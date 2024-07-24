@@ -22,14 +22,8 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class PathSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var DocumentInspector
-     */
-    private $documentInspector;
-
-    public function __construct(DocumentInspector $documentInspector)
+    public function __construct(private DocumentInspector $documentInspector)
     {
-        $this->documentInspector = $documentInspector;
     }
 
     public static function getSubscribedEvents()

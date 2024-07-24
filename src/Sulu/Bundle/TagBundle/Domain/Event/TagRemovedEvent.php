@@ -18,33 +18,14 @@ use Sulu\Bundle\TagBundle\Tag\TagInterface;
 class TagRemovedEvent extends DomainEvent
 {
     /**
-     * @var int
-     */
-    private $tagId;
-
-    /**
-     * @var string
-     */
-    private $tagName;
-
-    /**
-     * @var mixed[]
-     */
-    private $context;
-
-    /**
      * @param mixed[] $context
      */
     public function __construct(
-        int $tagId,
-        string $tagName,
-        array $context = []
+        private int $tagId,
+        private string $tagName,
+        private array $context = []
     ) {
         parent::__construct();
-
-        $this->tagId = $tagId;
-        $this->tagName = $tagName;
-        $this->context = $context;
     }
 
     public function getEventType(): string

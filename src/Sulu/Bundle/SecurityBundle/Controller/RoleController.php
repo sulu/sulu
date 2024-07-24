@@ -58,67 +58,18 @@ class RoleController extends AbstractRestController implements ClassResourceInte
      */
     protected $fieldDescriptors = [];
 
-    /**
-     * @var FieldDescriptorFactoryInterface
-     */
-    private $fieldDescriptorFactory;
-
-    /**
-     * @var RestHelperInterface
-     */
-    private $restHelper;
-
-    /**
-     * @var DoctrineListBuilderFactoryInterface
-     */
-    private $doctrineListBuilderFactory;
-
-    /**
-     * @var MaskConverterInterface
-     */
-    private $maskConverter;
-
-    /**
-     * @var RoleRepositoryInterface
-     */
-    private $roleRepository;
-
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
-
-    /**
-     * @var DomainEventCollectorInterface
-     */
-    private $eventCollector;
-
-    /**
-     * @var string
-     */
-    private $roleClass;
-
     public function __construct(
         ViewHandlerInterface $viewHandler,
-        FieldDescriptorFactoryInterface $fieldDescriptorFactory,
-        RestHelperInterface $restHelper,
-        DoctrineListBuilderFactoryInterface $doctrineListBuilderFactory,
-        MaskConverterInterface $maskConverter,
-        RoleRepositoryInterface $roleRepository,
-        EntityManagerInterface $entityManager,
-        DomainEventCollectorInterface $eventCollector,
-        string $roleClass
+        private FieldDescriptorFactoryInterface $fieldDescriptorFactory,
+        private RestHelperInterface $restHelper,
+        private DoctrineListBuilderFactoryInterface $doctrineListBuilderFactory,
+        private MaskConverterInterface $maskConverter,
+        private RoleRepositoryInterface $roleRepository,
+        private EntityManagerInterface $entityManager,
+        private DomainEventCollectorInterface $eventCollector,
+        private string $roleClass
     ) {
         parent::__construct($viewHandler);
-
-        $this->fieldDescriptorFactory = $fieldDescriptorFactory;
-        $this->restHelper = $restHelper;
-        $this->doctrineListBuilderFactory = $doctrineListBuilderFactory;
-        $this->maskConverter = $maskConverter;
-        $this->roleRepository = $roleRepository;
-        $this->entityManager = $entityManager;
-        $this->eventCollector = $eventCollector;
-        $this->roleClass = $roleClass;
     }
 
     protected function getFieldDescriptors()

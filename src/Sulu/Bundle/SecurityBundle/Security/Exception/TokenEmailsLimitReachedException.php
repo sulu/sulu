@@ -19,20 +19,11 @@ use Sulu\Component\Security\Authentication\UserInterface;
 class TokenEmailsLimitReachedException extends SecurityException
 {
     /**
-     * @var int
+     * @param int $limit
      */
-    private $limit;
-
-    /**
-     * @var UserInterface
-     */
-    private $user;
-
-    public function __construct($limit, UserInterface $user)
+    public function __construct(private $limit, private UserInterface $user)
     {
         parent::__construct('The resetting-email limit has been reached!', 1007);
-        $this->limit = $limit;
-        $this->user = $user;
     }
 
     public function getLimit()

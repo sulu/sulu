@@ -42,21 +42,6 @@ class DomainEventSubscriber implements EventSubscriberInterface
     public const TITLE_FIELD = 'title';
 
     /**
-     * @var DocumentDomainEventCollectorInterface
-     */
-    private $domainEventCollector;
-
-    /**
-     * @var DocumentManagerInterface
-     */
-    private $documentManager;
-
-    /**
-     * @var PropertyEncoder
-     */
-    private $propertyEncoder;
-
-    /**
      * @var array<array<string, mixed>>
      */
     private $eventsToBeDispatchedAfterFlush = [];
@@ -72,13 +57,10 @@ class DomainEventSubscriber implements EventSubscriberInterface
     private $persistEventsWithNewLocale = [];
 
     public function __construct(
-        DocumentDomainEventCollectorInterface $domainEventCollector,
-        DocumentManagerInterface $documentManager,
-        PropertyEncoder $propertyEncoder
+        private DocumentDomainEventCollectorInterface $domainEventCollector,
+        private DocumentManagerInterface $documentManager,
+        private PropertyEncoder $propertyEncoder,
     ) {
-        $this->domainEventCollector = $domainEventCollector;
-        $this->documentManager = $documentManager;
-        $this->propertyEncoder = $propertyEncoder;
     }
 
     /**

@@ -18,11 +18,11 @@ use Sulu\Component\DocumentManager\Exception\DocumentManagerException;
  */
 class NamespaceRegistry
 {
-    private $roleMap = [];
-
-    public function __construct(array $roleMap)
+    /**
+     * @param array<string, string> $roleMap
+     */
+    public function __construct(private array $roleMap)
     {
-        $this->roleMap = $roleMap;
     }
 
     /**

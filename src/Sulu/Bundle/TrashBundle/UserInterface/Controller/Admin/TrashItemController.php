@@ -57,91 +57,24 @@ class TrashItemController extends AbstractRestController implements ClassResourc
     use RequestParametersTrait;
 
     /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
-
-    /**
-     * @var DoctrineListBuilderFactoryInterface
-     */
-    private $listBuilderFactory;
-
-    /**
-     * @var FieldDescriptorFactoryInterface
-     */
-    private $fieldDescriptorFactory;
-
-    /**
-     * @var RestHelperInterface
-     */
-    private $restHelper;
-
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
-    /**
-     * @var TrashManagerInterface
-     */
-    private $trashManager;
-
-    /**
-     * @var TrashItemRepositoryInterface
-     */
-    private $trashItemRepository;
-
-    /**
-     * @var SecurityCheckerInterface
-     */
-    private $securityChecker;
-
-    /**
-     * @var ServiceLocator
-     */
-    private $restoreConfigurationProviderLocator;
-
-    /**
-     * @var string
-     */
-    private $trashItemClass;
-
-    /**
-     * @var array<string, int>
-     */
-    private $permissions;
-
-    /**
      * @param array<string, int> $permissions Inject `sulu_security.permissions` parameter
      */
     public function __construct(
-        EntityManagerInterface $entityManager,
-        FieldDescriptorFactoryInterface $fieldDescriptorFactory,
-        DoctrineListBuilderFactoryInterface $listBuilderFactory,
-        RestHelperInterface $restHelper,
-        TranslatorInterface $translator,
-        TrashManagerInterface $trashManager,
-        TrashItemRepositoryInterface $trashItemRepository,
-        SecurityCheckerInterface $securityChecker,
-        ServiceLocator $restoreConfigurationProviderLocator,
-        string $trashItemClass,
-        array $permissions,
+        private EntityManagerInterface $entityManager,
+        private FieldDescriptorFactoryInterface $fieldDescriptorFactory,
+        private DoctrineListBuilderFactoryInterface $listBuilderFactory,
+        private RestHelperInterface $restHelper,
+        private TranslatorInterface $translator,
+        private TrashManagerInterface $trashManager,
+        private TrashItemRepositoryInterface $trashItemRepository,
+        private SecurityCheckerInterface $securityChecker,
+        private ServiceLocator $restoreConfigurationProviderLocator,
+        private string $trashItemClass,
+        private array $permissions,
         ViewHandlerInterface $viewHandler,
         ?TokenStorageInterface $tokenStorage = null
     ) {
         parent::__construct($viewHandler, $tokenStorage);
-
-        $this->entityManager = $entityManager;
-        $this->fieldDescriptorFactory = $fieldDescriptorFactory;
-        $this->listBuilderFactory = $listBuilderFactory;
-        $this->restHelper = $restHelper;
-        $this->translator = $translator;
-        $this->trashManager = $trashManager;
-        $this->trashItemRepository = $trashItemRepository;
-        $this->securityChecker = $securityChecker;
-        $this->restoreConfigurationProviderLocator = $restoreConfigurationProviderLocator;
-        $this->trashItemClass = $trashItemClass;
-        $this->permissions = $permissions;
     }
 
     public function cgetAction(Request $request): Response

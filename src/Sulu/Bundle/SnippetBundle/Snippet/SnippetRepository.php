@@ -35,26 +35,11 @@ use Sulu\Component\PHPCR\SessionManager\SessionManager;
  */
 class SnippetRepository
 {
-    /**
-     * @var SessionManager
-     */
-    private $sessionManager;
-
-    /**
-     * @var ContentMapper
-     */
-    private $contentMapper;
-
-    /**
-     * @var DocumentManagerInterface
-     */
-    private $documentManager;
-
-    public function __construct(SessionManager $sessionManager, ContentMapper $contentMapper, DocumentManagerInterface $documentManager)
-    {
-        $this->contentMapper = $contentMapper;
-        $this->sessionManager = $sessionManager;
-        $this->documentManager = $documentManager;
+    public function __construct(
+        private SessionManager $sessionManager,
+        private ContentMapper $contentMapper,
+        private DocumentManagerInterface $documentManager,
+    ) {
     }
 
     /**

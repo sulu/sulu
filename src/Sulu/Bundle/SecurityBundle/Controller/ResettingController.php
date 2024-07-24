@@ -54,157 +54,37 @@ class ResettingController
     protected static $resetRouteId = 'sulu_admin';
 
     /**
-     * @var ValidatorInterface
-     */
-    protected $validator;
-
-    /**
-     * @var TranslatorInterface
-     */
-    protected $translator;
-
-    /**
-     * @var TokenGeneratorInterface
-     */
-    protected $tokenGenerator;
-
-    /**
-     * @var Environment
-     */
-    protected $twig;
-
-    /**
-     * @var TokenStorageInterface
-     */
-    protected $tokenStorage;
-
-    /**
-     * @var EventDispatcherInterface
-     */
-    protected $dispatcher;
-
-    /**
-     * @var Mailer|\Swift_Mailer
-     */
-    protected $mailer;
-
-    /**
-     * @var PasswordHasherFactoryInterface|EncoderFactoryInterface
-     */
-    protected $passwordHasherFactory;
-
-    /**
-     * @var UserRepositoryInterface
-     */
-    protected $userRepository;
-
-    /**
-     * @var UrlGeneratorInterface
-     */
-    private $router;
-
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
-
-    /**
-     * @var DomainEventCollectorInterface
-     */
-    private $domainEventCollector;
-
-    /**
-     * @var string
-     */
-    protected $suluSecuritySystem;
-
-    /**
-     * @var string
-     */
-    protected $sender;
-
-    /**
-     * @var string
-     */
-    protected $subject;
-
-    /**
-     * @var string
-     */
-    protected $translationDomain;
-
-    /**
-     * @var string
-     */
-    protected $mailTemplate;
-
-    /**
-     * @var string
-     */
-    protected $adminMail;
-
-    /**
-     * @var string
-     */
-    protected $tokenSendLimit;
-
-    /**
-     * @var string
-     */
-    protected $secret;
-
-    /**
      * @var LoggerInterface
      */
     private $logger;
 
     /**
      * @param PasswordHasherFactoryInterface|EncoderFactoryInterface $passwordHasherFactory
+     * @param Mailer|\Swift_Mailer $mailer
      */
     public function __construct(
-        ValidatorInterface $validator,
-        TranslatorInterface $translator,
-        TokenGeneratorInterface $tokenGenerator,
-        Environment $templating,
-        TokenStorageInterface $tokenStorage,
-        EventDispatcherInterface $dispatcher,
-        $mailer,
-        $passwordHasherFactory,
-        UserRepositoryInterface $userRepository,
-        UrlGeneratorInterface $router,
-        EntityManagerInterface $entityManager,
-        DomainEventCollectorInterface $domainEventCollector,
-        string $suluSecuritySystem,
-        string $sender,
-        string $subject,
-        string $translationDomain,
-        string $mailTemplate,
-        string $tokenSendLimit,
-        string $adminMail,
-        string $secret,
-        ?LoggerInterface $logger = null
+        protected ValidatorInterface $validator,
+        protected TranslatorInterface $translator,
+        protected TokenGeneratorInterface $tokenGenerator,
+        protected Environment $twig,
+        protected TokenStorageInterface $tokenStorage,
+        protected EventDispatcherInterface $dispatcher,
+        protected $mailer,
+        protected $passwordHasherFactory,
+        protected UserRepositoryInterface $userRepository,
+        private UrlGeneratorInterface $router,
+        private EntityManagerInterface $entityManager,
+        private DomainEventCollectorInterface $domainEventCollector,
+        protected string $suluSecuritySystem,
+        protected string $sender,
+        protected string $subject,
+        protected string $translationDomain,
+        protected string $mailTemplate,
+        protected string $tokenSendLimit,
+        protected string $adminMail,
+        protected string $secret,
+        ?LoggerInterface $logger = null,
     ) {
-        $this->validator = $validator;
-        $this->translator = $translator;
-        $this->tokenGenerator = $tokenGenerator;
-        $this->twig = $templating;
-        $this->tokenStorage = $tokenStorage;
-        $this->dispatcher = $dispatcher;
-        $this->mailer = $mailer;
-        $this->passwordHasherFactory = $passwordHasherFactory;
-        $this->userRepository = $userRepository;
-        $this->router = $router;
-        $this->entityManager = $entityManager;
-        $this->domainEventCollector = $domainEventCollector;
-
-        $this->suluSecuritySystem = $suluSecuritySystem;
-        $this->sender = $sender;
-        $this->subject = $subject;
-        $this->translationDomain = $translationDomain;
-        $this->mailTemplate = $mailTemplate;
-        $this->tokenSendLimit = $tokenSendLimit;
-        $this->adminMail = $adminMail;
-        $this->secret = $secret;
         $this->logger = $logger ?? new NullLogger();
     }
 

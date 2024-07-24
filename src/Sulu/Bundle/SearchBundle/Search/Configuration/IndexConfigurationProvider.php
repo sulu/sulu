@@ -19,34 +19,23 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class IndexConfigurationProvider implements IndexConfigurationProviderInterface
 {
     /**
-     * @var array|null
+     * @var array<string, IndexConfiguration>|null
      */
     private $indexConfigurations = null;
 
     /**
-     * @var TranslatorInterface
+     * @param array<string, array> $searchIndexes
      */
-    private $translator;
-
-    /**
-     * @var array
-     */
-    private $searchIndexes;
-
-    public function __construct(TranslatorInterface $translator, array $searchIndexes)
-    {
-        $this->translator = $translator;
-        $this->searchIndexes = $searchIndexes;
+    public function __construct(
+        private TranslatorInterface $translator,
+        private array $searchIndexes,
+    ) {
     }
 
-    /**
-     * Returns all IndexConfigurations available in this installation.
-     *
-     * @return IndexConfiguration[]
-     */
     public function getIndexConfigurations()
     {
         if (null === $this->indexConfigurations) {
+            $this->indexConfigurations = [];
             foreach ($this->searchIndexes as $indexName => $indexConfiguration) {
                 $this->indexConfigurations[$indexName] = new IndexConfiguration(
                     $indexName,

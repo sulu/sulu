@@ -26,36 +26,12 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class CustomUrlInitializer implements InitializerInterface
 {
-    /**
-     * @var NodeManager
-     */
-    private $nodeManager;
-
-    /**
-     * @var PathBuilder
-     */
-    private $pathBuilder;
-
-    /**
-     * @var WebspaceManagerInterface
-     */
-    private $webspaceManager;
-
-    /**
-     * @var SessionManagerInterface
-     */
-    private $sessionManager;
-
     public function __construct(
-        NodeManager $nodeManager,
-        PathBuilder $pathBuilder,
-        WebspaceManagerInterface $webspaceManager,
-        SessionManagerInterface $sessionManager
+        private NodeManager $nodeManager,
+        private PathBuilder $pathBuilder,
+        private WebspaceManagerInterface $webspaceManager,
+        private SessionManagerInterface $sessionManager,
     ) {
-        $this->nodeManager = $nodeManager;
-        $this->pathBuilder = $pathBuilder;
-        $this->webspaceManager = $webspaceManager;
-        $this->sessionManager = $sessionManager;
     }
 
     public function initialize(OutputInterface $output, $purge = false)

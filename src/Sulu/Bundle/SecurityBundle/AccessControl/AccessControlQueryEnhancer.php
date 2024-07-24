@@ -20,20 +20,10 @@ use Sulu\Component\Security\Authentication\UserInterface;
 
 class AccessControlQueryEnhancer
 {
-    /**
-     * @var SystemStoreInterface
-     */
-    private $systemStore;
-
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
-
-    public function __construct(SystemStoreInterface $systemStore, EntityManagerInterface $entityManager)
-    {
-        $this->systemStore = $systemStore;
-        $this->entityManager = $entityManager;
+    public function __construct(
+        private SystemStoreInterface $systemStore,
+        private EntityManagerInterface $entityManager,
+    ) {
     }
 
     /**

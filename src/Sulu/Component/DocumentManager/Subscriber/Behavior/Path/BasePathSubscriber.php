@@ -23,24 +23,10 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class BasePathSubscriber implements EventSubscriberInterface
 {
     /**
-     * @var NodeManager
-     */
-    private $nodeManager;
-
-    /**
-     * @var string
-     */
-    private $basePath;
-
-    /**
      * @param string $basePath
      */
-    public function __construct(
-        NodeManager $nodeManager,
-        $basePath
-    ) {
-        $this->nodeManager = $nodeManager;
-        $this->basePath = $basePath;
+    public function __construct(private NodeManager $nodeManager, private $basePath)
+    {
     }
 
     public static function getSubscribedEvents()

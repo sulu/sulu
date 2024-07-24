@@ -20,14 +20,9 @@ use Sulu\Bundle\AdminBundle\Admin\View\ViewCollection;
 class SearchAdmin extends Admin
 {
     public const SEARCH_VIEW = 'sulu_search.search';
-    /**
-     * @var ViewBuilderFactoryInterface
-     */
-    private $viewBuilderFactory;
 
-    public function __construct(ViewBuilderFactoryInterface $viewBuilderFactory)
+    public function __construct(private ViewBuilderFactoryInterface $viewBuilderFactory)
     {
-        $this->viewBuilderFactory = $viewBuilderFactory;
     }
 
     public function configureNavigationItems(NavigationItemCollection $navigationItemCollection): void

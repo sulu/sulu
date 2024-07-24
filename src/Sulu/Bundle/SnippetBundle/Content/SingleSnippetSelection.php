@@ -25,36 +25,13 @@ use Sulu\Component\Content\SimpleContentType;
 
 class SingleSnippetSelection extends SimpleContentType implements PreResolvableContentTypeInterface, ReferenceContentTypeInterface
 {
-    /**
-     * @var SnippetResolverInterface
-     */
-    private $snippetResolver;
-
-    /**
-     * @var DefaultSnippetManagerInterface
-     */
-    private $defaultSnippetManager;
-
-    /**
-     * @var ReferenceStoreInterface
-     */
-    private $snippetReferenceStore;
-
-    /**
-     * @var ReferenceStoreInterface|null
-     */
-    private $snippetAreaReferenceStore;
-
     public function __construct(
-        SnippetResolverInterface $snippetResolver,
-        DefaultSnippetManagerInterface $defaultSnippetManager,
-        ReferenceStoreInterface $snippetReferenceStore,
-        ?ReferenceStoreInterface $snippetAreaReferenceStore = null
+        private SnippetResolverInterface $snippetResolver,
+        private DefaultSnippetManagerInterface $defaultSnippetManager,
+        private ReferenceStoreInterface $snippetReferenceStore,
+        private ?ReferenceStoreInterface $snippetAreaReferenceStore = null
     ) {
-        $this->snippetResolver = $snippetResolver;
-        $this->defaultSnippetManager = $defaultSnippetManager;
-        $this->snippetReferenceStore = $snippetReferenceStore;
-        $this->snippetAreaReferenceStore = $snippetAreaReferenceStore;
+        parent::__construct('SingleSnippetSelection', null);
 
         if (null === $this->snippetAreaReferenceStore) {
             @trigger_deprecation(
@@ -63,8 +40,6 @@ class SingleSnippetSelection extends SimpleContentType implements PreResolvableC
                 'Instantiating the SingleSnippetSelection without the $snippetAreaReferenceStore argument is deprecated!'
             );
         }
-
-        parent::__construct('SingleSnippetSelection', null);
     }
 
     public function getContentData(PropertyInterface $property)

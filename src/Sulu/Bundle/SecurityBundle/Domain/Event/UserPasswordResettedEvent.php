@@ -17,16 +17,9 @@ use Sulu\Component\Security\Authentication\UserInterface;
 
 class UserPasswordResettedEvent extends DomainEvent
 {
-    /**
-     * @var UserInterface
-     */
-    private $resourceUser;
-
-    public function __construct(UserInterface $resourceUser)
+    public function __construct(private UserInterface $resourceUser)
     {
         parent::__construct();
-
-        $this->resourceUser = $resourceUser;
     }
 
     public function getEventType(): string

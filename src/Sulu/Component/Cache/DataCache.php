@@ -22,14 +22,8 @@ use Symfony\Component\Filesystem\Filesystem;
  */
 class DataCache implements CacheInterface
 {
-    /**
-     * @var string
-     */
-    private $file;
-
-    public function __construct($file)
+    public function __construct(private string $file)
     {
-        $this->file = $file;
     }
 
     public function read()

@@ -22,14 +22,8 @@ use Sulu\Component\SmartContent\ItemInterface;
 #[ExclusionPolicy('all')]
 class AccountDataItem implements ItemInterface
 {
-    /**
-     * @var Account
-     */
-    private $entity;
-
-    public function __construct(Account $entity)
+    public function __construct(private Account $entity)
     {
-        $this->entity = $entity;
     }
 
     #[VirtualProperty]

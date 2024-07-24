@@ -14,16 +14,6 @@ namespace Sulu\Component\DocumentManager\Event;
 class MoveEvent extends AbstractEvent
 {
     /**
-     * @var object
-     */
-    private $document;
-
-    /**
-     * @var string
-     */
-    private $destId;
-
-    /**
      * @var string
      */
     private $destName;
@@ -32,10 +22,8 @@ class MoveEvent extends AbstractEvent
      * @param object $document
      * @param string $destId
      */
-    public function __construct($document, $destId)
+    public function __construct(private $document, private $destId)
     {
-        $this->document = $document;
-        $this->destId = $destId;
     }
 
     public function getDebugMessage()

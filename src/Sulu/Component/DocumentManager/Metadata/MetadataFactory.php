@@ -22,14 +22,8 @@ use Sulu\Component\DocumentManager\MetadataFactoryInterface;
  */
 class MetadataFactory implements MetadataFactoryInterface
 {
-    /**
-     * @var MetadataFactoryInterface
-     */
-    private $metadataFactory;
-
-    public function __construct(MetadataFactoryInterface $metadataFactory)
+    public function __construct(private MetadataFactoryInterface $metadataFactory)
     {
-        $this->metadataFactory = $metadataFactory;
     }
 
     public function getMetadataForAlias($alias)

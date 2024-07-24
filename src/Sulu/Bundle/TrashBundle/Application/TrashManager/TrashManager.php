@@ -26,43 +26,13 @@ use Symfony\Component\DependencyInjection\ServiceLocator;
 
 final class TrashManager implements TrashManagerInterface
 {
-    /**
-     * @var TrashItemRepositoryInterface
-     */
-    private $trashItemRepository;
-
-    /**
-     * @var DomainEventCollectorInterface
-     */
-    private $domainEventCollector;
-
-    /**
-     * @var ServiceLocator
-     */
-    private $storeTrashItemHandlerLocator;
-
-    /**
-     * @var ServiceLocator
-     */
-    private $restoreTrashItemHandlerLocator;
-
-    /**
-     * @var ServiceLocator
-     */
-    private $removeTrashItemHandlerLocator;
-
     public function __construct(
-        TrashItemRepositoryInterface $trashItemRepository,
-        DomainEventCollectorInterface $domainEventCollector,
-        ServiceLocator $storeTrashItemHandlerLocator,
-        ServiceLocator $restoreTrashItemHandlerLocator,
-        ServiceLocator $removeTrashItemHandlerLocator
+        private TrashItemRepositoryInterface $trashItemRepository,
+        private DomainEventCollectorInterface $domainEventCollector,
+        private ServiceLocator $storeTrashItemHandlerLocator,
+        private ServiceLocator $restoreTrashItemHandlerLocator,
+        private ServiceLocator $removeTrashItemHandlerLocator,
     ) {
-        $this->trashItemRepository = $trashItemRepository;
-        $this->domainEventCollector = $domainEventCollector;
-        $this->storeTrashItemHandlerLocator = $storeTrashItemHandlerLocator;
-        $this->restoreTrashItemHandlerLocator = $restoreTrashItemHandlerLocator;
-        $this->removeTrashItemHandlerLocator = $removeTrashItemHandlerLocator;
     }
 
     public function store(string $resourceKey, object $object, array $options = []): TrashItemInterface

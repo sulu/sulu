@@ -25,22 +25,10 @@ use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 class AuhenticationFailureListener implements EventSubscriberInterface
 {
     /**
-     * @var PasswordHasherFactoryInterface|EncoderFactoryInterface
-     */
-    private $passwordHasherFactory;
-
-    /**
-     * @var UserRepositoryInterface
-     */
-    private $userRepository;
-
-    /**
      * @param PasswordHasherFactoryInterface|EncoderFactoryInterface $passwordHasherFactory
      */
-    public function __construct($passwordHasherFactory, UserRepositoryInterface $userRepository)
+    public function __construct(private $passwordHasherFactory, private UserRepositoryInterface $userRepository)
     {
-        $this->passwordHasherFactory = $passwordHasherFactory;
-        $this->userRepository = $userRepository;
     }
 
     public static function getSubscribedEvents()

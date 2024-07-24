@@ -19,18 +19,12 @@ class QueryExecuteEvent extends AbstractEvent
     use EventOptionsTrait;
 
     /**
-     * @var Query
-     */
-    private $query;
-
-    /**
      * @var QueryResultCollection
      */
     private $result;
 
-    public function __construct(Query $query, array $options = [])
+    public function __construct(private Query $query, array $options = [])
     {
-        $this->query = $query;
         $this->options = $options;
     }
 

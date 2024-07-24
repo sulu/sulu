@@ -21,7 +21,6 @@ use Sulu\Bundle\SecurityBundle\Entity\TwoFactor\TwoFactorInterface;
 use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\SecurityBundle\Entity\UserSetting;
 use Sulu\Bundle\SecurityBundle\Entity\UserTwoFactor;
-use Sulu\Bundle\SecurityBundle\UserManager\UserManager;
 use Sulu\Component\Rest\Exception\MissingArgumentException;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Security\Authentication\UserSettingRepositoryInterface;
@@ -36,60 +35,15 @@ class ProfileController implements ClassResourceInterface
 {
     protected static $entityNameUserSetting = UserSetting::class;
 
-    /**
-     * @var TokenStorageInterface
-     */
-    private $tokenStorage;
-
-    /**
-     * @var ObjectManager
-     */
-    private $objectManager;
-
-    /**
-     * @var ViewHandlerInterface
-     */
-    private $viewHandler;
-
-    /**
-     * @var UserSettingRepositoryInterface
-     */
-    private $userSettingRepository;
-
-    /**
-     * @var UserManager
-     */
-    private $userManager;
-
-    /**
-     * @var string
-     */
-    private $userClass;
-
-    /**
-     * @var string
-     */
-    private $contactClass;
-
-    /**
-     * @param UserManagerInterface $userManager
-     */
     public function __construct(
-        TokenStorageInterface $tokenStorage,
-        ObjectManager $objectManager,
-        ViewHandlerInterface $viewHandler,
-        UserSettingRepositoryInterface $userSettingRepository,
-        UserManager $userManager,
-        string $userClass,
-        string $contactClass
+        private TokenStorageInterface $tokenStorage,
+        private ObjectManager $objectManager,
+        private ViewHandlerInterface $viewHandler,
+        private UserSettingRepositoryInterface $userSettingRepository,
+        private UserManagerInterface $userManager,
+        private string $userClass,
+        private string $contactClass,
     ) {
-        $this->tokenStorage = $tokenStorage;
-        $this->objectManager = $objectManager;
-        $this->viewHandler = $viewHandler;
-        $this->userSettingRepository = $userSettingRepository;
-        $this->userManager = $userManager;
-        $this->userClass = $userClass;
-        $this->contactClass = $contactClass;
     }
 
     /**

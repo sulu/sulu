@@ -25561,11 +25561,6 @@ parameters:
 			path: src/Sulu/Bundle/SearchBundle/Controller/SearchController.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\SearchBundle\\\\Controller\\\\WebsiteSearchController\\:\\:__construct\\(\\) has parameter \\$indexes with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SearchBundle/Controller/WebsiteSearchController.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\SearchBundle\\\\Controller\\\\WebsiteSearchController\\:\\:getRequestParameter\\(\\) should return string but returns mixed\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SearchBundle/Controller/WebsiteSearchController.php
@@ -25641,16 +25636,6 @@ parameters:
 			path: src/Sulu/Bundle/SearchBundle/Search/Configuration/IndexConfiguration.php
 
 		-
-			message: "#^Property Sulu\\\\Bundle\\\\SearchBundle\\\\Search\\\\Configuration\\\\IndexConfiguration\\:\\:\\$contexts type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SearchBundle/Search/Configuration/IndexConfiguration.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\SearchBundle\\\\Search\\\\Configuration\\\\IndexConfiguration\\:\\:\\$securityContext \\(string\\) does not accept string\\|null\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SearchBundle/Search/Configuration/IndexConfiguration.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\SearchBundle\\\\Search\\\\Configuration\\\\IndexConfigurationProvider\\:\\:__construct\\(\\) has parameter \\$searchIndexes with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SearchBundle/Search/Configuration/IndexConfigurationProvider.php
@@ -25659,26 +25644,6 @@ parameters:
 			message: "#^Method Sulu\\\\Bundle\\\\SearchBundle\\\\Search\\\\Configuration\\\\IndexConfigurationProvider\\:\\:getIndexConfiguration\\(\\) should return Sulu\\\\Bundle\\\\SearchBundle\\\\Search\\\\Configuration\\\\IndexConfiguration but empty return statement found\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SearchBundle/Search/Configuration/IndexConfigurationProvider.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\SearchBundle\\\\Search\\\\Configuration\\\\IndexConfigurationProvider\\:\\:getIndexConfigurations\\(\\) should return array\\<Sulu\\\\Bundle\\\\SearchBundle\\\\Search\\\\Configuration\\\\IndexConfiguration\\> but returns array\\|null\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SearchBundle/Search/Configuration/IndexConfigurationProvider.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\SearchBundle\\\\Search\\\\Configuration\\\\IndexConfigurationProvider\\:\\:\\$indexConfigurations type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SearchBundle/Search/Configuration/IndexConfigurationProvider.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\SearchBundle\\\\Search\\\\Configuration\\\\IndexConfigurationProvider\\:\\:\\$searchIndexes type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SearchBundle/Search/Configuration/IndexConfigurationProvider.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\SearchBundle\\\\Search\\\\Configuration\\\\Route\\:\\:__construct\\(\\) has parameter \\$resultToRoute with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SearchBundle/Search/Configuration/Route.php
 
 		-
 			message: "#^Property Sulu\\\\Bundle\\\\SearchBundle\\\\Search\\\\Configuration\\\\Route\\:\\:\\$name is never read, only written\\.$#"
@@ -25961,22 +25926,12 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/Admin/Helper/SystemLanguageSelect.php
 
 		-
-			message: "#^Property Sulu\\\\Bundle\\\\SecurityBundle\\\\Admin\\\\Helper\\\\SystemLanguageSelect\\:\\:\\$translatedLocales type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Admin/Helper/SystemLanguageSelect.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\SecurityBundle\\\\Admin\\\\SecurityAdmin\\:\\:__construct\\(\\) has parameter \\$resources with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Admin/SecurityAdmin.php
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\SecurityBundle\\\\Admin\\\\SecurityAdmin\\:\\:getConfig\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Admin/SecurityAdmin.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\SecurityBundle\\\\Admin\\\\SecurityAdmin\\:\\:\\$resources type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Admin/SecurityAdmin.php
 
@@ -26042,11 +25997,6 @@ parameters:
 
 		-
 			message: "#^Call to method getEncoder\\(\\) on an unknown class Symfony\\\\Component\\\\Security\\\\Core\\\\Encoder\\\\EncoderFactoryInterface\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Command/CreateUserCommand.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\SecurityBundle\\\\Command\\\\CreateUserCommand\\:\\:__construct\\(\\) has parameter \\$locales with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Command/CreateUserCommand.php
 
@@ -26236,14 +26186,14 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/Controller/PermissionController.php
 
 		-
-			message: "#^Property Sulu\\\\Bundle\\\\SecurityBundle\\\\Controller\\\\PermissionController\\:\\:\\$resources type has no value type specified in iterable type array\\.$#"
+			message: "#^Property Sulu\\\\Bundle\\\\SecurityBundle\\\\Controller\\\\PermissionController\\:\\:\\$roleRepository is never read, only written\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Controller/PermissionController.php
 
 		-
-			message: "#^Property Sulu\\\\Bundle\\\\SecurityBundle\\\\Controller\\\\PermissionController\\:\\:\\$roleRepository is never read, only written\\.$#"
+			message: "#^Call to an undefined method Sulu\\\\Bundle\\\\AdminBundle\\\\UserManager\\\\UserManagerInterface\\:\\:save\\(\\)\\.$#"
 			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Controller/PermissionController.php
+			path: src/Sulu/Bundle/SecurityBundle/Controller/ProfileController.php
 
 		-
 			message: "#^Call to an undefined method object\\:\\:setValue\\(\\)\\.$#"
@@ -26257,16 +26207,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\SecurityBundle\\\\Controller\\\\ProfileController\\:\\:checkArguments\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Controller/ProfileController.php
-
-		-
-			message: "#^PHPDoc tag @param for parameter \\$userManager with type Sulu\\\\Bundle\\\\AdminBundle\\\\UserManager\\\\UserManagerInterface is not subtype of native type Sulu\\\\Bundle\\\\SecurityBundle\\\\UserManager\\\\UserManager\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Controller/ProfileController.php
-
-		-
-			message: "#^Parameter \\#2 \\$locale of method Sulu\\\\Bundle\\\\SecurityBundle\\\\UserManager\\\\UserManager\\:\\:save\\(\\) expects string, mixed given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Controller/ProfileController.php
 
@@ -26336,11 +26276,6 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/Controller/ResettingController.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\SecurityBundle\\\\Controller\\\\ResettingController\\:\\:__construct\\(\\) has parameter \\$mailer with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Controller/ResettingController.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\SecurityBundle\\\\Controller\\\\ResettingController\\:\\:changePassword\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Controller/ResettingController.php
@@ -26381,6 +26316,11 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/Controller/ResettingController.php
 
 		-
+			message: "#^Parameter \\#1 \\$limit of class Sulu\\\\Bundle\\\\SecurityBundle\\\\Security\\\\Exception\\\\TokenEmailsLimitReachedException constructor expects int, string given\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/SecurityBundle/Controller/ResettingController.php
+
+		-
 			message: "#^Parameter \\#1 \\$token of method Sulu\\\\Bundle\\\\SecurityBundle\\\\Controller\\\\ResettingController\\:\\:generateTokenHash\\(\\) expects string, mixed given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Controller/ResettingController.php
@@ -26397,6 +26337,11 @@ parameters:
 
 		-
 			message: "#^Parameter \\#2 \\$user of class Sulu\\\\Bundle\\\\SecurityBundle\\\\Security\\\\Exception\\\\TokenEmailsLimitReachedException constructor expects Sulu\\\\Component\\\\Security\\\\Authentication\\\\UserInterface, Symfony\\\\Component\\\\Security\\\\Core\\\\User\\\\UserInterface given\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/SecurityBundle/Controller/ResettingController.php
+
+		-
+			message: "#^Parameter \\$mailer of method Sulu\\\\Bundle\\\\SecurityBundle\\\\Controller\\\\ResettingController\\:\\:__construct\\(\\) has invalid type Swift_Mailer\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Controller/ResettingController.php
 
@@ -26571,52 +26516,7 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/Controller/RoleSettingController.php
 
 		-
-			message: "#^Call to an undefined method Doctrine\\\\ORM\\\\EntityManagerInterface\\:\\:create\\(\\)\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Controller/UserController.php
-
-		-
-			message: "#^Call to an undefined method Doctrine\\\\ORM\\\\EntityManagerInterface\\:\\:delete\\(\\)\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Controller/UserController.php
-
-		-
-			message: "#^Call to an undefined method Doctrine\\\\ORM\\\\EntityManagerInterface\\:\\:enableUser\\(\\)\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Controller/UserController.php
-
-		-
-			message: "#^Call to an undefined method Doctrine\\\\ORM\\\\EntityManagerInterface\\:\\:findAll\\(\\)\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Controller/UserController.php
-
-		-
-			message: "#^Call to an undefined method Doctrine\\\\ORM\\\\EntityManagerInterface\\:\\:getUserById\\(\\)\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Controller/UserController.php
-
-		-
-			message: "#^Call to an undefined method Doctrine\\\\ORM\\\\EntityManagerInterface\\:\\:lockUser\\(\\)\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Controller/UserController.php
-
-		-
-			message: "#^Call to an undefined method Doctrine\\\\ORM\\\\EntityManagerInterface\\:\\:save\\(\\)\\.$#"
-			count: 3
-			path: src/Sulu/Bundle/SecurityBundle/Controller/UserController.php
-
-		-
-			message: "#^Call to an undefined method Doctrine\\\\ORM\\\\EntityManagerInterface\\:\\:unlockUser\\(\\)\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Controller/UserController.php
-
-		-
 			message: "#^Call to an undefined method Doctrine\\\\ORM\\\\EntityRepository\\<object\\>\\:\\:findUserByContact\\(\\)\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Controller/UserController.php
-
-		-
-			message: "#^Call to an undefined method Sulu\\\\Bundle\\\\MediaBundle\\\\Media\\\\FormatOptions\\\\FormatOptionsManagerInterface\\:\\:initializeListBuilder\\(\\)\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Controller/UserController.php
 
@@ -26652,21 +26552,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$className of method Doctrine\\\\ORM\\\\EntityManagerInterface\\:\\:getRepository\\(\\) expects class\\-string\\<object\\>, string given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Controller/UserController.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\SecurityBundle\\\\Controller\\\\UserController\\:\\:\\$doctrineListBuilderFactory \\(Doctrine\\\\ORM\\\\EntityManagerInterface\\) does not accept Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Doctrine\\\\DoctrineListBuilderFactoryInterface\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Controller/UserController.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\SecurityBundle\\\\Controller\\\\UserController\\:\\:\\$restHelper \\(Sulu\\\\Bundle\\\\MediaBundle\\\\Media\\\\FormatOptions\\\\FormatOptionsManagerInterface\\) does not accept Sulu\\\\Component\\\\Rest\\\\RestHelperInterface\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Controller/UserController.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\SecurityBundle\\\\Controller\\\\UserController\\:\\:\\$userManager \\(Doctrine\\\\ORM\\\\EntityManagerInterface\\) does not accept Sulu\\\\Bundle\\\\AdminBundle\\\\UserManager\\\\UserManagerInterface\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Controller/UserController.php
 
@@ -27206,11 +27091,6 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/EventListener/SystemListener.php
 
 		-
-			message: "#^Call to an undefined method Symfony\\\\Contracts\\\\Translation\\\\LocaleAwareInterface\\|Symfony\\\\Contracts\\\\Translation\\\\TranslatorInterface\\:\\:setLocale\\(\\)\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/EventListener/UserLocaleListener.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\SecurityBundle\\\\EventListener\\\\UserLocaleListener\\:\\:copyUserLocaleToRequest\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/EventListener/UserLocaleListener.php
@@ -27306,19 +27186,9 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/Security/Exception/EmailNotUniqueException.php
 
 		-
-			message: "#^Property Sulu\\\\Bundle\\\\SecurityBundle\\\\Security\\\\Exception\\\\EmailNotUniqueException\\:\\:\\$email has no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Security/Exception/EmailNotUniqueException.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\SecurityBundle\\\\Security\\\\Exception\\\\EmailTemplateException\\:\\:toArray\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Security/Exception/EmailTemplateException.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\SecurityBundle\\\\Security\\\\Exception\\\\InvalidTokenException\\:\\:__construct\\(\\) has parameter \\$token with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Security/Exception/InvalidTokenException.php
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\SecurityBundle\\\\Security\\\\Exception\\\\InvalidTokenException\\:\\:getToken\\(\\) has no return type specified\\.$#"
@@ -27341,11 +27211,6 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/Security/Exception/SecurityException.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\SecurityBundle\\\\Security\\\\Exception\\\\TokenAlreadyRequestedException\\:\\:__construct\\(\\) has parameter \\$interval with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Security/Exception/TokenAlreadyRequestedException.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\SecurityBundle\\\\Security\\\\Exception\\\\TokenAlreadyRequestedException\\:\\:getInterval\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Security/Exception/TokenAlreadyRequestedException.php
@@ -27354,11 +27219,6 @@ parameters:
 			message: "#^Method Sulu\\\\Bundle\\\\SecurityBundle\\\\Security\\\\Exception\\\\TokenAlreadyRequestedException\\:\\:toArray\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Security/Exception/TokenAlreadyRequestedException.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\SecurityBundle\\\\Security\\\\Exception\\\\TokenEmailsLimitReachedException\\:\\:__construct\\(\\) has parameter \\$limit with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Security/Exception/TokenEmailsLimitReachedException.php
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\SecurityBundle\\\\Security\\\\Exception\\\\TokenEmailsLimitReachedException\\:\\:getLimit\\(\\) has no return type specified\\.$#"
@@ -27374,11 +27234,6 @@ parameters:
 			message: "#^Method Sulu\\\\Bundle\\\\SecurityBundle\\\\Security\\\\Exception\\\\TokenEmailsLimitReachedException\\:\\:toArray\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Security/Exception/TokenEmailsLimitReachedException.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\SecurityBundle\\\\Security\\\\Exception\\\\UsernameNotUniqueException\\:\\:__construct\\(\\) has parameter \\$username with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Security/Exception/UsernameNotUniqueException.php
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\SecurityBundle\\\\Security\\\\Exception\\\\UsernameNotUniqueException\\:\\:getUsername\\(\\) has no return type specified\\.$#"
@@ -28486,11 +28341,6 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/Util/TokenGenerator.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\SnippetBundle\\\\Admin\\\\SnippetAdmin\\:\\:__construct\\(\\) has parameter \\$defaultEnabled with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SnippetBundle/Admin/SnippetAdmin.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\SnippetBundle\\\\Admin\\\\SnippetAdmin\\:\\:getGlobalSnippetsSecurityContext\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SnippetBundle/Admin/SnippetAdmin.php
@@ -28766,11 +28616,6 @@ parameters:
 			path: src/Sulu/Bundle/SnippetBundle/Content/SnippetQueryBuilder.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\SnippetBundle\\\\Controller\\\\SnippetAreaController\\:\\:__construct\\(\\) has parameter \\$sulu_snippet_area with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SnippetBundle/Controller/SnippetAreaController.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\SnippetBundle\\\\Controller\\\\SnippetAreaController\\:\\:getLocalizedAreas\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SnippetBundle/Controller/SnippetAreaController.php
@@ -28787,11 +28632,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#3 \\$uuid of method Sulu\\\\Bundle\\\\SnippetBundle\\\\Snippet\\\\DefaultSnippetManagerInterface\\:\\:save\\(\\) expects string, mixed given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SnippetBundle/Controller/SnippetAreaController.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\SnippetBundle\\\\Controller\\\\SnippetAreaController\\:\\:\\$sulu_snippet_areas type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SnippetBundle/Controller/SnippetAreaController.php
 
@@ -29086,6 +28926,11 @@ parameters:
 			path: src/Sulu/Bundle/SnippetBundle/Snippet/DefaultSnippetManager.php
 
 		-
+			message: "#^Parameter \\#1 \\$actual of class Sulu\\\\Bundle\\\\SnippetBundle\\\\Snippet\\\\WrongSnippetTypeException constructor expects string, string\\|null given\\.$#"
+			count: 2
+			path: src/Sulu/Bundle/SnippetBundle/Snippet/DefaultSnippetManager.php
+
+		-
 			message: "#^Method Sulu\\\\Bundle\\\\SnippetBundle\\\\Snippet\\\\DefaultSnippetManagerInterface\\:\\:remove\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SnippetBundle/Snippet/DefaultSnippetManagerInterface.php
@@ -29164,16 +29009,6 @@ parameters:
 			message: "#^Method Sulu\\\\Bundle\\\\SnippetBundle\\\\Snippet\\\\SnippetResolverInterface\\:\\:resolve\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SnippetBundle/Snippet/SnippetResolverInterface.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\SnippetBundle\\\\Snippet\\\\WrongSnippetTypeException\\:\\:__construct\\(\\) has parameter \\$actual with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SnippetBundle/Snippet/WrongSnippetTypeException.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\SnippetBundle\\\\Snippet\\\\WrongSnippetTypeException\\:\\:__construct\\(\\) has parameter \\$expected with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SnippetBundle/Snippet/WrongSnippetTypeException.php
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\SnippetBundle\\\\Tests\\\\Functional\\\\BaseFunctionalTestCase\\:\\:createSnippet\\(\\) has no return type specified\\.$#"
@@ -30276,11 +30111,6 @@ parameters:
 			path: src/Sulu/Bundle/TagBundle/Event/TagMergeEvent.php
 
 		-
-			message: "#^Property Sulu\\\\Bundle\\\\TagBundle\\\\Event\\\\TagMergeEvent\\:\\:\\$srcTags type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/TagBundle/Event/TagMergeEvent.php
-
-		-
 			message: "#^Argument of an invalid type float\\|int supplied for foreach, only iterables are supported\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/TagBundle/Tag/TagManager.php
@@ -30341,22 +30171,17 @@ parameters:
 			path: src/Sulu/Bundle/TagBundle/Tag/TagManager.php
 
 		-
-			message: "#^Parameter \\#1 \\$id of method Sulu\\\\Bundle\\\\TagBundle\\\\Entity\\\\TagRepository\\:\\:findTagById\\(\\) expects int, float\\|int given\\.$#"
+			message: "#^Parameter \\#1 \\$id of method Sulu\\\\Bundle\\\\TagBundle\\\\Tag\\\\TagRepositoryInterface\\:\\:findTagById\\(\\) expects int, float\\|int given\\.$#"
 			count: 2
 			path: src/Sulu/Bundle/TagBundle/Tag/TagManager.php
 
 		-
-			message: "#^Parameter \\#1 \\$id of method Sulu\\\\Bundle\\\\TagBundle\\\\Entity\\\\TagRepository\\:\\:findTagById\\(\\) expects int, float\\|int\\<min, \\-1\\>\\|int\\<1, max\\> given\\.$#"
+			message: "#^Parameter \\#1 \\$id of method Sulu\\\\Bundle\\\\TagBundle\\\\Tag\\\\TagRepositoryInterface\\:\\:findTagById\\(\\) expects int, float\\|int\\<min, \\-1\\>\\|int\\<1, max\\> given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/TagBundle/Tag/TagManager.php
 
 		-
 			message: "#^Parameter \\#1 \\$srcTagIds \\(float\\|int\\) of method Sulu\\\\Bundle\\\\TagBundle\\\\Tag\\\\TagManager\\:\\:merge\\(\\) should be compatible with parameter \\$srcTagIds \\(array\\) of method Sulu\\\\Bundle\\\\TagBundle\\\\Tag\\\\TagManagerInterface\\:\\:merge\\(\\)$#"
-			count: 1
-			path: src/Sulu/Bundle/TagBundle/Tag/TagManager.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\TagBundle\\\\Tag\\\\TagManager\\:\\:\\$tagRepository \\(Sulu\\\\Bundle\\\\TagBundle\\\\Entity\\\\TagRepository\\) does not accept Sulu\\\\Bundle\\\\TagBundle\\\\Tag\\\\TagRepositoryInterface\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/TagBundle/Tag/TagManager.php
 
@@ -30926,21 +30751,6 @@ parameters:
 			path: src/Sulu/Bundle/TrashBundle/Application/TrashManager/TrashManager.php
 
 		-
-			message: "#^Property Sulu\\\\Bundle\\\\TrashBundle\\\\Application\\\\TrashManager\\\\TrashManager\\:\\:\\$removeTrashItemHandlerLocator with generic class Symfony\\\\Component\\\\DependencyInjection\\\\ServiceLocator does not specify its types\\: T$#"
-			count: 1
-			path: src/Sulu/Bundle/TrashBundle/Application/TrashManager/TrashManager.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\TrashBundle\\\\Application\\\\TrashManager\\\\TrashManager\\:\\:\\$restoreTrashItemHandlerLocator with generic class Symfony\\\\Component\\\\DependencyInjection\\\\ServiceLocator does not specify its types\\: T$#"
-			count: 1
-			path: src/Sulu/Bundle/TrashBundle/Application/TrashManager/TrashManager.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\TrashBundle\\\\Application\\\\TrashManager\\\\TrashManager\\:\\:\\$storeTrashItemHandlerLocator with generic class Symfony\\\\Component\\\\DependencyInjection\\\\ServiceLocator does not specify its types\\: T$#"
-			count: 1
-			path: src/Sulu/Bundle/TrashBundle/Application/TrashManager/TrashManager.php
-
-		-
 			message: "#^Call to method getUser\\(\\) on an unknown class Symfony\\\\Component\\\\Security\\\\Core\\\\Security\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/TrashBundle/Infrastructure/Doctrine/Repository/TrashItemRepository.php
@@ -31047,11 +30857,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\TrashBundle\\\\UserInterface\\\\Controller\\\\Admin\\\\TrashItemController\\:\\:getRequestParameter\\(\\) should return string but returns mixed\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/TrashBundle/UserInterface/Controller/Admin/TrashItemController.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\TrashBundle\\\\UserInterface\\\\Controller\\\\Admin\\\\TrashItemController\\:\\:\\$restoreConfigurationProviderLocator with generic class Symfony\\\\Component\\\\DependencyInjection\\\\ServiceLocator does not specify its types\\: T$#"
 			count: 1
 			path: src/Sulu/Bundle/TrashBundle/UserInterface/Controller/Admin/TrashItemController.php
 
@@ -33616,11 +33421,6 @@ parameters:
 			path: src/Sulu/Component/Cache/DataCache.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\Cache\\\\DataCache\\:\\:__construct\\(\\) has parameter \\$file with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Cache/DataCache.php
-
-		-
 			message: "#^Method Sulu\\\\Component\\\\Cache\\\\DataCache\\:\\:invalidate\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/Cache/DataCache.php
@@ -33644,11 +33444,6 @@ parameters:
 			message: "#^Parameter \\#1 \\$data of function unserialize expects string, string\\|false given\\.$#"
 			count: 1
 			path: src/Sulu/Component/Cache/DataCache.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Cache\\\\Memoize\\:\\:__construct\\(\\) has parameter \\$defaultLifeTime with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Cache/Memoize.php
 
 		-
 			message: "#^Method Sulu\\\\Component\\\\Cache\\\\Memoize\\:\\:memoize\\(\\) has no return type specified\\.$#"
@@ -41156,6 +40951,16 @@ parameters:
 			path: src/Sulu/Component/Content/Tests/Unit/SmartContent/Orm/BaseDataProviderTest.php
 
 		-
+			message: "#^Parameter \\#4 \\$security of class Sulu\\\\Component\\\\Content\\\\Tests\\\\Unit\\\\SmartContent\\\\Orm\\\\TestBaseDataProvier constructor expects Symfony\\\\Bundle\\\\SecurityBundle\\\\Security\\|Symfony\\\\Component\\\\Security\\\\Core\\\\Security\\|null, object given\\.$#"
+			count: 1
+			path: src/Sulu/Component/Content/Tests/Unit/SmartContent/Orm/BaseDataProviderTest.php
+
+		-
+			message: "#^Parameter \\#4 \\$security of class class@anonymous/src/Sulu/Component/Content/Tests/Unit/SmartContent/Orm/BaseDataProviderTest\\.php\\:360 constructor expects Symfony\\\\Bundle\\\\SecurityBundle\\\\Security\\|Symfony\\\\Component\\\\Security\\\\Core\\\\Security\\|null, object given\\.$#"
+			count: 1
+			path: src/Sulu/Component/Content/Tests/Unit/SmartContent/Orm/BaseDataProviderTest.php
+
+		-
 			message: "#^Call to method PHPUnit\\\\Framework\\\\Assert\\:\\:assertNull\\(\\) with string will always evaluate to false\\.$#"
 			count: 2
 			path: src/Sulu/Component/Content/Tests/Unit/SmartContent/PageDataProviderTest.php
@@ -41896,19 +41701,14 @@ parameters:
 			path: src/Sulu/Component/CustomUrl/Generator/Generator.php
 
 		-
-			message: "#^Parameter \\#3 \\$subject of function preg_replace expects array\\|string, string\\|null given\\.$#"
+			message: "#^Parameter \\#3 \\$domain of class Sulu\\\\Component\\\\CustomUrl\\\\Generator\\\\MissingDomainPartException constructor expects string, string\\|null given\\.$#"
 			count: 1
 			path: src/Sulu/Component/CustomUrl/Generator/Generator.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\CustomUrl\\\\Generator\\\\MissingDomainPartException\\:\\:__construct\\(\\) has parameter \\$baseDomain with no type specified\\.$#"
+			message: "#^Parameter \\#3 \\$subject of function preg_replace expects array\\|string, string\\|null given\\.$#"
 			count: 1
-			path: src/Sulu/Component/CustomUrl/Generator/MissingDomainPartException.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\CustomUrl\\\\Generator\\\\MissingDomainPartException\\:\\:__construct\\(\\) has parameter \\$domain with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/CustomUrl/Generator/MissingDomainPartException.php
+			path: src/Sulu/Component/CustomUrl/Generator/Generator.php
 
 		-
 			message: "#^Method Sulu\\\\Component\\\\CustomUrl\\\\Generator\\\\MissingDomainPartException\\:\\:__construct\\(\\) has parameter \\$domainParts with no value type specified in iterable type array\\.$#"
@@ -41921,17 +41721,7 @@ parameters:
 			path: src/Sulu/Component/CustomUrl/Generator/MissingDomainPartException.php
 
 		-
-			message: "#^Property Sulu\\\\Component\\\\CustomUrl\\\\Generator\\\\MissingDomainPartException\\:\\:\\$domainParts type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/CustomUrl/Generator/MissingDomainPartException.php
-
-		-
 			message: "#^Cannot call method getPortals\\(\\) on Sulu\\\\Component\\\\Webspace\\\\Webspace\\|null\\.$#"
-			count: 1
-			path: src/Sulu/Component/CustomUrl/Manager/CustomUrlManager.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\CustomUrl\\\\Manager\\\\CustomUrlManager\\:\\:__construct\\(\\) has parameter \\$environment with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/CustomUrl/Manager/CustomUrlManager.php
 
@@ -42036,6 +41826,11 @@ parameters:
 			path: src/Sulu/Component/CustomUrl/Manager/CustomUrlManager.php
 
 		-
+			message: "#^Parameter \\#1 \\$route of class Sulu\\\\Component\\\\CustomUrl\\\\Manager\\\\RouteNotRemovableException constructor expects string, string\\|false given\\.$#"
+			count: 1
+			path: src/Sulu/Component/CustomUrl/Manager/CustomUrlManager.php
+
+		-
 			message: "#^Strict comparison using \\=\\=\\= between null and Sulu\\\\Component\\\\CustomUrl\\\\Document\\\\RouteDocument will always evaluate to false\\.$#"
 			count: 1
 			path: src/Sulu/Component/CustomUrl/Manager/CustomUrlManager.php
@@ -42059,11 +41854,6 @@ parameters:
 			message: "#^Method Sulu\\\\Component\\\\CustomUrl\\\\Manager\\\\CustomUrlManagerInterface\\:\\:save\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Component/CustomUrl/Manager/CustomUrlManagerInterface.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\CustomUrl\\\\Manager\\\\RouteNotRemovableException\\:\\:__construct\\(\\) has parameter \\$route with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/CustomUrl/Manager/RouteNotRemovableException.php
 
 		-
 			message: "#^Method Sulu\\\\Component\\\\CustomUrl\\\\Manager\\\\TitleAlreadyExistsException\\:\\:__construct\\(\\) has parameter \\$title with no type specified\\.$#"
@@ -42126,11 +41916,6 @@ parameters:
 			path: src/Sulu/Component/CustomUrl/Repository/RowsIterator.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\CustomUrl\\\\Repository\\\\RowsIterator\\:\\:__construct\\(\\) has parameter \\$columns with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/CustomUrl/Repository/RowsIterator.php
-
-		-
 			message: "#^Method Sulu\\\\Component\\\\CustomUrl\\\\Repository\\\\RowsIterator\\:\\:__construct\\(\\) has parameter \\$iterator with no value type specified in iterable type Traversable\\.$#"
 			count: 1
 			path: src/Sulu/Component/CustomUrl/Repository/RowsIterator.php
@@ -42152,16 +41937,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Component\\\\CustomUrl\\\\Routing\\\\CustomUrlRouteProvider\\:\\:__construct\\(\\) has parameter \\$defaultOptions with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/CustomUrl/Routing/CustomUrlRouteProvider.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\CustomUrl\\\\Routing\\\\CustomUrlRouteProvider\\:\\:__construct\\(\\) has parameter \\$environment with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/CustomUrl/Routing/CustomUrlRouteProvider.php
-
-		-
-			message: "#^Property Sulu\\\\Component\\\\CustomUrl\\\\Routing\\\\CustomUrlRouteProvider\\:\\:\\$defaultOptions type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Component/CustomUrl/Routing/CustomUrlRouteProvider.php
 
@@ -42416,11 +42191,6 @@ parameters:
 			path: src/Sulu/Component/Doctrine/ReferencesOption.php
 
 		-
-			message: "#^Property Sulu\\\\Component\\\\Doctrine\\\\ReferencesOption\\:\\:\\$targetEntityMapping type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/Doctrine/ReferencesOption.php
-
-		-
 			message: "#^Static property Sulu\\\\Component\\\\Doctrine\\\\ReferencesOption\\:\\:\\$knownOptions is never read, only written\\.$#"
 			count: 1
 			path: src/Sulu/Component/Doctrine/ReferencesOption.php
@@ -42496,11 +42266,6 @@ parameters:
 			path: src/Sulu/Component/DocumentManager/Collection/ChildrenCollection.php
 
 		-
-			message: "#^Property Sulu\\\\Component\\\\DocumentManager\\\\Collection\\\\ChildrenCollection\\:\\:\\$options type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/Collection/ChildrenCollection.php
-
-		-
 			message: "#^Cannot call method getNode\\(\\) on mixed\\.$#"
 			count: 1
 			path: src/Sulu/Component/DocumentManager/Collection/QueryResultCollection.php
@@ -42516,17 +42281,7 @@ parameters:
 			path: src/Sulu/Component/DocumentManager/Collection/QueryResultCollection.php
 
 		-
-			message: "#^Property Sulu\\\\Component\\\\DocumentManager\\\\Collection\\\\QueryResultCollection\\:\\:\\$options type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/Collection/QueryResultCollection.php
-
-		-
 			message: "#^Cannot access offset string on Iterator\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/Collection/ReferrerCollection.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\DocumentManager\\\\Collection\\\\ReferrerCollection\\:\\:__construct\\(\\) has parameter \\$locale with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/DocumentManager/Collection/ReferrerCollection.php
 
@@ -43146,16 +42901,6 @@ parameters:
 			path: src/Sulu/Component/DocumentManager/MetadataFactoryInterface.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\DocumentManager\\\\NamespaceRegistry\\:\\:__construct\\(\\) has parameter \\$roleMap with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/NamespaceRegistry.php
-
-		-
-			message: "#^Property Sulu\\\\Component\\\\DocumentManager\\\\NamespaceRegistry\\:\\:\\$roleMap has no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/NamespaceRegistry.php
-
-		-
 			message: "#^Method Sulu\\\\Component\\\\DocumentManager\\\\NodeHelper\\:\\:move\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/DocumentManager/NodeHelper.php
@@ -43232,11 +42977,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Component\\\\DocumentManager\\\\PathSegmentRegistry\\:\\:__construct\\(\\) has parameter \\$pathSegments with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/PathSegmentRegistry.php
-
-		-
-			message: "#^Property Sulu\\\\Component\\\\DocumentManager\\\\PathSegmentRegistry\\:\\:\\$pathSegments type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Component/DocumentManager/PathSegmentRegistry.php
 
@@ -43362,11 +43102,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Component\\\\DocumentManager\\\\Query\\\\Query\\:\\:setPrimarySelector\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/Query/Query.php
-
-		-
-			message: "#^Property Sulu\\\\Component\\\\DocumentManager\\\\Query\\\\Query\\:\\:\\$options type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Component/DocumentManager/Query/Query.php
 
@@ -43756,7 +43491,7 @@ parameters:
 			path: src/Sulu/Component/DocumentManager/Subscriber/Behavior/VersionSubscriber.php
 
 		-
-			message: "#^Thrown exceptions in a catch block must bundle the previous exception \\(see throw statement line 231\\)\\. More info\\: http\\://bit\\.ly/bundleexception$#"
+			message: "#^Thrown exceptions in a catch block must bundle the previous exception \\(see throw statement line 221\\)\\. More info\\: http\\://bit\\.ly/bundleexception$#"
 			count: 1
 			path: src/Sulu/Component/DocumentManager/Subscriber/Behavior/VersionSubscriber.php
 
@@ -44301,11 +44036,6 @@ parameters:
 			path: src/Sulu/Component/DocumentManager/Tests/Unit/DocumentManagerTest.php
 
 		-
-			message: "#^Property Sulu\\\\Component\\\\DocumentManager\\\\Tests\\\\Unit\\\\TestDocumentManagerSubscriber\\:\\:\\$query has no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/Tests/Unit/DocumentManagerTest.php
-
-		-
 			message: "#^Property Sulu\\\\Component\\\\DocumentManager\\\\Tests\\\\Unit\\\\TestDocumentManagerSubscriber\\:\\:\\$queryCreate has no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/DocumentManager/Tests/Unit/DocumentManagerTest.php
@@ -44347,11 +44077,6 @@ parameters:
 
 		-
 			message: "#^Property Sulu\\\\Component\\\\DocumentManager\\\\Tests\\\\Unit\\\\TestDocumentManagerSubscriber\\:\\:\\$restore has no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/Tests/Unit/DocumentManagerTest.php
-
-		-
-			message: "#^Property Sulu\\\\Component\\\\DocumentManager\\\\Tests\\\\Unit\\\\TestDocumentManagerSubscriber\\:\\:\\$resultCollection has no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/DocumentManager/Tests/Unit/DocumentManagerTest.php
 

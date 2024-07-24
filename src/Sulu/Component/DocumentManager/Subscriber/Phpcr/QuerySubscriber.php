@@ -27,20 +27,10 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class QuerySubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var SessionInterface
-     */
-    private $session;
-
-    /**
-     * @var EventDispatcherInterface
-     */
-    private $eventDispatcher;
-
-    public function __construct(SessionInterface $session, EventDispatcherInterface $eventDispatcher)
-    {
-        $this->session = $session;
-        $this->eventDispatcher = $eventDispatcher;
+    public function __construct(
+        private SessionInterface $session,
+        private EventDispatcherInterface $eventDispatcher,
+    ) {
     }
 
     public static function getSubscribedEvents()

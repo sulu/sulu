@@ -39,63 +39,18 @@ use Symfony\Component\PropertyAccess\PropertyAccess;
 class CustomUrlManager implements CustomUrlManagerInterface
 {
     /**
-     * @var DocumentManagerInterface
+     * @param string $environment
      */
-    private $documentManager;
-
-    /**
-     * @var DocumentInspector
-     */
-    protected $documentInspector;
-
-    /**
-     * @var CustomUrlRepository
-     */
-    private $customUrlRepository;
-
-    /**
-     * @var MetadataFactoryInterface
-     */
-    private $metadataFactory;
-
-    /**
-     * @var PathBuilder
-     */
-    private $pathBuilder;
-
-    /**
-     * @var WebspaceManagerInterface
-     */
-    private $webspaceManager;
-
-    /**
-     * @var string
-     */
-    private $environment;
-
-    /**
-     * @var DocumentDomainEventCollectorInterface
-     */
-    private $documentDomainEventCollector;
-
     public function __construct(
-        DocumentManagerInterface $documentManager,
-        DocumentInspector $documentInspector,
-        CustomUrlRepository $customUrlRepository,
-        MetadataFactoryInterface $metadataFactory,
-        PathBuilder $pathBuilder,
-        WebspaceManagerInterface $webspaceManager,
-        $environment,
-        DocumentDomainEventCollectorInterface $documentDomainEventCollector
+        private DocumentManagerInterface $documentManager,
+        protected DocumentInspector $documentInspector,
+        private CustomUrlRepository $customUrlRepository,
+        private MetadataFactoryInterface $metadataFactory,
+        private PathBuilder $pathBuilder,
+        private WebspaceManagerInterface $webspaceManager,
+        private $environment,
+        private DocumentDomainEventCollectorInterface $documentDomainEventCollector
     ) {
-        $this->documentManager = $documentManager;
-        $this->documentInspector = $documentInspector;
-        $this->customUrlRepository = $customUrlRepository;
-        $this->metadataFactory = $metadataFactory;
-        $this->pathBuilder = $pathBuilder;
-        $this->webspaceManager = $webspaceManager;
-        $this->environment = $environment;
-        $this->documentDomainEventCollector = $documentDomainEventCollector;
     }
 
     public function create($webspaceKey, array $data)

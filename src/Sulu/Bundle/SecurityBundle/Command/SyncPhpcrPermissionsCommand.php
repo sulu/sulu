@@ -28,30 +28,11 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 #[AsCommand(name: 'sulu:security:sync-phpcr-permissions', description: 'Sync existing object permissions from phpcr into database to make them usable in database queries')]
 class SyncPhpcrPermissionsCommand extends Command
 {
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
-
-    /**
-     * @var DocumentManagerInterface
-     */
-    private $documentManager;
-
-    /**
-     * @var DoctrineAccessControlProvider
-     */
-    private $doctrineAccessControlProvider;
-
     public function __construct(
-        EntityManagerInterface $entityManager,
-        DocumentManagerInterface $documentManager,
-        DoctrineAccessControlProvider $doctrineAccessControlProvider
+        private EntityManagerInterface $entityManager,
+        private DocumentManagerInterface $documentManager,
+        private DoctrineAccessControlProvider $doctrineAccessControlProvider
     ) {
-        $this->entityManager = $entityManager;
-        $this->documentManager = $documentManager;
-        $this->doctrineAccessControlProvider = $doctrineAccessControlProvider;
-
         parent::__construct();
     }
 

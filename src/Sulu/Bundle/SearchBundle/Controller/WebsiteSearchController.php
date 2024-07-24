@@ -29,50 +29,16 @@ class WebsiteSearchController
     use RequestParametersTrait;
 
     /**
-     * @var SearchManagerInterface
+     * @param string[] $indexes
      */
-    private $searchManager;
-
-    /**
-     * @var RequestAnalyzerInterface
-     */
-    private $requestAnalyzer;
-
-    /**
-     * @var ParameterResolverInterface
-     */
-    private $parameterResolver;
-
-    /**
-     * @var Environment
-     */
-    private $twig;
-
-    /**
-     * @var string[]
-     */
-    private $indexes;
-
-    /**
-     * @var TemplateAttributeResolverInterface|null
-     */
-    private $templateAttributeResolver;
-
     public function __construct(
-        SearchManagerInterface $searchManager,
-        RequestAnalyzerInterface $requestAnalyzer,
-        ParameterResolverInterface $parameterResolver,
-        Environment $twig,
-        array $indexes = [],
-        ?TemplateAttributeResolverInterface $templateAttributeResolver = null
+        private SearchManagerInterface $searchManager,
+        private RequestAnalyzerInterface $requestAnalyzer,
+        private ParameterResolverInterface $parameterResolver,
+        private Environment $twig,
+        private array $indexes = [],
+        private ?TemplateAttributeResolverInterface $templateAttributeResolver = null
     ) {
-        $this->searchManager = $searchManager;
-        $this->requestAnalyzer = $requestAnalyzer;
-        $this->parameterResolver = $parameterResolver;
-        $this->twig = $twig;
-        $this->indexes = $indexes;
-        $this->templateAttributeResolver = $templateAttributeResolver;
-
         if (null === $this->templateAttributeResolver) {
             @trigger_deprecation(
                 'sulu/sulu',

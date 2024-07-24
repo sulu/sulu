@@ -19,18 +19,10 @@ use Sulu\Component\Rest\Exception\TranslationErrorMessageExceptionInterface;
 class TagAlreadyExistsException extends \Exception implements TranslationErrorMessageExceptionInterface
 {
     /**
-     * The id of the tag, which was not found.
-     *
-     * @var string
-     */
-    protected $name;
-
-    /**
      * @param string $name The name of the tag which already exists
      */
-    public function __construct($name, ?\Throwable $previous = null)
+    public function __construct(protected $name, ?\Throwable $previous = null)
     {
-        $this->name = $name;
         $message = 'The tag with the name "' . $this->name . '" already exists.';
         parent::__construct($message, 0, $previous);
     }

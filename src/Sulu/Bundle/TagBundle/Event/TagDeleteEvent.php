@@ -22,15 +22,7 @@ use Symfony\Contracts\EventDispatcher\Event;
  */
 class TagDeleteEvent extends Event
 {
-    /**
-     * @var TagInterface
-     */
-    protected $tag;
-
-    /**
-     * @param TagInterface $tag The deleted tag
-     */
-    public function __construct(TagInterface $tag)
+    public function __construct(protected TagInterface $tag)
     {
         @trigger_deprecation(
             'sulu/sulu',
@@ -39,8 +31,6 @@ class TagDeleteEvent extends Event
             TagDeleteEvent::class,
             TagRemovedEvent::class
         );
-
-        $this->tag = $tag;
     }
 
     /**

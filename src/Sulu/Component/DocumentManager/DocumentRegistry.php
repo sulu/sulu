@@ -46,11 +46,6 @@ class DocumentRegistry
     private $documentLocaleMap = [];
 
     /**
-     * @var string
-     */
-    private $defaultLocale;
-
-    /**
      * @var array
      */
     private $hydrationState = [];
@@ -58,9 +53,8 @@ class DocumentRegistry
     /**
      * @param string $defaultLocale
      */
-    public function __construct($defaultLocale)
+    public function __construct(private $defaultLocale)
     {
-        $this->defaultLocale = $defaultLocale;
     }
 
     /**

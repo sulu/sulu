@@ -15,15 +15,8 @@ namespace Sulu\Bundle\TrashBundle\Domain\Exception;
 
 class RestoreTrashItemHandlerNotFoundException extends \Exception
 {
-    /**
-     * @var string
-     */
-    private $resourceKey;
-
-    public function __construct(string $resourceKey)
+    public function __construct(private string $resourceKey)
     {
-        $this->resourceKey = $resourceKey;
-
         parent::__construct(
             \sprintf('RestoreTrashItemHandler for "%s" not found.', $this->resourceKey)
         );

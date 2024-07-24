@@ -19,17 +19,11 @@ use Sulu\Component\Rest\Exception\TranslationErrorMessageExceptionInterface;
 class RoleKeyAlreadyExistsException extends \Exception implements TranslationErrorMessageExceptionInterface
 {
     /**
-     * @var string
-     */
-    private $key;
-
-    /**
      * @param string $key
      */
-    public function __construct($key, ?\Throwable $previous = null)
+    public function __construct(private $key, ?\Throwable $previous = null)
     {
-        $this->key = $key;
-        parent::__construct(\sprintf('Role with key "%s" already exists', $key), 1101, $previous);
+        parent::__construct(\sprintf('Role with key "%s" already exists', $this->key), 1101, $previous);
     }
 
     /**

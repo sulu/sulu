@@ -24,14 +24,8 @@ use Symfony\Component\Security\Http\Event\LogoutEvent;
  */
 final class LogoutEventSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var UrlGeneratorInterface
-     */
-    private $urlGenerator;
-
-    public function __construct(UrlGeneratorInterface $urlGenerator)
+    public function __construct(private UrlGeneratorInterface $urlGenerator)
     {
-        $this->urlGenerator = $urlGenerator;
     }
 
     public function onLogout(LogoutEvent $logoutEvent): void

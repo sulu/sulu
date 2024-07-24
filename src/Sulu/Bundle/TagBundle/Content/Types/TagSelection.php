@@ -19,16 +19,9 @@ use Sulu\Component\Content\ContentTypeExportInterface;
 
 class TagSelection extends ComplexContentType implements ContentTypeExportInterface
 {
-    /**
-     * Responsible for saving the tags in the database.
-     *
-     * @var TagManagerInterface
-     */
-    private $tagManager;
-
-    public function __construct(TagManagerInterface $tagManager)
-    {
-        $this->tagManager = $tagManager;
+    public function __construct(
+        private TagManagerInterface $tagManager
+    ) {
     }
 
     public function read(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)

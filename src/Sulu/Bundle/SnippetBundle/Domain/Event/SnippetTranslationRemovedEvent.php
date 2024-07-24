@@ -17,24 +17,11 @@ use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
 
 class SnippetTranslationRemovedEvent extends DomainEvent
 {
-    /**
-     * @var SnippetDocument
-     */
-    private $snippetDocument;
-
-    /**
-     * @var string
-     */
-    private $locale;
-
     public function __construct(
-        SnippetDocument $snippetDocument,
-        string $locale
+        private SnippetDocument $snippetDocument,
+        private string $locale
     ) {
         parent::__construct();
-
-        $this->snippetDocument = $snippetDocument;
-        $this->locale = $locale;
     }
 
     public function getSnippetDocument(): SnippetDocument

@@ -16,20 +16,18 @@ use PHPCR\NodeInterface;
 class RestoreEvent extends AbstractMappingEvent
 {
     /**
-     * @var string
-     */
-    private $version;
-
-    /**
      * @param object $document
      * @param string $locale
      * @param string $version
      */
-    public function __construct($document, $locale, $version, array $options = [])
-    {
+    public function __construct(
+        $document,
+        $locale,
+        private $version,
+        array $options = [],
+    ) {
         $this->document = $document;
         $this->locale = $locale;
-        $this->version = $version;
         $this->options = $options;
     }
 
