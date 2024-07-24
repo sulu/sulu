@@ -23,16 +23,9 @@ class SnippetExportCommand extends Command
 {
     protected static $defaultName = 'sulu:snippet:export';
 
-    /**
-     * @var SnippetExportInterface
-     */
-    private $snippetExporter;
-
-    public function __construct(SnippetExportInterface $snippetExporter)
+    public function __construct(private SnippetExportInterface $snippetExporter)
     {
         parent::__construct();
-
-        $this->snippetExporter = $snippetExporter;
     }
 
     public function configure()

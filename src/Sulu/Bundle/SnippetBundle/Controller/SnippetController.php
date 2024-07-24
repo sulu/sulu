@@ -48,99 +48,21 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
 {
     use RequestParametersTrait;
 
-    /**
-     * @var ContentMapper
-     */
-    private $contentMapper;
-
-    /**
-     * @var StructureManagerInterface
-     */
-    private $structureManager;
-
-    /**
-     * @var ViewHandler
-     */
-    private $viewHandler;
-
-    /**
-     * @var SnippetRepository
-     */
-    private $snippetRepository;
-
-    /**
-     * @var TokenStorageInterface
-     */
-    private $tokenStorage;
-
-    /**
-     * @var UrlGeneratorInterface
-     */
-    private $urlGenerator;
-
-    /**
-     * @var DefaultSnippetManagerInterface
-     */
-    private $defaultSnippetManager;
-
-    /**
-     * @var DocumentManagerInterface
-     */
-    private $documentManager;
-
-    /**
-     * @var FormFactory
-     */
-    private $formFactory;
-
-    /**
-     * @var RequestHashChecker
-     */
-    private $requestHashChecker;
-
-    /**
-     * @var ListRestHelper
-     */
-    private $listRestHelper;
-
-    /**
-     * @var MetadataFactoryInterface
-     */
-    private $metadataFactory;
-
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
     public function __construct(
-        ViewHandler $viewHandler,
-        ContentMapper $contentMapper,
-        StructureManagerInterface $structureManager,
-        SnippetRepository $snippetRepository,
-        TokenStorageInterface $tokenStorage,
-        UrlGeneratorInterface $urlGenerator,
-        DefaultSnippetManagerInterface $defaultSnippetManager,
-        DocumentManagerInterface $documentManager,
-        FormFactory $formFactory,
-        RequestHashChecker $requestHashChecker,
-        ListRestHelper $listRestHelper,
-        MetadataFactoryInterface $metadataFactory,
-        TranslatorInterface $translator
+        private ViewHandler $viewHandler,
+        private ContentMapper $contentMapper,
+        private StructureManagerInterface $structureManager,
+        private SnippetRepository $snippetRepository,
+        private TokenStorageInterface $tokenStorage,
+        private UrlGeneratorInterface $urlGenerator,
+        private DefaultSnippetManagerInterface $defaultSnippetManager,
+        private DocumentManagerInterface $documentManager,
+        private FormFactory $formFactory,
+        private RequestHashChecker $requestHashChecker,
+        private ListRestHelper $listRestHelper,
+        private MetadataFactoryInterface $metadataFactory,
+        private TranslatorInterface $translator,
     ) {
-        $this->viewHandler = $viewHandler;
-        $this->contentMapper = $contentMapper;
-        $this->structureManager = $structureManager;
-        $this->snippetRepository = $snippetRepository;
-        $this->tokenStorage = $tokenStorage;
-        $this->urlGenerator = $urlGenerator;
-        $this->defaultSnippetManager = $defaultSnippetManager;
-        $this->documentManager = $documentManager;
-        $this->formFactory = $formFactory;
-        $this->requestHashChecker = $requestHashChecker;
-        $this->listRestHelper = $listRestHelper;
-        $this->metadataFactory = $metadataFactory;
-        $this->translator = $translator;
     }
 
     /**

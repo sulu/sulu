@@ -29,36 +29,9 @@ class SnippetLocaleCopyCommand extends Command
     protected static $defaultName = 'sulu:snippet:locale-copy';
 
     /**
-     * The namespace for languages.
-     *
-     * @var string
-     */
-    private $languageNamespace;
-
-    /**
-     * @var SnippetRepository
-     */
-    private $snippetRepository;
-
-    /**
-     * @var ContentMapperInterface
-     */
-    private $contentMapper;
-
-    /**
-     * @var SessionInterface
-     */
-    private $session;
-
-    /**
      * @var QueryManager
      */
     private $queryManager;
-
-    /**
-     * @var DocumentManagerInterface
-     */
-    private $documentManager;
 
     /**
      * @var OutputInterface
@@ -66,19 +39,16 @@ class SnippetLocaleCopyCommand extends Command
     private $output;
 
     public function __construct(
-        SnippetRepository $snippetRepository,
-        ContentMapperInterface $contentMapper,
-        SessionInterface $session,
-        DocumentManagerInterface $documentManager,
-        string $languageNamespace
+        private SnippetRepository $snippetRepository,
+        private ContentMapperInterface $contentMapper,
+        private SessionInterface $session,
+        private DocumentManagerInterface $documentManager,
+        /**
+         * The namespace for languages.
+         */
+        private string $languageNamespace
     ) {
         parent::__construct();
-
-        $this->languageNamespace = $languageNamespace;
-        $this->snippetRepository = $snippetRepository;
-        $this->contentMapper = $contentMapper;
-        $this->session = $session;
-        $this->documentManager = $documentManager;
     }
 
     public function configure()

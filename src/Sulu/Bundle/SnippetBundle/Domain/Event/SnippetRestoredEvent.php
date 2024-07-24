@@ -18,26 +18,13 @@ use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
 class SnippetRestoredEvent extends DomainEvent
 {
     /**
-     * @var SnippetDocument
-     */
-    private $snippetDocument;
-
-    /**
-     * @var mixed[]
-     */
-    private $payload;
-
-    /**
      * @param mixed[] $payload
      */
     public function __construct(
-        SnippetDocument $snippetDocument,
-        array $payload
+        private SnippetDocument $snippetDocument,
+        private array $payload
     ) {
         parent::__construct();
-
-        $this->snippetDocument = $snippetDocument;
-        $this->payload = $payload;
     }
 
     public function getsnippetDocument(): SnippetDocument

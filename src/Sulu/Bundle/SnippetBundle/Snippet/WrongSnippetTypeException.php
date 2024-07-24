@@ -19,29 +19,14 @@ use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
 class WrongSnippetTypeException extends \Exception
 {
     /**
-     * @var string
+     * @param string $expected
+     * @param string $actual
      */
-    private $expected;
-
-    /**
-     * @var string
-     */
-    private $actual;
-
-    /**
-     * @var SnippetDocument
-     */
-    private $document;
-
-    public function __construct($actual, $expected, SnippetDocument $document)
+    public function __construct(private $actual, private $expected, private SnippetDocument $document)
     {
         parent::__construct(
             \sprintf('Wrong snippet type were detected (actual: "%s", expected: "%s").', $actual, $expected)
         );
-
-        $this->actual = $actual;
-        $this->expected = $expected;
-        $this->document = $document;
     }
 
     /**

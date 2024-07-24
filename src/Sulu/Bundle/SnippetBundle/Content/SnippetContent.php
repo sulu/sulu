@@ -29,38 +29,14 @@ use Sulu\Component\Content\PreResolvableContentTypeInterface;
 class SnippetContent extends ComplexContentType implements ContentTypeExportInterface, PreResolvableContentTypeInterface
 {
     /**
-     * @var SnippetResolverInterface
-     */
-    private $snippetResolver;
-
-    /**
-     * @var DefaultSnippetManagerInterface
-     */
-    private $defaultSnippetManager;
-
-    /**
-     * @var ReferenceStoreInterface
-     */
-    private $referenceStore;
-
-    /**
-     * @var bool
-     */
-    protected $defaultEnabled;
-
-    /**
-     * @param true $defaultEnabled
+     * @param bool $defaultEnabled
      */
     public function __construct(
-        DefaultSnippetManagerInterface $defaultSnippetManager,
-        SnippetResolverInterface $snippetResolver,
-        ReferenceStoreInterface $referenceStore,
-        $defaultEnabled
+        private DefaultSnippetManagerInterface $defaultSnippetManager,
+        private SnippetResolverInterface $snippetResolver,
+        private ReferenceStoreInterface $referenceStore,
+        protected $defaultEnabled,
     ) {
-        $this->snippetResolver = $snippetResolver;
-        $this->defaultSnippetManager = $defaultSnippetManager;
-        $this->referenceStore = $referenceStore;
-        $this->defaultEnabled = $defaultEnabled;
     }
 
     public function read(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)

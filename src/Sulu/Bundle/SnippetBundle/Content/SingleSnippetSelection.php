@@ -22,30 +22,11 @@ use Sulu\Component\Content\SimpleContentType;
 
 class SingleSnippetSelection extends SimpleContentType implements PreResolvableContentTypeInterface
 {
-    /**
-     * @var SnippetResolverInterface
-     */
-    private $snippetResolver;
-
-    /**
-     * @var DefaultSnippetManagerInterface
-     */
-    private $defaultSnippetManager;
-
-    /**
-     * @var ReferenceStoreInterface
-     */
-    private $snippetReferenceStore;
-
     public function __construct(
-        SnippetResolverInterface $snippetResolver,
-        DefaultSnippetManagerInterface $defaultSnippetManager,
-        ReferenceStoreInterface $snippetReferenceStore
+        private SnippetResolverInterface $snippetResolver,
+        private DefaultSnippetManagerInterface $defaultSnippetManager,
+        private ReferenceStoreInterface $snippetReferenceStore
     ) {
-        $this->snippetResolver = $snippetResolver;
-        $this->defaultSnippetManager = $defaultSnippetManager;
-        $this->snippetReferenceStore = $snippetReferenceStore;
-
         parent::__construct('SingleSnippetSelection', null);
     }
 
