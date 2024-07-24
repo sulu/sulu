@@ -36,43 +36,13 @@ final class TagTrashItemHandler implements
     RestoreTrashItemHandlerInterface,
     RestoreConfigurationProviderInterface
 {
-    /**
-     * @var TrashItemRepositoryInterface
-     */
-    private $trashItemRepository;
-
-    /**
-     * @var TagRepositoryInterface
-     */
-    private $tagRepository;
-
-    /**
-     * @var DoctrineRestoreHelperInterface
-     */
-    private $doctrineRestoreHelper;
-
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
-
-    /**
-     * @var DomainEventCollectorInterface
-     */
-    private $domainEventCollector;
-
     public function __construct(
-        TrashItemRepositoryInterface $trashItemRepository,
-        TagRepositoryInterface $tagRepository,
-        DoctrineRestoreHelperInterface $doctrineRestoreHelper,
-        EntityManagerInterface $entityManager,
-        DomainEventCollectorInterface $domainEventCollector
+        private TrashItemRepositoryInterface $trashItemRepository,
+        private TagRepositoryInterface $tagRepository,
+        private DoctrineRestoreHelperInterface $doctrineRestoreHelper,
+        private EntityManagerInterface $entityManager,
+        private DomainEventCollectorInterface $domainEventCollector,
     ) {
-        $this->trashItemRepository = $trashItemRepository;
-        $this->tagRepository = $tagRepository;
-        $this->doctrineRestoreHelper = $doctrineRestoreHelper;
-        $this->entityManager = $entityManager;
-        $this->domainEventCollector = $domainEventCollector;
     }
 
     /**
