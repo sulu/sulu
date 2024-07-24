@@ -14,16 +14,10 @@ namespace Sulu\Component\DocumentManager\Event;
 abstract class AbstractDocumentEvent extends AbstractEvent
 {
     /**
-     * @var object
-     */
-    private $document;
-
-    /**
      * @param object $document
      */
-    public function __construct($document)
+    public function __construct(private $document)
     {
-        $this->document = $document;
     }
 
     /**

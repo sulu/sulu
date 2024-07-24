@@ -23,14 +23,8 @@ class Generator implements GeneratorInterface
 
     public const POSTFIX_REGEX = '/^.*\/.*\*.*$/';
 
-    /**
-     * @var ReplacerInterface
-     */
-    private $urlReplacer;
-
-    public function __construct(ReplacerInterface $urlReplacer)
+    public function __construct(private ReplacerInterface $urlReplacer)
     {
-        $this->urlReplacer = $urlReplacer;
     }
 
     public function generate($baseDomain, $domainParts, ?Localization $locale = null)

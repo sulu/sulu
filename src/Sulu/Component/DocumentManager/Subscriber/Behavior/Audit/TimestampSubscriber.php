@@ -33,20 +33,10 @@ class TimestampSubscriber implements EventSubscriberInterface
 
     public const CHANGED = 'changed';
 
-    /**
-     * @var PropertyEncoder
-     */
-    private $propertyEncoder;
-
-    /**
-     * @var DocumentInspector
-     */
-    private $documentInspector;
-
-    public function __construct(PropertyEncoder $propertyEncoder, DocumentInspector $documentInspector)
-    {
-        $this->propertyEncoder = $propertyEncoder;
-        $this->documentInspector = $documentInspector;
+    public function __construct(
+        private PropertyEncoder $propertyEncoder,
+        private DocumentInspector $documentInspector,
+    ) {
     }
 
     public static function getSubscribedEvents()

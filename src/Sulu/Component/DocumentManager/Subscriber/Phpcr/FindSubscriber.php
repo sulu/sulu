@@ -27,29 +27,11 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class FindSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var MetadataFactoryInterface
-     */
-    private $metadataFactory;
-
-    /**
-     * @var NodeManager
-     */
-    private $nodeManager;
-
-    /**
-     * @var EventDispatcherInterface
-     */
-    private $eventDispatcher;
-
     public function __construct(
-        MetadataFactoryInterface $metadataFactory,
-        NodeManager $nodeManager,
-        EventDispatcherInterface $eventDispatcher
+        private MetadataFactoryInterface $metadataFactory,
+        private NodeManager $nodeManager,
+        private EventDispatcherInterface $eventDispatcher,
     ) {
-        $this->metadataFactory = $metadataFactory;
-        $this->nodeManager = $nodeManager;
-        $this->eventDispatcher = $eventDispatcher;
     }
 
     public static function getSubscribedEvents()

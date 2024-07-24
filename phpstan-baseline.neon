@@ -33816,11 +33816,6 @@ parameters:
 			path: src/Sulu/Component/Cache/DataCache.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\Cache\\\\DataCache\\:\\:__construct\\(\\) has parameter \\$file with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Cache/DataCache.php
-
-		-
 			message: "#^Method Sulu\\\\Component\\\\Cache\\\\DataCache\\:\\:invalidate\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/Cache/DataCache.php
@@ -33844,11 +33839,6 @@ parameters:
 			message: "#^Parameter \\#1 \\$data of function unserialize expects string, string\\|false given\\.$#"
 			count: 1
 			path: src/Sulu/Component/Cache/DataCache.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Cache\\\\Memoize\\:\\:__construct\\(\\) has parameter \\$defaultLifeTime with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Cache/Memoize.php
 
 		-
 			message: "#^Method Sulu\\\\Component\\\\Cache\\\\Memoize\\:\\:memoize\\(\\) has no return type specified\\.$#"
@@ -42126,19 +42116,14 @@ parameters:
 			path: src/Sulu/Component/CustomUrl/Generator/Generator.php
 
 		-
-			message: "#^Parameter \\#3 \\$subject of function preg_replace expects array\\|string, string\\|null given\\.$#"
+			message: "#^Parameter \\#3 \\$domain of class Sulu\\\\Component\\\\CustomUrl\\\\Generator\\\\MissingDomainPartException constructor expects string, string\\|null given\\.$#"
 			count: 1
 			path: src/Sulu/Component/CustomUrl/Generator/Generator.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\CustomUrl\\\\Generator\\\\MissingDomainPartException\\:\\:__construct\\(\\) has parameter \\$baseDomain with no type specified\\.$#"
+			message: "#^Parameter \\#3 \\$subject of function preg_replace expects array\\|string, string\\|null given\\.$#"
 			count: 1
-			path: src/Sulu/Component/CustomUrl/Generator/MissingDomainPartException.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\CustomUrl\\\\Generator\\\\MissingDomainPartException\\:\\:__construct\\(\\) has parameter \\$domain with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/CustomUrl/Generator/MissingDomainPartException.php
+			path: src/Sulu/Component/CustomUrl/Generator/Generator.php
 
 		-
 			message: "#^Method Sulu\\\\Component\\\\CustomUrl\\\\Generator\\\\MissingDomainPartException\\:\\:__construct\\(\\) has parameter \\$domainParts with no value type specified in iterable type array\\.$#"
@@ -42151,17 +42136,7 @@ parameters:
 			path: src/Sulu/Component/CustomUrl/Generator/MissingDomainPartException.php
 
 		-
-			message: "#^Property Sulu\\\\Component\\\\CustomUrl\\\\Generator\\\\MissingDomainPartException\\:\\:\\$domainParts type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/CustomUrl/Generator/MissingDomainPartException.php
-
-		-
 			message: "#^Cannot call method getPortals\\(\\) on Sulu\\\\Component\\\\Webspace\\\\Webspace\\|null\\.$#"
-			count: 1
-			path: src/Sulu/Component/CustomUrl/Manager/CustomUrlManager.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\CustomUrl\\\\Manager\\\\CustomUrlManager\\:\\:__construct\\(\\) has parameter \\$environment with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/CustomUrl/Manager/CustomUrlManager.php
 
@@ -42291,11 +42266,6 @@ parameters:
 			path: src/Sulu/Component/CustomUrl/Manager/CustomUrlManagerInterface.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\CustomUrl\\\\Manager\\\\RouteNotRemovableException\\:\\:__construct\\(\\) has parameter \\$route with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/CustomUrl/Manager/RouteNotRemovableException.php
-
-		-
 			message: "#^Method Sulu\\\\Component\\\\CustomUrl\\\\Manager\\\\TitleAlreadyExistsException\\:\\:__construct\\(\\) has parameter \\$title with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/CustomUrl/Manager/TitleAlreadyExistsException.php
@@ -42371,11 +42341,6 @@ parameters:
 			path: src/Sulu/Component/CustomUrl/Repository/RowsIterator.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\CustomUrl\\\\Repository\\\\RowsIterator\\:\\:__construct\\(\\) has parameter \\$columns with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/CustomUrl/Repository/RowsIterator.php
-
-		-
 			message: "#^Method Sulu\\\\Component\\\\CustomUrl\\\\Repository\\\\RowsIterator\\:\\:__construct\\(\\) has parameter \\$iterator with no value type specified in iterable type Traversable\\.$#"
 			count: 1
 			path: src/Sulu/Component/CustomUrl/Repository/RowsIterator.php
@@ -42397,16 +42362,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Component\\\\CustomUrl\\\\Routing\\\\CustomUrlRouteProvider\\:\\:__construct\\(\\) has parameter \\$defaultOptions with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/CustomUrl/Routing/CustomUrlRouteProvider.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\CustomUrl\\\\Routing\\\\CustomUrlRouteProvider\\:\\:__construct\\(\\) has parameter \\$environment with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/CustomUrl/Routing/CustomUrlRouteProvider.php
-
-		-
-			message: "#^Property Sulu\\\\Component\\\\CustomUrl\\\\Routing\\\\CustomUrlRouteProvider\\:\\:\\$defaultOptions type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Component/CustomUrl/Routing/CustomUrlRouteProvider.php
 
@@ -42661,11 +42616,6 @@ parameters:
 			path: src/Sulu/Component/Doctrine/ReferencesOption.php
 
 		-
-			message: "#^Property Sulu\\\\Component\\\\Doctrine\\\\ReferencesOption\\:\\:\\$targetEntityMapping type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/Doctrine/ReferencesOption.php
-
-		-
 			message: "#^Static property Sulu\\\\Component\\\\Doctrine\\\\ReferencesOption\\:\\:\\$knownOptions is never read, only written\\.$#"
 			count: 1
 			path: src/Sulu/Component/Doctrine/ReferencesOption.php
@@ -42741,11 +42691,6 @@ parameters:
 			path: src/Sulu/Component/DocumentManager/Collection/ChildrenCollection.php
 
 		-
-			message: "#^Property Sulu\\\\Component\\\\DocumentManager\\\\Collection\\\\ChildrenCollection\\:\\:\\$options type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/Collection/ChildrenCollection.php
-
-		-
 			message: "#^Cannot call method getNode\\(\\) on mixed\\.$#"
 			count: 1
 			path: src/Sulu/Component/DocumentManager/Collection/QueryResultCollection.php
@@ -42761,17 +42706,7 @@ parameters:
 			path: src/Sulu/Component/DocumentManager/Collection/QueryResultCollection.php
 
 		-
-			message: "#^Property Sulu\\\\Component\\\\DocumentManager\\\\Collection\\\\QueryResultCollection\\:\\:\\$options type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/Collection/QueryResultCollection.php
-
-		-
 			message: "#^Cannot access offset string on Iterator\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/Collection/ReferrerCollection.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\DocumentManager\\\\Collection\\\\ReferrerCollection\\:\\:__construct\\(\\) has parameter \\$locale with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/DocumentManager/Collection/ReferrerCollection.php
 
@@ -43391,16 +43326,6 @@ parameters:
 			path: src/Sulu/Component/DocumentManager/MetadataFactoryInterface.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\DocumentManager\\\\NamespaceRegistry\\:\\:__construct\\(\\) has parameter \\$roleMap with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/NamespaceRegistry.php
-
-		-
-			message: "#^Property Sulu\\\\Component\\\\DocumentManager\\\\NamespaceRegistry\\:\\:\\$roleMap has no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/NamespaceRegistry.php
-
-		-
 			message: "#^Method Sulu\\\\Component\\\\DocumentManager\\\\NodeHelper\\:\\:move\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/DocumentManager/NodeHelper.php
@@ -43477,11 +43402,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Component\\\\DocumentManager\\\\PathSegmentRegistry\\:\\:__construct\\(\\) has parameter \\$pathSegments with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/PathSegmentRegistry.php
-
-		-
-			message: "#^Property Sulu\\\\Component\\\\DocumentManager\\\\PathSegmentRegistry\\:\\:\\$pathSegments type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Component/DocumentManager/PathSegmentRegistry.php
 
@@ -43607,11 +43527,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Component\\\\DocumentManager\\\\Query\\\\Query\\:\\:setPrimarySelector\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/Query/Query.php
-
-		-
-			message: "#^Property Sulu\\\\Component\\\\DocumentManager\\\\Query\\\\Query\\:\\:\\$options type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Component/DocumentManager/Query/Query.php
 
@@ -44001,7 +43916,7 @@ parameters:
 			path: src/Sulu/Component/DocumentManager/Subscriber/Behavior/VersionSubscriber.php
 
 		-
-			message: "#^Thrown exceptions in a catch block must bundle the previous exception \\(see throw statement line 231\\)\\. More info\\: http\\://bit\\.ly/bundleexception$#"
+			message: "#^Thrown exceptions in a catch block must bundle the previous exception \\(see throw statement line 221\\)\\. More info\\: http\\://bit\\.ly/bundleexception$#"
 			count: 1
 			path: src/Sulu/Component/DocumentManager/Subscriber/Behavior/VersionSubscriber.php
 
@@ -44546,11 +44461,6 @@ parameters:
 			path: src/Sulu/Component/DocumentManager/Tests/Unit/DocumentManagerTest.php
 
 		-
-			message: "#^Property Sulu\\\\Component\\\\DocumentManager\\\\Tests\\\\Unit\\\\TestDocumentManagerSubscriber\\:\\:\\$query has no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/Tests/Unit/DocumentManagerTest.php
-
-		-
 			message: "#^Property Sulu\\\\Component\\\\DocumentManager\\\\Tests\\\\Unit\\\\TestDocumentManagerSubscriber\\:\\:\\$queryCreate has no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/DocumentManager/Tests/Unit/DocumentManagerTest.php
@@ -44592,11 +44502,6 @@ parameters:
 
 		-
 			message: "#^Property Sulu\\\\Component\\\\DocumentManager\\\\Tests\\\\Unit\\\\TestDocumentManagerSubscriber\\:\\:\\$restore has no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/Tests/Unit/DocumentManagerTest.php
-
-		-
-			message: "#^Property Sulu\\\\Component\\\\DocumentManager\\\\Tests\\\\Unit\\\\TestDocumentManagerSubscriber\\:\\:\\$resultCollection has no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/DocumentManager/Tests/Unit/DocumentManagerTest.php
 

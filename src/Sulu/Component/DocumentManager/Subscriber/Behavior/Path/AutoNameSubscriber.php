@@ -38,54 +38,18 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class AutoNameSubscriber implements EventSubscriberInterface
 {
     /**
-     * @var DocumentRegistry
-     */
-    private $registry;
-
-    /**
-     * @var SlugifierInterface
-     */
-    private $slugifier;
-
-    /**
-     * @var NameResolver
-     */
-    private $resolver;
-
-    /**
-     * @var NodeManager
-     */
-    private $nodeManager;
-
-    /**
-     * @var SessionInterface
-     */
-    private $session;
-
-    /**
-     * @var SessionInterface
-     */
-    private $liveSession;
-
-    /**
      * @var array
      */
     private $scheduledRename = [];
 
     public function __construct(
-        DocumentRegistry $registry,
-        SlugifierInterface $slugifier,
-        NameResolver $resolver,
-        NodeManager $nodeManager,
-        SessionInterface $session,
-        SessionInterface $liveSession
+        private DocumentRegistry $registry,
+        private SlugifierInterface $slugifier,
+        private NameResolver $resolver,
+        private NodeManager $nodeManager,
+        private SessionInterface $session,
+        private SessionInterface $liveSession,
     ) {
-        $this->registry = $registry;
-        $this->slugifier = $slugifier;
-        $this->resolver = $resolver;
-        $this->nodeManager = $nodeManager;
-        $this->session = $session;
-        $this->liveSession = $liveSession;
     }
 
     public static function getSubscribedEvents()

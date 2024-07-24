@@ -29,36 +29,12 @@ use Symfony\Component\HttpFoundation\RequestStack;
  */
 class InvalidationSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var CustomUrlManagerInterface
-     */
-    private $customUrlManager;
-
-    /**
-     * @var null|CacheManager
-     */
-    private $cacheManager;
-
-    /**
-     * @var DocumentInspector
-     */
-    private $documentInspector;
-
-    /**
-     * @var RequestStack
-     */
-    private $requestStack;
-
     public function __construct(
-        CustomUrlManagerInterface $customUrlManager,
-        DocumentInspector $documentInspector,
-        ?CacheManager $cacheManager,
-        RequestStack $requestStack
+        private CustomUrlManagerInterface $customUrlManager,
+        private DocumentInspector $documentInspector,
+        private ?CacheManager $cacheManager,
+        private RequestStack $requestStack,
     ) {
-        $this->customUrlManager = $customUrlManager;
-        $this->cacheManager = $cacheManager;
-        $this->documentInspector = $documentInspector;
-        $this->requestStack = $requestStack;
     }
 
     public static function getSubscribedEvents()

@@ -24,20 +24,10 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class ContentEnhancer extends AbstractEnhancer
 {
-    /**
-     * @var DocumentInspector
-     */
-    private $inspector;
-
-    /**
-     * @var StructureManagerInterface
-     */
-    private $structureManager;
-
-    public function __construct(DocumentInspector $inspector, StructureManagerInterface $structureManager)
-    {
-        $this->inspector = $inspector;
-        $this->structureManager = $structureManager;
+    public function __construct(
+        private DocumentInspector $inspector,
+        private StructureManagerInterface $structureManager,
+    ) {
     }
 
     protected function doEnhance(

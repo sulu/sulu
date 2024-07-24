@@ -18,16 +18,6 @@ class FindEvent extends AbstractEvent
     use EventOptionsTrait;
 
     /**
-     * @var string
-     */
-    private $identifier;
-
-    /**
-     * @var string
-     */
-    private $locale;
-
-    /**
      * @var object
      */
     private $document;
@@ -36,10 +26,11 @@ class FindEvent extends AbstractEvent
      * @param string $identifier
      * @param string $locale
      */
-    public function __construct($identifier, $locale, array $options = [])
-    {
-        $this->identifier = $identifier;
-        $this->locale = $locale;
+    public function __construct(
+        private $identifier,
+        private $locale,
+        array $options = [],
+    ) {
         $this->options = $options;
     }
 

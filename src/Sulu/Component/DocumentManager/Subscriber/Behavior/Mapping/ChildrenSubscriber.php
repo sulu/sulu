@@ -22,14 +22,8 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class ChildrenSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var ProxyFactory
-     */
-    private $proxyFactory;
-
-    public function __construct(ProxyFactory $proxyFactory)
+    public function __construct(private ProxyFactory $proxyFactory)
     {
-        $this->proxyFactory = $proxyFactory;
     }
 
     public static function getSubscribedEvents()

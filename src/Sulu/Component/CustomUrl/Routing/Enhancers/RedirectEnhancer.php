@@ -21,14 +21,8 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class RedirectEnhancer extends AbstractEnhancer
 {
-    /**
-     * @var WebspaceManagerInterface
-     */
-    private $webspaceManager;
-
-    public function __construct(WebspaceManagerInterface $webspaceManager)
+    public function __construct(private WebspaceManagerInterface $webspaceManager)
     {
-        $this->webspaceManager = $webspaceManager;
     }
 
     protected function doEnhance(

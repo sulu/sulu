@@ -57,20 +57,10 @@ class ReferencesOption implements EventSubscriber
         'onUpdate',
     ];
 
-    /**
-     * @var ManagerRegistry
-     */
-    private $managerRegistry;
-
-    /**
-     * @var array
-     */
-    private $targetEntityMapping;
-
-    public function __construct(ManagerRegistry $managerRegistry, array $targetEntityMapping)
-    {
-        $this->managerRegistry = $managerRegistry;
-        $this->targetEntityMapping = $targetEntityMapping;
+    public function __construct(
+        private ManagerRegistry $managerRegistry,
+        private array $targetEntityMapping,
+    ) {
     }
 
     public function getSubscribedEvents()

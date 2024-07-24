@@ -35,16 +35,6 @@ class VersionSubscriber implements EventSubscriberInterface
     public const VERSION_PROPERTY = 'sulu:versions';
 
     /**
-     * @var SessionInterface
-     */
-    private $defaultSession;
-
-    /**
-     * @var PropertyEncoder
-     */
-    private $propertyEncoder;
-
-    /**
      * @var VersionManager
      */
     private $versionManager;
@@ -59,11 +49,11 @@ class VersionSubscriber implements EventSubscriberInterface
      */
     private $checkpointUuids = [];
 
-    public function __construct(SessionInterface $defaultSession, PropertyEncoder $propertyEncoder)
-    {
-        $this->defaultSession = $defaultSession;
-        $this->propertyEncoder = $propertyEncoder;
-        $this->versionManager = $defaultSession->getWorkspace()->getVersionManager();
+    public function __construct(
+        private SessionInterface $defaultSession,
+        private PropertyEncoder $propertyEncoder,
+    ) {
+        $this->versionManager = $this->defaultSession->getWorkspace()->getVersionManager();
     }
 
     public static function getSubscribedEvents()

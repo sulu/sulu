@@ -314,14 +314,8 @@ class TestDocumentManagerSubscriber implements EventSubscriberInterface
 
     public $reorder = false;
 
-    private $query;
-
-    private $resultCollection;
-
-    public function __construct(Query $query, QueryResultCollection $resultCollection)
+    public function __construct(private Query $query, private QueryResultCollection $resultCollection)
     {
-        $this->query = $query;
-        $this->resultCollection = $resultCollection;
     }
 
     public static function getSubscribedEvents()

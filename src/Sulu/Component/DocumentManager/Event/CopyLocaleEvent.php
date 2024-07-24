@@ -16,11 +16,6 @@ use Sulu\Component\DocumentManager\DocumentHelper;
 class CopyLocaleEvent extends AbstractMappingEvent
 {
     /**
-     * @var string
-     */
-    private $destLocale;
-
-    /**
      * @var object|null
      */
     private $destDocument = null;
@@ -30,12 +25,10 @@ class CopyLocaleEvent extends AbstractMappingEvent
      * @param string $locale
      * @param string $destLocale
      */
-    public function __construct($document, $locale, $destLocale)
+    public function __construct($document, $locale, private $destLocale)
     {
         $this->document = $document;
         $this->locale = $locale;
-
-        $this->destLocale = $destLocale;
     }
 
     /**

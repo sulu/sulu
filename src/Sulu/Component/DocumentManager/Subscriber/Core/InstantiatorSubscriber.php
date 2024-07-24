@@ -28,15 +28,8 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class InstantiatorSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var MetadataFactoryInterface
-     */
-    private $metadataFactory;
-
-    public function __construct(
-        MetadataFactoryInterface $metadataFactory
-    ) {
-        $this->metadataFactory = $metadataFactory;
+    public function __construct(private MetadataFactoryInterface $metadataFactory)
+    {
     }
 
     public static function getSubscribedEvents()

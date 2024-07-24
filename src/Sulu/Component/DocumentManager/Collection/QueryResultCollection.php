@@ -22,34 +22,9 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 class QueryResultCollection extends AbstractLazyCollection
 {
     /**
-     * @var EventDispatcherInterface
-     */
-    private $eventDispatcher;
-
-    /**
-     * @var QueryResultInterface
-     */
-    private $result;
-
-    /**
-     * @var string
-     */
-    private $locale;
-
-    /**
-     * @var array
-     */
-    private $options;
-
-    /**
      * @var bool
      */
     private $initialized = false;
-
-    /**
-     * @var null|string
-     */
-    private $primarySelector = null;
 
     /**
      * @param string $locale
@@ -57,17 +32,12 @@ class QueryResultCollection extends AbstractLazyCollection
      * @param null|string $primarySelector
      */
     public function __construct(
-        QueryResultInterface $result,
-        EventDispatcherInterface $eventDispatcher,
-        $locale,
-        $options = [],
-        $primarySelector = null
+        private QueryResultInterface $result,
+        private EventDispatcherInterface $eventDispatcher,
+        private $locale,
+        private $options = [],
+        private $primarySelector = null
     ) {
-        $this->result = $result;
-        $this->eventDispatcher = $eventDispatcher;
-        $this->locale = $locale;
-        $this->options = $options;
-        $this->primarySelector = $primarySelector;
     }
 
     public function current()

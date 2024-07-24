@@ -20,22 +20,10 @@ use Symfony\Contracts\Service\ResetInterface;
 class Memoize implements MemoizeInterface, ResetInterface
 {
     /**
-     * @var CacheProvider
+     * @param int $defaultLifeTime
      */
-    protected $cache;
-
-    /**
-     * @var int
-     */
-    protected $defaultLifeTime;
-
-    /**
-     * Constructor.
-     */
-    public function __construct(CacheProvider $cache, $defaultLifeTime)
+    public function __construct(protected CacheProvider $cache, protected $defaultLifeTime)
     {
-        $this->cache = $cache;
-        $this->defaultLifeTime = $defaultLifeTime;
     }
 
     public function memoize($compute, $lifeTime = null)

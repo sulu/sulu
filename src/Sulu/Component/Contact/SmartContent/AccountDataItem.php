@@ -23,14 +23,8 @@ use Sulu\Component\SmartContent\ItemInterface;
  */
 class AccountDataItem implements ItemInterface
 {
-    /**
-     * @var Account
-     */
-    private $entity;
-
-    public function __construct(Account $entity)
+    public function __construct(private Account $entity)
     {
-        $this->entity = $entity;
     }
 
     /**

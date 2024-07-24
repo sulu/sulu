@@ -18,18 +18,12 @@ use Symfony\Contracts\Service\ResetInterface;
 class DocumentManager implements DocumentManagerInterface, ResetInterface
 {
     /**
-     * @var EventDispatcherInterface
-     */
-    private $eventDispatcher;
-
-    /**
      * @var array<string, OptionsResolver> Cached options resolver instances
      */
     private $optionsResolvers = [];
 
-    public function __construct(EventDispatcherInterface $eventDispatcher)
+    public function __construct(private EventDispatcherInterface $eventDispatcher)
     {
-        $this->eventDispatcher = $eventDispatcher;
     }
 
     public function find($identifier, $locale = null, array $options = [])

@@ -23,14 +23,8 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class LocaleSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var DocumentRegistry
-     */
-    private $registry;
-
-    public function __construct(DocumentRegistry $registry)
+    public function __construct(private DocumentRegistry $registry)
     {
-        $this->registry = $registry;
     }
 
     public static function getSubscribedEvents()

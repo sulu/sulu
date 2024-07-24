@@ -23,30 +23,18 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 class ReferrerCollection extends AbstractLazyCollection
 {
     /**
-     * @var EventDispatcherInterface
-     */
-    private $dispatcher;
-
-    /**
-     * @var NodeInterface
-     */
-    private $node;
-
-    /**
-     * @var string
-     */
-    private $locale;
-
-    /**
      * @var bool
      */
     private $initialized = false;
 
-    public function __construct(NodeInterface $node, EventDispatcherInterface $dispatcher, $locale)
-    {
-        $this->node = $node;
-        $this->dispatcher = $dispatcher;
-        $this->locale = $locale;
+    /**
+     * @param string $locale
+     */
+    public function __construct(
+        private NodeInterface $node,
+        private EventDispatcherInterface $dispatcher,
+        private $locale,
+    ) {
         $this->documents = new \ArrayIterator();
     }
 
