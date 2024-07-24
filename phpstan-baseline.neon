@@ -8481,22 +8481,7 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Entity/AccountRepository.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\AccountRepository\\:\\:findByFiltersIds\\(\\) has parameter \\$entityAlias with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Entity/AccountRepository.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\AccountRepository\\:\\:findByFiltersIds\\(\\) has parameter \\$entityClass with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Entity/AccountRepository.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\AccountRepository\\:\\:findByFiltersIds\\(\\) has parameter \\$filters with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Entity/AccountRepository.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\AccountRepository\\:\\:findByFiltersIds\\(\\) has parameter \\$permission with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Entity/AccountRepository.php
 
@@ -8666,22 +8651,7 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Entity/ContactRepository.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\ContactRepository\\:\\:findByFiltersIds\\(\\) has parameter \\$entityAlias with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Entity/ContactRepository.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\ContactRepository\\:\\:findByFiltersIds\\(\\) has parameter \\$entityClass with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Entity/ContactRepository.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\ContactRepository\\:\\:findByFiltersIds\\(\\) has parameter \\$filters with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Entity/ContactRepository.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\ContactRepository\\:\\:findByFiltersIds\\(\\) has parameter \\$permission with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Entity/ContactRepository.php
 
@@ -9811,11 +9781,6 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Entity/AccountRepositoryTest.php
 
 		-
-			message: "#^Parameter \\#4 \\$limit of method Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\AccountRepository\\:\\:findByFilters\\(\\) expects int, null given\\.$#"
-			count: 21
-			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Entity/AccountRepositoryTest.php
-
-		-
 			message: "#^Property Sulu\\\\Bundle\\\\ContactBundle\\\\Tests\\\\Functional\\\\Entity\\\\AccountRepositoryTest\\:\\:\\$em \\(Doctrine\\\\ORM\\\\EntityManager\\) does not accept Doctrine\\\\ORM\\\\EntityManagerInterface\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Entity/AccountRepositoryTest.php
@@ -9868,11 +9833,6 @@ parameters:
 		-
 			message: "#^Parameter \\#2 \\$page of method Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\ContactRepository\\:\\:findByFilters\\(\\) expects int, null given\\.$#"
 			count: 18
-			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Entity/ContactRepositoryTest.php
-
-		-
-			message: "#^Parameter \\#4 \\$limit of method Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\ContactRepository\\:\\:findByFilters\\(\\) expects int, null given\\.$#"
-			count: 19
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Entity/ContactRepositoryTest.php
 
 		-
@@ -14376,22 +14336,7 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Entity/MediaDataProviderRepository.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\MediaDataProviderRepository\\:\\:findByFiltersIds\\(\\) has parameter \\$entityAlias with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/MediaDataProviderRepository.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\MediaDataProviderRepository\\:\\:findByFiltersIds\\(\\) has parameter \\$entityClass with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/MediaDataProviderRepository.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\MediaDataProviderRepository\\:\\:findByFiltersIds\\(\\) has parameter \\$filters with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/MediaDataProviderRepository.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\MediaDataProviderRepository\\:\\:findByFiltersIds\\(\\) has parameter \\$permission with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Entity/MediaDataProviderRepository.php
 
@@ -33801,21 +33746,6 @@ parameters:
 			path: src/Sulu/Component/Cache/Tests/Unit/Cache/DataCacheTest.php
 
 		-
-			message: "#^Call to method getFunctions\\(\\) on an unknown class Sulu\\\\Component\\\\Cache\\\\MemoizeTwigExtensionTrait\\.$#"
-			count: 1
-			path: src/Sulu/Component/Cache/Tests/Unit/Cache/MemoizeTwigExtensionTraitTest.php
-
-		-
-			message: "#^Property Sulu\\\\Component\\\\Cache\\\\Tests\\\\Unit\\\\Cache\\\\MemoizeTwigExtensionTraitTest\\:\\:\\$trait \\(Sulu\\\\Component\\\\Cache\\\\MemoizeTwigExtensionTrait\\) does not accept PHPUnit\\\\Framework\\\\MockObject\\\\MockObject\\.$#"
-			count: 1
-			path: src/Sulu/Component/Cache/Tests/Unit/Cache/MemoizeTwigExtensionTraitTest.php
-
-		-
-			message: "#^Property Sulu\\\\Component\\\\Cache\\\\Tests\\\\Unit\\\\Cache\\\\MemoizeTwigExtensionTraitTest\\:\\:\\$trait has invalid type Sulu\\\\Component\\\\Cache\\\\MemoizeTwigExtensionTrait\\.$#"
-			count: 1
-			path: src/Sulu/Component/Cache/Tests/Unit/Cache/MemoizeTwigExtensionTraitTest.php
-
-		-
 			message: "#^Cannot access property \\$query on Symfony\\\\Component\\\\HttpFoundation\\\\Request\\|null\\.$#"
 			count: 5
 			path: src/Sulu/Component/Category/Request/CategoryRequestHandler.php
@@ -49791,52 +49721,27 @@ parameters:
 			path: src/Sulu/Component/SmartContent/Tests/Unit/DataProviderPoolTest.php
 
 		-
-			message: "#^Call to method findByFilters\\(\\) on an unknown class Sulu\\\\Component\\\\SmartContent\\\\Orm\\\\DataProviderRepositoryTrait\\.$#"
+			message: "#^Cannot access offset 'id' on mixed\\.$#"
 			count: 2
 			path: src/Sulu/Component/SmartContent/Tests/Unit/Orm/DataProviderRepositoryTraitTest.php
 
 		-
-			message: "#^Call to method method\\(\\) on an unknown class Sulu\\\\Component\\\\SmartContent\\\\Orm\\\\DataProviderRepositoryTrait\\.$#"
-			count: 4
-			path: src/Sulu/Component/SmartContent/Tests/Unit/Orm/DataProviderRepositoryTraitTest.php
-
-		-
-			message: "#^Cannot access offset 'id' on mixed\\.$#"
+			message: "#^Method Sulu\\\\Component\\\\SmartContent\\\\Tests\\\\Orm\\\\DataProviderRepositoryTraitTest\\:\\:findByFilters\\(\\) has parameter \\$filters with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Component/SmartContent/Tests/Unit/Orm/DataProviderRepositoryTraitTest.php
 
 		-
-			message: "#^Method class@anonymous/src/Sulu/Component/SmartContent/Tests/Unit/Orm/DataProviderRepositoryTraitTest\\.php\\:106\\:\\:findByFilters\\(\\) has parameter \\$filters with no value type specified in iterable type array\\.$#"
+			message: "#^Method Sulu\\\\Component\\\\SmartContent\\\\Tests\\\\Orm\\\\DataProviderRepositoryTraitTest\\:\\:findByFiltersIds\\(\\) has parameter \\$filters with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Component/SmartContent/Tests/Unit/Orm/DataProviderRepositoryTraitTest.php
 
 		-
-			message: "#^Method class@anonymous/src/Sulu/Component/SmartContent/Tests/Unit/Orm/DataProviderRepositoryTraitTest\\.php\\:106\\:\\:findByFiltersIds\\(\\) has parameter \\$entityAlias with no type specified\\.$#"
+			message: "#^Method class@anonymous/src/Sulu/Component/SmartContent/Tests/Unit/Orm/DataProviderRepositoryTraitTest\\.php\\:119\\:\\:findByFilters\\(\\) has parameter \\$filters with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Component/SmartContent/Tests/Unit/Orm/DataProviderRepositoryTraitTest.php
 
 		-
-			message: "#^Method class@anonymous/src/Sulu/Component/SmartContent/Tests/Unit/Orm/DataProviderRepositoryTraitTest\\.php\\:106\\:\\:findByFiltersIds\\(\\) has parameter \\$entityClass with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/SmartContent/Tests/Unit/Orm/DataProviderRepositoryTraitTest.php
-
-		-
-			message: "#^Method class@anonymous/src/Sulu/Component/SmartContent/Tests/Unit/Orm/DataProviderRepositoryTraitTest\\.php\\:106\\:\\:findByFiltersIds\\(\\) has parameter \\$filters with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/SmartContent/Tests/Unit/Orm/DataProviderRepositoryTraitTest.php
-
-		-
-			message: "#^Method class@anonymous/src/Sulu/Component/SmartContent/Tests/Unit/Orm/DataProviderRepositoryTraitTest\\.php\\:106\\:\\:findByFiltersIds\\(\\) has parameter \\$permission with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/SmartContent/Tests/Unit/Orm/DataProviderRepositoryTraitTest.php
-
-		-
-			message: "#^Property Sulu\\\\Component\\\\SmartContent\\\\Tests\\\\Orm\\\\DataProviderRepositoryTraitTest\\:\\:\\$dataProviderRepositoryTrait \\(Sulu\\\\Component\\\\SmartContent\\\\Orm\\\\DataProviderRepositoryTrait\\) does not accept PHPUnit\\\\Framework\\\\MockObject\\\\MockObject\\.$#"
-			count: 1
-			path: src/Sulu/Component/SmartContent/Tests/Unit/Orm/DataProviderRepositoryTraitTest.php
-
-		-
-			message: "#^Property Sulu\\\\Component\\\\SmartContent\\\\Tests\\\\Orm\\\\DataProviderRepositoryTraitTest\\:\\:\\$dataProviderRepositoryTrait has invalid type Sulu\\\\Component\\\\SmartContent\\\\Orm\\\\DataProviderRepositoryTrait\\.$#"
+			message: "#^Method class@anonymous/src/Sulu/Component/SmartContent/Tests/Unit/Orm/DataProviderRepositoryTraitTest\\.php\\:119\\:\\:findByFiltersIds\\(\\) has parameter \\$filters with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Component/SmartContent/Tests/Unit/Orm/DataProviderRepositoryTraitTest.php
 

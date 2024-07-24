@@ -34,6 +34,9 @@ trait MemoizeTwigExtensionTrait
      */
     protected $lifeTime;
 
+    /**
+     * @return array<TwigFunction>
+     */
     public function getFunctions()
     {
         $result = [];
