@@ -36,6 +36,7 @@ class CreateUserCommand extends Command
     protected static $defaultName = 'sulu:security:user:create';
 
     /**
+     * @param string[] $locales
      * @param PasswordHasherFactoryInterface|EncoderFactoryInterface $passwordHasherFactory
      */
     public function __construct(
@@ -46,9 +47,6 @@ class CreateUserCommand extends Command
         private LocalizationManagerInterface $localizationManager,
         private SaltGenerator $saltGenerator,
         private $passwordHasherFactory,
-        /**
-         * @var string[]
-         */
         private array $locales
     ) {
         parent::__construct();
