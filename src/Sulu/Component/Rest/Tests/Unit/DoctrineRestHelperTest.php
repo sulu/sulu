@@ -11,7 +11,7 @@
 
 namespace Sulu\Component\Rest\Tests\Unit;
 
-use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 use PHPUnit\Framework\TestCase;
 use Sulu\Component\Rest\DoctrineRestHelper;
 use Sulu\Component\Rest\ListBuilder\ListRestHelper;
@@ -39,15 +39,11 @@ class DoctrineRestHelperTest extends TestCase
 
     public function testProcessSubEntities(): void
     {
-        $entities = $this->getMockBuilder(Collection::class)->getMockForAbstractClass();
+        /** @var ArrayCollection<array-key, mixed> $entities */
+        $entities = new ArrayCollection(['test' => true, 'hello' => null, 'foo' => false]);
 
-        $entities->expects($this->once())->method('count')->willReturn(2);
-        $entities->expects($this->once())->method('getValues')->willReturn([null, null]);
-        $entities->expects($this->once())->method('clear');
-        $entities->expects($this->once())->method('getIterator')->willReturn(new \ArrayIterator([null, null]));
-        $entities->expects($this->exactly(2))->method('add');
+        $this->restHelper->processSubEntities($entities, [], function() {});
 
-        $this->restHelper->processSubEntities($entities, [], function() {
-        });
+        $this->assertSame($entities->toArray(), [true, null, false]);
     }
 }

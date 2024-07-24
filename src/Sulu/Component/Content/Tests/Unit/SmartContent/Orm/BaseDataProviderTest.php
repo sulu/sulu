@@ -15,11 +15,13 @@ use JMS\Serializer\SerializationContext;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Serializer\ArraySerializerInterface;
 use Sulu\Component\SmartContent\Configuration\ProviderConfigurationInterface;
 use Sulu\Component\SmartContent\DataProviderResult;
+use Sulu\Component\SmartContent\ItemInterface;
 use Sulu\Component\SmartContent\Orm\BaseDataProvider;
 use Sulu\Component\SmartContent\Orm\DataProviderRepositoryInterface;
 use Sulu\Component\SmartContent\ResourceItemInterface;
@@ -32,18 +34,24 @@ class BaseDataProviderTest extends TestCase
 {
     use ProphecyTrait;
 
+    private TestBaseDataProvier $provider;
+
+    /** @var ObjectProphecy<DataProviderRepositoryInterface> */
+    private ObjectProphecy $repository;
+
+    /** @var ObjectProphecy<ArraySerializerInterface> */
+    private ObjectProphecy $serializer;
+
+    public function setUp(): void
+    {
+        $this->repository = $this->prophesize(DataProviderRepositoryInterface::class);
+        $this->serializer = $this->prophesize(ArraySerializerInterface::class);
+        $this->provider = new TestBaseDataProvier($this->repository->reveal(), $this->serializer->reveal());
+    }
+
     public function testGetDefaultPropertyParameter(): void
     {
-        $repository = $this->prophesize(DataProviderRepositoryInterface::class);
-        $serializer = $this->prophesize(ArraySerializerInterface::class);
-
-        /** @var BaseDataProvider $provider */
-        $provider = $this->getMockForAbstractClass(
-            BaseDataProvider::class,
-            [$repository->reveal(), $serializer->reveal()]
-        );
-
-        $this->assertEquals([], $provider->getDefaultPropertyParameter());
+        $this->assertEquals([], $this->provider->getDefaultPropertyParameter());
     }
 
     public static function configurationProvider()
@@ -64,13 +72,6 @@ class BaseDataProviderTest extends TestCase
     public function testInitConfiguration($tags, $categories, $limit, $presentAs, $paginated, $sorting): void
     {
         $repository = $this->prophesize(DataProviderRepositoryInterface::class);
-        $serializer = $this->prophesize(ArraySerializerInterface::class);
-
-        /** @var BaseDataProvider $provider */
-        $provider = $this->getMockForAbstractClass(
-            BaseDataProvider::class,
-            [$repository->reveal(), $serializer->reveal()]
-        );
 
         $class = new \ReflectionClass(BaseDataProvider::class);
         $method = $class->getMethod('initConfiguration');
@@ -78,7 +79,7 @@ class BaseDataProviderTest extends TestCase
 
         /** @var ProviderConfigurationInterface $configuration */
         $configuration = $method->invokeArgs(
-            $provider,
+            $this->provider,
             [
                 $tags,
                 $categories,
@@ -102,16 +103,7 @@ class BaseDataProviderTest extends TestCase
 
     public function testResolveDataSource(): void
     {
-        $repository = $this->prophesize(DataProviderRepositoryInterface::class);
-        $serializer = $this->prophesize(ArraySerializerInterface::class);
-
-        /** @var BaseDataProvider $provider */
-        $provider = $this->getMockForAbstractClass(
-            BaseDataProvider::class,
-            [$repository->reveal(), $serializer->reveal()]
-        );
-
-        $this->assertNull($provider->resolveDatasource('', [], []));
+        $this->assertNull($this->provider->resolveDatasource('', [], []));
     }
 
     public static function filtersProvider()
@@ -213,23 +205,14 @@ class BaseDataProviderTest extends TestCase
         $hasNextPage,
         $items
     ): void {
-        $repository = $this->prophesize(DataProviderRepositoryInterface::class);
-        $repository->findByFilters($filters, $page, $pageSize, $limit, 'en', $options, null, null)
+        $this->repository->findByFilters($filters, $page, $pageSize, $limit, 'en', $options, null, null)
             ->shouldBeCalled()->willReturn($repositoryResult);
-
-        $serializer = $this->prophesize(ArraySerializerInterface::class);
-
-        /** @var BaseDataProvider $provider */
-        $provider = $this->getMockForAbstractClass(
-            BaseDataProvider::class,
-            [$repository->reveal(), $serializer->reveal()]
-        );
 
         $class = new \ReflectionClass(BaseDataProvider::class);
         $method = $class->getMethod('resolveFilters');
         $method->setAccessible(true);
 
-        $result = $method->invokeArgs($provider, [$filters, 'en', $limit, $page, $pageSize, $options]);
+        $result = $method->invokeArgs($this->provider, [$filters, 'en', $limit, $page, $pageSize, $options]);
 
         $this->assertEquals($items, $result[0]);
         $this->assertEquals($hasNextPage, $result[1]);
@@ -248,21 +231,13 @@ class BaseDataProviderTest extends TestCase
         $hasNextPage,
         $items
     ): void {
-        $repository = $this->prophesize(DataProviderRepositoryInterface::class);
-        $repository->findByFilters($filters, $page, $pageSize, $limit, 'en', [], null, null)
+        $this->repository->findByFilters($filters, $page, $pageSize, $limit, 'en', [], null, null)
             ->shouldBeCalled()
             ->willReturn($repositoryResult);
 
-        $serializer = $this->prophesize(ArraySerializerInterface::class);
+        $this->provider->returnValue = $items;
 
-        /** @var BaseDataProvider $provider */
-        $provider = $this->getMockForAbstractClass(
-            BaseDataProvider::class,
-            [$repository->reveal(), $serializer->reveal()]
-        );
-        $provider->expects($this->any())->method('decorateDataItems')->willReturn($items);
-
-        $result = $provider->resolveDataItems(
+        $result = $this->provider->resolveDataItems(
             $filters,
             [],
             ['locale' => 'en', 'webspace' => 'sulu_io'],
@@ -299,28 +274,20 @@ class BaseDataProviderTest extends TestCase
             $repositoryResult
         );
 
-        $repository = $this->prophesize(DataProviderRepositoryInterface::class);
-        $repository->findByFilters($filters, $page, $pageSize, $limit, 'en', [], null, null)
+        $this->repository->findByFilters($filters, $page, $pageSize, $limit, 'en', [], null, null)
             ->shouldBeCalled()
             ->willReturn($mockedItems);
 
-        $serializer = $this->prophesize(ArraySerializerInterface::class);
-        $serializer->serialize(
+        $this->serializer->serialize(
             Argument::type(ResourceItemInterface::class),
             Argument::type(SerializationContext::class)
         )->will(
             function($args) {
                 return ['id' => $args[0]->getId()];
             }
-        );
+        )->shouldBeCalled();
 
-        /** @var BaseDataProvider $provider */
-        $provider = $this->getMockForAbstractClass(
-            BaseDataProvider::class,
-            [$repository->reveal(), $serializer->reveal()]
-        );
-
-        $result = $provider->resolveResourceItems(
+        $result = $this->provider->resolveResourceItems(
             $filters,
             [],
             ['locale' => 'en', 'webspace' => 'sulu_io'],
@@ -346,10 +313,7 @@ class BaseDataProviderTest extends TestCase
     {
         $user = $this->prophesize(UserInterface::class);
 
-        $repository = $this->prophesize(DataProviderRepositoryInterface::class);
-        $repository->findByFilters([], 1, null, -1, 'en', [], $user->reveal(), 64)->shouldBeCalled()->willReturn([]);
-
-        $serializer = $this->prophesize(ArraySerializerInterface::class);
+        $this->repository->findByFilters([], 1, null, -1, 'en', [], $user->reveal(), 64)->shouldBeCalled()->willReturn([]);
 
         $security = $this->prophesize(Security::class);
         $security->getUser()->willReturn($user->reveal());
@@ -362,20 +326,16 @@ class BaseDataProviderTest extends TestCase
         $webspace->setSecurity($webspaceSecurity);
         $requestAnalyzer->getWebspace()->willReturn($webspace);
 
-        /** @var BaseDataProvider $provider */
-        $provider = $this->getMockForAbstractClass(
-            BaseDataProvider::class,
-            [
-                $repository->reveal(),
-                $serializer->reveal(),
-                null,
-                $security->reveal(),
-                $requestAnalyzer->reveal(),
-                ['view' => 64],
-            ]
+        $this->provider = new TestBaseDataProvier(
+            $this->repository->reveal(),
+            $this->serializer->reveal(),
+            null,
+            $security->reveal(),
+            $requestAnalyzer->reveal(),
+            ['view' => 64],
         );
 
-        $provider->resolveResourceItems(
+        $this->provider->resolveResourceItems(
             [],
             [],
             ['locale' => 'en', 'webspace' => 'sulu_io'],
@@ -389,8 +349,7 @@ class BaseDataProviderTest extends TestCase
     {
         $user = $this->prophesize(UserInterface::class);
 
-        $repository = $this->prophesize(DataProviderRepositoryInterface::class);
-        $repository->findByFilters([], 1, null, -1, 'en', [], null, null)->shouldBeCalled()->willReturn([]);
+        $this->repository->findByFilters([], 1, null, -1, 'en', [], null, null)->shouldBeCalled()->willReturn([]);
 
         $serializer = $this->prophesize(ArraySerializerInterface::class);
 
@@ -405,18 +364,26 @@ class BaseDataProviderTest extends TestCase
         $webspace->setSecurity($webspaceSecurity);
         $requestAnalyzer->getWebspace()->willReturn($webspace);
 
-        /** @var BaseDataProvider $provider */
-        $provider = $this->getMockForAbstractClass(
-            BaseDataProvider::class,
-            [
-                $repository->reveal(),
-                $serializer->reveal(),
-                null,
-                $security->reveal(),
-                $requestAnalyzer->reveal(),
-                ['view' => 64],
-            ]
-        );
+        $provider = new class(
+            $this->repository->reveal(),
+            $serializer->reveal(),
+            null,
+            $security->reveal(),
+            $requestAnalyzer->reveal(),
+            ['view' => 64],
+        ) extends BaseDataProvider {
+            /**
+             * Decorates result as data item.
+             *
+             * @param object[] $data
+             *
+             * @return ItemInterface[]
+             */
+            protected function decorateDataItems(array $data)
+            {
+                return [];
+            }
+        };
 
         $provider->resolveResourceItems(
             [],
@@ -451,33 +418,25 @@ class BaseDataProviderTest extends TestCase
             $repositoryResult
         );
 
-        $repository = $this->prophesize(DataProviderRepositoryInterface::class);
-        $repository->findByFilters($filters, $page, $pageSize, $limit, 'en', [], null, null)
+        $this->repository->findByFilters($filters, $page, $pageSize, $limit, 'en', [], null, null)
             ->shouldBeCalled()
             ->willReturn($mockedItems);
 
-        $serializer = $this->prophesize(ArraySerializerInterface::class);
-        $serializer->serialize(
+        $this->serializer->serialize(
             Argument::type(ResourceItemInterface::class),
             Argument::type(SerializationContext::class)
         )->will(
             function($args) {
                 return ['id' => $args[0]->getId()];
             }
-        );
+        )->shouldBeCalled();
 
         $referenceStore = $this->prophesize(ReferenceStoreInterface::class);
         foreach ($items as $item) {
-            $referenceStore->add($item['id'])->shouldBeCalled();
+            $referenceStore->add($item['id']);
         }
 
-        /** @var BaseDataProvider $provider */
-        $provider = $this->getMockForAbstractClass(
-            BaseDataProvider::class,
-            [$repository->reveal(), $serializer->reveal(), $referenceStore->reveal()]
-        );
-
-        $result = $provider->resolveResourceItems(
+        $result = $this->provider->resolveResourceItems(
             $filters,
             [],
             ['locale' => 'en', 'webspace' => 'sulu_io'],

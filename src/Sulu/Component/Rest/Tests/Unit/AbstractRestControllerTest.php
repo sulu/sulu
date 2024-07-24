@@ -32,7 +32,8 @@ class AbstractRestControllerTest extends TestCase
     public function setUp(): void
     {
         $viewHandler = $this->prophesize(ViewHandlerInterface::class);
-        $this->controller = $this->getMockForAbstractClass(AbstractRestController::class, [$viewHandler->reveal()]);
+        $this->controller = new class($viewHandler->reveal()) extends AbstractRestController {
+        };
     }
 
     public function testResponseGetById(): void
