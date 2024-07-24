@@ -41,7 +41,7 @@ class ContentTypeTest extends TestCase
     use ProphecyTrait;
 
     /**
-     * @var TagManagerInterface
+     * @var ObjectProphecy<TagManagerInterface>
      */
     private $tagManager;
 
@@ -95,6 +95,11 @@ class ContentTypeTest extends TestCase
      */
     private $requestAnalyzer;
 
+    /**
+     * @var SmartContent
+     */
+    private $smartContent;
+
     public function setUp(): void
     {
         $this->pageDataProvider = $this->prophesize(DataProviderInterface::class);
@@ -104,15 +109,12 @@ class ContentTypeTest extends TestCase
         $this->dataProviderPool = new DataProviderPool(true);
         $this->dataProviderPool->add('pages', $this->pageDataProvider->reveal());
 
-        $this->tagManager = $this->getMockForAbstractClass(
-            TagManagerInterface::class,
-            [],
-            '',
-            false,
-            true,
-            true,
-            ['resolveTagIds', 'resolveTagName']
-        );
+        $this->tagManager = $this->prophesize(TagManagerInterface::class);
+        $this->tagManager->resolveTagIds([1, 2])->willReturn(['Tag1', 'Tag2']);
+
+        $this->tagManager->resolveTagNames(['Tag1', 'Tag2'])->willReturn([1, 2]);
+        $this->tagManager->resolveTagNames(['Tag1'])->willReturn([1]);
+        $this->tagManager->resolveTagNames(['Tag2'])->willReturn([2]);
 
         $this->requestStack = $this->getMockBuilder(RequestStack::class)->getMock();
         $this->request = $this->getMockBuilder(Request::class)->getMock();
@@ -127,26 +129,24 @@ class ContentTypeTest extends TestCase
         $this->categoryRequestHandler = $this->prophesize(CategoryRequestHandlerInterface::class);
         $this->categoryRequestHandler->getCategories('categories')->willReturn([]);
 
-        $this->tagManager->expects($this->any())->method('resolveTagIds')->willReturnMap(
-            [
-                [[1, 2], ['Tag1', 'Tag2']],
-            ]
-        );
-
-        $this->tagManager->expects($this->any())->method('resolveTagNames')->willReturnMap(
-            [
-                [['Tag1', 'Tag2'], [1, 2]],
-                [['Tag1'], [1]],
-                [['Tag2'], [2]],
-            ]
-        );
-
         $this->targetGroupStore = $this->prophesize(TargetGroupStoreInterface::class);
 
         $this->categoryReferenceStore = $this->prophesize(ReferenceStoreInterface::class);
         $this->tagReferenceStore = $this->prophesize(ReferenceStoreInterface::class);
 
         $this->requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
+
+        $this->smartContent = new SmartContent(
+            $this->dataProviderPool,
+            $this->tagManager->reveal(),
+            $this->requestStack,
+            $this->tagRequestHandler->reveal(),
+            $this->categoryRequestHandler->reveal(),
+            $this->categoryReferenceStore->reveal(),
+            $this->tagReferenceStore->reveal(),
+            null,
+            $this->requestAnalyzer->reveal()
+        );
     }
 
     private function getProviderConfiguration()
@@ -163,41 +163,9 @@ class ContentTypeTest extends TestCase
 
     public function testWrite(): void
     {
-        $smartContent = new SmartContent(
-            $this->dataProviderPool,
-            $this->tagManager,
-            $this->requestStack,
-            $this->tagRequestHandler->reveal(),
-            $this->categoryRequestHandler->reveal(),
-            $this->categoryReferenceStore->reveal(),
-            $this->tagReferenceStore->reveal(),
-            null,
-            $this->requestAnalyzer->reveal()
-        );
-
-        $node = $this->getMockForAbstractClass(
-            NodeInterface::class,
-            [],
-            '',
-            true,
-            true,
-            true,
-            ['setProperty']
-        );
-
-        $property = $this->getMockForAbstractClass(
-            PropertyInterface::class,
-            [],
-            '',
-            true,
-            true,
-            true,
-            ['getValue']
-        );
-
-        $property->expects($this->any())->method('getName')->willReturn('property');
-
-        $property->expects($this->any())->method('getValue')->willReturn(
+        $property = $this->prophesize(PropertyInterface::class);
+        $property->getName()->willReturn('property');
+        $property->getValue()->willReturn(
             [
                 'dataSource' => [
                     'home/products',
@@ -208,7 +176,8 @@ class ContentTypeTest extends TestCase
             ]
         );
 
-        $node->expects($this->once())->method('setProperty')->with(
+        $node = $this->prophesize(NodeInterface::class);
+        $node->setProperty(
             'property',
             \json_encode(
                 [
@@ -220,101 +189,42 @@ class ContentTypeTest extends TestCase
                     ],
                 ]
             )
-        );
+        )->shouldBeCalled();
 
-        $smartContent->write($node, $property, 0, 'test', 'en', 's');
+        $this->smartContent->write($node->reveal(), $property->reveal(), 0, 'test', 'en', 's');
     }
 
     public function testRead(): void
     {
-        $smartContent = new SmartContent(
-            $this->dataProviderPool,
-            $this->tagManager,
-            $this->requestStack,
-            $this->tagRequestHandler->reveal(),
-            $this->categoryRequestHandler->reveal(),
-            $this->categoryReferenceStore->reveal(),
-            $this->tagReferenceStore->reveal(),
-            null,
-            $this->requestAnalyzer->reveal()
-        );
-
         $config = [
             'tags' => ['Tag1', 'Tag2'],
             'limitResult' => '2',
         ];
 
-        $node = $this->getMockForAbstractClass(
-            NodeInterface::class,
-            [],
-            '',
-            true,
-            true,
-            true,
-            ['getPropertyValueWithDefault']
-        );
+        $node = $this->prophesize(NodeInterface::class);
+        $node->getPropertyValueWithDefault('property', '{}')->willReturn('{"tags":[1,2],"limitResult":"2"}');
 
-        $property = $this->getMockForAbstractClass(
-            PropertyInterface::class,
-            [],
-            '',
-            true,
-            true,
-            true,
-            ['setValue']
-        );
+        $property = $this->prophesize(PropertyInterface::class);
+        $property->getName()->willReturn('property');
+        $property->getParams()->willReturn(['properties' => ['my_title' => 'title']]);
 
-        $node->expects($this->any())->method('getPropertyValueWithDefault')->willReturnMap(
-            [
-                ['property', '{}', '{"tags":[1,2],"limitResult":"2"}'],
-            ]
-        );
+        $property->setValue($config)->shouldBeCalledTimes(1);
 
-        $property->expects($this->any())->method('getName')->willReturn('property');
-        $property->expects($this->any())->method('getParams')->willReturn(
-            ['properties' => ['my_title' => 'title']]
-        );
-
-        $property->expects($this->exactly(1))->method('setValue')->with($config);
-
-        $smartContent->read($node, $property, 'test', 'en', 's');
+        $this->smartContent->read($node->reveal(), $property->reveal(), 'test', 'en', 's');
     }
 
     public function testGetViewData(): void
     {
-        $smartContent = new SmartContent(
-            $this->dataProviderPool,
-            $this->tagManager,
-            $this->requestStack,
-            $this->tagRequestHandler->reveal(),
-            $this->categoryRequestHandler->reveal(),
-            $this->categoryReferenceStore->reveal(),
-            $this->tagReferenceStore->reveal(),
-            null,
-            $this->requestAnalyzer->reveal()
-        );
-
-        $property = $this->getMockForAbstractClass(
-            PropertyInterface::class,
-            [],
-            '',
-            true,
-            true,
-            true,
-            ['getValue', 'getParams']
-        );
         $structure = $this->prophesize(StructureInterface::class);
 
         $config = ['dataSource' => 'some-uuid'];
         $parameter = ['max_per_page' => new PropertyParameter('max_per_page', '5')];
 
-        $property->expects($this->any())->method('getValue')
-            ->willReturn(\array_merge($config, ['page' => 1, 'hasNextPage' => true]));
-
-        $property->expects($this->any())->method('getParams')
-            ->willReturn($parameter);
-        $property->expects($this->exactly(2))->method('getStructure')
-            ->willReturn($structure->reveal());
+        $property = $this->prophesize(PropertyInterface::class);
+        $property->getValue()->shouldBeCalled()->willReturn(\array_merge($config, ['page' => 1, 'hasNextPage' => true]));
+        $property->getParams()->shouldBeCalled()->willReturn($parameter);
+        $property->getStructure()->shouldBeCalledTimes(2)->willReturn($structure->reveal());
+        $property->setValue(Argument::any())->willReturn(null);
 
         $this->pageDataProvider->resolveResourceItems(
             [
@@ -388,7 +298,7 @@ class ContentTypeTest extends TestCase
             ->with($this->equalTo('p'))
             ->willReturn(1);
 
-        $viewData = $smartContent->getViewData($property);
+        $viewData = $this->smartContent->getViewData($property->reveal());
 
         $expectedViewData = \array_merge($config, ['page' => 1, 'hasNextPage' => true]);
 
@@ -400,18 +310,6 @@ class ContentTypeTest extends TestCase
 
     public function testGetContentData(): void
     {
-        $smartContent = new SmartContent(
-            $this->dataProviderPool,
-            $this->tagManager,
-            $this->requestStack,
-            $this->tagRequestHandler->reveal(),
-            $this->categoryRequestHandler->reveal(),
-            $this->categoryReferenceStore->reveal(),
-            $this->tagReferenceStore->reveal(),
-            null,
-            $this->requestAnalyzer->reveal()
-        );
-
         $property = $this->getContentDataProperty(
             [
                 'dataSource' => '123-123-123',
@@ -430,7 +328,7 @@ class ContentTypeTest extends TestCase
         $this->tagReferenceStore->add(1)->shouldBeCalled();
         $this->tagReferenceStore->add(2)->shouldBeCalled();
 
-        $pageData = $smartContent->getContentData($property);
+        $pageData = $this->smartContent->getContentData($property);
 
         $this->assertEquals(
             [
@@ -447,18 +345,6 @@ class ContentTypeTest extends TestCase
 
     public function testGetContentDataNullTagsCategories(): void
     {
-        $smartContent = new SmartContent(
-            $this->dataProviderPool,
-            $this->tagManager,
-            $this->requestStack,
-            $this->tagRequestHandler->reveal(),
-            $this->categoryRequestHandler->reveal(),
-            $this->categoryReferenceStore->reveal(),
-            $this->tagReferenceStore->reveal(),
-            null,
-            $this->requestAnalyzer->reveal()
-        );
-
         $property = $this->getContentDataProperty(
             [
                 'dataSource' => '123-123-123',
@@ -467,7 +353,7 @@ class ContentTypeTest extends TestCase
             ]
         );
 
-        $pageData = $smartContent->getContentData($property);
+        $pageData = $this->smartContent->getContentData($property);
 
         $this->assertEquals(
             [
@@ -484,40 +370,20 @@ class ContentTypeTest extends TestCase
 
     public function testGetContentDataPaged(): void
     {
-        $smartContent = new SmartContent(
-            $this->dataProviderPool,
-            $this->tagManager,
-            $this->requestStack,
-            $this->tagRequestHandler->reveal(),
-            $this->categoryRequestHandler->reveal(),
-            $this->categoryReferenceStore->reveal(),
-            $this->tagReferenceStore->reveal(),
-            null,
-            $this->requestAnalyzer->reveal()
-        );
-
-        $property = $this->getMockForAbstractClass(
-            PropertyInterface::class,
-            [],
-            '',
-            true,
-            true,
-            true,
-            ['getValue', 'getParams']
-        );
         $structure = $this->prophesize(StructureInterface::class);
 
         $this->request->expects($this->any())->method('get')
             ->with($this->equalTo('p'))
             ->willReturn(1);
 
-        $property->expects($this->exactly(1))->method('getValue')
-            ->willReturn(['dataSource' => '123-123-123']);
+        $property = $this->prophesize(PropertyInterface::class);
+        $property->getValue()->willReturn(['dataSource' => '123-123-123']);
 
-        $property->expects($this->any())->method('getParams')
-            ->willReturn(['max_per_page' => new PropertyParameter('max_per_page', '5')]);
-        $property->expects($this->exactly(2))->method('getStructure')
-            ->willReturn($structure->reveal());
+        $property->getParams()
+            ->willReturn(['max_per_page' => new PropertyParameter('max_per_page', '5')])
+            ->shouldBeCalledTimes(3);
+        $property->getStructure()->willReturn($structure->reveal())->shouldBeCalledTimes(2);
+        $property->setValue(Argument::any())->shouldBeCalled();
 
         $this->pageDataProvider->resolveResourceItems(
             [
@@ -585,7 +451,7 @@ class ContentTypeTest extends TestCase
         $structure->getUuid()->willReturn('123-123-123');
         $structure->getLanguageCode()->willReturn('de');
 
-        $pageData = $smartContent->getContentData($property);
+        $pageData = $this->smartContent->getContentData($property->reveal());
 
         $this->assertEquals([1, 2, 3, 4, 5], $pageData);
     }
@@ -617,27 +483,7 @@ class ContentTypeTest extends TestCase
         $expectedData,
         $hasNextPage
     ): void {
-        $smartContent = new SmartContent(
-            $this->dataProviderPool,
-            $this->tagManager,
-            $this->requestStack,
-            $this->tagRequestHandler->reveal(),
-            $this->categoryRequestHandler->reveal(),
-            $this->categoryReferenceStore->reveal(),
-            $this->tagReferenceStore->reveal(),
-            null,
-            $this->requestAnalyzer->reveal()
-        );
-
-        $property = $this->getMockForAbstractClass(
-            PropertyInterface::class,
-            [],
-            '',
-            true,
-            true,
-            true,
-            ['getValue', 'getParams']
-        );
+        $property = $this->prophesize(PropertyInterface::class);
         $structure = $this->prophesize(StructureInterface::class);
 
         $this->request->expects($this->any())->method('get')
@@ -704,12 +550,10 @@ class ContentTypeTest extends TestCase
             null
         )->willReturn(new DataProviderResult($expectedData, $hasNextPage));
 
-        $property->expects($this->exactly(1))->method('getValue')
-            ->willReturn($config);
-        $property->expects($this->any())->method('getParams')
-            ->willReturn(['max_per_page' => new PropertyParameter('max_per_page', $pageSize)]);
-        $property->expects($this->exactly(2))->method('getStructure')
-            ->willReturn($structure->reveal());
+        $property->getValue()->willReturn($config)->shouldBeCalled();
+        $property->getParams()->willReturn(['max_per_page' => new PropertyParameter('max_per_page', $pageSize)]);
+        $property->getStructure()->willReturn($structure->reveal())->shouldBeCalledTimes(2);
+        $property->setValue(Argument::any())->shouldBeCalled();
 
         $webspace = new Webspace();
         $webspace->setKey('sulu_io');
@@ -720,7 +564,7 @@ class ContentTypeTest extends TestCase
         $structure->getUuid()->willReturn($uuid);
         $structure->getLanguageCode()->willReturn('de');
 
-        $pageData = $smartContent->getContentData($property);
+        $pageData = $this->smartContent->getContentData($property->reveal());
         $this->assertEquals($expectedData, $pageData);
     }
 
@@ -733,27 +577,6 @@ class ContentTypeTest extends TestCase
         $expectedData,
         $hasNextPage
     ): void {
-        $smartContent = new SmartContent(
-            $this->dataProviderPool,
-            $this->tagManager,
-            $this->requestStack,
-            $this->tagRequestHandler->reveal(),
-            $this->categoryRequestHandler->reveal(),
-            $this->categoryReferenceStore->reveal(),
-            $this->tagReferenceStore->reveal(),
-            null,
-            $this->requestAnalyzer->reveal()
-        );
-
-        $property = $this->getMockForAbstractClass(
-            PropertyInterface::class,
-            [],
-            '',
-            true,
-            true,
-            true,
-            ['getValue', 'getParams']
-        );
         $structure = $this->prophesize(StructureInterface::class);
 
         $this->request->expects($this->any())->method('get')
@@ -822,13 +645,11 @@ class ContentTypeTest extends TestCase
             null
         )->willReturn(new DataProviderResult($expectedData, $hasNextPage));
 
-        $property->expects($this->any())->method('getValue')
-            ->willReturn(\array_merge($config, ['page' => $page, 'hasNextPage' => $hasNextPage]));
-
-        $property->expects($this->any())->method('getParams')
-            ->willReturn(['max_per_page' => new PropertyParameter('max_per_page', $pageSize)]);
-        $property->expects($this->exactly(2))->method('getStructure')
-            ->willReturn($structure->reveal());
+        $property = $this->prophesize(PropertyInterface::class);
+        $property->getValue()->willReturn(\array_merge($config, ['page' => $page, 'hasNextPage' => $hasNextPage]));
+        $property->getParams()->willReturn(['max_per_page' => new PropertyParameter('max_per_page', $pageSize)]);
+        $property->getStructure()->willReturn($structure->reveal())->shouldBeCalled();
+        $property->setValue(Argument::any())->shouldBeCalled();
 
         $webspace = new Webspace();
         $webspace->setKey('sulu_io');
@@ -839,7 +660,7 @@ class ContentTypeTest extends TestCase
         $structure->getUuid()->willReturn($uuid);
         $structure->getLanguageCode()->willReturn('de');
 
-        $viewData = $smartContent->getViewData($property);
+        $viewData = $this->smartContent->getViewData($property->reveal());
         $this->assertEquals(
             \array_merge(
                 [
@@ -867,25 +688,13 @@ class ContentTypeTest extends TestCase
 
     private function getContentDataProperty($value = ['dataSource' => '123-123-123'])
     {
-        $property = $this->getMockForAbstractClass(
-            PropertyInterface::class,
-            [],
-            '',
-            true,
-            true,
-            true,
-            ['getValue', 'getParams']
-        );
         $structure = $this->prophesize(StructureInterface::class);
 
-        $property->expects($this->exactly(1))->method('getValue')
-            ->willReturn($value);
-
-        $property->expects($this->any())->method('getParams')
-            ->willReturn([]);
-
-        $property->expects($this->any())->method('getStructure')
-            ->willReturn($structure->reveal());
+        $property = $this->prophesize(PropertyInterface::class);
+        $property->getValue()->shouldBeCalled()->willReturn($value);
+        $property->getParams()->shouldBeCalled()->willReturn([]);
+        $property->getStructure()->shouldBeCalled()->willReturn($structure->reveal());
+        $property->setValue(Argument::any())->willReturn(null);
 
         $this->pageDataProvider->resolveResourceItems(
             [
@@ -964,29 +773,18 @@ class ContentTypeTest extends TestCase
         $structure->getUuid()->willReturn('123-123-123');
         $structure->getLanguageCode()->willReturn('de');
 
-        return $property;
+        return $property->reveal();
     }
 
     public function testGetContentDataWithActivatedAudienceTargeting(): void
     {
-        $smartContent = new SmartContent(
-            $this->dataProviderPool,
-            $this->tagManager,
-            $this->requestStack,
-            $this->tagRequestHandler->reveal(),
-            $this->categoryRequestHandler->reveal(),
-            $this->categoryReferenceStore->reveal(),
-            $this->tagReferenceStore->reveal(),
-            $this->targetGroupStore->reveal(),
-            $this->requestAnalyzer->reveal()
-        );
-
         $property = $this->prophesize(PropertyInterface::class);
         $property->getParams()->willReturn([
             'provider' => new PropertyParameter('provider', 'pages'),
         ]);
         $property->getValue()->willReturn([
             'audienceTargeting' => true,
+            'targetGroupId' => 1,
         ]);
 
         $structure = $this->prophesize(StructureInterface::class);
@@ -1000,7 +798,7 @@ class ContentTypeTest extends TestCase
 
         $this->targetGroupStore->getTargetGroupId()->willReturn(1);
         $this->pageDataProvider->resolveResourceItems(
-            Argument::that(function($value) {
+            Argument::that(function(array $value) {
                 return 1 === $value['targetGroupId'];
             }),
             Argument::cetera(),
@@ -1011,23 +809,11 @@ class ContentTypeTest extends TestCase
             return 1 === $value['targetGroupId'];
         }))->shouldBeCalled();
 
-        $smartContent->getContentData($property->reveal());
+        $this->smartContent->getContentData($property->reveal());
     }
 
     public function testGetContentDataWithDeactivatedAudienceTargeting(): void
     {
-        $smartContent = new SmartContent(
-            $this->dataProviderPool,
-            $this->tagManager,
-            $this->requestStack,
-            $this->tagRequestHandler->reveal(),
-            $this->categoryRequestHandler->reveal(),
-            $this->categoryReferenceStore->reveal(),
-            $this->tagReferenceStore->reveal(),
-            $this->targetGroupStore->reveal(),
-            $this->requestAnalyzer->reveal()
-        );
-
         $property = $this->prophesize(PropertyInterface::class);
         $property->getParams()->willReturn([
             'provider' => new PropertyParameter('provider', 'pages'),
@@ -1058,23 +844,11 @@ class ContentTypeTest extends TestCase
             return !\array_key_exists('targetGroupId', $value);
         }))->shouldBeCalled();
 
-        $smartContent->getContentData($property->reveal());
+        $this->smartContent->getContentData($property->reveal());
     }
 
     public function testGetContentDataWithSegmentKey(): void
     {
-        $smartContent = new SmartContent(
-            $this->dataProviderPool,
-            $this->tagManager,
-            $this->requestStack,
-            $this->tagRequestHandler->reveal(),
-            $this->categoryRequestHandler->reveal(),
-            $this->categoryReferenceStore->reveal(),
-            $this->tagReferenceStore->reveal(),
-            $this->targetGroupStore->reveal(),
-            $this->requestAnalyzer->reveal()
-        );
-
         $webspace = new Webspace();
         $webspace->setKey('sulu_io');
         $this->requestAnalyzer->getWebspace()->willReturn($webspace);
@@ -1104,6 +878,6 @@ class ContentTypeTest extends TestCase
             return 's' === $value['segmentKey'];
         }))->shouldBeCalled();
 
-        $smartContent->getContentData($property->reveal());
+        $this->smartContent->getContentData($property->reveal());
     }
 }

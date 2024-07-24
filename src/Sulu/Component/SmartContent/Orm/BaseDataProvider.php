@@ -161,7 +161,7 @@ abstract class BaseDataProvider implements DataProviderInterface
      * @param int|null $pageSize
      * @param array $options
      *
-     * @return array
+     * @return array{array<mixed>, bool}
      */
     private function resolveFilters(
         array $filters,

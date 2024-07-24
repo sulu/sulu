@@ -16,15 +16,7 @@ use Sulu\Component\Rest\ListBuilder\Doctrine\EncodeAliasTrait;
 
 class EncodeAliasTraitTest extends TestCase
 {
-    /**
-     * @var EncodeAliasTrait
-     */
-    private $encodeAlias;
-
-    public function setup(): void
-    {
-        $this->encodeAlias = $this->getMockForTrait(EncodeAliasTrait::class);
-    }
+    use EncodeAliasTrait;
 
     public static function encodeAliasDataProvider()
     {
@@ -45,11 +37,8 @@ class EncodeAliasTraitTest extends TestCase
     }
 
     #[\PHPUnit\Framework\Attributes\DataProvider('encodeAliasDataProvider')]
-    public function testEncodeAlias($value, $expected): void
+    public function testEncodeAlias(string $value, string $expected): void
     {
-        $method = new \ReflectionMethod(\get_class($this->encodeAlias), 'encodeAlias');
-        $method->setAccessible(true);
-
-        $this->assertEquals($expected, $method->invoke($this->encodeAlias, $value));
+        $this->assertEquals($expected, $this->encodeAlias($value));
     }
 }
