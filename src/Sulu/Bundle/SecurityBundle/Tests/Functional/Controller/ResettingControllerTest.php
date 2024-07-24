@@ -287,6 +287,9 @@ class ResettingControllerTest extends SuluTestCase
             $this->assertCount(1, $mailCollector->getEvents()->getMessages());
         }
 
+        static::ensureKernelShutdown(); // shutdown to fix lowest test with: `Error: Cannot use object of type Doctrine\ORM\EntityNotFoundException as array` when try to flush the entity manager next
+        $this->client = $this->createAuthenticatedClient();
+
         /** @var User $user */
         $user = $this->em->find(
             User::class,
