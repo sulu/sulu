@@ -29,10 +29,10 @@ trait DataProviderRepositoryTrait
      * @param array $filters
      * @param int $page
      * @param int $pageSize
-     * @param int $limit
+     * @param int|null $limit
      * @param string $locale
      * @param array{webspaceKey?: string, locale?: string} $options
-     * @param string|null $entityClass
+     * @param class-string|null $entityClass
      * @param string|null $entityAlias
      * @param int|null $permission
      *
@@ -90,9 +90,10 @@ trait DataProviderRepositoryTrait
      * @param array $filters array of filters: tags, tagOperator
      * @param int $page
      * @param int $pageSize
-     * @param int $limit
+     * @param int|null $limit
      * @param string $locale
      * @param mixed[] $options
+     * @param class-string $entityClass
      *
      * @return int[]|string[]
      */
@@ -104,9 +105,9 @@ trait DataProviderRepositoryTrait
         $locale,
         $options = [],
         ?UserInterface $user = null,
-        $entityClass = null,
-        $entityAlias = null,
-        $permission = null
+        ?string $entityClass = null,
+        ?string $entityAlias = null,
+        ?int $permission = null
     ) {
         $parameter = [];
 
@@ -342,7 +343,7 @@ trait DataProviderRepositoryTrait
      * Creates a new QueryBuilder instance that is prepopulated for this entity name.
      *
      * @param string $alias
-     * @param string $indexBy
+     * @param string|null $indexBy
      *
      * @return QueryBuilder
      */
