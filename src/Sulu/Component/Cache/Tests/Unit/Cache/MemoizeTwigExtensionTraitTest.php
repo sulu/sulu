@@ -23,95 +23,47 @@ use Twig\TwigFunction;
 class MemoizeTwigExtensionTraitTest extends TestCase
 {
     use ProphecyTrait;
-
-    /**
-     * @var MemoizeTwigExtensionTrait
-     */
-    protected $trait;
+    use MemoizeTwigExtensionTrait;
 
     /**
      * @var ObjectProphecy<ExtensionInterface>
      */
-    protected $extension;
-
-    /**
-     * @var \ReflectionProperty
-     */
-    protected $extensionProperty;
+    private $extensionMock;
 
     /**
      * @var ObjectProphecy<MemoizeInterface>
      */
-    protected $memoizeCache;
-
-    /**
-     * @var \ReflectionProperty
-     */
-    protected $memoizeCacheProperty;
-
-    /**
-     * @var int
-     */
-    protected $lifeTime;
-
-    /**
-     * @var \ReflectionProperty
-     */
-    protected $lifeTimeProperty;
+    private $memoizeCacheMock;
 
     protected function setUp(): void
     {
-        $this->memoizeCache = $this->prophesize(MemoizeInterface::class);
-        $this->extension = $this->prophesize(ExtensionInterface::class);
+        $this->memoizeCacheMock = $this->prophesize(MemoizeInterface::class);
+        $this->extensionMock = $this->prophesize(ExtensionInterface::class);
 
-        $this->trait = $this->getMockForTrait(MemoizeTwigExtensionTrait::class);
-
-        $this->extensionProperty = new \ReflectionProperty(\get_class($this->trait), 'extension');
-        $this->extensionProperty->setAccessible(true);
-        $this->extensionProperty->setValue($this->trait, $this->extension->reveal());
-
-        $this->memoizeCacheProperty = new \ReflectionProperty(\get_class($this->trait), 'memoizeCache');
-        $this->memoizeCacheProperty->setAccessible(true);
-        $this->memoizeCacheProperty->setValue($this->trait, $this->memoizeCache->reveal());
-
-        $this->lifeTimeProperty = new \ReflectionProperty(\get_class($this->trait), 'lifeTime');
-        $this->lifeTimeProperty->setAccessible(true);
-        $this->lifeTimeProperty->setValue($this->trait, $this->lifeTime);
+        $this->extension = $this->extensionMock->reveal();
+        $this->memoizeCache = $this->memoizeCacheMock->reveal();
     }
 
     public function testGetFunctions(): void
     {
         $before = [
-            new TwigFunction(
-                'sulu_content_load',
-                function() {
-                    return 1;
-                }
-            ),
-            new TwigFunction(
-                'sulu_content_load_parent',
-                function() {
-                    return 2;
-                }
-            ),
+            new TwigFunction('sulu_content_load', function() { return 1; }),
+            new TwigFunction('sulu_content_load_parent', function() { return 2; }),
         ];
 
-        $this->extension->getFunctions()->willReturn($before);
-        $this->memoizeCache->memoizeById('sulu_content_load', [], Argument::type('callable'), $this->lifeTime)
-            ->will(
-                function($arguments) {
-                    return \call_user_func($arguments[2]);
-                }
-            );
-        $this->memoizeCache->memoizeById('sulu_content_load_parent', [], Argument::type('callable'), $this->lifeTime)
-            ->will(
-                function($arguments) {
-                    return \call_user_func($arguments[2]);
-                }
-            );
+        $this->extensionMock->getFunctions()->willReturn($before)->shouldBeCalled();
+
+        $this->memoizeCacheMock
+            ->memoizeById('sulu_content_load', [], Argument::type('callable'), $this->lifeTime)
+            ->will(function(array $arguments) {return $arguments[2](); })
+            ->shouldBeCalled();
+        $this->memoizeCacheMock
+            ->memoizeById('sulu_content_load_parent', [], Argument::type('callable'), $this->lifeTime)
+            ->will(function(array $arguments) {return $arguments[2](); })
+            ->shouldBeCalled();
 
         /** @var TwigFunction[] $result */
-        $result = $this->trait->getFunctions();
+        $result = $this->getFunctions();
 
         $this->assertInstanceOf(TwigFunction::class, $result[0]);
         $this->assertEquals('sulu_content_load', $result[0]->getName());
