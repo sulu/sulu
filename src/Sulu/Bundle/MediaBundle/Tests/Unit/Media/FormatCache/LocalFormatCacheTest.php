@@ -13,7 +13,6 @@ namespace Sulu\Bundle\MediaBundle\Media\FormatCache;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
-use Prophecy\Prophecy\ObjectProphecy;
 use Symfony\Component\Filesystem\Filesystem;
 
 class LocalFormatCacheTest extends TestCase
