@@ -211,6 +211,6 @@ class LocalFormatCache implements FormatCacheInterface
             throw new ImageProxyInvalidUrl('No `filename` was found in the url');
         }
 
-        return \urldecode($fileName);
+        return \rawurldecode($fileName);
     }
 }
