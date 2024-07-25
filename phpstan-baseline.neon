@@ -14591,11 +14591,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Media/FormatCache/LocalFormatCache.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Media\\\\FormatCache\\\\LocalFormatCache\\:\\:getFileNameFromUrl\\(\\) should return int but returns string\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Media/FormatCache/LocalFormatCache.php
-
-		-
 			message: "#^Parameter \\#1 \\$string of function strlen expects string, int given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Media/FormatCache/LocalFormatCache.php
