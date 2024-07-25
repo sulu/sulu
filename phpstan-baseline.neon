@@ -14576,11 +14576,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Media/FormatCache/FormatCacheInterface.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Media\\\\FormatCache\\\\LocalFormatCache\\:\\:__construct\\(\\) has parameter \\$segments with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Media/FormatCache/LocalFormatCache.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Media\\\\FormatCache\\\\LocalFormatCache\\:\\:analyzedMediaUrl\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Media/FormatCache/LocalFormatCache.php
@@ -17019,11 +17014,6 @@ parameters:
 			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Unit\\\\EventListener\\\\CacheInvalidationListenerTest\\:\\:testPostUpdateOther\\(\\) has parameter \\$functionName with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Unit/EventListener/CacheInvalidationListenerTest.php
-
-		-
-			message: "#^Class Sulu\\\\Bundle\\\\MediaBundle\\\\Media\\\\FormatCache\\\\LocalFormatCache constructor invoked with 5 parameters, 4 required\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Unit/LocalFormatCacheTest.php
 
 		-
 			message: "#^Parameter \\#1 \\$hrefs of method Sulu\\\\Bundle\\\\MediaBundle\\\\Markup\\\\Link\\\\MediaLinkProvider\\:\\:preload\\(\\) expects array\\<string\\>, array\\<int, int\\> given\\.$#"

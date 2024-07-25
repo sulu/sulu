@@ -20,41 +20,53 @@ class LocalFormatCacheTest extends TestCase
 {
     use ProphecyTrait;
 
-    /** @var ObjectProphecy<Filesystem> */
-    private ?ObjectProphecy $filesystem = null;
-
-    private ?LocalFormatCache $localFormatCache = null;
+    private LocalFormatCache $localFormatCache;
 
     protected function setUp(): void
     {
-        $this->filesystem = $this->prophesize(Filesystem::class);
+        $fileSystem = new Filesystem();
         $this->localFormatCache = new LocalFormatCache(
-            $this->filesystem->reveal(),
-            '/',
-            '/',
-            10
+            $fileSystem,
+            '/web/uploads/media',
+            '/uploads/media/{slug}',
+            10,
         );
     }
 
     public function testAnalyzedMediaUrl(): void
     {
-        $info = $this->localFormatCache?->analyzedMediaUrl('/uploads/media/950x/01/21-test-image.jpg');
+        $info = $this->localFormatCache->analyzedMediaUrl('/uploads/media/sulu-50x50/01/21-test-image.jpg');
 
         self::assertEquals([
             'id' => 21,
-            'format' => '950x',
+            'format' => 'sulu-50x50',
             'fileName' => 'test-image.jpg',
         ], $info);
     }
 
-    public function testAnalyzedMediaUrlWithWhiteSpace(): void
+    public function testAnalyzedMediaUrlDecode(): void
     {
-        $info = $this->localFormatCache?->analyzedMediaUrl('/uploads/media/950x/01/21-test%20image.jpg');
+        $info = $this->localFormatCache->analyzedMediaUrl('/uploads/media/sulu-50x50/01/21-Test%20With%20Spaces%20%26%20Co.jpg');
 
         self::assertEquals([
             'id' => 21,
-            'format' => '950x',
-            'fileName' => 'test image.jpg',
+            'format' => 'sulu-50x50',
+            'fileName' => 'Test With Spaces & Co.jpg',
         ], $info);
+    }
+
+    public function testMediaUrlEncoding(): void
+    {
+        $version = 2;
+        $subVersion = 3;
+        $fileId = 1;
+        $format = 'sulu-50x50';
+        $fileName = 'Test With Spaces & Co.jpg';
+        $filePath = $this->localFormatCache->getMediaUrl($fileId, $fileName, $format, $version, $subVersion);
+
+        $this->assertSame(
+            '/uploads/media/sulu-50x50/01/1-Test%20With%20Spaces%20%26%20Co.jpg?v=2-3',
+            $filePath
+        );
     }
 }

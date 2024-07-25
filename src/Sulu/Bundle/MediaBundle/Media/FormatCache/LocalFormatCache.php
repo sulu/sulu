@@ -26,6 +26,7 @@ class LocalFormatCache implements FormatCacheInterface
     /**
      * @param string $path
      * @param string $pathUrl
+     * @param int|float|numeric-string $segments
      */
     public function __construct(
         private Filesystem $filesystem,
