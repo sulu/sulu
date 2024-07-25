@@ -198,13 +198,11 @@ class LocalFormatCache implements FormatCacheInterface
     /**
      * Return the requested image format from url.
      *
-     * @param string $url
-     *
-     * @return int
+     * @return string
      *
      * @throws ImageProxyInvalidUrl
      */
-    protected function getFileNameFromUrl($url)
+    protected function getFileNameFromUrl(string $url)
     {
         $fileNameParts = \explode('-', \basename($url), 2); // the basename is {id}-{filename}
         $fileName = $fileNameParts[1] ?? null;
@@ -213,6 +211,6 @@ class LocalFormatCache implements FormatCacheInterface
             throw new ImageProxyInvalidUrl('No `filename` was found in the url');
         }
 
-        return $fileName;
+        return \urldecode($fileName);
     }
 }
