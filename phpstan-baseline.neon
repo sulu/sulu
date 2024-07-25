@@ -51,6 +51,11 @@ parameters:
 			path: src/Sulu/Bundle/ActivityBundle/UserInterface/Controller/ActivityController.php
 
 		-
+			message: "#^Parameter \\#1 \\$fieldDescriptors of class Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Doctrine\\\\FieldDescriptor\\\\DoctrineConcatenationFieldDescriptor constructor expects array\\<Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Doctrine\\\\FieldDescriptor\\\\DoctrineFieldDescriptorInterface\\>, array\\<Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\FieldDescriptorInterface\\> given\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/ActivityBundle/UserInterface/Controller/ActivityController.php
+
+		-
 			message: "#^Parameter \\#1 \\$value of method Sulu\\\\Bundle\\\\ActivityBundle\\\\UserInterface\\\\Controller\\\\ActivityController\\:\\:getLocalizedValue\\(\\) expects string\\|null, mixed given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/ActivityBundle/UserInterface/Controller/ActivityController.php
@@ -13901,12 +13906,32 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Entity/Collection.php
 
 		-
+			message: "#^Property Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\Collection\\:\\:\\$changer type mapping mismatch\\: property can contain Sulu\\\\Component\\\\Security\\\\Authentication\\\\UserInterface\\|null but database expects Sulu\\\\Bundle\\\\SecurityBundle\\\\Entity\\\\User\\|null\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/MediaBundle/Entity/Collection.php
+
+		-
+			message: "#^Property Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\Collection\\:\\:\\$children type mapping mismatch\\: property can contain Doctrine\\\\Common\\\\Collections\\\\Collection\\<int, Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\CollectionInterface\\> but database expects Doctrine\\\\Common\\\\Collections\\\\Collection&iterable\\<Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\Collection\\>\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/MediaBundle/Entity/Collection.php
+
+		-
+			message: "#^Property Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\Collection\\:\\:\\$creator type mapping mismatch\\: property can contain Sulu\\\\Component\\\\Security\\\\Authentication\\\\UserInterface\\|null but database expects Sulu\\\\Bundle\\\\SecurityBundle\\\\Entity\\\\User\\|null\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/MediaBundle/Entity/Collection.php
+
+		-
 			message: "#^Property Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\Collection\\:\\:\\$defaultMeta \\(Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\CollectionMeta\\) does not accept Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\CollectionMeta\\|null\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Entity/Collection.php
 
 		-
 			message: "#^Property Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\Collection\\:\\:\\$defaultMeta type mapping mismatch\\: database can contain Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\CollectionMeta\\|null but property expects Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\CollectionMeta\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/MediaBundle/Entity/Collection.php
+
+		-
+			message: "#^Property Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\Collection\\:\\:\\$media type mapping mismatch\\: property can contain Doctrine\\\\Common\\\\Collections\\\\Collection\\<int, Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\MediaInterface\\> but database expects Doctrine\\\\Common\\\\Collections\\\\Collection&iterable\\<Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\Media\\>\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Entity/Collection.php
 
@@ -37276,11 +37301,6 @@ parameters:
 			path: src/Sulu/Component/Content/Export/WebspaceExport.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Export\\\\WebspaceExport\\:\\:__construct\\(\\) has parameter \\$formatFilePaths with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Export/WebspaceExport.php
-
-		-
 			message: "#^Method Sulu\\\\Component\\\\Content\\\\Export\\\\WebspaceExport\\:\\:buildNodeUuidToPathWhere\\(\\) has parameter \\$nodes with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Export/WebspaceExport.php
@@ -44571,11 +44591,6 @@ parameters:
 			path: src/Sulu/Component/Export/Export.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\Export\\\\Export\\:\\:__construct\\(\\) has parameter \\$formatFilePaths with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/Export/Export.php
-
-		-
 			message: "#^Method Sulu\\\\Component\\\\Export\\\\Export\\:\\:createProperty\\(\\) has parameter \\$children with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Component/Export/Export.php
@@ -44686,22 +44701,7 @@ parameters:
 			path: src/Sulu/Component/Hash/AuditableHasher.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\Hash\\\\RequestHashChecker\\:\\:__construct\\(\\) has parameter \\$forceParameter with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Hash/RequestHashChecker.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Hash\\\\RequestHashChecker\\:\\:__construct\\(\\) has parameter \\$hashParameter with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Hash/RequestHashChecker.php
-
-		-
 			message: "#^Parameter \\#2 \\$default of method Symfony\\\\Component\\\\HttpFoundation\\\\InputBag\\<string\\>\\:\\:get\\(\\) expects string\\|null, false given\\.$#"
-			count: 1
-			path: src/Sulu/Component/Hash/RequestHashChecker.php
-
-		-
-			message: "#^Property Sulu\\\\Component\\\\Hash\\\\RequestHashChecker\\:\\:\\$forceParameter is never read, only written\\.$#"
 			count: 1
 			path: src/Sulu/Component/Hash/RequestHashChecker.php
 
@@ -44991,11 +44991,6 @@ parameters:
 			path: src/Sulu/Component/Import/Format/Xliff12.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\Import\\\\Import\\:\\:__construct\\(\\) has parameter \\$formatFilePaths with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/Import/Import.php
-
-		-
 			message: "#^Method Sulu\\\\Component\\\\Import\\\\Import\\:\\:addException\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/Import/Import.php
@@ -45211,11 +45206,6 @@ parameters:
 			path: src/Sulu/Component/Media/SystemCollections/SystemCollectionManager.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\Media\\\\SystemCollections\\\\SystemCollectionManager\\:\\:__construct\\(\\) has parameter \\$locale with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Media/SystemCollections/SystemCollectionManager.php
-
-		-
 			message: "#^Method Sulu\\\\Component\\\\Media\\\\SystemCollections\\\\SystemCollectionManager\\:\\:buildSystemCollections\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Component/Media/SystemCollections/SystemCollectionManager.php
@@ -45261,11 +45251,6 @@ parameters:
 			path: src/Sulu/Component/Media/SystemCollections/SystemCollectionManager.php
 
 		-
-			message: "#^Negated boolean expression is always false\\.$#"
-			count: 1
-			path: src/Sulu/Component/Media/SystemCollections/SystemCollectionManager.php
-
-		-
 			message: "#^Parameter \\#2 \\$locale of method Sulu\\\\Bundle\\\\MediaBundle\\\\Collection\\\\Manager\\\\CollectionManagerInterface\\:\\:getByKey\\(\\) expects string, int\\|string\\|null given\\.$#"
 			count: 1
 			path: src/Sulu/Component/Media/SystemCollections/SystemCollectionManager.php
@@ -45286,22 +45271,12 @@ parameters:
 			path: src/Sulu/Component/Media/SystemCollections/SystemCollectionManager.php
 
 		-
-			message: "#^Property Sulu\\\\Component\\\\Media\\\\SystemCollections\\\\SystemCollectionManager\\:\\:\\$config type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/Media/SystemCollections/SystemCollectionManager.php
-
-		-
 			message: "#^Property Sulu\\\\Component\\\\Media\\\\SystemCollections\\\\SystemCollectionManager\\:\\:\\$systemCollections \\(array\\) does not accept Serializable\\.$#"
 			count: 1
 			path: src/Sulu/Component/Media/SystemCollections/SystemCollectionManager.php
 
 		-
 			message: "#^Property Sulu\\\\Component\\\\Media\\\\SystemCollections\\\\SystemCollectionManager\\:\\:\\$systemCollections type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/Media/SystemCollections/SystemCollectionManager.php
-
-		-
-			message: "#^Property Sulu\\\\Component\\\\Media\\\\SystemCollections\\\\SystemCollectionManager\\:\\:\\$tokenProvider \\(Symfony\\\\Component\\\\Security\\\\Core\\\\Authentication\\\\Token\\\\Storage\\\\TokenStorageInterface\\) does not accept Symfony\\\\Component\\\\Security\\\\Core\\\\Authentication\\\\Token\\\\Storage\\\\TokenStorageInterface\\|null\\.$#"
 			count: 1
 			path: src/Sulu/Component/Media/SystemCollections/SystemCollectionManager.php
 
@@ -45801,11 +45776,6 @@ parameters:
 			path: src/Sulu/Component/PHPCR/PathCleanup.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\PHPCR\\\\SessionManager\\\\SessionManager\\:\\:__construct\\(\\) has parameter \\$nodeNames with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/PHPCR/SessionManager/SessionManager.php
-
-		-
 			message: "#^Method Sulu\\\\Component\\\\PHPCR\\\\SessionManager\\\\SessionManager\\:\\:getSnippetNode\\(\\) has parameter \\$templateKey with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/PHPCR/SessionManager/SessionManager.php
@@ -45857,11 +45827,6 @@ parameters:
 
 		-
 			message: "#^Property Sulu\\\\Component\\\\Persistence\\\\EventSubscriber\\\\ORM\\\\MetadataSubscriber\\:\\:\\$classNames type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/Persistence/EventSubscriber/ORM/MetadataSubscriber.php
-
-		-
-			message: "#^Property Sulu\\\\Component\\\\Persistence\\\\EventSubscriber\\\\ORM\\\\MetadataSubscriber\\:\\:\\$objects type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Component/Persistence/EventSubscriber/ORM/MetadataSubscriber.php
 
@@ -45952,11 +45917,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Component\\\\Persistence\\\\EventSubscriber\\\\ORM\\\\UserBlameSubscriber\\:\\:onFlush\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Persistence/EventSubscriber/ORM/UserBlameSubscriber.php
-
-		-
-			message: "#^Property Sulu\\\\Component\\\\Persistence\\\\EventSubscriber\\\\ORM\\\\UserBlameSubscriber\\:\\:\\$tokenStorage \\(Symfony\\\\Component\\\\Security\\\\Core\\\\Authentication\\\\Token\\\\Storage\\\\TokenStorageInterface\\) does not accept Symfony\\\\Component\\\\Security\\\\Core\\\\Authentication\\\\Token\\\\Storage\\\\TokenStorageInterface\\|null\\.$#"
 			count: 1
 			path: src/Sulu/Component/Persistence/EventSubscriber/ORM/UserBlameSubscriber.php
 
@@ -46611,11 +46571,6 @@ parameters:
 			path: src/Sulu/Component/Rest/ListBuilder/Doctrine/DoctrineListBuilder.php
 
 		-
-			message: "#^Property Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Doctrine\\\\DoctrineListBuilder\\:\\:\\$permissions type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/Doctrine/DoctrineListBuilder.php
-
-		-
 			message: "#^Property Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Doctrine\\\\DoctrineListBuilder\\:\\:\\$securedEntityName \\(class\\-string\\) does not accept string\\.$#"
 			count: 1
 			path: src/Sulu/Component/Rest/ListBuilder/Doctrine/DoctrineListBuilder.php
@@ -46626,22 +46581,7 @@ parameters:
 			path: src/Sulu/Component/Rest/ListBuilder/Doctrine/DoctrineListBuilderFactory.php
 
 		-
-			message: "#^Property Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Doctrine\\\\DoctrineListBuilderFactory\\:\\:\\$permissions type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/Doctrine/DoctrineListBuilderFactory.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Doctrine\\\\FieldDescriptor\\\\DoctrineConcatenationFieldDescriptor\\:\\:__construct\\(\\) has parameter \\$fieldDescriptors with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/Doctrine/FieldDescriptor/DoctrineConcatenationFieldDescriptor.php
-
-		-
 			message: "#^Method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Doctrine\\\\FieldDescriptor\\\\DoctrineConcatenationFieldDescriptor\\:\\:getSelect\\(\\) should return string but returns string\\|null\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/Doctrine/FieldDescriptor/DoctrineConcatenationFieldDescriptor.php
-
-		-
-			message: "#^Property Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Doctrine\\\\FieldDescriptor\\\\DoctrineConcatenationFieldDescriptor\\:\\:\\$glue has no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/Rest/ListBuilder/Doctrine/FieldDescriptor/DoctrineConcatenationFieldDescriptor.php
 
@@ -46661,11 +46601,6 @@ parameters:
 			path: src/Sulu/Component/Rest/ListBuilder/Doctrine/FieldDescriptor/DoctrineDescriptor.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Doctrine\\\\FieldDescriptor\\\\DoctrineFieldDescriptor\\:\\:__construct\\(\\) has parameter \\$joins with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/Doctrine/FieldDescriptor/DoctrineFieldDescriptor.php
-
-		-
 			message: "#^Method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Doctrine\\\\FieldDescriptor\\\\DoctrineFieldDescriptor\\:\\:encodeAlias\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/Rest/ListBuilder/Doctrine/FieldDescriptor/DoctrineFieldDescriptor.php
@@ -46674,11 +46609,6 @@ parameters:
 			message: "#^Method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Doctrine\\\\FieldDescriptor\\\\DoctrineFieldDescriptor\\:\\:getJoins\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Component/Rest/ListBuilder/Doctrine/FieldDescriptor/DoctrineFieldDescriptor.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Doctrine\\\\FieldDescriptor\\\\DoctrineIdentityFieldDescriptor\\:\\:__construct\\(\\) has parameter \\$joins with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/Doctrine/FieldDescriptor/DoctrineIdentityFieldDescriptor.php
 
 		-
 			message: "#^Method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Doctrine\\\\FieldDescriptor\\\\DoctrineIdentityFieldDescriptor\\:\\:encodeAlias\\(\\) has no return type specified\\.$#"
@@ -46691,12 +46621,7 @@ parameters:
 			path: src/Sulu/Component/Rest/ListBuilder/Doctrine/FieldDescriptor/DoctrineJoinDescriptor.php
 
 		-
-			message: "#^Property Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Doctrine\\\\FieldDescriptor\\\\DoctrineJoinDescriptor\\:\\:\\$join \\(string\\) does not accept string\\|null\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/Doctrine/FieldDescriptor/DoctrineJoinDescriptor.php
-
-		-
-			message: "#^Property Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Doctrine\\\\FieldDescriptor\\\\DoctrineJoinDescriptor\\:\\:\\$joinCondition \\(string\\) does not accept string\\|null\\.$#"
+			message: "#^Parameter \\#1 \\$value of method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Doctrine\\\\FieldDescriptor\\\\DoctrineJoinDescriptor\\:\\:encodeAlias\\(\\) expects array\\<string\\>\\|string, string\\|null given\\.$#"
 			count: 1
 			path: src/Sulu/Component/Rest/ListBuilder/Doctrine/FieldDescriptor/DoctrineJoinDescriptor.php
 
@@ -46714,16 +46639,6 @@ parameters:
 			message: "#^Method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Expression\\\\ConjunctionExpressionInterface\\:\\:getFieldNames\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Component/Rest/ListBuilder/Expression/ConjunctionExpressionInterface.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Expression\\\\Doctrine\\\\DoctrineBetweenExpression\\:\\:__construct\\(\\) has parameter \\$end with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/Expression/Doctrine/DoctrineBetweenExpression.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Expression\\\\Doctrine\\\\DoctrineBetweenExpression\\:\\:__construct\\(\\) has parameter \\$start with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/Expression/Doctrine/DoctrineBetweenExpression.php
 
 		-
 			message: "#^Method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Expression\\\\Doctrine\\\\DoctrineBetweenExpression\\:\\:getEnd\\(\\) return type has no value type specified in iterable type array\\.$#"
@@ -46774,16 +46689,6 @@ parameters:
 			message: "#^Property Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Expression\\\\Doctrine\\\\DoctrineInExpression\\:\\:\\$values type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Component/Rest/ListBuilder/Expression/Doctrine/DoctrineInExpression.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Expression\\\\Doctrine\\\\DoctrineWhereExpression\\:\\:__construct\\(\\) has parameter \\$comparator with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/Expression/Doctrine/DoctrineWhereExpression.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Expression\\\\Doctrine\\\\DoctrineWhereExpression\\:\\:__construct\\(\\) has parameter \\$value with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/Expression/Doctrine/DoctrineWhereExpression.php
 
 		-
 			message: "#^Method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Expression\\\\Doctrine\\\\DoctrineWhereExpression\\:\\:getComparator\\(\\) has no return type specified\\.$#"
@@ -46986,11 +46891,6 @@ parameters:
 			path: src/Sulu/Component/Rest/ListBuilder/ListRepresentation.php
 
 		-
-			message: "#^Property Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\ListRepresentation\\:\\:\\$parameters type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/ListRepresentation.php
-
-		-
 			message: "#^Property Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\ListRepresentation\\:\\:\\$route is never read, only written\\.$#"
 			count: 1
 			path: src/Sulu/Component/Rest/ListBuilder/ListRepresentation.php
@@ -47126,11 +47026,6 @@ parameters:
 			path: src/Sulu/Component/Rest/ListBuilder/Metadata/FieldDescriptorFactory.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Metadata\\\\FieldDescriptorFactory\\:\\:__construct\\(\\) has parameter \\$listDirectories with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/Metadata/FieldDescriptorFactory.php
-
-		-
 			message: "#^Method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Metadata\\\\FieldDescriptorFactory\\:\\:getCaseFieldDescriptor\\(\\) has parameter \\$options with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/Rest/ListBuilder/Metadata/FieldDescriptorFactory.php
@@ -47246,14 +47141,9 @@ parameters:
 			path: src/Sulu/Component/Rest/ListBuilder/Metadata/FieldDescriptorFactory.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Metadata\\\\FieldMetadata\\:\\:__construct\\(\\) has parameter \\$entityName with no type specified\\.$#"
+			message: "#^Parameter \\#1 \\$fieldDescriptors of class Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Doctrine\\\\FieldDescriptor\\\\DoctrineConcatenationFieldDescriptor constructor expects array\\<Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Doctrine\\\\FieldDescriptor\\\\DoctrineFieldDescriptorInterface\\>, array\\<Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\FieldDescriptor\\> given\\.$#"
 			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/Metadata/FieldMetadata.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Metadata\\\\FieldMetadata\\:\\:__construct\\(\\) has parameter \\$name with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/Metadata/FieldMetadata.php
+			path: src/Sulu/Component/Rest/ListBuilder/Metadata/FieldDescriptorFactory.php
 
 		-
 			message: "#^Argument of an invalid type DOMNodeList\\<DOMNode\\>\\|false supplied for foreach, only iterables are supported\\.$#"
@@ -47466,27 +47356,7 @@ parameters:
 			path: src/Sulu/Component/Rest/Listing/ListQueryBuilder.php
 
 		-
-			message: "#^Property Sulu\\\\Component\\\\Rest\\\\Listing\\\\ListQueryBuilder\\:\\:\\$associationNames type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/Listing/ListQueryBuilder.php
-
-		-
-			message: "#^Property Sulu\\\\Component\\\\Rest\\\\Listing\\\\ListQueryBuilder\\:\\:\\$entityName \\(string\\) does not accept array\\<string\\>\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/Listing/ListQueryBuilder.php
-
-		-
-			message: "#^Property Sulu\\\\Component\\\\Rest\\\\Listing\\\\ListQueryBuilder\\:\\:\\$fieldNames type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/Listing/ListQueryBuilder.php
-
-		-
 			message: "#^Property Sulu\\\\Component\\\\Rest\\\\Listing\\\\ListQueryBuilder\\:\\:\\$fields type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/Listing/ListQueryBuilder.php
-
-		-
-			message: "#^Property Sulu\\\\Component\\\\Rest\\\\Listing\\\\ListQueryBuilder\\:\\:\\$joinConditions type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Component/Rest/Listing/ListQueryBuilder.php
 
@@ -47512,16 +47382,6 @@ parameters:
 
 		-
 			message: "#^Property Sulu\\\\Component\\\\Rest\\\\Listing\\\\ListQueryBuilder\\:\\:\\$searchTextFields type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/Listing/ListQueryBuilder.php
-
-		-
-			message: "#^Property Sulu\\\\Component\\\\Rest\\\\Listing\\\\ListQueryBuilder\\:\\:\\$sorting type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/Listing/ListQueryBuilder.php
-
-		-
-			message: "#^Property Sulu\\\\Component\\\\Rest\\\\Listing\\\\ListQueryBuilder\\:\\:\\$where type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Component/Rest/Listing/ListQueryBuilder.php
 
@@ -47627,11 +47487,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#2 \\$value of method Sulu\\\\Component\\\\Rest\\\\Listing\\\\ListRepository\\:\\:getArrayIndexByKeyValue\\(\\) expects string, mixed given\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/Listing/ListRepository.php
-
-		-
-			message: "#^Parameter \\#3 \\$entityName of class Sulu\\\\Component\\\\Rest\\\\Listing\\\\ListQueryBuilder constructor expects array\\<string\\>, class\\-string\\<object\\> given\\.$#"
 			count: 1
 			path: src/Sulu/Component/Rest/Listing/ListRepository.php
 
@@ -47782,11 +47637,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Component\\\\Rest\\\\RestHelper\\:\\:processSubEntities\\(\\) has parameter \\$requestEntities with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/RestHelper.php
-
-		-
-			message: "#^Parameter \\#1 \\$filter of method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\ListBuilderInterface\\:\\:filter\\(\\) expects array, array\\|null given\\.$#"
 			count: 1
 			path: src/Sulu/Component/Rest/RestHelper.php
 
@@ -48351,11 +48201,6 @@ parameters:
 			path: src/Sulu/Component/Rest/Tests/Unit/Listing/ListQueryBuilderTest.php
 
 		-
-			message: "#^Parameter \\#3 \\$entityName of class Sulu\\\\Component\\\\Rest\\\\Listing\\\\ListQueryBuilder constructor expects array\\<string\\>, string given\\.$#"
-			count: 9
-			path: src/Sulu/Component/Rest/Tests/Unit/Listing/ListQueryBuilderTest.php
-
-		-
 			message: "#^Parameter \\#6 \\$where of class Sulu\\\\Component\\\\Rest\\\\Listing\\\\ListQueryBuilder constructor expects array\\<string\\>, array\\<string, int\\> given\\.$#"
 			count: 3
 			path: src/Sulu/Component/Rest/Tests/Unit/Listing/ListQueryBuilderTest.php
@@ -48476,11 +48321,6 @@ parameters:
 			path: src/Sulu/Component/Route/Document/Behavior/RoutableBehavior.php
 
 		-
-			message: "#^Property Sulu\\\\Component\\\\Route\\\\RouteDefaultOptionsCompilerPass\\:\\:\\$targetDefaultOptionsArgument \\(string\\) does not accept int\\.$#"
-			count: 1
-			path: src/Sulu/Component/Route/RouteDefaultOptionsCompilerPass.php
-
-		-
 			message: "#^Method Sulu\\\\Component\\\\Security\\\\Authentication\\\\RoleRepositoryInterface\\:\\:findAllRoles\\(\\) has parameter \\$filter with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Component/Security/Authentication/RoleRepositoryInterface.php
@@ -48562,11 +48402,6 @@ parameters:
 
 		-
 			message: "#^Expression on left side of \\?\\? is not nullable\\.$#"
-			count: 1
-			path: src/Sulu/Component/Security/Authorization/AccessControl/AccessControlManager.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Security\\\\Authorization\\\\AccessControl\\\\AccessControlManager\\:\\:__construct\\(\\) has parameter \\$descendantProviders with no value type specified in iterable type iterable\\.$#"
 			count: 1
 			path: src/Sulu/Component/Security/Authorization/AccessControl/AccessControlManager.php
 
@@ -48711,11 +48546,6 @@ parameters:
 			path: src/Sulu/Component/Security/Authorization/AccessControl/AccessControlManager.php
 
 		-
-			message: "#^Property Sulu\\\\Component\\\\Security\\\\Authorization\\\\AccessControl\\\\AccessControlManager\\:\\:\\$descendantProviders \\(array\\<Sulu\\\\Component\\\\Security\\\\Authorization\\\\AccessControl\\\\DescendantProviderInterface\\>\\) does not accept iterable\\.$#"
-			count: 1
-			path: src/Sulu/Component/Security/Authorization/AccessControl/AccessControlManager.php
-
-		-
 			message: "#^Method Sulu\\\\Component\\\\Security\\\\Authorization\\\\AccessControl\\\\AccessControlManagerInterface\\:\\:setPermissions\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/Security/Authorization/AccessControl/AccessControlManagerInterface.php
@@ -48791,27 +48621,12 @@ parameters:
 			path: src/Sulu/Component/Security/Authorization/AccessControl/PhpcrAccessControlProvider.php
 
 		-
-			message: "#^Property Sulu\\\\Component\\\\Security\\\\Authorization\\\\AccessControl\\\\PhpcrAccessControlProvider\\:\\:\\$permissions type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/Security/Authorization/AccessControl/PhpcrAccessControlProvider.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Security\\\\Authorization\\\\MaskConverter\\:\\:__construct\\(\\) has parameter \\$permissions with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Security/Authorization/MaskConverter.php
-
-		-
 			message: "#^Method Sulu\\\\Component\\\\Security\\\\Authorization\\\\MaskConverter\\:\\:convertPermissionsToArray\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Component/Security/Authorization/MaskConverter.php
 
 		-
 			message: "#^Method Sulu\\\\Component\\\\Security\\\\Authorization\\\\MaskConverter\\:\\:convertPermissionsToNumber\\(\\) has parameter \\$permissionsData with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/Security/Authorization/MaskConverter.php
-
-		-
-			message: "#^Property Sulu\\\\Component\\\\Security\\\\Authorization\\\\MaskConverter\\:\\:\\$permissions type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Component/Security/Authorization/MaskConverter.php
 
@@ -48846,39 +48661,9 @@ parameters:
 			path: src/Sulu/Component/Security/Authorization/SecurityCheckerInterface.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\Security\\\\Authorization\\\\SecurityCondition\\:\\:__construct\\(\\) has parameter \\$locale with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Security/Authorization/SecurityCondition.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Security\\\\Authorization\\\\SecurityCondition\\:\\:__construct\\(\\) has parameter \\$objectId with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Security/Authorization/SecurityCondition.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Security\\\\Authorization\\\\SecurityCondition\\:\\:__construct\\(\\) has parameter \\$objectType with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Security/Authorization/SecurityCondition.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Security\\\\Authorization\\\\SecurityCondition\\:\\:__construct\\(\\) has parameter \\$securityContext with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Security/Authorization/SecurityCondition.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Security\\\\Authorization\\\\SecurityCondition\\:\\:__construct\\(\\) has parameter \\$system with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Security/Authorization/SecurityCondition.php
-
-		-
 			message: "#^Method Sulu\\\\Component\\\\Security\\\\Authorization\\\\SecurityCondition\\:\\:getObjectId\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/Security/Authorization/SecurityCondition.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Security\\\\Authorization\\\\SecurityContextVoter\\:\\:__construct\\(\\) has parameter \\$permissions with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Security/Authorization/SecurityContextVoter.php
 
 		-
 			message: "#^Method Sulu\\\\Component\\\\Security\\\\Authorization\\\\SecurityContextVoter\\:\\:supportsAttribute\\(\\) has no return type specified\\.$#"
@@ -48902,11 +48687,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$securityCondition of method Sulu\\\\Component\\\\Security\\\\Authorization\\\\AccessControl\\\\AccessControlManagerInterface\\:\\:getUserPermissions\\(\\) expects Sulu\\\\Component\\\\Security\\\\Authorization\\\\SecurityCondition, object given\\.$#"
-			count: 1
-			path: src/Sulu/Component/Security/Authorization/SecurityContextVoter.php
-
-		-
-			message: "#^Property Sulu\\\\Component\\\\Security\\\\Authorization\\\\SecurityContextVoter\\:\\:\\$permissions type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Component/Security/Authorization/SecurityContextVoter.php
 
@@ -49732,11 +49512,6 @@ parameters:
 
 		-
 			message: "#^Do not throw the \\\\Exception base class\\. Instead, extend the \\\\Exception base class\\. More info\\: http\\://bit\\.ly/subtypeexception$#"
-			count: 1
-			path: src/Sulu/Component/Snippet/Export/SnippetExport.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Snippet\\\\Export\\\\SnippetExport\\:\\:__construct\\(\\) has parameter \\$formatFilePaths with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/Snippet/Export/SnippetExport.php
 

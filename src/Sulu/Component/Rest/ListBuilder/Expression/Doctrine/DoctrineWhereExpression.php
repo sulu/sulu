@@ -22,34 +22,14 @@ use Sulu\Component\Rest\ListBuilder\ListBuilderInterface;
 class DoctrineWhereExpression extends AbstractDoctrineExpression implements WhereExpressionInterface
 {
     /**
-     * Field descriptor used for comparison.
-     *
-     * @var DoctrineFieldDescriptorInterface
+     * @param mixed $value
+     * @param string $comparator
      */
-    protected $field;
-
-    /**
-     * Value which is used to compare.
-     *
-     * @var mixed
-     */
-    protected $value;
-
-    /**
-     * Comparator to compare values.
-     *
-     * @var DoctrineFieldDescriptorInterface
-     */
-    protected $comparator;
-
     public function __construct(
-        DoctrineFieldDescriptorInterface $field,
-        $value,
-        $comparator = ListBuilderInterface::WHERE_COMPARATOR_EQUAL
+        protected DoctrineFieldDescriptorInterface $field,
+        protected $value,
+        protected $comparator = ListBuilderInterface::WHERE_COMPARATOR_EQUAL
     ) {
-        $this->field = $field;
-        $this->value = $value;
-        $this->comparator = $comparator;
     }
 
     public function getStatement(QueryBuilder $queryBuilder)

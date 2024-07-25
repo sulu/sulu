@@ -25,29 +25,17 @@ use Sulu\Component\Import\Manager\ImportManagerInterface;
 class Import
 {
     /**
-     * @var FormatImportInterface[]
-     */
-    protected $formatFilePaths = [];
-
-    /**
-     * @var ImportManagerInterface
-     */
-    protected $importManager;
-
-    /**
-     * @var LegacyPropertyFactory
-     */
-    protected $legacyPropertyFactory;
-
-    /**
      * @var array
      */
     protected $exceptionStore = [];
 
+    /**
+     * @param FormatImportInterface[] $formatFilePaths
+     */
     public function __construct(
-        ImportManagerInterface $importManager,
-        LegacyPropertyFactory $legacyPropertyFactory,
-        array $formatFilePaths
+        protected ImportManagerInterface $importManager,
+        protected LegacyPropertyFactory $legacyPropertyFactory,
+        protected array $formatFilePaths
     ) {
         $this->formatFilePaths = $formatFilePaths;
         $this->importManager = $importManager;

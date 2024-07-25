@@ -27,11 +27,6 @@ class MetadataSubscriber implements EventSubscriber
     /**
      * @var array
      */
-    protected $objects;
-
-    /**
-     * @var array
-     */
     private $classNames;
 
     /**
@@ -39,9 +34,8 @@ class MetadataSubscriber implements EventSubscriber
      *
      * @param array $objects
      */
-    public function __construct($objects)
+    public function __construct(protected $objects)
     {
-        $this->objects = $objects;
     }
 
     public function getSubscribedEvents()

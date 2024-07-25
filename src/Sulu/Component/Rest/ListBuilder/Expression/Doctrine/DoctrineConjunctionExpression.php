@@ -22,16 +22,6 @@ use Sulu\Component\Rest\ListBuilder\Expression\Exception\InsufficientExpressions
 class DoctrineConjunctionExpression extends AbstractDoctrineExpression implements ConjunctionExpressionInterface
 {
     /**
-     * @var string
-     */
-    protected $conjunction;
-
-    /**
-     * @var AbstractDoctrineExpression[]
-     */
-    protected $expressions;
-
-    /**
      * DoctrineAndExpression constructor.
      *
      * @param string $conjunction
@@ -39,14 +29,11 @@ class DoctrineConjunctionExpression extends AbstractDoctrineExpression implement
      *
      * @throws InsufficientExpressionsException
      */
-    public function __construct($conjunction, array $expressions)
+    public function __construct(protected $conjunction, private array $expressions)
     {
-        if (\count($expressions) < 2) {
-            throw new InsufficientExpressionsException($expressions);
+        if (\count($this->expressions) < 2) {
+            throw new InsufficientExpressionsException($this->expressions);
         }
-
-        $this->expressions = $expressions;
-        $this->conjunction = $conjunction;
     }
 
     public function getStatement(QueryBuilder $queryBuilder)

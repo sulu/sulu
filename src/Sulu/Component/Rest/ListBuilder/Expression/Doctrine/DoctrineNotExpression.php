@@ -18,17 +18,8 @@ use Doctrine\ORM\QueryBuilder;
  */
 class DoctrineNotExpression extends AbstractDoctrineExpression
 {
-    /**
-     * @var AbstractDoctrineExpression
-     */
-    private $expression;
-
-    /**
-     * DoctrineNotExpression constructor.
-     */
-    public function __construct(AbstractDoctrineExpression $expression)
+    public function __construct(private AbstractDoctrineExpression $expression)
     {
-        $this->expression = $expression;
     }
 
     public function getStatement(QueryBuilder $queryBuilder)

@@ -20,11 +20,6 @@ use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
  */
 class DoctrineCountFieldDescriptor extends DoctrineFieldDescriptor
 {
-    /**
-     * @var bool
-     */
-    private $distinct;
-
     public function __construct(
         string $fieldName,
         string $name,
@@ -35,7 +30,7 @@ class DoctrineCountFieldDescriptor extends DoctrineFieldDescriptor
         string $searchability = FieldDescriptorInterface::SEARCHABILITY_NEVER,
         string $type = '',
         bool $sortable = true,
-        bool $distinct = false,
+        private bool $distinct = false,
         string $width = FieldDescriptorInterface::WIDTH_AUTO
     ) {
         parent::__construct(
@@ -50,8 +45,6 @@ class DoctrineCountFieldDescriptor extends DoctrineFieldDescriptor
             $sortable,
             $width
         );
-
-        $this->distinct = $distinct;
     }
 
     public function getSelect()

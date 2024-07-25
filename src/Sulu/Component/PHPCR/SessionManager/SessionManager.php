@@ -17,19 +17,12 @@ use PHPCR\SessionInterface;
 class SessionManager implements SessionManagerInterface
 {
     /**
-     * @var string[]
+     * @param string[] $nodeNames
      */
-    private $nodeNames;
-
-    /**
-     * @var SessionInterface
-     */
-    private $session;
-
-    public function __construct(SessionInterface $session, $nodeNames)
-    {
-        $this->session = $session;
-        $this->nodeNames = $nodeNames;
+    public function __construct(
+        private SessionInterface $session,
+        private $nodeNames
+    ) {
     }
 
     public function getSession()

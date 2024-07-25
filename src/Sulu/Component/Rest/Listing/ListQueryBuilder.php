@@ -47,35 +47,6 @@ class ListQueryBuilder
     private $fields = [];
 
     /**
-     * The array representation of the sortings.
-     *
-     * @var array
-     */
-    private $sorting;
-
-    /**
-     * Contains all the where clauses.
-     * The keys are the field names and the content is the value to filter for.
-     *
-     * @var array
-     */
-    private $where;
-
-    /**
-     * The name of the root entity.
-     *
-     * @var string
-     */
-    private $entityName;
-
-    /**
-     * The names of the relations of the root entity.
-     *
-     * @var array
-     */
-    private $associationNames;
-
-    /**
      * cache variable for replacing select string in some cases.
      *
      * @var string
@@ -88,13 +59,6 @@ class ListQueryBuilder
      * @var bool
      */
     private $countQuery;
-
-    /**
-     * The names of columns of the root entity.
-     *
-     * @var array
-     */
-    private $fieldNames;
 
     /**
      * contains all fieldnames that are searched.
@@ -125,16 +89,9 @@ class ListQueryBuilder
     private $relationalFilters = [];
 
     /**
-     * contains all join conditions.
-     *
-     * @var array
-     */
-    private $joinConditions = [];
-
-    /**
-     * @param string[] $associationNames
-     * @param string[] $fieldNames
-     * @param string[] $entityName
+     * @param string[] $associationNames the names of the relations of the root entity
+     * @param string[] $fieldNames the names of columns of the root entity
+     * @param string $entityName the name of the root entity
      * @param string[] $fields
      * @param string[] $sorting
      * @param string[] $where
@@ -143,26 +100,20 @@ class ListQueryBuilder
      * @param string[] $joinConditions - specify a custom join condition
      */
     public function __construct(
-        $associationNames,
-        $fieldNames,
-        $entityName,
+        private $associationNames,
+        private $fieldNames,
+        private $entityName,
         $fields,
-        $sorting,
-        $where,
+        private $sorting,
+        private $where,
         $searchTextFields = [],
         $searchNumberFields = [],
-        $joinConditions = []
+        private $joinConditions = []
     ) {
-        $this->associationNames = $associationNames;
-        $this->fieldNames = $fieldNames;
-        $this->entityName = $entityName;
         $this->fields = (\is_array($fields)) ? $fields : [];
-        $this->sorting = $sorting;
-        $this->where = $where;
         $this->searchFields = \array_merge($searchTextFields, $searchNumberFields);
         $this->searchTextFields = $searchTextFields;
         $this->searchNumberFields = $searchNumberFields;
-        $this->joinConditions = $joinConditions;
     }
 
     /**

@@ -25,14 +25,8 @@ class SystemCollectionBuilder implements BuilderInterface
      */
     protected $output;
 
-    /**
-     * @var SystemCollectionManagerInterface
-     */
-    private $systemCollectionManager;
-
-    public function __construct(SystemCollectionManagerInterface $systemCollectionManager)
+    public function __construct(private SystemCollectionManagerInterface $systemCollectionManager)
     {
-        $this->systemCollectionManager = $systemCollectionManager;
     }
 
     public function getName()
