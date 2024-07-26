@@ -21,30 +21,16 @@ use Sulu\Component\Rest\ListBuilder\Expression\BetweenExpressionInterface;
 class DoctrineBetweenExpression extends AbstractDoctrineExpression implements BetweenExpressionInterface
 {
     /**
-     * Field descriptor used for comparison.
-     *
-     * @var DoctrineFieldDescriptorInterface
-     */
-    protected $field;
-
-    /**
-     * @var mixed
-     */
-    protected $start;
-
-    /**
-     * @var mixed
-     */
-    protected $end;
-
-    /**
      * DoctrineInExpression constructor.
+     *
+     * @param mixed $start
+     * @param mixed $end
      */
-    public function __construct(DoctrineFieldDescriptorInterface $field, $start, $end)
-    {
-        $this->start = $start;
-        $this->end = $end;
-        $this->field = $field;
+    public function __construct(
+        protected DoctrineFieldDescriptorInterface $field,
+        protected $start,
+        protected $end,
+    ) {
     }
 
     /**

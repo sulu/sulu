@@ -23,18 +23,11 @@ abstract class AbstractRestController
     use ControllerTrait;
     use RestControllerTrait;
 
-    /**
-     * @var TokenStorageInterface|null
-     */
-    private $tokenStorage;
-
     public function __construct(
         ViewHandlerInterface $viewHandler,
-        ?TokenStorageInterface $tokenStorage = null
+        private ?TokenStorageInterface $tokenStorage = null
     ) {
         $this->setViewHandler($viewHandler);
-
-        $this->tokenStorage = $tokenStorage;
     }
 
     protected function getUser()

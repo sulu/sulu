@@ -24,14 +24,9 @@ class ExportManager implements ExportManagerInterface
      */
     protected $contentTypeOptions = [];
 
-    /**
-     * @var ContentTypeManagerInterface
-     */
-    protected $contentTypeManager;
-
-    public function __construct(ContentTypeManagerInterface $contentTypeManager)
-    {
-        $this->contentTypeManager = $contentTypeManager;
+    public function __construct(
+        protected ContentTypeManagerInterface $contentTypeManager
+    ) {
     }
 
     public function add($contentTypeName, $format, $options)

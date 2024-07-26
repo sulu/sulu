@@ -26,22 +26,8 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
  */
 class SecuredEntitySubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var AccessControlManagerInterface
-     */
-    private $accessControlManager;
-
-    /**
-     * @var TokenStorageInterface
-     */
-    private $tokenStorage;
-
-    public function __construct(
-        AccessControlManagerInterface $accessControlManagerInterface,
-        TokenStorageInterface $tokenStorage
-    ) {
-        $this->accessControlManager = $accessControlManagerInterface;
-        $this->tokenStorage = $tokenStorage;
+    public function __construct(private AccessControlManagerInterface $accessControlManager, private TokenStorageInterface $tokenStorage)
+    {
     }
 
     public static function getSubscribedEvents()

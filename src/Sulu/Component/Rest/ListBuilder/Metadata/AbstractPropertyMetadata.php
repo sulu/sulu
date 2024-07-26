@@ -21,11 +21,6 @@ abstract class AbstractPropertyMetadata
     /**
      * @var string
      */
-    private $name;
-
-    /**
-     * @var string
-     */
     private $translation;
 
     /**
@@ -71,11 +66,10 @@ abstract class AbstractPropertyMetadata
     /**
      * @param string $name
      */
-    public function __construct($name)
+    public function __construct(private $name)
     {
-        $this->name = $name;
         // default for translation can be overwritten by setter
-        $this->translation = \ucfirst($name);
+        $this->translation = \ucfirst($this->name);
     }
 
     /**

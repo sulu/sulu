@@ -48,28 +48,6 @@ class DoctrineListBuilder extends AbstractListBuilder
     use EncodeAliasTrait;
 
     /**
-     * @var EventDispatcherInterface
-     */
-    private $eventDispatcher;
-
-    /**
-     * @var array
-     */
-    private $permissions;
-
-    /**
-     * @var EntityManager
-     */
-    private $em;
-
-    /**
-     * The name of the entity to build the list for.
-     *
-     * @var string
-     */
-    private $entityName;
-
-    /**
      * @var DoctrineFieldDescriptorInterface[]
      */
     protected $selectFields = [];
@@ -134,26 +112,17 @@ class DoctrineListBuilder extends AbstractListBuilder
     private $permissionCheckFields = [];
 
     /**
-     * @var ?AccessControlQueryEnhancer
-     */
-    private $accessControlQueryEnhancer;
-
-    /**
      * @param class-string $entityName
      */
     public function __construct(
-        EntityManager $em,
-        $entityName,
+        private EntityManager $em,
+        private $entityName,
         FilterTypeRegistry $filterTypeRegistry,
-        EventDispatcherInterface $eventDispatcher,
-        array $permissions,
-        ?AccessControlQueryEnhancer $accessControlQueryEnhancer = null
+        private EventDispatcherInterface $eventDispatcher,
+        private array $permissions,
+        private ?AccessControlQueryEnhancer $accessControlQueryEnhancer = null
     ) {
         parent::__construct($filterTypeRegistry);
-        $this->em = $em;
-        $this->entityName = $entityName;
-        $this->eventDispatcher = $eventDispatcher;
-        $this->permissions = $permissions;
         $this->idField = new DoctrineFieldDescriptor(
             'id',
             'id',
@@ -161,8 +130,7 @@ class DoctrineListBuilder extends AbstractListBuilder
             'public.id'
         );
 
-        $this->securedEntityName = $entityName;
-        $this->accessControlQueryEnhancer = $accessControlQueryEnhancer;
+        $this->securedEntityName = $this->entityName;
     }
 
     public function setSelectFields($fieldDescriptors)

@@ -22,14 +22,8 @@ use Sulu\Component\Import\Exception\ContentTypeImportMissingException;
  */
 class ImportManager implements ImportManagerInterface
 {
-    /**
-     * @var ContentTypeManagerInterface
-     */
-    protected $contentTypeManager;
-
-    public function __construct(ContentTypeManagerInterface $contentTypeManager)
+    public function __construct(protected ContentTypeManagerInterface $contentTypeManager)
     {
-        $this->contentTypeManager = $contentTypeManager;
     }
 
     public function import(

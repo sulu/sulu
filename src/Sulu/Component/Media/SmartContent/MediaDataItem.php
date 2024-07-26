@@ -23,14 +23,8 @@ use Sulu\Component\SmartContent\ItemInterface;
  */
 class MediaDataItem implements ItemInterface
 {
-    /**
-     * @var Media
-     */
-    private $entity;
-
-    public function __construct(Media $entity)
+    public function __construct(private Media $entity)
     {
-        $this->entity = $entity;
     }
 
     /**

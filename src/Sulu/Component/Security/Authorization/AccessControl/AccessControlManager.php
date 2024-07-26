@@ -37,66 +37,21 @@ class AccessControlManager implements AccessControlManagerInterface
     protected $accessControlProviders = [];
 
     /**
-     * @var MaskConverterInterface
-     */
-    private $maskConverter;
-
-    /**
-     * @var EventDispatcherInterface
-     */
-    private $eventDispatcher;
-
-    /**
-     * @var SystemStoreInterface
-     */
-    private $systemStore;
-
-    /**
-     * @var DescendantProviderInterface[]
-     */
-    private $descendantProviders = [];
-
-    /**
-     * @var RoleRepositoryInterface
-     */
-    private $roleRepository;
-
-    /**
-     * @var AccessControlRepositoryInterface
-     */
-    private $accessControlRepository;
-
-    /**
-     * @var Security|null
-     */
-    private $security;
-
-    /**
-     * @var array<string, int>
-     */
-    private $permissions;
-
-    /**
      * @param array<string, int> $permissions
      */
     public function __construct(
-        MaskConverterInterface $maskConverter,
-        EventDispatcherInterface $eventDispatcher,
-        SystemStoreInterface $systemStore,
-        iterable $descendantProviders,
-        RoleRepositoryInterface $roleRepository,
-        AccessControlRepositoryInterface $accessControlRepository,
-        ?Security $security,
-        array $permissions
+        private MaskConverterInterface $maskConverter,
+        private EventDispatcherInterface $eventDispatcher,
+        private SystemStoreInterface $systemStore,
+        /**
+         * @var DescendantProviderInterface[]
+         */
+        private iterable $descendantProviders,
+        private RoleRepositoryInterface $roleRepository,
+        private AccessControlRepositoryInterface $accessControlRepository,
+        private ?Security $security,
+        private array $permissions
     ) {
-        $this->maskConverter = $maskConverter;
-        $this->eventDispatcher = $eventDispatcher;
-        $this->systemStore = $systemStore;
-        $this->descendantProviders = $descendantProviders;
-        $this->roleRepository = $roleRepository;
-        $this->accessControlRepository = $accessControlRepository;
-        $this->security = $security;
-        $this->permissions = $permissions;
     }
 
     public function setPermissions($type, $identifier, $permissions, $inherit = false)

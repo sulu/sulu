@@ -29,31 +29,6 @@ use Twig\Environment;
 class Export
 {
     /**
-     * @var Environment
-     */
-    protected $templating;
-
-    /**
-     * @var DocumentManagerInterface
-     */
-    protected $documentManager;
-
-    /**
-     * @var DocumentInspector
-     */
-    protected $documentInspector;
-
-    /**
-     * @var ExportManagerInterface
-     */
-    protected $exportManager;
-
-    /**
-     * @var string[]
-     */
-    protected $formatFilePaths;
-
-    /**
      * @var string
      */
     protected $exportLocale = 'en';
@@ -63,12 +38,15 @@ class Export
      */
     protected $format = '1.2.xliff';
 
+    /**
+     * @param string[] $formatFilePaths
+     */
     public function __construct(
-        Environment $templating,
-        DocumentManagerInterface $documentManager,
-        DocumentInspector $documentInspector,
-        ExportManagerInterface $exportManager,
-        array $formatFilePaths
+        protected Environment $templating,
+        protected DocumentManagerInterface $documentManager,
+        protected DocumentInspector $documentInspector,
+        protected ExportManagerInterface $exportManager,
+        protected array $formatFilePaths
     ) {
         $this->templating = $templating;
         $this->documentManager = $documentManager;

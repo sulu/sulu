@@ -26,52 +26,19 @@ class SystemCollectionManager implements SystemCollectionManagerInterface
     /**
      * @var array
      */
-    private $config;
-
-    /**
-     * @var CollectionManagerInterface
-     */
-    private $collectionManager;
-
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
-
-    /**
-     * @var TokenStorageInterface
-     */
-    private $tokenProvider;
-
-    /**
-     * @var string
-     */
-    private $locale;
-
-    /**
-     * @var CacheInterface
-     */
-    private $cache;
-
-    /**
-     * @var array
-     */
     private $systemCollections;
 
+    /**
+     * @param string $locale
+     */
     public function __construct(
-        array $config,
-        CollectionManagerInterface $collectionManager,
-        EntityManagerInterface $entityManager,
-        ?TokenStorageInterface $tokenProvider,
-        CacheInterface $cache,
-        $locale
+        private array $config,
+        private CollectionManagerInterface $collectionManager,
+        private EntityManagerInterface $entityManager,
+        private ?TokenStorageInterface $tokenProvider,
+        private CacheInterface $cache,
+        private $locale,
     ) {
-        $this->config = $config;
-        $this->collectionManager = $collectionManager;
-        $this->entityManager = $entityManager;
-        $this->tokenProvider = $tokenProvider;
-        $this->cache = $cache;
-        $this->locale = $locale;
     }
 
     public function warmUp()

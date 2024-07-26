@@ -21,33 +21,19 @@ use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
  */
 class DoctrineGroupConcatFieldDescriptor extends AbstractDoctrineFieldDescriptor
 {
-    /**
-     * The field descriptor which will be group concatenated.
-     *
-     * @var DoctrineFieldDescriptorInterface
-     */
-    private $fieldDescriptor;
-
-    /**
-     * @var string
-     */
-    private $glue;
-
-    /**
-     * @var bool
-     */
-    private $distinct;
-
     public function __construct(
-        DoctrineFieldDescriptorInterface $fieldDescriptor,
+        /**
+         * The field descriptor which will be group concatenated.
+         */
+        private DoctrineFieldDescriptorInterface $fieldDescriptor,
         string $name,
         ?string $translation = null,
-        string $glue = ',',
+        private string $glue = ',',
         string $visibility = FieldDescriptorInterface::VISIBILITY_YES,
         string $searchability = FieldDescriptorInterface::SEARCHABILITY_NEVER,
         string $type = '',
         bool $sortable = true,
-        bool $distinct = false,
+        private bool $distinct = false,
         string $width = FieldDescriptorInterface::WIDTH_AUTO
     ) {
         parent::__construct(
@@ -59,10 +45,6 @@ class DoctrineGroupConcatFieldDescriptor extends AbstractDoctrineFieldDescriptor
             $sortable,
             $width
         );
-
-        $this->fieldDescriptor = $fieldDescriptor;
-        $this->glue = $glue;
-        $this->distinct = $distinct;
     }
 
     public function getSelect()
