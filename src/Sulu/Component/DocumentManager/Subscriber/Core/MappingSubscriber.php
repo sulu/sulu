@@ -28,36 +28,12 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class MappingSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var MetadataFactoryInterface
-     */
-    private $factory;
-
-    /**
-     * @var PropertyEncoder
-     */
-    private $encoder;
-
-    /**
-     * @var ProxyFactory
-     */
-    private $proxyFactory;
-
-    /**
-     * @var DocumentRegistry
-     */
-    private $documentRegistry;
-
     public function __construct(
-        MetadataFactoryInterface $factory,
-        PropertyEncoder $encoder,
-        ProxyFactory $proxyFactory,
-        DocumentRegistry $documentRegistry
+        private MetadataFactoryInterface $factory,
+        private PropertyEncoder $encoder,
+        private ProxyFactory $proxyFactory,
+        private DocumentRegistry $documentRegistry,
     ) {
-        $this->factory = $factory;
-        $this->encoder = $encoder;
-        $this->proxyFactory = $proxyFactory;
-        $this->documentRegistry = $documentRegistry;
     }
 
     public static function getSubscribedEvents()

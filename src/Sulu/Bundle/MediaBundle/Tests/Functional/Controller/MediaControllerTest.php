@@ -381,7 +381,7 @@ class MediaControllerTest extends SuluTestCase
      */
     public function test404ResponseHeader(): void
     {
-        $this->client->jsonRequest(
+        $this->client->request(
             'GET',
             '/uploads/media/50x50/1/0-photo.jpg'
         );
@@ -399,9 +399,9 @@ class MediaControllerTest extends SuluTestCase
         $media = $this->createMedia('photo');
 
         \ob_start();
-        $this->client->jsonRequest(
+        $this->client->request(
             'GET',
-            '/media/' . $media->getId() . '/download/photo.jpg'
+            '/media/' . $media->getId() . '/download/photo.jpeg'
         );
         \ob_end_clean();
         $this->assertEquals(
@@ -418,9 +418,9 @@ class MediaControllerTest extends SuluTestCase
         $media = $this->createMedia('photo');
 
         \ob_start();
-        $this->client->jsonRequest(
+        $this->client->request(
             'GET',
-            '/media/' . $media->getId() . '/download/photo.jpg?inline=1'
+            '/media/' . $media->getId() . '/download/photo.jpeg?inline=1'
         );
         \ob_end_clean();
         $this->assertEquals(
@@ -437,7 +437,7 @@ class MediaControllerTest extends SuluTestCase
         $media = $this->createMedia('wöchentlich');
 
         \ob_start();
-        $this->client->jsonRequest(
+        $this->client->request(
             'GET',
             '/media/' . $media->getId() . '/download/wöchentlich.jpeg?inline=1'
         );
@@ -901,7 +901,7 @@ class MediaControllerTest extends SuluTestCase
 
         $response = \json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(5015, $response->code);
-        $this->assertTrue(isset($response->message));
+        $this->assertObjectHasProperty('message', $response);
     }
 
     public function testPost(): void
@@ -1439,7 +1439,7 @@ class MediaControllerTest extends SuluTestCase
 
         $response = \json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(5015, $response->code);
-        $this->assertTrue(isset($response->message));
+        $this->assertObjectHasProperty('message', $response);
 
         $this->assertFalse(\file_exists($this->getStoragePath() . '/1/photo.jpeg'));
     }

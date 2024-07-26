@@ -42,7 +42,7 @@ class GeolocatorResponseTest extends TestCase
 
         $this->location->expects($this->once())
             ->method('toArray')
-            ->will($this->returnValue($expected));
+            ->willReturn($expected);
 
         $this->response->addLocation($this->location);
 

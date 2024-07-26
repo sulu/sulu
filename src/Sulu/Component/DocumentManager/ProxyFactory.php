@@ -25,36 +25,12 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
  */
 class ProxyFactory
 {
-    /**
-     * @var LazyLoadingGhostFactory
-     */
-    private $proxyFactory;
-
-    /**
-     * @var EventDispatcherInterface
-     */
-    private $dispatcher;
-
-    /**
-     * @var DocumentRegistry
-     */
-    private $registry;
-
-    /**
-     * @var MetadataFactoryInterface
-     */
-    private $metadataFactory;
-
     public function __construct(
-        LazyLoadingGhostFactory $proxyFactory,
-        EventDispatcherInterface $dispatcher,
-        DocumentRegistry $registry,
-        MetadataFactoryInterface $metadataFactory
+        private LazyLoadingGhostFactory $proxyFactory,
+        private EventDispatcherInterface $dispatcher,
+        private DocumentRegistry $registry,
+        private MetadataFactoryInterface $metadataFactory,
     ) {
-        $this->proxyFactory = $proxyFactory;
-        $this->dispatcher = $dispatcher;
-        $this->registry = $registry;
-        $this->metadataFactory = $metadataFactory;
     }
 
     /**

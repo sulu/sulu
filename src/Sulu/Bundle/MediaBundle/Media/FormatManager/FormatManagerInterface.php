@@ -35,7 +35,7 @@ interface FormatManagerInterface
      *
      * @return Response
      */
-    public function returnImage($id, $formatKey, $imageFormat);
+    public function returnImage($id, $formatKey, $imageFormat /*, int<1, max>|null $version = null */);
 
     /**
      * @param int $id

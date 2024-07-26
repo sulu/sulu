@@ -23,17 +23,8 @@ use Symfony\Component\Security\Http\SecurityEvents;
  */
 class LastLoginListener implements EventSubscriberInterface
 {
-    /**
-     * @var EntityManagerInterface
-     */
-    protected $entityManager;
-
-    /**
-     * LastLoginListener constructor.
-     */
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(protected EntityManagerInterface $entityManager)
     {
-        $this->entityManager = $entityManager;
     }
 
     /**

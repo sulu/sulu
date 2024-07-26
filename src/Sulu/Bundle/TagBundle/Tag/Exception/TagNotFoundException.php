@@ -17,19 +17,11 @@ namespace Sulu\Bundle\TagBundle\Tag\Exception;
 class TagNotFoundException extends \Exception
 {
     /**
-     * The id of the tag, which was not found.
-     *
-     * @var int
-     */
-    protected $id;
-
-    /**
      * @param int $id The id of the entity, which was not found
      */
-    public function __construct($id)
+    public function __construct(protected $id)
     {
-        $this->id = $id;
-        $message = 'The tag with the id "' . $id . '" was not found.';
+        $message = 'The tag with the id "' . $this->id . '" was not found.';
         parent::__construct($message, 0);
     }
 

@@ -22,8 +22,11 @@ use Sulu\Component\SmartContent\Orm\DataProviderRepositoryInterface;
  */
 class AccountDataProvider extends BaseDataProvider
 {
-    public function __construct(DataProviderRepositoryInterface $repository, ArraySerializerInterface $serializer, ReferenceStoreInterface $referenceStore)
-    {
+    public function __construct(
+        DataProviderRepositoryInterface $repository,
+        ArraySerializerInterface $serializer,
+        ReferenceStoreInterface $referenceStore,
+    ) {
         parent::__construct($repository, $serializer, $referenceStore);
 
         $this->configuration = self::createConfigurationBuilder()

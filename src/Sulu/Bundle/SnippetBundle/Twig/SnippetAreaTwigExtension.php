@@ -25,36 +25,12 @@ use Twig\TwigFunction;
  */
 class SnippetAreaTwigExtension extends AbstractExtension
 {
-    /**
-     * @var DefaultSnippetManagerInterface
-     */
-    private $defaultSnippetManager;
-
-    /**
-     * @var RequestAnalyzerInterface
-     */
-    private $requestAnalyzer;
-
-    /**
-     * @var SnippetResolverInterface
-     */
-    private $snippetResolver;
-
-    /**
-     * @var ReferenceStoreInterface
-     */
-    private $snippetAreaReferenceStore;
-
     public function __construct(
-        DefaultSnippetManagerInterface $defaultSnippetManager,
-        RequestAnalyzerInterface $requestAnalyzer,
-        SnippetResolverInterface $snippetResolver,
-        ReferenceStoreInterface $snippetAreaReferenceStore
+        private DefaultSnippetManagerInterface $defaultSnippetManager,
+        private RequestAnalyzerInterface $requestAnalyzer,
+        private SnippetResolverInterface $snippetResolver,
+        private ReferenceStoreInterface $snippetAreaReferenceStore,
     ) {
-        $this->defaultSnippetManager = $defaultSnippetManager;
-        $this->requestAnalyzer = $requestAnalyzer;
-        $this->snippetResolver = $snippetResolver;
-        $this->snippetAreaReferenceStore = $snippetAreaReferenceStore;
     }
 
     public function getFunctions()

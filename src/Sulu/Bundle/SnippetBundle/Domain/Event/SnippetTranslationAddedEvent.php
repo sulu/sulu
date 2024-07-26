@@ -18,33 +18,14 @@ use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
 class SnippetTranslationAddedEvent extends DomainEvent
 {
     /**
-     * @var SnippetDocument
-     */
-    private $snippetDocument;
-
-    /**
-     * @var string
-     */
-    private $locale;
-
-    /**
-     * @var mixed[]
-     */
-    private $payload;
-
-    /**
      * @param mixed[] $payload
      */
     public function __construct(
-        SnippetDocument $snippetDocument,
-        string $locale,
-        array $payload
+        private SnippetDocument $snippetDocument,
+        private string $locale,
+        private array $payload
     ) {
         parent::__construct();
-
-        $this->snippetDocument = $snippetDocument;
-        $this->locale = $locale;
-        $this->payload = $payload;
     }
 
     public function getSnippetDocument(): SnippetDocument

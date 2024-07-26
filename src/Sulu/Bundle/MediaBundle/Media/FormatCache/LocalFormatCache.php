@@ -26,6 +26,7 @@ class LocalFormatCache implements FormatCacheInterface
     /**
      * @param string $path
      * @param string $pathUrl
+     * @param int|float|numeric-string $segments
      */
     public function __construct(
         private Filesystem $filesystem,
@@ -158,7 +159,7 @@ class LocalFormatCache implements FormatCacheInterface
             throw new ImageProxyInvalidUrl('The founded `id` was not a valid integer');
         }
 
-        return $id;
+        return (int) $id;
     }
 
     /**
@@ -198,14 +199,19 @@ class LocalFormatCache implements FormatCacheInterface
     /**
      * Return the requested image format from url.
      *
-     * @param string $url
-     *
-     * @return int
+     * @return string
      *
      * @throws ImageProxyInvalidUrl
      */
-    protected function getFileNameFromUrl($url)
+    protected function getFileNameFromUrl(string $url)
     {
-        return \basename($url);
+        $fileNameParts = \explode('-', \basename($url), 2); // the basename is {id}-{filename}
+        $fileName = $fileNameParts[1] ?? null;
+
+        if (null === $fileName) {
+            throw new ImageProxyInvalidUrl('No `filename` was found in the url');
+        }
+
+        return \rawurldecode($fileName);
     }
 }

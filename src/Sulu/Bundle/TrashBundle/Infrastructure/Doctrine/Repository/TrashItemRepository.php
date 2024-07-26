@@ -25,25 +25,12 @@ use Symfony\Component\Security\Core\Security as SymfonyCoreSecurity;
 final class TrashItemRepository implements TrashItemRepositoryInterface
 {
     /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
-
-    /**
-     * @var Security|SymfonyCoreSecurity|null
-     */
-    private $security;
-
-    /**
      * @var EntityRepository<TrashItemInterface>
      */
     private $entityRepository;
 
-    public function __construct(EntityManagerInterface $entityManager, Security|SymfonyCoreSecurity|null $security)
+    public function __construct(private EntityManagerInterface $entityManager, private Security|SymfonyCoreSecurity|null $security)
     {
-        $this->entityManager = $entityManager;
-        $this->security = $security;
-
         $this->entityRepository = $this->entityManager->getRepository(TrashItemInterface::class);
     }
 

@@ -23,32 +23,11 @@ use Twig\TwigFunction;
  */
 class SnippetTwigExtension extends AbstractExtension implements SnippetTwigExtensionInterface
 {
-    /**
-     * @var ContentMapperInterface
-     */
-    private $contentMapper;
-
-    /**
-     * @var RequestAnalyzerInterface
-     */
-    private $requestAnalyzer;
-
-    /**
-     * @var StructureResolverInterface
-     */
-    private $structureResolver;
-
-    /**
-     * Constructor.
-     */
     public function __construct(
-        ContentMapperInterface $contentMapper,
-        RequestAnalyzerInterface $requestAnalyzer,
-        StructureResolverInterface $structureResolver
+        private ContentMapperInterface $contentMapper,
+        private RequestAnalyzerInterface $requestAnalyzer,
+        private StructureResolverInterface $structureResolver,
     ) {
-        $this->contentMapper = $contentMapper;
-        $this->requestAnalyzer = $requestAnalyzer;
-        $this->structureResolver = $structureResolver;
     }
 
     public function getFunctions()

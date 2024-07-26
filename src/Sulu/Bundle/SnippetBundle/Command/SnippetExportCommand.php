@@ -23,16 +23,9 @@ use Symfony\Component\Console\Question\ConfirmationQuestion;
 #[AsCommand(name: 'sulu:snippet:export', description: 'Export snippet translations from given language into xliff file for translating into a new language.')]
 class SnippetExportCommand extends Command
 {
-    /**
-     * @var SnippetExportInterface
-     */
-    private $snippetExporter;
-
-    public function __construct(SnippetExportInterface $snippetExporter)
+    public function __construct(private SnippetExportInterface $snippetExporter)
     {
         parent::__construct();
-
-        $this->snippetExporter = $snippetExporter;
     }
 
     public function configure()

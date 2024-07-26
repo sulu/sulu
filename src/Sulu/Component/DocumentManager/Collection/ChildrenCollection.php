@@ -19,30 +19,10 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 /**
  * Lazily hydrate query results.
  *
- * TODO: Performance -- try fetch depth like in teh PHPCR-ODM ChildrenCollection
+ * TODO: Performance -- try fetch depth like in the PHPCR-ODM ChildrenCollection
  */
 class ChildrenCollection extends AbstractLazyCollection
 {
-    /**
-     * @var EventDispatcherInterface
-     */
-    private $dispatcher;
-
-    /**
-     * @var NodeInterface
-     */
-    private $parentNode;
-
-    /**
-     * @var string
-     */
-    private $locale;
-
-    /**
-     * @var array
-     */
-    private $options;
-
     /**
      * @var bool
      */
@@ -53,15 +33,11 @@ class ChildrenCollection extends AbstractLazyCollection
      * @param array $options
      */
     public function __construct(
-        NodeInterface $parentNode,
-        EventDispatcherInterface $dispatcher,
-        $locale,
-        $options = []
+        private NodeInterface $parentNode,
+        private EventDispatcherInterface $dispatcher,
+        private $locale,
+        private $options = []
     ) {
-        $this->parentNode = $parentNode;
-        $this->dispatcher = $dispatcher;
-        $this->locale = $locale;
-        $this->options = $options;
     }
 
     public function current()

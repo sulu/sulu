@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\WebsiteBundle\Tests\Functional\Controller;
 
+use Sulu\Bundle\HttpCacheBundle\Cache\SuluHttpCache;
 use Sulu\Bundle\SecurityBundle\Entity\Permission;
 use Sulu\Bundle\TestBundle\Testing\WebsiteTestCase;
 use Sulu\Component\Security\Authentication\RoleInterface;
@@ -57,7 +58,9 @@ class SitemapControllerTest extends WebsiteTestCase
     {
         $crawler = $this->client->request('GET', 'http://sulu.lo/sitemap.xml');
         $crawler->registerNamespace('x', 'http://www.sitemaps.org/schemas/sitemap/0.9');
-        $this->assertHttpStatusCode(200, $this->client->getResponse());
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(200, $response);
+        $this->assertSame('3600', $response->headers->get(SuluHttpCache::HEADER_REVERSE_PROXY_TTL));
 
         $this->assertCount(1, $crawler->filterXPath('//x:urlset/x:url'));
         $this->assertCount(1, $crawler->filterXPath('//x:urlset/x:url/x:loc'));
@@ -70,7 +73,9 @@ class SitemapControllerTest extends WebsiteTestCase
     {
         $crawler = $this->client->request('GET', 'http://test.lo/sitemap.xml');
         $crawler->registerNamespace('x', 'http://www.sitemaps.org/schemas/sitemap/0.9');
-        $this->assertHttpStatusCode(200, $this->client->getResponse());
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(200, $response);
+        $this->assertSame('3600', $response->headers->get(SuluHttpCache::HEADER_REVERSE_PROXY_TTL));
 
         $this->assertCount(2, $crawler->filterXPath('//x:urlset/x:url'));
 
@@ -132,7 +137,9 @@ class SitemapControllerTest extends WebsiteTestCase
     {
         $crawler = $this->client->request('GET', 'http://sulu.lo/sitemaps/pages-1.xml');
         $crawler->registerNamespace('x', 'http://www.sitemaps.org/schemas/sitemap/0.9');
-        $this->assertHttpStatusCode(200, $this->client->getResponse());
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(200, $response);
+        $this->assertSame('3600', $response->headers->get(SuluHttpCache::HEADER_REVERSE_PROXY_TTL));
 
         $this->assertCount(1, $crawler->filterXPath('//x:urlset/x:url'));
         $this->assertCount(1, $crawler->filterXPath('//x:urlset/x:url/x:loc'));

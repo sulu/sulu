@@ -27,20 +27,13 @@ use Symfony\Component\Console\Question\ConfirmationQuestion;
 class SnippetImportCommand extends Command
 {
     /**
-     * @var SnippetImportInterface
-     */
-    private $snippetImporter;
-
-    /**
      * @var LoggerInterface
      */
     private $logger;
 
-    public function __construct(SnippetImportInterface $snippetImporter, ?LoggerInterface $logger = null)
+    public function __construct(private SnippetImportInterface $snippetImporter, ?LoggerInterface $logger = null)
     {
         parent::__construct();
-
-        $this->snippetImporter = $snippetImporter;
         $this->logger = $logger ?: new NullLogger();
     }
 

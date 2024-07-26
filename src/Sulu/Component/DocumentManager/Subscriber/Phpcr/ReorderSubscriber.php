@@ -22,14 +22,8 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class ReorderSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var NodeHelperInterface
-     */
-    private $nodeHelper;
-
-    public function __construct(NodeHelperInterface $nodeHelper)
+    public function __construct(private NodeHelperInterface $nodeHelper)
     {
-        $this->nodeHelper = $nodeHelper;
     }
 
     public static function getSubscribedEvents()

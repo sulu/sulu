@@ -22,22 +22,10 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class RemoveSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var DocumentRegistry
-     */
-    private $documentRegistry;
-
-    /**
-     * @var NodeManager
-     */
-    private $nodeManager;
-
     public function __construct(
-        DocumentRegistry $documentRegistry,
-        NodeManager $nodeManager
+        private DocumentRegistry $documentRegistry,
+        private NodeManager $nodeManager,
     ) {
-        $this->documentRegistry = $documentRegistry;
-        $this->nodeManager = $nodeManager;
     }
 
     public static function getSubscribedEvents()

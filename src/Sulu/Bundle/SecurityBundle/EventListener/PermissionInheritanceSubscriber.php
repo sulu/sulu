@@ -17,14 +17,8 @@ use Sulu\Component\Security\Authorization\AccessControl\AccessControlManagerInte
 
 class PermissionInheritanceSubscriber
 {
-    /**
-     * @var AccessControlManagerInterface
-     */
-    private $accessControlManager;
-
-    public function __construct(AccessControlManagerInterface $accessControlManager)
+    public function __construct(private AccessControlManagerInterface $accessControlManager)
     {
-        $this->accessControlManager = $accessControlManager;
     }
 
     /**

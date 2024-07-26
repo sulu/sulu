@@ -29,22 +29,10 @@ class SnippetResolver implements SnippetResolverInterface, ResetInterface
      */
     private $snippetCache = [];
 
-    /**
-     * @var ContentMapperInterface
-     */
-    private $contentMapper;
-
-    /**
-     * @var StructureResolverInterface
-     */
-    private $structureResolver;
-
     public function __construct(
-        ContentMapperInterface $contentMapper,
-        StructureResolverInterface $structureResolver
+        private ContentMapperInterface $contentMapper,
+        private StructureResolverInterface $structureResolver,
     ) {
-        $this->contentMapper = $contentMapper;
-        $this->structureResolver = $structureResolver;
     }
 
     public function reset(): void

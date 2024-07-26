@@ -32,46 +32,15 @@ use Sulu\Component\Content\PreResolvableContentTypeInterface;
 class SnippetContent extends ComplexContentType implements ContentTypeExportInterface, PreResolvableContentTypeInterface, ReferenceContentTypeInterface
 {
     /**
-     * @var SnippetResolverInterface
-     */
-    private $snippetResolver;
-
-    /**
-     * @var DefaultSnippetManagerInterface
-     */
-    private $defaultSnippetManager;
-
-    /**
-     * @var ReferenceStoreInterface
-     */
-    private $referenceStore;
-
-    /**
-     * @var ReferenceStoreInterface|null
-     */
-    private $snippetAreaReferenceStore;
-
-    /**
-     * @var bool
-     */
-    protected $defaultEnabled;
-
-    /**
      * @param bool $defaultEnabled
      */
     public function __construct(
-        DefaultSnippetManagerInterface $defaultSnippetManager,
-        SnippetResolverInterface $snippetResolver,
-        ReferenceStoreInterface $referenceStore,
-        $defaultEnabled,
-        ?ReferenceStoreInterface $snippetAreaReferenceStore = null,
+        private DefaultSnippetManagerInterface $defaultSnippetManager,
+        private SnippetResolverInterface $snippetResolver,
+        private ReferenceStoreInterface $referenceStore,
+        protected $defaultEnabled,
+        private ?ReferenceStoreInterface $snippetAreaReferenceStore = null,
     ) {
-        $this->snippetResolver = $snippetResolver;
-        $this->defaultSnippetManager = $defaultSnippetManager;
-        $this->referenceStore = $referenceStore;
-        $this->snippetAreaReferenceStore = $snippetAreaReferenceStore;
-        $this->defaultEnabled = $defaultEnabled;
-
         if (null === $this->snippetAreaReferenceStore) {
             @trigger_deprecation(
                 'sulu/sulu',

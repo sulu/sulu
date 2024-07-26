@@ -15,9 +15,8 @@ use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\Context\Context;
 use FOS\RestBundle\View\ViewHandlerInterface;
 use HandcraftedInTheAlps\RestRoutingBundle\Routing\ClassResourceInterface;
-use Sulu\Bundle\AdminBundle\UserManager\UserManagerInterface;
-use Sulu\Bundle\MediaBundle\Media\FormatOptions\FormatOptionsManagerInterface;
 use Sulu\Bundle\SecurityBundle\Security\Exception\MissingPasswordException;
+use Sulu\Bundle\SecurityBundle\UserManager\UserManager;
 use Sulu\Component\Rest\AbstractRestController;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\MissingArgumentException;
@@ -45,46 +44,15 @@ class UserController extends AbstractRestController implements ClassResourceInte
      */
     protected static $entityKey = 'users';
 
-    /**
-     * @var FormatOptionsManagerInterface
-     */
-    private $restHelper;
-
-    /**
-     * @var EntityManagerInterface
-     */
-    private $doctrineListBuilderFactory;
-
-    /**
-     * @var EntityManagerInterface
-     */
-    private $userManager;
-
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
-
-    /**
-     * @var string
-     */
-    private $userClass;
-
     public function __construct(
         ViewHandlerInterface $viewHandler,
-        RestHelperInterface $restHelper,
-        DoctrineListBuilderFactoryInterface $doctrineListBuilderFactory,
-        UserManagerInterface $userManager,
-        EntityManagerInterface $entityManager,
-        string $userClass
+        private RestHelperInterface $restHelper,
+        private DoctrineListBuilderFactoryInterface $doctrineListBuilderFactory,
+        private UserManager $userManager,
+        private EntityManagerInterface $entityManager,
+        private string $userClass
     ) {
         parent::__construct($viewHandler);
-
-        $this->restHelper = $restHelper;
-        $this->doctrineListBuilderFactory = $doctrineListBuilderFactory;
-        $this->userManager = $userManager;
-        $this->entityManager = $entityManager;
-        $this->userClass = $userClass;
     }
 
     /**

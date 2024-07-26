@@ -16,24 +16,21 @@ use Doctrine\ORM\QueryBuilder;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\SecurityBundle\AccessControl\AccessControlQueryEnhancer;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\SmartContent\Orm\DataProviderRepositoryTrait;
 
 class Query extends AbstractQuery
 {
-    /**
-     * @return void
-     */
-    public function setFirstResult()
+    public function setFirstResult(): self
     {
+        return $this;
     }
 
-    /**
-     * @return void
-     */
-    public function setMaxResults()
+    public function setMaxResults(): self
     {
+        return $this;
     }
 
     public function getSQL(): string
@@ -50,42 +47,57 @@ class Query extends AbstractQuery
 class DataProviderRepositoryTraitTest extends TestCase
 {
     use ProphecyTrait;
+    use DataProviderRepositoryTrait;
 
     /**
-     * @var DataProviderRepositoryTrait
+     * @var ObjectProphecy<QueryBuilder>
      */
-    private $dataProviderRepositoryTrait;
+    private $queryBuilder;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
-        $this->dataProviderRepositoryTrait = $this->getMockForTrait(DataProviderRepositoryTrait::class);
+        $this->queryBuilder = $this->prophesize(QueryBuilder::class);
+    }
+
+    /**
+     * Creates a new QueryBuilder instance that is prepopulated for this entity name.
+     *
+     * @param string $alias
+     * @param string|null $indexBy
+     *
+     * @return QueryBuilder
+     */
+    public function createQueryBuilder($alias, $indexBy = null)
+    {
+        return $this->queryBuilder->reveal();
+    }
+
+    /**
+     * Append joins to query builder for "findByFilters" function.
+     *
+     * @param string $alias
+     * @param string $locale
+     */
+    protected function appendJoins(QueryBuilder $queryBuilder, $alias, $locale): void
+    {
     }
 
     public function testFindByFiltersIds(): void
     {
-        $findByFiltersIdsReflection = new \ReflectionMethod(
-            \get_class($this->dataProviderRepositoryTrait),
-            'findByFiltersIds'
-        );
-        $findByFiltersIdsReflection->setAccessible(true);
-
         $query = $this->prophesize(Query::class);
         $query->setFirstResult(0)->willReturn($query);
         $query->setMaxResults(Argument::any())->willReturn($query);
         $query->getScalarResult()->willReturn([]);
-        $queryBuilder = $this->prophesize(QueryBuilder::class);
-        $queryBuilder->select(Argument::cetera())->willReturn($queryBuilder);
-        $queryBuilder->distinct(Argument::cetera())->willReturn($queryBuilder);
-        $queryBuilder->orderBy(Argument::cetera())->willReturn($queryBuilder);
-        $queryBuilder->getQuery()->willReturn($query);
 
-        $this->dataProviderRepositoryTrait->method('createQueryBuilder')->willReturn($queryBuilder->reveal());
-
-        $findByFiltersIdsReflection->invoke($this->dataProviderRepositoryTrait, [], 1, 5, null, 'de');
-
+        $this->queryBuilder->select(Argument::cetera())->willReturn($this->queryBuilder)->shouldBeCalled();
+        $this->queryBuilder->distinct(Argument::cetera())->willReturn($this->queryBuilder)->shouldBeCalled();
+        $this->queryBuilder->orderBy(Argument::cetera())->willReturn($this->queryBuilder)->shouldBeCalled();
+        $this->queryBuilder->getQuery()->willReturn($query)->shouldBeCalled();
         // using distinct here is essential, since due to our joins multiple rows might be returned
         // this makes problems if also a limit is used
-        $queryBuilder->distinct()->shouldBeCalled();
+        $this->queryBuilder->distinct()->shouldBeCalled();
+
+        $this->findByFiltersIds([], 1, 5, null, 'de');
     }
 
     public function testFindByFiltersIdsWithUser(): void
@@ -97,6 +109,7 @@ class DataProviderRepositoryTraitTest extends TestCase
         $query->setFirstResult(0)->willReturn($query);
         $query->setMaxResults(Argument::any())->willReturn($query);
         $query->getScalarResult()->willReturn([]);
+
         $queryBuilder = $this->prophesize(QueryBuilder::class);
         $queryBuilder->select(Argument::cetera())->willReturn($queryBuilder);
         $queryBuilder->distinct(Argument::cetera())->willReturn($queryBuilder);
@@ -106,15 +119,11 @@ class DataProviderRepositoryTraitTest extends TestCase
         $dataProviderRepositoryTrait = new class($accessControlQueryEnhancer->reveal(), $queryBuilder->reveal()) {
             use DataProviderRepositoryTrait;
 
-            /**
-             * @var QueryBuilder
-             */
-            private $queryBuilder;
-
-            public function __construct(AccessControlQueryEnhancer $accessControlQueryEnhancer, QueryBuilder $queryBuilder)
-            {
+            public function __construct(
+                AccessControlQueryEnhancer $accessControlQueryEnhancer,
+                private QueryBuilder $queryBuilder,
+            ) {
                 $this->accessControlQueryEnhancer = $accessControlQueryEnhancer;
-                $this->queryBuilder = $queryBuilder;
             }
 
             /**
@@ -155,35 +164,34 @@ class DataProviderRepositoryTraitTest extends TestCase
             64
         );
 
-        $accessControlQueryEnhancer->enhance($queryBuilder->reveal(), $user->reveal(), 64, 'Some\\Entity', 'entity')
+        $accessControlQueryEnhancer
+            ->enhance($queryBuilder->reveal(), $user->reveal(), 64, 'Some\\Entity', 'entity')
             ->shouldBeCalled();
     }
 
     public function testFindByFiltersIdsWithDatasourceWithoutIncludeSubFolders(): void
     {
-        $findByFiltersIdsReflection = new \ReflectionMethod(
-            \get_class($this->dataProviderRepositoryTrait),
-            'findByFiltersIds'
-        );
-        $findByFiltersIdsReflection->setAccessible(true);
-
         $query = $this->prophesize(Query::class);
         $query->setFirstResult(0)->willReturn($query);
         $query->setMaxResults(Argument::any())->willReturn($query);
         $query->getScalarResult()->willReturn([]);
-        $queryBuilder = $this->prophesize(QueryBuilder::class);
-        $queryBuilder->select(Argument::cetera())->willReturn($queryBuilder);
-        $queryBuilder->distinct(Argument::cetera())->willReturn($queryBuilder);
-        $queryBuilder->orderBy(Argument::cetera())->willReturn($queryBuilder);
-        $queryBuilder->getQuery()->willReturn($query);
 
-        $this->dataProviderRepositoryTrait->method('createQueryBuilder')->willReturn($queryBuilder->reveal());
+        $this->queryBuilder->select(Argument::cetera())->willReturn($this->queryBuilder);
+        $this->queryBuilder->distinct(Argument::cetera())->willReturn($this->queryBuilder);
+        $this->queryBuilder->orderBy(Argument::cetera())->willReturn($this->queryBuilder);
+        $this->queryBuilder->getQuery()->willReturn($query);
 
-        $findByFiltersIdsReflection->invoke($this->dataProviderRepositoryTrait, ['dataSource' => 3], 1, 5, null, 'de');
+        $this->findByFiltersIds(
+            filters: ['dataSource' => 3],
+            page: 1,
+            pageSize: 5,
+            limit: null,
+            locale: 'de',
+        );
 
         // using distinct here is essential, since due to our joins multiple rows might be returned
         // this makes problems if also a limit is used
-        $queryBuilder->distinct()->shouldBeCalled();
+        $this->queryBuilder->distinct()->shouldBeCalled();
     }
 
     public function testFindByFiltersWithSorting(): void
@@ -194,24 +202,23 @@ class DataProviderRepositoryTraitTest extends TestCase
         $query->setMaxResults(Argument::any())->willReturn($query);
         $query->getScalarResult()->willReturn([]);
         $query->getResult()->willReturn([]);
-        $queryBuilder = $this->prophesize(QueryBuilder::class);
-        $queryBuilder->addSelect(Argument::cetera())->willReturn($queryBuilder);
-        $queryBuilder->select(Argument::cetera())->willReturn($queryBuilder);
-        $queryBuilder->where(Argument::cetera())->willReturn($queryBuilder);
-        $queryBuilder->orderBy(Argument::cetera())->willReturn($queryBuilder);
-        $queryBuilder->distinct(Argument::cetera())->willReturn($queryBuilder);
-        $queryBuilder->getAllAliases()->willReturn([]);
-        $queryBuilder->getQuery()->willReturn($query);
-        $this->dataProviderRepositoryTrait->method('createQueryBuilder')->willReturn($queryBuilder->reveal());
-        $this->dataProviderRepositoryTrait->findByFilters(
-            ['sortBy' => 'test', 'sortMethod' => 'asc'],
-            1,
-            5,
-            null,
-            'de'
-        );
 
-        $queryBuilder->orderBy('entity.test', 'asc')->shouldBeCalled();
+        $this->queryBuilder->addSelect(Argument::cetera())->willReturn($this->queryBuilder);
+        $this->queryBuilder->select(Argument::cetera())->willReturn($this->queryBuilder);
+        $this->queryBuilder->where(Argument::cetera())->willReturn($this->queryBuilder);
+        $this->queryBuilder->orderBy(Argument::cetera())->willReturn($this->queryBuilder);
+        $this->queryBuilder->distinct(Argument::cetera())->willReturn($this->queryBuilder);
+        $this->queryBuilder->getAllAliases()->willReturn([]);
+        $this->queryBuilder->getQuery()->willReturn($query);
+        $this->queryBuilder->orderBy('entity.test', 'asc')->shouldBeCalled();
+
+        $this->findByFilters(
+            filters: ['sortBy' => 'test', 'sortMethod' => 'asc'],
+            page: 1,
+            pageSize: 5,
+            limit: null,
+            locale: 'de'
+        );
     }
 
     public function testFindByFiltersWithoutSorting(): void
@@ -222,23 +229,23 @@ class DataProviderRepositoryTraitTest extends TestCase
         $query->setMaxResults(Argument::any())->willReturn($query);
         $query->getScalarResult()->willReturn([]);
         $query->getResult()->willReturn([]);
-        $queryBuilder = $this->prophesize(QueryBuilder::class);
-        $queryBuilder->addSelect(Argument::cetera())->willReturn($queryBuilder);
-        $queryBuilder->select(Argument::cetera())->willReturn($queryBuilder);
-        $queryBuilder->where(Argument::cetera())->willReturn($queryBuilder);
-        $queryBuilder->orderBy(Argument::cetera())->willReturn($queryBuilder);
-        $queryBuilder->distinct(Argument::cetera())->willReturn($queryBuilder);
-        $queryBuilder->getAllAliases()->willReturn([]);
-        $queryBuilder->getQuery()->willReturn($query);
-        $this->dataProviderRepositoryTrait->method('createQueryBuilder')->willReturn($queryBuilder->reveal());
-        $this->dataProviderRepositoryTrait->findByFilters(
-            ['sortBy' => null, 'sortMethod' => 'asc'],
-            1,
-            5,
-            null,
-            'de'
-        );
 
-        $queryBuilder->orderBy(null, 'asc')->shouldNotBeCalled();
+        $this->queryBuilder->addSelect(Argument::cetera())->willReturn($this->queryBuilder);
+        $this->queryBuilder->select(Argument::cetera())->willReturn($this->queryBuilder);
+        $this->queryBuilder->where(Argument::cetera())->willReturn($this->queryBuilder);
+        $this->queryBuilder->orderBy(Argument::cetera())->willReturn($this->queryBuilder);
+        $this->queryBuilder->distinct(Argument::cetera())->willReturn($this->queryBuilder);
+
+        $this->queryBuilder->getAllAliases()->willReturn([]);
+        $this->queryBuilder->getQuery()->willReturn($query);
+        $this->queryBuilder->orderBy(null, 'asc')->shouldNotBeCalled();
+
+        $this->findByFilters(
+            filters: ['sortBy' => null, 'sortMethod' => 'asc'],
+            page: 1,
+            pageSize: 5,
+            limit: null,
+            locale: 'de'
+        );
     }
 }

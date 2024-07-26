@@ -17,36 +17,16 @@ use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Contracts\Translation\LocaleAwareInterface;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Sets the locale of the current User to the request. Required for the translator to work properly.
  */
 class UserLocaleListener implements EventSubscriberInterface
 {
-    /**
-     * @var TokenStorageInterface
-     */
-    private $tokenStorage;
-
-    /**
-     * @var TranslatorInterface|LocaleAwareInterface
-     */
-    private $translator;
-
-    public function __construct(TokenStorageInterface $tokenStorage, TranslatorInterface $translator)
-    {
-        if (!$translator instanceof LocaleAwareInterface) {
-            throw new \LogicException(\sprintf(
-                'Expected "translator" in "%s" to be instance of "%s" but "%s" given.',
-                __CLASS__,
-                LocaleAwareInterface::class,
-                \get_class($translator)
-            ));
-        }
-
-        $this->tokenStorage = $tokenStorage;
-        $this->translator = $translator;
+    public function __construct(
+        private TokenStorageInterface $tokenStorage,
+        private LocaleAwareInterface $translator
+    ) {
     }
 
     public static function getSubscribedEvents(): array

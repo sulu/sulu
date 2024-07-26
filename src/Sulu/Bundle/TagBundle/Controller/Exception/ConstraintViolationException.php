@@ -27,20 +27,13 @@ class ConstraintViolationException extends RestException
     public const EXCEPTION_CODE_NON_UNIQUE_NAME = 1101;
 
     /**
-     * The field of the tag which is not unique.
-     *
-     * @var string
-     */
-    protected $field;
-
-    /**
-     * @param string $message The error message
      * @param string $field The field which is not
-     * @param int $code
      */
-    public function __construct($message, $field, $code = 0)
-    {
-        $this->field = $field;
+    public function __construct(
+        string $message,
+        protected $field,
+        int $code = 0,
+    ) {
         parent::__construct($message, $code);
     }
 

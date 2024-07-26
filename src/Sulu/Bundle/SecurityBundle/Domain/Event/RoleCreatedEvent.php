@@ -18,24 +18,11 @@ use Sulu\Component\Security\Authentication\RoleInterface;
 class RoleCreatedEvent extends DomainEvent
 {
     /**
-     * @var RoleInterface
-     */
-    private $role;
-
-    /**
-     * @var mixed[]|null
-     */
-    private $payload;
-
-    /**
      * @param mixed[] $payload
      */
-    public function __construct(RoleInterface $role, array $payload)
+    public function __construct(private RoleInterface $role, private array $payload)
     {
         parent::__construct();
-
-        $this->role = $role;
-        $this->payload = $payload;
     }
 
     public function getEventType(): string

@@ -21,14 +21,8 @@ use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
  */
 class TagsConverter implements ConverterInterface
 {
-    /**
-     * @var TagManagerInterface
-     */
-    private $tagManager;
-
-    public function __construct(TagManagerInterface $tagManager)
+    public function __construct(private TagManagerInterface $tagManager)
     {
-        $this->tagManager = $tagManager;
     }
 
     public function convert($value/*, Document $document = null*/)

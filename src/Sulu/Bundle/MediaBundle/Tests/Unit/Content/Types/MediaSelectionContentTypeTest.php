@@ -79,46 +79,18 @@ class MediaSelectionContentTypeTest extends TestCase
 
     public function testWrite(): void
     {
-        $node = $this->getMockForAbstractClass(
-            NodeInterface::class,
-            [],
-            '',
-            true,
-            true,
-            true,
-            ['setProperty']
-        );
+        $property = $this->prophesize(PropertyInterface::class);
+        $property->getName()->willReturn('property')->shouldBeCalled();
+        $property->getValue()->willReturn(
+            [
+                'ids' => [1, 2, 3, 4],
+                'displayOption' => 'right',
+                'config' => ['conf1' => 1, 'conf2' => 2],
+            ]
+        )->shouldBeCalled();
 
-        $property = $this->getMockForAbstractClass(
-            PropertyInterface::class,
-            [],
-            '',
-            true,
-            true,
-            true,
-            ['getValue', 'getParams']
-        );
-
-        $property->expects($this->any())->method('getName')->will($this->returnValue('property'));
-
-        $property->expects($this->any())->method('getValue')->will(
-            $this->returnValue(
-                [
-                    'ids' => [1, 2, 3, 4],
-                    'displayOption' => 'right',
-                    'config' => ['conf1' => 1, 'conf2' => 2],
-                ]
-            )
-        );
-
-        $property->expects($this->any())->method('getParams')->will(
-            $this->returnValue(
-                [
-                ]
-            )
-        );
-
-        $node->expects($this->once())->method('setProperty')->with(
+        $node = $this->prophesize(NodeInterface::class);
+        $node->setProperty(
             'property',
             \json_encode(
                 [
@@ -127,54 +99,27 @@ class MediaSelectionContentTypeTest extends TestCase
                     'config' => ['conf1' => 1, 'conf2' => 2],
                 ]
             )
-        );
+        )->shouldBeCalled();
 
-        $this->mediaSelection->write($node, $property, 0, 'test', 'en', 's');
+        $this->mediaSelection->write($node->reveal(), $property->reveal(), 0, 'test', 'en', 's');
     }
 
     public function testWriteWithPassedContainer(): void
     {
-        $node = $this->getMockForAbstractClass(
-            NodeInterface::class,
-            [],
-            '',
-            true,
-            true,
-            true,
-            ['setProperty']
-        );
+        $property = $this->prophesize(PropertyInterface::class);
 
-        $property = $this->getMockForAbstractClass(
-            PropertyInterface::class,
-            [],
-            '',
-            true,
-            true,
-            true,
-            ['getValue', 'getParams']
-        );
+        $property->getName()->willReturn('property')->shouldBeCalled();
+        $property->getValue()->willReturn(
+            [
+                'ids' => [1, 2, 3, 4],
+                'displayOption' => 'right',
+                'config' => ['conf1' => 1, 'conf2' => 2],
+                'data' => ['data1', 'data2'],
+            ]
+        )->shouldBeCalled();
 
-        $property->expects($this->any())->method('getName')->will($this->returnValue('property'));
-
-        $property->expects($this->any())->method('getValue')->will(
-            $this->returnValue(
-                [
-                    'ids' => [1, 2, 3, 4],
-                    'displayOption' => 'right',
-                    'config' => ['conf1' => 1, 'conf2' => 2],
-                    'data' => ['data1', 'data2'],
-                ]
-            )
-        );
-
-        $property->expects($this->any())->method('getParams')->will(
-            $this->returnValue(
-                [
-                ]
-            )
-        );
-
-        $node->expects($this->once())->method('setProperty')->with(
+        $node = $this->prophesize(NodeInterface::class);
+        $node->setProperty(
             'property',
             \json_encode(
                 [
@@ -183,219 +128,66 @@ class MediaSelectionContentTypeTest extends TestCase
                     'config' => ['conf1' => 1, 'conf2' => 2],
                 ]
             )
-        );
+        )->shouldBeCalled();
 
-        $this->mediaSelection->write($node, $property, 0, 'test', 'en', 's');
+        $this->mediaSelection->write($node->reveal(), $property->reveal(), 0, 'test', 'en', 's');
     }
 
     public function testRead(): void
     {
         $config = '{"config":{"conf1": 1, "conf2": 2}, "displayOption": "right", "ids": [1,2,3,4]}';
 
-        $node = $this->getMockForAbstractClass(
-            NodeInterface::class,
-            [],
-            '',
-            true,
-            true,
-            true,
-            ['getPropertyValueWithDefault']
-        );
+        $node = $this->prophesize(NodeInterface::class);
+        $node->getPropertyValueWithDefault('property', '{"ids": []}')->willReturn($config)->shouldBeCalled();
 
-        $property = $this->getMockForAbstractClass(
-            PropertyInterface::class,
-            [],
-            '',
-            true,
-            true,
-            true,
-            ['setValue', 'getParams']
-        );
+        $property = $this->prophesize(PropertyInterface::class);
+        $property->getName()->willReturn('property')->shouldBeCalled();
+        $property->setValue(\json_decode($config, true))->willReturn(null)->shouldBeCalled();
 
-        $node->expects($this->any())->method('getPropertyValueWithDefault')->will(
-            $this->returnValueMap(
-                [
-                    [
-                        'property',
-                        '{"ids": []}',
-                        $config,
-                    ],
-                ]
-            )
-        );
-
-        $property->expects($this->any())->method('getName')->will($this->returnValue('property'));
-
-        $property->expects($this->once())->method('setValue')->with(\json_decode($config, true))->will(
-            $this->returnValue(null)
-        );
-
-        $property->expects($this->any())->method('getParams')->will(
-            $this->returnValue(
-                [
-                ]
-            )
-        );
-
-        $this->mediaSelection->read($node, $property, 'test', 'en', 's');
+        $this->mediaSelection->read($node->reveal(), $property->reveal(), 'test', 'en', 's');
     }
 
     public function testReadWithInvalidValue(): void
     {
         $config = '[]';
 
-        $node = $this->getMockForAbstractClass(
-            NodeInterface::class,
-            [],
-            '',
-            true,
-            true,
-            true,
-            ['getPropertyValueWithDefault']
-        );
+        $node = $this->prophesize(NodeInterface::class);
+        $node->getPropertyValueWithDefault('property', '{"ids": []}')->willReturn($config)->shouldBeCalled();
 
-        $property = $this->getMockForAbstractClass(
-            PropertyInterface::class,
-            [],
-            '',
-            true,
-            true,
-            true,
-            ['setValue', 'getParams']
-        );
+        $property = $this->prophesize(PropertyInterface::class);
+        $property->getName()->willReturn('property')->shouldBeCalled();
+        $property->setValue(null)->willReturn(null)->shouldBeCalled();
 
-        $node->expects($this->any())->method('getPropertyValueWithDefault')->will(
-            $this->returnValueMap(
-                [
-                    [
-                        'property',
-                        '{"ids": []}',
-                        $config,
-                    ],
-                ]
-            )
-        );
-
-        $property->expects($this->any())->method('getName')->will($this->returnValue('property'));
-
-        $property->expects($this->once())->method('setValue')->with(null)->will(
-            $this->returnValue(null)
-        );
-
-        $property->expects($this->any())->method('getParams')->will(
-            $this->returnValue(
-                [
-                ]
-            )
-        );
-
-        $this->mediaSelection->read($node, $property, 'test', 'en', 's');
+        $this->mediaSelection->read($node->reveal(), $property->reveal(), 'test', 'en', 's');
     }
 
     public function testReadWithType(): void
     {
         $config = '{"config":{"conf1": 1, "conf2": 2}, "displayOption": "right", "ids": [1,2,3,4]}';
 
-        $node = $this->getMockForAbstractClass(
-            NodeInterface::class,
-            [],
-            '',
-            true,
-            true,
-            true,
-            ['getPropertyValueWithDefault']
-        );
+        $node = $this->prophesize(NodeInterface::class);
+        $node->getPropertyValueWithDefault('property', '{"ids": []}')->willReturn($config)->shouldBeCalled();
 
-        $property = $this->getMockForAbstractClass(
-            PropertyInterface::class,
-            [],
-            '',
-            true,
-            true,
-            true,
-            ['setValue', 'getParams']
-        );
+        $property = $this->prophesize(PropertyInterface::class);
+        $property->getName()->willReturn('property')->shouldBeCalled();
+        $property->setValue(\json_decode($config, true))->willReturn(null)->shouldBeCalled();
+        $property->getParams()->willReturn(['types' => 'document']);
 
-        $node->expects($this->any())->method('getPropertyValueWithDefault')->will(
-            $this->returnValueMap(
-                [
-                    [
-                        'property',
-                        '{"ids": []}',
-                        $config,
-                    ],
-                ]
-            )
-        );
-
-        $property->expects($this->any())->method('getName')->will($this->returnValue('property'));
-
-        $property->expects($this->once())->method('setValue')->with(\json_decode($config, true))->will(
-            $this->returnValue(null)
-        );
-
-        $property->expects($this->any())->method('getParams')->will(
-            $this->returnValue(
-                [
-                    'types' => 'document',
-                ]
-            )
-        );
-
-        $this->mediaSelection->read($node, $property, 'test', 'en', 's');
+        $this->mediaSelection->read($node->reveal(), $property->reveal(), 'test', 'en', 's');
     }
 
     public function testReadWithMultipleTypes(): void
     {
         $config = '{"config":{"conf1": 1, "conf2": 2}, "displayOption": "right", "ids": [1,2,3,4]}';
 
-        $node = $this->getMockForAbstractClass(
-            NodeInterface::class,
-            [],
-            '',
-            true,
-            true,
-            true,
-            ['getPropertyValueWithDefault']
-        );
+        $node = $this->prophesize(NodeInterface::class);
+        $node->getPropertyValueWithDefault('property', '{"ids": []}')->willReturn($config);
 
-        $property = $this->getMockForAbstractClass(
-            PropertyInterface::class,
-            [],
-            '',
-            true,
-            true,
-            true,
-            ['setValue', 'getParams']
-        );
+        $property = $this->prophesize(PropertyInterface::class);
+        $property->getName()->willReturn('property')->shouldBeCalled();
+        $property->setValue(\json_decode($config, true))->willReturn(null)->shouldBeCalled();
 
-        $node->expects($this->any())->method('getPropertyValueWithDefault')->will(
-            $this->returnValueMap(
-                [
-                    [
-                        'property',
-                        '{"ids": []}',
-                        $config,
-                    ],
-                ]
-            )
-        );
-
-        $property->expects($this->any())->method('getName')->will($this->returnValue('property'));
-
-        $property->expects($this->once())->method('setValue')->with(\json_decode($config, true))->will(
-            $this->returnValue(null)
-        );
-
-        $property->expects($this->any())->method('getParams')->will(
-            $this->returnValue(
-                [
-                    'types' => 'document,image',
-                ]
-            )
-        );
-
-        $this->mediaSelection->read($node, $property, 'test', 'en', 's');
+        $this->mediaSelection->read($node->reveal(), $property->reveal(), 'test', 'en', 's');
     }
 
     public function testGetContentData(): void

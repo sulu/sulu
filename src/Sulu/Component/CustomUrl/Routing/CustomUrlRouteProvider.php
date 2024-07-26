@@ -28,35 +28,14 @@ use Symfony\Component\Routing\RouteCollection;
 class CustomUrlRouteProvider implements RouteProviderInterface
 {
     /**
-     * @var RequestAnalyzerInterface
+     * @param string $environment
      */
-    private $requestAnalyzer;
-
-    /**
-     * @var PathBuilder
-     */
-    private $pathBuilder;
-
-    /**
-     * @var string
-     */
-    private $environment;
-
-    /**
-     * @var array
-     */
-    private $defaultOptions;
-
     public function __construct(
-        RequestAnalyzerInterface $requestAnalyzer,
-        PathBuilder $pathBuilder,
-        $environment,
-        array $defaultOptions = []
+        private RequestAnalyzerInterface $requestAnalyzer,
+        private PathBuilder $pathBuilder,
+        private $environment,
+        private array $defaultOptions = [],
     ) {
-        $this->requestAnalyzer = $requestAnalyzer;
-        $this->pathBuilder = $pathBuilder;
-        $this->environment = $environment;
-        $this->defaultOptions = $defaultOptions;
     }
 
     public function getRouteCollectionForRequest(Request $request): RouteCollection

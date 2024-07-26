@@ -29,31 +29,12 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 #[AsCommand(name: 'sulu:security:init', description: 'Create required sulu security entities.')]
 final class InitCommand extends Command
 {
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
-
-    /**
-     * @var RoleRepositoryInterface
-     */
-    private $roleRepository;
-
-    /**
-     * @var AdminPool
-     */
-    private $adminPool;
-
     public function __construct(
-        EntityManagerInterface $entityManager,
-        RoleRepositoryInterface $roleRepository,
-        AdminPool $adminPool
+        private EntityManagerInterface $entityManager,
+        private RoleRepositoryInterface $roleRepository,
+        private AdminPool $adminPool
     ) {
         parent::__construct();
-
-        $this->entityManager = $entityManager;
-        $this->roleRepository = $roleRepository;
-        $this->adminPool = $adminPool;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int

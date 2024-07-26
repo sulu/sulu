@@ -22,14 +22,8 @@ use Sulu\Component\SmartContent\ItemInterface;
 #[ExclusionPolicy('all')]
 class ContactDataItem implements ItemInterface
 {
-    /**
-     * @var Contact
-     */
-    private $entity;
-
-    public function __construct(Contact $entity)
+    public function __construct(private Contact $entity)
     {
-        $this->entity = $entity;
     }
 
     #[VirtualProperty]

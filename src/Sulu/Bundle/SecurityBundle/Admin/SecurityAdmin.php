@@ -53,51 +53,16 @@ class SecurityAdmin extends Admin
     }
 
     /**
-     * @var ViewBuilderFactoryInterface
-     */
-    private $viewBuilderFactory;
-
-    /**
-     * @var SecurityCheckerInterface
-     */
-    private $securityChecker;
-
-    /**
-     * @var UrlGeneratorInterface
-     */
-    private $urlGenerator;
-
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
-    /**
      * TODO: Instead of getting the security contexts from the admin pool, that should be closer to the SecurityBundle.
-     *
-     * @var AdminPool
      */
-    private $adminPool;
-
-    /**
-     * @var array
-     */
-    private $resources;
-
     public function __construct(
-        ViewBuilderFactoryInterface $viewBuilderFactory,
-        SecurityCheckerInterface $securityChecker,
-        UrlGeneratorInterface $urlGenerator,
-        TranslatorInterface $translator,
-        AdminPool $adminPool,
-        array $resources
+        private ViewBuilderFactoryInterface $viewBuilderFactory,
+        private SecurityCheckerInterface $securityChecker,
+        private UrlGeneratorInterface $urlGenerator,
+        private TranslatorInterface $translator,
+        private AdminPool $adminPool,
+        private array $resources
     ) {
-        $this->viewBuilderFactory = $viewBuilderFactory;
-        $this->securityChecker = $securityChecker;
-        $this->urlGenerator = $urlGenerator;
-        $this->translator = $translator;
-        $this->adminPool = $adminPool;
-        $this->resources = $resources;
     }
 
     public function configureNavigationItems(NavigationItemCollection $navigationItemCollection): void

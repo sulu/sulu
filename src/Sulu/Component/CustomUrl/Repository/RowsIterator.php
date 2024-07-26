@@ -21,37 +21,21 @@ use Sulu\Component\CustomUrl\Generator\GeneratorInterface;
 class RowsIterator extends \IteratorIterator
 {
     /**
-     * @var string[]
-     */
-    private $columns;
-
-    /**
      * @var Content[]
      */
     private $targets;
 
     /**
-     * @var GeneratorInterface
+     * @param string[] $columns
      */
-    private $generator;
-
-    /**
-     * @var UserManagerInterface
-     */
-    private $userManager;
-
     public function __construct(
         \Traversable $iterator,
-        array $columns,
+        private array $columns,
         array $targets,
-        GeneratorInterface $generator,
-        UserManagerInterface $userManager
+        private GeneratorInterface $generator,
+        private UserManagerInterface $userManager
     ) {
         parent::__construct($iterator);
-
-        $this->columns = $columns;
-        $this->generator = $generator;
-        $this->userManager = $userManager;
 
         $this->targets = [];
         foreach ($targets as $target) {

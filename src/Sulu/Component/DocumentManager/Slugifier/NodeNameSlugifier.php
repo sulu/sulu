@@ -18,14 +18,8 @@ use Symfony\Cmf\Api\Slugifier\SlugifierInterface;
  */
 class NodeNameSlugifier implements SlugifierInterface
 {
-    /**
-     * @var SlugifierInterface
-     */
-    private $slugifier;
-
-    public function __construct(SlugifierInterface $slugifier)
+    public function __construct(private SlugifierInterface $slugifier)
     {
-        $this->slugifier = $slugifier;
     }
 
     /**

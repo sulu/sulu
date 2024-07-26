@@ -22,22 +22,8 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class SnippetInitializer implements InitializerInterface
 {
-    /**
-     * @var ConnectionRegistry
-     */
-    private $connectionRegistry;
-
-    /**
-     * @var PathBuilder
-     */
-    private $pathBuilder;
-
-    public function __construct(
-        ConnectionRegistry $connectionRegistry,
-        PathBuilder $pathBuilder
-    ) {
-        $this->connectionRegistry = $connectionRegistry;
-        $this->pathBuilder = $pathBuilder;
+    public function __construct(private ConnectionRegistry $connectionRegistry, private PathBuilder $pathBuilder)
+    {
     }
 
     public function initialize(OutputInterface $output, $purge = false)

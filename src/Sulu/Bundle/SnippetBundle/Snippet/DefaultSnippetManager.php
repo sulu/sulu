@@ -27,48 +27,18 @@ use Symfony\Component\DependencyInjection\ParameterBag\FrozenParameterBag;
 class DefaultSnippetManager implements DefaultSnippetManagerInterface
 {
     /**
-     * @var WebspaceManagerInterface
-     */
-    private $webspaceManager;
-
-    /**
-     * @var SettingsManagerInterface
-     */
-    private $settingsManager;
-
-    /**
-     * @var DocumentManagerInterface
-     */
-    private $documentManager;
-
-    /**
-     * @var DocumentRegistry
-     */
-    private $registry;
-
-    /**
-     * @var DomainEventCollectorInterface
-     */
-    private $domainEventCollector;
-
-    /**
      * @var FrozenParameterBag
      */
     private $areas;
 
     public function __construct(
-        SettingsManagerInterface $settingsManager,
-        DocumentManagerInterface $documentManager,
-        WebspaceManagerInterface $webspaceManager,
-        DocumentRegistry $registry,
-        DomainEventCollectorInterface $domainEventCollector,
+        private SettingsManagerInterface $settingsManager,
+        private DocumentManagerInterface $documentManager,
+        private WebspaceManagerInterface $webspaceManager,
+        private DocumentRegistry $registry,
+        private DomainEventCollectorInterface $domainEventCollector,
         array $areas
     ) {
-        $this->settingsManager = $settingsManager;
-        $this->documentManager = $documentManager;
-        $this->webspaceManager = $webspaceManager;
-        $this->registry = $registry;
-        $this->domainEventCollector = $domainEventCollector;
         $this->areas = new FrozenParameterBag($areas);
     }
 

@@ -33,38 +33,14 @@ final class TrashAdmin extends Admin
     public const LIST_VIEW = 'sulu_trash.trash_items.list';
 
     /**
-     * @var ViewBuilderFactoryInterface
-     */
-    private $viewBuilderFactory;
-
-    /**
-     * @var SecurityCheckerInterface
-     */
-    private $securityChecker;
-
-    /**
-     * @var LocalizationManagerInterface
-     */
-    private $localizationManager;
-
-    /**
-     * @var iterable<string, RestoreConfigurationProviderInterface>
-     */
-    private $restoreConfigurationProviders;
-
-    /**
      * @param iterable<string, RestoreConfigurationProviderInterface> $restoreConfigurationProviders
      */
     public function __construct(
-        ViewBuilderFactoryInterface $viewBuilderFactory,
-        SecurityCheckerInterface $securityChecker,
-        LocalizationManagerInterface $localizationManager,
-        iterable $restoreConfigurationProviders
+        private ViewBuilderFactoryInterface $viewBuilderFactory,
+        private SecurityCheckerInterface $securityChecker,
+        private LocalizationManagerInterface $localizationManager,
+        private iterable $restoreConfigurationProviders,
     ) {
-        $this->viewBuilderFactory = $viewBuilderFactory;
-        $this->securityChecker = $securityChecker;
-        $this->localizationManager = $localizationManager;
-        $this->restoreConfigurationProviders = $restoreConfigurationProviders;
     }
 
     public function configureNavigationItems(NavigationItemCollection $navigationItemCollection): void

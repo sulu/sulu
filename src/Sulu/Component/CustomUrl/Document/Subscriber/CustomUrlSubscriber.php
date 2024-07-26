@@ -33,43 +33,13 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class CustomUrlSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var GeneratorInterface
-     */
-    private $generator;
-
-    /**
-     * @var DocumentManagerInterface
-     */
-    private $documentManager;
-
-    /**
-     * @var PathBuilder
-     */
-    private $pathBuilder;
-
-    /**
-     * @var DocumentInspector
-     */
-    protected $inspector;
-
-    /**
-     * @var WebspaceManagerInterface
-     */
-    private $webspaceManager;
-
     public function __construct(
-        GeneratorInterface $generator,
-        DocumentManagerInterface $documentManager,
-        PathBuilder $pathBuilder,
-        DocumentInspector $inspector,
-        WebspaceManagerInterface $webspaceManager
+        private GeneratorInterface $generator,
+        private DocumentManagerInterface $documentManager,
+        private PathBuilder $pathBuilder,
+        protected DocumentInspector $inspector,
+        private WebspaceManagerInterface $webspaceManager
     ) {
-        $this->generator = $generator;
-        $this->documentManager = $documentManager;
-        $this->pathBuilder = $pathBuilder;
-        $this->inspector = $inspector;
-        $this->webspaceManager = $webspaceManager;
     }
 
     public static function getSubscribedEvents()

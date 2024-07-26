@@ -29,14 +29,8 @@ use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
  */
 class ExplicitSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var NodeManager
-     */
-    private $nodeManager;
-
-    public function __construct(NodeManager $nodeManager)
+    public function __construct(private NodeManager $nodeManager)
     {
-        $this->nodeManager = $nodeManager;
     }
 
     public static function getSubscribedEvents()

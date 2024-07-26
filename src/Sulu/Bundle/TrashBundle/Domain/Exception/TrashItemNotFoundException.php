@@ -16,17 +16,10 @@ namespace Sulu\Bundle\TrashBundle\Domain\Exception;
 class TrashItemNotFoundException extends \Exception
 {
     /**
-     * @var mixed[]
-     */
-    private $criteria;
-
-    /**
      * @param mixed[] $criteria
      */
-    public function __construct(array $criteria)
+    public function __construct(private array $criteria)
     {
-        $this->criteria = $criteria;
-
         parent::__construct(
             \sprintf('TrashItem with criteria (%s) not found.', \json_encode($this->criteria))
         );

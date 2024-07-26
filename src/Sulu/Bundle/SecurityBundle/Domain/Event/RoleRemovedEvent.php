@@ -17,22 +17,9 @@ use Sulu\Component\Security\Authentication\RoleInterface;
 
 class RoleRemovedEvent extends DomainEvent
 {
-    /**
-     * @var int
-     */
-    private $roleId;
-
-    /**
-     * @var string
-     */
-    private $roleName;
-
-    public function __construct(int $roleId, string $roleName)
+    public function __construct(private int $roleId, private string $roleName)
     {
         parent::__construct();
-
-        $this->roleId = $roleId;
-        $this->roleName = $roleName;
     }
 
     public function getEventType(): string

@@ -19,7 +19,7 @@ interface IndexConfigurationProviderInterface
     /**
      * Returns all IndexConfigurations available in this installation.
      *
-     * @return IndexConfiguration[]
+     * @return array<string, IndexConfiguration>
      */
     public function getIndexConfigurations();
 

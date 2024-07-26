@@ -36,42 +36,15 @@ class SnippetAreaController implements ClassResourceInterface
     use RequestParametersTrait;
 
     /**
-     * @var DefaultSnippetManagerInterface
+     * @param array<array{key: string, title: array<string, string>, template: string}> $sulu_snippet_areas
      */
-    protected $defaultSnippetManager;
-
-    /**
-     * @var DocumentManagerInterface
-     */
-    protected $documentManager;
-
-    /**
-     * @var SecurityCheckerInterface
-     */
-    protected $securityChecker;
-
-    /**
-     * @var TokenStorageInterface
-     */
-    protected $tokenStorage;
-
-    /**
-     * @var array
-     */
-    protected $sulu_snippet_areas;
-
     public function __construct(
-        DefaultSnippetManagerInterface $defaultSnippetManager,
-        DocumentManagerInterface $documentManager,
-        SecurityCheckerInterface $securityChecker,
-        TokenStorageInterface $tokenStorage,
-        array $sulu_snippet_area
+        protected DefaultSnippetManagerInterface $defaultSnippetManager,
+        protected DocumentManagerInterface $documentManager,
+        protected SecurityCheckerInterface $securityChecker,
+        protected TokenStorageInterface $tokenStorage,
+        protected array $sulu_snippet_areas
     ) {
-        $this->defaultSnippetManager = $defaultSnippetManager;
-        $this->documentManager = $documentManager;
-        $this->securityChecker = $securityChecker;
-        $this->tokenStorage = $tokenStorage;
-        $this->sulu_snippet_areas = $sulu_snippet_area;
     }
 
     protected function getUser()

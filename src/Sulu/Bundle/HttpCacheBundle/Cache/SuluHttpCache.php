@@ -39,16 +39,21 @@ class SuluHttpCache extends HttpCache implements CacheInvalidation
 
     public const HEADER_REVERSE_PROXY_TTL = 'X-Reverse-Proxy-TTL';
 
+    private bool $debug;
+
     /**
      * @param string $cacheDir
+     * @param bool|null $debug given null will fallback to kernel debug
      */
-    public function __construct(HttpKernelInterface $kernel, $cacheDir = null)
+    public function __construct(HttpKernelInterface $kernel, $cacheDir = null, ?bool $debug = null)
     {
         if (!$cacheDir && $kernel instanceof SuluKernel) {
             $cacheDir = $kernel->getCommonCacheDir() . \DIRECTORY_SEPARATOR . 'http_cache';
         }
 
         parent::__construct($kernel, $cacheDir);
+
+        $this->debug = $debug ?? $this->kernel->isDebug();
 
         foreach ($this->getSubscribers() as $subscriber) {
             $this->addSubscriber($subscriber);
@@ -61,13 +66,13 @@ class SuluHttpCache extends HttpCache implements CacheInvalidation
     protected function getSubscribers(): array
     {
         $subscribers = [
-            CustomTtlListener::class => new CustomTtlListener(static::HEADER_REVERSE_PROXY_TTL, $this->kernel->isDebug()),
+            CustomTtlListener::class => new CustomTtlListener(static::HEADER_REVERSE_PROXY_TTL, $this->debug, false),
             PurgeListener::class => new PurgeListener(),
             PurgeTagsListener::class => new PurgeTagsListener(),
             SegmentCacheListener::class => new SegmentCacheListener(),
         ];
 
-        if ($this->kernel->isDebug()) {
+        if ($this->debug) {
             $subscribers[DebugListener::class] = new DebugListener();
         } else {
             $subscribers[CleanupCacheTagsListener::class] = new CleanupCacheTagsListener();
