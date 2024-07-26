@@ -19,13 +19,11 @@ use Sulu\Component\Webspace\Webspace;
 class WebspaceUrlChainProvider implements WebspaceUrlProviderInterface
 {
     /**
-     * @var WebspaceUrlProviderInterface[]
+     * @param WebspaceUrlProviderInterface[] $chain
      */
-    private $chain;
-
-    public function __construct(array $chain = [])
-    {
-        $this->chain = $chain;
+    public function __construct(
+        private array $chain = []
+    ) {
     }
 
     public function getUrls(Webspace $webspace, $environment)

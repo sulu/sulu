@@ -28,41 +28,6 @@ use Sulu\Component\Content\Extension\ExtensionManagerInterface;
 class ManagedExtensionContainer extends ExtensionContainer
 {
     /**
-     * @var ExtensionManagerInterface
-     */
-    private $extensionManager;
-
-    /**
-     * @var NodeInterface
-     */
-    private $node;
-
-    /**
-     * @var string
-     */
-    private $locale;
-
-    /**
-     * @var string
-     */
-    private $prefix;
-
-    /**
-     * @var string
-     */
-    private $internalPrefix;
-
-    /**
-     * @var string
-     */
-    private $structureType;
-
-    /**
-     * @var string
-     */
-    private $webspaceName;
-
-    /**
      * @param string $structureType
      * @param string $locale
      * @param string $prefix
@@ -70,22 +35,15 @@ class ManagedExtensionContainer extends ExtensionContainer
      * @param string $webspaceName
      */
     public function __construct(
-        $structureType,
-        ExtensionManagerInterface $extensionManager,
-        NodeInterface $node,
-        $locale,
-        $prefix,
-        $internalPrefix,
-        $webspaceName
+        private $structureType,
+        private ExtensionManagerInterface $extensionManager,
+        private NodeInterface $node,
+        private $locale,
+        private $prefix,
+        private $internalPrefix,
+        private $webspaceName
     ) {
         parent::__construct();
-        $this->extensionManager = $extensionManager;
-        $this->node = $node;
-        $this->locale = $locale;
-        $this->prefix = $prefix;
-        $this->internalPrefix = $internalPrefix;
-        $this->structureType = $structureType;
-        $this->webspaceName = $webspaceName;
     }
 
     /**

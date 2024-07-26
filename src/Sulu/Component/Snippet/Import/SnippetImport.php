@@ -34,11 +34,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 class SnippetImport extends Import implements SnippetImportInterface
 {
     /**
-     * @var DocumentManagerInterface
-     */
-    private $documentManager;
-
-    /**
      * @var StructureManagerInterface
      */
     protected $structureManager;
@@ -54,7 +49,7 @@ class SnippetImport extends Import implements SnippetImportInterface
     protected $logger;
 
     public function __construct(
-        DocumentManagerInterface $documentManager,
+        private DocumentManagerInterface $documentManager,
         StructureManagerInterface $structureManager,
         DocumentRegistry $documentRegistry,
         ImportManagerInterface $importManager,
@@ -63,8 +58,6 @@ class SnippetImport extends Import implements SnippetImportInterface
         ?LoggerInterface $logger = null
     ) {
         parent::__construct($importManager, $legacyPropertyFactory, ['1.2.xliff' => $xliff12]);
-
-        $this->documentManager = $documentManager;
         $this->documentRegistry = $documentRegistry;
         $this->structureManager = $structureManager;
         $this->logger = $logger ?: new NullLogger();

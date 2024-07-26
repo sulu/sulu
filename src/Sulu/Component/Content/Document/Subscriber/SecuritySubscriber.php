@@ -35,36 +35,12 @@ class SecuritySubscriber implements EventSubscriberInterface
 
     public const SECURITY_PERMISSION_PROPERTY = 'sec:permissions';
 
-    /**
-     * @var array
-     */
-    private $permissions;
-
-    /**
-     * @var SessionInterface
-     */
-    private $liveSession;
-
-    /**
-     * @var PropertyEncoder
-     */
-    private $propertyEncoder;
-
-    /**
-     * @var AccessControlManagerInterface
-     */
-    private $accessControlManager;
-
     public function __construct(
-        array $permissions,
-        SessionInterface $liveSession,
-        PropertyEncoder $propertyEncoder,
-        AccessControlManagerInterface $accessControlManager
+        private array $permissions,
+        private SessionInterface $liveSession,
+        private PropertyEncoder $propertyEncoder,
+        private AccessControlManagerInterface $accessControlManager,
     ) {
-        $this->permissions = $permissions;
-        $this->liveSession = $liveSession;
-        $this->propertyEncoder = $propertyEncoder;
-        $this->accessControlManager = $accessControlManager;
     }
 
     public static function getSubscribedEvents()

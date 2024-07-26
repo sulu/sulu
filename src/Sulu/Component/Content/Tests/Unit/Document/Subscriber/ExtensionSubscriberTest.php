@@ -17,6 +17,7 @@ use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\PropertyEncoder;
 use Sulu\Component\Content\Document\Behavior\ExtensionBehavior;
+use Sulu\Component\Content\Document\Extension\ExtensionContainer;
 use Sulu\Component\Content\Document\Subscriber\ExtensionSubscriber;
 use Sulu\Component\Content\Extension\ExtensionInterface;
 use Sulu\Component\Content\Extension\ExtensionManagerInterface;
@@ -169,11 +170,8 @@ class ExtensionSubscriberTest extends SubscriberTestCase
 
 class TestExtensionDocument implements ExtensionBehavior
 {
-    private $extensions;
-
-    public function __construct(array $extensions = [])
+    public function __construct(private array|ExtensionContainer $extensions = [])
     {
-        $this->extensions = $extensions;
     }
 
     public function getExtensionsData()

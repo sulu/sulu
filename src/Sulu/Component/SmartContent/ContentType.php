@@ -31,77 +31,23 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class ContentType extends ComplexContentType implements ContentTypeExportInterface
 {
     /**
-     * @var TagManagerInterface
-     */
-    private $tagManager;
-
-    /**
-     * @var DataProviderPoolInterface
-     */
-    private $dataProviderPool;
-
-    /**
-     * @var RequestStack
-     */
-    private $requestStack;
-
-    /**
      * Contains cached values.
      *
      * @var array
      */
     private $cache = [];
 
-    /**
-     * @var TagRequestHandlerInterface
-     */
-    private $tagRequestHandler;
-
-    /**
-     * @var CategoryRequestHandlerInterface
-     */
-    private $categoryRequestHandler;
-
-    /**
-     * @var TargetGroupStoreInterface
-     */
-    private $targetGroupStore;
-
-    /**
-     * @var ReferenceStoreInterface
-     */
-    private $tagReferenceStore;
-
-    /**
-     * @var ReferenceStoreInterface
-     */
-    private $categoryReferenceStore;
-
-    /**
-     * @var RequestAnalyzerInterface
-     */
-    private $requestAnalyzer;
-
     public function __construct(
-        DataProviderPoolInterface $dataProviderPool,
-        TagManagerInterface $tagManager,
-        RequestStack $requestStack,
-        TagRequestHandlerInterface $tagRequestHandler,
-        CategoryRequestHandlerInterface $categoryRequestHandler,
-        ReferenceStoreInterface $tagReferenceStore,
-        ReferenceStoreInterface $categoryReferenceStore,
-        ?TargetGroupStoreInterface $targetGroupStore,
-        RequestAnalyzerInterface $requestAnalyzer
+        private DataProviderPoolInterface $dataProviderPool,
+        private TagManagerInterface $tagManager,
+        private RequestStack $requestStack,
+        private TagRequestHandlerInterface $tagRequestHandler,
+        private CategoryRequestHandlerInterface $categoryRequestHandler,
+        private ReferenceStoreInterface $tagReferenceStore,
+        private ReferenceStoreInterface $categoryReferenceStore,
+        private ?TargetGroupStoreInterface $targetGroupStore,
+        private RequestAnalyzerInterface $requestAnalyzer,
     ) {
-        $this->dataProviderPool = $dataProviderPool;
-        $this->tagManager = $tagManager;
-        $this->requestStack = $requestStack;
-        $this->tagRequestHandler = $tagRequestHandler;
-        $this->categoryRequestHandler = $categoryRequestHandler;
-        $this->tagReferenceStore = $tagReferenceStore;
-        $this->categoryReferenceStore = $categoryReferenceStore;
-        $this->targetGroupStore = $targetGroupStore;
-        $this->requestAnalyzer = $requestAnalyzer;
     }
 
     public function read(

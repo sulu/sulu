@@ -24,13 +24,6 @@ use Symfony\Component\Config\Resource\FileResource;
 class WebspaceCollection implements \IteratorAggregate
 {
     /**
-     * All the webspaces in a specific sulu installation.
-     *
-     * @var array<string, Webspace>
-     */
-    private $webspaces;
-
-    /**
      * All the portals in a specific sulu installation.
      *
      * @var array<string, Portal>
@@ -55,9 +48,9 @@ class WebspaceCollection implements \IteratorAggregate
     /**
      * @param array<string, Webspace> $webspaces
      */
-    public function __construct(array $webspaces = [])
-    {
-        $this->webspaces = $webspaces;
+    public function __construct(
+        private array $webspaces = []
+    ) {
     }
 
     /**

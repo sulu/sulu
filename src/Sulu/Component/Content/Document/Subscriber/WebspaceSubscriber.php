@@ -23,36 +23,12 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class WebspaceSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var PropertyEncoder
-     */
-    private $propertyEncoder;
-
-    /**
-     * @var DocumentInspector
-     */
-    private $documentInspector;
-
-    /**
-     * @var DocumentManagerInterface
-     */
-    private $documentManager;
-
-    /**
-     * @var WebspaceManagerInterface
-     */
-    private $webspaceManager;
-
     public function __construct(
-        PropertyEncoder $propertyEncoder,
-        DocumentInspector $documentInspector,
-        DocumentManagerInterface $documentManager,
-        WebspaceManagerInterface $webspaceManager
+        private PropertyEncoder $propertyEncoder,
+        private DocumentInspector $documentInspector,
+        private DocumentManagerInterface $documentManager,
+        private WebspaceManagerInterface $webspaceManager,
     ) {
-        $this->propertyEncoder = $propertyEncoder;
-        $this->documentInspector = $documentInspector;
-        $this->documentManager = $documentManager;
-        $this->webspaceManager = $webspaceManager;
     }
 
     public static function getSubscribedEvents()

@@ -17,22 +17,10 @@ use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 
 class ScheduleBlockVisitor implements BlockVisitorInterface
 {
-    /**
-     * @var RequestAnalyzerInterface
-     */
-    private $requestAnalyzer;
-
-    /**
-     * @var CacheLifetimeRequestStore
-     */
-    private $cacheLifetimeRequestStore;
-
     public function __construct(
-        RequestAnalyzerInterface $requestAnalyzer,
-        CacheLifetimeRequestStore $cacheLifetimeRequestStore
+        private RequestAnalyzerInterface $requestAnalyzer,
+        private CacheLifetimeRequestStore $cacheLifetimeRequestStore,
     ) {
-        $this->requestAnalyzer = $requestAnalyzer;
-        $this->cacheLifetimeRequestStore = $cacheLifetimeRequestStore;
     }
 
     public function visit(BlockPropertyType $block): ?BlockPropertyType

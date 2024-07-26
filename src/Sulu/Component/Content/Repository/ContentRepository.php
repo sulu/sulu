@@ -56,21 +56,6 @@ class ContentRepository implements ContentRepositoryInterface, DescendantProvide
     ];
 
     /**
-     * @var SessionManagerInterface
-     */
-    private $sessionManager;
-
-    /**
-     * @var PropertyEncoder
-     */
-    private $propertyEncoder;
-
-    /**
-     * @var WebspaceManagerInterface
-     */
-    private $webspaceManager;
-
-    /**
      * @var SessionInterface
      */
     private $session;
@@ -80,51 +65,17 @@ class ContentRepository implements ContentRepositoryInterface, DescendantProvide
      */
     private $qomFactory;
 
-    /**
-     * @var LocalizationFinderInterface
-     */
-    private $localizationFinder;
-
-    /**
-     * @var StructureManagerInterface
-     */
-    private $structureManager;
-
-    /**
-     * @var SuluNodeHelper
-     */
-    private $nodeHelper;
-
-    /**
-     * @var array
-     */
-    private $permissions;
-
-    /**
-     * @var SystemStoreInterface
-     */
-    private $systemStore;
-
     public function __construct(
-        SessionManagerInterface $sessionManager,
-        PropertyEncoder $propertyEncoder,
-        WebspaceManagerInterface $webspaceManager,
-        LocalizationFinderInterface $localizationFinder,
-        StructureManagerInterface $structureManager,
-        SuluNodeHelper $nodeHelper,
-        SystemStoreInterface $systemStore,
-        array $permissions
+        private SessionManagerInterface $sessionManager,
+        private PropertyEncoder $propertyEncoder,
+        private WebspaceManagerInterface $webspaceManager,
+        private LocalizationFinderInterface $localizationFinder,
+        private StructureManagerInterface $structureManager,
+        private SuluNodeHelper $nodeHelper,
+        private SystemStoreInterface $systemStore,
+        private array $permissions
     ) {
-        $this->sessionManager = $sessionManager;
-        $this->propertyEncoder = $propertyEncoder;
-        $this->webspaceManager = $webspaceManager;
-        $this->localizationFinder = $localizationFinder;
-        $this->structureManager = $structureManager;
-        $this->nodeHelper = $nodeHelper;
-        $this->systemStore = $systemStore;
-        $this->permissions = $permissions;
-
-        $this->session = $sessionManager->getSession();
+        $this->session = $this->sessionManager->getSession();
         $this->qomFactory = $this->session->getWorkspace()->getQueryManager()->getQOMFactory();
     }
 

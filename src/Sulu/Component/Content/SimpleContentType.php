@@ -21,23 +21,13 @@ use Sulu\Component\Content\Compat\PropertyInterface;
 abstract class SimpleContentType implements ContentTypeInterface, ContentTypeExportInterface
 {
     /**
-     * name of content type.
-     *
-     * @var string
+     * @param string $name
+     * @param mixed $defaultValue
      */
-    private $name;
-
-    /**
-     * default value if node does not have the property.
-     *
-     * @var mixed
-     */
-    protected $defaultValue;
-
-    public function __construct($name, $defaultValue = null)
-    {
-        $this->name = $name;
-        $this->defaultValue = $defaultValue;
+    public function __construct(
+        private $name,
+        protected $defaultValue = null
+    ) {
     }
 
     /**

@@ -13901,17 +13901,17 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/DependencyInjection/SuluMediaExtension.php
 
 		-
+			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\Collection\\:\\:getChildren\\(\\) should return Doctrine\\\\Common\\\\Collections\\\\Collection\\<int, Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\Collection\\> but returns Doctrine\\\\Common\\\\Collections\\\\Collection\\<int, Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\CollectionInterface\\>\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/MediaBundle/Entity/Collection.php
+
+		-
 			message: "#^Property Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\Collection\\:\\:\\$defaultMeta \\(Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\CollectionMeta\\) does not accept Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\CollectionMeta\\|null\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Entity/Collection.php
 
 		-
 			message: "#^Property Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\Collection\\:\\:\\$defaultMeta type mapping mismatch\\: database can contain Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\CollectionMeta\\|null but property expects Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\CollectionMeta\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/Collection.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\Collection\\:\\:\\$media type mapping mismatch\\: property can contain Doctrine\\\\Common\\\\Collections\\\\Collection\\<int, Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\MediaInterface\\> but database expects Doctrine\\\\Common\\\\Collections\\\\Collection&iterable\\<Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\Media\\>\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Entity/Collection.php
 
@@ -24026,6 +24026,11 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/SmartContent/QueryBuilderTest.php
 
 		-
+			message: "#^Parameter \\#4 \\$languageNamespace of class Sulu\\\\Component\\\\Content\\\\SmartContent\\\\QueryBuilder constructor expects string, null given\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/PageBundle/Tests/Functional/SmartContent/QueryBuilderTest.php
+
+		-
 			message: "#^Property Sulu\\\\Bundle\\\\PageBundle\\\\Tests\\\\Functional\\\\SmartContent\\\\QueryBuilderTest\\:\\:\\$contentQuery \\(Sulu\\\\Component\\\\Content\\\\Query\\\\ContentQueryExecutor\\) does not accept object\\|null\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/SmartContent/QueryBuilderTest.php
@@ -24118,6 +24123,16 @@ parameters:
 		-
 			message: "#^Offset 'resourceLocator' does not exist on string\\.$#"
 			count: 2
+			path: src/Sulu/Bundle/PageBundle/Tests/Unit/Repository/ResourceLocatorRepositoryTest.php
+
+		-
+			message: "#^Parameter \\#2 \\$created of class Sulu\\\\Component\\\\Content\\\\Types\\\\ResourceLocator\\\\ResourceLocatorInformation constructor expects DateTime, null given\\.$#"
+			count: 3
+			path: src/Sulu/Bundle/PageBundle/Tests/Unit/Repository/ResourceLocatorRepositoryTest.php
+
+		-
+			message: "#^Parameter \\#3 \\$id of class Sulu\\\\Component\\\\Content\\\\Types\\\\ResourceLocator\\\\ResourceLocatorInformation constructor expects string, int given\\.$#"
+			count: 3
 			path: src/Sulu/Bundle/PageBundle/Tests/Unit/Repository/ResourceLocatorRepositoryTest.php
 
 		-
@@ -34021,6 +34036,11 @@ parameters:
 			path: src/Sulu/Component/Contact/Tests/Unit/SmartContent/AccountDataProviderTest.php
 
 		-
+			message: "#^Parameter \\#1 \\$id of class Sulu\\\\Component\\\\SmartContent\\\\ArrayAccessItem constructor expects string, int given\\.$#"
+			count: 1
+			path: src/Sulu/Component/Contact/Tests/Unit/SmartContent/AccountDataProviderTest.php
+
+		-
 			message: "#^Call to method PHPUnit\\\\Framework\\\\Assert\\:\\:assertNull\\(\\) with Sulu\\\\Component\\\\SmartContent\\\\DatasourceItemInterface will always evaluate to false\\.$#"
 			count: 1
 			path: src/Sulu/Component/Contact/Tests/Unit/SmartContent/ContactDataProviderTest.php
@@ -34151,19 +34171,9 @@ parameters:
 			path: src/Sulu/Component/Contact/Tests/Unit/SmartContent/ContactDataProviderTest.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\BreadcrumbItem\\:\\:__construct\\(\\) has parameter \\$depth with no type specified\\.$#"
+			message: "#^Parameter \\#1 \\$id of class Sulu\\\\Component\\\\SmartContent\\\\ArrayAccessItem constructor expects string, int given\\.$#"
 			count: 1
-			path: src/Sulu/Component/Content/BreadcrumbItem.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\BreadcrumbItem\\:\\:__construct\\(\\) has parameter \\$title with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/BreadcrumbItem.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\BreadcrumbItem\\:\\:__construct\\(\\) has parameter \\$uuid with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/BreadcrumbItem.php
+			path: src/Sulu/Component/Contact/Tests/Unit/SmartContent/ContactDataProviderTest.php
 
 		-
 			message: "#^Method Sulu\\\\Component\\\\Content\\\\BreadcrumbItem\\:\\:toArray\\(\\) return type has no value type specified in iterable type array\\.$#"
@@ -34201,47 +34211,7 @@ parameters:
 			path: src/Sulu/Component/Content/Compat/Block/BlockProperty.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Compat\\\\Block\\\\BlockProperty\\:\\:__construct\\(\\) has parameter \\$defaultTypeName with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Compat/Block/BlockProperty.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Compat\\\\Block\\\\BlockProperty\\:\\:__construct\\(\\) has parameter \\$mandatory with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Compat/Block/BlockProperty.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Compat\\\\Block\\\\BlockProperty\\:\\:__construct\\(\\) has parameter \\$maxOccurs with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Compat/Block/BlockProperty.php
-
-		-
 			message: "#^Method Sulu\\\\Component\\\\Content\\\\Compat\\\\Block\\\\BlockProperty\\:\\:__construct\\(\\) has parameter \\$metadata with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Compat/Block/BlockProperty.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Compat\\\\Block\\\\BlockProperty\\:\\:__construct\\(\\) has parameter \\$minOccurs with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Compat/Block/BlockProperty.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Compat\\\\Block\\\\BlockProperty\\:\\:__construct\\(\\) has parameter \\$multilingual with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Compat/Block/BlockProperty.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Compat\\\\Block\\\\BlockProperty\\:\\:__construct\\(\\) has parameter \\$name with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Compat/Block/BlockProperty.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Compat\\\\Block\\\\BlockProperty\\:\\:__construct\\(\\) has parameter \\$params with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Compat/Block/BlockProperty.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Compat\\\\Block\\\\BlockProperty\\:\\:__construct\\(\\) has parameter \\$tags with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Compat/Block/BlockProperty.php
 
@@ -34311,6 +34281,11 @@ parameters:
 			path: src/Sulu/Component/Content/Compat/Block/BlockPropertyWrapper.php
 
 		-
+			message: "#^Method Sulu\\\\Component\\\\Content\\\\Compat\\\\Block\\\\BlockPropertyWrapper\\:\\:getBlock\\(\\) should return Sulu\\\\Component\\\\Content\\\\Compat\\\\Block\\\\BlockPropertyInterface but returns Sulu\\\\Component\\\\Content\\\\Compat\\\\PropertyInterface\\.$#"
+			count: 1
+			path: src/Sulu/Component/Content/Compat/Block/BlockPropertyWrapper.php
+
+		-
 			message: "#^Method Sulu\\\\Component\\\\Content\\\\Compat\\\\Block\\\\BlockPropertyWrapper\\:\\:getParams\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Compat/Block/BlockPropertyWrapper.php
@@ -34347,16 +34322,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Component\\\\Content\\\\Compat\\\\Block\\\\BlockPropertyWrapper\\:\\:toArray\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Compat/Block/BlockPropertyWrapper.php
-
-		-
-			message: "#^Property Sulu\\\\Component\\\\Content\\\\Compat\\\\Block\\\\BlockPropertyWrapper\\:\\:\\$block \\(Sulu\\\\Component\\\\Content\\\\Compat\\\\Block\\\\BlockPropertyInterface\\) does not accept Sulu\\\\Component\\\\Content\\\\Compat\\\\PropertyInterface\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Compat/Block/BlockPropertyWrapper.php
-
-		-
-			message: "#^Property Sulu\\\\Component\\\\Content\\\\Compat\\\\Block\\\\BlockPropertyWrapper\\:\\:\\$index \\(int\\) does not accept int\\|null\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Compat/Block/BlockPropertyWrapper.php
 
@@ -34581,57 +34546,7 @@ parameters:
 			path: src/Sulu/Component/Content/Compat/Property.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Compat\\\\Property\\:\\:__construct\\(\\) has parameter \\$colSpan with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Compat/Property.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Compat\\\\Property\\:\\:__construct\\(\\) has parameter \\$contentTypeName with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Compat/Property.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Compat\\\\Property\\:\\:__construct\\(\\) has parameter \\$defaultTypeName with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Compat/Property.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Compat\\\\Property\\:\\:__construct\\(\\) has parameter \\$mandatory with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Compat/Property.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Compat\\\\Property\\:\\:__construct\\(\\) has parameter \\$maxOccurs with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Compat/Property.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Compat\\\\Property\\:\\:__construct\\(\\) has parameter \\$metaData with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Compat/Property.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Compat\\\\Property\\:\\:__construct\\(\\) has parameter \\$minOccurs with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Compat/Property.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Compat\\\\Property\\:\\:__construct\\(\\) has parameter \\$multilingual with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Compat/Property.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Compat\\\\Property\\:\\:__construct\\(\\) has parameter \\$name with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Compat/Property.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Compat\\\\Property\\:\\:__construct\\(\\) has parameter \\$params with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Compat/Property.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Compat\\\\Property\\:\\:__construct\\(\\) has parameter \\$tags with no type specified\\.$#"
+			message: "#^Method Sulu\\\\Component\\\\Content\\\\Compat\\\\Property\\:\\:__construct\\(\\) has parameter \\$metaData with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Compat/Property.php
 
@@ -34721,7 +34636,12 @@ parameters:
 			path: src/Sulu/Component/Content/Compat/Property.php
 
 		-
-			message: "#^Property Sulu\\\\Component\\\\Content\\\\Compat\\\\Property\\:\\:\\$params type has no value type specified in iterable type array\\.$#"
+			message: "#^Parameter \\#1 \\$metadata of class Sulu\\\\Component\\\\Content\\\\Compat\\\\Metadata constructor expects array, array\\|string given\\.$#"
+			count: 1
+			path: src/Sulu/Component/Content/Compat/Property.php
+
+		-
+			message: "#^Parameter \\#2 \\$metaData of class Sulu\\\\Component\\\\Content\\\\Compat\\\\Property constructor expects array\\|string, Sulu\\\\Component\\\\Content\\\\Compat\\\\Metadata given\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Compat/Property.php
 
@@ -35146,6 +35066,16 @@ parameters:
 			path: src/Sulu/Component/Content/Compat/Structure/LegacyPropertyFactory.php
 
 		-
+			message: "#^Parameter \\#1 \\$name of class Sulu\\\\Component\\\\Content\\\\Compat\\\\Block\\\\BlockProperty constructor expects string, float\\|int\\|string given\\.$#"
+			count: 1
+			path: src/Sulu/Component/Content/Compat/Structure/LegacyPropertyFactory.php
+
+		-
+			message: "#^Parameter \\#1 \\$name of class Sulu\\\\Component\\\\Content\\\\Compat\\\\Property constructor expects string, float\\|int\\|string given\\.$#"
+			count: 1
+			path: src/Sulu/Component/Content/Compat/Structure/LegacyPropertyFactory.php
+
+		-
 			message: "#^Parameter \\#1 \\$name of class Sulu\\\\Component\\\\Content\\\\Compat\\\\Section\\\\SectionProperty constructor expects string, float\\|int\\|string given\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Compat/Structure/LegacyPropertyFactory.php
@@ -35161,12 +35091,32 @@ parameters:
 			path: src/Sulu/Component/Content/Compat/Structure/LegacyPropertyFactory.php
 
 		-
+			message: "#^Parameter \\#10 \\$colSpan of class Sulu\\\\Component\\\\Content\\\\Compat\\\\Property constructor expects string\\|null, int given\\.$#"
+			count: 1
+			path: src/Sulu/Component/Content/Compat/Structure/LegacyPropertyFactory.php
+
+		-
 			message: "#^Parameter \\#3 \\$col of class Sulu\\\\Component\\\\Content\\\\Compat\\\\Section\\\\SectionProperty constructor expects string, int given\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Compat/Structure/LegacyPropertyFactory.php
 
 		-
-			message: "#^Property Sulu\\\\Component\\\\Content\\\\Compat\\\\Structure\\\\LegacyPropertyFactory\\:\\:\\$namespaceRegistry has no type specified\\.$#"
+			message: "#^Parameter \\#6 \\$maxOccurs of class Sulu\\\\Component\\\\Content\\\\Compat\\\\Block\\\\BlockProperty constructor expects int, int\\|null given\\.$#"
+			count: 1
+			path: src/Sulu/Component/Content/Compat/Structure/LegacyPropertyFactory.php
+
+		-
+			message: "#^Parameter \\#6 \\$maxOccurs of class Sulu\\\\Component\\\\Content\\\\Compat\\\\Property constructor expects int, int\\|null given\\.$#"
+			count: 1
+			path: src/Sulu/Component/Content/Compat/Structure/LegacyPropertyFactory.php
+
+		-
+			message: "#^Parameter \\#7 \\$minOccurs of class Sulu\\\\Component\\\\Content\\\\Compat\\\\Block\\\\BlockProperty constructor expects int, int\\|null given\\.$#"
+			count: 1
+			path: src/Sulu/Component/Content/Compat/Structure/LegacyPropertyFactory.php
+
+		-
+			message: "#^Parameter \\#7 \\$minOccurs of class Sulu\\\\Component\\\\Content\\\\Compat\\\\Property constructor expects int, int\\|null given\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Compat/Structure/LegacyPropertyFactory.php
 
@@ -35661,11 +35611,6 @@ parameters:
 			path: src/Sulu/Component/Content/Compat/Structure/StructureBridge.php
 
 		-
-			message: "#^Property Sulu\\\\Component\\\\Content\\\\Compat\\\\Structure\\\\StructureBridge\\:\\:\\$document \\(object\\) does not accept object\\|null\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Compat/Structure/StructureBridge.php
-
-		-
 			message: "#^Property Sulu\\\\Component\\\\Content\\\\Compat\\\\Structure\\\\StructureBridge\\:\\:\\$loadedProperties type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Compat/Structure/StructureBridge.php
@@ -35781,22 +35726,7 @@ parameters:
 			path: src/Sulu/Component/Content/Compat/StructureManager.php
 
 		-
-			message: "#^Property Sulu\\\\Component\\\\Content\\\\Compat\\\\StructureManager\\:\\:\\$inspector has no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Compat/StructureManager.php
-
-		-
-			message: "#^Property Sulu\\\\Component\\\\Content\\\\Compat\\\\StructureManager\\:\\:\\$propertyFactory has no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Compat/StructureManager.php
-
-		-
-			message: "#^Property Sulu\\\\Component\\\\Content\\\\Compat\\\\StructureManager\\:\\:\\$structureFactory has no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Compat/StructureManager.php
-
-		-
-			message: "#^Property Sulu\\\\Component\\\\Content\\\\Compat\\\\StructureManager\\:\\:\\$typeMap has no type specified\\.$#"
+			message: "#^Parameter \\#2 \\$structure of method Sulu\\\\Component\\\\Content\\\\Compat\\\\StructureManager\\:\\:wrapStructure\\(\\) expects Sulu\\\\Component\\\\Content\\\\Metadata\\\\StructureMetadata, Sulu\\\\Component\\\\Content\\\\Metadata\\\\StructureMetadata\\|null given\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Compat/StructureManager.php
 
@@ -35809,21 +35739,6 @@ parameters:
 			message: "#^Method Sulu\\\\Component\\\\Content\\\\Compat\\\\StructureTag\\:\\:getAttributes\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Compat/StructureTag.php
-
-		-
-			message: "#^Property Sulu\\\\Component\\\\Content\\\\Compat\\\\StructureTag\\:\\:\\$attributes type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Compat/StructureTag.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Compat\\\\StructureType\\:\\:__construct\\(\\) has parameter \\$name with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Compat/StructureType.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Compat\\\\StructureType\\:\\:__construct\\(\\) has parameter \\$value with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Compat/StructureType.php
 
 		-
 			message: "#^Method Sulu\\\\Component\\\\Content\\\\Compat\\\\StructureType\\:\\:toArray\\(\\) return type has no value type specified in iterable type array\\.$#"
@@ -36091,12 +36006,12 @@ parameters:
 			path: src/Sulu/Component/Content/Document/Structure/ManagedStructure.php
 
 		-
-			message: "#^Parameter \\#2 \\$locale of method Sulu\\\\Component\\\\Content\\\\Compat\\\\Structure\\\\LegacyPropertyFactory\\:\\:createTranslatedProperty\\(\\) expects string, string\\|null given\\.$#"
+			message: "#^Parameter \\#1 \\$document of method Sulu\\\\Bundle\\\\DocumentManagerBundle\\\\Bridge\\\\DocumentInspector\\:\\:getStructureMetadata\\(\\) expects Sulu\\\\Component\\\\Content\\\\Document\\\\Behavior\\\\StructureBehavior, object given\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Document/Structure/ManagedStructure.php
 
 		-
-			message: "#^Property Sulu\\\\Component\\\\Content\\\\Document\\\\Structure\\\\ManagedStructure\\:\\:\\$document \\(Sulu\\\\Component\\\\Content\\\\Document\\\\Behavior\\\\StructureBehavior\\) does not accept object\\.$#"
+			message: "#^Parameter \\#2 \\$locale of method Sulu\\\\Component\\\\Content\\\\Compat\\\\Structure\\\\LegacyPropertyFactory\\:\\:createTranslatedProperty\\(\\) expects string, string\\|null given\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Document/Structure/ManagedStructure.php
 
@@ -36147,16 +36062,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Component\\\\Content\\\\Document\\\\Structure\\\\PropertyValue\\:\\:setValue\\(\\) has parameter \\$value with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Document/Structure/PropertyValue.php
-
-		-
-			message: "#^Property Sulu\\\\Component\\\\Content\\\\Document\\\\Structure\\\\PropertyValue\\:\\:\\$name has no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Document/Structure/PropertyValue.php
-
-		-
-			message: "#^Property Sulu\\\\Component\\\\Content\\\\Document\\\\Structure\\\\PropertyValue\\:\\:\\$value has no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Document/Structure/PropertyValue.php
 
@@ -36781,11 +36686,6 @@ parameters:
 			path: src/Sulu/Component/Content/Document/Subscriber/SecuritySubscriber.php
 
 		-
-			message: "#^Property Sulu\\\\Component\\\\Content\\\\Document\\\\Subscriber\\\\SecuritySubscriber\\:\\:\\$permissions type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Document/Subscriber/SecuritySubscriber.php
-
-		-
 			message: "#^Call to an undefined method object\\:\\:isShadowLocaleEnabled\\(\\)\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Document/Subscriber/ShadowCopyPropertiesSubscriber.php
@@ -37087,11 +36987,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#3 \\$userId of method Sulu\\\\Component\\\\Content\\\\ContentTypeInterface\\:\\:write\\(\\) expects int, null given\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Document/Subscriber/StructureSubscriber.php
-
-		-
-			message: "#^Property Sulu\\\\Component\\\\Content\\\\Document\\\\Subscriber\\\\StructureSubscriber\\:\\:\\$defaultTypes type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Document/Subscriber/StructureSubscriber.php
 
@@ -37731,11 +37626,6 @@ parameters:
 			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Mapper\\\\ContentMapper\\:\\:__construct\\(\\) has parameter \\$permissions with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
 			message: "#^Method Sulu\\\\Component\\\\Content\\\\Mapper\\\\ContentMapper\\:\\:convertQueryResultToArray\\(\\) has parameter \\$fields with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
@@ -38096,17 +37986,7 @@ parameters:
 			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
 
 		-
-			message: "#^Property Sulu\\\\Component\\\\Content\\\\Mapper\\\\ContentMapper\\:\\:\\$contentTypeManager \\(Sulu\\\\Component\\\\Content\\\\ContentTypeManager\\) does not accept Sulu\\\\Component\\\\Content\\\\ContentTypeManagerInterface\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
 			message: "#^Property Sulu\\\\Component\\\\Content\\\\Mapper\\\\ContentMapper\\:\\:\\$formFactory is never read, only written\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: "#^Property Sulu\\\\Component\\\\Content\\\\Mapper\\\\ContentMapper\\:\\:\\$permissions type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
 
@@ -38166,11 +38046,6 @@ parameters:
 			path: src/Sulu/Component/Content/Mapper/Event/ContentNodeDeleteEvent.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Mapper\\\\Translation\\\\MultipleTranslatedProperties\\:\\:__construct\\(\\) has parameter \\$languageNamespace with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/Translation/MultipleTranslatedProperties.php
-
-		-
 			message: "#^Method Sulu\\\\Component\\\\Content\\\\Mapper\\\\Translation\\\\MultipleTranslatedProperties\\:\\:__construct\\(\\) has parameter \\$names with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Mapper/Translation/MultipleTranslatedProperties.php
@@ -38192,21 +38067,6 @@ parameters:
 
 		-
 			message: "#^Call to an undefined method Sulu\\\\Component\\\\Content\\\\Compat\\\\PropertyInterface\\:\\:getDocument\\(\\)\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/Translation/TranslatedProperty.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Mapper\\\\Translation\\\\TranslatedProperty\\:\\:__construct\\(\\) has parameter \\$additionalPrefix with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/Translation/TranslatedProperty.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Mapper\\\\Translation\\\\TranslatedProperty\\:\\:__construct\\(\\) has parameter \\$languageNamespace with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/Translation/TranslatedProperty.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Mapper\\\\Translation\\\\TranslatedProperty\\:\\:__construct\\(\\) has parameter \\$localization with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Mapper/Translation/TranslatedProperty.php
 
@@ -38259,21 +38119,6 @@ parameters:
 			message: "#^Method Sulu\\\\Component\\\\Content\\\\Mapper\\\\Translation\\\\TranslatedProperty\\:\\:toArray\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Mapper/Translation/TranslatedProperty.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Metadata\\\\Factory\\\\StructureMetadataFactory\\:\\:__construct\\(\\) has parameter \\$cachePath with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Factory/StructureMetadataFactory.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Metadata\\\\Factory\\\\StructureMetadataFactory\\:\\:__construct\\(\\) has parameter \\$debug with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Factory/StructureMetadataFactory.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Metadata\\\\Factory\\\\StructureMetadataFactory\\:\\:__construct\\(\\) has parameter \\$defaultTypes with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Factory/StructureMetadataFactory.php
 
 		-
 			message: "#^Method Sulu\\\\Component\\\\Content\\\\Metadata\\\\Factory\\\\StructureMetadataFactory\\:\\:__construct\\(\\) has parameter \\$typePaths with no value type specified in iterable type array\\.$#"
@@ -38341,18 +38186,8 @@ parameters:
 			path: src/Sulu/Component/Content/Metadata/Factory/StructureMetadataFactory.php
 
 		-
-			message: "#^Property Sulu\\\\Component\\\\Content\\\\Metadata\\\\Factory\\\\StructureMetadataFactory\\:\\:\\$typePaths type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Factory/StructureMetadataFactory.php
-
-		-
 			message: "#^Cannot access offset mixed on Sulu\\\\Component\\\\Content\\\\Metadata\\\\ItemMetadata\\.$#"
 			count: 2
-			path: src/Sulu/Component/Content/Metadata/ItemMetadata.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Metadata\\\\ItemMetadata\\:\\:__construct\\(\\) has parameter \\$name with no type specified\\.$#"
-			count: 1
 			path: src/Sulu/Component/Content/Metadata/ItemMetadata.php
 
 		-
@@ -38561,36 +38396,6 @@ parameters:
 			path: src/Sulu/Component/Content/Metadata/Loader/Exception/InvalidXmlException.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Metadata\\\\Loader\\\\Exception\\\\RequiredPropertyNameNotFoundException\\:\\:__construct\\(\\) has parameter \\$propertyName with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Loader/Exception/RequiredPropertyNameNotFoundException.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Metadata\\\\Loader\\\\Exception\\\\RequiredTagNotFoundException\\:\\:__construct\\(\\) has parameter \\$tagName with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Loader/Exception/RequiredTagNotFoundException.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Metadata\\\\Loader\\\\Exception\\\\TemplateException\\:\\:__construct\\(\\) has parameter \\$message with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Loader/Exception/TemplateException.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Metadata\\\\Loader\\\\Exception\\\\TemplateNotFoundException\\:\\:__construct\\(\\) has parameter \\$originalException with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Loader/Exception/TemplateNotFoundException.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Metadata\\\\Loader\\\\Exception\\\\TemplateNotFoundException\\:\\:__construct\\(\\) has parameter \\$path with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Loader/Exception/TemplateNotFoundException.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Metadata\\\\Loader\\\\Exception\\\\TemplateNotFoundException\\:\\:__construct\\(\\) has parameter \\$templateKey with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Loader/Exception/TemplateNotFoundException.php
-
-		-
 			message: "#^Parameter \\#2 \\$code of method Exception\\:\\:__construct\\(\\) expects int, null given\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Metadata/Loader/Exception/TemplateNotFoundException.php
@@ -38752,16 +38557,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#3 \\$context of method Sulu\\\\Component\\\\Content\\\\Metadata\\\\Parser\\\\PropertiesXmlParser\\:\\:load\\(\\) expects DOMNode, DOMNode\\|null given\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Loader/StructureXmlLoader.php
-
-		-
-			message: "#^Property Sulu\\\\Component\\\\Content\\\\Metadata\\\\Loader\\\\StructureXmlLoader\\:\\:\\$requiredPropertyNames type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Loader/StructureXmlLoader.php
-
-		-
-			message: "#^Property Sulu\\\\Component\\\\Content\\\\Metadata\\\\Loader\\\\StructureXmlLoader\\:\\:\\$requiredTagNames type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Metadata/Loader/StructureXmlLoader.php
 
@@ -39276,11 +39071,6 @@ parameters:
 			path: src/Sulu/Component/Content/PreResolvableContentTypeInterface.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Query\\\\ContentQueryBuilder\\:\\:__construct\\(\\) has parameter \\$languageNamespace with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Query/ContentQueryBuilder.php
-
-		-
 			message: "#^Method Sulu\\\\Component\\\\Content\\\\Query\\\\ContentQueryBuilder\\:\\:buildOrder\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Query/ContentQueryBuilder.php
@@ -39436,11 +39226,6 @@ parameters:
 			path: src/Sulu/Component/Content/Query/ContentQueryBuilderInterface.php
 
 		-
-			message: "#^If condition is always true\\.$#"
-			count: 8
-			path: src/Sulu/Component/Content/Query/ContentQueryExecutor.php
-
-		-
 			message: "#^Method Sulu\\\\Component\\\\Content\\\\Mapper\\\\ContentMapperInterface\\:\\:convertQueryResultToArray\\(\\) invoked with 7 parameters, 5\\-6 required\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Query/ContentQueryExecutor.php
@@ -39477,11 +39262,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$haystack of function substr_count expects string, string\\|null given\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Query/ContentQueryExecutor.php
-
-		-
-			message: "#^Property Sulu\\\\Component\\\\Content\\\\Query\\\\ContentQueryExecutor\\:\\:\\$stopwatch \\(Symfony\\\\Component\\\\Stopwatch\\\\Stopwatch\\) does not accept Symfony\\\\Component\\\\Stopwatch\\\\Stopwatch\\|null\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Query/ContentQueryExecutor.php
 
@@ -39881,11 +39661,6 @@ parameters:
 			path: src/Sulu/Component/Content/Repository/ContentRepository.php
 
 		-
-			message: "#^Property Sulu\\\\Component\\\\Content\\\\Repository\\\\ContentRepository\\:\\:\\$permissions type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Repository/ContentRepository.php
-
-		-
 			message: "#^Property Sulu\\\\Component\\\\Content\\\\Repository\\\\ContentRepository\\:\\:\\$systemStore is never read, only written\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Repository/ContentRepository.php
@@ -39954,16 +39729,6 @@ parameters:
 			message: "#^Method Sulu\\\\Component\\\\Content\\\\Repository\\\\Serializer\\\\SerializerEventListener\\:\\:onPostSerialize\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Repository/Serializer/SerializerEventListener.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\SimpleContentType\\:\\:__construct\\(\\) has parameter \\$defaultValue with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/SimpleContentType.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\SimpleContentType\\:\\:__construct\\(\\) has parameter \\$name with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/SimpleContentType.php
 
 		-
 			message: "#^Method Sulu\\\\Component\\\\Content\\\\SimpleContentType\\:\\:__get\\(\\) has no return type specified\\.$#"
@@ -40047,16 +39812,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Component\\\\Content\\\\SmartContent\\\\PageDataProvider\\:\\:__construct\\(\\) has parameter \\$enabledTwigAttributes with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/SmartContent/PageDataProvider.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\SmartContent\\\\PageDataProvider\\:\\:__construct\\(\\) has parameter \\$permissions with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/SmartContent/PageDataProvider.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\SmartContent\\\\PageDataProvider\\:\\:__construct\\(\\) has parameter \\$showDrafts with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/SmartContent/PageDataProvider.php
 
@@ -40161,27 +39916,12 @@ parameters:
 			path: src/Sulu/Component/Content/SmartContent/PageDataProvider.php
 
 		-
-			message: "#^Property Sulu\\\\Component\\\\Content\\\\SmartContent\\\\PageDataProvider\\:\\:\\$enabledTwigAttributes type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/SmartContent/PageDataProvider.php
-
-		-
-			message: "#^Property Sulu\\\\Component\\\\Content\\\\SmartContent\\\\PageDataProvider\\:\\:\\$hasAudienceTargeting has no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/SmartContent/PageDataProvider.php
-
-		-
-			message: "#^Property Sulu\\\\Component\\\\Content\\\\SmartContent\\\\PageDataProvider\\:\\:\\$permissions type has no value type specified in iterable type array\\.$#"
-			count: 1
+			message: "#^Parameter \\#9 \\$permission of method Sulu\\\\Component\\\\Content\\\\Query\\\\ContentQueryExecutorInterface\\:\\:execute\\(\\) expects int\\|null, mixed given\\.$#"
+			count: 2
 			path: src/Sulu/Component/Content/SmartContent/PageDataProvider.php
 
 		-
 			message: "#^Argument of an invalid type array\\<string\\>\\|string supplied for foreach, only iterables are supported\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/SmartContent/QueryBuilder.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\SmartContent\\\\QueryBuilder\\:\\:__construct\\(\\) has parameter \\$languageNamespace with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/SmartContent/QueryBuilder.php
 
@@ -40641,6 +40381,11 @@ parameters:
 			path: src/Sulu/Component/Content/Tests/Unit/Document/Subscriber/ExtensionSubscriberTest.php
 
 		-
+			message: "#^Method Sulu\\\\Component\\\\Content\\\\Tests\\\\Unit\\\\Document\\\\Subscriber\\\\TestExtensionDocument\\:\\:__construct\\(\\) has parameter \\$extensions with no value type specified in iterable type array\\|Sulu\\\\Component\\\\Content\\\\Document\\\\Extension\\\\ExtensionContainer\\.$#"
+			count: 1
+			path: src/Sulu/Component/Content/Tests/Unit/Document/Subscriber/ExtensionSubscriberTest.php
+
+		-
 			message: "#^Method Sulu\\\\Component\\\\Content\\\\Tests\\\\Unit\\\\Document\\\\Subscriber\\\\TestExtensionDocument\\:\\:getLocale\\(\\) should return string but return statement is missing\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Tests/Unit/Document/Subscriber/ExtensionSubscriberTest.php
@@ -40692,11 +40437,6 @@ parameters:
 
 		-
 			message: "#^Property Sulu\\\\Component\\\\Content\\\\Tests\\\\Unit\\\\Document\\\\Subscriber\\\\SubscriberTestCase\\:\\:\\$encoder \\(Prophecy\\\\Prophecy\\\\ObjectProphecy\\<Sulu\\\\Component\\\\DocumentManager\\\\PropertyEncoder\\>\\) does not accept Prophecy\\\\Prophecy\\\\ObjectProphecy\\<Sulu\\\\Bundle\\\\DocumentManagerBundle\\\\Bridge\\\\PropertyEncoder\\>\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Tests/Unit/Document/Subscriber/ExtensionSubscriberTest.php
-
-		-
-			message: "#^Property Sulu\\\\Component\\\\Content\\\\Tests\\\\Unit\\\\Document\\\\Subscriber\\\\TestExtensionDocument\\:\\:\\$extensions has no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Tests/Unit/Document/Subscriber/ExtensionSubscriberTest.php
 
@@ -41311,12 +41051,7 @@ parameters:
 			path: src/Sulu/Component/Content/Types/Block/SegmentBlockVisitor.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Types\\\\BlockContentType\\:\\:__construct\\(\\) has parameter \\$blockVisitors with no value type specified in iterable type iterable\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Types/BlockContentType.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Types\\\\BlockContentType\\:\\:__construct\\(\\) has parameter \\$languageNamespace with no type specified\\.$#"
+			message: "#^Argument of an invalid type iterable\\<Sulu\\\\Component\\\\Content\\\\Types\\\\Block\\\\BlockVisitorInterface\\>\\|null supplied for foreach, only iterables are supported\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Types/BlockContentType.php
 
@@ -41406,11 +41141,6 @@ parameters:
 			path: src/Sulu/Component/Content/Types/BlockContentType.php
 
 		-
-			message: "#^Property Sulu\\\\Component\\\\Content\\\\Types\\\\BlockContentType\\:\\:\\$blockVisitors \\(array\\<Sulu\\\\Component\\\\Content\\\\Types\\\\Block\\\\BlockVisitorInterface\\>\\) does not accept iterable\\|null\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Types/BlockContentType.php
-
-		-
 			message: "#^Property Sulu\\\\Component\\\\Content\\\\Types\\\\BlockContentType\\:\\:\\$languageNamespace is never read, only written\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Types/BlockContentType.php
@@ -41491,6 +41221,11 @@ parameters:
 			path: src/Sulu/Component/Content/Types/ResourceLocator/Mapper/PhpcrMapper.php
 
 		-
+			message: "#^Parameter \\#2 \\$created of class Sulu\\\\Component\\\\Content\\\\Types\\\\ResourceLocator\\\\ResourceLocatorInformation constructor expects DateTime, mixed given\\.$#"
+			count: 1
+			path: src/Sulu/Component/Content/Types/ResourceLocator/Mapper/PhpcrMapper.php
+
+		-
 			message: "#^Parameter \\#3 \\$segmentKey of method Sulu\\\\Component\\\\Content\\\\Types\\\\ResourceLocator\\\\Mapper\\\\PhpcrMapper\\:\\:getWebspaceRouteNode\\(\\) expects string, string\\|null given\\.$#"
 			count: 3
 			path: src/Sulu/Component/Content/Types/ResourceLocator/Mapper/PhpcrMapper.php
@@ -41519,21 +41254,6 @@ parameters:
 			message: "#^Method Sulu\\\\Component\\\\Content\\\\Types\\\\ResourceLocator\\\\Mapper\\\\ResourceLocatorMapperInterface\\:\\:save\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Types/ResourceLocator/Mapper/ResourceLocatorMapperInterface.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Types\\\\ResourceLocator\\\\ResourceLocatorInformation\\:\\:__construct\\(\\) has parameter \\$created with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Types/ResourceLocator/ResourceLocatorInformation.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Types\\\\ResourceLocator\\\\ResourceLocatorInformation\\:\\:__construct\\(\\) has parameter \\$id with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Types/ResourceLocator/ResourceLocatorInformation.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Types\\\\ResourceLocator\\\\ResourceLocatorInformation\\:\\:__construct\\(\\) has parameter \\$resourceLocator with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Types/ResourceLocator/ResourceLocatorInformation.php
 
 		-
 			message: "#^Call to an undefined method object\\:\\:getParent\\(\\)\\.$#"
@@ -41604,11 +41324,6 @@ parameters:
 			message: "#^Parameter \\#1 \\$key of method Sulu\\\\Component\\\\Content\\\\Compat\\\\StructureManagerInterface\\:\\:getStructure\\(\\) expects string, mixed given\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Types/ResourceLocator/Strategy/TreeLeafEditStrategy.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Types\\\\TextEditor\\:\\:__construct\\(\\) has parameter \\$markupNamespace with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Types/TextEditor.php
 
 		-
 			message: "#^Method Sulu\\\\Component\\\\Content\\\\Types\\\\TextEditor\\:\\:getDefaultParams\\(\\) return type has no value type specified in iterable type array\\.$#"
@@ -45126,11 +44841,6 @@ parameters:
 			path: src/Sulu/Component/Media/SmartContent/MediaDataProvider.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\Media\\\\SmartContent\\\\MediaDataProvider\\:\\:__construct\\(\\) has parameter \\$permissions with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Media/SmartContent/MediaDataProvider.php
-
-		-
 			message: "#^Method Sulu\\\\Component\\\\Media\\\\SmartContent\\\\MediaDataProvider\\:\\:decorateDataItems\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Component/Media/SmartContent/MediaDataProvider.php
@@ -45161,12 +44871,27 @@ parameters:
 			path: src/Sulu/Component/Media/SmartContent/MediaDataProvider.php
 
 		-
+			message: "#^Parameter \\#1 \\$id of class Sulu\\\\Component\\\\SmartContent\\\\DatasourceItem constructor expects string, int given\\.$#"
+			count: 1
+			path: src/Sulu/Component/Media/SmartContent/MediaDataProvider.php
+
+		-
 			message: "#^Parameter \\#1 \\$id of method Sulu\\\\Bundle\\\\MediaBundle\\\\Collection\\\\Manager\\\\CollectionManagerInterface\\:\\:getById\\(\\) expects int, int\\<min, \\-1\\>\\|int\\<1, max\\>\\|string given\\.$#"
 			count: 1
 			path: src/Sulu/Component/Media/SmartContent/MediaDataProvider.php
 
 		-
 			message: "#^Parameter \\#2 \\$locale of method Sulu\\\\Bundle\\\\MediaBundle\\\\Collection\\\\Manager\\\\CollectionManagerInterface\\:\\:getById\\(\\) expects string, mixed given\\.$#"
+			count: 1
+			path: src/Sulu/Component/Media/SmartContent/MediaDataProvider.php
+
+		-
+			message: "#^Parameter \\#2 \\$title of class Sulu\\\\Component\\\\SmartContent\\\\DatasourceItem constructor expects string, string\\|null given\\.$#"
+			count: 1
+			path: src/Sulu/Component/Media/SmartContent/MediaDataProvider.php
+
+		-
+			message: "#^Parameter \\#3 \\$path of class Sulu\\\\Component\\\\SmartContent\\\\DatasourceItem constructor expects string, string\\|null given\\.$#"
 			count: 1
 			path: src/Sulu/Component/Media/SmartContent/MediaDataProvider.php
 
@@ -45437,6 +45162,11 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$filters of method Sulu\\\\Component\\\\Media\\\\SmartContent\\\\MediaDataProvider\\:\\:resolveDataItems\\(\\) expects array\\{dataSource\\?\\: int\\|string\\|null, sortMethod\\?\\: 'asc'\\|'desc', sortBy\\?\\: string, tags\\?\\: array\\<string\\>, tagOperator\\?\\: 'and'\\|'or', types\\?\\: array\\<string\\>, categories\\?\\: array\\<int\\>, categoryOperator\\?\\: 'and'\\|'or', \\.\\.\\.\\}, array\\{dataSource\\: 42, tags\\: array\\{1\\}\\} given\\.$#"
+			count: 1
+			path: src/Sulu/Component/Media/Tests/Unit/SmartContent/MediaDataProviderTest.php
+
+		-
+			message: "#^Parameter \\#1 \\$id of class Sulu\\\\Component\\\\SmartContent\\\\ArrayAccessItem constructor expects string, int given\\.$#"
 			count: 1
 			path: src/Sulu/Component/Media/Tests/Unit/SmartContent/MediaDataProviderTest.php
 
@@ -46641,6 +46371,11 @@ parameters:
 			path: src/Sulu/Component/Rest/ListBuilder/Expression/Doctrine/DoctrineConjunctionExpression.php
 
 		-
+			message: "#^Method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Expression\\\\Doctrine\\\\DoctrineInExpression\\:\\:__construct\\(\\) has parameter \\$values with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Sulu/Component/Rest/ListBuilder/Expression/Doctrine/DoctrineInExpression.php
+
+		-
 			message: "#^Method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Expression\\\\Doctrine\\\\DoctrineInExpression\\:\\:filterNullValues\\(\\) has parameter \\$values with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Component/Rest/ListBuilder/Expression/Doctrine/DoctrineInExpression.php
@@ -46652,11 +46387,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Expression\\\\Doctrine\\\\DoctrineInExpression\\:\\:getValues\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/Expression/Doctrine/DoctrineInExpression.php
-
-		-
-			message: "#^Property Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Expression\\\\Doctrine\\\\DoctrineInExpression\\:\\:\\$values type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Component/Rest/ListBuilder/Expression/Doctrine/DoctrineInExpression.php
 
@@ -48816,11 +48546,6 @@ parameters:
 			path: src/Sulu/Component/SmartContent/ArrayAccessItem.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\SmartContent\\\\ArrayAccessItem\\:\\:__construct\\(\\) has parameter \\$id with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/SmartContent/ArrayAccessItem.php
-
-		-
 			message: "#^Method Sulu\\\\Component\\\\SmartContent\\\\ArrayAccessItem\\:\\:__get\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/SmartContent/ArrayAccessItem.php
@@ -48847,11 +48572,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$key of method Sulu\\\\Component\\\\SmartContent\\\\ArrayAccessItem\\:\\:get\\(\\) expects string, mixed given\\.$#"
-			count: 1
-			path: src/Sulu/Component/SmartContent/ArrayAccessItem.php
-
-		-
-			message: "#^Property Sulu\\\\Component\\\\SmartContent\\\\ArrayAccessItem\\:\\:\\$data type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Component/SmartContent/ArrayAccessItem.php
 
@@ -48901,11 +48621,6 @@ parameters:
 			path: src/Sulu/Component/SmartContent/Configuration/BuilderInterface.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\SmartContent\\\\Configuration\\\\ComponentConfiguration\\:\\:__construct\\(\\) has parameter \\$component with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/SmartContent/Configuration/ComponentConfiguration.php
-
-		-
 			message: "#^Method Sulu\\\\Component\\\\SmartContent\\\\Configuration\\\\ComponentConfiguration\\:\\:__construct\\(\\) has parameter \\$componentOptions with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Component/SmartContent/Configuration/ComponentConfiguration.php
@@ -48927,11 +48642,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Component\\\\SmartContent\\\\Configuration\\\\ComponentConfiguration\\:\\:setComponentOptions\\(\\) has parameter \\$componentOptions with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/SmartContent/Configuration/ComponentConfiguration.php
-
-		-
-			message: "#^Property Sulu\\\\Component\\\\SmartContent\\\\Configuration\\\\ComponentConfiguration\\:\\:\\$componentOptions type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Component/SmartContent/Configuration/ComponentConfiguration.php
 
@@ -49046,11 +48756,6 @@ parameters:
 			path: src/Sulu/Component/SmartContent/ContentType.php
 
 		-
-			message: "#^Left side of && is always true\\.$#"
-			count: 1
-			path: src/Sulu/Component/SmartContent/ContentType.php
-
-		-
 			message: "#^Method Sulu\\\\Component\\\\SmartContent\\\\ContentType\\:\\:exportData\\(\\) should return string but returns string\\|false\\.$#"
 			count: 1
 			path: src/Sulu/Component/SmartContent/ContentType.php
@@ -49126,11 +48831,6 @@ parameters:
 			path: src/Sulu/Component/SmartContent/ContentType.php
 
 		-
-			message: "#^Property Sulu\\\\Component\\\\SmartContent\\\\ContentType\\:\\:\\$targetGroupStore \\(Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\TargetGroup\\\\TargetGroupStoreInterface\\) does not accept Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\TargetGroup\\\\TargetGroupStoreInterface\\|null\\.$#"
-			count: 1
-			path: src/Sulu/Component/SmartContent/ContentType.php
-
-		-
 			message: "#^Method Sulu\\\\Component\\\\SmartContent\\\\DataProviderPool\\:\\:add\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/SmartContent/DataProviderPool.php
@@ -49141,52 +48841,12 @@ parameters:
 			path: src/Sulu/Component/SmartContent/DataProviderPoolInterface.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\SmartContent\\\\DataProviderResult\\:\\:__construct\\(\\) has parameter \\$items with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/SmartContent/DataProviderResult.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\SmartContent\\\\DatasourceItem\\:\\:__construct\\(\\) has parameter \\$id with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/SmartContent/DatasourceItem.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\SmartContent\\\\DatasourceItem\\:\\:__construct\\(\\) has parameter \\$image with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/SmartContent/DatasourceItem.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\SmartContent\\\\DatasourceItem\\:\\:__construct\\(\\) has parameter \\$path with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/SmartContent/DatasourceItem.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\SmartContent\\\\DatasourceItem\\:\\:__construct\\(\\) has parameter \\$title with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/SmartContent/DatasourceItem.php
-
-		-
-			message: "#^Property Sulu\\\\Component\\\\SmartContent\\\\Exception\\\\DataProviderException\\:\\:\\$alias has no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/SmartContent/Exception/DataProviderException.php
-
-		-
 			message: "#^Call to an undefined method object\\:\\:getId\\(\\)\\.$#"
 			count: 1
 			path: src/Sulu/Component/SmartContent/Orm/BaseDataProvider.php
 
 		-
 			message: "#^Default value of the parameter \\#3 \\$options \\(array\\{\\}\\) of method Sulu\\\\Component\\\\SmartContent\\\\Orm\\\\BaseDataProvider\\:\\:resolveDataItems\\(\\) is incompatible with type array\\{locale\\: string\\}\\.$#"
-			count: 1
-			path: src/Sulu/Component/SmartContent/Orm/BaseDataProvider.php
-
-		-
-			message: "#^If condition is always true\\.$#"
-			count: 1
-			path: src/Sulu/Component/SmartContent/Orm/BaseDataProvider.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\SmartContent\\\\Orm\\\\BaseDataProvider\\:\\:__construct\\(\\) has parameter \\$permissions with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/SmartContent/Orm/BaseDataProvider.php
 
@@ -49261,6 +48921,11 @@ parameters:
 			path: src/Sulu/Component/SmartContent/Orm/BaseDataProvider.php
 
 		-
+			message: "#^Parameter \\#1 \\$id of class Sulu\\\\Component\\\\SmartContent\\\\ArrayAccessItem constructor expects string, int given\\.$#"
+			count: 1
+			path: src/Sulu/Component/SmartContent/Orm/BaseDataProvider.php
+
+		-
 			message: "#^Parameter \\#2 \\$locale of method Sulu\\\\Component\\\\SmartContent\\\\Orm\\\\BaseDataProvider\\:\\:decorateResourceItems\\(\\) expects string, mixed given\\.$#"
 			count: 1
 			path: src/Sulu/Component/SmartContent/Orm/BaseDataProvider.php
@@ -49282,16 +48947,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#6 \\$options of method Sulu\\\\Component\\\\SmartContent\\\\Orm\\\\DataProviderRepositoryInterface\\:\\:findByFilters\\(\\) expects array\\{webspaceKey\\?\\: string, locale\\: string\\}, array given\\.$#"
-			count: 1
-			path: src/Sulu/Component/SmartContent/Orm/BaseDataProvider.php
-
-		-
-			message: "#^Property Sulu\\\\Component\\\\SmartContent\\\\Orm\\\\BaseDataProvider\\:\\:\\$permissions type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/SmartContent/Orm/BaseDataProvider.php
-
-		-
-			message: "#^Property Sulu\\\\Component\\\\SmartContent\\\\Orm\\\\BaseDataProvider\\:\\:\\$referenceStore \\(Sulu\\\\Bundle\\\\WebsiteBundle\\\\ReferenceStore\\\\ReferenceStoreInterface\\) does not accept Sulu\\\\Bundle\\\\WebsiteBundle\\\\ReferenceStore\\\\ReferenceStoreInterface\\|null\\.$#"
 			count: 1
 			path: src/Sulu/Component/SmartContent/Orm/BaseDataProvider.php
 
@@ -49436,6 +49091,16 @@ parameters:
 			path: src/Sulu/Component/SmartContent/Tests/Unit/ContentTypeTest.php
 
 		-
+			message: "#^Parameter \\#1 \\$items of class Sulu\\\\Component\\\\SmartContent\\\\DataProviderResult constructor expects array\\<Sulu\\\\Component\\\\SmartContent\\\\ResourceItemInterface\\>, array\\<int, array\\<string, int\\>\\> given\\.$#"
+			count: 1
+			path: src/Sulu/Component/SmartContent/Tests/Unit/ContentTypeTest.php
+
+		-
+			message: "#^Parameter \\#1 \\$items of class Sulu\\\\Component\\\\SmartContent\\\\DataProviderResult constructor expects array\\<Sulu\\\\Component\\\\SmartContent\\\\ResourceItemInterface\\>, array\\<int, int\\> given\\.$#"
+			count: 2
+			path: src/Sulu/Component/SmartContent/Tests/Unit/ContentTypeTest.php
+
+		-
 			message: "#^Parameter \\#2 \\$value of class Sulu\\\\Component\\\\Content\\\\Compat\\\\PropertyParameter constructor expects array\\|bool\\|string, null given\\.$#"
 			count: 5
 			path: src/Sulu/Component/SmartContent/Tests/Unit/ContentTypeTest.php
@@ -49544,11 +49209,6 @@ parameters:
 			message: "#^Parameter \\#5 \\$webspaceKey of method Sulu\\\\Component\\\\Import\\\\Import\\:\\:importProperty\\(\\) expects string, null given\\.$#"
 			count: 1
 			path: src/Sulu/Component/Snippet/Import/SnippetImport.php
-
-		-
-			message: "#^Property Sulu\\\\Component\\\\Symfony\\\\CompilerPass\\\\TaggedServiceCollectorCompilerPass\\:\\:\\$aliasAttribute \\(string\\) does not accept string\\|null\\.$#"
-			count: 1
-			path: src/Sulu/Component/Symfony/CompilerPass/TaggedServiceCollectorCompilerPass.php
 
 		-
 			message: "#^Cannot access offset 't1' on mixed\\.$#"
@@ -49816,28 +49476,8 @@ parameters:
 			path: src/Sulu/Component/Util/SuluNodeHelper.php
 
 		-
-			message: "#^Offset string on string in isset\\(\\) does not exist\\.$#"
-			count: 1
-			path: src/Sulu/Component/Util/SuluNodeHelper.php
-
-		-
-			message: "#^Parameter \\#1 \\$array of function array_keys expects array, string given\\.$#"
-			count: 1
-			path: src/Sulu/Component/Util/SuluNodeHelper.php
-
-		-
 			message: "#^Parameter \\#2 \\$haystack of function in_array expects array, mixed given\\.$#"
 			count: 3
-			path: src/Sulu/Component/Util/SuluNodeHelper.php
-
-		-
-			message: "#^Property Sulu\\\\Component\\\\Util\\\\SuluNodeHelper\\:\\:\\$paths \\(string\\) does not accept array\\.$#"
-			count: 1
-			path: src/Sulu/Component/Util/SuluNodeHelper.php
-
-		-
-			message: "#^Unreachable statement \\- code above always terminates\\.$#"
-			count: 1
 			path: src/Sulu/Component/Util/SuluNodeHelper.php
 
 		-
@@ -49911,12 +49551,12 @@ parameters:
 			path: src/Sulu/Component/Util/Tests/Unit/ArrayUtilsTest.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\Util\\\\Tests\\\\Unit\\\\FoobarTestClass\\:\\:__construct\\(\\) has parameter \\$value1 with no type specified\\.$#"
+			message: "#^Method Sulu\\\\Component\\\\Util\\\\Tests\\\\Unit\\\\FoobarTestClass\\:\\:__construct\\(\\) has parameter \\$field1 with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/Util/Tests/Unit/SortUtilsTest.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\Util\\\\Tests\\\\Unit\\\\FoobarTestClass\\:\\:__construct\\(\\) has parameter \\$value2 with no type specified\\.$#"
+			message: "#^Method Sulu\\\\Component\\\\Util\\\\Tests\\\\Unit\\\\FoobarTestClass\\:\\:__construct\\(\\) has parameter \\$field2 with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/Util/Tests/Unit/SortUtilsTest.php
 
@@ -49967,16 +49607,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$values of static method Sulu\\\\Component\\\\Util\\\\SortUtils\\:\\:multisort\\(\\) expects array, ArrayObject\\<int, object\\{\\}&stdClass\\> given\\.$#"
-			count: 1
-			path: src/Sulu/Component/Util/Tests/Unit/SortUtilsTest.php
-
-		-
-			message: "#^Property Sulu\\\\Component\\\\Util\\\\Tests\\\\Unit\\\\FoobarTestClass\\:\\:\\$field1 has no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Util/Tests/Unit/SortUtilsTest.php
-
-		-
-			message: "#^Property Sulu\\\\Component\\\\Util\\\\Tests\\\\Unit\\\\FoobarTestClass\\:\\:\\$field2 has no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/Util/Tests/Unit/SortUtilsTest.php
 
@@ -50161,11 +49791,6 @@ parameters:
 			path: src/Sulu/Component/Webspace/Analyzer/Attributes/AdminRequestProcessor.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\Webspace\\\\Analyzer\\\\Attributes\\\\AdminRequestProcessor\\:\\:__construct\\(\\) has parameter \\$environment with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Webspace/Analyzer/Attributes/AdminRequestProcessor.php
-
-		-
 			message: "#^Parameter \\#1 \\$key of method Sulu\\\\Component\\\\Webspace\\\\Manager\\\\WebspaceManagerInterface\\:\\:findWebspaceByKey\\(\\) expects string\\|null, mixed given\\.$#"
 			count: 1
 			path: src/Sulu/Component/Webspace/Analyzer/Attributes/AdminRequestProcessor.php
@@ -50179,11 +49804,6 @@ parameters:
 			message: "#^Property Sulu\\\\Component\\\\Webspace\\\\Analyzer\\\\Attributes\\\\AdminRequestProcessor\\:\\:\\$environment is never read, only written\\.$#"
 			count: 1
 			path: src/Sulu/Component/Webspace/Analyzer/Attributes/AdminRequestProcessor.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Webspace\\\\Analyzer\\\\Attributes\\\\ParameterRequestProcessor\\:\\:__construct\\(\\) has parameter \\$environment with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Webspace/Analyzer/Attributes/ParameterRequestProcessor.php
 
 		-
 			message: "#^Parameter \\#1 \\$portalKey of method Sulu\\\\Component\\\\Webspace\\\\Manager\\\\WebspaceManagerInterface\\:\\:findPortalInformationsByPortalKeyAndLocale\\(\\) expects string, mixed given\\.$#"
@@ -50231,27 +49851,12 @@ parameters:
 			path: src/Sulu/Component/Webspace/Analyzer/Attributes/RequestAttributes.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\Webspace\\\\Analyzer\\\\Attributes\\\\WebsiteRequestProcessor\\:\\:__construct\\(\\) has parameter \\$environment with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Webspace/Analyzer/Attributes/WebsiteRequestProcessor.php
-
-		-
 			message: "#^Property Sulu\\\\Component\\\\Webspace\\\\Analyzer\\\\Attributes\\\\WebsiteRequestProcessor\\:\\:\\$contentMapper is never read, only written\\.$#"
 			count: 1
 			path: src/Sulu/Component/Webspace/Analyzer/Attributes/WebsiteRequestProcessor.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\Webspace\\\\Analyzer\\\\Exception\\\\UrlMatchNotFoundException\\:\\:__construct\\(\\) has parameter \\$url with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Webspace/Analyzer/Exception/UrlMatchNotFoundException.php
-
-		-
 			message: "#^Cannot access property \\$attributes on Symfony\\\\Component\\\\HttpFoundation\\\\Request\\|null\\.$#"
-			count: 1
-			path: src/Sulu/Component/Webspace/Analyzer/RequestAnalyzer.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Webspace\\\\Analyzer\\\\RequestAnalyzer\\:\\:__construct\\(\\) has parameter \\$requestProcessors with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Component/Webspace/Analyzer/RequestAnalyzer.php
 
@@ -50299,11 +49904,6 @@ parameters:
 			message: "#^Method Sulu\\\\Component\\\\Webspace\\\\Analyzer\\\\RequestAnalyzerInterface\\:\\:validate\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/Webspace/Analyzer/RequestAnalyzerInterface.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Webspace\\\\CustomUrl\\:\\:__construct\\(\\) has parameter \\$url with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Webspace/CustomUrl.php
 
 		-
 			message: "#^Method Sulu\\\\Component\\\\Webspace\\\\CustomUrl\\:\\:getUrl\\(\\) has no return type specified\\.$#"
@@ -50411,11 +50011,6 @@ parameters:
 			path: src/Sulu/Component/Webspace/Environment.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\Webspace\\\\Exception\\\\EnvironmentNotFoundException\\:\\:__construct\\(\\) has parameter \\$environment with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Webspace/Exception/EnvironmentNotFoundException.php
-
-		-
 			message: "#^Method Sulu\\\\Component\\\\Webspace\\\\Exception\\\\InvalidTemplateException\\:\\:getTemplate\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/Webspace/Exception/InvalidTemplateException.php
@@ -50424,11 +50019,6 @@ parameters:
 			message: "#^Method Sulu\\\\Component\\\\Webspace\\\\Exception\\\\InvalidTemplateException\\:\\:getWebspace\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/Webspace/Exception/InvalidTemplateException.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Webspace\\\\Exception\\\\PortalLocalizationNotFoundException\\:\\:__construct\\(\\) has parameter \\$locale with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Webspace/Exception/PortalLocalizationNotFoundException.php
 
 		-
 			message: "#^Cannot access property \\$attributes on DOMElement\\|null\\.$#"
@@ -50479,21 +50069,6 @@ parameters:
 			message: "#^Property Sulu\\\\Component\\\\Webspace\\\\Loader\\\\Exception\\\\WebspaceException\\:\\:\\$webspace \\(Sulu\\\\Component\\\\Webspace\\\\Webspace\\) does not accept string\\.$#"
 			count: 1
 			path: src/Sulu/Component/Webspace/Loader/Exception/InvalidErrorTemplateException.php
-
-		-
-			message: "#^Property Sulu\\\\Component\\\\Webspace\\\\Loader\\\\Exception\\\\InvalidPortalDefaultLocalizationException\\:\\:\\$portal \\(Sulu\\\\Component\\\\Webspace\\\\Webspace\\) does not accept Sulu\\\\Component\\\\Webspace\\\\Portal\\.$#"
-			count: 1
-			path: src/Sulu/Component/Webspace/Loader/Exception/InvalidPortalDefaultLocalizationException.php
-
-		-
-			message: "#^Property Sulu\\\\Component\\\\Webspace\\\\Loader\\\\Exception\\\\PortalDefaultLocalizationNotFoundException\\:\\:\\$portal \\(string\\) does not accept Sulu\\\\Component\\\\Webspace\\\\Portal\\.$#"
-			count: 1
-			path: src/Sulu/Component/Webspace/Loader/Exception/PortalDefaultLocalizationNotFoundException.php
-
-		-
-			message: "#^Property Sulu\\\\Component\\\\Webspace\\\\Loader\\\\Exception\\\\PortalDefaultLocalizationNotFoundException\\:\\:\\$portal is never read, only written\\.$#"
-			count: 1
-			path: src/Sulu/Component/Webspace/Loader/Exception/PortalDefaultLocalizationNotFoundException.php
 
 		-
 			message: "#^Argument of an invalid type DOMNodeList\\<DOMNode\\>\\|false supplied for foreach, only iterables are supported\\.$#"
@@ -50628,6 +50203,11 @@ parameters:
 		-
 			message: "#^Parameter \\#1 \\$haystack of function strpos expects string, string\\|null given\\.$#"
 			count: 2
+			path: src/Sulu/Component/Webspace/Loader/XmlFileLoader10.php
+
+		-
+			message: "#^Parameter \\#1 \\$key of class Sulu\\\\Component\\\\Webspace\\\\NavigationContext constructor expects string, string\\|null given\\.$#"
+			count: 1
 			path: src/Sulu/Component/Webspace/Loader/XmlFileLoader10.php
 
 		-
@@ -50866,11 +50446,6 @@ parameters:
 			path: src/Sulu/Component/Webspace/Manager/WebspaceCollectionBuilder.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\Webspace\\\\Manager\\\\WebspaceCollectionBuilder\\:\\:__construct\\(\\) has parameter \\$path with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Webspace/Manager/WebspaceCollectionBuilder.php
-
-		-
 			message: "#^Method Sulu\\\\Component\\\\Webspace\\\\Manager\\\\WebspaceCollectionBuilder\\:\\:build\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/Webspace/Manager/WebspaceCollectionBuilder.php
@@ -50923,11 +50498,6 @@ parameters:
 		-
 			message: "#^Parameter \\#1 \\$string of function strlen expects string, TKey of int\\|string given\\.$#"
 			count: 2
-			path: src/Sulu/Component/Webspace/Manager/WebspaceCollectionBuilder.php
-
-		-
-			message: "#^Property Sulu\\\\Component\\\\Webspace\\\\Manager\\\\WebspaceCollectionBuilder\\:\\:\\$availableTemplates type has no value type specified in iterable type array\\.$#"
-			count: 1
 			path: src/Sulu/Component/Webspace/Manager/WebspaceCollectionBuilder.php
 
 		-
@@ -51004,11 +50574,6 @@ parameters:
 			message: "#^Method Sulu\\\\Component\\\\Webspace\\\\Navigation\\:\\:setContexts\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/Webspace/Navigation.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Webspace\\\\NavigationContext\\:\\:__construct\\(\\) has parameter \\$key with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Webspace/NavigationContext.php
 
 		-
 			message: "#^Method Sulu\\\\Component\\\\Webspace\\\\NavigationContext\\:\\:__construct\\(\\) has parameter \\$metadata with no type specified\\.$#"
@@ -51706,16 +51271,6 @@ parameters:
 			path: src/Sulu/Component/Webspace/Tests/Unit/WebspaceTest.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\Webspace\\\\Url\\:\\:__construct\\(\\) has parameter \\$environment with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Webspace/Url.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Webspace\\\\Url\\:\\:__construct\\(\\) has parameter \\$url with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Webspace/Url.php
-
-		-
 			message: "#^Method Sulu\\\\Component\\\\Webspace\\\\Url\\:\\:setCountry\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/Webspace/Url.php
@@ -51809,11 +51364,6 @@ parameters:
 			message: "#^Method Sulu\\\\Component\\\\Webspace\\\\Url\\\\ReplacerInterface\\:\\:cleanup\\(\\) has parameter \\$replacers with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Component/Webspace/Url/ReplacerInterface.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Webspace\\\\Url\\\\WebspaceUrlChainProvider\\:\\:__construct\\(\\) has parameter \\$chain with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/Webspace/Url/WebspaceUrlChainProvider.php
 
 		-
 			message: "#^Cannot access offset 'host' on array\\{scheme\\?\\: string, host\\?\\: string, port\\?\\: int\\<0, 65535\\>, user\\?\\: string, pass\\?\\: string, path\\?\\: string, query\\?\\: string, fragment\\?\\: string\\}\\|false\\.$#"

@@ -37,50 +37,14 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class ResourceSegmentSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var PropertyEncoder
-     */
-    private $encoder;
-
-    /**
-     * @var DocumentManagerInterface
-     */
-    private $documentManager;
-
-    /**
-     * @var DocumentInspector
-     */
-    private $documentInspector;
-
-    /**
-     * @var ResourceLocatorStrategyPoolInterface
-     */
-    private $resourceLocatorStrategyPool;
-
-    /**
-     * @var SessionInterface
-     */
-    private $defaultSession;
-
-    /**
-     * @var SessionInterface
-     */
-    private $liveSession;
-
     public function __construct(
-        PropertyEncoder $encoder,
-        DocumentManagerInterface $documentManager,
-        DocumentInspector $documentInspector,
-        ResourceLocatorStrategyPoolInterface $resourceLocatorStrategyPool,
-        SessionInterface $defaultSession,
-        SessionInterface $liveSession
+        private PropertyEncoder $encoder,
+        private DocumentManagerInterface $documentManager,
+        private DocumentInspector $documentInspector,
+        private ResourceLocatorStrategyPoolInterface $resourceLocatorStrategyPool,
+        private SessionInterface $defaultSession,
+        private SessionInterface $liveSession,
     ) {
-        $this->encoder = $encoder;
-        $this->documentManager = $documentManager;
-        $this->documentInspector = $documentInspector;
-        $this->resourceLocatorStrategyPool = $resourceLocatorStrategyPool;
-        $this->defaultSession = $defaultSession;
-        $this->liveSession = $liveSession;
     }
 
     public static function getSubscribedEvents()

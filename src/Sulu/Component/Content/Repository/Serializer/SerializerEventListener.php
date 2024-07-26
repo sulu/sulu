@@ -30,22 +30,10 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
  */
 class SerializerEventListener implements EventSubscriberInterface
 {
-    /**
-     * @var AccessControlManagerInterface
-     */
-    private $accessControlManager;
-
-    /**
-     * @var TokenStorageInterface|null
-     */
-    private $tokenStorage;
-
     public function __construct(
-        AccessControlManagerInterface $accessControlManager,
-        ?TokenStorageInterface $tokenStorage = null
+        private AccessControlManagerInterface $accessControlManager,
+        private ?TokenStorageInterface $tokenStorage = null,
     ) {
-        $this->accessControlManager = $accessControlManager;
-        $this->tokenStorage = $tokenStorage;
     }
 
     public static function getSubscribedEvents()

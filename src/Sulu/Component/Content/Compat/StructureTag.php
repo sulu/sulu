@@ -19,27 +19,13 @@ namespace Sulu\Component\Content\Compat;
 class StructureTag
 {
     /**
-     * The name of the structure tag.
-     *
-     * @var string
-     */
-    protected $name;
-
-    /**
-     * An array of attributes for this specific tag.
-     *
-     * @var array
-     */
-    protected $attributes;
-
-    /**
      * @param string $name Name of tag
      * @param array $attributes Tag attributes
      */
-    public function __construct($name, $attributes)
-    {
-        $this->name = $name;
-        $this->attributes = $attributes;
+    public function __construct(
+        protected $name,
+        protected $attributes
+    ) {
     }
 
     /**

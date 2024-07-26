@@ -24,26 +24,6 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class ExtensionSubscriber implements EventSubscriberInterface
 {
     /**
-     * @var ExtensionManagerInterface
-     */
-    private $extensionManager;
-
-    /**
-     * @var DocumentInspector
-     */
-    private $inspector;
-
-    /**
-     * @var NamespaceRegistry
-     */
-    private $namespaceRegistry;
-
-    /**
-     * @var PropertyEncoder
-     */
-    private $encoder;
-
-    /**
      * TODO: Remove this: Use a dedicated namespace instead.
      *
      * @var string
@@ -51,16 +31,12 @@ class ExtensionSubscriber implements EventSubscriberInterface
     private $internalPrefix = '';
 
     public function __construct(
-        PropertyEncoder $encoder,
-        ExtensionManagerInterface $extensionManager,
-        DocumentInspector $inspector,
+        private PropertyEncoder $encoder,
+        private ExtensionManagerInterface $extensionManager,
+        private DocumentInspector $inspector,
         // these two dependencies should absolutely not be necessary
-        NamespaceRegistry $namespaceRegistry
+        private NamespaceRegistry $namespaceRegistry
     ) {
-        $this->encoder = $encoder;
-        $this->extensionManager = $extensionManager;
-        $this->inspector = $inspector;
-        $this->namespaceRegistry = $namespaceRegistry;
     }
 
     public static function getSubscribedEvents()

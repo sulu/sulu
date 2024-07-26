@@ -22,29 +22,11 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class WebsiteRequestProcessor implements RequestProcessorInterface
 {
-    /**
-     * @var WebspaceManagerInterface
-     */
-    private $webspaceManager;
-
-    /**
-     * @var ContentMapperInterface
-     */
-    private $contentMapper;
-
-    /**
-     * @var string
-     */
-    private $environment;
-
     public function __construct(
-        WebspaceManagerInterface $webspaceManager,
-        ContentMapperInterface $contentMapper,
-        $environment
+        private WebspaceManagerInterface $webspaceManager,
+        private ContentMapperInterface $contentMapper,
+        private ?string $environment,
     ) {
-        $this->webspaceManager = $webspaceManager;
-        $this->contentMapper = $contentMapper;
-        $this->environment = $environment;
     }
 
     public function process(Request $request, RequestAttributes $requestAttributes)

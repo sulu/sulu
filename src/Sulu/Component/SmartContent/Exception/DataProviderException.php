@@ -16,20 +16,12 @@ namespace Sulu\Component\SmartContent\Exception;
  */
 abstract class DataProviderException extends SmartContentException
 {
-    private $alias;
-
     /**
-     * DataProviderException constructor.
-     *
      * @param string $alias
-     * @param string $message
-     * @param int $code
      */
-    public function __construct($alias, $message = '', $code = 0, ?\Exception $previous = null)
+    public function __construct(private $alias, string $message = '', int $code = 0, ?\Throwable $previous = null)
     {
         parent::__construct($message, $code, $previous);
-
-        $this->alias = $alias;
     }
 
     /**

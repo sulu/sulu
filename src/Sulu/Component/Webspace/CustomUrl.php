@@ -19,15 +19,11 @@ use Sulu\Component\Util\ArrayableInterface;
 class CustomUrl implements ArrayableInterface
 {
     /**
-     * The url itself.
-     *
-     * @var string
+     * @param string $url
      */
-    private $url;
-
-    public function __construct($url = null)
-    {
-        $this->url = $url;
+    public function __construct(
+        private $url = null
+    ) {
     }
 
     public function getUrl()

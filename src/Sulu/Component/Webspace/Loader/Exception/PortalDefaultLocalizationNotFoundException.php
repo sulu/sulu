@@ -16,18 +16,10 @@ use Sulu\Component\Webspace\Webspace;
 
 class PortalDefaultLocalizationNotFoundException extends WebspaceException
 {
-    /**
-     * The portal which has no default localization.
-     *
-     * @var string
-     */
-    private $portal;
-
-    public function __construct(Webspace $webspace, Portal $portal, ?\Throwable $previous = null)
+    public function __construct(Webspace $webspace, private Portal $portal, ?\Throwable $previous = null)
     {
         $this->webspace = $webspace;
-        $this->portal = $portal;
-        $message = 'The portal "' . $portal->getKey() . '" in the webspace definition "' . $webspace->getKey() . '" ' .
+        $message = 'The portal "' . $this->portal->getKey() . '" in the webspace definition "' . $webspace->getKey() . '" ' .
             'has not specified the required attributes (a default localization)';
         parent::__construct($message, 0, $previous);
     }

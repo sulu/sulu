@@ -19,18 +19,15 @@ use Sulu\Component\Webspace\Portal;
 class PortalLocalizationNotFoundException extends PortalException
 {
     /**
-     * @var string
+     * @param string $locale
      */
-    private $locale;
-
-    public function __construct(Portal $portal, $locale)
+    public function __construct(Portal $portal, private $locale)
     {
         parent::__construct(
-            \sprintf('The locale "%s" could not be found in the portal "%s".', $locale, $portal->getKey())
+            \sprintf('The locale "%s" could not be found in the portal "%s".', $this->locale, $portal->getKey())
         );
 
         $this->portal = $portal;
-        $this->locale = $locale;
     }
 
     /**

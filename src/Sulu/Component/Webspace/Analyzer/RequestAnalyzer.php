@@ -24,21 +24,12 @@ class RequestAnalyzer implements RequestAnalyzerInterface
     public const SULU_ATTRIBUTE = '_sulu';
 
     /**
-     * @var RequestProcessorInterface[]
+     * @param RequestProcessorInterface[] $requestProcessors
      */
-    private $requestProcessors;
-
-    /**
-     * @var RequestStack
-     */
-    private $requestStack;
-
     public function __construct(
-        RequestStack $requestStack,
-        array $requestProcessors
+        private RequestStack $requestStack,
+        private array $requestProcessors
     ) {
-        $this->requestStack = $requestStack;
-        $this->requestProcessors = $requestProcessors;
     }
 
     public function analyze(Request $request)

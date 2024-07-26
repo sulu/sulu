@@ -30,29 +30,11 @@ class AuthorSubscriber implements EventSubscriberInterface
 
     public const AUTHOR_PROPERTY_NAME = 'author';
 
-    /**
-     * @var PropertyEncoder
-     */
-    private $propertyEncoder;
-
-    /**
-     * @var UserRepositoryInterface
-     */
-    private $userRepository;
-
-    /**
-     * @var MetadataFactoryInterface
-     */
-    private $metadataFactory;
-
     public function __construct(
-        PropertyEncoder $propertyEncoder,
-        UserRepositoryInterface $userRepository,
-        MetadataFactoryInterface $metadataFactory
+        private PropertyEncoder $propertyEncoder,
+        private UserRepositoryInterface $userRepository,
+        private MetadataFactoryInterface $metadataFactory,
     ) {
-        $this->propertyEncoder = $propertyEncoder;
-        $this->userRepository = $userRepository;
-        $this->metadataFactory = $metadataFactory;
     }
 
     public static function getSubscribedEvents()

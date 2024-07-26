@@ -37,52 +37,16 @@ class StructureSubscriber implements EventSubscriberInterface
     public const STRUCTURE_TYPE_FIELD = 'template';
 
     /**
-     * @var ContentTypeManagerInterface
-     */
-    private $contentTypeManager;
-
-    /**
-     * @var DocumentInspector
-     */
-    private $inspector;
-
-    /**
-     * @var LegacyPropertyFactory
-     */
-    private $legacyPropertyFactory;
-
-    /**
-     * @var PropertyEncoder
-     */
-    private $encoder;
-
-    /**
-     * @var WebspaceManagerInterface
-     */
-    private $webspaceManager;
-
-    /**
-     * @var array
-     */
-    private $defaultTypes;
-
-    /**
      * @param array $defaultTypes
      */
     public function __construct(
-        PropertyEncoder $encoder,
-        ContentTypeManagerInterface $contentTypeManager,
-        DocumentInspector $inspector,
-        LegacyPropertyFactory $legacyPropertyFactory,
-        WebspaceManagerInterface $webspaceManager,
-        $defaultTypes
+        private PropertyEncoder $encoder,
+        private ContentTypeManagerInterface $contentTypeManager,
+        private DocumentInspector $inspector,
+        private LegacyPropertyFactory $legacyPropertyFactory,
+        private WebspaceManagerInterface $webspaceManager,
+        private $defaultTypes,
     ) {
-        $this->encoder = $encoder;
-        $this->contentTypeManager = $contentTypeManager;
-        $this->inspector = $inspector;
-        $this->legacyPropertyFactory = $legacyPropertyFactory;
-        $this->webspaceManager = $webspaceManager;
-        $this->defaultTypes = $defaultTypes;
     }
 
     public static function getSubscribedEvents()

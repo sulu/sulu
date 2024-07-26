@@ -34,11 +34,8 @@ use Sulu\Component\DocumentManager\NamespaceRegistry;
  */
 class LegacyPropertyFactory
 {
-    private $namespaceRegistry;
-
-    public function __construct(NamespaceRegistry $namespaceRegistry)
+    public function __construct(private NamespaceRegistry $namespaceRegistry)
     {
-        $this->namespaceRegistry = $namespaceRegistry;
     }
 
     /**
