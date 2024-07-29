@@ -22,14 +22,8 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class DocumentObjectType extends AbstractType
 {
-    /**
-     * @var DocumentManagerInterface
-     */
-    private $documentManager;
-
-    public function __construct(DocumentManagerInterface $documentManager)
+    public function __construct(private DocumentManagerInterface $documentManager)
     {
-        $this->documentManager = $documentManager;
     }
 
     public function configureOptions(OptionsResolver $options)

@@ -27,18 +27,12 @@ class PropertiesXmlParser
     use XmlParserTrait;
 
     /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
-    /**
      * @var string[]
      */
     private $locales;
 
-    public function __construct(TranslatorInterface $translator, array $locales)
+    public function __construct(private TranslatorInterface $translator, array $locales)
     {
-        $this->translator = $translator;
         $this->locales = \array_keys($locales);
     }
 

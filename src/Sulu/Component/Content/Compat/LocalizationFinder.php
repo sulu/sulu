@@ -19,14 +19,8 @@ use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
  */
 class LocalizationFinder implements LocalizationFinderInterface
 {
-    /**
-     * @var WebspaceManagerInterface
-     */
-    private $webspaceManager;
-
-    public function __construct(WebspaceManagerInterface $webspaceManager)
+    public function __construct(private WebspaceManagerInterface $webspaceManager)
     {
-        $this->webspaceManager = $webspaceManager;
     }
 
     public function findAvailableLocale($webspaceName, array $availableLocales, $locale)

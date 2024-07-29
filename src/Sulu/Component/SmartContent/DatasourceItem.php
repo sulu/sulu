@@ -22,31 +22,13 @@ use JMS\Serializer\Annotation\VirtualProperty;
 class DatasourceItem implements DatasourceItemInterface
 {
     /**
-     * @var string
+     * @param string $id
+     * @param string $title
+     * @param string $path
+     * @param string $image
      */
-    private $id;
-
-    /**
-     * @var string
-     */
-    private $title;
-
-    /**
-     * @var string
-     */
-    private $path;
-
-    /**
-     * @var string
-     */
-    private $image;
-
-    public function __construct($id, $title, $path, $image = null)
+    public function __construct(private $id, private $title, private $path, private $image = null)
     {
-        $this->id = $id;
-        $this->title = $title;
-        $this->path = $path;
-        $this->image = $image;
     }
 
     /**

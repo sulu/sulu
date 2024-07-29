@@ -17,19 +17,12 @@ namespace Sulu\Component\Webspace\Analyzer\Exception;
 class UrlMatchNotFoundException extends \Exception
 {
     /**
-     * The url for which no portal exists.
-     *
-     * @var string
-     */
-    private $url;
-
-    /**
      * @param string[] $portalUrls
+     * @param string $url
      */
-    public function __construct($url, array $portalUrls = [])
+    public function __construct(private $url, array $portalUrls = [])
     {
-        $this->url = $url;
-        $message = 'There exists no portal for the URL "' . $url . '"';
+        $message = 'There exists no portal for the URL "' . $this->url . '"';
 
         if (!empty($portalUrls)) {
             $message .= ', the URL should begin with one of the following Portal URLs: "' . \implode('", "', $portalUrls) . '"';

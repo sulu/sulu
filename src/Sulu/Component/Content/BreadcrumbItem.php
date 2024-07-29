@@ -19,31 +19,15 @@ namespace Sulu\Component\Content;
 class BreadcrumbItem implements BreadcrumbItemInterface
 {
     /**
-     * depth of node.
-     *
-     * @var int
+     * @param int $depth
+     * @param string $title
+     * @param string $uuid
      */
-    private $depth;
-
-    /**
-     * title of node.
-     *
-     * @var string
-     */
-    private $title;
-
-    /**
-     * uuid of node.
-     *
-     * @var string
-     */
-    private $uuid;
-
-    public function __construct($depth, $uuid, $title)
-    {
-        $this->depth = $depth;
-        $this->title = $title;
-        $this->uuid = $uuid;
+    public function __construct(
+        private $depth,
+        private $uuid,
+        private $title
+    ) {
     }
 
     /**

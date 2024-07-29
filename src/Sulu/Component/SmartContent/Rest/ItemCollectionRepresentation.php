@@ -23,20 +23,13 @@ use Sulu\Component\SmartContent\DatasourceItemInterface;
 class ItemCollectionRepresentation extends CollectionRepresentation
 {
     /**
-     * @var DatasourceItemInterface|null
-     */
-    private $datasource;
-
-    /**
      * @var int
      */
     private $total;
 
-    public function __construct(array $items, ?DatasourceItemInterface $datasource)
+    public function __construct(array $items, private ?DatasourceItemInterface $datasource)
     {
         parent::__construct($items, 'items');
-
-        $this->datasource = $datasource;
         $this->total = \count($items);
     }
 

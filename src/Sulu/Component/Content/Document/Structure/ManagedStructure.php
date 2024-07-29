@@ -17,7 +17,6 @@ use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\Structure\LegacyPropertyFactory;
 use Sulu\Component\Content\Compat\Structure\StructureBridge;
 use Sulu\Component\Content\ContentTypeManagerInterface;
-use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\Content\Metadata\StructureMetadata;
 
 /**
@@ -25,26 +24,6 @@ use Sulu\Component\Content\Metadata\StructureMetadata;
  */
 class ManagedStructure extends Structure
 {
-    /**
-     * @var ContentTypeManagerInterface
-     */
-    private $contentTypeManager;
-
-    /**
-     * @var StructureBehavior
-     */
-    private $document;
-
-    /**
-     * @var LegacyPropertyFactory
-     */
-    private $legacyPropertyFactory;
-
-    /**
-     * @var DocumentInspector
-     */
-    private $inspector;
-
     /**
      * @var StructureMetadata
      */
@@ -69,15 +48,11 @@ class ManagedStructure extends Structure
      * @param object $document
      */
     public function __construct(
-        ContentTypeManagerInterface $contentTypeManager,
-        LegacyPropertyFactory $legacyPropertyFactory,
-        DocumentInspector $inspector,
-        $document
+        private ContentTypeManagerInterface $contentTypeManager,
+        private LegacyPropertyFactory $legacyPropertyFactory,
+        private DocumentInspector $inspector,
+        private $document,
     ) {
-        $this->contentTypeManager = $contentTypeManager;
-        $this->document = $document;
-        $this->legacyPropertyFactory = $legacyPropertyFactory;
-        $this->inspector = $inspector;
     }
 
     public function getProperty($name)

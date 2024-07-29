@@ -16,18 +16,10 @@ use Sulu\Component\Webspace\Webspace;
 
 class InvalidPortalDefaultLocalizationException extends WebspaceException
 {
-    /**
-     * The webspace in which the error occured.
-     *
-     * @var Webspace
-     */
-    private $portal;
-
-    public function __construct(Webspace $webspace, Portal $portal, ?\Throwable $previous = null)
+    public function __construct(Webspace $webspace, private Portal $portal, ?\Throwable $previous = null)
     {
         $this->webspace = $webspace;
-        $this->portal = $portal;
-        $message = 'The portal "' . $portal->getKey() . '" in the webspace definition "' . $webspace->getKey() . '" ' .
+        $message = 'The portal "' . $this->portal->getKey() . '" in the webspace definition "' . $webspace->getKey() . '" ' .
             'has multiple default localizations';
         parent::__construct($message, 0, $previous);
     }
@@ -35,7 +27,7 @@ class InvalidPortalDefaultLocalizationException extends WebspaceException
     /**
      * Returns the webspace in which the error occured.
      *
-     * @return Webspace
+     * @return Portal
      */
     public function getPortal()
     {

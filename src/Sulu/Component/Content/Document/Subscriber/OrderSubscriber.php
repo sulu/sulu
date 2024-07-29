@@ -28,20 +28,10 @@ class OrderSubscriber implements EventSubscriberInterface
 {
     public const FIELD = 'order';
 
-    /**
-     * @var DocumentInspector
-     */
-    private $documentInspector;
-
-    /**
-     * @var PropertyEncoder
-     */
-    private $propertyEncoder;
-
-    public function __construct(DocumentInspector $documentInspector, PropertyEncoder $propertyEncoder)
-    {
-        $this->documentInspector = $documentInspector;
-        $this->propertyEncoder = $propertyEncoder;
+    public function __construct(
+        private DocumentInspector $documentInspector,
+        private PropertyEncoder $propertyEncoder,
+    ) {
     }
 
     public static function getSubscribedEvents()

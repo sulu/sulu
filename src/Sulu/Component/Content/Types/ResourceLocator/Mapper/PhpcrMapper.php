@@ -30,29 +30,11 @@ use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
  */
 class PhpcrMapper implements ResourceLocatorMapperInterface
 {
-    /**
-     * @var SessionManagerInterface
-     */
-    private $sessionManager;
-
-    /**
-     * @var DocumentManagerInterface
-     */
-    private $documentManager;
-
-    /**
-     * @var DocumentInspector
-     */
-    private $documentInspector;
-
     public function __construct(
-        SessionManagerInterface $sessionManager,
-        DocumentManagerInterface $documentManager,
-        DocumentInspector $documentInspector
+        private SessionManagerInterface $sessionManager,
+        private DocumentManagerInterface $documentManager,
+        private DocumentInspector $documentInspector,
     ) {
-        $this->sessionManager = $sessionManager;
-        $this->documentManager = $documentManager;
-        $this->documentInspector = $documentInspector;
     }
 
     public function save(ResourceSegmentBehavior $document)

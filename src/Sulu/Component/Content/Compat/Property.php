@@ -20,76 +20,11 @@ use Sulu\Component\Util\ArrayableInterface;
 class Property implements PropertyInterface, \JsonSerializable
 {
     /**
-     * name of property.
-     *
-     * @var string
-     */
-    private $name;
-
-    /**
      * @var Metadata
      */
     private $metadata;
 
     /**
-     * is property mandatory.
-     *
-     * @var bool
-     */
-    private $mandatory;
-
-    /**
-     * is property multilingual.
-     *
-     * @var bool
-     */
-    private $multilingual;
-
-    /**
-     * min occurs of property value.
-     *
-     * @var int
-     */
-    private $minOccurs;
-
-    /**
-     * max occurs of property value.
-     *
-     * @var int
-     */
-    private $maxOccurs;
-
-    /**
-     * name of content type.
-     *
-     * @var string
-     */
-    private $contentTypeName;
-
-    /**
-     * parameter of property to merge with parameter of content type.
-     *
-     * @var array
-     */
-    private $params;
-
-    /**
-     * tags defined in xml.
-     *
-     * @var PropertyTag[]
-     */
-    private $tags;
-
-    /**
-     * column span.
-     *
-     * @var string
-     */
-    private $colSpan;
-
-    /**
-     * value of property.
-     *
      * @var mixed
      */
     private $value;
@@ -100,8 +35,6 @@ class Property implements PropertyInterface, \JsonSerializable
     private $structure;
 
     /**
-     * Constructor.
-     *
      * @var PropertyValue
      */
     protected $propertyValue;
@@ -119,34 +52,32 @@ class Property implements PropertyInterface, \JsonSerializable
     protected $properties = [];
 
     /**
-     * @var string|null
+     * @param string $name
+     * @param array|string $metaData
+     * @param bool $mandatory
+     * @param bool $multilingual
+     * @param int $minOccurs
+     * @param int $maxOccurs
+     * @param string $contentTypeName
+     * @param mixed[] $params
+     * @param \Sulu\Component\Content\Compat\PropertyTag[] $tags
+     * @param string $colSpan
+     * @param string|null $defaultTypeName
      */
-    protected $defaultTypeName;
-
     public function __construct(
-        $name,
+        private $name,
         $metaData,
-        $contentTypeName,
-        $mandatory = false,
-        $multilingual = true,
-        $maxOccurs = 1,
-        $minOccurs = 1,
-        $params = [],
-        $tags = [],
-        $colSpan = null,
-        $defaultTypeName = null
+        private $contentTypeName,
+        private $mandatory = false,
+        private $multilingual = true,
+        private $maxOccurs = 1,
+        private $minOccurs = 1,
+        private $params = [],
+        private $tags = [],
+        private $colSpan = null,
+        protected $defaultTypeName = null
     ) {
-        $this->contentTypeName = $contentTypeName;
-        $this->mandatory = $mandatory;
-        $this->maxOccurs = $maxOccurs;
-        $this->minOccurs = $minOccurs;
-        $this->multilingual = $multilingual;
-        $this->name = $name;
         $this->metadata = new Metadata($metaData);
-        $this->params = $params;
-        $this->tags = $tags;
-        $this->colSpan = $colSpan;
-        $this->defaultTypeName = $defaultTypeName;
     }
 
     public function setPropertyValue(PropertyValue $propertyValue)

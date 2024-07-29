@@ -16,20 +16,12 @@ use Sulu\Component\Webspace\Webspace;
 class InvalidUrlDefinitionException extends WebspaceException
 {
     /**
-     * The pattern which was invalid.
-     *
-     * @var string
-     */
-    private $urlPattern;
-
-    /**
      * @param string $urlPattern
      */
-    public function __construct(Webspace $portal, $urlPattern)
+    public function __construct(Webspace $portal, private $urlPattern)
     {
         $this->webspace = $portal;
-        $this->urlPattern = $urlPattern;
-        $message = 'The url pattern "' . $urlPattern . '" in the webspace definition "' . $portal->getKey() . '" ' .
+        $message = 'The url pattern "' . $this->urlPattern . '" in the webspace definition "' . $portal->getKey() . '" ' .
             'has not specified the required attributes (either with xml attributes or as placeholders in the pattern)';
         parent::__construct($message, 0);
     }

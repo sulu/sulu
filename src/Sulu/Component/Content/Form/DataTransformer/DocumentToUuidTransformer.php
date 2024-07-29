@@ -19,14 +19,8 @@ use Symfony\Component\Form\Exception\TransformationFailedException;
 
 class DocumentToUuidTransformer implements DataTransformerInterface
 {
-    /**
-     * @var DocumentManagerInterface
-     */
-    private $documentManager;
-
-    public function __construct(DocumentManagerInterface $documentManager)
+    public function __construct(private DocumentManagerInterface $documentManager)
     {
-        $this->documentManager = $documentManager;
     }
 
     public function transform($document)

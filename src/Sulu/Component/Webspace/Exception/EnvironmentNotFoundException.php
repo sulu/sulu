@@ -19,18 +19,15 @@ use Sulu\Component\Webspace\Portal;
 class EnvironmentNotFoundException extends PortalException
 {
     /**
-     * @var string
+     * @param string $environment
      */
-    private $environment;
-
-    public function __construct(Portal $portal, $environment)
+    public function __construct(Portal $portal, private $environment)
     {
         parent::__construct(
-            \sprintf('The environment "%s" could not be found in the portal "%s".', $environment, $portal->getKey())
+            \sprintf('The environment "%s" could not be found in the portal "%s".', $this->environment, $portal->getKey())
         );
 
         $this->portal = $portal;
-        $this->environment = $environment;
     }
 
     /**

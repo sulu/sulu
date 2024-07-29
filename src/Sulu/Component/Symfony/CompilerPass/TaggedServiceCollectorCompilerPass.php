@@ -21,37 +21,13 @@ use Symfony\Component\DependencyInjection\Reference;
 class TaggedServiceCollectorCompilerPass implements CompilerPassInterface
 {
     /**
-     * @var string
-     */
-    private $serviceId;
-
-    /**
-     * @var string
-     */
-    private $tagName;
-
-    /**
-     * @var int
-     */
-    private $argumentNumber;
-
-    /**
-     * @var string
-     */
-    private $aliasAttribute;
-
-    /**
      * @param string $serviceId
      * @param string $tagName
      * @param int $argumentNumber
      * @param string $aliasAttribute
      */
-    public function __construct($serviceId, $tagName, $argumentNumber = 0, $aliasAttribute = null)
+    public function __construct(private $serviceId, private $tagName, private $argumentNumber = 0, private $aliasAttribute = null)
     {
-        $this->serviceId = $serviceId;
-        $this->tagName = $tagName;
-        $this->argumentNumber = $argumentNumber;
-        $this->aliasAttribute = $aliasAttribute;
     }
 
     public function process(ContainerBuilder $container)

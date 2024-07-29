@@ -20,38 +20,16 @@ use Sulu\Component\Content\Compat\PropertyTag;
 class TranslatedProperty implements PropertyInterface
 {
     /**
-     * @var PropertyInterface
-     */
-    private $property;
-
-    /**
-     * @var string
-     */
-    private $localization;
-
-    /**
-     * @var string
-     */
-    private $languageNamespace;
-
-    /**
-     * @var string
-     */
-    private $additionalPrefix;
-
-    /**
-     * Constructor.
+     * @param string $localization
+     * @param string $languageNamespace
+     * @param string|null $additionalPrefix
      */
     public function __construct(
-        PropertyInterface $property,
-        $localization,
-        $languageNamespace,
-        $additionalPrefix = null
+        private PropertyInterface $property,
+        private $localization,
+        private $languageNamespace,
+        private $additionalPrefix = null,
     ) {
-        $this->property = $property;
-        $this->localization = $localization;
-        $this->languageNamespace = $languageNamespace;
-        $this->additionalPrefix = $additionalPrefix;
     }
 
     /**

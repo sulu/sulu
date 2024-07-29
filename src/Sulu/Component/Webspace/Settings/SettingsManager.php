@@ -20,22 +20,10 @@ use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface as DeprecatedSes
  */
 class SettingsManager implements SettingsManagerInterface
 {
-    /**
-     * @var SessionManagerInterface
-     */
-    private $sessionManager;
-
-    /**
-     * @var DeprecatedSessionManagerInterface
-     */
-    private $deprecatedSessionManager;
-
     public function __construct(
-        SessionManagerInterface $sessionManager,
-        DeprecatedSessionManagerInterface $deprecatedSessionManager
+        private SessionManagerInterface $sessionManager,
+        private DeprecatedSessionManagerInterface $deprecatedSessionManager,
     ) {
-        $this->sessionManager = $sessionManager;
-        $this->deprecatedSessionManager = $deprecatedSessionManager;
     }
 
     public function save($webspaceKey, $key, $data)

@@ -35,31 +35,6 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class ContentMapperSubscriber implements EventSubscriberInterface
 {
     /**
-     * @var EventDispatcherInterface
-     */
-    private $eventDispatcher;
-
-    /**
-     * @var DocumentInspector
-     */
-    private $documentInspector;
-
-    /**
-     * @var ContentMapperInterface
-     */
-    private $contentMapper;
-
-    /**
-     * @var SuluNodeHelper
-     */
-    private $nodeHelper;
-
-    /**
-     * @var StructureManagerInterface
-     */
-    private $structureManager;
-
-    /**
      * @var ContentNodeDeleteEvent[]
      */
     private $deleteEvents;
@@ -69,18 +44,8 @@ class ContentMapperSubscriber implements EventSubscriberInterface
      */
     private $persistEvents = [];
 
-    public function __construct(
-        DocumentInspector $inspector,
-        EventDispatcherInterface $dispatcher,
-        ContentMapperInterface $mapper,
-        SuluNodeHelper $nodeHelper,
-        StructureManagerInterface $structureManager
-    ) {
-        $this->eventDispatcher = $dispatcher;
-        $this->documentInspector = $inspector;
-        $this->nodeHelper = $nodeHelper;
-        $this->contentMapper = $mapper;
-        $this->structureManager = $structureManager;
+    public function __construct(private DocumentInspector $documentInspector, private EventDispatcherInterface $eventDispatcher, private ContentMapperInterface $contentMapper, private SuluNodeHelper $nodeHelper, private StructureManagerInterface $structureManager)
+    {
     }
 
     public static function getSubscribedEvents()

@@ -20,14 +20,8 @@ namespace Sulu\Component\Content\Document\Structure;
  */
 class PropertyValue implements \ArrayAccess
 {
-    private $value;
-
-    private $name;
-
-    public function __construct($name, $value = null)
+    public function __construct(private $name, private $value = null)
     {
-        $this->name = $name;
-        $this->value = $value;
     }
 
     public function getValue()

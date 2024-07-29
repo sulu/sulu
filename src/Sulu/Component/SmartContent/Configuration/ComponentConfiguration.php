@@ -17,19 +17,10 @@ namespace Sulu\Component\SmartContent\Configuration;
 class ComponentConfiguration implements ComponentConfigurationInterface
 {
     /**
-     * @var string
+     * @param string $component
      */
-    private $component;
-
-    /**
-     * @var array
-     */
-    private $componentOptions;
-
-    public function __construct($component, array $componentOptions)
+    public function __construct(private $component, private array $componentOptions)
     {
-        $this->component = $component;
-        $this->componentOptions = $componentOptions;
     }
 
     public function getName()
