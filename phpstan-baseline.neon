@@ -33681,11 +33681,6 @@ parameters:
 			path: src/Sulu/Component/Category/Tests/Unit/Request/CategoryRequestHandlerTest.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\Contact\\\\SmartContent\\\\AccountDataItem\\:\\:getId\\(\\) should return string but returns int\\.$#"
-			count: 1
-			path: src/Sulu/Component/Contact/SmartContent/AccountDataItem.php
-
-		-
 			message: "#^Method Sulu\\\\Component\\\\Contact\\\\SmartContent\\\\AccountDataItem\\:\\:getResource\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/Contact/SmartContent/AccountDataItem.php
@@ -33694,11 +33689,6 @@ parameters:
 			message: "#^Method Sulu\\\\Component\\\\Contact\\\\SmartContent\\\\AccountDataProvider\\:\\:decorateDataItems\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Component/Contact/SmartContent/AccountDataProvider.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Contact\\\\SmartContent\\\\ContactDataItem\\:\\:getId\\(\\) should return string but returns int\\.$#"
-			count: 1
-			path: src/Sulu/Component/Contact/SmartContent/ContactDataItem.php
 
 		-
 			message: "#^Method Sulu\\\\Component\\\\Contact\\\\SmartContent\\\\ContactDataItem\\:\\:getResource\\(\\) has no return type specified\\.$#"
@@ -44386,11 +44376,6 @@ parameters:
 			path: src/Sulu/Component/Localization/Tests/Unit/Manager/LocalizationManagerTest.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\Media\\\\SmartContent\\\\MediaDataItem\\:\\:getId\\(\\) should return string but returns int\\.$#"
-			count: 1
-			path: src/Sulu/Component/Media/SmartContent/MediaDataItem.php
-
-		-
 			message: "#^Method Sulu\\\\Component\\\\Media\\\\SmartContent\\\\MediaDataItem\\:\\:getResource\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/Media/SmartContent/MediaDataItem.php
@@ -48417,11 +48402,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Component\\\\SmartContent\\\\Orm\\\\BaseDataProvider\\:\\:initConfiguration\\(\\) has parameter \\$tags with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/SmartContent/Orm/BaseDataProvider.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\SmartContent\\\\Orm\\\\BaseDataProvider\\:\\:resolveDatasource\\(\\) should return Sulu\\\\Component\\\\SmartContent\\\\DatasourceItemInterface\\|null but empty return statement found\\.$#"
 			count: 1
 			path: src/Sulu/Component/SmartContent/Orm/BaseDataProvider.php
 

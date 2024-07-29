@@ -79,7 +79,7 @@ abstract class BaseDataProvider implements DataProviderInterface
 
     public function resolveDatasource($datasource, array $propertyParameter, array $options)
     {
-        return;
+        return null;
     }
 
     /**

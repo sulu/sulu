@@ -24,7 +24,7 @@ interface ResourceItemInterface
     /**
      * Returns id of item.
      *
-     * @return string
+     * @return string|int
      */
     public function getId();
 }
