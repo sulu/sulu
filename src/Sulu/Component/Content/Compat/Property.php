@@ -53,15 +53,15 @@ class Property implements PropertyInterface, \JsonSerializable
 
     /**
      * @param string $name
-     * @param array|string $metaData
+     * @param array<string, mixed>|string $metaData
      * @param bool $mandatory
      * @param bool $multilingual
-     * @param int $minOccurs
-     * @param int $maxOccurs
+     * @param int|null $minOccurs
+     * @param int|null $maxOccurs
      * @param string $contentTypeName
      * @param mixed[] $params
      * @param \Sulu\Component\Content\Compat\PropertyTag[] $tags
-     * @param string $colSpan
+     * @param int $colSpan
      * @param string|null $defaultTypeName
      */
     public function __construct(
@@ -118,7 +118,7 @@ class Property implements PropertyInterface, \JsonSerializable
     /**
      * return min occurs.
      *
-     * @return int
+     * @return int|null
      */
     public function getMinOccurs()
     {
@@ -128,7 +128,7 @@ class Property implements PropertyInterface, \JsonSerializable
     /**
      * return max occurs.
      *
-     * @return int
+     * @return int|null
      */
     public function getMaxOccurs()
     {
@@ -200,7 +200,7 @@ class Property implements PropertyInterface, \JsonSerializable
     /**
      * returns column span.
      *
-     * @return string
+     * @return int
      */
     public function getColSpan()
     {

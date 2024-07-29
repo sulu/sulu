@@ -37,15 +37,13 @@ class AccessControlManager implements AccessControlManagerInterface
     protected $accessControlProviders = [];
 
     /**
+     * @param DescendantProviderInterface[] $descendantProviders
      * @param array<string, int> $permissions
      */
     public function __construct(
         private MaskConverterInterface $maskConverter,
         private EventDispatcherInterface $eventDispatcher,
         private SystemStoreInterface $systemStore,
-        /**
-         * @var DescendantProviderInterface[]
-         */
         private iterable $descendantProviders,
         private RoleRepositoryInterface $roleRepository,
         private AccessControlRepositoryInterface $accessControlRepository,

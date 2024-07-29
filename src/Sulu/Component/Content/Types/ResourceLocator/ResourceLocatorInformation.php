@@ -18,8 +18,8 @@ class ResourceLocatorInformation
 {
     /**
      * @param string $resourceLocator
-     * @param \DateTime $created
-     * @param string $id
+     * @param \DateTime|null $created
+     * @param string|int $id
      */
     public function __construct(private $resourceLocator, private $created, private $id)
     {
@@ -28,7 +28,7 @@ class ResourceLocatorInformation
     /**
      * returns datetime of creation.
      *
-     * @return \DateTime
+     * @return \DateTime|null
      */
     public function getCreated()
     {
@@ -46,7 +46,7 @@ class ResourceLocatorInformation
     }
 
     /**
-     * @return string
+     * @return string|int
      */
     public function getId()
     {

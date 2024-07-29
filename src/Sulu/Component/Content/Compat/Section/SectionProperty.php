@@ -32,7 +32,7 @@ class SectionProperty extends Property implements SectionPropertyInterface
     /**
      * @param string $name
      * @param array $metadata
-     * @param string $col
+     * @param int $col
      */
     public function __construct($name, $metadata, $col)
     {

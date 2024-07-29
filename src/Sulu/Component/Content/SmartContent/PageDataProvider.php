@@ -47,7 +47,7 @@ class PageDataProvider implements DataProviderInterface, DataProviderAliasInterf
 
     /**
      * @param bool $showDrafts
-     * @param mixed[] $permissions
+     * @param array<string, ?int> $permissions
      */
     public function __construct(
         private ContentQueryBuilderInterface $contentQueryBuilder,
@@ -151,7 +151,7 @@ class PageDataProvider implements DataProviderInterface, DataProviderAliasInterf
         );
 
         if (0 === \count($result)) {
-            return;
+            return null;
         }
 
         return new DatasourceItem($result[0]['id'], $result[0]['title'], $result[0]['url'] ?? null);

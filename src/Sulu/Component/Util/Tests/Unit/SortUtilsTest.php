@@ -171,16 +171,16 @@ class SortUtilsTest extends TestCase
 
 class FoobarTestClass
 {
-    public function __construct(public $field1, public $field2)
+    public function __construct(public string $field1, public string $field2)
     {
     }
 
-    public function getField1()
+    public function getField1(): string
     {
         return $this->field1;
     }
 
-    public function getField2()
+    public function getField2(): string
     {
         return $this->field2;
     }

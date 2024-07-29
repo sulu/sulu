@@ -19,7 +19,7 @@ interface DatasourceItemInterface
     /**
      * Returns id of item.
      *
-     * @return string
+     * @return string|int
      */
     public function getId();
 
@@ -41,7 +41,7 @@ interface DatasourceItemInterface
     /**
      * Returns URL to image.
      *
-     * @return string
+     * @return string|null
      */
     public function getImage();
 }

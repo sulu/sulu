@@ -25,7 +25,7 @@ class ArrayAccessItem implements ResourceItemInterface, \ArrayAccess, \JsonSeria
 {
     /**
      * @param object $resource
-     * @param string $id
+     * @param string|int $id
      */
     public function __construct(private $id, private array $data, private $resource)
     {
