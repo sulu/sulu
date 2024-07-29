@@ -15,40 +15,12 @@ use Doctrine\ORM\QueryBuilder;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
-use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Component\Persistence\Repository\ORM\OrderByTrait;
 
 class OrderByTraitTest extends TestCase
 {
     use ProphecyTrait;
-
-    /**
-     * @var ObjectProphecy<QueryBuilder>
-     */
-    private $queryBuilder;
-
-    /**
-     * @var OrderByTrait
-     */
-    private $orderByTrait;
-
-    /**
-     * @var \ReflectionMethod
-     */
-    private $addOrderByFunction;
-
-    public function setUp(): void
-    {
-        parent::setUp();
-
-        $this->orderByTrait = $this->getObjectForTrait(OrderByTrait::class);
-
-        $this->queryBuilder = $this->prophesize(QueryBuilder::class);
-
-        $reflectionClass = new \ReflectionClass($this->orderByTrait);
-        $this->addOrderByFunction = $reflectionClass->getMethod('addOrderBy');
-        $this->addOrderByFunction->setAccessible(true);
-    }
+    use OrderByTrait;
 
     public static function orderByProvider()
     {
@@ -65,21 +37,15 @@ class OrderByTraitTest extends TestCase
      */
     public function testAddOrderBy($alias, $orderBy, $expectedOrderBy): void
     {
+        $queryBuilder = $this->prophesize(QueryBuilder::class);
         if (0 === \count($expectedOrderBy)) {
-            $this->queryBuilder->addOrderBy(Argument::any(), Argument::any())->shouldNotBeCalled();
+            $queryBuilder->addOrderBy(Argument::any(), Argument::any())->shouldNotBeCalled();
         }
 
         foreach ($expectedOrderBy as $field => $order) {
-            $this->queryBuilder->addOrderBy($field, $order)->shouldBeCalledTimes(1);
+            $queryBuilder->addOrderBy($field, $order)->shouldBeCalledTimes(1);
         }
 
-        $this->addOrderByFunction->invokeArgs(
-            $this->orderByTrait,
-            [
-                $this->queryBuilder->reveal(),
-                $alias,
-                $orderBy,
-            ]
-        );
+        $this->addOrderBy($queryBuilder->reveal(), $alias, $orderBy);
     }
 }
