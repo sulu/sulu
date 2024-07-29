@@ -33916,26 +33916,6 @@ parameters:
 			path: src/Sulu/Component/Content/Compat/Block/BlockProperty.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Compat\\\\Property\\:\\:__construct\\(\\) invoked with 12 parameters, 3\\-11 required\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Compat/Block/BlockProperty.php
-
-		-
-			message: "#^Parameter \\#10 \\$colSpan of method Sulu\\\\Component\\\\Content\\\\Compat\\\\Property\\:\\:__construct\\(\\) expects int\\|null, array\\<Sulu\\\\Component\\\\Content\\\\Compat\\\\PropertyTag\\> given\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Compat/Block/BlockProperty.php
-
-		-
-			message: "#^Parameter \\#8 \\$params of method Sulu\\\\Component\\\\Content\\\\Compat\\\\Property\\:\\:__construct\\(\\) expects array, int\\|null given\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Compat/Block/BlockProperty.php
-
-		-
-			message: "#^Parameter \\#9 \\$tags of method Sulu\\\\Component\\\\Content\\\\Compat\\\\Property\\:\\:__construct\\(\\) expects array\\<Sulu\\\\Component\\\\Content\\\\Compat\\\\PropertyTag\\>, array given\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Compat/Block/BlockProperty.php
-
-		-
 			message: "#^Method Sulu\\\\Component\\\\Content\\\\Compat\\\\Block\\\\BlockPropertyType\\:\\:getSettings\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Compat/Block/BlockPropertyType.php
