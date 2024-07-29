@@ -20,6 +20,11 @@ trait OrderByTrait
 {
     /**
      * Function adds order-by to querybuilder based on $sortBy-data given.
+     *
+     * @param string $alias
+     * @param array<string, string> $sortBy
+     *
+     * @return void
      */
     protected function addOrderBy(QueryBuilder $queryBuilder, $alias, array $sortBy = [])
     {

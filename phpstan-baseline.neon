@@ -26821,21 +26821,6 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/Entity/UserGroup.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\SecurityBundle\\\\Entity\\\\UserRepository\\:\\:addOrderBy\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Entity/UserRepository.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\SecurityBundle\\\\Entity\\\\UserRepository\\:\\:addOrderBy\\(\\) has parameter \\$alias with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Entity/UserRepository.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\SecurityBundle\\\\Entity\\\\UserRepository\\:\\:addOrderBy\\(\\) has parameter \\$sortBy with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Entity/UserRepository.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\SecurityBundle\\\\Entity\\\\UserRepository\\:\\:findUserByContact\\(\\) has parameter \\$id with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Entity/UserRepository.php
@@ -45187,16 +45172,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Component\\\\Persistence\\\\Tests\\\\Unit\\\\EventSubscriber\\\\ORM\\\\OrderByTraitTest\\:\\:testAddOrderBy\\(\\) has parameter \\$orderBy with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Persistence/Tests/Unit/EventSubscriber/ORM/OrderByTraitTest.php
-
-		-
-			message: "#^Property Sulu\\\\Component\\\\Persistence\\\\Tests\\\\Unit\\\\EventSubscriber\\\\ORM\\\\OrderByTraitTest\\:\\:\\$orderByTrait \\(Sulu\\\\Component\\\\Persistence\\\\Repository\\\\ORM\\\\OrderByTrait\\) does not accept object\\.$#"
-			count: 1
-			path: src/Sulu/Component/Persistence/Tests/Unit/EventSubscriber/ORM/OrderByTraitTest.php
-
-		-
-			message: "#^Property Sulu\\\\Component\\\\Persistence\\\\Tests\\\\Unit\\\\EventSubscriber\\\\ORM\\\\OrderByTraitTest\\:\\:\\$orderByTrait has invalid type Sulu\\\\Component\\\\Persistence\\\\Repository\\\\ORM\\\\OrderByTrait\\.$#"
 			count: 1
 			path: src/Sulu/Component/Persistence/Tests/Unit/EventSubscriber/ORM/OrderByTraitTest.php
 
