@@ -17,28 +17,13 @@ use Sulu\Component\Content\Compat\PropertyTag;
 class BlockPropertyWrapper implements PropertyInterface
 {
     /**
-     * @var PropertyInterface
-     */
-    private $property;
-
-    /**
-     * @var BlockPropertyInterface
-     */
-    private $block;
-
-    /**
-     * @var int
-     */
-    private $index;
-
-    /**
      * @param int $index
      */
-    public function __construct(PropertyInterface $property, PropertyInterface $block, $index = null)
-    {
-        $this->property = $property;
-        $this->block = $block;
-        $this->index = $index;
+    public function __construct(
+        private PropertyInterface $property,
+        private PropertyInterface $block,
+        private $index = null
+    ) {
     }
 
     /**
@@ -226,7 +211,7 @@ class BlockPropertyWrapper implements PropertyInterface
     /**
      * returns column span.
      *
-     * @return string
+     * @return int
      */
     public function getColSpan()
     {

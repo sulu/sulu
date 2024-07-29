@@ -22,14 +22,6 @@ use Sulu\Component\Rest\ListBuilder\Metadata\AbstractPropertyMetadata;
 class FieldDescriptor implements FieldDescriptorInterface
 {
     /**
-     * The name of the field in the database.
-     *
-     * @var string
-     */
-    #[Expose]
-    private $name;
-
-    /**
      * The translation name.
      *
      * @var string
@@ -38,65 +30,27 @@ class FieldDescriptor implements FieldDescriptorInterface
     private $translation;
 
     /**
-     * Defines the visibility of the field.
-     *
-     * @var string
-     */
-    #[Expose]
-    private $visibility;
-
-    /**
-     * Defines the searchability of the field.
-     *
-     * @var string
-     */
-    #[Expose]
-    private $searchability;
-
-    /**
-     * Defines if this field is sortable.
-     *
-     * @var bool
-     */
-    #[Expose]
-    private $sortable;
-
-    /**
-     * @var string
-     */
-    #[Expose]
-    private $width;
-
-    /**
-     * The type of the field (only used for special fields like dates).
-     *
-     * @var string
-     */
-    #[Expose]
-    private $type;
-
-    /**
      * @var AbstractPropertyMetadata
      */
     #[Exclude]
     private $metadata;
 
     public function __construct(
-        string $name,
+        #[Expose]
+        private string $name,
         ?string $translation = null,
-        string $visibility = FieldDescriptorInterface::VISIBILITY_YES,
-        string $searchability = FieldDescriptorInterface::SEARCHABILITY_NEVER,
-        string $type = '',
-        bool $sortable = true,
-        string $width = FieldDescriptorInterface::WIDTH_AUTO
+        #[Expose]
+        private string $visibility = FieldDescriptorInterface::VISIBILITY_YES,
+        #[Expose]
+        private string $searchability = FieldDescriptorInterface::SEARCHABILITY_NEVER,
+        #[Expose]
+        private string $type = '',
+        #[Expose]
+        private bool $sortable = true,
+        #[Expose]
+        private string $width = FieldDescriptorInterface::WIDTH_AUTO
     ) {
-        $this->name = $name;
-        $this->visibility = $visibility;
-        $this->searchability = $searchability;
-        $this->sortable = $sortable;
-        $this->type = $type;
-        $this->translation = null == $translation ? $name : $translation;
-        $this->width = $width;
+        $this->translation = null == $translation ? $this->name : $translation;
     }
 
     public function getName()

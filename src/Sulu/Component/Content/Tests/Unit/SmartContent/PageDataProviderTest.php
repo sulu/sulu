@@ -171,6 +171,7 @@ class PageDataProviderTest extends TestCase
             $this->getSession(),
             new ReferenceStore(),
             false,
+            ['view' => 64],
             false
         );
 

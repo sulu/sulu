@@ -25,29 +25,11 @@ use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactoryInterface;
  */
 class PageBridgeHandler implements SubscribingHandlerInterface
 {
-    /**
-     * @var StructureMetadataFactoryInterface
-     */
-    private $structureFactory;
-
-    /**
-     * @var DocumentInspector
-     */
-    private $inspector;
-
-    /**
-     * @var LegacyPropertyFactory
-     */
-    private $propertyFactory;
-
     public function __construct(
-        DocumentInspector $inspector,
-        LegacyPropertyFactory $propertyFactory,
-        StructureMetadataFactoryInterface $structureFactory
+        private DocumentInspector $inspector,
+        private LegacyPropertyFactory $propertyFactory,
+        private StructureMetadataFactoryInterface $structureFactory,
     ) {
-        $this->structureFactory = $structureFactory;
-        $this->inspector = $inspector;
-        $this->propertyFactory = $propertyFactory;
     }
 
     public static function getSubscribingMethods()

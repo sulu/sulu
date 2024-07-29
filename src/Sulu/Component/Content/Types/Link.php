@@ -25,16 +25,9 @@ class Link extends SimpleContentType
 {
     public const LINK_TYPE_EXTERNAL = 'external';
 
-    /**
-     * @var LinkProviderPoolInterface
-     */
-    private $providerPool;
-
-    public function __construct(LinkProviderPoolInterface $providerPool)
+    public function __construct(private LinkProviderPoolInterface $providerPool)
     {
         parent::__construct('Link');
-
-        $this->providerPool = $providerPool;
     }
 
     /**

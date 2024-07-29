@@ -29,56 +29,18 @@ class DoctrineJoinDescriptor
     public const JOIN_CONDITION_METHOD_WITH = 'WITH';
 
     /**
-     * The name of the entity to join.
-     *
-     * @var string
-     */
-    private $entityName;
-
-    /**
-     * The field, which should be joined.
-     *
-     * @var string
-     */
-    private $join;
-
-    /**
-     * The additional condition which should apply to the join.
-     *
-     * @var string
-     */
-    private $joinCondition;
-
-    /**
-     * The method for the condition to apply.
-     *
-     * @var 'ON'|'WITH'
-     */
-    private $joinConditionMethod;
-
-    /**
-     * Defines the join method (left, right or inner join).
-     *
-     * @var 'LEFT'|'INNER'|'RIGHT'
-     */
-    private $joinMethod;
-
-    /**
+     * @param string $join the field, which should be joined
+     * @param string $joinCondition the additional condition which should apply to the join
      * @param 'LEFT'|'INNER'|'RIGHT' $joinMethod
      * @param 'ON'|'WITH' $joinConditionMethod
      */
     public function __construct(
-        string $entityName,
-        ?string $join = null,
-        ?string $joinCondition = null,
-        string $joinMethod = self::JOIN_METHOD_LEFT,
-        string $joinConditionMethod = self::JOIN_CONDITION_METHOD_WITH
+        private string $entityName,
+        private ?string $join = null,
+        private ?string $joinCondition = null,
+        private string $joinMethod = self::JOIN_METHOD_LEFT,
+        private string $joinConditionMethod = self::JOIN_CONDITION_METHOD_WITH
     ) {
-        $this->entityName = $entityName;
-        $this->join = $join;
-        $this->joinCondition = $joinCondition;
-        $this->joinConditionMethod = $joinConditionMethod;
-        $this->joinMethod = $joinMethod;
     }
 
     /**

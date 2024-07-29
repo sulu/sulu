@@ -38,29 +38,11 @@ class CopyLocaleSubscriber implements EventSubscriberInterface
 
     public const ROUTE_PROPERTY = 'routePath';
 
-    /**
-     * @var DocumentManagerInterface
-     */
-    private $documentManager;
-
-    /**
-     * @var DocumentInspector
-     */
-    private $documentInspector;
-
-    /**
-     * @var ResourceLocatorStrategyPoolInterface
-     */
-    private $resourceLocatorStrategyPool;
-
     public function __construct(
-        DocumentManagerInterface $documentManager,
-        DocumentInspector $documentInspector,
-        ResourceLocatorStrategyPoolInterface $resourceLocatorStrategyPool
+        private DocumentManagerInterface $documentManager,
+        private DocumentInspector $documentInspector,
+        private ResourceLocatorStrategyPoolInterface $resourceLocatorStrategyPool,
     ) {
-        $this->resourceLocatorStrategyPool = $resourceLocatorStrategyPool;
-        $this->documentInspector = $documentInspector;
-        $this->documentManager = $documentManager;
     }
 
     /**

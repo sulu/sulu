@@ -15,17 +15,7 @@ use Sulu\Component\Webspace\Webspace;
 
 class InvalidTemplateException extends \Exception
 {
-    /**
-     * @var Webspace
-     */
-    private $webspace;
-
-    /**
-     * @var string
-     */
-    private $template;
-
-    public function __construct(Webspace $webspace, string $template)
+    public function __construct(private Webspace $webspace, private string $template)
     {
         parent::__construct(
             \sprintf(
@@ -35,9 +25,6 @@ class InvalidTemplateException extends \Exception
                 $webspace->getKey()
             )
         );
-
-        $this->webspace = $webspace;
-        $this->template = $template;
     }
 
     public function getWebspace()

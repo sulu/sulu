@@ -21,19 +21,13 @@ use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
 class DoctrineConcatenationFieldDescriptor extends AbstractDoctrineFieldDescriptor
 {
     /**
-     * The field descriptors which will be concatenated.
-     *
-     * @var DoctrineFieldDescriptorInterface[]
+     * @param DoctrineFieldDescriptorInterface[] $fieldDescriptors the field descriptors which will be concatenated
      */
-    private $fieldDescriptors;
-
-    private $glue;
-
     public function __construct(
-        array $fieldDescriptors,
+        private array $fieldDescriptors,
         string $name,
         ?string $translation = null,
-        string $glue = ' ',
+        private string $glue = ' ',
         string $visibility = FieldDescriptorInterface::VISIBILITY_YES,
         string $searchability = FieldDescriptorInterface::SEARCHABILITY_NEVER,
         string $type = '',
@@ -49,8 +43,6 @@ class DoctrineConcatenationFieldDescriptor extends AbstractDoctrineFieldDescript
             $sortable,
             $width
         );
-        $this->fieldDescriptors = $fieldDescriptors;
-        $this->glue = $glue;
     }
 
     /**

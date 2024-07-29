@@ -37,36 +37,12 @@ class RouteSubscriber implements EventSubscriberInterface
 
     public const NODE_HISTORY_FIELD = 'sulu:history';
 
-    /**
-     * @var DocumentManagerInterface
-     */
-    private $documentManager;
-
-    /**
-     * @var DocumentInspector
-     */
-    private $documentInspector;
-
-    /**
-     * @var SessionManagerInterface
-     */
-    private $sessionManager;
-
-    /**
-     * @var NodeManager
-     */
-    private $nodeManager;
-
     public function __construct(
-        DocumentManagerInterface $documentManager,
-        DocumentInspector $documentInspector,
-        SessionManagerInterface $sessionManager,
-        NodeManager $nodeManager
+        private DocumentManagerInterface $documentManager,
+        private DocumentInspector $documentInspector,
+        private SessionManagerInterface $sessionManager,
+        private NodeManager $nodeManager,
     ) {
-        $this->documentManager = $documentManager;
-        $this->documentInspector = $documentInspector;
-        $this->sessionManager = $sessionManager;
-        $this->nodeManager = $nodeManager;
     }
 
     public static function getSubscribedEvents()

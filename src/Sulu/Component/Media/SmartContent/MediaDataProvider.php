@@ -33,57 +33,26 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class MediaDataProvider extends BaseDataProvider
 {
-    /**
-     * @var RequestStack
-     */
-    private $requestStack;
-
-    /**
-     * @var CollectionManagerInterface
-     */
-    private $collectionManager;
-
-    /**
-     * @var bool
-     */
-    private $hasAudienceTargeting;
-
-    /**
-     * @var EntityManagerInterface|null
-     */
-    private $entityManager;
-
-    /**
-     * @var TranslatorInterface|null
-     */
-    private $translator;
-
     public function __construct(
         DataProviderRepositoryInterface $repository,
-        CollectionManagerInterface $collectionManager,
+        private CollectionManagerInterface $collectionManager,
         ArraySerializerInterface $serializer,
-        RequestStack $requestStack,
+        private RequestStack $requestStack,
         ReferenceStoreInterface $referenceStore,
         Security|SymfonyCoreSecurity|null $security,
         RequestAnalyzerInterface $requestAnalyzer,
         $permissions,
-        bool $hasAudienceTargeting = false,
-        ?EntityManagerInterface $entityManager = null,
-        ?TranslatorInterface $translator = null
+        private bool $hasAudienceTargeting = false,
+        private ?EntityManagerInterface $entityManager = null,
+        private ?TranslatorInterface $translator = null
     ) {
         parent::__construct($repository, $serializer, $referenceStore, $security, $requestAnalyzer, $permissions);
 
-        $this->requestStack = $requestStack;
-        $this->collectionManager = $collectionManager;
-        $this->hasAudienceTargeting = $hasAudienceTargeting;
-        $this->entityManager = $entityManager;
-        $this->translator = $translator;
-
-        if (!$entityManager) {
+        if (!$this->entityManager) {
             @trigger_deprecation('sulu/sulu', '2.3', 'The usage of the "MediaDataProvider" without setting the "EntityManager" is deprecated. Please inject the "EntityManager".');
         }
 
-        if (!$translator) {
+        if (!$this->translator) {
             @trigger_deprecation('sulu/sulu', '2.3', 'The usage of the "MediaDataProvider" without setting the "Translator" is deprecated. Please inject the "Translator".');
         }
     }
@@ -144,7 +113,7 @@ class MediaDataProvider extends BaseDataProvider
     public function resolveDatasource($datasource, array $propertyParameter, array $options)
     {
         if (empty($datasource)) {
-            return;
+            return null;
         }
 
         if ('root' === $datasource) {
@@ -155,7 +124,7 @@ class MediaDataProvider extends BaseDataProvider
 
         $entity = $this->collectionManager->getById($datasource, $options['locale']);
 
-        return new DatasourceItem($entity->getId(), $entity->getTitle(), $entity->getTitle());
+        return new DatasourceItem($entity->getId(), (string) $entity->getTitle(), (string) $entity->getTitle());
     }
 
     public function resolveResourceItems(

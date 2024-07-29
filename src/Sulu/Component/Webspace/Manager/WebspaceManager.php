@@ -37,44 +37,9 @@ class WebspaceManager implements WebspaceManagerInterface
     private $webspaceCollection;
 
     /**
-     * @var LoaderInterface
-     */
-    private $loader;
-
-    /**
-     * @var ReplacerInterface
-     */
-    private $urlReplacer;
-
-    /**
-     * @var RequestStack
-     */
-    private $requestStack;
-
-    /**
      * @var array
      */
     private $options;
-
-    /**
-     * @var string
-     */
-    private $environment;
-
-    /**
-     * @var string
-     */
-    private $defaultHost;
-
-    /**
-     * @var string
-     */
-    private $defaultScheme;
-
-    /**
-     * @var StructureMetadataFactoryInterface
-     */
-    private $structureMetadataFactory;
 
     /**
      * @var mixed[]
@@ -82,23 +47,16 @@ class WebspaceManager implements WebspaceManagerInterface
     private $portalUrlCache = [];
 
     public function __construct(
-        LoaderInterface $loader,
-        ReplacerInterface $urlReplacer,
-        RequestStack $requestStack,
+        private LoaderInterface $loader,
+        private ReplacerInterface $urlReplacer,
+        private RequestStack $requestStack,
         array $options,
-        string $environment,
-        string $defaultHost,
-        string $defaultScheme,
-        StructureMetadataFactoryInterface $structureMetadataFactory
+        private string $environment,
+        private string $defaultHost,
+        private string $defaultScheme,
+        private StructureMetadataFactoryInterface $structureMetadataFactory
     ) {
-        $this->loader = $loader;
-        $this->urlReplacer = $urlReplacer;
-        $this->requestStack = $requestStack;
         $this->setOptions($options);
-        $this->environment = $environment;
-        $this->defaultHost = $defaultHost;
-        $this->defaultScheme = $defaultScheme;
-        $this->structureMetadataFactory = $structureMetadataFactory;
     }
 
     public function findWebspaceByKey(?string $key): ?Webspace

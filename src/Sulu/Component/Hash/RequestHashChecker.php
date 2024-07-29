@@ -19,32 +19,17 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class RequestHashChecker implements RequestHashCheckerInterface
 {
-    /**
-     * @var HasherInterface
-     */
-    private $hasher;
-
-    /**
-     * @var string
-     */
-    private $hashParameter;
-
-    /**
-     * @var string
-     */
-    private $forceParameter;
-
-    public function __construct(HasherInterface $hasher, $hashParameter = '_hash', $forceParameter = 'force')
-    {
-        $this->hasher = $hasher;
-        $this->hashParameter = $hashParameter;
-        $this->forceParameter = $forceParameter;
+    public function __construct(
+        private HasherInterface $hasher,
+        private string $hashParameter = '_hash',
+        private string $forceParameter = 'force'
+    ) {
     }
 
     public function checkHash(Request $request, $object, $identifier)
     {
         if (!$request->request->has($this->hashParameter)
-            || 'true' === $request->query->get('force', false)
+            || 'true' === $request->query->get($this->forceParameter, false)
             || $request->request->get($this->hashParameter) == $this->hasher->hash($object)
         ) {
             return true;

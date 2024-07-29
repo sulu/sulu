@@ -37,13 +37,6 @@ class StructureXmlLoader extends AbstractLoader
     public const SCHEMA_NAMESPACE_URI = 'http://schemas.sulu.io/template/template';
 
     /**
-     * Tags that are required in template.
-     *
-     * @var array
-     */
-    private $requiredTagNames = [];
-
-    /**
      * reserved names for sulu internals
      * TODO should be possible to inject from config.
      *
@@ -71,63 +64,24 @@ class StructureXmlLoader extends AbstractLoader
     ];
 
     /**
-     * Properties that are required in template.
-     *
-     * @var array
-     */
-    private $requiredPropertyNames = [];
-
-    /**
      * @var array<int, string>
      */
     private $locales;
 
     /**
-     * @var CacheLifetimeResolverInterface
-     */
-    private $cacheLifetimeResolver;
-
-    /**
-     * @var PropertiesXmlParser
-     */
-    private $propertiesXmlParser;
-
-    /**
-     * @var SchemaXmlParser
-     */
-    private $schemaXmlParser;
-
-    /**
-     * @var ContentTypeManagerInterface
-     */
-    private $contentTypeManager;
-
-    /**
-     * @var TranslatorInterface|null
-     */
-    private $translator;
-
-    /**
      * @param array<string, string> $locales
      */
     public function __construct(
-        CacheLifetimeResolverInterface $cacheLifetimeResolver,
-        PropertiesXmlParser $propertiesXmlParser,
-        SchemaXmlParser $schemaXmlParser,
-        ContentTypeManagerInterface $contentTypeManager,
-        array $requiredPropertyNames,
-        array $requiredTagNames,
+        private CacheLifetimeResolverInterface $cacheLifetimeResolver,
+        private PropertiesXmlParser $propertiesXmlParser,
+        private SchemaXmlParser $schemaXmlParser,
+        private ContentTypeManagerInterface $contentTypeManager,
+        private array $requiredPropertyNames,
+        private array $requiredTagNames,
         array $locales = [],
-        ?TranslatorInterface $translator = null
+        private ?TranslatorInterface $translator = null
     ) {
-        $this->cacheLifetimeResolver = $cacheLifetimeResolver;
-        $this->propertiesXmlParser = $propertiesXmlParser;
-        $this->schemaXmlParser = $schemaXmlParser;
-        $this->contentTypeManager = $contentTypeManager;
-        $this->requiredPropertyNames = $requiredPropertyNames;
-        $this->requiredTagNames = $requiredTagNames;
         $this->locales = \array_keys($locales);
-        $this->translator = $translator;
 
         parent::__construct(
             self::SCHEME_PATH,

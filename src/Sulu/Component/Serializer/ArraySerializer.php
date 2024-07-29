@@ -16,14 +16,8 @@ use JMS\Serializer\Serializer;
 
 class ArraySerializer implements ArraySerializerInterface
 {
-    /**
-     * @var Serializer
-     */
-    private $serializer;
-
-    public function __construct(Serializer $serializer)
+    public function __construct(private Serializer $serializer)
     {
-        $this->serializer = $serializer;
     }
 
     public function serialize($data, ?SerializationContext $context = null): array

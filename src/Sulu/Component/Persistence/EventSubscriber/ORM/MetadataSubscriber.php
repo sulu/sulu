@@ -25,11 +25,6 @@ class MetadataSubscriber
     /**
      * @var array
      */
-    protected $objects;
-
-    /**
-     * @var array
-     */
     private $classNames;
 
     /**
@@ -37,9 +32,8 @@ class MetadataSubscriber
      *
      * @param array $objects
      */
-    public function __construct($objects)
+    public function __construct(protected $objects)
     {
-        $this->objects = $objects;
     }
 
     public function loadClassMetadata(LoadClassMetadataEventArgs $event)

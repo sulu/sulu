@@ -24,32 +24,14 @@ class DoctrineFieldDescriptor extends AbstractDoctrineFieldDescriptor
     use EncodeAliasTrait;
 
     /**
-     * The name of the field in the database.
-     *
-     * @var string
+     * @param DoctrineJoinDescriptor[] $joins the joins, which have to be made to get to the result
      */
-    private $fieldName;
-
-    /**
-     * The name of the entity.
-     *
-     * @var string
-     */
-    private $entityName;
-
-    /**
-     * The joins, which have to be made to get to the result.
-     *
-     * @var DoctrineJoinDescriptor[]
-     */
-    private $joins;
-
     public function __construct(
-        string $fieldName,
+        private string $fieldName,
         string $name,
-        string $entityName,
+        private string $entityName,
         ?string $translation = null,
-        array $joins = [],
+        private array $joins = [],
         string $visibility = FieldDescriptorInterface::VISIBILITY_YES,
         string $searchability = FieldDescriptorInterface::SEARCHABILITY_NEVER,
         string $type = '',
@@ -65,10 +47,6 @@ class DoctrineFieldDescriptor extends AbstractDoctrineFieldDescriptor
             $sortable,
             $width
         );
-
-        $this->fieldName = $fieldName;
-        $this->entityName = $entityName;
-        $this->joins = $joins;
     }
 
     public function getSelect()

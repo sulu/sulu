@@ -42,14 +42,8 @@ class ShadowCopyPropertiesSubscriber implements EventSubscriberInterface
 
     public const TEMPLATE_PROPERTY = 'i18n:%s-template';
 
-    /**
-     * @var PropertyEncoder
-     */
-    protected $encoder;
-
-    public function __construct(PropertyEncoder $encoder)
+    public function __construct(protected PropertyEncoder $encoder)
     {
-        $this->encoder = $encoder;
     }
 
     public static function getSubscribedEvents()

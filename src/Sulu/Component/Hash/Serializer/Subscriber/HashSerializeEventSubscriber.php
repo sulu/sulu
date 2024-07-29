@@ -25,14 +25,8 @@ use Sulu\Component\Rest\ApiWrapper;
  */
 class HashSerializeEventSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var HasherInterface
-     */
-    private $hasher;
-
-    public function __construct(HasherInterface $hasher)
+    public function __construct(private HasherInterface $hasher)
     {
-        $this->hasher = $hasher;
     }
 
     public static function getSubscribedEvents()

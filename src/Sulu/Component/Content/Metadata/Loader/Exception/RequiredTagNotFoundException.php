@@ -17,15 +17,10 @@ namespace Sulu\Component\Content\Metadata\Loader\Exception;
 class RequiredTagNotFoundException extends InvalidXmlException
 {
     /**
-     * The name of the property, which is required, but not found.
-     *
-     * @var string
+     * @param string $tagName
      */
-    protected $tagName;
-
-    public function __construct($template, $tagName)
+    public function __construct($template, protected $tagName)
     {
-        $this->tagName = $tagName;
         parent::__construct(
             $template,
             \sprintf(

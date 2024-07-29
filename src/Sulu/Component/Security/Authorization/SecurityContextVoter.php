@@ -22,21 +22,15 @@ use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 class SecurityContextVoter implements VoterInterface
 {
     /**
-     * The permissions available, defined by config.
-     *
-     * @var array
+     * @param mixed[] $permissions
      */
-    private $permissions;
-
-    /**
-     * @var AccessControlManagerInterface
-     */
-    private $accessControlManager;
-
-    public function __construct(AccessControlManagerInterface $accessControlManager, $permissions)
-    {
-        $this->accessControlManager = $accessControlManager;
-        $this->permissions = $permissions;
+    public function __construct(
+        private AccessControlManagerInterface $accessControlManager,
+        /**
+         * The permissions available, defined by config.
+         */
+        private $permissions
+    ) {
     }
 
     public function supportsAttribute($attribute)

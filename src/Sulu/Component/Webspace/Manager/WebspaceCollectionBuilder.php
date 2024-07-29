@@ -28,25 +28,6 @@ use Symfony\Component\Finder\Finder;
 class WebspaceCollectionBuilder
 {
     /**
-     * The loader for the xml config files.
-     *
-     * @var LoaderInterface
-     */
-    private $loader;
-
-    /**
-     * @var ReplacerInterface
-     */
-    private $urlReplacer;
-
-    /**
-     * The path to the xml config files.
-     *
-     * @var string
-     */
-    private $path;
-
-    /**
      * The webspaces for the configured path.
      *
      * @var Webspace[]
@@ -73,20 +54,14 @@ class WebspaceCollectionBuilder
     private $typedFormMetadata;
 
     /**
-     * @var array
+     * @param string $path
      */
-    private $availableTemplates;
-
     public function __construct(
-        LoaderInterface $loader,
-        ReplacerInterface $urlReplacer,
-        $path,
-        array $availableTemplates
+        private LoaderInterface $loader,
+        private ReplacerInterface $urlReplacer,
+        private $path,
+        private array $availableTemplates
     ) {
-        $this->loader = $loader;
-        $this->urlReplacer = $urlReplacer;
-        $this->path = $path;
-        $this->availableTemplates = $availableTemplates;
     }
 
     public function build()

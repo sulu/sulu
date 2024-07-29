@@ -17,23 +17,11 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 class RouteDefaultOptionsCompilerPass implements CompilerPassInterface
 {
     /**
-     * @var string
-     */
-    private $targetService;
-
-    /**
-     * @var string
-     */
-    private $targetDefaultOptionsArgument;
-
-    /**
      * @param string $targetService
      * @param int $targetDefaultOptionsArgument
      */
-    public function __construct($targetService, $targetDefaultOptionsArgument)
+    public function __construct(private $targetService, private $targetDefaultOptionsArgument)
     {
-        $this->targetService = $targetService;
-        $this->targetDefaultOptionsArgument = $targetDefaultOptionsArgument;
     }
 
     public function process(ContainerBuilder $container)

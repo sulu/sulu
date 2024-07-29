@@ -17,22 +17,13 @@ namespace Sulu\Component\SmartContent;
 class DataProviderResult
 {
     /**
-     * @var bool
-     */
-    private $hasNextPage;
-
-    /**
-     * @var ResourceItemInterface[]
-     */
-    private $items;
-
-    /**
+     * @param ResourceItemInterface[] $items
      * @param bool $hasNextPage
      */
-    public function __construct(array $items, $hasNextPage)
-    {
-        $this->items = $items;
-        $this->hasNextPage = $hasNextPage;
+    public function __construct(
+        private array $items,
+        private $hasNextPage
+    ) {
     }
 
     /**

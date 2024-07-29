@@ -22,14 +22,8 @@ use Sulu\Component\SmartContent\ItemInterface;
 #[ExclusionPolicy('all')]
 class MediaDataItem implements ItemInterface
 {
-    /**
-     * @var Media
-     */
-    private $entity;
-
-    public function __construct(Media $entity)
+    public function __construct(private Media $entity)
     {
-        $this->entity = $entity;
     }
 
     #[VirtualProperty]
@@ -48,7 +42,7 @@ class MediaDataItem implements ItemInterface
     public function getImage()
     {
         if (!\array_key_exists('sulu-50x50', $thumbnails = $this->entity->getThumbnails())) {
-            return;
+            return null;
         }
 
         return $thumbnails['sulu-50x50'];

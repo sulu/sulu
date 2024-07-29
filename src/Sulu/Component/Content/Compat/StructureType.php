@@ -41,19 +41,11 @@ class StructureType
     }
 
     /**
-     * @var string
+     * @param string $name
+     * @param string $value
      */
-    private $name;
-
-    /**
-     * @var string
-     */
-    private $value;
-
-    private function __construct($name, $value)
+    private function __construct(private $name, private $value)
     {
-        $this->name = $name;
-        $this->value = $value;
     }
 
     /**

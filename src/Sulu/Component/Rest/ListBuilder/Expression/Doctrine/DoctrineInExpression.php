@@ -20,27 +20,8 @@ use Sulu\Component\Rest\ListBuilder\Expression\InExpressionInterface;
  */
 class DoctrineInExpression extends AbstractDoctrineExpression implements InExpressionInterface
 {
-    /**
-     * Field descriptor used for comparison.
-     *
-     * @var DoctrineFieldDescriptorInterface
-     */
-    protected $field;
-
-    /**
-     * Array values to compare.
-     *
-     * @var array
-     */
-    protected $values;
-
-    /**
-     * DoctrineInExpression constructor.
-     */
-    public function __construct(DoctrineFieldDescriptorInterface $field, array $values)
+    public function __construct(protected DoctrineFieldDescriptorInterface $field, protected array $values)
     {
-        $this->values = $values;
-        $this->field = $field;
     }
 
     public function getStatement(QueryBuilder $queryBuilder)

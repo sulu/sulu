@@ -20,20 +20,10 @@ use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
 #[ExclusionPolicy('all')]
 class DoctrineCaseFieldDescriptor extends AbstractDoctrineFieldDescriptor
 {
-    /**
-     * @var DoctrineDescriptor
-     */
-    private $case1;
-
-    /**
-     * @var DoctrineDescriptor
-     */
-    private $case2;
-
     public function __construct(
         string $name,
-        DoctrineDescriptor $case1,
-        DoctrineDescriptor $case2,
+        private DoctrineDescriptor $case1,
+        private DoctrineDescriptor $case2,
         ?string $translation = null,
         string $visibility = FieldDescriptorInterface::VISIBILITY_YES,
         string $searchability = FieldDescriptorInterface::SEARCHABILITY_NEVER,
@@ -50,9 +40,6 @@ class DoctrineCaseFieldDescriptor extends AbstractDoctrineFieldDescriptor
             $sortable,
             $width
         );
-
-        $this->case1 = $case1;
-        $this->case2 = $case2;
     }
 
     public function getSelect()

@@ -30,43 +30,13 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class StructureRemoveSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var DocumentManagerInterface
-     */
-    private $documentManager;
-
-    /**
-     * @var DocumentInspector
-     */
-    private $documentInspector;
-
-    /**
-     * @var SessionInterface
-     */
-    private $defaultSession;
-
-    /**
-     * @var SessionInterface
-     */
-    private $liveSession;
-
-    /**
-     * @var MetadataFactoryInterface
-     */
-    private $metadataFactory;
-
     public function __construct(
-        DocumentManagerInterface $documentManager,
-        DocumentInspector $documentInspector,
-        SessionInterface $defaultSession,
-        SessionInterface $liveSession,
-        MetadataFactoryInterface $metadataFactory
+        private DocumentManagerInterface $documentManager,
+        private DocumentInspector $documentInspector,
+        private SessionInterface $defaultSession,
+        private SessionInterface $liveSession,
+        private MetadataFactoryInterface $metadataFactory,
     ) {
-        $this->documentManager = $documentManager;
-        $this->documentInspector = $documentInspector;
-        $this->defaultSession = $defaultSession;
-        $this->liveSession = $liveSession;
-        $this->metadataFactory = $metadataFactory;
     }
 
     public static function getSubscribedEvents()

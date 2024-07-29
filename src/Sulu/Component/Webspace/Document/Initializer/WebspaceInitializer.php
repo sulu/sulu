@@ -24,43 +24,13 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class WebspaceInitializer implements InitializerInterface
 {
-    /**
-     * @var WebspaceManagerInterface
-     */
-    private $webspaceManager;
-
-    /**
-     * @var DocumentManagerInterface
-     */
-    private $documentManager;
-
-    /**
-     * @var PathBuilder
-     */
-    private $pathBuilder;
-
-    /**
-     * @var DocumentInspector
-     */
-    private $inspector;
-
-    /**
-     * @var NodeManager
-     */
-    private $nodeManager;
-
     public function __construct(
-        WebspaceManagerInterface $webspaceManager,
-        DocumentManagerInterface $documentManager,
-        DocumentInspector $inspector,
-        PathBuilder $pathBuilder,
-        NodeManager $nodeManager
+        private WebspaceManagerInterface $webspaceManager,
+        private DocumentManagerInterface $documentManager,
+        private DocumentInspector $inspector,
+        private PathBuilder $pathBuilder,
+        private NodeManager $nodeManager,
     ) {
-        $this->webspaceManager = $webspaceManager;
-        $this->documentManager = $documentManager;
-        $this->pathBuilder = $pathBuilder;
-        $this->inspector = $inspector;
-        $this->nodeManager = $nodeManager;
     }
 
     public function initialize(OutputInterface $output, $purge = false)

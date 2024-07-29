@@ -21,22 +21,10 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class WebsiteRequestProcessor implements RequestProcessorInterface
 {
-    /**
-     * @var WebspaceManagerInterface
-     */
-    private $webspaceManager;
-
-    /**
-     * @var string
-     */
-    private $environment;
-
     public function __construct(
-        WebspaceManagerInterface $webspaceManager,
-        string $environment
+        private WebspaceManagerInterface $webspaceManager,
+        private ?string $environment
     ) {
-        $this->webspaceManager = $webspaceManager;
-        $this->environment = $environment;
     }
 
     public function process(Request $request, RequestAttributes $requestAttributes)

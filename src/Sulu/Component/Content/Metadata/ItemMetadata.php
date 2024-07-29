@@ -19,13 +19,6 @@ namespace Sulu\Component\Content\Metadata;
 abstract class ItemMetadata
 {
     /**
-     * Name of this item.
-     *
-     * @var string|int|float
-     */
-    protected $name;
-
-    /**
      * The title of this property|structure e.g. [["de": "Artikles", "en": "Articles"]].
      *
      * @var array
@@ -82,9 +75,12 @@ abstract class ItemMetadata
      */
     protected $visibleCondition = null;
 
-    public function __construct($name = null)
-    {
-        $this->name = $name;
+    /**
+     * @param string|int|float $name
+     */
+    public function __construct(
+        protected $name = null
+    ) {
     }
 
     public function __get($name)

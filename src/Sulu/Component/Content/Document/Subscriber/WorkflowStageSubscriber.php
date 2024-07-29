@@ -35,36 +35,12 @@ class WorkflowStageSubscriber implements EventSubscriberInterface
 
     public const PUBLISHED_FIELD = 'published';
 
-    /**
-     * @var DocumentInspector
-     */
-    private $documentInspector;
-
-    /**
-     * @var PropertyEncoder
-     */
-    private $propertyEncoder;
-
-    /**
-     * @var SessionInterface
-     */
-    private $defaultSession;
-
-    /**
-     * @var SessionInterface
-     */
-    private $liveSession;
-
     public function __construct(
-        PropertyEncoder $propertyEncoder,
-        DocumentInspector $documentInspector,
-        SessionInterface $defaultSession,
-        SessionInterface $liveSession
+        private PropertyEncoder $propertyEncoder,
+        private DocumentInspector $documentInspector,
+        private SessionInterface $defaultSession,
+        private SessionInterface $liveSession,
     ) {
-        $this->propertyEncoder = $propertyEncoder;
-        $this->documentInspector = $documentInspector;
-        $this->defaultSession = $defaultSession;
-        $this->liveSession = $liveSession;
     }
 
     public static function getSubscribedEvents()

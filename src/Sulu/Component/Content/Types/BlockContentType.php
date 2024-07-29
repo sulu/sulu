@@ -35,47 +35,24 @@ use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 class BlockContentType extends ComplexContentType implements ContentTypeExportInterface, PreResolvableContentTypeInterface, ReferenceContentTypeInterface
 {
     /**
-     * @var ContentTypeManagerInterface
+     * @param string $languageNamespace
      */
-    private $contentTypeManager;
-
-    /**
-     * @var string
-     */
-    private $languageNamespace;
-
-    /**
-     * @var RequestAnalyzerInterface
-     *
-     * @deprecated This property is not needed anymore and will be removed in Sulu 3.0
-     */
-    private $requestAnalyzer;
-
-    /**
-     * @var ?TargetGroupStoreInterface
-     *
-     * @deprecated This property is not needed anymore and will be removed in Sulu 3.0
-     */
-    private $targetGroupStore;
-
-    /**
-     * @var BlockVisitorInterface[]
-     */
-    private $blockVisitors;
-
     public function __construct(
-        ContentTypeManagerInterface $contentTypeManager,
-        $languageNamespace,
-        RequestAnalyzerInterface $requestAnalyzer,
-        ?TargetGroupStoreInterface $targetGroupStore = null,
-        ?iterable $blockVisitors = null
+        private ContentTypeManagerInterface $contentTypeManager,
+        private $languageNamespace,
+        /**
+         * @deprecated This property is not needed anymore and will be removed in Sulu 3.0
+         */
+        private RequestAnalyzerInterface $requestAnalyzer,
+        /**
+         * @deprecated This property is not needed anymore and will be removed in Sulu 3.0
+         */
+        private ?TargetGroupStoreInterface $targetGroupStore = null,
+        /**
+         * @var BlockVisitorInterface[]
+         */
+        private ?iterable $blockVisitors = null
     ) {
-        $this->contentTypeManager = $contentTypeManager;
-        $this->languageNamespace = $languageNamespace;
-        $this->requestAnalyzer = $requestAnalyzer;
-        $this->targetGroupStore = $targetGroupStore;
-        $this->blockVisitors = $blockVisitors;
-
         if (null === $this->blockVisitors) {
             @trigger_deprecation('sulu/sulu', '2.3', 'Instantiating BlockContentType without the $blockVisitors argument is deprecated.');
 

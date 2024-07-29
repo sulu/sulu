@@ -49,14 +49,8 @@ class CsvHandler
         '\\t' => "\t",
     ];
 
-    /**
-     * @var ArraySerializerInterface
-     */
-    private $serializer;
-
-    public function __construct(ArraySerializerInterface $serializer)
+    public function __construct(private ArraySerializerInterface $serializer)
     {
-        $this->serializer = $serializer;
     }
 
     /**

@@ -19,30 +19,12 @@ use Symfony\Contracts\EventDispatcher\Event;
 class PermissionUpdateEvent extends Event
 {
     /**
-     * @var string
-     */
-    private $type;
-
-    /**
-     * @var string
-     */
-    private $identifier;
-
-    /**
-     * @var mixed[]
-     */
-    private $permissions;
-
-    /**
      * @param string $type
      * @param string $identifier
      * @param mixed[] $permissions
      */
-    public function __construct($type, $identifier, $permissions)
+    public function __construct(private $type, private $identifier, private $permissions)
     {
-        $this->type = $type;
-        $this->identifier = $identifier;
-        $this->permissions = $permissions;
     }
 
     /**

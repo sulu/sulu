@@ -20,11 +20,6 @@ use Sulu\Component\Security\Authentication\UserInterface;
 abstract class AbstractListBuilder implements ListBuilderInterface
 {
     /**
-     * @var FilterTypeRegistry
-     */
-    private $filterTypeRegistry;
-
-    /**
      * The field descriptors for the current list.
      *
      * @var FieldDescriptorInterface[]
@@ -123,9 +118,8 @@ abstract class AbstractListBuilder implements ListBuilderInterface
      */
     protected $permission;
 
-    public function __construct(FilterTypeRegistry $filterTypeRegistry)
+    public function __construct(private FilterTypeRegistry $filterTypeRegistry)
     {
-        $this->filterTypeRegistry = $filterTypeRegistry;
     }
 
     public function setSelectFields($fieldDescriptors)

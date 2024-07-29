@@ -28,31 +28,6 @@ class StructureMetadataFactory implements StructureMetadataFactoryInterface
     /**
      * @var array
      */
-    private $typePaths = [];
-
-    /**
-     * @var string
-     */
-    private $cachePath;
-
-    /**
-     * @var LoaderInterface
-     */
-    private $loader;
-
-    /**
-     * @var bool
-     */
-    private $debug;
-
-    /**
-     * @var array<string, string>
-     */
-    private $defaultTypes;
-
-    /**
-     * @var array
-     */
     private $cache = [];
 
     /**
@@ -60,19 +35,18 @@ class StructureMetadataFactory implements StructureMetadataFactoryInterface
      */
     private $inflector;
 
+    /**
+     * @param string $cachePath
+     * @param bool $debug
+     * @param array<string, string> $defaultTypes
+     */
     public function __construct(
-        LoaderInterface $loader,
-        array $typePaths,
-        array $defaultTypes,
-        $cachePath,
-        $debug = false
+        private LoaderInterface $loader,
+        private array $typePaths,
+        private array $defaultTypes,
+        private $cachePath,
+        private $debug = false
     ) {
-        $this->typePaths = $typePaths;
-        $this->cachePath = $cachePath;
-        $this->loader = $loader;
-        $this->debug = $debug;
-        $this->defaultTypes = $defaultTypes;
-
         $this->inflector = InflectorFactory::create()->build();
     }
 
