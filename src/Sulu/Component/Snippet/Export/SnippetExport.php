@@ -29,26 +29,19 @@ use Twig\Environment;
 class SnippetExport extends Export implements SnippetExportInterface
 {
     /**
-     * @var SnippetRepository
-     */
-    private $snippetManager;
-
-    /**
      * @var OutputInterface
      */
     protected $output;
 
     public function __construct(
         Environment $templating,
-        SnippetRepository $snippetManager,
+        private SnippetRepository $snippetManager,
         DocumentManagerInterface $documentManager,
         DocumentInspector $documentInspector,
         ExportManagerInterface $exportManager,
         $formatFilePaths
     ) {
         parent::__construct($templating, $documentManager, $documentInspector, $exportManager, $formatFilePaths);
-
-        $this->snippetManager = $snippetManager;
         $this->output = new NullOutput();
     }
 

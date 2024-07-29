@@ -21,14 +21,8 @@ use PHPCR\PropertyType;
  */
 class SuluNode implements \IteratorAggregate, NodeInterface
 {
-    /**
-     * @var NodeInterface
-     */
-    private $node;
-
-    public function __construct(NodeInterface $node)
+    public function __construct(private NodeInterface $node)
     {
-        $this->node = $node;
     }
 
     public function getPath()

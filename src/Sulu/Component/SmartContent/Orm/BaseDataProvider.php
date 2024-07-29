@@ -54,44 +54,17 @@ abstract class BaseDataProvider implements DataProviderInterface
     protected $configuration;
 
     /**
-     * @var ArraySerializerInterface
+     * @param null|mixed[] $permissions
      */
-    private $serializer;
-
-    /**
-     * @var ReferenceStoreInterface
-     */
-    private $referenceStore;
-
-    /**
-     * @var Security|SymfonyCoreSecurity|null
-     */
-    private $security;
-
-    /**
-     * @var ?RequestAnalyzerInterface
-     */
-    private $requestAnalyzer;
-
-    /**
-     * @var ?array
-     */
-    private $permissions;
-
     public function __construct(
         DataProviderRepositoryInterface $repository,
-        ArraySerializerInterface $serializer,
-        ?ReferenceStoreInterface $referenceStore = null,
-        Security|SymfonyCoreSecurity|null $security = null,
-        ?RequestAnalyzerInterface $requestAnalyzer = null,
-        $permissions = null
+        private ArraySerializerInterface $serializer,
+        private ?ReferenceStoreInterface $referenceStore = null,
+        private Security|SymfonyCoreSecurity|null $security = null,
+        private ?RequestAnalyzerInterface $requestAnalyzer = null,
+        private $permissions = null
     ) {
         $this->repository = $repository;
-        $this->serializer = $serializer;
-        $this->referenceStore = $referenceStore;
-        $this->security = $security;
-        $this->requestAnalyzer = $requestAnalyzer;
-        $this->permissions = $permissions;
     }
 
     public function getDefaultPropertyParameter()

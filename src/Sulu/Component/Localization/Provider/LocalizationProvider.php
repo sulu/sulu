@@ -16,16 +16,10 @@ use Sulu\Component\Localization\Localization;
 class LocalizationProvider implements LocalizationProviderInterface
 {
     /**
-     * @var string[]
-     */
-    private $locales;
-
-    /**
      * @param string[] $locales
      */
-    public function __construct(array $locales)
+    public function __construct(private array $locales)
     {
-        $this->locales = $locales;
     }
 
     public function getAllLocalizations(): array

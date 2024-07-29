@@ -112,7 +112,7 @@ interface DataProviderInterface
      * @param PropertyParameter[] $propertyParameter Contains the parameter of resolved property
      * @param mixed[] $options Options like webspace or locale
      *
-     * @return DatasourceItemInterface
+     * @return DatasourceItemInterface|null
      */
     public function resolveDatasource($datasource, array $propertyParameter, array $options);
 }

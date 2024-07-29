@@ -21,19 +21,10 @@ use Symfony\Component\HttpFoundation\Request;
 class ParameterRequestProcessor implements RequestProcessorInterface
 {
     /**
-     * @var WebspaceManagerInterface
+     * @param string $environment
      */
-    private $webspaceManager;
-
-    /**
-     * @var string
-     */
-    private $environment;
-
-    public function __construct(WebspaceManagerInterface $webspaceManager, $environment)
+    public function __construct(private WebspaceManagerInterface $webspaceManager, private $environment)
     {
-        $this->webspaceManager = $webspaceManager;
-        $this->environment = $environment;
     }
 
     public function process(Request $request, RequestAttributes $requestAttributes)

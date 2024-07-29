@@ -60,11 +60,6 @@ class QueryBuilder extends ContentQueryBuilder
     private $excluded = [];
 
     /**
-     * @var SessionManagerInterface
-     */
-    private $sessionManager;
-
-    /**
      * @var string
      */
     protected static $structureType = Structure::TYPE_PAGE;
@@ -72,12 +67,10 @@ class QueryBuilder extends ContentQueryBuilder
     public function __construct(
         StructureManagerInterface $structureManager,
         ExtensionManagerInterface $extensionManager,
-        SessionManagerInterface $sessionManager,
+        private SessionManagerInterface $sessionManager,
         $languageNamespace
     ) {
         parent::__construct($structureManager, $extensionManager, $languageNamespace);
-
-        $this->sessionManager = $sessionManager;
     }
 
     protected function buildWhere($webspaceKey, $locale)

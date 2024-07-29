@@ -25,21 +25,11 @@ class TextEditor extends SimpleContentType
     public const INVALID_REGEX = '/(<%s-[a-z]+\b[^\/>]*)(\/>|>[^<]*<\/%s-[^\/>]*>)/';
 
     /**
-     * @var MarkupParserInterface
+     * @param string $markupNamespace
      */
-    private $markupParser;
-
-    /**
-     * @var string
-     */
-    private $markupNamespace;
-
-    public function __construct(MarkupParserInterface $markupParser, $markupNamespace = 'sulu')
+    public function __construct(private MarkupParserInterface $markupParser, private $markupNamespace = 'sulu')
     {
         parent::__construct('TextEditor', '');
-
-        $this->markupParser = $markupParser;
-        $this->markupNamespace = $markupNamespace;
     }
 
     public function read(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)

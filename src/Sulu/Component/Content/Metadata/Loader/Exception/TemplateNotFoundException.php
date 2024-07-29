@@ -11,23 +11,17 @@
 
 namespace Sulu\Component\Content\Metadata\Loader\Exception;
 
-/**
- * indicates an exception in template loading.
- */
 class TemplateNotFoundException extends \Exception
 {
     /**
-     * @var string
+     * @param string $path
+     * @param string $templateKey
      */
-    private $templateKey;
-
-    /**
-     * @var string
-     */
-    private $path;
-
-    public function __construct($path, $templateKey, $originalException = null)
-    {
+    public function __construct(
+        private $path,
+        private $templateKey,
+        ?\Throwable $originalException = null
+    ) {
         parent::__construct(\sprintf('a valid template with key "%s" and file "%s" cannot be found', $templateKey, $path), null, $originalException);
 
         $this->path = $path;

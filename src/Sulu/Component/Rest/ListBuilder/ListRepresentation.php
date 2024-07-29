@@ -20,16 +20,6 @@ use JMS\Serializer\Annotation as Serializer;
 class ListRepresentation extends PaginatedRepresentation implements RepresentationInterface
 {
     /**
-     * @var string
-     */
-    private $route;
-
-    /**
-     * @var array[]
-     */
-    private $parameters;
-
-    /**
      * @param mixed $data The data which will be presented
      * @param string $rel The name of the relation inside of the _embedded field
      * @param string $route The name of the route, for generating the links
@@ -38,11 +28,8 @@ class ListRepresentation extends PaginatedRepresentation implements Representati
      * @param int|null $limit The size of one page
      * @param int $total The total number of elements
      */
-    public function __construct($data, $rel, $route, $parameters, $page, $limit, $total)
+    public function __construct($data, $rel, private $route, private $parameters, $page, $limit, $total)
     {
-        $this->route = $route;
-        $this->parameters = $parameters;
-
         parent::__construct($data, $rel, (int) $page, (int) $limit, (int) $total);
     }
 }

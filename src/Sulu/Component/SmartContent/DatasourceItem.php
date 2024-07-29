@@ -21,51 +21,45 @@ use JMS\Serializer\Annotation\VirtualProperty;
 class DatasourceItem implements DatasourceItemInterface
 {
     /**
-     * @var string
+     * @param string|int $id
+     * @param string $title
+     * @param string $path
+     * @param string|null $image
      */
-    private $id;
-
-    /**
-     * @var string
-     */
-    private $title;
-
-    /**
-     * @var string
-     */
-    private $path;
-
-    /**
-     * @var string
-     */
-    private $image;
-
-    public function __construct($id, $title, $path, $image = null)
+    public function __construct(private $id, private $title, private $path, private $image = null)
     {
-        $this->id = $id;
-        $this->title = $title;
-        $this->path = $path;
-        $this->image = $image;
     }
 
+    /**
+     * @return int|string
+     */
     #[VirtualProperty]
     public function getId()
     {
         return $this->id;
     }
 
+    /**
+     * @return string
+     */
     #[VirtualProperty]
     public function getTitle()
     {
         return $this->title;
     }
 
+    /**
+     * @return string
+     */
     #[VirtualProperty]
     public function getPath()
     {
         return $this->path;
     }
 
+    /**
+     * @return string|null
+     */
     #[VirtualProperty]
     public function getImage()
     {

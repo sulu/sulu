@@ -23,24 +23,12 @@ use Sulu\Component\Content\Metadata\StructureMetadata;
  */
 class StructureManager implements StructureManagerInterface
 {
-    private $structureFactory;
-
-    private $inspector;
-
-    private $propertyFactory;
-
-    private $typeMap;
-
     public function __construct(
-        StructureMetadataFactoryInterface $structureFactory,
-        DocumentInspector $inspector,
-        LegacyPropertyFactory $propertyFactory,
-        array $typeMap
+        private StructureMetadataFactoryInterface $structureFactory,
+        private DocumentInspector $inspector,
+        private LegacyPropertyFactory $propertyFactory,
+        private array $typeMap,
     ) {
-        $this->structureFactory = $structureFactory;
-        $this->inspector = $inspector;
-        $this->propertyFactory = $propertyFactory;
-        $this->typeMap = $typeMap;
     }
 
     public function getStructure($key, $type = Structure::TYPE_PAGE)

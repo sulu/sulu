@@ -25,21 +25,6 @@ use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
 abstract class ContentQueryBuilder implements ContentQueryBuilderInterface
 {
     /**
-     * @var StructureManagerInterface
-     */
-    protected $structureManager;
-
-    /**
-     * @var ExtensionManagerInterface
-     */
-    protected $extensionManager;
-
-    /**
-     * @var string
-     */
-    protected $languageNamespace;
-
-    /**
      * @var MultipleTranslatedProperties
      */
     private $translatedProperties;
@@ -79,15 +64,14 @@ abstract class ContentQueryBuilder implements ContentQueryBuilderInterface
 
     protected static $mixinTypes = ['sulu:page', 'sulu:home'];
 
+    /**
+     * @param string $languageNamespace
+     */
     public function __construct(
-        StructureManagerInterface $structureManager,
-        ExtensionManagerInterface $extensionManager,
-        $languageNamespace
+        protected StructureManagerInterface $structureManager,
+        protected ExtensionManagerInterface $extensionManager,
+        protected $languageNamespace
     ) {
-        $this->structureManager = $structureManager;
-        $this->extensionManager = $extensionManager;
-        $this->languageNamespace = $languageNamespace;
-
         $properties = \array_unique(\array_merge($this->defaultProperties, $this->properties));
         $this->translatedProperties = new MultipleTranslatedProperties($properties, $this->languageNamespace);
     }

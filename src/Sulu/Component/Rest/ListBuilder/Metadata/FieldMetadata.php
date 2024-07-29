@@ -17,24 +17,16 @@ namespace Sulu\Component\Rest\ListBuilder\Metadata;
 class FieldMetadata
 {
     /**
-     * @var string
-     */
-    private $name;
-
-    /**
-     * @var string
-     */
-    private $entityName;
-
-    /**
      * @var JoinMetadata[]
      */
     private array $joins = [];
 
-    public function __construct($name, $entityName)
+    /**
+     * @param string $name
+     * @param string $entityName
+     */
+    public function __construct(private $name, private $entityName)
     {
-        $this->name = $name;
-        $this->entityName = $entityName;
     }
 
     /**

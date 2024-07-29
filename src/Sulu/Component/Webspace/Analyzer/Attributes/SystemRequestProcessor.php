@@ -26,22 +26,8 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class SystemRequestProcessor implements RequestProcessorInterface
 {
-    /**
-     * @var SystemStoreInterface
-     */
-    private $systemStore;
-
-    /**
-     * @var string
-     */
-    private $context;
-
-    public function __construct(
-        SystemStoreInterface $systemStore,
-        string $context
-    ) {
-        $this->systemStore = $systemStore;
-        $this->context = $context;
+    public function __construct(private SystemStoreInterface $systemStore, private string $context)
+    {
     }
 
     public function process(Request $request, RequestAttributes $requestAttributes)

@@ -26,36 +26,12 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class FallbackLocalizationSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var PropertyEncoder
-     */
-    private $encoder;
-
-    /**
-     * @var DocumentInspector
-     */
-    private $inspector;
-
-    /**
-     * @var DocumentRegistry
-     */
-    private $documentRegistry;
-
-    /**
-     * @var LocalizationFinderInterface
-     */
-    private $localizationFinder;
-
     public function __construct(
-        PropertyEncoder $encoder,
-        DocumentInspector $inspector,
-        DocumentRegistry $documentRegistry,
-        LocalizationFinderInterface $localizationFinder
+        private PropertyEncoder $encoder,
+        private DocumentInspector $inspector,
+        private DocumentRegistry $documentRegistry,
+        private LocalizationFinderInterface $localizationFinder,
     ) {
-        $this->encoder = $encoder;
-        $this->inspector = $inspector;
-        $this->documentRegistry = $documentRegistry;
-        $this->localizationFinder = $localizationFinder;
     }
 
     public static function getSubscribedEvents()

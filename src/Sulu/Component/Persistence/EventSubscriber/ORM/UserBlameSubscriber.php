@@ -32,14 +32,8 @@ class UserBlameSubscriber
 
     public const CREATOR_FIELD = 'creator';
 
-    /**
-     * @var TokenStorageInterface
-     */
-    private $tokenStorage;
-
-    public function __construct(?TokenStorageInterface $tokenStorage = null)
+    public function __construct(private ?TokenStorageInterface $tokenStorage = null)
     {
-        $this->tokenStorage = $tokenStorage;
     }
 
     /**

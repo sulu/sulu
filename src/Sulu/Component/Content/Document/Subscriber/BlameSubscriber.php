@@ -32,14 +32,8 @@ class BlameSubscriber implements EventSubscriberInterface
 
     public const CHANGER = 'changer';
 
-    /**
-     * @var PropertyEncoder
-     */
-    private $propertyEncoder;
-
-    public function __construct(PropertyEncoder $propertyEncoder)
+    public function __construct(private PropertyEncoder $propertyEncoder)
     {
-        $this->propertyEncoder = $propertyEncoder;
     }
 
     public static function getSubscribedEvents()

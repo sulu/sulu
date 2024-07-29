@@ -45,6 +45,7 @@ class BlockProperty extends Property implements BlockPropertyInterface
             $mandatory,
             $multilingual,
             $maxOccurs,
+            $maxOccurs,
             $minOccurs,
             $params,
             $tags,

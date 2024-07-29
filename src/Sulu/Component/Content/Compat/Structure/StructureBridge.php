@@ -38,19 +38,9 @@ class StructureBridge implements StructureInterface
     protected $structure;
 
     /**
-     * @var object
-     */
-    protected $document;
-
-    /**
      * @var DocumentInspector
      */
     protected $inspector;
-
-    /**
-     * @var LegacyPropertyFactory
-     */
-    private $propertyFactory;
 
     /**
      * @var array
@@ -70,13 +60,11 @@ class StructureBridge implements StructureInterface
     public function __construct(
         StructureMetadata $structure,
         DocumentInspector $inspector,
-        LegacyPropertyFactory $propertyFactory,
-        $document = null
+        private LegacyPropertyFactory $propertyFactory,
+        protected $document = null
     ) {
         $this->structure = $structure;
         $this->inspector = $inspector;
-        $this->propertyFactory = $propertyFactory;
-        $this->document = $document;
     }
 
     public function setDocument(StructureBehavior $document)

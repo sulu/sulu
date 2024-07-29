@@ -23,28 +23,11 @@ use Sulu\Component\SmartContent\Exception\NotSupportedException;
 class ArrayAccessItem implements ResourceItemInterface, \ArrayAccess, \JsonSerializable
 {
     /**
-     * @var string
-     */
-    private $id;
-
-    /**
-     * @var array
-     */
-    private $data = [];
-
-    /**
-     * @var object
-     */
-    private $resource;
-
-    /**
      * @param object $resource
+     * @param string|int $id
      */
-    public function __construct($id, array $data, $resource)
+    public function __construct(private $id, private array $data, private $resource)
     {
-        $this->id = $id;
-        $this->data = $data;
-        $this->resource = $resource;
     }
 
     public function getResource()
@@ -52,6 +35,9 @@ class ArrayAccessItem implements ResourceItemInterface, \ArrayAccess, \JsonSeria
         return $this->resource;
     }
 
+    /**
+     * @return int|string
+     */
     #[VirtualProperty]
     public function getId()
     {

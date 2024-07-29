@@ -28,7 +28,6 @@ use Sulu\Component\Content\Compat\Property as LegacyProperty;
 use Sulu\Component\Content\Compat\Structure as LegacyStructure;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
-use Sulu\Component\Content\ContentTypeManager;
 use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Document\Behavior\ExtensionBehavior;
 use Sulu\Component\Content\Document\Behavior\LocalizedAuthorBehavior;
@@ -74,119 +73,30 @@ use Symfony\Component\Security\Core\Security as SymfonyCoreSecurity;
 class ContentMapper implements ContentMapperInterface
 {
     /**
-     * @var ContentTypeManager
-     */
-    private $contentTypeManager;
-
-    /**
-     * @var StructureManagerInterface
-     */
-    private $structureManager;
-
-    /**
-     * @var ExtensionManagerInterface
-     */
-    private $extensionManager;
-
-    /**
-     * @var SessionManagerInterface
-     */
-    private $sessionManager;
-
-    /**
-     * @var EventDispatcherInterface
-     */
-    private $eventDispatcher;
-
-    /**
-     * @var WebspaceManagerInterface
-     */
-    private $webspaceManager;
-
-    /**
      * @var Cache
      */
     private $extensionDataCache;
 
     /**
-     * @var ResourceLocatorStrategyPoolInterface
+     * @param mixed[] $permissions
      */
-    private $resourceLocatorStrategyPool;
-
-    /**
-     * @var DocumentManagerInterface
-     */
-    private $documentManager;
-
-    /**
-     * @var FormFactoryInterface
-     */
-    private $formFactory;
-
-    /**
-     * @var DocumentInspector
-     */
-    private $inspector;
-
-    /**
-     * @var PropertyEncoder
-     */
-    private $encoder;
-
-    /**
-     * @var NamespaceRegistry
-     */
-    private $namespaceRegistry;
-
-    /**
-     * @var AccessControlManagerInterface
-     */
-    private $accessControlManager;
-
-    /**
-     * @var array
-     */
-    private $permissions;
-
-    /**
-     * @var Security|SymfonyCoreSecurity|null
-     */
-    private $security;
-
     public function __construct(
-        DocumentManagerInterface $documentManager,
-        WebspaceManagerInterface $webspaceManager,
-        FormFactoryInterface $formFactory,
-        DocumentInspector $inspector,
-        PropertyEncoder $encoder,
-        StructureManagerInterface $structureManager,
-        ExtensionManagerInterface $extensionManager,
-        ContentTypeManagerInterface $contentTypeManager,
-        SessionManagerInterface $sessionManager,
-        EventDispatcherInterface $eventDispatcher,
-        ResourceLocatorStrategyPoolInterface $resourceLocatorStrategyPool,
-        NamespaceRegistry $namespaceRegistry,
-        AccessControlManagerInterface $accessControlManager,
-        $permissions,
-        Security|SymfonyCoreSecurity|null $security = null
+        private DocumentManagerInterface $documentManager,
+        private WebspaceManagerInterface $webspaceManager,
+        private FormFactoryInterface $formFactory,
+        private DocumentInspector $inspector,
+        private PropertyEncoder $encoder,
+        private StructureManagerInterface $structureManager,
+        private ExtensionManagerInterface $extensionManager,
+        private ContentTypeManagerInterface $contentTypeManager,
+        private SessionManagerInterface $sessionManager,
+        private EventDispatcherInterface $eventDispatcher,
+        private ResourceLocatorStrategyPoolInterface $resourceLocatorStrategyPool,
+        private NamespaceRegistry $namespaceRegistry,
+        private AccessControlManagerInterface $accessControlManager,
+        private $permissions,
+        private Security|SymfonyCoreSecurity|null $security = null,
     ) {
-        $this->contentTypeManager = $contentTypeManager;
-        $this->structureManager = $structureManager;
-        $this->extensionManager = $extensionManager;
-        $this->sessionManager = $sessionManager;
-        $this->webspaceManager = $webspaceManager;
-        $this->documentManager = $documentManager;
-        $this->formFactory = $formFactory;
-        $this->inspector = $inspector;
-        $this->encoder = $encoder;
-        $this->namespaceRegistry = $namespaceRegistry;
-        $this->resourceLocatorStrategyPool = $resourceLocatorStrategyPool;
-        $this->accessControlManager = $accessControlManager;
-        $this->permissions = $permissions;
-        $this->security = $security;
-
-        // deprecated
-        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**

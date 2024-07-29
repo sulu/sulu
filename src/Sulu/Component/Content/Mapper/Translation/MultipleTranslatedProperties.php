@@ -34,19 +34,16 @@ class MultipleTranslatedProperties
     /**
      * @var string
      */
-    private $languageNamespace;
-
-    /**
-     * @var string
-     */
     private $structureType = Structure::TYPE_PAGE;
 
+    /**
+     * @param string $languageNamespace
+     */
     public function __construct(
         $names,
-        $languageNamespace,
+        private $languageNamespace,
         $namespace = ''
     ) {
-        $this->languageNamespace = $languageNamespace;
         $this->properties = [];
         foreach ($names as $name) {
             $propertyName = (!empty($namespace) ? $namespace . '-' : '') . $name;

@@ -28,36 +28,15 @@ use Sulu\Component\Content\Metadata\StructureMetadata;
 class SuluNodeHelper
 {
     /**
-     * @var string
-     */
-    private $languageNamespace;
-
-    /**
-     * @var array<string, string|null>
-     */
-    private $paths;
-
-    /**
-     * @var SessionInterface
-     */
-    private $session;
-
-    /**
-     * @var StructureMetadataFactoryInterface
-     */
-    private $structureMetadataFactory;
-
-    /**
      * @param string $languageNamespace
-     * @param array $paths Path segments from configuration
+     * @param array<string, string|null> $paths Path segments from configuration
      */
     public function __construct(
-        SessionInterface $session,
-        $languageNamespace,
-        $paths,
-        StructureMetadataFactoryInterface $structureMetadataFactory
+        private SessionInterface $session,
+        private $languageNamespace,
+        private $paths,
+        private StructureMetadataFactoryInterface $structureMetadataFactory
     ) {
-        $this->languageNamespace = $languageNamespace;
         $this->paths = \array_merge(
             [
                 'base' => null,
@@ -67,8 +46,6 @@ class SuluNodeHelper
             ],
             $paths
         );
-        $this->session = $session;
-        $this->structureMetadataFactory = $structureMetadataFactory;
     }
 
     /**

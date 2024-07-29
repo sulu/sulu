@@ -41,104 +41,35 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 class PageDataProvider implements DataProviderInterface, DataProviderAliasInterface
 {
     /**
-     * @var ContentQueryBuilderInterface
-     */
-    private $contentQueryBuilder;
-
-    /**
-     * @var ContentQueryExecutorInterface
-     */
-    private $contentQueryExecutor;
-
-    /**
-     * @var DocumentManagerInterface
-     */
-    private $documentManager;
-
-    /**
      * @var ProviderConfigurationInterface
      */
     private $configuration;
 
     /**
-     * @var LazyLoadingValueHolderFactory
+     * @param bool $showDrafts
+     * @param array<string, ?int> $permissions
      */
-    private $proxyFactory;
-
-    /**
-     * @var SessionInterface
-     */
-    private $session;
-
-    /**
-     * @var ReferenceStoreInterface
-     */
-    private $referenceStore;
-
-    /**
-     * @var bool
-     */
-    private $showDrafts;
-
-    /**
-     * @var array
-     */
-    private $permissions;
-
-    /*
-     * @var bool
-     */
-    private $hasAudienceTargeting;
-
-    /**
-     * @var MetadataProviderInterface|null
-     */
-    private $formMetadataProvider;
-
-    /**
-     * @var TokenStorageInterface|null
-     */
-    private $tokenStorage;
-
-    /**
-     * @var array
-     */
-    private $enabledTwigAttributes = [];
-
     public function __construct(
-        ContentQueryBuilderInterface $contentQueryBuilder,
-        ContentQueryExecutorInterface $contentQueryExecutor,
-        DocumentManagerInterface $documentManager,
-        LazyLoadingValueHolderFactory $proxyFactory,
-        SessionInterface $session,
-        ReferenceStoreInterface $referenceStore,
-        $showDrafts,
-        $permissions,
-        bool $hasAudienceTargeting = false,
-        ?MetadataProviderInterface $formMetadataProvider = null,
-        ?TokenStorageInterface $tokenStorage = null,
-        array $enabledTwigAttributes = [
+        private ContentQueryBuilderInterface $contentQueryBuilder,
+        private ContentQueryExecutorInterface $contentQueryExecutor,
+        private DocumentManagerInterface $documentManager,
+        private LazyLoadingValueHolderFactory $proxyFactory,
+        private SessionInterface $session,
+        private ReferenceStoreInterface $referenceStore,
+        private $showDrafts,
+        private $permissions,
+        private bool $hasAudienceTargeting = false,
+        private ?MetadataProviderInterface $formMetadataProvider = null,
+        private ?TokenStorageInterface $tokenStorage = null,
+        private array $enabledTwigAttributes = [
             'path' => true,
         ]
     ) {
-        $this->contentQueryBuilder = $contentQueryBuilder;
-        $this->contentQueryExecutor = $contentQueryExecutor;
-        $this->documentManager = $documentManager;
-        $this->proxyFactory = $proxyFactory;
-        $this->session = $session;
-        $this->referenceStore = $referenceStore;
-        $this->showDrafts = $showDrafts;
-        $this->permissions = $permissions;
-        $this->hasAudienceTargeting = $hasAudienceTargeting;
-        $this->formMetadataProvider = $formMetadataProvider;
-        $this->tokenStorage = $tokenStorage;
-        $this->enabledTwigAttributes = $enabledTwigAttributes;
-
-        if (!$formMetadataProvider) {
+        if (!$this->formMetadataProvider) {
             @trigger_deprecation('sulu/sulu', '2.3', 'The usage of the "PageDataProvider" without setting the "FormMetadataProvider" is deprecated. Please inject the "FormMetadataProvider".');
         }
 
-        if ($enabledTwigAttributes['path'] ?? true) {
+        if ($this->enabledTwigAttributes['path'] ?? true) {
             @trigger_deprecation('sulu/sulu', '2.3', 'Enabling the "path" parameter is deprecated.');
         }
     }
@@ -220,7 +151,7 @@ class PageDataProvider implements DataProviderInterface, DataProviderAliasInterf
         );
 
         if (0 === \count($result)) {
-            return;
+            return null;
         }
 
         return new DatasourceItem($result[0]['id'], $result[0]['title'], $result[0]['url'] ?? null);

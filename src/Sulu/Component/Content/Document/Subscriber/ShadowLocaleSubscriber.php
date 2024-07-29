@@ -29,29 +29,11 @@ class ShadowLocaleSubscriber implements EventSubscriberInterface
 
     public const SHADOW_LOCALE_FIELD = 'shadow-base';
 
-    /**
-     * @var DocumentInspector
-     */
-    private $inspector;
-
-    /**
-     * @var DocumentRegistry
-     */
-    private $registry;
-
-    /**
-     * @var PropertyEncoder
-     */
-    private $encoder;
-
     public function __construct(
-        PropertyEncoder $encoder,
-        DocumentInspector $inspector,
-        DocumentRegistry $registry
+        private PropertyEncoder $encoder,
+        private DocumentInspector $inspector,
+        private DocumentRegistry $registry,
     ) {
-        $this->encoder = $encoder;
-        $this->inspector = $inspector;
-        $this->registry = $registry;
     }
 
     public static function getSubscribedEvents()

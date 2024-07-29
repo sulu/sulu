@@ -17,18 +17,12 @@ namespace Sulu\Component\Content\Query;
 class ListToTreeConverter
 {
     /**
-     * @var bool
-     */
-    private $moveUp;
-
-    /**
      * ListToTreeConverter constructor.
      *
      * @param bool $moveUp
      */
-    public function __construct($moveUp = false)
+    public function __construct(private $moveUp = false)
     {
-        $this->moveUp = $moveUp;
     }
 
     /**

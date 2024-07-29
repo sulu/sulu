@@ -41,7 +41,7 @@ class ContactDataItem implements ItemInterface
     #[VirtualProperty]
     public function getImage()
     {
-        return;
+        return null;
     }
 
     public function getResource()

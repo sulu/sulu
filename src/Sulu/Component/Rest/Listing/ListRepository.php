@@ -22,15 +22,9 @@ use Doctrine\Persistence\ObjectManager;
  */
 class ListRepository extends EntityRepository
 {
-    /**
-     * @var ListRestHelper
-     */
-    private $helper;
-
-    public function __construct(ObjectManager $em, ClassMetadata $class, ListRestHelper $helper)
+    public function __construct(ObjectManager $em, ClassMetadata $class, private ListRestHelper $helper)
     {
         parent::__construct($em, $class);
-        $this->helper = $helper;
     }
 
     /**

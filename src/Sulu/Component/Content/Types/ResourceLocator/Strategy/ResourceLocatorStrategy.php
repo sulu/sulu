@@ -65,11 +65,6 @@ abstract class ResourceLocatorStrategy implements ResourceLocatorStrategyInterfa
      */
     protected $documentManager;
 
-    /**
-     * @var ResourceLocatorGeneratorInterface
-     */
-    private $resourceLocatorGenerator;
-
     public function __construct(
         ResourceLocatorMapperInterface $mapper,
         PathCleanupInterface $cleaner,
@@ -78,7 +73,7 @@ abstract class ResourceLocatorStrategy implements ResourceLocatorStrategyInterfa
         SuluNodeHelper $nodeHelper,
         DocumentInspector $documentInspector,
         DocumentManagerInterface $documentManager,
-        ResourceLocatorGeneratorInterface $resourceLocatorGenerator
+        private ResourceLocatorGeneratorInterface $resourceLocatorGenerator
     ) {
         $this->mapper = $mapper;
         $this->cleaner = $cleaner;
@@ -87,7 +82,6 @@ abstract class ResourceLocatorStrategy implements ResourceLocatorStrategyInterfa
         $this->nodeHelper = $nodeHelper;
         $this->documentInspector = $documentInspector;
         $this->documentManager = $documentManager;
-        $this->resourceLocatorGenerator = $resourceLocatorGenerator;
     }
 
     public function generate($title, $parentUuid, $webspaceKey, $languageCode, $segmentKey = null/*, $uuid = null*/)

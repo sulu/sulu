@@ -36,22 +36,11 @@ use Sulu\Component\DocumentManager\NamespaceRegistry;
  */
 class LegacyPropertyFactory
 {
-    /**
-     * @var NamespaceRegistry
-     */
-    private $namespaceRegistry;
-
-    /**
-     * @var StructureMetadataFactoryInterface|null
-     */
-    private $structureFactory;
-
-    public function __construct(NamespaceRegistry $namespaceRegistry, ?StructureMetadataFactoryInterface $structureFactory = null)
-    {
-        $this->namespaceRegistry = $namespaceRegistry;
-        $this->structureFactory = $structureFactory;
-
-        if (!$structureFactory) {
+    public function __construct(
+        private NamespaceRegistry $namespaceRegistry,
+        private ?StructureMetadataFactoryInterface $structureFactory = null
+    ) {
+        if (!$this->structureFactory) {
             @trigger_deprecation(
                 'sulu/sulu',
                 '2.6',

@@ -16,7 +16,6 @@ use Sulu\Component\Rest\Exception\SearchFieldNotFoundException;
 use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
 use Sulu\Component\Rest\ListBuilder\ListBuilderInterface;
 use Sulu\Component\Rest\ListBuilder\ListRestHelper;
-use Sulu\Component\Rest\ListBuilder\ListRestHelperInterface;
 
 /**
  * Defines some common REST functionalities.
@@ -25,14 +24,8 @@ class RestHelper implements RestHelperInterface
 {
     use RelationTrait;
 
-    /**
-     * @var ListRestHelperInterface
-     */
-    private $listRestHelper;
-
-    public function __construct(ListRestHelper $listRestHelper)
+    public function __construct(private ListRestHelper $listRestHelper)
     {
-        $this->listRestHelper = $listRestHelper;
     }
 
     public function initializeListBuilder(ListBuilderInterface $listBuilder, array $fieldDescriptors)

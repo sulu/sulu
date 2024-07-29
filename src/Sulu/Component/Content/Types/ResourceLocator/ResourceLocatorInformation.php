@@ -17,31 +17,18 @@ namespace Sulu\Component\Content\Types\ResourceLocator;
 class ResourceLocatorInformation
 {
     /**
-     * @var string
+     * @param string $resourceLocator
+     * @param \DateTime|null $created
+     * @param string|int $id
      */
-    private $resourceLocator;
-
-    /**
-     * @var \DateTime
-     */
-    private $created;
-
-    /**
-     * @var string
-     */
-    private $id;
-
-    public function __construct($resourceLocator, $created, $id)
+    public function __construct(private $resourceLocator, private $created, private $id)
     {
-        $this->created = $created;
-        $this->resourceLocator = $resourceLocator;
-        $this->id = $id;
     }
 
     /**
      * returns datetime of creation.
      *
-     * @return \DateTime
+     * @return \DateTime|null
      */
     public function getCreated()
     {
@@ -59,7 +46,7 @@ class ResourceLocatorInformation
     }
 
     /**
-     * @return string
+     * @return string|int
      */
     public function getId()
     {
