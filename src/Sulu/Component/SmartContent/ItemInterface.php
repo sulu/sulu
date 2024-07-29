@@ -26,7 +26,7 @@ interface ItemInterface extends ResourceItemInterface
     /**
      * Returns URL to image.
      *
-     * @return string
+     * @return string|null
      */
     public function getImage();
 }

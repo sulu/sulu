@@ -22,10 +22,10 @@ use JMS\Serializer\Annotation\VirtualProperty;
 class DatasourceItem implements DatasourceItemInterface
 {
     /**
-     * @param string $id
+     * @param string|int $id
      * @param string $title
      * @param string $path
-     * @param string $image
+     * @param string|null $image
      */
     public function __construct(private $id, private $title, private $path, private $image = null)
     {

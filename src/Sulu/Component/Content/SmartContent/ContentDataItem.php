@@ -94,6 +94,6 @@ class ContentDataItem extends ArrayAccessItem implements ItemInterface, PublishI
 
     public function getImage()
     {
-        return;
+        return null;
     }
 }

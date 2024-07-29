@@ -49,7 +49,7 @@ class MediaDataItem implements ItemInterface
     public function getImage()
     {
         if (!\array_key_exists('sulu-50x50', $thumbnails = $this->entity->getThumbnails())) {
-            return;
+            return null;
         }
 
         return $thumbnails['sulu-50x50'];

@@ -110,7 +110,7 @@ class MediaDataProvider extends BaseDataProvider
     public function resolveDatasource($datasource, array $propertyParameter, array $options)
     {
         if (empty($datasource)) {
-            return;
+            return null;
         }
 
         if ('root' === $datasource) {
@@ -121,7 +121,7 @@ class MediaDataProvider extends BaseDataProvider
 
         $entity = $this->collectionManager->getById($datasource, $options['locale']);
 
-        return new DatasourceItem($entity->getId(), $entity->getTitle(), $entity->getTitle());
+        return new DatasourceItem($entity->getId(), (string) $entity->getTitle(), (string) $entity->getTitle());
     }
 
     public function resolveResourceItems(

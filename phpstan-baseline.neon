@@ -23951,11 +23951,6 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/SmartContent/QueryBuilderTest.php
 
 		-
-			message: "#^Class Sulu\\\\Component\\\\Content\\\\SmartContent\\\\QueryBuilder constructor invoked with 5 parameters, 4 required\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Tests/Functional/SmartContent/QueryBuilderTest.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Tests\\\\Functional\\\\SmartContent\\\\QueryBuilderTest\\:\\:categoriesProvider\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/SmartContent/QueryBuilderTest.php
@@ -24022,11 +24017,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Tests\\\\Functional\\\\SmartContent\\\\QueryBuilderTest\\:\\:tagsProvider\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Tests/Functional/SmartContent/QueryBuilderTest.php
-
-		-
-			message: "#^Parameter \\#4 \\$languageNamespace of class Sulu\\\\Component\\\\Content\\\\SmartContent\\\\QueryBuilder constructor expects string, null given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/SmartContent/QueryBuilderTest.php
 
@@ -24123,16 +24113,6 @@ parameters:
 		-
 			message: "#^Offset 'resourceLocator' does not exist on string\\.$#"
 			count: 2
-			path: src/Sulu/Bundle/PageBundle/Tests/Unit/Repository/ResourceLocatorRepositoryTest.php
-
-		-
-			message: "#^Parameter \\#2 \\$created of class Sulu\\\\Component\\\\Content\\\\Types\\\\ResourceLocator\\\\ResourceLocatorInformation constructor expects DateTime, null given\\.$#"
-			count: 3
-			path: src/Sulu/Bundle/PageBundle/Tests/Unit/Repository/ResourceLocatorRepositoryTest.php
-
-		-
-			message: "#^Parameter \\#3 \\$id of class Sulu\\\\Component\\\\Content\\\\Types\\\\ResourceLocator\\\\ResourceLocatorInformation constructor expects string, int given\\.$#"
-			count: 3
 			path: src/Sulu/Bundle/PageBundle/Tests/Unit/Repository/ResourceLocatorRepositoryTest.php
 
 		-
@@ -28717,11 +28697,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\SnippetBundle\\\\Content\\\\SnippetDataProvider\\:\\:decorateResourceItems\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SnippetBundle/Content/SnippetDataProvider.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\SnippetBundle\\\\Content\\\\SnippetDataProvider\\:\\:resolveDatasource\\(\\) should return Sulu\\\\Component\\\\SmartContent\\\\DatasourceItemInterface but returns null\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SnippetBundle/Content/SnippetDataProvider.php
 
@@ -33971,16 +33946,6 @@ parameters:
 			path: src/Sulu/Component/Category/Tests/Unit/Request/CategoryRequestHandlerTest.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\Contact\\\\SmartContent\\\\AccountDataItem\\:\\:getId\\(\\) should return string but returns int\\.$#"
-			count: 1
-			path: src/Sulu/Component/Contact/SmartContent/AccountDataItem.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Contact\\\\SmartContent\\\\AccountDataItem\\:\\:getImage\\(\\) should return string but empty return statement found\\.$#"
-			count: 1
-			path: src/Sulu/Component/Contact/SmartContent/AccountDataItem.php
-
-		-
 			message: "#^Method Sulu\\\\Component\\\\Contact\\\\SmartContent\\\\AccountDataItem\\:\\:getResource\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/Contact/SmartContent/AccountDataItem.php
@@ -33991,16 +33956,6 @@ parameters:
 			path: src/Sulu/Component/Contact/SmartContent/AccountDataProvider.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\Contact\\\\SmartContent\\\\ContactDataItem\\:\\:getId\\(\\) should return string but returns int\\.$#"
-			count: 1
-			path: src/Sulu/Component/Contact/SmartContent/ContactDataItem.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Contact\\\\SmartContent\\\\ContactDataItem\\:\\:getImage\\(\\) should return string but empty return statement found\\.$#"
-			count: 1
-			path: src/Sulu/Component/Contact/SmartContent/ContactDataItem.php
-
-		-
 			message: "#^Method Sulu\\\\Component\\\\Contact\\\\SmartContent\\\\ContactDataItem\\:\\:getResource\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/Contact/SmartContent/ContactDataItem.php
@@ -34009,11 +33964,6 @@ parameters:
 			message: "#^Method Sulu\\\\Component\\\\Contact\\\\SmartContent\\\\ContactDataProvider\\:\\:decorateDataItems\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Component/Contact/SmartContent/ContactDataProvider.php
-
-		-
-			message: "#^Call to method PHPUnit\\\\Framework\\\\Assert\\:\\:assertNull\\(\\) with Sulu\\\\Component\\\\SmartContent\\\\DatasourceItemInterface will always evaluate to false\\.$#"
-			count: 1
-			path: src/Sulu/Component/Contact/Tests/Unit/SmartContent/AccountDataProviderTest.php
 
 		-
 			message: "#^Method Sulu\\\\Component\\\\Contact\\\\Tests\\\\Unit\\\\SmartContent\\\\AccountDataProviderTest\\:\\:createAccount\\(\\) has parameter \\$id with no type specified\\.$#"
@@ -34034,16 +33984,6 @@ parameters:
 			message: "#^Method Sulu\\\\Component\\\\Contact\\\\Tests\\\\Unit\\\\SmartContent\\\\AccountDataProviderTest\\:\\:serialize\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/Contact/Tests/Unit/SmartContent/AccountDataProviderTest.php
-
-		-
-			message: "#^Parameter \\#1 \\$id of class Sulu\\\\Component\\\\SmartContent\\\\ArrayAccessItem constructor expects string, int given\\.$#"
-			count: 1
-			path: src/Sulu/Component/Contact/Tests/Unit/SmartContent/AccountDataProviderTest.php
-
-		-
-			message: "#^Call to method PHPUnit\\\\Framework\\\\Assert\\:\\:assertNull\\(\\) with Sulu\\\\Component\\\\SmartContent\\\\DatasourceItemInterface will always evaluate to false\\.$#"
-			count: 1
-			path: src/Sulu/Component/Contact/Tests/Unit/SmartContent/ContactDataProviderTest.php
 
 		-
 			message: "#^Method Sulu\\\\Component\\\\Contact\\\\Tests\\\\Unit\\\\SmartContent\\\\ContactDataProviderTest\\:\\:createContact\\(\\) has no return type specified\\.$#"
@@ -34171,11 +34111,6 @@ parameters:
 			path: src/Sulu/Component/Contact/Tests/Unit/SmartContent/ContactDataProviderTest.php
 
 		-
-			message: "#^Parameter \\#1 \\$id of class Sulu\\\\Component\\\\SmartContent\\\\ArrayAccessItem constructor expects string, int given\\.$#"
-			count: 1
-			path: src/Sulu/Component/Contact/Tests/Unit/SmartContent/ContactDataProviderTest.php
-
-		-
 			message: "#^Method Sulu\\\\Component\\\\Content\\\\BreadcrumbItem\\:\\:toArray\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/BreadcrumbItem.php
@@ -34193,11 +34128,6 @@ parameters:
 		-
 			message: "#^Call to an undefined method Sulu\\\\Component\\\\Content\\\\Compat\\\\PropertyType\\:\\:getSettings\\(\\)\\.$#"
 			count: 1
-			path: src/Sulu/Component/Content/Compat/Block/BlockProperty.php
-
-		-
-			message: "#^Call to function is_null\\(\\) with int will always evaluate to false\\.$#"
-			count: 2
 			path: src/Sulu/Component/Content/Compat/Block/BlockProperty.php
 
 		-
@@ -34237,11 +34167,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Component\\\\Content\\\\Compat\\\\Block\\\\BlockProperty\\:\\:setValue\\(\\) has parameter \\$value with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Compat/Block/BlockProperty.php
-
-		-
-			message: "#^Result of \\|\\| is always false\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Compat/Block/BlockProperty.php
 
@@ -34531,22 +34456,12 @@ parameters:
 			path: src/Sulu/Component/Content/Compat/PageInterface.php
 
 		-
-			message: "#^Call to function is_null\\(\\) with int will always evaluate to false\\.$#"
-			count: 2
-			path: src/Sulu/Component/Content/Compat/Property.php
-
-		-
 			message: "#^If condition is always true\\.$#"
 			count: 2
 			path: src/Sulu/Component/Content/Compat/Property.php
 
 		-
 			message: "#^Method Sulu\\\\Component\\\\Content\\\\Compat\\\\Property\\:\\:__clone\\(\\) with return type void returns Sulu\\\\Component\\\\Content\\\\Compat\\\\Property but should not return anything\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Compat/Property.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Compat\\\\Property\\:\\:__construct\\(\\) has parameter \\$metaData with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Compat/Property.php
 
@@ -34636,22 +34551,17 @@ parameters:
 			path: src/Sulu/Component/Content/Compat/Property.php
 
 		-
-			message: "#^Parameter \\#1 \\$metadata of class Sulu\\\\Component\\\\Content\\\\Compat\\\\Metadata constructor expects array, array\\|string given\\.$#"
+			message: "#^Parameter \\#1 \\$metadata of class Sulu\\\\Component\\\\Content\\\\Compat\\\\Metadata constructor expects array, array\\<string, mixed\\>\\|string given\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Compat/Property.php
 
 		-
-			message: "#^Parameter \\#2 \\$metaData of class Sulu\\\\Component\\\\Content\\\\Compat\\\\Property constructor expects array\\|string, Sulu\\\\Component\\\\Content\\\\Compat\\\\Metadata given\\.$#"
+			message: "#^Parameter \\#2 \\$metaData of class Sulu\\\\Component\\\\Content\\\\Compat\\\\Property constructor expects array\\<string, mixed\\>\\|string, Sulu\\\\Component\\\\Content\\\\Compat\\\\Metadata given\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Compat/Property.php
 
 		-
 			message: "#^Property Sulu\\\\Component\\\\Content\\\\Compat\\\\Property\\:\\:\\$value is never read, only written\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Compat/Property.php
-
-		-
-			message: "#^Result of && is always false\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Compat/Property.php
 
@@ -35088,36 +34998,6 @@ parameters:
 		-
 			message: "#^Parameter \\#1 \\$structure of method Sulu\\\\Component\\\\Content\\\\Compat\\\\Property\\:\\:setStructure\\(\\) expects Sulu\\\\Component\\\\Content\\\\Compat\\\\StructureInterface, Sulu\\\\Component\\\\Content\\\\Compat\\\\StructureInterface\\|null given\\.$#"
 			count: 2
-			path: src/Sulu/Component/Content/Compat/Structure/LegacyPropertyFactory.php
-
-		-
-			message: "#^Parameter \\#10 \\$colSpan of class Sulu\\\\Component\\\\Content\\\\Compat\\\\Property constructor expects string\\|null, int given\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Compat/Structure/LegacyPropertyFactory.php
-
-		-
-			message: "#^Parameter \\#3 \\$col of class Sulu\\\\Component\\\\Content\\\\Compat\\\\Section\\\\SectionProperty constructor expects string, int given\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Compat/Structure/LegacyPropertyFactory.php
-
-		-
-			message: "#^Parameter \\#6 \\$maxOccurs of class Sulu\\\\Component\\\\Content\\\\Compat\\\\Block\\\\BlockProperty constructor expects int, int\\|null given\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Compat/Structure/LegacyPropertyFactory.php
-
-		-
-			message: "#^Parameter \\#6 \\$maxOccurs of class Sulu\\\\Component\\\\Content\\\\Compat\\\\Property constructor expects int, int\\|null given\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Compat/Structure/LegacyPropertyFactory.php
-
-		-
-			message: "#^Parameter \\#7 \\$minOccurs of class Sulu\\\\Component\\\\Content\\\\Compat\\\\Block\\\\BlockProperty constructor expects int, int\\|null given\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Compat/Structure/LegacyPropertyFactory.php
-
-		-
-			message: "#^Parameter \\#7 \\$minOccurs of class Sulu\\\\Component\\\\Content\\\\Compat\\\\Property constructor expects int, int\\|null given\\.$#"
-			count: 1
 			path: src/Sulu/Component/Content/Compat/Structure/LegacyPropertyFactory.php
 
 		-
@@ -39801,11 +39681,6 @@ parameters:
 			path: src/Sulu/Component/Content/SmartContent/ContentDataItem.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\SmartContent\\\\ContentDataItem\\:\\:getImage\\(\\) should return string but empty return statement found\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/SmartContent/ContentDataItem.php
-
-		-
 			message: "#^Method Sulu\\\\Component\\\\Content\\\\SmartContent\\\\ContentDataItem\\:\\:getUrl\\(\\) should return string but returns null\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/SmartContent/ContentDataItem.php
@@ -39842,11 +39717,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Component\\\\Content\\\\SmartContent\\\\PageDataProvider\\:\\:loadPaginated\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/SmartContent/PageDataProvider.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\SmartContent\\\\PageDataProvider\\:\\:resolveDatasource\\(\\) should return Sulu\\\\Component\\\\SmartContent\\\\DatasourceItemInterface but empty return statement found\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/SmartContent/PageDataProvider.php
 
@@ -39913,11 +39783,6 @@ parameters:
 		-
 			message: "#^Parameter \\#2 \\$locales of method Sulu\\\\Component\\\\Content\\\\Query\\\\ContentQueryExecutorInterface\\:\\:execute\\(\\) expects array\\<string\\>, array\\<int, mixed\\> given\\.$#"
 			count: 1
-			path: src/Sulu/Component/Content/SmartContent/PageDataProvider.php
-
-		-
-			message: "#^Parameter \\#9 \\$permission of method Sulu\\\\Component\\\\Content\\\\Query\\\\ContentQueryExecutorInterface\\:\\:execute\\(\\) expects int\\|null, mixed given\\.$#"
-			count: 2
 			path: src/Sulu/Component/Content/SmartContent/PageDataProvider.php
 
 		-
@@ -40701,11 +40566,6 @@ parameters:
 			path: src/Sulu/Component/Content/Tests/Unit/Rlp/Strategy/TreeLeafEditStrategyTest.php
 
 		-
-			message: "#^Call to method PHPUnit\\\\Framework\\\\Assert\\:\\:assertNull\\(\\) with Sulu\\\\Component\\\\SmartContent\\\\DatasourceItemInterface will always evaluate to false\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Tests/Unit/SmartContent/Orm/BaseDataProviderTest.php
-
-		-
 			message: "#^Cannot access offset 'id' on Sulu\\\\Component\\\\SmartContent\\\\ResourceItemInterface\\.$#"
 			count: 2
 			path: src/Sulu/Component/Content/Tests/Unit/SmartContent/Orm/BaseDataProviderTest.php
@@ -40919,11 +40779,6 @@ parameters:
 			message: "#^Method Sulu\\\\Component\\\\Content\\\\Tests\\\\Unit\\\\SmartContent\\\\Orm\\\\BaseDataProviderTest\\:\\:testResolveResourceItemsWithReferenceStore\\(\\) has parameter \\$repositoryResult with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Tests/Unit/SmartContent/Orm/BaseDataProviderTest.php
-
-		-
-			message: "#^Call to method PHPUnit\\\\Framework\\\\Assert\\:\\:assertNull\\(\\) with string will always evaluate to false\\.$#"
-			count: 2
-			path: src/Sulu/Component/Content/Tests/Unit/SmartContent/PageDataProviderTest.php
 
 		-
 			message: "#^Method Sulu\\\\Component\\\\Content\\\\Tests\\\\Unit\\\\SmartContent\\\\PageDataProviderTest\\:\\:getContentQueryBuilder\\(\\) has parameter \\$initValue with no value type specified in iterable type array\\.$#"
@@ -41221,7 +41076,7 @@ parameters:
 			path: src/Sulu/Component/Content/Types/ResourceLocator/Mapper/PhpcrMapper.php
 
 		-
-			message: "#^Parameter \\#2 \\$created of class Sulu\\\\Component\\\\Content\\\\Types\\\\ResourceLocator\\\\ResourceLocatorInformation constructor expects DateTime, mixed given\\.$#"
+			message: "#^Parameter \\#2 \\$created of class Sulu\\\\Component\\\\Content\\\\Types\\\\ResourceLocator\\\\ResourceLocatorInformation constructor expects DateTime\\|null, mixed given\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Types/ResourceLocator/Mapper/PhpcrMapper.php
 
@@ -44816,16 +44671,6 @@ parameters:
 			path: src/Sulu/Component/Localization/Tests/Unit/Manager/LocalizationManagerTest.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\Media\\\\SmartContent\\\\MediaDataItem\\:\\:getId\\(\\) should return string but returns int\\.$#"
-			count: 1
-			path: src/Sulu/Component/Media/SmartContent/MediaDataItem.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Media\\\\SmartContent\\\\MediaDataItem\\:\\:getImage\\(\\) should return string but empty return statement found\\.$#"
-			count: 1
-			path: src/Sulu/Component/Media/SmartContent/MediaDataItem.php
-
-		-
 			message: "#^Method Sulu\\\\Component\\\\Media\\\\SmartContent\\\\MediaDataItem\\:\\:getResource\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/Media/SmartContent/MediaDataItem.php
@@ -44861,17 +44706,7 @@ parameters:
 			path: src/Sulu/Component/Media/SmartContent/MediaDataProvider.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\Media\\\\SmartContent\\\\MediaDataProvider\\:\\:resolveDatasource\\(\\) should return Sulu\\\\Component\\\\SmartContent\\\\DatasourceItemInterface but empty return statement found\\.$#"
-			count: 1
-			path: src/Sulu/Component/Media/SmartContent/MediaDataProvider.php
-
-		-
 			message: "#^Negated boolean expression is always false\\.$#"
-			count: 1
-			path: src/Sulu/Component/Media/SmartContent/MediaDataProvider.php
-
-		-
-			message: "#^Parameter \\#1 \\$id of class Sulu\\\\Component\\\\SmartContent\\\\DatasourceItem constructor expects string, int given\\.$#"
 			count: 1
 			path: src/Sulu/Component/Media/SmartContent/MediaDataProvider.php
 
@@ -44882,16 +44717,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#2 \\$locale of method Sulu\\\\Bundle\\\\MediaBundle\\\\Collection\\\\Manager\\\\CollectionManagerInterface\\:\\:getById\\(\\) expects string, mixed given\\.$#"
-			count: 1
-			path: src/Sulu/Component/Media/SmartContent/MediaDataProvider.php
-
-		-
-			message: "#^Parameter \\#2 \\$title of class Sulu\\\\Component\\\\SmartContent\\\\DatasourceItem constructor expects string, string\\|null given\\.$#"
-			count: 1
-			path: src/Sulu/Component/Media/SmartContent/MediaDataProvider.php
-
-		-
-			message: "#^Parameter \\#3 \\$path of class Sulu\\\\Component\\\\SmartContent\\\\DatasourceItem constructor expects string, string\\|null given\\.$#"
 			count: 1
 			path: src/Sulu/Component/Media/SmartContent/MediaDataProvider.php
 
@@ -45162,11 +44987,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$filters of method Sulu\\\\Component\\\\Media\\\\SmartContent\\\\MediaDataProvider\\:\\:resolveDataItems\\(\\) expects array\\{dataSource\\?\\: int\\|string\\|null, sortMethod\\?\\: 'asc'\\|'desc', sortBy\\?\\: string, tags\\?\\: array\\<string\\>, tagOperator\\?\\: 'and'\\|'or', types\\?\\: array\\<string\\>, categories\\?\\: array\\<int\\>, categoryOperator\\?\\: 'and'\\|'or', \\.\\.\\.\\}, array\\{dataSource\\: 42, tags\\: array\\{1\\}\\} given\\.$#"
-			count: 1
-			path: src/Sulu/Component/Media/Tests/Unit/SmartContent/MediaDataProviderTest.php
-
-		-
-			message: "#^Parameter \\#1 \\$id of class Sulu\\\\Component\\\\SmartContent\\\\ArrayAccessItem constructor expects string, int given\\.$#"
 			count: 1
 			path: src/Sulu/Component/Media/Tests/Unit/SmartContent/MediaDataProviderTest.php
 
@@ -48901,11 +48721,6 @@ parameters:
 			path: src/Sulu/Component/SmartContent/Orm/BaseDataProvider.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\SmartContent\\\\Orm\\\\BaseDataProvider\\:\\:resolveDatasource\\(\\) should return Sulu\\\\Component\\\\SmartContent\\\\DatasourceItemInterface but empty return statement found\\.$#"
-			count: 1
-			path: src/Sulu/Component/SmartContent/Orm/BaseDataProvider.php
-
-		-
 			message: "#^Method Sulu\\\\Component\\\\SmartContent\\\\Orm\\\\BaseDataProvider\\:\\:resolveFilters\\(\\) has parameter \\$filters with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Component/SmartContent/Orm/BaseDataProvider.php
@@ -48917,11 +48732,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Component\\\\SmartContent\\\\Orm\\\\DataProviderRepositoryInterface\\:\\:findByFilters\\(\\) invoked with 8 parameters, 5\\-6 required\\.$#"
-			count: 1
-			path: src/Sulu/Component/SmartContent/Orm/BaseDataProvider.php
-
-		-
-			message: "#^Parameter \\#1 \\$id of class Sulu\\\\Component\\\\SmartContent\\\\ArrayAccessItem constructor expects string, int given\\.$#"
 			count: 1
 			path: src/Sulu/Component/SmartContent/Orm/BaseDataProvider.php
 
@@ -49549,26 +49359,6 @@ parameters:
 			message: "#^Method Sulu\\\\Component\\\\Util\\\\Tests\\\\Unit\\\\ArrayUtilsTest\\:\\:testFilter\\(\\) has parameter \\$expression with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/Util/Tests/Unit/ArrayUtilsTest.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Util\\\\Tests\\\\Unit\\\\FoobarTestClass\\:\\:__construct\\(\\) has parameter \\$field1 with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Util/Tests/Unit/SortUtilsTest.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Util\\\\Tests\\\\Unit\\\\FoobarTestClass\\:\\:__construct\\(\\) has parameter \\$field2 with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Util/Tests/Unit/SortUtilsTest.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Util\\\\Tests\\\\Unit\\\\FoobarTestClass\\:\\:getField1\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Util/Tests/Unit/SortUtilsTest.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Util\\\\Tests\\\\Unit\\\\FoobarTestClass\\:\\:getField2\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Util/Tests/Unit/SortUtilsTest.php
 
 		-
 			message: "#^Method Sulu\\\\Component\\\\Util\\\\Tests\\\\Unit\\\\SortUtilsTest\\:\\:provideSortObjects\\(\\) has no return type specified\\.$#"

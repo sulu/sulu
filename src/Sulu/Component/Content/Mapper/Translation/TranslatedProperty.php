@@ -218,7 +218,7 @@ class TranslatedProperty implements PropertyInterface
     /**
      * returns column span.
      *
-     * @return string
+     * @return int
      */
     public function getColSpan()
     {
