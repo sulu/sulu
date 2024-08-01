@@ -96,7 +96,8 @@
             visibility="always"
             searchability="never"
             sortable="false"
-            type="html"
-        />
+        >
+            <transformer type="html"/>
+        </property>
     </properties>
 </list>
