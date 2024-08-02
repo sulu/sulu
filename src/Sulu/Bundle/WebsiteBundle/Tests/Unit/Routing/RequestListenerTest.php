@@ -43,7 +43,7 @@ class RequestListenerTest extends TestCase
     private $portalInformation;
 
     /**
-     * @var ObjectProphecy<RequestContext>
+     * @var RequestContext
      */
     private $requestContext;
 
@@ -58,7 +58,8 @@ class RequestListenerTest extends TestCase
         $this->requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
         $this->router = $this->prophesize(RouterInterface::class);
         $this->portalInformation = $this->prophesize(PortalInformation::class);
-        $this->requestContext = $this->prophesize(RequestContext::class);
+        $this->requestContext = new RequestContext();
+        $this->router->getContext()->willReturn($this->requestContext);
     }
 
     public function testRequestAnalyzer(): void
@@ -67,28 +68,36 @@ class RequestListenerTest extends TestCase
         $this->portalInformation->getHost()->willReturn('sulu.io');
         $this->requestAnalyzer->getPortalInformation()->willReturn($this->portalInformation);
 
-        $this->requestContext->hasParameter('prefix')->willReturn(false);
-        $this->requestContext->hasParameter('host')->willReturn(false);
-
-        $this->requestContext->setParameter('prefix', 'test/')->shouldBeCalled()
-            ->willReturn($this->requestContext->reveal());
-        $this->requestContext->setParameter('host', 'sulu.io')->shouldBeCalled()
-            ->willReturn($this->requestContext->reveal());
-
-        $this->router->getContext()->willReturn($this->requestContext);
-
         $event = $this->createRequestEvent(new Request());
 
         $requestListener = new RequestListener($this->router->reveal(), $this->requestAnalyzer->reveal());
         $requestListener->onRequest($event);
+
+        $this->assertSame('test/', $this->requestContext->getParameter('prefix'));
+        $this->assertSame('sulu.io', $this->requestContext->getParameter('host'));
     }
 
-    private function createRequestEvent(Request $request): RequestEvent
+    public function testRequestAnalyzerSubRequest(): void
+    {
+        $this->portalInformation->getPrefix()->willReturn('test/');
+        $this->portalInformation->getHost()->willReturn('sulu.io');
+        $this->requestAnalyzer->getPortalInformation()->willReturn($this->portalInformation);
+
+        $event = $this->createRequestEvent(new Request(), HttpKernelInterface::SUB_REQUEST);
+
+        $requestListener = new RequestListener($this->router->reveal(), $this->requestAnalyzer->reveal());
+        $requestListener->onRequest($event);
+
+        $this->assertFalse($this->requestContext->hasParameter('prefix'));
+        $this->assertFalse($this->requestContext->hasParameter('host'));
+    }
+
+    private function createRequestEvent(Request $request, int $requestType = HttpKernelInterface::MAIN_REQUEST): RequestEvent
     {
         return new RequestEvent(
             $this->kernel->reveal(),
             $request,
-            HttpKernelInterface::MAIN_REQUEST
+            $requestType,
         );
     }
 }

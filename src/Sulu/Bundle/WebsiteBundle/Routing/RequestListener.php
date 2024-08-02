@@ -15,12 +15,19 @@ use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
-use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Routing\RequestContextAwareInterface;
 
+/**
+ * Create your own RequestListener with lower priority if you need to change the behaviour of this one.
+ *
+ * @internal
+ *
+ * @final
+ */
 class RequestListener implements EventSubscriberInterface
 {
     /**
-     * @var RouterInterface
+     * @var RequestContextAwareInterface
      */
     private $router;
 
@@ -29,7 +36,7 @@ class RequestListener implements EventSubscriberInterface
      */
     private $requestAnalyzer;
 
-    public function __construct(RouterInterface $router, RequestAnalyzerInterface $requestAnalyzer)
+    public function __construct(RequestContextAwareInterface $router, RequestAnalyzerInterface $requestAnalyzer)
     {
         $this->router = $router;
         $this->requestAnalyzer = $requestAnalyzer;
@@ -37,13 +44,19 @@ class RequestListener implements EventSubscriberInterface
 
     public static function getSubscribedEvents(): array
     {
-        return [KernelEvents::REQUEST => ['onRequest', 31]];
+        return [KernelEvents::REQUEST => ['onRequest', 31]]; // directly after the RouterListener where the portal information is set
     }
 
-    public function onRequest(RequestEvent $event)
+    public function onRequest(RequestEvent $event): void
     {
         $context = $this->router->getContext();
         $portalInformation = $this->requestAnalyzer->getPortalInformation();
+
+        if (!$event->isMainRequest()) {
+            // sub requests like /_fos_user_context_hash ends in false prefix and should not set anything here
+            // else it can happen that the main request get the false prefix and generate urls incorrect.
+            return;
+        }
 
         if ($portalInformation) {
             if (!$context->hasParameter('prefix')) {
