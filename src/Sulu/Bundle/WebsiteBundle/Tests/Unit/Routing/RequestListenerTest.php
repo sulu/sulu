@@ -83,7 +83,7 @@ class RequestListenerTest extends TestCase
         $this->portalInformation->getHost()->willReturn('sulu.io');
         $this->requestAnalyzer->getPortalInformation()->willReturn($this->portalInformation);
 
-        $event = $this->createRequestEvent(new Request(), HttpKernelInterface::SUB_REQUEST);
+        $event = $this->createRequestEvent(Request::create('/_fos_user_context_hash'), HttpKernelInterface::SUB_REQUEST);
 
         $requestListener = new RequestListener($this->router->reveal(), $this->requestAnalyzer->reveal());
         $requestListener->onRequest($event);
