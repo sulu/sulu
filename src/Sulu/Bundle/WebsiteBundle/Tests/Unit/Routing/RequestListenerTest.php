@@ -83,7 +83,42 @@ class RequestListenerTest extends TestCase
         $this->portalInformation->getHost()->willReturn('sulu.io');
         $this->requestAnalyzer->getPortalInformation()->willReturn($this->portalInformation);
 
-        $event = $this->createRequestEvent(Request::create('/_fos_user_context_hash'), HttpKernelInterface::SUB_REQUEST);
+        $event = $this->createRequestEvent(Request::create('/_fragment'), HttpKernelInterface::SUB_REQUEST);
+
+        $requestListener = new RequestListener($this->router->reveal(), $this->requestAnalyzer->reveal());
+        $requestListener->onRequest($event);
+
+        $this->assertFalse($this->requestContext->hasParameter('prefix'));
+        $this->assertFalse($this->requestContext->hasParameter('host'));
+    }
+
+    public function testRequestAnalyzerInternalRequest(): void
+    {
+        $this->portalInformation->getPrefix()->willReturn('test/');
+        $this->portalInformation->getHost()->willReturn('sulu.io');
+        $this->requestAnalyzer->getPortalInformation()->willReturn($this->portalInformation);
+
+        // Context Hash is a Main Request https://github.com/FriendsOfSymfony/FOSHttpCache/blob/a582deb3f55f8a7efdae8ac916ef4adc285543a0/src/SymfonyCache/UserContextListener.php#L170
+        // To avoid side effects to other requests we should not set the prefix and host in that case
+        // Same is for /_sulu_target_group
+        $request = Request::create('/_fos_user_context_hash');
+        $request->attributes->set('internalRequest', true);
+        $event = $this->createRequestEvent($request);
+
+        $requestListener = new RequestListener($this->router->reveal(), $this->requestAnalyzer->reveal());
+        $requestListener->onRequest($event);
+
+        $this->assertFalse($this->requestContext->hasParameter('prefix'));
+        $this->assertFalse($this->requestContext->hasParameter('host'));
+    }
+
+    public function testRequestUserContextListener(): void
+    {
+        $this->portalInformation->getPrefix()->willReturn('test/');
+        $this->portalInformation->getHost()->willReturn('sulu.io');
+        $this->requestAnalyzer->getPortalInformation()->willReturn($this->portalInformation);
+
+        $event = $this->createRequestEvent(Request::create('/_fragment'), HttpKernelInterface::MAIN_REQUEST); // see https://github.com/FriendsOfSymfony/FOSHttpCache/blob/a582deb3f55f8a7efdae8ac916ef4adc285543a0/src/SymfonyCache/UserContextListener.php#L170 which is a main request
 
         $requestListener = new RequestListener($this->router->reveal(), $this->requestAnalyzer->reveal());
         $requestListener->onRequest($event);
