@@ -83,13 +83,15 @@ class RequestListenerTest extends TestCase
         $this->portalInformation->getHost()->willReturn('sulu.io');
         $this->requestAnalyzer->getPortalInformation()->willReturn($this->portalInformation);
 
-        $event = $this->createRequestEvent(Request::create('/_fragment'), HttpKernelInterface::SUB_REQUEST);
+        // if a route was not found the request listener is called as sub request
+        // to render to 404 page correctly we still need to set the prefix and host
+        $event = $this->createRequestEvent(Request::create('/error-404'), HttpKernelInterface::SUB_REQUEST);
 
         $requestListener = new RequestListener($this->router->reveal(), $this->requestAnalyzer->reveal());
         $requestListener->onRequest($event);
 
-        $this->assertFalse($this->requestContext->hasParameter('prefix'));
-        $this->assertFalse($this->requestContext->hasParameter('host'));
+        $this->assertSame('test/', $this->requestContext->getParameter('prefix'));
+        $this->assertSame('sulu.io', $this->requestContext->getParameter('host'));
     }
 
     public function testRequestAnalyzerInternalRequest(): void
