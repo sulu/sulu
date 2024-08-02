@@ -21,6 +21,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Routing\RequestContext;
+use Symfony\Component\Routing\RequestContextAwareInterface;
 use Symfony\Component\Routing\RouterInterface;
 
 class RequestListenerTest extends TestCase
@@ -33,7 +34,7 @@ class RequestListenerTest extends TestCase
     private $requestAnalyzer;
 
     /**
-     * @var ObjectProphecy<RouterInterface>
+     * @var ObjectProphecy<RequestContextAwareInterface>
      */
     private $router;
 
@@ -56,7 +57,7 @@ class RequestListenerTest extends TestCase
     {
         $this->kernel = $this->prophesize(HttpKernelInterface::class);
         $this->requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
-        $this->router = $this->prophesize(RouterInterface::class);
+        $this->router = $this->prophesize(RequestContextAwareInterface::class);
         $this->portalInformation = $this->prophesize(PortalInformation::class);
         $this->requestContext = new RequestContext();
         $this->router->getContext()->willReturn($this->requestContext);
