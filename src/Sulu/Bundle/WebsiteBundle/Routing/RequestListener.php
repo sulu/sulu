@@ -52,7 +52,6 @@ class RequestListener implements EventSubscriberInterface
         $context = $this->router->getContext();
         $portalInformation = $this->requestAnalyzer->getPortalInformation();
 
-
         if (!$event->isMainRequest()) {
             // sub requests like /_fos_user_context_hash ends in false prefix and should not set anything here
             // else it can happen that the main request get the false prefix and generate urls incorrect.

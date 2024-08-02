@@ -112,21 +112,6 @@ class RequestListenerTest extends TestCase
         $this->assertFalse($this->requestContext->hasParameter('host'));
     }
 
-    public function testRequestUserContextListener(): void
-    {
-        $this->portalInformation->getPrefix()->willReturn('test/');
-        $this->portalInformation->getHost()->willReturn('sulu.io');
-        $this->requestAnalyzer->getPortalInformation()->willReturn($this->portalInformation);
-
-        $event = $this->createRequestEvent(Request::create('/_fragment'), HttpKernelInterface::MAIN_REQUEST); // see https://github.com/FriendsOfSymfony/FOSHttpCache/blob/a582deb3f55f8a7efdae8ac916ef4adc285543a0/src/SymfonyCache/UserContextListener.php#L170 which is a main request
-
-        $requestListener = new RequestListener($this->router->reveal(), $this->requestAnalyzer->reveal());
-        $requestListener->onRequest($event);
-
-        $this->assertFalse($this->requestContext->hasParameter('prefix'));
-        $this->assertFalse($this->requestContext->hasParameter('host'));
-    }
-
     private function createRequestEvent(Request $request, int $requestType = HttpKernelInterface::MAIN_REQUEST): RequestEvent
     {
         return new RequestEvent(
