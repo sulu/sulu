@@ -15371,11 +15371,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Media/Storage/LocalStorage.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Media\\\\Storage\\\\LocalStorage\\:\\:load\\(\\) should return resource but returns resource\\|false\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Media/Storage/LocalStorage.php
-
-		-
 			message: "#^Parameter \\#2 \\$fileName of method Sulu\\\\Bundle\\\\MediaBundle\\\\Media\\\\Storage\\\\LocalStorage\\:\\:getUniqueFileName\\(\\) expects string, string\\|null given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Media/Storage/LocalStorage.php
