@@ -32196,11 +32196,6 @@ parameters:
 			path: src/Sulu/Bundle/WebsiteBundle/Routing/RequestListener.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\WebsiteBundle\\\\Routing\\\\RequestListener\\:\\:onRequest\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Routing/RequestListener.php
-
-		-
 			message: "#^Property Sulu\\\\Bundle\\\\WebsiteBundle\\\\Sitemap\\\\Sitemap\\:\\:\\$lastmod \\(DateTime\\) does not accept DateTime\\|null\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/WebsiteBundle/Sitemap/Sitemap.php
