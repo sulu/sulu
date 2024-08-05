@@ -99,6 +99,10 @@ abstract class SuluKernel extends Kernel
             $this->load($loader, $confDir, '/{packages}/sulu_admin');
             $this->load($loader, $confDir, '/{packages}/' . $this->environment . '/sulu_admin');
         }
+        if (isset($bundles['SuluWebsiteBundle'])) {
+            $this->load($loader, $confDir, '/{packages}/sulu_website');
+            $this->load($loader, $confDir, '/{packages}/' . $this->environment . '/sulu_website');
+        }
 
         $this->load($loader, $confDir, '/{packages}/*');
         $this->load($loader, $confDir, '/{packages}/' . $this->environment . '/*');
