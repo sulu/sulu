@@ -21,7 +21,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Routing\RequestContext;
-use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Routing\RequestContextAwareInterface;
 
 class RequestListenerTest extends TestCase
 {
@@ -33,7 +33,7 @@ class RequestListenerTest extends TestCase
     private $requestAnalyzer;
 
     /**
-     * @var ObjectProphecy<RouterInterface>
+     * @var ObjectProphecy<RequestContextAwareInterface>
      */
     private $router;
 
@@ -43,7 +43,7 @@ class RequestListenerTest extends TestCase
     private $portalInformation;
 
     /**
-     * @var ObjectProphecy<RequestContext>
+     * @var RequestContext
      */
     private $requestContext;
 
@@ -56,9 +56,10 @@ class RequestListenerTest extends TestCase
     {
         $this->kernel = $this->prophesize(HttpKernelInterface::class);
         $this->requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
-        $this->router = $this->prophesize(RouterInterface::class);
+        $this->router = $this->prophesize(RequestContextAwareInterface::class);
         $this->portalInformation = $this->prophesize(PortalInformation::class);
-        $this->requestContext = $this->prophesize(RequestContext::class);
+        $this->requestContext = new RequestContext();
+        $this->router->getContext()->willReturn($this->requestContext);
     }
 
     public function testRequestAnalyzer(): void
@@ -67,28 +68,58 @@ class RequestListenerTest extends TestCase
         $this->portalInformation->getHost()->willReturn('sulu.io');
         $this->requestAnalyzer->getPortalInformation()->willReturn($this->portalInformation);
 
-        $this->requestContext->hasParameter('prefix')->willReturn(false);
-        $this->requestContext->hasParameter('host')->willReturn(false);
-
-        $this->requestContext->setParameter('prefix', 'test/')->shouldBeCalled()
-            ->willReturn($this->requestContext->reveal());
-        $this->requestContext->setParameter('host', 'sulu.io')->shouldBeCalled()
-            ->willReturn($this->requestContext->reveal());
-
-        $this->router->getContext()->willReturn($this->requestContext);
-
         $event = $this->createRequestEvent(new Request());
 
         $requestListener = new RequestListener($this->router->reveal(), $this->requestAnalyzer->reveal());
         $requestListener->onRequest($event);
+
+        $this->assertSame('test/', $this->requestContext->getParameter('prefix'));
+        $this->assertSame('sulu.io', $this->requestContext->getParameter('host'));
     }
 
-    private function createRequestEvent(Request $request): RequestEvent
+    public function testRequestAnalyzerSubRequest(): void
+    {
+        $this->portalInformation->getPrefix()->willReturn('test/');
+        $this->portalInformation->getHost()->willReturn('sulu.io');
+        $this->requestAnalyzer->getPortalInformation()->willReturn($this->portalInformation);
+
+        // if a route was not found the request listener is called as sub request
+        // to render to 404 page correctly we still need to set the prefix and host
+        $event = $this->createRequestEvent(Request::create('/error-404'), HttpKernelInterface::SUB_REQUEST);
+
+        $requestListener = new RequestListener($this->router->reveal(), $this->requestAnalyzer->reveal());
+        $requestListener->onRequest($event);
+
+        $this->assertSame('test/', $this->requestContext->getParameter('prefix'));
+        $this->assertSame('sulu.io', $this->requestContext->getParameter('host'));
+    }
+
+    public function testRequestAnalyzerInternalRequest(): void
+    {
+        $this->portalInformation->getPrefix()->willReturn('test/');
+        $this->portalInformation->getHost()->willReturn('sulu.io');
+        $this->requestAnalyzer->getPortalInformation()->willReturn($this->portalInformation);
+
+        // Context Hash is a Main Request https://github.com/FriendsOfSymfony/FOSHttpCache/blob/a582deb3f55f8a7efdae8ac916ef4adc285543a0/src/SymfonyCache/UserContextListener.php#L170
+        // To avoid side effects to other requests we should not set the prefix and host in that case
+        // Same is for /_sulu_target_group
+        $request = Request::create('/_fos_user_context_hash');
+        $request->attributes->set('internalRequest', true);
+        $event = $this->createRequestEvent($request);
+
+        $requestListener = new RequestListener($this->router->reveal(), $this->requestAnalyzer->reveal());
+        $requestListener->onRequest($event);
+
+        $this->assertFalse($this->requestContext->hasParameter('prefix'));
+        $this->assertFalse($this->requestContext->hasParameter('host'));
+    }
+
+    private function createRequestEvent(Request $request, int $requestType = HttpKernelInterface::MAIN_REQUEST): RequestEvent
     {
         return new RequestEvent(
             $this->kernel->reveal(),
             $request,
-            HttpKernelInterface::MAIN_REQUEST
+            $requestType,
         );
     }
 }
