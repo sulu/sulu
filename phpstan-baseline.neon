@@ -751,16 +751,6 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/FieldType/FieldTypeOptionRegistry.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\FieldType\\\\FieldTypeOptionRegistry\\:\\:toArray\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/FieldType/FieldTypeOptionRegistry.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\AdminBundle\\\\FieldType\\\\FieldTypeOptionRegistry\\:\\:\\$options type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/FieldType/FieldTypeOptionRegistry.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\FieldType\\\\FieldTypeOptionRegistryInterface\\:\\:add\\(\\) has parameter \\$fieldTypeOptions with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AdminBundle/FieldType/FieldTypeOptionRegistryInterface.php
