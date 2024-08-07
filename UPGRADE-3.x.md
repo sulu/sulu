@@ -645,7 +645,7 @@ So a few constructor of specific classes has been changed:
 
 ### Removed deprecations for 3.0
 
-Removed classes / services:
+Removed classes / services / interfaces / traits:
 
 - `Sulu\Bundle\MarkupBundle\Listener\SwiftMailerListener`
 - `Sulu\Bundle\DocumentManagerBundle\Slugifier\Urlizer`
@@ -743,6 +743,7 @@ Removed classes / services:
 - `Sulu\Bundle\SecurityBundle\Security\LogoutSuccessHandler` (replaced by `LogoutEventSubscriber`)
 - `Sulu\Bundle\SecurityBundle\EventListener\AuhenticationFailureListener` (moved and internal)
 - `Sulu\Bundle\MediaBundle\DependencyInjection\FormatCacheClearerCompilerPass` (use tagged_iterator)
+- `Sulu\Component\Security\Authorization\AccessControl\SecuredEntityRepositoryTrait`
 
 Removed deprecated functions and properties:
 

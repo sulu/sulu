@@ -776,9 +776,10 @@ class UserControllerTest extends SuluTestCase
         $this->assertFalse(\property_exists($response, 'password'));
 
         $names = \array_map(fn ($role) => $role->role->name, $response->userRoles);
+        $existingNames = \implode(',', $names);
 
-        $this->assertContains('Role1', $names);
-        $this->assertContains('Role2', $names);
+        $this->assertContains('Role1', $names, 'Expected Role1 to be present. Found: ' . $existingNames);
+        $this->assertContains('Role2', $names, 'Expected Role2 to be present. Found: ' . $existingNames);
     }
 
     public function testGetUserAndRolesByContactNotExisting(): void

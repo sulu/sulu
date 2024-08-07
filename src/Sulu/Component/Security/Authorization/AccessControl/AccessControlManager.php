@@ -195,6 +195,8 @@ class AccessControlManager implements AccessControlManagerInterface
      * @deprecated Use the constructor instead
      *
      * @param AccessControlProviderInterface $accessControlProvider The AccessControlProvider to add
+     *
+     * @return void
      */
     public function addAccessControlProvider(AccessControlProviderInterface $accessControlProvider)
     {
