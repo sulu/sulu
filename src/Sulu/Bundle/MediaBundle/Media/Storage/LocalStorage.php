@@ -59,7 +59,14 @@ class LocalStorage implements StorageInterface
 
     public function load(array $storageOptions)
     {
-        return \fopen($this->getPath($storageOptions), 'r');
+        $pathName = $this->getPath($storageOptions);
+        $fp = @\fopen($pathName, 'r');
+
+        if (false === $fp) {
+            throw new IOException(\sprintf('Failed to open file "%s"', $pathName), path: $pathName);
+        }
+
+        return $fp;
     }
 
     public function getPath(array $storageOptions): string
