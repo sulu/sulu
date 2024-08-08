@@ -47,7 +47,7 @@ class NodeManager
         } catch (RepositoryException $e) {
             throw new DocumentNotFoundException(\sprintf(
                 'Could not find document with ID or path "%s"', $identifier
-            ), null, $e);
+            ), 0, $e);
         }
     }
 
@@ -153,7 +153,7 @@ class NodeManager
     {
         $current = $this->session->getRootNode();
 
-        $segments = \preg_split('#/#', $path, null, \PREG_SPLIT_NO_EMPTY);
+        $segments = \preg_split('#/#', $path, -1, \PREG_SPLIT_NO_EMPTY);
         foreach ($segments as $segment) {
             if ($current->hasNode($segment)) {
                 $current = $current->getNode($segment);

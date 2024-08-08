@@ -841,16 +841,6 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/FieldType/FieldTypeOptionRegistry.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\FieldType\\\\FieldTypeOptionRegistry\\:\\:toArray\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/FieldType/FieldTypeOptionRegistry.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\AdminBundle\\\\FieldType\\\\FieldTypeOptionRegistry\\:\\:\\$options type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/FieldType/FieldTypeOptionRegistry.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\FieldType\\\\FieldTypeOptionRegistryInterface\\:\\:add\\(\\) has parameter \\$fieldTypeOptions with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AdminBundle/FieldType/FieldTypeOptionRegistryInterface.php
@@ -15412,11 +15402,6 @@ parameters:
 
 		-
 			message: "#^Empty catch block\\. If you are sure this is meant to be empty, please add a \"// @ignoreException\" comment in the catch block\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Media/Storage/LocalStorage.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Media\\\\Storage\\\\LocalStorage\\:\\:load\\(\\) should return resource but returns resource\\|false\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Media/Storage/LocalStorage.php
 
@@ -40766,11 +40751,6 @@ parameters:
 			path: src/Sulu/Component/Content/Types/ResourceLocator/Mapper/PhpcrMapper.php
 
 		-
-			message: "#^Parameter \\#2 \\$code of class Sulu\\\\Component\\\\Content\\\\Exception\\\\ResourceLocatorNotFoundException constructor expects int, null given\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Types/ResourceLocator/Mapper/PhpcrMapper.php
-
-		-
 			message: "#^Parameter \\#2 \\$created of class Sulu\\\\Component\\\\Content\\\\Types\\\\ResourceLocator\\\\ResourceLocatorInformation constructor expects DateTime\\|null, mixed given\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Types/ResourceLocator/Mapper/PhpcrMapper.php
@@ -42437,16 +42417,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Component\\\\DocumentManager\\\\NodeManager\\:\\:save\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/NodeManager.php
-
-		-
-			message: "#^Parameter \\#2 \\$code of class Sulu\\\\Component\\\\DocumentManager\\\\Exception\\\\DocumentNotFoundException constructor expects int, null given\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/NodeManager.php
-
-		-
-			message: "#^Parameter \\#3 \\$limit of function preg_split expects int, null given\\.$#"
 			count: 1
 			path: src/Sulu/Component/DocumentManager/NodeManager.php
 
@@ -45691,11 +45661,6 @@ parameters:
 			path: src/Sulu/Component/Rest/ListBuilder/Doctrine/DoctrineListBuilder.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Doctrine\\\\DoctrineListBuilder\\:\\:encodeAlias\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/Doctrine/DoctrineListBuilder.php
-
-		-
 			message: "#^Method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Doctrine\\\\DoctrineListBuilder\\:\\:execute\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/Rest/ListBuilder/Doctrine/DoctrineListBuilder.php
@@ -45811,34 +45776,9 @@ parameters:
 			path: src/Sulu/Component/Rest/ListBuilder/Doctrine/FieldDescriptor/DoctrineDescriptor.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Doctrine\\\\FieldDescriptor\\\\DoctrineDescriptor\\:\\:encodeAlias\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/Doctrine/FieldDescriptor/DoctrineDescriptor.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Doctrine\\\\FieldDescriptor\\\\DoctrineFieldDescriptor\\:\\:encodeAlias\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/Doctrine/FieldDescriptor/DoctrineFieldDescriptor.php
-
-		-
 			message: "#^Method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Doctrine\\\\FieldDescriptor\\\\DoctrineFieldDescriptor\\:\\:getJoins\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Component/Rest/ListBuilder/Doctrine/FieldDescriptor/DoctrineFieldDescriptor.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Doctrine\\\\FieldDescriptor\\\\DoctrineIdentityFieldDescriptor\\:\\:encodeAlias\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/Doctrine/FieldDescriptor/DoctrineIdentityFieldDescriptor.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Doctrine\\\\FieldDescriptor\\\\DoctrineJoinDescriptor\\:\\:encodeAlias\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/Doctrine/FieldDescriptor/DoctrineJoinDescriptor.php
-
-		-
-			message: "#^Parameter \\#1 \\$value of method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Doctrine\\\\FieldDescriptor\\\\DoctrineJoinDescriptor\\:\\:encodeAlias\\(\\) expects array\\<string\\>\\|string, string\\|null given\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/Doctrine/FieldDescriptor/DoctrineJoinDescriptor.php
 
 		-
 			message: "#^Method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Expression\\\\BetweenExpressionInterface\\:\\:getEnd\\(\\) return type has no value type specified in iterable type array\\.$#"
@@ -46964,11 +46904,6 @@ parameters:
 			message: "#^Property Sulu\\\\Component\\\\Rest\\\\Tests\\\\Unit\\\\ListBuilder\\\\Doctrine\\\\DoctrineListBuilderTest\\:\\:\\$translationEntityNameAlias has no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/Rest/Tests/Unit/ListBuilder/Doctrine/DoctrineListBuilderTest.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Rest\\\\Tests\\\\Unit\\\\ListBuilder\\\\Doctrine\\\\EncodeAliasTraitTest\\:\\:encodeAlias\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/Tests/Unit/ListBuilder/Doctrine/EncodeAliasTraitTest.php
 
 		-
 			message: "#^Method Sulu\\\\Component\\\\Rest\\\\Tests\\\\Unit\\\\ListBuilder\\\\Doctrine\\\\EncodeAliasTraitTest\\:\\:encodeAliasDataProvider\\(\\) has no return type specified\\.$#"
@@ -48887,11 +48822,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Component\\\\Util\\\\SortUtils\\:\\:multisort\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/Util/SortUtils.php
-
-		-
-			message: "#^Parameter \\#1 \\$string of function strtolower expects string, mixed given\\.$#"
 			count: 1
 			path: src/Sulu/Component/Util/SortUtils.php
 
