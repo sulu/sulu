@@ -244,7 +244,7 @@ class PhpcrMapper implements ResourceLocatorMapperInterface
                 $route = $this->getWebspaceRouteNode($webspaceKey, $languageCode, $segmentKey);
             }
         } catch (PathNotFoundException $e) {
-            throw new ResourceLocatorNotFoundException(\sprintf('Path "%s" not found', $path), null, $e);
+            throw new ResourceLocatorNotFoundException(\sprintf('Path "%s" not found', $path), 0, $e);
         }
 
         if ($route->hasProperty('sulu:content') && $route->hasProperty('sulu:history')) {

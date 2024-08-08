@@ -17,10 +17,16 @@ namespace Sulu\Component\Rest\ListBuilder\Doctrine;
 trait EncodeAliasTrait
 {
     /**
-     * @param array<string>|string $value
+     * @param array<string>|string|null $value
+     *
+     * @return array<string>|string
      */
     protected function encodeAlias($value)
     {
+        if (null === $value) {
+            return '';
+        }
+
         return \preg_replace_callback(
             '/(?:"[^"]+")|([\\\])|(?<=\S)(:)/',
             function($matches) {

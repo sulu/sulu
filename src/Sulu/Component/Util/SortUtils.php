@@ -75,6 +75,9 @@ final class SortUtils
 
                 if (\is_string($aOrder)) {
                     $aOrder = \strtolower($aOrder);
+                }
+
+                if (\is_string($bOrder)) {
                     $bOrder = \strtolower($bOrder);
                 }
 
