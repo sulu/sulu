@@ -462,7 +462,7 @@ class DoctrineListBuilder extends AbstractListBuilder
     /**
      * Returns all the joins required for the query.
      *
-     * @return DoctrineJoinDescriptor[]
+     * @return array<string, DoctrineJoinDescriptor>
      */
     protected function getJoins()
     {
@@ -711,7 +711,7 @@ class DoctrineListBuilder extends AbstractListBuilder
     /**
      * Adds joins to querybuilder.
      *
-     * @param DoctrineJoinDescriptor[]|null $joins
+     * @param array<string, DoctrineJoinDescriptor>|null $joins
      */
     protected function assignJoins(QueryBuilder $queryBuilder, ?array $joins = null)
     {
