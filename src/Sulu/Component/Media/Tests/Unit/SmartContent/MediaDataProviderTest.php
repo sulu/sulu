@@ -90,6 +90,11 @@ class MediaDataProviderTest extends TestCase
      */
     private $requestAnalyzer;
 
+    /**
+     * @var ObjectProphecy<EntityManagerInterface>
+     */
+    private ObjectProphecy $entityManager;
+
     public function setUp(): void
     {
         $this->dataProviderRepository = $this->prophesize(DataProviderRepositoryInterface::class);
@@ -99,6 +104,7 @@ class MediaDataProviderTest extends TestCase
         $this->referenceStore = $this->prophesize(ReferenceStoreInterface::class);
         $this->security = $this->prophesize(\class_exists(Security::class) ? Security::class : SymfonyCoreSecurity::class);
         $this->requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
+        $this->entityManager = $this->prophesize(EntityManagerInterface::class);
 
         $this->mediaDataProvider = new MediaDataProvider(
             $this->dataProviderRepository->reveal(),
@@ -108,7 +114,10 @@ class MediaDataProviderTest extends TestCase
             $this->referenceStore->reveal(),
             $this->security->reveal(),
             $this->requestAnalyzer->reveal(),
-            ['view' => 64]
+            ['view' => 64],
+            false,
+            $this->entityManager->reveal(),
+            $this->prophesize(TranslatorInterface::class)->reveal(),
         );
     }
 
@@ -134,7 +143,8 @@ class MediaDataProviderTest extends TestCase
             null,
             $this->requestAnalyzer->reveal(),
             ['view' => 64],
-            true
+            true,
+            $this->entityManager->reveal(),
         );
 
         $configuration = $provider->getConfiguration();
@@ -157,7 +167,8 @@ class MediaDataProviderTest extends TestCase
             null,
             $this->requestAnalyzer->reveal(),
             ['view' => 64],
-            false
+            false,
+            $this->entityManager->reveal(),
         );
 
         $configuration = $provider->getConfiguration();
@@ -167,9 +178,6 @@ class MediaDataProviderTest extends TestCase
 
     public function testGetTypesConfiguration(): void
     {
-        /** @var EntityManagerInterface|ObjectProphecy $entityManager */
-        $entityManager = $this->prophesize(EntityManagerInterface::class);
-
         /** @var ObjectRepository|ObjectProphecy $mediaTypeRepository */
         $mediaTypeRepository = $this->prophesize(ObjectRepository::class);
 
@@ -178,7 +186,7 @@ class MediaDataProviderTest extends TestCase
         $requestStack = $this->prophesize(RequestStack::class);
         $referenceStore = $this->prophesize(ReferenceStoreInterface::class);
 
-        $entityManager->getRepository(MediaType::class)
+        $this->entityManager->getRepository(MediaType::class)
             ->shouldBeCalled()
             ->willReturn($mediaTypeRepository->reveal());
 
@@ -213,7 +221,7 @@ class MediaDataProviderTest extends TestCase
             $this->requestAnalyzer->reveal(),
             ['view' => 64],
             false,
-            $entityManager->reveal(),
+            $this->entityManager->reveal(),
             $translator->reveal()
         );
 
@@ -303,7 +311,9 @@ class MediaDataProviderTest extends TestCase
             $this->referenceStore->reveal(),
             null,
             $this->requestAnalyzer->reveal(),
-            ['view' => 64]
+            ['view' => 64],
+            false,
+            $this->entityManager->reveal(),
         );
 
         $medias = [
