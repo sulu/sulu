@@ -37,7 +37,7 @@ class DefaultSnippetTwigExtension extends AbstractExtension
     public function getFunctions()
     {
         return [
-            new TwigFunction('sulu_snippet_load_default', [$this, 'getDefault']),
+            new TwigFunction('sulu_snippet_load_default', [$this, 'getDefault'], ['deprecated' => true]),
         ];
     }
 
