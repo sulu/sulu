@@ -45,6 +45,7 @@ $config->setRiskyAllowed(true)
         'nullable_type_declaration_for_default_null_value' => true,
         'no_null_property_initialization' => false,
         'fully_qualified_strict_types' => false,
+        'new_with_parentheses' => true
     ])
     ->setFinder($finder);
 
