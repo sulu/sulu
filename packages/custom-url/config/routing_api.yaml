@@ -1,0 +1,55 @@
+sulu_custom_url.cget_webspace_custom-urls:
+    path: '/webspaces/{webspace}/custom-urls.{_format}'
+    defaults: { _format: json }
+    requirements: { _format: json|csv }
+    methods: [GET]
+    controller: 'sulu_custom_urls.custom_url_controller::cgetAction'
+
+sulu_custom_url.get_webspace_custom-urls:
+    path: '/webspaces/{webspace}/custom-urls/{id}.{_format}'
+    defaults: { _format: json }
+    requirements: { _format: json|csv }
+    methods: [GET]
+    controller: 'sulu_custom_urls.custom_url_controller::getAction'
+
+sulu_custom_url.post_webspace_custom-urls:
+    path: '/webspaces/{webspace}/custom-urls.{_format}'
+    defaults: { _format: json }
+    requirements: { _format: json|csv }
+    methods: [POST]
+    controller: 'sulu_custom_urls.custom_url_controller::postAction'
+
+sulu_custom_url.put_webspace_custom-urls:
+    path: '/webspaces/{webspace}/custom-urls/{id}.{_format}'
+    defaults: { _format: json }
+    requirements: { _format: json|csv }
+    methods: [PUT]
+    controller: 'sulu_custom_urls.custom_url_controller::putAction'
+
+sulu_custom_url.delete_webspace_custom-urls:
+    path: '/webspaces/{webspace}/custom-urls/{id}.{_format}'
+    defaults: { _format: json }
+    requirements: { _format: json|csv }
+    methods: [DELETE]
+    controller: 'sulu_custom_urls.custom_url_controller::deleteAction'
+
+sulu_custom_url.cdelete_webspace_custom-urls:
+    path: '/webspaces/{webspace}/custom-urls.{_format}'
+    defaults: { _format: json }
+    requirements: { _format: json|csv }
+    methods: [DELETE]
+    controller: 'sulu_custom_urls.custom_url_controller::cdeleteAction'
+
+sulu_custom_url.get_webspace_custom-urls_routes:
+    path: '/webspaces/{webspace}/custom-urls/{id}/routes.{_format}'
+    defaults: { _format: json }
+    requirements: { _format: json|csv }
+    methods: [GET]
+    controller: 'sulu_custom_urls.custom_url_route_controller::cgetAction'
+
+sulu_custom_url.delete_webspace_custom-urls_routes:
+    path: '/webspaces/{webspace}/custom-urls/{id}/routes.{_format}'
+    defaults: { _format: json }
+    requirements: { _format: json|csv }
+    methods: [DELETE]
+    controller: 'sulu_custom_urls.custom_url_route_controller::cdeleteAction'

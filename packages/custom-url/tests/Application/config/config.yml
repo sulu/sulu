@@ -1,0 +1,6 @@
+framework:
+    # symfony recipe default configuration:
+    workflows: null
+    messenger:
+        transports:
+        routing:

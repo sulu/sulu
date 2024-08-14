@@ -1,0 +1,5 @@
+{
+    "code":9003,
+    "message":"Domain-part mismatch \"*.sulu.io\/*\" with placeholders: test-1",
+    "errors": "@array@"
+}

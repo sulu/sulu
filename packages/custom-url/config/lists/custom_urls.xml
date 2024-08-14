@@ -1,0 +1,56 @@
+<?xml version="1.0" ?>
+<list xmlns="http://schemas.sulu.io/list-builder/list">
+    <key>custom_urls</key>
+
+    <properties>
+        <property name="id" visibility="no" translation="sulu_admin.id" sortable="false">
+            <field-name>id</field-name>
+            <entity-name>Sulu\CustomUrl\Domain\Model\CustomUrlInterface</entity-name>
+        </property>
+
+        <property name="title" visibility="always" translation="sulu_admin.title" sortable="false" searchability="yes">
+            <field-name>title</field-name>
+            <entity-name>Sulu\CustomUrl\Domain\Model\CustomUrlInterface</entity-name>
+            <filter type="text" />
+        </property>
+
+         <property name="webspace" visibility="never" sortable="false" searchability="never">
+            <field-name>webspace</field-name>
+            <entity-name>Sulu\CustomUrl\Domain\Model\CustomUrlInterface</entity-name>
+        </property>
+
+        <property name="published" visibility="yes" translation="sulu_custom_url.published" sortable="false">
+            <field-name>published</field-name>
+            <entity-name>Sulu\CustomUrl\Domain\Model\CustomUrlInterface</entity-name>
+            <transformer type="bool"/>
+            <filter type="boolean" />
+        </property>
+
+        <property name="targetDocument" visibility="yes" translation="sulu_custom_url.target_title" sortable="false">
+            <field-name>targetDocument</field-name>
+            <entity-name>Sulu\CustomUrl\Domain\Model\CustomUrlInterface</entity-name>
+        </property>
+
+        <property name="targetLocale" visibility="yes" translation="sulu_custom_url.target_locale" sortable="false">
+            <field-name>targetLocale</field-name>
+            <entity-name>Sulu\CustomUrl\Domain\Model\CustomUrlInterface</entity-name>
+        </property>
+
+        <property name="redirect" visibility="yes" translation="sulu_custom_url.redirect" sortable="false">
+            <field-name>redirect</field-name>
+            <entity-name>Sulu\CustomUrl\Domain\Model\CustomUrlInterface</entity-name>
+            <transformer type="bool"/>
+        </property>
+
+        <property
+            name="created"
+            visibility="yes"
+            translation="sulu_admin.created"
+            sortable="false"
+        >
+            <field-name>created</field-name>
+            <entity-name>Sulu\CustomUrl\Domain\Model\CustomUrlInterface</entity-name>
+            <transformer type="datetime"/>
+        </property>
+    </properties>
+</list>

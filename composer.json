@@ -207,7 +207,8 @@
             "Sulu\\Page\\": "packages/page/src",
             "Sulu\\Route\\": "packages/route/src",
             "Sulu\\Search\\": "packages/search/src",
-            "Sulu\\Content\\": "packages/content/src"
+            "Sulu\\Content\\": "packages/content/src",
+            "Sulu\\CustomUrl\\": "packages/custom-url/src"
         },
         "exclude-from-classmap": [
             "src/Sulu/Component/*/Tests/",
@@ -222,7 +223,8 @@
             "Sulu\\Page\\Tests\\": "packages/page/tests",
             "Sulu\\Route\\Tests\\": "packages/route/tests",
             "Sulu\\Search\\Tests\\": "packages/search/tests",
-            "Sulu\\Content\\Tests\\": "packages/content/tests"
+            "Sulu\\Content\\Tests\\": "packages/content/tests",
+            "Sulu\\CustomUrl\\Tests\\": "packages/custom-url/tests"
         }
     },
     "scripts": {

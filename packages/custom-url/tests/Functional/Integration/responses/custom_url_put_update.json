@@ -1,0 +1,17 @@
+{
+    "id":"@string@",
+    "title":"Updated Custom URL",
+    "published":true,
+    "webspace":"sulu_io",
+    "baseDomain":"*.sulu.io\/*",
+    "domainParts":[
+        "one",
+        "two"
+    ],
+    "targetDocument":"@string@",
+    "targetLocale":"en",
+    "canonical":true,
+    "redirect":true,
+    "noFollow":true,
+    "noIndex":true
+}

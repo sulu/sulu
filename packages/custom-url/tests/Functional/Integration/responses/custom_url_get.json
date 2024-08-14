@@ -1,0 +1,17 @@
+{
+    "id": "@string@",
+    "baseDomain": "*.sulu.io/*",
+    "canonical": true,
+    "domainParts": [
+        "test-11",
+        "test-21"
+    ],
+    "noFollow": true,
+    "noIndex": true,
+    "published": true,
+    "redirect": true,
+    "targetDocument": "@string@",
+    "targetLocale": "en",
+    "title": "Test",
+    "webspace": "sulu_io"
+}

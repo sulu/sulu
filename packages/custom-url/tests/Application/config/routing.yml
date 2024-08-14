@@ -1,0 +1,3 @@
+sulu_custom_url_api:
+    resource: "@SuluCustomUrlBundle/config/routing_api.yml"
+    prefix: /admin/api

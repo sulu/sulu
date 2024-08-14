@@ -67,6 +67,10 @@ sulu_website_api:
     resource: "@SuluWebsiteBundle/Resources/config/routing_api.yaml"
     prefix: /admin/api
 
+sulu_custom_urls_api:
+    resource: "@SuluCustomUrlBundle/config/routing_api.yaml"
+    prefix: /admin/api
+
 sulu_preview:
     resource: "@SuluPreviewBundle/Resources/config/routing.yaml"
     prefix: /admin/preview
