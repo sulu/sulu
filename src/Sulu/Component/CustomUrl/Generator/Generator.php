@@ -27,7 +27,7 @@ class Generator implements GeneratorInterface
     {
     }
 
-    public function generate($baseDomain, $domainParts, ?Localization $locale = null)
+    public function generate(string $baseDomain, array $domainParts, ?Localization $locale = null)
     {
         $domain = $baseDomain;
 

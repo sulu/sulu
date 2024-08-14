@@ -13,8 +13,10 @@ declare(strict_types=1);
 
 namespace Sulu\Bundle\CustomUrlBundle\Trash;
 
+use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Bundle\CustomUrlBundle\Admin\CustomUrlAdmin;
 use Sulu\Bundle\CustomUrlBundle\Domain\Event\CustomUrlRestoredEvent;
+use Sulu\Bundle\CustomUrlBundle\Entity\CustomUrl;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Bundle\DocumentManagerBundle\Collector\DocumentDomainEventCollectorInterface;
 use Sulu\Bundle\TrashBundle\Application\RestoreConfigurationProvider\RestoreConfiguration;
@@ -23,8 +25,6 @@ use Sulu\Bundle\TrashBundle\Application\TrashItemHandler\RestoreTrashItemHandler
 use Sulu\Bundle\TrashBundle\Application\TrashItemHandler\StoreTrashItemHandlerInterface;
 use Sulu\Bundle\TrashBundle\Domain\Model\TrashItemInterface;
 use Sulu\Bundle\TrashBundle\Domain\Repository\TrashItemRepositoryInterface;
-use Sulu\Component\CustomUrl\Document\CustomUrlDocument;
-use Sulu\Component\DocumentManager\DocumentAccessor;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Webmozart\Assert\Assert;
 
@@ -37,20 +37,20 @@ final class CustomUrlTrashItemHandler implements
         private TrashItemRepositoryInterface $trashItemRepository,
         private DocumentManagerInterface $documentManager,
         private DocumentInspector $documentInspector,
-        private DocumentDomainEventCollectorInterface $documentDomainEventCollector
+        private DocumentDomainEventCollectorInterface $documentDomainEventCollector,
+        private EntityManagerInterface $entityManager,
     ) {
     }
 
     /**
-     * @param CustomUrlDocument $customUrl
+     * @param CustomUrl $customUrl
      */
     public function store(object $customUrl, array $options = []): TrashItemInterface
     {
-        Assert::isInstanceOf($customUrl, CustomUrlDocument::class);
+        Assert::isInstanceOf($customUrl, CustomUrl::class);
 
         $data = [
             'title' => $customUrl->getTitle(),
-            'parentUuid' => $this->documentInspector->getUuid($customUrl->getParent()),
             'creator' => $customUrl->getCreator(),
             'created' => $customUrl->getCreated()->format('c'),
             'baseDomain' => $customUrl->getBaseDomain(),
@@ -59,20 +59,19 @@ final class CustomUrlTrashItemHandler implements
             'redirect' => $customUrl->isRedirect(),
             'noFollow' => $customUrl->isNoFollow(),
             'noIndex' => $customUrl->isNoIndex(),
-            'targetUuid' => $this->documentInspector->getUuid($customUrl->getTargetDocument()),
+            'targetUuid' => $customUrl->getTargetDocument(),
             'targetLocale' => $customUrl->getTargetLocale(),
+            'webspaceKey' => $customUrl->getWebspace(),
         ];
 
-        $webspaceKey = $this->documentInspector->getWebspace($customUrl);
-
         return $this->trashItemRepository->create(
-            CustomUrlDocument::RESOURCE_KEY,
-            (string) $customUrl->getUuid(),
+            CustomUrl::RESOURCE_KEY,
+            (string) $customUrl->getId(),
             $customUrl->getTitle(),
             $data,
             null,
             $options,
-            CustomUrlAdmin::getCustomUrlSecurityContext($webspaceKey),
+            CustomUrlAdmin::getCustomUrlSecurityContext($customUrl->getWebspace()),
             null,
             null
         );
@@ -80,16 +79,12 @@ final class CustomUrlTrashItemHandler implements
 
     public function restore(TrashItemInterface $trashItem, array $restoreFormData = []): object
     {
-        $uuid = $trashItem->getResourceId();
+        $id = $trashItem->getResourceId();
         $data = $trashItem->getRestoreData();
 
-        /** @var CustomUrlDocument $customUrl */
-        $customUrl = $this->documentManager->create('custom_url');
-        $customUrlAccessor = new DocumentAccessor($customUrl);
-        $customUrlAccessor->set('uuid', $uuid);
-
+        $customUrl = new CustomUrl();
+        $customUrl->setId($id);
         $customUrl->setTitle($data['title']);
-        $customUrl->setParent($this->documentManager->find($data['parentUuid']));
         $customUrl->setCreator($data['creator']);
         $customUrl->setCreated(new \DateTime($data['created']));
         $customUrl->setBaseDomain($data['baseDomain']);
@@ -98,24 +93,21 @@ final class CustomUrlTrashItemHandler implements
         $customUrl->setRedirect($data['redirect']);
         $customUrl->setNoFollow($data['noFollow']);
         $customUrl->setNoIndex($data['noIndex']);
-        $customUrl->setTargetDocument($this->documentManager->find($data['targetUuid']));
+        $customUrl->setTargetDocument($data['targetUuid']);
         $customUrl->setTargetLocale($data['targetLocale']);
+        $customUrl->setWebspace($data['webspaceKey']);
         $customUrl->setPublished(false);
 
-        $this->documentManager->persist($customUrl, CustomUrlDocument::DOCUMENT_LOCALE);
-        $this->documentManager->publish($customUrl, CustomUrlDocument::DOCUMENT_LOCALE);
-
-        $webspaceKey = $this->documentInspector->getWebspace($customUrl);
-        $this->documentDomainEventCollector->collect(new CustomUrlRestoredEvent($customUrl, $webspaceKey, $data));
-
-        $this->documentManager->flush();
+        $this->entityManager->persist($customUrl);
+        $this->documentDomainEventCollector->collect(new CustomUrlRestoredEvent($customUrl, $data));
+        $this->entityManager->flush();
 
         return $customUrl;
     }
 
     public static function getResourceKey(): string
     {
-        return CustomUrlDocument::RESOURCE_KEY;
+        return CustomUrl::RESOURCE_KEY;
     }
 
     public function getConfiguration(): RestoreConfiguration

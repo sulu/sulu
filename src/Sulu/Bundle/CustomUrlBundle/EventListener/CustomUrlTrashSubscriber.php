@@ -14,8 +14,8 @@ declare(strict_types=1);
 namespace Sulu\Bundle\CustomUrlBundle\EventListener;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Sulu\Bundle\CustomUrlBundle\Entity\CustomUrl;
 use Sulu\Bundle\TrashBundle\Application\TrashManager\TrashManagerInterface;
-use Sulu\Component\CustomUrl\Document\CustomUrlDocument;
 use Sulu\Component\DocumentManager\Event\ClearEvent;
 use Sulu\Component\DocumentManager\Event\FlushEvent;
 use Sulu\Component\DocumentManager\Event\RemoveEvent;
@@ -58,7 +58,7 @@ final class CustomUrlTrashSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $this->trashManager->store(CustomUrlDocument::RESOURCE_KEY, $document);
+        $this->trashManager->store(CustomUrl::RESOURCE_KEY, $document);
         $this->hasPendingTrashItem = true;
     }
 

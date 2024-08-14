@@ -11,12 +11,12 @@
 
 namespace Sulu\Bundle\CustomUrlBundle\Controller;
 
-use FOS\RestBundle\Context\Context;
 use FOS\RestBundle\View\ViewHandlerInterface;
 use HandcraftedInTheAlps\RestRoutingBundle\Controller\Annotations\RouteResource;
 use Sulu\Bundle\CustomUrlBundle\Admin\CustomUrlAdmin;
-use Sulu\Component\CustomUrl\Document\CustomUrlDocument;
+use Sulu\Bundle\CustomUrlBundle\Entity\CustomUrl;
 use Sulu\Component\CustomUrl\Manager\CustomUrlManagerInterface;
+use Sulu\Component\CustomUrl\Repository\CustomUrlRepository;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\Rest\AbstractRestController;
 use Sulu\Component\Rest\ListBuilder\CollectionRepresentation;
@@ -27,8 +27,6 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Provides rest api for custom-urls.
- *
  * @RouteResource("custom-urls")
  */
 class CustomUrlController extends AbstractRestController implements SecuredControllerInterface
@@ -39,143 +37,72 @@ class CustomUrlController extends AbstractRestController implements SecuredContr
         ViewHandlerInterface $viewHandler,
         private CustomUrlManagerInterface $customUrlManager,
         private DocumentManagerInterface $documentManager,
-        private RequestStack $requestStack
+        private RequestStack $requestStack,
+        private CustomUrlRepository $customUrlRepository,
     ) {
         parent::__construct($viewHandler);
     }
 
-    /**
-     * Returns a list of custom-urls.
-     *
-     * @param string $webspace
-     *
-     * @return Response
-     */
-    public function cgetAction($webspace, Request $request)
+    public function cgetAction(string $webspace, Request $request): Response
     {
-        $result = $this->customUrlManager->findList($webspace);
+        $result = $this->customUrlManager->findByWebspaceKey($webspace);
 
-        $list = new CollectionRepresentation($result, CustomUrlDocument::RESOURCE_KEY);
+        $list = new CollectionRepresentation($result, CustomUrl::RESOURCE_KEY);
 
         return $this->handleView($this->view($list));
     }
 
-    /**
-     * Returns a single custom-url identified by uuid.
-     *
-     * @param string $webspace
-     * @param string $id
-     *
-     * @return Response
-     */
-    public function getAction($webspace, $id, Request $request)
+    public function getAction(string $webspace, int $id, Request $request): Response
     {
-        $document = $this->customUrlManager->find($id);
+        $customUrl = $this->customUrlRepository->find($id);
 
-        // FIXME without this target-document will not be loaded (for serialization)
-        // - issue https://github.com/sulu-io/sulu-document-manager/issues/71
-        if (null !== $document->getTargetDocument()) {
-            $document->getTargetDocument()->getTitle();
-        }
-
-        $view = $this->view($document);
-
-        $context = new Context();
-        $context->setGroups(['defaultCustomUrl', 'fullRoute']);
-        $view->setContext($context);
-
-        return $this->handleView($view);
+        return $this->handleView($this->view($customUrl));
     }
 
-    /**
-     * Create a new custom-url object.
-     *
-     * @param string $webspace
-     *
-     * @return Response
-     */
-    public function postAction($webspace, Request $request)
+    public function postAction(string $webspace, Request $request): Response
     {
         // throw helpful error message if targetLocale is not set
         $this->getRequestParameter($request, 'targetLocale', true);
 
-        $document = $this->customUrlManager->create(
-            $webspace,
-            $request->request->all()
-        );
-        $this->documentManager->flush();
+        $document = $this->customUrlManager->create($webspace, $request->request->all());
 
-        $context = new Context();
-        $context->setGroups(['defaultCustomUrl', 'fullRoute']);
-
-        return $this->handleView($this->view($document)->setContext($context));
+        return $this->handleView($this->view($document));
     }
 
-    /**
-     * Update an existing custom-url object identified by uuid.
-     *
-     * @param string $webspace
-     * @param string $id
-     *
-     * @return Response
-     */
-    public function putAction($webspace, $id, Request $request)
+    public function putAction(string $webspace, int $id, Request $request): Response
     {
-        $manager = $this->customUrlManager;
+        $requestData = $request->request->all();
+        unset($requestData['creator'], $requestData['changer'], $requestData['created'], $requestData['updated']);
 
-        $document = $manager->save($id, $request->request->all());
-        $this->documentManager->flush();
+        $customUrl = $this->customUrlManager->save($id, $requestData);
 
-        $context = new Context();
-        $context->setGroups(['defaultCustomUrl', 'fullRoute']);
-
-        return $this->handleView($this->view($document)->setContext($context));
+        return $this->handleView($this->view($customUrl));
     }
 
-    /**
-     * Delete a single custom-url identified by uuid.
-     *
-     * @param string $webspace
-     * @param string $id
-     *
-     * @return Response
-     */
-    public function deleteAction($webspace, $id)
+    public function deleteAction(string $webspace, int $id): Response
     {
-        $manager = $this->customUrlManager;
-        $manager->delete($id);
-        $this->documentManager->flush();
+        $this->customUrlManager->deleteByIds([$id]);
 
         return $this->handleView($this->view());
     }
 
-    /**
-     * Deletes a list of custom-urls identified by a list of uuids.
-     *
-     * @param string $webspace
-     *
-     * @return Response
-     */
-    public function cdeleteAction($webspace, Request $request)
+    public function cdeleteAction(string $webspace, Request $request): Response
     {
         $ids = \array_filter(\explode(',', $request->get('ids', '')));
 
-        foreach ($ids as $ids) {
-            $this->customUrlManager->delete($ids);
-        }
-        $this->documentManager->flush();
+        $this->customUrlManager->deleteByIds($ids);
 
         return $this->handleView($this->view());
     }
 
-    public function getSecurityContext()
+    public function getSecurityContext(): string
     {
         $request = $this->requestStack->getCurrentRequest();
 
-        return CustomUrlAdmin::getCustomUrlSecurityContext($request->get('webspace'));
+        return CustomUrlAdmin::getCustomUrlSecurityContext($request->attributes->get('webspace'));
     }
 
-    public function getLocale(Request $request)
+    public function getLocale(Request $request): ?string
     {
         return null;
     }

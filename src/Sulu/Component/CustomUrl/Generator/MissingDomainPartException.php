@@ -18,14 +18,10 @@ use Sulu\Component\Rest\Exception\RestException;
  */
 class MissingDomainPartException extends RestException
 {
-    /**
-     * @param string $baseDomain
-     * @param string $domain
-     */
     public function __construct(
-        private $baseDomain,
+        private string $baseDomain,
         private array $domainParts,
-        private $domain,
+        private string $domain,
     ) {
         parent::__construct(
             \sprintf('Missing domain-part for base-domain "%s" detected. Result domain: "%s"', $baseDomain, $domain),
@@ -33,26 +29,20 @@ class MissingDomainPartException extends RestException
         );
     }
 
-    /**
-     * @return string
-     */
-    public function getBaseDomain()
+    public function getBaseDomain(): string
     {
         return $this->baseDomain;
     }
 
     /**
-     * @return array
+     * @return array<string>
      */
-    public function getDomainParts()
+    public function getDomainParts(): array
     {
         return $this->domainParts;
     }
 
-    /**
-     * @return string
-     */
-    public function getDomain()
+    public function getDomain(): string
     {
         return $this->domain;
     }
