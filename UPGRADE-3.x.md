@@ -10,6 +10,17 @@ We refactored the Migrations the abstract class is now under the Infrastructure 
 
  - `Sulu\Content\Migrations\AbstractTagNameToIdMigration` -> `Sulu\Content\Infrastructure\Doctrine\Migrations\AbstractTagNameToIdMigration`
 
+### Cleaning up the environment use in the webspaces
+
+The function `Sulu\Component\Webspace\Environment::setType()` is now deprecated and should be replaced with a call to the constructor with the correct environment:
+```diff
+- $environment = new Environment();
+- $environment->setType('prod');
++ $environment = new Environment('prod');
+```
+
+Using the `Url::getEnvironment()` and `Url::setEnvironment()` functions is deprecated. Use the environment of the `Portal::getEnvironment` instead.
+
 ## 3.0.7
 
 ### Smart content tag and category resolving is opt-in

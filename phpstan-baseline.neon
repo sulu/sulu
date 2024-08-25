@@ -37723,12 +37723,6 @@ parameters:
 			path: src/Sulu/Component/Webspace/Loader/XmlFileLoader10.php
 
 		-
-			message: '#^Parameter \#1 \$type of method Sulu\\Component\\Webspace\\Environment\:\:setType\(\) expects string, string\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Webspace/Loader/XmlFileLoader10.php
-
-		-
 			message: '#^Parameter \#1 \$type of method Sulu\\Component\\Webspace\\Webspace\:\:addDefaultTemplate\(\) expects string, string\|null given\.$#'
 			identifier: argument.type
 			count: 1
