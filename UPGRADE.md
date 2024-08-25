@@ -2,9 +2,10 @@
 
 ## 2.5.21
 
-### Setting the Webspace `Environment` in the constructor
+### Cleaning up the environment use in the webspaces
 
-The call to `Environment::setType()` should be replaced with a call to the constructor with the correct environment.
+The call to `Environment::setType()` should be replaced with a call to the constructor with the correct environment. 
+Using the `Url::getEnvironment()` and `Url::setEnvironment()` functions is deprecated. Use the environment of the `Portal` instead.
 
 ## 2.5.20
 
