@@ -51,6 +51,7 @@
         "core-js": "^3.18.0",
         "css-loader": "^6.10.0",
         "css-minimizer-webpack-plugin": "^6.0.0",
+        "cheerio": "1.0.0-rc.12",
         "dependency-cruiser": "^16.2.0",
         "empty": "^0.10.1",
         "enzyme": "^3.3.0",
