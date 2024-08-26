@@ -236,6 +236,7 @@ class ResettingController
                 [
                     'user' => $user,
                     'reset_url' => $resetUrl . '#/?forgotPasswordToken=' . $token,
+                    'message' => 'sulu_security.reset_mail_message',
                     'translation_domain' => $translationDomain,
                 ]
             )
