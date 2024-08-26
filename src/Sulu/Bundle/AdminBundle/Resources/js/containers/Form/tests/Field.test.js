@@ -634,3 +634,35 @@ test('Do not render anything if field does not exist and onInvalid is set to ign
 
     expect(field.isEmptyRender()).toEqual(true);
 });
+
+test('Call onFocus callback when Field gets focus', () => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'snippets'));
+
+    fieldRegistry.get.mockReturnValue(function Text() {
+        return <input type="text" />;
+    });
+
+    const field = shallow(
+        <Field
+            data={{}}
+            dataPath=""
+            formInspector={formInspector}
+            name="test"
+            onChange={jest.fn()}
+            onFinish={jest.fn()}
+            onSuccess={undefined}
+            router={undefined}
+            schema={{label: 'label', type: 'text'}}
+            schemaPath=""
+        />
+    );
+
+    const eventSpy = jest.fn();
+
+    const target = new EventTarget();
+    target.addEventListener('sulu.focus', eventSpy);
+
+    field.find('Text').props().onFocus(target);
+
+    expect(eventSpy).toBeCalled();
+});

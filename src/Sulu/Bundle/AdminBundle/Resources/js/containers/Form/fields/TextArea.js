@@ -2,9 +2,19 @@
 import React from 'react';
 import log from 'loglevel';
 import TextAreaComponent from '../../../components/TextArea';
-import type {FieldTypeProps} from '../../../types';
+import type {FieldTypeProps} from '../types';
 
 export default class TextArea extends React.Component<FieldTypeProps<?string>> {
+    handleFocus = (event: Event) => {
+        const {
+            onFocus,
+        } = this.props;
+
+        if (onFocus) {
+            onFocus(event.target);
+        }
+    };
+
     render() {
         const {
             dataPath,
@@ -47,6 +57,7 @@ export default class TextArea extends React.Component<FieldTypeProps<?string>> {
                 maxCharacters={evaluatedSoftMaxLength ? parseInt(evaluatedSoftMaxLength) : undefined}
                 onBlur={onFinish}
                 onChange={onChange}
+                onFocus={this.handleFocus}
                 valid={!error}
                 value={value}
             />
