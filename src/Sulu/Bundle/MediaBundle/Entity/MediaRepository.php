@@ -264,6 +264,7 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
         );
         $result = $query->getSingleResult()[1];
 
+        /** @var int<0, max> */
         return \intval($result);
     }
 
