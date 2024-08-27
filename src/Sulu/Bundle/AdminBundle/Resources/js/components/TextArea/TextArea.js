@@ -11,6 +11,7 @@ type Props = {|
     name?: string,
     onBlur?: () => void,
     onChange: (?string) => void,
+    onFocus?: (event: Event) => void,
     placeholder?: string,
     valid: boolean,
     value: ?string,
@@ -31,6 +32,14 @@ export default class TextArea extends React.PureComponent<Props> {
 
         if (onBlur) {
             onBlur();
+        }
+    };
+
+    handleFocus = (event: Event) => {
+        const {onFocus} = this.props;
+
+        if (onFocus) {
+            onFocus(event);
         }
     };
 
@@ -62,6 +71,7 @@ export default class TextArea extends React.PureComponent<Props> {
                     name={name}
                     onBlur={this.handleBlur}
                     onChange={this.handleChange}
+                    onFocus={this.handleFocus}
                     placeholder={placeholder}
                     value={value || ''}
                 />
