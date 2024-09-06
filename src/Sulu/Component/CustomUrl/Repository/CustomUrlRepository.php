@@ -26,7 +26,7 @@ class CustomUrlRepository extends ServiceEntityRepository implements CustomUrlRe
     public function __construct(
         ManagerRegistry $registry,
         private readonly ContentRepositoryInterface $contentRepository,
-        private readonly GeneratorInterface $generator,
+        private readonly GeneratorInterface $customUrlGenerator,
     ) {
         parent::__construct($registry, CustomUrl::class);
     }
@@ -57,7 +57,7 @@ class CustomUrlRepository extends ServiceEntityRepository implements CustomUrlRe
             MappingBuilder::create()->addProperties(['title'])->getMapping()
         );
 
-        return new RowsIterator($result, $targets, $this->generator);
+        return new RowsIterator($result, $targets, $this->customUrlGenerator);
     }
     public function findNewestPublishedByUrl(string $url, string $webspace, ?string $locale = null): ?CustomUrl
     {
@@ -93,7 +93,7 @@ class CustomUrlRepository extends ServiceEntityRepository implements CustomUrlRe
         $result = $this->findBy(['webspace' => $webspace]);
 
         return \array_map(
-            fn (CustomUrl $url) => $this->generator->generate($url->getBaseDomain(), $url->getDomainParts()),
+            fn (CustomUrl $url) => $this->customUrlGenerator->generate($url->getBaseDomain(), $url->getDomainParts()),
             $result
         );
     }

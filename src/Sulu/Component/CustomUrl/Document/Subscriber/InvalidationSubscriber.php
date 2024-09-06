@@ -15,6 +15,7 @@ use Sulu\Bundle\CustomUrlBundle\Entity\CustomUrl;
 use Sulu\Bundle\CustomUrlBundle\Entity\CustomUrlRoute;
 use Sulu\Bundle\HttpCacheBundle\Cache\CacheManager;
 use Sulu\Bundle\PageBundle\Document\BasePageDocument;
+use Sulu\Bundle\PageBundle\Document\RouteDocument;
 use Sulu\Component\CustomUrl\Repository\CustomUrlRepositoryInterface;
 use Sulu\Component\DocumentManager\Event\PublishEvent;
 use Sulu\Component\DocumentManager\Event\RemoveEvent;
@@ -53,7 +54,7 @@ class InvalidationSubscriber implements EventSubscriberInterface
         $this->invalidateDocument($event->getDocument());
     }
 
-    private function invalidateDocument(BasePageDocument|CustomUrl|CustomUrlRoute $document): void
+    private function invalidateDocument(BasePageDocument|RouteDocument|CustomUrl|CustomUrlRoute $document): void
     {
         if (!$this->cacheManager) {
             return;
@@ -63,10 +64,12 @@ class InvalidationSubscriber implements EventSubscriberInterface
             foreach ($this->customUrlRepository->findByTarget($document) as $customUrlDocument) {
                 $this->invalidateCustomUrlDocument($customUrlDocument);
             }
+        } elseif ($document instanceof RouteDocument) {
+            $this->cacheManager->invalidatePath($this->getUrlWithScheme($document->getPath()));
         } elseif ($document instanceof CustomUrl) {
             $this->invalidateCustomUrlDocument($document);
         } else {
-            $this->invalidateRouteDocument($document);
+            $this->invalidateCustomUrl($document);
         }
     }
 
@@ -77,7 +80,7 @@ class InvalidationSubscriber implements EventSubscriberInterface
         }
     }
 
-    private function invalidateRouteDocument(CustomUrlRoute $customUrlRoute): void
+    private function invalidateCustomUrl(CustomUrlRoute $customUrlRoute): void
     {
         $this->cacheManager->invalidatePath($this->getUrlWithScheme($customUrlRoute));
     }

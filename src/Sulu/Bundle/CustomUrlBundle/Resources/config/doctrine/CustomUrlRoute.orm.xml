@@ -14,5 +14,9 @@
         <field name="changed" type="datetime" />
 
         <many-to-one field="customUrl" target-entity="Sulu\Bundle\CustomUrlBundle\Entity\CustomUrl" inversed-by="routes" />
+
+        <indices>
+            <index name="routeUniqueInRouting" columns="customUrl,path" unique="true" />
+        </indices>
     </mapped-superclass>
 </doctrine-mapping>
