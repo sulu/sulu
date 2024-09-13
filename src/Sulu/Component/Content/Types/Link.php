@@ -80,13 +80,7 @@ class Link extends SimpleContentType
             $result['rel'] = $value['rel'];
         }
 
-        if (null !== $value['provider'] && self::LINK_TYPE_EXTERNAL !== $value['provider'] && null !== $value['href']) {
-            $provider = $this->providerPool->getProvider($value['provider']);
-            $locale = $property->getStructure()->getLanguageCode();
-            $result['uuid'] = $value['href'];
-            $result['linkitems'] = $provider->preload([$value['href']], $locale, true);
-        }
-
+        $result['href'] = $value['href'] ?? null;
         return $result;
     }
 
