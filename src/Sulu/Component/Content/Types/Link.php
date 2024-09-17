@@ -81,6 +81,7 @@ class Link extends SimpleContentType
         }
 
         $result['href'] = $value['href'] ?? null;
+
         return $result;
     }
 
@@ -123,7 +124,7 @@ class Link extends SimpleContentType
         $userId,
         $webspaceKey,
         $languageCode,
-        $segmentKey = null
+        $segmentKey = null,
     ): void {
         $property->setValue(\json_decode($value, true));
         $this->write($node, $property, $userId, $webspaceKey, $languageCode, $segmentKey);
