@@ -30,6 +30,7 @@ type Props = {
     snackbarMessage?: string,
     snackbarType: SnackbarType,
     title: string,
+    footerVisible: boolean,
 };
 
 const CLOSE_ICON = 'su-times';
@@ -39,6 +40,7 @@ const CLOSE_OVERLAY_KEY = 'esc';
 class Overlay extends React.Component<Props> {
     static defaultProps = {
         actions: [],
+        footerVisible: true,
         confirmDisabled: false,
         confirmLoading: false,
         snackbarType: 'error',
@@ -115,6 +117,7 @@ class Overlay extends React.Component<Props> {
             snackbarMessage,
             snackbarType,
             title,
+            footerVisible,
         } = this.props;
 
         const {open, visible} = this;
@@ -153,17 +156,19 @@ class Overlay extends React.Component<Props> {
                                         />
                                     </header>
                                     <article className={overlayStyles.article}>{children}</article>
-                                    <footer className={overlayStyles.footer}>
-                                        <Actions actions={actions} />
-                                        <Button
-                                            disabled={confirmDisabled}
-                                            loading={confirmLoading}
-                                            onClick={onConfirm}
-                                            skin="primary"
-                                        >
-                                            {confirmText}
-                                        </Button>
-                                    </footer>
+                                    {footerVisible &&
+                                        <footer className={overlayStyles.footer}>
+                                            <Actions actions={actions} />
+                                            <Button
+                                                disabled={confirmDisabled}
+                                                loading={confirmLoading}
+                                                onClick={onConfirm}
+                                                skin="primary"
+                                            >
+                                                {confirmText}
+                                            </Button>
+                                        </footer>
+                                    }
                                     <div className={overlayStyles.snackbar}>
                                         <Snackbar
                                             message={snackbarMessage || ''}
