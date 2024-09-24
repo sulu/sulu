@@ -272,7 +272,7 @@ class OpenIdSingleSignOnAdapter implements SingleSignOnAdapterInterface
         $contact = $user->getContact();
         $contact->setFirstName($attributes['given_name'] ?? '');
         $contact->setLastName($attributes['family_name'] ?? '');
-        $locale = (isset($attributes['locale']) && \in_array($attributes['locale'], $this->translations, true)) ? $attributes['locale'] : 'en';
+        $locale = (isset($attributes['locale']) && \in_array($attributes['locale'], $this->translations, true)) ? $attributes['locale'] : ($user instanceof User && $user->getLocale() ? $user->getLocale() : 'en');
         $user->setLocale($locale);
 
         $this->entityManager->flush();
