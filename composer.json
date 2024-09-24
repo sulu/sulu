@@ -233,6 +233,7 @@
             "@lint-composer",
             "@lint-doctrine",
             "@lint-rector",
+            "@lint-translations",
             "@php-cs",
             "@phpstan"
         ],
@@ -262,6 +263,10 @@
         "lint-composer": "@composer validate --strict",
         "lint-twig": "@php bin/adminconsole lint:twig templates",
         "lint-yaml": "@php bin/adminconsole lint:yaml config",
+        "lint-translations": [
+            "@php bin/console debug:translation --all en --only-missing",
+            "@php bin/console debug:translation --all de --only-missing"
+        ],
         "lint-container": [
             "@php bin/adminconsole lint:container --env dev",
             "@php bin/websiteconsole lint:container --env dev",
