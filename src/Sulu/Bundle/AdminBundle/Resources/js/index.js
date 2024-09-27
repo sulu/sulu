@@ -18,7 +18,7 @@ import userStore, {
 } from './stores/userStore';
 import {Config, resourceRouteRegistry} from './services';
 import initializer from './services/initializer';
-import translate from './utils/Translator';
+import {translate} from './utils/Translator';
 import ResourceTabs from './views/ResourceTabs';
 import List, {
     listItemActionRegistry,
