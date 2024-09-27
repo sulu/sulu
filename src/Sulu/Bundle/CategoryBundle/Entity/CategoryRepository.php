@@ -177,13 +177,6 @@ class CategoryRepository extends NestedTreeRepository implements CategoryReposit
             ->addSelect('categoryChildren');
     }
 
-    public function findCategoryByIds(array $ids)
-    {
-        @trigger_deprecation('sulu/sulu', '1.4', __METHOD__ . '() is deprecated and will be removed in 2.0. Use findCategoriesByIds() instead.');
-
-        return $this->findCategoriesByIds($ids);
-    }
-
     public function findCategories($parent = null, $depth = null, $sortBy = null, $sortOrder = null)
     {
         @trigger_deprecation('sulu/sulu', '1.4', __METHOD__ . '() is deprecated and will be removed in 2.0. Use findChildrenCategoriesByParentId() instead.');

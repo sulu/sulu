@@ -10,6 +10,11 @@ Removing deprecated functions and properties:
 - `Sulu\Component\Localization\Localization::isXDefault`
 - `Sulu\Bundle\MediaBundle\Controller\MediaController::$entityKey`
 
+- `Sulu\Bundle\CategoryBundle\Entity\CategoryRepository::findByCategoryIds`
+- `Sulu\Bundle\CategoryBundle\Entity\Category::addChildren`
+- `Sulu\Bundle\CategoryBundle\Entity\Category::removeChildren`
+- `Sulu\Bundle\AdminBundle\Admin\View\FormOverlayListViewBuilder::setRequestParameters`
+
 Removing unused arguments:
 
 - `Sulu\Component\Webspace\Analyzer\Attributes\WebsiteRequestProcessor::__construct` `$contentMapper` (2nd argument) removed
