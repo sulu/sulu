@@ -86,6 +86,7 @@
         "symfony/finder": "^5.4 || ^6.0 || ^7.0",
         "symfony/form": "^5.4 || ^6.0 || ^7.0",
         "symfony/framework-bundle": "^5.4 || ^6.0 || ^7.0",
+        "symfony/html-sanitizer": "^7.1",
         "symfony/http-client": "^5.4 || ^6.0 || ^7.0",
         "symfony/http-foundation": "^5.4 || ^6.0 || ^7.0",
         "symfony/http-kernel": "^5.4 || ^6.0 || ^7.0",
@@ -254,10 +255,13 @@
         "lint-rector": [
             "Composer\\Config::disableProcessTimeout",
             "@php bin/websiteconsole cache:warmup --env=dev",
+            "@php bin/adminconsole cache:warmup --env=dev",
             "@php vendor/bin/rector process --dry-run"
         ],
         "rector": [
             "Composer\\Config::disableProcessTimeout",
+            "@php bin/websiteconsole cache:warmup --env=dev",
+            "@php bin/adminconsole cache:warmup --env=dev",
             "@php vendor/bin/rector process"
         ],
         "lint-composer": "@composer validate --strict",
