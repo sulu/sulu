@@ -14,6 +14,10 @@ Removing unused arguments:
 
 - `Sulu\Component\Webspace\Analyzer\Attributes\WebsiteRequestProcessor::__construct` `$contentMapper` (2nd argument) removed
 
+Removed traits:
+
+- `Sulu\Component\Security\Authorization\AccessControl\SecuredEntityRepositoryTrait`
+
 ## 2.6.4
 
 ### Stricter Image Format Url Handling
