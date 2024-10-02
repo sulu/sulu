@@ -76,7 +76,7 @@ class WebspaceSelect extends React.Component<Props> {
                 <ArrowMenu.SingleItemSection
                     icon="su-webspace"
                     onChange={this.handleChange}
-                    title= {translate('sulu_page.webspaces')}
+                    title={translate('sulu_page.webspaces')}
                     value={value}
                 >
                     {children}

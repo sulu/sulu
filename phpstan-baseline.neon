@@ -1421,7 +1421,7 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Tests/Functional/Controller/CollaborationControllerTest.php
 
 		-
-			message: "#^Parameter \\#1 \\$array of function array_values expects array, mixed given\\.$#"
+			message: "#^Parameter \\#1 \\$array of function array_values expects array\\<T\\>, mixed given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AdminBundle/Tests/Functional/Controller/CollaborationControllerTest.php
 
@@ -3847,6 +3847,11 @@ parameters:
 
 		-
 			message: "#^Parameter \\#2 \\$string of function explode expects string, mixed given\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/CategoryBundle/Controller/CategoryController.php
+
+		-
+			message: "#^Parameter \\#2 \\$string of function explode expects string, string\\|null given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/CategoryBundle/Controller/CategoryController.php
 
@@ -18736,17 +18741,7 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Controller/PageController.php
 
 		-
-			message: "#^Result of && is always false\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Controller/PageController.php
-
-		-
 			message: "#^Strict comparison using \\=\\=\\= between false and string will always evaluate to false\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Controller/PageController.php
-
-		-
-			message: "#^Strict comparison using \\=\\=\\= between null and array\\|bool\\|float\\|int\\|string will always evaluate to false\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Controller/PageController.php
 
@@ -22556,7 +22551,7 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Export/WebspaceExportTest.php
 
 		-
-			message: "#^Parameter \\#1 \\$array of function array_values expects array, mixed given\\.$#"
+			message: "#^Parameter \\#1 \\$array of function array_values expects array\\<T\\>, mixed given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Export/WebspaceExportTest.php
 
@@ -28761,6 +28756,11 @@ parameters:
 			path: src/Sulu/Bundle/SnippetBundle/Controller/SnippetAreaController.php
 
 		-
+			message: "#^Return type of call to function array_values contains unresolvable type\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/SnippetBundle/Controller/SnippetAreaController.php
+
+		-
 			message: "#^Strict comparison using \\=\\=\\= between false and string will always evaluate to false\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SnippetBundle/Controller/SnippetAreaController.php
@@ -28822,7 +28822,7 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\SnippetBundle\\\\Controller\\\\SnippetController\\:\\:getLocale\\(\\) should return string but returns string\\|null\\.$#"
-			count: 1
+			count: 2
 			path: src/Sulu/Bundle/SnippetBundle/Controller/SnippetController.php
 
 		-
@@ -28873,6 +28873,11 @@ parameters:
 		-
 			message: "#^Parameter \\#2 \\$string of function explode expects string, mixed given\\.$#"
 			count: 1
+			path: src/Sulu/Bundle/SnippetBundle/Controller/SnippetController.php
+
+		-
+			message: "#^Parameter \\#2 \\$string of function explode expects string, string\\|null given\\.$#"
+			count: 2
 			path: src/Sulu/Bundle/SnippetBundle/Controller/SnippetController.php
 
 		-
@@ -43012,7 +43017,7 @@ parameters:
 
 		-
 			message: "#^Binary operation \"\\+\" between int\\|string\\|false and 1 results in an error\\.$#"
-			count: 2
+			count: 1
 			path: src/Sulu/Component/DocumentManager/Subscriber/Behavior/Path/AutoNameSubscriber.php
 
 		-
@@ -45996,7 +46001,7 @@ parameters:
 			path: src/Sulu/Component/Rest/ListBuilder/Doctrine/DoctrineListBuilder.php
 
 		-
-			message: "#^Parameter \\#1 \\$array of function array_values expects array, mixed given\\.$#"
+			message: "#^Parameter \\#1 \\$array of function array_values expects array\\<T\\>, mixed given\\.$#"
 			count: 1
 			path: src/Sulu/Component/Rest/ListBuilder/Doctrine/DoctrineListBuilder.php
 
