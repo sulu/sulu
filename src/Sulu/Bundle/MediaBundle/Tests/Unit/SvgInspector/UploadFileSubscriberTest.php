@@ -80,7 +80,6 @@ class UploadFileSubscriberTest extends TestCase
         $this->svgInspector->supports($mimeType)->willReturn(true);
         $this->svgInspector->inspect($uploadedFile)->willThrow(new UnsafeFileException($uploadedFile));
 
-
         $this->subscriber->onKernelRequest($event);
     }
 
