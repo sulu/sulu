@@ -28536,11 +28536,6 @@ parameters:
 			path: src/Sulu/Bundle/SnippetBundle/Controller/SnippetAreaController.php
 
 		-
-			message: "#^Return type of call to function array_values contains unresolvable type\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SnippetBundle/Controller/SnippetAreaController.php
-
-		-
 			message: "#^Strict comparison using \\=\\=\\= between false and string will always evaluate to false\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SnippetBundle/Controller/SnippetAreaController.php
