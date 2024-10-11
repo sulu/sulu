@@ -238,7 +238,7 @@ class OpenIdSingleSignOnAdapter implements SingleSignOnAdapterInterface
         $user = $this->userRepository->findOneBy(['email' => $email]);
 
         if (!$user instanceof User) {
-            /** @var UserInterface $user */
+            /** @var User $user */
             $user = $this->userRepository->createNew();
             $user->setEmail($email);
             $user->setUsername($email);
@@ -263,7 +263,8 @@ class OpenIdSingleSignOnAdapter implements SingleSignOnAdapterInterface
         }
 
         if (!\in_array($role->getIdentifier(), $roleNames, true)) {
-            $defaultRoleKey = new UserRole();
+            /** @var UserRole $defaultRoleKey */
+            $defaultRoleKey = $this->roleRepository->createNew();
             $defaultRoleKey->setRole($role);
             $defaultRoleKey->setUser($user);
             $defaultRoleKey->setLocale('["en", "de"]');
