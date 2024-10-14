@@ -163,9 +163,10 @@ class FormatManager implements FormatManagerInterface
             }
         } catch (MediaException $e) {
             $this->logger->error($e->getMessage(), ['exception' => $e]);
-            $responseContent = null;
+            $responseContent = $e->getMessage();
             $status = 404;
             $mimeType = null;
+            $headers['X-Debug-Exception'] = $e->getMessage();
         }
 
         // Set header.

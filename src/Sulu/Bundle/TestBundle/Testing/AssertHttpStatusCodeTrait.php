@@ -59,8 +59,9 @@ trait AssertHttpStatusCodeTrait
                     . 'Exception: %s' . \PHP_EOL
                     . 'Exception-File: %s' . \PHP_EOL
                     . 'Showing %s lines of the response body:' . \PHP_EOL
-                    . '%s' .
-                    . PHP_EOL . PHP_EOL . '%s',
+                    . '%s'  . \PHP_EOL
+                    . 'Showing raw data:' . \PHP_EOL
+                    . \PHP_EOL . \PHP_EOL . '%s',
                     $httpCode,
                     $code,
                     \rawurldecode($response->headers->get('X-Debug-Exception')),
