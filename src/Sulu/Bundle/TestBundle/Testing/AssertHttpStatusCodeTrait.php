@@ -42,9 +42,11 @@ trait AssertHttpStatusCodeTrait
                 );
             } else {
                 $message = $response->getContent();
+                $rawContent = $message;
 
                 if ('null' !== ($json = \json_encode(\json_decode($message, true), \JSON_PRETTY_PRINT))
-                    && $json) {
+                    && $json
+                ) {
                     $message = \explode(\PHP_EOL, $json);
                 } else {
                     $message = \explode(\PHP_EOL, $message);
@@ -57,13 +59,16 @@ trait AssertHttpStatusCodeTrait
                     . 'Exception: %s' . \PHP_EOL
                     . 'Exception-File: %s' . \PHP_EOL
                     . 'Showing %s lines of the response body:' . \PHP_EOL
-                    . '%s',
+                    . '%s'  . \PHP_EOL
+                    . 'Showing raw data:' . \PHP_EOL
+                    . \PHP_EOL . \PHP_EOL . '%s',
                     $httpCode,
                     $code,
                     \rawurldecode($response->headers->get('X-Debug-Exception')),
                     \rawurldecode($response->headers->get('X-Debug-Exception-File')),
                     $debugLength,
-                    $message
+                    $message,
+                    $rawContent
                 );
             }
         }
