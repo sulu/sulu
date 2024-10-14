@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\MediaBundle\DependencyInjection;
 
+use Composer\InstalledVersions;
 use Contao\ImagineSvg\Imagine as SvgImagine;
 use FFMpeg\FFMpeg;
 use Imagine\Vips\Imagine as VipsImagine;
@@ -362,6 +363,14 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
 
         if (\array_key_exists('SuluTrashBundle', $bundles)) {
             $loader->load('services_trash.xml');
+        }
+
+        if (
+            InstalledVersions::isInstalled('sulu/sulu-content-bundle')
+            && \version_compare(InstalledVersions::getVersion('sulu/sulu-content-bundle') ?? '0.0.0', '0.9', '>=')
+            && \version_compare(InstalledVersions::getVersion('sulu/sulu-content-bundle') ?? '0.0.0', '0.10', '<')
+        ) {
+            $loader->load('services_content.xml');
         }
 
         $ffmpegBinary = $container->resolveEnvPlaceholders($config['ffmpeg']['ffmpeg_binary'] ?? null, true);
