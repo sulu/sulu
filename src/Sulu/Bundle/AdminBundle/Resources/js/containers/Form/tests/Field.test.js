@@ -654,15 +654,35 @@ test('Call onFocus callback when Field gets focus', () => {
             router={undefined}
             schema={{label: 'label', type: 'text'}}
             schemaPath=""
+            value="test value"
         />
     );
 
-    const eventSpy = jest.fn();
-
     const target = new EventTarget();
-    target.addEventListener('sulu.focus', eventSpy);
+    const dispatchEventSpy = jest.spyOn(target, 'dispatchEvent');
 
     field.find('Text').props().onFocus(target);
 
-    expect(eventSpy).toBeCalled();
+    expect(dispatchEventSpy).toHaveBeenCalled();
+
+    const dispatchedEvent = dispatchEventSpy.mock.calls[0][0];
+
+    expect(dispatchedEvent.type).toBe('sulu.focus');
+    expect(dispatchedEvent.bubbles).toBe(true);
+    expect(dispatchedEvent.detail).toEqual({
+        schemaType: 'text',
+        setValue: expect.any(Function),
+        getValue: expect.any(Function),
+        schemaPath: '',
+        formInspector,
+    });
+
+    // Test the getValue function
+    expect(dispatchedEvent.detail.getValue()).toBe('test value');
+
+    // Test the setValue function
+    const onChangeMock = jest.fn();
+    field.setProps({onChange: onChangeMock});
+    dispatchedEvent.detail.setValue('new value');
+    expect(onChangeMock).toHaveBeenCalledWith('test', 'new value', undefined);
 });
