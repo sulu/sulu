@@ -100,6 +100,7 @@ class Field extends React.Component<Props> {
             setValue: this.handleChange,
             getValue: () => this.props.value,
             schemaPath,
+            formInspector: this.props.formInspector,
         };
 
         target.dispatchEvent(focusEvent);
