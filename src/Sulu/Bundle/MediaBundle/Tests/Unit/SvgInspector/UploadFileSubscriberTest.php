@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Sulu\Bundle\MediaBundle\Tests\Unit\SvgInspector;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\MediaBundle\FileInspector\FileInspectorInterface;
@@ -35,6 +36,16 @@ class UploadFileSubscriberTest extends TestCase
     private ObjectProphecy $svgInspector;
 
     private UploadFileSubscriber $subscriber;
+
+    public static function setUpBeforeClass(): void
+    {
+        \file_put_contents('test.svg', '<svg></svg>');
+    }
+
+    public static function tearDownAfterClass(): void
+    {
+        \unlink('test.svg');
+    }
 
     protected function setUp(): void
     {
@@ -60,6 +71,54 @@ class UploadFileSubscriberTest extends TestCase
 
         $this->svgInspector->supports($mimeType)->willReturn(true);
         $this->svgInspector->inspect($uploadedFile)->willReturn($uploadedFile);
+
+        $this->subscriber->onKernelRequest($event);
+
+        // If we reach here without exception, the test passes
+        $this->addToAssertionCount(1);
+    }
+
+    public function testOnKernelRequestWithReplace(): void
+    {
+        $mimeType = 'image/svg+xml';
+        $uploadedFile = new UploadedFile('test.svg', 'test.svg', $mimeType, 0, true);
+        $newUploadedFile = new UploadedFile('test.svg', 'test.svg', $mimeType, 0, true);
+
+        $request = new Request([], [], [], [], ['file' => $uploadedFile]);
+        $event = $this->createRequestEvent($request);
+
+        $this->svgInspector->supports($mimeType)->willReturn(true);
+        $this->svgInspector->inspect($uploadedFile)->willReturn($newUploadedFile);
+
+        $this->subscriber->onKernelRequest($event);
+
+        $this->assertSame($newUploadedFile, $request->files->get('file'));
+    }
+
+    public function testOnKernelRequestWithNestedFiles(): void
+    {
+        $mimeType = 'image/svg+xml';
+        $uploadedFile = new UploadedFile('test.svg', 'test.svg', $mimeType, 0, true);
+
+        $request = new Request([], [], [], [], ['Product' => ['thumbnail' => $uploadedFile]]);
+        $event = $this->createRequestEvent($request);
+
+        $this->svgInspector->supports($mimeType)->willReturn(true);
+        $this->svgInspector->inspect($uploadedFile)->willReturn($uploadedFile);
+
+        $this->subscriber->onKernelRequest($event);
+
+        // If we reach here without exception, the test passes
+        $this->addToAssertionCount(1);
+    }
+
+    public function testOnKernelRequestWithNull(): void
+    {
+        $request = new Request([], [], [], [], ['Product' => ['thumbnail' => null]]);
+        $event = $this->createRequestEvent($request);
+
+        $this->svgInspector->supports(Argument::any())->shouldNotBeCalled();
+        $this->svgInspector->inspect(Argument::any())->shouldNotBeCalled();
 
         $this->subscriber->onKernelRequest($event);
 
