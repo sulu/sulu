@@ -19,6 +19,7 @@ use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\ContactBundle\Entity\ContactRepositoryInterface;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
+use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\SecurityBundle\SingleSignOn\Adapter\OpenId\OpenIdSingleSignOnAdapter;
 use Sulu\Component\Security\Authentication\RoleRepositoryInterface;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
@@ -180,11 +181,30 @@ class OpenIdSingleSignOnAdapterTest extends TestCase
             ->willReturn('https://sulu.io/admin');
 
         $this->userRepository->findOneBy(Argument::any())->willReturn(null);
+
+        $user = $this->prophesize(User::class);
+        $user->getRoles()->willReturn([]);
+        $user->setEmail(Argument::any())->shouldBeCalled();
+        $user->setUsername(Argument::any())->shouldBeCalled();
+        $user->setPassword(Argument::any())->shouldBeCalled();
+        $user->setSalt(Argument::any())->shouldBeCalled();
+        $user->setEnabled(Argument::any())->shouldBeCalled();
+        $user->setContact(Argument::any())->shouldBeCalled();
+        $user->addUserRole(Argument::any())->shouldBeCalled();
+        $user->getLocale()->shouldBeCalled();
+        $user->setLocale(Argument::any())->shouldBeCalled();
+
+        $contact = $this->prophesize(Contact::class);
+        $user->getContact()->willReturn($contact->reveal());
+
+        $this->userRepository->createNew()->willReturn($user->reveal());
+
         $this->contactRepository->createNew()->willReturn($this->prophesize(Contact::class)->reveal());
         $this->entityManager->persist(Argument::any())->shouldBeCalled();
         $role = $this->prophesize(Role::class);
         $role->getAnonymous()->shouldBeCalled()->willReturn(false);
         $role->getIdentifier()->willReturn('hello@sulu.io');
+        $this->roleRepository->createNew()->willReturn($role->reveal());
         $this->roleRepository->findOneBy(Argument::any())
             ->shouldBeCalled()
             ->willReturn($role->reveal());
