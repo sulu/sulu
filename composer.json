@@ -24,6 +24,12 @@
         "source": "https://github.com/sulu/skeleton",
         "docs": "https://docs.sulu.io/"
     },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "git@github.com:Prokyonn/SuluContentBundle.git"
+        }
+    ],
     "require": {
         "php": "^8.2 || ^8.3",
         "ext-dom": "*",
@@ -143,6 +149,7 @@
         "scheb/2fa-google-authenticator": "^6.0 || ^7.0",
         "scheb/2fa-totp": "^6.0 || ^7.0",
         "scheb/2fa-trusted-device": "^6.0 || ^7.0",
+        "sulu/content-bundle": "dev-feature/content-resolver as 0.9.0",
         "superbalist/flysystem-google-storage": "^7.1",
         "symfony/browser-kit": "^5.4 || ^6.0 || ^7.0",
         "symfony/debug-bundle": "^5.4 || ^6.0 || ^7.0",
