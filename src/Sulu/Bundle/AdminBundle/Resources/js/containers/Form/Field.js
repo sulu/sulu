@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {computed, isArrayLike} from 'mobx';
+import {computed, isObservableArray} from 'mobx';
 import {observer} from 'mobx-react';
 import log from 'loglevel';
 import jexl from 'jexl';
@@ -111,7 +111,7 @@ class Field extends React.Component<Props> {
             return;
         }
 
-        if (isArrayLike(error)) {
+        if (Array.isArray(error) || isObservableArray(error)) {
             // this happens when the error is in a block field type
             // since the error is shown on the child elements of the block we do not have to mark the block separately
             return;

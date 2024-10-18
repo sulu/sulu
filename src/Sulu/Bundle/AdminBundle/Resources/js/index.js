@@ -123,7 +123,9 @@ import {initializeJexl} from './utils/jexl';
 import {ExternalLinkTypeOverlay, LinkTypeOverlay} from './containers/Link';
 import linkTypeRegistry from './containers/Link/registries/linkTypeRegistry';
 
-configure({enforceActions: 'observed'});
+configure({
+    enforceActions: 'always',
+});
 
 if (!window.ResizeObserver) {
     window.ResizeObserver = ResizeObserver;

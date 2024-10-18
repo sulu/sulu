@@ -1,5 +1,5 @@
 // @flow
-import {action, autorun, computed, isArrayLike, observable, toJS} from 'mobx';
+import {action, autorun, computed, isObservableArray, observable, toJS, makeObservable} from 'mobx';
 import equal from 'fast-deep-equal';
 import log from 'loglevel';
 import {compile} from 'path-to-regexp';
@@ -71,7 +71,7 @@ function equalBindings(value1, value2) {
 }
 
 function addValueToSearchParameters(searchParameters: URLSearchParams, value: Object, path: string) {
-    if (isArrayLike(value)) {
+    if (Array.isArray(value) || isObservableArray(value)) {
         addArrayToSearchParameters(searchParameters, value, path);
     } else if (value instanceof Date) {
         addDateToSearchParameters(searchParameters, value, path);
@@ -122,7 +122,7 @@ function addAttributesFromSearchParameters(attributes: Object, value: string, ke
 
 export default class Router {
     history: Object;
-    @observable route: Route;
+    @observable route: Route; // our observable route
     @observable attributes: AttributeMap = {};
     @observable bindings: Map<string, IObservableValue<*>> = new Map();
     bindingDefaults: Map<string, ?string | number | boolean> = new Map();
@@ -132,6 +132,8 @@ export default class Router {
     redirectFlag: boolean = false;
 
     constructor(history: Object) {
+        makeObservable(this); // this should be enough that we still should be able to use legacy decorators
+
         this.history = history;
 
         this.history.listen(({location}) => {

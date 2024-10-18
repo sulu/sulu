@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {computed, isArrayLike} from 'mobx';
+import {computed, isObservableArray} from 'mobx';
 import MultiSelectComponent from '../../../components/MultiSelect';
 import type {FieldTypeProps} from '../../../types';
 import type {IObservableArray} from 'mobx/lib/mobx';
@@ -23,7 +23,7 @@ export default class Select extends React.Component<Props> {
             return;
         }
 
-        if (!isArrayLike(defaultOptions)) {
+        if (!(Array.isArray(defaultOptions) || isObservableArray(defaultOptions))) {
             throw new Error('The "default_values" schema option must be an array!');
         }
 
@@ -44,7 +44,7 @@ export default class Select extends React.Component<Props> {
     @computed get values(): Array<any> | IObservableArray<any> {
         const {values} = this.props.schemaOptions;
 
-        if (!values || !isArrayLike(values.value)) {
+        if (!values || !(Array.isArray(values.value) || isObservableArray(values.value))) {
             throw new Error('The "values" option has to be set for the Select FieldType');
         }
 

@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {computed, observable, intercept, toJS, reaction, isArrayLike} from 'mobx';
+import {computed, observable, intercept, toJS, reaction, isObservableArray} from 'mobx';
 import equals from 'fast-deep-equal';
 import {observer} from 'mobx-react';
 import jsonpointer from 'json-pointer';
@@ -63,13 +63,16 @@ class Selection extends React.Component<Props> {
             throw new Error('The selection field needs a "resource_key" option to work properly');
         }
 
-        if (!isArrayLike(unvalidatedRequestParameters)) {
+        if (!(Array.isArray(unvalidatedRequestParameters) || isObservableArray(unvalidatedRequestParameters))) {
             throw new Error('The "request_parameters" schemaOption must be an array!');
         }
         // $FlowFixMe: flow does not recognize that isArrayLike(value) means that value is an array
         const requestParameters: Array<any> | IObservableArray<any> = unvalidatedRequestParameters;
 
-        if (!isArrayLike(unvalidatedResourceStorePropertiesToRequest)) {
+        if (!(
+            Array.isArray(unvalidatedResourceStorePropertiesToRequest)
+            || isObservableArray(unvalidatedResourceStorePropertiesToRequest)
+        )) {
             throw new Error('The "resource_store_properties_to_request" schemaOption must be an array!');
         }
         // $FlowFixMe: flow does not recognize that isArrayLike(value) means that value is an array
@@ -204,7 +207,11 @@ class Selection extends React.Component<Props> {
     @computed get value(): ?Value {
         const {value, dataPath} = this.props;
 
-        if (value && isArrayLike(value) && value.length > 0 && typeof value[0] === 'object') {
+        if (value
+            && (Array.isArray(value) || isObservableArray(value))
+            && value.length > 0
+            && typeof value[0] === 'object'
+        ) {
             log.warn(
                 'The "Selection" field with the path "' + dataPath + '" expects an array of ids as value but '
                 + 'received an array of objects instead. Is it possible that your API returns an array serialized '

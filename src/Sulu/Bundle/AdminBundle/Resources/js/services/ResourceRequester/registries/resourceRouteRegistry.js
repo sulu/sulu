@@ -1,12 +1,12 @@
 // @flow
-import {isArrayLike, toJS} from 'mobx';
+import {isObservableArray, toJS} from 'mobx';
 import symfonyRouting from 'fos-jsrouting/router';
 import log from 'loglevel';
 import {transformDateForUrl} from '../../../utils/Date';
 import type {EndpointConfiguration} from '../types';
 
 function transformParameter(parameter) {
-    return isArrayLike(parameter)
+    return (Array.isArray(parameter) || isObservableArray(parameter))
         ? parameter.map(transformParameter).join(',')
         : parameter instanceof Date
             ? transformDateForUrl(parameter)
