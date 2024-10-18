@@ -2,6 +2,9 @@
 
 ## 3.0.0
 
+Removing deprecated classes:
+- `Sulu\Bundle\DocumentManagerBundle\Slugifier\Urlizer`
+
 Removing deprecated functions and properties:
 
 - `Sulu\Component\Security\Event\PermissionUpdateEvent::getSecurityIdentity`
