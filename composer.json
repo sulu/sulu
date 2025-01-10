@@ -211,6 +211,7 @@
             "Sulu\\Article\\": "packages/article/src",
             "Sulu\\Snippet\\": "packages/snippet/src",
             "Sulu\\Page\\": "packages/page/src",
+            "Sulu\\Route\\": "packages/route/src",
             "Sulu\\Content\\": "packages/content/src"
         },
         "exclude-from-classmap": [
@@ -225,6 +226,7 @@
             "Sulu\\Article\\Tests\\": "packages/article/tests",
             "Sulu\\Snippet\\Tests\\": "packages/snippet/tests",
             "Sulu\\Page\\Tests\\": "packages/page/tests",
+            "Sulu\\Route\\Tests\\": "packages/route/tests",
             "Sulu\\Content\\Tests\\": "packages/content/tests"
         }
     },
