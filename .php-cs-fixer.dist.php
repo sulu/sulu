@@ -1,5 +1,7 @@
 <?php
 
+require __DIR__.'/src/CodeStyle/InternalClassFixer.php';
+
 $header = <<<EOF
 This file is part of Sulu.
 
@@ -18,8 +20,12 @@ $finder = PhpCsFixer\Finder::create()
     ]);
 
 $config = new PhpCsFixer\Config();
-$config->setRiskyAllowed(true)
+$config
+    ->setRiskyAllowed(true)
     ->setParallelConfig(PhpCsFixer\Runner\Parallel\ParallelConfigFactory::detect())
+    ->registerCustomFixers([
+        new \CodeStyle\InternalClassFixer(),
+    ])
     ->setRules([
         '@Symfony' => true,
         'array_syntax' => ['syntax' => 'short'],
@@ -52,6 +58,11 @@ $config->setRiskyAllowed(true)
         'new_with_parentheses' => true,
         'trailing_comma_in_multiline' => ['after_heredoc' => true, 'elements' => ['array_destructuring', 'arrays', 'match']],
         'no_useless_else' => false,
+        'Sulu/internal_class' => [
+            'base_type' => [
+                'CompilerPassInterface',
+            ],
+        ]
     ])
     ->setFinder($finder);
 
