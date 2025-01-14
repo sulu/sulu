@@ -236,6 +236,7 @@
             "Sulu\\Search\\Tests\\": "packages/search/tests",
             "Sulu\\Content\\Tests\\": "packages/content/tests",
             "Sulu\\CustomUrl\\Tests\\": "packages/custom-url/tests"
+            "PhpCsFixer\\": "tests/php-cs-fixer/"
         }
     },
     "scripts": {
