@@ -61,6 +61,9 @@ $config
         'Sulu/internal_class' => [
             'base_type' => [
                 'CompilerPassInterface',
+                'FormMetadataVisitorInterface',
+                'TypedFormMetadataVisitorInterface',
+                'MetadataProviderInterface',
             ],
         ]
     ])
