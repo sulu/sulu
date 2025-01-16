@@ -19,6 +19,8 @@ use Symfony\Component\DependencyInjection\Reference;
  * Registers the format cache clearers.
  *
  * @deprecated since 2.6 use the tagged_iterator instead
+ *
+ * @internal this is an internal class which should not be used by a project
  */
 class FormatCacheClearerCompilerPass implements CompilerPassInterface
 {

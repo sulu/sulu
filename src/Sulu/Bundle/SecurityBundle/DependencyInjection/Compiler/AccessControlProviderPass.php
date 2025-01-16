@@ -14,7 +14,10 @@ namespace Sulu\Bundle\SecurityBundle\DependencyInjection\Compiler;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
-/** @deprecated use tagged_iterator instead */
+/**
+ * @deprecated use tagged_iterator instead
+ * @internal this is an internal class which should not be used by a project
+ */
 class AccessControlProviderPass implements CompilerPassInterface
 {
     /** @deprecated use Sulu\Component\Security\Authorization\AccessControl\AccessControlProviderInterface::SERVICE_TAG instead */
