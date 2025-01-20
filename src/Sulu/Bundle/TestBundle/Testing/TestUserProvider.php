@@ -15,7 +15,6 @@ use Doctrine\ORM\EntityManager;
 use Sulu\Bundle\ContactBundle\Entity\ContactRepositoryInterface;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
-use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -50,7 +49,7 @@ class TestUserProvider implements UserProviderInterface, ResetInterface
     private $userRepository;
 
     /**
-     * @var PasswordHasherFactoryInterface|EncoderFactoryInterface
+     * @var PasswordHasherFactoryInterface
      */
     private $passwordHasherFactory;
 
@@ -59,14 +58,11 @@ class TestUserProvider implements UserProviderInterface, ResetInterface
      */
     private $userProvider;
 
-    /**
-     * @param PasswordHasherFactoryInterface|EncoderFactoryInterface $passwordHasherFactory
-     */
     public function __construct(
         EntityManager $entityManager,
         ContactRepositoryInterface $contactRepository,
         UserRepositoryInterface $userRepository,
-        $passwordHasherFactory,
+        PasswordHasherFactoryInterface $passwordHasherFactory,
         UserProviderInterface $userProvider
     ) {
         $this->entityManager = $entityManager;
@@ -100,13 +96,8 @@ class TestUserProvider implements UserProviderInterface, ResetInterface
         $user->setEmail(self::TEST_USER_USERNAME . '@example.localhost');
         $user->setSalt('');
 
-        if ($this->passwordHasherFactory instanceof PasswordHasherFactoryInterface) {
-            $hasher = $this->passwordHasherFactory->getPasswordHasher($user);
-            $password = $hasher->hash('test');
-        } else {
-            $encoder = $this->passwordHasherFactory->getEncoder($user);
-            $password = $encoder->encodePassword('test', $user->getSalt());
-        }
+        $hasher = $this->passwordHasherFactory->getPasswordHasher($user);
+        $password = $hasher->hash('test');
 
         $user->setPassword($password);
         $user->setLocale('en');

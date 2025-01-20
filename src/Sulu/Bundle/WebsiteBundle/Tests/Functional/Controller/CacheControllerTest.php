@@ -20,7 +20,6 @@ use Sulu\Bundle\SecurityBundle\Entity\UserRole;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Page\Infrastructure\Sulu\Admin\PageAdmin;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
-use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
 
 class CacheControllerTest extends SuluTestCase
 {
@@ -49,14 +48,9 @@ class CacheControllerTest extends SuluTestCase
         $user->setLocale('en');
         $user->setSalt('');
 
-        $passwordHasherFactory = self::getContainer()->get('sulu_security.encoder_factory');
-        if ($passwordHasherFactory instanceof PasswordHasherFactoryInterface) {
-            $hasher = $passwordHasherFactory->getPasswordHasher($user);
-            $password = $hasher->hash('cache-user');
-        } else {
-            $encoder = $passwordHasherFactory->getEncoder($user);
-            $password = $encoder->encodePassword('cache-user', $user->getSalt());
-        }
+        $passwordHasherFactory = self::getContainer()->get('security.password_hasher_factory');
+        $hasher = $passwordHasherFactory->getPasswordHasher($user);
+        $password = $hasher->hash('cache-user');
 
         $user->setPassword($password);
         $entityManager->persist($user);

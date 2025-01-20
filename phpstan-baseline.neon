@@ -28189,18 +28189,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/MediaStreamControllerAdminTest.php
 
 		-
-			message: '#^Cannot call method encodePassword\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/MediaStreamControllerAdminTest.php
-
-		-
-			message: '#^Instanceof between Symfony\\Component\\PasswordHasher\\Hasher\\PasswordHasherFactory and Symfony\\Component\\PasswordHasher\\Hasher\\PasswordHasherFactoryInterface will always evaluate to true\.$#'
-			identifier: instanceof.alwaysTrue
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/MediaStreamControllerAdminTest.php
-
-		-
 			message: '#^You should use assertNull\(\) instead of assertSame\(null, \$actual\)\.$#'
 			identifier: phpunit.assertNull
 			count: 1
@@ -28223,18 +28211,6 @@ parameters:
 			identifier: deadCode.unreachable
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/MediaStreamControllerTest.php
-
-		-
-			message: '#^Cannot call method encodePassword\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/MediaStreamControllerWebsiteSecuredTest.php
-
-		-
-			message: '#^Instanceof between Symfony\\Component\\PasswordHasher\\Hasher\\PasswordHasherFactory and Symfony\\Component\\PasswordHasher\\Hasher\\PasswordHasherFactoryInterface will always evaluate to true\.$#'
-			identifier: instanceof.alwaysTrue
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/MediaStreamControllerWebsiteSecuredTest.php
 
 		-
 			message: '#^Argument of an invalid type list\<string\>\|false supplied for foreach, only iterables are supported\.$#'
@@ -30895,12 +30871,6 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/Command/CreateRoleCommand.php
 
 		-
-			message: '#^Call to an undefined method Sulu\\Component\\Security\\Authentication\\UserInterface\:\:getSalt\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Command/CreateUserCommand.php
-
-		-
 			message: '#^Call to an undefined method Sulu\\Component\\Security\\Authentication\\UserInterface\:\:setContact\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -30937,42 +30907,6 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/Command/CreateUserCommand.php
 
 		-
-			message: '#^Call to method getEncoder\(\) on an unknown class Symfony\\Component\\Security\\Core\\Encoder\\EncoderFactoryInterface\.$#'
-			identifier: class.notFound
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Command/CreateUserCommand.php
-
-		-
-			message: '#^Cannot call method encodePassword\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Command/CreateUserCommand.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\SecurityBundle\\Command\\CreateUserCommand\:\:encodePassword\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Command/CreateUserCommand.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\SecurityBundle\\Command\\CreateUserCommand\:\:encodePassword\(\) has parameter \$password with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Command/CreateUserCommand.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\SecurityBundle\\Command\\CreateUserCommand\:\:encodePassword\(\) has parameter \$salt with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Command/CreateUserCommand.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\SecurityBundle\\Command\\CreateUserCommand\:\:encodePassword\(\) has parameter \$user with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Command/CreateUserCommand.php
-
-		-
 			message: '#^Negated boolean expression is always false\.$#'
 			identifier: booleanNot.alwaysFalse
 			count: 1
@@ -30985,13 +30919,7 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/Command/CreateUserCommand.php
 
 		-
-			message: '#^Parameter \#1 \$plainPassword of method Symfony\\Component\\PasswordHasher\\PasswordHasherInterface\:\:hash\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Command/CreateUserCommand.php
-
-		-
-			message: '#^Parameter \#1 \$user of method Symfony\\Component\\PasswordHasher\\Hasher\\PasswordHasherFactoryInterface\:\:getPasswordHasher\(\) expects string\|Symfony\\Component\\PasswordHasher\\Hasher\\PasswordHasherAwareInterface\|Symfony\\Component\\Security\\Core\\User\\PasswordAuthenticatedUserInterface, mixed given\.$#'
+			message: '#^Parameter \#1 \$user of method Symfony\\Component\\PasswordHasher\\Hasher\\PasswordHasherFactoryInterface\:\:getPasswordHasher\(\) expects string\|Symfony\\Component\\PasswordHasher\\Hasher\\PasswordHasherAwareInterface\|Symfony\\Component\\Security\\Core\\User\\PasswordAuthenticatedUserInterface, Sulu\\Component\\Security\\Authentication\\UserInterface given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Command/CreateUserCommand.php
@@ -31000,18 +30928,6 @@ parameters:
 			message: '#^Parameter \#2 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, mixed given\.$#'
 			identifier: argument.type
 			count: 2
-			path: src/Sulu/Bundle/SecurityBundle/Command/CreateUserCommand.php
-
-		-
-			message: '#^Parameter \$passwordHasherFactory of method Sulu\\Bundle\\SecurityBundle\\Command\\CreateUserCommand\:\:__construct\(\) has invalid type Symfony\\Component\\Security\\Core\\Encoder\\EncoderFactoryInterface\.$#'
-			identifier: class.notFound
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Command/CreateUserCommand.php
-
-		-
-			message: '#^Property Sulu\\Bundle\\SecurityBundle\\Command\\CreateUserCommand\:\:\$passwordHasherFactory has unknown class Symfony\\Component\\Security\\Core\\Encoder\\EncoderFactoryInterface as its type\.$#'
-			identifier: class.notFound
-			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Command/CreateUserCommand.php
 
 		-
@@ -31201,18 +31117,6 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/Controller/ResettingController.php
 
 		-
-			message: '#^Call to method getEncoder\(\) on an unknown class Symfony\\Component\\Security\\Core\\Encoder\\EncoderFactoryInterface\.$#'
-			identifier: class.notFound
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Controller/ResettingController.php
-
-		-
-			message: '#^Cannot call method encodePassword\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Controller/ResettingController.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\SecurityBundle\\Controller\\ResettingController\:\:changePassword\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -31220,12 +31124,6 @@ parameters:
 
 		-
 			message: '#^Method Sulu\\Bundle\\SecurityBundle\\Controller\\ResettingController\:\:deleteToken\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Controller/ResettingController.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\SecurityBundle\\Controller\\ResettingController\:\:encodePassword\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Controller/ResettingController.php
@@ -31279,12 +31177,6 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/Controller/ResettingController.php
 
 		-
-			message: '#^Parameter \#1 \$password of method Sulu\\Bundle\\SecurityBundle\\Entity\\User\:\:setPassword\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Controller/ResettingController.php
-
-		-
 			message: '#^Parameter \#1 \$request of class Symfony\\Component\\Security\\Http\\Event\\InteractiveLoginEvent constructor expects Symfony\\Component\\HttpFoundation\\Request, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -31317,18 +31209,6 @@ parameters:
 		-
 			message: '#^Parameter \#4 \$token of method Sulu\\Bundle\\SecurityBundle\\Controller\\ResettingController\:\:sendTokenEmail\(\) expects string, mixed given\.$#'
 			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Controller/ResettingController.php
-
-		-
-			message: '#^Parameter \$passwordHasherFactory of method Sulu\\Bundle\\SecurityBundle\\Controller\\ResettingController\:\:__construct\(\) has invalid type Symfony\\Component\\Security\\Core\\Encoder\\EncoderFactoryInterface\.$#'
-			identifier: class.notFound
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Controller/ResettingController.php
-
-		-
-			message: '#^Property Sulu\\Bundle\\SecurityBundle\\Controller\\ResettingController\:\:\$passwordHasherFactory has unknown class Symfony\\Component\\Security\\Core\\Encoder\\EncoderFactoryInterface as its type\.$#'
-			identifier: class.notFound
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Controller/ResettingController.php
 
@@ -32257,18 +32137,6 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/EventListener/AuhenticationFailureListener.php
 
 		-
-			message: '#^Call to method getEncoder\(\) on an unknown class Symfony\\Component\\Security\\Core\\Encoder\\EncoderFactoryInterface\.$#'
-			identifier: class.notFound
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/EventListener/AuhenticationFailureListener.php
-
-		-
-			message: '#^Cannot call method encodePassword\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/EventListener/AuhenticationFailureListener.php
-
-		-
 			message: '#^Cannot call method getPrevious\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -32300,18 +32168,6 @@ parameters:
 
 		-
 			message: '#^Parameter \$event of method Sulu\\Bundle\\SecurityBundle\\EventListener\\AuhenticationFailureListener\:\:onLoginFailure\(\) has invalid type Symfony\\Component\\Security\\Core\\Event\\AuthenticationFailureEvent\.$#'
-			identifier: class.notFound
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/EventListener/AuhenticationFailureListener.php
-
-		-
-			message: '#^Parameter \$passwordHasherFactory of method Sulu\\Bundle\\SecurityBundle\\EventListener\\AuhenticationFailureListener\:\:__construct\(\) has invalid type Symfony\\Component\\Security\\Core\\Encoder\\EncoderFactoryInterface\.$#'
-			identifier: class.notFound
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/EventListener/AuhenticationFailureListener.php
-
-		-
-			message: '#^Property Sulu\\Bundle\\SecurityBundle\\EventListener\\AuhenticationFailureListener\:\:\$passwordHasherFactory has unknown class Symfony\\Component\\Security\\Core\\Encoder\\EncoderFactoryInterface as its type\.$#'
 			identifier: class.notFound
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/EventListener/AuhenticationFailureListener.php
@@ -32821,12 +32677,6 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/ResettingControllerTest.php
 
 		-
-			message: '#^Cannot call method encodePassword\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/ResettingControllerTest.php
-
-		-
 			message: '#^Cannot call method getCollector\(\) on Symfony\\Component\\HttpKernel\\Profiler\\Profile\|false\|null\.$#'
 			identifier: method.nonObject
 			count: 11
@@ -32841,12 +32691,6 @@ parameters:
 		-
 			message: '#^Cannot call method getRequest\(\) on mixed\.$#'
 			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/ResettingControllerTest.php
-
-		-
-			message: '#^Instanceof between Symfony\\Component\\PasswordHasher\\Hasher\\PasswordHasherFactory and Symfony\\Component\\PasswordHasher\\Hasher\\PasswordHasherFactoryInterface will always evaluate to true\.$#'
-			identifier: instanceof.alwaysTrue
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/ResettingControllerTest.php
 
@@ -33769,12 +33613,6 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/User/UserProvider.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\SecurityBundle\\User\\UserProvider\:\:loadUserByUsername\(\) has parameter \$username with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/User/UserProvider.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\SecurityBundle\\User\\UserProvider\:\:supportsClass\(\) has parameter \$class with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -33782,12 +33620,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#1 \$id of method Sulu\\Component\\Security\\Authentication\\UserRepositoryInterface\:\:findUserWithSecurityById\(\) expects int, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/User/UserProvider.php
-
-		-
-			message: '#^Parameter \#1 \$identifier of method Sulu\\Bundle\\SecurityBundle\\User\\UserProvider\:\:loadUserByIdentifier\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/User/UserProvider.php
@@ -33901,12 +33733,6 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/UserManager/UserManager.php
 
 		-
-			message: '#^Call to method getEncoder\(\) on an unknown class Symfony\\Component\\Security\\Core\\Encoder\\EncoderFactoryInterface\.$#'
-			identifier: class.notFound
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/UserManager/UserManager.php
-
-		-
 			message: '#^Cannot access offset ''email'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 2
@@ -33961,12 +33787,6 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/UserManager/UserManager.php
 
 		-
-			message: '#^Cannot call method encodePassword\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/UserManager/UserManager.php
-
-		-
 			message: '#^Cannot call method getId\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 2
@@ -33987,12 +33807,6 @@ parameters:
 		-
 			message: '#^Cannot call method getValues\(\) on class\-string\|object\.$#'
 			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/UserManager/UserManager.php
-
-		-
-			message: '#^Class Symfony\\Component\\Security\\Core\\Encoder\\EncoderFactoryInterface not found\.$#'
-			identifier: class.notFound
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/UserManager/UserManager.php
 
@@ -34035,12 +33849,6 @@ parameters:
 		-
 			message: '#^Method Sulu\\Bundle\\SecurityBundle\\UserManager\\UserManager\:\:compareEntitiesWithData\(\) has parameter \$requestEntities with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/UserManager/UserManager.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\SecurityBundle\\UserManager\\UserManager\:\:encodePassword\(\) should return string but returns mixed\.$#'
-			identifier: return.type
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/UserManager/UserManager.php
 
@@ -34333,12 +34141,6 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/UserManager/UserManager.php
 
 		-
-			message: '#^Parameter \$passwordHasherFactory of method Sulu\\Bundle\\SecurityBundle\\UserManager\\UserManager\:\:__construct\(\) has invalid type Symfony\\Component\\Security\\Core\\Encoder\\EncoderFactoryInterface\.$#'
-			identifier: class.notFound
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/UserManager/UserManager.php
-
-		-
 			message: '#^Parameter &\$matchedEntry by\-ref type of method Sulu\\Bundle\\SecurityBundle\\UserManager\\UserManager\:\:findMatchByCallback\(\) expects array, mixed given\.$#'
 			identifier: parameterByRef.type
 			count: 1
@@ -34359,12 +34161,6 @@ parameters:
 		-
 			message: '#^Parameter &\$matchedKey by\-ref type of method Sulu\\Bundle\\SecurityBundle\\UserManager\\UserManager\:\:findMatchByCallback\(\) expects string, null given\.$#'
 			identifier: parameterByRef.type
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/UserManager/UserManager.php
-
-		-
-			message: '#^Property Sulu\\Bundle\\SecurityBundle\\UserManager\\UserManager\:\:\$passwordHasherFactory has unknown class Symfony\\Component\\Security\\Core\\Encoder\\EncoderFactoryInterface as its type\.$#'
-			identifier: class.notFound
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/UserManager/UserManager.php
 
@@ -35299,12 +35095,6 @@ parameters:
 			path: src/Sulu/Bundle/TestBundle/Kernel/SuluTestKernel.php
 
 		-
-			message: '#^If condition is always true\.$#'
-			identifier: if.alwaysTrue
-			count: 1
-			path: src/Sulu/Bundle/TestBundle/Resources/app/config/config.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\TestBundle\\Testing\\KernelTestCase\:\:createKernel\(\) has parameter \$options with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -35431,24 +35221,6 @@ parameters:
 			path: src/Sulu/Bundle/TestBundle/Testing/TestUserProvider.php
 
 		-
-			message: '#^Call to method getEncoder\(\) on an unknown class Symfony\\Component\\Security\\Core\\Encoder\\EncoderFactoryInterface\.$#'
-			identifier: class.notFound
-			count: 1
-			path: src/Sulu/Bundle/TestBundle/Testing/TestUserProvider.php
-
-		-
-			message: '#^Cannot call method encodePassword\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Bundle/TestBundle/Testing/TestUserProvider.php
-
-		-
-			message: '#^Cannot call method getSalt\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Bundle/TestBundle/Testing/TestUserProvider.php
-
-		-
 			message: '#^Cannot call method setEmail\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -35511,18 +35283,6 @@ parameters:
 		-
 			message: '#^Parameter \#1 \$user of method Symfony\\Component\\PasswordHasher\\Hasher\\PasswordHasherFactoryInterface\:\:getPasswordHasher\(\) expects string\|Symfony\\Component\\PasswordHasher\\Hasher\\PasswordHasherAwareInterface\|Symfony\\Component\\Security\\Core\\User\\PasswordAuthenticatedUserInterface, mixed given\.$#'
 			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/TestBundle/Testing/TestUserProvider.php
-
-		-
-			message: '#^Parameter \$passwordHasherFactory of method Sulu\\Bundle\\TestBundle\\Testing\\TestUserProvider\:\:__construct\(\) has invalid type Symfony\\Component\\Security\\Core\\Encoder\\EncoderFactoryInterface\.$#'
-			identifier: class.notFound
-			count: 1
-			path: src/Sulu/Bundle/TestBundle/Testing/TestUserProvider.php
-
-		-
-			message: '#^Property Sulu\\Bundle\\TestBundle\\Testing\\TestUserProvider\:\:\$passwordHasherFactory has unknown class Symfony\\Component\\Security\\Core\\Encoder\\EncoderFactoryInterface as its type\.$#'
-			identifier: class.notFound
 			count: 1
 			path: src/Sulu/Bundle/TestBundle/Testing/TestUserProvider.php
 
@@ -37009,12 +36769,6 @@ parameters:
 			path: src/Sulu/Bundle/WebsiteBundle/Sitemap/XmlSitemapRenderer.php
 
 		-
-			message: '#^Right side of && is always false\.$#'
-			identifier: booleanAnd.rightAlwaysFalse
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Tests/Application/Kernel.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\WebsiteBundle\\Tests\\Application\\TestController\:\:index\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -37247,18 +37001,6 @@ parameters:
 			identifier: argument.type
 			count: 9
 			path: src/Sulu/Bundle/WebsiteBundle/Tests/Functional/Controller/AnalyticsControllerTest.php
-
-		-
-			message: '#^Cannot call method encodePassword\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Tests/Functional/Controller/CacheControllerTest.php
-
-		-
-			message: '#^Instanceof between Symfony\\Component\\PasswordHasher\\Hasher\\PasswordHasherFactory and Symfony\\Component\\PasswordHasher\\Hasher\\PasswordHasherFactoryInterface will always evaluate to true\.$#'
-			identifier: instanceof.alwaysTrue
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Tests/Functional/Controller/CacheControllerTest.php
 
 		-
 			message: '#^Parameter \#2 \$haystack of method PHPUnit\\Framework\\Assert\:\:assertStringContainsString\(\) expects string, string\|false given\.$#'

@@ -882,6 +882,7 @@ The corresponding traits `TimestampableTrait` and `UserBlameTrait` have been upd
 - `sulu_page.teaser.manager`: `sulu_admin.teaser_manager`
 - `sulu_page.teaser_controller`: `sulu_admin.teaser_controller`
 - `sulu.content.path_cleaner`: `sulu_route.path_cleanup`
+- `sulu_security.encoder_factory`: `security.password_hasher_factory`.
 
 ### Moved files for 3.0
 

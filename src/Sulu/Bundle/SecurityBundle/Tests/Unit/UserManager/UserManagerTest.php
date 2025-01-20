@@ -71,6 +71,7 @@ class UserManagerTest extends TestCase
     public function setUp(): void
     {
         $this->objectManager = $this->prophesize(ObjectManager::class);
+        $passwordHasherFactory = $this->prophesize(PasswordHasherFactoryInterface::class);
         $this->userRepository = $this->prophesize(UserRepositoryInterface::class);
         $this->eventCollector = $this->prophesize(DomainEventCollectorInterface::class);
         $this->roleRepository = $this->prophesize(RoleRepositoryInterface::class);
@@ -79,7 +80,7 @@ class UserManagerTest extends TestCase
 
         $this->userManager = new UserManager(
             $this->objectManager->reveal(),
-            null,
+            $passwordHasherFactory->reveal(),
             $this->roleRepository->reveal(),
             $this->contactManager->reveal(),
             $this->saltGenerator->reveal(),

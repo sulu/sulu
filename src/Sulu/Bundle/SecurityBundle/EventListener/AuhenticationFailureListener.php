@@ -14,7 +14,6 @@ namespace Sulu\Bundle\SecurityBundle\EventListener;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
-use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 use Symfony\Component\Security\Core\Event\AuthenticationFailureEvent;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Uid\Uuid;
@@ -25,7 +24,7 @@ use Symfony\Component\Uid\Uuid;
 class AuhenticationFailureListener implements EventSubscriberInterface
 {
     /**
-     * @param PasswordHasherFactoryInterface|EncoderFactoryInterface $passwordHasherFactory
+     * @param PasswordHasherFactoryInterface $passwordHasherFactory
      */
     public function __construct(private $passwordHasherFactory, private UserRepositoryInterface $userRepository)
     {
@@ -44,13 +43,8 @@ class AuhenticationFailureListener implements EventSubscriberInterface
         if ($previousException instanceof UsernameNotFoundException) {
             $user = $this->userRepository->createNew();
 
-            if ($this->passwordHasherFactory instanceof PasswordHasherFactoryInterface) {
-                $hasher = $this->passwordHasherFactory->getPasswordHasher($user);
-                $hasher->hash(Uuid::v7()->toRfc4122());
-            } else {
-                $encoder = $this->passwordHasherFactory->getEncoder($user);
-                $encoder->encodePassword(Uuid::v7()->toRfc4122(), 'dummy-salt');
-            }
+            $hasher = $this->passwordHasherFactory->getPasswordHasher($user);
+            $hasher->hash(Uuid::v7()->toRfc4122());
         }
     }
 }
