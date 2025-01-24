@@ -44245,174 +44245,6 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/Controller/ContextsController.php
 
 		-
-			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
-			identifier: foreach.nonIterable
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Controller/GroupController.php
-
-		-
-			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<object\>\:\:findAllGroups\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Controller/GroupController.php
-
-		-
-			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<object\>\:\:findGroupById\(\)\.$#'
-			identifier: method.notFound
-			count: 4
-			path: src/Sulu/Bundle/SecurityBundle/Controller/GroupController.php
-
-		-
-			message: '#^Cannot access offset ''id'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Controller/GroupController.php
-
-		-
-			message: '#^Cannot call method getId\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Controller/GroupController.php
-
-		-
-			message: '#^Cannot call method setParent\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Controller/GroupController.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\SecurityBundle\\Controller\\GroupController\:\:addRole\(\) has parameter \$roleData with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Controller/GroupController.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\SecurityBundle\\Controller\\GroupController\:\:deleteAction\(\) has parameter \$id with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Controller/GroupController.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\SecurityBundle\\Controller\\GroupController\:\:getAction\(\) has parameter \$id with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Controller/GroupController.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\SecurityBundle\\Controller\\GroupController\:\:processRoles\(\) has parameter \$roles with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Controller/GroupController.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\SecurityBundle\\Controller\\GroupController\:\:putAction\(\) has parameter \$id with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Controller/GroupController.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\SecurityBundle\\Controller\\GroupController\:\:setParent\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Controller/GroupController.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\SecurityBundle\\Controller\\GroupController\:\:setParent\(\) has parameter \$group with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Controller/GroupController.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\SecurityBundle\\Controller\\GroupController\:\:updateRole\(\) has parameter \$roleData with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Controller/GroupController.php
-
-		-
-			message: '#^Negated boolean expression is always false\.$#'
-			identifier: booleanNot.alwaysFalse
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Controller/GroupController.php
-
-		-
-			message: '#^Parameter \#1 \$className of method Doctrine\\ORM\\EntityManagerInterface\:\:getRepository\(\) expects class\-string\<object\>, string given\.$#'
-			identifier: argument.type
-			count: 5
-			path: src/Sulu/Bundle/SecurityBundle/Controller/GroupController.php
-
-		-
-			message: '#^Parameter \#1 \$id of method Sulu\\Component\\Rest\\AbstractRestController\:\:responseDelete\(\) expects int\|string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Controller/GroupController.php
-
-		-
-			message: '#^Parameter \#1 \$id of method Sulu\\Component\\Rest\\AbstractRestController\:\:responseGetById\(\) expects int\|string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Controller/GroupController.php
-
-		-
-			message: '#^Parameter \#1 \$id of method Sulu\\Component\\Security\\Authentication\\RoleRepositoryInterface\:\:findRoleById\(\) expects int, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Controller/GroupController.php
-
-		-
-			message: '#^Parameter \#1 \$name of method Sulu\\Bundle\\SecurityBundle\\Entity\\Group\:\:setName\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: src/Sulu/Bundle/SecurityBundle/Controller/GroupController.php
-
-		-
-			message: '#^Parameter \#1 \$object of method Doctrine\\Persistence\\ObjectManager\:\:remove\(\) expects object, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: src/Sulu/Bundle/SecurityBundle/Controller/GroupController.php
-
-		-
-			message: '#^Parameter \#1 \$role of method Sulu\\Bundle\\SecurityBundle\\Controller\\GroupController\:\:updateRole\(\) expects Sulu\\Component\\Security\\Authentication\\RoleInterface, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Controller/GroupController.php
-
-		-
-			message: '#^Parameter \#2 \$fieldDescriptors of method Sulu\\Component\\Rest\\RestHelperInterface\:\:initializeListBuilder\(\) expects array\<Sulu\\Component\\Rest\\ListBuilder\\FieldDescriptorInterface\>, array given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Controller/GroupController.php
-
-		-
-			message: '#^Parameter \#2 \$id of class Sulu\\Component\\Rest\\Exception\\EntityNotFoundException constructor expects int\|string, mixed given\.$#'
-			identifier: argument.type
-			count: 4
-			path: src/Sulu/Bundle/SecurityBundle/Controller/GroupController.php
-
-		-
-			message: '#^Parameter \#2 \$roleData of method Sulu\\Bundle\\SecurityBundle\\Controller\\GroupController\:\:addRole\(\) expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: src/Sulu/Bundle/SecurityBundle/Controller/GroupController.php
-
-		-
-			message: '#^Parameter \#2 \$roles of method Sulu\\Bundle\\SecurityBundle\\Controller\\GroupController\:\:processRoles\(\) expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Controller/GroupController.php
-
-		-
-			message: '#^Property Sulu\\Bundle\\SecurityBundle\\Controller\\GroupController\:\:\$fieldDescriptors type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Controller/GroupController.php
-
-		-
-			message: '#^Unable to resolve the template type T in call to method Doctrine\\ORM\\EntityManagerInterface\:\:getRepository\(\)$#'
-			identifier: argument.templateType
-			count: 5
-			path: src/Sulu/Bundle/SecurityBundle/Controller/GroupController.php
-
-		-
 			message: '#^Binary operation "\." between ''The resourceKey "'' and mixed results in an error\.$#'
 			identifier: binaryOp.invalid
 			count: 2
@@ -45277,36 +45109,6 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/Entity/AccessControlRepository.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\SecurityBundle\\Entity\\GroupRepository\:\:findAllGroups\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Entity/GroupRepository.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\SecurityBundle\\Entity\\GroupRepository\:\:findAllGroups\(\) should return array but empty return statement found\.$#'
-			identifier: return.empty
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Entity/GroupRepository.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\SecurityBundle\\Entity\\GroupRepository\:\:findGroupById\(\) has parameter \$id with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Entity/GroupRepository.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\SecurityBundle\\Entity\\GroupRepository\:\:findGroupById\(\) should return Sulu\\Bundle\\SecurityBundle\\Entity\\Group but empty return statement found\.$#'
-			identifier: return.empty
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Entity/GroupRepository.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\SecurityBundle\\Entity\\GroupRepository\:\:findGroupById\(\) should return Sulu\\Bundle\\SecurityBundle\\Entity\\Group but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Entity/GroupRepository.php
-
-		-
 			message: '#^Property Sulu\\Bundle\\SecurityBundle\\Entity\\Permission\:\:\$role \(Sulu\\Component\\Security\\Authentication\\RoleInterface\) does not accept Sulu\\Component\\Security\\Authentication\\RoleInterface\|null\.$#'
 			identifier: assign.propertyType
 			count: 1
@@ -45463,18 +45265,6 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/Entity/User.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\SecurityBundle\\Entity\\User\:\:getUserGroups\(\) return type with generic class Doctrine\\Common\\Collections\\ArrayCollection does not specify its types\: TKey, T$#'
-			identifier: missingType.generics
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Entity/User.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\SecurityBundle\\Entity\\User\:\:getUserGroups\(\) should return Doctrine\\Common\\Collections\\ArrayCollection but returns Doctrine\\Common\\Collections\\Collection&iterable\<Sulu\\Bundle\\SecurityBundle\\Entity\\UserGroup\>\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Entity/User.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\SecurityBundle\\Entity\\User\:\:getUserIdentifier\(\) should return non\-empty\-string but returns string\.$#'
 			identifier: return.type
 			count: 1
@@ -45495,12 +45285,6 @@ parameters:
 		-
 			message: '#^Method Sulu\\Bundle\\SecurityBundle\\Entity\\User\:\:getUserSettings\(\) return type with generic interface Doctrine\\Common\\Collections\\Collection does not specify its types\: TKey, T$#'
 			identifier: missingType.generics
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Entity/User.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\SecurityBundle\\Entity\\User\:\:removeUserGroup\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Entity/User.php
 
@@ -45547,12 +45331,6 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/Entity/User.php
 
 		-
-			message: '#^Property Sulu\\Bundle\\SecurityBundle\\Entity\\User\:\:\$userGroups with generic interface Doctrine\\Common\\Collections\\Collection does not specify its types\: TKey, T$#'
-			identifier: missingType.generics
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Entity/User.php
-
-		-
 			message: '#^Property Sulu\\Bundle\\SecurityBundle\\Entity\\User\:\:\$userRoles with generic interface Doctrine\\Common\\Collections\\Collection does not specify its types\: TKey, T$#'
 			identifier: missingType.generics
 			count: 1
@@ -45569,18 +45347,6 @@ parameters:
 			identifier: notIdentical.alwaysTrue
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Entity/User.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\SecurityBundle\\Entity\\UserGroup\:\:getLocales\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Entity/UserGroup.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\SecurityBundle\\Entity\\UserGroup\:\:getLocales\(\) should return array but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Entity/UserGroup.php
 
 		-
 			message: '#^Method Sulu\\Bundle\\SecurityBundle\\Entity\\UserRepository\:\:findUserByContact\(\) has parameter \$id with no type specified\.$#'
@@ -46309,84 +46075,6 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Command/InitCommandTest.php
 
 		-
-			message: '#^Binary operation "\." between ''/api/groups/'' and mixed results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/GroupControllerTest.php
-
-		-
-			message: '#^Cannot access offset 0 on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 6
-			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/GroupControllerTest.php
-
-		-
-			message: '#^Cannot access offset 1 on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 4
-			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/GroupControllerTest.php
-
-		-
-			message: '#^Cannot access property \$_embedded on mixed\.$#'
-			identifier: property.nonObject
-			count: 4
-			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/GroupControllerTest.php
-
-		-
-			message: '#^Cannot access property \$groups on mixed\.$#'
-			identifier: property.nonObject
-			count: 4
-			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/GroupControllerTest.php
-
-		-
-			message: '#^Cannot access property \$id on mixed\.$#'
-			identifier: property.nonObject
-			count: 4
-			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/GroupControllerTest.php
-
-		-
-			message: '#^Cannot access property \$name on mixed\.$#'
-			identifier: property.nonObject
-			count: 16
-			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/GroupControllerTest.php
-
-		-
-			message: '#^Cannot access property \$parent on mixed\.$#'
-			identifier: property.nonObject
-			count: 4
-			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/GroupControllerTest.php
-
-		-
-			message: '#^Cannot access property \$roles on mixed\.$#'
-			identifier: property.nonObject
-			count: 13
-			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/GroupControllerTest.php
-
-		-
-			message: '#^Cannot access property \$total on mixed\.$#'
-			identifier: property.nonObject
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/GroupControllerTest.php
-
-		-
-			message: '#^Parameter \#1 \$json of function json_decode expects string, string\|false given\.$#'
-			identifier: argument.type
-			count: 7
-			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/GroupControllerTest.php
-
-		-
-			message: '#^Parameter \#1 \$value of function count expects array\|Countable, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/GroupControllerTest.php
-
-		-
-			message: '#^Parameter \#2 \$haystack of method PHPUnit\\Framework\\Assert\:\:assertCount\(\) expects Countable\|iterable, mixed given\.$#'
-			identifier: argument.type
-			count: 5
-			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/GroupControllerTest.php
-
-		-
 			message: '#^Cannot call method getKey\(\) on Sulu\\Bundle\\SecurityBundle\\Entity\\UserSetting\|null\.$#'
 			identifier: method.nonObject
 			count: 2
@@ -46725,13 +46413,13 @@ parameters:
 		-
 			message: '#^Cannot access offset 0 on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 62
+			count: 38
 			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/UserControllerTest.php
 
 		-
 			message: '#^Cannot access offset 1 on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 33
+			count: 19
 			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/UserControllerTest.php
 
 		-
@@ -46783,12 +46471,6 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/UserControllerTest.php
 
 		-
-			message: '#^Cannot access property \$group on mixed\.$#'
-			identifier: property.nonObject
-			count: 8
-			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/UserControllerTest.php
-
-		-
 			message: '#^Cannot access property \$id on mixed\.$#'
 			identifier: property.nonObject
 			count: 16
@@ -46803,7 +46485,7 @@ parameters:
 		-
 			message: '#^Cannot access property \$locales on mixed\.$#'
 			identifier: property.nonObject
-			count: 32
+			count: 19
 			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/UserControllerTest.php
 
 		-
@@ -46821,25 +46503,19 @@ parameters:
 		-
 			message: '#^Cannot access property \$name on mixed\.$#'
 			identifier: property.nonObject
-			count: 25
+			count: 16
 			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/UserControllerTest.php
 
 		-
 			message: '#^Cannot access property \$role on mixed\.$#'
 			identifier: property.nonObject
-			count: 17
-			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/UserControllerTest.php
-
-		-
-			message: '#^Cannot access property \$userGroups on mixed\.$#'
-			identifier: property.nonObject
-			count: 20
+			count: 16
 			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/UserControllerTest.php
 
 		-
 			message: '#^Cannot access property \$userRoles on mixed\.$#'
 			identifier: property.nonObject
-			count: 38
+			count: 36
 			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/UserControllerTest.php
 
 		-
@@ -46906,6 +46582,12 @@ parameters:
 			message: '#^Parameter \#1 \$value of function count expects array\|Countable, mixed given\.$#'
 			identifier: argument.type
 			count: 3
+			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/UserControllerTest.php
+
+		-
+			message: '#^Parameter \#2 \$array of function array_map expects array, mixed given\.$#'
+			identifier: argument.type
+			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/UserControllerTest.php
 
 		-
@@ -47431,12 +47113,6 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/UserManager/UserManager.php
 
 		-
-			message: '#^Call to an undefined method Sulu\\Component\\Security\\Authentication\\UserInterface\:\:addUserGroup\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/UserManager/UserManager.php
-
-		-
 			message: '#^Call to an undefined method Sulu\\Component\\Security\\Authentication\\UserInterface\:\:addUserRole\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -47449,21 +47125,9 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/UserManager/UserManager.php
 
 		-
-			message: '#^Call to an undefined method Sulu\\Component\\Security\\Authentication\\UserInterface\:\:getUserGroups\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/UserManager/UserManager.php
-
-		-
 			message: '#^Call to an undefined method Sulu\\Component\\Security\\Authentication\\UserInterface\:\:getUserRoles\(\)\.$#'
 			identifier: method.notFound
 			count: 3
-			path: src/Sulu/Bundle/SecurityBundle/UserManager/UserManager.php
-
-		-
-			message: '#^Call to an undefined method Sulu\\Component\\Security\\Authentication\\UserInterface\:\:removeUserGroup\(\)\.$#'
-			identifier: method.notFound
-			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/UserManager/UserManager.php
 
 		-
@@ -47557,33 +47221,21 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/UserManager/UserManager.php
 
 		-
-			message: '#^Cannot access offset ''group'' on Sulu\\Bundle\\SecurityBundle\\Entity\\UserGroup\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/UserManager/UserManager.php
-
-		-
-			message: '#^Cannot access offset ''group'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 3
-			path: src/Sulu/Bundle/SecurityBundle/UserManager/UserManager.php
-
-		-
 			message: '#^Cannot access offset ''id'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 9
+			count: 5
 			path: src/Sulu/Bundle/SecurityBundle/UserManager/UserManager.php
 
 		-
 			message: '#^Cannot access offset ''locale'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
+			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/UserManager/UserManager.php
 
 		-
 			message: '#^Cannot access offset ''locales'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
+			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/UserManager/UserManager.php
 
 		-
@@ -47625,7 +47277,7 @@ parameters:
 		-
 			message: '#^Cannot call method getId\(\) on mixed\.$#'
 			identifier: method.nonObject
-			count: 3
+			count: 2
 			path: src/Sulu/Bundle/SecurityBundle/UserManager/UserManager.php
 
 		-
@@ -47655,12 +47307,6 @@ parameters:
 		-
 			message: '#^Loose comparison using \=\= between null and null will always evaluate to true\.$#'
 			identifier: equal.alwaysTrue
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/UserManager/UserManager.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\SecurityBundle\\UserManager\\UserManager\:\:addUserGroup\(\) has parameter \$userGroupData with no type specified\.$#'
-			identifier: missingType.parameter
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/UserManager/UserManager.php
 
@@ -47833,21 +47479,9 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/UserManager/UserManager.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\SecurityBundle\\UserManager\\UserManager\:\:updateUserGroup\(\) has parameter \$userGroupData with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/UserManager/UserManager.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\SecurityBundle\\UserManager\\UserManager\:\:updateUserRole\(\) has parameter \$userRoleData with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/UserManager/UserManager.php
-
-		-
-			message: '#^Negated boolean expression is always false\.$#'
-			identifier: booleanNot.alwaysFalse
-			count: 2
 			path: src/Sulu/Bundle/SecurityBundle/UserManager/UserManager.php
 
 		-
@@ -47865,7 +47499,7 @@ parameters:
 		-
 			message: '#^Parameter \#1 \$entities of method Sulu\\Bundle\\SecurityBundle\\UserManager\\UserManager\:\:processSubEntities\(\) expects Traversable, mixed given\.$#'
 			identifier: argument.type
-			count: 2
+			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/UserManager/UserManager.php
 
 		-
@@ -47893,18 +47527,6 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/UserManager/UserManager.php
 
 		-
-			message: '#^Parameter \#1 \$locale of method Sulu\\Bundle\\SecurityBundle\\Entity\\UserGroup\:\:setLocale\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/UserManager/UserManager.php
-
-		-
-			message: '#^Parameter \#1 \$locale of method Sulu\\Bundle\\SecurityBundle\\Entity\\UserGroup\:\:setLocale\(\) expects string, string\|false given\.$#'
-			identifier: argument.type
-			count: 2
-			path: src/Sulu/Bundle/SecurityBundle/UserManager/UserManager.php
-
-		-
 			message: '#^Parameter \#1 \$locale of method Sulu\\Bundle\\SecurityBundle\\Entity\\UserRole\:\:setLocale\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -47919,7 +47541,7 @@ parameters:
 		-
 			message: '#^Parameter \#1 \$object of method Doctrine\\Persistence\\ObjectManager\:\:remove\(\) expects object, mixed given\.$#'
 			identifier: argument.type
-			count: 2
+			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/UserManager/UserManager.php
 
 		-
@@ -47936,12 +47558,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#1 \$user of method Symfony\\Component\\PasswordHasher\\Hasher\\PasswordHasherFactoryInterface\:\:getPasswordHasher\(\) expects string\|Symfony\\Component\\PasswordHasher\\Hasher\\PasswordHasherAwareInterface\|Symfony\\Component\\Security\\Core\\User\\PasswordAuthenticatedUserInterface, Sulu\\Component\\Security\\Authentication\\UserInterface given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/UserManager/UserManager.php
-
-		-
-			message: '#^Parameter \#1 \$userGroup of method Sulu\\Bundle\\SecurityBundle\\UserManager\\UserManager\:\:updateUserGroup\(\) expects Sulu\\Bundle\\SecurityBundle\\Entity\\UserGroup, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/UserManager/UserManager.php
@@ -47967,7 +47583,7 @@ parameters:
 		-
 			message: '#^Parameter \#2 \$array of function array_key_exists expects array, mixed given\.$#'
 			identifier: argument.type
-			count: 2
+			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/UserManager/UserManager.php
 
 		-
@@ -47979,7 +47595,7 @@ parameters:
 		-
 			message: '#^Parameter \#2 \$id of class Sulu\\Component\\Rest\\Exception\\EntityNotFoundException constructor expects int\|string, mixed given\.$#'
 			identifier: argument.type
-			count: 5
+			count: 3
 			path: src/Sulu/Bundle/SecurityBundle/UserManager/UserManager.php
 
 		-
@@ -47992,12 +47608,6 @@ parameters:
 			message: '#^Parameter \#2 \$requestEntities of method Sulu\\Bundle\\SecurityBundle\\UserManager\\UserManager\:\:findMatchByCallback\(\) expects array, mixed given\.$#'
 			identifier: argument.type
 			count: 2
-			path: src/Sulu/Bundle/SecurityBundle/UserManager/UserManager.php
-
-		-
-			message: '#^Parameter \#2 \$requestEntities of method Sulu\\Bundle\\SecurityBundle\\UserManager\\UserManager\:\:processSubEntities\(\) expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/UserManager/UserManager.php
 
 		-
