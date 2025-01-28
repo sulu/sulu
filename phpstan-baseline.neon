@@ -66097,12 +66097,6 @@ parameters:
 			path: src/Sulu/Component/Cache/DataCache.php
 
 		-
-			message: '#^Method Sulu\\Component\\Cache\\Memoize\:\:memoize\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Component/Cache/Memoize.php
-
-		-
 			message: '#^Method Sulu\\Component\\Cache\\Memoize\:\:memoizeById\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -66121,22 +66115,10 @@ parameters:
 			path: src/Sulu/Component/Cache/Memoize.php
 
 		-
-			message: '#^Offset ''function'' on array\{function\: string, line\?\: int, file\?\: string, class\: class\-string, type\?\: ''\-\>''\|''\:\:'', args\?\: array\<mixed\>, object\?\: object\} in isset\(\) always exists and is not nullable\.$#'
-			identifier: isset.offset
-			count: 1
-			path: src/Sulu/Component/Cache/Memoize.php
-
-		-
 			message: '#^Parameter \#2 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Component/Cache/Memoize.php
-
-		-
-			message: '#^Method Sulu\\Component\\Cache\\MemoizeInterface\:\:memoize\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Component/Cache/MemoizeInterface.php
 
 		-
 			message: '#^Method Sulu\\Component\\Cache\\MemoizeInterface\:\:memoizeById\(\) has no return type specified\.$#'
@@ -66213,7 +66195,7 @@ parameters:
 		-
 			message: '#^Binary operation "\+" between mixed and mixed results in an error\.$#'
 			identifier: binaryOp.invalid
-			count: 6
+			count: 3
 			path: src/Sulu/Component/Cache/Tests/Unit/Cache/MemoizeTest.php
 
 		-
