@@ -37,6 +37,7 @@ Removed classes / services:
 - `Sulu/Bundle/MarkupBundle/Listener/SwiftMailerListener`
 - `Sulu\Bundle\DocumentManagerBundle\Slugifier\Urlizer`
 - `Sulu\\Bundle\\CategoryBundle\\DependencyInjection\\DeprecationCompilerPass`
+- `Sulu\\Bundle\\SecurityBundle\\DataFixtures\\ORM\\LoadSecurityTypes`
 - `Sulu\Component\Rest\Listing\ListQueryBuilder`
 - `Sulu\Component\Rest\Listing\ListRepository`
 - `Sulu\Component\Rest\Listing\ListRestHelper`
@@ -70,6 +71,9 @@ Removed deprecated functions and properties:
 Removed unused arguments:
 
 - `Sulu\Component\Webspace\Analyzer\Attributes\WebsiteRequestProcessor::__construct` `$contentMapper` (2nd argument) removed
+
+Removed container parameters:
+- `sulu_security.security_types.fixture`
 
 ### Piwik replaced with Matomo script
 
