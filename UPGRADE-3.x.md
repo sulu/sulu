@@ -670,6 +670,7 @@ Removed deprecated functions and properties:
 - `Sulu\Bundle\ContactBundle\Controller\PositionController::$entityKey`
 - `Sulu\Component\Cache\Memoize::memoize()`
 - `Sulu\Component\Cache\MemoizeInterface::memoize()`
+- `Sulu\Bundle\WebsiteBundle\Twig\Core\UtilTwigExtension::extract()`
 - `Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata::setName()` (use `setKey()` instead)
 - `Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata::getName()` (use `getKey()` instead)
 

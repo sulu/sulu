@@ -52177,24 +52177,6 @@ parameters:
 			path: src/Sulu/Bundle/WebsiteBundle/Twig/Content/ContentTwigExtensionInterface.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\WebsiteBundle\\Twig\\Core\\UtilTwigExtension\:\:extract\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Twig/Core/UtilTwigExtension.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\WebsiteBundle\\Twig\\Core\\UtilTwigExtension\:\:extract\(\) has parameter \$mode with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Twig/Core/UtilTwigExtension.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\WebsiteBundle\\Twig\\Core\\UtilTwigExtension\:\:extract\(\) has parameter \$url with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Twig/Core/UtilTwigExtension.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\WebsiteBundle\\Twig\\Exception\\ParentNotFoundException\:\:__construct\(\) has parameter \$uuid with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
