@@ -514,6 +514,7 @@ Removed classes / services:
 - `Sulu\Bundle\CategoryBundle\DependencyInjection\DeprecationCompilerPass`
 - `Sulu\Bundle\SecurityBundle\DataFixtures\ORM\LoadSecurityTypes`
 - `Sulu\Bundle\SecurityBundle\Controller\ContextsController`
+- `Sulu\Bundle\SecurityBundle\Security\Exception\TokenAlreadyRequestedException`
 - `Sulu\Component\Rest\Listing\ListQueryBuilder`
 - `Sulu\Component\Rest\Listing\ListRepository`
 - `Sulu\Component\Rest\Listing\ListRestHelper`

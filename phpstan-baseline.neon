@@ -45385,18 +45385,6 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/Security/Exception/SecurityException.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\SecurityBundle\\Security\\Exception\\TokenAlreadyRequestedException\:\:getInterval\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Security/Exception/TokenAlreadyRequestedException.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\SecurityBundle\\Security\\Exception\\TokenAlreadyRequestedException\:\:toArray\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Security/Exception/TokenAlreadyRequestedException.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\SecurityBundle\\Security\\Exception\\TokenEmailsLimitReachedException\:\:getLimit\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
