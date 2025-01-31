@@ -26,14 +26,22 @@ class UtilTwigExtension extends AbstractExtension
         return [
             new TwigFilter('sulu_util_multisort', 'Sulu\Component\Util\SortUtils::multisort'),
             new TwigFilter('sulu_util_filter', 'Sulu\Component\Util\ArrayUtils::filter'),
-            new TwigFilter('sulu_util_domain_info', [$this, 'extract']),
+            new TwigFilter(
+                'sulu_util_domain_info',
+                [$this, 'extract'],
+                ['deprecated' => true],
+            ),
         ];
     }
 
     public function getFunctions()
     {
         return [
-            new TwigFunction('sulu_util_domain_info', [$this, 'extract']),
+            new TwigFunction(
+                'sulu_util_domain_info',
+                [$this, 'extract'],
+                ['deprecated' => true],
+            ),
         ];
     }
 
