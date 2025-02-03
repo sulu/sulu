@@ -20,7 +20,7 @@ class AccessControlProviderPass implements CompilerPassInterface
     /** @deprecated use Sulu\Component\Security\Authorization\AccessControl\AccessControlProviderInterface::SERVICE_TAG instead */
     public const ACCESS_CONTROL_TAG = 'sulu.access_control';
 
-    public function process(ContainerBuilder $container)
+    public function process(ContainerBuilder $container): void
     {
         $accessControlManager = $container->getDefinition('sulu_security.access_control_manager');
 

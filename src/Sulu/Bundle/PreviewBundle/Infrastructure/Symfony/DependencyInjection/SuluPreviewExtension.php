@@ -18,7 +18,7 @@ use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
-use Symfony\Component\HttpKernel\DependencyInjection\Extension;
+use Symfony\Component\DependencyInjection\Extension\Extension;
 
 /**
  * @internal No BC promises are given for this class. It may be changed or removed at any time.
