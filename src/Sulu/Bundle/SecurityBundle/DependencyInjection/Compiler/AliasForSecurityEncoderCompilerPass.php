@@ -15,8 +15,8 @@ use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
-* @internal
-*/
+ * @internal
+ */
 class AliasForSecurityEncoderCompilerPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container)
