@@ -1,0 +1,3 @@
+sulu_page_api:
+    resource: "@SuluPageBundle/config/routing_admin_api.yaml"
+    prefix: /admin/api
