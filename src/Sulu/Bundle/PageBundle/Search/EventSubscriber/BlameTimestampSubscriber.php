@@ -95,7 +95,7 @@ class BlameTimestampSubscriber implements EventSubscriberInterface
     /**
      * Map timestamps to the search document.
      */
-    private function mapTimestamp(Document $document, ?\DateTime $created = null, ?\DateTime $changed = null)
+    private function mapTimestamp(Document $document, ?\DateTimeInterface $created = null, ?\DateTimeInterface $changed = null)
     {
         $document->addField(
             $this->factory->createField('created', $created ? $created->format('c') : null, 'string')

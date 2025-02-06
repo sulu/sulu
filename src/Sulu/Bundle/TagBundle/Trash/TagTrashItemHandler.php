@@ -85,7 +85,7 @@ final class TagTrashItemHandler implements
         $tag->setName($data['name']);
 
         if ($tag instanceof Tag) {
-            $tag->setCreated(new \DateTime($data['created']));
+            $tag->setCreated(new \DateTimeImmutable($data['created']));
             $tag->setCreator($this->findEntity(UserInterface::class, $data['creatorId']));
         }
 

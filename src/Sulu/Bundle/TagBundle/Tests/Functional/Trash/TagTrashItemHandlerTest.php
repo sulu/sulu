@@ -55,7 +55,7 @@ class TagTrashItemHandlerTest extends SuluTestCase
         /** @var Tag $tag1 */
         $tag1 = $this->tagRepository->createNew();
         $tag1->setName('First Tag');
-        $tag1->setCreated(new \DateTime('2020-10-10'));
+        $tag1->setCreated(new \DateTimeImmutable('2020-10-10'));
         $this->entityManager->persist($tag1);
 
         // create second tag to check if id of first tag is restored correctly
@@ -85,6 +85,6 @@ class TagTrashItemHandlerTest extends SuluTestCase
         static::assertCount(2, $this->entityManager->getRepository(TagInterface::class)->findAll());
         static::assertSame($originalTagId, $restoredTag->getId());
         static::assertSame('First Tag', $restoredTag->getName());
-        static::assertEquals(new \DateTime('2020-10-10'), $restoredTag->getCreated());
+        static::assertEquals(new \DateTimeImmutable('2020-10-10'), $restoredTag->getCreated());
     }
 }

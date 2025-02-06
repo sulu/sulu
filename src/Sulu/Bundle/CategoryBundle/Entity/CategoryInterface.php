@@ -221,36 +221,4 @@ interface CategoryInterface extends AuditableInterface
      * @return CategoryInterface|null
      */
     public function getParent();
-
-    /**
-     * Set creator.
-     * Note: This property is set automatically by the UserBlameSubscriber if not set manually.
-     *
-     * @return CategoryInterface
-     */
-    public function setCreator(?UserInterface $creator = null);
-
-    /**
-     * Set created.
-     * Note: This property is set automatically by the TimestampableSubscriber if not set manually.
-     *
-     * @return CategoryInterface
-     */
-    public function setCreated(\DateTime $created);
-
-    /**
-     * Set changer.
-     * Note: This property is set automatically by the UserBlameSubscriber if not set manually.
-     *
-     * @return CategoryInterface
-     */
-    public function setChanger(?UserInterface $changer = null);
-
-    /**
-     * Set changed.
-     * Note: This property is set automatically by the TimestampableSubscriber if not set manually.
-     *
-     * @return CategoryInterface
-     */
-    public function setChanged(\DateTime $changed);
 }

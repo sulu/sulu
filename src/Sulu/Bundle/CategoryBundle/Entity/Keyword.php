@@ -13,6 +13,7 @@ namespace Sulu\Bundle\CategoryBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Sulu\Component\Persistence\Model\AuditableTrait;
 use Sulu\Component\Security\Authentication\UserInterface;
 
 /**
@@ -20,6 +21,8 @@ use Sulu\Component\Security\Authentication\UserInterface;
  */
 class Keyword implements KeywordInterface
 {
+    use AuditableTrait;
+
     /**
      * @var int
      */
@@ -34,26 +37,6 @@ class Keyword implements KeywordInterface
      * @var string
      */
     protected $locale;
-
-    /**
-     * @var UserInterface|null
-     */
-    protected $creator;
-
-    /**
-     * @var UserInterface|null
-     */
-    protected $changer;
-
-    /**
-     * @var \DateTimeImmutable
-     */
-    protected $created;
-
-    /**
-     * @var \DateTimeImmutable
-     */
-    protected $changed;
 
     /**
      * @var Collection<int, CategoryTranslationInterface>
@@ -95,46 +78,6 @@ class Keyword implements KeywordInterface
     public function getId()
     {
         return $this->id;
-    }
-
-    public function getCreator()
-    {
-        return $this->creator;
-    }
-
-    public function setCreator($creator)
-    {
-        $this->creator = $creator;
-    }
-
-    public function getChanger()
-    {
-        return $this->changer;
-    }
-
-    public function setChanger($changer)
-    {
-        $this->changer = $changer;
-    }
-
-    public function getCreated(): \DateTimeImmutable
-    {
-        return $this->created;
-    }
-
-    public function setCreated($created)
-    {
-        $this->created = $created;
-    }
-
-    public function getChanged(): \DateTimeImmutable
-    {
-        return $this->changed;
-    }
-
-    public function setChanged($changed)
-    {
-        $this->changed = $changed;
     }
 
     public function equals(KeywordInterface $keyword)

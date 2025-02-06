@@ -19,10 +19,13 @@ use JMS\Serializer\Annotation\Type;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\TagBundle\Tag\TagInterface;
+use Sulu\Component\Persistence\Model\TimestampableTrait;
 use Sulu\Component\Security\Authentication\UserInterface;
 
 class Account implements AccountInterface
 {
+    use TimestampableTrait;
+
     /**
      * @var int
      */
@@ -47,16 +50,6 @@ class Account implements AccountInterface
      * @var int
      */
     protected $depth;
-
-    /**
-     * @var \DateTimeImmutable
-     */
-    private $created;
-
-    /**
-     * @var \DateTimeImmutable
-     */
-    private $changed;
 
     /**
      * @var UserInterface|null
@@ -781,30 +774,6 @@ class Account implements AccountInterface
     public function getMainUrl(): ?string
     {
         return $this->mainUrl;
-    }
-
-    public function getCreated(): \DateTimeImmutable
-    {
-        return $this->created;
-    }
-
-    public function setCreated(\DateTimeImmutable $created): AccountInterface
-    {
-        $this->created = $created;
-
-        return $this;
-    }
-
-    public function getChanged(): \DateTimeImmutable
-    {
-        return $this->changed;
-    }
-
-    public function setChanged(\DateTimeImmutable $changed): AccountInterface
-    {
-        $this->changed = $changed;
-
-        return $this;
     }
 
     public function getChanger(): ?UserInterface

@@ -254,7 +254,7 @@ final class AccountTrashItemHandler implements
 
         if ($account instanceof Account) {
             if ($data['changed'] ?? null) {
-                $account->setChanged(new \DateTime($data['changed']));
+                $account->setChanged(new \DateTimeImmutable($data['changed']));
             }
             if ($data['created'] ?? null) {
                 $account->setCreated(new \DateTime($data['created']));

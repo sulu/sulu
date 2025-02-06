@@ -289,8 +289,8 @@ class MediaControllerTest extends SuluTestCase
         $fileVersion->addCategory($this->category2);
         $fileVersion->addTag($this->tag1);
         $fileVersion->addTag($this->tag2);
-        $fileVersion->setChanged(new \DateTime('1937-04-20'));
-        $fileVersion->setCreated(new \DateTime('1937-04-20'));
+        $fileVersion->setChanged(new \DateTimeImmutable('1937-04-20'));
+        $fileVersion->setCreated(new \DateTimeImmutable('1937-04-20'));
         $fileVersion->setStorageOptions(['segment' => '1', 'fileName' => $name . '.' . $extension]);
         $storagePath = $this->getStoragePath();
 

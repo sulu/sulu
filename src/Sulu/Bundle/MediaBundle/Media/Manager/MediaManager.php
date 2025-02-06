@@ -242,7 +242,7 @@ class MediaManager implements MediaManagerInterface
     {
         $mediaEntity = $this->getEntityById($data['id']);
         $mediaEntity->setChanger($user);
-        $mediaEntity->setChanged(new \DateTime());
+        $mediaEntity->setChanged(new \DateTimeImmutable());
 
         $files = $mediaEntity->getFiles();
         if (!isset($files[0])) {
@@ -253,7 +253,7 @@ class MediaManager implements MediaManagerInterface
         $file = $files[0]; // currently a media can only have one file
 
         $file->setChanger($user);
-        $file->setChanged(new \DateTime());
+        $file->setChanged(new \DateTimeImmutable());
 
         $version = $file->getVersion();
 
@@ -291,9 +291,9 @@ class MediaManager implements MediaManagerInterface
             $fileVersion = clone $currentFileVersion;
             $this->em->persist($fileVersion);
 
-            $fileVersion->setChanged(new \DateTime());
+            $fileVersion->setChanged(new \DateTimeImmutable());
             $fileVersion->setChanger($user);
-            $fileVersion->setCreated(new \DateTime());
+            $fileVersion->setCreated(new \DateTimeImmutable());
             $fileVersion->setCreator($user);
             $fileVersion->setDownloadCounter(0);
 

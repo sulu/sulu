@@ -292,8 +292,8 @@ class ContactTrashItemHandlerTest extends TestCase
         static::setPrivateProperty($contact, 'id', 1);
         $contact->setFirstName('Minimal');
         $contact->setLastName('Contact');
-        $contact->setCreated(new \DateTime('2020-11-05T12:15:00+01:00'));
-        $contact->setChanged(new \DateTime('2020-12-10T14:15:00+01:00'));
+        $contact->setCreated(new \DateTimeImmutable('2020-11-05T12:15:00+01:00'));
+        $contact->setChanged(new \DateTimeImmutable('2020-12-10T14:15:00+01:00'));
 
         return $contact;
     }
@@ -348,8 +348,8 @@ class ContactTrashItemHandlerTest extends TestCase
         $contact->setMainPhone('+43 12345 6789');
         $contact->setMainFax('+43 12345 1234 1');
         $contact->setNote('123456');
-        $contact->setCreated(new \DateTime('2020-11-05T12:15:00+01:00'));
-        $contact->setChanged(new \DateTime('2020-12-10T14:15:00+01:00'));
+        $contact->setCreated(new \DateTimeImmutable('2020-11-05T12:15:00+01:00'));
+        $contact->setChanged(new \DateTimeImmutable('2020-12-10T14:15:00+01:00'));
 
         $creator = new User();
         static::setPrivateProperty($creator, 'id', 21);

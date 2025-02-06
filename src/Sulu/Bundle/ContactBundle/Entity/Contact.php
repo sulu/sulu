@@ -24,10 +24,14 @@ use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\TagBundle\Tag\TagInterface;
+use Sulu\Component\Persistence\Model\TimestampableTrait;
 use Sulu\Component\Security\Authentication\UserInterface;
 
 class Contact extends ApiEntity implements ContactInterface
 {
+    // TODO: Use AuditableInterface instead
+    use TimestampableTrait;
+
     /**
      * @var int
      */
@@ -59,16 +63,6 @@ class Contact extends ApiEntity implements ContactInterface
      * @var \DateTime|null
      */
     protected $birthday;
-
-    /**
-     * @var \DateTimeImmutable
-     */
-    protected $created;
-
-    /**
-     * @var \DateTimeImmutable
-     */
-    protected $changed;
 
     /**
      * @var Collection<int, ContactLocale>
@@ -355,16 +349,6 @@ class Contact extends ApiEntity implements ContactInterface
     public function getBirthday()
     {
         return $this->birthday;
-    }
-
-    public function getCreated(): \DateTimeImmutable
-    {
-        return $this->created;
-    }
-
-    public function getChanged(): \DateTimeImmutable
-    {
-        return $this->changed;
     }
 
     public function addLocale(ContactLocale $locale)
@@ -806,6 +790,7 @@ class Contact extends ApiEntity implements ContactInterface
     }
 
     /**
+<<<<<<< HEAD
      * @return $this
      */
     public function setCreated(\DateTimeImmutable $created)
@@ -826,6 +811,8 @@ class Contact extends ApiEntity implements ContactInterface
     }
 
     /**
+=======
+>>>>>>> 26a60fcc96 (Refactoring stuff)
      * @return mixed[]
      */
     public function toArray()

@@ -13,13 +13,15 @@ namespace Sulu\Bundle\CategoryBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Sulu\Component\Security\Authentication\UserInterface;
+use Sulu\Component\Persistence\Model\AuditableTrait;
 
 /**
  * Category.
  */
 class Category implements CategoryInterface
 {
+    use AuditableTrait;
+
     /**
      * @var int
      */
@@ -34,16 +36,6 @@ class Category implements CategoryInterface
      * @var int
      */
     protected $depth;
-
-    /**
-     * @var \DateTimeImmutable
-     */
-    protected $created;
-
-    /**
-     * @var \DateTimeImmutable
-     */
-    protected $changed;
 
     /**
      * @var int
@@ -64,16 +56,6 @@ class Category implements CategoryInterface
      * @var CategoryInterface|null
      */
     protected $parent;
-
-    /**
-     * @var UserInterface|null
-     */
-    protected $creator;
-
-    /**
-     * @var UserInterface|null
-     */
-    protected $changer;
 
     /**
      * @var Collection<int, CategoryMetaInterface>
@@ -143,11 +125,6 @@ class Category implements CategoryInterface
         return $this->depth;
     }
 
-    public function getCreated(): \DateTimeImmutable
-    {
-        return $this->created;
-    }
-
     public function getKey()
     {
         return $this->key;
@@ -172,11 +149,6 @@ class Category implements CategoryInterface
         return $this->defaultLocale;
     }
 
-    public function getChanged(): \DateTimeImmutable
-    {
-        return $this->changed;
-    }
-
     public function getId()
     {
         return $this->id;
@@ -192,44 +164,6 @@ class Category implements CategoryInterface
     public function getParent()
     {
         return $this->parent;
-    }
-
-    public function setCreator(?UserInterface $creator = null)
-    {
-        $this->creator = $creator;
-
-        return $this;
-    }
-
-    public function setCreated(\DateTime $created)
-    {
-        $this->created = $created;
-
-        return $this;
-    }
-
-    public function getCreator()
-    {
-        return $this->creator;
-    }
-
-    public function setChanger(?UserInterface $changer = null)
-    {
-        $this->changer = $changer;
-
-        return $this;
-    }
-
-    public function setChanged(\DateTime $changed)
-    {
-        $this->changed = $changed;
-
-        return $this;
-    }
-
-    public function getChanger()
-    {
-        return $this->changer;
     }
 
     public function addMeta(CategoryMetaInterface $meta)

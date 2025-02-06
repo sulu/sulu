@@ -105,8 +105,8 @@ class KeywordManager implements KeywordManagerInterface
         $categoryTranslation->addKeyword($keyword);
 
         // FIXME category and meta will not be updated if only keyword was changed
-        $category->setChanged(new \DateTime());
-        $categoryTranslation->setChanged(new \DateTime());
+        $category->setChanged(new \DateTimeImmutable());
+        $categoryTranslation->setChanged(new \DateTimeImmutable());
 
         return $keyword;
     }
@@ -147,8 +147,8 @@ class KeywordManager implements KeywordManagerInterface
             $categoryTranslation->removeKeyword($keyword);
 
             // FIXME category and meta will not be updated if only keyword was changed
-            $category->setChanged(new \DateTime());
-            $categoryTranslation->setChanged(new \DateTime());
+            $category->setChanged(new \DateTimeImmutable());
+            $categoryTranslation->setChanged(new \DateTimeImmutable());
 
             // dispatch event only if keyword was flushed and therefore has an id
             if ($keyword->getId()) {
