@@ -189,8 +189,8 @@ class MediaPreviewControllerTest extends SuluTestCase
         $fileVersion->setFile($file);
         $fileVersion->setSize(1124214);
         $fileVersion->setDownloadCounter(2);
-        $fileVersion->setChanged(new \DateTime('1937-04-20'));
-        $fileVersion->setCreated(new \DateTime('1937-04-20'));
+        $fileVersion->setChanged(new \DateTimeImmutable('1937-04-20'));
+        $fileVersion->setCreated(new \DateTimeImmutable('1937-04-20'));
         $fileVersion->setStorageOptions(['segment' => '1', 'fileName' => $name . '.' . $extension]);
         $storagePath = $this->getStoragePath();
 

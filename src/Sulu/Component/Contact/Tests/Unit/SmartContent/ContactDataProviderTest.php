@@ -250,8 +250,8 @@ class ContactDataProviderTest extends TestCase
         $contact->setSalutation('');
         $contact->setMiddleName('');
         $contact->setBirthday(new \DateTime());
-        $contact->setCreated(new \DateTime());
-        $contact->setChanged(new \DateTime());
+        $contact->setCreated(new \DateTimeImmutable());
+        $contact->setChanged(new \DateTimeImmutable());
 
         return new Contact($contact, 'de');
     }

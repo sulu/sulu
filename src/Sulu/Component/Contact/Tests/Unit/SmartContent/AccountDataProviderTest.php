@@ -302,8 +302,8 @@ class AccountDataProviderTest extends TestCase
         $entity->setPlaceOfJurisdiction('');
         $entity->setUid('');
         $entity->setCorporation('');
-        $entity->setCreated(new \DateTime());
-        $entity->setChanged(new \DateTime());
+        $entity->setCreated(new \DateTimeImmutable());
+        $entity->setChanged(new \DateTimeImmutable());
 
         return new Account($entity, 'de');
     }

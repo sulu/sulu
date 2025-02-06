@@ -46,7 +46,7 @@ class AuditableHasherTest extends TestCase
         $user = $this->prophesize(UserInterface::class);
         $user->getId()->willReturn(1);
         $object->getChanger()->willReturn($user->reveal());
-        $object->getChanged()->willReturn(new \DateTime('2016-02-05'));
+        $object->getChanged()->willReturn(new \DateTimeImmutable('2016-02-05'));
 
         $this->assertSame($this->hasher->hash($object->reveal()), $this->hasher->hash($object->reveal()));
     }
