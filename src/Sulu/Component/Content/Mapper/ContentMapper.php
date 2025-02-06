@@ -22,7 +22,6 @@ use Sulu\Bundle\DocumentManagerBundle\Bridge\PropertyEncoder;
 use Sulu\Bundle\PageBundle\Admin\PageAdmin;
 use Sulu\Bundle\PageBundle\Document\BasePageDocument;
 use Sulu\Bundle\PageBundle\Document\HomeDocument;
-use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
 use Sulu\Component\Content\BreadcrumbItem;
 use Sulu\Component\Content\Compat\Property as LegacyProperty;
 use Sulu\Component\Content\Compat\Structure as LegacyStructure;
@@ -532,7 +531,7 @@ class ContentMapper implements ContentMapperInterface
      *
      * @param string $webspaceKey
      *
-     * @return BasePageDocument|SnippetDocument
+     * @return BasePageDocument
      */
     private function getContentDocument($webspaceKey, $locale, array $options = [])
     {
