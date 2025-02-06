@@ -346,6 +346,7 @@
             </meta>
         </property>
 
+        <!-- TODO readd if new snippet bundle registered: https://github.com/sulu/sulu/pull/7794
         <property name="single_snippet_selection" type="single_snippet_selection">
             <meta>
                 <title lang="en">Single Snippet Selection</title>
@@ -359,6 +360,7 @@
                 <title lang="de">Schnipsel</title>
             </meta>
         </property>
+        -->
 
         <property name="category_selection" type="category_selection">
             <meta>
