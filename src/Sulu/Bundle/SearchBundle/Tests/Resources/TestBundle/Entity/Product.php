@@ -12,10 +12,13 @@
 namespace Sulu\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity;
 
 use Sulu\Component\Persistence\Model\TimestampableInterface;
+use Sulu\Component\Persistence\Model\TimestampableTrait;
 use Sulu\Component\Persistence\Model\UserBlameInterface;
 
 class Product implements TimestampableInterface, UserBlameInterface
 {
+    use TimestampableTrait;
+
     public $id;
 
     public $title;
@@ -30,27 +33,13 @@ class Product implements TimestampableInterface, UserBlameInterface
 
     public $image;
 
-    public $changed;
-
-    public $created;
-
     public $creator;
 
     public $changer;
 
-    public function getChanged()
-    {
-        return $this->changed;
-    }
-
     public function getChanger()
     {
         return $this->changer;
-    }
-
-    public function getCreated()
-    {
-        return $this->created;
     }
 
     public function getCreator()

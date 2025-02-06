@@ -255,8 +255,8 @@ class SearchControllerTest extends SuluTestCase
         $product->body = 'To be or not to be, that is the question';
         $product->url = '/foobar';
         $product->locale = 'fr';
-        $product->created = new \DateTime('2015-04-10T00:00:00+00:00');
-        $product->changed = new \DateTime('2015-04-12T00:00:00+00:00');
+        $product->setCreated(new \DateTime('2015-04-10T00:00:00+00:00'));
+        $product->setChanged(new \DateTime('2015-04-12T00:00:00+00:00'));
         $product->changer = $this->user;
         $product->creator = $this->user;
 
@@ -268,8 +268,8 @@ class SearchControllerTest extends SuluTestCase
         $product->body = 'To be or not to be, that is the question';
         $product->url = '/foobar';
         $product->locale = 'fr';
-        $product->created = new \DateTime('2015-04-10T00:00:00+00:00');
-        $product->changed = new \DateTime('2015-04-12T00:00:00+00:00');
+        $product->setCreated(new \DateTime('2015-04-10T00:00:00+00:00'));
+        $product->setChanged(new \DateTime('2015-04-12T00:00:00+00:00'));
         $product->changer = $this->user;
         $product->creator = $this->user;
 

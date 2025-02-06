@@ -95,34 +95,27 @@ class BlameTimestampSubscriber implements EventSubscriberInterface
     /**
      * Map timestamps to the search document.
      */
-    private function mapTimestamp(Document $document, ?\DateTime $created = null, ?\DateTime $changed = null)
-    {
-        $document->addField(
-            $this->factory->createField('created', $created ? $created->format('c') : null, 'string')
-        );
-
-        $document->addField(
-            $this->factory->createField('changed', $changed ? $changed->format('c') : null, 'string')
-        );
+    private function mapTimestamp(
+        Document $document,
+        ?\DateTimeInterface $created = null,
+        ?\DateTimeInterface $changed = null,
+    ): void {
+        $document->addField($this->factory->createField('created', $created?->format('c'), 'string'));
+        $document->addField($this->factory->createField('changed', $changed?->format('c'), 'string'));
     }
 
     /**
      * Map the creator and changer to the document.
      */
-    private function mapCreatorAndChanger(Document $document, ?UserInterface $creator = null, ?UserInterface $changer = null)
-    {
-        $document->addField(
-            $this->factory->createField('changer', $changer ? $changer->getUserIdentifier() : null, 'string')
-        );
-        $document->addField(
-            $this->factory->createField('changer_id', $changer ? $changer->getId() : null, 'string')
-        );
+    private function mapCreatorAndChanger(
+        Document $document,
+        ?UserInterface $creator = null,
+        ?UserInterface $changer = null,
+    ): void {
+        $document->addField($this->factory->createField('changer', $changer?->getUserIdentifier(), 'string'));
+        $document->addField($this->factory->createField('changer_id', $changer?->getId(), 'string'));
 
-        $document->addField(
-            $this->factory->createField('creator', $creator ? $creator->getUserIdentifier() : null, 'string')
-        );
-        $document->addField(
-            $this->factory->createField('creator_id', $creator ? $creator->getId() : null, 'string')
-        );
+        $document->addField($this->factory->createField('creator', $creator?->getUserIdentifier(), 'string'));
+        $document->addField($this->factory->createField('creator_id', $creator?->getId(), 'string'));
     }
 }

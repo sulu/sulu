@@ -763,7 +763,7 @@ class Media extends ApiWrapper
      * @VirtualProperty
      * @SerializedName("changed")
      *
-     * @return \DateTime
+     * @return \DateTimeInterface
      */
     public function getChanged()
     {
@@ -802,11 +802,14 @@ class Media extends ApiWrapper
      * @VirtualProperty
      * @SerializedName("created")
      *
-     * @return \DateTime
+     * @return \DateTimeInterface
      */
     public function getCreated()
     {
-        return $this->entity->getCreated();
+        /** @var MediaInterface $entity */
+        $entity = $this->entity;
+
+        return $entity->getCreated();
     }
 
     /**

@@ -40,11 +40,11 @@ class AuditableHasherTest extends TestCase
 
     public function testHashSameObject(): void
     {
-        /** @var AuditableInterface $object */
         $object = $this->prophesize(AuditableInterface::class);
-        /** @var UserInterface $user */
+
         $user = $this->prophesize(UserInterface::class);
         $user->getId()->willReturn(1);
+
         $object->getChanger()->willReturn($user->reveal());
         $object->getChanged()->willReturn(new \DateTime('2016-02-05'));
 
@@ -65,17 +65,13 @@ class AuditableHasherTest extends TestCase
      */
     public function testHashDifferentObject($changer1, $changer2, $changed1, $changed2): void
     {
-        /** @var AuditableInterface $object1 */
         $object1 = $this->prophesize(AuditableInterface::class);
-        /** @var UserInterface $user1 */
         $user1 = $this->prophesize(UserInterface::class);
         $user1->getId()->willReturn($changer1);
         $object1->getChanger()->willReturn($user1->reveal());
         $object1->getChanged()->willReturn($changed1);
 
-        /** @var AuditableInterface $object2 */
         $object2 = $this->prophesize(AuditableInterface::class);
-        /** @var UserInterface $user2 */
         $user2 = $this->prophesize(UserInterface::class);
         $user2->getId()->willReturn($changer2);
         $object2->getChanger()->willReturn($user2->reveal());
@@ -86,7 +82,6 @@ class AuditableHasherTest extends TestCase
 
     public function testHashWithoutChanger(): void
     {
-        /** @var AuditableInterface $object */
         $object = $this->prophesize(AuditableInterface::class);
         $object->getChanger()->willReturn(null);
         $object->getChanged()->willReturn(new \DateTime('2016-02-05'));
