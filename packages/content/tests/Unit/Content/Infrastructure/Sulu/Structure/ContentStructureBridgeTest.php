@@ -222,7 +222,7 @@ class ContentStructureBridgeTest extends TestCase
 
         $structure = $this->createStructureBridge();
 
-        $structure->setCreated(new \DateTime());
+        $structure->setCreated(new \DateTimeImmutable());
     }
 
     public function testGetCreated(): void

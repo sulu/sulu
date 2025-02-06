@@ -717,14 +717,14 @@ class Media extends ApiWrapper
     }
 
     /**
-     * @param \DateTime|string $changed
+     * @param \DateTimeImmutable|string $changed
      *
      * @return $this
      */
-    public function setChanged($changed)
+    public function setChanged($changed): self
     {
         if (\is_string($changed)) {
-            $changed = new \DateTime($changed);
+            $changed = new \DateTimeImmutable($changed);
         }
         $this->getFileVersion()->setChanged($changed);
 
@@ -732,7 +732,7 @@ class Media extends ApiWrapper
     }
 
     /**
-     * @return \DateTime
+     * @return \DateTimeInterface
      */
     #[VirtualProperty]
     #[SerializedName('changed')]
@@ -769,7 +769,7 @@ class Media extends ApiWrapper
     }
 
     /**
-     * @return \DateTime
+     * @return \DateTimeInterface
      */
     #[VirtualProperty]
     #[SerializedName('created')]
