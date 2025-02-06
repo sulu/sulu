@@ -61,12 +61,12 @@ class CategoryTranslation implements CategoryTranslationInterface
     protected $changer;
 
     /**
-     * @var \DateTime
+     * @var \DateTimeImmutable
      */
     protected $created;
 
     /**
-     * @var \DateTime
+     * @var \DateTimeImmutable
      */
     protected $changed;
 
@@ -193,7 +193,7 @@ class CategoryTranslation implements CategoryTranslationInterface
         $this->changer = $changer;
     }
 
-    public function getCreated()
+    public function getCreated(): \DateTimeImmutable
     {
         return $this->created;
     }
@@ -203,7 +203,7 @@ class CategoryTranslation implements CategoryTranslationInterface
         $this->created = $created;
     }
 
-    public function getChanged()
+    public function getChanged(): \DateTimeImmutable
     {
         return $this->changed;
     }

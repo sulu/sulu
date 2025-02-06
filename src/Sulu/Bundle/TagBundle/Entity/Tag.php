@@ -35,13 +35,13 @@ class Tag implements TagInterface
     private $id;
 
     /**
-     * @var \DateTime
+     * @var \DateTimeImmutable
      */
     #[Groups(['partialTag'])]
     private $created;
 
     /**
-     * @var \DateTime
+     * @var \DateTimeImmutable
      */
     #[Groups(['partialTag'])]
     private $changed;
@@ -80,7 +80,7 @@ class Tag implements TagInterface
         return $this;
     }
 
-    public function getCreated()
+    public function getCreated(): \DateTimeImmutable
     {
         return $this->created;
     }
@@ -95,7 +95,7 @@ class Tag implements TagInterface
         return $this;
     }
 
-    public function getChanged()
+    public function getChanged(): \DateTimeImmutable
     {
         return $this->changed;
     }

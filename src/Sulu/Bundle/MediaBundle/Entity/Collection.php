@@ -51,12 +51,12 @@ class Collection implements CollectionInterface, PermissionInheritanceInterface
     protected $depth;
 
     /**
-     * @var \DateTime
+     * @var \DateTimeImmutable
      */
     protected $created;
 
     /**
-     * @var \DateTime
+     * @var \DateTimeImmutable
      */
     protected $changed;
 
@@ -267,20 +267,16 @@ class Collection implements CollectionInterface, PermissionInheritanceInterface
 
     /**
      * Get created.
-     *
-     * @return \DateTime
      */
-    public function getCreated()
+    public function getCreated(): \DateTimeImmutable
     {
         return $this->created;
     }
 
     /**
      * Get changed.
-     *
-     * @return \DateTime
      */
-    public function getChanged()
+    public function getChanged(): \DateTimeImmutable
     {
         return $this->changed;
     }
@@ -288,7 +284,7 @@ class Collection implements CollectionInterface, PermissionInheritanceInterface
     /**
      * @return $this
      */
-    public function setCreated(\DateTime $created)
+    public function setCreated(\DateTimeImmutable $created)
     {
         $this->created = $created;
 
@@ -298,7 +294,7 @@ class Collection implements CollectionInterface, PermissionInheritanceInterface
     /**
      * @return $this
      */
-    public function setChanged(\DateTime $changed)
+    public function setChanged(\DateTimeImmutable $changed)
     {
         $this->changed = $changed;
 

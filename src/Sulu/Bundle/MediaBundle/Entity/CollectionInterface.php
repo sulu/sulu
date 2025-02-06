@@ -140,20 +140,6 @@ interface CollectionInterface extends AuditableInterface, SecuredEntityInterface
     public function getDepth();
 
     /**
-     * Get created.
-     *
-     * @return \DateTime
-     */
-    public function getCreated();
-
-    /**
-     * Get changed.
-     *
-     * @return \DateTime
-     */
-    public function getChanged();
-
-    /**
      * Set parent.
      *
      * @return CollectionInterface

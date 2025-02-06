@@ -38,7 +38,7 @@ class Product implements TimestampableInterface, UserBlameInterface
 
     public $changer;
 
-    public function getChanged()
+    public function getChanged(): \DateTimeImmutable
     {
         return $this->changed;
     }
@@ -48,7 +48,7 @@ class Product implements TimestampableInterface, UserBlameInterface
         return $this->changer;
     }
 
-    public function getCreated()
+    public function getCreated(): \DateTimeImmutable
     {
         return $this->created;
     }
