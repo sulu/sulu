@@ -49,12 +49,12 @@ class Account implements AccountInterface
     protected $depth;
 
     /**
-     * @var \DateTime
+     * @var \DateTimeImmutable
      */
     private $created;
 
     /**
-     * @var \DateTime
+     * @var \DateTimeImmutable
      */
     private $changed;
 
@@ -783,24 +783,24 @@ class Account implements AccountInterface
         return $this->mainUrl;
     }
 
-    public function getCreated(): \DateTime
+    public function getCreated(): \DateTimeImmutable
     {
         return $this->created;
     }
 
-    public function setCreated(\DateTime $created): AccountInterface
+    public function setCreated(\DateTimeImmutable $created): AccountInterface
     {
         $this->created = $created;
 
         return $this;
     }
 
-    public function getChanged(): \DateTime
+    public function getChanged(): \DateTimeImmutable
     {
         return $this->changed;
     }
 
-    public function setChanged(\DateTime $changed): AccountInterface
+    public function setChanged(\DateTimeImmutable $changed): AccountInterface
     {
         $this->changed = $changed;
 

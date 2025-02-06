@@ -46,12 +46,12 @@ class Keyword implements KeywordInterface
     protected $changer;
 
     /**
-     * @var \DateTime
+     * @var \DateTimeImmutable
      */
     protected $created;
 
     /**
-     * @var \DateTime
+     * @var \DateTimeImmutable
      */
     protected $changed;
 
@@ -117,7 +117,7 @@ class Keyword implements KeywordInterface
         $this->changer = $changer;
     }
 
-    public function getCreated()
+    public function getCreated(): \DateTimeImmutable
     {
         return $this->created;
     }
@@ -127,7 +127,7 @@ class Keyword implements KeywordInterface
         $this->created = $created;
     }
 
-    public function getChanged()
+    public function getChanged(): \DateTimeImmutable
     {
         return $this->changed;
     }

@@ -184,7 +184,7 @@ class Route implements RouteInterface, AuditableInterface
     }
 
     #[VirtualProperty]
-    public function getCreated()
+    public function getCreated(): \DateTimeImmutable
     {
         return $this->created;
     }

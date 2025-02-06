@@ -61,12 +61,12 @@ class Contact extends ApiEntity implements ContactInterface
     protected $birthday;
 
     /**
-     * @var \DateTime
+     * @var \DateTimeImmutable
      */
     protected $created;
 
     /**
-     * @var \DateTime
+     * @var \DateTimeImmutable
      */
     protected $changed;
 
@@ -357,12 +357,12 @@ class Contact extends ApiEntity implements ContactInterface
         return $this->birthday;
     }
 
-    public function getCreated()
+    public function getCreated(): \DateTimeImmutable
     {
         return $this->created;
     }
 
-    public function getChanged()
+    public function getChanged(): \DateTimeImmutable
     {
         return $this->changed;
     }
@@ -808,7 +808,7 @@ class Contact extends ApiEntity implements ContactInterface
     /**
      * @return $this
      */
-    public function setCreated(\DateTime $created)
+    public function setCreated(\DateTimeImmutable $created)
     {
         $this->created = $created;
 
@@ -818,7 +818,7 @@ class Contact extends ApiEntity implements ContactInterface
     /**
      * @return $this
      */
-    public function setChanged(\DateTime $changed)
+    public function setChanged(\DateTimeImmutable $changed)
     {
         $this->changed = $changed;
 

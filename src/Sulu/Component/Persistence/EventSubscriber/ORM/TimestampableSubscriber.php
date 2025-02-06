@@ -38,7 +38,7 @@ class TimestampableSubscriber
             if (!$metadata->hasField(self::CREATED_FIELD)) {
                 $metadata->mapField([
                     'fieldName' => self::CREATED_FIELD,
-                    'type' => 'datetime',
+                    'type' => 'datetime_immutable',
                     'nullable' => false,
                 ]);
             }
@@ -46,7 +46,7 @@ class TimestampableSubscriber
             if (!$metadata->hasField(self::CHANGED_FIELD)) {
                 $metadata->mapField([
                     'fieldName' => self::CHANGED_FIELD,
-                    'type' => 'datetime',
+                    'type' => 'datetime_immutable',
                     'nullable' => false,
                 ]);
             }

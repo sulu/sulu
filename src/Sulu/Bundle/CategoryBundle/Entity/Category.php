@@ -36,12 +36,12 @@ class Category implements CategoryInterface
     protected $depth;
 
     /**
-     * @var \DateTime
+     * @var \DateTimeImmutable
      */
     protected $created;
 
     /**
-     * @var \DateTime
+     * @var \DateTimeImmutable
      */
     protected $changed;
 
@@ -143,7 +143,7 @@ class Category implements CategoryInterface
         return $this->depth;
     }
 
-    public function getCreated()
+    public function getCreated(): \DateTimeImmutable
     {
         return $this->created;
     }
@@ -172,7 +172,7 @@ class Category implements CategoryInterface
         return $this->defaultLocale;
     }
 
-    public function getChanged()
+    public function getChanged(): \DateTimeImmutable
     {
         return $this->changed;
     }
