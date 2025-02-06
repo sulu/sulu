@@ -121,10 +121,10 @@ final class CollectionTrashItemHandler implements
         }
 
         if ($collection instanceof Collection) {
-            if ($data['changed'] ?? null) {
+            if (is_string($data['changed'] ?? null)) {
                 $collection->setChanged(new \DateTimeImmutable($data['changed']));
             }
-            if ($data['created'] ?? null) {
+            if (is_string($data['created'] ?? null)) {
                 $collection->setCreated(new \DateTimeImmutable($data['created']));
             }
             $collection->setCreator($this->findEntity(UserInterface::class, $data['creatorId'] ?? null));

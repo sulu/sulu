@@ -253,11 +253,11 @@ final class AccountTrashItemHandler implements
         $account->setMainPhone($data['mainPhone'] ?? null);
 
         if ($account instanceof Account) {
-            if ($data['changed'] ?? null) {
+            if (is_string($data['changed'] ?? null)) {
                 $account->setChanged(new \DateTimeImmutable($data['changed']));
             }
-            if ($data['created'] ?? null) {
-                $account->setCreated(new \DateTime($data['created']));
+            if (is_string($data['created'] ?? null)) {
+                $account->setCreated(new \DateTimeImmutable($data['created']));
             }
             $account->setCreator($this->findEntity(UserInterface::class, $data['creatorId'] ?? null));
             $account->setChanger($this->findEntity(UserInterface::class, $data['changerId'] ?? null));

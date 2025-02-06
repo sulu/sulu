@@ -43669,55 +43669,7 @@ parameters:
 			path: src/Sulu/Bundle/SearchBundle/Tests/Resources/TestBundle/Controller/SearchController.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\SearchBundle\\Tests\\Resources\\TestBundle\\Entity\\Product\:\:getChanged\(\) should return DateTime but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Sulu/Bundle/SearchBundle/Tests/Resources/TestBundle/Entity/Product.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\SearchBundle\\Tests\\Resources\\TestBundle\\Entity\\Product\:\:getChanger\(\) should return Sulu\\Component\\Security\\Authentication\\UserInterface\|null but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Sulu/Bundle/SearchBundle/Tests/Resources/TestBundle/Entity/Product.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\SearchBundle\\Tests\\Resources\\TestBundle\\Entity\\Product\:\:getCreated\(\) should return DateTime but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Sulu/Bundle/SearchBundle/Tests/Resources/TestBundle/Entity/Product.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\SearchBundle\\Tests\\Resources\\TestBundle\\Entity\\Product\:\:getCreator\(\) should return Sulu\\Component\\Security\\Authentication\\UserInterface\|null but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Sulu/Bundle/SearchBundle/Tests/Resources/TestBundle/Entity/Product.php
-
-		-
 			message: '#^Property Sulu\\Bundle\\SearchBundle\\Tests\\Resources\\TestBundle\\Entity\\Product\:\:\$body has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: src/Sulu/Bundle/SearchBundle/Tests/Resources/TestBundle/Entity/Product.php
-
-		-
-			message: '#^Property Sulu\\Bundle\\SearchBundle\\Tests\\Resources\\TestBundle\\Entity\\Product\:\:\$changed has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: src/Sulu/Bundle/SearchBundle/Tests/Resources/TestBundle/Entity/Product.php
-
-		-
-			message: '#^Property Sulu\\Bundle\\SearchBundle\\Tests\\Resources\\TestBundle\\Entity\\Product\:\:\$changer has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: src/Sulu/Bundle/SearchBundle/Tests/Resources/TestBundle/Entity/Product.php
-
-		-
-			message: '#^Property Sulu\\Bundle\\SearchBundle\\Tests\\Resources\\TestBundle\\Entity\\Product\:\:\$created has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: src/Sulu/Bundle/SearchBundle/Tests/Resources/TestBundle/Entity/Product.php
-
-		-
-			message: '#^Property Sulu\\Bundle\\SearchBundle\\Tests\\Resources\\TestBundle\\Entity\\Product\:\:\$creator has no type specified\.$#'
 			identifier: missingType.property
 			count: 1
 			path: src/Sulu/Bundle/SearchBundle/Tests/Resources/TestBundle/Entity/Product.php

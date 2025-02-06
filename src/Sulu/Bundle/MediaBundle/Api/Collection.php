@@ -373,7 +373,7 @@ class Collection extends ApiWrapper
     }
 
     /**
-     * @return string
+     * @return \DateTimeInterface
      */
     #[VirtualProperty]
     #[SerializedName('changed')]
@@ -408,7 +408,7 @@ class Collection extends ApiWrapper
     }
 
     /**
-     * @return string
+     * @return \DateTimeInterface
      */
     #[VirtualProperty]
     #[SerializedName('created')]

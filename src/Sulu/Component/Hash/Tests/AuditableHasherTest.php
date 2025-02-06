@@ -54,9 +54,9 @@ class AuditableHasherTest extends TestCase
     public static function provideDifferentObjects()
     {
         return [
-            [1, 2, new \DateTime('2016-02-05'), new \DateTime('2016-02-04')],
-            [1, 1, new \DateTime('2016-02-05'), new \DateTime('2016-02-04')],
-            [1, 2, new \DateTime('2016-02-05'), new \DateTime('2016-02-05')],
+            [1, 2, new \DateTimeImmutable('2016-02-05'), new \DateTimeImmutable('2016-02-04')],
+            [1, 1, new \DateTimeImmutable('2016-02-05'), new \DateTimeImmutable('2016-02-04')],
+            [1, 2, new \DateTimeImmutable('2016-02-05'), new \DateTimeImmutable('2016-02-05')],
         ];
     }
 

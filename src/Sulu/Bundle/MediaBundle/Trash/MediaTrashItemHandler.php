@@ -202,7 +202,6 @@ final class MediaTrashItemHandler implements
         $type = $this->findEntity(MediaType::class, $data['typeId']);
         Assert::isInstanceOf($type, MediaType::class);
 
-        /** @var Media $media */
         $media = $this->mediaRepository->createNew();
         $media->setCollection($collection);
         $media->setType($type);

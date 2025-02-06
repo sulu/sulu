@@ -87,6 +87,8 @@ interface MediaInterface extends AuditableInterface
      */
     public function setChanger($changer);
 
+    public function setChanged(\DateTimeImmutable $changed): self;
+
     /**
      * Set creator.
      *
@@ -95,6 +97,8 @@ interface MediaInterface extends AuditableInterface
      * @return MediaInterface
      */
     public function setCreator($creator);
+
+    public function setCreated(\DateTimeImmutable $changed): self;
 
     /**
      * Set preview image.
