@@ -15,6 +15,8 @@ use Sulu\Bundle\CoreBundle\Build\SuluBuilder;
 
 /**
  * Builder for index.
+ *
+ * @internal No backwards compatibility promise is given for this class it can be removed or changed at any time.
  */
 class InitBuilder extends SuluBuilder
 {
@@ -28,8 +30,6 @@ class InitBuilder extends SuluBuilder
 
     /**
      * Return the dependencies for this builder.
-     *
-     * @return array{}
      */
     public function getDependencies(): array
     {

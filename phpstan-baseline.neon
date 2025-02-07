@@ -10026,26 +10026,6 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Util/IndexComparatorInterface.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\CoreBundle\\\\Build\\\\DatabaseBuilder\\:\\:getDependencies\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/CoreBundle/Build/DatabaseBuilder.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\CoreBundle\\\\Build\\\\FixturesBuilder\\:\\:getDependencies\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/CoreBundle/Build/FixturesBuilder.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\CoreBundle\\\\Build\\\\PhpcrBuilder\\:\\:getDependencies\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/CoreBundle/Build/PhpcrBuilder.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\CoreBundle\\\\Build\\\\PhpcrMigrationsBuilder\\:\\:getDependencies\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/CoreBundle/Build/PhpcrMigrationsBuilder.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\CoreBundle\\\\Build\\\\SuluBuilder\\:\\:execCommand\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/CoreBundle/Build/SuluBuilder.php
@@ -17424,11 +17404,6 @@ parameters:
 			message: "#^Property Sulu\\\\Bundle\\\\PageBundle\\\\Admin\\\\PageAdmin\\:\\:\\$sessionManager is never read, only written\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Admin/PageAdmin.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Build\\\\NodeOrderBuilder\\:\\:getDependencies\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Build/NodeOrderBuilder.php
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Build\\\\NodeOrderBuilder\\:\\:setContext\\(\\) has no return type specified\\.$#"
@@ -25849,16 +25824,6 @@ parameters:
 			message: "#^Property Sulu\\\\Bundle\\\\SecurityBundle\\\\Admin\\\\SecurityAdmin\\:\\:\\$translator is never read, only written\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Admin/SecurityAdmin.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\SecurityBundle\\\\Build\\\\SecurityBuilder\\:\\:getDependencies\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Build/SecurityBuilder.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\SecurityBundle\\\\Build\\\\UserBuilder\\:\\:getDependencies\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Build/UserBuilder.php
 
 		-
 			message: "#^Call to an undefined method Sulu\\\\Component\\\\Security\\\\Authentication\\\\RoleRepositoryInterface\\:\\:findOneByName\\(\\)\\.$#"
@@ -44334,11 +44299,6 @@ parameters:
 			message: "#^Parameter \\#2 \\$locale of method Sulu\\\\Bundle\\\\MediaBundle\\\\Collection\\\\Manager\\\\CollectionManagerInterface\\:\\:getById\\(\\) expects string, mixed given\\.$#"
 			count: 1
 			path: src/Sulu/Component/Media/SmartContent/MediaDataProvider.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Media\\\\SystemCollections\\\\SystemCollectionBuilder\\:\\:getDependencies\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/Media/SystemCollections/SystemCollectionBuilder.php
 
 		-
 			message: "#^Method Sulu\\\\Component\\\\Media\\\\SystemCollections\\\\SystemCollectionBuilder\\:\\:setContext\\(\\) has no return type specified\\.$#"
