@@ -20,8 +20,6 @@ class InitBuilder extends SuluBuilder
 {
     /**
      * Return the name for this builder.
-     *
-     * @return string
      */
     public function getName(): string
     {
@@ -31,7 +29,7 @@ class InitBuilder extends SuluBuilder
     /**
      * Return the dependencies for this builder.
      *
-     * @return array
+     * @return array{}
      */
     public function getDependencies(): array
     {
@@ -44,7 +42,7 @@ class InitBuilder extends SuluBuilder
     public function build(): void
     {
         if ($this->input->getOption('destroy')) {
-            $this->execCommand('Purging search indexes', 'massive:search:purge', ['--all'=>true, '--force'=>true]);
+            $this->execCommand('Purging search indexes', 'massive:search:purge', ['--all' => true, '--force' => true]);
         }
         $this->execCommand('Create search indexes', 'massive:search:init');
     }
