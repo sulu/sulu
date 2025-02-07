@@ -14,14 +14,14 @@ declare(strict_types=1);
 namespace Sulu\Page\Infrastructure\Sulu\Content;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Sulu\Page\Domain\Model\PageDimensionContentInterface;
-use Sulu\Page\Domain\Model\PageInterface;
 use Sulu\Bundle\PageBundle\Teaser\Configuration\TeaserConfiguration;
 use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactoryInterface;
 use Sulu\Content\Application\ContentManager\ContentManagerInterface;
 use Sulu\Content\Application\ContentMetadataInspector\ContentMetadataInspectorInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Infrastructure\Sulu\Teaser\ContentTeaserProvider;
+use Sulu\Page\Domain\Model\PageDimensionContentInterface;
+use Sulu\Page\Domain\Model\PageInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**

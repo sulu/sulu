@@ -13,8 +13,6 @@ declare(strict_types=1);
 
 namespace Sulu\Page\Infrastructure\Sulu\Content;
 
-use Sulu\Page\Domain\Model\PageInterface;
-use Sulu\Page\Domain\Repository\PageRepositoryInterface;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkConfiguration;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkConfigurationBuilder;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkItem;
@@ -22,6 +20,8 @@ use Sulu\Bundle\MarkupBundle\Markup\Link\LinkProviderInterface;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Content\Application\ContentManager\ContentManagerInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
+use Sulu\Page\Domain\Model\PageInterface;
+use Sulu\Page\Domain\Repository\PageRepositoryInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class PageLinkProvider implements LinkProviderInterface

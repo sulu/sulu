@@ -49,6 +49,10 @@ final class CreatePageMessageHandler
     {
         $data = $message->getData();
         $page = $this->pageRepository->createNew($message->getUuid());
+        $page->setWebspaceKey($message->getWebspaceKey());
+
+        $parent = $this->pageRepository->getOneBy(['uuid' => $message->getParentId()]);
+        $page->setParent($parent);
 
         foreach ($this->pageMappers as $pageMapper) {
             $pageMapper->mapPageData($page, $data);

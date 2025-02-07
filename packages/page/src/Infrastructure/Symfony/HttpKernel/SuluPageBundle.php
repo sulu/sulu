@@ -13,6 +13,11 @@ declare(strict_types=1);
 
 namespace Sulu\Page\Infrastructure\Symfony\HttpKernel;
 
+use Sulu\Bundle\PersistenceBundle\DependencyInjection\PersistenceExtensionTrait;
+use Sulu\Bundle\PersistenceBundle\PersistenceBundleTrait;
+use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStore;
+use Sulu\Content\Infrastructure\Sulu\Preview\ContentObjectProvider;
+use Sulu\Content\Infrastructure\Sulu\Search\ContentSearchMetadataProvider;
 use Sulu\Page\Application\Mapper\PageContentMapper;
 use Sulu\Page\Application\Mapper\PageMapperInterface;
 use Sulu\Page\Application\MessageHandler\ApplyWorkflowTransitionPageMessageHandler;
@@ -20,6 +25,7 @@ use Sulu\Page\Application\MessageHandler\CopyLocalePageMessageHandler;
 use Sulu\Page\Application\MessageHandler\CreatePageMessageHandler;
 use Sulu\Page\Application\MessageHandler\ModifyPageMessageHandler;
 use Sulu\Page\Application\MessageHandler\RemovePageMessageHandler;
+use Sulu\Page\Application\Normalizer\PageNormalizer;
 use Sulu\Page\Domain\Model\Page;
 use Sulu\Page\Domain\Model\PageDimensionContent;
 use Sulu\Page\Domain\Model\PageDimensionContentInterface;
@@ -27,18 +33,15 @@ use Sulu\Page\Domain\Model\PageInterface;
 use Sulu\Page\Domain\Repository\PageRepositoryInterface;
 use Sulu\Page\Infrastructure\Doctrine\Repository\PageRepository;
 use Sulu\Page\Infrastructure\Sulu\Admin\PageAdmin;
-use Sulu\Page\Infrastructure\Sulu\Content\PageDataProvider;
 use Sulu\Page\Infrastructure\Sulu\Content\PageLinkProvider;
 use Sulu\Page\Infrastructure\Sulu\Content\PageSelectionContentType;
 use Sulu\Page\Infrastructure\Sulu\Content\PageSitemapProvider;
 use Sulu\Page\Infrastructure\Sulu\Content\PageTeaserProvider;
+use Sulu\Page\Infrastructure\Sulu\Content\PropertyResolver\PageSelectionPropertyResolver;
+use Sulu\Page\Infrastructure\Sulu\Content\PropertyResolver\SinglePageSelectionPropertyResolver;
+use Sulu\Page\Infrastructure\Sulu\Content\ResourceLoader\PageResourceLoader;
 use Sulu\Page\Infrastructure\Sulu\Content\SinglePageSelectionContentType;
 use Sulu\Page\UserInterface\Controller\Admin\PageController;
-use Sulu\Bundle\PersistenceBundle\DependencyInjection\PersistenceExtensionTrait;
-use Sulu\Bundle\PersistenceBundle\PersistenceBundleTrait;
-use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStore;
-use Sulu\Content\Infrastructure\Sulu\Preview\ContentObjectProvider;
-use Sulu\Content\Infrastructure\Sulu\Search\ContentSearchMetadataProvider;
 use Symfony\Component\Config\Definition\Configurator\DefinitionConfigurator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
@@ -57,6 +60,10 @@ final class SuluPageBundle extends AbstractBundle
 {
     use PersistenceExtensionTrait;
     use PersistenceBundleTrait;
+
+    // TODO remove this when the deprecated SuluPageBundle is removed
+    protected string $name = 'SuluNextPageBundle';
+    protected string $extensionAlias = 'sulu_next_page';
 
     /**
      * @internal this method is not part of the public API and should only be called by the Symfony framework classes
@@ -148,14 +155,37 @@ final class SuluPageBundle extends AbstractBundle
             ])
             ->tag('sulu_page.page_mapper');
 
+        // Normalizer service
+        $services->set('sulu_page.page_normalizer')
+            ->class(PageNormalizer::class)
+            ->tag('sulu_content.normalizer');
+
+        // Property Resolver services
+        $services->set('sulu_page.page_selection_property_resolver')
+            ->class(PageSelectionPropertyResolver::class)
+            ->tag('sulu_content.property_resolver');
+
+        $services->set('sulu_page.single_page_selection_property_resolver')
+            ->class(SinglePageSelectionPropertyResolver::class)
+            ->tag('sulu_content.property_resolver');
+
+        // Resource Loader services
+        $services->set('sulu_page.page_resource_loader')
+            ->class(PageResourceLoader::class)
+            ->args([
+                new Reference('sulu_page.page_repository'),
+            ])
+            ->tag('sulu_content.resource_loader', ['type' => PageResourceLoader::RESOURCE_LOADER_KEY]);
+
         // Sulu Integration service
         $services->set('sulu_page.page_admin')
             ->class(PageAdmin::class)
             ->args([
                 new Reference('sulu_admin.view_builder_factory'),
-                new Reference('sulu_content.content_view_builder_factory'),
+                new Reference('sulu_core.webspace.webspace_manager'),
                 new Reference('sulu_security.security_checker'),
-                new Reference('sulu.core.localization_manager'),
+                new Reference('sulu_activity.activity_list_view_builder_factory'),
+                new Reference('sulu_content.content_view_builder_factory'),
             ])
             ->tag('sulu.context', ['context' => 'admin'])
             ->tag('sulu.admin');
@@ -183,6 +213,7 @@ final class SuluPageBundle extends AbstractBundle
                 new Reference('sulu_core.list_builder.field_descriptor_factory'),
                 new Reference('sulu_core.doctrine_list_builder_factory'),
                 new Reference('sulu_core.doctrine_rest_helper'),
+                new Reference('doctrine.orm.entity_manager'),
             ])
             ->tag('sulu.context', ['context' => 'admin']);
 
@@ -194,7 +225,7 @@ final class SuluPageBundle extends AbstractBundle
                 new Reference('sulu_content.content_aggregator'),
                 new Reference('sulu_content.content_data_mapper'),
                 '%sulu.model.page.class%',
-                PageAdmin::SECURITY_CONTEXT,
+                null, //TODO add security context for preview
             ])
             ->tag('sulu.context', ['context' => 'admin'])
             ->tag('sulu_preview.object_provider', ['provider-key' => 'pages']);
@@ -257,15 +288,15 @@ final class SuluPageBundle extends AbstractBundle
             ->tag('sulu.content.type', ['alias' => 'page_selection']);
 
         // Smart Content services
-        $services->set('sulu_page.page_data_provider')
-            ->class(PageDataProvider::class) // TODO this should not be handled via Content Bundle instead own service which uses the PageRepository
-            ->args([
-                new Reference('sulu_page.page_repository'),
-                new Reference('sulu_content.content_manager'),
-                new Reference('sulu_page.page_reference_store'),
-                '%sulu_document_manager.show_drafts%',
-            ])
-            ->tag('sulu.smart_content.data_provider', ['alias' => PageInterface::RESOURCE_KEY]);
+        //        $services->set('sulu_page.page_data_provider')
+        //            ->class(PageDataProvider::class) // TODO this should not be handled via Content Bundle instead own service which uses the PageRepository
+        //            ->args([
+        //                new Reference('sulu_page.page_repository'),
+        //                new Reference('sulu_content.content_manager'),
+        //                new Reference('sulu_page.page_reference_store'),
+        //                '%sulu_document_manager.show_drafts%',
+        //            ])
+        //            ->tag('sulu.smart_content.data_provider', ['alias' => PageInterface::RESOURCE_KEY]);
 
         // Search integration
         $services->set('sulu_page.page_search_metadata_provider')

@@ -19,11 +19,6 @@ use Webmozart\Assert\Assert;
 class CreatePageMessage
 {
     /**
-     * @var mixed[]
-     */
-    private $data;
-
-    /**
      * @var string|null
      */
     private $uuid;
@@ -31,14 +26,16 @@ class CreatePageMessage
     /**
      * @param mixed[] $data
      */
-    public function __construct(array $data)
-    {
+    public function __construct(
+        private string $webspaceKey,
+        private string $parentId,
+        private array $data
+    ) {
         $uuid = $data['uuid'] ?? null;
 
-        Assert::string($data['locale'] ?? null, 'Expected a "locale" string given.');
-        Assert::nullOrString($uuid, 'Expected "uuid" to be a string.');
+        Assert::string($data['locale'] ?? null, \sprintf('Expected a "locale" string given. Got: %s', \gettype($data['locale'])));
+        Assert::nullOrString($uuid, \sprintf('Expected a "uuid" string or null given. Got: %s', \gettype($uuid)));
 
-        $this->data = $data;
         $this->uuid = $uuid;
     }
 
@@ -53,5 +50,15 @@ class CreatePageMessage
     public function getData(): array
     {
         return $this->data;
+    }
+
+    public function getWebspaceKey(): string
+    {
+        return $this->webspaceKey;
+    }
+
+    public function getParentId(): string
+    {
+        return $this->parentId;
     }
 }

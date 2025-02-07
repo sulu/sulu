@@ -50,7 +50,7 @@ interface PageInterface extends AuditableInterface, ContentRichEntityInterface
 
     public function getParent(): ?self;
 
-    public function setParent(?self $parent): self;
+    public function setParent(self $parent): self;
 
     /**
      * @return Collection<int, PageInterface>

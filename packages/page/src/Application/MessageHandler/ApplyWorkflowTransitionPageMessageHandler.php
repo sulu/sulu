@@ -11,9 +11,9 @@
 
 namespace Sulu\Page\Application\MessageHandler;
 
+use Sulu\Content\Application\ContentWorkflow\ContentWorkflowInterface;
 use Sulu\Page\Application\Message\ApplyWorkflowTransitionPageMessage;
 use Sulu\Page\Domain\Repository\PageRepositoryInterface;
-use Sulu\Content\Application\ContentWorkflow\ContentWorkflowInterface;
 
 /**
  * @experimental

@@ -24,7 +24,7 @@
         </field>
 
         <many-to-one field="parent" target-entity="Sulu\Page\Domain\Model\PageInterface" inversed-by="children">
-            <join-column name="parent_id" referenced-column-name="id" on-delete="CASCADE"/>
+            <join-column name="parent_id" referenced-column-name="uuid" on-delete="CASCADE"/>
             <gedmo:tree-parent/>
         </many-to-one>
 

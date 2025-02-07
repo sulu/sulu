@@ -11,12 +11,12 @@
 
 namespace Sulu\Page\Tests\Application;
 
-use Sulu\Page\Infrastructure\Symfony\HttpKernel\SuluPageBundle;
 use Sulu\Bundle\AutomationBundle\SuluAutomationBundle;
 use Sulu\Bundle\TestBundle\Kernel\SuluTestKernel;
 use Sulu\Component\HttpKernel\SuluKernel;
 use Sulu\Content\Infrastructure\Symfony\HttpKernel\SuluContentBundle;
 use Sulu\Content\Tests\Application\ExampleTestBundle\ExampleTestBundle;
+use Sulu\Page\Infrastructure\Symfony\HttpKernel\SuluPageBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Task\TaskBundle\TaskBundle;
 

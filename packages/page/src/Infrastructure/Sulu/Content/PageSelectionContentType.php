@@ -11,13 +11,13 @@
 
 namespace Sulu\Page\Infrastructure\Sulu\Content;
 
-use Sulu\Page\Domain\Repository\PageRepositoryInterface;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\PreResolvableContentTypeInterface;
 use Sulu\Component\Content\SimpleContentType;
 use Sulu\Content\Application\ContentManager\ContentManagerInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
+use Sulu\Page\Domain\Repository\PageRepositoryInterface;
 
 class PageSelectionContentType extends SimpleContentType implements PreResolvableContentTypeInterface
 {

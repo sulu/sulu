@@ -50,6 +50,13 @@
         </join>
     </joins>
 
+    <joins name="parent">
+        <join>
+            <entity-name>parent</entity-name>
+            <field-name>Sulu\Page\Domain\Model\PageInterface.parent</field-name>
+        </join>
+    </joins>
+
     <joins name="author">
         <join>
             <entity-name>authorEntity</entity-name>
@@ -62,6 +69,32 @@
         <property name="id" translation="sulu_admin.uuid">
             <field-name>uuid</field-name>
             <entity-name>Sulu\Page\Domain\Model\PageInterface</entity-name>
+        </property>
+
+        <property name="webspaceKey" visibility="never">
+            <field-name>webspaceKey</field-name>
+            <entity-name>Sulu\Page\Domain\Model\PageInterface</entity-name>
+        </property>
+
+        <property name="template" visibility="never">
+            <field-name>templateKey</field-name>
+            <entity-name>dimensionContent</entity-name>
+        </property>
+
+        <property name="lft" visibility="never">
+            <field-name>lft</field-name>
+            <entity-name>Sulu\Page\Domain\Model\PageInterface</entity-name>
+        </property>
+
+        <property name="rgt" visibility="never">
+            <field-name>rgt</field-name>
+            <entity-name>Sulu\Page\Domain\Model\PageInterface</entity-name>
+        </property>
+
+        <property name="parentId" visibility="never">
+            <field-name>uuid</field-name>
+            <entity-name>parent</entity-name>
+            <joins ref="parent"/>
         </property>
 
         <case-property name="title" translation="sulu_admin.title" visibility="always" searchability="yes">
@@ -100,7 +133,6 @@
         <property name="authored" type="date" visibility="no" translation="sulu_admin.authored"
         >
             <transformer type="datetime"/>
-            <filter type="date"/>
         </property>
 
         <property name="created" translation="sulu_admin.created">

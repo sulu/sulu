@@ -11,10 +11,10 @@
 
 namespace Sulu\Page\Application\MessageHandler;
 
-use Sulu\Page\Application\Message\CopyLocalePageMessage;
-use Sulu\Page\Domain\Repository\PageRepositoryInterface;
 use Sulu\Content\Application\ContentCopier\ContentCopierInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
+use Sulu\Page\Application\Message\CopyLocalePageMessage;
+use Sulu\Page\Domain\Repository\PageRepositoryInterface;
 
 /**
  * @experimental

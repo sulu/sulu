@@ -11,7 +11,6 @@
 
 namespace Sulu\Page\Infrastructure\Sulu\Content;
 
-use Sulu\Page\Domain\Repository\PageRepositoryInterface;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\SmartContent\ArrayAccessItem;
@@ -24,6 +23,7 @@ use Sulu\Component\SmartContent\DataProviderResult;
 use Sulu\Component\SmartContent\DatasourceItemInterface;
 use Sulu\Content\Application\ContentManager\ContentManagerInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
+use Sulu\Page\Domain\Repository\PageRepositoryInterface;
 
 class PageDataProvider implements DataProviderInterface, DataProviderAliasInterface
 {

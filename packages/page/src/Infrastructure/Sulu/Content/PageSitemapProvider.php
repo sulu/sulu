@@ -12,10 +12,10 @@
 namespace Sulu\Page\Infrastructure\Sulu\Content;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Sulu\Page\Domain\Model\PageDimensionContentInterface;
-use Sulu\Page\Domain\Model\PageInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Content\Infrastructure\Sulu\Sitemap\ContentSitemapProvider;
+use Sulu\Page\Domain\Model\PageDimensionContentInterface;
+use Sulu\Page\Domain\Model\PageInterface;
 
 /**
  * @extends ContentSitemapProvider<PageDimensionContentInterface, PageInterface>
