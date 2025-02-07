@@ -48,8 +48,8 @@ class MediaAdmin extends Admin
         private LocalizationManagerInterface $localizationManager,
         private UrlGeneratorInterface $urlGenerator,
         private WebspaceManagerInterface $webspaceManager,
-        private ActivityViewBuilderFactoryInterface $activityViewBuilderFactory,
-        private ReferenceViewBuilderFactoryInterface $referenceViewBuilderFactory
+        private ?ActivityViewBuilderFactoryInterface $activityViewBuilderFactory,
+        private ?ReferenceViewBuilderFactoryInterface $referenceViewBuilderFactory
     ) {
     }
 
@@ -131,7 +131,7 @@ class MediaAdmin extends Admin
                     ->setParent(static::EDIT_FORM_VIEW)
             );
 
-            if ($this->activityViewBuilderFactory->hasActivityListPermission() || $this->referenceViewBuilderFactory->hasReferenceListPermission()) {
+            if ($this->activityViewBuilderFactory?->hasActivityListPermission() || $this->referenceViewBuilderFactory?->hasReferenceListPermission()) {
                 $insightsResourceTabViewName = MediaAdmin::EDIT_FORM_VIEW . '.insights';
 
                 $viewCollection->add(
@@ -144,7 +144,7 @@ class MediaAdmin extends Admin
                         ->setParent(MediaAdmin::EDIT_FORM_VIEW)
                 );
 
-                if ($this->activityViewBuilderFactory->hasActivityListPermission()) {
+                if ($this->activityViewBuilderFactory?->hasActivityListPermission()) {
                     $viewCollection->add(
                         $this->activityViewBuilderFactory
                             ->createActivityListViewBuilder(
@@ -156,7 +156,7 @@ class MediaAdmin extends Admin
                     );
                 }
 
-                if ($this->referenceViewBuilderFactory->hasReferenceListPermission()) {
+                if ($this->referenceViewBuilderFactory?->hasReferenceListPermission()) {
                     $viewCollection->add(
                         $this->referenceViewBuilderFactory
                             ->createReferenceListViewBuilder(

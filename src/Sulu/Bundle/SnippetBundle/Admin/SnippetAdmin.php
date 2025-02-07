@@ -60,8 +60,8 @@ class SnippetAdmin extends Admin
         private SecurityCheckerInterface $securityChecker,
         private WebspaceManagerInterface $webspaceManager,
         private $defaultEnabled,
-        private ActivityViewBuilderFactoryInterface $activityViewBuilderFactory,
-        private ReferenceViewBuilderFactoryInterface $referenceViewBuilderFactory
+        private ?ActivityViewBuilderFactoryInterface $activityViewBuilderFactory,
+        private ?ReferenceViewBuilderFactoryInterface $referenceViewBuilderFactory,
     ) {
     }
 
@@ -190,7 +190,7 @@ class SnippetAdmin extends Admin
             );
         }
 
-        if (($this->activityViewBuilderFactory->hasActivityListPermission() || $this->referenceViewBuilderFactory->hasReferenceListPermission()) && $this->securityChecker->hasPermission(static::SECURITY_CONTEXT, PermissionTypes::EDIT)) {
+        if (($this->activityViewBuilderFactory?->hasActivityListPermission() || $this->referenceViewBuilderFactory?->hasReferenceListPermission()) && $this->securityChecker->hasPermission(static::SECURITY_CONTEXT, PermissionTypes::EDIT)) {
             $insightsResourceTabViewName = SnippetAdmin::EDIT_FORM_VIEW . '.insights';
 
             $viewCollection->add(
@@ -203,7 +203,7 @@ class SnippetAdmin extends Admin
                     ->setParent(SnippetAdmin::EDIT_FORM_VIEW)
             );
 
-            if ($this->activityViewBuilderFactory->hasActivityListPermission()) {
+            if ($this->activityViewBuilderFactory?->hasActivityListPermission()) {
                 $viewCollection->add(
                     $this->activityViewBuilderFactory
                         ->createActivityListViewBuilder(
@@ -215,7 +215,7 @@ class SnippetAdmin extends Admin
                 );
             }
 
-            if ($this->referenceViewBuilderFactory->hasReferenceListPermission()) {
+            if ($this->referenceViewBuilderFactory?->hasReferenceListPermission()) {
                 $viewCollection->add(
                     $this->referenceViewBuilderFactory
                         ->createReferenceListViewBuilder(
