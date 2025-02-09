@@ -32,7 +32,9 @@ class PageNormalizer implements NormalizerInterface
     public function getIgnoredAttributes(object $object): array
     {
         if (!$object instanceof PageInterface) {
-            return [];
+            return [
+                'mainWebspace',
+            ];
         }
 
         return [];

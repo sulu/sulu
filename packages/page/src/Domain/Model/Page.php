@@ -89,7 +89,7 @@ class Page implements PageInterface
         return $this;
     }
 
-    public function getParent(): PageInterface
+    public function getParent(): ?PageInterface
     {
         return $this->parent;
     }

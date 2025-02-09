@@ -37,9 +37,9 @@
     "shadowLocales": [],
     "shadowOn": false,
     "stage": "draft",
-    "template": "page",
+    "template": "default",
     "title": "Test Page",
     "url": "/my-page",
     "workflowPlace": "unpublished",
-    "mainWebspace": "sulu-io"
+    "webspace": "sulu-io"
 }

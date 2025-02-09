@@ -5,21 +5,45 @@
 
     <key>default</key>
 
-    <view>::default</view>
-    <controller>SuluWebsiteBundle:Default:index</controller>
+    <view>views/pages/page</view>
+    <controller>Sulu\Content\UserInterface\Controller\Website\ContentController::indexAction</controller>
     <cacheLifetime>2400</cacheLifetime>
 
     <properties>
         <property name="title" type="text_line" mandatory="true">
+            <meta>
+                <title lang="en">Title</title>
+                <title lang="de">Titel</title>
+            </meta>
+
+            <params>
+                <param name="headline" value="true"/>
+            </params>
+
             <tag name="sulu.rlp.part"/>
         </property>
 
-        <property name="tags" type="tag_selection"/>
+        <property name="url" type="route">
+            <meta>
+                <title lang="en">Resourcelocator</title>
+                <title lang="de">Adresse</title>
+            </meta>
 
-        <property name="url" type="resource_locator" mandatory="true">
             <tag name="sulu.rlp"/>
         </property>
 
-        <property name="page" type="text_area" mandatory="false" />
+        <property name="description" type="text_area">
+            <meta>
+                <title lang="en">Description</title>
+                <title lang="de">Beschreibung</title>
+            </meta>
+        </property>
+
+        <property name="image" type="single_media_selection">
+            <meta>
+                <title lang="en">Image</title>
+                <title lang="de">Bild</title>
+            </meta>
+        </property>
     </properties>
 </template>

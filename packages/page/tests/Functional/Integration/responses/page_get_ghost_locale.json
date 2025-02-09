@@ -15,7 +15,7 @@
     "lastModified": null,
     "lastModifiedEnabled": false,
     "locale": null,
-    "mainWebspace": null,
+    "webspace": "sulu-io",
     "published": null,
     "publishedState": false,
     "seoCanonicalUrl": null,
@@ -30,6 +30,5 @@
     "shadowOn": false,
     "stage": "draft",
     "template": null,
-    "title": null,
     "workflowPlace": null
 }

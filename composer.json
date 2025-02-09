@@ -178,6 +178,7 @@
     "replace": {
         "sulu/article-bundle": "self.version",
         "sulu/content-bundle": "self.version",
+        "sulu/page-bundle": "self.version",
         "sulu/document-manager": "self.version",
         "sulu/media-bundle": "self.version",
         "sulu/tag-bundle": "self.version",

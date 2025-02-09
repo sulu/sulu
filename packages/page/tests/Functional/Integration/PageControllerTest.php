@@ -13,8 +13,10 @@ declare(strict_types=1);
 
 namespace Sulu\Page\Tests\Functional\Integration;
 
+use Sulu\Article\Tests\Traits\AssertSnapshotTrait;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
-use Sulu\Page\Tests\Traits\AssertSnapshotTrait;
+use Sulu\Page\Domain\Model\Page;
+use Sulu\Page\Domain\Model\PageInterface;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 /**
@@ -39,41 +41,63 @@ class PageControllerTest extends SuluTestCase
         );
     }
 
+    private function createHomepage(): PageInterface
+    {
+        $homepage = new Page('123-123-123');
+        $homepage->setLft(0);
+        $homepage->setRgt(1);
+        $homepage->setDepth(0);
+        $homepage->setWebspaceKey('sulu-io');
+        self::getEntityManager()->persist($homepage);
+        self::getEntityManager()->flush();
+
+        return $homepage;
+    }
+
     public function testPostPublish(): string
     {
         self::purgeDatabase();
         self::initPhpcr();
 
-        $this->client->request('POST', '/admin/api/pages?locale=en&action=publish', [], [], [], \json_encode([
-            'template' => 'page',
-            'title' => 'Test Page',
-            'url' => '/my-page',
-            'published' => '2020-05-08T00:00:00+00:00', // Should be ignored
-            'description' => null,
-            'image' => null,
-            'lastModified' => '2022-05-08T00:00:00+00:00',
-            'lastModifiedEnabled' => true,
-            'seoTitle' => 'Seo Title',
-            'seoDescription' => 'Seo Description',
-            'seoCanonicalUrl' => 'https://sulu.io/',
-            'seoKeywords' => 'Seo Keyword 1, Seo Keyword 2',
-            'seoNoIndex' => true,
-            'seoNoFollow' => true,
-            'seoHideInSitemap' => true,
-            'excerptTitle' => 'Excerpt Title',
-            'excerptDescription' => 'Excerpt Description',
-            'excerptMore' => 'Excerpt More',
-            'excerptTags' => ['Tag 1', 'Tag 2'],
-            'excerptCategories' => [],
-            'excerptIcon' => null,
-            'excerptMedia' => null,
-            'author' => null,
-            'authored' => '2020-05-08T00:00:00+00:00',
-            'mainWebspace' => 'sulu-io',
-        ]) ?: null);
+        $homepage = $this->createHomepage();
+        $this->client->request(
+            'POST',
+            \sprintf('/admin/api/pages?locale=en&action=publish&parentId=%s&webspace=sulu-io', $homepage->getId()),
+            [],
+            [],
+            [],
+            \json_encode(
+                [
+                    'template' => 'default',
+                    'title' => 'Test Page',
+                    'url' => '/my-page',
+                    'published' => '2020-05-08T00:00:00+00:00', // Should be ignored
+                    'description' => null,
+                    'image' => null,
+                    'lastModified' => '2022-05-08T00:00:00+00:00',
+                    'lastModifiedEnabled' => true,
+                    'seoTitle' => 'Seo Title',
+                    'seoDescription' => 'Seo Description',
+                    'seoCanonicalUrl' => 'https://sulu.io/',
+                    'seoKeywords' => 'Seo Keyword 1, Seo Keyword 2',
+                    'seoNoIndex' => true,
+                    'seoNoFollow' => true,
+                    'seoHideInSitemap' => true,
+                    'excerptTitle' => 'Excerpt Title',
+                    'excerptDescription' => 'Excerpt Description',
+                    'excerptMore' => 'Excerpt More',
+                    'excerptTags' => ['Tag 1', 'Tag 2'],
+                    'excerptCategories' => [],
+                    'excerptIcon' => null,
+                    'excerptMedia' => null,
+                    'author' => null,
+                    'authored' => '2020-05-08T00:00:00+00:00',
+                    'mainWebspace' => 'sulu-io',
+                ]
+            ) ?: null);
 
         $response = $this->client->getResponse();
-        $content = \json_decode((string) $response->getContent(), true);
+        $content = \json_decode((string)$response->getContent(), true);
         /** @var string $id */
         $id = $content['id'] ?? null; // @phpstan-ignore-line
 
@@ -118,30 +142,37 @@ class PageControllerTest extends SuluTestCase
     {
         self::purgeDatabase();
 
-        $this->client->request('POST', '/admin/api/pages?locale=en', [], [], [], \json_encode([
-            'template' => 'page',
-            'title' => 'Test Page',
-            'url' => '/my-page',
-            'images' => null,
-            'lastModified' => '2022-05-08T00:00:00+00:00',
-            'lastModifiedEnabled' => true,
-            'seoTitle' => 'Seo Title',
-            'seoDescription' => 'Seo Description',
-            'seoCanonicalUrl' => 'https://sulu.io/',
-            'seoKeywords' => 'Seo Keyword 1, Seo Keyword 2',
-            'seoNoIndex' => true,
-            'seoNoFollow' => true,
-            'seoHideInSitemap' => true,
-            'excerptTitle' => 'Excerpt Title',
-            'excerptDescription' => 'Excerpt Description',
-            'excerptMore' => 'Excerpt More',
-            'excerptTags' => ['Tag 1', 'Tag 2'],
-            'excerptCategories' => [],
-            'excerptIcon' => null,
-            'excerptMedia' => null,
-            'mainWebspace' => 'sulu-io',
-            'authored' => '2020-05-08T00:00:00+00:00',
-        ]) ?: null);
+        $homepage = $this->createHomepage();
+        $this->client->request(
+            'POST',
+            \sprintf('/admin/api/pages?locale=en&parentId=%s&webspace=sulu-io', $homepage->getId()),
+            [],
+            [],
+            [],
+            \json_encode([
+                'template' => 'default',
+                'title' => 'Test Page',
+                'url' => '/my-page',
+                'images' => null,
+                'lastModified' => '2022-05-08T00:00:00+00:00',
+                'lastModifiedEnabled' => true,
+                'seoTitle' => 'Seo Title',
+                'seoDescription' => 'Seo Description',
+                'seoCanonicalUrl' => 'https://sulu.io/',
+                'seoKeywords' => 'Seo Keyword 1, Seo Keyword 2',
+                'seoNoIndex' => true,
+                'seoNoFollow' => true,
+                'seoHideInSitemap' => true,
+                'excerptTitle' => 'Excerpt Title',
+                'excerptDescription' => 'Excerpt Description',
+                'excerptMore' => 'Excerpt More',
+                'excerptTags' => ['Tag 1', 'Tag 2'],
+                'excerptCategories' => [],
+                'excerptIcon' => null,
+                'excerptMedia' => null,
+                'mainWebspace' => 'sulu-io',
+                'authored' => '2020-05-08T00:00:00+00:00',
+            ]) ?: null);
 
         $response = $this->client->getResponse();
 
@@ -151,7 +182,7 @@ class PageControllerTest extends SuluTestCase
         $this->assertCount(0, $routeRepository->findAll());
 
         /** @var string $id */
-        $id = \json_decode((string) $response->getContent(), true)['id'] ?? null; // @phpstan-ignore-line
+        $id = \json_decode((string)$response->getContent(), true)['id'] ?? null; // @phpstan-ignore-line
 
         return $id;
     }
@@ -211,7 +242,7 @@ class PageControllerTest extends SuluTestCase
     public function testPut(string $id): void
     {
         $this->client->request('PUT', '/admin/api/pages/' . $id . '?locale=en', [], [], [], \json_encode([
-            'template' => 'page',
+            'template' => 'default',
             'title' => 'Test Page 2',
             'url' => '/my-page-2',
             'description' => '<p>Test Page 2</p>',
@@ -245,9 +276,9 @@ class PageControllerTest extends SuluTestCase
      * @depends testPost
      * @depends testPut
      */
-    public function testGetList(): void
+    public function testGetList(string $id): void
     {
-        $this->client->request('GET', '/admin/api/pages?locale=en');
+        $this->client->request('GET', '/admin/api/pages?locale=en&webspace=sulu-io&expandedIds=' . $id);
         $response = $this->client->getResponse();
 
         $this->assertResponseSnapshot('page_cget.json', $response, 200);
