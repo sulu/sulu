@@ -8371,21 +8371,6 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Entity/AccountRepository.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\AccountRepository\\:\\:appendJoins\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Entity/AccountRepository.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\AccountRepository\\:\\:appendJoins\\(\\) has parameter \\$alias with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Entity/AccountRepository.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\AccountRepository\\:\\:appendJoins\\(\\) has parameter \\$locale with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Entity/AccountRepository.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\AccountRepository\\:\\:countDistinctAccountChildrenAndContacts\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Entity/AccountRepository.php
@@ -8517,21 +8502,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\ContactRepository\\:\\:addWhere\\(\\) has parameter \\$where with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Entity/ContactRepository.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\ContactRepository\\:\\:appendJoins\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Entity/ContactRepository.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\ContactRepository\\:\\:appendJoins\\(\\) has parameter \\$alias with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Entity/ContactRepository.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\ContactRepository\\:\\:appendJoins\\(\\) has parameter \\$locale with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Entity/ContactRepository.php
 
@@ -14016,6 +13986,11 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Entity/FileVersionPublishLanguage.php
 
 		-
+			message: "#^Cannot access offset 'id' on mixed\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/MediaBundle/Entity/MediaDataProviderRepository.php
+
+		-
 			message: "#^Default value of the parameter \\#6 \\$options \\(array\\{\\}\\) of method Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\MediaDataProviderRepository\\:\\:findByFilters\\(\\) is incompatible with type array\\{webspaceKey\\?\\: string, locale\\: string\\}\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Entity/MediaDataProviderRepository.php
@@ -14071,21 +14046,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Entity/MediaDataProviderRepository.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\MediaDataProviderRepository\\:\\:appendJoins\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/MediaDataProviderRepository.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\MediaDataProviderRepository\\:\\:appendJoins\\(\\) has parameter \\$alias with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/MediaDataProviderRepository.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\MediaDataProviderRepository\\:\\:appendJoins\\(\\) has parameter \\$locale with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/MediaDataProviderRepository.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\MediaDataProviderRepository\\:\\:appendSortByJoins\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Entity/MediaDataProviderRepository.php
@@ -14117,21 +14077,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\MediaDataProviderRepository\\:\\:appendTargetGroupRelation\\(\\) has parameter \\$alias with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/MediaDataProviderRepository.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\MediaDataProviderRepository\\:\\:createQueryBuilder\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/MediaDataProviderRepository.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\MediaDataProviderRepository\\:\\:createQueryBuilder\\(\\) has parameter \\$alias with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/MediaDataProviderRepository.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\MediaDataProviderRepository\\:\\:createQueryBuilder\\(\\) has parameter \\$indexBy with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Entity/MediaDataProviderRepository.php
 
@@ -23951,17 +23896,7 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Tests/Unit/Search/EventSubscriber/StructureSubscriberTest.php
 
 		-
-			message: "#^Call to an undefined method Sulu\\\\Component\\\\Content\\\\Document\\\\Behavior\\\\SecurityBehavior\\:\\:reveal\\(\\)\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Tests/Unit/Search/Reindex/StructureProviderTest.php
-
-		-
-			message: "#^Cannot call method willReturn\\(\\) on array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Tests/Unit/Search/Reindex/StructureProviderTest.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\PageBundle\\\\Tests\\\\Unit\\\\Search\\\\Reindex\\\\StructureProviderTest\\:\\:\\$secureStructure \\(Sulu\\\\Component\\\\Content\\\\Document\\\\Behavior\\\\SecurityBehavior\\) does not accept Prophecy\\\\Prophecy\\\\ObjectProphecy\\<Sulu\\\\Component\\\\Content\\\\Document\\\\Behavior\\\\SecurityBehavior&Sulu\\\\Component\\\\Content\\\\Document\\\\Behavior\\\\StructureBehavior\\>\\.$#"
+			message: "#^Property Sulu\\\\Bundle\\\\PageBundle\\\\Tests\\\\Unit\\\\Search\\\\Reindex\\\\StructureProviderTest\\:\\:\\$secureStructure \\(Prophecy\\\\Prophecy\\\\ObjectProphecy\\<Sulu\\\\Component\\\\Content\\\\Document\\\\Behavior\\\\SecurityBehavior&Sulu\\\\Component\\\\Content\\\\Document\\\\Behavior\\\\StructureBehavior\\>\\) does not accept \\$this\\(Sulu\\\\Bundle\\\\PageBundle\\\\Tests\\\\Unit\\\\Search\\\\Reindex\\\\StructureProviderTest\\)\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Tests/Unit/Search/Reindex/StructureProviderTest.php
 
@@ -39931,12 +39866,12 @@ parameters:
 			path: src/Sulu/Component/Content/Tests/Unit/Document/Subscriber/ExtensionSubscriberTest.php
 
 		-
-			message: "#^Call to an undefined method Sulu\\\\Component\\\\Content\\\\Document\\\\Behavior\\\\StructureBehavior\\:\\:reveal\\(\\)\\.$#"
-			count: 8
+			message: "#^Call to an undefined method Sulu\\\\Component\\\\Content\\\\Tests\\\\Unit\\\\Document\\\\Subscriber\\\\FallbackLocalizationSubscriberTest\\:\\:reveal\\(\\)\\.$#"
+			count: 1
 			path: src/Sulu/Component/Content/Tests/Unit/Document/Subscriber/FallbackLocalizationSubscriberTest.php
 
 		-
-			message: "#^Property Sulu\\\\Component\\\\Content\\\\Tests\\\\Unit\\\\Document\\\\Subscriber\\\\FallbackLocalizationSubscriberTest\\:\\:\\$document \\(Sulu\\\\Component\\\\Content\\\\Document\\\\Behavior\\\\StructureBehavior\\) does not accept Prophecy\\\\Prophecy\\\\ObjectProphecy\\<Sulu\\\\Component\\\\Content\\\\Document\\\\Behavior\\\\StructureBehavior&Sulu\\\\Component\\\\Content\\\\Document\\\\Behavior\\\\WebspaceBehavior\\>\\.$#"
+			message: "#^Property Sulu\\\\Component\\\\Content\\\\Tests\\\\Unit\\\\Document\\\\Subscriber\\\\FallbackLocalizationSubscriberTest\\:\\:\\$document \\(Prophecy\\\\Prophecy\\\\ObjectProphecy\\<Sulu\\\\Component\\\\Content\\\\Document\\\\Behavior\\\\StructureBehavior&Sulu\\\\Component\\\\Content\\\\Document\\\\Behavior\\\\WebspaceBehavior\\>\\) does not accept \\$this\\(Sulu\\\\Component\\\\Content\\\\Tests\\\\Unit\\\\Document\\\\Subscriber\\\\FallbackLocalizationSubscriberTest\\)\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Tests/Unit/Document/Subscriber/FallbackLocalizationSubscriberTest.php
 
@@ -39947,11 +39882,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Component\\\\Content\\\\Tests\\\\Unit\\\\Document\\\\Subscriber\\\\ResourceSegmentSubscriberTest\\:\\:getDocumentMock\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Tests/Unit/Document/Subscriber/ResourceSegmentSubscriberTest.php
-
-		-
-			message: "#^Property Sulu\\\\Component\\\\Content\\\\Tests\\\\Unit\\\\Document\\\\Subscriber\\\\ResourceSegmentSubscriberTest\\:\\:\\$document \\(Prophecy\\\\Prophecy\\\\ObjectProphecy\\<Sulu\\\\Component\\\\Content\\\\Document\\\\Behavior\\\\ResourceSegmentBehavior\\>\\) does not accept Prophecy\\\\Prophecy\\\\ObjectProphecy\\<Sulu\\\\Component\\\\Content\\\\Document\\\\Behavior\\\\RedirectTypeBehavior&Sulu\\\\Component\\\\Content\\\\Document\\\\Behavior\\\\ResourceSegmentBehavior&Sulu\\\\Component\\\\Content\\\\Document\\\\Behavior\\\\StructureBehavior\\>\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Tests/Unit/Document/Subscriber/ResourceSegmentSubscriberTest.php
 
@@ -45026,6 +44956,16 @@ parameters:
 			path: src/Sulu/Component/Persistence/EventSubscriber/ORM/UserBlameSubscriber.php
 
 		-
+			message: "#^Call to an undefined method Sulu\\\\Component\\\\Persistence\\\\Tests\\\\Unit\\\\EventSubscriber\\\\ORM\\\\MetadataSubscriberTest\\:\\:reveal\\(\\)\\.$#"
+			count: 1
+			path: src/Sulu/Component/Persistence/Tests/Unit/EventSubscriber/ORM/MetadataSubscriberTest.php
+
+		-
+			message: "#^Property Sulu\\\\Component\\\\Persistence\\\\Tests\\\\Unit\\\\EventSubscriber\\\\ORM\\\\MetadataSubscriberTest\\:\\:\\$object \\(Prophecy\\\\Prophecy\\\\ObjectProphecy\\<stdClass\\>\\) does not accept \\$this\\(Sulu\\\\Component\\\\Persistence\\\\Tests\\\\Unit\\\\EventSubscriber\\\\ORM\\\\MetadataSubscriberTest\\)\\.$#"
+			count: 1
+			path: src/Sulu/Component/Persistence/Tests/Unit/EventSubscriber/ORM/MetadataSubscriberTest.php
+
+		-
 			message: "#^Property Sulu\\\\Component\\\\Persistence\\\\Tests\\\\Unit\\\\EventSubscriber\\\\ORM\\\\MetadataSubscriberTest\\:\\:\\$reflection with generic class ReflectionClass does not specify its types\\: T$#"
 			count: 1
 			path: src/Sulu/Component/Persistence/Tests/Unit/EventSubscriber/ORM/MetadataSubscriberTest.php
@@ -45066,17 +45006,7 @@ parameters:
 			path: src/Sulu/Component/Persistence/Tests/Unit/EventSubscriber/ORM/TimestampableSubscriberTest.php
 
 		-
-			message: "#^Property Sulu\\\\Component\\\\Persistence\\\\Tests\\\\Unit\\\\EventSubscriber\\\\ORM\\\\TimestampableSubscriberTest\\:\\:\\$timestampableObject \\(Prophecy\\\\Prophecy\\\\ObjectProphecy\\<stdClass\\>\\) does not accept Prophecy\\\\Prophecy\\\\ObjectProphecy\\<stdClass&Sulu\\\\Component\\\\Persistence\\\\Model\\\\TimestampableInterface\\>\\.$#"
-			count: 1
-			path: src/Sulu/Component/Persistence/Tests/Unit/EventSubscriber/ORM/TimestampableSubscriberTest.php
-
-		-
 			message: "#^Call to an undefined method Doctrine\\\\ORM\\\\UnitOfWork\\:\\:method\\(\\)\\.$#"
-			count: 7
-			path: src/Sulu/Component/Persistence/Tests/Unit/EventSubscriber/ORM/UserBlameSubscriberTest.php
-
-		-
-			message: "#^Cannot call method reveal\\(\\) on stdClass\\.$#"
 			count: 7
 			path: src/Sulu/Component/Persistence/Tests/Unit/EventSubscriber/ORM/UserBlameSubscriberTest.php
 
@@ -45107,11 +45037,6 @@ parameters:
 
 		-
 			message: "#^Property Sulu\\\\Component\\\\Persistence\\\\Tests\\\\Unit\\\\EventSubscriber\\\\ORM\\\\UserBlameSubscriberTest\\:\\:\\$refl with generic class ReflectionClass does not specify its types\\: T$#"
-			count: 1
-			path: src/Sulu/Component/Persistence/Tests/Unit/EventSubscriber/ORM/UserBlameSubscriberTest.php
-
-		-
-			message: "#^Property Sulu\\\\Component\\\\Persistence\\\\Tests\\\\Unit\\\\EventSubscriber\\\\ORM\\\\UserBlameSubscriberTest\\:\\:\\$userBlameObject \\(stdClass\\) does not accept Prophecy\\\\Prophecy\\\\ObjectProphecy\\<stdClass&Sulu\\\\Component\\\\Persistence\\\\Model\\\\UserBlameInterface\\>\\.$#"
 			count: 1
 			path: src/Sulu/Component/Persistence/Tests/Unit/EventSubscriber/ORM/UserBlameSubscriberTest.php
 

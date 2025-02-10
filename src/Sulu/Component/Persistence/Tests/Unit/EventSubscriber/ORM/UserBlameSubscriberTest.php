@@ -42,7 +42,7 @@ class UserBlameSubscriberTest extends TestCase
     private $onFlushEvent;
 
     /**
-     * @var \stdClass
+     * @var ObjectProphecy<UserBlameInterface>
      */
     private $userBlameObject;
 
@@ -93,8 +93,7 @@ class UserBlameSubscriberTest extends TestCase
 
         $this->onFlushEvent = $this->prophesize(OnFlushEventArgs::class);
 
-        $this->userBlameObject = $this->prophesize(\stdClass::class)
-            ->willImplement(UserBlameInterface::class);
+        $this->userBlameObject = $this->prophesize(UserBlameInterface::class);
         $this->classMetadata = $this->prophesize(ClassMetadata::class);
         $this->refl = $this->prophesize(\ReflectionClass::class);
         $this->entityManager = $this->prophesize(EntityManager::class);
