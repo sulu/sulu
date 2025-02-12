@@ -54,6 +54,7 @@
             <tag name="sulu.rlp"/>
         </property>
 
+        <!-- TODO readd ? https://github.com/sulu/sulu/pull/7794
         <property name="animals" type="snippet_selection">
             <params>
                 <param name="snippetType" value="animal" />
@@ -64,6 +65,7 @@
                 <title lang="en">Animals</title>
             </meta>
         </property>
+        -->
 
         <property name="blog" type="text_area" multilingual="false" mandatory="false"/>
 

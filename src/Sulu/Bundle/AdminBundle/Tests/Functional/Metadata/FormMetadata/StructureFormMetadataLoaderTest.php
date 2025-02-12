@@ -60,7 +60,7 @@ class StructureFormMetadataLoaderTest extends KernelTestCase
         $this->assertInstanceOf(FormMetadata::class, $defaultForm);
         $this->assertEquals('default', $defaultForm->getName());
         $this->assertEquals('Animals', $defaultForm->getTitle());
-        $this->assertCount(6, $defaultForm->getItems());
+        $this->assertCount(5, $defaultForm->getItems());
         $this->assertCount(3, $defaultForm->getTags());
         $this->assertNotNull($defaultForm->getSchema());
         $this->assertInstanceOf(SchemaMetadata::class, $defaultForm->getSchema());
@@ -91,7 +91,7 @@ class StructureFormMetadataLoaderTest extends KernelTestCase
         $this->assertInstanceOf(FormMetadata::class, $defaultForm);
         $this->assertEquals('default', $defaultForm->getName());
         $this->assertEquals('Tiers', $defaultForm->getTitle());
-        $this->assertCount(6, $defaultForm->getItems());
+        $this->assertCount(5, $defaultForm->getItems());
         $this->assertCount(3, $defaultForm->getTags());
         $this->assertNotNull($defaultForm->getSchema());
         $this->assertInstanceOf(SchemaMetadata::class, $defaultForm->getSchema());
@@ -132,7 +132,7 @@ class StructureFormMetadataLoaderTest extends KernelTestCase
         $this->assertInstanceOf(FormMetadata::class, $defaultForm);
         $this->assertEquals('default', $defaultForm->getName());
         $this->assertEquals('Tiers', $defaultForm->getTitle());
-        $this->assertCount(6, $defaultForm->getItems());
+        $this->assertCount(5, $defaultForm->getItems());
         $this->assertCount(3, $defaultForm->getTags());
         $this->assertNotNull($defaultForm->getSchema());
         $this->assertInstanceOf(SchemaMetadata::class, $defaultForm->getSchema());
@@ -140,6 +140,10 @@ class StructureFormMetadataLoaderTest extends KernelTestCase
         $this->assertEquals('default', $typedForm->getDefaultType());
     }
 
+
+    // TODO instead of snippets we should create a custom type and check that here to make AdminBundle not depending
+    //      on the snippet bundle: https://github.com/sulu/sulu/pull/7794
+    /*
     public function testGetMetadataForSnippets(): void
     {
         $typedForm = $this->structureFormMetadataLoader->getMetadata('snippet', 'de');
@@ -157,4 +161,5 @@ class StructureFormMetadataLoaderTest extends KernelTestCase
 
         $this->assertEquals('default', $typedForm->getDefaultType());
     }
+    */
 }

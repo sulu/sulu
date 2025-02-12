@@ -48,32 +48,6 @@
                 }
             ]
         },
-        "animals": {
-            "label": "Animals",
-            "disabledCondition": null,
-            "visibleCondition": null,
-            "description": "",
-            "type": "snippet_selection",
-            "colSpan": 12,
-            "options": {
-                "snippetType": {
-                    "name": "snippetType",
-                    "type": "string",
-                    "value": "animal",
-                    "title": null,
-                    "placeholder": null,
-                    "infoText": null
-                }
-            },
-            "types": [],
-            "defaultType": null,
-            "required": false,
-            "spaceAfter": null,
-            "minOccurs": null,
-            "maxOccurs": null,
-            "onInvalid": null,
-            "tags": []
-        },
         "blog": {
             "label": null,
             "disabledCondition": null,
@@ -351,41 +325,6 @@
                     "title": {
                         "type": "string",
                         "minLength": 1
-                    },
-                    "animals": {
-                        "anyOf": [
-                            {
-                                "type": "null"
-                            },
-                            {
-                                "type": "array",
-                                "items": {
-                                    "type": [
-                                        "number",
-                                        "string",
-                                        "boolean",
-                                        "object",
-                                        "array",
-                                        "null"
-                                    ]
-                                },
-                                "maxItems": 0
-                            },
-                            {
-                                "type": "array",
-                                "items": {
-                                    "anyOf": [
-                                        {
-                                            "type": "string"
-                                        },
-                                        {
-                                            "type": "number"
-                                        }
-                                    ]
-                                },
-                                "uniqueItems": true
-                            }
-                        ]
                     },
                     "blog": {
                         "anyOf": [
