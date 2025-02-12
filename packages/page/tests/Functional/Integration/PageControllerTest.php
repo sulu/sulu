@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Sulu\Page\Tests\Functional\Integration;
 
-use Sulu\Article\Tests\Traits\AssertSnapshotTrait;
+use Sulu\Bundle\TestBundle\Testing\AssertSnapshotTrait;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Page\Domain\Model\Page;
 use Sulu\Page\Domain\Model\PageInterface;
@@ -97,7 +97,7 @@ class PageControllerTest extends SuluTestCase
             ) ?: null);
 
         $response = $this->client->getResponse();
-        $content = \json_decode((string)$response->getContent(), true);
+        $content = \json_decode((string) $response->getContent(), true);
         /** @var string $id */
         $id = $content['id'] ?? null; // @phpstan-ignore-line
 
@@ -182,7 +182,7 @@ class PageControllerTest extends SuluTestCase
         $this->assertCount(0, $routeRepository->findAll());
 
         /** @var string $id */
-        $id = \json_decode((string)$response->getContent(), true)['id'] ?? null; // @phpstan-ignore-line
+        $id = \json_decode((string) $response->getContent(), true)['id'] ?? null; // @phpstan-ignore-line
 
         return $id;
     }

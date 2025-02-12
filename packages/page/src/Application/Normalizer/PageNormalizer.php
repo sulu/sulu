@@ -13,7 +13,6 @@ namespace Sulu\Page\Application\Normalizer;
 
 use Sulu\Content\Application\ContentNormalizer\Normalizer\NormalizerInterface;
 use Sulu\Page\Domain\Model\PageDimensionContentInterface;
-use Sulu\Page\Domain\Model\PageInterface;
 
 class PageNormalizer implements NormalizerInterface
 {
@@ -31,7 +30,7 @@ class PageNormalizer implements NormalizerInterface
 
     public function getIgnoredAttributes(object $object): array
     {
-        if (!$object instanceof PageInterface) {
+        if ($object instanceof PageDimensionContentInterface) {
             return [
                 'mainWebspace',
             ];

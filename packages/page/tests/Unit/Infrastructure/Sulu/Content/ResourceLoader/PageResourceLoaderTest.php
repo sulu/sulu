@@ -14,10 +14,6 @@ namespace Sulu\Bundle\Page\Tests\Unit\Infrastructure\Sulu\Content\ResourceLoader
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
-use Sulu\Bundle\ContactBundle\Api\Contact as ContactApi;
-use Sulu\Bundle\ContactBundle\Contact\ContactManager;
-use Sulu\Bundle\ContactBundle\Entity\Contact;
-use Sulu\Bundle\ContactBundle\Infrastructure\Sulu\Content\ResourceLoader\ContactResourceLoader;
 use Sulu\Bundle\TestBundle\Testing\SetGetPrivatePropertyTrait;
 use Sulu\Page\Domain\Model\Page;
 use Sulu\Page\Domain\Repository\PageRepositoryInterface;
@@ -51,7 +47,7 @@ class PageResourceLoaderTest extends TestCase
         $page1 = $this->createPage('123-123-123');
         $page2 = $this->createPage('321-321-321');
 
-        $this->pageRepository->findBy(['ids' => ['123-123-123', '321-321-321']])->willReturn([
+        $this->pageRepository->findBy(['id' => ['123-123-123', '321-321-321']])->willReturn([
             $page1,
             $page2,
         ])
@@ -65,10 +61,10 @@ class PageResourceLoaderTest extends TestCase
         ], $result);
     }
 
-    private static function createPage(int $id): Page
+    private static function createPage(string $id): Page
     {
         $page = new Page();
-        static::setPrivateProperty($page, 'id', $id);
+        static::setPrivateProperty($page, 'uuid', $id);
 
         return $page;
     }

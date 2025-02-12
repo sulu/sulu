@@ -47,7 +47,7 @@ class Kernel extends SuluTestKernel
         foreach ($bundles as $key => $bundle) {
             // remove old route bundle to avoid conflicts
             if (DeprecatedSuluPageBundle::class === $bundle::class) {
-//                unset($bundles[$key]);
+                //                unset($bundles[$key]);
             }
         }
 
