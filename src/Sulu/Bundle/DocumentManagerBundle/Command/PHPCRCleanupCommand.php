@@ -183,6 +183,11 @@ class PHPCRCleanupCommand extends Command
                 if (0 !== $status) {
                     ++$stats['erroredNodes'];
                     $erroredUuids[$uuid] = $process->getErrorOutput();
+                    $this->logger->writeln(\sprintf(
+                        "# Error processing node '%s'\n\n%s\n",
+                        $uuid,
+                        $process->getErrorOutput(),
+                    ));
 
                     continue;
                 }
