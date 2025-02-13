@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\SecurityBundle\Tests\Functional\Controller;
 
+use Coduo\PHPMatcher\PHPUnit\PHPMatcherAssertions;
 use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
@@ -18,6 +19,8 @@ use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 class PermissionControllerTest extends SuluTestCase
 {
+    use PHPMatcherAssertions;
+
     /**
      * @var KernelBrowser
      */
@@ -58,33 +61,31 @@ class PermissionControllerTest extends SuluTestCase
             '/api/permissions?resourceKey=secured_entity&id=2'
         );
 
-        $response = \json_decode($this->client->getResponse()->getContent(), true);
-        $this->assertCount(2, $response['permissions']);
-        $this->assertEquals(
-            [
-                'view' => true,
-                'add' => false,
-                'edit' => true,
-                'delete' => false,
-                'archive' => false,
-                'archive' => false,
-                'security' => false,
-                'live' => false,
-            ],
-            $response['permissions'][$role1->getId()]
-        );
-        $this->assertEquals(
-            [
-                'view' => true,
-                'add' => false,
-                'edit' => true,
-                'delete' => false,
-                'archive' => false,
-                'archive' => false,
-                'security' => false,
-                'live' => false,
-            ],
-            $response['permissions'][$role2->getId()]
+        $this->assertMatchesPattern(<<<JSON
+            {
+                "permissions": {
+                    "{$role1->getId()}": {
+                        "add": false,
+                        "archive": false,
+                        "delete": false,
+                        "edit": true,
+                        "live": false,
+                        "security": false,
+                        "view": true
+                    },
+                    "{$role2->getId()}": {
+                        "add": false,
+                        "archive": false,
+                        "delete": false,
+                        "edit": true,
+                        "live": false,
+                        "security": false,
+                        "view": true
+                    }
+                }
+            }
+            JSON,
+            $this->client->getResponse()->getContent() ?: ''
         );
 
         $this->client->request(
@@ -102,24 +103,26 @@ class PermissionControllerTest extends SuluTestCase
             '/api/permissions?resourceKey=secured_entity&id=2'
         );
 
-        $response = \json_decode($this->client->getResponse()->getContent(), true);
-        $this->assertCount(1, $response['permissions']);
-        $this->assertEquals(
-            [
-                'view' => true,
-                'add' => false,
-                'edit' => false,
-                'delete' => false,
-                'archive' => false,
-                'archive' => false,
-                'security' => false,
-                'live' => false,
-            ],
-            $response['permissions'][$role1->getId()]
+        $this->assertMatchesPattern(<<<JSON
+            {
+                "permissions": {
+                    "{$role1->getId()}": {
+                        "add": false,
+                        "archive": false,
+                        "delete": false,
+                        "edit": false,
+                        "live": false,
+                        "security": false,
+                        "view": true
+                    }
+                }
+            }
+            JSON,
+            $this->client->getResponse()->getContent() ?: ''
         );
     }
 
-    private function createRole(string $name)
+    private function createRole(string $name): Role
     {
         $role = new Role();
         $role->setName($name);
