@@ -47,7 +47,7 @@ module.exports = { // eslint-disable-line
         {
             name: 'Views',
             sections: (function() {
-                const folders = glob.sync('./src/Sulu/Bundle/*/Resources/js/views/*');
+                const folders = glob.sync('./{src/Sulu/Bundle/*/Resources,packages/*/assets}/js/views/*');
 
                 return folders
                     .filter((folder) => path.basename(folder) !== 'index.js')
@@ -61,7 +61,7 @@ module.exports = { // eslint-disable-line
         {
             name: 'Services',
             sections: (function() {
-                const folders = glob.sync('./src/Sulu/Bundle/*/Resources/js/services/*');
+                const folders = glob.sync('./{src/Sulu/Bundle/*/Resources,packages/*/assets}/js/services/*');
 
                 return folders
                     .filter((folder) => path.basename(folder) !== 'index.js')
@@ -77,7 +77,7 @@ module.exports = { // eslint-disable-line
         {
             name: 'Containers',
             components() {
-                let folders = glob.sync('./src/Sulu/Bundle/*/Resources/js/containers/*');
+                let folders = glob.sync('./{src/Sulu/Bundle/*/Resources,packages/*/assets}/js/containers/*');
                 // filter out containers
                 folders = folders
                     .filter((folder) => firstLetterIsUppercase(path.basename(folder)))
@@ -94,7 +94,7 @@ module.exports = { // eslint-disable-line
         {
             name: 'Higher-Order components',
             sections: (function() {
-                let folders = glob.sync('./src/Sulu/Bundle/*/Resources/js/components/*');
+                let folders = glob.sync('./{src/Sulu/Bundle/*/Resources,packages/*/assets}/js/components/*');
                 folders = folders.filter((folder) => !firstLetterIsUppercase(path.basename(folder)));
 
                 return folders
@@ -110,7 +110,7 @@ module.exports = { // eslint-disable-line
         {
             name: 'Components',
             components() {
-                let folders = glob.sync('./src/Sulu/Bundle/*/Resources/js/components/*');
+                let folders = glob.sync('./{src/Sulu/Bundle/*/Resources,packages/*/assets}/js/components/*');
                 // filter out higher order components
                 folders = folders
                     .filter((folder) => firstLetterIsUppercase(path.basename(folder)))
