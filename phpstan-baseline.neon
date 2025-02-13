@@ -46633,48 +46633,6 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/SingleSignOn/SingleSignOnAdapterFactory.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\SecurityBundle\\Tests\\Application\\SecuredDocument\:\:getPermissions\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Tests/Application/SecuredDocument.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\SecurityBundle\\Tests\\Application\\SecuredDocument\:\:setPermissions\(\) has parameter \$permissions with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Tests/Application/SecuredDocument.php
-
-		-
-			message: '#^Property Sulu\\Bundle\\SecurityBundle\\Tests\\Application\\SecuredDocument\:\:\$nodeName is never written, only read\.$#'
-			identifier: property.onlyRead
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Tests/Application/SecuredDocument.php
-
-		-
-			message: '#^Property Sulu\\Bundle\\SecurityBundle\\Tests\\Application\\SecuredDocument\:\:\$path is never written, only read\.$#'
-			identifier: property.onlyRead
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Tests/Application/SecuredDocument.php
-
-		-
-			message: '#^Property Sulu\\Bundle\\SecurityBundle\\Tests\\Application\\SecuredDocument\:\:\$permissions \(array\) does not accept mixed\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Tests/Application/SecuredDocument.php
-
-		-
-			message: '#^Property Sulu\\Bundle\\SecurityBundle\\Tests\\Application\\SecuredDocument\:\:\$permissions type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Tests/Application/SecuredDocument.php
-
-		-
-			message: '#^Property Sulu\\Bundle\\SecurityBundle\\Tests\\Application\\SecuredDocument\:\:\$uuid is never written, only read\.$#'
-			identifier: property.onlyRead
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Tests/Application/SecuredDocument.php
-
-		-
 			message: '#^Return type \(void\) of method Sulu\\Bundle\\SecurityBundle\\Tests\\Application\\SecuredEntity\:\:getId\(\) should be compatible with return type \(int\) of method Sulu\\Component\\Security\\Authorization\\AccessControl\\SecuredEntityInterface\:\:getId\(\)$#'
 			identifier: method.childReturnType
 			count: 1
