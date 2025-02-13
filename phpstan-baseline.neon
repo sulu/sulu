@@ -86719,12 +86719,6 @@ parameters:
 			path: src/Sulu/Component/Persistence/Tests/Unit/EventSubscriber/ORM/MetadataSubscriberTest.php
 
 		-
-			message: '#^Call to an undefined method Sulu\\Component\\Persistence\\Tests\\Unit\\EventSubscriber\\ORM\\MetadataSubscriberTest\:\:reveal\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/Sulu/Component/Persistence/Tests/Unit/EventSubscriber/ORM/MetadataSubscriberTest.php
-
-		-
 			message: '#^Cannot call method shouldNotBeCalled\(\) on Prophecy\\Prophecy\\MethodProphecy\|null\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -86749,12 +86743,6 @@ parameters:
 			path: src/Sulu/Component/Persistence/Tests/Unit/EventSubscriber/ORM/MetadataSubscriberTest.php
 
 		-
-			message: '#^Parameter \#1 \$object of function get_class expects object, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Persistence/Tests/Unit/EventSubscriber/ORM/MetadataSubscriberTest.php
-
-		-
 			message: '#^Parameter \#2 \$metadata of method Doctrine\\Persistence\\Mapping\\Driver\\MappingDriver\:\:loadMetadataForClass\(\) expects Doctrine\\Persistence\\Mapping\\ClassMetadata\<stdClass\>, Prophecy\\Argument\\Token\\TypeToken given\.$#'
 			identifier: argument.type
 			count: 1
@@ -86763,12 +86751,6 @@ parameters:
 		-
 			message: '#^Property Sulu\\Component\\Persistence\\Tests\\Unit\\EventSubscriber\\ORM\\MetadataSubscriberTest\:\:\$classMetadata with generic class Doctrine\\ORM\\Mapping\\ClassMetadata does not specify its types\: T$#'
 			identifier: missingType.generics
-			count: 1
-			path: src/Sulu/Component/Persistence/Tests/Unit/EventSubscriber/ORM/MetadataSubscriberTest.php
-
-		-
-			message: '#^Property Sulu\\Component\\Persistence\\Tests\\Unit\\EventSubscriber\\ORM\\MetadataSubscriberTest\:\:\$object \(Prophecy\\Prophecy\\ObjectProphecy\<stdClass\>\) does not accept \$this\(Sulu\\Component\\Persistence\\Tests\\Unit\\EventSubscriber\\ORM\\MetadataSubscriberTest\)\.$#'
-			identifier: assign.propertyType
 			count: 1
 			path: src/Sulu/Component/Persistence/Tests/Unit/EventSubscriber/ORM/MetadataSubscriberTest.php
 
