@@ -5,10 +5,10 @@
     "scripts": {
         "preinstall": "node preinstall.js",
         "lint:js": "eslint . --cache",
-        "lint:scss": "stylelint src/Sulu/Bundle/*/Resources/js/**/*.scss",
+        "lint:scss": "stylelint src/Sulu/Bundle/*/Resources/js/**/*.scss packages/*/assets/js/**/*.scss",
         "flow": "flow",
         "test": "jest",
-        "depcruise": "depcruise src/Sulu/Bundle/*/Resources/js -c dependency-cruiser.json",
+        "depcruise": "depcruise src/Sulu/Bundle/*/Resources/js packages/*/assets/js -c dependency-cruiser.json",
         "styleguide": "styleguidist server",
         "styleguide:build": "styleguidist build",
         "build": "webpack --mode production",
