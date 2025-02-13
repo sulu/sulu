@@ -1,0 +1,104 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render snippet areas with data as table 1`] = `
+<div
+  class="tableContainer light"
+>
+  <table
+    class="table"
+  >
+    <thead
+      class="header"
+    >
+      <tr>
+        <th
+          class="headerCell"
+        >
+          <span>
+            sulu_snippet.snippet_area
+          </span>
+        </th>
+        <th
+          class="headerCell"
+        >
+          <span>
+            sulu_snippet.snippet
+          </span>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr
+        class="row"
+      >
+        <td
+          class="cell"
+        >
+          <div
+            class="cellContent"
+          >
+            Default
+          </div>
+        </td>
+        <td
+          class="cell"
+        >
+          <div
+            class="cellContent"
+          >
+            <button
+              class="button link addButton"
+              type="button"
+            >
+              <span
+                aria-label="su-plus-circle"
+                class="su-plus-circle buttonIcon"
+              />
+            </button>
+          </div>
+        </td>
+      </tr>
+      <tr
+        class="row"
+      >
+        <td
+          class="cell"
+        >
+          <div
+            class="cellContent"
+          >
+            Footer
+          </div>
+        </td>
+        <td
+          class="cell"
+        >
+          <div
+            class="cellContent"
+          >
+            <button
+              class="button text hasText titleButton"
+              type="button"
+            >
+              <span
+                class="buttonText"
+              >
+                Footer Snippet
+              </span>
+            </button>
+            <button
+              class="button link deleteButton"
+              type="button"
+            >
+              <span
+                aria-label="su-trash-alt"
+                class="su-trash-alt buttonIcon"
+              />
+            </button>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+`;

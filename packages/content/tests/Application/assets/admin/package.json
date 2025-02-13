@@ -25,7 +25,7 @@
         "sulu-route-bundle": "file:node_modules/@sulu/vendor/sulu/sulu/src/Sulu/Bundle/RouteBundle/Resources/js",
         "sulu-search-bundle": "file:node_modules/@sulu/vendor/sulu/sulu/src/Sulu/Bundle/SearchBundle/Resources/js",
         "sulu-security-bundle": "file:node_modules/@sulu/vendor/sulu/sulu/src/Sulu/Bundle/SecurityBundle/Resources/js",
-        "sulu-snippet-bundle": "file:node_modules/@sulu/vendor/sulu/sulu/src/Sulu/Bundle/SnippetBundle/Resources/js",
+        "sulu-snippet-bundle": "file:node_modules/@sulu/vendor/sulu/sulu/packages/snippet/assets/js",
         "sulu-trash-bundle": "file:node_modules/@sulu/vendor/sulu/sulu/src/Sulu/Bundle/TrashBundle/Resources/js",
         "sulu-website-bundle": "file:node_modules/@sulu/vendor/sulu/sulu/src/Sulu/Bundle/WebsiteBundle/Resources/js"
     },
