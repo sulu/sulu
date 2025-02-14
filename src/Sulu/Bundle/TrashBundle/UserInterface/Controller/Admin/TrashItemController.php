@@ -24,6 +24,7 @@ use Sulu\Bundle\TrashBundle\Domain\Model\TrashItemInterface;
 use Sulu\Bundle\TrashBundle\Domain\Repository\TrashItemRepositoryInterface;
 use Sulu\Bundle\TrashBundle\Infrastructure\Sulu\Admin\TrashAdmin;
 use Sulu\Component\Rest\AbstractRestController;
+use Sulu\Component\Rest\Exception\MissingParameterException;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilder;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactoryInterface;
@@ -197,11 +198,15 @@ class TrashItemController extends AbstractRestController implements ClassResourc
 
     public function postTriggerAction(int $id, Request $request): Response
     {
-        $action = $this->getRequestParameter($request, 'action', true);
+        $action = $request->getPayload()->get('action');
 
         try {
+            if (null === $action) {
+                throw new MissingParameterException(self::class, 'name');
+            }
+
             return match ($action) {
-                'restore' => $this->restoreTrashItem($id, $request->request->all()),
+                'restore' => $this->restoreTrashItem($id, $request->getPayload()->all()),
                 default => throw new RestException(\sprintf('Unrecognized action: "%s"', $action)),
             };
         } catch (RestException $ex) {

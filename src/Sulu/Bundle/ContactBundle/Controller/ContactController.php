@@ -341,7 +341,7 @@ class ContactController extends AbstractRestController implements ClassResourceI
         try {
             $this->checkArguments($request);
             $contact = $this->contactManager->save(
-                $request->request->all()
+                $request->getPayload()->all()
             );
             $apiContact = $this->contactManager->getContact(
                 $contact,
@@ -370,7 +370,7 @@ class ContactController extends AbstractRestController implements ClassResourceI
     public function putAction($id, Request $request)
     {
         try {
-            $contact = $this->contactManager->save($request->request->all(), $id);
+            $contact = $this->contactManager->save($request->getPayload()->all(), $id);
 
             $apiContact = $this->contactManager->getContact($contact, $this->getUser()->getLocale());
             $view = $this->view($apiContact, 200);
@@ -397,7 +397,7 @@ class ContactController extends AbstractRestController implements ClassResourceI
     {
         try {
             $contact = $this->contactManager->save(
-                $request->request->all(),
+                $request->getPayload()->all(),
                 $id,
                 true
             );

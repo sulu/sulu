@@ -108,7 +108,7 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
                         'serialize_null' => true,
                     ],
                     'body_listener' => [
-                        'enabled' => true,
+                        'enabled' => false,
                     ],
                     'routing_loader' => false,
                     'view' => [

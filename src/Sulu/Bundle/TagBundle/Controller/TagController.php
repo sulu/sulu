@@ -127,7 +127,7 @@ class TagController extends AbstractRestController implements ClassResourceInter
      */
     public function postAction(Request $request)
     {
-        $name = $request->get('name');
+        $name = $request->getPayload()->get('name');
 
         try {
             if (null == $name) {
@@ -162,7 +162,7 @@ class TagController extends AbstractRestController implements ClassResourceInter
      */
     public function putAction(Request $request, $id)
     {
-        $name = $request->get('name');
+        $name = $request->getPayload()->get('name');
 
         try {
             if (null == $name) {
@@ -218,9 +218,11 @@ class TagController extends AbstractRestController implements ClassResourceInter
      */
     public function postMergeAction(Request $request)
     {
+        $payload = $request->getPayload();
+
         try {
-            $srcTagIds = \explode(',', $request->get('src'));
-            $destTagId = $request->get('dest');
+            $srcTagIds = \explode(',', $payload->getString('src'));
+            $destTagId = $payload->get('dest');
 
             $destTag = $this->tagManager->merge($srcTagIds, $destTagId);
 
@@ -244,11 +246,11 @@ class TagController extends AbstractRestController implements ClassResourceInter
      */
     public function cpatchAction(Request $request)
     {
+        $tags = [];
+        $payload = $request->getPayload();
         try {
-            $tags = [];
-
             $i = 0;
-            while ($item = $request->get($i)) {
+            while ($item = $payload->all((string) $i)) {
                 if (isset($item['id'])) {
                     $tags[] = $this->tagManager->save($item, $item['id']);
                 } else {
@@ -285,6 +287,6 @@ class TagController extends AbstractRestController implements ClassResourceInter
      */
     protected function getData(Request $request)
     {
-        return $request->request->all();
+        return $request->getPayload()->all();
     }
 }

@@ -80,12 +80,13 @@ class ProfileController implements ClassResourceInterface
         $user = $this->tokenStorage->getToken()->getUser();
         $this->userManager->save($this->getData($request), $request->get('locale'), $user->getId(), true);
 
-        $user->setFirstName($request->request->get('firstName'));
-        $user->setLastName($request->request->get('lastName'));
+        $payload = $request->getPayload();
+        $user->setFirstName($payload->get('firstName'));
+        $user->setLastName($payload->get('lastName'));
 
         if ($user instanceof TwoFactorInterface) {
             /** @var array{method?: string|null} $twoFactorData */
-            $twoFactorData = $request->request->all('twoFactor');
+            $twoFactorData = $payload->all('twoFactor');
             $twoFactorMethod = $twoFactorData['method'] ?? null;
 
             if ($twoFactorMethod) {
@@ -124,13 +125,11 @@ class ProfileController implements ClassResourceInterface
      */
     public function patchSettingsAction(Request $request)
     {
-        $settings = $request->request->all();
-
         try {
             /** @var User $user */
             $user = $this->tokenStorage->getToken()->getUser();
 
-            foreach ($settings as $settingKey => $settingValue) {
+            foreach ($request->getPayload() as $settingKey => $settingValue) {
                 // get setting
                 // TODO: move this logic into own service (UserSettingManager?)
                 $setting = $this->userSettingRepository->findOneBy(['user' => $user, 'key' => $settingKey]);
@@ -223,7 +222,7 @@ class ProfileController implements ClassResourceInterface
     {
         $data = [];
 
-        foreach ($request->request->all() as $key => $value) {
+        foreach ($request->getPayload() as $key => $value) {
             if (\in_array($key, ['firstName', 'lastName', 'username', 'email', 'password', 'locale'], true)) {
                 $data[$key] = $value;
             }

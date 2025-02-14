@@ -105,7 +105,7 @@ class AnalyticsController extends AbstractRestController implements ClassResourc
      */
     public function postAction(Request $request, $webspace)
     {
-        $data = $request->request->all();
+        $data = $request->getPayload()->all();
         $data['content'] = $this->buildContent($data);
 
         $entity = $this->analyticsManager->create($webspace, $data);
@@ -125,7 +125,7 @@ class AnalyticsController extends AbstractRestController implements ClassResourc
      */
     public function putAction(Request $request, $webspace, $id)
     {
-        $data = $request->request->all();
+        $data = $request->getPayload()->all();
         $data['content'] = $this->buildContent($data);
 
         $entity = $this->analyticsManager->update($id, $data);

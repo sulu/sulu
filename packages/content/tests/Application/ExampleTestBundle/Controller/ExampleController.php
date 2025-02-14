@@ -318,9 +318,7 @@ class ExampleController extends AbstractRestController implements ClassResourceI
      */
     protected function getData(Request $request): array
     {
-        $data = $request->request->all();
-
-        return $data;
+        return $request->getPayload()->all();
     }
 
     /**

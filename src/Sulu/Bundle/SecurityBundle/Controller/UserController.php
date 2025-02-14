@@ -127,7 +127,7 @@ class UserController extends AbstractRestController implements ClassResourceInte
         try {
             $this->checkArguments($request);
             $locale = $this->getRequestParameter($request, 'locale', true);
-            $data = $request->request->all();
+            $data = $request->getPayload()->all();
             $data['contactId'] = $request->query->get('contactId');
             $user = $this->userManager->save($data, $locale);
             $view = $this->view($user, 200);
@@ -182,7 +182,7 @@ class UserController extends AbstractRestController implements ClassResourceInte
         try {
             $this->checkArguments($request);
             $locale = $this->getRequestParameter($request, 'locale', true);
-            $user = $this->userManager->save($request->request->all(), $locale, $id);
+            $user = $this->userManager->save($request->getPayload()->all(), $locale, $id);
             $view = $this->view($user, 200);
         } catch (EntityNotFoundException $exc) {
             $view = $this->view($exc->toArray(), 404);
@@ -206,7 +206,7 @@ class UserController extends AbstractRestController implements ClassResourceInte
     {
         try {
             $locale = $this->getRequestParameter($request, 'locale');
-            $user = $this->userManager->save($request->request->all(), $locale, $id, true);
+            $user = $this->userManager->save($request->getPayload()->all(), $locale, $id, true);
             $view = $this->view($user, 200);
         } catch (EntityNotFoundException $exc) {
             $view = $this->view($exc->toArray(), 404);
@@ -243,16 +243,18 @@ class UserController extends AbstractRestController implements ClassResourceInte
     // https://github.com/sulu-io/sulu/issues/1136
     private function checkArguments(Request $request)
     {
-        if (null == $request->get('username')) {
+        $payload = $request->getPayload();
+
+        if (null == $payload->get('username')) {
             throw new MissingArgumentException($this->userClass, 'username');
         }
-        if ($request->isMethod('POST') && null === $request->get('password')) {
+        if ($request->isMethod(Request::METHOD_POST) && null === $payload->get('password')) {
             throw new MissingArgumentException($this->userClass, 'password');
         }
-        if (null == $request->get('locale')) {
+        if (null == $payload->get('locale')) {
             throw new MissingArgumentException($this->userClass, 'locale');
         }
-        if (null == $request->get('contact') && null == $request->get('contactId')) {
+        if (null == $payload->get('contact') && null == $payload->get('contactId')) {
             throw new MissingArgumentException($this->userClass, 'contact');
         }
     }
@@ -266,7 +268,7 @@ class UserController extends AbstractRestController implements ClassResourceInte
     public function cgetAction(Request $request)
     {
         $view = null;
-        if ('true' == $request->get('flat')) {
+        if ('true' == $request->query->get('flat')) {
             $listBuilder = $this->doctrineListBuilderFactory->create($this->userClass);
 
             $this->restHelper->initializeListBuilder($listBuilder, $this->getFieldDescriptors());

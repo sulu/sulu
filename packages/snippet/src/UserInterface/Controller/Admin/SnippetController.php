@@ -205,7 +205,7 @@ final class SnippetController
     private function getData(Request $request): array
     {
         return \array_replace(
-            $request->request->all(),
+            $request->getPayload()->all(),
             [
                 'locale' => $this->getLocale($request),
             ]
