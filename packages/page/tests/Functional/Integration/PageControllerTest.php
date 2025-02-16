@@ -15,6 +15,8 @@ namespace Sulu\Page\Tests\Functional\Integration;
 
 use Sulu\Bundle\TestBundle\Testing\AssertSnapshotTrait;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
+use Sulu\Page\Application\Message\CreatePageMessage;
+use Sulu\Page\Application\MessageHandler\CreatePageMessageHandler;
 use Sulu\Page\Domain\Model\Page;
 use Sulu\Page\Domain\Model\PageInterface;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
@@ -52,6 +54,32 @@ class PageControllerTest extends SuluTestCase
         self::getEntityManager()->flush();
 
         return $homepage;
+    }
+
+    /**
+     * @param array<string, mixed> $data
+     */
+    private function createPage(
+        string $parentId,
+        array $data = []
+    ): PageInterface {
+        $data = \array_merge(
+            [
+                'title' => 'Test Page',
+                'locale' => 'en',
+                'url' => '/test-page-' . \uniqid(),
+                'template' => 'default',
+            ],
+            $data
+        );
+        $message = new CreatePageMessage('sulu-io', $parentId, $data);
+
+        /** @var CreatePageMessageHandler $messageHandler */
+        $messageHandler = self::getContainer()->get('sulu_page.create_page_handler');
+        $page = $messageHandler->__invoke($message);
+        self::getEntityManager()->flush();
+
+        return $page;
     }
 
     public function testPostPublish(): string
@@ -282,6 +310,34 @@ class PageControllerTest extends SuluTestCase
         $response = $this->client->getResponse();
 
         $this->assertResponseSnapshot('page_cget.json', $response, 200);
+    }
+
+    /**
+     * @depends testPost
+     * @depends testGetList
+     */
+    public function testOrderPages(string $id): void
+    {
+        $page1 = $this->createPage($id);
+        $page2 = $this->createPage($id);
+        $page3 = $this->createPage($id);
+
+        $this->client->request('GET', '/admin/api/pages?locale=en&webspace=sulu-io&expandedIds=' . $id);
+        $response = $this->client->getResponse();
+        $this->assertResponseSnapshot('page_post_before_order_list.json', $response, 200);
+
+        $this->client->request(
+            method: 'POST',
+            uri: \sprintf('/admin/api/pages/%s?webspace=sulu-io&locale=en&action=order', $page1->getId()),
+            content: (string) \json_encode(['position' => 3]),
+        );
+        $response = $this->client->getResponse();
+        $this->assertResponseSnapshot('page_post_order.json', $response, 200);
+
+        // test if the order is still correct
+        $this->client->request('GET', '/admin/api/pages?locale=en&webspace=sulu-io&expandedIds=' . $id);
+        $response = $this->client->getResponse();
+        $this->assertResponseSnapshot('page_post_before_order_list.json', $response, 200);
     }
 
     /**

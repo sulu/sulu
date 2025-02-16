@@ -24,6 +24,7 @@ use Sulu\Page\Application\MessageHandler\ApplyWorkflowTransitionPageMessageHandl
 use Sulu\Page\Application\MessageHandler\CopyLocalePageMessageHandler;
 use Sulu\Page\Application\MessageHandler\CreatePageMessageHandler;
 use Sulu\Page\Application\MessageHandler\ModifyPageMessageHandler;
+use Sulu\Page\Application\MessageHandler\OrderPageMessageHandler;
 use Sulu\Page\Application\MessageHandler\RemovePageMessageHandler;
 use Sulu\Page\Application\Normalizer\PageNormalizer;
 use Sulu\Page\Domain\Model\Page;
@@ -144,6 +145,13 @@ final class SuluPageBundle extends AbstractBundle
             ->args([
                 new Reference('sulu_page.page_repository'),
                 new Reference('sulu_content.content_copier'),
+            ])
+            ->tag('messenger.message_handler');
+
+        $services->set('sulu_page.order_page_handler')
+            ->class(OrderPageMessageHandler::class)
+            ->args([
+                new Reference('sulu_page.page_repository'),
             ])
             ->tag('messenger.message_handler');
 

@@ -16,6 +16,7 @@ use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query\Expr\OrderBy;
 use Doctrine\ORM\QueryBuilder;
+use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
 use Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer;
 use Sulu\Page\Domain\Exception\PageNotFoundException;
 use Sulu\Page\Domain\Model\PageDimensionContentInterface;
@@ -48,7 +49,7 @@ class PageRepository implements PageRepositoryInterface
     private $entityManager;
 
     /**
-     * @var EntityRepository<PageInterface>
+     * @var NestedTreeRepository<PageInterface>
      */
     protected $entityRepository;
 
@@ -76,7 +77,10 @@ class PageRepository implements PageRepositoryInterface
         EntityManagerInterface $entityManager,
         DimensionContentQueryEnhancer $dimensionContentQueryEnhancer
     ) {
-        $this->entityRepository = $entityManager->getRepository(PageInterface::class);
+        $repository = $entityManager->getRepository(PageInterface::class);
+        Assert::isInstanceOf($repository, NestedTreeRepository::class);
+
+        $this->entityRepository = $repository;
         $this->entityDimensionContentRepository = $entityManager->getRepository(PageDimensionContentInterface::class);
         $this->entityManager = $entityManager;
         $this->dimensionContentQueryEnhancer = $dimensionContentQueryEnhancer;
@@ -178,6 +182,27 @@ class PageRepository implements PageRepositoryInterface
     public function remove(PageInterface $page): void
     {
         $this->entityManager->remove($page);
+    }
+
+    public function reorder(PageInterface $page, string $sortByField = 'lft', bool $verify = true, bool $recursive = false): void
+    {
+        $this->entityRepository->recoverFast();
+        $this->entityRepository->reorder(
+            node: $page,
+        );
+    }
+
+    /**
+     * @phpstan-param 'asc'|'desc'|'ASC'|'DESC' $direction
+     *
+     * @return PageInterface[]
+     */
+    public function getChildren(?PageInterface $node = null, bool $direct = false, ?string $sortByField = null, string $direction = 'ASC', bool $includeNode = false): array
+    {
+        /** @var PageInterface[] $children */
+        $children = $this->entityRepository->getChildren($node, $direct, $sortByField, $direction, $includeNode);
+
+        return $children;
     }
 
     /**
@@ -293,5 +318,28 @@ class PageRepository implements PageRepositoryInterface
         }
 
         return $queryBuilder;
+    }
+
+    public function moveUp(PageInterface $node, int $number): bool
+    {
+        return $this->entityRepository->moveUp($node, $number);
+    }
+
+    public function moveDown(PageInterface $node, int $number): bool
+    {
+        return $this->entityRepository->moveDown($node, $number);
+    }
+
+    /**
+     * @return bool|string[]
+     */
+    public function verify(): bool|array
+    {
+        return $this->entityRepository->verify();
+    }
+
+    public function recover(): void
+    {
+        $this->entityRepository->recover();
     }
 }

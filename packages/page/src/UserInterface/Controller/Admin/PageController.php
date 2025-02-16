@@ -26,6 +26,7 @@ use Sulu\Page\Application\Message\ApplyWorkflowTransitionPageMessage;
 use Sulu\Page\Application\Message\CopyLocalePageMessage;
 use Sulu\Page\Application\Message\CreatePageMessage;
 use Sulu\Page\Application\Message\ModifyPageMessage;
+use Sulu\Page\Application\Message\OrderPageMessage;
 use Sulu\Page\Application\Message\RemovePageMessage;
 use Sulu\Page\Domain\Model\PageInterface;
 use Sulu\Page\Domain\Repository\PageRepositoryInterface;
@@ -195,6 +196,16 @@ final class PageController
             /** @see Sulu\Page\Application\MessageHandler\CopyLocalePageMessageHandler */
             /** @var null */
             return $this->handle(new Envelope($message, [new EnableFlushStamp()]));
+        } elseif ('order' === $action) {
+            $position = $request->request->getInt('position');
+            $message = new OrderPageMessage(
+                ['uuid' => $uuid],
+                $position
+            );
+
+            /** @see Sulu\Page\Application\MessageHandler\OrderPageMessageHandler */
+            /** @var null */
+            return $this->handle(new Envelope($message, [new EnableFlushStamp()]));
         } else {
             $message = new ApplyWorkflowTransitionPageMessage(['uuid' => $uuid], $this->getLocale($request), $action);
 
@@ -252,6 +263,7 @@ final class PageController
         $listBuilder->addSelectField($fieldDescriptors['lft']);
         $listBuilder->addSelectField($fieldDescriptors['rgt']);
         $listBuilder->addSelectField($fieldDescriptors['parentId']);
+        $listBuilder->sort($fieldDescriptors['lft'], 'asc');
 
         // collect entities of which the children should be included in the response
         $idsToExpand = \array_merge(

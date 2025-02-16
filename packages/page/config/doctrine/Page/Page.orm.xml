@@ -6,6 +6,7 @@
     <mapped-superclass
         name="Sulu\Page\Domain\Model\Page"
         table="pa_pages"
+        repository-class="Gedmo\Tree\Entity\Repository\NestedTreeRepository"
     >
         <id name="uuid" type="string" column="uuid">
             <generator strategy="NONE"/>

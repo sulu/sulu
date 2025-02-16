@@ -1,0 +1,42 @@
+{
+    "author": null,
+    "authored": null,
+    "availableLocales": [
+        "en"
+    ],
+    "contentLocales": [
+        "en"
+    ],
+    "description": null,
+    "excerptCategories": [],
+    "excerptDescription": null,
+    "excerptIcon": null,
+    "excerptImage": null,
+    "excerptMore": null,
+    "excerptTags": [],
+    "excerptTitle": null,
+    "ghostLocale": "en",
+    "id": "@string@",
+    "image": null,
+    "lastModified": null,
+    "lastModifiedEnabled": false,
+    "locale": "en",
+    "published": null,
+    "publishedState": false,
+    "seoCanonicalUrl": null,
+    "seoDescription": null,
+    "seoHideInSitemap": false,
+    "seoKeywords": null,
+    "seoNoFollow": false,
+    "seoNoIndex": false,
+    "seoTitle": null,
+    "shadowLocale": null,
+    "shadowLocales": [],
+    "shadowOn": false,
+    "stage": "draft",
+    "template": "default",
+    "title": "Test Page",
+    "url": "@string@",
+    "webspace": "sulu-io",
+    "workflowPlace": "unpublished"
+}
