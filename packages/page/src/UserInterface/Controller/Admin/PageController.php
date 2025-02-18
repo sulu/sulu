@@ -34,6 +34,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\HandleTrait;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 /**
@@ -41,12 +42,13 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
  *           Use instead a request or response listener to
  *           extend the endpoints behaviours
  */
-final readonly class PageController
+final class PageController
 {
     use HandleTrait;
 
     public function __construct(
         private PageRepositoryInterface $pageRepository,
+        private MessageBusInterface $messageBus, // @phpstan-ignore property.onlyWritten
         private NormalizerInterface $normalizer,
         private ContentManagerInterface $contentManager,
         private FieldDescriptorFactoryInterface $fieldDescriptorFactory,

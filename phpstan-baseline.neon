@@ -184,6 +184,12 @@ parameters:
 			message: '#^Call to function array_key_exists\(\) with ''model'' and array\{model\: class\-string, repository\?\: class\-string\} will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 1
+			path: packages/page/src/Infrastructure/Symfony/HttpKernel/SuluPageBundle.php
+
+		-
+			message: '#^Call to function array_key_exists\(\) with ''model'' and array\{model\: class\-string, repository\?\: class\-string\} will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
 			path: packages/snippet/src/Infrastructure/Symfony/HttpKernel/SuluSnippetBundle.php
 
 		-

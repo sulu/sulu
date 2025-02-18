@@ -34,13 +34,11 @@ use Sulu\Page\Domain\Repository\PageRepositoryInterface;
 use Sulu\Page\Infrastructure\Doctrine\Repository\PageRepository;
 use Sulu\Page\Infrastructure\Sulu\Admin\PageAdmin;
 use Sulu\Page\Infrastructure\Sulu\Content\PageLinkProvider;
-use Sulu\Page\Infrastructure\Sulu\Content\PageSelectionContentType;
 use Sulu\Page\Infrastructure\Sulu\Content\PageSitemapProvider;
 use Sulu\Page\Infrastructure\Sulu\Content\PageTeaserProvider;
 use Sulu\Page\Infrastructure\Sulu\Content\PropertyResolver\PageSelectionPropertyResolver;
 use Sulu\Page\Infrastructure\Sulu\Content\PropertyResolver\SinglePageSelectionPropertyResolver;
 use Sulu\Page\Infrastructure\Sulu\Content\ResourceLoader\PageResourceLoader;
-use Sulu\Page\Infrastructure\Sulu\Content\SinglePageSelectionContentType;
 use Sulu\Page\UserInterface\Controller\Admin\PageController;
 use Symfony\Component\Config\Definition\Configurator\DefinitionConfigurator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -270,24 +268,6 @@ final class SuluPageBundle extends AbstractBundle
         $services->set('sulu_page.page_reference_store')
             ->class(ReferenceStore::class)
             ->tag('sulu_website.reference_store', ['alias' => PageInterface::RESOURCE_KEY]);
-
-        $services->set('sulu_page.content_types.single_page_selection')
-            ->class(SinglePageSelectionContentType::class)
-            ->args([
-                new Reference('sulu_page.page_repository'),
-                new Reference('sulu_content.content_manager'),
-                new Reference('sulu_page.page_reference_store'),
-            ])
-            ->tag('sulu.content.type', ['alias' => 'single_page_selection']);
-
-        $services->set('sulu_page.content_types.page_selection')
-            ->class(PageSelectionContentType::class)
-            ->args([
-                new Reference('sulu_page.page_repository'),
-                new Reference('sulu_content.content_manager'),
-                new Reference('sulu_page.page_reference_store'),
-            ])
-            ->tag('sulu.content.type', ['alias' => 'page_selection']);
 
         // Smart Content services
         //        $services->set('sulu_page.page_data_provider')
