@@ -185,6 +185,7 @@ class SettingsResolverTest extends TestCase
         $exampleDimension = new ExampleDimensionContent($example);
         $exampleDimension->setAuthored(new \DateTimeImmutable('2021-01-01'));
         $exampleDimension->setAuthor($author);
+        $exampleDimension->setLastModified(new \DateTimeImmutable('2021-01-01'));
 
         $result = $this->resolver->resolve($exampleDimension);
         /** @var SettingsData $content */
@@ -192,6 +193,7 @@ class SettingsResolverTest extends TestCase
 
         self::assertSame(1, $content['author']);
         self::assertSame('2021-01-01', $content['authored']?->format('Y-m-d'));
+        self::assertSame('2021-01-01', $content['lastModified']?->format('Y-m-d'));
     }
 
     public function testResolveShadowData(): void
@@ -205,18 +207,5 @@ class SettingsResolverTest extends TestCase
         $content = $result->getContent();
 
         self::assertSame('de', $content['shadowBaseLocale']);
-    }
-
-    public function testResolveLastModifiedData(): void
-    {
-        $example = new Example();
-        $exampleDimension = new ExampleDimensionContent($example);
-        $exampleDimension->setLastModified(new \DateTimeImmutable('2021-01-01'));
-
-        $result = $this->resolver->resolve($exampleDimension);
-        /** @var SettingsData $content */
-        $content = $result->getContent();
-
-        self::assertSame('2021-01-01', $content['lastModified']?->format('Y-m-d'));
     }
 }
