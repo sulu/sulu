@@ -13,6 +13,7 @@ namespace Sulu\Page\UserInterface\Controller\Admin;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Component\Rest\ListBuilder\CollectionRepresentation;
+use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilder;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactoryInterface;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\ListBuilderInterface;
@@ -33,7 +34,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\HandleTrait;
-use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 /**
@@ -41,13 +41,12 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
  *           Use instead a request or response listener to
  *           extend the endpoints behaviours
  */
-final class PageController
+final readonly class PageController
 {
     use HandleTrait;
 
     public function __construct(
         private PageRepositoryInterface $pageRepository,
-        private MessageBusInterface $messageBus,
         private NormalizerInterface $normalizer,
         private ContentManagerInterface $contentManager,
         private FieldDescriptorFactoryInterface $fieldDescriptorFactory,
@@ -62,7 +61,7 @@ final class PageController
     {
         $locale = $request->query->get('locale');
         $parentId = $request->query->get('parentId');
-        $expandedIds = \array_filter(\explode(',', $request->query->get('expandedIds')));
+        $expandedIds = \array_filter(\explode(',', (string) $request->query->get('expandedIds')));
 
         // TODO this should be handled by PageRepository, currently copied from
         //      https://github.com/handcraftedinthealps/SuluResourceBundle
@@ -203,11 +202,18 @@ final class PageController
         }
     }
 
+    /**
+     * @param array<string, string> $filters
+     * @param array<string, mixed> $parameters
+     * @param string[] $expandedIds
+     * @param string[] $includedFields
+     * @param string[] $groupByFields
+     */
     private function createDoctrineListRepresentation(
         string $resourceKey,
         array $filters = [],
         array $parameters = [],
-        $parentId = null,
+        ?string $parentId = null,
         array $expandedIds = [],
         array $includedFields = [],
         array $groupByFields = [],
@@ -217,6 +223,8 @@ final class PageController
 
         /** @var DoctrineFieldDescriptor[] $fieldDescriptors */
         $fieldDescriptors = $this->fieldDescriptorFactory->getFieldDescriptors($listKey);
+
+        /** @var DoctrineListBuilder $listBuilder */
         $listBuilder = $this->listBuilderFactory->create($fieldDescriptors['id']->getEntityName());
         $listBuilder->setIdField($fieldDescriptors['id']); // TODO should be uuid field descriptor
         $this->restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
@@ -262,17 +270,25 @@ final class PageController
 
         if (1 === \count($expandExpressions)) {
             $listBuilder->addExpression($expandExpressions[0]);
-        } elseif (\count($expandExpressions) > 1) {
+        } else {
             $orExpression = $listBuilder->createOrExpression($expandExpressions);
             $listBuilder->addExpression($orExpression);
         }
 
+        /** @var mixed[][] $rows */
+        $rows = $listBuilder->execute();
+
         return new CollectionRepresentation(
-            $this->generateNestedRows($parentId, $resourceKey, $listBuilder->execute()),
+            $this->generateNestedRows($parentId, $resourceKey, $rows),
             $resourceKey
         );
     }
 
+    /**
+     * @param string[] $endIds
+     *
+     * @return mixed[]
+     */
     private function findIdsOnPathsBetween(string $entityClass, int|string|null $startId, array $endIds): array
     {
         // there are no paths and therefore no ids if we dont have any end-ids
@@ -299,19 +315,27 @@ final class PageController
             ->andWhere('entity.rgt > endEntity.rgt')
             ->setParameter('endIds', $endIds);
 
-        return \array_map('current', $queryBuilder->getQuery()->getScalarResult());
+        return \array_map('current', $queryBuilder->getQuery()->getScalarResult()); // @phpstan-ignore argument.type
     }
 
-    private function generateNestedRows($parentId, string $resourceKey, array $flatRows): array
+    /**
+     * @param mixed[][] $flatRows
+     *
+     * @return mixed[]
+     */
+    private function generateNestedRows(?string $parentId, string $resourceKey, array $flatRows): array
     {
         // add hasChildren property that is expected by the sulu frontend
         foreach ($flatRows as &$row) {
-            $row['hasChildren'] = ($row['lft'] + 1) !== $row['rgt'];
+            /** @var int $lft */
+            $lft = $row['lft'];
+            $row['hasChildren'] = ($lft + 1) !== $row['rgt'];
         }
 
         // group rows by the id of their parent
         $rowsByParentId = [];
         foreach ($flatRows as &$row) {
+            /** @var string $rowParentId */
             $rowParentId = $row['parentId'];
             if (!\array_key_exists($rowParentId, $rowsByParentId)) {
                 $rowsByParentId[$rowParentId] = [];
@@ -321,6 +345,7 @@ final class PageController
 
         // embed children rows int their parent rows
         foreach ($flatRows as &$row) {
+            /** @var string $rowId */
             $rowId = $row['id'];
             if (\array_key_exists($rowId, $rowsByParentId)) {
                 $row['_embedded'] = [

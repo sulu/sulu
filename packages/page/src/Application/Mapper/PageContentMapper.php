@@ -36,6 +36,9 @@ final class PageContentMapper implements PageMapperInterface
         $this->contentPersister = $contentPersister;
     }
 
+    /**
+     * @param array<string, mixed> $data
+     */
     public function mapPageData(PageInterface $page, array $data): void
     {
         $locale = $data['locale'] ?? null;

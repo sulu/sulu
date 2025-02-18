@@ -17,6 +17,7 @@ use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItem;
 use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItemCollection;
 use Sulu\Bundle\AdminBundle\Admin\View\DropdownToolbarAction;
 use Sulu\Bundle\AdminBundle\Admin\View\ListItemAction;
+use Sulu\Bundle\AdminBundle\Admin\View\PreviewFormViewBuilder;
 use Sulu\Bundle\AdminBundle\Admin\View\SaveWithFormDialogToolbarAction;
 use Sulu\Bundle\AdminBundle\Admin\View\ToolbarAction;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewBuilderFactoryInterface;
@@ -244,41 +245,43 @@ class PageAdmin extends Admin
 
             $previewCondition = 'shadowOn == false';
             $tabCondition = 'shadowOn == false';
+            /** @var PreviewFormViewBuilder $viewBuilder */
             foreach ($viewBuilders as $viewBuilder) {
                 if ('sulu_page.page_edit_form.content' === $viewBuilder->getName()) {
                     //TODO /details or /content ?
                     $viewBuilder
+                        ->disablePreviewWebspaceChooser()
                         ->addToolbarActions($formToolbarActionsWithType)
                         ->addRouterAttributesToFormRequest($routerAttributesToFormRequest)
                         ->addRouterAttributesToFormMetadata($routerAttributesToFormMetadata)
-                        ->setPreviewCondition($previewCondition)
-                        ->disablePreviewWebspaceChooser()
-                        ->setTabCondition($tabCondition);
+                        ->setTabCondition($tabCondition)
+                        ->setPreviewCondition($previewCondition);
                 }
 
                 if ('sulu_page.page_edit_form.seo' === $viewBuilder->getName()) {
-                    $viewBuilder->addToolbarActions($formToolbarActionsWithoutType)
+                    $viewBuilder
+                        ->disablePreviewWebspaceChooser()
+                        ->addToolbarActions($formToolbarActionsWithoutType)
                         ->addRouterAttributesToFormRequest($routerAttributesToFormRequest)
-                        ->setPreviewCondition($previewCondition)
-                        ->disablePreviewWebspaceChooser();
+                        ->setPreviewCondition($previewCondition);
                 }
 
                 if ('sulu_page.page_edit_form.excerpt' === $viewBuilder->getName()) {
                     $viewBuilder
+                        ->disablePreviewWebspaceChooser()
                         ->addToolbarActions($formToolbarActionsWithoutType)
                         ->addRouterAttributesToFormRequest($routerAttributesToFormRequest)
                         ->addRouterAttributesToFormMetadata($routerAttributesToFormMetadata)
                         ->setPreviewCondition($previewCondition)
-                        ->setTabCondition($tabCondition)
-                        ->disablePreviewWebspaceChooser();
+                        ->setTabCondition($tabCondition);
                 }
 
                 if ('sulu_page.page_edit_form.settings' === $viewBuilder->getName()) {
                     $viewBuilder
+                        ->disablePreviewWebspaceChooser()
                         ->addToolbarActions($formToolbarActionsWithoutType)
                         ->addRouterAttributesToFormRequest($routerAttributesToFormRequest)
-                        ->setPreviewCondition($previewCondition)
-                        ->disablePreviewWebspaceChooser();
+                        ->setPreviewCondition($previewCondition);
                 }
 
                 $viewCollection->add($viewBuilder);
@@ -448,12 +451,19 @@ class PageAdmin extends Admin
         );
     }
 
-    public function getConfigKey(): ?string
+    public function getConfigKey(): string
     {
         return 'sulu_page';
     }
 
-    public function getConfig(): ?array
+    /**
+     * @return array{
+     *     teaser: array<string, mixed>,
+     *     versioning: bool,
+     *     webspaces: array<string, Webspace>
+     * }
+     */
+    public function getConfig(): array
     {
         $webspaces = $this->webspaceManager->getWebspaceCollection()->getWebspaces();
         \uasort($webspaces, function($w1, $w2) {

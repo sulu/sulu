@@ -11,7 +11,7 @@ declare(strict_types=1);
  * with this source code in the file LICENSE.
  */
 
-use Sulu\Page\Tests\Application\Kernel;
+use Sulu\Article\Tests\Application\Kernel;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Debug\Debug;
@@ -28,6 +28,7 @@ if (!\class_exists(Application::class)) {
 
 $input = new ArgvInput();
 if (null !== $env = $input->getParameterOption(['--env', '-e'], null, true)) {
+    \assert(\is_string($env));
     \putenv('APP_ENV=' . $_SERVER['APP_ENV'] = $_ENV['APP_ENV'] = $env);
 }
 
@@ -44,6 +45,9 @@ if ($_SERVER['APP_DEBUG']) {
         Debug::enable();
     }
 }
+
+\assert(\is_string($_SERVER['APP_ENV']));
+\assert(!isset($suluContext) || \is_string($suluContext));
 
 $kernel = new Kernel($_SERVER['APP_ENV'], (bool) $_SERVER['APP_DEBUG'], $suluContext ?? Kernel::CONTEXT_ADMIN);
 $application = new Application($kernel);

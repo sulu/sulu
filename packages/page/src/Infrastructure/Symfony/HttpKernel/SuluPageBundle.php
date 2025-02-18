@@ -66,7 +66,7 @@ final class SuluPageBundle extends AbstractBundle
         $this->name = 'SuluNextPageBundle';
         $this->extensionAlias = 'sulu_next_page';
     }
-    
+
     /**
      * @internal this method is not part of the public API and should only be called by the Symfony framework classes
      */

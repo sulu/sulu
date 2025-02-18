@@ -11,6 +11,7 @@
 
 namespace Sulu\Page\Domain\Model;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Sulu\Component\Persistence\Model\AuditableTrait;
 use Sulu\Content\Domain\Model\ContentRichEntityTrait;
@@ -50,6 +51,7 @@ class Page implements PageInterface
     ) {
         $this->uuid = $uuid ?: Uuid::v7()->toRfc4122();
         $this->initializeDimensionContents();
+        $this->children = new ArrayCollection();
     }
 
     public function getId(): string // TODO should be replaced by uuid

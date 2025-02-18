@@ -34,11 +34,14 @@ class PageSelectionPropertyResolver implements PropertyResolverInterface
         /** @var string $resourceLoaderKey */
         $resourceLoaderKey = $params['resourceLoader'] ?? PageResourceLoader::getKey();
 
+        /** @var string[] $ids */
+        $ids = $data;
+
         return ContentView::createResolvables(
-            $data,
+            $ids,
             $resourceLoaderKey,
             [
-                'ids' => $data,
+                'ids' => $ids,
                 ...$params,
             ],
         );
