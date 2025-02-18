@@ -61,10 +61,12 @@ final class SuluPageBundle extends AbstractBundle
     use PersistenceExtensionTrait;
     use PersistenceBundleTrait;
 
-    // TODO remove this when the deprecated SuluPageBundle is removed
-    protected string $name = 'SuluNextPageBundle';
-    protected string $extensionAlias = 'sulu_next_page';
-
+    public function __construct()
+    {
+        $this->name = 'SuluNextPageBundle';
+        $this->extensionAlias = 'sulu_next_page';
+    }
+    
     /**
      * @internal this method is not part of the public API and should only be called by the Symfony framework classes
      */
