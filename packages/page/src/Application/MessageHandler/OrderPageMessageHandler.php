@@ -29,27 +29,6 @@ final class OrderPageMessageHandler
 
     public function __invoke(OrderPageMessage $message): void
     {
-        $page = $this->pageRepository->getOneBy($message->getIdentifier());
-
-        $parent = $page->getParent();
-        $siblings = $this->pageRepository->getChildren($parent);
-        $currentPosition = \array_search($page, $siblings);
-
-        if (false === $currentPosition) {
-            throw new \RuntimeException('Node not found in sibling list');
-        }
-
-        $currentPosition = \intval($currentPosition);
-        $movementSteps = $currentPosition - \max(0, $message->getPosition() - 1);
-
-        if ($movementSteps > 0) {
-            $this->pageRepository->moveUp($page, $movementSteps);
-        } elseif ($movementSteps < 0) {
-            $this->pageRepository->moveDown($page, \abs($movementSteps));
-        }
-
-        if (true !== $this->pageRepository->verify()) {
-            $this->pageRepository->recover();
-        }
+        $this->pageRepository->reorderOne($message->getIdentifier(), $message->getPosition());
     }
 }

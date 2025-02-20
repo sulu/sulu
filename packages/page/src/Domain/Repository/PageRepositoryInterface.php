@@ -146,21 +146,11 @@ interface PageRepositoryInterface
 
     public function remove(PageInterface $page): void;
 
-    public function reorder(PageInterface $page, string $sortByField, bool $verify, bool $recursive): void;
-
     /**
-     * @return PageInterface[]
+     * @param array{
+     *     uuid?: string,
+     *     uuids?: string[],
+     * } $filters
      */
-    public function getChildren(?PageInterface $node = null, bool $direct = false, ?string $sortByField = null, string $direction = 'ASC', bool $includeNode = false): array;
-
-    public function moveUp(PageInterface $node, int $number): bool;
-
-    public function moveDown(PageInterface $node, int $number): bool;
-
-    /**
-     * @return bool|string[]
-     */
-    public function verify(): bool|array;
-
-    public function recover(): void;
+    public function reorderOne(array $filters, int $position): void;
 }

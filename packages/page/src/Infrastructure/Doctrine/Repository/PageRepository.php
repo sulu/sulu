@@ -184,25 +184,30 @@ class PageRepository implements PageRepositoryInterface
         $this->entityManager->remove($page);
     }
 
-    public function reorder(PageInterface $page, string $sortByField = 'lft', bool $verify = true, bool $recursive = false): void
+    public function reorderOne(array $filters, int $position): void
     {
-        $this->entityRepository->recoverFast();
-        $this->entityRepository->reorder(
-            node: $page,
-        );
-    }
+        $page = $this->getOneBy($filters);
 
-    /**
-     * @phpstan-param 'asc'|'desc'|'ASC'|'DESC' $direction
-     *
-     * @return PageInterface[]
-     */
-    public function getChildren(?PageInterface $node = null, bool $direct = false, ?string $sortByField = null, string $direction = 'ASC', bool $includeNode = false): array
-    {
-        /** @var PageInterface[] $children */
-        $children = $this->entityRepository->getChildren($node, $direct, $sortByField, $direction, $includeNode);
+        $parent = $page->getParent();
+        $siblings = $this->entityRepository->getChildren($parent);
+        $currentPosition = \array_search($page, $siblings);
 
-        return $children;
+        if (false === $currentPosition) {
+            throw new \RuntimeException(\sprintf('Page with id "%s" not found in sibling list', $page->getId()));
+        }
+
+        $currentPosition = \intval($currentPosition);
+        $movementSteps = $currentPosition - \max(0, $position - 1);
+
+        if ($movementSteps > 0) {
+            $this->entityRepository->moveUp($page, $movementSteps);
+        } elseif ($movementSteps < 0) {
+            $this->entityRepository->moveDown($page, \abs($movementSteps));
+        }
+
+        if (true !== $this->entityRepository->verify()) {
+            $this->entityRepository->recover();
+        }
     }
 
     /**
@@ -318,28 +323,5 @@ class PageRepository implements PageRepositoryInterface
         }
 
         return $queryBuilder;
-    }
-
-    public function moveUp(PageInterface $node, int $number): bool
-    {
-        return $this->entityRepository->moveUp($node, $number);
-    }
-
-    public function moveDown(PageInterface $node, int $number): bool
-    {
-        return $this->entityRepository->moveDown($node, $number);
-    }
-
-    /**
-     * @return bool|string[]
-     */
-    public function verify(): bool|array
-    {
-        return $this->entityRepository->verify();
-    }
-
-    public function recover(): void
-    {
-        $this->entityRepository->recover();
     }
 }
