@@ -69,6 +69,8 @@
             />
         </service>
 
+        <service id="Sulu\Content\Application\PropertyResolver\PropertyResolverProviderInterface" alias="sulu_content.property_resolver_provider"/>
+
         <service id="sulu_content.default_property_resolver"
                  class="Sulu\Content\Application\PropertyResolver\Resolver\DefaultPropertyResolver">
 

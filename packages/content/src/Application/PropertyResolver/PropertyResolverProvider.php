@@ -15,7 +15,7 @@ namespace Sulu\Content\Application\PropertyResolver;
 
 use Sulu\Content\Application\PropertyResolver\Resolver\PropertyResolverInterface;
 
-class PropertyResolverProvider
+final class PropertyResolverProvider implements PropertyResolverProviderInterface
 {
     /**
      * @var PropertyResolverInterface[]
@@ -23,6 +23,8 @@ class PropertyResolverProvider
     private array $propertyResolvers;
 
     /**
+     * @internal The constructor of this class maybe change in future releases. Use this service via the dependency injection container only.
+     *
      * @param iterable<PropertyResolverInterface> $propertyResolvers
      */
     public function __construct(iterable $propertyResolvers)
