@@ -15,6 +15,9 @@ namespace Sulu\Content\Application\PropertyResolver;
 
 use Sulu\Content\Application\PropertyResolver\Resolver\PropertyResolverInterface;
 
+/**
+ * If you need to override this service use service decoration via the provided interface: https://symfony.com/doc/6.4/service_container/service_decoration.html.
+ */
 final class PropertyResolverProvider implements PropertyResolverProviderInterface
 {
     /**
