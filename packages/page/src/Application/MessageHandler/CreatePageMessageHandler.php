@@ -24,25 +24,15 @@ use Sulu\Page\Domain\Repository\PageRepositoryInterface;
  */
 final class CreatePageMessageHandler
 {
-    /**
-     * @var PageRepositoryInterface
-     */
-    private $pageRepository;
-
-    /**
-     * @var iterable<PageMapperInterface>
-     */
-    private $pageMappers;
+    public const HOMEPAGE_PARENT_ID = 'homepage';
 
     /**
      * @param iterable<PageMapperInterface> $pageMappers
      */
     public function __construct(
-        PageRepositoryInterface $pageRepository,
-        iterable $pageMappers
+        private PageRepositoryInterface $pageRepository,
+        private iterable $pageMappers
     ) {
-        $this->pageRepository = $pageRepository;
-        $this->pageMappers = $pageMappers;
     }
 
     public function __invoke(CreatePageMessage $message): PageInterface
@@ -50,15 +40,24 @@ final class CreatePageMessageHandler
         $data = $message->getData();
         $page = $this->pageRepository->createNew($message->getUuid());
         $page->setWebspaceKey($message->getWebspaceKey());
-
-        $parent = $this->pageRepository->getOneBy(['uuid' => $message->getParentId()]);
-        $page->setParent($parent);
+        $page = $this->setParent($message->getParentId(), $page);
 
         foreach ($this->pageMappers as $pageMapper) {
             $pageMapper->mapPageData($page, $data);
         }
 
         $this->pageRepository->add($page);
+
+        return $page;
+    }
+
+    public function setParent(string $parentId, PageInterface $page): PageInterface
+    {
+        // only the homepage is allowed to not have a parent
+        if (self::HOMEPAGE_PARENT_ID !== $parentId) {
+            $parent = $this->pageRepository->getOneBy(['uuid' => $parentId]);
+            $page->setParent($parent);
+        }
 
         return $page;
     }

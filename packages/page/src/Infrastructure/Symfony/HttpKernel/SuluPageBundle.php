@@ -34,12 +34,14 @@ use Sulu\Page\Domain\Model\PageInterface;
 use Sulu\Page\Domain\Repository\PageRepositoryInterface;
 use Sulu\Page\Infrastructure\Doctrine\Repository\PageRepository;
 use Sulu\Page\Infrastructure\Sulu\Admin\PageAdmin;
+use Sulu\Page\Infrastructure\Sulu\Build\HomepageBuilder;
 use Sulu\Page\Infrastructure\Sulu\Content\PageLinkProvider;
 use Sulu\Page\Infrastructure\Sulu\Content\PageSitemapProvider;
 use Sulu\Page\Infrastructure\Sulu\Content\PageTeaserProvider;
 use Sulu\Page\Infrastructure\Sulu\Content\PropertyResolver\PageSelectionPropertyResolver;
 use Sulu\Page\Infrastructure\Sulu\Content\PropertyResolver\SinglePageSelectionPropertyResolver;
 use Sulu\Page\Infrastructure\Sulu\Content\ResourceLoader\PageResourceLoader;
+use Sulu\Page\UserInterface\Command\InitializeHomepageCommand;
 use Sulu\Page\UserInterface\Controller\Admin\PageController;
 use Symfony\Component\Config\Definition\Configurator\DefinitionConfigurator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -185,6 +187,11 @@ final class SuluPageBundle extends AbstractBundle
             ])
             ->tag('sulu_content.resource_loader', ['type' => PageResourceLoader::RESOURCE_LOADER_KEY]);
 
+        // Sulu Builder service
+        $services->set('sulu_page.homepage_builder')
+            ->class(HomepageBuilder::class)
+            ->tag('massive_build.builder');
+
         // Sulu Integration service
         $services->set('sulu_page.page_admin')
             ->class(PageAdmin::class)
@@ -207,6 +214,16 @@ final class SuluPageBundle extends AbstractBundle
             ]);
 
         $services->alias(PageRepositoryInterface::class, 'sulu_page.page_repository');
+
+        // Commands services
+        $services->set('sulu_page.command.initialize_homepage')
+            ->class(InitializeHomepageCommand::class)
+            ->args([
+                new Reference('sulu_core.webspace.webspace_manager'),
+                new Reference('sulu_page.page_repository'),
+                new Reference('sulu_message_bus'),
+            ])
+            ->tag('console.command');
 
         // Controllers services
         $services->set('sulu_page.admin_page_controller')

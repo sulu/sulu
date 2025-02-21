@@ -224,6 +224,8 @@ class PageRepository implements PageRepositoryInterface
      *     tagOperator?: 'AND'|'OR',
      *     templateKeys?: string[],
      *     loadGhost?: bool,
+     *     parentId?: string,
+     *     webspace?: string,
      *     page?: int,
      *     limit?: int,
      * } $filters
@@ -264,6 +266,20 @@ class PageRepository implements PageRepositoryInterface
             Assert::isArray($uuids); // @phpstan-ignore staticMethod.alreadyNarrowedType
             $queryBuilder->andWhere('page.uuid IN(:uuids)')
                 ->setParameter('uuids', $uuids);
+        }
+
+        $webspace = $filters['webspace'] ?? null;
+        if (null !== $webspace) {
+            Assert::string($webspace); // @phpstan-ignore staticMethod.alreadyNarrowedType
+            $queryBuilder->andWhere('page.webspace = :webspace')
+                ->setParameter('webspace', $webspace);
+        }
+
+        $parentId = $filters['parentId'] ?? null;
+        if (null !== $parentId) {
+            Assert::string($parentId); // @phpstan-ignore staticMethod.alreadyNarrowedType
+            $queryBuilder->andWhere('page.parentId = :parentId')
+                ->setParameter('parentId', $parentId);
         }
 
         $limit = $filters['limit'] ?? null;

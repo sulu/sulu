@@ -165,9 +165,10 @@ class RoutableDataMapper implements DataMapperInterface
             );
         }
 
-        if ('/' === $routePath) {
-            throw new \RuntimeException('Not allowed url "/" given or generated.');
-        }
+        //        TODO: we need this for the homepage
+        //        if ('/' === $routePath) {
+        //            throw new \RuntimeException('Not allowed url "/" given or generated.');
+        //        }
 
         if (DimensionContentInterface::STAGE_LIVE === $localizedDimensionContent->getStage()) {
             if (!$localizedDimensionContent->getResourceId()) {

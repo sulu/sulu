@@ -206,41 +206,58 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
         }
 
         if ($container->hasExtension('massive_build')) {
-            $container->prependExtensionConfig(
-                'massive_build',
-                [
-                    'targets' => [
-                        'prod' => [
-                            'dependencies' => [
-                                'database' => [],
-                                'phpcr' => [],
-                                'fixtures' => [],
-                                'phpcr_migrations' => [],
-                                'system_collections' => [],
-                                'security' => [],
-                            ],
-                        ],
-                        'dev' => [
-                            'dependencies' => [
-                                'database' => [],
-                                'fixtures' => [],
-                                'phpcr' => [],
-                                'user' => [],
-                                'phpcr_migrations' => [],
-                                'system_collections' => [],
-                                'security' => [],
-                                'search_init' => [],
-                            ],
-                        ],
-                        'maintain' => [
-                            'dependencies' => [
-                                'node_order' => [],
-                                'search_index' => [],
-                                'phpcr_migrations' => [],
-                            ],
+            $massiveBuildConfig = [
+                'targets' => [
+                    'prod' => [
+                        'dependencies' => [
+                            'database' => [],
+                            'phpcr' => [],
+                            'fixtures' => [],
+                            'phpcr_migrations' => [],
+                            'system_collections' => [],
+                            'security' => [],
                         ],
                     ],
-                ]
+                    'dev' => [
+                        'dependencies' => [
+                            'database' => [],
+                            'fixtures' => [],
+                            'phpcr' => [],
+                            'user' => [],
+                            'phpcr_migrations' => [],
+                            'system_collections' => [],
+                            'security' => [],
+                            'search_init' => [],
+                        ],
+                    ],
+                    'maintain' => [
+                        'dependencies' => [
+                            'node_order' => [],
+                            'search_index' => [],
+                            'phpcr_migrations' => [],
+                        ],
+                    ],
+                ],
+            ];
+
+            // Check sulu page bundle enabled
+            /** @var array<string, string> $bundles */
+            $bundles = $container->getParameter('kernel.bundles');
+            $contentPageBundle = \array_key_exists('SuluNextPageBundle', $bundles) ? $bundles['SuluNextPageBundle'] : null;
+            if ($contentPageBundle) {
+                $massiveBuildConfig['targets']['prod']['dependencies']['homepage'] = [];
+                $massiveBuildConfig['targets']['dev']['dependencies']['homepage'] = [];
+            }
+
+            $phpcrPageBundle = \array_key_exists('SuluPageBundle', $bundles) ? $bundles['SuluPageBundle'] : null;
+            if ($phpcrPageBundle) {
+                $massiveBuildConfig['targets']['prod']['dependencies']['phpcr'] = [];
+                $massiveBuildConfig['targets']['dev']['dependencies']['phpcr'] = [];
+            }
+
+            $container->prependExtensionConfig(
+                'massive_build',
+                $massiveBuildConfig
             );
         }
 
