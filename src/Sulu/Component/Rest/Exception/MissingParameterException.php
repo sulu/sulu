@@ -13,6 +13,8 @@ namespace Sulu\Component\Rest\Exception;
 
 /**
  * missing parameter in api.
+ *
+ * @deprecated since version 2.6 use the request object instead
  */
 class MissingParameterException extends RestException
 {

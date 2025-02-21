@@ -115,6 +115,24 @@ All `.yml` routing files of the core bundles will be removed in the future.
 
 If you want to upgrade your own custom routes, have a look at the opt out command of [RestRoutingBundle](https://github.com/handcraftedinthealps/RestRoutingBundle).
 
+### Deprecated `RequestParameters` trait
+
+The `RequestParameters` trait has been deprecated. Specifically, the `getRequestParameter` method should be replaced
+with direct access to the request object, such as:
+```php
+$request->query->get('param');
+$request->headers->get('param');
+$request->request->get('param');
+```
+
+For type-safe alternatives, use the appropriate methods on the `ParameterBag`:
+```php
+$request->query->getBoolean('param');
+$request->query->getString('param');
+$request->query->getInt('param');
+```
+This deprecation also includes the `Sulu\Component\Rest\Exception\MissingParameterException`.
+
 ## 2.6.7
 
 ### Doctrine incompatibility with Symfony 6.3
