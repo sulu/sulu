@@ -152,5 +152,5 @@ interface PageRepositoryInterface
      *     uuids?: string[],
      * } $filters
      */
-    public function reorderOne(array $filters, int $position): void;
+    public function reorderOneBy(array $filters, int $position): void;
 }

@@ -184,7 +184,7 @@ class PageRepository implements PageRepositoryInterface
         $this->entityManager->remove($page);
     }
 
-    public function reorderOne(array $filters, int $position): void
+    public function reorderOneBy(array $filters, int $position): void
     {
         $page = $this->getOneBy($filters);
 

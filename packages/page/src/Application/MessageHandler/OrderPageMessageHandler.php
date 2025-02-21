@@ -29,6 +29,6 @@ final class OrderPageMessageHandler
 
     public function __invoke(OrderPageMessage $message): void
     {
-        $this->pageRepository->reorderOne($message->getIdentifier(), $message->getPosition());
+        $this->pageRepository->reorderOneBy($message->getIdentifier(), $message->getPosition());
     }
 }
