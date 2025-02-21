@@ -16,7 +16,7 @@ namespace Sulu\Content\Application\PropertyResolver;
 use Sulu\Content\Application\PropertyResolver\Resolver\PropertyResolverInterface;
 
 /**
- * @internal The constructor of this class maybe change in future releases to add new features or improve performance.
+ * @internal The constructor of this class may change in future releases to add new features or improve performance.
  *           Use this service via the dependency injection container via the PropertyResolverProviderInterface only.
  *           It is still fine to use this class to create a new instance for mock-less unit tests,
  *           but no backwards compatibility promise can be given for the constructor.
