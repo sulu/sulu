@@ -224,8 +224,8 @@ class PageRepository implements PageRepositoryInterface
      *     tagOperator?: 'AND'|'OR',
      *     templateKeys?: string[],
      *     loadGhost?: bool,
-     *     parentId?: string,
-     *     webspace?: string,
+     *     parentId?: string|null,
+     *     webspaceKey?: string,
      *     page?: int,
      *     limit?: int,
      * } $filters
@@ -268,18 +268,22 @@ class PageRepository implements PageRepositoryInterface
                 ->setParameter('uuids', $uuids);
         }
 
-        $webspace = $filters['webspace'] ?? null;
+        $webspace = $filters['webspaceKey'] ?? null;
         if (null !== $webspace) {
             Assert::string($webspace); // @phpstan-ignore staticMethod.alreadyNarrowedType
-            $queryBuilder->andWhere('page.webspace = :webspace')
-                ->setParameter('webspace', $webspace);
+            $queryBuilder->andWhere('page.webspaceKey = :webspaceKey')
+                ->setParameter('webspaceKey', $webspace);
         }
 
         $parentId = $filters['parentId'] ?? null;
-        if (null !== $parentId) {
-            Assert::string($parentId); // @phpstan-ignore staticMethod.alreadyNarrowedType
-            $queryBuilder->andWhere('page.parentId = :parentId')
-                ->setParameter('parentId', $parentId);
+        // null is a valid value for parentId
+        if (\array_key_exists('parentId', $filters)) {
+            Assert::nullOrString($parentId); // @phpstan-ignore staticMethod.alreadyNarrowedType
+            match ($parentId) {
+                null => $queryBuilder->andWhere('page.parent IS NULL'),
+                default => $queryBuilder->andWhere('page.parent = :parentId')
+                    ->setParameter('parentId', $parentId),
+            };
         }
 
         $limit = $filters['limit'] ?? null;

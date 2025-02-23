@@ -165,11 +165,6 @@ class RoutableDataMapper implements DataMapperInterface
             );
         }
 
-        //        TODO: we need this for the homepage
-        //        if ('/' === $routePath) {
-        //            throw new \RuntimeException('Not allowed url "/" given or generated.');
-        //        }
-
         if (DimensionContentInterface::STAGE_LIVE === $localizedDimensionContent->getStage()) {
             if (!$localizedDimensionContent->getResourceId()) {
                 // TODO route bundle should work to update the entity later with a resourceId over UPDATE SQL statement

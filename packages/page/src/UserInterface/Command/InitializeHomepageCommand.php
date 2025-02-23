@@ -13,6 +13,7 @@ namespace Sulu\Page\UserInterface\Command;
 
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Webspace;
+use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Domain\Model\WorkflowInterface;
 use Sulu\Messenger\Infrastructure\Symfony\Messenger\FlushMiddleware\EnableFlushStamp;
 use Sulu\Page\Application\Message\ApplyWorkflowTransitionPageMessage;
@@ -30,9 +31,9 @@ use Symfony\Component\Messenger\HandleTrait;
 use Symfony\Component\Messenger\MessageBusInterface;
 
 /**
- * @internal Your code should not create direct dependencies on this implementation
+ * @internal your code should not create direct dependencies on this implementation
  *           projects can utilize the `sulu:page:initialize` command to
- *           initialize new webspaces with the homepage.
+ *           initialize new webspaces with the homepage
  *
  * @final
  */
@@ -56,12 +57,10 @@ class InitializeHomepageCommand extends Command
 
         $webspaces = $this->webspaceManager->getWebspaceCollection();
         foreach ($webspaces as $webspace) {
-            $ui->section('Initialize homepage for webspace ' . $webspace->getKey());
-
             $localizations = $webspace->getLocalizations();
             foreach ($localizations as $localization) {
                 if ($this->homepageExists($webspace, $localization->getLocale())) {
-                    $ui->text(
+                    $ui->info(
                         \sprintf(
                             'Homepage for locale "%s" in webspace "%s" already exists',
                             $localization->getLocale(),
@@ -81,14 +80,14 @@ class InitializeHomepageCommand extends Command
 
     private function homepageExists(Webspace $webspace, string $locale): bool
     {
-        // TODO more optimized query
-        $homepage = $this->pageRepository->findOneBy([
+        $result = $this->pageRepository->countBy([
             'webspaceKey' => $webspace->getKey(),
             'locale' => $locale,
-            'url' => '/',
+            'parentId' => null,
+            'stage' => DimensionContentInterface::STAGE_LIVE,
         ]);
 
-        return null !== $homepage;
+        return $result > 0;
     }
 
     private function createHomepage(Webspace $webspace, string $locale): PageInterface
