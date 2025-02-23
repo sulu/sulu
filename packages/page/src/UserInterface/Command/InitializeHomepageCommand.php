@@ -31,12 +31,12 @@ use Symfony\Component\Messenger\MessageBusInterface;
 
 /**
  * @internal Your code should not create direct dependencies on this implementation
- *  projects can utilize the `sulu:page:initialize` command to
- *  initialize new webspaces with the homepage
+ *           projects can utilize the `sulu:page:initialize` command to
+ *           initialize new webspaces with the homepage.
  *
  * @final
  */
-#[AsCommand(name: 'sulu:page:initialize', description: 'Initializes the homepage per webspace')]
+#[AsCommand(name: 'sulu:page:initialize', description: 'Initializes the homepage per webspace locale')]
 class InitializeHomepageCommand extends Command
 {
     use HandleTrait;

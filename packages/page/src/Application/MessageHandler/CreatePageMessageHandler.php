@@ -51,7 +51,7 @@ final class CreatePageMessageHandler
         return $page;
     }
 
-    public function setParent(string $parentId, PageInterface $page): PageInterface
+    private function setParent(string $parentId, PageInterface $page): PageInterface
     {
         // only the homepage is allowed to not have a parent
         if (self::HOMEPAGE_PARENT_ID !== $parentId) {
