@@ -21,9 +21,8 @@ use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 /**
  * The integration test should have no impact on the coverage so we set it to coversNothing.
- *
- * @coversNothing
  */
+#[\PHPUnit\Framework\Attributes\CoversNothing]
 class SnippetControllerTest extends SuluTestCase
 {
     use AssertSnapshotTrait;
@@ -80,9 +79,7 @@ class SnippetControllerTest extends SuluTestCase
         return $id;
     }
 
-    /**
-     * @depends testPostPublish
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testPostPublish')]
     public function testPostTriggerUnpublish(string $id): void
     {
         $this->client->request('POST', '/admin/api/snippets/' . $id . '?locale=en&action=unpublish');
@@ -119,9 +116,7 @@ class SnippetControllerTest extends SuluTestCase
         return $id;
     }
 
-    /**
-     * @depends testPost
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testPost')]
     public function testGet(string $id): void
     {
         $this->client->request('GET', '/admin/api/snippets/' . $id . '?locale=en');
@@ -129,9 +124,7 @@ class SnippetControllerTest extends SuluTestCase
         $this->assertResponseSnapshot('snippet_get.json', $response, 200);
     }
 
-    /**
-     * @depends testPost
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testPost')]
     public function testGetGhostLocale(string $id): void
     {
         $this->client->request('GET', '/admin/api/snippets/' . $id . '?locale=de');
@@ -139,9 +132,7 @@ class SnippetControllerTest extends SuluTestCase
         $this->assertResponseSnapshot('snippet_get_ghost_locale.json', $response, 200);
     }
 
-    /**
-     * @depends testPost
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testPost')]
     public function testPostTriggerCopyLocale(string $id): void
     {
         $this->client->request('POST', '/admin/api/snippets/' . $id . '?locale=de&action=copy-locale&src=en&dest=de');
@@ -151,10 +142,8 @@ class SnippetControllerTest extends SuluTestCase
         $this->assertResponseSnapshot('snippet_post_trigger_copy_locale.json', $response, 200);
     }
 
-    /**
-     * @depends testPost
-     * @depends testGet
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testPost')]
+    #[\PHPUnit\Framework\Attributes\Depends('testGet')]
     public function testPut(string $id): void
     {
         $this->client->request('PUT', '/admin/api/snippets/' . $id . '?locale=en', [], [], [], \json_encode([
@@ -175,10 +164,8 @@ class SnippetControllerTest extends SuluTestCase
         $this->assertResponseSnapshot('snippet_put.json', $response, 200);
     }
 
-    /**
-     * @depends testPost
-     * @depends testPut
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testPost')]
+    #[\PHPUnit\Framework\Attributes\Depends('testPut')]
     public function testGetList(): void
     {
         $this->client->request('GET', '/admin/api/snippets?locale=en');
@@ -187,10 +174,8 @@ class SnippetControllerTest extends SuluTestCase
         $this->assertResponseSnapshot('snippet_cget.json', $response, 200);
     }
 
-    /**
-     * @depends testPost
-     * @depends testGetList
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testPost')]
+    #[\PHPUnit\Framework\Attributes\Depends('testGetList')]
     public function testDelete(string $id): void
     {
         $this->client->request('DELETE', '/admin/api/snippets/' . $id . '?locale=en');

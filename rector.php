@@ -14,6 +14,7 @@ declare(strict_types=1);
 use Rector\Config\RectorConfig;
 use Rector\Doctrine\Set\DoctrineSetList;
 use Rector\PHPUnit\PHPUnit100\Rector\Class_\StaticDataProviderClassMethodRector;
+use Rector\PHPUnit\Set\PHPUnitSetList;
 use Rector\Renaming\Rector\MethodCall\RenameMethodRector;
 use Rector\Renaming\ValueObject\MethodCallRename;
 use Rector\Set\ValueObject\LevelSetList;
@@ -29,6 +30,7 @@ return RectorConfig::configure()
         __DIR__ . '/public',
         __DIR__ . '/src',
         __DIR__ . '/tests',
+        __DIR__ . '/packages',
     ])
     ->withSkipPath('*/var/cache')
     ->withSkipPath('*/tests/Resources/cache')
@@ -44,6 +46,7 @@ return RectorConfig::configure()
         // SymfonySetList::SYMFONY_CODE_QUALITY,
         // DoctrineSetList::DOCTRINE_CODE_QUALITY,
         // LevelSetList::UP_TO_PHP_80,
+        PHPUnitSetList::ANNOTATIONS_TO_ATTRIBUTES,
     ])
     ->withRules([
         StaticDataProviderClassMethodRector::class,

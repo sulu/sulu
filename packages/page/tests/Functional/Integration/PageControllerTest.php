@@ -23,9 +23,8 @@ use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 /**
  * The integration test should have no impact on the coverage so we set it to coversNothing.
- *
- * @coversNothing
  */
+#[\PHPUnit\Framework\Attributes\CoversNothing]
 class PageControllerTest extends SuluTestCase
 {
     use AssertSnapshotTrait;
@@ -146,9 +145,7 @@ class PageControllerTest extends SuluTestCase
         return $id;
     }
 
-    /**
-     * @depends testPostPublish
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testPostPublish')]
     public function testPostTriggerUnpublish(string $id): void
     {
         $this->client->request('POST', '/admin/api/pages/' . $id . '?locale=en&action=unpublish');
@@ -215,9 +212,7 @@ class PageControllerTest extends SuluTestCase
         return $id;
     }
 
-    /**
-     * @depends testPost
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testPost')]
     public function testGet(string $id): void
     {
         $this->client->request('GET', '/admin/api/pages/' . $id . '?locale=en');
@@ -233,9 +228,7 @@ class PageControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(404, $response);
     }
 
-    /**
-     * @depends testPost
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testPost')]
     public function testGetGhostLocale(string $id): void
     {
         $this->client->request('GET', '/admin/api/pages/' . $id . '?locale=de');
@@ -251,9 +244,7 @@ class PageControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(404, $response);
     }
 
-    /**
-     * @depends testPost
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testPost')]
     public function testPostTriggerCopyLocale(string $id): void
     {
         $this->client->request('POST', '/admin/api/pages/' . $id . '?locale=de&action=copy-locale&src=en&dest=de');
@@ -263,10 +254,8 @@ class PageControllerTest extends SuluTestCase
         $this->assertResponseSnapshot('page_post_trigger_copy_locale.json', $response, 200);
     }
 
-    /**
-     * @depends testPost
-     * @depends testGet
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testPost')]
+    #[\PHPUnit\Framework\Attributes\Depends('testGet')]
     public function testPut(string $id): void
     {
         $this->client->request('PUT', '/admin/api/pages/' . $id . '?locale=en', [], [], [], \json_encode([
@@ -300,10 +289,8 @@ class PageControllerTest extends SuluTestCase
         $this->assertResponseSnapshot('page_put.json', $response, 200);
     }
 
-    /**
-     * @depends testPost
-     * @depends testPut
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testPost')]
+    #[\PHPUnit\Framework\Attributes\Depends('testPut')]
     public function testGetList(string $id): void
     {
         $this->client->request('GET', '/admin/api/pages?locale=en&webspace=sulu-io&expandedIds=' . $id);
@@ -312,10 +299,8 @@ class PageControllerTest extends SuluTestCase
         $this->assertResponseSnapshot('page_cget.json', $response, 200);
     }
 
-    /**
-     * @depends testPost
-     * @depends testGetList
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testPost')]
+    #[\PHPUnit\Framework\Attributes\Depends('testGetList')]
     public function testOrderPages(string $id): void
     {
         $page1 = $this->createPage($id);
@@ -340,10 +325,8 @@ class PageControllerTest extends SuluTestCase
         $this->assertResponseSnapshot('page_post_before_order_list.json', $response, 200);
     }
 
-    /**
-     * @depends testPost
-     * @depends testGetList
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testPost')]
+    #[\PHPUnit\Framework\Attributes\Depends('testGetList')]
     public function testDelete(string $id): void
     {
         $this->client->request('DELETE', '/admin/api/pages/' . $id . '?locale=en');

@@ -23,9 +23,8 @@ use Symfony\Bundle\FrameworkBundle\KernelBrowser;
  * publishing processes.
  *
  * The integration test should have no impact on the coverage so we set it to coversNothing.
- *
- * @coversNothing
  */
+#[\PHPUnit\Framework\Attributes\CoversNothing]
 class ExampleControllerAvailableAndShadowLocalesTest extends SuluTestCase
 {
     /**
@@ -86,9 +85,7 @@ class ExampleControllerAvailableAndShadowLocalesTest extends SuluTestCase
         return $id;
     }
 
-    /**
-     * @depends testPostCreateEnDraft
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testPostCreateEnDraft')]
     public function testPostCreateDeDraft(int $id): int
     {
         $this->client->request('PUT', '/admin/api/examples/' . $id . '?locale=de', [], [], [], \json_encode([
@@ -145,9 +142,7 @@ class ExampleControllerAvailableAndShadowLocalesTest extends SuluTestCase
         return $id;
     }
 
-    /**
-     * @depends testPostCreateDeDraft
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testPostCreateDeDraft')]
     public function testPostPublishEn(int $id): int
     {
         $this->client->request('PUT', '/admin/api/examples/' . $id . '?locale=en&action=publish', [], [], [], \json_encode([
@@ -222,9 +217,7 @@ class ExampleControllerAvailableAndShadowLocalesTest extends SuluTestCase
         return $id;
     }
 
-    /**
-     * @depends testPostPublishEn
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testPostPublishEn')]
     public function testPostPublishDe(int $id): int
     {
         $this->client->request('PUT', '/admin/api/examples/' . $id . '?locale=de&action=publish', [], [], [], \json_encode([
@@ -313,9 +306,7 @@ class ExampleControllerAvailableAndShadowLocalesTest extends SuluTestCase
         return $id;
     }
 
-    /**
-     * @depends testPostPublishDe
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testPostPublishDe')]
     public function testPostRepublishEn(int $id): int
     {
         $this->client->request('PUT', '/admin/api/examples/' . $id . '?locale=en&action=publish', [], [], [], \json_encode([
@@ -402,9 +393,7 @@ class ExampleControllerAvailableAndShadowLocalesTest extends SuluTestCase
         return $id;
     }
 
-    /**
-     * @depends testPostRepublishEn
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testPostRepublishEn')]
     public function testPostUnpublishDe(int $id): int
     {
         $this->client->request('POST', '/admin/api/examples/' . $id . '?locale=de&action=unpublish', [], [], [], \json_encode([
@@ -481,9 +470,7 @@ class ExampleControllerAvailableAndShadowLocalesTest extends SuluTestCase
         return $id;
     }
 
-    /**
-     * @depends testPostRepublishEn
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testPostRepublishEn')]
     public function testPostRepublishEnAgain(int $id): int
     {
         $this->client->request('PUT', '/admin/api/examples/' . $id . '?locale=en&action=publish', [], [], [], \json_encode([

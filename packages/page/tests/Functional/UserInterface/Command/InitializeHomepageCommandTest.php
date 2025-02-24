@@ -56,9 +56,7 @@ class InitializeHomepageCommandTest extends SuluTestCase
         ]));
     }
 
-    /**
-     * @depends testExecuteWithNoExistingHomepage
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('testExecuteWithNoExistingHomepage')]
     public function testExecuteWithExistingHomepage(): void
     {
         self::assertInstanceOf(KernelInterface::class, self::$kernel);
