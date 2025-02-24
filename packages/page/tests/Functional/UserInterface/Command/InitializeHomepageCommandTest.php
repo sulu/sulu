@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Page\Tests\Functional\Command;
+namespace Sulu\Page\Tests\Functional\UserInterface\Command;
 
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
