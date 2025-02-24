@@ -32,7 +32,7 @@ trait AssertSnapshotTrait
         $this->assertInstanceOf(Response::class, $actualResponse);
         $responseContent = $actualResponse->getContent();
         $this->assertHttpStatusCode($statusCode, $actualResponse);
-        $this->assertIsString($responseContent);
+        $this->assertIsString($responseContent, 'The response content is not a string');
 
         $this->assertSnapshot($snapshotPatternFilename, $responseContent, $message);
     }
@@ -46,7 +46,7 @@ trait AssertSnapshotTrait
         string $message = ''
     ): void {
         $arrayContent = \json_encode($array);
-        $this->assertIsString($arrayContent);
+        $this->assertIsString($arrayContent, 'Unable to encode the data into a string');
 
         $this->assertSnapshot($snapshotPatternFilename, $arrayContent, $message);
     }
@@ -56,9 +56,14 @@ trait AssertSnapshotTrait
         string $content,
         string $message = ''
     ): void {
-        $snapshotFolder = $this->getCalledClassFolder() . \DIRECTORY_SEPARATOR . $this->getSnapshotFolder();
-        $snapshotPattern = \file_get_contents($snapshotFolder . \DIRECTORY_SEPARATOR . $snapshotPatternFilename);
-        $this->assertIsString($snapshotPattern);
+        $snapshotFilePath = \implode(
+            \DIRECTORY_SEPARATOR,
+            [$this->getCalledClassFolder(), $this->getSnapshotFolder(), $snapshotPatternFilename],
+        );
+
+        $this->assertFileExists($snapshotFilePath, 'Unable to find snapshot file');
+        $snapshotPattern = \file_get_contents($snapshotFilePath);
+        $this->assertIsString($snapshotPattern, 'Unable to open snapshot file: ' . $snapshotFilePath);
 
         $this->assertMatchesPattern(\trim($snapshotPattern), \trim($content), $message);
     }
