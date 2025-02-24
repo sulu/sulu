@@ -59,9 +59,7 @@ class SvgFileInspectorTest extends TestCase
         yield 'svg with phishing link' => ['<svg><a href="http://phishing-site.com" target="_blank"><text x="10" y="50">Click here for a prize!</text></a></svg>', false];
     }
 
-    /**
-     * @dataProvider provideSvgs
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideSvgs')]
     public function testIsSafe(string $svg, bool $expectedSafe): void
     {
         if (!$expectedSafe) {
