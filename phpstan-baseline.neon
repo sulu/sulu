@@ -24877,12 +24877,6 @@ parameters:
 			path: src/Sulu/Bundle/MarkupBundle/Listener/MarkupListener.php
 
 		-
-			message: '#^Parameter \#1 \$key of function array_key_exists expects int\|string, string\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/MarkupBundle/Listener/MarkupListener.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\MarkupBundle\\Markup\\HtmlMarkupParser\:\:validate\(\) should return array\<string, string\> but returns array\.$#'
 			identifier: return.type
 			count: 1
@@ -25157,12 +25151,6 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/MarkupBundle/Tag/TagRegistry.php
-
-		-
-			message: '#^Class Sulu\\Bundle\\MarkupBundle\\Listener\\MarkupListener constructor invoked with 2 parameters, 1 required\.$#'
-			identifier: arguments.count
-			count: 1
-			path: src/Sulu/Bundle/MarkupBundle/Tests/Unit/Listener/MarkupListenerTest.php
 
 		-
 			message: '#^Binary operation "\." between ''\<html\>\<body\>'' and mixed results in an error\.$#'

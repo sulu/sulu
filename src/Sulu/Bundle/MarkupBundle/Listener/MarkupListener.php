@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\MarkupBundle\Listener;
 
+use Psr\Container\ContainerInterface;
 use Sulu\Bundle\MarkupBundle\Markup\MarkupParserInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
@@ -21,17 +22,8 @@ use Symfony\Component\HttpKernel\KernelEvents;
  */
 class MarkupListener implements EventSubscriberInterface
 {
-    /**
-     * @var array<string, MarkupParserInterface>
-     */
-    private array $markupParser;
-
-    /**
-     * @param iterable<string, MarkupParserInterface> $markupParser
-     */
-    public function __construct(iterable $markupParser)
+    public function __construct(private ContainerInterface $markupParser)
     {
-        $this->markupParser = [...$markupParser];
     }
 
     public static function getSubscribedEvents(): array
@@ -46,15 +38,19 @@ class MarkupListener implements EventSubscriberInterface
     {
         $request = $event->getRequest();
         $response = $event->getResponse();
+
+        /** @var string $format */
         $format = $request->getRequestFormat();
+
         $content = $response->getContent();
 
-        if (!$content || !\array_key_exists($format, $this->markupParser)) {
+        if (!$content || !$this->markupParser->has($format)) {
             return;
         }
 
-        $response->setContent(
-            $this->markupParser[$format]->parse($content, $request->getLocale())
-        );
+        /** @var MarkupParserInterface $markupParser */
+        $markupParser = $this->markupParser->get($format);
+
+        $response->setContent($markupParser->parse($content, $request->getLocale()));
     }
 }
