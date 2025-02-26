@@ -18,6 +18,7 @@ use Sulu\Content\Domain\Model\WorkflowInterface;
 use Sulu\Messenger\Infrastructure\Symfony\Messenger\FlushMiddleware\EnableFlushStamp;
 use Sulu\Page\Application\Message\ApplyWorkflowTransitionPageMessage;
 use Sulu\Page\Application\Message\CreatePageMessage;
+use Sulu\Page\Application\Message\ModifyPageMessage;
 use Sulu\Page\Application\MessageHandler\CreatePageMessageHandler;
 use Sulu\Page\Domain\Model\PageInterface;
 use Sulu\Page\Domain\Repository\PageRepositoryInterface;
@@ -59,7 +60,7 @@ class InitializeHomepageCommand extends Command
         foreach ($webspaces as $webspace) {
             $localizations = $webspace->getLocalizations();
             foreach ($localizations as $localization) {
-                if ($this->homepageExists($webspace, $localization->getLocale())) {
+                if ($this->homepageExists($webspace->getKey(), $localization->getLocale())) {
                     $ui->info(
                         \sprintf(
                             'Homepage for locale "%s" in webspace "%s" already exists',
@@ -78,10 +79,10 @@ class InitializeHomepageCommand extends Command
         return Command::SUCCESS;
     }
 
-    private function homepageExists(Webspace $webspace, string $locale): bool
+    private function homepageExists(string $webspaceKey, string $locale): bool
     {
         $result = $this->pageRepository->countBy([
-            'webspaceKey' => $webspace->getKey(),
+            'webspaceKey' => $webspaceKey,
             'locale' => $locale,
             'parentId' => null,
             'stage' => DimensionContentInterface::STAGE_LIVE,
@@ -93,16 +94,26 @@ class InitializeHomepageCommand extends Command
     private function createHomepage(Webspace $webspace, string $locale): PageInterface
     {
         $webspaceKey = $webspace->getKey();
-        $message = new CreatePageMessage(
-            $webspaceKey,
-            CreatePageMessageHandler::HOMEPAGE_PARENT_ID,
-            [
-                'title' => $webspace->getName(),
-                'template' => $webspace->getDefaultTemplate('home'),
-                'locale' => $locale,
-                'url' => '/',
-            ]
-        );
+        $contentRichEntity = $this->pageRepository->findOneBy([
+            'webspaceKey' => $webspace->getKey(),
+            'parentId' => null,
+        ]);
+
+        $data = [
+            'title' => $webspace->getName(),
+            'template' => $webspace->getDefaultTemplate('home'),
+            'locale' => $locale,
+            'url' => '/',
+        ];
+
+        $message = match ($contentRichEntity) {
+            null => new CreatePageMessage(
+                $webspaceKey,
+                CreatePageMessageHandler::HOMEPAGE_PARENT_ID,
+                $data
+            ),
+            default => new ModifyPageMessage(['uuid' => $contentRichEntity->getUuid()], $data),
+        };
 
         /** @see CreatePageMessageHandler */
         /** @var PageInterface $page */

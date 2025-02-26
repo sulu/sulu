@@ -51,8 +51,6 @@ class InitializeHomepageCommandTest extends SuluTestCase
         self::assertSame(1, $this->pageRepository->countBy([
             'parentId' => null,
             'webspaceKey' => 'sulu-io',
-            'locale' => 'en',
-            'stage' => DimensionContentInterface::STAGE_LIVE,
         ]));
     }
 
@@ -65,8 +63,6 @@ class InitializeHomepageCommandTest extends SuluTestCase
         self::assertSame(1, $this->pageRepository->countBy([
             'parentId' => null,
             'webspaceKey' => 'sulu-io',
-            'locale' => 'en',
-            'stage' => DimensionContentInterface::STAGE_LIVE,
         ]));
 
         $command = $application->find('sulu:page:initialize');
@@ -78,8 +74,6 @@ class InitializeHomepageCommandTest extends SuluTestCase
         self::assertSame(1, $this->pageRepository->countBy([
             'parentId' => null,
             'webspaceKey' => 'sulu-io',
-            'locale' => 'en',
-            'stage' => DimensionContentInterface::STAGE_LIVE,
         ]));
     }
 }
