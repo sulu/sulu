@@ -99,7 +99,7 @@ class RouteChangedUpdater implements ResetInterface
 
             $newSlugCast = '';
             if ($connection->getDatabasePlatform() instanceof PostgreSQLPlatform) {
-                $newSlugCast = '::text'; // concat seems not directly supported by dbal and parameter $1 (newSlug) is not cast to text correctly. So manually cast it here.
+                $newSlugCast = '::text'; // concat seems not directly supported by dbal and parameter $1 (newSlug) is not cast to text correctly. So manually cast it here: https://github.com/sulu/sulu/pull/7726#discussion_r1930324013
             }
 
             // update child and grand routes

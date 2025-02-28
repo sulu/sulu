@@ -36,6 +36,14 @@ class RouteChangedUpdaterTest extends KernelTestCase
         $schemaTool->updateSchema($classes, false);
     }
 
+    protected function tearDown(): void
+    {
+        $entityManager = self::getContainer()->get(EntityManagerInterface::class);
+        $entityManager->getConnection()->executeStatement('DELETE FROM ro_routes WHERE 1 = 1');
+
+        parent::tearDown();
+    }
+
     /**
      * @param RouteData[] $routes
      * @param RouteData[] $expectedRoutes
