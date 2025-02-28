@@ -8,16 +8,19 @@
     >
         <unique-constraints>
             <unique-constraint name="ro_routes_unique" fields="site,locale,slug" />
-            <unique-constraint name="ro_routes_resource_unique" fields="site,locale,resourceKey,resourceId" />
         </unique-constraints>
+
+        <indexes>
+            <index name="ro_routes_resource" fields="locale,resourceKey,resourceId"/>
+        </indexes>
 
         <id name="id" type="integer" column="id">
             <generator strategy="AUTO"/>
         </id>
 
-        <field name="site" type="string" length="16" nullable="true"/>
-        <field name="locale" type="string" length="11"/>
-        <field name="slug" type="string" length="164"/>
+        <field name="site" type="string" length="32" nullable="true"/>
+        <field name="locale" type="string" length="15"/>
+        <field name="slug" type="string" length="144"/>
 
         <many-to-one field="parentRoute" target-entity="Sulu\Route\Domain\Model\Route">
             <join-column name="parent_id" referenced-column-name="id" nullable="true" on-delete="SET NULL"/>

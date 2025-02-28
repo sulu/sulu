@@ -17,15 +17,15 @@ class Route
 
     private ?string $site;
 
-    private ?string $locale;
+    private string $locale;
 
-    private ?string $slug;
+    private string $slug;
 
     private ?Route $parentRoute;
 
-    private ?string $resourceKey;
+    private string $resourceKey;
 
-    private ?string $resourceId;
+    private string $resourceId;
 
     public function __construct(string $resourceKey, string $resourceId, string $locale, string $slug, ?string $site = null, ?Route $parentRoute = null)
     {
@@ -54,7 +54,7 @@ class Route
         return $this->parentRoute;
     }
 
-    public function getId(): ?int
+    public function getId(): int
     {
         return $this->id;
     }
@@ -64,22 +64,22 @@ class Route
         return $this->site;
     }
 
-    public function getLocale(): ?string
+    public function getLocale(): string
     {
         return $this->locale;
     }
 
-    public function getSlug(): ?string
+    public function getSlug(): string
     {
         return $this->slug;
     }
 
-    public function getResourceKey(): ?string
+    public function getResourceKey(): string
     {
         return $this->resourceKey;
     }
 
-    public function getResourceId(): ?string
+    public function getResourceId(): string
     {
         return $this->resourceId;
     }

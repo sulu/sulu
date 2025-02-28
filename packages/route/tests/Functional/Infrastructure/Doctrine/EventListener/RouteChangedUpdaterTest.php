@@ -57,9 +57,6 @@ class RouteChangedUpdaterTest extends KernelTestCase
             $uniqueKey = ($route->getSite() ?? '') . $route->getLocale() . $route->getSlug();
             $parentUniqueKey = ($route->getSite() ?? '') . $route->getLocale() . ($routeData['parentSlug'] ?? '');
             $parentRoute = $createdRoutes[$parentUniqueKey] ?? null;
-            if ($parentRoute?->getId()) {
-                $parentRoute = $entityManager->getReference(Route::class, $createdRoutes[$parentUniqueKey]->getId());
-            }
 
             $route->setParentRoute($parentRoute);
             $repository->add($route);
@@ -71,7 +68,6 @@ class RouteChangedUpdaterTest extends KernelTestCase
 
             if (0 === $count % 1000) {
                 $entityManager->flush();
-                $entityManager->clear();
                 \gc_collect_cycles();
             }
         }
