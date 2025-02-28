@@ -59,14 +59,14 @@ class BlockPropertyResolver implements PropertyResolverInterface
         /** @var TypedFormMetadata $typedFormMetadata */
         $typedFormMetadata = $this->formMetadataLoader->getMetadata('block', $locale, []);
         $globalBlocksMetadata = $typedFormMetadata->getForms();
+
         $contentViews = [];
         foreach ($data as $key => $block) {
             if (!\is_array($block) || !isset($block['type']) || !\is_string($block['type'])) {
                 continue;
             }
-
             $type = $block['type'];
-            $formMetadata = $globalBlocksMetadata[$type] ?? $metadataTypes[$type] ?? null;
+            $formMetadata = $metadataTypes[$type] ?? null;
 
             if (!$formMetadata instanceof FormMetadata) {
                 $errorMessage = \sprintf(
@@ -89,6 +89,11 @@ class BlockPropertyResolver implements PropertyResolverInterface
                 }
             }
 
+            $globalBlockType = $this->getGlobalBlockType($formMetadata);
+            if ($globalBlockType && \array_key_exists($globalBlockType, $globalBlocksMetadata)) {
+                $formMetadata = $globalBlocksMetadata[$globalBlockType];
+            }
+
             $contentViews[$key] = ContentView::create(
                 \array_merge(
                     ['type' => $type],
@@ -108,6 +113,16 @@ class BlockPropertyResolver implements PropertyResolverInterface
         }
 
         return ContentView::create($contentViews, [...$returnedParams]);
+    }
+
+    private function getGlobalBlockType(FormMetadata $formMetadata): ?string
+    {
+        $tag = $formMetadata->getTagsByName('sulu.global_block')[0] ?? null;
+
+        /** @var string|null $result */
+        $result = $tag?->getAttribute('global_block');
+
+        return $result;
     }
 
     public static function getType(): string

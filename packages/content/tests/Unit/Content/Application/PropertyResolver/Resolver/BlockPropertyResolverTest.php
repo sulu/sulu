@@ -21,6 +21,7 @@ use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadataLoaderInterface;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TagMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
 use Sulu\Content\Application\ContentResolver\Value\ContentView;
 use Sulu\Content\Application\MetadataResolver\MetadataResolver;
@@ -166,6 +167,12 @@ class BlockPropertyResolverTest extends TestCase
         $formMetadata = new FormMetadata();
         $formMetadata->setName('text_block');
         $formMetadata->setKey('text_block');
+        $tag = new TagMetadata();
+        $tag->setName('sulu.global_block');
+        $tag->setAttributes(['global_block' => 'text_block']);
+        $formMetadata->setTags([
+            $tag,
+        ]);
         $blockFieldMetadata = new FieldMetadata('text_block');
         $blockFieldMetadata->addType($formMetadata);
 
