@@ -51,8 +51,6 @@ class RouteRepository implements RouteRepositoryInterface
 
     /**
      * @param RouteFilter $filters
-     *
-     * @return QueryBuilder
      */
     protected function createQueryBuilder(array $filters): QueryBuilder
     {
