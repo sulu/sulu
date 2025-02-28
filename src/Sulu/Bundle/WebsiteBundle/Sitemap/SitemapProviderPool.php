@@ -59,15 +59,19 @@ class SitemapProviderPool implements SitemapProviderPoolInterface
 
     public function getIndex($scheme, $host)
     {
-        if ($this->index) {
-            return $this->index;
+        $key = $scheme . $host;
+
+        if (isset($this->index[$key])) {
+            return $this->index[$key];
         }
 
-        $this->index = [];
+        $indexes = [];
         foreach ($this->providers as $alias => $provider) {
-            $this->index[] = $provider->createSitemap($scheme, $host);
+            $indexes[] = $provider->createSitemap($scheme, $host);
         }
 
-        return $this->index;
+        $this->index[$key] = $indexes;
+
+        return $this->index[$key];
     }
 }
