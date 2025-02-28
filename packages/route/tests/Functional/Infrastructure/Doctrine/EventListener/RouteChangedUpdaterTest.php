@@ -46,6 +46,7 @@ class RouteChangedUpdaterTest extends KernelTestCase
         string $changeRoute,
         array $expectedRoutes,
     ): void {
+        /** @var RouteRepositoryInterface $repository */
         $repository = self::getContainer()->get(RouteRepositoryInterface::class);
         $entityManager = self::getContainer()->get(EntityManagerInterface::class);
 
@@ -76,6 +77,7 @@ class RouteChangedUpdaterTest extends KernelTestCase
         $entityManager->clear();
         $this->assertNotNull($firstRoute);
         $firstRoute = $entityManager->getReference(Route::class, $firstRoute->getId());
+        $this->assertNotNull($firstRoute);
         $firstRoute->setSlug($changeRoute);
         $entityManager->flush();
         $entityManager->clear();
@@ -222,7 +224,14 @@ class RouteChangedUpdaterTest extends KernelTestCase
         // yield 'heavy_load' => static::generateNestedRoutes('/rezepte', '/rezepte-neu', 10, 100_000);
     }
 
-    private static function generateNestedRoutes($baseSlug, $newSlug, $depth = 10, $totalUrls = 100000)
+    /**
+     * @return array{
+     *     routes: RouteData[],
+     *     changeRoute: string,
+     *     expectedRoutes: RouteData[],
+     * }
+     */
+    private static function generateNestedRoutes(string $baseSlug, string $newSlug, int $depth = 10, int $totalUrls = 100000): array // @phpstan-ignore-line method.unused
     {
         $routes = [];
         $expectedRoutes = [];
@@ -254,7 +263,7 @@ class RouteChangedUpdaterTest extends KernelTestCase
             // Only apply unique suffix if it is not the baseSlug
             $uniqueSlug = null === $node['uniqueSuffix'] ? $node['slug'] : $node['slug'] . '-' . $node['uniqueSuffix'];
             $routes[] = [
-                'resourceId' => $node['resourceId'],
+                'resourceId' => (string) $node['resourceId'],
                 'slug' => $uniqueSlug,
                 'parentSlug' => $node['parentSlug'],
             ];
@@ -262,7 +271,7 @@ class RouteChangedUpdaterTest extends KernelTestCase
             // Modify slug to expected new route
             $expectedSlug = \str_replace($baseSlug, $newSlug, $uniqueSlug);
             $expectedRoutes[] = [
-                'resourceId' => $node['resourceId'],
+                'resourceId' => (string) $node['resourceId'],
                 'slug' => $expectedSlug,
                 'parentSlug' => $node['parentSlug'] ? \str_replace($baseSlug, $newSlug, $node['parentSlug']) : null,
             ];
@@ -274,7 +283,7 @@ class RouteChangedUpdaterTest extends KernelTestCase
                     }
                     $childSlug = $node['slug'] . '/child-' . $i;
                     $queue[] = [
-                        'resourceId' => $resourceId++,
+                        'resourceId' => (string) ($resourceId++),
                         'slug' => $childSlug,
                         'parentSlug' => $uniqueSlug,
                         'depth' => $node['depth'] + 1,

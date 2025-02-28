@@ -45,13 +45,14 @@ class RouteRepository implements RouteRepositoryInterface
 
         // Hydrate Object is default, but we need to specify it here to make PHPStan happy:
         //     see: https://github.com/phpstan/phpstan-doctrine?tab=readme-ov-file#supported-methods
+        /** @var Route */
         return $queryBuilder->getQuery()->getOneOrNullResult(Query::HYDRATE_OBJECT);
     }
 
     /**
      * @param RouteFilter $filters
      *
-     * @return QueryBuilder<Route>
+     * @return QueryBuilder
      */
     protected function createQueryBuilder(array $filters): QueryBuilder
     {

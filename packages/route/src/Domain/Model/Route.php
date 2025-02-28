@@ -56,6 +56,8 @@ class Route
 
     public function getId(): int
     {
+        \assert(null !== $this->id, 'Do not access before persist and flush the entity to doctrine.');
+
         return $this->id;
     }
 

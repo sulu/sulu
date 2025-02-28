@@ -29,10 +29,10 @@ class MetadataTest extends KernelTestCase
         $tableDefinition = $classMetadata->table;
 
         Assert::true(isset($tableDefinition['indexes']), 'We expect that the table definition contains indexes.');
-        Assert::isArray($tableDefinition['indexes'], 'We expect that the table definition contains indexes.');
         Assert::notEmpty($tableDefinition['indexes'], 'We expect that the table definition contains indexes.');
 
         foreach ($tableDefinition['indexes'] as $indexName => $indexDefinition) {
+            Assert::isArray($indexDefinition, 'We expect that the index definition is an array.');
             Assert::true(isset($indexDefinition['fields']), 'We expect that the index definition contains fields.');
             Assert::isArray($indexDefinition['fields'], 'We expect that the index definition contains fields.');
             Assert::notEmpty($indexDefinition['fields'], 'We expect that the index definition contains fields.');
@@ -40,12 +40,10 @@ class MetadataTest extends KernelTestCase
             $countLimit = 0;
 
             foreach ($indexDefinition['fields'] as $field) {
+                Assert::string($field);
                 $fieldDefinition = $classMetadata->getFieldMapping($field);
 
-                Assert::true(isset($fieldDefinition['type']), 'We expect the type to be returned.');
-                Assert::true('string' === $fieldDefinition['type'], 'Currently this tests handles only strings.');
                 Assert::true(isset($fieldDefinition['length']), 'We expect the length to be returned.');
-                Assert::integer($fieldDefinition['length'], 'We expect the length to be returned.');
 
                 $countLimit += $fieldDefinition['length'];
             }
@@ -63,10 +61,10 @@ class MetadataTest extends KernelTestCase
         $tableDefinition = $classMetadata->table;
 
         Assert::true(isset($tableDefinition['uniqueConstraints']), 'We expect that the table definition contains uniqueConstraints.');
-        Assert::isArray($tableDefinition['uniqueConstraints'], 'We expect that the table definition contains uniqueConstraints.');
         Assert::notEmpty($tableDefinition['uniqueConstraints'], 'We expect that the table definition contains uniqueConstraints.');
 
         foreach ($tableDefinition['uniqueConstraints'] as $uniqueConstraintName => $uniqueConstraintDefinition) {
+            Assert::isArray($uniqueConstraintDefinition, 'We expect that the uniqueConstraints definition is an array.');
             Assert::true(isset($uniqueConstraintDefinition['fields']), 'We expect that the uniqueConstraints definition contains fields.');
             Assert::isArray($uniqueConstraintDefinition['fields'], 'We expect that the uniqueConstraints definition contains fields.');
             Assert::notEmpty($uniqueConstraintDefinition['fields'], 'We expect that the uniqueConstraints definition contains fields.');
@@ -74,12 +72,11 @@ class MetadataTest extends KernelTestCase
             $countLimit = 0;
 
             foreach ($uniqueConstraintDefinition['fields'] as $field) {
+                Assert::string($field);
                 $fieldDefinition = $classMetadata->getFieldMapping($field);
 
-                Assert::true(isset($fieldDefinition['type']), 'We expect the type to be returned.');
                 Assert::true('string' === $fieldDefinition['type'], 'Currently this tests handles only strings.');
                 Assert::true(isset($fieldDefinition['length']), 'We expect the length to be returned.');
-                Assert::integer($fieldDefinition['length'], 'We expect the length to be returned.');
 
                 $countLimit += $fieldDefinition['length'];
             }

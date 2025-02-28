@@ -37,7 +37,9 @@ class RouteChangedUpdater implements ResetInterface
             return;
         }
 
+        /** @var string $oldSlug */
         $oldSlug = $args->getOldValue('slug');
+        /** @var string $newSlug */
         $newSlug = $args->getNewValue('slug');
 
         if ($oldSlug === $newSlug) {
