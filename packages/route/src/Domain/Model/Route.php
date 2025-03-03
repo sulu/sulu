@@ -11,7 +11,7 @@
 
 namespace Sulu\Route\Domain\Model;
 
-class Route
+final class Route
 {
     private ?int $id = null;
 
@@ -44,9 +44,11 @@ class Route
         return $this;
     }
 
-    public function setParentRoute(?Route $parentRoute): void
+    public function setParentRoute(?Route $parentRoute): static
     {
         $this->parentRoute = $parentRoute;
+        
+        return $this;
     }
 
     public function getParentRoute(): ?Route

@@ -19,7 +19,7 @@ use Sulu\Route\Domain\Model\Route;
 use Sulu\Route\Domain\Repository\RouteRepositoryInterface;
 
 /**
- * @phpstan-import-type RouteFilter from \Sulu\Route\Domain\Repository\RouteRepositoryInterface
+ * @phpstan-import-type RouteFilter from RouteRepositoryInterface
  */
 class RouteRepository implements RouteRepositoryInterface
 {
