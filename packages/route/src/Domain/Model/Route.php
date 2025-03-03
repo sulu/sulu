@@ -11,7 +11,10 @@
 
 namespace Sulu\Route\Domain\Model;
 
-final class Route
+/**
+ * @final
+ */
+class Route
 {
     private ?int $id = null;
 
