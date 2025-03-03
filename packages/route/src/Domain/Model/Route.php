@@ -47,6 +47,7 @@ final class Route
     public function setParentRoute(?Route $parentRoute): static
     {
         $this->parentRoute = $parentRoute;
+
         return $this;
     }
 
