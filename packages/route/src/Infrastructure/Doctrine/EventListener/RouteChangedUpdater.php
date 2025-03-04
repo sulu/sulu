@@ -26,7 +26,7 @@ use Symfony\Contracts\Service\ResetInterface;
 class RouteChangedUpdater implements ResetInterface
 {
     /**
-     * @var array<int, array{oldValue: string, newValue: string, locale: string, site: string|null}>
+     * @var array<int, array{oldSlug: string, oldSite: string|null, route: Route}>
      */
     private array $routeChanges = [];
 
@@ -37,20 +37,27 @@ class RouteChangedUpdater implements ResetInterface
             return;
         }
 
-        /** @var string $oldSlug */
-        $oldSlug = $args->getOldValue('slug');
-        /** @var string $newSlug */
-        $newSlug = $args->getNewValue('slug');
 
-        if ($oldSlug === $newSlug) {
+        $oldSlug = $route->getSlug();
+        if ($args->hasChangedField('slug')) {
+            $oldSlug = $args->getOldValue('slug');
+            \assert(\is_string($oldSlug), 'Slug is expected to be always a string.');
+        }
+
+        $oldSite = $route->getSite();
+        if ($args->hasChangedField('site')) {
+            $oldSite = $args->getOldValue('site');
+            \assert(\is_string($oldSite) || \is_null($oldSite), 'Site is expected to be always a string or null.');
+        }
+
+        if ($oldSlug === $route->getSlug()) {
             return;
         }
 
         $this->routeChanges[$route->getId()] = [
-            'oldValue' => $oldSlug,
-            'newValue' => $newSlug,
-            'locale' => $route->getLocale(),
-            'site' => $route->getSite(),
+            'oldSlug' => $oldSlug,
+            'oldSite' => $oldSite,
+            'route' => $route,
         ];
     }
 
@@ -65,15 +72,21 @@ class RouteChangedUpdater implements ResetInterface
         $routesTableName = $args->getObjectManager()->getClassMetadata(Route::class)->getTableName();
 
         foreach ($this->routeChanges as $routeChange) {
-            $oldSlug = $routeChange['oldValue'];
-            $newSlug = $routeChange['newValue'];
-            $locale = $routeChange['locale'];
-            $site = $routeChange['site'];
+            $route = $routeChange['route'];
+            $oldSlug = $routeChange['oldSlug'];
+            $oldSite = $routeChange['oldSite'];
+            $newSlug = $route->getSlug();
+            $locale = $route->getLocale();
+            $site = $route->getSite();
 
             // select all child and grand routes of oldSlug
             $selectQueryBuilder = $connection->createQueryBuilder()
                 ->from($routesTableName, 'parent')
                 ->select('parent.id AS parent_id')
+                ->addSelect('child.site')
+                ->addSelect('child.slug')
+                ->addSelect('child.resource_key')
+                ->addSelect('child.resource_id')
                 ->innerJoin('parent', $routesTableName, 'child', 'child.parent_id = parent.id')
                 ->andWhere(\is_string($site) ? 'parent.site = :site' : 'parent.site IS NULL')
                 ->andWhere('parent.locale = :locale')
@@ -86,16 +99,58 @@ class RouteChangedUpdater implements ResetInterface
                 $selectQueryBuilder->setParameter('site', $site, ParameterType::STRING);
             }
 
-            $parentIds = \array_map(fn ($row) => $row[0], $selectQueryBuilder->executeQuery()->fetchAllNumeric());
+            /**
+             * @var array<int, array{
+             *     parent_id: int,
+             *     site: string|null,
+             *     slug: string,
+             *     resource_key: string,
+             *     resource_id: string,
+             * }> $childAndGrandChildResult
+             */
+            $childAndGrandChildResult = $selectQueryBuilder->executeQuery()->fetchAllAssociative();
+            $parentIds = [];
+            $childAndGrandChildHistoryUrls = [];
+            foreach ($childAndGrandChildResult as $childAndGrandChildRow) {
+                $parentIds[] = $childAndGrandChildRow['parent_id'];
+                $childAndGrandChildHistoryUrls[] = [
+                    'site' => $childAndGrandChildRow['site'],
+                    'locale' => $locale,
+                    'slug' => $childAndGrandChildRow['slug'],
+                    // TODO we currently handling history URLs as own
+                    'resourceKey' => Route::HISTORY_RESOURCE_KEY,
+                    'resourceId' => $childAndGrandChildRow['resource_key'] . '::' . $childAndGrandChildRow['resource_id'],
+                ];
+            }
+
             $parentIds = \array_filter($parentIds);
+            $parentIds = \array_unique($parentIds); // DISTINCT and GROUP BY is a lot slower as make it unique in PHP itself
+
+            // create route history for changed route
+            $historyInsertQueryBuilder = $connection->createQueryBuilder()->insert($routesTableName)
+                ->values([
+                    // history never has parents ad they never will be updated
+                    'site' => ':site',
+                    'locale' => ':locale',
+                    'slug' => ':slug',
+                    // TODO we currently handling history URLs as own
+                    'resource_key' => ':resourceKey',
+                    'resource_id' => ':resourceId',
+                ])
+                ->setParameters([
+                    'site' => $oldSite,
+                    'locale' => $locale,
+                    'slug' => $oldSlug,
+                    // TODO we currently handling history URLs as own
+                    'resourceKey' => Route::HISTORY_RESOURCE_KEY,
+                    'resourceId' => $route->getResourceKey() . '::' . $route->getResourceId(),
+                ]);
+
+            $historyInsertQueryBuilder->executeStatement();
 
             if (0 === \count($parentIds)) {
                 continue;
             }
-
-            $parentIds = \array_unique($parentIds); // DISTINCT and GROUP BY a lot slower as make it unique in PHP itself
-
-            // TODO create history for current ids
 
             $newSlugCast = '';
             if ($connection->getDatabasePlatform() instanceof PostgreSQLPlatform) {
@@ -111,6 +166,23 @@ class RouteChangedUpdater implements ResetInterface
                 ->setParameter('parentIds', $parentIds, ArrayParameterType::INTEGER);
 
             $updateQueryBuilder->executeStatement();
+
+            // create child and grand history routes
+            foreach ($childAndGrandChildHistoryUrls as $childAndGrandChildHistoryUrl) {
+                $historyInsertQueryBuilder = $connection->createQueryBuilder()->insert($routesTableName)
+                    ->values([
+                        // history never has parents as they never will be updated
+                        'site' => ':site',
+                        'locale' => ':locale',
+                        'slug' => ':slug',
+                        // TODO we currently handling history URLs as own
+                        'resource_key' => ':resourceKey',
+                        'resource_id' => ':resourceId',
+                    ])
+                    ->setParameters($childAndGrandChildHistoryUrl);
+
+                $historyInsertQueryBuilder->executeStatement();
+            }
         }
     }
 

@@ -29,7 +29,7 @@ class RouteChangedUpdaterTest extends KernelTestCase
     protected function setUp(): void
     {
         $entityManager = self::getContainer()->get(EntityManagerInterface::class);
-        $entityManager->getConnection()->executeStatement('DELETE FROM ro_routes WHERE 1 = 1');
+        $entityManager->getConnection()->executeStatement('DELETE FROM ro_next_routes WHERE 1 = 1');
 
         $schemaTool = new SchemaTool($entityManager);
         $classes = $entityManager->getMetadataFactory()->getAllMetadata();
@@ -108,6 +108,36 @@ class RouteChangedUpdaterTest extends KernelTestCase
             }
             if (0 === $count % 1000) {
                 \gc_collect_cycles();
+            }
+        }
+
+        $expectedHistoryRoutes = [];
+        foreach ($expectedRoutes as $expectedRoute) {
+            foreach ($routes as $route) {
+                if ($expectedRoute['resourceId'] === $route['resourceId']
+                    && $expectedRoute['slug'] !== $route['slug']
+                ) {
+                    $expectedHistoryRoutes[] = $route;
+                }
+            }
+        }
+
+        if (\count($expectedHistoryRoutes)) {
+            foreach ($expectedHistoryRoutes as $expectedHistoryRoute) {
+                $route = $repository->findOneBy([
+                    'locale' => 'en',
+                    'site' => 'website',
+                    'slug' => $expectedHistoryRoute['slug'],
+                ]);
+
+                $additionalErrorInfoMessage = \sprintf(
+                    'Expected route "%s" be a route history.',
+                    $expectedHistoryRoute['slug'],
+                );
+                $this->assertNotNull($route, $additionalErrorInfoMessage);
+
+                $this->assertSame(Route::HISTORY_RESOURCE_KEY, $route->getResourceKey(), $additionalErrorInfoMessage);
+                $this->assertSame('page::' . $expectedHistoryRoute['resourceId'], $route->getResourceId(), $additionalErrorInfoMessage);
             }
         }
     }

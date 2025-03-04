@@ -1,5 +1,3 @@
-sulu_route: {}
-
 framework:
     # symfony recipe default configuration:
     workflows: null
