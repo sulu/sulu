@@ -31781,11 +31781,6 @@ parameters:
 			path: src/Sulu/Bundle/WebsiteBundle/Routing/RequestListener.php
 
 		-
-			message: "#^Property Sulu\\\\Bundle\\\\WebsiteBundle\\\\Sitemap\\\\Sitemap\\:\\:\\$lastmod \\(DateTime\\) does not accept DateTime\\|null\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Sitemap/Sitemap.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\WebsiteBundle\\\\Sitemap\\\\SitemapContentQueryBuilder\\:\\:buildSelect\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/WebsiteBundle/Sitemap/SitemapContentQueryBuilder.php
@@ -32754,11 +32749,6 @@ parameters:
 			message: "#^Parameter \\#3 \\$userId of method Sulu\\\\Component\\\\Content\\\\ContentTypeInterface\\:\\:write\\(\\) expects int, null given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/WebsiteBundle/Tests/Unit/Sitemap/SitemapGeneratorTest.php
-
-		-
-			message: "#^Call to method PHPUnit\\\\Framework\\\\Assert\\:\\:assertNull\\(\\) with DateTime will always evaluate to false\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Tests/Unit/Sitemap/SitemapProviderPoolTest.php
 
 		-
 			message: "#^Class Sulu\\\\Bundle\\\\WebsiteBundle\\\\Sitemap\\\\XmlSitemapRenderer constructor invoked with 3 parameters, 2 required\\.$#"
