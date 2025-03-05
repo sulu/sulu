@@ -5,6 +5,8 @@
     <services>
         <service id="sulu_website.sitemap.pool" class="Sulu\Bundle\WebsiteBundle\Sitemap\SitemapProviderPool">
             <argument type="tagged" tag="sulu.sitemap.provider"/>
+
+            <tag name="kernel.reset" method="reset"/>
         </service>
 
         <service id="sulu_website.sitemap.xml_renderer" class="Sulu\Bundle\WebsiteBundle\Sitemap\XmlSitemapRenderer">

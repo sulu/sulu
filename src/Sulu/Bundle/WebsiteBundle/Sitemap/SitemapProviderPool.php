@@ -12,11 +12,12 @@
 namespace Sulu\Bundle\WebsiteBundle\Sitemap;
 
 use Sulu\Bundle\WebsiteBundle\Exception\SitemapProviderNotFoundException;
+use Symfony\Contracts\Service\ResetInterface;
 
 /**
  * Pool of all sitemap-providers.
  */
-class SitemapProviderPool implements SitemapProviderPoolInterface
+class SitemapProviderPool implements SitemapProviderPoolInterface, ResetInterface
 {
     /**
      * @var SitemapProviderInterface[]
@@ -70,8 +71,16 @@ class SitemapProviderPool implements SitemapProviderPoolInterface
             $sitemapsPerHost[] = $provider->createSitemap($scheme, $host);
         }
 
-        $this->sitemapsPerHost[$key] = $indexes;
+        $this->sitemapsPerHost[$key] = $sitemapsPerHost;
 
         return $this->sitemapsPerHost[$key];
+    }
+
+    /**
+     * @internal this method is for internal use only and should not be used by other classes
+     */
+    public function reset(): void
+    {
+        $this->sitemapsPerHost = [];
     }
 }
