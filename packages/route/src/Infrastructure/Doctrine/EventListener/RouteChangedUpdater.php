@@ -17,6 +17,8 @@ use Doctrine\DBAL\Platforms\PostgreSQLPlatform;
 use Doctrine\ORM\Event\OnClearEventArgs;
 use Doctrine\ORM\Event\PostFlushEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
+use Doctrine\ORM\Mapping\ClassMetadata;
+use Doctrine\Persistence\ObjectManager;
 use Sulu\Route\Domain\Model\Route;
 use Symfony\Contracts\Service\ResetInterface;
 
@@ -70,9 +72,11 @@ class RouteChangedUpdater implements ResetInterface
             return;
         }
 
-        $connection = $args->getObjectManager()->getConnection();
+        $objectManager = $args->getObjectManager();
+        $connection = $objectManager->getConnection();
 
-        $routesTableName = $args->getObjectManager()->getClassMetadata(Route::class)->getTableName();
+        $classMetadata = $objectManager->getClassMetadata(Route::class);
+        $routesTableName = $classMetadata->getTableName();
 
         foreach ($this->routeChanges as $routeChange) {
             $route = $routeChange['route'];
@@ -113,43 +117,32 @@ class RouteChangedUpdater implements ResetInterface
              */
             $childAndGrandChildResult = $selectQueryBuilder->executeQuery()->fetchAllAssociative();
             $parentIds = [];
-            $childAndGrandChildHistoryUrls = [];
+            $childAndGrandChildHistoryRoutes = [];
             foreach ($childAndGrandChildResult as $childAndGrandChildRow) {
                 $parentIds[] = $childAndGrandChildRow['parent_id'];
-                $childAndGrandChildHistoryUrls[] = [
-                    'site' => $childAndGrandChildRow['site'],
-                    'locale' => $locale,
-                    'slug' => $childAndGrandChildRow['slug'],
-                    // TODO we currently handling history URLs as own
-                    'resourceKey' => Route::HISTORY_RESOURCE_KEY,
-                    'resourceId' => $childAndGrandChildRow['resource_key'] . '::' . $childAndGrandChildRow['resource_id'],
-                ];
+                $childAndGrandChildHistoryRoutes[] = new Route(
+                    Route::HISTORY_RESOURCE_KEY,
+                    $childAndGrandChildRow['resource_key'] . '::' . $childAndGrandChildRow['resource_id'],
+                    $locale,
+                    $childAndGrandChildRow['slug'],
+                    $childAndGrandChildRow['site'],
+                    null, // history never has parents ad they never will be updated
+                );
             }
 
             $parentIds = \array_filter($parentIds);
             $parentIds = \array_unique($parentIds); // DISTINCT and GROUP BY is a lot slower as make it unique in PHP itself
 
-            // create route history for changed route
-            $historyInsertQueryBuilder = $connection->createQueryBuilder()->insert($routesTableName)
-                ->values([
-                    // history never has parents ad they never will be updated
-                    'site' => ':site',
-                    'locale' => ':locale',
-                    'slug' => ':slug',
-                    // TODO we currently handling history URLs as own
-                    'resource_key' => ':resourceKey',
-                    'resource_id' => ':resourceId',
-                ])
-                ->setParameters([
-                    'site' => $oldSite,
-                    'locale' => $locale,
-                    'slug' => $oldSlug,
-                    // TODO we currently handling history URLs as own
-                    'resourceKey' => Route::HISTORY_RESOURCE_KEY,
-                    'resourceId' => $route->getResourceKey() . '::' . $route->getResourceId(),
-                ]);
+            $historyRoute = new Route(
+                Route::HISTORY_RESOURCE_KEY,
+                $route->getResourceKey() . '::' . $route->getResourceId(),
+                $locale,
+                $oldSlug,
+                $oldSite,
+                null, // history never has parents ad they never will be updated
+            );
 
-            $historyInsertQueryBuilder->executeStatement();
+            $this->createHistoryRoute($objectManager, $classMetadata, $historyRoute);
 
             if (0 === \count($parentIds)) {
                 continue;
@@ -171,22 +164,41 @@ class RouteChangedUpdater implements ResetInterface
             $updateQueryBuilder->executeStatement();
 
             // create child and grand history routes
-            foreach ($childAndGrandChildHistoryUrls as $childAndGrandChildHistoryUrl) {
-                $historyInsertQueryBuilder = $connection->createQueryBuilder()->insert($routesTableName)
-                    ->values([
-                        // history never has parents as they never will be updated
-                        'site' => ':site',
-                        'locale' => ':locale',
-                        'slug' => ':slug',
-                        // TODO we currently handling history URLs as own
-                        'resource_key' => ':resourceKey',
-                        'resource_id' => ':resourceId',
-                    ])
-                    ->setParameters($childAndGrandChildHistoryUrl);
-
-                $historyInsertQueryBuilder->executeStatement();
+            foreach ($childAndGrandChildHistoryRoutes as $childAndGrandChildHistoryRoute) {
+                $this->createHistoryRoute($objectManager, $classMetadata, $childAndGrandChildHistoryRoute);
             }
         }
+    }
+
+    private function createHistoryRoute(ObjectManager $objectManager, ClassMetadata $classMetadata, Route $historyRoute): void
+    {
+        $connection = $objectManager->getConnection();
+        $routesTableName = $classMetadata->getTableName();
+
+        $historyInsertQueryBuilder = $connection->createQueryBuilder()->insert($routesTableName)
+            ->values([
+                $classMetadata->getColumnName('resourceKey') => ':resourceKey',
+                $classMetadata->getColumnName('resourceId') => ':resourceId',
+                $classMetadata->getColumnName('locale') => ':locale',
+                $classMetadata->getColumnName('slug') => ':slug',
+                $classMetadata->getColumnName('site') => ':site',
+            ])
+            ->setParameters([
+                'resourceKey' => $historyRoute->getResourceKey(),
+                'resourceId' => $historyRoute->getResourceId(),
+                'locale' => $historyRoute->getLocale(),
+                'slug' => $historyRoute->getSlug(),
+                'site' => $historyRoute->getSite(),
+            ]);
+
+        if (!$classMetadata->idGenerator->isPostInsertGenerator()) {
+            $historyInsertQueryBuilder->setValue(
+                $classMetadata->getColumnName('id'),
+                $classMetadata->idGenerator->generate($objectManager, $historyRoute)
+            );
+        }
+
+        $historyInsertQueryBuilder->executeStatement();
     }
 
     public function onClear(OnClearEventArgs $args): void
