@@ -16771,11 +16771,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Tests/Unit/Media/FormatManager/FormatManagerTest.php
 
 		-
-			message: "#^Parameter \\#4 \\$saveImage of class Sulu\\\\Bundle\\\\MediaBundle\\\\Media\\\\FormatManager\\\\FormatManager constructor expects string, true given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Unit/Media/FormatManager/FormatManagerTest.php
-
-		-
 			message: "#^Property Sulu\\\\Bundle\\\\MediaBundle\\\\Media\\\\FormatManager\\\\FormatManagerTest\\:\\:\\$formats type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Unit/Media/FormatManager/FormatManagerTest.php

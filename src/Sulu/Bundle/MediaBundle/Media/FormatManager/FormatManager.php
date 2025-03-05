@@ -89,7 +89,7 @@ class FormatManager implements FormatManagerInterface
             $info = \pathinfo($fileName);
 
             if (!isset($info['extension'])) {
-                throw new ImageProxyInvalidUrl('No `extension` was found in the url');
+                throw new ImageProxyInvalidUrl(\sprintf('No `extension` was found in the url "%s".', $fileName));
             }
 
             $imageFormat = $info['extension'];
@@ -97,7 +97,7 @@ class FormatManager implements FormatManagerInterface
             $media = $this->mediaRepository->findMediaByIdForRendering($id, $formatKey, $version);
 
             if (!$media) {
-                throw new ImageProxyMediaNotFoundException('Media was not found');
+                throw new ImageProxyMediaNotFoundException(\sprintf('Media with id "%s" was not found.', $id));
             }
 
             $fileVersion = $this->getLatestFileVersion($media);
@@ -108,13 +108,13 @@ class FormatManager implements FormatManagerInterface
             $requestedFileVersion = $file?->getFileVersion($version);
 
             if (!$requestedFileVersion) {
-                throw new ImageProxyMediaNotFoundException('Requested FileVersion for media was not found');
+                throw new ImageProxyMediaNotFoundException(\sprintf('Requested FileVersion "%s" for media with id "%s" was not found.', $version, $id));
             }
 
             $requestedFileVersionImageFormatName = $this->replaceExtension($requestedFileVersion->getName(), $imageFormat);
 
             if ($requestedFileVersionImageFormatName !== $fileName) {
-                throw new ImageProxyMediaNotFoundException('File version was not found');
+                throw new ImageProxyMediaNotFoundException(\sprintf('FileVersion "%s" for media with id "%s" was not found.', $requestedFileVersion->getVersion(), $id));
             }
 
             if ($fileVersion->getVersion() !== $requestedFileVersion->getVersion()) {
@@ -122,7 +122,7 @@ class FormatManager implements FormatManagerInterface
 
                 $formatUrl = $formats[$formatKey . '.' . $imageFormat] ?? null;
                 if (null === $formatUrl) {
-                    throw new ImageProxyMediaNotFoundException('Image format "' . $formatKey . '.' . $imageFormat . '" was not found');
+                    throw new ImageProxyMediaNotFoundException(\sprintf('Image format "%s.%s" was not found for media with id "%s".', $formatKey, $imageFormat, $id));
                 }
 
                 return new RedirectResponse($formatUrl, 301);
@@ -136,7 +136,7 @@ class FormatManager implements FormatManagerInterface
             if (!\in_array($imageFormat, $supportedImageFormats)) {
                 throw new ImageProxyInvalidImageFormat(
                     \sprintf(
-                        'Image format "%s" not supported. Supported image formats are: %s',
+                        'Image format "%s" is not supported. Supported image formats are: "%s"',
                         $imageFormat,
                         \implode(', ', $supportedImageFormats)
                     ));
