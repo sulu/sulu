@@ -73,7 +73,8 @@ final class PageController
             parameters: ['locale' => $locale],
             parentId: $parentId,
             expandedIds: $expandedIds,
-            includedFields: ['locale', 'ghostLocale', 'webspaceKey', 'template']
+            includedFields: ['locale', 'ghostLocale', 'webspaceKey', 'template'],
+            listKey: 'pages_next'
         );
 
         return new JsonResponse($this->normalizer->normalize(
