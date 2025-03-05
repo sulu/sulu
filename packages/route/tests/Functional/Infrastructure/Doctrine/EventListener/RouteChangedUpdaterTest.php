@@ -39,7 +39,7 @@ class RouteChangedUpdaterTest extends KernelTestCase
     protected function tearDown(): void
     {
         $entityManager = self::getContainer()->get(EntityManagerInterface::class);
-        $entityManager->getConnection()->executeStatement('DELETE FROM ro_routes WHERE 1 = 1');
+        $entityManager->getConnection()->executeStatement('DELETE FROM ro_next_routes WHERE 1 = 1');
 
         parent::tearDown();
     }
