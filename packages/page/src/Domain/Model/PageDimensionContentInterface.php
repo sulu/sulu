@@ -29,4 +29,20 @@ use Sulu\Content\Domain\Model\WorkflowInterface;
 interface PageDimensionContentInterface extends DimensionContentInterface, ExcerptInterface, SeoInterface, TemplateInterface, RoutableInterface, WorkflowInterface, ShadowInterface, WebspaceInterface, AuthorInterface
 {
     public function getTitle(): ?string;
+
+    /**
+     * @return string[]
+     */
+    public function getNavigationContexts(): array;
+
+    /**
+     * @param string[] $navigationContexts
+     */
+    public function setNavigationContexts(array $navigationContexts): self;
+
+    public function addNavigationContext(string $navigationContext): self;
+
+    public function removeNavigationContext(string $navigationContext): self;
+
+    public function hasNavigationContext(string $navigationContext): bool;
 }

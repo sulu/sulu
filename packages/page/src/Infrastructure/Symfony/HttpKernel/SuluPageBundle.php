@@ -18,8 +18,10 @@ use Sulu\Bundle\PersistenceBundle\PersistenceBundleTrait;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStore;
 use Sulu\Content\Infrastructure\Sulu\Preview\ContentObjectProvider;
 use Sulu\Content\Infrastructure\Sulu\Search\ContentSearchMetadataProvider;
+use Sulu\Page\Application\DataMapper\NavigationContextDataMapper;
 use Sulu\Page\Application\Mapper\PageContentMapper;
 use Sulu\Page\Application\Mapper\PageMapperInterface;
+use Sulu\Page\Application\Merger\NavigationContextMerger;
 use Sulu\Page\Application\MessageHandler\ApplyWorkflowTransitionPageMessageHandler;
 use Sulu\Page\Application\MessageHandler\CopyLocalePageMessageHandler;
 use Sulu\Page\Application\MessageHandler\CreatePageMessageHandler;
@@ -164,6 +166,16 @@ final class SuluPageBundle extends AbstractBundle
                 new Reference('sulu_content.content_persister'),
             ])
             ->tag('sulu_page.page_mapper');
+
+        // DataMapper service
+        $services->set('sulu_page.navigation_context_data_mapper')
+            ->class(NavigationContextDataMapper::class)
+            ->tag('sulu_content.data_mapper');
+
+        // Merger service
+        $services->set('sulu_page.navigation_context_merger')
+            ->class(NavigationContextMerger::class)
+            ->tag('sulu_content.merger');
 
         // Normalizer service
         $services->set('sulu_page.page_normalizer')
@@ -333,7 +345,7 @@ final class SuluPageBundle extends AbstractBundle
                     ],
                     'forms' => [
                         'directories' => [
-                            // \dirname(__DIR__, 4) . '/config/forms',
+                            \dirname(__DIR__, 4) . '/config/forms',
                         ],
                     ],
                     'resources' => [

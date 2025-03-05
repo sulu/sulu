@@ -17,5 +17,17 @@
                 <join-column name="pageUuid" referenced-column-name="uuid" on-delete="CASCADE" nullable="false"/>
             </join-columns>
         </many-to-one>
+
+        <one-to-many
+            field="navigationContexts"
+            target-entity="Sulu\Page\Domain\Model\PageDimensionContentNavigationContext"
+            mapped-by="pageDimensionContent"
+            orphan-removal="true"
+        >
+            <cascade>
+                <cascade-persist/>
+                <cascade-remove/>
+            </cascade>
+        </one-to-many>
     </mapped-superclass>
 </doctrine-mapping>
