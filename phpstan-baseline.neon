@@ -241,18 +241,6 @@ parameters:
 			path: src/Sulu/Bundle/ActivityBundle/Domain/Repository/NullActivityRepository.php
 
 		-
-			message: '#^Cannot call method generate\(\) on Doctrine\\ORM\\Id\\AbstractIdGenerator\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Bundle/ActivityBundle/Infrastructure/Doctrine/Repository/ActivityRepository.php
-
-		-
-			message: '#^Cannot call method isPostInsertGenerator\(\) on Doctrine\\ORM\\Id\\AbstractIdGenerator\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Bundle/ActivityBundle/Infrastructure/Doctrine/Repository/ActivityRepository.php
-
-		-
 			message: '#^Parameter \#2 \$value of method Doctrine\\DBAL\\Query\\QueryBuilder\:\:setValue\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1

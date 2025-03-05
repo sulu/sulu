@@ -14,11 +14,11 @@ namespace Sulu\Route\Infrastructure\Doctrine\EventListener;
 use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\ParameterType;
 use Doctrine\DBAL\Platforms\PostgreSQLPlatform;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Event\OnClearEventArgs;
 use Doctrine\ORM\Event\PostFlushEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\ORM\Mapping\ClassMetadata;
-use Doctrine\Persistence\ObjectManager;
 use Sulu\Route\Domain\Model\Route;
 use Symfony\Contracts\Service\ResetInterface;
 
@@ -170,7 +170,10 @@ class RouteChangedUpdater implements ResetInterface
         }
     }
 
-    private function createHistoryRoute(ObjectManager $objectManager, ClassMetadata $classMetadata, Route $historyRoute): void
+    /**
+     * @param ClassMetadata<Route> $classMetadata
+     */
+    private function createHistoryRoute(EntityManagerInterface $objectManager, ClassMetadata $classMetadata, Route $historyRoute): void
     {
         $connection = $objectManager->getConnection();
         $routesTableName = $classMetadata->getTableName();
@@ -191,10 +194,13 @@ class RouteChangedUpdater implements ResetInterface
                 'site' => $historyRoute->getSite(),
             ]);
 
-        if (!$classMetadata->idGenerator->isPostInsertGenerator()) {
+        if (
+            null !== $classMetadata->idGenerator
+            && !$classMetadata->idGenerator->isPostInsertGenerator()
+        ) {
             $historyInsertQueryBuilder->setValue(
                 $classMetadata->getColumnName('id'),
-                $classMetadata->idGenerator->generate($objectManager, $historyRoute)
+                $classMetadata->idGenerator->generateId($objectManager, $historyRoute), // @phpstan-ignore-line argument.type // not really sure to return a integer id as a string so currently keep the id as int
             );
         }
 
