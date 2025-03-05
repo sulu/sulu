@@ -21,7 +21,7 @@ use Sulu\Route\Infrastructure\Doctrine\EventListener\RouteChangedUpdater;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 /**
- * @phpstan-type RouteData array{resourceId: string, locale?: string, slug: string, site?: string|null, parentSlug?: string|null}
+ * @phpstan-type RouteData array{resourceId: string, locale?: string, slug: string, site?: string|null, parentSlug?: string|null, parentSite?: string|null}
  */
 #[CoversClass(RouteChangedUpdater::class)]
 class RouteChangedUpdaterTest extends KernelTestCase
@@ -53,6 +53,7 @@ class RouteChangedUpdaterTest extends KernelTestCase
         array $routes,
         string $changeRoute,
         array $expectedRoutes,
+        int $expectedChangedRoutes,
     ): void {
         /** @var RouteRepositoryInterface $repository */
         $repository = self::getContainer()->get(RouteRepositoryInterface::class);
@@ -64,7 +65,7 @@ class RouteChangedUpdaterTest extends KernelTestCase
         foreach ($routes as $routeData) {
             $route = $this->createRoute($routeData);
             $uniqueKey = ($route->getSite() ?? '') . $route->getLocale() . $route->getSlug();
-            $parentUniqueKey = ($route->getSite() ?? '') . $route->getLocale() . ($routeData['parentSlug'] ?? '');
+            $parentUniqueKey = ($routeData['parentSite'] ?? $route->getSite() ?? '') . $route->getLocale() . ($routeData['parentSlug'] ?? '');
             $parentRoute = $createdRoutes[$parentUniqueKey] ?? null;
 
             $route->setParentRoute($parentRoute);
@@ -122,31 +123,30 @@ class RouteChangedUpdaterTest extends KernelTestCase
             foreach ($routes as $route) {
                 if ($expectedRoute['resourceId'] === $route['resourceId']
                     && $expectedRoute['slug'] !== $route['slug']
-                    && ($expectedRoute['locale'] ?? 'en') !== ($route['locale'] ?? 'en')
-                    && ($expectedRoute['site'] ?? null) !== ($route['site'] ?? null)
+                    && ($expectedRoute['locale'] ?? 'en') === ($route['locale'] ?? 'en')
+                    && ($expectedRoute['site'] ?? null) === ($route['site'] ?? null)
                 ) {
                     $expectedHistoryRoutes[] = $route;
                 }
             }
         }
 
-        if (\count($expectedHistoryRoutes)) {
-            foreach ($expectedHistoryRoutes as $expectedHistoryRoute) {
-                $route = $repository->findOneBy([
-                    'locale' => $expectedHistoryRoute['locale'] ?? 'en',
-                    'site' => $expectedHistoryRoute['site'] ?? null,
-                    'slug' => $expectedHistoryRoute['slug'],
-                ]);
+        $this->assertCount($expectedChangedRoutes, $expectedHistoryRoutes);
+        foreach ($expectedHistoryRoutes as $expectedHistoryRoute) {
+            $route = $repository->findOneBy([
+                'locale' => $expectedHistoryRoute['locale'] ?? 'en',
+                'site' => $expectedHistoryRoute['site'] ?? null,
+                'slug' => $expectedHistoryRoute['slug'],
+            ]);
 
-                $additionalErrorInfoMessage = \sprintf(
-                    'Expected route "%s" be a route history.',
-                    $expectedHistoryRoute['slug'],
-                );
-                $this->assertNotNull($route, $additionalErrorInfoMessage);
+            $additionalErrorInfoMessage = \sprintf(
+                'Expected route "%s" be a route history.',
+                $expectedHistoryRoute['slug'],
+            );
+            $this->assertNotNull($route, $additionalErrorInfoMessage);
 
-                $this->assertSame(Route::HISTORY_RESOURCE_KEY, $route->getResourceKey(), $additionalErrorInfoMessage);
-                $this->assertSame('page::' . $expectedHistoryRoute['resourceId'], $route->getResourceId(), $additionalErrorInfoMessage);
-            }
+            $this->assertSame(Route::HISTORY_RESOURCE_KEY, $route->getResourceKey(), $additionalErrorInfoMessage);
+            $this->assertSame('page::' . $expectedHistoryRoute['resourceId'], $route->getResourceId(), $additionalErrorInfoMessage);
         }
     }
 
@@ -173,6 +173,7 @@ class RouteChangedUpdaterTest extends KernelTestCase
                     'slug' => '/test-article',
                 ],
             ],
+            'expectedChangedRoutes' => 1,
         ];
 
         yield 'direct_childs_update' => [
@@ -209,6 +210,7 @@ class RouteChangedUpdaterTest extends KernelTestCase
                     'parentSlug' => '/test-article',
                 ],
             ],
+            'expectedChangedRoutes' => 3,
         ];
 
         yield 'nested_childs_update' => [
@@ -265,6 +267,7 @@ class RouteChangedUpdaterTest extends KernelTestCase
                     'parentSlug' => '/test-article/child-b',
                 ],
             ],
+            'expectedChangedRoutes' => 5,
         ];
 
         yield 'nested_childs_update_multiple_locales' => [
@@ -379,6 +382,7 @@ class RouteChangedUpdaterTest extends KernelTestCase
                     'parentSlug' => '/test/child-b',
                 ],
             ],
+            'expectedChangedRoutes' => 5,
         ];
 
         yield 'nested_childs_update_multiple_sites' => [
@@ -503,6 +507,91 @@ class RouteChangedUpdaterTest extends KernelTestCase
                     'parentSlug' => '/test/child-b',
                 ],
             ],
+            'expectedChangedRoutes' => 5,
+        ];
+
+        yield 'cross_site_parents' => [
+            'routes' => [
+                [
+                    'resourceId' => '1',
+                    'slug' => '/test',
+                    'site' => 'website',
+                ],
+                [
+                    'resourceId' => '2',
+                    'slug' => '/test/child-a',
+                    'site' => 'website',
+                    'parentSlug' => '/test',
+                    'parentSite' => 'website',
+                ],
+                [
+                    'resourceId' => '3',
+                    'slug' => '/test/something-else/child-a',
+                    'site' => null,
+                    'parentSlug' => '/test',
+                    'parentSite' => 'website',
+                ],
+                [
+                    'resourceId' => '4',
+                    'slug' => '/test/something-else/child-b',
+                    'site' => null,
+                    'parentSlug' => '/test',
+                    'parentSite' => 'website',
+                ],
+                [
+                    'resourceId' => '10',
+                    'slug' => '/test-2',
+                    'site' => 'website',
+                ],
+                [
+                    'resourceId' => '11',
+                    'slug' => '/test-2/something-else/child-a',
+                    'site' => null,
+                    'parentSlug' => '/test-2',
+                    'parentSite' => 'website',
+                ],
+            ],
+            'changeRoute' => '/test-article',
+            'expectedRoutes' => [
+                [
+                    'resourceId' => '1',
+                    'slug' => '/test-article',
+                    'site' => 'website',
+                ],
+                [
+                    'resourceId' => '2',
+                    'slug' => '/test-article/child-a',
+                    'site' => 'website',
+                    'parentSlug' => '/test-article',
+                ],
+                [
+                    'resourceId' => '3',
+                    'slug' => '/test-article/something-else/child-a',
+                    'site' => null,
+                    'parentSlug' => '/test-article',
+                    'parentSite' => 'website',
+                ],
+                [
+                    'resourceId' => '4',
+                    'slug' => '/test-article/something-else/child-b',
+                    'site' => null,
+                    'parentSlug' => '/test-article',
+                    'parentSite' => 'website',
+                ],
+                [
+                    'resourceId' => '10',
+                    'slug' => '/test-2',
+                    'site' => 'website',
+                ],
+                [
+                    'resourceId' => '11',
+                    'slug' => '/test-2/something-else/child-a',
+                    'site' => null,
+                    'parentSlug' => '/test-2',
+                    'parentSite' => 'website',
+                ],
+            ],
+            'expectedChangedRoutes' => 4,
         ];
 
         // yield 'heavy_load' => static::generateNestedRoutes('/rezepte', '/rezepte-neu', 10, 100_000);
