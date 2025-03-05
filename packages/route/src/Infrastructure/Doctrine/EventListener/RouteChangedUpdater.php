@@ -98,6 +98,7 @@ class RouteChangedUpdater implements ResetInterface
                 ->andWhere(\is_string($site) ? 'parent.site = :site' : 'parent.site IS NULL')
                 ->andWhere('parent.locale = :locale')
                 ->andWhere('(parent.slug = :newSlug OR parent.slug LIKE :oldSlugSlash)') // direct child is using newSlug already updated as we are in PostFlush, grand child use oldSlugWithSlash as not yet updated
+                ->andWhere('(child.slug LIKE :oldSlugSlash)') // ignore disconnected child routes in case of full tree edit
                 ->setParameter('newSlug', $newSlug, ParameterType::STRING)
                 ->setParameter('oldSlugSlash', $oldSlug . '/%', ParameterType::STRING)
                 ->setParameter('locale', $locale, ParameterType::STRING);
@@ -115,7 +116,7 @@ class RouteChangedUpdater implements ResetInterface
              *     resource_id: string,
              * }> $childAndGrandChildResult
              */
-            $childAndGrandChildResult = $selectQueryBuilder->executeQuery()->fetchAllAssociative();
+            $childAndGrandChildResult = $selectQueryBuilder->executeQuery()->iterateAssociative();
             $parentIds = [];
             $childAndGrandChildHistoryRoutes = [];
             foreach ($childAndGrandChildResult as $childAndGrandChildRow) {
@@ -126,7 +127,7 @@ class RouteChangedUpdater implements ResetInterface
                     $locale,
                     $childAndGrandChildRow['slug'],
                     $childAndGrandChildRow['site'],
-                    null, // history never has parents ad they never will be updated
+                    null, // history never has parents as they never will be updated
                 );
             }
 
@@ -159,6 +160,8 @@ class RouteChangedUpdater implements ResetInterface
                 ->set('slug', 'CONCAT(:newSlug' . $newSlugCast . ', SUBSTRING(slug, ' . (\strlen($oldSlug) + 1) . '))')
                 ->setParameter('newSlug', $newSlug, ParameterType::STRING)
                 ->where('parent_id IN (:parentIds)')
+                ->andWhere('slug LIKE :oldSlugSlash') // ignore disconnected child routes in case of full tree edit
+                ->setParameter('oldSlugSlash', $oldSlug . '/%', ParameterType::STRING)
                 ->setParameter('parentIds', $parentIds, ArrayParameterType::INTEGER);
 
             $updateQueryBuilder->executeStatement();

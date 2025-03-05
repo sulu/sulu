@@ -42,6 +42,34 @@ class RouteTest extends TestCase
         $this->assertSame('/test2', $route->getSlug());
     }
 
+    public function testGetParentRoute(): void
+    {
+        $parentRoute = $this->createModel(slug: '/test');
+        $route = $this->createModel(slug: '/test/child', parentRoute: $parentRoute);
+
+        $this->assertSame($parentRoute, $route->getParentRoute());
+    }
+
+    public function testSetSlugViaLeafEdit(): void
+    {
+        $parentRoute = $this->createModel(slug: '/test');
+        $route = $this->createModel(slug: '/test/child', parentRoute: $parentRoute);
+
+        $route->setSlug('/test/child-2');
+        $this->assertSame('/test/child-2', $route->getSlug());
+        $this->assertSame($parentRoute, $route->getParentRoute());
+    }
+
+    public function testSetSlugViaFullTreeEdit(): void
+    {
+        $parentRoute = $this->createModel(slug: '/test');
+        $route = $this->createModel(slug: '/test/child', parentRoute: $parentRoute);
+
+        $route->setSlug('/test2');
+        $this->assertSame('/test2', $route->getSlug());
+        $this->assertSame($parentRoute, $route->getParentRoute(), 'We keep connection to parent route for easier opt-in later.');
+    }
+
     public function createModel(
         string $resourceKey = 'resource',
         string $resourceId = '1',

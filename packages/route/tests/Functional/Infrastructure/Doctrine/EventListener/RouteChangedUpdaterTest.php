@@ -15,6 +15,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\SchemaTool;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
+use Sulu\Bundle\TestBundle\Testing\SetGetPrivatePropertyTrait;
 use Sulu\Route\Domain\Model\Route;
 use Sulu\Route\Domain\Repository\RouteRepositoryInterface;
 use Sulu\Route\Infrastructure\Doctrine\EventListener\RouteChangedUpdater;
@@ -26,7 +27,9 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 #[CoversClass(RouteChangedUpdater::class)]
 class RouteChangedUpdaterTest extends KernelTestCase
 {
-    protected function setUp(): void
+    use SetGetPrivatePropertyTrait;
+
+    public static function setUpBeforeClass(): void
     {
         $entityManager = self::getContainer()->get(EntityManagerInterface::class);
         $entityManager->getConnection()->executeStatement('DELETE FROM ro_next_routes WHERE 1 = 1');
@@ -34,14 +37,24 @@ class RouteChangedUpdaterTest extends KernelTestCase
         $schemaTool = new SchemaTool($entityManager);
         $classes = $entityManager->getMetadataFactory()->getAllMetadata();
         $schemaTool->updateSchema($classes, false);
+
+        self::ensureKernelShutdown();
     }
 
-    protected function tearDown(): void
+    public static function tearDownAfterClass(): void
     {
         $entityManager = self::getContainer()->get(EntityManagerInterface::class);
         $entityManager->getConnection()->executeStatement('DELETE FROM ro_next_routes WHERE 1 = 1');
 
-        parent::tearDown();
+        parent::tearDownAfterClass();
+    }
+
+    protected function setUp(): void
+    {
+        $entityManager = self::getContainer()->get(EntityManagerInterface::class);
+        $entityManager->getConnection()->executeStatement('DELETE FROM ro_next_routes WHERE 1 = 1');
+
+        self::ensureKernelShutdown();
     }
 
     /**
@@ -53,7 +66,7 @@ class RouteChangedUpdaterTest extends KernelTestCase
         array $routes,
         string $changeRoute,
         array $expectedRoutes,
-        int $expectedChangedRoutes,
+        ?int $expectedChangedRoutes,
     ): void {
         /** @var RouteRepositoryInterface $repository */
         $repository = self::getContainer()->get(RouteRepositoryInterface::class);
@@ -62,11 +75,23 @@ class RouteChangedUpdaterTest extends KernelTestCase
         $firstRoute = null;
         $createdRoutes = [];
         $count = 0;
+        $postParentRouteSetter = [];
         foreach ($routes as $routeData) {
             $route = $this->createRoute($routeData);
             $uniqueKey = ($route->getSite() ?? '') . $route->getLocale() . $route->getSlug();
-            $parentUniqueKey = ($routeData['parentSite'] ?? $route->getSite() ?? '') . $route->getLocale() . ($routeData['parentSlug'] ?? '');
-            $parentRoute = $createdRoutes[$parentUniqueKey] ?? null;
+            $parentRoute = null;
+            if (isset($routeData['parentSlug'])) {
+                $parentUniqueKey = ($routeData['parentSite'] ?? $route->getSite() ?? '') . $route->getLocale() . $routeData['parentSlug'];
+                $parentRoute = $createdRoutes[$parentUniqueKey] ?? null;
+                if (null === $parentRoute) { // if parent route was not yet created we set it later see $postParentRouteSetter foreach below
+                    $postParentRouteSetter[$parentUniqueKey][] = $route;
+                }
+            }
+
+            foreach ($postParentRouteSetter[$uniqueKey] ?? [] as $childRoute) {
+                static::setPrivateProperty($childRoute, 'parentRoute', $route);
+                unset($postParentRouteSetter[$uniqueKey]);
+            }
 
             $route->setParentRoute($parentRoute);
             $repository->add($route);
@@ -82,8 +107,11 @@ class RouteChangedUpdaterTest extends KernelTestCase
             }
         }
 
+        $this->assertCount(0, $postParentRouteSetter, 'All post parent route setters should have been called, this is a error in the lines above or the fixtures not in tested class itself.');
+
         $entityManager->flush();
         $entityManager->clear();
+
         $this->assertNotNull($firstRoute);
         $firstRoute = $entityManager->getReference(Route::class, $firstRoute->getId());
         $this->assertNotNull($firstRoute);
@@ -131,7 +159,9 @@ class RouteChangedUpdaterTest extends KernelTestCase
             }
         }
 
-        $this->assertCount($expectedChangedRoutes, $expectedHistoryRoutes);
+        if (null !== $expectedChangedRoutes) {
+            $this->assertCount($expectedChangedRoutes, $expectedHistoryRoutes);
+        }
         foreach ($expectedHistoryRoutes as $expectedHistoryRoute) {
             $route = $repository->findOneBy([
                 'locale' => $expectedHistoryRoute['locale'] ?? 'en',
@@ -639,6 +669,199 @@ class RouteChangedUpdaterTest extends KernelTestCase
             'expectedChangedRoutes' => 4,
         ];
 
+        yield 'tree_full_edit_last_part_changes_keep_parent' => [
+            'routes' => [
+                [
+                    'resourceId' => '2',
+                    'slug' => '/test/child-a',
+                    'site' => 'website',
+                    'parentSlug' => '/test',
+                    'parentSite' => 'website',
+                ],
+                [
+                    'resourceId' => '1',
+                    'slug' => '/test',
+                    'site' => 'website',
+                ],
+            ],
+            'changeRoute' => '/test/child-a-edit',
+            'expectedRoutes' => [
+                [
+                    'resourceId' => '2',
+                    'slug' => '/test/child-a-edit',
+                    'site' => 'website',
+                    'parentSlug' => '/test',
+                    'parentSite' => 'website',
+                ],
+                [
+                    'resourceId' => '1',
+                    'slug' => '/test',
+                    'site' => 'website',
+                ],
+            ],
+            'expectedChangedRoutes' => 1,
+        ];
+
+        yield 'tree_full_edit_change_whole_url_remove_parent' => [
+            'routes' => [
+                [
+                    'resourceId' => '2',
+                    'slug' => '/test/child-a',
+                    'site' => 'website',
+                    'parentSlug' => '/test',
+                    'parentSite' => 'website',
+                ],
+                [
+                    'resourceId' => '1',
+                    'slug' => '/test',
+                    'site' => 'website',
+                ],
+            ],
+            'changeRoute' => '/test-child-a',
+            'expectedRoutes' => [
+                [
+                    'resourceId' => '2',
+                    'slug' => '/test-child-a',
+                    'site' => 'website',
+                    'parentSlug' => '/test',
+                    'parentSite' => 'website',
+                ],
+                [
+                    'resourceId' => '1',
+                    'slug' => '/test',
+                    'site' => 'website',
+                ],
+            ],
+            'expectedChangedRoutes' => 1,
+        ];
+
+        yield 'tree_full_edit_still_connected_unrelated_child_not_updated' => [
+            'routes' => [
+                [
+                    'resourceId' => '1',
+                    'slug' => '/test',
+                    'site' => 'website',
+                ],
+                [
+                    'resourceId' => '2',
+                    'slug' => '/test-child-a',
+                    'site' => 'website',
+                    'parentSlug' => '/test',
+                    'parentSite' => 'website',
+                ],
+                [
+                    'resourceId' => '3',
+                    'slug' => '/test/child-b',
+                    'site' => 'website',
+                    'parentSlug' => '/test',
+                    'parentSite' => 'website',
+                ],
+            ],
+            'changeRoute' => '/test-article',
+            'expectedRoutes' => [
+                [
+                    'resourceId' => '1',
+                    'slug' => '/test-article',
+                    'site' => 'website',
+                ],
+                [
+                    'resourceId' => '2',
+                    'slug' => '/test-child-a',
+                    'site' => 'website',
+                    'parentSlug' => '/test-article',
+                    'parentSite' => 'website',
+                ],
+                [
+                    'resourceId' => '3',
+                    'slug' => '/test-article/child-b',
+                    'site' => 'website',
+                    'parentSlug' => '/test-article',
+                    'parentSite' => 'website',
+                ],
+            ],
+            'expectedChangedRoutes' => 2,
+        ];
+
+        yield 'tree_full_edit_disconnected_unrelated_child_not_updated' => [
+            'routes' => [
+                [
+                    'resourceId' => '1',
+                    'slug' => '/test',
+                    'site' => 'website',
+                ],
+                [
+                    'resourceId' => '2',
+                    'slug' => '/test/child-a',
+                    'site' => 'website',
+                    'parentSlug' => null,
+                    'parentSite' => null,
+                ],
+            ],
+            'changeRoute' => '/test-article',
+            'expectedRoutes' => [
+                [
+                    'resourceId' => '1',
+                    'slug' => '/test-article',
+                    'site' => 'website',
+                ],
+                [
+                    'resourceId' => '2',
+                    'slug' => '/test/child-a',
+                    'site' => 'website',
+                    'parentSlug' => null,
+                    'parentSite' => null,
+                ],
+            ],
+            'expectedChangedRoutes' => 1,
+        ];
+
+        yield 'tree_full_edit_update_child_not_directly_connected' => [
+            'routes' => [
+                [
+                    'resourceId' => '1',
+                    'slug' => '/test',
+                    'site' => 'website',
+                ],
+                [
+                    'resourceId' => '2',
+                    'slug' => '/test/child-a',
+                    'site' => 'website',
+                    'parentSlug' => '/test',
+                    'parentSite' => 'website',
+                ],
+                [
+                    'resourceId' => '3',
+                    'slug' => '/test/grand-child-1', // this was before "/test/child-a/grand-child-1"
+                    'site' => 'website',
+                    'parentSlug' => '/test/child-a', // and so still child of "/test-child-a"
+                    'parentSite' => 'website',
+                ],
+            ],
+            'changeRoute' => '/test-article',
+            'expectedRoutes' => [
+                [
+                    'resourceId' => '1',
+                    'slug' => '/test-article',
+                    'site' => 'website',
+                ],
+                [
+                    'resourceId' => '2',
+                    'slug' => '/test-article/child-a',
+                    'site' => 'website',
+                    'parentSlug' => '/test-article',
+                    'parentSite' => 'website',
+                ],
+                [
+                    'resourceId' => '3',
+                    'slug' => '/test-article/grand-child-1',
+                    'site' => 'website',
+                    'parentSlug' => '/test-article/child-a',
+                    'parentSite' => 'website',
+                ],
+            ],
+            'expectedChangedRoutes' => 3,
+        ];
+
         // yield 'heavy_load' => static::generateNestedRoutes('/rezepte', '/rezepte-neu', 10, 100_000);
     }
 
@@ -715,6 +938,7 @@ class RouteChangedUpdaterTest extends KernelTestCase
             'routes' => $routes,
             'changeRoute' => $newSlug,
             'expectedRoutes' => $expectedRoutes,
+            'expectedChangedRoutes' => null,
         ];
     }
 
