@@ -176,6 +176,51 @@ class RouteChangedUpdaterTest extends KernelTestCase
             'expectedChangedRoutes' => 1,
         ];
 
+        yield 'not_effect_same_level_with_same_starting' => [
+            'routes' => [
+                [
+                    'resourceId' => '1',
+                    'slug' => '/test',
+                    'locale' => 'en',
+                    'site' => 'website',
+                ],
+                [
+                    'resourceId' => '2',
+                    'slug' => '/test-2',
+                    'locale' => 'en',
+                    'site' => 'website',
+                ],
+                [
+                    'resourceId' => '3',
+                    'slug' => '/test-2/child-a',
+                    'locale' => 'en',
+                    'site' => 'website',
+                ],
+            ],
+            'changeRoute' => '/test-article',
+            'expectedRoutes' => [
+                [
+                    'resourceId' => '1',
+                    'slug' => '/test-article',
+                    'locale' => 'en',
+                    'site' => 'website',
+                ],
+                [
+                    'resourceId' => '2',
+                    'slug' => '/test-2',
+                    'locale' => 'en',
+                    'site' => 'website',
+                ],
+                [
+                    'resourceId' => '3',
+                    'slug' => '/test-2/child-a',
+                    'locale' => 'en',
+                    'site' => 'website',
+                ],
+            ],
+            'expectedChangedRoutes' => 1,
+        ];
+
         yield 'direct_childs_update' => [
             'routes' => [
                 [
