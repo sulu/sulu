@@ -33756,11 +33756,6 @@ parameters:
 			path: src/Sulu/Component/Content/Compat/Block/BlockPropertyWrapper.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Compat\\\\Block\\\\BlockPropertyWrapper\\:\\:getBlock\\(\\) should return Sulu\\\\Component\\\\Content\\\\Compat\\\\Block\\\\BlockPropertyInterface but returns Sulu\\\\Component\\\\Content\\\\Compat\\\\PropertyInterface\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Compat/Block/BlockPropertyWrapper.php
-
-		-
 			message: "#^Method Sulu\\\\Component\\\\Content\\\\Compat\\\\Block\\\\BlockPropertyWrapper\\:\\:getParams\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Compat/Block/BlockPropertyWrapper.php
