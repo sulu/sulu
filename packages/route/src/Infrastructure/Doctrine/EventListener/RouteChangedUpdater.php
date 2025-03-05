@@ -25,9 +25,9 @@ use Symfony\Contracts\Service\ResetInterface;
 /**
  * @internal No BC promises are given for this class. It may be changed or removed at any time.
  *
- * This is kind of a complex mechanic here and "Test Driven Development" is recommended way to do any changes here.
- * Reporting a bug inside the following logic please provide a failing test case. Easiest way in most use cases is
- * to adopt the existing `RouteChangedUpdaterTest::provideRoutes` test data provider.
+ * This is a complex mechanism, and "Test Driven Development" is the recommended way to implement any changes here.
+ * When reporting a bug in the following logic, please provide a failing test case. The easiest way in most use cases 
+ * is to adopt the existing `RouteChangedUpdaterTest::provideRoutes` test data provider.
  */
 class RouteChangedUpdater implements ResetInterface
 {
