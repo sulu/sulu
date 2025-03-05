@@ -21,10 +21,12 @@ use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Media\FormatCache\FormatCacheInterface;
 use Sulu\Bundle\MediaBundle\Media\ImageConverter\ImageConverterInterface;
+use Sulu\Bundle\TestBundle\Testing\SetGetPrivatePropertyTrait;
 use Symfony\Component\ErrorHandler\BufferingLogger;
 
 class FormatManagerTest extends TestCase
 {
+    use SetGetPrivatePropertyTrait;
     use ProphecyTrait;
 
     /**
@@ -115,10 +117,7 @@ class FormatManagerTest extends TestCase
     public function testReturnImage(): void
     {
         $media = new Media();
-        $reflection = new \ReflectionClass(\get_class($media));
-        $property = $reflection->getProperty('id');
-        $property->setAccessible(true);
-        $property->setValue($media, 1);
+        $this->setPrivateProperty($media, 'id', 1);
 
         $file = new File();
         $file->setVersion(1);
@@ -156,10 +155,7 @@ class FormatManagerTest extends TestCase
     public function testReturnImageWithVideo(): void
     {
         $media = new Media();
-        $reflection = new \ReflectionClass(\get_class($media));
-        $property = $reflection->getProperty('id');
-        $property->setAccessible(true);
-        $property->setValue($media, 1);
+        $this->setPrivateProperty($media, 'id', 1);
 
         $file = new File();
         $file->setVersion(1);
@@ -202,10 +198,7 @@ class FormatManagerTest extends TestCase
     public function testReturnNewFileVersion(): void
     {
         $media = new Media();
-        $reflection = new \ReflectionClass(\get_class($media));
-        $property = $reflection->getProperty('id');
-        $property->setAccessible(true);
-        $property->setValue($media, 1);
+        $this->setPrivateProperty($media, 'id', 1);
 
         $file = new File();
         $file->setVersion(2);
@@ -243,10 +236,7 @@ class FormatManagerTest extends TestCase
     public function testReturn404NoFileNameMatch(): void
     {
         $media = new Media();
-        $reflection = new \ReflectionClass(\get_class($media));
-        $property = $reflection->getProperty('id');
-        $property->setAccessible(true);
-        $property->setValue($media, 1);
+        $this->setPrivateProperty($media, 'id', 1);
 
         $file = new File();
         $file->setVersion(1);
@@ -270,15 +260,17 @@ class FormatManagerTest extends TestCase
         $result = $this->formatManager->returnImage(1, '640x480', 'other.gif', 1);
 
         $this->assertSame(404, $result->getStatusCode());
+        $logs = $this->logger->cleanLogs();
+        $this->assertCount(1, $logs);
+        $this->assertIsArray($logs[0]);
+        $this->assertArrayHasKey(1, $logs[0]);
+        $this->assertSame('FileVersion "1" for media with id "1" was not found.', $logs[0][1]);
     }
 
     public function testReturnNewFileVersionWebp(): void
     {
         $media = new Media();
-        $reflection = new \ReflectionClass(\get_class($media));
-        $property = $reflection->getProperty('id');
-        $property->setAccessible(true);
-        $property->setValue($media, 1);
+        $this->setPrivateProperty($media, 'id', 1);
 
         $file = new File();
         $file->setVersion(2);
@@ -456,10 +448,7 @@ class FormatManagerTest extends TestCase
     public function testFileVersionNotFound(): void
     {
         $media = new Media();
-        $reflection = new \ReflectionClass(\get_class($media));
-        $property = $reflection->getProperty('id');
-        $property->setAccessible(true);
-        $property->setValue($media, 1);
+        $this->setPrivateProperty($media, 'id', 1);
 
         $file = new File();
         $file->setVersion(1);
@@ -488,10 +477,7 @@ class FormatManagerTest extends TestCase
     public function testFileVersionNameNotFound(): void
     {
         $media = new Media();
-        $reflection = new \ReflectionClass(\get_class($media));
-        $property = $reflection->getProperty('id');
-        $property->setAccessible(true);
-        $property->setValue($media, 1);
+        $this->setPrivateProperty($media, 'id', 1);
 
         $file = new File();
         $file->setVersion(1);
@@ -520,10 +506,7 @@ class FormatManagerTest extends TestCase
     public function testImageFormatNotFound(): void
     {
         $media = new Media();
-        $reflection = new \ReflectionClass(\get_class($media));
-        $property = $reflection->getProperty('id');
-        $property->setAccessible(true);
-        $property->setValue($media, 1);
+        $this->setPrivateProperty($media, 'id', 1);
 
         $file = new File();
         $file->setVersion(1);
@@ -561,10 +544,7 @@ class FormatManagerTest extends TestCase
     public function testImageFormatNotSupported(): void
     {
         $media = new Media();
-        $reflection = new \ReflectionClass(\get_class($media));
-        $property = $reflection->getProperty('id');
-        $property->setAccessible(true);
-        $property->setValue($media, 1);
+        $this->setPrivateProperty($media, 'id', 1);
 
         $file = new File();
         $file->setVersion(1);
