@@ -609,4 +609,10 @@ class FormatManagerTest extends TestCase
 
         $this->formatManager->purge(1, 'test.JPG', 'image/jpeg', null);
     }
+
+    protected function tearDown(): void
+    {
+        $this->logger->cleanLogs();
+        parent::tearDown();
+    }
 }
