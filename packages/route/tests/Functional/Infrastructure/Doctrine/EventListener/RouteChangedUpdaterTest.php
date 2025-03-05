@@ -95,9 +95,15 @@ class RouteChangedUpdaterTest extends KernelTestCase
                 'resourceKey' => 'page',
                 'resourceId' => $expectedRoute['resourceId'],
                 'locale' => $expectedRoute['locale'] ?? 'en',
-                'site' =>  $expectedRoute['site'] ?? null,
+                'site' => $expectedRoute['site'] ?? null,
             ]);
-            $this->assertNotNull($route);
+
+            $this->assertNotNull($route, \sprintf(
+                'Expected route with resourceId "%s", locale "%s" and site "%s" not found.',
+                $expectedRoute['resourceId'],
+                $expectedRoute['locale'] ?? 'en',
+                $expectedRoute['site'] ?? 'NULL',
+            ));
 
             $this->assertSame($expectedRoute['slug'], $route->getSlug());
             $this->assertSame($expectedRoute['parentSlug'] ?? null, $route->getParentRoute()?->getSlug());
@@ -370,6 +376,130 @@ class RouteChangedUpdaterTest extends KernelTestCase
                     'resourceId' => '5',
                     'slug' => '/test/child-b/grand-child-b',
                     'locale' => 'de',
+                    'parentSlug' => '/test/child-b',
+                ],
+            ],
+        ];
+
+        yield 'nested_childs_update_multiple_sites' => [
+            'routes' => [
+                [
+                    'resourceId' => '1',
+                    'slug' => '/test',
+                    'site' => 'website',
+                ],
+                [
+                    'resourceId' => '2',
+                    'slug' => '/test/child-a',
+                    'site' => 'website',
+                    'parentSlug' => '/test',
+                ],
+                [
+                    'resourceId' => '3',
+                    'slug' => '/test/child-b',
+                    'site' => 'website',
+                    'parentSlug' => '/test',
+                ],
+                [
+                    'resourceId' => '4',
+                    'slug' => '/test/child-b/grand-child-a',
+                    'site' => 'website',
+                    'parentSlug' => '/test/child-b',
+                ],
+                [
+                    'resourceId' => '5',
+                    'slug' => '/test/child-b/grand-child-b',
+                    'site' => 'website',
+                    'parentSlug' => '/test/child-b',
+                ],
+                [
+                    'resourceId' => '1',
+                    'slug' => '/test',
+                    'site' => 'intranet',
+                ],
+                [
+                    'resourceId' => '2',
+                    'slug' => '/test/child-a',
+                    'site' => 'intranet',
+                    'parentSlug' => '/test',
+                ],
+                [
+                    'resourceId' => '3',
+                    'slug' => '/test/child-b',
+                    'site' => 'intranet',
+                    'parentSlug' => '/test',
+                ],
+                [
+                    'resourceId' => '4',
+                    'slug' => '/test/child-b/grand-child-a',
+                    'site' => 'intranet',
+                    'parentSlug' => '/test/child-b',
+                ],
+                [
+                    'resourceId' => '5',
+                    'slug' => '/test/child-b/grand-child-b',
+                    'site' => 'intranet',
+                    'parentSlug' => '/test/child-b',
+                ],
+            ],
+            'changeRoute' => '/test-article',
+            'expectedRoutes' => [
+                [
+                    'resourceId' => '1',
+                    'slug' => '/test-article',
+                    'site' => 'website',
+                ],
+                [
+                    'resourceId' => '2',
+                    'slug' => '/test-article/child-a',
+                    'site' => 'website',
+                    'parentSlug' => '/test-article',
+                ],
+                [
+                    'resourceId' => '3',
+                    'slug' => '/test-article/child-b',
+                    'site' => 'website',
+                    'parentSlug' => '/test-article',
+                ],
+                [
+                    'resourceId' => '4',
+                    'slug' => '/test-article/child-b/grand-child-a',
+                    'site' => 'website',
+                    'parentSlug' => '/test-article/child-b',
+                ],
+                [
+                    'resourceId' => '5',
+                    'slug' => '/test-article/child-b/grand-child-b',
+                    'site' => 'website',
+                    'parentSlug' => '/test-article/child-b',
+                ],
+                [
+                    'resourceId' => '1',
+                    'slug' => '/test',
+                    'site' => 'intranet',
+                ],
+                [
+                    'resourceId' => '2',
+                    'slug' => '/test/child-a',
+                    'site' => 'intranet',
+                    'parentSlug' => '/test',
+                ],
+                [
+                    'resourceId' => '3',
+                    'slug' => '/test/child-b',
+                    'site' => 'intranet',
+                    'parentSlug' => '/test',
+                ],
+                [
+                    'resourceId' => '4',
+                    'slug' => '/test/child-b/grand-child-a',
+                    'site' => 'intranet',
+                    'parentSlug' => '/test/child-b',
+                ],
+                [
+                    'resourceId' => '5',
+                    'slug' => '/test/child-b/grand-child-b',
+                    'site' => 'intranet',
                     'parentSlug' => '/test/child-b',
                 ],
             ],
