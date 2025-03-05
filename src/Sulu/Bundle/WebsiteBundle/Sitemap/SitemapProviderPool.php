@@ -24,9 +24,9 @@ class SitemapProviderPool implements SitemapProviderPoolInterface
     private $providers;
 
     /**
-     * @var Sitemap[]
+     * @var array<string, Sitemap[]>
      */
-    private $index;
+    private $sitemapsPerHost;
 
     /**
      * @param SitemapProviderInterface[] $providers
@@ -61,17 +61,17 @@ class SitemapProviderPool implements SitemapProviderPoolInterface
     {
         $key = $scheme . $host;
 
-        if (isset($this->index[$key])) {
-            return $this->index[$key];
+        if (isset($this->sitemapsPerHost[$key])) {
+            return $this->sitemapsPerHost[$key];
         }
 
-        $indexes = [];
+        $sitemapsPerHost = [];
         foreach ($this->providers as $alias => $provider) {
-            $indexes[] = $provider->createSitemap($scheme, $host);
+            $sitemapsPerHost[] = $provider->createSitemap($scheme, $host);
         }
 
-        $this->index[$key] = $indexes;
+        $this->sitemapsPerHost[$key] = $indexes;
 
-        return $this->index[$key];
+        return $this->sitemapsPerHost[$key];
     }
 }
