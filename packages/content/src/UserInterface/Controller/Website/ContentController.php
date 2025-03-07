@@ -23,8 +23,21 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotAcceptableHttpException;
 
 /**
- * TODO this controller will later replace the DefaultController of the WebsiteBundle
- *      and should be base for all content controllers.
+ * It is common to extend this controller if you need to load additional data for a specific template. Inside the
+ * `resolveSuluParameters` method you have access to all managed content and can extend it with additional parameters.
+ *
+ *      <code>
+ *      class ExampleContentController extends ContentController
+ *      {
+ *          protected function resolveSuluParameters(DimensionContentInterface $object, bool $normalize): array
+ *          {
+ *              $parameters = parent::resolveSuluParameters($object, $normalize);
+ *              $parameters['custom_key'] = 'custom_variable'; // add whatever you want to add here
+ *
+ *              return $parameters;
+ *          }
+ *      }
+ *      </code>
  *
  * @template T of DimensionContentInterface
  */
@@ -45,6 +58,8 @@ class ContentController extends AbstractController
         $parameters = $this->resolveSuluParameters($object, 'json' === $requestFormat);
 
         if ('json' === $requestFormat) {
+            $parameters = []; // TODO normalize for JSON response here or inside the resolver already, no headless support yet
+
             $response = new JsonResponse($parameters);
         } else {
             $response = new Response($this->renderSuluView($view, $requestFormat, $parameters, $preview, $partial));
@@ -65,11 +80,7 @@ class ContentController extends AbstractController
      */
     protected function resolveSuluParameters(DimensionContentInterface $object, bool $normalize): array
     {
-        if (false === $normalize) {
-            return $this->container->get('sulu_content.content_resolver')->resolve($object);
-        }
-
-        return []; // TODO normalize JSON response
+        return $this->container->get('sulu_content.content_resolver')->resolve($object); // TODO should the resolver already normalize the data based on metadata inside the template (serialization group)
     }
 
     /**
