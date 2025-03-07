@@ -120,6 +120,7 @@ class PageControllerTest extends SuluTestCase
                     'author' => null,
                     'authored' => '2020-05-08T00:00:00+00:00',
                     'mainWebspace' => 'sulu-io',
+                    'navigationContexts' => ['main'],
                 ]
             ) ?: null);
 
