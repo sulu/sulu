@@ -12586,11 +12586,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Api/Media.php
 
 		-
-			message: "#^Call to an undefined method object\\:\\:getCreated\\(\\)\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Api/Media.php
-
-		-
 			message: "#^Call to an undefined method object\\:\\:getFiles\\(\\)\\.$#"
 			count: 2
 			path: src/Sulu/Bundle/MediaBundle/Api/Media.php
@@ -20391,11 +20386,6 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Search/EventSubscriber/BlameTimestampSubscriber.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Search\\\\EventSubscriber\\\\BlameTimestampSubscriber\\:\\:mapTimestamp\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Search/EventSubscriber/BlameTimestampSubscriber.php
-
-		-
 			message: "#^Parameter \\#1 \\$document of method Sulu\\\\Bundle\\\\PageBundle\\\\Search\\\\EventSubscriber\\\\BlameTimestampSubscriber\\:\\:mapCreatorAndChanger\\(\\) expects Sulu\\\\Bundle\\\\SearchBundle\\\\Search\\\\Document, Massive\\\\Bundle\\\\SearchBundle\\\\Search\\\\Document given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Search/EventSubscriber/BlameTimestampSubscriber.php
@@ -25661,17 +25651,7 @@ parameters:
 			path: src/Sulu/Bundle/SearchBundle/Tests/Resources/TestBundle/Entity/Product.php
 
 		-
-			message: "#^Property Sulu\\\\Bundle\\\\SearchBundle\\\\Tests\\\\Resources\\\\TestBundle\\\\Entity\\\\Product\\:\\:\\$changed has no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SearchBundle/Tests/Resources/TestBundle/Entity/Product.php
-
-		-
 			message: "#^Property Sulu\\\\Bundle\\\\SearchBundle\\\\Tests\\\\Resources\\\\TestBundle\\\\Entity\\\\Product\\:\\:\\$changer has no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SearchBundle/Tests/Resources/TestBundle/Entity/Product.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\SearchBundle\\\\Tests\\\\Resources\\\\TestBundle\\\\Entity\\\\Product\\:\\:\\$created has no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SearchBundle/Tests/Resources/TestBundle/Entity/Product.php
 
@@ -43754,31 +43734,6 @@ parameters:
 			message: "#^Method Sulu\\\\Component\\\\Hash\\\\Serializer\\\\Subscriber\\\\HashSerializeEventSubscriber\\:\\:onPostSerialize\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/Hash/Serializer/Subscriber/HashSerializeEventSubscriber.php
-
-		-
-			message: "#^Call to an undefined method DateTime\\:\\:willReturn\\(\\)\\.$#"
-			count: 4
-			path: src/Sulu/Component/Hash/Tests/AuditableHasherTest.php
-
-		-
-			message: "#^Call to an undefined method Sulu\\\\Component\\\\Persistence\\\\Model\\\\AuditableInterface\\:\\:reveal\\(\\)\\.$#"
-			count: 5
-			path: src/Sulu/Component/Hash/Tests/AuditableHasherTest.php
-
-		-
-			message: "#^Call to an undefined method Sulu\\\\Component\\\\Security\\\\Authentication\\\\UserInterface\\:\\:reveal\\(\\)\\.$#"
-			count: 3
-			path: src/Sulu/Component/Hash/Tests/AuditableHasherTest.php
-
-		-
-			message: "#^Cannot call method willReturn\\(\\) on Sulu\\\\Component\\\\Security\\\\Authentication\\\\UserInterface\\|null\\.$#"
-			count: 4
-			path: src/Sulu/Component/Hash/Tests/AuditableHasherTest.php
-
-		-
-			message: "#^Cannot call method willReturn\\(\\) on int\\.$#"
-			count: 3
-			path: src/Sulu/Component/Hash/Tests/AuditableHasherTest.php
 
 		-
 			message: "#^Method Sulu\\\\Component\\\\Hash\\\\Tests\\\\AuditableHasherTest\\:\\:provideDifferentObjects\\(\\) has no return type specified\\.$#"
