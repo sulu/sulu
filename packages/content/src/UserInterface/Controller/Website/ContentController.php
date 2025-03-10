@@ -23,8 +23,11 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotAcceptableHttpException;
 
 /**
- * It is common to extend this controller if you need to load additional data for a specific template. Inside the
- * `resolveSuluParameters` method you have access to all managed content and can extend it with additional parameters.
+ * This controller is commonly extended when additional data needs to be loaded for a specific template. 
+ * The `resolveSuluParameters` method provides access to all managed content, allowing you to extend 
+ * it with additional parameters.
+ *
+ * Example usage:
  *
  *      <code>
  *      class ExampleContentController extends ContentController
