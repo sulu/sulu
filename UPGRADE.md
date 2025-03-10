@@ -3,10 +3,16 @@
 ## 3.0.0
 
 ### Removing deprecated twig functions
-- `sulu_meta_alternate` (use `sulu_seo` instead)
-- `sulu_meta_seo` (use `sulu_seo` instead)
+- `sulu_meta_alternate` (use the SEO template instead `@SuluWebsite/Extension/seo.html.twig`)
+- `sulu_meta_seo` (use the SEO template instead `@SuluWebsite/Extension/seo.html.twig`)
+- `sulu_seo` (use the SEO template instead `@SuluWebsite/Extension/seo.html.twig`)
 
-This also includes the container services: `sulu_website.twig.meta` and the parameter `%sulu_website.twig.meta.class%`
+This also includes the container services:
+- `sulu_website.twig.meta`
+- `sulu_website.twig.seo`
+and the parameters
+- `%sulu_website.twig.meta.class%`
+- `%sulu_website.twig.seo.class%`
 
 ### Changed Media Format HTTP Response Headers
 
