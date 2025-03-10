@@ -23,8 +23,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotAcceptableHttpException;
 
 /**
- * This controller is commonly extended when additional data needs to be loaded for a specific template. 
- * The `resolveSuluParameters` method provides access to all managed content, allowing you to extend 
+ * This controller is commonly extended when additional data needs to be loaded for a specific template.
+ * The `resolveSuluParameters` method provides access to all managed content, allowing you to extend
  * it with additional parameters.
  *
  * Example usage:
