@@ -26,6 +26,7 @@ use Sulu\Bundle\RouteBundle\Generator\ChainRouteGeneratorInterface;
 use Sulu\Bundle\RouteBundle\Manager\ConflictResolverInterface;
 use Sulu\Bundle\RouteBundle\Model\RouteInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
+use Sulu\Component\Content\Metadata\PropertyMetadata;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\DocumentRegistry;
 use Sulu\Component\Route\Document\Behavior\RoutableBehavior;
@@ -422,5 +423,66 @@ class PageTreeRouteContentTypeTest extends TestCase
         $this->property->getValue()->willReturn($value);
 
         $this->assertEquals($value, $this->contentType->getViewData($this->property->reveal()));
+    }
+
+    public function testMapPropertyMetadata(): void
+    {
+        $propertyMetadata = new PropertyMetadata();
+        $propertyMetadata->setName('property-name');
+
+        $jsonSchema = $this->contentType->mapPropertyMetadata($propertyMetadata)->toJsonSchema();
+
+        $this->assertEquals([
+            'anyOf' => [
+                [
+                    'type' => 'null',
+                ],
+                [
+                    'type' => 'object',
+                    'properties' => [
+                        'page' => [
+                            'anyOf' => [
+                                ['type' => 'null'],
+                                [
+                                    'type' => 'object',
+                                    'properties' => [
+                                        'uuid' => ['type' => 'string'],
+                                        'path' => ['type' => 'string'],
+                                    ],
+                                ],
+                            ],
+                        ],
+                        'path' => ['type' => 'string'],
+                        'suffix' => ['type' => 'string'],
+                    ],
+                ],
+            ],
+        ], $jsonSchema);
+    }
+
+    public function testMapPropertyMetadataRequired(): void
+    {
+        $propertyMetadata = new PropertyMetadata();
+        $propertyMetadata->setName('property-name');
+        $propertyMetadata->setRequired(true);
+
+        $jsonSchema = $this->contentType->mapPropertyMetadata($propertyMetadata)->toJsonSchema();
+
+        $this->assertEquals([
+            'type' => 'object',
+            'properties' => [
+                'page' => [
+                    'type' => 'object',
+                    'properties' => [
+                        'uuid' => ['type' => 'string'],
+                        'path' => ['type' => 'string'],
+                    ],
+                    'required' => ['uuid', 'path'],
+                ],
+                'path' => ['type' => 'string'],
+                'suffix' => ['type' => 'string'],
+            ],
+            'required' => ['page', 'path'],
+        ], $jsonSchema);
     }
 }

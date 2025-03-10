@@ -15,11 +15,18 @@ use Doctrine\ORM\EntityManagerInterface;
 use PHPCR\ItemNotFoundException;
 use PHPCR\NodeInterface;
 use PHPCR\PropertyType;
+use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\AnyOfsMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\NullMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\ObjectMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadataMapperInterface;
+use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\StringMetadata;
 use Sulu\Bundle\RouteBundle\Entity\Route;
 use Sulu\Bundle\RouteBundle\Entity\RouteRepositoryInterface;
 use Sulu\Bundle\RouteBundle\Generator\ChainRouteGeneratorInterface;
 use Sulu\Bundle\RouteBundle\Manager\ConflictResolverInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
+use Sulu\Component\Content\Metadata\PropertyMetadata as ContentPropertyMetadata;
 use Sulu\Component\Content\SimpleContentType;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\DocumentRegistry;
@@ -27,7 +34,7 @@ use Sulu\Component\DocumentManager\DocumentRegistry;
 /**
  * Provides page_tree_route content-type.
  */
-class PageTreeRouteContentType extends SimpleContentType
+class PageTreeRouteContentType extends SimpleContentType implements PropertyMetadataMapperInterface
 {
     public const NAME = 'page_tree_route';
 
@@ -214,5 +221,37 @@ class PageTreeRouteContentType extends SimpleContentType
     private function getRouteRepository(): RouteRepositoryInterface
     {
         return $this->entityManager->getRepository(Route::class);
+    }
+
+    public function mapPropertyMetadata(ContentPropertyMetadata $propertyMetadata): PropertyMetadata
+    {
+        $mandatory = $propertyMetadata->isRequired();
+
+        $pageMetadata = new ObjectMetadata([
+            new PropertyMetadata('uuid', $mandatory, new StringMetadata()),
+            new PropertyMetadata('path', $mandatory, new StringMetadata()),
+        ]);
+
+        if (!$mandatory) {
+            $pageMetadata = new AnyOfsMetadata([
+                new NullMetadata(),
+                $pageMetadata,
+            ]);
+        }
+
+        $pageTreeRouteMetadata = new ObjectMetadata([
+            new PropertyMetadata('page', $mandatory, $pageMetadata),
+            new PropertyMetadata('path', $mandatory, new StringMetadata()),
+            new PropertyMetadata('suffix', false, new StringMetadata()),
+        ]);
+
+        if (!$mandatory) {
+            $pageTreeRouteMetadata = new AnyOfsMetadata([
+                new NullMetadata(),
+                $pageTreeRouteMetadata,
+            ]);
+        }
+
+        return new PropertyMetadata((string) $propertyMetadata->getName(), $mandatory, $pageTreeRouteMetadata);
     }
 }
