@@ -51,7 +51,8 @@
         height: 200px;
     }
 
-    :global(.ck.ck-editor .ck.ck-content) {
+    :global(.ck.ck-editor .ck.ck-content),
+    :global(.ck.ck-editor .ck.ck-content.ck-focused) {
         height: 199px;
     }
 
