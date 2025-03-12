@@ -28,7 +28,6 @@ use Sulu\Page\Application\MessageHandler\CreatePageMessageHandler;
 use Sulu\Page\Application\MessageHandler\ModifyPageMessageHandler;
 use Sulu\Page\Application\MessageHandler\OrderPageMessageHandler;
 use Sulu\Page\Application\MessageHandler\RemovePageMessageHandler;
-use Sulu\Page\Application\Normalizer\PageNormalizer;
 use Sulu\Page\Domain\Model\Page;
 use Sulu\Page\Domain\Model\PageDimensionContent;
 use Sulu\Page\Domain\Model\PageDimensionContentInterface;
@@ -176,11 +175,6 @@ final class SuluPageBundle extends AbstractBundle
         $services->set('sulu_page.navigation_context_merger')
             ->class(NavigationContextMerger::class)
             ->tag('sulu_content.merger');
-
-        // Normalizer service
-        $services->set('sulu_page.page_normalizer')
-            ->class(PageNormalizer::class)
-            ->tag('sulu_content.normalizer');
 
         // Property Resolver services
         $services->set('sulu_page.page_selection_property_resolver')

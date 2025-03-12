@@ -23,7 +23,6 @@ use Sulu\Content\Domain\Model\RoutableTrait;
 use Sulu\Content\Domain\Model\SeoTrait;
 use Sulu\Content\Domain\Model\ShadowTrait;
 use Sulu\Content\Domain\Model\TemplateTrait;
-use Sulu\Content\Domain\Model\WebspaceTrait;
 use Sulu\Content\Domain\Model\WorkflowTrait;
 
 /**
@@ -40,7 +39,6 @@ class PageDimensionContent implements PageDimensionContentInterface
     use TemplateTrait {
         setTemplateData as parentSetTemplateData;
     }
-    use WebspaceTrait;
     use WorkflowTrait;
 
     protected int $id;
