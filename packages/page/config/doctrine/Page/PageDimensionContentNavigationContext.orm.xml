@@ -6,15 +6,18 @@
         name="Sulu\Page\Domain\Model\PageDimensionContentNavigationContext"
         table="pa_page_dimension_content_navigation_contexts"
     >
-        <id name="navigationContext" type="string" column="navigation_context" length="64" />
-        <id name="pageDimensionContent" association-key="true" />
+        <id name="id" type="integer" column="id">
+            <generator strategy="AUTO"/>
+        </id>
+
+        <field name="navigationContext" type="string" column="name" length="64" />
 
         <many-to-one field="pageDimensionContent" target-entity="Sulu\Page\Domain\Model\PageDimensionContent" inversed-by="navigationContexts">
             <join-column name="page_dimension_content_id" referenced-column-name="id" on-delete="CASCADE" nullable="false" />
         </many-to-one>
 
         <indexes>
-            <index name="idx_navigationContext" columns="navigation_context"/>
+            <index name="idx_page_navigation_context" fields="navigationContext"/>
         </indexes>
     </entity>
 </doctrine-mapping>
