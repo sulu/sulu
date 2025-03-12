@@ -55,4 +55,9 @@ readonly class TemplateResolver implements ResolverInterface
             []
         );
     }
+
+    public function supports(DimensionContentInterface $dimensionContent): bool
+    {
+        return $dimensionContent instanceof TemplateInterface;
+    }
 }

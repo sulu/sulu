@@ -30,9 +30,12 @@ class SnippetResourceLoader implements ResourceLoaderInterface
     ) {
     }
 
+    /**
+     * @param string[] $ids
+     */
     public function load(array $ids, ?string $locale, array $params = []): array
     {
-        $result = $this->snippetRepository->findBy(['id' => $ids]);
+        $result = $this->snippetRepository->findBy(['uuids' => $ids]);
 
         $mappedResult = [];
         foreach ($result as $snippet) {

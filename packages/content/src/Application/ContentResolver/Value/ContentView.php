@@ -38,21 +38,37 @@ class ContentView
     /**
      * @param mixed[] $view
      */
-    public static function createResolvable(string|int $id, string $resourceLoaderKey, array $view, ?\Closure $closure = null): self
+    public static function createResolvable(string|int $id, string $resourceLoaderKey, array $view, int $priority = 0, ?\Closure $closure = null): self
     {
-        return new self(new ResolvableResource($id, $resourceLoaderKey, $closure), $view);
+        return new self(
+            new ResolvableResource(
+                id: $id,
+                resourceLoaderKey: $resourceLoaderKey,
+                priority: $priority,
+                resourceCallback: $closure
+            ),
+            $view
+        );
     }
 
     /**
      * @param array<string|int> $ids
      * @param mixed[] $view
      */
-    public static function createResolvables(array $ids, string $resourceLoaderKey, array $view): self
-    {
+    public static function createResolvables(
+        array $ids,
+        string $resourceLoaderKey,
+        array $view,
+        int $priority = 0
+    ): self {
         $resolvableResources = [];
 
         foreach ($ids as $id) {
-            $resolvableResources[] = new ResolvableResource($id, $resourceLoaderKey);
+            $resolvableResources[] = new ResolvableResource(
+                id: $id,
+                resourceLoaderKey: $resourceLoaderKey,
+                priority: $priority,
+            );
         }
 
         return new self($resolvableResources, $view);

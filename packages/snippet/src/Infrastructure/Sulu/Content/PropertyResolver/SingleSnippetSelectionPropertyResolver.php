@@ -32,12 +32,13 @@ class SingleSnippetSelectionPropertyResolver implements PropertyResolverInterfac
         $resourceLoaderKey = $params['resourceLoader'] ?? SnippetResourceLoader::getKey();
 
         return ContentView::createResolvable(
-            $data,
-            $resourceLoaderKey,
-            [
+            id: $data,
+            resourceLoaderKey: $resourceLoaderKey,
+            view: [
                 'id' => $data,
                 ...$params,
             ],
+            priority: 100
         );
     }
 

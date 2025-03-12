@@ -100,4 +100,9 @@ readonly class SeoResolver implements ResolverInterface
             'seoHideInSitemap' => $dimensionContent->getSeoHideInSitemap(),
         ];
     }
+
+    public function supports(DimensionContentInterface $dimensionContent): bool
+    {
+        return $dimensionContent instanceof SeoInterface;
+    }
 }

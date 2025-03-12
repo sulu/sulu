@@ -81,7 +81,7 @@ class ImageMapPropertyResolver implements PropertyResolverInterface // TODO we m
 
         return ContentView::create(
             [
-                'image' => new ResolvableResource($imageId, $resourceLoaderKey),
+                'image' => new ResolvableResource($imageId, $resourceLoaderKey, -50),
                 'hotspots' => $hotspots->getContent(),
             ],
             [

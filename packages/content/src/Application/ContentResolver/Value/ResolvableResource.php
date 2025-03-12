@@ -23,7 +23,8 @@ class ResolvableResource
     public function __construct(
         private string|int $id,
         private string $resourceLoaderKey,
-        ?\Closure $resourceCallback = null
+        private int $priority,
+        ?\Closure $resourceCallback = null,
     ) {
         $this->callback = $resourceCallback ?? (static fn (mixed $resource) => $resource);
     }
@@ -41,5 +42,10 @@ class ResolvableResource
     public function executeResourceCallback(mixed $resource): mixed
     {
         return ($this->callback)($resource);
+    }
+
+    public function getPriority(): int
+    {
+        return $this->priority;
     }
 }

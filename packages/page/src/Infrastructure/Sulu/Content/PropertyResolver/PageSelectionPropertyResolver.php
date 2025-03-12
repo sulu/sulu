@@ -38,12 +38,13 @@ class PageSelectionPropertyResolver implements PropertyResolverInterface
         $ids = $data;
 
         return ContentView::createResolvables(
-            $ids,
-            $resourceLoaderKey,
-            [
+            ids: $ids,
+            resourceLoaderKey: $resourceLoaderKey,
+            view: [
                 'ids' => $ids,
                 ...$params,
             ],
+            priority: 150
         );
     }
 

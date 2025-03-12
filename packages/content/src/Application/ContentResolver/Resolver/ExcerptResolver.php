@@ -95,4 +95,9 @@ readonly class ExcerptResolver implements ResolverInterface
             'excerptImage' => $dimensionContent->getExcerptImage(),
         ];
     }
+
+    public function supports(DimensionContentInterface $dimensionContent): bool
+    {
+        return $dimensionContent instanceof ExcerptInterface;
+    }
 }

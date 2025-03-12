@@ -42,13 +42,14 @@ class SingleMediaSelectionPropertyResolver implements PropertyResolverInterface
         $id = (int) $data['id'];
 
         return ContentView::createResolvable(
-            $id,
-            $resourceLoaderKey,
-            [
+            id: $id,
+            resourceLoaderKey: $resourceLoaderKey,
+            view: [
                 'id' => $id,
                 'displayOption' => $displayOption,
                 ...$params,
             ],
+            priority: -50
         );
     }
 

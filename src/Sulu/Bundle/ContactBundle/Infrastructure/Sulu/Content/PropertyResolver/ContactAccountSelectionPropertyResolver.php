@@ -62,8 +62,8 @@ class ContactAccountSelectionPropertyResolver implements PropertyResolverInterfa
             // but in this case we need to use it to load resources depending on the key correctly
             // the ResolvableResource is kept internal to the content bundle and should not be used by other bundles
             match ($key) {
-                self::PREFIX_CONTACT => $resolvableResources[] = new ResolvableResource($id, $contactResourceLoaderKey),
-                self::PREFIX_ACCOUNT => $resolvableResources[] = new ResolvableResource($id, $accountResourceLoaderKey),
+                self::PREFIX_CONTACT => $resolvableResources[] = new ResolvableResource($id, $contactResourceLoaderKey, 0),
+                self::PREFIX_ACCOUNT => $resolvableResources[] = new ResolvableResource($id, $accountResourceLoaderKey, 0),
                 default => null,
             };
         }

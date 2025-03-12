@@ -20,14 +20,14 @@ class ResolvableResourceTest extends TestCase
 {
     public function testGetId(): void
     {
-        $resolvableResource = new ResolvableResource(5, 'resourceLoaderKey');
+        $resolvableResource = new ResolvableResource(5, 'resourceLoaderKey', 0);
 
         $this->assertSame(5, $resolvableResource->getId());
     }
 
     public function testGetResourceLoaderKey(): void
     {
-        $resolvableResource = new ResolvableResource(5, 'resourceLoaderKey');
+        $resolvableResource = new ResolvableResource(5, 'resourceLoaderKey', 0);
 
         $this->assertSame('resourceLoaderKey', $resolvableResource->getResourceLoaderKey());
     }

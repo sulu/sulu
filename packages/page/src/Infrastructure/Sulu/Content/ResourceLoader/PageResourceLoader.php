@@ -28,9 +28,12 @@ class PageResourceLoader implements ResourceLoaderInterface
     ) {
     }
 
+    /**
+     * @param string[] $ids
+     */
     public function load(array $ids, ?string $locale, array $params = []): array
     {
-        $result = $this->pageRepository->findBy(['id' => $ids]);
+        $result = $this->pageRepository->findBy(['uuids' => $ids]);
 
         $mappedResult = [];
         foreach ($result as $page) {

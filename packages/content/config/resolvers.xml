@@ -12,6 +12,7 @@
                 index-by="type"
             />
             <argument type="service" id="sulu_content.resource_loader_provider"/>
+            <argument type="service" id="sulu_content.content_aggregator"/>
         </service>
         <service id="Sulu\Content\Application\ContentResolver\ContentResolverInterface" alias="sulu_content.content_resolver"/>
 

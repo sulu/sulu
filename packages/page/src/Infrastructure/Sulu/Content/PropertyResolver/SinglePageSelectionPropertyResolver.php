@@ -32,12 +32,13 @@ class SinglePageSelectionPropertyResolver implements PropertyResolverInterface
         $resourceLoaderKey = $params['resourceLoader'] ?? PageResourceLoader::getKey();
 
         return ContentView::createResolvable(
-            $data,
-            $resourceLoaderKey,
-            [
+            id: $data,
+            resourceLoaderKey: $resourceLoaderKey,
+            view: [
                 'id' => $data,
                 ...$params,
             ],
+            priority: 150
         );
     }
 

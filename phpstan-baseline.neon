@@ -55,36 +55,6 @@ parameters:
 			path: packages/article/src/Infrastructure/Symfony/HttpKernel/SuluArticleBundle.php
 
 		-
-			message: '#^Cannot access an offset on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: packages/content/src/Application/ContentResolver/ContentResolver.php
-
-		-
-			message: '#^Method Sulu\\Content\\Application\\ContentResolver\\ContentResolver\:\:resolveContentView\(\) should return array\{content\: array\<string, mixed\>, view\: array\<string, mixed\>, resolvableResources\: array\<string, array\<Sulu\\Content\\Application\\ContentResolver\\Value\\ResolvableResource\>\>\} but returns array\{content\: array\{\}, view\: array\{\}, resolvableResources\: array\}\|array\{content\: non\-empty\-array\<string, array\>, view\: non\-empty\-array\<string, array\>, resolvableResources\: array\}\.$#'
-			identifier: return.type
-			count: 1
-			path: packages/content/src/Application/ContentResolver/ContentResolver.php
-
-		-
-			message: '#^Method Sulu\\Content\\Application\\ContentResolver\\ContentResolver\:\:resolveContentView\(\) should return array\{content\: array\<string, mixed\>, view\: array\<string, mixed\>, resolvableResources\: array\<string, array\<Sulu\\Content\\Application\\ContentResolver\\Value\\ResolvableResource\>\>\} but returns array\{content\: non\-empty\-array\<string, array\<string, mixed\>\>, view\: non\-empty\-array\<string, array\<string, mixed\>\>, resolvableResources\: array\}\.$#'
-			identifier: return.type
-			count: 1
-			path: packages/content/src/Application/ContentResolver/ContentResolver.php
-
-		-
-			message: '#^Method Sulu\\Content\\Application\\ContentResolver\\ContentResolver\:\:resolveContentViews\(\) should return array\{content\: array\<string, mixed\>, view\: array\<string, mixed\>, resolvableResources\: array\<string, array\<Sulu\\Content\\Application\\ContentResolver\\Value\\ResolvableResource\>\>\} but returns array\{content\: array\<string, mixed\>, view\: array\<string, mixed\>, resolvableResources\: array\}\.$#'
-			identifier: return.type
-			count: 1
-			path: packages/content/src/Application/ContentResolver/ContentResolver.php
-
-		-
-			message: '#^Parameter \#1 \$contentViews of method Sulu\\Content\\Application\\ContentResolver\\ContentResolver\:\:resolveContentViews\(\) expects array\<Sulu\\Content\\Application\\ContentResolver\\Value\\ContentView\>, array\<mixed, mixed\> given\.$#'
-			identifier: argument.type
-			count: 1
-			path: packages/content/src/Application/ContentResolver/ContentResolver.php
-
-		-
 			message: '#^Cannot access offset ''index'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 4

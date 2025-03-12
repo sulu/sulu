@@ -44,12 +44,13 @@ class SnippetSelectionPropertyResolver implements PropertyResolverInterface
         $resourceLoaderKey = $params['resourceLoader'] ?? SnippetResourceLoader::getKey();
 
         return ContentView::createResolvables(
-            $identifiers,
-            $resourceLoaderKey,
-            [
+            ids: $identifiers,
+            resourceLoaderKey: $resourceLoaderKey,
+            view: [
                 'ids' => $identifiers,
                 ...$params,
             ],
+            priority: 100
         );
     }
 

@@ -52,13 +52,14 @@ class TeaserSelectionPropertyResolver implements PropertyResolverInterface
             $id = $item['id'];
 
             $contentViews[] = ContentView::createResolvable(
-                $type . '::' . $id,
-                $resourceLoaderKey,
-                [
+                id: $type . '::' . $id,
+                resourceLoaderKey: $resourceLoaderKey,
+                view: [
                     'id' => $id,
                     'type' => $type,
                 ],
-                static function(Teaser $resource) use ($item) {
+                priority: -50,
+                closure: static function(Teaser $resource) use ($item) {
                     return $resource->merge($item);
                 }
             );

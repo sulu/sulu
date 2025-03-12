@@ -35,14 +35,15 @@ class LinkPropertyResolver implements PropertyResolverInterface
         $resourceLoaderKey = $params['resourceLoader'] ?? LinkResourceLoader::getKey();
 
         return ContentView::createResolvable(
-            $data['provider'] . '::' . $data['href'],
-            $resourceLoaderKey,
-            [
+            id: $data['provider'] . '::' . $data['href'],
+            resourceLoaderKey: $resourceLoaderKey,
+            view: [
                 ...$data,
                 ...$params,
             ],
+            priority: -50,
             // external links are not passed as a LinkItem
-            static function(string|LinkItem $linkItem) use ($data) {
+            closure: static function(string|LinkItem $linkItem) use ($data) {
                 if (\is_string($linkItem)) {
                     return $linkItem;
                 }

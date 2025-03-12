@@ -44,28 +44,25 @@ class SnippetResourceLoaderTest extends TestCase
 
     public function testLoad(): void
     {
-        $snippet1 = $this->createSnippet(1);
-        $snippet2 = $this->createSnippet(3);
+        $snippet1 = $this->createSnippet('1');
+        $snippet2 = $this->createSnippet('3');
 
-        $this->snippetRepository->findBy(['id' => [1, 3]])->willReturn([
+        $this->snippetRepository->findBy(['id' => ['1', '3']])->willReturn([
             $snippet1,
             $snippet2,
         ])
             ->shouldBeCalled();
 
-        $result = $this->loader->load([1, 3], 'en');
+        $result = $this->loader->load(['1', '3'], 'en');
 
         $this->assertSame([
-            1 => $snippet1,
-            3 => $snippet2,
+            '1' => $snippet1,
+            '3' => $snippet2,
         ], $result);
     }
 
-    private static function createSnippet(int $id): Snippet
+    private static function createSnippet(string $uuid): Snippet
     {
-        $snippet = new Snippet();
-        self::setprivateProperty($snippet, 'uuid', $id);
-
-        return $snippet;
+        return new Snippet($uuid);
     }
 }

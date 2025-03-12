@@ -25,4 +25,11 @@ interface ResolverInterface
      * @param DimensionContentInterface<T> $dimensionContent
      */
     public function resolve(DimensionContentInterface $dimensionContent): ContentView;
+
+    /**
+     * @template T of ContentRichEntityInterface
+     *
+     * @param DimensionContentInterface<T> $dimensionContent
+     */
+    public function supports(DimensionContentInterface $dimensionContent): bool;
 }

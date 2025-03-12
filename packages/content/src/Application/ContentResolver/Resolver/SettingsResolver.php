@@ -194,4 +194,9 @@ readonly class SettingsResolver implements ResolverInterface
             'shadowBaseLocale' => $dimensionContent->getShadowLocale(),
         ];
     }
+
+    public function supports(DimensionContentInterface $dimensionContent): bool
+    {
+        return true;
+    }
 }

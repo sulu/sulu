@@ -46,13 +46,14 @@ class MediaSelectionPropertyResolver implements PropertyResolverInterface
         $resourceLoaderKey = $params['resourceLoader'] ?? MediaResourceLoader::getKey();
 
         return ContentView::createResolvables(
-            $ids,
-            $resourceLoaderKey,
-            [
+            ids: $ids,
+            resourceLoaderKey: $resourceLoaderKey,
+            view: [
                 'ids' => $ids,
                 'displayOption' => $displayOption,
                 ...$params,
             ],
+            priority: -50
         );
     }
 
