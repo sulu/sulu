@@ -13,5 +13,6 @@
     "sulu_content.shadow_locale": "Shadow Sprache",
     "sulu_content.webspace": "Webspace",
     "sulu_content.main_webspace": "Hauptwebspace",
-    "sulu_content.additional_webspaces": "Weitere Webspaces"
+    "sulu_content.additional_webspaces": "Weitere Webspaces",
+    "sulu_content.page_settings": "Seiteneinstellungen"
 }

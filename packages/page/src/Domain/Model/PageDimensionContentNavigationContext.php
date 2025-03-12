@@ -13,10 +13,17 @@ namespace Sulu\Page\Domain\Model;
 
 class PageDimensionContentNavigationContext
 {
+    protected int $id;
+
     public function __construct(
-        private string $navigationContext,
-        private PageDimensionContent $pageDimensionContent
+        protected string $navigationContext,
+        protected PageDimensionContent $pageDimensionContent
     ) {
+    }
+
+    public function getId(): int
+    {
+        return $this->id;
     }
 
     public function getNavigationContext(): string
