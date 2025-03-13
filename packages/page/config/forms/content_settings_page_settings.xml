@@ -1,0 +1,30 @@
+<?xml version="1.0" ?>
+<form xmlns="http://schemas.sulu.io/template/template"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/form-1.0.xsd"
+>
+    <key>content_settings_page_settings</key>
+
+    <tag name="sulu_content.content_settings_form" instanceOf="Sulu\Page\Domain\Model\PageDimensionContentInterface" priority="100"/>
+
+    <properties>
+        <section name="content_settings_page_settings">
+            <meta>
+                <title>sulu_content.page_settings</title>
+            </meta>
+
+            <properties>
+                <property
+                    name="navigationContexts"
+                    type="page_settings_navigation_select"
+                    visibleCondition="shadowOn == false"
+                    colspan="6"
+                >
+                    <meta>
+                        <title>sulu_page.show_page_in</title>
+                    </meta>
+                </property>
+            </properties>
+        </section>
+    </properties>
+</form>

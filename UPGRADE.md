@@ -2,6 +2,28 @@
 
 ## 3.0.0
 
+### Removing deprecated twig functions
+- `sulu_meta_alternate` (use the SEO template instead `@SuluWebsite/Extension/seo.html.twig`)
+- `sulu_meta_seo` (use the SEO template instead `@SuluWebsite/Extension/seo.html.twig`)
+- `sulu_seo` (use the SEO template instead `@SuluWebsite/Extension/seo.html.twig`)
+
+This also includes the container services:
+- `sulu_website.twig.meta`
+- `sulu_website.twig.seo`
+and the parameters
+- `%sulu_website.twig.meta.class%`
+- `%sulu_website.twig.seo.class%`
+
+### Removing "modules" from Permissions
+The unused column on the permissions table has been removed. This also requires some migration on the table, to recreate
+an index:
+
+```sql
+DROP INDEX UNIQ_5CEC3EEAE25D857EC242628A1FA6DDA ON se_permissions;
+ALTER TABLE se_permissions DROP module;
+CREATE UNIQUE INDEX UNIQ_5CEC3EEAE25D857EA1FA6DDA ON se_permissions (context, idRoles);
+```
+
 ### Changed Media Format HTTP Response Headers
 
 Removed `Pragma` & `Expires` HTTP headers, as the `Cache-Control` header is enough.

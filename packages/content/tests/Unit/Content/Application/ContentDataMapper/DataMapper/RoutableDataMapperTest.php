@@ -568,42 +568,6 @@ class RoutableDataMapperTest extends TestCase
         ], $localizedDimensionContent->getTemplateData());
     }
 
-    public function testMapOnlySlash(): void
-    {
-        $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessage('Not allowed url "/" given or generated.');
-
-        $data = [
-            'url' => null,
-        ];
-
-        $route = new Route();
-        $route->setPath('/custom/testEntity-123');
-
-        $example = new Example();
-        static::setPrivateProperty($example, 'id', 123);
-        $unlocalizedDimensionContent = new ExampleDimensionContent($example);
-        $localizedDimensionContent = new ExampleDimensionContent($example);
-        $localizedDimensionContent->setTemplateKey('default');
-        $localizedDimensionContent->setLocale('en');
-        $localizedDimensionContent->setTemplateData(['title' => 'Test', 'url' => null]);
-
-        $this->structureMetadataFactory->getStructureMetadata('example', 'default')
-            ->shouldBeCalled()
-            ->willReturn($this->createRouteStructureMetadata());
-        $this->routeGenerator->generate(Argument::cetera())->willReturn('/');
-
-        $this->conflictResolver->resolve(Argument::cetera())->shouldNotBeCalled();
-
-        $mapper = $this->createRouteDataMapperInstance();
-        $mapper->map($unlocalizedDimensionContent, $localizedDimensionContent, $data);
-
-        $this->assertSame([
-            'url' => '/custom/testEntity-123',
-            'title' => 'Test',
-        ], $localizedDimensionContent->getTemplateData());
-    }
-
     private function createRouteStructureMetadata(string $propertyName = 'url'): StructureMetadata
     {
         $property = $this->prophesize(PropertyMetadata::class);

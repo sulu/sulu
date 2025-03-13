@@ -1,4 +1,0 @@
-services:
-    sulu_document_manager_test.document_registry:
-        alias: sulu_document_manager.document_registry
-        public: true

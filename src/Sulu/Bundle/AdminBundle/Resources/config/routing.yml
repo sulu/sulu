@@ -10,11 +10,13 @@ sulu_admin.config:
 
 sulu_admin.metadata:
     path: /metadata/{type}/{key}
+    methods: ['GET', 'OPTIONS']
     defaults:
         _controller: sulu_admin.admin_controller::metadataAction
 
 sulu_admin.translation:
     path: /translations
+    methods: ['GET', 'OPTIONS']
     defaults:
         _controller: sulu_admin.admin_controller::translationsAction
 

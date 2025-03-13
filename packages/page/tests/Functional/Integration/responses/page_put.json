@@ -1,0 +1,47 @@
+{
+    "author": null,
+    "authored": "2020-06-09T00:00:00+00:00",
+    "availableLocales": [
+        "en",
+        "de"
+    ],
+    "contentLocales": [
+        "en",
+        "de"
+    ],
+    "description": "<p>Test Page 2</p>",
+    "excerptCategories": [],
+    "excerptDescription": "Excerpt Description 2",
+    "excerptIcon": null,
+    "excerptImage": null,
+    "excerptMore": "Excerpt More 2",
+    "excerptTags": [
+        "Tag 3",
+        "Tag 4"
+    ],
+    "excerptTitle": "Excerpt Title 2",
+    "ghostLocale": "en",
+    "id": "@string@",
+    "image": null,
+    "lastModified": "2022-05-08T00:00:00+00:00",
+    "lastModifiedEnabled": true,
+    "locale": "en",
+    "navigationContexts": [],
+    "published": null,
+    "publishedState": false,
+    "seoCanonicalUrl": "https://sulu.io/2",
+    "seoDescription": "Seo Description 2",
+    "seoHideInSitemap": false,
+    "seoKeywords": "Seo Keyword 3, Seo Keyword 4",
+    "seoNoFollow": false,
+    "seoNoIndex": false,
+    "seoTitle": "Seo Title 2",
+    "shadowLocale": null,
+    "shadowLocales": [],
+    "shadowOn": false,
+    "stage": "draft",
+    "template": "default",
+    "title": "Test Page 2",
+    "url": "/my-page-2",
+    "workflowPlace": "unpublished"
+}

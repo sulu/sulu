@@ -16,7 +16,7 @@ namespace Sulu\Content\Application\MetadataResolver;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\ItemMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\SectionMetadata;
 use Sulu\Content\Application\ContentResolver\Value\ContentView;
-use Sulu\Content\Application\PropertyResolver\PropertyResolverProvider;
+use Sulu\Content\Application\PropertyResolver\PropertyResolverProviderInterface;
 
 /**
  * @internal This class is intended for internal use only within the library. Modifying or depending on this class may result in unexpected behavior and is not supported.
@@ -24,7 +24,7 @@ use Sulu\Content\Application\PropertyResolver\PropertyResolverProvider;
 class MetadataResolver
 {
     public function __construct(
-        private PropertyResolverProvider $propertyResolverProvider
+        private PropertyResolverProviderInterface $propertyResolverProvider
     ) {
     }
 

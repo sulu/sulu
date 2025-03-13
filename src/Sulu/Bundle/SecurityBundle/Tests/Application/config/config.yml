@@ -44,13 +44,6 @@ sulu_admin:
             security_context: "sulu.security.secured_entity"
             security_class: "Sulu\\Bundle\\SecurityBundle\\Tests\\Application\\SecuredEntity"
 
-sulu_document_manager:
-    mapping:
-        secured_document:
-            alias: "secured_document"
-            phpcr_type: "mix:test"
-            class: "Sulu\\Bundle\\SecurityBundle\\Tests\\Application\\SecuredDocument"
-
 scheb_two_factor:
     email:
         enabled: true

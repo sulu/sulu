@@ -15,8 +15,14 @@ namespace Sulu\Content\Tests\Unit\Content\Application\PropertyResolver\Resolver;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Util\Type;
+use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadataLoaderInterface;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TagMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
 use Sulu\Content\Application\ContentResolver\Value\ContentView;
 use Sulu\Content\Application\MetadataResolver\MetadataResolver;
 use Sulu\Content\Application\PropertyResolver\PropertyResolverProvider;
@@ -26,14 +32,26 @@ use Symfony\Component\ErrorHandler\BufferingLogger;
 
 class BlockPropertyResolverTest extends TestCase
 {
+    use ProphecyTrait;
+
     private BlockPropertyResolver $resolver;
     private BufferingLogger $logger;
 
+    /**
+     * @var ObjectProphecy<FormMetadataLoaderInterface>
+     */
+    private ObjectProphecy $formMetadataLoader;
+
     protected function setUp(): void
     {
+        $this->formMetadataLoader = $this->prophesize(FormMetadataLoaderInterface::class);
+        $this->formMetadataLoader->getMetadata('block', 'en', [])
+            ->willReturn(new TypedFormMetadata());
+
         $this->logger = new BufferingLogger();
         $this->resolver = new BlockPropertyResolver(
             $this->logger,
+            $this->formMetadataLoader->reveal(),
             debug: false,
         );
         $metadataResolverProperty = new PropertyResolverProvider(
@@ -117,6 +135,68 @@ class BlockPropertyResolverTest extends TestCase
         $params = [
             'metadata' => $blockFieldMetadata,
         ];
+
+        $content = $this->resolver->resolve($data, $locale, $params);
+        /** @var ContentView[] $innerContent */
+        $innerContent = $content->getContent();
+        $this->assertCount(1, $innerContent);
+        /** @var array<string, mixed> $blockData */
+        $blockData = $innerContent[0]->getContent();
+        $this->assertSame('text_block', $blockData['type']);
+        $this->assertInstanceOf(ContentView::class, $blockData['title']);
+        $this->assertSame('Sulu', $blockData['title']->getContent());
+        $this->assertSame([], $blockData['title']->getView());
+        $this->assertInstanceOf(ContentView::class, $blockData['description']);
+        $this->assertSame('Sulu is awesome', $blockData['description']->getContent());
+        $this->assertSame([], $blockData['description']->getView());
+
+        $this->assertSame([], $content->getView());
+    }
+
+    public function testResolveGlobalBlock(): void
+    {
+        $data = [
+            [
+                'type' => 'text_block',
+                'title' => 'Sulu',
+                'description' => 'Sulu is awesome',
+            ],
+        ];
+        $locale = 'en';
+
+        $formMetadata = new FormMetadata();
+        $formMetadata->setName('text_block');
+        $formMetadata->setKey('text_block');
+        $tag = new TagMetadata();
+        $tag->setName('sulu.global_block');
+        $tag->setAttributes(['global_block' => 'text_block']);
+        $formMetadata->setTags([
+            $tag,
+        ]);
+        $blockFieldMetadata = new FieldMetadata('text_block');
+        $blockFieldMetadata->addType($formMetadata);
+
+        $params = [
+            'metadata' => $blockFieldMetadata,
+        ];
+
+        $globalFormMetadata = new FormMetadata();
+        $globalFormMetadata->setName('text_block');
+        $globalFormMetadata->setKey('text_block');
+        $globalBlockFieldMetadata = new FieldMetadata('text_block');
+        $globalBlockFieldMetadata->addType($globalFormMetadata);
+        $tileFieldMetadata = new FieldMetadata('title');
+        $tileFieldMetadata->setType('text_line');
+        $descriptionFieldMetadata = new FieldMetadata('description');
+        $descriptionFieldMetadata->setType('text_area');
+        $globalFormMetadata->addItem($tileFieldMetadata);
+        $globalFormMetadata->addItem($descriptionFieldMetadata);
+
+        $typedFormMetadata = new TypedFormMetadata();
+        $typedFormMetadata->addForm('text_block', $globalFormMetadata);
+
+        $this->formMetadataLoader->getMetadata('block', 'en', [])
+            ->willReturn($typedFormMetadata);
 
         $content = $this->resolver->resolve($data, $locale, $params);
         /** @var ContentView[] $innerContent */

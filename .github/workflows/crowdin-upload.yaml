@@ -4,11 +4,12 @@ on:
     push:
         tags:
             - '*'
+    workflow_dispatch:
 
 jobs:
     upload_sources:
         name: Upload Sources
-        runs-on: ubuntu-18.04
+        runs-on: ubuntu-22.04
         timeout-minutes: 30
 
         steps:

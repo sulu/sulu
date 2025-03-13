@@ -1,0 +1,34 @@
+{
+    "_embedded" : {
+        "pages" : [ {
+            "id" : "123-123-123",
+            "title" : null,
+            "author" : null,
+            "created" : "@datetime@",
+            "changed" : "@datetime@",
+            "creator" : null,
+            "changer" : null,
+            "locale" : null,
+            "ghostLocale" : null,
+            "webspaceKey" : "sulu-io",
+            "template" : null,
+            "hasChildren" : true,
+            "_embedded" : {
+                "pages" : [ {
+                    "id" : "@string@",
+                    "title" : "Test Page 2",
+                    "author" : null,
+                    "created" : "@datetime@",
+                    "changed" : "@datetime@",
+                    "creator" : "Max Mustermann",
+                    "changer" : "Max Mustermann",
+                    "locale" : "en",
+                    "ghostLocale" : null,
+                    "webspaceKey" : "sulu-io",
+                    "template" : "default",
+                    "hasChildren" : false
+                } ]
+            }
+        } ]
+    }
+}

@@ -81,9 +81,17 @@ class SitemapProviderPoolTest extends TestCase
 
     public function testGetIndex(): void
     {
-        $lastMod = new \DateTime();
-        $this->pagesSitemapProvider->createSitemap('http', 'sulu.io')->willReturn(new Sitemap('pages', 1));
-        $this->articlesSitemapProvider->createSitemap('http', 'sulu.io')->willReturn(new Sitemap('articles', 1, $lastMod));
+        $suluLastMod = new \DateTime();
+        $this->pagesSitemapProvider->createSitemap('http', 'sulu.io')->willReturn(new Sitemap('pages', 1))
+            ->shouldBeCalled();
+        $this->articlesSitemapProvider->createSitemap('http', 'sulu.io')->willReturn(new Sitemap('articles', 1, $suluLastMod))
+            ->shouldBeCalled();
+
+        $exampleLastMod = new \DateTime('-1 week');
+        $this->pagesSitemapProvider->createSitemap('http', 'example.localhost')->willReturn(new Sitemap('pages-example', 1))
+            ->shouldBeCalled();
+        $this->articlesSitemapProvider->createSitemap('http', 'example.localhost')->willReturn(new Sitemap('articles-example', 1, $exampleLastMod))
+            ->shouldBeCalled();
 
         $result = $this->pool->getIndex('http', 'sulu.io');
 
@@ -91,6 +99,32 @@ class SitemapProviderPoolTest extends TestCase
         $this->assertEquals('pages', $result[0]->getAlias());
         $this->assertNull($result[0]->getLastmod());
         $this->assertEquals('articles', $result[1]->getAlias());
-        $this->assertEquals($lastMod, $result[1]->getLastmod());
+        $this->assertEquals($suluLastMod, $result[1]->getLastmod());
+
+        $result = $this->pool->getIndex('http', 'example.localhost');
+        $this->assertCount(2, $result);
+        $this->assertEquals('pages-example', $result[0]->getAlias());
+        $this->assertNull($result[0]->getLastmod());
+        $this->assertEquals('articles-example', $result[1]->getAlias());
+        $this->assertEquals($exampleLastMod, $result[1]->getLastmod());
+    }
+
+    public function testReset(): void
+    {
+        $suluLastMod = new \DateTime();
+        $this->pagesSitemapProvider->createSitemap('http', 'sulu.io')->willReturn(new Sitemap('pages', 1))
+            ->shouldBeCalledTimes(2);
+        $this->articlesSitemapProvider->createSitemap('http', 'sulu.io')->willReturn(new Sitemap('articles', 1, $suluLastMod))
+            ->shouldBeCalledTimes(2);
+
+        $result = $this->pool->getIndex('http', 'sulu.io');
+        $this->assertCount(2, $result);
+        $result = $this->pool->getIndex('http', 'sulu.io');
+        $this->assertCount(2, $result, 'Loaded from cache is same as before.');
+
+        $this->pool->reset();
+
+        $result = $this->pool->getIndex('http', 'sulu.io');
+        $this->assertCount(2, $result);
     }
 }

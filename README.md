@@ -70,4 +70,4 @@ Sulu requires a **PHP version higher or equal to 8.2** and is compatible with ev
 
 ## 📘&nbsp; License
 
-The Sulu content management system is released under the under terms of the [MIT License](LICENSE).
+The Sulu content management system is released under the terms of the [MIT License](LICENSE).

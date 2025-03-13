@@ -16,6 +16,8 @@ namespace Sulu\Content\Application\PropertyResolver\Resolver;
 use Psr\Log\LoggerInterface;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadataLoaderInterface;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
 use Sulu\Content\Application\ContentResolver\Value\ContentView;
 use Sulu\Content\Application\MetadataResolver\MetadataResolver;
 
@@ -25,6 +27,7 @@ class BlockPropertyResolver implements PropertyResolverInterface
 
     public function __construct(
         private readonly LoggerInterface $logger,
+        private readonly FormMetadataLoaderInterface $formMetadataLoader,
         private readonly bool $debug = false,
     ) {
     }
@@ -53,12 +56,15 @@ class BlockPropertyResolver implements PropertyResolverInterface
         \assert($metadata instanceof FieldMetadata, 'Metadata must be set to resolve blocks.');
         $metadataTypes = $metadata->getTypes();
 
+        /** @var TypedFormMetadata $typedFormMetadata */
+        $typedFormMetadata = $this->formMetadataLoader->getMetadata('block', $locale, []);
+        $globalBlocksMetadata = $typedFormMetadata->getForms();
+
         $contentViews = [];
         foreach ($data as $key => $block) {
             if (!\is_array($block) || !isset($block['type']) || !\is_string($block['type'])) {
                 continue;
             }
-
             $type = $block['type'];
             $formMetadata = $metadataTypes[$type] ?? null;
 
@@ -83,6 +89,11 @@ class BlockPropertyResolver implements PropertyResolverInterface
                 }
             }
 
+            $globalBlockType = $this->getGlobalBlockType($formMetadata);
+            if ($globalBlockType && \array_key_exists($globalBlockType, $globalBlocksMetadata)) {
+                $formMetadata = $globalBlocksMetadata[$globalBlockType];
+            }
+
             $contentViews[$key] = ContentView::create(
                 \array_merge(
                     ['type' => $type],
@@ -102,6 +113,16 @@ class BlockPropertyResolver implements PropertyResolverInterface
         }
 
         return ContentView::create($contentViews, [...$returnedParams]);
+    }
+
+    private function getGlobalBlockType(FormMetadata $formMetadata): ?string
+    {
+        $tag = $formMetadata->getTagsByName('sulu.global_block')[0] ?? null;
+
+        /** @var string|null $result */
+        $result = $tag?->getAttribute('global_block');
+
+        return $result;
     }
 
     public static function getType(): string

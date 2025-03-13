@@ -17,6 +17,8 @@ use Sulu\Bundle\TestBundle\Kernel\SuluTestKernel;
 use Sulu\Component\HttpKernel\SuluKernel;
 use Sulu\Content\Infrastructure\Symfony\HttpKernel\SuluContentBundle;
 use Sulu\Content\Tests\Application\ExampleTestBundle\ExampleTestBundle;
+use Sulu\Page\Infrastructure\Symfony\HttpKernel\SuluPageBundle;
+use Sulu\Route\Infrastructure\Symfony\HttpKernel\SuluRouteBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Task\TaskBundle\TaskBundle;
 
@@ -42,8 +44,11 @@ class Kernel extends SuluTestKernel
     public function registerBundles(): iterable
     {
         $bundles = [...parent::registerBundles()];
+
+        $bundles[] = new SuluPageBundle();
         $bundles[] = new SuluContentBundle();
         $bundles[] = new SuluArticleBundle();
+        $bundles[] = new SuluRouteBundle();
         $bundles[] = new ExampleTestBundle(); // TODO currently required for test content bundle, everybody should setup database by its own
         $bundles[] = new SuluAutomationBundle(); // TODO currently required for test content bundle, everybody should setup database by its own
         $bundles[] = new TaskBundle(); // TODO currently required for test content bundle, everybody should setup database by its own

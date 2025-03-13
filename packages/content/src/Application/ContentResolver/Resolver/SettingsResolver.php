@@ -70,7 +70,6 @@ readonly class SettingsResolver implements ResolverInterface
 
         if ($dimensionContent instanceof AuthorInterface) {
             $result = \array_merge($result, $this->getAuthorData($dimensionContent));
-            $result = \array_merge($result, $this->getLastModifiedData($dimensionContent));
         }
 
         if ($dimensionContent instanceof ShadowInterface) {
@@ -171,6 +170,7 @@ readonly class SettingsResolver implements ResolverInterface
         return [
             'author' => $dimensionContent->getAuthor()?->getId(),
             'authored' => $dimensionContent->getAuthored(),
+            'lastModified' => $dimensionContent->getLastModified(),
         ];
     }
 
@@ -183,22 +183,6 @@ readonly class SettingsResolver implements ResolverInterface
     {
         return [
             'shadowBaseLocale' => $dimensionContent->getShadowLocale(),
-        ];
-    }
-
-    /**
-     * @return array{
-     *     lastModified?: \DateTimeImmutable|null
-     * }
-     */
-    protected function getLastModifiedData(AuthorInterface $dimensionContent): array
-    {
-        if (!$dimensionContent->getLastModifiedEnabled()) {
-            return [];
-        }
-
-        return [
-            'lastModified' => $dimensionContent->getLastModified(),
         ];
     }
 }

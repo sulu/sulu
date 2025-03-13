@@ -14,8 +14,13 @@ namespace Sulu\Bundle\MediaBundle\Tests\Unit\Infrastructure\Sulu\Content\Propert
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadataLoaderInterface;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TagMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
 use Sulu\Bundle\MediaBundle\Infrastructure\Sulu\Content\PropertyResolver\ImageMapPropertyResolver;
 use Sulu\Content\Application\ContentResolver\Value\ResolvableResource;
 use Sulu\Content\Application\MetadataResolver\MetadataResolver;
@@ -26,15 +31,27 @@ use Symfony\Component\ErrorHandler\BufferingLogger;
 #[CoversClass(ImageMapPropertyResolver::class)]
 class ImageMapPropertyResolverTest extends TestCase
 {
+    use ProphecyTrait;
+
     private ImageMapPropertyResolver $resolver;
 
     private BufferingLogger $logger;
 
+    /**
+     * @var ObjectProphecy<FormMetadataLoaderInterface>
+     */
+    private ObjectProphecy $formMetadataLoader;
+
     public function setUp(): void
     {
+        $this->formMetadataLoader = $this->prophesize(FormMetadataLoaderInterface::class);
+        $this->formMetadataLoader->getMetadata('block', 'en', [])
+            ->willReturn(new TypedFormMetadata());
+
         $this->logger = new BufferingLogger();
         $this->resolver = new ImageMapPropertyResolver(
             $this->logger,
+            $this->formMetadataLoader->reveal(),
             debug: false,
         );
         $metadataResolverProperty = new PropertyResolverProvider([
@@ -242,6 +259,46 @@ class ImageMapPropertyResolverTest extends TestCase
         yield 'hotspot_with_no_hotspot' => [['imageId' => 1, 'hotspots' => [['type' => 'not_exist', 'title' => 'Title']]]];
     }
 
+    public function testResolveGlobalBlockHotspot(): void
+    {
+        $data = ['imageId' => 1, 'hotspots' => [['type' => 'text', 'hotspot' => ['type' => 'circle'], 'title' => 'Title 1'], ['type' => 'text', 'hotspot' => ['type' => 'circle'], 'title' => 'Title 2']]];
+
+        $textFormMetadata = new FormMetadata();
+        $textFormMetadata->setName('text');
+        $itemMetadata = new FieldMetadata('title');
+        $itemMetadata->setType('text_line');
+        $textFormMetadata->addItem($itemMetadata);
+        $typedFormMetadata = new TypedFormMetadata();
+        $typedFormMetadata->addForm('text', $textFormMetadata);
+
+        $this->formMetadataLoader->getMetadata('block', 'en', [])
+            ->willReturn($typedFormMetadata);
+
+        $contentView = $this->resolver->resolve($data, 'en', ['metadata' => $this->createGlobalBlockMetadata()]);
+
+        $content = $contentView->getContent();
+        $this->assertIsArray($content);
+        $imageId = $data['imageId'];
+
+        $hotspots = $content['hotspots'] ?? [];
+        $this->assertIsArray($hotspots);
+        $expectedView = [];
+
+        foreach (($data['hotspots']) as $key => $hotspot) {
+            $hotspot = $hotspots[$key];
+            $this->assertIsArray($hotspot);
+            $this->assertSame($data['hotspots'][$key], $hotspot);
+            $expectedView[] = ['title' => []];
+        }
+
+        $this->assertSame([
+            'imageId' => $imageId,
+            'hotspots' => $expectedView,
+        ], $contentView->getView());
+
+        $this->assertCount(0, $this->logger->cleanLogs());
+    }
+
     private function createMetadata(): FieldMetadata
     {
         $fieldMetadata = new FieldMetadata('image');
@@ -253,6 +310,27 @@ class ImageMapPropertyResolverTest extends TestCase
         $itemMetadata = new FieldMetadata('title');
         $itemMetadata->setType('text_line');
         $textFormMetadata->addItem($itemMetadata);
+
+        $fieldMetadata->addType($textFormMetadata);
+
+        return $fieldMetadata;
+    }
+
+    private function createGlobalBlockMetadata(): FieldMetadata
+    {
+        $fieldMetadata = new FieldMetadata('image');
+        $fieldMetadata->setType('image_map');
+        $fieldMetadata->setDefaultType('text');
+
+        $textFormMetadata = new FormMetadata();
+        $textFormMetadata->setName('text');
+
+        $tag = new TagMetadata();
+        $tag->setName('sulu.global_block');
+        $tag->setAttributes(['global_block' => 'text']);
+        $textFormMetadata->setTags([
+            $tag,
+        ]);
 
         $fieldMetadata->addType($textFormMetadata);
 

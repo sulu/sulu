@@ -33,7 +33,7 @@ class Sitemap
     /**
      * Datetime of last modification.
      *
-     * @var \DateTime
+     * @var \DateTime|null
      */
     private $lastmod;
 
@@ -71,7 +71,7 @@ class Sitemap
     /**
      * Returns lastmod.
      *
-     * @return \DateTime
+     * @return \DateTime|null
      */
     public function getLastmod()
     {

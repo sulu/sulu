@@ -16,6 +16,8 @@ namespace Sulu\Bundle\MediaBundle\Infrastructure\Sulu\Content\PropertyResolver;
 use Psr\Log\LoggerInterface;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadataLoaderInterface;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
 use Sulu\Bundle\MediaBundle\Infrastructure\Sulu\Content\ResourceLoader\MediaResourceLoader;
 use Sulu\Content\Application\ContentResolver\Value\ContentView;
 use Sulu\Content\Application\ContentResolver\Value\ResolvableResource;
@@ -33,6 +35,7 @@ class ImageMapPropertyResolver implements PropertyResolverInterface // TODO we m
 
     public function __construct(
         private readonly LoggerInterface $logger,
+        private readonly FormMetadataLoaderInterface $formMetadataLoader,
         private readonly bool $debug = false,
     ) {
     }
@@ -100,6 +103,10 @@ class ImageMapPropertyResolver implements PropertyResolverInterface // TODO we m
         $metadataTypes = $metadata->getTypes();
         $content = [];
         $view = [];
+
+        /** @var TypedFormMetadata $typedFormMetadata */
+        $typedFormMetadata = $this->formMetadataLoader->getMetadata('block', $locale, []);
+        $globalBlocksMetadata = $typedFormMetadata->getForms();
         foreach ($hotspots as $key => $block) {
             if (!\is_array($block) || !isset($block['type']) || !\is_string($block['type'])) {
                 continue;
@@ -132,6 +139,11 @@ class ImageMapPropertyResolver implements PropertyResolverInterface // TODO we m
                 }
             }
 
+            $globalBlockType = $this->getGlobalBlockType($formMetadata);
+            if ($globalBlockType && \array_key_exists($globalBlockType, $globalBlocksMetadata)) {
+                $formMetadata = $globalBlocksMetadata[$globalBlockType];
+            }
+
             $content[$key] = [
                 'type' => $type,
                 'hotspot' => $block['hotspot'],
@@ -146,6 +158,16 @@ class ImageMapPropertyResolver implements PropertyResolverInterface // TODO we m
         }
 
         return ContentView::create(\array_values($content), \array_values($view));
+    }
+
+    private function getGlobalBlockType(FormMetadata $fieldMetadata): ?string
+    {
+        $tag = $fieldMetadata->getTagsByName('sulu.global_block')[0] ?? null;
+
+        /** @var string|null $result */
+        $result = $tag?->getAttribute('global_block');
+
+        return $result;
     }
 
     public static function getType(): string
