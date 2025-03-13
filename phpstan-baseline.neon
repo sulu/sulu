@@ -44751,7 +44751,7 @@ parameters:
 		-
 			message: '#^Cannot access offset ''id'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 5
+			count: 2
 			path: src/Sulu/Bundle/SecurityBundle/Controller/RoleController.php
 
 		-
@@ -44768,12 +44768,6 @@ parameters:
 
 		-
 			message: '#^Method Sulu\\Bundle\\SecurityBundle\\Controller\\RoleController\:\:addPermission\(\) has parameter \$permissionData with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Controller/RoleController.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\SecurityBundle\\Controller\\RoleController\:\:checkSecurityTypeData\(\) has parameter \$securityTypeData with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Controller/RoleController.php
@@ -44816,18 +44810,6 @@ parameters:
 
 		-
 			message: '#^Method Sulu\\Bundle\\SecurityBundle\\Controller\\RoleController\:\:putAction\(\) has parameter \$id with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Controller/RoleController.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\SecurityBundle\\Controller\\RoleController\:\:setSecurityType\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Controller/RoleController.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\SecurityBundle\\Controller\\RoleController\:\:setSecurityType\(\) has parameter \$securityTypeData with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Controller/RoleController.php
@@ -44973,7 +44955,7 @@ parameters:
 		-
 			message: '#^Parameter \#2 \$id of class Sulu\\Component\\Rest\\Exception\\EntityNotFoundException constructor expects int\|string, mixed given\.$#'
 			identifier: argument.type
-			count: 4
+			count: 3
 			path: src/Sulu/Bundle/SecurityBundle/Controller/RoleController.php
 
 		-
@@ -45121,84 +45103,6 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/Controller/UserController.php
 
 		-
-			message: '#^Argument of an invalid type DOMNodeList\<DOMNode\>\|false supplied for foreach, only iterables are supported\.$#'
-			identifier: foreach.nonIterable
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/DataFixtures/ORM/LoadSecurityTypes.php
-
-		-
-			message: '#^Call to an undefined method Doctrine\\Persistence\\ObjectManager\:\:createQueryBuilder\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/DataFixtures/ORM/LoadSecurityTypes.php
-
-		-
-			message: '#^Call to function is_null\(\) with DOMNodeList\<DOMNode\>\|false will always evaluate to false\.$#'
-			identifier: function.impossibleType
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/DataFixtures/ORM/LoadSecurityTypes.php
-
-		-
-			message: '#^Cannot call method from\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/DataFixtures/ORM/LoadSecurityTypes.php
-
-		-
-			message: '#^Cannot call method getQuery\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/DataFixtures/ORM/LoadSecurityTypes.php
-
-		-
-			message: '#^Cannot call method getResult\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/DataFixtures/ORM/LoadSecurityTypes.php
-
-		-
-			message: '#^Cannot call method select\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/DataFixtures/ORM/LoadSecurityTypes.php
-
-		-
-			message: '#^Cannot call method setId\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/DataFixtures/ORM/LoadSecurityTypes.php
-
-		-
-			message: '#^Cannot call method setName\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/DataFixtures/ORM/LoadSecurityTypes.php
-
-		-
-			message: '#^PHPDoc tag @var has invalid value \(\$child \\DOMNode\)\: Unexpected token "\$child", expected type at offset 9 on line 1$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/DataFixtures/ORM/LoadSecurityTypes.php
-
-		-
-			message: '#^PHPDoc tag @var has invalid value \(\$element \\DOMNode\)\: Unexpected token "\$element", expected type at offset 9 on line 1$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/DataFixtures/ORM/LoadSecurityTypes.php
-
-		-
-			message: '#^Parameter \#1 \$object of method Doctrine\\Persistence\\ObjectManager\:\:persist\(\) expects object, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/DataFixtures/ORM/LoadSecurityTypes.php
-
-		-
-			message: '#^Parameter \#2 \$array of function array_key_exists expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/DataFixtures/ORM/LoadSecurityTypes.php
-
-		-
 			message: '#^Parameter \#1 \$name of method Symfony\\Component\\DependencyInjection\\ContainerBuilder\:\:findTaggedServiceIds\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -45244,12 +45148,6 @@ parameters:
 			message: '#^Cannot access offset ''enabled'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 3
-			path: src/Sulu/Bundle/SecurityBundle/DependencyInjection/SuluSecurityExtension.php
-
-		-
-			message: '#^Cannot access offset ''fixture'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/DependencyInjection/SuluSecurityExtension.php
 
 		-
@@ -45303,7 +45201,7 @@ parameters:
 		-
 			message: '#^Parameter \#2 \$value of method Symfony\\Component\\DependencyInjection\\Container\:\:setParameter\(\) expects array\|bool\|float\|int\|string\|UnitEnum\|null, mixed given\.$#'
 			identifier: argument.type
-			count: 7
+			count: 6
 			path: src/Sulu/Bundle/SecurityBundle/DependencyInjection/SuluSecurityExtension.php
 
 		-
@@ -45521,24 +45419,6 @@ parameters:
 			identifier: return.type
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Entity/RoleSettingRepository.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\SecurityBundle\\Entity\\SecurityTypeRepository\:\:findSecurityTypeById\(\) has parameter \$id with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Entity/SecurityTypeRepository.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\SecurityBundle\\Entity\\SecurityTypeRepository\:\:findSecurityTypeById\(\) should return Sulu\\Bundle\\SecurityBundle\\Entity\\SecurityType\|null but empty return statement found\.$#'
-			identifier: return.empty
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Entity/SecurityTypeRepository.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\SecurityBundle\\Entity\\SecurityTypeRepository\:\:findSecurityTypeById\(\) should return Sulu\\Bundle\\SecurityBundle\\Entity\\SecurityType\|null but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Entity/SecurityTypeRepository.php
 
 		-
 			message: '#^Call to an undefined method Sulu\\Bundle\\ContactBundle\\Entity\\ContactInterface\:\:getFullName\(\)\.$#'
@@ -46731,7 +46611,7 @@ parameters:
 		-
 			message: '#^Cannot access property \$name on mixed\.$#'
 			identifier: property.nonObject
-			count: 9
+			count: 6
 			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/RoleControllerTest.php
 
 		-
@@ -46753,12 +46633,6 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/RoleControllerTest.php
 
 		-
-			message: '#^Cannot access property \$securityType on mixed\.$#'
-			identifier: property.nonObject
-			count: 3
-			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/RoleControllerTest.php
-
-		-
 			message: '#^Cannot access property \$system on mixed\.$#'
 			identifier: property.nonObject
 			count: 6
@@ -46773,7 +46647,7 @@ parameters:
 		-
 			message: '#^Parameter \#1 \$json of function json_decode expects string, string\|false given\.$#'
 			identifier: argument.type
-			count: 17
+			count: 15
 			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/RoleControllerTest.php
 
 		-
@@ -46784,12 +46658,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#1 \$values of static method Sulu\\Component\\Util\\SortUtils\:\:multisort\(\) expects iterable\<\(int\|string\), mixed\>, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/RoleControllerTest.php
-
-		-
-			message: '#^Parameter \#2 \$array of method PHPUnit\\Framework\\Assert\:\:assertArrayNotHasKey\(\) expects array\<mixed\>\|ArrayAccess\<\(int\|string\), mixed\>, mixed given\.$#'
 			identifier: argument.type
 			count: 2
 			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/RoleControllerTest.php
