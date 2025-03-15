@@ -1,7 +1,8 @@
-// src/Sulu/Bundle/AdminBundle/Resources/js/containers/Translator/dummyData.js
 // @flow
 
-// Pre-defined segments for demonstration
+export const DUMMY_TEXT = "Welcome to our website. We offer premium services for all your needs. Contact us for more information.";
+
+// Pre-defined segments for demonstration (plain text)
 export const DUMMY_SEGMENTS = [
     {
         id: 1,
@@ -20,6 +21,30 @@ export const DUMMY_SEGMENTS = [
         text: "Contact us for more information.",
         beginPos: 70,
         endPos: 104
+    }
+];
+
+export const DUMMY_HTML_TEXT = "<h1>Welcome to our website.</h1><p>We offer <strong>premium services</strong> for all your needs.</p><p>Contact us for <a href=\"#\">more information</a>.</p>";
+
+// Pre-defined segments for HTML content
+export const DUMMY_HTML_SEGMENTS = [
+    {
+        id: 1,
+        text: "<h1>Welcome to our website.</h1>",
+        beginPos: 0,
+        endPos: 32
+    },
+    {
+        id: 2,
+        text: "<p>We offer <strong>premium services</strong> for all your needs.</p>",
+        beginPos: 33,
+        endPos: 102
+    },
+    {
+        id: 3,
+        text: "<p>Contact us for <a href=\"#\">more information</a>.</p>",
+        beginPos: 103,
+        endPos: 160
     }
 ];
 
@@ -45,5 +70,37 @@ export const DUMMY_ALTERNATIVES = {
         "Reach out to us for additional information.",
         "For more details, please contact us.",
         "Need more info? Contact our team."
+    ],
+    4: [
+        "Our dedicated team is ready to assist you.",
+        "Our expert team stands ready to help you.",
+        "We have a team of specialists ready to support you.",
+        "Our professionals are available to provide assistance.",
+        "A team of experts is waiting to help you."
     ]
+};
+
+// HTML alternatives with formatting preserved
+export const DUMMY_HTML_ALTERNATIVES = {
+    1: [
+        "<h1>Welcome to our website.</h1>",
+        "<h1>Welcome to our site.</h1>",
+        "<h1>Thanks for visiting our website.</h1>",
+        "<h1>We're glad you're here at our website.</h1>",
+        "<h1>Hello and welcome to our website.</h1>"
+    ],
+    2: [
+        "<p>We offer <strong>premium services</strong> for all your needs.</p>",
+        "<p>We provide <strong>high-quality services</strong> for your requirements.</p>",
+        "<p>Our <strong>premium services</strong> fulfill all your needs.</p>",
+        "<p>All your needs can be met by our <strong>premium services</strong>.</p>",
+        "<p>For all your needs, we offer <strong>top-notch services</strong>.</p>"
+    ],
+    3: [
+        "<p>Contact us for <a href=\"#\">more information</a>.</p>",
+        "<p>Get in touch for <a href=\"#\">further details</a>.</p>",
+        "<p>Reach out to us for <a href=\"#\">additional information</a>.</p>",
+        "<p>For <a href=\"#\">more details</a>, please contact us.</p>",
+        "<p>Need <a href=\"#\">more info</a>? Contact our team.</p>"
+    ],
 };

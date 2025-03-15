@@ -12,7 +12,7 @@ import Input from './Input';
 import TranslationAlternatives from './TranslationAlternatives';
 
 // Import dummy data (in a real implementation, this would come from API calls)
-import {DUMMY_SEGMENTS, DUMMY_ALTERNATIVES} from './dummyData';
+import {DUMMY_HTML_TEXT as DUMMY_TEXT, DUMMY_HTML_SEGMENTS as DUMMY_SEGMENTS, DUMMY_HTML_ALTERNATIVES as DUMMY_ALTERNATIVES} from './dummyData';
 
 type Props = {|
     action?: React$ComponentType<Object>,
@@ -126,7 +126,7 @@ export default class Translator extends React.Component<Props> {
             },
         }) => {
             this.loading = false;
-            this.targetText = 'Welcome to our website. We offer premium services for all your needs. Contact us for more information.';
+            this.targetText = DUMMY_TEXT;
             this.lastResponse = data;
 
             this.targetLanguage = data.response.targetLanguage.toLowerCase();

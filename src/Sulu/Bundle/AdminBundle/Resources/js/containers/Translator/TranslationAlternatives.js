@@ -1,14 +1,8 @@
-// src/Sulu/Bundle/AdminBundle/Resources/js/containers/Translator/TranslationAlternatives.js
 // @flow
 import React from 'react';
-import translatorStyles from './translator.scss';
-
-type Segment = {|
-    text: string,
-    beginPos: number,
-    endPos: number,
-    alternatives: Array<string>,
-|};
+import TextArea from "./TextArea";
+import type {Segment} from "./types";
+import TextEditor from "./TextEditor";
 
 type Props = {|
     onSegmentClick?: (segment: Segment) => void,
@@ -32,92 +26,30 @@ export default class TranslationAlternatives extends React.Component<Props> {
     render() {
         const {
             type,
-        } = this.props;
-
-        if (type === 'text_editor') {
-            return this.renderEditor();
-        }
-
-        return this.renderTextarea();
-    }
-
-    renderEditor() {
-        // Your existing editor rendering code
-        return null;
-    }
-
-    setTextareaRef = (ref: ?HTMLTextAreaElement) => {
-        this.textareaRef = ref;
-    }
-
-    renderTextarea() {
-        const {
-            text,
-        } = this.props;
-
-        return (
-            <div className={translatorStyles.inputContainer}>
-                {/* Original textarea with the full text */}
-                <textarea
-                    ref={this.setTextareaRef}
-                    className={translatorStyles.input + ' ' + translatorStyles.textarea}
-                    readOnly
-                    value={text}
-                    style={{display: 'none'}}
-                />
-                {/* Create an invisible overlay for segment selection */}
-                <div className={translatorStyles.textOverlay}>
-                    {this.renderInlineSegments(text)}
-                </div>
-            </div>
-        );
-    }
-
-    renderInlineSegments(text) {
-        const {
             segments,
+            text,
             selectedSegment,
             onSegmentClick,
         } = this.props;
 
-        if (!segments || segments.length === 0) {
-            return <span>{text}</span>;
-        }
-
-        // Create an array of text parts and segment spans
-        const parts = [];
-        let lastEnd = 0;
-
-        segments.forEach((segment, index) => {
-            // Add text before this segment if any
-            if (segment.beginPos > lastEnd) {
-                parts.push(
-                    <span key={`text-${index}`}>{text.substring(lastEnd, segment.beginPos)}</span>
-                );
-            }
-
-            // Add the segment as a span
-            const isSelected = selectedSegment === segment;
-            parts.push(
-                <span
-                    key={`segment-${index}`}
-                    className={`${translatorStyles.inlineSegment} ${isSelected ? translatorStyles.selectedInlineSegment : ''}`}
-                    onClick={() => onSegmentClick && onSegmentClick(segment)}
-                >
-                    {segment.text}
-                </span>
-            );
-
-            lastEnd = segment.endPos;
-        });
-
-        // Add any remaining text
-        if (lastEnd < text.length) {
-            parts.push(
-                <span key="text-end">{text.substring(lastEnd)}</span>
+        if (type === 'text_editor') {
+            return (
+                <TextEditor
+                    segments={segments}
+                    selectedSegment={selectedSegment}
+                    text={text}
+                    onSegmentClick={onSegmentClick}
+                />
             );
         }
 
-        return parts;
+        return (
+            <TextArea
+                  segments={segments}
+                  selectedSegment={selectedSegment}
+                  text={text}
+                  onSegmentClick={onSegmentClick}
+            />
+        );
     }
 }
