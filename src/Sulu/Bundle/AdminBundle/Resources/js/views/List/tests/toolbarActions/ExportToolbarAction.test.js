@@ -1,6 +1,7 @@
 // @flow
 import {observable as mockObservable, observable} from 'mobx';
 import {mount} from 'enzyme';
+import {createMemoryHistory} from 'history';
 import ListStore from '../../../../containers/List/stores/ListStore';
 import Router from '../../../../services/Router';
 import ResourceStore from '../../../../stores/ResourceStore';
@@ -30,7 +31,7 @@ jest.mock('../../../../services/ResourceRequester/registries/resourceRouteRegist
 }));
 
 function createExportToolbarAction(options = {}) {
-    const router = new Router({});
+    const router = new Router(createMemoryHistory());
     const listStore = new ListStore('test', 'test', 'test', {page: observable.box(1)});
     const list = new List({
         route: router.route,

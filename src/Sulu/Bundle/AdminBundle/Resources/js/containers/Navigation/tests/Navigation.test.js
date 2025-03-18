@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
 import {render, mount} from 'enzyme';
+import {createMemoryHistory} from 'history';
 import Navigation from '../Navigation';
 import Router, {Route} from '../../../services/Router';
 import type {NavigationItem} from '../types';
@@ -88,7 +89,7 @@ jest.mock('../registries/navigationRegistry', () => ({
 }));
 
 test('Should render navigation', () => {
-    const router = new Router({});
+    const router = new Router(createMemoryHistory());
     router.route = new Route({
         name: 'sulu_admin.form_tab',
         path: '/form',
@@ -112,7 +113,7 @@ test('Should render navigation', () => {
 });
 
 test('Should render navigation without appVersion', () => {
-    const router = new Router({});
+    const router = new Router(createMemoryHistory());
     router.route = new Route({
         name: 'sulu_admin.form_tab',
         path: '/form',
@@ -136,7 +137,7 @@ test('Should render navigation without appVersion', () => {
 });
 
 test('Should call the navigation callback, pin callback and router navigate', () => {
-    const router = new Router({});
+    const router = new Router(createMemoryHistory());
     router.route = new Route({
         name: 'sulu_admin.form_tab',
         path: '/form',

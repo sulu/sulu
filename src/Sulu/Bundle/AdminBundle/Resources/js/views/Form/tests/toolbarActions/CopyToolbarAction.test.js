@@ -1,5 +1,6 @@
 // @flow
 import {mount} from 'enzyme';
+import {createMemoryHistory} from 'history';
 import {ResourceFormStore} from '../../../../containers/Form';
 import ResourceRequester from '../../../../services/ResourceRequester';
 import ResourceStore from '../../../../stores/ResourceStore';
@@ -66,7 +67,7 @@ jest.mock('../../../../views/Form', () => jest.fn(function() {
 function createCopyToolbarAction(options = {}) {
     const resourceStore = new ResourceStore('test');
     const formStore = new ResourceFormStore(resourceStore, 'test');
-    const router = new Router({});
+    const router = new Router(createMemoryHistory());
     const form = new Form({
         locales: [],
         resourceStore,

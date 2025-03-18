@@ -1,6 +1,7 @@
 // @flow
 import {mount} from 'enzyme';
 import log from 'loglevel';
+import {createMemoryHistory} from 'history';
 import {ResourceFormStore} from '../../../../containers/Form';
 import ResourceRequester from '../../../../services/ResourceRequester';
 import ResourceStore from '../../../../stores/ResourceStore';
@@ -135,7 +136,7 @@ jest.mock('../../../../containers/Form/stores/metadataStore', () => ({
 function createCopyLocaleToolbarAction(locales, options = {}) {
     const resourceStore = new ResourceStore('test');
     const formStore = new ResourceFormStore(resourceStore, 'test');
-    const router = new Router({});
+    const router = new Router(createMemoryHistory());
     const form = new Form({
         locales: [],
         resourceStore,

@@ -1,6 +1,7 @@
 //@flow
 import React from 'react';
 import {render, mount} from 'enzyme';
+import {createMemoryHistory} from 'history';
 import Router, {Route} from '../../../services/Router';
 import Application from '../Application';
 
@@ -109,7 +110,7 @@ test('Render login with loader', () => {
     mockInitializedTranslationsLocale.mockReturnValue(null);
     mockUserStoreLoggedIn.mockReturnValue(false);
 
-    const router = new Router({});
+    const router = new Router(createMemoryHistory());
     const application = mount(<Application appVersion={null} router={router} suluVersion="2.0.0-RC1" />);
     expect(application.render()).toMatchSnapshot();
 });
@@ -120,7 +121,7 @@ test('Render login screen to reset password', () => {
     mockInitializedTranslationsLocale.mockReturnValue('en');
     mockUserStoreLoggedIn.mockReturnValue(false);
 
-    const router = new Router({});
+    const router = new Router(createMemoryHistory());
     router.attributes.forgotPasswordToken = 'some-uuid';
     const application = mount(<Application appVersion={null} router={router} suluVersion="2.0.0-RC1" />);
     expect(application.render()).toMatchSnapshot();
@@ -132,21 +133,21 @@ test('Render login when user is not logged in', () => {
     mockInitializedTranslationsLocale.mockReturnValue('en');
     mockUserStoreLoggedIn.mockReturnValue(false);
 
-    const router = new Router({});
+    const router = new Router(createMemoryHistory());
     const application = mount(<Application appVersion={null} router={router} suluVersion="2.0.0-RC1" />);
 
     expect(application.render()).toMatchSnapshot();
 });
 
 test('Should not fail if current route does not exist', () => {
-    const router = new Router({});
+    const router = new Router(createMemoryHistory());
     const view = render(<Application appVersion={null} router={router} suluVersion="2.0.0-RC1" />);
 
     expect(view).toMatchSnapshot();
 });
 
 test('Render based on current route', () => {
-    const router = new Router({});
+    const router = new Router(createMemoryHistory());
     router.route = new Route({
         name: 'test',
         path: '/webspaces',
@@ -159,7 +160,7 @@ test('Render based on current route', () => {
 });
 
 test('Render based on current route with app version', () => {
-    const router = new Router({});
+    const router = new Router(createMemoryHistory());
     router.route = new Route({
         name: 'test',
         path: '/webspaces',
@@ -172,7 +173,7 @@ test('Render based on current route with app version', () => {
 });
 
 test('Render opened navigation', () => {
-    const router = new Router({});
+    const router = new Router(createMemoryHistory());
     router.route = new Route({
         name: 'test',
         path: '/webspaces',
@@ -186,7 +187,7 @@ test('Render opened navigation', () => {
 });
 
 test('Pin navigation', () => {
-    const router = new Router({});
+    const router = new Router(createMemoryHistory());
     router.route = new Route({
         name: 'test',
         path: '/webspaces',
@@ -202,7 +203,7 @@ test('Pin navigation', () => {
 });
 
 test('Pin navigation from beginning', () => {
-    const router = new Router({});
+    const router = new Router(createMemoryHistory());
     router.route = new Route({
         name: 'test',
         path: '/webspaces',
@@ -222,7 +223,7 @@ test('Pin navigation from beginning', () => {
 });
 
 test('Do not pin navigation from beginning', () => {
-    const router = new Router({});
+    const router = new Router(createMemoryHistory());
     router.route = new Route({
         name: 'test',
         path: '/webspaces',

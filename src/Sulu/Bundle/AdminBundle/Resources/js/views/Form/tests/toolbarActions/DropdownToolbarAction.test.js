@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
 import {render} from 'enzyme';
+import {createMemoryHistory} from 'history';
 import {ResourceFormStore} from '../../../../containers/Form';
 import ResourceStore from '../../../../stores/ResourceStore';
 import Router from '../../../../services/Router';
@@ -42,7 +43,7 @@ jest.mock('../../registries/formToolbarActionRegistry', () => ({
 function createDropdownToolbarAction(options = {}) {
     const resourceStore = new ResourceStore('test');
     const resourceFormStore = new ResourceFormStore(resourceStore, 'test');
-    const router = new Router({});
+    const router = new Router(createMemoryHistory());
     const form = new Form({
         locales: [],
         resourceStore,

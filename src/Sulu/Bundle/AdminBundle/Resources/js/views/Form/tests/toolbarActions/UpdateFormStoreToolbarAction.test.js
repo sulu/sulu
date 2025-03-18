@@ -1,6 +1,7 @@
 // @flow
 import {mount} from 'enzyme';
 import symfonyRouting from 'fos-jsrouting/router';
+import {createMemoryHistory} from 'history';
 import UpdateFormStoreToolbarAction from '../../toolbarActions/UpdateFormStoreToolbarAction';
 import {ResourceFormStore} from '../../../../containers/Form';
 import ResourceStore from '../../../../stores/ResourceStore';
@@ -75,7 +76,7 @@ jest.mock('../../../../stores/ResourceStore', () => jest.fn(function(resourceKey
 function createUpdateFormStoreToolbarAction(options = {}) {
     const resourceStore = new ResourceStore('test');
     const resourceFormStore = new ResourceFormStore(resourceStore, 'test');
-    const router = new Router({});
+    const router = new Router(createMemoryHistory());
     const form = new Form({
         locales: [],
         resourceStore,

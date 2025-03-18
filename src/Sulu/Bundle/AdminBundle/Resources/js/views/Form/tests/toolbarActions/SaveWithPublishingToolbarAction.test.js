@@ -1,5 +1,6 @@
 // @flow
 import log from 'loglevel';
+import {createMemoryHistory} from 'history';
 import SaveWithPublishingToolbarAction from '../../toolbarActions/SaveWithPublishingToolbarAction';
 import {ResourceFormStore} from '../../../../containers/Form';
 import ResourceStore from '../../../../stores/ResourceStore';
@@ -48,7 +49,7 @@ jest.mock('../../../../views/Form', () => jest.fn(function() {
 function createSaveWithPublishingToolbarAction(options = {}) {
     const resourceStore = new ResourceStore('test');
     const resourceFormStore = new ResourceFormStore(resourceStore, 'test');
-    const router = new Router({});
+    const router = new Router(createMemoryHistory());
     const form = new Form({
         locales: [],
         resourceStore,

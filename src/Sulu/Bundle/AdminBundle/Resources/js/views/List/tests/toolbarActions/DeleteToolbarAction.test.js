@@ -1,5 +1,6 @@
 // @flow
 import {observable} from 'mobx';
+import {createMemoryHistory} from 'history';
 import ListStore from '../../../../containers/List/stores/ListStore';
 import Router from '../../../../services/Router';
 import ResourceStore from '../../../../stores/ResourceStore';
@@ -23,7 +24,7 @@ jest.mock('../../../../views/List/List', () => jest.fn(function() {
 jest.mock('../../../../services/Router/Router', () => jest.fn());
 
 function createDeleteToolbarAction(options = {}) {
-    const router = new Router({});
+    const router = new Router(createMemoryHistory());
     const listStore = new ListStore('test', 'test', 'test', {page: observable.box(1)});
     const list = new List({
         route: router.route,

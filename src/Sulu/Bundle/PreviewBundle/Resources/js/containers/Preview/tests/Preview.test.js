@@ -7,6 +7,7 @@ import ResourceFormStore from 'sulu-admin-bundle/containers/Form/stores/Resource
 import Router, {Route} from 'sulu-admin-bundle/services/Router';
 import ResourceRequester from 'sulu-admin-bundle/services/ResourceRequester';
 import {webspaceStore} from 'sulu-page-bundle/stores';
+import {createMemoryHistory} from 'history';
 import PreviewStore from '../stores/PreviewStore';
 import Preview from '../Preview';
 
@@ -102,7 +103,7 @@ beforeEach(() => {
 test('Render correct preview', () => {
     const resourceStore = new ResourceStore('pages', 1);
     const formStore = new ResourceFormStore(resourceStore, 'pages');
-    const router = new Router({});
+    const router = new Router(createMemoryHistory());
 
     webspaceStore.getWebspace.mockReturnValue({
         segments: [
@@ -130,7 +131,7 @@ test('Render correct preview', () => {
 test('Render correct preview use route option for resourceKey', () => {
     const resourceStore = new ResourceStore('pages', 1);
     const formStore = new ResourceFormStore(resourceStore, 'pages');
-    const router = new Router({});
+    const router = new Router(createMemoryHistory());
     router.route = new Route({
         path: '/test',
         name: 'test',
@@ -159,7 +160,7 @@ test('Render correct preview with target groups', () => {
 
     const resourceStore = new ResourceStore('pages', 1);
     const formStore = new ResourceFormStore(resourceStore, 'pages');
-    const router = new Router({});
+    const router = new Router(createMemoryHistory());
 
     Preview.audienceTargeting = true;
     const preview = mount(<Preview formStore={formStore} router={router} />);
@@ -180,7 +181,7 @@ test('Render correct preview with target groups', () => {
 test('Render button to start preview', () => {
     const resourceStore = new ResourceStore('pages', 1);
     const formStore = new ResourceFormStore(resourceStore, 'pages');
-    const router = new Router({});
+    const router = new Router(createMemoryHistory());
 
     const preview = mount(<Preview formStore={formStore} router={router} />);
 
@@ -193,7 +194,7 @@ test('Render nothing if separate window is opened and rerender if it is closed',
 
     const resourceStore = new ResourceStore('pages', 1);
     const formStore = new ResourceFormStore(resourceStore, 'pages');
-    const router = new Router({});
+    const router = new Router(createMemoryHistory());
 
     const preview = shallow(<Preview formStore={formStore} router={router} />);
 
@@ -218,7 +219,7 @@ test('Render nothing if separate window is opened and rerender if it is closed',
 test('Change css class when selection of device has changed', () => {
     const resourceStore = new ResourceStore('pages', 1);
     const formStore = new ResourceFormStore(resourceStore, 'pages');
-    const router = new Router({});
+    const router = new Router(createMemoryHistory());
 
     const preview = shallow(<Preview formStore={formStore} router={router} />);
 
@@ -259,7 +260,7 @@ test('Change webspace in PreviewStore when selection of webspace has changed', (
     const locale = observable.box('de');
     const resourceStore = new ResourceStore('pages', 1, {locale});
     const formStore = new ResourceFormStore(resourceStore, 'pages');
-    const router = new Router({});
+    const router = new Router(createMemoryHistory());
 
     const preview = shallow(<Preview formStore={formStore} router={router} />);
 
@@ -282,7 +283,7 @@ test('Use router attribute to determine webspace', () => {
     const locale = observable.box('ru');
     const resourceStore = new ResourceStore('pages', 1, {locale});
     const formStore = new ResourceFormStore(resourceStore, 'pages');
-    const router = new Router({});
+    const router = new Router(createMemoryHistory());
     router.attributes.webspace = 'example';
 
     const preview = shallow(<Preview formStore={formStore} router={router} />);
@@ -302,7 +303,7 @@ test('Use router attribute to determine webspace', () => {
 test('Change segment in PreviewStore when selection of segment has changed', () => {
     const resourceStore = new ResourceStore('pages', 1);
     const formStore = new ResourceFormStore(resourceStore, 'pages');
-    const router = new Router({});
+    const router = new Router(createMemoryHistory());
 
     webspaceStore.getWebspace.mockReturnValue({
         segments: [
@@ -339,7 +340,7 @@ test('React and update preview when data is changed', () => {
     // $FlowFixMe
     formStore.type = observable.box('default');
 
-    const router = new Router({});
+    const router = new Router(createMemoryHistory());
     const preview = mount(<Preview formStore={formStore} router={router} />);
 
     const startPromise = Promise.resolve();
@@ -390,7 +391,7 @@ test('React and update preview in external window when data is changed', () => {
     // $FlowFixMe
     formStore.type = observable.box('default');
 
-    const router = new Router({});
+    const router = new Router(createMemoryHistory());
     const preview = mount(<Preview formStore={formStore} router={router} />);
 
     const startPromise = Promise.resolve();
@@ -431,7 +432,7 @@ test('Dont react or update preview when data is changed during formstore is load
     // $FlowFixMe
     formStore.type = observable.box('default');
 
-    const router = new Router({});
+    const router = new Router(createMemoryHistory());
     const preview = mount(<Preview formStore={formStore} router={router} />);
 
     const startPromise = Promise.resolve();
@@ -465,7 +466,7 @@ test('Dont react or update preview when data is changed during preview-store is 
     // $FlowFixMe
     formStore.type = observable.box('default');
 
-    const router = new Router({});
+    const router = new Router(createMemoryHistory());
     const preview = mount(<Preview formStore={formStore} router={router} />);
 
     const startPromise = Promise.resolve();
@@ -500,7 +501,7 @@ test('React and update-context when schema is changed', () => {
     formStore.type = observable.box('default');
     formStore.schema = observable.box({title: {label: 'Title'}});
 
-    const router = new Router({});
+    const router = new Router(createMemoryHistory());
     const preview = mount(<Preview formStore={formStore} router={router} />);
 
     const startPromise = Promise.resolve();
@@ -537,7 +538,7 @@ test('React and restart when locale is changed', () => {
     // $FlowFixMe
     formStore.locale = observable.box('en');
 
-    const router = new Router({});
+    const router = new Router(createMemoryHistory());
     const preview = mount(<Preview formStore={formStore} router={router} />);
 
     const startPromise = Promise.resolve();
@@ -564,7 +565,7 @@ test('Change target group in PreviewStore when selection of target group has cha
     const locale = observable.box('de');
     const resourceStore = new ResourceStore('pages', 1, {locale});
     const formStore = new ResourceFormStore(resourceStore, 'pages');
-    const router = new Router({});
+    const router = new Router(createMemoryHistory());
 
     Preview.audienceTargeting = true;
 
@@ -590,7 +591,7 @@ test('Change target group in PreviewStore when selection of target group has cha
 test('Change dateTime in PreviewStore when DatePicker changed', () => {
     const resourceStore = new ResourceStore('pages', 1);
     const formStore = new ResourceFormStore(resourceStore, 'pages');
-    const router = new Router({});
+    const router = new Router(createMemoryHistory());
 
     const preview = mount(<Preview formStore={formStore} router={router} />);
 

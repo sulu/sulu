@@ -1,4 +1,5 @@
 // @flow
+import {createMemoryHistory} from 'history';
 import SaveToolbarAction from '../../toolbarActions/SaveToolbarAction';
 import {ResourceFormStore} from '../../../../containers/Form';
 import ResourceStore from '../../../../stores/ResourceStore';
@@ -46,7 +47,7 @@ jest.mock('../../../../views/Form', () => jest.fn(function() {
 function createSaveToolbarAction(options = {}) {
     const resourceStore = new ResourceStore('test');
     const resourceFormStore = new ResourceFormStore(resourceStore, 'test');
-    const router = new Router({});
+    const router = new Router(createMemoryHistory());
     const form = new Form({
         locales: [],
         resourceStore,

@@ -1,4 +1,5 @@
 // @flow
+import {createMemoryHistory} from 'history';
 import ResourceStore from '../../../../stores/ResourceStore';
 import Router from '../../../../services/Router';
 import Form from '../../../../views/Form';
@@ -60,7 +61,7 @@ jest.mock('../../../../services/ResourceRequester', () => ({
 function createTogglerToolbarAction(resourceKey, options: {[key: string]: mixed}) {
     const resourceStore = new ResourceStore(resourceKey);
     const resourceFormStore = new ResourceFormStore(resourceStore, resourceKey);
-    const router = new Router({});
+    const router = new Router(createMemoryHistory());
     const form = new Form({
         locales: [],
         resourceStore,
