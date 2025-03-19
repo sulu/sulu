@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Sulu\Content\Infrastructure\Symfony\HttpKernel;
 
+use Sulu\Content\Infrastructure\Symfony\HttpKernel\Compiler\ResourceLoaderCacheCompilerPass;
 use Sulu\Content\Infrastructure\Symfony\HttpKernel\Compiler\SettingsFormPass;
 use Symfony\Component\Config\Definition\Configurator\DefinitionConfigurator;
 use Symfony\Component\Config\FileLocator;
@@ -100,5 +101,6 @@ final class SuluContentBundle extends AbstractBundle
     public function build(ContainerBuilder $container): void
     {
         $container->addCompilerPass(new SettingsFormPass());
+        $container->addCompilerPass(new ResourceLoaderCacheCompilerPass());
     }
 }
