@@ -47,7 +47,7 @@ class PageResourceLoaderTest extends TestCase
         $page1 = $this->createPage('123-123-123');
         $page2 = $this->createPage('321-321-321');
 
-        $this->pageRepository->findBy(['id' => ['123-123-123', '321-321-321']])->willReturn([
+        $this->pageRepository->findBy(['uuids' => ['123-123-123', '321-321-321']])->willReturn([
             $page1,
             $page2,
         ])

@@ -47,7 +47,7 @@ class SnippetResourceLoaderTest extends TestCase
         $snippet1 = $this->createSnippet('1');
         $snippet2 = $this->createSnippet('3');
 
-        $this->snippetRepository->findBy(['id' => ['1', '3']])->willReturn([
+        $this->snippetRepository->findBy(['uuids' => ['1', '3']])->willReturn([
             $snippet1,
             $snippet2,
         ])

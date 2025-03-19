@@ -16,9 +16,6 @@ parameters:
     parallel:
         processTimeout: 300.0
     ignoreErrors:
-        -
-            message: '#Cannot access offset .+ on mixed.#' # TODO we should match against a whole array not every single item
-            path: packages/content/tests/Functional/Application/ContentResolver/ContentResolverTest.php
         - message: '#^Property Sulu\\(.*)\\Domain\\Model\\(.*)\:\:\$id \(int\|null\) is never assigned int so it can be removed from the property type\.$#'
     excludePaths:
         - %currentWorkingDirectory%/node_modules/*
