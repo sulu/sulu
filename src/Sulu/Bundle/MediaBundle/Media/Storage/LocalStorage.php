@@ -63,7 +63,7 @@ class LocalStorage implements StorageInterface
         $fp = @\fopen($pathName, 'r');
 
         if (false === $fp) {
-            throw new IOException(\sprintf('Failed to open file "%s"', $pathName), path: $pathName);
+            throw new IOException(\sprintf('Failed to open file with path "%s"', $pathName), path: $pathName);
         }
 
         return $fp;
