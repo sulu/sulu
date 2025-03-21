@@ -131,7 +131,7 @@ export default class Router {
     updateAttributesHooks: Array<UpdateAttributesHook> = [];
     redirectFlag: boolean = false;
 
-    constructor(history: Object | undefined = undefined) {
+    constructor(history?: Object = undefined) {
         if (history) {
             this.history = createMemoryHistory();
         } else {
