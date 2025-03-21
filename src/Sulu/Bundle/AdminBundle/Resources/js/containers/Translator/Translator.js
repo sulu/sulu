@@ -12,7 +12,7 @@ import Input from './Input';
 import TranslationAlternatives from './TranslationAlternatives';
 
 // Import dummy data (in a real implementation, this would come from API calls)
-import {DUMMY_HTML_TEXT as DUMMY_TEXT, DUMMY_HTML_SEGMENTS as DUMMY_SEGMENTS, DUMMY_HTML_ALTERNATIVES as DUMMY_ALTERNATIVES} from './dummyData';
+import {DUMMY_TEXT, DUMMY_SEGMENTS, DUMMY_ALTERNATIVES} from './dummyData';
 
 type Props = {|
     action?: React$ComponentType<Object>,

@@ -24,27 +24,27 @@ export const DUMMY_SEGMENTS = [
     }
 ];
 
-export const DUMMY_HTML_TEXT = "<h1>Welcome to our website.</h1><p>We offer <strong>premium services</strong> for all your needs.</p><p>Contact us for <a href=\"#\">more information</a>.</p>";
+export const DUMMY_HTML_TEXT = "<h2>Welcome to our website.</h2><p>We offer <strong>premium services</strong> for all your needs.</p><p>Contact us for <a href=\"#\">more information</a>.</p>";
 
 // Pre-defined segments for HTML content
 export const DUMMY_HTML_SEGMENTS = [
     {
         id: 1,
-        text: "<h1>Welcome to our website.</h1>",
+        text: "<h2>Welcome to our website.</h2>",
         beginPos: 0,
         endPos: 32
     },
     {
         id: 2,
         text: "<p>We offer <strong>premium services</strong> for all your needs.</p>",
-        beginPos: 33,
-        endPos: 102
+        beginPos: 32,
+        endPos: 101
     },
     {
         id: 3,
         text: "<p>Contact us for <a href=\"#\">more information</a>.</p>",
-        beginPos: 103,
-        endPos: 160
+        beginPos: 101,
+        endPos: 157
     }
 ];
 
@@ -83,11 +83,11 @@ export const DUMMY_ALTERNATIVES = {
 // HTML alternatives with formatting preserved
 export const DUMMY_HTML_ALTERNATIVES = {
     1: [
-        "<h1>Welcome to our website.</h1>",
-        "<h1>Welcome to our site.</h1>",
-        "<h1>Thanks for visiting our website.</h1>",
-        "<h1>We're glad you're here at our website.</h1>",
-        "<h1>Hello and welcome to our website.</h1>"
+        "<h2>Welcome to our website.</h2>",
+        "<h2>Welcome to our site.</h2>",
+        "<h2>Thanks for visiting our website.</h2>",
+        "<h2>We're glad you're here at our website.</h2>",
+        "<h2>Hello and welcome to our website.</h2>"
     ],
     2: [
         "<p>We offer <strong>premium services</strong> for all your needs.</p>",
