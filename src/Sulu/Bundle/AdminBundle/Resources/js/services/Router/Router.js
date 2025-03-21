@@ -133,9 +133,9 @@ export default class Router {
 
     constructor(history?: Object = undefined) {
         if (history) {
-            this.history = createMemoryHistory();
-        } else {
             this.history = history;
+        } else {
+            this.history = createMemoryHistory();
         }
 
         this.history.listen(({location}) => {
