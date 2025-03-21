@@ -29,6 +29,7 @@ use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Symfony\Cmf\Component\Routing\RouteProviderInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\Route;
@@ -80,6 +81,8 @@ class ContentRouteProvider implements RouteProviderInterface
      */
     private $defaultOptions;
 
+    private ?ContainerInterface $container;
+
     public function __construct(
         DocumentManagerInterface $documentManager,
         DocumentInspector $documentInspector,
@@ -88,7 +91,8 @@ class ContentRouteProvider implements RouteProviderInterface
         WebspaceManagerInterface $webspaceManager,
         RequestAnalyzerInterface $requestAnalyzer,
         ?SecurityCheckerInterface $securityChecker = null,
-        array $defaultOptions = []
+        array $defaultOptions = [],
+        ?ContainerInterface $container = null
     ) {
         $this->documentManager = $documentManager;
         $this->documentInspector = $documentInspector;
@@ -99,11 +103,18 @@ class ContentRouteProvider implements RouteProviderInterface
         $this->securityChecker = $securityChecker;
         Assert::null($securityChecker, 'The security checker should be called by the SecurityListener not the ContentRouteProvider.'); // people who overwrite the ContentRouteProvider should make aware of that they also need to refactor this
         $this->defaultOptions = $defaultOptions;
+        $this->container = $container;
     }
 
     public function getRouteCollectionForRequest(Request $request): RouteCollection
     {
         $collection = new RouteCollection();
+
+        // TODO remove as soon as the old PageBundle is removed
+        // If the new SuluPageBundle is registered, we need to skip this route provider
+        if ($this->container && \array_key_exists('SuluNextPageBundle', $this->container->getParameter('kernel.bundles'))) {
+            return $collection;
+        }
 
         if ('' === $request->getRequestFormat()) {
             return $collection;

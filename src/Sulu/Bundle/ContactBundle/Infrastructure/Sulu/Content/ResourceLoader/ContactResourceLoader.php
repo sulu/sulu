@@ -42,7 +42,9 @@ class ContactResourceLoader implements ResourceLoaderInterface
 
         $mappedResult = [];
         foreach ($result as $object) {
-            $mappedResult[$object->getId()] = $object;
+            // TODO fix this
+            // return entity to be compatible with old content type
+            $mappedResult[$object->getId()] = $object->getEntity();
         }
 
         return $mappedResult;
