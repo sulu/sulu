@@ -1,7 +1,6 @@
 // @flow
 import React from 'react';
 import {mount, render} from 'enzyme';
-import {createMemoryHistory} from 'history';
 import Router, {Route} from '../../../services/Router';
 import Tabs from '../Tabs';
 import Requester from '../../../services/Requester';
@@ -65,7 +64,7 @@ test('Should render the children after the tabs', () => {
         this.route = route;
     });
 
-    const router = new Router(createMemoryHistory());
+    const router = new Router();
 
     const Child = () => (<h1>Child</h1>);
     expect(render(<Tabs isRootView={true} route={route} router={router}>{() => (<Child />)}</Tabs>)).toMatchSnapshot();
@@ -122,7 +121,7 @@ test('Should render the tab badges', () => {
         this.route = route;
     });
 
-    const router = new Router(createMemoryHistory());
+    const router = new Router();
 
     const Child = () => (<h1>Child</h1>);
     const tabs = mount(<Tabs isRootView={true} route={route} router={router}>{() => (<Child />)}</Tabs>);
@@ -168,7 +167,7 @@ test('Should render the header between children and tabs', () => {
         this.route = route;
     });
 
-    const router = new Router(createMemoryHistory());
+    const router = new Router();
 
     const Child = () => (<h2>Child</h2>);
     expect(render(
@@ -215,7 +214,7 @@ test('Should render the children with the passed props', () => {
         this.route = route;
     });
 
-    const router = new Router(createMemoryHistory());
+    const router = new Router();
 
     const Child = ({test}) => (<h2>{test}</h2>);
     expect(render(
@@ -274,7 +273,7 @@ test('Should render the active child with disabledTabGap option', () => {
         this.route = activeRoute;
     });
 
-    const router = new Router(createMemoryHistory());
+    const router = new Router();
 
     const Child = () => (<h1>Child</h1>);
     expect(render(
@@ -341,7 +340,7 @@ test('Should consider the tabOrder when rendering the tabs', () => {
         this.route = route;
     });
 
-    const router = new Router(createMemoryHistory());
+    const router = new Router();
 
     const Child = () => (<h1>Child</h1>);
     const tabs = mount(<Tabs route={route} router={router}>{() => (<Child />)}</Tabs>);
@@ -394,7 +393,7 @@ test('Should mark currently active tab as selected according to prop', (done) =>
         this.route = activeRoute;
     });
 
-    const router = new Router(createMemoryHistory());
+    const router = new Router();
 
     const Child = () => (<h1>Child</h1>);
     const tabs = mount(
@@ -452,7 +451,7 @@ test('Should mark currently active tab as selected', (done) => {
         this.route = activeRoute;
     });
 
-    const router = new Router(createMemoryHistory());
+    const router = new Router();
 
     const Child = () => (<h1>Child</h1>);
     const tabs = mount(
@@ -509,7 +508,7 @@ test('Should redirect to child route with highest priority if no tab is active b
         this.route = route;
     });
 
-    const router = new Router(createMemoryHistory());
+    const router = new Router();
 
     const Child = () => (<h1>Child</h1>);
     mount(<Tabs route={route} router={router}>{() => (<Child />)}</Tabs>);
@@ -564,7 +563,7 @@ test('Should redirect to child route from props with highest priority if no tab 
         this.route = route;
     });
 
-    const router = new Router(createMemoryHistory());
+    const router = new Router();
 
     const Child = () => (<h1>Child</h1>);
     mount(<Tabs route={route} routeChildren={childRoutes} router={router}>{() => (<Child />)}</Tabs>);
@@ -617,7 +616,7 @@ test('Navigate to tab if it was clicked', () => {
         this.route = route;
     });
 
-    const router = new Router(createMemoryHistory());
+    const router = new Router();
 
     const Child = () => (<h1>Child</h1>);
     const tabs = mount(<Tabs route={route} router={router}>{() => (<Child />)}</Tabs>);
@@ -671,7 +670,7 @@ test('Navigate to tab if it was clicked', () => {
         this.route = route;
     });
 
-    const router = new Router(createMemoryHistory());
+    const router = new Router();
 
     const Child = () => (<h1>Child</h1>);
     const tabs = mount(<Tabs route={route} router={router}>{() => (<Child />)}</Tabs>);

@@ -1,7 +1,6 @@
 // @flow
 import mockReact from 'react';
 import {mount} from 'enzyme';
-import {createMemoryHistory} from 'history';
 import FormContainer, {ResourceFormStore} from '../../../../containers/Form';
 import Router from '../../../../services/Router';
 import ResourceStore from '../../../../stores/ResourceStore';
@@ -49,7 +48,7 @@ function createSaveWithFormDialogToolbarAction(options: {[string]: any}) {
     const locales = [];
     const resourceStore = new ResourceStore('test');
     const formStore = new ResourceFormStore(resourceStore, 'test');
-    const router = new Router(createMemoryHistory());
+    const router = new Router();
     const form = new Form({
         locales,
         resourceStore,

@@ -4,7 +4,6 @@ import {extendObservable as mockExtendObservable, observable} from 'mobx';
 import {mount} from 'enzyme';
 import {Router} from 'sulu-admin-bundle/services';
 import {findWithHighOrderFunction, defaultWebspace} from 'sulu-admin-bundle/utils/TestHelper';
-import {createMemoryHistory} from 'history';
 
 jest.mock('sulu-admin-bundle/containers', () => ({
     FlatStructureStrategy: require(
@@ -111,7 +110,7 @@ test('Render PageList', () => {
     };
 
     const PageList = require('../PageList').default;
-    const router = new Router(createMemoryHistory());
+    const router = new Router();
     router.attributes = {
         webspace: 'sulu',
     };
@@ -193,7 +192,7 @@ test('Should show the locales from the webspace configuration for the toolbar', 
         allLocalizations: [{localization: 'en', name: 'en'}, {localization: 'de', name: 'de'}],
     };
 
-    const router = new Router(createMemoryHistory());
+    const router = new Router();
     router.attributes = {
         webspace: 'sulu',
     };
@@ -237,7 +236,7 @@ test('Should change excludeGhostsAndShadows when value of toggler is changed', (
         key: 'sulu',
     };
 
-    const router = new Router(createMemoryHistory());
+    const router = new Router();
     router.attributes = {
         webspace: 'sulu',
     };
@@ -292,7 +291,7 @@ test('Should set webspace if copied page is in different webspace than the sourc
         key: 'sulu',
     };
 
-    const router = new Router(createMemoryHistory());
+    const router = new Router();
     router.attributes = {
         webspace: 'sulu',
     };
@@ -329,7 +328,7 @@ test('Should use CacheClearToolbarAction for cache clearing', () => {
         allLocalizations: [{localization: 'en', name: 'en'}, {localization: 'de', name: 'de'}],
     };
 
-    const router = new Router(createMemoryHistory());
+    const router = new Router();
     router.attributes = {
         webspace: 'sulu',
     };
@@ -386,7 +385,7 @@ test('Destroy ListStore to avoid many requests and reset active to be set on web
         allLocalizations: [{localization: 'en', name: 'en'}, {localization: 'de', name: 'de'}],
     };
 
-    const router = new Router(createMemoryHistory());
+    const router = new Router();
     router.attributes = {
         webspace: 'sulu',
     };
@@ -416,7 +415,7 @@ test('Should bind router', () => {
         localizations: undefined,
     };
 
-    const router = new Router(createMemoryHistory());
+    const router = new Router();
     router.attributes = {
         webspace: 'sulu',
     };
@@ -449,7 +448,7 @@ test('Should call disposers on unmount', () => {
         localizations: undefined,
     };
 
-    const router = new Router(createMemoryHistory());
+    const router = new Router();
     router.attributes = {
         webspace: 'sulu',
     };

@@ -3,7 +3,6 @@ import {mount} from 'enzyme';
 import {observable} from 'mobx';
 import log from 'loglevel';
 import jexl from 'jexl';
-import {createMemoryHistory} from 'history';
 import DeleteToolbarAction from '../../toolbarActions/DeleteToolbarAction';
 import {ResourceFormStore} from '../../../../containers/Form';
 import ResourceStore from '../../../../stores/ResourceStore';
@@ -64,7 +63,7 @@ jexl.addTransform('length', (value: Array<*>) => value.length);
 function createDeleteToolbarAction(options = {}) {
     const resourceStore = new ResourceStore('test', undefined, {locale: observable.box('en')});
     const resourceFormStore = new ResourceFormStore(resourceStore, 'test');
-    const router = new Router(createMemoryHistory());
+    const router = new Router();
     const form = new Form({
         locales: [],
         resourceStore,
@@ -181,7 +180,7 @@ test('Return item config when passed visible_condition is met', () => {
 test('Throw error when "delete_locale" option is not a boolean', () => {
     const resourceStore = new ResourceStore('test', undefined, {locale: observable.box('en')});
     const resourceFormStore = new ResourceFormStore(resourceStore, 'test');
-    const router = new Router(createMemoryHistory());
+    const router = new Router();
     const form = new Form({
         locales: [],
         resourceStore,

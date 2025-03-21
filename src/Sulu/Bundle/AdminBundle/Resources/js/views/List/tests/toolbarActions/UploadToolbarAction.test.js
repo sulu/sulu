@@ -4,7 +4,6 @@ import {observable} from 'mobx';
 import {act} from 'react-dom/test-utils';
 import SymfonyRouting from 'fos-jsrouting/router';
 import log from 'loglevel';
-import {createMemoryHistory} from 'history';
 import ListStore from '../../../../containers/List/stores/ListStore';
 import Router from '../../../../services/Router';
 import ResourceStore from '../../../../stores/ResourceStore';
@@ -39,7 +38,7 @@ jest.mock('../../../../services/Requester', () => ({
 }));
 
 function createUploadToolbarAction(options = {}) {
-    const router = new Router(createMemoryHistory());
+    const router = new Router();
     const listStore = new ListStore('test', 'test', 'test', {page: observable.box(1)});
     const list = new List({
         route: router.route,

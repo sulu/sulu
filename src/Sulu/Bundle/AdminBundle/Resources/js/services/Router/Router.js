@@ -3,7 +3,7 @@ import {action, autorun, computed, isArrayLike, observable, toJS} from 'mobx';
 import equal from 'fast-deep-equal';
 import log from 'loglevel';
 import {compile} from 'path-to-regexp';
-import {parsePath} from 'history';
+import {createMemoryHistory, parsePath} from 'history';
 import {transformDateForUrl} from '../../utils/Date';
 import routeRegistry from './registries/routeRegistry';
 import resourceViewRegistry from './registries/resourceViewRegistry';
@@ -131,8 +131,12 @@ export default class Router {
     updateAttributesHooks: Array<UpdateAttributesHook> = [];
     redirectFlag: boolean = false;
 
-    constructor(history: Object) {
-        this.history = history;
+    constructor(history: Object | undefined = undefined) {
+        if (history) {
+            this.history = createMemoryHistory();
+        } else {
+            this.history = history;
+        }
 
         this.history.listen(({location}) => {
             log.info('URL was changed to "' + location.pathname + location.search + '"');

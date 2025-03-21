@@ -1,7 +1,6 @@
 // @flow
 import {extendObservable as mockExtendObservable} from 'mobx';
 import SymfonyRouting from 'fos-jsrouting/router';
-import {createMemoryHistory} from 'history';
 import BadgeStore from '../../stores/BadgeStore';
 import Router from '../../../../services/Router';
 import Requester from '../../../../services/Requester';
@@ -39,7 +38,7 @@ test('Should load data using the Requester', () => {
     Requester.get.mockReturnValue(promise);
     Requester.handleResponseHooks = [];
 
-    const router = new Router(createMemoryHistory());
+    const router = new Router();
     const badgeStore = new BadgeStore(
         router,
         'foo',
@@ -71,7 +70,7 @@ test('Should load data without datapath', () => {
     Requester.get.mockReturnValue(promise);
     Requester.handleResponseHooks = [];
 
-    const router = new Router(createMemoryHistory());
+    const router = new Router();
     const badgeStore = new BadgeStore(
         router,
         'foo',
@@ -103,7 +102,7 @@ test('Should load data if route changes', () => {
     Requester.get.mockReturnValue(promise);
     Requester.handleResponseHooks = [];
 
-    const router = new Router(createMemoryHistory());
+    const router = new Router();
     new BadgeStore(
         router,
         'foo',
@@ -135,7 +134,7 @@ test('Should not load data if route changes to other parent', () => {
     Requester.get.mockReturnValue(promise);
     Requester.handleResponseHooks = [];
 
-    const router = new Router(createMemoryHistory());
+    const router = new Router();
     new BadgeStore(
         router,
         'foo',
@@ -168,7 +167,7 @@ test('Should load data on response hook callback', () => {
     Requester.get.mockReturnValue(promise);
     Requester.handleResponseHooks = [];
 
-    const router = new Router(createMemoryHistory());
+    const router = new Router();
     const badgeStore = new BadgeStore(
         router,
         'foo',

@@ -6,7 +6,6 @@ import Router from 'sulu-admin-bundle/services/Router';
 import List from 'sulu-admin-bundle/views/List';
 import Dialog from 'sulu-admin-bundle/components/Dialog';
 import {ResourceRequester} from 'sulu-admin-bundle/services';
-import {createMemoryHistory} from 'history';
 import RestoreVersionItemAction from '../../itemActions/RestoreVersionItemAction';
 
 jest.mock('sulu-admin-bundle/utils/Translator', () => ({
@@ -29,7 +28,7 @@ jest.mock('sulu-admin-bundle/services/Router', () => jest.fn(function() {
 }));
 
 function createItemAction(options = {}) {
-    const router = new Router(createMemoryHistory());
+    const router = new Router();
     const listStore = new ListStore(
         'list-resource-key',
         'list-key',

@@ -1,7 +1,6 @@
 // @flow
 import {mount} from 'enzyme';
 import React from 'react';
-import {createMemoryHistory} from 'history';
 import Router from '../../../services/Router';
 import Requester from '../../../services/Requester';
 import Badge from '../Badge';
@@ -27,7 +26,7 @@ jest.mock('../../../services/Router', () => jest.fn(function() {
 }));
 
 test('Should create new BadgeStore', () => {
-    const router = new Router(createMemoryHistory());
+    const router = new Router();
 
     const promise = Promise.resolve({data: 'foo'});
     Requester.get.mockReturnValue(promise);
@@ -70,7 +69,7 @@ test('Should create new BadgeStore', () => {
 });
 
 test('Should pass correct props to badge component', () => {
-    const router = new Router(createMemoryHistory());
+    const router = new Router();
 
     const promise = Promise.resolve('hello');
     Requester.get.mockReturnValue(promise);
@@ -101,7 +100,7 @@ test('Should pass correct props to badge component', () => {
 });
 
 test('Should not render Badge component if visibleCondition fails', () => {
-    const router = new Router(createMemoryHistory());
+    const router = new Router();
 
     const promise = Promise.resolve({data: 0});
     Requester.get.mockReturnValue(promise);

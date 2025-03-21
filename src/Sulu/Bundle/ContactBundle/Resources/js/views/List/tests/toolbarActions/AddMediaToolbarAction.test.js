@@ -5,7 +5,6 @@ import {ListStore} from 'sulu-admin-bundle/containers';
 import {ResourceRequester, Router} from 'sulu-admin-bundle/services';
 import {ResourceStore} from 'sulu-admin-bundle/stores';
 import {List} from 'sulu-admin-bundle/views';
-import {createMemoryHistory} from 'history';
 import AddMediaToolbarAction from '../../toolbarActions/AddMediaToolbarAction';
 
 jest.mock('sulu-admin-bundle/utils/Translator', () => ({
@@ -32,7 +31,7 @@ jest.mock('sulu-admin-bundle/stores/ResourceStore/ResourceStore', () => jest.fn(
 }));
 
 function createAddMediaToolbarAction() {
-    const router = new Router(createMemoryHistory());
+    const router = new Router();
     const listStore = new ListStore('test', 'test', 'test', {page: observable.box(1)});
     const list = new List({
         route: router.route,

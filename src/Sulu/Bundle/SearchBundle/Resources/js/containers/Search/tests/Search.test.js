@@ -2,7 +2,6 @@
 import React from 'react';
 import {mount} from 'enzyme';
 import {Router} from 'sulu-admin-bundle/services';
-import {createMemoryHistory} from 'history';
 import Search from '../Search';
 import indexStore from '../stores/indexStore';
 import searchStore from '../stores/searchStore';
@@ -36,7 +35,7 @@ beforeEach(() => {
 });
 
 test('Render loader while loading indexes and show SearchField afterwards', () => {
-    const router = new Router(createMemoryHistory());
+    const router = new Router();
 
     const indexes = [
         {
@@ -63,7 +62,7 @@ test('Render loader while loading indexes and show SearchField afterwards', () =
 });
 
 test('Render loader while loading search results', () => {
-    const router = new Router(createMemoryHistory());
+    const router = new Router();
 
     const indexes = [
         {
@@ -90,7 +89,7 @@ test('Render loader while loading search results', () => {
 });
 
 test('Render hint that nothing was found', () => {
-    const router = new Router(createMemoryHistory());
+    const router = new Router();
 
     const indexes = [
         {
@@ -119,7 +118,7 @@ test('Render hint that nothing was found', () => {
 });
 
 test('Render search results', () => {
-    const router = new Router(createMemoryHistory());
+    const router = new Router();
 
     const indexes = [
         {
@@ -181,7 +180,7 @@ test('Render search results', () => {
 });
 
 test('Set the query and index name from the SearchStore as start value', () => {
-    const router = new Router(createMemoryHistory());
+    const router = new Router();
 
     searchStore.indexName = undefined;
     searchStore.query = 'Test';
@@ -211,7 +210,7 @@ test('Set the query and index name from the SearchStore as start value', () => {
 });
 
 test('Search when the search button is clicked', () => {
-    const router = new Router(createMemoryHistory());
+    const router = new Router();
 
     const indexes = [
         {
@@ -246,7 +245,7 @@ test('Search when the search button is clicked', () => {
 });
 
 test('Navigate to route for search result item', () => {
-    const router = new Router(createMemoryHistory());
+    const router = new Router();
 
     const indexes = [
         {
