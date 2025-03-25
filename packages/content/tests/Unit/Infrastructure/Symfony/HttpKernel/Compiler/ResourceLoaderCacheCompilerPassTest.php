@@ -28,17 +28,13 @@ class ResourceLoaderCacheCompilerPassTest extends AbstractCompilerPassTestCase
 
     public function testCompilerPassDecorates(): void
     {
-        $this->container->setDefinition('app.resource_loader.test', new Definition('stdClass'))
-            ->addTag('sulu_content.resource_loader');
+        $this->container->setDefinition('app.resource_loader.test', new Definition(ResourceLoaderInterface::class))
+            ->addTag('sulu_content.resource_loader', ['type' => 'test']);
 
         $this->compile();
 
         $this->assertContainerBuilderHasService('app.resource_loader.test.cached', CachedResourceLoader::class);
-        $this->assertContainerBuilderHasServiceDefinitionWithMethodCall(
-            'app.resource_loader.test.cached',
-            'setDecoratedService',
-            ['app.resource_loader.test']
-        );
+        $this->assertContainerBuilderServiceDecoration('app.resource_loader.test.cached', 'app.resource_loader.test');
     }
 
     public function testConfigurationPassesInnerServiceCorrectly(): void
