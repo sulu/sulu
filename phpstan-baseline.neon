@@ -54031,30 +54031,6 @@ parameters:
 			path: src/Sulu/Bundle/WebsiteBundle/Tests/Functional/Navigation/NavigationMapperTest.php
 
 		-
-			message: '#^Call to an undefined method object\:\:getRouteCollectionForRequest\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Tests/Functional/Routing/ContentRouteProviderTest.php
-
-		-
-			message: '#^Cannot call method all\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Tests/Functional/Routing/ContentRouteProviderTest.php
-
-		-
-			message: '#^Cannot call method getOption\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Tests/Functional/Routing/ContentRouteProviderTest.php
-
-		-
-			message: '#^Parameter \#1 \$array of function array_values expects array\<T\>, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Tests/Functional/Routing/ContentRouteProviderTest.php
-
-		-
 			message: '#^Cannot call method getContent\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 1
