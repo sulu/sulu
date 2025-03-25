@@ -37,7 +37,8 @@ class ResourceLoaderCacheCompilerPass implements CompilerPassInterface
 
             $decoratorService = $container->getDefinition($decoratorId);
 
-            // Copy all tags from the original service to the decorator
+            // Copy all tags from the original service to the decorator to prevent tag loss during service decoration
+            // Refer to: https://symfony.com/doc/current/service_container/service_decoration.html
             $tags = $decoratedService->getTags();
             foreach ($tags as $tagName => $tagAttributes) {
                 if (\is_array($tagAttributes)) {
