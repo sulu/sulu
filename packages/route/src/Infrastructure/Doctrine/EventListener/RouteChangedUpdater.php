@@ -145,26 +145,24 @@ class RouteChangedUpdater implements ResetInterface
 
             $this->createHistoryRoute($objectManager, $classMetadata, $historyRoute);
 
-            if (0 === \count($parentIds)) {
-                continue;
+            if (0 !== \count($parentIds)) {
+                $newSlugCast = '';
+                if ($connection->getDatabasePlatform() instanceof PostgreSQLPlatform) {
+                    $newSlugCast = '::text'; // concat seems not directly supported by dbal and parameter $1 (newSlug) is not cast to text correctly. So manually cast it here: https://github.com/sulu/sulu/pull/7726#discussion_r1930324013
+                }
+
+                // update child and grand routes
+                $updateQueryBuilder = $connection->createQueryBuilder()
+                    ->update($routesTableName, 'r')
+                    ->set('slug', 'CONCAT(:newSlug' . $newSlugCast . ', SUBSTRING(slug, ' . (\strlen($oldSlug) + 1) . '))')
+                    ->setParameter('newSlug', $newSlug, ParameterType::STRING)
+                    ->where('parent_id IN (:parentIds)')
+                    ->andWhere('slug LIKE :oldSlugSlash') // ignore disconnected child routes in case of full tree edit
+                    ->setParameter('oldSlugSlash', $oldSlug . '/%', ParameterType::STRING)
+                    ->setParameter('parentIds', $parentIds, ArrayParameterType::INTEGER);
+
+                $updateQueryBuilder->executeStatement();
             }
-
-            $newSlugCast = '';
-            if ($connection->getDatabasePlatform() instanceof PostgreSQLPlatform) {
-                $newSlugCast = '::text'; // concat seems not directly supported by dbal and parameter $1 (newSlug) is not cast to text correctly. So manually cast it here: https://github.com/sulu/sulu/pull/7726#discussion_r1930324013
-            }
-
-            // update child and grand routes
-            $updateQueryBuilder = $connection->createQueryBuilder()
-                ->update($routesTableName, 'r')
-                ->set('slug', 'CONCAT(:newSlug' . $newSlugCast . ', SUBSTRING(slug, ' . (\strlen($oldSlug) + 1) . '))')
-                ->setParameter('newSlug', $newSlug, ParameterType::STRING)
-                ->where('parent_id IN (:parentIds)')
-                ->andWhere('slug LIKE :oldSlugSlash') // ignore disconnected child routes in case of full tree edit
-                ->setParameter('oldSlugSlash', $oldSlug . '/%', ParameterType::STRING)
-                ->setParameter('parentIds', $parentIds, ArrayParameterType::INTEGER);
-
-            $updateQueryBuilder->executeStatement();
 
             // create child and grand history routes
             foreach ($childAndGrandChildHistoryRoutes as $childAndGrandChildHistoryRoute) {
