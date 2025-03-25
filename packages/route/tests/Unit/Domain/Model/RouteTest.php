@@ -12,11 +12,14 @@
 namespace Sulu\Route\Tests\Unit\Domain\Model;
 
 use PHPUnit\Framework\TestCase;
+use Sulu\Bundle\TestBundle\Testing\SetGetPrivatePropertyTrait;
 use Sulu\Route\Domain\Model\Route;
 use Symfony\Component\Uid\Uuid;
 
 class RouteTest extends TestCase
 {
+    use SetGetPrivatePropertyTrait;
+
     public function testGetResourceKey(): void
     {
         $route = $this->createModel(resourceKey: 'test');
@@ -70,6 +73,26 @@ class RouteTest extends TestCase
         $this->assertSame($parentRoute, $route->getParentRoute(), 'We keep connection to parent route for easier opt-in later.');
     }
 
+    public function testWithTempId(): void
+    {
+        $counter = 0;
+        $route = $this->createModelWithTempId(
+            resourceIdCallable: function() use (&$counter) {
+                return (string) ++$counter;
+            },
+        );
+
+        $this->assertStringStartsWith('temp::', $route->getResourceId());
+        $this->assertTrue($route->hasTemporaryId());
+        $this->assertSame(0, $counter);
+        $newResourceId = $route->generateRealResourceId();
+        $this->assertSame('1', $newResourceId);
+        $this->assertSame(1, $counter); // @phpstan-ignore-line method.impossibleType
+        static::setPrivateProperty($route, 'resourceId', $newResourceId);
+        $this->assertFalse($route->hasTemporaryId());
+        $this->assertSame($newResourceId, $route->getResourceId());
+    }
+
     public function createModel(
         string $resourceKey = 'resource',
         string $resourceId = '1',
@@ -81,6 +104,24 @@ class RouteTest extends TestCase
         return new Route(
             $resourceKey,
             $resourceId,
+            $locale,
+            $slug,
+            $site,
+            $parentRoute,
+        );
+    }
+
+    public function createModelWithTempId(
+        string $resourceKey = 'resource',
+        ?callable $resourceIdCallable = null,
+        string $locale = 'en',
+        string $slug = '/',
+        ?string $site = null,
+        ?Route $parentRoute = null,
+    ): Route {
+        return Route::createRouteWithTempId(
+            $resourceKey,
+            null === $resourceIdCallable ? fn () => '1' : $resourceIdCallable,
             $locale,
             $slug,
             $site,

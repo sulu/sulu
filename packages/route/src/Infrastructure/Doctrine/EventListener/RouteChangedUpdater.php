@@ -17,6 +17,7 @@ use Doctrine\DBAL\Platforms\PostgreSQLPlatform;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Event\OnClearEventArgs;
 use Doctrine\ORM\Event\PostFlushEventArgs;
+use Doctrine\ORM\Event\PrePersistEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Sulu\Route\Domain\Model\Route;
@@ -35,6 +36,11 @@ class RouteChangedUpdater implements ResetInterface
      * @var array<int, array{oldSlug: string, oldSite: string|null, route: Route}>
      */
     private array $routeChanges = [];
+
+    /**
+     * @var Route[]
+     */
+    private array $routesWithTempIds = [];
 
     public function preUpdate(PreUpdateEventArgs $args): void
     {
@@ -66,9 +72,25 @@ class RouteChangedUpdater implements ResetInterface
         ];
     }
 
+    public function prePersist(PrePersistEventArgs $args): void
+    {
+        $route = $args->getObject();
+        if (!$route instanceof Route) {
+            return;
+        }
+
+        if (!$route->hasTemporaryId()) {
+            return;
+        }
+
+        $this->routesWithTempIds[] = $route;
+    }
+
     public function postFlush(PostFlushEventArgs $args): void
     {
-        if (0 === \count($this->routeChanges)) {
+        if (0 === \count($this->routeChanges)
+            && 0 === \count($this->routesWithTempIds)
+        ) {
             return;
         }
 
@@ -77,6 +99,26 @@ class RouteChangedUpdater implements ResetInterface
 
         $classMetadata = $objectManager->getClassMetadata(Route::class);
         $routesTableName = $classMetadata->getTableName();
+
+        foreach ($this->routesWithTempIds as $route) {
+            $tempResourceId = $route->getResourceId();
+            $newResourceId = $route->generateRealResourceId();
+
+            $updateTempResourceIdQueryBuilder = $connection->createQueryBuilder()
+                ->update($routesTableName, 'r')
+                ->set('resource_id', ':newResourceId')
+                ->setParameter('newResourceId', $newResourceId, ParameterType::STRING)
+                ->where('resource_id = :tempResourceId')
+                ->setParameter('tempResourceId', $tempResourceId, ParameterType::STRING);
+
+            $updateTempResourceIdQueryBuilder->executeStatement();
+        }
+
+        $this->routesWithTempIds = [];
+
+        if (0 === \count($this->routeChanges)) {
+            return;
+        }
 
         foreach ($this->routeChanges as $routeChange) {
             $route = $routeChange['route'];
@@ -169,6 +211,8 @@ class RouteChangedUpdater implements ResetInterface
                 $this->createHistoryRoute($objectManager, $classMetadata, $childAndGrandChildHistoryRoute);
             }
         }
+
+        $this->routeChanges = [];
     }
 
     /**
@@ -216,5 +260,6 @@ class RouteChangedUpdater implements ResetInterface
     public function reset(): void
     {
         $this->routeChanges = [];
+        $this->routesWithTempIds = [];
     }
 }

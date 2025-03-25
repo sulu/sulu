@@ -48,7 +48,8 @@ final class SuluRouteBundle extends AbstractBundle
         $services->set('sulu_route.doctrine_route_changed_updater')
             ->class(RouteChangedUpdater::class)
             ->tag('doctrine.event_listener', ['event' => 'preUpdate', 'entity' => Route::class, 'method' => 'preUpdate'])
-            ->tag('doctrine.event_listener', ['event' => 'postFlush', 'method' => 'postFlush'])
+            ->tag('doctrine.event_listener', ['event' => 'prePersist', 'entity' => Route::class, 'method' => 'prePersist'])
+            ->tag('doctrine.event_listener', ['event' => 'postFlush', 'method' => 'postFlush', 'priority' => 1000])
             ->tag('doctrine.event_listener', ['event' => 'onClear', 'method' => 'onClear'])
             ->tag('kernel.reset', ['method' => 'reset']);
 

@@ -57,6 +57,44 @@ class RouteChangedUpdaterTest extends KernelTestCase
         self::ensureKernelShutdown();
     }
 
+    public function testPersistTempRoute(): void
+    {
+        /** @var EntityManagerInterface $entityManager */
+        $entityManager = self::getContainer()->get(EntityManagerInterface::class);
+
+        $counter = 0;
+        $route = Route::createRouteWithTempId(
+            'article',
+            function() use (&$counter) {
+                return (string) ++$counter;
+            },
+            'en',
+            '/some-slug',
+        );
+
+        $route2 = Route::createRouteWithTempId(
+            'article',
+            function() use (&$counter) {
+                return (string) ++$counter;
+            },
+            'en',
+            '/some-slug',
+        );
+
+        $entityManager->persist($route);
+        $entityManager->persist($route2);
+
+        $this->assertSame(0, $counter, 'The resourceId generator should not be called before flush.');
+
+        $entityManager->flush();
+        $this->assertSame(2, $counter, 'The resourceId generator should be called inside the flush.'); // @phpstan-ignore-line method.impossibleType
+
+        $entityManager->refresh($route);
+        $this->assertSame('1', $route->getResourceId());
+        $entityManager->refresh($route2);
+        $this->assertSame('2', $route2->getResourceId());
+    }
+
     /**
      * @param RouteData[] $routes
      * @param RouteData[] $expectedRoutes
@@ -178,6 +216,16 @@ class RouteChangedUpdaterTest extends KernelTestCase
             $this->assertSame(Route::HISTORY_RESOURCE_KEY, $route->getResourceKey(), $additionalErrorInfoMessage);
             $this->assertSame('page::' . $expectedHistoryRoute['resourceId'], $route->getResourceId(), $additionalErrorInfoMessage);
         }
+
+        /** @var RouteChangedUpdater $routeChangedUpdater */
+        $routeChangedUpdater = self::getContainer()->get('sulu_route.doctrine_route_changed_updater');
+
+        $routeChanges = self::getPrivateProperty($routeChangedUpdater, 'routeChanges');
+        $this->assertIsArray($routeChanges);
+        $routesWithTempIds = self::getPrivateProperty($routeChangedUpdater, 'routesWithTempIds');
+        $this->assertIsArray($routesWithTempIds);
+        $this->assertCount(0, $routeChanges, 'There should be no route changes left after the update.');
+        $this->assertCount(0, $routesWithTempIds, 'There should be no routes with temp ids left after the update.');
     }
 
     /**
