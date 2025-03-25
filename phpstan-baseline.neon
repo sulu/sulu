@@ -92929,18 +92929,6 @@ parameters:
 			path: src/Sulu/Component/Util/SuluNodeHelper.php
 
 		-
-			message: '#^Method Sulu\\Component\\Util\\SuluNodeHelper\:\:getNextNode\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Component/Util/SuluNodeHelper.php
-
-		-
-			message: '#^Method Sulu\\Component\\Util\\SuluNodeHelper\:\:getPreviousNode\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Component/Util/SuluNodeHelper.php
-
-		-
 			message: '#^Method Sulu\\Component\\Util\\SuluNodeHelper\:\:getStructureTypeForNode\(\) should return string but empty return statement found\.$#'
 			identifier: return.empty
 			count: 1
@@ -93175,48 +93163,6 @@ parameters:
 			path: src/Sulu/Component/Util/Tests/Unit/SortUtilsTest.php
 
 		-
-			message: '#^Call to an undefined method PHPCR\\NodeInterface\:\:expects\(\)\.$#'
-			identifier: method.notFound
-			count: 3
-			path: src/Sulu/Component/Util/Tests/Unit/SuluNodeHelperTest.php
-
-		-
-			message: '#^Call to an undefined method PHPCR\\SessionInterface\:\:expects\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/Sulu/Component/Util/Tests/Unit/SuluNodeHelperTest.php
-
-		-
-			message: '#^Cannot call method expects\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 4
-			path: src/Sulu/Component/Util/Tests/Unit/SuluNodeHelperTest.php
-
-		-
-			message: '#^Cannot call method getPath\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 4
-			path: src/Sulu/Component/Util/Tests/Unit/SuluNodeHelperTest.php
-
-		-
-			message: '#^Cannot call method method\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 8
-			path: src/Sulu/Component/Util/Tests/Unit/SuluNodeHelperTest.php
-
-		-
-			message: '#^Cannot call method willReturn\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 8
-			path: src/Sulu/Component/Util/Tests/Unit/SuluNodeHelperTest.php
-
-		-
-			message: '#^Cannot call method with\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 3
-			path: src/Sulu/Component/Util/Tests/Unit/SuluNodeHelperTest.php
-
-		-
 			message: '#^Method Sulu\\Component\\Content\\Tests\\Unit\\Mapper\\Translation\\SuluNodeHelperTest\:\:provideExtractSnippetTypeFromPath\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -93295,18 +93241,6 @@ parameters:
 			path: src/Sulu/Component/Util/Tests/Unit/SuluNodeHelperTest.php
 
 		-
-			message: '#^Parameter \#1 \$node of method Sulu\\Component\\Util\\SuluNodeHelper\:\:getNextNode\(\) expects PHPCR\\NodeInterface, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Util/Tests/Unit/SuluNodeHelperTest.php
-
-		-
-			message: '#^Parameter \#1 \$node of method Sulu\\Component\\Util\\SuluNodeHelper\:\:getPreviousNode\(\) expects PHPCR\\NodeInterface, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Util/Tests/Unit/SuluNodeHelperTest.php
-
-		-
 			message: '#^Parameter \#1 \$path of method Sulu\\Component\\Util\\SuluNodeHelper\:\:extractSnippetTypeFromPath\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -93322,24 +93256,6 @@ parameters:
 			message: '#^Parameter \#2 \$suluNodeTypes of method Sulu\\Component\\Util\\SuluNodeHelper\:\:hasSuluNodeType\(\) expects array\|string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
-			path: src/Sulu/Component/Util/Tests/Unit/SuluNodeHelperTest.php
-
-		-
-			message: '#^Undefined variable\: \$node1$#'
-			identifier: variable.undefined
-			count: 2
-			path: src/Sulu/Component/Util/Tests/Unit/SuluNodeHelperTest.php
-
-		-
-			message: '#^Undefined variable\: \$node2$#'
-			identifier: variable.undefined
-			count: 4
-			path: src/Sulu/Component/Util/Tests/Unit/SuluNodeHelperTest.php
-
-		-
-			message: '#^Undefined variable\: \$node3$#'
-			identifier: variable.undefined
-			count: 2
 			path: src/Sulu/Component/Util/Tests/Unit/SuluNodeHelperTest.php
 
 		-
