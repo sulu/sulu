@@ -11,97 +11,62 @@
 
 namespace Sulu\Content\Tests\Unit\Content\Infrastructure\Symfony\HttpKernel\Compiler;
 
-use PHPUnit\Framework\TestCase;
-use Prophecy\Argument;
-use Prophecy\PhpUnit\ProphecyTrait;
+use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractCompilerPassTestCase;
 use Sulu\Content\Application\ResourceLoader\Loader\CachedResourceLoader;
+use Sulu\Content\Application\ResourceLoader\Loader\ResourceLoaderInterface;
 use Sulu\Content\Infrastructure\Symfony\HttpKernel\Compiler\ResourceLoaderCacheCompilerPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
 
-class ResourceLoaderCacheCompilerPassTest extends TestCase
+class ResourceLoaderCacheCompilerPassTest extends AbstractCompilerPassTestCase
 {
-    use ProphecyTrait;
-
-    public function testProcess(): void
+    protected function registerCompilerPass(ContainerBuilder $container): void
     {
-        $container = $this->prophesize(ContainerBuilder::class);
-        $cachedResourceLoaderDefinition = $this->prophesize(Definition::class);
-
-        $container->findTaggedServiceIds('sulu_content.resource_loader')
-            ->shouldBeCalled()
-            ->willReturn([
-                'resource_loader.test' => [
-                    ['type' => 'test'],
-                ],
-                'resource_loader.another' => [
-                    ['type' => 'another'],
-                ],
-            ]);
-
-        $container->register('resource_loader.test.cached', CachedResourceLoader::class)
-            ->shouldBeCalled()
-            ->willReturn($cachedResourceLoaderDefinition->reveal());
-
-        $container->register('resource_loader.another.cached', CachedResourceLoader::class)
-            ->shouldBeCalled()
-            ->willReturn($cachedResourceLoaderDefinition->reveal());
-
-        $cachedResourceLoaderDefinition->setDecoratedService('resource_loader.test')
-            ->shouldBeCalled()
-            ->willReturn($cachedResourceLoaderDefinition->reveal());
-
-        $cachedResourceLoaderDefinition->setDecoratedService('resource_loader.another')
-            ->shouldBeCalled()
-            ->willReturn($cachedResourceLoaderDefinition->reveal());
-
-        $cachedResourceLoaderDefinition->setArguments([
-            new Reference('resource_loader.test.cached.inner'),
-        ])->shouldBeCalledTimes(1)
-            ->willReturn($cachedResourceLoaderDefinition->reveal());
-
-        $cachedResourceLoaderDefinition->setArguments([
-            new Reference('resource_loader.another.cached.inner'),
-        ])->shouldBeCalledTimes(1)
-            ->willReturn($cachedResourceLoaderDefinition->reveal());
-
-        $cachedResourceLoaderDefinition->setPublic(false)
-            ->shouldBeCalledTimes(2)
-            ->willReturn($cachedResourceLoaderDefinition->reveal());
-
-        $container->getDefinition('resource_loader.test.cached')
-            ->shouldBeCalled()
-            ->willReturn($cachedResourceLoaderDefinition->reveal());
-
-        $container->getDefinition('resource_loader.another.cached')
-            ->shouldBeCalled()
-            ->willReturn($cachedResourceLoaderDefinition->reveal());
-
-        $cachedResourceLoaderDefinition->addTag('sulu_content.resource_loader', ['type' => 'test'])
-            ->shouldBeCalledTimes(1)
-            ->willReturn($cachedResourceLoaderDefinition->reveal());
-
-        $cachedResourceLoaderDefinition->addTag('sulu_content.resource_loader', ['type' => 'another'])
-            ->shouldBeCalledTimes(1)
-            ->willReturn($cachedResourceLoaderDefinition->reveal());
-
-        $compilerPass = new ResourceLoaderCacheCompilerPass();
-        $compilerPass->process($container->reveal());
+        $container->addCompilerPass(new ResourceLoaderCacheCompilerPass());
     }
 
-    public function testProcessWithNoResourceLoaders(): void
+    public function testCompilerPassDecorates(): void
     {
-        $container = $this->prophesize(ContainerBuilder::class);
+        $this->container->setDefinition('app.resource_loader.test', new Definition('stdClass'))
+            ->addTag('sulu_content.resource_loader');
 
-        $container->findTaggedServiceIds('sulu_content.resource_loader')
-            ->shouldBeCalled()
-            ->willReturn([]);
+        $this->compile();
 
-        $container->register(Argument::any())->shouldNotBeCalled();
-        $container->getDefinition(Argument::any())->shouldNotBeCalled();
+        $this->assertContainerBuilderHasService('app.resource_loader.test.cached', CachedResourceLoader::class);
+        $this->assertContainerBuilderHasServiceDefinitionWithMethodCall(
+            'app.resource_loader.test.cached',
+            'setDecoratedService',
+            ['app.resource_loader.test']
+        );
+    }
 
-        $compilerPass = new ResourceLoaderCacheCompilerPass();
-        $compilerPass->process($container->reveal());
+    public function testConfigurationPassesInnerServiceCorrectly(): void
+    {
+        $this->container->setDefinition('app.resource_loader.test', new Definition(ResourceLoaderInterface::class))
+            ->addTag('sulu_content.resource_loader');
+
+        $this->compile();
+
+        $this->assertContainerBuilderHasServiceDefinitionWithArgument(
+            'app.resource_loader.test.cached',
+            0,
+            new Reference('app.resource_loader.test.cached.inner')
+        );
+    }
+
+    public function testCompilerPassCopiesTags(): void
+    {
+        $this->container->setDefinition('app.resource_loader.test', new Definition(ResourceLoaderInterface::class))
+            ->addTag('sulu_content.resource_loader', ['key' => 'value']);
+
+        $this->compile();
+
+        $definition = $this->container->getDefinition('app.resource_loader.test.cached');
+        /** @var array<int, array<string, string>> $tags */
+        $tags = $definition->getTag('sulu_content.resource_loader');
+        $this->assertCount(1, $tags);
+        $this->assertArrayHasKey('key', $tags[0]);
+        $this->assertEquals('value', $tags[0]['key']);
     }
 }

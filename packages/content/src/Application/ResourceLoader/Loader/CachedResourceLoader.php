@@ -13,10 +13,13 @@ namespace Sulu\Content\Application\ResourceLoader\Loader;
 
 use Symfony\Contracts\Service\ResetInterface;
 
+/**
+ * @internal this class is internal and should not be used or extended in custom code
+ */
 class CachedResourceLoader implements ResourceLoaderInterface, ResetInterface
 {
     /**
-     * @var array<string, array<int|string, mixed>>
+     * @var array<string, mixed>
      */
     private array $cache = [];
 
@@ -26,14 +29,29 @@ class CachedResourceLoader implements ResourceLoaderInterface, ResetInterface
 
     public function load(array $ids, ?string $locale, array $params = []): array
     {
-        $cacheKey = $this->generateCacheKey($ids, $locale, $params);
+        $result = [];
+        $uncachedIds = [];
 
-        if (isset($this->cache[$cacheKey])) {
-            return $this->cache[$cacheKey];
+        foreach ($ids as $id) {
+            $cacheKey = $this->generateCacheKey($id, $locale, $params);
+            if (!isset($this->cache[$cacheKey])) {
+                $uncachedIds[] = $id;
+                continue;
+            }
+
+            $result[$id] = $this->cache[$cacheKey];
         }
 
-        $result = $this->decoratedResourceLoader->load($ids, $locale, $params);
-        $this->cache[$cacheKey] = $result;
+        if ([] !== $uncachedIds) {
+            $loadedResults = $this->decoratedResourceLoader->load($uncachedIds, $locale, $params);
+
+            // Cache and merge the newly loaded results
+            foreach ($loadedResults as $id => $resource) {
+                $cacheKey = $this->generateCacheKey($id, $locale, $params);
+                $this->cache[$cacheKey] = $resource;
+                $result[$id] = $resource;
+            }
+        }
 
         return $result;
     }
@@ -44,13 +62,12 @@ class CachedResourceLoader implements ResourceLoaderInterface, ResetInterface
     }
 
     /**
-     * @param array<int|string> $ids
      * @param mixed[] $params
      */
-    private function generateCacheKey(array $ids, ?string $locale, array $params): string
+    private function generateCacheKey(int|string $id, ?string $locale, array $params): string
     {
         return \md5((string) \json_encode([
-            'ids' => $ids,
+            'id' => $id,
             'locale' => $locale,
             'params' => $params,
         ]));
