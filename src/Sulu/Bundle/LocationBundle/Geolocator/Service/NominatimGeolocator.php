@@ -95,7 +95,7 @@ class NominatimGeolocator implements GeolocatorInterface
                 'setCountry' => 'country_code',
             ] as $method => $key) {
                 if (isset($result['address'][$key])) {
-                    $location->$method($result['address'][$key]);
+                    $location->$method($result['address'][$key]); // @phpstan-ignore-line
                 }
             }
 
