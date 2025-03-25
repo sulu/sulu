@@ -23,16 +23,30 @@ class ResourceLoaderCacheCompilerPass implements CompilerPassInterface
         $resourceLoaders = $container->findTaggedServiceIds('sulu_content.resource_loader');
 
         foreach ($resourceLoaders as $id => $tags) {
-            $container->register($id . '.cached', CachedResourceLoader::class)
-                ->setDecoratedService($id)  // This service decorates the original loader
+            $decoratedService = $container->getDefinition($id);
+
+            // Create the cached decorator service
+            $decoratorId = $id . '.cached';
+            $container->register($decoratorId, CachedResourceLoader::class)
+                ->setDecoratedService($id)
                 ->setArguments([
-                    new Reference($id . '.cached.inner'),
+                    new Reference($decoratorId . '.inner'),
                 ])
+                ->addTag('kernel.reset', ['method' => 'reset'])
                 ->setPublic(false);
 
-            /** @var array<string, string> $tag */
-            foreach ($tags as $tag) {
-                $container->getDefinition($id . '.cached')->addTag('sulu_content.resource_loader', $tag);
+            $decoratorService = $container->getDefinition($decoratorId);
+
+            // Copy all tags from the original service to the decorator
+            $tags = $decoratedService->getTags();
+            foreach ($tags as $tagName => $tagAttributes) {
+                if (\is_array($tagAttributes)) {
+                    foreach ($tagAttributes as $attributes) {
+                        if (\is_array($attributes)) {
+                            $decoratorService->addTag($tagName, $attributes);
+                        }
+                    }
+                }
             }
         }
     }

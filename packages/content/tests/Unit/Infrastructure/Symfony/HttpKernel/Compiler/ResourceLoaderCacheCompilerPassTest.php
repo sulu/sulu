@@ -69,4 +69,45 @@ class ResourceLoaderCacheCompilerPassTest extends AbstractCompilerPassTestCase
         $this->assertArrayHasKey('key', $tags[0]);
         $this->assertEquals('value', $tags[0]['key']);
     }
+
+    public function testKernelResetTagIsAdded(): void
+    {
+        $this->container->setDefinition('app.resource_loader.test', new Definition(ResourceLoaderInterface::class))
+            ->addTag('sulu_content.resource_loader');
+
+        $this->compile();
+
+        $definition = $this->container->getDefinition('app.resource_loader.test.cached');
+        $this->assertTrue($definition->hasTag('kernel.reset'));
+
+        /** @var array<int, array<string, string>> $tags */
+        $tags = $definition->getTag('kernel.reset');
+        $this->assertCount(1, $tags);
+        $this->assertArrayHasKey('method', $tags[0]);
+        $this->assertEquals('reset', $tags[0]['method']);
+    }
+
+    public function testMultipleTagsAreCopied(): void
+    {
+        $this->container->setDefinition('app.resource_loader.test', new Definition(ResourceLoaderInterface::class))
+            ->addTag('sulu_content.resource_loader')
+            ->addTag('custom.tag.1', ['attr1' => 'value1'])
+            ->addTag('custom.tag.2', ['attr2' => 'value2']);
+
+        $this->compile();
+
+        $definition = $this->container->getDefinition('app.resource_loader.test.cached');
+        $this->assertTrue($definition->hasTag('custom.tag.1'));
+        $this->assertTrue($definition->hasTag('custom.tag.2'));
+
+        /** @var array<int, array<string, string>> $tags */
+        $tags = $definition->getTag('custom.tag.1');
+        $this->assertCount(1, $tags);
+        $this->assertEquals('value1', $tags[0]['attr1']);
+
+        /** @var array<int, array<string, string>> $tags */
+        $tags = $definition->getTag('custom.tag.2');
+        $this->assertCount(1, $tags);
+        $this->assertEquals('value2', $tags[0]['attr2']);
+    }
 }
