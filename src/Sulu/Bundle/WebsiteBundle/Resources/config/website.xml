@@ -24,7 +24,6 @@
             <argument type="service" id="sulu_core.webspace.request_analyzer"/>
             <argument>null</argument><!-- not longer required -->
             <argument type="collection" />
-            <argument type="service" id="service_container"/>
 
             <tag name="sulu.context" context="website"/>
         </service>
