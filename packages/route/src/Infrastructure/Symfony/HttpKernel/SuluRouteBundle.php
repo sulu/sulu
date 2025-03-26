@@ -17,6 +17,7 @@ use Sulu\Route\Domain\Model\Route;
 use Sulu\Route\Domain\Repository\RouteRepositoryInterface;
 use Sulu\Route\Infrastructure\Doctrine\EventListener\RouteChangedUpdater;
 use Sulu\Route\Infrastructure\Doctrine\Repository\RouteRepository;
+use Sulu\Route\Infrastructure\SymfonyCmf\Routing\CmfRouteProvider;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symfony\Component\DependencyInjection\Reference;
@@ -62,6 +63,11 @@ final class SuluRouteBundle extends AbstractBundle
 
         $services->alias(RouteRepositoryInterface::class, 'sulu_route.route_repository')
             ->public();
+
+        if ($builder->hasExtension('cmf_routing')) {
+            $services->set('sulu_route.symfony_cmf_route_provider')
+                ->class(CmfRouteProvider::class);
+        }
     }
 
     /**
@@ -86,6 +92,24 @@ final class SuluRouteBundle extends AbstractBundle
                         ],
                     ],
                 ],
+            );
+        }
+
+        if ($builder->hasExtension('cmf_routing')) {
+            $builder->prependExtensionConfig(
+                'cmf_routing',
+                [
+                    'chain' => [
+                        'routers_by_id' => [
+                            'router.default' => 100,
+                            'cmf_routing.dynamic_router' => 20,
+                        ],
+                    ],
+                    'dynamic' => [
+                        'route_provider_service_id' => 'sulu_route.symfony_cmf_route_provider',
+                        'enabled' => true,
+                    ],
+                ]
             );
         }
     }
