@@ -214,19 +214,6 @@ class PageAdmin extends Admin
                     ->setOption('resourceKey', PageInterface::RESOURCE_KEY)
             );
             $viewCollection->add(
-                $this->viewBuilderFactory
-                    ->createFormViewBuilder('sulu_page.page_add_form.details', '/details')
-                    ->setResourceKey(PageInterface::RESOURCE_KEY)
-                    ->setFormKey('page')
-                    ->setTabTitle('sulu_admin.details')
-                    ->setEditView(static::EDIT_FORM_VIEW)
-                    ->addRouterAttributesToEditView(['webspace'])
-                    ->addToolbarActions($formToolbarActionsWithType)
-                    ->addRouterAttributesToFormRequest($routerAttributesToFormRequest)
-                    ->addRouterAttributesToFormMetadata($routerAttributesToFormMetadata)
-                    ->setParent(static::ADD_FORM_VIEW)
-            );
-            $viewCollection->add(
                 $this->viewBuilderFactory->createViewBuilder(
                     static::EDIT_FORM_VIEW,
                     '/webspaces/:webspace/pages/:locale/:id',
@@ -247,8 +234,15 @@ class PageAdmin extends Admin
             $tabCondition = 'shadowOn == false';
             /** @var PreviewFormViewBuilder $viewBuilder */
             foreach ($viewBuilders as $viewBuilder) {
+                if ('sulu_page.page_add_form.content' === $viewBuilder->getName()) {
+                    $viewBuilder
+                        ->addRouterAttributesToEditView(['webspace'])
+                        ->addToolbarActions($formToolbarActionsWithType)
+                        ->addRouterAttributesToFormRequest($routerAttributesToFormRequest)
+                        ->addRouterAttributesToFormMetadata($routerAttributesToFormMetadata);
+                }
+
                 if ('sulu_page.page_edit_form.content' === $viewBuilder->getName()) {
-                    //TODO /details or /content ?
                     $viewBuilder
                         ->disablePreviewWebspaceChooser()
                         ->addToolbarActions($formToolbarActionsWithType)
