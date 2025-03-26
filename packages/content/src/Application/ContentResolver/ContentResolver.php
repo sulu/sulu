@@ -28,6 +28,7 @@ use Webmozart\Assert\Assert;
  */
 class ContentResolver implements ContentResolverInterface
 {
+    // TODO add configurable parameter for max depth
     private const MAX_DEPTH = 3;
 
     /**
@@ -388,7 +389,6 @@ class ContentResolver implements ContentResolverInterface
      *     content: array<string, mixed>,
      *     view: array<string, mixed>,
      *     extension: array<string, array<string, mixed>>,
-     *     settings: SettingsData,
      * }
      */
     private function normalizeContentData(array $content, array $view, ContentRichEntityInterface $resource): array
@@ -402,18 +402,20 @@ class ContentResolver implements ContentResolverInterface
         unset($view['template']);
 
         /** @var SettingsData $settingsData */
-        $settingsData = $content['settings'];
+        $settingsData = $content['settings'] ?? [];
         unset($content['settings'], $view['settings']);
 
         /** @var array<string, array<string, mixed>> $extensionData */
         $extensionData = $content;
 
-        return [
-            'resource' => $resource,
-            'content' => $templateData,
-            'view' => $templateView,
-            'extension' => $extensionData,
-            'settings' => $settingsData,
-        ];
+        return \array_merge(
+            [
+                'resource' => $resource,
+                'content' => $templateData,
+                'view' => $templateView,
+                'extension' => $extensionData,
+            ],
+            $settingsData
+        );
     }
 }

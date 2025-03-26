@@ -28,7 +28,6 @@ interface ContentResolverInterface
      *     content: array<string, mixed>,
      *     view: array<string, mixed>,
      *     extension: array<string, array<string, mixed>>,
-     *     settings: array<string, mixed>,
      * }
      */
     public function resolve(DimensionContentInterface $dimensionContent): array;

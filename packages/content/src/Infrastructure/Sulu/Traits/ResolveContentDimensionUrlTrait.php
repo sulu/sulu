@@ -46,7 +46,7 @@ trait ResolveContentDimensionUrlTrait
         }
 
         foreach ($metadata->getProperties() as $property) {
-            if ('route' === $property->getType()) {
+            if ('route' === $property->getType() || 'resource_locator' === $property->getType()) {
                 /** @var string|null */
                 return $dimensionContent->getTemplateData()[$property->getName()] ?? null;
             }

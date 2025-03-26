@@ -32,10 +32,10 @@ class CachedResourceLoader implements ResourceLoaderInterface, ResetInterface
         $result = [];
         $uncachedIds = [];
 
-        foreach ($ids as $id) {
+        foreach ($ids as $index => $id) {
             $cacheKey = $this->generateCacheKey($id, $locale, $params);
             if (!isset($this->cache[$cacheKey])) {
-                $uncachedIds[] = $id;
+                $uncachedIds[$index] = $id;
                 continue;
             }
 
