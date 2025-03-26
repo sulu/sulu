@@ -29,6 +29,7 @@
                  class="Sulu\Content\Application\ContentResolver\Resolver\SettingsResolver">
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>
             <argument type="service" id="sulu.core.localization_manager"/>
+            <argument type="service" id="sulu.repository.route"/>
 
             <tag name="sulu_content.content_resolver" type="settings"/>
         </service>

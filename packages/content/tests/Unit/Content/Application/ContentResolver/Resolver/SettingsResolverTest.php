@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Sulu.
  *
@@ -15,6 +17,8 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
+use Sulu\Bundle\RouteBundle\Entity\Route;
+use Sulu\Bundle\RouteBundle\Entity\RouteRepositoryInterface;
 use Sulu\Bundle\TestBundle\Testing\SetGetPrivatePropertyTrait;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Localization\Manager\LocalizationManagerInterface;
@@ -39,14 +43,21 @@ class SettingsResolverTest extends TestCase
     /** @var ObjectProphecy<WebspaceManagerInterface> */
     private ObjectProphecy $webspaceManager;
 
+    /**
+     * @var ObjectProphecy<RouteRepositoryInterface>
+     */
+    private ObjectProphecy $repository;
+
     protected function setUp(): void
     {
         $this->localizationManager = $this->prophesize(LocalizationManagerInterface::class);
         $this->webspaceManager = $this->prophesize(WebspaceManagerInterface::class);
+        $this->repository = $this->prophesize(RouteRepositoryInterface::class);
 
         $this->resolver = new SettingsResolver(
             $this->webspaceManager->reveal(),
-            $this->localizationManager->reveal()
+            $this->localizationManager->reveal(),
+            $this->repository->reveal(),
         );
     }
 
@@ -91,6 +102,7 @@ class SettingsResolverTest extends TestCase
     public function testResolveLocalizations(): void
     {
         $example = new Example();
+        $this->setPrivateProperty($example, 'id', 1);
         $exampleDimension = new ExampleDimensionContent($example);
         $exampleDimension->setTemplateData(['url' => '/test']);
         $exampleDimension->setMainWebspace('sulu_io');
@@ -111,11 +123,11 @@ class SettingsResolverTest extends TestCase
         )->willReturn('/de/test')->shouldBeCalled();
 
         $this->webspaceManager->findUrlByResourceLocator(
-            '/test',
+            '/test_en',
             null,
             'en',
             'sulu_io',
-        )->willReturn('/en/test')->shouldBeCalled();
+        )->willReturn('/en/test_en')->shouldBeCalled();
 
         $this->webspaceManager->findUrlByResourceLocator(
             '/',
@@ -123,6 +135,27 @@ class SettingsResolverTest extends TestCase
             'fr',
             'sulu_io',
         )->willReturn('/fr/')->shouldBeCalled();
+
+        $routeDE = new Route('/test', '1', Example::class . 'Interface', 'de');
+        $this->repository->findByEntity(
+            Example::class . 'Interface',
+            '1',
+            'de',
+        )->willReturn($routeDE)
+            ->shouldBeCalled();
+
+        $routeEN = new Route('/test_en', '1', Example::class . 'Interface', 'en');
+        $this->repository->findByEntity(
+            Example::class . 'Interface',
+            '1',
+            'en',
+        )->willReturn($routeEN)
+            ->shouldBeCalled();
+        $this->repository->findByEntity(
+            Example::class . 'Interface',
+            '1',
+            'fr',
+        )->shouldNotBeCalled();
 
         $result = $this->resolver->resolve($exampleDimension);
         /** @var SettingsData $content */
@@ -137,7 +170,7 @@ class SettingsResolverTest extends TestCase
             ],
             'en' => [
                 'locale' => 'en',
-                'url' => '/en/test',
+                'url' => '/en/test_en',
                 'country' => 'US',
                 'alternate' => true,
             ],

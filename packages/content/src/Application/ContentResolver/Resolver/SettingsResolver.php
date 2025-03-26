@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Sulu\Content\Application\ContentResolver\Resolver;
 
+use Sulu\Bundle\RouteBundle\Entity\RouteRepositoryInterface;
 use Sulu\Component\Localization\Manager\LocalizationManagerInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Content\Application\ContentResolver\Value\ContentView;
@@ -45,7 +46,8 @@ readonly class SettingsResolver implements ResolverInterface
 {
     public function __construct(
         private WebspaceManagerInterface $webspaceManager,
-        private LocalizationManagerInterface $localizationManager
+        private LocalizationManagerInterface $localizationManager,
+        private RouteRepositoryInterface $routeRepository,
     ) {
     }
 
@@ -95,6 +97,8 @@ readonly class SettingsResolver implements ResolverInterface
      */
     protected function getLocalizationsData(RoutableInterface&TemplateInterface&DimensionContentInterface $dimensionContent): array
     {
+        // TODO refactor using the new RouteBundle
+        // TODO this should not be resolved on nested content
         $templateData = $dimensionContent->getTemplateData();
 
         if (!isset($templateData['url'])) {
@@ -103,30 +107,35 @@ readonly class SettingsResolver implements ResolverInterface
             ];
         }
 
-        /** @var string $templateUrl */
-        $templateUrl = $templateData['url'];
         $webspaceKey = $dimensionContent instanceof WebspaceInterface ? $dimensionContent->getMainWebspace() : null;
-
         $localizations = $this->localizationManager->getLocalizations();
         $localizationData = [];
 
         $availableLocales = $dimensionContent->getAvailableLocales() ?? [];
         $availableLocales = \array_combine($availableLocales, $availableLocales);
+        $resource = $dimensionContent->getResource();
         foreach ($localizations as $locale => $localization) {
-            $url = isset($availableLocales[$locale]) ? $templateUrl : '/';
+            $route = null;
+            if (isset($availableLocales[$locale])) {
+                // TODO this should be the resourceKey instead of the interface with the new RouteBundle implementation
+                $route = $this->routeRepository->findByEntity($resource::class . 'Interface', (string) $resource->getId(), $locale);
+            }
+
+            // fallback to homepage
+            $url = $route?->getPath() ?? '/';
 
             $resolvedUrl = $this->webspaceManager->findUrlByResourceLocator(
                 $url,
                 null,
                 $locale,
-                $webspaceKey
+                $webspaceKey,
             );
 
             $localizationData[$locale] = [
                 'locale' => $locale,
                 'url' => $resolvedUrl,
                 'country' => $localization->getCountry(),
-                'alternate' => '/' !== $url, // true for alternative locales
+                'alternate' => null !== $route, // true for alternative locales
             ];
         }
 
