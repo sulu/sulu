@@ -24,15 +24,9 @@ class RequestAnalyzerResolver implements RequestAnalyzerResolverInterface
      */
     private $webspaceManager;
 
-    /**
-     * @var string
-     */
-    private $environment;
-
-    public function __construct(WebspaceManagerInterface $webspaceManager, $environment)
+    public function __construct(WebspaceManagerInterface $webspaceManager)
     {
         $this->webspaceManager = $webspaceManager;
-        $this->environment = $environment;
     }
 
     public function resolve(RequestAnalyzerInterface $requestAnalyzer)

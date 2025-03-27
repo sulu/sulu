@@ -86,7 +86,6 @@ class SeoEnhancerTest extends TestCase
         $webspaceManager = $this->prophesize(WebspaceManagerInterface::class);
         $webspaceManager->findUrlByResourceLocator(
             '/test',
-            'prod',
             'de',
             'sulu_io',
             'sulu.io',

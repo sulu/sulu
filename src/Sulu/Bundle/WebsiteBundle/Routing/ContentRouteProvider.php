@@ -183,7 +183,6 @@ class ContentRouteProvider implements RouteProviderInterface
 
                 $redirectUrl = $this->webspaceManager->findUrlByResourceLocator(
                     $redirectTarget->getResourceSegment(),
-                    null,
                     $document->getLocale(),
                     $redirectTarget->getWebspaceName()
                 );

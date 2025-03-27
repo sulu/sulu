@@ -205,7 +205,6 @@ final class SuluArticleBundle extends AbstractBundle
             ->args([
                 new Reference('doctrine.orm.entity_manager'),
                 new Reference('sulu_core.webspace.webspace_manager'),
-                '%kernel.environment%',
                 ArticleInterface::class,
                 '%sulu.model.route.class%',
                 ArticleInterface::RESOURCE_KEY,

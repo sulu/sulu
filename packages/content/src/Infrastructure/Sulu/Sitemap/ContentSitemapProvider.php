@@ -52,11 +52,6 @@ class ContentSitemapProvider implements SitemapProviderInterface
     protected $webspaceManager;
 
     /**
-     * @var string
-     */
-    protected $kernelEnvironment;
-
-    /**
      * @var class-string<T>
      */
     protected $contentRichEntityClass;
@@ -77,21 +72,18 @@ class ContentSitemapProvider implements SitemapProviderInterface
     protected $pageSize;
 
     /**
-     * @param string $kernelEnvironment Inject parameter "kernel.environment" here
      * @param class-string<T> $contentRichEntityClass Classname that is used in the route table
      * @param class-string<RouteInterface> $routeClass
      */
     public function __construct(
         EntityManagerInterface $entityManager,
         WebspaceManagerInterface $webspaceManager,
-        string $kernelEnvironment,
         string $contentRichEntityClass,
         string $routeClass,
         string $alias
     ) {
         $this->entityManager = $entityManager;
         $this->webspaceManager = $webspaceManager;
-        $this->kernelEnvironment = $kernelEnvironment;
         $this->contentRichEntityClass = $contentRichEntityClass;
         $this->routeClass = $routeClass;
         $this->alias = $alias;
@@ -104,7 +96,7 @@ class ContentSitemapProvider implements SitemapProviderInterface
         $offset = (int) (($page - 1) * $limit);
 
         $portalInformations = $this->webspaceManager->findPortalInformationsByHostIncludingSubdomains(
-            $host, $this->kernelEnvironment
+            $host,
         );
 
         /** @var PortalInformation|null $portalInformation */
@@ -287,7 +279,6 @@ class ContentSitemapProvider implements SitemapProviderInterface
     ): ?string {
         $url = $this->webspaceManager->findUrlByResourceLocator(
             $route->getPath(),
-            $this->kernelEnvironment,
             $route->getLocale(),
             $webspaceKey,
             $host,

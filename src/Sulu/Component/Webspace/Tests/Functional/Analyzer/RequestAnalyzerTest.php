@@ -60,7 +60,7 @@ class RequestAnalyzerTest extends TestCase
             [
                 new UrlRequestProcessor(),
                 new WebsiteRequestProcessor(
-                    $this->webspaceManager->reveal(), 'prod'
+                    $this->webspaceManager->reveal(),
                 ),
                 new PortalInformationRequestProcessor(),
             ]

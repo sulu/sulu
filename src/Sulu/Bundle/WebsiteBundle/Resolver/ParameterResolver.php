@@ -110,10 +110,10 @@ class ParameterResolver implements ParameterResolverInterface
 
             $alternate = true;
             if (\array_key_exists($locale, $pageUrls)) {
-                $url = $this->webspaceManager->findUrlByResourceLocator($pageUrls[$locale], null, $locale);
+                $url = $this->webspaceManager->findUrlByResourceLocator($pageUrls[$locale], $locale);
             } else {
                 $alternate = false;
-                $url = $this->webspaceManager->findUrlByResourceLocator('/', null, $locale);
+                $url = $this->webspaceManager->findUrlByResourceLocator('/', $locale);
             }
 
             $localizations[$locale] = [

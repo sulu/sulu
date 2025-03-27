@@ -53,7 +53,7 @@ class CacheCommandSubscriberTest extends TestCase
         $this->application = $this->prophesize(Application::class);
         $this->previewKernel = $this->prophesize(KernelInterface::class);
         $this->kernelFactory = $this->prophesize(KernelFactoryInterface::class);
-        $this->cacheCommandSubscriber = new CacheCommandSubscriber($this->kernelFactory->reveal(), 'test');
+        $this->cacheCommandSubscriber = new CacheCommandSubscriber($this->kernelFactory->reveal());
 
         $this->cacheCommandSubscriber->setApplication($this->application->reveal());
     }

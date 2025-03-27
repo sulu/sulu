@@ -117,7 +117,6 @@ readonly class SettingsResolver implements ResolverInterface
 
             $resolvedUrl = $this->webspaceManager->findUrlByResourceLocator(
                 $url,
-                null,
                 $locale,
                 $webspaceKey
             );

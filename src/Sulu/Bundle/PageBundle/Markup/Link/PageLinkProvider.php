@@ -32,7 +32,6 @@ class PageLinkProvider implements LinkProviderInterface
         protected WebspaceManagerInterface $webspaceManager,
         protected RequestStack $requestStack,
         private TranslatorInterface $translator,
-        protected string $environment,
         private AccessControlManagerInterface $accessControlManager,
         private ?TokenStorageInterface $tokenStorage = null
     ) {
@@ -106,6 +105,7 @@ class PageLinkProvider implements LinkProviderInterface
      *
      * @param string $locale
      * @param string $scheme
+     * @param string $domain
      *
      * @return LinkItem
      */
@@ -114,7 +114,6 @@ class PageLinkProvider implements LinkProviderInterface
         $published = !empty($content->getPropertyWithDefault('published'));
         $url = $this->webspaceManager->findUrlByResourceLocator(
             $content->getUrl(),
-            $this->environment,
             $locale,
             $content->getWebspaceKey(),
             $domain,

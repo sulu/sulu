@@ -31,7 +31,6 @@ class CustomUrlRequestProcessor implements RequestProcessorInterface
         private CustomUrlManagerInterface $customUrlManager,
         private GeneratorInterface $generator,
         private WebspaceManagerInterface $webspaceManager,
-        private ?string $environment
     ) {
     }
 
@@ -49,7 +48,7 @@ class CustomUrlRequestProcessor implements RequestProcessorInterface
         }
 
         $url = $this->decodeUrl(\rtrim(\sprintf('%s%s%s', $request->getHost(), $pathInfo, $queryString), '/'));
-        $portalInformations = $this->webspaceManager->findPortalInformationsByUrl($url, $this->environment);
+        $portalInformations = $this->webspaceManager->findPortalInformationsByUrl($url);
 
         if (0 === \count($portalInformations)) {
             return new RequestAttributes();
@@ -119,7 +118,6 @@ class CustomUrlRequestProcessor implements RequestProcessorInterface
         $portalInformations = $this->webspaceManager->findPortalInformationsByWebspaceKeyAndLocale(
             $portalInformation->getWebspace()->getKey(),
             $localization->getLocale(),
-            $this->environment
         );
 
         if (0 === \count($portalInformations)) {

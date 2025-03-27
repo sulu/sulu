@@ -27,7 +27,7 @@ class CacheCommandSubscriber implements EventSubscriberInterface
      */
     private $application;
 
-    public function __construct(private KernelFactoryInterface $kernelFactory, private string $environment)
+    public function __construct(private KernelFactoryInterface $kernelFactory)
     {
     }
 
@@ -66,7 +66,7 @@ class CacheCommandSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $previewKernel = $this->kernelFactory->create($this->environment);
+        $previewKernel = $this->kernelFactory->create();
 
         $application = $this->application ?: new Application($previewKernel);
         $application->setAutoExit(false);

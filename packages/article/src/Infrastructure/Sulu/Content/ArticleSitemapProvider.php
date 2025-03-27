@@ -22,9 +22,9 @@ use Sulu\Content\Infrastructure\Sulu\Sitemap\ContentSitemapProvider;
  */
 class ArticleSitemapProvider extends ContentSitemapProvider
 {
-    public function __construct(EntityManagerInterface $entityManager, WebspaceManagerInterface $webspaceManager, string $kernelEnvironment, string $contentRichEntityClass, string $routeClass, string $alias)
+    public function __construct(EntityManagerInterface $entityManager, WebspaceManagerInterface $webspaceManager, string $contentRichEntityClass, string $routeClass, string $alias)
     {
-        parent::__construct($entityManager, $webspaceManager, $kernelEnvironment, $contentRichEntityClass, $routeClass, $alias);
+        parent::__construct($entityManager, $webspaceManager, $contentRichEntityClass, $routeClass, $alias);
     }
 
     protected function getEntityIdField(): string

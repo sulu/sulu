@@ -82,11 +82,6 @@ class TemplateAttributeResolverTest extends TestCase
      */
     protected $templateAttributeResolver;
 
-    /**
-     * @var string
-     */
-    protected $environment = 'test';
-
     public function setUp(): void
     {
         $webspacePortalKey = 'sulu_io';
@@ -117,7 +112,7 @@ class TemplateAttributeResolverTest extends TestCase
             $portalInformationDe->reveal(),
         ];
 
-        $this->webspaceManager->getPortalInformations($this->environment)->willReturn($this->portalInformations);
+        $this->webspaceManager->getPortalInformations()->willReturn($this->portalInformations);
 
         $this->requestStack->getCurrentRequest()->willReturn($this->request);
 
@@ -142,7 +137,6 @@ class TemplateAttributeResolverTest extends TestCase
 
         $this->requestAnalyzerResolver = new RequestAnalyzerResolver(
             $this->webspaceManager->reveal(),
-            $this->environment
         );
     }
 
@@ -300,7 +294,6 @@ class TemplateAttributeResolverTest extends TestCase
             $this->webspaceManager->reveal(),
             $this->router->reveal(),
             $this->requestStack->reveal(),
-            $this->environment,
             $enabledTwigAttributes
         );
     }

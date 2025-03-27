@@ -38,7 +38,6 @@ services:
         arguments:
             - '@doctrine.orm.entity_manager'
             - '@sulu_core.webspace.webspace_manager'
-            - '%kernel.environment%'
             - Sulu\Content\Tests\Application\ExampleTestBundle\Entity\Example
             - '%sulu.model.route.class%'
             - 'examples'

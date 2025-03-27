@@ -434,7 +434,7 @@ class CopyLocaleSubscriberTest extends SubscriberTestCase
 
     public function testHandleCopyLocaleOnExistingRouteWrongLocale(): void
     {
-        /** @var CopyLocaleEvent|ObjectProphecy $event */
+        /** @var ObjectProphecy<CopyLocaleEvent> $event */
         $event = $this->prophesize(CopyLocaleEvent::class);
         $event->getLocale()->willReturn('en');
         $event->getDestLocale()->willReturn('de');

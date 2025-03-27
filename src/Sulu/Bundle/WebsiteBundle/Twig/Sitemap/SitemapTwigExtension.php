@@ -37,18 +37,11 @@ class SitemapTwigExtension extends AbstractExtension implements SitemapTwigExten
      */
     private $requestAnalyzer;
 
-    /**
-     * @var string
-     */
-    private $environment;
-
     public function __construct(
         SitemapGeneratorInterface $sitemapGenerator,
         WebspaceManagerInterface $webspaceManager,
-        $environment,
         ?RequestAnalyzerInterface $requestAnalyzer = null
     ) {
-        $this->environment = $environment;
         $this->sitemapGenerator = $sitemapGenerator;
         $this->webspaceManager = $webspaceManager;
         $this->requestAnalyzer = $requestAnalyzer;
@@ -74,7 +67,6 @@ class SitemapTwigExtension extends AbstractExtension implements SitemapTwigExten
 
         return $this->webspaceManager->findUrlByResourceLocator(
             $url,
-            $this->environment,
             $locale,
             $webspaceKey
         );

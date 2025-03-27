@@ -20,15 +20,9 @@ class UrlSelect
      */
     private $webspaceManager;
 
-    /**
-     * @var string
-     */
-    protected $environment;
-
-    public function __construct(WebspaceManagerInterface $webspaceManager, string $environment)
+    public function __construct(WebspaceManagerInterface $webspaceManager)
     {
         $this->webspaceManager = $webspaceManager;
-        $this->environment = $environment;
     }
 
     public function getValues(): array
@@ -40,7 +34,7 @@ class UrlSelect
                     'title' => $url,
                 ];
             },
-            $this->webspaceManager->getUrls($this->environment)
+            $this->webspaceManager->getUrls()
         );
     }
 }

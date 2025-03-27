@@ -31,18 +31,11 @@ class ContentPathTwigExtension extends AbstractExtension implements ContentPathI
      */
     private $webspaceManager;
 
-    /**
-     * @var string
-     */
-    private $environment;
-
     public function __construct(
         WebspaceManagerInterface $webspaceManager,
-        $environment,
         ?RequestAnalyzerInterface $requestAnalyzer = null
     ) {
         $this->webspaceManager = $webspaceManager;
-        $this->environment = $environment;
         $this->requestAnalyzer = $requestAnalyzer;
     }
 
@@ -69,14 +62,13 @@ class ContentPathTwigExtension extends AbstractExtension implements ContentPathI
         $url = null;
         $host = $this->requestAnalyzer->getAttribute('host');
         if (!$domain
-            && $this->webspaceManager->findWebspaceByKey($webspaceKey)->hasDomain($host, $this->environment, $locale)
+            && $this->webspaceManager->findWebspaceByKey($webspaceKey)->hasDomain($host, $locale)
         ) {
             $domain = $host;
         }
 
         $url = $this->webspaceManager->findUrlByResourceLocator(
             $route,
-            $this->environment,
             $locale,
             $webspaceKey,
             $domain,
@@ -86,7 +78,6 @@ class ContentPathTwigExtension extends AbstractExtension implements ContentPathI
         if (!$withoutDomain && !$url) {
             $url = $this->webspaceManager->findUrlByResourceLocator(
                 $route,
-                $this->environment,
                 $locale,
                 $webspaceKey,
                 null,

@@ -43,9 +43,6 @@ class InvalidationSubscriber implements EventSubscriberInterface
 {
     public const HTTP_CACHE_INVALIDATION_OPTION = 'http_cache_invalidation';
 
-    /**
-     * @param string $environment - kernel envionment, dev, prod, etc
-     */
     public function __construct(
         private ?CacheManager $cacheManager,
         private StructureManagerInterface $structureManager,
@@ -54,7 +51,6 @@ class InvalidationSubscriber implements EventSubscriberInterface
         private WebspaceManagerInterface $webspaceManager,
         private RequestStack $requestStack,
         private TagManagerInterface $tagManager,
-        private ?string $environment
     ) {
     }
 
@@ -294,7 +290,6 @@ class InvalidationSubscriber implements EventSubscriberInterface
 
         return $this->webspaceManager->findUrlsByResourceLocator(
             $resourceLocator,
-            $this->environment,
             $locale,
             $webspace,
             null,

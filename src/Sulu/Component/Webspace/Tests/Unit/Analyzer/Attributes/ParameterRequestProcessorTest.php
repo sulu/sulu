@@ -40,7 +40,6 @@ class ParameterRequestProcessorTest extends TestCase
 
         $this->parameterRequestProcessor = new ParameterRequestProcessor(
             $this->webspaceManager->reveal(),
-            'dev'
         );
     }
 
@@ -50,7 +49,7 @@ class ParameterRequestProcessorTest extends TestCase
 
         $portalInformation = new PortalInformation(1);
 
-        $this->webspaceManager->findPortalInformationsByPortalKeyAndLocale('sulu_io', 'de', 'dev')
+        $this->webspaceManager->findPortalInformationsByPortalKeyAndLocale('sulu_io', 'de')
             ->willReturn([$portalInformation]);
 
         $requestAttributes = $this->parameterRequestProcessor->process($request, new RequestAttributes());

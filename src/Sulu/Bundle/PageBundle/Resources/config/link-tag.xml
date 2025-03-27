@@ -8,7 +8,6 @@
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>
             <argument type="service" id="request_stack"/>
             <argument type="service" id="translator"/>
-            <argument type="string">%kernel.environment%</argument>
             <argument type="service" id="sulu_security.access_control_manager"/>
             <argument type="service" id="security.token_storage" on-invalid="null"/>
 

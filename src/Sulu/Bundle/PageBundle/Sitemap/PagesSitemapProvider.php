@@ -32,7 +32,6 @@ class PagesSitemapProvider extends AbstractSitemapProvider
     public function __construct(
         private ContentRepositoryInterface $contentRepository,
         private WebspaceManagerInterface $webspaceManager,
-        private string $environment,
         private ?AccessControlManagerInterface $accessControlManager = null,
     ) {
     }
@@ -40,7 +39,7 @@ class PagesSitemapProvider extends AbstractSitemapProvider
     public function build($page, $scheme, $host)
     {
         $portalInformations = $this->webspaceManager->findPortalInformationsByHostIncludingSubdomains(
-            $host, $this->environment
+            $host,
         );
 
         $result = [];
@@ -114,7 +113,6 @@ class PagesSitemapProvider extends AbstractSitemapProvider
 
         $url = $this->webspaceManager->findUrlByResourceLocator(
             $contentPage->getUrl(),
-            $this->environment,
             $contentPage->getLocale(),
             $portalInformation->getWebspaceKey(),
             $host,
@@ -144,7 +142,6 @@ class PagesSitemapProvider extends AbstractSitemapProvider
 
             $url = $this->webspaceManager->findUrlByResourceLocator(
                 $href,
-                $this->environment,
                 $urlLocale,
                 $portalInformation->getWebspaceKey(),
                 $host,

@@ -7,3 +7,5 @@ framework:
 services:
     sulu_preview.preview.kernel_factory:
         class: Sulu\Content\Tests\Application\PreviewKernelFactory
+        arguments:
+            '%kernel.environment%'

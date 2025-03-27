@@ -289,7 +289,7 @@ class WebspaceManagerTest extends WebspaceTestCase
 
     public function testFindPortalInformationByUrl(): void
     {
-        $portalInformation = $this->webspaceManager->findPortalInformationByUrl('sulu.at/test/test/test', 'prod');
+        $portalInformation = $this->webspaceManager->findPortalInformationByUrl('sulu.at/test/test/test');
         $this->assertNotNull($portalInformation);
         $this->assertEquals('de_at', $portalInformation->getLocalization()->getLocale());
 
@@ -333,7 +333,7 @@ class WebspaceManagerTest extends WebspaceTestCase
         $this->assertCount(1, $environmentDev->getUrls());
         $this->assertEquals('sulu.lo', $environmentDev->getUrls()[0]->getUrl());
 
-        $portalInformation = $this->webspaceManager->findPortalInformationByUrl('sulu.lo', 'dev');
+        $portalInformation = $this->webspaceManager->findPortalInformationByUrl('sulu.lo');
         $this->assertInstanceOf(PortalInformation::class, $portalInformation);
         $this->assertEquals('de_at', $portalInformation->getLocalization()->getLocale());
 
@@ -381,7 +381,7 @@ class WebspaceManagerTest extends WebspaceTestCase
 
     public function testFindPortalInformationsByUrl(): void
     {
-        $portalInformations = $this->webspaceManager->findPortalInformationsByUrl('sulu.at/test/test/test', 'prod');
+        $portalInformations = $this->webspaceManager->findPortalInformationsByUrl('sulu.at/test/test/test');
         $this->assertNotCount(0, $portalInformations);
         $portalInformation = \reset($portalInformations);
         $this->assertInstanceOf(PortalInformation::class, $portalInformation);
@@ -429,7 +429,7 @@ class WebspaceManagerTest extends WebspaceTestCase
         $this->assertCount(1, $environmentDev->getUrls());
         $this->assertEquals('sulu.lo', $environmentDev->getUrls()[0]->getUrl());
 
-        $portalInformation = $this->webspaceManager->findPortalInformationByUrl('sulu.lo', 'dev');
+        $portalInformation = $this->webspaceManager->findPortalInformationByUrl('sulu.lo');
         $this->assertInstanceOf(PortalInformation::class, $portalInformation);
         $this->assertEquals('de_at', $portalInformation->getLocalization()->getLocale());
 
@@ -500,7 +500,7 @@ class WebspaceManagerTest extends WebspaceTestCase
     #[\PHPUnit\Framework\Attributes\DataProvider('provideFindPortalInformationByUrl')]
     public function testFindPortalInformationByUrlWithInvalidSuffix(string $url, $shouldFind): void
     {
-        $portalInformation = $this->webspaceManager->findPortalInformationByUrl($url, 'dev');
+        $portalInformation = $this->webspaceManager->findPortalInformationByUrl($url);
 
         if ($shouldFind) {
             $this->assertNotNull($portalInformation);
@@ -514,7 +514,6 @@ class WebspaceManagerTest extends WebspaceTestCase
         $portalInformations = $this->webspaceManager->findPortalInformationsByWebspaceKeyAndLocale(
             'sulu_io',
             'de_at',
-            'dev'
         );
 
         $this->assertCount(1, $portalInformations);
@@ -530,7 +529,6 @@ class WebspaceManagerTest extends WebspaceTestCase
         $portalInformations = $this->webspaceManager->findPortalInformationsByPortalKeyAndLocale(
             'sulucmf_at',
             'de_at',
-            'dev'
         );
         $portalInformation = \reset($portalInformations);
         $this->assertInstanceOf(PortalInformation::class, $portalInformation);
@@ -619,7 +617,7 @@ class WebspaceManagerTest extends WebspaceTestCase
 
     public function testRedirectUrl(): void
     {
-        $portalInformation = $this->webspaceManager->findPortalInformationByUrl('www.sulu.at/test/test', 'prod');
+        $portalInformation = $this->webspaceManager->findPortalInformationByUrl('www.sulu.at/test/test');
         $this->assertInstanceOf(PortalInformation::class, $portalInformation);
 
         $this->assertEquals('sulu.at', $portalInformation->getRedirect());
@@ -678,12 +676,12 @@ class WebspaceManagerTest extends WebspaceTestCase
 
     public function testFindUrlsByResourceLocator(): void
     {
-        $result = $this->webspaceManager->findUrlsByResourceLocator('/test', 'dev', 'en_us', 'massiveart');
+        $result = $this->webspaceManager->findUrlsByResourceLocator('/test', 'en_us', 'massiveart');
 
         $this->assertCount(1, $result);
         $this->assertContains('http://massiveart.lo/en-us/test', $result);
 
-        $result = $this->webspaceManager->findUrlsByResourceLocator('/test', 'dev', 'de_at', 'sulu_io');
+        $result = $this->webspaceManager->findUrlsByResourceLocator('/test', 'de_at', 'sulu_io');
         $this->assertEquals(['http://sulu.lo/test'], $result);
     }
 
@@ -691,7 +689,6 @@ class WebspaceManagerTest extends WebspaceTestCase
     {
         $result = $this->webspaceManager->findUrlsByResourceLocator(
             '/test',
-            'dev',
             'en_us',
             'massiveart',
             null,
@@ -701,7 +698,7 @@ class WebspaceManagerTest extends WebspaceTestCase
         $this->assertCount(1, $result);
         $this->assertContains('https://massiveart.lo/en-us/test', $result);
 
-        $result = $this->webspaceManager->findUrlsByResourceLocator('/test', 'dev', 'de_at', 'sulu_io', null, 'https');
+        $result = $this->webspaceManager->findUrlsByResourceLocator('/test', 'de_at', 'sulu_io', null, 'https');
         $this->assertEquals(['https://sulu.lo/test'], $result);
     }
 
@@ -709,7 +706,6 @@ class WebspaceManagerTest extends WebspaceTestCase
     {
         $result = $this->webspaceManager->findUrlsByResourceLocator(
             '/test',
-            'dev',
             'en_us',
             'massiveart',
             null,
@@ -719,7 +715,7 @@ class WebspaceManagerTest extends WebspaceTestCase
         $this->assertCount(1, $result);
         $this->assertContains('http://massiveart.lo/en-us/test', $result);
 
-        $result = $this->webspaceManager->findUrlsByResourceLocator('/test', 'dev', 'de_at', 'sulu_io', null, null);
+        $result = $this->webspaceManager->findUrlsByResourceLocator('/test', 'de_at', 'sulu_io', null, null);
         $this->assertEquals(['http://sulu.lo/test'], $result);
     }
 
@@ -731,12 +727,12 @@ class WebspaceManagerTest extends WebspaceTestCase
         $request->getScheme()->willReturn('https');
         $this->requestStack->getCurrentRequest()->willReturn($request->reveal());
 
-        $result = $this->webspaceManager->findUrlsByResourceLocator('/test', 'dev', 'en_us', 'massiveart');
+        $result = $this->webspaceManager->findUrlsByResourceLocator('/test', 'en_us', 'massiveart');
 
         $this->assertCount(1, $result);
         $this->assertContains('https://massiveart.lo:8080/en-us/test', $result);
 
-        $result = $this->webspaceManager->findUrlsByResourceLocator('/test', 'dev', 'de_at', 'sulu_io');
+        $result = $this->webspaceManager->findUrlsByResourceLocator('/test', 'de_at', 'sulu_io');
         $this->assertEquals(['https://sulu.lo/test'], $result);
     }
 
@@ -747,30 +743,30 @@ class WebspaceManagerTest extends WebspaceTestCase
         $request = new Request([], [], ['_sulu' => new RequestAttributes(['webspace' => $webspace])]);
         $this->requestStack->getCurrentRequest()->willReturn($request);
 
-        $result = $this->webspaceManager->findUrlsByResourceLocator('/test', 'dev', 'de_at');
+        $result = $this->webspaceManager->findUrlsByResourceLocator('/test', 'de_at');
 
         $this->assertEquals(['http://dan.lo/de/test'], $result);
     }
 
     public function testFindUrlsByResourceLocatorRoot(): void
     {
-        $result = $this->webspaceManager->findUrlsByResourceLocator('/', 'dev', 'en_us', 'massiveart');
+        $result = $this->webspaceManager->findUrlsByResourceLocator('/', 'en_us', 'massiveart');
 
         $this->assertCount(1, $result);
         $this->assertContains('http://massiveart.lo/en-us', $result);
 
-        $result = $this->webspaceManager->findUrlsByResourceLocator('/', 'dev', 'de_at', 'sulu_io');
+        $result = $this->webspaceManager->findUrlsByResourceLocator('/', 'de_at', 'sulu_io');
         $this->assertEquals(['http://sulu.lo/'], $result);
     }
 
     public function testFindUrlsByResourceLocatorRootWithScheme(): void
     {
-        $result = $this->webspaceManager->findUrlsByResourceLocator('/', 'dev', 'en_us', 'massiveart', null, 'https');
+        $result = $this->webspaceManager->findUrlsByResourceLocator('/', 'en_us', 'massiveart', null, 'https');
 
         $this->assertCount(1, $result);
         $this->assertContains('https://massiveart.lo/en-us', $result);
 
-        $result = $this->webspaceManager->findUrlsByResourceLocator('/', 'dev', 'de_at', 'sulu_io', null, 'https');
+        $result = $this->webspaceManager->findUrlsByResourceLocator('/', 'de_at', 'sulu_io', null, 'https');
         $this->assertEquals(['https://sulu.lo/'], $result);
     }
 
@@ -781,12 +777,12 @@ class WebspaceManagerTest extends WebspaceTestCase
         $request->getPort()->willReturn(8080);
         $this->requestStack->getCurrentRequest()->willReturn($request->reveal());
 
-        $result = $this->webspaceManager->findUrlsByResourceLocator('/test', 'dev', 'en_us', 'massiveart', null, 'http');
+        $result = $this->webspaceManager->findUrlsByResourceLocator('/test', 'en_us', 'massiveart', null, 'http');
 
         $this->assertCount(1, $result);
         $this->assertContains('http://massiveart.lo:8080/en-us/test', $result);
 
-        $result = $this->webspaceManager->findUrlsByResourceLocator('/test', 'dev', 'de_at', 'sulu_io', null, 'http');
+        $result = $this->webspaceManager->findUrlsByResourceLocator('/test', 'de_at', 'sulu_io', null, 'http');
         $this->assertEquals(['http://sulu.lo/test'], $result);
     }
 
@@ -797,18 +793,18 @@ class WebspaceManagerTest extends WebspaceTestCase
         $request->getPort()->willReturn(4444);
         $this->requestStack->getCurrentRequest()->willReturn($request->reveal());
 
-        $result = $this->webspaceManager->findUrlsByResourceLocator('/test', 'dev', 'en_us', 'massiveart', null, 'https');
+        $result = $this->webspaceManager->findUrlsByResourceLocator('/test', 'en_us', 'massiveart', null, 'https');
 
         $this->assertCount(1, $result);
         $this->assertContains('https://massiveart.lo/en-us/test', $result);
 
-        $result = $this->webspaceManager->findUrlsByResourceLocator('/test', 'dev', 'de_at', 'sulu_io', null, 'https');
+        $result = $this->webspaceManager->findUrlsByResourceLocator('/test', 'de_at', 'sulu_io', null, 'https');
         $this->assertEquals(['https://sulu.lo:4444/test'], $result);
     }
 
     public function testFindUrlByResourceLocator(): void
     {
-        $result = $this->webspaceManager->findUrlByResourceLocator('/test', 'dev', 'de_at', 'sulu_io');
+        $result = $this->webspaceManager->findUrlByResourceLocator('/test', 'de_at', 'sulu_io');
         $this->assertEquals('http://sulu.lo/test', $result);
 
         $result = $this->webspaceManager->findUrlByResourceLocator('/test', 'main', 'de_at', 'sulu_io');
@@ -822,7 +818,6 @@ class WebspaceManagerTest extends WebspaceTestCase
 
         $result = $this->webspaceManager->findUrlByResourceLocator(
             '/test',
-            'main',
             'de_at',
             'sulu_io',
             'sulu.lo',
@@ -838,7 +833,7 @@ class WebspaceManagerTest extends WebspaceTestCase
         $request = new Request([], [], ['_sulu' => new RequestAttributes(['webspace' => $webspace])]);
         $this->requestStack->getCurrentRequest()->willReturn($request);
 
-        $result = $this->webspaceManager->findUrlByResourceLocator('/test', 'dev', 'de_at');
+        $result = $this->webspaceManager->findUrlByResourceLocator('/test', 'de_at');
         $this->assertEquals('http://dan.lo/de/test', $result);
     }
 
@@ -849,10 +844,10 @@ class WebspaceManagerTest extends WebspaceTestCase
         $request->getPort()->willReturn(8080);
         $this->requestStack->getCurrentRequest()->willReturn($request->reveal());
 
-        $result = $this->webspaceManager->findUrlByResourceLocator('/test', 'dev', 'en_us', 'massiveart', null, 'http');
+        $result = $this->webspaceManager->findUrlByResourceLocator('/test', 'en_us', 'massiveart', null, 'http');
         $this->assertEquals('http://massiveart.lo:8080/en-us/test', $result);
 
-        $result = $this->webspaceManager->findUrlByResourceLocator('/test', 'dev', 'de_at', 'sulu_io', null, 'http');
+        $result = $this->webspaceManager->findUrlByResourceLocator('/test', 'de_at', 'sulu_io', null, 'http');
         $this->assertEquals('http://sulu.lo/test', $result);
     }
 
@@ -863,10 +858,10 @@ class WebspaceManagerTest extends WebspaceTestCase
         $request->getPort()->willReturn(4444);
         $this->requestStack->getCurrentRequest()->willReturn($request->reveal());
 
-        $result = $this->webspaceManager->findUrlByResourceLocator('/test', 'dev', 'en_us', 'massiveart', null, 'https');
+        $result = $this->webspaceManager->findUrlByResourceLocator('/test', 'en_us', 'massiveart', null, 'https');
         $this->assertEquals('https://massiveart.lo/en-us/test', $result);
 
-        $result = $this->webspaceManager->findUrlByResourceLocator('/test', 'dev', 'de_at', 'sulu_io', null, 'https');
+        $result = $this->webspaceManager->findUrlByResourceLocator('/test', 'de_at', 'sulu_io', null, 'https');
         $this->assertEquals('https://sulu.lo:4444/test', $result);
     }
 
@@ -889,7 +884,7 @@ class WebspaceManagerTest extends WebspaceTestCase
 
     public function testGetUrls(): void
     {
-        $urls = $this->webspaceManager->getUrls('dev');
+        $urls = $this->webspaceManager->getUrls();
 
         $this->assertCount(9, $urls);
         $this->assertContains('sulu.lo', $urls);
@@ -904,7 +899,7 @@ class WebspaceManagerTest extends WebspaceTestCase
 
     public function testGetPortalInformations(): void
     {
-        $portalInformations = $this->webspaceManager->getPortalInformations('dev');
+        $portalInformations = $this->webspaceManager->getPortalInformations();
 
         $this->assertCount(9, $portalInformations);
         $this->assertArrayHasKey('sulu.lo', $portalInformations);
@@ -1032,7 +1027,6 @@ class WebspaceManagerTest extends WebspaceTestCase
         $portalInformations = \array_values(
             $this->webspaceManager->getPortalInformationsByWebspaceKey(
                 'test',
-                'sulu_io_host_replacement'
             )
         );
 

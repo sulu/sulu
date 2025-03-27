@@ -92,10 +92,7 @@ class WebspaceSerializeEventSubscriber implements EventSubscriberInterface
      */
     private function appendPortalInformation(Webspace $webspace, Context $context, SerializationVisitorInterface $visitor)
     {
-        $portalInformation = $this->webspaceManager->getPortalInformationsByWebspaceKey(
-            $this->environment,
-            $webspace->getKey()
-        );
+        $portalInformation = $this->webspaceManager->getPortalInformationsByWebspaceKey($webspace->getKey());
 
         $portalInformation = $context->getNavigator()->accept(\array_values($portalInformation));
 
