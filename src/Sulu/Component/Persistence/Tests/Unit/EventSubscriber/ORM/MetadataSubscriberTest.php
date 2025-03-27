@@ -160,7 +160,7 @@ class MetadataSubscriberTest extends TestCase
         $this->configuration->getNamingStrategy()->willReturn(null);
         $this->classMetadataFactory->getReflectionService()->willReturn($this->reflectionService->reveal());
 
-        /** @var MappingDriver|ObjectProphecy $mappingDriver */
+        /** @var ObjectProphecy<MappingDriver> $mappingDriver */
         $mappingDriver = $this->prophesize(MappingDriver::class);
         $this->configuration->getMetadataDriverImpl()->willReturn($mappingDriver->reveal());
         $mappingDriver->getAllClassNames()->willReturn([\get_class($this->parentObject->reveal())]);

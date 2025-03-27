@@ -54,7 +54,7 @@ class TagsSubscriberTest extends TestCase
     private $requestStack;
 
     /**
-     * @var (ReferenceStoreInterface|ObjectProphecy)[]
+     * @var ObjectProphecy<(ReferenceStoreInterface>)[]
      */
     private $referenceStores;
 
