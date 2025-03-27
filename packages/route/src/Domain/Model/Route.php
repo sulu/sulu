@@ -154,6 +154,11 @@ class Route
         return \str_starts_with($this->resourceId, self::TEMPORARY_RESOURCE_IDENTIFIER . '::');
     }
 
+    public function isHistory(): bool
+    {
+        return self::HISTORY_RESOURCE_KEY === $this->resourceKey;
+    }
+
     /**
      * @internal
      */

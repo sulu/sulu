@@ -11,7 +11,7 @@
 
 namespace Sulu\Route\Infrastructure\SymfonyCmf\Routing;
 
-use Sulu\Route\Application\Routing\RouteCollectionForRequestLoaderInterface;
+use Sulu\Route\Application\Routing\Matcher\RouteCollectionForRequestLoaderInterface;
 use Symfony\Cmf\Component\Routing\RouteProviderInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
@@ -19,11 +19,9 @@ use Symfony\Component\Routing\Route as SymfonyRoute;
 use Symfony\Component\Routing\RouteCollection;
 
 /**
- * @final
- *
  * @internal No BC promises are given for this class. It may be changed or removed at any time.
  */
-class CmfRouteProvider implements RouteProviderInterface
+final readonly class CmfRouteProvider implements RouteProviderInterface
 {
     /**
      * @param RouteCollectionForRequestLoaderInterface[] $routeCollectionForRequestLoaders

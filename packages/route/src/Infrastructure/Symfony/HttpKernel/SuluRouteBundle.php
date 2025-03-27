@@ -13,6 +13,13 @@ declare(strict_types=1);
 
 namespace Sulu\Route\Infrastructure\Symfony\HttpKernel;
 
+use Sulu\Route\Application\Routing\Generator\RouteGenerator;
+use Sulu\Route\Application\Routing\Generator\RouteGeneratorInterface;
+use Sulu\Route\Application\Routing\Generator\SiteRouteGeneratorInterface;
+use Sulu\Route\Application\Routing\Matcher\RouteCollectionForRequestLoaderInterface;
+use Sulu\Route\Application\Routing\Matcher\RouteCollectionForRequestRouteLoader;
+use Sulu\Route\Application\Routing\Matcher\RouteDefaultsProviderInterface;
+use Sulu\Route\Application\Routing\Matcher\RouteHistoryDefaultsProvider;
 use Sulu\Route\Domain\Model\Route;
 use Sulu\Route\Domain\Repository\RouteRepositoryInterface;
 use Sulu\Route\Infrastructure\Doctrine\EventListener\RouteChangedUpdater;
@@ -20,6 +27,10 @@ use Sulu\Route\Infrastructure\Doctrine\Repository\RouteRepository;
 use Sulu\Route\Infrastructure\SymfonyCmf\Routing\CmfRouteProvider;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
+
+use function Symfony\Component\DependencyInjection\Loader\Configurator\tagged_iterator;
+use function Symfony\Component\DependencyInjection\Loader\Configurator\tagged_locator;
+
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
 
@@ -64,10 +75,46 @@ final class SuluRouteBundle extends AbstractBundle
         $services->alias(RouteRepositoryInterface::class, 'sulu_route.route_repository')
             ->public();
 
-        if ($builder->hasExtension('cmf_routing')) {
-            $services->set('sulu_route.symfony_cmf_route_provider')
-                ->class(CmfRouteProvider::class);
-        }
+        $services->set('sulu_route.symfony_cmf_route_provider')
+            ->class(CmfRouteProvider::class)
+            ->args([
+                tagged_iterator('sulu_route.route_collection_for_request_loader'),
+            ]);
+
+        $services->set('sulu_route.route_generator')
+            ->class(RouteGenerator::class)
+            ->args([
+                tagged_locator('sulu_route.site_route_generator', 'site', 'getSite'),
+                new Reference('router.request_context'),
+            ]);
+
+        $services->alias(RouteGeneratorInterface::class, 'sulu_route.route_generator')
+            ->public();
+
+        $services->set('sulu_route.route_loader')
+            ->class(RouteCollectionForRequestRouteLoader::class)
+            ->args([
+                new Reference('sulu_route.route_repository'),
+                tagged_locator('sulu_route.route_defaults_provider', 'resource_key', 'getResourceKey'),
+            ])
+            ->tag('sulu_route.route_collection_for_request_loader', ['priority' => 100]);
+
+        $services->set('sulu_route.route_history_defaults_provider')
+            ->class(RouteHistoryDefaultsProvider::class)
+            ->args([
+                new Reference('sulu_route.route_repository'),
+                new Reference('sulu_route.route_generator'),
+            ])
+            ->tag('sulu_route.route_defaults_provider');
+
+        $builder->registerForAutoconfiguration(SiteRouteGeneratorInterface::class)
+            ->addTag('sulu_route.site_route_generator');
+
+        $builder->registerForAutoconfiguration(RouteCollectionForRequestLoaderInterface::class)
+            ->addTag('sulu_route.route_collection_for_request_loader');
+
+        $builder->registerForAutoconfiguration(RouteDefaultsProviderInterface::class)
+            ->addTag('sulu_route.route_defaults_provider');
     }
 
     /**

@@ -16,6 +16,7 @@ use Sulu\Bundle\TestBundle\Testing\SetGetPrivatePropertyTrait;
 use Sulu\Route\Domain\Model\Route;
 use Symfony\Component\Uid\Uuid;
 
+#[CoversClass(Route::class)]
 class RouteTest extends TestCase
 {
     use SetGetPrivatePropertyTrait;

@@ -1,4 +1,8 @@
 framework:
+    test: true
+    router:
+        utf8: true
+        resource: '%kernel.project_dir%/config/routing.yml'
     # symfony recipe default configuration:
     workflows: null
     messenger:
@@ -8,3 +12,15 @@ framework:
 twig:
     paths:
         - '%kernel.project_dir%/templates'
+
+doctrine:
+    orm:
+        auto_generate_proxy_classes: "%kernel.debug%"
+        naming_strategy: doctrine.orm.naming_strategy.underscore
+        auto_mapping: true
+    dbal:
+        url: '%env(DATABASE_URL)%'
+
+services:
+    Sulu\Route\Tests\Application\ExampleSiteRouteGenerator:
+        autoconfigure: true
