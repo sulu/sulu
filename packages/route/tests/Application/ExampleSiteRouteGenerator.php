@@ -24,6 +24,7 @@ final class ExampleSiteRouteGenerator implements SiteRouteGeneratorInterface
         $port = match ($requestContext->getScheme()) {
             'http' => 80 !== $requestContext->getHttpPort() ? ':' . $requestContext->getHttpPort() : '',
             'https' => 443 !== $requestContext->getHttpsPort() ? ':' . $requestContext->getHttpsPort() : '',
+            default => throw new \RuntimeException('Invalid scheme: ' . $requestContext->getScheme()),
         };
 
         return \sprintf(

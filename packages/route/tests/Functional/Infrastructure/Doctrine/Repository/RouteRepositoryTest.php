@@ -48,7 +48,7 @@ class RouteRepositoryTest extends KernelTestCase
 
     protected function setUp(): void
     {
-        $this->routeRepository = self::getContainer()->get('sulu_route.route_repository');
+        $this->routeRepository = self::getContainer()->get('sulu_route.route_repository'); // @phpstan-ignore-line
     }
 
     public function testFindOneBySiteSlugLocale(): void
@@ -59,6 +59,7 @@ class RouteRepositoryTest extends KernelTestCase
             'locale' => 'en',
         ]);
 
+        $this->assertNotNull($route);
         $this->assertSame('/test', $route->getSlug());
         $this->assertSame('en', $route->getLocale());
         $this->assertSame('the_site', $route->getSite());
@@ -72,6 +73,7 @@ class RouteRepositoryTest extends KernelTestCase
             'resourceId' => 'example::1',
         ]);
 
+        $this->assertNotNull($route);
         $this->assertSame('en', $route->getLocale());
         $this->assertSame(Route::HISTORY_RESOURCE_KEY, $route->getResourceKey());
         $this->assertSame('example::1', $route->getResourceId());

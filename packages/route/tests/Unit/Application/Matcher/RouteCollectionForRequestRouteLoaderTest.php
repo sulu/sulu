@@ -15,6 +15,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\TestBundle\Testing\SetGetPrivatePropertyTrait;
 use Sulu\Route\Application\Routing\Matcher\RouteCollectionForRequestRouteLoader;
 use Sulu\Route\Application\Routing\Matcher\RouteDefaultsProviderInterface;
@@ -30,11 +31,15 @@ class RouteCollectionForRequestRouteLoaderTest extends TestCase
     use SetGetPrivatePropertyTrait;
     use ProphecyTrait;
 
+    /**
+     * @var ObjectProphecy<RouteRepositoryInterface>
+     */
+    private ObjectProphecy $routeRepository;
+
     private RouteCollectionForRequestRouteLoader $routeCollectionForRequestRouteLoader;
 
     protected function setUp(): void
     {
-        $this->routeRepository = $this->prophesize(RouteRepositoryInterface::class);
         $container = new Container();
         $container->set('resource_key_example', new class() implements RouteDefaultsProviderInterface {
             public function getDefaults(Route $route): array
@@ -44,6 +49,8 @@ class RouteCollectionForRequestRouteLoaderTest extends TestCase
                 ];
             }
         });
+
+        $this->routeRepository = $this->prophesize(RouteRepositoryInterface::class);
 
         $this->routeCollectionForRequestRouteLoader = new RouteCollectionForRequestRouteLoader(
             $this->routeRepository->reveal(),
@@ -99,6 +106,8 @@ class RouteCollectionForRequestRouteLoaderTest extends TestCase
 
         $this->assertCount(1, $routeCollection);
         $route = $routeCollection->get('sulu_route.route_id_1');
+
+        $this->assertNotNull($route);
 
         $this->assertSame(
             [

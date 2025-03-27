@@ -57,6 +57,7 @@ final class RouteGenerator implements RouteGeneratorInterface
             match ($this->requestContext->getScheme()) {
                 'http' => 80 !== $this->requestContext->getHttpPort() ? ':' . $this->requestContext->getHttpPort() : '',
                 'https' => 443 !== $this->requestContext->getHttpsPort() ? ':' . $this->requestContext->getHttpsPort() : '',
+                default => throw new \RuntimeException('Invalid scheme: ' . $this->requestContext->getScheme()),
             },
         );
 

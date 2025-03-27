@@ -35,10 +35,10 @@ final readonly class RouteHistoryDefaultsProvider implements RouteDefaultsProvid
         \assert($route->isHistory(), \sprintf('Route must be of type "%s", but "%s" given.', Route::HISTORY_RESOURCE_KEY, $route->getResourceKey()));
 
         $resourceIdParts = \explode('::', $route->getResourceId(), 2);
-        $resourceKey = $resourceIdParts[0] ?? null;
-        $resourceId = $resourceIdParts[1] ?? null;
+        $resourceKey = $resourceIdParts[0];
+        $resourceId = $resourceIdParts[1] ?? '';
 
-        if (null === $resourceKey || null === $resourceId) {
+        if ('' === $resourceKey || '' === $resourceId) {
             throw new \RuntimeException(\sprintf('The given history route "resourceId" need to contain resourceKey and resourceId separated by "::", but "%s" given.', $route->getResourceId()));
         }
 

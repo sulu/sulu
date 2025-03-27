@@ -35,6 +35,7 @@ class RouteGeneratorTest extends TestCase
                 $port = match ($requestContext->getScheme()) {
                     'http' => 80 !== $requestContext->getHttpPort() ? ':' . $requestContext->getHttpPort() : '',
                     'https' => 443 !== $requestContext->getHttpsPort() ? ':' . $requestContext->getHttpsPort() : '',
+                    default => throw new \RuntimeException('Invalid scheme: ' . $requestContext->getScheme()),
                 };
 
                 return \sprintf(
@@ -63,19 +64,19 @@ class RouteGeneratorTest extends TestCase
         $this->routeGenerator = new RouteGenerator($container, $this->requestContext);
     }
 
-    public function testGenerate()
+    public function testGenerate(): void
     {
         $result = $this->routeGenerator->generate('/test', 'en', 'the_site');
         $this->assertSame('/en/test', $result);
     }
 
-    public function testGenerateOther()
+    public function testGenerateOther(): void
     {
         $result = $this->routeGenerator->generate('/test', 'en', 'the_other_side');
         $this->assertSame('https://example.org/en/test', $result);
     }
 
-    public function testGenerateRequestContextLocale()
+    public function testGenerateRequestContextLocale(): void
     {
         $this->requestContext->setParameter('_locale', 'en');
 
@@ -83,7 +84,7 @@ class RouteGeneratorTest extends TestCase
         $this->assertSame('/en/test', $result);
     }
 
-    public function testGenerateRequestContextSite()
+    public function testGenerateRequestContextSite(): void
     {
         $this->requestContext->setParameter('site', 'the_site');
 
@@ -91,7 +92,7 @@ class RouteGeneratorTest extends TestCase
         $this->assertSame('/en/test', $result);
     }
 
-    public function testGenerateRequestContextLocaleMissing()
+    public function testGenerateRequestContextLocaleMissing(): void
     {
         $this->expectException(MissingRequestContextParameterException::class);
         $this->expectExceptionMessage('Missing request context parameter "_locale".');
@@ -99,7 +100,7 @@ class RouteGeneratorTest extends TestCase
         $this->routeGenerator->generate('/test', null, 'default');
     }
 
-    public function testGenerateRequestContextSiteMissing()
+    public function testGenerateRequestContextSiteMissing(): void
     {
         $this->expectException(MissingRequestContextParameterException::class);
         $this->expectExceptionMessage('Missing request context parameter "site".');
