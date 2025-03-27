@@ -222,18 +222,6 @@ class ContentObjectProviderTest extends TestCase
         $this->assertNull($result);
     }
 
-    public function testGetId(int $id = 1): void
-    {
-        $contentRichEntity = new Example();
-        static::setPrivateProperty($contentRichEntity, 'id', $id);
-
-        $dimensionContent = new ExampleDimensionContent($contentRichEntity);
-
-        $actualId = (string) $this->contentObjectProvider->getId($dimensionContent);
-
-        $this->assertSame((string) $id, $actualId);
-    }
-
     /**
      * @param array<string, mixed> $data
      */

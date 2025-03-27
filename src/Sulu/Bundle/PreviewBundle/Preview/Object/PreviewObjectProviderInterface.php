@@ -25,13 +25,6 @@ interface PreviewObjectProviderInterface
     public function getObject($id, $locale);
 
     /**
-     * Returns id for given object.
-     *
-     * @return string
-     */
-    public function getId($object);
-
-    /**
      * Set given data to the object.
      *
      * @param string $locale

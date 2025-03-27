@@ -42,14 +42,6 @@ class PageObjectProvider implements PreviewObjectProviderInterface
     /**
      * @param BasePageDocument $object
      */
-    public function getId($object)
-    {
-        return $object->getUuid();
-    }
-
-    /**
-     * @param BasePageDocument $object
-     */
     public function setValues($object, $locale, array $data)
     {
         $propertyAccess = PropertyAccess::createPropertyAccessorBuilder()

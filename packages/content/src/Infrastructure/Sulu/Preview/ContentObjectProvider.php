@@ -98,16 +98,6 @@ class ContentObjectProvider implements PreviewObjectProviderInterface
 
     /**
      * @param B $object
-     *
-     * @return string|int
-     */
-    public function getId($object)
-    {
-        return $object->getResource()->getId();
-    }
-
-    /**
-     * @param B $object
      * @param string $locale
      * @param array<string, mixed> $data
      */
