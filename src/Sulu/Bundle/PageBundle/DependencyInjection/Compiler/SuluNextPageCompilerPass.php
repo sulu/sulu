@@ -11,11 +11,10 @@
 
 namespace Sulu\Bundle\PageBundle\DependencyInjection\Compiler;
 
-use Sulu\Bundle\PageBundle\Admin\PageAdmin;
-use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
+use Symfony\Component\DependencyInjection\Reference;
 
 /**
  * @internal
@@ -37,22 +36,25 @@ class SuluNextPageCompilerPass implements CompilerPassInterface
         }
     }
 
-    /**
-     * @param ContainerBuilder $container
-     * @return void
-     */
     public function removeLegacyPageAdmin(ContainerBuilder $container): void
     {
         if ($container->hasDefinition('sulu_page.admin')) {
             $adminPool = $container->getDefinition('sulu_admin.admin_pool');
 
             $methodCalls = $adminPool->getMethodCalls();
+            /**
+             * @var string $key
+             * @var array<int, string|array<int, Definition>> $methodCall
+             */
             foreach ($methodCalls as $key => $methodCall) {
-                if ($methodCall[0] === 'addAdmin') {
-                    /** @var Definition $definition */
+                if ('addAdmin' === $methodCall[0]) {
                     $definition = $methodCall[1][0];
-                    if ($definition->getClass() === '%sulu_page.admin.class%') {
-                        unset($methodCalls[$key]);
+                    if ($definition instanceof Definition) {
+                        $class = $definition->getClass();
+                        if ('%sulu_page.admin.class%' === $class) {
+                            unset($methodCalls[$key]);
+                            break;
+                        }
                     }
                 }
             }
@@ -60,21 +62,27 @@ class SuluNextPageCompilerPass implements CompilerPassInterface
         }
     }
 
-    /**
-     * @param ContainerBuilder $container
-     * @return void
-     */
     public function removeLegacyNavigationTwigExtension(ContainerBuilder $container): void
     {
         $twigDefinition = $container->getDefinition('twig');
 
         $methodCalls = $twigDefinition->getMethodCalls();
+        /**
+         * @var string $key
+         * @var array<int, string|array<int, Reference>> $methodCall
+         */
         foreach ($methodCalls as $key => $methodCall) {
-            if ($methodCall[0] === 'addExtension' && ((string)$methodCall[1][0]) === 'sulu_website.twig.navigation.memoized') {
-                unset($methodCalls[$key]);
+            if ('addExtension' === $methodCall[0]) {
+                $definition = $methodCall[1][0];
+                if ($definition instanceof Reference) {
+                    $id = $definition->__toString();
+                    if ('sulu_website.twig.navigation.memoized' === $id) {
+                        unset($methodCalls[$key]);
+                        break;
+                    }
+                }
             }
         }
         $twigDefinition->setMethodCalls($methodCalls);
     }
-
 }
