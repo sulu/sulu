@@ -18706,22 +18706,12 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/DependencyInjection/SuluPageExtension.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Document\\\\BasePageDocument\\:\\:getNavigationContexts\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Document/BasePageDocument.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Document\\\\BasePageDocument\\:\\:getPermissions\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Document/BasePageDocument.php
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Document\\\\BasePageDocument\\:\\:getPublished\\(\\) should return DateTime\\|null but returns bool\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Document/BasePageDocument.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Document\\\\BasePageDocument\\:\\:getWebspaceName\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Document/BasePageDocument.php
 
@@ -18747,11 +18737,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Document\\\\BasePageDocument\\:\\:setNavigationContexts\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Document/BasePageDocument.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Document\\\\BasePageDocument\\:\\:setNavigationContexts\\(\\) has parameter \\$navigationContexts with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Document/BasePageDocument.php
 
@@ -24076,7 +24061,7 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Trash/PageTrashItemHandler.php
 
 		-
-			message: "#^Parameter \\#1 \\$navigationContexts of method Sulu\\\\Bundle\\\\PageBundle\\\\Document\\\\BasePageDocument\\:\\:setNavigationContexts\\(\\) expects array, mixed given\\.$#"
+			message: "#^Parameter \\#1 \\$navigationContexts of method Sulu\\\\Bundle\\\\PageBundle\\\\Document\\\\BasePageDocument\\:\\:setNavigationContexts\\(\\) expects array\\<string\\>, mixed given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Trash/PageTrashItemHandler.php
 
@@ -35206,17 +35191,7 @@ parameters:
 			path: src/Sulu/Component/Content/Document/Behavior/LocalizedAuthorBehavior.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Document\\\\Behavior\\\\NavigationContextBehavior\\:\\:getNavigationContexts\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Document/Behavior/NavigationContextBehavior.php
-
-		-
 			message: "#^Method Sulu\\\\Component\\\\Content\\\\Document\\\\Behavior\\\\NavigationContextBehavior\\:\\:setNavigationContexts\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Document/Behavior/NavigationContextBehavior.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Document\\\\Behavior\\\\NavigationContextBehavior\\:\\:setNavigationContexts\\(\\) has parameter \\$navigationContexts with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Document/Behavior/NavigationContextBehavior.php
 
@@ -35284,11 +35259,6 @@ parameters:
 			message: "#^Method Sulu\\\\Component\\\\Content\\\\Document\\\\Behavior\\\\TargetBehavior\\:\\:setTargetDocument\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Document/Behavior/TargetBehavior.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Document\\\\Behavior\\\\WebspaceBehavior\\:\\:getWebspaceName\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Document/Behavior/WebspaceBehavior.php
 
 		-
 			message: "#^Method Sulu\\\\Component\\\\Content\\\\Document\\\\Behavior\\\\WorkflowStageBehavior\\:\\:setWorkflowStage\\(\\) has no return type specified\\.$#"
