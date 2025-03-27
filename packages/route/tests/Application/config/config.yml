@@ -1,5 +1,6 @@
 framework:
     test: true
+    secret: secret
     router:
         utf8: true
         resource: '%kernel.project_dir%/config/routing.yml'
