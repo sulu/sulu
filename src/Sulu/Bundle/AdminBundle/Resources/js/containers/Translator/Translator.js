@@ -86,6 +86,7 @@ export default class Translator extends React.Component<Props> {
     translateText = debounce(action(() => {
         const {
             url,
+            type,
             messages: {
                 errorTranslatingText: errorTranslatingTextMessage,
             },
@@ -100,6 +101,7 @@ export default class Translator extends React.Component<Props> {
                 text: this.sourceText,
                 sourceLanguage: this.sourceLanguage,
                 targetLanguage: this.targetLanguage,
+                type,
             }
         ).then(action((data: {
             response: {

@@ -11,6 +11,10 @@ jest.mock('../../../utils/Translator', () => ({
     translate: (key) => key,
 }));
 
+jest.mock('../../../containers', () => ({
+    TextEditor: jest.fn(() => <div data-testid="text-editor" />),
+}));
+
 const mockProps = {
     locale: 'en',
     value: 'Hallo',
@@ -55,10 +59,28 @@ describe('Translator', () => {
                 text: 'Hallo',
                 sourceLanguage: undefined,
                 targetLanguage: 'en',
+                type: 'text_line',
             });
         });
 
         expect(screen.getByDisplayValue('Hello')).toBeInTheDocument();
+    });
+
+    test('renders correctly with initial props and text_editor', async() => {
+        Requester.post.mockResolvedValue({
+            response: {text: '<h1>Hello</h1>', sourceLanguage: undefined, targetLanguage: 'en'},
+        });
+
+        render(<Translator {...mockProps} type="text_editor" value="<h1>Hallo</h1>" />);
+
+        await waitFor(() => {
+            expect(Requester.post).toHaveBeenCalledWith('/api/translate', {
+                text: '<h1>Hallo</h1>',
+                sourceLanguage: undefined,
+                targetLanguage: 'en',
+                type: 'text_editor',
+            });
+        });
     });
 
     test('translates text when source text changes', async() => {
@@ -81,6 +103,7 @@ describe('Translator', () => {
                 text: 'Auf wiedersehen',
                 sourceLanguage: undefined,
                 targetLanguage: 'en',
+                type: 'text_line',
             });
         });
 
@@ -113,6 +136,7 @@ describe('Translator', () => {
                 text: 'Hallo',
                 sourceLanguage: 'de',
                 targetLanguage: 'en',
+                type: 'text_line',
             });
         });
     });
@@ -143,6 +167,7 @@ describe('Translator', () => {
                 text: 'Hallo',
                 sourceLanguage: undefined,
                 targetLanguage: 'fr',
+                type: 'text_line',
             });
         });
 
@@ -201,6 +226,7 @@ describe('Translator', () => {
                 text: 'Bonjour',
                 sourceLanguage: 'EN',
                 targetLanguage: 'FR',
+                type: 'text_line',
             },
         });
 
@@ -218,6 +244,7 @@ describe('Translator', () => {
                     text: 'Bonjour',
                     sourceLanguage: 'EN',
                     targetLanguage: 'FR',
+                    type: 'text_line',
                 },
             },
         }, {});
