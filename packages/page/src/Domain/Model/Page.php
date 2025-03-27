@@ -39,7 +39,7 @@ class Page implements PageInterface
 
     private int $depth;
 
-    private PageInterface $parent;
+    private ?PageInterface $parent = null;
 
     /**
      * @var Collection<int, PageInterface>

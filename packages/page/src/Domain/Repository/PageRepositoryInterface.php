@@ -85,6 +85,8 @@ interface PageRepositoryInterface
      *     templateKeys?: string[],
      *     page?: int,
      *     limit?: int,
+     *     navigationContexts?: string[],
+     *     depth?: int,
      * } $filters
      * @param array{
      *     id?: 'asc'|'desc',
@@ -99,6 +101,38 @@ interface PageRepositoryInterface
      * @return iterable<PageInterface>
      */
     public function findBy(array $filters = [], array $sortBy = [], array $selects = []): iterable;
+
+    /**
+     * @param array{
+     *     uuid?: string,
+     *     uuids?: string[],
+     *     locale?: string,
+     *     stage?: string,
+     *     categoryIds?: int[],
+     *     categoryKeys?: string[],
+     *     categoryOperator?: 'AND'|'OR',
+     *     tagIds?: int[],
+     *     tagNames?: string[],
+     *     tagOperator?: 'AND'|'OR',
+     *     templateKeys?: string[],
+     *     page?: int,
+     *     limit?: int,
+     *     navigationContexts?: string[],
+     *     depth?: int,
+     * } $filters
+     * @param array{
+     *     id?: 'asc'|'desc',
+     *     title?: 'asc'|'desc',
+     * } $sortBy
+     * @param array{
+     *     page_admin?: bool,
+     *     page_website?: bool,
+     *     with-page-content?: bool|array<string, mixed>,
+     * }|array<string, mixed> $selects
+     *
+     * @return iterable<PageInterface>
+     */
+    public function findByAsTree(array $filters = [], array $sortBy = [], array $selects = []): iterable;
 
     /**
      * @param array{

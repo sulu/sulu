@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Sulu\Page\Infrastructure\Symfony\HttpKernel;
 
+use Gedmo\Tree\Hydrator\ORM\TreeObjectHydrator;
 use Sulu\Bundle\PersistenceBundle\DependencyInjection\PersistenceExtensionTrait;
 use Sulu\Bundle\PersistenceBundle\PersistenceBundleTrait;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStore;
@@ -42,6 +43,7 @@ use Sulu\Page\Infrastructure\Sulu\Content\PageTeaserProvider;
 use Sulu\Page\Infrastructure\Sulu\Content\PropertyResolver\PageSelectionPropertyResolver;
 use Sulu\Page\Infrastructure\Sulu\Content\PropertyResolver\SinglePageSelectionPropertyResolver;
 use Sulu\Page\Infrastructure\Sulu\Content\ResourceLoader\PageResourceLoader;
+use Sulu\Page\Infrastructure\Symfony\Twig\Extension\NavigationTwigExtension;
 use Sulu\Page\UserInterface\Command\InitializeHomepageCommand;
 use Sulu\Page\UserInterface\Controller\Admin\PageController;
 use Symfony\Component\Config\Definition\Configurator\DefinitionConfigurator;
@@ -321,6 +323,17 @@ final class SuluPageBundle extends AbstractBundle
                 PageInterface::class,
             ])
             ->tag('massive_search.metadata.provider');
+
+        // NavigationTwigExtension
+        $services->set('sulu_page.navigation_twig_extension')
+            ->class(NavigationTwigExtension::class)
+            ->args([
+                new Reference('sulu_page.page_repository'),
+                new Reference('sulu_content.content_aggregator'),
+                new Reference('sulu_content.content_resolver'),
+                new Reference('sulu_core.webspace.request_analyzer'),
+            ])
+            ->tag('twig.extension');
     }
 
     /**
@@ -402,6 +415,9 @@ final class SuluPageBundle extends AbstractBundle
                                 'is_bundle' => false,
                                 'mapping' => true,
                             ],
+                        ],
+                        'hydrators' => [
+                            'sulu_page_tree' => TreeObjectHydrator::class,
                         ],
                     ],
                 ],

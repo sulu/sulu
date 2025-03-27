@@ -14,9 +14,12 @@ namespace Sulu\Page\Infrastructure\Doctrine\Repository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NoResultException;
+use Doctrine\ORM\Query;
+use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\Query\Expr\OrderBy;
 use Doctrine\ORM\QueryBuilder;
 use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
+use Gedmo\Tree\Hydrator\ORM\TreeObjectHydrator;
 use Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer;
 use Sulu\Page\Domain\Exception\PageNotFoundException;
 use Sulu\Page\Domain\Model\PageDimensionContentInterface;
@@ -184,6 +187,21 @@ class PageRepository implements PageRepositoryInterface
         $this->entityManager->remove($page);
     }
 
+    public function findByAsTree(array $filters = [], array $sortBy = [], array $selects = []): iterable
+    {
+        $queryBuilder = $this->createQueryBuilder($filters, $sortBy, $selects);
+
+        $query = $queryBuilder->getQuery();
+        // Hint is necessary for the TreeObjectHydrator to work
+        // https://github.com/doctrine-extensions/DoctrineExtensions/blob/main/doc/tree.md#building-trees-from-your-entities
+        $query->setHint(Query::HINT_INCLUDE_META_COLUMNS, true);
+
+        /** @var PageInterface[] $pages */
+        $pages = $query->getResult('sulu_page_tree');
+
+        return $pages;
+    }
+
     public function reorderOneBy(array $filters, int $position): void
     {
         $page = $this->getOneBy($filters);
@@ -228,6 +246,8 @@ class PageRepository implements PageRepositoryInterface
      *     webspaceKey?: string,
      *     page?: int,
      *     limit?: int,
+     *     navigationContexts?: string[],
+     *     depth?: int,
      * } $filters
      * @param array{
      *     uuid?: 'asc'|'desc',
@@ -286,6 +306,13 @@ class PageRepository implements PageRepositoryInterface
             };
         }
 
+        $depth = $filters['depth'] ?? null;
+        if (null !== $depth) {
+            Assert::integer($depth); // @phpstan-ignore staticMethod.alreadyNarrowedType
+            $queryBuilder->andWhere('page.depth <= :depth')
+                ->setParameter('depth', $depth);
+        }
+
         $limit = $filters['limit'] ?? null;
         if (null !== $limit) {
             Assert::integer($limit); // @phpstan-ignore staticMethod.alreadyNarrowedType
@@ -328,11 +355,7 @@ class PageRepository implements PageRepositoryInterface
         if ($selects[self::SELECT_PAGE_CONTENT] ?? null) {
             /** @var array<string, bool> $contentSelects */
             $contentSelects = $selects[self::SELECT_PAGE_CONTENT];
-
-            $queryBuilder->leftJoin(
-                'page.dimensionContents',
-                'dimensionContent'
-            );
+            $this->leftJoinDimensionContent($queryBuilder);
 
             $this->dimensionContentQueryEnhancer->addSelects(
                 $queryBuilder,
@@ -342,6 +365,39 @@ class PageRepository implements PageRepositoryInterface
             );
         }
 
+        $navigationContexts = $filters['navigationContexts'] ?? null;
+        if (null !== $navigationContexts) {
+            Assert::isArray($navigationContexts); // @phpstan-ignore staticMethod.alreadyNarrowedType
+            if ([] !== $navigationContexts) {
+                $this->leftJoinDimensionContent($queryBuilder);
+
+                $queryBuilder->leftJoin('dimensionContent.navigationContexts', 'navigationContext')
+                    ->andWhere('navigationContext.navigationContext IN (:navigationContexts)')
+                    ->setParameter('navigationContexts', $navigationContexts);
+            }
+        }
+
         return $queryBuilder;
+    }
+
+    private function leftJoinDimensionContent(QueryBuilder $queryBuilder): void
+    {
+        // check if we already have a join for dimensionContent
+        $hasJoin = false;
+        /** @var array<string, Join[]> $joinParts */
+        $joinParts = $queryBuilder->getDQLPart('join');
+
+        foreach ($joinParts as $joins) {
+            foreach ($joins as $join) {
+                if ('page.dimensionContents' === $join->getJoin()) {
+                    $hasJoin = true;
+                    break 2;
+                }
+            }
+        }
+
+        if (!$hasJoin) {
+            $queryBuilder->leftJoin('page.dimensionContents', 'dimensionContent');
+        }
     }
 }
