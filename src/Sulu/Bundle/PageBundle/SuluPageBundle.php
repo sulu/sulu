@@ -30,6 +30,7 @@ final class SuluPageBundle extends Bundle
     {
         parent::build($container);
 
+        $container->addCompilerPass(new SuluNextPageCompilerPass());
         $container->addCompilerPass(new ContentExportCompilerPass());
         $container->addCompilerPass(new SmartContentDataProviderCompilerPass());
         $container->addCompilerPass(new WebspacesPass());
@@ -43,6 +44,5 @@ final class SuluPageBundle extends Bundle
                 'alias'
             )
         );
-        $container->addCompilerPass(new SuluNextPageCompilerPass());
     }
 }
