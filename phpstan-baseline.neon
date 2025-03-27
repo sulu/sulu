@@ -33026,32 +33026,7 @@ parameters:
 			path: src/Sulu/Bundle/WebsiteBundle/Twig/Sitemap/SitemapTwigExtension.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\WebsiteBundle\\\\Twig\\\\Sitemap\\\\SitemapTwigExtension\\:\\:sitemapFunction\\(\\) has parameter \\$locale with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Twig/Sitemap/SitemapTwigExtension.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\WebsiteBundle\\\\Twig\\\\Sitemap\\\\SitemapTwigExtension\\:\\:sitemapFunction\\(\\) has parameter \\$webspaceKey with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Twig/Sitemap/SitemapTwigExtension.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\WebsiteBundle\\\\Twig\\\\Sitemap\\\\SitemapTwigExtension\\:\\:sitemapUrlFunction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Twig/Sitemap/SitemapTwigExtension.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\WebsiteBundle\\\\Twig\\\\Sitemap\\\\SitemapTwigExtension\\:\\:sitemapUrlFunction\\(\\) has parameter \\$locale with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Twig/Sitemap/SitemapTwigExtension.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\WebsiteBundle\\\\Twig\\\\Sitemap\\\\SitemapTwigExtension\\:\\:sitemapUrlFunction\\(\\) has parameter \\$url with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Twig/Sitemap/SitemapTwigExtension.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\WebsiteBundle\\\\Twig\\\\Sitemap\\\\SitemapTwigExtension\\:\\:sitemapUrlFunction\\(\\) has parameter \\$webspaceKey with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/WebsiteBundle/Twig/Sitemap/SitemapTwigExtension.php
 
@@ -33066,32 +33041,7 @@ parameters:
 			path: src/Sulu/Bundle/WebsiteBundle/Twig/Sitemap/SitemapTwigExtensionInterface.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\WebsiteBundle\\\\Twig\\\\Sitemap\\\\SitemapTwigExtensionInterface\\:\\:sitemapFunction\\(\\) has parameter \\$locale with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Twig/Sitemap/SitemapTwigExtensionInterface.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\WebsiteBundle\\\\Twig\\\\Sitemap\\\\SitemapTwigExtensionInterface\\:\\:sitemapFunction\\(\\) has parameter \\$webspaceKey with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Twig/Sitemap/SitemapTwigExtensionInterface.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\WebsiteBundle\\\\Twig\\\\Sitemap\\\\SitemapTwigExtensionInterface\\:\\:sitemapUrlFunction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Twig/Sitemap/SitemapTwigExtensionInterface.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\WebsiteBundle\\\\Twig\\\\Sitemap\\\\SitemapTwigExtensionInterface\\:\\:sitemapUrlFunction\\(\\) has parameter \\$locale with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Twig/Sitemap/SitemapTwigExtensionInterface.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\WebsiteBundle\\\\Twig\\\\Sitemap\\\\SitemapTwigExtensionInterface\\:\\:sitemapUrlFunction\\(\\) has parameter \\$url with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Twig/Sitemap/SitemapTwigExtensionInterface.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\WebsiteBundle\\\\Twig\\\\Sitemap\\\\SitemapTwigExtensionInterface\\:\\:sitemapUrlFunction\\(\\) has parameter \\$webspaceKey with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/WebsiteBundle/Twig/Sitemap/SitemapTwigExtensionInterface.php
 
