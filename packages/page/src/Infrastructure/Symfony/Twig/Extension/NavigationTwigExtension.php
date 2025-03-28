@@ -12,20 +12,14 @@
 namespace Sulu\Page\Infrastructure\Symfony\Twig\Extension;
 
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
-use Sulu\Content\Application\ContentAggregator\ContentAggregatorInterface;
-use Sulu\Content\Application\ContentResolver\ContentResolverInterface;
-use Sulu\Content\Domain\Model\DimensionContentInterface;
-use Sulu\Page\Domain\Model\PageInterface;
-use Sulu\Page\Domain\Repository\PageRepositoryInterface;
+use Sulu\Page\Domain\Repository\NavigationRepositoryInterface;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
 class NavigationTwigExtension extends AbstractExtension
 {
     public function __construct(
-        private PageRepositoryInterface $pageRepository,
-        private ContentAggregatorInterface $contentAggregator,
-        private ContentResolverInterface $contentResolver,
+        private NavigationRepositoryInterface $navigationRepository,
         private RequestAnalyzerInterface $requestAnalyzer
     ) {
     }
@@ -48,26 +42,15 @@ class NavigationTwigExtension extends AbstractExtension
     public function flatRootNavigationFunction(string $navigationContext, int $depth = 1, bool $loadExcerpt = false): array
     {
         $webspaceKey = $this->requestAnalyzer->getWebspace()->getKey();
-        $pages = $this->pageRepository->findBy([
-            'navigationContexts' => [$navigationContext],
-            'depth' => $depth,
-            'webspaceKey' => $webspaceKey,
-        ]);
-
-        if ([] === $pages) {
-            return [];
-        }
-
         $locale = $this->requestAnalyzer->getCurrentLocalization()->getLocale();
-        $result = [];
 
-        /** @var PageInterface $page */
-        foreach ($pages as $page) {
-            $content = $this->resolvePageContent($page, $locale);
-            $result[] = $this->normalizePageContent($content, $loadExcerpt);
-        }
-
-        return $result;
+        return $this->navigationRepository->getNavigationFlat(
+            $navigationContext,
+            $locale,
+            $webspaceKey,
+            $depth,
+            ['loadExcerpt' => $loadExcerpt]
+        );
     }
 
     /**
@@ -76,82 +59,14 @@ class NavigationTwigExtension extends AbstractExtension
     public function treeRootNavigationFunction(string $navigationContext, int $depth = 1, bool $loadExcerpt = false): array
     {
         $webspaceKey = $this->requestAnalyzer->getWebspace()->getKey();
-        $pages = $this->pageRepository->findByAsTree([
-            'navigationContexts' => [$navigationContext],
-            'depth' => $depth,
-            'webspaceKey' => $webspaceKey,
-        ]);
-
-        if ([] === $pages) {
-            return [];
-        }
-
         $locale = $this->requestAnalyzer->getCurrentLocalization()->getLocale();
 
-        return $this->normalizePageTree($pages, $loadExcerpt, $locale);
-    }
-
-    /**
-     * @param iterable<PageInterface> $pages
-     *
-     * @return array<string, mixed>[]
-     */
-    private function normalizePageTree(iterable $pages, bool $loadExcerpt, string $locale): array
-    {
-        $result = [];
-
-        foreach ($pages as $page) {
-            $content = $this->resolvePageContent($page, $locale);
-            $normalizedContent = $this->normalizePageContent($content, $loadExcerpt);
-            $normalizedContent['children'] = $this->normalizePageTree($page->getChildren(), $loadExcerpt, $locale);
-
-            $result[] = $normalizedContent;
-        }
-
-        return $result;
-    }
-
-    /**
-     * @return array{
-     *      resource: object,
-     *      content: mixed,
-     *      view: mixed[],
-     *      extension: array<string, array<string, mixed>>,
-     * }
-     */
-    private function resolvePageContent(PageInterface $page, string $locale): array
-    {
-        $contentDimension = $this->contentAggregator->aggregate($page, [
-            'locale' => $locale,
-            'stage' => DimensionContentInterface::STAGE_LIVE,
-        ]);
-
-        return $this->contentResolver->resolve($contentDimension);
-    }
-
-    /**
-     * @param array{
-     *      resource: object,
-     *      content: mixed,
-     *      view: mixed[],
-     *      extension: array<string, array<string, mixed>>,
-     *  } $content
-     *
-     * @return array<string, mixed>
-     */
-    private function normalizePageContent(array $content, bool $loadExcerpt): array
-    {
-        /** @var array{
-         *      extension: array<string, array<string, mixed>>,
-         * } $contentData
-         */
-        $contentData = $content['content'];
-        $result = [...$contentData];
-
-        if ($loadExcerpt) {
-            $result['excerpt'] = $content['extension']['excerpt'];
-        }
-
-        return $result;
+        return $this->navigationRepository->getNavigationTree(
+            $navigationContext,
+            $locale,
+            $webspaceKey,
+            $depth,
+            ['excerpt' => $loadExcerpt]
+        );
     }
 }

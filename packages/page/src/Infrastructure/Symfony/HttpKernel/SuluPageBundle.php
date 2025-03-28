@@ -34,6 +34,7 @@ use Sulu\Page\Domain\Model\PageDimensionContent;
 use Sulu\Page\Domain\Model\PageDimensionContentInterface;
 use Sulu\Page\Domain\Model\PageInterface;
 use Sulu\Page\Domain\Repository\PageRepositoryInterface;
+use Sulu\Page\Infrastructure\Doctrine\Repository\NavigationRepository;
 use Sulu\Page\Infrastructure\Doctrine\Repository\PageRepository;
 use Sulu\Page\Infrastructure\Sulu\Admin\PageAdmin;
 use Sulu\Page\Infrastructure\Sulu\Build\HomepageBuilder;
@@ -324,13 +325,22 @@ final class SuluPageBundle extends AbstractBundle
             ])
             ->tag('massive_search.metadata.provider');
 
-        // NavigationTwigExtension
+        // Navigation
+        $services->set('sulu_page.navigation_repository')
+            ->class(NavigationRepository::class)
+            ->args([
+                new Reference('doctrine.orm.entity_manager'),
+                new Reference('sulu_content.dimension_content_query_enhancer'),
+                new Reference('sulu_content.content_aggregator'),
+                new Reference('sulu_content.content_resolver'),
+            ]);
+
+        $services->alias(NavigationRepository::class, 'sulu_page.navigation_repository');
+
         $services->set('sulu_page.navigation_twig_extension')
             ->class(NavigationTwigExtension::class)
             ->args([
-                new Reference('sulu_page.page_repository'),
-                new Reference('sulu_content.content_aggregator'),
-                new Reference('sulu_content.content_resolver'),
+                new Reference('sulu_page.navigation_repository'),
                 new Reference('sulu_core.webspace.request_analyzer'),
             ])
             ->tag('twig.extension');
