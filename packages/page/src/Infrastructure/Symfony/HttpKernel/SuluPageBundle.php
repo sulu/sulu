@@ -270,7 +270,6 @@ final class SuluPageBundle extends AbstractBundle
             ->args([
                 new Reference('doctrine.orm.entity_manager'),
                 new Reference('sulu_core.webspace.webspace_manager'),
-                '%kernel.environment%',
                 PageInterface::class,
                 '%sulu.model.route.class%',
                 PageInterface::RESOURCE_KEY,

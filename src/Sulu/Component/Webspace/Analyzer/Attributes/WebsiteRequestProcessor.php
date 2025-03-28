@@ -23,7 +23,6 @@ class WebsiteRequestProcessor implements RequestProcessorInterface
 {
     public function __construct(
         private WebspaceManagerInterface $webspaceManager,
-        private ?string $environment
     ) {
     }
 
@@ -34,7 +33,6 @@ class WebsiteRequestProcessor implements RequestProcessorInterface
 
         $portalInformations = $this->webspaceManager->findPortalInformationsByUrl(
             $url,
-            $this->environment
         );
 
         if (0 === \count($portalInformations)) {

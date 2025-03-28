@@ -40,7 +40,6 @@ class SeoEnhancer extends AbstractEnhancer
             $resourceSegment = $customUrl->getTargetDocument()->getResourceSegment();
             $seo['canonicalUrl'] = $this->webspaceManager->findUrlByResourceLocator(
                 $resourceSegment,
-                $defaults['_environment'],
                 $customUrl->getTargetLocale(),
                 $webspace->getKey(),
                 $request->getHost(),

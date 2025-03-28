@@ -85,11 +85,6 @@ class PreviewRendererTest extends TestCase
      */
     private $previewDefault = [];
 
-    /**
-     * @var string
-     */
-    private $environment = 'prod';
-
     public function setUp(): void
     {
         $this->routeDefaultsProvider = $this->prophesize(RouteDefaultsProviderInterface::class);
@@ -99,7 +94,7 @@ class PreviewRendererTest extends TestCase
         $this->eventDispatcher = $this->prophesize(EventDispatcherInterface::class);
 
         $this->httpKernel = $this->prophesize(HttpKernelInterface::class);
-        $this->kernelFactory->create($this->environment)->willReturn($this->httpKernel->reveal());
+        $this->kernelFactory->create()->willReturn($this->httpKernel->reveal());
 
         $this->renderer = new PreviewRenderer(
             $this->routeDefaultsProvider->reveal(),
@@ -108,7 +103,6 @@ class PreviewRendererTest extends TestCase
             $this->webspaceManager->reveal(),
             $this->eventDispatcher->reveal(),
             $this->previewDefault,
-            $this->environment,
             'X-Sulu-Target-Group'
         );
     }
@@ -150,7 +144,7 @@ class PreviewRendererTest extends TestCase
         $portalInformation->getUrl()->willReturn($portalUrl);
         $portalInformation->getPrefix()->willReturn('/de');
 
-        $this->webspaceManager->findPortalInformationsByWebspaceKeyAndLocale('sulu_io', 'de', $this->environment)
+        $this->webspaceManager->findPortalInformationsByWebspaceKeyAndLocale('sulu_io', 'de')
             ->willReturn([$portalInformation->reveal()]);
 
         $this->routeDefaultsProvider->supports(\get_class($object->reveal()))->willReturn(true);
@@ -223,7 +217,7 @@ class PreviewRendererTest extends TestCase
         $portalInformation->getUrl()->willReturn('sulu.lo');
         $portalInformation->getPrefix()->willReturn('/de');
 
-        $this->webspaceManager->findPortalInformationsByWebspaceKeyAndLocale('sulu_io', 'de', $this->environment)
+        $this->webspaceManager->findPortalInformationsByWebspaceKeyAndLocale('sulu_io', 'de')
             ->willReturn([$portalInformation->reveal()]);
 
         $this->routeDefaultsProvider->supports(\get_class($object->reveal()))->willReturn(true);
@@ -269,7 +263,7 @@ class PreviewRendererTest extends TestCase
         $portalInformation->getUrl()->willReturn('sulu.lo');
         $portalInformation->getPrefix()->willReturn('/de');
 
-        $this->webspaceManager->findPortalInformationsByWebspaceKeyAndLocale('sulu_io', 'de', $this->environment)
+        $this->webspaceManager->findPortalInformationsByWebspaceKeyAndLocale('sulu_io', 'de')
             ->willReturn([$portalInformation->reveal()]);
 
         $this->routeDefaultsProvider->supports(\get_class($object->reveal()))->willReturn(true);
@@ -312,7 +306,7 @@ class PreviewRendererTest extends TestCase
         $portalInformation->getUrl()->willReturn('sulu.lo');
         $portalInformation->getPrefix()->willReturn('/de');
 
-        $this->webspaceManager->findPortalInformationsByWebspaceKeyAndLocale('sulu_io', 'de', $this->environment)
+        $this->webspaceManager->findPortalInformationsByWebspaceKeyAndLocale('sulu_io', 'de')
             ->willReturn([$portalInformation->reveal()]);
 
         $this->routeDefaultsProvider->supports(\get_class($object->reveal()))->willReturn(true);
@@ -350,7 +344,7 @@ class PreviewRendererTest extends TestCase
     {
         $object = $this->prophesize(\stdClass::class);
 
-        $this->webspaceManager->findPortalInformationsByWebspaceKeyAndLocale('sulu_io', 'de', $this->environment)
+        $this->webspaceManager->findPortalInformationsByWebspaceKeyAndLocale('sulu_io', 'de')
             ->willReturn([]);
 
         $webspace = new Webspace();
@@ -386,7 +380,7 @@ class PreviewRendererTest extends TestCase
 
         $this->routeDefaultsProvider->supports(\get_class($object))->willReturn(true);
 
-        $this->webspaceManager->findPortalInformationsByWebspaceKeyAndLocale('not_existing', 'de', $this->environment)
+        $this->webspaceManager->findPortalInformationsByWebspaceKeyAndLocale('not_existing', 'de')
             ->willReturn([]);
 
         $this->webspaceManager->findWebspaceByKey('not_existing')->willReturn(null);
@@ -404,7 +398,7 @@ class PreviewRendererTest extends TestCase
         $object = new \stdClass();
         $this->routeDefaultsProvider->supports(\get_class($object))->willReturn(true);
 
-        $this->webspaceManager->findPortalInformationsByWebspaceKeyAndLocale('sulu_io', 'de', $this->environment)
+        $this->webspaceManager->findPortalInformationsByWebspaceKeyAndLocale('sulu_io', 'de')
             ->willReturn([]);
 
         $webspace = new Webspace();
@@ -429,7 +423,7 @@ class PreviewRendererTest extends TestCase
         $portalInformation->getUrl()->willReturn('sulu.lo');
         $portalInformation->getPrefix()->willReturn('/de');
 
-        $this->webspaceManager->findPortalInformationsByWebspaceKeyAndLocale('sulu_io', 'de', $this->environment)
+        $this->webspaceManager->findPortalInformationsByWebspaceKeyAndLocale('sulu_io', 'de')
             ->willReturn([$portalInformation->reveal()]);
 
         $this->routeDefaultsProvider->supports(\get_class($object->reveal()))->willReturn(false);
@@ -464,7 +458,7 @@ class PreviewRendererTest extends TestCase
         $portalInformation->getUrl()->willReturn('sulu.lo');
         $portalInformation->getPrefix()->willReturn('/de');
 
-        $this->webspaceManager->findPortalInformationsByWebspaceKeyAndLocale('sulu_io', 'de', $this->environment)
+        $this->webspaceManager->findPortalInformationsByWebspaceKeyAndLocale('sulu_io', 'de')
             ->willReturn([$portalInformation->reveal()]);
 
         $this->routeDefaultsProvider->supports(\get_class($object->reveal()))->willReturn(true);
@@ -499,7 +493,7 @@ class PreviewRendererTest extends TestCase
         $portalInformation->getUrl()->willReturn('sulu.lo');
         $portalInformation->getPrefix()->willReturn('/de');
 
-        $this->webspaceManager->findPortalInformationsByWebspaceKeyAndLocale('sulu_io', 'de', $this->environment)
+        $this->webspaceManager->findPortalInformationsByWebspaceKeyAndLocale('sulu_io', 'de')
             ->willReturn([$portalInformation->reveal()]);
 
         $this->routeDefaultsProvider->supports(\get_class($object->reveal()))->willReturn(true);
@@ -534,7 +528,7 @@ class PreviewRendererTest extends TestCase
         $portalInformation->getUrl()->willReturn('sulu.lo');
         $portalInformation->getPrefix()->willReturn('/de');
 
-        $this->webspaceManager->findPortalInformationsByWebspaceKeyAndLocale('sulu_io', 'de', $this->environment)
+        $this->webspaceManager->findPortalInformationsByWebspaceKeyAndLocale('sulu_io', 'de')
             ->willReturn([$portalInformation->reveal()]);
 
         $this->routeDefaultsProvider->supports(\get_class($object->reveal()))->willReturn(true);
@@ -571,7 +565,7 @@ class PreviewRendererTest extends TestCase
         $portalInformation->getUrl()->willReturn('sulu.lo');
         $portalInformation->getPrefix()->willReturn('/de');
 
-        $this->webspaceManager->findPortalInformationsByWebspaceKeyAndLocale('sulu_io', 'de', $this->environment)
+        $this->webspaceManager->findPortalInformationsByWebspaceKeyAndLocale('sulu_io', 'de')
             ->willReturn([$portalInformation->reveal()]);
 
         $this->routeDefaultsProvider->supports(\get_class($object->reveal()))->willReturn(true);
@@ -605,7 +599,7 @@ class PreviewRendererTest extends TestCase
         $portalInformation->getUrl()->willReturn('sulu-preview-test.io');
         $portalInformation->getPrefix()->willReturn('/de');
 
-        $this->webspaceManager->findPortalInformationsByWebspaceKeyAndLocale('sulu_io', 'de', $this->environment)
+        $this->webspaceManager->findPortalInformationsByWebspaceKeyAndLocale('sulu_io', 'de')
             ->willReturn([$portalInformation->reveal()]);
 
         $this->routeDefaultsProvider->supports(\get_class($object->reveal()))->willReturn(true);

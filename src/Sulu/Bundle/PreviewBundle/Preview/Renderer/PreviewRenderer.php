@@ -52,7 +52,6 @@ class PreviewRenderer implements PreviewRendererInterface
         private WebspaceManagerInterface $webspaceManager,
         private EventDispatcherInterface $eventDispatcher,
         private array $previewDefaults,
-        private string $environment,
         private ?string $targetGroupHeader = null,
     ) {
     }
@@ -73,7 +72,6 @@ class PreviewRenderer implements PreviewRendererInterface
         $portalInformations = $this->webspaceManager->findPortalInformationsByWebspaceKeyAndLocale(
             $webspaceKey,
             $locale,
-            $this->environment
         );
 
         /** @var PortalInformation $portalInformation */
@@ -138,12 +136,6 @@ class PreviewRenderer implements PreviewRendererInterface
         try {
             $response = $this->handle($request);
         } catch (Error $e) {
-            // dev/test only: display also the file and line which was causing the error
-            // for better debugging and faster development
-            if (\in_array($this->environment, ['dev', 'test'])) {
-                $e->appendMessage(' (' . $e->getFile() . ' line ' . $e->getLine() . ')');
-            }
-
             throw new TwigException($e, $object, $id, $webspace, $locale);
         } catch (\InvalidArgumentException $e) {
             throw new TemplateNotFoundException($e, $object, $id, $webspace, $locale);
@@ -163,7 +155,7 @@ class PreviewRenderer implements PreviewRendererInterface
      */
     private function handle(Request $request)
     {
-        $kernel = $this->kernelFactory->create($this->environment);
+        $kernel = $this->kernelFactory->create();
 
         try {
             return $kernel->handle($request, HttpKernelInterface::MAIN_REQUEST, false);
@@ -263,7 +255,7 @@ class PreviewRenderer implements PreviewRendererInterface
         $portal->setDefaultLocalization($localization);
 
         $environment = new Environment();
-        $url = new Url($domain, $this->environment);
+        $url = new Url($domain, null);
         $environment->setUrls([$url]);
         $portal->setEnvironments([$environment]);
         $webspace->setPortals([$portal]);

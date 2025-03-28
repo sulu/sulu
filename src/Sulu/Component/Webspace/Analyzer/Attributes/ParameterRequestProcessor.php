@@ -20,10 +20,7 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class ParameterRequestProcessor implements RequestProcessorInterface
 {
-    /**
-     * @param string $environment
-     */
-    public function __construct(private WebspaceManagerInterface $webspaceManager, private $environment)
+    public function __construct(private WebspaceManagerInterface $webspaceManager)
     {
     }
 
@@ -36,7 +33,6 @@ class ParameterRequestProcessor implements RequestProcessorInterface
         $portalInformations = $this->webspaceManager->findPortalInformationsByPortalKeyAndLocale(
             $request->get('_portal'),
             $request->get('_locale'),
-            $this->environment
         );
 
         if (!$portalInformations) {

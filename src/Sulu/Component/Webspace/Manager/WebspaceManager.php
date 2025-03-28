@@ -42,7 +42,7 @@ class WebspaceManager implements WebspaceManagerInterface
     private $options;
 
     /**
-     * @var mixed[]
+     * @var array<string, array<string, array<string, string|null>>>
      */
     private $portalUrlCache = [];
 
@@ -77,13 +77,9 @@ class WebspaceManager implements WebspaceManagerInterface
         return $this->getWebspaceCollection()->getPortal($key);
     }
 
-    public function findPortalInformationByUrl(string $url, ?string $environment = null): ?PortalInformation
+    public function findPortalInformationByUrl(string $url): ?PortalInformation
     {
-        if (null === $environment) {
-            $environment = $this->environment;
-        }
-
-        $portalInformations = $this->getWebspaceCollection()->getPortalInformations($environment);
+        $portalInformations = $this->getWebspaceCollection()->getPortalInformations($this->environment);
         foreach ($portalInformations as $portalInformation) {
             if ($this->matchUrl($url, $portalInformation->getUrl())) {
                 return $portalInformation;
@@ -93,14 +89,10 @@ class WebspaceManager implements WebspaceManagerInterface
         return null;
     }
 
-    public function findPortalInformationsByHostIncludingSubdomains(string $host, ?string $environment = null): array
+    public function findPortalInformationsByHostIncludingSubdomains(string $host): array
     {
-        if (null === $environment) {
-            $environment = $this->environment;
-        }
-
         return \array_filter(
-            $this->getWebspaceCollection()->getPortalInformations($environment),
+            $this->getWebspaceCollection()->getPortalInformations($this->environment),
             function(PortalInformation $portalInformation) use ($host) {
                 $portalHost = $portalInformation->getHost();
 
@@ -110,14 +102,10 @@ class WebspaceManager implements WebspaceManagerInterface
         );
     }
 
-    public function findPortalInformationsByUrl(string $url, ?string $environment = null): array
+    public function findPortalInformationsByUrl(string $url): array
     {
-        if (null === $environment) {
-            $environment = $this->environment;
-        }
-
         return \array_filter(
-            $this->getWebspaceCollection()->getPortalInformations($environment),
+            $this->getWebspaceCollection()->getPortalInformations($this->environment),
             function(PortalInformation $portalInformation) use ($url) {
                 return $this->matchUrl($url, $portalInformation->getUrl());
             }
@@ -127,14 +115,9 @@ class WebspaceManager implements WebspaceManagerInterface
     public function findPortalInformationsByWebspaceKeyAndLocale(
         string $webspaceKey,
         string $locale,
-        ?string $environment = null
     ): array {
-        if (null === $environment) {
-            $environment = $this->environment;
-        }
-
         return \array_filter(
-            $this->getWebspaceCollection()->getPortalInformations($environment),
+            $this->getWebspaceCollection()->getPortalInformations($this->environment),
             function(PortalInformation $portalInformation) use ($webspaceKey, $locale) {
                 return $portalInformation->getWebspace()->getKey() === $webspaceKey
                     && $portalInformation->getLocale() === $locale;
@@ -144,15 +127,10 @@ class WebspaceManager implements WebspaceManagerInterface
 
     public function findPortalInformationsByPortalKeyAndLocale(
         string $portalKey,
-        string $locale,
-        ?string $environment = null
+        string $locale
     ): array {
-        if (null === $environment) {
-            $environment = $this->environment;
-        }
-
         return \array_filter(
-            $this->getWebspaceCollection()->getPortalInformations($environment),
+            $this->getWebspaceCollection()->getPortalInformations($this->environment),
             function(PortalInformation $portalInformation) use ($portalKey, $locale) {
                 return $portalInformation->getPortal()
                     && $portalInformation->getPortal()->getKey() === $portalKey
@@ -163,15 +141,11 @@ class WebspaceManager implements WebspaceManagerInterface
 
     public function findUrlsByResourceLocator(
         string $resourceLocator,
-        ?string $environment,
         string $languageCode,
         ?string $webspaceKey = null,
         ?string $domain = null,
         ?string $scheme = null
     ): array {
-        if (null === $environment) {
-            $environment = $this->environment;
-        }
         if (null === $webspaceKey) {
             $currentWebspace = $this->getCurrentWebspace();
             $webspaceKey = $currentWebspace ? $currentWebspace->getKey() : $webspaceKey;
@@ -179,7 +153,7 @@ class WebspaceManager implements WebspaceManagerInterface
 
         $urls = [];
         $portals = $this->getWebspaceCollection()->getPortalInformations(
-            $environment,
+            $this->environment,
             [RequestAnalyzerInterface::MATCH_TYPE_FULL]
         );
         foreach ($portals as $portalInformation) {
@@ -196,15 +170,11 @@ class WebspaceManager implements WebspaceManagerInterface
 
     public function findUrlByResourceLocator(
         ?string $resourceLocator,
-        ?string $environment,
         string $languageCode,
         ?string $webspaceKey = null,
         ?string $domain = null,
         ?string $scheme = null
     ): ?string {
-        if (null === $environment) {
-            $environment = $this->environment;
-        }
         if (null === $webspaceKey) {
             $currentWebspace = $this->getCurrentWebspace();
             $webspaceKey = $currentWebspace ? $currentWebspace->getKey() : $webspaceKey;
@@ -213,8 +183,8 @@ class WebspaceManager implements WebspaceManagerInterface
             $resourceLocator = '/';
         }
 
-        if (isset($this->portalUrlCache[$webspaceKey][$domain][$environment][$languageCode])) {
-            $portalUrl = $this->portalUrlCache[$webspaceKey][$domain][$environment][$languageCode];
+        if (isset($this->portalUrlCache[$webspaceKey][$domain][$languageCode])) {
+            $portalUrl = $this->portalUrlCache[$webspaceKey][$domain][$languageCode];
 
             if (!$portalUrl) {
                 return null;
@@ -228,7 +198,7 @@ class WebspaceManager implements WebspaceManagerInterface
         $partialMatchedUrl = null;
 
         $portals = $this->getWebspaceCollection()->getPortalInformations(
-            $environment
+            $this->environment
         );
 
         foreach ($portals as $portalInformation) {
@@ -289,7 +259,7 @@ class WebspaceManager implements WebspaceManagerInterface
             $portalUrl = null;
         }
 
-        $this->portalUrlCache[$webspaceKey][$domain][$environment][$languageCode] = $portalUrl;
+        $this->portalUrlCache[$webspaceKey][$domain][$languageCode] = $portalUrl;
 
         if (!$portalUrl) {
             return null;
@@ -303,38 +273,26 @@ class WebspaceManager implements WebspaceManagerInterface
         return $this->getWebspaceCollection()->getPortals();
     }
 
-    public function getUrls(?string $environment = null): array
+    public function getUrls(): array
     {
-        if (null === $environment) {
-            $environment = $this->environment;
-        }
-
         $urls = [];
 
-        foreach ($this->getWebspaceCollection()->getPortalInformations($environment) as $portalInformation) {
+        foreach ($this->getWebspaceCollection()->getPortalInformations($this->environment) as $portalInformation) {
             $urls[] = $portalInformation->getUrl();
         }
 
         return $urls;
     }
 
-    public function getPortalInformations(?string $environment = null): array
+    public function getPortalInformations(): array
     {
-        if (null === $environment) {
-            $environment = $this->environment;
-        }
-
-        return $this->getWebspaceCollection()->getPortalInformations($environment);
+        return $this->getWebspaceCollection()->getPortalInformations($this->environment);
     }
 
-    public function getPortalInformationsByWebspaceKey(?string $environment, string $webspaceKey): array
+    public function getPortalInformationsByWebspaceKey(string $webspaceKey): array
     {
-        if (null === $environment) {
-            $environment = $this->environment;
-        }
-
         return \array_filter(
-            $this->getWebspaceCollection()->getPortalInformations($environment),
+            $this->getWebspaceCollection()->getPortalInformations($this->environment),
             function(PortalInformation $portal) use ($webspaceKey) {
                 return $portal->getWebspaceKey() === $webspaceKey;
             }

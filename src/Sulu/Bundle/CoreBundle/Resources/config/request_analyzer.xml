@@ -13,7 +13,6 @@
         <service id="sulu_core.request_processor.parameter"
                  class="Sulu\Component\Webspace\Analyzer\Attributes\ParameterRequestProcessor">
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>
-            <argument>%kernel.environment%</argument>
 
             <tag name="sulu.context" context="website"/>
             <tag name="sulu.request_attributes" priority="128"/>
@@ -34,7 +33,6 @@
         <service id="sulu_core.request_processor.website"
                  class="Sulu\Component\Webspace\Analyzer\Attributes\WebsiteRequestProcessor">
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>
-            <argument type="string">%kernel.environment%</argument>
 
             <tag name="sulu.context" context="website"/>
             <tag name="sulu.request_attributes" priority="0"/>

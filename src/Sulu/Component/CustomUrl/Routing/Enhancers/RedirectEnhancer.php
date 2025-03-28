@@ -38,7 +38,6 @@ class RedirectEnhancer extends AbstractEnhancer
 
         $url = $this->webspaceManager->findUrlByResourceLocator(
             $resourceSegment,
-            $defaults['_environment'],
             $customUrl->getTargetLocale(),
             $defaults['_webspace']->getKey(),
             $request->getHost(),

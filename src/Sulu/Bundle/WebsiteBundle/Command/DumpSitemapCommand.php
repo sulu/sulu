@@ -46,11 +46,6 @@ class DumpSitemapCommand extends Command
     /**
      * @var string
      */
-    private $environment;
-
-    /**
-     * @var string
-     */
     private $baseDirectory;
 
     /**
@@ -68,7 +63,6 @@ class DumpSitemapCommand extends Command
         XmlSitemapDumperInterface $sitemapDumper,
         Filesystem $filesystem,
         string $baseDirectory,
-        string $environment,
         string $scheme,
         string $defaultHost
     ) {
@@ -77,7 +71,6 @@ class DumpSitemapCommand extends Command
         $this->webspaceManager = $webspaceManager;
         $this->sitemapDumper = $sitemapDumper;
         $this->filesystem = $filesystem;
-        $this->environment = $environment;
         $this->baseDirectory = $baseDirectory;
         $this->scheme = $scheme;
         $this->defaultHost = $defaultHost;
@@ -103,7 +96,7 @@ class DumpSitemapCommand extends Command
 
         $output->writeln('Start dumping "sitemap.xml" files:');
 
-        $portalInformations = $this->webspaceManager->getPortalInformations($this->environment);
+        $portalInformations = $this->webspaceManager->getPortalInformations();
 
         $hosts = [];
         foreach ($portalInformations as $portalInformation) {

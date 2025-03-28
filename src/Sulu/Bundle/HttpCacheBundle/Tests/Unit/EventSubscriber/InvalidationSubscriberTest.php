@@ -89,11 +89,6 @@ class InvalidationSubscriberTest extends TestCase
      */
     private $tagManager;
 
-    /**
-     * @var string
-     */
-    private $env = 'prod';
-
     public function setUp(): void
     {
         $this->cacheManager = $this->prophesize(CacheManager::class);
@@ -116,7 +111,6 @@ class InvalidationSubscriberTest extends TestCase
             $this->webspaceManager->reveal(),
             $this->requestStack->reveal(),
             $this->tagManager->reveal(),
-            $this->env
         );
     }
 
@@ -182,7 +176,6 @@ class InvalidationSubscriberTest extends TestCase
 
         $this->webspaceManager->findUrlsByResourceLocator(
             $resourceLocator1,
-            $this->env,
             $documentLocale,
             $documentWebspace,
             null,
@@ -191,7 +184,6 @@ class InvalidationSubscriberTest extends TestCase
 
         $this->webspaceManager->findUrlsByResourceLocator(
             $resourceLocator2,
-            $this->env,
             $documentLocale,
             $documentWebspace,
             null,
@@ -336,7 +328,6 @@ class InvalidationSubscriberTest extends TestCase
 
         $this->webspaceManager->findUrlsByResourceLocator(
             $resourceLocator1,
-            $this->env,
             $documentLocale,
             $documentWebspace,
             null,
@@ -345,7 +336,6 @@ class InvalidationSubscriberTest extends TestCase
 
         $this->webspaceManager->findUrlsByResourceLocator(
             $resourceLocator2,
-            $this->env,
             $documentLocale,
             $documentWebspace,
             null,
@@ -458,7 +448,6 @@ class InvalidationSubscriberTest extends TestCase
         // en url related
         $this->webspaceManager->findUrlsByResourceLocator(
             $resourceLocatorEn1,
-            $this->env,
             $documentLocales[0],
             $documentWebspace,
             null,
@@ -467,7 +456,6 @@ class InvalidationSubscriberTest extends TestCase
 
         $this->webspaceManager->findUrlsByResourceLocator(
             $resourceLocatorEn2,
-            $this->env,
             $documentLocales[0],
             $documentWebspace,
             null,
@@ -477,7 +465,6 @@ class InvalidationSubscriberTest extends TestCase
         // de url related
         $this->webspaceManager->findUrlsByResourceLocator(
             $resourceLocatorDe1,
-            $this->env,
             $documentLocales[1],
             $documentWebspace,
             null,
@@ -544,7 +531,6 @@ class InvalidationSubscriberTest extends TestCase
         // en url related
         $this->webspaceManager->findUrlsByResourceLocator(
             $resourceLocatorEn1,
-            $this->env,
             $documentLocales[0],
             $documentWebspace,
             null,
@@ -553,7 +539,6 @@ class InvalidationSubscriberTest extends TestCase
 
         $this->webspaceManager->findUrlsByResourceLocator(
             $resourceLocatorEn2,
-            $this->env,
             $documentLocales[0],
             $documentWebspace,
             null,

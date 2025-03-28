@@ -79,7 +79,6 @@ class ContentPathTwigExtensionTest extends TestCase
 
         $this->extension = new ContentPathTwigExtension(
             $this->webspaceManager->reveal(),
-            $this->environment,
             $this->requestAnalyzer->reveal()
         );
     }
@@ -89,7 +88,6 @@ class ContentPathTwigExtensionTest extends TestCase
         $this->requestAnalyzer->getAttribute('host')->willReturn('www.sulu.io');
         $this->webspaceManager->findUrlByResourceLocator(
             '/test',
-            $this->environment,
             'de',
             'sulu_io',
             'www.sulu.io',
@@ -105,7 +103,6 @@ class ContentPathTwigExtensionTest extends TestCase
         $this->requestAnalyzer->getAttribute('scheme')->willReturn('https');
         $this->webspaceManager->findUrlByResourceLocator(
             '/test',
-            $this->environment,
             'de',
             'sulu_io',
             'www.sulu.io',
@@ -120,7 +117,6 @@ class ContentPathTwigExtensionTest extends TestCase
         $this->requestAnalyzer->getAttribute('host')->willReturn('en.sulu.io');
         $this->webspaceManager->findUrlByResourceLocator(
             '/test',
-            $this->environment,
             'de',
             'sulu_io',
             null,
@@ -135,7 +131,6 @@ class ContentPathTwigExtensionTest extends TestCase
         $this->requestAnalyzer->getAttribute('host')->willReturn('www.test.io');
         $this->webspaceManager->findUrlByResourceLocator(
             '/test',
-            $this->environment,
             'de',
             'test_io',
             'www.test.io',
@@ -155,7 +150,6 @@ class ContentPathTwigExtensionTest extends TestCase
 
         $this->webspaceManager->findUrlByResourceLocator(
             '/test',
-            $this->environment,
             'de',
             'test_io',
             null,
@@ -171,7 +165,6 @@ class ContentPathTwigExtensionTest extends TestCase
         $this->testWebspace->hasDomain('www.xy.io', $this->environment, 'de')->willReturn(false);
         $this->webspaceManager->findUrlByResourceLocator(
             '/test',
-            $this->environment,
             'de',
             'test_io',
             null,
@@ -186,7 +179,6 @@ class ContentPathTwigExtensionTest extends TestCase
         $this->requestAnalyzer->getAttribute('host')->willReturn('www.sulu.io');
         $this->webspaceManager->findUrlByResourceLocator(
             '/test',
-            $this->environment,
             'en',
             'test_io',
             'www.test.io',

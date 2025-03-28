@@ -48,19 +48,12 @@ class TemplateAttributeResolver implements TemplateAttributeResolverInterface
     protected $requestStack;
 
     /**
-     * @var string
-     */
-    protected $environment;
-
-    /**
      * @var array
      */
     private $enabledTwigAttributes;
 
     /**
      * TemplateAttributeResolver constructor.
-     *
-     * @param string $environment
      */
     public function __construct(
         RequestAnalyzerInterface $requestAnalyzer,
@@ -68,7 +61,6 @@ class TemplateAttributeResolver implements TemplateAttributeResolverInterface
         WebspaceManagerInterface $webspaceManager,
         RouterInterface $router,
         RequestStack $requestStack,
-        $environment,
         array $enabledTwigAttributes = [
             'urls' => true,
         ]
@@ -78,7 +70,6 @@ class TemplateAttributeResolver implements TemplateAttributeResolverInterface
         $this->webspaceManager = $webspaceManager;
         $this->router = $router;
         $this->requestStack = $requestStack;
-        $this->environment = $environment;
         $this->enabledTwigAttributes = $enabledTwigAttributes;
     }
 
@@ -148,7 +139,7 @@ class TemplateAttributeResolver implements TemplateAttributeResolverInterface
         $urls = [];
 
         if ($request->get('_route')) {
-            $portalInformations = $this->webspaceManager->getPortalInformations($this->environment);
+            $portalInformations = $this->webspaceManager->getPortalInformations();
             $routeParams = $request->get('_route_params');
             $routeName = $request->get('_route');
 

@@ -46,7 +46,6 @@ class RedirectEnhancerTest extends TestCase
         $webspaceManager = $this->prophesize(WebspaceManagerInterface::class);
         $webspaceManager->findUrlByResourceLocator(
             '/test',
-            'prod',
             'de',
             'sulu_io',
             'sulu.io',
@@ -94,7 +93,6 @@ class RedirectEnhancerTest extends TestCase
         $webspaceManager = $this->prophesize(WebspaceManagerInterface::class);
         $webspaceManager->findUrlByResourceLocator(
             '/test',
-            'prod',
             'de',
             'sulu_io',
             'sulu.io',
@@ -142,7 +140,6 @@ class RedirectEnhancerTest extends TestCase
         $webspaceManager = $this->prophesize(WebspaceManagerInterface::class);
         $webspaceManager->findUrlByResourceLocator(
             '/test',
-            'prod',
             'de',
             'sulu_io',
             'sulu.io',

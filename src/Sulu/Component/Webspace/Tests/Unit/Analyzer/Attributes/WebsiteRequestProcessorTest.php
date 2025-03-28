@@ -43,7 +43,6 @@ class WebsiteRequestProcessorTest extends TestCase
 
         $this->provider = new WebsiteRequestProcessor(
             $this->webspaceManager->reveal(),
-            'prod'
         );
     }
 
@@ -83,9 +82,9 @@ class WebsiteRequestProcessorTest extends TestCase
             'sulu.io/de'
         );
 
-        $this->webspaceManager->findPortalInformationsByUrl(Argument::any(), 'prod')
+        $this->webspaceManager->findPortalInformationsByUrl(Argument::any())
             ->willReturn([$portalInformation1]);
-        $this->webspaceManager->getPortalInformations('prod')
+        $this->webspaceManager->getPortalInformations()
             ->willReturn([$portalInformation1, $portalInformation2, $portalInformation3]);
 
         $request = new Request();
@@ -134,9 +133,9 @@ class WebsiteRequestProcessorTest extends TestCase
             5
         );
 
-        $this->webspaceManager->findPortalInformationsByUrl(Argument::any(), 'prod')
+        $this->webspaceManager->findPortalInformationsByUrl(Argument::any())
             ->willReturn([$portalInformation1, $portalInformation2]);
-        $this->webspaceManager->getPortalInformations('prod')
+        $this->webspaceManager->getPortalInformations()
             ->willReturn([$portalInformation1, $portalInformation2]);
 
         $request = new Request();
@@ -184,9 +183,9 @@ class WebsiteRequestProcessorTest extends TestCase
             5
         );
 
-        $this->webspaceManager->findPortalInformationsByUrl(Argument::any(), 'prod')
+        $this->webspaceManager->findPortalInformationsByUrl(Argument::any())
             ->willReturn([$portalInformation1, $portalInformation2]);
-        $this->webspaceManager->getPortalInformations('prod')
+        $this->webspaceManager->getPortalInformations()
             ->willReturn([$portalInformation1, $portalInformation2]);
 
         $request = new Request();
