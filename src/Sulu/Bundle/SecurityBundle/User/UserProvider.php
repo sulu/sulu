@@ -32,7 +32,6 @@ use Webmozart\Assert\Assert;
  * configuration from the webspaces into account.
  *
  * @implements UserProviderInterface<UserInterface>
- * @implements PasswordUpgraderInterface<User>
  */
 class UserProvider implements UserProviderInterface, PasswordUpgraderInterface
 {
@@ -127,7 +126,7 @@ class UserProvider implements UserProviderInterface, PasswordUpgraderInterface
 
     public function upgradePassword(PasswordAuthenticatedUserInterface $user, string $newHashedPassword): void
     {
-        if (!$user instanceof User) { // @phpstan-ignore-line we can not be 100% sure about this but generic forces us to check
+        if (!$user instanceof User) {
             return;
         }
 
