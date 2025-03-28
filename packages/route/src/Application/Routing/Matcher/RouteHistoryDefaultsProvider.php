@@ -39,7 +39,7 @@ final readonly class RouteHistoryDefaultsProvider implements RouteDefaultsProvid
         $resourceId = $resourceIdParts[1] ?? '';
 
         if ('' === $resourceKey || '' === $resourceId) {
-            throw new \RuntimeException(\sprintf('The given history route "resourceId" need to contain resourceKey and resourceId separated by "::", but "%s" given.', $route->getResourceId()));
+            throw new \RuntimeException(\sprintf('The given history route "resourceId" has to contain resourceKey and resourceId separated by "::", but "%s" given.', $route->getResourceId()));
         }
 
         $targetRoute = $this->routeRepository->findOneBy([
@@ -49,7 +49,7 @@ final readonly class RouteHistoryDefaultsProvider implements RouteDefaultsProvid
         ]);
 
         if (null === $targetRoute) {
-            throw new GoneHttpException(\sprintf('The target route with resourceKey "%s" and resourceId "%s" seems not longer exists.', $resourceKey, $resourceId));
+            throw new GoneHttpException(\sprintf('The target route with resourceKey "%s" and resourceId "%s" no longer exists.', $resourceKey, $resourceId));
         }
 
         $url = $this->routeGenerator->generate($targetRoute->getSlug(), $targetRoute->getLocale(), $targetRoute->getSite());
