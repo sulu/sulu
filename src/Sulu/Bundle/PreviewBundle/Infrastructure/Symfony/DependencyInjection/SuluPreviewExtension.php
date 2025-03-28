@@ -21,7 +21,7 @@ use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 /**
- * Extends the container and initializes the preview budle.
+ * @internal No BC promises are given for this class. It may be changed or removed at any time.
  */
 class SuluPreviewExtension extends Extension implements PrependExtensionInterface
 {

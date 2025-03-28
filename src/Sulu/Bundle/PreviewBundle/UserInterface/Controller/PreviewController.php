@@ -21,6 +21,9 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Profiler\Profiler;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
+/**
+ * @internal No BC promises are given for this class. It may be changed or removed at any time.
+ */
 class PreviewController
 {
     use RequestParametersTrait;

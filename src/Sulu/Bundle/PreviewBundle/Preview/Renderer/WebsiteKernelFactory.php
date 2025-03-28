@@ -14,6 +14,8 @@ namespace Sulu\Bundle\PreviewBundle\Preview\Renderer;
 use Sulu\Component\HttpKernel\SuluKernel;
 
 /**
+ * @internal No BC promises are given for this class. It may be changed or removed at any time.
+ *
  * Creates new Website-Kernels foreach preview request.
  */
 class WebsiteKernelFactory implements KernelFactoryInterface

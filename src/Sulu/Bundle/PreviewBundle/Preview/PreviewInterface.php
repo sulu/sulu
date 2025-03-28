@@ -14,7 +14,7 @@ namespace Sulu\Bundle\PreviewBundle\Preview;
 use Sulu\Bundle\PreviewBundle\Preview\Exception\ProviderNotFoundException;
 
 /**
- * Interface for preview.
+ * @internal No BC promises are given for this class. It may be changed or removed at any time.
  */
 interface PreviewInterface
 {

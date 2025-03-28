@@ -24,6 +24,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
+ * @internal No BC promises are given for this class. It may be changed or removed at any time.
+ *
  * @RouteResource("preview-link")
  */
 class PreviewLinkController extends AbstractRestController implements ClassResourceInterface

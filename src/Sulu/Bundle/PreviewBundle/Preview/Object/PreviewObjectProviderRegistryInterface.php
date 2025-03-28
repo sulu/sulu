@@ -11,6 +11,9 @@
 
 namespace Sulu\Bundle\PreviewBundle\Preview\Object;
 
+/**
+ * @internal No BC promises are given for this class. It may be changed or removed at any time.
+ */
 interface PreviewObjectProviderRegistryInterface
 {
     /**

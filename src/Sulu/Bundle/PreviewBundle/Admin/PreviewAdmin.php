@@ -15,6 +15,9 @@ use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
 
+/**
+ * @internal No BC promises are given for this class. It may be changed or removed at any time.
+ */
 class PreviewAdmin extends Admin
 {
     public function __construct(

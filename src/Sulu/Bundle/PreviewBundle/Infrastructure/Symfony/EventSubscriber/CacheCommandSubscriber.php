@@ -20,6 +20,9 @@ use Symfony\Component\Console\ConsoleEvents;
 use Symfony\Component\Console\Event\ConsoleCommandEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
+/**
+ * @internal No BC promises are given for this class. It may be changed or removed at any time.
+ */
 class CacheCommandSubscriber implements EventSubscriberInterface
 {
     /**
