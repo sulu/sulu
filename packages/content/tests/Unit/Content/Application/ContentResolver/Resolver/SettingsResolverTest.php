@@ -24,6 +24,7 @@ use Sulu\Component\Localization\Localization;
 use Sulu\Component\Localization\Manager\LocalizationManagerInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Content\Application\ContentResolver\Resolver\SettingsResolver;
+use Sulu\Content\Application\ContentResolver\Value\ContentView;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\Example;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\ExampleDimensionContent;
 
@@ -69,6 +70,8 @@ class SettingsResolverTest extends TestCase
         $exampleDimension->addAvailableLocale('en');
 
         $result = $this->resolver->resolve($exampleDimension);
+        self::assertInstanceOf(ContentView::class, $result);
+
         /** @var SettingsData $content */
         $content = $result->getContent();
 
@@ -81,6 +84,8 @@ class SettingsResolverTest extends TestCase
         $exampleDimension = new ExampleDimensionContent($example);
 
         $result = $this->resolver->resolve($exampleDimension);
+        self::assertInstanceOf(ContentView::class, $result);
+
         /** @var SettingsData $content */
         $content = $result->getContent();
 
@@ -93,6 +98,8 @@ class SettingsResolverTest extends TestCase
         $exampleDimension = new ExampleDimensionContent($example);
 
         $result = $this->resolver->resolve($exampleDimension);
+        self::assertInstanceOf(ContentView::class, $result);
+
         /** @var SettingsData $content */
         $content = $result->getContent();
 
@@ -158,6 +165,8 @@ class SettingsResolverTest extends TestCase
         )->shouldNotBeCalled();
 
         $result = $this->resolver->resolve($exampleDimension);
+        self::assertInstanceOf(ContentView::class, $result);
+
         /** @var SettingsData $content */
         $content = $result->getContent();
 
@@ -190,6 +199,8 @@ class SettingsResolverTest extends TestCase
         $exampleDimension->setMainWebspace('sulu_io');
 
         $result = $this->resolver->resolve($exampleDimension);
+        self::assertInstanceOf(ContentView::class, $result);
+
         /** @var SettingsData $content */
         $content = $result->getContent();
 
@@ -204,6 +215,8 @@ class SettingsResolverTest extends TestCase
         $exampleDimension->setTemplateData(['exampleKey' => 'exampleValue']);
 
         $result = $this->resolver->resolve($exampleDimension);
+        self::assertInstanceOf(ContentView::class, $result);
+
         /** @var SettingsData $content */
         $content = $result->getContent();
 
@@ -221,6 +234,8 @@ class SettingsResolverTest extends TestCase
         $exampleDimension->setLastModified(new \DateTimeImmutable('2021-01-01'));
 
         $result = $this->resolver->resolve($exampleDimension);
+        self::assertInstanceOf(ContentView::class, $result);
+
         /** @var SettingsData $content */
         $content = $result->getContent();
 
@@ -236,6 +251,8 @@ class SettingsResolverTest extends TestCase
         $exampleDimension->setShadowLocale('de');
 
         $result = $this->resolver->resolve($exampleDimension);
+        self::assertInstanceOf(ContentView::class, $result);
+
         /** @var SettingsData $content */
         $content = $result->getContent();
 

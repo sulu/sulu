@@ -25,7 +25,6 @@ use Sulu\Content\Application\MetadataResolver\MetadataResolver;
 use Sulu\Content\Application\PropertyResolver\PropertyResolverProvider;
 use Sulu\Content\Application\PropertyResolver\Resolver\DefaultPropertyResolver;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
-use Sulu\Content\Domain\Model\TemplateInterface;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\Example;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\ExampleDimensionContent;
 
@@ -40,10 +39,7 @@ class TemplateResolverTest extends TestCase
             $this->prophesize(MetadataResolver::class)->reveal()
         );
 
-        $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessage('DimensionContent needs to extend the ' . TemplateInterface::class);
-
-        $templateResolver->resolve($this->prophesize(DimensionContentInterface::class)->reveal());
+        self::assertNull($templateResolver->resolve($this->prophesize(DimensionContentInterface::class)->reveal()));
     }
 
     public function testInvalidTemplateKeyResolve(): void
@@ -104,12 +100,13 @@ class TemplateResolverTest extends TestCase
         );
 
         $contentView = $templateResolver->resolve($dimensionContent);
+        self::assertInstanceOf(ContentView::class, $contentView);
 
         $content = $contentView->getContent();
-        $this->assertIsArray($content);
-        $this->assertCount(1, $content);
-        $this->assertInstanceOf(ContentView::class, $content['title']);
-        $this->assertSame('Sulu', $content['title']->getContent());
-        $this->assertSame([], $content['title']->getView());
+        self::assertIsArray($content);
+        self::assertCount(1, $content);
+        self::assertInstanceOf(ContentView::class, $content['title']);
+        self::assertSame('Sulu', $content['title']->getContent());
+        self::assertSame([], $content['title']->getView());
     }
 }

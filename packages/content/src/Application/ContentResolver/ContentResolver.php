@@ -169,11 +169,12 @@ class ContentResolver implements ContentResolverInterface
          * @var ResolverInterface $contentResolver
          */
         foreach ($this->contentResolvers as $resolverKey => $contentResolver) {
-            if (!$contentResolver->supports($dimensionContent)) {
+            $contentView = $contentResolver->resolve($dimensionContent);
+
+            if (!$contentView instanceof ContentView) {
                 continue;
             }
 
-            $contentView = $contentResolver->resolve($dimensionContent);
             $contentViews[$resolverKey] = $contentView;
         }
 

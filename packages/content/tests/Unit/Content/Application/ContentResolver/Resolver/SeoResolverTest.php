@@ -21,7 +21,6 @@ use Sulu\Content\Application\ContentResolver\Resolver\SeoResolver;
 use Sulu\Content\Application\ContentResolver\Value\ContentView;
 use Sulu\Content\Application\MetadataResolver\MetadataResolver;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
-use Sulu\Content\Domain\Model\SeoInterface;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\Example;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\ExampleDimensionContent;
 
@@ -36,10 +35,7 @@ class SeoResolverTest extends TestCase
             $this->prophesize(MetadataResolver::class)->reveal()
         );
 
-        $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessage('DimensionContent needs to extend the ' . SeoInterface::class);
-
-        $templateResolver->resolve($this->prophesize(DimensionContentInterface::class)->reveal());
+        self::assertNull($templateResolver->resolve($this->prophesize(DimensionContentInterface::class)->reveal()));
     }
 
     public function testResolve(): void
@@ -87,8 +83,9 @@ class SeoResolverTest extends TestCase
 
         $contentView = $templateResolver->resolve($dimensionContent);
 
+        self::assertInstanceOf(ContentView::class, $contentView);
         $content = $contentView->getContent();
-        $this->assertIsArray($content);
-        $this->assertCount(1, $content);
+        self::assertIsArray($content);
+        self::assertCount(1, $content);
     }
 }

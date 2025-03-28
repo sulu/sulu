@@ -24,7 +24,6 @@ use Sulu\Content\Application\ContentResolver\Resolver\ExcerptResolver;
 use Sulu\Content\Application\ContentResolver\Value\ContentView;
 use Sulu\Content\Application\MetadataResolver\MetadataResolver;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
-use Sulu\Content\Domain\Model\ExcerptInterface;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\Example;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\ExampleDimensionContent;
 
@@ -40,10 +39,7 @@ class ExcerptResolverTest extends TestCase
             $this->prophesize(MetadataResolver::class)->reveal()
         );
 
-        $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessage('DimensionContent needs to extend the ' . ExcerptInterface::class);
-
-        $templateResolver->resolve($this->prophesize(DimensionContentInterface::class)->reveal());
+        self::assertNull($templateResolver->resolve($this->prophesize(DimensionContentInterface::class)->reveal()));
     }
 
     public function testResolve(): void
@@ -96,8 +92,9 @@ class ExcerptResolverTest extends TestCase
 
         $contentView = $excerptResolver->resolve($dimensionContent);
 
+        self::assertInstanceOf(ContentView::class, $contentView);
         $content = $contentView->getContent();
-        $this->assertIsArray($content);
-        $this->assertCount(1, $content);
+        self::assertIsArray($content);
+        self::assertCount(1, $content);
     }
 }

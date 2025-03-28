@@ -28,10 +28,10 @@ readonly class SeoResolver implements ResolverInterface
     ) {
     }
 
-    public function resolve(DimensionContentInterface $dimensionContent): ContentView
+    public function resolve(DimensionContentInterface $dimensionContent): ?ContentView
     {
         if (!$dimensionContent instanceof SeoInterface) {
-            throw new \RuntimeException('DimensionContent needs to extend the ' . SeoInterface::class);
+            return null;
         }
 
         /** @var string $locale */
@@ -99,10 +99,5 @@ readonly class SeoResolver implements ResolverInterface
             'seoNoFollow' => $dimensionContent->getSeoNoFollow(),
             'seoHideInSitemap' => $dimensionContent->getSeoHideInSitemap(),
         ];
-    }
-
-    public function supports(DimensionContentInterface $dimensionContent): bool
-    {
-        return $dimensionContent instanceof SeoInterface;
     }
 }

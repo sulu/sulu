@@ -51,7 +51,7 @@ readonly class SettingsResolver implements ResolverInterface
     ) {
     }
 
-    public function resolve(DimensionContentInterface $dimensionContent): ContentView
+    public function resolve(DimensionContentInterface $dimensionContent): ?ContentView
     {
         /** @var SettingsData $result */
         $result = [
@@ -193,10 +193,5 @@ readonly class SettingsResolver implements ResolverInterface
         return [
             'shadowBaseLocale' => $dimensionContent->getShadowLocale(),
         ];
-    }
-
-    public function supports(DimensionContentInterface $dimensionContent): bool
-    {
-        return true;
     }
 }
