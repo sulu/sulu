@@ -56,7 +56,7 @@ class RouteRepositoryTest extends KernelTestCase
 
     protected function setUp(): void
     {
-        $this->routeRepository = self::getContainer()->get('sulu_route.route_repository'); // @phpstan-ignore-line
+        $this->routeRepository = self::getContainer()->get('sulu_route.route_repository');
     }
 
     public function testFindOneBySiteSlugLocale(): void

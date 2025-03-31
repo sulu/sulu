@@ -15,8 +15,6 @@ parameters:
     level: max
     parallel:
         processTimeout: 300.0
-    ignoreErrors:
-        - message: '#^Property Sulu\\(.*)\\Domain\\Model\\(.*)\:\:\$id \(int\|null\) is never assigned int so it can be removed from the property type\.$#'
     excludePaths:
         - %currentWorkingDirectory%/node_modules/*
         - %currentWorkingDirectory%/var/*

@@ -25,12 +25,14 @@ use Sulu\Route\Domain\Repository\RouteRepositoryInterface;
 use Sulu\Route\Infrastructure\Doctrine\EventListener\RouteChangedUpdater;
 use Sulu\Route\Infrastructure\Doctrine\Repository\RouteRepository;
 use Sulu\Route\Infrastructure\SymfonyCmf\Routing\CmfRouteProvider;
+use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 
 use function Symfony\Component\DependencyInjection\Loader\Configurator\tagged_iterator;
 use function Symfony\Component\DependencyInjection\Loader\Configurator\tagged_locator;
 
+use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
 
@@ -54,6 +56,10 @@ final class SuluRouteBundle extends AbstractBundle
      */
     public function loadExtension(array $config, ContainerConfigurator $container, ContainerBuilder $builder): void
     {
+        // TODO bridge to keep old route, custom url, redirect bundle working remove the deprecated_service_bridge.xml and make the `sulu_route.symfony_cmf_route_provider` default route provider
+        $loader = new XmlFileLoader($builder, new FileLocator(\dirname(__DIR__, 4) . '/config'));
+        $loader->load('deprecated_service_bridge.xml');
+
         $services = $container->services();
 
         // Doctrine Route Updater Listener
@@ -153,11 +159,24 @@ final class SuluRouteBundle extends AbstractBundle
                         ],
                     ],
                     'dynamic' => [
-                        'route_provider_service_id' => 'sulu_route.symfony_cmf_route_provider',
+                        ...($builder->hasExtension('sulu_route') ? [] : [ // TODO remove this check when `deprecated_service_bridge.xml` removed
+                            'route_provider_service_id' => 'sulu_route.symfony_cmf_route_provider',
+                        ]),
                         'enabled' => true,
                     ],
                 ]
             );
+
+            if ($builder->hasExtension('sulu_route')) {
+                $builder->prependExtensionConfig(
+                    'cmf_routing',
+                    [
+                        'dynamic' => [
+                            'route_provider_service_id' => 'sulu_route.symfony_cmf_route_provider',
+                        ],
+                    ]
+                );
+            }
         }
     }
 
