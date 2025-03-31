@@ -30,7 +30,6 @@ use Sulu\Article\Infrastructure\Sulu\Admin\ArticleAdmin;
 use Sulu\Article\Infrastructure\Sulu\Content\ArticleDataProvider;
 use Sulu\Article\Infrastructure\Sulu\Content\ArticleLinkProvider;
 use Sulu\Article\Infrastructure\Sulu\Content\ArticleSelectionContentType;
-use Sulu\Article\Infrastructure\Sulu\Content\ArticleSitemapProvider;
 use Sulu\Article\Infrastructure\Sulu\Content\ArticleTeaserProvider;
 use Sulu\Article\Infrastructure\Sulu\Content\SingleArticleSelectionContentType;
 use Sulu\Article\UserInterface\Controller\Admin\ArticleController;
@@ -200,18 +199,6 @@ final class SuluArticleBundle extends AbstractBundle
             ->tag('sulu_preview.object_provider', ['provider-key' => 'articles']);
 
         // Content services
-        $services->set('sulu_article.article_sitemap_provider')
-            ->class(ArticleSitemapProvider::class)
-            ->args([
-                new Reference('doctrine.orm.entity_manager'),
-                new Reference('sulu_core.webspace.webspace_manager'),
-                '%kernel.environment%',
-                ArticleInterface::class,
-                '%sulu.model.route.class%',
-                ArticleInterface::RESOURCE_KEY,
-            ])
-            ->tag('sulu.sitemap.provider');
-
         $services->set('sulu_article.article_teaser_provider')
             ->class(ArticleTeaserProvider::class)
             ->args([

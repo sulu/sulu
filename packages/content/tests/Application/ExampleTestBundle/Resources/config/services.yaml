@@ -32,19 +32,6 @@ services:
             - '@doctrine.orm.entity_manager'
             - '@sulu_content.dimension_content_query_enhancer'
 
-    example_test.example_sitemap_provider:
-        class: Sulu\Content\Infrastructure\Sulu\Sitemap\ContentSitemapProvider
-        public: true
-        arguments:
-            - '@doctrine.orm.entity_manager'
-            - '@sulu_core.webspace.webspace_manager'
-            - '%kernel.environment%'
-            - Sulu\Content\Tests\Application\ExampleTestBundle\Entity\Example
-            - '%sulu.model.route.class%'
-            - 'examples'
-        tags:
-            - { name: sulu.sitemap.provider }
-
     example_test.example_teaser_provider:
         class: Sulu\Content\Tests\Application\ExampleTestBundle\Teaser\ExampleTeaserProvider
         public: true

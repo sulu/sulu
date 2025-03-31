@@ -39,7 +39,6 @@ use Sulu\Page\Infrastructure\Doctrine\Repository\PageRepository;
 use Sulu\Page\Infrastructure\Sulu\Admin\PageAdmin;
 use Sulu\Page\Infrastructure\Sulu\Build\HomepageBuilder;
 use Sulu\Page\Infrastructure\Sulu\Content\PageLinkProvider;
-use Sulu\Page\Infrastructure\Sulu\Content\PageSitemapProvider;
 use Sulu\Page\Infrastructure\Sulu\Content\PageTeaserProvider;
 use Sulu\Page\Infrastructure\Sulu\Content\PropertyResolver\PageSelectionPropertyResolver;
 use Sulu\Page\Infrastructure\Sulu\Content\PropertyResolver\SinglePageSelectionPropertyResolver;
@@ -265,18 +264,6 @@ final class SuluPageBundle extends AbstractBundle
             ->tag('sulu_preview.object_provider', ['provider-key' => 'pages']);
 
         // Content services
-        $services->set('sulu_page.page_sitemap_provider')
-            ->class(PageSitemapProvider::class)
-            ->args([
-                new Reference('doctrine.orm.entity_manager'),
-                new Reference('sulu_core.webspace.webspace_manager'),
-                '%kernel.environment%',
-                PageInterface::class,
-                '%sulu.model.route.class%',
-                PageInterface::RESOURCE_KEY,
-            ])
-            ->tag('sulu.sitemap.provider');
-
         $services->set('sulu_page.page_teaser_provider')
             ->class(PageTeaserProvider::class)
             ->args([
