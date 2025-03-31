@@ -41461,12 +41461,6 @@ parameters:
 			path: src/Sulu/Bundle/PreviewBundle/Tests/Unit/Preview/PreviewTest.php
 
 		-
-			message: '#^Parameter \#2 \$id of method Sulu\\Bundle\\PreviewBundle\\Preview\\PreviewInterface\:\:start\(\) expects string, int given\.$#'
-			identifier: argument.type
-			count: 3
-			path: src/Sulu/Bundle/PreviewBundle/Tests/Unit/Preview/PreviewTest.php
-
-		-
 			message: '#^Cannot call method getAttribute\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 5
