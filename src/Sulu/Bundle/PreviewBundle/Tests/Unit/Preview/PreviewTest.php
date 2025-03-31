@@ -21,7 +21,6 @@ use Sulu\Bundle\PreviewBundle\Preview\Exception\TokenNotFoundException;
 use Sulu\Bundle\PreviewBundle\Preview\Object\PreviewObjectProviderInterface;
 use Sulu\Bundle\PreviewBundle\Preview\Object\PreviewObjectProviderRegistry;
 use Sulu\Bundle\PreviewBundle\Preview\Preview;
-use Sulu\Bundle\PreviewBundle\Preview\PreviewInterface;
 use Sulu\Bundle\PreviewBundle\Preview\Renderer\PreviewRendererInterface;
 
 class PreviewTest extends TestCase
@@ -44,7 +43,7 @@ class PreviewTest extends TestCase
     private $cacheLifeTime = 3600;
 
     /**
-     * @var PreviewInterface
+     * @var Preview
      */
     private $preview;
 
@@ -96,7 +95,7 @@ class PreviewTest extends TestCase
 
         $this->provider->serialize($this->object->reveal())->willReturn($dataJson);
 
-        $token = $this->preview->start($this->providerKey, 1, 1, $data, ['locale' => $this->locale]);
+        $token = $this->preview->start($this->providerKey, '1', 1, $data, ['locale' => $this->locale]);
 
         $expectedData = [
             'id' => '1',
@@ -130,7 +129,7 @@ class PreviewTest extends TestCase
 
         $this->provider->serialize($this->object->reveal())->willReturn($dataJson);
 
-        $token = $this->preview->start($this->providerKey, 1, 1, [], ['locale' => $this->locale]);
+        $token = $this->preview->start($this->providerKey, '1', 1, [], ['locale' => $this->locale]);
 
         $expectedData = [
             'id' => '1',
@@ -158,7 +157,7 @@ class PreviewTest extends TestCase
     {
         $this->expectException(ProviderNotFoundException::class);
 
-        $this->preview->start('xxx', 1, 1, ['locale' => $this->locale]);
+        $this->preview->start('xxx', '1', 1, ['locale' => $this->locale]);
     }
 
     public function testStop(): void

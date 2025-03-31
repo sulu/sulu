@@ -2,7 +2,7 @@
 
 ## 3.0.0
 
-### Upgrading from Sulu 2.6 to Sulu 3.0
+### Upgrading Data from Sulu 2.6 to Sulu 3.0
 
 The upgrade from Sulu 2.6 to Sulu 3.0 is a major upgrade and will require some migration steps.
 
@@ -104,6 +104,7 @@ If everything is done and the migration is successful, you can log in to the Sul
 for the articles and snippets and check if everything is working as expected.
 
 ### Removing deprecated twig functions
+
 - `sulu_meta_alternate` (use the SEO template instead `@SuluWebsite/Extension/seo.html.twig`)
 - `sulu_meta_seo` (use the SEO template instead `@SuluWebsite/Extension/seo.html.twig`)
 - `sulu_seo` (use the SEO template instead `@SuluWebsite/Extension/seo.html.twig`)
@@ -116,6 +117,7 @@ and the parameters
 - `%sulu_website.twig.seo.class%`
 
 ### Removing "modules" from Permissions
+
 The unused column on the permissions table has been removed. This also requires some migration on the table, to recreate
 an index:
 
@@ -139,6 +141,7 @@ And the container parameters has been removed:
 - `sulu_security.security_types.fixture`
 
 ### Groups and User Groups have been removed
+
 This includes the following services:
 - `sulu_security.group_repository`
 - `sulu_security.group_controller`
@@ -169,6 +172,11 @@ DROP TABLE se_group_roles;
 DROP TABLE se_groups;
 DROP TABLE se_user_groups;
 ```
+
+### Preview Services changed
+
+Most of the PreviewBundle services are now internal and only the `PreviewDefaultsProviderInterface` is
+now the way to communicate with the Bundle.
 
 ### Changed Media Format HTTP Response Headers
 

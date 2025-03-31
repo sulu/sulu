@@ -99,7 +99,7 @@ class PreviewRendererTest extends TestCase
         $this->eventDispatcher = $this->prophesize(EventDispatcherInterface::class);
 
         $this->httpKernel = $this->prophesize(HttpKernelInterface::class);
-        $this->kernelFactory->create($this->environment)->willReturn($this->httpKernel->reveal());
+        $this->kernelFactory->create()->willReturn($this->httpKernel->reveal());
 
         $this->renderer = new PreviewRenderer(
             $this->routeDefaultsProvider->reveal(),

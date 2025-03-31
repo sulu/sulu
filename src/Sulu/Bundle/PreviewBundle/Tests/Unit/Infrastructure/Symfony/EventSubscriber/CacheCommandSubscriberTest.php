@@ -53,7 +53,7 @@ class CacheCommandSubscriberTest extends TestCase
         $this->application = $this->prophesize(Application::class);
         $this->previewKernel = $this->prophesize(KernelInterface::class);
         $this->kernelFactory = $this->prophesize(KernelFactoryInterface::class);
-        $this->cacheCommandSubscriber = new CacheCommandSubscriber($this->kernelFactory->reveal(), 'test');
+        $this->cacheCommandSubscriber = new CacheCommandSubscriber($this->kernelFactory->reveal());
 
         $this->cacheCommandSubscriber->setApplication($this->application->reveal());
     }
@@ -63,7 +63,7 @@ class CacheCommandSubscriberTest extends TestCase
         $command = $this->prophesize(Command::class);
         $command->getName()->willReturn('cache:clear');
 
-        $this->kernelFactory->create(Argument::any())
+        $this->kernelFactory->create()
             ->shouldBeCalled()
             ->willReturn($this->previewKernel->reveal());
 
@@ -79,7 +79,7 @@ class CacheCommandSubscriberTest extends TestCase
         $command = $this->prophesize(Command::class);
         $command->getName()->willReturn('cache:warmup');
 
-        $this->kernelFactory->create(Argument::any())
+        $this->kernelFactory->create()
             ->shouldBeCalled()
             ->willReturn($this->previewKernel->reveal());
 
@@ -95,7 +95,7 @@ class CacheCommandSubscriberTest extends TestCase
         $command = $this->prophesize(Command::class);
         $command->getName()->willReturn('other:command');
 
-        $this->kernelFactory->create(Argument::any())
+        $this->kernelFactory->create()
             ->shouldNotBeCalled();
 
         $this->application->run(Argument::any(), Argument::any())

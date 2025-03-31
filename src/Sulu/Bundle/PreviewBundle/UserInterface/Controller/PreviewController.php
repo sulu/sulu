@@ -11,7 +11,7 @@
 
 namespace Sulu\Bundle\PreviewBundle\UserInterface\Controller;
 
-use Sulu\Bundle\PreviewBundle\Preview\PreviewInterface;
+use Sulu\Bundle\PreviewBundle\Preview\Preview;
 use Sulu\Component\Rest\RequestParametersTrait;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -29,7 +29,7 @@ class PreviewController
     use RequestParametersTrait;
 
     public function __construct(
-        private PreviewInterface $preview,
+        private Preview $preview,
         private TokenStorageInterface $tokenStorage,
         private ?Profiler $profiler = null,
     ) {

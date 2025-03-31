@@ -23,9 +23,7 @@ interface KernelFactoryInterface
     /**
      * Create new kernel for a single preview master-request.
      *
-     * @param string $environment
-     *
      * @return KernelInterface
      */
-    public function create($environment);
+    public function create();
 }

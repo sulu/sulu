@@ -41131,36 +41131,6 @@ parameters:
 			path: src/Sulu/Bundle/PreviewBundle/Preview/PreviewCacheItem.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\PreviewBundle\\Preview\\PreviewInterface\:\:render\(\) has parameter \$options with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/PreviewBundle/Preview/PreviewInterface.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PreviewBundle\\Preview\\PreviewInterface\:\:start\(\) has parameter \$data with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/PreviewBundle/Preview/PreviewInterface.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PreviewBundle\\Preview\\PreviewInterface\:\:start\(\) has parameter \$options with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/PreviewBundle/Preview/PreviewInterface.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PreviewBundle\\Preview\\PreviewInterface\:\:update\(\) has parameter \$data with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/PreviewBundle/Preview/PreviewInterface.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PreviewBundle\\Preview\\PreviewInterface\:\:update\(\) has parameter \$options with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/PreviewBundle/Preview/PreviewInterface.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\PreviewBundle\\Preview\\Renderer\\PreviewKernel\:\:getKernelParameters\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1

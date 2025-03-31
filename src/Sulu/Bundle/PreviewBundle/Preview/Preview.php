@@ -13,6 +13,7 @@ namespace Sulu\Bundle\PreviewBundle\Preview;
 
 use Doctrine\Common\Cache\Cache;
 use Psr\Cache\CacheItemPoolInterface;
+use Sulu\Bundle\PreviewBundle\Preview\Exception\ProviderNotFoundException;
 use Sulu\Bundle\PreviewBundle\Preview\Exception\TokenNotFoundException;
 use Sulu\Bundle\PreviewBundle\Preview\Object\PreviewObjectProviderInterface;
 use Sulu\Bundle\PreviewBundle\Preview\Object\PreviewObjectProviderRegistryInterface;
@@ -21,7 +22,7 @@ use Sulu\Bundle\PreviewBundle\Preview\Renderer\PreviewRendererInterface;
 /**
  * @internal No BC promises are given for this class. It may be changed or removed at any time.
  */
-class Preview implements PreviewInterface
+class Preview
 {
     public const CONTENT_REPLACER = '<!-- CONTENT-REPLACER -->';
 
@@ -42,6 +43,13 @@ class Preview implements PreviewInterface
         $this->cache = new PreviewCache($cache);
     }
 
+    /**
+     * Starts a new preview session.
+     *
+     * @return string Token can be used to reuse this preview-session
+     *
+     * @throws ProviderNotFoundException
+     */
     public function start(string $providerKey, string $id, int $userId, array $data = [], array $options = []): string
     {
         $locale = $options['locale'] ?? null;
@@ -58,6 +66,9 @@ class Preview implements PreviewInterface
         return $cacheItem->getToken();
     }
 
+    /**
+     * Stops the preview-session and deletes the data.
+     */
     public function stop(string $token): void
     {
         if (!$this->exists($token)) {
@@ -67,11 +78,19 @@ class Preview implements PreviewInterface
         $this->cache->delete($token);
     }
 
+    /**
+     * Returns true if such a session exists.
+     */
     public function exists(string $token): bool
     {
         return $this->cache->contains($token);
     }
 
+    /**
+     * Updates given data in the preview-session.
+     *
+     * @return string Complete html response
+     */
     public function update(
         string $token,
         array $data,
@@ -89,6 +108,15 @@ class Preview implements PreviewInterface
         return $this->renderPartial($cacheItem, $options);
     }
 
+    /**
+     * Updates given context and restart preview with given data.
+     *
+     * @param mixed[] $context
+     * @param mixed[] $data
+     * @param mixed[] $options
+     *
+     * @return string Complete html response
+     */
     public function updateContext(
         string $token,
         array $context,
@@ -127,6 +155,11 @@ class Preview implements PreviewInterface
         return $this->renderPartial($cacheItem, $options);
     }
 
+    /**
+     * Returns rendered preview-session.
+     *
+     * @return string Complete html response
+     */
     public function render(
         string $token,
         array $options = []

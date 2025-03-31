@@ -14,7 +14,7 @@ namespace Sulu\Bundle\PreviewBundle\Tests\Unit\UserInterface\Controller;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
-use Sulu\Bundle\PreviewBundle\Preview\PreviewInterface;
+use Sulu\Bundle\PreviewBundle\Preview\Preview;
 use Sulu\Bundle\PreviewBundle\UserInterface\Controller\PreviewController;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -27,7 +27,7 @@ class PreviewControllerTest extends TestCase
     use ProphecyTrait;
 
     /**
-     * @var ObjectProphecy<PreviewInterface>
+     * @var ObjectProphecy<Preview>
      */
     private $preview;
 
@@ -48,7 +48,7 @@ class PreviewControllerTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->preview = $this->prophesize(PreviewInterface::class);
+        $this->preview = $this->prophesize(Preview::class);
         $this->tokenStorage = $this->prophesize(TokenStorageInterface::class);
 
         $this->previewController = new PreviewController($this->preview->reveal(), $this->tokenStorage->reveal());

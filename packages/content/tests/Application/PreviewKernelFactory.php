@@ -18,9 +18,13 @@ use Sulu\Component\HttpKernel\SuluKernel;
 
 class PreviewKernelFactory implements KernelFactoryInterface
 {
-    public function create($environment)
+    public function __construct(private readonly string $environment)
     {
-        $kernel = new PreviewKernel($environment, 'dev' === $environment, SuluKernel::CONTEXT_WEBSITE);
+    }
+
+    public function create()
+    {
+        $kernel = new PreviewKernel($this->environment, 'dev' === $this->environment, SuluKernel::CONTEXT_WEBSITE);
         $kernel->boot();
 
         return $kernel;

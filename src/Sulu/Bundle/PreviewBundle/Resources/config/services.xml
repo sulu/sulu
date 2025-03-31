@@ -19,7 +19,6 @@
 
         <service id="sulu_preview.cache_command_subscriber" class="Sulu\Bundle\PreviewBundle\Infrastructure\Symfony\EventSubscriber\CacheCommandSubscriber">
             <argument type="service" id="sulu_preview.preview.kernel_factory"/>
-            <argument type="string">%kernel.environment%</argument>
 
             <tag name="kernel.event_subscriber"/>
             <tag name="sulu.context" context="admin"/>
@@ -27,7 +26,9 @@
 
         <!-- preview -->
         <service id="sulu_preview.preview.kernel_factory"
-                 class="Sulu\Bundle\PreviewBundle\Preview\Renderer\WebsiteKernelFactory"/>
+                 class="Sulu\Bundle\PreviewBundle\Preview\Renderer\WebsiteKernelFactory">
+            <argument type="string">%kernel.environment%</argument>
+        </service>
 
         <service id="sulu_preview.preview.renderer" class="Sulu\Bundle\PreviewBundle\Preview\Renderer\PreviewRenderer">
             <argument type="service" id="sulu_route.routing.defaults_provider"/>
