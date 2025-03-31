@@ -49,6 +49,17 @@ class RouteRepository implements RouteRepositoryInterface
         return $queryBuilder->getQuery()->getOneOrNullResult(Query::HYDRATE_OBJECT);
     }
 
+    public function findBy(array $filters): iterable
+    {
+        $queryBuilder = $this->createQueryBuilder($filters);
+        $queryBuilder->select('route');
+
+        // Hydrate Object is default, but we need to specify it here to make PHPStan happy:
+        //     see: https://github.com/phpstan/phpstan-doctrine?tab=readme-ov-file#supported-methods
+        /** @var iterable<Route> */
+        return $queryBuilder->getQuery()->getResult(Query::HYDRATE_OBJECT);
+    }
+
     /**
      * @param RouteFilter $filters
      */
@@ -71,6 +82,12 @@ class RouteRepository implements RouteRepositoryInterface
         if (null !== $locale) {
             $queryBuilder->andWhere('route.locale = :locale')
                 ->setParameter('locale', $locale);
+        }
+
+        $locales = $filters['locales'] ?? null;
+        if (null !== $locales) {
+            $queryBuilder->andWhere('route.locale IN (:locales)')
+                ->setParameter('locales', $locales);
         }
 
         $slug = $filters['slug'] ?? null;

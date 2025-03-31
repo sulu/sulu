@@ -31,6 +31,14 @@ class RouteRepositoryTest extends KernelTestCase
         $entityManager->persist($expectedRoute);
         $unexpectedRoute = new Route(Route::HISTORY_RESOURCE_KEY, 'example::2', 'en', '/test-2', 'the_site');
         $entityManager->persist($unexpectedRoute);
+        $expectedLocalesRouteEn = new Route('example', '1', 'en', '/example', 'the_site');
+        $entityManager->persist($expectedLocalesRouteEn);
+        $expectedLocalesRouteDe = new Route('example', '1', 'de', '/beispiel', 'the_site');
+        $entityManager->persist($expectedLocalesRouteDe);
+        $expectedLocalesRouteFr = new Route('example', '1', 'fr', '/exemple', 'the_site');
+        $entityManager->persist($expectedLocalesRouteFr);
+        $unexpectedLocalesRouteEs = new Route('example', '1', 'es', '/ejemplo', 'the_site');
+        $entityManager->persist($unexpectedLocalesRouteEs);
 
         $entityManager->flush();
         $entityManager->clear();
@@ -77,6 +85,54 @@ class RouteRepositoryTest extends KernelTestCase
         $this->assertSame('en', $route->getLocale());
         $this->assertSame(Route::HISTORY_RESOURCE_KEY, $route->getResourceKey());
         $this->assertSame('example::1', $route->getResourceId());
+    }
+
+    public function testFindOneByResourceAndLocales(): void
+    {
+        $routes = [...$this->routeRepository->findBy([
+            'locales' => ['en', 'de', 'fr'],
+            'resourceKey' => 'example',
+            'resourceId' => '1',
+        ])];
+
+        \usort($routes, function(Route $a, Route $b) {
+            return \strcmp($a->getLocale(), $b->getLocale());
+        });
+
+        $this->assertSame(
+            [
+                [
+                    'resourceKey' => 'example',
+                    'resourceId' => '1',
+                    'locale' => 'de',
+                    'slug' => '/beispiel',
+                    'site' => 'the_site',
+                ],
+                [
+                    'resourceKey' => 'example',
+                    'resourceId' => '1',
+                    'locale' => 'en',
+                    'slug' => '/example',
+                    'site' => 'the_site',
+                ],
+                [
+                    'resourceKey' => 'example',
+                    'resourceId' => '1',
+                    'locale' => 'fr',
+                    'slug' => '/exemple',
+                    'site' => 'the_site',
+                ],
+            ],
+            \array_map(function(Route $route): array {
+                return [
+                    'resourceKey' => $route->getResourceKey(),
+                    'resourceId' => $route->getResourceId(),
+                    'locale' => $route->getLocale(),
+                    'slug' => $route->getSlug(),
+                    'site' => $route->getSite(),
+                ];
+            }, $routes),
+        );
     }
 
     public function testFindOneNotFound(): void

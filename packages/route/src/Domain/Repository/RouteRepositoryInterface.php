@@ -17,6 +17,7 @@ use Sulu\Route\Domain\Model\Route;
  * @phpstan-type RouteFilter array{
  *     site?: string|null,
  *     locale?: string,
+ *     locales?: string[],
  *     slug?: string,
  *     resourceKey?: string,
  *     resourceId?: string,
@@ -30,4 +31,11 @@ interface RouteRepositoryInterface
      * @param RouteFilter $filters
      */
     public function findOneBy(array $filters): ?Route;
+
+    /**
+     * @param RouteFilter $filters
+     *
+     * @return iterable<Route>
+     */
+    public function findBy(array $filters): iterable;
 }
