@@ -101,9 +101,10 @@ class PreviewTest extends TestCase
             'id' => '1',
             'providerKey' => $this->providerKey,
             'object' => $dataJson,
-            'objectClass' => \get_class($this->object->reveal()),
+            'objectClass' => \get_debug_type($this->object->reveal()),
             'userId' => 1,
             'html' => null,
+            'locale' => $this->locale,
         ];
 
         $this->cache->save(
@@ -135,9 +136,10 @@ class PreviewTest extends TestCase
             'id' => '1',
             'providerKey' => $this->providerKey,
             'object' => $dataJson,
-            'objectClass' => \get_class($this->object->reveal()),
+            'objectClass' => \get_debug_type($this->object->reveal()),
             'userId' => 1,
             'html' => null,
+            'locale' => $this->locale,
         ];
 
         $this->cache->save(
@@ -202,17 +204,19 @@ class PreviewTest extends TestCase
             'id' => '1',
             'providerKey' => $this->providerKey,
             'object' => \json_encode(['title' => 'test']),
-            'objectClass' => \get_class($this->object->reveal()),
+            'objectClass' => \get_debug_type($this->object->reveal()),
             'userId' => 1,
             'html' => '<html><body><div id="content"><!-- CONTENT-REPLACER --></div></body></html>',
+            'locale' => $this->locale,
         ];
         $expectedData = [
             'id' => '1',
             'providerKey' => $this->providerKey,
             'object' => $dataJson,
-            'objectClass' => \get_class($this->object->reveal()),
+            'objectClass' => \get_debug_type($this->object->reveal()),
             'userId' => 1,
             'html' => '<html><body><div id="content"><!-- CONTENT-REPLACER --></div></body></html>',
+            'locale' => $this->locale,
         ];
 
         $this->cache->contains($token)->willReturn(true);
@@ -263,9 +267,10 @@ class PreviewTest extends TestCase
             'id' => '1',
             'providerKey' => $this->providerKey,
             'object' => $dataJson,
-            'objectClass' => \get_class($this->object->reveal()),
+            'objectClass' => \get_debug_type($this->object->reveal()),
             'userId' => 1,
             'html' => '<html><body><div id="content"><!-- CONTENT-REPLACER --></div></body></html>',
+            'locale' => $this->locale,
         ];
 
         $this->cache->contains($token)->willReturn(true);
@@ -322,7 +327,7 @@ class PreviewTest extends TestCase
             'id' => '1',
             'providerKey' => $this->providerKey,
             'object' => $dataJson,
-            'objectClass' => \get_class($this->object->reveal()),
+            'objectClass' => \get_debug_type($this->object->reveal()),
             'userId' => 1,
             'html' => '<html><body><div id="content"><!-- CONTENT-REPLACER --></div></body></html>',
         ];
@@ -377,9 +382,10 @@ class PreviewTest extends TestCase
             'id' => '1',
             'providerKey' => $this->providerKey,
             'object' => $dataJson,
-            'objectClass' => \get_class($this->object->reveal()),
+            'objectClass' => \get_debug_type($this->object->reveal()),
             'userId' => 1,
             'html' => '<html><body><div id="content"><!-- CONTENT-REPLACER --></div></body></html>',
+            'locale' => $this->locale,
         ];
 
         $newObject = $this->prophesize(\stdClass::class);
@@ -387,9 +393,10 @@ class PreviewTest extends TestCase
             'id' => '1',
             'providerKey' => $this->providerKey,
             'object' => \json_encode(\array_merge($data, $context)),
-            'objectClass' => \get_class($newObject->reveal()),
+            'objectClass' => \get_debug_type($this->object->reveal()),
             'userId' => 1,
             'html' => '<html><body><div id="content"><!-- CONTENT-REPLACER --></div></body></html>',
+            'locale' => $this->locale,
         ];
 
         $this->cache->contains($token)->willReturn(true);
@@ -402,7 +409,7 @@ class PreviewTest extends TestCase
 
         $this->renderer->render(
             $newObject->reveal(),
-            1,
+            '1',
             false,
             ['webspaceKey' => $this->webspaceKey, 'locale' => $this->locale]
         )->willReturn(
@@ -456,7 +463,7 @@ class PreviewTest extends TestCase
             'id' => '1',
             'providerKey' => $this->providerKey,
             'object' => $dataJson,
-            'objectClass' => \get_class($this->object->reveal()),
+            'objectClass' => \get_debug_type($this->object->reveal()),
             'userId' => 1,
             'html' => '<html><body><div id="content"></div></body></html>',
         ];
@@ -497,7 +504,7 @@ class PreviewTest extends TestCase
             'id' => '1',
             'providerKey' => $this->providerKey,
             'object' => $dataJson,
-            'objectClass' => \get_class($this->object->reveal()),
+            'objectClass' => \get_debug_type($this->object->reveal()),
             'userId' => 1,
             'html' => '<html><body><div id="content"><!-- CONTENT-REPLACER --></div></body></html>',
         ];
@@ -546,9 +553,10 @@ class PreviewTest extends TestCase
             'id' => '1',
             'providerKey' => $this->providerKey,
             'object' => $dataJson,
-            'objectClass' => \get_class($this->object->reveal()),
+            'objectClass' => \get_debug_type($this->object->reveal()),
             'userId' => 1,
             'html' => '<html><body><div id="content"><!-- CONTENT-REPLACER --></div></body></html>',
+            'locale' => $this->locale,
         ];
 
         $newObject = $this->prophesize(\stdClass::class);
@@ -556,9 +564,10 @@ class PreviewTest extends TestCase
             'id' => '1',
             'providerKey' => $this->providerKey,
             'object' => \json_encode(\array_merge($data, $context)),
-            'objectClass' => \get_class($newObject->reveal()),
+            'objectClass' => \get_debug_type($newObject->reveal()),
             'userId' => 1,
             'html' => '<html><body><div id="content"><!-- CONTENT-REPLACER --></div></body></html>',
+            'locale' => $this->locale,
         ];
 
         $this->cache->contains($token)->willReturn(true);
@@ -620,17 +629,19 @@ class PreviewTest extends TestCase
             'id' => '1',
             'providerKey' => $this->providerKey,
             'object' => $dataJson,
-            'objectClass' => \get_class($this->object->reveal()),
+            'objectClass' => \get_debug_type($this->object->reveal()),
             'userId' => 1,
             'html' => null,
+            'locale' => $this->locale,
         ];
         $expectedData = [
             'id' => '1',
             'providerKey' => $this->providerKey,
             'object' => $dataJson,
-            'objectClass' => \get_class($this->object->reveal()),
+            'objectClass' => \get_debug_type($this->object->reveal()),
             'userId' => 1,
             'html' => '<html><body><div id="content"><!-- CONTENT-REPLACER --></div></body></html>',
+            'locale' => $this->locale,
         ];
 
         $this->cache->contains($token)->willReturn(true);
@@ -684,17 +695,19 @@ class PreviewTest extends TestCase
             'id' => '1',
             'providerKey' => $this->providerKey,
             'object' => $dataJson,
-            'objectClass' => \get_class($this->object->reveal()),
+            'objectClass' => \get_debug_type($this->object->reveal()),
             'userId' => 1,
             'html' => null,
+            'locale' => $this->locale,
         ];
         $expectedData = [
             'id' => '1',
             'providerKey' => $this->providerKey,
             'object' => $dataJson,
-            'objectClass' => \get_class($this->object->reveal()),
+            'objectClass' => \get_debug_type($this->object->reveal()),
             'userId' => 1,
             'html' => '<html><body><div id="content"><!-- CONTENT-REPLACER --></div></body></html>',
+            'locale' => $this->locale,
         ];
 
         $this->cache->contains($token)->willReturn(true);

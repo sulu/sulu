@@ -26,6 +26,7 @@ class PreviewCacheItem
      */
     public function __construct(
         private string $id,
+        private ?string $locale,
         private int $userId,
         private string $providerKey,
         private $object,
@@ -35,6 +36,11 @@ class PreviewCacheItem
     public function getId(): string
     {
         return $this->id;
+    }
+
+    public function getLocale(): ?string
+    {
+        return $this->locale;
     }
 
     public function getUserId(): int

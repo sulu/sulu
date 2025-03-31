@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\PreviewBundle\Preview\Object;
 
 use Sulu\Bundle\PreviewBundle\Preview\Exception\ProviderNotFoundException;
+use Sulu\Bundle\PreviewBundle\Preview\Provider\PreviewDefaultsProviderInterface;
 
 /**
  * @internal No BC promises are given for this class. It may be changed or removed at any time.
@@ -19,7 +20,7 @@ use Sulu\Bundle\PreviewBundle\Preview\Exception\ProviderNotFoundException;
 class PreviewObjectProviderRegistry implements PreviewObjectProviderRegistryInterface
 {
     /**
-     * @param PreviewObjectProviderInterface[] $previewObjectProviders
+     * @param array<string, PreviewObjectProviderInterface|PreviewDefaultsProviderInterface> $previewObjectProviders
      */
     public function __construct(private array $previewObjectProviders)
     {
@@ -30,7 +31,7 @@ class PreviewObjectProviderRegistry implements PreviewObjectProviderRegistryInte
         return $this->previewObjectProviders;
     }
 
-    public function getPreviewObjectProvider(string $providerKey): PreviewObjectProviderInterface
+    public function getPreviewObjectProvider(string $providerKey): PreviewObjectProviderInterface|PreviewDefaultsProviderInterface
     {
         if (!$this->hasPreviewObjectProvider($providerKey)) {
             throw new ProviderNotFoundException($providerKey);

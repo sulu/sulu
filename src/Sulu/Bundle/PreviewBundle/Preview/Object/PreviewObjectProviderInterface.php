@@ -13,6 +13,8 @@ namespace Sulu\Bundle\PreviewBundle\Preview\Object;
 
 /**
  * Interface for preview-object-provider.
+ *
+ * @deprecated use PreviewDefaultsProviderInterface instead
  */
 interface PreviewObjectProviderInterface
 {

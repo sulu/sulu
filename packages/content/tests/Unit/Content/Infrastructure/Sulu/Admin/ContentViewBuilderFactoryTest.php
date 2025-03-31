@@ -24,6 +24,7 @@ use Sulu\Bundle\AdminBundle\Admin\View\ViewBuilderFactory;
 use Sulu\Bundle\PreviewBundle\Preview\Object\PreviewObjectProviderInterface;
 use Sulu\Bundle\PreviewBundle\Preview\Object\PreviewObjectProviderRegistry;
 use Sulu\Bundle\PreviewBundle\Preview\Object\PreviewObjectProviderRegistryInterface;
+use Sulu\Bundle\PreviewBundle\Preview\Provider\PreviewDefaultsProviderInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Sulu\Content\Application\ContentAggregator\ContentAggregatorInterface;
@@ -74,7 +75,7 @@ class ContentViewBuilderFactoryTest extends TestCase
     }
 
     /**
-     * @param array<string, PreviewObjectProviderInterface> $providers
+     * @param array<string, PreviewObjectProviderInterface|PreviewDefaultsProviderInterface> $providers
      */
     protected function createPreviewObjectProviderRegistry(array $providers): PreviewObjectProviderRegistryInterface
     {

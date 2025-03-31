@@ -72,6 +72,7 @@ class PreviewController
         $provider = $this->getRequestParameter($request, 'provider', true);
         $id = $this->getRequestParameter($request, 'id', true);
         $token = $this->getRequestParameter($request, 'token', true);
+        /** @var array<string, mixed> $data */
         $data = (array) $this->getRequestParameter($request, 'data', true);
 
         $options = $this->getOptionsFromRequest($request);
@@ -94,8 +95,9 @@ class PreviewController
         $id = $this->getRequestParameter($request, 'id', true);
         $provider = $this->getRequestParameter($request, 'provider', true);
         $token = $this->getRequestParameter($request, 'token', true);
+        /** @var array<string, mixed> $context */
         $context = (array) $this->getRequestParameter($request, 'context', true);
-        /** @var mixed[] $data */
+        /** @var array<string, mixed> $data */
         $data = $this->getRequestParameter($request, 'data', true);
 
         $options = $this->getOptionsFromRequest($request);
@@ -146,7 +148,7 @@ class PreviewController
     }
 
     /**
-     * @return mixed[]
+     * @return array<string, mixed>
      */
     private function getOptionsFromRequest(Request $request): array
     {

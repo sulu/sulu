@@ -40939,98 +40939,8 @@ parameters:
 			path: src/Sulu/Bundle/PreviewBundle/Preview/Object/PreviewObjectProviderInterface.php
 
 		-
-			message: '#^Cannot access offset ''html'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/PreviewBundle/Preview/Preview.php
-
-		-
-			message: '#^Cannot access offset ''id'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/PreviewBundle/Preview/Preview.php
-
-		-
-			message: '#^Cannot access offset ''object'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/PreviewBundle/Preview/Preview.php
-
-		-
-			message: '#^Cannot access offset ''objectClass'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/PreviewBundle/Preview/Preview.php
-
-		-
-			message: '#^Cannot access offset ''providerKey'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: src/Sulu/Bundle/PreviewBundle/Preview/Preview.php
-
-		-
-			message: '#^Cannot access offset ''userId'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/PreviewBundle/Preview/Preview.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PreviewBundle\\Preview\\Preview\:\:render\(\) has parameter \$options with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/PreviewBundle/Preview/Preview.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\PreviewBundle\\Preview\\Preview\:\:renderPartial\(\) has parameter \$options with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/PreviewBundle/Preview/Preview.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PreviewBundle\\Preview\\Preview\:\:start\(\) has parameter \$data with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/PreviewBundle/Preview/Preview.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PreviewBundle\\Preview\\Preview\:\:start\(\) has parameter \$options with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/PreviewBundle/Preview/Preview.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PreviewBundle\\Preview\\Preview\:\:update\(\) has parameter \$data with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/PreviewBundle/Preview/Preview.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PreviewBundle\\Preview\\Preview\:\:update\(\) has parameter \$options with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/PreviewBundle/Preview/Preview.php
-
-		-
-			message: '#^Parameter \#1 \$html of method Sulu\\Bundle\\PreviewBundle\\Preview\\PreviewCacheItem\:\:setHtml\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/PreviewBundle/Preview/Preview.php
-
-		-
-			message: '#^Parameter \#1 \$id of class Sulu\\Bundle\\PreviewBundle\\Preview\\PreviewCacheItem constructor expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/PreviewBundle/Preview/Preview.php
-
-		-
-			message: '#^Parameter \#1 \$object of function get_class expects object, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/PreviewBundle/Preview/Preview.php
-
-		-
-			message: '#^Parameter \#1 \$providerKey of method Sulu\\Bundle\\PreviewBundle\\Preview\\Preview\:\:getProvider\(\) expects string, mixed given\.$#'
-			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/PreviewBundle/Preview/Preview.php
 
@@ -41041,61 +40951,7 @@ parameters:
 			path: src/Sulu/Bundle/PreviewBundle/Preview/Preview.php
 
 		-
-			message: '#^Parameter \#2 \$locale of method Sulu\\Bundle\\PreviewBundle\\Preview\\Object\\PreviewObjectProviderInterface\:\:getObject\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/PreviewBundle/Preview/Preview.php
-
-		-
-			message: '#^Parameter \#2 \$locale of method Sulu\\Bundle\\PreviewBundle\\Preview\\Object\\PreviewObjectProviderInterface\:\:setContext\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/PreviewBundle/Preview/Preview.php
-
-		-
-			message: '#^Parameter \#2 \$locale of method Sulu\\Bundle\\PreviewBundle\\Preview\\Object\\PreviewObjectProviderInterface\:\:setValues\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 3
-			path: src/Sulu/Bundle/PreviewBundle/Preview/Preview.php
-
-		-
-			message: '#^Parameter \#2 \$objectClass of method Sulu\\Bundle\\PreviewBundle\\Preview\\Object\\PreviewObjectProviderInterface\:\:deserialize\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/PreviewBundle/Preview/Preview.php
-
-		-
-			message: '#^Parameter \#2 \$userId of class Sulu\\Bundle\\PreviewBundle\\Preview\\PreviewCacheItem constructor expects int, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/PreviewBundle/Preview/Preview.php
-
-		-
 			message: '#^Parameter \#2 \$value of method Sulu\\Bundle\\PreviewBundle\\Preview\\PreviewCache\:\:save\(\) expects string, string\|false given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/PreviewBundle/Preview/Preview.php
-
-		-
-			message: '#^Parameter \#3 \$context of method Sulu\\Bundle\\PreviewBundle\\Preview\\Object\\PreviewObjectProviderInterface\:\:setContext\(\) expects array\<string, mixed\>, array\<mixed\> given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/PreviewBundle/Preview/Preview.php
-
-		-
-			message: '#^Parameter \#3 \$data of method Sulu\\Bundle\\PreviewBundle\\Preview\\Object\\PreviewObjectProviderInterface\:\:setValues\(\) expects array\<string, mixed\>, array given\.$#'
-			identifier: argument.type
-			count: 2
-			path: src/Sulu/Bundle/PreviewBundle/Preview/Preview.php
-
-		-
-			message: '#^Parameter \#3 \$data of method Sulu\\Bundle\\PreviewBundle\\Preview\\Object\\PreviewObjectProviderInterface\:\:setValues\(\) expects array\<string, mixed\>, array\<mixed\> given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/PreviewBundle/Preview/Preview.php
-
-		-
-			message: '#^Parameter \#3 \$providerKey of class Sulu\\Bundle\\PreviewBundle\\Preview\\PreviewCacheItem constructor expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/PreviewBundle/Preview/Preview.php
@@ -41203,12 +41059,6 @@ parameters:
 			path: src/Sulu/Bundle/PreviewBundle/Preview/Renderer/PreviewRenderer.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\PreviewBundle\\Preview\\Renderer\\PreviewRenderer\:\:render\(\) has parameter \$object with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/PreviewBundle/Preview/Renderer/PreviewRenderer.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\PreviewBundle\\Preview\\Renderer\\PreviewRenderer\:\:render\(\) has parameter \$options with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -41233,43 +41083,13 @@ parameters:
 			path: src/Sulu/Bundle/PreviewBundle/Preview/Renderer/PreviewRenderer.php
 
 		-
-			message: '#^Parameter \#1 \$entityClass of method Sulu\\Bundle\\RouteBundle\\Routing\\Defaults\\RouteDefaultsProviderInterface\:\:getByEntity\(\) expects string, class\-string\|false given\.$#'
+			message: '#^Parameter \#1 \$locale of method Symfony\\Component\\HttpFoundation\\Request\:\:setLocale\(\) expects string, string\|null given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/PreviewBundle/Preview/Renderer/PreviewRenderer.php
 
 		-
-			message: '#^Parameter \#1 \$entityClass of method Sulu\\Bundle\\RouteBundle\\Routing\\Defaults\\RouteDefaultsProviderInterface\:\:supports\(\) expects string, class\-string\|false given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/PreviewBundle/Preview/Renderer/PreviewRenderer.php
-
-		-
-			message: '#^Parameter \#1 \$locale of method Symfony\\Component\\HttpFoundation\\Request\:\:setLocale\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/PreviewBundle/Preview/Renderer/PreviewRenderer.php
-
-		-
-			message: '#^Parameter \#1 \$localization of method Sulu\\Component\\Webspace\\Webspace\:\:getLocalization\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/PreviewBundle/Preview/Renderer/PreviewRenderer.php
-
-		-
-			message: '#^Parameter \#1 \$object of class Sulu\\Bundle\\PreviewBundle\\Preview\\Exception\\RouteDefaultsProviderNotFoundException constructor expects object, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/PreviewBundle/Preview/Renderer/PreviewRenderer.php
-
-		-
-			message: '#^Parameter \#1 \$object of function get_class expects object, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: src/Sulu/Bundle/PreviewBundle/Preview/Renderer/PreviewRenderer.php
-
-		-
-			message: '#^Parameter \#1 \$object of method Sulu\\Bundle\\PreviewBundle\\Preview\\Renderer\\PreviewRenderer\:\:createPortalInformation\(\) expects object, mixed given\.$#'
+			message: '#^Parameter \#1 \$localization of method Sulu\\Component\\Webspace\\Webspace\:\:getLocalization\(\) expects string, string\|null given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/PreviewBundle/Preview/Renderer/PreviewRenderer.php
@@ -41281,7 +41101,7 @@ parameters:
 			path: src/Sulu/Bundle/PreviewBundle/Preview/Renderer/PreviewRenderer.php
 
 		-
-			message: '#^Parameter \#1 \$webspaceKey of method Sulu\\Component\\Webspace\\Manager\\WebspaceManagerInterface\:\:findPortalInformationsByWebspaceKeyAndLocale\(\) expects string, mixed given\.$#'
+			message: '#^Parameter \#1 \$webspaceKey of method Sulu\\Component\\Webspace\\Manager\\WebspaceManagerInterface\:\:findPortalInformationsByWebspaceKeyAndLocale\(\) expects string, string\|null given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/PreviewBundle/Preview/Renderer/PreviewRenderer.php
@@ -41293,7 +41113,7 @@ parameters:
 			path: src/Sulu/Bundle/PreviewBundle/Preview/Renderer/PreviewRenderer.php
 
 		-
-			message: '#^Parameter \#2 \$locale of method Sulu\\Component\\Webspace\\Manager\\WebspaceManagerInterface\:\:findPortalInformationsByWebspaceKeyAndLocale\(\) expects string, mixed given\.$#'
+			message: '#^Parameter \#2 \$locale of method Sulu\\Component\\Webspace\\Manager\\WebspaceManagerInterface\:\:findPortalInformationsByWebspaceKeyAndLocale\(\) expects string, string\|null given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/PreviewBundle/Preview/Renderer/PreviewRenderer.php
@@ -41305,37 +41125,31 @@ parameters:
 			path: src/Sulu/Bundle/PreviewBundle/Preview/Renderer/PreviewRenderer.php
 
 		-
-			message: '#^Parameter \#3 \$locale of method Sulu\\Bundle\\RouteBundle\\Routing\\Defaults\\RouteDefaultsProviderInterface\:\:getByEntity\(\) expects string, mixed given\.$#'
+			message: '#^Parameter \#3 \$locale of method Sulu\\Bundle\\RouteBundle\\Routing\\Defaults\\RouteDefaultsProviderInterface\:\:getByEntity\(\) expects string, string\|null given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/PreviewBundle/Preview/Renderer/PreviewRenderer.php
 
 		-
-			message: '#^Parameter \#3 \$webspaceKey of class Sulu\\Bundle\\PreviewBundle\\Preview\\Exception\\RouteDefaultsProviderNotFoundException constructor expects string, mixed given\.$#'
+			message: '#^Parameter \#3 \$webspaceKey of class Sulu\\Bundle\\PreviewBundle\\Preview\\Exception\\RouteDefaultsProviderNotFoundException constructor expects string, string\|null given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/PreviewBundle/Preview/Renderer/PreviewRenderer.php
 
 		-
-			message: '#^Parameter \#3 \$webspaceKey of method Sulu\\Bundle\\PreviewBundle\\Preview\\Renderer\\PreviewRenderer\:\:createPortalInformation\(\) expects string, mixed given\.$#'
+			message: '#^Parameter \#3 \$webspaceKey of method Sulu\\Bundle\\PreviewBundle\\Preview\\Renderer\\PreviewRenderer\:\:createPortalInformation\(\) expects string, string\|null given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/PreviewBundle/Preview/Renderer/PreviewRenderer.php
 
 		-
-			message: '#^Parameter \#4 \$locale of class Sulu\\Bundle\\PreviewBundle\\Preview\\Exception\\RouteDefaultsProviderNotFoundException constructor expects string, mixed given\.$#'
+			message: '#^Parameter \#4 \$locale of class Sulu\\Bundle\\PreviewBundle\\Preview\\Exception\\RouteDefaultsProviderNotFoundException constructor expects string, string\|null given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/PreviewBundle/Preview/Renderer/PreviewRenderer.php
 
 		-
-			message: '#^Parameter \#4 \$locale of method Sulu\\Bundle\\PreviewBundle\\Preview\\Renderer\\PreviewRenderer\:\:createPortalInformation\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/PreviewBundle/Preview/Renderer/PreviewRenderer.php
-
-		-
-			message: '#^Parameter \#4 \$object of method Sulu\\Bundle\\RouteBundle\\Routing\\Defaults\\RouteDefaultsProviderInterface\:\:getByEntity\(\) expects object\|null, mixed given\.$#'
+			message: '#^Parameter \#4 \$locale of method Sulu\\Bundle\\PreviewBundle\\Preview\\Renderer\\PreviewRenderer\:\:createPortalInformation\(\) expects string, string\|null given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/PreviewBundle/Preview/Renderer/PreviewRenderer.php
@@ -41359,26 +41173,20 @@ parameters:
 			path: src/Sulu/Bundle/PreviewBundle/Preview/Renderer/PreviewRenderer.php
 
 		-
-			message: '#^Parameter \#5 \$locale of class Sulu\\Bundle\\PreviewBundle\\Preview\\Exception\\TemplateNotFoundException constructor expects string, mixed given\.$#'
+			message: '#^Parameter \#5 \$locale of class Sulu\\Bundle\\PreviewBundle\\Preview\\Exception\\TemplateNotFoundException constructor expects string, string\|null given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/PreviewBundle/Preview/Renderer/PreviewRenderer.php
 
 		-
-			message: '#^Parameter \#5 \$locale of class Sulu\\Bundle\\PreviewBundle\\Preview\\Exception\\TwigException constructor expects string, mixed given\.$#'
+			message: '#^Parameter \#5 \$locale of class Sulu\\Bundle\\PreviewBundle\\Preview\\Exception\\TwigException constructor expects string, string\|null given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/PreviewBundle/Preview/Renderer/PreviewRenderer.php
 
 		-
-			message: '#^Parameter \#5 \$locale of class Sulu\\Bundle\\PreviewBundle\\Preview\\Exception\\UnexpectedException constructor expects string, mixed given\.$#'
+			message: '#^Parameter \#5 \$locale of class Sulu\\Bundle\\PreviewBundle\\Preview\\Exception\\UnexpectedException constructor expects string, string\|null given\.$#'
 			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/PreviewBundle/Preview/Renderer/PreviewRenderer.php
-
-		-
-			message: '#^Property Sulu\\Bundle\\PreviewBundle\\Preview\\Renderer\\PreviewRenderer\:\:\$defaultHost is unused\.$#'
-			identifier: property.unused
 			count: 1
 			path: src/Sulu/Bundle/PreviewBundle/Preview/Renderer/PreviewRenderer.php
 
@@ -41387,12 +41195,6 @@ parameters:
 			identifier: property.onlyWritten
 			count: 1
 			path: src/Sulu/Bundle/PreviewBundle/Preview/Renderer/PreviewRenderer.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PreviewBundle\\Preview\\Renderer\\PreviewRendererInterface\:\:render\(\) has parameter \$object with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/PreviewBundle/Preview/Renderer/PreviewRendererInterface.php
 
 		-
 			message: '#^Method Sulu\\Bundle\\PreviewBundle\\Preview\\Renderer\\PreviewRendererInterface\:\:render\(\) has parameter \$options with no type specified\.$#'

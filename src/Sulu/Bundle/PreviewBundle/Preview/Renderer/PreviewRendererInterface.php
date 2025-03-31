@@ -19,6 +19,7 @@ interface PreviewRendererInterface
     /**
      * Renders object in given webspace and locale.
      *
+     * @param mixed $object
      * @param string $id
      * @param bool $partial
      *

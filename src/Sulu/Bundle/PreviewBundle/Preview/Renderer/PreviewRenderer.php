@@ -40,13 +40,8 @@ use Twig\Error\Error;
  */
 class PreviewRenderer implements PreviewRendererInterface
 {
-    /**
-     * @var string
-     */
-    private $defaultHost;
-
     public function __construct(
-        private RouteDefaultsProviderInterface $routeDefaultsProvider,
+        private ?RouteDefaultsProviderInterface $routeDefaultsProvider,
         private RequestStack $requestStack,
         private KernelFactoryInterface $kernelFactory,
         private WebspaceManagerInterface $webspaceManager,
@@ -63,12 +58,10 @@ class PreviewRenderer implements PreviewRendererInterface
         $partial = false,
         $options = []
     ) {
+        /** @var string|null $webspaceKey */
         $webspaceKey = $options['webspaceKey'] ?? null;
+        /** @var string|null $locale */
         $locale = $options['locale'] ?? null;
-
-        if (!$this->routeDefaultsProvider->supports(\get_class($object))) {
-            throw new RouteDefaultsProviderNotFoundException($object, $id, $webspaceKey, $locale);
-        }
 
         $portalInformations = $this->webspaceManager->findPortalInformationsByWebspaceKeyAndLocale(
             $webspaceKey,
@@ -95,7 +88,22 @@ class PreviewRenderer implements PreviewRendererInterface
             $request = $currentRequest->request->all();
         }
 
-        $attributes = $this->routeDefaultsProvider->getByEntity(\get_class($object), $id, $locale, $object);
+        if (\is_array($object)) {
+            $attributes = [...$object];
+        } else {
+            if (!$this->routeDefaultsProvider instanceof RouteDefaultsProviderInterface
+                || !\is_object($object)
+            ) {
+                throw new \RuntimeException('This is deprecated replace it with the new PreviewDefaultsProviderInterface');
+            }
+
+            if (!$this->routeDefaultsProvider->supports(\get_class($object))) {
+                throw new RouteDefaultsProviderNotFoundException($object, $id, $webspaceKey, $locale);
+            }
+
+            $attributes = $this->routeDefaultsProvider->getByEntity(\get_class($object), $id, $locale, $object);
+        }
+
         $attributes['preview'] = true;
         $attributes['partial'] = $partial;
         $attributes['_sulu'] = new RequestAttributes(
@@ -228,7 +236,7 @@ class PreviewRenderer implements PreviewRendererInterface
      * that a webspace defines a language, which is not used in any portal. For this case we have to define our own
      * fake PortalInformation object.
      *
-     * @param object $object
+     * @param mixed $object
      * @param int $id
      * @param string $webspaceKey
      * @param string $locale
