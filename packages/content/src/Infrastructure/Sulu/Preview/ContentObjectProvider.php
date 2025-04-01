@@ -15,21 +15,30 @@ namespace Sulu\Content\Infrastructure\Sulu\Preview;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NoResultException;
-use Sulu\Bundle\PreviewBundle\Preview\Object\PreviewObjectProviderInterface;
+use Sulu\Bundle\PreviewBundle\Preview\PreviewContext;
+use Sulu\Bundle\PreviewBundle\Preview\Provider\PreviewDefaultsProviderInterface;
 use Sulu\Content\Application\ContentAggregator\ContentAggregatorInterface;
 use Sulu\Content\Application\ContentDataMapper\ContentDataMapperInterface;
 use Sulu\Content\Domain\Exception\ContentNotFoundException;
 use Sulu\Content\Domain\Model\ContentRichEntityInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
+use Sulu\Content\Domain\Model\RoutableInterface;
 use Sulu\Content\Domain\Model\ShadowInterface;
 use Sulu\Content\Domain\Model\TemplateInterface;
+use Sulu\Content\Infrastructure\Sulu\Structure\ContentStructureBridgeFactory;
+use Sulu\Content\Infrastructure\Sulu\Structure\StructureMetadataNotFoundException;
 
 /**
  * @template B of DimensionContentInterface
  * @template T of ContentRichEntityInterface<B>
  */
-class ContentObjectProvider implements PreviewObjectProviderInterface
+class ContentObjectProvider implements PreviewDefaultsProviderInterface
 {
+    /**
+     * @var ContentStructureBridgeFactory
+     */
+    protected $contentStructureBridgeFactory;
+
     /**
      * @var EntityManagerInterface
      */
@@ -59,12 +68,14 @@ class ContentObjectProvider implements PreviewObjectProviderInterface
      * @param class-string<T> $contentRichEntityClass
      */
     public function __construct(
+        ContentStructureBridgeFactory $contentStructureBridgeFactory,
         EntityManagerInterface $entityManager,
         ContentAggregatorInterface $contentAggregator,
         ContentDataMapperInterface $contentDataMapper,
         string $contentRichEntityClass,
         ?string $securityContext = null
     ) {
+        $this->contentStructureBridgeFactory = $contentStructureBridgeFactory;
         $this->entityManager = $entityManager;
         $this->contentAggregator = $contentAggregator;
         $this->contentDataMapper = $contentDataMapper;
@@ -72,14 +83,19 @@ class ContentObjectProvider implements PreviewObjectProviderInterface
         $this->securityContext = $securityContext;
     }
 
-    /**
-     * @param string|int $id
-     * @param string $locale
-     *
-     * @return B|null
-     */
-    public function getObject($id, $locale)
+    public function getDefaults(PreviewContext $previewContext): array
     {
+        $id = $previewContext->getId();
+        $locale = $previewContext->getLocale();
+
+        if (null === $id) {
+            throw new \RuntimeException('The ContentObjectProvider requires a id to be set in the PreviewContext.');
+        }
+
+        if (null === $locale) {
+            throw new \RuntimeException('The ContentObjectProvider requires a locale to be set in the PreviewContext.');
+        }
+
         try {
             /** @var T $contentRichEntity */
             $contentRichEntity = $this->entityManager->createQueryBuilder()
@@ -90,36 +106,58 @@ class ContentObjectProvider implements PreviewObjectProviderInterface
                 ->getQuery()
                 ->getSingleResult();
         } catch (NoResultException $exception) {
-            return null;
+            return [];
         }
 
-        return $this->resolveContent($contentRichEntity, $locale);
+        $object = $this->resolveContent($contentRichEntity, $locale);
+
+        if (!$object instanceof RoutableInterface) {
+            return [];
+        }
+
+        try {
+            $structureBridge = $this->contentStructureBridgeFactory->getBridge($object, $id, $locale);
+        } catch (StructureMetadataNotFoundException $exception) {
+            return [];
+        }
+
+        return [
+            'object' => $object,
+            '_controller' => $structureBridge->getController(),
+            'view' => $structureBridge->getView(),
+        ];
     }
 
-    /**
-     * @param B $object
-     * @param string $locale
-     * @param array<string, mixed> $data
-     */
-    public function setValues($object, $locale, array $data): void
+    public function updateValues(PreviewContext $previewContext, array $defaults, array $data): array
     {
+        $object = $defaults['object'];
+        if (!$object instanceof DimensionContentInterface) {
+            throw new \RuntimeException('Object must be instance of DimensionContentInterface');
+        }
+
+        $locale = $previewContext->getLocale();
+
+        if (null === $locale) {
+            throw new \RuntimeException('The ContentObjectProvider requires a locale to be set in the PreviewContext.');
+        }
+
         $previewDimensionContentCollection = new PreviewDimensionContentCollection($object, $locale);
         $this->contentDataMapper->map(
             $previewDimensionContentCollection,
             $previewDimensionContentCollection->getDimensionAttributes(),
             $data
         );
+
+        return $defaults;
     }
 
-    /**
-     * @param B $object
-     * @param string $locale
-     * @param array<string, mixed> $context
-     *
-     * @return B
-     */
-    public function setContext($object, $locale, array $context): DimensionContentInterface
+    public function updateContext(PreviewContext $previewContext, array $defaults, array $context): array
     {
+        $object = $defaults['object'];
+        if (!$object instanceof DimensionContentInterface) {
+            throw new \RuntimeException('Object must be instance of DimensionContentInterface');
+        }
+
         if ($object instanceof TemplateInterface) {
             if (\array_key_exists('template', $context)) {
                 \assert(\is_string($context['template']));
@@ -127,44 +165,10 @@ class ContentObjectProvider implements PreviewObjectProviderInterface
             }
         }
 
-        return $object;
+        return $defaults;
     }
 
-    /**
-     * @param B $object
-     *
-     * @return string
-     */
-    public function serialize($object)
-    {
-        return \json_encode([
-            'id' => $object->getResource()->getId(),
-            'locale' => $object->getLocale(),
-        ]) ?: '[]';
-    }
-
-    /**
-     * @param string $serializedObject
-     * @param class-string $objectClass
-     *
-     * @return B|null
-     */
-    public function deserialize($serializedObject, $objectClass)
-    {
-        /** @var array{id?: int|string, locale?: string} $data */
-        $data = \json_decode($serializedObject, true);
-
-        $id = $data['id'] ?? null;
-        $locale = $data['locale'] ?? null;
-
-        if (!$id || !$locale) {
-            return null;
-        }
-
-        return $this->getObject($id, $locale);
-    }
-
-    public function getSecurityContext($id, $locale): ?string
+    public function getSecurityContext(PreviewContext $previewContext): ?string
     {
         return $this->securityContext;
     }

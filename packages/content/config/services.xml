@@ -101,7 +101,9 @@
             <argument type="service" id="sulu_content.content_structure_bridge_factory"/>
             <argument type="service" id="sulu_http_cache.cache_lifetime.resolver"/>
 
-            <tag name="sulu_route.defaults_provider"/>
+            <tag name="sulu_route.route_defaults_provider" resource-key="examples"/>
+            <tag name="sulu_route.route_defaults_provider" resource-key="articles"/>
+            <tag name="sulu_route.route_defaults_provider" resource-key="pages"/>
         </service>
 
         <!-- Structure Bridge Factory -->

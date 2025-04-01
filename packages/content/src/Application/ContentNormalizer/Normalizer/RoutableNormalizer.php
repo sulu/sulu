@@ -34,6 +34,7 @@ class RoutableNormalizer implements NormalizerInterface
 
         return [
             'resourceId',
+            'route',
         ];
     }
 }

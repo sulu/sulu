@@ -27,6 +27,7 @@ use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\PortalInformation;
 use Sulu\Component\Webspace\Url;
+use Sulu\Route\Domain\Value\RequestAttributeEnum;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -106,6 +107,7 @@ class PreviewRenderer implements PreviewRendererInterface
 
         $attributes['preview'] = true;
         $attributes['partial'] = $partial;
+        $attributes[RequestAttributeEnum::SITE->value] = $webspaceKey;
         $attributes['_sulu'] = new RequestAttributes(
             [
                 'webspace' => $webspace,

@@ -13,9 +13,6 @@ declare(strict_types=1);
 
 namespace Sulu\Content\Application\ContentResolver\Resolver;
 
-use Sulu\Bundle\RouteBundle\Entity\RouteRepositoryInterface;
-use Sulu\Component\Localization\Manager\LocalizationManagerInterface;
-use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Content\Application\ContentResolver\Value\ContentView;
 use Sulu\Content\Domain\Model\AuthorInterface;
 use Sulu\Content\Domain\Model\ContentRichEntityInterface;
@@ -24,29 +21,30 @@ use Sulu\Content\Domain\Model\RoutableInterface;
 use Sulu\Content\Domain\Model\ShadowInterface;
 use Sulu\Content\Domain\Model\TemplateInterface;
 use Sulu\Content\Domain\Model\WebspaceInterface;
+use Sulu\Route\Application\Routing\Generator\RouteGeneratorInterface;
+use Sulu\Route\Domain\Repository\RouteRepositoryInterface;
 
 /**
  * @phpstan-type SettingsData array{
- *      availableLocales: string[]|null,
- *      localizations: array<string, array{
+ *      availableLocales?: string[]|null,
+ *      localizations?: array<string, array{
  *          locale: string,
  *          url: string|null,
  *          country: string,
  *          alternate: bool
  *      }>,
- *      mainWebspace: string|null,
- *      template: string|null,
- *      author: int|null,
- *      authored: \DateTime|null,
- *      shadowBaseLocale: string|null,
+ *      mainWebspace?: string|null,
+ *      template?: string|null,
+ *      author?: int|null,
+ *      authored?: \DateTime|null,
+ *      shadowBaseLocale?: string|null,
  *      lastModified?: \DateTimeImmutable|null
  *  }
  */
 readonly class SettingsResolver implements ResolverInterface
 {
     public function __construct(
-        private WebspaceManagerInterface $webspaceManager,
-        private LocalizationManagerInterface $localizationManager,
+        private RouteGeneratorInterface $routeGenerator,
         private RouteRepositoryInterface $routeRepository,
     ) {
     }
@@ -87,57 +85,46 @@ readonly class SettingsResolver implements ResolverInterface
      * @param RoutableInterface&TemplateInterface&DimensionContentInterface<T> $dimensionContent
      *
      * @return array{
-     *     localizations: array<string, array{
+     *     localizations?: array<string, array{
      *         locale: string,
-     *         url: string|null,
-     *         country: string,
+     *         url: string,
      *         alternate: bool
-     *      }>
+     *     }>
      * }
      */
     protected function getLocalizationsData(RoutableInterface&TemplateInterface&DimensionContentInterface $dimensionContent): array
     {
-        // TODO refactor using the new RouteBundle
-        // TODO this should not be resolved on nested content
-        $templateData = $dimensionContent->getTemplateData();
-
-        if (!isset($templateData['url'])) {
-            return [
-                'localizations' => [],
-            ];
-        }
-
-        $webspaceKey = $dimensionContent instanceof WebspaceInterface ? $dimensionContent->getMainWebspace() : null;
-        $localizations = $this->localizationManager->getLocalizations();
         $localizationData = [];
 
-        $availableLocales = $dimensionContent->getAvailableLocales() ?? [];
-        $availableLocales = \array_combine($availableLocales, $availableLocales);
-        $resource = $dimensionContent->getResource();
-        foreach ($localizations as $locale => $localization) {
-            $route = null;
-            if (isset($availableLocales[$locale])) {
-                // TODO this should be the resourceKey instead of the interface with the new RouteBundle implementation
-                $route = $this->routeRepository->findByEntity($resource::class . 'Interface', (string) $resource->getId(), $locale);
-            }
+        $availableLocales = $dimensionContent->getAvailableLocales();
 
-            // fallback to homepage
-            $url = $route?->getPath() ?? '/';
+        if (null === $availableLocales) {
+            return [];
+        }
 
-            $resolvedUrl = $this->webspaceManager->findUrlByResourceLocator(
-                $url,
-                null,
+        $routes = $this->routeRepository->findBy([
+            'locales' => $availableLocales,
+            'resourceKey' => $dimensionContent->getResourceKey(),
+            'resourceId' => (string) $dimensionContent->getResourceId(),
+        ]);
+
+        foreach ($routes as $route) {
+            $locale = $route->getLocale();
+
+            $resolvedUrl = $this->routeGenerator->generate(
+                $route->getSlug(),
                 $locale,
-                $webspaceKey,
+                $route->getSite(),
             );
 
             $localizationData[$locale] = [
                 'locale' => $locale,
                 'url' => $resolvedUrl,
-                'country' => $localization->getCountry(),
-                'alternate' => null !== $route, // true for alternative locales
+                'alternate' => '' !== $resolvedUrl,
             ];
         }
+
+        \ksort($localizationData);
 
         return [
             'localizations' => $localizationData,

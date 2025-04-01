@@ -102,6 +102,7 @@ final class SuluRouteBundle extends AbstractBundle
             ->args([
                 new Reference('sulu_route.route_repository'),
                 tagged_locator('sulu_route.route_defaults_provider', 'resource_key', 'getResourceKey'),
+                new Reference('router.request_context'),
             ])
             ->tag('sulu_route.route_collection_for_request_loader', ['priority' => 100]);
 
@@ -163,6 +164,7 @@ final class SuluRouteBundle extends AbstractBundle
                             'route_provider_service_id' => 'sulu_route.symfony_cmf_route_provider',
                         ]),
                         'enabled' => true,
+                        'uri_filter_regexp' => '/^(?!\/admin\b).*/', // exclude admin routes
                     ],
                 ]
             );

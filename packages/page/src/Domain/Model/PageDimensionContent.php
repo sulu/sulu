@@ -24,6 +24,7 @@ use Sulu\Content\Domain\Model\SeoTrait;
 use Sulu\Content\Domain\Model\ShadowTrait;
 use Sulu\Content\Domain\Model\TemplateTrait;
 use Sulu\Content\Domain\Model\WorkflowTrait;
+use Sulu\Route\Domain\Model\Route;
 
 /**
  * @experimental
@@ -33,7 +34,9 @@ class PageDimensionContent implements PageDimensionContentInterface
     use AuthorTrait;
     use DimensionContentTrait;
     use ExcerptTrait;
-    use RoutableTrait;
+    use RoutableTrait {
+        setRoute as parentSetRoute;
+    }
     use SeoTrait;
     use ShadowTrait;
     use TemplateTrait {
@@ -80,6 +83,13 @@ class PageDimensionContent implements PageDimensionContentInterface
         }
 
         $this->parentSetTemplateData($templateData);
+    }
+
+    public function setRoute(Route $route): void
+    {
+        $route->setSite($this->getResource()->getWebspaceKey());
+
+        $this->parentSetRoute($route);
     }
 
     public static function getTemplateType(): string

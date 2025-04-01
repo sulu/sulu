@@ -17,10 +17,6 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
-use Sulu\Bundle\RouteBundle\Entity\Route;
-use Sulu\Bundle\RouteBundle\Generator\RouteGeneratorInterface;
-use Sulu\Bundle\RouteBundle\Manager\ConflictResolverInterface;
-use Sulu\Bundle\RouteBundle\Manager\RouteManagerInterface;
 use Sulu\Bundle\TestBundle\Testing\SetGetPrivatePropertyTrait;
 use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactoryInterface;
 use Sulu\Component\Content\Metadata\PropertyMetadata;
@@ -30,6 +26,8 @@ use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Domain\Model\RoutableInterface;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\Example;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\ExampleDimensionContent;
+use Sulu\Route\Domain\Model\Route;
+use Sulu\Route\Domain\Repository\RouteRepositoryInterface;
 
 class RoutableDataMapperTest extends TestCase
 {
@@ -37,63 +35,26 @@ class RoutableDataMapperTest extends TestCase
     use SetGetPrivatePropertyTrait;
 
     /**
+     * @var ObjectProphecy<RouteRepositoryInterface>
+     */
+    private $routeRepository;
+
+    /**
      * @var ObjectProphecy<StructureMetadataFactoryInterface>
      */
     private $structureMetadataFactory;
 
-    /**
-     * @var ObjectProphecy<RouteGeneratorInterface>
-     */
-    private $routeGenerator;
-
-    /**
-     * @var ObjectProphecy<RouteManagerInterface>
-     */
-    private $routeManager;
-
-    /**
-     * @var ObjectProphecy<ConflictResolverInterface>
-     */
-    private $conflictResolver;
-
     protected function setUp(): void
     {
+        $this->routeRepository = $this->prophesize(RouteRepositoryInterface::class);
         $this->structureMetadataFactory = $this->prophesize(StructureMetadataFactoryInterface::class);
-        $this->routeGenerator = $this->prophesize(RouteGeneratorInterface::class);
-        $this->routeManager = $this->prophesize(RouteManagerInterface::class);
-        $this->conflictResolver = $this->prophesize(ConflictResolverInterface::class);
     }
 
-    /**
-     * @param array<string, array{
-     *     resource_key: string,
-     *     entityClass?: string,
-     *     options: array<string, mixed>,
-     *     generator: string,
-     * }> $resourceKeyMappings
-     */
-    protected function createRouteDataMapperInstance(
-        ?array $resourceKeyMappings = null
-    ): RoutableDataMapper {
-        if (!\is_array($resourceKeyMappings)) {
-            $resourceKeyMappings = [
-                'examples' => [
-                    'resource_key' => 'examples',
-                    'entityClass' => Example::class,
-                    'options' => [
-                        'route_schema' => '/{object["title"]}',
-                    ],
-                    'generator' => 'schema',
-                ],
-            ];
-        }
-
+    protected function createRouteDataMapperInstance(): RoutableDataMapper
+    {
         return new RoutableDataMapper(
+            $this->routeRepository->reveal(),
             $this->structureMetadataFactory->reveal(),
-            $this->routeGenerator->reveal(),
-            $this->routeManager->reveal(),
-            $this->conflictResolver->reveal(),
-            $resourceKeyMappings
         );
     }
 
@@ -105,9 +66,7 @@ class RoutableDataMapperTest extends TestCase
         $localizedDimensionContent = $this->prophesize(DimensionContentInterface::class);
 
         $this->structureMetadataFactory->getStructureMetadata(Argument::cetera())->shouldNotBeCalled();
-        $this->routeManager->createOrUpdateByAttributes(Argument::cetera())->shouldNotBeCalled();
-        $this->routeGenerator->generate(Argument::cetera())->shouldNotBeCalled();
-        $this->conflictResolver->resolve(Argument::cetera())->shouldNotBeCalled();
+        $this->routeRepository->add(Argument::any())->shouldNotBeCalled();
 
         $mapper = $this->createRouteDataMapperInstance();
         $mapper->map($unlocalizedDimensionContent->reveal(), $localizedDimensionContent->reveal(), $data);
@@ -126,9 +85,7 @@ class RoutableDataMapperTest extends TestCase
         $localizedDimensionContent->willImplement(RoutableInterface::class);
 
         $this->structureMetadataFactory->getStructureMetadata(Argument::cetera())->shouldNotBeCalled();
-        $this->routeManager->createOrUpdateByAttributes(Argument::cetera())->shouldNotBeCalled();
-        $this->routeGenerator->generate(Argument::cetera())->shouldNotBeCalled();
-        $this->conflictResolver->resolve(Argument::cetera())->shouldNotBeCalled();
+        $this->routeRepository->add(Argument::any())->shouldNotBeCalled();
 
         $mapper = $this->createRouteDataMapperInstance();
         $mapper->map($unlocalizedDimensionContent->reveal(), $localizedDimensionContent->reveal(), $data);
@@ -148,15 +105,11 @@ class RoutableDataMapperTest extends TestCase
         $localizedDimensionContent->setLocale('en');
 
         $this->structureMetadataFactory->getStructureMetadata(Argument::cetera())->shouldNotBeCalled();
-        $this->routeManager->createOrUpdateByAttributes(Argument::cetera())->shouldNotBeCalled();
-        $this->routeGenerator->generate(Argument::cetera())->shouldNotBeCalled();
-        $this->conflictResolver->resolve(Argument::cetera())->shouldNotBeCalled();
+        $this->routeRepository->add(Argument::any())->shouldNotBeCalled();
 
-        $mapper = $this->createRouteDataMapperInstance([]);
+        $mapper = $this->createRouteDataMapperInstance();
 
         $mapper->map($unlocalizedDimensionContent, $localizedDimensionContent, $data);
-
-        $this->assertSame([], $localizedDimensionContent->getTemplateData());
     }
 
     public function testMapNoMetadata(): void
@@ -173,14 +126,13 @@ class RoutableDataMapperTest extends TestCase
         $this->structureMetadataFactory->getStructureMetadata('example', 'default')
             ->shouldBeCalled()
             ->willReturn(null);
-        $this->routeManager->createOrUpdateByAttributes(Argument::cetera())->shouldNotBeCalled();
-        $this->routeGenerator->generate(Argument::cetera())->shouldNotBeCalled();
-        $this->conflictResolver->resolve(Argument::cetera())->shouldNotBeCalled();
+        $this->routeRepository->add(Argument::any())->shouldNotBeCalled();
 
         $mapper = $this->createRouteDataMapperInstance();
         $mapper->map($unlocalizedDimensionContent, $localizedDimensionContent, $data);
 
         $this->assertSame([], $localizedDimensionContent->getTemplateData());
+        $this->assertNull($localizedDimensionContent->getRoute());
     }
 
     public function testMapNoRouteProperty(): void
@@ -197,15 +149,13 @@ class RoutableDataMapperTest extends TestCase
         $this->structureMetadataFactory->getStructureMetadata('example', 'default')
             ->shouldBeCalled()
             ->willReturn($this->createTextLineStructureMetadata());
-
-        $this->routeManager->createOrUpdateByAttributes(Argument::cetera())->shouldNotBeCalled();
-        $this->routeGenerator->generate(Argument::cetera())->shouldNotBeCalled();
-        $this->conflictResolver->resolve(Argument::cetera())->shouldNotBeCalled();
+        $this->routeRepository->add(Argument::any())->shouldNotBeCalled();
 
         $mapper = $this->createRouteDataMapperInstance();
         $mapper->map($unlocalizedDimensionContent, $localizedDimensionContent, $data);
 
         $this->assertSame([], $localizedDimensionContent->getTemplateData());
+        $this->assertNull($localizedDimensionContent->getRoute());
     }
 
     public function testMapNoLocale(): void
@@ -224,25 +174,18 @@ class RoutableDataMapperTest extends TestCase
         $this->structureMetadataFactory->getStructureMetadata('example', 'default')
             ->shouldBeCalled()
             ->willReturn($this->createRouteStructureMetadata());
-
-        $this->routeManager->createOrUpdateByAttributes(Argument::cetera())->shouldNotBeCalled();
-        $this->routeGenerator->generate(Argument::cetera())->shouldNotBeCalled();
-        $this->conflictResolver->resolve(Argument::cetera())->shouldNotBeCalled();
+        $this->routeRepository->add(Argument::any())->shouldNotBeCalled();
 
         $mapper = $this->createRouteDataMapperInstance();
         $mapper->map($unlocalizedDimensionContent, $localizedDimensionContent, $data);
 
         $this->assertSame([], $localizedDimensionContent->getTemplateData());
+        $this->assertSame('/test', $localizedDimensionContent->getRoute()?->getSlug());
+        $this->assertNull($localizedDimensionContent->getRoute());
     }
 
     public function testMapNoRoutePropertyValue(): void
     {
-        // see https://github.com/sulu/SuluContentBundle/pull/55
-        $this->markTestSkipped(
-            'This is currently handled the same way as "testMapNoNewAndOldUrl". But should be handle differently to avoid patch creates.'
-        );
-
-        /** @phpstan-ignore-next-line */
         $data = [];
 
         $example = new Example();
@@ -255,76 +198,13 @@ class RoutableDataMapperTest extends TestCase
         $this->structureMetadataFactory->getStructureMetadata('example', 'default')
             ->shouldBeCalled()
             ->willReturn($this->createRouteStructureMetadata());
-
-        $this->routeManager->createOrUpdateByAttributes(Argument::cetera())->shouldNotBeCalled();
-        $this->routeGenerator->generate(Argument::cetera())->shouldNotBeCalled();
-        $this->conflictResolver->resolve(Argument::cetera())->shouldNotBeCalled();
+        $this->routeRepository->add(Argument::any())->shouldNotBeCalled();
 
         $mapper = $this->createRouteDataMapperInstance();
         $mapper->map($unlocalizedDimensionContent, $localizedDimensionContent, $data);
 
         $this->assertSame([], $localizedDimensionContent->getTemplateData());
-    }
-
-    public function testMapNoRouteMapping(): void
-    {
-        $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessage('No route mapping found for "examples".');
-
-        $data = [
-            'url' => '/test',
-        ];
-
-        $example = new Example();
-        static::setPrivateProperty($example, 'id', 1);
-        $unlocalizedDimensionContent = new ExampleDimensionContent($example);
-        $localizedDimensionContent = new ExampleDimensionContent($example);
-        $localizedDimensionContent->setTemplateKey('default');
-        $localizedDimensionContent->setLocale('en');
-
-        $this->structureMetadataFactory->getStructureMetadata('example', 'default')
-            ->shouldBeCalled()
-            ->willReturn($this->createRouteStructureMetadata());
-
-        $this->routeManager->createOrUpdateByAttributes(Argument::cetera())->shouldNotBeCalled();
-        $this->routeGenerator->generate(Argument::cetera())->shouldNotBeCalled();
-        $this->conflictResolver->resolve(Argument::cetera())->shouldNotBeCalled();
-
-        $mapper = $this->createRouteDataMapperInstance([]);
-        $mapper->map($unlocalizedDimensionContent, $localizedDimensionContent, $data);
-
-        $this->assertSame([], $localizedDimensionContent->getTemplateData());
-    }
-
-    public function testMapNoResourceId(): void
-    {
-        $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessage('Expected a LocalizedDimensionContent with a resourceId.');
-
-        $data = [
-            'url' => '/test',
-        ];
-
-        $example = new Example();
-        $unlocalizedDimensionContent = new ExampleDimensionContent($example);
-        $unlocalizedDimensionContent->setStage('live');
-        $localizedDimensionContent = new ExampleDimensionContent($example);
-        $localizedDimensionContent->setTemplateKey('default');
-        $localizedDimensionContent->setStage('live');
-        $localizedDimensionContent->setLocale('en');
-
-        $this->structureMetadataFactory->getStructureMetadata('example', 'default')
-            ->shouldBeCalled()
-            ->willReturn($this->createRouteStructureMetadata());
-
-        $this->routeManager->createOrUpdateByAttributes(Argument::cetera())->shouldNotBeCalled();
-        $this->routeGenerator->generate(Argument::cetera())->shouldNotBeCalled();
-        $this->conflictResolver->resolve(Argument::cetera())->shouldNotBeCalled();
-
-        $mapper = $this->createRouteDataMapperInstance();
-        $mapper->map($unlocalizedDimensionContent, $localizedDimensionContent, $data);
-
-        $this->assertSame([], $localizedDimensionContent->getTemplateData());
+        $this->assertNull($localizedDimensionContent->getRoute());
     }
 
     public function testMapRouteProperty(): void
@@ -333,8 +213,32 @@ class RoutableDataMapperTest extends TestCase
             'url' => '/test',
         ];
 
-        $route = new Route();
-        $route->setPath('/test-1');
+        $example = new Example();
+        static::setPrivateProperty($example, 'id', 1);
+        $unlocalizedDimensionContent = new ExampleDimensionContent($example);
+        $unlocalizedDimensionContent->setStage('draft');
+        $localizedDimensionContent = new ExampleDimensionContent($example);
+        $localizedDimensionContent->setTemplateKey('default');
+        $localizedDimensionContent->setStage('draft');
+        $localizedDimensionContent->setLocale('en');
+
+        $this->structureMetadataFactory->getStructureMetadata('example', 'default')
+            ->shouldBeCalled()
+            ->willReturn($this->createRouteStructureMetadata());
+        $this->routeRepository->add(Argument::any())->shouldBeCalled();
+
+        $mapper = $this->createRouteDataMapperInstance();
+        $mapper->map($unlocalizedDimensionContent, $localizedDimensionContent, $data);
+
+        $this->assertSame('/test', $localizedDimensionContent->getRoute()?->getSlug());
+        $this->assertSame([], $localizedDimensionContent->getTemplateData());
+    }
+
+    public function testMapRoutePropertyLive(): void
+    {
+        $data = [
+            'url' => '/test',
+        ];
 
         $example = new Example();
         static::setPrivateProperty($example, 'id', 1);
@@ -345,29 +249,50 @@ class RoutableDataMapperTest extends TestCase
         $localizedDimensionContent->setStage('live');
         $localizedDimensionContent->setLocale('en');
 
+        $route = new Route(Example::RESOURCE_KEY, '1', 'en', '/test', null, null);
+
         $this->structureMetadataFactory->getStructureMetadata('example', 'default')
             ->shouldBeCalled()
             ->willReturn($this->createRouteStructureMetadata());
-
-        $this->routeManager->createOrUpdateByAttributes(
-            Example::class,
-            '1',
-            'en',
-            '/test',
-            false
-        )
-            ->shouldBeCalled()
-            ->willReturn($route);
-
-        $this->routeGenerator->generate(Argument::cetera())->shouldNotBeCalled();
-        $this->conflictResolver->resolve(Argument::cetera())->shouldNotBeCalled();
+        $this->routeRepository->findOneBy([
+            'locale' => 'en',
+            'resourceKey' => 'examples',
+            'resourceId' => '1',
+        ])
+            ->willReturn($route)
+            ->shouldBeCalled();
 
         $mapper = $this->createRouteDataMapperInstance();
         $mapper->map($unlocalizedDimensionContent, $localizedDimensionContent, $data);
 
-        $this->assertSame([
-            'url' => '/test-1',
-        ], $localizedDimensionContent->getTemplateData());
+        $this->assertSame('/test', $localizedDimensionContent->getRoute()?->getSlug());
+        $this->assertSame([], $localizedDimensionContent->getTemplateData());
+    }
+
+    public function testMapNoResourceId(): void
+    {
+        $data = [
+            'url' => '/test',
+        ];
+
+        $example = new Example();
+        $unlocalizedDimensionContent = new ExampleDimensionContent($example);
+        $unlocalizedDimensionContent->setStage('draft');
+        $localizedDimensionContent = new ExampleDimensionContent($example);
+        $localizedDimensionContent->setTemplateKey('default');
+        $localizedDimensionContent->setStage('draft');
+        $localizedDimensionContent->setLocale('en');
+
+        $this->structureMetadataFactory->getStructureMetadata('example', 'default')
+            ->shouldBeCalled()
+            ->willReturn($this->createRouteStructureMetadata());
+        $this->routeRepository->add(Argument::any())->shouldBeCalled();
+
+        $mapper = $this->createRouteDataMapperInstance();
+        $mapper->map($unlocalizedDimensionContent, $localizedDimensionContent, $data);
+
+        $this->assertSame([], $localizedDimensionContent->getTemplateData());
+        $this->assertSame('/test', $localizedDimensionContent->getRoute()?->getSlug());
     }
 
     public function testMapRoutePropertyFalseName(): void
@@ -378,194 +303,60 @@ class RoutableDataMapperTest extends TestCase
         $data = [
             'route' => '/test',
         ];
-
-        $route = new Route();
-        $route->setPath('/test-1');
-
         $example = new Example();
         static::setPrivateProperty($example, 'id', 1);
         $unlocalizedDimensionContent = new ExampleDimensionContent($example);
-        $unlocalizedDimensionContent->setStage('live');
+        $unlocalizedDimensionContent->setStage('draft');
         $localizedDimensionContent = new ExampleDimensionContent($example);
         $localizedDimensionContent->setTemplateKey('default');
-        $localizedDimensionContent->setStage('live');
+        $localizedDimensionContent->setStage('draft');
         $localizedDimensionContent->setLocale('en');
 
         $this->structureMetadataFactory->getStructureMetadata('example', 'default')
             ->shouldBeCalled()
             ->willReturn($this->createRouteStructureMetadata('route'));
-
-        $mapper = $this->createRouteDataMapperInstance();
-        $mapper->map($unlocalizedDimensionContent, $localizedDimensionContent, $data);
-    }
-
-    public function testMapRouteDraftDimension(): void
-    {
-        $data = [
-            'url' => '/test',
-        ];
-
-        $conflictRoute = new Route();
-        $conflictRoute->setPath('/test-1');
-
-        $example = new Example();
-        $unlocalizedDimensionContent = new ExampleDimensionContent($example);
-        $localizedDimensionContent = new ExampleDimensionContent($example);
-        $localizedDimensionContent->setTemplateKey('default');
-        $localizedDimensionContent->setLocale('en');
-
-        $this->structureMetadataFactory->getStructureMetadata('example', 'default')
-            ->shouldBeCalled()
-            ->willReturn($this->createRouteStructureMetadata());
-
-        $this->routeManager->createOrUpdateByAttributes(Argument::cetera())->shouldNotBeCalled();
-        $this->routeGenerator->generate(Argument::cetera())->shouldNotBeCalled();
-
-        $this->conflictResolver->resolve(Argument::cetera())
-            ->shouldBeCalled()
-            ->willReturn($conflictRoute);
+        $this->routeRepository->add(Argument::any())->shouldNotBeCalled();
 
         $mapper = $this->createRouteDataMapperInstance();
         $mapper->map($unlocalizedDimensionContent, $localizedDimensionContent, $data);
 
-        $this->assertSame([
-            'url' => '/test-1',
-        ], $localizedDimensionContent->getTemplateData());
-    }
-
-    public function testMapNoNewAndOldUrl(): void
-    {
-        $data = [];
-
-        $route = new Route();
-        $route->setPath('/test');
-
-        $example = new Example();
-        static::setPrivateProperty($example, 'id', 1);
-        $unlocalizedDimensionContent = new ExampleDimensionContent($example);
-        $unlocalizedDimensionContent->setStage('live');
-        $localizedDimensionContent = new ExampleDimensionContent($example);
-        $localizedDimensionContent->setTemplateKey('default');
-        $localizedDimensionContent->setStage('live');
-        $localizedDimensionContent->setLocale('en');
-
-        $this->structureMetadataFactory->getStructureMetadata('example', 'default')
-            ->shouldBeCalled()
-            ->willReturn($this->createRouteStructureMetadata());
-        $this->routeGenerator->generate(Argument::cetera())->willReturn('/test');
-
-        $this->conflictResolver->resolve(Argument::cetera())->shouldNotBeCalled();
-
-        $this->routeManager->createOrUpdateByAttributes(
-            Example::class,
-            '1',
-            'en',
-            '/test',
-            false
-        )
-            ->shouldBeCalled()
-            ->willReturn($route);
-
-        $mapper = $this->createRouteDataMapperInstance();
-        $mapper->map($unlocalizedDimensionContent, $localizedDimensionContent, $data);
-
-        $this->assertSame([
-            'url' => '/test',
-        ], $localizedDimensionContent->getTemplateData());
+        $this->assertSame('/test', $localizedDimensionContent->getRoute()?->getSlug());
+        $this->assertSame([], $localizedDimensionContent->getTemplateData());
     }
 
     public function testMapWithNoUrlButOldUrl(): void
     {
         $data = [];
 
-        $route = new Route();
-        $route->setPath('/test-1');
+        $route = new Route(
+            ExampleDimensionContent::getResourceKey(),
+            '1',
+            'en',
+            '/test',
+            null,
+            null,
+        );
 
         $example = new Example();
         static::setPrivateProperty($example, 'id', 1);
         $unlocalizedDimensionContent = new ExampleDimensionContent($example);
-        $unlocalizedDimensionContent->setStage('live');
+        $unlocalizedDimensionContent->setStage('draft');
         $localizedDimensionContent = new ExampleDimensionContent($example);
         $localizedDimensionContent->setTemplateKey('default');
-        $localizedDimensionContent->setStage('live');
+        $localizedDimensionContent->setStage('draft');
         $localizedDimensionContent->setLocale('en');
-        $localizedDimensionContent->setTemplateData(['url' => '/example']);
+        $localizedDimensionContent->setRoute($route);
 
         $this->structureMetadataFactory->getStructureMetadata('example', 'default')
             ->shouldBeCalled()
             ->willReturn($this->createRouteStructureMetadata());
-
-        $this->routeManager->createOrUpdateByAttributes(Argument::cetera())->shouldNotBeCalled();
-        $this->routeGenerator->generate(Argument::cetera())->shouldNotBeCalled();
-        $this->conflictResolver->resolve(Argument::cetera())->shouldNotBeCalled();
+        $this->routeRepository->add(Argument::any())->shouldNotBeCalled();
 
         $mapper = $this->createRouteDataMapperInstance();
         $mapper->map($unlocalizedDimensionContent, $localizedDimensionContent, $data);
 
-        $this->assertSame([
-            'url' => '/example',
-        ], $localizedDimensionContent->getTemplateData());
-    }
-
-    public function testMapGenerate(): void
-    {
-        $data = [
-            'url' => null,
-        ];
-
-        $route = new Route();
-        $route->setPath('/custom/testEntity-123');
-
-        $example = new Example();
-        static::setPrivateProperty($example, 'id', 123);
-        $unlocalizedDimensionContent = new ExampleDimensionContent($example);
-        $unlocalizedDimensionContent->setStage('live');
-        $localizedDimensionContent = new ExampleDimensionContent($example);
-        $localizedDimensionContent->setTemplateKey('default');
-        $localizedDimensionContent->setStage('live');
-        $localizedDimensionContent->setLocale('en');
-        $localizedDimensionContent->setTemplateData(['title' => 'Test', 'url' => null]);
-
-        $this->structureMetadataFactory->getStructureMetadata('example', 'default')
-            ->shouldBeCalled()
-            ->willReturn($this->createRouteStructureMetadata());
-
-        $this->routeGenerator->generate(
-            \array_merge($data, [
-                '_unlocalizedObject' => $unlocalizedDimensionContent,
-                '_localizedObject' => $localizedDimensionContent,
-            ]),
-            ['route_schema' => 'custom/{object["_localizedObject"].getTitle()}-{object["_unlocalizedObject"].getResourceId()}']
-        )->willReturn('/custom/testEntity-123');
-
-        $this->routeManager->createOrUpdateByAttributes(
-            Example::class,
-            '123',
-            'en',
-            '/custom/testEntity-123',
-            false
-        )
-            ->shouldBeCalled()
-            ->willReturn($route);
-
-        $this->conflictResolver->resolve(Argument::cetera())->shouldNotBeCalled();
-
-        $mapper = $this->createRouteDataMapperInstance([
-            'examples' => [
-                'resource_key' => 'examples',
-                'entityClass' => Example::class,
-                'options' => [
-                    'route_schema' => 'custom/{object["_localizedObject"].getTitle()}-{object["_unlocalizedObject"].getResourceId()}',
-                ],
-                'generator' => 'schema',
-            ],
-        ]);
-        $mapper->map($unlocalizedDimensionContent, $localizedDimensionContent, $data);
-
-        $this->assertSame([
-            'title' => 'Test',
-            'url' => '/custom/testEntity-123',
-        ], $localizedDimensionContent->getTemplateData());
+        $this->assertSame('/test', $localizedDimensionContent->getRoute()?->getSlug());
+        $this->assertSame([], $localizedDimensionContent->getTemplateData());
     }
 
     private function createRouteStructureMetadata(string $propertyName = 'url'): StructureMetadata

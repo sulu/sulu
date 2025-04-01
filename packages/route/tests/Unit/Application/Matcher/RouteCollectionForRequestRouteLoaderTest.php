@@ -24,6 +24,7 @@ use Sulu\Route\Domain\Repository\RouteRepositoryInterface;
 use Sulu\Route\Domain\Value\RequestAttributeEnum;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\RequestContext;
 
 #[CoversClass(RouteCollectionForRequestRouteLoader::class)]
 class RouteCollectionForRequestRouteLoaderTest extends TestCase
@@ -35,6 +36,8 @@ class RouteCollectionForRequestRouteLoaderTest extends TestCase
      * @var ObjectProphecy<RouteRepositoryInterface>
      */
     private ObjectProphecy $routeRepository;
+
+    private RequestContext $requestContext;
 
     private RouteCollectionForRequestRouteLoader $routeCollectionForRequestRouteLoader;
 
@@ -51,10 +54,12 @@ class RouteCollectionForRequestRouteLoaderTest extends TestCase
         });
 
         $this->routeRepository = $this->prophesize(RouteRepositoryInterface::class);
+        $this->requestContext = new RequestContext();
 
         $this->routeCollectionForRequestRouteLoader = new RouteCollectionForRequestRouteLoader(
             $this->routeRepository->reveal(),
             $container,
+            $this->requestContext,
         );
     }
 

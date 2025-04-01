@@ -15,8 +15,8 @@ namespace Sulu\Content\Infrastructure\Sulu\Route;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NoResultException;
+use Sulu\Article\Domain\Model\Article;
 use Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeResolverInterface;
-use Sulu\Bundle\RouteBundle\Routing\Defaults\RouteDefaultsProviderInterface;
 use Sulu\Component\Content\Metadata\StructureMetadata;
 use Sulu\Content\Application\ContentAggregator\ContentAggregatorInterface;
 use Sulu\Content\Domain\Exception\ContentNotFoundException;
@@ -25,7 +25,15 @@ use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Domain\Model\TemplateInterface;
 use Sulu\Content\Infrastructure\Sulu\Structure\ContentStructureBridgeFactory;
 use Sulu\Content\Infrastructure\Sulu\Structure\StructureMetadataNotFoundException;
+use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\Example;
+use Sulu\Page\Domain\Model\Page;
+use Sulu\Route\Application\Routing\Matcher\RouteDefaultsProviderInterface;
+use Sulu\Route\Domain\Model\Route;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
+/**
+ * @internal this class is experimental and does not have a stable API yet
+ */
 class ContentRouteDefaultsProvider implements RouteDefaultsProviderInterface
 {
     /**
@@ -52,7 +60,7 @@ class ContentRouteDefaultsProvider implements RouteDefaultsProviderInterface
         EntityManagerInterface $entityManager,
         ContentAggregatorInterface $contentAggregator,
         ContentStructureBridgeFactory $contentStructureBridgeFactory,
-        CacheLifetimeResolverInterface $cacheLifetimeResolver
+        CacheLifetimeResolverInterface $cacheLifetimeResolver,
     ) {
         $this->entityManager = $entityManager;
         $this->contentAggregator = $contentAggregator;
@@ -60,40 +68,43 @@ class ContentRouteDefaultsProvider implements RouteDefaultsProviderInterface
         $this->cacheLifetimeResolver = $cacheLifetimeResolver;
     }
 
-    /**
-     * @template B of DimensionContentInterface
-     * @template T of ContentRichEntityInterface<B>
-     *
-     * @param class-string<T> $entityClass
-     * @param string $id
-     * @param string $locale
-     * @param B|null $object
-     *
-     * @return mixed[]
-     */
-    public function getByEntity($entityClass, $id, $locale, $object = null)
+    public function getDefaults(Route $route): array
     {
-        $entity = $object ?: $this->loadEntity($entityClass, $id, $locale);
-        if (!$entity) {
-            // return empty array which will lead to a 404 response
-            return [];
+        $id = $route->getResourceId();
+        $locale = $route->getLocale();
+
+        /** @var class-string<Page|Article|Example> $entityClass */
+        $entityClass = match ($route->getResourceKey()) { // TODO we should have repository interface and every bundle its own RouteDefaultsProvider this is here to move things forward faster
+            'pages' => Page::class,
+            'articles' => Article::class,
+            'examples' => Example::class,
+            default => throw new \RuntimeException(\sprintf('Unknown resourceKey "%s"', $route->getResourceKey())),
+        };
+
+        /** @var DimensionContentInterface|null $entity */
+        $entity = $this->loadEntity($entityClass, $id, $locale); // @phpstan-ignore-line
+
+        if (null === $entity) {
+            throw new NotFoundHttpException(\sprintf('No content found for id "%s" and locale "%s"', $id, $locale));
         }
 
         if (!$entity instanceof TemplateInterface) {
             throw new \RuntimeException(\sprintf('Expected to get "%s" from ContentResolver but "%s" given.', TemplateInterface::class, $entity::class));
         }
 
+        if (!$entity->getLocale()) {
+            throw new NotFoundHttpException(\sprintf('No content found for id "%s" and locale "%s"', $id, $locale));
+        }
+
         try {
             $structureBridge = $this->contentStructureBridgeFactory->getBridge($entity, $id, $locale);
         } catch (StructureMetadataNotFoundException $exception) {
-            // return empty array which will lead to a 404 response
-            return [];
+            throw new NotFoundHttpException($exception->getMessage(), $exception);
         }
 
         return [
             'object' => $entity,
             'view' => $structureBridge->getView(),
-            'structure' => $structureBridge,
             '_controller' => $structureBridge->getController(),
             '_cacheLifetime' => $this->getCacheLifetime($structureBridge->getStructure()),
         ];
@@ -103,31 +114,10 @@ class ContentRouteDefaultsProvider implements RouteDefaultsProviderInterface
      * @template T of DimensionContentInterface
      *
      * @param class-string<ContentRichEntityInterface<T>> $entityClass
-     */
-    public function isPublished($entityClass, $id, $locale)
-    {
-        $entity = $this->loadEntity($entityClass, $id, $locale);
-
-        if ($entity instanceof DimensionContentInterface) {
-            return DimensionContentInterface::STAGE_LIVE === $entity->getStage() && $locale === $entity->getLocale();
-        }
-
-        return null !== $entity;
-    }
-
-    public function supports($entityClass)
-    {
-        // need to support DimensionContentInterface::class because of the ContentObjectProvider::deserialize() method
-        return \is_a($entityClass, ContentRichEntityInterface::class, true)
-            || \is_a($entityClass, DimensionContentInterface::class, true);
-    }
-
-    /**
-     * @template T of DimensionContentInterface
      *
-     * @param class-string<ContentRichEntityInterface<T>> $entityClass
+     * @return T|null
      */
-    protected function loadEntity(string $entityClass, string $id, string $locale): ?TemplateInterface
+    private function loadEntity(string $entityClass, string $id, string $locale): ?DimensionContentInterface
     {
         try {
             /** @var ContentRichEntityInterface<T> $contentRichEntity */

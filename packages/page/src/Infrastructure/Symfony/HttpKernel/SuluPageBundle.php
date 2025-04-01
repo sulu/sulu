@@ -43,6 +43,7 @@ use Sulu\Page\Infrastructure\Sulu\Content\PageTeaserProvider;
 use Sulu\Page\Infrastructure\Sulu\Content\PropertyResolver\PageSelectionPropertyResolver;
 use Sulu\Page\Infrastructure\Sulu\Content\PropertyResolver\SinglePageSelectionPropertyResolver;
 use Sulu\Page\Infrastructure\Sulu\Content\ResourceLoader\PageResourceLoader;
+use Sulu\Page\Infrastructure\Sulu\Route\WebspaceSiteRouteGenerator;
 use Sulu\Page\Infrastructure\Symfony\Twig\Extension\NavigationTwigExtension;
 use Sulu\Page\UserInterface\Command\InitializeHomepageCommand;
 use Sulu\Page\UserInterface\Controller\Admin\PageController;
@@ -213,6 +214,16 @@ final class SuluPageBundle extends AbstractBundle
             ->tag('sulu.context', ['context' => 'admin'])
             ->tag('sulu.admin');
 
+        // Route Integration
+        $services->set('sulu_page.webspace_site_route_generator')
+            ->class(WebspaceSiteRouteGenerator::class)
+            ->args([
+                new Reference('sulu_core.webspace.webspace_manager'),
+                new Reference('request_stack'),
+            ])
+            ->tag('sulu_route.site_route_generator', ['site' => '.default'])
+        ;
+
         // Repositories services
         $services->set('sulu_page.page_repository')
             ->class(PageRepository::class)
@@ -254,6 +265,7 @@ final class SuluPageBundle extends AbstractBundle
         $services->set('sulu_page.page_preview_provider')
             ->class(ContentObjectProvider::class)
             ->args([
+                new Reference('sulu_content.content_structure_bridge_factory'),
                 new Reference('doctrine.orm.entity_manager'),
                 new Reference('sulu_content.content_aggregator'),
                 new Reference('sulu_content.content_data_mapper'),

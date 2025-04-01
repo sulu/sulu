@@ -70,7 +70,7 @@ class RouteRepository implements RouteRepositoryInterface
         if (\array_key_exists('site', $filters)) {
             $site = $filters['site'] ?? null;
             $queryBuilder->andWhere(
-                null === $site ? 'route.site IS NULL' : 'route.site = :site'
+                null === $site ? 'route.site IS NULL' : '(route.site = :site OR route.site IS NULL)'
             );
 
             if (null !== $site) {

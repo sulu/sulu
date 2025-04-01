@@ -18,6 +18,9 @@ use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Finder\Finder;
 
+/**
+ * @internal this class is not part of the public API and should only be called by the Symfony framework classes
+ */
 class SettingsFormPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container): void

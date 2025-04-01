@@ -14,19 +14,18 @@ declare(strict_types=1);
 namespace Sulu\Content\Tests\Unit\Content\Application\ContentResolver\Resolver;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
-use Sulu\Bundle\RouteBundle\Entity\Route;
-use Sulu\Bundle\RouteBundle\Entity\RouteRepositoryInterface;
 use Sulu\Bundle\TestBundle\Testing\SetGetPrivatePropertyTrait;
-use Sulu\Component\Localization\Localization;
-use Sulu\Component\Localization\Manager\LocalizationManagerInterface;
-use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Content\Application\ContentResolver\Resolver\SettingsResolver;
 use Sulu\Content\Application\ContentResolver\Value\ContentView;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\Example;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\ExampleDimensionContent;
+use Sulu\Route\Application\Routing\Generator\RouteGeneratorInterface;
+use Sulu\Route\Domain\Model\Route;
+use Sulu\Route\Domain\Repository\RouteRepositoryInterface;
 
 /**
  * @phpstan-import-type SettingsData from SettingsResolver
@@ -38,36 +37,37 @@ class SettingsResolverTest extends TestCase
 
     private SettingsResolver $resolver;
 
-    /** @var ObjectProphecy<LocalizationManagerInterface> */
-    private ObjectProphecy $localizationManager;
+    /** @var ObjectProphecy<RouteGeneratorInterface> */
+    private ObjectProphecy $routeGenerator;
 
-    /** @var ObjectProphecy<WebspaceManagerInterface> */
-    private ObjectProphecy $webspaceManager;
-
-    /**
-     * @var ObjectProphecy<RouteRepositoryInterface>
-     */
-    private ObjectProphecy $repository;
+    /** @var ObjectProphecy<RouteRepositoryInterface> */
+    private ObjectProphecy $routeRepository;
 
     protected function setUp(): void
     {
-        $this->localizationManager = $this->prophesize(LocalizationManagerInterface::class);
-        $this->webspaceManager = $this->prophesize(WebspaceManagerInterface::class);
-        $this->repository = $this->prophesize(RouteRepositoryInterface::class);
+        $this->routeGenerator = $this->prophesize(RouteGeneratorInterface::class);
+        $this->routeRepository = $this->prophesize(RouteRepositoryInterface::class);
 
         $this->resolver = new SettingsResolver(
-            $this->webspaceManager->reveal(),
-            $this->localizationManager->reveal(),
-            $this->repository->reveal(),
+            $this->routeGenerator->reveal(),
+            $this->routeRepository->reveal(),
         );
     }
 
     public function testResolveAvailableLocales(): void
     {
         $example = new Example();
+        $this->setPrivateProperty($example, 'id', 1);
+        $exampleDimensionUnlocalized = new ExampleDimensionContent($example);
+        $example->addDimensionContent($exampleDimensionUnlocalized);
         $exampleDimension = new ExampleDimensionContent($example);
         $exampleDimension->addAvailableLocale('de');
         $exampleDimension->addAvailableLocale('en');
+        $example->addDimensionContent($exampleDimension);
+
+        $this->routeRepository->findBy(Argument::cetera())
+            ->willReturn([])
+            ->shouldBeCalled();
 
         $result = $this->resolver->resolve($exampleDimension);
         self::assertInstanceOf(ContentView::class, $result);
@@ -75,7 +75,7 @@ class SettingsResolverTest extends TestCase
         /** @var SettingsData $content */
         $content = $result->getContent();
 
-        self::assertSame(['de', 'en'], $content['availableLocales']);
+        self::assertSame(['de', 'en'], $content['availableLocales'] ?? null);
     }
 
     public function testResolveNoAvailableLocales(): void
@@ -89,13 +89,23 @@ class SettingsResolverTest extends TestCase
         /** @var SettingsData $content */
         $content = $result->getContent();
 
-        self::assertSame([], $content['availableLocales']);
+        self::assertSame([], $content['availableLocales'] ?? null);
     }
 
     public function testResolveLocalizationsNoUrl(): void
     {
         $example = new Example();
+        $this->setPrivateProperty($example, 'id', 1);
+        $exampleDimensionUnlocalized = new ExampleDimensionContent($example);
+        $example->addDimensionContent($exampleDimensionUnlocalized);
         $exampleDimension = new ExampleDimensionContent($example);
+        $exampleDimension->addAvailableLocale('de');
+        $exampleDimension->addAvailableLocale('en');
+        $example->addDimensionContent($exampleDimension);
+
+        $this->routeRepository->findBy(Argument::cetera())
+            ->willReturn([])
+            ->shouldBeCalled();
 
         $result = $this->resolver->resolve($exampleDimension);
         self::assertInstanceOf(ContentView::class, $result);
@@ -103,66 +113,45 @@ class SettingsResolverTest extends TestCase
         /** @var SettingsData $content */
         $content = $result->getContent();
 
-        self::assertSame([], $content['localizations']);
+        self::assertSame([], $content['localizations'] ?? null);
     }
 
     public function testResolveLocalizations(): void
     {
         $example = new Example();
         $this->setPrivateProperty($example, 'id', 1);
+        $exampleDimensionUnlocalized = new ExampleDimensionContent($example);
         $exampleDimension = new ExampleDimensionContent($example);
+        $exampleDimension->setLocale('de');
         $exampleDimension->setTemplateData(['url' => '/test']);
         $exampleDimension->setMainWebspace('sulu_io');
         $exampleDimension->addAvailableLocale('de');
         $exampleDimension->addAvailableLocale('en');
+        $example->addDimensionContent($exampleDimensionUnlocalized);
+        $example->addDimensionContent($exampleDimension);
 
-        $this->localizationManager->getLocalizations()->willReturn([
-            'de' => new Localization('de', 'DE'),
-            'en' => new Localization('en', 'US'),
-            'fr' => new Localization('fr', 'FR'),
-        ])->shouldBeCalled();
+        $routeEn = new Route('example', '1', 'en', '/example');
+        $this->setPrivateProperty($routeEn, 'id', 10);
+        $routeDe = new Route('example', '1', 'de', '/beispiel');
+        $this->setPrivateProperty($routeEn, 'id', 11);
+        $routeFr = new Route('example', '1', 'fr', '/exemple');
+        $this->setPrivateProperty($routeFr, 'id', 12);
 
-        $this->webspaceManager->findUrlByResourceLocator(
-            '/test',
-            null,
-            'de',
-            'sulu_io',
-        )->willReturn('/de/test')->shouldBeCalled();
-
-        $this->webspaceManager->findUrlByResourceLocator(
-            '/test_en',
-            null,
-            'en',
-            'sulu_io',
-        )->willReturn('/en/test_en')->shouldBeCalled();
-
-        $this->webspaceManager->findUrlByResourceLocator(
-            '/',
-            null,
-            'fr',
-            'sulu_io',
-        )->willReturn('/fr/')->shouldBeCalled();
-
-        $routeDE = new Route('/test', '1', Example::class . 'Interface', 'de');
-        $this->repository->findByEntity(
-            Example::class . 'Interface',
-            '1',
-            'de',
-        )->willReturn($routeDE)
+        $this->routeRepository->findBy([
+            'locales' => ['de', 'en'],
+            'resourceKey' => 'examples',
+            'resourceId' => '1',
+        ])
+            ->willReturn([$routeDe, $routeEn])
             ->shouldBeCalled();
 
-        $routeEN = new Route('/test_en', '1', Example::class . 'Interface', 'en');
-        $this->repository->findByEntity(
-            Example::class . 'Interface',
-            '1',
-            'en',
-        )->willReturn($routeEN)
+        $this->routeGenerator->generate('/example', 'en', null)
+            ->willReturn('/en/example')
             ->shouldBeCalled();
-        $this->repository->findByEntity(
-            Example::class . 'Interface',
-            '1',
-            'fr',
-        )->shouldNotBeCalled();
+
+        $this->routeGenerator->generate('/beispiel', 'de', null)
+            ->willReturn('/de/beispiel')
+            ->shouldBeCalled();
 
         $result = $this->resolver->resolve($exampleDimension);
         self::assertInstanceOf(ContentView::class, $result);
@@ -173,23 +162,15 @@ class SettingsResolverTest extends TestCase
         self::assertSame([
             'de' => [
                 'locale' => 'de',
-                'url' => '/de/test',
-                'country' => 'DE',
+                'url' => '/de/beispiel',
                 'alternate' => true,
             ],
             'en' => [
                 'locale' => 'en',
-                'url' => '/en/test_en',
-                'country' => 'US',
+                'url' => '/en/example',
                 'alternate' => true,
             ],
-            'fr' => [
-                'locale' => 'fr',
-                'url' => '/fr/',
-                'country' => 'FR',
-                'alternate' => false,
-            ],
-        ], $content['localizations']);
+        ], $content['localizations'] ?? null);
     }
 
     public function testResolveWebspace(): void
@@ -204,7 +185,7 @@ class SettingsResolverTest extends TestCase
         /** @var SettingsData $content */
         $content = $result->getContent();
 
-        self::assertSame('sulu_io', $content['mainWebspace']);
+        self::assertSame('sulu_io', $content['mainWebspace'] ?? null);
     }
 
     public function testResolveTemplateData(): void
@@ -220,7 +201,7 @@ class SettingsResolverTest extends TestCase
         /** @var SettingsData $content */
         $content = $result->getContent();
 
-        self::assertSame('default', $content['template']);
+        self::assertSame('default', $content['template'] ?? null);
     }
 
     public function testResolveAuthorData(): void
@@ -239,7 +220,7 @@ class SettingsResolverTest extends TestCase
         /** @var SettingsData $content */
         $content = $result->getContent();
 
-        self::assertSame(1, $content['author']);
+        self::assertSame(1, $content['author'] ?? null);
         self::assertSame('2021-01-01', $content['authored']?->format('Y-m-d'));
         self::assertSame('2021-01-01', $content['lastModified']?->format('Y-m-d'));
     }
@@ -256,6 +237,6 @@ class SettingsResolverTest extends TestCase
         /** @var SettingsData $content */
         $content = $result->getContent();
 
-        self::assertSame('de', $content['shadowBaseLocale']);
+        self::assertSame('de', $content['shadowBaseLocale'] ?? null);
     }
 }

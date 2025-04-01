@@ -26,6 +26,7 @@ use Sulu\Bundle\TagBundle\Tag\TagInterface;
 use Sulu\Content\Domain\Model\AuthorInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Domain\Model\ExcerptInterface;
+use Sulu\Content\Domain\Model\RoutableInterface;
 use Sulu\Content\Domain\Model\SeoInterface;
 use Sulu\Content\Domain\Model\ShadowInterface;
 use Sulu\Content\Domain\Model\TemplateInterface;
@@ -63,6 +64,7 @@ class MetadataLoaderTest extends TestCase
         $reflectionClass->implementsInterface(WebspaceInterface::class)->willReturn(\in_array(WebspaceInterface::class, $interfaces, true));
         $reflectionClass->implementsInterface(AuthorInterface::class)->willReturn(\in_array(AuthorInterface::class, $interfaces, true));
         $reflectionClass->implementsInterface(ShadowInterface::class)->willReturn(\in_array(ShadowInterface::class, $interfaces, true));
+        $reflectionClass->implementsInterface(RoutableInterface::class)->willReturn(\in_array(RoutableInterface::class, $interfaces, true));
 
         foreach ($interfaces as $interface) {
             $reflectionClass->implementsInterface($interface)->willReturn(true);

@@ -13,69 +13,21 @@ declare(strict_types=1);
 
 namespace Sulu\Content\Application\ContentDataMapper\DataMapper;
 
-use Sulu\Bundle\RouteBundle\Entity\Route;
-use Sulu\Bundle\RouteBundle\Generator\RouteGeneratorInterface;
-use Sulu\Bundle\RouteBundle\Manager\ConflictResolverInterface;
-use Sulu\Bundle\RouteBundle\Manager\RouteManagerInterface;
 use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactoryInterface;
 use Sulu\Component\Content\Metadata\PropertyMetadata;
 use Sulu\Component\Content\Metadata\StructureMetadata;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Domain\Model\RoutableInterface;
 use Sulu\Content\Domain\Model\TemplateInterface;
+use Sulu\Route\Domain\Model\Route;
+use Sulu\Route\Domain\Repository\RouteRepositoryInterface;
 
 class RoutableDataMapper implements DataMapperInterface
 {
-    /**
-     * @var StructureMetadataFactoryInterface
-     */
-    private $factory;
-
-    /**
-     * @var RouteGeneratorInterface
-     */
-    private $routeGenerator;
-
-    /**
-     * @var RouteManagerInterface
-     */
-    private $routeManager;
-
-    /**
-     * @var ConflictResolverInterface
-     */
-    private $conflictResolver;
-
-    /**
-     * @var array<string, array{
-     *     resource_key: string,
-     *     entityClass?: string,
-     *     options: array<string, mixed>,
-     *     generator: string,
-     * }>
-     */
-    private $routeMappings;
-
-    /**
-     * @param array<string, array{
-     *     resource_key: string,
-     *     entityClass?: string,
-     *     options: array<string, mixed>,
-     *     generator: string,
-     * }> $routeMappings
-     */
     public function __construct(
-        StructureMetadataFactoryInterface $factory,
-        RouteGeneratorInterface $routeGenerator,
-        RouteManagerInterface $routeManager,
-        ConflictResolverInterface $conflictResolver,
-        array $routeMappings
+        private RouteRepositoryInterface $routeRepository,
+        private StructureMetadataFactoryInterface $factory,
     ) {
-        $this->factory = $factory;
-        $this->routeGenerator = $routeGenerator;
-        $this->routeManager = $routeManager;
-        $this->conflictResolver = $conflictResolver;
-        $this->routeMappings = $routeMappings;
     }
 
     public function map(
@@ -122,85 +74,62 @@ class RoutableDataMapper implements DataMapperInterface
             throw new \RuntimeException(\sprintf(
                 'Expected a property with the name "url" but "%s" given.',
                 $name
-            )); // TODO move this validation to a compiler pass see also direct access of 'url'  in PublishTransitionSubscriber class.
+            )); // TODO move this validation to a compiler pass see also direct access of 'url' in PublishTransitionSubscriber class.
         }
 
-        $currentRoutePath = $localizedDimensionContent->getTemplateData()[$name] ?? null;
-        if (!\array_key_exists($name, $data) && null !== $currentRoutePath) {
+        if (!\array_key_exists($name, $data)) {
             return;
         }
 
-        $entityClass = null;
-        $routeSchema = null;
-        $resourceKey = $localizedDimensionContent::getResourceKey();
+        $routeSlug = $data[$name];
+        \assert(
+            \is_string($routeSlug),
+            \sprintf('Expected property "%s" be string but "%s" given.', $name, \get_debug_type($routeSlug))
+        );
 
-        foreach ($this->routeMappings as $key => $mapping) {
-            if ($resourceKey === $mapping['resource_key']) {
-                $entityClass = $mapping['entityClass'] ?? $key;
-                $routeSchema = $mapping['options'];
-                break;
-            }
-        }
+        $route = $localizedDimensionContent->getRoute();
+        if (!$route instanceof Route
+            && DimensionContentInterface::STAGE_DRAFT !== $localizedDimensionContent->getStage()
+        ) {
+            $route = $this->routeRepository->findOneBy([
+                'locale' => $locale,
+                'resourceKey' => $localizedDimensionContent::getResourceKey(),
+                'resourceId' => (string) $localizedDimensionContent->getResourceId(),
+            ]);
 
-        if (null === $entityClass || null === $routeSchema) {
-            throw new \RuntimeException(\sprintf('No route mapping found for "%s".', $resourceKey));
-        }
-
-        /** @var string $routePath */
-        $routePath = $data[$name] ?? '';
-
-        if (!$routePath) {
-            /** @var mixed[] $routeGenerationData */
-            $routeGenerationData = \array_merge(
-                $data,
-                [
-                    '_unlocalizedObject' => $unlocalizedDimensionContent,
-                    '_localizedObject' => $localizedDimensionContent,
-                ]
-            );
-
-            $routePath = $this->routeGenerator->generate(
-                $routeGenerationData,
-                $routeSchema
-            );
-        }
-
-        if (DimensionContentInterface::STAGE_LIVE === $localizedDimensionContent->getStage()) {
-            if (!$localizedDimensionContent->getResourceId()) {
-                // TODO route bundle should work to update the entity later with a resourceId over UPDATE SQL statement
-                throw new \RuntimeException('Expected a LocalizedDimensionContent with a resourceId.');
+            if (!$route instanceof Route) {
+                throw new \RuntimeException(\sprintf(
+                    'Expected that the draft dimension of "%s" with id "%s" and locale "%s" already created the route.',
+                    $localizedDimensionContent::getResourceKey(),
+                    $localizedDimensionContent->getResourceId(),
+                    $locale,
+                ));
             }
 
-            // route should only be updated in live dimension
-            $route = $this->routeManager->createOrUpdateByAttributes(
-                $entityClass,
-                (string) $localizedDimensionContent->getResourceId(),
-                $locale,
-                $routePath,
-                false
-            );
+            $localizedDimensionContent->setRoute($route);
 
-            $routePath = $route->getPath();
-        } else {
-            $route = new Route();
-            $route->setPath($routePath);
-            $route->setLocale($locale);
-            $route->setEntityClass($entityClass);
-            $route->setEntityId((string) $localizedDimensionContent->getResourceId());
-
-            $routePath = $this->conflictResolver->resolve($route)
-                ->getPath();
+            return;
         }
 
-        $oldData = $localizedDimensionContent->getTemplateData();
-        if (($oldData[$name] ?? null) !== $routePath) {
-            $localizedDimensionContent->setTemplateData(
-                \array_merge(
-                    $oldData,
-                    [$name => $routePath]
-                )
-            );
+        if ($route instanceof Route) {
+            $route->setSlug($routeSlug);
+            // TODO support for parent and tree change update
+
+            return;
         }
+
+        $route = Route::createRouteWithTempId(
+            $localizedDimensionContent::getResourceKey(),
+            fn (): string => (string) $localizedDimensionContent->getResourceId(),
+            $locale,
+            $routeSlug,
+            null, // TODO support for site / webspaces maybe set it in the `setRoute` of PageDimensionContent
+            null, // TODO support for parent and tree route
+        );
+
+        $localizedDimensionContent->setRoute($route);
+
+        $this->routeRepository->add($route);
     }
 
     private function getRouteProperty(StructureMetadata $metadata): ?PropertyMetadata

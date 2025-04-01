@@ -45,8 +45,14 @@ final class RouteGenerator implements RouteGeneratorInterface
             $locale = $requestLocale;
         }
 
-        $siteRouteGenerator = $this->siteRouteGeneratorLocator->get($site);
-        \assert($siteRouteGenerator instanceof SiteRouteGeneratorInterface, 'The SiteRouteGenerator must implement SiteRouteGeneratorInterface but got: ' . \get_debug_type($siteRouteGenerator));
+        $siteRouteGenerator = null;
+        if ($this->siteRouteGeneratorLocator->has($site)) {
+            $siteRouteGenerator = $this->siteRouteGeneratorLocator->get($site);
+        } elseif ($this->siteRouteGeneratorLocator->has('.default')) { // TODO discuss how we should handle this, currently a workaround to avoid register one per webspace
+            $siteRouteGenerator = $this->siteRouteGeneratorLocator->get('.default');
+        }
+
+        \assert($siteRouteGenerator instanceof SiteRouteGeneratorInterface, 'The SiteRouteGenerator for "' . $site . '" must implement SiteRouteGeneratorInterface but got: ' . \get_debug_type($siteRouteGenerator));
 
         $generatedUrl = $siteRouteGenerator->generate($this->requestContext, $slug, $locale);
 

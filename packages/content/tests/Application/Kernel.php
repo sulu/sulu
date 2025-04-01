@@ -18,6 +18,7 @@ use Sulu\Bundle\AutomationBundle\SuluAutomationBundle;
 use Sulu\Bundle\TestBundle\Kernel\SuluTestKernel;
 use Sulu\Content\Infrastructure\Symfony\HttpKernel\SuluContentBundle;
 use Sulu\Content\Tests\Application\ExampleTestBundle\ExampleTestBundle;
+use Sulu\Page\Infrastructure\Symfony\HttpKernel\SuluPageBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Task\TaskBundle\TaskBundle;
 
@@ -29,6 +30,7 @@ class Kernel extends SuluTestKernel
         $bundles[] = new SuluContentBundle();
         $bundles[] = new TaskBundle();
         $bundles[] = new SuluAutomationBundle();
+        $bundles[] = new SuluPageBundle();
         $bundles[] = new ExampleTestBundle();
 
         foreach ($bundles as $key => $bundle) {

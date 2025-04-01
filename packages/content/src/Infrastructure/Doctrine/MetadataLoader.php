@@ -24,11 +24,13 @@ use Sulu\Bundle\TagBundle\Tag\TagInterface;
 use Sulu\Content\Domain\Model\AuthorInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Domain\Model\ExcerptInterface;
+use Sulu\Content\Domain\Model\RoutableInterface;
 use Sulu\Content\Domain\Model\SeoInterface;
 use Sulu\Content\Domain\Model\ShadowInterface;
 use Sulu\Content\Domain\Model\TemplateInterface;
 use Sulu\Content\Domain\Model\WebspaceInterface;
 use Sulu\Content\Domain\Model\WorkflowInterface;
+use Sulu\Route\Domain\Model\Route;
 
 /**
  * @internal
@@ -104,6 +106,10 @@ final class MetadataLoader
             $this->addManyToMany($event, $metadata, 'excerptCategories', CategoryInterface::class, 'category_id');
         }
 
+        if ($reflection->implementsInterface(RoutableInterface::class)) {
+            $this->addManyToOne($event, $metadata, 'route', Route::class, true);
+        }
+
         if ($reflection->implementsInterface(WebspaceInterface::class)) {
             $this->addField($metadata, 'mainWebspace', 'string', ['nullable' => true]);
         }
@@ -134,7 +140,7 @@ final class MetadataLoader
         ClassMetadataInfo $metadata,
         string $name,
         string $class,
-        bool $nullable = false
+        bool $nullable = false,
     ): void {
         if ($metadata->hasAssociation($name)) {
             return;

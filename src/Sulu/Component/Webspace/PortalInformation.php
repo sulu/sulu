@@ -333,7 +333,7 @@ class PortalInformation implements ArrayableInterface
     public function getWebspaceKey()
     {
         if (null === $this->webspace) {
-            return;
+            return null;
         }
 
         return $this->webspace->getKey();

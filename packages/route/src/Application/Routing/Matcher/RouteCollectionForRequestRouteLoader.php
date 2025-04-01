@@ -12,9 +12,13 @@
 namespace Sulu\Route\Application\Routing\Matcher;
 
 use Psr\Container\ContainerInterface;
+use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
+use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
+use Sulu\Component\Webspace\PortalInformation;
 use Sulu\Route\Domain\Repository\RouteRepositoryInterface;
 use Sulu\Route\Domain\Value\RequestAttributeEnum;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\Route as SymfonyRoute;
 use Symfony\Component\Routing\RouteCollection;
 
@@ -29,6 +33,7 @@ final readonly class RouteCollectionForRequestRouteLoader implements RouteCollec
     public function __construct(
         private RouteRepositoryInterface $routeRepository,
         private ContainerInterface $routeDefaultsProviderLocator,
+        private RequestContext $requestContext,
     ) {
     }
 
@@ -37,6 +42,36 @@ final readonly class RouteCollectionForRequestRouteLoader implements RouteCollec
         $locale = $request->getLocale();
         $site = $request->attributes->get(RequestAttributeEnum::SITE->value);
         $slug = $request->attributes->get(RequestAttributeEnum::SLUG->value);
+
+        if (null === $site) {
+            // TODO remove this bridge the routing should not know about webspaces and the sulu routes attributes
+            $suluAttribute = $request->attributes->get('_sulu');
+            if ($suluAttribute instanceof RequestAttributes) {
+                $portalInformation = $suluAttribute->getAttribute('portalInformation');
+
+                if ($portalInformation instanceof PortalInformation) {
+                    $site = $portalInformation->getWebspaceKey();
+
+                    if ($site) {
+                        $request->attributes->set(RequestAttributeEnum::SITE->value, $site);
+                        $this->requestContext->setParameter(RequestAttributeEnum::SITE->value, $site);
+                    }
+                }
+
+                $matchType = $suluAttribute->getAttribute('matchType');
+
+                if (null === $slug
+                    && RequestAnalyzerInterface::MATCH_TYPE_FULL === $matchType // only full matches should have a slug
+                ) {
+                    $slug = $suluAttribute->getAttribute('resourceLocator');
+
+                    if ($slug) {
+                        $request->attributes->set(RequestAttributeEnum::SLUG->value, $slug);
+                        $this->requestContext->setParameter(RequestAttributeEnum::SLUG->value, $slug);
+                    }
+                }
+            }
+        }
 
         if ((null !== $site && !\is_string($site))
             || !\is_string($slug)

@@ -13,6 +13,7 @@ namespace Sulu\Component\Webspace\Analyzer\Attributes;
 
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
+use Sulu\Route\Domain\Value\RequestAttributeEnum;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -32,6 +33,8 @@ class AdminRequestProcessor implements RequestProcessorInterface
         $attributes = [];
         $attributes['webspaceKey'] = $request->get('webspace');
         $attributes['locale'] = $request->get('locale', $request->get('language'));
+
+        $request->attributes->set(RequestAttributeEnum::SITE->value, $attributes['webspaceKey']); // TODO move in own request listener
 
         if ($attributes['locale']) {
             $attributes['localization'] = Localization::createFromString($attributes['locale']);
