@@ -147,6 +147,29 @@ class TemplateDataMapperTest extends TestCase
         $this->assertSame(['title' => 'Test Localized'], $localizedDimensionContent->getTemplateData());
     }
 
+    public function testMapDataPreview(): void
+    {
+        $data = [
+            'template' => 'template-key',
+            'unlocalizedField' => 'Test Unlocalized',
+            'title' => 'Test Localized',
+        ];
+
+        $example = new Example();
+        $localizedDimensionContent = new ExampleDimensionContent($example);
+
+        $this->structureMetadataFactory->getStructureMetadata(
+            'example',
+            'template-key'
+        )->willReturn($this->createStructureMetadata())->shouldBeCalled();
+
+        $templateMapper = $this->createTemplateDataMapperInstance();
+        $templateMapper->map($localizedDimensionContent, $localizedDimensionContent, $data);
+
+        $this->assertSame('template-key', $localizedDimensionContent->getTemplateKey());
+        $this->assertSame(['title' => 'Test Localized'], $localizedDimensionContent->getTemplateData());
+    }
+
     public function testMapFloatData(): void
     {
         $data = [

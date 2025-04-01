@@ -22,7 +22,6 @@ use Sulu\Content\Application\ContentDataMapper\ContentDataMapperInterface;
 use Sulu\Content\Domain\Exception\ContentNotFoundException;
 use Sulu\Content\Domain\Model\ContentRichEntityInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
-use Sulu\Content\Domain\Model\RoutableInterface;
 use Sulu\Content\Domain\Model\ShadowInterface;
 use Sulu\Content\Domain\Model\TemplateInterface;
 use Sulu\Content\Infrastructure\Sulu\Structure\ContentStructureBridgeFactory;
@@ -111,7 +110,7 @@ class ContentObjectProvider implements PreviewDefaultsProviderInterface
 
         $object = $this->resolveContent($contentRichEntity, $locale);
 
-        if (!$object instanceof RoutableInterface) {
+        if (!$object instanceof TemplateInterface) {
             return [];
         }
 

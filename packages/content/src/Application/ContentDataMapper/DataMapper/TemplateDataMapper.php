@@ -76,9 +76,9 @@ class TemplateDataMapper implements DataMapperInterface
             return;
         }
 
+        $unlocalizedDimensionContent->setTemplateData($unlocalizedData);
         $localizedDimensionContent->setTemplateKey($template);
         $localizedDimensionContent->setTemplateData($localizedData);
-        $unlocalizedDimensionContent->setTemplateData($unlocalizedData);
     }
 
     /**

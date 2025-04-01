@@ -44,10 +44,12 @@ class AdminRequestProcessorTest extends TestCase
         $webspaceManager = $this->prophesize(WebspaceManagerInterface::class);
         $provider = new AdminRequestProcessor($webspaceManager->reveal(), 'prod');
 
-        $request = $this->prophesize(Request::class);
-        $request->get('webspace')->willReturn($webspaceKey);
-        $request->get('locale', $language)->willReturn($locale ?: $language);
-        $request->get('language')->willReturn($language);
+        $query = \http_build_query([
+            'webspace' => $webspaceKey,
+            'locale' => $locale,
+            'language' => $language,
+        ]);
+        $request = Request::create('/admin/api?' . $query, 'GET', [], [], [], ['HTTP_HOST' => 'sulu.io']);
 
         $webspace = $this->prophesize(Webspace::class);
         $webspace->getKey()->willReturn($webspaceKey);
@@ -61,7 +63,7 @@ class AdminRequestProcessorTest extends TestCase
         }
         $webspaceManager->findWebspaceByKey($webspaceKey)->willReturn($webspaceKey ? $webspace->reveal() : null);
 
-        $result = $provider->process($request->reveal(), new RequestAttributes());
+        $result = $provider->process($request, new RequestAttributes());
 
         foreach ($expected as $key => $value) {
             $this->assertEquals($value, $result->getAttribute($key));

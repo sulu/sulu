@@ -45,6 +45,7 @@ use Sulu\Content\Domain\Model\WorkflowTrait;
 use Sulu\Content\Infrastructure\Sulu\Admin\ContentViewBuilderFactory;
 use Sulu\Content\Infrastructure\Sulu\Admin\ContentViewBuilderFactoryInterface;
 use Sulu\Content\Infrastructure\Sulu\Preview\ContentObjectProvider;
+use Sulu\Content\Infrastructure\Sulu\Structure\ContentStructureBridgeFactory;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\Example;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\ExampleDimensionContent;
 
@@ -91,12 +92,14 @@ class ContentViewBuilderFactoryTest extends TestCase
      * @return ContentObjectProvider<B, T>
      */
     protected function createContentObjectProvider(
+        ContentStructureBridgeFactory $contentStructureBridgeFactory,
         EntityManagerInterface $entityManager,
         ContentAggregatorInterface $contentAggregator,
         ContentDataMapperInterface $contentDataMapper,
         string $entityClass
     ): ContentObjectProvider {
         return new ContentObjectProvider(
+            $contentStructureBridgeFactory,
             $entityManager,
             $contentAggregator,
             $contentDataMapper,
@@ -170,6 +173,7 @@ class ContentViewBuilderFactoryTest extends TestCase
     {
         $securityChecker = $this->prophesize(SecurityCheckerInterface::class);
 
+        $contentStructureBridgeFactory = $this->prophesize(ContentStructureBridgeFactory::class);
         $entityManager = $this->prophesize(EntityManagerInterface::class);
         $contentMetadataInspector = $this->prophesize(ContentMetadataInspectorInterface::class);
         $contentMetadataInspector->getDimensionContentClass(Example::class)
@@ -179,6 +183,7 @@ class ContentViewBuilderFactoryTest extends TestCase
         $contentDataMapper = $this->prophesize(ContentDataMapperInterface::class);
 
         $contentObjectProvider = $this->createContentObjectProvider(
+            $contentStructureBridgeFactory->reveal(),
             $entityManager->reveal(),
             $contentAggregator->reveal(),
             $contentDataMapper->reveal(),
