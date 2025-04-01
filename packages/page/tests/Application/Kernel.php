@@ -18,7 +18,6 @@ use Sulu\Component\HttpKernel\SuluKernel;
 use Sulu\Content\Infrastructure\Symfony\HttpKernel\SuluContentBundle;
 use Sulu\Content\Tests\Application\ExampleTestBundle\ExampleTestBundle;
 use Sulu\Page\Infrastructure\Symfony\HttpKernel\SuluPageBundle;
-use Sulu\Route\Infrastructure\Symfony\HttpKernel\SuluRouteBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Task\TaskBundle\TaskBundle;
 
