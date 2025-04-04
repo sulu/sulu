@@ -39,6 +39,7 @@ use Sulu\Page\Infrastructure\Sulu\Admin\PageAdmin;
 use Sulu\Page\Infrastructure\Sulu\Build\HomepageBuilder;
 use Sulu\Page\Infrastructure\Sulu\Content\PageLinkProvider;
 use Sulu\Page\Infrastructure\Sulu\Content\PageTeaserProvider;
+use Sulu\Page\Infrastructure\Sulu\Content\PropertyResolver\BlockVisitor\SegmentBlockVisitor;
 use Sulu\Page\Infrastructure\Sulu\Content\PropertyResolver\PageSelectionPropertyResolver;
 use Sulu\Page\Infrastructure\Sulu\Content\PropertyResolver\SinglePageSelectionPropertyResolver;
 use Sulu\Page\Infrastructure\Sulu\Content\ResourceLoader\PageResourceLoader;
@@ -186,6 +187,13 @@ final class SuluPageBundle extends AbstractBundle
         $services->set('sulu_page.single_page_selection_property_resolver')
             ->class(SinglePageSelectionPropertyResolver::class)
             ->tag('sulu_content.property_resolver');
+
+        $services->set('sulu_page.segment_block_visitor')
+            ->class(SegmentBlockVisitor::class)
+            ->args([
+                new Reference('sulu_core.webspace.request_analyzer'),
+            ])
+            ->tag('sulu_content.block_visitor');
 
         // Resource Loader services
         $services->set('sulu_page.page_resource_loader')

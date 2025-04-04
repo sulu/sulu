@@ -9,15 +9,16 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content\Types\Block;
-
-use Sulu\Component\Content\Compat\Block\BlockPropertyType;
+namespace Sulu\Content\Application\PropertyResolver\BlockVisitor;
 
 class HiddenBlockVisitor implements BlockVisitorInterface
 {
-    public function visit(BlockPropertyType $block): ?BlockPropertyType
+    /**
+     * @param array<string, mixed> $block
+     */
+    public function visit(array $block): ?array
     {
-        $blockPropertyTypeSettings = $block->getSettings();
+        $blockPropertyTypeSettings = $block['settings'];
 
         return \is_array($blockPropertyTypeSettings) && !empty($blockPropertyTypeSettings['hidden'])
             ? null

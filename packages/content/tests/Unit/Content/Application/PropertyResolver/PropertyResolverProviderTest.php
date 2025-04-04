@@ -31,6 +31,7 @@ class PropertyResolverProviderTest extends TestCase
                 'block' => new BlockPropertyResolver(
                     new BufferingLogger(),
                     $metadataProviderRegistry,
+                    [],
                     false
                 ),
                 'default' => new DefaultPropertyResolver(),

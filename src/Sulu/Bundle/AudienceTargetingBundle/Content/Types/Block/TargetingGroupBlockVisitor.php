@@ -15,7 +15,7 @@ use Sulu\Bundle\AudienceTargetingBundle\TargetGroup\TargetGroupStoreInterface;
 use Sulu\Component\Content\Compat\Block\BlockPropertyType;
 use Sulu\Component\Content\Types\Block\BlockVisitorInterface;
 
-class TargetGroupBlockVisitor implements BlockVisitorInterface
+class TargetingGroupBlockVisitor implements BlockVisitorInterface
 {
     /**
      * @var TargetGroupStoreInterface

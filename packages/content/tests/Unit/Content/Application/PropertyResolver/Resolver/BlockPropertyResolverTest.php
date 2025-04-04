@@ -51,7 +51,8 @@ class BlockPropertyResolverTest extends TestCase
         $this->resolver = new BlockPropertyResolver(
             $this->logger,
             $this->metadataProviderRegistry,
-            debug: false,
+            [],
+            false,
         );
         $metadataResolverProperty = new PropertyResolverProvider(
             new \ArrayIterator([

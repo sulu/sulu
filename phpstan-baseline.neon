@@ -85,6 +85,36 @@ parameters:
 			path: packages/content/tests/Functional/Infrastructure/Sulu/SmartContent/ContentDataProviderTest.php
 
 		-
+			message: '#^Method Sulu\\Content\\Tests\\Unit\\Content\\Application\\PropertyResolver\\BlockVisitor\\ScheduleBlockVisitorTest\:\:provideVisit\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: packages/content/tests/Unit/Content/Application/PropertyResolver/BlockVisitor/ScheduleBlockVisitorTest.php
+
+		-
+			message: '#^Method Sulu\\Content\\Tests\\Unit\\Content\\Application\\PropertyResolver\\BlockVisitor\\ScheduleBlockVisitorTest\:\:testVisit\(\) has parameter \$settings with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: packages/content/tests/Unit/Content/Application/PropertyResolver/BlockVisitor/ScheduleBlockVisitorTest.php
+
+		-
+			message: '#^Cannot access offset non\-falsy\-string on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: packages/page/src/Infrastructure/Sulu/Content/PropertyResolver/BlockVisitor/SegmentBlockVisitor.php
+
+		-
+			message: '#^Right side of && is always true\.$#'
+			identifier: booleanAnd.rightAlwaysTrue
+			count: 1
+			path: packages/page/src/Infrastructure/Sulu/Content/PropertyResolver/BlockVisitor/SegmentBlockVisitor.php
+
+		-
+			message: '#^Ternary operator condition is always true\.$#'
+			identifier: ternary.alwaysTrue
+			count: 1
+			path: packages/page/src/Infrastructure/Sulu/Content/PropertyResolver/BlockVisitor/SegmentBlockVisitor.php
+
+		-
 			message: '#^Call to function array_key_exists\(\) with ''model'' and array\{model\: class\-string, repository\?\: class\-string\} will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 1
@@ -5158,7 +5188,7 @@ parameters:
 			message: '#^Parameter \#2 \$haystack of function in_array expects array, mixed given\.$#'
 			identifier: argument.type
 			count: 1
-			path: src/Sulu/Bundle/AudienceTargetingBundle/Content/Types/Block/TargetGroupBlockVisitor.php
+			path: src/Sulu/Bundle/AudienceTargetingBundle/Content/Types/Block/TargetingGroupBlockVisitor.php
 
 		-
 			message: '#^Method Sulu\\Bundle\\AudienceTargetingBundle\\Content\\Types\\TargetGroupSelection\:\:exportData\(\) should return string but returns string\|false\.$#'
@@ -5621,6 +5651,12 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/AudienceTargetingBundle/EventListener/TargetGroupSubscriber.php
+
+		-
+			message: '#^Parameter \#2 \$haystack of function in_array expects array, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Sulu/Bundle/AudienceTargetingBundle/Infrastructure/Sulu/Content/PropertyResolver/BlockVisitor/TargetGroupBlockVisitor.php
 
 		-
 			message: '#^Parameter \#1 \$uri of static method Symfony\\Component\\HttpFoundation\\Request\:\:create\(\) expects string, string\|null given\.$#'
@@ -18805,13 +18841,13 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/AdminControllerTest.php
 
 		-
-			message: '#^Parameter \#2 \$array of method PHPUnit\\Framework\\Assert\:\:assertArrayHasKey\(\) expects array\<mixed\>\|ArrayAccess\<\(int\|string\), mixed\>, mixed given\.$#'
+			message: '#^Parameter \#2 \$array of method PHPUnit\\Framework\\Assert\:\:assertArrayHasKey\(\) expects array\<mixed\>\|ArrayAccess\<\(int\|string\), mixed\>, non\-empty\-array\|ArrayAccess given\.$#'
 			identifier: argument.type
 			count: 3
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/AdminControllerTest.php
 
 		-
-			message: '#^Parameter \#2 \$array of method PHPUnit\\Framework\\Assert\:\:assertArrayHasKey\(\) expects array\<mixed\>\|ArrayAccess\<\(int\|string\), mixed\>, non\-empty\-array\|ArrayAccess given\.$#'
+			message: '#^Parameter \#2 \$array of method PHPUnit\\Framework\\Assert\:\:assertArrayHasKey\(\) expects array\<mixed\>\|ArrayAccess\<\(int\|string\), mixed\>, mixed given\.$#'
 			identifier: argument.type
 			count: 3
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/AdminControllerTest.php
@@ -64426,43 +64462,43 @@ parameters:
 			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
 			identifier: foreach.nonIterable
 			count: 1
-			path: src/Sulu/Component/Content/Tests/Unit/Types/Block/ScheduleBlockVisitorTest.php
+			path: src/Sulu/Component/Content/Tests/Unit/Types/Block/OldScheduleBlockVisitorTest.php
 
 		-
-			message: '#^Method Sulu\\Component\\Content\\Tests\\Unit\\Types\\Block\\ScheduleBlockVisitorTest\:\:provideVisit\(\) has no return type specified\.$#'
+			message: '#^Method Sulu\\Component\\Content\\Tests\\Unit\\Types\\Block\\OldScheduleBlockVisitorTest\:\:provideVisit\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
-			path: src/Sulu/Component/Content/Tests/Unit/Types/Block/ScheduleBlockVisitorTest.php
+			path: src/Sulu/Component/Content/Tests/Unit/Types/Block/OldScheduleBlockVisitorTest.php
 
 		-
-			message: '#^Method Sulu\\Component\\Content\\Tests\\Unit\\Types\\Block\\ScheduleBlockVisitorTest\:\:testVisit\(\) has parameter \$now with no type specified\.$#'
+			message: '#^Method Sulu\\Component\\Content\\Tests\\Unit\\Types\\Block\\OldScheduleBlockVisitorTest\:\:testVisit\(\) has parameter \$now with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
-			path: src/Sulu/Component/Content/Tests/Unit/Types/Block/ScheduleBlockVisitorTest.php
+			path: src/Sulu/Component/Content/Tests/Unit/Types/Block/OldScheduleBlockVisitorTest.php
 
 		-
-			message: '#^Method Sulu\\Component\\Content\\Tests\\Unit\\Types\\Block\\ScheduleBlockVisitorTest\:\:testVisit\(\) has parameter \$requestCacheLifetimes with no type specified\.$#'
+			message: '#^Method Sulu\\Component\\Content\\Tests\\Unit\\Types\\Block\\OldScheduleBlockVisitorTest\:\:testVisit\(\) has parameter \$requestCacheLifetimes with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
-			path: src/Sulu/Component/Content/Tests/Unit/Types/Block/ScheduleBlockVisitorTest.php
+			path: src/Sulu/Component/Content/Tests/Unit/Types/Block/OldScheduleBlockVisitorTest.php
 
 		-
-			message: '#^Method Sulu\\Component\\Content\\Tests\\Unit\\Types\\Block\\ScheduleBlockVisitorTest\:\:testVisit\(\) has parameter \$settings with no type specified\.$#'
+			message: '#^Method Sulu\\Component\\Content\\Tests\\Unit\\Types\\Block\\OldScheduleBlockVisitorTest\:\:testVisit\(\) has parameter \$settings with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
-			path: src/Sulu/Component/Content/Tests/Unit/Types/Block/ScheduleBlockVisitorTest.php
+			path: src/Sulu/Component/Content/Tests/Unit/Types/Block/OldScheduleBlockVisitorTest.php
 
 		-
-			message: '#^Method Sulu\\Component\\Content\\Tests\\Unit\\Types\\Block\\ScheduleBlockVisitorTest\:\:testVisit\(\) has parameter \$skip with no type specified\.$#'
+			message: '#^Method Sulu\\Component\\Content\\Tests\\Unit\\Types\\Block\\OldScheduleBlockVisitorTest\:\:testVisit\(\) has parameter \$skip with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
-			path: src/Sulu/Component/Content/Tests/Unit/Types/Block/ScheduleBlockVisitorTest.php
+			path: src/Sulu/Component/Content/Tests/Unit/Types/Block/OldScheduleBlockVisitorTest.php
 
 		-
 			message: '#^Parameter \#1 \$datetime of class DateTime constructor expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
-			path: src/Sulu/Component/Content/Tests/Unit/Types/Block/ScheduleBlockVisitorTest.php
+			path: src/Sulu/Component/Content/Tests/Unit/Types/Block/OldScheduleBlockVisitorTest.php
 
 		-
 			message: '#^Class Sulu\\Component\\Content\\Types\\Number constructor invoked with 1 parameter, 0 required\.$#'
@@ -64480,79 +64516,79 @@ parameters:
 			message: '#^Cannot access offset ''days'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
-			path: src/Sulu/Component/Content/Types/Block/ScheduleBlockVisitor.php
+			path: src/Sulu/Component/Content/Types/Block/OldScheduleBlockVisitor.php
 
 		-
 			message: '#^Cannot access offset ''end'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 2
-			path: src/Sulu/Component/Content/Types/Block/ScheduleBlockVisitor.php
+			path: src/Sulu/Component/Content/Types/Block/OldScheduleBlockVisitor.php
 
 		-
 			message: '#^Cannot access offset ''start'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 2
-			path: src/Sulu/Component/Content/Types/Block/ScheduleBlockVisitor.php
+			path: src/Sulu/Component/Content/Types/Block/OldScheduleBlockVisitor.php
 
 		-
 			message: '#^Cannot access offset ''type'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
-			path: src/Sulu/Component/Content/Types/Block/ScheduleBlockVisitor.php
+			path: src/Sulu/Component/Content/Types/Block/OldScheduleBlockVisitor.php
 
 		-
-			message: '#^Method Sulu\\Component\\Content\\Types\\Block\\ScheduleBlockVisitor\:\:matchWeekday\(\) has no return type specified\.$#'
+			message: '#^Method Sulu\\Component\\Content\\Types\\Block\\OldScheduleBlockVisitor\:\:matchWeekday\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
-			path: src/Sulu/Component/Content/Types/Block/ScheduleBlockVisitor.php
+			path: src/Sulu/Component/Content/Types/Block/OldScheduleBlockVisitor.php
 
 		-
-			message: '#^Method Sulu\\Component\\Content\\Types\\Block\\ScheduleBlockVisitor\:\:matchWeekday\(\) has parameter \$schedule with no type specified\.$#'
+			message: '#^Method Sulu\\Component\\Content\\Types\\Block\\OldScheduleBlockVisitor\:\:matchWeekday\(\) has parameter \$schedule with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
-			path: src/Sulu/Component/Content/Types/Block/ScheduleBlockVisitor.php
+			path: src/Sulu/Component/Content/Types/Block/OldScheduleBlockVisitor.php
 
 		-
 			message: '#^Parameter \#1 \$datetime of class DateTime constructor expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 4
-			path: src/Sulu/Component/Content/Types/Block/ScheduleBlockVisitor.php
+			path: src/Sulu/Component/Content/Types/Block/OldScheduleBlockVisitor.php
 
 		-
 			message: '#^Parameter \#1 \$year of method DateTime\:\:setDate\(\) expects int, string given\.$#'
 			identifier: argument.type
 			count: 2
-			path: src/Sulu/Component/Content/Types/Block/ScheduleBlockVisitor.php
+			path: src/Sulu/Component/Content/Types/Block/OldScheduleBlockVisitor.php
 
 		-
 			message: '#^Parameter \#2 \$month of method DateTime\:\:setDate\(\) expects int, string given\.$#'
 			identifier: argument.type
 			count: 2
-			path: src/Sulu/Component/Content/Types/Block/ScheduleBlockVisitor.php
+			path: src/Sulu/Component/Content/Types/Block/OldScheduleBlockVisitor.php
 
 		-
 			message: '#^Parameter \#3 \$day of method DateTime\:\:setDate\(\) expects int, string given\.$#'
 			identifier: argument.type
 			count: 2
-			path: src/Sulu/Component/Content/Types/Block/ScheduleBlockVisitor.php
+			path: src/Sulu/Component/Content/Types/Block/OldScheduleBlockVisitor.php
 
 		-
 			message: '#^Cannot access offset non\-falsy\-string on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
-			path: src/Sulu/Component/Content/Types/Block/SegmentBlockVisitor.php
+			path: src/Sulu/Component/Content/Types/Block/OldSegmentBlockVisitor.php
 
 		-
 			message: '#^Right side of && is always true\.$#'
 			identifier: booleanAnd.rightAlwaysTrue
 			count: 1
-			path: src/Sulu/Component/Content/Types/Block/SegmentBlockVisitor.php
+			path: src/Sulu/Component/Content/Types/Block/OldSegmentBlockVisitor.php
 
 		-
 			message: '#^Ternary operator condition is always true\.$#'
 			identifier: ternary.alwaysTrue
 			count: 1
-			path: src/Sulu/Component/Content/Types/Block/SegmentBlockVisitor.php
+			path: src/Sulu/Component/Content/Types/Block/OldSegmentBlockVisitor.php
 
 		-
 			message: '#^Argument of an invalid type iterable\<Sulu\\Component\\Content\\Types\\Block\\BlockVisitorInterface\>\|null supplied for foreach, only iterables are supported\.$#'

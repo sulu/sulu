@@ -9,17 +9,16 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content\Tests\Unit\Types\Block;
+namespace Sulu\Page\Tests\Unit\Infrastructure\Sulu\Content\PropertyResolver\BlockVisitor;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
-use Sulu\Component\Content\Compat\Block\BlockPropertyType;
 use Sulu\Component\Content\Compat\Metadata;
-use Sulu\Component\Content\Types\Block\SegmentBlockVisitor;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Segment;
 use Sulu\Component\Webspace\Webspace;
+use Sulu\Page\Infrastructure\Sulu\Content\PropertyResolver\BlockVisitor\SegmentBlockVisitor;
 
 class SegmentBlockVisitorTest extends TestCase
 {
@@ -43,24 +42,21 @@ class SegmentBlockVisitorTest extends TestCase
 
     public function testShouldNotSkipWithObjectAsSettings(): void
     {
-        $blockPropertyType = new BlockPropertyType('type1', new Metadata([]));
-        $blockPropertyType->setSettings(new \stdClass());
+        $block = ['name' => 'type1', 'metadata' => new Metadata([]), 'settings' => new \stdClass()];
 
-        $this->assertEquals($blockPropertyType, $this->segmentBlockVisitor->visit($blockPropertyType));
+        $this->assertEquals($block, $this->segmentBlockVisitor->visit($block));
     }
 
     public function testShouldNotSkipWithEmptyArrayAsSettings(): void
     {
-        $blockPropertyType = new BlockPropertyType('type1', new Metadata([]));
-        $blockPropertyType->setSettings([]);
+        $block = ['name' => 'type1', 'metadata' => new Metadata([]), 'settings' => []];
 
-        $this->assertEquals($blockPropertyType, $this->segmentBlockVisitor->visit($blockPropertyType));
+        $this->assertEquals($block, $this->segmentBlockVisitor->visit($block));
     }
 
     public function testShouldSkipWithOtherSegment(): void
     {
-        $blockPropertyType = new BlockPropertyType('type1', new Metadata([]));
-        $blockPropertyType->setSettings(['segment_enabled' => true, 'segments' => ['sulu_io' => 'w']]);
+        $block = ['name' => 'type1', 'metadata' => new Metadata([]), 'settings' => ['segment_enabled' => true, 'segments' => ['sulu_io' => 'w']]];
 
         $webspace = new Webspace();
         $webspace->setKey('sulu_io');
@@ -70,13 +66,12 @@ class SegmentBlockVisitorTest extends TestCase
         $segment->setKey('s');
         $this->requestAnalyzer->getSegment()->willReturn($segment);
 
-        $this->assertNull($this->segmentBlockVisitor->visit($blockPropertyType));
+        $this->assertNull($this->segmentBlockVisitor->visit($block));
     }
 
     public function testShouldNotSkipWithSameSegment(): void
     {
-        $blockPropertyType = new BlockPropertyType('type1', new Metadata([]));
-        $blockPropertyType->setSettings(['segment_enabled' => true, 'segments' => ['sulu_io' => 'w']]);
+        $block = ['name' => 'type1', 'metadata' => new Metadata([]), 'settings' => ['segment_enabled' => true, 'segments' => ['sulu_io' => 'w']]];
 
         $webspace = new Webspace();
         $webspace->setKey('sulu_io');
@@ -86,26 +81,24 @@ class SegmentBlockVisitorTest extends TestCase
         $segment->setKey('w');
         $this->requestAnalyzer->getSegment()->willReturn($segment);
 
-        $this->assertEquals($blockPropertyType, $this->segmentBlockVisitor->visit($blockPropertyType));
+        $this->assertEquals($block, $this->segmentBlockVisitor->visit($block));
     }
 
     public function testShouldNotSkipWithoutSegment(): void
     {
-        $blockPropertyType = new BlockPropertyType('type1', new Metadata([]));
-        $blockPropertyType->setSettings(['segment_enabled' => true, 'segments' => ['sulu_io' => 'w']]);
+        $block = ['name' => 'type1', 'metadata' => new Metadata([]), 'settings' => ['segment_enabled' => true, 'segments' => ['sulu_io' => 'w']]];
 
         $webspace = new Webspace();
         $webspace->setKey('sulu_io');
         $this->requestAnalyzer->getWebspace()->willReturn($webspace);
         $this->requestAnalyzer->getSegment()->willReturn(null);
 
-        $this->assertEquals($blockPropertyType, $this->segmentBlockVisitor->visit($blockPropertyType));
+        $this->assertEquals($block, $this->segmentBlockVisitor->visit($block));
     }
 
     public function testShouldNotSkipWithoutSegmentForWebspace(): void
     {
-        $blockPropertyType = new BlockPropertyType('type1', new Metadata([]));
-        $blockPropertyType->setSettings(['segment_enabled' => true, 'segments' => ['sulu_io' => 'w']]);
+        $block = ['name' => 'type1', 'metadata' => new Metadata([]), 'settings' => ['segment_enabled' => true, 'segments' => ['sulu_io' => 'w']]];
 
         $webspace = new Webspace();
         $webspace->setKey('sulu_blog');
@@ -115,13 +108,12 @@ class SegmentBlockVisitorTest extends TestCase
         $segment->setKey('s');
         $this->requestAnalyzer->getSegment()->willReturn($segment);
 
-        $this->assertEquals($blockPropertyType, $this->segmentBlockVisitor->visit($blockPropertyType));
+        $this->assertEquals($block, $this->segmentBlockVisitor->visit($block));
     }
 
     public function testShouldNotSkipWithDisabledSegment(): void
     {
-        $blockPropertyType = new BlockPropertyType('type1', new Metadata([]));
-        $blockPropertyType->setSettings(['segment_enabled' => false, 'segments' => ['sulu_io' => 'w']]);
+        $block = ['name' => 'type1', 'metadata' => new Metadata([]), 'settings' => ['segment_enabled' => false, 'segments' => ['sulu_io' => 'w']]];
 
         $webspace = new Webspace();
         $webspace->setKey('sulu_io');
@@ -131,13 +123,12 @@ class SegmentBlockVisitorTest extends TestCase
         $segment->setKey('s');
         $this->requestAnalyzer->getSegment()->willReturn($segment);
 
-        $this->assertEquals($blockPropertyType, $this->segmentBlockVisitor->visit($blockPropertyType));
+        $this->assertEquals($block, $this->segmentBlockVisitor->visit($block));
     }
 
     public function testShouldSkipWithoutSegmentEnabledFlag(): void
     {
-        $blockPropertyType = new BlockPropertyType('type1', new Metadata([]));
-        $blockPropertyType->setSettings(['segments' => ['sulu_io' => 'w']]);
+        $block = ['name' => 'type1', 'metadata' => new Metadata([]), 'settings' => ['segments' => ['sulu_io' => 'w']]];
 
         $webspace = new Webspace();
         $webspace->setKey('sulu_io');
@@ -147,6 +138,6 @@ class SegmentBlockVisitorTest extends TestCase
         $segment->setKey('s');
         $this->requestAnalyzer->getSegment()->willReturn($segment);
 
-        $this->assertEquals($blockPropertyType, $this->segmentBlockVisitor->visit($blockPropertyType));
+        $this->assertEquals($block, $this->segmentBlockVisitor->visit($block));
     }
 }

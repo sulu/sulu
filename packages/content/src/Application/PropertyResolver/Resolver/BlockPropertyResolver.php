@@ -20,6 +20,7 @@ use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
 use Sulu\Content\Application\ContentResolver\Value\ContentView;
 use Sulu\Content\Application\MetadataResolver\MetadataResolver;
+use Sulu\Content\Application\PropertyResolver\BlockVisitor\BlockVisitorInterface;
 
 class BlockPropertyResolver implements PropertyResolverInterface
 {
@@ -28,6 +29,9 @@ class BlockPropertyResolver implements PropertyResolverInterface
     public function __construct(
         private readonly LoggerInterface $logger,
         private readonly MetadataProviderRegistry $metadataProviderRegistry,
+        private readonly FormMetadataLoaderInterface $formMetadataLoader,
+        /** @var iterable<BlockVisitorInterface> */
+        private readonly iterable $blockVisitors,
         private readonly bool $debug = false,
     ) {
     }
@@ -64,10 +68,20 @@ class BlockPropertyResolver implements PropertyResolverInterface
         $globalBlocksMetadata = $typedFormMetadata->getForms();
 
         $contentViews = [];
+        /** @var array<string, mixed> $block */
         foreach ($data as $key => $block) {
             if (!\is_array($block) || !isset($block['type']) || !\is_string($block['type'])) {
                 continue;
             }
+
+            foreach ($this->blockVisitors as $blockVisitor) {
+                $block = $blockVisitor->visit($block);
+
+                if (null === $block) {
+                    continue 2;
+                }
+            }
+
             $type = $block['type'];
             $formMetadata = $metadataTypes[$type] ?? null;
 

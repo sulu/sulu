@@ -71,6 +71,19 @@
 
         <service id="Sulu\Content\Application\PropertyResolver\PropertyResolverProviderInterface" alias="sulu_content.property_resolver_provider"/>
 
+        <service id="sulu_content.hidden_block_visitor"
+                 class="Sulu\Content\Application\PropertyResolver\BlockVisitor\HiddenBlockVisitor">
+
+            <tag name="sulu_content.block_visitor"/>
+        </service>
+
+        <service id="sulu_content.schedule_block_visitor"
+                 class="Sulu\Content\Application\PropertyResolver\BlockVisitor\ScheduleBlockVisitor">
+            <argument type="service" id="sulu_core.webspace.request_analyzer" />
+            <argument type="service" id="sulu_http_cache.cache_lifetime.request_store" on-invalid="null" />
+            <tag name="sulu_content.block_visitor"/>
+        </service>
+
         <service id="sulu_content.default_property_resolver"
                  class="Sulu\Content\Application\PropertyResolver\Resolver\DefaultPropertyResolver">
 
@@ -81,6 +94,13 @@
                  class="Sulu\Content\Application\PropertyResolver\Resolver\BlockPropertyResolver">
             <argument type="service" id="logger"/>
             <argument type="service" id="sulu_admin.metadata_provider_registry"/>
+            <argument type="service" id="sulu_admin.structure_form_metadata_loader"/>
+            <argument
+                type="tagged_iterator"
+                tag="sulu_content.block_visitor"
+                default-index-method="getType"
+                index-by="type"
+            />
             <argument>%kernel.debug%</argument>
 
             <call method="setMetadataResolver">

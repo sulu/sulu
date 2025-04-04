@@ -193,26 +193,23 @@
 
         <service
             id="sulu.content.type.block.hidden_visitor"
-            class="Sulu\Component\Content\Types\Block\HiddenBlockVisitor"
+            class="Sulu\Component\Content\Types\Block\OldHiddenBlockVisitor"
         >
-            <tag name="sulu_content.block_visitor" />
         </service>
 
         <service
             id="sulu.content.type.block.segment_visitor"
-            class="Sulu\Component\Content\Types\Block\SegmentBlockVisitor"
+            class="Sulu\Component\Content\Types\Block\OldSegmentBlockVisitor"
         >
             <argument type="service" id="sulu_core.webspace.request_analyzer" />
-            <tag name="sulu_content.block_visitor" />
         </service>
 
         <service
             id="sulu.content.type.block.schedule_visitor"
-            class="Sulu\Component\Content\Types\Block\ScheduleBlockVisitor"
+            class="Sulu\Component\Content\Types\Block\OldScheduleBlockVisitor"
         >
             <argument type="service" id="sulu_core.webspace.request_analyzer" />
             <argument type="service" id="sulu_http_cache.cache_lifetime.request_store" on-invalid="null" />
-            <tag name="sulu_content.block_visitor" />
         </service>
 
         <service

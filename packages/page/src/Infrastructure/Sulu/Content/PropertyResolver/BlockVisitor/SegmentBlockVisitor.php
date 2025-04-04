@@ -9,10 +9,10 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content\Types\Block;
+namespace Sulu\Page\Infrastructure\Sulu\Content\PropertyResolver\BlockVisitor;
 
-use Sulu\Component\Content\Compat\Block\BlockPropertyType;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
+use Sulu\Content\Application\PropertyResolver\BlockVisitor\BlockVisitorInterface;
 
 class SegmentBlockVisitor implements BlockVisitorInterface
 {
@@ -20,9 +20,12 @@ class SegmentBlockVisitor implements BlockVisitorInterface
     {
     }
 
-    public function visit(BlockPropertyType $block): ?BlockPropertyType
+    /**
+     * @param array<string, mixed> $block
+     */
+    public function visit(array $block): ?array
     {
-        $blockPropertyTypeSettings = $block->getSettings();
+        $blockPropertyTypeSettings = $block['settings'];
 
         $webspace = $this->requestAnalyzer->getWebspace();
         $webspaceKey = $webspace ? $webspace->getKey() : null;
