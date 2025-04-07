@@ -55,7 +55,7 @@ class WebspaceSiteRouteGenerator implements SiteRouteGeneratorInterface
         $url = $this->webspaceManager->findUrlByResourceLocator($slug, null, $locale, $site, $requestContext->getHost(), $requestContext->getScheme());
 
         if (null === $url) {
-            throw new \RuntimeException(\sprintf('No found for "%s" in locale "%s" and site "%s".', $slug, $locale, $site));
+            throw new \RuntimeException(\sprintf('No url found for "%s" in locale "%s" and site "%s".', $slug, $locale, $site));
         }
 
         return $url;
