@@ -13,11 +13,16 @@ declare(strict_types=1);
 
 namespace Sulu\Content\Application\ContentDataMapper\DataMapper;
 
+use Sulu\Content\Application\ContentWorkflow\ContentWorkflowInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Domain\Model\WorkflowInterface;
 
 class WorkflowDataMapper implements DataMapperInterface
 {
+    public function __construct(private ContentWorkflowInterface $contentWorkflow)
+    {
+    }
+
     public function map(
         DimensionContentInterface $unlocalizedDimensionContent,
         DimensionContentInterface $localizedDimensionContent,
@@ -59,8 +64,7 @@ class WorkflowDataMapper implements DataMapperInterface
         }
 
         if (!$object->getWorkflowPlace()) {
-            // TODO: get public workflow registry and set initial place based on $object::getWorkflowName()
-            $object->setWorkflowPlace(WorkflowInterface::WORKFLOW_PLACE_UNPUBLISHED);
+            $object->setWorkflowPlace($object::getWorkflowInitialPlace());
         }
     }
 
@@ -76,6 +80,14 @@ class WorkflowDataMapper implements DataMapperInterface
         // therefore we only want to copy the published property from the draft to the live dimension
 
         if (DimensionContentInterface::STAGE_LIVE !== $object->getStage()) {
+            if (WorkflowInterface::WORKFLOW_PLACE_UNPUBLISHED !== $object->getWorkflowPlace()) {
+                $this->contentWorkflow->apply(
+                    $object->getResource(),
+                    $object::getEffectiveDimensionAttributes(['locale' => $object->getLocale()]),
+                    $object::getWorkflowTransitionEdit()
+                );
+            }
+
             return;
         }
 

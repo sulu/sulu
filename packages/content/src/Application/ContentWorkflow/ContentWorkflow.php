@@ -134,10 +134,10 @@ class ContentWorkflow implements ContentWorkflowInterface
         // |     |  create  |             |--------------------->|        |  publish  |            |<---------------|       |---------------------------->|               |
         // | New |--------->| Unpublished |                      | Review |---------->| Published  |                | draft |                             | Review draft  |
         // |     |          |             |<---------------------|        |           |            |--------------->|       |<----------------------------|               |
-        // +-----+          +-------------+       reject         +--------+           +------------+  create draft  +-------+        reject draft         +---------------+
-        //                                                                              A   |    A                                                                |
-        //                                                                              +---+    |                          publish                               |
-        //                                                                             publish   +----------------------------------------------------------------+
+        // +-----+          +-------------+       reject         +--------+           +------------+      edit      +-------+        reject draft         +---------------+
+        //                     A   |                                                    A   |    A                                                                |
+        //                     +---+                                                    +---+    |                          publish                               |
+        //                     edit                                                    publish   +----------------------------------------------------------------+
 
         // Configures places
         $definition = $definitionBuilder
@@ -151,6 +151,11 @@ class ContentWorkflow implements ContentWorkflowInterface
             ->setInitialPlaces([
                 WorkflowInterface::WORKFLOW_PLACE_UNPUBLISHED,
             ])
+            ->addTransition(new Transition(
+                WorkflowInterface::WORKFLOW_TRANSITION_EDIT,
+                WorkflowInterface::WORKFLOW_PLACE_UNPUBLISHED,
+                WorkflowInterface::WORKFLOW_PLACE_UNPUBLISHED
+            ))
             // Transfer a unpublished to review
             ->addTransition(new Transition(
                 WorkflowInterface::WORKFLOW_TRANSITION_REQUEST_FOR_REVIEW,
@@ -203,7 +208,7 @@ class ContentWorkflow implements ContentWorkflowInterface
             ))
             // Create a draft out of a published
             ->addTransition(new Transition(
-                WorkflowInterface::WORKFLOW_TRANSITION_CREATE_DRAFT,
+                WorkflowInterface::WORKFLOW_TRANSITION_EDIT,
                 WorkflowInterface::WORKFLOW_PLACE_PUBLISHED,
                 WorkflowInterface::WORKFLOW_PLACE_DRAFT
             ))

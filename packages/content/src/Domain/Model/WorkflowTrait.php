@@ -30,6 +30,16 @@ trait WorkflowTrait
         return WorkflowInterface::WORKFLOW_DEFAULT_NAME;
     }
 
+    public static function getWorkflowInitialPlace(): string
+    {
+        return WorkflowInterface::WORKFLOW_PLACE_UNPUBLISHED;
+    }
+
+    public static function getWorkflowTransitionEdit(): string
+    {
+        return WorkflowInterface::WORKFLOW_TRANSITION_EDIT;
+    }
+
     public function getWorkflowPlace(): ?string
     {
         return $this->workflowPlace;

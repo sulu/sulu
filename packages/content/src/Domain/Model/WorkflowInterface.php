@@ -37,6 +37,8 @@ interface WorkflowInterface
 
     public const WORKFLOW_TRANSITION_CREATE_DRAFT = 'create_draft';
 
+    public const WORKFLOW_TRANSITION_EDIT = 'edit';
+
     public const WORKFLOW_TRANSITION_REMOVE_DRAFT = 'remove_draft';
 
     public const WORKFLOW_TRANSITION_REQUEST_FOR_REVIEW_DRAFT = 'request_for_review_draft';
@@ -46,6 +48,10 @@ interface WorkflowInterface
     public const WORKFLOW_DEFAULT_NAME = 'content_workflow';
 
     public static function getWorkflowName(): string;
+
+    public static function getWorkflowInitialPlace(): string;
+
+    public static function getWorkflowTransitionEdit(): string;
 
     public function getWorkflowPlace(): ?string;
 

@@ -48,4 +48,14 @@ trait WorkflowMockWrapperTrait
     {
         $this->instance->setWorkflowPublished($workflowPublished);
     }
+
+    public static function getWorkflowInitialPlace(): string
+    {
+        return WorkflowInterface::WORKFLOW_PLACE_UNPUBLISHED;
+    }
+
+    public static function getWorkflowTransitionEdit(): string
+    {
+        return WorkflowInterface::WORKFLOW_TRANSITION_EDIT;
+    }
 }

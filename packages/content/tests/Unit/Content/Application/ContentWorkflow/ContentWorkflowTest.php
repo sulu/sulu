@@ -16,6 +16,7 @@ namespace Sulu\Content\Tests\Unit\Content\Application\ContentWorkflow;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Content\Application\ContentMerger\ContentMergerInterface;
 use Sulu\Content\Application\ContentWorkflow\ContentWorkflow;
@@ -35,7 +36,7 @@ use Sulu\Content\Tests\Unit\Mocks\WorkflowMockWrapperTrait;
 
 class ContentWorkflowTest extends TestCase
 {
-    use \Prophecy\PhpUnit\ProphecyTrait;
+    use ProphecyTrait;
 
     protected function createContentWorkflowInstance(
         DimensionContentRepositoryInterface $dimensionContentRepository,
@@ -277,7 +278,7 @@ class ContentWorkflowTest extends TestCase
                 'reject' => false,
                 'publish' => true,
                 'unpublish' => false,
-                'create_draft' => false,
+                'edit' => true,
                 'remove_draft' => false,
                 'request_for_review_draft' => false,
                 'reject_draft' => false,
@@ -287,7 +288,7 @@ class ContentWorkflowTest extends TestCase
                 'reject' => true,
                 'publish' => true,
                 'unpublish' => false,
-                'create_draft' => false,
+                'edit' => false,
                 'remove_draft' => false,
                 'request_for_review_draft' => false,
                 'reject_draft' => false,
@@ -297,7 +298,7 @@ class ContentWorkflowTest extends TestCase
                 'reject' => false,
                 'publish' => true,
                 'unpublish' => true,
-                'create_draft' => true,
+                'edit' => true,
                 'remove_draft' => false,
                 'request_for_review_draft' => false,
                 'reject_draft' => false,
@@ -307,7 +308,7 @@ class ContentWorkflowTest extends TestCase
                 'reject' => false,
                 'publish' => true,
                 'unpublish' => true,
-                'create_draft' => false,
+                'edit' => false,
                 'remove_draft' => true,
                 'request_for_review_draft' => true,
                 'reject_draft' => false,
@@ -317,7 +318,7 @@ class ContentWorkflowTest extends TestCase
                 'reject' => false,
                 'publish' => true,
                 'unpublish' => false,
-                'create_draft' => false,
+                'edit' => false,
                 'remove_draft' => false,
                 'request_for_review_draft' => false,
                 'reject_draft' => true,

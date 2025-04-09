@@ -23,6 +23,8 @@
         </service>
 
         <service id="sulu_content.workflow_data_mapper" class="Sulu\Content\Application\ContentDataMapper\DataMapper\WorkflowDataMapper">
+            <argument type="service" id="sulu_content.content_workflow"/>
+
             <tag name="sulu_content.data_mapper" priority="24"/>
         </service>
 

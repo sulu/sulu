@@ -14,18 +14,33 @@ declare(strict_types=1);
 namespace Sulu\Content\Tests\Unit\Content\Application\ContentDataMapper\DataMapper;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Content\Application\ContentDataMapper\DataMapper\WorkflowDataMapper;
+use Sulu\Content\Application\ContentWorkflow\ContentWorkflowInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\Example;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\ExampleDimensionContent;
 
 class WorkflowDataMapperTest extends TestCase
 {
-    use \Prophecy\PhpUnit\ProphecyTrait;
+    use ProphecyTrait;
+
+    /**
+     * @var ObjectProphecy<ContentWorkflowInterface>
+     */
+    private ObjectProphecy $contentWorkflow;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->contentWorkflow = $this->prophesize(ContentWorkflowInterface::class);
+    }
 
     protected function createWorkflowDataMapperInstance(): WorkflowDataMapper
     {
-        return new WorkflowDataMapper();
+        return new WorkflowDataMapper($this->contentWorkflow->reveal());
     }
 
     public function testMapNoWorkflowInterface(): void
@@ -106,8 +121,18 @@ class WorkflowDataMapperTest extends TestCase
         $example = new Example();
         $unlocalizedDimensionContent = new ExampleDimensionContent($example);
         $localizedDimensionContent = new ExampleDimensionContent($example);
+        $localizedDimensionContent->setLocale('en');
 
         $localizedDimensionContent->setWorkflowPlace('something-else');
+
+        $this->contentWorkflow->apply(
+            $example,
+            [
+                'stage' => 'draft',
+                'locale' => 'en',
+            ],
+            $localizedDimensionContent::getWorkflowTransitionEdit()
+        )->willReturn($localizedDimensionContent);
 
         $workflowMapper = $this->createWorkflowDataMapperInstance();
         $workflowMapper->map($unlocalizedDimensionContent, $localizedDimensionContent, $data);
@@ -124,9 +149,19 @@ class WorkflowDataMapperTest extends TestCase
         $example = new Example();
         $unlocalizedDimensionContent = new ExampleDimensionContent($example);
         $localizedDimensionContent = new ExampleDimensionContent($example);
+        $localizedDimensionContent->setLocale('en');
 
         $localizedDimensionContent->setWorkflowPlace('something-else');
         $localizedDimensionContent->setWorkflowPublished(new \DateTimeImmutable('2021-01-01 00:00:00'));
+
+        $this->contentWorkflow->apply(
+            $example,
+            [
+                'stage' => 'draft',
+                'locale' => 'en',
+            ],
+            $localizedDimensionContent::getWorkflowTransitionEdit()
+        )->shouldBeCalled()->willReturn($localizedDimensionContent);
 
         $workflowMapper = $this->createWorkflowDataMapperInstance();
         $workflowMapper->map($unlocalizedDimensionContent, $localizedDimensionContent, $data);
