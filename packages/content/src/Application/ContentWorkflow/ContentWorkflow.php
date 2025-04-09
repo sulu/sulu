@@ -135,9 +135,11 @@ class ContentWorkflow implements ContentWorkflowInterface
         // | New |--------->| Unpublished |                      | Review |---------->| Published  |                | draft |                             | Review draft  |
         // |     |          |             |<---------------------|        |           |            |--------------->|       |<----------------------------|               |
         // +-----+          +-------------+       reject         +--------+           +------------+      edit      +-------+        reject draft         +---------------+
-        //                     A   |                                                    A   |    A                                                                |
-        //                     +---+                                                    +---+    |                          publish                               |
-        //                     edit                                                    publish   +----------------------------------------------------------------+
+        //                     A   |                                                    A   |    A                    A    |                                      |
+        //                     +---+                                                    +---+    |                    +----+                                      |
+        //                     edit                                                    publish   |                     edit                                       |
+        //                                                                                       |                          publish                               |
+        //                                                                                       +----------------------------------------------------------------+
 
         // Configures places
         $definition = $definitionBuilder
@@ -210,6 +212,11 @@ class ContentWorkflow implements ContentWorkflowInterface
             ->addTransition(new Transition(
                 WorkflowInterface::WORKFLOW_TRANSITION_EDIT,
                 WorkflowInterface::WORKFLOW_PLACE_PUBLISHED,
+                WorkflowInterface::WORKFLOW_PLACE_DRAFT
+            ))
+            ->addTransition(new Transition(
+                WorkflowInterface::WORKFLOW_TRANSITION_EDIT,
+                WorkflowInterface::WORKFLOW_PLACE_DRAFT,
                 WorkflowInterface::WORKFLOW_PLACE_DRAFT
             ))
             // Remove a draft
