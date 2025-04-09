@@ -23545,7 +23545,7 @@ parameters:
 			path: src/Sulu/Bundle/HttpCacheBundle/EventSubscriber/TagsSubscriber.php
 
 		-
-			message: '#^Parameter \#1 \$uuid of static method Ramsey\\Uuid\\Uuid\:\:isValid\(\) expects string, mixed given\.$#'
+			message: '#^Parameter \#1 \$uuid of static method Symfony\\Component\\Uid\\Uuid\:\:isValid\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/HttpCacheBundle/EventSubscriber/TagsSubscriber.php

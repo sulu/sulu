@@ -12,13 +12,13 @@
 namespace Sulu\Bundle\HttpCacheBundle\EventSubscriber;
 
 use FOS\HttpCacheBundle\Http\SymfonyResponseTagger;
-use Symfony\Component\Uid\Uuid;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStorePoolInterface;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\KernelEvents;
+use Symfony\Component\Uid\Uuid;
 
 /**
  * Adds tags to the Symfony response tagger from all available reference stores.
