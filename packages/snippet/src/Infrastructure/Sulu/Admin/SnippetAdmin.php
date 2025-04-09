@@ -78,8 +78,8 @@ class SnippetAdmin extends Admin
     {
         if ($this->securityChecker->hasPermission(static::SECURITY_CONTEXT, PermissionTypes::EDIT)) {
             $navigationItem = new NavigationItem('sulu_snippet.snippets');
-            $navigationItem->setPosition(20);
-            $navigationItem->setIcon('su-newspaper');
+            $navigationItem->setPosition(15);
+            $navigationItem->setIcon('su-snippet');
             $navigationItem->setView(static::LIST_VIEW);
 
             $navigationItemCollection->add($navigationItem);
