@@ -12,7 +12,7 @@
 namespace Sulu\Bundle\HttpCacheBundle\EventSubscriber;
 
 use FOS\HttpCacheBundle\Http\SymfonyResponseTagger;
-use Ramsey\Uuid\Uuid;
+use Symfony\Component\Uid\Uuid;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStorePoolInterface;
 use Sulu\Component\Content\Compat\StructureInterface;
