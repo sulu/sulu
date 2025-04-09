@@ -45,7 +45,7 @@ class WebspaceSiteRouteGenerator implements SiteRouteGeneratorInterface
                 throw new MissingRequestContextParameterException(RequestAttributeEnum::SITE->value);
             }
 
-            $site = $currentRequest->attributes->get(RequestAttributeEnum::SITE->value);
+            $site = $currentRequest->attributes->get(RequestAttributeEnum::SITE->value); // TODO the requestContext should be kept in sync via listener with request attributes
 
             if (!\is_string($site)) {
                 throw new MissingRequestContextParameterException(RequestAttributeEnum::SITE->value);

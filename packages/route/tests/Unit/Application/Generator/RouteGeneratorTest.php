@@ -17,6 +17,7 @@ use Sulu\Route\Application\Routing\Generator\RouteGenerator;
 use Sulu\Route\Application\Routing\Generator\SiteRouteGeneratorInterface;
 use Sulu\Route\Domain\Exception\MissingRequestContextParameterException;
 use Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RequestContext;
 
 #[CoversClass(RouteGenerator::class)]
@@ -61,7 +62,7 @@ class RouteGeneratorTest extends TestCase
         });
 
         $this->requestContext = new RequestContext();
-        $this->routeGenerator = new RouteGenerator($container, $this->requestContext);
+        $this->routeGenerator = new RouteGenerator($container, $this->requestContext, new RequestStack());
     }
 
     public function testGenerate(): void

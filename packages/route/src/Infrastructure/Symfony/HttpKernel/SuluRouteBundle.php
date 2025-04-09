@@ -92,6 +92,7 @@ final class SuluRouteBundle extends AbstractBundle
             ->args([
                 tagged_locator('sulu_route.site_route_generator', 'site', 'getSite'),
                 new Reference('router.request_context'),
+                new Reference('request_stack'),
             ]);
 
         $services->alias(RouteGeneratorInterface::class, 'sulu_route.route_generator')

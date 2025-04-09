@@ -31,7 +31,7 @@ class AdminRequestProcessor implements RequestProcessorInterface
     public function process(Request $request, RequestAttributes $requestAttributes)
     {
         $attributes = [];
-        $attributes['webspaceKey'] = $request->get('webspace');
+        $attributes['webspaceKey'] = $request->get('webspace') ?: $request->get('webspaceKey');
         $attributes['locale'] = $request->get('locale', $request->get('language'));
 
         $request->attributes->set(RequestAttributeEnum::SITE->value, $attributes['webspaceKey']); // TODO move in own request listener

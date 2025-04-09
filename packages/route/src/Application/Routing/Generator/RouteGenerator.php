@@ -14,6 +14,7 @@ namespace Sulu\Route\Application\Routing\Generator;
 use Psr\Container\ContainerInterface;
 use Sulu\Route\Domain\Exception\MissingRequestContextParameterException;
 use Sulu\Route\Domain\Value\RequestAttributeEnum;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RequestContext;
 
 final class RouteGenerator implements RouteGeneratorInterface
@@ -21,6 +22,7 @@ final class RouteGenerator implements RouteGeneratorInterface
     public function __construct(
         private ContainerInterface $siteRouteGeneratorLocator,
         private RequestContext $requestContext,
+        private RequestStack $requestStack,
     ) {
     }
 
@@ -28,6 +30,11 @@ final class RouteGenerator implements RouteGeneratorInterface
     {
         if (null === $site) {
             $requestSite = $this->requestContext->getParameter(RequestAttributeEnum::SITE->value);
+
+            if (!\is_string($requestSite)) {
+                $requestSite = $this->requestStack->getCurrentRequest()?->attributes->get(RequestAttributeEnum::SITE->value);
+            }
+
             if (!\is_string($requestSite)) {
                 throw new MissingRequestContextParameterException(RequestAttributeEnum::SITE->value);
             }

@@ -46,6 +46,7 @@ final readonly class RouteHistoryDefaultsProvider implements RouteDefaultsProvid
             'resourceKey' => $resourceKey,
             'resourceId' => $resourceId,
             'site' => $route->getSite(),
+            'locale' => $route->getLocale(),
         ]);
 
         if (null === $targetRoute) {

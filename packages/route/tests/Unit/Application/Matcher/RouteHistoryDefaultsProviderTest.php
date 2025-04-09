@@ -24,6 +24,7 @@ use Sulu\Route\Domain\Model\Route;
 use Sulu\Route\Domain\Repository\RouteRepositoryInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\RedirectController;
 use Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Exception\GoneHttpException;
 use Symfony\Component\Routing\RequestContext;
 
@@ -71,7 +72,7 @@ class RouteHistoryDefaultsProviderTest extends TestCase
         });
 
         $this->requestContext = new RequestContext();
-        $this->routeGenerator = new RouteGenerator($container, $this->requestContext);
+        $this->routeGenerator = new RouteGenerator($container, $this->requestContext, new RequestStack());
 
         $this->routeHistoryDefaultsProvider = new RouteHistoryDefaultsProvider(
             $this->routeRepository->reveal(),
