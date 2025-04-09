@@ -21,6 +21,7 @@ use Sulu\Component\Rest\ListBuilder\Metadata\FieldDescriptorFactoryInterface;
 use Sulu\Component\Rest\RestHelperInterface;
 use Sulu\Content\Application\ContentManager\ContentManagerInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
+use Sulu\Content\Domain\Model\WorkflowInterface;
 use Sulu\Messenger\Infrastructure\Symfony\Messenger\FlushMiddleware\EnableFlushStamp;
 use Sulu\Page\Application\Message\ApplyWorkflowTransitionPageMessage;
 use Sulu\Page\Application\Message\CopyLocalePageMessage;
@@ -28,6 +29,7 @@ use Sulu\Page\Application\Message\CreatePageMessage;
 use Sulu\Page\Application\Message\ModifyPageMessage;
 use Sulu\Page\Application\Message\OrderPageMessage;
 use Sulu\Page\Application\Message\RemovePageMessage;
+use Sulu\Page\Domain\Model\Page;
 use Sulu\Page\Domain\Model\PageInterface;
 use Sulu\Page\Domain\Repository\PageRepositoryInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -73,7 +75,7 @@ final class PageController
             parameters: ['locale' => $locale],
             parentId: $parentId,
             expandedIds: $expandedIds,
-            includedFields: ['locale', 'ghostLocale', 'webspaceKey', 'template'],
+            includedFields: ['locale', 'ghostLocale', 'webspaceKey', 'template', 'publishedState'],
             listKey: 'pages_next'
         );
 
@@ -360,6 +362,9 @@ final class PageController
 
         // embed children rows int their parent rows
         foreach ($flatRows as &$row) {
+            // TODO this should be handled by the listbuilder
+            $row['publishedState'] = WorkflowInterface::WORKFLOW_PLACE_PUBLISHED === $row['publishedState'];
+
             /** @var string $rowId */
             $rowId = $row['id'];
             if (\array_key_exists($rowId, $rowsByParentId)) {

@@ -63,7 +63,10 @@ final readonly class RouteCollectionForRequestRouteLoader implements RouteCollec
                 if (null === $slug
                     && RequestAnalyzerInterface::MATCH_TYPE_FULL === $matchType // only full matches should have a slug
                 ) {
-                    $slug = $suluAttribute->getAttribute('resourceLocator');
+                    // Important: This fix is only possible because we check that the matchType
+                    // ResourceLocator is not set for homepage, because it is an empty string
+                    // and the constructor of the RequestAttributes filters the given attributes via array_filter
+                    $slug = $suluAttribute->getAttribute('resourceLocator') ?? '/';
 
                     if ($slug) {
                         $request->attributes->set(RequestAttributeEnum::SLUG->value, $slug);

@@ -7,6 +7,7 @@
                 "created": "@datetime@",
                 "creator": "Max Mustermann",
                 "id": "@string@",
+                "publishedState": false,
                 "title": "Test Snippet 2"
             }
         ]

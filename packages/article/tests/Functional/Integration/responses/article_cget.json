@@ -8,6 +8,7 @@
                 "created": "@datetime@",
                 "creator": "Max Mustermann",
                 "id": "@string@",
+                "publishedState": false,
                 "title": "Test Article 2"
             }
         ]

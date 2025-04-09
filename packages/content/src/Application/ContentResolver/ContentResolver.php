@@ -29,7 +29,7 @@ use Webmozart\Assert\Assert;
 class ContentResolver implements ContentResolverInterface
 {
     // TODO add configurable parameter for max depth
-    private const MAX_DEPTH = 3;
+    private const MAX_DEPTH = 5;
 
     /**
      * @param iterable<ResolverInterface> $contentResolvers

@@ -19,6 +19,7 @@ use Sulu\Component\Rest\ListBuilder\PaginatedRepresentation;
 use Sulu\Component\Rest\RestHelperInterface;
 use Sulu\Content\Application\ContentManager\ContentManagerInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
+use Sulu\Content\Domain\Model\WorkflowInterface;
 use Sulu\Messenger\Infrastructure\Symfony\Messenger\FlushMiddleware\EnableFlushStamp;
 use Sulu\Snippet\Application\Message\ApplyWorkflowTransitionSnippetMessage;
 use Sulu\Snippet\Application\Message\CopyLocaleSnippetMessage;
@@ -106,6 +107,8 @@ final class SnippetController
         $listBuilder->setIdField($fieldDescriptors['id']); // TODO should be uuid field descriptor
         $listBuilder->addSelectField($fieldDescriptors['locale']);
         $listBuilder->addSelectField($fieldDescriptors['ghostLocale']);
+        $listBuilder->addSelectField($fieldDescriptors['published']);
+        $listBuilder->addSelectField($fieldDescriptors['publishedState']);
         $listBuilder->setParameter('locale', $request->query->get('locale'));
         $this->restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
 
@@ -117,8 +120,14 @@ final class SnippetController
             $listBuilder->count(),
         );
 
+        /** @var array{_embedded: array{snippets: mixed[][]}} $list */
+        $list = $listRepresentation->toArray();
+        foreach ($list['_embedded']['snippets'] as &$item) {
+            $item['publishedState'] = WorkflowInterface::WORKFLOW_PLACE_PUBLISHED === ($item['publishedState'] ?? null);
+        }
+
         return new JsonResponse($this->normalizer->normalize(
-            $listRepresentation->toArray(), // TODO maybe a listener should automatically do that for `sulu_admin` context
+            $list, // TODO maybe a listener should automatically do that for `sulu_admin` context
             'json',
             ['sulu_admin' => true, 'sulu_admin_snippet' => true, 'sulu_admin_snippet_list' => true],
         ));

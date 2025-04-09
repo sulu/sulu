@@ -252,128 +252,86 @@ class ContentResolverTest extends TestCase
             ->shouldBeCalled()
             ->willReturn($this->getTemplateFormMetadata('page'));
 
-        /**
-         * @var array{
-         *     resource: Page,
-         *     content: array{
-         *         title: string,
-         *         url: string,
-         *         article: string|null,
-         *         pages: array{
-         *             array{
-         *                 resource: Page,
-         *                 content: array{
-         *                     title: string,
-         *                     url: string,
-         *                     article: string|null,
-         *                     pages: array{
-         *                         array{
-         *                             resource: Page,
-         *                             content: array{
-         *                                 title: string,
-         *                                 url: string,
-         *                                 article: string|null,
-         *                                 pages: array{
-         *                                     array{
-         *                                         resource: Page,
-         *                                         content: array{
-         *                                             title: string,
-         *                                             url: string,
-         *                                             article: string|null,
-         *                                             pages: array{0: mixed},
-         *                                         },
-         *                                         view: array{
-         *                                             title: mixed[],
-         *                                             url: mixed[],
-         *                                             article: mixed[],
-         *                                             pages: array{0: array{ids: array<string>}}
-         *                                         }
-         *                                     }
-         *                                 }
-         *                             },
-         *                             view: array{
-         *                                 title: mixed[],
-         *                                 url: mixed[],
-         *                                 article: mixed[],
-         *                                 pages: array{0: array{ids: array<string>}}
-         *                             }
-         *                         }
-         *                     }
-         *                 },
-         *                 view: array{
-         *                     title: mixed[],
-         *                     url: mixed[],
-         *                     article: mixed[],
-         *                     pages: array{0: array{ids: array<string>}}
-         *                 }
-         *             }
-         *         }
-         *     },
-         *     view: array{
-         *         title: mixed[],
-         *         url: mixed[],
-         *         article: mixed[],
-         *         pages: array{0: array{ids: array<string>}}
-         *     }
-         * } $result
-         */
         $result = $this->contentResolver->resolve($dimensionContent1);
 
-        self::assertSame($page1, $result['resource']);
+        // Define expected data for each level in the circular reference
+        $expectedData = [
+            // Level 0 - page1
+            [
+                'resource' => $page1,
+                'title' => 'Sulu',
+                'url' => '/page',
+                'article' => null,
+                'nextId' => '111-111-222',
+            ],
+            // Level 1 - page2
+            [
+                'resource' => $page2,
+                'title' => 'Page 2',
+                'url' => '/page-2',
+                'article' => '<p>Page 2 article</p>',
+                'nextId' => '111-111-111',
+            ],
+            // Levels 2, 4 - page1 (repeats)
+            [
+                'resource' => $page1,
+                'title' => 'Sulu',
+                'url' => '/page',
+                'article' => null,
+                'nextId' => '111-111-222',
+            ],
+            // Levels 3, 5 - page2 (repeats)
+            [
+                'resource' => $page2,
+                'title' => 'Page 2',
+                'url' => '/page-2',
+                'article' => '<p>Page 2 article</p>',
+                'nextId' => '111-111-111',
+            ],
+            // Back to page1 for level 4
+            [
+                'resource' => $page1,
+                'title' => 'Sulu',
+                'url' => '/page',
+                'article' => null,
+                'nextId' => '111-111-222',
+            ],
+            // Back to page2 for level 5
+            [
+                'resource' => $page2,
+                'title' => 'Page 2',
+                'url' => '/page-2',
+                'article' => '<p>Page 2 article</p>',
+                'nextId' => '111-111-111',
+            ],
+        ];
 
-        $content = $result['content'];
-        // level 0
-        self::assertSame('Sulu', $content['title']);
-        self::assertSame('/page', $content['url']);
-        self::assertNull($content['article']);
+        $contentPointer = $result;
+        // Loop through expected levels and verify the content
+        for ($level = 0; $level < 6; ++$level) {
+            $expectedLevel = $expectedData[$level % \count($expectedData)];
 
-        $view = $result['view'];
-        self::assertSame([], $view['title']);
-        self::assertSame([], $view['url']);
-        self::assertSame([], $view['article']);
-        self::assertSame(['111-111-222'], $view['pages'][0]['ids']);
+            // Test based on the level index
+            self::assertSame($expectedLevel['resource'], $contentPointer['resource'], "Level $level resource incorrect"); //@phpstan-ignore-line
+            self::assertSame($expectedLevel['title'], $contentPointer['content']['title'], "Level $level title incorrect"); //@phpstan-ignore-line
+            self::assertSame($expectedLevel['url'], $contentPointer['content']['url'], "Level $level url incorrect"); //@phpstan-ignore-line
+            self::assertSame($expectedLevel['article'], $contentPointer['content']['article'], "Level $level article incorrect"); //@phpstan-ignore-line
 
-        // level 1
-        self::assertSame($content['pages'][0]['resource'], $page2);
-        $innerContent = $content['pages'][0]['content'];
-        self::assertSame('Page 2', $innerContent['title']);
-        self::assertSame('/page-2', $innerContent['url']);
-        self::assertSame('<p>Page 2 article</p>', $innerContent['article']);
+            // Check view data for the current level
+            self::assertSame([], $contentPointer['view']['title'], "Level $level view title incorrect"); //@phpstan-ignore-line
+            self::assertSame([], $contentPointer['view']['url'], "Level $level view url incorrect"); //@phpstan-ignore-line
+            self::assertSame([], $contentPointer['view']['article'], "Level $level view article incorrect"); //@phpstan-ignore-line
+            self::assertSame([$expectedLevel['nextId']], $contentPointer['view']['pages'][0]['ids'], "Level $level view page ids incorrect"); //@phpstan-ignore-line
 
-        $innerView = $content['pages'][0]['view'];
-        self::assertSame([], $innerView['title']);
-        self::assertSame([], $innerView['url']);
-        self::assertSame([], $innerView['article']);
-        self::assertSame(['111-111-111'], $innerView['pages'][0]['ids']);
+            // Level 5 is where we expect it to break the circular reference
+            if (5 === $level) {
+                self::assertNull($contentPointer['content']['pages'][0], 'Circular reference should break after level 5'); //@phpstan-ignore-line
+                break;
+            }
 
-        // level 2
-        self::assertSame($innerContent['pages'][0]['resource'], $page1);
-        $innerInnerContent = $innerContent['pages'][0]['content'];
-        self::assertSame('Sulu', $innerInnerContent['title']);
-        self::assertSame('/page', $innerInnerContent['url']);
-        self::assertNull($innerInnerContent['article']);
-
-        $innerInnerView = $innerContent['pages'][0]['view'];
-        self::assertSame([], $innerInnerView['title']);
-        self::assertSame([], $innerInnerView['url']);
-        self::assertSame([], $innerInnerView['article']);
-        self::assertSame(['111-111-222'], $innerInnerView['pages'][0]['ids']);
-
-        // level 3
-        self::assertSame($innerInnerContent['pages'][0]['resource'], $page2);
-        $innerInnerInnerContent = $innerInnerContent['pages'][0]['content'];
-        self::assertSame('Page 2', $innerInnerInnerContent['title']);
-        self::assertSame('/page-2', $innerInnerInnerContent['url']);
-        self::assertSame('<p>Page 2 article</p>', $innerInnerInnerContent['article']);
-
-        $innerInnerInnerView = $innerInnerContent['pages'][0]['view'];
-        self::assertSame([], $innerInnerInnerView['title']);
-        self::assertSame([], $innerInnerInnerView['url']);
-        self::assertSame([], $innerInnerInnerView['article']);
-        self::assertSame(['111-111-111'], $innerInnerInnerView['pages'][0]['ids']);
-
-        // level 4 should be null to break the circular loop
-        self::assertNull($innerInnerInnerContent['pages'][0]);
+            // Move the pointer to the next page in the reference chain
+            $contentPointer = $contentPointer['content']['pages'][0]; //@phpstan-ignore-line
+        }
     }
 
     private function getTemplateFormMetadata(string $templateType): TypedFormMetadata

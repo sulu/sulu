@@ -128,5 +128,16 @@
             <field-name>locale</field-name>
             <entity-name>ghostDimensionContent</entity-name>
         </property>
+
+        <property name="published" translation="sulu_admin.published" type="date" visibility="never">
+            <field-name>workflowPublished</field-name>
+            <entity-name>dimensionContent</entity-name>
+            <transformer type="datetime"/>
+        </property>
+
+        <property name="publishedState" type="string" visibility="never">
+            <field-name>workflowPlace</field-name>
+            <entity-name>dimensionContent</entity-name>
+        </property>
     </properties>
 </list>
