@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\MediaBundle\Media\ListBuilderFactory;
 
+use Sulu\Bundle\MediaBundle\Entity\CollectionInterface;
 use Sulu\Bundle\MediaBundle\Entity\CollectionRepositoryInterface;
 use Sulu\Component\Media\SystemCollections\SystemCollectionManagerInterface;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilder;
@@ -21,6 +22,7 @@ use Sulu\Component\Rest\RestHelperInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
+use Webmozart\Assert\Assert;
 
 class MediaListBuilderFactory
 {
@@ -82,6 +84,12 @@ class MediaListBuilderFactory
         if (!$this->securityChecker->hasPermission('sulu.media.system_collections', PermissionTypes::VIEW)) {
             $systemCollection = $this->collectionRepository
                 ->findCollectionByKey(SystemCollectionManagerInterface::COLLECTION_KEY);
+
+            Assert::isInstanceOf(
+                $systemCollection,
+                CollectionInterface::class,
+                'The system collection fixtures should have been loaded.',
+            );
 
             $lftExpression = $listBuilder->createWhereExpression(
                 $fieldDescriptors['lft'],

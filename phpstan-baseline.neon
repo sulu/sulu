@@ -25117,6 +25117,7 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Collection/Manager/CollectionManager.php
 
 		-
+<<<<<<< HEAD
 			message: '#^Method Sulu\\Bundle\\MediaBundle\\Collection\\Manager\\CollectionManager\:\:setBreadcrumbToCollection\(\) has parameter \$breadcrumbEntities with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -27127,14 +27128,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Entity/CollectionRepository.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\Entity\\CollectionRepository\:\:countCollections\(\) should return int but empty return statement found\.$#'
-			identifier: return.empty
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/CollectionRepository.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\Entity\\CollectionRepository\:\:findCollectionBreadcrumbById\(\) should return array\<Sulu\\Bundle\\MediaBundle\\Entity\\Collection\> but returns mixed\.$#'
-			identifier: return.type
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Entity/CollectionRepository.php
 

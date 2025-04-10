@@ -256,19 +256,14 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
 
     public function findCollectionByKey($key)
     {
-        $queryBuilder = $this->createQueryBuilder('collection')
+        return $this->createQueryBuilder('collection')
             ->leftJoin('collection.meta', 'collectionMeta')
             ->leftJoin('collection.defaultMeta', 'defaultMeta')
-            ->where('collection.key = :key');
-
-        $query = $queryBuilder->getQuery();
-        $query->setParameter('key', $key);
-
-        try {
-            return $query->getSingleResult();
-        } catch (NoResultException $ex) {
-            return;
-        }
+            ->where('collection.key = :key')
+            ->setParameter('key', $key)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
     }
 
     public function findTree($id, $locale)

@@ -101,7 +101,7 @@ interface CollectionRepositoryInterface
      *
      * @param string $key
      *
-     * @return Collection
+     * @return Collection|null
      */
     public function findCollectionByKey($key);
 
