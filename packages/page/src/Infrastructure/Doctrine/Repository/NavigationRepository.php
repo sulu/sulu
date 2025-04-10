@@ -14,7 +14,6 @@ namespace Sulu\Page\Infrastructure\Doctrine\Repository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
-use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
 use Sulu\Content\Application\ContentAggregator\ContentAggregatorInterface;
@@ -75,6 +74,7 @@ class NavigationRepository implements NavigationRepositoryInterface
             'navigationContexts' => [$navigationContext],
             'depth' => $depth,
             'webspaceKey' => $webspaceKey,
+            'stage' => DimensionContentInterface::STAGE_LIVE,
         ]);
 
         $loadExcerpt = (bool) ($properties['excerpt'] ?? false);
@@ -94,6 +94,7 @@ class NavigationRepository implements NavigationRepositoryInterface
             'navigationContexts' => [$navigationContext],
             'depth' => $depth,
             'webspaceKey' => $webspaceKey,
+            'stage' => DimensionContentInterface::STAGE_LIVE,
         ]);
 
         $loadExcerpt = (bool) ($properties['excerpt'] ?? false);
@@ -221,7 +222,12 @@ class NavigationRepository implements NavigationRepositoryInterface
          * } $contentData
          */
         $contentData = $content['content'];
-        $result = [...$contentData];
+        /** @var PageInterface $page */
+        $page = $content['resource'];
+        $result = [
+            ...$contentData,
+            ...['webspaceKey' => $page->getWebspaceKey()],
+        ];
 
         if ($loadExcerpt) {
             $result['excerpt'] = $content['extension']['excerpt'];
@@ -290,9 +296,7 @@ class NavigationRepository implements NavigationRepositoryInterface
         if (null !== $navigationContexts) {
             Assert::isArray($navigationContexts); // @phpstan-ignore staticMethod.alreadyNarrowedType
             if ([] !== $navigationContexts) {
-                $this->leftJoinDimensionContent($queryBuilder);
-
-                $queryBuilder->leftJoin('dimensionContent.navigationContexts', 'navigationContext')
+                $queryBuilder->leftJoin('filterDimensionContent.navigationContexts', 'navigationContext')
                     ->andWhere('navigationContext.navigationContext IN (:navigationContexts)')
                     ->setParameter('navigationContexts', $navigationContexts);
             }
@@ -301,26 +305,5 @@ class NavigationRepository implements NavigationRepositoryInterface
         $queryBuilder->addOrderBy('page.lft', 'asc');
 
         return $queryBuilder;
-    }
-
-    private function leftJoinDimensionContent(QueryBuilder $queryBuilder): void
-    {
-        // check if we already have a join for dimensionContent
-        $hasJoin = false;
-        /** @var array<string, Join[]> $joinParts */
-        $joinParts = $queryBuilder->getDQLPart('join');
-
-        foreach ($joinParts as $joins) {
-            foreach ($joins as $join) {
-                if ('page.dimensionContents' === $join->getJoin()) {
-                    $hasJoin = true;
-                    break 2;
-                }
-            }
-        }
-
-        if (!$hasJoin) {
-            $queryBuilder->leftJoin('page.dimensionContents', 'dimensionContent');
-        }
     }
 }

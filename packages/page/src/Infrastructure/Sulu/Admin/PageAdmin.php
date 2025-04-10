@@ -245,7 +245,6 @@ class PageAdmin extends Admin
                 if ('sulu_page.page_edit_form.content' === $viewBuilder->getName()) {
                     $viewBuilder
                         ->disablePreviewWebspaceChooser()
-                        ->addToolbarActions($formToolbarActionsWithType)
                         ->addRouterAttributesToFormRequest($routerAttributesToFormRequest)
                         ->addRouterAttributesToFormMetadata($routerAttributesToFormMetadata)
                         ->setTabCondition($tabCondition)
