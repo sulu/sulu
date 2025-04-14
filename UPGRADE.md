@@ -50,9 +50,9 @@ return [
 
 Configure the SuluPhpcrMigrationBundle in `config/packages/sulu_phpcr_migration.yaml`:
 
-> If you are currently using jackrabbit use the "jackrabbit://" based DSN string.
-> After the upgrade Apache Jackrabbit is not longer used by Sulu new content storage and can be
-> removed from your projects in most situation.
+> If you are currently using Jackrabbit, use the "jackrabbit://" based DSN string.
+> After the upgrade, Apache Jackrabbit is no longer used by Sulu’s new content storage and can be removed from
+> your projects in most situations.
 
 ```yaml
 sulu_phpcr_migration:
