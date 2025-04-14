@@ -115,8 +115,8 @@
             <transformer type="datetime"/>
         </property>
 
-        <concatenation-property name="creator" visibility="always" glue=" "
-                                translation="sulu_automation.list.creator" sortable="false">
+        <concatenation-property name="creator" visibility="yes" glue=" "
+                                translation="sulu_admin.creator" sortable="false">
             <field>
                 <field-name>firstName</field-name>
                 <entity-name>%sulu.model.contact.class%</entity-name>
@@ -131,7 +131,7 @@
             </field>
         </concatenation-property>
 
-        <concatenation-property name="changer" glue=" " translation="sulu_automation.list.changer"
+        <concatenation-property name="changer" glue=" " translation="sulu_admin.changer"
                                 sortable="false">
             <field>
                 <field-name>firstName</field-name>
