@@ -14,8 +14,9 @@ php bin/adminconsole phpcr:migrations:migrate
 
 ### Pre Update step to 3.0 Sulu Article Bundle
 
-Due to the fact that in Sulu 3.0 the SuluArticleBundle is merged into the core Sulu package, before updating the
-`sulu/sulu` dependency, you have to update the sulu/article-bundle dependency to the latest version.
+Due to the fact that in Sulu 3.0 the SuluArticleBundle is merged into the core Sulu package, if you have the
+sulu/article-bundle installed, you need to update the sulu/article-bundle dependency to the latest version before
+updating the sulu/sulu dependency. If the sulu/article-bundle is not installed, this step is not necessary.
 
 Ensure that the [Version202407111600](https://github.com/sulu/SuluArticleBundle/blob/2.6/Resources/phpcr-migrations/Version202407111600.php) migration is executed. This migration is required to migrate the old article
 structure to the new one. After that you can remove the old article bundle from your code.
@@ -102,7 +103,8 @@ sulu_phpcr_migration:
             connection: default
 ```
 
-Make sure you have done all database migrations below for 3.0 after that you can run the following command to update the content structure:
+Please ensure that you have executed all the database migrations for version 3.0. Once finished, you 
+can run the following command to update the content structure:
 
 ```shell
 php bin/adminconsole sulu:phpcr-migration:migrate
@@ -132,7 +134,7 @@ renamed to `url` in your templates and use the `route` always.
 
 ### Upgrade the Controller references
 
-The controller in the page/article templates has to be adjusted use the new controller
+The controller in the page/article templates have to be adjusted use the new controller
 from the SuluContentBundle. Be aware that also your custom controllers have to be modified to extend from the new one.
 
 ```diff
