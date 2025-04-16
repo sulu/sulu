@@ -1,51 +1,85 @@
-# Upgrade
 
 ## 3.0.0
 
-### Upgrading Data from Sulu 2.6 to Sulu 3.0
-
 The upgrade from Sulu 2.6 to Sulu 3.0 is a major upgrade and will require some migration steps.
 
-Due to the fact that in Sulu 3.0 the SuluArticleBundle is merged into the core Sulu package, before updating the 
-sulu/sulu dependency, you have to update the sulu/article-bundle dependency to the latest version. 
+### Pre Update step to 3.0 PHPCR Migration
+
+Before upgrading to 3.0 make sure you have installed the latest Sulu 2.x versions of Sulu and the Sulu bundles.
+Make sure that you have all PHPCR migration run via:
 
 ```shell
-    composer update sulu/article-bundle:"^2.6.7"
+php bin/adminconsole phpcr:migrations:migrate
 ```
 
-After that you have to execute the latest PhpCr migrations. 
+### Pre Update step to 3.0 Sulu Article Bundle
 
-```shell
-    php bin/adminconsole phpcr:migrations:migrate
-```
+Due to the fact that in Sulu 3.0 the SuluArticleBundle is merged into the core Sulu package, before updating the
+`sulu/sulu` dependency, you have to update the sulu/article-bundle dependency to the latest version.
+
 Ensure that the [Version202407111600](https://github.com/sulu/SuluArticleBundle/blob/2.6/Resources/phpcr-migrations/Version202407111600.php) migration is executed. This migration is required to migrate the old article
-structure to the new one. After that you can update the sulu/sulu dependency to the 3.0 version and install
-the SuluPhpcrMigrationBundle.
+structure to the new one. After that you can remove the old article bundle from your code.
 
 ```shell
-    composer remove sulu/article-bundle
-    composer remove elasticsearch/elasticsearch
-    composer update sulu/sulu:"^3.0"
-    composer require sulu/phpcr-migration-bundle
+composer remove sulu/article-bundle
+# composer remove elasticsearch/elasticsearch # can also be removed if not further required
 ```
 
-Disable the old SuluArticleBundle and activate the new Sulu 3.0 bundles in `config/bundles.php`:
+Disable the old SuluArticleBundle `config/bundles.php`:
 
 ```diff
+// config/bundles.php
+
+return [
+     // ...
+-    Sulu\Bundle\ArticleBundle\SuluArticleBundle::class => ['all' => true],
+-    ONGR\ElasticsearchBundle\ONGRElasticsearchBundle::class => ['all' => true],
+```
+
+### Upgrade to Sulu 3.0 and register new bundles
+
+Now upgrade the dependencies to Sulu 3.0:
+
+```shell
+composer require sulu/sulu:"3.0.*"
+```
+
+After that you need to register the new Sulu bundles in your `config/bundles.php`:
+
+```diff
+// config/bundles.php
+
+return [
+     // ...
+-    Sulu\Bundle\SnippetBundle\SuluSnippetBundle::class => ['all' => true],
+-    Sulu\Bundle\SuluPageBundle\SuluPageBundle::class => ['all' => true],
+-    Sulu\Bundle\ArticleBundle\SuluArticleBundle::class => ['all' => true],
+-    ONGR\ElasticsearchBundle\ONGRElasticsearchBundle::class => ['all' => true],
+
++    Sulu\Content\Infrastructure\Symfony\HttpKernel\SuluContentBundle::class => ['all' => true],
++    Sulu\Route\Infrastructure\Symfony\HttpKernel\SuluRouteBundle::class => ['all' => true],
++    Sulu\Messenger\Infrastructure\Symfony\HttpKernel\SuluMessengerBundle::class => ['all' => true],
++    Sulu\Article\Infrastructure\Symfony\HttpKernel\SuluArticleBundle::class => ['all' => true],
++    Sulu\Snippet\Infrastructure\Symfony\HttpKernel\SuluSnippetBundle::class => ['all' => true],
++    Sulu\Page\Infrastructure\Symfony\HttpKernel\SuluPageBundle::class => ['all' => true],
+```
+
+### Upgrading Data from Sulu 2.6 to Sulu 3.0
+
+To migrate the data from PHPCR to the new content storage a migration bundle was developed. 
+
+```shell
+composer require sulu/phpcr-migration-bundle
+```
+
+Add the new migration bundle to your `config/bundles.php`:
+
+```diff
+// config/bundles.php
 
 return [
     // ...
--        Sulu\Bundle\SnippetBundle\SuluSnippetBundle::class => ['all' => true],
--        Sulu\Bundle\ArticleBundle\SuluArticleBundle::class => ['all' => true],
--        ONGR\ElasticsearchBundle\ONGRElasticsearchBundle::class => ['all' => true],
--        Sulu\Bundle\SnippetBundle\SuluSnippetBundle::class => ['all' => true],
-
-+        Sulu\Bundle\PhpcrMigrationBundle\SuluPhpcrMigrationBundle::class => ['all' => true],
-+        Sulu\Content\Infrastructure\Symfony\HttpKernel\SuluContentBundle::class => ['all' => true],
-+        Sulu\Messenger\Infrastructure\Symfony\HttpKernel\SuluMessengerBundle::class => ['all' => true],
-+        Sulu\Article\Infrastructure\Symfony\HttpKernel\SuluArticleBundle::class => ['all' => true],
-+        Sulu\Snippet\Infrastructure\Symfony\HttpKernel\SuluSnippetBundle::class => ['all' => true],
-+        Sulu\Page\Infrastructure\Symfony\HttpKernel\SuluPageBundle::class => ['all' => true],
++   Sulu\Bundle\PhpcrMigrationBundle\SuluPhpcrMigrationBundle::class => ['all' => true],
 ```
 
 Configure the SuluPhpcrMigrationBundle in `config/packages/sulu_phpcr_migration.yaml`:
@@ -55,6 +89,8 @@ Configure the SuluPhpcrMigrationBundle in `config/packages/sulu_phpcr_migration.
 > your projects in most situations.
 
 ```yaml
+# config/packages/sulu_phpcr_migration.yaml
+
 sulu_phpcr_migration:
     # dbal://<dbalConnection>?workspace=<workspaceName>
     # jackrabbit://<user>:<password>@<host>:<port>/server?workspace=<workspaceName>
@@ -64,11 +100,23 @@ sulu_phpcr_migration:
     target:
         dbal:
             connection: default
-
 ```
 
-The new content structure used in Sulu 3.0 requires that all the `resource_locators` or `route` properties must be 
-renamed to `url` in your templates.
+Make sure you have done all database migrations below for 3.0 after that you can run the following command to update the content structure:
+
+```shell
+php bin/adminconsole sulu:phpcr-migration:migrate
+```
+
+In case of some errors on customized code, you can try to fix it and rerun the command. The migration command can be
+rerun, the existing already migrated content will be overwritten and not duplicated.
+If everything is done and the migration is successful, you can log in to the Sulu admin interface, set the permissions
+for the articles and snippets and check if everything is working as expected.
+
+### Upgrade resourceLocator and route property type
+
+The new content structure used in Sulu 3.0 requires that all the `resource_locators` or `route` properties must be
+renamed to `url` in your templates and use the `route` always.
 
 ```diff
 -        <property name="routePath" type="route">
@@ -82,36 +130,22 @@ renamed to `url` in your templates.
         </property>
 ```
 
-Additionally, the controller in the page/article templates has to be adjusted use the new controller 
+### Upgrade the Controller references
+
+The controller in the page/article templates has to be adjusted use the new controller
 from the SuluContentBundle. Be aware that also your custom controllers have to be modified to extend from the new one.
 
 ```diff
 -        <controller class="Sulu\Bundle\ArticleBundle\Controller\ArticleController"/>
 -        <controller>Sulu\Bundle\WebsiteBundle\Controller\DefaultController::indexAction</controller>
--        <controller>Sulu\Content\UserInterface\Controller\Website\ContentController::indexAction</controller>
++        <controller>Sulu\Content\UserInterface\Controller\Website\ContentController::indexAction</controller>
 ```
-
-Now you have to update the database schema. You can use the following command to do that:
-
-```shell
-    php bin/adminconsole doctrine:schema:update --force
-```
-
-After that you can run the following command to update the content structure:
-
-```shell
-    php bin/adminconsole sulu:phpcr-migration:migrate
-```
-In case of some errors on customized code, you can try to fix it and rerun the command. The migration command can be
-rerun, the existing already migrated content will be overwritten and not duplicated.
-If everything is done and the migration is successful, you can log in to the Sulu admin interface, set the permissions
-for the articles and snippets and check if everything is working as expected.
 
 ### Page, CustomUrl, Snippet JS includes path changed
 
 The paths to the page, custom url and snippet bundle has changed so its JS package
 paths need also be changed. This step is normally automatically done by `bin/console sulu:admin:update-build` command,
-kept here for completness:
+kept here for completeness:
 
 ```diff
 -        "sulu-custom-url-bundle": "file:../../vendor/sulu/sulu/src/Sulu/Bundle/CustomUrlBundle/Resources/js",
@@ -147,6 +181,7 @@ CREATE UNIQUE INDEX UNIQ_5CEC3EEAE25D857EA1FA6DDA ON se_permissions (context, id
 ```
 
 ### Removed `SecurityType`
+
 Removed the `Sulu\Bundle\SecurityBundle\Entity\SecurityType` class and its fixtures. This also includes database migrations:
 
 ```sql
@@ -157,6 +192,7 @@ ALTER TABLE se_roles DROP idSecurityTypes;
 ```
 
 And the container parameters has been removed:
+
 - `sulu_security.security_types.fixture`
 
 ### Groups and User Groups have been removed
@@ -171,6 +207,7 @@ These unused parameters have been removed:
 - `sulu_security.entity.group`
 
 The resource routes has been removed:
+
 ```diff
 - sulu_security.groups:
 -    type: rest
@@ -179,6 +216,7 @@ The resource routes has been removed:
 ```
 
 The `se_user_groups` and `se_groups` table were removed from the database:
+
 ```sql
 ALTER TABLE se_group_roles DROP FOREIGN KEY FK_9713F725937C91EA;
 ALTER TABLE se_group_roles DROP FOREIGN KEY FK_9713F725A1FA6DDA;
