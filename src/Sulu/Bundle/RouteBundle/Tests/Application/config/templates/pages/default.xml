@@ -35,16 +35,6 @@
             <tag name="sulu.rlp"/>
         </property>
 
-        <property name="animals" type="snippet_selection">
-            <params>
-                <param name="snippetType" value="animal" />
-            </params>
-
-            <meta>
-                <title lang="de">Tiers</title>
-                <title lang="en">Animals</title>
-            </meta>
-        </property>
 
         <property name="blog" type="text_area" multilingual="false" mandatory="false"/>
 
