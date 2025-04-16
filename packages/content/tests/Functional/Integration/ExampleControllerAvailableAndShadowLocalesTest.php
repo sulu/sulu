@@ -43,7 +43,6 @@ class ExampleControllerAvailableAndShadowLocalesTest extends SuluTestCase
     public function testPostCreateEnDraft(): int
     {
         self::purgeDatabase();
-        self::initPhpcr();
 
         $this->client->request('POST', '/admin/api/examples?locale=en', [], [], [], \json_encode([
             'template' => 'example-2',

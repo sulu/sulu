@@ -54,11 +54,6 @@ sulu_category_api:
     resource: "@SuluCategoryBundle/Resources/config/routing_api.yml"
     prefix: /admin/api
 
-sulu_snippet_api:
-    resource: "@SuluSnippetBundle/Resources/config/routing_api.yml"
-    type: rest
-    prefix: /admin/api
-
 sulu_location:
     resource: "@SuluLocationBundle/Resources/config/routing.yml"
     prefix: /admin/location

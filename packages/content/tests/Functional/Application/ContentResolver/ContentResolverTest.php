@@ -37,7 +37,6 @@ class ContentResolverTest extends SuluTestCase
     protected function setUp(): void
     {
         self::purgeDatabase();
-        self::initPhpcr();
 
         $this->contentResolver = self::getContainer()->get('sulu_content.content_resolver');
         $this->contentAggregator = self::getContainer()->get('sulu_content.content_aggregator');

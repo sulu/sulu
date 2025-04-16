@@ -106,11 +106,6 @@ class FOSJSRoutingControllerTest extends SuluTestCase
             'sulu_security.get_security-contexts',
             'sulu_security.get_user',
             'sulu_security.get_users',
-            'sulu_snippet.get_languages',
-            'sulu_snippet.get_snippet',
-            'sulu_snippet.get_snippet-areas',
-            'sulu_snippet.get_snippets',
-            'sulu_snippet.put_snippet-area',
             'sulu_tag.get_tag',
             'sulu_tag.get_tags',
             'sulu_trash.get_trash-item',
@@ -118,5 +113,6 @@ class FOSJSRoutingControllerTest extends SuluTestCase
             'sulu_website.cget_webspace_analytics',
             'sulu_website.get_webspace_analytics',
         ], $routes);
+
     }
 }

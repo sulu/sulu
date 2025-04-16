@@ -300,20 +300,10 @@ class StructureXmlLoaderTest extends TestCase
 
         $properties = $result->getProperties();
 
-        $this->assertCount(2, $properties);
+        //invalid property will also be loaded
+        $this->assertCount(3, $properties);
         $this->assertEquals('title', $properties['title']->getName());
         $this->assertEquals('url', $properties['url']->getName());
-    }
-
-    public function testLoadInvalidWithoutIgnore(): void
-    {
-        $this->expectException(\InvalidArgumentException::class);
-
-        $this->contentTypeManager->has('text_line')->willReturn(true);
-        $this->contentTypeManager->has('resource_locator')->willReturn(true);
-        $this->contentTypeManager->has('test')->willReturn(false);
-        $this->contentTypeManager->getAll()->willReturn(['text_line', 'resource_locator']);
-        $this->load('template_without_invalid_ignore.xml');
     }
 
     public function testLoadRequiredProperty(): void

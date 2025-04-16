@@ -32,7 +32,6 @@ class AdminControllerTest extends SuluTestCase
 
     public function testGetConfig(): void
     {
-        $this->initPhpcr();
         $collectionType = new LoadCollectionTypes();
         $collectionType->load($this->getEntityManager());
 
@@ -60,8 +59,6 @@ class AdminControllerTest extends SuluTestCase
 
     public function testGetConfigWithFallbackNonExistUserLocale(): void
     {
-        $this->initPhpcr();
-
         $this->getTestUser()->setLocale('not-exist');
 
         $collectionType = new LoadCollectionTypes();
@@ -91,7 +88,6 @@ class AdminControllerTest extends SuluTestCase
 
     public function testTemplateConfig(): void
     {
-        $this->initPhpcr();
         $collectionType = new LoadCollectionTypes();
         $collectionType->load($this->getEntityManager());
 
@@ -148,7 +144,6 @@ class AdminControllerTest extends SuluTestCase
 
     public function testGetMetaDataKeysOnly(): void
     {
-        $this->initPhpcr();
         $collectionType = new LoadCollectionTypes();
         $collectionType->load($this->getEntityManager());
 
@@ -170,7 +165,6 @@ class AdminControllerTest extends SuluTestCase
 
     public function testGetMetaData(): void
     {
-        $this->initPhpcr();
         $collectionType = new LoadCollectionTypes();
         $collectionType->load($this->getEntityManager());
 
@@ -196,7 +190,6 @@ class AdminControllerTest extends SuluTestCase
 
     public function testGetMetaDataGhostLocale(): void
     {
-        $this->initPhpcr();
         $collectionType = new LoadCollectionTypes();
         $collectionType->load($this->getEntityManager());
 
@@ -244,7 +237,6 @@ class AdminControllerTest extends SuluTestCase
 
     public function testGetMetaDataCopyLocale(): void
     {
-        $this->initPhpcr();
         $collectionType = new LoadCollectionTypes();
         $collectionType->load($this->getEntityManager());
 

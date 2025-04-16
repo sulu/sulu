@@ -41,7 +41,6 @@ class ExampleControllerTest extends SuluTestCase
     public function testPostPublish(): int
     {
         self::purgeDatabase();
-        self::initPhpcr();
 
         $this->client->request('POST', '/admin/api/examples?locale=en&action=publish', [], [], [], \json_encode([
             'template' => 'example-2',

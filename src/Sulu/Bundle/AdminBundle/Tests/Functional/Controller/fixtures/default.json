@@ -352,41 +352,6 @@
                         "type": "string",
                         "minLength": 1
                     },
-                    "animals": {
-                        "anyOf": [
-                            {
-                                "type": "null"
-                            },
-                            {
-                                "type": "array",
-                                "items": {
-                                    "type": [
-                                        "number",
-                                        "string",
-                                        "boolean",
-                                        "object",
-                                        "array",
-                                        "null"
-                                    ]
-                                },
-                                "maxItems": 0
-                            },
-                            {
-                                "type": "array",
-                                "items": {
-                                    "anyOf": [
-                                        {
-                                            "type": "string"
-                                        },
-                                        {
-                                            "type": "number"
-                                        }
-                                    ]
-                                },
-                                "uniqueItems": true
-                            }
-                        ]
-                    },
                     "blog": {
                         "anyOf": [
                             {
