@@ -685,7 +685,9 @@ class UserManager implements UserManagerInterface
                 $user->setEmail($email);
             }
         } else {
-            if ($email && 0 !== \strcasecmp($email, $user->getEmail()) && !$this->isEmailUnique($email)) {
+            $emailChanged = $email && (null === $user->getEmail() || 0 !== \strcasecmp($email, $user->getEmail()));
+
+            if ($emailChanged && !$this->isEmailUnique($email)) {
                 throw new EmailNotUniqueException($email);
             }
             $user->setEmail($email);
