@@ -114,6 +114,14 @@ class ActivityRepository implements ActivityRepositoryInterface
         // use query-builder to insert only given entity instead of flushing all managed entities via the entity-manager
         // this prevents flushing unrelated changes and allows to call this method in a postFlush event-listener
         $queryBuilder = $this->getInsertQueryBuilder($activity);
+
+        // DBAL 3 to 4 BC Layer
+        if (\method_exists($queryBuilder, 'executeStatement')) {
+            $queryBuilder->executeStatement();
+
+            return;
+        }
+
         $queryBuilder->execute();
     }
 }
