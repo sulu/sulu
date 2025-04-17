@@ -17,6 +17,10 @@
     "sulu_snippet.route": "Route",
     "sulu_snippet.last_modified_enabled": "Enable last modified date",
     "sulu_snippet.last_modified_date": "Last modified date",
+    "sulu_snippet.snippet_area": "Typ oder Bereich",
+    "sulu_snippet.taxonomies": "Taxonomien",
+    "sulu_snippet.webspace_default_snippet": "{webspaceKey} Standard Schnipsel",
+    "sulu_snippet.single_snippet_selection_overlay_title": "Snippet auswählen",
     "sulu_activity.resource.snippets": "Snippet",
     "sulu_activity.resource.snippets.translation": "Translation",
     "sulu_activity.description.snippets.created": "{userFullName} has created the snippet \"{resourceTitle}\"",
@@ -32,5 +36,7 @@
     "sulu_activity.description.snippets.translation_removed": "{userFullName} has removed the \"{resourceLocale}\" translation of the snippet \"{resourceTitle}\"",
     "sulu_activity.description.snippets.translation_restored": "{userFullName} has restored the \"{resourceLocale}\" translation of the snippet \"{resourceTitle}\"",
     "sulu_activity.description.snippets.version_restored": "{userFullName} has restored the version \"{context_version}\" of the snippet \"{resourceTitle}\"",
-    "sulu_activity.description.snippets.route_removed": "{userFullName} has removed the route \"{resourceTitle}\"."
+    "sulu_activity.description.snippets.route_removed": "{userFullName} has removed the route \"{resourceTitle}\".",
+    "sulu_activity.description.webspaces.default_snippet_modified": "{userFullName} hat das Standardschnipsel für den Bereich \"{context_snippetAreaKey}\" im Webspace \"{resourceTitle}\" geändert",
+    "sulu_activity.description.webspaces.default_snippet_removed": "{userFullName} hat das Standardschnipsel für den Bereich \"{context_snippetAreaKey}\" im Webspace \"{resourceTitle}\" gelöscht"
 }
