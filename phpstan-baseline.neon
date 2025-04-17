@@ -3135,19 +3135,19 @@ parameters:
 		-
 			message: '#^Call to method PHPUnit\\Framework\\Assert\:\:assertInstanceOf\(\) with ''Sulu\\\\Bundle\\\\AdminBundle\\\\Metadata\\\\FormMetadata\\\\FormMetadata'' and Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\FormMetadata will always evaluate to true\.$#'
 			identifier: method.alreadyNarrowedType
-			count: 6
+			count: 5
 			path: src/Sulu/Bundle/AdminBundle/Tests/Functional/Metadata/FormMetadata/StructureFormMetadataLoaderTest.php
 
 		-
 			message: '#^Call to method PHPUnit\\Framework\\Assert\:\:assertInstanceOf\(\) with ''Sulu\\\\Bundle\\\\AdminBundle\\\\Metadata\\\\SchemaMetadata\\\\SchemaMetadata'' and Sulu\\Bundle\\AdminBundle\\Metadata\\SchemaMetadata\\SchemaMetadata will always evaluate to true\.$#'
 			identifier: method.alreadyNarrowedType
-			count: 6
+			count: 5
 			path: src/Sulu/Bundle/AdminBundle/Tests/Functional/Metadata/FormMetadata/StructureFormMetadataLoaderTest.php
 
 		-
 			message: '#^Call to method PHPUnit\\Framework\\Assert\:\:assertNotNull\(\) with Sulu\\Bundle\\AdminBundle\\Metadata\\SchemaMetadata\\SchemaMetadata will always evaluate to true\.$#'
 			identifier: method.alreadyNarrowedType
-			count: 6
+			count: 5
 			path: src/Sulu/Bundle/AdminBundle/Tests/Functional/Metadata/FormMetadata/StructureFormMetadataLoaderTest.php
 
 		-
@@ -18295,13 +18295,13 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/AdminControllerTest.php
 
 		-
-			message: '#^Parameter \#2 \$array of method PHPUnit\\Framework\\Assert\:\:assertArrayHasKey\(\) expects array\<mixed\>\|ArrayAccess\<\(int\|string\), mixed\>, mixed given\.$#'
+			message: '#^Parameter \#2 \$array of method PHPUnit\\Framework\\Assert\:\:assertArrayHasKey\(\) expects array\<mixed\>\|ArrayAccess\<\(int\|string\), mixed\>, array\|ArrayAccess given\.$#'
 			identifier: argument.type
 			count: 3
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/AdminControllerTest.php
 
 		-
-			message: '#^Parameter \#2 \$array of method PHPUnit\\Framework\\Assert\:\:assertArrayHasKey\(\) expects array\<mixed\>\|ArrayAccess\<\(int\|string\), mixed\>, non\-empty\-array\|ArrayAccess given\.$#'
+			message: '#^Parameter \#2 \$array of method PHPUnit\\Framework\\Assert\:\:assertArrayHasKey\(\) expects array\<mixed\>\|ArrayAccess\<\(int\|string\), mixed\>, mixed given\.$#'
 			identifier: argument.type
 			count: 3
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/AdminControllerTest.php
@@ -46551,6 +46551,12 @@ parameters:
 		-
 			message: '#^Call to an undefined method Symfony\\Component\\Security\\Core\\User\\UserInterface\:\:getId\(\)\.$#'
 			identifier: method.notFound
+			count: 1
+			path: src/Sulu/Bundle/SecurityBundle/User/UserProvider.php
+
+		-
+			message: '#^Class Sulu\\Bundle\\SecurityBundle\\User\\UserProvider implements generic interface Symfony\\Component\\Security\\Core\\User\\PasswordUpgraderInterface but does not specify its types\: TUser$#'
+			identifier: missingType.generics
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/User/UserProvider.php
 

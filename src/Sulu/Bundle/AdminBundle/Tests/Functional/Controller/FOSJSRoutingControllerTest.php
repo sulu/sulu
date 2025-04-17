@@ -113,6 +113,5 @@ class FOSJSRoutingControllerTest extends SuluTestCase
             'sulu_website.cget_webspace_analytics',
             'sulu_website.get_webspace_analytics',
         ], $routes);
-
     }
 }

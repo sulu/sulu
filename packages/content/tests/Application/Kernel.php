@@ -40,8 +40,8 @@ class Kernel extends SuluTestKernel
             // Audience Targeting is not configured and so should not be here
             // remove deprecated SuluSnippetBundle to avoid conflicts
             if (
-                $bundle instanceof SuluAudienceTargetingBundle ||
-                $bundle instanceof DeprecatedSuluSnippetBundle
+                $bundle instanceof SuluAudienceTargetingBundle
+                || $bundle instanceof DeprecatedSuluSnippetBundle
             ) {
                 unset($bundles[$key]);
             }
