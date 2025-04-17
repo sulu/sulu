@@ -18,7 +18,6 @@ use Sulu\Component\PHPCR\NodeTypes\Base\SuluNodeType;
 use Sulu\Component\PHPCR\NodeTypes\Content\ContentNodeType;
 use Sulu\Component\PHPCR\NodeTypes\Content\HomeNodeType;
 use Sulu\Component\PHPCR\NodeTypes\Content\PageNodeType;
-use Sulu\Component\PHPCR\NodeTypes\Content\SnippetNodeType;
 use Sulu\Component\PHPCR\NodeTypes\Path\PathNodeType;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -73,7 +72,6 @@ class ContentInitializer implements InitializerInterface
             new SuluNodeType(),
             new PathNodeType(),
             new ContentNodeType(),
-            new SnippetNodeType(),
             new PageNodeType(),
             new HomeNodeType(),
         ] as $nodeType) {

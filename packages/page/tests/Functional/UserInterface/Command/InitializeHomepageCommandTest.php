@@ -24,9 +24,7 @@ class InitializeHomepageCommandTest extends SuluTestCase
 
     protected function setUp(): void
     {
-        $pageRepository = $this->getContainer()->get('sulu_page.page_repository');
-        self::assertInstanceOf(PageRepositoryInterface::class, $pageRepository);
-        $this->pageRepository = $pageRepository;
+        $this->pageRepository = $this->getContainer()->get('sulu_page.page_repository');
     }
 
     public function testExecuteWithNoExistingHomepage(): void

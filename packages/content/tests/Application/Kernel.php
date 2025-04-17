@@ -15,7 +15,6 @@ namespace Sulu\Content\Tests\Application;
 
 use Sulu\Bundle\AudienceTargetingBundle\SuluAudienceTargetingBundle;
 use Sulu\Bundle\AutomationBundle\SuluAutomationBundle;
-use Sulu\Bundle\SnippetBundle\SuluSnippetBundle as DeprecatedSuluSnippetBundle;
 use Sulu\Bundle\TestBundle\Kernel\SuluTestKernel;
 use Sulu\Content\Infrastructure\Symfony\HttpKernel\SuluContentBundle;
 use Sulu\Content\Tests\Application\ExampleTestBundle\ExampleTestBundle;
@@ -41,7 +40,6 @@ class Kernel extends SuluTestKernel
             // remove deprecated SuluSnippetBundle to avoid conflicts
             if (
                 $bundle instanceof SuluAudienceTargetingBundle
-                || $bundle instanceof DeprecatedSuluSnippetBundle
             ) {
                 unset($bundles[$key]);
             }

@@ -12,7 +12,6 @@
 namespace Sulu\Snippet\Tests\Application;
 
 use Sulu\Bundle\AutomationBundle\SuluAutomationBundle;
-use Sulu\Bundle\SnippetBundle\SuluSnippetBundle as DeprecatedSuluSnippetBundle;
 use Sulu\Bundle\TestBundle\Kernel\SuluTestKernel;
 use Sulu\Component\HttpKernel\SuluKernel;
 use Sulu\Content\Infrastructure\Symfony\HttpKernel\SuluContentBundle;
@@ -44,13 +43,6 @@ class Kernel extends SuluTestKernel
     public function registerBundles(): iterable
     {
         $bundles = [...parent::registerBundles()];
-
-        foreach ($bundles as $key => $bundle) {
-            // remove old route bundle to avoid conflicts
-            if (DeprecatedSuluSnippetBundle::class === $bundle::class) {
-                unset($bundles[$key]);
-            }
-        }
 
         $bundles[] = new SuluContentBundle();
         $bundles[] = new SuluSnippetBundle();

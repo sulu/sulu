@@ -70,7 +70,6 @@ class StructureManagerTest extends TestCase
         $typemap = [
             'page' => '\\' . PageBridge::class,
             'home' => '\\' . PageBridge::class,
-            'snippet' => '\\' . SnippetBridge::class,
         ];
 
         $this->structureManager = new StructureManager(

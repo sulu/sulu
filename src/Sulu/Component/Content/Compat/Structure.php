@@ -18,7 +18,7 @@ use Sulu\Component\Content\Exception\NoSuchPropertyException;
 
 /**
  * The Structure class represents content structure and is the super type
- * for Page and Snippet classes.
+ * for Page and Other classes.
  *
  * Structures are composed of properties which map to content types.
  */
@@ -43,11 +43,6 @@ abstract class Structure implements StructureInterface
      * Structure type page.
      */
     public const TYPE_PAGE = 'page';
-
-    /**
-     * Structure type page.
-     */
-    public const TYPE_SNIPPET = 'snippet';
 
     /**
      * webspaceKey of node.

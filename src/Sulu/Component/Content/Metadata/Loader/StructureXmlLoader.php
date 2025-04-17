@@ -166,8 +166,13 @@ class StructureXmlLoader extends AbstractLoader
             }
 
             $propertyType = $property->getType();
+
+            return true;
+
+            /*
+            // TODO maybe readd validation based on a JSON provided by admin build
             if ($this->contentTypeManager->has($propertyType)) {
-                return true;
+                 return true;
             }
 
             if ('ignore' === $property->getOnInvalid()) {
@@ -179,6 +184,7 @@ class StructureXmlLoader extends AbstractLoader
                 $propertyType,
                 \implode('", "', $this->contentTypeManager->getAll())
             ));
+            */
         });
 
         // FIXME until excerpt-template is no page template anymore

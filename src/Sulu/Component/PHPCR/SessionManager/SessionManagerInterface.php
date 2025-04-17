@@ -94,14 +94,4 @@ interface SessionManagerInterface
      * @return string
      */
     public function getWebspacePath($webspaceKey);
-
-    /**
-     * returns the snippet node.
-     *
-     * @return NodeInterface
-     *
-     * @deprecated Do not use anymore, because the node is always returned from the default session, although multiple
-     *             sessions can exist
-     */
-    public function getSnippetNode();
 }

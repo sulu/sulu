@@ -174,34 +174,9 @@ class SuluNodeHelperTest extends TestCase
         $this->assertEquals($expected, $res);
     }
 
-    public static function provideExtractSnippetTypeFromPath()
-    {
-        return [
-            ['/cmf/snippets/foobar/snippet1', 'foobar'],
-            ['/cmf/snippets/bar-foo/snippet2', 'bar-foo'],
-            ['/cmf', null, false],
-            ['/cmf/snippets', null, false],
-            ['/cmf/snippets/bar', null, false],
-            ['/cmf/snippets/animal/elephpant', 'animal'],
-            ['', null, false],
-        ];
-    }
-
-    #[\PHPUnit\Framework\Attributes\DataProvider('provideExtractSnippetTypeFromPath')]
-    public function testExtractSnippetTypeFromPath($path, $expected, $valid = true): void
-    {
-        if (false === $valid) {
-            $this->expectException(\InvalidArgumentException::class);
-        }
-
-        $res = $this->helper->extractSnippetTypeFromPath($path);
-        $this->assertEquals($expected, $res);
-    }
-
     public static function provideGetStructureTypeForNode()
     {
         return [
-            ['sulu:snippet', 'snippet'],
             ['sulu:page', 'page'],
             ['sulu:foobar', null],
             ['', null],
@@ -222,9 +197,8 @@ class SuluNodeHelperTest extends TestCase
     public static function provideHasSuluNodeType()
     {
         return [
-            ['sulu:snippet', true],
-            [['sulu:foobar', 'sulu:snippet'], true],
-            ['sulu:page', false],
+            [['sulu:foobar', 'sulu:page'], true],
+            ['sulu:page', true],
             ['sulu:foobar', false],
             ['', false],
         ];
@@ -236,7 +210,7 @@ class SuluNodeHelperTest extends TestCase
         $this->node->expects($this->any())
             ->method('getPropertyValueWithDefault')
             ->with('jcr:mixinTypes', [])
-            ->willReturn(['sulu:snippet']);
+            ->willReturn(['sulu:page']);
 
         $this->assertEquals($expected, $this->helper->hasSuluNodeType($this->node, $nodeTypes));
     }
@@ -274,20 +248,5 @@ class SuluNodeHelperTest extends TestCase
         $res = $this->helper->getPreviousNode($node2);
         $this->assertNotNull($res);
         $this->assertSame($node1->getPath(), $res->getPath());
-    }
-
-    public function testGetBaseSnippetUuid(): void
-    {
-        $baseSnippetNode = $this->getMockBuilder(Node::class)->disableOriginalConstructor()->getMock();
-        $baseSnippetNode->expects($this->any())
-            ->method('getIdentifier')
-            ->willReturn('some-uuid');
-
-        $this->session->expects($this->any())
-            ->method('getNode')
-            ->with('/cmf/snippets/snippet')
-            ->willReturn($baseSnippetNode);
-
-        $this->assertEquals('some-uuid', $this->helper->getBaseSnippetUuid('snippet'));
     }
 }

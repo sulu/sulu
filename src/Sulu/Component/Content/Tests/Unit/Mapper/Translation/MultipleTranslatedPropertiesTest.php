@@ -36,7 +36,6 @@ class MultipleTranslatedPropertiesTest extends TestCase
     {
         return [
             [Structure::TYPE_PAGE, 'foobar', 'i18n:de-foobar'],
-            [Structure::TYPE_SNIPPET, 'template', 'template'],
             [Structure::TYPE_PAGE, 'template', 'i18n:de-template'],
         ];
     }

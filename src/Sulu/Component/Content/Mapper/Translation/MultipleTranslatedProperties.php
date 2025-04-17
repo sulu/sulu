@@ -79,13 +79,6 @@ class MultipleTranslatedProperties
      */
     public function getName($key)
     {
-        // templates do not translate the template key
-        if (Structure::TYPE_SNIPPET === $this->structureType) {
-            if ('template' === $key) {
-                return $key;
-            }
-        }
-
         if (isset($this->translatedProperties[$key])) {
             return $this->translatedProperties[$key]->getName();
         } else {

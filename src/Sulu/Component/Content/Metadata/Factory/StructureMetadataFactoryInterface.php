@@ -18,7 +18,7 @@ interface StructureMetadataFactoryInterface
     /**
      * Return the structure of the given $type and $structureType.
      *
-     * @param mixed $type The primary system type, e.g. page, snippet
+     * @param mixed $type The primary system type, e.g. page
      * @param mixed $structureType The secondary user type
      *
      * @return StructureMetadata|null

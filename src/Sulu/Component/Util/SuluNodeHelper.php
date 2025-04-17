@@ -12,14 +12,11 @@
 namespace Sulu\Component\Util;
 
 use PHPCR\NodeInterface;
-use PHPCR\PathNotFoundException;
 use PHPCR\PropertyInterface;
 use PHPCR\SessionInterface;
-use PHPCR\Util\PathHelper;
 use Sulu\Component\Content\Compat\Structure;
 use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
 use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactoryInterface;
-use Sulu\Component\Content\Metadata\StructureMetadata;
 
 /**
  * Utility class for extracting Sulu-centric properties from nodes.
@@ -82,10 +79,6 @@ class SuluNodeHelper
             return Structure::TYPE_PAGE;
         }
 
-        if (\in_array('sulu:' . Structure::TYPE_SNIPPET, $mixinTypes)) {
-            return Structure::TYPE_SNIPPET;
-        }
-
         return;
     }
 
@@ -118,8 +111,8 @@ class SuluNodeHelper
      * with the sulu namespace.
      *
      * Example:
-     *   sulu:snippet is the PHPCR node type
-     *   snippet is the Sulu node type
+     *   sulu:page is the PHPCR node type
+     *   page is the Sulu node type
      *
      * @param NodeInterface $node
      * @param string|array $suluNodeTypes One or more node sulu types
@@ -155,89 +148,6 @@ class SuluNodeHelper
         } else {
             return;
         }
-    }
-
-    /**
-     * Returns the path for the base snippet of the given type resp. of all types if not given.
-     *
-     * @param string $type
-     *
-     * @return string
-     */
-    public function getBaseSnippetPath($type = null)
-    {
-        $path = '/' . $this->getPath('base') . '/' . $this->getPath('snippet');
-
-        if ($type) {
-            $path .= '/' . $type;
-        }
-
-        return $path;
-    }
-
-    /**
-     * Returns the uuid for the base snippet of the given type resp. of all types if not given.
-     *
-     * @param string $type
-     *
-     * @return string
-     */
-    public function getBaseSnippetUuid($type = null)
-    {
-        try {
-            return $this->session->getNode($this->getBaseSnippetPath($type))->getIdentifier();
-        } catch (PathNotFoundException $e) {
-            $snippetStructures = \array_map(function(StructureMetadata $structureMetadata) {
-                return $structureMetadata->getName();
-            }, $this->structureMetadataFactory->getStructures('snippet'));
-
-            if (\in_array($type, $snippetStructures)) {
-                return null;
-            }
-
-            throw new \InvalidArgumentException(\sprintf(
-                'Snippet type "%s" not available, available snippet types are: [%s]',
-                $type,
-                \implode(', ', $snippetStructures)
-            ), 0, $e);
-        }
-    }
-
-    /**
-     * Extract the snippet path from the given path.
-     *
-     * @param string $path
-     *
-     * @return string
-     *
-     * @throws \InvalidArgumentException
-     */
-    public function extractSnippetTypeFromPath($path)
-    {
-        if ('/' !== \substr($path, 0, 1)) {
-            throw new \InvalidArgumentException(
-                \sprintf(
-                    'Path must be absolute, got "%s"',
-                    $path
-                )
-            );
-        }
-
-        $snippetsPath = $this->getBaseSnippetPath() . '/';
-        $newPath = PathHelper::getParentPath($path);
-        $newPath = \substr($newPath, \strlen($snippetsPath));
-
-        // $newPath can be false or empty because of return difference of substr depending on php version (<= 7.4, 8.0)
-        if (!$newPath) {
-            throw new \InvalidArgumentException(
-                \sprintf(
-                    'Cannot extract snippet template type from path "%s"',
-                    $path
-                )
-            );
-        }
-
-        return $newPath;
     }
 
     /**
