@@ -13,7 +13,6 @@ namespace Sulu\Bundle\PageBundle\Tests\Functional\Command;
 
 use Sulu\Bundle\PageBundle\Command\ValidateWebspacesCommand;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
-use Sulu\Component\DocumentManager\DocumentManager;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
@@ -24,15 +23,9 @@ class ValidateWebspacesCommandTest extends SuluTestCase
      */
     private $tester;
 
-    /**
-     * @var DocumentManager
-     */
-    private $documentManager;
-
     public function setUp(): void
     {
         $application = new Application();
-        $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
         $controllerNameParser = null;
         if ($this->getContainer()->has('sulu_page.controller_name_converter')) {
             /** @var \Symfony\Bundle\FrameworkBundle\Controller\ControllerNameParser $controllerNameParser */

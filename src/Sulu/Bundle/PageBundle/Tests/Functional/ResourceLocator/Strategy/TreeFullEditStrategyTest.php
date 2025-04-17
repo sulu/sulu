@@ -12,7 +12,6 @@
 namespace Sulu\Bundle\PageBundle\Tests\Functional\ResourceLocator\Strategy;
 
 use PHPCR\SessionInterface;
-use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Exception\ResourceLocatorMovedException;
 use Sulu\Component\Content\Exception\ResourceLocatorNotFoundException;
@@ -32,11 +31,6 @@ class TreeFullEditStrategyTest extends SuluTestCase
     private $documentManager;
 
     /**
-     * @var DocumentInspector
-     */
-    private $documentInspector;
-
-    /**
      * @var SessionInterface
      */
     private $session;
@@ -45,7 +39,6 @@ class TreeFullEditStrategyTest extends SuluTestCase
     {
         $this->resourceLocatorStrategy = $this->getContainer()->get('sulu_page_test.resource_locator.strategy.tree_full_edit');
         $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
-        $this->documentInspector = $this->getContainer()->get('sulu_document_manager.document_inspector');
         $this->session = $this->getContainer()->get('sulu_document_manager.default_session');
 
         $this->initPhpcr();

@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\PageBundle\Tests\Functional\Controller;
 
-use PHPCR\SessionInterface;
 use Sulu\Bundle\ActivityBundle\Domain\Model\Activity;
 use Sulu\Bundle\PageBundle\Document\BasePageDocument;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
@@ -21,11 +20,6 @@ use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 class PageResourcelocatorControllerTest extends SuluTestCase
 {
-    /**
-     * @var SessionInterface
-     */
-    private $session;
-
     /**
      * @var KernelBrowser
      */
@@ -51,7 +45,6 @@ class PageResourcelocatorControllerTest extends SuluTestCase
         $this->client = $this->createAuthenticatedClient();
         $this->purgeDatabase();
         $this->initPhpcr();
-        $this->session = $this->getContainer()->get('doctrine')->getConnection();
         $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
         $this->data = $this->prepareRepositoryContent();
         $this->activityRepository = $this->getContainer()->get('sulu.repository.activity');

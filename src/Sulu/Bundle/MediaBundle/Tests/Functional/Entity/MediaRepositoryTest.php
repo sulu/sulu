@@ -40,11 +40,6 @@ class MediaRepositoryTest extends SuluTestCase
     private $em;
 
     /**
-     * @var Collection[]
-     */
-    private $collections;
-
-    /**
      * @var MediaType[]
      */
     private $mediaTypes = [];
