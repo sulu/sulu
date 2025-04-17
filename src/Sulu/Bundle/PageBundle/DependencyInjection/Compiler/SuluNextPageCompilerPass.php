@@ -27,7 +27,7 @@ class SuluNextPageCompilerPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container): void
     {
-        if (\array_key_exists('SuluNextPageBundle', $container->getParameter('kernel.bundles'))) { // @phpstan-ignore function.impossibleType
+        if (\array_key_exists('SuluNextPageBundle', $container->getParameter('kernel.bundles'))) {
             // Remove the old NavigationTwigExtension service when SuluNextPageBundle is enabled
             $this->removeLegacyNavigationTwigExtension($container);
 

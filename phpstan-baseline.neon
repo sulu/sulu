@@ -157,6 +157,12 @@ parameters:
 			path: packages/page/src/Infrastructure/Symfony/HttpKernel/SuluPageBundle.php
 
 		-
+			message: '#^Call to static method PHPUnit\\Framework\\Assert\:\:assertInstanceOf\(\) with ''Sulu\\\\Page\\\\Domain\\\\Repository\\\\PageRepositoryInterface'' and Sulu\\Page\\Infrastructure\\Doctrine\\Repository\\PageRepository will always evaluate to true\.$#'
+			identifier: staticMethod.alreadyNarrowedType
+			count: 1
+			path: packages/page/tests/Functional/UserInterface/Command/InitializeHomepageCommandTest.php
+
+		-
 			message: '#^Call to function array_key_exists\(\) with ''model'' and array\{model\: class\-string, repository\?\: class\-string\} will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 1
@@ -36883,6 +36889,12 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/DependencyInjection/Compiler/StructureExtensionCompilerPass.php
 
 		-
+			message: '#^Call to function array_key_exists\(\) with ''SuluNextPageBundle'' and array\{FrameworkBundle\: string, TwigBundle\: string, MonologBundle\: string, FlysystemBundle\: string, SuluCoreBundle\: string, DoctrineBundle\: string, DoctrineFixturesBundle\: string, DoctrinePHPCRBundle\: string, \.\.\.\} will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: src/Sulu/Bundle/PageBundle/DependencyInjection/Compiler/SuluNextPageCompilerPass.php
+
+		-
 			message: '#^Cannot access offset 0 on array\<SimpleXMLElement\>\|false\|null\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 2
@@ -39401,6 +39413,12 @@ parameters:
 			identifier: missingType.return
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version202005250917.php
+
+		-
+			message: '#^Unreachable statement \- code above always terminates\.$#'
+			identifier: deadCode.unreachable
+			count: 1
+			path: src/Sulu/Bundle/PageBundle/Routing/DecoratedContentRouteProvider.php
 
 		-
 			message: '#^Cannot access property \$headers on Symfony\\Component\\HttpFoundation\\Request\|null\.$#'
@@ -47263,6 +47281,60 @@ parameters:
 			path: src/Sulu/Bundle/SnippetBundle/Admin/SnippetAdmin.php
 
 		-
+			message: '#^Binary operation "\." between ''Format\: '' and mixed results in an error\.$#'
+			identifier: binaryOp.invalid
+			count: 1
+			path: src/Sulu/Bundle/SnippetBundle/Command/SnippetExportCommand.php
+
+		-
+			message: '#^Binary operation "\." between ''Locale\: '' and mixed results in an error\.$#'
+			identifier: binaryOp.invalid
+			count: 1
+			path: src/Sulu/Bundle/SnippetBundle/Command/SnippetExportCommand.php
+
+		-
+			message: '#^Binary operation "\." between ''Target\: '' and mixed results in an error\.$#'
+			identifier: binaryOp.invalid
+			count: 1
+			path: src/Sulu/Bundle/SnippetBundle/Command/SnippetExportCommand.php
+
+		-
+			message: '#^Binary operation "\." between non\-falsy\-string and mixed results in an error\.$#'
+			identifier: binaryOp.invalid
+			count: 1
+			path: src/Sulu/Bundle/SnippetBundle/Command/SnippetExportCommand.php
+
+		-
+			message: '#^Call to an undefined method Symfony\\Component\\Console\\Helper\\HelperInterface\:\:ask\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Sulu/Bundle/SnippetBundle/Command/SnippetExportCommand.php
+
+		-
+			message: '#^Parameter \#1 \$filename of function file_put_contents expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Sulu/Bundle/SnippetBundle/Command/SnippetExportCommand.php
+
+		-
+			message: '#^Parameter \#1 \$haystack of function strpos expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Sulu/Bundle/SnippetBundle/Command/SnippetExportCommand.php
+
+		-
+			message: '#^Parameter \#1 \$locale of method Sulu\\Component\\Snippet\\Export\\SnippetExportInterface\:\:export\(\) expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Sulu/Bundle/SnippetBundle/Command/SnippetExportCommand.php
+
+		-
+			message: '#^Parameter \#3 \$format of method Sulu\\Component\\Snippet\\Export\\SnippetExportInterface\:\:export\(\) expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Sulu/Bundle/SnippetBundle/Command/SnippetExportCommand.php
+
+		-
 			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
 			identifier: foreach.nonIterable
 			count: 2
@@ -47277,6 +47349,30 @@ parameters:
 		-
 			message: '#^Binary operation "\." between ''\<info\>'' and mixed results in an error\.$#'
 			identifier: binaryOp.invalid
+			count: 1
+			path: src/Sulu/Bundle/SnippetBundle/Command/SnippetImportCommand.php
+
+		-
+			message: '#^Binary operation "\." between ''Format\: '' and mixed results in an error\.$#'
+			identifier: binaryOp.invalid
+			count: 1
+			path: src/Sulu/Bundle/SnippetBundle/Command/SnippetImportCommand.php
+
+		-
+			message: '#^Binary operation "\." between ''Locale\: '' and mixed results in an error\.$#'
+			identifier: binaryOp.invalid
+			count: 1
+			path: src/Sulu/Bundle/SnippetBundle/Command/SnippetImportCommand.php
+
+		-
+			message: '#^Binary operation "\." between non\-falsy\-string and mixed results in an error\.$#'
+			identifier: binaryOp.invalid
+			count: 1
+			path: src/Sulu/Bundle/SnippetBundle/Command/SnippetImportCommand.php
+
+		-
+			message: '#^Call to an undefined method Symfony\\Component\\Console\\Helper\\HelperInterface\:\:ask\(\)\.$#'
+			identifier: method.notFound
 			count: 1
 			path: src/Sulu/Bundle/SnippetBundle/Command/SnippetImportCommand.php
 
@@ -47299,6 +47395,18 @@ parameters:
 			path: src/Sulu/Bundle/SnippetBundle/Command/SnippetImportCommand.php
 
 		-
+			message: '#^Parameter \#1 \$haystack of function strpos expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Sulu/Bundle/SnippetBundle/Command/SnippetImportCommand.php
+
+		-
+			message: '#^Parameter \#1 \$locale of method Sulu\\Component\\Snippet\\Import\\SnippetImportInterface\:\:import\(\) expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Sulu/Bundle/SnippetBundle/Command/SnippetImportCommand.php
+
+		-
 			message: '#^Parameter \#1 \$message of method Psr\\Log\\LoggerInterface\:\:info\(\) expects string\|Stringable, mixed given\.$#'
 			identifier: argument.type
 			count: 2
@@ -47311,6 +47419,12 @@ parameters:
 			path: src/Sulu/Bundle/SnippetBundle/Command/SnippetImportCommand.php
 
 		-
+			message: '#^Parameter \#2 \$filePath of method Sulu\\Component\\Snippet\\Import\\SnippetImportInterface\:\:import\(\) expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Sulu/Bundle/SnippetBundle/Command/SnippetImportCommand.php
+
+		-
 			message: '#^Parameter \#2 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -47318,6 +47432,12 @@ parameters:
 
 		-
 			message: '#^Parameter \#3 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Sulu/Bundle/SnippetBundle/Command/SnippetImportCommand.php
+
+		-
+			message: '#^Parameter \#4 \$format of method Sulu\\Component\\Snippet\\Import\\SnippetImportInterface\:\:import\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/SnippetBundle/Command/SnippetImportCommand.php
