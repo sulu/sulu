@@ -11,7 +11,6 @@
 
 namespace Sulu\Component\PHPCR\SessionManager;
 
-use PHPCR\PathNotFoundException;
 use PHPCR\SessionInterface;
 
 class SessionManager implements SessionManagerInterface

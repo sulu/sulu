@@ -223,7 +223,7 @@ class SearchControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(200, $response);
         $result = \json_decode($response->getContent(), true);
 
-        $this->assertEquals('snippet', $result['_embedded']['search_indexes'][0]['indexName']);
+        $this->assertEquals('category', $result['_embedded']['search_indexes'][0]['indexName']);
         $this->assertEquals([], $result['_embedded']['search_indexes'][0]['contexts']);
     }
 

@@ -301,7 +301,7 @@ class StructureXmlLoaderTest extends TestCase
         $properties = $result->getProperties();
 
         //invalid property will also be loaded
-        $this->assertCount(2, $properties);
+        $this->assertCount(3, $properties);
         $this->assertEquals('title', $properties['title']->getName());
         $this->assertEquals('url', $properties['url']->getName());
     }
