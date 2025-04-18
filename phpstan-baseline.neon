@@ -27502,7 +27502,7 @@ parameters:
 
 		-
 			message: "#^Call to an undefined method Sulu\\\\Component\\\\Security\\\\Authentication\\\\UserInterface\\:\\:getEmail\\(\\)\\.$#"
-			count: 2
+			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/UserManager/UserManager.php
 
 		-
