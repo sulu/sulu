@@ -185,11 +185,11 @@ final class SuluSnippetBundle extends AbstractBundle
             ])
             ->tag('sulu.context', ['context' => 'admin']);
 
-        // PropertyResolver services
         $services->set('sulu_snippet.snippet_reference_store')
             ->class(ReferenceStore::class)
             ->tag('sulu_website.reference_store', ['alias' => SnippetInterface::RESOURCE_KEY]);
 
+        // PropertyResolver services
         $services->set('sulu_snippet.single_snippet_selection_property_resolver')
             ->class(SingleSnippetSelectionPropertyResolver::class)
             ->tag('sulu_content.property_resolver');

@@ -29,9 +29,10 @@ use Sulu\Article\Infrastructure\Doctrine\Repository\ArticleRepository;
 use Sulu\Article\Infrastructure\Sulu\Admin\ArticleAdmin;
 use Sulu\Article\Infrastructure\Sulu\Content\ArticleDataProvider;
 use Sulu\Article\Infrastructure\Sulu\Content\ArticleLinkProvider;
-use Sulu\Article\Infrastructure\Sulu\Content\ArticleSelectionContentType;
 use Sulu\Article\Infrastructure\Sulu\Content\ArticleTeaserProvider;
-use Sulu\Article\Infrastructure\Sulu\Content\SingleArticleSelectionContentType;
+use Sulu\Article\Infrastructure\Sulu\Content\PropertyResolver\ArticleSelectionPropertyResolver;
+use Sulu\Article\Infrastructure\Sulu\Content\PropertyResolver\SingleArticleSelectionPropertyResolver;
+use Sulu\Article\Infrastructure\Sulu\Content\ResourceLoader\ArticleResourceLoader;
 use Sulu\Article\UserInterface\Controller\Admin\ArticleController;
 use Sulu\Bundle\PersistenceBundle\DependencyInjection\PersistenceExtensionTrait;
 use Sulu\Bundle\PersistenceBundle\PersistenceBundleTrait;
@@ -185,6 +186,23 @@ final class SuluArticleBundle extends AbstractBundle
             ])
             ->tag('sulu.context', ['context' => 'admin']);
 
+        // PropertyResolver services
+        $services->set('sulu_article.single_article_selection_property_resolver')
+            ->class(SingleArticleSelectionPropertyResolver::class)
+            ->tag('sulu_content.property_resolver');
+
+        $services->set('sulu_article.article_selection_property_resolver')
+            ->class(ArticleSelectionPropertyResolver::class)
+            ->tag('sulu_content.property_resolver');
+
+        // ResourceLoader services
+        $services->set('sulu_article.article_resource_loader')
+            ->class(ArticleResourceLoader::class)
+            ->args([
+                new Reference('sulu_article.article_repository'),
+            ])
+            ->tag('sulu_content.resource_loader', ['type' => ArticleResourceLoader::RESOURCE_LOADER_KEY]);
+
         // Preview service
         $services->set('sulu_article.article_preview_provider')
             ->class(ContentObjectProvider::class)
@@ -225,24 +243,6 @@ final class SuluArticleBundle extends AbstractBundle
         $services->set('sulu_article.article_reference_store')
             ->class(ReferenceStore::class)
             ->tag('sulu_website.reference_store', ['alias' => ArticleInterface::RESOURCE_KEY]);
-
-        $services->set('sulu_article.content_types.single_article_selection')
-            ->class(SingleArticleSelectionContentType::class)
-            ->args([
-                new Reference('sulu_article.article_repository'),
-                new Reference('sulu_content.content_manager'),
-                new Reference('sulu_article.article_reference_store'),
-            ])
-            ->tag('sulu.content.type', ['alias' => 'single_article_selection']);
-
-        $services->set('sulu_article.content_types.article_selection')
-            ->class(ArticleSelectionContentType::class)
-            ->args([
-                new Reference('sulu_article.article_repository'),
-                new Reference('sulu_content.content_manager'),
-                new Reference('sulu_article.article_reference_store'),
-            ])
-            ->tag('sulu.content.type', ['alias' => 'article_selection']);
 
         // Smart Content services
         $services->set('sulu_article.article_data_provider')
