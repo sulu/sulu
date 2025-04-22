@@ -53,7 +53,6 @@ After that you need to register the new Sulu bundles in your `config/bundles.php
 return [
      // ...
 -    Sulu\Bundle\SnippetBundle\SuluSnippetBundle::class => ['all' => true],
--    Sulu\Bundle\SuluPageBundle\SuluPageBundle::class => ['all' => true],
 -    Sulu\Bundle\ArticleBundle\SuluArticleBundle::class => ['all' => true],
 -    ONGR\ElasticsearchBundle\ONGRElasticsearchBundle::class => ['all' => true],
 
@@ -76,7 +75,6 @@ Then you need to update the route configuration in your `config/routes/sulu_admi
 +    resource: "@SuluSnippetBundle/config/routing_admin_api.yaml"
      prefix: /admin/api
 
-# TODO sulu_page_api or sulu_next_page_api ?
 +sulu_next_page_api:
 +    resource: "@SuluNextPageBundle/config/routing_admin_api.yaml"
 +    prefix: /admin/api
