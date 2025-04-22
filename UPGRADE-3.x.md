@@ -65,6 +65,8 @@ return [
 +    Sulu\Page\Infrastructure\Symfony\HttpKernel\SuluPageBundle::class => ['all' => true],
 ```
 
+### Register new bundle routes
+
 Then you need to update the route configuration in your `config/routes/sulu_admin.yaml`:
 
 ```diff
@@ -83,6 +85,8 @@ Then you need to update the route configuration in your `config/routes/sulu_admi
 +    resource: "@SuluArticleBundle/config/routing_admin_api.yaml"
 +    prefix: /admin/api
 ```
+
+### Add new Content storage tables
 
 The new content storage architecture requires a new database schema. You can execute the following sql statements
 to update your database schema.
@@ -155,14 +159,14 @@ ALTER TABLE ar_articles ADD CONSTRAINT FK_7F75CD17DBF11E1D FOREIGN KEY (idUsersC
 ALTER TABLE ar_articles ADD CONSTRAINT FK_7F75CD1730D07CD5 FOREIGN KEY (idUsersChanger) REFERENCES se_users (id) ON DELETE SET NULL;
 ```
 
-#### Migrate Permission settings
+### Migrate Permission settings
 
 ```sql
 UPDATE `se_permissions` SET `context` = 'sulu.article.articles' WHERE `context` = 'sulu.modules.articles';
 UPDATE `se_permissions` SET `context` = 'sulu.snippet.snippets' WHERE `context` = 'sulu.global.snippets';
 ```
 
-#### Remove legacy user settings
+### Remove legacy user settings
 
 This step is optional but highly recommended, removing legacy user settings from the database helps ensure compatibility
 with the new content storage architecture. Some columns from the old settings may no longer exist in the updated schema.
