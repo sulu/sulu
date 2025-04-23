@@ -25,9 +25,11 @@ final readonly class CmfRouteProvider implements RouteProviderInterface
 {
     /**
      * @param RouteCollectionForRequestLoaderInterface[] $routeCollectionForRequestLoaders
+     * @param array<string, mixed> $routeDefaultsOptions
      */
     public function __construct(
         private iterable $routeCollectionForRequestLoaders,
+        private array $routeDefaultsOptions,
     ) {
     }
 
@@ -37,6 +39,8 @@ final readonly class CmfRouteProvider implements RouteProviderInterface
             $routeCollection = $routeCollectionLoader->getRouteCollectionForRequest($request);
 
             if (0 !== \count($routeCollection)) {
+                $routeCollection->addOptions($this->routeDefaultsOptions);
+
                 return $routeCollection;
             }
         }

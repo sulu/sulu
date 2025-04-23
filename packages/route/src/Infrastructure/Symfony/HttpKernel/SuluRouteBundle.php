@@ -24,11 +24,13 @@ use Sulu\Route\Domain\Model\Route;
 use Sulu\Route\Domain\Repository\RouteRepositoryInterface;
 use Sulu\Route\Infrastructure\Doctrine\EventListener\RouteChangedUpdater;
 use Sulu\Route\Infrastructure\Doctrine\Repository\RouteRepository;
+use Sulu\Route\Infrastructure\Symfony\DependencyInjection\RouteDefaultsOptionsCompilerPass;
 use Sulu\Route\Infrastructure\SymfonyCmf\Routing\CmfRouteProvider;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 
+use function Symfony\Component\DependencyInjection\Loader\Configurator\param;
 use function Symfony\Component\DependencyInjection\Loader\Configurator\tagged_iterator;
 use function Symfony\Component\DependencyInjection\Loader\Configurator\tagged_locator;
 
@@ -47,6 +49,11 @@ final class SuluRouteBundle extends AbstractBundle
     {
         $this->name = 'SuluNextRouteBundle';
         $this->extensionAlias = 'sulu_next_route'; // TODO also change route table from `ro_next_routes` to `ro_routes`
+    }
+
+    public function build(ContainerBuilder $container)
+    {
+        $container->addCompilerPass(new RouteDefaultsOptionsCompilerPass());
     }
 
     /**
@@ -85,6 +92,7 @@ final class SuluRouteBundle extends AbstractBundle
             ->class(CmfRouteProvider::class)
             ->args([
                 tagged_iterator('sulu_route.route_collection_for_request_loader'),
+                param('sulu_route.route_default_options'),
             ]);
 
         $services->set('sulu_route.route_generator')

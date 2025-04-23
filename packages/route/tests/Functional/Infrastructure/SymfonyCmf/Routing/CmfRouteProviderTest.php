@@ -14,8 +14,11 @@ namespace Sulu\Route\Tests\Functional\Infrastructure\SymfonyCmf\Routing;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use Sulu\Route\Domain\Model\Route;
+use Sulu\Route\Domain\Value\RequestAttributeEnum;
 use Sulu\Route\Infrastructure\SymfonyCmf\Routing\CmfRouteProvider;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\RouteCompiler;
 
 #[CoversClass(CmfRouteProvider::class)]
 class CmfRouteProviderTest extends WebTestCase
@@ -63,5 +66,35 @@ class CmfRouteProviderTest extends WebTestCase
         $response = $client->getResponse();
 
         $this->assertSame(404, $response->getStatusCode(), 'Unexpected response: ' . ($response->getContent() ?: ''));
+    }
+
+    public function testRouteDefaultsOptions(): void
+    {
+        /** @var CmfRouteProvider $cmfRouteProvider */
+        $cmfRouteProvider = self::getContainer()->get('sulu_route.symfony_cmf_route_provider');
+
+        $request = Request::create('/en/test-redirect');
+        $request->attributes->set(RequestAttributeEnum::SITE->value, 'sulu-io');
+        $request->attributes->set(RequestAttributeEnum::SLUG->value, '/test-redirect');
+        $request->setLocale('en');
+
+        $routeCollection = $cmfRouteProvider->getRouteCollectionForRequest($request);
+
+        $routes = $routeCollection->all();
+        $this->assertCount(1, $routes);
+
+        [$route] = \array_values($routes);
+
+        $this->assertSame([
+            'compiler_class' => RouteCompiler::class,
+            'utf8' => true,
+        ], $route->getOptions());
+        $this->assertSame([
+            '_controller',
+            'path',
+            'permanent',
+            '_sulu_route_target',
+            '_sulu_route',
+        ], \array_keys($route->getDefaults()));
     }
 }
