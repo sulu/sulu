@@ -423,7 +423,7 @@ flysystem:
         default.storage:
             adapter: 'local'
             options:
-                directory: '%kernel.project_dir%/var/uploads'
+                directory: '%kernel.project_dir%/var/uploads/media'
 ```
 
 Here are some examples on how to migrate individual providers:
