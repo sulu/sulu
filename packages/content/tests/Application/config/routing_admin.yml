@@ -76,11 +76,6 @@ sulu_core:
     resource: "@SuluCoreBundle/Resources/config/routing_api.yml"
     prefix: /admin/api
 
-sulu_custom_urls_api:
-    type: rest
-    resource: "@SuluCustomUrlBundle/Resources/config/routing_api.yml"
-    prefix: /admin/api
-
 sulu_route_api:
     type: rest
     resource: "@SuluRouteBundle/Resources/config/routing_api.yml"

@@ -41,7 +41,6 @@ return [
     Sulu\Bundle\ActivityBundle\SuluActivityBundle::class => ['all' => true],
     Sulu\Bundle\TrashBundle\SuluTrashBundle::class => ['all' => true],
     Sulu\Bundle\ReferenceBundle\SuluReferenceBundle::class => ['all' => true],
-    Sulu\Bundle\CustomUrlBundle\SuluCustomUrlBundle::class => ['all' => true],
     Sulu\Bundle\RouteBundle\SuluRouteBundle::class => ['all' => true],
     Sulu\Bundle\MarkupBundle\SuluMarkupBundle::class => ['all' => true],
     Sulu\Bundle\AudienceTargetingBundle\SuluAudienceTargetingBundle::class => ['all' => true],

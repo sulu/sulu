@@ -35,10 +35,6 @@ final class RouteDefaultsOptionsCompilerPass implements CompilerPassInterface
 
         $container->setParameter('sulu_route.route_default_options', $routeDefaultOptions);
 
-        if ($container->hasDefinition('sulu_custom_urls.routing.provider')) {
-            $container->getDefinition('sulu_custom_urls.routing.provider')->setArgument(3, $routeDefaultOptions); // TODO remove before 3.0 release
-        }
-
         if ($container->hasDefinition('sulu_route.routing.provider')) {
             $container->getDefinition('sulu_route.routing.provider')->setArgument(5, $routeDefaultOptions); // TODO remove before 3.0 release
         }
