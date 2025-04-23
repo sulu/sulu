@@ -12,6 +12,7 @@
 namespace Sulu\Content\Infrastructure\Symfony\HttpKernel\Compiler;
 
 use Sulu\Content\Application\ResourceLoader\Loader\CachedResourceLoader;
+use Sulu\Content\Application\ResourceLoader\Loader\ResourceLoaderInterface;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
@@ -39,9 +40,10 @@ class ResourceLoaderCacheCompilerPass implements CompilerPassInterface
                 ->setPublic(false);
 
             $key = null;
-            if (\method_exists($decoratedService->getClass(), 'getKey')) {
-                // Check if the decorated service has a getKey() method
-                $key = $decoratedService->getClass()::getKey();
+            $class = $decoratedService->getClass();
+
+            if (null !== $class && \is_subclass_of($class, ResourceLoaderInterface::class)) {
+                $key = $class::getKey();
             }
 
             $decoratorService = $container->getDefinition($decoratorId);
