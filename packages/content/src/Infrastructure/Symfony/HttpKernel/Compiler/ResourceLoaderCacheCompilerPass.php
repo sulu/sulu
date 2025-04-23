@@ -40,7 +40,7 @@ class ResourceLoaderCacheCompilerPass implements CompilerPassInterface
 
             $key = null;
             if (method_exists($decoratedService->getClass(), 'getKey')){
-                // Check if the decorated service has a getType() method
+                // Check if the decorated service has a getKey() method
                 $key = $decoratedService->getClass()::getKey();
             }
 
