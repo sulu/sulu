@@ -39,7 +39,7 @@ class ResourceLoaderCacheCompilerPass implements CompilerPassInterface
                 ->setPublic(false);
 
             $key = null;
-            if (method_exists($decoratedService->getClass(), 'getKey')){
+            if (\method_exists($decoratedService->getClass(), 'getKey')) {
                 // Check if the decorated service has a getKey() method
                 $key = $decoratedService->getClass()::getKey();
             }
@@ -53,7 +53,7 @@ class ResourceLoaderCacheCompilerPass implements CompilerPassInterface
                 if (\is_array($tagAttributes)) {
                     foreach ($tagAttributes as $attributes) {
                         if (\is_array($attributes)) {
-                            if($key && !array_key_exists('key', $attributes)){
+                            if ($key && !\array_key_exists('key', $attributes)) {
                                 $attributes['key'] = $key;
                             }
 
