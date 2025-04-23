@@ -55,6 +55,7 @@ return [
 -    Sulu\Bundle\SnippetBundle\SuluSnippetBundle::class => ['all' => true],
 -    Sulu\Bundle\ArticleBundle\SuluArticleBundle::class => ['all' => true],
 -    ONGR\ElasticsearchBundle\ONGRElasticsearchBundle::class => ['all' => true],
+-    Sulu\Bundle\CustomUrlBundle\SuluCustomUrlBundle::class => ['all' => true],
 
 +    Sulu\Content\Infrastructure\Symfony\HttpKernel\SuluContentBundle::class => ['all' => true],
 +    Sulu\Route\Infrastructure\Symfony\HttpKernel\SuluRouteBundle::class => ['all' => true],
@@ -69,6 +70,11 @@ return [
 Then you need to update the route configuration in your `config/routes/sulu_admin.yaml`:
 
 ```diff
+- sulu_custom_urls_api:
+-     type: rest
+-     resource: "@SuluCustomUrlBundle/Resources/config/routing_api.yml"
+-     prefix: /admin/api
+
  sulu_snippet_api:
 -    resource: "@SuluSnippetBundle/Resources/config/routing_api.yml"
 -    type: rest
