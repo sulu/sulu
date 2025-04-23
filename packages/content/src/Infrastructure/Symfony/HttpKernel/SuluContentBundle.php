@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace Sulu\Content\Infrastructure\Symfony\HttpKernel;
 
+use Sulu\Content\Application\PropertyResolver\Resolver\PropertyResolverInterface;
+use Sulu\Content\Application\ResourceLoader\Loader\ResourceLoaderInterface;
 use Sulu\Content\Infrastructure\Symfony\HttpKernel\Compiler\ResourceLoaderCacheCompilerPass;
 use Sulu\Content\Infrastructure\Symfony\HttpKernel\Compiler\SettingsFormPass;
 use Symfony\Component\Config\Definition\Configurator\DefinitionConfigurator;
@@ -102,5 +104,11 @@ final class SuluContentBundle extends AbstractBundle
     {
         $container->addCompilerPass(new SettingsFormPass());
         $container->addCompilerPass(new ResourceLoaderCacheCompilerPass());
+
+        $container->registerForAutoconfiguration(ResourceLoaderInterface::class)
+            ->addTag('sulu_content.resource_loader');
+
+        $container->registerForAutoconfiguration(PropertyResolverInterface::class)
+            ->addTag('sulu_content.property_resolver');
     }
 }

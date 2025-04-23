@@ -38,6 +38,12 @@ class ResourceLoaderCacheCompilerPass implements CompilerPassInterface
                 ->addTag('kernel.reset', ['method' => 'reset'])
                 ->setPublic(false);
 
+            $key = null;
+            if (method_exists($decoratedService->getClass(), 'getKey')){
+                // Check if the decorated service has a getType() method
+                $key = $decoratedService->getClass()::getKey();
+            }
+
             $decoratorService = $container->getDefinition($decoratorId);
 
             // Copy all tags from the original service to the decorator to prevent tag loss during service decoration
@@ -47,6 +53,10 @@ class ResourceLoaderCacheCompilerPass implements CompilerPassInterface
                 if (\is_array($tagAttributes)) {
                     foreach ($tagAttributes as $attributes) {
                         if (\is_array($attributes)) {
+                            if($key && !array_key_exists('key', $attributes)){
+                                $attributes['key'] = $key;
+                            }
+
                             $decoratorService->addTag($tagName, $attributes);
                         }
                     }

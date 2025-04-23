@@ -42,14 +42,14 @@
                  class="Sulu\Bundle\MediaBundle\Infrastructure\Sulu\Content\ResourceLoader\MediaResourceLoader">
             <argument type="service" id="sulu_media.media_manager"/>
 
-            <tag name="sulu_content.resource_loader" type="media"/>
+            <tag name="sulu_content.resource_loader" key="media"/>
         </service>
 
         <service id="sulu_media.collection_resource_loader"
                  class="Sulu\Bundle\MediaBundle\Infrastructure\Sulu\Content\ResourceLoader\CollectionResourceLoader">
             <argument type="service" id="sulu_media.collection_manager"/>
 
-            <tag name="sulu_content.resource_loader" type="collection"/>
+            <tag name="sulu_content.resource_loader" key="collection"/>
         </service>
     </services>
 </container>

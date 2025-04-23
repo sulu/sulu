@@ -9,8 +9,8 @@
             <argument
                 type="tagged"
                 tag="sulu_content.resource_loader"
-                default-index-method="getType"
-                index-by="type"
+                default-index-method="getKey"
+                index-by="key"
             />
         </service>
 
@@ -18,14 +18,14 @@
                  class="Sulu\Content\Application\ResourceLoader\Loader\LinkResourceLoader">
             <argument type="service" id="sulu_markup.link_tag.provider_pool"/>
 
-            <tag name="sulu_content.resource_loader" type="link"/>
+            <tag name="sulu_content.resource_loader" key="link"/>
         </service>
 
         <service id="sulu_content.teaser_resource_loader"
         class="Sulu\Content\Application\ResourceLoader\Loader\TeaserResourceLoader">
             <argument type="service" id="sulu_page.teaser.manager"/>
 
-            <tag name="sulu_content.resource_loader" type="teaser"/>
+            <tag name="sulu_content.resource_loader" key="teaser"/>
         </service>
     </services>
 </container>
