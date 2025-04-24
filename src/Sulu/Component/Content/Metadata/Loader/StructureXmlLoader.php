@@ -167,18 +167,18 @@ class StructureXmlLoader extends AbstractLoader
 
             $propertyType = $property->getType();
 
-            return true;
-
-            /*
-            // TODO maybe readd validation based on a JSON provided by admin build
             if ($this->contentTypeManager->has($propertyType)) {
-                 return true;
+                return true;
             }
 
             if ('ignore' === $property->getOnInvalid()) {
                 return false;
             }
 
+            return true;
+
+            /*
+            // TODO maybe readd validation based on a JSON provided by admin build
             throw new \InvalidArgumentException(\sprintf(
                 'Content type with alias "%s" has not been registered. Known content types are: "%s"',
                 $propertyType,
