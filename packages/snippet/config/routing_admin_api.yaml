@@ -34,8 +34,16 @@ sulu_snippet.post_snippet_trigger:
     controller: sulu_snippet.admin_snippet_controller::postTriggerAction
     format: json
 
+<<<<<<< HEAD
 sulu_snippet.get_snippet_versions:
     path: /snippets/{id}/versions.{_format}
     methods: GET
     controller: sulu_snippet.admin_snippet_controller::getVersionsAction
+=======
+# Snippet areas
+sulu_snippet_area.get_snippet_areas:
+    path: /snippets_areas/{webspace}
+    methods: GET
+    controller: sulu_snippet.admin_snippet_area_controller::cgetAction
+>>>>>>> 3861077403 (Snippets and areas)
     format: json
