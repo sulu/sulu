@@ -14,7 +14,7 @@ export default class SnippetAreaStore {
         this.webspaceKey = webspaceKey;
 
         ResourceRequester.getList('snippet_areas', {webspace: webspaceKey}).then(action((response) => {
-            this.snippetAreas = response._embedded.areas.reduce((snippetAreas, snippetArea) => {
+            this.snippetAreas = response._embedded.snippet_areas.reduce((snippetAreas, snippetArea) => {
                 snippetAreas[snippetArea.key] = snippetArea;
 
                 return snippetAreas;

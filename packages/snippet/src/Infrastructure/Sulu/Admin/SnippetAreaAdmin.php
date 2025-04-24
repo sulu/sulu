@@ -2,15 +2,22 @@
 
 declare(strict_types=1);
 
+/*
+ * This file is part of Sulu.
+ *
+ * (c) Sulu GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Sulu\Snippet\Infrastructure\Sulu\Admin;
 
-use Sulu\Bundle\PageBundle\Admin\PageAdmin;
-use Sulu\Component\Localization\Manager\LocalizationManagerInterface;
-use Sulu\Content\Infrastructure\Sulu\Admin\ContentViewBuilderFactoryInterface;
 use Sulu\Bundle\AdminBundle\Admin\Admin;
-use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewBuilderFactoryInterface;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewCollection;
+use Sulu\Bundle\PageBundle\Admin\PageAdmin;
+use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 
 class SnippetAreaAdmin extends Admin
 {
@@ -19,8 +26,8 @@ class SnippetAreaAdmin extends Admin
     public const LIST_VIEW = 'sulu_snippet.snippet_areas.list';
 
     public function __construct(
-      private ViewBuilderFactoryInterface $viewBuilderFactory,
-      private SecurityCheckerInterface $securityChecker,
+        private ViewBuilderFactoryInterface $viewBuilderFactory,
+        private SecurityCheckerInterface $securityChecker,
     ) {
     }
 

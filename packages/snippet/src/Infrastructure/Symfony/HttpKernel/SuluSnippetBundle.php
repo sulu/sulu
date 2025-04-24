@@ -362,8 +362,8 @@ final class SuluSnippetBundle extends AbstractBundle
                         'snippet_areas' => [
                             'routes' => [
                                 'list' => 'sulu_snippet_area.get_snippet_areas',
-                            ]
-                        ]
+                            ],
+                        ],
                     ],
                     'field_type_options' => [
                         'selection' => [
