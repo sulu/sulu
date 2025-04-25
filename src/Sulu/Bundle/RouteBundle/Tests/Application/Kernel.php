@@ -22,4 +22,12 @@ class Kernel extends SuluTestKernel
 
         $loader->load(__DIR__ . '/config/config.yml');
     }
+
+    public function registerBundles(): iterable
+    {
+        $bundles = [...parent::registerBundles()];
+        $bundles[] = new \Sulu\Bundle\RouteBundle\SuluRouteBundle();
+
+        return $bundles;
+    }
 }

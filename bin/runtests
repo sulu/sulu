@@ -117,7 +117,7 @@ function exec_sf_cmd($cmd, $echo = true, $checkForError = true)
     }
 
     return exec_cmd(
-        PHP_BINARY . ' ' . get_test_console_path() . ' ' . $cmd,
+        PHP_BINARY . ' ' . get_test_console_path() . ' ' . $cmd . ' --env test',
         $echo,
         $checkForError
     );
@@ -195,7 +195,7 @@ function get_bundles($target = null)
 
 function get_test_console_path()
 {
-    $consolePath = __DIR__ . '/../packages/article/tests/Application/bin/adminconsole'; // to init the database with complete schema was using currently article bundle
+    $consolePath = __DIR__ . '/../bin/adminconsole'; // to init the database with complete schema was using currently article bundle
 
     if (!file_exists($consolePath)) {
         write_error(sprintf('Could not find test console "%s", is the test being executed in the correct directory?', $consolePath));

@@ -144,7 +144,7 @@ jobs:
                       tools: 'composer:v2'
                       env:
                           SYMFONY_DEPRECATIONS_HELPER: disabled
-                          DATABASE_URL: mysql://root@127.0.0.1:3306/sulu_test?serverVersion=5.7&charset=utf8mb4
+                          DATABASE_URL: mysql://root@127.0.0.1:3306/sulu?serverVersion=5.7&charset=utf8mb4
 
                     - php-version: '8.2'
                       database: mariadb-114
@@ -154,7 +154,7 @@ jobs:
                       tools: 'composer:v2'
                       env:
                           SYMFONY_DEPRECATIONS_HELPER: weak
-                          DATABASE_URL: mysql://root:ChangeMe@127.0.0.1:3306/sulu_test?serverVersion=11.4.4-MariaDB&charset=utf8mb4
+                          DATABASE_URL: mysql://root:ChangeMe@127.0.0.1:3306/sulu?serverVersion=11.4.4-MariaDB&charset=utf8mb4
 
                     - php-version: '8.3'
                       database: postgres-14
@@ -164,7 +164,7 @@ jobs:
                       tools: 'composer:v2'
                       env:
                           SYMFONY_DEPRECATIONS_HELPER: weak
-                          DATABASE_URL: postgres://symfony:ChangeMe@127.0.0.1:5432/sulu_test?serverVersion=14.11
+                          DATABASE_URL: postgres://symfony:ChangeMe@127.0.0.1:5432/sulu?serverVersion=14.11
 
                     - php-version: '8.3'
                       database: postgres-14
@@ -174,7 +174,7 @@ jobs:
                       tools: 'composer:v2'
                       env:
                           SYMFONY_DEPRECATIONS_HELPER: weak
-                          DATABASE_URL: postgres://symfony:ChangeMe@127.0.0.1:5432/sulu_test?serverVersion=14.11
+                          DATABASE_URL: postgres://symfony:ChangeMe@127.0.0.1:5432/sulu?serverVersion=14.11
 
                     - php-version: '8.4'
                       database: mysql-80
@@ -185,7 +185,7 @@ jobs:
                       composer-stability: 'dev'
                       env:
                           SYMFONY_DEPRECATIONS_HELPER: weak
-                          DATABASE_URL: mysql://root:ChangeMe@127.0.0.1:3306/sulu_test?serverVersion=8.0&charset=utf8mb4
+                          DATABASE_URL: mysql://root:ChangeMe@127.0.0.1:3306/sulu?serverVersion=8.0&charset=utf8mb4
 
         steps:
             - name: Checkout project

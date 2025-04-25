@@ -21,6 +21,8 @@ doctrine:
         auto_mapping: true
     dbal:
         url: '%env(DATABASE_URL)%'
+        # "TEST_TOKEN" is typically set by ParaTest
+        dbname_suffix: '_test%env(default::TEST_TOKEN)%'
 
 services:
     Sulu\Route\Tests\Application\ExampleSiteRouteGenerator:
