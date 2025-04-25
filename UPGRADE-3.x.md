@@ -408,6 +408,15 @@ Removed unused arguments:
 - `Sulu\Component\Webspace\Analyzer\Attributes\WebsiteRequestProcessor::__construct` `$contentMapper` (2nd argument) removed
 - `Sulu\\Bundle\\SecurityBundle\\UserManager\\UserManager::__construct` `$groupRepository` (4th argument) removed
 
+### Moved classes for 3.0:
+
+- `Sulu\Bundle\CoreBundle\ExpressionLanguage\ContainerExpressionLanguageProvider`: `Sulu\Bundle\AdminBundle\ExpressionLanguage\ContainerExpressionLanguageProvider`
+
+### Moved services for 3.0:
+
+- `sulu_core.expression_language`: `sulu_admin.expression_language`
+- `sulu_core.symfony_expression_language_provider`: `sulu_admin.symfony_expression_language_provider`
+
 ### Piwik replaced with Matomo script
 
 The script provided by Sulu for the piwik implementation has been updated to use mataomo path so the script is now pointing to matomo.php instead of the piwik.php file.

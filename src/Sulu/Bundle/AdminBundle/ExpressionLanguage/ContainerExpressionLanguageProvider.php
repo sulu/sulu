@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\CoreBundle\ExpressionLanguage;
+namespace Sulu\Bundle\AdminBundle\ExpressionLanguage;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\ExpressionLanguage\ExpressionFunction;
@@ -19,7 +19,6 @@ class ContainerExpressionLanguageProvider implements ExpressionFunctionProviderI
 {
     public function __construct(private ContainerInterface $container)
     {
-        $this->container = $container;
     }
 
     public function getFunctions(): array
@@ -29,7 +28,7 @@ class ContainerExpressionLanguageProvider implements ExpressionFunctionProviderI
                 'service',
                 function() {
                 },
-                function(array $variables, $value) {
+                function(array $variables, string $value) {
                     return $this->container->get($value);
                 }
             ),
@@ -38,7 +37,7 @@ class ContainerExpressionLanguageProvider implements ExpressionFunctionProviderI
                 'parameter',
                 function() {
                 },
-                function(array $variables, $value) {
+                function(array $variables, string $value) {
                     return $this->container->getParameter($value);
                 }
             ),

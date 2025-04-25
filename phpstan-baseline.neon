@@ -21697,18 +21697,6 @@ parameters:
 			path: src/Sulu/Bundle/CoreBundle/Entity/ApiEntityWrapper.php
 
 		-
-			message: '#^Parameter \#1 \$id of method Symfony\\Component\\DependencyInjection\\ContainerInterface\:\:get\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/CoreBundle/ExpressionLanguage/ContainerExpressionLanguageProvider.php
-
-		-
-			message: '#^Parameter \#1 \$name of method Symfony\\Component\\DependencyInjection\\ContainerInterface\:\:getParameter\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/CoreBundle/ExpressionLanguage/ContainerExpressionLanguageProvider.php
-
-		-
 			message: '#^Cannot access offset ''_embedded'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
@@ -60381,12 +60369,6 @@ parameters:
 		-
 			message: '#^Parameter \#4 \$formKey of method Sulu\\Component\\Content\\Metadata\\Parser\\PropertiesXmlParser\:\:load\(\) expects string\|null, mixed given\.$#'
 			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Loader/StructureXmlLoader.php
-
-		-
-			message: '#^Property Sulu\\Component\\Content\\Metadata\\Loader\\StructureXmlLoader\:\:\$contentTypeManager is never read, only written\.$#'
-			identifier: property.onlyWritten
 			count: 1
 			path: src/Sulu/Component/Content/Metadata/Loader/StructureXmlLoader.php
 
