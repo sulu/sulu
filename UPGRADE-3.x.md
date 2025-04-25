@@ -293,7 +293,7 @@ and the parameters
 
 ### Remove deprecated sulu_website twig attributes configuration
 
-The configuration of `config/packages/sulu_website.yaml` for twig attribute need to be be removed:
+The configuration for the Twig attribute in `config/packages/sulu_website.yaml` needs to be removed.
 
 ```diff
 sulu_website:
