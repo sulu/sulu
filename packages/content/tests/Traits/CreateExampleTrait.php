@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Sulu\Content\Tests\Traits;
 
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Bundle\RouteBundle\Entity\Route;
 use Sulu\Content\Application\ContentDataMapper\ContentDataMapper;

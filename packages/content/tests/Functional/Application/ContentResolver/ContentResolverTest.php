@@ -84,9 +84,6 @@ class ContentResolverTest extends SuluTestCase
                     ],
                 ],
             ],
-            [
-                'create_route' => true,
-            ]
         );
 
         static::getEntityManager()->flush();
@@ -174,9 +171,7 @@ class ContentResolverTest extends SuluTestCase
                     ],
                 ],
             ],
-            [
-                'create_route' => true,
-            ]
+            []
         );
 
         static::getEntityManager()->flush();
@@ -241,9 +236,7 @@ class ContentResolverTest extends SuluTestCase
                     ],
                 ],
             ],
-            [
-                'create_route' => true,
-            ]
+            []
         );
 
         static::getEntityManager()->flush();
@@ -290,9 +283,7 @@ class ContentResolverTest extends SuluTestCase
                     ],
                 ],
             ],
-            [
-                'create_route' => true,
-            ]
+            []
         );
 
         static::getEntityManager()->flush();
@@ -344,9 +335,7 @@ class ContentResolverTest extends SuluTestCase
                     ],
                 ],
             ],
-            [
-                'create_route' => true,
-            ]
+            []
         );
 
         static::getEntityManager()->flush();
@@ -417,9 +406,7 @@ class ContentResolverTest extends SuluTestCase
                     ],
                 ],
             ],
-            [
-                'create_route' => true,
-            ]
+            []
         );
 
         static::getEntityManager()->flush();
