@@ -93,7 +93,6 @@
             <argument type="service" id="sulu.phpcr.session"/>
             <argument type="service" id="debug.stopwatch" on-invalid="null"/>
             <argument>%sulu_security.permissions%</argument>
-            <argument>%sulu_website.enabled_twig_attributes%</argument>
         </service>
 
         <!-- sitemap generator -->
@@ -157,7 +156,6 @@
             <argument type="service" id="sulu_security.security_checker" on-invalid="null"/>
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>
             <argument type="service" id="request_stack"/>
-            <argument>%sulu_website.enabled_twig_attributes%</argument>
         </service>
         <service id="sulu_website.twig.content.memoized" class="%sulu_website.twig.content.memoized.class%">
             <argument type="service" id="sulu_website.twig.content"/>
@@ -183,7 +181,6 @@
         <service id="sulu_website.resolver.structure" class="%sulu_website.resolver.structure.class%" public="true">
             <argument type="service" id="sulu.content.type_manager" />
             <argument type="service" id="sulu_page.extension.manager"/>
-            <argument>%sulu_website.enabled_twig_attributes%</argument>
         </service>
 
         <service id="sulu_website.resolver.request_analyzer" class="%sulu_website.resolver.request_analyzer.class%">
@@ -200,7 +197,6 @@
             <argument type="service" id="router"/>
             <argument type="service" id="request_stack"/>
             <argument>%kernel.environment%</argument>
-            <argument>%sulu_website.enabled_twig_attributes%</argument>
         </service>
 
         <service id="Sulu\Bundle\WebsiteBundle\Resolver\TemplateAttributeResolverInterface"
@@ -212,7 +208,6 @@
             <argument type="service" id="sulu_core.webspace.webspace_manager" />
             <argument type="service" id="request_stack"/>
             <argument>%sulu_website.segment_switch_url%</argument>
-            <argument>%sulu_website.enabled_twig_attributes%</argument>
         </service>
 
         <service id="Sulu\Bundle\WebsiteBundle\Resolver\ParameterResolverInterface"

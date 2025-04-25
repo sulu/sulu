@@ -161,10 +161,6 @@ class TemplateAttributeResolverTest extends TestCase
             'view' => [],
             'shadowBaseLocale' => null,
             'custom' => 'test',
-            'urls' => [
-                'en' => 'http://sulu.io/en/test',
-                'de' => 'http://sulu.io/de/test',
-            ],
             'localizations' => [
                 'en' => [
                     'locale' => 'en',
@@ -214,10 +210,6 @@ class TemplateAttributeResolverTest extends TestCase
             'view' => [],
             'shadowBaseLocale' => null,
             'custom' => 'test',
-            'urls' => [
-                'en' => 'http://sulu.io/en/test',
-                'de' => 'http://sulu.io/de/test',
-            ],
             'localizations' => [
                 'en' => [
                     'locale' => 'en',
@@ -244,55 +236,7 @@ class TemplateAttributeResolverTest extends TestCase
         ], $resolved);
     }
 
-    public function testResolveStaticRouteWithoutUrls(): void
-    {
-        $this->request->get('_route')->willReturn('test_static')->shouldBeCalled();
-        $this->request->get('_route_params')->willReturn(['host' => 'sulu.io', '_locale' => 'de']);
-
-        $this->router->generate('test_static', ['host' => 'sulu.io', '_locale' => 'de'], UrlGeneratorInterface::ABSOLUTE_URL)
-            ->willReturn('http://sulu.io/de/test')->shouldBeCalledTimes(1);
-        $this->router->generate('test_static', ['host' => 'sulu.io', '_locale' => 'en'], UrlGeneratorInterface::ABSOLUTE_URL)
-            ->willReturn('http://sulu.io/en/test')->shouldBeCalledTimes(1);
-
-        $templateAttributeResolver = $this->createTemplateAttributeResolver(['urls' => false]);
-        $resolved = $templateAttributeResolver->resolve(['custom' => 'test']);
-
-        $this->assertEquals([
-            'extension' => [
-                'seo' => [],
-                'excerpt' => [],
-            ],
-            'content' => [],
-            'view' => [],
-            'shadowBaseLocale' => null,
-            'custom' => 'test',
-            'localizations' => [
-                'en' => [
-                    'locale' => 'en',
-                    'url' => 'http://sulu.io/en/test',
-                    'alternate' => true,
-                ],
-                'de' => [
-                    'locale' => 'de',
-                    'url' => 'http://sulu.io/de/test',
-                    'alternate' => true,
-                ],
-            ],
-            'request' => [
-                'webspaceKey' => 'sulu_io',
-                'webspaceName' => 'Sulu',
-                'defaultLocale' => 'en',
-                'portalKey' => 'sulu_io',
-                'portalName' => 'Sulu',
-                'portalUrl' => 'sulu.io/de',
-                'resourceLocatorPrefix' => '/de',
-                'resourceLocator' => '/test',
-                'segmentKey' => null,
-            ],
-        ], $resolved);
-    }
-
-    private function createTemplateAttributeResolver(array $enabledTwigAttributes = ['urls' => true])
+    private function createTemplateAttributeResolver()
     {
         return new TemplateAttributeResolver(
             $this->requestAnalyzer->reveal(),
@@ -301,7 +245,6 @@ class TemplateAttributeResolverTest extends TestCase
             $this->router->reveal(),
             $this->requestStack->reveal(),
             $this->environment,
-            $enabledTwigAttributes
         );
     }
 }

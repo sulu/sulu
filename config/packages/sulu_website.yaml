@@ -1,5 +1,0 @@
-sulu_website:
-    twig:
-        attributes:
-            urls: false
-            path: false

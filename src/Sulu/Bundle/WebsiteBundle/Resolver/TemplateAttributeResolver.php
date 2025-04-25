@@ -53,11 +53,6 @@ class TemplateAttributeResolver implements TemplateAttributeResolverInterface
     protected $environment;
 
     /**
-     * @var array
-     */
-    private $enabledTwigAttributes;
-
-    /**
      * TemplateAttributeResolver constructor.
      *
      * @param string $environment
@@ -69,9 +64,6 @@ class TemplateAttributeResolver implements TemplateAttributeResolverInterface
         RouterInterface $router,
         RequestStack $requestStack,
         $environment,
-        array $enabledTwigAttributes = [
-            'urls' => true,
-        ]
     ) {
         $this->requestAnalyzer = $requestAnalyzer;
         $this->requestAnalyzerResolver = $requestAnalyzerResolver;
@@ -79,7 +71,6 @@ class TemplateAttributeResolver implements TemplateAttributeResolverInterface
         $this->router = $router;
         $this->requestStack = $requestStack;
         $this->environment = $environment;
-        $this->enabledTwigAttributes = $enabledTwigAttributes;
     }
 
     public function resolve($customParameters = [])
@@ -102,17 +93,6 @@ class TemplateAttributeResolver implements TemplateAttributeResolverInterface
             }
 
             $customParameters['localizations'] = $localizations;
-        }
-
-        if ($this->enabledTwigAttributes['urls'] ?? true) {
-            @trigger_deprecation('sulu/sulu', '2.2', 'Enabling the "urls" parameter is deprecated.');
-
-            if (!isset($customParameters['urls'])) {
-                $customParameters['urls'] = [];
-                foreach ($customParameters['localizations'] as $localization) {
-                    $customParameters['urls'][$localization['locale']] = $localization['url'];
-                }
-            }
         }
 
         return \array_merge(

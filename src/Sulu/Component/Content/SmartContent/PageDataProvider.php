@@ -61,16 +61,9 @@ class PageDataProvider implements DataProviderInterface, DataProviderAliasInterf
         private bool $hasAudienceTargeting = false,
         private ?MetadataProviderInterface $formMetadataProvider = null,
         private ?TokenStorageInterface $tokenStorage = null,
-        private array $enabledTwigAttributes = [
-            'path' => true,
-        ]
     ) {
         if (!$this->formMetadataProvider) {
             @trigger_deprecation('sulu/sulu', '2.3', 'The usage of the "PageDataProvider" without setting the "FormMetadataProvider" is deprecated. Please inject the "FormMetadataProvider".');
-        }
-
-        if ($this->enabledTwigAttributes['path'] ?? true) {
-            @trigger_deprecation('sulu/sulu', '2.3', 'Enabling the "path" parameter is deprecated.');
         }
     }
 
@@ -345,9 +338,7 @@ class PageDataProvider implements DataProviderInterface, DataProviderAliasInterf
             function($item) use ($locale) {
                 $this->referenceStore->add($item['id']);
 
-                if (!($this->enabledTwigAttributes['path'] ?? true)) {
-                    unset($item['path']);
-                }
+                unset($item['path']);
 
                 return new ArrayAccessItem($item['id'], $item, $this->getResource($item['id'], $locale));
             },

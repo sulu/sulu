@@ -9,7 +9,6 @@
             <argument type="service" id="sulu_page.reference_store.content"/>
             <argument>%sulu_document_manager.show_drafts%</argument>
             <argument>%sulu_security.permissions%</argument>
-            <argument>%sulu_website.enabled_twig_attributes%</argument>
 
             <tag name="sulu.content.type" alias="page_selection"/>
             <tag name="sulu.content.export" format="1.2.xliff" translate="false" />

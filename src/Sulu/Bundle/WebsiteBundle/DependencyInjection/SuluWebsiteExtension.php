@@ -107,10 +107,6 @@ class SuluWebsiteExtension extends Extension implements PrependExtensionInterfac
             $config['sitemap']['dump_dir']
         );
         $container->setParameter(
-            'sulu_website.enabled_twig_attributes',
-            $config['twig']['attributes']
-        );
-        $container->setParameter(
             'sulu_website.segment_switch_url',
             $config['segments']['switch_url']
         );

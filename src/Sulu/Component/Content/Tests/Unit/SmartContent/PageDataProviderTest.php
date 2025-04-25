@@ -468,12 +468,10 @@ class PageDataProviderTest extends TestCase
         $items = $result->getItems();
 
         $this->assertEquals($data[0]['id'], $items[0]->getId());
-        $this->assertEquals($data[0]['path'], $items[0]['path']);
         $this->assertTrue($items[0]->getResource()->initializeProxy());
         $this->assertEquals($document1->reveal(), $items[0]->getResource()->getWrappedValueHolderValue());
 
         $this->assertEquals($data[1]['id'], $items[1]->getId());
-        $this->assertEquals($data[1]['path'], $items[1]['path']);
         $this->assertTrue($items[1]->getResource()->initializeProxy());
         $this->assertEquals($document2->reveal(), $items[1]->getResource()->getWrappedValueHolderValue());
 
@@ -512,7 +510,6 @@ class PageDataProviderTest extends TestCase
             false,
             null,
             null,
-            ['path' => false]
         );
 
         $result = $provider->resolveResourceItems(
@@ -711,6 +708,7 @@ class PageDataProviderTest extends TestCase
         $items = $result->getItems();
         for ($i = 0, $length = \count($items); $i < $length; ++$i) {
             $this->assertEquals($data[$i]['id'], $items[$i]->getId());
+            unset($data[$i]['path']);
             $this->assertEquals($data[$i], $items[$i]->jsonSerialize());
 
             $this->assertTrue($items[$i]->getResource()->initializeProxy());

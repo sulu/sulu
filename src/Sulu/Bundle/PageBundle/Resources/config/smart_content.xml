@@ -43,7 +43,6 @@
             <argument type="expression">container.hasParameter('sulu_audience_targeting.enabled')</argument>
             <argument type="service" id="sulu_admin.form_metadata_provider" on-invalid="null"/>
             <argument type="service" id="security.token_storage" on-invalid="null"/>
-            <argument>%sulu_website.enabled_twig_attributes%</argument>
 
             <tag name="sulu.smart_content.data_provider" alias="pages"/>
         </service>

@@ -76,14 +76,6 @@ class ContentTwigExtension extends AbstractExtension implements ContentTwigExten
      */
     private $requestStack;
 
-    /**
-     * @var array{urls?: bool}
-     */
-    private $enabledTwigAttributes;
-
-    /**
-     * @param array{urls?: bool} $enabledTwigAttributes
-     */
     public function __construct(
         ContentMapperInterface $contentMapper,
         StructureResolverInterface $structureResolver,
@@ -93,9 +85,6 @@ class ContentTwigExtension extends AbstractExtension implements ContentTwigExten
         $securityChecker = null,
         ?WebspaceManagerInterface $webspaceManager = null,
         ?RequestStack $requestStack = null,
-        array $enabledTwigAttributes = [
-            'urls' => true,
-        ]
     ) {
         $this->contentMapper = $contentMapper;
         $this->structureResolver = $structureResolver;
@@ -117,8 +106,6 @@ class ContentTwigExtension extends AbstractExtension implements ContentTwigExten
         if (null === $this->requestStack) {
             @trigger_deprecation('sulu/sulu', '2.3', 'Instantiating the "ContentTwigExtension" without the "$requestStack" parameter is deprecated');
         }
-
-        $this->enabledTwigAttributes = $enabledTwigAttributes;
     }
 
     public function getFunctions()
@@ -215,11 +202,7 @@ class ContentTwigExtension extends AbstractExtension implements ContentTwigExten
             }
         }
 
-        if ($this->enabledTwigAttributes['urls'] ?? true) {
-            @trigger_deprecation('sulu/sulu', '2.2', 'Enabling the "urls" parameter is deprecated');
-        } else {
-            unset($structureData['urls']);
-        }
+        unset($structureData['urls']);
 
         return $structureData;
     }

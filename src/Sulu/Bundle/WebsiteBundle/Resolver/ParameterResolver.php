@@ -48,11 +48,6 @@ class ParameterResolver implements ParameterResolverInterface
     private $segmentSwitchUrl;
 
     /**
-     * @var array
-     */
-    private $enabledTwigAttributes;
-
-    /**
      * ParameterResolver constructor.
      */
     public function __construct(
@@ -61,16 +56,12 @@ class ParameterResolver implements ParameterResolverInterface
         WebspaceManagerInterface $webspaceManager,
         RequestStack $requestStack,
         $segmentSwitchUrl,
-        array $enabledTwigAttributes = [
-            'urls' => true,
-        ]
     ) {
         $this->structureResolver = $structureResolver;
         $this->requestAnalyzerResolver = $requestAnalyzerResolver;
         $this->webspaceManager = $webspaceManager;
         $this->requestStack = $requestStack;
         $this->segmentSwitchUrl = $segmentSwitchUrl;
-        $this->enabledTwigAttributes = $enabledTwigAttributes;
     }
 
     public function resolve(
@@ -122,15 +113,6 @@ class ParameterResolver implements ParameterResolverInterface
                 'country' => $localization->getCountry(),
                 'alternate' => $alternate,
             ];
-        }
-
-        if ($this->enabledTwigAttributes['urls'] ?? true) {
-            @trigger_deprecation('sulu/sulu', '2.2', 'Enabling the "urls" parameter is deprecated.');
-
-            $structureData['urls'] = [];
-            foreach ($localizations as $localization) {
-                $structureData['urls'][$localization['locale']] = $localization['url'];
-            }
         }
 
         $structureData['localizations'] = $localizations;

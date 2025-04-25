@@ -40,13 +40,7 @@ class PageSelection extends ComplexContentType implements ContentTypeExportInter
         private ReferenceStoreInterface $referenceStore,
         private $showDrafts,
         private $permissions = null,
-        private array $enabledTwigAttributes = [
-            'path' => true,
-        ]
     ) {
-        if ($this->enabledTwigAttributes['path'] ?? true) {
-            @trigger_deprecation('sulu/sulu', '2.3', 'Enabling the "path" parameter is deprecated.');
-        }
     }
 
     public function read(
@@ -125,7 +119,6 @@ class PageSelection extends ComplexContentType implements ContentTypeExportInter
             $property->getStructure()->getLanguageCode(),
             $this->showDrafts,
             $this->permissions[PermissionTypes::VIEW],
-            $this->enabledTwigAttributes
         );
 
         return $container->getData();

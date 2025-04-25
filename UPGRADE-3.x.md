@@ -291,6 +291,20 @@ and the parameters
 - `%sulu_website.twig.meta.class%`
 - `%sulu_website.twig.seo.class%`
 
+### Remove deprecated sulu_website twig attributes configuration
+
+The configuration of `config/packages/sulu_website.yaml` for twig attribute need to be be removed:
+
+```diff
+sulu_website:
+-    twig:
+-        attributes:
+-            urls: false
+-            path: false
+```
+
+If you have nothing else configured, the whole file can be removed.
+
 ### Removing "modules" from Permissions
 
 The unused column on the permissions table has been removed. This also requires some migration on the table, to recreate

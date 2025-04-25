@@ -40,12 +40,6 @@ jms_serializer:
     metadata:
         debug: '%kernel.debug%'
 
-sulu_website:
-    twig:
-        attributes:
-            urls: false
-            path: false
-
 flysystem:
     storages:
         default.storage:

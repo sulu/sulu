@@ -52,11 +52,6 @@ class NavigationMapper implements NavigationMapperInterface
      */
     private $permissions;
 
-    /**
-     * @var array
-     */
-    private $enabledTwigAttributes = [];
-
     public function __construct(
         ContentMapperInterface $contentMapper,
         ContentQueryExecutorInterface $contentQueryExecutor,
@@ -64,9 +59,6 @@ class NavigationMapper implements NavigationMapperInterface
         SessionManagerInterface $sessionManager,
         ?Stopwatch $stopwatch = null,
         $permissions = null,
-        array $enabledTwigAttributes = [
-            'path' => true,
-        ]
     ) {
         $this->contentMapper = $contentMapper;
         $this->contentQueryExecutor = $contentQueryExecutor;
@@ -74,11 +66,6 @@ class NavigationMapper implements NavigationMapperInterface
         $this->sessionManager = $sessionManager;
         $this->stopwatch = $stopwatch;
         $this->permissions = $permissions;
-        $this->enabledTwigAttributes = $enabledTwigAttributes;
-
-        if ($enabledTwigAttributes['path'] ?? true) {
-            @trigger_deprecation('sulu/sulu', '2.3', 'Enabling the "path" parameter is deprecated.');
-        }
     }
 
     public function getNavigation(
@@ -285,9 +272,7 @@ class NavigationMapper implements NavigationMapperInterface
                 $item['children'] = [];
             }
 
-            if (!($this->enabledTwigAttributes['path'] ?? true)) {
-                unset($item['path']);
-            }
+            unset($item['path']);
 
             $result[$key] = $item;
         }

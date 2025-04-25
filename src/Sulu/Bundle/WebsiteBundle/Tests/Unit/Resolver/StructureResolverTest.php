@@ -133,7 +133,6 @@ class StructureResolverTest extends TestCase
             'published' => 'date',
             'template' => 'test',
             'urls' => ['en' => '/description', 'de' => '/beschreibung', 'es' => null],
-            'path' => 'test-path',
             'shadowBaseLocale' => 'en',
             'lastModified' => $lastModified,
             'authored' => $authored,
@@ -215,7 +214,6 @@ class StructureResolverTest extends TestCase
         $structureResolver = new StructureResolver(
             $this->contentTypeManager->reveal(),
             $this->extensionManager->reveal(),
-            ['path' => false]
         );
 
         $this->assertEquals($expected, $structureResolver->resolve($structure->reveal()));
@@ -280,7 +278,6 @@ class StructureResolverTest extends TestCase
             'published' => 'date',
             'template' => 'test',
             'urls' => ['en' => '/description', 'de' => '/beschreibung', 'es' => null],
-            'path' => 'test-path',
             'shadowBaseLocale' => 'en',
             'lastModified' => $lastModified,
             'authored' => $authored,
@@ -354,7 +351,6 @@ class StructureResolverTest extends TestCase
             'published' => 'date',
             'template' => 'test',
             'urls' => ['en' => '/description', 'de' => '/beschreibung', 'es' => null],
-            'path' => 'test-path',
             'shadowBaseLocale' => 'en',
             'lastModified' => null,
             'authored' => $authored,

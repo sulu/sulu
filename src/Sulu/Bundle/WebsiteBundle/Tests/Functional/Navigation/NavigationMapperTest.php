@@ -273,10 +273,8 @@ class NavigationMapperTest extends SuluTestCase
         $main = $this->navigationMapper->getRootNavigation('sulu_io', 'en', 1);
         $this->assertEquals(2, \count($main));
         $this->assertEquals('/news', $main[0]['url']);
-        $this->assertEquals('/news', $main[0]['path']);
         $this->assertEquals(0, \count($main[0]['children']));
         $this->assertEquals('/products', $main[1]['url']);
-        $this->assertEquals('/products', $main[1]['path']);
         $this->assertEquals(0, \count($main[1]['children']));
 
         $main = $this->navigationMapper->getRootNavigation('sulu_io', 'en', null);
@@ -287,26 +285,6 @@ class NavigationMapperTest extends SuluTestCase
         $this->assertEquals(0, \count($main[0]['children'][1]['children']));
         $this->assertEquals(0, \count($main[1]['children'][0]['children']));
         $this->assertEquals(0, \count($main[1]['children'][1]['children']));
-    }
-
-    public function testMainNavigationWithoutPathParameter(): void
-    {
-        $navigationMapper = new NavigationMapper(
-            $this->contentMapper,
-            new ContentQueryExecutor($this->sessionManager, $this->contentMapper, null),
-            new NavigationQueryBuilder($this->structureManager, $this->extensionManager, $this->languageNamespace),
-            $this->sessionManager,
-            null,
-            ['view' => 64],
-            ['path' => false]
-        );
-
-        $main = $navigationMapper->getRootNavigation('sulu_io', 'en', 1);
-        $this->assertEquals(2, \count($main));
-        $this->assertEquals('/news', $main[0]['url']);
-        $this->assertArrayNotHasKey('path', $main[0]);
-        $this->assertEquals('/products', $main[1]['url']);
-        $this->assertArrayNotHasKey('path', $main[1]);
     }
 
     public function testMainNavigationWithSegment(): void
@@ -376,40 +354,10 @@ class NavigationMapperTest extends SuluTestCase
         $this->assertEquals($this->data['news/news-1']->getUuid(), $main[0]['id']);
         $this->assertEquals('News-1', $main[0]['title']);
         $this->assertEquals('/news/news-1', $main[0]['url']);
-        $this->assertEquals('/news/news-1', $main[0]['path']);
 
         $this->assertEquals($this->data['news/news-2']->getUuid(), $main[1]['id']);
         $this->assertEquals('News-2', $main[1]['title']);
         $this->assertEquals('/news/news-2', $main[1]['url']);
-        $this->assertEquals('/news/news-2', $main[1]['path']);
-    }
-
-    public function testNavigationWithoutPathParameter(): void
-    {
-        $navigationMapper = new NavigationMapper(
-            $this->contentMapper,
-            new ContentQueryExecutor($this->sessionManager, $this->contentMapper, null),
-            new NavigationQueryBuilder($this->structureManager, $this->extensionManager, $this->languageNamespace),
-            $this->sessionManager,
-            null,
-            ['view' => 64],
-            ['path' => false]
-        );
-
-        $main = $navigationMapper->getNavigation($this->data['news']->getUuid(), 'sulu_io', 'en', 1);
-        $this->assertEquals(2, \count($main));
-        $this->assertEquals(0, \count($main[0]['children']));
-        $this->assertEquals(0, \count($main[1]['children']));
-
-        $this->assertEquals($this->data['news/news-1']->getUuid(), $main[0]['id']);
-        $this->assertEquals('News-1', $main[0]['title']);
-        $this->assertEquals('/news/news-1', $main[0]['url']);
-        $this->assertArrayNotHasKey('path', $main[0]);
-
-        $this->assertEquals($this->data['news/news-2']->getUuid(), $main[1]['id']);
-        $this->assertEquals('News-2', $main[1]['title']);
-        $this->assertEquals('/news/news-2', $main[1]['url']);
-        $this->assertArrayNotHasKey('path', $main[0]);
     }
 
     public function testMainNavigationFlat(): void
