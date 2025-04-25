@@ -1,19 +1,28 @@
 parameters:
     env(PHPCR_WORKSPACE): 'default'
+    env(PHPCR_TRANSPORT): doctrinedbal
+    env(PHPCR_BACKEND_URL): http://localhost:8080/server/
+    env(PHPCR_USERNAME): admin
+    env(PHPCR_PASSWORD): admin
 
 sulu_document_manager:
     versioning:
         enabled: false # See https://docs.sulu.io/en/2.0/bundles/page/versioning.html if you want to enable versioning
     sessions:
-        # See https://docs.sulu.io/en/2.0/cookbook/jackrabbit.html if you want to use Jackrabbit
         default:
             backend:
-                type: doctrinedbal
-            workspace: "%env(PHPCR_WORKSPACE)%"
+                type: '%env(PHPCR_TRANSPORT)%'
+                url:  '%env(PHPCR_BACKEND_URL)%'
+            workspace: '%env(PHPCR_WORKSPACE)%'
+            username: '%env(PHPCR_USERNAME)%'
+            password: '%env(PHPCR_PASSWORD)%'
         live:
             backend:
-                type: doctrinedbal
-            workspace: "%env(PHPCR_WORKSPACE)%_live"
+                type: '%env(PHPCR_TRANSPORT)%'
+                url:  '%env(PHPCR_BACKEND_URL)%'
+            workspace: '%env(PHPCR_WORKSPACE)%_live'
+            username: '%env(PHPCR_USERNAME)%'
+            password: '%env(PHPCR_PASSWORD)%'
 
 when@prod: &prod
     sulu_document_manager:
