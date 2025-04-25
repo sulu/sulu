@@ -41,7 +41,6 @@ class ArticleControllerTest extends SuluTestCase
     public function testPostPublish(): string
     {
         self::purgeDatabase();
-        self::initPhpcr();
 
         $this->client->request('POST', '/admin/api/articles?locale=en&action=publish', [], [], [], \json_encode([
             'template' => 'article',

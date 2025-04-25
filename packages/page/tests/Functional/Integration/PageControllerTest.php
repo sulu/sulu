@@ -84,7 +84,6 @@ class PageControllerTest extends SuluTestCase
     public function testPostPublish(): string
     {
         self::purgeDatabase();
-        self::initPhpcr();
 
         $homepage = $this->createHomepage();
         $this->client->request(
