@@ -29,7 +29,7 @@ trait CreateExampleTrait
 {
     /**
      * @param array<string, array{ draft?: array<string, mixed>, live?: array<string, mixed> }> $dataSet
-     * @param array{create_route?: bool} $options
+     * @param array{} $options
      */
     protected static function createExample(array $dataSet = [], array $options = []): Example
     {
@@ -43,12 +43,6 @@ trait CreateExampleTrait
         ]);
 
         $example = new Example();
-
-        if ($options['create_route'] ?? false) {
-            Assert::isInstanceOf($entityManager, EntityManager::class);
-            $entityManager->persist($example);
-            $entityManager->flush($example); // we need an id for creating the route
-        }
 
         $slugger = new AsciiSlugger();
 
@@ -141,19 +135,6 @@ trait CreateExampleTrait
                     $liveDimensionContentCollection->getDimensionAttributes(),
                     $fillWithDefaultData($liveData)
                 );
-
-                if ($options['create_route'] ?? false) {
-                    $route = new Route();
-                    $route->setLocale($locale);
-
-                    /** @var array{url: string} $draftTemplateData */
-                    $draftTemplateData = $draftLocalizedDimension->getTemplateData();
-                    $route->setPath($draftTemplateData['url']);
-                    $route->setEntityId($example->getId()); // @phpstan-ignore-line
-                    $route->setEntityClass($example::class);
-
-                    $entityManager->persist($route);
-                }
             }
         }
 

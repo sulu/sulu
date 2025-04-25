@@ -8,13 +8,6 @@
             <tag name="doctrine.event_listener" event="loadClassMetadata" priority="100"/>
         </service>
 
-        <service id="sulu_content.route_remover" class="Sulu\Content\Infrastructure\Doctrine\RouteRemover">
-            <argument type="service" id="sulu_content.content_metadata_inspector"/>
-            <argument type="service" id="sulu.repository.route"/>
-            <argument>%sulu_route.mappings%</argument>
-            <tag name="doctrine.event_subscriber"/>
-        </service>
-
         <service id="sulu_content.content_view_builder_factory" class="Sulu\Content\Infrastructure\Sulu\Admin\ContentViewBuilderFactory">
             <argument type="service" id="sulu_admin.view_builder_factory"/>
             <argument type="service" id="sulu_preview.preview_object_provider_registry"/>

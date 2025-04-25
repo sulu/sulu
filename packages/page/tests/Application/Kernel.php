@@ -11,8 +11,10 @@
 
 namespace Sulu\Page\Tests\Application;
 
+use Sulu\Bundle\AudienceTargetingBundle\SuluAudienceTargetingBundle;
 use Sulu\Bundle\AutomationBundle\SuluAutomationBundle;
 use Sulu\Bundle\PageBundle\SuluPageBundle as DeprecatedSuluPageBundle;
+use Sulu\Bundle\RouteBundle\SuluRouteBundle as DeprecatedSuluRouteBundle;
 use Sulu\Bundle\TestBundle\Kernel\SuluTestKernel;
 use Sulu\Component\HttpKernel\SuluKernel;
 use Sulu\Content\Infrastructure\Symfony\HttpKernel\SuluContentBundle;
@@ -45,9 +47,12 @@ class Kernel extends SuluTestKernel
         $bundles = [...parent::registerBundles()];
 
         foreach ($bundles as $key => $bundle) {
-            // remove old route bundle to avoid conflicts
-            if (DeprecatedSuluPageBundle::class === $bundle::class) {
-                //                unset($bundles[$key]);
+            if (
+                $bundle instanceof SuluAudienceTargetingBundle // Audience Targeting is not configured and so should not be here
+                || $bundle instanceof DeprecatedSuluRouteBundle
+                // || $bundle instanceof DeprecatedSuluPageBundle // TODO remove old pages bundle
+            ) {
+                unset($bundles[$key]);
             }
         }
 

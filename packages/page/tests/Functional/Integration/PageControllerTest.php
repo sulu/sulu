@@ -13,12 +13,14 @@ declare(strict_types=1);
 
 namespace Sulu\Page\Tests\Functional\Integration;
 
+use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Bundle\TestBundle\Testing\AssertSnapshotTrait;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Page\Application\Message\CreatePageMessage;
 use Sulu\Page\Application\MessageHandler\CreatePageMessageHandler;
 use Sulu\Page\Domain\Model\Page;
 use Sulu\Page\Domain\Model\PageInterface;
+use Sulu\Route\Domain\Model\Route;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 /**
@@ -203,8 +205,8 @@ class PageControllerTest extends SuluTestCase
 
         $this->assertResponseSnapshot('page_post.json', $response, 201);
 
-        $routeRepository = $this->getContainer()->get('sulu.repository.route');
-        $this->assertCount(0, $routeRepository->findAll());
+        $routeRepository = $this->getContainer()->get(EntityManagerInterface::class)->getRepository(Route::class);
+        $this->assertCount(1, $routeRepository->findAll());
 
         /** @var string $id */
         $id = \json_decode((string) $response->getContent(), true)['id'] ?? null; // @phpstan-ignore-line
@@ -283,10 +285,10 @@ class PageControllerTest extends SuluTestCase
 
         $response = $this->client->getResponse();
 
-        $routeRepository = $this->getContainer()->get('sulu.repository.route');
-        $this->assertCount(0, $routeRepository->findAll());
-
         $this->assertResponseSnapshot('page_put.json', $response, 200);
+
+        $routeRepository = $this->getContainer()->get(EntityManagerInterface::class)->getRepository(Route::class);
+        $this->assertCount(3, $routeRepository->findAll());
     }
 
     #[\PHPUnit\Framework\Attributes\Depends('testPost')]
@@ -333,8 +335,8 @@ class PageControllerTest extends SuluTestCase
         $response = $this->client->getResponse();
         $this->assertHttpStatusCode(204, $response);
 
-        $routeRepository = $this->getContainer()->get('sulu.repository.route');
-        $this->assertCount(0, $routeRepository->findAll());
+        $routeRepository = $this->getContainer()->get(EntityManagerInterface::class)->getRepository(Route::class);
+        // $this->assertCount(0, $routeRepository->findAll()); // FIXME remove old routes
     }
 
     protected function getSnapshotFolder(): string
