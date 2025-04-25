@@ -59,11 +59,25 @@
             <tag name="sulu_admin.metadata_provider" type="form" />
         </service>
 
+        <service id="sulu_admin.expression_language" class="Symfony\Component\ExpressionLanguage\ExpressionLanguage">
+            <argument>null</argument>
+            <argument type="collection">
+                <argument type="service" id="sulu_admin.symfony_expression_language_provider" />
+            </argument>
+        </service>
+
+        <service
+            id="sulu_admin.symfony_expression_language_provider"
+            class="Sulu\Bundle\AdminBundle\ExpressionLanguage\ContainerExpressionLanguageProvider"
+        >
+            <argument type="service" id="service_container" />
+        </service>
+
         <service
             id="sulu_admin.expression_form_metadata_visitor"
             class="Sulu\Bundle\AdminBundle\Metadata\FormMetadata\ExpressionFormMetadataVisitor"
         >
-            <argument type="service" id="sulu_core.expression_language" />
+            <argument type="service" id="sulu_admin.expression_language" />
             <tag name="sulu_admin.form_metadata_visitor" />
             <tag name="sulu_admin.typed_form_metadata_visitor" />
         </service>
