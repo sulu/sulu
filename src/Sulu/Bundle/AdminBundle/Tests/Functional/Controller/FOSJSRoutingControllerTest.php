@@ -70,7 +70,6 @@ class FOSJSRoutingControllerTest extends SuluTestCase
             'sulu_contact.get_contact-titles',
             'sulu_contact.get_contact_medias',
             'sulu_contact.get_contacts',
-            'sulu_core.get_localizations',
             'sulu_location.geolocator_query',
             'sulu_media.cget_media',
             'sulu_media.delete_media_version',

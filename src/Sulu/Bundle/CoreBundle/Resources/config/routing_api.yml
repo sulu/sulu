@@ -1,4 +1,0 @@
-sulu_core.localizations:
-    type: rest
-    name_prefix: sulu_core.
-    resource: sulu_core.localization_controller

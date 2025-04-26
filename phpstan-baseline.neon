@@ -21697,30 +21697,6 @@ parameters:
 			path: src/Sulu/Bundle/CoreBundle/Entity/ApiEntityWrapper.php
 
 		-
-			message: '#^Cannot access offset ''_embedded'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/CoreBundle/Tests/Functional/Controller/LocalizationControllerTest.php
-
-		-
-			message: '#^Cannot access offset ''localizations'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/CoreBundle/Tests/Functional/Controller/LocalizationControllerTest.php
-
-		-
-			message: '#^Parameter \#1 \$json of function json_decode expects string, string\|false given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/CoreBundle/Tests/Functional/Controller/LocalizationControllerTest.php
-
-		-
-			message: '#^Parameter \#2 \$haystack of method PHPUnit\\Framework\\Assert\:\:assertCount\(\) expects Countable\|iterable, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/CoreBundle/Tests/Functional/Controller/LocalizationControllerTest.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\CoreBundle\\Tests\\Unit\\DependencyInjection\\Compiler\\ListBuilderMetadataProviderCompilerPassTest\:\:dataProcessProvider\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1

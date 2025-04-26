@@ -70,6 +70,11 @@ return [
 Then you need to update the route configuration in your `config/routes/sulu_admin.yaml`:
 
 ```diff
+-sulu_core:
+-    type: rest
+-    resource: "@SuluCoreBundle/Resources/config/routing_api.yml"
+-    prefix: /admin/api
+
 - sulu_custom_urls_api:
 -     type: rest
 -     resource: "@SuluCustomUrlBundle/Resources/config/routing_api.yml"
@@ -388,6 +393,7 @@ Removed classes / services:
 - `Sulu\Component\Rest\Listing\ListQueryBuilder`
 - `Sulu\Component\Rest\Listing\ListRepository`
 - `Sulu\Component\Rest\Listing\ListRestHelper`
+- `Sulu\\Bundle\\CoreBundle\\Controller\\LocalizationController`
 - `Sulu\\Bundle\\MediaBundle\\Media\\Storage\\AzureBlobStorage`
 - `Sulu\\Bundle\\MediaBundle\\Media\\Storage\\GoogleCloudStorage`
 - `Sulu\\Bundle\\MediaBundle\\Media\\Storage\\LocalStorage`
