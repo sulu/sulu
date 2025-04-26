@@ -21,8 +21,6 @@ use Sulu\Bundle\PersistenceBundle\PersistenceBundleTrait;
 use Sulu\Bundle\TrashBundle\Domain\Repository\TrashItemRepositoryInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\CustomUrl\Application\Mapper\CustomUrlMapperInterface;
-use Sulu\CustomUrl\Domain\Exception\MismatchingDomainPartException;
-use Sulu\CustomUrl\Domain\Exception\TitleAlreadyExistsException;
 use Sulu\CustomUrl\Domain\Model\CustomUrl;
 use Sulu\CustomUrl\Domain\Model\CustomUrlInterface;
 use Sulu\CustomUrl\Domain\Model\CustomUrlRoute;
@@ -142,26 +140,6 @@ final class SuluCustomUrlBundle extends AbstractBundle
      */
     public function prependExtension(ContainerConfigurator $container, ContainerBuilder $builder): void
     {
-        if ($builder->hasExtension('doctrine')) {
-            $builder->prependExtensionConfig(
-                'doctrine',
-                [
-                    'orm' => [
-                        'mappings' => [
-                            'SuluCustomUrlBundle' => [
-                                'type' => 'xml',
-                                'dir' => \dirname(__DIR__, 4) . '/config/doctrine/CustomUrl',
-                                'prefix' => 'Sulu\CustomUrl\Domain\Model',
-                                'alias' => 'SuluCustomUrlBundle',
-                                'is_bundle' => false,
-                                'mapping' => true,
-                            ],
-                        ],
-                    ],
-                ]
-            );
-        }
-
         if ($builder->hasExtension('sulu_admin')) {
             $builder->prependExtensionConfig(
                 'sulu_admin',
@@ -193,17 +171,23 @@ final class SuluCustomUrlBundle extends AbstractBundle
             );
         }
 
-        if ($builder->hasExtension('fos_rest')) {
+        if ($builder->hasExtension('doctrine')) {
             $builder->prependExtensionConfig(
-                'fos_rest',
+                'doctrine',
                 [
-                    'exception' => [
-                        'codes' => [
-                            TitleAlreadyExistsException::class => 400,
-                            MismatchingDomainPartException::class => 400,
+                    'orm' => [
+                        'mappings' => [
+                            'SuluCustomUrlBundle' => [
+                                'type' => 'xml',
+                                'dir' => \dirname(__DIR__, 4) . '/config/doctrine/CustomUrl',
+                                'prefix' => 'Sulu\CustomUrl\Domain\Model',
+                                'alias' => 'SuluCustomUrlBundle',
+                                'is_bundle' => false,
+                                'mapping' => true,
+                            ],
                         ],
                     ],
-                ]
+                ],
             );
         }
     }

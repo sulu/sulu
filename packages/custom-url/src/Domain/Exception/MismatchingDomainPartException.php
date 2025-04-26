@@ -11,12 +11,10 @@
 
 namespace Sulu\CustomUrl\Domain\Exception;
 
-use Sulu\Component\Rest\Exception\RestException;
-
 /**
  * Thrown when a missing domain-part is detected.
  */
-class MismatchingDomainPartException extends RestException
+class MismatchingDomainPartException extends \Exception
 {
     /**
      * @param array<string> $domainParts

@@ -22,7 +22,7 @@ use Sulu\Component\Security\SecuredControllerInterface;
 use Sulu\CustomUrl\Application\Messages\CreateCustomUrlMessage;
 use Sulu\CustomUrl\Application\Messages\ModifyCustomUrlMessage;
 use Sulu\CustomUrl\Application\Messages\RemoveCustomUrlMessage;
-use Sulu\CustomUrl\Domain\Exception\TitleAlreadyExistsException;
+use Sulu\CustomUrl\Domain\Exception\MismatchingDomainPartException;
 use Sulu\CustomUrl\Domain\Model\CustomUrlInterface;
 use Sulu\CustomUrl\Infrastructure\Repository\CustomUrlRepositoryInterface;
 use Sulu\CustomUrl\Infrastructure\Sulu\Admin\CustomUrlAdmin;
@@ -110,10 +110,12 @@ class CustomUrlController implements SecuredControllerInterface
             /** @var string $title */
             $title = $requestData['title'];
             if (\str_contains($e->getMessage(), 'Duplicate entry \'' . $title)) {
-                throw new TitleAlreadyExistsException($title);
+                return $this->createErrorResponse(\sprintf('Title "%s" already in use', $this->title), 9001);
             } else {
                 return new JsonResponse(null, Response::HTTP_CONFLICT);
             }
+        } catch (MismatchingDomainPartException $e) {
+            return $this->createErrorResponse($e->getMessage(), $e->getCode());
         }
 
         return new JsonResponse($this->normalizer->normalize(
@@ -143,10 +145,12 @@ class CustomUrlController implements SecuredControllerInterface
             /** @var string $title */
             $title = $requestData['title'];
             if (\str_contains($e->getMessage(), 'Duplicate entry \'' . $title)) {
-                throw new TitleAlreadyExistsException($title);
+                return $this->createErrorResponse(\sprintf('Title "%s" already in use', $this->title), 9001);
             } else {
                 return new JsonResponse(null, Response::HTTP_CONFLICT);
             }
+        } catch (MismatchingDomainPartException $e) {
+            return $this->createErrorResponse($e->getMessage(), $e->getCode());
         }
 
         return new JsonResponse($this->normalizer->normalize(
@@ -182,6 +186,14 @@ class CustomUrlController implements SecuredControllerInterface
         }
 
         return new Response(status: Response::HTTP_NO_CONTENT);
+    }
+
+    private function createErrorResponse(string $errorMessage, int $errorCode): JsonResponse
+    {
+        return new JsonResponse([
+            'code' => $errorCode,
+            'errorMessage' => $errorMessage,
+        ]);
     }
 
     public function getSecurityContext(): string

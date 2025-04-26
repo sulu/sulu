@@ -23,7 +23,7 @@ class CustomUrlMapper implements CustomUrlMapperInterface
             $customUrl->setTitle($data['title']);
         }
         if (\array_key_exists('published', $data)) {
-            $customUrl->setPublished($data['published']);
+            $customUrl->setPublished((bool) $data['published']);
         }
         if (\array_key_exists('baseDomain', $data)) {
             $customUrl->setBaseDomain($data['baseDomain']);
@@ -41,13 +41,13 @@ class CustomUrlMapper implements CustomUrlMapperInterface
             $customUrl->setCanonical($data['canonical']);
         }
         if (\array_key_exists('redirect', $data)) {
-            $customUrl->setRedirect($data['redirect']);
+            $customUrl->setRedirect((bool) $data['redirect']);
         }
         if (\array_key_exists('noFollow', $data)) {
-            $customUrl->setNoFollow($data['noFollow']);
+            $customUrl->setNoFollow((bool) $data['noFollow']);
         }
         if (\array_key_exists('noIndex', $data)) {
-            $customUrl->setNoIndex($data['noIndex']);
+            $customUrl->setNoIndex((bool) $data['noIndex']);
         }
     }
 }
