@@ -390,6 +390,7 @@ Removed classes / services:
 - `Sulu\Bundle\DocumentManagerBundle\Slugifier\Urlizer`
 - `Sulu\\Bundle\\CategoryBundle\\DependencyInjection\\DeprecationCompilerPass`
 - `Sulu\\Bundle\\SecurityBundle\\DataFixtures\\ORM\\LoadSecurityTypes`
+- `Sulu\\Bundle\\SecurityBundle\\Controller\\ContextsController`
 - `Sulu\Component\Rest\Listing\ListQueryBuilder`
 - `Sulu\Component\Rest\Listing\ListRepository`
 - `Sulu\Component\Rest\Listing\ListRestHelper`
@@ -427,6 +428,7 @@ Removed unused arguments:
 
 - `Sulu\Component\Webspace\Analyzer\Attributes\WebsiteRequestProcessor::__construct` `$contentMapper` (2nd argument) removed
 - `Sulu\\Bundle\\SecurityBundle\\UserManager\\UserManager::__construct` `$groupRepository` (4th argument) removed
+- `Sulu\\Bundle\\SecurityBundle\\Admin\\SecurityAdmin::__construct` `$urlGenerator` (3rd argument) removed
 
 ### Moved classes for 3.0:
 

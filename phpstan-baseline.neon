@@ -43297,12 +43297,6 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/Command/SyncPhpcrPermissionsCommand.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\SecurityBundle\\Controller\\ContextsController\:\:cgetAction\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Controller/ContextsController.php
-
-		-
 			message: '#^Binary operation "\." between ''The resourceKey "'' and mixed results in an error\.$#'
 			identifier: binaryOp.invalid
 			count: 2
