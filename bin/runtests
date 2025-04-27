@@ -351,9 +351,14 @@ if ($target = $input->getOption('target')) {
     $bundles = get_bundles($target);
 }
 
+write_header('Bundle tests');
+
 foreach ($bundles as $bundle) {
+    echo "::group::". basename($bundle->getPath()). PHP_EOL;
     run_bundle_tests($bundle);
+    echo "::endgroup::\n";
 }
+echo "\n";
 
 if (false === $input->getOption('no-component-tests') || $input->getOption('all')) {
     write_header('Components');
