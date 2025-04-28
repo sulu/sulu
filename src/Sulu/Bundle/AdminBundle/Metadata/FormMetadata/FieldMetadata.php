@@ -34,6 +34,11 @@ class FieldMetadata extends ItemMetadata
     protected $required;
 
     /**
+     * @var bool
+     */
+    protected $multilingual;
+
+    /**
      * @var null|int
      */
     protected $spaceAfter;
@@ -104,6 +109,16 @@ class FieldMetadata extends ItemMetadata
     public function setRequired(bool $required): void
     {
         $this->required = $required;
+    }
+
+    public function isMultilingual(): bool
+    {
+        return $this->multilingual;
+    }
+
+    public function setMultilingual(bool $multilingual): void
+    {
+        $this->multilingual = $multilingual;
     }
 
     public function getSpaceAfter(): ?int

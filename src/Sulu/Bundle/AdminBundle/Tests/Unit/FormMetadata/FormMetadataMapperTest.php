@@ -101,6 +101,7 @@ class FormMetadataMapperTest extends TestCase
         $this->assertEquals('visibleCondition', $newProperty1->getVisibleCondition());
         $this->assertEquals(6, $newProperty1->getColSpan());
         $this->assertEquals(true, $newProperty1->isRequired());
+        $this->assertEquals(true, $newProperty1->isMultilingual());
         $this->assertEquals(10, $newProperty1->getSpaceAfter());
         $this->assertEquals('onInvalid', $newProperty1->getOnInvalid());
     }
@@ -591,6 +592,7 @@ class FormMetadataMapperTest extends TestCase
         $property1->setVisibleCondition('visibleCondition');
         $property1->setColSpan(6);
         $property1->setRequired(true);
+        $property1->setLocalized(true);
         $property1->setSpaceAfter(10);
         $property1->setOnInvalid('onInvalid');
 
