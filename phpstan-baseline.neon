@@ -2101,7 +2101,7 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/FormMetadata/FormXmlLoader.php
 
 		-
-			message: '#^Parameter \#3 \$context of method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\Parser\\PropertiesXmlParser\:\:load\(\) expects DOMNode, DOMNode\|null given\.$#'
+			message: '#^Parameter \#2 \$context of method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\Parser\\PropertiesXmlParser\:\:load\(\) expects DOMNode, DOMNode\|null given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/AdminBundle/FormMetadata/FormXmlLoader.php
@@ -2473,12 +2473,6 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\Parser\\PropertiesXmlParser\:\:load\(\) has parameter \$tags with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\Parser\\PropertiesXmlParser\:\:load\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -2492,12 +2486,6 @@ parameters:
 
 		-
 			message: '#^Method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\Parser\\PropertiesXmlParser\:\:loadBlock\(\) has parameter \$formKey with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\Parser\\PropertiesXmlParser\:\:loadBlock\(\) has parameter \$tags with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
 			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
@@ -2539,12 +2527,6 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\Parser\\PropertiesXmlParser\:\:loadProperties\(\) has parameter \$tags with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\Parser\\PropertiesXmlParser\:\:loadProperties\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -2563,12 +2545,6 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\Parser\\PropertiesXmlParser\:\:loadProperty\(\) has parameter \$tags with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\Parser\\PropertiesXmlParser\:\:loadSection\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -2576,12 +2552,6 @@ parameters:
 
 		-
 			message: '#^Method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\Parser\\PropertiesXmlParser\:\:loadSection\(\) has parameter \$formKey with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\Parser\\PropertiesXmlParser\:\:loadSection\(\) has parameter \$tags with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
 			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
@@ -2599,12 +2569,6 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\Parser\\PropertiesXmlParser\:\:loadTags\(\) has parameter \$tags with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\Parser\\PropertiesXmlParser\:\:loadType\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -2617,12 +2581,6 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\Parser\\PropertiesXmlParser\:\:loadType\(\) has parameter \$tags with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\Parser\\PropertiesXmlParser\:\:loadTypes\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -2630,12 +2588,6 @@ parameters:
 
 		-
 			message: '#^Method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\Parser\\PropertiesXmlParser\:\:loadTypes\(\) has parameter \$formKey with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\Parser\\PropertiesXmlParser\:\:loadTypes\(\) has parameter \$tags with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
 			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
@@ -2869,6 +2821,12 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
 
 		-
+			message: '#^Parameter \#2 \$context of method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\Parser\\PropertiesXmlParser\:\:loadProperties\(\) expects DOMNode, DOMNode\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
+
+		-
 			message: '#^Parameter \#2 \$defaultType of class Sulu\\Component\\Content\\Exception\\InvalidDefaultTypeException constructor expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -2893,13 +2851,7 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
 
 		-
-			message: '#^Parameter \#3 \$context of method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\Parser\\PropertiesXmlParser\:\:loadProperties\(\) expects DOMNode, DOMNode\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Parameter \#4 \$formKey of method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\Parser\\PropertiesXmlParser\:\:loadProperties\(\) expects string\|null, mixed given\.$#'
+			message: '#^Parameter \#3 \$formKey of method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\Parser\\PropertiesXmlParser\:\:loadProperties\(\) expects string\|null, mixed given\.$#'
 			identifier: argument.type
 			count: 2
 			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
@@ -60483,7 +60435,7 @@ parameters:
 		-
 			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
 			identifier: foreach.nonIterable
-			count: 3
+			count: 2
 			path: src/Sulu/Component/Content/Metadata/Loader/StructureXmlLoader.php
 
 		-
@@ -60519,7 +60471,7 @@ parameters:
 		-
 			message: '#^Cannot access offset ''key'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 4
+			count: 3
 			path: src/Sulu/Component/Content/Metadata/Loader/StructureXmlLoader.php
 
 		-
@@ -60793,12 +60745,6 @@ parameters:
 			path: src/Sulu/Component/Content/Metadata/Loader/StructureXmlLoader.php
 
 		-
-			message: '#^Parameter \#1 \$key of function array_key_exists expects int\|string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Loader/StructureXmlLoader.php
-
-		-
 			message: '#^Parameter \#1 \$metaValues of method Sulu\\Component\\Content\\Metadata\\Loader\\StructureXmlLoader\:\:loadMetaValues\(\) expects array\<string, string\>, mixed given\.$#'
 			identifier: argument.type
 			count: 2
@@ -60847,12 +60793,6 @@ parameters:
 			path: src/Sulu/Component/Content/Metadata/Loader/StructureXmlLoader.php
 
 		-
-			message: '#^Parameter \#1 \$template of class Sulu\\Component\\Content\\Metadata\\Loader\\Exception\\RequiredTagNotFoundException constructor expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Loader/StructureXmlLoader.php
-
-		-
 			message: '#^Parameter \#1 \$template of class Sulu\\Component\\Content\\Metadata\\Loader\\Exception\\ReservedPropertyNameException constructor expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -60877,9 +60817,9 @@ parameters:
 			path: src/Sulu/Component/Content/Metadata/Loader/StructureXmlLoader.php
 
 		-
-			message: '#^Parameter \#2 \$array of function array_key_exists expects array, mixed given\.$#'
+			message: '#^Parameter \#2 \$context of method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\Parser\\PropertiesXmlParser\:\:load\(\) expects DOMNode, DOMNode\|null given\.$#'
 			identifier: argument.type
-			count: 2
+			count: 1
 			path: src/Sulu/Component/Content/Metadata/Loader/StructureXmlLoader.php
 
 		-
@@ -60890,12 +60830,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#2 \$reservedPropertyName of method Sulu\\Component\\Content\\Metadata\\Loader\\StructureXmlLoader\:\:isReservedProperty\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Loader/StructureXmlLoader.php
-
-		-
-			message: '#^Parameter \#2 \$tagName of class Sulu\\Component\\Content\\Metadata\\Loader\\Exception\\RequiredTagNotFoundException constructor expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Component/Content/Metadata/Loader/StructureXmlLoader.php
@@ -60913,7 +60847,7 @@ parameters:
 			path: src/Sulu/Component/Content/Metadata/Loader/StructureXmlLoader.php
 
 		-
-			message: '#^Parameter \#3 \$context of method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\Parser\\PropertiesXmlParser\:\:load\(\) expects DOMNode, DOMNode\|null given\.$#'
+			message: '#^Parameter \#3 \$formKey of method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\Parser\\PropertiesXmlParser\:\:load\(\) expects string\|null, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Component/Content/Metadata/Loader/StructureXmlLoader.php
@@ -60931,8 +60865,8 @@ parameters:
 			path: src/Sulu/Component/Content/Metadata/Loader/StructureXmlLoader.php
 
 		-
-			message: '#^Parameter \#4 \$formKey of method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\Parser\\PropertiesXmlParser\:\:load\(\) expects string\|null, mixed given\.$#'
-			identifier: argument.type
+			message: '#^Property Sulu\\Component\\Content\\Metadata\\Loader\\StructureXmlLoader\:\:\$requiredTagNames is never read, only written\.$#'
+			identifier: property.onlyWritten
 			count: 1
 			path: src/Sulu/Component/Content/Metadata/Loader/StructureXmlLoader.php
 

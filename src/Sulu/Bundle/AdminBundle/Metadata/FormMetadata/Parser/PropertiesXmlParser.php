@@ -20,7 +20,7 @@ use Sulu\Component\Content\Metadata\SectionMetadata;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
- * Parse properties structure from an XML file.
+ * @internal this class is not part of the public API and may be changed or removed without further notice
  */
 class PropertiesXmlParser
 {
@@ -173,7 +173,7 @@ class PropertiesXmlParser
         /** @var \DOMElement $node */
         foreach ($xpath->query('x:tag', $context) as $node) {
             $tag = $this->loadTag($xpath, $node);
-            $this->validateTag($tag, $tags);
+            $this->validateTag($tags, $tag);
 
             $result[] = $tag;
         }

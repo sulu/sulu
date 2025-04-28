@@ -16,6 +16,9 @@ use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\SchemaMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\XmlParserTrait;
 
+/**
+ * @internal this class is not part of the public API and may be changed or removed without further notice
+ */
 class SchemaXmlParser
 {
     use XmlParserTrait;

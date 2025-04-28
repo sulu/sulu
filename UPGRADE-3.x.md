@@ -525,7 +525,9 @@ Removed classes / services:
 - `Sulu\Bundle\MediaBundle\DependencyInjection\S3ClientCompilerPass` (internal)
 - `Sulu\Bundle\AdminBundle\Command\DownloadBuildCommand`
 - `Sulu\Component\Rest\ListBuilder\ListRepresentation`
-- `src\Sulu\Component\Content\Metadata\XmlParserTrait`
+- `src\Sulu\Component\Content\Metadata\XmlParserTrait`  (internal)
+- `Sulu\Component\Content\Metadata\Parser\PropertiesXmlParser` (moved and internal)
+- `Sulu\Component\Content\Metadata\Parser\SchemaXmlParser` (moved and internal)
 
 Removed deprecated functions and properties:
 
