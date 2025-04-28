@@ -32,7 +32,7 @@ class TeaserSelectionPropertyResolver implements PropertyResolverInterface
             || !\array_key_exists('items', $data)
             || !\is_array($data['items'])
         ) {
-            return ContentView::create($data, $returnedParams);
+            return ContentView::create([], $returnedParams);
         }
 
         $resourceLoaderKey = isset($params['resourceLoader']) && \is_string($params['resourceLoader']) ? $params['resourceLoader'] : TeaserResourceLoader::getKey();

@@ -36,6 +36,14 @@ class TeaserSelectionPropertyResolverTest extends TestCase
         $this->assertSame(['presentsAs' => null], $contentView->getView());
     }
 
+    public function testResolveWrongData(): void
+    {
+        $contentView = $this->resolver->resolve(['source' => 1], 'en');
+
+        $this->assertSame([], $contentView->getContent());
+        $this->assertSame(['presentsAs' => null], $contentView->getView());
+    }
+
     public function testResolveParams(): void
     {
         $contentView = $this->resolver->resolve([], 'en', ['custom' => 'params']);
