@@ -18,7 +18,6 @@ use Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeResolverInterface;
 use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Metadata\Loader\Exception\InvalidXmlException;
 use Sulu\Component\Content\Metadata\Loader\Exception\RequiredPropertyNameNotFoundException;
-use Sulu\Component\Content\Metadata\Loader\Exception\RequiredTagNotFoundException;
 use Sulu\Component\Content\Metadata\Loader\Exception\ReservedPropertyNameException;
 use Sulu\Component\Content\Metadata\PropertyMetadata;
 use Sulu\Component\Content\Metadata\SectionMetadata;
@@ -130,16 +129,12 @@ class StructureXmlLoader extends AbstractLoader
 
     protected function parse($resource, \DOMXPath $xpath, $type)
     {
-        // init running vars
-        $tags = [];
-
         // init result
         $result = $this->loadTemplateAttributes($resource, $xpath, $type);
 
         // load properties
         $propertiesNode = $xpath->query('/x:template/x:properties')->item(0);
         $result['properties'] = $this->propertiesXmlParser->load(
-            $tags,
             $xpath,
             $propertiesNode,
             $type
@@ -186,18 +181,6 @@ class StructureXmlLoader extends AbstractLoader
             ));
             */
         });
-
-        // FIXME until excerpt-template is no page template anymore
-        // - https://github.com/sulu-io/sulu/issues/1220#issuecomment-110704259
-        if (!\array_key_exists('internal', $result) || !$result['internal']) {
-            if (isset($this->requiredTagNames[$type])) {
-                foreach ($this->requiredTagNames[$type] as $requiredTagName) {
-                    if (!\array_key_exists($requiredTagName, $tags)) {
-                        throw new RequiredTagNotFoundException($result['key'], $requiredTagName);
-                    }
-                }
-            }
-        }
 
         return $result;
     }

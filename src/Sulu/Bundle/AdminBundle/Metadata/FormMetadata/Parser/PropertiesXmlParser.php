@@ -37,30 +37,29 @@ class PropertiesXmlParser
     }
 
     public function load(
-        &$tags,
         \DOMXPath $xpath,
         \DOMNode $context,
         ?string $formKey = null
     ): array {
-        $propertyData = $this->loadProperties($tags, $xpath, $context, $formKey);
+        $propertyData = $this->loadProperties($xpath, $context, $formKey);
 
         return $this->mapProperties($propertyData);
     }
 
-    private function loadProperties(&$tags, \DOMXPath $xpath, \DOMNode $context, ?string $formKey): array
+    private function loadProperties(\DOMXPath $xpath, \DOMNode $context, ?string $formKey): array
     {
         $result = [];
 
         /** @var \DOMElement $node */
         foreach ($xpath->query('x:*', $context) as $node) {
             if ('property' === $node->tagName) {
-                $value = $this->loadProperty($xpath, $node, $tags, $formKey);
+                $value = $this->loadProperty($xpath, $node, $formKey);
                 $result[$value['name']] = $value;
             } elseif ('block' === $node->tagName) {
-                $value = $this->loadBlock($xpath, $node, $tags, $formKey);
+                $value = $this->loadBlock($xpath, $node, $formKey);
                 $result[$value['name']] = $value;
             } elseif ('section' === $node->tagName) {
-                $value = $this->loadSection($xpath, $node, $tags, $formKey);
+                $value = $this->loadSection($xpath, $node, $formKey);
                 $result[$value['name']] = $value;
             }
         }
@@ -68,7 +67,7 @@ class PropertiesXmlParser
         return $result;
     }
 
-    private function loadProperty(\DOMXPath $xpath, \DOMNode $node, &$tags, $formKey)
+    private function loadProperty(\DOMXPath $xpath, \DOMNode $node, $formKey)
     {
         $result = $this->loadValues(
             $xpath,
@@ -90,10 +89,10 @@ class PropertiesXmlParser
         $result['mandatory'] = $this->getValueFromXPath('@mandatory', $xpath, $node, false);
         $result['multilingual'] = $this->getValueFromXPath('@multilingual', $xpath, $node, true);
         $result['onInvalid'] = $this->getValueFromXPath('@onInvalid', $xpath, $node);
-        $result['tags'] = $this->loadTags($tags, $xpath, $node);
+        $result['tags'] = $this->loadTags($xpath, $node);
         $result['params'] = $this->loadParams('x:params/x:param', $xpath, $node);
         $result['meta'] = $this->loadMeta($xpath, $node);
-        $result['types'] = $this->loadTypes($tags, $xpath, $node, $formKey);
+        $result['types'] = $this->loadTypes($xpath, $node, $formKey);
 
         $typeNames = \array_map(function($type) {
             return $type['name'];
@@ -112,7 +111,7 @@ class PropertiesXmlParser
         return $result;
     }
 
-    private function validateTag($tag, &$tags)
+    private function validateTag(&$tags, $tag)
     {
         if (!isset($tags[$tag['name']])) {
             $tags[$tag['name']] = [];
@@ -140,15 +139,15 @@ class PropertiesXmlParser
         return $tag;
     }
 
-    private function loadBlock(\DOMXPath $xpath, \DOMNode $node, &$tags, $formKey)
+    private function loadBlock(\DOMXPath $xpath, \DOMNode $node, $formKey)
     {
-        $result = $this->loadProperty($xpath, $node, $tags, $formKey);
+        $result = $this->loadProperty($xpath, $node, $formKey);
         $result['type'] = 'block';
 
         return $result;
     }
 
-    private function loadSection(\DOMXPath $xpath, \DOMNode $node, &$tags, $formKey)
+    private function loadSection(\DOMXPath $xpath, \DOMNode $node, $formKey)
     {
         $result = $this->loadValues(
             $xpath,
@@ -161,13 +160,14 @@ class PropertiesXmlParser
         $result['meta'] = $this->loadMeta($xpath, $node);
 
         $propertiesNode = $xpath->query('x:properties', $node)->item(0);
-        $result['properties'] = $this->loadProperties($tags, $xpath, $propertiesNode, $formKey);
+        $result['properties'] = $this->loadProperties($xpath, $propertiesNode, $formKey);
 
         return $result;
     }
 
-    private function loadTags(&$tags, \DOMXPath $xpath, ?\DOMNode $context = null)
+    private function loadTags(\DOMXPath $xpath, ?\DOMNode $context = null)
     {
+        $tags = [];
         $result = [];
 
         /** @var \DOMElement $node */
@@ -181,20 +181,20 @@ class PropertiesXmlParser
         return $result;
     }
 
-    private function loadTypes(&$tags, \DOMXPath $xpath, ?\DOMNode $context, $formKey)
+    private function loadTypes(\DOMXPath $xpath, ?\DOMNode $context, $formKey)
     {
         $result = [];
 
         /** @var \DOMElement $node */
         foreach ($xpath->query('x:types/x:type', $context) as $node) {
-            $value = $this->loadType($xpath, $node, $tags, $formKey);
+            $value = $this->loadType($xpath, $node, $formKey);
             $result[$value['name']] = $value;
         }
 
         return $result;
     }
 
-    private function loadType(\DOMXPath $xpath, \DOMNode $node, &$tags, $formKey)
+    private function loadType(\DOMXPath $xpath, \DOMNode $node, $formKey)
     {
         $result = $this->loadValues($xpath, $node, ['name', 'ref']);
         if ($result['ref'] && $result['name']) {
@@ -220,7 +220,7 @@ class PropertiesXmlParser
 
         $propertiesNode = $xpath->query('x:properties', $node)->item(0);
         if ($propertiesNode) {
-            $result['properties'] = $this->loadProperties($tags, $xpath, $propertiesNode, $formKey);
+            $result['properties'] = $this->loadProperties($xpath, $propertiesNode, $formKey);
         }
 
         return $result;

@@ -50,9 +50,6 @@ class FormXmlLoader extends AbstractLoader
 
     protected function parse($resource, \DOMXPath $xpath, $type): LocalizedFormMetadataCollection
     {
-        // init running vars
-        $tags = [];
-
         if (0 === $xpath->query('/x:form')->count()) {
             throw new InvalidRootTagException($resource, 'form');
         }
@@ -64,7 +61,6 @@ class FormXmlLoader extends AbstractLoader
 
         $propertiesNode = $xpath->query('/x:form/x:properties')->item(0);
         $properties = $this->propertiesXmlParser->load(
-            $tags,
             $xpath,
             $propertiesNode,
             $form->getKey()
