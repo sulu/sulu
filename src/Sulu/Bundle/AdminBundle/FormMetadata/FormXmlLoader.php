@@ -15,9 +15,9 @@ use Sulu\Bundle\AdminBundle\Exception\InvalidRootTagException;
 use Sulu\Bundle\AdminBundle\FormMetadata\FormMetadata as ExternalFormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\LocalizedFormMetadataCollection;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Parser\PropertiesXmlParser;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Parser\SchemaXmlParser;
 use Sulu\Component\Content\Metadata\Loader\AbstractLoader;
-use Sulu\Component\Content\Metadata\Parser\PropertiesXmlParser;
-use Sulu\Component\Content\Metadata\Parser\SchemaXmlParser;
 
 /**
  * Load structure from an XML file.

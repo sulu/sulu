@@ -11,7 +11,7 @@
 
 namespace Sulu\Component\Content\Metadata\Loader;
 
-use Sulu\Component\Content\Metadata\XmlParserTrait;
+use Sulu\Bundle\AdminBundle\Metadata\XmlParserTrait;
 use Sulu\Exception\FeatureNotImplementedException;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Loader\LoaderResolverInterface;

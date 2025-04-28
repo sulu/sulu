@@ -9,14 +9,14 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content\Metadata\Parser;
+namespace Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Parser;
 
+use Sulu\Bundle\AdminBundle\Metadata\XmlParserTrait;
 use Sulu\Component\Content\Exception\InvalidDefaultTypeException;
 use Sulu\Component\Content\Metadata\BlockMetadata;
 use Sulu\Component\Content\Metadata\ComponentMetadata;
 use Sulu\Component\Content\Metadata\PropertyMetadata;
 use Sulu\Component\Content\Metadata\SectionMetadata;
-use Sulu\Component\Content\Metadata\XmlParserTrait;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**

@@ -9,12 +9,12 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content\Metadata\Parser;
+namespace Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Parser;
 
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\ConstMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\SchemaMetadata;
-use Sulu\Component\Content\Metadata\XmlParserTrait;
+use Sulu\Bundle\AdminBundle\Metadata\XmlParserTrait;
 
 class SchemaXmlParser
 {

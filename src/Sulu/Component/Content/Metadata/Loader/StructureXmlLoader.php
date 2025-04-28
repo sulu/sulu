@@ -11,18 +11,18 @@
 
 namespace Sulu\Component\Content\Metadata\Loader;
 
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Parser\PropertiesXmlParser;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Parser\SchemaXmlParser;
+use Sulu\Bundle\AdminBundle\Metadata\XmlParserTrait;
 use Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeResolverInterface;
 use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Metadata\Loader\Exception\InvalidXmlException;
 use Sulu\Component\Content\Metadata\Loader\Exception\RequiredPropertyNameNotFoundException;
 use Sulu\Component\Content\Metadata\Loader\Exception\RequiredTagNotFoundException;
 use Sulu\Component\Content\Metadata\Loader\Exception\ReservedPropertyNameException;
-use Sulu\Component\Content\Metadata\Parser\PropertiesXmlParser;
-use Sulu\Component\Content\Metadata\Parser\SchemaXmlParser;
 use Sulu\Component\Content\Metadata\PropertyMetadata;
 use Sulu\Component\Content\Metadata\SectionMetadata;
 use Sulu\Component\Content\Metadata\StructureMetadata;
-use Sulu\Component\Content\Metadata\XmlParserTrait;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**

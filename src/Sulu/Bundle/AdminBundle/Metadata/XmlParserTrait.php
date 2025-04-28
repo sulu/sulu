@@ -9,8 +9,11 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content\Metadata;
+namespace Sulu\Bundle\AdminBundle\Metadata;
 
+/**
+ * @internal this class is not part of the public API and may be changed or removed without further notice
+ */
 trait XmlParserTrait
 {
     private function getValueFromXPath($path, \DOMXPath $xpath, ?\DOMNode $context = null, $default = null)

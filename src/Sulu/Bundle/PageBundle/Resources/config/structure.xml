@@ -8,25 +8,13 @@
                  class="Sulu\Component\Content\Metadata\Loader\StructureXmlLoader"
                  public="false">
             <argument type="service" id="sulu_http_cache.cache_lifetime.resolver"/>
-            <argument type="service" id="sulu_page.structure.properties_xml_parser"/>
-            <argument type="service" id="sulu_page.structure.schema_xml_parser"/>
+            <argument type="service" id="sulu_admin.properties_xml_parser"/>
+            <argument type="service" id="sulu_admin.schema_xml_parser"/>
             <argument type="service" id="sulu.content.type_manager" />
             <argument>%sulu.content.structure.required_properties%</argument>
             <argument>%sulu.content.structure.required_tags%</argument>
             <argument>%sulu_core.translated_locales%</argument>
             <argument type="service" id="translator" />
-        </service>
-
-        <service id="sulu_page.structure.properties_xml_parser"
-                 class="Sulu\Component\Content\Metadata\Parser\PropertiesXmlParser"
-                 public="false">
-            <argument type="service" id="translator" />
-            <argument>%sulu_core.translated_locales%</argument>
-        </service>
-
-        <service id="sulu_page.structure.schema_xml_parser"
-                 class="Sulu\Component\Content\Metadata\Parser\SchemaXmlParser"
-                 public="false">
         </service>
 
         <service id="sulu_page.structure.factory" class="Sulu\Component\Content\Metadata\Factory\StructureMetadataFactory" public="true">

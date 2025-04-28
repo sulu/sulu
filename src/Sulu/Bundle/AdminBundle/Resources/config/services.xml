@@ -66,6 +66,18 @@
             </argument>
         </service>
 
+        <service id="sulu_admin.properties_xml_parser"
+                 class="Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Parser\PropertiesXmlParser"
+                 public="false">
+            <argument type="service" id="translator" />
+            <argument>%sulu_core.translated_locales%</argument>
+        </service>
+
+        <service id="sulu_admin.schema_xml_parser"
+                 class="Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Parser\SchemaXmlParser"
+                 public="false">
+        </service>
+
         <service
             id="sulu_admin.symfony_expression_language_provider"
             class="Sulu\Bundle\AdminBundle\ExpressionLanguage\ContainerExpressionLanguageProvider"
@@ -128,8 +140,8 @@
         />
 
         <service id="sulu_admin.form_metadata.form_xml_loader" class="Sulu\Bundle\AdminBundle\FormMetadata\FormXmlLoader">
-            <argument type="service" id="sulu_page.structure.properties_xml_parser"/>
-            <argument type="service" id="sulu_page.structure.schema_xml_parser"/>
+            <argument type="service" id="sulu_admin.properties_xml_parser"/>
+            <argument type="service" id="sulu_admin.schema_xml_parser"/>
             <argument>%sulu_core.locales%</argument>
             <argument type="service" id="sulu_admin.form_metadata.form_metadata_mapper"/>
         </service>

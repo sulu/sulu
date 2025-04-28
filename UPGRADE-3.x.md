@@ -476,22 +476,23 @@ CREATE UNIQUE INDEX UNIQ_5CEC3EEAE25D857EA1FA6DDA ON se_permissions (context, id
 
 Removed classes / services:
 
-- `Sulu/Bundle/MarkupBundle/Listener/SwiftMailerListener`
+- `Sulu\Bundle\MarkupBundle\Listener\SwiftMailerListener`
 - `Sulu\Bundle\DocumentManagerBundle\Slugifier\Urlizer`
-- `Sulu\\Bundle\\CategoryBundle\\DependencyInjection\\DeprecationCompilerPass`
-- `Sulu\\Bundle\\SecurityBundle\\DataFixtures\\ORM\\LoadSecurityTypes`
-- `Sulu\\Bundle\\SecurityBundle\\Controller\\ContextsController`
+- `Sulu\Bundle\CategoryBundle\DependencyInjection\DeprecationCompilerPass`
+- `Sulu\Bundle\SecurityBundle\DataFixtures\ORM\LoadSecurityTypes`
+- `Sulu\Bundle\SecurityBundle\Controller\ContextsController`
 - `Sulu\Component\Rest\Listing\ListQueryBuilder`
 - `Sulu\Component\Rest\Listing\ListRepository`
 - `Sulu\Component\Rest\Listing\ListRestHelper`
-- `Sulu\\Bundle\\CoreBundle\\Controller\\LocalizationController`
-- `Sulu\\Bundle\\MediaBundle\\Media\\Storage\\AzureBlobStorage`
-- `Sulu\\Bundle\\MediaBundle\\Media\\Storage\\GoogleCloudStorage`
-- `Sulu\\Bundle\\MediaBundle\\Media\\Storage\\LocalStorage`
-- `Sulu\\Bundle\\MediaBundle\\Media\\Storage\\S3Storage`
-- `Sulu\\Bundle\\MediaBundle\\DependencyInjection\\S3ClientCompilerPass` (internal)
-- `Sulu\\Bundle\\AdminBundle\\Command\\DownloadBuildCommand`
-- `Sulu\\Component\\Rest\\ListBuilder\\ListRepresentation`
+- `Sulu\Bundle\CoreBundle\Controller\LocalizationController`
+- `Sulu\Bundle\MediaBundle\Media\Storage\AzureBlobStorage`
+- `Sulu\Bundle\MediaBundle\Media\Storage\GoogleCloudStorage`
+- `Sulu\Bundle\MediaBundle\Media\Storage\LocalStorage`
+- `Sulu\Bundle\MediaBundle\Media\Storage\S3Storage`
+- `Sulu\Bundle\MediaBundle\DependencyInjection\S3ClientCompilerPass` (internal)
+- `Sulu\Bundle\AdminBundle\Command\DownloadBuildCommand`
+- `Sulu\Component\Rest\ListBuilder\ListRepresentation`
+- `src\Sulu\Component\Content\Metadata\XmlParserTrait`
 
 Removed deprecated functions and properties:
 
@@ -517,17 +518,21 @@ Removed deprecated functions and properties:
 Removed unused arguments:
 
 - `Sulu\Component\Webspace\Analyzer\Attributes\WebsiteRequestProcessor::__construct` `$contentMapper` (2nd argument) removed
-- `Sulu\\Bundle\\SecurityBundle\\UserManager\\UserManager::__construct` `$groupRepository` (4th argument) removed
-- `Sulu\\Bundle\\SecurityBundle\\Admin\\SecurityAdmin::__construct` `$urlGenerator` (3rd argument) removed
+- `Sulu\Bundle\SecurityBundle\UserManager\UserManager::__construct` `$groupRepository` (4th argument) removed
+- `Sulu\Bundle\SecurityBundle\Admin\SecurityAdmin::__construct` `$urlGenerator` (3rd argument) removed
 
 ### Moved classes for 3.0:
 
 - `Sulu\Bundle\CoreBundle\ExpressionLanguage\ContainerExpressionLanguageProvider`: `Sulu\Bundle\AdminBundle\ExpressionLanguage\ContainerExpressionLanguageProvider`
+- `Sulu\Component\Content\Metadata\Parser\PropertiesXmlParser`: `Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Parser\PropertiesXmlParser`
+- `Sulu\Component\Content\Metadata\Parser\SchemaXmlParser`: `Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Parser\SchemaXmlParser`
 
 ### Moved services for 3.0:
 
 - `sulu_core.expression_language`: `sulu_admin.expression_language`
 - `sulu_core.symfony_expression_language_provider`: `sulu_admin.symfony_expression_language_provider`
+- `sulu_page.structure.properties_xml_parser`: `sulu_admin.properties_xml_parser`
+- `sulu_page.structure.schema_xml_parser`: `sulu_admin.schema_xml_parser`
 
 ### Piwik replaced with Matomo script
 
