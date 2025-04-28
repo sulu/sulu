@@ -387,8 +387,8 @@ This will only create the service `sulu_media.storage` as the alias to `sulu_med
 
 ### Preview Services changed
 
-Most of the PreviewBundle services are now internal and only the new `PreviewDefaultsProviderInterface` is
-now the way to communicate with the Bundle.
+Most of the services in the PreviewBundle are now internal. The new `PreviewDefaultsProviderInterface` is
+now the primary means of interacting with the bundle.
 
 ### Upgrade resourceLocator and route property type
 
