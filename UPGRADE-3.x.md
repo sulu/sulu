@@ -37,6 +37,13 @@ return [
 -    ONGR\ElasticsearchBundle\ONGRElasticsearchBundle::class => ['all' => true],
 ```
 
+It can happen that flex removes the `config/templates/articles/*` files. If you need the article bundle, make sure 
+to not lose them by checking out the files again:
+
+```bash
+git checkout config/templates/articles/
+```
+
 ### Upgrade to Sulu 3.0 and register new bundles
 
 Now upgrade the dependencies to Sulu 3.0:
