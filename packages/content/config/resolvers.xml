@@ -80,7 +80,7 @@
         <service id="sulu_content.block_property_resolver"
                  class="Sulu\Content\Application\PropertyResolver\Resolver\BlockPropertyResolver">
             <argument type="service" id="logger"/>
-            <argument type="service" id="sulu_admin.structure_form_metadata_loader"/>
+            <argument type="service" id="sulu_admin.metadata_provider_registry"/>
             <argument>%kernel.debug%</argument>
 
             <call method="setMetadataResolver">

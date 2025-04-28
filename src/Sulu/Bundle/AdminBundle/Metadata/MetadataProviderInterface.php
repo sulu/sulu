@@ -13,5 +13,8 @@ namespace Sulu\Bundle\AdminBundle\Metadata;
 
 interface MetadataProviderInterface
 {
+    /**
+     * @param array<string, mixed> $metadataOptions
+     */
     public function getMetadata(string $key, string $locale, array $metadataOptions): MetadataInterface;
 }

@@ -16,8 +16,8 @@ namespace Sulu\Content\Application\PropertyResolver\Resolver;
 use Psr\Log\LoggerInterface;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
-use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadataLoaderInterface;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
 use Sulu\Content\Application\ContentResolver\Value\ContentView;
 use Sulu\Content\Application\MetadataResolver\MetadataResolver;
 
@@ -27,7 +27,7 @@ class BlockPropertyResolver implements PropertyResolverInterface
 
     public function __construct(
         private readonly LoggerInterface $logger,
-        private readonly FormMetadataLoaderInterface $formMetadataLoader,
+        private readonly MetadataProviderRegistry $metadataProviderRegistry,
         private readonly bool $debug = false,
     ) {
     }
@@ -56,8 +56,11 @@ class BlockPropertyResolver implements PropertyResolverInterface
         \assert($metadata instanceof FieldMetadata, 'Metadata must be set to resolve blocks.');
         $metadataTypes = $metadata->getTypes();
 
-        /** @var TypedFormMetadata $typedFormMetadata */
-        $typedFormMetadata = $this->formMetadataLoader->getMetadata('block', $locale, []);
+        $typedFormMetadata = $this->metadataProviderRegistry->getMetadataProvider('form')
+            ->getMetadata('block', $locale, []);
+
+        \assert($typedFormMetadata instanceof TypedFormMetadata, 'Block form metadata not found for block resolving.');
+
         $globalBlocksMetadata = $typedFormMetadata->getForms();
 
         $contentViews = [];

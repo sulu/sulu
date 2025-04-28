@@ -2239,12 +2239,6 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/FormMetadata.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\FormMetadataProvider\:\:getMetadata\(\) has parameter \$metadataOptions with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/FormMetadataProvider.php
-
-		-
 			message: '#^Property Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\ItemMetadata\:\:\$description \(string\) does not accept string\|null\.$#'
 			identifier: assign.propertyType
 			count: 1
@@ -2567,18 +2561,6 @@ parameters:
 			identifier: missingType.iterableValue
 			count: 1
 			path: src/Sulu/Bundle/AdminBundle/Metadata/ListMetadata/FieldMetadata.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\AdminBundle\\Metadata\\ListMetadata\\ListMetadataProvider\:\:getMetadata\(\) has parameter \$metadataOptions with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Metadata/ListMetadata/ListMetadataProvider.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\AdminBundle\\Metadata\\MetadataProviderInterface\:\:getMetadata\(\) has parameter \$metadataOptions with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Metadata/MetadataProviderInterface.php
 
 		-
 			message: '#^Cannot access offset string on mixed\.$#'

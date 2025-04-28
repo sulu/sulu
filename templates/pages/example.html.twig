@@ -5,10 +5,14 @@
     <p>{{ content.url }}</p>
     {{ content.text_editor|raw }}
 
-
     {% for block in content.blocks %}
         {% if block.type == 'editor' %}
             {{ block.text_editor|raw }}
+        {% elseif block.type == 'text_block' %}
+            <h2>
+                {{ block.title }}
+            </h2>
+            {{ block.description|raw }}
         {% elseif block.type == 'media' %}
             {% for media in block.media_selection %}
                 <img src="{{ media.thumbnails['sulu-260x'] }}" />
@@ -56,7 +60,7 @@
 
     <p>{{ content.page_selection|map(page => page.title)|join(', ') }}</p>
     <p>{{ content.teaser_selection|map(teaser => teaser.title)|join(', ') }}</p>
-    <p>{{ content.smart_content|map(page => page.title)|join(', ') }}</p>
+    <p>{{ content.smart_content|default([])|map(page => page.title)|join(', ') }}</p>
     <p>{{ content.single_snippet_selection ? content.single_snippet_selection.title : '' }}</p>
     <p>{{ content.snippet_selection|map(snippet => snippet.title)|join(', ') }}</p>
     <p>{{ content.category_selection|map(category => category.name)|join(', ') }}</p>

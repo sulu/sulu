@@ -16,13 +16,12 @@ namespace Sulu\Content\Tests\Unit\Content\Application\PropertyResolver\Resolver;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Util\Type;
-use Prophecy\PhpUnit\ProphecyTrait;
-use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
-use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadataLoaderInterface;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TagMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderInterface;
+use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
 use Sulu\Content\Application\ContentResolver\Value\ContentView;
 use Sulu\Content\Application\MetadataResolver\MetadataResolver;
 use Sulu\Content\Application\PropertyResolver\PropertyResolverProvider;
@@ -32,26 +31,26 @@ use Symfony\Component\ErrorHandler\BufferingLogger;
 
 class BlockPropertyResolverTest extends TestCase
 {
-    use ProphecyTrait;
-
     private BlockPropertyResolver $resolver;
+
     private BufferingLogger $logger;
 
-    /**
-     * @var ObjectProphecy<FormMetadataLoaderInterface>
-     */
-    private ObjectProphecy $formMetadataLoader;
+    private MetadataProviderRegistry $metadataProviderRegistry;
 
     protected function setUp(): void
     {
-        $this->formMetadataLoader = $this->prophesize(FormMetadataLoaderInterface::class);
-        $this->formMetadataLoader->getMetadata('block', 'en', [])
-            ->willReturn(new TypedFormMetadata());
+        $this->metadataProviderRegistry = new MetadataProviderRegistry();
+        $this->metadataProviderRegistry->addMetadataProvider('form', new class() implements MetadataProviderInterface {
+            public function getMetadata(string $key, string $locale, array $metadataOptions): TypedFormMetadata
+            {
+                return new TypedFormMetadata();
+            }
+        });
 
         $this->logger = new BufferingLogger();
         $this->resolver = new BlockPropertyResolver(
             $this->logger,
-            $this->formMetadataLoader->reveal(),
+            $this->metadataProviderRegistry,
             debug: false,
         );
         $metadataResolverProperty = new PropertyResolverProvider(
@@ -195,8 +194,16 @@ class BlockPropertyResolverTest extends TestCase
         $typedFormMetadata = new TypedFormMetadata();
         $typedFormMetadata->addForm('text_block', $globalFormMetadata);
 
-        $this->formMetadataLoader->getMetadata('block', 'en', [])
-            ->willReturn($typedFormMetadata);
+        $this->metadataProviderRegistry->addMetadataProvider('form', new class($typedFormMetadata) implements MetadataProviderInterface {
+            public function __construct(private readonly TypedFormMetadata $typedFormMetadata)
+            {
+            }
+
+            public function getMetadata(string $key, string $locale, array $metadataOptions): TypedFormMetadata
+            {
+                return $this->typedFormMetadata;
+            }
+        });
 
         $content = $this->resolver->resolve($data, $locale, $params);
         /** @var ContentView[] $innerContent */
