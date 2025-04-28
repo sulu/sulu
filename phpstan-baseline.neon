@@ -2167,7 +2167,7 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/FormMetadata/FormXmlLoader.php
 
 		-
-			message: '#^Parameter \#3 \$context of method Sulu\\Component\\Content\\Metadata\\Parser\\PropertiesXmlParser\:\:load\(\) expects DOMNode, DOMNode\|null given\.$#'
+			message: '#^Parameter \#3 \$context of method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\Parser\\PropertiesXmlParser\:\:load\(\) expects DOMNode, DOMNode\|null given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/AdminBundle/FormMetadata/FormXmlLoader.php
@@ -2303,6 +2303,780 @@ parameters:
 			identifier: assign.propertyType
 			count: 1
 			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/OptionMetadata.php
+
+		-
+			message: '#^Argument of an invalid type \(DOMNamedNodeMap&iterable\<DOMAttr\>\)\|null supplied for foreach, only iterables are supported\.$#'
+			identifier: foreach.nonIterable
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
+
+		-
+			message: '#^Argument of an invalid type DOMNodeList\<DOMNode\>\|false supplied for foreach, only iterables are supported\.$#'
+			identifier: foreach.nonIterable
+			count: 5
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
+
+		-
+			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
+			identifier: foreach.nonIterable
+			count: 3
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
+
+		-
+			message: '#^Binary operation "\." between mixed and mixed results in an error\.$#'
+			identifier: binaryOp.invalid
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
+
+		-
+			message: '#^Cannot access an offset on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
+
+		-
+			message: '#^Cannot access offset ''colspan'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
+
+		-
+			message: '#^Cannot access offset ''default\-type'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 3
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
+
+		-
+			message: '#^Cannot access offset ''disabledCondition'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 2
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
+
+		-
+			message: '#^Cannot access offset ''info_text'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 5
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
+
+		-
+			message: '#^Cannot access offset ''mandatory'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
+
+		-
+			message: '#^Cannot access offset ''meta'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 8
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
+
+		-
+			message: '#^Cannot access offset ''multilingual'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
+
+		-
+			message: '#^Cannot access offset ''name'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 12
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
+
+		-
+			message: '#^Cannot access offset ''onInvalid'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
+
+		-
+			message: '#^Cannot access offset ''params'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 2
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
+
+		-
+			message: '#^Cannot access offset ''priority'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
+
+		-
+			message: '#^Cannot access offset ''properties'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 4
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
+
+		-
+			message: '#^Cannot access offset ''ref'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 5
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
+
+		-
+			message: '#^Cannot access offset ''tags'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
+
+		-
+			message: '#^Cannot access offset ''title'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 4
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
+
+		-
+			message: '#^Cannot access offset ''type'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 2
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
+
+		-
+			message: '#^Cannot access offset ''types'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 2
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
+
+		-
+			message: '#^Cannot access offset ''visibleCondition'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 2
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
+
+		-
+			message: '#^Cannot access offset mixed on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 3
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
+
+		-
+			message: '#^Cannot access property \$length on DOMNodeList\<DOMNode\>\|false\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
+
+		-
+			message: '#^Cannot assign offset mixed to array\<string\>\|string\|null\.$#'
+			identifier: offsetAssign.dimType
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
+
+		-
+			message: '#^Cannot call method item\(\) on DOMNodeList\<DOMNode\>\|false\.$#'
+			identifier: method.nonObject
+			count: 4
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
+
+		-
+			message: '#^Method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\Parser\\PropertiesXmlParser\:\:__construct\(\) has parameter \$locales with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
+
+		-
+			message: '#^Method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\Parser\\PropertiesXmlParser\:\:createBlock\(\) has parameter \$data with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
+
+		-
+			message: '#^Method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\Parser\\PropertiesXmlParser\:\:createBlock\(\) has parameter \$propertyName with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
+
+		-
+			message: '#^Method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\Parser\\PropertiesXmlParser\:\:createProperty\(\) has parameter \$propertyData with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
+
+		-
+			message: '#^Method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\Parser\\PropertiesXmlParser\:\:createProperty\(\) never returns null so it can be removed from the return type\.$#'
+			identifier: return.unusedType
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
+
+		-
+			message: '#^Method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\Parser\\PropertiesXmlParser\:\:createSection\(\) has parameter \$data with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
+
+		-
+			message: '#^Method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\Parser\\PropertiesXmlParser\:\:createSection\(\) has parameter \$propertyName with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
+
+		-
+			message: '#^Method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\Parser\\PropertiesXmlParser\:\:getValueFromXPath\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
+
+		-
+			message: '#^Method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\Parser\\PropertiesXmlParser\:\:getValueFromXPath\(\) has parameter \$default with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
+
+		-
+			message: '#^Method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\Parser\\PropertiesXmlParser\:\:getValueFromXPath\(\) has parameter \$path with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
+
+		-
+			message: '#^Method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\Parser\\PropertiesXmlParser\:\:load\(\) has parameter \$tags with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
+
+		-
+			message: '#^Method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\Parser\\PropertiesXmlParser\:\:load\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
+
+		-
+			message: '#^Method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\Parser\\PropertiesXmlParser\:\:loadBlock\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
+
+		-
+			message: '#^Method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\Parser\\PropertiesXmlParser\:\:loadBlock\(\) has parameter \$formKey with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
+
+		-
+			message: '#^Method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\Parser\\PropertiesXmlParser\:\:loadBlock\(\) has parameter \$tags with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
+
+		-
+			message: '#^Method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\Parser\\PropertiesXmlParser\:\:loadMeta\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
+
+		-
+			message: '#^Method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\Parser\\PropertiesXmlParser\:\:loadMetaTag\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
+
+		-
+			message: '#^Method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\Parser\\PropertiesXmlParser\:\:loadMetaTag\(\) has parameter \$path with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
+
+		-
+			message: '#^Method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\Parser\\PropertiesXmlParser\:\:loadParam\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
+
+		-
+			message: '#^Method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\Parser\\PropertiesXmlParser\:\:loadParams\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
+
+		-
+			message: '#^Method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\Parser\\PropertiesXmlParser\:\:loadParams\(\) has parameter \$path with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
+
+		-
+			message: '#^Method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\Parser\\PropertiesXmlParser\:\:loadProperties\(\) has parameter \$tags with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
+
+		-
+			message: '#^Method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\Parser\\PropertiesXmlParser\:\:loadProperties\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
+
+		-
+			message: '#^Method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\Parser\\PropertiesXmlParser\:\:loadProperty\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
+
+		-
+			message: '#^Method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\Parser\\PropertiesXmlParser\:\:loadProperty\(\) has parameter \$formKey with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
+
+		-
+			message: '#^Method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\Parser\\PropertiesXmlParser\:\:loadProperty\(\) has parameter \$tags with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
+
+		-
+			message: '#^Method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\Parser\\PropertiesXmlParser\:\:loadSection\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
+
+		-
+			message: '#^Method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\Parser\\PropertiesXmlParser\:\:loadSection\(\) has parameter \$formKey with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
+
+		-
+			message: '#^Method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\Parser\\PropertiesXmlParser\:\:loadSection\(\) has parameter \$tags with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
+
+		-
+			message: '#^Method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\Parser\\PropertiesXmlParser\:\:loadTag\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
+
+		-
+			message: '#^Method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\Parser\\PropertiesXmlParser\:\:loadTags\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
+
+		-
+			message: '#^Method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\Parser\\PropertiesXmlParser\:\:loadTags\(\) has parameter \$tags with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
+
+		-
+			message: '#^Method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\Parser\\PropertiesXmlParser\:\:loadType\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
+
+		-
+			message: '#^Method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\Parser\\PropertiesXmlParser\:\:loadType\(\) has parameter \$formKey with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
+
+		-
+			message: '#^Method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\Parser\\PropertiesXmlParser\:\:loadType\(\) has parameter \$tags with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
+
+		-
+			message: '#^Method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\Parser\\PropertiesXmlParser\:\:loadTypes\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
+
+		-
+			message: '#^Method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\Parser\\PropertiesXmlParser\:\:loadTypes\(\) has parameter \$formKey with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
+
+		-
+			message: '#^Method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\Parser\\PropertiesXmlParser\:\:loadTypes\(\) has parameter \$tags with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
+
+		-
+			message: '#^Method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\Parser\\PropertiesXmlParser\:\:loadValues\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
+
+		-
+			message: '#^Method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\Parser\\PropertiesXmlParser\:\:loadValues\(\) has parameter \$keys with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
+
+		-
+			message: '#^Method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\Parser\\PropertiesXmlParser\:\:loadValues\(\) has parameter \$prefix with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
+
+		-
+			message: '#^Method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\Parser\\PropertiesXmlParser\:\:mapMeta\(\) has parameter \$meta with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
+
+		-
+			message: '#^Method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\Parser\\PropertiesXmlParser\:\:mapProperties\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
+
+		-
+			message: '#^Method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\Parser\\PropertiesXmlParser\:\:mapProperties\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
+
+		-
+			message: '#^Method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\Parser\\PropertiesXmlParser\:\:mapProperty\(\) has parameter \$data with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
+
+		-
+			message: '#^Method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\Parser\\PropertiesXmlParser\:\:normalizeConditionData\(\) has parameter \$data with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
+
+		-
+			message: '#^Method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\Parser\\PropertiesXmlParser\:\:normalizeConditionData\(\) should return string\|null but returns mixed\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
+
+		-
+			message: '#^Method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\Parser\\PropertiesXmlParser\:\:normalizeItem\(\) has parameter \$data with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
+
+		-
+			message: '#^Method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\Parser\\PropertiesXmlParser\:\:normalizeItem\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
+
+		-
+			message: '#^Method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\Parser\\PropertiesXmlParser\:\:normalizePropertyData\(\) has parameter \$data with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
+
+		-
+			message: '#^Method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\Parser\\PropertiesXmlParser\:\:normalizePropertyData\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
+
+		-
+			message: '#^Method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\Parser\\PropertiesXmlParser\:\:validateTag\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
+
+		-
+			message: '#^Method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\Parser\\PropertiesXmlParser\:\:validateTag\(\) has parameter \$tag with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
+
+		-
+			message: '#^Method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\Parser\\PropertiesXmlParser\:\:validateTag\(\) has parameter \$tags with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
+
+		-
+			message: '#^Parameter \#1 \$child of method Sulu\\Component\\Content\\Metadata\\ItemMetadata\:\:addChild\(\) expects Sulu\\Component\\Content\\Metadata\\ItemMetadata, Sulu\\Component\\Content\\Metadata\\PropertyMetadata\|Sulu\\Component\\Content\\Metadata\\SectionMetadata\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
+
+		-
+			message: '#^Parameter \#1 \$child of method Sulu\\Component\\Content\\Metadata\\ItemMetadata\:\:addChild\(\) expects Sulu\\Component\\Content\\Metadata\\ItemMetadata, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
+
+		-
+			message: '#^Parameter \#1 \$colSpan of method Sulu\\Component\\Content\\Metadata\\PropertyMetadata\:\:setColSpan\(\) expects int, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
+
+		-
+			message: '#^Parameter \#1 \$colSpan of method Sulu\\Component\\Content\\Metadata\\SectionMetadata\:\:setColSpan\(\) expects int, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
+
+		-
+			message: '#^Parameter \#1 \$cssClass of method Sulu\\Component\\Content\\Metadata\\PropertyMetadata\:\:setCssClass\(\) expects string\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
+
+		-
+			message: '#^Parameter \#1 \$data of method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\Parser\\PropertiesXmlParser\:\:mapProperties\(\) expects array, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
+
+		-
+			message: '#^Parameter \#1 \$descriptions of method Sulu\\Component\\Content\\Metadata\\ItemMetadata\:\:setDescriptions\(\) expects array, mixed given\.$#'
+			identifier: argument.type
+			count: 4
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
+
+		-
+			message: '#^Parameter \#1 \$expression of method DOMXPath\:\:query\(\) expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 3
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
+
+		-
+			message: '#^Parameter \#1 \$localized of method Sulu\\Component\\Content\\Metadata\\PropertyMetadata\:\:setLocalized\(\) expects bool, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
+
+		-
+			message: '#^Parameter \#1 \$name of class Sulu\\Component\\Content\\Exception\\InvalidDefaultTypeException constructor expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
+
+		-
+			message: '#^Parameter \#1 \$name of method Sulu\\Component\\Content\\Metadata\\ItemMetadata\:\:setName\(\) expects float\|int\|string, mixed given\.$#'
+			identifier: argument.type
+			count: 3
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
+
+		-
+			message: '#^Parameter \#1 \$onInvalid of method Sulu\\Component\\Content\\Metadata\\PropertyMetadata\:\:setOnInvalid\(\) expects string\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
+
+		-
+			message: '#^Parameter \#1 \$parameters of method Sulu\\Component\\Content\\Metadata\\ItemMetadata\:\:setParameters\(\) expects array, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
+
+		-
+			message: '#^Parameter \#1 \$placeholders of method Sulu\\Component\\Content\\Metadata\\PropertyMetadata\:\:setPlaceholders\(\) expects array, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
+
+		-
+			message: '#^Parameter \#1 \$propertyName of method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\Parser\\PropertiesXmlParser\:\:createProperty\(\) expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
+
+		-
+			message: '#^Parameter \#1 \$required of method Sulu\\Component\\Content\\Metadata\\PropertyMetadata\:\:setRequired\(\) expects bool, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
+
+		-
+			message: '#^Parameter \#1 \$spaceAfter of method Sulu\\Component\\Content\\Metadata\\PropertyMetadata\:\:setSpaceAfter\(\) expects int\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
+
+		-
+			message: '#^Parameter \#1 \$tags of method Sulu\\Component\\Content\\Metadata\\ItemMetadata\:\:setTags\(\) expects array, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
+
+		-
+			message: '#^Parameter \#1 \$titles of method Sulu\\Component\\Content\\Metadata\\ItemMetadata\:\:setTitles\(\) expects array, mixed given\.$#'
+			identifier: argument.type
+			count: 4
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
+
+		-
+			message: '#^Parameter \#1 \$type of method Sulu\\Component\\Content\\Metadata\\PropertyMetadata\:\:setType\(\) expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
+
+		-
+			message: '#^Parameter \#1 \$value of function intval expects array\|bool\|float\|int\|resource\|string\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 2
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
+
+		-
+			message: '#^Parameter \#2 \$array of function array_map expects array, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
+
+		-
+			message: '#^Parameter \#2 \$defaultType of class Sulu\\Component\\Content\\Exception\\InvalidDefaultTypeException constructor expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
+
+		-
+			message: '#^Parameter \#2 \$propertyData of method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\Parser\\PropertiesXmlParser\:\:createProperty\(\) expects array, mixed given\.$#'
+			identifier: argument.type
+			count: 2
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
+
+		-
+			message: '#^Parameter \#2 \.\.\.\$arrays of function array_merge_recursive expects array, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
+
+		-
+			message: '#^Parameter \#3 \$availableTypes of class Sulu\\Component\\Content\\Exception\\InvalidDefaultTypeException constructor expects array\<string\>, array given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
+
+		-
+			message: '#^Parameter \#3 \$context of method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\Parser\\PropertiesXmlParser\:\:loadProperties\(\) expects DOMNode, DOMNode\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
+
+		-
+			message: '#^Parameter \#4 \$formKey of method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\Parser\\PropertiesXmlParser\:\:loadProperties\(\) expects string\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 2
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
+
+		-
+			message: '#^Property Sulu\\Component\\Content\\Metadata\\PropertyMetadata\:\:\$defaultComponentName \(string\) does not accept mixed\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
+
+		-
+			message: '#^Strict comparison using \!\=\= between null and \(int\|string\) will always evaluate to true\.$#'
+			identifier: notIdentical.alwaysTrue
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
+
+		-
+			message: '#^Argument of an invalid type DOMNodeList\<DOMNode\>\|false supplied for foreach, only iterables are supported\.$#'
+			identifier: foreach.nonIterable
+			count: 3
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/SchemaXmlParser.php
+
+		-
+			message: '#^Cannot access property \$length on DOMNodeList\<DOMNode\>\|false\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/SchemaXmlParser.php
+
+		-
+			message: '#^Cannot call method item\(\) on DOMNodeList\<DOMNode\>\|false\.$#'
+			identifier: method.nonObject
+			count: 4
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/SchemaXmlParser.php
+
+		-
+			message: '#^Method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\Parser\\SchemaXmlParser\:\:getValueFromXPath\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/SchemaXmlParser.php
+
+		-
+			message: '#^Method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\Parser\\SchemaXmlParser\:\:getValueFromXPath\(\) has parameter \$default with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/SchemaXmlParser.php
+
+		-
+			message: '#^Method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\Parser\\SchemaXmlParser\:\:getValueFromXPath\(\) has parameter \$path with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/SchemaXmlParser.php
+
+		-
+			message: '#^Method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\Parser\\SchemaXmlParser\:\:load\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/SchemaXmlParser.php
+
+		-
+			message: '#^Method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\Parser\\SchemaXmlParser\:\:loadAllOfs\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/SchemaXmlParser.php
+
+		-
+			message: '#^Method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\Parser\\SchemaXmlParser\:\:loadAnyOfs\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/SchemaXmlParser.php
+
+		-
+			message: '#^Method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\Parser\\SchemaXmlParser\:\:loadProperties\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/SchemaXmlParser.php
+
+		-
+			message: '#^Method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\Parser\\SchemaXmlParser\:\:loadProperty\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/SchemaXmlParser.php
+
+		-
+			message: '#^Parameter \#1 \$expression of method DOMXPath\:\:query\(\) expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/SchemaXmlParser.php
+
+		-
+			message: '#^Parameter \#1 \$name of class Sulu\\Bundle\\AdminBundle\\Metadata\\SchemaMetadata\\PropertyMetadata constructor expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 2
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/SchemaXmlParser.php
+
+		-
+			message: '#^Parameter \#1 \$properties of class Sulu\\Bundle\\AdminBundle\\Metadata\\SchemaMetadata\\SchemaMetadata constructor expects array\<Sulu\\Bundle\\AdminBundle\\Metadata\\SchemaMetadata\\PropertyMetadata\>, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/SchemaXmlParser.php
+
+		-
+			message: '#^Parameter \#1 \$value of class Sulu\\Bundle\\AdminBundle\\Metadata\\SchemaMetadata\\ConstMetadata constructor expects float\|int\|string\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/SchemaXmlParser.php
+
+		-
+			message: '#^Parameter \#2 \$anyOfs of class Sulu\\Bundle\\AdminBundle\\Metadata\\SchemaMetadata\\SchemaMetadata constructor expects array\<Sulu\\Bundle\\AdminBundle\\Metadata\\SchemaMetadata\\SchemaMetadataInterface\>, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/SchemaXmlParser.php
+
+		-
+			message: '#^Parameter \#2 \$mandatory of class Sulu\\Bundle\\AdminBundle\\Metadata\\SchemaMetadata\\PropertyMetadata constructor expects bool, mixed given\.$#'
+			identifier: argument.type
+			count: 2
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/SchemaXmlParser.php
+
+		-
+			message: '#^Parameter \#3 \$allOfs of class Sulu\\Bundle\\AdminBundle\\Metadata\\SchemaMetadata\\SchemaMetadata constructor expects array\<Sulu\\Bundle\\AdminBundle\\Metadata\\SchemaMetadata\\SchemaMetadataInterface\>, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/SchemaXmlParser.php
 
 		-
 			message: '#^Cannot call method getDefaultTemplate\(\) on Sulu\\Component\\Webspace\\Webspace\|null\.$#'
@@ -60199,7 +60973,7 @@ parameters:
 			path: src/Sulu/Component/Content/Metadata/Loader/StructureXmlLoader.php
 
 		-
-			message: '#^Parameter \#3 \$context of method Sulu\\Component\\Content\\Metadata\\Parser\\PropertiesXmlParser\:\:load\(\) expects DOMNode, DOMNode\|null given\.$#'
+			message: '#^Parameter \#3 \$context of method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\Parser\\PropertiesXmlParser\:\:load\(\) expects DOMNode, DOMNode\|null given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Component/Content/Metadata/Loader/StructureXmlLoader.php
@@ -60217,7 +60991,7 @@ parameters:
 			path: src/Sulu/Component/Content/Metadata/Loader/StructureXmlLoader.php
 
 		-
-			message: '#^Parameter \#4 \$formKey of method Sulu\\Component\\Content\\Metadata\\Parser\\PropertiesXmlParser\:\:load\(\) expects string\|null, mixed given\.$#'
+			message: '#^Parameter \#4 \$formKey of method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\Parser\\PropertiesXmlParser\:\:load\(\) expects string\|null, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Component/Content/Metadata/Loader/StructureXmlLoader.php
@@ -60227,780 +61001,6 @@ parameters:
 			identifier: missingType.iterableValue
 			count: 1
 			path: src/Sulu/Component/Content/Metadata/Loader/StructureXmlLoader.php
-
-		-
-			message: '#^Argument of an invalid type \(DOMNamedNodeMap&iterable\<DOMAttr\>\)\|null supplied for foreach, only iterables are supported\.$#'
-			identifier: foreach.nonIterable
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Argument of an invalid type DOMNodeList\<DOMNode\>\|false supplied for foreach, only iterables are supported\.$#'
-			identifier: foreach.nonIterable
-			count: 5
-			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
-			identifier: foreach.nonIterable
-			count: 3
-			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Binary operation "\." between mixed and mixed results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Cannot access an offset on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Cannot access offset ''colspan'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Cannot access offset ''default\-type'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 3
-			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Cannot access offset ''disabledCondition'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Cannot access offset ''info_text'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 5
-			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Cannot access offset ''mandatory'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Cannot access offset ''meta'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 8
-			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Cannot access offset ''multilingual'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Cannot access offset ''name'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 12
-			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Cannot access offset ''onInvalid'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Cannot access offset ''params'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Cannot access offset ''priority'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Cannot access offset ''properties'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 4
-			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Cannot access offset ''ref'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 5
-			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Cannot access offset ''tags'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Cannot access offset ''title'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 4
-			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Cannot access offset ''type'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Cannot access offset ''types'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Cannot access offset ''visibleCondition'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Cannot access offset mixed on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 3
-			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Cannot access property \$length on DOMNodeList\<DOMNode\>\|false\.$#'
-			identifier: property.nonObject
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Cannot assign offset mixed to array\<string\>\|string\|null\.$#'
-			identifier: offsetAssign.dimType
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Cannot call method item\(\) on DOMNodeList\<DOMNode\>\|false\.$#'
-			identifier: method.nonObject
-			count: 4
-			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Metadata\\Parser\\PropertiesXmlParser\:\:__construct\(\) has parameter \$locales with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Metadata\\Parser\\PropertiesXmlParser\:\:createBlock\(\) has parameter \$data with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Metadata\\Parser\\PropertiesXmlParser\:\:createBlock\(\) has parameter \$propertyName with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Metadata\\Parser\\PropertiesXmlParser\:\:createProperty\(\) has parameter \$propertyData with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Metadata\\Parser\\PropertiesXmlParser\:\:createProperty\(\) never returns null so it can be removed from the return type\.$#'
-			identifier: return.unusedType
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Metadata\\Parser\\PropertiesXmlParser\:\:createSection\(\) has parameter \$data with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Metadata\\Parser\\PropertiesXmlParser\:\:createSection\(\) has parameter \$propertyName with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Metadata\\Parser\\PropertiesXmlParser\:\:getValueFromXPath\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Metadata\\Parser\\PropertiesXmlParser\:\:getValueFromXPath\(\) has parameter \$default with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Metadata\\Parser\\PropertiesXmlParser\:\:getValueFromXPath\(\) has parameter \$path with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Metadata\\Parser\\PropertiesXmlParser\:\:load\(\) has parameter \$tags with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Metadata\\Parser\\PropertiesXmlParser\:\:load\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Metadata\\Parser\\PropertiesXmlParser\:\:loadBlock\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Metadata\\Parser\\PropertiesXmlParser\:\:loadBlock\(\) has parameter \$formKey with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Metadata\\Parser\\PropertiesXmlParser\:\:loadBlock\(\) has parameter \$tags with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Metadata\\Parser\\PropertiesXmlParser\:\:loadMeta\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Metadata\\Parser\\PropertiesXmlParser\:\:loadMetaTag\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Metadata\\Parser\\PropertiesXmlParser\:\:loadMetaTag\(\) has parameter \$path with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Metadata\\Parser\\PropertiesXmlParser\:\:loadParam\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Metadata\\Parser\\PropertiesXmlParser\:\:loadParams\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Metadata\\Parser\\PropertiesXmlParser\:\:loadParams\(\) has parameter \$path with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Metadata\\Parser\\PropertiesXmlParser\:\:loadProperties\(\) has parameter \$tags with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Metadata\\Parser\\PropertiesXmlParser\:\:loadProperties\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Metadata\\Parser\\PropertiesXmlParser\:\:loadProperty\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Metadata\\Parser\\PropertiesXmlParser\:\:loadProperty\(\) has parameter \$formKey with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Metadata\\Parser\\PropertiesXmlParser\:\:loadProperty\(\) has parameter \$tags with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Metadata\\Parser\\PropertiesXmlParser\:\:loadSection\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Metadata\\Parser\\PropertiesXmlParser\:\:loadSection\(\) has parameter \$formKey with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Metadata\\Parser\\PropertiesXmlParser\:\:loadSection\(\) has parameter \$tags with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Metadata\\Parser\\PropertiesXmlParser\:\:loadTag\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Metadata\\Parser\\PropertiesXmlParser\:\:loadTags\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Metadata\\Parser\\PropertiesXmlParser\:\:loadTags\(\) has parameter \$tags with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Metadata\\Parser\\PropertiesXmlParser\:\:loadType\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Metadata\\Parser\\PropertiesXmlParser\:\:loadType\(\) has parameter \$formKey with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Metadata\\Parser\\PropertiesXmlParser\:\:loadType\(\) has parameter \$tags with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Metadata\\Parser\\PropertiesXmlParser\:\:loadTypes\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Metadata\\Parser\\PropertiesXmlParser\:\:loadTypes\(\) has parameter \$formKey with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Metadata\\Parser\\PropertiesXmlParser\:\:loadTypes\(\) has parameter \$tags with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Metadata\\Parser\\PropertiesXmlParser\:\:loadValues\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Metadata\\Parser\\PropertiesXmlParser\:\:loadValues\(\) has parameter \$keys with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Metadata\\Parser\\PropertiesXmlParser\:\:loadValues\(\) has parameter \$prefix with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Metadata\\Parser\\PropertiesXmlParser\:\:mapMeta\(\) has parameter \$meta with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Metadata\\Parser\\PropertiesXmlParser\:\:mapProperties\(\) has parameter \$data with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Metadata\\Parser\\PropertiesXmlParser\:\:mapProperties\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Metadata\\Parser\\PropertiesXmlParser\:\:mapProperty\(\) has parameter \$data with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Metadata\\Parser\\PropertiesXmlParser\:\:normalizeConditionData\(\) has parameter \$data with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Metadata\\Parser\\PropertiesXmlParser\:\:normalizeConditionData\(\) should return string\|null but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Metadata\\Parser\\PropertiesXmlParser\:\:normalizeItem\(\) has parameter \$data with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Metadata\\Parser\\PropertiesXmlParser\:\:normalizeItem\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Metadata\\Parser\\PropertiesXmlParser\:\:normalizePropertyData\(\) has parameter \$data with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Metadata\\Parser\\PropertiesXmlParser\:\:normalizePropertyData\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Metadata\\Parser\\PropertiesXmlParser\:\:validateTag\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Metadata\\Parser\\PropertiesXmlParser\:\:validateTag\(\) has parameter \$tag with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Metadata\\Parser\\PropertiesXmlParser\:\:validateTag\(\) has parameter \$tags with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Parameter \#1 \$child of method Sulu\\Component\\Content\\Metadata\\ItemMetadata\:\:addChild\(\) expects Sulu\\Component\\Content\\Metadata\\ItemMetadata, Sulu\\Component\\Content\\Metadata\\PropertyMetadata\|Sulu\\Component\\Content\\Metadata\\SectionMetadata\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Parameter \#1 \$child of method Sulu\\Component\\Content\\Metadata\\ItemMetadata\:\:addChild\(\) expects Sulu\\Component\\Content\\Metadata\\ItemMetadata, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Parameter \#1 \$colSpan of method Sulu\\Component\\Content\\Metadata\\PropertyMetadata\:\:setColSpan\(\) expects int, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Parameter \#1 \$colSpan of method Sulu\\Component\\Content\\Metadata\\SectionMetadata\:\:setColSpan\(\) expects int, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Parameter \#1 \$cssClass of method Sulu\\Component\\Content\\Metadata\\PropertyMetadata\:\:setCssClass\(\) expects string\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Parameter \#1 \$data of method Sulu\\Component\\Content\\Metadata\\Parser\\PropertiesXmlParser\:\:mapProperties\(\) expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Parameter \#1 \$descriptions of method Sulu\\Component\\Content\\Metadata\\ItemMetadata\:\:setDescriptions\(\) expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 4
-			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Parameter \#1 \$expression of method DOMXPath\:\:query\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 3
-			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Parameter \#1 \$localized of method Sulu\\Component\\Content\\Metadata\\PropertyMetadata\:\:setLocalized\(\) expects bool, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Parameter \#1 \$name of class Sulu\\Component\\Content\\Exception\\InvalidDefaultTypeException constructor expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Parameter \#1 \$name of method Sulu\\Component\\Content\\Metadata\\ItemMetadata\:\:setName\(\) expects float\|int\|string, mixed given\.$#'
-			identifier: argument.type
-			count: 3
-			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Parameter \#1 \$onInvalid of method Sulu\\Component\\Content\\Metadata\\PropertyMetadata\:\:setOnInvalid\(\) expects string\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Parameter \#1 \$parameters of method Sulu\\Component\\Content\\Metadata\\ItemMetadata\:\:setParameters\(\) expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Parameter \#1 \$placeholders of method Sulu\\Component\\Content\\Metadata\\PropertyMetadata\:\:setPlaceholders\(\) expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Parameter \#1 \$propertyName of method Sulu\\Component\\Content\\Metadata\\Parser\\PropertiesXmlParser\:\:createProperty\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Parameter \#1 \$required of method Sulu\\Component\\Content\\Metadata\\PropertyMetadata\:\:setRequired\(\) expects bool, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Parameter \#1 \$spaceAfter of method Sulu\\Component\\Content\\Metadata\\PropertyMetadata\:\:setSpaceAfter\(\) expects int\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Parameter \#1 \$tags of method Sulu\\Component\\Content\\Metadata\\ItemMetadata\:\:setTags\(\) expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Parameter \#1 \$titles of method Sulu\\Component\\Content\\Metadata\\ItemMetadata\:\:setTitles\(\) expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 4
-			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Parameter \#1 \$type of method Sulu\\Component\\Content\\Metadata\\PropertyMetadata\:\:setType\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Parameter \#1 \$value of function intval expects array\|bool\|float\|int\|resource\|string\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Parameter \#2 \$array of function array_map expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Parameter \#2 \$defaultType of class Sulu\\Component\\Content\\Exception\\InvalidDefaultTypeException constructor expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Parameter \#2 \$propertyData of method Sulu\\Component\\Content\\Metadata\\Parser\\PropertiesXmlParser\:\:createProperty\(\) expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Parameter \#2 \.\.\.\$arrays of function array_merge_recursive expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Parameter \#3 \$availableTypes of class Sulu\\Component\\Content\\Exception\\InvalidDefaultTypeException constructor expects array\<string\>, array given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Parameter \#3 \$context of method Sulu\\Component\\Content\\Metadata\\Parser\\PropertiesXmlParser\:\:loadProperties\(\) expects DOMNode, DOMNode\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Parameter \#4 \$formKey of method Sulu\\Component\\Content\\Metadata\\Parser\\PropertiesXmlParser\:\:loadProperties\(\) expects string\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Property Sulu\\Component\\Content\\Metadata\\PropertyMetadata\:\:\$defaultComponentName \(string\) does not accept mixed\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Strict comparison using \!\=\= between null and \(int\|string\) will always evaluate to true\.$#'
-			identifier: notIdentical.alwaysTrue
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Argument of an invalid type DOMNodeList\<DOMNode\>\|false supplied for foreach, only iterables are supported\.$#'
-			identifier: foreach.nonIterable
-			count: 3
-			path: src/Sulu/Component/Content/Metadata/Parser/SchemaXmlParser.php
-
-		-
-			message: '#^Cannot access property \$length on DOMNodeList\<DOMNode\>\|false\.$#'
-			identifier: property.nonObject
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Parser/SchemaXmlParser.php
-
-		-
-			message: '#^Cannot call method item\(\) on DOMNodeList\<DOMNode\>\|false\.$#'
-			identifier: method.nonObject
-			count: 4
-			path: src/Sulu/Component/Content/Metadata/Parser/SchemaXmlParser.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Metadata\\Parser\\SchemaXmlParser\:\:getValueFromXPath\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Parser/SchemaXmlParser.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Metadata\\Parser\\SchemaXmlParser\:\:getValueFromXPath\(\) has parameter \$default with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Parser/SchemaXmlParser.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Metadata\\Parser\\SchemaXmlParser\:\:getValueFromXPath\(\) has parameter \$path with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Parser/SchemaXmlParser.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Metadata\\Parser\\SchemaXmlParser\:\:load\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Parser/SchemaXmlParser.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Metadata\\Parser\\SchemaXmlParser\:\:loadAllOfs\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Parser/SchemaXmlParser.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Metadata\\Parser\\SchemaXmlParser\:\:loadAnyOfs\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Parser/SchemaXmlParser.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Metadata\\Parser\\SchemaXmlParser\:\:loadProperties\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Parser/SchemaXmlParser.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Metadata\\Parser\\SchemaXmlParser\:\:loadProperty\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Parser/SchemaXmlParser.php
-
-		-
-			message: '#^Parameter \#1 \$expression of method DOMXPath\:\:query\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Parser/SchemaXmlParser.php
-
-		-
-			message: '#^Parameter \#1 \$name of class Sulu\\Bundle\\AdminBundle\\Metadata\\SchemaMetadata\\PropertyMetadata constructor expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: src/Sulu/Component/Content/Metadata/Parser/SchemaXmlParser.php
-
-		-
-			message: '#^Parameter \#1 \$properties of class Sulu\\Bundle\\AdminBundle\\Metadata\\SchemaMetadata\\SchemaMetadata constructor expects array\<Sulu\\Bundle\\AdminBundle\\Metadata\\SchemaMetadata\\PropertyMetadata\>, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Parser/SchemaXmlParser.php
-
-		-
-			message: '#^Parameter \#1 \$value of class Sulu\\Bundle\\AdminBundle\\Metadata\\SchemaMetadata\\ConstMetadata constructor expects float\|int\|string\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Parser/SchemaXmlParser.php
-
-		-
-			message: '#^Parameter \#2 \$anyOfs of class Sulu\\Bundle\\AdminBundle\\Metadata\\SchemaMetadata\\SchemaMetadata constructor expects array\<Sulu\\Bundle\\AdminBundle\\Metadata\\SchemaMetadata\\SchemaMetadataInterface\>, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Parser/SchemaXmlParser.php
-
-		-
-			message: '#^Parameter \#2 \$mandatory of class Sulu\\Bundle\\AdminBundle\\Metadata\\SchemaMetadata\\PropertyMetadata constructor expects bool, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: src/Sulu/Component/Content/Metadata/Parser/SchemaXmlParser.php
-
-		-
-			message: '#^Parameter \#3 \$allOfs of class Sulu\\Bundle\\AdminBundle\\Metadata\\SchemaMetadata\\SchemaMetadata constructor expects array\<Sulu\\Bundle\\AdminBundle\\Metadata\\SchemaMetadata\\SchemaMetadataInterface\>, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Parser/SchemaXmlParser.php
 
 		-
 			message: '#^Cannot access offset ''name'' on mixed\.$#'
