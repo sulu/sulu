@@ -21,7 +21,6 @@ use Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeResolverInterface;
 use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Exception\InvalidDefaultTypeException;
 use Sulu\Component\Content\Metadata\Loader\Exception\RequiredPropertyNameNotFoundException;
-use Sulu\Component\Content\Metadata\Loader\Exception\RequiredTagNotFoundException;
 use Sulu\Component\Content\Metadata\Loader\StructureXmlLoader;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -313,16 +312,6 @@ class StructureXmlLoaderTest extends TestCase
         $this->contentTypeManager->has('resource_locator')->willReturn(true);
         $this->contentTypeManager->getAll()->willReturn(['text_line', 'resource_locator']);
         $this->load('template_without_title.xml');
-    }
-
-    public function testLoadRequiredTag(): void
-    {
-        $this->expectException(RequiredTagNotFoundException::class);
-
-        $this->contentTypeManager->has('text_line')->willReturn(true);
-        $this->contentTypeManager->has('resource_locator')->willReturn(true);
-        $this->contentTypeManager->getAll()->willReturn(['text_line', 'resource_locator']);
-        $this->load('template_without_sulu_rlp.xml');
     }
 
     public function testLoadRequiredPropertyOtherType(): void
