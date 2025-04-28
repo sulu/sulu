@@ -22,8 +22,8 @@ Ensure that the [Version202407111600](https://github.com/sulu/SuluArticleBundle/
 structure to the new one. After that you can remove the old article bundle from your code.
 
 ```shell
-composer remove sulu/article-bundle
-# composer remove elasticsearch/elasticsearch # can also be removed if not further required
+composer remove sulu/article-bundle --no-scripts
+# composer remove elasticsearch/elasticsearch --no-scripts # can also be removed if not further required
 ```
 
 Disable the old SuluArticleBundle `config/bundles.php`:
@@ -42,7 +42,7 @@ return [
 Now upgrade the dependencies to Sulu 3.0:
 
 ```shell
-composer require sulu/sulu:"3.0.*"
+composer require sulu/sulu:"3.0.*" --no-scripts
 ```
 
 After that you need to register the new Sulu bundles in your `config/bundles.php`:
@@ -99,6 +99,8 @@ Then you need to update the route configuration in your `config/routes/sulu_admi
 
 The new content storage architecture requires a new database schema. You can execute the following sql statements
 to update your database schema.
+
+The following SQL statements are examples based on MySQL. You might generate them via doctrine for your preferred database.
 
 #### RouteBundle
 
@@ -168,159 +170,6 @@ ALTER TABLE ar_articles ADD CONSTRAINT FK_7F75CD17DBF11E1D FOREIGN KEY (idUsersC
 ALTER TABLE ar_articles ADD CONSTRAINT FK_7F75CD1730D07CD5 FOREIGN KEY (idUsersChanger) REFERENCES se_users (id) ON DELETE SET NULL;
 ```
 
-### Migrate Permission settings
-
-```sql
-UPDATE `se_permissions` SET `context` = 'sulu.article.articles' WHERE `context` = 'sulu.modules.articles';
-UPDATE `se_permissions` SET `context` = 'sulu.snippet.snippets' WHERE `context` = 'sulu.global.snippets';
-```
-
-### Remove legacy user settings
-
-This step is optional but highly recommended, removing legacy user settings from the database helps ensure compatibility
-with the new content storage architecture. Some columns from the old settings may no longer exist in the updated schema.
-Retaining outdated data can lead to issues or exceptions in the admin interface, especially if user settings reference
-fields that are no longer available.
-
-To safely remove these obsolete settings, execute the following SQL commands:
-
-```sql
-DELETE FROM se_user_settings WHERE settingsKey LIKE 'sulu_admin.list_store.articles%';
-DELETE FROM se_user_settings WHERE settingsKey LIKE 'sulu_admin.list_store.snippets%';
-DELETE FROM se_user_settings WHERE settingsKey LIKE 'sulu_admin.list_store.pages%';
-```
-
-### Upgrading Data from Sulu 2.6 to Sulu 3.0
-
-To migrate the data from PHPCR to the new content storage a migration bundle was developed. 
-
-```shell
-composer require sulu/phpcr-migration-bundle
-```
-
-Add the new migration bundle to your `config/bundles.php`:
-
-```diff
-// config/bundles.php
-
-return [
-    // ...
-+   Sulu\Bundle\PhpcrMigrationBundle\SuluPhpcrMigrationBundle::class => ['all' => true],
-```
-
-Configure the SuluPhpcrMigrationBundle in `config/packages/sulu_phpcr_migration.yaml`:
-
-> If you are currently using Jackrabbit, use the "jackrabbit://" based DSN string.
-> After the upgrade, Apache Jackrabbit is no longer used by Sulu’s new content storage and can be removed from
-> your projects in most situations.
-
-```yaml
-# config/packages/sulu_phpcr_migration.yaml
-
-sulu_phpcr_migration:
-    # dbal://<dbalConnection>?workspace=<workspaceName>
-    # jackrabbit://<user>:<password>@<host>:<port>/server?workspace=<workspaceName>
-    #    DSN: "dbal://default?workspace=%env(PHPCR_WORKSPACE)%"
-    #    DSN: "jackrabbit://admin:admin@127.0.0.1:8080/server?workspace=%env(PHPCR_WORKSPACE)%"
-    DSN: "dbal://default?workspace=%env(PHPCR_WORKSPACE)%"
-    target:
-        dbal:
-            connection: default
-```
-
-Please ensure that you have executed all the database migrations for version 3.0. Once finished, you 
-can run the following command to update the content structure:
-
-```shell
-php bin/adminconsole sulu:phpcr-migration:migrate
-```
-
-In case of some errors on customized code, you can try to fix it and rerun the command. The migration command can be
-rerun, the existing already migrated content will be overwritten and not duplicated.
-If everything is done and the migration is successful, you can log in to the Sulu admin interface, set the permissions
-for the articles and snippets and check if everything is working as expected.
-
-### Upgrade resourceLocator and route property type
-
-The new content structure used in Sulu 3.0 requires that all the `resource_locators` or `route` properties must be
-renamed to `url` in your templates and use the `route` always.
-
-```diff
--        <property name="routePath" type="route">
-+        <property name="url" type="route">
-            <meta>
-                <title lang="en">Resourcelocator</title>
-                <title lang="de">Adresse</title>
-            </meta>
-
-            <tag name="sulu_article.article_route"/>
-        </property>
-```
-
-### Upgrade the Controller references
-
-The controller in the page/article templates have to be adjusted use the new controller
-from the SuluContentBundle. Be aware that also your custom controllers have to be modified to extend from the new one.
-
-```diff
--        <controller class="Sulu\Bundle\ArticleBundle\Controller\ArticleController"/>
--        <controller>Sulu\Bundle\WebsiteBundle\Controller\DefaultController::indexAction</controller>
-+        <controller>Sulu\Content\UserInterface\Controller\Website\ContentController::indexAction</controller>
-```
-
-### Page, CustomUrl, Snippet JS includes path changed
-
-The paths to the page, custom url and snippet bundle has changed so its JS package
-paths need also be changed. This step is normally automatically done by `bin/console sulu:admin:update-build` command,
-kept here for completeness:
-
-```diff
--        "sulu-custom-url-bundle": "file:../../vendor/sulu/sulu/src/Sulu/Bundle/CustomUrlBundle/Resources/js",
-+        "sulu-custom-url-bundle": "file:../../vendor/sulu/sulu/packages/custom-url/assets/js",
--        "sulu-page-bundle": "file:../../vendor/sulu/sulu/src/Sulu/Bundle/PageBundle/Resources/js",
-+        "sulu-page-bundle": "file:../../vendor/sulu/sulu/packages/page/assets/js",
--        "sulu-snippet-bundle": "file:../../vendor/sulu/sulu/src/Sulu/Bundle/SnippetBundle/Resources/js",
-+        "sulu-snippet-bundle": "file:../../vendor/sulu/sulu/packages/snippet/assets/js",
-```
-
-### Removing deprecated twig functions
-
-- `sulu_meta_alternate` (use the SEO template instead `@SuluWebsite/Extension/seo.html.twig`)
-- `sulu_meta_seo` (use the SEO template instead `@SuluWebsite/Extension/seo.html.twig`)
-- `sulu_seo` (use the SEO template instead `@SuluWebsite/Extension/seo.html.twig`)
-
-This also includes the container services:
-- `sulu_website.twig.meta`
-- `sulu_website.twig.seo`
-and the parameters
-- `%sulu_website.twig.meta.class%`
-- `%sulu_website.twig.seo.class%`
-
-### Remove deprecated sulu_website twig attributes configuration
-
-The configuration for the Twig attribute in `config/packages/sulu_website.yaml` needs to be removed.
-
-```diff
-sulu_website:
--    twig:
--        attributes:
--            urls: false
--            path: false
-```
-
-If you have nothing else configured, the whole file can be removed.
-
-### Removing "modules" from Permissions
-
-The unused column on the permissions table has been removed. This also requires some migration on the table, to recreate
-an index:
-
-```sql
-DROP INDEX UNIQ_5CEC3EEAE25D857EC242628A1FA6DDA ON se_permissions;
-ALTER TABLE se_permissions DROP module;
-CREATE UNIQUE INDEX UNIQ_5CEC3EEAE25D857EA1FA6DDA ON se_permissions (context, idRoles);
-```
-
 ### Removed `SecurityType`
 
 Removed the `Sulu\Bundle\SecurityBundle\Entity\SecurityType` class and its fixtures. This also includes database migrations:
@@ -339,6 +188,7 @@ And the container parameters has been removed:
 ### Groups and User Groups have been removed
 
 This includes the following services:
+
 - `sulu_security.group_repository`
 - `sulu_security.group_controller`
 
@@ -371,83 +221,37 @@ DROP TABLE se_groups;
 DROP TABLE se_user_groups;
 ```
 
-### Preview Services changed
+### Migrate Permission settings
 
-Most of the PreviewBundle services are now internal and only the `PreviewDefaultsProviderInterface` is
-now the way to communicate with the Bundle.
+> [!IMPORTANT]
+> Doctrine migration cannot detect the following migrations, you need to execute it manually,
+> or create a custom migration for it. The following SQL commands are for MySQL-based projects for other used 
+> databases you might need to change it.
 
-### Changed Media Format HTTP Response Headers
+```sql
+UPDATE `se_permissions` SET `context` = 'sulu.article.articles' WHERE `context` = 'sulu.modules.articles';
+UPDATE `se_permissions` SET `context` = 'sulu.snippet.snippets' WHERE `context` = 'sulu.global.snippets';
+```
 
-Removed `Pragma` & `Expires` HTTP headers, as the `Cache-Control` header is enough.
+### Remove legacy user settings
 
-If you still want to readd them use `sulu_media.format_manager.response_headers` configuration.
+> [!IMPORTANT]
+> Doctrine migration cannot detect the following migrations, you need to execute it manually,
+> or create a custom migration for it. The following SQL commands are for MySQL-based projects for other used
+> databases you might need to change it.
 
-### Removed deprecations for 3.0
+This step is optional but highly recommended, removing legacy user settings from the database helps ensure compatibility
+with the new content storage architecture. Some columns from the old settings may no longer exist in the updated schema.
+Retaining outdated data can lead to issues or exceptions in the admin interface, especially if user settings reference
+fields that are no longer available.
 
-Removed classes / services:
+To safely remove these obsolete settings, execute the following SQL commands:
 
-- `Sulu/Bundle/MarkupBundle/Listener/SwiftMailerListener`
-- `Sulu\Bundle\DocumentManagerBundle\Slugifier\Urlizer`
-- `Sulu\\Bundle\\CategoryBundle\\DependencyInjection\\DeprecationCompilerPass`
-- `Sulu\\Bundle\\SecurityBundle\\DataFixtures\\ORM\\LoadSecurityTypes`
-- `Sulu\\Bundle\\SecurityBundle\\Controller\\ContextsController`
-- `Sulu\Component\Rest\Listing\ListQueryBuilder`
-- `Sulu\Component\Rest\Listing\ListRepository`
-- `Sulu\Component\Rest\Listing\ListRestHelper`
-- `Sulu\\Bundle\\CoreBundle\\Controller\\LocalizationController`
-- `Sulu\\Bundle\\MediaBundle\\Media\\Storage\\AzureBlobStorage`
-- `Sulu\\Bundle\\MediaBundle\\Media\\Storage\\GoogleCloudStorage`
-- `Sulu\\Bundle\\MediaBundle\\Media\\Storage\\LocalStorage`
-- `Sulu\\Bundle\\MediaBundle\\Media\\Storage\\S3Storage`
-- `Sulu\\Bundle\\MediaBundle\\DependencyInjection\\S3ClientCompilerPass` (internal)
-- `Sulu\\Bundle\\AdminBundle\\Command\\DownloadBuildCommand`
-- `Sulu\\Component\\Rest\\ListBuilder\\ListRepresentation`
-
-Removed deprecated functions and properties:
-
-- `Sulu\Component\Security\Event\PermissionUpdateEvent::getSecurityIdentity`
-- `Sulu\Component\Webspace\Portal::getXDefaultLocalization`
-- `Sulu\Component\Webspace\Portal::setXDefaultLocalization`
-- `Sulu\Component\Localization\Localization::isXDefault`
-- `Sulu\Bundle\ContactBundle\Controller\AccountController::$contactEntityKey`
-- `Sulu\Bundle\ContactBundle\Controller\AccountController::$entityKey`
-- `Sulu\Bundle\WebsiteBundle\Controller\AnalyticsController::$entityKey`
-- `Sulu\Bundle\CategoryBundle\Controller\CategoryController::$entityKey`
-- `Sulu\Bundle\MediaBundle\Controller\CollectionController::$entityKey`
-- `Sulu\Bundle\MediaBundle\Controller\MediaController::$entityKey`
-- `Sulu\Bundle\PageBundle\Controller\PageController::$entityKey`
-- `Sulu\Bundle\TagBundle\Controller\TagController::$entityKey`
-- `Sulu\Bundle\SecurityBundle\Controller\UserController::$entityKey`
-- `Sulu\Bundle\ContactBundle\Controller\ContactTitleController::$entityKey`
-- `Sulu\Bundle\ContactBundle\Controller\ContactController::$entityKey`
-- `Sulu\Bundle\ContactBundle\Controller\PositionController::$entityKey`
-- `Sulu\Component\Cache\Memoize::memoize()`
-- `Sulu\Component\Cache\MemoizeInterface::memoize()`
-
-Removed unused arguments:
-
-- `Sulu\Component\Webspace\Analyzer\Attributes\WebsiteRequestProcessor::__construct` `$contentMapper` (2nd argument) removed
-- `Sulu\\Bundle\\SecurityBundle\\UserManager\\UserManager::__construct` `$groupRepository` (4th argument) removed
-- `Sulu\\Bundle\\SecurityBundle\\Admin\\SecurityAdmin::__construct` `$urlGenerator` (3rd argument) removed
-
-### Moved classes for 3.0:
-
-- `Sulu\Bundle\CoreBundle\ExpressionLanguage\ContainerExpressionLanguageProvider`: `Sulu\Bundle\AdminBundle\ExpressionLanguage\ContainerExpressionLanguageProvider`
-
-### Moved services for 3.0:
-
-- `sulu_core.expression_language`: `sulu_admin.expression_language`
-- `sulu_core.symfony_expression_language_provider`: `sulu_admin.symfony_expression_language_provider`
-
-### Piwik replaced with Matomo script
-
-The script provided by Sulu for the piwik implementation has been updated to use mataomo path so the script is now pointing to matomo.php instead of the piwik.php file.
-
-### Removing deprecated guzzle integration
-
-As part of the update of flysystem the support for the guzzle client package `guzzlehttp/guzzle` has been removed. If you need it you need to manually require it.
-
-The `GoogleGeolocator` and the `NominatimGeolocator` no longer support the Guzzle client and require a `Symfony\HttpClient` client instead.
+```sql
+DELETE FROM se_user_settings WHERE settingsKey LIKE 'sulu_admin.list_store.articles%';
+DELETE FROM se_user_settings WHERE settingsKey LIKE 'sulu_admin.list_store.snippets%';
+DELETE FROM se_user_settings WHERE settingsKey LIKE 'sulu_admin.list_store.pages%';
+```
 
 ### Updating to flysystem 3
 
@@ -525,8 +329,8 @@ sulu_media:
             path_prefix: 'optional path prefix'
 ```
 
-
 New:
+
 ```yaml
 flysystem:
     storages:
@@ -555,7 +359,7 @@ sulu_media:
             path_prefix: 'optional path prefix'
 ```
 
-New
+New:
 
 ```yaml
 flysystem:
@@ -580,3 +384,214 @@ sulu_media:
 ```
 
 This will only create the service `sulu_media.storage` as the alias to `sulu_media.storage.*` services has been removed.
+
+### Preview Services changed
+
+Most of the PreviewBundle services are now internal and only the new `PreviewDefaultsProviderInterface` is
+now the way to communicate with the Bundle.
+
+### Upgrade resourceLocator and route property type
+
+The new content structure used in Sulu 3.0 requires that all the `resource_locators` or `route` properties must be
+renamed to `url` in your templates and use the `route` always.
+
+```diff
+-        <property name="routePath" type="route">
++        <property name="url" type="route">
+            <meta>
+                <title lang="en">Resourcelocator</title>
+                <title lang="de">Adresse</title>
+            </meta>
+
+            <tag name="sulu_article.article_route"/>
+        </property>
+```
+
+### Upgrade the Controller references
+
+The controller in the page/article templates have to be adjusted use the new controller
+from the SuluContentBundle. Be aware that also your custom controllers have to be modified to extend from the new one.
+
+```diff
+-        <controller class="Sulu\Bundle\ArticleBundle\Controller\ArticleController"/>
+-        <controller>Sulu\Bundle\WebsiteBundle\Controller\DefaultController::indexAction</controller>
++        <controller>Sulu\Content\UserInterface\Controller\Website\ContentController::indexAction</controller>
+```
+
+### Page, CustomUrl, Snippet JS includes path changed
+
+The paths to the page, custom url and snippet bundle has changed so its JS package
+paths need also be changed. This step is normally automatically done by `bin/console sulu:admin:update-build` command,
+kept here for completeness:
+
+```diff
+-        "sulu-custom-url-bundle": "file:../../vendor/sulu/sulu/src/Sulu/Bundle/CustomUrlBundle/Resources/js",
++        "sulu-custom-url-bundle": "file:../../vendor/sulu/sulu/packages/custom-url/assets/js",
+-        "sulu-page-bundle": "file:../../vendor/sulu/sulu/src/Sulu/Bundle/PageBundle/Resources/js",
++        "sulu-page-bundle": "file:../../vendor/sulu/sulu/packages/page/assets/js",
+-        "sulu-snippet-bundle": "file:../../vendor/sulu/sulu/src/Sulu/Bundle/SnippetBundle/Resources/js",
++        "sulu-snippet-bundle": "file:../../vendor/sulu/sulu/packages/snippet/assets/js",
+```
+
+### Removing deprecated twig functions
+
+- `sulu_meta_alternate` (use the SEO template instead `@SuluWebsite/Extension/seo.html.twig`)
+- `sulu_meta_seo` (use the SEO template instead `@SuluWebsite/Extension/seo.html.twig`)
+- `sulu_seo` (use the SEO template instead `@SuluWebsite/Extension/seo.html.twig`)
+
+This also includes the container services:
+
+- `sulu_website.twig.meta`
+- `sulu_website.twig.seo`
+  and the parameters
+- `%sulu_website.twig.meta.class%`
+- `%sulu_website.twig.seo.class%`
+
+### Remove deprecated sulu_website twig attributes configuration
+
+The configuration for the Twig attribute in `config/packages/sulu_website.yaml` needs to be removed.
+
+```diff
+sulu_website:
+-    twig:
+-        attributes:
+-            urls: false
+-            path: false
+```
+
+If you have nothing else configured, the whole file can be removed.
+
+### Removing "modules" from Permissions
+
+The unused column on the permissions table has been removed. This also requires some migration on the table, to recreate
+an index:
+
+```sql
+DROP INDEX UNIQ_5CEC3EEAE25D857EC242628A1FA6DDA ON se_permissions;
+ALTER TABLE se_permissions DROP module;
+CREATE UNIQUE INDEX UNIQ_5CEC3EEAE25D857EA1FA6DDA ON se_permissions (context, idRoles);
+```
+
+### Removed deprecations for 3.0
+
+Removed classes / services:
+
+- `Sulu/Bundle/MarkupBundle/Listener/SwiftMailerListener`
+- `Sulu\Bundle\DocumentManagerBundle\Slugifier\Urlizer`
+- `Sulu\\Bundle\\CategoryBundle\\DependencyInjection\\DeprecationCompilerPass`
+- `Sulu\\Bundle\\SecurityBundle\\DataFixtures\\ORM\\LoadSecurityTypes`
+- `Sulu\\Bundle\\SecurityBundle\\Controller\\ContextsController`
+- `Sulu\Component\Rest\Listing\ListQueryBuilder`
+- `Sulu\Component\Rest\Listing\ListRepository`
+- `Sulu\Component\Rest\Listing\ListRestHelper`
+- `Sulu\\Bundle\\CoreBundle\\Controller\\LocalizationController`
+- `Sulu\\Bundle\\MediaBundle\\Media\\Storage\\AzureBlobStorage`
+- `Sulu\\Bundle\\MediaBundle\\Media\\Storage\\GoogleCloudStorage`
+- `Sulu\\Bundle\\MediaBundle\\Media\\Storage\\LocalStorage`
+- `Sulu\\Bundle\\MediaBundle\\Media\\Storage\\S3Storage`
+- `Sulu\\Bundle\\MediaBundle\\DependencyInjection\\S3ClientCompilerPass` (internal)
+- `Sulu\\Bundle\\AdminBundle\\Command\\DownloadBuildCommand`
+- `Sulu\\Component\\Rest\\ListBuilder\\ListRepresentation`
+
+Removed deprecated functions and properties:
+
+- `Sulu\Component\Security\Event\PermissionUpdateEvent::getSecurityIdentity`
+- `Sulu\Component\Webspace\Portal::getXDefaultLocalization`
+- `Sulu\Component\Webspace\Portal::setXDefaultLocalization`
+- `Sulu\Component\Localization\Localization::isXDefault`
+- `Sulu\Bundle\ContactBundle\Controller\AccountController::$contactEntityKey`
+- `Sulu\Bundle\ContactBundle\Controller\AccountController::$entityKey`
+- `Sulu\Bundle\WebsiteBundle\Controller\AnalyticsController::$entityKey`
+- `Sulu\Bundle\CategoryBundle\Controller\CategoryController::$entityKey`
+- `Sulu\Bundle\MediaBundle\Controller\CollectionController::$entityKey`
+- `Sulu\Bundle\MediaBundle\Controller\MediaController::$entityKey`
+- `Sulu\Bundle\PageBundle\Controller\PageController::$entityKey`
+- `Sulu\Bundle\TagBundle\Controller\TagController::$entityKey`
+- `Sulu\Bundle\SecurityBundle\Controller\UserController::$entityKey`
+- `Sulu\Bundle\ContactBundle\Controller\ContactTitleController::$entityKey`
+- `Sulu\Bundle\ContactBundle\Controller\ContactController::$entityKey`
+- `Sulu\Bundle\ContactBundle\Controller\PositionController::$entityKey`
+- `Sulu\Component\Cache\Memoize::memoize()`
+- `Sulu\Component\Cache\MemoizeInterface::memoize()`
+
+Removed unused arguments:
+
+- `Sulu\Component\Webspace\Analyzer\Attributes\WebsiteRequestProcessor::__construct` `$contentMapper` (2nd argument) removed
+- `Sulu\\Bundle\\SecurityBundle\\UserManager\\UserManager::__construct` `$groupRepository` (4th argument) removed
+- `Sulu\\Bundle\\SecurityBundle\\Admin\\SecurityAdmin::__construct` `$urlGenerator` (3rd argument) removed
+
+### Moved classes for 3.0:
+
+- `Sulu\Bundle\CoreBundle\ExpressionLanguage\ContainerExpressionLanguageProvider`: `Sulu\Bundle\AdminBundle\ExpressionLanguage\ContainerExpressionLanguageProvider`
+
+### Moved services for 3.0:
+
+- `sulu_core.expression_language`: `sulu_admin.expression_language`
+- `sulu_core.symfony_expression_language_provider`: `sulu_admin.symfony_expression_language_provider`
+
+### Piwik replaced with Matomo script
+
+The script provided by Sulu for the piwik implementation has been updated to use mataomo path so the script is now pointing to matomo.php instead of the piwik.php file.
+
+### Changed Media Format HTTP Response Headers
+
+Removed `Pragma` & `Expires` HTTP headers, as the `Cache-Control` header is enough.
+
+If you still want to readd them use `sulu_media.format_manager.response_headers` configuration.
+
+
+### Removing deprecated guzzle integration
+
+As part of the update of flysystem the support for the guzzle client package `guzzlehttp/guzzle` has been removed. If you need it you need to manually require it.
+
+The `GoogleGeolocator` and the `NominatimGeolocator` no longer support the Guzzle client and require a `Symfony\HttpClient` client instead.
+
+### Upgrading Data from Sulu 2.6 to Sulu 3.0
+
+To migrate the data from PHPCR to the new content storage a migration bundle was developed.
+
+```shell
+composer require sulu/phpcr-migration-bundle
+```
+
+Add the new migration bundle to your `config/bundles.php`:
+
+```diff
+// config/bundles.php
+
+return [
+    // ...
++   Sulu\Bundle\PhpcrMigrationBundle\SuluPhpcrMigrationBundle::class => ['all' => true],
+```
+
+Configure the SuluPhpcrMigrationBundle in `config/packages/sulu_phpcr_migration.yaml`:
+
+> If you are currently using Jackrabbit, use the "jackrabbit://" based DSN string.
+> After the upgrade, Apache Jackrabbit is no longer used by Sulu’s new content storage and can be removed from
+> your projects in most situations.
+
+```yaml
+# config/packages/sulu_phpcr_migration.yaml
+
+sulu_phpcr_migration:
+    # dbal://<dbalConnection>?workspace=<workspaceName>
+    # jackrabbit://<user>:<password>@<host>:<port>/server?workspace=<workspaceName>
+    #    DSN: "dbal://default?workspace=%env(PHPCR_WORKSPACE)%"
+    #    DSN: "jackrabbit://admin:admin@127.0.0.1:8080/server?workspace=%env(PHPCR_WORKSPACE)%"
+    DSN: "dbal://default?workspace=%env(PHPCR_WORKSPACE)%"
+    target:
+        dbal:
+            connection: default
+```
+
+Please ensure that you have executed all the database migrations for version 3.0. Once finished, you
+can run the following command to update the content structure:
+
+```shell
+php bin/adminconsole sulu:phpcr-migration:migrate
+```
+
+In case of some errors on customized code, you can try to fix it and rerun the command. The migration command can be
+rerun, the existing already migrated content will be overwritten and not duplicated.
+If everything is done and the migration is successful, you can log in to the Sulu admin interface, set the permissions
+for the articles and snippets and check if everything is working as expected.
