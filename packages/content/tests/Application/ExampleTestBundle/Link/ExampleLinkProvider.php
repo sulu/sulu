@@ -13,26 +13,25 @@ declare(strict_types=1);
 
 namespace Sulu\Content\Tests\Application\ExampleTestBundle\Link;
 
-use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkConfiguration;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkConfigurationBuilder;
-use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactoryInterface;
+use Sulu\Bundle\MarkupBundle\Markup\Link\LinkItem;
+use Sulu\Bundle\MarkupBundle\Markup\Link\LinkProviderInterface;
+use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Content\Application\ContentManager\ContentManagerInterface;
-use Sulu\Content\Infrastructure\Sulu\Link\ContentLinkProvider;
+use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\Example;
-use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\ExampleDimensionContent;
+use Sulu\Content\Tests\Application\ExampleTestBundle\Repository\ExampleRepository;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
-/**
- * @extends ContentLinkProvider<ExampleDimensionContent, Example>
- */
-class ExampleLinkProvider extends ContentLinkProvider
+class ExampleLinkProvider implements LinkProviderInterface
 {
     public function __construct(
-        ContentManagerInterface $contentManager,
-        StructureMetadataFactoryInterface $structureMetadataFactory,
-        EntityManagerInterface $entityManager
+        private readonly ContentManagerInterface $contentManager,
+        private readonly ExampleRepository $exampleRepository,
+        private readonly ReferenceStoreInterface $exampleReferenceStore,
+        private readonly TranslatorInterface $translator,
     ) {
-        parent::__construct($contentManager, $structureMetadataFactory, $entityManager, Example::class);
     }
 
     public function getConfiguration(): LinkConfiguration
@@ -46,5 +45,40 @@ class ExampleLinkProvider extends ContentLinkProvider
             ->setEmptyText('No example selected')
             ->setIcon('su-document')
             ->getLinkConfiguration();
+    }
+
+    public function preload(array $hrefs, $locale, $published = true)
+    {
+        $dimensionAttributes = [
+            'locale' => $locale,
+            'stage' => $published ? DimensionContentInterface::STAGE_LIVE : DimensionContentInterface::STAGE_DRAFT,
+        ];
+
+        $examples = $this->exampleRepository->findBy(
+            filters: [...$dimensionAttributes, 'uuids' => $hrefs],
+            selects: [ExampleRepository::GROUP_SELECT_EXAMPLE_WEBSITE => true]
+        );
+
+        $result = [];
+        foreach ($examples as $example) {
+            $dimensionContent = $this->contentManager->resolve($example, $dimensionAttributes);
+            $this->exampleReferenceStore->add($example->getId());
+
+            /** @var string|null $url */
+            $url = $dimensionContent->getTemplateData()['url'] ?? null;
+            if (null === $url) {
+                // TODO what to do when there is no url?
+                continue;
+            }
+
+            $result[] = new LinkItem(
+                $example->getUuid(),
+                (string) $dimensionContent->getTitle(),
+                $url,
+                $published
+            );
+        }
+
+        return $result;
     }
 }

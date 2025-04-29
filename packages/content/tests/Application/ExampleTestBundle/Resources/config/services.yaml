@@ -38,7 +38,7 @@ services:
             - '@sulu_content.content_manager'
             - '@doctrine.orm.entity_manager'
             - '@sulu_content.content_metadata_inspector'
-            - '@sulu_page.structure.factory'
+            - '@sulu_admin.metadata_provider_registry'
             - '@translator'
             - '%sulu_document_manager.show_drafts%'
         tags:
@@ -49,11 +49,11 @@ services:
         public: true
         arguments:
             - '@sulu_content.content_manager'
-            - '@sulu_page.structure.factory'
-            - '@doctrine.orm.entity_manager'
+            - '@example_test.example_repository'
+            - '@example_test.example_reference_store'
+            - '@translator'
         tags:
             - { name: sulu.link.provider, alias: examples }
-
 
     example_test.example_data_provider_repository:
         class: Sulu\Content\Infrastructure\Sulu\SmartContent\Repository\ContentDataProviderRepository

@@ -223,7 +223,7 @@ final class SuluArticleBundle extends AbstractBundle
                 new Reference('sulu_content.content_manager'), // TODO teaser provider should not build on manager
                 new Reference('doctrine.orm.entity_manager'),
                 new Reference('sulu_content.content_metadata_inspector'),
-                new Reference('sulu_page.structure.factory'),
+                new Reference('sulu_admin.metadata_provider_registry'),
                 new Reference('translator'),
                 '%sulu_document_manager.show_drafts%',
             ])

@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Sulu\Content\Tests\Application\ExampleTestBundle\Teaser;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
 use Sulu\Bundle\PageBundle\Teaser\Configuration\TeaserConfiguration;
 use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactoryInterface;
 use Sulu\Content\Application\ContentManager\ContentManagerInterface;
@@ -38,11 +39,11 @@ class ExampleTeaserProvider extends ContentTeaserProvider
         ContentManagerInterface $contentManager,
         EntityManagerInterface $entityManager,
         ContentMetadataInspectorInterface $contentMetadataInspector,
-        StructureMetadataFactoryInterface $metadataFactory,
+        MetadataProviderRegistry $metadataProviderRegistry,
         TranslatorInterface $translator,
         bool $showDrafts
     ) {
-        parent::__construct($contentManager, $entityManager, $contentMetadataInspector, $metadataFactory, Example::class, $showDrafts);
+        parent::__construct($contentManager, $entityManager, $contentMetadataInspector, $metadataProviderRegistry, Example::class, $showDrafts);
 
         $this->translator = $translator;
     }

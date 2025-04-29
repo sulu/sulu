@@ -13,7 +13,9 @@ declare(strict_types=1);
 
 namespace Sulu\Content\Infrastructure\Sulu\Traits;
 
-use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactoryInterface;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Domain\Model\TemplateInterface;
 
@@ -38,14 +40,22 @@ trait ResolveContentDimensionUrlTrait
         $type = $dimensionContent::getTemplateType();
         $template = $dimensionContent->getTemplateKey();
 
-        $metadata = $this->getStructureMetadataFactory()->getStructureMetadata($type, $template);
+        $metadata = $this->getMetadataProviderRegistry()->getMetadataProvider('form')
+            ->getMetadata($type, $dimensionContent->getLocale() ?? 'en', []);
 
-        if (!$metadata) {
+        if (!$metadata instanceof TypedFormMetadata) {
             // TODO FIXME add testcase for it
             return null; // @codeCoverageIgnore
         }
 
-        foreach ($metadata->getProperties() as $property) {
+        $metadata = $metadata->getForms()[$template] ?? null;
+
+        if (!$metadata instanceof FormMetadata) {
+            // TODO FIXME add testcase for it
+            return null; // @codeCoverageIgnore
+        }
+
+        foreach ($metadata->getItems() as $property) {
             if ('route' === $property->getType() || 'resource_locator' === $property->getType()) {
                 /** @var string|null */
                 return $dimensionContent->getTemplateData()[$property->getName()] ?? null;
@@ -55,5 +65,5 @@ trait ResolveContentDimensionUrlTrait
         return null;
     }
 
-    abstract protected function getStructureMetadataFactory(): StructureMetadataFactoryInterface;
+    abstract protected function getMetadataProviderRegistry(): MetadataProviderRegistry;
 }
