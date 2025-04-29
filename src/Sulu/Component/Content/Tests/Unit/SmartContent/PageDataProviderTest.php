@@ -204,11 +204,11 @@ class PageDataProviderTest extends TestCase
 
         $formMetadata1 = new FormMetadata();
         $formMetadata1->setName('template-1');
-        $formMetadata1->setTitle('translated-template-1');
+        $formMetadata1->setTitle('translated-template-1', 'en');
 
         $formMetadata2 = new FormMetadata();
         $formMetadata2->setName('template-2');
-        $formMetadata2->setTitle('translated-template-2');
+        $formMetadata2->setTitle('translated-template-2', 'en');
 
         $typedFormMetadata = new TypedFormMetadata();
         $typedFormMetadata->addForm('template-1', $formMetadata1);

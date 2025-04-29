@@ -144,23 +144,23 @@ class FormXmlLoaderTest extends TestCase
 
         $this->assertInstanceOf(FormMetadata::class, $formMetadataEn);
         $this->assertCount(4, $formMetadataEn->getItems());
-        $this->assertEquals('en_form_of_address', $formMetadataEn->getItems()['formOfAddress']->getLabel());
-        $this->assertEquals('en_first_name', $formMetadataEn->getItems()['firstName']->getLabel());
-        $this->assertEquals('en_last_name', $formMetadataEn->getItems()['lastName']->getLabel());
-        $this->assertEquals('en_salutation', $formMetadataEn->getItems()['salutation']->getLabel());
+        $this->assertEquals('en_form_of_address', $formMetadataEn->getItems()['formOfAddress']->getLabel('en'));
+        $this->assertEquals('en_first_name', $formMetadataEn->getItems()['firstName']->getLabel('en'));
+        $this->assertEquals('en_last_name', $formMetadataEn->getItems()['lastName']->getLabel('en'));
+        $this->assertEquals('en_salutation', $formMetadataEn->getItems()['salutation']->getLabel('en'));
         $this->assertEquals('en_mr', $formMetadataEn->getItems()['formOfAddress']->getOptions()['values']
-            ->getValue()[0]->getTitle());
+            ->getValue()[0]->getTitle('en'));
         $this->assertEquals('en_ms', $formMetadataEn->getItems()['formOfAddress']->getOptions()['values']
-            ->getValue()[1]->getTitle());
+            ->getValue()[1]->getTitle('en'));
 
         $formMetadataDe = $formMetadataCollection->get('de');
         $this->assertCount(4, $formMetadataDe->getItems());
-        $this->assertEquals('de_form_of_address', $formMetadataDe->getItems()['formOfAddress']->getLabel());
-        $this->assertEquals('de_first_name', $formMetadataDe->getItems()['firstName']->getLabel());
-        $this->assertEquals('Deutscher Nachname', $formMetadataDe->getItems()['lastName']->getLabel());
-        $this->assertEquals('de_salutation', $formMetadataDe->getItems()['salutation']->getLabel());
-        $this->assertEquals('de_mr', $formMetadataDe->getItems()['formOfAddress']->getOptions()['values']->getValue()[0]->getTitle());
-        $this->assertEquals('de_ms', $formMetadataDe->getItems()['formOfAddress']->getOptions()['values']->getValue()[1]->getTitle());
+        $this->assertEquals('de_form_of_address', $formMetadataDe->getItems()['formOfAddress']->getLabel('de'));
+        $this->assertEquals('de_first_name', $formMetadataDe->getItems()['firstName']->getLabel('de'));
+        $this->assertEquals('Deutscher Nachname', $formMetadataDe->getItems()['lastName']->getLabel('de'));
+        $this->assertEquals('de_salutation', $formMetadataDe->getItems()['salutation']->getLabel('de'));
+        $this->assertEquals('de_mr', $formMetadataDe->getItems()['formOfAddress']->getOptions()['values']->getValue()[0]->getTitle('de'));
+        $this->assertEquals('de_ms', $formMetadataDe->getItems()['formOfAddress']->getOptions()['values']->getValue()[1]->getTitle('de'));
 
         $schemaMetadataEn = $formMetadataEn->getSchema();
         $this->assertInstanceOf(SchemaMetadata::class, $schemaMetadataEn);

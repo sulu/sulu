@@ -42,7 +42,10 @@ class PasswordPolicyFormMetadataVisitor implements FormMetadataVisitorInterface
 
         /** @var FieldMetadata $passwordField */
         $passwordField = $formMetadata->getItems()['password'];
-        $passwordField->setDescription($this->translator->trans($this->passwordInformationTranslationKey, [], 'admin'));
+        $passwordField->setDescription(
+            $this->translator->trans($this->passwordInformationTranslationKey, [], 'admin'),
+            $this->translator->getLocale(),
+        );
 
         $schema = new SchemaMetadata(
             [new PropertyMetadata('password', false, new StringMetadata(null, null, $this->passwordPattern))]

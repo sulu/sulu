@@ -11,6 +11,8 @@
 
 namespace Sulu\Bundle\AdminBundle\Metadata\FormMetadata;
 
+use JMS\Serializer\Annotation as Serializer;
+
 class OptionMetadata
 {
     public const TYPE_STRING = 'string';
@@ -35,19 +37,22 @@ class OptionMetadata
     protected $value;
 
     /**
-     * @var ?string
+     * @var array<string, string>
      */
-    protected $title;
+    #[Serializer\Exclude]
+    protected $titles = [];
 
     /**
-     * @var ?string
+     * @var array<string, string>
      */
-    protected $placeholder;
+    #[Serializer\Exclude]
+    protected $placeholders = [];
 
     /**
-     * @var ?string
+     * @var array<string, string>
      */
-    protected $infoText;
+    #[Serializer\Exclude]
+    protected $infoTexts = [];
 
     /**
      * @return null|string|int|float
@@ -100,33 +105,83 @@ class OptionMetadata
         $this->value[] = $option;
     }
 
-    public function getTitle(): ?string
+    public function getTitle(string $locale): ?string
     {
-        return $this->title;
+        if (\array_key_exists($locale, $this->titles)) {
+            return $this->titles[$locale];
+        }
+
+        return \count($this->titles) ? $this->titles[\array_key_first($this->titles)] : null;
     }
 
-    public function setTitle(?string $title = null): void
+    /**
+     * @param array<string, string> $titles
+     */
+    public function setTitles(array $titles): void
     {
-        $this->title = $title;
+        $this->titles = $titles;
     }
 
-    public function getPlaceholder(): ?string
+    public function setTitle(string $title, string $locale)
     {
-        return $this->placeholder;
+        $this->titles[$locale] = $title;
     }
 
-    public function setPlaceholder(?string $placeholder = null): void
+    /**
+     * @return array<string, string>
+     */
+    public function getTitles(): array
     {
-        $this->placeholder = $placeholder;
+        return $this->titles;
     }
 
-    public function getInfotext(): ?string
+    public function getInfotext(string $locale): ?string
     {
-        return $this->infoText;
+        if (\array_key_exists($locale, $this->infoTexts)) {
+            return $this->infoTexts[$locale];
+        }
+
+        return \count($this->infoTexts) ? $this->infoTexts[\array_key_first($this->infoTexts)] : null;
     }
 
-    public function setInfotext(?string $infoText = null): void
+    /**
+     * @param array<string, string> $infoTexts
+     */
+    public function setInfoTexts(array $infoTexts): void
     {
-        $this->infoText = $infoText;
+        $this->infoTexts = $infoTexts;
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    public function getInfoTexts(): array
+    {
+        return $this->infoTexts;
+    }
+
+    public function getPlaceholder(string $locale): ?string
+    {
+        if (\array_key_exists($locale, $this->placeholders)) {
+            return $this->placeholders[$locale];
+        }
+
+        return \count($this->placeholders) ? $this->placeholders[\array_key_first($this->placeholders)] : null;
+    }
+
+    /**
+     * @param array<string, string> $placeholders
+     */
+    public function setPlaceholders(array $placeholders): void
+    {
+        $this->placeholders = $placeholders;
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    public function getPlaceholders(): array
+    {
+        return $this->placeholders;
     }
 }

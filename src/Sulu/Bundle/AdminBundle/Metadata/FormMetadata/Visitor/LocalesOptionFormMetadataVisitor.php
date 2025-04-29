@@ -46,7 +46,7 @@ class LocalesOptionFormMetadataVisitor implements FormMetadataVisitorInterface
             $option = new OptionMetadata();
             $option->setName($locale);
             $option->setValue($locale);
-            $option->setTitle($locale);
+            $option->setTitle($locale, $locale);
 
             return $option;
         }, $locales));

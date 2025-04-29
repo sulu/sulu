@@ -84,7 +84,7 @@ class GlobalBlocksTypedFormMetadataVisitorTest extends TestCase
 
         $globalBlockFormTypeMetadata->setSchema(new SchemaMetadata());
         $globalBlockFormTypeMetadata->setName($globalBlockName);
-        $globalBlockFormTypeMetadata->setTitle('Test Block Title');
+        $globalBlockFormTypeMetadata->setTitles(['en' => 'Test Block Title']);
 
         $this->metadataProviderProphecy->getMetadata('block', $locale, [
             'ignore_global_blocks' => true,
@@ -107,7 +107,7 @@ class GlobalBlocksTypedFormMetadataVisitorTest extends TestCase
             $definitions
         );
 
-        $this->assertSame('Test Block Title', $fieldType1->getTitle());
+        $this->assertSame('Test Block Title', $fieldType1->getTitle($locale));
     }
 
     public function testDefinitionIsAddedInFormDataForGlobalBlock(): void
@@ -142,7 +142,7 @@ class GlobalBlocksTypedFormMetadataVisitorTest extends TestCase
         $globalBlockFormMetadata->addForm($globalBlockName, $globalBlockFormTypeMetadata);
 
         $globalBlockFormTypeMetadata->setName($globalBlockName);
-        $globalBlockFormTypeMetadata->setTitle('Test Block Title');
+        $globalBlockFormTypeMetadata->setTitles(['en' => 'Test Block Title']);
 
         $this->metadataProviderProphecy->getMetadata('block', $locale, [
             'ignore_global_blocks' => true,
@@ -164,7 +164,7 @@ class GlobalBlocksTypedFormMetadataVisitorTest extends TestCase
             $definitions
         );
 
-        $this->assertSame('Test Block Title', $fieldType1->getTitle());
+        $this->assertSame('Test Block Title', $fieldType1->getTitle($locale));
     }
 
     public function testDefinitionIgnore(): void
@@ -201,7 +201,7 @@ class GlobalBlocksTypedFormMetadataVisitorTest extends TestCase
         $globalBlockFormMetadata->addForm($globalBlockName, $globalBlockFormTypeMetadata);
 
         $globalBlockFormTypeMetadata->setName($globalBlockName);
-        $globalBlockFormTypeMetadata->setTitle('Test Block Title');
+        $globalBlockFormTypeMetadata->setTitles(['en' => 'Test Block Title']);
 
         $this->metadataProviderProphecy->getMetadata('block', $locale, [
             'ignore_global_blocks' => true,

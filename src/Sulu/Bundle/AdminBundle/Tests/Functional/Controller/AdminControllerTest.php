@@ -13,10 +13,15 @@ declare(strict_types=1);
 
 namespace Sulu\Bundle\AdminBundle\Tests\Functional\Controller;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use Sulu\Bundle\AdminBundle\Controller\AdminController;
+use Sulu\Bundle\AdminBundle\Serializer\Subscriber\MetadataSubscriber;
 use Sulu\Bundle\MediaBundle\DataFixtures\ORM\LoadCollectionTypes;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
+#[CoversClass(AdminController::class)]
+#[CoversClass(MetadataSubscriber::class)]
 class AdminControllerTest extends SuluTestCase
 {
     /**
@@ -181,11 +186,11 @@ class AdminControllerTest extends SuluTestCase
         $defaultMetadata = $metaData['types']['default'];
         $overviewMetadata = $metaData['types']['overview'];
         $this->assertSame(
-            \json_decode((string) \file_get_contents(__DIR__ . '/fixtures/default.json'), true),
-            $defaultMetadata);
-        $this->assertSame(
             \json_decode((string) \file_get_contents(__DIR__ . '/fixtures/overview.json'), true),
             $overviewMetadata);
+        $this->assertSame(
+            \json_decode((string) \file_get_contents(__DIR__ . '/fixtures/default.json'), true),
+            $defaultMetadata);
     }
 
     public function testGetMetaDataGhostLocale(): void

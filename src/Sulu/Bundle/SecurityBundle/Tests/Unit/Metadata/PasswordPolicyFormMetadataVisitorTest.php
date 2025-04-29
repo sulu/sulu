@@ -32,6 +32,7 @@ class PasswordPolicyFormMetadataVisitorTest extends TestCase
         $translator->trans(Argument::any(), [], 'admin')->will(function($arguments) {
             return $arguments[0];
         });
+        $translator->getLocale()->willReturn('en');
 
         return new PasswordPolicyFormMetadataVisitor(
             $translator->reveal(),
@@ -51,7 +52,7 @@ class PasswordPolicyFormMetadataVisitorTest extends TestCase
 
         $instance = $this->createInstance();
         $instance->visitFormMetadata($formMetadata, 'en');
-        $this->assertNull($passwordMetadata->getDescription());
+        $this->assertNull($passwordMetadata->getDescription('en'));
         $this->assertSame([
             'type' => [
                 'number',
@@ -76,7 +77,7 @@ class PasswordPolicyFormMetadataVisitorTest extends TestCase
 
         $instance = $this->createInstance('.{8,}', 'test_key');
         $instance->visitFormMetadata($formMetadata, 'en');
-        $this->assertNull($passwordMetadata->getDescription());
+        $this->assertNull($passwordMetadata->getDescription('en'));
         $this->assertSame([
             'type' => [
                 'number',
@@ -101,7 +102,7 @@ class PasswordPolicyFormMetadataVisitorTest extends TestCase
 
         $instance = $this->createInstance('.{8,}', 'test_key');
         $instance->visitFormMetadata($formMetadata, 'en');
-        $this->assertSame('test_key', $passwordMetadata->getDescription());
+        $this->assertSame('test_key', $passwordMetadata->getDescription('en'));
         $this->assertSame([
             'allOf' => [
                 [
@@ -139,7 +140,7 @@ class PasswordPolicyFormMetadataVisitorTest extends TestCase
 
         $instance = $this->createInstance('.{8,}', 'test_key');
         $instance->visitFormMetadata($formMetadata, 'en');
-        $this->assertSame('test_key', $passwordMetadata->getDescription());
+        $this->assertSame('test_key', $passwordMetadata->getDescription('en'));
         $this->assertSame([
             'allOf' => [
                 [

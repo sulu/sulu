@@ -46,7 +46,7 @@ class StructureFormMetadataLoaderTest extends KernelTestCase
         $overviewForm = $typedForm->getForms()['overview'];
         $this->assertInstanceOf(FormMetadata::class, $overviewForm);
         $this->assertEquals('overview', $overviewForm->getName());
-        $this->assertEquals('Overview', $overviewForm->getTitle());
+        $this->assertEquals('Overview', $overviewForm->getTitle('en'));
         $this->assertCount(8, $overviewForm->getItems());
         $this->assertCount(1, $overviewForm->getTags());
         $this->assertNotNull($overviewForm->getSchema());
@@ -59,7 +59,7 @@ class StructureFormMetadataLoaderTest extends KernelTestCase
         $defaultForm = $typedForm->getForms()['default'];
         $this->assertInstanceOf(FormMetadata::class, $defaultForm);
         $this->assertEquals('default', $defaultForm->getName());
-        $this->assertEquals('Animals', $defaultForm->getTitle());
+        $this->assertEquals('Animals', $defaultForm->getTitle('en'));
         $this->assertCount(5, $defaultForm->getItems());
         $this->assertCount(3, $defaultForm->getTags());
         $this->assertNotNull($defaultForm->getSchema());
@@ -81,7 +81,7 @@ class StructureFormMetadataLoaderTest extends KernelTestCase
         $overviewForm = $typedForm->getForms()['overview'];
         $this->assertInstanceOf(FormMetadata::class, $overviewForm);
         $this->assertEquals('overview', $overviewForm->getName());
-        $this->assertEquals('Overview', $overviewForm->getTitle());
+        $this->assertEquals('Overview', $overviewForm->getTitle('de'));
         $this->assertCount(8, $overviewForm->getItems());
         $this->assertCount(1, $overviewForm->getTags());
         $this->assertNotNull($overviewForm->getSchema());
@@ -90,7 +90,7 @@ class StructureFormMetadataLoaderTest extends KernelTestCase
         $defaultForm = $typedForm->getForms()['default'];
         $this->assertInstanceOf(FormMetadata::class, $defaultForm);
         $this->assertEquals('default', $defaultForm->getName());
-        $this->assertEquals('Tiers', $defaultForm->getTitle());
+        $this->assertEquals('Tiers', $defaultForm->getTitle('de'));
         $this->assertCount(5, $defaultForm->getItems());
         $this->assertCount(3, $defaultForm->getTags());
         $this->assertNotNull($defaultForm->getSchema());
@@ -131,7 +131,7 @@ class StructureFormMetadataLoaderTest extends KernelTestCase
         $defaultForm = $typedForm->getForms()['default'];
         $this->assertInstanceOf(FormMetadata::class, $defaultForm);
         $this->assertEquals('default', $defaultForm->getName());
-        $this->assertEquals('Tiers', $defaultForm->getTitle());
+        $this->assertEquals('Tiers', $defaultForm->getTitle('de'));
         $this->assertCount(5, $defaultForm->getItems());
         $this->assertCount(3, $defaultForm->getTags());
         $this->assertNotNull($defaultForm->getSchema());

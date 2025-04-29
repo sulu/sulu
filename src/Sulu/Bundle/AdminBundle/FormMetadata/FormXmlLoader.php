@@ -92,7 +92,7 @@ class FormXmlLoader extends AbstractLoader
     {
         $form = new FormMetadata();
         $form->setTags($this->formMetadataMapper->mapTags($formMetadata->getTags()));
-        $form->setItems($this->formMetadataMapper->mapChildren($formMetadata->getChildren(), $locale));
+        $form->setItems($this->formMetadataMapper->mapChildren($formMetadata->getChildren()));
 
         $schema = $this->formMetadataMapper->mapSchema($formMetadata->getProperties());
         $xmlSchema = $formMetadata->getSchema();

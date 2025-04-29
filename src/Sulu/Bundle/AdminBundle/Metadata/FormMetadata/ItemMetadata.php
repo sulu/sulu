@@ -22,9 +22,16 @@ abstract class ItemMetadata
     protected $name;
 
     /**
-     * @var string
+     * @var array<string, string>
      */
-    protected $label;
+    #[Serializer\Exclude]
+    protected $labels = [];
+
+    /**
+     * @var array<string, string>
+     */
+    #[Serializer\Exclude]
+    protected $descriptions = [];
 
     /**
      * @var string
@@ -35,11 +42,6 @@ abstract class ItemMetadata
      * @var string
      */
     protected $visibleCondition;
-
-    /**
-     * @var string
-     */
-    protected $description;
 
     /**
      * @var string
@@ -61,14 +63,64 @@ abstract class ItemMetadata
         return $this->name;
     }
 
-    public function getLabel(): ?string
+    public function setLabel(string $label, string $locale)
     {
-        return $this->label;
+        $this->labels[$locale] = $label;
     }
 
-    public function setLabel(?string $label): void
+    /**
+     * @return array<string, string>
+     */
+    public function getLabels(): array
     {
-        $this->label = $label;
+        return $this->labels;
+    }
+
+    public function getLabel(string $locale): ?string
+    {
+        if (isset($this->labels[$locale])) {
+            return $this->labels[$locale];
+        }
+
+        return \count($this->labels) ? $this->labels[\array_key_first($this->labels)] : null;
+    }
+
+    /**
+     * @param array<string, string> $labels
+     */
+    public function setLabels(array $labels): void
+    {
+        $this->labels = $labels;
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    public function getDescriptions(): array
+    {
+        return $this->descriptions;
+    }
+
+    public function getDescription(string $locale): ?string
+    {
+        if (isset($this->descriptions[$locale])) {
+            return $this->descriptions[$locale];
+        }
+
+        return \count($this->descriptions) ? $this->descriptions[\array_key_first($this->descriptions)] : null;
+    }
+
+    /**
+     * @param array<string, string> $descriptions
+     */
+    public function setDescriptions(array $descriptions): void
+    {
+        $this->descriptions = $descriptions;
+    }
+
+    public function setDescription(string $description, string $locale)
+    {
+        $this->descriptions[$locale] = $description;
     }
 
     public function getDisabledCondition(): ?string
@@ -89,16 +141,6 @@ abstract class ItemMetadata
     public function setVisibleCondition(?string $visibleCondition): void
     {
         $this->visibleCondition = $visibleCondition;
-    }
-
-    public function getDescription(): ?string
-    {
-        return $this->description;
-    }
-
-    public function setDescription(?string $description): void
-    {
-        $this->description = $description;
     }
 
     public function getColSpan(): int

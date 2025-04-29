@@ -390,6 +390,32 @@ This will only create the service `sulu_media.storage` as the alias to `sulu_med
 Most of the services in the PreviewBundle are now internal. The new `PreviewDefaultsProviderInterface` is
 now the primary means of interacting with the bundle.
 
+### Metadata now locale independent
+
+The Sulu Metadata classes `ItemMetadata`, `SectionMetadata`, `FieldMetadata`, `OptionMetadata` and `FormMetadata` are
+now independent from the locale and contain all metadata for all locales this means setter and getter changed.
+
+```diff
+// getter
+-$metadata->getLabel();
++$metadata->getLabel($locale);
+-$metadata->getTitle();
++$metadata->getTitle($locale);
+-$metadata->getDescription();
++$metadata->getDescription($locale);
+-$metadata->getPlaceholder();
++$metadata->getPlaceholder($locale);
+// setter
+-$metadata->setLabel($label);
++$metadata->setLabel($label, $locale);
+-$metadata->setTitle($title);
++$metadata->setTitle($title, $locale);
+-$metadata->setDescription($description);
++$metadata->setDescription($description, $locale);
+-$metadata->setPlaceholder($placeholder);
++$metadata->setPlaceholder($placeholder, $locale);
+```
+
 ### Upgrade resourceLocator and route property type
 
 The new content structure used in Sulu 3.0 requires that all the `resource_locators` or `route` properties must be

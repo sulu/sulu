@@ -100,7 +100,7 @@ class XmlFormMetadataLoaderTest extends KernelTestCase
     public function testGetMetadataWithoutLabel(): void
     {
         $form = $this->xmlFormMetadataLoader->getMetadata('form_without_label', 'en');
-        $this->assertNull($form->getItems()['name']->getLabel());
+        $this->assertNull($form->getItems()['name']->getLabel('en'));
     }
 
     public function testGetMetadataFromMultipleFiles(): void

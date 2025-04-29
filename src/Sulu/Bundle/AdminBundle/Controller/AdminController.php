@@ -191,13 +191,15 @@ class AdminController
     public function metadataAction(string $type, string $key, Request $request): Response
     {
         $user = $this->tokenStorage->getToken()->getUser();
+        $locale = $user->getLocale();
 
         $metadataOptions = $request->query->all();
         $metadata = $this->metadataProviderRegistry->getMetadataProvider($type)
-            ->getMetadata($key, $user->getLocale(), $metadataOptions);
+            ->getMetadata($key, $locale, $metadataOptions);
 
         $context = new Context();
         $context->addGroup('Default');
+        $context->setAttribute('locale', $locale);
         if (true === \filter_var($metadataOptions['onlyKeys'] ?? 'false', \FILTER_VALIDATE_BOOLEAN)) {
             $context->addGroup('admin_form_metadata_keys_only');
         }

@@ -145,7 +145,7 @@ class StructureFormMetadataLoaderTest extends TestCase
         $structure->setResource(\tempnam(static::CACHE_DIR, 'some_template'));
 
         $this->formMetadataMapper->mapTags([])->willReturn([]);
-        $this->formMetadataMapper->mapChildren([], 'en')->willReturn([$propertyMetadata, $sectionMetadata, $blockMetadata]);
+        $this->formMetadataMapper->mapChildren([])->willReturn([$propertyMetadata, $sectionMetadata, $blockMetadata]);
 
         $schemaMetadata = new SchemaMetadata();
         $this->formMetadataMapper->mapSchema([])->willReturn($schemaMetadata);

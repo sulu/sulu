@@ -244,6 +244,12 @@
             <tag name="jms_serializer.event_subscriber"/>
         </service>
 
+        <service id="sulu_admin.item_metadata_serializer_subscriber"
+            class="Sulu\Bundle\AdminBundle\Serializer\Subscriber\MetadataSubscriber"
+        >
+            <tag name="jms_serializer.event_subscriber"/>
+        </service>
+
         <service id="sulu_admin.save_with_form_dialog_toolbar_action_subscriber"
             class="Sulu\Bundle\AdminBundle\Serializer\Subscriber\SaveWithFormDialogToolbarActionSubscriber"
         >

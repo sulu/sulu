@@ -1,12 +1,9 @@
 {
     "name": "default",
-    "title": "Animals",
     "form": {
         "title": {
-            "label": "Animals",
             "disabledCondition": null,
             "visibleCondition": null,
-            "description": "",
             "type": "text_line",
             "colSpan": 12,
             "options": [],
@@ -24,13 +21,12 @@
                     "priority": 100,
                     "attributes": []
                 }
-            ]
+            ],
+            "label": "Animals"
         },
         "url": {
-            "label": "Resourcelocator",
             "disabledCondition": null,
             "visibleCondition": null,
-            "description": "",
             "type": "resource_locator",
             "colSpan": 12,
             "options": [],
@@ -48,13 +44,12 @@
                     "priority": null,
                     "attributes": []
                 }
-            ]
+            ],
+            "label": "Resourcelocator"
         },
         "blog": {
-            "label": null,
             "disabledCondition": null,
             "visibleCondition": null,
-            "description": "",
             "type": "text_area",
             "colSpan": 12,
             "options": [],
@@ -69,10 +64,8 @@
             "tags": []
         },
         "localized_blog": {
-            "label": null,
             "disabledCondition": null,
             "visibleCondition": null,
-            "description": "",
             "type": "text_area",
             "colSpan": 12,
             "options": [],
@@ -87,34 +80,26 @@
             "tags": []
         },
         "content": {
-            "label": null,
             "disabledCondition": null,
             "visibleCondition": null,
-            "description": null,
             "type": "section",
             "colSpan": 12,
             "items": {
                 "blocks": {
-                    "label": null,
                     "disabledCondition": null,
                     "visibleCondition": null,
-                    "description": "",
                     "type": "block",
                     "colSpan": 12,
                     "options": {
                         "settings_form_key": {
                             "name": "settings_form_key",
                             "type": null,
-                            "value": "page_block_settings",
-                            "title": null,
-                            "placeholder": null,
-                            "infoText": null
+                            "value": "page_block_settings"
                         }
                     },
                     "types": {
                         "text_block": {
                             "name": "text_block",
-                            "title": "Text Block",
                             "form": [],
                             "schema": {
                                 "type": [
@@ -135,11 +120,11 @@
                                         "global_block": "text_block"
                                     }
                                 }
-                            ]
+                            ],
+                            "title": "Text Block"
                         },
                         "text_block2": {
                             "name": "text_block2",
-                            "title": "Text Block 2",
                             "form": [],
                             "schema": {
                                 "type": [
@@ -160,17 +145,15 @@
                                         "global_block": "text_block2"
                                     }
                                 }
-                            ]
+                            ],
+                            "title": "Text Block 2"
                         },
                         "editor": {
                             "name": "editor",
-                            "title": "Editor",
                             "form": {
                                 "text_editor": {
-                                    "label": "Text Editor",
                                     "disabledCondition": null,
                                     "visibleCondition": null,
-                                    "description": "",
                                     "type": "text_editor",
                                     "colSpan": 12,
                                     "options": [],
@@ -182,7 +165,8 @@
                                     "minOccurs": null,
                                     "maxOccurs": null,
                                     "onInvalid": null,
-                                    "tags": []
+                                    "tags": [],
+                                    "label": "Text Editor"
                                 }
                             },
                             "schema": {
@@ -196,17 +180,15 @@
                                 ]
                             },
                             "key": null,
-                            "tags": []
+                            "tags": [],
+                            "title": "Editor"
                         },
                         "block": {
                             "name": "block",
-                            "title": "Block",
                             "form": {
                                 "title": {
-                                    "label": null,
                                     "disabledCondition": null,
                                     "visibleCondition": null,
-                                    "description": "",
                                     "type": "text_line",
                                     "colSpan": 12,
                                     "options": [],
@@ -221,26 +203,20 @@
                                     "tags": []
                                 },
                                 "blocks": {
-                                    "label": null,
                                     "disabledCondition": null,
                                     "visibleCondition": null,
-                                    "description": "",
                                     "type": "block",
                                     "colSpan": 12,
                                     "options": {
                                         "settings_form_key": {
                                             "name": "settings_form_key",
                                             "type": null,
-                                            "value": "page_block_settings",
-                                            "title": null,
-                                            "placeholder": null,
-                                            "infoText": null
+                                            "value": "page_block_settings"
                                         }
                                     },
                                     "types": {
                                         "text_block2": {
                                             "name": "text_block2",
-                                            "title": "Text Block 2",
                                             "form": [],
                                             "schema": {
                                                 "type": [
@@ -261,11 +237,11 @@
                                                         "global_block": "text_block2"
                                                     }
                                                 }
-                                            ]
+                                            ],
+                                            "title": "Text Block 2"
                                         },
                                         "text_block3": {
                                             "name": "text_block3",
-                                            "title": "Text Block 3",
                                             "form": [],
                                             "schema": {
                                                 "type": [
@@ -286,7 +262,8 @@
                                                         "global_block": "text_block3"
                                                     }
                                                 }
-                                            ]
+                                            ],
+                                            "title": "Text Block 3"
                                         }
                                     },
                                     "defaultType": "text_block2",
@@ -310,7 +287,8 @@
                                 ]
                             },
                             "key": null,
-                            "tags": []
+                            "tags": [],
+                            "title": "Block"
                         }
                     },
                     "defaultType": "text_block",
@@ -626,5 +604,6 @@
                 "value": "test-value"
             }
         }
-    ]
+    ],
+    "title": "Animals"
 }

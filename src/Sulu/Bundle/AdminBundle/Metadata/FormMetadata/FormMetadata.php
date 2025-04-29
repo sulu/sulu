@@ -25,10 +25,10 @@ class FormMetadata extends AbstractMetadata
     private $name;
 
     /**
-     * @var string
+     * @var array<string, string>
      */
-    #[Exclude(if: "'admin_form_metadata_keys_only' in context.getAttribute('groups')")]
-    private $title;
+    #[Exclude]
+    private $titles = [];
 
     /**
      * @var ItemMetadata[]
@@ -80,14 +80,36 @@ class FormMetadata extends AbstractMetadata
         return $this->key;
     }
 
-    public function setTitle(string $title)
+    public function setTitle(string $title, string $locale)
     {
-        $this->title = $title;
+        $this->titles[$locale] = $title;
     }
 
-    public function getTitle(): string
+    /**
+     * @param array<string, string> $titles
+     */
+    public function setTitles(array $titles)
     {
-        return $this->title;
+        $this->titles = $titles;
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    public function getTitles(): array
+    {
+        return $this->titles;
+    }
+
+    public function getTitle(string $locale): string
+    {
+        if (isset($this->titles[$locale])) {
+            return $this->titles[$locale];
+        }
+
+        return \count($this->titles)
+            ? $this->titles[\array_key_first($this->titles)]
+            : ($this->name ? \ucfirst($this->name) : '');
     }
 
     /**
@@ -164,8 +186,8 @@ class FormMetadata extends AbstractMetadata
         if ($this->name) {
             $mergedForm->setName($this->name);
         }
-        if ($this->title) {
-            $mergedForm->setTitle($this->title);
+        if ($this->titles) {
+            $mergedForm->setTitles($this->titles);
         }
 
         $mergedForm->setTags(\array_merge($this->getTags(), $otherForm->getTags()));

@@ -1,12 +1,9 @@
 {
     "name": "overview",
-    "title": "Overview",
     "form": {
         "title": {
-            "label": null,
             "disabledCondition": null,
             "visibleCondition": null,
-            "description": "",
             "type": "text_line",
             "colSpan": 12,
             "options": [],
@@ -27,10 +24,8 @@
             ]
         },
         "tags": {
-            "label": null,
             "disabledCondition": null,
             "visibleCondition": null,
-            "description": "",
             "type": "text_line",
             "colSpan": 12,
             "options": [],
@@ -45,10 +40,8 @@
             "tags": []
         },
         "url": {
-            "label": null,
             "disabledCondition": null,
             "visibleCondition": null,
-            "description": "",
             "type": "resource_locator",
             "colSpan": 12,
             "options": [],
@@ -69,10 +62,8 @@
             ]
         },
         "article": {
-            "label": null,
             "disabledCondition": null,
             "visibleCondition": null,
-            "description": "",
             "type": "text_area",
             "colSpan": 12,
             "options": [],
@@ -87,10 +78,8 @@
             "tags": []
         },
         "blog": {
-            "label": null,
             "disabledCondition": null,
             "visibleCondition": null,
-            "description": "",
             "type": "text_area",
             "colSpan": 12,
             "options": [],
@@ -105,10 +94,8 @@
             "tags": []
         },
         "external": {
-            "label": null,
             "disabledCondition": null,
             "visibleCondition": null,
-            "description": "",
             "type": "url",
             "colSpan": 12,
             "options": [],
@@ -123,32 +110,24 @@
             "tags": []
         },
         "blocks": {
-            "label": null,
             "disabledCondition": null,
             "visibleCondition": null,
-            "description": "",
             "type": "block",
             "colSpan": 12,
             "options": {
                 "settings_form_key": {
                     "name": "settings_form_key",
                     "type": null,
-                    "value": "page_block_settings",
-                    "title": null,
-                    "placeholder": null,
-                    "infoText": null
+                    "value": "page_block_settings"
                 }
             },
             "types": {
                 "editor": {
                     "name": "editor",
-                    "title": "Editor",
                     "form": {
                         "text_editor": {
-                            "label": "Text Editor",
                             "disabledCondition": null,
                             "visibleCondition": null,
-                            "description": "",
                             "type": "text_editor",
                             "colSpan": 12,
                             "options": [],
@@ -160,7 +139,8 @@
                             "minOccurs": null,
                             "maxOccurs": null,
                             "onInvalid": null,
-                            "tags": []
+                            "tags": [],
+                            "label": "Text Editor"
                         }
                     },
                     "schema": {
@@ -174,7 +154,8 @@
                         ]
                     },
                     "key": null,
-                    "tags": []
+                    "tags": [],
+                    "title": "Editor"
                 }
             },
             "defaultType": "editor",
@@ -187,32 +168,24 @@
             "tags": []
         },
         "blocks_with_custom_settings_form_key": {
-            "label": null,
             "disabledCondition": null,
             "visibleCondition": null,
-            "description": "",
             "type": "block",
             "colSpan": 12,
             "options": {
                 "settings_form_key": {
                     "name": "settings_form_key",
                     "type": "string",
-                    "value": "custom_block_settings",
-                    "title": null,
-                    "placeholder": null,
-                    "infoText": null
+                    "value": "custom_block_settings"
                 }
             },
             "types": {
                 "editor": {
                     "name": "editor",
-                    "title": "Editor",
                     "form": {
                         "text_editor": {
-                            "label": "Text Editor",
                             "disabledCondition": null,
                             "visibleCondition": null,
-                            "description": "",
                             "type": "text_editor",
                             "colSpan": 12,
                             "options": [],
@@ -224,7 +197,8 @@
                             "minOccurs": null,
                             "maxOccurs": null,
                             "onInvalid": null,
-                            "tags": []
+                            "tags": [],
+                            "label": "Text Editor"
                         }
                     },
                     "schema": {
@@ -238,7 +212,8 @@
                         ]
                     },
                     "key": null,
-                    "tags": []
+                    "tags": [],
+                    "title": "Editor"
                 }
             },
             "defaultType": "editor",
@@ -373,5 +348,6 @@
             "priority": null,
             "attributes": []
         }
-    ]
+    ],
+    "title": "Overview"
 }
