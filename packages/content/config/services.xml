@@ -144,14 +144,6 @@
 
         <service id="Sulu\Content\Application\ContentCopier\ContentCopierInterface" alias="sulu_content.content_copier"/>
 
-        <!-- Content Indexer -->
-        <service id="sulu_content.content_indexer" class="Sulu\Content\Application\ContentIndexer\ContentIndexer">
-            <argument type="service" id="massive_search.search_manager"/>
-            <argument type="service" id="sulu_content.content_aggregator"/>
-        </service>
-
-        <service id="Sulu\Content\Application\ContentIndexer\ContentIndexerInterface" alias="sulu_content.content_indexer"/>
-
         <!-- Content Workflow -->
         <service id="sulu_content.content_workflow" class="Sulu\Content\Application\ContentWorkflow\ContentWorkflow">
             <argument type="service" id="sulu_content.dimension_content_repository"/>
@@ -188,7 +180,6 @@
             <argument type="service" id="sulu_content.content_normalizer"/>
             <argument type="service" id="sulu_content.content_copier"/>
             <argument type="service" id="sulu_content.content_workflow"/>
-            <argument type="service" id="sulu_content.content_indexer"/>
         </service>
 
         <service id="Sulu\Content\Application\ContentManager\ContentManagerInterface" alias="sulu_content.content_manager"/>

@@ -16,7 +16,6 @@ namespace Sulu\Snippet\Infrastructure\Symfony\HttpKernel;
 use Sulu\Bundle\PersistenceBundle\DependencyInjection\PersistenceExtensionTrait;
 use Sulu\Bundle\PersistenceBundle\PersistenceBundleTrait;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStore;
-use Sulu\Content\Infrastructure\Sulu\Search\ContentSearchMetadataProvider;
 use Sulu\Snippet\Application\Mapper\SnippetContentMapper;
 use Sulu\Snippet\Application\Mapper\SnippetMapperInterface;
 use Sulu\Snippet\Application\MessageHandler\ApplyWorkflowTransitionSnippetMessageHandler;
@@ -241,17 +240,6 @@ final class SuluSnippetBundle extends AbstractBundle
                 '%sulu_document_manager.show_drafts%',
             ])
             ->tag('sulu.smart_content.data_provider', ['alias' => SnippetInterface::RESOURCE_KEY]);
-
-        // Search integration
-        $services->set('sulu_snippet.snippet_search_metadata_provider')
-            ->class(ContentSearchMetadataProvider::class) // TODO this should not be handled via Content Bundle instead own service which uses the SnippetRepository
-            ->args([
-                new Reference('sulu_content.content_metadata_inspector'),
-                new Reference('massive_search.factory_default'),
-                new Reference('sulu_page.structure.factory'),
-                SnippetInterface::class,
-            ])
-            ->tag('massive_search.metadata.provider');
     }
 
     /**

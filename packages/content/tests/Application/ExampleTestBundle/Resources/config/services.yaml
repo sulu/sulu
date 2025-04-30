@@ -20,7 +20,6 @@ services:
             - '@sulu_core.doctrine_list_builder_factory'
             - '@sulu_core.doctrine_rest_helper'
             - '@sulu_content.content_manager'
-            - '@sulu_content.content_indexer'
             - '@doctrine.orm.entity_manager'
         tags:
             - { name: sulu.context, context: admin }
@@ -81,27 +80,6 @@ services:
             - '@example_test.example_reference_store'
         tags:
             - { name: sulu.smart_content.data_provider, alias: examples }
-
-    example_test.example_reindex_provider:
-        class: Sulu\Content\Infrastructure\Sulu\Search\ContentReindexProvider
-        arguments:
-            - '@doctrine.orm.entity_manager'
-            - '@sulu_content.content_metadata_inspector'
-            - '@sulu_content.content_aggregator'
-            - '%sulu.context%'
-            - Sulu\Content\Tests\Application\ExampleTestBundle\Entity\Example
-        tags:
-            - {name: 'massive_search.reindex.provider', id: 'example'}
-
-    example_test.example_search_metadata_provider:
-        class: Sulu\Content\Infrastructure\Sulu\Search\ContentSearchMetadataProvider
-        arguments:
-            - '@sulu_content.content_metadata_inspector'
-            - '@massive_search.factory_default'
-            - '@sulu_page.structure.factory'
-            - Sulu\Content\Tests\Application\ExampleTestBundle\Entity\Example
-        tags:
-            - 'massive_search.metadata.provider'
 
     example_test.example_preview_object_provider:
         class: Sulu\Content\Infrastructure\Sulu\Preview\ContentObjectProvider

@@ -25,7 +25,6 @@ use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescri
 use Sulu\Component\Rest\ListBuilder\Metadata\FieldDescriptorFactoryInterface;
 use Sulu\Component\Rest\ListBuilder\PaginatedRepresentation;
 use Sulu\Component\Rest\RestHelperInterface;
-use Sulu\Content\Application\ContentIndexer\ContentIndexerInterface;
 use Sulu\Content\Application\ContentManager\ContentManagerInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Domain\Model\WorkflowInterface;
@@ -59,11 +58,6 @@ class ExampleController extends AbstractRestController implements ClassResourceI
     private $contentManager;
 
     /**
-     * @var ContentIndexerInterface
-     */
-    private $contentIndexer;
-
-    /**
      * @var EntityManagerInterface
      */
     private $entityManager;
@@ -75,14 +69,12 @@ class ExampleController extends AbstractRestController implements ClassResourceI
         DoctrineListBuilderFactoryInterface $listBuilderFactory,
         RestHelperInterface $restHelper,
         ContentManagerInterface $contentManager,
-        ContentIndexerInterface $contentIndexer,
         EntityManagerInterface $entityManager
     ) {
         $this->fieldDescriptorFactory = $fieldDescriptorFactory;
         $this->listBuilderFactory = $listBuilderFactory;
         $this->restHelper = $restHelper;
         $this->contentManager = $contentManager;
-        $this->contentIndexer = $contentIndexer;
         $this->entityManager = $entityManager;
 
         parent::__construct($viewHandler, $tokenStorage);
@@ -154,15 +146,7 @@ class ExampleController extends AbstractRestController implements ClassResourceI
             );
 
             $this->entityManager->flush();
-
-            // Index live dimension content
-            $this->contentIndexer->index($example, \array_merge($dimensionAttributes, [
-                'stage' => DimensionContentInterface::STAGE_LIVE,
-            ]));
         }
-
-        // Index draft dimension content
-        $this->contentIndexer->indexDimensionContent($dimensionContent);
 
         return $this->handleView($this->view($this->normalize($example, $dimensionContent), 201));
     }
@@ -211,12 +195,6 @@ class ExampleController extends AbstractRestController implements ClassResourceI
 
                 $this->entityManager->flush();
 
-                // Deindex live dimension content
-                $this->contentIndexer->deindex(Example::RESOURCE_KEY, $id, \array_merge(
-                    $dimensionAttributes,
-                    ['stage' => DimensionContentInterface::STAGE_LIVE]
-                ));
-
                 return $this->handleView($this->view($this->normalize($example, $dimensionContent)));
             case 'remove-draft':
                 $dimensionContent = $this->contentManager->applyTransition(
@@ -226,9 +204,6 @@ class ExampleController extends AbstractRestController implements ClassResourceI
                 );
 
                 $this->entityManager->flush();
-
-                // Index draft dimension content
-                $this->contentIndexer->indexDimensionContent($dimensionContent);
 
                 return $this->handleView($this->view($this->normalize($example, $dimensionContent)));
             default:
@@ -271,15 +246,7 @@ class ExampleController extends AbstractRestController implements ClassResourceI
             );
 
             $this->entityManager->flush();
-
-            // Index live dimension content
-            $this->contentIndexer->index($example, \array_merge($dimensionAttributes, [
-                'stage' => DimensionContentInterface::STAGE_LIVE,
-            ]));
         }
-
-        // Index draft dimension content
-        $this->contentIndexer->indexDimensionContent($dimensionContent);
 
         return $this->handleView($this->view($this->normalize($example, $dimensionContent)));
     }
@@ -294,9 +261,6 @@ class ExampleController extends AbstractRestController implements ClassResourceI
 
         $this->entityManager->remove($example);
         $this->entityManager->flush();
-
-        // Remove all documents with given id from index
-        $this->contentIndexer->deindex(Example::RESOURCE_KEY, $id);
 
         return new Response('', 204);
     }

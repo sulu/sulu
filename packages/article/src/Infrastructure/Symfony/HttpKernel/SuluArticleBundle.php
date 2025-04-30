@@ -38,7 +38,6 @@ use Sulu\Bundle\PersistenceBundle\DependencyInjection\PersistenceExtensionTrait;
 use Sulu\Bundle\PersistenceBundle\PersistenceBundleTrait;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStore;
 use Sulu\Content\Infrastructure\Sulu\Preview\ContentObjectProvider;
-use Sulu\Content\Infrastructure\Sulu\Search\ContentSearchMetadataProvider;
 use Symfony\Component\Config\Definition\Configurator\DefinitionConfigurator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
@@ -254,17 +253,6 @@ final class SuluArticleBundle extends AbstractBundle
                 '%sulu_document_manager.show_drafts%',
             ])
             ->tag('sulu.smart_content.data_provider', ['alias' => ArticleInterface::RESOURCE_KEY]);
-
-        // Search integration
-        $services->set('sulu_article.article_search_metadata_provider')
-            ->class(ContentSearchMetadataProvider::class) // TODO this should not be handled via Content Bundle instead own service which uses the ArticleRepository
-            ->args([
-                new Reference('sulu_content.content_metadata_inspector'),
-                new Reference('massive_search.factory_default'),
-                new Reference('sulu_page.structure.factory'),
-                ArticleInterface::class,
-            ])
-            ->tag('massive_search.metadata.provider');
     }
 
     /**
