@@ -17,10 +17,12 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderInterface;
+use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
 use Sulu\Bundle\TestBundle\Testing\SetGetPrivatePropertyTrait;
-use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactoryInterface;
-use Sulu\Component\Content\Metadata\PropertyMetadata;
-use Sulu\Component\Content\Metadata\StructureMetadata;
 use Sulu\Content\Application\ContentDataMapper\DataMapper\RoutableDataMapper;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Domain\Model\RoutableInterface;
@@ -39,22 +41,28 @@ class RoutableDataMapperTest extends TestCase
      */
     private $routeRepository;
 
-    /**
-     * @var ObjectProphecy<StructureMetadataFactoryInterface>
-     */
-    private $structureMetadataFactory;
-
     protected function setUp(): void
     {
         $this->routeRepository = $this->prophesize(RouteRepositoryInterface::class);
-        $this->structureMetadataFactory = $this->prophesize(StructureMetadataFactoryInterface::class);
     }
 
-    protected function createRouteDataMapperInstance(): RoutableDataMapper
+    protected function createRouteDataMapperInstance(TypedFormMetadata $typedFormMetadata): RoutableDataMapper
     {
+        $metadataProviderRegistry = new MetadataProviderRegistry();
+        $metadataProviderRegistry->addMetadataProvider('form', new class($typedFormMetadata) implements MetadataProviderInterface {
+            public function __construct(private readonly TypedFormMetadata $typedFormMetadata)
+            {
+            }
+
+            public function getMetadata(string $key, string $locale, array $metadataOptions): TypedFormMetadata
+            {
+                return $this->typedFormMetadata;
+            }
+        });
+
         return new RoutableDataMapper(
             $this->routeRepository->reveal(),
-            $this->structureMetadataFactory->reveal(),
+            $metadataProviderRegistry,
         );
     }
 
@@ -65,10 +73,9 @@ class RoutableDataMapperTest extends TestCase
         $unlocalizedDimensionContent = $this->prophesize(DimensionContentInterface::class);
         $localizedDimensionContent = $this->prophesize(DimensionContentInterface::class);
 
-        $this->structureMetadataFactory->getStructureMetadata(Argument::cetera())->shouldNotBeCalled();
         $this->routeRepository->add(Argument::any())->shouldNotBeCalled();
 
-        $mapper = $this->createRouteDataMapperInstance();
+        $mapper = $this->createRouteDataMapperInstance(new TypedFormMetadata());
         $mapper->map($unlocalizedDimensionContent->reveal(), $localizedDimensionContent->reveal(), $data);
     }
 
@@ -84,10 +91,9 @@ class RoutableDataMapperTest extends TestCase
         $localizedDimensionContent = $this->prophesize(DimensionContentInterface::class);
         $localizedDimensionContent->willImplement(RoutableInterface::class);
 
-        $this->structureMetadataFactory->getStructureMetadata(Argument::cetera())->shouldNotBeCalled();
         $this->routeRepository->add(Argument::any())->shouldNotBeCalled();
 
-        $mapper = $this->createRouteDataMapperInstance();
+        $mapper = $this->createRouteDataMapperInstance(new TypedFormMetadata());
         $mapper->map($unlocalizedDimensionContent->reveal(), $localizedDimensionContent->reveal(), $data);
     }
 
@@ -104,10 +110,9 @@ class RoutableDataMapperTest extends TestCase
         $localizedDimensionContent = new ExampleDimensionContent($example);
         $localizedDimensionContent->setLocale('en');
 
-        $this->structureMetadataFactory->getStructureMetadata(Argument::cetera())->shouldNotBeCalled();
         $this->routeRepository->add(Argument::any())->shouldNotBeCalled();
 
-        $mapper = $this->createRouteDataMapperInstance();
+        $mapper = $this->createRouteDataMapperInstance(new TypedFormMetadata());
 
         $mapper->map($unlocalizedDimensionContent, $localizedDimensionContent, $data);
     }
@@ -123,12 +128,9 @@ class RoutableDataMapperTest extends TestCase
         $localizedDimensionContent->setTemplateKey('default');
         $localizedDimensionContent->setLocale('en');
 
-        $this->structureMetadataFactory->getStructureMetadata('example', 'default')
-            ->shouldBeCalled()
-            ->willReturn(null);
         $this->routeRepository->add(Argument::any())->shouldNotBeCalled();
 
-        $mapper = $this->createRouteDataMapperInstance();
+        $mapper = $this->createRouteDataMapperInstance(new TypedFormMetadata());
         $mapper->map($unlocalizedDimensionContent, $localizedDimensionContent, $data);
 
         $this->assertSame([], $localizedDimensionContent->getTemplateData());
@@ -146,12 +148,9 @@ class RoutableDataMapperTest extends TestCase
         $localizedDimensionContent->setTemplateKey('default');
         $localizedDimensionContent->setLocale('en');
 
-        $this->structureMetadataFactory->getStructureMetadata('example', 'default')
-            ->shouldBeCalled()
-            ->willReturn($this->createTextLineStructureMetadata());
         $this->routeRepository->add(Argument::any())->shouldNotBeCalled();
 
-        $mapper = $this->createRouteDataMapperInstance();
+        $mapper = $this->createRouteDataMapperInstance($this->createTypedFormMetadataWithTextLine());
         $mapper->map($unlocalizedDimensionContent, $localizedDimensionContent, $data);
 
         $this->assertSame([], $localizedDimensionContent->getTemplateData());
@@ -171,12 +170,9 @@ class RoutableDataMapperTest extends TestCase
         $localizedDimensionContent = new ExampleDimensionContent($example);
         $localizedDimensionContent->setTemplateKey('default');
 
-        $this->structureMetadataFactory->getStructureMetadata('example', 'default')
-            ->shouldBeCalled()
-            ->willReturn($this->createRouteStructureMetadata());
         $this->routeRepository->add(Argument::any())->shouldNotBeCalled();
 
-        $mapper = $this->createRouteDataMapperInstance();
+        $mapper = $this->createRouteDataMapperInstance($this->createTypedFormMetadataWithRoute());
         $mapper->map($unlocalizedDimensionContent, $localizedDimensionContent, $data);
 
         $this->assertSame([], $localizedDimensionContent->getTemplateData());
@@ -195,12 +191,9 @@ class RoutableDataMapperTest extends TestCase
         $localizedDimensionContent->setTemplateKey('default');
         $localizedDimensionContent->setLocale('en');
 
-        $this->structureMetadataFactory->getStructureMetadata('example', 'default')
-            ->shouldBeCalled()
-            ->willReturn($this->createRouteStructureMetadata());
         $this->routeRepository->add(Argument::any())->shouldNotBeCalled();
 
-        $mapper = $this->createRouteDataMapperInstance();
+        $mapper = $this->createRouteDataMapperInstance($this->createTypedFormMetadataWithRoute());
         $mapper->map($unlocalizedDimensionContent, $localizedDimensionContent, $data);
 
         $this->assertSame([], $localizedDimensionContent->getTemplateData());
@@ -222,12 +215,9 @@ class RoutableDataMapperTest extends TestCase
         $localizedDimensionContent->setStage('draft');
         $localizedDimensionContent->setLocale('en');
 
-        $this->structureMetadataFactory->getStructureMetadata('example', 'default')
-            ->shouldBeCalled()
-            ->willReturn($this->createRouteStructureMetadata());
         $this->routeRepository->add(Argument::any())->shouldBeCalled();
 
-        $mapper = $this->createRouteDataMapperInstance();
+        $mapper = $this->createRouteDataMapperInstance($this->createTypedFormMetadataWithRoute());
         $mapper->map($unlocalizedDimensionContent, $localizedDimensionContent, $data);
 
         $this->assertSame('/test', $localizedDimensionContent->getRoute()?->getSlug());
@@ -251,9 +241,6 @@ class RoutableDataMapperTest extends TestCase
 
         $route = new Route(Example::RESOURCE_KEY, '1', 'en', '/test', null, null);
 
-        $this->structureMetadataFactory->getStructureMetadata('example', 'default')
-            ->shouldBeCalled()
-            ->willReturn($this->createRouteStructureMetadata());
         $this->routeRepository->findOneBy([
             'locale' => 'en',
             'resourceKey' => 'examples',
@@ -262,7 +249,7 @@ class RoutableDataMapperTest extends TestCase
             ->willReturn($route)
             ->shouldBeCalled();
 
-        $mapper = $this->createRouteDataMapperInstance();
+        $mapper = $this->createRouteDataMapperInstance($this->createTypedFormMetadataWithRoute());
         $mapper->map($unlocalizedDimensionContent, $localizedDimensionContent, $data);
 
         $this->assertSame('/test', $localizedDimensionContent->getRoute()?->getSlug());
@@ -283,12 +270,9 @@ class RoutableDataMapperTest extends TestCase
         $localizedDimensionContent->setStage('draft');
         $localizedDimensionContent->setLocale('en');
 
-        $this->structureMetadataFactory->getStructureMetadata('example', 'default')
-            ->shouldBeCalled()
-            ->willReturn($this->createRouteStructureMetadata());
         $this->routeRepository->add(Argument::any())->shouldBeCalled();
 
-        $mapper = $this->createRouteDataMapperInstance();
+        $mapper = $this->createRouteDataMapperInstance($this->createTypedFormMetadataWithRoute());
         $mapper->map($unlocalizedDimensionContent, $localizedDimensionContent, $data);
 
         $this->assertSame([], $localizedDimensionContent->getTemplateData());
@@ -312,12 +296,9 @@ class RoutableDataMapperTest extends TestCase
         $localizedDimensionContent->setStage('draft');
         $localizedDimensionContent->setLocale('en');
 
-        $this->structureMetadataFactory->getStructureMetadata('example', 'default')
-            ->shouldBeCalled()
-            ->willReturn($this->createRouteStructureMetadata('route'));
         $this->routeRepository->add(Argument::any())->shouldNotBeCalled();
 
-        $mapper = $this->createRouteDataMapperInstance();
+        $mapper = $this->createRouteDataMapperInstance($this->createTypedFormMetadataWithRoute('route'));
         $mapper->map($unlocalizedDimensionContent, $localizedDimensionContent, $data);
 
         $this->assertSame('/test', $localizedDimensionContent->getRoute()?->getSlug());
@@ -347,43 +328,50 @@ class RoutableDataMapperTest extends TestCase
         $localizedDimensionContent->setLocale('en');
         $localizedDimensionContent->setRoute($route);
 
-        $this->structureMetadataFactory->getStructureMetadata('example', 'default')
-            ->shouldBeCalled()
-            ->willReturn($this->createRouteStructureMetadata());
         $this->routeRepository->add(Argument::any())->shouldNotBeCalled();
 
-        $mapper = $this->createRouteDataMapperInstance();
+        $mapper = $this->createRouteDataMapperInstance($this->createTypedFormMetadataWithRoute());
         $mapper->map($unlocalizedDimensionContent, $localizedDimensionContent, $data);
 
         $this->assertSame('/test', $localizedDimensionContent->getRoute()?->getSlug());
         $this->assertSame([], $localizedDimensionContent->getTemplateData());
     }
 
-    private function createRouteStructureMetadata(string $propertyName = 'url'): StructureMetadata
+    private function createTypedFormMetadataWithRoute(string $propertyName = 'url'): TypedFormMetadata
     {
-        $property = $this->prophesize(PropertyMetadata::class);
-        $property->getType()->willReturn('route');
-        $property->getName()->willReturn($propertyName);
+        $formMetadata = new FormMetadata();
+        $formMetadata->setName('Default');
+        $formMetadata->setKey('default');
 
-        $structureMetadata = $this->prophesize(StructureMetadata::class);
-        $structureMetadata->getProperties()->willReturn([
-            $property->reveal(),
-        ])->shouldBeCalled();
+        $routeProperty = new FieldMetadata($propertyName);
+        $routeProperty->setMultilingual(true);
+        $routeProperty->setType('route');
 
-        return $structureMetadata->reveal();
+        $formMetadata->addItem($routeProperty);
+
+        $typedFormMetadata = new TypedFormMetadata();
+        $typedFormMetadata->addForm($formMetadata->getKey(), $formMetadata);
+        $typedFormMetadata->setDefaultType('default');
+
+        return $typedFormMetadata;
     }
 
-    private function createTextLineStructureMetadata(): StructureMetadata
+    private function createTypedFormMetadataWithTextLine(string $propertyName = 'url'): TypedFormMetadata
     {
-        $property = $this->prophesize(PropertyMetadata::class);
-        $property->getType()->willReturn('text_line');
-        $property->getName()->willReturn('url');
+        $formMetadata = new FormMetadata();
+        $formMetadata->setName('Default');
+        $formMetadata->setKey('default');
 
-        $structureMetadata = $this->prophesize(StructureMetadata::class);
-        $structureMetadata->getProperties()->willReturn([
-            $property->reveal(),
-        ])->shouldBeCalled();
+        $routeProperty = new FieldMetadata($propertyName);
+        $routeProperty->setMultilingual(true);
+        $routeProperty->setType('text_line');
 
-        return $structureMetadata->reveal();
+        $formMetadata->addItem($routeProperty);
+
+        $typedFormMetadata = new TypedFormMetadata();
+        $typedFormMetadata->addForm($formMetadata->getKey(), $formMetadata);
+        $typedFormMetadata->setDefaultType('default');
+
+        return $typedFormMetadata;
     }
 }

@@ -13,9 +13,10 @@ declare(strict_types=1);
 
 namespace Sulu\Content\Application\ContentDataMapper\DataMapper;
 
-use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactoryInterface;
-use Sulu\Component\Content\Metadata\PropertyMetadata;
-use Sulu\Component\Content\Metadata\StructureMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Domain\Model\RoutableInterface;
 use Sulu\Content\Domain\Model\TemplateInterface;
@@ -26,7 +27,7 @@ class RoutableDataMapper implements DataMapperInterface
 {
     public function __construct(
         private RouteRepositoryInterface $routeRepository,
-        private StructureMetadataFactoryInterface $factory,
+        private MetadataProviderRegistry $metadataProviderRegistry,
     ) {
     }
 
@@ -52,8 +53,22 @@ class RoutableDataMapper implements DataMapperInterface
             throw new \RuntimeException('LocalizedDimensionContent should return the a template.');
         }
 
-        $metadata = $this->factory->getStructureMetadata($type, $template);
-        if (!$metadata) {
+        $locale = $localizedDimensionContent->getLocale();
+
+        if (!$locale) {
+            throw new \RuntimeException('Expected a LocalizedDimensionContent with a locale.');
+        }
+
+        $typedMetadata = $this->metadataProviderRegistry->getMetadataProvider('form')
+            ->getMetadata($type, $locale, []);
+
+        if (!$typedMetadata instanceof TypedFormMetadata) {
+            throw new \RuntimeException(\sprintf('Could not find metadata "%s" of type "%s".', 'form', $type));
+        }
+
+        $metadata = $typedMetadata->getForms()[$template] ?? null;
+
+        if (!$metadata instanceof FormMetadata) {
             return;
         }
 
@@ -132,9 +147,9 @@ class RoutableDataMapper implements DataMapperInterface
         $this->routeRepository->add($route);
     }
 
-    private function getRouteProperty(StructureMetadata $metadata): ?PropertyMetadata
+    private function getRouteProperty(FormMetadata $metadata): ?FieldMetadata
     {
-        foreach ($metadata->getProperties() as $property) {
+        foreach ($metadata->getFlatFieldMetadata() as $property) {
             // TODO add support for page_tree_route field type: https://github.com/sulu/SuluContentBundle/issues/242
             if ('route' === $property->getType() || 'resource_locator' === $property->getType()) {
                 return $property;
