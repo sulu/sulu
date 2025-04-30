@@ -11,12 +11,14 @@
 
 namespace Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Parser;
 
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\ItemMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\OptionMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\SectionMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TagMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\XmlParserTrait;
 use Sulu\Component\Content\Exception\InvalidDefaultTypeException;
-use Sulu\Component\Content\Metadata\BlockMetadata;
-use Sulu\Component\Content\Metadata\ComponentMetadata;
-use Sulu\Component\Content\Metadata\PropertyMetadata;
-use Sulu\Component\Content\Metadata\SectionMetadata;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -326,21 +328,13 @@ class PropertiesXmlParser
         return $properties;
     }
 
-    /**
-     * @return null|BlockMetadata|PropertyMetadata|SectionMetadata
-     */
-    private function createProperty(string $propertyName, array $propertyData)
+    private function createProperty(string $propertyName, array $propertyData): FieldMetadata|SectionMetadata
     {
-        if ('block' === $propertyData['type']) {
-            return $this->createBlock($propertyName, $propertyData);
-        }
-
         if ('section' === $propertyData['type']) {
             return $this->createSection($propertyName, $propertyData);
         }
 
-        $property = new PropertyMetadata();
-        $property->setName($propertyName);
+        $property = new FieldMetadata($propertyName);
         $this->mapProperty($property, $propertyData);
 
         return $property;
@@ -348,12 +342,12 @@ class PropertiesXmlParser
 
     private function createSection($propertyName, $data): SectionMetadata
     {
-        $section = new SectionMetadata();
-        $section->setName($propertyName);
+        $section = new SectionMetadata($propertyName);
         if (isset($data['colspan'])) {
             $section->setColSpan($data['colspan']);
         }
 
+        /* TODO
         if (isset($data['meta']['title'])) {
             $section->setTitles($data['meta']['title']);
         }
@@ -361,6 +355,7 @@ class PropertiesXmlParser
         if (isset($data['meta']['info_text'])) {
             $section->setDescriptions($data['meta']['info_text']);
         }
+        */
 
         if (isset($data['disabledCondition'])) {
             $section->setDisabledCondition($this->normalizeConditionData($data['disabledCondition']));
@@ -371,87 +366,114 @@ class PropertiesXmlParser
         }
 
         foreach ($data['properties'] as $name => $property) {
-            $section->addChild($this->createProperty($name, $property));
+            $section->addItem($this->createProperty($name, $property));
         }
 
         return $section;
     }
 
-    private function createBlock($propertyName, $data): BlockMetadata
-    {
-        $blockProperty = new BlockMetadata();
-        $blockProperty->setName($propertyName);
-
-        if (isset($data['disabledCondition'])) {
-            $blockProperty->setDisabledCondition($this->normalizeConditionData($data['disabledCondition']));
-        }
-
-        if (isset($data['visibleCondition'])) {
-            $blockProperty->setVisibleCondition($this->normalizeConditionData($data['visibleCondition']));
-        }
-
-        if (isset($data['meta']['title'])) {
-            $blockProperty->setTitles($data['meta']['title']);
-        }
-
-        if (isset($data['meta']['info_text'])) {
-            $blockProperty->setDescriptions($data['meta']['info_text']);
-        }
-
-        $this->mapProperty($blockProperty, $data);
-
-        return $blockProperty;
-    }
-
-    private function mapProperty(PropertyMetadata $property, $data): void
+    private function mapProperty(FieldMetadata $property, $data): void
     {
         $data = $this->normalizePropertyData($data);
 
-        $property->defaultComponentName = $data['default-type'];
+        $property->setDefaultType($data['default-type']);
         $property->setType($data['type']);
-        $property->setLocalized($data['multilingual']);
         $property->setRequired($data['mandatory']);
+        // $property->setMultilingual($data['multilingual']); // TODO https://github.com/sulu/sulu/pull/7929
+        $property->setSpaceAfter($data['spaceAfter']);
         if (isset($data['colspan'])) {
             $property->setColSpan($data['colspan']);
         }
-        $property->setSpaceAfter($data['spaceAfter']);
-        $property->setCssClass($data['cssClass']);
         $property->setTags($data['tags']);
         $property->setMinOccurs(null !== $data['minOccurs'] ? \intval($data['minOccurs']) : null);
         $property->setMaxOccurs(null !== $data['maxOccurs'] ? \intval($data['maxOccurs']) : null);
         $property->setDisabledCondition($this->normalizeConditionData($data['disabledCondition'] ?? null));
         $property->setVisibleCondition($this->normalizeConditionData($data['visibleCondition'] ?? null));
-        $property->setParameters($data['params']);
         $property->setOnInvalid(\array_key_exists('onInvalid', $data) ? $data['onInvalid'] : null);
+
+        foreach ($data['params'] as $parameter) {
+            $option = new OptionMetadata();
+            $option->setName($parameter['name']);
+            $option->setType($parameter['type']);
+
+            if (OptionMetadata::TYPE_COLLECTION === $parameter['type']) {
+                foreach ($parameter['value'] as $parameterName => $parameterValue) {
+                    $valueOption = new OptionMetadata();
+                    $valueOption->setName($parameterValue['name']);
+                    $valueOption->setValue($parameterValue['value']);
+
+                    $this->mapOptionMeta($parameterValue, $valueOption);
+
+                    $option->addValueOption($valueOption);
+                }
+            } elseif (OptionMetadata::TYPE_STRING === $parameter['type'] || OptionMetadata::TYPE_EXPRESSION === $parameter['type']) {
+                $option->setValue($parameter['value']);
+                $this->mapOptionMeta($parameter, $option);
+            } else {
+                throw new \Exception('Unsupported parameter given "' . \get_class($parameter) . '"');
+            }
+
+            $property->addOption($option);
+        }
+
+
         $this->mapMeta($property, $data['meta']);
 
         $types = $data['types'];
-        foreach ($types as $name => $type) {
-            $component = new ComponentMetadata();
-            $component->setName($name);
+        foreach ($types as $name => $typeData) {
+            $type = new FormMetadata();
+            $type->setName($name);
+            $type->setTitles($typeData['meta']['title'] ?? []);
 
-            if (isset($type['meta']['title'])) {
-                $component->setTitles($type['meta']['title']);
+            // TODO title
+            // TODO tags
+            // TODO children
+            /*
+            if (isset($typeData['meta']['title'])) {
+                $component->setTitles($typeData['meta']['title']);
             }
 
             if (isset($data['meta']['info_text'])) {
                 $component->setDescriptions($data['meta']['info_text']);
             }
+            */
 
-            if (!$type['ref']) {
-                foreach ($this->mapProperties($type['properties']) as $childProperty) {
-                    $component->addChild($childProperty);
+            if (!$typeData['ref']) {
+                foreach ($this->mapProperties($typeData['properties']) as $childProperty) {
+                    $type->addItem($childProperty);
                 }
             } else {
-                $component->addTag([
-                    'name' => 'sulu.global_block',
-                    'attributes' => [
-                        'global_block' => $name,
-                    ],
+                $tagMetadata = new TagMetadata();
+                $tagMetadata->setName('sulu.global_block');
+                $tagMetadata->setAttributes([
+                    'global_block' => $name,
                 ]);
+
+                $type->addTag($tagMetadata);
             }
 
-            $property->addComponent($component);
+            $property->addType($type);
+        }
+    }
+
+    private function mapOptionMeta(array $parameterValue, OptionMetadata $option): void
+    {
+        if (!\array_key_exists('meta', $parameterValue)) {
+            return;
+        }
+
+        foreach ($parameterValue['meta'] as $metaKey => $metaValues) {
+            switch ($metaKey) {
+                case 'title':
+                    $option->setTitles($metaValues);
+                    break;
+                case 'info_text':
+                    $option->setInfotexts($metaValues);
+                    break;
+                case 'placeholder':
+                    $option->setPlaceholders($metaValues);
+                    break;
+            }
         }
     }
 
@@ -501,13 +523,9 @@ class PropertiesXmlParser
         return $data;
     }
 
-    private function mapMeta(PropertyMetadata $item, $meta): void
+    private function mapMeta(ItemMetadata $item, $meta): void
     {
-        $item->setTitles($meta['title']);
+        $item->setLabels($meta['title']);
         $item->setDescriptions($meta['info_text']);
-
-        if ($item->getPlaceholders()) {
-            $item->setPlaceholders($meta['info_text']);
-        }
     }
 }
