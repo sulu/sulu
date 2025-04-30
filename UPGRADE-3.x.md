@@ -37,8 +37,8 @@ return [
 -    ONGR\ElasticsearchBundle\ONGRElasticsearchBundle::class => ['all' => true],
 ```
 
-It can happen that flex removes the `config/templates/articles/*` files. If you need the article bundle, make sure 
-to not lose them by checking out the files again:
+It can happen that flex removes the `config/templates/articles/*` files. If you need the article bundle, ensure you 
+don’t lose these files by checking them out again from version control:
 
 ```bash
 git checkout config/templates/articles/
