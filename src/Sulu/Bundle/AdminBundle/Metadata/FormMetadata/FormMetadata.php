@@ -44,6 +44,12 @@ class FormMetadata extends AbstractMetadata
     private $schema;
 
     /**
+     * @var TemplateMetadata|null
+     */
+    #[Exclude()]
+    private $template;
+
+    /**
      * @var string
      */
     #[Exclude(if: "'admin_form_metadata_keys_only' in context.getAttribute('groups')")]
@@ -141,6 +147,16 @@ class FormMetadata extends AbstractMetadata
     public function getSchema(): SchemaMetadata
     {
         return $this->schema;
+    }
+
+    public function setTemplate(?TemplateMetadata $template)
+    {
+        $this->template = $template;
+    }
+
+    public function getTemplate(): ?TemplateMetadata
+    {
+        return $this->template;
     }
 
     /**

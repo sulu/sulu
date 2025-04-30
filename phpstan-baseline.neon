@@ -2167,6 +2167,12 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/FormMetadata.php
 
 		-
+			message: '#^Method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\FormMetadata\:\:setTemplate\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/FormMetadata.php
+
+		-
 			message: '#^Method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\FormMetadata\:\:setTitle\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
