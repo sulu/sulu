@@ -5,8 +5,7 @@
     <services>
         <!-- DataMapper -->
         <service id="sulu_content.template_data_mapper" class="Sulu\Content\Application\ContentDataMapper\DataMapper\TemplateDataMapper">
-            <argument type="service" id="sulu_page.structure.factory"/>
-            <argument>%sulu.content.structure.default_types%</argument>
+            <argument type="service" id="sulu_admin.metadata_provider_registry"/>
 
             <tag name="sulu_content.data_mapper" priority="128"/>
         </service>

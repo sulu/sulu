@@ -32,4 +32,31 @@ class SectionMetadata extends ItemMetadata
     {
         $this->items[$item->getName()] = $item;
     }
+
+    /**
+     * @return FieldMetadata[]
+     */
+    public function getFlatFieldMetadata(): array
+    {
+        return $this->doFlatItems($this);
+    }
+
+    /**
+     * @return FieldMetadata[]
+     */
+    private function doFlatItems(SectionMetadata $metadata): array
+    {
+        $items = [];
+        foreach ($metadata->getItems() as $item) {
+            if ($item instanceof SectionMetadata) {
+                foreach ($this->doFlatItems($item) as $subItem) {
+                    $items[] = $subItem;
+                }
+            } elseif ($item instanceof FieldMetadata) {
+                $items[] = $item;
+            }
+        }
+
+        return $items;
+    }
 }

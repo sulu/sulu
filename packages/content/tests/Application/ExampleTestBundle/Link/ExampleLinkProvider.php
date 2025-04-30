@@ -22,7 +22,6 @@ use Sulu\Content\Application\ContentManager\ContentManagerInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\Example;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Repository\ExampleRepository;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ExampleLinkProvider implements LinkProviderInterface
 {
@@ -30,7 +29,6 @@ class ExampleLinkProvider implements LinkProviderInterface
         private readonly ContentManagerInterface $contentManager,
         private readonly ExampleRepository $exampleRepository,
         private readonly ReferenceStoreInterface $exampleReferenceStore,
-        private readonly TranslatorInterface $translator,
     ) {
     }
 
@@ -55,7 +53,9 @@ class ExampleLinkProvider implements LinkProviderInterface
         ];
 
         $examples = $this->exampleRepository->findBy(
-            filters: [...$dimensionAttributes, 'uuids' => $hrefs],
+            filters: [...$dimensionAttributes, 'ids' => \array_map(function($href) {
+                return (int) $href;
+            }, $hrefs)],
             selects: [ExampleRepository::GROUP_SELECT_EXAMPLE_WEBSITE => true]
         );
 
@@ -72,7 +72,7 @@ class ExampleLinkProvider implements LinkProviderInterface
             }
 
             $result[] = new LinkItem(
-                $example->getUuid(),
+                (string) $example->getId(),
                 (string) $dimensionContent->getTitle(),
                 $url,
                 $published

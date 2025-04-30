@@ -13,30 +13,22 @@ declare(strict_types=1);
 
 namespace Sulu\Content\Application\ContentDataMapper\DataMapper;
 
-use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactoryInterface;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Domain\Model\TemplateInterface;
-use Webmozart\Assert\Assert;
 
 class TemplateDataMapper implements DataMapperInterface
 {
     /**
-     * @var StructureMetadataFactoryInterface
+     * @var MetadataProviderRegistry
      */
-    private $factory;
+    private $metadataProviderRegistry;
 
-    /**
-     * @var array<string, string>
-     */
-    private $structureDefaultTypes;
-
-    /**
-     * @param array<string, string> $structureDefaultTypes
-     */
-    public function __construct(StructureMetadataFactoryInterface $factory, array $structureDefaultTypes)
+    public function __construct(MetadataProviderRegistry $metadataProviderRegistry)
     {
-        $this->factory = $factory;
-        $this->structureDefaultTypes = $structureDefaultTypes;
+        $this->metadataProviderRegistry = $metadataProviderRegistry;
     }
 
     public function map(
@@ -52,23 +44,31 @@ class TemplateDataMapper implements DataMapperInterface
 
         $type = $localizedDimensionContent::getTemplateType();
 
-        /** @var string|null $template */
-        $template = $data['template'] ?? null;
+        $locale = $localizedDimensionContent->getLocale();
 
-        if (null === $template) {
-            $template = $this->structureDefaultTypes[$type] ?? null;
+        \assert(\is_string($locale), 'Expected locale to be defined always when using TemplateInterface');
+
+        $typedMetadata = $this->metadataProviderRegistry->getMetadataProvider('form')
+            ->getMetadata($type, $locale, []);
+
+        if (!$typedMetadata instanceof TypedFormMetadata) {
+            throw new \RuntimeException(\sprintf('Could not find metadata "%s" of type "%s".', 'form', $type));
         }
 
-        if (null === $template) {
-            throw new \RuntimeException('Expected "template" to be set in the data array.');
+        /** @var string $template */
+        $template = $data['template'] ?? $typedMetadata->getDefaultType();
+
+        $metadata = $typedMetadata->getForms()[$template] ?? null;
+
+        if (!$metadata instanceof FormMetadata) {
+            throw new \RuntimeException(\sprintf('Could not find form metadata "%s" of type "%s".', $template, $type));
         }
 
         [$unlocalizedData, $localizedData, $hasAnyValue] = $this->getTemplateData(
             $data,
-            $type,
-            $template,
             $unlocalizedDimensionContent->getTemplateData(),
-            $localizedDimensionContent->getTemplateData()
+            $localizedDimensionContent->getTemplateData(),
+            $metadata,
         );
 
         if (!isset($data['template']) && !$hasAnyValue) {
@@ -94,38 +94,26 @@ class TemplateDataMapper implements DataMapperInterface
      */
     private function getTemplateData(
         array $data,
-        string $type,
-        string $template,
         array $unlocalizedData,
-        array $localizedData
+        array $localizedData,
+        FormMetadata $metadata,
     ): array {
-        $metadata = $this->factory->getStructureMetadata($type, $template);
-
-        if (!$metadata) {
-            throw new \RuntimeException(\sprintf('Could not find structure "%s" of type "%s".', $template, $type));
-        }
-
         $hasAnyValue = false;
 
         $defaultLocalizedData = $localizedData; // use existing localizedData only as default to remove not longer existing properties of the template
         $localizedData = [];
-        foreach ($metadata->getProperties() as $property) {
+        foreach ($metadata->getFlatFieldMetadata() as $property) {
             $name = $property->getName();
 
-            // Float are converted to ints in php array as key so we need convert it to string
-            if (\is_float($name)) {
-                $name = (string) $name;
-            }
+            $isMultilingual = $property->isMultilingual();
 
-            Assert::string($name); // TODO may remove this line for better performance
-
-            $value = $property->isLocalized() ? $defaultLocalizedData[$name] ?? null : $defaultLocalizedData[$name] ?? null;
+            $value = $isMultilingual ? $defaultLocalizedData[$name] ?? null : $defaultLocalizedData[$name] ?? null;
             if (\array_key_exists($name, $data)) { // values not explicitly given need to stay untouched for e.g. for shadow pages urls
                 $hasAnyValue = true;
                 $value = $data[$name];
             }
 
-            if ($property->isLocalized()) {
+            if ($isMultilingual) {
                 $localizedData[$name] = $value;
                 continue;
             }

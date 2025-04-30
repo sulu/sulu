@@ -51,7 +51,6 @@ services:
             - '@sulu_content.content_manager'
             - '@example_test.example_repository'
             - '@example_test.example_reference_store'
-            - '@translator'
         tags:
             - { name: sulu.link.provider, alias: examples }
 

@@ -196,4 +196,23 @@ class FormMetadata extends AbstractMetadata
 
         return $mergedForm;
     }
+
+    /**
+     * @return FieldMetadata[]
+     */
+    public function getFlatFieldMetadata(): array
+    {
+        $items = [];
+        foreach ($this->getItems() as $item) {
+            if ($item instanceof SectionMetadata) {
+                foreach ($item->getFlatFieldMetadata() as $subItem) {
+                    $items[] = $subItem;
+                }
+            } elseif ($item instanceof FieldMetadata) {
+                $items[] = $item;
+            }
+        }
+
+        return $items;
+    }
 }

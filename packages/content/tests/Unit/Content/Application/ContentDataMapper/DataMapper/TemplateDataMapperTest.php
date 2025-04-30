@@ -15,10 +15,12 @@ namespace Sulu\Content\Tests\Unit\Content\Application\ContentDataMapper\DataMapp
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
-use Prophecy\Prophecy\ObjectProphecy;
-use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactoryInterface;
-use Sulu\Component\Content\Metadata\PropertyMetadata;
-use Sulu\Component\Content\Metadata\StructureMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\ItemMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderInterface;
+use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
 use Sulu\Content\Application\ContentDataMapper\DataMapper\TemplateDataMapper;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\Example;
@@ -29,22 +31,25 @@ class TemplateDataMapperTest extends TestCase
     use ProphecyTrait;
 
     /**
-     * @var ObjectProphecy<StructureMetadataFactoryInterface>
-     */
-    private $structureMetadataFactory;
-
-    protected function setUp(): void
-    {
-        $this->structureMetadataFactory = $this->prophesize(StructureMetadataFactoryInterface::class);
-    }
-
-    /**
-     * @param array<string, string> $structureDefaultTypes
+     * @param ItemMetadata[] $properties
      */
     protected function createTemplateDataMapperInstance(
-        array $structureDefaultTypes = []
+        array $properties = [],
+        ?string $defaultTemplateKey = null,
     ): TemplateDataMapper {
-        return new TemplateDataMapper($this->structureMetadataFactory->reveal(), $structureDefaultTypes);
+        $metadataProviderRegistry = new MetadataProviderRegistry();
+        $metadataProviderRegistry->addMetadataProvider('form', new class($this->createTypedFormMetadata($properties, $defaultTemplateKey)) implements MetadataProviderInterface {
+            public function __construct(private readonly TypedFormMetadata $typedFormMetadata)
+            {
+            }
+
+            public function getMetadata(string $key, string $locale, array $metadataOptions): TypedFormMetadata
+            {
+                return $this->typedFormMetadata;
+            }
+        });
+
+        return new TemplateDataMapper($metadataProviderRegistry);
     }
 
     public function testMapNoTemplateInstance(): void
@@ -76,8 +81,9 @@ class TemplateDataMapperTest extends TestCase
         $example = new Example();
         $unlocalizedDimensionContent = new ExampleDimensionContent($example);
         $localizedDimensionContent = new ExampleDimensionContent($example);
+        $localizedDimensionContent->setLocale('en');
 
-        $templateMapper = $this->createTemplateDataMapperInstance();
+        $templateMapper = $this->createTemplateDataMapperInstance([], 'none-exist-template');
         $templateMapper->map($unlocalizedDimensionContent, $localizedDimensionContent, $data);
     }
 
@@ -94,6 +100,7 @@ class TemplateDataMapperTest extends TestCase
         $example = new Example();
         $unlocalizedDimensionContent = new ExampleDimensionContent($example);
         $localizedDimensionContent = new ExampleDimensionContent($example);
+        $localizedDimensionContent->setLocale('en');
 
         $templateMapper = $this->createTemplateDataMapperInstance();
         $templateMapper->map($unlocalizedDimensionContent, $localizedDimensionContent, $data);
@@ -106,13 +113,9 @@ class TemplateDataMapperTest extends TestCase
         $example = new Example();
         $unlocalizedDimensionContent = new ExampleDimensionContent($example);
         $localizedDimensionContent = new ExampleDimensionContent($example);
+        $localizedDimensionContent->setLocale('en');
 
-        $this->structureMetadataFactory->getStructureMetadata(
-            'example',
-            'template-key'
-        )->willReturn($this->createStructureMetadata())->shouldBeCalled();
-
-        $templateMapper = $this->createTemplateDataMapperInstance(['example' => 'template-key']);
+        $templateMapper = $this->createTemplateDataMapperInstance([], 'template-key');
         $templateMapper->map($unlocalizedDimensionContent, $localizedDimensionContent, $data);
 
         $this->assertNull($unlocalizedDimensionContent->getTemplateKey());
@@ -132,11 +135,7 @@ class TemplateDataMapperTest extends TestCase
         $example = new Example();
         $unlocalizedDimensionContent = new ExampleDimensionContent($example);
         $localizedDimensionContent = new ExampleDimensionContent($example);
-
-        $this->structureMetadataFactory->getStructureMetadata(
-            'example',
-            'template-key'
-        )->willReturn($this->createStructureMetadata())->shouldBeCalled();
+        $localizedDimensionContent->setLocale('en');
 
         $templateMapper = $this->createTemplateDataMapperInstance();
         $templateMapper->map($unlocalizedDimensionContent, $localizedDimensionContent, $data);
@@ -157,11 +156,7 @@ class TemplateDataMapperTest extends TestCase
 
         $example = new Example();
         $localizedDimensionContent = new ExampleDimensionContent($example);
-
-        $this->structureMetadataFactory->getStructureMetadata(
-            'example',
-            'template-key'
-        )->willReturn($this->createStructureMetadata())->shouldBeCalled();
+        $localizedDimensionContent->setLocale('en');
 
         $templateMapper = $this->createTemplateDataMapperInstance();
         $templateMapper->map($localizedDimensionContent, $localizedDimensionContent, $data);
@@ -182,17 +177,12 @@ class TemplateDataMapperTest extends TestCase
         $example = new Example();
         $unlocalizedDimensionContent = new ExampleDimensionContent($example);
         $localizedDimensionContent = new ExampleDimensionContent($example);
+        $localizedDimensionContent->setLocale('en');
 
-        $floatPropertyMetadata = $this->prophesize(PropertyMetadata::class);
-        $floatPropertyMetadata->getName()->willReturn(1.1)->shouldBeCalled();
-        $floatPropertyMetadata->isLocalized()->willReturn(true)->shouldBeCalled();
+        $floatPropertyMetadata = new FieldMetadata((string) 1.1);
+        $floatPropertyMetadata->setMultilingual(true);
 
-        $this->structureMetadataFactory->getStructureMetadata(
-            'example',
-            'template-key'
-        )->willReturn($this->createStructureMetadata([$floatPropertyMetadata->reveal()]))->shouldBeCalled();
-
-        $templateMapper = $this->createTemplateDataMapperInstance();
+        $templateMapper = $this->createTemplateDataMapperInstance([$floatPropertyMetadata]);
         $templateMapper->map($unlocalizedDimensionContent, $localizedDimensionContent, $data);
 
         $this->assertNull($unlocalizedDimensionContent->getTemplateKey());
@@ -211,15 +201,9 @@ class TemplateDataMapperTest extends TestCase
         $example = new Example();
         $unlocalizedDimensionContent = new ExampleDimensionContent($example);
         $localizedDimensionContent = new ExampleDimensionContent($example);
+        $localizedDimensionContent->setLocale('en');
 
-        $this->structureMetadataFactory->getStructureMetadata(
-            'example',
-            'template-key'
-        )->willReturn($this->createStructureMetadata())->shouldBeCalled();
-
-        $templateMapper = $this->createTemplateDataMapperInstance([
-            'example' => 'template-key',
-        ]);
+        $templateMapper = $this->createTemplateDataMapperInstance([], 'template-key');
         $templateMapper->map($unlocalizedDimensionContent, $localizedDimensionContent, $data);
 
         $this->assertNull($unlocalizedDimensionContent->getTemplateKey());
@@ -229,23 +213,34 @@ class TemplateDataMapperTest extends TestCase
     }
 
     /**
-     * @param PropertyMetadata[] $properties
+     * @param ItemMetadata[] $properties
      */
-    private function createStructureMetadata(array $properties = []): StructureMetadata
+    private function createTypedFormMetadata(array $properties = [], ?string $defaultTemplateKey = null): TypedFormMetadata
     {
-        $unlocalizedPropertyMetadata = $this->prophesize(PropertyMetadata::class);
-        $unlocalizedPropertyMetadata->getName()->willReturn('unlocalizedField')->shouldBeCalled();
-        $unlocalizedPropertyMetadata->isLocalized()->willReturn(false)->shouldBeCalled();
-        $localizedPropertyMetadata = $this->prophesize(PropertyMetadata::class);
-        $localizedPropertyMetadata->getName()->willReturn('title')->shouldBeCalled();
-        $localizedPropertyMetadata->isLocalized()->willReturn(true)->shouldBeCalled();
+        $formMetadata = new FormMetadata();
+        $formMetadata->setName('Example Template');
+        $formMetadata->setKey('template-key');
 
-        $structureMetadata = $this->prophesize(StructureMetadata::class);
-        $structureMetadata->getProperties()->willReturn(\array_merge([
-            $unlocalizedPropertyMetadata->reveal(),
-            $localizedPropertyMetadata->reveal(),
-        ], $properties))->shouldBeCalled();
+        $unlocalizedPropertyMetadata = new FieldMetadata('unlocalizedField');
+        $unlocalizedPropertyMetadata->setMultilingual(false);
 
-        return $structureMetadata->reveal();
+        $localizedPropertyMetadata = new FieldMetadata('title');
+        $localizedPropertyMetadata->setMultilingual(true);
+
+        $formMetadata->addItem($unlocalizedPropertyMetadata);
+        $formMetadata->addItem($localizedPropertyMetadata);
+
+        foreach ($properties as $property) {
+            $formMetadata->addItem($property);
+        }
+
+        $typedFormMetadata = new TypedFormMetadata();
+        $typedFormMetadata->addForm($formMetadata->getKey(), $formMetadata);
+
+        if (null !== $defaultTemplateKey) {
+            $typedFormMetadata->setDefaultType($defaultTemplateKey);
+        }
+
+        return $typedFormMetadata;
     }
 }
