@@ -8,7 +8,7 @@
                  class="Sulu\Component\Content\Metadata\Loader\StructureXmlLoader"
                  public="false">
             <argument type="service" id="sulu_http_cache.cache_lifetime.resolver"/>
-            <argument type="service" id="sulu_admin.properties_xml_parser"/>
+            <argument type="service" id="sulu_admin.deprecated_properties_xml_parser"/>
             <argument type="service" id="sulu_admin.schema_xml_parser"/>
             <argument type="service" id="sulu.content.type_manager" />
             <argument>%sulu.content.structure.required_properties%</argument>

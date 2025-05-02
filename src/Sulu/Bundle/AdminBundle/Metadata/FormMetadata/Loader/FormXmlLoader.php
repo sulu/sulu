@@ -15,7 +15,7 @@ use Sulu\Bundle\AdminBundle\Exception\InvalidRootTagException;
 use Sulu\Bundle\AdminBundle\FormMetadata\FormMetadata as ExternalFormMetadata;
 use Sulu\Bundle\AdminBundle\FormMetadata\FormMetadataMapper;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
-use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Parser\PropertiesXmlParser;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Parser\DeprecatedPropertiesXmlParser;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Parser\SchemaXmlParser;
 use Sulu\Component\Content\Metadata\Loader\AbstractLoader;
 
@@ -31,7 +31,7 @@ class FormXmlLoader extends AbstractLoader
     public const SCHEMA_NAMESPACE_URI = 'http://schemas.sulu.io/template/template';
 
     public function __construct(
-        private PropertiesXmlParser $propertiesXmlParser,
+        private DeprecatedPropertiesXmlParser $propertiesXmlParser,
         private SchemaXmlParser $schemaXmlParser,
         private FormMetadataMapper $formMetadataMapper
     ) {

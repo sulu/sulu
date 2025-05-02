@@ -15,7 +15,7 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
-use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Parser\PropertiesXmlParser;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Parser\DeprecatedPropertiesXmlParser;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Parser\SchemaXmlParser;
 use Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeResolverInterface;
 use Sulu\Component\Content\ContentTypeManagerInterface;
@@ -73,7 +73,7 @@ class StructureXmlLoaderTest extends TestCase
     public function setUp(): void
     {
         $this->translator = $this->prophesize(TranslatorInterface::class);
-        $propertiesXmlParser = new PropertiesXmlParser(
+        $propertiesXmlParser = new DeprecatedPropertiesXmlParser(
             $this->translator->reveal(),
             $this->locales
         );

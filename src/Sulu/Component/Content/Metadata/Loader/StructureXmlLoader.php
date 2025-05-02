@@ -11,7 +11,7 @@
 
 namespace Sulu\Component\Content\Metadata\Loader;
 
-use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Parser\PropertiesXmlParser;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Parser\DeprecatedPropertiesXmlParser;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Parser\SchemaXmlParser;
 use Sulu\Bundle\AdminBundle\Metadata\XmlParserTrait;
 use Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeResolverInterface;
@@ -74,7 +74,7 @@ class StructureXmlLoader extends AbstractLoader
      */
     public function __construct(
         private CacheLifetimeResolverInterface $cacheLifetimeResolver,
-        private PropertiesXmlParser $propertiesXmlParser,
+        private DeprecatedPropertiesXmlParser $propertiesXmlParser,
         private SchemaXmlParser $schemaXmlParser,
         private ContentTypeManagerInterface $contentTypeManager,
         private array $requiredPropertyNames,

@@ -22,7 +22,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 /**
  * @internal this class is not part of the public API and may be changed or removed without further notice
  */
-class PropertiesXmlParser
+class DeprecatedPropertiesXmlParser
 {
     use XmlParserTrait;
 

@@ -16,7 +16,14 @@ namespace Sulu\Bundle\AdminBundle\Metadata;
  */
 trait XmlParserTrait
 {
-    private function getValueFromXPath($path, \DOMXPath $xpath, ?\DOMNode $context = null, $default = null)
+    /**
+     * @template T of mixed
+     *
+     * @param T $default
+     *
+     * @return T|bool|int|string|null
+     */
+    private function getValueFromXPath(string $path, \DOMXPath $xpath, ?\DOMNode $context = null, $default = null)
     {
         try {
             $result = $xpath->query($path, $context);
