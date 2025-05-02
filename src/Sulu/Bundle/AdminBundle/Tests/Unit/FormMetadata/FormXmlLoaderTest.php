@@ -20,7 +20,6 @@ use Sulu\Bundle\AdminBundle\Exception\PropertyMetadataMapperNotFoundException;
 use Sulu\Bundle\AdminBundle\FormMetadata\FormMetadataMapper;
 use Sulu\Bundle\AdminBundle\FormMetadata\FormXmlLoader;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
-use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\LocalizedFormMetadataCollection;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Parser\PropertiesXmlParser;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Parser\SchemaXmlParser;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadataMapperRegistry;
@@ -49,7 +48,6 @@ class FormXmlLoaderTest extends TestCase
             ['en' => 'en', 'de' => 'de', 'fr' => 'fr', 'nl' => 'nl']
         );
         $schemaXmlParser = new SchemaXmlParser();
-        $locales = ['de', 'en'];
 
         $propertyMetadataMapperRegistry = $this->prophesize(PropertyMetadataMapperRegistry::class);
         $propertyMetadataMapperRegistry->has(Argument::cetera())->willReturn(false);
@@ -58,19 +56,14 @@ class FormXmlLoaderTest extends TestCase
         });
 
         $formMetadataMapper = new FormMetadataMapper($propertyMetadataMapperRegistry->reveal());
-        $this->loader = new FormXmlLoader($propertiesXmlParser, $schemaXmlParser, $locales, $formMetadataMapper);
+        $this->loader = new FormXmlLoader($propertiesXmlParser, $schemaXmlParser, $formMetadataMapper);
     }
 
     public function testLoadForm(): void
     {
-        /** @var LocalizedFormMetadataCollection */
-        $formMetadataCollection = $this->loader->load($this->getFormDirectory() . 'form.xml');
+        $formMetadata = $this->loader->load($this->getFormDirectory() . 'form.xml');
 
-        $this->assertInstanceOf(LocalizedFormMetadataCollection::class, $formMetadataCollection);
-
-        $this->assertCount(2, $formMetadataCollection->getItems());
-
-        $formMetadata = $formMetadataCollection->get('en');
+        $this->assertInstanceOf(FormMetadata::class, $formMetadata);
 
         $this->assertCount(1, $formMetadata->getTags());
         $this->assertCount(1, $formMetadata->getTagsByName('test'));
@@ -135,50 +128,34 @@ class FormXmlLoaderTest extends TestCase
         $this->translator->trans('sulu_contact.salutation', [], 'admin', 'fr')->willReturn('fr_salutation');
         $this->translator->trans('sulu_contact.salutation', [], 'admin', 'nl')->willReturn('nl_salutation');
 
-        /**
-         * @var LocalizedFormMetadataCollection
-         */
-        $formMetadataCollection = $this->loader->load($this->getFormDirectory() . 'form_with_localizations.xml');
+        $formMetadata = $this->loader->load($this->getFormDirectory() . 'form_with_localizations.xml');
 
-        $formMetadataEn = $formMetadataCollection->get('en');
-
-        $this->assertInstanceOf(FormMetadata::class, $formMetadataEn);
-        $this->assertCount(4, $formMetadataEn->getItems());
-        $this->assertEquals('en_form_of_address', $formMetadataEn->getItems()['formOfAddress']->getLabel('en'));
-        $this->assertEquals('en_first_name', $formMetadataEn->getItems()['firstName']->getLabel('en'));
-        $this->assertEquals('en_last_name', $formMetadataEn->getItems()['lastName']->getLabel('en'));
-        $this->assertEquals('en_salutation', $formMetadataEn->getItems()['salutation']->getLabel('en'));
-        $this->assertEquals('en_mr', $formMetadataEn->getItems()['formOfAddress']->getOptions()['values']
+        $this->assertInstanceOf(FormMetadata::class, $formMetadata);
+        $this->assertCount(4, $formMetadata->getItems());
+        $this->assertEquals('en_form_of_address', $formMetadata->getItems()['formOfAddress']->getLabel('en'));
+        $this->assertEquals('en_first_name', $formMetadata->getItems()['firstName']->getLabel('en'));
+        $this->assertEquals('en_last_name', $formMetadata->getItems()['lastName']->getLabel('en'));
+        $this->assertEquals('en_salutation', $formMetadata->getItems()['salutation']->getLabel('en'));
+        $this->assertEquals('en_mr', $formMetadata->getItems()['formOfAddress']->getOptions()['values']
             ->getValue()[0]->getTitle('en'));
-        $this->assertEquals('en_ms', $formMetadataEn->getItems()['formOfAddress']->getOptions()['values']
+        $this->assertEquals('en_ms', $formMetadata->getItems()['formOfAddress']->getOptions()['values']
             ->getValue()[1]->getTitle('en'));
 
-        $formMetadataDe = $formMetadataCollection->get('de');
-        $this->assertCount(4, $formMetadataDe->getItems());
-        $this->assertEquals('de_form_of_address', $formMetadataDe->getItems()['formOfAddress']->getLabel('de'));
-        $this->assertEquals('de_first_name', $formMetadataDe->getItems()['firstName']->getLabel('de'));
-        $this->assertEquals('Deutscher Nachname', $formMetadataDe->getItems()['lastName']->getLabel('de'));
-        $this->assertEquals('de_salutation', $formMetadataDe->getItems()['salutation']->getLabel('de'));
-        $this->assertEquals('de_mr', $formMetadataDe->getItems()['formOfAddress']->getOptions()['values']->getValue()[0]->getTitle('de'));
-        $this->assertEquals('de_ms', $formMetadataDe->getItems()['formOfAddress']->getOptions()['values']->getValue()[1]->getTitle('de'));
+        $this->assertEquals('de_form_of_address', $formMetadata->getItems()['formOfAddress']->getLabel('de'));
+        $this->assertEquals('de_first_name', $formMetadata->getItems()['firstName']->getLabel('de'));
+        $this->assertEquals('Deutscher Nachname', $formMetadata->getItems()['lastName']->getLabel('de'));
+        $this->assertEquals('de_salutation', $formMetadata->getItems()['salutation']->getLabel('de'));
+        $this->assertEquals('de_mr', $formMetadata->getItems()['formOfAddress']->getOptions()['values']->getValue()[0]->getTitle('de'));
+        $this->assertEquals('de_ms', $formMetadata->getItems()['formOfAddress']->getOptions()['values']->getValue()[1]->getTitle('de'));
 
-        $schemaMetadataEn = $formMetadataEn->getSchema();
+        $schemaMetadataEn = $formMetadata->getSchema();
         $this->assertInstanceOf(SchemaMetadata::class, $schemaMetadataEn);
         $this->assertCount(3, $schemaMetadataEn->toJsonSchema()['required']);
-
-        $schemaMetadataDe = $formMetadataDe->getSchema();
-        $this->assertInstanceOf(SchemaMetadata::class, $schemaMetadataDe);
-        $this->assertCount(3, $schemaMetadataDe->toJsonSchema()['required']);
     }
 
     public function testLoadFormWithEvaluations(): void
     {
-        /**
-         * @var LocalizedFormMetadataCollection
-         */
-        $formMetadataCollection = $this->loader->load($this->getFormDirectory() . 'form_with_evaluations.xml');
-
-        $formMetadata = $formMetadataCollection->get('en');
+        $formMetadata = $this->loader->load($this->getFormDirectory() . 'form_with_evaluations.xml');
 
         $this->assertInstanceOf(FormMetadata::class, $formMetadata);
 
@@ -233,12 +210,7 @@ class FormXmlLoaderTest extends TestCase
 
     public function testLoadFormWithSchema(): void
     {
-        /**
-         * @var LocalizedFormMetadataCollection
-         */
-        $formMetadataCollection = $this->loader->load($this->getFormDirectory() . 'form_with_schema.xml');
-
-        $formMetadata = $formMetadataCollection->get('en');
+        $formMetadata = $this->loader->load($this->getFormDirectory() . 'form_with_schema.xml');
 
         $this->assertInstanceOf(FormMetadata::class, $formMetadata);
 
@@ -295,12 +267,7 @@ class FormXmlLoaderTest extends TestCase
 
     public function testLoadFormSchemaWithBlocks(): void
     {
-        /**
-         * @var LocalizedFormMetadataCollection
-         */
-        $formMetadataCollection = $this->loader->load($this->getFormDirectory() . 'form_with_blocks.xml');
-
-        $formMetadata = $formMetadataCollection->get('en');
+        $formMetadata = $this->loader->load($this->getFormDirectory() . 'form_with_blocks.xml');
 
         $this->assertInstanceOf(FormMetadata::class, $formMetadata);
 
@@ -353,12 +320,7 @@ class FormXmlLoaderTest extends TestCase
 
     public function testLoadFormMetadataWithNestedBlocks(): void
     {
-        /**
-         * @var LocalizedFormMetadataCollection
-         */
-        $formMetadataCollection = $this->loader->load($this->getFormDirectory() . 'form_with_nested_blocks.xml');
-
-        $formMetadata = $formMetadataCollection->get('en');
+        $formMetadata = $this->loader->load($this->getFormDirectory() . 'form_with_nested_blocks.xml');
 
         $this->assertInstanceOf(FormMetadata::class, $formMetadata);
 
@@ -496,24 +458,14 @@ class FormXmlLoaderTest extends TestCase
 
     public function testLoadFormWithoutLabel(): void
     {
-        /**
-         * @var LocalizedFormMetadataCollection
-         */
-        $formMetadataCollection = $this->loader->load($this->getFormDirectory() . 'form_without_label.xml');
-
-        $formMetadata = $formMetadataCollection->get('en');
+        $formMetadata = $this->loader->load($this->getFormDirectory() . 'form_without_label.xml');
 
         $this->assertInstanceOf(FormMetadata::class, $formMetadata);
     }
 
     public function testLoadFormWithExpressionParam(): void
     {
-        /**
-         * LocalizedFormMetadataCollection.
-         */
-        $formMetadataCollection = $this->loader->load($this->getFormDirectory() . 'form_with_expression_param.xml');
-
-        $formMetadata = $formMetadataCollection->get('en');
+        $formMetadata = $this->loader->load($this->getFormDirectory() . 'form_with_expression_param.xml');
 
         $this->assertEquals(
             'service(\'test\').getId()',
@@ -528,12 +480,8 @@ class FormXmlLoaderTest extends TestCase
 
     public function testLoadFormWithSizedSections(): void
     {
-        /**
-         * @var LocalizedFormMetadataCollection
-         */
-        $formMetadataCollection = $this->loader->load($this->getFormDirectory() . 'form_with_sections.xml');
+        $formMetadata = $this->loader->load($this->getFormDirectory() . 'form_with_sections.xml');
 
-        $formMetadata = $formMetadataCollection->get('en');
         $this->assertInstanceOf(FormMetadata::class, $formMetadata);
 
         $this->assertCount(2, $formMetadata->getItems());
@@ -564,7 +512,7 @@ class FormXmlLoaderTest extends TestCase
         );
     }
 
-    private function getFormDirectory()
+    private function getFormDirectory(): string
     {
         return __DIR__ . \DIRECTORY_SEPARATOR . '..' . \DIRECTORY_SEPARATOR . '..' . \DIRECTORY_SEPARATOR
             . 'Application' . \DIRECTORY_SEPARATOR . 'config' . \DIRECTORY_SEPARATOR . 'forms' . \DIRECTORY_SEPARATOR;

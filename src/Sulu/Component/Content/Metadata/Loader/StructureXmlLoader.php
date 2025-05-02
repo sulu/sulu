@@ -26,6 +26,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Reads a template xml and returns a StructureMetadata.
+ *
+ * @extends AbstractLoader<StructureMetadata>
  */
 class StructureXmlLoader extends AbstractLoader
 {

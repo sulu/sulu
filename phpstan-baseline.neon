@@ -2209,12 +2209,6 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/ItemMetadata.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\LocalizedFormMetadataCollection\:\:add\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/LocalizedFormMetadataCollection.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\OptionMetadata\:\:getType\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -3127,30 +3121,6 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/TypedFormMetadata.php
 
 		-
-			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
-			identifier: foreach.nonIterable
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/XmlFormMetadataLoader.php
-
-		-
-			message: '#^Cannot call method getItems\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 3
-			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/XmlFormMetadataLoader.php
-
-		-
-			message: '#^Cannot call method getKey\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/XmlFormMetadataLoader.php
-
-		-
-			message: '#^Cannot call method merge\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/XmlFormMetadataLoader.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\XmlFormMetadataLoader\:\:__construct\(\) has parameter \$formDirectories with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -3163,31 +3133,7 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/XmlFormMetadataLoader.php
 
 		-
-			message: '#^Parameter \#1 \$array of function reset expects array\|object, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/XmlFormMetadataLoader.php
-
-		-
 			message: '#^Parameter \#1 \$data of function unserialize expects string, string\|false given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/XmlFormMetadataLoader.php
-
-		-
-			message: '#^Parameter \#1 \$items of method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\XmlFormMetadataLoader\:\:validateItems\(\) expects array\<Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\ItemMetadata\>, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/XmlFormMetadataLoader.php
-
-		-
-			message: '#^Parameter \#1 \$key of function array_key_exists expects int\|string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/XmlFormMetadataLoader.php
-
-		-
-			message: '#^Parameter \#2 \$locale of method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\XmlFormMetadataLoader\:\:getConfigCache\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/XmlFormMetadataLoader.php
@@ -4723,48 +4669,6 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/FormMetadata/FormMetadataMapperTest.php
 
 		-
-			message: '#^Binary operation "\." between mixed and ''form\.xml'' results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/FormMetadata/FormXmlLoaderTest.php
-
-		-
-			message: '#^Binary operation "\." between mixed and ''form_with_blocks\.xml'' results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/FormMetadata/FormXmlLoaderTest.php
-
-		-
-			message: '#^Binary operation "\." between mixed and ''form_with_nested…'' results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/FormMetadata/FormXmlLoaderTest.php
-
-		-
-			message: '#^Binary operation "\." between mixed and ''form_with_schema\.xml'' results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/FormMetadata/FormXmlLoaderTest.php
-
-		-
-			message: '#^Binary operation "\." between mixed and ''form_with_sections…'' results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/FormMetadata/FormXmlLoaderTest.php
-
-		-
-			message: '#^Binary operation "\." between mixed and ''form_without_label…'' results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/FormMetadata/FormXmlLoaderTest.php
-
-		-
-			message: '#^Binary operation "\." between mixed and ''form_with…'' results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 3
-			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/FormMetadata/FormXmlLoaderTest.php
-
-		-
 			message: '#^Call to an undefined method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\ItemMetadata\:\:getItems\(\)\.$#'
 			identifier: method.notFound
 			count: 4
@@ -4773,7 +4677,7 @@ parameters:
 		-
 			message: '#^Call to an undefined method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\ItemMetadata\:\:getOptions\(\)\.$#'
 			identifier: method.notFound
-			count: 8
+			count: 10
 			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/FormMetadata/FormXmlLoaderTest.php
 
 		-
@@ -4785,19 +4689,13 @@ parameters:
 		-
 			message: '#^Call to method PHPUnit\\Framework\\Assert\:\:assertInstanceOf\(\) with ''Sulu\\\\Bundle\\\\AdminBundle\\\\Metadata\\\\FormMetadata\\\\FormMetadata'' and Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\FormMetadata will always evaluate to true\.$#'
 			identifier: method.alreadyNarrowedType
-			count: 7
-			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/FormMetadata/FormXmlLoaderTest.php
-
-		-
-			message: '#^Call to method PHPUnit\\Framework\\Assert\:\:assertInstanceOf\(\) with ''Sulu\\\\Bundle\\\\AdminBundle\\\\Metadata\\\\FormMetadata\\\\LocalizedFormMetadataCollection'' and Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\LocalizedFormMetadataCollection will always evaluate to true\.$#'
-			identifier: method.alreadyNarrowedType
-			count: 1
+			count: 8
 			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/FormMetadata/FormXmlLoaderTest.php
 
 		-
 			message: '#^Call to method PHPUnit\\Framework\\Assert\:\:assertInstanceOf\(\) with ''Sulu\\\\Bundle\\\\AdminBundle\\\\Metadata\\\\SchemaMetadata\\\\SchemaMetadata'' and Sulu\\Bundle\\AdminBundle\\Metadata\\SchemaMetadata\\SchemaMetadata will always evaluate to true\.$#'
 			identifier: method.alreadyNarrowedType
-			count: 3
+			count: 2
 			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/FormMetadata/FormXmlLoaderTest.php
 
 		-
@@ -4839,7 +4737,7 @@ parameters:
 		-
 			message: '#^Cannot access offset ''name'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 4
+			count: 2
 			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/FormMetadata/FormXmlLoaderTest.php
 
 		-
@@ -4885,12 +4783,6 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/FormMetadata/FormXmlLoaderTest.php
 
 		-
-			message: '#^Cannot call method get\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/FormMetadata/FormXmlLoaderTest.php
-
-		-
 			message: '#^Cannot call method getDefaultType\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -4905,19 +4797,13 @@ parameters:
 		-
 			message: '#^Cannot call method getItems\(\) on mixed\.$#'
 			identifier: method.nonObject
-			count: 7
+			count: 5
 			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/FormMetadata/FormXmlLoaderTest.php
 
 		-
 			message: '#^Cannot call method getName\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 5
-			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/FormMetadata/FormXmlLoaderTest.php
-
-		-
-			message: '#^Cannot call method getOptions\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
 			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/FormMetadata/FormXmlLoaderTest.php
 
 		-
@@ -4951,12 +4837,6 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/FormMetadata/FormXmlLoaderTest.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\AdminBundle\\Tests\\Unit\\FormMetadata\\FormXmlLoaderTest\:\:getFormDirectory\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/FormMetadata/FormXmlLoaderTest.php
-
-		-
 			message: '#^Parameter \#1 \$type of class Sulu\\Bundle\\AdminBundle\\Exception\\PropertyMetadataMapperNotFoundException constructor expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -4965,7 +4845,7 @@ parameters:
 		-
 			message: '#^Parameter \#2 \$haystack of method PHPUnit\\Framework\\Assert\:\:assertCount\(\) expects Countable\|iterable, mixed given\.$#'
 			identifier: argument.type
-			count: 7
+			count: 6
 			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/FormMetadata/FormXmlLoaderTest.php
 
 		-
@@ -60373,12 +60253,6 @@ parameters:
 			path: src/Sulu/Component/Content/Metadata/Loader/AbstractLoader.php
 
 		-
-			message: '#^Method Sulu\\Component\\Content\\Metadata\\Loader\\AbstractLoader\:\:parse\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Loader/AbstractLoader.php
-
-		-
 			message: '#^Method Sulu\\Component\\Content\\Metadata\\Loader\\AbstractLoader\:\:parse\(\) has parameter \$resource with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -60691,12 +60565,6 @@ parameters:
 			path: src/Sulu/Component/Content/Metadata/Loader/StructureXmlLoader.php
 
 		-
-			message: '#^Method Sulu\\Component\\Content\\Metadata\\Loader\\StructureXmlLoader\:\:parse\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Loader/StructureXmlLoader.php
-
-		-
 			message: '#^Method Sulu\\Component\\Content\\Metadata\\Loader\\StructureXmlLoader\:\:parse\(\) has parameter \$resource with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -60705,6 +60573,12 @@ parameters:
 		-
 			message: '#^Method Sulu\\Component\\Content\\Metadata\\Loader\\StructureXmlLoader\:\:parse\(\) has parameter \$type with no type specified\.$#'
 			identifier: missingType.parameter
+			count: 1
+			path: src/Sulu/Component/Content/Metadata/Loader/StructureXmlLoader.php
+
+		-
+			message: '#^Method Sulu\\Component\\Content\\Metadata\\Loader\\StructureXmlLoader\:\:parse\(\) should return Sulu\\Component\\Content\\Metadata\\StructureMetadata but returns mixed\.$#'
+			identifier: return.type
 			count: 1
 			path: src/Sulu/Component/Content/Metadata/Loader/StructureXmlLoader.php
 

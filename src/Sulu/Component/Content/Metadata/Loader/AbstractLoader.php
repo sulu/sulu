@@ -18,6 +18,8 @@ use Symfony\Component\Config\Loader\LoaderResolverInterface;
 use Symfony\Component\Config\Util\XmlUtils;
 
 /**
+ * @template T
+ *
  * reads a template xml and returns a array representation.
  */
 abstract class AbstractLoader implements LoaderInterface
@@ -44,6 +46,8 @@ abstract class AbstractLoader implements LoaderInterface
 
     /**
      * @param string $resource
+     *
+     * @return T
      */
     public function load($resource, $type = null): mixed
     {
@@ -77,6 +81,9 @@ abstract class AbstractLoader implements LoaderInterface
         return $result;
     }
 
+    /**
+     * @return T
+     */
     abstract protected function parse($resource, \DOMXPath $xpath, $type);
 
     /**

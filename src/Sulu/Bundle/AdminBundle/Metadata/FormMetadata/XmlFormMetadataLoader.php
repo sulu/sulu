@@ -62,7 +62,7 @@ class XmlFormMetadataLoader implements FormMetadataLoaderInterface, CacheWarmerI
 
     public function getMetadata(string $key, string $locale, array $metadataOptions = []): ?MetadataInterface
     {
-        $configCache = $this->getConfigCache($key, $locale);
+        $configCache = $this->getConfigCache($key);
 
         if (!\file_exists($configCache->getPath())) {
             return null;
@@ -84,29 +84,26 @@ class XmlFormMetadataLoader implements FormMetadataLoaderInterface, CacheWarmerI
         $formsMetadataResources = [];
 
         foreach ($formFinder as $formFile) {
-            $formMetadataCollection = $this->formXmlLoader->load($formFile->getPathName());
-            $items = $formMetadataCollection->getItems();
-            $formKey = \reset($items)->getKey();
+            $formMetadata = $this->formXmlLoader->load($formFile->getPathName());
+            $formKey = $formMetadata->getKey();
             $formsMetadataResources[$formKey][] = $formFile->getPathName();
             if (!\array_key_exists($formKey, $formsMetadataCollection)) {
-                $formsMetadataCollection[$formKey] = $formMetadataCollection;
+                $formsMetadataCollection[$formKey] = $formMetadata;
             } else {
-                $formsMetadataCollection[$formKey] = $formsMetadataCollection[$formKey]->merge($formMetadataCollection);
+                $formsMetadataCollection[$formKey] = $formsMetadataCollection[$formKey]->merge($formMetadata);
             }
         }
 
-        foreach ($formsMetadataCollection as $key => $formMetadataCollection) {
-            foreach ($formMetadataCollection->getItems() as $locale => $formMetadata) {
-                $this->validateItems($formMetadata->getItems(), $key);
+        foreach ($formsMetadataCollection as $key => $formMetadata) {
+            $this->validateItems($formMetadata->getItems(), $key);
 
-                $configCache = $this->getConfigCache($key, $locale);
-                $configCache->write(
-                    \serialize($formMetadata),
-                    \array_map(function(string $resource) {
-                        return new FileResource($resource);
-                    }, $formsMetadataResources[$key])
-                );
-            }
+            $configCache = $this->getConfigCache($key);
+            $configCache->write(
+                \serialize($formMetadata),
+                \array_map(function(string $resource) {
+                    return new FileResource($resource);
+                }, $formsMetadataResources[$key])
+            );
         }
 
         return [];
@@ -137,8 +134,8 @@ class XmlFormMetadataLoader implements FormMetadataLoaderInterface, CacheWarmerI
         return false;
     }
 
-    private function getConfigCache(string $key, string $locale): ConfigCache
+    private function getConfigCache(string $key): ConfigCache
     {
-        return new ConfigCache(\sprintf('%s%s%s.%s', $this->cacheDir, \DIRECTORY_SEPARATOR, $key, $locale), $this->debug);
+        return new ConfigCache(\sprintf('%s%s%s', $this->cacheDir, \DIRECTORY_SEPARATOR, $key), $this->debug);
     }
 }

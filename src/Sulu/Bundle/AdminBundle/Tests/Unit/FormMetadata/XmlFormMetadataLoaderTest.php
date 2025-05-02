@@ -19,7 +19,6 @@ use Sulu\Bundle\AdminBundle\FormMetadata\FormXmlLoader;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\ItemMetadata;
-use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\LocalizedFormMetadataCollection;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\SectionMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Validation\FieldMetadataValidatorInterface;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\XmlFormMetadataLoader;
@@ -120,11 +119,8 @@ class XmlFormMetadataLoaderTest extends TestCase
         $blockMetadata = $this->createFieldMetadata('some_block', 'block', [$blockTypeMetadata]);
         $formMetadata = $this->createFormMetadata('some_form', 'some_form_key', [$propertyMetadata, $sectionMetadata, $blockMetadata]);
 
-        $formMetadataCollection = new LocalizedFormMetadataCollection();
-        $formMetadataCollection->add('en', $formMetadata);
-
         $this->formXmlLoader->load(Argument::cetera())
-            ->willReturn($formMetadataCollection);
+            ->willReturn($formMetadata);
 
         $this->fieldMetadataValidator->validate($propertyMetadata, 'some_form_key')->shouldBeCalled();
         $this->fieldMetadataValidator->validate($sectionPropertyMetadata, 'some_form_key')->shouldBeCalled();

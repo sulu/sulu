@@ -14,13 +14,14 @@ namespace Sulu\Bundle\AdminBundle\FormMetadata;
 use Sulu\Bundle\AdminBundle\Exception\InvalidRootTagException;
 use Sulu\Bundle\AdminBundle\FormMetadata\FormMetadata as ExternalFormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
-use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\LocalizedFormMetadataCollection;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Parser\PropertiesXmlParser;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Parser\SchemaXmlParser;
 use Sulu\Component\Content\Metadata\Loader\AbstractLoader;
 
 /**
- * Load structure from an XML file.
+ * @internal this class is not part of the public API and may be changed or removed without further notice
+ *
+ * @extends AbstractLoader<FormMetadata>
  */
 class FormXmlLoader extends AbstractLoader
 {
@@ -28,27 +29,18 @@ class FormXmlLoader extends AbstractLoader
 
     public const SCHEMA_NAMESPACE_URI = 'http://schemas.sulu.io/template/template';
 
-    /**
-     * @param string[] $locales
-     */
     public function __construct(
         private PropertiesXmlParser $propertiesXmlParser,
         private SchemaXmlParser $schemaXmlParser,
-        private array $locales,
         private FormMetadataMapper $formMetadataMapper
     ) {
-        $this->propertiesXmlParser = $propertiesXmlParser;
-        $this->schemaXmlParser = $schemaXmlParser;
-        $this->locales = $locales;
-        $this->formMetadataMapper = $formMetadataMapper;
-
         parent::__construct(
             self::SCHEMA_PATH,
             self::SCHEMA_NAMESPACE_URI
         );
     }
 
-    protected function parse($resource, \DOMXPath $xpath, $type): LocalizedFormMetadataCollection
+    protected function parse($resource, \DOMXPath $xpath, $type): FormMetadata
     {
         if (0 === $xpath->query('/x:form')->count()) {
             throw new InvalidRootTagException($resource, 'form');
@@ -76,15 +68,10 @@ class FormXmlLoader extends AbstractLoader
         }
         $form->burnProperties();
 
-        $formMetadataCollection = new LocalizedFormMetadataCollection();
-        foreach ($this->locales as $locale) {
-            $formMetadataCollection->add($locale, $this->mapFormsMetadata($form, $locale));
-        }
-
-        return $formMetadataCollection;
+        return $this->mapFormsMetadata($form);
     }
 
-    private function mapFormsMetadata(ExternalFormMetadata $formMetadata, string $locale): FormMetadata
+    private function mapFormsMetadata(ExternalFormMetadata $formMetadata): FormMetadata
     {
         $form = new FormMetadata();
         $form->setTags($this->formMetadataMapper->mapTags($formMetadata->getTags()));
