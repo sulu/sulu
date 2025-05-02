@@ -64,7 +64,8 @@ class FormatCacheRegenerateCommand extends Command
             $this->formatManager->returnImage(
                 $fileInformation['id'],
                 $fileInformation['formatKey'],
-                $fileInformation['fileName']
+                $fileInformation['fileName'],
+                version: null
             );
 
             $progressBar->advance();

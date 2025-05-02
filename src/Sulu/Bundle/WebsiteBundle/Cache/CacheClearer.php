@@ -76,14 +76,8 @@ class CacheClearer implements CacheClearerInterface
         $this->tagsEnabled = $tagsEnabled;
     }
 
-    public function clear(/*?array $tags = null*/)
+    public function clear(?array $tags = null)
     {
-        if (0 === \func_num_args()) {
-            @trigger_deprecation('sulu/sulu', '2.3', 'Calling "%s()" without $tags parameter is deprecated.', __METHOD__);
-        }
-
-        $tags = \func_num_args() >= 1 ? \func_get_arg(0) : null;
-
         if (null !== $tags && $this->tagsEnabled && $this->cacheManager && $this->cacheManager->supportsTags()) {
             foreach ($tags as $tag) {
                 $this->cacheManager->invalidateTag($tag);

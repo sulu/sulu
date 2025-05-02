@@ -82,10 +82,8 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
         }
     }
 
-    public function findMediaByIdForRendering($id, $formatKey /*, $version = null */)
+    public function findMediaByIdForRendering($id, $formatKey, ?int $version = null)
     {
-        $version = \func_num_args() > 2 ? \func_get_arg(2) : null;
-
         try {
             $queryBuilder = $this->createQueryBuilder('media')
                 ->leftJoin('media.files', 'file')

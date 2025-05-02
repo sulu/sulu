@@ -18,6 +18,8 @@ interface CacheClearerInterface
 {
     /**
      * Clear the website cache.
+     *
+     * @param array<string>|null $tags
      */
-    public function clear(/*?array $tags = null*/);
+    public function clear(?array $tags = null);
 }

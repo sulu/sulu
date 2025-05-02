@@ -68,15 +68,8 @@ class FormatManager implements FormatManagerInterface
         $this->logger = $logger ?: new NullLogger();
     }
 
-    public function returnImage($id, $formatKey, $fileName /*, int<1, max>|null $version = null */)
+    public function returnImage($id, $formatKey, $fileName, ?int $version)
     {
-        /** @var int|null $version */
-        $version = \func_num_args() > 3 ? \func_get_arg(3) : null;
-
-        if (null === $version) {
-            @trigger_deprecation('sulu/sulu', '2.5', 'The $version parameter in ' . __CLASS__ . '::' . __METHOD__ . ' is required.');
-        }
-
         $setExpireHeaders = false;
 
         try {
@@ -94,8 +87,8 @@ class FormatManager implements FormatManagerInterface
                 throw new ImageProxyMediaNotFoundException(\sprintf('Media with id "%s" was not found.', $id));
             }
 
-            $fileVersion = $this->getLatestFileVersion($media);
-            $version = null !== $version ? $version : $fileVersion->getVersion(); // TODO remove this line in Sulu 3.0 currently bc layer when version is not given
+            $latestFileVersion = $this->getLatestFileVersion($media);
+            $version ??= $latestFileVersion->getVersion(); // TODO remove this line in Sulu 3.0 currently bc layer when version is not given
 
             /** @var File|null $file */
             $file = $media->getFiles()[0] ?? null;
@@ -111,8 +104,15 @@ class FormatManager implements FormatManagerInterface
                 throw new ImageProxyMediaNotFoundException(\sprintf('FileVersion "%s" for media with id "%s" was not found.', $requestedFileVersion->getVersion(), $id));
             }
 
-            if ($fileVersion->getVersion() !== $requestedFileVersion->getVersion()) {
-                $formats = $this->getFormats($id, $fileVersion->getName(), $fileVersion->getVersion(), $fileVersion->getSubVersion(), $fileVersion->getMimeType());
+            // Generate a redirect for old versions
+            if ($latestFileVersion->getVersion() !== $requestedFileVersion->getVersion()) {
+                $formats = $this->getFormats(
+                    $id,
+                    $latestFileVersion->getName(),
+                    $latestFileVersion->getVersion(),
+                    $latestFileVersion->getSubVersion(),
+                    $latestFileVersion->getMimeType(),
+                );
 
                 $formatUrl = $formats[$formatKey . '.' . $imageFormat] ?? null;
                 if (null === $formatUrl) {
@@ -122,9 +122,10 @@ class FormatManager implements FormatManagerInterface
                 return new RedirectResponse($formatUrl, 301);
             }
 
-            $supportedImageFormats = $this->converter->getSupportedOutputImageFormats($fileVersion->getMimeType());
+            // Generate the current version
+            $supportedImageFormats = $this->converter->getSupportedOutputImageFormats($latestFileVersion->getMimeType());
             if (empty($supportedImageFormats)) {
-                throw new InvalidMimeTypeForPreviewException($fileVersion->getMimeType() ?? '-null-');
+                throw new InvalidMimeTypeForPreviewException($latestFileVersion->getMimeType() ?? '-null-');
             }
 
             if (!\in_array($imageFormat, $supportedImageFormats)) {
@@ -137,7 +138,7 @@ class FormatManager implements FormatManagerInterface
             }
 
             // Convert Media to format.
-            $responseContent = $this->converter->convert($fileVersion, $formatKey, $imageFormat);
+            $responseContent = $this->converter->convert($latestFileVersion, $formatKey, $imageFormat);
 
             // HTTP Headers
             $status = 200;
@@ -151,7 +152,7 @@ class FormatManager implements FormatManagerInterface
                 $this->formatCache->save(
                     $responseContent,
                     $media->getId(),
-                    $this->replaceExtension($fileVersion->getName(), $imageFormat),
+                    $this->replaceExtension($latestFileVersion->getName(), $imageFormat),
                     $formatKey
                 );
             }

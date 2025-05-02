@@ -32,29 +32,17 @@ class MediaImageExtractor implements MediaImageExtractorInterface
     ) {
     }
 
-    public function extract($resource/*, string $resourceMimeType*/)
+    public function extract($resource, string $resourceMimeType)
     {
-        if (\func_num_args() <= 1) {
-            @trigger_deprecation(
-                'sulu/sulu',
-                '2.2',
-                \sprintf('Calling "%s()" without $resourceMimeType parameter is deprecated.', __METHOD__)
-            );
-
-            $mimeType = \mime_content_type($resource);
-        } else {
-            $mimeType = \func_get_arg(1);
-        }
-
-        if ('application/pdf' === $mimeType) {
+        if ('application/pdf' === $resourceMimeType) {
             return $this->convertPdfToImage($resource);
         }
 
-        if ('image/vnd.adobe.photoshop' === $mimeType) {
+        if ('image/vnd.adobe.photoshop' === $resourceMimeType) {
             return $this->convertPsdToImage($resource);
         }
 
-        if (\fnmatch('video/*', $mimeType)) {
+        if (\fnmatch('video/*', $resourceMimeType)) {
             return $this->convertVideoToImage($resource);
         }
 
