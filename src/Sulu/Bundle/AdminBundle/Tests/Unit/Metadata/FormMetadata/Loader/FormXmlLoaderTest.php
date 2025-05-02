@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\AdminBundle\Tests\Unit\FormMetadata;
+namespace Sulu\Bundle\AdminBundle\Tests\Unit\Metadata\FormMetadata\Loader;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
@@ -18,8 +18,8 @@ use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\AdminBundle\Exception\InvalidRootTagException;
 use Sulu\Bundle\AdminBundle\Exception\PropertyMetadataMapperNotFoundException;
 use Sulu\Bundle\AdminBundle\FormMetadata\FormMetadataMapper;
-use Sulu\Bundle\AdminBundle\FormMetadata\FormXmlLoader;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Loader\FormXmlLoader;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Parser\PropertiesXmlParser;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Parser\SchemaXmlParser;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadataMapperRegistry;
@@ -499,7 +499,7 @@ class FormXmlLoaderTest extends TestCase
         $this->expectExceptionMessageMatches('/"form"/');
 
         $this->loader->load(
-            __DIR__ . \DIRECTORY_SEPARATOR . 'data' . \DIRECTORY_SEPARATOR . 'form_invalid_root_tag.xml'
+            \dirname(__DIR__) . \DIRECTORY_SEPARATOR . 'data' . \DIRECTORY_SEPARATOR . 'form_invalid_root_tag.xml'
         );
     }
 
@@ -508,13 +508,13 @@ class FormXmlLoaderTest extends TestCase
         $this->expectException(\InvalidArgumentException::class);
 
         $this->loader->load(
-            __DIR__ . \DIRECTORY_SEPARATOR . 'data' . \DIRECTORY_SEPARATOR . 'form_invalid.xml'
+            \dirname(__DIR__) . \DIRECTORY_SEPARATOR . 'data' . \DIRECTORY_SEPARATOR . 'form_invalid.xml'
         );
     }
 
     private function getFormDirectory(): string
     {
-        return __DIR__ . \DIRECTORY_SEPARATOR . '..' . \DIRECTORY_SEPARATOR . '..' . \DIRECTORY_SEPARATOR
+        return \dirname(__DIR__, 4) . \DIRECTORY_SEPARATOR
             . 'Application' . \DIRECTORY_SEPARATOR . 'config' . \DIRECTORY_SEPARATOR . 'forms' . \DIRECTORY_SEPARATOR;
     }
 }

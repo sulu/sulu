@@ -11,7 +11,7 @@
 
 namespace Sulu\Bundle\AdminBundle\Metadata\FormMetadata;
 
-use Sulu\Bundle\AdminBundle\FormMetadata\FormXmlLoader;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Loader\FormXmlLoader;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Validation\FieldMetadataValidatorInterface;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataInterface;
 use Symfony\Component\Config\ConfigCache;

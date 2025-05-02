@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\AdminBundle\Tests\Unit\FormMetadata\Validation;
+namespace Sulu\Bundle\AdminBundle\Tests\Unit\Metadata\FormMetadata\Validation;
 
 use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;

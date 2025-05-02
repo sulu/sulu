@@ -9,16 +9,16 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\AdminBundle\Tests\Unit\FormMetadata;
+namespace Sulu\Bundle\AdminBundle\Tests\Unit\Metadata\FormMetadata;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
-use Sulu\Bundle\AdminBundle\FormMetadata\FormXmlLoader;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\ItemMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Loader\FormXmlLoader;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\SectionMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Validation\FieldMetadataValidatorInterface;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\XmlFormMetadataLoader;

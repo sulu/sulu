@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Sulu\Content\Infrastructure\Symfony\HttpKernel\Compiler;
 
-use Sulu\Bundle\AdminBundle\FormMetadata\FormXmlLoader;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Loader\FormXmlLoader;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Finder\Finder;

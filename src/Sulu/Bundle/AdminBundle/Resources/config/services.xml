@@ -139,7 +139,7 @@
             alias="sulu_admin.view_builder_factory"
         />
 
-        <service id="sulu_admin.form_metadata.form_xml_loader" class="Sulu\Bundle\AdminBundle\FormMetadata\FormXmlLoader">
+        <service id="sulu_admin.form_metadata.form_xml_loader" class="Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Loader\FormXmlLoader">
             <argument type="service" id="sulu_admin.properties_xml_parser"/>
             <argument type="service" id="sulu_admin.schema_xml_parser"/>
             <argument type="service" id="sulu_admin.form_metadata.form_metadata_mapper"/>
