@@ -61,6 +61,14 @@ class FormMetadata extends AbstractMetadata
     #[Exclude(if: "'admin_form_metadata_keys_only' in context.getAttribute('groups')")]
     protected $tags = [];
 
+    /**
+     * The resources from which this structure was loaded (useful for debugging).
+     *
+     * @var array<string>
+     */
+    #[Exclude()]
+    protected $resources = [];
+
     public function __construct()
     {
         $this->schema = new SchemaMetadata();
@@ -195,6 +203,27 @@ class FormMetadata extends AbstractMetadata
         $this->tags = $tags;
     }
 
+    public function addResource(string $resource): void
+    {
+        $this->resources[] = $resource;
+    }
+
+    /**
+     * @param array<string> $resources
+     */
+    public function setResources(array $resources): void
+    {
+        $this->resources = $resources;
+    }
+
+    /**
+     * @return array<string>
+     */
+    public function getResources(): array
+    {
+        return $this->resources;
+    }
+
     public function merge(self $otherForm): FormMetadata
     {
         $mergedForm = new self();
@@ -208,6 +237,7 @@ class FormMetadata extends AbstractMetadata
 
         $mergedForm->setTags(\array_merge($this->getTags(), $otherForm->getTags()));
         $mergedForm->setItems(\array_merge($this->getItems(), $otherForm->getItems()));
+        $mergedForm->setResources(\array_merge($this->getResources(), $otherForm->getResources()));
         $mergedForm->setSchema($this->getSchema()->merge($otherForm->getSchema()));
 
         return $mergedForm;

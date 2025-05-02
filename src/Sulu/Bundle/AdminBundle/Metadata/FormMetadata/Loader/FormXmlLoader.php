@@ -75,6 +75,7 @@ class FormXmlLoader extends AbstractLoader
     private function mapFormsMetadata(ExternalFormMetadata $formMetadata): FormMetadata
     {
         $form = new FormMetadata();
+        $form->addResource($formMetadata->getResource());
         $form->setTags($this->formMetadataMapper->mapTags($formMetadata->getTags()));
         $form->setItems($this->formMetadataMapper->mapChildren($formMetadata->getChildren()));
 
