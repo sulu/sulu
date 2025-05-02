@@ -352,11 +352,15 @@ if ($target = $input->getOption('target')) {
 }
 
 write_header('Bundle tests');
-
+$enableGrouping = getenv('CI_GROUP_OUTPUT') === 'true';
 foreach ($bundles as $bundle) {
-    echo "::group::". basename($bundle->getPath()). PHP_EOL;
+    if ($enableGrouping) {
+        echo "::group::". basename($bundle->getPath()). PHP_EOL;
+    }
     run_bundle_tests($bundle);
-    echo "::endgroup::\n";
+    if ($enableGrouping) {
+        echo "::endgroup::\n";
+    }
 }
 echo "\n";
 
