@@ -144,16 +144,17 @@ class SuluAdminExtension extends Extension implements PrependExtensionInterface
         $configuration = $this->getConfiguration($configs, $container);
         $config = $this->processConfiguration($configuration, $configs);
 
-        $container->setParameter($this->getAlias() . '.name', $config['name']);
-        $container->setParameter($this->getAlias() . '.email', $config['email']);
-        $container->setParameter($this->getAlias() . '.user_data_service', $config['user_data_service']);
-        $container->setParameter($this->getAlias() . '.resources', $config['resources']);
-        $container->setParameter($this->getAlias() . '.collaboration_enabled', $config['collaboration']['enabled']);
-        $container->setParameter($this->getAlias() . '.collaboration_interval', $config['collaboration']['interval']);
-        $container->setParameter($this->getAlias() . '.collaboration_threshold', $config['collaboration']['threshold']);
+        $container->setParameter('sulu_admin.name', $config['name']);
+        $container->setParameter('sulu_admin.email', $config['email']);
+        $container->setParameter('sulu_admin.user_data_service', $config['user_data_service']);
+        $container->setParameter('sulu_admin.resources', $config['resources']);
+        $container->setParameter('sulu_admin.collaboration_enabled', $config['collaboration']['enabled']);
+        $container->setParameter('sulu_admin.collaboration_interval', $config['collaboration']['interval']);
+        $container->setParameter('sulu_admin.collaboration_threshold', $config['collaboration']['threshold']);
 
-        $container->setParameter($this->getAlias() . '.forms.directories', $config['forms']['directories'] ?? []);
-        $container->setParameter($this->getAlias() . '.lists.directories', $config['lists']['directories'] ?? []);
+        $container->setParameter('sulu_admin.forms.directories', $config['forms']['directories'] ?? []);
+        $container->setParameter('sulu_admin.lists.directories', $config['lists']['directories'] ?? []);
+        $container->setParameter('sulu_admin.templates.configuration', $config['templates']);
 
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.xml');

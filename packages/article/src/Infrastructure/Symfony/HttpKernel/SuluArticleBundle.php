@@ -274,6 +274,14 @@ final class SuluArticleBundle extends AbstractBundle
                             // \dirname(__DIR__, 4) . '/config/forms',
                         ],
                     ],
+                    'templates' => [
+                        'articles' => [
+                            'default_type' => null,
+                            'directories' => [
+                                'app' => '%kernel.project_dir%/config/templates/articles',
+                            ],
+                        ],
+                    ],
                     'resources' => [
                         'articles' => [
                             'routes' => [

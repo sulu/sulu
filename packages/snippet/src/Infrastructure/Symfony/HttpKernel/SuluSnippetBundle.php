@@ -261,6 +261,14 @@ final class SuluSnippetBundle extends AbstractBundle
                             // \dirname(__DIR__, 4) . '/config/forms',
                         ],
                     ],
+                    'templates' => [
+                        'snippets' => [
+                            'default_type' => null,
+                            'directories' => [
+                                'app' => '%kernel.project_dir%/config/templates/snippets',
+                            ],
+                        ],
+                    ],
                     'resources' => [
                         'snippets' => [
                             'routes' => [

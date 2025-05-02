@@ -352,6 +352,14 @@ final class SuluPageBundle extends AbstractBundle
                             \dirname(__DIR__, 4) . '/config/forms',
                         ],
                     ],
+                    'templates' => [
+                        'pages' => [
+                            'default_type' => null,
+                            'directories' => [
+                                'app' => '%kernel.project_dir%/config/templates/pages',
+                            ],
+                        ],
+                    ],
                     'resources' => [
                         'pages' => [
                             'routes' => [
