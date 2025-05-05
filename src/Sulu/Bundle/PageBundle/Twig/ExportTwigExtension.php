@@ -55,7 +55,11 @@ class ExportTwigExtension extends AbstractExtension
      */
     public function escapeXmlContent($content)
     {
-        if (\is_object($content) || \is_array($content)) {
+        if (\is_array($content)) {
+            return 'ERROR: wrong data';
+        }
+
+        if (\is_object($content)) {
             if (\method_exists($content, 'getUuid')) {
                 return $content->getUuid();
             }

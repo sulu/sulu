@@ -24036,11 +24036,6 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Twig/ExportTwigExtension.php
 
 		-
-			message: "#^Parameter \\#1 \\$object_or_class of function method_exists expects object\\|string, array\\|object given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Twig/ExportTwigExtension.php
-
-		-
 			message: "#^Property Sulu\\\\Bundle\\\\PageBundle\\\\Twig\\\\ExportTwigExtension\\:\\:\\$exportManager is never read, only written\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Twig/ExportTwigExtension.php
