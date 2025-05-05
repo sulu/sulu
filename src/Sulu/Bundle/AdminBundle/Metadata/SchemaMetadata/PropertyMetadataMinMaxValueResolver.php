@@ -11,7 +11,7 @@
 
 namespace Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata;
 
-use Sulu\Component\Content\Metadata\PropertyMetadata as ContentPropertyMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
 use Webmozart\Assert\Assert;
 
 class PropertyMetadataMinMaxValueResolver
@@ -26,17 +26,17 @@ class PropertyMetadataMinMaxValueResolver
      * @throws \InvalidArgumentException
      */
     public function resolveMinMaxValue(
-        ContentPropertyMetadata $propertyMetadata,
+        FieldMetadata $fieldMetadata,
         string $minParamName = 'min',
         string $maxParamName = 'max'
     ): object {
-        $mandatory = $propertyMetadata->isRequired();
+        $mandatory = $fieldMetadata->isRequired();
 
-        $min = $propertyMetadata->getParameter($minParamName)['value'] ?? null;
+        $min = $fieldMetadata->findOption($minParamName)?->getValue();
         Assert::nullOrIntegerish($min, \sprintf(
             'Parameter "%s" of property "%s" needs to be either null or of type int',
             $minParamName,
-            $propertyMetadata->getName()
+            $fieldMetadata->getName()
         ));
 
         if (null !== $min) {
@@ -46,7 +46,7 @@ class PropertyMetadataMinMaxValueResolver
         Assert::nullOrGreaterThanEq($min, 0, \sprintf(
             'Parameter "%s" of property "%s" needs to be greater than or equal "0"',
             $minParamName,
-            $propertyMetadata->getName()
+            $fieldMetadata->getName()
         ));
 
         if ($mandatory) {
@@ -56,16 +56,16 @@ class PropertyMetadataMinMaxValueResolver
 
             Assert::greaterThanEq($min, 1, \sprintf(
                 'Because property "%s" is mandatory, parameter "%s" needs to be greater than or equal "1"',
-                $propertyMetadata->getName(),
+                $fieldMetadata->getName(),
                 $minParamName
             ));
         }
 
-        $max = $propertyMetadata->getParameter($maxParamName)['value'] ?? null;
+        $max = $fieldMetadata->findOption($maxParamName)?->getValue();
         Assert::nullOrIntegerish($max, \sprintf(
             'Parameter "%s" of property "%s" needs to be either null or of type int',
             $maxParamName,
-            $propertyMetadata->getName()
+            $fieldMetadata->getName()
         ));
 
         if (null !== $max) {
@@ -75,14 +75,14 @@ class PropertyMetadataMinMaxValueResolver
         Assert::nullOrGreaterThanEq($max, 1, \sprintf(
             'Parameter "%s" of property "%s" needs to be greater than or equal "1"',
             $maxParamName,
-            $propertyMetadata->getName()
+            $fieldMetadata->getName()
         ));
 
         if (null !== $min) {
             Assert::nullOrGreaterThanEq($max, $min, \sprintf(
                 'Because parameter "%1$s" of property "%2$s" has value "%4$d", parameter "%3$s" needs to be greater than or equal "%4$d"',
                 $minParamName,
-                $propertyMetadata->getName(),
+                $fieldMetadata->getName(),
                 $maxParamName,
                 $min
             ));

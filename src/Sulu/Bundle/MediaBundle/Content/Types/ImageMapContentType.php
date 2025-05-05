@@ -12,7 +12,9 @@
 namespace Sulu\Bundle\MediaBundle\Content\Types;
 
 use PHPCR\NodeInterface;
-use Sulu\Bundle\AdminBundle\FormMetadata\FormMetadataMapper;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\SchemaMetadataProvider;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TagMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\AllOfsMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\ArrayMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\ConstMetadata;
@@ -33,14 +35,13 @@ use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Document\Structure\PropertyValue;
 use Sulu\Component\Content\Document\Subscriber\PHPCR\SuluNode;
 use Sulu\Component\Content\Exception\UnexpectedPropertyType;
-use Sulu\Component\Content\Metadata\PropertyMetadata as ContentPropertyMetadata;
 use Sulu\Component\Content\PreResolvableContentTypeInterface;
 
 class ImageMapContentType extends ComplexContentType implements ContentTypeExportInterface, PreResolvableContentTypeInterface, PropertyMetadataMapperInterface, ReferenceContentTypeInterface
 {
     public function __construct(
         private ContentTypeManagerInterface $contentTypeManager,
-        private FormMetadataMapper $formMetadataMapper,
+        private SchemaMetadataProvider $schemaMetadataProvider,
     ) {
     }
 
@@ -454,12 +455,15 @@ class ImageMapContentType extends ComplexContentType implements ContentTypeExpor
         );
     }
 
-    public function mapPropertyMetadata(ContentPropertyMetadata $propertyMetadata): PropertyMetadata
+    public function mapPropertyMetadata(FieldMetadata $fieldMetadata): PropertyMetadata
     {
         $blockTypeSchemas = [];
-        foreach ($propertyMetadata->getComponents() as $blockType) {
-            if ($blockType->hasTag('sulu.global_block')) {
-                $blockName = $blockType->getTag('sulu.global_block')['attributes']['global_block'];
+        foreach ($fieldMetadata->getTypes() as $blockType) {
+            $tag = $blockType->findTag('sulu.global_block');
+            if ($tag instanceof TagMetadata) {
+                $blockName = $tag->getAttributes()['global_block'] ?? null;
+                \assert(null !== $blockName, 'Global block name is expected to be not null.');
+
                 $blockTypeSchemas[] = new IfThenElseMetadata(
                     new SchemaMetadata([
                         new PropertyMetadata('type', true, new ConstMetadata($blockType->getName())),
@@ -474,17 +478,17 @@ class ImageMapContentType extends ComplexContentType implements ContentTypeExpor
                 new SchemaMetadata([
                     new PropertyMetadata('type', true, new ConstMetadata($blockType->getName())),
                 ]),
-                $this->formMetadataMapper->mapSchema($blockType->getChildren()),
+                $this->schemaMetadataProvider->getMetadata($blockType->getItems()),
             );
         }
 
         return new PropertyMetadata(
-            (string) $propertyMetadata->getName(),
-            $propertyMetadata->isRequired(),
+            $fieldMetadata->getName(),
+            $fieldMetadata->isRequired(),
             new SchemaMetadata([
-                new PropertyMetadata('imageId', $propertyMetadata->isRequired()),
+                new PropertyMetadata('imageId', $fieldMetadata->isRequired()),
                 new PropertyMetadata(
-                    'hotspots', $propertyMetadata->isRequired(), new ArrayMetadata(
+                    'hotspots', $fieldMetadata->isRequired(), new ArrayMetadata(
                         new AllOfsMetadata($blockTypeSchemas)
                     )),
             ])

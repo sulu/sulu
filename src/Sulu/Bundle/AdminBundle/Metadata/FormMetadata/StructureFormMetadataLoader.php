@@ -35,6 +35,11 @@ class StructureFormMetadataLoader implements FormMetadataLoaderInterface, CacheW
     private $formMetadataMapper;
 
     /**
+     * @var SchemaMetadataProvider
+     */
+    private $schemaMetadataProvider;
+
+    /**
      * @var WebspaceManagerInterface
      */
     private $webspaceManager;
@@ -67,6 +72,7 @@ class StructureFormMetadataLoader implements FormMetadataLoaderInterface, CacheW
     public function __construct(
         StructureMetadataFactoryInterface $structureMetadataFactory,
         FormMetadataMapper $formMetadataMapper,
+        SchemaMetadataProvider $schemaMetadataProvider,
         WebspaceManagerInterface $webspaceManager,
         FieldMetadataValidatorInterface $fieldMetadataValidator,
         array $defaultTypes,
@@ -76,6 +82,7 @@ class StructureFormMetadataLoader implements FormMetadataLoaderInterface, CacheW
     ) {
         $this->structureMetadataFactory = $structureMetadataFactory;
         $this->formMetadataMapper = $formMetadataMapper;
+        $this->schemaMetadataProvider = $schemaMetadataProvider;
         $this->webspaceManager = $webspaceManager;
         $this->fieldMetadataValidator = $fieldMetadataValidator;
         $this->defaultTypes = $defaultTypes;
@@ -166,7 +173,7 @@ class StructureFormMetadataLoader implements FormMetadataLoaderInterface, CacheW
             $form->setTitles($structureMetadata->getTitles());
             $form->setItems($this->formMetadataMapper->mapChildren($structureMetadata->getChildren()));
 
-            $schema = $this->formMetadataMapper->mapSchema($structureMetadata->getProperties());
+            $schema = $this->schemaMetadataProvider->getMetadata($form->getItems());
             $xmlSchema = $structureMetadata->getSchema();
             if ($xmlSchema) {
                 $schema = $schema->merge($xmlSchema);

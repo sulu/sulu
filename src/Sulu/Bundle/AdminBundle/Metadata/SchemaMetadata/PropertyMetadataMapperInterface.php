@@ -11,9 +11,9 @@
 
 namespace Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata;
 
-use Sulu\Component\Content\Metadata\PropertyMetadata as ContentPropertyMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
 
 interface PropertyMetadataMapperInterface
 {
-    public function mapPropertyMetadata(ContentPropertyMetadata $propertyMetadata): PropertyMetadata;
+    public function mapPropertyMetadata(FieldMetadata $fieldMetadata): PropertyMetadata;
 }

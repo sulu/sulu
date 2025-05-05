@@ -17,7 +17,10 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
-use Sulu\Bundle\AdminBundle\FormMetadata\FormMetadataMapper;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\SchemaMetadataProvider;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TagMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadata as SchemaPropertyMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\SchemaMetadata;
 use Sulu\Bundle\MediaBundle\Api\Media;
@@ -33,8 +36,6 @@ use Sulu\Component\Content\Compat\Property;
 use Sulu\Component\Content\Compat\PropertyType;
 use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Document\Subscriber\PHPCR\SuluNode;
-use Sulu\Component\Content\Metadata\ComponentMetadata;
-use Sulu\Component\Content\Metadata\PropertyMetadata as ContentPropertyMetadata;
 use Sulu\Component\Content\Types\TextLine;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 
@@ -63,23 +64,23 @@ class ImageMapContentTypeTest extends TestCase
     private $contentTypeManager;
 
     /**
-     * @var ObjectProphecy<FormMetadataMapper>
+     * @var ObjectProphecy<SchemaMetadataProvider>
      */
-    private $formMetadataMapper;
+    private $schemaMetadataProvider;
 
     protected function setUp(): void
     {
         $this->textLineContentType = $this->prophesize(TextLine::class);
         $this->singleMediaSelectionContentType = $this->prophesize(SingleMediaSelection::class);
         $this->contentTypeManager = $this->prophesize(ContentTypeManagerInterface::class);
-        $this->formMetadataMapper = $this->prophesize(FormMetadataMapper::class);
+        $this->schemaMetadataProvider = $this->prophesize(SchemaMetadataProvider::class);
 
         $this->contentTypeManager->get('text_line')->willReturn($this->textLineContentType);
         $this->contentTypeManager->get('single_media_selection')->willReturn($this->singleMediaSelectionContentType);
 
         $this->imageMapContentType = new ImageMapContentType(
             $this->contentTypeManager->reveal(),
-            $this->formMetadataMapper->reveal(),
+            $this->schemaMetadataProvider->reveal(),
         );
     }
 
@@ -1190,7 +1191,7 @@ class ImageMapContentTypeTest extends TestCase
         $this->imageMapContentType->preResolve($property);
     }
 
-    public function testMapPropertyMetatada(): void
+    public function testMapPropertyMetadata(): void
     {
         $types = [
             'headline' => [
@@ -1203,33 +1204,35 @@ class ImageMapContentTypeTest extends TestCase
             ],
         ];
 
-        $metadata = new ContentPropertyMetadata('imageMap');
+        $metadata = new FieldMetadata('imageMap');
         $metadata->setRequired(true);
         foreach ($types as $key => $config) {
-            $type = new ComponentMetadata($key);
+            $type = new FormMetadata();
+            $type->setName($key);
+            $type->setKey($key);
 
             $isGlobalBlock = $config['isGlobalBlock'] ?? false;
             if ($isGlobalBlock) {
-                $type->addTag([
-                    'name' => 'sulu.global_block',
-                    'attributes' => [
-                        'global_block' => $key,
-                    ],
+                $tagMetadata = new TagMetadata();
+                $tagMetadata->setName('sulu.global_block');
+                $tagMetadata->setAttributes([
+                    'global_block' => $key,
                 ]);
+                $type->addTag($tagMetadata);
             }
 
             foreach ($config['children'] ?? [] as $childName => $childType) {
-                $itemMetadata = new ContentPropertyMetadata($childName);
-                $type->addChild($itemMetadata);
+                $itemMetadata = new FieldMetadata($childName);
+                $type->addItem($itemMetadata);
             }
 
             if (!$isGlobalBlock) {
                 $itemSchemaMetadata = new SchemaMetadata([
                     new SchemaPropertyMetadata('type', false),
                 ]);
-                $this->formMetadataMapper->mapSchema($type->getChildren())->willReturn($itemSchemaMetadata);
+                $this->schemaMetadataProvider->getMetadata($type->getItems())->willReturn($itemSchemaMetadata);
             }
-            $metadata->addComponent($type);
+            $metadata->addType($type);
         }
 
         $result = $this->imageMapContentType->mapPropertyMetadata($metadata);
@@ -1289,33 +1292,35 @@ class ImageMapContentTypeTest extends TestCase
             ],
         ];
 
-        $metadata = new ContentPropertyMetadata('imageMap');
+        $metadata = new FieldMetadata('imageMap');
         $metadata->setRequired(false);
         foreach ($types as $key => $config) {
-            $type = new ComponentMetadata($key);
+            $type = new FormMetadata();
+            $type->setName($key);
+            $type->setKey($key);
 
             $isGlobalBlock = $config['isGlobalBlock'] ?? false;
             if ($isGlobalBlock) {
-                $type->addTag([
-                    'name' => 'sulu.global_block',
-                    'attributes' => [
-                        'global_block' => $key,
-                    ],
+                $tagMetadata = new TagMetadata();
+                $tagMetadata->setName('sulu.global_block');
+                $tagMetadata->setAttributes([
+                    'global_block' => $key,
                 ]);
+                $type->addTag($tagMetadata);
             }
 
             foreach ($config['children'] ?? [] as $childName => $childType) {
-                $itemMetadata = new ContentPropertyMetadata($childName);
-                $type->addChild($itemMetadata);
+                $itemMetadata = new FieldMetadata($childName);
+                $type->addItem($itemMetadata);
             }
 
             if (!$isGlobalBlock) {
                 $itemSchemaMetadata = new SchemaMetadata([
                     new SchemaPropertyMetadata('type', false),
                 ]);
-                $this->formMetadataMapper->mapSchema($type->getChildren())->willReturn($itemSchemaMetadata);
+                $this->schemaMetadataProvider->getMetadata($type->getItems())->willReturn($itemSchemaMetadata);
             }
-            $metadata->addComponent($type);
+            $metadata->addType($type);
         }
 
         $result = $this->imageMapContentType->mapPropertyMetadata($metadata);

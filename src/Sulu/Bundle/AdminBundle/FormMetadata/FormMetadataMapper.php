@@ -17,16 +17,8 @@ use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\ItemMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\OptionMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\SectionMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TagMetadata;
-use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\AllOfsMetadata;
-use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\ArrayMetadata;
-use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\ConstMetadata;
-use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\IfThenElseMetadata;
-use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadataMapperRegistry;
-use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\RefSchemaMetadata;
-use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\SchemaMetadata;
 use Sulu\Component\Content\Metadata\BlockMetadata as ContentBlockMetadata;
-use Sulu\Component\Content\Metadata\ItemMetadata as ContentItemMetadata;
 use Sulu\Component\Content\Metadata\PropertyMetadata as ContentPropertyMetadata;
 use Sulu\Component\Content\Metadata\SectionMetadata as ContentSectionMetadata;
 
@@ -58,14 +50,6 @@ class FormMetadataMapper
         }
 
         return $items;
-    }
-
-    /**
-     * @param ContentItemMetadata[] $itemsMetadata
-     */
-    public function mapSchema(array $itemsMetadata): SchemaMetadata
-    {
-        return new SchemaMetadata($this->mapSchemaProperties($itemsMetadata));
     }
 
     /**
@@ -196,60 +180,5 @@ class FormMetadataMapper
                     break;
             }
         }
-    }
-
-    /**
-     * @param ContentItemMetadata[] $itemsMetadata
-     *
-     * @return PropertyMetadata[]
-     */
-    private function mapSchemaProperties(array $itemsMetadata): array
-    {
-        return \array_filter(\array_map(function(ContentItemMetadata $itemMetadata) {
-            if ($itemMetadata instanceof ContentSectionMetadata) {
-                return $this->mapSchemaProperties($itemMetadata->getChildren());
-            }
-
-            if ($itemMetadata instanceof ContentBlockMetadata) {
-                $blockTypeSchemas = [];
-                foreach ($itemMetadata->getComponents() as $blockType) {
-                    $metadata = new SchemaMetadata($this->mapSchemaProperties($blockType->getChildren()));
-                    if ($blockType->hasTag('sulu.global_block')) {
-                        $definitionName = $blockType->getTag('sulu.global_block')['attributes']['global_block'];
-                        $metadata = new RefSchemaMetadata('#/definitions/' . $definitionName);
-                    }
-
-                    $blockTypeSchemas[] = new IfThenElseMetadata(
-                        new SchemaMetadata([
-                            new PropertyMetadata('type', true, new ConstMetadata($blockType->getName())),
-                        ]),
-                        $metadata
-                    );
-                }
-
-                return new PropertyMetadata(
-                    $itemMetadata->getName(),
-                    $itemMetadata->isRequired(),
-                    new ArrayMetadata(
-                        new AllOfsMetadata($blockTypeSchemas)
-                    )
-                );
-            }
-
-            /** @var ContentPropertyMetadata $propertyMetadata */
-            $propertyMetadata = $itemMetadata;
-            $type = $propertyMetadata->getType();
-
-            if ($this->propertyMetadataMapperRegistry->has($type)) {
-                return $this->propertyMetadataMapperRegistry
-                    ->get($type)
-                    ->mapPropertyMetadata($propertyMetadata);
-            }
-
-            return new PropertyMetadata(
-                $propertyMetadata->getName(),
-                $propertyMetadata->isRequired()
-            );
-        }, $itemsMetadata));
     }
 }

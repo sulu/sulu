@@ -66,6 +66,13 @@
             </argument>
         </service>
 
+        <service id="sulu_admin.properties_xml_parser"
+                 class="Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Parser\PropertiesXmlParser"
+                 public="false">
+            <argument type="service" id="translator" />
+            <argument>%sulu_core.translated_locales%</argument>
+        </service>
+
         <service id="sulu_admin.deprecated_properties_xml_parser"
                  class="Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Parser\DeprecatedPropertiesXmlParser"
                  public="false">
@@ -140,9 +147,9 @@
         />
 
         <service id="sulu_admin.form_metadata.form_xml_loader" class="Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Loader\FormXmlLoader">
-            <argument type="service" id="sulu_admin.deprecated_properties_xml_parser"/>
+            <argument type="service" id="sulu_admin.properties_xml_parser"/>
             <argument type="service" id="sulu_admin.schema_xml_parser"/>
-            <argument type="service" id="sulu_admin.form_metadata.form_metadata_mapper"/>
+            <argument type="service" id="sulu_admin.schema_metadata_provider"/>
         </service>
 
         <service
@@ -175,6 +182,12 @@
             class="Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\SingleSelectionPropertyMetadataMapper"/>
 
         <service
+            id="sulu_admin.schema_metadata_provider"
+            class="Sulu\Bundle\AdminBundle\Metadata\FormMetadata\SchemaMetadataProvider">
+            <argument type="service" id="sulu_admin.property_metadata_mapper_registry"/>
+        </service>
+
+        <service
             id="sulu_admin.form_metadata.form_metadata_mapper"
             class="Sulu\Bundle\AdminBundle\FormMetadata\FormMetadataMapper">
             <argument type="service" id="sulu_admin.property_metadata_mapper_registry"/>
@@ -183,6 +196,7 @@
         <service id="sulu_admin.structure_form_metadata_loader" class="Sulu\Bundle\AdminBundle\Metadata\FormMetadata\StructureFormMetadataLoader" lazy="true">
             <argument type="service" id="sulu_page.structure.factory"/>
             <argument type="service" id="sulu_admin.form_metadata.form_metadata_mapper"/>
+            <argument type="service" id="sulu_admin.schema_metadata_provider"/>
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>
             <argument type="service" id="sulu_admin.field_metadata_validator.chain"/>
             <argument>%sulu.content.structure.default_types%</argument>

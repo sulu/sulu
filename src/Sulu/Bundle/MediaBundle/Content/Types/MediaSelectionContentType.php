@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\MediaBundle\Content\Types;
 
 use PHPCR\NodeInterface;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\AnyOfsMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\ArrayMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\EmptyArrayMetadata;
@@ -32,7 +33,6 @@ use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Content\ComplexContentType;
 use Sulu\Component\Content\ContentTypeExportInterface;
-use Sulu\Component\Content\Metadata\PropertyMetadata as ContentPropertyMetadata;
 use Sulu\Component\Content\PreResolvableContentTypeInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Util\ArrayableInterface;
@@ -184,9 +184,9 @@ class MediaSelectionContentType extends ComplexContentType implements ContentTyp
         }
     }
 
-    public function mapPropertyMetadata(ContentPropertyMetadata $propertyMetadata): PropertyMetadata
+    public function mapPropertyMetadata(FieldMetadata $fieldMetadata): PropertyMetadata
     {
-        $mandatory = $propertyMetadata->isRequired();
+        $mandatory = $fieldMetadata->isRequired();
 
         $minMaxValue = (object) [
             'min' => null,
@@ -194,7 +194,7 @@ class MediaSelectionContentType extends ComplexContentType implements ContentTyp
         ];
 
         if (null !== $this->propertyMetadataMinMaxValueResolver) {
-            $minMaxValue = $this->propertyMetadataMinMaxValueResolver->resolveMinMaxValue($propertyMetadata);
+            $minMaxValue = $this->propertyMetadataMinMaxValueResolver->resolveMinMaxValue($fieldMetadata);
         }
 
         $idsMetadata = new ArrayMetadata(
@@ -223,7 +223,7 @@ class MediaSelectionContentType extends ComplexContentType implements ContentTyp
             ]);
         }
 
-        return new PropertyMetadata($propertyMetadata->getName(), $mandatory, $mediaSelectionMetadata);
+        return new PropertyMetadata($fieldMetadata->getName(), $mandatory, $mediaSelectionMetadata);
     }
 
     public function getReferences(PropertyInterface $property, ReferenceCollectorInterface $referenceCollector, string $propertyPrefix = ''): void

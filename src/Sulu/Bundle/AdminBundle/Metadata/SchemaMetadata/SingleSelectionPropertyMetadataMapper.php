@@ -11,13 +11,13 @@
 
 namespace Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata;
 
-use Sulu\Component\Content\Metadata\PropertyMetadata as ContentPropertyMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
 
 class SingleSelectionPropertyMetadataMapper implements PropertyMetadataMapperInterface
 {
-    public function mapPropertyMetadata(ContentPropertyMetadata $propertyMetadata): PropertyMetadata
+    public function mapPropertyMetadata(FieldMetadata $fieldMetadata): PropertyMetadata
     {
-        $mandatory = $propertyMetadata->isRequired();
+        $mandatory = $fieldMetadata->isRequired();
 
         $anyOfs = [
             new StringMetadata(),
@@ -33,7 +33,7 @@ class SingleSelectionPropertyMetadataMapper implements PropertyMetadataMapperInt
         }
 
         return new PropertyMetadata(
-            $propertyMetadata->getName(),
+            $fieldMetadata->getName(),
             $mandatory,
             new AnyOfsMetadata($anyOfs)
         );

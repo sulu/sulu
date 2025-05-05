@@ -12,11 +12,10 @@
 namespace Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Loader;
 
 use Sulu\Bundle\AdminBundle\Exception\InvalidRootTagException;
-use Sulu\Bundle\AdminBundle\FormMetadata\FormMetadata as ExternalFormMetadata;
-use Sulu\Bundle\AdminBundle\FormMetadata\FormMetadataMapper;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
-use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Parser\DeprecatedPropertiesXmlParser;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Parser\PropertiesXmlParser;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Parser\SchemaXmlParser;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\SchemaMetadataProvider;
 use Sulu\Component\Content\Metadata\Loader\AbstractLoader;
 
 /**
@@ -31,9 +30,9 @@ class FormXmlLoader extends AbstractLoader
     public const SCHEMA_NAMESPACE_URI = 'http://schemas.sulu.io/template/template';
 
     public function __construct(
-        private DeprecatedPropertiesXmlParser $propertiesXmlParser,
+        private PropertiesXmlParser $propertiesXmlParser,
         private SchemaXmlParser $schemaXmlParser,
-        private FormMetadataMapper $formMetadataMapper
+        private SchemaMetadataProvider $schemaMetadataProvider,
     ) {
         parent::__construct(
             self::SCHEMA_PATH,
@@ -47,8 +46,8 @@ class FormXmlLoader extends AbstractLoader
             throw new InvalidRootTagException($resource, 'form');
         }
 
-        $form = new ExternalFormMetadata();
-        $form->setResource($resource);
+        $form = new FormMetadata();
+        $form->addResource($resource);
         $form->setKey($xpath->query('/x:form/x:key')->item(0)->nodeValue);
         $form->setTags($this->loadStructureTags('/x:form/x:tag', $xpath));
 
@@ -59,34 +58,16 @@ class FormXmlLoader extends AbstractLoader
             $form->getKey()
         );
 
+        $schema = $this->schemaMetadataProvider->getMetadata($properties);
         $schemaNode = $xpath->query('/x:form/x:schema')->item(0);
         if ($schemaNode) {
-            $form->setSchema($this->schemaXmlParser->load($xpath, $schemaNode));
+            $schema->merge($this->schemaXmlParser->load($xpath, $schemaNode));
         }
+        $form->setSchema($schema);
 
         foreach ($properties as $property) {
-            $form->addChild($property);
+            $form->addItem($property);
         }
-        $form->burnProperties();
-
-        return $this->mapFormsMetadata($form);
-    }
-
-    private function mapFormsMetadata(ExternalFormMetadata $formMetadata): FormMetadata
-    {
-        $form = new FormMetadata();
-        $form->addResource($formMetadata->getResource());
-        $form->setTags($this->formMetadataMapper->mapTags($formMetadata->getTags()));
-        $form->setItems($this->formMetadataMapper->mapChildren($formMetadata->getChildren()));
-
-        $schema = $this->formMetadataMapper->mapSchema($formMetadata->getProperties());
-        $xmlSchema = $formMetadata->getSchema();
-        if ($xmlSchema) {
-            $schema = $schema->merge($xmlSchema);
-        }
-
-        $form->setSchema($schema);
-        $form->setKey($formMetadata->getKey());
 
         return $form;
     }

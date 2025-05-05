@@ -11,7 +11,7 @@
 
 namespace Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata;
 
-use Sulu\Component\Content\Metadata\PropertyMetadata as ContentPropertyMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
 
 class TextPropertyMetadataMapper implements PropertyMetadataMapperInterface
 {
@@ -25,9 +25,9 @@ class TextPropertyMetadataMapper implements PropertyMetadataMapperInterface
         $this->propertyMetadataMinMaxValueResolver = $propertyMetadataMinMaxValueResolver;
     }
 
-    public function mapPropertyMetadata(ContentPropertyMetadata $propertyMetadata): PropertyMetadata
+    public function mapPropertyMetadata(FieldMetadata $fieldMetadata): PropertyMetadata
     {
-        $mandatory = $propertyMetadata->isRequired();
+        $mandatory = $fieldMetadata->isRequired();
 
         $minMaxValue = (object) [
             'min' => null,
@@ -36,13 +36,13 @@ class TextPropertyMetadataMapper implements PropertyMetadataMapperInterface
 
         if (null !== $this->propertyMetadataMinMaxValueResolver) {
             $minMaxValue = $this->propertyMetadataMinMaxValueResolver->resolveMinMaxValue(
-                $propertyMetadata,
+                $fieldMetadata,
                 'min_length',
                 'max_length'
             );
         }
 
-        $pattern = $propertyMetadata->getParameter('pattern')['value'] ?? null;
+        $pattern = $fieldMetadata->findOption('pattern')?->getValue();
 
         $textLineMetadata = new StringMetadata(
             $minMaxValue->min,
@@ -59,8 +59,8 @@ class TextPropertyMetadataMapper implements PropertyMetadataMapperInterface
         }
 
         return new PropertyMetadata(
-            $propertyMetadata->getName(),
-            $propertyMetadata->isRequired(),
+            $fieldMetadata->getName(),
+            $fieldMetadata->isRequired(),
             $textLineMetadata
         );
     }

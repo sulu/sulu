@@ -13,13 +13,13 @@ namespace Sulu\Component\Content\Types;
 
 use PHPCR\NodeInterface;
 use PHPCR\PropertyType;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\AnyOfsMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\NullMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\NumberMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadataMapperInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
-use Sulu\Component\Content\Metadata\PropertyMetadata as ContentPropertyMetadata;
 use Sulu\Component\Content\SimpleContentType;
 use Webmozart\Assert\Assert;
 
@@ -65,16 +65,15 @@ class Number extends SimpleContentType implements PropertyMetadataMapperInterfac
         return $value;
     }
 
-    public function mapPropertyMetadata(ContentPropertyMetadata $propertyMetadata): PropertyMetadata
+    public function mapPropertyMetadata(FieldMetadata $fieldMetadata): PropertyMetadata
     {
-        /** @var string $propertyName */
-        $propertyName = $propertyMetadata->getName();
-        $mandatory = $propertyMetadata->isRequired();
+        $propertyName = $fieldMetadata->getName();
+        $mandatory = $fieldMetadata->isRequired();
 
-        $min = $this->getFloatParam($propertyMetadata, 'min');
-        $max = $this->getFloatParam($propertyMetadata, 'max');
-        $multipleOf = $this->getFloatParam($propertyMetadata, 'multiple_of');
-        $step = $this->getFloatParam($propertyMetadata, 'step');
+        $min = $this->getFloatParam($fieldMetadata, 'min');
+        $max = $this->getFloatParam($fieldMetadata, 'max');
+        $multipleOf = $this->getFloatParam($fieldMetadata, 'multiple_of');
+        $step = $this->getFloatParam($fieldMetadata, 'step');
 
         Assert::nullOrGreaterThan($multipleOf, 0, \sprintf(
             'Parameter "%s" of property "%s" needs to be greater than "0"',
@@ -138,11 +137,9 @@ class Number extends SimpleContentType implements PropertyMetadataMapperInterfac
         return 0.0 === $value - (int) (\floor($value / $multipleOf) * $multipleOf);
     }
 
-    private function getFloatParam(ContentPropertyMetadata $propertyMetadata, string $paramName): ?float
+    private function getFloatParam(FieldMetadata $fieldMetadata, string $paramName): ?float
     {
-        /** @var mixed[]|null $param */
-        $param = $propertyMetadata->getParameter($paramName);
-        $value = $param['value'] ?? null;
+        $value = $fieldMetadata->findOption($paramName)?->getValue();
 
         if (null === $value) {
             return null;
@@ -151,7 +148,7 @@ class Number extends SimpleContentType implements PropertyMetadataMapperInterfac
         Assert::numeric($value, \sprintf(
             'Parameter "%s" of property "%s" needs to be either null or numeric',
             $paramName,
-            $propertyMetadata->getName()
+            $fieldMetadata->getName()
         ));
 
         return (float) $value;

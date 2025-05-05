@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\PageBundle\Teaser;
 
 use PHPCR\NodeInterface;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\AnyOfsMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\ArrayMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\EmptyArrayMetadata;
@@ -28,7 +29,6 @@ use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreNotExistsException;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStorePoolInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
-use Sulu\Component\Content\Metadata\PropertyMetadata as ContentPropertyMetadata;
 use Sulu\Component\Content\PreResolvableContentTypeInterface;
 use Sulu\Component\Content\SimpleContentType;
 
@@ -161,9 +161,9 @@ class TeaserContentType extends SimpleContentType implements PreResolvableConten
         return \array_merge($default, $property->getValue());
     }
 
-    public function mapPropertyMetadata(ContentPropertyMetadata $propertyMetadata): PropertyMetadata
+    public function mapPropertyMetadata(FieldMetadata $fieldMetadata): PropertyMetadata
     {
-        $mandatory = $propertyMetadata->isRequired();
+        $mandatory = $fieldMetadata->isRequired();
 
         $minMaxValue = (object) [
             'min' => null,
@@ -171,7 +171,7 @@ class TeaserContentType extends SimpleContentType implements PreResolvableConten
         ];
 
         if (null !== $this->propertyMetadataMinMaxValueResolver) {
-            $minMaxValue = $this->propertyMetadataMinMaxValueResolver->resolveMinMaxValue($propertyMetadata);
+            $minMaxValue = $this->propertyMetadataMinMaxValueResolver->resolveMinMaxValue($fieldMetadata);
         }
 
         $itemsMetadata = new ArrayMetadata(
@@ -209,6 +209,6 @@ class TeaserContentType extends SimpleContentType implements PreResolvableConten
             ]);
         }
 
-        return new PropertyMetadata($propertyMetadata->getName(), $mandatory, $teaserSelectionMetadata);
+        return new PropertyMetadata($fieldMetadata->getName(), $mandatory, $teaserSelectionMetadata);
     }
 }

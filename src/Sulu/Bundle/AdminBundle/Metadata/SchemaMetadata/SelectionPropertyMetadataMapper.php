@@ -11,7 +11,7 @@
 
 namespace Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata;
 
-use Sulu\Component\Content\Metadata\PropertyMetadata as ContentPropertyMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
 
 class SelectionPropertyMetadataMapper implements PropertyMetadataMapperInterface
 {
@@ -25,10 +25,10 @@ class SelectionPropertyMetadataMapper implements PropertyMetadataMapperInterface
         $this->propertyMetadataMinMaxValueResolver = $propertyMetadataMinMaxValueResolver;
     }
 
-    public function mapPropertyMetadata(ContentPropertyMetadata $propertyMetadata): PropertyMetadata
+    public function mapPropertyMetadata(FieldMetadata $fieldMetadata): PropertyMetadata
     {
-        $mandatory = $propertyMetadata->isRequired();
-        $minMaxValue = $this->propertyMetadataMinMaxValueResolver->resolveMinMaxValue($propertyMetadata);
+        $mandatory = $fieldMetadata->isRequired();
+        $minMaxValue = $this->propertyMetadataMinMaxValueResolver->resolveMinMaxValue($fieldMetadata);
 
         $selectionMetadata = new ArrayMetadata(
             new AnyOfsMetadata([
@@ -48,6 +48,6 @@ class SelectionPropertyMetadataMapper implements PropertyMetadataMapperInterface
             ]);
         }
 
-        return new PropertyMetadata($propertyMetadata->getName(), $mandatory, $selectionMetadata);
+        return new PropertyMetadata($fieldMetadata->getName(), $mandatory, $selectionMetadata);
     }
 }

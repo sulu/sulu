@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\MediaBundle\Content\Types;
 
 use PHPCR\NodeInterface;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\AnyOfsMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\NullMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\NumberMetadata;
@@ -29,7 +30,6 @@ use Sulu\Bundle\ReferenceBundle\Application\Collector\ReferenceCollectorInterfac
 use Sulu\Bundle\ReferenceBundle\Infrastructure\Sulu\ContentType\ReferenceContentTypeInterface;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
-use Sulu\Component\Content\Metadata\PropertyMetadata as ContentPropertyMetadata;
 use Sulu\Component\Content\PreResolvableContentTypeInterface;
 use Sulu\Component\Content\SimpleContentType;
 use Sulu\Component\Security\Authorization\PermissionTypes;
@@ -137,9 +137,9 @@ class SingleMediaSelection extends SimpleContentType implements PreResolvableCon
         return \json_decode($value, true);
     }
 
-    public function mapPropertyMetadata(ContentPropertyMetadata $propertyMetadata): PropertyMetadata
+    public function mapPropertyMetadata(FieldMetadata $fieldMetadata): PropertyMetadata
     {
-        $mandatory = $propertyMetadata->isRequired();
+        $mandatory = $fieldMetadata->isRequired();
 
         $idMetadata = new NumberMetadata();
 
@@ -162,7 +162,7 @@ class SingleMediaSelection extends SimpleContentType implements PreResolvableCon
             ]);
         }
 
-        return new PropertyMetadata($propertyMetadata->getName(), $mandatory, $singleMediaSelectionMetadata);
+        return new PropertyMetadata($fieldMetadata->getName(), $mandatory, $singleMediaSelectionMetadata);
     }
 
     public function getReferences(PropertyInterface $property, ReferenceCollectorInterface $referenceCollector, string $propertyPrefix = ''): void

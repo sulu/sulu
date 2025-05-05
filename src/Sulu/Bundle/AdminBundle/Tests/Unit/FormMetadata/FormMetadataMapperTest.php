@@ -12,7 +12,6 @@
 namespace Sulu\Bundle\AdminBundle\Tests\Unit\FormMetadata;
 
 use PHPUnit\Framework\TestCase;
-use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\AdminBundle\FormMetadata\FormMetadata as ExternalFormMetadata;
@@ -20,10 +19,7 @@ use Sulu\Bundle\AdminBundle\FormMetadata\FormMetadataMapper;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\SectionMetadata;
-use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadata as SchemaPropertyMetadata;
-use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadataMapperInterface;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadataMapperRegistry;
-use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\SchemaMetadata;
 use Sulu\Component\Content\Metadata\BlockMetadata;
 use Sulu\Component\Content\Metadata\ComponentMetadata;
 use Sulu\Component\Content\Metadata\PropertyMetadata;
@@ -421,158 +417,6 @@ class FormMetadataMapperTest extends TestCase
         $this->assertCount(2, $block->getTypes()['component2']->getItems());
         $this->assertContains('property3', \array_keys($block->getTypes()['component2']->getItems()));
         $this->assertContains('property4', \array_keys($block->getTypes()['component2']->getItems()));
-    }
-
-    public function testMapSchema(): void
-    {
-        $form = $this->createFormWithRequiredProperties();
-
-        $propertyMetadataMapper = $this->prophesize(PropertyMetadataMapperInterface::class);
-        $this->propertyMetadataMapperRegistry->has(Argument::cetera())->willReturn(true);
-        $this->propertyMetadataMapperRegistry->get(Argument::cetera())->willReturn($propertyMetadataMapper->reveal());
-        $propertyMetadataMapper->mapPropertyMetadata(Argument::cetera())->will(function($arguments) {
-            /** @var PropertyMetadata $propertyMetadata */
-            $propertyMetadata = $arguments[0];
-
-            return new SchemaPropertyMetadata((string) $propertyMetadata->getName(), $propertyMetadata->isRequired());
-        });
-
-        $schema = $this->formMetadataMapper->mapSchema($form->getChildren());
-
-        $this->assertInstanceOf(SchemaMetadata::class, $schema);
-        $this->assertEquals([
-            'required' => [
-                'property1',
-                'property2',
-                'property3',
-            ],
-            'type' => 'object',
-        ], $schema->toJsonSchema());
-    }
-
-    public function testMapSchemaWithoutMapper(): void
-    {
-        $form = $this->createFormWithRequiredProperties();
-
-        $this->propertyMetadataMapperRegistry->has(Argument::cetera())->willReturn(false);
-
-        $schema = $this->formMetadataMapper->mapSchema($form->getChildren());
-
-        $this->assertInstanceOf(SchemaMetadata::class, $schema);
-        $this->assertEquals([
-            'required' => [
-                'property1',
-                'property2',
-                'property3',
-            ],
-            'type' => 'object',
-        ], $schema->toJsonSchema());
-    }
-
-    public function testMapSchemaWithBlock(): void
-    {
-        $form = $this->createFormWithBlock();
-
-        $propertyMetadataMapper = $this->prophesize(PropertyMetadataMapperInterface::class);
-        $this->propertyMetadataMapperRegistry->has(Argument::cetera())->willReturn(true);
-        $this->propertyMetadataMapperRegistry->get(Argument::cetera())->willReturn($propertyMetadataMapper->reveal());
-        $propertyMetadataMapper->mapPropertyMetadata(Argument::cetera())->will(function($arguments) {
-            /** @var PropertyMetadata $propertyMetadata */
-            $propertyMetadata = $arguments[0];
-
-            return new SchemaPropertyMetadata($propertyMetadata->getName(), $propertyMetadata->isRequired());
-        });
-
-        $schema = $this->formMetadataMapper->mapSchema($form->getChildren());
-
-        $this->assertInstanceOf(SchemaMetadata::class, $schema);
-        $this->assertEquals([
-            'properties' => [
-                'block' => [
-                    'type' => 'array',
-                    'items' => [
-                        'allOf' => [
-                            [
-                                'if' => [
-                                    'properties' => [
-                                        'type' => [
-                                            'const' => 'component1',
-                                        ],
-                                    ],
-                                    'required' => ['type'],
-                                    'type' => 'object',
-                                ],
-                                'then' => [
-                                    'required' => ['property2'],
-                                    'type' => 'object',
-                                ],
-                            ],
-                            [
-                                'if' => [
-                                    'properties' => [
-                                        'type' => [
-                                            'const' => 'component2',
-                                        ],
-                                    ],
-                                    'required' => ['type'],
-                                    'type' => 'object',
-                                ],
-                                'then' => [
-                                    'required' => ['property3'],
-                                    'type' => 'object',
-                                ],
-                            ],
-                        ],
-                    ],
-                ],
-            ],
-            'type' => 'object',
-        ], $schema->toJsonSchema());
-    }
-
-    public function testMapSchemaWithGlobalBlock(): void
-    {
-        $form = $this->createFormWithGlobalBlock();
-
-        $propertyMetadataMapper = $this->prophesize(PropertyMetadataMapperInterface::class);
-        $this->propertyMetadataMapperRegistry->has(Argument::cetera())->willReturn(true);
-        $this->propertyMetadataMapperRegistry->get(Argument::cetera())->willReturn($propertyMetadataMapper->reveal());
-        $propertyMetadataMapper->mapPropertyMetadata(Argument::cetera())->will(function($arguments) {
-            /** @var PropertyMetadata $propertyMetadata */
-            $propertyMetadata = $arguments[0];
-
-            return new SchemaPropertyMetadata((string) $propertyMetadata->getName(), $propertyMetadata->isRequired());
-        });
-
-        $schema = $this->formMetadataMapper->mapSchema($form->getChildren());
-
-        $this->assertInstanceOf(SchemaMetadata::class, $schema);
-        $this->assertEquals([
-            'properties' => [
-                'block' => [
-                    'type' => 'array',
-                    'items' => [
-                        'allOf' => [
-                            [
-                                'if' => [
-                                    'properties' => [
-                                        'type' => [
-                                            'const' => 'component1',
-                                        ],
-                                    ],
-                                    'required' => ['type'],
-                                    'type' => 'object',
-                                ],
-                                'then' => [
-                                    '$ref' => '#/definitions/component1',
-                                ],
-                            ],
-                        ],
-                    ],
-                ],
-            ],
-            'type' => 'object',
-        ], $schema->toJsonSchema());
     }
 
     private function createFormWithBasicProperties(): ExternalFormMetadata

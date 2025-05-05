@@ -15,6 +15,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use PHPCR\ItemNotFoundException;
 use PHPCR\NodeInterface;
 use PHPCR\PropertyType;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\AnyOfsMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\NullMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\ObjectMetadata;
@@ -26,7 +27,6 @@ use Sulu\Bundle\RouteBundle\Entity\RouteRepositoryInterface;
 use Sulu\Bundle\RouteBundle\Generator\ChainRouteGeneratorInterface;
 use Sulu\Bundle\RouteBundle\Manager\ConflictResolverInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
-use Sulu\Component\Content\Metadata\PropertyMetadata as ContentPropertyMetadata;
 use Sulu\Component\Content\SimpleContentType;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\DocumentRegistry;
@@ -227,9 +227,9 @@ class PageTreeRouteContentType extends SimpleContentType implements PropertyMeta
         return $this->entityManager->getRepository(Route::class);
     }
 
-    public function mapPropertyMetadata(ContentPropertyMetadata $propertyMetadata): PropertyMetadata
+    public function mapPropertyMetadata(FieldMetadata $fieldMetadata): PropertyMetadata
     {
-        $mandatory = $propertyMetadata->isRequired();
+        $mandatory = $fieldMetadata->isRequired();
 
         $pageMetadata = new ObjectMetadata([
             new PropertyMetadata('uuid', $mandatory, new StringMetadata()),
@@ -256,6 +256,6 @@ class PageTreeRouteContentType extends SimpleContentType implements PropertyMeta
             ]);
         }
 
-        return new PropertyMetadata((string) $propertyMetadata->getName(), $mandatory, $pageTreeRouteMetadata);
+        return new PropertyMetadata($fieldMetadata->getName(), $mandatory, $pageTreeRouteMetadata);
     }
 }
