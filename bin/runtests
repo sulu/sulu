@@ -365,6 +365,9 @@ foreach ($bundles as $bundle) {
 echo "\n";
 
 if (false === $input->getOption('no-component-tests') || $input->getOption('all')) {
+    if ($enableGrouping) {
+        echo "::group::Components". PHP_EOL;
+    }
     write_header('Components');
 
     $process = exec_cmd(
@@ -372,6 +375,10 @@ if (false === $input->getOption('no-component-tests') || $input->getOption('all'
         true,
         false
     );
+
+    if ($enableGrouping) {
+        echo "::endgroup::\n";
+    }
 
     if ($process->getExitCode() !== 0) {
         $failedTests[] = 'Components';
