@@ -118,15 +118,15 @@ class PageAdmin extends Admin
         );
 
         $formToolbarActionsWithType = [
-            $saveWithPublishingDropdown,
-            new ToolbarAction(
+            'save' => $saveWithPublishingDropdown,
+            'type' => new ToolbarAction(
                 'sulu_admin.type',
                 [
                     'sort_by' => 'title',
                     'disabled_condition' => '(_permissions && !_permissions.edit)',
                 ]
             ),
-            new DropdownToolbarAction(
+            'delete' => new DropdownToolbarAction(
                 'sulu_admin.delete',
                 'su-trash-alt',
                 [
@@ -147,7 +147,7 @@ class PageAdmin extends Admin
                     ),
                 ]
             ),
-            new DropdownToolbarAction(
+            'edit' => new DropdownToolbarAction(
                 'sulu_admin.edit',
                 'su-pen',
                 [
@@ -225,9 +225,10 @@ class PageAdmin extends Admin
             );
 
             $viewBuilders = $this->contentViewBuilderFactory->createViews(
-                PageInterface::class,
-                static::EDIT_FORM_VIEW,
-                static::ADD_FORM_VIEW,
+                contentRichEntityClass: PageInterface::class,
+                editParentView: static::EDIT_FORM_VIEW,
+                addParentView: static::ADD_FORM_VIEW,
+                toolbarActions: $formToolbarActionsWithType
             );
 
             $previewCondition = 'shadowOn == false';
@@ -237,7 +238,6 @@ class PageAdmin extends Admin
                 if ('sulu_page.page_add_form.content' === $viewBuilder->getName()) {
                     $viewBuilder
                         ->addRouterAttributesToEditView(['webspace'])
-                        ->addToolbarActions($formToolbarActionsWithType)
                         ->addRouterAttributesToFormRequest($routerAttributesToFormRequest)
                         ->addRouterAttributesToFormMetadata($routerAttributesToFormMetadata);
                 }
@@ -254,7 +254,6 @@ class PageAdmin extends Admin
                 if ('sulu_page.page_edit_form.seo' === $viewBuilder->getName()) {
                     $viewBuilder
                         ->disablePreviewWebspaceChooser()
-                        ->addToolbarActions($formToolbarActionsWithoutType)
                         ->addRouterAttributesToFormRequest($routerAttributesToFormRequest)
                         ->setPreviewCondition($previewCondition);
                 }
@@ -262,7 +261,6 @@ class PageAdmin extends Admin
                 if ('sulu_page.page_edit_form.excerpt' === $viewBuilder->getName()) {
                     $viewBuilder
                         ->disablePreviewWebspaceChooser()
-                        ->addToolbarActions($formToolbarActionsWithoutType)
                         ->addRouterAttributesToFormRequest($routerAttributesToFormRequest)
                         ->addRouterAttributesToFormMetadata($routerAttributesToFormMetadata)
                         ->setPreviewCondition($previewCondition)
@@ -272,7 +270,6 @@ class PageAdmin extends Admin
                 if ('sulu_page.page_edit_form.settings' === $viewBuilder->getName()) {
                     $viewBuilder
                         ->disablePreviewWebspaceChooser()
-                        ->addToolbarActions($formToolbarActionsWithoutType)
                         ->addRouterAttributesToFormRequest($routerAttributesToFormRequest)
                         ->setPreviewCondition($previewCondition);
                 }
