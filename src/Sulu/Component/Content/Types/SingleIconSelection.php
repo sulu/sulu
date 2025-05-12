@@ -14,22 +14,30 @@ namespace Sulu\Component\Content\Types;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\SimpleContentType;
 
-class SingleIconSelect extends SimpleContentType
+class SingleIconSelection extends SimpleContentType
 {
     public function __construct()
     {
-        parent::__construct('single_icon_select');
+        parent::__construct('single_icon_selection');
     }
 
     public function getContentData(PropertyInterface $property)
     {
-        $params = $property->getParams();
-
         $content = [
             'icon' => $property->getValue(),
-            'iconSet' => $params['icon_set']->getValue(),
         ];
 
         return $content;
+    }
+
+    public function getViewData(PropertyInterface $property)
+    {
+        $params = $property->getParams();
+
+        $view = [
+            'iconSet' => $params['icon_set']->getValue(),
+        ];
+
+        return $view;
     }
 }

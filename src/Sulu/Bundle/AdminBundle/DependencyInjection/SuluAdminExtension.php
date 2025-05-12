@@ -57,6 +57,9 @@ class SuluAdminExtension extends Extension implements PrependExtensionInterface
                             'sulu_admin.collaboration_cache' => [
                                 'adapter' => 'cache.app',
                             ],
+                            'sulu_admin.icon_cache' => [
+                                'adapter' => 'cache.app',
+                            ],
                         ],
                     ],
                     'translator' => [
@@ -134,6 +137,9 @@ class SuluAdminExtension extends Extension implements PrependExtensionInterface
                             'list' => 'sulu_page.get_teasers',
                         ],
                     ],
+                ],
+                'icon_sets' => [
+                    'sulu' => 'icomoon://' . __DIR__ . '/../Resources/js/components/Icon/selection.json',
                 ],
             ]
         );

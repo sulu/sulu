@@ -507,6 +507,17 @@
             </types>
         </property>
 
+        <property name="icon" type="single_icon_selection">
+            <meta>
+                <title lang="en">Icon</title>
+                <title lang="de">Icon</title>
+            </meta>
+
+            <params>
+                <param name="icon_set" value="sulu"/>
+            </params>
+        </property>
+
         <section name="test">
             <properties>
                 <block name="blocks2" default-type="editor" minOccurs="0">

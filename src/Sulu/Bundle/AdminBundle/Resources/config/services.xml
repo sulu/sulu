@@ -291,5 +291,24 @@
                  class="Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Visitor\LocalesOptionFormMetadataVisitor">
             <tag name="sulu_admin.form_metadata_visitor"/>
         </service>
+
+        <service id="sulu_admin.icon_controller"
+                class="Sulu\Bundle\AdminBundle\Controller\IconController"
+                public="true">
+            <argument type="service" id="fos_rest.view_handler"/>
+            <argument>%sulu_admin.icon_sets%</argument>
+            <argument type="tagged_iterator" tag="sulu_admin.icon_provider" index-by="type"/>
+
+            <tag name="sulu.context" context="admin"/>
+        </service>
+
+        <service id="sulu_admin.icon_provider.icomoon" class="Sulu\Bundle\AdminBundle\Icon\providers\IcomoonProvider">
+            <tag name="sulu_admin.icon_provider" type="icomoon" />
+        </service>
+
+        <service id="sulu_admin.icon_provider.svg" class="Sulu\Bundle\AdminBundle\Icon\providers\SvgProvider">
+            <argument type="service" id="sulu_admin.icon_cache"/>
+            <tag name="sulu_admin.icon_provider" type="svg" />
+        </service>
     </services>
 </container>

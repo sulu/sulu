@@ -43,7 +43,7 @@ sulu_page.teaser:
 sulu_page.icon:
     type: rest
     name_prefix: sulu_page.
-    resource: sulu_page.icon_controller
+    resource: sulu_admin.icon_controller
 
 sulu_page.page.versioning:
     type: versioning_rest

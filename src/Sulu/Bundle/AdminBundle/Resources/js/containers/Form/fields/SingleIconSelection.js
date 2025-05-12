@@ -12,7 +12,7 @@ import type {IObservableValue} from 'mobx/lib/mobx';
 type Props = FieldTypeProps<?string>
 
 @observer
-export default class SingleIconSelect extends React.Component<Props> {
+export default class SingleIconSelection extends React.Component<Props> {
     @computed get locale(): IObservableValue<string> {
         const {formInspector} = this.props;
 
@@ -73,14 +73,14 @@ export default class SingleIconSelect extends React.Component<Props> {
             value,
         } = this.props;
 
-        if (iconSet === typeof 'undefined') {
+        if (iconSet === undefined) {
             throw new Error('The "icon_set" schema option must be defined!');
         }
 
         return (
             <Fragment>
                 <SingleItemSelection
-                    emptyText={translate('sulu_admin.single_icon_select.select')}
+                    emptyText={translate('sulu_admin.single_icon_selection.select')}
                     id={value}
                     leftButton={{
                         icon: 'su-magic',
@@ -109,7 +109,7 @@ export default class SingleIconSelect extends React.Component<Props> {
                     }
                     preSelectedItem={{'id': value}}
                     resourceKey="icons"
-                    title={translate('sulu_admin.single_icon_select.select')}
+                    title={translate('sulu_admin.single_icon_selection.select')}
                 />
             </Fragment>
         );
