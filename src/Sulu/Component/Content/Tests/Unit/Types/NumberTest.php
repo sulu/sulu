@@ -18,8 +18,9 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\OptionMetadata;
 use Sulu\Component\Content\Compat\PropertyInterface;
-use Sulu\Component\Content\Metadata\PropertyMetadata;
 use Sulu\Component\Content\Types\Number;
 
 class NumberTest extends TestCase
@@ -129,10 +130,9 @@ class NumberTest extends TestCase
 
     public function testMapPropertyMetadata(): void
     {
-        $propertyMetadata = new PropertyMetadata();
-        $propertyMetadata->setName('property-name');
+        $fieldMetadata = new FieldMetadata('property-name');
 
-        $jsonSchema = $this->number->mapPropertyMetadata($propertyMetadata)->toJsonSchema();
+        $jsonSchema = $this->number->mapPropertyMetadata($fieldMetadata)->toJsonSchema();
 
         $this->assertEquals([
             'anyOf' => [
@@ -146,11 +146,10 @@ class NumberTest extends TestCase
 
     public function testMapPropertyMetadataRequired(): void
     {
-        $propertyMetadata = new PropertyMetadata();
-        $propertyMetadata->setName('property-name');
-        $propertyMetadata->setRequired(true);
+        $fieldMetadata = new FieldMetadata('property-name');
+        $fieldMetadata->setRequired(true);
 
-        $jsonSchema = $this->number->mapPropertyMetadata($propertyMetadata)->toJsonSchema();
+        $jsonSchema = $this->number->mapPropertyMetadata($fieldMetadata)->toJsonSchema();
 
         $this->assertEquals([
             'type' => 'number',
@@ -159,13 +158,13 @@ class NumberTest extends TestCase
 
     public function testMapPropertyMetadataMultipleOfFloat(): void
     {
-        $propertyMetadata = new PropertyMetadata();
-        $propertyMetadata->setName('property-name');
-        $propertyMetadata->setParameters([
-            ['name' => 'multiple_of', 'value' => 0.5],
-        ]);
+        $fieldMetadata = new FieldMetadata('property-name');
+        $multipleOfOption = new OptionMetadata();
+        $multipleOfOption->setName('multiple_of');
+        $multipleOfOption->setValue(0.5);
+        $fieldMetadata->addOption($multipleOfOption);
 
-        $jsonSchema = $this->number->mapPropertyMetadata($propertyMetadata)->toJsonSchema();
+        $jsonSchema = $this->number->mapPropertyMetadata($fieldMetadata)->toJsonSchema();
 
         $this->assertEquals([
             'anyOf' => [
@@ -180,13 +179,13 @@ class NumberTest extends TestCase
 
     public function testMapPropertyMetadataMultipleOfIntegerish(): void
     {
-        $propertyMetadata = new PropertyMetadata();
-        $propertyMetadata->setName('property-name');
-        $propertyMetadata->setParameters([
-            ['name' => 'multiple_of', 'value' => '2'],
-        ]);
+        $fieldMetadata = new FieldMetadata('property-name');
+        $multipleOfOption = new OptionMetadata();
+        $multipleOfOption->setName('multiple_of');
+        $multipleOfOption->setValue('2');
+        $fieldMetadata->addOption($multipleOfOption);
 
-        $jsonSchema = $this->number->mapPropertyMetadata($propertyMetadata)->toJsonSchema();
+        $jsonSchema = $this->number->mapPropertyMetadata($fieldMetadata)->toJsonSchema();
 
         $this->assertEquals([
             'anyOf' => [
@@ -201,13 +200,13 @@ class NumberTest extends TestCase
 
     public function testMapPropertyMetadataMultipleOfInteger(): void
     {
-        $propertyMetadata = new PropertyMetadata();
-        $propertyMetadata->setName('property-name');
-        $propertyMetadata->setParameters([
-            ['name' => 'multiple_of', 'value' => 2],
-        ]);
+        $fieldMetadata = new FieldMetadata('property-name');
+        $multipleOfOption = new OptionMetadata();
+        $multipleOfOption->setName('multiple_of');
+        $multipleOfOption->setValue(2);
+        $fieldMetadata->addOption($multipleOfOption);
 
-        $jsonSchema = $this->number->mapPropertyMetadata($propertyMetadata)->toJsonSchema();
+        $jsonSchema = $this->number->mapPropertyMetadata($fieldMetadata)->toJsonSchema();
 
         $this->assertEquals([
             'anyOf' => [
@@ -224,38 +223,41 @@ class NumberTest extends TestCase
     {
         $this->expectExceptionMessage('Parameter "multiple_of" of property "property-name" needs to be greater than "0"');
 
-        $propertyMetadata = new PropertyMetadata();
-        $propertyMetadata->setName('property-name');
-        $propertyMetadata->setParameters([
-            ['name' => 'multiple_of', 'value' => 0],
-        ]);
+        $fieldMetadata = new FieldMetadata('property-name');
+        $multipleOfOption = new OptionMetadata();
+        $multipleOfOption->setName('multiple_of');
+        $multipleOfOption->setValue(0);
+        $fieldMetadata->addOption($multipleOfOption);
 
-        $jsonSchema = $this->number->mapPropertyMetadata($propertyMetadata)->toJsonSchema();
+        $this->number->mapPropertyMetadata($fieldMetadata);
     }
 
     public function testMapPropertyMetadataMinAndMaxMultipleOfInvalidType(): void
     {
         $this->expectExceptionMessage('Parameter "multiple_of" of property "property-name" needs to be either null or numeric');
 
-        $propertyMetadata = new PropertyMetadata();
-        $propertyMetadata->setName('property-name');
-        $propertyMetadata->setParameters([
-            ['name' => 'multiple_of', 'value' => 'invalid-value'],
-        ]);
+        $fieldMetadata = new FieldMetadata('property-name');
+        $multipleOfOption = new OptionMetadata();
+        $multipleOfOption->setName('multiple_of');
+        $multipleOfOption->setValue('invalid-value');
+        $fieldMetadata->addOption($multipleOfOption);
 
-        $this->number->mapPropertyMetadata($propertyMetadata);
+        $this->number->mapPropertyMetadata($fieldMetadata);
     }
 
     public function testMapPropertyMetadataMinAndMax(): void
     {
-        $propertyMetadata = new PropertyMetadata();
-        $propertyMetadata->setName('property-name');
-        $propertyMetadata->setParameters([
-            ['name' => 'min', 'value' => 2],
-            ['name' => 'max', 'value' => 3],
-        ]);
+        $fieldMetadata = new FieldMetadata('property-name');
+        $minOption = new OptionMetadata();
+        $minOption->setName('min');
+        $minOption->setValue(2);
+        $maxOption = new OptionMetadata();
+        $maxOption->setName('max');
+        $maxOption->setValue(3);
+        $fieldMetadata->addOption($minOption);
+        $fieldMetadata->addOption($maxOption);
 
-        $jsonSchema = $this->number->mapPropertyMetadata($propertyMetadata)->toJsonSchema();
+        $jsonSchema = $this->number->mapPropertyMetadata($fieldMetadata)->toJsonSchema();
 
         $this->assertEquals([
             'anyOf' => [
@@ -271,13 +273,13 @@ class NumberTest extends TestCase
 
     public function testMapPropertyMetadataMinAndMaxMinOnly(): void
     {
-        $propertyMetadata = new PropertyMetadata();
-        $propertyMetadata->setName('property-name');
-        $propertyMetadata->setParameters([
-            ['name' => 'min', 'value' => 2],
-        ]);
+        $fieldMetadata = new FieldMetadata('property-name');
+        $minOption = new OptionMetadata();
+        $minOption->setName('min');
+        $minOption->setValue(2);
+        $fieldMetadata->addOption($minOption);
 
-        $jsonSchema = $this->number->mapPropertyMetadata($propertyMetadata)->toJsonSchema();
+        $jsonSchema = $this->number->mapPropertyMetadata($fieldMetadata)->toJsonSchema();
 
         $this->assertEquals([
             'anyOf' => [
@@ -292,20 +294,20 @@ class NumberTest extends TestCase
 
     public function testMapPropertyMetadataMinAndMaxMaxOnly(): void
     {
-        $propertyMetadata = new PropertyMetadata();
-        $propertyMetadata->setName('property-name');
-        $propertyMetadata->setParameters([
-            ['name' => 'max', 'value' => 2],
-        ]);
+        $fieldMetadata = new FieldMetadata('property-name');
+        $maxOption = new OptionMetadata();
+        $maxOption->setName('max');
+        $maxOption->setValue(3);
+        $fieldMetadata->addOption($maxOption);
 
-        $jsonSchema = $this->number->mapPropertyMetadata($propertyMetadata)->toJsonSchema();
+        $jsonSchema = $this->number->mapPropertyMetadata($fieldMetadata)->toJsonSchema();
 
         $this->assertEquals([
             'anyOf' => [
                 $this->getNullSchema(),
                 [
                     'type' => 'number',
-                    'maximum' => 2,
+                    'maximum' => 3,
                 ],
             ],
         ], $jsonSchema);
@@ -313,14 +315,17 @@ class NumberTest extends TestCase
 
     public function testMapPropertyMetadataMinAndMaxWithIntegerishValues(): void
     {
-        $propertyMetadata = new PropertyMetadata();
-        $propertyMetadata->setName('property-name');
-        $propertyMetadata->setParameters([
-            ['name' => 'min', 'value' => '2'],
-            ['name' => 'max', 'value' => '3'],
-        ]);
+        $fieldMetadata = new FieldMetadata('property-name');
+        $minOption = new OptionMetadata();
+        $minOption->setName('min');
+        $minOption->setValue('2');
+        $maxOption = new OptionMetadata();
+        $maxOption->setName('max');
+        $maxOption->setValue('3');
+        $fieldMetadata->addOption($minOption);
+        $fieldMetadata->addOption($maxOption);
 
-        $jsonSchema = $this->number->mapPropertyMetadata($propertyMetadata)->toJsonSchema();
+        $jsonSchema = $this->number->mapPropertyMetadata($fieldMetadata)->toJsonSchema();
 
         $this->assertEquals([
             'anyOf' => [
@@ -336,14 +341,17 @@ class NumberTest extends TestCase
 
     public function testMapPropertyMetadataMinAndMaxWithFloatValues(): void
     {
-        $propertyMetadata = new PropertyMetadata();
-        $propertyMetadata->setName('property-name');
-        $propertyMetadata->setParameters([
-            ['name' => 'min', 'value' => 1.2],
-            ['name' => 'max', 'value' => 3.4],
-        ]);
+        $fieldMetadata = new FieldMetadata('property-name');
+        $minOption = new OptionMetadata();
+        $minOption->setName('min');
+        $minOption->setValue(1.2);
+        $maxOption = new OptionMetadata();
+        $maxOption->setName('max');
+        $maxOption->setValue(3.4);
+        $fieldMetadata->addOption($minOption);
+        $fieldMetadata->addOption($maxOption);
 
-        $jsonSchema = $this->number->mapPropertyMetadata($propertyMetadata)->toJsonSchema();
+        $jsonSchema = $this->number->mapPropertyMetadata($fieldMetadata)->toJsonSchema();
 
         $this->assertEquals([
             'anyOf' => [
@@ -361,39 +369,42 @@ class NumberTest extends TestCase
     {
         $this->expectExceptionMessage('Parameter "min" of property "property-name" needs to be either null or numeric');
 
-        $propertyMetadata = new PropertyMetadata();
-        $propertyMetadata->setName('property-name');
-        $propertyMetadata->setParameters([
-            ['name' => 'min', 'value' => 'invalid-value'],
-        ]);
+        $fieldMetadata = new FieldMetadata('property-name');
+        $minOption = new OptionMetadata();
+        $minOption->setName('min');
+        $minOption->setValue('invalid-value');
+        $fieldMetadata->addOption($minOption);
 
-        $this->number->mapPropertyMetadata($propertyMetadata);
+        $this->number->mapPropertyMetadata($fieldMetadata);
     }
 
     public function testMapPropertyMetadataMinAndMaxMaxInvalidType(): void
     {
         $this->expectExceptionMessage('Parameter "max" of property "property-name" needs to be either null or numeric');
 
-        $propertyMetadata = new PropertyMetadata();
-        $propertyMetadata->setName('property-name');
-        $propertyMetadata->setParameters([
-            ['name' => 'max', 'value' => 'invalid-value'],
-        ]);
+        $fieldMetadata = new FieldMetadata('property-name');
+        $maxOption = new OptionMetadata();
+        $maxOption->setName('max');
+        $maxOption->setValue('invalid-value');
+        $fieldMetadata->addOption($maxOption);
 
-        $this->number->mapPropertyMetadata($propertyMetadata);
+        $this->number->mapPropertyMetadata($fieldMetadata);
     }
 
     public function testMapPropertyMetadataMinAndMaxMaxLowerThanMin(): void
     {
         $this->expectExceptionMessage('Because parameter "min" of property "property-name" has value "2", parameter "max" needs to be greater than or equal "2"');
 
-        $propertyMetadata = new PropertyMetadata();
-        $propertyMetadata->setName('property-name');
-        $propertyMetadata->setParameters([
-            ['name' => 'min', 'value' => 2],
-            ['name' => 'max', 'value' => 1],
-        ]);
+        $fieldMetadata = new FieldMetadata('property-name');
+        $minOption = new OptionMetadata();
+        $minOption->setName('min');
+        $minOption->setValue(2);
+        $maxOption = new OptionMetadata();
+        $maxOption->setName('max');
+        $maxOption->setValue(1);
+        $fieldMetadata->addOption($minOption);
+        $fieldMetadata->addOption($maxOption);
 
-        $this->number->mapPropertyMetadata($propertyMetadata);
+        $this->number->mapPropertyMetadata($fieldMetadata);
     }
 }

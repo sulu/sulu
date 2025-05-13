@@ -17,6 +17,7 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
 use Sulu\Bundle\MediaBundle\Api\Media;
 use Sulu\Bundle\MediaBundle\Content\Types\SingleMediaSelection;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
@@ -27,7 +28,6 @@ use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStore;
 use Sulu\Component\Content\Compat\Metadata;
 use Sulu\Component\Content\Compat\Property;
 use Sulu\Component\Content\Compat\StructureInterface;
-use Sulu\Component\Content\Metadata\PropertyMetadata;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Sulu\Component\Security\Authorization\SecurityCondition;
@@ -357,10 +357,9 @@ class SingleMediaSelectionTest extends TestCase
 
     public function testMapPropertyMetadata(): void
     {
-        $propertyMetadata = new PropertyMetadata();
-        $propertyMetadata->setName('property-name');
+        $fieldMetadata = new FieldMetadata('property-name');
 
-        $jsonSchema = $this->singleMediaSelection->mapPropertyMetadata($propertyMetadata)->toJsonSchema();
+        $jsonSchema = $this->singleMediaSelection->mapPropertyMetadata($fieldMetadata)->toJsonSchema();
 
         $this->assertEquals([
             'anyOf' => [
@@ -385,11 +384,10 @@ class SingleMediaSelectionTest extends TestCase
 
     public function testMapPropertyMetadataRequired(): void
     {
-        $propertyMetadata = new PropertyMetadata();
-        $propertyMetadata->setName('property-name');
-        $propertyMetadata->setRequired(true);
+        $fieldMetadata = new FieldMetadata('property-name');
+        $fieldMetadata->setRequired(true);
 
-        $jsonSchema = $this->singleMediaSelection->mapPropertyMetadata($propertyMetadata)->toJsonSchema();
+        $jsonSchema = $this->singleMediaSelection->mapPropertyMetadata($fieldMetadata)->toJsonSchema();
 
         $this->assertEquals([
             'type' => 'object',

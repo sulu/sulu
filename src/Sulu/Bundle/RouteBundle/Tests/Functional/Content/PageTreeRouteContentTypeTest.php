@@ -17,6 +17,7 @@ use PHPCR\PropertyType;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Bundle\PageBundle\Document\BasePageDocument;
 use Sulu\Bundle\RouteBundle\Content\Type\PageTreeRouteContentType;
@@ -26,7 +27,6 @@ use Sulu\Bundle\RouteBundle\Generator\ChainRouteGeneratorInterface;
 use Sulu\Bundle\RouteBundle\Manager\ConflictResolverInterface;
 use Sulu\Bundle\RouteBundle\Model\RouteInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
-use Sulu\Component\Content\Metadata\PropertyMetadata;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\DocumentRegistry;
 use Sulu\Component\Route\Document\Behavior\RoutableBehavior;
@@ -461,10 +461,9 @@ class PageTreeRouteContentTypeTest extends TestCase
 
     public function testMapPropertyMetadata(): void
     {
-        $propertyMetadata = new PropertyMetadata();
-        $propertyMetadata->setName('property-name');
+        $fieldMetadata = new FieldMetadata('property-name');
 
-        $jsonSchema = $this->contentType->mapPropertyMetadata($propertyMetadata)->toJsonSchema();
+        $jsonSchema = $this->contentType->mapPropertyMetadata($fieldMetadata)->toJsonSchema();
 
         $this->assertEquals([
             'anyOf' => [
@@ -496,11 +495,10 @@ class PageTreeRouteContentTypeTest extends TestCase
 
     public function testMapPropertyMetadataRequired(): void
     {
-        $propertyMetadata = new PropertyMetadata();
-        $propertyMetadata->setName('property-name');
-        $propertyMetadata->setRequired(true);
+        $fieldMetadata = new FieldMetadata('property-name');
+        $fieldMetadata->setRequired(true);
 
-        $jsonSchema = $this->contentType->mapPropertyMetadata($propertyMetadata)->toJsonSchema();
+        $jsonSchema = $this->contentType->mapPropertyMetadata($fieldMetadata)->toJsonSchema();
 
         $this->assertEquals([
             'type' => 'object',
