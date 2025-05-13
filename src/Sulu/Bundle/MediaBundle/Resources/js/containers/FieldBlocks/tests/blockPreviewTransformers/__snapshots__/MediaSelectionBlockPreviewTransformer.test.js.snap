@@ -1,16 +1,16 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`Render a single image if an id is given 1`] = `
-<div>
+Array [
   <img
     className="image"
     src="/admin/media/redirect/media/3?locale=en&format=sulu-50x50"
-  />
+  />,
   <img
     className="image"
     src="/admin/media/redirect/media/7?locale=en&format=sulu-50x50"
-  />
-</div>
+  />,
+]
 `;
 
 exports[`Render nothing if a wrong type of value is given 1`] = `null`;
@@ -18,38 +18,38 @@ exports[`Render nothing if a wrong type of value is given 1`] = `null`;
 exports[`Render nothing if no id is given 1`] = `null`;
 
 exports[`Render only eight images if more are given if an id is given 1`] = `
-<div>
+Array [
   <img
     className="image"
     src="/admin/media/redirect/media/3?locale=en&format=sulu-50x50"
-  />
+  />,
   <img
     className="image"
     src="/admin/media/redirect/media/7?locale=en&format=sulu-50x50"
-  />
+  />,
   <img
     className="image"
     src="/admin/media/redirect/media/9?locale=en&format=sulu-50x50"
-  />
+  />,
   <img
     className="image"
     src="/admin/media/redirect/media/11?locale=en&format=sulu-50x50"
-  />
+  />,
   <img
     className="image"
     src="/admin/media/redirect/media/13?locale=en&format=sulu-50x50"
-  />
+  />,
   <img
     className="image"
     src="/admin/media/redirect/media/2?locale=en&format=sulu-50x50"
-  />
+  />,
   <img
     className="image"
     src="/admin/media/redirect/media/1?locale=en&format=sulu-50x50"
-  />
+  />,
   <img
     className="image"
     src="/admin/media/redirect/media/4?locale=en&format=sulu-50x50"
-  />
-</div>
+  />,
+]
 `;
