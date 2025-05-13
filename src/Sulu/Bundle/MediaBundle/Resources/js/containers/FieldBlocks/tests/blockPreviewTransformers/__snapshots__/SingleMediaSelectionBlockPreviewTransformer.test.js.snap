@@ -1,5 +1,17 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
+exports[`Render MimeTypeIndicator if image isn't available 1`] = `
+<div
+  class="mimeTypeIndicator"
+  style="color: rgb(255, 255, 255); font-size: 16px; background-color: rgb(187, 8, 6); width: 25px; height: 25px;"
+>
+  <span
+    aria-label="fa-file-pdf-o"
+    class="fa fa-file-pdf-o"
+  />
+</div>
+`;
+
 exports[`Render a single image if an id is given 1`] = `
 <img
   className="image"
