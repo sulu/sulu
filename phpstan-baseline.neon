@@ -46519,57 +46519,9 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/Tests/Unit/User/UserProviderTest.php
 
 		-
-			message: '#^Access to an undefined property Sulu\\Bundle\\SecurityBundle\\Tests\\Unit\\UserManager\\UserManagerTest\:\:\$groupRepository\.$#'
-			identifier: property.notFound
-			count: 2
-			path: src/Sulu/Bundle/SecurityBundle/Tests/Unit/UserManager/UserManagerTest.php
-
-		-
 			message: '#^Call to method PHPUnit\\Framework\\Assert\:\:assertNull\(\) with string will always evaluate to false\.$#'
 			identifier: method.impossibleType
 			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Tests/Unit/UserManager/UserManagerTest.php
-
-		-
-			message: '#^Cannot call method reveal\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: src/Sulu/Bundle/SecurityBundle/Tests/Unit/UserManager/UserManagerTest.php
-
-		-
-			message: '#^Class Sulu\\Bundle\\SecurityBundle\\UserManager\\UserManager constructor invoked with 9 parameters, 7\-8 required\.$#'
-			identifier: arguments.count
-			count: 2
-			path: src/Sulu/Bundle/SecurityBundle/Tests/Unit/UserManager/UserManagerTest.php
-
-		-
-			message: '#^Parameter \#4 \$contactManager of class Sulu\\Bundle\\SecurityBundle\\UserManager\\UserManager constructor expects Sulu\\Bundle\\ContactBundle\\Contact\\ContactManager, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: src/Sulu/Bundle/SecurityBundle/Tests/Unit/UserManager/UserManagerTest.php
-
-		-
-			message: '#^Parameter \#5 \$saltGenerator of class Sulu\\Bundle\\SecurityBundle\\UserManager\\UserManager constructor expects Sulu\\Component\\Security\\Authentication\\SaltGenerator, Sulu\\Bundle\\ContactBundle\\Contact\\ContactManager given\.$#'
-			identifier: argument.type
-			count: 2
-			path: src/Sulu/Bundle/SecurityBundle/Tests/Unit/UserManager/UserManagerTest.php
-
-		-
-			message: '#^Parameter \#6 \$userRepository of class Sulu\\Bundle\\SecurityBundle\\UserManager\\UserManager constructor expects Sulu\\Component\\Security\\Authentication\\UserRepositoryInterface, Sulu\\Component\\Security\\Authentication\\SaltGenerator given\.$#'
-			identifier: argument.type
-			count: 2
-			path: src/Sulu/Bundle/SecurityBundle/Tests/Unit/UserManager/UserManagerTest.php
-
-		-
-			message: '#^Parameter \#7 \$domainEventCollector of class Sulu\\Bundle\\SecurityBundle\\UserManager\\UserManager constructor expects Sulu\\Bundle\\ActivityBundle\\Application\\Collector\\DomainEventCollectorInterface, Sulu\\Bundle\\SecurityBundle\\Entity\\UserRepository given\.$#'
-			identifier: argument.type
-			count: 2
-			path: src/Sulu/Bundle/SecurityBundle/Tests/Unit/UserManager/UserManagerTest.php
-
-		-
-			message: '#^Parameter \#8 \$passwordPattern of class Sulu\\Bundle\\SecurityBundle\\UserManager\\UserManager constructor expects string\|null, Sulu\\Bundle\\ActivityBundle\\Application\\Collector\\DomainEventCollectorInterface given\.$#'
-			identifier: argument.type
-			count: 2
 			path: src/Sulu/Bundle/SecurityBundle/Tests/Unit/UserManager/UserManagerTest.php
 
 		-
