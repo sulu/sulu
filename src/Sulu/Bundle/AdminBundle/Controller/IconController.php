@@ -21,6 +21,9 @@ use Sulu\Component\Rest\ListBuilder\CollectionRepresentation;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * @experimental This is an experimental feature and may change in future releases.
+ */
 class IconController extends AbstractRestController implements ClassResourceInterface
 {
     /**

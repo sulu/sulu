@@ -11,6 +11,9 @@
 
 namespace Sulu\Bundle\AdminBundle\Icon;
 
+/**
+ * @experimental This is an experimental feature and may change in future releases.
+ */
 interface IconProviderInterface
 {
     /**

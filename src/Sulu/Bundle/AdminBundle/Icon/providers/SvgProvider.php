@@ -15,6 +15,9 @@ use Psr\Cache\CacheItemPoolInterface;
 use Sulu\Bundle\AdminBundle\Icon\IconProviderInterface;
 use Symfony\Component\Finder\Finder;
 
+/**
+ * @experimental This is an experimental feature and may change in future releases.
+ */
 class SvgProvider implements IconProviderInterface
 {
     private CacheItemPoolInterface $cache;

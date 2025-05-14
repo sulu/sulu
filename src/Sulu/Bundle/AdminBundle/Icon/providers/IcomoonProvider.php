@@ -13,6 +13,9 @@ namespace Sulu\Bundle\AdminBundle\Icon\providers;
 
 use Sulu\Bundle\AdminBundle\Icon\IconProviderInterface;
 
+/**
+ * @experimental This is an experimental feature and may change in future releases.
+ */
 class IcomoonProvider implements IconProviderInterface
 {
     /**
