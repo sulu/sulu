@@ -15,7 +15,7 @@ use Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeRequestStore;
 use Sulu\Component\Content\Compat\Block\BlockPropertyType;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 
-class OldScheduleBlockVisitor implements BlockVisitorInterface
+class ScheduleBlockVisitor implements BlockVisitorInterface
 {
     public function __construct(
         private RequestAnalyzerInterface $requestAnalyzer,

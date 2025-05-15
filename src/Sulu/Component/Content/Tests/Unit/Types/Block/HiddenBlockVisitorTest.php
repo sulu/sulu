@@ -14,18 +14,18 @@ namespace Sulu\Component\Content\Tests\Unit\Types\Block;
 use PHPUnit\Framework\TestCase;
 use Sulu\Component\Content\Compat\Block\BlockPropertyType;
 use Sulu\Component\Content\Compat\Metadata;
-use Sulu\Component\Content\Types\Block\OldHiddenBlockVisitor;
+use Sulu\Component\Content\Types\Block\HiddenBlockVisitor;
 
-class OldHiddenBlockVisitorTest extends TestCase
+class HiddenBlockVisitorTest extends TestCase
 {
     /**
-     * @var OldHiddenBlockVisitor
+     * @var HiddenBlockVisitor
      */
     private $hiddenBlockVisitor;
 
     public function setUp(): void
     {
-        $this->hiddenBlockVisitor = new OldHiddenBlockVisitor();
+        $this->hiddenBlockVisitor = new HiddenBlockVisitor();
     }
 
     public function testShouldNotSkipWithObjectAsSettings(): void

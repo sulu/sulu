@@ -16,12 +16,12 @@ use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Component\Content\Compat\Block\BlockPropertyType;
 use Sulu\Component\Content\Compat\Metadata;
-use Sulu\Component\Content\Types\Block\OldSegmentBlockVisitor;
+use Sulu\Component\Content\Types\Block\SegmentBlockVisitor;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Segment;
 use Sulu\Component\Webspace\Webspace;
 
-class OldSegmentBlockVisitorTest extends TestCase
+class SegmentBlockVisitorTest extends TestCase
 {
     use ProphecyTrait;
 
@@ -31,14 +31,14 @@ class OldSegmentBlockVisitorTest extends TestCase
     private $requestAnalyzer;
 
     /**
-     * @var OldSegmentBlockVisitor
+     * @var SegmentBlockVisitor
      */
     private $segmentBlockVisitor;
 
     public function setUp(): void
     {
         $this->requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
-        $this->segmentBlockVisitor = new OldSegmentBlockVisitor($this->requestAnalyzer->reveal());
+        $this->segmentBlockVisitor = new SegmentBlockVisitor($this->requestAnalyzer->reveal());
     }
 
     public function testShouldNotSkipWithObjectAsSettings(): void

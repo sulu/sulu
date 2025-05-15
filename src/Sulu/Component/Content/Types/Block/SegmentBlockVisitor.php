@@ -14,7 +14,7 @@ namespace Sulu\Component\Content\Types\Block;
 use Sulu\Component\Content\Compat\Block\BlockPropertyType;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 
-class OldSegmentBlockVisitor implements BlockVisitorInterface
+class SegmentBlockVisitor implements BlockVisitorInterface
 {
     public function __construct(private RequestAnalyzerInterface $requestAnalyzer)
     {

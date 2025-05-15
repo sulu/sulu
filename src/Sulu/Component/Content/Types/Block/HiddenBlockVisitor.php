@@ -13,7 +13,7 @@ namespace Sulu\Component\Content\Types\Block;
 
 use Sulu\Component\Content\Compat\Block\BlockPropertyType;
 
-class OldHiddenBlockVisitor implements BlockVisitorInterface
+class HiddenBlockVisitor implements BlockVisitorInterface
 {
     public function visit(BlockPropertyType $block): ?BlockPropertyType
     {

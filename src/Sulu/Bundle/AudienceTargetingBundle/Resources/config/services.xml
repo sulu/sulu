@@ -158,10 +158,11 @@
         </service>
 
         <service
-            id="sulu_audience_targeting.targeting_group_block_visitor"
-            class="Sulu\Bundle\AudienceTargetingBundle\Content\Types\Block\TargetingGroupBlockVisitor"
+            id="sulu_audience_targeting.deprecated_target_group_block_visitor"
+            class="Sulu\Bundle\AudienceTargetingBundle\Content\Types\Block\TargetGroupBlockVisitor"
         >
             <argument type="service" id="sulu_audience_targeting.target_group_store"/>
+            <tag name="sulu_content.deprecated_block_visitor" />
         </service>
     </services>
 </container>

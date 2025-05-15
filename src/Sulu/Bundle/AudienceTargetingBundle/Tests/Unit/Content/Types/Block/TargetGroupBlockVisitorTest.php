@@ -14,12 +14,12 @@ namespace Sulu\Component\Content\Tests\Unit\Types\Block;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
-use Sulu\Bundle\AudienceTargetingBundle\Content\Types\Block\TargetingGroupBlockVisitor;
+use Sulu\Bundle\AudienceTargetingBundle\Content\Types\Block\TargetGroupBlockVisitor;
 use Sulu\Bundle\AudienceTargetingBundle\TargetGroup\TargetGroupStoreInterface;
 use Sulu\Component\Content\Compat\Block\BlockPropertyType;
 use Sulu\Component\Content\Compat\Metadata;
 
-class TargetingGroupBlockVisitorTest extends TestCase
+class TargetGroupBlockVisitorTest extends TestCase
 {
     use ProphecyTrait;
 
@@ -29,14 +29,14 @@ class TargetingGroupBlockVisitorTest extends TestCase
     private $targetGroupStore;
 
     /**
-     * @var TargetingGroupBlockVisitor
+     * @var TargetGroupBlockVisitor
      */
-    private $targetingGroupBlockVisitor;
+    private $targetGroupBlockVisitor;
 
     public function setUp(): void
     {
         $this->targetGroupStore = $this->prophesize(TargetGroupStoreInterface::class);
-        $this->targetingGroupBlockVisitor = new TargetingGroupBlockVisitor($this->targetGroupStore->reveal());
+        $this->targetGroupBlockVisitor = new TargetGroupBlockVisitor($this->targetGroupStore->reveal());
     }
 
     public function testShouldNotSkipWithObjectAsSettings(): void
@@ -44,7 +44,7 @@ class TargetingGroupBlockVisitorTest extends TestCase
         $blockPropertyType = new BlockPropertyType('type1', new Metadata([]));
         $blockPropertyType->setSettings(new \stdClass());
 
-        $this->assertEquals($blockPropertyType, $this->targetingGroupBlockVisitor->visit($blockPropertyType));
+        $this->assertEquals($blockPropertyType, $this->targetGroupBlockVisitor->visit($blockPropertyType));
     }
 
     public function testShouldNotSkipWithEmptyArrayAsSettings(): void
@@ -52,7 +52,7 @@ class TargetingGroupBlockVisitorTest extends TestCase
         $blockPropertyType = new BlockPropertyType('type1', new Metadata([]));
         $blockPropertyType->setSettings([]);
 
-        $this->assertEquals($blockPropertyType, $this->targetingGroupBlockVisitor->visit($blockPropertyType));
+        $this->assertEquals($blockPropertyType, $this->targetGroupBlockVisitor->visit($blockPropertyType));
     }
 
     public function testShouldSkipWithOtherTargetGroup(): void
@@ -62,7 +62,7 @@ class TargetingGroupBlockVisitorTest extends TestCase
 
         $this->targetGroupStore->getTargetGroupId()->willReturn(3);
 
-        $this->assertNull($this->targetingGroupBlockVisitor->visit($blockPropertyType));
+        $this->assertNull($this->targetGroupBlockVisitor->visit($blockPropertyType));
     }
 
     public function testShouldNotSkipWithSameTargetGroup(): void
@@ -72,7 +72,7 @@ class TargetingGroupBlockVisitorTest extends TestCase
 
         $this->targetGroupStore->getTargetGroupId()->willReturn(3);
 
-        $this->assertEquals($blockPropertyType, $this->targetingGroupBlockVisitor->visit($blockPropertyType));
+        $this->assertEquals($blockPropertyType, $this->targetGroupBlockVisitor->visit($blockPropertyType));
     }
 
     public function testShouldNotSkipWithoutTargetGroups(): void
@@ -82,7 +82,7 @@ class TargetingGroupBlockVisitorTest extends TestCase
 
         $this->targetGroupStore->getTargetGroupId()->willReturn(3);
 
-        $this->assertEquals($blockPropertyType, $this->targetingGroupBlockVisitor->visit($blockPropertyType));
+        $this->assertEquals($blockPropertyType, $this->targetGroupBlockVisitor->visit($blockPropertyType));
     }
 
     public function testShouldNotSkipWithDisabledTargetGroups(): void
@@ -92,7 +92,7 @@ class TargetingGroupBlockVisitorTest extends TestCase
 
         $this->targetGroupStore->getTargetGroupId()->willReturn(3);
 
-        $this->assertEquals($blockPropertyType, $this->targetingGroupBlockVisitor->visit($blockPropertyType));
+        $this->assertEquals($blockPropertyType, $this->targetGroupBlockVisitor->visit($blockPropertyType));
     }
 
     public function testShouldNotSkipWithoutTargetGroupsFlag(): void
@@ -102,6 +102,6 @@ class TargetingGroupBlockVisitorTest extends TestCase
 
         $this->targetGroupStore->getTargetGroupId()->willReturn(3);
 
-        $this->assertEquals($blockPropertyType, $this->targetingGroupBlockVisitor->visit($blockPropertyType));
+        $this->assertEquals($blockPropertyType, $this->targetGroupBlockVisitor->visit($blockPropertyType));
     }
 }

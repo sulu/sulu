@@ -17,10 +17,10 @@ use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeRequestStore;
 use Sulu\Component\Content\Compat\Block\BlockPropertyType;
 use Sulu\Component\Content\Compat\Metadata;
-use Sulu\Component\Content\Types\Block\OldScheduleBlockVisitor;
+use Sulu\Component\Content\Types\Block\ScheduleBlockVisitor;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 
-class OldScheduleBlockVisitorTest extends TestCase
+class ScheduleBlockVisitorTest extends TestCase
 {
     use ProphecyTrait;
 
@@ -35,7 +35,7 @@ class OldScheduleBlockVisitorTest extends TestCase
     private $cacheLifetimeRequestStore;
 
     /**
-     * @var OldScheduleBlockVisitor
+     * @var ScheduleBlockVisitor
      */
     private $scheduleBlockVisitor;
 
@@ -43,7 +43,7 @@ class OldScheduleBlockVisitorTest extends TestCase
     {
         $this->requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
         $this->cacheLifetimeRequestStore = $this->prophesize(CacheLifetimeRequestStore::class);
-        $this->scheduleBlockVisitor = new OldScheduleBlockVisitor(
+        $this->scheduleBlockVisitor = new ScheduleBlockVisitor(
             $this->requestAnalyzer->reveal(),
             $this->cacheLifetimeRequestStore->reveal()
         );
