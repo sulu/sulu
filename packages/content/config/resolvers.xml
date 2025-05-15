@@ -94,7 +94,6 @@
                  class="Sulu\Content\Application\PropertyResolver\Resolver\BlockPropertyResolver">
             <argument type="service" id="logger"/>
             <argument type="service" id="sulu_admin.metadata_provider_registry"/>
-            <argument type="service" id="sulu_admin.structure_form_metadata_loader"/>
             <argument
                 type="tagged_iterator"
                 tag="sulu_content.block_visitor"

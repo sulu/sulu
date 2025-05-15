@@ -29,7 +29,6 @@ class BlockPropertyResolver implements PropertyResolverInterface
     public function __construct(
         private readonly LoggerInterface $logger,
         private readonly MetadataProviderRegistry $metadataProviderRegistry,
-        private readonly FormMetadataLoaderInterface $formMetadataLoader,
         /** @var iterable<BlockVisitorInterface> */
         private readonly iterable $blockVisitors,
         private readonly bool $debug = false,
