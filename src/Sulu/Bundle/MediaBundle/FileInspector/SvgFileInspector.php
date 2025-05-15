@@ -55,10 +55,17 @@ class SvgFileInspector implements FileInspectorInterface
 
     private function containsUnsafeContent(string $svg): bool
     {
-        \libxml_use_internal_errors(true);
-        $dom = new \DOMDocument();
-        $dom->loadXML($svg, \LIBXML_NOENT | \LIBXML_DTDLOAD);
-        \libxml_clear_errors();
+        $xmlErrorHandlerPreviousValue = \libxml_use_internal_errors(true);
+
+        try {
+            $dom = new \DOMDocument();
+            $dom->resolveExternals = false;
+            $dom->substituteEntities = false;
+            $dom->loadXML($svg, \LIBXML_NONET);
+        } finally {
+            \libxml_use_internal_errors($xmlErrorHandlerPreviousValue);
+            \libxml_clear_errors();
+        }
 
         foreach (self::UNSAFE_ELEMENTS as $element) {
             if ($dom->getElementsByTagName($element)->length > 0) {

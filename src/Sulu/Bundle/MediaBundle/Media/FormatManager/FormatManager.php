@@ -18,15 +18,14 @@ use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Media\Exception\FormatNotFoundException;
+use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyException;
 use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyInvalidImageFormat;
 use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyInvalidUrl;
 use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyMediaNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\InvalidMimeTypeForPreviewException;
-use Sulu\Bundle\MediaBundle\Media\Exception\MediaException;
 use Sulu\Bundle\MediaBundle\Media\FormatCache\FormatCacheInterface;
 use Sulu\Bundle\MediaBundle\Media\ImageConverter\ImageConverterInterface;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -49,11 +48,6 @@ class FormatManager implements FormatManagerInterface
      * @var LoggerInterface
      */
     private $logger;
-
-    /**
-     * @var ParameterBag|null
-     */
-    private $supportedImageFormats;
 
     /**
      * @param string $saveImage
@@ -161,8 +155,8 @@ class FormatManager implements FormatManagerInterface
                     $formatKey
                 );
             }
-        } catch (MediaException $e) {
-            $this->logger->error($e->getMessage(), ['exception' => $e]);
+        } catch (ImageProxyException $e) {
+            $this->logger->debug($e->getMessage(), ['exception' => $e]);
             $responseContent = null;
             $status = 404;
             $mimeType = null;

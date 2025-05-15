@@ -63,8 +63,8 @@ class PageTreeRoute extends Component<Props> {
     }): void => {
         const {onFinish} = this.props;
 
-        const uuid = (value && value.toString()) || null;
-        const path = (page && page.url) || null;
+        const uuid = (value && value.toString()) || undefined;
+        const path = (page && page.url) || undefined;
 
         this.handleChange({
             ...this.props.value,

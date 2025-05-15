@@ -11,6 +11,9 @@
 
 namespace Sulu\Bundle\MediaBundle\Media\FormatCache;
 
+use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyInvalidUrl;
+use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyUrlNotFoundException;
+
 /**
  * Defines the operations of the FormatCache
  * The FormatCache is a interface to cache different Image Formats.
@@ -59,6 +62,9 @@ interface FormatCacheInterface
      * @param string $url
      *
      * @return array ($id, $format)
+     *
+     * @throws ImageProxyUrlNotFoundException
+     * @throws ImageProxyInvalidUrl
      */
     public function analyzedMediaUrl($url);
 

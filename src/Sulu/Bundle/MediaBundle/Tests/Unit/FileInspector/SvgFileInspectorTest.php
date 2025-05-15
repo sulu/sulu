@@ -32,6 +32,29 @@ class SvgFileInspectorTest extends TestCase
         yield 'svg with attributes' => ['<svg width="100" height="100" viewBox="0 0 100 100"></svg>', true];
         yield 'svg with path' => ['<svg><path d="M10 10 H 90 V 90 H 10 L 10 10"/></svg>', true];
         yield 'svg with style' => ['<svg><style>.cls-1{fill:none;}</style><circle class="cls-1" cx="50" cy="50" r="40"/></svg>', true];
+        yield 'svg with adobe common svg entity export style' => ['<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 25.2.1, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" [
+	<!ENTITY ns_extend "http://ns.adobe.com/Extensibility/1.0/">
+	<!ENTITY ns_ai "http://ns.adobe.com/AdobeIllustrator/10.0/">
+	<!ENTITY ns_graphs "http://ns.adobe.com/Graphs/1.0/">
+	<!ENTITY ns_vars "http://ns.adobe.com/Variables/1.0/">
+	<!ENTITY ns_imrep "http://ns.adobe.com/ImageReplacement/1.0/">
+	<!ENTITY ns_sfw "http://ns.adobe.com/SaveForWeb/1.0/">
+	<!ENTITY ns_custom "http://ns.adobe.com/GenericCustomNamespace/1.0/">
+	<!ENTITY ns_adobe_xpath "http://ns.adobe.com/XPath/1.0/">
+]>
+<svg version="1.1" xmlns:x="&ns_extend;" xmlns:i="&ns_ai;" xmlns:graph="&ns_graphs;"
+	 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 89.5056686 94.5434723" style="enable-background:new 0 0 89.5056686 94.5434723;" xml:space="preserve">
+<style type="text/css">
+    * {
+       shape-rendering: crispEdges;
+    }
+</style>
+<g id="Text">
+</g>
+</svg>', true];
 
         // Potentially unsafe SVGs
         yield 'svg with script tag' => ['<svg><script>alert("XSS")</script></svg>', false];

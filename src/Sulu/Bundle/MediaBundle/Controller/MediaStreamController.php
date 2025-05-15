@@ -13,13 +13,13 @@ namespace Sulu\Bundle\MediaBundle\Controller;
 
 use Sulu\Bundle\MediaBundle\Admin\MediaAdmin;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
-use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Media\DispositionType\DispositionTypeResolver;
 use Sulu\Bundle\MediaBundle\Media\Exception\FileVersionNotFoundException;
-use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyException;
+use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyInvalidUrl;
+use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyUrlNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\MediaException;
 use Sulu\Bundle\MediaBundle\Media\FormatCache\FormatCacheInterface;
 use Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface;
@@ -67,16 +67,16 @@ class MediaStreamController
             $version = (int) (\explode('-', $version)[0] ?? '1');
 
             $mediaProperties = $this->formatCache->analyzedMediaUrl($url);
-
-            return $this->formatManager->returnImage(
-                $mediaProperties['id'],
-                $mediaProperties['format'],
-                $mediaProperties['fileName'],
-                $version,
-            );
-        } catch (ImageProxyException $e) {
+        } catch (ImageProxyUrlNotFoundException|ImageProxyInvalidUrl $e) {
             throw new NotFoundHttpException('Image create error. Code: ' . $e->getCode(), $e);
         }
+
+        return $this->formatManager->returnImage(
+            $mediaProperties['id'],
+            $mediaProperties['format'],
+            $mediaProperties['fileName'],
+            $version,
+        );
     }
 
     /**

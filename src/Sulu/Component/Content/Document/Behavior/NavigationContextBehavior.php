@@ -22,13 +22,15 @@ interface NavigationContextBehavior
     /**
      * Return the navigation contexts.
      *
-     * @return array Array of strings
+     * @return string[] Array of strings
      */
     public function getNavigationContexts();
 
     /**
      * Set the navigation contexts. The array should contain a list of keys.
      * (eg. to add it to the default main menu: ['main']).
+     *
+     * @param string[] $navigationContexts
      */
     public function setNavigationContexts(array $navigationContexts = []);
 }

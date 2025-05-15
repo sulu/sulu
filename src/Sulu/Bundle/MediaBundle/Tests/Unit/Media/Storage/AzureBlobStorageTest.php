@@ -19,7 +19,7 @@ use MicrosoftAzure\Storage\Blob\BlobRestProxy;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
-use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyMediaNotFoundException;
+use Symfony\Component\Filesystem\Exception\IOException;
 
 class AzureBlobStorageTest extends TestCase
 {
@@ -140,7 +140,7 @@ class AzureBlobStorageTest extends TestCase
 
     public function testLoadNotFound(): void
     {
-        $this->expectException(ImageProxyMediaNotFoundException::class);
+        $this->expectException(IOException::class);
 
         $adapter = $this->prophesize(AzureBlobStorageAdapter::class);
         $flysystem = $this->prophesize(Filesystem::class);

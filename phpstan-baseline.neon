@@ -13541,16 +13541,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Controller/MediaStreamController.php
 
 		-
-			message: "#^Parameter \\#1 \\$storageOptions of method Sulu\\\\Bundle\\\\MediaBundle\\\\Media\\\\Storage\\\\StorageInterface\\:\\:getPath\\(\\) expects array\\<string, string\\|null\\>, array given\\.$#"
-			count: 2
-			path: src/Sulu/Bundle/MediaBundle/Controller/MediaStreamController.php
-
-		-
-			message: "#^Parameter \\#1 \\$storageOptions of method Sulu\\\\Bundle\\\\MediaBundle\\\\Media\\\\Storage\\\\StorageInterface\\:\\:getType\\(\\) expects array\\<string, string\\|null\\>, array given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Controller/MediaStreamController.php
-
-		-
 			message: "#^Parameter \\#2 \\$values of method Symfony\\\\Component\\\\HttpFoundation\\\\ResponseHeaderBag\\:\\:set\\(\\) expects array\\<string\\>\\|string\\|null, int given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Controller/MediaStreamController.php
@@ -13846,11 +13836,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Entity/FileVersion.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\FileVersion\\:\\:getStorageOptions\\(\\) should return array but returns mixed\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/FileVersion.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\FileVersion\\:\\:removeCategories\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Entity/FileVersion.php
@@ -13897,16 +13882,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\FileVersion\\:\\:setProperties\\(\\) has parameter \\$properties with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/FileVersion.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\FileVersion\\:\\:setStorageOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/FileVersion.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\FileVersion\\:\\:setStorageOptions\\(\\) has parameter \\$storageOptions with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Entity/FileVersion.php
 
@@ -14601,11 +14576,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Media/FormatManager/FormatManager.php
 
 		-
-			message: "#^Property Sulu\\\\Bundle\\\\MediaBundle\\\\Media\\\\FormatManager\\\\FormatManager\\:\\:\\$supportedImageFormats is unused\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Media/FormatManager/FormatManager.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Media\\\\FormatManager\\\\FormatManagerInterface\\:\\:getFormats\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Media/FormatManager/FormatManagerInterface.php
@@ -14757,11 +14727,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Media\\\\ImageConverter\\\\MediaImageExtractorInterface\\:\\:extract\\(\\) invoked with 2 parameters, 1 required\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Media/ImageConverter/ImagineImageConverter.php
-
-		-
-			message: "#^Parameter \\#1 \\$storageOptions of method Sulu\\\\Bundle\\\\MediaBundle\\\\Media\\\\Storage\\\\StorageInterface\\:\\:load\\(\\) expects array\\<string, string\\|null\\>, array given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Media/ImageConverter/ImagineImageConverter.php
 
@@ -15011,18 +14976,8 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Media/Manager/MediaManager.php
 
 		-
-			message: "#^Parameter \\#1 \\$storageOptions of method Sulu\\\\Bundle\\\\MediaBundle\\\\Media\\\\Storage\\\\StorageInterface\\:\\:remove\\(\\) expects array\\<string, string\\|null\\>, array given\\.$#"
-			count: 2
-			path: src/Sulu/Bundle/MediaBundle/Media/Manager/MediaManager.php
-
-		-
 			message: "#^Parameter \\#1 \\$userId of method Sulu\\\\Bundle\\\\MediaBundle\\\\Media\\\\Manager\\\\MediaManager\\:\\:getUser\\(\\) expects int, int\\|null given\\.$#"
 			count: 2
-			path: src/Sulu/Bundle/MediaBundle/Media/Manager/MediaManager.php
-
-		-
-			message: "#^Parameter \\#3 \\$storageOptions of method Sulu\\\\Bundle\\\\MediaBundle\\\\Media\\\\Storage\\\\StorageInterface\\:\\:save\\(\\) expects array\\<string, string\\|null\\>, array given\\.$#"
-			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Media/Manager/MediaManager.php
 
 		-
@@ -15586,11 +15541,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/CollectionControllerTest.php
 
 		-
-			message: "#^Property Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Functional\\\\Controller\\\\CollectionControllerTest\\:\\:\\$roleRepository is never read, only written\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/CollectionControllerTest.php
-
-		-
 			message: "#^Property Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Functional\\\\Controller\\\\CollectionControllerTest\\:\\:\\$systemCollectionCache \\(Sulu\\\\Component\\\\Cache\\\\CacheInterface\\) does not accept object\\|null\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/CollectionControllerTest.php
@@ -15607,11 +15557,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$json of function json_decode expects string, string\\|false given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/FormatControllerTest.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Functional\\\\Controller\\\\FormatControllerTest\\:\\:\\$formatOptions is unused\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/FormatControllerTest.php
 
@@ -16206,16 +16151,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/MediaWebsiteControllerTest.php
 
 		-
-			message: "#^Property Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Functional\\\\Controller\\\\MediaWebsiteControllerTest\\:\\:\\$category is unused\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/MediaWebsiteControllerTest.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Functional\\\\Controller\\\\MediaWebsiteControllerTest\\:\\:\\$category2 is unused\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/MediaWebsiteControllerTest.php
-
-		-
 			message: "#^Property Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Functional\\\\Controller\\\\MediaWebsiteControllerTest\\:\\:\\$em \\(Doctrine\\\\ORM\\\\EntityManager\\) does not accept Doctrine\\\\ORM\\\\EntityManagerInterface\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/MediaWebsiteControllerTest.php
@@ -16566,11 +16501,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Entity/MediaRepositoryTest.php
 
 		-
-			message: "#^Property Functional\\\\Entity\\\\MediaRepositoryTest\\:\\:\\$collections is unused\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Entity/MediaRepositoryTest.php
-
-		-
 			message: "#^Property Functional\\\\Entity\\\\MediaRepositoryTest\\:\\:\\$em \\(Doctrine\\\\ORM\\\\EntityManager\\) does not accept Doctrine\\\\ORM\\\\EntityManagerInterface\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Entity/MediaRepositoryTest.php
@@ -16902,16 +16832,6 @@ parameters:
 
 		-
 			message: "#^If condition is always true\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Unit/Media/TypeManager/TypeManagerTest.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\MediaBundle\\\\Media\\\\TypeManager\\\\TypeManagerTest\\:\\:\\$em is unused\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Unit/Media/TypeManager/TypeManagerTest.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\MediaBundle\\\\Media\\\\TypeManager\\\\TypeManagerTest\\:\\:\\$em with generic class Prophecy\\\\Prophecy\\\\ObjectProphecy does not specify its types\\: T$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Unit/Media/TypeManager/TypeManagerTest.php
 
@@ -17261,11 +17181,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Trash/MediaTrashItemHandler.php
 
 		-
-			message: "#^Parameter \\#1 \\$sourceStorageOptions of method Sulu\\\\Bundle\\\\MediaBundle\\\\Media\\\\Storage\\\\StorageInterface\\:\\:move\\(\\) expects array\\<string, string\\|null\\>, array given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Trash/MediaTrashItemHandler.php
-
-		-
 			message: "#^Parameter \\#1 \\$sourceStorageOptions of method Sulu\\\\Bundle\\\\MediaBundle\\\\Media\\\\Storage\\\\StorageInterface\\:\\:move\\(\\) expects array\\<string, string\\|null\\>, mixed given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Trash/MediaTrashItemHandler.php
@@ -17287,11 +17202,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$version of method Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\FileVersion\\:\\:setVersion\\(\\) expects int, mixed given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Trash/MediaTrashItemHandler.php
-
-		-
-			message: "#^Parameter \\#2 \\$targetStorageOptions of method Sulu\\\\Bundle\\\\MediaBundle\\\\Media\\\\Storage\\\\StorageInterface\\:\\:move\\(\\) expects array\\<string, string\\|null\\>, array given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Trash/MediaTrashItemHandler.php
 
@@ -18756,22 +18666,12 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/DependencyInjection/SuluPageExtension.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Document\\\\BasePageDocument\\:\\:getNavigationContexts\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Document/BasePageDocument.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Document\\\\BasePageDocument\\:\\:getPermissions\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Document/BasePageDocument.php
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Document\\\\BasePageDocument\\:\\:getPublished\\(\\) should return DateTime\\|null but returns bool\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Document/BasePageDocument.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Document\\\\BasePageDocument\\:\\:getWebspaceName\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Document/BasePageDocument.php
 
@@ -18797,11 +18697,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Document\\\\BasePageDocument\\:\\:setNavigationContexts\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Document/BasePageDocument.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Document\\\\BasePageDocument\\:\\:setNavigationContexts\\(\\) has parameter \\$navigationContexts with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Document/BasePageDocument.php
 
@@ -21081,11 +20976,6 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Command/ValidateWebspacesCommandTest.php
 
 		-
-			message: "#^Property Sulu\\\\Bundle\\\\PageBundle\\\\Tests\\\\Functional\\\\Command\\\\ValidateWebspacesCommandTest\\:\\:\\$documentManager is never read, only written\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Command/ValidateWebspacesCommandTest.php
-
-		-
 			message: "#^Call to an undefined method object\\:\\:getChildren\\(\\)\\.$#"
 			count: 3
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Command/WebspaceCopyCommandTest.php
@@ -21726,16 +21616,6 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/PageResourcelocatorControllerTest.php
 
 		-
-			message: "#^Property Sulu\\\\Bundle\\\\PageBundle\\\\Tests\\\\Functional\\\\Controller\\\\PageResourcelocatorControllerTest\\:\\:\\$session \\(PHPCR\\\\SessionInterface\\) does not accept object\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/PageResourcelocatorControllerTest.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\PageBundle\\\\Tests\\\\Functional\\\\Controller\\\\PageResourcelocatorControllerTest\\:\\:\\$session is never read, only written\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/PageResourcelocatorControllerTest.php
-
-		-
 			message: "#^Cannot access offset 'id' on mixed\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/ResourcelocatorControllerTest.php
@@ -21822,11 +21702,6 @@ parameters:
 
 		-
 			message: "#^Property Sulu\\\\Bundle\\\\PageBundle\\\\Tests\\\\Functional\\\\Controller\\\\SmartContentItemControllerTest\\:\\:\\$session \\(PHPCR\\\\SessionInterface\\) does not accept object\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/SmartContentItemControllerTest.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\PageBundle\\\\Tests\\\\Functional\\\\Controller\\\\SmartContentItemControllerTest\\:\\:\\$structureManager is never read, only written\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/SmartContentItemControllerTest.php
 
@@ -22272,11 +22147,6 @@ parameters:
 
 		-
 			message: "#^Property Sulu\\\\Bundle\\\\PageBundle\\\\Tests\\\\Functional\\\\Export\\\\WebspaceExportTest\\:\\:\\$creator is never written, only read\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Export/WebspaceExportTest.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\PageBundle\\\\Tests\\\\Functional\\\\Export\\\\WebspaceExportTest\\:\\:\\$extensionManager is never read, only written\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Export/WebspaceExportTest.php
 
@@ -22756,11 +22626,6 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Mapper/ContentMapperTest.php
 
 		-
-			message: "#^Property Sulu\\\\Bundle\\\\PageBundle\\\\Tests\\\\Functional\\\\Mapper\\\\ContentMapperTest\\:\\:\\$contentTypeManager is never read, only written\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Mapper/ContentMapperTest.php
-
-		-
 			message: "#^Property Sulu\\\\Bundle\\\\PageBundle\\\\Tests\\\\Functional\\\\Mapper\\\\ContentMapperTest\\:\\:\\$session \\(Jackalope\\\\Session\\) does not accept Sulu\\\\Bundle\\\\DocumentManagerBundle\\\\Session\\\\Session\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Mapper/ContentMapperTest.php
@@ -23181,16 +23046,6 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Repository/NodeRepositoryTest.php
 
 		-
-			message: "#^Property Sulu\\\\Bundle\\\\PageBundle\\\\Tests\\\\Functional\\\\Repository\\\\NodeRepositoryTest\\:\\:\\$extensions is never read, only written\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Repository/NodeRepositoryTest.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\PageBundle\\\\Tests\\\\Functional\\\\Repository\\\\NodeRepositoryTest\\:\\:\\$sessionManager is never read, only written\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Repository/NodeRepositoryTest.php
-
-		-
 			message: "#^Call to an undefined method Sulu\\\\Component\\\\Content\\\\Document\\\\Behavior\\\\ResourceSegmentBehavior\\:\\:getUuid\\(\\)\\.$#"
 			count: 5
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/ResourceLocator/Mapper/PhpcrMapperTest.php
@@ -23256,11 +23111,6 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/ResourceLocator/Mapper/PhpcrMapperTest.php
 
 		-
-			message: "#^Property Sulu\\\\Bundle\\\\PageBundle\\\\Tests\\\\Functional\\\\ResourceLocator\\\\Mapper\\\\PhpcrMapperTest\\:\\:\\$mapper is never read, only written\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Tests/Functional/ResourceLocator/Mapper/PhpcrMapperTest.php
-
-		-
 			message: "#^Class Sulu\\\\Component\\\\Content\\\\Types\\\\ResourceLocator constructor invoked with 1 parameter, 0 required\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/ResourceLocator/ResourceLocatorTest.php
@@ -23272,21 +23122,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#3 \\$webspaceKey of method Sulu\\\\Component\\\\Content\\\\SimpleContentType\\:\\:read\\(\\) expects string, int given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Tests/Functional/ResourceLocator/ResourceLocatorTest.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\PageBundle\\\\Tests\\\\Functional\\\\ResourceLocator\\\\ResourceLocatorTest\\:\\:\\$em \\(Doctrine\\\\ORM\\\\EntityManager\\) does not accept Doctrine\\\\Persistence\\\\ObjectManager\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Tests/Functional/ResourceLocator/ResourceLocatorTest.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\PageBundle\\\\Tests\\\\Functional\\\\ResourceLocator\\\\ResourceLocatorTest\\:\\:\\$em is never read, only written\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Tests/Functional/ResourceLocator/ResourceLocatorTest.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\PageBundle\\\\Tests\\\\Functional\\\\ResourceLocator\\\\ResourceLocatorTest\\:\\:\\$resourceLocatorMapper is never read, only written\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/ResourceLocator/ResourceLocatorTest.php
 
@@ -23368,11 +23203,6 @@ parameters:
 		-
 			message: "#^Parameter \\#2 \\$userId of method Sulu\\\\Component\\\\Content\\\\Types\\\\ResourceLocator\\\\Strategy\\\\ResourceLocatorStrategyInterface\\:\\:save\\(\\) expects int, null given\\.$#"
 			count: 2
-			path: src/Sulu/Bundle/PageBundle/Tests/Functional/ResourceLocator/Strategy/TreeFullEditStrategyTest.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\PageBundle\\\\Tests\\\\Functional\\\\ResourceLocator\\\\Strategy\\\\TreeFullEditStrategyTest\\:\\:\\$documentInspector is never read, only written\\.$#"
-			count: 1
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/ResourceLocator/Strategy/TreeFullEditStrategyTest.php
 
 		-
@@ -23458,11 +23288,6 @@ parameters:
 		-
 			message: "#^Parameter \\#2 \\$userId of method Sulu\\\\Component\\\\Content\\\\Types\\\\ResourceLocator\\\\Strategy\\\\ResourceLocatorStrategyInterface\\:\\:save\\(\\) expects int, null given\\.$#"
 			count: 2
-			path: src/Sulu/Bundle/PageBundle/Tests/Functional/ResourceLocator/Strategy/TreeLeafEditStrategyTest.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\PageBundle\\\\Tests\\\\Functional\\\\ResourceLocator\\\\Strategy\\\\TreeLeafEditStrategyTest\\:\\:\\$documentInspector is never read, only written\\.$#"
-			count: 1
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/ResourceLocator/Strategy/TreeLeafEditStrategyTest.php
 
 		-
@@ -24121,7 +23946,7 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Trash/PageTrashItemHandler.php
 
 		-
-			message: "#^Parameter \\#1 \\$navigationContexts of method Sulu\\\\Bundle\\\\PageBundle\\\\Document\\\\BasePageDocument\\:\\:setNavigationContexts\\(\\) expects array, mixed given\\.$#"
+			message: "#^Parameter \\#1 \\$navigationContexts of method Sulu\\\\Bundle\\\\PageBundle\\\\Document\\\\BasePageDocument\\:\\:setNavigationContexts\\(\\) expects array\\<string\\>, mixed given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Trash/PageTrashItemHandler.php
 
@@ -24197,11 +24022,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Twig\\\\ExportTwigExtension\\:\\:getFunctions\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Twig/ExportTwigExtension.php
-
-		-
-			message: "#^Parameter \\#1 \\$object_or_class of function method_exists expects object\\|string, array\\|object given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Twig/ExportTwigExtension.php
 
@@ -25287,16 +25107,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$route of method Sulu\\\\Bundle\\\\RouteBundle\\\\Entity\\\\RouteRepositoryInterface\\:\\:remove\\(\\) expects Sulu\\\\Bundle\\\\RouteBundle\\\\Model\\\\RouteInterface, Sulu\\\\Bundle\\\\RouteBundle\\\\Entity\\\\Route\\|null given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/RouteBundle/Tests/Functional/Entity/RouteRepositoryTest.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\RouteBundle\\\\Tests\\\\Functional\\\\Controller\\\\RouteRepositoryTest\\:\\:\\$route \\(Sulu\\\\Bundle\\\\RouteBundle\\\\Entity\\\\Route\\) does not accept Sulu\\\\Bundle\\\\RouteBundle\\\\Model\\\\RouteInterface\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/RouteBundle/Tests/Functional/Entity/RouteRepositoryTest.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\RouteBundle\\\\Tests\\\\Functional\\\\Controller\\\\RouteRepositoryTest\\:\\:\\$route is never read, only written\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/RouteBundle/Tests/Functional/Entity/RouteRepositoryTest.php
 
@@ -27251,11 +27061,6 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/RoleControllerTest.php
 
 		-
-			message: "#^Property Sulu\\\\Bundle\\\\SecurityBundle\\\\Tests\\\\Functional\\\\Controller\\\\RoleControllerTest\\:\\:\\$role3 is never read, only written\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/RoleControllerTest.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\SecurityBundle\\\\Tests\\\\Functional\\\\Controller\\\\RoleSettingControllerTest\\:\\:testPut\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/RoleSettingControllerTest.php
@@ -27373,11 +27178,6 @@ parameters:
 		-
 			message: "#^Parameter \\#1 \\$object_or_class of function property_exists expects object\\|string, mixed given\\.$#"
 			count: 4
-			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/UserControllerTest.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\SecurityBundle\\\\Tests\\\\Functional\\\\Controller\\\\UserControllerTest\\:\\:\\$contact3 is never read, only written\\.$#"
-			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/UserControllerTest.php
 
 		-
@@ -29191,16 +28991,6 @@ parameters:
 			path: src/Sulu/Bundle/SnippetBundle/Tests/Functional/Controller/SnippetControllerTest.php
 
 		-
-			message: "#^Property Sulu\\\\Bundle\\\\SnippetBundle\\\\Tests\\\\Functional\\\\Controller\\\\SnippetControllerTest\\:\\:\\$phpcrSession \\(PHPCR\\\\SessionInterface\\) does not accept object\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SnippetBundle/Tests/Functional/Controller/SnippetControllerTest.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\SnippetBundle\\\\Tests\\\\Functional\\\\Controller\\\\SnippetControllerTest\\:\\:\\$phpcrSession is never read, only written\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SnippetBundle/Tests/Functional/Controller/SnippetControllerTest.php
-
-		-
 			message: "#^Call to an undefined method Sulu\\\\Component\\\\Snippet\\\\Export\\\\SnippetExportInterface\\:\\:getExportData\\(\\)\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SnippetBundle/Tests/Functional/Export/SnippetTest.php
@@ -29212,16 +29002,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Tests\\\\Functional\\\\Export\\\\SnippetTest\\:\\:prepareData\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SnippetBundle/Tests/Functional/Export/SnippetTest.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\PageBundle\\\\Tests\\\\Functional\\\\Export\\\\SnippetTest\\:\\:\\$creator is unused\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SnippetBundle/Tests/Functional/Export/SnippetTest.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\PageBundle\\\\Tests\\\\Functional\\\\Export\\\\SnippetTest\\:\\:\\$extensionManager is unused\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SnippetBundle/Tests/Functional/Export/SnippetTest.php
 
@@ -33076,32 +32856,7 @@ parameters:
 			path: src/Sulu/Bundle/WebsiteBundle/Twig/Sitemap/SitemapTwigExtension.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\WebsiteBundle\\\\Twig\\\\Sitemap\\\\SitemapTwigExtension\\:\\:sitemapFunction\\(\\) has parameter \\$locale with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Twig/Sitemap/SitemapTwigExtension.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\WebsiteBundle\\\\Twig\\\\Sitemap\\\\SitemapTwigExtension\\:\\:sitemapFunction\\(\\) has parameter \\$webspaceKey with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Twig/Sitemap/SitemapTwigExtension.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\WebsiteBundle\\\\Twig\\\\Sitemap\\\\SitemapTwigExtension\\:\\:sitemapUrlFunction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Twig/Sitemap/SitemapTwigExtension.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\WebsiteBundle\\\\Twig\\\\Sitemap\\\\SitemapTwigExtension\\:\\:sitemapUrlFunction\\(\\) has parameter \\$locale with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Twig/Sitemap/SitemapTwigExtension.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\WebsiteBundle\\\\Twig\\\\Sitemap\\\\SitemapTwigExtension\\:\\:sitemapUrlFunction\\(\\) has parameter \\$url with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Twig/Sitemap/SitemapTwigExtension.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\WebsiteBundle\\\\Twig\\\\Sitemap\\\\SitemapTwigExtension\\:\\:sitemapUrlFunction\\(\\) has parameter \\$webspaceKey with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/WebsiteBundle/Twig/Sitemap/SitemapTwigExtension.php
 
@@ -33116,32 +32871,7 @@ parameters:
 			path: src/Sulu/Bundle/WebsiteBundle/Twig/Sitemap/SitemapTwigExtensionInterface.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\WebsiteBundle\\\\Twig\\\\Sitemap\\\\SitemapTwigExtensionInterface\\:\\:sitemapFunction\\(\\) has parameter \\$locale with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Twig/Sitemap/SitemapTwigExtensionInterface.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\WebsiteBundle\\\\Twig\\\\Sitemap\\\\SitemapTwigExtensionInterface\\:\\:sitemapFunction\\(\\) has parameter \\$webspaceKey with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Twig/Sitemap/SitemapTwigExtensionInterface.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\WebsiteBundle\\\\Twig\\\\Sitemap\\\\SitemapTwigExtensionInterface\\:\\:sitemapUrlFunction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Twig/Sitemap/SitemapTwigExtensionInterface.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\WebsiteBundle\\\\Twig\\\\Sitemap\\\\SitemapTwigExtensionInterface\\:\\:sitemapUrlFunction\\(\\) has parameter \\$locale with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Twig/Sitemap/SitemapTwigExtensionInterface.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\WebsiteBundle\\\\Twig\\\\Sitemap\\\\SitemapTwigExtensionInterface\\:\\:sitemapUrlFunction\\(\\) has parameter \\$url with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Twig/Sitemap/SitemapTwigExtensionInterface.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\WebsiteBundle\\\\Twig\\\\Sitemap\\\\SitemapTwigExtensionInterface\\:\\:sitemapUrlFunction\\(\\) has parameter \\$webspaceKey with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/WebsiteBundle/Twig/Sitemap/SitemapTwigExtensionInterface.php
 
@@ -35241,17 +34971,7 @@ parameters:
 			path: src/Sulu/Component/Content/Document/Behavior/LocalizedAuthorBehavior.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Document\\\\Behavior\\\\NavigationContextBehavior\\:\\:getNavigationContexts\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Document/Behavior/NavigationContextBehavior.php
-
-		-
 			message: "#^Method Sulu\\\\Component\\\\Content\\\\Document\\\\Behavior\\\\NavigationContextBehavior\\:\\:setNavigationContexts\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Document/Behavior/NavigationContextBehavior.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Document\\\\Behavior\\\\NavigationContextBehavior\\:\\:setNavigationContexts\\(\\) has parameter \\$navigationContexts with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Document/Behavior/NavigationContextBehavior.php
 
@@ -35319,11 +35039,6 @@ parameters:
 			message: "#^Method Sulu\\\\Component\\\\Content\\\\Document\\\\Behavior\\\\TargetBehavior\\:\\:setTargetDocument\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Document/Behavior/TargetBehavior.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Document\\\\Behavior\\\\WebspaceBehavior\\:\\:getWebspaceName\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Document/Behavior/WebspaceBehavior.php
 
 		-
 			message: "#^Method Sulu\\\\Component\\\\Content\\\\Document\\\\Behavior\\\\WorkflowStageBehavior\\:\\:setWorkflowStage\\(\\) has no return type specified\\.$#"
@@ -43977,7 +43692,7 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Component\\\\Import\\\\Format\\\\Xliff12\\:\\:utf8ToCharset\\(\\) should return string but returns string\\|false\\.$#"
-			count: 1
+			count: 2
 			path: src/Sulu/Component/Import/Format/Xliff12.php
 
 		-

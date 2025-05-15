@@ -16,6 +16,7 @@ use Sulu\Bundle\MediaBundle\Collection\Manager\CollectionManager;
 use Sulu\Bundle\MediaBundle\DataFixtures\ORM\LoadCollectionTypes;
 use Sulu\Bundle\MediaBundle\DataFixtures\ORM\LoadMediaTypes;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManager;
+use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
 use Sulu\Bundle\TestBundle\Testing\WebsiteTestCase;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -128,9 +129,31 @@ class MediaStreamControllerTest extends WebsiteTestCase
 
     public function testGetImageActionForNonExistingMedia(): void
     {
+        $this->client->request('GET', '/uploads/media/sulu-400x400/01/999999-test.jpg?v=1');
+
+        $this->assertHttpStatusCode(404, $this->client->getResponse());
+    }
+
+    public function testGetImageActionForNonProvidedIdMedia(): void
+    {
         $this->client->request('GET', '/uploads/media/sulu-400x400/01/test.jpg?v=1');
 
         $this->assertHttpStatusCode(404, $this->client->getResponse());
+    }
+
+    public function testGetImageActionForExistingMediaButNotFoundFile(): void
+    {
+        $filePath = $this->createMediaFile('test.jpg');
+        $media = $this->createMedia($filePath, 'Test jpg');
+
+        $storageOptions = $media->getFileVersion()->getStorageOptions();
+        $this->assertNotNull($storageOptions);
+
+        self::getContainer()->get(StorageInterface::class)->remove($storageOptions);
+
+        $this->client->request('GET', $media->getFormats()['small-inset']);
+
+        $this->assertHttpStatusCode(500, $this->client->getResponse());
     }
 
     public function testGetImageAction(): void

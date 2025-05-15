@@ -77,7 +77,7 @@ class SwiftMailerListenerTest extends TestCase
 
     public function testReplaceMarkup(): void
     {
-        /** @var Request|ObjectProphecy $request */
+        /** @var ObjectProphecy<Request> $request */
         $request = $this->prophesize(Request::class);
         $request->getLocale()->willReturn('de');
         $this->requestStack->getCurrentRequest()->willReturn($request->reveal());
@@ -110,7 +110,7 @@ class SwiftMailerListenerTest extends TestCase
 
     public function testReplaceMarkupWithUnknownContentType(): void
     {
-        /** @var Request|ObjectProphecy $request */
+        /** @var ObjectProphecy<Request> $request */
         $request = $this->prophesize(Request::class);
         $request->getLocale()->willReturn('de');
         $this->requestStack->getCurrentRequest()->willReturn($request->reveal());
