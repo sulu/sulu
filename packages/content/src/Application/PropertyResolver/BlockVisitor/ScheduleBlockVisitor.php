@@ -43,6 +43,7 @@ class ScheduleBlockVisitor implements BlockVisitorInterface
 
         $returnBlock = false;
 
+        /** @var array<string, mixed> $schedule */
         foreach ($blockPropertyTypeSettings['schedules'] as $schedule) {
             switch ($schedule['type']) {
                 case 'fixed':
@@ -78,9 +79,9 @@ class ScheduleBlockVisitor implements BlockVisitorInterface
                     }
                     break;
                 case 'weekly':
-                    $year = $now->format('Y');
-                    $month = $now->format('m');
-                    $day = $now->format('d');
+                    $year = (int) $now->format('Y');
+                    $month = (int) $now->format('m');
+                    $day = (int) $now->format('d');
 
                     $start = new \DateTime($schedule['start']);
                     $start->setDate($year, $month, $day);
@@ -121,7 +122,8 @@ class ScheduleBlockVisitor implements BlockVisitorInterface
         return $returnBlock ? $block : null;
     }
 
-    private function matchWeekday(\DateTime $datetime, $schedule): bool
+    /** @param array<string, mixed> $schedule */
+    private function matchWeekday(\DateTime $datetime, array $schedule): bool
     {
         if (!\is_array($schedule['days'])) {
             return false;

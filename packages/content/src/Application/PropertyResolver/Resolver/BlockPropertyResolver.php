@@ -43,9 +43,6 @@ class BlockPropertyResolver implements PropertyResolverInterface
         $this->metadataResolver = $metadataResolver;
     }
 
-    /**
-     * @param array<array<mixed>>|mixed $data
-     */
     public function resolve(mixed $data, string $locale, array $params = []): ContentView
     {
         $metadata = $params['metadata'] ?? null;
@@ -81,6 +78,7 @@ class BlockPropertyResolver implements PropertyResolverInterface
                 }
             }
 
+            /** @var string $type */
             $type = $block['type'];
             $formMetadata = $metadataTypes[$type] ?? null;
 

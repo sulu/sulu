@@ -55,6 +55,18 @@ parameters:
 			path: packages/article/src/Infrastructure/Symfony/HttpKernel/SuluArticleBundle.php
 
 		-
+			message: '#^Parameter \#1 \$datetime of class DateTime constructor expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 4
+			path: packages/content/src/Application/PropertyResolver/BlockVisitor/ScheduleBlockVisitor.php
+
+		-
+			message: '#^Call to function is_array\(\) with array\<string, mixed\> will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: packages/content/src/Application/PropertyResolver/Resolver/BlockPropertyResolver.php
+
+		-
 			message: '#^Method Sulu\\Content\\Infrastructure\\Sulu\\SmartContent\\DataItem\\ContentDataItem\:\:getTitle\(\) should return string\|null but returns mixed\.$#'
 			identifier: return.type
 			count: 2
@@ -18841,13 +18853,13 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/AdminControllerTest.php
 
 		-
-			message: '#^Parameter \#2 \$array of method PHPUnit\\Framework\\Assert\:\:assertArrayHasKey\(\) expects array\<mixed\>\|ArrayAccess\<\(int\|string\), mixed\>, non\-empty\-array\|ArrayAccess given\.$#'
+			message: '#^Parameter \#2 \$array of method PHPUnit\\Framework\\Assert\:\:assertArrayHasKey\(\) expects array\<mixed\>\|ArrayAccess\<\(int\|string\), mixed\>, mixed given\.$#'
 			identifier: argument.type
 			count: 3
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/AdminControllerTest.php
 
 		-
-			message: '#^Parameter \#2 \$array of method PHPUnit\\Framework\\Assert\:\:assertArrayHasKey\(\) expects array\<mixed\>\|ArrayAccess\<\(int\|string\), mixed\>, mixed given\.$#'
+			message: '#^Parameter \#2 \$array of method PHPUnit\\Framework\\Assert\:\:assertArrayHasKey\(\) expects array\<mixed\>\|ArrayAccess\<\(int\|string\), mixed\>, non\-empty\-array\|ArrayAccess given\.$#'
 			identifier: argument.type
 			count: 3
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/AdminControllerTest.php
