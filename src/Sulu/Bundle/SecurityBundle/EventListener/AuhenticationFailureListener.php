@@ -12,12 +12,14 @@
 namespace Sulu\Bundle\SecurityBundle\EventListener;
 
 use Ramsey\Uuid\Uuid;
-use Sulu\Component\Security\Authentication\UserRepositoryInterface;
+use Symfony\Component\Security\Http\Event\LoginFailureEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
+use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 use Symfony\Component\Security\Core\Event\AuthenticationFailureEvent;
+use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
+use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
 
 /**
  * This listener ensures, that requests with invalid usernames have the same response time as valid users.
@@ -34,14 +36,15 @@ class AuhenticationFailureListener implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            AuthenticationFailureEvent::class => 'onLoginFailure',
+            class_exists(AuthenticationFailureEvent::class) ? AuthenticationFailureEvent::class : LoginFailureEvent::class => 'onLoginFailure',
         ];
     }
 
-    public function onLoginFailure(AuthenticationFailureEvent $event)
+    public function onLoginFailure(AuthenticationFailureEvent|LoginFailureEvent $event)
     {
-        $previousException = $event->getAuthenticationException()->getPrevious();
-        if ($previousException instanceof UsernameNotFoundException) {
+        $exception = $event instanceof AuthenticationFailureEvent ? $event->getAuthenticationException() : $event->getException();
+        $previousException = $exception->getPrevious();
+        if ($previousException instanceof UsernameNotFoundException || $previousException instanceof UserNotFoundException) {
             $user = $this->userRepository->createNew();
 
             if ($this->passwordHasherFactory instanceof PasswordHasherFactoryInterface) {
