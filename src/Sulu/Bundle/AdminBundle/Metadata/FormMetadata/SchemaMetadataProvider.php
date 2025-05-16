@@ -52,10 +52,12 @@ class SchemaMetadataProvider
 
             $type = $itemMetadata->getType();
 
-            if ($this->propertyMetadataMapperRegistry->has($type) && false) {
+            if ($this->propertyMetadataMapperRegistry->has($type)) {
                 yield $this->propertyMetadataMapperRegistry
                     ->get($type)
                     ->mapPropertyMetadata($itemMetadata);
+
+                continue;
             }
 
             yield new PropertyMetadata(

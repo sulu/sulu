@@ -60,8 +60,9 @@ class FormXmlLoader extends AbstractLoader
 
         $schema = $this->schemaMetadataProvider->getMetadata($properties);
         $schemaNode = $xpath->query('/x:form/x:schema')->item(0);
+
         if ($schemaNode) {
-            $schema->merge($this->schemaXmlParser->load($xpath, $schemaNode));
+            $schema = $schema->merge($this->schemaXmlParser->load($xpath, $schemaNode));
         }
         $form->setSchema($schema);
 
