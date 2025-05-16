@@ -1,0 +1,74 @@
+{
+    "name": null,
+    "form": {
+        "title": {
+            "disabledCondition": null,
+            "visibleCondition": null,
+            "type": "text_line",
+            "colSpan": 12,
+            "options": {
+                "headline": {
+                    "name": "headline",
+                    "type": "string",
+                    "value": true
+                }
+            },
+            "types": [],
+            "defaultType": null,
+            "required": true,
+            "multilingual": true,
+            "spaceAfter": null,
+            "minOccurs": null,
+            "maxOccurs": null,
+            "onInvalid": null,
+            "tags": [],
+            "label": "Title"
+        },
+        "description": {
+            "disabledCondition": null,
+            "visibleCondition": null,
+            "type": "text_area",
+            "colSpan": 12,
+            "options": [],
+            "types": [],
+            "defaultType": null,
+            "required": false,
+            "multilingual": true,
+            "spaceAfter": null,
+            "minOccurs": null,
+            "maxOccurs": null,
+            "onInvalid": null,
+            "tags": [],
+            "label": "Description"
+        }
+    },
+    "schema": {
+        "type": "object",
+        "properties": {
+            "title": {
+                "type": "string",
+                "minLength": 1
+            },
+            "description": {
+                "anyOf": [
+                    {
+                        "type": "null"
+                    },
+                    {
+                        "type": "string",
+                        "maxLength": 0
+                    },
+                    {
+                        "type": "string"
+                    }
+                ]
+            }
+        },
+        "required": [
+            "title"
+        ]
+    },
+    "key": "collection_details",
+    "tags": [],
+    "title": ""
+}

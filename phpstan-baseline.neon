@@ -30421,39 +30421,9 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/AdminControllerTest.php
 
 		-
-			message: '#^Cannot access property \$form on mixed\.$#'
-			identifier: property.nonObject
-			count: 2
-			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/AdminControllerTest.php
-
-		-
 			message: '#^Cannot access property \$image_format on mixed\.$#'
 			identifier: property.nonObject
 			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/AdminControllerTest.php
-
-		-
-			message: '#^Cannot access property \$items on mixed\.$#'
-			identifier: property.nonObject
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/AdminControllerTest.php
-
-		-
-			message: '#^Cannot access property \$media_details on mixed\.$#'
-			identifier: property.nonObject
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/AdminControllerTest.php
-
-		-
-			message: '#^Cannot access property \$required on mixed\.$#'
-			identifier: property.nonObject
-			count: 2
-			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/AdminControllerTest.php
-
-		-
-			message: '#^Cannot access property \$schema on mixed\.$#'
-			identifier: property.nonObject
-			count: 2
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/AdminControllerTest.php
 
 		-
@@ -30463,27 +30433,9 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/AdminControllerTest.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\Tests\\Functional\\Controller\\AdminControllerTest\:\:getEmptyArraySchema\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/AdminControllerTest.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\Tests\\Functional\\Controller\\AdminControllerTest\:\:getNullSchema\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/AdminControllerTest.php
-
-		-
 			message: '#^Parameter \#1 \$json of function json_decode expects string, string\|false given\.$#'
 			identifier: argument.type
-			count: 4
-			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/AdminControllerTest.php
-
-		-
-			message: '#^Parameter \#1 \$object_or_class of function property_exists expects object\|string, mixed given\.$#'
-			identifier: argument.type
-			count: 8
+			count: 2
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/AdminControllerTest.php
 
 		-

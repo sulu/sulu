@@ -1,0 +1,42 @@
+{
+    "anyOf": [
+        {
+            "type": "null"
+        },
+        {
+            "type": "object",
+            "properties": {
+                "ids": {
+                    "anyOf": [
+                        {
+                            "type": "array",
+                            "items": {
+                                "type": [
+                                    "number",
+                                    "string",
+                                    "boolean",
+                                    "object",
+                                    "array",
+                                    "null"
+                                ]
+                            },
+                            "maxItems": 0
+                        },
+                        {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "minItems": 2,
+                            "maxItems": 3,
+                            "uniqueItems": true
+                        }
+                    ]
+                },
+                "displayOption": {
+                    "type": "string"
+                }
+            }
+        }
+    ]
+}

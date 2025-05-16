@@ -11,11 +11,14 @@
 
 namespace Sulu\Bundle\MediaBundle\Tests\Functional\Controller;
 
+use Sulu\Bundle\TestBundle\Testing\AssertSnapshotTrait;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
 class AdminControllerTest extends SuluTestCase
 {
-    public function testContactsConfig(): void
+    use AssertSnapshotTrait;
+
+    public function testConfig(): void
     {
         $client = $this->createAuthenticatedClient();
         $client->jsonRequest('GET', '/admin/config');
@@ -35,16 +38,8 @@ class AdminControllerTest extends SuluTestCase
         $client->jsonRequest('GET', '/admin/metadata/form/collection_details');
 
         $this->assertHttpStatusCode(200, $client->getResponse());
-        $response = \json_decode($client->getResponse()->getContent());
 
-        $form = $response->form;
-
-        $this->assertTrue(\property_exists($form, 'title'));
-        $this->assertTrue(\property_exists($form, 'description'));
-
-        $schema = $response->schema;
-
-        $this->assertEquals(['title'], $schema->required);
+        $this->assertSnapshot('collection_details.json', $client->getResponse()->getContent() ?: '');
     }
 
     public function testMediaMetadataAction(): void
@@ -54,39 +49,8 @@ class AdminControllerTest extends SuluTestCase
         $client->jsonRequest('GET', '/admin/metadata/form/media_details');
 
         $this->assertHttpStatusCode(200, $client->getResponse());
-        $response = \json_decode($client->getResponse()->getContent());
 
-        $form = $response->form;
-        $this->assertTrue(\property_exists($form, 'media_upload'));
-        $this->assertTrue(\property_exists($form, 'media_details'));
-
-        $items = $form->media_details->items;
-        $this->assertTrue(\property_exists($items, 'title'));
-        $this->assertTrue(\property_exists($items, 'description'));
-        $this->assertTrue(\property_exists($items, 'license'));
-        $this->assertTrue(\property_exists($items, 'taxonomies'));
-
-        $schema = $response->schema;
-
-        $this->assertEquals(['title'], $schema->required);
-    }
-
-    private function getNullSchema(): array
-    {
-        return [
-            'type' => 'null',
-        ];
-    }
-
-    private function getEmptyArraySchema(): array
-    {
-        return [
-            'type' => 'array',
-            'items' => [
-                'type' => ['number', 'string', 'boolean', 'object', 'array', 'null'],
-            ],
-            'maxItems' => 0,
-        ];
+        $this->assertSnapshot('media_details.json', $client->getResponse()->getContent() ?: '');
     }
 
     public function testImagesFormMetadataAction(): void
@@ -104,52 +68,9 @@ class AdminControllerTest extends SuluTestCase
         $this->assertSame(['title', 'url'], $schema['required']);
         $this->assertArrayHasKey('properties', $schema);
         $this->assertArrayHasKey('images', $schema['properties']);
-        $this->assertEquals([
-            'anyOf' => [
-                $this->getNullSchema(),
-                [
-                    'type' => 'object',
-                    'properties' => [
-                        'ids' => [
-                            'anyOf' => [
-                                $this->getEmptyArraySchema(),
-                                [
-                                    'type' => 'array',
-                                    'items' => [
-                                        'type' => 'number',
-                                    ],
-                                    'minItems' => 2,
-                                    'maxItems' => 3,
-                                    'uniqueItems' => true,
-                                ],
-                            ],
-                        ],
-                        'displayOption' => [
-                            'type' => 'string',
-                        ],
-                    ],
-                ],
-            ],
-        ], $schema['properties']['images']);
         $this->assertArrayHasKey('image', $schema['properties']);
-        $this->assertEquals([
-            'anyOf' => [
-                $this->getNullSchema(),
-                [
-                    'type' => 'object',
-                    'properties' => [
-                        'id' => [
-                            'anyOf' => [
-                                $this->getNullSchema(),
-                                ['type' => 'number'],
-                            ],
-                        ],
-                        'displayOption' => [
-                            'type' => 'string',
-                        ],
-                    ],
-                ],
-            ],
-        ], $schema['properties']['image']);
+
+        $this->assertSnapshot('form_image.json', \json_encode($schema['properties']['image'], \JSON_THROW_ON_ERROR));
+        $this->assertSnapshot('form_images.json', \json_encode($schema['properties']['images'], \JSON_THROW_ON_ERROR));
     }
 }

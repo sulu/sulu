@@ -1,0 +1,25 @@
+{
+    "anyOf": [
+        {
+            "type": "null"
+        },
+        {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "anyOf": [
+                        {
+                            "type": "null"
+                        },
+                        {
+                            "type": "number"
+                        }
+                    ]
+                },
+                "displayOption": {
+                    "type": "string"
+                }
+            }
+        }
+    ]
+}
