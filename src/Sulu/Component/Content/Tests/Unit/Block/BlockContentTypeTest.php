@@ -16,6 +16,7 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\SchemaMetadataProvider;
 use Sulu\Bundle\AudienceTargetingBundle\TargetGroup\TargetGroupStoreInterface;
 use Sulu\Bundle\MediaBundle\Content\Types\MediaSelectionContentType;
 use Sulu\Bundle\MediaBundle\Content\Types\SingleMediaSelection;
@@ -97,18 +98,18 @@ class BlockContentTypeTest extends TestCase
 
         $this->requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
         $this->contentTypeManager = $this->prophesize(ContentTypeManager::class);
-        $this->targetGroupStore = $this->prophesize(TargetGroupStoreInterface::class);
         $this->blockVisitor1 = $this->prophesize(BlockVisitorInterface::class);
         $this->blockVisitor2 = $this->prophesize(BlockVisitorInterface::class);
+        $this->targetGroupStore = $this->prophesize(TargetGroupStoreInterface::class);
 
         $this->blockVisitor1->visit(Argument::any())->will(function($arguments) {return $arguments[0]; });
         $this->blockVisitor2->visit(Argument::any())->will(function($arguments) {return $arguments[0]; });
 
+        $this->schemaMetadataProvider = $this->prophesize(SchemaMetadataProvider::class);
+
         $this->blockContentType = new BlockContentType(
             $this->contentTypeManager->reveal(),
-            'not in use',
-            $this->requestAnalyzer->reveal(),
-            $this->targetGroupStore->reveal(),
+            $this->schemaMetadataProvider->reveal(),
             [
                 $this->blockVisitor1->reveal(),
                 $this->blockVisitor2->reveal(),

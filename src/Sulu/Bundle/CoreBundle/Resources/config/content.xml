@@ -183,12 +183,12 @@
         <!-- complex content types -->
         <service id="sulu.content.type.block" class="%sulu.content.type.block.class%">
             <argument type="service" id="sulu.content.type_manager"/>
-            <argument>%sulu.content.language.namespace%</argument>
-            <argument type="service" id="sulu_core.webspace.request_analyzer" />
-            <argument type="service" id="sulu_audience_targeting.target_group_store" on-invalid="null" />
+            <argument type="service" id="sulu_admin.schema_metadata_provider"/>
             <argument type="tagged" tag="sulu_content.deprecated_block_visitor" />
+
             <tag name="sulu.content.type" alias="block"/>
             <tag name="sulu.content.export" format="1.2.xliff" translate="false" />
+            <tag name="sulu_admin.property_metadata_mapper" type="block" />
         </service>
 
         <service

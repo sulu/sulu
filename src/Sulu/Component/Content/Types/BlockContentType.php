@@ -12,6 +12,17 @@
 namespace Sulu\Component\Content\Types;
 
 use PHPCR\NodeInterface;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\SchemaMetadataProvider;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TagMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\AllOfsMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\ArrayMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\ConstMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\IfThenElseMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadataMapperInterface;
+use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\RefSchemaMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\SchemaMetadata;
 use Sulu\Bundle\AudienceTargetingBundle\TargetGroup\TargetGroupStoreInterface;
 use Sulu\Bundle\ReferenceBundle\Application\Collector\ReferenceCollectorInterface;
 use Sulu\Bundle\ReferenceBundle\Infrastructure\Sulu\ContentType\ReferenceContentTypeInterface;
@@ -32,32 +43,16 @@ use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 /**
  * content type for block.
  */
-class BlockContentType extends ComplexContentType implements ContentTypeExportInterface, PreResolvableContentTypeInterface, ReferenceContentTypeInterface
+class BlockContentType extends ComplexContentType implements ContentTypeExportInterface, PreResolvableContentTypeInterface, ReferenceContentTypeInterface, PropertyMetadataMapperInterface
 {
     /**
-     * @param string $languageNamespace
+     * @param BlockVisitorInterface[] $blockVisitors
      */
     public function __construct(
         private ContentTypeManagerInterface $contentTypeManager,
-        private $languageNamespace,
-        /**
-         * @deprecated This property is not needed anymore and will be removed in Sulu 3.0
-         */
-        private RequestAnalyzerInterface $requestAnalyzer,
-        /**
-         * @deprecated This property is not needed anymore and will be removed in Sulu 3.0
-         */
-        private ?TargetGroupStoreInterface $targetGroupStore = null,
-        /**
-         * @var BlockVisitorInterface[]
-         */
-        private ?iterable $blockVisitors = null
+        private SchemaMetadataProvider $schemaMetadataProvider,
+        private iterable $blockVisitors,
     ) {
-        if (null === $this->blockVisitors) {
-            @trigger_deprecation('sulu/sulu', '2.3', 'Instantiating BlockContentType without the $blockVisitors argument is deprecated.');
-
-            $this->blockVisitors = [];
-        }
     }
 
     public function read(
@@ -473,5 +468,41 @@ class BlockContentType extends ComplexContentType implements ContentTypeExportIn
                 $child->setValue($oldValue);
             }
         }
+    }
+
+    public function mapPropertyMetadata(FieldMetadata $fieldMetadata): PropertyMetadata
+    {
+        $blockTypeSchemas = [];
+        foreach ($fieldMetadata->getTypes() as $blockType) {
+            $tag = $blockType->findTag('sulu.global_block');
+            if ($tag instanceof TagMetadata) {
+                $blockName = $tag->getAttributes()['global_block'] ?? null;
+                \assert(null !== $blockName, 'Global block name is expected to be not null.');
+
+                $blockTypeSchemas[] = new IfThenElseMetadata(
+                    new SchemaMetadata([
+                        new PropertyMetadata('type', true, new ConstMetadata($blockType->getName())),
+                    ]),
+                    new RefSchemaMetadata('#/definitions/' . $blockName)
+                );
+
+                continue;
+            }
+
+            $blockTypeSchemas[] = new IfThenElseMetadata(
+                new SchemaMetadata([
+                    new PropertyMetadata('type', true, new ConstMetadata($blockType->getName())),
+                ]),
+                $this->schemaMetadataProvider->getMetadata($blockType->getItems()),
+            );
+        }
+
+        return new PropertyMetadata(
+            $fieldMetadata->getName(),
+            $fieldMetadata->isRequired(),
+            new ArrayMetadata(
+                new AllOfsMetadata($blockTypeSchemas)
+            )
+        );
     }
 }
