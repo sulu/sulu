@@ -29,33 +29,39 @@ class SchemaMetadataProvider
      */
     public function getMetadata(array $itemsMetadata): SchemaMetadata
     {
-        return new SchemaMetadata($this->getSchemaProperties($itemsMetadata));
+        return new SchemaMetadata([...$this->getSchemaProperties($itemsMetadata)]);
     }
 
     /**
      * @param ItemMetadata[] $itemsMetadata
+     *
+     * @return \Generator<int, PropertyMetadata>
      */
-    private function getSchemaProperties(array $itemsMetadata): array
+    private function getSchemaProperties(array $itemsMetadata): \Generator
     {
-        return \array_filter(\array_map(function(ItemMetadata $itemMetadata) {
+        foreach ($itemsMetadata as $itemMetadata) {
             if ($itemMetadata instanceof SectionMetadata) {
-                return $this->getSchemaProperties($itemMetadata->getItems());
+                foreach ($this->getSchemaProperties($itemMetadata->getItems()) as $propertyMetadata) {
+                    yield $propertyMetadata;
+                }
+
+                continue;
             }
 
             \assert($itemMetadata instanceof FieldMetadata, 'ItemMetadata is expected to be FieldMetadata');
 
             $type = $itemMetadata->getType();
 
-            if ($this->propertyMetadataMapperRegistry->has($type)) {
-                return $this->propertyMetadataMapperRegistry
+            if ($this->propertyMetadataMapperRegistry->has($type) && false) {
+                yield $this->propertyMetadataMapperRegistry
                     ->get($type)
                     ->mapPropertyMetadata($itemMetadata);
             }
 
-            return new PropertyMetadata(
+            yield new PropertyMetadata(
                 $itemMetadata->getName(),
                 $itemMetadata->isRequired()
             );
-        }, $itemsMetadata));
+        }
     }
 }
