@@ -1,0 +1,137 @@
+{
+    "name": null,
+    "form": {
+        "name": {
+            "disabledCondition": null,
+            "visibleCondition": null,
+            "type": "text_line",
+            "colSpan": 12,
+            "options": {
+                "headline": {
+                    "name": "headline",
+                    "type": "string",
+                    "value": true
+                }
+            },
+            "types": [],
+            "defaultType": null,
+            "required": true,
+            "multilingual": true,
+            "spaceAfter": null,
+            "minOccurs": null,
+            "maxOccurs": null,
+            "onInvalid": null,
+            "tags": [],
+            "label": "Name"
+        },
+        "system": {
+            "disabledCondition": null,
+            "visibleCondition": null,
+            "type": "single_select",
+            "colSpan": 3,
+            "options": {
+                "values": {
+                    "name": "values",
+                    "type": "expression",
+                    "value": [
+                        {
+                            "name": "Sulu",
+                            "title": "Sulu"
+                        },
+                        {
+                            "name": "Sulu CMF",
+                            "title": "Sulu CMF"
+                        }
+                    ]
+                },
+                "default_value": {
+                    "name": "default_value",
+                    "type": "expression",
+                    "value": "Sulu"
+                }
+            },
+            "types": [],
+            "defaultType": null,
+            "required": true,
+            "multilingual": true,
+            "spaceAfter": null,
+            "minOccurs": null,
+            "maxOccurs": null,
+            "onInvalid": null,
+            "tags": [],
+            "label": "System"
+        },
+        "key": {
+            "disabledCondition": null,
+            "visibleCondition": null,
+            "type": "text_line",
+            "colSpan": 9,
+            "options": [],
+            "types": [],
+            "defaultType": null,
+            "required": false,
+            "multilingual": true,
+            "spaceAfter": null,
+            "minOccurs": null,
+            "maxOccurs": null,
+            "onInvalid": null,
+            "tags": [],
+            "label": "Key"
+        },
+        "permissions_section": {
+            "disabledCondition": null,
+            "visibleCondition": null,
+            "type": "section",
+            "colSpan": 12,
+            "items": {
+                "permissions": {
+                    "disabledCondition": null,
+                    "visibleCondition": null,
+                    "type": "permissions",
+                    "colSpan": 12,
+                    "options": [],
+                    "types": [],
+                    "defaultType": null,
+                    "required": false,
+                    "multilingual": true,
+                    "spaceAfter": null,
+                    "minOccurs": null,
+                    "maxOccurs": null,
+                    "onInvalid": null,
+                    "tags": []
+                }
+            },
+            "label": "System"
+        }
+    },
+    "schema": {
+        "type": "object",
+        "properties": {
+            "name": {
+                "type": "string",
+                "minLength": 1
+            },
+            "key": {
+                "anyOf": [
+                    {
+                        "type": "null"
+                    },
+                    {
+                        "type": "string",
+                        "maxLength": 0
+                    },
+                    {
+                        "type": "string"
+                    }
+                ]
+            }
+        },
+        "required": [
+            "name",
+            "system"
+        ]
+    },
+    "key": "role_details",
+    "tags": [],
+    "title": ""
+}

@@ -1,0 +1,165 @@
+{
+    "name": null,
+    "form": {
+        "username": {
+            "disabledCondition": null,
+            "visibleCondition": null,
+            "type": "text_line",
+            "colSpan": 6,
+            "options": [],
+            "types": [],
+            "defaultType": null,
+            "required": true,
+            "multilingual": true,
+            "spaceAfter": null,
+            "minOccurs": null,
+            "maxOccurs": null,
+            "onInvalid": null,
+            "tags": [],
+            "label": "Username"
+        },
+        "email": {
+            "disabledCondition": null,
+            "visibleCondition": null,
+            "type": "email",
+            "colSpan": 6,
+            "options": [],
+            "types": [],
+            "defaultType": null,
+            "required": false,
+            "multilingual": true,
+            "spaceAfter": null,
+            "minOccurs": null,
+            "maxOccurs": null,
+            "onInvalid": null,
+            "tags": [],
+            "label": "Email"
+        },
+        "password": {
+            "disabledCondition": null,
+            "visibleCondition": null,
+            "type": "password_confirmation",
+            "colSpan": 12,
+            "options": [],
+            "types": [],
+            "defaultType": null,
+            "required": false,
+            "multilingual": true,
+            "spaceAfter": null,
+            "minOccurs": null,
+            "maxOccurs": null,
+            "onInvalid": null,
+            "tags": [],
+            "label": "Password"
+        },
+        "locale": {
+            "disabledCondition": null,
+            "visibleCondition": null,
+            "type": "single_select",
+            "colSpan": 6,
+            "options": {
+                "values": {
+                    "name": "values",
+                    "type": "expression",
+                    "value": [
+                        {
+                            "name": "de",
+                            "title": "Deutsch"
+                        },
+                        {
+                            "name": "en",
+                            "title": "English"
+                        }
+                    ]
+                }
+            },
+            "types": [],
+            "defaultType": null,
+            "required": true,
+            "multilingual": true,
+            "spaceAfter": null,
+            "minOccurs": null,
+            "maxOccurs": null,
+            "onInvalid": null,
+            "tags": [],
+            "label": "System language"
+        },
+        "permission": {
+            "disabledCondition": null,
+            "visibleCondition": null,
+            "type": "section",
+            "colSpan": 12,
+            "items": {
+                "userRoles": {
+                    "disabledCondition": null,
+                    "visibleCondition": null,
+                    "type": "role_assignments",
+                    "colSpan": 12,
+                    "options": [],
+                    "types": [],
+                    "defaultType": null,
+                    "required": false,
+                    "multilingual": true,
+                    "spaceAfter": null,
+                    "minOccurs": null,
+                    "maxOccurs": null,
+                    "onInvalid": null,
+                    "tags": [],
+                    "label": "User roles"
+                }
+            },
+            "label": "Permissions"
+        }
+    },
+    "schema": {
+        "allOf": [
+            {
+                "type": "object",
+                "properties": {
+                    "username": {
+                        "type": "string",
+                        "minLength": 1
+                    },
+                    "email": {
+                        "anyOf": [
+                            {
+                                "type": "null"
+                            },
+                            {
+                                "type": "string",
+                                "maxLength": 0
+                            },
+                            {
+                                "type": "string",
+                                "format": "idn-email"
+                            }
+                        ]
+                    }
+                },
+                "required": [
+                    "username",
+                    "locale"
+                ]
+            },
+            {
+                "anyOf": [
+                    {
+                        "type": "object",
+                        "required": [
+                            "id"
+                        ]
+                    },
+                    {
+                        "type": "object",
+                        "required": [
+                            "password"
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    "key": "user_details",
+    "tags": [],
+    "title": ""
+}

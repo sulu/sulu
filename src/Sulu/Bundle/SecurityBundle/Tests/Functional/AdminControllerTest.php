@@ -11,10 +11,13 @@
 
 namespace Sulu\Bundle\SecurityBundle\Tests\Functional\Controller;
 
+use Sulu\Bundle\TestBundle\Testing\AssertSnapshotTrait;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
 class AdminControllerTest extends SuluTestCase
 {
+    use AssertSnapshotTrait;
+
     public function testRouteConfig(): void
     {
         $client = $this->createAuthenticatedClient();
@@ -50,18 +53,8 @@ class AdminControllerTest extends SuluTestCase
         $client->jsonRequest('GET', '/admin/metadata/form/user_details');
 
         $this->assertHttpStatusCode(200, $client->getResponse());
-        $response = \json_decode($client->getResponse()->getContent());
 
-        $form = $response->form;
-
-        $this->assertTrue(\property_exists($form, 'username'));
-        $this->assertTrue(\property_exists($form, 'password'));
-
-        $schema = $response->schema;
-
-        $this->assertEquals(['username', 'locale'], $schema->allOf[0]->required);
-        $this->assertEquals(['id'], $schema->allOf[1]->anyOf[0]->required);
-        $this->assertEquals(['password'], $schema->allOf[1]->anyOf[1]->required);
+        $this->assertSnapshot('user_details.json', $client->getResponse()->getContent() ?: '');
     }
 
     public function testRoleMetadataAction(): void
@@ -71,15 +64,7 @@ class AdminControllerTest extends SuluTestCase
         $client->jsonRequest('GET', '/admin/metadata/form/role_details');
 
         $this->assertHttpStatusCode(200, $client->getResponse());
-        $response = \json_decode($client->getResponse()->getContent());
 
-        $form = $response->form;
-
-        $this->assertTrue(\property_exists($form, 'name'));
-        $this->assertTrue(\property_exists($form, 'system'));
-
-        $schema = $response->schema;
-
-        $this->assertEquals(['name', 'system'], $schema->required);
+        $this->assertSnapshot('role_details.json', $client->getResponse()->getContent() ?: '');
     }
 }

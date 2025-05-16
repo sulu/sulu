@@ -61,7 +61,7 @@ trait AssertSnapshotTrait
             [$this->getCalledClassFolder(), $this->getSnapshotFolder(), $snapshotPatternFilename],
         );
 
-        $this->assertFileExists($snapshotFilePath, 'Unable to find snapshot file');
+        $this->assertFileExists($snapshotFilePath, 'Unable to find snapshot file: ' . $snapshotFilePath);
         $snapshotPattern = \file_get_contents($snapshotFilePath);
         $this->assertIsString($snapshotPattern, 'Unable to open snapshot file: ' . $snapshotFilePath);
 

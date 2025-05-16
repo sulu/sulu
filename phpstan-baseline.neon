@@ -45475,18 +45475,6 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/AdminControllerTest.php
 
 		-
-			message: '#^Cannot access offset 0 on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/AdminControllerTest.php
-
-		-
-			message: '#^Cannot access offset 1 on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 3
-			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/AdminControllerTest.php
-
-		-
 			message: '#^Cannot access offset 2 on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
@@ -45502,24 +45490,6 @@ parameters:
 			message: '#^Cannot access property \$Sulu on mixed\.$#'
 			identifier: property.nonObject
 			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/AdminControllerTest.php
-
-		-
-			message: '#^Cannot access property \$allOf on mixed\.$#'
-			identifier: property.nonObject
-			count: 3
-			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/AdminControllerTest.php
-
-		-
-			message: '#^Cannot access property \$anyOf on mixed\.$#'
-			identifier: property.nonObject
-			count: 2
-			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/AdminControllerTest.php
-
-		-
-			message: '#^Cannot access property \$form on mixed\.$#'
-			identifier: property.nonObject
-			count: 2
 			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/AdminControllerTest.php
 
 		-
@@ -45541,21 +45511,9 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/AdminControllerTest.php
 
 		-
-			message: '#^Cannot access property \$required on mixed\.$#'
-			identifier: property.nonObject
-			count: 4
-			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/AdminControllerTest.php
-
-		-
 			message: '#^Cannot access property \$routes on mixed\.$#'
 			identifier: property.nonObject
 			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/AdminControllerTest.php
-
-		-
-			message: '#^Cannot access property \$schema on mixed\.$#'
-			identifier: property.nonObject
-			count: 2
 			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/AdminControllerTest.php
 
 		-
@@ -45591,13 +45549,7 @@ parameters:
 		-
 			message: '#^Parameter \#1 \$json of function json_decode expects string, string\|false given\.$#'
 			identifier: argument.type
-			count: 3
-			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/AdminControllerTest.php
-
-		-
-			message: '#^Parameter \#1 \$object_or_class of function property_exists expects object\|string, mixed given\.$#'
-			identifier: argument.type
-			count: 4
+			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/AdminControllerTest.php
 
 		-
@@ -61399,7 +61351,7 @@ parameters:
 			path: src/Sulu/Component/Content/Query/ListToTreeConverter.php
 
 		-
-			message: '#^PHPDoc tag @var with type array\<string\> is not subtype of native type list\<string\>\|false\.$#'
+			message: '#^PHPDoc tag @var with type array\<string\> is not subtype of native type list\<array\{string, int\<0, max\>\}\|string\>\|false\.$#'
 			identifier: varTag.nativeType
 			count: 1
 			path: src/Sulu/Component/Content/Query/ListToTreeConverter.php
