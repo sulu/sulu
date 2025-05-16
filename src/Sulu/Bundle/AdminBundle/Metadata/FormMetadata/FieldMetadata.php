@@ -61,7 +61,7 @@ class FieldMetadata extends ItemMetadata
     /**
      * @var TagMetadata[]
      */
-    protected $tags;
+    protected $tags = [];
 
     public function setType(string $type): void
     {

@@ -51,7 +51,7 @@ abstract class ItemMetadata
     /**
      * @var int
      */
-    protected $colSpan;
+    protected $colSpan = 12;
 
     public function __construct(string $name)
     {
