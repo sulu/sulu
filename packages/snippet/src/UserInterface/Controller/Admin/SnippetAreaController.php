@@ -20,6 +20,7 @@ use Sulu\Component\Rest\RestHelperInterface;
 use Sulu\Messenger\Infrastructure\Symfony\Messenger\FlushMiddleware\EnableFlushStamp;
 use Sulu\Snippet\Application\Message\RemoveSnippetAreaMessage;
 use Sulu\Snippet\Application\Message\SetSnippetMessage;
+use Sulu\Snippet\Domain\Model\SnippetArea;
 use Sulu\Snippet\Domain\Model\SnippetAreaInterface;
 use Sulu\Snippet\Domain\Model\SnippetInterface;
 use Sulu\Snippet\Infrastructure\Doctrine\Repository\SnippetAreaRepository;
@@ -40,13 +41,17 @@ final class SnippetAreaController
 {
     use HandleTrait;
 
+    /**
+     * @param array<int,mixed> $snippetArea
+     */
     public function __construct(
         private SnippetAreaRepository $snippetAreaRepository,
         private MessageBusInterface $messageBus,
         private NormalizerInterface $normalizer,
         private FieldDescriptorFactoryInterface $fieldDescriptorFactory,
         private DoctrineListBuilderFactoryInterface $listBuilderFactory,
-        private RestHelperInterface $restHelper
+        private RestHelperInterface $restHelper,
+        private array $snippetArea,
     ) {
     }
 
@@ -62,8 +67,16 @@ final class SnippetAreaController
 
         $this->restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
 
+        $results = $listBuilder->execute();
+        foreach ($this->snippetArea as $snippetArea) {
+            $missingSnippet = new SnippetArea();
+            $missingSnippet->setWebspaceKey($request->attributes->getString('webspace'));
+            $missingSnippet->setAreaKey($snippetArea['key']);
+            $results[] = $missingSnippet;
+        }
+
         $listRepresentation = new PaginatedRepresentation(
-            $listBuilder->execute(),
+            $results,
             SnippetAreaInterface::RESOURCE_KEY,
             (int) $listBuilder->getCurrentPage(),
             (int) $listBuilder->getLimit(),

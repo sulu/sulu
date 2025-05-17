@@ -15,7 +15,7 @@ namespace Sulu\Snippet\Domain\Model;
 
 use Symfony\Component\Uid\Uuid;
 
-class SnippetArea
+class SnippetArea implements SnippetAreaInterface
 {
     /**
      * @var string
@@ -26,7 +26,7 @@ class SnippetArea
 
     private string $areaKey;
 
-    private Snippet $snippet;
+    private ?Snippet $snippet = null;
 
     public function __construct(
         ?string $uuid = null
@@ -69,7 +69,7 @@ class SnippetArea
         $this->snippet = $snippet;
     }
 
-    public function getSnippet(): Snippet
+    public function getSnippet(): ?Snippet
     {
         return $this->snippet;
     }
