@@ -12,9 +12,10 @@
 namespace Sulu\Bundle\AdminBundle\Tests\Unit\Metadata\SchemaMetadata;
 
 use PHPUnit\Framework\TestCase;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\OptionMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadataMinMaxValueResolver;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\TextPropertyMetadataMapper;
-use Sulu\Component\Content\Metadata\PropertyMetadata;
 
 class TextPropertyMetadataMapperTest extends TestCase
 {
@@ -47,10 +48,9 @@ class TextPropertyMetadataMapperTest extends TestCase
 
     public function testMapPropertyMetadata(): void
     {
-        $propertyMetadata = new PropertyMetadata();
-        $propertyMetadata->setName('property-name');
+        $fieldMetadata = new FieldMetadata('property-name');
 
-        $jsonSchema = $this->textPropertyMetadataMapper->mapPropertyMetadata($propertyMetadata)->toJsonSchema();
+        $jsonSchema = $this->textPropertyMetadataMapper->mapPropertyMetadata($fieldMetadata)->toJsonSchema();
 
         $this->assertEquals([
             'anyOf' => [
@@ -65,11 +65,10 @@ class TextPropertyMetadataMapperTest extends TestCase
 
     public function testMapPropertyMetadataRequired(): void
     {
-        $propertyMetadata = new PropertyMetadata();
-        $propertyMetadata->setName('property-name');
-        $propertyMetadata->setRequired(true);
+        $fieldMetadata = new FieldMetadata('property-name');
+        $fieldMetadata->setRequired(true);
 
-        $jsonSchema = $this->textPropertyMetadataMapper->mapPropertyMetadata($propertyMetadata)->toJsonSchema();
+        $jsonSchema = $this->textPropertyMetadataMapper->mapPropertyMetadata($fieldMetadata)->toJsonSchema();
 
         $this->assertEquals([
             'type' => 'string',
@@ -79,13 +78,13 @@ class TextPropertyMetadataMapperTest extends TestCase
 
     public function testMapPropertyMetadataPattern(): void
     {
-        $propertyMetadata = new PropertyMetadata();
-        $propertyMetadata->setName('property-name');
-        $propertyMetadata->setParameters([
-            ['name' => 'pattern', 'value' => '^[^,]*$'],
-        ]);
+        $fieldMetadata = new FieldMetadata('property-name');
+        $option = new OptionMetadata();
+        $option->setName('pattern');
+        $option->setValue('^[^,]*$');
+        $fieldMetadata->addOption($option);
 
-        $jsonSchema = $this->textPropertyMetadataMapper->mapPropertyMetadata($propertyMetadata)->toJsonSchema();
+        $jsonSchema = $this->textPropertyMetadataMapper->mapPropertyMetadata($fieldMetadata)->toJsonSchema();
 
         $this->assertEquals([
             'anyOf' => [
@@ -101,14 +100,17 @@ class TextPropertyMetadataMapperTest extends TestCase
 
     public function testMapPropertyMetadataMinAndMax(): void
     {
-        $propertyMetadata = new PropertyMetadata();
-        $propertyMetadata->setName('property-name');
-        $propertyMetadata->setParameters([
-            ['name' => 'min_length', 'value' => 2],
-            ['name' => 'max_length', 'value' => 3],
-        ]);
+        $fieldMetadata = new FieldMetadata('property-name');
+        $option = new OptionMetadata();
+        $option->setName('min_length');
+        $option->setValue(2);
+        $fieldMetadata->addOption($option);
+        $option = new OptionMetadata();
+        $option->setName('max_length');
+        $option->setValue(3);
+        $fieldMetadata->addOption($option);
 
-        $jsonSchema = $this->textPropertyMetadataMapper->mapPropertyMetadata($propertyMetadata)->toJsonSchema();
+        $jsonSchema = $this->textPropertyMetadataMapper->mapPropertyMetadata($fieldMetadata)->toJsonSchema();
 
         $this->assertEquals([
             'anyOf' => [
@@ -125,13 +127,13 @@ class TextPropertyMetadataMapperTest extends TestCase
 
     public function testMapPropertyMetadataMinAndMaxMinOnly(): void
     {
-        $propertyMetadata = new PropertyMetadata();
-        $propertyMetadata->setName('property-name');
-        $propertyMetadata->setParameters([
-            ['name' => 'min_length', 'value' => 2],
-        ]);
+        $fieldMetadata = new FieldMetadata('property-name');
+        $option = new OptionMetadata();
+        $option->setName('min_length');
+        $option->setValue(2);
+        $fieldMetadata->addOption($option);
 
-        $jsonSchema = $this->textPropertyMetadataMapper->mapPropertyMetadata($propertyMetadata)->toJsonSchema();
+        $jsonSchema = $this->textPropertyMetadataMapper->mapPropertyMetadata($fieldMetadata)->toJsonSchema();
 
         $this->assertEquals([
             'anyOf' => [
@@ -147,13 +149,13 @@ class TextPropertyMetadataMapperTest extends TestCase
 
     public function testMapPropertyMetadataMinAndMaxMaxOnly(): void
     {
-        $propertyMetadata = new PropertyMetadata();
-        $propertyMetadata->setName('property-name');
-        $propertyMetadata->setParameters([
-            ['name' => 'max_length', 'value' => 2],
-        ]);
+        $fieldMetadata = new FieldMetadata('property-name');
+        $option = new OptionMetadata();
+        $option->setName('max_length');
+        $option->setValue(2);
+        $fieldMetadata->addOption($option);
 
-        $jsonSchema = $this->textPropertyMetadataMapper->mapPropertyMetadata($propertyMetadata)->toJsonSchema();
+        $jsonSchema = $this->textPropertyMetadataMapper->mapPropertyMetadata($fieldMetadata)->toJsonSchema();
 
         $this->assertEquals([
             'anyOf' => [
@@ -169,14 +171,17 @@ class TextPropertyMetadataMapperTest extends TestCase
 
     public function testMapPropertyMetadataMinAndMaxWithIntegerishValues(): void
     {
-        $propertyMetadata = new PropertyMetadata();
-        $propertyMetadata->setName('property-name');
-        $propertyMetadata->setParameters([
-            ['name' => 'min_length', 'value' => '2'],
-            ['name' => 'max_length', 'value' => '3'],
-        ]);
+        $fieldMetadata = new FieldMetadata('property-name');
+        $option = new OptionMetadata();
+        $option->setName('min_length');
+        $option->setValue('2');
+        $fieldMetadata->addOption($option);
+        $option = new OptionMetadata();
+        $option->setName('max_length');
+        $option->setValue('3');
+        $fieldMetadata->addOption($option);
 
-        $jsonSchema = $this->textPropertyMetadataMapper->mapPropertyMetadata($propertyMetadata)->toJsonSchema();
+        $jsonSchema = $this->textPropertyMetadataMapper->mapPropertyMetadata($fieldMetadata)->toJsonSchema();
 
         $this->assertEquals([
             'anyOf' => [
@@ -195,79 +200,82 @@ class TextPropertyMetadataMapperTest extends TestCase
     {
         $this->expectExceptionMessage('Parameter "min_length" of property "property-name" needs to be either null or of type int');
 
-        $propertyMetadata = new PropertyMetadata();
-        $propertyMetadata->setName('property-name');
-        $propertyMetadata->setParameters([
-            ['name' => 'min_length', 'value' => 'invalid-value'],
-        ]);
+        $fieldMetadata = new FieldMetadata('property-name');
+        $option = new OptionMetadata();
+        $option->setName('min_length');
+        $option->setValue('invalid-value');
+        $fieldMetadata->addOption($option);
 
-        $this->textPropertyMetadataMapper->mapPropertyMetadata($propertyMetadata);
+        $this->textPropertyMetadataMapper->mapPropertyMetadata($fieldMetadata);
     }
 
     public function testMapPropertyMetadataMinAndMaxMinTooLow(): void
     {
         $this->expectExceptionMessage('Parameter "min_length" of property "property-name" needs to be greater than or equal "0"');
 
-        $propertyMetadata = new PropertyMetadata();
-        $propertyMetadata->setName('property-name');
-        $propertyMetadata->setParameters([
-            ['name' => 'min_length', 'value' => -1],
-        ]);
+        $fieldMetadata = new FieldMetadata('property-name');
+        $option = new OptionMetadata();
+        $option->setName('min_length');
+        $option->setValue(-1);
+        $fieldMetadata->addOption($option);
 
-        $this->textPropertyMetadataMapper->mapPropertyMetadata($propertyMetadata);
+        $this->textPropertyMetadataMapper->mapPropertyMetadata($fieldMetadata);
     }
 
     public function testMapPropertyMetadataMinAndMaxMandatoryMinTooLow(): void
     {
         $this->expectExceptionMessage('Because property "property-name" is mandatory, parameter "min_length" needs to be greater than or equal "1"');
 
-        $propertyMetadata = new PropertyMetadata();
-        $propertyMetadata->setName('property-name');
-        $propertyMetadata->setRequired(true);
-        $propertyMetadata->setParameters([
-            ['name' => 'min_length', 'value' => 0],
-        ]);
+        $fieldMetadata = new FieldMetadata('property-name');
+        $fieldMetadata->setRequired(true);
+        $option = new OptionMetadata();
+        $option->setName('min_length');
+        $option->setValue(0);
+        $fieldMetadata->addOption($option);
 
-        $this->textPropertyMetadataMapper->mapPropertyMetadata($propertyMetadata);
+        $this->textPropertyMetadataMapper->mapPropertyMetadata($fieldMetadata);
     }
 
     public function testMapPropertyMetadataMinAndMaxMaxInvalidType(): void
     {
         $this->expectExceptionMessage('Parameter "max_length" of property "property-name" needs to be either null or of type int');
 
-        $propertyMetadata = new PropertyMetadata();
-        $propertyMetadata->setName('property-name');
-        $propertyMetadata->setParameters([
-            ['name' => 'max_length', 'value' => 'invalid-value'],
-        ]);
+        $fieldMetadata = new FieldMetadata('property-name');
+        $option = new OptionMetadata();
+        $option->setName('max_length');
+        $option->setValue('invalid-value');
+        $fieldMetadata->addOption($option);
 
-        $this->textPropertyMetadataMapper->mapPropertyMetadata($propertyMetadata);
+        $this->textPropertyMetadataMapper->mapPropertyMetadata($fieldMetadata);
     }
 
     public function testMapPropertyMetadataMinAndMaxMaxTooLow(): void
     {
         $this->expectExceptionMessage('Parameter "max_length" of property "property-name" needs to be greater than or equal "1"');
 
-        $propertyMetadata = new PropertyMetadata();
-        $propertyMetadata->setName('property-name');
-        $propertyMetadata->setParameters([
-            ['name' => 'max_length', 'value' => 0],
-        ]);
+        $fieldMetadata = new FieldMetadata('property-name');
+        $option = new OptionMetadata();
+        $option->setName('max_length');
+        $option->setValue(0);
+        $fieldMetadata->addOption($option);
 
-        $this->textPropertyMetadataMapper->mapPropertyMetadata($propertyMetadata);
+        $this->textPropertyMetadataMapper->mapPropertyMetadata($fieldMetadata);
     }
 
     public function testMapPropertyMetadataMinAndMaxMaxLowerThanMin(): void
     {
         $this->expectExceptionMessage('Because parameter "min_length" of property "property-name" has value "2", parameter "max_length" needs to be greater than or equal "2"');
 
-        $propertyMetadata = new PropertyMetadata();
-        $propertyMetadata->setName('property-name');
-        $propertyMetadata->setParameters([
-            ['name' => 'min_length', 'value' => 2],
-            ['name' => 'max_length', 'value' => 1],
-        ]);
+        $fieldMetadata = new FieldMetadata('property-name');
+        $option = new OptionMetadata();
+        $option->setName('min_length');
+        $option->setValue(2);
+        $fieldMetadata->addOption($option);
+        $option = new OptionMetadata();
+        $option->setName('max_length');
+        $option->setValue(1);
+        $fieldMetadata->addOption($option);
 
-        $this->textPropertyMetadataMapper->mapPropertyMetadata($propertyMetadata);
+        $this->textPropertyMetadataMapper->mapPropertyMetadata($fieldMetadata);
     }
 }
