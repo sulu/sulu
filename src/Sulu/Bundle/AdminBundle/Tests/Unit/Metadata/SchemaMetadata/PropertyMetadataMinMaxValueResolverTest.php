@@ -12,8 +12,9 @@
 namespace Sulu\Bundle\AdminBundle\Tests\Unit\Metadata\SchemaMetadata;
 
 use PHPUnit\Framework\TestCase;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\OptionMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadataMinMaxValueResolver;
-use Sulu\Component\Content\Metadata\PropertyMetadata;
 
 class PropertyMetadataMinMaxValueResolverTest extends TestCase
 {
@@ -29,14 +30,17 @@ class PropertyMetadataMinMaxValueResolverTest extends TestCase
 
     public function testResolveMinMaxValue(): void
     {
-        $propertyMetadata = new PropertyMetadata();
-        $propertyMetadata->setName('property-name');
-        $propertyMetadata->setParameters([
-            ['name' => 'min', 'value' => 2],
-            ['name' => 'max', 'value' => 3],
-        ]);
+        $fieldMetadata = new FieldMetadata('property-name');
+        $minOption = new OptionMetadata();
+        $minOption->setName('min');
+        $minOption->setValue(2);
+        $fieldMetadata->addOption($minOption);
+        $maxOption = new OptionMetadata();
+        $maxOption->setName('max');
+        $maxOption->setValue(3);
+        $fieldMetadata->addOption($maxOption);
 
-        $minMaxValue = $this->propertyMetadataMinMaxValueResolver->resolveMinMaxValue($propertyMetadata);
+        $minMaxValue = $this->propertyMetadataMinMaxValueResolver->resolveMinMaxValue($fieldMetadata);
 
         $this->assertTrue(\property_exists($minMaxValue, 'min'));
         $this->assertSame(2, $minMaxValue->min);
@@ -46,13 +50,13 @@ class PropertyMetadataMinMaxValueResolverTest extends TestCase
 
     public function testResolveMinMaxValueMinOnly(): void
     {
-        $propertyMetadata = new PropertyMetadata();
-        $propertyMetadata->setName('property-name');
-        $propertyMetadata->setParameters([
-            ['name' => 'min', 'value' => 2],
-        ]);
+        $fieldMetadata = new FieldMetadata('property-name');
+        $minOption = new OptionMetadata();
+        $minOption->setName('min');
+        $minOption->setValue(2);
+        $fieldMetadata->addOption($minOption);
 
-        $minMaxValue = $this->propertyMetadataMinMaxValueResolver->resolveMinMaxValue($propertyMetadata);
+        $minMaxValue = $this->propertyMetadataMinMaxValueResolver->resolveMinMaxValue($fieldMetadata);
 
         $this->assertTrue(\property_exists($minMaxValue, 'min'));
         $this->assertSame(2, $minMaxValue->min);
@@ -62,13 +66,13 @@ class PropertyMetadataMinMaxValueResolverTest extends TestCase
 
     public function testResolveMinMaxValueMaxOnly(): void
     {
-        $propertyMetadata = new PropertyMetadata();
-        $propertyMetadata->setName('property-name');
-        $propertyMetadata->setParameters([
-            ['name' => 'max', 'value' => 2],
-        ]);
+        $fieldMetadata = new FieldMetadata('property-name');
+        $maxOption = new OptionMetadata();
+        $maxOption->setName('max');
+        $maxOption->setValue(2);
+        $fieldMetadata->addOption($maxOption);
 
-        $minMaxValue = $this->propertyMetadataMinMaxValueResolver->resolveMinMaxValue($propertyMetadata);
+        $minMaxValue = $this->propertyMetadataMinMaxValueResolver->resolveMinMaxValue($fieldMetadata);
 
         $this->assertTrue(\property_exists($minMaxValue, 'min'));
         $this->assertNull($minMaxValue->min);
@@ -78,10 +82,9 @@ class PropertyMetadataMinMaxValueResolverTest extends TestCase
 
     public function testResolveMinMaxValueWithoutParams(): void
     {
-        $propertyMetadata = new PropertyMetadata();
-        $propertyMetadata->setName('property-name');
+        $fieldMetadata = new FieldMetadata('property-name');
 
-        $minMaxValue = $this->propertyMetadataMinMaxValueResolver->resolveMinMaxValue($propertyMetadata);
+        $minMaxValue = $this->propertyMetadataMinMaxValueResolver->resolveMinMaxValue($fieldMetadata);
 
         $this->assertTrue(\property_exists($minMaxValue, 'min'));
         $this->assertNull($minMaxValue->min);
@@ -91,11 +94,10 @@ class PropertyMetadataMinMaxValueResolverTest extends TestCase
 
     public function testResolveMinMaxValueWithoutParamsRequired(): void
     {
-        $propertyMetadata = new PropertyMetadata();
-        $propertyMetadata->setName('property-name');
-        $propertyMetadata->setRequired(true);
+        $fieldMetadata = new FieldMetadata('property-name');
+        $fieldMetadata->setRequired(true);
 
-        $minMaxValue = $this->propertyMetadataMinMaxValueResolver->resolveMinMaxValue($propertyMetadata);
+        $minMaxValue = $this->propertyMetadataMinMaxValueResolver->resolveMinMaxValue($fieldMetadata);
 
         $this->assertTrue(\property_exists($minMaxValue, 'min'));
         $this->assertSame(1, $minMaxValue->min);
@@ -105,14 +107,18 @@ class PropertyMetadataMinMaxValueResolverTest extends TestCase
 
     public function testResolveMinMaxValueWithIntegerishValues(): void
     {
-        $propertyMetadata = new PropertyMetadata();
-        $propertyMetadata->setName('property-name');
-        $propertyMetadata->setParameters([
-            ['name' => 'min', 'value' => '2'],
-            ['name' => 'max', 'value' => '3'],
-        ]);
+        $fieldMetadata = new FieldMetadata('property-name');
+        $fieldMetadata->setRequired(true);
+        $minOption = new OptionMetadata();
+        $minOption->setName('min');
+        $minOption->setValue(2);
+        $fieldMetadata->addOption($minOption);
+        $maxOption = new OptionMetadata();
+        $maxOption->setName('max');
+        $maxOption->setValue(3);
+        $fieldMetadata->addOption($maxOption);
 
-        $minMaxValue = $this->propertyMetadataMinMaxValueResolver->resolveMinMaxValue($propertyMetadata);
+        $minMaxValue = $this->propertyMetadataMinMaxValueResolver->resolveMinMaxValue($fieldMetadata);
 
         $this->assertTrue(\property_exists($minMaxValue, 'min'));
         $this->assertSame(2, $minMaxValue->min);
@@ -122,15 +128,19 @@ class PropertyMetadataMinMaxValueResolverTest extends TestCase
 
     public function testResolveMinMaxValueWithDifferentParamNames(): void
     {
-        $propertyMetadata = new PropertyMetadata();
-        $propertyMetadata->setName('property-name');
-        $propertyMetadata->setParameters([
-            ['name' => 'minItems', 'value' => 2],
-            ['name' => 'maxItems', 'value' => 3],
-        ]);
+        $fieldMetadata = new FieldMetadata('property-name');
+        $fieldMetadata->setRequired(true);
+        $minOption = new OptionMetadata();
+        $minOption->setName('minItems');
+        $minOption->setValue(2);
+        $fieldMetadata->addOption($minOption);
+        $maxOption = new OptionMetadata();
+        $maxOption->setName('maxItems');
+        $maxOption->setValue(3);
+        $fieldMetadata->addOption($maxOption);
 
         $minMaxValue = $this->propertyMetadataMinMaxValueResolver->resolveMinMaxValue(
-            $propertyMetadata,
+            $fieldMetadata,
             'minItems',
             'maxItems'
         );
@@ -145,79 +155,84 @@ class PropertyMetadataMinMaxValueResolverTest extends TestCase
     {
         $this->expectExceptionMessage('Parameter "min" of property "property-name" needs to be either null or of type int');
 
-        $propertyMetadata = new PropertyMetadata();
-        $propertyMetadata->setName('property-name');
-        $propertyMetadata->setParameters([
-            ['name' => 'min', 'value' => 'invalid-value'],
-        ]);
+        $fieldMetadata = new FieldMetadata('property-name');
+        $fieldMetadata->setRequired(true);
+        $minOption = new OptionMetadata();
+        $minOption->setName('min');
+        $minOption->setValue('invalid-value');
+        $fieldMetadata->addOption($minOption);
 
-        $this->propertyMetadataMinMaxValueResolver->resolveMinMaxValue($propertyMetadata);
+        $this->propertyMetadataMinMaxValueResolver->resolveMinMaxValue($fieldMetadata);
     }
 
     public function testResolveMinMaxValueMinTooLow(): void
     {
         $this->expectExceptionMessage('Parameter "min" of property "property-name" needs to be greater than or equal "0"');
 
-        $propertyMetadata = new PropertyMetadata();
-        $propertyMetadata->setName('property-name');
-        $propertyMetadata->setParameters([
-            ['name' => 'min', 'value' => -1],
-        ]);
+        $fieldMetadata = new FieldMetadata('property-name');
+        $minOption = new OptionMetadata();
+        $minOption->setName('min');
+        $minOption->setValue(-1);
+        $fieldMetadata->addOption($minOption);
 
-        $this->propertyMetadataMinMaxValueResolver->resolveMinMaxValue($propertyMetadata);
+        $this->propertyMetadataMinMaxValueResolver->resolveMinMaxValue($fieldMetadata);
     }
 
     public function testResolveMinMaxValueMandatoryMinTooLow(): void
     {
         $this->expectExceptionMessage('Because property "property-name" is mandatory, parameter "min" needs to be greater than or equal "1"');
 
-        $propertyMetadata = new PropertyMetadata();
-        $propertyMetadata->setName('property-name');
-        $propertyMetadata->setRequired(true);
-        $propertyMetadata->setParameters([
-            ['name' => 'min', 'value' => 0],
-        ]);
+        $fieldMetadata = new FieldMetadata('property-name');
+        $fieldMetadata->setRequired(true);
+        $minOption = new OptionMetadata();
+        $minOption->setName('min');
+        $minOption->setValue(0);
+        $fieldMetadata->addOption($minOption);
 
-        $this->propertyMetadataMinMaxValueResolver->resolveMinMaxValue($propertyMetadata);
+        $this->propertyMetadataMinMaxValueResolver->resolveMinMaxValue($fieldMetadata);
     }
 
     public function testResolveMinMaxValueMaxInvalidType(): void
     {
         $this->expectExceptionMessage('Parameter "max" of property "property-name" needs to be either null or of type int');
 
-        $propertyMetadata = new PropertyMetadata();
-        $propertyMetadata->setName('property-name');
-        $propertyMetadata->setParameters([
-            ['name' => 'max', 'value' => 'invalid-value'],
-        ]);
+        $fieldMetadata = new FieldMetadata('property-name');
+        $maxOption = new OptionMetadata();
+        $maxOption->setName('max');
+        $maxOption->setValue('invalid-value');
+        $fieldMetadata->addOption($maxOption);
 
-        $this->propertyMetadataMinMaxValueResolver->resolveMinMaxValue($propertyMetadata);
+        $this->propertyMetadataMinMaxValueResolver->resolveMinMaxValue($fieldMetadata);
     }
 
     public function testResolveMinMaxValueMaxTooLow(): void
     {
         $this->expectExceptionMessage('Parameter "max" of property "property-name" needs to be greater than or equal "1"');
 
-        $propertyMetadata = new PropertyMetadata();
-        $propertyMetadata->setName('property-name');
-        $propertyMetadata->setParameters([
-            ['name' => 'max', 'value' => 0],
-        ]);
+        $fieldMetadata = new FieldMetadata('property-name');
+        $fieldMetadata->setRequired(true);
+        $maxOption = new OptionMetadata();
+        $maxOption->setName('max');
+        $maxOption->setValue(0);
+        $fieldMetadata->addOption($maxOption);
 
-        $this->propertyMetadataMinMaxValueResolver->resolveMinMaxValue($propertyMetadata);
+        $this->propertyMetadataMinMaxValueResolver->resolveMinMaxValue($fieldMetadata);
     }
 
     public function testResolveMinMaxValueMaxLowerThanMin(): void
     {
         $this->expectExceptionMessage('Because parameter "min" of property "property-name" has value "2", parameter "max" needs to be greater than or equal "2"');
 
-        $propertyMetadata = new PropertyMetadata();
-        $propertyMetadata->setName('property-name');
-        $propertyMetadata->setParameters([
-            ['name' => 'min', 'value' => 2],
-            ['name' => 'max', 'value' => 1],
-        ]);
+        $fieldMetadata = new FieldMetadata('property-name');
+        $minOption = new OptionMetadata();
+        $minOption->setName('min');
+        $minOption->setValue(2);
+        $fieldMetadata->addOption($minOption);
+        $maxOption = new OptionMetadata();
+        $maxOption->setName('max');
+        $maxOption->setValue(1);
+        $fieldMetadata->addOption($maxOption);
 
-        $this->propertyMetadataMinMaxValueResolver->resolveMinMaxValue($propertyMetadata);
+        $this->propertyMetadataMinMaxValueResolver->resolveMinMaxValue($fieldMetadata);
     }
 }
