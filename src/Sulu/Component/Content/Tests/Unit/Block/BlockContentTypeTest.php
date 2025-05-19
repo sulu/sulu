@@ -17,7 +17,6 @@ use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\SchemaMetadataProvider;
-use Sulu\Bundle\AudienceTargetingBundle\TargetGroup\TargetGroupStoreInterface;
 use Sulu\Bundle\MediaBundle\Content\Types\MediaSelectionContentType;
 use Sulu\Bundle\MediaBundle\Content\Types\SingleMediaSelection;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
