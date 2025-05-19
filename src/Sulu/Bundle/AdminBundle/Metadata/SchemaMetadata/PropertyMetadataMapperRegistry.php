@@ -11,18 +11,18 @@
 
 namespace Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata;
 
+use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Sulu\Bundle\AdminBundle\Exception\PropertyMetadataMapperNotFoundException;
-use Symfony\Component\DependencyInjection\ServiceLocator;
 
 class PropertyMetadataMapperRegistry
 {
     /**
-     * @var ServiceLocator
+     * @var ContainerInterface
      */
     private $locator;
 
-    public function __construct(ServiceLocator $locator)
+    public function __construct(ContainerInterface $locator)
     {
         $this->locator = $locator;
     }

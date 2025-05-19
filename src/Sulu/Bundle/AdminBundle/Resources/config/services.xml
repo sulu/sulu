@@ -69,6 +69,7 @@
         <service id="sulu_admin.properties_xml_parser"
                  class="Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Parser\PropertiesXmlParser"
                  public="false">
+            <argument type="service" id="sulu_admin.tag_xml_parser" />
             <argument type="service" id="translator" />
             <argument>%sulu_core.translated_locales%</argument>
         </service>
@@ -82,6 +83,11 @@
 
         <service id="sulu_admin.schema_xml_parser"
                  class="Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Parser\SchemaXmlParser"
+                 public="false">
+        </service>
+
+        <service id="sulu_admin.tag_xml_parser"
+                 class="Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Parser\TagXmlParser"
                  public="false">
         </service>
 
@@ -149,6 +155,7 @@
         <service id="sulu_admin.form_metadata.form_xml_loader" class="Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Loader\FormXmlLoader">
             <argument type="service" id="sulu_admin.properties_xml_parser"/>
             <argument type="service" id="sulu_admin.schema_xml_parser"/>
+            <argument type="service" id="sulu_admin.tag_xml_parser"/>
             <argument type="service" id="sulu_admin.schema_metadata_provider"/>
         </service>
 

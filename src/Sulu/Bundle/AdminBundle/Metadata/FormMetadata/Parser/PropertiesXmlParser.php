@@ -33,8 +33,11 @@ class PropertiesXmlParser
      */
     private $locales;
 
-    public function __construct(private TranslatorInterface $translator, array $locales)
-    {
+    public function __construct(
+        private TagXmlParser $tagXmlParser,
+        private TranslatorInterface $translator,
+        array $locales,
+    ) {
         $this->locales = \array_keys($locales);
     }
 
@@ -113,34 +116,6 @@ class PropertiesXmlParser
         return $result;
     }
 
-    private function validateTag(&$tags, $tag)
-    {
-        if (!isset($tags[$tag['name']])) {
-            $tags[$tag['name']] = [];
-        }
-
-        $tags[$tag['name']][] = $tag['priority'];
-    }
-
-    private function loadTag(\DOMXPath $xpath, \DOMNode $node)
-    {
-        $tag = [
-            'name' => null,
-            'priority' => null,
-            'attributes' => [],
-        ];
-
-        foreach ($node->attributes as $key => $attr) {
-            if (\in_array($key, ['name', 'priority'])) {
-                $tag[$key] = $attr->value;
-            } else {
-                $tag['attributes'][$key] = $attr->value;
-            }
-        }
-
-        return $tag;
-    }
-
     private function loadBlock(\DOMXPath $xpath, \DOMNode $node, ?string $formKey)
     {
         $result = $this->loadProperty($xpath, $node, $formKey);
@@ -169,18 +144,7 @@ class PropertiesXmlParser
 
     private function loadTags(\DOMXPath $xpath, ?\DOMNode $context = null)
     {
-        $tags = [];
-        $result = [];
-
-        /** @var \DOMElement $node */
-        foreach ($xpath->query('x:tag', $context) as $node) {
-            $tag = $this->loadTag($xpath, $node);
-            $this->validateTag($tags, $tag);
-
-            $result[] = $tag;
-        }
-
-        return $result;
+        return $this->tagXmlParser->load($xpath, $xpath->query('x:tag', $context));
     }
 
     private function loadTypes(\DOMXPath $xpath, ?\DOMNode $context, ?string $formKey)
@@ -387,14 +351,7 @@ class PropertiesXmlParser
             $property->setColSpan($data['colspan']);
         }
         $property->setSpaceAfter($data['spaceAfter']);
-        foreach ($data['tags'] as $tagData) {
-            $tag = new TagMetadata();
-            $tag->setName($tagData['name']);
-            $tag->setPriority($tagData['priority'] ?? null);
-            $tag->setAttributes($tagData['attributes'] ?? []);
-
-            $property->addTag($tag);
-        }
+        $property->setTags($data['tags'] ?? []);
         $property->setMinOccurs(null !== $data['minOccurs'] ? \intval($data['minOccurs']) : null);
         $property->setMaxOccurs(null !== $data['maxOccurs'] ? \intval($data['maxOccurs']) : null);
         $property->setDisabledCondition($this->normalizeConditionData($data['disabledCondition'] ?? null));

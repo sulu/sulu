@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\AdminBundle\Tests\Unit\Metadata\FormMetadata;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\AdminBundle\FormMetadata\FormMetadataMapper;
@@ -156,7 +157,7 @@ class StructureFormMetadataLoaderTest extends TestCase
         $this->formMetadataMapper->mapChildren([])->willReturn([$propertyMetadata, $sectionMetadata, $blockMetadata]);
 
         $schemaMetadata = new SchemaMetadata();
-        $this->schemaMetadataProvider->getMetadata([])->willReturn($schemaMetadata);
+        $this->schemaMetadataProvider->getMetadata(Argument::cetera())->willReturn($schemaMetadata);
 
         $this->structureMetadataFactory->getStructureTypes()->willReturn(['page']);
         $this->structureMetadataFactory->getStructures('page')->willReturn([$structure]);

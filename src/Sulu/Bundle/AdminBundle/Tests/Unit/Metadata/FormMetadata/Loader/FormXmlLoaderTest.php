@@ -12,20 +12,20 @@
 namespace Sulu\Bundle\AdminBundle\Tests\Unit\Metadata\FormMetadata\Loader;
 
 use PHPUnit\Framework\TestCase;
-use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\AdminBundle\Exception\InvalidRootTagException;
-use Sulu\Bundle\AdminBundle\Exception\PropertyMetadataMapperNotFoundException;
-use Sulu\Bundle\AdminBundle\FormMetadata\FormMetadataMapper;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Loader\FormXmlLoader;
-use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Parser\DeprecatedPropertiesXmlParser;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Parser\PropertiesXmlParser;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Parser\SchemaXmlParser;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Parser\TagXmlParser;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\SchemaMetadataProvider;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadataMapperRegistry;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\SchemaMetadata;
+use Sulu\Component\Content\ContentTypeManagerInterface;
+use Sulu\Component\Content\Types\BlockContentType;
+use Symfony\Component\DependencyInjection\Container;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class FormXmlLoaderTest extends TestCase
@@ -45,20 +45,25 @@ class FormXmlLoaderTest extends TestCase
     public function setUp(): void
     {
         $this->translator = $this->prophesize(TranslatorInterface::class);
+        $tagXmlParser = new TagXmlParser();
         $propertiesXmlParser = new PropertiesXmlParser(
+            $tagXmlParser,
             $this->translator->reveal(),
             ['en' => 'en', 'de' => 'de', 'fr' => 'fr', 'nl' => 'nl']
         );
         $schemaXmlParser = new SchemaXmlParser();
 
-        $propertyMetadataMapperRegistry = $this->prophesize(PropertyMetadataMapperRegistry::class);
-        $propertyMetadataMapperRegistry->has(Argument::cetera())->willReturn(false);
-        $propertyMetadataMapperRegistry->get(Argument::cetera())->will(function($arguments) {
-            throw new PropertyMetadataMapperNotFoundException($arguments[0]);
-        });
+        $container = new Container();
+        $propertyMetadataMapperRegistry = new PropertyMetadataMapperRegistry($container);
+        $schemaMetadataProvider = new SchemaMetadataProvider($propertyMetadataMapperRegistry);
+        $blockMetadataProvider = new BlockContentType(
+            $this->prophesize(ContentTypeManagerInterface::class)->reveal(),
+            $schemaMetadataProvider,
+            [],
+        );
+        $container->set('block', $blockMetadataProvider);
 
-        $schemaMetadataProvider = new SchemaMetadataProvider($propertyMetadataMapperRegistry->reveal());
-        $this->loader = new FormXmlLoader($propertiesXmlParser, $schemaXmlParser, $schemaMetadataProvider);
+        $this->loader = new FormXmlLoader($propertiesXmlParser, $schemaXmlParser, $tagXmlParser, $schemaMetadataProvider);
     }
 
     public function testLoadForm(): void
@@ -69,6 +74,7 @@ class FormXmlLoaderTest extends TestCase
 
         $this->assertCount(1, $formMetadata->getTags());
         $this->assertCount(1, $formMetadata->getTagsByName('test'));
+
         $this->assertEquals('test', $formMetadata->getTagsByName('test')[0]->getName());
         $this->assertEquals(['value' => 'test-value'], $formMetadata->getTagsByName('test')[0]->getAttributes());
 

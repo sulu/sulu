@@ -15,6 +15,7 @@ use Sulu\Bundle\AdminBundle\Exception\InvalidRootTagException;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Parser\PropertiesXmlParser;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Parser\SchemaXmlParser;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Parser\TagXmlParser;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\SchemaMetadataProvider;
 use Sulu\Component\Content\Metadata\Loader\AbstractLoader;
 
@@ -32,6 +33,7 @@ class FormXmlLoader extends AbstractLoader
     public function __construct(
         private PropertiesXmlParser $propertiesXmlParser,
         private SchemaXmlParser $schemaXmlParser,
+        private TagXmlParser $tagXmlParser,
         private SchemaMetadataProvider $schemaMetadataProvider,
     ) {
         parent::__construct(
@@ -49,7 +51,9 @@ class FormXmlLoader extends AbstractLoader
         $form = new FormMetadata();
         $form->addResource($resource);
         $form->setKey($xpath->query('/x:form/x:key')->item(0)->nodeValue);
-        $form->setTags($this->loadStructureTags('/x:form/x:tag', $xpath));
+
+        $tagNodes = $xpath->query('/x:form/x:tag') ?: [];
+        $form->setTags($this->tagXmlParser->load($xpath, $tagNodes));
 
         $propertiesNode = $xpath->query('/x:form/x:properties')->item(0);
         $properties = $this->propertiesXmlParser->load(
