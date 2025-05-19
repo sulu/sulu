@@ -26,10 +26,6 @@ use Sulu\Component\Content\Metadata\SectionMetadata as ContentSectionMetadata;
  */
 class FormMetadataMapper
 {
-    public function __construct()
-    {
-    }
-
     /**
      * @return ItemMetadata[]
      */
