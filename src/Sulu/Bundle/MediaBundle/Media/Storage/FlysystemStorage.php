@@ -14,6 +14,7 @@ namespace Sulu\Bundle\MediaBundle\Media\Storage;
 use League\Flysystem\FilesystemAdapter;
 use League\Flysystem\FilesystemException;
 use League\Flysystem\FilesystemOperator;
+use League\Flysystem\InMemory\InMemoryFilesystemAdapter;
 use League\Flysystem\Local\LocalFilesystemAdapter;
 use League\Flysystem\UnableToDeleteFile;
 use League\Flysystem\UnableToReadFile;
@@ -170,16 +171,21 @@ class FlysystemStorage implements StorageInterface
 
     public function getPath(array $storageOptions): string
     {
-        if ($this->getType($storageOptions) === StorageInterface::TYPE_REMOTE) {
+        if (StorageInterface::TYPE_REMOTE === $this->getType($storageOptions)) {
             return $this->filesystem->publicUrl($this->getFilePath($storageOptions));
         }
 
-        return $this->rootPath . '/' . $this->getFilePath($storageOptions);
+        $path = $this->getFilePath($storageOptions);
+        if (null === $this->rootPath) {
+            return $path;
+        }
+
+        return $this->rootPath . '/' . $path;
     }
 
     public function getType(array $storageOptions): string
     {
-        if ($this->adapter instanceof LocalFilesystemAdapter) {
+        if ($this->adapter instanceof LocalFilesystemAdapter || $this->adapter instanceof InMemoryFilesystemAdapter) {
             return StorageInterface::TYPE_LOCAL;
         }
 

@@ -211,6 +211,6 @@ class FlysystemStorageTest extends TestCase
 
         $filePath = $this->flysystemStorage->getType($storageOptions);
 
-        $this->assertEquals('remote', $filePath);
+        $this->assertEquals('local', $filePath);
     }
 }
