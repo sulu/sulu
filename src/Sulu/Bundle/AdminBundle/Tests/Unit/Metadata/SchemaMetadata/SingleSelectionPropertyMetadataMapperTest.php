@@ -12,8 +12,8 @@
 namespace Sulu\Bundle\AdminBundle\Tests\Unit\Metadata\SchemaMetadata;
 
 use PHPUnit\Framework\TestCase;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\SingleSelectionPropertyMetadataMapper;
-use Sulu\Component\Content\Metadata\PropertyMetadata;
 
 class SingleSelectionPropertyMetadataMapperTest extends TestCase
 {
@@ -44,8 +44,7 @@ class SingleSelectionPropertyMetadataMapperTest extends TestCase
 
     public function testMapPropertyMetadata(): void
     {
-        $propertyMetadata = new PropertyMetadata();
-        $propertyMetadata->setName('property-name');
+        $propertyMetadata = new FieldMetadata('property-name');
 
         $jsonSchema = $this->singleSelectionPropertyMetadataMapper->mapPropertyMetadata($propertyMetadata)->toJsonSchema();
 
@@ -62,8 +61,7 @@ class SingleSelectionPropertyMetadataMapperTest extends TestCase
 
     public function testMapPropertyMetadataRequired(): void
     {
-        $propertyMetadata = new PropertyMetadata();
-        $propertyMetadata->setName('property-name');
+        $propertyMetadata = new FieldMetadata('property-name');
         $propertyMetadata->setRequired(true);
 
         $jsonSchema = $this->singleSelectionPropertyMetadataMapper->mapPropertyMetadata($propertyMetadata)->toJsonSchema();
