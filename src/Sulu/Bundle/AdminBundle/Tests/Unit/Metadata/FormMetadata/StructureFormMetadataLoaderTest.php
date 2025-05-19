@@ -32,6 +32,9 @@ class StructureFormMetadataLoaderTest extends TestCase
 {
     use ProphecyTrait;
 
+    /**
+     * @var string
+     */
     public const CACHE_DIR = __DIR__ . '/../../../../../../../tests/Resources/cache';
 
     /**

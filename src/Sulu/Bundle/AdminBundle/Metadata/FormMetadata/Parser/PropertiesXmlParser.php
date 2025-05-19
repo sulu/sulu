@@ -33,6 +33,9 @@ class PropertiesXmlParser
      */
     private $locales;
 
+    /**
+     * @param array<string, string> $locales
+     */
     public function __construct(
         private TagXmlParser $tagXmlParser,
         private TranslatorInterface $translator,
@@ -41,6 +44,9 @@ class PropertiesXmlParser
         $this->locales = \array_keys($locales);
     }
 
+    /**
+     * @return array<FieldMetadata|SectionMetadata>
+     */
     public function load(
         \DOMXPath $xpath,
         \DOMNode $context,
@@ -51,6 +57,9 @@ class PropertiesXmlParser
         return $this->mapProperties($propertyData);
     }
 
+    /**
+     * @return array<string, array<string, mixed>>
+     */
     private function loadProperties(\DOMXPath $xpath, \DOMNode $context, ?string $formKey): array
     {
         $result = [];

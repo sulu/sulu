@@ -36,6 +36,7 @@ class TagXmlParser
                 'attributes' => [],
             ];
 
+            /** @var string $key */
             /** @var \DOMAttr $attr */
             foreach ($node->attributes ?? [] as $key => $attr) {
                 if (\in_array($key, ['name'])) {

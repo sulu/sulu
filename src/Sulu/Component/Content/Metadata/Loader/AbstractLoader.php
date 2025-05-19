@@ -82,6 +82,8 @@ abstract class AbstractLoader implements LoaderInterface
     }
 
     /**
+     * @param string $resource
+     *
      * @return T
      */
     abstract protected function parse($resource, \DOMXPath $xpath, $type);

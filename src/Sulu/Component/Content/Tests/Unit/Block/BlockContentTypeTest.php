@@ -68,14 +68,9 @@ class BlockContentTypeTest extends TestCase
     private $contentTypeValueMap;
 
     /**
-     * @var ObjectProphecy<RequestAnalyzerInterface>
+     * @var ObjectProphecy<SchemaMetadataProvider>
      */
-    private $requestAnalyzer;
-
-    /**
-     * @var ObjectProphecy<TargetGroupStoreInterface>
-     */
-    private $targetGroupStore;
+    private $schemaMetadataProvider;
 
     /**
      * @var ObjectProphecy<ContentTypeManager>
@@ -96,11 +91,9 @@ class BlockContentTypeTest extends TestCase
     {
         parent::setUp();
 
-        $this->requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
         $this->contentTypeManager = $this->prophesize(ContentTypeManager::class);
         $this->blockVisitor1 = $this->prophesize(BlockVisitorInterface::class);
         $this->blockVisitor2 = $this->prophesize(BlockVisitorInterface::class);
-        $this->targetGroupStore = $this->prophesize(TargetGroupStoreInterface::class);
 
         $this->blockVisitor1->visit(Argument::any())->will(function($arguments) {return $arguments[0]; });
         $this->blockVisitor2->visit(Argument::any())->will(function($arguments) {return $arguments[0]; });

@@ -43,6 +43,7 @@ class TextPropertyMetadataMapper implements PropertyMetadataMapperInterface
         }
 
         $pattern = $fieldMetadata->findOption('pattern')?->getValue();
+        \assert(\is_string($pattern) || null === $pattern, 'The option "pattern" must be a string or null.');
 
         $textLineMetadata = new StringMetadata(
             $minMaxValue->min,

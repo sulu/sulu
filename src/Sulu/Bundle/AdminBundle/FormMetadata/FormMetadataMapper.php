@@ -17,7 +17,6 @@ use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\ItemMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\OptionMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\SectionMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TagMetadata;
-use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadataMapperRegistry;
 use Sulu\Component\Content\Metadata\BlockMetadata as ContentBlockMetadata;
 use Sulu\Component\Content\Metadata\PropertyMetadata as ContentPropertyMetadata;
 use Sulu\Component\Content\Metadata\SectionMetadata as ContentSectionMetadata;
@@ -27,7 +26,7 @@ use Sulu\Component\Content\Metadata\SectionMetadata as ContentSectionMetadata;
  */
 class FormMetadataMapper
 {
-    public function __construct(private PropertyMetadataMapperRegistry $propertyMetadataMapperRegistry)
+    public function __construct()
     {
     }
 

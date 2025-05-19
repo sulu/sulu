@@ -24,7 +24,7 @@ class TagMetadata
     private $priority;
 
     /**
-     * @var array
+     * @var array<string, string>
      */
     private $attributes = [];
 
@@ -48,16 +48,25 @@ class TagMetadata
         $this->priority = $priority;
     }
 
+    /**
+     * @param array<string, string> $attributes
+     */
     public function setAttributes(array $attributes): void
     {
         $this->attributes = $attributes;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function getAttributes()
     {
         return $this->attributes;
     }
 
+    /**
+     * @return mixed
+     */
     public function getAttribute(string $name)
     {
         return $this->attributes[$name] ?? null;

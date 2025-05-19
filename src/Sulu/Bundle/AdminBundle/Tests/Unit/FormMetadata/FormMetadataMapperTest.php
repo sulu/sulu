@@ -34,18 +34,9 @@ class FormMetadataMapperTest extends TestCase
      */
     private $formMetadataMapper;
 
-    /**
-     * @var ObjectProphecy<PropertyMetadataMapperRegistry>
-     */
-    private $propertyMetadataMapperRegistry;
-
     public function setUp(): void
     {
-        $this->propertyMetadataMapperRegistry = $this->prophesize(PropertyMetadataMapperRegistry::class);
-
-        $this->formMetadataMapper = new FormMetadataMapper(
-            $this->propertyMetadataMapperRegistry->reveal()
-        );
+        $this->formMetadataMapper = new FormMetadataMapper();
     }
 
     public function testMapTags(): void
@@ -567,59 +558,6 @@ class FormMetadataMapperTest extends TestCase
         $block->setType('block');
 
         $form->addChild($block);
-
-        return $form;
-    }
-
-    private function createFormWithGlobalBlock(): ExternalFormMetadata
-    {
-        $form = new ExternalFormMetadata();
-        $block = new BlockMetadata('block');
-
-        $component1 = new ComponentMetadata('component1');
-        $component1->setTitles([
-            'en' => 'First Component',
-            'de' => 'Erste Komponente',
-        ]);
-        $component1->addTag([
-            'name' => 'sulu.global_block',
-            'attributes' => [
-                'global_block' => 'component1',
-            ],
-        ]);
-
-        $block->addComponent($component1);
-        $block->setMinOccurs(1);
-        $block->setMaxOccurs(2);
-        $block->defaultComponentName = 'component1';
-        $block->setType('block');
-
-        $form->addChild($block);
-
-        return $form;
-    }
-
-    private function createFormWithRequiredProperties(): ExternalFormMetadata
-    {
-        $form = new ExternalFormMetadata();
-
-        $property1 = new PropertyMetadata('property1');
-        $property1->setType('text_line');
-        $property1->setRequired(true);
-        $property2 = new PropertyMetadata('property2');
-        $property2->setType('text_area');
-        $property2->setRequired(true);
-        $property3 = new PropertyMetadata('property3');
-        $property3->setType('checkbox');
-        $property3->setRequired(true);
-        $property4 = new PropertyMetadata('property4');
-        $property4->setType('type');
-        $property4->setRequired(false);
-
-        $form->addChild($property1);
-        $form->addChild($property2);
-        $form->addChild($property3);
-        $form->addChild($property4);
 
         return $form;
     }

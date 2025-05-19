@@ -27,6 +27,11 @@ trait XmlParserTrait
     {
         try {
             $result = $xpath->query($path, $context);
+
+            if (false === $result) {
+                return $default;
+            }
+
             if (0 === $result->length) {
                 return $default;
             }
