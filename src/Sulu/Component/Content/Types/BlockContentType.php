@@ -23,7 +23,6 @@ use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadataMapperInterface;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\RefSchemaMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\SchemaMetadata;
-use Sulu\Bundle\AudienceTargetingBundle\TargetGroup\TargetGroupStoreInterface;
 use Sulu\Bundle\ReferenceBundle\Application\Collector\ReferenceCollectorInterface;
 use Sulu\Bundle\ReferenceBundle\Infrastructure\Sulu\ContentType\ReferenceContentTypeInterface;
 use Sulu\Component\Content\Compat\Block\BlockPropertyInterface;
@@ -38,7 +37,6 @@ use Sulu\Component\Content\Document\Subscriber\PHPCR\SuluNode;
 use Sulu\Component\Content\Exception\UnexpectedPropertyType;
 use Sulu\Component\Content\PreResolvableContentTypeInterface;
 use Sulu\Component\Content\Types\Block\BlockVisitorInterface;
-use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 
 /**
  * content type for block.
