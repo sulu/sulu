@@ -301,7 +301,7 @@ flysystem:
     storages:
         default.storage:
             adapter: 'aws'
-            public_url: 'http://some_cdn.com'
+            public_url: 'http://some_cdn.com/optional/path/prefix' # Public url now also has to contain the prefix
             options:
                 client: 'aws_client_service' # see service below
                 key: ''

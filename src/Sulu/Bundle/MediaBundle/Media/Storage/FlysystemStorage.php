@@ -170,8 +170,8 @@ class FlysystemStorage implements StorageInterface
 
     public function getPath(array $storageOptions): string
     {
-        if (null === $this->rootPath) {
-            return $this->getFilePath($storageOptions);
+        if ($this->getType($storageOptions) === StorageInterface::TYPE_REMOTE) {
+            return $this->filesystem->publicUrl($this->getFilePath($storageOptions));
         }
 
         return $this->rootPath . '/' . $this->getFilePath($storageOptions);
