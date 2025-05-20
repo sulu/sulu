@@ -11,6 +11,7 @@
 
 namespace Sulu\Component\Content\Metadata\Loader;
 
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Loader\AbstractLoader;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Parser\DeprecatedPropertiesXmlParser;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Parser\SchemaXmlParser;
 use Sulu\Bundle\AdminBundle\Metadata\XmlParserTrait;

@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content\Metadata\Loader;
+namespace Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Loader;
 
 use Sulu\Bundle\AdminBundle\Metadata\XmlParserTrait;
 use Sulu\Exception\FeatureNotImplementedException;
@@ -18,6 +18,8 @@ use Symfony\Component\Config\Loader\LoaderResolverInterface;
 use Symfony\Component\Config\Util\XmlUtils;
 
 /**
+ * @internal this class is not part of the public API and may be changed or removed without further notice
+ *
  * @template T
  *
  * reads a template xml and returns a array representation.
