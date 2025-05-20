@@ -94,7 +94,7 @@ class StructureXmlLoader extends AbstractLoader
     /**
      * @param string $resource
      */
-    public function load($resource, $type = null): StructureMetadata
+    public function load($resource, ?string $type = null): StructureMetadata
     {
         if (null === $type) {
             $type = 'page';
@@ -130,7 +130,7 @@ class StructureXmlLoader extends AbstractLoader
         return $structure;
     }
 
-    protected function parse($resource, \DOMXPath $xpath, $type)
+    protected function parse(string $resource, \DOMXPath $xpath, ?string $type)
     {
         // init result
         $result = $this->loadTemplateAttributes($resource, $xpath, $type);

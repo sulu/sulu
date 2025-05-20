@@ -393,7 +393,7 @@ class StructureXmlLoaderTest extends TestCase
         $this->load('template_with_global_blocks_ref_and_name.xml');
     }
 
-    private function load($name, $type = null)
+    private function load($name, ?string $type = null)
     {
         $this->cacheLifetimeResolver->supports(CacheLifetimeResolverInterface::TYPE_SECONDS, Argument::any())
             ->willReturn(true);

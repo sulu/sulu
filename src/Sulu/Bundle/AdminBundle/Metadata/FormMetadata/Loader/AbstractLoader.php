@@ -51,9 +51,9 @@ abstract class AbstractLoader implements LoaderInterface
      *
      * @return T
      */
-    public function load($resource, $type = null): mixed
+    public function load($resource, ?string $type = null): mixed
     {
-        $schemaPath = __DIR__ . $this->schemaPath;
+        $schemaPath = \dirname(__DIR__, 3) . '/Resources/config/' . $this->schemaPath;
 
         $cwd = \getcwd();
         // Necessary only for Windows, no effect on linux. Mute errors for PHP with chdir disabled to avoid E_WARNINGs
@@ -84,11 +84,9 @@ abstract class AbstractLoader implements LoaderInterface
     }
 
     /**
-     * @param string $resource
-     *
      * @return T
      */
-    abstract protected function parse($resource, \DOMXPath $xpath, $type);
+    abstract protected function parse(string $resource, \DOMXPath $xpath, ?string $type);
 
     /**
      * Loads the tags for the structure.

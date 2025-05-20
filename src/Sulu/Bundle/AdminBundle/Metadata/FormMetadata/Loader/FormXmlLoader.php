@@ -44,7 +44,7 @@ class FormXmlLoader extends AbstractLoader
         );
     }
 
-    protected function parse($resource, \DOMXPath $xpath, $type): FormMetadata
+    protected function parse(string $resource, \DOMXPath $xpath, ?string $type): FormMetadata
     {
         if (0 === $xpath->query('/x:form')->count()) {
             throw new InvalidRootTagException($resource, 'form');

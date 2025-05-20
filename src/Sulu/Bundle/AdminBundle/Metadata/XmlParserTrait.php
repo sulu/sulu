@@ -23,7 +23,7 @@ trait XmlParserTrait
      *
      * @return T|bool|int|string|null
      */
-    private function getValueFromXPath(string $path, \DOMXPath $xpath, ?\DOMNode $context = null, $default = null)
+    private function getValueFromXPath(string $path, \DOMXPath $xpath, ?\DOMNode $context = null, mixed $default = null)
     {
         try {
             $result = $xpath->query($path, $context);

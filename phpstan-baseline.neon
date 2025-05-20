@@ -2155,6 +2155,78 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/ItemMetadata.php
 
 		-
+			message: '#^Cannot access offset ''title'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Loader/AbstractLoader.php
+
+		-
+			message: '#^Cannot assign offset mixed to array\<string\>\|string\.$#'
+			identifier: offsetAssign.dimType
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Loader/AbstractLoader.php
+
+		-
+			message: '#^Cannot assign offset mixed to array\<string\>\|string\|null\.$#'
+			identifier: offsetAssign.dimType
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Loader/AbstractLoader.php
+
+		-
+			message: '#^Method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\Loader\\AbstractLoader\:\:loadMeta\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Loader/AbstractLoader.php
+
+		-
+			message: '#^Method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\Loader\\AbstractLoader\:\:loadMeta\(\) has parameter \$path with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Loader/AbstractLoader.php
+
+		-
+			message: '#^Method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\Loader\\AbstractLoader\:\:loadStructureAreas\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Loader/AbstractLoader.php
+
+		-
+			message: '#^Method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\Loader\\AbstractLoader\:\:loadStructureTags\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Loader/AbstractLoader.php
+
+		-
+			message: '#^Method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\Loader\\AbstractLoader\:\:supports\(\) has parameter \$type with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Loader/AbstractLoader.php
+
+		-
+			message: '#^PHPDoc tag @template T for method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\Loader\\AbstractLoader\:\:getValueFromXPath\(\) shadows @template T for class Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\Loader\\AbstractLoader\.$#'
+			identifier: method.shadowTemplate
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Loader/AbstractLoader.php
+
+		-
+			message: '#^Parameter \#1 \$directory of function chdir expects string, string\|false given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Loader/AbstractLoader.php
+
+		-
+			message: '#^Parameter \#1 \$expression of method DOMXPath\:\:query\(\) expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Loader/AbstractLoader.php
+
+		-
+			message: '#^Possibly invalid array key type bool\|int\|string\|T\|null\.$#'
+			identifier: offsetAccess.invalidOffset
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Loader/AbstractLoader.php
+
+		-
 			message: '#^Cannot call method count\(\) on DOMNodeList\<DOMNode\>\|false\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -2163,12 +2235,6 @@ parameters:
 		-
 			message: '#^Cannot call method item\(\) on DOMNodeList\<DOMNode\>\|false\.$#'
 			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Loader/FormXmlLoader.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\Loader\\FormXmlLoader\:\:parse\(\) has parameter \$type with no type specified\.$#'
-			identifier: missingType.parameter
 			count: 1
 			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Loader/FormXmlLoader.php
 
@@ -60331,90 +60397,6 @@ parameters:
 			path: src/Sulu/Component/Content/Metadata/ItemMetadata.php
 
 		-
-			message: '#^Cannot access offset ''title'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Loader/AbstractLoader.php
-
-		-
-			message: '#^Cannot assign offset mixed to array\<string\>\|string\.$#'
-			identifier: offsetAssign.dimType
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Loader/AbstractLoader.php
-
-		-
-			message: '#^Cannot assign offset mixed to array\<string\>\|string\|null\.$#'
-			identifier: offsetAssign.dimType
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Loader/AbstractLoader.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Metadata\\Loader\\AbstractLoader\:\:load\(\) has parameter \$type with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Loader/AbstractLoader.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Metadata\\Loader\\AbstractLoader\:\:loadMeta\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Loader/AbstractLoader.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Metadata\\Loader\\AbstractLoader\:\:loadMeta\(\) has parameter \$path with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Loader/AbstractLoader.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Metadata\\Loader\\AbstractLoader\:\:loadStructureAreas\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Loader/AbstractLoader.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Metadata\\Loader\\AbstractLoader\:\:loadStructureTags\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Loader/AbstractLoader.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Metadata\\Loader\\AbstractLoader\:\:parse\(\) has parameter \$type with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Loader/AbstractLoader.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Metadata\\Loader\\AbstractLoader\:\:supports\(\) has parameter \$type with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Loader/AbstractLoader.php
-
-		-
-			message: '#^PHPDoc tag @template T for method Sulu\\Component\\Content\\Metadata\\Loader\\AbstractLoader\:\:getValueFromXPath\(\) shadows @template T for class Sulu\\Component\\Content\\Metadata\\Loader\\AbstractLoader\.$#'
-			identifier: method.shadowTemplate
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Loader/AbstractLoader.php
-
-		-
-			message: '#^Parameter \#1 \$directory of function chdir expects string, string\|false given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Loader/AbstractLoader.php
-
-		-
-			message: '#^Parameter \#1 \$expression of method DOMXPath\:\:query\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Loader/AbstractLoader.php
-
-		-
-			message: '#^Possibly invalid array key type bool\|int\|string\|T\|null\.$#'
-			identifier: offsetAccess.invalidOffset
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Loader/AbstractLoader.php
-
-		-
 			message: '#^Method Sulu\\Component\\Content\\Metadata\\Loader\\Exception\\InvalidXmlException\:\:__construct\(\) has parameter \$message with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -60613,12 +60595,6 @@ parameters:
 			path: src/Sulu/Component/Content/Metadata/Loader/StructureXmlLoader.php
 
 		-
-			message: '#^Method Sulu\\Component\\Content\\Metadata\\Loader\\StructureXmlLoader\:\:load\(\) has parameter \$type with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Loader/StructureXmlLoader.php
-
-		-
 			message: '#^Method Sulu\\Component\\Content\\Metadata\\Loader\\StructureXmlLoader\:\:loadCacheLifetime\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -60674,12 +60650,6 @@ parameters:
 
 		-
 			message: '#^Method Sulu\\Component\\Content\\Metadata\\Loader\\StructureXmlLoader\:\:normalizeStructureData\(\) has parameter \$data with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Loader/StructureXmlLoader.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Metadata\\Loader\\StructureXmlLoader\:\:parse\(\) has parameter \$type with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
 			path: src/Sulu/Component/Content/Metadata/Loader/StructureXmlLoader.php
@@ -60787,7 +60757,7 @@ parameters:
 			path: src/Sulu/Component/Content/Metadata/Loader/StructureXmlLoader.php
 
 		-
-			message: '#^Parameter \#1 \$type of method Sulu\\Component\\Content\\Metadata\\Loader\\StructureXmlLoader\:\:findMissingRequiredProperties\(\) expects string, mixed given\.$#'
+			message: '#^Parameter \#1 \$type of method Sulu\\Component\\Content\\Metadata\\Loader\\StructureXmlLoader\:\:findMissingRequiredProperties\(\) expects string, string\|null given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Component/Content/Metadata/Loader/StructureXmlLoader.php
@@ -60824,12 +60794,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#2 \.\.\.\$replacements of function array_replace_recursive expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Loader/StructureXmlLoader.php
-
-		-
-			message: '#^Parameter \#3 \$formKey of method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\Parser\\DeprecatedPropertiesXmlParser\:\:load\(\) expects string\|null, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Component/Content/Metadata/Loader/StructureXmlLoader.php
@@ -64022,12 +63986,6 @@ parameters:
 
 		-
 			message: '#^Method Sulu\\Component\\Content\\Tests\\Unit\\Metadata\\Loader\\StructureXmlLoaderTest\:\:load\(\) has parameter \$name with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Component/Content/Tests/Unit/Metadata/Loader/StructureXmlLoaderTest.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Tests\\Unit\\Metadata\\Loader\\StructureXmlLoaderTest\:\:load\(\) has parameter \$type with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
 			path: src/Sulu/Component/Content/Tests/Unit/Metadata/Loader/StructureXmlLoaderTest.php
