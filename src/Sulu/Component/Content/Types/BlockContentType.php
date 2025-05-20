@@ -243,7 +243,7 @@ class BlockContentType extends ComplexContentType implements ContentTypeExportIn
                 $this->writeProperty(
                     $settingsProperty,
                     $property,
-                    \json_encode($blockPropertyType->getSettings()),
+                    \is_array($blockSettings = $blockPropertyType->getSettings()) ? \json_encode($blockSettings) : $blockSettings,
                     $i,
                     $node,
                     $userId,
