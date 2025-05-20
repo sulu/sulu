@@ -63,6 +63,7 @@
                         </property>
                     </properties>
                 </type>
+                <type ref="text_block" />
             </types>
         </block>
     </properties>

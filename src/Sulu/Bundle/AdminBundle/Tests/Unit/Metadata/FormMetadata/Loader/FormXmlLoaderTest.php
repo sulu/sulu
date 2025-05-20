@@ -316,6 +316,20 @@ class FormXmlLoaderTest extends TestCase
                                         'type' => 'object',
                                     ],
                                 ],
+                                [
+                                    'if' => [
+                                        'properties' => [
+                                            'type' => [
+                                                'const' => 'text_block',
+                                            ],
+                                        ],
+                                        'required' => ['type'],
+                                        'type' => 'object',
+                                    ],
+                                    'then' => [
+                                        '$ref' => '#/definitions/text_block',
+                                    ],
+                                ],
                             ],
                         ],
                     ],

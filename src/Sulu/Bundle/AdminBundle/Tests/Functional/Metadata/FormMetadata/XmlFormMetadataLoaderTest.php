@@ -145,9 +145,11 @@ class XmlFormMetadataLoaderTest extends KernelTestCase
         $this->assertEquals('test_block_settings', $options['settings_form_key']->getValue());
 
         $types = $blocks->getTypes();
-        $this->assertCount(2, $types);
+
+        $this->assertCount(3, $types);
         $this->assertEquals('editor', $types['editor']->getName());
         $this->assertEquals('editor_image', $types['editor_image']->getName());
+        $this->assertEquals('text_block', $types['text_block']->getName());
     }
 
     public function testGetMetadataWithPropertyWithTypes(): void
