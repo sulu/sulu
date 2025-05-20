@@ -50,6 +50,15 @@
         </join>
     </joins>
 
+    <joins name="shadowDimensionContent" ref="dimensionContent">
+        <join>
+            <entity-name>shadowDimensionContent</entity-name>
+            <field-name>Sulu\Page\Domain\Model\PageInterface.dimensionContents</field-name>
+            <method>LEFT</method>
+            <condition>shadowDimensionContent.locale = dimensionContent.shadowLocale AND shadowDimensionContent.stage = 'draft'</condition>
+        </join>
+    </joins>
+
     <joins name="parent">
         <join>
             <entity-name>parent</entity-name>
@@ -187,6 +196,15 @@
         <property name="ghostLocale" translation="sulu_admin.ghost_locale" visibility="never">
             <field-name>locale</field-name>
             <entity-name>ghostDimensionContent</entity-name>
+
+            <joins ref="ghostDimensionContent"/>
+        </property>
+
+        <property name="shadowLocale" translation="sulu_admin.shadow_locale" visibility="never">
+            <field-name>locale</field-name>
+            <entity-name>shadowDimensionContent</entity-name>
+
+            <joins ref="shadowDimensionContent"/>
         </property>
 
         <property name="published" translation="sulu_admin.published" type="date" visibility="never">
