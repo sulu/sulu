@@ -240,18 +240,20 @@ class BlockContentType extends ComplexContentType implements ContentTypeExportIn
                     $isImport
                 );
 
-                $this->writeProperty(
-                    $settingsProperty,
-                    $property,
-                    \is_array($blockSettings = $blockPropertyType->getSettings()) ? \json_encode($blockSettings) : $blockSettings,
-                    $i,
-                    $node,
-                    $userId,
-                    $webspaceKey,
-                    $languageCode,
-                    $segmentKey,
-                    $isImport
-                );
+                if (\is_array($blockSettings = $blockPropertyType->getSettings())) {
+                    $this->writeProperty(
+                        $settingsProperty,
+                        $property,
+                        \json_encode($blockSettings),
+                        $i,
+                        $node,
+                        $userId,
+                        $webspaceKey,
+                        $languageCode,
+                        $segmentKey,
+                        $isImport
+                    );
+                }
 
                 foreach ($blockProperty->getProperties($i)->getChildProperties() as $subProperty) {
                     $this->writeProperty(

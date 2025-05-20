@@ -87,7 +87,6 @@ class Export
 
         foreach ($blockDataList as $blockData) {
             $blockType = $blockData['type'];
-            $blockSettings = \is_array($settings = $blockData['settings']) ? \json_encode($settings) : \json_encode('{}');
 
             $block = $this->getPropertiesContentData(
                 $property->getComponentByName($blockType)->getChildren(),
@@ -103,7 +102,7 @@ class Export
 
             $block['settings'] = $this->createProperty(
                 'settings',
-                $blockSettings,
+                \json_encode($blockData['settings']),
                 $this->exportManager->getOptions($property->getType(), $this->format),
                 $property->getType() . '_settings',
             );
