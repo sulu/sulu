@@ -35,7 +35,7 @@ class StructureFormMetadataLoaderTest extends TestCase
     /**
      * @var string
      */
-    public const CACHE_DIR = __DIR__ . '/../../../../../../../tests/Resources/cache';
+    public const CACHE_DIR = __DIR__ . '/../../../../../../../../tests/Resources/cache';
 
     /**
      * @var ObjectProphecy<StructureMetadataFactoryInterface>
