@@ -2,36 +2,36 @@
     "_embedded": {
         "pages": [
             {
-                "id": "@string@",
+                "id": "123-123-123",
                 "title": null,
                 "author": null,
-                "created": "@string@",
+                "created": "@datetime@",
                 "changed": "@datetime@",
                 "creator": null,
                 "changer": null,
                 "locale": null,
-                "publishedState": false,
-                "shadowLocale": null,
                 "ghostLocale": null,
+                "shadowLocale": null,
                 "webspaceKey": "sulu-io",
                 "template": null,
+                "publishedState": false,
                 "hasChildren": true,
                 "_embedded": {
                     "pages": [
                         {
                             "id": "@string@",
-                            "title": "Test Page 2",
+                            "title": "Test Page",
                             "author": null,
                             "created": "@datetime@",
                             "changed": "@datetime@",
                             "creator": "Max Mustermann",
                             "changer": "Max Mustermann",
-                            "locale": "en",
-                            "publishedState": false,
-                            "shadowLocale": null,
+                            "locale": "de",
                             "ghostLocale": null,
+                            "shadowLocale": null,
                             "webspaceKey": "sulu-io",
                             "template": "default",
+                            "publishedState": false,
                             "hasChildren": true,
                             "_embedded": {
                                 "pages": [
@@ -43,12 +43,12 @@
                                         "changed": "@datetime@",
                                         "creator": null,
                                         "changer": null,
-                                        "locale": "en",
-                                        "publishedState": false,
+                                        "locale": null,
+                                        "ghostLocale": "en",
                                         "shadowLocale": null,
-                                        "ghostLocale": null,
                                         "webspaceKey": "sulu-io",
-                                        "template": "default",
+                                        "template": null,
+                                        "publishedState": false,
                                         "hasChildren": false
                                     },
                                     {
@@ -59,12 +59,12 @@
                                         "changed": "@datetime@",
                                         "creator": null,
                                         "changer": null,
-                                        "locale": "en",
-                                        "publishedState": false,
+                                        "locale": null,
+                                        "ghostLocale": "en",
                                         "shadowLocale": null,
-                                        "ghostLocale": null,
                                         "webspaceKey": "sulu-io",
-                                        "template": "default",
+                                        "template": null,
+                                        "publishedState": false,
                                         "hasChildren": false
                                     },
                                     {
@@ -75,13 +75,29 @@
                                         "changed": "@datetime@",
                                         "creator": null,
                                         "changer": null,
-                                        "locale": "en",
-                                        "publishedState": false,
+                                        "locale": null,
+                                        "ghostLocale": "en",
                                         "shadowLocale": null,
-                                        "ghostLocale": null,
                                         "webspaceKey": "sulu-io",
-                                        "template": "default",
+                                        "template": null,
+                                        "publishedState": false,
                                         "hasChildren": false
+                                    },
+                                    {
+                                        "author": null,
+                                        "changed": "@datetime@",
+                                        "changer": null,
+                                        "created": "@datetime@",
+                                        "creator": null,
+                                        "ghostLocale": null,
+                                        "hasChildren": false,
+                                        "id": "@string@",
+                                        "locale": "de",
+                                        "publishedState": false,
+                                        "shadowLocale": "en",
+                                        "template": "default",
+                                        "title": "Test Page",
+                                        "webspaceKey": "sulu-io"
                                     }
                                 ]
                             }

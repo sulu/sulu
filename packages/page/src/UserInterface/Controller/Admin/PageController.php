@@ -237,7 +237,7 @@ final class PageController
     }
 
     /**
-     * @param array<string, string> $filters
+     * @param array<string, bool|float|int|string|null> $filters
      * @param array<string, mixed> $parameters
      * @param string[] $expandedIds
      * @param string[] $includedFields
@@ -268,7 +268,7 @@ final class PageController
         }
 
         foreach ($filters as $key => $value) {
-            $listBuilder->where($fieldDescriptors[$key], $value);
+            $listBuilder->where($fieldDescriptors[$key], $value); // @phpstan-ignore argument.type
         }
 
         foreach ($includedFields as $field) {
