@@ -11,10 +11,10 @@ declare(strict_types=1);
  * with this source code in the file LICENSE.
  */
 
-use Sulu\CustomUrl\Infrastructure\Repository\CustomUrlRepositoryInterface;
+use Sulu\CustomUrl\Infrastructure\Doctrine\Repository\CustomUrlRepositoryInterface;
 use Sulu\CustomUrl\Infrastructure\Symfony\Fixtures\LoadCustomUrlFixture;
-use Sulu\CustomUrl\Infrastructure\Symfony\Normalizer\CustomUrlNormalizer;
 use Sulu\CustomUrl\Infrastructure\Symfony\Router\CustomUrlRouter;
+use Sulu\CustomUrl\Infrastructure\Symfony\Serializer\CustomUrlNormalizer;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 
 use function Symfony\Component\DependencyInjection\Loader\Configurator\service;

@@ -24,7 +24,7 @@ use Sulu\CustomUrl\Application\Messages\ModifyCustomUrlMessage;
 use Sulu\CustomUrl\Application\Messages\RemoveCustomUrlMessage;
 use Sulu\CustomUrl\Domain\Exception\MismatchingDomainPartException;
 use Sulu\CustomUrl\Domain\Model\CustomUrlInterface;
-use Sulu\CustomUrl\Infrastructure\Repository\CustomUrlRepositoryInterface;
+use Sulu\CustomUrl\Infrastructure\Doctrine\Repository\CustomUrlRepositoryInterface;
 use Sulu\CustomUrl\Infrastructure\Sulu\Admin\CustomUrlAdmin;
 use Sulu\Messenger\Infrastructure\Symfony\Messenger\FlushMiddleware\EnableFlushStamp;
 use Symfony\Component\HttpFoundation\JsonResponse;

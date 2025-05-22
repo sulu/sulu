@@ -17,7 +17,7 @@ use Sulu\CustomUrl\Application\Mapper\CustomUrlMapperInterface;
 use Sulu\CustomUrl\Application\MessageHandler\CreateCustomUrlMessageHandler;
 use Sulu\CustomUrl\Application\MessageHandler\ModifyCustomUrlMessageHandler;
 use Sulu\CustomUrl\Application\MessageHandler\RemoveCustomUrlMessageHandler;
-use Sulu\CustomUrl\Infrastructure\Repository\CustomUrlRepositoryInterface;
+use Sulu\CustomUrl\Infrastructure\Doctrine\Repository\CustomUrlRepositoryInterface;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symfony\Component\DependencyInjection\Reference;
 

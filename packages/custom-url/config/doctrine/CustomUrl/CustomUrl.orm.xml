@@ -4,7 +4,7 @@
     xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
      https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
     <mapped-superclass name="Sulu\CustomUrl\Domain\Model\CustomUrl" table="cu_custom_url"
-        repository-class="Sulu\CustomUrl\Infrastructure\Repository\CustomUrlRepository">
+        repository-class="Sulu\CustomUrl\Infrastructure\Doctrine\Repository\CustomUrlRepository">
         <indexes>
             <index columns="webspace" />
         </indexes>

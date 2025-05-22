@@ -26,7 +26,7 @@ use Sulu\CustomUrl\Application\Mapper\CustomUrlMapperInterface;
 use Sulu\CustomUrl\Domain\Event\CustomUrlRestoredEvent;
 use Sulu\CustomUrl\Domain\Model\CustomUrl;
 use Sulu\CustomUrl\Domain\Model\CustomUrlInterface;
-use Sulu\CustomUrl\Infrastructure\Repository\CustomUrlRepositoryInterface;
+use Sulu\CustomUrl\Infrastructure\Doctrine\Repository\CustomUrlRepositoryInterface;
 use Sulu\CustomUrl\Infrastructure\Sulu\Admin\CustomUrlAdmin;
 use Webmozart\Assert\Assert;
 

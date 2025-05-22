@@ -11,7 +11,7 @@ declare(strict_types=1);
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\CustomUrl\Infrastructure\Symfony\Normalizer;
+namespace Sulu\CustomUrl\Infrastructure\Symfony\Serializer;
 
 use Sulu\CustomUrl\Domain\Model\CustomUrlInterface;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;

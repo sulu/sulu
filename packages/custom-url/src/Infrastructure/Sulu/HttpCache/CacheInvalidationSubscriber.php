@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\CustomUrl\Infrastructure\Sulu\EventSubscriber;
+namespace Sulu\CustomUrl\Infrastructure\Sulu\HttpCache;
 
 use Sulu\Bundle\HttpCacheBundle\Cache\CacheManager;
 use Sulu\Bundle\PageBundle\Document\RouteDocument;
@@ -19,8 +19,8 @@ use Sulu\Component\DocumentManager\Event\RemoveEvent;
 use Sulu\Component\DocumentManager\Events;
 use Sulu\CustomUrl\Domain\Model\CustomUrlInterface;
 use Sulu\CustomUrl\Domain\Model\CustomUrlRoute;
-use Sulu\CustomUrl\Infrastructure\Repository\CustomUrlRepositoryInterface;
-use Sulu\CustomUrl\Infrastructure\Repository\CustomUrlRouteRepositoryInterface;
+use Sulu\CustomUrl\Infrastructure\Doctrine\Repository\CustomUrlRepositoryInterface;
+use Sulu\CustomUrl\Infrastructure\Doctrine\Repository\CustomUrlRouteRepositoryInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 

@@ -20,9 +20,9 @@ use Sulu\Bundle\TestBundle\Testing\SetGetPrivatePropertyTrait;
 use Sulu\Component\DocumentManager\Event\PublishEvent;
 use Sulu\CustomUrl\Domain\Model\CustomUrl;
 use Sulu\CustomUrl\Domain\Model\CustomUrlRoute;
-use Sulu\CustomUrl\Infrastructure\Repository\CustomUrlRepositoryInterface;
-use Sulu\CustomUrl\Infrastructure\Repository\CustomUrlRouteRepositoryInterface;
-use Sulu\CustomUrl\Infrastructure\Sulu\EventSubscriber\CacheInvalidationSubscriber;
+use Sulu\CustomUrl\Infrastructure\Doctrine\Repository\CustomUrlRepositoryInterface;
+use Sulu\CustomUrl\Infrastructure\Doctrine\Repository\CustomUrlRouteRepositoryInterface;
+use Sulu\CustomUrl\Infrastructure\Sulu\HttpCache\CacheInvalidationSubscriber;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 

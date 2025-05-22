@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\CustomUrl\Tests\Unit\Infrastructure\Repository;
+namespace Sulu\CustomUrl\Tests\Unit\Infrastructure\Doctrine\Repository;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
@@ -17,9 +17,9 @@ use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\TestBundle\Testing\KernelTestCase;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\CustomUrl\Domain\Model\CustomUrl;
-use Sulu\CustomUrl\Infrastructure\Repository\CustomUrlRepository;
-use Sulu\CustomUrl\Infrastructure\Repository\CustomUrlRepositoryInterface;
-use Sulu\CustomUrl\Infrastructure\Repository\CustomUrlRouteRepository;
+use Sulu\CustomUrl\Infrastructure\Doctrine\Repository\CustomUrlRepository;
+use Sulu\CustomUrl\Infrastructure\Doctrine\Repository\CustomUrlRepositoryInterface;
+use Sulu\CustomUrl\Infrastructure\Doctrine\Repository\CustomUrlRouteRepository;
 
 class CustomUrlRepositoryTest extends KernelTestCase
 {

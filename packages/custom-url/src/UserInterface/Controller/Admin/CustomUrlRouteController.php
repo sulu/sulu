@@ -13,7 +13,7 @@ namespace Sulu\CustomUrl\UserInterface\Controller\Admin;
 
 use Sulu\Component\Rest\ListBuilder\CollectionRepresentation;
 use Sulu\Component\Security\SecuredControllerInterface;
-use Sulu\CustomUrl\Infrastructure\Repository\CustomUrlRouteRepositoryInterface;
+use Sulu\CustomUrl\Infrastructure\Doctrine\Repository\CustomUrlRouteRepositoryInterface;
 use Sulu\CustomUrl\Infrastructure\Sulu\Admin\CustomUrlAdmin;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;

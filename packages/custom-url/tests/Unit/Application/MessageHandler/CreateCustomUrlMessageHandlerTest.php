@@ -16,8 +16,8 @@ namespace Sulu\CustomUrl\Tests\Unit\Application\MessageHandler;
 use Doctrine\ORM\EntityManagerInterface;
 use Sulu\CustomUrl\Application\MessageHandler\CreateCustomUrlMessageHandler;
 use Sulu\CustomUrl\Application\Messages\CreateCustomUrlMessage;
-use Sulu\CustomUrl\Infrastructure\Repository\CustomUrlRepositoryInterface;
-use Sulu\CustomUrl\Infrastructure\Repository\CustomUrlRouteRepositoryInterface;
+use Sulu\CustomUrl\Infrastructure\Doctrine\Repository\CustomUrlRepositoryInterface;
+use Sulu\CustomUrl\Infrastructure\Doctrine\Repository\CustomUrlRouteRepositoryInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Uid\Uuid;
 

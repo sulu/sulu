@@ -17,7 +17,7 @@ use Doctrine\ORM\EntityNotFoundException;
 use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
 use Sulu\CustomUrl\Application\Messages\RemoveCustomUrlMessage;
 use Sulu\CustomUrl\Domain\Event\CustomUrlRemovedEvent;
-use Sulu\CustomUrl\Infrastructure\Repository\CustomUrlRepositoryInterface;
+use Sulu\CustomUrl\Infrastructure\Doctrine\Repository\CustomUrlRepositoryInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 final class RemoveCustomUrlMessageHandler

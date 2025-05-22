@@ -19,7 +19,7 @@ use Sulu\CustomUrl\Application\Mapper\CustomUrlMapperInterface;
 use Sulu\CustomUrl\Application\Messages\ModifyCustomUrlMessage;
 use Sulu\CustomUrl\Domain\Event\CustomUrlModifiedEvent;
 use Sulu\CustomUrl\Domain\Model\CustomUrlInterface;
-use Sulu\CustomUrl\Infrastructure\Repository\CustomUrlRepositoryInterface;
+use Sulu\CustomUrl\Infrastructure\Doctrine\Repository\CustomUrlRepositoryInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 final class ModifyCustomUrlMessageHandler
