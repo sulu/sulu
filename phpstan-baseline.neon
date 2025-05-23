@@ -29713,6 +29713,12 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Media/FormatLoader/BaseXmlFormatLoader.php
 
 		-
+			message: '#^Cannot call method getNamedItem\(\) on \(DOMNamedNodeMap&iterable\<DOMAttr\>\)\|null\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: src/Sulu/Bundle/MediaBundle/Media/FormatLoader/BaseXmlFormatLoader.php
+
+		-
 			message: '#^Cannot call method item\(\) on DOMNodeList\<DOMNode\>\|false\.$#'
 			identifier: method.nonObject
 			count: 2
@@ -74563,7 +74569,7 @@ parameters:
 			path: src/Sulu/Component/Content/Query/ListToTreeConverter.php
 
 		-
-			message: '#^PHPDoc tag @var with type array\<string\> is not subtype of native type list\<string\>\|false\.$#'
+			message: '#^PHPDoc tag @var with type array\<string\> is not subtype of native type list\<array\{string, int\<0, max\>\}\|string\>\|false\.$#'
 			identifier: varTag.nativeType
 			count: 1
 			path: src/Sulu/Component/Content/Query/ListToTreeConverter.php
@@ -92707,6 +92713,12 @@ parameters:
 			path: src/Sulu/Component/Webspace/Loader/BaseXmlFileLoader.php
 
 		-
+			message: '#^Cannot call method getNamedItem\(\) on \(DOMNamedNodeMap&iterable\<DOMAttr\>\)\|null\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: src/Sulu/Component/Webspace/Loader/BaseXmlFileLoader.php
+
+		-
 			message: '#^Method Sulu\\Component\\Webspace\\Loader\\BaseXmlFileLoader\:\:supports\(\) has parameter \$type with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -92824,6 +92836,12 @@ parameters:
 			message: '#^Cannot access property \$nodeValue on DOMNode\|null\.$#'
 			identifier: property.nonObject
 			count: 8
+			path: src/Sulu/Component/Webspace/Loader/XmlFileLoader10.php
+
+		-
+			message: '#^Cannot call method getNamedItem\(\) on \(DOMNamedNodeMap&iterable\<DOMAttr\>\)\|null\.$#'
+			identifier: method.nonObject
+			count: 5
 			path: src/Sulu/Component/Webspace/Loader/XmlFileLoader10.php
 
 		-
