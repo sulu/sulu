@@ -85,9 +85,9 @@ class TimestampableSubscriber
 
         $created = $meta->getFieldValue($entity, self::CREATED_FIELD);
         if (null === $created) {
-            $meta->setFieldValue($entity, self::CREATED_FIELD, new \DateTime());
+            $meta->setFieldValue($entity, self::CREATED_FIELD, new \DateTimeImmutable());
         }
 
-        $meta->setFieldValue($entity, self::CHANGED_FIELD, new \DateTime());
+        $meta->setFieldValue($entity, self::CHANGED_FIELD, new \DateTimeImmutable());
     }
 }

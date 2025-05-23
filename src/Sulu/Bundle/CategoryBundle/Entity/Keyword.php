@@ -14,7 +14,6 @@ namespace Sulu\Bundle\CategoryBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Sulu\Component\Persistence\Model\AuditableTrait;
-use Sulu\Component\Security\Authentication\UserInterface;
 
 /**
  * The keywords can describe a category with different words.

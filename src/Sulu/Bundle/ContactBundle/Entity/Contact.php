@@ -790,29 +790,6 @@ class Contact extends ApiEntity implements ContactInterface
     }
 
     /**
-<<<<<<< HEAD
-     * @return $this
-     */
-    public function setCreated(\DateTimeImmutable $created)
-    {
-        $this->created = $created;
-
-        return $this;
-    }
-
-    /**
-     * @return $this
-     */
-    public function setChanged(\DateTimeImmutable $changed)
-    {
-        $this->changed = $changed;
-
-        return $this;
-    }
-
-    /**
-=======
->>>>>>> 26a60fcc96 (Refactoring stuff)
      * @return mixed[]
      */
     public function toArray()
