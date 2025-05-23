@@ -13,6 +13,7 @@ namespace Sulu\Component\Persistence\Model;
 
 /**
  * Trait with basic implementation for the TimestampableInterface.
+ *
  * @see TimestampableInterface
  */
 trait TimestampableTrait
