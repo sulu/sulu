@@ -208,10 +208,10 @@ class UserBlameSubscriberTest extends TestCase
 
     /**
      * @param $changeset The changeset for the entity
-     * @param $expectedFields List of filds which should be updated/set
+     * @param array<string> $expectedFields List of filds which should be updated/set
      */
     #[\PHPUnit\Framework\Attributes\DataProvider('provideLifecycle')]
-    public function testOnFlush($changeset, $expectedFields, $insert = true): void
+    public function testOnFlush($changeset, $expectedFields, bool $insert = true): void
     {
         $entity = $this->userBlameObject->reveal();
 
@@ -255,9 +255,10 @@ class UserBlameSubscriberTest extends TestCase
 
     /**
      * @param $changeset The changeset for the entity
+     * @param array<string> $expectedFields List of filds which should be updated/set
      */
     #[\PHPUnit\Framework\Attributes\DataProvider('provideLifecycle')]
-    public function testOnFlushOtherUser($changeset): void
+    public function testOnFlushOtherUser($changeset, $expectedFields, bool $insert = true): void
     {
         $symfonyUser = $this->prophesize(SymfonyUserInterface::class);
         $token = $this->prophesize(TokenInterface::class);

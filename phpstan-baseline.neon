@@ -25711,24 +25711,6 @@ parameters:
 			path: src/Sulu/Bundle/MarkupBundle/Tests/Unit/Markup/HtmlTagExtractorTest.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\MarkupBundle\\Tests\\Unit\\Markup\\HtmlTagExtractorTest\:\:testCount\(\) has parameter \$count with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/MarkupBundle/Tests/Unit/Markup/HtmlTagExtractorTest.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\MarkupBundle\\Tests\\Unit\\Markup\\HtmlTagExtractorTest\:\:testCount\(\) has parameter \$counts with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/MarkupBundle/Tests/Unit/Markup/HtmlTagExtractorTest.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\MarkupBundle\\Tests\\Unit\\Markup\\HtmlTagExtractorTest\:\:testCount\(\) has parameter \$html with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/MarkupBundle/Tests/Unit/Markup/HtmlTagExtractorTest.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\MarkupBundle\\Tests\\Unit\\Markup\\HtmlTagExtractorTest\:\:testExtract\(\) has parameter \$attributes with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -25743,36 +25725,6 @@ parameters:
 		-
 			message: '#^Method Sulu\\Bundle\\MarkupBundle\\Tests\\Unit\\Markup\\HtmlTagExtractorTest\:\:testExtract\(\) has parameter \$tagName with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/MarkupBundle/Tests/Unit/Markup/HtmlTagExtractorTest.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\MarkupBundle\\Tests\\Unit\\Markup\\HtmlTagExtractorTest\:\:testExtractAll\(\) has parameter \$counts with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/MarkupBundle/Tests/Unit/Markup/HtmlTagExtractorTest.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\MarkupBundle\\Tests\\Unit\\Markup\\HtmlTagExtractorTest\:\:testExtractAll\(\) has parameter \$html with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/MarkupBundle/Tests/Unit/Markup/HtmlTagExtractorTest.php
-
-		-
-			message: '#^Parameter \#1 \$expectedCount of method PHPUnit\\Framework\\Assert\:\:assertCount\(\) expects int, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/MarkupBundle/Tests/Unit/Markup/HtmlTagExtractorTest.php
-
-		-
-			message: '#^Parameter \#1 \$html of method Sulu\\Bundle\\MarkupBundle\\Markup\\HtmlTagExtractor\:\:count\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/MarkupBundle/Tests/Unit/Markup/HtmlTagExtractorTest.php
-
-		-
-			message: '#^Parameter \#1 \$html of method Sulu\\Bundle\\MarkupBundle\\Markup\\HtmlTagExtractor\:\:extract\(\) expects string, mixed given\.$#'
-			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/MarkupBundle/Tests/Unit/Markup/HtmlTagExtractorTest.php
 
@@ -85477,32 +85429,8 @@ parameters:
 			path: src/Sulu/Component/Persistence/Tests/Unit/EventSubscriber/ORM/UserBlameSubscriberTest.php
 
 		-
-			message: '#^Method Sulu\\Component\\Persistence\\Tests\\Unit\\EventSubscriber\\ORM\\UserBlameSubscriberTest\:\:testOnFlush\(\) has parameter \$expectedFields with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Component/Persistence/Tests/Unit/EventSubscriber/ORM/UserBlameSubscriberTest.php
-
-		-
-			message: '#^Method Sulu\\Component\\Persistence\\Tests\\Unit\\EventSubscriber\\ORM\\UserBlameSubscriberTest\:\:testOnFlush\(\) has parameter \$insert with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Component/Persistence/Tests/Unit/EventSubscriber/ORM/UserBlameSubscriberTest.php
-
-		-
 			message: '#^Method Sulu\\Component\\Persistence\\Tests\\Unit\\EventSubscriber\\ORM\\UserBlameSubscriberTest\:\:testOnFlushOtherUser\(\) has parameter \$changeset with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Component/Persistence/Tests/Unit/EventSubscriber/ORM/UserBlameSubscriberTest.php
-
-		-
-			message: '#^Parameter \#1 \$value of function count expects array\|Countable, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Persistence/Tests/Unit/EventSubscriber/ORM/UserBlameSubscriberTest.php
-
-		-
-			message: '#^Parameter \#2 \$haystack of function in_array expects array, mixed given\.$#'
-			identifier: argument.type
 			count: 1
 			path: src/Sulu/Component/Persistence/Tests/Unit/EventSubscriber/ORM/UserBlameSubscriberTest.php
 
