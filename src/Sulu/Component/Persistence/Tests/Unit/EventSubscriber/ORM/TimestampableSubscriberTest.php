@@ -90,7 +90,7 @@ class TimestampableSubscriberTest extends TestCase
     {
         return [
             [null],
-            [new \DateTime('2015-01-01')],
+            [new \DateTimeImmutable('2015-01-01')],
         ];
     }
 
@@ -108,7 +108,7 @@ class TimestampableSubscriberTest extends TestCase
             $this->classMetadata->setFieldValue(
                 $entity,
                 'created',
-                Argument::type('\DateTime')
+                Argument::type('\DateTimeImmutable')
             )->shouldBeCalled();
         } else {
             $this->classMetadata->setFieldValue(Argument::any())->shouldNotBeCalled();
@@ -117,7 +117,7 @@ class TimestampableSubscriberTest extends TestCase
         $this->classMetadata->setFieldValue(
             $entity,
             'changed',
-            Argument::type('\DateTime')
+            Argument::type('\DateTimeImmutable')
         )->shouldBeCalled();
 
         $this->subscriber->preUpdate($this->lifecycleEvent->reveal());

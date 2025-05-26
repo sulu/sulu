@@ -18,32 +18,19 @@ use Sulu\Component\Security\Authentication\UserInterface;
  */
 trait UserBlameTrait
 {
-    /**
-     * @var UserInterface|null
-     */
-    protected $creator;
+    protected ?UserInterface $creator = null;
 
-    /**
-     * @var UserInterface|null
-     */
-    protected $changer;
+    protected ?UserInterface $changer = null;
 
     /**
      * @see UserBlameInterface::getCreator()
      */
-    public function getCreator()
+    public function getCreator(): ?UserInterface
     {
         return $this->creator;
     }
 
-    /**
-     * Set creator.
-     *
-     * @param UserInterface|null $creator
-     *
-     * @return $this
-     */
-    public function setCreator($creator)
+    public function setCreator(?UserInterface $creator): self
     {
         $this->creator = $creator;
 
@@ -53,19 +40,12 @@ trait UserBlameTrait
     /**
      * @see UserBlameInterface::getChanger()
      */
-    public function getChanger()
+    public function getChanger(): ?UserInterface
     {
         return $this->changer;
     }
 
-    /**
-     * Set changer.
-     *
-     * @param UserInterface|null $changer
-     *
-     * @return $this
-     */
-    public function setChanger($changer)
+    public function setChanger(?UserInterface $changer): self
     {
         $this->changer = $changer;
 

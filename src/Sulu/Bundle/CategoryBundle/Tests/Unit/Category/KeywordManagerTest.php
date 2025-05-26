@@ -72,8 +72,8 @@ class KeywordManagerTest extends TestCase
         $category->findTranslationByLocale($locale)->willReturn($categoryTranslation->reveal());
         $categoryTranslation->getCategory()->willReturn($category->reveal());
 
-        $categoryTranslation->setChanged(Argument::any())->willReturn(null);
-        $category->setChanged(Argument::any())->willReturn(null);
+        $categoryTranslation->setChanged(Argument::any())->willReturn($category->reveal());
+        $category->setChanged(Argument::any())->willReturn($category->reveal());
 
         if ($exists) {
             $keyword->removeCategoryTranslation($categoryTranslation->reveal())->shouldBeCalled();
@@ -123,7 +123,7 @@ class KeywordManagerTest extends TestCase
         $categoryTranslation->setLocale('it')->shouldBeCalled();
         $categoryTranslation->setTranslation('')->shouldBeCalled();
         $categoryTranslation->setCategory($category->reveal())->shouldBeCalled();
-        $categoryTranslation->setChanged(Argument::any())->willReturn(null);
+        $categoryTranslation->setChanged(Argument::any())->willReturn($categoryTranslation->reveal());
         $categoryTranslation->getCategory()->willReturn($category->reveal());
         $categoryTranslation->hasKeyword($keyword->reveal())->willReturn(false);
         $categoryTranslation->addKeyword($keyword->reveal())->shouldBeCalled();
@@ -137,7 +137,7 @@ class KeywordManagerTest extends TestCase
 
         $category->addTranslation($categoryTranslation->reveal())->willReturn($category->reveal());
         $category->findTranslationByLocale($locale)->willReturn(false);
-        $category->setChanged(Argument::any())->willReturn(null);
+        $category->setChanged(Argument::any())->willReturn($category->reveal());
 
         $domainEventCollector->collect(Argument::type(CategoryKeywordAddedEvent::class))->shouldBeCalled();
 

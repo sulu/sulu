@@ -9415,30 +9415,6 @@ parameters:
 			path: src/Sulu/Bundle/CategoryBundle/Entity/CategoryTranslation.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\CategoryBundle\\Entity\\CategoryTranslation\:\:setChanged\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Entity/CategoryTranslation.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\CategoryBundle\\Entity\\CategoryTranslation\:\:setChanger\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Entity/CategoryTranslation.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\CategoryBundle\\Entity\\CategoryTranslation\:\:setCreated\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Entity/CategoryTranslation.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\CategoryBundle\\Entity\\CategoryTranslation\:\:setCreator\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Entity/CategoryTranslation.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\CategoryBundle\\Entity\\CategoryTranslation\:\:setDescription\(\) has parameter \$description with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -9464,30 +9440,6 @@ parameters:
 
 		-
 			message: '#^Method Sulu\\Bundle\\CategoryBundle\\Entity\\CategoryTranslationInterface\:\:removeKeyword\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Entity/CategoryTranslationInterface.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\CategoryBundle\\Entity\\CategoryTranslationInterface\:\:setChanged\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Entity/CategoryTranslationInterface.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\CategoryBundle\\Entity\\CategoryTranslationInterface\:\:setChanger\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Entity/CategoryTranslationInterface.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\CategoryBundle\\Entity\\CategoryTranslationInterface\:\:setCreated\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Entity/CategoryTranslationInterface.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\CategoryBundle\\Entity\\CategoryTranslationInterface\:\:setCreator\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
 			path: src/Sulu/Bundle/CategoryBundle/Entity/CategoryTranslationInterface.php
@@ -10453,7 +10405,7 @@ parameters:
 			path: src/Sulu/Bundle/CategoryBundle/Trash/CategoryTrashItemHandler.php
 
 		-
-			message: '#^Parameter \#1 \$datetime of class DateTime constructor expects string, mixed given\.$#'
+			message: '#^Parameter \#1 \$datetime of class DateTimeImmutable constructor expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 3
 			path: src/Sulu/Bundle/CategoryBundle/Trash/CategoryTrashItemHandler.php
@@ -16153,18 +16105,6 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Controller/AccountController.php
 
 		-
-			message: '#^Call to an undefined method Sulu\\Bundle\\ContactBundle\\Entity\\AccountInterface\:\:setChanger\(\)\.$#'
-			identifier: method.notFound
-			count: 2
-			path: src/Sulu/Bundle/ContactBundle/Controller/AccountController.php
-
-		-
-			message: '#^Call to an undefined method Sulu\\Bundle\\ContactBundle\\Entity\\AccountInterface\:\:setCreator\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Controller/AccountController.php
-
-		-
 			message: '#^Call to an undefined method Sulu\\Bundle\\ContactBundle\\Entity\\AccountRepositoryInterface\:\:findChildAccounts\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -16435,6 +16375,12 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Controller/AccountController.php
 
 		-
+			message: '#^Parameter \#1 \$changer of method Sulu\\Component\\Persistence\\Model\\UserBlameInterface\:\:setChanger\(\) expects Sulu\\Component\\Security\\Authentication\\UserInterface\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 2
+			path: src/Sulu/Bundle/ContactBundle/Controller/AccountController.php
+
+		-
 			message: '#^Parameter \#1 \$className of method Doctrine\\ORM\\EntityManagerInterface\:\:getRepository\(\) expects class\-string\<object\>, mixed given\.$#'
 			identifier: argument.type
 			count: 4
@@ -16450,6 +16396,12 @@ parameters:
 			message: '#^Parameter \#1 \$corporation of method Sulu\\Bundle\\ContactBundle\\Entity\\AccountInterface\:\:setCorporation\(\) expects string\|null, mixed given\.$#'
 			identifier: argument.type
 			count: 2
+			path: src/Sulu/Bundle/ContactBundle/Controller/AccountController.php
+
+		-
+			message: '#^Parameter \#1 \$creator of method Sulu\\Component\\Persistence\\Model\\UserBlameInterface\:\:setCreator\(\) expects Sulu\\Component\\Security\\Authentication\\UserInterface\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Controller/AccountController.php
 
 		-
@@ -21259,12 +21211,6 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Trash/AccountTrashItemHandler.php
 
 		-
-			message: '#^Parameter \#1 \$datetime of class DateTime constructor expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: src/Sulu/Bundle/ContactBundle/Trash/AccountTrashItemHandler.php
-
-		-
 			message: '#^Parameter \#1 \$deliveryAddress of method Sulu\\Bundle\\ContactBundle\\Entity\\Address\:\:setDeliveryAddress\(\) expects bool, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -21693,7 +21639,13 @@ parameters:
 		-
 			message: '#^Parameter \#1 \$datetime of class DateTime constructor expects string, mixed given\.$#'
 			identifier: argument.type
-			count: 3
+			count: 1
+			path: src/Sulu/Bundle/ContactBundle/Trash/ContactTrashItemHandler.php
+
+		-
+			message: '#^Parameter \#1 \$datetime of class DateTimeImmutable constructor expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 2
 			path: src/Sulu/Bundle/ContactBundle/Trash/ContactTrashItemHandler.php
 
 		-
@@ -25123,18 +25075,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Api/Collection.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\Api\\Collection\:\:getChanged\(\) should return string but returns DateTime\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Api/Collection.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\Api\\Collection\:\:getCreated\(\) should return string but returns DateTime\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Api/Collection.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\MediaBundle\\Api\\Collection\:\:getEmbedded\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -25441,7 +25381,7 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Api/Media.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\Api\\Media\:\:getCreated\(\) should return DateTime but returns mixed\.$#'
+			message: '#^Method Sulu\\Bundle\\MediaBundle\\Api\\Media\:\:getCreated\(\) should return DateTimeInterface but returns mixed\.$#'
 			identifier: return.type
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Api/Media.php
@@ -30151,7 +30091,7 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Media/Manager/MediaManager.php
 
 		-
-			message: '#^Parameter \#1 \$changed of method Sulu\\Bundle\\MediaBundle\\Api\\Media\:\:setChanged\(\) expects DateTime\|string, mixed given\.$#'
+			message: '#^Parameter \#1 \$changed of method Sulu\\Bundle\\MediaBundle\\Api\\Media\:\:setChanged\(\) expects DateTimeImmutable\|string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Media/Manager/MediaManager.php
@@ -34267,12 +34207,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Trash/CollectionTrashItemHandler.php
 
 		-
-			message: '#^Parameter \#1 \$datetime of class DateTime constructor expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: src/Sulu/Bundle/MediaBundle/Trash/CollectionTrashItemHandler.php
-
-		-
 			message: '#^Parameter \#1 \$description of method Sulu\\Bundle\\MediaBundle\\Entity\\CollectionMeta\:\:setDescription\(\) expects string\|null, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -34543,7 +34477,7 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Trash/MediaTrashItemHandler.php
 
 		-
-			message: '#^Parameter \#1 \$datetime of class DateTime constructor expects string, mixed given\.$#'
+			message: '#^Parameter \#1 \$datetime of class DateTimeImmutable constructor expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 3
 			path: src/Sulu/Bundle/MediaBundle/Trash/MediaTrashItemHandler.php
@@ -48343,7 +48277,7 @@ parameters:
 			path: src/Sulu/Bundle/TagBundle/Trash/TagTrashItemHandler.php
 
 		-
-			message: '#^Parameter \#1 \$datetime of class DateTime constructor expects string, mixed given\.$#'
+			message: '#^Parameter \#1 \$datetime of class DateTimeImmutable constructor expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/TagBundle/Trash/TagTrashItemHandler.php
@@ -68959,7 +68893,7 @@ parameters:
 			path: src/Sulu/Component/Hash/Serializer/Subscriber/HashSerializeEventSubscriber.php
 
 		-
-			message: '#^Call to an undefined method DateTime\:\:willReturn\(\)\.$#'
+			message: '#^Call to an undefined method DateTimeImmutable\:\:willReturn\(\)\.$#'
 			identifier: method.notFound
 			count: 4
 			path: src/Sulu/Component/Hash/Tests/AuditableHasherTest.php
@@ -68979,7 +68913,7 @@ parameters:
 		-
 			message: '#^Call to method PHPUnit\\Framework\\Assert\:\:assertIsString\(\) with string will always evaluate to true\.$#'
 			identifier: method.alreadyNarrowedType
-			count: 4
+			count: 3
 			path: src/Sulu/Component/Hash/Tests/AuditableHasherTest.php
 
 		-

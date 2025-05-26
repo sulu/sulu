@@ -20,16 +20,22 @@ interface UserBlameInterface
 {
     /**
      * Return the user that created this object.
-     *
-     * @return UserInterface|null
      */
-    public function getCreator();
+    public function getCreator(): ?UserInterface;
 
     /**
      * Return the user that change this object the last time.
      * this object.
-     *
-     * @return UserInterface|null
      */
-    public function getChanger();
+    public function getChanger(): ?UserInterface;
+
+    /**
+     * Set the user that created this object.
+     */
+    public function setCreator(?UserInterface $creator): self;
+
+    /**
+     * Set the user that changed this object the last time.
+     */
+    public function setChanger(?UserInterface $changer): self;
 }
