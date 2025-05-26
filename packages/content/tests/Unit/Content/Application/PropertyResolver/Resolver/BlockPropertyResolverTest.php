@@ -94,7 +94,7 @@ class BlockPropertyResolverTest extends TestCase
         yield 'smart_content' => [['source' => '123']];
         yield 'single_value' => [1];
         yield 'object' => [(object) [1, 2]];
-        yield 'non_type_blocks' => [['text' => 'test'], ['text' => '123']];
+        yield 'non_type_blocks' => [[['text' => 'test'], ['text' => '123']]];
     }
 
     #[DataProvider('provideUnresolvableData')]
