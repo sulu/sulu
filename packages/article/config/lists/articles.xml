@@ -2,20 +2,20 @@
 <list xmlns="http://schemas.sulu.io/list-builder/list">
     <key>articles</key>
 
-    <joins name="creator">
+    <joins name="creator" ref="dimensionContent">
         <join>
             <entity-name>%sulu.model.user.class%</entity-name>
-            <field-name>Sulu\Article\Domain\Model\ArticleInterface.creator</field-name>
+            <field-name>dimensionContent.creator</field-name>
         </join>
         <join>
             <entity-name>%sulu.model.contact.class%</entity-name>
             <field-name>%sulu.model.user.class%.contact</field-name>
         </join>
     </joins>
-    <joins name="changer">
+    <joins name="changer" ref="dimensionContent">
         <join>
             <entity-name>%sulu.model.user.class%</entity-name>
-            <field-name>Sulu\Article\Domain\Model\ArticleInterface.changer</field-name>
+            <field-name>dimensionContent.changer</field-name>
         </join>
         <join>
             <entity-name>%sulu.model.contact.class%</entity-name>
@@ -105,13 +105,19 @@
 
         <property name="created" translation="sulu_admin.created">
             <field-name>created</field-name>
-            <entity-name>Sulu\Article\Domain\Model\ArticleInterface</entity-name>
+            <entity-name>dimensionContent</entity-name>
+
+            <joins ref="dimensionContent"/>
+
             <transformer type="datetime"/>
         </property>
 
         <property name="changed" translation="sulu_admin.changed">
             <field-name>changed</field-name>
-            <entity-name>Sulu\Article\Domain\Model\ArticleInterface</entity-name>
+            <entity-name>dimensionContent</entity-name>
+
+            <joins ref="dimensionContent"/>
+
             <transformer type="datetime"/>
         </property>
 

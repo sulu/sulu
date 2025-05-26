@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace Sulu\Article\Domain\Model;
 
+use Sulu\Content\Domain\Model\AuditableInterface;
+use Sulu\Content\Domain\Model\AuditableTrait;
 use Sulu\Content\Domain\Model\AuthorTrait;
 use Sulu\Content\Domain\Model\ContentRichEntityInterface;
 use Sulu\Content\Domain\Model\DimensionContentTrait;
@@ -21,15 +23,15 @@ use Sulu\Content\Domain\Model\RoutableTrait;
 use Sulu\Content\Domain\Model\SeoTrait;
 use Sulu\Content\Domain\Model\ShadowTrait;
 use Sulu\Content\Domain\Model\TemplateTrait;
-//use Sulu\Content\Domain\Model\WebspaceTrait;
 use Sulu\Content\Domain\Model\WebspaceTrait;
 use Sulu\Content\Domain\Model\WorkflowTrait;
 
 /**
  * @experimental
  */
-class ArticleDimensionContent implements ArticleDimensionContentInterface
+class ArticleDimensionContent implements ArticleDimensionContentInterface, AuditableInterface
 {
+    use AuditableTrait;
     use AuthorTrait;
     use DimensionContentTrait;
     use ExcerptTrait;
@@ -37,7 +39,7 @@ class ArticleDimensionContent implements ArticleDimensionContentInterface
     use SeoTrait;
     use ShadowTrait;
     use TemplateTrait {
-        setTemplateData as parentSetTemplateData;
+        TemplateTrait::setTemplateData as parentSetTemplateData;
     }
     use WebspaceTrait;
     use WorkflowTrait;

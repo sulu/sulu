@@ -160,7 +160,7 @@ ALTER TABLE sn_snippets ADD CONSTRAINT FK_E68115CF30D07CD5 FOREIGN KEY (idUsersC
 #### ArticleBundle
 
 ```sql
-CREATE TABLE ar_article_dimension_contents (id INT AUTO_INCREMENT NOT NULL, route_id INT DEFAULT NULL, author_id INT DEFAULT NULL, title VARCHAR(191) DEFAULT NULL, stage VARCHAR(15) NOT NULL, locale VARCHAR(15) DEFAULT NULL, ghostLocale VARCHAR(15) DEFAULT NULL, availableLocales JSON DEFAULT NULL, shadowLocale VARCHAR(15) DEFAULT NULL, shadowLocales JSON DEFAULT NULL, templateKey VARCHAR(31) DEFAULT NULL, templateData JSON NOT NULL, seoTitle VARCHAR(255) DEFAULT NULL, seoDescription LONGTEXT DEFAULT NULL, seoKeywords LONGTEXT DEFAULT NULL, seoCanonicalUrl LONGTEXT DEFAULT NULL, seoNoIndex TINYINT(1) NOT NULL, seoNoFollow TINYINT(1) NOT NULL, seoHideInSitemap TINYINT(1) NOT NULL, excerptTitle VARCHAR(255) DEFAULT NULL, excerptMore VARCHAR(63) DEFAULT NULL, excerptDescription LONGTEXT DEFAULT NULL, excerptImageId INT DEFAULT NULL, excerptIconId INT DEFAULT NULL, mainWebspace VARCHAR(255) DEFAULT NULL, authored DATETIME DEFAULT NULL COMMENT '(DC2Type:datetime_immutable)', lastModified DATETIME DEFAULT NULL COMMENT '(DC2Type:datetime_immutable)', workflowPlace VARCHAR(31) DEFAULT NULL, workflowPublished DATETIME DEFAULT NULL COMMENT '(DC2Type:datetime_immutable)', articleUuid VARCHAR(255) NOT NULL, INDEX IDX_5674F7BF34ECB4E6 (route_id), INDEX IDX_5674F7BFAE39C518 (articleUuid), INDEX IDX_5674F7BFF675F31B (author_id), INDEX idx_ar_article_dimension_contents_dimension (stage, locale), INDEX idx_ar_article_dimension_contents_locale (locale), INDEX idx_ar_article_dimension_contents_stage (stage), INDEX idx_ar_article_dimension_contents_template_key (templateKey), INDEX idx_ar_article_dimension_contents_workflow_place (workflowPlace), INDEX idx_ar_article_dimension_contents_workflow_published (workflowPublished), INDEX IDX_5674F7BF2F5A5F5D (excerptImageId), INDEX IDX_5674F7BF16996F78 (excerptIconId), PRIMARY KEY(id));
+CREATE TABLE ar_article_dimension_contents (id INT AUTO_INCREMENT NOT NULL, route_id INT DEFAULT NULL, author_id INT DEFAULT NULL, title VARCHAR(191) DEFAULT NULL, stage VARCHAR(15) NOT NULL, locale VARCHAR(15) DEFAULT NULL, ghostLocale VARCHAR(15) DEFAULT NULL, availableLocales JSON DEFAULT NULL, shadowLocale VARCHAR(15) DEFAULT NULL, shadowLocales JSON DEFAULT NULL, templateKey VARCHAR(31) DEFAULT NULL, templateData JSON NOT NULL, seoTitle VARCHAR(255) DEFAULT NULL, seoDescription LONGTEXT DEFAULT NULL, seoKeywords LONGTEXT DEFAULT NULL, seoCanonicalUrl LONGTEXT DEFAULT NULL, seoNoIndex TINYINT(1) NOT NULL, seoNoFollow TINYINT(1) NOT NULL, seoHideInSitemap TINYINT(1) NOT NULL, excerptTitle VARCHAR(255) DEFAULT NULL, excerptMore VARCHAR(63) DEFAULT NULL, excerptDescription LONGTEXT DEFAULT NULL, excerptImageId INT DEFAULT NULL, excerptIconId INT DEFAULT NULL, mainWebspace VARCHAR(255) DEFAULT NULL, authored DATETIME DEFAULT NULL COMMENT '(DC2Type:datetime_immutable)', lastModified DATETIME DEFAULT NULL COMMENT '(DC2Type:datetime_immutable)', workflowPlace VARCHAR(31) DEFAULT NULL, workflowPublished DATETIME DEFAULT NULL COMMENT '(DC2Type:datetime_immutable)', articleUuid VARCHAR(255) NOT NULL, created DATETIME NOT NULL, changed DATETIME NOT NULL, idUsersCreator INT DEFAULT NULL, idUsersChanger INT DEFAULT NULL, INDEX IDX_5674F7BF34ECB4E6 (route_id), INDEX IDX_5674F7BFAE39C518 (articleUuid), INDEX IDX_5674F7BFF675F31B (author_id), INDEX idx_ar_article_dimension_contents_dimension (stage, locale), INDEX idx_ar_article_dimension_contents_locale (locale), INDEX idx_ar_article_dimension_contents_stage (stage), INDEX idx_ar_article_dimension_contents_template_key (templateKey), INDEX idx_ar_article_dimension_contents_workflow_place (workflowPlace), INDEX idx_ar_article_dimension_contents_workflow_published (workflowPublished), INDEX IDX_5674F7BF2F5A5F5D (excerptImageId), INDEX IDX_5674F7BF16996F78 (excerptIconId), INDEX IDX_5674F7BFDBF11E1D (idUsersCreator), INDEX IDX_5674F7BF30D07CD5 (idUsersChanger), PRIMARY KEY(id));
 CREATE TABLE ar_article_dimension_content_excerpt_tags (article_dimension_content_id INT NOT NULL, tag_id INT NOT NULL, INDEX IDX_B45854027C1747D1 (article_dimension_content_id), INDEX IDX_B4585402BAD26311 (tag_id), PRIMARY KEY(article_dimension_content_id, tag_id));
 CREATE TABLE ar_article_dimension_content_excerpt_categories (article_dimension_content_id INT NOT NULL, category_id INT NOT NULL, INDEX IDX_971AE52D7C1747D1 (article_dimension_content_id), INDEX IDX_971AE52D12469DE2 (category_id), PRIMARY KEY(article_dimension_content_id, category_id));
 CREATE TABLE ar_articles (uuid VARCHAR(255) NOT NULL, created DATETIME NOT NULL, changed DATETIME NOT NULL, idUsersCreator INT DEFAULT NULL, idUsersChanger INT DEFAULT NULL, INDEX IDX_7F75CD17DBF11E1D (idUsersCreator), INDEX IDX_7F75CD1730D07CD5 (idUsersChanger), PRIMARY KEY(uuid));
@@ -169,6 +169,8 @@ ALTER TABLE ar_article_dimension_contents ADD CONSTRAINT FK_5674F7BFAE39C518 FOR
 ALTER TABLE ar_article_dimension_contents ADD CONSTRAINT FK_5674F7BFF675F31B FOREIGN KEY (author_id) REFERENCES co_contacts (id) ON DELETE CASCADE;
 ALTER TABLE ar_article_dimension_contents ADD CONSTRAINT FK_5674F7BF2F5A5F5D FOREIGN KEY (excerptImageId) REFERENCES me_media (id) ON DELETE SET NULL;
 ALTER TABLE ar_article_dimension_contents ADD CONSTRAINT FK_5674F7BF16996F78 FOREIGN KEY (excerptIconId) REFERENCES me_media (id) ON DELETE SET NULL;
+ALTER TABLE ar_article_dimension_contents ADD CONSTRAINT FK_5674F7BFDBF11E1D FOREIGN KEY (idUsersCreator) REFERENCES se_users (id) ON DELETE SET NULL;
+ALTER TABLE ar_article_dimension_contents ADD CONSTRAINT FK_5674F7BF30D07CD5 FOREIGN KEY (idUsersChanger) REFERENCES se_users (id) ON DELETE SET NULL;
 ALTER TABLE ar_article_dimension_content_excerpt_tags ADD CONSTRAINT FK_B45854027C1747D1 FOREIGN KEY (article_dimension_content_id) REFERENCES ar_article_dimension_contents (id) ON DELETE CASCADE;
 ALTER TABLE ar_article_dimension_content_excerpt_tags ADD CONSTRAINT FK_B4585402BAD26311 FOREIGN KEY (tag_id) REFERENCES ta_tags (id) ON DELETE CASCADE;
 ALTER TABLE ar_article_dimension_content_excerpt_categories ADD CONSTRAINT FK_971AE52D7C1747D1 FOREIGN KEY (article_dimension_content_id) REFERENCES ar_article_dimension_contents (id) ON DELETE CASCADE;
@@ -566,6 +568,19 @@ Removed kernel parameters:
 
 - All `sulu_*.class` parameters for services where removed (use compilerpasses to replace class of a service definition)
 - Parameter `%permissions%` was replaced in favor of `%sulu_security.permissions%`
+
+### Added return type hints for TimestampableInterface and UserBlameInterface
+
+Return type hints have been added to the `TimestampableInterface` and `UserBlameInterface` methods in Sulu 3.0. This affects the following methods:
+
+- `TimestampableInterface::getCreated()`: now returns `\DateTime`
+- `TimestampableInterface::getChanged()`: now returns `\DateTime`
+- `UserBlameInterface::getCreator()`: now returns `?UserInterface`
+- `UserBlameInterface::getChanger()`: now returns `?UserInterface`
+
+The corresponding traits `TimestampableTrait` and `UserBlameTrait` have been updated with these return type hints.
+
+**Impact:** If you have custom entities that directly implement these interfaces without using the traits, you need to add the proper return type hints to your implementation methods. This is a breaking change that will cause PHP fatal errors if not addressed.
 
 ### Moved classes for 3.0:
 

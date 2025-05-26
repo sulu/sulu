@@ -4,9 +4,11 @@
     "availableLocales": [
         "en"
     ],
+    "changer": null,
     "contentLocales": [
         "en"
     ],
+    "creator": null,
     "description": null,
     "excerptCategories": [],
     "excerptDescription": "Excerpt Description",

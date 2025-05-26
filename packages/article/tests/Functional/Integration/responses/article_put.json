@@ -5,10 +5,12 @@
         "en",
         "de"
     ],
+    "changer": null,
     "contentLocales": [
         "en",
         "de"
     ],
+    "creator": null,
     "description": "<p>Test Article 2</p>",
     "excerptCategories": [],
     "excerptDescription": "Excerpt Description 2",
