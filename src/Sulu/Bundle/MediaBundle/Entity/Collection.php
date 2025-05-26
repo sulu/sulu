@@ -60,17 +60,11 @@ class Collection implements CollectionInterface, PermissionInheritanceInterface
      */
     protected $type;
 
-    /**
-     * @var UserInterface|null
-     */
     #[Exclude]
-    protected $changer;
+    protected ?UserInterface $changer;
 
-    /**
-     * @var UserInterface|null
-     */
     #[Exclude]
-    protected $creator;
+    protected ?UserInterface $creator;
 
     /**
      * @var string|null
@@ -118,30 +112,6 @@ class Collection implements CollectionInterface, PermissionInheritanceInterface
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Set changer.
-     *
-     * @return CollectionInterface
-     */
-    public function setChanger(?UserInterface $changer = null)
-    {
-        $this->changer = $changer;
-
-        return $this;
-    }
-
-    /**
-     * Set creator.
-     *
-     * @return CollectionInterface
-     */
-    public function setCreator(?UserInterface $creator = null)
-    {
-        $this->creator = $creator;
-
-        return $this;
     }
 
     /**

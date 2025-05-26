@@ -195,7 +195,7 @@ final class CategoryTrashItemHandler implements
         $category = $this->categoryRepository->createNew();
         $category->setKey($data['key']);
         $category->setDefaultLocale($data['defaultLocale']);
-        $category->setCreated(new \DateTime($data['created']));
+        $category->setCreated(new \DateTimeImmutable($data['created']));
         $category->setCreator($this->findEntity(UserInterface::class, $data['creatorId']));
 
         if ($parentId) {
@@ -220,7 +220,7 @@ final class CategoryTrashItemHandler implements
             $translation->setTranslation($translationData['translation']);
             $translation->setDescription($translationData['description']);
             $translation->setLocale($translationData['locale']);
-            $translation->setCreated(new \DateTime($translationData['created']));
+            $translation->setCreated(new \DateTimeImmutable($translationData['created']));
             $translation->setCreator($this->findEntity(UserInterface::class, $translationData['creatorId']));
 
             $medias = [];
@@ -240,7 +240,7 @@ final class CategoryTrashItemHandler implements
 
                     $keyword->setKeyword($keywordData['keyword']);
                     $keyword->setLocale($translationData['locale']);
-                    $keyword->setCreated(new \DateTime($keywordData['created']));
+                    $keyword->setCreated(new \DateTimeImmutable($keywordData['created']));
                     $keyword->setCreator($this->findEntity(UserInterface::class, $keywordData['creatorId']));
                 }
 

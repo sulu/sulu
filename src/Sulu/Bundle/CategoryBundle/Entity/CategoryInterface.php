@@ -220,4 +220,8 @@ interface CategoryInterface extends AuditableInterface
      * @return CategoryInterface|null
      */
     public function getParent();
+
+    public function setChanged(\DateTimeImmutable $changed): self;
+
+    public function setCreated(\DateTimeImmutable $created): self;
 }

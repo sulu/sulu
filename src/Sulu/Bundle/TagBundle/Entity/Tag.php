@@ -14,13 +14,15 @@ namespace Sulu\Bundle\TagBundle\Entity;
 use JMS\Serializer\Annotation\Expose;
 use JMS\Serializer\Annotation\Groups;
 use Sulu\Bundle\TagBundle\Tag\TagInterface;
-use Sulu\Component\Security\Authentication\UserInterface;
+use Sulu\Component\Persistence\Model\UserBlameTrait;
 
 /**
  * Represents single tag in the system.
  */
 class Tag implements TagInterface
 {
+    use UserBlameTrait;
+
     /**
      * @var string
      */
@@ -39,16 +41,6 @@ class Tag implements TagInterface
 
     #[Groups(['partialTag'])]
     private \DateTimeImmutable $changed;
-
-    /**
-     * @var UserInterface|null
-     */
-    private $changer;
-
-    /**
-     * @var UserInterface|null
-     */
-    private $creator;
 
     public function setName($name)
     {
@@ -96,36 +88,6 @@ class Tag implements TagInterface
         $this->changed = $changed;
 
         return $this;
-    }
-
-    /**
-     * @return $this
-     */
-    public function setChanger(?UserInterface $changer = null)
-    {
-        $this->changer = $changer;
-
-        return $this;
-    }
-
-    public function getChanger()
-    {
-        return $this->changer;
-    }
-
-    /**
-     * @return $this
-     */
-    public function setCreator(?UserInterface $creator = null)
-    {
-        $this->creator = $creator;
-
-        return $this;
-    }
-
-    public function getCreator()
-    {
-        return $this->creator;
     }
 
     public function __toString()

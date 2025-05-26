@@ -80,24 +80,6 @@ interface RoleInterface extends AuditableInterface, SecurityIdentityInterface
     public function getId();
 
     /**
-     * Set creator.
-     *
-     * @param UserInterface $creator
-     *
-     * @return RoleInterface
-     */
-    public function setCreator($creator);
-
-    /**
-     * Set changer.
-     *
-     * @param UserInterface $changer
-     *
-     * @return RoleInterface
-     */
-    public function setChanger($changer);
-
-    /**
      * Add permissions.
      *
      * @return RoleInterface

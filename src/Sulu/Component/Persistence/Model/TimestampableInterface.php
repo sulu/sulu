@@ -27,4 +27,16 @@ interface TimestampableInterface
      * was changed.
      */
     public function getChanged(): \DateTimeImmutable;
+
+    /**
+     * Set the date the object implementing this interface
+     * was created.
+     */
+    public function setCreated(\DateTimeImmutable $created): self;
+
+    /**
+     * Set the date the object implementing this interface
+     * was changed.
+     */
+    public function setChanged(\DateTimeImmutable $changed): self;
 }

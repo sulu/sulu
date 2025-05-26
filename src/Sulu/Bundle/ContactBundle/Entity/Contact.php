@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Sulu.
  *
@@ -24,13 +26,12 @@ use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\TagBundle\Tag\TagInterface;
-use Sulu\Component\Persistence\Model\TimestampableTrait;
+use Sulu\Component\Persistence\Model\AuditableTrait;
 use Sulu\Component\Security\Authentication\UserInterface;
 
 class Contact extends ApiEntity implements ContactInterface
 {
-    // TODO: Use AuditableInterface instead
-    use TimestampableTrait;
+    use AuditableTrait;
 
     /**
      * @var int
@@ -69,17 +70,11 @@ class Contact extends ApiEntity implements ContactInterface
      */
     protected $locales;
 
-    /**
-     * @var UserInterface|null
-     */
     #[Groups(['fullContact'])]
-    protected $changer;
+    protected ?UserInterface $changer;
 
-    /**
-     * @var UserInterface|null
-     */
     #[Groups(['fullContact'])]
-    protected $creator;
+    protected ?UserInterface $creator;
 
     /**
      * @var string|null
@@ -368,40 +363,6 @@ class Contact extends ApiEntity implements ContactInterface
         return $this->locales;
     }
 
-    /**
-     * Set changer.
-     *
-     * @return Contact
-     */
-    public function setChanger(?UserInterface $changer = null)
-    {
-        $this->changer = $changer;
-
-        return $this;
-    }
-
-    public function getChanger()
-    {
-        return $this->changer;
-    }
-
-    /**
-     * Set creator.
-     *
-     * @return Contact
-     */
-    public function setCreator(?UserInterface $creator = null)
-    {
-        $this->creator = $creator;
-
-        return $this;
-    }
-
-    public function getCreator()
-    {
-        return $this->creator;
-    }
-
     public function setNote(?string $note): ContactInterface
     {
         $this->note = $note;
@@ -615,7 +576,7 @@ class Contact extends ApiEntity implements ContactInterface
     public function getMainAccount()
     {
         $mainAccountContact = $this->getMainAccountContact();
-        if (!\is_null($mainAccountContact)) {
+        if (null !== $mainAccountContact) {
             return $mainAccountContact->getAccount();
         }
 

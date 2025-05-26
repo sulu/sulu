@@ -391,8 +391,8 @@ class MediaManagerTest extends TestCase
         $uploadedFile->getMimeType()->willReturn('img');
 
         $media = $this->prophesize(Media::class);
-        $media->setChanger(Argument::any())->willReturn(null);
-        $media->setChanged(Argument::any())->willReturn(null);
+        $media->setChanger(Argument::any())->willReturn($media->reveal());
+        $media->setChanged(Argument::any())->willReturn($media->reveal());
 
         $mediaType = $this->prophesize(MediaType::class);
         $mediaType->getId()->willReturn(1);
@@ -400,8 +400,8 @@ class MediaManagerTest extends TestCase
 
         $file = $this->prophesize(File::class);
         $file->getVersion()->willReturn(1);
-        $file->setChanger(Argument::any())->willReturn(null);
-        $file->setChanged(Argument::any())->willReturn(null);
+        $file->setChanger(Argument::any())->willReturn($file->reveal());
+        $file->setChanged(Argument::any())->willReturn($file->reveal());
         $media->getFiles()->willReturn([$file->reveal()]);
 
         $fileVersion = $this->prophesize(FileVersion::class);

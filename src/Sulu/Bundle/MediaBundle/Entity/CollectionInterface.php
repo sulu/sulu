@@ -13,7 +13,6 @@ namespace Sulu\Bundle\MediaBundle\Entity;
 
 use Doctrine\Common\Collections\Collection as DoctrineCollection;
 use Sulu\Component\Persistence\Model\AuditableInterface;
-use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Security\Authorization\AccessControl\SecuredEntityInterface;
 
 /**
@@ -46,34 +45,6 @@ interface CollectionInterface extends AuditableInterface, SecuredEntityInterface
      * @return CollectionInterface
      */
     public function setKey($key);
-
-    /**
-     * Set changer.
-     *
-     * @return CollectionInterface
-     */
-    public function setChanger(?UserInterface $changer = null);
-
-    /**
-     * Get changer.
-     *
-     * @return UserInterface|null
-     */
-    public function getChanger();
-
-    /**
-     * Set creator.
-     *
-     * @return CollectionInterface
-     */
-    public function setCreator(?UserInterface $creator = null);
-
-    /**
-     * Get creator.
-     *
-     * @return UserInterface|null
-     */
-    public function getCreator();
 
     /**
      * Set style.
