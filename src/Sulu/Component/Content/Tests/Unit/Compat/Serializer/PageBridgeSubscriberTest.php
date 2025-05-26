@@ -54,7 +54,7 @@ class PageBridgeSubscriberTest extends TestCase
         $event = new ObjectEvent(
             $context->reveal(),
             $pageBridge->reveal(),
-            ['type' => PageBridge::class, 'params' => []]
+            ['name' => PageBridge::class, 'params' => []]
         );
 
         $pageBridgeSubscriber->onPostSerialize($event);
