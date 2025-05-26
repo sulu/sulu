@@ -145,6 +145,10 @@ abstract class SimpleContentType implements ContentTypeInterface, ContentTypeExp
             return \json_encode($propertyValue);
         }
 
+        if (\is_numeric($propertyValue)) {
+            return (string) $propertyValue;
+        }
+
         return '';
     }
 
