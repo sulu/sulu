@@ -77901,7 +77901,7 @@ parameters:
 		-
 			message: '#^Cannot call method getNamedItem\(\) on \(DOMNamedNodeMap&iterable\<DOMAttr\>\)\|null\.$#'
 			identifier: method.nonObject
-			count: 5
+			count: 4
 			path: src/Sulu/Component/Webspace/Loader/XmlFileLoader10.php
 
 		-
