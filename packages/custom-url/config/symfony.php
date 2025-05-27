@@ -13,11 +13,8 @@ declare(strict_types=1);
 
 use Sulu\CustomUrl\Infrastructure\Doctrine\Repository\CustomUrlRepositoryInterface;
 use Sulu\CustomUrl\Infrastructure\Symfony\Fixtures\LoadCustomUrlFixture;
-use Sulu\CustomUrl\Infrastructure\Symfony\Router\CustomUrlRouter;
 use Sulu\CustomUrl\Infrastructure\Symfony\Serializer\CustomUrlNormalizer;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
-
-use function Symfony\Component\DependencyInjection\Loader\Configurator\service;
 
 use Symfony\Component\DependencyInjection\Reference;
 
@@ -36,12 +33,5 @@ return static function(ContainerConfigurator $containerConfigurator): void {
             new Reference(CustomUrlRepositoryInterface::class),
         ])
         ->tag('doctrine.fixture.orm')
-    ;
-
-    $services->set(CustomUrlRouter::class)
-        ->args([
-            service('sulu_custom_urls.repository'),
-        ])
-        ->tag('router', ['priority' => -30])
     ;
 };

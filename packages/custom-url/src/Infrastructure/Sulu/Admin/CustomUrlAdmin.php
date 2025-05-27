@@ -92,7 +92,7 @@ class CustomUrlAdmin extends Admin
         ];
     }
 
-    public static function getSecurityContextsWithPlaceholder(): array
+    public function getSecurityContextsWithPlaceholder(): array
     {
         return [
             self::SULU_ADMIN_SECURITY_SYSTEM => [
