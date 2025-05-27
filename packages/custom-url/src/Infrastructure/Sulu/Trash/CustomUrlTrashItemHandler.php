@@ -31,20 +31,20 @@ use Sulu\CustomUrl\Infrastructure\Sulu\Admin\CustomUrlAdmin;
 use Webmozart\Assert\Assert;
 
 /** @phpstan-type TrashRestoreData array{
- * title: string,
- * creator: UserInterface,
- * created: string,
- * changer: string,
- * changed: string,
- * baseDomain: string,
- * domainParts: array<string>,
- * canonical: bool,
- * redirect: bool,
- * noFollow: bool,
- * noIndex: bool,
- * targetUuid: string,
- * targetLocale: string,
- * webspaceKey: string,
+ *     title: string,
+ *     creator: UserInterface,
+ *     created: string,
+ *     changer: string,
+ *     changed: string,
+ *     baseDomain: string,
+ *     domainParts: array<string>,
+ *     canonical: bool,
+ *     redirect: bool,
+ *     noFollow: bool,
+ *     noIndex: bool,
+ *     targetUuid: string,
+ *     targetLocale: string,
+ *     webspaceKey: string,
  * }
  */
 final class CustomUrlTrashItemHandler implements

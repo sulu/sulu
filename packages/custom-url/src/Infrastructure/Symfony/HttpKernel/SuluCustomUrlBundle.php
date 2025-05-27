@@ -13,30 +13,17 @@ declare(strict_types=1);
 
 namespace Sulu\CustomUrl\Infrastructure\Symfony\HttpKernel;
 
-use Doctrine\ORM\EntityManagerInterface;
-use Sulu\Bundle\AdminBundle\Admin\View\ViewBuilderFactoryInterface;
-use Sulu\Bundle\DocumentManagerBundle\Collector\DocumentDomainEventCollectorInterface;
 use Sulu\Bundle\PersistenceBundle\DependencyInjection\PersistenceExtensionTrait;
 use Sulu\Bundle\PersistenceBundle\PersistenceBundleTrait;
-use Sulu\Bundle\TrashBundle\Domain\Repository\TrashItemRepositoryInterface;
-use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
-use Sulu\CustomUrl\Application\Mapper\CustomUrlMapperInterface;
 use Sulu\CustomUrl\Domain\Model\CustomUrl;
 use Sulu\CustomUrl\Domain\Model\CustomUrlInterface;
 use Sulu\CustomUrl\Domain\Model\CustomUrlRoute;
 use Sulu\CustomUrl\Domain\Model\CustomUrlRouteInterface;
-use Sulu\CustomUrl\Infrastructure\Doctrine\Repository\CustomUrlRepositoryInterface;
-use Sulu\CustomUrl\Infrastructure\Sulu\Admin\CustomUrlAdmin;
-use Sulu\CustomUrl\Infrastructure\Sulu\Trash\CustomUrlTrashItemHandler;
-use Sulu\CustomUrl\Infrastructure\Sulu\Trash\CustomUrlTrashSubscriber;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Configurator\DefinitionConfigurator;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
-
-use function Symfony\Component\DependencyInjection\Loader\Configurator\service;
-
 use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
 
@@ -92,46 +79,12 @@ final class SuluCustomUrlBundle extends AbstractBundle
 
         $loader = new PhpFileLoader($builder, new FileLocator(\dirname(__DIR__, 4) . '/config'));
 
-        $services = $container->services();
-        $services->set('sulu_custom_urls.admin', CustomUrlAdmin::class)
-            ->public()
-            ->args([
-                service(WebspaceManagerInterface::class),
-                service(ViewBuilderFactoryInterface::class),
-                service('sulu_security.security_checker'),
-            ])
-            ->tag('sulu.admin')
-            ->tag('sulu.context', ['context' => 'admin'])
-        ;
-        $services->alias(CustomUrlAdmin::class, 'sulu_custom_urls.admin');
-
-        $loader->load('document.php');
+        $loader->load('services.php');
         $loader->load('symfony.php');
         $loader->load('message_handler.php');
 
         if ($builder->hasExtension('sulu_trash')) {
-            $services->set('sulu_custom_urls.custom_url_trash_subscriber', CustomUrlTrashSubscriber::class)
-                ->args([
-                    service('sulu_trash.trash_manager'),
-                    service(EntityManagerInterface::class),
-                ])
-                ->tag('sulu_document_manager.event_subscriber')
-            ;
-            $services->alias(CustomUrlTrashSubscriber::class, 'sulu_custom_urls.custom_url_trash_subscriber');
-
-            $services->set('sulu_custom_urls.custom_url_trash_item_handler', CustomUrlTrashItemHandler::class)
-                ->args([
-                    service(CustomUrlRepositoryInterface::class),
-                    service(CustomUrlMapperInterface::class),
-                    service(TrashItemRepositoryInterface::class),
-                    service(DocumentDomainEventCollectorInterface::class),
-                    service(EntityManagerInterface::class),
-                ])
-                ->tag('sulu_trash.store_trash_item_handler')
-                ->tag('sulu_trash.restore_trash_item_handler')
-                ->tag('sulu_trash.restore_configuration_provider')
-            ;
-            $services->alias(CustomUrlTrashItemHandler::class, 'sulu_custom_urls.custom_url_trash_item_handler');
+            $loader->load('sulu_trash.php');
         }
     }
 

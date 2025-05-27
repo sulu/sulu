@@ -25,12 +25,6 @@
         <field name="noFollow" type="boolean" />
         <field name="noIndex" type="boolean" />
 
-        <field name="created" type="datetime" />
-        <field name="changed" type="datetime" />
-
-        <many-to-one field="creator" target-entity="Sulu\Component\Security\Authentication\UserInterface" />
-        <many-to-one field="changer" target-entity="Sulu\Component\Security\Authentication\UserInterface" />
-
         <one-to-many field="routes" target-entity="Sulu\CustomUrl\Domain\Model\CustomUrlRoute" mapped-by="customUrl" fetch="EXTRA_LAZY" orphan-removal="true" />
     </mapped-superclass>
 </doctrine-mapping>

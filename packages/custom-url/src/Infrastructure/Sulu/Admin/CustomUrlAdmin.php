@@ -82,7 +82,7 @@ class CustomUrlAdmin extends Admin
         /* @var Webspace $webspace */
         foreach ($this->webspaceManager->getWebspaceCollection() as $webspace) {
             $securityContextKey = self::getCustomUrlSecurityContext($webspace->getKey());
-            $webspaceContexts[$securityContextKey] = $this->getSecurityContextPermissions();
+            $webspaceContexts[$securityContextKey] = self::getSecurityContextPermissions();
         }
 
         return [
@@ -92,12 +92,12 @@ class CustomUrlAdmin extends Admin
         ];
     }
 
-    public function getSecurityContextsWithPlaceholder(): array
+    public static function getSecurityContextsWithPlaceholder(): array
     {
         return [
             self::SULU_ADMIN_SECURITY_SYSTEM => [
                 'Webspaces' => [
-                    self::getCustomUrlSecurityContext('#webspace#') => $this->getSecurityContextPermissions(),
+                    self::getCustomUrlSecurityContext('#webspace#') => self::getSecurityContextPermissions(),
                 ],
             ],
         ];
@@ -106,7 +106,7 @@ class CustomUrlAdmin extends Admin
     /**
      * @return array<int,string>
      */
-    private function getSecurityContextPermissions(): array
+    private static function getSecurityContextPermissions(): array
     {
         return [
             PermissionTypes::VIEW,

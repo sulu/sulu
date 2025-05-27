@@ -15,11 +15,12 @@ namespace Sulu\CustomUrl\Domain\Model;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Sulu\Component\Persistence\Model\AuditableInterface;
 use Sulu\Component\Persistence\Model\AuditableTrait;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Symfony\Component\Uid\Uuid;
 
-class CustomUrl implements CustomUrlInterface
+class CustomUrl implements AuditableInterface, CustomUrlInterface
 {
     use AuditableTrait;
 

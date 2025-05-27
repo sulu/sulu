@@ -12,12 +12,16 @@ declare(strict_types=1);
  */
 
 use Doctrine\ORM\EntityManagerInterface;
+use Sulu\Bundle\AdminBundle\Admin\View\ViewBuilderFactoryInterface;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactoryInterface;
 use Sulu\Component\Rest\ListBuilder\Metadata\FieldDescriptorFactoryInterface;
+use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
+use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\CustomUrl\Infrastructure\Doctrine\Repository\CustomUrlRepository;
 use Sulu\CustomUrl\Infrastructure\Doctrine\Repository\CustomUrlRepositoryInterface;
 use Sulu\CustomUrl\Infrastructure\Doctrine\Repository\CustomUrlRouteRepository;
 use Sulu\CustomUrl\Infrastructure\Doctrine\Repository\CustomUrlRouteRepositoryInterface;
+use Sulu\CustomUrl\Infrastructure\Sulu\Admin\CustomUrlAdmin;
 use Sulu\CustomUrl\Infrastructure\Sulu\HttpCache\CacheInvalidationSubscriber;
 use Sulu\CustomUrl\UserInterface\Controller\Admin\CustomUrlController;
 use Sulu\CustomUrl\UserInterface\Controller\Admin\CustomUrlRouteController;
@@ -32,6 +36,18 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 return static function(ContainerConfigurator $containerConfigurator): void {
     $services = $containerConfigurator->services();
+
+    $services->set('sulu_custom_urls.admin', CustomUrlAdmin::class)
+        ->public()
+        ->args([
+            service(WebspaceManagerInterface::class),
+            service(ViewBuilderFactoryInterface::class),
+            service(SecurityCheckerInterface::class),
+        ])
+        ->tag('sulu.admin')
+        ->tag('sulu.context', ['context' => 'admin'])
+    ;
+    $services->alias(CustomUrlAdmin::class, 'sulu_custom_urls.admin');
 
     $services->set(CustomUrlRepositoryInterface::class, CustomUrlRepository::class)
         ->args([
@@ -53,7 +69,7 @@ return static function(ContainerConfigurator $containerConfigurator): void {
             new Reference(CustomUrlRepositoryInterface::class),
             new Reference(CustomUrlRouteRepositoryInterface::class),
             service('sulu_http_cache.cache_manager')->nullOnInvalid(),
-            new Reference('request_stack'),
+            new Reference(RequestStack::class),
         ])
         ->tag('sulu_document_manager.event_subscriber')
     ;
@@ -74,7 +90,7 @@ return static function(ContainerConfigurator $containerConfigurator): void {
     $services->set('sulu_custom_urls.custom_url_route_controller', CustomUrlRouteController::class)
         ->public()
         ->args([
-            new Reference('request_stack'),
+            new Reference(RequestStack::class),
             new Reference(CustomUrlRouteRepositoryInterface::class),
             new Reference(NormalizerInterface::class),
         ])
