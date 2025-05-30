@@ -33986,6 +33986,11 @@ parameters:
 			path: src/Sulu/Component/Content/Compat/Serializer/PageBridgeHandler.php
 
 		-
+			message: "#^Parameter \\#2 \\$type of method JMS\\\\Serializer\\\\GraphNavigatorInterface\\:\\:accept\\(\\) expects array\\{name\\: string, params\\: array\\}\\|null, array\\{name\\: mixed\\} given\\.$#"
+			count: 1
+			path: src/Sulu/Component/Content/Compat/Serializer/PageBridgeHandler.php
+
+		-
 			message: "#^Parameter \\#4 \\$document of class Sulu\\\\Component\\\\Content\\\\Compat\\\\Structure\\\\PageBridge constructor expects object\\|null, mixed given\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Compat/Serializer/PageBridgeHandler.php
@@ -39374,6 +39379,11 @@ parameters:
 			message: "#^Method Sulu\\\\Component\\\\Content\\\\Tests\\\\Unit\\\\Compat\\\\PropertyTest\\:\\:testIsMultipleTest\\(\\) has parameter \\$result with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Tests/Unit/Compat/PropertyTest.php
+
+		-
+			message: "#^Parameter \\#3 \\$type of class JMS\\\\Serializer\\\\EventDispatcher\\\\ObjectEvent constructor expects array\\{name\\: string, params\\: array\\}, array\\{type\\: 'Sulu\\\\\\\\Component\\\\\\\\Content\\\\\\\\Compat\\\\\\\\Structure\\\\\\\\PageBridge', params\\: array\\{\\}\\} given\\.$#"
+			count: 1
+			path: src/Sulu/Component/Content/Tests/Unit/Compat/Serializer/PageBridgeSubscriberTest.php
 
 		-
 			message: "#^Call to an undefined method Sulu\\\\Component\\\\Content\\\\Compat\\\\PropertyInterface\\:\\:getLocalization\\(\\)\\.$#"
