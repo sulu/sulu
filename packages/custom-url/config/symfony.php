@@ -15,7 +15,6 @@ use Sulu\CustomUrl\Infrastructure\Doctrine\Repository\CustomUrlRepositoryInterfa
 use Sulu\CustomUrl\Infrastructure\Symfony\Fixtures\LoadCustomUrlFixture;
 use Sulu\CustomUrl\Infrastructure\Symfony\Serializer\CustomUrlNormalizer;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
-
 use Symfony\Component\DependencyInjection\Reference;
 
 return static function(ContainerConfigurator $containerConfigurator): void {

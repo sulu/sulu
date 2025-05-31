@@ -28,7 +28,7 @@ return static function(ContainerConfigurator $containerConfigurator): void {
 
     $services->set(CreateCustomUrlMessageHandler::class)
         ->args([
-            new Reference(CustomUrlMapperInterface::class),
+            tagged_iterator('sulu_snippet.snippet_mapper'),
             new Reference(CustomUrlRepositoryInterface::class),
             new Reference(DomainEventCollectorInterface::class),
         ])
@@ -37,7 +37,7 @@ return static function(ContainerConfigurator $containerConfigurator): void {
 
     $services->set(ModifyCustomUrlMessageHandler::class)
         ->args([
-            new Reference(CustomUrlMapperInterface::class),
+            tagged_iterator('sulu_snippet.snippet_mapper'),
             new Reference(CustomUrlRepositoryInterface::class),
             new Reference(DomainEventCollectorInterface::class),
         ])
@@ -46,7 +46,7 @@ return static function(ContainerConfigurator $containerConfigurator): void {
 
     $services->set(RemoveCustomUrlMessageHandler::class)
         ->args([
-            new Reference(CustomUrlRepositoryInterface::class),
+            tagged_iterator('sulu_snippet.snippet_mapper'),
             new Reference(DomainEventCollectorInterface::class),
         ])
         ->tag('messenger.message_handler')

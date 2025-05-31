@@ -22,8 +22,11 @@ use Sulu\CustomUrl\Infrastructure\Doctrine\Repository\CustomUrlRepositoryInterfa
 
 final class CreateCustomUrlMessageHandler
 {
+    /**
+     * @param iterable<CustomUrlMapperInterface> $customUrlMappers
+     */
     public function __construct(
-        private readonly CustomUrlMapperInterface $mapper,
+        private readonly iterable $customUrlMappers,
         private readonly CustomUrlRepositoryInterface $customUrlRepository,
         private readonly DomainEventCollectorInterface $documentDomainEventCollector,
     ) {
@@ -34,7 +37,11 @@ final class CreateCustomUrlMessageHandler
         $data = $message->getData();
 
         $customUrl = $this->customUrlRepository->create();
-        $this->mapper->mapCustomUrlData($customUrl, $data);
+
+        foreach ($this->customUrlMappers as $customUrlMapper) {
+            $customUrlMapper->mapCustomUrlData($customUrl, $data);
+        }
+
         $customUrl->setWebspace($message->getWebspaceKey());
 
         $this->customUrlRepository->add($customUrl);

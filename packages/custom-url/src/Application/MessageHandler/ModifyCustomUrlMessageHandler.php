@@ -24,8 +24,11 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 final class ModifyCustomUrlMessageHandler
 {
+    /**
+     * @param iterable<CustomUrlMapperInterface> $customUrlMappers
+     */
     public function __construct(
-        private readonly CustomUrlMapperInterface $mapper,
+        private readonly iterable $customUrlMappers,
         private readonly CustomUrlRepositoryInterface $customUrlRepository,
         private readonly DomainEventCollectorInterface $documentDomainEventCollector,
     ) {
@@ -44,7 +47,9 @@ final class ModifyCustomUrlMessageHandler
             throw new AccessDeniedException(\sprintf('Entity from webspace "%s" does not belong to webspace "%s"', $customUrl->getWebspace(), $message->getWebspaceKey()));
         }
 
-        $this->mapper->mapCustomUrlData($customUrl, $data);
+        foreach ($this->customUrlMappers as $customUrlMapper) {
+            $customUrlMapper->mapCustomUrlData($customUrl, $data);
+        }
 
         $this->customUrlRepository->add($customUrl);
 

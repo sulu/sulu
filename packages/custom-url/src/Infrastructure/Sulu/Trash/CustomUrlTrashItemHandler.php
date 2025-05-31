@@ -52,9 +52,12 @@ final class CustomUrlTrashItemHandler implements
     RestoreTrashItemHandlerInterface,
     RestoreConfigurationProviderInterface
 {
+    /**
+     * @param iterable<CustomUrlMapperInterface> $customUrlMappers
+     */
     public function __construct(
         private CustomUrlRepositoryInterface $customUrlRepository,
-        private CustomUrlMapperInterface $customUrlMapper,
+        private readonly iterable $customUrlMappers,
         private TrashItemRepositoryInterface $trashItemRepository,
         private DocumentDomainEventCollectorInterface $documentDomainEventCollector,
         private EntityManagerInterface $entityManager,
@@ -105,7 +108,9 @@ final class CustomUrlTrashItemHandler implements
 
         $customUrl = $this->customUrlRepository->create();
         $customUrl->setId($id);
-        $this->customUrlMapper->mapCustomUrlData($customUrl, $data);
+        foreach ($this->customUrlMappers as $customUrlMapper) {
+            $customUrlMapper->mapCustomUrlData($customUrl, $data);
+        }
 
         $customUrl->setCreator($data['creator']);
         $customUrl->setCreated(new \DateTime($data['created']));
