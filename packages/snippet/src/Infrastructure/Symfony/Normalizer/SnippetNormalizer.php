@@ -22,11 +22,13 @@ final class SnippetNormalizer implements NormalizerInterface
 {
     public function __construct(
         private ObjectNormalizer $objectNormalizer,
-        private array $snippetArea,
+        private array $snippetAreas,
     ) {
     }
 
     /**
+     * @param SnippetArea $data
+     *
      * @return array<mixed>
      */
     public function normalize(
@@ -38,15 +40,21 @@ final class SnippetNormalizer implements NormalizerInterface
         $normalizedData = $this->objectNormalizer->normalize($data, $format, $context);
         unset($normalizedData['snippet']);
 
-        //dd($this->snippetArea[$normalizedData['areaKey']]);
+        $metaData = $this->snippetAreas[$normalizedData['areaKey']];
+        $title = $metaData['title'][$context['locale']];
+
+        // Remove ids because that's an implementation detail
+        unset($normalizedData['id'], $normalizedData['uuid']);
+
         $normalizedData['key'] = $normalizedData['areaKey'];
-        unset($normalizedData['areaKey']);
-        unset($normalizedData['webspaceKey']);
+        unset($normalizedData['areaKey'], $normalizedData['webspaceKey']);
 
         /** @var SnippetInterface $snippet */
         $snippet = $data->getSnippet();
         $normalizedData['defaultTitle'] = $snippet?->getTitle();
-        $normalizedData['defaultTitle'] = $snippet?->getId();
+        $normalizedData['defaultUuid'] = $snippet?->getId();
+        $normalizedData['template'] = $metaData['template'];
+        $normalizedData['title'] = $title;
 
         // Why would this would be false?
         $normalizedData['valid'] = true;

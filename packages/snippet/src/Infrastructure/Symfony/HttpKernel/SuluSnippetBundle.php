@@ -22,6 +22,7 @@ use Sulu\Snippet\Application\Mapper\SnippetMapperInterface;
 use Sulu\Snippet\Application\MessageHandler\ApplyWorkflowTransitionSnippetMessageHandler;
 use Sulu\Snippet\Application\MessageHandler\CopyLocaleSnippetMessageHandler;
 use Sulu\Snippet\Application\MessageHandler\CreateSnippetMessageHandler;
+use Sulu\Snippet\Application\MessageHandler\ModifySnippetAreaMessageHandler;
 use Sulu\Snippet\Application\MessageHandler\ModifySnippetMessageHandler;
 use Sulu\Snippet\Application\MessageHandler\RemoveSnippetAreaMessageHandler;
 use Sulu\Snippet\Application\MessageHandler\RemoveSnippetMessageHandler;
@@ -165,7 +166,7 @@ final class SuluSnippetBundle extends AbstractBundle
 
         // Snippet area
         $services->set('sulu_snippet.modify_snippet_area_handler')
-            ->class(ModifySnippetMessageHandler::class)
+            ->class(ModifySnippetAreaMessageHandler::class)
             ->args([
                 new Reference('sulu_snippet.snippet_area_repository'),
             ])

@@ -13,6 +13,11 @@ declare(strict_types=1);
 
 namespace Sulu\Snippet\Application\MessageHandler;
 
+use Sulu\Snippet\Application\Message\ModifySnippetAreaMessage;
+
 class ModifySnippetAreaMessageHandler
 {
+    public function __invoke(ModifySnippetAreaMessage $message): void
+    {
+    }
 }

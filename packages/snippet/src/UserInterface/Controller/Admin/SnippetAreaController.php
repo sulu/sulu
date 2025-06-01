@@ -22,7 +22,6 @@ use Sulu\Snippet\Application\Message\RemoveSnippetAreaMessage;
 use Sulu\Snippet\Application\Message\SetSnippetMessage;
 use Sulu\Snippet\Domain\Model\SnippetArea;
 use Sulu\Snippet\Domain\Model\SnippetAreaInterface;
-use Sulu\Snippet\Domain\Model\SnippetInterface;
 use Sulu\Snippet\Infrastructure\Doctrine\Repository\SnippetAreaRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -58,11 +57,11 @@ final class SnippetAreaController
     public function cgetAction(Request $request): Response
     {
         /** @var DoctrineFieldDescriptorInterface[] $fieldDescriptors */
-        $fieldDescriptors = $this->fieldDescriptorFactory->getFieldDescriptors(SnippetInterface::RESOURCE_KEY);
+        $fieldDescriptors = $this->fieldDescriptorFactory->getFieldDescriptors(SnippetAreaInterface::RESOURCE_KEY);
 
         /** @var DoctrineListBuilder $listBuilder */
-        $listBuilder = $this->listBuilderFactory->create(SnippetInterface::class);
-        $listBuilder->setIdField($fieldDescriptors['id']); // TODO should be uuid field descriptor
+        $listBuilder = $this->listBuilderFactory->create(SnippetAreaInterface::class);
+        $listBuilder->setIdField($fieldDescriptors['uuid']); // TODO should be uuid field descriptor
         $listBuilder->setParameter('locale', $request->query->get('locale'));
 
         $this->restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
@@ -86,7 +85,12 @@ final class SnippetAreaController
         return new JsonResponse($this->normalizer->normalize(
             $listRepresentation->toArray(),
             'json',
-            ['sulu_admin' => true, 'sulu_admin_snippet' => true, 'sulu_admin_snippet_list' => true],
+            [
+                'locale' => $request->getLocale(),
+                'sulu_admin' => true,
+                'sulu_admin_snippet' => true,
+                'sulu_admin_snippet_list' => true,
+            ],
         ));
     }
 

@@ -25,8 +25,8 @@ class RemoveSnippetAreaMessageHandler
 
     public function __invoke(RemoveSnippetAreaMessage $message): void
     {
-        $snippetRepository = $this->entityManager->getRepository(SnippetArea::class);
-        $entityToDelete = $snippetRepository->findOneBy([
+        $snippetAreaRepository = $this->entityManager->getRepository(SnippetArea::class);
+        $entityToDelete = $snippetAreaRepository->findOneBy([
             'webspaceKey' => $message->getWebspaceKey(),
             'areaKey' => $message->getAreaKey(),
         ]);

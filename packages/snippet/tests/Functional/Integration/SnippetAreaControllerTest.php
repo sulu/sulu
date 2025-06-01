@@ -17,6 +17,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\SchemaTool;
 use Sulu\Bundle\TestBundle\Testing\AssertSnapshotTrait;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
+use Sulu\Snippet\Domain\Model\SnippetArea;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 /**
@@ -26,6 +27,8 @@ use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 class SnippetAreaControllerTest extends SuluTestCase
 {
     use AssertSnapshotTrait;
+
+    private EntityManagerInterface $entityManager;
 
     protected KernelBrowser $client;
 
@@ -41,6 +44,8 @@ class SnippetAreaControllerTest extends SuluTestCase
         $schemaTool = new SchemaTool($entityManager);
         $classes = $entityManager->getMetadataFactory()->getAllMetadata();
         $schemaTool->updateSchema($classes, false);
+
+        $this->entityManager = $entityManager;
     }
 
     public function testGetList(): string
@@ -54,80 +59,23 @@ class SnippetAreaControllerTest extends SuluTestCase
         self::ensureKernelShutdown();
     }
 
-    //public function testPut(): void
-    //{
-    //$this->client->jsonRequest(
-    //'PUT',
-    //'/admin/api/snippet-areas/car',
-    //['webspace' => 'sulu_io', 'defaultUuid' => $this->car1->getUuid()]
-    //);
+    public function testPut(): void
+    {
+        self::purgeDatabase();
 
-    //$this->assertHttpStatusCode(200, $this->client->getResponse());
-    //$response = \json_decode($this->client->getResponse()->getContent(), true);
+        $snippetArea = new SnippetArea();
+        $snippetArea->setWebspaceKey('sulu-io');
+        $snippetArea->setAreaKey('car');
 
-    //$this->assertEquals('car', $response['template']);
-    //$this->assertEquals('Car', $response['title']);
-    //$this->assertEquals($this->car1->getUuid(), $response['defaultUuid']);
-    //$this->assertEquals($this->car1->getTitle(), $response['defaultTitle']);
+        $this->entityManager->persist($snippetArea);
+        $this->entityManager->flush();
 
-    //$this->client->jsonRequest('GET', '/api/snippet-areas?webspace=sulu_io');
+        $this->client->jsonRequest('GET', '/admin/api/snippet-areas/sulu-io');
 
-    //$this->assertHttpStatusCode(200, $this->client->getResponse());
-    //$response = \json_decode($this->client->getResponse()->getContent(), true);
-    //$data = $response['_embedded']['areas'];
+        $this->assertResponseSnapshot('snippet_area_cget.json', $this->client->getResponse(), 200);
 
-    //$this->assertEquals(3, $response['total']);
-    //$this->assertEquals('car', $data[0]['template']);
-    //$this->assertEquals('Car', $data[0]['title']);
-    //$this->assertEquals($this->car1->getTitle(), $data[0]['defaultTitle']);
-    //$this->assertEquals($this->car1->getUuid(), $data[0]['defaultUuid']);
-    //$this->assertEquals('hotel', $data[1]['template']);
-    //$this->assertEquals('Golf hotel', $data[1]['title']);
-    //$this->assertEquals(null, $data[1]['defaultTitle']);
-    //$this->assertEquals(null, $data[1]['defaultUuid']);
-    //$this->assertEquals('hotel', $data[2]['template']);
-    //$this->assertEquals('Sport hotel', $data[2]['title']);
-    //$this->assertEquals(null, $data[2]['defaultTitle']);
-    //$this->assertEquals(null, $data[2]['defaultUuid']);
-    //}
-
-    //#[\PHPUnit\Framework\Attributes\Depends('testPut')]
-    //public function testDelete(): void
-    //{
-    //$this->client->jsonRequest(
-    //'DELETE',
-    //'/api/snippet-areas/car',
-    //['webspace' => 'sulu_io']
-    //);
-
-    //$this->assertHttpStatusCode(200, $this->client->getResponse());
-    //$response = \json_decode($this->client->getResponse()->getContent(), true);
-
-    //$this->assertEquals('car', $response['template']);
-    //$this->assertEquals('Car', $response['title']);
-    //$this->assertEquals(null, $response['defaultUuid']);
-    //$this->assertEquals(null, $response['defaultTitle']);
-
-    //$this->client->jsonRequest('GET', '/api/snippet-areas?webspace=sulu_io');
-
-    //$this->assertHttpStatusCode(200, $this->client->getResponse());
-    //$response = \json_decode($this->client->getResponse()->getContent(), true);
-    //$data = $response['_embedded']['areas'];
-
-    //$this->assertEquals(3, $response['total']);
-    //$this->assertEquals('car', $data[0]['template']);
-    //$this->assertEquals('Car', $data[0]['title']);
-    //$this->assertEquals(null, $data[0]['defaultTitle']);
-    //$this->assertEquals(null, $data[0]['defaultUuid']);
-    //$this->assertEquals('hotel', $data[1]['template']);
-    //$this->assertEquals('Golf hotel', $data[1]['title']);
-    //$this->assertEquals(null, $data[1]['defaultTitle']);
-    //$this->assertEquals(null, $data[1]['defaultUuid']);
-    //$this->assertEquals('hotel', $data[2]['template']);
-    //$this->assertEquals('Sport hotel', $data[2]['title']);
-    //$this->assertEquals(null, $data[2]['defaultTitle']);
-    //$this->assertEquals(null, $data[2]['defaultUuid']);
-    //}
+        self::ensureKernelShutdown();
+    }
 
     protected function getSnapshotFolder(): string
     {
