@@ -28,11 +28,12 @@ use Sulu\Snippet\Application\MessageHandler\RemoveSnippetAreaMessageHandler;
 use Sulu\Snippet\Application\MessageHandler\RemoveSnippetMessageHandler;
 use Sulu\Snippet\Application\MessageHandler\RestoreSnippetVersionMessageHandler;
 use Sulu\Snippet\Domain\Model\Snippet;
+use Sulu\Snippet\Domain\Model\SnippetArea;
+use Sulu\Snippet\Domain\Model\SnippetAreaInterface;
 use Sulu\Snippet\Domain\Model\SnippetDimensionContent;
 use Sulu\Snippet\Domain\Model\SnippetDimensionContentInterface;
 use Sulu\Snippet\Domain\Model\SnippetInterface;
 use Sulu\Snippet\Domain\Repository\SnippetRepositoryInterface;
-use Sulu\Snippet\Infrastructure\Doctrine\Repository\SnippetAreaRepository;
 use Sulu\Snippet\Infrastructure\Doctrine\Repository\SnippetRepository;
 use Sulu\Snippet\Infrastructure\Sulu\Admin\SnippetAdmin;
 use Sulu\Snippet\Infrastructure\Sulu\Admin\SnippetAreaAdmin;
@@ -87,6 +88,12 @@ final class SuluSnippetBundle extends AbstractBundle
                             ->addDefaultsIfNotSet()
                             ->children()
                                 ->scalarNode('model')->defaultValue(SnippetDimensionContent::class)->end()
+                            ->end()
+                        ->end()
+                        ->arrayNode('snippet_area')
+                            ->addDefaultsIfNotSet()
+                            ->children()
+                                ->scalarNode('model')->defaultValue(SnippetArea::class)->end()
                             ->end()
                         ->end()
                     ->end()
@@ -167,9 +174,6 @@ final class SuluSnippetBundle extends AbstractBundle
         // Snippet area
         $services->set('sulu_snippet.modify_snippet_area_handler')
             ->class(ModifySnippetAreaMessageHandler::class)
-            ->args([
-                new Reference('sulu_snippet.snippet_area_repository'),
-            ])
             ->tag('messenger.message_handler');
 
         $services->set('sulu_snippet.remove_snippet_area_handler')
@@ -218,14 +222,6 @@ final class SuluSnippetBundle extends AbstractBundle
         ;
 
         // Repositories services
-        $services->set('sulu_snippet.snippet_area_repository')
-            ->class(SnippetAreaRepository::class)
-            ->args([
-                new Reference('doctrine.orm.entity_manager'),
-            ]);
-
-        $services->alias(SnippetRepositoryInterface::class, 'sulu_snippet.snippet_area_repository');
-
         $services->set('sulu_snippet.snippet_repository')
             ->class(SnippetRepository::class)
             ->args([
@@ -259,7 +255,6 @@ final class SuluSnippetBundle extends AbstractBundle
             ->class(SnippetAreaController::class)
             ->public()
             ->args([
-                new Reference('sulu_snippet.snippet_area_repository'),
                 new Reference('sulu_message_bus'),
                 new Reference('serializer'),
                 // additional services to be removed when no longer needed
@@ -470,6 +465,7 @@ final class SuluSnippetBundle extends AbstractBundle
         $this->buildPersistence([
             SnippetInterface::class => 'sulu.model.snippet.class',
             SnippetDimensionContentInterface::class => 'sulu.model.snippet_content.class',
+            SnippetAreaInterface::class => 'sulu.model.snippet_area.class',
         ], $container);
 
         $container->addCompilerPass(new SnippetAreaCompilerPass());

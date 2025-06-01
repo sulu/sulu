@@ -19,7 +19,7 @@
     "sulu_snippet.last_modified_date": "Last modified date",
     "sulu_snippet.snippet_area": "Typ oder Bereich",
     "sulu_snippet.taxonomies": "Taxonomien",
-    "sulu_snippet.webspace_default_snippet": "{webspaceKey} Standard Schnipsel",
+    "sulu_snippet.webspace_default_snippets": "Default snippets",
     "sulu_snippet.single_snippet_selection_overlay_title": "Snippet auswählen",
     "sulu_activity.resource.snippets": "Snippet",
     "sulu_activity.resource.snippets.translation": "Translation",

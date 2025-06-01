@@ -22,7 +22,6 @@ use Sulu\Snippet\Application\Message\RemoveSnippetAreaMessage;
 use Sulu\Snippet\Application\Message\SetSnippetMessage;
 use Sulu\Snippet\Domain\Model\SnippetArea;
 use Sulu\Snippet\Domain\Model\SnippetAreaInterface;
-use Sulu\Snippet\Infrastructure\Doctrine\Repository\SnippetAreaRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -30,6 +29,7 @@ use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\HandleTrait;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use Webmozart\Assert\Assert;
 
 /**
  * @internal this class should not be instated by a project
@@ -44,7 +44,6 @@ final class SnippetAreaController
      * @param array<int,mixed> $snippetArea
      */
     public function __construct(
-        private SnippetAreaRepository $snippetAreaRepository,
         private MessageBusInterface $messageBus,
         private NormalizerInterface $normalizer,
         private FieldDescriptorFactoryInterface $fieldDescriptorFactory,
@@ -56,12 +55,13 @@ final class SnippetAreaController
 
     public function cgetAction(Request $request): Response
     {
-        /** @var DoctrineFieldDescriptorInterface[] $fieldDescriptors */
+        /** @var DoctrineFieldDescriptorInterface[]|null $fieldDescriptors */
         $fieldDescriptors = $this->fieldDescriptorFactory->getFieldDescriptors(SnippetAreaInterface::RESOURCE_KEY);
+        Assert::notNull($fieldDescriptors, 'Could not find field descriptors for resource key: ' . SnippetAreaInterface::RESOURCE_KEY);
 
         /** @var DoctrineListBuilder $listBuilder */
         $listBuilder = $this->listBuilderFactory->create(SnippetAreaInterface::class);
-        $listBuilder->setIdField($fieldDescriptors['uuid']); // TODO should be uuid field descriptor
+        $listBuilder->setIdField($fieldDescriptors['id']); // We need to set this because it's the uuid doctrine column
         $listBuilder->setParameter('locale', $request->query->get('locale'));
 
         $this->restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
