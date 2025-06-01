@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Sulu\Snippet\Infrastructure\Symfony\Normalizer;
 
+use Sulu\Snippet\Domain\Model\SnippetArea;
 use Sulu\Snippet\Domain\Model\SnippetAreaInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
@@ -35,8 +36,20 @@ final class SnippetNormalizer implements NormalizerInterface
     ): array {
         /** @var array<mixed> $normalizedData */
         $normalizedData = $this->objectNormalizer->normalize($data, $format, $context);
+        unset($normalizedData['snippet']);
 
-        dd($this->snippetArea[$normalizedData['areaKey']]);
+        //dd($this->snippetArea[$normalizedData['areaKey']]);
+        $normalizedData['key'] = $normalizedData['areaKey'];
+        unset($normalizedData['areaKey']);
+        unset($normalizedData['webspaceKey']);
+
+        /** @var SnippetInterface $snippet */
+        $snippet = $data->getSnippet();
+        $normalizedData['defaultTitle'] = $snippet?->getTitle();
+        $normalizedData['defaultTitle'] = $snippet?->getId();
+
+        // Why would this would be false?
+        $normalizedData['valid'] = true;
 
         return $normalizedData;
     }

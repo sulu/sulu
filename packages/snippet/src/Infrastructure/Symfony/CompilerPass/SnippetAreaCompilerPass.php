@@ -30,8 +30,9 @@ class SnippetAreaCompilerPass implements CompilerPassInterface
 
         $structure = new StructureMetadata();
         $structure->setAreas([
-            ['key' => 'a', 'cache-invalidation' => true, 'title' => ['testing-a']],
-            ['key' => 'b', 'cache-invalidation' => true, 'title' => ['testing-b']],
+            ['key' => 'car', 'template' => 'car', 'cache-invalidation' => true, 'title' => ['Car']],
+            ['key' => 'golf_hotel', 'template' => 'golf_hotel', 'cache-invalidation' => true, 'title' => ['Hotel']],
+            ['key' => 'sport_hotel', 'template' => 'sport_hotel', 'cache-invalidation' => true, 'title' => ['Hotel']],
         ]);
         $structures[] = $structure;
 

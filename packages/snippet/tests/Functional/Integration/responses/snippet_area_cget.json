@@ -1,0 +1,31 @@
+{
+    "_embedded": {
+        "snippet_areas": [
+            {
+                "key": "car",
+                "template": "car",
+                "title": "Car",
+                "defaultUuid": null,
+                "defaultTitle": null,
+                "valid": true
+            },
+            {
+                "key": "golf_hotel",
+                "template": "hotel",
+                "title": "Golf hotel",
+                "defaultUuid": null,
+                "defaultTitle": null,
+                "valid": true
+            },
+            {
+                "key": "sport_hotel",
+                "template": "hotel",
+                "title": "Sport hotel",
+                "defaultUuid": null,
+                "defaultTitle": null,
+                "valid": true
+            }
+        ]
+    },
+    "total": 3
+}
