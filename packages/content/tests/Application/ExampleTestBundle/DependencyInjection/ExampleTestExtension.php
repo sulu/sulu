@@ -62,6 +62,14 @@ class ExampleTestExtension extends Extension implements PrependExtensionInterfac
                             ],
                         ],
                     ],
+                    'templates' => [
+                        Example::TEMPLATE_TYPE => [
+                            'default_type' => 'default', // TODO should not be hardcoded?
+                            'directories' => [
+                                'app' => '%kernel.project_dir%/config/templates/examples',
+                            ],
+                        ],
+                    ],
                 ]
             );
         }

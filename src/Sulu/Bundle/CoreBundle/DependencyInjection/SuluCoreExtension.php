@@ -78,6 +78,20 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
             ]
         );
 
+        $container->prependExtensionConfig(
+            'sulu_admin',
+            [
+                'templates' => [
+                    'block' => [ // TODO maybe blocks?
+                        'default_type' => null,
+                        'directories' => [
+                            'app' => '%kernel.project_dir%/config/templates/blocks',
+                        ],
+                    ],
+                ],
+            ]
+        );
+
         if ($container->hasExtension('massive_build')) {
             $container->prependExtensionConfig('massive_build', [
                 'command_class' => SuluBuildCommand::class,

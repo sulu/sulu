@@ -20,6 +20,7 @@ use Sulu\Bundle\PageBundle\Form\Type\PageDocumentType;
 use Sulu\Component\Content\Compat\Structure\PageBridge;
 use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 use Sulu\Component\Content\Exception\ResourceLocatorAlreadyExistsException;
+use Sulu\Page\Domain\Model\PageInterface;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -43,6 +44,13 @@ class SuluPageExtension extends Extension implements PrependExtensionInterface
                     'forms' => [
                         'directories' => [
                             __DIR__ . '/../Resources/config/forms',
+                        ],
+                    ],
+                    'templates' => [
+                        PageInterface::TEMPLATE_TYPE => [
+                            'directories' => [
+                                'app' => '%kernel.project_dir%/config/templates/pages',
+                            ],
                         ],
                     ],
                     'resources' => [

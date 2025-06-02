@@ -361,7 +361,7 @@ final class SuluPageBundle extends AbstractBundle
                         ],
                     ],
                     'templates' => [
-                        'pages' => [
+                        PageInterface::TEMPLATE_TYPE => [
                             'default_type' => null,
                             'directories' => [
                                 'app' => '%kernel.project_dir%/config/templates/pages',

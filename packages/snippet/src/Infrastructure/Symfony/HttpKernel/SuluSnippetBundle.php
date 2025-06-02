@@ -262,7 +262,7 @@ final class SuluSnippetBundle extends AbstractBundle
                         ],
                     ],
                     'templates' => [
-                        'snippets' => [
+                        SnippetInterface::TEMPLATE_TYPE => [
                             'default_type' => null,
                             'directories' => [
                                 'app' => '%kernel.project_dir%/config/templates/snippets',

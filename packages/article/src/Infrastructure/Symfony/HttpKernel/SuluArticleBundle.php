@@ -275,7 +275,7 @@ final class SuluArticleBundle extends AbstractBundle
                         ],
                     ],
                     'templates' => [
-                        'articles' => [
+                        ArticleInterface::TEMPLATE_TYPE => [
                             'default_type' => null,
                             'directories' => [
                                 'app' => '%kernel.project_dir%/config/templates/articles',
