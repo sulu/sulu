@@ -10,7 +10,7 @@
             <generator strategy="AUTO"/>
         </id>
 
-        <field name="navigationContext" type="string" column="name" length="64" />
+        <field name="navigationContext" type="string" column="name" length="31" />
 
         <many-to-one field="pageDimensionContent" target-entity="Sulu\Page\Domain\Model\PageDimensionContent" inversed-by="navigationContexts">
             <join-column name="page_dimension_content_id" referenced-column-name="id" on-delete="CASCADE" nullable="false" />

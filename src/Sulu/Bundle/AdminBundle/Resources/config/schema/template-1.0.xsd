@@ -17,7 +17,14 @@
 
     <xs:complexType name="templateType">
         <xs:choice maxOccurs="unbounded">
-            <xs:element type="xs:string" name="key" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="key" minOccurs="1" maxOccurs="1">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="31"/>
+                        <xs:pattern value="[a-z0-9_-]+"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
             <xs:element type="indexType" name="index" minOccurs="1" maxOccurs="1"/>
             <xs:element type="tagType" name="tag" maxOccurs="unbounded"/>
             <xs:element type="xs:string" name="view" minOccurs="1" maxOccurs="1"/>

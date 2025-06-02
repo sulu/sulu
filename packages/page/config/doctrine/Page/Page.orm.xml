@@ -12,7 +12,7 @@
             <generator strategy="NONE"/>
         </id>
 
-        <field name="webspaceKey" type="string" column="webspaceKey" length="64"/>
+        <field name="webspaceKey" type="string" column="webspaceKey" length="31"/>
 
         <field name="lft" type="integer" column="lft">
             <gedmo:tree-left/>

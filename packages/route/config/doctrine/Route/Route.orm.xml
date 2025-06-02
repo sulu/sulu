@@ -18,7 +18,7 @@
             <generator strategy="AUTO"/>
         </id>
 
-        <field name="site" type="string" length="32" nullable="true"/>
+        <field name="site" type="string" length="31" nullable="true"/>
         <field name="locale" type="string" length="15"/>
         <field name="slug" type="string" length="144"/>
 
