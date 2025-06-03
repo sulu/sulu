@@ -193,13 +193,13 @@ class FormMetadataMapperTest extends TestCase
         $this->assertEquals(1, $item->getMinOccurs());
         $this->assertEquals(2, $item->getMaxOccurs());
 
-        $this->assertEquals('component1', $item->getTypes()['component1']->getName());
+        $this->assertEquals('component1', $item->getTypes()['component1']->getKey());
         $this->assertEquals('First Component', $item->getTypes()['component1']->getTitle('en'));
         $this->assertCount(2, $item->getTypes()['component1']->getItems());
         $this->assertContains('property1', \array_keys($item->getTypes()['component1']->getItems()));
         $this->assertContains('property2', \array_keys($item->getTypes()['component1']->getItems()));
 
-        $this->assertEquals('component2', $item->getTypes()['component2']->getName());
+        $this->assertEquals('component2', $item->getTypes()['component2']->getKey());
         $this->assertEquals('Second Component', $item->getTypes()['component2']->getTitle('en'));
         $this->assertCount(2, $item->getTypes()['component2']->getItems());
         $this->assertContains('property3', \array_keys($item->getTypes()['component2']->getItems()));
@@ -258,11 +258,11 @@ class FormMetadataMapperTest extends TestCase
         $this->assertEquals(1, $item->getMinOccurs());
         $this->assertEquals(2, $item->getMaxOccurs());
 
-        $this->assertEquals('component1', $item->getTypes()['component1']->getName());
+        $this->assertEquals('component1', $item->getTypes()['component1']->getKey());
         $this->assertEquals('First Component', $item->getTypes()['component1']->getTitle('en'));
         $this->assertCount(0, $item->getTypes()['component1']->getItems());
 
-        $this->assertEquals('component2', $item->getTypes()['component2']->getName());
+        $this->assertEquals('component2', $item->getTypes()['component2']->getKey());
         $this->assertEquals('Second Component', $item->getTypes()['component2']->getTitle('en'));
         $this->assertCount(2, $item->getTypes()['component2']->getItems());
         $this->assertContains('property3', \array_keys($item->getTypes()['component2']->getItems()));
@@ -365,13 +365,13 @@ class FormMetadataMapperTest extends TestCase
         $this->assertEquals(1, $block->getMinOccurs());
         $this->assertEquals(2, $block->getMaxOccurs());
 
-        $this->assertEquals('component1', $block->getTypes()['component1']->getName());
+        $this->assertEquals('component1', $block->getTypes()['component1']->getKey());
         $this->assertEquals('First Component', $block->getTypes()['component1']->getTitle('en'));
         $this->assertCount(2, $block->getTypes()['component1']->getItems());
         $this->assertContains('property1', \array_keys($block->getTypes()['component1']->getItems()));
         $this->assertContains('property2', \array_keys($block->getTypes()['component1']->getItems()));
 
-        $this->assertEquals('component2', $block->getTypes()['component2']->getName());
+        $this->assertEquals('component2', $block->getTypes()['component2']->getKey());
         $this->assertEquals('Second Component', $block->getTypes()['component2']->getTitle('en'));
         $this->assertCount(2, $block->getTypes()['component2']->getItems());
         $this->assertContains('property3', \array_keys($block->getTypes()['component2']->getItems()));
@@ -395,13 +395,13 @@ class FormMetadataMapperTest extends TestCase
         $this->assertEquals(1, $block->getMinOccurs());
         $this->assertEquals(2, $block->getMaxOccurs());
 
-        $this->assertEquals('component1', $block->getTypes()['component1']->getName());
+        $this->assertEquals('component1', $block->getTypes()['component1']->getKey());
         $this->assertEquals('Erste Komponente', $block->getTypes()['component1']->getTitle('de'));
         $this->assertCount(2, $block->getTypes()['component1']->getItems());
         $this->assertContains('property1', \array_keys($block->getTypes()['component1']->getItems()));
         $this->assertContains('property2', \array_keys($block->getTypes()['component1']->getItems()));
 
-        $this->assertEquals('component2', $block->getTypes()['component2']->getName());
+        $this->assertEquals('component2', $block->getTypes()['component2']->getKey());
         $this->assertEquals('Zweite Komponente', $block->getTypes()['component2']->getTitle('de'));
         $this->assertCount(2, $block->getTypes()['component2']->getItems());
         $this->assertContains('property3', \array_keys($block->getTypes()['component2']->getItems()));

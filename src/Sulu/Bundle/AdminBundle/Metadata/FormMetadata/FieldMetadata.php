@@ -103,7 +103,7 @@ class FieldMetadata extends ItemMetadata
 
     public function addType(FormMetadata $type): void
     {
-        $this->types[$type->getName()] = $type;
+        $this->types[$type->getKey()] = $type;
     }
 
     public function isRequired(): bool

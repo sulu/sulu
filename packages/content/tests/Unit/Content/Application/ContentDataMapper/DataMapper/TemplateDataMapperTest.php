@@ -218,7 +218,7 @@ class TemplateDataMapperTest extends TestCase
     private function createTypedFormMetadata(array $properties = [], ?string $defaultTemplateKey = null): TypedFormMetadata
     {
         $formMetadata = new FormMetadata();
-        $formMetadata->setName('Example Template');
+        $formMetadata->setTitle('Example Template', 'en');
         $formMetadata->setKey('template-key');
 
         $unlocalizedPropertyMetadata = new FieldMetadata('unlocalizedField');

@@ -119,7 +119,6 @@ class BlockPropertyResolverTest extends TestCase
         $locale = 'en';
 
         $formMetadata = new FormMetadata();
-        $formMetadata->setName('text_block');
         $formMetadata->setKey('text_block');
         $blockFieldMetadata = new FieldMetadata('text_block');
         $blockFieldMetadata->addType($formMetadata);
@@ -165,7 +164,6 @@ class BlockPropertyResolverTest extends TestCase
         $locale = 'en';
 
         $formMetadata = new FormMetadata();
-        $formMetadata->setName('text_block');
         $formMetadata->setKey('text_block');
         $tag = new TagMetadata();
         $tag->setName('sulu.global_block');
@@ -181,7 +179,6 @@ class BlockPropertyResolverTest extends TestCase
         ];
 
         $globalFormMetadata = new FormMetadata();
-        $globalFormMetadata->setName('text_block');
         $globalFormMetadata->setKey('text_block');
         $globalBlockFieldMetadata = new FieldMetadata('text_block');
         $globalBlockFieldMetadata->addType($globalFormMetadata);
@@ -235,7 +232,6 @@ class BlockPropertyResolverTest extends TestCase
         $locale = 'en';
 
         $formMetadata = new FormMetadata();
-        $formMetadata->setName('text_block');
         $formMetadata->setKey('text_block');
         $blockFieldMetadata = new FieldMetadata('text_block');
         $blockFieldMetadata->addType($formMetadata);

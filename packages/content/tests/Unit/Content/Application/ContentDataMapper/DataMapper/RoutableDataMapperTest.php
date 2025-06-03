@@ -340,7 +340,7 @@ class RoutableDataMapperTest extends TestCase
     private function createTypedFormMetadataWithRoute(string $propertyName = 'url'): TypedFormMetadata
     {
         $formMetadata = new FormMetadata();
-        $formMetadata->setName('Default');
+        $formMetadata->setTitle('Default', 'en');
         $formMetadata->setKey('default');
 
         $routeProperty = new FieldMetadata($propertyName);
@@ -359,7 +359,7 @@ class RoutableDataMapperTest extends TestCase
     private function createTypedFormMetadataWithTextLine(string $propertyName = 'url'): TypedFormMetadata
     {
         $formMetadata = new FormMetadata();
-        $formMetadata->setName('Default');
+        $formMetadata->setTitle('Default', 'en');
         $formMetadata->setKey('default');
 
         $routeProperty = new FieldMetadata($propertyName);

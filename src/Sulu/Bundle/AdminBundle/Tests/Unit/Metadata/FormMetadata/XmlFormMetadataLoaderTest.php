@@ -81,10 +81,9 @@ class XmlFormMetadataLoaderTest extends TestCase
     /**
      * @param ItemMetadata[] $items
      */
-    private function createFormMetadata(string $name, string $key, array $items = []): FormMetadata
+    private function createFormMetadata(string $key, array $items = []): FormMetadata
     {
         $formMetadata = new FormMetadata();
-        $formMetadata->setName($name);
         $formMetadata->setKey($key);
         $formMetadata->setItems([]);
 
@@ -115,9 +114,9 @@ class XmlFormMetadataLoaderTest extends TestCase
         $sectionPropertyMetadata = $this->createFieldMetadata('some_section_property', 'text_line');
         $sectionMetadata = $this->createSectionMetadata('some_section', [$sectionPropertyMetadata]);
         $blockPropertyMetadata = $this->createFieldMetadata('some_block_property', 'text_line');
-        $blockTypeMetadata = $this->createFormMetadata('some_block_type', 'some_block_type_key', [$blockPropertyMetadata]);
+        $blockTypeMetadata = $this->createFormMetadata('some_block_type_key', [$blockPropertyMetadata]);
         $blockMetadata = $this->createFieldMetadata('some_block', 'block', [$blockTypeMetadata]);
-        $formMetadata = $this->createFormMetadata('some_form', 'some_form_key', [$propertyMetadata, $sectionMetadata, $blockMetadata]);
+        $formMetadata = $this->createFormMetadata('some_form_key', [$propertyMetadata, $sectionMetadata, $blockMetadata]);
 
         $this->formXmlLoader->load(Argument::cetera())
             ->willReturn($formMetadata);

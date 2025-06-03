@@ -1208,7 +1208,6 @@ class ImageMapContentTypeTest extends TestCase
         $metadata->setRequired(true);
         foreach ($types as $key => $config) {
             $type = new FormMetadata();
-            $type->setName($key);
             $type->setKey($key);
 
             $isGlobalBlock = $config['isGlobalBlock'] ?? false;
@@ -1296,7 +1295,6 @@ class ImageMapContentTypeTest extends TestCase
         $metadata->setRequired(false);
         foreach ($types as $key => $config) {
             $type = new FormMetadata();
-            $type->setName($key);
             $type->setKey($key);
 
             $isGlobalBlock = $config['isGlobalBlock'] ?? false;

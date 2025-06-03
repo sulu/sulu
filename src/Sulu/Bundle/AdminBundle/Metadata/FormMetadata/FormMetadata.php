@@ -13,17 +13,12 @@ namespace Sulu\Bundle\AdminBundle\Metadata\FormMetadata;
 
 use JMS\Serializer\Annotation\Exclude;
 use JMS\Serializer\Annotation\SerializedName;
+use JMS\Serializer\Annotation\VirtualProperty;
 use Sulu\Bundle\AdminBundle\Metadata\AbstractMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\SchemaMetadata;
 
 class FormMetadata extends AbstractMetadata
 {
-    /**
-     * @var string
-     */
-    #[Exclude(if: "'admin_form_metadata_keys_only' in context.getAttribute('groups')")]
-    private $name;
-
     /**
      * @var array<string, string>
      */
@@ -74,14 +69,15 @@ class FormMetadata extends AbstractMetadata
         $this->schema = new SchemaMetadata();
     }
 
-    public function setName(string $name)
-    {
-        $this->name = $name;
-    }
-
+    /**
+     * @deprecated since 3.0, use setKey() instead
+     */
+    #[VirtualProperty]
+    #[SerializedName('name')]
+    #[Exclude(if: "'admin_form_metadata_keys_only' in context.getAttribute('groups')")]
     public function getName(): string
     {
-        return $this->name;
+        return $this->key;
     }
 
     public function setKey(string $key)
@@ -123,7 +119,7 @@ class FormMetadata extends AbstractMetadata
 
         return \count($this->titles)
             ? $this->titles[\array_key_first($this->titles)]
-            : ($this->name ? \ucfirst($this->name) : '');
+            : ($this->key ? \ucfirst($this->key) : '');
     }
 
     /**
@@ -250,9 +246,6 @@ class FormMetadata extends AbstractMetadata
     {
         $mergedForm = new self();
         $mergedForm->setKey($this->getKey());
-        if ($this->name) {
-            $mergedForm->setName($this->name);
-        }
         if ($this->titles) {
             $mergedForm->setTitles($this->titles);
         }

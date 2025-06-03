@@ -52,10 +52,10 @@ class BlockFieldMetadataValidatorTest extends TestCase
     /**
      * @param ItemMetadata[] $items
      */
-    private function createFormMetadata(string $name, array $items = []): FormMetadata
+    private function createFormMetadata(string $key, array $items = []): FormMetadata
     {
         $formMetadata = new FormMetadata();
-        $formMetadata->setName($name);
+        $formMetadata->setKey($key);
 
         foreach ($items as $item) {
             $formMetadata->addItem($item);

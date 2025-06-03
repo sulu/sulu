@@ -262,7 +262,7 @@ class ImageMapPropertyResolverTest extends TestCase
         $data = ['imageId' => 1, 'hotspots' => [['type' => 'text', 'hotspot' => ['type' => 'circle'], 'title' => 'Title 1'], ['type' => 'text', 'hotspot' => ['type' => 'circle'], 'title' => 'Title 2']]];
 
         $textFormMetadata = new FormMetadata();
-        $textFormMetadata->setName('text');
+        $textFormMetadata->setKey('text');
         $itemMetadata = new FieldMetadata('title');
         $itemMetadata->setType('text_line');
         $textFormMetadata->addItem($itemMetadata);
@@ -312,7 +312,7 @@ class ImageMapPropertyResolverTest extends TestCase
         $fieldMetadata->setDefaultType('text');
 
         $textFormMetadata = new FormMetadata();
-        $textFormMetadata->setName('text');
+        $textFormMetadata->setKey('text');
         $itemMetadata = new FieldMetadata('title');
         $itemMetadata->setType('text_line');
         $textFormMetadata->addItem($itemMetadata);
@@ -329,7 +329,7 @@ class ImageMapPropertyResolverTest extends TestCase
         $fieldMetadata->setDefaultType('text');
 
         $textFormMetadata = new FormMetadata();
-        $textFormMetadata->setName('text');
+        $textFormMetadata->setKey('text');
 
         $tag = new TagMetadata();
         $tag->setName('sulu.global_block');

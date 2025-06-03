@@ -399,7 +399,7 @@ class PropertiesXmlParser
         $types = $data['types'];
         foreach ($types as $name => $typeData) {
             $type = new FormMetadata();
-            $type->setName($name);
+            $type->setKey($name);
             $type->setTitles($typeData['meta']['title'] ?? []);
 
             if (!$typeData['ref']) {

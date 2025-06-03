@@ -79,7 +79,7 @@ class GlobalBlocksTypedFormMetadataVisitor implements TypedFormMetadataVisitorIn
 
                 $type->setTitles($blockMetadata->getTitles());
 
-                $rootSchema->addDefinition($blockMetadata->getName(), $blockMetadata->getSchema());
+                $rootSchema->addDefinition($blockMetadata->getKey(), $blockMetadata->getSchema());
 
                 $this->enhanceGlobalBlockTypes($blockMetadata->getItems(), $locale, $rootSchema);
             }

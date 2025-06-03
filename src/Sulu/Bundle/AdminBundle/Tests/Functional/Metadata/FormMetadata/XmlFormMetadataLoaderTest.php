@@ -147,9 +147,9 @@ class XmlFormMetadataLoaderTest extends KernelTestCase
         $types = $blocks->getTypes();
 
         $this->assertCount(3, $types);
-        $this->assertEquals('editor', $types['editor']->getName());
-        $this->assertEquals('editor_image', $types['editor_image']->getName());
-        $this->assertEquals('text_block', $types['text_block']->getName());
+        $this->assertEquals('editor', $types['editor']->getKey());
+        $this->assertEquals('editor_image', $types['editor_image']->getKey());
+        $this->assertEquals('text_block', $types['text_block']->getKey());
     }
 
     public function testGetMetadataWithPropertyWithTypes(): void
@@ -164,10 +164,10 @@ class XmlFormMetadataLoaderTest extends KernelTestCase
 
         $types = $image->getTypes();
         $this->assertCount(2, $types);
-        $this->assertEquals('editor', $types['editor']->getName());
+        $this->assertEquals('editor', $types['editor']->getKey());
         $this->assertCount(1, $types['editor']->getItems());
         $this->assertEquals('article', $types['editor']->getItems()['article']->getName());
-        $this->assertEquals('editor_image', $types['editor_image']->getName());
+        $this->assertEquals('editor_image', $types['editor_image']->getKey());
         $this->assertCount(2, $types['editor_image']->getItems());
         $this->assertEquals('images', $types['editor_image']->getItems()['images']->getName());
         $this->assertEquals('article', $types['editor_image']->getItems()['article']->getName());

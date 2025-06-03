@@ -390,7 +390,7 @@ class PageDataProvider implements DataProviderInterface, DataProviderAliasInterf
             $metadata = $this->formMetadataProvider->getMetadata('page', $user->getLocale(), []);
 
             foreach ($metadata->getForms() as $form) {
-                $types[] = ['type' => $form->getName(), 'title' => $form->getTitle($user->getLocale())];
+                $types[] = ['type' => $form->getKey(), 'title' => $form->getTitle($user->getLocale())];
             }
         }
 

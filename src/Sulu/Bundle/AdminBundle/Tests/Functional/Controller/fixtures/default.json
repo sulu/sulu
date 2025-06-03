@@ -111,7 +111,7 @@
                                     "null"
                                 ]
                             },
-                            "key": null,
+                            "key": "text_block",
                             "tags": [
                                 {
                                     "name": "sulu.global_block",
@@ -136,7 +136,7 @@
                                     "null"
                                 ]
                             },
-                            "key": null,
+                            "key": "text_block2",
                             "tags": [
                                 {
                                     "name": "sulu.global_block",
@@ -179,7 +179,7 @@
                                     "null"
                                 ]
                             },
-                            "key": null,
+                            "key": "editor",
                             "tags": [],
                             "title": "Editor"
                         },
@@ -228,7 +228,7 @@
                                                     "null"
                                                 ]
                                             },
-                                            "key": null,
+                                            "key": "text_block2",
                                             "tags": [
                                                 {
                                                     "name": "sulu.global_block",
@@ -253,7 +253,7 @@
                                                     "null"
                                                 ]
                                             },
-                                            "key": null,
+                                            "key": "text_block3",
                                             "tags": [
                                                 {
                                                     "name": "sulu.global_block",
@@ -286,7 +286,7 @@
                                     "null"
                                 ]
                             },
-                            "key": null,
+                            "key": "block",
                             "tags": [],
                             "title": "Block"
                         }
@@ -581,7 +581,7 @@
             }
         }
     },
-    "key": null,
+    "key": "default",
     "tags": [
         {
             "name": "test",

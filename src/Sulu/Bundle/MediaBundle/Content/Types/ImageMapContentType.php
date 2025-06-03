@@ -466,7 +466,7 @@ class ImageMapContentType extends ComplexContentType implements ContentTypeExpor
 
                 $blockTypeSchemas[] = new IfThenElseMetadata(
                     new SchemaMetadata([
-                        new PropertyMetadata('type', true, new ConstMetadata($blockType->getName())),
+                        new PropertyMetadata('type', true, new ConstMetadata($blockType->getKey())),
                     ]),
                     new RefSchemaMetadata('#/definitions/' . $blockName)
                 );
@@ -476,7 +476,7 @@ class ImageMapContentType extends ComplexContentType implements ContentTypeExpor
 
             $blockTypeSchemas[] = new IfThenElseMetadata(
                 new SchemaMetadata([
-                    new PropertyMetadata('type', true, new ConstMetadata($blockType->getName())),
+                    new PropertyMetadata('type', true, new ConstMetadata($blockType->getKey())),
                 ]),
                 $this->schemaMetadataProvider->getMetadata($blockType->getItems()),
             );

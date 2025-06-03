@@ -70,12 +70,12 @@ class GlobalBlocksTypedFormMetadataVisitorTest extends TestCase
         $fieldTag->setAttributes(['global_block' => $globalBlockName]);
 
         $fieldType1 = new FormMetadata();
-        $fieldType1->setName('test3');
+        $fieldType1->setKey('test3');
         $fieldType1->addTag($fieldTag);
         $fieldMetadata->addType($fieldType1);
 
         $fieldType2 = new FormMetadata();
-        $fieldType2->setName('test4');
+        $fieldType2->setKey('test4');
         $fieldMetadata->addType($fieldType2);
 
         $globalBlockFormMetadata = new TypedFormMetadata();
@@ -83,7 +83,7 @@ class GlobalBlocksTypedFormMetadataVisitorTest extends TestCase
         $globalBlockFormMetadata->addForm($globalBlockName, $globalBlockFormTypeMetadata);
 
         $globalBlockFormTypeMetadata->setSchema(new SchemaMetadata());
-        $globalBlockFormTypeMetadata->setName($globalBlockName);
+        $globalBlockFormTypeMetadata->setKey($globalBlockName);
         $globalBlockFormTypeMetadata->setTitles(['en' => 'Test Block Title']);
 
         $this->metadataProviderProphecy->getMetadata('block', $locale, [
@@ -129,19 +129,19 @@ class GlobalBlocksTypedFormMetadataVisitorTest extends TestCase
         $fieldTag->setAttributes(['global_block' => $globalBlockName]);
 
         $fieldType1 = new FormMetadata();
-        $fieldType1->setName('test3');
+        $fieldType1->setKey('test3');
         $fieldType1->addTag($fieldTag);
         $fieldMetadata->addType($fieldType1);
 
         $fieldType2 = new FormMetadata();
-        $fieldType2->setName('test4');
+        $fieldType2->setKey('test4');
         $fieldMetadata->addType($fieldType2);
 
         $globalBlockFormMetadata = new TypedFormMetadata();
         $globalBlockFormTypeMetadata = new FormMetadata();
         $globalBlockFormMetadata->addForm($globalBlockName, $globalBlockFormTypeMetadata);
 
-        $globalBlockFormTypeMetadata->setName($globalBlockName);
+        $globalBlockFormTypeMetadata->setKey($globalBlockName);
         $globalBlockFormTypeMetadata->setTitles(['en' => 'Test Block Title']);
 
         $this->metadataProviderProphecy->getMetadata('block', $locale, [
@@ -188,19 +188,19 @@ class GlobalBlocksTypedFormMetadataVisitorTest extends TestCase
         $fieldTag->setAttributes(['global_block' => $globalBlockName]);
 
         $fieldType1 = new FormMetadata();
-        $fieldType1->setName('test3');
+        $fieldType1->setKey('test3');
         $fieldType1->addTag($fieldTag);
         $fieldMetadata->addType($fieldType1);
 
         $fieldType2 = new FormMetadata();
-        $fieldType2->setName('test4');
+        $fieldType2->setKey('test4');
         $fieldMetadata->addType($fieldType2);
 
         $globalBlockFormMetadata = new TypedFormMetadata();
         $globalBlockFormTypeMetadata = new FormMetadata();
         $globalBlockFormMetadata->addForm($globalBlockName, $globalBlockFormTypeMetadata);
 
-        $globalBlockFormTypeMetadata->setName($globalBlockName);
+        $globalBlockFormTypeMetadata->setKey($globalBlockName);
         $globalBlockFormTypeMetadata->setTitles(['en' => 'Test Block Title']);
 
         $this->metadataProviderProphecy->getMetadata('block', $locale, [

@@ -114,7 +114,7 @@ class FormMetadataMapper
 
         foreach ($property->getComponents() as $component) {
             $type = new FormMetadata();
-            $type->setName($component->getName());
+            $type->setKey($component->getName());
             $type->setTitles($component->getTitles());
             $type->setTags($this->mapTags($component->getTags()));
 
