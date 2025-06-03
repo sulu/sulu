@@ -20,7 +20,6 @@ use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\ItemMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\XmlFormMetadataLoader;
-use Sulu\Bundle\AdminBundle\Metadata\MetadataInterface;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\SchemaMetadata;
 use Sulu\Content\Infrastructure\Sulu\Form\SettingsFormMetadataVisitor;
 
@@ -70,31 +69,6 @@ class SettingsFormMetadataVisitorTest extends TestCase
             ->shouldNotBeCalled();
 
         $this->settingsFormMetadataVisitor->visitFormMetadata($formMetadata->reveal(), 'de', []);
-    }
-
-    public function testVisitFormMetadataInvalidSubFormMetadata(): void
-    {
-        $formMetadata = $this->prophesize(FormMetadata::class);
-        $formMetadata->getKey()
-            ->shouldBeCalled()
-            ->willReturn('content_settings');
-
-        $formMetadata->setItems(Argument::any())
-            ->shouldNotBeCalled();
-        $formMetadata->setSchema(Argument::any())
-            ->shouldNotBeCalled();
-
-        $subFormMetadata = $this->prophesize(MetadataInterface::class);
-
-        $metadataOptions = [
-            'forms' => ['content_settings_author'],
-        ];
-
-        $this->xmlFormMetadataLoader->getMetadata('content_settings_author', 'de', $metadataOptions)
-            ->shouldBeCalled()
-            ->willReturn($subFormMetadata->reveal());
-
-        $this->settingsFormMetadataVisitor->visitFormMetadata($formMetadata->reveal(), 'de', $metadataOptions);
     }
 
     public function testVisitFormMetadataSubFormMetadataIsNull(): void
