@@ -36,7 +36,7 @@ class XmlTemplateFormMetadataLoader implements FormMetadataLoaderInterface, Cach
     ) {
     }
 
-    public function getMetadata(string $key, ?string $locale = null, array $metadataOptions = []): ?MetadataInterface
+    public function getMetadata(string $key, ?string $locale = null, array $metadataOptions = []): ?TypedFormMetadata
     {
         $configCache = $this->getConfigCache($key);
 
@@ -48,7 +48,7 @@ class XmlTemplateFormMetadataLoader implements FormMetadataLoaderInterface, Cach
             $this->warmUp($this->cacheDir);
         }
 
-        $typedForm = \unserialize(\file_get_contents($configCache->getPath()));
+        $typedForm = \unserialize(\file_get_contents($configCache->getPath()) ?: '');
 
         \assert($typedForm instanceof TypedFormMetadata, 'Expected TypedFormMetadata instance for key: "' . $key . '".');
 
@@ -60,7 +60,7 @@ class XmlTemplateFormMetadataLoader implements FormMetadataLoaderInterface, Cach
         foreach ($this->templateDirectories as $type => $config) {
             $defaultType = $config['default_type'] ?? null;
             $directories = \array_filter(
-                $config['directories'] ?? [],
+                $config['directories'],
                 fn (string $directory) => \file_exists($directory),
             );
 

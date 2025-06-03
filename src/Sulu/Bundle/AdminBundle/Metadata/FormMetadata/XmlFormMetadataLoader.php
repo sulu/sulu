@@ -60,7 +60,7 @@ class XmlFormMetadataLoader implements FormMetadataLoaderInterface, CacheWarmerI
         $this->debug = $debug;
     }
 
-    public function getMetadata(string $key, string $locale, array $metadataOptions = []): ?MetadataInterface
+    public function getMetadata(string $key, string $locale, array $metadataOptions = []): ?FormMetadata
     {
         $configCache = $this->getConfigCache($key);
 
@@ -72,7 +72,9 @@ class XmlFormMetadataLoader implements FormMetadataLoaderInterface, CacheWarmerI
             $this->warmUp($this->cacheDir);
         }
 
-        $form = \unserialize(\file_get_contents($configCache->getPath()));
+        $form = \unserialize(\file_get_contents($configCache->getPath()) ?: '');
+
+        \assert($form instanceof FormMetadata, 'Expected FormMetadata instance for key: "' . $key . '".');
 
         return $form;
     }

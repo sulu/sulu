@@ -31,6 +31,8 @@ class XmlFormMetadataLoaderTest extends KernelTestCase
     public function testGetMetadataWithOnInvalid(): void
     {
         $form = $this->xmlFormMetadataLoader->getMetadata('form_with_on_invalid', 'en');
+        $this->assertNotNull($form);
+
         $this->assertCount(1, $form->getItems());
         $this->assertEquals(
             'ignore',
@@ -41,6 +43,8 @@ class XmlFormMetadataLoaderTest extends KernelTestCase
     public function testGetMetadataWithSchema(): void
     {
         $form = $this->xmlFormMetadataLoader->getMetadata('form_with_schema', 'en');
+        $this->assertNotNull($form);
+
         $schema = $form->getSchema()->toJsonSchema();
         $this->assertCount(1, \array_keys($schema));
         $this->assertCount(2, $schema['allOf']);
@@ -50,6 +54,7 @@ class XmlFormMetadataLoaderTest extends KernelTestCase
     public function testGetMetadataWithEvaluations(): void
     {
         $form = $this->xmlFormMetadataLoader->getMetadata('form_with_evaluations', 'en');
+        $this->assertNotNull($form);
 
         $this->assertEquals(
             'lastName == \'section_property\'',
@@ -92,6 +97,7 @@ class XmlFormMetadataLoaderTest extends KernelTestCase
     {
         $form = $this->xmlFormMetadataLoader->getMetadata('form_with_expression_param', 'en');
         $this->assertNotNull($form);
+
         $this->assertContains('name', \array_keys($form->getItems()));
         $this->assertEquals('expression', $form->getItems()['name']->getOptions()['id']->getType());
         $this->assertEquals('service(\'test\').getId()', $form->getItems()['name']->getOptions()['id']->getValue());
@@ -100,12 +106,16 @@ class XmlFormMetadataLoaderTest extends KernelTestCase
     public function testGetMetadataWithoutLabel(): void
     {
         $form = $this->xmlFormMetadataLoader->getMetadata('form_without_label', 'en');
+        $this->assertNotNull($form);
+
         $this->assertNull($form->getItems()['name']->getLabel('en'));
     }
 
     public function testGetMetadataFromMultipleFiles(): void
     {
         $form = $this->xmlFormMetadataLoader->getMetadata('merged_form', 'en');
+        $this->assertNotNull($form);
+
         $this->assertContains('field1', \array_keys($form->getItems()));
         $this->assertContains('field2', \array_keys($form->getItems()));
 
@@ -116,6 +126,7 @@ class XmlFormMetadataLoaderTest extends KernelTestCase
     public function testGetMetadataWithNestedSections(): void
     {
         $form = $this->xmlFormMetadataLoader->getMetadata('form_with_nested_sections', 'en');
+        $this->assertNotNull($form);
 
         $section1 = $form->getItems()['test1'];
         $section2 = $form->getItems()['test2'];
@@ -133,6 +144,7 @@ class XmlFormMetadataLoaderTest extends KernelTestCase
     public function testGetMetadataWithBlocks(): void
     {
         $form = $this->xmlFormMetadataLoader->getMetadata('form_with_blocks', 'en');
+        $this->assertNotNull($form);
 
         $blocks = $form->getItems()['blocks'];
 
@@ -155,6 +167,7 @@ class XmlFormMetadataLoaderTest extends KernelTestCase
     public function testGetMetadataWithPropertyWithTypes(): void
     {
         $form = $this->xmlFormMetadataLoader->getMetadata('form_with_property_with_types', 'en');
+        $this->assertNotNull($form);
 
         /** @var FieldMetadata $image */
         $image = $form->getItems()['image'];

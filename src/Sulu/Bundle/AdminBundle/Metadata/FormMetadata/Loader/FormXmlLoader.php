@@ -28,8 +28,14 @@ class FormXmlLoader extends AbstractLoader
 {
     use XmlParserTrait;
 
+    /**
+     * @var string
+     */
     public const SCHEMA_PATH = '/schema/form-1.0.xsd';
 
+    /**
+     * @var string
+     */
     public const SCHEMA_NAMESPACE_URI = 'http://schemas.sulu.io/template/template';
 
     public function __construct(

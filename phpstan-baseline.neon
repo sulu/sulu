@@ -2239,6 +2239,24 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Loader/FormXmlLoader.php
 
 		-
+			message: '#^Cannot call method count\(\) on DOMNodeList\<DOMNode\>\|false\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Loader/TemplateXmlLoader.php
+
+		-
+			message: '#^Cannot call method item\(\) on DOMNodeList\<DOMNode\>\|false\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Loader/TemplateXmlLoader.php
+
+		-
+			message: '#^Parameter \#1 \$schema of method Sulu\\Bundle\\AdminBundle\\Metadata\\SchemaMetadata\\SchemaMetadata\:\:merge\(\) expects Sulu\\Bundle\\AdminBundle\\Metadata\\SchemaMetadata\\SchemaMetadata, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Loader/TemplateXmlLoader.php
+
+		-
 			message: '#^Method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\OptionMetadata\:\:getType\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -3589,18 +3607,6 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/XmlFormMetadataLoader.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\XmlFormMetadataLoader\:\:getMetadata\(\) should return Sulu\\Bundle\\AdminBundle\\Metadata\\MetadataInterface\|null but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/XmlFormMetadataLoader.php
-
-		-
-			message: '#^Parameter \#1 \$data of function unserialize expects string, string\|false given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/XmlFormMetadataLoader.php
-
-		-
 			message: '#^Property Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\XmlFormMetadataLoader\:\:\$formDirectories \(array\<string\>\) does not accept array\.$#'
 			identifier: assign.propertyType
 			count: 1
@@ -4195,9 +4201,27 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Tests/Functional/Metadata/FormMetadata/StructureFormMetadataLoaderTest.php
 
 		-
-			message: '#^Call to an undefined method Sulu\\Bundle\\AdminBundle\\Metadata\\MetadataInterface\:\:getItems\(\)\.$#'
+			message: '#^Call to an undefined method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\ItemMetadata\:\:getItems\(\)\.$#'
 			identifier: method.notFound
 			count: 3
+			path: src/Sulu/Bundle/AdminBundle/Tests/Functional/Metadata/FormMetadata/XmlFormMetadataLoaderTest.php
+
+		-
+			message: '#^Call to an undefined method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\ItemMetadata\:\:getOnInvalid\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Tests/Functional/Metadata/FormMetadata/XmlFormMetadataLoaderTest.php
+
+		-
+			message: '#^Call to an undefined method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\ItemMetadata\:\:getOptions\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: src/Sulu/Bundle/AdminBundle/Tests/Functional/Metadata/FormMetadata/XmlFormMetadataLoaderTest.php
+
+		-
+			message: '#^Call to an undefined method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\ItemMetadata\:\:getTypes\(\)\.$#'
+			identifier: method.notFound
+			count: 2
 			path: src/Sulu/Bundle/AdminBundle/Tests/Functional/Metadata/FormMetadata/XmlFormMetadataLoaderTest.php
 
 		-
@@ -4207,37 +4231,7 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Tests/Functional/Metadata/FormMetadata/XmlFormMetadataLoaderTest.php
 
 		-
-			message: '#^Cannot access offset ''allOf'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 3
-			path: src/Sulu/Bundle/AdminBundle/Tests/Functional/Metadata/FormMetadata/XmlFormMetadataLoaderTest.php
-
-		-
-			message: '#^Cannot access offset ''audience_targeting_groups'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Tests/Functional/Metadata/FormMetadata/XmlFormMetadataLoaderTest.php
-
-		-
-			message: '#^Cannot access offset ''block'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 4
-			path: src/Sulu/Bundle/AdminBundle/Tests/Functional/Metadata/FormMetadata/XmlFormMetadataLoaderTest.php
-
-		-
-			message: '#^Cannot access offset ''blocks'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Tests/Functional/Metadata/FormMetadata/XmlFormMetadataLoaderTest.php
-
-		-
 			message: '#^Cannot access offset ''formOfAddress'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: src/Sulu/Bundle/AdminBundle/Tests/Functional/Metadata/FormMetadata/XmlFormMetadataLoaderTest.php
-
-		-
-			message: '#^Cannot access offset ''highlight'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 2
 			path: src/Sulu/Bundle/AdminBundle/Tests/Functional/Metadata/FormMetadata/XmlFormMetadataLoaderTest.php
@@ -4249,15 +4243,9 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Tests/Functional/Metadata/FormMetadata/XmlFormMetadataLoaderTest.php
 
 		-
-			message: '#^Cannot access offset ''image'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Tests/Functional/Metadata/FormMetadata/XmlFormMetadataLoaderTest.php
-
-		-
 			message: '#^Cannot access offset ''name'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 5
+			count: 2
 			path: src/Sulu/Bundle/AdminBundle/Tests/Functional/Metadata/FormMetadata/XmlFormMetadataLoaderTest.php
 
 		-
@@ -4267,27 +4255,9 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Tests/Functional/Metadata/FormMetadata/XmlFormMetadataLoaderTest.php
 
 		-
-			message: '#^Cannot access offset ''salutation'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: src/Sulu/Bundle/AdminBundle/Tests/Functional/Metadata/FormMetadata/XmlFormMetadataLoaderTest.php
-
-		-
 			message: '#^Cannot access offset ''test'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 2
-			path: src/Sulu/Bundle/AdminBundle/Tests/Functional/Metadata/FormMetadata/XmlFormMetadataLoaderTest.php
-
-		-
-			message: '#^Cannot access offset ''test1'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Tests/Functional/Metadata/FormMetadata/XmlFormMetadataLoaderTest.php
-
-		-
-			message: '#^Cannot access offset ''test2'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
 			path: src/Sulu/Bundle/AdminBundle/Tests/Functional/Metadata/FormMetadata/XmlFormMetadataLoaderTest.php
 
 		-
@@ -4305,25 +4275,13 @@ parameters:
 		-
 			message: '#^Cannot call method getDisabledCondition\(\) on mixed\.$#'
 			identifier: method.nonObject
-			count: 4
-			path: src/Sulu/Bundle/AdminBundle/Tests/Functional/Metadata/FormMetadata/XmlFormMetadataLoaderTest.php
-
-		-
-			message: '#^Cannot call method getItems\(\) on Sulu\\Bundle\\AdminBundle\\Metadata\\MetadataInterface\|null\.$#'
-			identifier: method.nonObject
-			count: 17
+			count: 2
 			path: src/Sulu/Bundle/AdminBundle/Tests/Functional/Metadata/FormMetadata/XmlFormMetadataLoaderTest.php
 
 		-
 			message: '#^Cannot call method getItems\(\) on mixed\.$#'
 			identifier: method.nonObject
-			count: 5
-			path: src/Sulu/Bundle/AdminBundle/Tests/Functional/Metadata/FormMetadata/XmlFormMetadataLoaderTest.php
-
-		-
-			message: '#^Cannot call method getLabel\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
+			count: 2
 			path: src/Sulu/Bundle/AdminBundle/Tests/Functional/Metadata/FormMetadata/XmlFormMetadataLoaderTest.php
 
 		-
@@ -4333,33 +4291,9 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Tests/Functional/Metadata/FormMetadata/XmlFormMetadataLoaderTest.php
 
 		-
-			message: '#^Cannot call method getOnInvalid\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Tests/Functional/Metadata/FormMetadata/XmlFormMetadataLoaderTest.php
-
-		-
-			message: '#^Cannot call method getOptions\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: src/Sulu/Bundle/AdminBundle/Tests/Functional/Metadata/FormMetadata/XmlFormMetadataLoaderTest.php
-
-		-
-			message: '#^Cannot call method getSchema\(\) on Sulu\\Bundle\\AdminBundle\\Metadata\\MetadataInterface\|null\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: src/Sulu/Bundle/AdminBundle/Tests/Functional/Metadata/FormMetadata/XmlFormMetadataLoaderTest.php
-
-		-
 			message: '#^Cannot call method getType\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Tests/Functional/Metadata/FormMetadata/XmlFormMetadataLoaderTest.php
-
-		-
-			message: '#^Cannot call method getTypes\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
 			path: src/Sulu/Bundle/AdminBundle/Tests/Functional/Metadata/FormMetadata/XmlFormMetadataLoaderTest.php
 
 		-
@@ -4371,25 +4305,13 @@ parameters:
 		-
 			message: '#^Cannot call method getVisibleCondition\(\) on mixed\.$#'
 			identifier: method.nonObject
-			count: 4
-			path: src/Sulu/Bundle/AdminBundle/Tests/Functional/Metadata/FormMetadata/XmlFormMetadataLoaderTest.php
-
-		-
-			message: '#^Cannot call method toJsonSchema\(\) on mixed\.$#'
-			identifier: method.nonObject
 			count: 2
-			path: src/Sulu/Bundle/AdminBundle/Tests/Functional/Metadata/FormMetadata/XmlFormMetadataLoaderTest.php
-
-		-
-			message: '#^Parameter \#1 \$array of function array_keys expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 4
 			path: src/Sulu/Bundle/AdminBundle/Tests/Functional/Metadata/FormMetadata/XmlFormMetadataLoaderTest.php
 
 		-
 			message: '#^Parameter \#2 \$haystack of method PHPUnit\\Framework\\Assert\:\:assertCount\(\) expects Countable\|iterable, mixed given\.$#'
 			identifier: argument.type
-			count: 3
+			count: 2
 			path: src/Sulu/Bundle/AdminBundle/Tests/Functional/Metadata/FormMetadata/XmlFormMetadataLoaderTest.php
 
 		-
