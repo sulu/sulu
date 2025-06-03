@@ -17,6 +17,7 @@ use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\AdminBundle\Exception\InvalidRootTagException;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Loader\FormXmlLoader;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Parser\MetaXmlParser;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Parser\PropertiesXmlParser;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Parser\SchemaXmlParser;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Parser\TagXmlParser;
@@ -46,10 +47,13 @@ class FormXmlLoaderTest extends TestCase
     {
         $this->translator = $this->prophesize(TranslatorInterface::class);
         $tagXmlParser = new TagXmlParser();
-        $propertiesXmlParser = new PropertiesXmlParser(
-            $tagXmlParser,
+        $metaXmlParser = new MetaXmlParser(
             $this->translator->reveal(),
             ['en' => 'en', 'de' => 'de', 'fr' => 'fr', 'nl' => 'nl']
+        );
+        $propertiesXmlParser = new PropertiesXmlParser(
+            $tagXmlParser,
+            $metaXmlParser,
         );
         $schemaXmlParser = new SchemaXmlParser();
 

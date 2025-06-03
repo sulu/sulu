@@ -19,7 +19,6 @@ use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\SectionMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TagMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\XmlParserTrait;
 use Sulu\Component\Content\Exception\InvalidDefaultTypeException;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @internal this class is not part of the public API and may be changed or removed without further notice
@@ -28,20 +27,10 @@ class PropertiesXmlParser
 {
     use XmlParserTrait;
 
-    /**
-     * @var string[]
-     */
-    private $locales;
-
-    /**
-     * @param array<string, string> $locales
-     */
     public function __construct(
         private TagXmlParser $tagXmlParser,
-        private TranslatorInterface $translator,
-        array $locales,
+        private MetaXmlParser $metaXmlParser,
     ) {
-        $this->locales = \array_keys($locales);
     }
 
     /**
@@ -105,7 +94,7 @@ class PropertiesXmlParser
         $result['onInvalid'] = $this->getValueFromXPath('@onInvalid', $xpath, $node);
         $result['tags'] = $this->loadTags($xpath, $node);
         $result['params'] = $this->loadParams('x:params/x:param', $xpath, $node);
-        $result['meta'] = $this->loadMeta($xpath, $node);
+        $result['meta'] = $this->metaXmlParser->load($xpath, $node);
         $result['types'] = $this->loadTypes($xpath, $node, $formKey);
 
         $typeNames = \array_map(function($type) {
@@ -143,7 +132,7 @@ class PropertiesXmlParser
 
         $result['type'] = 'section';
         $result['params'] = $this->loadParams('x:params/x:param', $xpath, $node);
-        $result['meta'] = $this->loadMeta($xpath, $node);
+        $result['meta'] = $this->metaXmlParser->load($xpath, $node);
 
         $propertiesNode = $xpath->query('x:properties', $node)->item(0);
         $result['properties'] = $this->loadProperties($xpath, $propertiesNode, $formKey);
@@ -191,7 +180,7 @@ class PropertiesXmlParser
             $result['ref'] = true;
         }
 
-        $result['meta'] = $this->loadMeta($xpath, $node);
+        $result['meta'] = $this->metaXmlParser->load($xpath, $node);
 
         $propertiesNode = $xpath->query('x:properties', $node)->item(0);
         if ($propertiesNode) {
@@ -207,53 +196,6 @@ class PropertiesXmlParser
 
         foreach ($keys as $key) {
             $result[$key] = $this->getValueFromXPath($prefix . $key, $xpath, $node);
-        }
-
-        return $result;
-    }
-
-    private function loadMeta(\DOMXPath $xpath, ?\DOMNode $context = null)
-    {
-        $result = [];
-        $metaNode = $xpath->query('x:meta', $context)->item(0);
-
-        if (!$metaNode) {
-            return $result;
-        }
-
-        $result['title'] = $this->loadMetaTag('x:title', $xpath, $metaNode);
-        $result['info_text'] = $this->loadMetaTag('x:info_text', $xpath, $metaNode);
-        $result['placeholder'] = $this->loadMetaTag('x:placeholder', $xpath, $metaNode);
-
-        return $result;
-    }
-
-    private function loadMetaTag($path, \DOMXPath $xpath, ?\DOMNode $context = null)
-    {
-        $result = [];
-
-        $translationKey = null;
-
-        /** @var \DOMElement $node */
-        foreach ($xpath->query($path, $context) as $node) {
-            $lang = $this->getValueFromXPath('@lang', $xpath, $node);
-
-            if (!$lang) {
-                $translationKey = $node->textContent;
-
-                continue;
-            }
-
-            $result[$lang] = $node->textContent;
-        }
-
-        if (!$translationKey) {
-            return $result;
-        }
-
-        $missingLocales = \array_diff($this->locales, \array_keys($result));
-        foreach ($missingLocales as $missingLocale) {
-            $result[$missingLocale] = $this->translator->trans($translationKey, [], 'admin', $missingLocale);
         }
 
         return $result;
@@ -276,7 +218,7 @@ class PropertiesXmlParser
         $result = [
             'name' => $this->getValueFromXPath('@name', $xpath, $node),
             'type' => $this->getValueFromXPath('@type', $xpath, $node, 'string'),
-            'meta' => $this->loadMeta($xpath, $node),
+            'meta' => $this->metaXmlParser->load($xpath, $node),
         ];
 
         $result['value'] = match ($result['type']) {

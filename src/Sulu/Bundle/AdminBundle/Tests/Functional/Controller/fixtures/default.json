@@ -270,7 +270,7 @@
                                     "required": false,
                                     "multilingual": true,
                                     "spaceAfter": null,
-                                    "minOccurs": null,
+                                    "minOccurs": 0,
                                     "maxOccurs": null,
                                     "onInvalid": null,
                                     "tags": []
@@ -295,7 +295,7 @@
                     "required": false,
                     "multilingual": true,
                     "spaceAfter": null,
-                    "minOccurs": null,
+                    "minOccurs": 0,
                     "maxOccurs": null,
                     "onInvalid": null,
                     "tags": []
