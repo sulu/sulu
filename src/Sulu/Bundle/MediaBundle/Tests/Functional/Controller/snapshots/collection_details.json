@@ -1,5 +1,5 @@
 {
-    "name": null,
+    "name": "collection_details",
     "form": {
         "title": {
             "disabledCondition": null,
@@ -70,5 +70,5 @@
     },
     "key": "collection_details",
     "tags": [],
-    "title": ""
+    "title": "Collection details"
 }

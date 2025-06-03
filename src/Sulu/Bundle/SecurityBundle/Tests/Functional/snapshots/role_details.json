@@ -1,5 +1,5 @@
 {
-    "name": null,
+    "name": "role_details",
     "form": {
         "name": {
             "disabledCondition": null,
@@ -133,5 +133,5 @@
     },
     "key": "role_details",
     "tags": [],
-    "title": ""
+    "title": "Role details"
 }

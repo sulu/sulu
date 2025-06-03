@@ -1,5 +1,5 @@
 {
-    "name": null,
+    "name": "media_details",
     "form": {
         "media_upload": {
             "disabledCondition": null,
@@ -338,5 +338,5 @@
     },
     "key": "media_details",
     "tags": [],
-    "title": ""
+    "title": "Media details"
 }

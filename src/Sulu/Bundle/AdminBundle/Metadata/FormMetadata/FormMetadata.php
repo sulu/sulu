@@ -70,7 +70,7 @@ class FormMetadata extends AbstractMetadata
     }
 
     /**
-     * @deprecated since 3.0, use setKey() instead
+     * @deprecated since 3.0, use setName() instead
      */
     #[VirtualProperty]
     #[SerializedName('name')]
@@ -119,7 +119,7 @@ class FormMetadata extends AbstractMetadata
 
         return \count($this->titles)
             ? $this->titles[\array_key_first($this->titles)]
-            : ($this->key ? \ucfirst($this->key) : '');
+            : ($this->key ? \ucfirst(\str_replace(['_', '-'], ' ', $this->key)) : '');
     }
 
     /**

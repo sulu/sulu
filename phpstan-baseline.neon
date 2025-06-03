@@ -1951,6 +1951,12 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/FormMetadata/FormMetadataMapper.php
 
 		-
+			message: '#^Parameter \#1 \$key of method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\FormMetadata\:\:setKey\(\) expects string, float\|int\|string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/FormMetadata/FormMetadataMapper.php
+
+		-
 			message: '#^Parameter \#1 \$labels of method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\ItemMetadata\:\:setLabels\(\) expects array\<string, string\>, array given\.$#'
 			identifier: argument.type
 			count: 2
@@ -1964,12 +1970,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#1 \$name of class Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\SectionMetadata constructor expects string, float\|int\|string given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/FormMetadata/FormMetadataMapper.php
-
-		-
-			message: '#^Parameter \#1 \$name of method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\FormMetadata\:\:setName\(\) expects string, float\|int\|string given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/AdminBundle/FormMetadata/FormMetadataMapper.php
@@ -2096,12 +2096,6 @@ parameters:
 
 		-
 			message: '#^Method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\FormMetadata\:\:setKey\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/FormMetadata.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\FormMetadata\:\:setName\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
 			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/FormMetadata.php
@@ -3229,6 +3223,12 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
 
 		-
+			message: '#^Parameter \#1 \$key of method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\FormMetadata\:\:setKey\(\) expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
+
+		-
 			message: '#^Parameter \#1 \$labels of method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\ItemMetadata\:\:setLabels\(\) expects array\<string, string\>, mixed given\.$#'
 			identifier: argument.type
 			count: 2
@@ -3248,12 +3248,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#1 \$name of class Sulu\\Component\\Content\\Exception\\InvalidDefaultTypeException constructor expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
-
-		-
-			message: '#^Parameter \#1 \$name of method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\FormMetadata\:\:setName\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/PropertiesXmlParser.php
@@ -3517,13 +3511,13 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/StructureFormMetadataLoader.php
 
 		-
-			message: '#^Parameter \#1 \$key of method Sulu\\Component\\Webspace\\Manager\\WebspaceManagerInterface\:\:findWebspaceByKey\(\) expects string\|null, mixed given\.$#'
+			message: '#^Parameter \#1 \$key of method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\FormMetadata\:\:setKey\(\) expects string, float\|int\|string given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/StructureFormMetadataLoader.php
 
 		-
-			message: '#^Parameter \#1 \$name of method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\FormMetadata\:\:setName\(\) expects string, float\|int\|string given\.$#'
+			message: '#^Parameter \#1 \$key of method Sulu\\Component\\Webspace\\Manager\\WebspaceManagerInterface\:\:findWebspaceByKey\(\) expects string\|null, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/StructureFormMetadataLoader.php
