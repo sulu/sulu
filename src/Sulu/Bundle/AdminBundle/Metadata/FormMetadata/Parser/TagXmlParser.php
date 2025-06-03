@@ -33,13 +33,14 @@ class TagXmlParser
         foreach ($tagNodes as $node) {
             $tag = [
                 'name' => null,
+                'priority' => null,
                 'attributes' => [],
             ];
 
             /** @var string $key */
             /** @var \DOMAttr $attr */
             foreach ($node->attributes ?? [] as $key => $attr) {
-                if (\in_array($key, ['name'])) {
+                if (\in_array($key, ['name', 'priority'], true)) {
                     $tag[$key] = $attr->value;
                 } else {
                     $tag['attributes'][$key] = $attr->value;
@@ -53,6 +54,7 @@ class TagXmlParser
 
             $tagMetadata = new TagMetadata();
             $tagMetadata->setName($tag['name']);
+            $tagMetadata->setPriority($tag['priority']);
             $tagMetadata->setAttributes($tag['attributes']);
 
             $result[] = $tagMetadata;
