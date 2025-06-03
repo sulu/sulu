@@ -54,7 +54,7 @@ class TagXmlParser
 
             $tagMetadata = new TagMetadata();
             $tagMetadata->setName($tag['name']);
-            $tagMetadata->setPriority($tag['priority']);
+            $tagMetadata->setPriority(\is_numeric($tag['priority']) ? \intval($tag['priority']) : null);
             $tagMetadata->setAttributes($tag['attributes']);
 
             $result[] = $tagMetadata;
