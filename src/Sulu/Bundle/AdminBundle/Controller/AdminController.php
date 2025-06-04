@@ -21,11 +21,10 @@ use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationRegistry;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewRegistry;
 use Sulu\Bundle\AdminBundle\FieldType\FieldTypeOptionRegistryInterface;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
+use Sulu\Bundle\AdminBundle\SmartContent\SmartContentProviderInterface;
 use Sulu\Bundle\ContactBundle\Contact\ContactManagerInterface;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkProviderPoolInterface;
 use Sulu\Component\Localization\Manager\LocalizationManagerInterface;
-use Sulu\Component\SmartContent\DataProviderInterface;
-use Sulu\Component\SmartContent\DataProviderPoolInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -48,6 +47,7 @@ class AdminController
      * @param array<mixed> $resources
      * @param array<string> $locales
      * @param array<string> $translations
+     * @param iterable<SmartContentProviderInterface> $smartContentProviders
      */
     public function __construct(
         private UrlGeneratorInterface $urlGenerator,
@@ -62,7 +62,7 @@ class AdminController
         private NavigationRegistry $navigationRegistry,
         private FieldTypeOptionRegistryInterface $fieldTypeOptionRegistry,
         private ContactManagerInterface $contactManager,
-        private ?DataProviderPoolInterface $dataProviderPool,
+        private iterable $smartContentProviders,
         private LinkProviderPoolInterface $linkProviderPool,
         private LocalizationManagerInterface $localizationManager,
         private string $environment,
@@ -76,7 +76,7 @@ class AdminController
         ?bool $collaborationEnabled = null,
         private ?string $passwordPattern = null,
         private ?string $passwordInfoTranslationKey = null,
-        private bool $hasSingleSignOnProvider = false
+        private bool $hasSingleSignOnProvider = false,
     ) {
         if (null === $collaborationEnabled) {
             @trigger_deprecation('sulu/sulu', '2.3', 'Instantiating the AdminController without the $collaborationEnabled argument is deprecated!');
@@ -88,7 +88,7 @@ class AdminController
     {
         $endpoints = [
             'config' => $this->urlGenerator->generate('sulu_admin.config'),
-            'items' => $this->urlGenerator->generate('sulu_page.get_items'),
+            'items' => $this->urlGenerator->generate('sulu_admin.get_items'),
             'loginCheck' => $this->urlGenerator->generate('sulu_admin.login_check'),
             'logout' => $this->urlGenerator->generate('sulu_admin.logout'),
             'profileSettings' => $this->urlGenerator->generate('sulu_security.patch_profile_settings'),
@@ -117,7 +117,7 @@ class AdminController
                 'sulu_version' => $this->suluVersion,
                 'app_version' => $this->appVersion,
                 'has_single_sign_on' => $this->hasSingleSignOnProvider,
-            ]
+            ],
         ));
     }
 
@@ -135,14 +135,14 @@ class AdminController
                 'fieldTypeOptions' => $this->fieldTypeOptionRegistry->toArray(),
                 'internalLinkTypes' => $this->linkProviderPool->getConfiguration(),
                 'localizations' => \array_values($this->localizationManager->getLocalizations()),
-                'navigation' => \array_map(function(NavigationItem $navigationItem) {
+                'navigation' => \array_map(function (NavigationItem $navigationItem) {
                     return $navigationItem->toArray();
                 }, \array_values($this->navigationRegistry->getNavigationItems())),
                 'routes' => $this->viewRegistry->getViews(),
                 'resources' => $this->resources,
-                'smartContent' => \array_map(function(DataProviderInterface $dataProvider) {
+                'smartContent' => \array_map(function (SmartContentProviderInterface $dataProvider) {
                     return $dataProvider->getConfiguration();
-                }, $this->dataProviderPool?->getAll() ?? []),
+                }, iterator_to_array($this->smartContentProviders)),
                 'user' => $user,
                 'contact' => $contact,
                 'collaborationEnabled' => $this->collaborationEnabled,

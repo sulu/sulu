@@ -2,36 +2,29 @@
 
 declare(strict_types=1);
 
-/*
- * This file is part of Sulu.
- *
- * (c) Sulu GmbH
- *
- * This source file is subject to the MIT license that is bundled
- * with this source code in the file LICENSE.
- */
-
 namespace Sulu\Content\Application\ContentResolver\Value;
 
 /**
  * @internal This class is intended for internal use only within the package/library. Modifying or depending on this class may result in unexpected behavior and is not supported.
  */
-class ResolvableResource implements ResolvableInterface
+class SmartResolvable implements ResolvableInterface
 {
     private \Closure $callback;
 
+    /**
+     * @param array<mixed> $data
+     */
     public function __construct(
-        private string|int $id,
+        private array $data,
         private string $resourceLoaderKey,
         private int $priority,
-        ?\Closure $resourceCallback = null,
     ) {
         $this->callback = $resourceCallback ?? (static fn (mixed $resource) => $resource);
     }
 
     public function getId(): string|int
     {
-        return $this->id;
+        return \spl_object_hash($this);
     }
 
     public function getResourceLoaderKey(): string
@@ -39,13 +32,18 @@ class ResolvableResource implements ResolvableInterface
         return $this->resourceLoaderKey;
     }
 
+    public function getPriority(): int
+    {
+        return $this->priority;
+    }
+
     public function executeResourceCallback(mixed $resource): mixed
     {
         return ($this->callback)($resource);
     }
 
-    public function getPriority(): int
+    public function getData(): array
     {
-        return $this->priority;
+        return $this->data;
     }
 }

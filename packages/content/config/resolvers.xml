@@ -13,6 +13,7 @@
             />
             <argument type="service" id="sulu_content.resource_loader_provider"/>
             <argument type="service" id="sulu_content.content_aggregator"/>
+            <argument type="service" id="sulu_content.smart_resolver_provider"/>
         </service>
         <service id="Sulu\Content\Application\ContentResolver\ContentResolverInterface" alias="sulu_content.content_resolver"/>
 
@@ -131,6 +132,37 @@
                  class="Sulu\Content\Application\PropertyResolver\Resolver\DateTimePropertyResolver">
 
             <tag name="sulu_content.property_resolver"/>
+        </service>
+
+        <service id="sulu_content.smart_content_property_resolver"
+                 class="Sulu\Content\Application\PropertyResolver\Resolver\SmartContentPropertyResolver">
+            <argument type="service" id="request_stack"/>
+
+            <tag name="sulu_content.property_resolver"/>
+        </service>
+
+        <!--- SmartResolver -->
+        <service id="sulu_content.smart_resolver_provider"
+                 class="Sulu\Content\Application\SmartResolver\SmartResolverProvider">
+            <argument
+                type="tagged_locator"
+                tag="sulu_content.smart_resolver"
+                default-index-method="getType"
+                index-by="type"
+            />
+        </service>
+
+        <service id="sulu_content.smart_content_smart_resolver"
+                 class="Sulu\Content\Application\SmartResolver\Resolver\SmartContentSmartResolver">
+            <argument
+                type="tagged_locator"
+                tag="sulu_content.smart_content_provider"
+                default-index-method="getType"
+                index-by="type"
+            />
+            <argument type="service" id="request_stack"/>
+
+            <tag name="sulu_content.smart_resolver" type="smart_content"/>
         </service>
     </services>
 </container>

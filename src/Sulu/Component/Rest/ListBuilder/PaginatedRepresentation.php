@@ -39,9 +39,9 @@ class PaginatedRepresentation extends CollectionRepresentation implements Repres
      */
     protected $pages;
 
-    public function __construct($data, string $rel, ?int $page, int $limit, int $total)
+    public function __construct($data, string $rel, ?int $page, int $limit, int $total, array $metadata = [])
     {
-        parent::__construct($data, $rel);
+        parent::__construct($data, $rel, $metadata);
         $this->page = $page;
         $this->limit = $limit;
         $this->total = $total;

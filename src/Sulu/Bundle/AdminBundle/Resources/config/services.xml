@@ -14,7 +14,7 @@
             <argument type="service" id="sulu_admin.navigation_registry"/>
             <argument type="service" id="sulu_admin.field_type_option_registry"/>
             <argument type="service" id="sulu_contact.contact_manager" />
-            <argument type="service" id="sulu_page.smart_content.data_provider_pool" on-invalid="null" />
+            <argument type="tagged_iterator" tag="sulu_content.smart_content_provider" default-index-method="getType" index-by="type"/>
             <argument type="service" id="sulu_markup.link_tag.provider_pool"/>
             <argument type="service" id="sulu.core.localization_manager" />
             <argument>%kernel.environment%</argument>
@@ -390,6 +390,18 @@
         <service id="sulu_admin.icon_provider.svg" class="Sulu\Bundle\AdminBundle\Icon\providers\SvgProvider">
             <argument type="service" id="sulu_admin.icon_cache"/>
             <tag name="sulu_admin.icon_provider" type="svg" />
+        </service>
+
+        <!-- SmartContent -->
+        <service id="sulu_admin.smart_content_item_controller"
+                 class="Sulu\Bundle\AdminBundle\Controller\SmartContentItemController"
+                 public="true">
+            <argument type="service" id="fos_rest.view_handler"/>
+            <argument type="service" id="sulu_tag.tag_manager"/>
+            <argument type="tagged_locator" tag="sulu_content.smart_content_provider" default-index-method="getType" index-by="type"/>
+            <argument type="service" id="security.token_storage" on-invalid="null"/>
+
+            <tag name="sulu.context" context="admin"/>
         </service>
 
         <!-- Teaser -->
