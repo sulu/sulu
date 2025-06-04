@@ -13,12 +13,9 @@ namespace Sulu\Content\Application\PropertyResolver\BlockVisitor;
 
 class HiddenBlockVisitor implements BlockVisitorInterface
 {
-    /**
-     * @param array<string, mixed> $block
-     */
     public function visit(array $block): ?array
     {
-        $blockPropertyTypeSettings = $block['settings'];
+        $blockPropertyTypeSettings = $block['settings'] ?? [];
 
         return \is_array($blockPropertyTypeSettings) && !empty($blockPropertyTypeSettings['hidden'])
             ? null

@@ -22,12 +22,9 @@ class ScheduleBlockVisitor implements BlockVisitorInterface
     ) {
     }
 
-    /**
-     * @param array<string, mixed> $block
-     */
     public function visit(array $block): ?array
     {
-        $blockPropertyTypeSettings = $block['settings'];
+        $blockPropertyTypeSettings = $block['settings'] ?? [];
 
         if (!\is_array($blockPropertyTypeSettings)
             || !isset($blockPropertyTypeSettings['schedules_enabled'])

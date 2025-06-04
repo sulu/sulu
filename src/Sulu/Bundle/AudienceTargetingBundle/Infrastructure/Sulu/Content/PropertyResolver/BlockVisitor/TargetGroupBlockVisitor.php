@@ -28,7 +28,7 @@ class TargetGroupBlockVisitor implements BlockVisitorInterface
 
     public function visit(array $block): ?array
     {
-        $blockPropertyTypeSettings = $block['settings'];
+        $blockPropertyTypeSettings = $block['settings'] ?? [];
 
         if (\is_array($blockPropertyTypeSettings)
             && isset($blockPropertyTypeSettings['target_groups_enabled'])

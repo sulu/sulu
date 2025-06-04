@@ -20,12 +20,9 @@ class SegmentBlockVisitor implements BlockVisitorInterface
     {
     }
 
-    /**
-     * @param array<string, mixed> $block
-     */
     public function visit(array $block): ?array
     {
-        $blockPropertyTypeSettings = $block['settings'];
+        $blockPropertyTypeSettings = $block['settings'] ?? [];
 
         $webspace = $this->requestAnalyzer->getWebspace();
         $webspaceKey = $webspace ? $webspace->getKey() : null;
