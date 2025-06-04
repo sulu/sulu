@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Visitor;
 
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\ItemMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\OptionMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\SectionMetadata;
@@ -38,6 +39,10 @@ class BlockSettingsFormMetadataVisitor implements TypedFormMetadataVisitorInterf
             if ($itemMetadata instanceof SectionMetadata) {
                 $this->enhanceBlockMetadata($itemMetadata->getItems());
 
+                continue;
+            }
+
+            if (!$itemMetadata instanceof FieldMetadata) {
                 continue;
             }
 

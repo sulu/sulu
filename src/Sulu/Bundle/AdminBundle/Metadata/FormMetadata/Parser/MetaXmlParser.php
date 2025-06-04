@@ -46,7 +46,7 @@ class MetaXmlParser
     public function load(\DOMXPath $xpath, \DOMNode $context): array
     {
         $result = [];
-        $metaNode = $xpath->query('x:meta', $context)->item(0);
+        $metaNode = ($xpath->query('x:meta', $context) ?: null)?->item(0);
 
         if (!$metaNode) {
             return $result;
@@ -59,15 +59,17 @@ class MetaXmlParser
         return $result;
     }
 
-    private function loadMetaTag($path, \DOMXPath $xpath, ?\DOMNode $context = null)
+    /**
+     * @return array<string, string>
+     */
+    private function loadMetaTag(string $path, \DOMXPath $xpath, ?\DOMNode $context = null): array
     {
         $result = [];
 
         $translationKey = null;
 
-        /** @var \DOMElement $node */
-        foreach ($xpath->query($path, $context) as $node) {
-            $lang = $this->getValueFromXPath('@lang', $xpath, $node);
+        foreach (($xpath->query($path, $context) ?: []) as $node) {
+            $lang = (string) $this->getValueFromXPath('@lang', $xpath, $node);
 
             if (!$lang) {
                 $translationKey = $node->textContent;

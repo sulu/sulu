@@ -54,7 +54,7 @@ class PropertiesXmlParser
         $result = [];
 
         /** @var \DOMElement $node */
-        foreach ($xpath->query('x:*', $context) as $node) {
+        foreach (($xpath->query('x:*', $context) ?: []) as $node) {
             if ('property' === $node->tagName) {
                 $value = $this->loadProperty($xpath, $node, $formKey);
                 $result[$value['name']] = $value;
@@ -70,6 +70,49 @@ class PropertiesXmlParser
         return $result;
     }
 
+    /**
+     * @return array{
+     *     name: string,
+     *     type: string,
+     *     default-type: string|null,
+     *     minOccurs: int|null,
+     *     maxOccurs: int|null,
+     *     colspan: int|null,
+     *     cssClass: string|null,
+     *     spaceAfter: int|null,
+     *     disabledCondition: int|null,
+     *     visibleCondition: int|null,
+     *     mandatory: bool,
+     *     multilingual: bool,
+     *     onInvalid: bool,
+     *     tags: TagMetadata[],
+     *     params: array<array{
+     *         name: string|null,
+     *         type: string|null,
+     *         meta: array{
+     *             title?: array<string, string>,
+     *             info_text?: array<string, string>,
+     *             placeholder?: array<string, string>,
+     *         },
+     *         collection?: array<mixed>,
+     *     }>,
+     *     meta: array{
+     *        title?: array<string, string>,
+     *        info_text?: array<string, string>,
+     *        placeholder?: array<string, string>,
+     *     },
+     *     types: array<string, array{
+     *         name: string|null,
+     *         ref: bool,
+     *         meta: array{
+     *             title?: array<string, string>,
+     *             info_text?: array<string, string>,
+     *             placeholder?: array<string, string>,
+     *         },
+     *         properties?: array<string, array<string, mixed>>,
+     *     }>
+     * }
+     */
     private function loadProperty(\DOMXPath $xpath, \DOMNode $node, ?string $formKey)
     {
         $result = $this->loadValues(
@@ -114,6 +157,49 @@ class PropertiesXmlParser
         return $result;
     }
 
+    /**
+     * @return array{
+     *     name: string,
+     *     type: string,
+     *     default-type: string|null,
+     *     minOccurs: int|null,
+     *     maxOccurs: int|null,
+     *     colspan: int|null,
+     *     cssClass: string|null,
+     *     spaceAfter: int|null,
+     *     disabledCondition: int|null,
+     *     visibleCondition: int|null,
+     *     mandatory: bool,
+     *     multilingual: bool,
+     *     onInvalid: bool,
+     *     tags: TagMetadata[],
+     *     params: array<array{
+     *         name: string|null,
+     *         type: string|null,
+     *         meta: array{
+     *             title?: array<string, string>,
+     *             info_text?: array<string, string>,
+     *             placeholder?: array<string, string>,
+     *         },
+     *         collection?: array<mixed>,
+     *     }>,
+     *     meta: array{
+     *        title?: array<string, string>,
+     *        info_text?: array<string, string>,
+     *        placeholder?: array<string, string>,
+     *     },
+     *     types: array<string, array{
+     *         name: string|null,
+     *         ref: bool,
+     *         meta: array{
+     *             title?: array<string, string>,
+     *             info_text?: array<string, string>,
+     *             placeholder?: array<string, string>,
+     *         },
+     *         properties?: array<string, array<string, mixed>>,
+     *     }>
+     * }
+     */
     private function loadBlock(\DOMXPath $xpath, \DOMNode $node, ?string $formKey)
     {
         $result = $this->loadProperty($xpath, $node, $formKey);
@@ -122,7 +208,33 @@ class PropertiesXmlParser
         return $result;
     }
 
-    private function loadSection(\DOMXPath $xpath, \DOMNode $node, ?string $formKey)
+    /**
+     * @return array{
+     *      name: string,
+     *      colspan: int|null,
+     *      cssClass: string|null,
+     *      disabledCondition: string|null,
+     *      visibleCondition: string|null,
+     *      type: string,
+     *      params: array<array{
+     *          name: string|null,
+     *          type: string|null,
+     *          meta: array{
+     *              title?: array<string, string>,
+     *              info_text?: array<string, string>,
+     *              placeholder?: array<string, string>,
+     *          },
+     *          collection?: array<mixed>,
+     *      }>,
+     *      meta: array{
+     *         title?: array<string, string>,
+     *         info_text?: array<string, string>,
+     *         placeholder?: array<string, string>,
+     *      },
+     *      properties?: array<string, array<string, mixed>>,
+     * }
+     */
+    private function loadSection(\DOMXPath $xpath, \DOMNode $node, ?string $formKey): array
     {
         $result = $this->loadValues(
             $xpath,
@@ -134,22 +246,37 @@ class PropertiesXmlParser
         $result['params'] = $this->loadParams('x:params/x:param', $xpath, $node);
         $result['meta'] = $this->metaXmlParser->load($xpath, $node);
 
-        $propertiesNode = $xpath->query('x:properties', $node)->item(0);
+        $propertiesNode = ($xpath->query('x:properties', $node) ?: null)?->item(0);
+        \assert(null !== $propertiesNode, 'The properties tag not found in section node.');
         $result['properties'] = $this->loadProperties($xpath, $propertiesNode, $formKey);
 
         return $result;
     }
 
-    private function loadTags(\DOMXPath $xpath, ?\DOMNode $context = null)
+    /**
+     * @return array<TagMetadata>
+     */
+    private function loadTags(\DOMXPath $xpath, ?\DOMNode $context = null): array
     {
         return $this->tagXmlParser->load($xpath, $xpath->query('x:tag', $context));
     }
 
-    private function loadTypes(\DOMXPath $xpath, ?\DOMNode $context, ?string $formKey)
+    /**
+     * @return array<string, array{
+     *      name: string|null,
+     *      ref: bool,
+     *      meta: array{
+     *          title?: array<string, string>,
+     *          info_text?: array<string, string>,
+     *          placeholder?: array<string, string>,
+     *      },
+     *      properties?: array<string, array<string, mixed>>,
+     *  }>
+     */
+    private function loadTypes(\DOMXPath $xpath, ?\DOMNode $context, ?string $formKey): array
     {
         $result = [];
 
-        /** @var \DOMElement $node */
         foreach ($xpath->query('x:types/x:type', $context) as $node) {
             $value = $this->loadType($xpath, $node, $formKey);
             $result[$value['name']] = $value;
@@ -158,7 +285,19 @@ class PropertiesXmlParser
         return $result;
     }
 
-    private function loadType(\DOMXPath $xpath, \DOMNode $node, ?string $formKey)
+    /**
+     * @return array{
+     *     name: string|null,
+     *     ref: bool,
+     *     meta: array{
+     *         title?: array<string, string>,
+     *         info_text?: array<string, string>,
+     *         placeholder?: array<string, string>,
+     *     },
+     *     properties?: array<string, array<string, mixed>>,
+     * }
+     */
+    private function loadType(\DOMXPath $xpath, \DOMNode $node, ?string $formKey): array
     {
         $result = $this->loadValues($xpath, $node, ['name', 'ref']);
         if ($result['ref'] && $result['name']) {
@@ -190,7 +329,10 @@ class PropertiesXmlParser
         return $result;
     }
 
-    private function loadValues(\DOMXPath $xpath, \DOMNode $node, $keys, $prefix = '@')
+    /**
+     * @param array<string> $keys
+     */
+    private function loadValues(\DOMXPath $xpath, \DOMNode $node, array $keys, string $prefix = '@')
     {
         $result = [];
 
@@ -201,19 +343,43 @@ class PropertiesXmlParser
         return $result;
     }
 
-    private function loadParams($path, \DOMXPath $xpath, ?\DOMNode $context = null)
+    /**
+     * @return array<array{
+     *      name: string|null,
+     *      type: string|null,
+     *      meta: array{
+     *          title?: array<string, string>,
+     *          info_text?: array<string, string>,
+     *          placeholder?: array<string, string>,
+     *      },
+     *      collection?: array<mixed>,
+     *  }>
+     */
+    private function loadParams(string $path, \DOMXPath $xpath, ?\DOMNode $context = null): array
     {
         $result = [];
 
         /** @var \DOMElement $node */
-        foreach ($xpath->query($path, $context) as $node) {
+        foreach (($xpath->query($path, $context) ?: []) as $node) {
             $result[] = $this->loadParam($xpath, $node);
         }
 
         return $result;
     }
 
-    private function loadParam(\DOMXPath $xpath, \DOMNode $node)
+    /**
+     * @return array{
+     *     name: string|null,
+     *     type: string|null,
+     *     meta: array{
+     *         title?: array<string, string>,
+     *         info_text?: array<string, string>,
+     *         placeholder?: array<string, string>,
+     *     },
+     *     collection?: array<mixed>,
+     * }
+     */
+    private function loadParam(\DOMXPath $xpath, \DOMNode $node): array
     {
         $result = [
             'name' => $this->getValueFromXPath('@name', $xpath, $node),
