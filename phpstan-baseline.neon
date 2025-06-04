@@ -2053,34 +2053,16 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/FormMetadata/FormMetadataMapper.php
 
 		-
-			message: '#^Cannot call method getType\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/ExpressionFormMetadataVisitor.php
-
-		-
-			message: '#^Cannot call method getValue\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/ExpressionFormMetadataVisitor.php
-
-		-
-			message: '#^Cannot call method setValue\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/ExpressionFormMetadataVisitor.php
-
-		-
-			message: '#^Parameter \#1 \$expression of method Symfony\\Component\\ExpressionLanguage\\ExpressionLanguage\:\:evaluate\(\) expects string\|Symfony\\Component\\ExpressionLanguage\\Expression, mixed given\.$#'
+			message: '#^Parameter \#1 \$expression of method Symfony\\Component\\ExpressionLanguage\\ExpressionLanguage\:\:evaluate\(\) expects string\|Symfony\\Component\\ExpressionLanguage\\Expression, array\<Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\OptionMetadata\>\|int\|string given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/ExpressionFormMetadataVisitor.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\FieldMetadata\:\:getOptions\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
+			message: '#^Parameter \#1 \$value of method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\OptionMetadata\:\:setValue\(\) expects array\<Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\OptionMetadata\>\|int\|string, mixed given\.$#'
+			identifier: argument.type
 			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/FieldMetadata.php
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/ExpressionFormMetadataVisitor.php
 
 		-
 			message: '#^Property Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\FieldMetadata\:\:\$onInvalid \(string\) does not accept string\|null\.$#'
@@ -4195,12 +4177,6 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Tests/Functional/Metadata/FormMetadata/XmlFormMetadataLoaderTest.php
 
 		-
-			message: '#^Cannot call method getName\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Tests/Functional/Metadata/FormMetadata/XmlFormMetadataLoaderTest.php
-
-		-
 			message: '#^Cannot call method getType\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -4209,7 +4185,7 @@ parameters:
 		-
 			message: '#^Cannot call method getValue\(\) on mixed\.$#'
 			identifier: method.nonObject
-			count: 2
+			count: 1
 			path: src/Sulu/Bundle/AdminBundle/Tests/Functional/Metadata/FormMetadata/XmlFormMetadataLoaderTest.php
 
 		-
@@ -4843,7 +4819,7 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/FormMetadata/FormMetadataMapperTest.php
 
 		-
-			message: '#^Cannot access offset 0 on mixed\.$#'
+			message: '#^Cannot access offset 0 on array\<Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\OptionMetadata\>\|int\|string\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 6
 			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/FormMetadata/FormMetadataMapperTest.php
@@ -4861,21 +4837,27 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/FormMetadata/FormMetadataMapperTest.php
 
 		-
-			message: '#^Cannot call method getInfoText\(\) on mixed\.$#'
+			message: '#^Cannot call method getInfoText\(\) on string\|Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\OptionMetadata\.$#'
 			identifier: method.nonObject
-			count: 2
+			count: 1
 			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/FormMetadata/FormMetadataMapperTest.php
 
 		-
 			message: '#^Cannot call method getName\(\) on mixed\.$#'
 			identifier: method.nonObject
-			count: 6
+			count: 2
 			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/FormMetadata/FormMetadataMapperTest.php
 
 		-
-			message: '#^Cannot call method getPlaceholder\(\) on mixed\.$#'
+			message: '#^Cannot call method getName\(\) on string\|Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\OptionMetadata\.$#'
 			identifier: method.nonObject
-			count: 2
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/FormMetadata/FormMetadataMapperTest.php
+
+		-
+			message: '#^Cannot call method getPlaceholder\(\) on string\|Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\OptionMetadata\.$#'
+			identifier: method.nonObject
+			count: 1
 			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/FormMetadata/FormMetadataMapperTest.php
 
 		-
@@ -4885,21 +4867,21 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/FormMetadata/FormMetadataMapperTest.php
 
 		-
-			message: '#^Cannot call method getTitle\(\) on mixed\.$#'
+			message: '#^Cannot call method getTitle\(\) on string\|Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\OptionMetadata\.$#'
 			identifier: method.nonObject
-			count: 3
+			count: 1
 			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/FormMetadata/FormMetadataMapperTest.php
 
 		-
-			message: '#^Cannot call method getType\(\) on mixed\.$#'
+			message: '#^Cannot call method getType\(\) on string\|Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\OptionMetadata\.$#'
 			identifier: method.nonObject
-			count: 4
+			count: 1
 			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/FormMetadata/FormMetadataMapperTest.php
 
 		-
-			message: '#^Cannot call method getValue\(\) on mixed\.$#'
+			message: '#^Cannot call method getValue\(\) on string\|Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\OptionMetadata\.$#'
 			identifier: method.nonObject
-			count: 9
+			count: 1
 			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/FormMetadata/FormMetadataMapperTest.php
 
 		-
@@ -5077,31 +5059,25 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/Metadata/FormMetadata/Loader/FormXmlLoaderTest.php
 
 		-
-			message: '#^Cannot access offset 0 on mixed\.$#'
+			message: '#^Cannot access offset 0 on array\<Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\OptionMetadata\>\|int\|string\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 2
 			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/Metadata/FormMetadata/Visitor/LocalesOptionFormMetadataVisitorTest.php
 
 		-
-			message: '#^Cannot access offset 1 on mixed\.$#'
+			message: '#^Cannot access offset 1 on array\<Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\OptionMetadata\>\|int\|string\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 2
 			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/Metadata/FormMetadata/Visitor/LocalesOptionFormMetadataVisitorTest.php
 
 		-
-			message: '#^Cannot call method getType\(\) on mixed\.$#'
+			message: '#^Cannot call method getValue\(\) on string\|Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\OptionMetadata\.$#'
 			identifier: method.nonObject
-			count: 2
+			count: 4
 			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/Metadata/FormMetadata/Visitor/LocalesOptionFormMetadataVisitorTest.php
 
 		-
-			message: '#^Cannot call method getValue\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 11
-			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/Metadata/FormMetadata/Visitor/LocalesOptionFormMetadataVisitorTest.php
-
-		-
-			message: '#^Parameter \#2 \$haystack of method PHPUnit\\Framework\\Assert\:\:assertCount\(\) expects Countable\|iterable, mixed given\.$#'
+			message: '#^Parameter \#2 \$haystack of method PHPUnit\\Framework\\Assert\:\:assertCount\(\) expects Countable\|iterable, array\<Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\OptionMetadata\>\|int\|string given\.$#'
 			identifier: argument.type
 			count: 2
 			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/Metadata/FormMetadata/Visitor/LocalesOptionFormMetadataVisitorTest.php

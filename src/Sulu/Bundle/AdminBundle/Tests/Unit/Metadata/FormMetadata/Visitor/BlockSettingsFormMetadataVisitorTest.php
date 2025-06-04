@@ -47,7 +47,7 @@ class BlockSettingsFormMetadataVisitorTest extends TestCase
                     'value' => 'page_block_settings',
                 ],
             ],
-            \array_map(function(OptionMetadata $optionMetadata) {
+            \array_map(function(OptionMetadata $optionMetadata): array {
                 return [
                     'name' => $optionMetadata->getName(),
                     'value' => $optionMetadata->getValue(),
@@ -80,7 +80,7 @@ class BlockSettingsFormMetadataVisitorTest extends TestCase
                     'value' => 'other_block_settings',
                 ],
             ],
-            \array_map(function(OptionMetadata $optionMetadata) {
+            \array_map(function(OptionMetadata $optionMetadata): array {
                 return [
                     'name' => $optionMetadata->getName(),
                     'value' => $optionMetadata->getValue(),
@@ -118,7 +118,7 @@ class BlockSettingsFormMetadataVisitorTest extends TestCase
                     'value' => 'page_block_settings',
                 ],
             ],
-            \array_map(function(OptionMetadata $optionMetadata) {
+            \array_map(function(OptionMetadata $optionMetadata): array {
                 return [
                     'name' => $optionMetadata->getName(),
                     'value' => $optionMetadata->getValue(),

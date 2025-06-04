@@ -68,6 +68,9 @@ class FieldMetadata extends ItemMetadata
         $this->type = $type;
     }
 
+    /**
+     * @return array<OptionMetadata>
+     */
     public function getOptions(): array
     {
         return $this->options;
@@ -94,7 +97,7 @@ class FieldMetadata extends ItemMetadata
     }
 
     /**
-     * @return FormMetadata[]
+     * @return array<FormMetadata>
      */
     public function getTypes(): array
     {
@@ -167,7 +170,7 @@ class FieldMetadata extends ItemMetadata
     }
 
     /**
-     * @return TagMetadata[]
+     * @return array<TagMetadata>
      */
     public function getTags(): array
     {
