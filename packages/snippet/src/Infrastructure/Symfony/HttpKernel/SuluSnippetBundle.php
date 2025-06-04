@@ -33,7 +33,9 @@ use Sulu\Snippet\Domain\Model\SnippetAreaInterface;
 use Sulu\Snippet\Domain\Model\SnippetDimensionContent;
 use Sulu\Snippet\Domain\Model\SnippetDimensionContentInterface;
 use Sulu\Snippet\Domain\Model\SnippetInterface;
+use Sulu\Snippet\Domain\Repository\SnippetAreaRepositoryInterface;
 use Sulu\Snippet\Domain\Repository\SnippetRepositoryInterface;
+use Sulu\Snippet\Infrastructure\Doctrine\Repository\SnippetAreaRepository;
 use Sulu\Snippet\Infrastructure\Doctrine\Repository\SnippetRepository;
 use Sulu\Snippet\Infrastructure\Sulu\Admin\SnippetAdmin;
 use Sulu\Snippet\Infrastructure\Sulu\Admin\SnippetAreaAdmin;
@@ -174,6 +176,11 @@ final class SuluSnippetBundle extends AbstractBundle
         // Snippet area
         $services->set('sulu_snippet.modify_snippet_area_handler')
             ->class(ModifySnippetAreaMessageHandler::class)
+            ->args([
+                new Reference(SnippetAreaRepositoryInterface::class),
+                new Reference(SnippetRepositoryInterface::class),
+                new Reference(EntityManagerInterface::class),
+            ])
             ->tag('messenger.message_handler');
 
         $services->set('sulu_snippet.remove_snippet_area_handler')
@@ -230,6 +237,14 @@ final class SuluSnippetBundle extends AbstractBundle
             ]);
 
         $services->alias(SnippetRepositoryInterface::class, 'sulu_snippet.snippet_repository');
+
+        $services->set('sulu_snippet.snippet_area_repository')
+            ->class(SnippetAreaRepository::class)
+            ->args([
+                new Reference('doctrine.orm.entity_manager'),
+            ]);
+
+        $services->alias(SnippetAreaRepositoryInterface::class, 'sulu_snippet.snippet_area_repository');
 
         // Controllers services
         $services->set('sulu_snippet.admin_snippet_controller')

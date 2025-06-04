@@ -18,8 +18,8 @@ use Sulu\Component\Rest\ListBuilder\Metadata\FieldDescriptorFactoryInterface;
 use Sulu\Component\Rest\ListBuilder\PaginatedRepresentation;
 use Sulu\Component\Rest\RestHelperInterface;
 use Sulu\Messenger\Infrastructure\Symfony\Messenger\FlushMiddleware\EnableFlushStamp;
+use Sulu\Snippet\Application\Message\ModifySnippetAreaMessage;
 use Sulu\Snippet\Application\Message\RemoveSnippetAreaMessage;
-use Sulu\Snippet\Application\Message\SetSnippetMessage;
 use Sulu\Snippet\Domain\Model\SnippetArea;
 use Sulu\Snippet\Domain\Model\SnippetAreaInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -63,14 +63,18 @@ final class SnippetAreaController
         $listBuilder = $this->listBuilderFactory->create(SnippetAreaInterface::class);
         $listBuilder->setIdField($fieldDescriptors['id']); // We need to set this because it's the uuid doctrine column
         $listBuilder->setParameter('locale', $request->query->get('locale'));
+        $listBuilder->setParameter('webspace', $request->query->get('webspace'));
 
         $this->restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
 
         $results = $listBuilder->execute();
+        dump($results);
         foreach ($this->snippetArea as $snippetArea) {
-            $missingSnippet = new SnippetArea();
-            $missingSnippet->setWebspaceKey($request->attributes->getString('webspace'));
-            $missingSnippet->setAreaKey($snippetArea['key']);
+            $missingSnippet = new SnippetArea(
+                null,
+                areaKey: $snippetArea['key'],
+                webspaceKey: $request->attributes->getString('webspace'),
+            );
             $results[] = $missingSnippet;
         }
 
@@ -79,7 +83,7 @@ final class SnippetAreaController
             SnippetAreaInterface::RESOURCE_KEY,
             (int) $listBuilder->getCurrentPage(),
             (int) $listBuilder->getLimit(),
-            $listBuilder->count(),
+            \count($results),
         );
 
         return new JsonResponse($this->normalizer->normalize(
@@ -96,7 +100,10 @@ final class SnippetAreaController
 
     public function putAction(Request $request): Response
     {
-        $message = new SetSnippetMessage($request->attributes->all());
+        $message = new ModifySnippetAreaMessage([
+            ...$request->attributes->all('_route_params'),
+            ...$request->request->all(),
+        ]);
 
         /** @see Sulu\Snippet\Application\MessageHandler\SetSnippetAreaMessageHandler */
         $this->handle(new Envelope($message, [new EnableFlushStamp()]));

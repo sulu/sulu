@@ -17,7 +17,6 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\SchemaTool;
 use Sulu\Bundle\TestBundle\Testing\AssertSnapshotTrait;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
-use Sulu\Snippet\Domain\Model\SnippetArea;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 /**
@@ -52,7 +51,7 @@ class SnippetAreaControllerTest extends SuluTestCase
     {
         self::purgeDatabase();
 
-        $this->client->jsonRequest('GET', '/admin/api/snippet-areas/sulu-io');
+        $this->client->jsonRequest('GET', '/admin/api/snippet-areas?webspace=sulu-io');
 
         $this->assertResponseSnapshot('snippet_area_cget.json', $this->client->getResponse(), 200);
 
@@ -63,16 +62,30 @@ class SnippetAreaControllerTest extends SuluTestCase
     {
         self::purgeDatabase();
 
-        $snippetArea = new SnippetArea();
-        $snippetArea->setWebspaceKey('sulu-io');
-        $snippetArea->setAreaKey('car');
+        $this->client->jsonRequest('POST', '/admin/api/snippets?locale=en', [
+            'template' => 'snippet',
+            'title' => 'Test Snippet',
+            'images' => null,
+            'excerptTitle' => 'Excerpt Title',
+            'excerptDescription' => 'Excerpt Description',
+            'excerptMore' => 'Excerpt More',
+            'excerptTags' => ['Tag 1', 'Tag 2'],
+            'excerptCategories' => [],
+            'excerptIcon' => null,
+            'excerptMedia' => null,
+        ]);
 
-        $this->entityManager->persist($snippetArea);
-        $this->entityManager->flush();
+        $response = $this->client->getResponse();
+        $id = \json_decode($response->getContent(), true)['id'];
 
-        $this->client->jsonRequest('GET', '/admin/api/snippet-areas/sulu-io');
+        $this->client->jsonRequest('PUT', '/admin/api/snippet-areas/car', [
+            'snippet' => ['uuid' => (string) $id],
+            'webspace' => 'sulu-io',
+        ]);
+        $this->assertResponseStatusCodeSame(200);
 
-        $this->assertResponseSnapshot('snippet_area_cget.json', $this->client->getResponse(), 200);
+        $this->client->jsonRequest('GET', '/admin/api/snippet-areas?webspace=sulu-io');
+        $this->assertResponseSnapshot('snippet_area_cget_partially_filled.json', $this->client->getResponse(), 200);
 
         self::ensureKernelShutdown();
     }

@@ -2,26 +2,6 @@
 <list xmlns="http://schemas.sulu.io/list-builder/list">
     <key>snippet_areas</key>
 
-    <joins name="creator">
-        <join>
-            <entity-name>%sulu.model.user.class%</entity-name>
-            <field-name>Sulu\Snippet\Domain\Model\SnippetAreaInterface.creator</field-name>
-        </join>
-        <join>
-            <entity-name>%sulu.model.contact.class%</entity-name>
-            <field-name>%sulu.model.user.class%.contact</field-name>
-        </join>
-    </joins>
-    <joins name="changer">
-        <join>
-            <entity-name>%sulu.model.user.class%</entity-name>
-            <field-name>Sulu\Snippet\Domain\Model\SnippetAreaInterface.changer</field-name>
-        </join>
-        <join>
-            <entity-name>%sulu.model.contact.class%</entity-name>
-            <field-name>%sulu.model.user.class%.contact</field-name>
-        </join>
-    </joins>
     <joins name="snippet">
         <join>
             <entity-name>%sulu.model.user.class%</entity-name>
@@ -35,53 +15,13 @@
 
     <properties>
         <!-- TODO should be uuid not id -->
-        <property name="id" translation="sulu_admin.uuid">
+        <property name="id" translation="sulu_admin.uuid" visibility="never">
             <field-name>uuid</field-name>
             <entity-name>Sulu\Snippet\Domain\Model\SnippetAreaInterface</entity-name>
         </property>
-
-        <property name="created" translation="sulu_admin.created">
-            <field-name>created</field-name>
+        <property name="key" translation="sulu_admin.uuid">
+            <field-name>areaKey</field-name>
             <entity-name>Sulu\Snippet\Domain\Model\SnippetAreaInterface</entity-name>
-            <transformer type="datetime"/>
         </property>
-
-        <property name="changed" translation="sulu_admin.changed">
-            <field-name>changed</field-name>
-            <entity-name>Sulu\Snippet\Domain\Model\SnippetAreaInterface</entity-name>
-            <transformer type="datetime"/>
-        </property>
-
-        <concatenation-property name="creator" visibility="yes" glue=" "
-                                translation="sulu_admin.creator" sortable="false">
-            <field>
-                <field-name>firstName</field-name>
-                <entity-name>%sulu.model.contact.class%</entity-name>
-
-                <joins ref="creator"/>
-            </field>
-            <field>
-                <field-name>lastName</field-name>
-                <entity-name>%sulu.model.contact.class%</entity-name>
-
-                <joins ref="creator"/>
-            </field>
-        </concatenation-property>
-
-        <concatenation-property name="changer" glue=" " translation="sulu_admin.changer"
-                                sortable="false">
-            <field>
-                <field-name>firstName</field-name>
-                <entity-name>%sulu.model.contact.class%</entity-name>
-
-                <joins ref="changer"/>
-            </field>
-            <field>
-                <field-name>lastName</field-name>
-                <entity-name>%sulu.model.contact.class%</entity-name>
-
-                <joins ref="changer"/>
-            </field>
-        </concatenation-property>
     </properties>
 </list>

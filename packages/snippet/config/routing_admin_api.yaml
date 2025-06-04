@@ -42,8 +42,18 @@ sulu_snippet.get_snippet_versions:
 =======
 # Snippet areas
 sulu_snippet_area.get_snippet_areas:
-    path: /snippet-areas/{webspace}
+    path: /snippet-areas.{_format}
     methods: GET
     controller: sulu_snippet.admin_snippet_area_controller::cgetAction
 >>>>>>> 3861077403 (Snippets and areas)
     format: json
+
+sulu_snippet_area.put_snippet_area:
+    path: /snippet-areas/{key}
+    methods: PUT
+    controller: sulu_snippet.admin_snippet_area_controller::putAction
+
+sulu_snippet_area.delete_snippet_area:
+    path: /snippet-areas/{key}
+    methods: PUT
+    controller: sulu_snippet.admin_snippet_area_controller::deleteAction
