@@ -2215,12 +2215,6 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Loader/FormXmlLoader.php
 
 		-
-			message: '#^Parameter \#1 \$schema of method Sulu\\Bundle\\AdminBundle\\Metadata\\SchemaMetadata\\SchemaMetadata\:\:merge\(\) expects Sulu\\Bundle\\AdminBundle\\Metadata\\SchemaMetadata\\SchemaMetadata, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Loader/FormXmlLoader.php
-
-		-
 			message: '#^Cannot call method count\(\) on DOMNodeList\<DOMNode\>\|false\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -2229,12 +2223,6 @@ parameters:
 		-
 			message: '#^Cannot call method item\(\) on DOMNodeList\<DOMNode\>\|false\.$#'
 			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Loader/TemplateXmlLoader.php
-
-		-
-			message: '#^Parameter \#1 \$schema of method Sulu\\Bundle\\AdminBundle\\Metadata\\SchemaMetadata\\SchemaMetadata\:\:merge\(\) expects Sulu\\Bundle\\AdminBundle\\Metadata\\SchemaMetadata\\SchemaMetadata, mixed given\.$#'
-			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Loader/TemplateXmlLoader.php
 
@@ -3304,12 +3292,6 @@ parameters:
 			message: '#^Cannot call method item\(\) on DOMNodeList\<DOMNode\>\|false\.$#'
 			identifier: method.nonObject
 			count: 3
-			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/SchemaXmlParser.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\Parser\\SchemaXmlParser\:\:load\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
 			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/SchemaXmlParser.php
 
 		-

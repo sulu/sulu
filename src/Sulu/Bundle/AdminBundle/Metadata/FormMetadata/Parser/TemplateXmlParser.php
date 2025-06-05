@@ -55,17 +55,21 @@ class TemplateXmlParser
     private function parseCacheLifeTime(\DOMNode $cacheLifeTimeNode): CacheLifetimeMetadata
     {
         $cacheLifeTimeValue = $cacheLifeTimeNode->nodeValue;
+        \assert(\is_string($cacheLifeTimeValue), 'The <cache_lifetime> value must be a "string", got "' . \get_debug_type($cacheLifeTimeValue) . '".');
+
         $cacheLifeTimeType =
-            $cacheLifeTimeNode->attributes?->getNamedItem('type')?->nodeValue
+            $cacheLifeTimeNode->attributes?->getNamedItem('type')->nodeValue
             ?? CacheLifetimeResolverInterface::TYPE_SECONDS;
 
-        \assert(
-            \in_array($cacheLifeTimeType, [
-                CacheLifetimeResolverInterface::TYPE_SECONDS,
-                CacheLifetimeResolverInterface::TYPE_EXPRESSION,
-            ]),
-            'The <cache_lifetime type="..."> must be one of the defined types (' . CacheLifetimeResolverInterface::TYPE_SECONDS . ', ' . CacheLifetimeResolverInterface::TYPE_EXPRESSION . '), got "' . $cacheLifeTimeType . '".',
-        );
+        \assert(\in_array($cacheLifeTimeType, [
+            CacheLifetimeResolverInterface::TYPE_SECONDS,
+            CacheLifetimeResolverInterface::TYPE_EXPRESSION,
+        ]), \sprintf(
+            'The <cache_lifetime type="..."> must be one of the defined types (%s, %s), got "%s".',
+            CacheLifetimeResolverInterface::TYPE_SECONDS,
+            CacheLifetimeResolverInterface::TYPE_EXPRESSION,
+            $cacheLifeTimeType,
+        ));
 
         return new CacheLifetimeMetadata($cacheLifeTimeType, $cacheLifeTimeValue);
     }

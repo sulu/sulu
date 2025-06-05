@@ -98,7 +98,7 @@
         <service id="sulu_content.route_defaults_provider" class="Sulu\Content\Infrastructure\Sulu\Route\ContentRouteDefaultsProvider">
             <argument type="service" id="doctrine.orm.entity_manager"/>
             <argument type="service" id="sulu_content.content_aggregator"/>
-            <argument type="service" id="sulu_content.content_structure_bridge_factory"/>
+            <argument type="service" id="sulu_admin.metadata_provider_registry"/>
             <argument type="service" id="sulu_http_cache.cache_lifetime.resolver"/>
 
             <tag name="sulu_route.route_defaults_provider" resource-key="examples"/>

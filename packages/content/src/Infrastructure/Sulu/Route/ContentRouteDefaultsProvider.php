@@ -16,15 +16,17 @@ namespace Sulu\Content\Infrastructure\Sulu\Route;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NoResultException;
 use Sulu\Article\Domain\Model\Article;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\CacheLifetimeMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TemplateMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
 use Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeResolverInterface;
-use Sulu\Component\Content\Metadata\StructureMetadata;
 use Sulu\Content\Application\ContentAggregator\ContentAggregatorInterface;
 use Sulu\Content\Domain\Exception\ContentNotFoundException;
 use Sulu\Content\Domain\Model\ContentRichEntityInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Domain\Model\TemplateInterface;
-use Sulu\Content\Infrastructure\Sulu\Structure\ContentStructureBridgeFactory;
-use Sulu\Content\Infrastructure\Sulu\Structure\StructureMetadataNotFoundException;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\Example;
 use Sulu\Page\Domain\Model\Page;
 use Sulu\Route\Application\Routing\Matcher\RouteDefaultsProviderInterface;
@@ -47,9 +49,9 @@ class ContentRouteDefaultsProvider implements RouteDefaultsProviderInterface
     protected $contentAggregator;
 
     /**
-     * @var ContentStructureBridgeFactory
+     * @var MetadataProviderRegistry
      */
-    protected $contentStructureBridgeFactory;
+    private $metadataProviderRegistry;
 
     /**
      * @var CacheLifetimeResolverInterface
@@ -59,12 +61,12 @@ class ContentRouteDefaultsProvider implements RouteDefaultsProviderInterface
     public function __construct(
         EntityManagerInterface $entityManager,
         ContentAggregatorInterface $contentAggregator,
-        ContentStructureBridgeFactory $contentStructureBridgeFactory,
+        MetadataProviderRegistry $metadataProviderRegistry,
         CacheLifetimeResolverInterface $cacheLifetimeResolver,
     ) {
         $this->entityManager = $entityManager;
         $this->contentAggregator = $contentAggregator;
-        $this->contentStructureBridgeFactory = $contentStructureBridgeFactory;
+        $this->metadataProviderRegistry = $metadataProviderRegistry;
         $this->cacheLifetimeResolver = $cacheLifetimeResolver;
     }
 
@@ -81,32 +83,34 @@ class ContentRouteDefaultsProvider implements RouteDefaultsProviderInterface
             default => throw new \RuntimeException(\sprintf('Unknown resourceKey "%s"', $route->getResourceKey())),
         };
 
-        /** @var DimensionContentInterface|null $entity */
-        $entity = $this->loadEntity($entityClass, $id, $locale); // @phpstan-ignore-line
+        /** @var DimensionContentInterface|null $dimensionContent */
+        $dimensionContent = $this->loadEntity($entityClass, $id, $locale); // @phpstan-ignore-line
 
-        if (null === $entity) {
+        if (null === $dimensionContent) {
             throw new NotFoundHttpException(\sprintf('No content found for id "%s" and locale "%s"', $id, $locale));
         }
 
-        if (!$entity instanceof TemplateInterface) {
-            throw new \RuntimeException(\sprintf('Expected to get "%s" from ContentResolver but "%s" given.', TemplateInterface::class, $entity::class));
-        }
-
-        if (!$entity->getLocale()) {
+        $contentLocale = $dimensionContent->getLocale();
+        if (!$contentLocale) {
             throw new NotFoundHttpException(\sprintf('No content found for id "%s" and locale "%s"', $id, $locale));
         }
 
-        try {
-            $structureBridge = $this->contentStructureBridgeFactory->getBridge($entity, $id, $locale);
-        } catch (StructureMetadataNotFoundException $exception) {
-            throw new NotFoundHttpException($exception->getMessage(), $exception);
+        if (!$dimensionContent instanceof TemplateInterface) {
+            throw new \RuntimeException(\sprintf('Expected to get "%s" from ContentResolver but "%s" given.', TemplateInterface::class, $dimensionContent::class));
         }
+
+        $templateKey = $dimensionContent->getTemplateKey();
+        if (!$templateKey) {
+            throw new NotFoundHttpException(\sprintf('No template found for id "%s" and locale "%s"', $id, $locale));
+        }
+
+        $templateMetadata = $this->resolveTemplateMetadata($dimensionContent::getTemplateType(), $templateKey, $contentLocale);
 
         return [
-            'object' => $entity,
-            'view' => $structureBridge->getView(),
-            '_controller' => $structureBridge->getController(),
-            '_cacheLifetime' => $this->getCacheLifetime($structureBridge->getStructure()),
+            'object' => $dimensionContent,
+            'view' => $templateMetadata->getView(),
+            '_controller' => $templateMetadata->getController(),
+            '_cacheLifetime' => $this->getCacheLifetime($templateMetadata),
         ];
     }
 
@@ -155,24 +159,48 @@ class ContentRouteDefaultsProvider implements RouteDefaultsProviderInterface
         }
     }
 
-    private function getCacheLifetime(StructureMetadata $metadata): ?int
+    private function getCacheLifetime(TemplateMetadata $templateMetadata): ?int
     {
-        $cacheLifetime = $metadata->getCacheLifetime();
-        if (!$cacheLifetime) {
+        $cacheLifetime = $templateMetadata->getCacheLifetime();
+        if (!$cacheLifetime instanceof CacheLifetimeMetadata) {
             // TODO FIXME add test case for this
             return null; // @codeCoverageIgnore
         }
 
-        if (!isset($cacheLifetime['type'])
-            || !isset($cacheLifetime['value'])
-            || !\is_string($cacheLifetime['type'])
-            || !(\is_string($cacheLifetime['value']) || \is_int($cacheLifetime['value']))
-            || !$this->cacheLifetimeResolver->supports($cacheLifetime['type'], $cacheLifetime['value'])
-        ) {
-            // TODO FIXME add test case for this
-            throw new \InvalidArgumentException(\sprintf('Invalid cachelifetime in route default provider: %s', \var_export($cacheLifetime, true))); // @codeCoverageIgnore
+        $cacheLifeTimeType = $cacheLifetime->getType();
+        $cacheLifeTimeValue = $cacheLifetime->getValue();
+
+        if (!$this->cacheLifetimeResolver->supports($cacheLifeTimeType, $cacheLifeTimeValue)) {
+            throw new \InvalidArgumentException(\sprintf('Invalid cacheLifeTime in route default provider: %s', \json_encode([
+                'type' => $cacheLifeTimeType,
+                'value' => $cacheLifeTimeValue,
+            ], flags: \JSON_THROW_ON_ERROR)));
         }
 
-        return $this->cacheLifetimeResolver->resolve($cacheLifetime['type'], $cacheLifetime['value']);
+        return $this->cacheLifetimeResolver->resolve($cacheLifeTimeType, $cacheLifeTimeValue);
+    }
+
+    private function resolveTemplateMetadata(string $type, string $templateKey, string $locale): TemplateMetadata
+    {
+        $typedMetadata = $this->metadataProviderRegistry->getMetadataProvider('form')
+            ->getMetadata($type, $locale, []);
+
+        if (!$typedMetadata instanceof TypedFormMetadata) {
+            throw new \RuntimeException(\sprintf('Could not find metadata "%s" of type "%s".', 'form', $type));
+        }
+
+        $metadata = $typedMetadata->getForms()[$templateKey] ?? null;
+
+        if (!$metadata instanceof FormMetadata) {
+            throw new \RuntimeException(\sprintf('Could not find form metadata "%s" of type "%s".', $templateKey, $type));
+        }
+
+        $templateMetadata = $metadata->getTemplate();
+
+        if (!$templateMetadata instanceof TemplateMetadata) {
+            throw new \RuntimeException(\sprintf('Could not find template metadata "%s" of type "%s".', $templateKey, $type));
+        }
+
+        return $templateMetadata;
     }
 }
