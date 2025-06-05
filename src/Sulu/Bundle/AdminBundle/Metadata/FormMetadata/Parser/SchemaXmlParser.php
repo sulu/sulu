@@ -23,7 +23,7 @@ class SchemaXmlParser
 {
     use XmlParserTrait;
 
-    public function load(\DOMXPath $xpath, \DOMNode $contextNode)
+    public function load(\DOMXPath $xpath, \DOMNode $contextNode): SchemaMetadata
     {
         $allOfNode = $xpath->query('x:allOf', $contextNode)->item(0);
         $allOfs = [];

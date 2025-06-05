@@ -20,6 +20,7 @@ use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Parser\MetaXmlParser;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Parser\PropertiesXmlParser;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Parser\SchemaXmlParser;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Parser\TagXmlParser;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Parser\TemplateXmlParser;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\SchemaMetadataProvider;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TagMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadataMapperRegistry;
@@ -55,6 +56,7 @@ class TemplateXmlLoaderTest extends TestCase
             $metaXmlParser,
         );
         $schemaXmlParser = new SchemaXmlParser();
+        $templateXmlParser = new TemplateXmlParser();
 
         $container = new Container();
         $propertyMetadataMapperRegistry = new PropertyMetadataMapperRegistry($container);
@@ -66,7 +68,7 @@ class TemplateXmlLoaderTest extends TestCase
         );
         $container->set('block', $blockMetadataProvider);
 
-        $this->loader = new TemplateXmlLoader($propertiesXmlParser, $schemaXmlParser, $tagXmlParser, $metaXmlParser, $schemaMetadataProvider);
+        $this->loader = new TemplateXmlLoader($propertiesXmlParser, $schemaXmlParser, $tagXmlParser, $metaXmlParser, $templateXmlParser, $schemaMetadataProvider);
     }
 
     public function testLoadDefaultTemplate(): void
@@ -74,6 +76,14 @@ class TemplateXmlLoaderTest extends TestCase
         $formMetadata = $this->loader->load($this->getTemplatesDirectory() . 'default.xml');
 
         $this->assertSame([
+            'template' => [
+                'controller' => 'Sulu\Bundle\WebsiteBundle\Controller\DefaultController::indexAction',
+                'view' => 'ClientWebsiteBundle:templates:animals',
+                'cacheLifetime' => [
+                    'type' => 'seconds',
+                    'value' => '2400',
+                ],
+            ],
             'titles' => [
                 'de' => 'Tiers',
                 'en' => 'Animals',
@@ -252,12 +262,215 @@ class TemplateXmlLoaderTest extends TestCase
         ], $this->metadataToArray($formMetadata));
     }
 
+    public function testLoadOverviewTemplate(): void
+    {
+        $formMetadata = $this->loader->load($this->getTemplatesDirectory() . 'overview.xml');
+
+        $this->assertSame([
+            'template' => [
+                'controller' => 'SuluPageBundle:Default:index',
+                'view' => 'page',
+                'cacheLifetime' => [
+                    'type' => 'expression',
+                    'value' => '0 2 * * *',
+                ],
+            ],
+            'titles' => [
+                'de' => 'Tiers',
+                'en' => 'Animals',
+            ],
+            'tags' => [
+                [
+                    'name' => 'test3',
+                    'priority' => null,
+                    'attributes' => [],
+                ],
+            ],
+            'schema' => [
+                'type' => 'object',
+                'properties' => [
+                    'blocks' => [
+                        'type' => 'array',
+                        'items' => [
+                            'allOf' => [
+                                [
+                                    'if' => [
+                                        'type' => 'object',
+                                        'properties' => [
+                                            'type' => [
+                                                'const' => 'editor',
+                                            ],
+                                        ],
+                                        'required' => ['type'],
+                                    ],
+                                    'then' => [
+                                        'type' => [
+                                            'number',
+                                            'string',
+                                            'boolean',
+                                            'object',
+                                            'array',
+                                            'null',
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                    'blocks_with_custom_settings_form_key' => [
+                        'type' => 'array',
+                        'items' => [
+                            'allOf' => [
+                                [
+                                    'if' => [
+                                        'type' => 'object',
+                                        'properties' => [
+                                            'type' => [
+                                                'const' => 'editor',
+                                            ],
+                                        ],
+                                        'required' => ['type'],
+                                    ],
+                                    'then' => [
+                                        'type' => [
+                                            'number',
+                                            'string',
+                                            'boolean',
+                                            'object',
+                                            'array',
+                                            'null',
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+                'required' => [
+                    'title',
+                    'url',
+                ],
+            ],
+        ], $this->metadataToArray($formMetadata));
+    }
+
+    public function testLoadSnippetTemplate(): void
+    {
+        $formMetadata = $this->loader->load($this->getTemplatesDirectory() . '../snippets/default.xml');
+
+        $this->assertSame([
+            'template' => [
+                'controller' => null,
+                'view' => null,
+                'cacheLifetime' => null,
+            ],
+            'titles' => [
+                'de' => 'Tiers',
+                'en' => 'Animals',
+            ],
+            'tags' => [],
+            'schema' => [
+                'type' => 'object',
+                'required' => [
+                    0 => 'title',
+                ],
+            ],
+        ], $this->metadataToArray($formMetadata));
+    }
+
+    public function testLoadBlockTemplate(): void
+    {
+        $formMetadata = $this->loader->load($this->getTemplatesDirectory() . '../blocks/text_block.xml');
+
+        $this->assertSame([
+            'template' => [
+                'controller' => null,
+                'view' => null,
+                'cacheLifetime' => null,
+            ],
+            'titles' => [
+                'de' => 'Tiers',
+                'en' => 'Animals',
+            ],
+            'tags' => [],
+            'schema' => [
+                'type' => 'object',
+                'properties' => [
+                    'blocks' => [
+                        'type' => 'array',
+                        'items' => [
+                            'allOf' => [
+                                [
+                                    'if' => [
+                                        'type' => 'object',
+                                        'properties' => [
+                                            'type' => [
+                                                'const' => 'text_block2',
+                                            ],
+                                        ],
+                                        'required' => [
+                                            'type',
+                                        ],
+                                    ],
+                                    'then' => [
+                                        '$ref' => '#/definitions/text_block2',
+                                    ],
+                                ],
+                                [
+                                    'if' => [
+                                        'type' => 'object',
+                                        'properties' => [
+                                            'type' => [
+                                                'const' => 'editor',
+                                            ],
+                                        ],
+                                        'required' => [
+                                            'type',
+                                        ],
+                                    ],
+                                    'then' => [
+                                        'type' => [
+                                            'number',
+                                            'string',
+                                            'boolean',
+                                            'object',
+                                            'array',
+                                            'null',
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+                'required' => [
+                    'title',
+                ],
+            ],
+        ], $this->metadataToArray($formMetadata));
+    }
+
     /**
      * @return array<string, mixed>
      */
     private function metadataToArray(FormMetadata $formMetadata): array
     {
         return [
+            'template' => (function() use ($formMetadata) {
+                $template = $formMetadata->getTemplate();
+                if (null === $template) {
+                    return null;
+                }
+
+                return [
+                    'controller' => $template->getController(),
+                    'view' => $template->getView(),
+                    'cacheLifetime' => $template->getCacheLifetime() ? [
+                        'type' => $template->getCacheLifetime()->getType(),
+                        'value' => $template->getCacheLifetime()->getValue(),
+                    ] : null,
+                ];
+            })(),
             'titles' => [
                 'de' => 'Tiers',
                 'en' => 'Animals',

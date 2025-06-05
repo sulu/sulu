@@ -92,6 +92,11 @@
                  public="false">
         </service>
 
+        <service id="sulu_admin.template_xml_parser"
+                 class="Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Parser\TemplateXmlParser"
+                 public="false">
+        </service>
+
         <service id="sulu_admin.tag_xml_parser"
                  class="Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Parser\TagXmlParser"
                  public="false">
@@ -182,6 +187,7 @@
             <argument type="service" id="sulu_admin.schema_xml_parser"/>
             <argument type="service" id="sulu_admin.tag_xml_parser"/>
             <argument type="service" id="sulu_admin.meta_xml_parser"/>
+            <argument type="service" id="sulu_admin.template_xml_parser"/>
             <argument type="service" id="sulu_admin.schema_metadata_provider"/>
         </service>
 

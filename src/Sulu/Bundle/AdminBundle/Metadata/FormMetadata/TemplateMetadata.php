@@ -13,14 +13,11 @@ namespace Sulu\Bundle\AdminBundle\Metadata\FormMetadata;
 
 class TemplateMetadata
 {
-    protected ?string $controller = null;
-
-    protected ?string $view = null;
-
-    protected ?CacheLifetimeMetadata $cacheLifetime = null;
-
-    public function __construct()
-    {
+    public function __construct(
+        protected ?string $controller = null,
+        protected ?string $view = null,
+        protected ?CacheLifetimeMetadata $cacheLifetime = null,
+    ) {
     }
 
     public function getController(): ?string

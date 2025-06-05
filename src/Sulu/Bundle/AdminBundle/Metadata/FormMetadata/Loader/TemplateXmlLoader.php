@@ -17,6 +17,7 @@ use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Parser\MetaXmlParser;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Parser\PropertiesXmlParser;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Parser\SchemaXmlParser;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Parser\TagXmlParser;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Parser\TemplateXmlParser;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\SchemaMetadataProvider;
 use Sulu\Bundle\AdminBundle\Metadata\XmlParserTrait;
 
@@ -44,6 +45,7 @@ class TemplateXmlLoader extends AbstractLoader
         private SchemaXmlParser $schemaXmlParser,
         private TagXmlParser $tagXmlParser,
         private MetaXmlParser $metaXmlParser,
+        private TemplateXmlParser $templateXmlParser,
         private SchemaMetadataProvider $schemaMetadataProvider,
     ) {
         parent::__construct(
@@ -74,6 +76,8 @@ class TemplateXmlLoader extends AbstractLoader
         if (\array_key_exists('title', $meta)) {
             $form->setTitles($meta['title']);
         }
+
+        $form->setTemplate($this->templateXmlParser->load($xpath, $templateNode));
 
         $propertiesNode = ($xpath->query('/x:template/x:properties') ?: null)?->item(0);
         \assert(null !== $propertiesNode, 'Expected <properties> be defined for "' . $resource . '".');

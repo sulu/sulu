@@ -7,9 +7,9 @@
 
     <key>overview</key>
 
-    <view>page.html.twig</view>
+    <view>page</view>
     <controller>SuluPageBundle:Default:index</controller>
-    <cacheLifetime>2400</cacheLifetime>
+    <cacheLifetime type="expression">0 2 * * *</cacheLifetime>
 
     <tag name="test3"/>
 
@@ -68,4 +68,3 @@
         </block>
     </properties>
 </template>
-
