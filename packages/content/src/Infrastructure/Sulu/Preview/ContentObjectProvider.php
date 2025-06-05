@@ -15,6 +15,10 @@ namespace Sulu\Content\Infrastructure\Sulu\Preview;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NoResultException;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TemplateMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
 use Sulu\Bundle\PreviewBundle\Preview\PreviewContext;
 use Sulu\Bundle\PreviewBundle\Preview\Provider\PreviewDefaultsProviderInterface;
 use Sulu\Content\Application\ContentAggregator\ContentAggregatorInterface;
@@ -24,8 +28,6 @@ use Sulu\Content\Domain\Model\ContentRichEntityInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Domain\Model\ShadowInterface;
 use Sulu\Content\Domain\Model\TemplateInterface;
-use Sulu\Content\Infrastructure\Sulu\Structure\ContentStructureBridgeFactory;
-use Sulu\Content\Infrastructure\Sulu\Structure\StructureMetadataNotFoundException;
 
 /**
  * @template B of DimensionContentInterface
@@ -34,9 +36,9 @@ use Sulu\Content\Infrastructure\Sulu\Structure\StructureMetadataNotFoundExceptio
 class ContentObjectProvider implements PreviewDefaultsProviderInterface
 {
     /**
-     * @var ContentStructureBridgeFactory
+     * @var MetadataProviderRegistry
      */
-    protected $contentStructureBridgeFactory;
+    private $metadataProviderRegistry;
 
     /**
      * @var EntityManagerInterface
@@ -67,14 +69,14 @@ class ContentObjectProvider implements PreviewDefaultsProviderInterface
      * @param class-string<T> $contentRichEntityClass
      */
     public function __construct(
-        ContentStructureBridgeFactory $contentStructureBridgeFactory,
+        MetadataProviderRegistry $metadataProviderRegistry,
         EntityManagerInterface $entityManager,
         ContentAggregatorInterface $contentAggregator,
         ContentDataMapperInterface $contentDataMapper,
         string $contentRichEntityClass,
         ?string $securityContext = null
     ) {
-        $this->contentStructureBridgeFactory = $contentStructureBridgeFactory;
+        $this->metadataProviderRegistry = $metadataProviderRegistry;
         $this->entityManager = $entityManager;
         $this->contentAggregator = $contentAggregator;
         $this->contentDataMapper = $contentDataMapper;
@@ -114,16 +116,21 @@ class ContentObjectProvider implements PreviewDefaultsProviderInterface
             return [];
         }
 
-        try {
-            $structureBridge = $this->contentStructureBridgeFactory->getBridge($object, $id, $locale);
-        } catch (StructureMetadataNotFoundException $exception) {
+        $templateKey = $object->getTemplateKey();
+        if (!$templateKey) {
+            return [];
+        }
+
+        $templateMetadata = $this->resolveTemplateMetadata($object::getTemplateType(), $templateKey, $locale);
+
+        if (!$templateMetadata instanceof TemplateMetadata) {
             return [];
         }
 
         return [
             'object' => $object,
-            '_controller' => $structureBridge->getController(),
-            'view' => $structureBridge->getView(),
+            'view' => $templateMetadata->getView(),
+            '_controller' => $templateMetadata->getController(),
         ];
     }
 
@@ -202,5 +209,29 @@ class ContentObjectProvider implements PreviewDefaultsProviderInterface
         } catch (ContentNotFoundException $exception) {
             return null;
         }
+    }
+
+    private function resolveTemplateMetadata(string $type, string $templateKey, string $locale): ?TemplateMetadata
+    {
+        $typedMetadata = $this->metadataProviderRegistry->getMetadataProvider('form')
+            ->getMetadata($type, $locale, []);
+
+        if (!$typedMetadata instanceof TypedFormMetadata) {
+            return null;
+        }
+
+        $metadata = $typedMetadata->getForms()[$templateKey] ?? null;
+
+        if (!$metadata instanceof FormMetadata) {
+            return null;
+        }
+
+        $templateMetadata = $metadata->getTemplate();
+
+        if (!$templateMetadata instanceof TemplateMetadata) {
+            return null;
+        }
+
+        return $templateMetadata;
     }
 }

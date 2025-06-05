@@ -272,7 +272,7 @@ final class SuluPageBundle extends AbstractBundle
         $services->set('sulu_page.page_preview_provider')
             ->class(ContentObjectProvider::class)
             ->args([
-                new Reference('sulu_content.content_structure_bridge_factory'),
+                new Reference('sulu_admin.metadata_provider_registry'),
                 new Reference('doctrine.orm.entity_manager'),
                 new Reference('sulu_content.content_aggregator'),
                 new Reference('sulu_content.content_data_mapper'),

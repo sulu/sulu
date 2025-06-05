@@ -21,6 +21,12 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\CacheLifetimeMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadataProvider;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TemplateMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
 use Sulu\Bundle\PreviewBundle\Preview\PreviewContext;
 use Sulu\Bundle\TestBundle\Testing\SetGetPrivatePropertyTrait;
 use Sulu\Content\Application\ContentAggregator\ContentAggregatorInterface;
@@ -28,13 +34,8 @@ use Sulu\Content\Application\ContentDataMapper\ContentDataMapperInterface;
 use Sulu\Content\Domain\Exception\ContentNotFoundException;
 use Sulu\Content\Domain\Model\ContentRichEntityInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
-use Sulu\Content\Domain\Model\RoutableInterface;
-use Sulu\Content\Domain\Model\ShadowInterface;
-use Sulu\Content\Domain\Model\TemplateInterface;
 use Sulu\Content\Infrastructure\Sulu\Preview\ContentObjectProvider;
 use Sulu\Content\Infrastructure\Sulu\Preview\PreviewDimensionContentCollection;
-use Sulu\Content\Infrastructure\Sulu\Structure\ContentStructureBridge;
-use Sulu\Content\Infrastructure\Sulu\Structure\ContentStructureBridgeFactory;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Admin\ExampleAdmin;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\Example;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\ExampleDimensionContent;
@@ -46,9 +47,9 @@ class ContentObjectProviderTest extends TestCase
     use SetGetPrivatePropertyTrait;
 
     /**
-     * @var ObjectProphecy<ContentStructureBridgeFactory>
+     * @var ObjectProphecy<FormMetadataProvider>
      */
-    private $contentStructureBridgeFactory;
+    private ObjectProphecy $formMetadataProvider;
 
     /**
      * @var ObjectProphecy<EntityManagerInterface>
@@ -72,19 +73,16 @@ class ContentObjectProviderTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->contentStructureBridgeFactory = $this->prophesize(ContentStructureBridgeFactory::class);
+        $metadataProviderRegistry = new MetadataProviderRegistry();
+        $this->formMetadataProvider = $this->prophesize(FormMetadataProvider::class);
+        $metadataProviderRegistry->addMetadataProvider('form', $this->formMetadataProvider->reveal());
+
         $this->entityManager = $this->prophesize(EntityManagerInterface::class);
         $this->contentAggregator = $this->prophesize(ContentAggregatorInterface::class);
         $this->contentDataMapper = $this->prophesize(ContentDataMapperInterface::class);
 
-        $contentStructureBridge = $this->prophesize(ContentStructureBridge::class);
-        $contentStructureBridge->getController()->willReturn(ContentController::class . '::indexAction');
-        $contentStructureBridge->getView()->willReturn('pages/default');
-        $this->contentStructureBridgeFactory->getBridge(Argument::cetera())
-            ->willReturn($contentStructureBridge);
-
         $this->contentObjectProvider = new ContentObjectProvider(
-            $this->contentStructureBridgeFactory->reveal(),
+            $metadataProviderRegistry,
             $this->entityManager->reveal(),
             $this->contentAggregator->reveal(),
             $this->contentDataMapper->reveal(),
@@ -125,6 +123,8 @@ class ContentObjectProviderTest extends TestCase
 
         $example = new Example();
         $exampleDimensionContent = new ExampleDimensionContent($example);
+        $exampleDimensionContent->setLocale($locale);
+        $exampleDimensionContent->setTemplateKey('default');
         self::setPrivateProperty($example, 'id', $id);
 
         $this->contentAggregator->aggregate(
@@ -132,13 +132,18 @@ class ContentObjectProviderTest extends TestCase
             Argument::type('array')
         )->willReturn($exampleDimensionContent)->shouldBeCalledTimes(1);
 
+        $this->prepareTemplateMetadata(
+            ContentController::class . '::indexAction',
+            'pages/default',
+        );
+
         $previewContext = new PreviewContext($id, $locale);
         $result = $this->contentObjectProvider->getDefaults($previewContext);
 
         $this->assertSame([
             'object' => $exampleDimensionContent,
-            '_controller' => ContentController::class . '::indexAction',
             'view' => 'pages/default',
+            '_controller' => ContentController::class . '::indexAction',
         ], $result);
     }
 
@@ -172,10 +177,13 @@ class ContentObjectProviderTest extends TestCase
 
         $query->getSingleResult()->willReturn($entity->reveal())->shouldBeCalledTimes(1);
 
-        $dimensionContent = $this->prophesize(DimensionContentInterface::class);
-        $dimensionContent->willImplement(ShadowInterface::class);
-        $dimensionContent->willImplement(TemplateInterface::class);
-        $dimensionContent->getShadowLocale()->willReturn('en')->shouldBeCalledTimes(2);
+        $example = new Example();
+        self::setPrivateProperty($example, 'id', $id);
+        $exampleDimensionContent = new ExampleDimensionContent($example);
+        $exampleDimensionContent->setLocale('de');
+        $exampleDimensionContent->setStage(DimensionContentInterface::STAGE_DRAFT);
+        $exampleDimensionContent->setTemplateKey('default');
+        $exampleDimensionContent->setShadowLocale('en');
 
         $this->contentAggregator->aggregate(
             $entity->reveal(),
@@ -183,27 +191,33 @@ class ContentObjectProviderTest extends TestCase
                 'locale' => 'de',
                 'stage' => DimensionContentInterface::STAGE_DRAFT,
             ]
-        )->willReturn($dimensionContent->reveal())->shouldBeCalledTimes(1);
+        )->willReturn($exampleDimensionContent)->shouldBeCalledTimes(1);
 
-        $dimensionContent = $this->prophesize(DimensionContentInterface::class)
-            ->willImplement(RoutableInterface::class)
-            ->willImplement(TemplateInterface::class);
-        $dimensionContent->getLocale()->willReturn('en');
+        $shadowDimensionContent = new ExampleDimensionContent($example);
+        $shadowDimensionContent->setLocale('en');
+        $shadowDimensionContent->setStage(DimensionContentInterface::STAGE_DRAFT);
+        $shadowDimensionContent->setTemplateKey('default');
+
         $this->contentAggregator->aggregate(
             $entity->reveal(),
             [
                 'locale' => 'en',
                 'stage' => DimensionContentInterface::STAGE_DRAFT,
             ]
-        )->willReturn($dimensionContent->reveal())->shouldBeCalledTimes(1);
+        )->willReturn($shadowDimensionContent)->shouldBeCalledTimes(1);
+
+        $this->prepareTemplateMetadata(
+            ContentController::class . '::indexAction',
+            'pages/default',
+        );
 
         $previewContext = new PreviewContext($id, $locale);
         $result = $this->contentObjectProvider->getDefaults($previewContext);
 
         $this->assertSame([
-            'object' => $dimensionContent->reveal(),
-            '_controller' => ContentController::class . '::indexAction',
+            'object' => $shadowDimensionContent,
             'view' => 'pages/default',
+            '_controller' => ContentController::class . '::indexAction',
         ], $result);
     }
 
@@ -329,5 +343,24 @@ class ContentObjectProviderTest extends TestCase
             ExampleAdmin::SECURITY_CONTEXT,
             $this->contentObjectProvider->getSecurityContext($previewContext)
         );
+    }
+
+    private function prepareTemplateMetadata(string $controller, string $view, ?string $cacheLifeTimeType = null, string $cacheLifeTimeValue = '0'): void
+    {
+        $typedMetadata = new TypedFormMetadata();
+        $formMetadata = new FormMetadata();
+        $formMetadata->setKey('default');
+        $typedMetadata->addForm($formMetadata->getKey(), $formMetadata);
+
+        $cacheLifeTimeMetadata = null;
+        if (null !== $cacheLifeTimeType) {
+            $cacheLifeTimeMetadata = new CacheLifetimeMetadata($cacheLifeTimeType, $cacheLifeTimeValue);
+        }
+        $templateMetadata = new TemplateMetadata($controller, $view, $cacheLifeTimeMetadata);
+        $formMetadata->setTemplate($templateMetadata);
+
+        $this->formMetadataProvider->getMetadata(Argument::cetera())
+            ->willReturn($typedMetadata)
+            ->shouldBeCalled();
     }
 }

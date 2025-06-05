@@ -83,7 +83,7 @@ services:
     example_test.example_preview_object_provider:
         class: Sulu\Content\Infrastructure\Sulu\Preview\ContentObjectProvider
         arguments:
-            - '@sulu_content.content_structure_bridge_factory'
+            - '@sulu_admin.metadata_provider_registry'
             - '@doctrine.orm.entity_manager'
             - '@sulu_content.content_aggregator'
             - '@sulu_content.content_data_mapper'
