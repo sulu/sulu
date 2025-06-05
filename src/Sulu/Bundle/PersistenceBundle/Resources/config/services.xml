@@ -2,21 +2,14 @@
 <container xmlns="http://symfony.com/schema/dic/services"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
-
-    <parameters>
-        <parameter key="sulu.persistence.event_subscriber.orm.timestampable.class">Sulu\Component\Persistence\EventSubscriber\ORM\TimestampableSubscriber</parameter>
-        <parameter key="sulu.persistence.event_subscriber.orm.user_blame.class">Sulu\Component\Persistence\EventSubscriber\ORM\UserBlameSubscriber</parameter>
-        <parameter key="sulu.persistence.event_subscriber.orm.metadata.class">Sulu\Component\Persistence\EventSubscriber\ORM\MetadataSubscriber</parameter>
-    </parameters>
-
     <services>
-        <service id="sulu.persistence.event_subscriber.orm.timestampable" class="%sulu.persistence.event_subscriber.orm.timestampable.class%">
+        <service id="sulu.persistence.event_subscriber.orm.timestampable" class="Sulu\Component\Persistence\EventSubscriber\ORM\TimestampableSubscriber">
             <tag name="doctrine.event_listener" event="loadClassMetadata"/>
             <tag name="doctrine.event_listener" event="preUpdate"/>
             <tag name="doctrine.event_listener" event="prePersist"/>
         </service>
 
-        <service id="sulu.persistence.event_subscriber.orm.user_blame" class="%sulu.persistence.event_subscriber.orm.user_blame.class%">
+        <service id="sulu.persistence.event_subscriber.orm.user_blame" class="Sulu\Component\Persistence\EventSubscriber\ORM\UserBlameSubscriber">
             <argument type="service" id="security.token_storage" on-invalid="null"/>
 
             <!-- Priority 50 as the MetadataLoader need to be before the ResolveTargetEntityListener of Doctrine -->
@@ -24,7 +17,7 @@
             <tag name="doctrine.event_listener" event="onFlush" priority="50"/>
         </service>
 
-        <service id="sulu.persistence.event_subscriber.orm.metadata" class="%sulu.persistence.event_subscriber.orm.metadata.class%">
+        <service id="sulu.persistence.event_subscriber.orm.metadata" class="Sulu\Component\Persistence\EventSubscriber\ORM\MetadataSubscriber">
             <argument>%sulu.persistence.objects%</argument>
             <!-- Priority 8000 as the MetadataLoader need to be before all other Doctrine listeners -->
             <tag name="doctrine.event_listener" event="loadClassMetadata" priority="8000" />

@@ -3,14 +3,8 @@
 <container xmlns="http://symfony.com/schema/dic/services"
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
-
-    <parameters>
-        <parameter key="sulu.core.localization_manager.class">Sulu\Component\Localization\Manager\LocalizationManager</parameter>
-        <parameter key="sulu.core.localization_manager.core_provider.class">Sulu\Component\Localization\Provider\LocalizationProvider</parameter>
-    </parameters>
-
     <services>
-        <service id="sulu.core.localization_manager" class="%sulu.core.localization_manager.class%" public="true"/>
+        <service id="sulu.core.localization_manager" class="Sulu\Component\Localization\Manager\LocalizationManager" public="true"/>
         <service id="Sulu\Component\Localization\Manager\LocalizationManagerInterface" alias="sulu.core.localization_manager"/>
     </services>
 </container>

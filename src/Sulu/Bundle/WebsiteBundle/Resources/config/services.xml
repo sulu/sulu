@@ -2,28 +2,6 @@
 <container xmlns="http://symfony.com/schema/dic/services"
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
-
-    <parameters>
-        <parameter key="sulu_website.admin.class">Sulu\Bundle\WebsiteBundle\Admin\WebsiteAdmin</parameter>
-        <parameter key="sulu_website.navigation_mapper.class">Sulu\Bundle\WebsiteBundle\Navigation\NavigationMapper</parameter>
-        <parameter key="sulu_website.sitemap.class">Sulu\Bundle\WebsiteBundle\Sitemap\SitemapGenerator</parameter>
-        <parameter key="sulu_website.twig.content_path.class">Sulu\Bundle\WebsiteBundle\Twig\Content\ContentPathTwigExtension</parameter>
-        <parameter key="sulu_website.twig.navigation.class">Sulu\Bundle\WebsiteBundle\Twig\Navigation\NavigationTwigExtension</parameter>
-        <parameter key="sulu_website.twig.navigation.memoized.class">Sulu\Bundle\WebsiteBundle\Twig\Navigation\MemoizedNavigationTwigExtension</parameter>
-        <parameter key="sulu_website.twig.sitemap.class">Sulu\Bundle\WebsiteBundle\Twig\Sitemap\SitemapTwigExtension</parameter>
-        <parameter key="sulu_website.twig.sitemap.memoized.class">Sulu\Bundle\WebsiteBundle\Twig\Sitemap\MemoizedSitemapTwigExtension</parameter>
-        <parameter key="sulu_website.twig.content.class">Sulu\Bundle\WebsiteBundle\Twig\Content\ContentTwigExtension</parameter>
-        <parameter key="sulu_website.twig.content.memoized.class">Sulu\Bundle\WebsiteBundle\Twig\Content\MemoizedContentTwigExtension</parameter>
-        <parameter key="sulu_website.twig.util.class">Sulu\Bundle\WebsiteBundle\Twig\Core\UtilTwigExtension</parameter>
-        <parameter key="sulu_website.routing.portal_loader.class">Sulu\Bundle\WebsiteBundle\Routing\PortalLoader</parameter>
-        <parameter key="sulu_website.resolver.request_analyzer.class">Sulu\Bundle\WebsiteBundle\Resolver\RequestAnalyzerResolver</parameter>
-        <parameter key="sulu_website.resolver.structure.class">Sulu\Bundle\WebsiteBundle\Resolver\StructureResolver</parameter>
-        <parameter key="sulu_website.resolver.parameter.class">Sulu\Bundle\WebsiteBundle\Resolver\ParameterResolver</parameter>
-
-        <parameter key="sulu_website.navigation_mapper.query_builder.class">Sulu\Bundle\WebsiteBundle\Navigation\NavigationQueryBuilder</parameter>
-        <parameter key="sulu_website.sitemap.query_builder.class">Sulu\Bundle\WebsiteBundle\Sitemap\SitemapContentQueryBuilder</parameter>
-    </parameters>
-
     <services>
         <!-- controllers -->
         <service id="sulu_website.redirect_controller"
@@ -70,7 +48,7 @@
         </service>
 
         <!-- website admin -->
-        <service id="sulu_website.admin" class="%sulu_website.admin.class%">
+        <service id="sulu_website.admin" class="Sulu\Bundle\WebsiteBundle\Admin\WebsiteAdmin">
             <argument type="service" id="Sulu\Bundle\AdminBundle\Admin\View\ViewBuilderFactoryInterface"/>
             <argument type="service" id="sulu_core.webspace.webspace_manager" />
             <argument type="service" id="sulu_security.security_checker" />
@@ -81,12 +59,12 @@
         </service>
 
         <!-- navigation mapper -->
-        <service id="sulu_website.navigation_mapper.query_builder" class="%sulu_website.navigation_mapper.query_builder.class%" public="false">
+        <service id="sulu_website.navigation_mapper.query_builder" class="Sulu\Bundle\WebsiteBundle\Navigation\NavigationQueryBuilder" public="false">
             <argument type="service" id="sulu.content.structure_manager"/>
             <argument type="service" id="sulu_page.extension.manager"/>
             <argument>%sulu.content.language.namespace%</argument>
         </service>
-        <service id="sulu_website.navigation_mapper" class="%sulu_website.navigation_mapper.class%">
+        <service id="sulu_website.navigation_mapper" class="Sulu\Bundle\WebsiteBundle\Navigation\NavigationMapper">
             <argument type="service" id="sulu.content.mapper"/>
             <argument type="service" id="sulu.content.query_executor"/>
             <argument type="service" id="sulu_website.navigation_mapper.query_builder"/>
@@ -96,12 +74,12 @@
         </service>
 
         <!-- sitemap generator -->
-        <service id="sulu_website.sitemap.query_builder" class="%sulu_website.sitemap.query_builder.class%" public="false">
+        <service id="sulu_website.sitemap.query_builder" class="Sulu\Bundle\WebsiteBundle\Sitemap\SitemapContentQueryBuilder" public="false">
             <argument type="service" id="sulu.content.structure_manager"/>
             <argument type="service" id="sulu_page.extension.manager"/>
             <argument>%sulu.content.language.namespace%</argument>
         </service>
-        <service id="sulu_website.sitemap" class="%sulu_website.sitemap.class%">
+        <service id="sulu_website.sitemap" class="Sulu\Bundle\WebsiteBundle\Sitemap\SitemapGenerator">
             <argument type="service" id="sulu.content.query_executor"/>
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>
             <argument type="service" id="sulu_website.sitemap.query_builder"/>
@@ -109,7 +87,7 @@
         </service>
 
         <!-- twig extension: content path -->
-        <service id="sulu_website.twig.content_path" class="%sulu_website.twig.content_path.class%">
+        <service id="sulu_website.twig.content_path" class="Sulu\Bundle\WebsiteBundle\Twig\Content\ContentPathTwigExtension">
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>
             <argument>%kernel.environment%</argument>
             <argument type="service" id="sulu_core.webspace.request_analyzer" on-invalid="ignore"/>
@@ -118,12 +96,12 @@
         </service>
 
         <!-- twig extension: navigation -->
-        <service id="sulu_website.twig.navigation" class="%sulu_website.twig.navigation.class%">
+        <service id="sulu_website.twig.navigation" class="Sulu\Bundle\WebsiteBundle\Twig\Navigation\NavigationTwigExtension">
             <argument type="service" id="sulu.content.mapper"/>
             <argument type="service" id="sulu_website.navigation_mapper"/>
             <argument type="service" id="sulu_core.webspace.request_analyzer" on-invalid="null"/>
         </service>
-        <service id="sulu_website.twig.navigation.memoized" class="%sulu_website.twig.navigation.memoized.class%">
+        <service id="sulu_website.twig.navigation.memoized" class="Sulu\Bundle\WebsiteBundle\Twig\Navigation\MemoizedNavigationTwigExtension">
             <argument type="service" id="sulu_website.twig.navigation"/>
             <argument type="service" id="sulu_core.cache.memoize"/>
             <argument type="string">%sulu_website.navigation.cache.lifetime%</argument>
@@ -132,13 +110,13 @@
         </service>
 
         <!-- twig extension: sitemap -->
-        <service id="sulu_website.twig.sitemap" class="%sulu_website.twig.sitemap.class%">
+        <service id="sulu_website.twig.sitemap" class="Sulu\Bundle\WebsiteBundle\Twig\Sitemap\SitemapTwigExtension">
             <argument type="service" id="sulu_website.sitemap"/>
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>
             <argument>%kernel.environment%</argument>
             <argument type="service" id="sulu_core.webspace.request_analyzer" on-invalid="ignore"/>
         </service>
-        <service id="sulu_website.twig.sitemap.memoized" class="%sulu_website.twig.sitemap.memoized.class%">
+        <service id="sulu_website.twig.sitemap.memoized" class="Sulu\Bundle\WebsiteBundle\Twig\Sitemap\MemoizedSitemapTwigExtension">
             <argument type="service" id="sulu_website.twig.sitemap"/>
             <argument type="service" id="sulu_core.cache.memoize"/>
             <argument type="string">%sulu_website.sitemap.cache.lifetime%</argument>
@@ -147,7 +125,7 @@
         </service>
 
         <!-- twig extension: content -->
-        <service id="sulu_website.twig.content" class="%sulu_website.twig.content.class%">
+        <service id="sulu_website.twig.content" class="Sulu\Bundle\WebsiteBundle\Twig\Content\ContentTwigExtension">
             <argument type="service" id="sulu.content.mapper"/>
             <argument type="service" id="sulu_website.resolver.structure"/>
             <argument type="service" id="sulu.phpcr.session"/>
@@ -157,7 +135,7 @@
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>
             <argument type="service" id="request_stack"/>
         </service>
-        <service id="sulu_website.twig.content.memoized" class="%sulu_website.twig.content.memoized.class%">
+        <service id="sulu_website.twig.content.memoized" class="Sulu\Bundle\WebsiteBundle\Twig\Content\MemoizedContentTwigExtension">
             <argument type="service" id="sulu_website.twig.content"/>
             <argument type="service" id="sulu_core.cache.memoize"/>
             <argument type="string">%sulu_website.content.cache.lifetime%</argument>
@@ -166,24 +144,24 @@
         </service>
 
         <!-- twig extension: util -->
-        <service id="sulu_website.twig.util" class="%sulu_website.twig.util.class%">
+        <service id="sulu_website.twig.util" class="Sulu\Bundle\WebsiteBundle\Twig\Core\UtilTwigExtension">
             <tag name="twig.extension"/>
         </service>
 
         <!-- portal loader -->
-        <service id="sulu_website.routing.portal_loader" class="%sulu_website.routing.portal_loader.class%">
+        <service id="sulu_website.routing.portal_loader" class="Sulu\Bundle\WebsiteBundle\Routing\PortalLoader">
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>
             <argument type="service" id="file_locator"/>
 
             <tag name="routing.loader"/>
         </service>
 
-        <service id="sulu_website.resolver.structure" class="%sulu_website.resolver.structure.class%" public="true">
+        <service id="sulu_website.resolver.structure" class="Sulu\Bundle\WebsiteBundle\Resolver\StructureResolver" public="true">
             <argument type="service" id="sulu.content.type_manager" />
             <argument type="service" id="sulu_page.extension.manager"/>
         </service>
 
-        <service id="sulu_website.resolver.request_analyzer" class="%sulu_website.resolver.request_analyzer.class%">
+        <service id="sulu_website.resolver.request_analyzer" class="Sulu\Bundle\WebsiteBundle\Resolver\RequestAnalyzerResolver">
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>
             <argument>%kernel.environment%</argument>
         </service>
@@ -202,7 +180,7 @@
         <service id="Sulu\Bundle\WebsiteBundle\Resolver\TemplateAttributeResolverInterface"
                  alias="sulu_website.resolver.template_attribute"/>
 
-        <service id="sulu_website.resolver.parameter" class="%sulu_website.resolver.parameter.class%" public="true">
+        <service id="sulu_website.resolver.parameter" class="Sulu\Bundle\WebsiteBundle\Resolver\ParameterResolver" public="true">
             <argument type="service" id="sulu_website.resolver.structure"/>
             <argument type="service" id="sulu_website.resolver.request_analyzer"/>
             <argument type="service" id="sulu_core.webspace.webspace_manager" />

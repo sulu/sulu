@@ -2,13 +2,8 @@
 <container xmlns="http://symfony.com/schema/dic/services"
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
-
-    <parameters>
-        <parameter key="sulu.phpcr.session.class">Sulu\Component\PHPCR\SessionManager\SessionManager</parameter>
-    </parameters>
-
     <services>
-        <service id="sulu.phpcr.session" class="%sulu.phpcr.session.class%" public="true">
+        <service id="sulu.phpcr.session" class="Sulu\Component\PHPCR\SessionManager\SessionManager" public="true">
             <argument type="service" id="sulu_document_manager.default_session"/>
             <argument type="collection">
                 <argument key="base">%sulu.content.node_names.base%</argument>

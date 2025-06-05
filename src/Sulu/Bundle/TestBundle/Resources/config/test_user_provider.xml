@@ -1,12 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <container xmlns="http://symfony.com/schema/dic/services" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
-    <parameters>
-        <parameter key="sulu.test_user_provider.class">Sulu\Bundle\TestBundle\Testing\TestUserProvider</parameter>
-        <parameter key="sulu.test_voter.class">Sulu\Bundle\TestBundle\Testing\TestVoter</parameter>
-        <parameter key="sulu_test.test_user_repository.class">Sulu\Bundle\TestBundle\Entity\TestUserRepository</parameter>
-    </parameters>
     <services>
-        <service id="test_user_provider" class="%sulu.test_user_provider.class%" public="true">
+        <service id="test_user_provider" class="Sulu\Bundle\TestBundle\Testing\TestUserProvider" public="true">
             <argument type="service" id="doctrine.orm.entity_manager"/>
             <argument type="service" id="sulu.repository.contact"/>
             <argument type="service" id="sulu.repository.user"/>
@@ -14,7 +9,7 @@
             <argument type="service" id="sulu_security.user_provider"/>
             <tag name="kernel.reset" method="reset"/>
         </service>
-        <service id="test_voter" class="%sulu.test_voter.class%" public="false">
+        <service id="test_voter" class="Sulu\Bundle\TestBundle\Testing\TestVoter" public="false">
             <tag name="security.voter"/>
         </service>
     </services>

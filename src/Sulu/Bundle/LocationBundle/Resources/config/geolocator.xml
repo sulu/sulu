@@ -1,29 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <container xmlns="http://symfony.com/schema/dic/services" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
-    <parameters>
-        <parameter key="sulu_location.geolocator.nominatim.class">Sulu\Bundle\LocationBundle\Geolocator\Service\NominatimGeolocator</parameter>
-        <parameter key="sulu_location.geolocator.google.class">Sulu\Bundle\LocationBundle\Geolocator\Service\GoogleGeolocator</parameter>
-        <parameter key="sulu_location.geolocator.mapquest.class">Sulu\Bundle\LocationBundle\Geolocator\Service\MapquestGeolocator</parameter>
-    </parameters>
-
     <services>
         <!-- Geolocator services -->
         <!-- * Nominatim * -->
-        <service id="sulu_location.geolocator.service.nominatim" class="%sulu_location.geolocator.nominatim.class%">
+        <service id="sulu_location.geolocator.service.nominatim" class="Sulu\Bundle\LocationBundle\Geolocator\Service\NominatimGeolocator">
             <argument type="service" id="http_client" />
             <argument>%sulu_location.geolocator.service.nominatim.endpoint%</argument>
             <argument>%sulu_location.geolocator.service.nominatim.api_key%</argument>
         </service>
 
         <!-- * Google * -->
-        <service id="sulu_location.geolocator.service.google" class="%sulu_location.geolocator.google.class%">
+        <service id="sulu_location.geolocator.service.google" class="Sulu\Bundle\LocationBundle\Geolocator\Service\GoogleGeolocator">
             <argument type="service" id="http_client" />
             <argument>%sulu_location.geolocator.service.google.api_key%</argument>
         </service>
 
         <!-- * Mapquest * -->
-        <service id="sulu_location.geolocator.service.mapquest" class="%sulu_location.geolocator.mapquest.class%">
+        <service id="sulu_location.geolocator.service.mapquest" class="Sulu\Bundle\LocationBundle\Geolocator\Service\MapquestGeolocator">
             <argument type="service" id="http_client" />
             <argument>%sulu_location.geolocator.service.mapquest.endpoint%</argument>
             <argument>%sulu_location.geolocator.service.mapquest.api_key%</argument>

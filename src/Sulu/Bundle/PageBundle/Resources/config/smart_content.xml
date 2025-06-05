@@ -1,37 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <container xmlns="http://symfony.com/schema/dic/services" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
-    <parameters>
-        <!-- data provider -->
-        <parameter key="sulu_page.smart_content.data_provider_pool.class">Sulu\Component\SmartContent\DataProviderPool</parameter>
-
-        <!-- content provider -->
-        <parameter key="sulu_page.smart_content.data_provider.content.query_builder.class">Sulu\Component\Content\SmartContent\QueryBuilder</parameter>
-        <parameter key="sulu_page.smart_content.data_provider.page.class">Sulu\Component\Content\SmartContent\PageDataProvider</parameter>
-        <parameter key="sulu_page.smart_content.data_provider.content.proxy_factory.class">ProxyManager\Factory\LazyLoadingValueHolderFactory</parameter>
-
-        <!-- content type -->
-        <parameter key="sulu_page.smart_content.content_type.class">Sulu\Component\SmartContent\ContentType</parameter>
-    </parameters>
     <services>
         <!-- data provider -->
         <service id="sulu_page.smart_content.data_provider_pool"
-                 class="%sulu_page.smart_content.data_provider_pool.class%" public="true"/>
+                 class="Sulu\Component\SmartContent\DataProviderPool" public="true"/>
 
         <!-- content provider -->
         <service id="sulu_page.smart_content.data_provider.content.proxy_factory"
-                 class="%sulu_page.smart_content.data_provider.content.proxy_factory.class%">
+                 class="ProxyManager\Factory\LazyLoadingValueHolderFactory">
             <argument type="service" id="sulu_core.proxy_manager.configuration"/>
         </service>
         <service id="sulu_page.smart_content.data_provider.content.query_builder"
-                 class="%sulu_page.smart_content.data_provider.content.query_builder.class%" public="false">
+                 class="Sulu\Component\Content\SmartContent\QueryBuilder" public="false">
             <argument type="service" id="sulu.content.structure_manager"/>
             <argument type="service" id="sulu_page.extension.manager"/>
             <argument type="service" id="sulu.phpcr.session"/>
             <argument>%sulu.content.language.namespace%</argument>
         </service>
         <service id="sulu_page.smart_content.data_provider.content"
-                 class="%sulu_page.smart_content.data_provider.page.class%">
+                 class="Sulu\Component\Content\SmartContent\PageDataProvider">
             <argument type="service" id="sulu_page.smart_content.data_provider.content.query_builder"/>
             <argument type="service" id="sulu.content.query_executor"/>
             <argument type="service" id="sulu_document_manager.document_manager"/>
@@ -48,7 +36,7 @@
         </service>
 
         <!-- content type -->
-        <service id="sulu_page.smart_content.content_type" class="%sulu_page.smart_content.content_type.class%">
+        <service id="sulu_page.smart_content.content_type" class="Sulu\Component\SmartContent\ContentType">
             <argument type="service" id="sulu_page.smart_content.data_provider_pool"/>
             <argument type="service" id="sulu_tag.tag_manager"/>
             <argument type="service" id="request_stack"/>

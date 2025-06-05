@@ -3,15 +3,8 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
-    <parameters>
-        <parameter key="sulu_page.search.metadata.provider.structure.class">Sulu\Bundle\PageBundle\Search\Metadata\StructureProvider</parameter>
-        <parameter key="sulu_page.search.event_subscriber.blame_timestamp.class">Sulu\Bundle\PageBundle\Search\EventSubscriber\BlameTimestampSubscriber</parameter>
-        <parameter key="sulu_page.search.event_subscriber.structure.class">Sulu\Bundle\PageBundle\Search\EventSubscriber\StructureSubscriber</parameter>
-        <parameter key="sulu_search.event_listener.hit.class">Sulu\Bundle\PageBundle\Search\EventListener\HitListener</parameter>
-    </parameters>
-
     <services>
-        <service id="sulu_page.search.metadata.provider.structure" class="%sulu_page.search.metadata.provider.structure.class%">
+        <service id="sulu_page.search.metadata.provider.structure" class="Sulu\Bundle\PageBundle\Search\Metadata\StructureProvider">
             <argument type="service" id="massive_search.factory" />
             <argument type="service" id="sulu_document_manager.metadata_factory" />
             <argument type="service" id="sulu_page.structure.factory" />
@@ -21,7 +14,7 @@
         </service>
 
         <!-- Blame and Timestamp subscriber -->
-        <service id="sulu_page.search.event_subscriber.blame_timestamp" class="%sulu_page.search.event_subscriber.blame_timestamp.class%">
+        <service id="sulu_page.search.event_subscriber.blame_timestamp" class="Sulu\Bundle\PageBundle\Search\EventSubscriber\BlameTimestampSubscriber">
             <argument type="service" id="massive_search.factory" />
             <argument type="service" id="doctrine.orm.entity_manager" />
             <tag name="kernel.event_subscriber" />
@@ -36,12 +29,12 @@
             <tag name="massive_search.reindex.provider" id="sulu_structure"/>
         </service>
 
-        <service id="sulu_page.search.event_subscriber.structure" class="%sulu_page.search.event_subscriber.structure.class%">
+        <service id="sulu_page.search.event_subscriber.structure" class="Sulu\Bundle\PageBundle\Search\EventSubscriber\StructureSubscriber">
             <argument type="service" id="massive_search.search_manager" />
             <tag name="sulu_document_manager.event_subscriber" />
         </service>
 
-        <service id="sulu_search.event_listener.hit" class="%sulu_search.event_listener.hit.class%">
+        <service id="sulu_search.event_listener.hit" class="Sulu\Bundle\PageBundle\Search\EventListener\HitListener">
             <argument type="service" id="sulu_core.webspace.request_analyzer" />
             <tag name="kernel.event_listener" event="massive_search.hit" method="onHit" />
             <tag name="sulu.context" context="website"/>

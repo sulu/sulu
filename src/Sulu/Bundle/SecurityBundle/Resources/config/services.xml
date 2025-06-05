@@ -14,26 +14,7 @@
             <parameter key="security">1</parameter>
         </parameter>
 
-        <parameter key="permissions">%sulu_security.permissions%</parameter><!-- TODO deprecated -->
-
-        <parameter key="sulu_security.admin.class">Sulu\Bundle\SecurityBundle\Admin\SecurityAdmin</parameter>
-        <parameter key="sulu_security.authentication_entry_point.class">Sulu\Bundle\SecurityBundle\Security\AuthenticationEntryPoint</parameter>
-        <parameter key="sulu_security.authentication_handler.class">Sulu\Bundle\SecurityBundle\Security\AuthenticationHandler</parameter>
-        <parameter key="sulu_security.mask_converter.class">Sulu\Component\Security\Authorization\MaskConverter</parameter>
-        <parameter key="sulu_security.salt_generator.class">Sulu\Component\Security\Authentication\SaltGenerator</parameter>
-        <parameter key="sulu_security.token_generator.class">Sulu\Bundle\SecurityBundle\Util\TokenGenerator</parameter>
-        <parameter key="sulu_security.security_context_voter.class">Sulu\Component\Security\Authorization\SecurityContextVoter</parameter>
-        <parameter key="sulu_security.access_control_manager.class">Sulu\Component\Security\Authorization\AccessControl\AccessControlManager</parameter>
-        <parameter key="sulu_security.phpcr_access_control_provider.class">Sulu\Component\Security\Authorization\AccessControl\PhpcrAccessControlProvider</parameter>
-        <parameter key="sulu_security.doctrine_access_control_provider.class">Sulu\Component\Security\Authorization\AccessControl\DoctrineAccessControlProvider</parameter>
-        <parameter key="sulu_security.permission_controller.class">Sulu\Bundle\SecurityBundle\Controller\PermissionController</parameter>
-        <parameter key="sulu_security.user_repository.class">Sulu\Bundle\SecurityBundle\Entity\UserRepository</parameter>
-        <parameter key="sulu_security.user_setting_repository.class">Sulu\Bundle\SecurityBundle\Entity\UserSettingRepository</parameter>
-        <parameter key="sulu_security.user_repository_factory.class">Sulu\Component\Security\Authentication\UserRepositoryFactory</parameter>
-        <parameter key="sulu_security.build.user.class">Sulu\Bundle\SecurityBundle\Build\UserBuilder</parameter>
-        <parameter key="sulu_security.entity.role">Sulu\Bundle\SecurityBundle\Entity\Role</parameter>
         <parameter key="sulu_security.entity.user_setting">Sulu\Bundle\SecurityBundle\Entity\UserSetting</parameter>
-        <parameter key="sulu_security.profile_controller.class">Sulu\Bundle\SecurityBundle\Controller\ProfileController</parameter>
     </parameters>
 
     <services>
@@ -64,7 +45,7 @@
 
             <tag name="sulu.context" context="admin"/>
         </service>
-        <service id="sulu_security.admin" class="%sulu_security.admin.class%">
+        <service id="sulu_security.admin" class="Sulu\Bundle\SecurityBundle\Admin\SecurityAdmin">
             <argument type="service" id="Sulu\Bundle\AdminBundle\Admin\View\ViewBuilderFactoryInterface"/>
             <argument type="service" id="sulu_security.security_checker"/>
             <argument type="service" id="translator"/>
@@ -87,32 +68,32 @@
 
         <service
             id="sulu_security.authentication_entry_point"
-            class="%sulu_security.authentication_entry_point.class%"
+            class="Sulu\Bundle\SecurityBundle\Security\AuthenticationEntryPoint"
         />
 
-        <service id="sulu_security.authentication_handler" class="%sulu_security.authentication_handler.class%">
+        <service id="sulu_security.authentication_handler" class="Sulu\Bundle\SecurityBundle\Security\AuthenticationHandler">
             <argument type="service" id="router"/>
             <argument>%sulu_security.two_factor_methods%</argument>
         </service>
 
-        <service id="sulu_security.mask_converter" class="%sulu_security.mask_converter.class%" public="true">
-            <argument>%permissions%</argument>
+        <service id="sulu_security.mask_converter" class="Sulu\Component\Security\Authorization\MaskConverter" public="true">
+            <argument>%sulu_security.permissions%</argument>
         </service>
 
-        <service id="sulu_security.salt_generator" class="%sulu_security.salt_generator.class%" public="true">
+        <service id="sulu_security.salt_generator" class="Sulu\Component\Security\Authentication\SaltGenerator" public="true">
         </service>
-        <service id="%sulu_security.salt_generator.class%" alias="sulu_security.salt_generator"/>
+        <service id="Sulu\Component\Security\Authentication\SaltGenerator" alias="sulu_security.salt_generator"/>
 
-        <service id="sulu_security.token_generator" class="%sulu_security.token_generator.class%" public="true">
+        <service id="sulu_security.token_generator" class="Sulu\Bundle\SecurityBundle\Util\TokenGenerator" public="true">
         </service>
 
-        <service id="sulu_security.security_context_voter" class="%sulu_security.security_context_voter.class%" public="false">
+        <service id="sulu_security.security_context_voter" class="Sulu\Component\Security\Authorization\SecurityContextVoter" public="false">
             <argument type="service" id="sulu_security.access_control_manager"/>
-            <argument>%permissions%</argument>
+            <argument>%sulu_security.permissions%</argument>
             <tag name="security.voter"/>
         </service>
 
-        <service id="sulu_security.access_control_manager" class="%sulu_security.access_control_manager.class%">
+        <service id="sulu_security.access_control_manager" class="Sulu\Component\Security\Authorization\AccessControl\AccessControlManager">
             <argument type="service" id="sulu_security.mask_converter"/>
             <argument type="service" id="event_dispatcher"/>
             <argument type="service" id="sulu_security.system_store"/>
@@ -130,14 +111,14 @@
 
         <service id="Sulu\Bundle\SecurityBundle\System\SystemStoreInterface" alias="sulu_security.system_store"/>
 
-        <service id="sulu_security.phpcr_access_control_provider" class="%sulu_security.phpcr_access_control_provider.class%">
+        <service id="sulu_security.phpcr_access_control_provider" class="Sulu\Component\Security\Authorization\AccessControl\PhpcrAccessControlProvider">
             <argument type="service" id="sulu_document_manager.document_manager"/>
             <argument type="service" id="sulu.repository.role"/>
-            <argument>%permissions%</argument>
+            <argument>%sulu_security.permissions%</argument>
             <tag name="sulu.access_control"/>
         </service>
 
-        <service id="sulu_security.doctrine_access_control_provider" class="%sulu_security.doctrine_access_control_provider.class%">
+        <service id="sulu_security.doctrine_access_control_provider" class="Sulu\Component\Security\Authorization\AccessControl\DoctrineAccessControlProvider">
             <argument type="service" id="doctrine.orm.default_entity_manager"/>
             <argument type="service" id="sulu.repository.role"/>
             <argument type="service" id="sulu.repository.access_control"/>
@@ -145,7 +126,7 @@
             <tag name="sulu.access_control"/>
         </service>
 
-        <service id="sulu_security.permission_controller" class="%sulu_security.permission_controller.class%" public="true">
+        <service id="sulu_security.permission_controller" class="Sulu\Bundle\SecurityBundle\Controller\PermissionController" public="true">
             <argument type="service" id="sulu_security.access_control_manager"/>
             <argument type="service" id="sulu_security.security_checker"/>
             <argument type="service" id="sulu.repository.role"/>
@@ -154,7 +135,7 @@
             <tag name="sulu.context" context="admin"/>
         </service>
 
-        <service id="sulu_security.profile_controller" class="%sulu_security.profile_controller.class%" public="true">
+        <service id="sulu_security.profile_controller" class="Sulu\Bundle\SecurityBundle\Controller\ProfileController" public="true">
             <argument type="service" id="security.token_storage"/>
             <argument type="service" id="doctrine.orm.default_entity_manager"/>
             <argument type="service" id="fos_rest.view_handler"/>
@@ -210,13 +191,13 @@
             <tag name="sulu.context" context="admin"/>
         </service>
 
-        <service id="sulu_security.user_setting_repository" class="%sulu_security.user_setting_repository.class%" public="true">
+        <service id="sulu_security.user_setting_repository" class="Sulu\Bundle\SecurityBundle\Entity\UserSettingRepository" public="true">
             <factory service="doctrine.orm.entity_manager" method="getRepository"/>
 
             <argument>%sulu_security.entity.user_setting%</argument>
         </service>
 
-        <service id="sulu_security.user_repository" class="%sulu_security.user_repository.class%" public="true">
+        <service id="sulu_security.user_repository" class="Sulu\Bundle\SecurityBundle\Entity\UserRepository" public="true">
             <factory service="doctrine.orm.entity_manager" method="getRepository"/>
 
             <argument>%sulu.model.user.class%</argument>
@@ -228,7 +209,7 @@
             <argument type="service" id="doctrine.orm.entity_manager"/>
         </service>
 
-        <service id="sulu_security.build.user" class="%sulu_security.build.user.class%">
+        <service id="sulu_security.build.user" class="Sulu\Bundle\SecurityBundle\Build\UserBuilder">
             <tag name="massive_build.builder" />
         </service>
 

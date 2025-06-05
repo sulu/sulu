@@ -1,16 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <container xmlns="http://symfony.com/schema/dic/services" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
-    <parameters>
-        <parameter key="sulu_page.admin.class">Sulu\Bundle\PageBundle\Admin\PageAdmin</parameter>
-        <parameter key="sulu_page.node_repository.class">Sulu\Bundle\PageBundle\Repository\NodeRepository</parameter>
-        <parameter key="sulu_page.rl_repository.class">Sulu\Bundle\PageBundle\Repository\ResourceLocatorRepository</parameter>
-        <parameter key="sulu_page.extension.seo.class">Sulu\Bundle\PageBundle\Content\Structure\SeoStructureExtension</parameter>
-        <parameter key="sulu_page.extension.excerpt.class">Sulu\Bundle\PageBundle\Content\Structure\ExcerptStructureExtension</parameter>
-    </parameters>
     <services>
         <!-- admin class -->
-        <service id="sulu_page.admin" class="%sulu_page.admin.class%">
+        <service id="sulu_page.admin" class="Sulu\Bundle\PageBundle\Admin\PageAdmin">
             <tag name="sulu.admin"/>
             <tag name="sulu.context" context="admin"/>
             <argument type="service" id="Sulu\Bundle\AdminBundle\Admin\View\ViewBuilderFactoryInterface"/>
@@ -45,7 +38,7 @@
         </service>
 
         <!-- nodes -->
-        <service id="sulu_page.node_repository" class="%sulu_page.node_repository.class%" public="true">
+        <service id="sulu_page.node_repository" class="Sulu\Bundle\PageBundle\Repository\NodeRepository" public="true">
             <argument type="service" id="sulu.content.mapper"/>
             <argument type="service" id="sulu.phpcr.session"/>
             <argument type="service" id="sulu_security.user_manager"/>
@@ -57,7 +50,7 @@
         </service>
 
         <!-- resource locator -->
-        <service id="sulu_page.rl_repository" class="%sulu_page.rl_repository.class%" public="true">
+        <service id="sulu_page.rl_repository" class="Sulu\Bundle\PageBundle\Repository\ResourceLocatorRepository" public="true">
             <argument type="service" id="sulu.content.resource_locator.strategy_pool"/>
             <argument type="service" id="sulu.content.structure_manager"/>
         </service>
@@ -125,12 +118,12 @@
         </service>
 
         <!-- structure extension -->
-        <service id="sulu_page.extension.seo" class="%sulu_page.extension.seo.class%">
+        <service id="sulu_page.extension.seo" class="Sulu\Bundle\PageBundle\Content\Structure\SeoStructureExtension">
             <tag name="sulu.structure.extension"/>
         </service>
 
         <!-- structure extension -->
-        <service id="sulu_page.extension.excerpt" class="%sulu_page.extension.excerpt.class%">
+        <service id="sulu_page.extension.excerpt" class="Sulu\Bundle\PageBundle\Content\Structure\ExcerptStructureExtension">
             <argument type="service" id="sulu.content.structure_manager"/>
             <argument type="service" id="sulu.content.type_manager"/>
             <argument type="service" id="sulu_page.export.manager" />

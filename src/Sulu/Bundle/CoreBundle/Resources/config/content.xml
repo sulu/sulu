@@ -2,57 +2,27 @@
 <container xmlns="http://symfony.com/schema/dic/services"
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
-
-    <parameters>
-        <parameter key="sulu.content.path_cleaner.replacer_loader.file_locator.class">Symfony\Component\Config\FileLocator</parameter>
-        <parameter key="sulu.content.path_cleaner.replacer_loader.class">Sulu\Bundle\CoreBundle\DataFixtures\ReplacerXmlLoader</parameter>
-        <parameter key="sulu.content.path_cleaner.class">Sulu\Component\PHPCR\PathCleanup</parameter>
-        <parameter key="sulu.content.template_resolver.class">Sulu\Component\Content\Template\TemplateResolver</parameter>
-
-        <parameter key="sulu.content.mapper.class">Sulu\Component\Content\Mapper\ContentMapper</parameter>
-        <parameter key="sulu.content.structure_manager.class">Sulu\Component\Content\Compat\StructureManager</parameter>
-        <parameter key="sulu.content.webspace_structure_provider.class">Sulu\Component\Webspace\StructureProvider\WebspaceStructureProvider</parameter>
-
-        <parameter key="sulu.content.type_manager.class">Sulu\Component\Content\ContentTypeManager</parameter>
-        <parameter key="sulu.content.type.number.class">Sulu\Component\Content\Types\Number</parameter>
-        <parameter key="sulu.content.type.text_line.class">Sulu\Component\Content\Types\TextLine</parameter>
-        <parameter key="sulu.content.type.text_area.class">Sulu\Component\Content\Types\TextArea</parameter>
-        <parameter key="sulu.content.type.text_editor.class">Sulu\Component\Content\Types\TextEditor</parameter>
-        <parameter key="sulu.content.type.resource_locator.class">Sulu\Component\Content\Types\ResourceLocator</parameter>
-        <parameter key="sulu.content.type.link.class">Sulu\Component\Content\Types\Link</parameter>
-        <parameter key="sulu.content.type.single_icon_selection.class">Sulu\Component\Content\Types\SingleIconSelection</parameter>
-        <parameter key="sulu.content.type.block.class">Sulu\Component\Content\Types\BlockContentType</parameter>
-
-        <parameter key="sulu.content.resource_locator.mapper.phpcr.class">Sulu\Component\Content\Types\ResourceLocator\Mapper\PhpcrMapper</parameter>
-
-        <parameter key="sulu.content.query_executor.class">Sulu\Component\Content\Query\ContentQueryExecutor</parameter>
-
-        <parameter key="sulu.cache.warmer.structure.class">Sulu\Bundle\CoreBundle\Cache\StructureWarmer</parameter>
-
-        <parameter key="sulu.util.node_helper.class">Sulu\Component\Util\SuluNodeHelper</parameter>
-    </parameters>
-
     <services>
         <service id="sulu.content.slugger" class="Symfony\Component\String\Slugger\AsciiSlugger" />
 
-        <service id="sulu.content.path_cleaner.replacer_loader.file_locator" class="%sulu.content.path_cleaner.replacer_loader.file_locator.class%" synthetic="false">
+        <service id="sulu.content.path_cleaner.replacer_loader.file_locator" class="Symfony\Component\Config\FileLocator" synthetic="false">
         </service>
 
-        <service id="sulu.content.path_cleaner.replacer_loader" class="%sulu.content.path_cleaner.replacer_loader.class%" synthetic="false">
+        <service id="sulu.content.path_cleaner.replacer_loader" class="Sulu\Bundle\CoreBundle\DataFixtures\ReplacerXmlLoader" synthetic="false">
             <argument type="service" id="sulu.content.path_cleaner.replacer_loader.file_locator"/>
         </service>
 
-        <service id="sulu.content.path_cleaner" class="%sulu.content.path_cleaner.class%" public="true">
+        <service id="sulu.content.path_cleaner" class="Sulu\Component\PHPCR\PathCleanup" public="true">
             <argument type="collection" key="$replacers">
             </argument>
             <argument type="service" key="$slugger" id="sulu.content.slugger"/>
         </service>
         <service id="Sulu\Component\PHPCR\PathCleanupInterface" alias="sulu.content.path_cleaner"/>
 
-        <service id="sulu.content.template_resolver" public="false" class="%sulu.content.template_resolver.class%"/>
+        <service id="sulu.content.template_resolver" public="false" class="Sulu\Component\Content\Template\TemplateResolver"/>
 
         <!-- content mapper -->
-        <service id="sulu.content.mapper" class="%sulu.content.mapper.class%" public="true">
+        <service id="sulu.content.mapper" class="Sulu\Component\Content\Mapper\ContentMapper" public="true">
             <argument type="service" id="sulu_document_manager.document_manager" />
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>
             <argument type="service" id="form.factory" />
@@ -71,12 +41,12 @@
         </service>
 
         <!-- content type manager -->
-        <service id="sulu.content.type_manager" class="%sulu.content.type_manager.class%" public="true">
+        <service id="sulu.content.type_manager" class="Sulu\Component\Content\ContentTypeManager" public="true">
             <argument type="service" id="service_container"/>
         </service>
 
         <!-- structure manager -->
-        <service id="sulu.content.structure_manager" class="%sulu.content.structure_manager.class%" public="true">
+        <service id="sulu.content.structure_manager" class="Sulu\Component\Content\Compat\StructureManager" public="true">
             <argument type="service" id="sulu_page.structure.factory" />
             <argument type="service" id="sulu_document_manager.document_inspector" />
             <argument type="service" id="sulu_page.compat.structure.legacy_property_factory" />
@@ -94,7 +64,7 @@
             <argument type="service" id="sulu.content.webspace_structure_provider.cache_adapter" />
         </service>
 
-        <service id="sulu.content.webspace_structure_provider" class="%sulu.content.webspace_structure_provider.class%" public="true">
+        <service id="sulu.content.webspace_structure_provider" class="Sulu\Component\Webspace\StructureProvider\WebspaceStructureProvider" public="true">
             <argument type="service" id="twig"/>
             <argument type="service" id="sulu.content.structure_manager"/>
             <argument type="service" id="sulu.content.webspace_structure_provider.cache"/>
@@ -102,7 +72,7 @@
 
         <!-- rlp mapper -->
         <service id="sulu.content.resource_locator.mapper.phpcr"
-                 class="%sulu.content.resource_locator.mapper.phpcr.class%" public="false">
+                 class="Sulu\Component\Content\Types\ResourceLocator\Mapper\PhpcrMapper" public="false">
             <argument type="service" id="sulu.phpcr.session"/>
             <argument type="service" id="sulu_document_manager.document_manager"/>
             <argument type="service" id="sulu_document_manager.document_inspector"/>
@@ -148,40 +118,40 @@
         <service id="sulu.content.rlp.strategy.tree" alias="sulu.content.resource_locator.strategy.tree_leaf_edit"/>
 
         <!-- simple content types -->
-        <service id="sulu.content.type.number" class="%sulu.content.type.number.class%">
+        <service id="sulu.content.type.number" class="Sulu\Component\Content\Types\Number">
             <tag name="sulu_admin.property_metadata_mapper" type="number"/>
             <tag name="sulu.content.type" alias="number"/>
             <tag name="sulu.content.export" format="1.2.xliff" translate="true" />
         </service>
-        <service id="sulu.content.type.text_line" class="%sulu.content.type.text_line.class%">
+        <service id="sulu.content.type.text_line" class="Sulu\Component\Content\Types\TextLine">
             <tag name="sulu.content.type" alias="text_line"/>
             <tag name="sulu.content.export" format="1.2.xliff" translate="true" />
         </service>
-        <service id="sulu.content.type.text_area" class="%sulu.content.type.text_line.class%">
+        <service id="sulu.content.type.text_area" class="Sulu\Component\Content\Types\TextArea">
             <tag name="sulu.content.type" alias="text_area"/>
             <tag name="sulu.content.export" format="1.2.xliff" translate="true" />
         </service>
-        <service id="sulu.content.type.text_editor" class="%sulu.content.type.text_editor.class%">
+        <service id="sulu.content.type.text_editor" class="Sulu\Component\Content\Types\TextEditor">
             <argument type="service" id="sulu_markup.parser"/>
             <tag name="sulu.content.type" alias="text_editor"/>
             <tag name="sulu.content.export" format="1.2.xliff" translate="true" />
         </service>
-        <service id="sulu.content.type.resource_locator" class="%sulu.content.type.resource_locator.class%">
+        <service id="sulu.content.type.resource_locator" class="Sulu\Component\Content\Types\ResourceLocator">
             <tag name="sulu.content.type" alias="resource_locator"/>
             <tag name="sulu.content.export" format="1.2.xliff" translate="false" />
         </service>
-        <service id="sulu.content.type.link" class="%sulu.content.type.link.class%">
+        <service id="sulu.content.type.link" class="Sulu\Component\Content\Types\Link">
             <argument type="service" id="sulu_markup.link_tag.provider_pool"/>
             <tag name="sulu.content.type" alias="link"/>
             <tag name="sulu.content.export" format="1.2.xliff" translate="false" />
         </service>
-        <service id="sulu.content.type.single_icon_selection" class="%sulu.content.type.single_icon_selection.class%">
+        <service id="sulu.content.type.single_icon_selection" class="Sulu\Component\Content\Types\SingleIconSelection">
             <tag name="sulu.content.type" alias="single_icon_selection"/>
             <tag name="sulu.content.export" format="1.2.xliff" translate="true" />
         </service>
 
         <!-- complex content types -->
-        <service id="sulu.content.type.block" class="%sulu.content.type.block.class%">
+        <service id="sulu.content.type.block" class="Sulu\Component\Content\Types\BlockContentType">
             <argument type="service" id="sulu.content.type_manager"/>
             <argument type="service" id="sulu_admin.schema_metadata_provider"/>
             <argument type="tagged" tag="sulu_content.deprecated_block_visitor" />
@@ -226,20 +196,20 @@
         </service>
 
         <!-- content query -->
-        <service id="sulu.content.query_executor" class="%sulu.content.query_executor.class%">
+        <service id="sulu.content.query_executor" class="Sulu\Component\Content\Query\ContentQueryExecutor">
             <argument type="service" id="sulu.phpcr.session"/>
             <argument type="service" id="sulu.content.mapper"/>
             <argument type="service" id="debug.stopwatch" on-invalid="null"/>
         </service>
 
         <!-- cache warmer for structures -->
-        <service id="sulu.cache.warmer.structure" class="%sulu.cache.warmer.structure.class%">
+        <service id="sulu.cache.warmer.structure" class="Sulu\Bundle\CoreBundle\Cache\StructureWarmer">
             <argument type="service" id="sulu.content.structure_manager" />
             <tag name="kernel.cache_warmer" />
         </service>
 
         <!-- sulu node helper -->
-        <service id="sulu.util.node_helper" class="%sulu.util.node_helper.class%" public="true">
+        <service id="sulu.util.node_helper" class="Sulu\Component\Util\SuluNodeHelper" public="true">
             <argument type="service" id="sulu_document_manager.default_session"/>
             <argument>%sulu.content.language.namespace%</argument>
             <argument type="collection">

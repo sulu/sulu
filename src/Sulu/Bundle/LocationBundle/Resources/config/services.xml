@@ -1,13 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <container xmlns="http://symfony.com/schema/dic/services" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
-    <parameters>
-        <parameter key="sulu_location.content.type.location.class">Sulu\Bundle\LocationBundle\Content\Types\LocationContentType</parameter>
-    </parameters>
-
     <services>
         <!-- content-types -->
-        <service id="sulu_location.content.type.location" class="%sulu_location.content.type.location.class%">
+        <service id="sulu_location.content.type.location" class="Sulu\Bundle\LocationBundle\Content\Types\LocationContentType">
             <tag name="sulu.content.type" alias="location" />
             <tag name="sulu.content.export" format="1.2.xliff" translate="false" />
         </service>

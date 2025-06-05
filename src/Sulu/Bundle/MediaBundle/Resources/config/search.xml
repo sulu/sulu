@@ -4,20 +4,15 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd"
     >
-    <parameters>
-        <parameter key="sulu_media.search.subscriber.structure_media.class">Sulu\Bundle\MediaBundle\Search\Subscriber\StructureMediaSearchSubscriber</parameter>
-        <parameter key="sulu_media.search.subscriber.media.class">Sulu\Bundle\MediaBundle\Search\Subscriber\MediaSearchSubscriber</parameter>
-    </parameters>
-
     <services>
-        <service id="sulu_media.search.subscriber.structure_media" class="%sulu_media.search.subscriber.structure_media.class%" >
+        <service id="sulu_media.search.subscriber.structure_media" class="Sulu\Bundle\MediaBundle\Search\Subscriber\StructureMediaSearchSubscriber" >
             <argument type="service" id="sulu_media.media_manager" />
             <argument type="service" id="sulu_core.webspace.request_analyzer" on-invalid="ignore"/>
             <argument>%sulu_media.search.default_image_format%</argument>
             <tag name="kernel.event_subscriber" />
         </service>
 
-        <service id="sulu_media.search.subscriber.media" class="%sulu_media.search.subscriber.media.class%" >
+        <service id="sulu_media.search.subscriber.media" class="Sulu\Bundle\MediaBundle\Search\Subscriber\MediaSearchSubscriber" >
             <argument type="service" id="sulu_media.media_manager" />
             <argument type="service" id="massive_search.factory" />
             <argument>%sulu_media.format_manager.mime_types%</argument>

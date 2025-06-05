@@ -562,6 +562,11 @@ Removed unused arguments:
 - `Sulu\Bundle\SecurityBundle\UserManager\UserManager::__construct` `$groupRepository` (4th argument) removed
 - `Sulu\Bundle\SecurityBundle\Admin\SecurityAdmin::__construct` `$urlGenerator` (3rd argument) removed
 
+Removed kernel parameters:
+
+- All `sulu_*.class` parameters for services where removed (use compilerpasses to replace class of a service definition)
+- Parameter `%permissions%` was replaced in favor of `%sulu_security.permissions%`
+
 ### Moved classes for 3.0:
 
 - `Sulu\Bundle\CoreBundle\ExpressionLanguage\ContainerExpressionLanguageProvider`: `Sulu\Bundle\AdminBundle\ExpressionLanguage\ContainerExpressionLanguageProvider`
