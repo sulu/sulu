@@ -29,7 +29,7 @@
                     </params>
                 </property>
 
-                <property name="mainWebspace" type="single_select" colspan="6">
+                <property name="mainWebspace" type="single_select" colspan="6" disabledCondition="!customizeWebspaceSettings">
                     <meta>
                         <title>sulu_content.main_webspace</title>
                     </meta>
@@ -43,7 +43,7 @@
                     </params>
                 </property>
 
-                <property name="additionalWebspaces" type="select" colspan="6">
+                <property name="additionalWebspaces" type="select" colspan="6" disabledCondition="!customizeWebspaceSettings">
                     <meta>
                         <title>sulu_article.additional_webspaces</title>
                     </meta>

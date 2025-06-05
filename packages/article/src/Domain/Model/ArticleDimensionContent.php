@@ -29,9 +29,10 @@ use Sulu\Content\Domain\Model\WorkflowTrait;
 /**
  * @experimental
  */
-class ArticleDimensionContent implements ArticleDimensionContentInterface
+class ArticleDimensionContent implements ArticleDimensionContentInterface, AdditionalWebspacesInterface
 {
     use AuditableTrait;
+    use AdditionalWebspacesTrait;
     use AuthorTrait;
     use DimensionContentTrait;
     use ExcerptTrait;

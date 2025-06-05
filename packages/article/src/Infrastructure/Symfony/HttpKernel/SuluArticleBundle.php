@@ -13,8 +13,13 @@ declare(strict_types=1);
 
 namespace Sulu\Article\Infrastructure\Symfony\HttpKernel;
 
+use Sulu\Article\Application\Content\DataMapper\AdditionalWebspacesDataMapper;
+use Sulu\Article\Application\Content\Merger\AdditionalWebspacesMerger;
 use Sulu\Article\Application\Mapper\ArticleContentMapper;
 use Sulu\Article\Application\Mapper\ArticleMapperInterface;
+use Sulu\Article\Application\Webspace\WebspaceResolver;
+use Sulu\Article\Application\Webspace\WebspaceSettingsConfigurationResolver;
+use Sulu\Article\Application\Content\Normalizer\AdditionalWebspacesNormalizer;
 use Sulu\Article\Application\MessageHandler\ApplyWorkflowTransitionArticleMessageHandler;
 use Sulu\Article\Application\MessageHandler\CopyLocaleArticleMessageHandler;
 use Sulu\Article\Application\MessageHandler\CreateArticleMessageHandler;
@@ -26,11 +31,13 @@ use Sulu\Article\Domain\Model\ArticleDimensionContent;
 use Sulu\Article\Domain\Model\ArticleDimensionContentInterface;
 use Sulu\Article\Domain\Model\ArticleInterface;
 use Sulu\Article\Domain\Repository\ArticleRepositoryInterface;
+use Sulu\Article\Infrastructure\Doctrine\MetadataLoader;
 use Sulu\Article\Infrastructure\Doctrine\Repository\ArticleRepository;
 use Sulu\Article\Infrastructure\Sulu\Admin\ArticleAdmin;
 use Sulu\Article\Infrastructure\Sulu\Content\ArticleLinkProvider;
 use Sulu\Article\Infrastructure\Sulu\Content\ArticleSmartContentProvider;
 use Sulu\Article\Infrastructure\Sulu\Content\ArticleTeaserProvider;
+use Sulu\Article\Infrastructure\Sulu\Routing\ArticleRouteEnhancer;
 use Sulu\Article\Infrastructure\Sulu\Content\PropertyResolver\ArticleSelectionPropertyResolver;
 use Sulu\Article\Infrastructure\Sulu\Content\PropertyResolver\SingleArticleSelectionPropertyResolver;
 use Sulu\Article\Infrastructure\Sulu\Content\ResourceLoader\ArticleResourceLoader;
@@ -68,6 +75,28 @@ final class SuluArticleBundle extends AbstractBundle
     {
         $definition->rootNode() // @phpstan-ignore-line
             ->children()
+                ->arrayNode('default_main_webspace')
+                    ->useAttributeAsKey('locale')
+                    ->beforeNormalization()
+                        ->ifString()
+                        ->then(function ($v) {
+                            return ['default' => $v];
+                        })
+                    ->end()
+                    ->prototype('scalar')->end()
+                ->end()
+                ->arrayNode('default_additional_webspaces')
+                    ->beforeNormalization()
+                        ->ifTrue(function ($v) {
+                            return \count(\array_filter(\array_keys($v), 'is_string')) <= 0;
+                        })
+                        ->then(function ($v) {
+                            return ['default' => $v];
+                        })
+                    ->end()
+                    ->prototype('array')->useAttributeAsKey('locale')->prototype('scalar')->end()->end()
+                    ->defaultValue([])
+                ->end()
                 ->arrayNode('objects')
                     ->addDefaultsIfNotSet()
                     ->children()
@@ -96,6 +125,9 @@ final class SuluArticleBundle extends AbstractBundle
     public function loadExtension(array $config, ContainerConfigurator $container, ContainerBuilder $builder): void
     {
         $this->configurePersistence($config['objects'], $builder); // @phpstan-ignore-line
+
+        $builder->setParameter('sulu_article.default_main_webspace', $config['default_main_webspace']);
+        $builder->setParameter('sulu_article.default_additional_webspaces', $config['default_additional_webspaces']);
 
         $services = $container->services();
 
@@ -165,6 +197,45 @@ final class SuluArticleBundle extends AbstractBundle
                 new Reference('sulu_content.content_persister'),
             ])
             ->tag('sulu_article.article_mapper');
+
+        // Additional Webspaces Data Mapper service
+        $services->set('sulu_article.additional_webspaces_data_mapper')
+            ->class(AdditionalWebspacesDataMapper::class)
+            ->tag('sulu_content.data_mapper');
+
+        // Doctrine Metadata Loader service
+        $services->set('sulu_article.additional_webspaces_metadata_loader')
+            ->class(MetadataLoader::class)
+            ->tag('doctrine.event_listener', ['event' => 'loadClassMetadata']);
+
+        // Additional Webspaces Content Merger service
+        $services->set('sulu_article.additional_webspaces_merger')
+            ->class(AdditionalWebspacesMerger::class)
+            ->tag('sulu_content.merger', ['priority' => 12]);
+
+        // Webspace Configuration Resolver service
+        $services->set('sulu_article.webspace_settings_configuration_resolver')
+            ->class(WebspaceSettingsConfigurationResolver::class)
+            ->args([
+                '%sulu_article.default_main_webspace%',
+                '%sulu_article.default_additional_webspaces%',
+            ]);
+
+        // Webspace Resolver service
+        $services->set('sulu_article.webspace_resolver')
+            ->class(WebspaceResolver::class)
+            ->args([
+                new Reference('sulu_core.webspace.webspace_manager'),
+                new Reference('sulu_article.webspace_settings_configuration_resolver'),
+            ]);
+
+        // Additional Webspaces Content Normalizer service
+        $services->set('sulu_article.additional_webspaces_normalizer')
+            ->class(AdditionalWebspacesNormalizer::class)
+            ->args([
+                new Reference('sulu_article.webspace_resolver'),
+            ])
+            ->tag('sulu_content.normalizer');
 
         // Sulu Integration service
         $services->set('sulu_article.article_admin')
@@ -307,6 +378,16 @@ final class SuluArticleBundle extends AbstractBundle
                 ->tag('sulu_trash.restore_trash_item_handler')
                 ->tag('sulu_trash.restore_configuration_provider');
         }
+
+        // Article Route Enhancer for SEO support
+        $services->set('sulu_article.article_route_enhancer')
+            ->class(ArticleRouteEnhancer::class)
+            ->args([
+                new Reference('sulu_core.webspace.webspace_manager'),
+                new Reference('sulu_article.webspace_resolver'),
+                '%kernel.environment%',
+            ])
+            ->tag('cmf_routing.route_enhancer', ['priority' => 10]);
     }
 
     /**
