@@ -573,8 +573,8 @@ Removed kernel parameters:
 
 Return type hints have been added to the `TimestampableInterface` and `UserBlameInterface` methods in Sulu 3.0. This affects the following methods:
 
-- `TimestampableInterface::getCreated()`: now returns `\DateTime`
-- `TimestampableInterface::getChanged()`: now returns `\DateTime`
+- `TimestampableInterface::getCreated()`: now returns `\DateTimeImmutable`
+- `TimestampableInterface::getChanged()`: now returns `\DateTimeImmutable`
 - `UserBlameInterface::getCreator()`: now returns `?UserInterface`
 - `UserBlameInterface::getChanger()`: now returns `?UserInterface`
 
