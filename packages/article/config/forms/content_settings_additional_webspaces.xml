@@ -1,0 +1,62 @@
+<?xml version="1.0" ?>
+<form xmlns="http://schemas.sulu.io/template/template"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/form-1.0.xsd"
+>
+    <key>content_settings_additional_webspaces</key>
+
+    <tag name="sulu_content.content_settings_form" instanceOf="Sulu\Article\Domain\Model\ArticleDimensionContent" priority="-31"/>
+
+    <properties>
+        <section name="webspace">
+            <meta>
+                <title>sulu_content.webspace</title>
+            </meta>
+
+            <properties>
+                <property name="customizeWebspaceSettings" type="checkbox">
+                    <meta>
+                        <title>sulu_article.webspace_settings</title>
+                    </meta>
+
+                    <params>
+                        <param name="label">
+                            <meta>
+                                <title>sulu_article.customize_webspace_settings</title>
+                            </meta>
+                        </param>
+                        <param name="type" value="toggler"/>
+                    </params>
+                </property>
+
+                <property name="mainWebspace" type="single_select" colspan="6">
+                    <meta>
+                        <title>sulu_content.main_webspace</title>
+                    </meta>
+
+                    <params>
+                        <param
+                            name="values"
+                            type="expression"
+                            value="service('sulu_content.webspace_select').getValues()"
+                        />
+                    </params>
+                </property>
+
+                <property name="additionalWebspaces" type="select" colspan="6">
+                    <meta>
+                        <title>sulu_article.additional_webspaces</title>
+                    </meta>
+
+                    <params>
+                        <param
+                            name="values"
+                            type="expression"
+                            value="service('sulu_content.webspace_select').getValues()"
+                        />
+                    </params>
+                </property>
+            </properties>
+        </section>
+    </properties>
+</form>

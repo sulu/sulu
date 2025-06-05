@@ -293,7 +293,7 @@ class ContentViewBuilderFactory implements ContentViewBuilderFactoryInterface
     ): ViewBuilderInterface {
         $forms = [];
         foreach ($this->settingsForms as $key => $tag) {
-            if (\is_subclass_of($dimensionContentClass, $tag['instanceOf'])) {
+            if (\is_subclass_of($dimensionContentClass, $tag['instanceOf']) || $dimensionContentClass === $tag['instanceOf']) {
                 $forms[] = $key;
             }
         }

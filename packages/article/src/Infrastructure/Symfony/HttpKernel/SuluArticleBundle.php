@@ -325,7 +325,7 @@ final class SuluArticleBundle extends AbstractBundle
                     ],
                     'forms' => [
                         'directories' => [
-                            // \dirname(__DIR__, 4) . '/config/forms',
+                            \dirname(__DIR__, 4) . '/config/forms',
                         ],
                     ],
                     'templates' => [
