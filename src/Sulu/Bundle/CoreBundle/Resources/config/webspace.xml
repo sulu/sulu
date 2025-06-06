@@ -43,7 +43,7 @@
             <argument>%kernel.environment%</argument>
             <argument>%router.request_context.host%</argument>
             <argument>%router.request_context.scheme%</argument>
-            <argument type="service" id="sulu_page.structure.factory" />
+            <argument type="service" id="sulu_admin.metadata_provider_registry" />
 
             <tag name="sulu.localization_provider"/>
         </service>

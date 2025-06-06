@@ -400,7 +400,7 @@ now the primary means of interacting with the bundle.
 ### Metadata now locale independent
 
 The Sulu Metadata classes `ItemMetadata`, `SectionMetadata`, `FieldMetadata`, `OptionMetadata` and `FormMetadata` are
-now independent from the locale and contain all metadata for all locales this means setter and getter changed.
+now independent of the locale and contain all metadata for all locales this means setter and getter changed.
 
 ```diff
 // getter
@@ -504,6 +504,13 @@ DROP INDEX UNIQ_5CEC3EEAE25D857EC242628A1FA6DDA ON se_permissions;
 ALTER TABLE se_permissions DROP module;
 CREATE UNIQUE INDEX UNIQ_5CEC3EEAE25D857EA1FA6DDA ON se_permissions (context, idRoles);
 ```
+
+### The StructureMetadataFactory service removed
+
+The StructureMetadataFactory service was removed and replaced by the MetadataProviderRegistry.
+So a few constructor of specific classes has been changed:
+
+- `Sulu\Component\Webspace\Manager\WebspaceManager` 
 
 ### Removed deprecations for 3.0
 

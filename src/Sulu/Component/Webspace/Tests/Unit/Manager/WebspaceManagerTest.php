@@ -14,8 +14,10 @@ namespace Sulu\Component\Webspace\Tests\Unit;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
-use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactoryInterface;
-use Sulu\Component\Content\Metadata\StructureMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadataProvider;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
 use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
 use Sulu\Component\Webspace\Exception\InvalidTemplateException;
 use Sulu\Component\Webspace\Loader\XmlFileLoader10;
@@ -43,14 +45,16 @@ class WebspaceManagerTest extends WebspaceTestCase
      */
     private $requestStack;
 
+    /**
+     * @var ObjectProphecy<FormMetadataProvider>
+     */
+    private ObjectProphecy $formMetadataProvider;
+
+    protected MetadataProviderRegistry $metadataProviderRegistry;
+
     protected WebspaceManager $webspaceManager;
 
     private string $cacheDirectory;
-
-    /**
-     * @var ObjectProphecy<StructureMetadataFactoryInterface>
-     */
-    private $structureMetadataFactory;
 
     public function setUp(): void
     {
@@ -74,10 +78,17 @@ class WebspaceManagerTest extends WebspaceTestCase
         $this->loader = new DelegatingLoader($resolver);
         $this->requestStack = $this->prophesize(RequestStack::class);
 
-        $this->structureMetadataFactory = $this->prophesize(StructureMetadataFactoryInterface::class);
-        $defaultStructure = new StructureMetadata('default');
-        $overviewStructure = new StructureMetadata('overview');
-        $this->structureMetadataFactory->getStructures('page')->willReturn([$defaultStructure, $overviewStructure]);
+        $this->metadataProviderRegistry = new MetadataProviderRegistry();
+        $this->formMetadataProvider = $this->prophesize(FormMetadataProvider::class);
+        $this->metadataProviderRegistry->addMetadataProvider('form', $this->formMetadataProvider->reveal());
+        $typedMetadata = new TypedFormMetadata();
+        $defaultMetadata = new FormMetadata();
+        $defaultMetadata->setKey('default');
+        $overviewMetadata = new FormMetadata();
+        $overviewMetadata->setKey('overview');
+        $typedMetadata->addForm($defaultMetadata->getKey(), $defaultMetadata);
+        $typedMetadata->addForm($overviewMetadata->getKey(), $overviewMetadata);
+        $this->formMetadataProvider->getMetadata('page', Argument::cetera())->willReturn($typedMetadata);
 
         $this->webspaceManager = new WebspaceManager(
             $this->loader,
@@ -91,7 +102,7 @@ class WebspaceManagerTest extends WebspaceTestCase
             'test',
             'sulu.io',
             'http',
-            $this->structureMetadataFactory->reveal()
+            $this->metadataProviderRegistry,
         );
     }
 
@@ -553,7 +564,7 @@ class WebspaceManagerTest extends WebspaceTestCase
             'test',
             'sulu.io',
             'http',
-            $this->structureMetadataFactory->reveal()
+            $this->metadataProviderRegistry
         );
 
         $webspaces = $this->webspaceManager->getWebspaceCollection();
@@ -575,7 +586,11 @@ class WebspaceManagerTest extends WebspaceTestCase
     {
         $this->expectException(InvalidTemplateException::class);
 
-        $this->structureMetadataFactory->getStructures('page')->willReturn([]);
+        $this->metadataProviderRegistry = new MetadataProviderRegistry();
+        $this->formMetadataProvider = $this->prophesize(FormMetadataProvider::class);
+        $this->metadataProviderRegistry->addMetadataProvider('form', $this->formMetadataProvider->reveal());
+        $typedMetadata = new TypedFormMetadata();
+        $this->formMetadataProvider->getMetadata('page', Argument::cetera())->willReturn($typedMetadata);
 
         $this->webspaceManager = new WebspaceManager(
             $this->loader,
@@ -589,7 +604,7 @@ class WebspaceManagerTest extends WebspaceTestCase
             'prod',
             'sulu.io',
             'http',
-            $this->structureMetadataFactory->reveal()
+            $this->metadataProviderRegistry,
         );
 
         $webspaces = $this->webspaceManager->getWebspaceCollection();
@@ -611,7 +626,7 @@ class WebspaceManagerTest extends WebspaceTestCase
             'prod',
             'sulu.io',
             'http',
-            $this->structureMetadataFactory->reveal()
+            $this->metadataProviderRegistry
         );
 
         $webspaces = $this->webspaceManager->getWebspaceCollection();

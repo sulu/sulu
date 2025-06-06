@@ -11,8 +11,9 @@
 
 namespace Sulu\Component\Webspace\Manager;
 
-use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactoryInterface;
-use Sulu\Component\Content\Metadata\StructureMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Util\WildcardUrlUtil;
 use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
@@ -22,6 +23,7 @@ use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\PortalInformation;
 use Sulu\Component\Webspace\Url\ReplacerInterface;
 use Sulu\Component\Webspace\Webspace;
+use Sulu\Page\Domain\Model\PageInterface;
 use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -54,7 +56,7 @@ class WebspaceManager implements WebspaceManagerInterface
         private string $environment,
         private string $defaultHost,
         private string $defaultScheme,
-        private StructureMetadataFactoryInterface $structureMetadataFactory
+        private MetadataProviderRegistry $metadataProviderRegistry,
     ) {
         $this->setOptions($options);
     }
@@ -400,11 +402,15 @@ class WebspaceManager implements WebspaceManagerInterface
             );
 
             if (!$cache->isFresh()) {
+                $metadataProvider = $this->metadataProviderRegistry->getMetadataProvider('form');
+                $metadata = $metadataProvider->getMetadata(PageInterface::TEMPLATE_TYPE, 'en', []);
+                \assert($metadata instanceof TypedFormMetadata, \sprintf('Expected TypedFormMetadata instance for "%s" metadata.', PageInterface::TEMPLATE_TYPE));
+
                 $availableTemplates = \array_map(
-                    function(StructureMetadata $structure) {
-                        return $structure->getName();
+                    function(FormMetadata $formMetadata) {
+                        return $formMetadata->getKey();
                     },
-                    $this->structureMetadataFactory->getStructures('page')
+                    $metadata->getForms()
                 );
                 $webspaceCollectionBuilder = new WebspaceCollectionBuilder(
                     $this->loader,
