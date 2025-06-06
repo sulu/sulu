@@ -62,7 +62,7 @@ class AdminController
         private NavigationRegistry $navigationRegistry,
         private FieldTypeOptionRegistryInterface $fieldTypeOptionRegistry,
         private ContactManagerInterface $contactManager,
-        private DataProviderPoolInterface $dataProviderPool,
+        private ?DataProviderPoolInterface $dataProviderPool,
         private LinkProviderPoolInterface $linkProviderPool,
         private LocalizationManagerInterface $localizationManager,
         private string $environment,
@@ -142,7 +142,7 @@ class AdminController
                 'resources' => $this->resources,
                 'smartContent' => \array_map(function(DataProviderInterface $dataProvider) {
                     return $dataProvider->getConfiguration();
-                }, $this->dataProviderPool->getAll()),
+                }, $this->dataProviderPool?->getAll() ?? []),
                 'user' => $user,
                 'contact' => $contact,
                 'collaborationEnabled' => $this->collaborationEnabled,

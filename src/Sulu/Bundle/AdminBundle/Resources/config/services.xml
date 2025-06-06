@@ -14,7 +14,7 @@
             <argument type="service" id="sulu_admin.navigation_registry"/>
             <argument type="service" id="sulu_admin.field_type_option_registry"/>
             <argument type="service" id="sulu_contact.contact_manager" />
-            <argument type="service" id="sulu_page.smart_content.data_provider_pool" />
+            <argument type="service" id="sulu_page.smart_content.data_provider_pool" on-invalid="null" />
             <argument type="service" id="sulu_markup.link_tag.provider_pool"/>
             <argument type="service" id="sulu.core.localization_manager" />
             <argument>%kernel.environment%</argument>
