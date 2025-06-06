@@ -37,7 +37,7 @@ use Sulu\Article\Infrastructure\Sulu\Admin\ArticleAdmin;
 use Sulu\Article\Infrastructure\Sulu\Content\ArticleLinkProvider;
 use Sulu\Article\Infrastructure\Sulu\Content\ArticleSmartContentProvider;
 use Sulu\Article\Infrastructure\Sulu\Content\ArticleTeaserProvider;
-use Sulu\Article\Infrastructure\Sulu\Routing\ArticleRouteEnhancer;
+use Sulu\Article\Infrastructure\Sulu\Route\ArticleRouteDefaultsProvider;
 use Sulu\Article\Infrastructure\Sulu\Content\PropertyResolver\ArticleSelectionPropertyResolver;
 use Sulu\Article\Infrastructure\Sulu\Content\PropertyResolver\SingleArticleSelectionPropertyResolver;
 use Sulu\Article\Infrastructure\Sulu\Content\ResourceLoader\ArticleResourceLoader;
@@ -379,15 +379,19 @@ final class SuluArticleBundle extends AbstractBundle
                 ->tag('sulu_trash.restore_configuration_provider');
         }
 
-        // Article Route Enhancer for SEO support
-        $services->set('sulu_article.article_route_enhancer')
-            ->class(ArticleRouteEnhancer::class)
+        // Article Route Defaults Provider with SEO support
+        $services->set('sulu_article.article_route_defaults_provider')
+            ->class(ArticleRouteDefaultsProvider::class)
             ->args([
+                new Reference('doctrine.orm.entity_manager'),
+                new Reference('sulu_content.content_aggregator'),
+                new Reference('sulu_admin.metadata_provider_registry'),
+                new Reference('sulu_http_cache.cache_lifetime.resolver'),
                 new Reference('sulu_core.webspace.webspace_manager'),
                 new Reference('sulu_article.webspace_resolver'),
                 '%kernel.environment%',
             ])
-            ->tag('cmf_routing.route_enhancer', ['priority' => 10]);
+            ->tag('sulu_route.route_defaults_provider', ['resource_key' => 'articles']);
     }
 
     /**
