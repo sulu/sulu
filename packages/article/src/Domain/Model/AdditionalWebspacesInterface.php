@@ -31,7 +31,5 @@ interface AdditionalWebspacesInterface extends WebspaceInterface
      */
     public function setAdditionalWebspaces(?array $additionalWebspaces): void;
 
-    public function addAdditionalWebspace(string $webspace): void;
-
-    public function removeAdditionalWebspace(string $webspace): void;
+    public function getTargetWebspace(string $currentWebspaceKey): string;
 }

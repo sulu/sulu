@@ -33,7 +33,6 @@ use Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeResolver;
 use Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeResolverInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Content\Application\ContentAggregator\ContentAggregatorInterface;
-use Sulu\Content\Domain\Model\RoutableInterface;
 use Sulu\Route\Application\Routing\Matcher\RouteDefaultsProviderInterface;
 use Sulu\Route\Domain\Model\Route;
 
@@ -83,7 +82,7 @@ class ArticleRouteDefaultsProviderTest extends TestCase
         $mainWebspace = 'sulu-io';
         $canonicalUrl = 'https://sulu.io/test-article';
 
-        // Create article dimension content that implements required interfaces
+        // Create article dimension content that implements AdditionalWebspacesInterface
         $contentRichEntity = new Article();
         $resolvedDimensionContent = new ArticleDimensionContent($contentRichEntity);
         $resolvedDimensionContent->setLocale($locale);
@@ -134,7 +133,7 @@ class ArticleRouteDefaultsProviderTest extends TestCase
         $locale = 'en';
         $slug = '/test-article';
 
-        // Create article dimension content that doesn't have webspace support
+        // Create article dimension content that doesn't implement AdditionalWebspacesInterface
         $contentRichEntity = new Article();
         $resolvedDimensionContent = new ArticleDimensionContent($contentRichEntity);
         $resolvedDimensionContent->setLocale($locale);

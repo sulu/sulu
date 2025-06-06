@@ -45,27 +45,17 @@ trait AdditionalWebspacesTrait
         $this->additionalWebspaces = $additionalWebspaces;
     }
 
-    public function addAdditionalWebspace(string $webspace): void
+    public function getTargetWebspace(string $currentWebspaceKey): string
     {
-        if (null === $this->additionalWebspaces) {
-            $this->additionalWebspaces = [];
+        if ($this->getMainWebspace() === $currentWebspaceKey
+            || (
+                $this->getAdditionalWebspaces()
+                && \in_array($currentWebspaceKey, $this->getAdditionalWebspaces(), true)
+            )
+        ) {
+            return $currentWebspaceKey;
         }
 
-        if (!\in_array($webspace, $this->additionalWebspaces, true)) {
-            $this->additionalWebspaces[] = $webspace;
-        }
-    }
-
-    public function removeAdditionalWebspace(string $webspace): void
-    {
-        if (null === $this->additionalWebspaces) {
-            return;
-        }
-
-        $key = \array_search($webspace, $this->additionalWebspaces, true);
-        if (false !== $key) {
-            unset($this->additionalWebspaces[$key]);
-            $this->additionalWebspaces = \array_values($this->additionalWebspaces);
-        }
+        return $this->getMainWebspace();
     }
 }
