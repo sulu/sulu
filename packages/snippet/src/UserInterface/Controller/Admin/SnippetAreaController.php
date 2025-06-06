@@ -11,11 +11,11 @@
 
 namespace Sulu\Snippet\UserInterface\Controller\Admin;
 
+use Sulu\Component\Rest\ListBuilder\CollectionRepresentation;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilder;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactoryInterface;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptorInterface;
 use Sulu\Component\Rest\ListBuilder\Metadata\FieldDescriptorFactoryInterface;
-use Sulu\Component\Rest\ListBuilder\PaginatedRepresentation;
 use Sulu\Component\Rest\RestHelperInterface;
 use Sulu\Messenger\Infrastructure\Symfony\Messenger\FlushMiddleware\EnableFlushStamp;
 use Sulu\Snippet\Application\Message\ModifySnippetAreaMessage;
@@ -67,23 +67,39 @@ final class SnippetAreaController
 
         $this->restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
 
+        $snippetAreas = [];
+
+        // Load the existing snippets from the database
         $results = $listBuilder->execute();
-        dump($results);
-        foreach ($this->snippetArea as $snippetArea) {
-            $missingSnippet = new SnippetArea(
+        foreach ($results as $result) {
+            $areaKey = $result['key'];
+            $snippetAreas[$areaKey] = new SnippetArea(
                 null,
-                areaKey: $snippetArea['key'],
+                areaKey: $areaKey,
                 webspaceKey: $request->attributes->getString('webspace'),
             );
-            $results[] = $missingSnippet;
+
+            // todo: handle the snippet somehow
         }
 
-        $listRepresentation = new PaginatedRepresentation(
-            $results,
+        // Add the empty snippet areas as placeholders
+        foreach ($this->snippetArea as $snippetArea) {
+            $key = $snippetArea['key'];
+            if (!\array_key_exists($key, $snippetAreas)) {
+                $snippetAreas[$key] = new SnippetArea(
+                    null,
+                    areaKey: $snippetArea['key'],
+                    webspaceKey: $request->attributes->getString('webspace'),
+                );
+            }
+        }
+
+        $listRepresentation = new CollectionRepresentation(
+            \array_values($snippetAreas),
             SnippetAreaInterface::RESOURCE_KEY,
             (int) $listBuilder->getCurrentPage(),
             (int) $listBuilder->getLimit(),
-            \count($results),
+            \count($snippetAreas),
         );
 
         return new JsonResponse($this->normalizer->normalize(

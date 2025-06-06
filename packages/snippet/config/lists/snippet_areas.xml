@@ -19,6 +19,7 @@
             <field-name>uuid</field-name>
             <entity-name>Sulu\Snippet\Domain\Model\SnippetAreaInterface</entity-name>
         </property>
+
         <property name="key" translation="sulu_admin.uuid">
             <field-name>areaKey</field-name>
             <entity-name>Sulu\Snippet\Domain\Model\SnippetAreaInterface</entity-name>
