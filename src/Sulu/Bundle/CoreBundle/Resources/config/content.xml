@@ -32,7 +32,6 @@
             <argument type="service" id="sulu_page.extension.manager"/>
             <argument type="service" id="sulu.content.type_manager"/>
             <argument type="service" id="sulu.phpcr.session"/>
-            <argument type="service" id="event_dispatcher"/>
             <argument type="service" id="sulu.content.resource_locator.strategy_pool"/>
             <argument type="service" id="sulu_document_manager.namespace_registry" />
             <argument type="service" id="sulu_security.access_control_manager" />

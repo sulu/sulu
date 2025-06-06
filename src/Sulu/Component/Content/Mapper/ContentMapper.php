@@ -46,7 +46,6 @@ use Sulu\Component\Content\Exception\InvalidOrderPositionException;
 use Sulu\Component\Content\Exception\TranslatedNodeNotFoundException;
 use Sulu\Component\Content\Extension\ExtensionInterface;
 use Sulu\Component\Content\Extension\ExtensionManagerInterface;
-use Sulu\Component\Content\Mapper\Event\ContentNodeEvent;
 use Sulu\Component\Content\Metadata\Factory\Exception\StructureTypeNotFoundException;
 use Sulu\Component\Content\Types\ResourceLocator;
 use Sulu\Component\Content\Types\ResourceLocator\Strategy\ResourceLocatorStrategyPoolInterface;
@@ -61,7 +60,6 @@ use Sulu\Component\Security\Authorization\AccessControl\AccessControlManagerInte
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Security\Core\Security as SymfonyCoreSecurity;
 
@@ -90,7 +88,6 @@ class ContentMapper implements ContentMapperInterface
         private ExtensionManagerInterface $extensionManager,
         private ContentTypeManagerInterface $contentTypeManager,
         private SessionManagerInterface $sessionManager,
-        private EventDispatcherInterface $eventDispatcher,
         private ResourceLocatorStrategyPoolInterface $resourceLocatorStrategyPool,
         private NamespaceRegistry $namespaceRegistry,
         private AccessControlManagerInterface $accessControlManager,
@@ -144,9 +141,6 @@ class ContentMapper implements ContentMapperInterface
         $this->documentManager->flush();
 
         $structure = $this->documentToStructure($document);
-
-        $event = new ContentNodeEvent($node, $structure);
-        $this->eventDispatcher->dispatch($event, ContentEvents::NODE_POST_SAVE);
 
         return $structure;
     }

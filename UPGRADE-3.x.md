@@ -532,6 +532,11 @@ Removed classes / services:
 - `Sulu\Component\Content\Metadata\Parser\PropertiesXmlParser` (moved and internal)
 - `Sulu\Bundle\AdminBundle\FormMetadata\FormXmlLoader` (moved and internal)
 - `Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Loader\AbstractLoader` (moved and internal)
+- `Sulu\Commponent\Content\Document\Subscriber\Compat\ContentMapperSubscriber`
+- `Sulu\Component\Content\Mapper\ContentEvents`
+- `Sulu\Component\Content\Mapper\Event\ContentNodeDeleteEvent`
+- `Sulu\Component\Content\Mapper\Event\ContentNodeEvent`
+- `Sulu\Component\Content\Mapper\Event\ContentNodeOrderEvent`
 
 Removed deprecated functions and properties:
 
