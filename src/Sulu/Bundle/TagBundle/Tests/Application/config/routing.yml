@@ -1,5 +1,5 @@
 sulu_admin:
-    resource: "@SuluAdminBundle/Resources/config/routing.yml"
+    resource: "@SuluAdminBundle/Resources/config/routing.yaml"
     prefix: /admin
 
 sulu_tag_api:
