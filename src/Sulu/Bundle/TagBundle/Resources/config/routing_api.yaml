@@ -40,7 +40,7 @@ sulu_tag.delete_tag:
 
 sulu_tag.patch_tag:
     path: /tags.{_format}
-    controller: sulu_tag.tag_controller::patchAction
+    controller: sulu_tag.tag_controller::cpatchAction
     methods: PATCH
     format: json
     defaults:
