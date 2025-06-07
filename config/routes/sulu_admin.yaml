@@ -97,8 +97,7 @@ sulu_search:
     prefix: /admin/search
 
 sulu_activity_api:
-    resource: "@SuluActivityBundle/Resources/config/routing_api.yml"
-    type: rest
+    resource: "@SuluActivityBundle/Resources/config/routing_api.yaml"
     prefix: /admin/api
 
 sulu_trash_api:
