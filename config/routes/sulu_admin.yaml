@@ -93,7 +93,7 @@ sulu_preview_public:
     prefix: /admin/p
 
 sulu_search:
-    resource: "@SuluSearchBundle/Resources/config/routing.yml"
+    resource: "@SuluSearchBundle/Resources/config/routing.yaml"
     prefix: /admin/search
 
 sulu_activity_api:

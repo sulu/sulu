@@ -3,7 +3,7 @@ sulu_media:
 
 sulu_search:
     type: portal
-    resource: "@SuluSearchBundle/Resources/config/routing_website.yml"
+    resource: "@SuluSearchBundle/Resources/config/routing_website.yaml"
 
 sulu_website:
     resource: "@SuluWebsiteBundle/Resources/config/routing_website.yml"
