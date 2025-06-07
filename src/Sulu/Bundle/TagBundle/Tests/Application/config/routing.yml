@@ -3,6 +3,5 @@ sulu_admin:
     prefix: /admin
 
 sulu_tag_api:
-    type: rest
-    resource: "@SuluTagBundle/Resources/config/routing_api.yml"
+    resource: "@SuluTagBundle/Resources/config/routing_api.yaml"
     prefix: /api

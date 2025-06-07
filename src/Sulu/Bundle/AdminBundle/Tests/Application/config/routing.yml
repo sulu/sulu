@@ -5,9 +5,8 @@ fos_js_routing:
 
 # Sulu Routes
 sulu_tag_api:
-    type: rest
-    resource: "@SuluTagBundle/Resources/config/routing_api.yml"
-    prefix:   /admin/api
+    resource: "@SuluTagBundle/Resources/config/routing_api.yaml"
+    prefix: /admin/api
 
 sulu_admin:
     resource: "@SuluAdminBundle/Resources/config/routing.yml"
