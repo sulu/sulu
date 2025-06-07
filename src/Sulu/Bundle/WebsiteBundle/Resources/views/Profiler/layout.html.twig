@@ -4,7 +4,7 @@
     <?xml version="1.0" encoding="UTF-8"?>
     <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
         <!-- Generator: Sketch 42 (36781) - http://www.bohemiancoding.com/sketch -->
-        <title>Artboard</title>
+        <title>Sulu</title>
         <desc>Created with Sketch.</desc>
         <defs></defs>
         <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -36,17 +36,15 @@
             <span>{{ collector.data('structure').template }}</span>
         </div>
         <div class="sf-toolbar-info-piece">
-            <b>Structure class</b>
-            <span>{{ collector.data('structure').objectClass }}</span>
+            <b>Class</b>
+            <span>{{ collector.data('structure').class }}</span>
         </div>
         {% endif %}
         <div class="sf-toolbar-info-piece">
             <b>Localization</b>
             <span>
                 {{ collector.data('localization') }}
-                {% if collector.data('structure') %}
-                ({{ collector.data('structure').shadowOn ? collector.data('structure').shadowBaseLanguage : 'no shadow' }})
-                {% endif %}
+                {% if collector.data('structure') %} ({{ collector.data('structure').locale }}) {% endif %}
             </span>
         </div>
     {% endset %}
@@ -94,6 +92,29 @@
         </div>
     </div>
 
+    <h2>Structure</h2>
+    {% if collector.data('structure') %}
+    <table>
+        <tbody>
+            {{ self.table_row('id', collector.data('structure').id) }}
+            {{ self.table_row('class', collector.data('structure').class) }}
+            {{ self.table_row('dimensionClass', collector.data('structure').dimensionClass) }}
+            {{ self.table_row('nodeState', collector.data('structure').nodeState) }}
+            {{ self.table_row('locale', collector.data('structure').locale) }}
+            {{ self.table_row('published', collector.data('structure').published.format('Y-m-d H:i:s')) }}
+            {{ self.table_row('navContexts', collector.data('structure').navContexts) }}
+            {{ self.table_row('ghostLoacle', collector.data('structure').ghostLocale) }}
+            {{ self.table_row('template', collector.data('structure').template) }}
+            {{ self.table_row('creator', collector.data('structure').creator) }}
+            {{ self.table_row('changer', collector.data('structure').changer) }}
+            {{ self.table_row('created', collector.data('structure').created.format('Y-m-d H:i:s')) }}
+            {{ self.table_row('changed', collector.data('structure').changed.format('Y-m-d H:i:s')) }}
+        </tbody>
+    </table>
+    {% else %}
+        No structure was found.
+    {% endif %}
+
     <h2>Webspace</h2>
     <table>
         <tbody>
@@ -110,34 +131,6 @@
             {% endfor %}
         </tbody>
     </table>
-    <h2>Structure</h2>
-    {% if collector.data('structure') %}
-    <table>
-        <tbody>
-            {{ self.table_row('id', collector.data('structure').id) }}
-            {{ self.table_row('class', collector.data('structure').objectClass) }}
-            {{ self.table_row('path', collector.data('structure').path) }}
-            {{ self.table_row('nodeType', collector.data('structure').nodeType) }}
-            {{ self.table_row('internal', collector.data('structure').internal ? 'yes' : 'no') }}
-            {{ self.table_row('nodeState', collector.data('structure').nodeState) }}
-            {{ self.table_row('published', collector.data('structure').published.format('Y-m-d H:i:s')) }}
-            {{ self.table_row('nodeState', collector.data('structure').nodeState) }}
-            {{ self.table_row('navContexts', collector.data('structure').navContexts) }}
-            {{ self.table_row('shadowLocales', collector.data('structure').shadowLocales) }}
-            {{ self.table_row('contentLocales', collector.data('structure').contentLocales) }}
-            {{ self.table_row('shadowOn', collector.data('structure').shadowOn ? 'yes' : 'no') }}
-            {{ self.table_row('shadowBaseLanguage', collector.data('structure').shadowBaseLanguage) }}
-            {{ self.table_row('template', collector.data('structure').template) }}
-            {{ self.table_row('has children', collector.data('structure').hasSub ? 'yes' : 'no') }}
-            {{ self.table_row('creator', collector.data('structure').creator) }}
-            {{ self.table_row('changer', collector.data('structure').changer) }}
-            {{ self.table_row('created', collector.data('structure').created.format('Y-m-d H:i:s')) }}
-            {{ self.table_row('changed', collector.data('structure').changed.format('Y-m-d H:i:s')) }}
-        </tbody>
-    </table>
-    {% else %}
-        No structure was found.
-    {% endif %}
 {% endblock %}
 
 {% macro table_row(field, value) %}
