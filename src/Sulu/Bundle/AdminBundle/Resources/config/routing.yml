@@ -1,5 +1,5 @@
 sulu_admin:
-    path:  /
+    path: /
     defaults:
         _controller: sulu_admin.admin_controller::indexAction
 
