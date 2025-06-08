@@ -89,8 +89,6 @@ class SuluCollectorTest extends TestCase
             ]
         ))->shouldBeCalled();
 
-        $this->attributes->has('_route_params')->willReturn(true)->shouldBeCalled();
-        $this->attributes->get('_route_params')->willReturn(['structure' => $structure->reveal()])->shouldBeCalled();
         $this->attributes->has('object')->willReturn(false);
 
         $webspace->toArray()->shouldBeCalled();

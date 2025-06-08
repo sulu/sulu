@@ -49357,48 +49357,6 @@ parameters:
 			path: src/Sulu/Bundle/WebsiteBundle/Controller/WebsiteController.php
 
 		-
-			message: '#^Call to an undefined method Sulu\\Component\\Content\\Compat\\StructureInterface\:\:getContentLocales\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/DataCollector/SuluCollector.php
-
-		-
-			message: '#^Call to an undefined method Sulu\\Component\\Content\\Compat\\StructureInterface\:\:getInternal\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/DataCollector/SuluCollector.php
-
-		-
-			message: '#^Call to an undefined method Sulu\\Component\\Content\\Compat\\StructureInterface\:\:getIsShadow\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/DataCollector/SuluCollector.php
-
-		-
-			message: '#^Call to an undefined method Sulu\\Component\\Content\\Compat\\StructureInterface\:\:getNavContexts\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/DataCollector/SuluCollector.php
-
-		-
-			message: '#^Call to an undefined method Sulu\\Component\\Content\\Compat\\StructureInterface\:\:getOriginTemplate\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/DataCollector/SuluCollector.php
-
-		-
-			message: '#^Call to an undefined method Sulu\\Component\\Content\\Compat\\StructureInterface\:\:getShadowBaseLanguage\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/DataCollector/SuluCollector.php
-
-		-
-			message: '#^Call to an undefined method Sulu\\Component\\Content\\Compat\\StructureInterface\:\:getShadowLocales\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/DataCollector/SuluCollector.php
-
-		-
 			message: '#^Cannot access offset ''environments'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 3
@@ -49411,26 +49369,8 @@ parameters:
 			path: src/Sulu/Bundle/WebsiteBundle/DataCollector/SuluCollector.php
 
 		-
-			message: '#^Cannot access offset ''structure'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/DataCollector/SuluCollector.php
-
-		-
 			message: '#^Cannot call method toArray\(\) on mixed\.$#'
 			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/DataCollector/SuluCollector.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\WebsiteBundle\\DataCollector\\SuluCollector\:\:data\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/DataCollector/SuluCollector.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\WebsiteBundle\\DataCollector\\SuluCollector\:\:data\(\) has parameter \$key with no type specified\.$#'
-			identifier: missingType.parameter
 			count: 1
 			path: src/Sulu/Bundle/WebsiteBundle/DataCollector/SuluCollector.php
 

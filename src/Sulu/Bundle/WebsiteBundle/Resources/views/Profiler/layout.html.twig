@@ -96,19 +96,11 @@
     {% if collector.data('structure') %}
     <table>
         <tbody>
-            {{ self.table_row('id', collector.data('structure').id) }}
-            {{ self.table_row('class', collector.data('structure').class) }}
-            {{ self.table_row('dimensionClass', collector.data('structure').dimensionClass) }}
-            {{ self.table_row('nodeState', collector.data('structure').nodeState) }}
-            {{ self.table_row('locale', collector.data('structure').locale) }}
-            {{ self.table_row('published', collector.data('structure').published.format('Y-m-d H:i:s')) }}
-            {{ self.table_row('navContexts', collector.data('structure').navContexts) }}
-            {{ self.table_row('ghostLoacle', collector.data('structure').ghostLocale) }}
-            {{ self.table_row('template', collector.data('structure').template) }}
-            {{ self.table_row('creator', collector.data('structure').creator) }}
-            {{ self.table_row('changer', collector.data('structure').changer) }}
-            {{ self.table_row('created', collector.data('structure').created.format('Y-m-d H:i:s')) }}
-            {{ self.table_row('changed', collector.data('structure').changed.format('Y-m-d H:i:s')) }}
+            {% set structure = collector.data('structure') %}
+
+            {% for name, value in structure %}
+                {{ self.table_row(name, value) }}
+            {% endfor %}
         </tbody>
     </table>
     {% else %}
