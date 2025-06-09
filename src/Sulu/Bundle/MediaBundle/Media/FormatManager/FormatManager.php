@@ -25,6 +25,7 @@ use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyMediaNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\InvalidMimeTypeForPreviewException;
 use Sulu\Bundle\MediaBundle\Media\FormatCache\FormatCacheInterface;
 use Sulu\Bundle\MediaBundle\Media\ImageConverter\ImageConverterInterface;
+use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -156,7 +157,7 @@ class FormatManager implements FormatManagerInterface
                     $formatKey
                 );
             }
-        } catch (ImageProxyException $e) {
+        } catch (IOException|ImageProxyException $e) {
             $this->logger->debug($e->getMessage(), ['exception' => $e]);
             $responseContent = null;
             $status = 404;
@@ -360,20 +361,20 @@ class FormatManager implements FormatManagerInterface
             }
         }
 
-        return \sprintf(
-            '<?xml version="1.0" encoding="utf-8"?>'
-            . '<svg xmlns="http://www.w3.org/2000/svg" width="%s" height="%s">' . \PHP_EOL
-            . '    <rect height="100%%" width="100%%" fill="silver"/>' . \PHP_EOL
-            . '    <text x="%s" y="%s" fill="white" text-anchor="middle" font-family="Monospace" font-size="%s" alignment-baseline="central">' . \PHP_EOL
-            . '        ERROR CODE: %s' . \PHP_EOL
-            . '    </text>' . \PHP_EOL
-            . '</svg>',
-            $x,
-            $y,
-            \ceil($x / 2),
-            \ceil($y / 2),
-            $x / 20,
-            $e->getCode()
-        );
+        $fontSize = $x / 20;
+        $textX = \ceil($x / 2);
+        $textY = \ceil($y / 2);
+        $textY2 = \ceil($textX + $fontSize * 1.5);
+        $errorCode = $e->getCode();
+
+        return <<<XML
+            <?xml version="1.0" encoding="utf-8"?>
+            <svg xmlns="http://www.w3.org/2000/svg" width="$x" height="$y">
+                <rect height="100%" width="100%" fill="silver"/>
+                <text x="$textX" y="$textY" fill="white" text-anchor="middle" font-family="Monospace" font-size="$fontSize" alignment-baseline="central">
+                    ERROR CODE: $errorCode
+                </text>
+            </svg>
+            XML;
     }
 }
