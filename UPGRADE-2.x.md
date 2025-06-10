@@ -4,11 +4,11 @@
 
 ### Deprecate usage of fos rest routing
 
-We are not longer considering the [fos rest routing](https://github.com/handcraftedinthealps/RestRoutingBundle) as a best practice.
+We are no longer considering the [fos rest routing](https://github.com/handcraftedinthealps/RestRoutingBundle) as a best practice.
 All bundles should use the Symfony routing system instead.
 
-Inside your `config/routes/sulu_admin.yaml` and `config/routes/sulu_website.yaml` you can remove the fos rest routing.
-By first remove all `type: rest` appeareance and also replace `.yml` with `.yaml`:
+Inside your `config/routes/sulu_admin.yaml` and `config/routes/sulu_website.yaml`, you can remove the fos rest routing configuration.
+First, remove all appearances of `type: rest` and also replace `.yml` with `.yaml`:
 
 ```diff
 sulu_tag_api:
@@ -18,10 +18,10 @@ sulu_tag_api:
      prefix: /admin/api
 ```
 
-This is an example and all routes should be checked for the `type: rest` and `.yml`.
-All `.yml` routing files of the core bundles will in future be removed.
+This is an example, all routes should be checked for the use of `type: rest` and `.yml`.
+All `.yml` routing files of the core bundles will be removed in the future.
 
-If you want upgrade your own custom routes have a look at the command opt out command of [RestRoutingBundle](https://github.com/handcraftedinthealps/RestRoutingBundle).
+If you want to upgrade your own custom routes, have a look at the opt out command of [RestRoutingBundle](https://github.com/handcraftedinthealps/RestRoutingBundle).
 
 ## 2.6.7
 
