@@ -4,7 +4,7 @@ sulu_admin:
 
 sulu_page_api:
     type: rest
-    resource: "@SuluPageBundle/Resources/config/routing_api.yml"
+    resource: "@SuluPageBundle/Resources/config/routing_api.yaml"
     prefix: /api
 
 sulu_media:

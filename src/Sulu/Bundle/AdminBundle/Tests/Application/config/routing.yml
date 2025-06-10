@@ -29,8 +29,7 @@ sulu_security_api:
     prefix: /admin/api
 
 sulu_page_api:
-    type: rest
-    resource: "@SuluPageBundle/Resources/config/routing_api.yml"
+    resource: "@SuluPageBundle/Resources/config/routing_api.yaml"
     prefix: /admin/api
 
 sulu_media:
@@ -64,8 +63,7 @@ sulu_website:
     prefix: /admin/website
 
 sulu_website_api:
-    resource: "@SuluWebsiteBundle/Resources/config/routing_api.yml"
-    type: rest
+    resource: "@SuluWebsiteBundle/Resources/config/routing_api.yaml"
     prefix: /admin/api
 
 sulu_core:
@@ -74,8 +72,7 @@ sulu_core:
     prefix: /admin/api
 
 sulu_custom_urls_api:
-    type: rest
-    resource: "@SuluCustomUrlBundle/Resources/config/routing_api.yml"
+    resource: "@SuluCustomUrlBundle/Resources/config/routing_api.yaml"
     prefix: /admin/api
 
 sulu_route_api:

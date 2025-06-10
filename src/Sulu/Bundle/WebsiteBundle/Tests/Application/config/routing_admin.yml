@@ -3,13 +3,11 @@ sulu_website:
     prefix: /sulu_website
 
 sulu_page_api:
-    type: rest
-    resource: "@SuluPageBundle/Resources/config/routing_api.yml"
+    resource: "@SuluPageBundle/Resources/config/routing_api.yaml"
     prefix: /api
 
 sulu_website_api:
-    type: rest
-    resource: "@SuluWebsiteBundle/Resources/config/routing_api.yml"
+    resource: "@SuluWebsiteBundle/Resources/config/routing_api.yaml"
     prefix: /api
 
 sulu_website.website:

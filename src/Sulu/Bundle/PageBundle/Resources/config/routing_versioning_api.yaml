@@ -1,0 +1,15 @@
+sulu_page.get_page_versions:
+    path: '/pages/{id}/versions.{_format}'
+    methods: GET
+    controller: 'sulu_page.version_controller::cgetAction'
+    format: json
+    requirements:
+        _format: json|csv
+
+sulu_page.post_page_version_trigger:
+    path: '/pages/{id}/versions/{version}.{_format}'
+    methods: POST
+    controller: 'sulu_page.version_controller::postTriggerAction'
+    format: json
+    requirements:
+        _format: json|csv
