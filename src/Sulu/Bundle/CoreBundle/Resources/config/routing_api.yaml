@@ -1,0 +1,7 @@
+sulu_core.get_localizations:
+    path: '/localizations.{_format}'
+    methods: GET
+    controller: 'sulu_core.localization_controller::cgetAction'
+    format: json
+    requirements:
+        _format: json|csv
