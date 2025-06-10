@@ -26,8 +26,7 @@ sulu_pages_api:
     prefix: /api
 
 sulu_security_api:
-    type: rest
-    resource: "@SuluSecurityBundle/Resources/config/routing_api.yml"
+    resource: "@SuluSecurityBundle/Resources/config/routing_api.yaml"
     prefix: /api
 
 sulu_website:

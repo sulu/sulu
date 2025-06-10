@@ -20,8 +20,7 @@ sulu_media_api:
     prefix: /admin/api
 
 sulu_security_api:
-    resource: "@SuluSecurityBundle/Resources/config/routing_api.yml"
-    type: rest
+    resource: "@SuluSecurityBundle/Resources/config/routing_api.yaml"
     prefix: /api
 
 sulu_preview:
