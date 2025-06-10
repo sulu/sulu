@@ -56,18 +56,6 @@ final class SuluContentBundle extends AbstractBundle
         $loader->load('controller.xml');
         $loader->load('resolvers.xml');
         $loader->load('resource-loader.xml');
-
-        if ($builder->hasParameter('kernel.bundles')) {
-            // TODO FIXME add test here
-            // @codeCoverageIgnoreStart
-            /** @var string[] $bundles */
-            $bundles = $builder->getParameter('kernel.bundles');
-
-            if (\array_key_exists('SuluAutomationBundle', $bundles)) {
-                $loader->load('automation.xml');
-            }
-            // @codeCoverageIgnoreEnd
-        }
     }
 
     /**

@@ -93,16 +93,6 @@ sulu_search:
     resource: "@SuluSearchBundle/Resources/config/routing.yml"
     prefix: /admin/search
 
-# automation
-sulu_automation_api:
-    resource: '@SuluAutomationBundle/Resources/config/routing_api.yml'
-    prefix: /admin/api
-
-sulu_automation:
-    type: rest
-    resource: '@SuluAutomationBundle/Resources/config/routing.yml'
-    prefix: /admin/automation
-
 # Custom
 example_test_api:
     type: rest

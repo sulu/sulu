@@ -12,7 +12,6 @@
 namespace Sulu\Article\Tests\Application;
 
 use Sulu\Article\Infrastructure\Symfony\HttpKernel\SuluArticleBundle;
-use Sulu\Bundle\AutomationBundle\SuluAutomationBundle;
 use Sulu\Bundle\TestBundle\Kernel\SuluTestKernel;
 use Sulu\Component\HttpKernel\SuluKernel;
 use Sulu\Content\Infrastructure\Symfony\HttpKernel\SuluContentBundle;
@@ -20,7 +19,6 @@ use Sulu\Content\Tests\Application\ExampleTestBundle\ExampleTestBundle;
 use Sulu\Page\Infrastructure\Symfony\HttpKernel\SuluPageBundle;
 use Sulu\Snippet\Infrastructure\Symfony\HttpKernel\SuluSnippetBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
-use Task\TaskBundle\TaskBundle;
 
 /**
  * AppKernel for functional tests.
@@ -49,8 +47,6 @@ class Kernel extends SuluTestKernel
         $bundles[] = new SuluContentBundle();
         $bundles[] = new SuluArticleBundle();
         $bundles[] = new ExampleTestBundle(); // TODO currently required for test content bundle, everybody should setup database by its own
-        $bundles[] = new SuluAutomationBundle(); // TODO currently required for test content bundle, everybody should setup database by its own
-        $bundles[] = new TaskBundle(); // TODO currently required for test content bundle, everybody should setup database by its own
         $bundles[] = new SuluSnippetBundle();
 
         return $bundles;

@@ -60,7 +60,6 @@
         "phpstan/phpstan-webmozart-assert": "^1.0",
         "phpunit/phpunit": "^8.5.33 || ^9.6.5",
         "qossmic/deptrac-shim": "^0.23 || ^1.0",
-        "sulu/automation-bundle": "^3.0@dev",
         "symfony/browser-kit": "^6.4 || ^7.1",
         "symfony/console": "^6.4 || ^7.1",
         "symfony/dotenv": "^6.4 || ^7.1",
