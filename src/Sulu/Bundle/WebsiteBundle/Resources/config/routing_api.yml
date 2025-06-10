@@ -1,5 +1,0 @@
-sulu_website.webspace_analytics:
-    type: rest
-    name_prefix: sulu_website.
-    parent: sulu_page.webspace
-    resource: sulu_website.analytics_controller

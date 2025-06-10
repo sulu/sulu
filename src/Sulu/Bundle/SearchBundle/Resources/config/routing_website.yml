@@ -1,5 +1,0 @@
-sulu_search.website_search:
-    path: "/search.{_format}"
-    defaults:
-        _controller: sulu_search.controller.website_search::queryAction
-        _format: html

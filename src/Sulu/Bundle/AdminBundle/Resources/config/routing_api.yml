@@ -1,4 +1,0 @@
-sulu_admin.collaboration_controller:
-    type: rest
-    name_prefix: sulu_admin.
-    resource: sulu_admin.collaboration_controller

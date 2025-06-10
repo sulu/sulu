@@ -1,5 +1,5 @@
 example_test.examples:
-    type: rest
+    type: rest # TODO
     name_prefix: example_test.
     resource: example_test.example_controller
     defaults:

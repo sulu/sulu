@@ -1,3 +1,0 @@
-sulu_location.geolocator_query:
-    path: /geolocator
-    defaults: { _controller: sulu_location.controller.geolocator::queryAction }

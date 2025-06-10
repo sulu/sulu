@@ -1,4 +1,0 @@
-sulu_activity.activities:
-    type: rest
-    name_prefix: sulu_activity.
-    resource: sulu_activity.activity_controller

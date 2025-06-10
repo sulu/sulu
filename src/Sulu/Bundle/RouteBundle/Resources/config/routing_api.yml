@@ -1,4 +1,0 @@
-sulu_routes.routes:
-    type: rest
-    name_prefix: sulu_routes.
-    resource: sulu_route.route_controller

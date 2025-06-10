@@ -1,3 +1,0 @@
-sulu_media.redirect:
-    path: /redirect/media/{id}
-    defaults: { _controller: sulu_media.media_redirect_controller::redirectAction }

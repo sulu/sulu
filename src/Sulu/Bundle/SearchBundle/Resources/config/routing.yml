@@ -1,7 +1,0 @@
-sulu_search_indexes:
-    path: /indexes
-    defaults: { _controller: "sulu_search.controller.search::indexesAction", _format: json }
-
-sulu_search_search:
-    path: /query
-    defaults: { _controller: "sulu_search.controller.search::searchAction", _format: json }
