@@ -8,7 +8,7 @@ We are no longer considering the [fos rest routing](https://github.com/handcraft
 All bundles should use the Symfony routing system instead.
 
 Inside your `config/routes/sulu_admin.yaml` and `config/routes/sulu_website.yaml`, you can remove the fos rest routing configuration.
-First, remove all appearances of `type: rest` and also replace `.yml` with `.yaml`:
+First, remove all instances of `type: rest` and also replace `.yml` with `.yaml`:
 
 ```diff
 sulu_tag_api:
