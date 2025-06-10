@@ -56,47 +56,6 @@ sulu_security.put_role_setting:
     requirements:
         _format: json|csv
 
-# Groups
-sulu_security.get_groups:
-    path: '/groups.{_format}'
-    methods: GET
-    controller: 'sulu_security.group_controller::cgetAction'
-    format: json
-    requirements:
-        _format: json|csv
-
-sulu_security.get_group:
-    path: '/groups/{id}.{_format}'
-    methods: GET
-    controller: 'sulu_security.group_controller::getAction'
-    format: json
-    requirements:
-        _format: json|csv
-
-sulu_security.post_group:
-    path: '/groups.{_format}'
-    methods: POST
-    controller: 'sulu_security.group_controller::postAction'
-    format: json
-    requirements:
-        _format: json|csv
-
-sulu_security.put_group:
-    path: '/groups/{id}.{_format}'
-    methods: PUT
-    controller: 'sulu_security.group_controller::putAction'
-    format: json
-    requirements:
-        _format: json|csv
-
-sulu_security.delete_group:
-    path: '/groups/{id}.{_format}'
-    methods: DELETE
-    controller: 'sulu_security.group_controller::deleteAction'
-    format: json
-    requirements:
-        _format: json|csv
-
 # Users
 sulu_security.get_user:
     path: '/users/{id}.{_format}'
@@ -167,23 +126,6 @@ sulu_security.put_permissions:
     path: '/permissions.{_format}'
     methods: PUT
     controller: 'sulu_security.permission_controller::cputAction'
-    format: json
-    requirements:
-        _format: json|csv
-
-# Contexts
-sulu_security.cget_security-contexts:
-    path: '/security-contexts.{_format}'
-    methods: GET
-    controller: 'sulu_security.contexts_controller::cgetAction'
-    format: json
-    requirements:
-        _format: json|csv
-
-sulu_security.get_security-contexts:
-    path: '/security-contexts.{_format}'
-    methods: GET
-    controller: 'sulu_security.contexts_controller::cgetAction'
     format: json
     requirements:
         _format: json|csv
