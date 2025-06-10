@@ -96,6 +96,5 @@ sulu_trash_api:
 
 # additional bundles
 sulu_audience_targeting_api:
-    type: rest
-    resource: "@SuluAudienceTargetingBundle/Resources/config/routing_api.yml"
+    resource: "@SuluAudienceTargetingBundle/Resources/config/routing_api.yaml"
     prefix: /admin/api

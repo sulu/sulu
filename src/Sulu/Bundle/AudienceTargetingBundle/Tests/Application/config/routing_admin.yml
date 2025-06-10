@@ -3,8 +3,7 @@ sulu_admin:
     prefix: /admin
 
 sulu_category_api:
-    resource: "@SuluAudienceTargetingBundle/Resources/config/routing_api.yml"
-    type: rest
+    resource: "@SuluAudienceTargetingBundle/Resources/config/routing_api.yaml"
     prefix: /api
 
 # The following route are necessary to get AdminController::configAction work.
