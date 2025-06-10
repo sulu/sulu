@@ -430,7 +430,7 @@ the `type: rest` / [FOSRestRouting](https://github.com/handcraftedinthealps/Rest
 
 The `HandcraftedInTheAlps\RestRoutingBundle\RestRoutingBundle` class should be removed from your `config/bundles.php`.
 
-Use the `.yaml` instead of the old `.yml` routing files in your `config/routes/` files without `type: rest`:
+Use the `.yaml` extension instead of the old `.yml` for routing files in your `config/routes/` files without `type: rest`:
 
 Example:
 
