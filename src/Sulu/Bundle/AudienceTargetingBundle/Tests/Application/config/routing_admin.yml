@@ -25,7 +25,7 @@ sulu_security_api:
     prefix: /admin/api
 
 sulu_website:
-    resource: "@SuluWebsiteBundle/Resources/config/routing.yml"
+    resource: "@SuluWebsiteBundle/Resources/config/routing.yaml"
     prefix: /admin
 
 sulu_preview_api:

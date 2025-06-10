@@ -6,9 +6,9 @@ sulu_search:
     resource: "@SuluSearchBundle/Resources/config/routing_website.yaml"
 
 sulu_website:
-    resource: "@SuluWebsiteBundle/Resources/config/routing_website.yml"
+    resource: "@SuluWebsiteBundle/Resources/config/routing_website.yaml"
 
 when@dev:
     _portal_errors:
-        resource: "@SuluWebsiteBundle/Resources/config/routing_error.yml"
+        resource: "@SuluWebsiteBundle/Resources/config/routing_error.yaml"
         type: portal

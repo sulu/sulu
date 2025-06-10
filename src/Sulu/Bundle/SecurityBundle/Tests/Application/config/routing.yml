@@ -23,7 +23,7 @@ sulu_preview_public:
     prefix: /admin/p
 
 sulu_website:
-    resource: "@SuluWebsiteBundle/Resources/config/routing.yml"
+    resource: "@SuluWebsiteBundle/Resources/config/routing.yaml"
     prefix: /admin
 
 sulu_media:

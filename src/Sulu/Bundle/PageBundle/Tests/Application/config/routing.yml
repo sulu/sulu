@@ -36,5 +36,5 @@ sulu_preview_public:
 
 sulu_website:
     type: rest
-    resource: "@SuluWebsiteBundle/Resources/config/routing.yml"
+    resource: "@SuluWebsiteBundle/Resources/config/routing.yaml"
     prefix: /admin

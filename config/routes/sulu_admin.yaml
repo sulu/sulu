@@ -47,11 +47,11 @@ sulu_snippet_api:
     prefix: /admin/api
 
 sulu_location:
-    resource: "@SuluLocationBundle/Resources/config/routing.yml"
+    resource: "@SuluLocationBundle/Resources/config/routing.yaml"
     prefix: /admin/location
 
 sulu_website:
-    resource: "@SuluWebsiteBundle/Resources/config/routing.yml"
+    resource: "@SuluWebsiteBundle/Resources/config/routing.yaml"
     prefix: /admin/website
 
 sulu_website_api:
