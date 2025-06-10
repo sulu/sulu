@@ -98,6 +98,5 @@ sulu_article_api:
     prefix: /admin/api
 
 example_test_api:
-    type: rest
     resource: "@ExampleTestBundle/Resources/config/routing_api.yaml"
     prefix: /admin/api
