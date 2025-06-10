@@ -13,7 +13,6 @@ namespace Sulu\Bundle\PageBundle\Controller;
 
 use FOS\RestBundle\Context\Context;
 use FOS\RestBundle\View\ViewHandlerInterface;
-use HandcraftedInTheAlps\RestRoutingBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\AdminBundle\Controller\AdminController;
 use Sulu\Bundle\PageBundle\Admin\PageAdmin;
 use Sulu\Component\Rest\AbstractRestController;
@@ -40,7 +39,7 @@ use Symfony\Component\HttpFoundation\Response;
  * @deprecated Deprecated since Sulu 2.0, use data from Sulu\Bundle\AdminBundle\Controller\AdminController::configAction
  * Remember deleting the resource configuration from Sulu\Bundle\AdminBundle\DependencyInjection\SuluAdminExtension.
  */
-class WebspaceController extends AbstractRestController implements ClassResourceInterface, SecuredControllerInterface
+class WebspaceController extends AbstractRestController implements SecuredControllerInterface
 {
     use RequestParametersTrait;
 

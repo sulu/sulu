@@ -12,7 +12,6 @@
 namespace Sulu\Bundle\AdminBundle\Controller;
 
 use FOS\RestBundle\View\ViewHandlerInterface;
-use HandcraftedInTheAlps\RestRoutingBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\AdminBundle\Exception\InvalidIconProviderException;
 use Sulu\Bundle\AdminBundle\Icon\IconProviderInterface;
 use Sulu\Component\Rest\AbstractRestController;
@@ -24,7 +23,7 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * @experimental This is an experimental feature and may change in future releases.
  */
-class IconController extends AbstractRestController implements ClassResourceInterface
+class IconController extends AbstractRestController
 {
     /**
      * @var array<string, string>

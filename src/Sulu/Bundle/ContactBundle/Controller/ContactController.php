@@ -13,7 +13,6 @@ namespace Sulu\Bundle\ContactBundle\Controller;
 
 use FOS\RestBundle\Context\Context;
 use FOS\RestBundle\View\ViewHandlerInterface;
-use HandcraftedInTheAlps\RestRoutingBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\ContactBundle\Contact\ContactManagerInterface;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\ContactBundle\Entity\ContactInterface;
@@ -43,7 +42,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 /**
  * Makes contacts available through a REST API.
  */
-class ContactController extends AbstractRestController implements ClassResourceInterface, SecuredControllerInterface
+class ContactController extends AbstractRestController implements SecuredControllerInterface
 {
     protected static $accountContactEntityName = \Sulu\Bundle\ContactBundle\Entity\AccountContact::class;
 

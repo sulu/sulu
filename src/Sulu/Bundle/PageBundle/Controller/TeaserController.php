@@ -12,14 +12,13 @@
 namespace Sulu\Bundle\PageBundle\Controller;
 
 use FOS\RestBundle\View\ViewHandlerInterface;
-use HandcraftedInTheAlps\RestRoutingBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\PageBundle\Teaser\TeaserManagerInterface;
 use Sulu\Component\Rest\AbstractRestController;
 use Sulu\Component\Rest\ListBuilder\CollectionRepresentation;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class TeaserController extends AbstractRestController implements ClassResourceInterface
+class TeaserController extends AbstractRestController
 {
     public function __construct(
         ViewHandlerInterface $viewHandler,

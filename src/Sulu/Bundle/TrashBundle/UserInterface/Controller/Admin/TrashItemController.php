@@ -16,8 +16,6 @@ namespace Sulu\Bundle\TrashBundle\UserInterface\Controller\Admin;
 use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\Context\Context;
 use FOS\RestBundle\View\ViewHandlerInterface;
-use HandcraftedInTheAlps\RestRoutingBundle\Controller\Annotations\RouteResource;
-use HandcraftedInTheAlps\RestRoutingBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\TrashBundle\Application\RestoreConfigurationProvider\RestoreConfigurationProviderInterface;
 use Sulu\Bundle\TrashBundle\Application\TrashManager\TrashManagerInterface;
 use Sulu\Bundle\TrashBundle\Domain\Model\TrashItemInterface;
@@ -46,13 +44,11 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
- * @RouteResource("trash-item")
- *
  * This controller cannot implement the SecuredControllerInterface, because then the SuluSecurityListener would check
  * for the "edit" permission in the "postTriggerAction", but the TrashAdmin::SECURITY_CONTEXT doesn't define an "edit" permission.
  * Because of this, the controller needs to explicitly check the "view" permissions by itself.
  */
-class TrashItemController extends AbstractRestController implements ClassResourceInterface
+class TrashItemController extends AbstractRestController
 {
     use RequestParametersTrait;
 

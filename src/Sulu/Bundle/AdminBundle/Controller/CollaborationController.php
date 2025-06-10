@@ -13,14 +13,13 @@ namespace Sulu\Bundle\AdminBundle\Controller;
 
 use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\ViewHandler;
-use HandcraftedInTheAlps\RestRoutingBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\AdminBundle\Entity\Collaboration;
 use Sulu\Bundle\AdminBundle\Entity\CollaborationRepository;
 use Sulu\Component\Rest\ListBuilder\CollectionRepresentation;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-class CollaborationController implements ClassResourceInterface
+class CollaborationController
 {
     private static $resourceKey = 'collaborations';
 

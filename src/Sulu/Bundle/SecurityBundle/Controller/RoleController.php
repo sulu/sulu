@@ -14,7 +14,6 @@ namespace Sulu\Bundle\SecurityBundle\Controller;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\View\ViewHandlerInterface;
-use HandcraftedInTheAlps\RestRoutingBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
 use Sulu\Bundle\SecurityBundle\Domain\Event\RoleCreatedEvent;
 use Sulu\Bundle\SecurityBundle\Domain\Event\RoleModifiedEvent;
@@ -42,7 +41,7 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * Makes the roles accessible through a REST-API.
  */
-class RoleController extends AbstractRestController implements ClassResourceInterface, SecuredControllerInterface
+class RoleController extends AbstractRestController implements SecuredControllerInterface
 {
     public const ENTITY_NAME_PERMISSION = Permission::class;
 

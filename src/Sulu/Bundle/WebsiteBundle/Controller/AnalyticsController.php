@@ -13,7 +13,6 @@ namespace Sulu\Bundle\WebsiteBundle\Controller;
 
 use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\View\ViewHandlerInterface;
-use HandcraftedInTheAlps\RestRoutingBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\WebsiteBundle\Admin\WebsiteAdmin;
 use Sulu\Bundle\WebsiteBundle\Analytics\AnalyticsManagerInterface;
 use Sulu\Bundle\WebsiteBundle\Cache\CacheClearerInterface;
@@ -29,7 +28,7 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * Provides webspace analytics rest-endpoint.
  */
-class AnalyticsController extends AbstractRestController implements ClassResourceInterface, SecuredControllerInterface
+class AnalyticsController extends AbstractRestController implements SecuredControllerInterface
 {
     /**
      * @var AnalyticsManagerInterface

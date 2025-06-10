@@ -13,7 +13,6 @@ namespace Sulu\Bundle\MediaBundle\Controller;
 
 use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\View\ViewHandlerInterface;
-use HandcraftedInTheAlps\RestRoutingBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\MediaBundle\Admin\MediaAdmin;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\CollectionRepositoryInterface;
@@ -51,7 +50,6 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
  * Makes media available through a REST API.
  */
 class MediaController extends AbstractMediaController implements
-    ClassResourceInterface,
     SecuredControllerInterface,
     SecuredObjectControllerInterface
 {

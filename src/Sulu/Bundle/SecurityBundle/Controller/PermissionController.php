@@ -13,7 +13,6 @@ namespace Sulu\Bundle\SecurityBundle\Controller;
 
 use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\ViewHandlerInterface;
-use HandcraftedInTheAlps\RestRoutingBundle\Routing\ClassResourceInterface;
 use Sulu\Component\Rest\Exception\MissingParameterException;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Security\Authentication\RoleRepositoryInterface;
@@ -25,7 +24,7 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * This controller handles all object based securities.
  */
-class PermissionController implements ClassResourceInterface
+class PermissionController
 {
     public function __construct(
         private AccessControlManagerInterface $accessControlManager,

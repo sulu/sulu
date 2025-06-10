@@ -13,7 +13,6 @@ namespace Sulu\Bundle\CategoryBundle\Controller;
 
 use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\View\ViewHandlerInterface;
-use HandcraftedInTheAlps\RestRoutingBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\CategoryBundle\Admin\CategoryAdmin;
 use Sulu\Bundle\CategoryBundle\Category\KeywordManagerInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
@@ -35,7 +34,7 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * Provides keywords for categories.
  */
-class KeywordController extends AbstractRestController implements ClassResourceInterface, SecuredControllerInterface
+class KeywordController extends AbstractRestController implements SecuredControllerInterface
 {
     public const FORCE_OVERWRITE = 'overwrite';
 

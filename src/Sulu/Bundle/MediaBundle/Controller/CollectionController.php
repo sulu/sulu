@@ -12,7 +12,6 @@
 namespace Sulu\Bundle\MediaBundle\Controller;
 
 use FOS\RestBundle\View\ViewHandlerInterface;
-use HandcraftedInTheAlps\RestRoutingBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\MediaBundle\Admin\MediaAdmin;
 use Sulu\Bundle\MediaBundle\Api\RootCollection;
 use Sulu\Bundle\MediaBundle\Collection\Manager\CollectionManagerInterface;
@@ -40,7 +39,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 /**
  * Makes collections available through a REST API.
  */
-class CollectionController extends AbstractRestController implements ClassResourceInterface, SecuredControllerInterface, SecuredObjectControllerInterface
+class CollectionController extends AbstractRestController implements SecuredControllerInterface, SecuredObjectControllerInterface
 {
     use RequestParametersTrait;
 

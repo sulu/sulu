@@ -12,8 +12,6 @@
 namespace Sulu\Bundle\PreviewBundle\UserInterface\Controller;
 
 use FOS\RestBundle\View\ViewHandlerInterface;
-use HandcraftedInTheAlps\RestRoutingBundle\Controller\Annotations\RouteResource;
-use HandcraftedInTheAlps\RestRoutingBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\PreviewBundle\Application\Manager\PreviewLinkManagerInterface;
 use Sulu\Bundle\PreviewBundle\Domain\Repository\PreviewLinkRepositoryInterface;
 use Sulu\Component\Rest\AbstractRestController;
@@ -25,10 +23,8 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 
 /**
  * @internal No BC promises are given for this class. It may be changed or removed at any time.
- *
- * @RouteResource("preview-link")
  */
-class PreviewLinkController extends AbstractRestController implements ClassResourceInterface
+class PreviewLinkController extends AbstractRestController
 {
     use RequestParametersTrait;
 

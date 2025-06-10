@@ -12,7 +12,6 @@
 namespace Sulu\Bundle\PageBundle\Controller;
 
 use FOS\RestBundle\View\ViewHandlerInterface;
-use HandcraftedInTheAlps\RestRoutingBundle\Routing\ClassResourceInterface;
 use Sulu\Component\Rest\AbstractRestController;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\ListBuilder\CollectionRepresentation;
@@ -23,7 +22,7 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * Controller for getting localizations.
  */
-class WebspaceLocalizationController extends AbstractRestController implements ClassResourceInterface
+class WebspaceLocalizationController extends AbstractRestController
 {
     public function __construct(
         ViewHandlerInterface $viewHandler,

@@ -15,7 +15,6 @@ use Doctrine\Persistence\ObjectManager;
 use FOS\RestBundle\Context\Context;
 use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\ViewHandlerInterface;
-use HandcraftedInTheAlps\RestRoutingBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\AdminBundle\UserManager\UserManagerInterface;
 use Sulu\Bundle\SecurityBundle\Entity\TwoFactor\TwoFactorInterface;
 use Sulu\Bundle\SecurityBundle\Entity\User;
@@ -31,7 +30,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 /**
  * This controller handles everything a user is allowed to change on its own.
  */
-class ProfileController implements ClassResourceInterface
+class ProfileController
 {
     protected static $entityNameUserSetting = UserSetting::class;
 

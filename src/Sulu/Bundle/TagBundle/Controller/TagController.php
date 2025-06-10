@@ -14,7 +14,6 @@ namespace Sulu\Bundle\TagBundle\Controller;
 use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\Context\Context;
 use FOS\RestBundle\View\ViewHandlerInterface;
-use HandcraftedInTheAlps\RestRoutingBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\TagBundle\Admin\TagAdmin;
 use Sulu\Bundle\TagBundle\Controller\Exception\ConstraintViolationException;
 use Sulu\Bundle\TagBundle\Tag\Exception\TagAlreadyExistsException;
@@ -38,7 +37,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 /**
  * Makes tag available through.
  */
-class TagController extends AbstractRestController implements ClassResourceInterface, SecuredControllerInterface
+class TagController extends AbstractRestController implements SecuredControllerInterface
 {
     protected static $entityName = \Sulu\Bundle\TagBundle\Entity\Tag::class;
 

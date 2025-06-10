@@ -13,8 +13,6 @@ namespace Sulu\Bundle\ContactBundle\Controller;
 
 use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\View\ViewHandlerInterface;
-use HandcraftedInTheAlps\RestRoutingBundle\Controller\Annotations\RouteResource;
-use HandcraftedInTheAlps\RestRoutingBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
 use Sulu\Bundle\ContactBundle\Contact\AbstractContactManager;
 use Sulu\Bundle\ContactBundle\Domain\Event\ContactMediaAddedEvent;
@@ -33,10 +31,8 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 
 /**
  * Class ContactMediaController.
- *
- * @RouteResource("Medias")
  */
-class ContactMediaController extends AbstractMediaController implements ClassResourceInterface
+class ContactMediaController extends AbstractMediaController
 {
     protected static $mediaEntityKey = 'contact_media';
 

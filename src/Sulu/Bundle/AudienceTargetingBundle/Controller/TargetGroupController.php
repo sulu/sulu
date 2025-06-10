@@ -14,8 +14,6 @@ namespace Sulu\Bundle\AudienceTargetingBundle\Controller;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\View\ViewHandlerInterface;
-use HandcraftedInTheAlps\RestRoutingBundle\Controller\Annotations\RouteResource;
-use HandcraftedInTheAlps\RestRoutingBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\AudienceTargetingBundle\Admin\AudienceTargetingAdmin;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupConditionInterface;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupConditionRepositoryInterface;
@@ -38,10 +36,8 @@ use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Makes target groups available through a REST API.
- *
- * @RouteResource("target-group")
  */
-class TargetGroupController extends AbstractRestController implements ClassResourceInterface, SecuredControllerInterface
+class TargetGroupController extends AbstractRestController implements SecuredControllerInterface
 {
     protected static $entityKey = 'target_groups';
 

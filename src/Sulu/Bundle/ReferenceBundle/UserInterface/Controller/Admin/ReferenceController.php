@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Sulu\Bundle\ReferenceBundle\UserInterface\Controller\Admin;
 
 use FOS\RestBundle\View\ViewHandlerInterface;
-use HandcraftedInTheAlps\RestRoutingBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\ReferenceBundle\Domain\Model\ReferenceInterface;
 use Sulu\Bundle\ReferenceBundle\Domain\Repository\ReferenceRepositoryInterface;
 use Sulu\Bundle\ReferenceBundle\Infrastructure\Sulu\Admin\ReferenceAdmin;
@@ -32,7 +31,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
  *
  * @internal there should be no need to extend this class
  */
-class ReferenceController extends AbstractRestController implements ClassResourceInterface
+class ReferenceController extends AbstractRestController
 {
     public function __construct(
         private ReferenceRepositoryInterface $referenceRepository,

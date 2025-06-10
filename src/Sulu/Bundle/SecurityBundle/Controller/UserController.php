@@ -14,7 +14,6 @@ namespace Sulu\Bundle\SecurityBundle\Controller;
 use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\Context\Context;
 use FOS\RestBundle\View\ViewHandlerInterface;
-use HandcraftedInTheAlps\RestRoutingBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\SecurityBundle\Security\Exception\MissingPasswordException;
 use Sulu\Bundle\SecurityBundle\UserManager\UserManager;
 use Sulu\Component\Rest\AbstractRestController;
@@ -35,7 +34,7 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * Makes the users accessible through a rest api.
  */
-class UserController extends AbstractRestController implements ClassResourceInterface, SecuredControllerInterface
+class UserController extends AbstractRestController implements SecuredControllerInterface
 {
     use RequestParametersTrait;
 

@@ -13,8 +13,6 @@ namespace Sulu\Bundle\MediaBundle\Controller;
 
 use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\View\ViewHandlerInterface;
-use HandcraftedInTheAlps\RestRoutingBundle\Controller\Annotations\RouteResource;
-use HandcraftedInTheAlps\RestRoutingBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
 use Sulu\Bundle\MediaBundle\Domain\Event\MediaPreviewImageModifiedEvent;
 use Sulu\Bundle\MediaBundle\Domain\Event\MediaPreviewImageRemovedEvent;
@@ -29,10 +27,8 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 
 /**
  * Makes medias preview images available through a REST API.
- *
- * @RouteResource("Preview")
  */
-class MediaPreviewController extends AbstractMediaController implements ClassResourceInterface
+class MediaPreviewController extends AbstractMediaController
 {
     public function __construct(
         ViewHandlerInterface $viewHandler,

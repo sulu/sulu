@@ -12,7 +12,6 @@
 namespace Sulu\Bundle\MediaBundle\Controller;
 
 use FOS\RestBundle\View\ViewHandlerInterface;
-use HandcraftedInTheAlps\RestRoutingBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface;
 use Sulu\Component\Rest\AbstractRestController;
 use Sulu\Component\Rest\ListBuilder\CollectionRepresentation;
@@ -20,7 +19,7 @@ use Sulu\Component\Rest\RequestParametersTrait;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class FormatController extends AbstractRestController implements ClassResourceInterface
+class FormatController extends AbstractRestController
 {
     use RequestParametersTrait;
 

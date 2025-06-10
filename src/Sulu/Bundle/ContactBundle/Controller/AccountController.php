@@ -15,7 +15,6 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ObjectManager;
 use FOS\RestBundle\Context\Context;
 use FOS\RestBundle\View\ViewHandlerInterface;
-use HandcraftedInTheAlps\RestRoutingBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
 use Sulu\Bundle\ContactBundle\Contact\AccountFactoryInterface;
 use Sulu\Bundle\ContactBundle\Contact\AccountManager;
@@ -53,7 +52,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 /**
  * Makes accounts available through a REST API.
  */
-class AccountController extends AbstractRestController implements ClassResourceInterface, SecuredControllerInterface
+class AccountController extends AbstractRestController implements SecuredControllerInterface
 {
     protected static $positionEntityName = \Sulu\Bundle\ContactBundle\Entity\Position::class;
 

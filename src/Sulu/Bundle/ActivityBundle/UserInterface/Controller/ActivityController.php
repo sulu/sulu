@@ -12,7 +12,6 @@
 namespace Sulu\Bundle\ActivityBundle\UserInterface\Controller;
 
 use FOS\RestBundle\View\ViewHandlerInterface;
-use HandcraftedInTheAlps\RestRoutingBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\ActivityBundle\Domain\Model\ActivityInterface;
 use Sulu\Bundle\ActivityBundle\Infrastructure\Sulu\Admin\ActivityAdmin;
 use Sulu\Component\Rest\AbstractRestController;
@@ -36,7 +35,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class ActivityController extends AbstractRestController implements ClassResourceInterface, SecuredControllerInterface
+class ActivityController extends AbstractRestController implements SecuredControllerInterface
 {
     use RequestParametersTrait;
 

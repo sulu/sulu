@@ -13,8 +13,6 @@ namespace Sulu\Bundle\SecurityBundle\Controller;
 
 use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\View\ViewHandlerInterface;
-use HandcraftedInTheAlps\RestRoutingBundle\Controller\Annotations\RouteResource;
-use HandcraftedInTheAlps\RestRoutingBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Component\Rest\AbstractRestController;
 use Sulu\Component\Security\Authentication\RoleSettingRepositoryInterface;
@@ -23,10 +21,8 @@ use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Endpoint for role-settings.
- *
- * @RouteResource("setting")
  */
-class RoleSettingController extends AbstractRestController implements ClassResourceInterface
+class RoleSettingController extends AbstractRestController
 {
     public function __construct(
         ViewHandlerInterface $viewHandler,

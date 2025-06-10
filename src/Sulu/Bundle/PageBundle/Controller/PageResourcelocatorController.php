@@ -12,7 +12,6 @@
 namespace Sulu\Bundle\PageBundle\Controller;
 
 use FOS\RestBundle\View\ViewHandlerInterface;
-use HandcraftedInTheAlps\RestRoutingBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\PageBundle\Repository\ResourceLocatorRepositoryInterface;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\Rest\AbstractRestController;
@@ -21,7 +20,7 @@ use Sulu\Component\Rest\RequestParametersTrait;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class PageResourcelocatorController extends AbstractRestController implements ClassResourceInterface
+class PageResourcelocatorController extends AbstractRestController
 {
     use RequestParametersTrait;
 

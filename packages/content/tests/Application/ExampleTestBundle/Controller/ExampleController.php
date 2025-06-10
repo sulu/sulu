@@ -14,8 +14,6 @@ declare(strict_types=1);
 namespace Sulu\Content\Tests\Application\ExampleTestBundle\Controller;
 
 use Doctrine\ORM\EntityManagerInterface;
-use FOS\RestBundle\Controller\Annotations as Rest;
-use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\View\ViewHandlerInterface;
 use Sulu\Component\Rest\AbstractRestController;
 use Sulu\Component\Rest\Exception\RestException;
@@ -35,7 +33,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-class ExampleController extends AbstractRestController implements ClassResourceInterface
+class ExampleController extends AbstractRestController
 {
     /**
      * @var FieldDescriptorFactoryInterface
@@ -153,8 +151,6 @@ class ExampleController extends AbstractRestController implements ClassResourceI
 
     /**
      *  The postTriggerAction loads the main entity and applies transitions based on the given action parameter.
-     *
-     * @Rest\Post("examples/{id}")
      */
     public function postTriggerAction(string $id, Request $request): Response
     {

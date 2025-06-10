@@ -54,7 +54,6 @@
         "gedmo/doctrine-extensions": "^3.8",
         "guzzlehttp/promises": "^1.0 || ^2.0",
         "handcraftedinthealps/goodby-csv": "^1.4",
-        "handcraftedinthealps/rest-routing-bundle": "^1.0",
         "imagine/imagine": "^1.0",
         "jackalope/jackalope": "^1.4.5 || ^2.0",
         "jms/serializer": "^3.19",

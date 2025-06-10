@@ -13,8 +13,6 @@ namespace Sulu\Bundle\ContactBundle\Controller;
 
 use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\View\ViewHandlerInterface;
-use HandcraftedInTheAlps\RestRoutingBundle\Controller\Annotations\RouteResource;
-use HandcraftedInTheAlps\RestRoutingBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
 use Sulu\Bundle\ContactBundle\Domain\Event\ContactTitleCreatedEvent;
 use Sulu\Bundle\ContactBundle\Domain\Event\ContactTitleModifiedEvent;
@@ -31,7 +29,7 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * @RouteResource("contact-title")
  */
-class ContactTitleController extends AbstractRestController implements ClassResourceInterface
+class ContactTitleController extends AbstractRestController
 {
     protected static $entityName = ContactTitle::class;
 

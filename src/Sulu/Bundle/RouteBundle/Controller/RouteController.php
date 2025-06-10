@@ -13,7 +13,6 @@ namespace Sulu\Bundle\RouteBundle\Controller;
 
 use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\View\ViewHandlerInterface;
-use HandcraftedInTheAlps\RestRoutingBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
 use Sulu\Bundle\RouteBundle\Domain\Event\RouteRemovedEvent;
 use Sulu\Bundle\RouteBundle\Entity\RouteRepositoryInterface;
@@ -33,7 +32,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * Provides api to handle routes.
  */
-class RouteController extends AbstractRestController implements ClassResourceInterface
+class RouteController extends AbstractRestController
 {
     use RequestParametersTrait;
 

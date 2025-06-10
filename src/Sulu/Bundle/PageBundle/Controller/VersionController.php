@@ -13,7 +13,6 @@ namespace Sulu\Bundle\PageBundle\Controller;
 
 use FOS\RestBundle\Context\Context;
 use FOS\RestBundle\View\ViewHandlerInterface;
-use HandcraftedInTheAlps\RestRoutingBundle\Routing\ClassResourceInterface;
 use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\Version;
@@ -33,7 +32,6 @@ use Symfony\Component\Routing\Exception\MissingMandatoryParametersException;
  * Handles the versions of pages.
  */
 class VersionController extends AbstractRestController implements
-    ClassResourceInterface,
     SecuredControllerInterface,
     SecuredObjectControllerInterface
 {
