@@ -19,7 +19,6 @@ sulu_security:
     prefix: /admin/security
 
 sulu_security_api:
-    type: rest
     resource: "@SuluSecurityBundle/Resources/config/routing_api.yml"
     prefix: /admin/api
 

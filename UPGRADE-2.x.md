@@ -1,5 +1,26 @@
 # Upgrade
 
+## 2.6.10
+
+### Deprecate usage of fos rest routing
+
+We are not longer considering the [fos rest routing](https://github.com/handcraftedinthealps/RestRoutingBundle) as a best practice.
+All bundles should use the Symfony routing system instead.
+
+Inside your `config/routes/sulu_admin.yaml` and `config/routes/sulu_website.yaml` you can remove the fos rest routing.
+By first remove all `type: rest` appeareance and also replace `.yml` with `.yaml`:
+
+```diff
+sulu_tag_api:
+-    resource: "@SuluTagBundle/Resources/config/routing_api.yml"
++    resource: "@SuluTagBundle/Resources/config/routing_api.yaml"
+-    type: rest
+     prefix: /admin/api
+```
+
+This is an example and all routes should be checked for the `type: rest` and `.yml`.
+All `.yml` routing files of the core bundles will in future be removed.
+
 ## 2.6.7
 
 ### Doctrine incompatibility with Symfony 6.3
