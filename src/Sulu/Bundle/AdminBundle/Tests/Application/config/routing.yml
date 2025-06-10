@@ -44,8 +44,7 @@ sulu_media_api:
     prefix: /admin/api
 
 sulu_category_api:
-    type: rest
-    resource: "@SuluCategoryBundle/Resources/config/routing_api.yml"
+    resource: "@SuluCategoryBundle/Resources/config/routing_api.yaml"
     prefix: /admin/api
 
 sulu_snippet_api:

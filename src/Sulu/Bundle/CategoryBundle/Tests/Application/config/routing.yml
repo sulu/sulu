@@ -3,6 +3,5 @@ sulu_admin:
     prefix: /admin
 
 sulu_category_api:
-    resource: "@SuluCategoryBundle/Resources/config/routing_api.yml"
-    type: rest
+    resource: "@SuluCategoryBundle/Resources/config/routing_api.yaml"
     prefix: /api
