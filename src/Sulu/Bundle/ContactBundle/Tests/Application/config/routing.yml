@@ -3,8 +3,7 @@ sulu_admin:
     prefix: /admin
 
 sulu_contact_api:
-    type: rest
-    resource: "@SuluContactBundle/Resources/config/routing_api.yml"
+    resource: "@SuluContactBundle/Resources/config/routing_api.yaml"
     prefix: /api
 
 sulu_media:
