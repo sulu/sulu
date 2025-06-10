@@ -10,7 +10,7 @@ sulu_category_api:
 # The following route are necessary to get AdminController::configAction work.
 # Can be removed once its content is not hardcoded anymore.
 sulu_media:
-    resource: "@SuluMediaBundle/Resources/config/routing.yml"
+    resource: "@SuluMediaBundle/Resources/config/routing.yaml"
     prefix: /admin/media
 
 sulu_preview:

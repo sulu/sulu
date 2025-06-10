@@ -28,15 +28,14 @@ sulu_page_api:
     prefix: /admin/api
 
 sulu_media:
-    resource: "@SuluMediaBundle/Resources/config/routing.yml"
+    resource: "@SuluMediaBundle/Resources/config/routing.yaml"
     prefix: /admin/media
 
 sulu_media_website:
-    resource: "@SuluMediaBundle/Resources/config/routing_website.yml"
+    resource: "@SuluMediaBundle/Resources/config/routing_website.yaml"
 
 sulu_media_api:
-    type: rest
-    resource: "@SuluMediaBundle/Resources/config/routing_api.yml"
+    resource: "@SuluMediaBundle/Resources/config/routing_api.yaml"
     prefix: /admin/api
 
 sulu_category_api:

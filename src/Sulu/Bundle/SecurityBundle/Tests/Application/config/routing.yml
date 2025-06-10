@@ -23,10 +23,9 @@ sulu_preview_public:
     prefix: /admin/p
 
 sulu_website:
-    type: rest
     resource: "@SuluWebsiteBundle/Resources/config/routing.yml"
     prefix: /admin
 
 sulu_media:
-    resource: "@SuluMediaBundle/Resources/config/routing.yml"
+    resource: "@SuluMediaBundle/Resources/config/routing.yaml"
     prefix: /admin/media

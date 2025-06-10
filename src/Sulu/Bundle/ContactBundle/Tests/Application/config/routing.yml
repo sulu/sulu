@@ -7,7 +7,7 @@ sulu_contact_api:
     prefix: /api
 
 sulu_media:
-    resource: "@SuluMediaBundle/Resources/config/routing.yml"
+    resource: "@SuluMediaBundle/Resources/config/routing.yaml"
     prefix:
 sulu_security_api:
     resource: "@SuluSecurityBundle/Resources/config/routing_api.yaml"

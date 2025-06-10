@@ -1,5 +1,5 @@
 sulu_media_website:
-    resource: "@SuluMediaBundle/Resources/config/routing_website.yml"
+    resource: "@SuluMediaBundle/Resources/config/routing_website.yaml"
 
 # Including a portal route to test if media download is still working
 sulu_search:

@@ -3,16 +3,15 @@ sulu_admin:
     prefix: /admin
 
 sulu_media_api:
-    type: rest
-    resource: "@SuluMediaBundle/Resources/config/routing_api.yml"
+    resource: "@SuluMediaBundle/Resources/config/routing_api.yaml"
     prefix: /api
 
 sulu_media:
-    resource: "@SuluMediaBundle/Resources/config/routing.yml"
+    resource: "@SuluMediaBundle/Resources/config/routing.yaml"
     prefix:
 
 sulu_media_website:
-    resource: "@SuluMediaBundle/Resources/config/routing_website.yml"
+    resource: "@SuluMediaBundle/Resources/config/routing_website.yaml"
     prefix:
 
 # Including a portal route to test if media download is still working
