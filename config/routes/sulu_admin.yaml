@@ -80,16 +80,15 @@ sulu_route_api:
     prefix: /admin/api
 
 sulu_preview:
-    resource: "@SuluPreviewBundle/Resources/config/routing.yml"
+    resource: "@SuluPreviewBundle/Resources/config/routing.yaml"
     prefix: /admin/preview
 
 sulu_preview_api:
-    type: rest
-    resource: "@SuluPreviewBundle/Resources/config/routing_api.yml"
+    resource: "@SuluPreviewBundle/Resources/config/routing_api.yaml"
     prefix: /admin/api
 
 sulu_preview_public:
-    resource: "@SuluPreviewBundle/Resources/config/routing_public.yml"
+    resource: "@SuluPreviewBundle/Resources/config/routing_public.yaml"
     prefix: /admin/p
 
 sulu_search:
