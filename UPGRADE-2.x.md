@@ -21,6 +21,8 @@ sulu_tag_api:
 This is an example and all routes should be checked for the `type: rest` and `.yml`.
 All `.yml` routing files of the core bundles will in future be removed.
 
+If you want upgrade your own custom routes have a look at the command opt out command of [RestRoutingBundle](https://github.com/handcraftedinthealps/RestRoutingBundle).
+
 ## 2.6.7
 
 ### Doctrine incompatibility with Symfony 6.3
