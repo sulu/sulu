@@ -39,10 +39,15 @@ class FOSJSRoutingControllerTest extends SuluTestCase
         $this->assertIsArray($json);
         $this->assertArrayHasKey('routes', $json);
 
-        $routes = \array_keys($json['routes']);
-        \sort($routes);
+        $routes = [];
+        foreach (\array_keys($json['routes']) as $route) {
+            $routes[$route] = $route;
+        }
+        \ksort($routes);
 
-        $this->assertSame([
+        $expectedRoutes = [];
+
+        foreach ([
             'sulu_activity.get_activities',
             'sulu_admin.metadata',
             'sulu_admin.put_collaborations',
@@ -122,6 +127,10 @@ class FOSJSRoutingControllerTest extends SuluTestCase
             'sulu_trash.get_trash-items',
             'sulu_website.cget_webspace_analytics',
             'sulu_website.get_webspace_analytics',
-        ], $routes);
+        ] as $routeName) {
+            $expectedRoutes[$routeName] = $routeName;
+        }
+
+        $this->assertSame($expectedRoutes, $routes);
     }
 }
