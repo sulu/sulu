@@ -10,13 +10,3 @@ doctrine:
                 dir: "%gedmo_directory%/Tree/Entity"
                 alias: GedmoTree
                 is_bundle: false
-
-#sulu_core:
-#    content:
-#        structure:
-#            type_map:
-#                test_resource_contents: 'Sulu\Component\Content\Compat\Structure\StructureBridge'
-#            paths:
-#                test_resource_contents:
-#                    path: '%kernel.project_dir%/config/templates/test_resources'
-#                    type: 'test_resource_contents'

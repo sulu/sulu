@@ -106,12 +106,6 @@
             <tag name="sulu_route.route_defaults_provider" resource-key="pages"/>
         </service>
 
-        <!-- Structure Bridge Factory -->
-        <service id="sulu_content.content_structure_bridge_factory" class="Sulu\Content\Infrastructure\Sulu\Structure\ContentStructureBridgeFactory">
-            <argument type="service" id="sulu_page.structure.factory"/>
-            <argument type="service" id="sulu_page.compat.structure.legacy_property_factory"/>
-        </service>
-
         <!-- Content Persister -->
         <service id="sulu_content.content_persister" class="Sulu\Content\Application\ContentPersister\ContentPersister">
             <argument type="service" id="sulu_content.dimension_content_collection_factory"/>
@@ -183,10 +177,5 @@
         </service>
 
         <service id="Sulu\Content\Application\ContentManager\ContentManagerInterface" alias="sulu_content.content_manager"/>
-
-        <!-- StructureResolver -->
-        <service id="Sulu\Content\Infrastructure\Sulu\Structure\DecoratedStructureResolver" decorates="sulu_website.resolver.structure">
-            <argument type="service" id=".inner"/>
-        </service>
     </services>
 </container>

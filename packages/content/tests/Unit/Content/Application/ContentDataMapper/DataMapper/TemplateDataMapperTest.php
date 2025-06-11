@@ -87,7 +87,7 @@ class TemplateDataMapperTest extends TestCase
         $templateMapper->map($unlocalizedDimensionContent, $localizedDimensionContent, $data);
     }
 
-    public function testMapNoStructureFound(): void
+    public function testMapNoMetadataFound(): void
     {
         $this->expectException(\RuntimeException::class);
 
