@@ -2,7 +2,7 @@
 
 namespace Sulu\Bundle\AdminBundle\SmartContent;
 
-use Sulu\Component\SmartContent\Configuration\ProviderConfigurationInterface;
+use Sulu\Bundle\AdminBundle\SmartContent\Configuration\ProviderConfigurationInterface;
 use Sulu\Component\SmartContent\DatasourceItemInterface;
 
 interface SmartContentProviderInterface

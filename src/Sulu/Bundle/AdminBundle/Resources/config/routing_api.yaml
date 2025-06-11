@@ -23,3 +23,11 @@ sulu_page.get_teasers:
     format: json
     requirements:
         _format: json|csv
+
+sulu_admin.get_items:
+    path: '/items.{_format}'
+    methods: GET
+    controller: 'sulu_admin.smart_content_item_controller::getItemsAction'
+    format: json
+    requirements:
+        _format: json|csv

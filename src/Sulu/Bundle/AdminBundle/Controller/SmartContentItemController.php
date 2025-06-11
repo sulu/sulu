@@ -15,7 +15,6 @@ namespace Sulu\Bundle\AdminBundle\Controller;
 
 use FOS\RestBundle\View\ViewHandlerInterface;
 use Sulu\Bundle\AdminBundle\SmartContent\SmartContentProviderInterface;
-use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Rest\AbstractRestController;
 use Sulu\Component\Rest\Exception\MissingParameterException;
@@ -38,9 +37,8 @@ class SmartContentItemController extends AbstractRestController
      * @param ServiceLocator<SmartContentProviderInterface> $smartContentProviderLocator
      */
     public function __construct(
-        ViewHandlerInterface $viewHandler,
-        private TagManagerInterface $tagManager,
         private ServiceLocator $smartContentProviderLocator,
+        ViewHandlerInterface $viewHandler,
         ?TokenStorageInterface $tokenStorage = null,
     ) {
         parent::__construct($viewHandler, $tokenStorage);

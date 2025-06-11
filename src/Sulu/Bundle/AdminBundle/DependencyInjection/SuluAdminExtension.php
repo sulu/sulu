@@ -78,7 +78,7 @@ class SuluAdminExtension extends Extension implements PrependExtensionInterface
                             [
                                 'name' => 'sulu_admin',
                                 'path' => __DIR__ . '/../Resources/config/serializer',
-                                'namespace_prefix' => 'Sulu\Component\SmartContent\Configuration',
+                                'namespace_prefix' => 'Sulu\Bundle\AdminBundle\SmartContent\Configuration',
                             ],
                         ],
                     ],

@@ -9,10 +9,10 @@ use Doctrine\ORM\EntityRepository;
 use Sulu\Article\Domain\Model\ArticleDimensionContentInterface;
 use Sulu\Article\Domain\Model\ArticleInterface;
 use Sulu\Article\Infrastructure\Sulu\Content\ResourceLoader\ArticleResourceLoader;
+use Sulu\Bundle\AdminBundle\SmartContent\Configuration\Builder;
+use Sulu\Bundle\AdminBundle\SmartContent\Configuration\BuilderInterface;
+use Sulu\Bundle\AdminBundle\SmartContent\Configuration\ProviderConfigurationInterface;
 use Sulu\Bundle\AdminBundle\SmartContent\SmartContentProviderInterface;
-use Sulu\Component\SmartContent\Configuration\Builder;
-use Sulu\Component\SmartContent\Configuration\BuilderInterface;
-use Sulu\Component\SmartContent\Configuration\ProviderConfigurationInterface;
 use Sulu\Component\SmartContent\DatasourceItemInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer;
@@ -51,7 +51,6 @@ class ArticleSmartContentProvider implements SmartContentProviderInterface
      *     limit?: int,
      *     page?: int,
      * } $filters
-     *
      * @param array{
      *     title?: 'asc'|'desc',
      *     authored?: 'asc'|'desc',
@@ -92,7 +91,6 @@ class ArticleSmartContentProvider implements SmartContentProviderInterface
      *     limit?: int,
      *     page?: int,
      * } $filters
-     *
      * @param array{
      *     title?: 'asc'|'desc',
      *     authored?: 'asc'|'desc',

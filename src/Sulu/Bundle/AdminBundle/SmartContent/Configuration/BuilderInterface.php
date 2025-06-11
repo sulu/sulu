@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\SmartContent\Configuration;
+namespace Sulu\Bundle\AdminBundle\SmartContent\Configuration;
 
 /**
  * Builder with fluent interface for smart content configuration.
