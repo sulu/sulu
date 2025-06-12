@@ -34,7 +34,8 @@ class AdditionalWebspacesMerger implements MergerInterface
         }
 
         // Merge additionalWebspaces array
-        if ($additionalWebspaces = $sourceObject->getAdditionalWebspaces()) {
+        $additionalWebspaces = $sourceObject->getAdditionalWebspaces();
+        if (null !== $additionalWebspaces) {
             $targetObject->setAdditionalWebspaces($additionalWebspaces);
         }
     }

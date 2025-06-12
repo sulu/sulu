@@ -56,6 +56,6 @@ trait AdditionalWebspacesTrait
             return $currentWebspaceKey;
         }
 
-        return $this->getMainWebspace();
+        return $this->getMainWebspace() ?? '';
     }
 }

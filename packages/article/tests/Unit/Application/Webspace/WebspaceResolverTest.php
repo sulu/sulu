@@ -15,17 +15,23 @@ namespace Sulu\Article\Tests\Unit\Application\Webspace;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Article\Application\Webspace\WebspaceResolver;
 use Sulu\Article\Application\Webspace\WebspaceSettingsConfigurationResolver;
+use Sulu\Article\Domain\Model\AdditionalWebspacesInterface;
+use Sulu\Component\Webspace\Manager\WebspaceCollection;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Webspace;
+use Sulu\Content\Domain\Model\DimensionContentInterface;
 
 class WebspaceResolverTest extends TestCase
 {
     use ProphecyTrait;
 
-    private WebspaceManagerInterface $webspaceManager;
-    private WebspaceSettingsConfigurationResolver $configurationResolver;
+    /** @var ObjectProphecy<WebspaceManagerInterface> */
+    private ObjectProphecy $webspaceManager;
+    /** @var ObjectProphecy<WebspaceSettingsConfigurationResolver> */
+    private ObjectProphecy $configurationResolver;
 
     protected function setUp(): void
     {
@@ -41,110 +47,73 @@ class WebspaceResolverTest extends TestCase
         );
     }
 
-    public function testResolveMainWebspaceWithValidWebspace(): void
+    public function testResolveMainWebspaceWithCustomizedSettings(): void
     {
-        $resolver = $this->getWebspaceResolverInstance();
-
         $locale = 'en';
         $mainWebspaceKey = 'sulu-io';
-        $webspace = $this->prophesize(Webspace::class);
 
-        $this->configurationResolver->resolveMainWebspace($locale)->willReturn($mainWebspaceKey)->shouldBeCalled();
-        $this->webspaceManager->findWebspaceByKey($mainWebspaceKey)->willReturn($webspace->reveal())->shouldBeCalled();
+        $dimensionContent = $this->prophesize(DimensionContentInterface::class);
+        $dimensionContent->willImplement(AdditionalWebspacesInterface::class);
+        $dimensionContent->getCustomizeWebspaceSettings()->willReturn(true);
+        $dimensionContent->getMainWebspace()->willReturn($mainWebspaceKey);
 
-        $result = $resolver->resolveMainWebspace($locale);
+        $webspaceCollection = $this->prophesize(WebspaceCollection::class);
+        $webspace1 = $this->prophesize(Webspace::class);
+        $webspace2 = $this->prophesize(Webspace::class);
+        $webspaceCollection->getWebspaces()->willReturn([$webspace1->reveal(), $webspace2->reveal()]);
+        $this->webspaceManager->getWebspaceCollection()->willReturn($webspaceCollection->reveal());
+
+        $resolver = $this->getWebspaceResolverInstance();
+        $result = $resolver->resolveMainWebspace($dimensionContent->reveal(), $locale);
 
         $this->assertSame($mainWebspaceKey, $result);
     }
 
-    public function testResolveMainWebspaceWithInvalidWebspace(): void
+    public function testResolveAdditionalWebspacesWithCustomizedSettings(): void
     {
-        $resolver = $this->getWebspaceResolverInstance();
-
         $locale = 'en';
-        $mainWebspaceKey = 'invalid-webspace';
+        $additionalWebspaces = ['sulu-io', 'example-com'];
 
-        $this->configurationResolver->resolveMainWebspace($locale)->willReturn($mainWebspaceKey)->shouldBeCalled();
-        $this->webspaceManager->findWebspaceByKey($mainWebspaceKey)->willReturn(null)->shouldBeCalled();
+        $dimensionContent = $this->prophesize(DimensionContentInterface::class);
+        $dimensionContent->willImplement(AdditionalWebspacesInterface::class);
+        $dimensionContent->getCustomizeWebspaceSettings()->willReturn(true);
+        $dimensionContent->getAdditionalWebspaces()->willReturn($additionalWebspaces);
 
-        $result = $resolver->resolveMainWebspace($locale);
-
-        $this->assertNull($result);
-    }
-
-    public function testResolveMainWebspaceWithNullConfig(): void
-    {
-        $resolver = $this->getWebspaceResolverInstance();
-
-        $locale = 'en';
-
-        $this->configurationResolver->resolveMainWebspace($locale)->willReturn(null)->shouldBeCalled();
-        $this->webspaceManager->findWebspaceByKey()->shouldNotBeCalled();
-
-        $result = $resolver->resolveMainWebspace($locale);
-
-        $this->assertNull($result);
-    }
-
-    public function testResolveAdditionalWebspacesWithValidWebspaces(): void
-    {
-        $resolver = $this->getWebspaceResolverInstance();
-
-        $locale = 'en';
-        $additionalWebspaceKeys = ['sulu-io', 'example-com'];
+        $webspaceCollection = $this->prophesize(WebspaceCollection::class);
         $webspace1 = $this->prophesize(Webspace::class);
         $webspace2 = $this->prophesize(Webspace::class);
+        $webspaceCollection->getWebspaces()->willReturn([$webspace1->reveal(), $webspace2->reveal()]);
+        $this->webspaceManager->getWebspaceCollection()->willReturn($webspaceCollection->reveal());
 
-        $this->configurationResolver->resolveAdditionalWebspaces($locale)->willReturn($additionalWebspaceKeys)->shouldBeCalled();
-        $this->webspaceManager->findWebspaceByKey('sulu-io')->willReturn($webspace1->reveal())->shouldBeCalled();
-        $this->webspaceManager->findWebspaceByKey('example-com')->willReturn($webspace2->reveal())->shouldBeCalled();
+        $resolver = $this->getWebspaceResolverInstance();
+        $result = $resolver->resolveAdditionalWebspaces($dimensionContent->reveal(), $locale);
 
-        $result = $resolver->resolveAdditionalWebspaces($locale);
-
-        $this->assertSame($additionalWebspaceKeys, $result);
+        $this->assertSame($additionalWebspaces, $result);
     }
 
-    public function testResolveAdditionalWebspacesWithSomeInvalidWebspaces(): void
+    public function testHasCustomizedWebspaceSettingsTrue(): void
     {
         $resolver = $this->getWebspaceResolverInstance();
 
-        $locale = 'en';
-        $additionalWebspaceKeys = ['sulu-io', 'invalid-webspace', 'example-com'];
-        $webspace1 = $this->prophesize(Webspace::class);
-        $webspace2 = $this->prophesize(Webspace::class);
+        $dimensionContent = $this->prophesize(DimensionContentInterface::class);
+        $dimensionContent->willImplement(AdditionalWebspacesInterface::class);
+        $dimensionContent->getCustomizeWebspaceSettings()->willReturn(true);
 
-        $this->configurationResolver->resolveAdditionalWebspaces($locale)->willReturn($additionalWebspaceKeys)->shouldBeCalled();
-        $this->webspaceManager->findWebspaceByKey('sulu-io')->willReturn($webspace1->reveal())->shouldBeCalled();
-        $this->webspaceManager->findWebspaceByKey('invalid-webspace')->willReturn(null)->shouldBeCalled();
-        $this->webspaceManager->findWebspaceByKey('example-com')->willReturn($webspace2->reveal())->shouldBeCalled();
+        $result = $resolver->hasCustomizedWebspaceSettings($dimensionContent->reveal());
 
-        $result = $resolver->resolveAdditionalWebspaces($locale);
-
-        $this->assertSame(['sulu-io', 'example-com'], $result);
+        $this->assertTrue($result);
     }
 
-    public function testResolveAdditionalWebspacesWithEmptyConfig(): void
+    public function testHasCustomizedWebspaceSettingsFalse(): void
     {
         $resolver = $this->getWebspaceResolverInstance();
 
-        $locale = 'en';
+        $dimensionContent = $this->prophesize(DimensionContentInterface::class);
+        $dimensionContent->willImplement(AdditionalWebspacesInterface::class);
+        $dimensionContent->getCustomizeWebspaceSettings()->willReturn(false);
 
-        $this->configurationResolver->resolveAdditionalWebspaces($locale)->willReturn([])->shouldBeCalled();
-        $this->webspaceManager->findWebspaceByKey()->shouldNotBeCalled();
+        $result = $resolver->hasCustomizedWebspaceSettings($dimensionContent->reveal());
 
-        $result = $resolver->resolveAdditionalWebspaces($locale);
-
-        $this->assertSame([], $result);
-    }
-
-    public function testResolveAdditionalWebspacesWithNullLocale(): void
-    {
-        $resolver = $this->getWebspaceResolverInstance();
-
-        $this->configurationResolver->resolveAdditionalWebspaces(null)->willReturn([])->shouldBeCalled();
-
-        $result = $resolver->resolveAdditionalWebspaces(null);
-
-        $this->assertSame([], $result);
+        $this->assertFalse($result);
     }
 }

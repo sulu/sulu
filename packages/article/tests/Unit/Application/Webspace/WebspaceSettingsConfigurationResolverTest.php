@@ -29,10 +29,10 @@ class WebspaceSettingsConfigurationResolverTest extends TestCase
 
         $resolver = new WebspaceSettingsConfigurationResolver($defaultMainWebspace, $defaultAdditionalWebspaces);
 
-        $result = $resolver->resolveMainWebspace('en');
+        $result = $resolver->getDefaultMainWebspaceForLocale('en');
         $this->assertSame('sulu-io-en', $result);
 
-        $result = $resolver->resolveMainWebspace('de');
+        $result = $resolver->getDefaultMainWebspaceForLocale('de');
         $this->assertSame('sulu-io-de', $result);
     }
 
@@ -46,7 +46,7 @@ class WebspaceSettingsConfigurationResolverTest extends TestCase
 
         $resolver = new WebspaceSettingsConfigurationResolver($defaultMainWebspace, $defaultAdditionalWebspaces);
 
-        $result = $resolver->resolveMainWebspace('fr');
+        $result = $resolver->getDefaultMainWebspaceForLocale('fr');
         $this->assertSame('sulu-io-default', $result);
     }
 
@@ -57,8 +57,8 @@ class WebspaceSettingsConfigurationResolverTest extends TestCase
 
         $resolver = new WebspaceSettingsConfigurationResolver($defaultMainWebspace, $defaultAdditionalWebspaces);
 
-        $result = $resolver->resolveMainWebspace('en');
-        $this->assertNull($result);
+        $this->expectException(\Symfony\Component\Form\Exception\InvalidConfigurationException::class);
+        $resolver->getDefaultMainWebspaceForLocale('en');
     }
 
     public function testResolveMainWebspaceWithNullLocale(): void
@@ -70,7 +70,7 @@ class WebspaceSettingsConfigurationResolverTest extends TestCase
 
         $resolver = new WebspaceSettingsConfigurationResolver($defaultMainWebspace, $defaultAdditionalWebspaces);
 
-        $result = $resolver->resolveMainWebspace(null);
+        $result = $resolver->getDefaultMainWebspaceForLocale('default');
         $this->assertSame('sulu-io-default', $result);
     }
 
@@ -85,10 +85,10 @@ class WebspaceSettingsConfigurationResolverTest extends TestCase
 
         $resolver = new WebspaceSettingsConfigurationResolver($defaultMainWebspace, $defaultAdditionalWebspaces);
 
-        $result = $resolver->resolveAdditionalWebspaces('en');
+        $result = $resolver->getDefaultAdditionalWebspacesForLocale('en');
         $this->assertSame(['sulu-io', 'example-com'], $result);
 
-        $result = $resolver->resolveAdditionalWebspaces('de');
+        $result = $resolver->getDefaultAdditionalWebspacesForLocale('de');
         $this->assertSame(['sulu-io', 'beispiel-de'], $result);
     }
 
@@ -102,7 +102,7 @@ class WebspaceSettingsConfigurationResolverTest extends TestCase
 
         $resolver = new WebspaceSettingsConfigurationResolver($defaultMainWebspace, $defaultAdditionalWebspaces);
 
-        $result = $resolver->resolveAdditionalWebspaces('fr');
+        $result = $resolver->getDefaultAdditionalWebspacesForLocale('fr');
         $this->assertSame(['sulu-io'], $result);
     }
 
@@ -113,7 +113,7 @@ class WebspaceSettingsConfigurationResolverTest extends TestCase
 
         $resolver = new WebspaceSettingsConfigurationResolver($defaultMainWebspace, $defaultAdditionalWebspaces);
 
-        $result = $resolver->resolveAdditionalWebspaces('en');
+        $result = $resolver->getDefaultAdditionalWebspacesForLocale('en');
         $this->assertSame([], $result);
     }
 
@@ -126,7 +126,7 @@ class WebspaceSettingsConfigurationResolverTest extends TestCase
 
         $resolver = new WebspaceSettingsConfigurationResolver($defaultMainWebspace, $defaultAdditionalWebspaces);
 
-        $result = $resolver->resolveAdditionalWebspaces(null);
+        $result = $resolver->getDefaultAdditionalWebspacesForLocale('default');
         $this->assertSame(['sulu-io', 'example-com'], $result);
     }
 
@@ -138,10 +138,10 @@ class WebspaceSettingsConfigurationResolverTest extends TestCase
 
         $resolver = new WebspaceSettingsConfigurationResolver($defaultMainWebspace, $defaultAdditionalWebspaces);
 
-        $result = $resolver->resolveMainWebspace('en');
+        $result = $resolver->getDefaultMainWebspaceForLocale('en');
         $this->assertSame('sulu-io', $result);
 
-        $result = $resolver->resolveMainWebspace('de');
+        $result = $resolver->getDefaultMainWebspaceForLocale('de');
         $this->assertSame('sulu-io', $result);
     }
 
@@ -153,10 +153,10 @@ class WebspaceSettingsConfigurationResolverTest extends TestCase
 
         $resolver = new WebspaceSettingsConfigurationResolver($defaultMainWebspace, $defaultAdditionalWebspaces);
 
-        $result = $resolver->resolveAdditionalWebspaces('en');
+        $result = $resolver->getDefaultAdditionalWebspacesForLocale('en');
         $this->assertSame(['sulu-io', 'example-com'], $result);
 
-        $result = $resolver->resolveAdditionalWebspaces('de');
+        $result = $resolver->getDefaultAdditionalWebspacesForLocale('de');
         $this->assertSame(['sulu-io', 'example-com'], $result);
     }
 }

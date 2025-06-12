@@ -15,16 +15,19 @@ namespace Sulu\Article\Tests\Unit\Application\Content\Normalizer;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Article\Application\Content\Normalizer\AdditionalWebspacesNormalizer;
 use Sulu\Article\Application\Webspace\WebspaceResolver;
 use Sulu\Article\Domain\Model\AdditionalWebspacesInterface;
 use Sulu\Content\Application\ContentNormalizer\Normalizer\NormalizerInterface;
+use Sulu\Content\Domain\Model\DimensionContentInterface;
 
 class AdditionalWebspacesNormalizerTest extends TestCase
 {
     use ProphecyTrait;
 
-    private WebspaceResolver $webspaceResolver;
+    /** @var ObjectProphecy<WebspaceResolver> */
+    private ObjectProphecy $webspaceResolver;
 
     protected function setUp(): void
     {
@@ -74,12 +77,13 @@ class AdditionalWebspacesNormalizerTest extends TestCase
         $resolvedMainWebspace = 'resolved-main';
         $resolvedAdditionalWebspaces = ['resolved-additional'];
 
-        $object = $this->prophesize(AdditionalWebspacesInterface::class);
+        $object = $this->prophesize(DimensionContentInterface::class);
+        $object->willImplement(AdditionalWebspacesInterface::class);
         $object->getCustomizeWebspaceSettings()->willReturn(false)->shouldBeCalled();
         $object->getLocale()->willReturn($locale)->shouldBeCalled();
 
-        $this->webspaceResolver->resolveMainWebspace($locale)->willReturn($resolvedMainWebspace)->shouldBeCalled();
-        $this->webspaceResolver->resolveAdditionalWebspaces($locale)->willReturn($resolvedAdditionalWebspaces)->shouldBeCalled();
+        $this->webspaceResolver->resolveMainWebspace($object->reveal(), $locale)->willReturn($resolvedMainWebspace)->shouldBeCalled();
+        $this->webspaceResolver->resolveAdditionalWebspaces($object->reveal(), $locale)->willReturn($resolvedAdditionalWebspaces)->shouldBeCalled();
 
         $normalizedData = [
             'customizeWebspaceSettings' => false,
@@ -102,12 +106,12 @@ class AdditionalWebspacesNormalizerTest extends TestCase
     {
         $normalizer = $this->getAdditionalWebspacesNormalizerInstance();
 
-        $object = $this->prophesize(AdditionalWebspacesInterface::class);
+        $object = $this->prophesize(DimensionContentInterface::class);
+        $object->willImplement(AdditionalWebspacesInterface::class);
         $object->getCustomizeWebspaceSettings()->willReturn(false)->shouldBeCalled();
         $object->getLocale()->willReturn(null)->shouldBeCalled();
 
-        $this->webspaceResolver->resolveMainWebspace(null)->willReturn(null)->shouldBeCalled();
-        $this->webspaceResolver->resolveAdditionalWebspaces(null)->willReturn([])->shouldBeCalled();
+        // When locale is null, the resolver methods should not be called
 
         $normalizedData = [
             'customizeWebspaceSettings' => false,
@@ -145,6 +149,6 @@ class AdditionalWebspacesNormalizerTest extends TestCase
 
         $result = $normalizer->getIgnoredAttributes($object->reveal());
 
-        $this->assertSame(['customizeWebspaceSettings', 'additionalWebspaces'], $result);
+        $this->assertSame([], $result);
     }
 }

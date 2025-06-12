@@ -20,7 +20,7 @@ use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
 use Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeResolverInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Content\Application\ContentAggregator\ContentAggregatorInterface;
-use Sulu\Content\Domain\Model\RoutableInterface;
+use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Infrastructure\Sulu\Route\ContentRouteDefaultsProvider;
 use Sulu\Route\Application\Routing\Matcher\RouteDefaultsProviderInterface;
 use Sulu\Route\Domain\Model\Route;
@@ -66,6 +66,10 @@ class ArticleRouteDefaultsProvider extends ContentRouteDefaultsProvider implemen
      */
     private function getSeoData(AdditionalWebspacesInterface $dimensionContent, Route $route): ?array
     {
+        if (!$dimensionContent instanceof DimensionContentInterface) {
+            return null;
+        }
+
         $locale = $dimensionContent->getLocale();
         if (!$locale) {
             return null;

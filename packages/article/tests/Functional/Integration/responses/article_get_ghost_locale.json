@@ -20,6 +20,8 @@
     "lastModifiedEnabled": false,
     "locale": null,
     "mainWebspace": null,
+    "additionalWebspaces": [],
+    "customizeWebspaceSettings": false,
     "published": null,
     "publishedState": false,
     "seoCanonicalUrl": null,

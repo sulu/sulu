@@ -15,17 +15,17 @@ namespace Sulu\Article\Infrastructure\Symfony\HttpKernel;
 
 use Sulu\Article\Application\Content\DataMapper\AdditionalWebspacesDataMapper;
 use Sulu\Article\Application\Content\Merger\AdditionalWebspacesMerger;
+use Sulu\Article\Application\Content\Normalizer\AdditionalWebspacesNormalizer;
 use Sulu\Article\Application\Mapper\ArticleContentMapper;
 use Sulu\Article\Application\Mapper\ArticleMapperInterface;
-use Sulu\Article\Application\Webspace\WebspaceResolver;
-use Sulu\Article\Application\Webspace\WebspaceSettingsConfigurationResolver;
-use Sulu\Article\Application\Content\Normalizer\AdditionalWebspacesNormalizer;
 use Sulu\Article\Application\MessageHandler\ApplyWorkflowTransitionArticleMessageHandler;
 use Sulu\Article\Application\MessageHandler\CopyLocaleArticleMessageHandler;
 use Sulu\Article\Application\MessageHandler\CreateArticleMessageHandler;
 use Sulu\Article\Application\MessageHandler\ModifyArticleMessageHandler;
 use Sulu\Article\Application\MessageHandler\RemoveArticleMessageHandler;
 use Sulu\Article\Application\MessageHandler\RestoreArticleVersionMessageHandler;
+use Sulu\Article\Application\Webspace\WebspaceResolver;
+use Sulu\Article\Application\Webspace\WebspaceSettingsConfigurationResolver;
 use Sulu\Article\Domain\Model\Article;
 use Sulu\Article\Domain\Model\ArticleDimensionContent;
 use Sulu\Article\Domain\Model\ArticleDimensionContentInterface;
@@ -37,11 +37,11 @@ use Sulu\Article\Infrastructure\Sulu\Admin\ArticleAdmin;
 use Sulu\Article\Infrastructure\Sulu\Content\ArticleLinkProvider;
 use Sulu\Article\Infrastructure\Sulu\Content\ArticleSmartContentProvider;
 use Sulu\Article\Infrastructure\Sulu\Content\ArticleTeaserProvider;
-use Sulu\Article\Infrastructure\Sulu\Route\ArticleRouteDefaultsProvider;
 use Sulu\Article\Infrastructure\Sulu\Content\PropertyResolver\ArticleSelectionPropertyResolver;
 use Sulu\Article\Infrastructure\Sulu\Content\PropertyResolver\SingleArticleSelectionPropertyResolver;
 use Sulu\Article\Infrastructure\Sulu\Content\ResourceLoader\ArticleResourceLoader;
 use Sulu\Article\Infrastructure\Sulu\Reference\ArticleReferenceRefresher;
+use Sulu\Article\Infrastructure\Sulu\Route\ArticleRouteDefaultsProvider;
 use Sulu\Article\Infrastructure\Sulu\Sitemap\ArticlesSitemapProvider;
 use Sulu\Article\Trash\ArticleTrashItemHandler;
 use Sulu\Article\UserInterface\Controller\Admin\ArticleController;
@@ -88,6 +88,10 @@ final class SuluArticleBundle extends AbstractBundle
                 ->arrayNode('default_additional_webspaces')
                     ->beforeNormalization()
                         ->ifTrue(function ($v) {
+                            if (!\is_array($v)) {
+                                return false;
+                            }
+
                             return \count(\array_filter(\array_keys($v), 'is_string')) <= 0;
                         })
                         ->then(function ($v) {
@@ -124,10 +128,16 @@ final class SuluArticleBundle extends AbstractBundle
      */
     public function loadExtension(array $config, ContainerConfigurator $container, ContainerBuilder $builder): void
     {
-        $this->configurePersistence($config['objects'], $builder); // @phpstan-ignore-line
+        /** @var array<string, array{model: class-string, repository?: class-string}> $objects */
+        $objects = $config['objects'] ?? [];
+        $this->configurePersistence($objects, $builder);
 
-        $builder->setParameter('sulu_article.default_main_webspace', $config['default_main_webspace']);
-        $builder->setParameter('sulu_article.default_additional_webspaces', $config['default_additional_webspaces']);
+        /** @var array<string, string> $defaultMainWebspace */
+        $defaultMainWebspace = $config['default_main_webspace'] ?? [];
+        /** @var array<string, array<string>> $defaultAdditionalWebspaces */
+        $defaultAdditionalWebspaces = $config['default_additional_webspaces'] ?? [];
+        $builder->setParameter('sulu_article.default_main_webspace', $defaultMainWebspace);
+        $builder->setParameter('sulu_article.default_additional_webspaces', $defaultAdditionalWebspaces);
 
         $services = $container->services();
 
@@ -508,6 +518,25 @@ final class SuluArticleBundle extends AbstractBundle
                     ],
                 ],
             );
+        }
+
+        if ($builder->hasExtension('sulu_search')) {
+            $suluSearchConfigs = $builder->getExtensionConfig('sulu_search');
+
+            foreach ($suluSearchConfigs as $suluSearchConfig) {
+                if (isset($suluSearchConfig['website']) && \is_array($suluSearchConfig['website']) && isset($suluSearchConfig['website']['indexes'])) {
+                    $builder->prependExtensionConfig(
+                        'sulu_search',
+                        [
+                            'website' => [
+                                'indexes' => [
+                                    ArticleInterface::RESOURCE_KEY => ArticleInterface::RESOURCE_KEY . '_published',
+                                ],
+                            ],
+                        ],
+                    );
+                }
+            }
         }
     }
 

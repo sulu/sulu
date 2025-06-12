@@ -19,6 +19,7 @@ use Doctrine\ORM\QueryBuilder;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Article\Application\Webspace\WebspaceResolver;
 use Sulu\Article\Domain\Model\AdditionalWebspacesInterface;
 use Sulu\Article\Domain\Model\Article;
@@ -30,7 +31,6 @@ use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TemplateMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
 use Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeResolver;
-use Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeResolverInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Content\Application\ContentAggregator\ContentAggregatorInterface;
 use Sulu\Route\Application\Routing\Matcher\RouteDefaultsProviderInterface;
@@ -40,13 +40,18 @@ class ArticleRouteDefaultsProviderTest extends TestCase
 {
     use ProphecyTrait;
 
-    private EntityManagerInterface $entityManager;
-    private ContentAggregatorInterface $contentAggregator;
+    /** @var ObjectProphecy<EntityManagerInterface> */
+    private ObjectProphecy $entityManager;
+    /** @var ObjectProphecy<ContentAggregatorInterface> */
+    private ObjectProphecy $contentAggregator;
     private MetadataProviderRegistry $metadataProviderRegistry;
-    private CacheLifetimeResolverInterface $cacheLifetimeResolver;
-    private WebspaceManagerInterface $webspaceManager;
-    private WebspaceResolver $webspaceResolver;
-    private FormMetadataProvider $formMetadataProvider;
+    private CacheLifetimeResolver $cacheLifetimeResolver;
+    /** @var ObjectProphecy<WebspaceManagerInterface> */
+    private ObjectProphecy $webspaceManager;
+    /** @var ObjectProphecy<WebspaceResolver> */
+    private ObjectProphecy $webspaceResolver;
+    /** @var ObjectProphecy<FormMetadataProvider> */
+    private ObjectProphecy $formMetadataProvider;
 
     protected function setUp(): void
     {
@@ -120,6 +125,7 @@ class ArticleRouteDefaultsProviderTest extends TestCase
         $result = $provider->getDefaults($route);
 
         $this->assertArrayHasKey('_seo', $result);
+        \assert(\is_array($result['_seo']));
         $this->assertSame($canonicalUrl, $result['_seo']['canonicalUrl']);
         $this->assertSame($resolvedDimensionContent, $result['object']);
         $this->assertSame('article.html.twig', $result['view']);

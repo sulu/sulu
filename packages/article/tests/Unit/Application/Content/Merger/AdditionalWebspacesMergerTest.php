@@ -67,10 +67,12 @@ class AdditionalWebspacesMergerTest extends TestCase
         $source = $this->prophesize(DimensionContentInterface::class);
         $source->willImplement(AdditionalWebspacesInterface::class);
         $source->getCustomizeWebspaceSettings()->willReturn($customizeWebspaceSettings)->shouldBeCalled();
+        $source->getAdditionalWebspaces()->willReturn(['test-webspace'])->shouldBeCalled();
 
         $target = $this->prophesize(DimensionContentInterface::class);
         $target->willImplement(AdditionalWebspacesInterface::class);
         $target->setCustomizeWebspaceSettings($customizeWebspaceSettings)->shouldBeCalled();
+        $target->setAdditionalWebspaces(['test-webspace'])->shouldBeCalled();
 
         $merger->merge($target->reveal(), $source->reveal());
     }
@@ -82,10 +84,12 @@ class AdditionalWebspacesMergerTest extends TestCase
         $source = $this->prophesize(DimensionContentInterface::class);
         $source->willImplement(AdditionalWebspacesInterface::class);
         $source->getCustomizeWebspaceSettings()->willReturn(false)->shouldBeCalled();
+        $source->getAdditionalWebspaces()->willReturn(null)->shouldBeCalled();
 
         $target = $this->prophesize(DimensionContentInterface::class);
         $target->willImplement(AdditionalWebspacesInterface::class);
         $target->setCustomizeWebspaceSettings(Argument::any())->shouldNotBeCalled();
+        $target->setAdditionalWebspaces(Argument::any())->shouldNotBeCalled();
 
         $merger->merge($target->reveal(), $source->reveal());
     }

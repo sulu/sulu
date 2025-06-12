@@ -49,6 +49,7 @@ class AdditionalWebspacesDataMapper implements DataMapperInterface
         if (!$customizeWebspaceSettings) {
             $dimensionContent->setMainWebspace(null);
             $dimensionContent->setAdditionalWebspaces(null);
+
             return;
         }
 
@@ -58,7 +59,7 @@ class AdditionalWebspacesDataMapper implements DataMapperInterface
             $additionalWebspaces = $data['additionalWebspaces'] ?? [];
 
             // Ensure all values are strings
-            $additionalWebspaces = \array_filter($additionalWebspaces, static function ($webspace): bool {
+            $additionalWebspaces = \array_filter($additionalWebspaces, static function($webspace): bool {
                 return \is_string($webspace) && '' !== $webspace;
             });
 
