@@ -78,8 +78,6 @@ class DimensionContentQueryEnhancer
      *     tagOperator?: 'AND'|'OR',
      *     templateKeys?: string[],
      *     loadGhost?: bool,
-     *     limit?: int,
-     *     page?: int,
      * } $filters
      * @param array{
      *     title?: 'asc'|'desc',
@@ -191,20 +189,6 @@ class DimensionContentQueryEnhancer
                 $queryBuilder->andWhere('filterDimensionContent.templateKey IN (:templateKeys)')
                     ->setParameter('templateKeys', $templateKeys);
             }
-        }
-
-        // Limit
-        $limit = $filters['limit'] ?? null;
-        if (null !== $limit) {
-            Assert::integer($limit);
-            $queryBuilder->setMaxResults($limit);
-        }
-
-        // Page
-        $page = $filters['page'] ?? 1;
-        if (null !== $page) {
-            Assert::integer($page);
-            $queryBuilder->setFirstResult(($page - 1) * ($limit ?? 10));
         }
 
         // Sort by

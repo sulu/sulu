@@ -9,7 +9,7 @@ interface SmartContentProviderInterface
 {
     public function getConfiguration(): ProviderConfigurationInterface;
 
-    public function countBy(array $filters, array $sortBys): int;
+    public function countBy(array $filters): int;
 
     public function findFlatBy(array $filters, array $sortBys): array;
 

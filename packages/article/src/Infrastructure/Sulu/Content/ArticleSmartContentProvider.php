@@ -16,6 +16,7 @@ use Sulu\Bundle\AdminBundle\SmartContent\SmartContentProviderInterface;
 use Sulu\Component\SmartContent\DatasourceItemInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer;
+use Webmozart\Assert\Assert;
 
 class ArticleSmartContentProvider implements SmartContentProviderInterface
 {
@@ -41,25 +42,14 @@ class ArticleSmartContentProvider implements SmartContentProviderInterface
      * @param array{
      *     locale?: string|null,
      *     categoryIds?: int[],
-     *     categoryKeys?: string[],
      *     categoryOperator?: 'AND'|'OR',
      *     tagIds?: int[],
-     *     tagNames?: string[],
      *     tagOperator?: 'AND'|'OR',
      *     templateKeys?: string[],
      *     loadGhost?: bool,
-     *     limit?: int,
-     *     page?: int,
      * } $filters
-     * @param array{
-     *     title?: 'asc'|'desc',
-     *     authored?: 'asc'|'desc',
-     *     workflowPublished?: 'asc'|'desc',
-     *     created?: 'asc'|'desc',
-     *     changed?: 'asc'|'desc',
-     * } $sortBys
      */
-    public function countBy(array $filters, array $sortBys): int
+    public function countBy(array $filters): int
     {
         $filters = $this->enhanceWithDimensionAttributes($filters);
 
@@ -70,9 +60,9 @@ class ArticleSmartContentProvider implements SmartContentProviderInterface
             $alias,
             $this->articleDimensionContentClassName,
             $filters,
-            $sortBys,
+            [],
         );
-        $queryBuilder->select('COUNT(article.uuid)');
+        $queryBuilder->select('COUNT(DISTINCT article.uuid)');
 
         return (int) $queryBuilder->getQuery()->getSingleScalarResult();
     }
@@ -81,9 +71,7 @@ class ArticleSmartContentProvider implements SmartContentProviderInterface
      * @param array{
      *     locale?: string|null,
      *     categoryIds?: int[],
-     *     categoryKeys?: string[],
      *     categoryOperator?: 'AND'|'OR',
-     *     tagIds?: int[],
      *     tagNames?: string[],
      *     tagOperator?: 'AND'|'OR',
      *     templateKeys?: string[],
@@ -115,9 +103,25 @@ class ArticleSmartContentProvider implements SmartContentProviderInterface
             $sortBys,
         );
 
+        // Limit
+        $limit = $filters['limit'] ?? null;
+        if (null !== $limit) {
+            Assert::integer($limit);
+            $queryBuilder->setMaxResults($limit);
+        }
+
+        // Page
+        $page = $filters['page'] ?? 1;
+        if (null !== $page) {
+            Assert::integer($page);
+            $queryBuilder->setFirstResult(($page - 1) * ($limit ?? 10));
+        }
+
         $queryBuilder->select('article.uuid as id');
         // TODO add dynamic selects via enhancer?
         $queryBuilder->addSelect('filterDimensionContent.title');
+        $queryBuilder->groupBy('article.uuid');
+        $queryBuilder->addgroupBy('filterDimensionContent.title');
 
         return $queryBuilder->getQuery()->getArrayResult();
     }
