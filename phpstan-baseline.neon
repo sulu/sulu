@@ -1633,6 +1633,18 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Controller/CollaborationController.php
 
 		-
+			message: '#^Parameter \#2 \$locale of method Sulu\\Bundle\\AdminBundle\\Teaser\\TeaserManagerInterface\:\:find\(\) expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Controller/TeaserController.php
+
+		-
+			message: '#^Parameter \#2 \$string of function explode expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Controller/TeaserController.php
+
+		-
 			message: '#^Cannot access offset ''type'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
@@ -3829,6 +3841,240 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Serializer/Subscriber/TogglerToolbarActionSubscriber.php
 
 		-
+			message: '#^Method Sulu\\Bundle\\AdminBundle\\Teaser\\Configuration\\TeaserConfiguration\:\:__construct\(\) has parameter \$displayProperties with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Teaser/Configuration/TeaserConfiguration.php
+
+		-
+			message: '#^Property Sulu\\Bundle\\AdminBundle\\Teaser\\Configuration\\TeaserConfiguration\:\:\$displayProperties \(array\<string\>\) does not accept array\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Teaser/Configuration/TeaserConfiguration.php
+
+		-
+			message: '#^Property Sulu\\Bundle\\AdminBundle\\Teaser\\Configuration\\TeaserConfiguration\:\:\$displayProperties is never read, only written\.$#'
+			identifier: property.onlyWritten
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Teaser/Configuration/TeaserConfiguration.php
+
+		-
+			message: '#^Property Sulu\\Bundle\\AdminBundle\\Teaser\\Configuration\\TeaserConfiguration\:\:\$listAdapter is never read, only written\.$#'
+			identifier: property.onlyWritten
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Teaser/Configuration/TeaserConfiguration.php
+
+		-
+			message: '#^Property Sulu\\Bundle\\AdminBundle\\Teaser\\Configuration\\TeaserConfiguration\:\:\$overlayTitle is never read, only written\.$#'
+			identifier: property.onlyWritten
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Teaser/Configuration/TeaserConfiguration.php
+
+		-
+			message: '#^Property Sulu\\Bundle\\AdminBundle\\Teaser\\Configuration\\TeaserConfiguration\:\:\$resourceKey is never read, only written\.$#'
+			identifier: property.onlyWritten
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Teaser/Configuration/TeaserConfiguration.php
+
+		-
+			message: '#^Property Sulu\\Bundle\\AdminBundle\\Teaser\\Configuration\\TeaserConfiguration\:\:\$resultToView is never read, only written\.$#'
+			identifier: property.onlyWritten
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Teaser/Configuration/TeaserConfiguration.php
+
+		-
+			message: '#^Property Sulu\\Bundle\\AdminBundle\\Teaser\\Configuration\\TeaserConfiguration\:\:\$title is never read, only written\.$#'
+			identifier: property.onlyWritten
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Teaser/Configuration/TeaserConfiguration.php
+
+		-
+			message: '#^Property Sulu\\Bundle\\AdminBundle\\Teaser\\Configuration\\TeaserConfiguration\:\:\$view is never read, only written\.$#'
+			identifier: property.onlyWritten
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Teaser/Configuration/TeaserConfiguration.php
+
+		-
+			message: '#^Method Sulu\\Bundle\\AdminBundle\\Teaser\\Provider\\TeaserProviderInterface\:\:find\(\) has parameter \$ids with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Teaser/Provider/TeaserProviderInterface.php
+
+		-
+			message: '#^Method Sulu\\Bundle\\AdminBundle\\Teaser\\Teaser\:\:getValue\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Teaser/Teaser.php
+
+		-
+			message: '#^Method Sulu\\Bundle\\AdminBundle\\Teaser\\Teaser\:\:getValue\(\) has parameter \$default with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Teaser/Teaser.php
+
+		-
+			message: '#^Method Sulu\\Bundle\\AdminBundle\\Teaser\\Teaser\:\:getValue\(\) has parameter \$item with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Teaser/Teaser.php
+
+		-
+			message: '#^Method Sulu\\Bundle\\AdminBundle\\Teaser\\Teaser\:\:merge\(\) has parameter \$item with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Teaser/Teaser.php
+
+		-
+			message: '#^Property Sulu\\Bundle\\AdminBundle\\Teaser\\Teaser\:\:\$description \(string\) does not accept mixed\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Teaser/Teaser.php
+
+		-
+			message: '#^Property Sulu\\Bundle\\AdminBundle\\Teaser\\Teaser\:\:\$mediaId \(int\) does not accept mixed\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Teaser/Teaser.php
+
+		-
+			message: '#^Property Sulu\\Bundle\\AdminBundle\\Teaser\\Teaser\:\:\$moreText \(string\) does not accept mixed\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Teaser/Teaser.php
+
+		-
+			message: '#^Property Sulu\\Bundle\\AdminBundle\\Teaser\\Teaser\:\:\$title \(string\) does not accept mixed\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Teaser/Teaser.php
+
+		-
+			message: '#^Property Sulu\\Bundle\\AdminBundle\\Teaser\\Teaser\:\:\$url \(string\) does not accept mixed\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Teaser/Teaser.php
+
+		-
+			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
+			identifier: foreach.nonIterable
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Teaser/TeaserManager.php
+
+		-
+			message: '#^Cannot access offset ''id'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 2
+			path: src/Sulu/Bundle/AdminBundle/Teaser/TeaserManager.php
+
+		-
+			message: '#^Cannot access offset ''type'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 4
+			path: src/Sulu/Bundle/AdminBundle/Teaser/TeaserManager.php
+
+		-
+			message: '#^Method Sulu\\Bundle\\AdminBundle\\Teaser\\TeaserManager\:\:find\(\) has parameter \$items with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Teaser/TeaserManager.php
+
+		-
+			message: '#^Method Sulu\\Bundle\\AdminBundle\\Teaser\\TeaserManager\:\:find\(\) should return array\<Sulu\\Bundle\\AdminBundle\\Teaser\\Teaser\> but returns list\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Teaser/TeaserManager.php
+
+		-
+			message: '#^Method Sulu\\Bundle\\AdminBundle\\Teaser\\TeaserManager\:\:sortItems\(\) has parameter \$items with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Teaser/TeaserManager.php
+
+		-
+			message: '#^Method Sulu\\Bundle\\AdminBundle\\Teaser\\TeaserManager\:\:sortItems\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Teaser/TeaserManager.php
+
+		-
+			message: '#^Method Sulu\\Bundle\\AdminBundle\\Teaser\\TeaserManager\:\:sortTeasers\(\) has parameter \$items with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Teaser/TeaserManager.php
+
+		-
+			message: '#^Method Sulu\\Bundle\\AdminBundle\\Teaser\\TeaserManager\:\:sortTeasers\(\) has parameter \$positions with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Teaser/TeaserManager.php
+
+		-
+			message: '#^Method Sulu\\Bundle\\AdminBundle\\Teaser\\TeaserManager\:\:sortTeasers\(\) has parameter \$result with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Teaser/TeaserManager.php
+
+		-
+			message: '#^Method Sulu\\Bundle\\AdminBundle\\Teaser\\TeaserManager\:\:sortTeasers\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Teaser/TeaserManager.php
+
+		-
+			message: '#^Parameter \#1 \$array of function array_keys expects array, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Teaser/TeaserManager.php
+
+		-
+			message: '#^Parameter \#1 \$ids of method Sulu\\Bundle\\AdminBundle\\Teaser\\Provider\\TeaserProviderInterface\:\:find\(\) expects array, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Teaser/TeaserManager.php
+
+		-
+			message: '#^Parameter \#1 \$item of method Sulu\\Bundle\\AdminBundle\\Teaser\\Teaser\:\:merge\(\) expects array, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Teaser/TeaserManager.php
+
+		-
+			message: '#^Parameter \#1 \$key of function array_key_exists expects int\|string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Teaser/TeaserManager.php
+
+		-
+			message: '#^Parameter \#1 \$name of method Sulu\\Bundle\\AdminBundle\\Teaser\\Provider\\TeaserProviderPoolInterface\:\:getProvider\(\) expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Teaser/TeaserManager.php
+
+		-
+			message: '#^Parameter \#2 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Teaser/TeaserManager.php
+
+		-
+			message: '#^Parameter \#3 \$positions of method Sulu\\Bundle\\AdminBundle\\Teaser\\TeaserManager\:\:sortTeasers\(\) expects array, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Teaser/TeaserManager.php
+
+		-
+			message: '#^Parameter \#3 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Teaser/TeaserManager.php
+
+		-
+			message: '#^Method Sulu\\Bundle\\AdminBundle\\Teaser\\TeaserManagerInterface\:\:find\(\) has parameter \$items with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Teaser/TeaserManagerInterface.php
+
+		-
 			message: '#^Call to method PHPUnit\\Framework\\Assert\:\:assertArrayHasKey\(\) with ''locale'' and array\{locale\: array\{options\: array\{default_value\: array\{value\: string\}, values\: array\{value\: array\<array\{name\: string, value\: string, title\: string\}\>\}\}\}\} will always evaluate to true\.$#'
 			identifier: method.alreadyNarrowedType
 			count: 1
@@ -4001,6 +4247,24 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/AdminBundle/Tests/Functional/Controller/FOSJSRoutingControllerTest.php
+
+		-
+			message: '#^Cannot access offset ''_embedded'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Tests/Functional/Controller/TeaserControllerTest.php
+
+		-
+			message: '#^Cannot access offset ''teasers'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Tests/Functional/Controller/TeaserControllerTest.php
+
+		-
+			message: '#^Parameter \#1 \$json of function json_decode expects string, string\|false given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Tests/Functional/Controller/TeaserControllerTest.php
 
 		-
 			message: '#^Call to an undefined method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\ItemMetadata\:\:getOptions\(\)\.$#'
@@ -5291,6 +5555,66 @@ parameters:
 			identifier: method.nonObject
 			count: 2
 			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/Navigation/NavigationItemTest.php
+
+		-
+			message: '#^Call to an undefined method Sulu\\Bundle\\AdminBundle\\Teaser\\Configuration\\TeaserConfiguration\:\:willReturn\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/Teaser/Provider/TeaserProviderPoolTest.php
+
+		-
+			message: '#^Call to an undefined method Sulu\\Bundle\\AdminBundle\\Teaser\\Provider\\TeaserProviderInterface\:\:reveal\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/Teaser/Provider/TeaserProviderPoolTest.php
+
+		-
+			message: '#^Property Sulu\\Bundle\\AdminBundle\\Tests\\Unit\\Teaser\\Provider\\TeaserProviderPoolTest\:\:\$providers \(array\<Sulu\\Bundle\\AdminBundle\\Teaser\\Provider\\TeaserProviderInterface\>\) does not accept array\<string, Prophecy\\Prophecy\\ObjectProphecy\<Sulu\\Bundle\\AdminBundle\\Teaser\\Provider\\TeaserProviderInterface\>\>\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/Teaser/Provider/TeaserProviderPoolTest.php
+
+		-
+			message: '#^Cannot access offset ''id'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/Teaser/TeaserManagerTest.php
+
+		-
+			message: '#^Cannot access offset ''type'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/Teaser/TeaserManagerTest.php
+
+		-
+			message: '#^Cannot access offset 0 on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/Teaser/TeaserManagerTest.php
+
+		-
+			message: '#^Cannot access offset 1 on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/Teaser/TeaserManagerTest.php
+
+		-
+			message: '#^Cannot access offset 2 on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/Teaser/TeaserManagerTest.php
+
+		-
+			message: '#^Method Sulu\\Bundle\\AdminBundle\\Tests\\Unit\\Teaser\\TeaserManagerTest\:\:getTeaserMocks\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/Teaser/TeaserManagerTest.php
+
+		-
+			message: '#^Method Sulu\\Bundle\\AdminBundle\\Tests\\Unit\\Teaser\\TeaserManagerTest\:\:getTeaserMocks\(\) has parameter \$items with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/Teaser/TeaserManagerTest.php
 
 		-
 			message: '#^Method Sulu\\Bundle\\AudienceTargetingBundle\\Admin\\AudienceTargetingAdmin\:\:getConfig\(\) return type has no value type specified in iterable type array\.$#'
@@ -36715,18 +37039,6 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Controller/SmartContentItemController.php
 
 		-
-			message: '#^Parameter \#2 \$locale of method Sulu\\Bundle\\PageBundle\\Teaser\\TeaserManagerInterface\:\:find\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Controller/TeaserController.php
-
-		-
-			message: '#^Parameter \#2 \$string of function explode expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Controller/TeaserController.php
-
-		-
 			message: '#^Call to an undefined method Sulu\\Component\\Security\\Authentication\\UserInterface\:\:getContact\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -40255,62 +40567,26 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Sitemap/PagesSitemapProvider.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Teaser\\Configuration\\TeaserConfiguration\:\:__construct\(\) has parameter \$displayProperties with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Teaser/Configuration/TeaserConfiguration.php
-
-		-
-			message: '#^Property Sulu\\Bundle\\PageBundle\\Teaser\\Configuration\\TeaserConfiguration\:\:\$displayProperties \(array\<string\>\) does not accept array\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Teaser/Configuration/TeaserConfiguration.php
-
-		-
-			message: '#^Property Sulu\\Bundle\\PageBundle\\Teaser\\Configuration\\TeaserConfiguration\:\:\$displayProperties is never read, only written\.$#'
-			identifier: property.onlyWritten
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Teaser/Configuration/TeaserConfiguration.php
-
-		-
-			message: '#^Property Sulu\\Bundle\\PageBundle\\Teaser\\Configuration\\TeaserConfiguration\:\:\$listAdapter is never read, only written\.$#'
-			identifier: property.onlyWritten
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Teaser/Configuration/TeaserConfiguration.php
-
-		-
-			message: '#^Property Sulu\\Bundle\\PageBundle\\Teaser\\Configuration\\TeaserConfiguration\:\:\$overlayTitle is never read, only written\.$#'
-			identifier: property.onlyWritten
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Teaser/Configuration/TeaserConfiguration.php
-
-		-
-			message: '#^Property Sulu\\Bundle\\PageBundle\\Teaser\\Configuration\\TeaserConfiguration\:\:\$resourceKey is never read, only written\.$#'
-			identifier: property.onlyWritten
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Teaser/Configuration/TeaserConfiguration.php
-
-		-
-			message: '#^Property Sulu\\Bundle\\PageBundle\\Teaser\\Configuration\\TeaserConfiguration\:\:\$resultToView is never read, only written\.$#'
-			identifier: property.onlyWritten
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Teaser/Configuration/TeaserConfiguration.php
-
-		-
-			message: '#^Property Sulu\\Bundle\\PageBundle\\Teaser\\Configuration\\TeaserConfiguration\:\:\$title is never read, only written\.$#'
-			identifier: property.onlyWritten
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Teaser/Configuration/TeaserConfiguration.php
-
-		-
-			message: '#^Property Sulu\\Bundle\\PageBundle\\Teaser\\Configuration\\TeaserConfiguration\:\:\$view is never read, only written\.$#'
-			identifier: property.onlyWritten
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Teaser/Configuration/TeaserConfiguration.php
-
-		-
 			message: '#^Cannot access offset 0 on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: src/Sulu/Bundle/PageBundle/Teaser/PHPCRPageTeaserProvider.php
+
+		-
+			message: '#^Instantiated class Sulu\\Bundle\\PageBundle\\Teaser\\Teaser not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Sulu/Bundle/PageBundle/Teaser/PHPCRPageTeaserProvider.php
+
+		-
+			message: '#^Method Sulu\\Bundle\\PageBundle\\Teaser\\PHPCRPageTeaserProvider\:\:createTeaser\(\) has invalid return type Sulu\\Bundle\\PageBundle\\Teaser\\Teaser\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Sulu/Bundle/PageBundle/Teaser/PHPCRPageTeaserProvider.php
+
+		-
+			message: '#^Method Sulu\\Bundle\\PageBundle\\Teaser\\PHPCRPageTeaserProvider\:\:find\(\) has invalid return type Sulu\\Bundle\\PageBundle\\Teaser\\Teaser\.$#'
+			identifier: class.notFound
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Teaser/PHPCRPageTeaserProvider.php
 
@@ -40363,12 +40639,6 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Teaser/PHPCRPageTeaserProvider.php
 
 		-
-			message: '#^Parameter \#1 \$id of class Sulu\\Bundle\\PageBundle\\Teaser\\Teaser constructor expects int\|string, string\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Teaser/PHPCRPageTeaserProvider.php
-
-		-
 			message: '#^Parameter \#1 \$webspaceKey of method Sulu\\Component\\Content\\Query\\ContentQueryExecutorInterface\:\:execute\(\) expects string, null given\.$#'
 			identifier: argument.type
 			count: 1
@@ -40381,44 +40651,32 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Teaser/PHPCRPageTeaserProvider.php
 
 		-
-			message: '#^Parameter \#4 \$title of class Sulu\\Bundle\\PageBundle\\Teaser\\Teaser constructor expects string, string\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Teaser/PHPCRPageTeaserProvider.php
-
-		-
-			message: '#^Parameter \#5 \$description of class Sulu\\Bundle\\PageBundle\\Teaser\\Teaser constructor expects string, string\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Teaser/PHPCRPageTeaserProvider.php
-
-		-
-			message: '#^Parameter \#6 \$moreText of class Sulu\\Bundle\\PageBundle\\Teaser\\Teaser constructor expects string, string\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Teaser/PHPCRPageTeaserProvider.php
-
-		-
-			message: '#^Parameter \#7 \$url of class Sulu\\Bundle\\PageBundle\\Teaser\\Teaser constructor expects string, string\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Teaser/PHPCRPageTeaserProvider.php
-
-		-
-			message: '#^Parameter \#8 \$mediaId of class Sulu\\Bundle\\PageBundle\\Teaser\\Teaser constructor expects int, int\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Teaser/PHPCRPageTeaserProvider.php
-
-		-
 			message: '#^Cannot access offset 0 on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Teaser/PageTeaserProvider.php
 
 		-
+			message: '#^Instantiated class Sulu\\Bundle\\PageBundle\\Teaser\\Teaser not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Sulu/Bundle/PageBundle/Teaser/PageTeaserProvider.php
+
+		-
 			message: '#^Method Sulu\\Bundle\\PageBundle\\Teaser\\PageTeaserProvider\:\:find\(\) has parameter \$ids with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
+			count: 1
+			path: src/Sulu/Bundle/PageBundle/Teaser/PageTeaserProvider.php
+
+		-
+			message: '#^Method Sulu\\Bundle\\PageBundle\\Teaser\\PageTeaserProvider\:\:find\(\) should return array\<Sulu\\Bundle\\AdminBundle\\Teaser\\Teaser\> but returns array\<Sulu\\Bundle\\PageBundle\\Teaser\\Teaser\>\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Sulu/Bundle/PageBundle/Teaser/PageTeaserProvider.php
+
+		-
+			message: '#^Method Sulu\\Bundle\\PageBundle\\Teaser\\PageTeaserProvider\:\:find\(\) should return array\<Sulu\\Bundle\\AdminBundle\\Teaser\\Teaser\> but returns list\<Sulu\\Bundle\\PageBundle\\Teaser\\Teaser\>\.$#'
+			identifier: return.type
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Teaser/PageTeaserProvider.php
 
@@ -40493,102 +40751,6 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Teaser/PageTeaserProvider.php
-
-		-
-			message: '#^Parameter \#4 \$title of class Sulu\\Bundle\\PageBundle\\Teaser\\Teaser constructor expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Teaser/PageTeaserProvider.php
-
-		-
-			message: '#^Parameter \#5 \$description of class Sulu\\Bundle\\PageBundle\\Teaser\\Teaser constructor expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Teaser/PageTeaserProvider.php
-
-		-
-			message: '#^Parameter \#6 \$moreText of class Sulu\\Bundle\\PageBundle\\Teaser\\Teaser constructor expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Teaser/PageTeaserProvider.php
-
-		-
-			message: '#^Parameter \#7 \$url of class Sulu\\Bundle\\PageBundle\\Teaser\\Teaser constructor expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Teaser/PageTeaserProvider.php
-
-		-
-			message: '#^Parameter \#8 \$mediaId of class Sulu\\Bundle\\PageBundle\\Teaser\\Teaser constructor expects int, int\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Teaser/PageTeaserProvider.php
-
-		-
-			message: '#^Parameter \#9 \$attributes of class Sulu\\Bundle\\PageBundle\\Teaser\\Teaser constructor expects array\<string, mixed\>, array given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Teaser/PageTeaserProvider.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Teaser\\Provider\\TeaserProviderInterface\:\:find\(\) has parameter \$ids with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Teaser/Provider/TeaserProviderInterface.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Teaser\\Teaser\:\:getValue\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Teaser/Teaser.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Teaser\\Teaser\:\:getValue\(\) has parameter \$default with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Teaser/Teaser.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Teaser\\Teaser\:\:getValue\(\) has parameter \$item with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Teaser/Teaser.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Teaser\\Teaser\:\:merge\(\) has parameter \$item with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Teaser/Teaser.php
-
-		-
-			message: '#^Property Sulu\\Bundle\\PageBundle\\Teaser\\Teaser\:\:\$description \(string\) does not accept mixed\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Teaser/Teaser.php
-
-		-
-			message: '#^Property Sulu\\Bundle\\PageBundle\\Teaser\\Teaser\:\:\$mediaId \(int\) does not accept mixed\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Teaser/Teaser.php
-
-		-
-			message: '#^Property Sulu\\Bundle\\PageBundle\\Teaser\\Teaser\:\:\$moreText \(string\) does not accept mixed\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Teaser/Teaser.php
-
-		-
-			message: '#^Property Sulu\\Bundle\\PageBundle\\Teaser\\Teaser\:\:\$title \(string\) does not accept mixed\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Teaser/Teaser.php
-
-		-
-			message: '#^Property Sulu\\Bundle\\PageBundle\\Teaser\\Teaser\:\:\$url \(string\) does not accept mixed\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Teaser/Teaser.php
 
 		-
 			message: '#^Access to an undefined property object\:\:\$max\.$#'
@@ -40685,126 +40847,6 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Teaser/TeaserContentType.php
-
-		-
-			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
-			identifier: foreach.nonIterable
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Teaser/TeaserManager.php
-
-		-
-			message: '#^Cannot access offset ''id'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: src/Sulu/Bundle/PageBundle/Teaser/TeaserManager.php
-
-		-
-			message: '#^Cannot access offset ''type'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 4
-			path: src/Sulu/Bundle/PageBundle/Teaser/TeaserManager.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Teaser\\TeaserManager\:\:find\(\) has parameter \$items with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Teaser/TeaserManager.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Teaser\\TeaserManager\:\:find\(\) should return array\<Sulu\\Bundle\\PageBundle\\Teaser\\Teaser\> but returns list\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Teaser/TeaserManager.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Teaser\\TeaserManager\:\:sortItems\(\) has parameter \$items with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Teaser/TeaserManager.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Teaser\\TeaserManager\:\:sortItems\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Teaser/TeaserManager.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Teaser\\TeaserManager\:\:sortTeasers\(\) has parameter \$items with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Teaser/TeaserManager.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Teaser\\TeaserManager\:\:sortTeasers\(\) has parameter \$positions with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Teaser/TeaserManager.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Teaser\\TeaserManager\:\:sortTeasers\(\) has parameter \$result with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Teaser/TeaserManager.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Teaser\\TeaserManager\:\:sortTeasers\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Teaser/TeaserManager.php
-
-		-
-			message: '#^Parameter \#1 \$array of function array_keys expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Teaser/TeaserManager.php
-
-		-
-			message: '#^Parameter \#1 \$ids of method Sulu\\Bundle\\PageBundle\\Teaser\\Provider\\TeaserProviderInterface\:\:find\(\) expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Teaser/TeaserManager.php
-
-		-
-			message: '#^Parameter \#1 \$item of method Sulu\\Bundle\\PageBundle\\Teaser\\Teaser\:\:merge\(\) expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Teaser/TeaserManager.php
-
-		-
-			message: '#^Parameter \#1 \$key of function array_key_exists expects int\|string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Teaser/TeaserManager.php
-
-		-
-			message: '#^Parameter \#1 \$name of method Sulu\\Bundle\\PageBundle\\Teaser\\Provider\\TeaserProviderPoolInterface\:\:getProvider\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Teaser/TeaserManager.php
-
-		-
-			message: '#^Parameter \#2 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Teaser/TeaserManager.php
-
-		-
-			message: '#^Parameter \#3 \$positions of method Sulu\\Bundle\\PageBundle\\Teaser\\TeaserManager\:\:sortTeasers\(\) expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Teaser/TeaserManager.php
-
-		-
-			message: '#^Parameter \#3 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Teaser/TeaserManager.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Teaser\\TeaserManagerInterface\:\:find\(\) has parameter \$items with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Teaser/TeaserManagerInterface.php
 
 		-
 			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
