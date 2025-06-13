@@ -14,10 +14,10 @@ namespace Sulu\Bundle\PageBundle\Teaser;
 use Massive\Bundle\SearchBundle\Search\Document;
 use Massive\Bundle\SearchBundle\Search\QueryHit;
 use Massive\Bundle\SearchBundle\Search\SearchManagerInterface;
-use Sulu\Bundle\PageBundle\Admin\PageAdmin;
-use Sulu\Bundle\PageBundle\Search\Metadata\StructureProvider;
 use Sulu\Bundle\AdminBundle\Teaser\Configuration\TeaserConfiguration;
 use Sulu\Bundle\AdminBundle\Teaser\Provider\TeaserProviderInterface;
+use Sulu\Bundle\PageBundle\Admin\PageAdmin;
+use Sulu\Bundle\PageBundle\Search\Metadata\StructureProvider;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**

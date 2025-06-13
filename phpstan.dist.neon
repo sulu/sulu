@@ -13,6 +13,7 @@ parameters:
     paths:
         - .
     level: max
+    reportUnmatchedIgnoredErrors: false
     parallel:
         processTimeout: 300.0
     excludePaths:

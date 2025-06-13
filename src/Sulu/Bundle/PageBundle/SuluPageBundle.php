@@ -17,7 +17,6 @@ use Sulu\Bundle\PageBundle\DependencyInjection\Compiler\StructureExtensionCompil
 use Sulu\Bundle\PageBundle\DependencyInjection\Compiler\SuluNextPageCompilerPass;
 use Sulu\Bundle\PageBundle\DependencyInjection\Compiler\VersioningCompilerPass;
 use Sulu\Bundle\PageBundle\DependencyInjection\Compiler\WebspacesPass;
-use Sulu\Component\Symfony\CompilerPass\TaggedServiceCollectorCompilerPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
