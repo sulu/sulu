@@ -17,7 +17,7 @@ use JMS\Serializer\EventDispatcher\ObjectEvent;
 use JMS\Serializer\Metadata\StaticPropertyMetadata;
 use JMS\Serializer\Visitor\SerializationVisitorInterface;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
-use Sulu\Bundle\PageBundle\Teaser\Teaser;
+use Sulu\Bundle\AdminBundle\Teaser\Teaser;
 
 /**
  * Extends teaser with a uniqueid and media-data.

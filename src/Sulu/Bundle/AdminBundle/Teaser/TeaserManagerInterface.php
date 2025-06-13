@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\PageBundle\Teaser;
+namespace Sulu\Bundle\AdminBundle\Teaser;
 
 /**
  * Interface for teaser manager.

@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Sulu\Content\Tests\Functional\Infrastructure\Sulu\Teaser;
 
-use Sulu\Bundle\PageBundle\Teaser\Teaser;
+use Sulu\Bundle\AdminBundle\Teaser\Teaser;
 use Sulu\Bundle\TestBundle\Testing\AssertSnapshotTrait;
 use Sulu\Bundle\TestBundle\Testing\WebsiteTestCase;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Teaser\ExampleTeaserProvider;

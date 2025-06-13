@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Sulu\Content\Application\ResourceLoader\Loader;
 
-use Sulu\Bundle\PageBundle\Teaser\TeaserManagerInterface;
+use Sulu\Bundle\AdminBundle\Teaser\TeaserManagerInterface;
 
 class TeaserResourceLoader implements ResourceLoaderInterface
 {

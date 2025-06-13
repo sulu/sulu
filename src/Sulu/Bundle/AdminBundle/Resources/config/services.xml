@@ -391,5 +391,26 @@
             <argument type="service" id="sulu_admin.icon_cache"/>
             <tag name="sulu_admin.icon_provider" type="svg" />
         </service>
+
+        <!-- Teaser -->
+        <service
+            id="sulu_admin.teaser_controller"
+            class="Sulu\Bundle\AdminBundle\Controller\TeaserController"
+            public="true"
+        >
+            <argument type="service" id="fos_rest.view_handler"/>
+            <argument type="service" id="sulu_admin.teaser_manager"/>
+
+            <tag name="sulu.context" context="admin"/>
+        </service>
+
+        <service id="sulu_admin.teaser_provider_pool"
+                 class="Sulu\Bundle\AdminBundle\Teaser\Provider\TeaserProviderPool">
+            <argument type="collection"/>
+        </service>
+
+        <service id="sulu_admin.teaser_manager" class="Sulu\Bundle\AdminBundle\Teaser\TeaserManager">
+            <argument type="service" id="sulu_admin.teaser_provider_pool"/>
+        </service>
     </services>
 </container>

@@ -219,6 +219,13 @@ function get_kernel_dir($phpunitPath)
 
 function init_dbal()
 {
+    write_info('Drop database');
+    exec_sf_cmd(
+        'doctrine:database:drop --force',
+        false,
+        false
+    );
+
     write_info('Creating database');
     exec_sf_cmd(
         'doctrine:database:create',

@@ -603,6 +603,14 @@ Removed kernel parameters:
 - `Sulu\Bundle\CoreBundle\ExpressionLanguage\ContainerExpressionLanguageProvider`: `Sulu\Bundle\AdminBundle\ExpressionLanguage\ContainerExpressionLanguageProvider`
 - `Sulu\Component\Content\Metadata\Parser\PropertiesXmlParser`: `Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Parser\PropertiesXmlParser`
 - `Sulu\Component\Content\Metadata\Parser\SchemaXmlParser`: `Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Parser\SchemaXmlParser`
+- `Sulu\Bundle\PageBundle\Controller\TeaserController`: `Sulu\Bundle\AdminBundle\Controller\TeaserController`
+- `Sulu\Bundle\PageBundle\Teaser\Teaser`: `Sulu\Bundle\AdminBundle\Teaser\ProviderTeaser`
+- `Sulu\Bundle\PageBundle\Teaser\Provider\TeaserProviderPool`: `Sulu\Bundle\AdminBundle\Teaser\Provider\TeaserProviderPool`
+- `Sulu\Bundle\PageBundle\Teaser\Provider\TeaserProviderPoolInterface`: `Sulu\Bundle\AdminBundle\Teaser\Provider\TeaserProviderPoolInterface`
+- `Sulu\Bundle\PageBundle\Teaser\TeaserManager`: `Sulu\Bundle\AdminBundle\Teaser\TeaserManager`
+- `Sulu\Bundle\PageBundle\Teaser\TeaserManagerInterface`: `Sulu\Bundle\AdminBundle\Teaser\TeaserManagerInterface`
+- `Sulu\Bundle\PageBundle\Teaser\Configuration\TeaserConfiguration`: `Sulu\Bundle\AdminBundle\Teaser\Configuration\TeaserConfiguration`
+- `Sulu\Bundle\PageBundle\Teaser\Provider\TeaserProviderInterface`: `Sulu\Bundle\AdminBundle\Teaser\Provider\TeaserProviderInterface`
 
 ### Moved services for 3.0:
 
@@ -610,6 +618,9 @@ Removed kernel parameters:
 - `sulu_core.symfony_expression_language_provider`: `sulu_admin.symfony_expression_language_provider`
 - `sulu_page.structure.properties_xml_parser`: `sulu_admin.properties_xml_parser`
 - `sulu_page.structure.schema_xml_parser`: `sulu_admin.schema_xml_parser`
+- `sulu_page.teaser.provider_pool`: `sulu_admin.teaser_provider_pool`
+- `sulu_page.teaser.manager`: `sulu_admin.teaser_manager`
+- `sulu_page.teaser_controller`: `sulu_admin.teaser_controller`
 
 ### Moved files for 3.0
 

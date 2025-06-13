@@ -15,8 +15,8 @@ namespace Sulu\Content\Infrastructure\Sulu\Teaser;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
-use Sulu\Bundle\PageBundle\Teaser\Provider\TeaserProviderInterface;
-use Sulu\Bundle\PageBundle\Teaser\Teaser;
+use Sulu\Bundle\AdminBundle\Teaser\Provider\TeaserProviderInterface;
+use Sulu\Bundle\AdminBundle\Teaser\Teaser;
 use Sulu\Content\Application\ContentManager\ContentManagerInterface;
 use Sulu\Content\Application\ContentMetadataInspector\ContentMetadataInspectorInterface;
 use Sulu\Content\Domain\Model\ContentRichEntityInterface;

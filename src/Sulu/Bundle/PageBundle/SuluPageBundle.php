@@ -36,13 +36,5 @@ final class SuluPageBundle extends Bundle
         $container->addCompilerPass(new WebspacesPass());
         $container->addCompilerPass(new StructureExtensionCompilerPass());
         $container->addCompilerPass(new VersioningCompilerPass());
-        $container->addCompilerPass(
-            new TaggedServiceCollectorCompilerPass(
-                'sulu_page.teaser.provider_pool',
-                'sulu.teaser.provider',
-                0,
-                'alias'
-            )
-        );
     }
 }

@@ -23,7 +23,7 @@
 
         <service id="sulu_content.teaser_resource_loader"
         class="Sulu\Content\Application\ResourceLoader\Loader\TeaserResourceLoader">
-            <argument type="service" id="sulu_page.teaser.manager"/>
+            <argument type="service" id="sulu_admin.teaser_manager"/>
 
             <tag name="sulu_content.resource_loader" key="teaser"/>
         </service>

@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Sulu\Content\Application\PropertyResolver\Resolver;
 
-use Sulu\Bundle\PageBundle\Teaser\Teaser;
+use Sulu\Bundle\AdminBundle\Teaser\Teaser;
 use Sulu\Content\Application\ContentResolver\Value\ContentView;
 use Sulu\Content\Application\ResourceLoader\Loader\TeaserResourceLoader;
 

@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\PageBundle\Teaser\Configuration;
+namespace Sulu\Bundle\AdminBundle\Teaser\Configuration;
 
 use JMS\Serializer\Annotation\Groups;
 

@@ -13,8 +13,8 @@ namespace Sulu\Bundle\PageBundle\Teaser;
 
 use Sulu\Bundle\MediaBundle\Api\Media;
 use Sulu\Bundle\PageBundle\Admin\PageAdmin;
-use Sulu\Bundle\PageBundle\Teaser\Configuration\TeaserConfiguration;
-use Sulu\Bundle\PageBundle\Teaser\Provider\TeaserProviderInterface;
+use Sulu\Bundle\AdminBundle\Teaser\Configuration\TeaserConfiguration;
+use Sulu\Bundle\AdminBundle\Teaser\Provider\TeaserProviderInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactoryInterface;
 use Sulu\Component\Content\Metadata\StructureMetadata;

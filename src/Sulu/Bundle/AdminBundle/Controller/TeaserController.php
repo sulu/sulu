@@ -9,10 +9,10 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\PageBundle\Controller;
+namespace Sulu\Bundle\AdminBundle\Controller;
 
 use FOS\RestBundle\View\ViewHandlerInterface;
-use Sulu\Bundle\PageBundle\Teaser\TeaserManagerInterface;
+use Sulu\Bundle\AdminBundle\Teaser\TeaserManagerInterface;
 use Sulu\Component\Rest\AbstractRestController;
 use Sulu\Component\Rest\ListBuilder\CollectionRepresentation;
 use Symfony\Component\HttpFoundation\Request;

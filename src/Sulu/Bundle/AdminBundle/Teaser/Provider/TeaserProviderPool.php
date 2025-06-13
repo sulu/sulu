@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\PageBundle\Teaser\Provider;
+namespace Sulu\Bundle\AdminBundle\Teaser\Provider;
 
 /**
  * Manages available providers.

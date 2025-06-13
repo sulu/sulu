@@ -116,15 +116,6 @@ sulu_page.get_webspace:
     requirements:
         _format: json|csv
 
-# Teaser
-sulu_page.get_teasers:
-    path: '/teasers.{_format}'
-    methods: GET
-    controller: 'sulu_page.teaser_controller::cgetAction'
-    format: json
-    requirements:
-        _format: json|csv
-
 # Icon
 sulu_page.get_icons:
     path: '/icons.{_format}'

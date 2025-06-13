@@ -9,9 +9,9 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\PageBundle\Teaser;
+namespace Sulu\Bundle\AdminBundle\Teaser;
 
-use Sulu\Bundle\PageBundle\Teaser\Provider\TeaserProviderPoolInterface;
+use Sulu\Bundle\AdminBundle\Teaser\Provider\TeaserProviderPoolInterface;
 
 /**
  * Provides functionality for interacting with teasers.
