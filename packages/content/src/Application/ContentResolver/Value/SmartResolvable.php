@@ -9,17 +9,14 @@ namespace Sulu\Content\Application\ContentResolver\Value;
  */
 class SmartResolvable implements ResolvableInterface
 {
-    private \Closure $callback;
-
     /**
-     * @param array<mixed> $data
+     * @param mixed[] $data
      */
     public function __construct(
         private array $data,
         private string $resourceLoaderKey,
         private int $priority,
     ) {
-        $this->callback = $resourceCallback ?? (static fn (mixed $resource) => $resource);
     }
 
     public function getId(): string|int
@@ -37,11 +34,9 @@ class SmartResolvable implements ResolvableInterface
         return $this->priority;
     }
 
-    public function executeResourceCallback(mixed $resource): mixed
-    {
-        return ($this->callback)($resource);
-    }
-
+    /**
+     * @return mixed[]
+     */
     public function getData(): array
     {
         return $this->data;

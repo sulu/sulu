@@ -17,14 +17,13 @@ class SmartContentSmartResolver implements SmartResolverInterface
      */
     public function __construct(
         private ServiceLocator $smartContentProviders,
-        private RequestStack $requestStack,
     ) {
     }
 
-    public function resolve(SmartResolvable $resolvable, string $locale): ContentView
+    public function resolve(SmartResolvable $resolvable, ?string $locale = null): ContentView
     {
         /** @var array{
-         *     filters: array<string, mixed>,
+         *     filters?: array<string, mixed>,
          *     sortBys?: array<string, string>,
          *     parameters?: array<string, mixed>,
          *     provider?: string,
@@ -34,8 +33,10 @@ class SmartContentSmartResolver implements SmartResolverInterface
 
         $filters = $data['filters'] ?? [];
         $sortBys = $data['sortBys'] ?? [];
+        /** @var int|null $limit */
         $limit = $filters['limitResult'] ?? null;
-        $page = $filters['page'];
+        /** @var int $page */
+        $page = $filters['page'] ?? 1;
         $provider = $data['provider'] ?? null;
 
         if (!\is_string($provider)) {
@@ -54,7 +55,7 @@ class SmartContentSmartResolver implements SmartResolverInterface
         $smartContentProvider = $this->smartContentProviders->get($provider);
 
         $result = $smartContentProvider->findFlatBy($filters, $sortBys);
-        $total = $result < $limit ? \count($result) : $smartContentProvider->countBy($filters, $sortBys);
+        $total = ($limit && \count($result) < $limit) ? \count($result) : $smartContentProvider->countBy($filters);
 
         // TODO verify filters
         $view = [
@@ -62,7 +63,7 @@ class SmartContentSmartResolver implements SmartResolverInterface
             ...$sortBys,
             'provider' => $provider,
             'page' => $page,
-            'hasNextPage' => null !== $limit && $total > ($limit * $page),
+            'hasNextPage' => null !== $limit && ($total > ($limit * $page)),
             'paginated' => null !== $limit,
             'total' => $total,
             'maxPage' => (null !== $limit) ? (int) \ceil($total / $limit) : null,

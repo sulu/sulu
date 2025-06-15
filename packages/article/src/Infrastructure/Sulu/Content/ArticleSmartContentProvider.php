@@ -16,12 +16,22 @@ use Sulu\Bundle\AdminBundle\SmartContent\SmartContentProviderInterface;
 use Sulu\Component\SmartContent\DatasourceItemInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer;
-use Webmozart\Assert\Assert;
 
 class ArticleSmartContentProvider implements SmartContentProviderInterface
 {
+    /**
+     * @var EntityRepository<ArticleInterface>
+     */
     private EntityRepository $entityRepository;
+
+    /**
+     * @var EntityRepository<ArticleDimensionContentInterface>
+     */
     private EntityRepository $entityDimensionContentRepository;
+
+    /**
+     * @var class-string<ArticleDimensionContentInterface>
+     */
     private string $articleDimensionContentClassName;
 
     public function __construct(
@@ -51,6 +61,18 @@ class ArticleSmartContentProvider implements SmartContentProviderInterface
      */
     public function countBy(array $filters): int
     {
+        /**
+         * @var array{
+         *     locale?: string|null,
+         *     categoryIds?: int[],
+         *     categoryOperator?: 'AND'|'OR',
+         *     tagIds?: int[],
+         *     tagOperator?: 'AND'|'OR',
+         *     templateKeys?: string[],
+         *     loadGhost?: bool,
+         *     stage: string,
+         * } $filters
+         */
         $filters = $this->enhanceWithDimensionAttributes($filters);
 
         $alias = 'article';
@@ -91,6 +113,20 @@ class ArticleSmartContentProvider implements SmartContentProviderInterface
      */
     public function findFlatBy(array $filters, array $sortBys): array
     {
+        /**
+         * @var array{
+         *      locale?: string|null,
+         *      categoryIds?: int[],
+         *      categoryOperator?: 'AND'|'OR',
+         *      tagNames?: string[],
+         *      tagOperator?: 'AND'|'OR',
+         *      templateKeys?: string[],
+         *      loadGhost?: bool,
+         *      limit?: int,
+         *      page?: int,
+         *      stage: string,
+         *  } $filters
+         */
         $filters = $this->enhanceWithDimensionAttributes($filters);
 
         $alias = 'article';
@@ -103,18 +139,9 @@ class ArticleSmartContentProvider implements SmartContentProviderInterface
             $sortBys,
         );
 
-        // Limit
-        $limit = $filters['limit'] ?? null;
-        if (null !== $limit) {
-            Assert::integer($limit);
-            $queryBuilder->setMaxResults($limit);
-        }
-
-        // Page
-        $page = $filters['page'] ?? 1;
-        if (null !== $page) {
-            Assert::integer($page);
-            $queryBuilder->setFirstResult(($page - 1) * ($limit ?? 10));
+        if (($page = ($filters['page'] ?? null))
+            && ($limit = ($filters['limit'] ?? null))) {
+            $this->dimensionContentQueryEnhancer->addPagination($queryBuilder, $page, $limit);
         }
 
         $queryBuilder->select('article.uuid as id');
@@ -123,9 +150,17 @@ class ArticleSmartContentProvider implements SmartContentProviderInterface
         $queryBuilder->groupBy('article.uuid');
         $queryBuilder->addgroupBy('filterDimensionContent.title');
 
-        return $queryBuilder->getQuery()->getArrayResult();
+        /** @var array{id: string, title: string}[] $result */
+        $result = $queryBuilder->getQuery()->getArrayResult();
+
+        return $result;
     }
 
+    /**
+     * @param array<string, mixed> $filters
+     *
+     * @return array<string, mixed>
+     */
     protected function enhanceWithDimensionAttributes(array $filters): array
     {
         $dimensionAttributes = [

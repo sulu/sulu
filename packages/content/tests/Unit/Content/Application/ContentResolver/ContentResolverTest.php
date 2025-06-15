@@ -28,9 +28,11 @@ use Sulu\Content\Application\PropertyResolver\PropertyResolverProvider;
 use Sulu\Content\Application\PropertyResolver\Resolver\DefaultPropertyResolver;
 use Sulu\Content\Application\ResourceLoader\Loader\ResourceLoaderInterface;
 use Sulu\Content\Application\ResourceLoader\ResourceLoaderProvider;
+use Sulu\Content\Application\SmartResolver\SmartResolverProvider;
 use Sulu\Page\Domain\Model\Page;
 use Sulu\Page\Domain\Model\PageDimensionContentInterface;
 use Sulu\Page\Infrastructure\Sulu\Content\PropertyResolver\PageSelectionPropertyResolver;
+use Symfony\Component\DependencyInjection\ServiceLocator;
 
 class ContentResolverTest extends TestCase
 {
@@ -94,7 +96,8 @@ class ContentResolverTest extends TestCase
         $this->contentResolver = new ContentResolver(
             $this->resolvers,
             $this->resourceLoaderProvider,
-            $this->contentAggregator->reveal()
+            $this->contentAggregator->reveal(),
+            new SmartResolverProvider(new ServiceLocator([])),
         );
     }
 

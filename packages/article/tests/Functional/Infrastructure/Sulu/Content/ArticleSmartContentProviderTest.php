@@ -24,42 +24,28 @@ class ArticleSmartContentProviderTest extends SuluTestCase
     use CreateTagTrait;
     use HandleTrait;
 
-    private KernelBrowser $client;
-
-    private MessageBusInterface $messageBus;
-
-    private SmartContentProviderInterface $smartContentProvider;
+    private readonly SmartContentProviderInterface $smartContentProvider;
 
     protected function setUp(): void
     {
         parent::setUp();
-
-        $this->client = $this->createAuthenticatedClient();
         self::purgeDatabase();
-        $messageBus = $this->getContainer()->get('sulu_message_bus');
-        self::assertInstanceOf(MessageBusInterface::class, $messageBus);
-        $this->messageBus = $messageBus;
 
-        $smartContentProvider = $this->getContainer()->get('sulu_article.article_smart_content_provider');
-        $this->smartContentProvider = $smartContentProvider;
+        $this->messageBus = $this->getContainer()->get('sulu_message_bus');
+        $this->smartContentProvider = $this->getContainer()->get('sulu_article.article_smart_content_provider');
     }
 
-    public function testFindFlatByNoParameters()
+    public function testFindFlatByNoParameters(): void
     {
         $article = $this->createArticle(['title' => 'Example Article']);
 
-        /** @var array{
-         *     id: string,
-         *     title: string,
-         *     }[] $result
-         */
         $result = $this->smartContentProvider->findFlatBy(['locale' => 'en'], []);
 
         $this->assertCount(1, $result);
         $this->assertSame($article->getUuid(), $result[0]['id']);
         $this->assertSame('Example Article', $result[0]['title']);
 
-        $count = $this->smartContentProvider->countBy(['locale' => 'en'], []);
+        $count = $this->smartContentProvider->countBy(['locale' => 'en']);
         $this->assertSame(1, $count);
     }
 
@@ -300,26 +286,66 @@ class ArticleSmartContentProviderTest extends SuluTestCase
         );
     }
 
-    public function testFindFlatByAllSortBys(): void
+    public function testSortByTitle(): void
     {
-        //        $this->createArticle(['title' => 'A']);
-        //        $this->createArticle(['title' => 'B']);
-        //        $sortBys = ['title', 'authored', 'workflowPublished', 'created', 'changed'];
-        //        foreach ($sortBys as $sortBy) {
-        //            $resultAsc = $this->smartContentProvider->findFlatBy([
-        //                'locale' => 'en',
-        //            ], [
-        //                $sortBy => 'asc',
-        //            ]);
-        //            $resultDesc = $this->smartContentProvider->findFlatBy([
-        //                'locale' => 'en',
-        //            ], [
-        //                $sortBy => 'desc',
-        //            ]);
-        //            $this->assertNotEmpty($resultAsc);
-        //            $this->assertNotEmpty($resultDesc);
-        //        }
+        $this->createArticle(['title' => 'B']);
+        $this->createArticle(['title' => 'A']);
+        $this->createArticle(['title' => 'C']);
+
+        // ASC
+        $result = $this->smartContentProvider->findFlatBy(['locale' => 'en'], [
+            'sortBy' => 'title',
+            'sortMethod' => 'asc',
+        ]);
+        $this->assertCount(3, $result);
+        $this->assertSame('A', $result[0]['title']);
+        $this->assertSame('B', $result[1]['title']);
+        $this->assertSame('C', $result[2]['title']);
+
+        $count = $this->smartContentProvider->countBy(['locale' => 'en']);
+        $this->assertSame(3, $count);
+
+        // DESC
+        $result = $this->smartContentProvider->findFlatBy(['locale' => 'en'], [
+            'sortBy' => 'title',
+            'sortMethod' => 'desc',
+        ]);
+        $this->assertCount(3, $result);
+        $this->assertSame('C', $result[0]['title']);
+        $this->assertSame('B', $result[1]['title']);
+        $this->assertSame('A', $result[2]['title']);
+
+        $count = $this->smartContentProvider->countBy(['locale' => 'en']);
+        $this->assertSame(3, $count);
     }
+
+    public function testSortByAuthored(): void
+    {
+        $this->createArticle(['title' => 'B', 'locale' => 'en', 'authored' => '2023-10-01T12:00:00+00:00']);
+        $this->createArticle(['title' => 'A', 'locale' => 'en', 'authored' => '2023-09-01T12:00:00+00:00']);
+        $this->createArticle(['title' => 'C', 'locale' => 'en', 'authored' => '2023-11-01T12:00:00+00:00']);
+
+        // ASC
+        $result = $this->smartContentProvider->findFlatBy(['locale' => 'en'], [
+            'sortBy' => 'authored',
+            'sortMethod' => 'asc',
+        ]);
+        $this->assertCount(3, $result);
+        $this->assertSame('A', $result[0]['title']);
+        $this->assertSame('B', $result[1]['title']);
+        $this->assertSame('C', $result[2]['title']);
+
+        // DESC
+        $result = $this->smartContentProvider->findFlatBy(['locale' => 'en'], [
+            'sortBy' => 'authored',
+            'sortMethod' => 'desc',
+        ]);
+        $this->assertCount(3, $result);
+        $this->assertSame('C', $result[0]['title']);
+        $this->assertSame('B', $result[1]['title']);
+        $this->assertSame('A', $result[2]['title']);
+    }
+
 
     /**
      * @param array{
@@ -327,8 +353,10 @@ class ArticleSmartContentProviderTest extends SuluTestCase
      *     url?: string,
      *     template?: string,
      *     locale?: string,
-     *     excerptCategories?: array<int>,
-     *     excerptTags?: array<int>,
+     *     excerptCategories?: int[],
+     *     excerptTags?: string[],
+     *     author?: int|null,
+     *     authored?: string|null,
      * } $data
      */
     private function createArticle(

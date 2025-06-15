@@ -201,6 +201,12 @@ class DimensionContentQueryEnhancer
         }
     }
 
+    public function addPagination(QueryBuilder $queryBuilder, int $page, int $limit): void
+    {
+        $queryBuilder->setMaxResults($limit);
+        $queryBuilder->setFirstResult(($page - 1) * $limit);
+    }
+
     /**
      * @param int[]|string[] $parameters
      * @param 'AND'|'OR' $operator

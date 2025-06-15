@@ -35,6 +35,10 @@ class ContentView
         return new self($content, $view);
     }
 
+    /**
+     * @param mixed[] $data
+     * @param mixed[] $view
+     */
     public static function createSmartResolvable(
         array $data,
         string $resourceLoaderKey,

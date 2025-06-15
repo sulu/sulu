@@ -9,6 +9,9 @@ use Symfony\Component\DependencyInjection\ServiceLocator;
 
 class SmartResolverProvider implements SmartResolverProviderInterface
 {
+    /**
+     * @param ServiceLocator<SmartResolverInterface> $smartResolvers
+     */
     public function __construct(private ServiceLocator $smartResolvers)
     {
     }
@@ -27,10 +30,5 @@ class SmartResolverProvider implements SmartResolverProviderInterface
     public function hasSmartResolver(string $type): bool
     {
         return $this->smartResolvers->has($type);
-    }
-
-    public function getSmartResolvers(): array
-    {
-        return $this->smartResolvers->getProvidedServices();
     }
 }

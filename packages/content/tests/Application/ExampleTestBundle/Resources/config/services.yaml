@@ -69,17 +69,6 @@ services:
         tags:
             - { name: 'sulu_website.reference_store', alias: 'example' }
 
-    example_test.example_data_provider:
-        class: Sulu\Content\Infrastructure\Sulu\SmartContent\Provider\ContentDataProvider
-        public: true
-        arguments:
-            - '@example_test.example_data_provider_repository'
-            - '@sulu_core.array_serializer'
-            - '@sulu_content.content_manager'
-            - '@example_test.example_reference_store'
-        tags:
-            - { name: sulu.smart_content.data_provider, alias: examples }
-
     example_test.example_preview_object_provider:
         class: Sulu\Content\Infrastructure\Sulu\Preview\ContentObjectProvider
         arguments:

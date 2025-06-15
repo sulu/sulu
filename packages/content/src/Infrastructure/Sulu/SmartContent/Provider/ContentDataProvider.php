@@ -13,10 +13,10 @@ declare(strict_types=1);
 
 namespace Sulu\Content\Infrastructure\Sulu\SmartContent\Provider;
 
+use Sulu\Bundle\AdminBundle\SmartContent\Configuration\BuilderInterface;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Component\Serializer\ArraySerializerInterface;
 use Sulu\Component\SmartContent\ArrayAccessItem;
-use Sulu\Component\SmartContent\Configuration\BuilderInterface;
 use Sulu\Component\SmartContent\ItemInterface;
 use Sulu\Component\SmartContent\Orm\BaseDataProvider;
 use Sulu\Component\SmartContent\Orm\DataProviderRepositoryInterface;

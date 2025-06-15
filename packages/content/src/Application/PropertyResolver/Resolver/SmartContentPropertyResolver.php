@@ -15,9 +15,21 @@ class SmartContentPropertyResolver implements PropertyResolverInterface
     {
     }
 
+    /**
+     * @param array{
+     *     categories?: int[],
+     *     tags?: string[],
+     *     categoryOperator?: 'AND'|'OR',
+     *     tagOperator?: 'AND'|'OR',
+     *     sortBy?: string,
+     *     sortDirection?: 'ASC'|'DESC',
+     *     limitResult?: int|null,
+     * } $data
+     * @param array<string, mixed> $params
+     */
     public function resolve(mixed $data, string $locale, array $params = []): ContentView
     {
-        if (!\is_array($data)) {
+        if (!\is_array($data)) { // @phpstan-ignore function.alreadyNarrowedType
             return ContentView::create($data, $params);
         }
 
@@ -28,6 +40,18 @@ class SmartContentPropertyResolver implements PropertyResolverInterface
 
         $parameters = $this->getOptions($metadata);
         // Default parameters
+        /**
+         * @var array{
+         *     locale: string|null,
+         *     page_parameter: string,
+         *     tags_parameter: string,
+         *     categories_parameter: string,
+         *     website_tags_operator: 'AND'|'OR',
+         *     website_categories_operator: 'AND'|'OR',
+         *     exclude_duplicates: bool,
+         *     provider: string,
+         *     } $parameters
+         */
         $parameters = \array_merge([
             'locale' => $locale,
             'page_parameter' => 'p',
@@ -56,7 +80,15 @@ class SmartContentPropertyResolver implements PropertyResolverInterface
          */
         $filters = [
             'locale' => $parameters['locale'],
-            'categoryIds' => \array_merge($data['categories'] ?? [], \array_filter(\explode(',', $request->query->getString($parameters['categories_parameter'])))),
+            'categoryIds' => \array_merge(
+                $data['categories'] ?? [],
+                \array_filter(
+                    \explode(
+                        ',',
+                        $request->query->getString($parameters['categories_parameter']),
+                    ),
+                ),
+            ),
             'categoryOperator' => \strtoupper($data['categoryOperator'] ?? $parameters['website_categories_operator']),
             'tagNames' => \array_merge($data['tags'] ?? [], \array_filter(\explode(',', $request->query->getString($parameters['tags_parameter'])))),
             'tagOperator' => \strtoupper($data['tagOperator'] ?? $parameters['website_tags_operator']),
@@ -87,6 +119,9 @@ class SmartContentPropertyResolver implements PropertyResolverInterface
         return 'smart_content';
     }
 
+    /**
+     * @return array<string|int, string|int|mixed[]|bool|null>
+     */
     private function getOptions(FieldMetadata $metadata): array
     {
         $parameters = [];
@@ -98,22 +133,34 @@ class SmartContentPropertyResolver implements PropertyResolverInterface
     }
 
     /**
-     * @return string<string, mixed>|int|array|bool
+     * @return array<string|int, mixed>|string|int|bool|null
      */
-    private function getOption(OptionMetadata $metadata): string|int|array|bool
+    private function getOption(OptionMetadata $metadata): string|int|array|bool|null
     {
         if (OptionMetadata::TYPE_COLLECTION === $metadata->getType()) {
             $values = [];
-            foreach ($metadata->getValue() as $option) {
+            $metadataValues = $metadata->getValue();
+            if (!\is_array($metadataValues)) {
+                throw new \InvalidArgumentException(
+                    \sprintf('The value of option "%s" from type %s, must be an array, %s given.', $metadata->getName(), $metadata->getType(), \gettype($metadataValues)),
+                );
+            }
+            foreach ($metadataValues as $option) {
                 $values[$option->getName()] = $this->getOption($option);
             }
 
             return $values;
         }
 
-        return $metadata->getValue() ?? $metadata->getName();
+        /** @var string|int|bool|null $result */
+        $result = $metadata->getValue() ?? $metadata->getName();
+
+        return $result;
     }
 
+    /**
+     * @param array<string, mixed> $parameters
+     */
     private function validateParameters(array $parameters): void
     {
         if (!isset($parameters['provider'])) {
@@ -126,7 +173,9 @@ class SmartContentPropertyResolver implements PropertyResolverInterface
 
         foreach (['website_tags_operator', 'website_categories_operator'] as $operator) {
             if ($parameters[$operator] ?? null) {
-                $parameters[$operator] = \strtoupper($parameters[$operator]);
+                /** @var string $operatorValue */
+                $operatorValue = $parameters[$operator];
+                $parameters[$operator] = \strtoupper($operatorValue);
 
                 if (!\in_array($parameters[$operator], ['AND', 'OR'], true)) {
                     throw new \InvalidArgumentException(

@@ -20,9 +20,4 @@ interface SmartResolverProviderInterface
     public function getSmartResolver(string $type): SmartResolverInterface;
 
     public function hasSmartResolver(string $type): bool;
-
-    /**
-     * @return array<string, SmartResolverInterface>
-     */
-    public function getSmartResolvers(): array;
 }
