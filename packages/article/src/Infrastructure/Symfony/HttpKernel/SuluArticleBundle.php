@@ -45,6 +45,7 @@ use Sulu\Article\Infrastructure\Sulu\Route\ArticleRouteDefaultsProvider;
 use Sulu\Article\Infrastructure\Sulu\Sitemap\ArticlesSitemapProvider;
 use Sulu\Article\Trash\ArticleTrashItemHandler;
 use Sulu\Article\UserInterface\Controller\Admin\ArticleController;
+use Sulu\Bundle\HttpCacheBundle\ReferenceStore\ReferenceStore;
 use Sulu\Bundle\PersistenceBundle\DependencyInjection\PersistenceExtensionTrait;
 use Sulu\Bundle\PersistenceBundle\PersistenceBundleTrait;
 use Sulu\Content\Infrastructure\Sulu\Preview\ContentObjectProvider;
@@ -79,7 +80,7 @@ final class SuluArticleBundle extends AbstractBundle
                     ->useAttributeAsKey('locale')
                     ->beforeNormalization()
                         ->ifString()
-                        ->then(function ($v) {
+                        ->then(function($v) {
                             return ['default' => $v];
                         })
                     ->end()
@@ -87,14 +88,14 @@ final class SuluArticleBundle extends AbstractBundle
                 ->end()
                 ->arrayNode('default_additional_webspaces')
                     ->beforeNormalization()
-                        ->ifTrue(function ($v) {
+                        ->ifTrue(function($v) {
                             if (!\is_array($v)) {
                                 return false;
                             }
 
                             return \count(\array_filter(\array_keys($v), 'is_string')) <= 0;
                         })
-                        ->then(function ($v) {
+                        ->then(function($v) {
                             return ['default' => $v];
                         })
                     ->end()
@@ -200,7 +201,6 @@ final class SuluArticleBundle extends AbstractBundle
             ])
             ->tag('messenger.message_handler');
 
-        // Mapper service
         $services->set('sulu_article.article_content_mapper')
             ->class(ArticleContentMapper::class)
             ->args([
@@ -208,22 +208,18 @@ final class SuluArticleBundle extends AbstractBundle
             ])
             ->tag('sulu_article.article_mapper');
 
-        // Additional Webspaces Data Mapper service
         $services->set('sulu_article.additional_webspaces_data_mapper')
             ->class(AdditionalWebspacesDataMapper::class)
             ->tag('sulu_content.data_mapper');
 
-        // Doctrine Metadata Loader service
         $services->set('sulu_article.additional_webspaces_metadata_loader')
             ->class(MetadataLoader::class)
             ->tag('doctrine.event_listener', ['event' => 'loadClassMetadata']);
 
-        // Additional Webspaces Content Merger service
         $services->set('sulu_article.additional_webspaces_merger')
             ->class(AdditionalWebspacesMerger::class)
             ->tag('sulu_content.merger', ['priority' => 12]);
 
-        // Webspace Configuration Resolver service
         $services->set('sulu_article.webspace_settings_configuration_resolver')
             ->class(WebspaceSettingsConfigurationResolver::class)
             ->args([
@@ -231,7 +227,6 @@ final class SuluArticleBundle extends AbstractBundle
                 '%sulu_article.default_additional_webspaces%',
             ]);
 
-        // Webspace Resolver service
         $services->set('sulu_article.webspace_resolver')
             ->class(WebspaceResolver::class)
             ->args([
@@ -239,7 +234,6 @@ final class SuluArticleBundle extends AbstractBundle
                 new Reference('sulu_article.webspace_settings_configuration_resolver'),
             ]);
 
-        // Additional Webspaces Content Normalizer service
         $services->set('sulu_article.additional_webspaces_normalizer')
             ->class(AdditionalWebspacesNormalizer::class)
             ->args([
@@ -247,7 +241,6 @@ final class SuluArticleBundle extends AbstractBundle
             ])
             ->tag('sulu_content.normalizer');
 
-        // Sulu Integration service
         $services->set('sulu_article.article_admin')
             ->class(ArticleAdmin::class)
             ->args([
@@ -260,7 +253,6 @@ final class SuluArticleBundle extends AbstractBundle
             ->tag('sulu.context', ['context' => 'admin'])
             ->tag('sulu.admin');
 
-        // Repositories services
         $services->set('sulu_article.article_repository')
             ->class(ArticleRepository::class)
             ->args([
@@ -270,7 +262,6 @@ final class SuluArticleBundle extends AbstractBundle
 
         $services->alias(ArticleRepositoryInterface::class, 'sulu_article.article_repository');
 
-        // Controllers services
         $services->set('sulu_article.admin_article_controller')
             ->class(ArticleController::class)
             ->public()
@@ -278,7 +269,6 @@ final class SuluArticleBundle extends AbstractBundle
                 new Reference('sulu_article.article_repository'),
                 new Reference('sulu_message_bus'),
                 new Reference('serializer'),
-                // additional services to be removed when no longer needed
                 new Reference('sulu_content.content_manager'),
                 new Reference('sulu_core.list_builder.field_descriptor_factory'),
                 new Reference('sulu_core.doctrine_list_builder_factory'),
@@ -286,7 +276,6 @@ final class SuluArticleBundle extends AbstractBundle
             ])
             ->tag('sulu.context', ['context' => 'admin']);
 
-        // PropertyResolver services
         $services->set('sulu_article.single_article_selection_property_resolver')
             ->class(SingleArticleSelectionPropertyResolver::class)
             ->tag('sulu_content.property_resolver');
@@ -295,7 +284,6 @@ final class SuluArticleBundle extends AbstractBundle
             ->class(ArticleSelectionPropertyResolver::class)
             ->tag('sulu_content.property_resolver');
 
-        // ResourceLoader services
         $services->set('sulu_article.article_resource_loader')
             ->class(ArticleResourceLoader::class)
             ->args([
@@ -303,7 +291,6 @@ final class SuluArticleBundle extends AbstractBundle
             ])
             ->tag('sulu_content.resource_loader', ['type' => ArticleResourceLoader::RESOURCE_LOADER_KEY]);
 
-        // Preview service
         $services->set('sulu_article.article_preview_provider')
             ->class(ContentObjectProvider::class)
             ->args([
@@ -317,7 +304,6 @@ final class SuluArticleBundle extends AbstractBundle
             ->tag('sulu.context', ['context' => 'admin'])
             ->tag('sulu_preview.object_provider', ['provider-key' => 'articles']);
 
-        // Content services
         $services->set('sulu_article.article_teaser_provider')
             ->class(ArticleTeaserProvider::class)
             ->args([
@@ -348,6 +334,10 @@ final class SuluArticleBundle extends AbstractBundle
                 new Reference('doctrine.orm.entity_manager'),
             ])
         ->tag('sulu_content.smart_content_provider', ['type' => ArticleInterface::RESOURCE_KEY]);
+
+        $services->set('sulu_article.article_reference_store')
+            ->class(ReferenceStore::class)
+            ->tag('sulu_website.reference_store', ['alias' => ArticleInterface::RESOURCE_KEY]);
 
         // Reference services
         $services->set('sulu_article.article_reference_refresher')
@@ -389,7 +379,6 @@ final class SuluArticleBundle extends AbstractBundle
                 ->tag('sulu_trash.restore_configuration_provider');
         }
 
-        // Article Route Defaults Provider with SEO support
         $services->set('sulu_article.article_route_defaults_provider')
             ->class(ArticleRouteDefaultsProvider::class)
             ->args([

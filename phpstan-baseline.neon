@@ -241,18 +241,6 @@ parameters:
 			path: packages/page/src/Infrastructure/Sulu/Content/PropertyResolver/BlockVisitor/SegmentBlockVisitor.php
 
 		-
-			message: '#^Call to function array_key_exists\(\) with ''model'' and array\{model\: class\-string, repository\?\: class\-string\} will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: packages/page/src/Infrastructure/Symfony/HttpKernel/SuluPageBundle.php
-
-		-
-			message: '#^Call to function array_key_exists\(\) with ''model'' and array\{model\: class\-string, repository\?\: class\-string\} will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: packages/snippet/src/Infrastructure/Symfony/HttpKernel/SuluSnippetBundle.php
-
-		-
 			message: '#^Parameter \#1 \$environment of class App\\Kernel constructor expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -315,12 +303,6 @@ parameters:
 		-
 			message: '#^Binary operation "\." between ''sulu_activity…'' and mixed results in an error\.$#'
 			identifier: binaryOp.invalid
-			count: 1
-			path: src/Sulu/Bundle/ActivityBundle/Infrastructure/Symfony/DependencyInjection/SuluActivityExtension.php
-
-		-
-			message: '#^Call to function array_key_exists\(\) with ''model'' and array\{model\: class\-string, repository\?\: class\-string\} will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
 			count: 1
 			path: src/Sulu/Bundle/ActivityBundle/Infrastructure/Symfony/DependencyInjection/SuluActivityExtension.php
 
@@ -4783,12 +4765,6 @@ parameters:
 			path: src/Sulu/Bundle/AudienceTargetingBundle/DependencyInjection/Configuration.php
 
 		-
-			message: '#^Call to function array_key_exists\(\) with ''model'' and array\{model\: class\-string, repository\?\: class\-string\} will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: src/Sulu/Bundle/AudienceTargetingBundle/DependencyInjection/SuluAudienceTargetingExtension.php
-
-		-
 			message: '#^Cannot access offset ''headers'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 2
@@ -8282,12 +8258,6 @@ parameters:
 
 		-
 			message: '#^Call to function array_key_exists\(\) with ''SuluTrashBundle'' and array\{FrameworkBundle\: string, TwigBundle\: string, MonologBundle\: string, FlysystemBundle\: string, SuluCoreBundle\: string, DoctrineBundle\: string, DoctrineFixturesBundle\: string, StofDoctrineExtensionsBundle\: string, \.\.\.\} will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/DependencyInjection/SuluCategoryExtension.php
-
-		-
-			message: '#^Call to function array_key_exists\(\) with ''model'' and array\{model\: class\-string, repository\?\: class\-string\} will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 1
 			path: src/Sulu/Bundle/CategoryBundle/DependencyInjection/SuluCategoryExtension.php
@@ -15872,12 +15842,6 @@ parameters:
 
 		-
 			message: '#^Call to function array_key_exists\(\) with ''SuluTrashBundle'' and array\{FrameworkBundle\: string, TwigBundle\: string, MonologBundle\: string, FlysystemBundle\: string, SuluCoreBundle\: string, DoctrineBundle\: string, DoctrineFixturesBundle\: string, StofDoctrineExtensionsBundle\: string, \.\.\.\} will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/DependencyInjection/SuluContactExtension.php
-
-		-
-			message: '#^Call to function array_key_exists\(\) with ''model'' and array\{model\: class\-string, repository\?\: class\-string\} will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/DependencyInjection/SuluContactExtension.php
@@ -23701,12 +23665,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/DependencyInjection/SuluMediaExtension.php
 
 		-
-			message: '#^Call to function array_key_exists\(\) with ''model'' and array\{model\: class\-string, repository\?\: class\-string\} will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/DependencyInjection/SuluMediaExtension.php
-
-		-
 			message: '#^Cannot access offset ''binary_timeout'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
@@ -29959,12 +29917,6 @@ parameters:
 			path: src/Sulu/Bundle/PersistenceBundle/Tests/Unit/Fixture/Bundle/UsingPersistenceBundleTrait.php
 
 		-
-			message: '#^Call to function array_key_exists\(\) with ''model'' and array\{model\: class\-string, repository\?\: class\-string\} will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: src/Sulu/Bundle/PersistenceBundle/Tests/Unit/Fixture/DependencyInjection/UsingPersistenceExtensionTrait.php
-
-		-
 			message: '#^Parameter \#1 \$objects of method Sulu\\Bundle\\PersistenceBundle\\Tests\\Unit\\Fixture\\DependencyInjection\\UsingPersistenceExtensionTrait\:\:configurePersistence\(\) expects array\<string, array\{model\: class\-string, repository\?\: class\-string\}\>, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -29981,12 +29933,6 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/PreviewBundle/Domain/Model/PreviewLink.php
-
-		-
-			message: '#^Call to function array_key_exists\(\) with ''model'' and array\{model\: class\-string, repository\?\: class\-string\} will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: src/Sulu/Bundle/PreviewBundle/Infrastructure/Symfony/DependencyInjection/SuluPreviewExtension.php
 
 		-
 			message: '#^Parameter \#1 \$objects of method Sulu\\Bundle\\PreviewBundle\\Infrastructure\\Symfony\\DependencyInjection\\SuluPreviewExtension\:\:configurePersistence\(\) expects array\<string, array\{model\: class\-string, repository\?\: class\-string\}\>, mixed given\.$#'
@@ -30443,12 +30389,6 @@ parameters:
 			identifier: identical.alwaysFalse
 			count: 1
 			path: src/Sulu/Bundle/PreviewBundle/UserInterface/Controller/PublicPreviewController.php
-
-		-
-			message: '#^Call to function array_key_exists\(\) with ''model'' and array\{model\: class\-string, repository\?\: class\-string\} will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: src/Sulu/Bundle/ReferenceBundle/Infrastructure/Symfony/DependencyInjection/SuluReferenceExtension.php
 
 		-
 			message: '#^Parameter \#1 \$objects of method Sulu\\Bundle\\ReferenceBundle\\Infrastructure\\Symfony\\DependencyInjection\\SuluReferenceExtension\:\:configurePersistence\(\) expects array\<string, array\{model\: class\-string, repository\?\: class\-string\}\>, mixed given\.$#'
@@ -31431,12 +31371,6 @@ parameters:
 		-
 			message: '#^Binary operation "\." between ''sulu_security\.reset…'' and mixed results in an error\.$#'
 			identifier: binaryOp.invalid
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/DependencyInjection/SuluSecurityExtension.php
-
-		-
-			message: '#^Call to function array_key_exists\(\) with ''model'' and array\{model\: class\-string, repository\?\: class\-string\} will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/DependencyInjection/SuluSecurityExtension.php
 
@@ -34159,12 +34093,6 @@ parameters:
 			path: src/Sulu/Bundle/TagBundle/DependencyInjection/SuluTagExtension.php
 
 		-
-			message: '#^Call to function array_key_exists\(\) with ''model'' and array\{model\: class\-string, repository\?\: class\-string\} will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: src/Sulu/Bundle/TagBundle/DependencyInjection/SuluTagExtension.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\TagBundle\\DependencyInjection\\SuluTagExtension\:\:load\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -35075,12 +35003,6 @@ parameters:
 			identifier: return.unusedType
 			count: 1
 			path: src/Sulu/Bundle/TrashBundle/Infrastructure/Sulu/Admin/TrashAdmin.php
-
-		-
-			message: '#^Call to function array_key_exists\(\) with ''model'' and array\{model\: class\-string, repository\?\: class\-string\} will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: src/Sulu/Bundle/TrashBundle/Infrastructure/Symfony/DependencyInjection/SuluTrashExtension.php
 
 		-
 			message: '#^Parameter \#1 \$objects of method Sulu\\Bundle\\TrashBundle\\Infrastructure\\Symfony\\DependencyInjection\\SuluTrashExtension\:\:configurePersistence\(\) expects array\<string, array\{model\: class\-string, repository\?\: class\-string\}\>, mixed given\.$#'

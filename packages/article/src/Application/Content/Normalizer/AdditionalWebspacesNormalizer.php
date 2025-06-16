@@ -51,7 +51,6 @@ class AdditionalWebspacesNormalizer implements NormalizerInterface
             return [];
         }
 
-        // Don't ignore any attributes - we want to enhance the existing data
         return [];
     }
 }

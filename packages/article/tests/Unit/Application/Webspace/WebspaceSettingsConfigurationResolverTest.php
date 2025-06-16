@@ -57,7 +57,7 @@ class WebspaceSettingsConfigurationResolverTest extends TestCase
 
         $resolver = new WebspaceSettingsConfigurationResolver($defaultMainWebspace, $defaultAdditionalWebspaces);
 
-        $this->expectException(\Symfony\Component\Form\Exception\InvalidConfigurationException::class);
+        $this->expectException(\Exception::class);
         $resolver->getDefaultMainWebspaceForLocale('en');
     }
 

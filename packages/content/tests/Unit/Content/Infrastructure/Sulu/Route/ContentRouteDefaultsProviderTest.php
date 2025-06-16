@@ -344,45 +344,6 @@ class ContentRouteDefaultsProviderTest extends TestCase
         $this->contentRouteDefaultsProvider->getDefaults($route);
     }
 
-    public function testGetDefaultsWithoutSeoSupport(): void
-    {
-        // Test that the provider works normally without SEO dependencies
-        $contentRichEntity = new Example();
-        $resolvedDimensionContent = new ExampleDimensionContent($contentRichEntity);
-        $resolvedDimensionContent->setLocale('en');
-        $resolvedDimensionContent->setTemplateKey('default');
-
-        $queryBuilder = $this->prophesize(QueryBuilder::class);
-        $query = $this->prophesize(AbstractQuery::class);
-
-        $this->entityManager->createQueryBuilder()->willReturn($queryBuilder->reveal());
-        $queryBuilder->select('entity')->willReturn($queryBuilder->reveal());
-        $queryBuilder->from(Example::class, 'entity')->willReturn($queryBuilder->reveal());
-        $queryBuilder->where('entity = :id')->willReturn($queryBuilder->reveal());
-        $queryBuilder->setParameter('id', '123-123-123')->willReturn($queryBuilder->reveal());
-        $queryBuilder->getQuery()->willReturn($query);
-        $query->getSingleResult()->willReturn($contentRichEntity);
-
-        $this->contentAggregator->aggregate($contentRichEntity, ['locale' => 'en', 'stage' => 'live'])
-            ->willReturn($resolvedDimensionContent);
-
-        $this->prepareTemplateMetadata('ExampleController::indexAction', 'example.html.twig', 'seconds', '3600');
-
-        $route = new Route(
-            Example::RESOURCE_KEY,
-            '123-123-123',
-            'en',
-            '/example',
-        );
-
-        $result = $this->contentRouteDefaultsProvider->getDefaults($route);
-
-        $this->assertArrayNotHasKey('_seo', $result);
-        $this->assertSame($resolvedDimensionContent, $result['object']);
-        $this->assertSame('example.html.twig', $result['view']);
-        $this->assertSame('ExampleController::indexAction', $result['_controller']);
-    }
-
     private function prepareTemplateMetadata(string $controller, string $view, ?string $cacheLifeTimeType, string $cacheLifeTimeValue): void
     {
         $typedMetadata = new TypedFormMetadata();

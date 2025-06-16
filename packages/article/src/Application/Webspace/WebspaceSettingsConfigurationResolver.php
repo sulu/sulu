@@ -13,8 +13,6 @@ declare(strict_types=1);
 
 namespace Sulu\Article\Application\Webspace;
 
-use Symfony\Component\Form\Exception\InvalidConfigurationException;
-
 class WebspaceSettingsConfigurationResolver
 {
     /**
@@ -23,7 +21,7 @@ class WebspaceSettingsConfigurationResolver
      */
     public function __construct(
         private array $defaultMainWebspace,
-        private array $defaultAdditionalWebspaces
+        private array $defaultAdditionalWebspaces,
     ) {
     }
 
@@ -37,7 +35,7 @@ class WebspaceSettingsConfigurationResolver
             return $this->defaultMainWebspace['default'];
         }
 
-        throw new InvalidConfigurationException('No configured default main webspace for locale "' . $searchedLocale . '" not found.');
+        throw new \Exception('No configured default main webspace for locale "' . $searchedLocale . '" not found.');
     }
 
     /**

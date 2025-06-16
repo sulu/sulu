@@ -83,7 +83,7 @@ class ArticleControllerTest extends SuluTestCase
 
         $response = $this->client->getResponse();
         $content = \json_decode((string) $response->getContent(), true);
-        \assert(\is_array($content));
+        $this->assertIsArray($content);
         /** @var string $id */
         $id = $content['id'] ?? null;
 
@@ -232,7 +232,7 @@ class ArticleControllerTest extends SuluTestCase
         $this->assertCount(1, $routeRepository->findBy([]));
 
         $responseData = \json_decode((string) $response->getContent(), true);
-        \assert(\is_array($responseData));
+        $this->assertIsArray($responseData);
         /** @var string $id */
         $id = $responseData['id'] ?? null;
 

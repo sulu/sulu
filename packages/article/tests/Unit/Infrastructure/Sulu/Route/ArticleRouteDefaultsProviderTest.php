@@ -125,7 +125,7 @@ class ArticleRouteDefaultsProviderTest extends TestCase
         $result = $provider->getDefaults($route);
 
         $this->assertArrayHasKey('_seo', $result);
-        \assert(\is_array($result['_seo']));
+        $this->assertIsArray($result['_seo']);
         $this->assertSame($canonicalUrl, $result['_seo']['canonicalUrl']);
         $this->assertSame($resolvedDimensionContent, $result['object']);
         $this->assertSame('article.html.twig', $result['view']);
