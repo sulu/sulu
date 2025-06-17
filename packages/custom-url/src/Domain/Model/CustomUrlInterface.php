@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Sulu\CustomUrl\Domain\Model;
 
 use Sulu\Component\Persistence\Model\AuditableInterface;
-use Sulu\Component\Security\Authentication\UserInterface;
 
 interface CustomUrlInterface extends AuditableInterface
 {
@@ -73,10 +72,6 @@ interface CustomUrlInterface extends AuditableInterface
     public function isNoIndex(): bool;
 
     public function setNoIndex(bool $noIndex): void;
-
-    public function setCreator(UserInterface $user): void;
-
-    public function setCreated(\DateTime $dateTime): void;
 
     /**
      * @return array<mixed>

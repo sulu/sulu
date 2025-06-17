@@ -17,6 +17,8 @@ use Sulu\CustomUrl\Domain\Model\CustomUrlInterface;
 
 interface CustomUrlMapperInterface
 {
+    public const SERVICE_TAG = 'sulu_custom_url.snippet_mapper';
+
     /**
      * @param array<mixed> $data
      */

@@ -13,19 +13,49 @@ declare(strict_types=1);
 
 namespace Sulu\CustomUrl\Infrastructure\Symfony\HttpKernel;
 
+use Doctrine\ORM\EntityManagerInterface;
+use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
+use Sulu\Bundle\AdminBundle\Admin\View\ViewBuilderFactoryInterface;
 use Sulu\Bundle\PersistenceBundle\DependencyInjection\PersistenceExtensionTrait;
 use Sulu\Bundle\PersistenceBundle\PersistenceBundleTrait;
+use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactoryInterface;
+use Sulu\Component\Rest\ListBuilder\Metadata\FieldDescriptorFactoryInterface;
+use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
+use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
+use Sulu\CustomUrl\Application\Mapper\CustomUrlMapper;
+use Sulu\CustomUrl\Application\Mapper\CustomUrlMapperInterface;
+use Sulu\CustomUrl\Application\MessageHandler\CreateCustomUrlMessageHandler;
+use Sulu\CustomUrl\Application\MessageHandler\ModifyCustomUrlMessageHandler;
+use Sulu\CustomUrl\Application\MessageHandler\RemoveCustomUrlMessageHandler;
 use Sulu\CustomUrl\Domain\Model\CustomUrl;
 use Sulu\CustomUrl\Domain\Model\CustomUrlInterface;
 use Sulu\CustomUrl\Domain\Model\CustomUrlRoute;
 use Sulu\CustomUrl\Domain\Model\CustomUrlRouteInterface;
+use Sulu\CustomUrl\Infrastructure\Doctrine\Repository\CustomUrlRepository;
+use Sulu\CustomUrl\Infrastructure\Doctrine\Repository\CustomUrlRepositoryInterface;
+use Sulu\CustomUrl\Infrastructure\Doctrine\Repository\CustomUrlRouteRepository;
+use Sulu\CustomUrl\Infrastructure\Doctrine\Repository\CustomUrlRouteRepositoryInterface;
+use Sulu\CustomUrl\Infrastructure\Sulu\Admin\CustomUrlAdmin;
+use Sulu\CustomUrl\Infrastructure\Sulu\HttpCache\CacheInvalidationSubscriber;
+use Sulu\CustomUrl\Infrastructure\Symfony\Fixtures\LoadCustomUrlFixture;
+use Sulu\CustomUrl\Infrastructure\Symfony\Serializer\CustomUrlNormalizer;
+use Sulu\CustomUrl\UserInterface\Controller\Admin\CustomUrlController;
+use Sulu\CustomUrl\UserInterface\Controller\Admin\CustomUrlRouteController;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Configurator\DefinitionConfigurator;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
+
+use function Symfony\Component\DependencyInjection\Loader\Configurator\service;
+use function Symfony\Component\DependencyInjection\Loader\Configurator\tagged_iterator;
+
 use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
+use Symfony\Component\DependencyInjection\Reference;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
+use Symfony\Component\Messenger\MessageBusInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 /**
  * @codeCoverageIgnore
@@ -79,9 +109,116 @@ final class SuluCustomUrlBundle extends AbstractBundle
 
         $loader = new PhpFileLoader($builder, new FileLocator(\dirname(__DIR__, 4) . '/config'));
 
-        $loader->load('services.php');
-        $loader->load('symfony.php');
-        $loader->load('message_handler.php');
+        $services = $container->services();
+
+        // Mapper
+        $services->set(CustomUrlMapperInterface::class, CustomUrlMapper::class)
+            ->tag(CustomUrlMapperInterface::SERVICE_TAG)
+        ;
+
+        // Message Handler
+        $services->set(CreateCustomUrlMessageHandler::class)
+            ->args([
+                tagged_iterator(CustomUrlMapperInterface::SERVICE_TAG),
+                new Reference(CustomUrlRepositoryInterface::class),
+                new Reference(DomainEventCollectorInterface::class),
+            ])
+            ->tag('messenger.message_handler')
+        ;
+
+        $services->set(ModifyCustomUrlMessageHandler::class)
+            ->args([
+                tagged_iterator(CustomUrlMapperInterface::SERVICE_TAG),
+                new Reference(CustomUrlRepositoryInterface::class),
+                new Reference(DomainEventCollectorInterface::class),
+            ])
+            ->tag('messenger.message_handler')
+        ;
+
+        $services->set(RemoveCustomUrlMessageHandler::class)
+            ->args([
+                new Reference(CustomUrlRepositoryInterface::class),
+                new Reference(DomainEventCollectorInterface::class),
+            ])
+            ->tag('messenger.message_handler')
+        ;
+
+        // Admin configuration
+        $services->set('sulu_custom_urls.admin', CustomUrlAdmin::class)
+            ->public()
+            ->args([
+                service(WebspaceManagerInterface::class),
+                service(ViewBuilderFactoryInterface::class),
+                service(SecurityCheckerInterface::class),
+            ])
+            ->tag('sulu.admin')
+            ->tag('sulu.context', ['context' => 'admin'])
+        ;
+        $services->alias(CustomUrlAdmin::class, 'sulu_custom_urls.admin');
+
+        $services->set('sulu_custom_urls.custom_url_controller', CustomUrlController::class)
+            ->public()
+            ->args([
+                new Reference(MessageBusInterface::class),
+                new Reference(RequestStack::class),
+                new Reference(CustomUrlRepositoryInterface::class),
+                new Reference(NormalizerInterface::class),
+                new Reference(FieldDescriptorFactoryInterface::class),
+                new Reference(DoctrineListBuilderFactoryInterface::class),
+                new Reference('sulu_core.doctrine_rest_helper'),
+            ])
+        ;
+
+        $services->set('sulu_custom_urls.custom_url_route_controller', CustomUrlRouteController::class)
+            ->public()
+            ->args([
+                new Reference(RequestStack::class),
+                new Reference(CustomUrlRouteRepositoryInterface::class),
+                new Reference(NormalizerInterface::class),
+            ])
+        ;
+
+        // Repositories
+        $services->set(CustomUrlRepositoryInterface::class, CustomUrlRepository::class)
+            ->args([
+                new Reference('doctrine'),
+                new Reference(CustomUrlRouteRepositoryInterface::class),
+            ])
+        ;
+
+        $services->alias('sulu_custom_urls.repository', CustomUrlRepositoryInterface::class);
+
+        $services->set(CustomUrlRouteRepositoryInterface::class, CustomUrlRouteRepository::class)
+            ->args([
+                new Reference(EntityManagerInterface::class),
+            ])
+        ;
+
+        // Cache invalidation
+        $services->set('sulu_custom_urls.event_subscriber.invalidation', CacheInvalidationSubscriber::class)
+            ->args([
+                new Reference(CustomUrlRepositoryInterface::class),
+                new Reference(CustomUrlRouteRepositoryInterface::class),
+                service('sulu_http_cache.cache_manager')->nullOnInvalid(),
+                new Reference(RequestStack::class),
+            ])
+            ->tag('sulu_document_manager.event_subscriber')
+        ;
+
+        // Extending Symfony
+        $services->set(CustomUrlNormalizer::class)
+            ->args([
+                new Reference('serializer.normalizer.object'),
+            ])
+            ->tag('serializer.normalizer')
+        ;
+
+        $services->set(LoadCustomUrlFixture::class)
+            ->args([
+                new Reference(CustomUrlRepositoryInterface::class),
+            ])
+            ->tag('doctrine.fixture.orm')
+        ;
 
         if ($builder->hasExtension('sulu_trash')) {
             $loader->load('sulu_trash.php');
@@ -158,7 +295,8 @@ final class SuluCustomUrlBundle extends AbstractBundle
      */
     public function build(ContainerBuilder $container): void
     {
-        parent::build($container);
+        $container->registerForAutoconfiguration(CustomUrlMapperInterface::class)
+            ->addTag(CustomUrlMapperInterface::SERVICE_TAG);
 
         $this->buildPersistence([
             CustomUrlInterface::class => 'sulu.model.custom_url.class',

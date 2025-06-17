@@ -9,7 +9,6 @@ includes:
     - vendor/phpstan/phpstan-webmozart-assert/extension.neon
 
 parameters:
-    reportUnmatchedIgnoredErrors: false
     phpVersion: 80200
     paths:
         - .
