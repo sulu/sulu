@@ -38,6 +38,7 @@ use Sulu\Page\Infrastructure\Doctrine\Repository\PageRepository;
 use Sulu\Page\Infrastructure\Sulu\Admin\PageAdmin;
 use Sulu\Page\Infrastructure\Sulu\Build\HomepageBuilder;
 use Sulu\Page\Infrastructure\Sulu\Content\PageLinkProvider;
+use Sulu\Page\Infrastructure\Sulu\Content\PageSmartContentProvider;
 use Sulu\Page\Infrastructure\Sulu\Content\PageTeaserProvider;
 use Sulu\Page\Infrastructure\Sulu\Content\PropertyResolver\BlockVisitor\SegmentBlockVisitor;
 use Sulu\Page\Infrastructure\Sulu\Content\PropertyResolver\PageSelectionPropertyResolver;
@@ -310,15 +311,15 @@ final class SuluPageBundle extends AbstractBundle
             ->tag('sulu_website.reference_store', ['alias' => PageInterface::RESOURCE_KEY]);
 
         // Smart Content services
-        //        $services->set('sulu_page.page_data_provider')
-        //            ->class(PageDataProvider::class) // TODO this should not be handled via Content Bundle instead own service which uses the PageRepository
-        //            ->args([
-        //                new Reference('sulu_page.page_repository'),
-        //                new Reference('sulu_content.content_manager'),
-        //                new Reference('sulu_page.page_reference_store'),
-        //                '%sulu_document_manager.show_drafts%',
-        //            ])
-        //            ->tag('sulu.smart_content.data_provider', ['alias' => PageInterface::RESOURCE_KEY]);
+        $services->set('sulu_page.page_smart_content_provider')
+            ->class(PageSmartContentProvider::class)
+            ->args([
+                new Reference('sulu_content.dimension_content_query_enhancer'),
+                new Reference('sulu_admin.form_metadata_provider'),
+                new Reference('security.token_storage'),
+                new Reference('doctrine.orm.entity_manager'),
+            ])
+            ->tag('sulu_content.smart_content_provider', ['type' => PageInterface::RESOURCE_KEY]);
 
         // Navigation
         $services->set('sulu_page.navigation_repository')

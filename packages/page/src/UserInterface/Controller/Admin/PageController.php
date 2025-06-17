@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Sulu.
  *
@@ -56,7 +58,7 @@ final class PageController
         private FieldDescriptorFactoryInterface $fieldDescriptorFactory,
         private DoctrineListBuilderFactoryInterface $listBuilderFactory,
         private RestHelperInterface $restHelper,
-        private EntityManagerInterface $entityManager
+        private EntityManagerInterface $entityManager,
     ) {
         // TODO controller should not need more then Repository, MessageBus, Serializer
     }
@@ -70,9 +72,11 @@ final class PageController
         $excludeShadows = $request->query->getBoolean('exclude-shadows', false);
         $expandedIds = \array_filter(\explode(',', (string) $request->query->get('expandedIds')));
 
-        $filters = [
-            'webspaceKey' => $webspaceKey,
-        ];
+        $filters = [];
+
+        if ($webspaceKey) {
+            $filters['webspaceKey'] = $webspaceKey;
+        }
 
         if ($excludeGhosts) {
             $filters['ghostLocale'] = null;
@@ -94,7 +98,7 @@ final class PageController
             parentId: $parentId,
             expandedIds: $expandedIds,
             includedFields: $includedFields,
-            listKey: 'pages_next'
+            listKey: 'pages_next',
         );
 
         return new JsonResponse($this->normalizer->normalize(
@@ -121,7 +125,7 @@ final class PageController
             ),
             [
                 PageRepositoryInterface::GROUP_SELECT_PAGE_ADMIN => true,
-            ]
+            ],
         );
 
         // TODO the `$page` should just be serialized
@@ -190,7 +194,7 @@ final class PageController
             $request->request->all(),
             [
                 'locale' => $this->getLocale($request),
-            ]
+            ],
         );
     }
 
@@ -211,7 +215,7 @@ final class PageController
             $message = new CopyLocalePageMessage(
                 ['uuid' => $uuid],
                 (string) $request->query->get('src'),
-                (string) $request->query->get('dest')
+                (string) $request->query->get('dest'),
             );
 
             /** @see Sulu\Page\Application\MessageHandler\CopyLocalePageMessageHandler */
@@ -221,19 +225,18 @@ final class PageController
             $position = $request->request->getInt('position');
             $message = new OrderPageMessage(
                 ['uuid' => $uuid],
-                $position
+                $position,
             );
 
             /** @see Sulu\Page\Application\MessageHandler\OrderPageMessageHandler */
             /** @var null */
             return $this->handle(new Envelope($message, [new EnableFlushStamp()]));
-        } else {
-            $message = new ApplyWorkflowTransitionPageMessage(['uuid' => $uuid], $this->getLocale($request), $action);
-
-            /** @see Sulu\Page\Application\MessageHandler\ApplyWorkflowTransitionPageMessageHandler */
-            /** @var null */
-            return $this->handle(new Envelope($message, [new EnableFlushStamp()]));
         }
+        $message = new ApplyWorkflowTransitionPageMessage(['uuid' => $uuid], $this->getLocale($request), $action);
+
+        /** @see Sulu\Page\Application\MessageHandler\ApplyWorkflowTransitionPageMessageHandler */
+        /** @var null */
+        return $this->handle(new Envelope($message, [new EnableFlushStamp()]));
     }
 
     /**
@@ -251,7 +254,7 @@ final class PageController
         array $expandedIds = [],
         array $includedFields = [],
         array $groupByFields = [],
-        ?string $listKey = null
+        ?string $listKey = null,
     ): CollectionRepresentation {
         $listKey = $listKey ?? $resourceKey;
 
@@ -290,7 +293,7 @@ final class PageController
         $idsToExpand = \array_merge(
             [$parentId],
             $this->findIdsOnPathsBetween($fieldDescriptors['id']->getEntityName(), $parentId, $expandedIds),
-            $expandedIds
+            $expandedIds,
         );
 
         // generate expressions to select only entities that are children of the collected expand-entities
@@ -299,7 +302,7 @@ final class PageController
             $expandExpressions[] = $listBuilder->createWhereExpression(
                 $fieldDescriptors['parentId'],
                 $idToExpand,
-                ListBuilderInterface::WHERE_COMPARATOR_EQUAL
+                ListBuilderInterface::WHERE_COMPARATOR_EQUAL,
             );
         }
 
@@ -315,7 +318,7 @@ final class PageController
 
         return new CollectionRepresentation(
             $this->generateNestedRows($parentId, $resourceKey, $rows),
-            $resourceKey
+            $resourceKey,
         );
     }
 

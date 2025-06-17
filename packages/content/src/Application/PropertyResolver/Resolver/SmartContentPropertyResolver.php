@@ -6,13 +6,15 @@ namespace Sulu\Content\Application\PropertyResolver\Resolver;
 
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\OptionMetadata;
+use Sulu\Component\Webspace\Webspace;
 use Sulu\Content\Application\ContentResolver\Value\ContentView;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 class SmartContentPropertyResolver implements PropertyResolverInterface
 {
-    public function __construct(private RequestStack $requestStack)
-    {
+    public function __construct(
+        private RequestStack $requestStack,
+    ) {
     }
 
     /**
@@ -24,6 +26,8 @@ class SmartContentPropertyResolver implements PropertyResolverInterface
      *     sortBy?: string,
      *     sortDirection?: 'ASC'|'DESC',
      *     limitResult?: int|null,
+     *     dataSource?: string|null,
+     *     types?: string[]|null,
      * } $data
      * @param array<string, mixed> $params
      */
@@ -53,6 +57,7 @@ class SmartContentPropertyResolver implements PropertyResolverInterface
          *     } $parameters
          */
         $parameters = \array_merge([
+            'provider' => 'pages', // TODO Should we use default provider for backwards compatibility?
             'locale' => $locale,
             'page_parameter' => 'p',
             'tags_parameter' => 'tags',
@@ -65,6 +70,8 @@ class SmartContentPropertyResolver implements PropertyResolverInterface
 
         $request = $this->requestStack->getCurrentRequest();
         \assert(null !== $request, 'Request must not be null');
+        /** @var Webspace|null $webspace */
+        $webspace = $request->attributes->get('_sulu')?->getAttribute('webspace');
 
         /** @var array{
          *     locale?: string|null,
@@ -76,10 +83,12 @@ class SmartContentPropertyResolver implements PropertyResolverInterface
          *     limit?: int,
          *     page?: int,
          *     webspaceKey?: string|null,
+         *     types?: string[]|null,
          * } $filters
          */
         $filters = [
             'locale' => $parameters['locale'],
+            'webspaceKey' => $webspace?->getKey() ?? null,
             'categoryIds' => \array_merge(
                 $data['categories'] ?? [],
                 \array_filter(
@@ -89,9 +98,27 @@ class SmartContentPropertyResolver implements PropertyResolverInterface
                     ),
                 ),
             ),
+            'tagNames' => \array_merge(
+                $data['tags'] ?? [],
+                \array_filter(
+                    \explode(
+                        ',',
+                        $request->query->getString($parameters['tags_parameter']),
+                    ),
+                ),
+            ),
+            'types' => \array_merge(
+                $data['types'] ?? [],
+                \array_filter(
+                    \explode(
+                        ',',
+                        $request->query->getString('types'),
+                    ),
+                ),
+            ),
             'categoryOperator' => \strtoupper($data['categoryOperator'] ?? $parameters['website_categories_operator']),
-            'tagNames' => \array_merge($data['tags'] ?? [], \array_filter(\explode(',', $request->query->getString($parameters['tags_parameter'])))),
             'tagOperator' => \strtoupper($data['tagOperator'] ?? $parameters['website_tags_operator']),
+            'dataSource' => $data['dataSource'] ?? null,
             'limit' => $data['limitResult'] ?? null,
             'page' => $request->query->getInt($parameters['page_parameter'], 1),
             // TODO exclude_duplicates

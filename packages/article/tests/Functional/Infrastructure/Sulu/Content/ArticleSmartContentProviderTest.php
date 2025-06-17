@@ -13,11 +13,24 @@ use Sulu\Content\Domain\Model\WorkflowInterface;
 use Sulu\Content\Tests\Traits\CreateCategoryTrait;
 use Sulu\Content\Tests\Traits\CreateTagTrait;
 use Sulu\Messenger\Infrastructure\Symfony\Messenger\FlushMiddleware\EnableFlushStamp;
-use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\HandleTrait;
-use Symfony\Component\Messenger\MessageBusInterface;
+use Symfony\Component\Messenger\Stamp\HandledStamp;
 
+/**
+ * Tests for the ArticleSmartContentProvider.
+ *
+ * @phpstan-type ArticleData array{
+ *     title?: string,
+ *     url?: string,
+ *     template?: string,
+ *     locale?: string,
+ *     excerptCategories?: int[],
+ *     excerptTags?: string[],
+ *     author?: int|null,
+ *     authored?: string|null,
+ * }
+ */
 class ArticleSmartContentProviderTest extends SuluTestCase
 {
     use CreateCategoryTrait;
@@ -26,340 +39,458 @@ class ArticleSmartContentProviderTest extends SuluTestCase
 
     private readonly SmartContentProviderInterface $smartContentProvider;
 
+    /**
+     * @var array<string, ArticleInterface>
+     */
+    private static array $articles = [];
+
+    /**
+     * @var array<string, mixed>
+     */
+    private static array $categories = [];
+
+    /**
+     * @var array<string, string>
+     */
+    private static array $tags = [];
+
     protected function setUp(): void
     {
         parent::setUp();
-        self::purgeDatabase();
-
         $this->messageBus = $this->getContainer()->get('sulu_message_bus');
         $this->smartContentProvider = $this->getContainer()->get('sulu_article.article_smart_content_provider');
     }
 
+    public static function setUpBeforeClass(): void
+    {
+        parent::setUpBeforeClass();
+        self::purgeDatabase();
+        self::bootKernel();
+
+        $container = self::getContainer();
+        $entityManager = $container->get('doctrine.orm.entity_manager');
+
+        // Create categories
+        self::$categories['tech'] = self::createCategory(['en' => ['title' => 'Technology']]);
+        self::$categories['sports'] = self::createCategory(['en' => ['title' => 'Sports']]);
+        self::$categories['health'] = self::createCategory(['en' => ['title' => 'Health']]);
+        self::$categories['business'] = self::createCategory(['en' => ['title' => 'Business']]);
+        self::$categories['entertainment'] = self::createCategory(['en' => ['title' => 'Entertainment']]);
+        $entityManager->flush();
+
+        // Create tags
+        self::$tags = [
+            'mobile' => 'mobile',
+            'web' => 'web',
+            'cloud' => 'cloud',
+            'football' => 'football',
+            'tennis' => 'tennis',
+            'fitness' => 'fitness',
+            'diet' => 'diet',
+            'startup' => 'startup',
+            'finance' => 'finance',
+            'movies' => 'movies',
+            'music' => 'music',
+        ];
+
+        // Create articles with various combinations of categories and tags
+        self::$articles['tech1'] = self::createArticle([
+            'title' => 'Latest in Tech',
+            'excerptCategories' => [self::$categories['tech']->getId()],
+            'excerptTags' => [self::$tags['mobile'], self::$tags['web']],
+            'authored' => '2023-01-15T12:00:00+00:00',
+        ]);
+
+        self::$articles['tech2'] = self::createArticle([
+            'title' => 'Cloud Computing',
+            'excerptCategories' => [self::$categories['tech']->getId(), self::$categories['business']->getId()],
+            'excerptTags' => [self::$tags['cloud']],
+            'authored' => '2023-02-20T14:30:00+00:00',
+        ]);
+
+        self::$articles['sports1'] = self::createArticle([
+            'title' => 'Football Season',
+            'excerptCategories' => [self::$categories['sports']->getId()],
+            'excerptTags' => [self::$tags['football']],
+            'authored' => '2023-03-10T09:15:00+00:00',
+        ]);
+
+        self::$articles['sports2'] = self::createArticle([
+            'title' => 'Tennis Championship',
+            'excerptCategories' => [self::$categories['sports']->getId()],
+            'excerptTags' => [self::$tags['tennis']],
+            'authored' => '2023-04-05T16:45:00+00:00',
+        ]);
+
+        self::$articles['health1'] = self::createArticle([
+            'title' => 'Fitness Tips',
+            'excerptCategories' => [self::$categories['health']->getId()],
+            'excerptTags' => [self::$tags['fitness']],
+            'authored' => '2023-05-12T08:20:00+00:00',
+        ]);
+
+        self::$articles['health2'] = self::createArticle([
+            'title' => 'Healthy Diet',
+            'excerptCategories' => [self::$categories['health']->getId()],
+            'excerptTags' => [self::$tags['diet'], self::$tags['fitness']],
+            'authored' => '2023-06-18T11:30:00+00:00',
+        ]);
+
+        self::$articles['business1'] = self::createArticle([
+            'title' => 'Startup News',
+            'excerptCategories' => [self::$categories['business']->getId()],
+            'excerptTags' => [self::$tags['startup']],
+            'authored' => '2023-07-22T10:00:00+00:00',
+        ]);
+
+        self::$articles['business2'] = self::createArticle([
+            'title' => 'Finance Report',
+            'excerptCategories' => [self::$categories['business']->getId()],
+            'excerptTags' => [self::$tags['finance']],
+            'authored' => '2023-08-30T13:45:00+00:00',
+        ]);
+
+        self::$articles['entertainment1'] = self::createArticle([
+            'title' => 'Movie Reviews',
+            'excerptCategories' => [self::$categories['entertainment']->getId()],
+            'excerptTags' => [self::$tags['movies']],
+            'authored' => '2023-09-05T15:30:00+00:00',
+        ]);
+
+        self::$articles['entertainment2'] = self::createArticle([
+            'title' => 'Music Festival',
+            'excerptCategories' => [self::$categories['entertainment']->getId()],
+            'excerptTags' => [self::$tags['music']],
+            'authored' => '2023-10-12T17:15:00+00:00',
+        ]);
+
+        self::$articles['tech_health'] = self::createArticle([
+            'title' => 'Tech in Healthcare',
+            'excerptCategories' => [self::$categories['tech']->getId(), self::$categories['health']->getId()],
+            'excerptTags' => [self::$tags['mobile'], self::$tags['fitness']],
+            'authored' => '2023-11-08T09:40:00+00:00',
+        ]);
+
+        self::$articles['sports_health'] = self::createArticle([
+            'title' => 'Sports Nutrition',
+            'excerptCategories' => [self::$categories['sports']->getId(), self::$categories['health']->getId()],
+            'excerptTags' => [self::$tags['fitness'], self::$tags['diet']],
+            'authored' => '2023-12-01T14:20:00+00:00',
+        ]);
+
+        self::$articles['business_tech'] = self::createArticle([
+            'title' => 'Tech Investments',
+            'excerptCategories' => [self::$categories['business']->getId(), self::$categories['tech']->getId()],
+            'excerptTags' => [self::$tags['startup'], self::$tags['cloud']],
+            'authored' => '2024-01-10T11:00:00+00:00',
+        ]);
+
+        self::$articles['entertainment_business'] = self::createArticle([
+            'title' => 'Entertainment Industry',
+            'excerptCategories' => [self::$categories['entertainment']->getId(), self::$categories['business']->getId()],
+            'excerptTags' => [self::$tags['movies'], self::$tags['finance']],
+            'authored' => '2024-02-15T16:30:00+00:00',
+        ]);
+
+        self::$articles['multi_category_multi_tag'] = self::createArticle([
+            'title' => 'Digital Lifestyle',
+            'excerptCategories' => [
+                self::$categories['tech']->getId(),
+                self::$categories['health']->getId(),
+                self::$categories['entertainment']->getId(),
+            ],
+            'excerptTags' => [self::$tags['mobile'], self::$tags['fitness'], self::$tags['music']],
+            'authored' => '2024-03-20T10:45:00+00:00',
+        ]);
+    }
+
     public function testFindFlatByNoParameters(): void
     {
-        $article = $this->createArticle(['title' => 'Example Article']);
-
         $result = $this->smartContentProvider->findFlatBy(['locale' => 'en'], []);
 
-        $this->assertCount(1, $result);
-        $this->assertSame($article->getUuid(), $result[0]['id']);
-        $this->assertSame('Example Article', $result[0]['title']);
-
+        $this->assertCount(15, $result);
         $count = $this->smartContentProvider->countBy(['locale' => 'en']);
-        $this->assertSame(1, $count);
+        $this->assertSame(15, $count);
     }
 
-    public function testFindFlatByCategoryFilters(): void
+    public function testFindFlatByCategoryFiltersSingleCategoryOR(): void
     {
-        $category1 = $this->createCategory(['en' => ['title' => 'Category 1']]);
-        $category2 = $this->createCategory(['en' => ['title' => 'Category 2']]);
-        $this->getEntityManager()->flush();
-
-        $article1 = $this->createArticle(['title' => 'Cat1', 'excerptCategories' => [$category1->getId()]]);
-        $article2 = $this->createArticle(['title' => 'Cat2', 'excerptCategories' => [$category2->getId()]]);
-        $article3 = $this->createArticle(['title' => 'Cat3', 'excerptCategories' => [$category1->getId(), $category2->getId()]]);
-
-        // OR
         $result = $this->smartContentProvider->findFlatBy([
             'locale' => 'en',
-            'categoryIds' => [$category2->getId()],
+            'categoryIds' => [self::$categories['tech']->getId()],
             'categoryOperator' => 'OR',
         ], []);
-        $this->assertCount(2, $result);
-        $this->assertSame($article2->getUuid(), $result[0]['id']);
-        $this->assertSame($article3->getUuid(), $result[1]['id']);
+
+        $this->assertCount(5, $result);
         $this->assertSame(
-            2,
+            5,
             $this->smartContentProvider->countBy([
                 'locale' => 'en',
-                'categoryIds' => [$category2->getId()],
+                'categoryIds' => [self::$categories['tech']->getId()],
                 'categoryOperator' => 'OR',
             ]),
         );
+    }
 
+    public function testFindFlatByCategoryFiltersMultipleCategoriesOR(): void
+    {
         $result = $this->smartContentProvider->findFlatBy([
             'locale' => 'en',
-            'categoryIds' => [$category1->getId(), $category2->getId()],
+            'categoryIds' => [self::$categories['tech']->getId(), self::$categories['health']->getId()],
             'categoryOperator' => 'OR',
         ], ['title' => 'asc']);
 
-        $this->assertCount(3, $result);
-        $this->assertSame($article1->getUuid(), $result[0]['id']);
-        $this->assertSame($article2->getUuid(), $result[1]['id']);
-        $this->assertSame($article3->getUuid(), $result[2]['id']);
+        // Should include tech1, tech2, health1, health2, tech_health, sports_health, business_tech, multi_category_multi_tag
+        $this->assertCount(8, $result);
         $this->assertSame(
-            3,
+            8,
             $this->smartContentProvider->countBy([
                 'locale' => 'en',
-                'categoryIds' => [$category1->getId(), $category2->getId()],
+                'categoryIds' => [self::$categories['tech']->getId(), self::$categories['health']->getId()],
                 'categoryOperator' => 'OR',
             ]),
         );
+    }
 
-        // AND
+    public function testFindFlatByCategoryFiltersSingleCategoryAND(): void
+    {
         $result = $this->smartContentProvider->findFlatBy([
             'locale' => 'en',
-            'categoryIds' => [$category2->getId()],
-            'categoryOperator' => 'AND',
-        ], []);
-        $this->assertCount(2, $result);
-        $this->assertSame($article2->getUuid(), $result[0]['id']);
-        $this->assertSame($article3->getUuid(), $result[1]['id']);
-        $this->assertSame(
-            2,
-            $this->smartContentProvider->countBy([
-                'locale' => 'en',
-                'categoryIds' => [$category2->getId()],
-                'categoryOperator' => 'AND',
-            ]),
-        );
-
-        $result = $this->smartContentProvider->findFlatBy([
-            'locale' => 'en',
-            'categoryIds' => [$category1->getId(), $category2->getId()],
+            'categoryIds' => [self::$categories['health']->getId()],
             'categoryOperator' => 'AND',
         ], []);
 
-        $this->assertCount(1, $result);
-        $this->assertSame($article3->getUuid(), $result[0]['id']);
+        $this->assertCount(5, $result);
         $this->assertSame(
-            1,
+            5,
             $this->smartContentProvider->countBy([
                 'locale' => 'en',
-                'categoryIds' => [$category1->getId(), $category2->getId()],
+                'categoryIds' => [self::$categories['health']->getId()],
                 'categoryOperator' => 'AND',
             ]),
         );
     }
 
-    /**
-     * Test filtering by tagIds and tagNames.
-     */
-    public function testFindFlatByTagFilters(): void
+    public function testFindFlatByCategoryFiltersMultipleCategoriesAND(): void
     {
-        $article1 = $this->createArticle(['title' => 'Tag1', 'excerptTags' => ['tag1']]);
-        $article2 = $this->createArticle(['title' => 'Tag2', 'excerptTags' => ['tag2']]);
-        $article3 = $this->createArticle(['title' => 'Tag3', 'excerptTags' => ['tag1', 'tag2']]);
-
-        // OR
         $result = $this->smartContentProvider->findFlatBy([
             'locale' => 'en',
-            'tagNames' => ['tag1'],
-            'tagOperator' => 'OR',
+            'categoryIds' => [self::$categories['tech']->getId(), self::$categories['health']->getId()],
+            'categoryOperator' => 'AND',
         ], []);
+
+        // Should include tech_health and multi_category_multi_tag
         $this->assertCount(2, $result);
-        $this->assertSame($article1->getUuid(), $result[0]['id']);
-        $this->assertSame($article3->getUuid(), $result[1]['id']);
         $this->assertSame(
             2,
             $this->smartContentProvider->countBy([
                 'locale' => 'en',
-                'tagNames' => ['tag1'],
-                'tagOperator' => 'OR',
+                'categoryIds' => [self::$categories['tech']->getId(), self::$categories['health']->getId()],
+                'categoryOperator' => 'AND',
             ]),
         );
+    }
 
+    public function testFindFlatByTagFiltersSingleTagOR(): void
+    {
         $result = $this->smartContentProvider->findFlatBy([
             'locale' => 'en',
-            'tagNames' => ['tag1', 'tag2'],
+            'tagNames' => [self::$tags['mobile']],
             'tagOperator' => 'OR',
-        ], ['title' => 'asc']);
+        ], []);
 
+        // Should include tech1, tech_health, multi_category_multi_tag
         $this->assertCount(3, $result);
-        $this->assertSame($article1->getUuid(), $result[0]['id']);
-        $this->assertSame($article2->getUuid(), $result[1]['id']);
-        $this->assertSame($article3->getUuid(), $result[2]['id']);
         $this->assertSame(
             3,
             $this->smartContentProvider->countBy([
                 'locale' => 'en',
-                'tagNames' => ['tag1', 'tag2'],
+                'tagNames' => [self::$tags['mobile']],
                 'tagOperator' => 'OR',
             ]),
         );
+    }
 
-        // AND
+    public function testFindFlatByTagFiltersMultipleTagsOR(): void
+    {
         $result = $this->smartContentProvider->findFlatBy([
             'locale' => 'en',
-            'tagNames' => ['tag2'],
+            'tagNames' => [self::$tags['mobile'], self::$tags['cloud']],
+            'tagOperator' => 'OR',
+        ], ['title' => 'asc']);
+
+        // Should include tech1, tech2, tech_health, business_tech, multi_category_multi_tag
+        $this->assertCount(5, $result);
+        $this->assertSame(
+            5,
+            $this->smartContentProvider->countBy([
+                'locale' => 'en',
+                'tagNames' => [self::$tags['mobile'], self::$tags['cloud']],
+                'tagOperator' => 'OR',
+            ]),
+        );
+    }
+
+    public function testFindFlatByTagFiltersSingleTagAND(): void
+    {
+        $result = $this->smartContentProvider->findFlatBy([
+            'locale' => 'en',
+            'tagNames' => [self::$tags['fitness']],
             'tagOperator' => 'AND',
         ], []);
+
+        // Should include health1, health2, tech_health, sports_health, multi_category_multi_tag
+        $this->assertCount(5, $result);
+        $this->assertSame(
+            5,
+            $this->smartContentProvider->countBy([
+                'locale' => 'en',
+                'tagNames' => [self::$tags['fitness']],
+                'tagOperator' => 'AND',
+            ]),
+        );
+    }
+
+    public function testFindFlatByTagFiltersMultipleTagsAND(): void
+    {
+        $result = $this->smartContentProvider->findFlatBy([
+            'locale' => 'en',
+            'tagNames' => [self::$tags['mobile'], self::$tags['fitness']],
+            'tagOperator' => 'AND',
+        ], []);
+
+        // Should include tech_health, multi_category_multi_tag
         $this->assertCount(2, $result);
-        $this->assertSame($article2->getUuid(), $result[0]['id']);
-        $this->assertSame($article3->getUuid(), $result[1]['id']);
         $this->assertSame(
             2,
             $this->smartContentProvider->countBy([
                 'locale' => 'en',
-                'tagNames' => ['tag2'],
-                'tagOperator' => 'AND',
-            ]),
-        );
-
-        $result = $this->smartContentProvider->findFlatBy([
-            'locale' => 'en',
-            'tagNames' => ['tag1', 'tag2'],
-            'tagOperator' => 'AND',
-        ], []);
-
-        $this->assertCount(1, $result);
-        $this->assertSame($article3->getUuid(), $result[0]['id']);
-        $this->assertSame(
-            1,
-            $this->smartContentProvider->countBy([
-                'locale' => 'en',
-                'tagNames' => ['tag1', 'tag2'],
+                'tagNames' => [self::$tags['mobile'], self::$tags['fitness']],
                 'tagOperator' => 'AND',
             ]),
         );
     }
 
-    public function testFindFlatByCategoryAndTag(): void
+    public function testFindFlatByCategoryAndTagFilters(): void
     {
-        $category1 = $this->createCategory(['en' => ['title' => 'Category 1']]);
-        $this->getEntityManager()->flush();
-
-        $article1 = $this->createArticle(['title' => 'A', 'excerptCategories' => [$category1->getId()], 'excerptTags' => ['tag1']]);
-        $article2 = $this->createArticle(['title' => 'B', 'excerptCategories' => [$category1->getId()]]);
-        $article3 = $this->createArticle(['title' => 'C', 'excerptTags' => ['tag1']]);
-
         $result = $this->smartContentProvider->findFlatBy([
             'locale' => 'en',
-            'categoryIds' => [$category1->getId()],
-            'tagNames' => ['tag1'],
+            'categoryIds' => [self::$categories['health']->getId()],
+            'tagNames' => [self::$tags['fitness']],
         ], []);
-        $this->assertCount(1, $result);
-        $this->assertSame($article1->getUuid(), $result[0]['id']);
+
+        // Should include health1, health2, tech_health, sports_health, multi_category_multi_tag
+        $this->assertCount(5, $result);
         $this->assertSame(
-            1,
+            5,
             $this->smartContentProvider->countBy([
                 'locale' => 'en',
-                'categoryIds' => [$category1->getId()],
-                'tagNames' => ['tag1'],
+                'categoryIds' => [self::$categories['health']->getId()],
+                'tagNames' => [self::$tags['fitness']],
             ]),
         );
     }
 
-    public function testFindFlatByLimitAndPage(): void
+    public function testFindFlatByLimitAndPageFirst(): void
     {
-        $this->createArticle(['title' => 'A']);
-        $this->createArticle(['title' => 'B']);
-        $this->createArticle(['title' => 'C']);
-
         $result = $this->smartContentProvider->findFlatBy([
             'locale' => 'en',
-            'limit' => 2,
+            'limit' => 5,
             'page' => 1,
         ], [
             'sortBy' => 'title',
             'sortMethod' => 'asc',
         ]);
-        $this->assertCount(2, $result);
-        $this->assertSame('A', $result[0]['title']);
-        $this->assertSame('B', $result[1]['title']);
+
+        $this->assertCount(5, $result);
         $this->assertSame(
-            3,
+            15,
             $this->smartContentProvider->countBy([
                 'locale' => 'en',
-                'limit' => 2,
+                'limit' => 5,
                 'page' => 1,
             ]),
         );
+    }
 
+    public function testFindFlatByLimitAndPageSecond(): void
+    {
         $result = $this->smartContentProvider->findFlatBy([
             'locale' => 'en',
-            'limit' => 2,
+            'limit' => 5,
             'page' => 2,
         ], [
             'sortBy' => 'title',
             'sortMethod' => 'asc',
         ]);
-        $this->assertCount(1, $result);
-        $this->assertSame('C', $result[0]['title']);
+
+        $this->assertCount(5, $result);
         $this->assertSame(
-            3,
+            15,
             $this->smartContentProvider->countBy([
                 'locale' => 'en',
-                'limit' => 2,
+                'limit' => 5,
                 'page' => 2,
             ]),
         );
     }
 
-    public function testSortByTitle(): void
+    public function testSortByTitleAsc(): void
     {
-        $this->createArticle(['title' => 'B']);
-        $this->createArticle(['title' => 'A']);
-        $this->createArticle(['title' => 'C']);
-
-        // ASC
         $result = $this->smartContentProvider->findFlatBy(['locale' => 'en'], [
-            'sortBy' => 'title',
-            'sortMethod' => 'asc',
+            'title' => 'asc',
         ]);
-        $this->assertCount(3, $result);
-        $this->assertSame('A', $result[0]['title']);
-        $this->assertSame('B', $result[1]['title']);
-        $this->assertSame('C', $result[2]['title']);
 
-        $count = $this->smartContentProvider->countBy(['locale' => 'en']);
-        $this->assertSame(3, $count);
-
-        // DESC
-        $result = $this->smartContentProvider->findFlatBy(['locale' => 'en'], [
-            'sortBy' => 'title',
-            'sortMethod' => 'desc',
-        ]);
-        $this->assertCount(3, $result);
-        $this->assertSame('C', $result[0]['title']);
-        $this->assertSame('B', $result[1]['title']);
-        $this->assertSame('A', $result[2]['title']);
-
-        $count = $this->smartContentProvider->countBy(['locale' => 'en']);
-        $this->assertSame(3, $count);
+        $this->assertCount(15, $result);
+        // Check if first article is alphabetically first
+        $this->assertStringContainsString('Cloud', $result[0]['title']);
+        // Check if last article is alphabetically last
+        $this->assertStringContainsString('Tennis', $result[14]['title']);
     }
 
-    public function testSortByAuthored(): void
+    public function testSortByTitleDesc(): void
     {
-        $this->createArticle(['title' => 'B', 'locale' => 'en', 'authored' => '2023-10-01T12:00:00+00:00']);
-        $this->createArticle(['title' => 'A', 'locale' => 'en', 'authored' => '2023-09-01T12:00:00+00:00']);
-        $this->createArticle(['title' => 'C', 'locale' => 'en', 'authored' => '2023-11-01T12:00:00+00:00']);
-
-        // ASC
         $result = $this->smartContentProvider->findFlatBy(['locale' => 'en'], [
-            'sortBy' => 'authored',
-            'sortMethod' => 'asc',
+            'title' => 'desc',
         ]);
-        $this->assertCount(3, $result);
-        $this->assertSame('A', $result[0]['title']);
-        $this->assertSame('B', $result[1]['title']);
-        $this->assertSame('C', $result[2]['title']);
 
-        // DESC
-        $result = $this->smartContentProvider->findFlatBy(['locale' => 'en'], [
-            'sortBy' => 'authored',
-            'sortMethod' => 'desc',
-        ]);
-        $this->assertCount(3, $result);
-        $this->assertSame('C', $result[0]['title']);
-        $this->assertSame('B', $result[1]['title']);
-        $this->assertSame('A', $result[2]['title']);
+        $this->assertCount(15, $result);
+        // Check if first article is alphabetically last
+        $this->assertStringContainsString('Tennis', $result[0]['title']);
+        // Check if last article is alphabetically first
+        $this->assertStringContainsString('Cloud', $result[14]['title']);
     }
 
+    public function testSortByAuthoredAsc(): void
+    {
+        $result = $this->smartContentProvider->findFlatBy(['locale' => 'en'], [
+            'authored' => 'asc',
+        ]);
+
+        $this->assertCount(15, $result);
+        // First should be oldest
+        $this->assertSame('Latest in Tech', $result[0]['title']);
+        // Last should be newest
+        $this->assertSame('Digital Lifestyle', $result[14]['title']);
+    }
+
+    public function testSortByAuthoredDesc(): void
+    {
+        $result = $this->smartContentProvider->findFlatBy(['locale' => 'en'], [
+            'authored' => 'desc',
+        ]);
+
+        $this->assertCount(15, $result);
+        // First should be newest
+        $this->assertSame('Digital Lifestyle', $result[0]['title']);
+        // Last should be oldest
+        $this->assertSame('Latest in Tech', $result[14]['title']);
+    }
 
     /**
-     * @param array{
-     *     title?: string,
-     *     url?: string,
-     *     template?: string,
-     *     locale?: string,
-     *     excerptCategories?: int[],
-     *     excerptTags?: string[],
-     *     author?: int|null,
-     *     authored?: string|null,
-     * } $data
+     * @param ArticleData $data
      */
-    private function createArticle(
+    private static function createArticle(
         array $data = [],
     ): ArticleInterface {
         $data = \array_merge([
@@ -369,10 +500,16 @@ class ArticleSmartContentProviderTest extends SuluTestCase
             'locale' => 'en',
         ], $data);
 
-        /** @var ArticleInterface $article */
-        $article = $this->handle(new Envelope(new CreateArticleMessage($data), [new EnableFlushStamp()]));
+        $messageBus = self::getContainer()->get('sulu_message_bus');
 
-        $this->handle(
+        /** @var ArticleInterface $article */
+        $envelope = $messageBus->dispatch(new Envelope(new CreateArticleMessage($data), [new EnableFlushStamp()]));
+        /** @var HandledStamp[] $handledStamps */
+        $handledStamps = $envelope->all(HandledStamp::class);
+
+        /** @var ArticleInterface $article */
+        $article = $handledStamps[0]->getResult();
+        $messageBus->dispatch(
             new Envelope(
                 new ApplyWorkflowTransitionArticleMessage(
                     identifier: ['uuid' => $article->getUuid()],

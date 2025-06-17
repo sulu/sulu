@@ -9,4 +9,6 @@ interface ResolvableInterface
     public function getResourceLoaderKey(): string;
 
     public function getPriority(): int;
+
+    public function executeResourceCallback(mixed $resource): mixed;
 }

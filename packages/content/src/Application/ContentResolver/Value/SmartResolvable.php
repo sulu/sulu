@@ -9,6 +9,8 @@ namespace Sulu\Content\Application\ContentResolver\Value;
  */
 class SmartResolvable implements ResolvableInterface
 {
+    private \Closure $callback;
+
     /**
      * @param mixed[] $data
      */
@@ -16,7 +18,9 @@ class SmartResolvable implements ResolvableInterface
         private array $data,
         private string $resourceLoaderKey,
         private int $priority,
+        ?\Closure $resourceCallback = null,
     ) {
+        $this->callback = $resourceCallback ?? (static fn (mixed $resource) => $resource);
     }
 
     public function getId(): string|int
@@ -29,6 +33,16 @@ class SmartResolvable implements ResolvableInterface
         return $this->resourceLoaderKey;
     }
 
+    public function executeResourceCallback(mixed $resource): mixed
+    {
+        return ($this->callback)($resource);
+    }
+
+    /**
+     * SmartResolvable should be resolved before other resolvables, so it is recommended to have a high priority.
+     *
+     * @return int
+     */
     public function getPriority(): int
     {
         return $this->priority;

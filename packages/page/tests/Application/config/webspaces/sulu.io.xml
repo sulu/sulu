@@ -18,7 +18,7 @@
     <theme>default</theme>
 
     <default-templates>
-        <default-template type="homepage">default</default-template>
+        <default-template type="homepage">homepage</default-template>
         <default-template type="page">default</default-template>
     </default-templates>
 

@@ -43,7 +43,7 @@ class ContentView
         array $data,
         string $resourceLoaderKey,
         array $view = [],
-        int $priority = 0,
+        int $priority = 2048, // Default priority for SmartResolvable should be high
     ): self {
         return new self(
             new SmartResolvable(

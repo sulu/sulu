@@ -2,44 +2,52 @@
 
 declare(strict_types=1);
 
-namespace Sulu\Article\Infrastructure\Sulu\Content;
+namespace Sulu\Page\Infrastructure\Sulu\Content;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
-use Sulu\Article\Domain\Model\ArticleDimensionContentInterface;
-use Sulu\Article\Domain\Model\ArticleInterface;
-use Sulu\Article\Infrastructure\Sulu\Content\ResourceLoader\ArticleResourceLoader;
+use Doctrine\ORM\QueryBuilder;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderInterface;
 use Sulu\Bundle\AdminBundle\SmartContent\Configuration\Builder;
 use Sulu\Bundle\AdminBundle\SmartContent\Configuration\BuilderInterface;
 use Sulu\Bundle\AdminBundle\SmartContent\Configuration\ProviderConfigurationInterface;
 use Sulu\Bundle\AdminBundle\SmartContent\SmartContentProviderInterface;
+use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer;
+use Sulu\Page\Domain\Model\PageDimensionContentInterface;
+use Sulu\Page\Domain\Model\PageInterface;
+use Sulu\Page\Infrastructure\Sulu\Admin\PageAdmin;
+use Sulu\Page\Infrastructure\Sulu\Content\ResourceLoader\PageResourceLoader;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-class ArticleSmartContentProvider implements SmartContentProviderInterface
+class PageSmartContentProvider implements SmartContentProviderInterface
 {
     /**
-     * @var EntityRepository<ArticleInterface>
+     * @var EntityRepository<PageInterface>
      */
     private EntityRepository $entityRepository;
 
     /**
-     * @var EntityRepository<ArticleDimensionContentInterface>
+     * @var EntityRepository<PageDimensionContentInterface>
      */
     private EntityRepository $entityDimensionContentRepository;
 
     /**
-     * @var class-string<ArticleDimensionContentInterface>
+     * @var class-string<PageDimensionContentInterface>
      */
-    private string $articleDimensionContentClassName;
+    private string $pageDimensionContentClassName;
 
     public function __construct(
         private readonly DimensionContentQueryEnhancer $dimensionContentQueryEnhancer,
+        private MetadataProviderInterface $formMetadataProvider,
+        private TokenStorageInterface $tokenStorage,
         EntityManagerInterface $entityManager,
     ) {
-        $this->entityRepository = $entityManager->getRepository(ArticleInterface::class);
-        $this->entityDimensionContentRepository = $entityManager->getRepository(ArticleDimensionContentInterface::class);
-        $this->articleDimensionContentClassName = $this->entityDimensionContentRepository->getClassName();
+        $this->entityRepository = $entityManager->getRepository(PageInterface::class);
+        $this->entityDimensionContentRepository = $entityManager->getRepository(PageDimensionContentInterface::class);
+        $this->pageDimensionContentClassName = $this->entityDimensionContentRepository->getClassName();
     }
 
     public function getConfiguration(): ProviderConfigurationInterface
@@ -74,16 +82,19 @@ class ArticleSmartContentProvider implements SmartContentProviderInterface
          */
         $filters = $this->enhanceWithDimensionAttributes($filters);
 
-        $alias = 'article';
+        $alias = 'page';
         $queryBuilder = $this->entityRepository->createQueryBuilder($alias);
+        $filters = $this->mapFilters($filters);
         $this->dimensionContentQueryEnhancer->addFilters(
             $queryBuilder,
             $alias,
-            $this->articleDimensionContentClassName,
+            $this->pageDimensionContentClassName,
             $filters,
             [],
         );
-        $queryBuilder->select('COUNT(DISTINCT article.uuid)');
+        $this->addInternalFilters($queryBuilder, $filters, $alias);
+
+        $queryBuilder->select('COUNT(DISTINCT page.uuid)');
 
         return (int) $queryBuilder->getQuery()->getSingleScalarResult();
     }
@@ -99,6 +110,8 @@ class ArticleSmartContentProvider implements SmartContentProviderInterface
      *     loadGhost?: bool,
      *     limit?: int,
      *     page?: int,
+     *     webspaceKey?: string,
+     *     datasource?: string|null,
      * } $filters
      * @param array{
      *     title?: 'asc'|'desc',
@@ -108,7 +121,7 @@ class ArticleSmartContentProvider implements SmartContentProviderInterface
      *     changed?: 'asc'|'desc',
      * } $sortBys
      *
-     * @return array<array{id: string, title: string}>
+     * @return array<array{id: string, title: string, webspace: string}>
      */
     public function findFlatBy(array $filters, array $sortBys): array
     {
@@ -124,19 +137,22 @@ class ArticleSmartContentProvider implements SmartContentProviderInterface
          *      limit?: int,
          *      page?: int,
          *      stage: string,
+         *      webspaceKey?: string,
          *  } $filters
          */
         $filters = $this->enhanceWithDimensionAttributes($filters);
 
-        $alias = 'article';
+        $alias = 'page';
         $queryBuilder = $this->entityRepository->createQueryBuilder($alias);
+        $filters = $this->mapFilters($filters);
         $this->dimensionContentQueryEnhancer->addFilters(
             $queryBuilder,
             $alias,
-            $this->articleDimensionContentClassName,
+            $this->pageDimensionContentClassName,
             $filters,
             $sortBys,
         );
+        $this->addInternalFilters($queryBuilder, $filters, $alias);
 
         if (($page = ($filters['page'] ?? null))
             && ($limit = ($filters['limit'] ?? null))) {
@@ -145,7 +161,8 @@ class ArticleSmartContentProvider implements SmartContentProviderInterface
 
         // TODO refactor this part to not use distinct
         // we need the distinct here, because joins due to tags/categories can lead to duplicate results
-        $queryBuilder->select('DISTINCT article.uuid as id');
+        $queryBuilder->select('DISTINCT page.uuid as id');
+        $queryBuilder->addSelect('page.webspaceKey as webspace');
         $queryBuilder->addSelect('filterDimensionContent.title');
 
         foreach ($queryBuilder->getDQLPart('orderBy') ?? [] as $orderBy) {
@@ -155,10 +172,33 @@ class ArticleSmartContentProvider implements SmartContentProviderInterface
             }
         }
 
-        /** @var array{id: string, title: string}[] $result */
+        /** @var array{id: string, title: string, webspace: string}[] $result */
         $result = $queryBuilder->getQuery()->getArrayResult();
 
         return $result;
+    }
+
+    protected function mapFilters(array $filters): array
+    {
+        if ($filters['types'] ?? null) {
+            $filters['templateKeys'] = $filters['types'];
+            unset($filters['types']);
+        }
+
+        return $filters;
+    }
+
+    protected function addInternalFilters(QueryBuilder $queryBuilder, array $filters, string $alias): void
+    {
+        if ($webspaceKey = $filters['webspaceKey'] ?? null) {
+            $queryBuilder->andWhere($alias . '.webspaceKey = :webspaceKey')
+                ->setParameter('webspaceKey', $webspaceKey);
+        }
+
+        if ($datasource = $filters['dataSource'] ?? null) {
+            $queryBuilder->andWhere($alias . '.parent = :datasource')
+                ->setParameter('datasource', $datasource);
+        }
     }
 
     /**
@@ -178,12 +218,13 @@ class ArticleSmartContentProvider implements SmartContentProviderInterface
 
     protected function getConfigurationBuilder(): BuilderInterface
     {
-        return Builder::create()
+        $builder = Builder::create()
             ->enableTags()
             ->enableCategories()
             ->enableLimit()
             ->enablePagination()
             ->enablePresentAs()
+            ->enableDatasource(PageInterface::RESOURCE_KEY, PageInterface::RESOURCE_KEY, 'column_list')
             ->enableSorting(
                 [
                     ['column' => 'workflowPublished', 'title' => 'sulu_admin.published'],
@@ -192,16 +233,49 @@ class ArticleSmartContentProvider implements SmartContentProviderInterface
                     ['column' => 'changed', 'title' => 'sulu_admin.changed'],
                     ['column' => 'title', 'title' => 'sulu_admin.title'],
                 ],
-            );
+            )
+            ->enableTypes($this->getTypes())
+            ->enableView(PageAdmin::EDIT_FORM_VIEW, ['id' => 'id', 'webspace' => 'webspace']);
+
+        //        if ($this->hasAudienceTargeting) {
+        //            $builder->enableAudienceTargeting();
+        //        }
+
+        return $builder;
+    }
+
+    /**
+     * @return array<int, array<string, string>>
+     */
+    private function getTypes(): array
+    {
+        $types = [];
+        if ($this->tokenStorage && null !== $this->tokenStorage->getToken() && $this->formMetadataProvider) {
+            $user = $this->tokenStorage->getToken()->getUser();
+
+            if (!$user instanceof UserInterface) {
+                return $types;
+            }
+
+            $locale = $user->getLocale();
+            /** @var TypedFormMetadata $metadata */
+            $metadata = $this->formMetadataProvider->getMetadata('page', $locale, []);
+
+            foreach ($metadata->getForms() as $form) {
+                $types[] = ['type' => $form->getName(), 'title' => $form->getTitle($locale)];
+            }
+        }
+
+        return $types;
     }
 
     public function getType(): string
     {
-        return ArticleInterface::RESOURCE_KEY;
+        return PageInterface::RESOURCE_KEY;
     }
 
     public function getResourceLoaderKey(): string
     {
-        return ArticleResourceLoader::RESOURCE_LOADER_KEY;
+        return PageResourceLoader::RESOURCE_LOADER_KEY;
     }
 }

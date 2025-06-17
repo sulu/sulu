@@ -79,6 +79,7 @@ class SmartContentItemController extends AbstractRestController
         unset($filters['params']);
         // TODO do we need default parameters here?
         $params = $this->getParams(\json_decode($params, true));
+        $maxPerPage = ($params['max_per_page'] ?? null) ? $params['max_per_page']->getValue() : null;
 
         $filters['locale'] = $locale;
         $filters['excluded'] = \array_filter(\explode(',', $this->getRequestParameter($request, 'excluded')));
@@ -95,8 +96,9 @@ class SmartContentItemController extends AbstractRestController
         $filters['sortBy'] = isset($filters['sortBy']) ? $this->getRequestParameter($request, 'sortBy') : null;
         $filters['includeSubFolders'] = isset($filters['includeSubFolders']) && 'true' === $filters['includeSubFolders'];
         $filters['webspaceKey'] = $this->getRequestParameter($request, 'webspace');
+        $filters['datasource'] = $this->getRequestParameter($request, 'datasource');
         $filters['page'] = (int) $this->getRequestParameter($request, 'page', false, 1);
-        $filters['limit'] = ((int) ($filters['limitResult'] ?? $params['max_per_page']->getValue())) ?? null;
+        $filters['limit'] = ($filters['limitResult'] ?? $maxPerPage) ? (int)($filters['limitResult'] ?? $maxPerPage) : null;
         $filters = \array_filter($filters);
 
         $sortBys = [];
@@ -117,15 +119,7 @@ class SmartContentItemController extends AbstractRestController
             );
         }
         $provider = $this->smartContentProviderLocator->get($providerType);
-
         $items = $provider->findFlatBy($filters, $sortBys);
-
-        $datasourceParameters = \array_filter([
-            'locale' => $filters['locale'],
-            'webspaceKey' => $filters['webspaceKey'] ?? null,
-        ]);
-        $datasource = $this->getRequestParameter($request, 'datasource');
-        $datasource = null !== $datasource ? $provider->resolveDatasource($request->get('dataSource'), [], $datasourceParameters) : null;
 
         return $this->handleView(
             $this->view(
@@ -134,7 +128,6 @@ class SmartContentItemController extends AbstractRestController
                     'items',
                     [
                         'total' => \count($items),
-                        'datasource' => $datasource,
                     ],
                 ),
             ),

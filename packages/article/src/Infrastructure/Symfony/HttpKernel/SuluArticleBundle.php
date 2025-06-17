@@ -252,16 +252,6 @@ final class SuluArticleBundle extends AbstractBundle
                 new Reference('doctrine.orm.entity_manager'),
             ])
         ->tag('sulu_content.smart_content_provider', ['type' => ArticleInterface::RESOURCE_KEY]);
-
-        //                $services->set('sulu_article.article_data_provider')
-        //                    ->class(ArticleDataProvider::class) // TODO this should not be handled via Content Bundle instead own service which uses the ArticleRepository
-        //                    ->args([
-        //                        new Reference('sulu_article.article_repository'),
-        //                        new Reference('sulu_content.content_manager'),
-        //                        new Reference('sulu_article.article_reference_store'),
-        //                        '%sulu_document_manager.show_drafts%',
-        //                    ])
-        //                    ->tag('sulu.smart_content.data_provider', ['alias' => ArticleInterface::RESOURCE_KEY]);
     }
 
     /**

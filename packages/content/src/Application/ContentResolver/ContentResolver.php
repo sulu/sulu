@@ -409,7 +409,7 @@ class ContentResolver implements ContentResolverInterface
 
         $hasReplaced = false;
         \array_walk_recursive($content, function (&$value) use ($resolvedResources, &$hasReplaced) {
-            if ($value instanceof ResolvableResource && isset($resolvedResources[$value->getResourceLoaderKey()][$value->getId()])) {
+            if ($value instanceof ResolvableInterface && isset($resolvedResources[$value->getResourceLoaderKey()][$value->getId()])) {
                 $value = $value->executeResourceCallback(
                     $resolvedResources[$value->getResourceLoaderKey()][$value->getId()],
                 );

@@ -78,6 +78,8 @@ class DimensionContentQueryEnhancer
      *     tagOperator?: 'AND'|'OR',
      *     templateKeys?: string[],
      *     loadGhost?: bool,
+     *     excludedIds?: string[],
+     *     includeSubFolders?: bool,
      * } $filters
      * @param array{
      *     title?: 'asc'|'desc',
