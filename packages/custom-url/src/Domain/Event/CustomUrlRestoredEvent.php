@@ -28,7 +28,7 @@ class CustomUrlRestoredEvent extends DomainEvent
         parent::__construct();
     }
 
-    public function getCustomUrlDocument(): CustomUrlInterface
+    public function getCustomUrl(): CustomUrlInterface
     {
         return $this->customUrl;
     }
@@ -50,7 +50,7 @@ class CustomUrlRestoredEvent extends DomainEvent
 
     public function getResourceId(): string
     {
-        return (string) $this->customUrl->getId();
+        return $this->customUrl->getId();
     }
 
     public function getResourceWebspaceKey(): ?string
