@@ -32,7 +32,7 @@ class CustomUrlRepository extends ServiceEntityRepository implements CustomUrlRe
         parent::__construct($registry, CustomUrl::class);
     }
 
-    public function createNew(?string $uuid): CustomUrlInterface
+    public function createNew(?string $uuid = null): CustomUrlInterface
     {
         return new CustomUrl($uuid);
     }

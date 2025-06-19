@@ -17,9 +17,9 @@ use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\TestBundle\Testing\KernelTestCase;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\CustomUrl\Domain\Model\CustomUrl;
-use Sulu\CustomUrl\Infrastructure\Doctrine\Repository\CustomUrlRepository;
+use Sulu\CustomUrl\Domain\Repository\CustomUrlRepository;
+use Sulu\CustomUrl\Domain\Repository\CustomUrlRouteRepository;
 use Sulu\CustomUrl\Infrastructure\Doctrine\Repository\CustomUrlRepositoryInterface;
-use Sulu\CustomUrl\Infrastructure\Doctrine\Repository\CustomUrlRouteRepository;
 
 class CustomUrlRepositoryTest extends KernelTestCase
 {
@@ -48,8 +48,8 @@ class CustomUrlRepositoryTest extends KernelTestCase
         $originalCustomUrl->setWebspace('sulu_io');
         $originalCustomUrl->setCreator($user);
         $originalCustomUrl->setChanger($user);
-        $originalCustomUrl->setCreated(new \DateTime('2025-04-20T00:00:00+00:00'));
-        $originalCustomUrl->setChanged(new \DateTime('2025-04-20T00:00:00+00:00'));
+        $originalCustomUrl->setCreated(new \DateTimeImmutable('2025-04-20T00:00:00+00:00'));
+        $originalCustomUrl->setChanged(new \DateTimeImmutable('2025-04-20T00:00:00+00:00'));
         $originalCustomUrl->setBaseDomain('sulu-test.localhost/*/*');
         $originalCustomUrl->setDomainParts(['custom-path-1', 'custom-path-2']);
         $originalCustomUrl->setCanonical(true);

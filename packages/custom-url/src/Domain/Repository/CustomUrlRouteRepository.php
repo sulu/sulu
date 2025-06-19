@@ -23,14 +23,14 @@ use Sulu\CustomUrl\Infrastructure\Doctrine\Repository\CustomUrlRouteRepositoryIn
 class CustomUrlRouteRepository implements CustomUrlRouteRepositoryInterface
 {
     /**
-     * @return EntityRepository<CustomUrlRoute>
+     * @var EntityRepository<CustomUrlRoute>
      */
     private EntityRepository $repository;
 
     public function __construct(
-        EntityManagerInterface $entityManager,
+        private EntityManagerInterface $entityManager,
     ) {
-        $this->repository = $entityManager->getRepository(CustomUrlRoute::class);
+        $this->repository = $this->entityManager->getRepository(CustomUrlRoute::class);
     }
 
     public function count(): int
@@ -84,11 +84,9 @@ class CustomUrlRouteRepository implements CustomUrlRouteRepositoryInterface
             throw new MismatchingDomainPartException($baseDomain, $customUrl->getDomainParts());
         }
 
-        /** @var CustomUrlRoute|null $existingRoute */
-        $existingRoute = $this->repository
-            ->findOneBy(['customUrl' => $customUrl, 'path' => $newUrl]);
+        $existingRoute = $this->repository->findOneBy(['customUrl' => $customUrl, 'path' => $newUrl]);
         if (null !== $existingRoute) {
-            $existingRoute->setCreated(new \DateTime());
+            $existingRoute->setCreated(new \DateTimeImmutable());
 
             return;
         }

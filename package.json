@@ -20,7 +20,7 @@
         "sulu-audience-targeting-bundle": "file:src/Sulu/Bundle/AudienceTargetingBundle/Resources/js",
         "sulu-category-bundle": "file:src/Sulu/Bundle/CategoryBundle/Resources/js",
         "sulu-contact-bundle": "file:src/Sulu/Bundle/ContactBundle/Resources/js",
-        "sulu-custom-url-bundle": "file:packages/custom-url/src/Resources/js",
+        "sulu-custom-url-bundle": "file:packages/custom-url/assets/js",
         "sulu-location-bundle": "file:src/Sulu/Bundle/LocationBundle/Resources/js",
         "sulu-media-bundle": "file:src/Sulu/Bundle/MediaBundle/Resources/js",
         "sulu-page-bundle": "file:packages/page/assets/js",

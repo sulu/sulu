@@ -110,7 +110,7 @@ class CustomUrlController implements SecuredControllerInterface
             /** @var string $title */
             $title = $requestData['title'];
             if (\str_contains($e->getMessage(), 'Duplicate entry \'' . $title)) {
-                return $this->createErrorResponse(\sprintf('Title "%s" already in use', $this->title), 9001);
+                return $this->createErrorResponse(\sprintf('Title "%s" already in use', $title), 9001);
             } else {
                 return new JsonResponse(null, Response::HTTP_CONFLICT);
             }
@@ -145,7 +145,7 @@ class CustomUrlController implements SecuredControllerInterface
             /** @var string $title */
             $title = $requestData['title'];
             if (\str_contains($e->getMessage(), 'Duplicate entry \'' . $title)) {
-                return $this->createErrorResponse(\sprintf('Title "%s" already in use', $this->title), 9001);
+                return $this->createErrorResponse(\sprintf('Title "%s" already in use', $title), 9001);
             } else {
                 return new JsonResponse(null, Response::HTTP_CONFLICT);
             }
@@ -193,7 +193,7 @@ class CustomUrlController implements SecuredControllerInterface
         return new JsonResponse([
             'code' => $errorCode,
             'errorMessage' => $errorMessage,
-        ]);
+        ], status: Response::HTTP_BAD_REQUEST);
     }
 
     public function getSecurityContext(): string

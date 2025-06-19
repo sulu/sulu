@@ -113,7 +113,7 @@ final class CustomUrlTrashItemHandler implements
         }
 
         $customUrl->setCreator($data['creator']);
-        $customUrl->setCreated(new \DateTime($data['created']));
+        $customUrl->setCreated(new \DateTimeImmutable($data['created']));
 
         $this->entityManager->persist($customUrl);
         $this->documentDomainEventCollector->collect(new CustomUrlRestoredEvent($customUrl, $data));

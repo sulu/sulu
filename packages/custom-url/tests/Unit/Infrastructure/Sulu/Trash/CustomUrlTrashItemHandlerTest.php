@@ -30,6 +30,9 @@ class CustomUrlTrashItemHandlerTest extends SuluTestCase
         $container = static::getContainer();
         $this->entityManager = $container->get(EntityManagerInterface::class);
 
+        if (!$container->has(CustomUrlTrashItemHandler::class)) {
+            $this->markTestSkipped('Enable the TrashBundle to run this test');
+        }
         /** @var CustomUrlTrashItemHandler $trashItemHandler */
         $trashItemHandler = $container->get(CustomUrlTrashItemHandler::class);
         $this->customUrlTrashItemHandler = $trashItemHandler;
@@ -45,8 +48,8 @@ class CustomUrlTrashItemHandlerTest extends SuluTestCase
         $originalCustomUrl->setWebspace('sulu_io');
         $originalCustomUrl->setCreator($user);
         $originalCustomUrl->setChanger($user);
-        $originalCustomUrl->setCreated(new \DateTime('2025-04-20T00:00:00+00:00'));
-        $originalCustomUrl->setChanged(new \DateTime('2025-04-20T00:00:00+00:00'));
+        $originalCustomUrl->setCreated(new \DateTimeImmutable('2025-04-20T00:00:00+00:00'));
+        $originalCustomUrl->setChanged(new \DateTimeImmutable('2025-04-20T00:00:00+00:00'));
         $originalCustomUrl->setBaseDomain('sulu-test.localhost/*/*');
         $originalCustomUrl->setDomainParts(['custom-path-1', 'custom-path-2']);
         $originalCustomUrl->setCanonical(true);

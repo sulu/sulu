@@ -139,7 +139,7 @@ class CustomUrlControllerTest extends SuluTestCase
         $this->assertResponseSnapshot(
             'custom_url_post_with_already_existing_title.json',
             $response,
-            Response::HTTP_BAD_REQUEST,
+            Response::HTTP_CONFLICT,
         );
     }
 
@@ -175,7 +175,7 @@ class CustomUrlControllerTest extends SuluTestCase
                 baseDomain: '*.sulu.io/*',
                 domainParts: ['foo', 'bar'],
             ),
-            Response::HTTP_BAD_REQUEST,
+            Response::HTTP_CONFLICT,
             'custom_url_put_update_with_already_existing_title.json',
         ];
 

@@ -10,9 +10,6 @@
 
         <field name="path" type="string" />
 
-        <field name="created" type="datetime" />
-        <field name="changed" type="datetime" />
-
         <many-to-one field="customUrl" target-entity="Sulu\CustomUrl\Domain\Model\CustomUrlInterface" inversed-by="routes">
             <join-column name="customUrl" referenced-column-name="id" nullable="false" on-delete="cascade" />
          </many-to-one>
