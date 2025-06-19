@@ -36,7 +36,7 @@ final class CreateCustomUrlMessageHandler
     {
         $data = $message->getData();
 
-        $customUrl = $this->customUrlRepository->create();
+        $customUrl = $this->customUrlRepository->createNew();
 
         foreach ($this->customUrlMappers as $customUrlMapper) {
             $customUrlMapper->mapCustomUrlData($customUrl, $data);

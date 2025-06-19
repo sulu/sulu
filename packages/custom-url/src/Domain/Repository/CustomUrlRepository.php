@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\CustomUrl\Infrastructure\Doctrine\Repository;
+namespace Sulu\CustomUrl\Domain\Repository;
 
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -17,6 +17,8 @@ use Sulu\Component\Content\Document\Behavior\WebspaceBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\UuidBehavior;
 use Sulu\CustomUrl\Domain\Model\CustomUrl;
 use Sulu\CustomUrl\Domain\Model\CustomUrlInterface;
+use Sulu\CustomUrl\Infrastructure\Doctrine\Repository\CustomUrlRepositoryInterface;
+use Sulu\CustomUrl\Infrastructure\Doctrine\Repository\CustomUrlRouteRepositoryInterface;
 
 /**
  * @extends ServiceEntityRepository<CustomUrlInterface>
@@ -30,9 +32,9 @@ class CustomUrlRepository extends ServiceEntityRepository implements CustomUrlRe
         parent::__construct($registry, CustomUrl::class);
     }
 
-    public function create(): CustomUrlInterface
+    public function createNew(?string $uuid): CustomUrlInterface
     {
-        return new CustomUrl();
+        return new CustomUrl($uuid);
     }
 
     public function add(CustomUrlInterface $customUrl): void
@@ -41,7 +43,7 @@ class CustomUrlRepository extends ServiceEntityRepository implements CustomUrlRe
         $this->customUrlRouteRepository->addRoute($customUrl);
     }
 
-    public function findNewestPublishedByUrl(string $url, ?string $locale = null): ?CustomUrlInterface
+    public function findByUrlNewestPublished(string $url, ?string $locale = null): ?CustomUrlInterface
     {
         /** @var CustomUrlInterface|null $customUrl */
         $customUrl = $this->createQueryBuilder('c')

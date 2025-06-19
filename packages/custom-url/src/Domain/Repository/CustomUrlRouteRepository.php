@@ -11,43 +11,42 @@ declare(strict_types=1);
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\CustomUrl\Infrastructure\Doctrine\Repository;
+namespace Sulu\CustomUrl\Domain\Repository;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Sulu\CustomUrl\Domain\Exception\MismatchingDomainPartException;
 use Sulu\CustomUrl\Domain\Model\CustomUrlInterface;
 use Sulu\CustomUrl\Domain\Model\CustomUrlRoute;
+use Sulu\CustomUrl\Infrastructure\Doctrine\Repository\CustomUrlRouteRepositoryInterface;
 
 class CustomUrlRouteRepository implements CustomUrlRouteRepositoryInterface
 {
-    public function __construct(
-        private EntityManagerInterface $entityManager,
-    ) {
-    }
-
     /**
      * @return EntityRepository<CustomUrlRoute>
      */
-    private function getRepository(): EntityRepository
-    {
-        return $this->entityManager->getRepository(CustomUrlRoute::class);
+    private EntityRepository $repository;
+
+    public function __construct(
+        EntityManagerInterface $entityManager,
+    ) {
+        $this->repository = $entityManager->getRepository(CustomUrlRoute::class);
     }
 
     public function count(): int
     {
-        return $this->getRepository()->count([]);
+        return $this->repository->count([]);
     }
 
     public function findByCustomUrl(CustomUrlInterface $customUrl): array
     {
-        return $this->getRepository()->findBy(['customUrl' => $customUrl]);
+        return $this->repository->findBy(['customUrl' => $customUrl]);
     }
 
     public function findHistoryRoutes(CustomUrlInterface|string $customUrl): array
     {
         /** @var array{id: string, resourcelocator: string, created: \DateTimeInterface} $historicRoutes */
-        $historicRoutes = $this->getRepository()
+        $historicRoutes = $this->repository
             ->createQueryBuilder('r')
             ->select(['r.uuid as id', 'r.path as resourcelocator', 'r.created'])
             ->andWhere('r.customUrl = :customUrl')
@@ -86,7 +85,7 @@ class CustomUrlRouteRepository implements CustomUrlRouteRepositoryInterface
         }
 
         /** @var CustomUrlRoute|null $existingRoute */
-        $existingRoute = $this->getRepository()
+        $existingRoute = $this->repository
             ->findOneBy(['customUrl' => $customUrl, 'path' => $newUrl]);
         if (null !== $existingRoute) {
             $existingRoute->setCreated(new \DateTime());
@@ -102,7 +101,7 @@ class CustomUrlRouteRepository implements CustomUrlRouteRepositoryInterface
 
     public function deleteAll(array $ids, string $webspaceKey): void
     {
-        $this->getRepository()
+        $this->repository
             ->createQueryBuilder('r')
             ->delete()
             ->join('r.customUrl', 'c')

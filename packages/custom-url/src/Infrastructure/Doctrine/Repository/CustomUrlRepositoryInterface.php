@@ -23,7 +23,7 @@ use Sulu\CustomUrl\Domain\Model\CustomUrlInterface;
  */
 interface CustomUrlRepositoryInterface extends ServiceEntityRepositoryInterface, ObjectRepository
 {
-    public function create(): CustomUrlInterface;
+    public function createNew(?string $uuid): CustomUrlInterface;
 
     public function add(CustomUrlInterface $customUrl): void;
 
@@ -34,5 +34,5 @@ interface CustomUrlRepositoryInterface extends ServiceEntityRepositoryInterface,
 
     public function remove(CustomUrlInterface $customUrl): void;
 
-    public function findNewestPublishedByUrl(string $url, ?string $locale = null): ?CustomUrlInterface;
+    public function findByUrlNewestPublished(string $url, ?string $locale = null): ?CustomUrlInterface;
 }

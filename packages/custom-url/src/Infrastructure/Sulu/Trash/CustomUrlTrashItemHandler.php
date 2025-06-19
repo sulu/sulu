@@ -106,7 +106,7 @@ final class CustomUrlTrashItemHandler implements
         $data = $trashItem->getRestoreData();
         $data['published'] = false;
 
-        $customUrl = $this->customUrlRepository->create();
+        $customUrl = $this->customUrlRepository->createNew();
         $customUrl->setId($id);
         foreach ($this->customUrlMappers as $customUrlMapper) {
             $customUrlMapper->mapCustomUrlData($customUrl, $data);
