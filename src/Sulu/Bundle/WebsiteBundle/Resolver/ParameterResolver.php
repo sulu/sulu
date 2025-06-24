@@ -146,7 +146,7 @@ class ParameterResolver implements ParameterResolverInterface
             if (empty($segmentData = $structureData['extension']['excerpt']['segments']) || $segmentKey === $segmentData[$structureData['webspaceKey']]) {
                 $segmentUrl = $this->segmentSwitchUrl . '?segment=' . $segmentKey . '&url=' . $url;
             } else {
-                $segmentUrl = $this->webspaceManager->findUrlByResourceLocator('/', null, $requestAnalyzer->getCurrentLocalization()->getLocale());
+                $segmentUrl = $this->segmentSwitchUrl . '?segment=' . $segmentKey . '&url=' . $this->webspaceManager->findUrlByResourceLocator('/', null, $requestAnalyzer->getCurrentLocalization()->getLocale());
             }
             $segments[$segmentKey] = [
                 'title' => $segment->getTitle($requestAnalyzer->getCurrentLocalization()->getLocale()),
