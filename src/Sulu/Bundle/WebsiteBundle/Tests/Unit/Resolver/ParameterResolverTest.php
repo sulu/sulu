@@ -539,7 +539,7 @@ class ParameterResolverTest extends TestCase
             'segments' => [
                 's' => [
                     'title' => 'Summer',
-                    'url' => '/en',
+                    'url' => '_sulu_segment_switch?segment=s&url=/en',
                 ],
                 'w' => [
                     'title' => 'Winter',
