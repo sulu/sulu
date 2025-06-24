@@ -29,9 +29,9 @@ class SnippetArea implements SnippetAreaInterface
     private ?Snippet $snippet = null;
 
     public function __construct(
-        ?string $uuid = null,
         string $areaKey,
-        string $webspaceKey
+        string $webspaceKey,
+        ?string $uuid = null,
     ) {
         $this->uuid = $uuid ?: Uuid::v7()->__toString();
 

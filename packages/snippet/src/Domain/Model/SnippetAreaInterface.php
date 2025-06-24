@@ -16,4 +16,16 @@ namespace Sulu\Snippet\Domain\Model;
 interface SnippetAreaInterface
 {
     public const RESOURCE_KEY = 'snippet_areas';
+
+    public function setWebspaceKey(string $webspaceKey): void;
+
+    public function getWebspaceKey(): string;
+
+    public function setAreaKey(string $areaKey): void;
+
+    public function getAreaKey(): string;
+
+    public function setSnippet(Snippet $snippet): void;
+
+    public function getSnippet(): ?Snippet;
 }

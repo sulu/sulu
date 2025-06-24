@@ -209,6 +209,9 @@ class DoctrineListBuilder extends AbstractListBuilder
         return 0;
     }
 
+    /**
+     * @return array<mixed>
+     */
     public function execute()
     {
         parent::execute();

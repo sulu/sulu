@@ -16,7 +16,6 @@ namespace Sulu\Snippet\Infrastructure\Doctrine\Repository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Sulu\Snippet\Domain\Model\SnippetAreaInterface;
-use Sulu\Snippet\Domain\Model\SnippetInterface;
 use Sulu\Snippet\Domain\Repository\SnippetAreaRepositoryInterface;
 
 class SnippetAreaRepository implements SnippetAreaRepositoryInterface
@@ -35,14 +34,15 @@ class SnippetAreaRepository implements SnippetAreaRepositoryInterface
         $this->snippetAreaClassName = $this->entityRepository->getClassName();
     }
 
-    public function createNew(?string $uuid = null, string $areaKey, string $webspaceKey): SnippetAreaInterface
+    public function createNew(string $areaKey, string $webspaceKey, ?string $uuid): SnippetAreaInterface
     {
+        /** @var class-string<SnippetAreaInterface> $className */
         $className = $this->snippetAreaClassName;
 
-        return new $className($uuid, $areaKey, $webspaceKey);
+        return new $className($areaKey, $webspaceKey, $uuid);
     }
 
-    public function findOneByWebspaceAndKey(string $webspaceKey, string $areaKey): ?SnippetInterface
+    public function findOneByWebspaceAndKey(string $webspaceKey, string $areaKey): ?SnippetAreaInterface
     {
         return $this->entityRepository->findOneBy(['webspaceKey' => $webspaceKey, 'areaKey' => $areaKey]);
     }

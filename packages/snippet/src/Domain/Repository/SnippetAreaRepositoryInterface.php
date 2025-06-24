@@ -14,16 +14,15 @@ declare(strict_types=1);
 namespace Sulu\Snippet\Domain\Repository;
 
 use Sulu\Snippet\Domain\Model\SnippetAreaInterface;
-use Sulu\Snippet\Domain\Model\SnippetInterface;
 
 /**
  * Implementation can be found in the following class:.
  *
- * @see Sulu\Snippet\Infrastructure\Doctrine\Repository\SnippetRepository
+ * @see Sulu\Snippet\Infrastructure\Doctrine\Repository\SnippetAreaRepository
  */
 interface SnippetAreaRepositoryInterface
 {
-    public function createNew(?string $uuid = null, string $areaKey, string $webspaceKey): SnippetAreaInterface;
+    public function createNew(string $areaKey, string $webspaceKey, ?string $uuid): SnippetAreaInterface;
 
-    public function findOneByWebspaceAndKey(string $webspaceKey, string $areaKey): ?SnippetInterface;
+    public function findOneByWebspaceAndKey(string $webspaceKey, string $areaKey): ?SnippetAreaInterface;
 }

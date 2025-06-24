@@ -19,11 +19,12 @@ class ModifySnippetAreaMessage
     private string $areaKey;
 
     /**
-     * @var array{ uuid: string } */
+     * @var array{ uuid: string }
+     */
     private array $snippet;
 
     /**
-     * @param array<string,string> $requestData
+     * @param array{webspace: string, areaKey: string, snippet: array{uuid: string}} $requestData
      */
     public function __construct(array $requestData)
     {
@@ -42,6 +43,9 @@ class ModifySnippetAreaMessage
         return $this->areaKey;
     }
 
+    /**
+     * @return array{ uuid: string }
+     */
     public function getSnippet(): array
     {
         return $this->snippet;

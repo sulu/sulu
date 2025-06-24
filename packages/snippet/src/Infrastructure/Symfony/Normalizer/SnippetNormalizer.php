@@ -15,11 +15,19 @@ namespace Sulu\Snippet\Infrastructure\Symfony\Normalizer;
 
 use Sulu\Snippet\Domain\Model\SnippetArea;
 use Sulu\Snippet\Domain\Model\SnippetAreaInterface;
+use Sulu\Snippet\Domain\Model\SnippetInterface;
+use Sulu\Snippet\Infrastructure\Symfony\CompilerPass\SnippetAreaCompilerPass;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 
+/**
+ * @phpstan-import-type Entry from SnippetAreaCompilerPass
+ */
 final class SnippetNormalizer implements NormalizerInterface
 {
+    /**
+     * @param array<string, Entry> $snippetAreas
+     */
     public function __construct(
         private ObjectNormalizer $objectNormalizer,
         private array $snippetAreas,
@@ -49,7 +57,7 @@ final class SnippetNormalizer implements NormalizerInterface
         $normalizedData['key'] = $normalizedData['areaKey'];
         unset($normalizedData['areaKey'], $normalizedData['webspaceKey']);
 
-        /** @var SnippetInterface $snippet */
+        /** @var SnippetInterface|null $snippet */
         $snippet = $data->getSnippet();
         $normalizedData['defaultTitle'] = $snippet?->getTitle();
         $normalizedData['defaultUuid'] = $snippet?->getId();

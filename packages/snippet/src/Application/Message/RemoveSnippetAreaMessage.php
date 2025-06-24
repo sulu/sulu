@@ -15,10 +15,16 @@ namespace Sulu\Snippet\Application\Message;
 
 class RemoveSnippetAreaMessage
 {
-    public function __construct(
-        private string $webspaceKey,
-        private string $areaKey,
-    ) {
+    private string $webspaceKey;
+    private string $areaKey;
+
+    /**
+     * @param array<string, string> $requestData
+     */
+    public function __construct(array $requestData)
+    {
+        $this->webspaceKey = $requestData['webspaceKey'];
+        $this->areaKey = $requestData['areaKey'];
     }
 
     public function getWebspaceKey(): string

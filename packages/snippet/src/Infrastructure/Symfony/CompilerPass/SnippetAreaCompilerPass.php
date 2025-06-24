@@ -17,7 +17,7 @@ use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
- * Get all snippets from compiler.
+ * @phpstan-type Entry array{key: string, template: string, title: array<string, string>, cache-invalidation: mixed}
  */
 class SnippetAreaCompilerPass implements CompilerPassInterface
 {
@@ -27,6 +27,7 @@ class SnippetAreaCompilerPass implements CompilerPassInterface
     {
         //$structureFactory = $container->get('sulu_page.structure.factory');
         //$structures = $structureFactory->getStructures(Structure::TYPE_SNIPPET);
+        $structures = [];
 
         $structure = new StructureMetadata();
         $structure->setName('car');
@@ -79,11 +80,11 @@ class SnippetAreaCompilerPass implements CompilerPassInterface
     }
 
     /**
-     * @param array{key: string, title: array<string>, cache-invalidation: string} $area
+     * @param Entry $area
      * @param array<string> $locales
      * @param array<string, string> $templateTitles
      *
-     * @return array{key: string, template: string, title: array<string, string>}
+     * @return Entry
      */
     private function getArea(
         ContainerBuilder $container,

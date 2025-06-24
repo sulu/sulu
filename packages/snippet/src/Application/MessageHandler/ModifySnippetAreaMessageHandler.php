@@ -39,7 +39,7 @@ class ModifySnippetAreaMessageHandler
             $this->entityManager->persist($snippetArea);
         }
 
-        $snippet = $snippet = $this->snippetRepository->getOneBy($message->getSnippet());
+        $snippet = $this->snippetRepository->getOneBy($message->getSnippet());
 
         $snippetArea->setSnippet($snippet);
     }

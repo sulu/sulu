@@ -31,6 +31,10 @@ class RemoveSnippetAreaMessageHandler
             'areaKey' => $message->getAreaKey(),
         ]);
 
+        if (null === $entityToDelete) {
+            return;
+        }
+
         $this->entityManager->remove($entityToDelete);
     }
 }

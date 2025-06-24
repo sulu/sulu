@@ -22,6 +22,7 @@ use Sulu\Snippet\Application\Message\ModifySnippetAreaMessage;
 use Sulu\Snippet\Application\Message\RemoveSnippetAreaMessage;
 use Sulu\Snippet\Domain\Model\SnippetArea;
 use Sulu\Snippet\Domain\Model\SnippetAreaInterface;
+use Sulu\Snippet\Infrastructure\Symfony\CompilerPass\SnippetAreaCompilerPass;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -35,22 +36,26 @@ use Webmozart\Assert\Assert;
  * @internal this class should not be instated by a project
  *           Use instead a request or response listener to
  *           extend the endpoints behaviours
+ *
+ * @phpstan-import-type Entry from SnippetAreaCompilerPass
  */
 final class SnippetAreaController
 {
     use HandleTrait;
 
     /**
-     * @param array<int,mixed> $snippetArea
+     * @param array<Entry> $snippetArea
      */
     public function __construct(
-        private MessageBusInterface $messageBus,
+        MessageBusInterface $messageBus,
         private NormalizerInterface $normalizer,
         private FieldDescriptorFactoryInterface $fieldDescriptorFactory,
         private DoctrineListBuilderFactoryInterface $listBuilderFactory,
         private RestHelperInterface $restHelper,
         private array $snippetArea,
     ) {
+        // Setting the message bus of the HandleTrait
+        $this->messageBus = $messageBus;
     }
 
     public function cgetAction(Request $request): Response
@@ -74,7 +79,6 @@ final class SnippetAreaController
         foreach ($results as $result) {
             $areaKey = $result['key'];
             $snippetAreas[$areaKey] = new SnippetArea(
-                null,
                 areaKey: $areaKey,
                 webspaceKey: $request->attributes->getString('webspace'),
             );
@@ -87,7 +91,6 @@ final class SnippetAreaController
             $key = $snippetArea['key'];
             if (!\array_key_exists($key, $snippetAreas)) {
                 $snippetAreas[$key] = new SnippetArea(
-                    null,
                     areaKey: $snippetArea['key'],
                     webspaceKey: $request->attributes->getString('webspace'),
                 );
@@ -97,9 +100,6 @@ final class SnippetAreaController
         $listRepresentation = new CollectionRepresentation(
             \array_values($snippetAreas),
             SnippetAreaInterface::RESOURCE_KEY,
-            (int) $listBuilder->getCurrentPage(),
-            (int) $listBuilder->getLimit(),
-            \count($snippetAreas),
         );
 
         return new JsonResponse($this->normalizer->normalize(
