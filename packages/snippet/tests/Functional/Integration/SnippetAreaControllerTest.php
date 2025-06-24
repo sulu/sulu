@@ -27,8 +27,6 @@ class SnippetAreaControllerTest extends SuluTestCase
 {
     use AssertSnapshotTrait;
 
-    private EntityManagerInterface $entityManager;
-
     protected KernelBrowser $client;
 
     protected function setUp(): void
@@ -43,11 +41,9 @@ class SnippetAreaControllerTest extends SuluTestCase
         $schemaTool = new SchemaTool($entityManager);
         $classes = $entityManager->getMetadataFactory()->getAllMetadata();
         $schemaTool->updateSchema($classes, false);
-
-        $this->entityManager = $entityManager;
     }
 
-    public function testGetList(): string
+    public function testGetList(): void
     {
         self::purgeDatabase();
 
@@ -76,7 +72,7 @@ class SnippetAreaControllerTest extends SuluTestCase
         ]);
 
         $response = $this->client->getResponse();
-        $id = \json_decode($response->getContent(), true)['id'];
+        $id = \json_decode((string) $response->getContent(), true)['id'];
 
         $this->client->jsonRequest('PUT', '/admin/api/snippet-areas/car', [
             'snippet' => ['uuid' => (string) $id],

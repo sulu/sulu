@@ -28,6 +28,6 @@ class RemoveSnippetAreaMessage
 
     public function getAreaKey(): string
     {
-        return $this->webspaceKey;
+        return $this->areaKey;
     }
 }
