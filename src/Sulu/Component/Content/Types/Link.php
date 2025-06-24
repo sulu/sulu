@@ -15,6 +15,9 @@ namespace Sulu\Component\Content\Types;
 
 use PHPCR\NodeInterface;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkProviderPoolInterface;
+use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
+use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreNotExistsException;
+use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStorePoolInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\SimpleContentType;
 
@@ -25,8 +28,10 @@ class Link extends SimpleContentType
 {
     public const LINK_TYPE_EXTERNAL = 'external';
 
-    public function __construct(private LinkProviderPoolInterface $providerPool)
-    {
+    public function __construct(
+        private LinkProviderPoolInterface $providerPool,
+        private ReferenceStorePoolInterface $referenceStorePool,
+    ) {
         parent::__construct('Link');
     }
 
@@ -112,6 +117,17 @@ class Link extends SimpleContentType
             $url = \sprintf('%s#%s', $url, $value['anchor']);
         }
 
+        $mediaReferenceStore = $this->getMediaReferenceStore($value['provider']);
+        if (!$mediaReferenceStore) {
+            return $url;
+        }
+
+        foreach ($linkItems as $linkItem) {
+            if ($linkItem->getId()) {
+                $mediaReferenceStore->add($linkItem->getId());
+            }
+        }
+
         return $url;
     }
 
@@ -126,5 +142,14 @@ class Link extends SimpleContentType
     ): void {
         $property->setValue(\json_decode($value, true));
         $this->write($node, $property, $userId, $webspaceKey, $languageCode, $segmentKey);
+    }
+
+    private function getMediaReferenceStore(string $provider): ?ReferenceStoreInterface
+    {
+        try {
+            return $this->referenceStorePool->getStore($provider);
+        } catch (ReferenceStoreNotExistsException $exception) {
+            return null;
+        }
     }
 }

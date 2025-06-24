@@ -165,6 +165,7 @@
         </service>
         <service id="sulu.content.type.link" class="%sulu.content.type.link.class%">
             <argument type="service" id="sulu_markup.link_tag.provider_pool"/>
+            <argument type="service" id="sulu_website.reference_store_pool"/>
             <tag name="sulu.content.type" alias="link"/>
             <tag name="sulu.content.export" format="1.2.xliff" translate="false" />
         </service>

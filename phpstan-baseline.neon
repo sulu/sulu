@@ -33961,7 +33961,7 @@ parameters:
 			path: src/Sulu/Component/Content/Compat/Serializer/PageBridgeHandler.php
 
 		-
-			message: "#^Parameter \\#2 \\$type of method JMS\\\\Serializer\\\\GraphNavigatorInterface\\:\\:accept\\(\\) expects array\\{name\\: string, params\\: array\\}\\|null, array\\{name\\: mixed\\} given\\.$#"
+			message: "#^Parameter \\#2 \\$type of method JMS\\\\Serializer\\\\GraphNavigatorInterface\\:\\:accept\\(\\) expects array\\{name\\: string, params\\: array\\}\\|null, array\\{name\\: mixed, param\\: null\\} given\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Compat/Serializer/PageBridgeHandler.php
 
