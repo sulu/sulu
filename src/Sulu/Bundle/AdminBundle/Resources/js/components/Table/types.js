@@ -7,6 +7,7 @@ export type ButtonConfig = {|
     disabled?: boolean,
     icon: string,
     onClick: ?(rowId: string | number, index: number) => void,
+    title?: string,
 |};
 
 export type Skin = 'dark' | 'light' | 'flat';
