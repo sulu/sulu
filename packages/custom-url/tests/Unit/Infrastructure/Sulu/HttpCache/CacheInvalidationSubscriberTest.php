@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\CustomUrl\Tests\Unit\Document\Subscriber;
+namespace Sulu\CustomUrl\Tests\Unit\Infrastructure\Sulu\HttpCache;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
@@ -26,7 +26,7 @@ use Sulu\CustomUrl\Infrastructure\Sulu\HttpCache\CacheInvalidationSubscriber;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-class InvalidationSubscriberTest extends TestCase
+class CacheInvalidationSubscriberTest extends TestCase
 {
     use ProphecyTrait;
     use SetGetPrivatePropertyTrait;
