@@ -192,7 +192,7 @@ class CustomUrlController implements SecuredControllerInterface
     {
         return new JsonResponse([
             'code' => $errorCode,
-            'errorMessage' => $errorMessage,
+            'message' => $errorMessage,
         ], status: Response::HTTP_BAD_REQUEST);
     }
 

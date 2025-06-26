@@ -175,13 +175,13 @@ class CustomUrlControllerTest extends SuluTestCase
                 baseDomain: '*.sulu.io/*',
                 domainParts: ['foo', 'bar'],
             ),
-            Response::HTTP_CONFLICT,
+            Response::HTTP_BAD_REQUEST,
             'custom_url_put_update_with_already_existing_title.json',
         ];
 
         yield 'Already existing path' => [
             self::createCustomUrlData(title: 'Test-1'),
-            Response::HTTP_CONFLICT,
+            Response::HTTP_BAD_REQUEST,
             'custom_url_put_update_with_conflicting_path.json',
         ];
     }
