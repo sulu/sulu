@@ -24,7 +24,7 @@ class SmartContentPropertyResolver implements PropertyResolverInterface
      *     categoryOperator?: 'AND'|'OR',
      *     tagOperator?: 'AND'|'OR',
      *     sortBy?: string,
-     *     sortDirection?: 'ASC'|'DESC',
+     *     sortMethod?: 'ASC'|'DESC',
      *     limitResult?: int|null,
      *     dataSource?: string|null,
      *     types?: string[]|null,
@@ -124,20 +124,19 @@ class SmartContentPropertyResolver implements PropertyResolverInterface
             // TODO exclude_duplicates
         ];
 
-        $sortBys = $data['sortBy'] ?? null ? [$data['sortBy'] = $data['sortDirection'] ?? 'ASC'] : null;
+        $sortBys = $data['sortBy'] ?? null ? [$data['sortBy'] => $data['sortMethod'] ?? 'ASC'] : null;
 
-        $data = [
-            ...$data,
+        $result = [
+            'value' => $data,
             'filters' => $filters,
             'sortBys' => $sortBys,
-            'provider' => $parameters['provider'],
             'parameters' => $parameters,
         ];
 
         return ContentView::createSmartResolvable(
-            data: $data,
+            data: $result,
             resourceLoaderKey: 'smart_content',
-            view: $data,
+            view: $result,
         );
     }
 

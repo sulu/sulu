@@ -403,6 +403,19 @@
             <tag name="sulu.smart_content.data_provider" alias="media"/>
         </service>
 
+        <service id="sulu_media.media_smart_content_provider" class="Sulu\Bundle\AdminBundle\SmartContent\MediaSmartContentProvider">
+            <argument type="service" id="doctrine.orm.default_entity_manager"/>
+            <argument type="service" id="translator"/>
+            <argument type="service" id="request_stack"/>
+            <argument type="service" id="sulu_core.webspace.webspace_manager"/>
+            <argument type="service" id="sulu_security.access_control_query_enhancer"/>
+            <argument type="service" id="security.helper" on-invalid="ignore"/>
+            <argument type="expression">container.hasParameter('sulu_audience_targeting.enabled')</argument>
+            <argument>%sulu_security.permissions%</argument>
+
+            <tag name="sulu_content.smart_content_provider" type="media"/>
+        </service>
+
         <service id="sulu_media.system_collections.cache" class="Sulu\Component\Cache\DataCache">
             <argument>%sulu.cache_dir%/system_collection.cache</argument>
         </service>

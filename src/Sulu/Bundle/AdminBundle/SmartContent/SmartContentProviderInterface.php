@@ -12,16 +12,18 @@ interface SmartContentProviderInterface
 
     /**
      * @param array<string, mixed> $filters
+     * @param array<string, mixed> $params
      */
-    public function countBy(array $filters): int;
+    public function countBy(array $filters, array $params = []): int;
 
     /**
      * @param array<string, mixed> $filters
      * @param array<string, string> $sortBys
+     * @param array<string, mixed> $params
      *
      * @return array<array{id: string, title: string}>
      */
-    public function findFlatBy(array $filters, array $sortBys): array;
+    public function findFlatBy(array $filters, array $sortBys, array $params = []): array;
 
     public function getType(): string;
 

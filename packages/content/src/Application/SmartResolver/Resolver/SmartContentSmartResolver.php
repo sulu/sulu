@@ -8,7 +8,6 @@ use Sulu\Bundle\AdminBundle\SmartContent\SmartContentProviderInterface;
 use Sulu\Content\Application\ContentResolver\Value\ContentView;
 use Sulu\Content\Application\ContentResolver\Value\SmartResolvable;
 use Symfony\Component\DependencyInjection\ServiceLocator;
-use Symfony\Component\HttpFoundation\RequestStack;
 
 class SmartContentSmartResolver implements SmartResolverInterface
 {
@@ -23,21 +22,24 @@ class SmartContentSmartResolver implements SmartResolverInterface
     public function resolve(SmartResolvable $resolvable, ?string $locale = null): ContentView
     {
         /** @var array{
+         *     value?: array<string, mixed>,
          *     filters?: array<string, mixed>,
          *     sortBys?: array<string, string>,
          *     parameters?: array<string, mixed>,
-         *     provider?: string,
          * } $data
          */
         $data = $resolvable->getData();
 
         $filters = $data['filters'] ?? [];
         $sortBys = $data['sortBys'] ?? [];
+        $parameters = $data['parameters'] ?? [];
+
         /** @var int|null $limit */
         $limit = $filters['limitResult'] ?? null;
         /** @var int $page */
         $page = $filters['page'] ?? 1;
-        $provider = $data['provider'] ?? null;
+
+        $provider = $parameters['provider'] ?? null;
 
         if (!\is_string($provider)) {
             throw new \InvalidArgumentException(\sprintf('The "provider" must be a string, %s given.', \gettype($provider)));
@@ -54,8 +56,9 @@ class SmartContentSmartResolver implements SmartResolverInterface
         }
         $smartContentProvider = $this->smartContentProviders->get($provider);
 
-        $result = $smartContentProvider->findFlatBy($filters, $sortBys);
-        $total = ($limit && \count($result) < $limit) ? \count($result) : $smartContentProvider->countBy($filters);
+        $params = ['value' => $data['value'] ?? null, ...$parameters];
+        $result = $smartContentProvider->findFlatBy($filters, $sortBys, $params);
+        $total = ($limit && \count($result) < $limit) ? \count($result) : $smartContentProvider->countBy($filters, $params);
 
         // TODO verify filters
         $view = [

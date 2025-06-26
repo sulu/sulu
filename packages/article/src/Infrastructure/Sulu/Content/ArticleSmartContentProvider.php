@@ -58,7 +58,7 @@ class ArticleSmartContentProvider implements SmartContentProviderInterface
      *     loadGhost?: bool,
      * } $filters
      */
-    public function countBy(array $filters): int
+    public function countBy(array $filters, array $params = []): int
     {
         /**
          * @var array{
@@ -110,7 +110,7 @@ class ArticleSmartContentProvider implements SmartContentProviderInterface
      *
      * @return array<array{id: string, title: string}>
      */
-    public function findFlatBy(array $filters, array $sortBys): array
+    public function findFlatBy(array $filters, array $sortBys, array $params = []): array
     {
         /**
          * @var array{
