@@ -393,7 +393,7 @@ class ContentResolver implements ContentResolverInterface
     {
         if ($depth > self::MAX_DEPTH) {
             // replace non resolved resources with null
-            \array_walk_recursive($content, function (&$value) {
+            \array_walk_recursive($content, function(&$value) {
                 if ($value instanceof ResolvableResource) {
                     // TODO add callback with exception in dev mode
                     $value = null;
@@ -408,7 +408,7 @@ class ContentResolver implements ContentResolverInterface
         }
 
         $hasReplaced = false;
-        \array_walk_recursive($content, function (&$value) use ($resolvedResources, &$hasReplaced) {
+        \array_walk_recursive($content, function(&$value) use ($resolvedResources, &$hasReplaced) {
             if ($value instanceof ResolvableInterface && isset($resolvedResources[$value->getResourceLoaderKey()][$value->getId()])) {
                 $value = $value->executeResourceCallback(
                     $resolvedResources[$value->getResourceLoaderKey()][$value->getId()],

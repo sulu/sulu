@@ -2,21 +2,29 @@
 
 declare(strict_types=1);
 
-namespace Sulu\Bundle\AdminBundle\SmartContent;
+/*
+ * This file is part of Sulu.
+ *
+ * (c) Sulu GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
+namespace Sulu\Bundle\MediaBundle\Infrastructure\Sulu\Content\SmartContent;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 use Sulu\Bundle\AdminBundle\SmartContent\Configuration\Builder;
 use Sulu\Bundle\AdminBundle\SmartContent\Configuration\ProviderConfigurationInterface;
+use Sulu\Bundle\AdminBundle\SmartContent\SmartContentProviderInterface;
 use Sulu\Bundle\MediaBundle\Admin\MediaAdmin;
 use Sulu\Bundle\MediaBundle\Entity\CollectionInterface;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\MediaBundle\Entity\MediaType;
 use Sulu\Bundle\MediaBundle\Infrastructure\Sulu\Content\ResourceLoader\MediaResourceLoader;
 use Sulu\Bundle\SecurityBundle\AccessControl\AccessControlQueryEnhancer;
-use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -26,10 +34,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class MediaSmartContentProvider implements SmartContentProviderInterface
 {
     /**
-     * @var EntityRepository<MediaInterface>
+     * @param mixed[]|null $permissions
      */
-    private EntityRepository $entityRepository;
-
     public function __construct(
         private EntityManagerInterface $entityManager,
         private TranslatorInterface $translator,
@@ -40,7 +46,6 @@ class MediaSmartContentProvider implements SmartContentProviderInterface
         private bool $hasAudienceTargeting = false,
         private ?array $permissions = null,
     ) {
-        $this->entityRepository = $entityManager->getRepository(MediaInterface::class);
     }
 
     public function getConfiguration(): ProviderConfigurationInterface
@@ -92,12 +97,6 @@ class MediaSmartContentProvider implements SmartContentProviderInterface
 
     public function countBy(array $filters, array $params = []): int
     {
-        $webspace = $this->webspaceManager->findWebspaceByKey($filters['webspaceKey'] ?? null);
-        $user = $this->security && $webspace && $webspace->hasWebsiteSecurity() ? $this->security->getUser() : null;
-        $permission = $webspace && $webspace->hasWebsiteSecurity() && $this->permissions
-            ? $this->permissions[PermissionTypes::VIEW]
-            : null;
-
         $alias = 'media';
         $queryBuilder = $this->createQueryBuilder($alias);
         $queryBuilder->select(\sprintf('COUNT(DISTINCT %s.id)', $alias));
@@ -107,10 +106,8 @@ class MediaSmartContentProvider implements SmartContentProviderInterface
             [],
             $filters['locale'],
             $this->getOptions($params),
-            $user,
             MediaInterface::class,
             $alias,
-            $permission,
         );
 
         return (int) $queryBuilder->getQuery()->getSingleScalarResult();
@@ -118,12 +115,6 @@ class MediaSmartContentProvider implements SmartContentProviderInterface
 
     public function findFlatBy(array $filters, array $sortBys, array $params = []): array
     {
-        $webspace = $this->webspaceManager->findWebspaceByKey($filters['webspaceKey'] ?? null);
-        $user = $this->security && $webspace && $webspace->hasWebsiteSecurity() ? $this->security->getUser() : null;
-        $permission = $webspace && $webspace->hasWebsiteSecurity() && $this->permissions
-            ? $this->permissions[PermissionTypes::VIEW]
-            : null;
-
         $page = $filters['page'] ?? 1;
         $pageSize = $filters['pageSize'] ?? null; // TODO do we need a limit ?
         $limit = $filters['limit'] ?? null;
@@ -131,21 +122,76 @@ class MediaSmartContentProvider implements SmartContentProviderInterface
 
         $alias = 'media';
         $queryBuilder = $this->createQueryBuilder($alias);
+        $queryBuilder->select($alias . '.id as id');
+        $queryBuilder->addSelect('fileVersionMeta.title as title');
+        $queryBuilder->distinct();
+
         $this->enhanceQueryBuilder(
             $queryBuilder,
             $filters,
             $sortBys,
             $locale,
             $this->getOptions($params),
-            $user,
             MediaInterface::class,
             $alias,
-            $permission,
         );
 
-        $queryBuilder->select($alias . '.id as id');
-        $queryBuilder->addSelect('fileVersionMeta.title as title');
-        $queryBuilder->distinct();
+        if (null !== $pageSize && $pageSize > 0) {
+            $pageOffset = ($page - 1) * $pageSize;
+            $restLimit = $limit - $pageOffset;
+
+            $queryBuilder->setMaxResults($restLimit);
+            $queryBuilder->setFirstResult($pageOffset);
+        } elseif (null !== $limit) {
+            $queryBuilder->setMaxResults($limit);
+        }
+
+        $result = $queryBuilder->getQuery()->getArrayResult();
+
+        return \array_map(
+            function(array $item) {
+                // TODO image
+                return [
+                    'id' => $item['id'],
+                    'title' => $item['title'],
+                ];
+            },
+            $result,
+        );
+    }
+
+    /**
+     * Resolves filter and returns id array for second query.
+     *
+     * @param array $filters array of filters: tags, tagOperator
+     * @param mixed[] $options
+     * @param class-string $entityClass
+     */
+    private function enhanceQueryBuilder(
+        QueryBuilder $queryBuilder,
+        array $filters,
+        array $sortBys,
+        string $locale,
+        array $options = [],
+        ?string $entityClass = null,
+        ?string $entityAlias = null,
+    ): void {
+        $alias = 'media';
+
+        $webspace = $this->webspaceManager->findWebspaceByKey($filters['webspaceKey'] ?? null);
+        $user = $this->security && $webspace && $webspace->hasWebsiteSecurity() ? $this->security->getUser() : null;
+        $permission = $webspace && $webspace->hasWebsiteSecurity() && $this->permissions
+            ? $this->permissions[PermissionTypes::VIEW]
+            : null;
+
+        $queryBuilder
+            ->innerJoin($alias . '.files', 'file')
+            ->innerJoin(
+                'file.fileVersions',
+                'fileVersion',
+                Join::WITH,
+                'fileVersion.version = file.version',
+            );
 
         $queryBuilder
             ->leftJoin(
@@ -156,59 +202,6 @@ class MediaSmartContentProvider implements SmartContentProviderInterface
             )
             ->setParameter('locale', $locale);
 
-        foreach ($queryBuilder->getDQLPart('orderBy') ?? [] as $orderBy) {
-            foreach ($orderBy->getParts() as $order) {
-                [$column] = \explode(' ', $order);
-                $queryBuilder->addSelect($column);
-            }
-        }
-
-        if (null !== $pageSize && $pageSize > 0) {
-            $pageOffset = ($page - 1) * $pageSize;
-            $restLimit = $limit - $pageOffset;
-
-            // if limitation is smaller than the page size then use the rest limit else use page size plus 1 to
-            // determine has next page
-            $maxResults = (null !== $limit && $pageSize > $restLimit ? $restLimit : ($pageSize + 1));
-
-            if ($maxResults <= 0) {
-                return [];
-            }
-
-            $queryBuilder->setMaxResults($maxResults);
-            $queryBuilder->setFirstResult($pageOffset);
-        } elseif (null !== $limit) {
-            $queryBuilder->setMaxResults($limit);
-        }
-
-        return $queryBuilder->getQuery()->getArrayResult();
-    }
-
-    /**
-     * Resolves filter and returns id array for second query.
-     *
-     * @param array $filters array of filters: tags, tagOperator
-     * @param mixed[] $options
-     * @param class-string $entityClass
-     *
-     * @return int[]|string[]
-     */
-    private function enhanceQueryBuilder(
-        QueryBuilder $queryBuilder,
-        array $filters,
-        array $sortBys,
-        string $locale,
-        array $options = [],
-        ?UserInterface $user = null,
-        ?string $entityClass = null,
-        ?string $entityAlias = null,
-        ?int $permission = null,
-    ) {
-        $alias = 'media';
-
-        $tagRelation = $this->appendTagsRelation($queryBuilder, $alias);
-        $categoryRelation = $this->appendCategoriesRelation($queryBuilder, $alias);
-
         foreach ($sortBys as $sortBy => $sortMethod) {
             if (!\is_string($sortBy) || !\is_string($sortMethod)) {
                 continue;
@@ -217,20 +210,41 @@ class MediaSmartContentProvider implements SmartContentProviderInterface
             $queryBuilder->addSelect($sortBy);
         }
 
-        $parameter = $this->append($queryBuilder, $alias, $locale, $options);
-
-        if (isset($filters['dataSource'])) {
-            $includeSubFolders = ($filters['includeSubFolders'] ?? null) === 'true' || ($filters['includeSubFolders'] ?? null) === true;
-            $parameter = \array_merge(
-                $parameter,
-                $this->appendDatasource($filters['dataSource'], $includeSubFolders, $queryBuilder, $alias),
-            );
+        if (\array_key_exists('mimetype', $options)) {
+            $queryBuilder
+                ->andWhere('fileVersion.mimeType = :mimeType')
+                ->setParameter('mimeType', $options['mimetype']);
+        }
+        if (\array_key_exists('type', $options)) {
+            $queryBuilder
+                ->innerJoin($alias . '.type', 'type')
+                ->andWhere('type.name = :type')
+                ->setParameter('type', $options['type']);
         }
 
-        if (isset($filters['tagNames']) && !empty($filters['tagNames'])) {
+        if (($filters['dataSource'] ?? null) && '' !== $filters['dataSource']) {
+            $includeSubFolders = ($filters['includeSubFolders'] ?? null) === 'true' || ($filters['includeSubFolders'] ?? null) === true;
+            if (!$includeSubFolders) {
+                $queryBuilder->andWhere('collection.id = :collectionId');
+                $queryBuilder->setParameter('collectionId', $filters['dataSource']);
+            } else {
+                $queryBuilder
+                    ->innerJoin(
+                        //                    $this->collectionEntityName,
+                        CollectionInterface::class,// TODO should this be dynamic?
+                        'parentCollection',
+                        Join::WITH,
+                        'parentCollection.id = :collectionId',
+                    )
+                    ->where('collection.lft BETWEEN parentCollection.lft AND parentCollection.rgt')
+                    ->setParameter('collectionId', $filters['dataSource']);
+            }
+        }
+
+        if (($filters['tagNames'] ?? null) && [] !== $filters['tagNames']) {
             $this->addJoinFilter(
                 $queryBuilder,
-                $tagRelation,
+                'fileVersion.tags',
                 'filterTagName',
                 'name',
                 'tagNames',
@@ -239,11 +253,10 @@ class MediaSmartContentProvider implements SmartContentProviderInterface
             );
         }
 
-        if (isset($filters['types']) && !empty($filters['types'])) {
-            $typeRelation = $alias . '.type';
+        if (($filters['types'] ?? null) && [] !== $filters['types']) {
             $this->addJoinFilter(
                 $queryBuilder,
-                $typeRelation,
+                $alias . '.type',
                 'filterTypeId',
                 'id',
                 'typeId',
@@ -251,10 +264,10 @@ class MediaSmartContentProvider implements SmartContentProviderInterface
             );
         }
 
-        if (isset($filters['categoryIds']) && !empty($filters['categoryIds'])) {
+        if (($filters['categoryIds'] ?? null) && [] !== $filters['categoryIds']) {
             $this->addJoinFilter(
                 $queryBuilder,
-                $categoryRelation,
+                'fileVersion.categories',
                 'filterCategoryId',
                 'id',
                 'categoryIds',
@@ -263,17 +276,15 @@ class MediaSmartContentProvider implements SmartContentProviderInterface
             );
         }
 
-        if (isset($filters['targetGroupId']) && $filters['targetGroupId']) {
-            $targetGroupRelation = $this->appendTargetGroupRelation($queryBuilder, $alias);
-            $parameter = \array_merge(
-                $parameter,
-                $this->appendRelation(
-                    $queryBuilder,
-                    $targetGroupRelation,
-                    [$filters['targetGroupId']],
-                    'and',
-                    'targetGroupId',
-                ),
+        if (($filters['targetGroupId'] ?? null) && '' !== $filters['targetGroupId']) {
+            $this->addJoinFilter(
+                $queryBuilder,
+                'fileVersion.targetGroups',
+                'filterTargetGroupId',
+                'id',
+                'targetGroupIds',
+                [$filters['targetGroupId']],
+                'AND',
             );
         }
 
@@ -285,10 +296,6 @@ class MediaSmartContentProvider implements SmartContentProviderInterface
                 $entityClass,
                 $entityAlias,
             );
-        }
-
-        foreach ($parameter as $name => $value) {
-            $queryBuilder->setParameter($name, $value);
         }
     }
 
@@ -308,60 +315,6 @@ class MediaSmartContentProvider implements SmartContentProviderInterface
         }
 
         return \array_merge($options, \array_filter($queryOptions));
-    }
-
-    /**
-     * Append additional condition to query builder for "findByFilters" function.
-     *
-     * @param string $alias
-     * @param string $locale
-     * @param mixed[] $options
-     *
-     * @return array<string, int|string|int[]|string[]> parameters for query
-     */
-    protected function append(QueryBuilder $queryBuilder, $alias, $locale, $options = [])
-    {
-        $parameter = [];
-
-        if (\array_key_exists('mimetype', $options)) {
-            $queryBuilder
-                ->andWhere('fileVersion.mimeType = :mimeType');
-
-            $parameter['mimeType'] = $options['mimetype'];
-        }
-        if (\array_key_exists('type', $options)) {
-            $queryBuilder
-                ->innerJoin($alias . '.type', 'type')
-                ->andWhere('type.name = :type');
-
-            $parameter['type'] = $options['type'];
-        }
-
-        /** @var array<string, string> */
-        return $parameter;
-    }
-
-    /**
-     * Extension point to append relations to tag relation if it is not direct linked.
-     */
-    protected function appendTagsRelation(QueryBuilder $queryBuilder, string $alias): string
-    {
-        // TODO ????
-        $queryBuilder
-            ->innerJoin($alias . '.files', 'file')
-            ->innerJoin('file.fileVersions', 'fileVersion', 'WITH', 'fileVersion.version = file.version');
-
-        return 'fileVersion.tags';
-    }
-
-    protected function appendCategoriesRelation(QueryBuilder $queryBuilder, string $alias): string
-    {
-        return 'fileVersion.categories';
-    }
-
-    protected function appendTargetGroupRelation(QueryBuilder $queryBuilder, string $alias): string
-    {
-        return 'fileVersion.targetGroups';
     }
 
     /**
@@ -400,85 +353,6 @@ class MediaSmartContentProvider implements SmartContentProviderInterface
                 \sprintf('The operator "%s" is not supported for this filter.', $operator),
             );
         }
-    }
-
-    /**
-     * @return array<string, int|string|int[]|string[]> parameters for query
-     */
-    protected function appendDatasource(int|string $datasource, bool $includeSubFolders, QueryBuilder $queryBuilder, string $alias): array
-    {
-        if (!$includeSubFolders) {
-            $queryBuilder->andWhere('collection.id = :collectionId');
-        } else {
-            $queryBuilder
-                ->innerJoin(
-                    //                    $this->collectionEntityName,
-                    CollectionInterface::class,// TODO should this be dynamic?
-                    'parentCollection',
-                    Join::WITH,
-                    'parentCollection.id = :collectionId',
-                )
-                ->where('collection.lft BETWEEN parentCollection.lft AND parentCollection.rgt');
-        }
-
-        return ['collectionId' => $datasource];
-    }
-
-    /**
-     * Append tags to query builder with given operator.
-     *
-     * @param int[] $values
-     * @param string $operator "and" or "or"
-     *
-     * @return array<string, int|string|int[]|string[]> parameter for the query
-     */
-    private function appendRelation(QueryBuilder $queryBuilder, string $relation, array $values, string $operator, string $alias): array
-    {
-        return match ($operator) {
-            'or' => $this->appendRelationOr($queryBuilder, $relation, $values, $alias),
-            'and' => $this->appendRelationAnd($queryBuilder, $relation, $values, $alias),
-            default => [],
-        };
-    }
-
-    /**
-     * Append tags to query builder with "or" operator.
-     *
-     * @param int[] $values
-     *
-     * @return array<string, int|string|int[]|string[]> parameter for the query
-     */
-    private function appendRelationOr(QueryBuilder $queryBuilder, string $relation, array $values, string $alias): array
-    {
-        $queryBuilder->leftJoin($relation, $alias)
-            ->andWhere($alias . '.id IN (:' . $alias . ')');
-
-        return [$alias => $values];
-    }
-
-    /**
-     * Append tags to query builder with "and" operator.
-     *
-     * @param int[] $values
-     *
-     * @return array<string, int|string|int[]|string[]> parameter for the query
-     */
-    private function appendRelationAnd(QueryBuilder $queryBuilder, string $relation, array $values, string $alias): array
-    {
-        $parameter = [];
-        $expr = $queryBuilder->expr()->andX();
-
-        $length = \count($values);
-        for ($i = 0; $i < $length; ++$i) {
-            $queryBuilder->leftJoin($relation, $alias . $i);
-
-            $expr->add($queryBuilder->expr()->eq($alias . $i . '.id', ':' . $alias . $i));
-
-            $parameter[$alias . $i] = $values[$i];
-        }
-        $queryBuilder->andWhere($expr);
-
-        return $parameter;
     }
 
     public function createQueryBuilder($alias, $indexBy = null): QueryBuilder

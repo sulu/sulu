@@ -135,14 +135,14 @@ class AdminController
                 'fieldTypeOptions' => $this->fieldTypeOptionRegistry->toArray(),
                 'internalLinkTypes' => $this->linkProviderPool->getConfiguration(),
                 'localizations' => \array_values($this->localizationManager->getLocalizations()),
-                'navigation' => \array_map(function (NavigationItem $navigationItem) {
+                'navigation' => \array_map(function(NavigationItem $navigationItem) {
                     return $navigationItem->toArray();
                 }, \array_values($this->navigationRegistry->getNavigationItems())),
                 'routes' => $this->viewRegistry->getViews(),
                 'resources' => $this->resources,
-                'smartContent' => \array_map(function (SmartContentProviderInterface $dataProvider) {
+                'smartContent' => \array_map(function(SmartContentProviderInterface $dataProvider) {
                     return $dataProvider->getConfiguration();
-                }, iterator_to_array($this->smartContentProviders)),
+                }, \iterator_to_array($this->smartContentProviders)),
                 'user' => $user,
                 'contact' => $contact,
                 'collaborationEnabled' => $this->collaborationEnabled,

@@ -47,10 +47,10 @@ class SmartContentItemController extends AbstractRestController
     /**
      * Resolves filter for smart-content UI.
      *
+     * @return Response
+     *
      * @throws MissingParameterException
      * @throws DataProviderNotExistsException
-     *
-     * @return Response
      */
     public function getItemsAction(Request $request)
     {
@@ -98,7 +98,7 @@ class SmartContentItemController extends AbstractRestController
         $filters['webspaceKey'] = $this->getRequestParameter($request, 'webspace');
         $filters['datasource'] = $this->getRequestParameter($request, 'datasource');
         $filters['page'] = (int) $this->getRequestParameter($request, 'page', false, 1);
-        $filters['limit'] = ($filters['limitResult'] ?? $maxPerPage) ? (int)($filters['limitResult'] ?? $maxPerPage) : null;
+        $filters['limit'] = ($filters['limitResult'] ?? $maxPerPage) ? (int) ($filters['limitResult'] ?? $maxPerPage) : null;
         $filters = \array_filter($filters);
 
         $sortBys = [];
