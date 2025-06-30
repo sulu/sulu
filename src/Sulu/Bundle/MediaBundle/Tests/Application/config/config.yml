@@ -19,10 +19,6 @@ services:
         alias: sulu_document_manager.node_manager
         public: true
 
-    sulu_media_test.smart_content.data_provider.media.repository:
-        alias: sulu_media.smart_content.data_provider.media.repository
-        public: true
-
     sulu_media_test.system_collections.cache:
         alias: sulu_media.system_collections.cache
         public: true

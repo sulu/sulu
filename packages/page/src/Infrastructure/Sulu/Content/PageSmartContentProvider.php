@@ -52,7 +52,7 @@ class PageSmartContentProvider implements SmartContentProviderInterface
     public function __construct(
         private readonly DimensionContentQueryEnhancer $dimensionContentQueryEnhancer,
         private MetadataProviderInterface $formMetadataProvider,
-        private TokenStorageInterface $tokenStorage,
+        private ?TokenStorageInterface $tokenStorage,
         EntityManagerInterface $entityManager,
     ) {
         $this->entityRepository = $entityManager->getRepository(PageInterface::class);
@@ -300,7 +300,7 @@ class PageSmartContentProvider implements SmartContentProviderInterface
     private function getTypes(): array
     {
         $types = [];
-        if (null !== $this->tokenStorage->getToken()) {
+        if ($this->tokenStorage && null !== $this->tokenStorage->getToken()) {
             $user = $this->tokenStorage->getToken()->getUser();
 
             if (!$user instanceof UserInterface) {
