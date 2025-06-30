@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Sulu\Page\Tests\Functional\Infrastructure\Sulu\Content;
 
 use Sulu\Bundle\AdminBundle\SmartContent\SmartContentProviderInterface;
+use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Content\Domain\Model\WorkflowInterface;
 use Sulu\Content\Tests\Traits\CreateCategoryTrait;
@@ -55,7 +56,7 @@ class PageSmartContentProviderTest extends SuluTestCase
     private static array $pages = [];
 
     /**
-     * @var array<string, mixed>
+     * @var array<string, CategoryInterface>
      */
     private static array $categories = [];
 
@@ -65,14 +66,9 @@ class PageSmartContentProviderTest extends SuluTestCase
     private static array $tags = [];
 
     /**
-     * @var array<string, string>
+     * @var array<string>
      */
     private static array $webspaces = ['sulu_io', 'blog'];
-
-    /**
-     * @var array<string, string>
-     */
-    private static array $templates = ['default', 'homepage', 'landing_page', 'blog'];
 
     /**
      * @var array<string, string>
@@ -331,6 +327,21 @@ class PageSmartContentProviderTest extends SuluTestCase
         $this->assertCount(17, $result); // 15 pages + 2 parent pages
         $count = $this->smartContentProvider->countBy(['locale' => 'en']);
         $this->assertSame(17, $count);
+
+        $resultIds = \array_map(
+            fn ($page) => $page['id'],
+            $result,
+        );
+
+        // Verify all pages are returned
+        foreach (self::$pages as $page) {
+            $this->assertContains($page->getUuid(), $resultIds);
+        }
+
+        // Verify parent pages are returned
+        foreach (self::$parentPages as $parentPage) {
+            $this->assertContains($parentPage, $resultIds);
+        }
     }
 
     public function testFindFlatByCategoryFiltersSingleCategoryOR(): void
@@ -350,6 +361,25 @@ class PageSmartContentProviderTest extends SuluTestCase
                 'categoryOperator' => 'OR',
             ]),
         );
+
+        $resultIds = \array_map(
+            fn ($page) => $page['id'],
+            $result,
+        );
+
+        // Verify correct pages are returned
+        $expectedKeys = ['tech1', 'tech2', 'tech_health', 'business_tech', 'multi_category_multi_tag'];
+        foreach ($expectedKeys as $key) {
+            $this->assertContains(self::$pages[$key]->getUuid(), $resultIds, "Page '$key' should be in the result");
+        }
+
+        // Verify other pages are not returned
+        $allKeys = \array_keys(self::$pages);
+        $unexpectedKeys = \array_diff($allKeys, $expectedKeys);
+
+        foreach ($unexpectedKeys as $key) {
+            $this->assertNotContains(self::$pages[$key]->getUuid(), $resultIds, "Page '$key' should not be in the result");
+        }
     }
 
     public function testFindFlatByCategoryFiltersMultipleCategoriesOR(): void
@@ -370,6 +400,29 @@ class PageSmartContentProviderTest extends SuluTestCase
                 'categoryOperator' => 'OR',
             ]),
         );
+
+        $resultIds = \array_map(
+            fn ($page) => $page['id'],
+            $result,
+        );
+
+        // Verify correct pages are returned
+        $expectedKeys = [
+            'tech1', 'tech2', 'health1', 'health2', 'tech_health',
+            'sports_health', 'business_tech', 'multi_category_multi_tag',
+        ];
+
+        foreach ($expectedKeys as $key) {
+            $this->assertContains(self::$pages[$key]->getUuid(), $resultIds, "Page '$key' should be in the result");
+        }
+
+        // Verify other pages are not returned
+        $allKeys = \array_keys(self::$pages);
+        $unexpectedKeys = \array_diff($allKeys, $expectedKeys);
+
+        foreach ($unexpectedKeys as $key) {
+            $this->assertNotContains(self::$pages[$key]->getUuid(), $resultIds, "Page '$key' should not be in the result");
+        }
     }
 
     public function testFindFlatByCategoryFiltersSingleCategoryAND(): void
@@ -389,6 +442,17 @@ class PageSmartContentProviderTest extends SuluTestCase
                 'categoryOperator' => 'AND',
             ]),
         );
+
+        $resultIds = \array_map(
+            fn ($page) => $page['id'],
+            $result,
+        );
+
+        // Verify correct pages are returned
+        $expectedKeys = ['health1', 'health2', 'tech_health', 'sports_health', 'multi_category_multi_tag'];
+        foreach ($expectedKeys as $key) {
+            $this->assertContains(self::$pages[$key]->getUuid(), $resultIds, "Page '$key' should be in the result");
+        }
     }
 
     public function testFindFlatByCategoryFiltersMultipleCategoriesAND(): void
@@ -409,6 +473,17 @@ class PageSmartContentProviderTest extends SuluTestCase
                 'categoryOperator' => 'AND',
             ]),
         );
+
+        $resultIds = \array_map(
+            fn ($page) => $page['id'],
+            $result,
+        );
+
+        // Verify correct pages are returned
+        $expectedKeys = ['tech_health', 'multi_category_multi_tag'];
+        foreach ($expectedKeys as $key) {
+            $this->assertContains(self::$pages[$key]->getUuid(), $resultIds, "Page '$key' should be in the result");
+        }
     }
 
     public function testFindFlatByTagFiltersSingleTagOR(): void
@@ -429,6 +504,17 @@ class PageSmartContentProviderTest extends SuluTestCase
                 'tagOperator' => 'OR',
             ]),
         );
+
+        $resultIds = \array_map(
+            fn ($page) => $page['id'],
+            $result,
+        );
+
+        // Verify correct pages are returned
+        $expectedKeys = ['tech1', 'tech_health', 'multi_category_multi_tag'];
+        foreach ($expectedKeys as $key) {
+            $this->assertContains(self::$pages[$key]->getUuid(), $resultIds, "Page '$key' should be in the result");
+        }
     }
 
     public function testFindFlatByTagFiltersMultipleTagsOR(): void
@@ -449,6 +535,17 @@ class PageSmartContentProviderTest extends SuluTestCase
                 'tagOperator' => 'OR',
             ]),
         );
+
+        $resultIds = \array_map(
+            fn ($page) => $page['id'],
+            $result,
+        );
+
+        // Verify correct pages are returned
+        $expectedKeys = ['tech1', 'tech2', 'tech_health', 'business_tech', 'multi_category_multi_tag'];
+        foreach ($expectedKeys as $key) {
+            $this->assertContains(self::$pages[$key]->getUuid(), $resultIds, "Page '$key' should be in the result");
+        }
     }
 
     public function testFindFlatByTagFiltersSingleTagAND(): void
@@ -469,6 +566,17 @@ class PageSmartContentProviderTest extends SuluTestCase
                 'tagOperator' => 'AND',
             ]),
         );
+
+        $resultIds = \array_map(
+            fn ($page) => $page['id'],
+            $result,
+        );
+
+        // Verify correct pages are returned
+        $expectedKeys = ['health1', 'health2', 'tech_health', 'sports_health', 'multi_category_multi_tag'];
+        foreach ($expectedKeys as $key) {
+            $this->assertContains(self::$pages[$key]->getUuid(), $resultIds, "Page '$key' should be in the result");
+        }
     }
 
     public function testFindFlatByTagFiltersMultipleTagsAND(): void
@@ -489,6 +597,17 @@ class PageSmartContentProviderTest extends SuluTestCase
                 'tagOperator' => 'AND',
             ]),
         );
+
+        $resultIds = \array_map(
+            fn ($page) => $page['id'],
+            $result,
+        );
+
+        // Verify correct pages are returned
+        $expectedKeys = ['tech_health', 'multi_category_multi_tag'];
+        foreach ($expectedKeys as $key) {
+            $this->assertContains(self::$pages[$key]->getUuid(), $resultIds, "Page '$key' should be in the result");
+        }
     }
 
     public function testFindFlatByCategoryAndTagFilters(): void
@@ -509,6 +628,17 @@ class PageSmartContentProviderTest extends SuluTestCase
                 'tagNames' => [self::$tags['fitness']],
             ]),
         );
+
+        $resultIds = \array_map(
+            fn ($page) => $page['id'],
+            $result,
+        );
+
+        // Verify correct pages are returned
+        $expectedKeys = ['health1', 'health2', 'tech_health', 'sports_health', 'multi_category_multi_tag'];
+        foreach ($expectedKeys as $key) {
+            $this->assertContains(self::$pages[$key]->getUuid(), $resultIds, "Page '$key' should be in the result");
+        }
     }
 
     public function testFindFlatByLimitAndPageFirst(): void
@@ -530,6 +660,17 @@ class PageSmartContentProviderTest extends SuluTestCase
                 'page' => 1,
             ]),
         );
+
+        $resultIds = \array_map(
+            fn ($page) => $page['id'],
+            $result,
+        );
+
+        // When sorted by title, the first page should include "Cloud Computing" page
+        $this->assertContains(self::$pages['tech2']->getUuid(), $resultIds, "First page should include 'Cloud Computing'");
+
+        // With sorting by title ascending, verify the results are in the correct order
+        $this->assertSame('Cloud Computing', $result[0]['title']);
     }
 
     public function testFindFlatByLimitAndPageSecond(): void
@@ -551,6 +692,24 @@ class PageSmartContentProviderTest extends SuluTestCase
                 'page' => 2,
             ]),
         );
+
+        $resultIds = \array_map(
+            fn ($page) => $page['id'],
+            $result,
+        );
+
+        // When sorted by title, the second page should include pages that come alphabetically after the first 5
+        // Verify that some expected pages are in the second page
+        $expectedInSecondPage = ['sports1', 'entertainment2', 'health2', 'entertainment1'];
+        foreach ($expectedInSecondPage as $key) {
+            $this->assertContains(self::$pages[$key]->getUuid(), $resultIds, "Second page should include '$key'");
+        }
+
+        // First page pages should not be in the second page results
+        $notExpectedInSecondPage = ['tech2']; // 'Cloud Computing' should be on the first page
+        foreach ($notExpectedInSecondPage as $key) {
+            $this->assertNotContains(self::$pages[$key]->getUuid(), $resultIds, "Second page should not include '$key'");
+        }
     }
 
     public function testSortByTitleAsc(): void
@@ -560,10 +719,27 @@ class PageSmartContentProviderTest extends SuluTestCase
         ]);
 
         $this->assertCount(17, $result);
+
         // Check if first article is alphabetically first
         $this->assertStringContainsString('Cloud Computing', $result[0]['title']);
+        $this->assertSame(self::$pages['tech2']->getUuid(), $result[0]['id'], "First result should be 'Cloud Computing'");
+
         // Check if last article is alphabetically last
         $this->assertStringContainsString('Tennis Championship', $result[16]['title']);
+        $this->assertSame(self::$pages['sports2']->getUuid(), $result[16]['id'], "Last result should be 'Tennis Championship'");
+
+        // Verify the order of some key pages
+        $resultIds = \array_map(fn ($page) => $page['id'], $result);
+        $this->assertLessThan(
+            \array_search(self::$pages['health1']->getUuid(), $resultIds),
+            \array_search(self::$pages['tech2']->getUuid(), $resultIds),
+            "'Cloud Computing' should come before 'Fitness Tips'"
+        );
+        $this->assertLessThan(
+            \array_search(self::$pages['sports2']->getUuid(), $resultIds),
+            \array_search(self::$pages['sports1']->getUuid(), $resultIds),
+            "'Football Season' should come before 'Tennis Championship'"
+        );
     }
 
     public function testSortByTitleDesc(): void
@@ -573,10 +749,27 @@ class PageSmartContentProviderTest extends SuluTestCase
         ]);
 
         $this->assertCount(17, $result);
+
         // Check if first article is alphabetically last
         $this->assertStringContainsString('Tennis Championship', $result[0]['title']);
+        $this->assertSame(self::$pages['sports2']->getUuid(), $result[0]['id'], "First result should be 'Tennis Championship'");
+
         // Check if last article is alphabetically first
         $this->assertStringContainsString('Cloud Computing', $result[16]['title']);
+        $this->assertSame(self::$pages['tech2']->getUuid(), $result[16]['id'], "Last result should be 'Cloud Computing'");
+
+        // Verify the order of some key pages
+        $resultIds = \array_map(fn ($page) => $page['id'], $result);
+        $this->assertLessThan(
+            \array_search(self::$pages['tech2']->getUuid(), $resultIds),
+            \array_search(self::$pages['sports2']->getUuid(), $resultIds),
+            "'Tennis Championship' should come before 'Cloud Computing' in descending order"
+        );
+        $this->assertLessThan(
+            \array_search(self::$pages['health1']->getUuid(), $resultIds),
+            \array_search(self::$pages['entertainment1']->getUuid(), $resultIds),
+            "'Movie Reviews' should come before 'Fitness Tips' in descending order"
+        );
     }
 
     public function testSortByAuthoredAsc(): void
@@ -586,13 +779,35 @@ class PageSmartContentProviderTest extends SuluTestCase
         ]);
 
         $this->assertCount(17, $result);
-        $firstPage = \reset($result);
-        $lastPage = \end($result);
 
-        // First should have oldest authored date
-        $this->assertStringContainsString('Parent Page blog', $firstPage['title']);
+        // First should have oldest authored date (parent pages were created first)
+        $this->assertStringContainsString('Parent Page', $result[0]['title']);
+
+        // Check that pages are in correct chronological order
+        $resultIds = \array_map(fn ($page) => $page['id'], $result);
+
+        // Verify the pages with known authored dates are in correct order
+        $this->assertLessThan(
+            \array_search(self::$pages['tech1']->getUuid(), $resultIds),
+            \array_search(self::$parentPages['sulu_io'], $resultIds),
+            'Parent pages should come before regular pages in ascending authored order'
+        );
+
+        $this->assertLessThan(
+            \array_search(self::$pages['tech2']->getUuid(), $resultIds),
+            \array_search(self::$pages['tech1']->getUuid(), $resultIds),
+            "'Latest in Tech' should come before 'Cloud Computing' in ascending authored order"
+        );
+
+        $this->assertLessThan(
+            \array_search(self::$pages['multi_category_multi_tag']->getUuid(), $resultIds),
+            \array_search(self::$pages['entertainment_business']->getUuid(), $resultIds),
+            "'Entertainment Industry' should come before 'Digital Lifestyle' in ascending authored order"
+        );
+
         // Last should have newest authored date
-        $this->assertStringContainsString('Digital Lifestyle', $lastPage['title']);
+        $this->assertSame(self::$pages['multi_category_multi_tag']->getUuid(), $result[16]['id']);
+        $this->assertStringContainsString('Digital Lifestyle', $result[16]['title']);
     }
 
     public function testSortByAuthoredDesc(): void
@@ -602,13 +817,34 @@ class PageSmartContentProviderTest extends SuluTestCase
         ]);
 
         $this->assertCount(17, $result);
-        $firstPage = \reset($result);
-        $lastPage = \end($result);
 
-        // First should have oldest authored date
-        $this->assertStringContainsString('Digital Lifestyle', $firstPage['title']);
-        // Last should have newest authored date
-        $this->assertStringContainsString('Parent Page blog', $lastPage['title']);
+        // First should have newest authored date
+        $this->assertStringContainsString('Digital Lifestyle', $result[0]['title']);
+        $this->assertSame(self::$pages['multi_category_multi_tag']->getUuid(), $result[0]['id'], "First result should be 'Digital Lifestyle'");
+
+        // Check that pages are in correct reverse chronological order
+        $resultIds = \array_map(fn ($page) => $page['id'], $result);
+
+        // Verify the pages with known authored dates are in correct order
+        $this->assertLessThan(
+            \array_search(self::$pages['entertainment_business']->getUuid(), $resultIds),
+            \array_search(self::$pages['multi_category_multi_tag']->getUuid(), $resultIds),
+            "'Digital Lifestyle' should come before 'Entertainment Industry' in descending authored order"
+        );
+
+        $this->assertLessThan(
+            \array_search(self::$pages['tech1']->getUuid(), $resultIds),
+            \array_search(self::$pages['tech2']->getUuid(), $resultIds),
+            "'Cloud Computing' should come before 'Latest in Tech' in descending authored order"
+        );
+
+        // Last should have oldest authored date
+        $this->assertStringContainsString('Parent Page', $result[16]['title']);
+        // Check that one of the parent pages is last (they have the same authored date)
+        $this->assertTrue(
+            \in_array($result[16]['id'], self::$parentPages),
+            'Last result should be a parent page'
+        );
     }
 
     public function testFindFlatByWebspaceKeyFilter(): void
@@ -629,6 +865,29 @@ class PageSmartContentProviderTest extends SuluTestCase
             ]),
         );
 
+        $resultIds = \array_map(
+            fn ($page) => $page['id'],
+            $result,
+        );
+
+        // Verify all sulu_io pages are returned
+        $expectedKeys = [
+            'tech1', 'sports1', 'health1', 'business1',
+            'entertainment1', 'tech_health', 'business_tech', 'multi_category_multi_tag',
+        ];
+        foreach ($expectedKeys as $key) {
+            $this->assertContains(self::$pages[$key]->getUuid(), $resultIds, "Page '$key' should be in the sulu_io result");
+        }
+
+        // Verify the parent page is returned
+        $this->assertContains(self::$parentPages['sulu_io'], $resultIds, 'Parent page of sulu_io should be in the result');
+
+        // Verify blog pages are not returned
+        $blogPageKeys = ['tech2', 'sports2', 'health2', 'business2', 'entertainment2', 'sports_health', 'entertainment_business'];
+        foreach ($blogPageKeys as $key) {
+            $this->assertNotContains(self::$pages[$key]->getUuid(), $resultIds, "Page '$key' should not be in the sulu_io result");
+        }
+
         // Test filtering by blog webspace
         $result = $this->smartContentProvider->findFlatBy([
             'locale' => 'en',
@@ -644,6 +903,23 @@ class PageSmartContentProviderTest extends SuluTestCase
                 'webspaceKey' => 'blog',
             ]),
         );
+
+        $resultIds = \array_map(
+            fn ($page) => $page['id'],
+            $result,
+        );
+
+        // Verify all blog pages are returned
+        $expectedKeys = [
+            'tech2', 'sports2', 'health2', 'business2',
+            'entertainment2', 'sports_health', 'entertainment_business',
+        ];
+        foreach ($expectedKeys as $key) {
+            $this->assertContains(self::$pages[$key]->getUuid(), $resultIds, "Page '$key' should be in the blog result");
+        }
+
+        // Verify the parent page is returned
+        $this->assertContains(self::$parentPages['blog'], $resultIds, 'Parent page of blog should be in the result');
     }
 
     public function testFindFlatByTypesSingleTemplateFilter(): void
@@ -661,6 +937,27 @@ class PageSmartContentProviderTest extends SuluTestCase
                 'types' => ['default'],
             ]),
         );
+
+        $resultIds = \array_map(
+            fn ($page) => $page['id'],
+            $result,
+        );
+
+        // Verify all default template pages are returned
+        $expectedKeys = ['tech1', 'sports1', 'health1', 'business2', 'tech_health', 'multi_category_multi_tag'];
+        foreach ($expectedKeys as $key) {
+            $this->assertContains(self::$pages[$key]->getUuid(), $resultIds, "Page '$key' should be in the default template result");
+        }
+
+        // Verify parent pages are returned (they use default template)
+        $this->assertContains(self::$parentPages['sulu_io'], $resultIds, 'Parent page of sulu_io should be in the result');
+        $this->assertContains(self::$parentPages['blog'], $resultIds, 'Parent page of blog should be in the result');
+
+        // Verify non-default template pages are not returned
+        $nonDefaultTemplateKeys = ['tech2', 'sports2', 'health2', 'business1', 'entertainment1', 'entertainment2', 'sports_health', 'business_tech', 'entertainment_business'];
+        foreach ($nonDefaultTemplateKeys as $key) {
+            $this->assertNotContains(self::$pages[$key]->getUuid(), $resultIds, "Page '$key' should not be in the default template result");
+        }
     }
 
     public function testFindFlatByTypesMultipleTemplateFilter(): void
@@ -678,6 +975,33 @@ class PageSmartContentProviderTest extends SuluTestCase
                 'types' => ['blog', 'landing_page'],
             ]),
         );
+
+        $resultIds = \array_map(
+            fn ($page) => $page['id'],
+            $result,
+        );
+
+        // Verify all blog template pages are returned
+        $blogTemplateKeys = ['tech2', 'health2', 'entertainment1', 'sports_health'];
+        foreach ($blogTemplateKeys as $key) {
+            $this->assertContains(self::$pages[$key]->getUuid(), $resultIds, "Page '$key' should be in the blog template result");
+        }
+
+        // Verify all landing_page template pages are returned
+        $landingPageTemplateKeys = ['sports2', 'entertainment2', 'business_tech'];
+        foreach ($landingPageTemplateKeys as $key) {
+            $this->assertContains(self::$pages[$key]->getUuid(), $resultIds, "Page '$key' should be in the landing_page template result");
+        }
+
+        // Verify pages with other templates are not returned
+        $otherTemplateKeys = ['tech1', 'sports1', 'health1', 'business1', 'business2', 'tech_health', 'entertainment_business', 'multi_category_multi_tag'];
+        foreach ($otherTemplateKeys as $key) {
+            $this->assertNotContains(self::$pages[$key]->getUuid(), $resultIds, "Page '$key' should not be in the blog/landing_page template result");
+        }
+
+        // Verify parent pages are not returned (they use default template)
+        $this->assertNotContains(self::$parentPages['sulu_io'], $resultIds, 'Parent page of sulu_io should not be in the result');
+        $this->assertNotContains(self::$parentPages['blog'], $resultIds, 'Parent page of blog should not be in the result');
     }
 
     public function testFindFlatByTemplateKeysFilter(): void
@@ -772,7 +1096,6 @@ class PageSmartContentProviderTest extends SuluTestCase
 
         $messageBus = self::getContainer()->get('sulu_message_bus');
 
-        /** @var PageInterface $page */
         $envelope = $messageBus->dispatch(new Envelope(new CreatePageMessage(webspaceKey: $webspaceKey, parentId: $parentId, data: $data), [new EnableFlushStamp()]));
         /** @var HandledStamp[] $handledStamps */
         $handledStamps = $envelope->all(HandledStamp::class);

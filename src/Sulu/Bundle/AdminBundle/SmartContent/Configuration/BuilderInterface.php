@@ -16,7 +16,7 @@ namespace Sulu\Bundle\AdminBundle\SmartContent\Configuration;
  */
 interface BuilderInterface
 {
-    public static function create();
+    public static function create(): BuilderInterface;
 
     /**
      * Enables tags.
@@ -28,7 +28,10 @@ interface BuilderInterface
     public function enableTags(bool $enable = true);
 
     /**
-     * @param mixed[] $types
+     * @param array{
+     *     title: string,
+     *     type: string,
+     * }[] $types
      *
      * @return BuilderInterface
      */
@@ -87,7 +90,10 @@ interface BuilderInterface
     /**
      * Enables categories.
      *
-     * @param array $sorting array of arrays with keys column and title (translation key)
+     * @param array{
+     *     column: string,
+     *     title: string, // translation key
+     * }[] $sorting
      *
      * @return BuilderInterface
      */
@@ -97,6 +103,8 @@ interface BuilderInterface
      * Defines where the deep link when clicking on a smart content item should navigate to.
      *
      * @param array<string, string> $resultToView
+     *
+     * @return BuilderInterface
      */
     public function enableView(string $view, array $resultToView);
 

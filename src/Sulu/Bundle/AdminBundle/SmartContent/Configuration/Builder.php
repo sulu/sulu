@@ -18,34 +18,26 @@ use Sulu\Component\Content\Compat\PropertyParameter;
  */
 class Builder implements BuilderInterface
 {
-    /**
-     * Returns new builder instance.
-     *
-     * @return BuilderInterface
-     */
-    public static function create()
+    public static function create(): BuilderInterface
     {
         return new self();
     }
 
-    /**
-     * @var ProviderConfiguration
-     */
-    private $configuration;
+    private ProviderConfiguration $configuration;
 
     public function __construct()
     {
         $this->configuration = new ProviderConfiguration();
     }
 
-    public function enableTags(bool $enable = true)
+    public function enableTags(bool $enable = true): self
     {
         $this->configuration->setTags($enable);
 
         return $this;
     }
 
-    public function enableTypes(array $types = [])
+    public function enableTypes(array $types = []): self
     {
         $this->configuration->setTypes(
             \array_map(
@@ -59,35 +51,35 @@ class Builder implements BuilderInterface
         return $this;
     }
 
-    public function enableCategories(bool $enable = true)
+    public function enableCategories(bool $enable = true): self
     {
         $this->configuration->setCategories($enable);
 
         return $this;
     }
 
-    public function enableLimit(bool $enable = true)
+    public function enableLimit(bool $enable = true): self
     {
         $this->configuration->setLimit($enable);
 
         return $this;
     }
 
-    public function enablePagination(bool $enable = true)
+    public function enablePagination(bool $enable = true): self
     {
         $this->configuration->setPaginated($enable);
 
         return $this;
     }
 
-    public function enablePresentAs(bool $enable = true)
+    public function enablePresentAs(bool $enable = true): self
     {
         $this->configuration->setPresentAs($enable);
 
         return $this;
     }
 
-    public function enableDatasource(string $resourceKey, string $listKey, string $listAdapter)
+    public function enableDatasource(string $resourceKey, string $listKey, string $listAdapter): self
     {
         $this->configuration->setDatasourceResourceKey($resourceKey);
         $this->configuration->setDatasourceListKey($listKey);
@@ -96,14 +88,14 @@ class Builder implements BuilderInterface
         return $this;
     }
 
-    public function enableAudienceTargeting(bool $enable = true)
+    public function enableAudienceTargeting(bool $enable = true): self
     {
         $this->configuration->setAudienceTargeting($enable);
 
         return $this;
     }
 
-    public function enableSorting(array $sorting)
+    public function enableSorting(array $sorting): self
     {
         $this->configuration->setSorting(
             \array_map(
@@ -117,7 +109,7 @@ class Builder implements BuilderInterface
         return $this;
     }
 
-    public function enableView(string $view, array $resultToView)
+    public function enableView(string $view, array $resultToView): self
     {
         $this->configuration->setView($view);
         $this->configuration->setResultToView($resultToView);

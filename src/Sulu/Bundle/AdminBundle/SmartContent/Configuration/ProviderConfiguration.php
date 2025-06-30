@@ -85,7 +85,7 @@ class ProviderConfiguration implements ProviderConfigurationInterface
 
     public function hasDatasource(): bool
     {
-        return null !== $this->datasourceResourceKey && false !== $this->datasourceResourceKey;
+        return null !== $this->datasourceResourceKey && '' !== $this->datasourceResourceKey;
     }
 
     public function getDatasourceResourceKey(): ?string
@@ -93,12 +93,12 @@ class ProviderConfiguration implements ProviderConfigurationInterface
         return $this->datasourceResourceKey;
     }
 
-    public function setDatasourceResourceKey(string $datasourceResourceKey)
+    public function setDatasourceResourceKey(string $datasourceResourceKey): void
     {
         $this->datasourceResourceKey = $datasourceResourceKey;
     }
 
-    public function setDatasourceListKey(string $datasourceListKey)
+    public function setDatasourceListKey(string $datasourceListKey): void
     {
         $this->datasourceListKey = $datasourceListKey;
     }
@@ -113,7 +113,7 @@ class ProviderConfiguration implements ProviderConfigurationInterface
         return $this->datasourceAdapter;
     }
 
-    public function setDatasourceAdapter(string $datasourceAdapter)
+    public function setDatasourceAdapter(string $datasourceAdapter): void
     {
         $this->datasourceAdapter = $datasourceAdapter;
     }
@@ -123,7 +123,7 @@ class ProviderConfiguration implements ProviderConfigurationInterface
         return $this->audienceTargeting;
     }
 
-    public function setAudienceTargeting(bool $audienceTargeting)
+    public function setAudienceTargeting(bool $audienceTargeting): void
     {
         $this->audienceTargeting = $audienceTargeting;
     }
@@ -133,7 +133,7 @@ class ProviderConfiguration implements ProviderConfigurationInterface
         return $this->tags;
     }
 
-    public function setTags(bool $tags)
+    public function setTags(bool $tags): void
     {
         $this->tags = $tags;
     }
@@ -152,9 +152,9 @@ class ProviderConfiguration implements ProviderConfigurationInterface
     }
 
     /**
-     * @param array<array<string, string | array<string, string>> $types
+     * @param PropertyParameter[] $types
      */
-    public function setTypes(array $types)
+    public function setTypes(array $types): void
     {
         $this->types = $types;
     }
@@ -164,7 +164,7 @@ class ProviderConfiguration implements ProviderConfigurationInterface
         return $this->categories;
     }
 
-    public function setCategories(bool $categories)
+    public function setCategories(bool $categories): void
     {
         $this->categories = $categories;
     }
@@ -179,7 +179,10 @@ class ProviderConfiguration implements ProviderConfigurationInterface
         return \count($this->sorting) > 0;
     }
 
-    public function setSorting(array $sorting)
+    /**
+     * @param PropertyParameter[] $sorting
+     */
+    public function setSorting(array $sorting): void
     {
         $this->sorting = $sorting;
     }
@@ -189,7 +192,7 @@ class ProviderConfiguration implements ProviderConfigurationInterface
         return $this->limit;
     }
 
-    public function setLimit(bool $limit)
+    public function setLimit(bool $limit): void
     {
         $this->limit = $limit;
     }
@@ -199,7 +202,7 @@ class ProviderConfiguration implements ProviderConfigurationInterface
         return $this->presentAs;
     }
 
-    public function setPresentAs(bool $presentAs)
+    public function setPresentAs(bool $presentAs): void
     {
         $this->presentAs = $presentAs;
     }
@@ -209,7 +212,7 @@ class ProviderConfiguration implements ProviderConfigurationInterface
         return $this->paginated;
     }
 
-    public function setPaginated(bool $paginated)
+    public function setPaginated(bool $paginated): void
     {
         $this->paginated = $paginated;
     }
@@ -219,7 +222,7 @@ class ProviderConfiguration implements ProviderConfigurationInterface
         return $this->view;
     }
 
-    public function setView(?string $view)
+    public function setView(?string $view): void
     {
         $this->view = $view;
     }
@@ -229,7 +232,10 @@ class ProviderConfiguration implements ProviderConfigurationInterface
         return $this->resultToView;
     }
 
-    public function setResultToView(?array $resultToView)
+    /**
+     * @param array<string, string>|null $resultToView
+     */
+    public function setResultToView(?array $resultToView): void
     {
         $this->resultToView = $resultToView;
     }

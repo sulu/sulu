@@ -45,7 +45,7 @@ interface ProviderConfigurationInterface
     /**
      * Sets whether or not the audience targeting feature is activated.
      */
-    public function setAudienceTargeting(bool $audienceTargeting);
+    public function setAudienceTargeting(bool $audienceTargeting): void;
 
     /**
      * Returns TRUE if tags should be displayed.

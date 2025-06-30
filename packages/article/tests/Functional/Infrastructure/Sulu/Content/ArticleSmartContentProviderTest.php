@@ -17,6 +17,7 @@ use Sulu\Article\Application\Message\ApplyWorkflowTransitionArticleMessage;
 use Sulu\Article\Application\Message\CreateArticleMessage;
 use Sulu\Article\Domain\Model\ArticleInterface;
 use Sulu\Bundle\AdminBundle\SmartContent\SmartContentProviderInterface;
+use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Content\Domain\Model\WorkflowInterface;
 use Sulu\Content\Tests\Traits\CreateCategoryTrait;
@@ -54,7 +55,7 @@ class ArticleSmartContentProviderTest extends SuluTestCase
     private static array $articles = [];
 
     /**
-     * @var array<string, mixed>
+     * @var array<string, CategoryInterface>
      */
     private static array $categories = [];
 
@@ -220,6 +221,16 @@ class ArticleSmartContentProviderTest extends SuluTestCase
         $this->assertCount(15, $result);
         $count = $this->smartContentProvider->countBy(['locale' => 'en']);
         $this->assertSame(15, $count);
+
+        $resultIds = \array_map(
+            fn ($article) => $article['id'],
+            $result,
+        );
+
+        // Verify all articles are returned
+        foreach (self::$articles as $article) {
+            $this->assertContains($article->getUuid(), $resultIds);
+        }
     }
 
     public function testFindFlatByCategoryFiltersSingleCategoryOR(): void
@@ -239,6 +250,25 @@ class ArticleSmartContentProviderTest extends SuluTestCase
                 'categoryOperator' => 'OR',
             ]),
         );
+
+        $resultIds = \array_map(
+            fn ($article) => $article['id'],
+            $result,
+        );
+
+        // Verify correct articles are returned
+        $expectedKeys = ['tech1', 'tech2', 'tech_health', 'business_tech', 'multi_category_multi_tag'];
+        foreach ($expectedKeys as $key) {
+            $this->assertContains(self::$articles[$key]->getUuid(), $resultIds, "Article '$key' should be in the result");
+        }
+
+        // Verify other articles are not returned
+        $allKeys = \array_keys(self::$articles);
+        $unexpectedKeys = \array_diff($allKeys, $expectedKeys);
+
+        foreach ($unexpectedKeys as $key) {
+            $this->assertNotContains(self::$articles[$key]->getUuid(), $resultIds, "Article '$key' should not be in the result");
+        }
     }
 
     public function testFindFlatByCategoryFiltersMultipleCategoriesOR(): void
@@ -259,6 +289,21 @@ class ArticleSmartContentProviderTest extends SuluTestCase
                 'categoryOperator' => 'OR',
             ]),
         );
+
+        $resultIds = \array_map(
+            fn ($article) => $article['id'],
+            $result,
+        );
+
+        // Verify correct articles are returned
+        $expectedKeys = [
+            'tech1', 'tech2', 'health1', 'health2', 'tech_health',
+            'sports_health', 'business_tech', 'multi_category_multi_tag',
+        ];
+
+        foreach ($expectedKeys as $key) {
+            $this->assertContains(self::$articles[$key]->getUuid(), $resultIds, "Article '$key' should be in the result");
+        }
     }
 
     public function testFindFlatByCategoryFiltersSingleCategoryAND(): void
@@ -278,6 +323,17 @@ class ArticleSmartContentProviderTest extends SuluTestCase
                 'categoryOperator' => 'AND',
             ]),
         );
+
+        $resultIds = \array_map(
+            fn ($article) => $article['id'],
+            $result,
+        );
+
+        // Verify correct articles are returned
+        $expectedKeys = ['health1', 'health2', 'tech_health', 'sports_health', 'multi_category_multi_tag'];
+        foreach ($expectedKeys as $key) {
+            $this->assertContains(self::$articles[$key]->getUuid(), $resultIds, "Article '$key' should be in the result");
+        }
     }
 
     public function testFindFlatByCategoryFiltersMultipleCategoriesAND(): void
@@ -298,6 +354,17 @@ class ArticleSmartContentProviderTest extends SuluTestCase
                 'categoryOperator' => 'AND',
             ]),
         );
+
+        $resultIds = \array_map(
+            fn ($article) => $article['id'],
+            $result,
+        );
+
+        // Verify correct articles are returned
+        $expectedKeys = ['tech_health', 'multi_category_multi_tag'];
+        foreach ($expectedKeys as $key) {
+            $this->assertContains(self::$articles[$key]->getUuid(), $resultIds, "Article '$key' should be in the result");
+        }
     }
 
     public function testFindFlatByTagFiltersSingleTagOR(): void
@@ -318,6 +385,17 @@ class ArticleSmartContentProviderTest extends SuluTestCase
                 'tagOperator' => 'OR',
             ]),
         );
+
+        $resultIds = \array_map(
+            fn ($article) => $article['id'],
+            $result,
+        );
+
+        // Verify correct articles are returned
+        $expectedKeys = ['tech1', 'tech_health', 'multi_category_multi_tag'];
+        foreach ($expectedKeys as $key) {
+            $this->assertContains(self::$articles[$key]->getUuid(), $resultIds, "Article '$key' should be in the result");
+        }
     }
 
     public function testFindFlatByTagFiltersMultipleTagsOR(): void
@@ -338,6 +416,17 @@ class ArticleSmartContentProviderTest extends SuluTestCase
                 'tagOperator' => 'OR',
             ]),
         );
+
+        $resultIds = \array_map(
+            fn ($article) => $article['id'],
+            $result,
+        );
+
+        // Verify correct articles are returned
+        $expectedKeys = ['tech1', 'tech2', 'tech_health', 'business_tech', 'multi_category_multi_tag'];
+        foreach ($expectedKeys as $key) {
+            $this->assertContains(self::$articles[$key]->getUuid(), $resultIds, "Article '$key' should be in the result");
+        }
     }
 
     public function testFindFlatByTagFiltersSingleTagAND(): void
@@ -358,6 +447,17 @@ class ArticleSmartContentProviderTest extends SuluTestCase
                 'tagOperator' => 'AND',
             ]),
         );
+
+        $resultIds = \array_map(
+            fn ($article) => $article['id'],
+            $result,
+        );
+
+        // Verify correct articles are returned
+        $expectedKeys = ['health1', 'health2', 'tech_health', 'sports_health', 'multi_category_multi_tag'];
+        foreach ($expectedKeys as $key) {
+            $this->assertContains(self::$articles[$key]->getUuid(), $resultIds, "Article '$key' should be in the result");
+        }
     }
 
     public function testFindFlatByTagFiltersMultipleTagsAND(): void
@@ -378,6 +478,17 @@ class ArticleSmartContentProviderTest extends SuluTestCase
                 'tagOperator' => 'AND',
             ]),
         );
+
+        $resultIds = \array_map(
+            fn ($article) => $article['id'],
+            $result,
+        );
+
+        // Verify correct articles are returned
+        $expectedKeys = ['tech_health', 'multi_category_multi_tag'];
+        foreach ($expectedKeys as $key) {
+            $this->assertContains(self::$articles[$key]->getUuid(), $resultIds, "Article '$key' should be in the result");
+        }
     }
 
     public function testFindFlatByCategoryAndTagFilters(): void
@@ -398,6 +509,17 @@ class ArticleSmartContentProviderTest extends SuluTestCase
                 'tagNames' => [self::$tags['fitness']],
             ]),
         );
+
+        $resultIds = \array_map(
+            fn ($article) => $article['id'],
+            $result,
+        );
+
+        // Verify correct articles are returned
+        $expectedKeys = ['health1', 'health2', 'tech_health', 'sports_health', 'multi_category_multi_tag'];
+        foreach ($expectedKeys as $key) {
+            $this->assertContains(self::$articles[$key]->getUuid(), $resultIds, "Article '$key' should be in the result");
+        }
     }
 
     public function testFindFlatByLimitAndPageFirst(): void
@@ -407,8 +529,7 @@ class ArticleSmartContentProviderTest extends SuluTestCase
             'limit' => 5,
             'page' => 1,
         ], [
-            'sortBy' => 'title',
-            'sortMethod' => 'asc',
+            'title' => 'asc',
         ]);
 
         $this->assertCount(5, $result);
@@ -420,6 +541,19 @@ class ArticleSmartContentProviderTest extends SuluTestCase
                 'page' => 1,
             ]),
         );
+
+        $resultIds = \array_map(
+            fn ($article) => $article['id'],
+            $result,
+        );
+
+        // With title sort, verify the first page contains the alphabetically first 5 articles
+        // Since we're sorting by title ASC, we expect these articles in the first page
+        $this->assertContains(self::$articles['tech2']->getUuid(), $resultIds); // "Cloud Computing"
+        $this->assertContains(self::$articles['multi_category_multi_tag']->getUuid(), $resultIds); // "Digital Lifestyle"
+
+        // Additional check to verify result order (first article should be "Cloud Computing")
+        $this->assertSame('Cloud Computing', $result[0]['title']);
     }
 
     public function testFindFlatByLimitAndPageSecond(): void
@@ -511,7 +645,6 @@ class ArticleSmartContentProviderTest extends SuluTestCase
 
         $messageBus = self::getContainer()->get('sulu_message_bus');
 
-        /** @var ArticleInterface $article */
         $envelope = $messageBus->dispatch(new Envelope(new CreateArticleMessage($data), [new EnableFlushStamp()]));
         /** @var HandledStamp[] $handledStamps */
         $handledStamps = $envelope->all(HandledStamp::class);

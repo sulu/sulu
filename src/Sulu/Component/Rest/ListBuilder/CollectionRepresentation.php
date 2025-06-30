@@ -36,6 +36,10 @@ class CollectionRepresentation implements RepresentationInterface
      */
     protected $metadata;
 
+    /**
+     * @param mixed $data
+     * @param array<string, mixed> $metadata
+     */
     public function __construct($data, string $rel, array $metadata = [])
     {
         if (!\is_array($data)) {
@@ -55,6 +59,9 @@ class CollectionRepresentation implements RepresentationInterface
         return $this->data;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function getMetadata(): array
     {
         return $this->metadata;

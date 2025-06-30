@@ -72,7 +72,9 @@ class ExpressionFormMetadataVisitor implements FormMetadataVisitorInterface, Typ
 
                 foreach ($item->getOptions() as $option) {
                     if (OptionMetadata::TYPE_EXPRESSION === $option->getType()) {
-                        $option->setValue($this->expressionLanguage->evaluate($option->getValue(), $context));
+                        /** @var string $value */
+                        $value = $option->getValue();
+                        $option->setValue($this->expressionLanguage->evaluate($value, $context));
                     }
                 }
             }

@@ -19,13 +19,16 @@ use Sulu\Component\Content\Compat\PropertyParameter;
 
 class BuilderTest extends TestCase
 {
-    public static function provideBoolean()
+    /**
+     * @return array<array<bool>>
+     */
+    public static function provideBoolean(): array
     {
         return [[true], [false]];
     }
 
     #[DataProvider('provideBoolean')]
-    public function testTags($enable): void
+    public function testTags(bool $enable): void
     {
         $builder = Builder::create();
 
@@ -43,7 +46,7 @@ class BuilderTest extends TestCase
     }
 
     #[DataProvider('provideBoolean')]
-    public function testCategories($enable): void
+    public function testCategories(bool $enable): void
     {
         $builder = Builder::create();
 
@@ -61,7 +64,7 @@ class BuilderTest extends TestCase
     }
 
     #[DataProvider('provideBoolean')]
-    public function testLimit($enable): void
+    public function testLimit(bool $enable): void
     {
         $builder = Builder::create();
 
@@ -79,7 +82,7 @@ class BuilderTest extends TestCase
     }
 
     #[DataProvider('provideBoolean')]
-    public function testPresentAs($enable): void
+    public function testPresentAs(bool $enable): void
     {
         $builder = Builder::create();
 
@@ -97,7 +100,7 @@ class BuilderTest extends TestCase
     }
 
     #[DataProvider('provideBoolean')]
-    public function testPagination($enable): void
+    public function testPagination(bool $enable): void
     {
         $builder = Builder::create();
 

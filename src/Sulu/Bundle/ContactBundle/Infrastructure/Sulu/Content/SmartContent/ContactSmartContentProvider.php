@@ -22,6 +22,17 @@ use Sulu\Bundle\ContactBundle\Admin\ContactAdmin;
 use Sulu\Bundle\ContactBundle\Entity\ContactInterface;
 use Sulu\Bundle\ContactBundle\Infrastructure\Sulu\Content\ResourceLoader\ContactResourceLoader;
 
+/**
+ * @phpstan-type ContactSmartContentFilters array{
+ *      page?: int,
+ *      pageSize?: int|null,
+ *      limit?: int|null,
+ *      tagNames?: string[],
+ *      categoryIds?: int[],
+ *      tagOperator?: 'AND'|'OR',
+ *      categoryOperator?: 'AND'|'OR',
+ *  }
+ */
 class ContactSmartContentProvider implements SmartContentProviderInterface
 {
     public function __construct(
@@ -47,6 +58,9 @@ class ContactSmartContentProvider implements SmartContentProviderInterface
             ->getConfiguration();
     }
 
+    /**
+     * @param ContactSmartContentFilters $filters
+     */
     public function countBy(array $filters, array $params = []): int
     {
         $alias = 'contact';
@@ -56,11 +70,15 @@ class ContactSmartContentProvider implements SmartContentProviderInterface
             $queryBuilder,
             $filters,
             [],
+            $alias
         );
 
         return (int) $queryBuilder->getQuery()->getSingleScalarResult();
     }
 
+    /**
+     * @param ContactSmartContentFilters $filters
+     */
     public function findFlatBy(array $filters, array $sortBys, array $params = []): array
     {
         $page = $filters['page'] ?? 1;
@@ -78,6 +96,7 @@ class ContactSmartContentProvider implements SmartContentProviderInterface
             $queryBuilder,
             $filters,
             $sortBys,
+            $alias
         );
 
         if (null !== $pageSize && $pageSize > 0) {
@@ -90,45 +109,42 @@ class ContactSmartContentProvider implements SmartContentProviderInterface
             $queryBuilder->setMaxResults($limit);
         }
 
-        $result = $queryBuilder->getQuery()->getArrayResult();
+        /** @var array{id: string, firstName: string, lastName: string}[] $queryResult */
+        $queryResult = $queryBuilder->getQuery()->getArrayResult();
 
-        return \array_map(
-            function(array $item) {
-                return [
-                    'id' => $item['id'],
-                    'title' => $item['firstName'] . ' ' . $item['lastName'],
-                ];
-            },
-            $result,
+        /** @var array<array{id: string, title: string}> $result */
+        $result = \array_map(
+            fn (array $item) => ['id' => $item['id'], 'title' => $item['firstName'] . ' ' . $item['lastName']],
+            $queryResult,
         );
+
+        return $result;
     }
 
     /**
-     * Resolves filter and returns id array for second query.
-     *
-     * @param array $filters array of filters: tags, tagOperator
-     *
-     * @return int[]|string[]
+     * @param array{
+     *     tagNames?: string[],
+     *     categoryIds?: int[],
+     *     tagOperator?: 'AND'|'OR',
+     *     categoryOperator?: 'AND'|'OR',
+     * } $filters
+     * @param array<string, string> $sortBys
      */
     private function enhanceQueryBuilder(
         QueryBuilder $queryBuilder,
         array $filters,
         array $sortBys,
-    ) {
-        $alias = 'contact';
-
+        string $alias,
+    ): void {
         $tagRelation = $alias . '.tags';
         $categoryRelation = $alias . '.categories';
 
         foreach ($sortBys as $sortBy => $sortMethod) {
-            if (!\is_string($sortBy) || !\is_string($sortMethod)) {
-                continue;
-            }
             $queryBuilder->orderBy($sortBy, $sortMethod);
             $queryBuilder->addSelect($sortBy);
         }
 
-        if ($filters['tagNames'] ?? null && [] !== $filters['tagNames']) {
+        if (($filters['tagNames'] ?? null) && [] !== $filters['tagNames'] && ($filters['tagOperator'] ?? null)) {
             $this->addJoinFilter(
                 $queryBuilder,
                 $tagRelation,
@@ -140,7 +156,7 @@ class ContactSmartContentProvider implements SmartContentProviderInterface
             );
         }
 
-        if ($filters['categoryIds'] ?? null && [] !== $filters['categoryIds']) {
+        if (($filters['categoryIds'] ?? null) && [] !== $filters['categoryIds'] && ($filters['categoryOperator'] ?? null)) {
             $this->addJoinFilter(
                 $queryBuilder,
                 $categoryRelation,
@@ -191,7 +207,7 @@ class ContactSmartContentProvider implements SmartContentProviderInterface
         }
     }
 
-    public function createQueryBuilder($alias): QueryBuilder
+    public function createQueryBuilder(string $alias): QueryBuilder
     {
         return $this->entityManager->createQueryBuilder()
             ->from(ContactInterface::class, $alias);

@@ -15,6 +15,7 @@ namespace Sulu\Article\Infrastructure\Sulu\Content;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Query\Expr\OrderBy;
 use Sulu\Article\Domain\Model\ArticleDimensionContentInterface;
 use Sulu\Article\Domain\Model\ArticleInterface;
 use Sulu\Article\Infrastructure\Sulu\Content\ResourceLoader\ArticleResourceLoader;
@@ -157,7 +158,9 @@ class ArticleSmartContentProvider implements SmartContentProviderInterface
         $queryBuilder->select('DISTINCT article.uuid as id');
         $queryBuilder->addSelect('filterDimensionContent.title');
 
-        foreach ($queryBuilder->getDQLPart('orderBy') ?? [] as $orderBy) {
+        /** @var OrderBy[]|null $queryParts */
+        $queryParts = $queryBuilder->getDQLPart('orderBy');
+        foreach ($queryParts ?? [] as $orderBy) {
             foreach ($orderBy->getParts() as $order) {
                 [$column] = \explode(' ', $order);
                 $queryBuilder->addSelect($column);

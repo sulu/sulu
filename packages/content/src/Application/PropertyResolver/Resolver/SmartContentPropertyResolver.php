@@ -15,6 +15,7 @@ namespace Sulu\Content\Application\PropertyResolver\Resolver;
 
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\OptionMetadata;
+use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
 use Sulu\Component\Webspace\Webspace;
 use Sulu\Content\Application\ContentResolver\Value\ContentView;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -79,20 +80,23 @@ class SmartContentPropertyResolver implements PropertyResolverInterface
 
         $request = $this->requestStack->getCurrentRequest();
         \assert(null !== $request, 'Request must not be null');
+
+        /** @var RequestAttributes|null $suluAttributes */
+        $suluAttributes = $request->attributes->get('_sulu');
         /** @var Webspace|null $webspace */
-        $webspace = $request->attributes->get('_sulu')?->getAttribute('webspace');
+        $webspace = $suluAttributes?->getAttribute('webspace');
 
         /** @var array{
-         *     locale?: string|null,
-         *     categoryIds?: int[],
-         *     categoryOperator?: 'AND'|'OR',
-         *     tagIds?: int[],
-         *     tagNames?: string[],
-         *     tagOperator?: 'AND'|'OR',
-         *     limit?: int,
-         *     page?: int,
-         *     webspaceKey?: string|null,
-         *     types?: string[]|null,
+         *     locale: string|null,
+         *     webspaceKey: string|null,
+         *     categoryIds: array<int>,
+         *     tagNames: array<string>,
+         *     types: array<string>,
+         *     categoryOperator: 'AND'|'OR',
+         *     tagOperator: 'AND'|'OR',
+         *     dataSource: string|null,
+         *     limit: int|null,
+         *     page: int
          * } $filters
          */
         $filters = [
@@ -174,6 +178,7 @@ class SmartContentPropertyResolver implements PropertyResolverInterface
     {
         if (OptionMetadata::TYPE_COLLECTION === $metadata->getType()) {
             $values = [];
+            /** @var OptionMetadata[]|null $metadataValues */
             $metadataValues = $metadata->getValue();
             if (!\is_array($metadataValues)) {
                 throw new \InvalidArgumentException(

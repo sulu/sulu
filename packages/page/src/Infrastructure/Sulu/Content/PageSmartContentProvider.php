@@ -15,6 +15,7 @@ namespace Sulu\Page\Infrastructure\Sulu\Content;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Query\Expr\OrderBy;
 use Doctrine\ORM\QueryBuilder;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderInterface;
@@ -61,7 +62,32 @@ class PageSmartContentProvider implements SmartContentProviderInterface
 
     public function getConfiguration(): ProviderConfigurationInterface
     {
-        return $this->getConfigurationBuilder()->getConfiguration();
+        /** @var BuilderInterface $builder */
+        $builder = Builder::create()
+            ->enableTags()
+            ->enableCategories()
+            ->enableLimit()
+            ->enablePagination()
+            ->enablePresentAs()
+            ->enableDatasource(PageInterface::RESOURCE_KEY, PageInterface::RESOURCE_KEY, 'column_list')
+            ->enableSorting(
+                [
+                    ['column' => 'workflowPublished', 'title' => 'sulu_admin.published'],
+                    ['column' => 'authored', 'title' => 'sulu_admin.authored'],
+                    ['column' => 'created', 'title' => 'sulu_admin.created'],
+                    ['column' => 'changed', 'title' => 'sulu_admin.changed'],
+                    ['column' => 'title', 'title' => 'sulu_admin.title'],
+                ],
+            )
+            ->enableTypes($this->getTypes())
+            ->enableView(PageAdmin::EDIT_FORM_VIEW, ['id' => 'id', 'webspace' => 'webspace']);
+
+        // TODO
+        //        if ($this->hasAudienceTargeting) {
+        //            $builder->enableAudienceTargeting();
+        //        }
+
+        return $builder->getConfiguration();
     }
 
     /**
@@ -79,15 +105,18 @@ class PageSmartContentProvider implements SmartContentProviderInterface
     {
         /**
          * @var array{
-         *     locale?: string|null,
-         *     categoryIds?: int[],
-         *     categoryOperator?: 'AND'|'OR',
-         *     tagNames?: int[],
-         *     tagOperator?: 'AND'|'OR',
-         *     templateKeys?: string[],
-         *     loadGhost?: bool,
-         *     stage: string,
-         * } $filters
+         *      locale?: string|null,
+         *      categoryIds?: int[],
+         *      categoryOperator?: 'AND'|'OR',
+         *      tagNames?: string[],
+         *      tagOperator?: 'AND'|'OR',
+         *      templateKeys?: string[],
+         *      loadGhost?: bool,
+         *      limit?: int,
+         *      page?: int,
+         *      stage?: string,
+         *      webspaceKey?: string,
+         *  } $filters
          */
         $filters = $this->enhanceWithDimensionAttributes($filters);
 
@@ -145,7 +174,7 @@ class PageSmartContentProvider implements SmartContentProviderInterface
          *      loadGhost?: bool,
          *      limit?: int,
          *      page?: int,
-         *      stage: string,
+         *      stage?: string,
          *      webspaceKey?: string,
          *  } $filters
          */
@@ -174,7 +203,9 @@ class PageSmartContentProvider implements SmartContentProviderInterface
         $queryBuilder->addSelect('page.webspaceKey as webspace');
         $queryBuilder->addSelect('filterDimensionContent.title');
 
-        foreach ($queryBuilder->getDQLPart('orderBy') ?? [] as $orderBy) {
+        /** @var OrderBy[]|null $queryParts */
+        $queryParts = $queryBuilder->getDQLPart('orderBy');
+        foreach ($queryParts ?? [] as $orderBy) {
             foreach ($orderBy->getParts() as $order) {
                 [$column] = \explode(' ', $order);
                 $queryBuilder->addSelect($column);
@@ -187,6 +218,38 @@ class PageSmartContentProvider implements SmartContentProviderInterface
         return $result;
     }
 
+    /**
+     * @param array{
+     *     locale?: string|null,
+     *     categoryIds?: array<int>,
+     *     categoryOperator?: 'AND'|'OR',
+     *     tagNames?: array<string>,
+     *     tagOperator?: 'AND'|'OR',
+     *     templateKeys?: array<string>,
+     *     loadGhost?: bool,
+     *     types?: array<string>,
+     *     webspaceKey?: string,
+     *     dataSource?: string|null,
+     *     page?: int,
+     *     limit?: int,
+     *     stage?: string,
+     * } $filters
+     *
+     * @return array{
+     *     locale?: string|null,
+     *     stage?: string|null,
+     *     categoryIds?: array<int>,
+     *     categoryOperator?: 'AND'|'OR',
+     *     tagNames?: array<string>,
+     *     tagOperator?: 'AND'|'OR',
+     *     templateKeys?: array<string>,
+     *     loadGhost?: bool,
+     *     webspaceKey?: string,
+     *     dataSource?: string|null,
+     *     page?: int,
+     *     limit?: int,
+     * }
+     */
     protected function mapFilters(array $filters): array
     {
         if ($filters['types'] ?? null) {
@@ -197,6 +260,12 @@ class PageSmartContentProvider implements SmartContentProviderInterface
         return $filters;
     }
 
+    /**
+     * @param array{
+     *      webspaceKey?: string,
+     *      dataSource?: string|null,
+     *  } $filters
+     */
     protected function addInternalFilters(QueryBuilder $queryBuilder, array $filters, string $alias): void
     {
         if ($webspaceKey = $filters['webspaceKey'] ?? null) {
@@ -225,41 +294,13 @@ class PageSmartContentProvider implements SmartContentProviderInterface
         return \array_merge($dimensionAttributes, $filters);
     }
 
-    protected function getConfigurationBuilder(): BuilderInterface
-    {
-        $builder = Builder::create()
-            ->enableTags()
-            ->enableCategories()
-            ->enableLimit()
-            ->enablePagination()
-            ->enablePresentAs()
-            ->enableDatasource(PageInterface::RESOURCE_KEY, PageInterface::RESOURCE_KEY, 'column_list')
-            ->enableSorting(
-                [
-                    ['column' => 'workflowPublished', 'title' => 'sulu_admin.published'],
-                    ['column' => 'authored', 'title' => 'sulu_admin.authored'],
-                    ['column' => 'created', 'title' => 'sulu_admin.created'],
-                    ['column' => 'changed', 'title' => 'sulu_admin.changed'],
-                    ['column' => 'title', 'title' => 'sulu_admin.title'],
-                ],
-            )
-            ->enableTypes($this->getTypes())
-            ->enableView(PageAdmin::EDIT_FORM_VIEW, ['id' => 'id', 'webspace' => 'webspace']);
-
-        //        if ($this->hasAudienceTargeting) {
-        //            $builder->enableAudienceTargeting();
-        //        }
-
-        return $builder;
-    }
-
     /**
-     * @return array<int, array<string, string>>
+     * @return array{type: string, title: string}[]
      */
     private function getTypes(): array
     {
         $types = [];
-        if ($this->tokenStorage && null !== $this->tokenStorage->getToken() && $this->formMetadataProvider) {
+        if (null !== $this->tokenStorage->getToken()) {
             $user = $this->tokenStorage->getToken()->getUser();
 
             if (!$user instanceof UserInterface) {

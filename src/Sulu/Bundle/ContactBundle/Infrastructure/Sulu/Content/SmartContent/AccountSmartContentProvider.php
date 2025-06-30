@@ -22,6 +22,17 @@ use Sulu\Bundle\ContactBundle\Admin\ContactAdmin;
 use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
 use Sulu\Bundle\ContactBundle\Infrastructure\Sulu\Content\ResourceLoader\AccountResourceLoader;
 
+/**
+ * @phpstan-type AccountSmartContentFilters array{
+ *      page?: int,
+ *      pageSize?: int|null,
+ *      limit?: int|null,
+ *      tagNames?: string[],
+ *      categoryIds?: int[],
+ *      tagOperator?: 'AND'|'OR',
+ *      categoryOperator?: 'AND'|'OR',
+ *  }
+ */
 class AccountSmartContentProvider implements SmartContentProviderInterface
 {
     public function __construct(
@@ -41,6 +52,9 @@ class AccountSmartContentProvider implements SmartContentProviderInterface
             ->getConfiguration();
     }
 
+    /**
+     * @param AccountSmartContentFilters $filters
+     */
     public function countBy(array $filters, array $params = []): int
     {
         $alias = 'account';
@@ -50,11 +64,15 @@ class AccountSmartContentProvider implements SmartContentProviderInterface
             $queryBuilder,
             $filters,
             [],
+            $alias
         );
 
         return (int) $queryBuilder->getQuery()->getSingleScalarResult();
     }
 
+    /**
+     * @param AccountSmartContentFilters $filters
+     */
     public function findFlatBy(array $filters, array $sortBys, array $params = []): array
     {
         $page = $filters['page'] ?? 1;
@@ -71,6 +89,7 @@ class AccountSmartContentProvider implements SmartContentProviderInterface
             $queryBuilder,
             $filters,
             $sortBys,
+            $alias
         );
 
         if (null !== $pageSize && $pageSize > 0) {
@@ -83,35 +102,36 @@ class AccountSmartContentProvider implements SmartContentProviderInterface
             $queryBuilder->setMaxResults($limit);
         }
 
-        return $queryBuilder->getQuery()->getArrayResult();
+        /** @var array<array{id: string, title: string}> $result */
+        $result = $queryBuilder->getQuery()->getArrayResult();
+
+        return $result;
     }
 
     /**
-     * Resolves filter and returns id array for second query.
-     *
-     * @param array $filters array of filters: tags, tagOperator
-     *
-     * @return int[]|string[]
+     * @param array{
+     *     tagNames?: string[],
+     *     categoryIds?: int[],
+     *     tagOperator?: 'AND'|'OR',
+     *     categoryOperator?: 'AND'|'OR',
+     * } $filters
+     * @param array<string, string> $sortBys
      */
     private function enhanceQueryBuilder(
         QueryBuilder $queryBuilder,
         array $filters,
         array $sortBys,
-    ) {
-        $alias = 'account';
-
+        string $alias,
+    ): void {
         $tagRelation = $alias . '.tags';
         $categoryRelation = $alias . '.categories';
 
         foreach ($sortBys as $sortBy => $sortMethod) {
-            if (!\is_string($sortBy) || !\is_string($sortMethod)) {
-                continue;
-            }
             $queryBuilder->orderBy($sortBy, $sortMethod);
             $queryBuilder->addSelect($sortBy);
         }
 
-        if ($filters['tagNames'] ?? null && [] !== $filters['tagNames']) {
+        if (($filters['tagNames'] ?? null) && [] !== $filters['tagNames'] && ($filters['tagOperator'] ?? null)) {
             $this->addJoinFilter(
                 $queryBuilder,
                 $tagRelation,
@@ -123,7 +143,7 @@ class AccountSmartContentProvider implements SmartContentProviderInterface
             );
         }
 
-        if ($filters['categoryIds'] ?? null && [] !== $filters['categoryIds']) {
+        if (($filters['categoryIds'] ?? null) && [] !== $filters['categoryIds'] && ($filters['categoryOperator'] ?? null)) {
             $this->addJoinFilter(
                 $queryBuilder,
                 $categoryRelation,
@@ -174,7 +194,7 @@ class AccountSmartContentProvider implements SmartContentProviderInterface
         }
     }
 
-    public function createQueryBuilder($alias): QueryBuilder
+    public function createQueryBuilder(string $alias): QueryBuilder
     {
         return $this->entityManager->createQueryBuilder()
             ->from(AccountInterface::class, $alias);

@@ -19,7 +19,6 @@ use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Rest\AbstractRestController;
 use Sulu\Component\Rest\Exception\MissingParameterException;
 use Sulu\Component\Rest\ListBuilder\CollectionRepresentation;
-use Sulu\Component\Rest\RequestParametersTrait;
 use Sulu\Component\SmartContent\Exception\DataProviderNotExistsException;
 use Symfony\Component\DependencyInjection\ServiceLocator;
 use Symfony\Component\HttpFoundation\Request;
@@ -31,8 +30,6 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
  */
 class SmartContentItemController extends AbstractRestController
 {
-    use RequestParametersTrait;
-
     /**
      * @param ServiceLocator<SmartContentProviderInterface> $smartContentProviderLocator
      */
@@ -54,50 +51,49 @@ class SmartContentItemController extends AbstractRestController
      */
     public function getItemsAction(Request $request)
     {
-        $locale = $this->getLocale($request);
+        $locale = $request->getLocale();
 
         /** @var array{
          *     locale: string,
-         *     excluded?: string[],
+         *     excluded?: string,
          *     categories?: string|null,
          *     categoryIds?: int[],
          *     categoryOperator?: 'AND'|'OR',
          *     tags?: string|null,
-         *     tagIds?: int[],
          *     tagOperator?: 'AND'|'OR',
-         *     types?: string[],
+         *     types?: string,
          *     sortBy?: string|null,
          *     sortMethod?: 'asc'|'desc',
-         *     includeSubFolders?: bool,
+         *     includeSubFolders?: bool|string,
          *     webspaceKey?: string|null,
          *     page?: int,
          *     limitResult?: int|null,
+         *     params?: string|null,
+         *     provider?: string|null,
          * } $filters
          */
         $filters = $request->query->all();
         $params = $filters['params'] ?? '{}';
         unset($filters['params']);
-        // TODO do we need default parameters here?
-        $params = $this->getParams(\json_decode($params, true));
+        /** @var array<string, array{type?: string|null, value: mixed}> $decodedParams */
+        $decodedParams = \json_decode($params, true) ?: [];
+        $params = $this->getParams($decodedParams);
         $maxPerPage = ($params['max_per_page'] ?? null) ? $params['max_per_page']->getValue() : null;
 
         $filters['locale'] = $locale;
-        $filters['excluded'] = \array_filter(\explode(',', $this->getRequestParameter($request, 'excluded')));
+        $filters['excluded'] = \array_filter(\explode(',', $filters['excluded'] ?? ''));
 
-        $filters['categoryIds'] = isset($filters['categories']) ? \array_filter(\explode(',', $this->getRequestParameter($request, 'categories'))) : null;
+        $filters['categoryIds'] = isset($filters['categories']) ? \array_filter(\explode(',', $filters['categories'])) : null;
         unset($filters['categories']);
-        $filters['categoryOperator'] = isset($filters['categoryOperator']) ? \strtoupper($this->getRequestParameter($request, 'categoryOperator')) : null;
+        $filters['categoryOperator'] = isset($filters['categoryOperator']) ? \strtoupper($filters['categoryOperator']) : null;
 
-        $filters['tagNames'] = isset($filters['tags']) ? \array_filter(\explode(',', $this->getRequestParameter($request, 'tags'))) : null;
+        $filters['tagNames'] = isset($filters['tags']) ? \array_filter(\explode(',', $filters['tags'])) : null;
         unset($filters['tags']);
-        $filters['tagOperator'] = isset($filters['tagOperator']) ? \strtoupper($this->getRequestParameter($request, 'tagOperator')) : null;
+        $filters['tagOperator'] = isset($filters['tagOperator']) ? \strtoupper($filters['tagOperator']) : null;
 
-        $filters['types'] = isset($filters['types']) ? \explode(',', $this->getRequestParameter($request, 'types')) : null;
-        $filters['sortBy'] = isset($filters['sortBy']) ? $this->getRequestParameter($request, 'sortBy') : null;
+        $filters['types'] = isset($filters['types']) ? \explode(',', $filters['types']) : null;
         $filters['includeSubFolders'] = isset($filters['includeSubFolders']) && 'true' === $filters['includeSubFolders'];
-        $filters['webspaceKey'] = $this->getRequestParameter($request, 'webspace');
-        $filters['datasource'] = $this->getRequestParameter($request, 'datasource');
-        $filters['page'] = (int) $this->getRequestParameter($request, 'page', false, 1);
+        $filters['page'] = (int) ($filters['page'] ?? 1);
         $filters['limit'] = ($filters['limitResult'] ?? $maxPerPage) ? (int) ($filters['limitResult'] ?? $maxPerPage) : null;
         $filters = \array_filter($filters);
 
@@ -107,10 +103,10 @@ class SmartContentItemController extends AbstractRestController
             unset($filters['sortBy'], $filters['sortMethod']);
         }
 
-        $providerType = $this->getRequestParameter($request, 'provider', true);
+        $providerType = (string) ($filters['provider'] ?? null);
 
         if (!$this->smartContentProviderLocator->has($providerType)) {
-            throw new DataProviderNotExistsException(
+            throw new \RuntimeException(
                 \sprintf(
                     'Smart content provider "%s" does not exist. Existing providers: %s',
                     $providerType,
@@ -135,7 +131,10 @@ class SmartContentItemController extends AbstractRestController
     }
 
     /**
-     * Returns property-parameter.
+     * @param array<string, array{
+     *     type?: string|null,
+     *     value: mixed,
+     * }> $params
      *
      * @return PropertyParameter[]
      */
@@ -145,18 +144,17 @@ class SmartContentItemController extends AbstractRestController
         foreach ($params as $name => $item) {
             $type = $item['type'] ?? null;
             $value = $item['value'];
-            if ('collection' === $type) {
-                $value = $this->getParams($value);
+            if ('collection' === $type && \is_array($value)) {
+                /** @var array<string, array{type?: string|null, value: mixed}> $typedCollectionValue */
+                $typedCollectionValue = $value;
+                $value = $this->getParams($typedCollectionValue);
             }
 
-            $result[$name] = new PropertyParameter($name, $value, $type);
+            /** @var mixed[]|bool|string $typedValue */
+            $typedValue = $value;
+            $result[$name] = new PropertyParameter($name, $typedValue, $type);
         }
 
         return $result;
-    }
-
-    public function getLocale(Request $request): string
-    {
-        return $this->getRequestParameter($request, 'locale', true);
     }
 }

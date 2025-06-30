@@ -25,12 +25,31 @@ use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\MediaBundle\Entity\MediaType;
 use Sulu\Bundle\MediaBundle\Infrastructure\Sulu\Content\ResourceLoader\MediaResourceLoader;
 use Sulu\Bundle\SecurityBundle\AccessControl\AccessControlQueryEnhancer;
+use Sulu\Component\Content\Compat\PropertyParameter;
+use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
+/**
+ * @phpstan-type MediaSmartContentFilters array{
+ *      page?: int,
+ *      pageSize?: int|null,
+ *      limit?: int|null,
+ *      types?: string[],
+ *      tagNames?: string[],
+ *      categoryIds?: int[],
+ *      tagOperator?: 'AND'|'OR',
+ *      categoryOperator?: 'AND'|'OR',
+ *      targetGroupId?: string,
+ *      dataSource?: string,
+ *      includeSubFolders?: bool|string,
+ *      webspaceKey?: string,
+ *      locale: string,
+ *  }
+ */
 class MediaSmartContentProvider implements SmartContentProviderInterface
 {
     /**
@@ -75,26 +94,29 @@ class MediaSmartContentProvider implements SmartContentProviderInterface
     }
 
     /**
-     * @return array<int, array<string, string>>
+     * @return array{type: string, title: string}[]
      */
     protected function getTypes(): array
     {
+        /** @var array{type: string, title: string}[] $types */
         $types = [];
-
-        if (!$this->entityManager) {
-            return $types;
-        }
 
         $repository = $this->entityManager->getRepository(MediaType::class);
         /** @var MediaType $mediaType */
         foreach ($repository->findAll() as $mediaType) {
-            $title = $this->translator ? $this->translator->trans('sulu_media.' . $mediaType->getName(), [], 'admin') : $mediaType->getName();
-            $types[] = ['type' => $mediaType->getId(), 'title' => $title];
+            $types[] = [
+                'type' => (string) $mediaType->getId(),
+                'title' => $this->translator->trans('sulu_media.' . $mediaType->getName(), [], 'admin'),
+            ];
         }
 
         return $types;
     }
 
+    /**
+     * @param MediaSmartContentFilters $filters
+     * @param PropertyParameter[] $params
+     */
     public function countBy(array $filters, array $params = []): int
     {
         $alias = 'media';
@@ -105,18 +127,23 @@ class MediaSmartContentProvider implements SmartContentProviderInterface
             $filters,
             [],
             $filters['locale'],
+            $alias,
             $this->getOptions($params),
             MediaInterface::class,
-            $alias,
         );
 
         return (int) $queryBuilder->getQuery()->getSingleScalarResult();
     }
 
+    /**
+     * @param MediaSmartContentFilters $filters
+     * @param array<string, string> $sortBys
+     * @param PropertyParameter[] $params
+     */
     public function findFlatBy(array $filters, array $sortBys, array $params = []): array
     {
         $page = $filters['page'] ?? 1;
-        $pageSize = $filters['pageSize'] ?? null; // TODO do we need a limit ?
+        $pageSize = $filters['pageSize'] ?? null;
         $limit = $filters['limit'] ?? null;
         $locale = $filters['locale'];
 
@@ -131,9 +158,9 @@ class MediaSmartContentProvider implements SmartContentProviderInterface
             $filters,
             $sortBys,
             $locale,
+            $alias,
             $this->getOptions($params),
             MediaInterface::class,
-            $alias,
         );
 
         if (null !== $pageSize && $pageSize > 0) {
@@ -146,7 +173,8 @@ class MediaSmartContentProvider implements SmartContentProviderInterface
             $queryBuilder->setMaxResults($limit);
         }
 
-        $result = $queryBuilder->getQuery()->getArrayResult();
+        /** @var array<array{id: string, title: string}> $queryResult */
+        $queryResult = $queryBuilder->getQuery()->getArrayResult();
 
         return \array_map(
             function(array $item) {
@@ -156,30 +184,31 @@ class MediaSmartContentProvider implements SmartContentProviderInterface
                     'title' => $item['title'],
                 ];
             },
-            $result,
+            $queryResult,
         );
     }
 
     /**
-     * Resolves filter and returns id array for second query.
+     * Enhances the query builder with filters, sorting, and access control.
      *
-     * @param array $filters array of filters: tags, tagOperator
-     * @param mixed[] $options
-     * @param class-string $entityClass
+     * @param MediaSmartContentFilters $filters
+     * @param array<string, string> $sortBys
+     * @param array{mimetype?: string, type?: string} $options
+     * @param class-string|null $entityClass
      */
     private function enhanceQueryBuilder(
         QueryBuilder $queryBuilder,
         array $filters,
         array $sortBys,
         string $locale,
+        string $alias,
         array $options = [],
         ?string $entityClass = null,
-        ?string $entityAlias = null,
     ): void {
-        $alias = 'media';
-
         $webspace = $this->webspaceManager->findWebspaceByKey($filters['webspaceKey'] ?? null);
-        $user = $this->security && $webspace && $webspace->hasWebsiteSecurity() ? $this->security->getUser() : null;
+        /** @var UserInterface|null $user */
+        $user = $webspace && $webspace->hasWebsiteSecurity() ? $this->security->getUser() : null;
+        /** @var int|null $permission */
         $permission = $webspace && $webspace->hasWebsiteSecurity() && $this->permissions
             ? $this->permissions[PermissionTypes::VIEW]
             : null;
@@ -203,19 +232,16 @@ class MediaSmartContentProvider implements SmartContentProviderInterface
             ->setParameter('locale', $locale);
 
         foreach ($sortBys as $sortBy => $sortMethod) {
-            if (!\is_string($sortBy) || !\is_string($sortMethod)) {
-                continue;
-            }
             $queryBuilder->orderBy($sortBy, $sortMethod);
             $queryBuilder->addSelect($sortBy);
         }
 
-        if (\array_key_exists('mimetype', $options)) {
+        if ($options['mimetype'] ?? null) {
             $queryBuilder
                 ->andWhere('fileVersion.mimeType = :mimeType')
                 ->setParameter('mimeType', $options['mimetype']);
         }
-        if (\array_key_exists('type', $options)) {
+        if ($options['type'] ?? null) {
             $queryBuilder
                 ->innerJoin($alias . '.type', 'type')
                 ->andWhere('type.name = :type')
@@ -230,7 +256,6 @@ class MediaSmartContentProvider implements SmartContentProviderInterface
             } else {
                 $queryBuilder
                     ->innerJoin(
-                        //                    $this->collectionEntityName,
                         CollectionInterface::class,// TODO should this be dynamic?
                         'parentCollection',
                         Join::WITH,
@@ -241,7 +266,7 @@ class MediaSmartContentProvider implements SmartContentProviderInterface
             }
         }
 
-        if (($filters['tagNames'] ?? null) && [] !== $filters['tagNames']) {
+        if (($filters['tagNames'] ?? null) && [] !== $filters['tagNames'] && ($filters['tagOperator'] ?? null)) {
             $this->addJoinFilter(
                 $queryBuilder,
                 'fileVersion.tags',
@@ -264,7 +289,7 @@ class MediaSmartContentProvider implements SmartContentProviderInterface
             );
         }
 
-        if (($filters['categoryIds'] ?? null) && [] !== $filters['categoryIds']) {
+        if (($filters['categoryIds'] ?? null) && [] !== $filters['categoryIds'] && ($filters['categoryOperator'] ?? null)) {
             $this->addJoinFilter(
                 $queryBuilder,
                 'fileVersion.categories',
@@ -288,33 +313,44 @@ class MediaSmartContentProvider implements SmartContentProviderInterface
             );
         }
 
-        if ($this->accessControlQueryEnhancer && $entityClass && $entityAlias && $permission) {
+        if ($entityClass && $alias && $permission) {
             $this->accessControlQueryEnhancer->enhance(
                 $queryBuilder,
                 $user,
                 $permission,
                 $entityClass,
-                $entityAlias,
+                $alias,
             );
         }
     }
 
-    protected function getOptions(
-        array $propertyParameter,
-        array $options = [],
-    ) {
+    /**
+     * @param PropertyParameter[] $propertyParameter
+     *
+     * @return array{mimetype?: string, type?: string}
+     */
+    protected function getOptions(array $propertyParameter): array
+    {
         $request = $this->requestStack->getCurrentRequest();
+        if (null === $request) {
+            return [];
+        }
 
         $queryOptions = [];
-
-        if (\array_key_exists('mimetype_parameter', $propertyParameter)) {
-            $queryOptions['mimetype'] = $request->get($propertyParameter['mimetype_parameter']->getValue());
+        if ($propertyParameter['mimetype_parameter'] ?? null) {
+            $mimetypeParameter = $propertyParameter['mimetype_parameter']->getValue();
+            if (\is_string($mimetypeParameter)) {
+                $queryOptions['mimetype'] = $mimetypeParameter;
+            }
         }
-        if (\array_key_exists('type_parameter', $propertyParameter)) {
-            $queryOptions['type'] = $request->get($propertyParameter['type_parameter']->getValue());
+        if ($propertyParameter['type_parameter'] ?? null) {
+            $typeParameter = $propertyParameter['type_parameter']->getValue();
+            if (\is_string($typeParameter)) {
+                $queryOptions['type'] = $typeParameter;
+            }
         }
 
-        return \array_merge($options, \array_filter($queryOptions));
+        return \array_filter($queryOptions);
     }
 
     /**
@@ -355,12 +391,12 @@ class MediaSmartContentProvider implements SmartContentProviderInterface
         }
     }
 
-    public function createQueryBuilder($alias, $indexBy = null): QueryBuilder
+    public function createQueryBuilder(string $alias): QueryBuilder
     {
         return $this->entityManager->createQueryBuilder()
             ->select($alias)
             ->addSelect('collection')
-            ->from(MediaInterface::class, $alias, $indexBy)
+            ->from(MediaInterface::class, $alias)
             ->innerJoin($alias . '.collection', 'collection');
     }
 
