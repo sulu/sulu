@@ -12,7 +12,6 @@
 namespace Sulu\Bundle\PageBundle;
 
 use Sulu\Bundle\PageBundle\DependencyInjection\Compiler\ContentExportCompilerPass;
-use Sulu\Bundle\PageBundle\DependencyInjection\Compiler\SmartContentDataProviderCompilerPass;
 use Sulu\Bundle\PageBundle\DependencyInjection\Compiler\StructureExtensionCompilerPass;
 use Sulu\Bundle\PageBundle\DependencyInjection\Compiler\SuluNextPageCompilerPass;
 use Sulu\Bundle\PageBundle\DependencyInjection\Compiler\VersioningCompilerPass;
@@ -31,7 +30,6 @@ final class SuluPageBundle extends Bundle
 
         $container->addCompilerPass(new SuluNextPageCompilerPass());
         $container->addCompilerPass(new ContentExportCompilerPass());
-        $container->addCompilerPass(new SmartContentDataProviderCompilerPass());
         $container->addCompilerPass(new WebspacesPass());
         $container->addCompilerPass(new StructureExtensionCompilerPass());
         $container->addCompilerPass(new VersioningCompilerPass());

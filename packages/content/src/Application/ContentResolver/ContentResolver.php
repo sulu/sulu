@@ -282,7 +282,7 @@ class ContentResolver implements ContentResolverInterface
                 if (isset($view[$key])) {
                     $result['view'][$name][$key] = $view[$key];
                 } else {
-                    $result['view'][$name] = $view;
+                    $result['view'][$name][$key] = $view;
                 }
             }
 
