@@ -35,6 +35,7 @@ use Sulu\Snippet\Infrastructure\Sulu\Content\PropertyResolver\SnippetSelectionPr
 use Sulu\Snippet\Infrastructure\Sulu\Content\ResourceLoader\SnippetResourceLoader;
 use Sulu\Snippet\Infrastructure\Sulu\Content\SingleSnippetSelectionContentType;
 use Sulu\Snippet\Infrastructure\Sulu\Content\SnippetSelectionContentType;
+use Sulu\Snippet\Infrastructure\Sulu\Content\SnippetSmartContentProvider;
 use Sulu\Snippet\UserInterface\Controller\Admin\SnippetController;
 use Symfony\Component\Config\Definition\Configurator\DefinitionConfigurator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -230,7 +231,13 @@ final class SuluSnippetBundle extends AbstractBundle
             ->tag('sulu.content.type', ['alias' => 'snippet_selection']);
 
         // Smart Content services
-        // TODO add SnippetSmartContentProvider
+        $services->set('sulu_snippet.snippet_smart_content_provider')
+            ->class(SnippetSmartContentProvider::class)
+            ->args([
+                new Reference('sulu_content.dimension_content_query_enhancer'),
+                new Reference('doctrine.orm.entity_manager'),
+            ])
+            ->tag('sulu_content.smart_content_provider', ['type' => SnippetInterface::RESOURCE_KEY]);
     }
 
     /**
