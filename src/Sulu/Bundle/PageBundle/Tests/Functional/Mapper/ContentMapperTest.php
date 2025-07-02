@@ -18,7 +18,6 @@ use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\BreadcrumbItemInterface;
 use Sulu\Component\Content\Compat\Structure;
 use Sulu\Component\Content\Compat\StructureInterface;
-use Sulu\Component\Content\ContentTypeManager;
 use Sulu\Component\Content\Document\Behavior\ExtensionBehavior;
 use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
 use Sulu\Component\Content\Document\Behavior\ShadowLocaleBehavior;
@@ -82,11 +81,6 @@ class ContentMapperTest extends SuluTestCase
      */
     private $tokenStorage = null;
 
-    /**
-     * @var ContentTypeManager
-     */
-    private $contentTypeManager;
-
     public function setUp(): void
     {
         $this->initPhpcr();
@@ -96,7 +90,6 @@ class ContentMapperTest extends SuluTestCase
         $this->session = $this->getContainer()->get('sulu_document_manager.default_session');
         $this->sessionManager = $this->getContainer()->get('sulu.phpcr.session');
         $this->extensionManager = $this->getContainer()->get('sulu_page.extension.manager');
-        $this->contentTypeManager = $this->getContainer()->get('sulu.content.type_manager');
 
         /** @var bool $hasTokenStorage */
         $hasTokenStorage = $this->getContainer()->has('security.token_storage');

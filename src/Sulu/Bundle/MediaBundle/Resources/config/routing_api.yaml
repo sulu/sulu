@@ -1,0 +1,158 @@
+# Collections
+sulu_media.get_collection:
+    path: '/collections/{id}.{_format}'
+    methods: GET
+    controller: 'sulu_media.collection_controller::getAction'
+    format: json
+    requirements:
+        _format: json|csv
+
+sulu_media.get_collections:
+    path: '/collections.{_format}'
+    methods: GET
+    controller: 'sulu_media.collection_controller::cgetAction'
+    format: json
+    requirements:
+        _format: json|csv
+
+sulu_media.post_collection:
+    path: '/collections.{_format}'
+    methods: POST
+    controller: 'sulu_media.collection_controller::postAction'
+    format: json
+    requirements:
+        _format: json|csv
+
+sulu_media.put_collection:
+    path: '/collections/{id}.{_format}'
+    methods: PUT
+    controller: 'sulu_media.collection_controller::putAction'
+    format: json
+    requirements:
+        _format: json|csv
+
+sulu_media.delete_collection:
+    path: '/collections/{id}.{_format}'
+    methods: DELETE
+    controller: 'sulu_media.collection_controller::deleteAction'
+    format: json
+    requirements:
+        _format: json|csv
+
+sulu_media.post_collection_trigger:
+    path: '/collections/{id}.{_format}'
+    methods: POST
+    controller: 'sulu_media.collection_controller::postTriggerAction'
+    format: json
+    requirements:
+        _format: json|csv
+
+# Media
+
+sulu_media.get_media:
+    path: '/media/{id}.{_format}'
+    methods: GET
+    controller: 'sulu_media.media_controller::getAction'
+    format: json
+    requirements:
+        _format: json|csv
+
+sulu_media.cget_media:
+    path: '/media.{_format}'
+    methods: GET
+    controller: 'sulu_media.media_controller::cgetAction'
+    format: json
+    requirements:
+        _format: json|csv
+
+sulu_media.post_media:
+    path: '/media.{_format}'
+    methods: POST
+    controller: 'sulu_media.media_controller::postAction'
+    format: json
+    requirements:
+        _format: json|csv
+
+sulu_media.put_media:
+    path: '/media/{id}.{_format}'
+    methods: PUT
+    controller: 'sulu_media.media_controller::putAction'
+    format: json
+    requirements:
+        _format: json|csv
+
+sulu_media.delete_media:
+    path: '/media/{id}.{_format}'
+    methods: DELETE
+    controller: 'sulu_media.media_controller::deleteAction'
+    format: json
+    requirements:
+        _format: json|csv
+
+sulu_media.delete_media_version:
+    path: '/media/{id}/versions/{version}.{_format}'
+    methods: DELETE
+    controller: 'sulu_media.media_controller::deleteVersionAction'
+    format: json
+    requirements:
+        _format: json|csv
+
+sulu_media.post_media_trigger:
+    path: '/media/{id}.{_format}'
+    methods: POST
+    controller: 'sulu_media.media_controller::postTriggerAction'
+    format: json
+    requirements:
+        _format: json|csv
+
+# Media Preview
+sulu_media.delete_media_preview:
+    path: '/media/{id}/preview.{_format}'
+    methods: DELETE
+    controller: 'sulu_media.media_preview_controller::deleteAction'
+    format: json
+    requirements:
+        _format: json|csv
+
+sulu_media.post_media_preview:
+    path: '/media/{id}/preview.{_format}'
+    methods: POST
+    controller: 'sulu_media.media_preview_controller::postAction'
+    format: json
+    requirements:
+        _format: json|csv
+
+# Format
+sulu_media.get_formats:
+    path: '/formats.{_format}'
+    methods: GET
+    controller: 'sulu_media.format_controller::cgetAction'
+    format: json
+    requirements:
+        _format: json|csv
+
+# Media Format
+
+sulu_media.get_media_formats:
+    path: '/media/{id}/formats.{_format}'
+    methods: GET
+    controller: 'sulu_media.media_format_controller::cgetAction'
+    format: json
+    requirements:
+        _format: json|csv
+
+sulu_media.put_media_format:
+    path: '/media/{id}/formats/{key}.{_format}'
+    methods: PUT
+    controller: 'sulu_media.media_format_controller::putAction'
+    format: json
+    requirements:
+        _format: json|csv
+
+sulu_media.patch_media_formats:
+    path: '/media/{id}/formats.{_format}'
+    methods: PATCH
+    controller: 'sulu_media.media_format_controller::cpatchAction'
+    format: json
+    requirements:
+        _format: json|csv

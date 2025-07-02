@@ -5,6 +5,7 @@ on:
         branches:
             - '2.x'
             - '2.[0-9]+'
+    workflow_dispatch:
 
 jobs:
     trigger-styleguide-build:

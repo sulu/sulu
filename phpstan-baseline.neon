@@ -97,6 +97,12 @@ parameters:
 			path: src/Sulu/Bundle/ActivityBundle/Domain/Repository/NullActivityRepository.php
 
 		-
+			message: '#^Call to function method_exists\(\) with Doctrine\\DBAL\\Query\\QueryBuilder and ''executeStatement'' will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: src/Sulu/Bundle/ActivityBundle/Infrastructure/Doctrine/Repository/ActivityRepository.php
+
+		-
 			message: '#^Cannot call method generate\(\) on Doctrine\\ORM\\Id\\AbstractIdGenerator\|null\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -1647,7 +1653,7 @@ parameters:
 		-
 			message: '#^Parameter \#2 \$value of method Symfony\\Component\\DependencyInjection\\Container\:\:setParameter\(\) expects array\|bool\|float\|int\|string\|UnitEnum\|null, mixed given\.$#'
 			identifier: argument.type
-			count: 9
+			count: 10
 			path: src/Sulu/Bundle/AdminBundle/DependencyInjection/SuluAdminExtension.php
 
 		-
@@ -1869,12 +1875,6 @@ parameters:
 		-
 			message: '#^Method Sulu\\Bundle\\AdminBundle\\FormMetadata\\FormMetadataMapper\:\:mapTags\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/FormMetadata/FormMetadataMapper.php
-
-		-
-			message: '#^PHPDoc tag @var with type Sulu\\Component\\Content\\Metadata\\PropertyMetadata is not subtype of native type Sulu\\Component\\Content\\Metadata\\ItemMetadata\.$#'
-			identifier: varTag.nativeType
 			count: 1
 			path: src/Sulu/Bundle/AdminBundle/FormMetadata/FormMetadataMapper.php
 
@@ -7573,6 +7573,12 @@ parameters:
 			path: src/Sulu/Bundle/CategoryBundle/Command/RecoverCommand.php
 
 		-
+			message: '#^Call to function method_exists\(\) with Doctrine\\DBAL\\Statement and ''executeStatement'' will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: src/Sulu/Bundle/CategoryBundle/Command/RecoverCommand.php
+
+		-
 			message: '#^Cannot call method execute\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -12331,6 +12337,12 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Command/AccountRecoverCommand.php
 
 		-
+			message: '#^Call to function method_exists\(\) with Doctrine\\DBAL\\Statement and ''executeStatement'' will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: src/Sulu/Bundle/ContactBundle/Command/AccountRecoverCommand.php
+
+		-
 			message: '#^Cannot call method execute\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -16465,24 +16477,6 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Entity/AccountRepository.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Entity\\AccountRepository\:\:appendJoins\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Entity/AccountRepository.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Entity\\AccountRepository\:\:appendJoins\(\) has parameter \$alias with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Entity/AccountRepository.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Entity\\AccountRepository\:\:appendJoins\(\) has parameter \$locale with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Entity/AccountRepository.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\ContactBundle\\Entity\\AccountRepository\:\:countDistinctAccountChildrenAndContacts\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -16779,24 +16773,6 @@ parameters:
 		-
 			message: '#^Method Sulu\\Bundle\\ContactBundle\\Entity\\ContactRepository\:\:addWhere\(\) has parameter \$where with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Entity/ContactRepository.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Entity\\ContactRepository\:\:appendJoins\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Entity/ContactRepository.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Entity\\ContactRepository\:\:appendJoins\(\) has parameter \$alias with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Entity/ContactRepository.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Entity\\ContactRepository\:\:appendJoins\(\) has parameter \$locale with no type specified\.$#'
-			identifier: missingType.parameter
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Entity/ContactRepository.php
 
@@ -18229,13 +18205,13 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/AdminControllerTest.php
 
 		-
-			message: '#^Parameter \#2 \$array of method PHPUnit\\Framework\\Assert\:\:assertArrayHasKey\(\) expects array\<mixed\>\|ArrayAccess\<\(int\|string\), mixed\>, array\|ArrayAccess given\.$#'
+			message: '#^Parameter \#2 \$array of method PHPUnit\\Framework\\Assert\:\:assertArrayHasKey\(\) expects array\<mixed\>\|ArrayAccess\<\(int\|string\), mixed\>, mixed given\.$#'
 			identifier: argument.type
 			count: 3
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/AdminControllerTest.php
 
 		-
-			message: '#^Parameter \#2 \$array of method PHPUnit\\Framework\\Assert\:\:assertArrayHasKey\(\) expects array\<mixed\>\|ArrayAccess\<\(int\|string\), mixed\>, mixed given\.$#'
+			message: '#^Parameter \#2 \$array of method PHPUnit\\Framework\\Assert\:\:assertArrayHasKey\(\) expects array\<mixed\>\|ArrayAccess\<\(int\|string\), mixed\>, non\-empty\-array\|ArrayAccess given\.$#'
 			identifier: argument.type
 			count: 3
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/AdminControllerTest.php
@@ -21103,38 +21079,14 @@ parameters:
 			path: src/Sulu/Bundle/CoreBundle/Build/DatabaseBuilder.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\CoreBundle\\Build\\DatabaseBuilder\:\:getDependencies\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/CoreBundle/Build/DatabaseBuilder.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\CoreBundle\\Build\\FixturesBuilder\:\:getDependencies\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/CoreBundle/Build/FixturesBuilder.php
-
-		-
 			message: '#^Cannot call method getOption\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 1
 			path: src/Sulu/Bundle/CoreBundle/Build/PhpcrBuilder.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\CoreBundle\\Build\\PhpcrBuilder\:\:getDependencies\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/CoreBundle/Build/PhpcrBuilder.php
-
-		-
 			message: '#^Cannot call method initialize\(\) on mixed\.$#'
 			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Bundle/CoreBundle/Build/PhpcrMigrationsBuilder.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\CoreBundle\\Build\\PhpcrMigrationsBuilder\:\:getDependencies\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
 			count: 1
 			path: src/Sulu/Bundle/CoreBundle/Build/PhpcrMigrationsBuilder.php
 
@@ -22327,19 +22279,19 @@ parameters:
 			path: src/Sulu/Bundle/CustomUrlBundle/Tests/Functional/Controller/CustomUrlControllerTest.php
 
 		-
-			message: '#^Parameter \#2 \$array of method PHPUnit\\Framework\\Assert\:\:assertArrayHasKey\(\) expects array\<mixed\>\|ArrayAccess\<\(int\|string\), mixed\>, array\|ArrayAccess given\.$#'
-			identifier: argument.type
-			count: 4
-			path: src/Sulu/Bundle/CustomUrlBundle/Tests/Functional/Controller/CustomUrlControllerTest.php
-
-		-
 			message: '#^Parameter \#2 \$array of method PHPUnit\\Framework\\Assert\:\:assertArrayHasKey\(\) expects array\<mixed\>\|ArrayAccess\<\(int\|string\), mixed\>, mixed given\.$#'
 			identifier: argument.type
 			count: 4
 			path: src/Sulu/Bundle/CustomUrlBundle/Tests/Functional/Controller/CustomUrlControllerTest.php
 
 		-
-			message: '#^Parameter \#2 \$array of method PHPUnit\\Framework\\Assert\:\:assertArrayNotHasKey\(\) expects array\<mixed\>\|ArrayAccess\<\(int\|string\), mixed\>, array\|ArrayAccess given\.$#'
+			message: '#^Parameter \#2 \$array of method PHPUnit\\Framework\\Assert\:\:assertArrayHasKey\(\) expects array\<mixed\>\|ArrayAccess\<\(int\|string\), mixed\>, non\-empty\-array\|ArrayAccess given\.$#'
+			identifier: argument.type
+			count: 4
+			path: src/Sulu/Bundle/CustomUrlBundle/Tests/Functional/Controller/CustomUrlControllerTest.php
+
+		-
+			message: '#^Parameter \#2 \$array of method PHPUnit\\Framework\\Assert\:\:assertArrayNotHasKey\(\) expects array\<mixed\>\|ArrayAccess\<\(int\|string\), mixed\>, non\-empty\-array\|ArrayAccess given\.$#'
 			identifier: argument.type
 			count: 3
 			path: src/Sulu/Bundle/CustomUrlBundle/Tests/Functional/Controller/CustomUrlControllerTest.php
@@ -23197,7 +23149,7 @@ parameters:
 			path: src/Sulu/Bundle/DocumentManagerBundle/DependencyInjection/Compiler/RegisterListenersPass.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\DocumentManagerBundle\\DependencyInjection\\Compiler\\ExtractingEventDispatcher\:\:getSubscribedEvents\(\) should return array\<string, array\<int\|string, array\<int\|string, int\|string\>\|int\|string\>\|string\> but returns array\.$#'
+			message: '#^Method Sulu\\Bundle\\DocumentManagerBundle\\DependencyInjection\\Compiler\\ExtractingEventDispatcher\:\:getSubscribedEvents\(\) should return array\<string, list\<array\{0\: string, 1\?\: int\}\|int\|string\>\|string\> but returns array\.$#'
 			identifier: return.type
 			count: 1
 			path: src/Sulu/Bundle/DocumentManagerBundle/DependencyInjection/Compiler/RegisterListenersPass.php
@@ -24697,12 +24649,6 @@ parameters:
 			path: src/Sulu/Bundle/HttpCacheBundle/EventSubscriber/InvalidationSubscriber.php
 
 		-
-			message: '#^Parameter \#1 \$webspaceKey of method Sulu\\Component\\Content\\Types\\ResourceLocator\\Strategy\\ResourceLocatorStrategyPoolInterface\:\:getStrategyByWebspaceKey\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/HttpCacheBundle/EventSubscriber/InvalidationSubscriber.php
-
-		-
 			message: '#^Parameter \#2 \$id of method Sulu\\Bundle\\HttpCacheBundle\\Cache\\CacheManager\:\:invalidateReference\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 2
@@ -24722,24 +24668,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#2 \$structure of method Sulu\\Component\\Content\\Compat\\StructureManagerInterface\:\:wrapStructure\(\) expects Sulu\\Component\\Content\\Metadata\\StructureMetadata, Sulu\\Component\\Content\\Metadata\\StructureMetadata\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/HttpCacheBundle/EventSubscriber/InvalidationSubscriber.php
-
-		-
-			message: '#^Parameter \#2 \$webspaceKey of method Sulu\\Component\\Content\\Types\\ResourceLocator\\Strategy\\ResourceLocatorStrategyInterface\:\:loadByContentUuid\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/HttpCacheBundle/EventSubscriber/InvalidationSubscriber.php
-
-		-
-			message: '#^Parameter \#2 \$webspaceKey of method Sulu\\Component\\Content\\Types\\ResourceLocator\\Strategy\\ResourceLocatorStrategyInterface\:\:loadHistoryByContentUuid\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/HttpCacheBundle/EventSubscriber/InvalidationSubscriber.php
-
-		-
-			message: '#^Parameter \#3 \$webspace of method Sulu\\Bundle\\HttpCacheBundle\\EventSubscriber\\InvalidationSubscriber\:\:findUrlsByResourceLocator\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/HttpCacheBundle/EventSubscriber/InvalidationSubscriber.php
@@ -24863,18 +24791,6 @@ parameters:
 			identifier: missingType.parameter
 			count: 1
 			path: src/Sulu/Bundle/HttpCacheBundle/Tests/Unit/EventSubscriber/InvalidationSubscriberTest.php
-
-		-
-			message: '#^Cannot call method willReturn\(\) on array\|Prophecy\\Prophecy\\MethodProphecy\.$#'
-			identifier: method.nonObject
-			count: 3
-			path: src/Sulu/Bundle/HttpCacheBundle/Tests/Unit/EventSubscriber/TagsSubscriberTest.php
-
-		-
-			message: '#^Property Sulu\\Bundle\\HttpCacheBundle\\Tests\\Unit\\EventListener\\TagsSubscriberTest\:\:\$referenceStores with generic class Prophecy\\Prophecy\\ObjectProphecy does not specify its types\: T$#'
-			identifier: missingType.generics
-			count: 1
-			path: src/Sulu/Bundle/HttpCacheBundle/Tests/Unit/EventSubscriber/TagsSubscriberTest.php
 
 		-
 			message: '#^Method Sulu\\Bundle\\LocationBundle\\Content\\Types\\LocationContentType\:\:read\(\) has no return type specified\.$#'
@@ -25795,24 +25711,6 @@ parameters:
 			path: src/Sulu/Bundle/MarkupBundle/Tests/Unit/Markup/HtmlTagExtractorTest.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\MarkupBundle\\Tests\\Unit\\Markup\\HtmlTagExtractorTest\:\:testCount\(\) has parameter \$count with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/MarkupBundle/Tests/Unit/Markup/HtmlTagExtractorTest.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\MarkupBundle\\Tests\\Unit\\Markup\\HtmlTagExtractorTest\:\:testCount\(\) has parameter \$counts with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/MarkupBundle/Tests/Unit/Markup/HtmlTagExtractorTest.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\MarkupBundle\\Tests\\Unit\\Markup\\HtmlTagExtractorTest\:\:testCount\(\) has parameter \$html with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/MarkupBundle/Tests/Unit/Markup/HtmlTagExtractorTest.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\MarkupBundle\\Tests\\Unit\\Markup\\HtmlTagExtractorTest\:\:testExtract\(\) has parameter \$attributes with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -25827,36 +25725,6 @@ parameters:
 		-
 			message: '#^Method Sulu\\Bundle\\MarkupBundle\\Tests\\Unit\\Markup\\HtmlTagExtractorTest\:\:testExtract\(\) has parameter \$tagName with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/MarkupBundle/Tests/Unit/Markup/HtmlTagExtractorTest.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\MarkupBundle\\Tests\\Unit\\Markup\\HtmlTagExtractorTest\:\:testExtractAll\(\) has parameter \$counts with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/MarkupBundle/Tests/Unit/Markup/HtmlTagExtractorTest.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\MarkupBundle\\Tests\\Unit\\Markup\\HtmlTagExtractorTest\:\:testExtractAll\(\) has parameter \$html with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/MarkupBundle/Tests/Unit/Markup/HtmlTagExtractorTest.php
-
-		-
-			message: '#^Parameter \#1 \$expectedCount of method PHPUnit\\Framework\\Assert\:\:assertCount\(\) expects int, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/MarkupBundle/Tests/Unit/Markup/HtmlTagExtractorTest.php
-
-		-
-			message: '#^Parameter \#1 \$html of method Sulu\\Bundle\\MarkupBundle\\Markup\\HtmlTagExtractor\:\:count\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/MarkupBundle/Tests/Unit/Markup/HtmlTagExtractorTest.php
-
-		-
-			message: '#^Parameter \#1 \$html of method Sulu\\Bundle\\MarkupBundle\\Markup\\HtmlTagExtractor\:\:extract\(\) expects string, mixed given\.$#'
-			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/MarkupBundle/Tests/Unit/Markup/HtmlTagExtractorTest.php
 
@@ -26395,12 +26263,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Api/Media.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\Api\\Media\:\:getStorageOptions\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Api/Media.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\MediaBundle\\Api\\Media\:\:getThumbnails\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -26468,12 +26330,6 @@ parameters:
 
 		-
 			message: '#^Method Sulu\\Bundle\\MediaBundle\\Api\\Media\:\:setPublishLanguages\(\) has parameter \$publishLanguages with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Api/Media.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\Api\\Media\:\:setStorageOptions\(\) has parameter \$storageOptions with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Api/Media.php
@@ -28381,18 +28237,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Controller/MediaStreamController.php
 
 		-
-			message: '#^Parameter \#1 \$storageOptions of method Sulu\\Bundle\\MediaBundle\\Media\\Storage\\StorageInterface\:\:getPath\(\) expects array\<string, string\|null\>, array\<mixed\> given\.$#'
-			identifier: argument.type
-			count: 2
-			path: src/Sulu/Bundle/MediaBundle/Controller/MediaStreamController.php
-
-		-
-			message: '#^Parameter \#1 \$storageOptions of method Sulu\\Bundle\\MediaBundle\\Media\\Storage\\StorageInterface\:\:getType\(\) expects array\<string, string\|null\>, array\<mixed\> given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Controller/MediaStreamController.php
-
-		-
 			message: '#^Parameter \#2 \$formatKey of method Sulu\\Bundle\\MediaBundle\\Media\\FormatManager\\FormatManagerInterface\:\:returnImage\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -29071,12 +28915,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Entity/FileVersion.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\Entity\\FileVersion\:\:getStorageOptions\(\) should return array\<mixed\> but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/FileVersion.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\MediaBundle\\Entity\\FileVersion\:\:removeCategories\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -29132,18 +28970,6 @@ parameters:
 
 		-
 			message: '#^Method Sulu\\Bundle\\MediaBundle\\Entity\\FileVersion\:\:setProperties\(\) has parameter \$properties with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/FileVersion.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\Entity\\FileVersion\:\:setStorageOptions\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/FileVersion.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\Entity\\FileVersion\:\:setStorageOptions\(\) has parameter \$storageOptions with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Entity/FileVersion.php
@@ -29233,43 +29059,7 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Entity/FileVersionPublishLanguage.php
 
 		-
-			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
-			identifier: foreach.nonIterable
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/MediaDataProviderRepository.php
-
-		-
 			message: '#^Binary operation "\." between ''entity\.'' and mixed results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 2
-			path: src/Sulu/Bundle/MediaBundle/Entity/MediaDataProviderRepository.php
-
-		-
-			message: '#^Binary operation "\." between mixed and ''\.changer'' results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/MediaDataProviderRepository.php
-
-		-
-			message: '#^Binary operation "\." between mixed and ''\.collection'' results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/MediaDataProviderRepository.php
-
-		-
-			message: '#^Binary operation "\." between mixed and ''\.creator'' results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/MediaDataProviderRepository.php
-
-		-
-			message: '#^Binary operation "\." between mixed and ''\.files'' results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 2
-			path: src/Sulu/Bundle/MediaBundle/Entity/MediaDataProviderRepository.php
-
-		-
-			message: '#^Binary operation "\." between mixed and ''\.type'' results in an error\.$#'
 			identifier: binaryOp.invalid
 			count: 2
 			path: src/Sulu/Bundle/MediaBundle/Entity/MediaDataProviderRepository.php
@@ -29281,212 +29071,8 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Entity/MediaDataProviderRepository.php
 
 		-
-			message: '#^Cannot call method addSelect\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: src/Sulu/Bundle/MediaBundle/Entity/MediaDataProviderRepository.php
-
-		-
-			message: '#^Cannot call method distinct\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/MediaDataProviderRepository.php
-
-		-
-			message: '#^Cannot call method getQuery\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: src/Sulu/Bundle/MediaBundle/Entity/MediaDataProviderRepository.php
-
-		-
-			message: '#^Cannot call method getResult\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/MediaDataProviderRepository.php
-
-		-
-			message: '#^Cannot call method getScalarResult\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/MediaDataProviderRepository.php
-
-		-
-			message: '#^Cannot call method orderBy\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: src/Sulu/Bundle/MediaBundle/Entity/MediaDataProviderRepository.php
-
-		-
-			message: '#^Cannot call method select\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/MediaDataProviderRepository.php
-
-		-
-			message: '#^Cannot call method setFirstResult\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/MediaDataProviderRepository.php
-
-		-
-			message: '#^Cannot call method setMaxResults\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: src/Sulu/Bundle/MediaBundle/Entity/MediaDataProviderRepository.php
-
-		-
-			message: '#^Cannot call method setParameter\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: src/Sulu/Bundle/MediaBundle/Entity/MediaDataProviderRepository.php
-
-		-
-			message: '#^Cannot call method where\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/MediaDataProviderRepository.php
-
-		-
 			message: '#^Default value of the parameter \#6 \$options \(array\{\}\) of method Sulu\\Bundle\\MediaBundle\\Entity\\MediaDataProviderRepository\:\:findByFilters\(\) is incompatible with type array\{webspaceKey\?\: string, locale\: string\}\.$#'
 			identifier: parameter.defaultValue
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/MediaDataProviderRepository.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\Entity\\MediaDataProviderRepository\:\:append\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/MediaDataProviderRepository.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\Entity\\MediaDataProviderRepository\:\:append\(\) has parameter \$alias with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/MediaDataProviderRepository.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\Entity\\MediaDataProviderRepository\:\:append\(\) has parameter \$locale with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/MediaDataProviderRepository.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\Entity\\MediaDataProviderRepository\:\:append\(\) has parameter \$options with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/MediaDataProviderRepository.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\Entity\\MediaDataProviderRepository\:\:appendCategoriesRelation\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/MediaDataProviderRepository.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\Entity\\MediaDataProviderRepository\:\:appendCategoriesRelation\(\) has parameter \$alias with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/MediaDataProviderRepository.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\Entity\\MediaDataProviderRepository\:\:appendDatasource\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/MediaDataProviderRepository.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\Entity\\MediaDataProviderRepository\:\:appendDatasource\(\) has parameter \$alias with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/MediaDataProviderRepository.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\Entity\\MediaDataProviderRepository\:\:appendDatasource\(\) has parameter \$datasource with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/MediaDataProviderRepository.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\Entity\\MediaDataProviderRepository\:\:appendDatasource\(\) has parameter \$includeSubFolders with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/MediaDataProviderRepository.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\Entity\\MediaDataProviderRepository\:\:appendJoins\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/MediaDataProviderRepository.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\Entity\\MediaDataProviderRepository\:\:appendJoins\(\) has parameter \$alias with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/MediaDataProviderRepository.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\Entity\\MediaDataProviderRepository\:\:appendJoins\(\) has parameter \$locale with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/MediaDataProviderRepository.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\Entity\\MediaDataProviderRepository\:\:appendSortByJoins\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/MediaDataProviderRepository.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\Entity\\MediaDataProviderRepository\:\:appendSortByJoins\(\) has parameter \$alias with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/MediaDataProviderRepository.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\Entity\\MediaDataProviderRepository\:\:appendSortByJoins\(\) has parameter \$locale with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/MediaDataProviderRepository.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\Entity\\MediaDataProviderRepository\:\:appendTagsRelation\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/MediaDataProviderRepository.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\Entity\\MediaDataProviderRepository\:\:appendTagsRelation\(\) has parameter \$alias with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/MediaDataProviderRepository.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\Entity\\MediaDataProviderRepository\:\:appendTargetGroupRelation\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/MediaDataProviderRepository.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\Entity\\MediaDataProviderRepository\:\:appendTargetGroupRelation\(\) has parameter \$alias with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/MediaDataProviderRepository.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\Entity\\MediaDataProviderRepository\:\:createQueryBuilder\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/MediaDataProviderRepository.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\Entity\\MediaDataProviderRepository\:\:createQueryBuilder\(\) has parameter \$alias with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/MediaDataProviderRepository.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\Entity\\MediaDataProviderRepository\:\:createQueryBuilder\(\) has parameter \$indexBy with no type specified\.$#'
-			identifier: missingType.parameter
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Entity/MediaDataProviderRepository.php
 
@@ -29521,57 +29107,15 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Entity/MediaDataProviderRepository.php
 
 		-
+			message: '#^Parameter \#1 \$datasource of method Sulu\\Bundle\\MediaBundle\\Entity\\MediaDataProviderRepository\:\:appendDatasource\(\) expects int\|string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Sulu/Bundle/MediaBundle/Entity/MediaDataProviderRepository.php
+
+		-
 			message: '#^Parameter \#1 \$haystack of function strpos expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 2
-			path: src/Sulu/Bundle/MediaBundle/Entity/MediaDataProviderRepository.php
-
-		-
-			message: '#^Parameter \#1 \$queryBuilder of method Sulu\\Bundle\\MediaBundle\\Entity\\MediaDataProviderRepository\:\:append\(\) expects Doctrine\\ORM\\QueryBuilder, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/MediaDataProviderRepository.php
-
-		-
-			message: '#^Parameter \#1 \$queryBuilder of method Sulu\\Bundle\\MediaBundle\\Entity\\MediaDataProviderRepository\:\:appendCategoriesRelation\(\) expects Doctrine\\ORM\\QueryBuilder, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/MediaDataProviderRepository.php
-
-		-
-			message: '#^Parameter \#1 \$queryBuilder of method Sulu\\Bundle\\MediaBundle\\Entity\\MediaDataProviderRepository\:\:appendJoins\(\) expects Doctrine\\ORM\\QueryBuilder, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/MediaDataProviderRepository.php
-
-		-
-			message: '#^Parameter \#1 \$queryBuilder of method Sulu\\Bundle\\MediaBundle\\Entity\\MediaDataProviderRepository\:\:appendRelation\(\) expects Doctrine\\ORM\\QueryBuilder, mixed given\.$#'
-			identifier: argument.type
-			count: 6
-			path: src/Sulu/Bundle/MediaBundle/Entity/MediaDataProviderRepository.php
-
-		-
-			message: '#^Parameter \#1 \$queryBuilder of method Sulu\\Bundle\\MediaBundle\\Entity\\MediaDataProviderRepository\:\:appendTagsRelation\(\) expects Doctrine\\ORM\\QueryBuilder, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/MediaDataProviderRepository.php
-
-		-
-			message: '#^Parameter \#1 \$queryBuilder of method Sulu\\Bundle\\MediaBundle\\Entity\\MediaDataProviderRepository\:\:appendTargetGroupRelation\(\) expects Doctrine\\ORM\\QueryBuilder, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/MediaDataProviderRepository.php
-
-		-
-			message: '#^Parameter \#1 \$queryBuilder of method Sulu\\Bundle\\MediaBundle\\Entity\\MediaDataProviderRepository\:\:appendTypeRelation\(\) expects Doctrine\\ORM\\QueryBuilder, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/MediaDataProviderRepository.php
-
-		-
-			message: '#^Parameter \#1 \$queryBuilder of method Sulu\\Bundle\\SecurityBundle\\AccessControl\\AccessControlQueryEnhancer\:\:enhance\(\) expects Doctrine\\ORM\\QueryBuilder, mixed given\.$#'
-			identifier: argument.type
-			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Entity/MediaDataProviderRepository.php
 
 		-
@@ -29593,67 +29137,19 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Entity/MediaDataProviderRepository.php
 
 		-
-			message: '#^Parameter \#1 \.\.\.\$arrays of function array_merge expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 7
-			path: src/Sulu/Bundle/MediaBundle/Entity/MediaDataProviderRepository.php
-
-		-
 			message: '#^Parameter \#10 \$permission of method Sulu\\Bundle\\MediaBundle\\Entity\\MediaDataProviderRepository\:\:parentFindByFilters\(\) expects int\|null, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Entity/MediaDataProviderRepository.php
 
 		-
-			message: '#^Parameter \#2 \$alias of method Doctrine\\ORM\\QueryBuilder\:\:from\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/MediaDataProviderRepository.php
-
-		-
-			message: '#^Parameter \#2 \$array of function array_key_exists expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: src/Sulu/Bundle/MediaBundle/Entity/MediaDataProviderRepository.php
-
-		-
 			message: '#^Parameter \#2 \$array of function array_map expects array, mixed given\.$#'
 			identifier: argument.type
-			count: 2
-			path: src/Sulu/Bundle/MediaBundle/Entity/MediaDataProviderRepository.php
-
-		-
-			message: '#^Parameter \#2 \$relation of method Sulu\\Bundle\\MediaBundle\\Entity\\MediaDataProviderRepository\:\:appendRelation\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 5
+			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Entity/MediaDataProviderRepository.php
 
 		-
 			message: '#^Parameter \#2 \$sortMethod of method Sulu\\Bundle\\MediaBundle\\Entity\\MediaDataProviderRepository\:\:appendSortBy\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: src/Sulu/Bundle/MediaBundle/Entity/MediaDataProviderRepository.php
-
-		-
-			message: '#^Parameter \#2 \.\.\.\$arrays of function array_merge expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/MediaDataProviderRepository.php
-
-		-
-			message: '#^Parameter \#3 \$indexBy of method Doctrine\\ORM\\QueryBuilder\:\:from\(\) expects string\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/MediaDataProviderRepository.php
-
-		-
-			message: '#^Parameter \#3 \$queryBuilder of method Sulu\\Bundle\\MediaBundle\\Entity\\MediaDataProviderRepository\:\:appendDatasource\(\) expects Doctrine\\ORM\\QueryBuilder, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/MediaDataProviderRepository.php
-
-		-
-			message: '#^Parameter \#3 \$queryBuilder of method Sulu\\Bundle\\MediaBundle\\Entity\\MediaDataProviderRepository\:\:appendSortBy\(\) expects Doctrine\\ORM\\QueryBuilder, mixed given\.$#'
 			identifier: argument.type
 			count: 2
 			path: src/Sulu/Bundle/MediaBundle/Entity/MediaDataProviderRepository.php
@@ -30169,6 +29665,12 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Media/FormatLoader/BaseXmlFormatLoader.php
 
 		-
+			message: '#^Cannot call method getNamedItem\(\) on \(DOMNamedNodeMap&iterable\<DOMAttr\>\)\|null\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: src/Sulu/Bundle/MediaBundle/Media/FormatLoader/BaseXmlFormatLoader.php
+
+		-
 			message: '#^Cannot call method item\(\) on DOMNodeList\<DOMNode\>\|false\.$#'
 			identifier: method.nonObject
 			count: 2
@@ -30577,12 +30079,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Media/FormatManager/FormatManager.php
 
 		-
-			message: '#^Property Sulu\\Bundle\\MediaBundle\\Media\\FormatManager\\FormatManager\:\:\$supportedImageFormats is unused\.$#'
-			identifier: property.unused
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Media/FormatManager/FormatManager.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\MediaBundle\\Media\\FormatManager\\FormatManagerInterface\:\:getFormats\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -30842,12 +30338,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#1 \$pattern of function fnmatch expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Media/ImageConverter/ImagineImageConverter.php
-
-		-
-			message: '#^Parameter \#1 \$storageOptions of method Sulu\\Bundle\\MediaBundle\\Media\\Storage\\StorageInterface\:\:load\(\) expects array\<string, string\|null\>, array\<mixed\> given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Media/ImageConverter/ImagineImageConverter.php
@@ -31627,15 +31117,9 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Media/Manager/MediaManager.php
 
 		-
-			message: '#^Parameter \#1 \$storageOptions of method Sulu\\Bundle\\MediaBundle\\Api\\Media\:\:setStorageOptions\(\) expects array, mixed given\.$#'
+			message: '#^Parameter \#1 \$storageOptions of method Sulu\\Bundle\\MediaBundle\\Api\\Media\:\:setStorageOptions\(\) expects array\<string, string\|null\>, mixed given\.$#'
 			identifier: argument.type
 			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Media/Manager/MediaManager.php
-
-		-
-			message: '#^Parameter \#1 \$storageOptions of method Sulu\\Bundle\\MediaBundle\\Media\\Storage\\StorageInterface\:\:remove\(\) expects array\<string, string\|null\>, array\<mixed\> given\.$#'
-			identifier: argument.type
-			count: 2
 			path: src/Sulu/Bundle/MediaBundle/Media/Manager/MediaManager.php
 
 		-
@@ -31682,12 +31166,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#3 \$fileName of method Sulu\\Bundle\\MediaBundle\\Media\\Manager\\MediaManager\:\:generateUrl\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Media/Manager/MediaManager.php
-
-		-
-			message: '#^Parameter \#3 \$storageOptions of method Sulu\\Bundle\\MediaBundle\\Media\\Storage\\StorageInterface\:\:save\(\) expects array\<string, string\|null\>, array\<mixed\> given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Media/Manager/MediaManager.php
@@ -32737,12 +32215,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/CollectionControllerTest.php
 
 		-
-			message: '#^Property Sulu\\Bundle\\MediaBundle\\Tests\\Functional\\Controller\\CollectionControllerTest\:\:\$roleRepository is never read, only written\.$#'
-			identifier: property.onlyWritten
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/CollectionControllerTest.php
-
-		-
 			message: '#^Property Sulu\\Bundle\\MediaBundle\\Tests\\Functional\\Controller\\CollectionControllerTest\:\:\$systemCollectionCache \(Sulu\\Component\\Cache\\CacheInterface\) does not accept object\.$#'
 			identifier: assign.propertyType
 			count: 1
@@ -32805,12 +32277,6 @@ parameters:
 		-
 			message: '#^Parameter \#2 \$haystack of method PHPUnit\\Framework\\Assert\:\:assertCount\(\) expects Countable\|iterable, mixed given\.$#'
 			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/FormatControllerTest.php
-
-		-
-			message: '#^Property Sulu\\Bundle\\MediaBundle\\Tests\\Functional\\Controller\\FormatControllerTest\:\:\$formatOptions is unused\.$#'
-			identifier: property.unused
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/FormatControllerTest.php
 
@@ -33801,7 +33267,7 @@ parameters:
 		-
 			message: '#^Parameter \#2 \$uri of method Symfony\\Component\\BrowserKit\\AbstractBrowser\<Symfony\\Component\\HttpFoundation\\Request,Symfony\\Component\\HttpFoundation\\Response\>\:\:request\(\) expects string, mixed given\.$#'
 			identifier: argument.type
-			count: 5
+			count: 6
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/MediaStreamControllerTest.php
 
 		-
@@ -33963,18 +33429,6 @@ parameters:
 		-
 			message: '#^Parameter \#1 \$title of method Sulu\\Bundle\\MediaBundle\\Entity\\FileVersionMeta\:\:setTitle\(\) expects string, mixed given\.$#'
 			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/MediaWebsiteControllerTest.php
-
-		-
-			message: '#^Property Sulu\\Bundle\\MediaBundle\\Tests\\Functional\\Controller\\MediaWebsiteControllerTest\:\:\$category is unused\.$#'
-			identifier: property.unused
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/MediaWebsiteControllerTest.php
-
-		-
-			message: '#^Property Sulu\\Bundle\\MediaBundle\\Tests\\Functional\\Controller\\MediaWebsiteControllerTest\:\:\$category2 is unused\.$#'
-			identifier: property.unused
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/MediaWebsiteControllerTest.php
 
@@ -34819,12 +34273,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Entity/MediaRepositoryTest.php
 
 		-
-			message: '#^Property Sulu\\Bundle\\MediaBundle\\Tests\\Functional\\Entity\\MediaRepositoryTest\:\:\$collections is unused\.$#'
-			identifier: property.unused
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Entity/MediaRepositoryTest.php
-
-		-
 			message: '#^Property Sulu\\Bundle\\MediaBundle\\Tests\\Functional\\Entity\\MediaRepositoryTest\:\:\$em \(Doctrine\\ORM\\EntityManager\) does not accept Doctrine\\ORM\\EntityManagerInterface\.$#'
 			identifier: assign.propertyType
 			count: 1
@@ -35287,12 +34735,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Tests/Unit/Media/FormatManager/FormatManagerTest.php
 
 		-
-			message: '#^Parameter \#4 \$saveImage of class Sulu\\Bundle\\MediaBundle\\Media\\FormatManager\\FormatManager constructor expects string, true given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Unit/Media/FormatManager/FormatManagerTest.php
-
-		-
 			message: '#^Property Sulu\\Bundle\\MediaBundle\\Media\\FormatManager\\FormatManagerTest\:\:\$formats type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -35641,68 +35083,8 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Tests/Unit/Media/ImageConverter/Transformations/SharpenTransformationTest.php
 
 		-
-			message: '#^Call to an undefined method Prophecy\\Prophecy\\ObjectProphecy\|Symfony\\Component\\HttpFoundation\\File\\UploadedFile\:\:reveal\(\)\.$#'
-			identifier: method.notFound
-			count: 2
-			path: src/Sulu/Bundle/MediaBundle/Tests/Unit/Media/Manager/MediaManagerTest.php
-
-		-
-			message: '#^Call to an undefined method Prophecy\\Prophecy\\ObjectProphecy\|Symfony\\Component\\Security\\Core\\Authentication\\Token\\TokenInterface\:\:reveal\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Unit/Media/Manager/MediaManagerTest.php
-
-		-
 			message: '#^Call to method PHPUnit\\Framework\\Assert\:\:assertNotNull\(\) with Sulu\\Bundle\\MediaBundle\\Api\\Media will always evaluate to true\.$#'
 			identifier: method.alreadyNarrowedType
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Unit/Media/Manager/MediaManagerTest.php
-
-		-
-			message: '#^Cannot call method shouldBeCalled\(\) on Prophecy\\Prophecy\\MethodProphecy\|Symfony\\Component\\Security\\Core\\User\\UserInterface\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Unit/Media/Manager/MediaManagerTest.php
-
-		-
-			message: '#^Cannot call method shouldNotBeCalled\(\) on Prophecy\\Prophecy\\MethodProphecy\|Symfony\\Component\\Security\\Core\\User\\UserInterface\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Unit/Media/Manager/MediaManagerTest.php
-
-		-
-			message: '#^Cannot call method willReturn\(\) on Prophecy\\Prophecy\\MethodProphecy\|string\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: src/Sulu/Bundle/MediaBundle/Tests/Unit/Media/Manager/MediaManagerTest.php
-
-		-
-			message: '#^Cannot call method willReturn\(\) on Prophecy\\Prophecy\\MethodProphecy\|string\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Unit/Media/Manager/MediaManagerTest.php
-
-		-
-			message: '#^Cannot call method willReturn\(\) on int\|Prophecy\\Prophecy\\MethodProphecy\|false\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Unit/Media/Manager/MediaManagerTest.php
-
-		-
-			message: '#^PHPDoc tag @var for variable \$token contains generic class Prophecy\\Prophecy\\ObjectProphecy but does not specify its types\: T$#'
-			identifier: missingType.generics
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Unit/Media/Manager/MediaManagerTest.php
-
-		-
-			message: '#^PHPDoc tag @var for variable \$uploadedFile contains generic class Prophecy\\Prophecy\\ObjectProphecy but does not specify its types\: T$#'
-			identifier: missingType.generics
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Unit/Media/Manager/MediaManagerTest.php
-
-		-
-			message: '#^PHPDoc tag @var with type Prophecy\\Prophecy\\ObjectProphecy\|Symfony\\Component\\Security\\Core\\Authentication\\Token\\TokenInterface is not subtype of native type Prophecy\\Prophecy\\ObjectProphecy\.$#'
-			identifier: varTag.nativeType
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Unit/Media/Manager/MediaManagerTest.php
 
@@ -35710,12 +35092,6 @@ parameters:
 			message: '#^Parameter \#1 \$locale of method Sulu\\Bundle\\MediaBundle\\Media\\Manager\\MediaManager\:\:get\(\) expects string, int given\.$#'
 			identifier: argument.type
 			count: 2
-			path: src/Sulu/Bundle/MediaBundle/Tests/Unit/Media/Manager/MediaManagerTest.php
-
-		-
-			message: '#^Parameter \#1 \$uploadedFile of method Sulu\\Bundle\\MediaBundle\\Media\\Manager\\MediaManager\:\:save\(\) expects Symfony\\Component\\HttpFoundation\\File\\UploadedFile\|null, object given\.$#'
-			identifier: argument.type
-			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Unit/Media/Manager/MediaManagerTest.php
 
 		-
@@ -35751,18 +35127,6 @@ parameters:
 		-
 			message: '#^Parameter \#2 \$mediaTypes of class Sulu\\Bundle\\MediaBundle\\Media\\TypeManager\\TypeManager constructor expects array, mixed given\.$#'
 			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Unit/Media/TypeManager/TypeManagerTest.php
-
-		-
-			message: '#^Property Sulu\\Bundle\\MediaBundle\\Media\\TypeManager\\TypeManagerTest\:\:\$em is unused\.$#'
-			identifier: property.unused
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Unit/Media/TypeManager/TypeManagerTest.php
-
-		-
-			message: '#^Property Sulu\\Bundle\\MediaBundle\\Media\\TypeManager\\TypeManagerTest\:\:\$em with generic class Prophecy\\Prophecy\\ObjectProphecy does not specify its types\: T$#'
-			identifier: missingType.generics
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Unit/Media/TypeManager/TypeManagerTest.php
 
@@ -36283,12 +35647,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Trash/MediaTrashItemHandler.php
 
 		-
-			message: '#^Parameter \#1 \$sourceStorageOptions of method Sulu\\Bundle\\MediaBundle\\Media\\Storage\\StorageInterface\:\:move\(\) expects array\<string, string\|null\>, array\<mixed\> given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Trash/MediaTrashItemHandler.php
-
-		-
 			message: '#^Parameter \#1 \$sourceStorageOptions of method Sulu\\Bundle\\MediaBundle\\Media\\Storage\\StorageInterface\:\:move\(\) expects array\<string, string\|null\>, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -36314,12 +35672,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#1 \$version of method Sulu\\Bundle\\MediaBundle\\Entity\\FileVersion\:\:setVersion\(\) expects int, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Trash/MediaTrashItemHandler.php
-
-		-
-			message: '#^Parameter \#2 \$targetStorageOptions of method Sulu\\Bundle\\MediaBundle\\Media\\Storage\\StorageInterface\:\:move\(\) expects array\<string, string\|null\>, array\<mixed\> given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Trash/MediaTrashItemHandler.php
@@ -36496,12 +35848,6 @@ parameters:
 			message: '#^Cannot call method writeln\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 4
-			path: src/Sulu/Bundle/PageBundle/Build/NodeOrderBuilder.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Build\\NodeOrderBuilder\:\:getDependencies\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
 			path: src/Sulu/Bundle/PageBundle/Build/NodeOrderBuilder.php
 
 		-
@@ -39055,12 +38401,6 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/DependencyInjection/SuluPageExtension.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Document\\BasePageDocument\:\:getNavigationContexts\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Document/BasePageDocument.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\PageBundle\\Document\\BasePageDocument\:\:getPermissions\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -39069,12 +38409,6 @@ parameters:
 		-
 			message: '#^Method Sulu\\Bundle\\PageBundle\\Document\\BasePageDocument\:\:getPublished\(\) should return DateTime\|null but returns bool\.$#'
 			identifier: return.type
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Document/BasePageDocument.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Document\\BasePageDocument\:\:getWebspaceName\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Document/BasePageDocument.php
 
@@ -39105,12 +38439,6 @@ parameters:
 		-
 			message: '#^Method Sulu\\Bundle\\PageBundle\\Document\\BasePageDocument\:\:setNavigationContexts\(\) has no return type specified\.$#'
 			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Document/BasePageDocument.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Document\\BasePageDocument\:\:setNavigationContexts\(\) has parameter \$navigationContexts with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Document/BasePageDocument.php
 
@@ -39200,12 +38528,6 @@ parameters:
 
 		-
 			message: '#^Property Sulu\\Bundle\\PageBundle\\Document\\BasePageDocument\:\:\$children \(Sulu\\Component\\DocumentManager\\Collection\\ChildrenCollection\) does not accept ArrayIterator\<\*NEVER\*, \*NEVER\*\>\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Document/BasePageDocument.php
-
-		-
-			message: '#^Property Sulu\\Bundle\\PageBundle\\Document\\BasePageDocument\:\:\$navigationContexts \(array\<string\>\) does not accept array\.$#'
 			identifier: assign.propertyType
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Document/BasePageDocument.php
@@ -39391,90 +38713,6 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/DocumentManager/ContentInitializer.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Domain\\Event\\PageChildrenReorderedEvent\:\:getResourceWebspaceKey\(\) should return string but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Domain/Event/PageChildrenReorderedEvent.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Domain\\Event\\PageCopiedEvent\:\:getResourceWebspaceKey\(\) should return string but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Domain/Event/PageCopiedEvent.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Domain\\Event\\PageCreatedEvent\:\:getResourceWebspaceKey\(\) should return string but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Domain/Event/PageCreatedEvent.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Domain\\Event\\PageDraftRemovedEvent\:\:getResourceWebspaceKey\(\) should return string but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Domain/Event/PageDraftRemovedEvent.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Domain\\Event\\PageModifiedEvent\:\:getResourceWebspaceKey\(\) should return string but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Domain/Event/PageModifiedEvent.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Domain\\Event\\PageMovedEvent\:\:getResourceWebspaceKey\(\) should return string but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Domain/Event/PageMovedEvent.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Domain\\Event\\PagePublishedEvent\:\:getResourceWebspaceKey\(\) should return string but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Domain/Event/PagePublishedEvent.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Domain\\Event\\PageRestoredEvent\:\:getResourceWebspaceKey\(\) should return string but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Domain/Event/PageRestoredEvent.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Domain\\Event\\PageTranslationAddedEvent\:\:getResourceWebspaceKey\(\) should return string but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Domain/Event/PageTranslationAddedEvent.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Domain\\Event\\PageTranslationCopiedEvent\:\:getResourceWebspaceKey\(\) should return string but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Domain/Event/PageTranslationCopiedEvent.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Domain\\Event\\PageTranslationRemovedEvent\:\:getResourceWebspaceKey\(\) should return string but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Domain/Event/PageTranslationRemovedEvent.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Domain\\Event\\PageTranslationRestoredEvent\:\:getResourceWebspaceKey\(\) should return string but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Domain/Event/PageTranslationRestoredEvent.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Domain\\Event\\PageUnpublishedEvent\:\:getResourceWebspaceKey\(\) should return string but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Domain/Event/PageUnpublishedEvent.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Domain\\Event\\PageVersionRestoredEvent\:\:getResourceWebspaceKey\(\) should return string but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Domain/Event/PageVersionRestoredEvent.php
-
-		-
 			message: '#^Cannot access offset ''locale'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
@@ -39536,18 +38774,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#2 \$sourcePageId of class Sulu\\Bundle\\PageBundle\\Domain\\Event\\PageCopiedEvent constructor expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/EventListener/DomainEventSubscriber.php
-
-		-
-			message: '#^Parameter \#2 \$webspaceKey of class Sulu\\Bundle\\PageBundle\\Domain\\Event\\PageRemovedEvent constructor expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/EventListener/DomainEventSubscriber.php
-
-		-
-			message: '#^Parameter \#2 \$webspaceKey of class Sulu\\Bundle\\PageBundle\\Domain\\Event\\PageRouteRemovedEvent constructor expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/EventListener/DomainEventSubscriber.php
@@ -40079,12 +39305,6 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Preview/PageRouteDefaultsProvider.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Reference\\Provider\\PageReferenceProvider\:\:getReferenceRouterAttributes\(\) should return array\<string, string\> but returns array\<string, mixed\>\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Reference/Provider/PageReferenceProvider.php
 
 		-
 			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
@@ -43117,12 +42337,6 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Command/ValidateWebspacesCommandTest.php
 
 		-
-			message: '#^Property Sulu\\Bundle\\PageBundle\\Tests\\Functional\\Command\\ValidateWebspacesCommandTest\:\:\$documentManager is never read, only written\.$#'
-			identifier: property.onlyWritten
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Command/ValidateWebspacesCommandTest.php
-
-		-
 			message: '#^Binary operation "\." between ''\<p\>\<sulu\-link href\="'' and mixed results in an error\.$#'
 			identifier: binaryOp.invalid
 			count: 1
@@ -43327,13 +42541,13 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Compat/StructureBridgeSerializationTest.php
 
 		-
-			message: '#^Parameter \#2 \$array of method PHPUnit\\Framework\\Assert\:\:assertArrayHasKey\(\) expects array\<mixed\>\|ArrayAccess\<\(int\|string\), mixed\>, array\|ArrayAccess given\.$#'
+			message: '#^Parameter \#2 \$array of method PHPUnit\\Framework\\Assert\:\:assertArrayHasKey\(\) expects array\<mixed\>\|ArrayAccess\<\(int\|string\), mixed\>, mixed given\.$#'
 			identifier: argument.type
 			count: 2
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Compat/StructureBridgeSerializationTest.php
 
 		-
-			message: '#^Parameter \#2 \$array of method PHPUnit\\Framework\\Assert\:\:assertArrayHasKey\(\) expects array\<mixed\>\|ArrayAccess\<\(int\|string\), mixed\>, mixed given\.$#'
+			message: '#^Parameter \#2 \$array of method PHPUnit\\Framework\\Assert\:\:assertArrayHasKey\(\) expects array\<mixed\>\|ArrayAccess\<\(int\|string\), mixed\>, non\-empty\-array\|ArrayAccess given\.$#'
 			identifier: argument.type
 			count: 2
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Compat/StructureBridgeSerializationTest.php
@@ -44419,27 +43633,27 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/PageControllerTest.php
 
 		-
-			message: '#^Parameter \#2 \$array of method PHPUnit\\Framework\\Assert\:\:assertArrayHasKey\(\) expects array\<mixed\>\|ArrayAccess\<\(int\|string\), mixed\>, array\|ArrayAccess given\.$#'
-			identifier: argument.type
-			count: 14
-			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/PageControllerTest.php
-
-		-
 			message: '#^Parameter \#2 \$array of method PHPUnit\\Framework\\Assert\:\:assertArrayHasKey\(\) expects array\<mixed\>\|ArrayAccess\<\(int\|string\), mixed\>, mixed given\.$#'
 			identifier: argument.type
 			count: 7
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/PageControllerTest.php
 
 		-
-			message: '#^Parameter \#2 \$array of method PHPUnit\\Framework\\Assert\:\:assertArrayNotHasKey\(\) expects array\<mixed\>\|ArrayAccess\<\(int\|string\), mixed\>, array\|ArrayAccess given\.$#'
+			message: '#^Parameter \#2 \$array of method PHPUnit\\Framework\\Assert\:\:assertArrayHasKey\(\) expects array\<mixed\>\|ArrayAccess\<\(int\|string\), mixed\>, non\-empty\-array\|ArrayAccess given\.$#'
 			identifier: argument.type
-			count: 5
+			count: 14
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/PageControllerTest.php
 
 		-
 			message: '#^Parameter \#2 \$array of method PHPUnit\\Framework\\Assert\:\:assertArrayNotHasKey\(\) expects array\<mixed\>\|ArrayAccess\<\(int\|string\), mixed\>, mixed given\.$#'
 			identifier: argument.type
 			count: 4
+			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/PageControllerTest.php
+
+		-
+			message: '#^Parameter \#2 \$array of method PHPUnit\\Framework\\Assert\:\:assertArrayNotHasKey\(\) expects array\<mixed\>\|ArrayAccess\<\(int\|string\), mixed\>, non\-empty\-array\|ArrayAccess given\.$#'
+			identifier: argument.type
+			count: 5
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/PageControllerTest.php
 
 		-
@@ -44581,18 +43795,6 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/PageResourcelocatorControllerTest.php
 
 		-
-			message: '#^Property Sulu\\Bundle\\PageBundle\\Tests\\Functional\\Controller\\PageResourcelocatorControllerTest\:\:\$session \(PHPCR\\SessionInterface\) does not accept object\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/PageResourcelocatorControllerTest.php
-
-		-
-			message: '#^Property Sulu\\Bundle\\PageBundle\\Tests\\Functional\\Controller\\PageResourcelocatorControllerTest\:\:\$session is never read, only written\.$#'
-			identifier: property.onlyWritten
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/PageResourcelocatorControllerTest.php
-
-		-
 			message: '#^Cannot access offset ''id'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
@@ -44709,12 +43911,6 @@ parameters:
 		-
 			message: '#^Property Sulu\\Bundle\\PageBundle\\Tests\\Functional\\Controller\\SmartContentItemControllerTest\:\:\$em \(Doctrine\\ORM\\EntityManager\) does not accept Doctrine\\ORM\\EntityManagerInterface\.$#'
 			identifier: assign.propertyType
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/SmartContentItemControllerTest.php
-
-		-
-			message: '#^Property Sulu\\Bundle\\PageBundle\\Tests\\Functional\\Controller\\SmartContentItemControllerTest\:\:\$structureManager is never read, only written\.$#'
-			identifier: property.onlyWritten
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/SmartContentItemControllerTest.php
 
@@ -45465,12 +44661,6 @@ parameters:
 		-
 			message: '#^Property Sulu\\Bundle\\PageBundle\\Tests\\Functional\\Export\\WebspaceExportTest\:\:\$creator is never written, only read\.$#'
 			identifier: property.onlyRead
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Export/WebspaceExportTest.php
-
-		-
-			message: '#^Property Sulu\\Bundle\\PageBundle\\Tests\\Functional\\Export\\WebspaceExportTest\:\:\$extensionManager is never read, only written\.$#'
-			identifier: property.onlyWritten
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Export/WebspaceExportTest.php
 
@@ -46573,12 +45763,6 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Mapper/ContentMapperTest.php
 
 		-
-			message: '#^Property Sulu\\Bundle\\PageBundle\\Tests\\Functional\\Mapper\\ContentMapperTest\:\:\$contentTypeManager is never read, only written\.$#'
-			identifier: property.onlyWritten
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Mapper/ContentMapperTest.php
-
-		-
 			message: '#^Property Sulu\\Bundle\\PageBundle\\Tests\\Functional\\Mapper\\ContentMapperTest\:\:\$session \(Jackalope\\Session\) does not accept Sulu\\Bundle\\DocumentManagerBundle\\Session\\Session\.$#'
 			identifier: assign.propertyType
 			count: 1
@@ -47503,18 +46687,6 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Repository/NodeRepositoryTest.php
 
 		-
-			message: '#^Property Sulu\\Bundle\\PageBundle\\Tests\\Functional\\Repository\\NodeRepositoryTest\:\:\$extensions is never read, only written\.$#'
-			identifier: property.onlyWritten
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Repository/NodeRepositoryTest.php
-
-		-
-			message: '#^Property Sulu\\Bundle\\PageBundle\\Tests\\Functional\\Repository\\NodeRepositoryTest\:\:\$sessionManager is never read, only written\.$#'
-			identifier: property.onlyWritten
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Repository/NodeRepositoryTest.php
-
-		-
 			message: '#^Property Sulu\\Component\\Content\\Extension\\AbstractExtension\:\:\$additionalPrefix \(string\) does not accept mixed\.$#'
 			identifier: assign.propertyType
 			count: 1
@@ -47665,12 +46837,6 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/ResourceLocator/Mapper/PhpcrMapperTest.php
 
 		-
-			message: '#^Property Sulu\\Bundle\\PageBundle\\Tests\\Functional\\ResourceLocator\\Mapper\\PhpcrMapperTest\:\:\$mapper is never read, only written\.$#'
-			identifier: property.onlyWritten
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Tests/Functional/ResourceLocator/Mapper/PhpcrMapperTest.php
-
-		-
 			message: '#^Class Sulu\\Component\\Content\\Types\\ResourceLocator constructor invoked with 1 parameter, 0 required\.$#'
 			identifier: arguments.count
 			count: 1
@@ -47685,24 +46851,6 @@ parameters:
 		-
 			message: '#^Parameter \#3 \$webspaceKey of method Sulu\\Component\\Content\\SimpleContentType\:\:read\(\) expects string, int given\.$#'
 			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Tests/Functional/ResourceLocator/ResourceLocatorTest.php
-
-		-
-			message: '#^Property Sulu\\Bundle\\PageBundle\\Tests\\Functional\\ResourceLocator\\ResourceLocatorTest\:\:\$em \(Doctrine\\ORM\\EntityManager\) does not accept Doctrine\\Persistence\\ObjectManager\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Tests/Functional/ResourceLocator/ResourceLocatorTest.php
-
-		-
-			message: '#^Property Sulu\\Bundle\\PageBundle\\Tests\\Functional\\ResourceLocator\\ResourceLocatorTest\:\:\$em is never read, only written\.$#'
-			identifier: property.onlyWritten
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Tests/Functional/ResourceLocator/ResourceLocatorTest.php
-
-		-
-			message: '#^Property Sulu\\Bundle\\PageBundle\\Tests\\Functional\\ResourceLocator\\ResourceLocatorTest\:\:\$resourceLocatorMapper is never read, only written\.$#'
-			identifier: property.onlyWritten
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/ResourceLocator/ResourceLocatorTest.php
 
@@ -47824,12 +46972,6 @@ parameters:
 			message: '#^Parameter \#2 \$userId of method Sulu\\Component\\Content\\Types\\ResourceLocator\\Strategy\\ResourceLocatorStrategyInterface\:\:save\(\) expects int, null given\.$#'
 			identifier: argument.type
 			count: 2
-			path: src/Sulu/Bundle/PageBundle/Tests/Functional/ResourceLocator/Strategy/TreeFullEditStrategyTest.php
-
-		-
-			message: '#^Property Sulu\\Bundle\\PageBundle\\Tests\\Functional\\ResourceLocator\\Strategy\\TreeFullEditStrategyTest\:\:\$documentInspector is never read, only written\.$#'
-			identifier: property.onlyWritten
-			count: 1
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/ResourceLocator/Strategy/TreeFullEditStrategyTest.php
 
 		-
@@ -47956,12 +47098,6 @@ parameters:
 			message: '#^Parameter \#2 \$userId of method Sulu\\Component\\Content\\Types\\ResourceLocator\\Strategy\\ResourceLocatorStrategyInterface\:\:save\(\) expects int, null given\.$#'
 			identifier: argument.type
 			count: 2
-			path: src/Sulu/Bundle/PageBundle/Tests/Functional/ResourceLocator/Strategy/TreeLeafEditStrategyTest.php
-
-		-
-			message: '#^Property Sulu\\Bundle\\PageBundle\\Tests\\Functional\\ResourceLocator\\Strategy\\TreeLeafEditStrategyTest\:\:\$documentInspector is never read, only written\.$#'
-			identifier: property.onlyWritten
-			count: 1
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/ResourceLocator/Strategy/TreeLeafEditStrategyTest.php
 
 		-
@@ -48835,12 +47971,6 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Tests/Unit/Document/Subscriber/PublishSubscriberTest.php
 
 		-
-			message: '#^Cannot call method shouldBeCalled\(\) on Prophecy\\Prophecy\\MethodProphecy\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Tests/Unit/Document/Subscriber/PublishSubscriberTest.php
-
-		-
 			message: '#^Cannot call method willReturn\(\) on Prophecy\\Prophecy\\MethodProphecy\|string\.$#'
 			identifier: method.nonObject
 			count: 2
@@ -48871,21 +48001,9 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Tests/Unit/Document/Subscriber/PublishSubscriberTest.php
 
 		-
-			message: '#^PHPDoc tag @var for variable \$property contains generic class Prophecy\\Prophecy\\ObjectProphecy but does not specify its types\: T$#'
-			identifier: missingType.generics
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Tests/Unit/Document/Subscriber/PublishSubscriberTest.php
-
-		-
 			message: '#^PHPDoc tag @var with type PHPCR\\NodeInterface\|Prophecy\\Prophecy\\ObjectProphecy is not subtype of native type Prophecy\\Prophecy\\ObjectProphecy\.$#'
 			identifier: varTag.nativeType
 			count: 2
-			path: src/Sulu/Bundle/PageBundle/Tests/Unit/Document/Subscriber/PublishSubscriberTest.php
-
-		-
-			message: '#^PHPDoc tag @var with type PHPCR\\PropertyInterface\|Prophecy\\Prophecy\\ObjectProphecy is not subtype of native type Prophecy\\Prophecy\\ObjectProphecy\.$#'
-			identifier: varTag.nativeType
-			count: 1
 			path: src/Sulu/Bundle/PageBundle/Tests/Unit/Document/Subscriber/PublishSubscriberTest.php
 
 		-
@@ -49183,24 +48301,6 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Tests/Unit/Search/EventSubscriber/StructureSubscriberTest.php
 
 		-
-			message: '#^Call to an undefined method Sulu\\Component\\Content\\Document\\Behavior\\SecurityBehavior\:\:reveal\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Tests/Unit/Search/Reindex/StructureProviderTest.php
-
-		-
-			message: '#^Cannot call method willReturn\(\) on array\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Tests/Unit/Search/Reindex/StructureProviderTest.php
-
-		-
-			message: '#^Property Sulu\\Bundle\\PageBundle\\Tests\\Unit\\Search\\Reindex\\StructureProviderTest\:\:\$secureStructure \(Sulu\\Component\\Content\\Document\\Behavior\\SecurityBehavior\) does not accept Prophecy\\Prophecy\\ObjectProphecy\<Sulu\\Component\\Content\\Document\\Behavior\\SecurityBehavior&Sulu\\Component\\Content\\Document\\Behavior\\StructureBehavior\>\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Tests/Unit/Search/Reindex/StructureProviderTest.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\PageBundle\\Tests\\Unit\\Sulu\\Bundle\\WebsiteBundle\\Sitemap\\PagesSitemapProviderTest\:\:createContent\(\) has parameter \$locale with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -49447,12 +48547,6 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Trash/PageTrashItemHandler.php
 
 		-
-			message: '#^Parameter \#1 \$webspaceKey of static method Sulu\\Bundle\\PageBundle\\Admin\\PageAdmin\:\:getPageSecurityContext\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Trash/PageTrashItemHandler.php
-
-		-
 			message: '#^Parameter \#2 \$locale of class Sulu\\Bundle\\PageBundle\\Domain\\Event\\PageTranslationRestoredEvent constructor expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -49479,12 +48573,6 @@ parameters:
 		-
 			message: '#^Method Sulu\\Bundle\\PageBundle\\Twig\\ExportTwigExtension\:\:getFunctions\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Twig/ExportTwigExtension.php
-
-		-
-			message: '#^Parameter \#1 \$object_or_class of function method_exists expects object\|string, array\<mixed, mixed\>\|object given\.$#'
-			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Twig/ExportTwigExtension.php
 
@@ -51529,18 +50617,6 @@ parameters:
 			path: src/Sulu/Bundle/RouteBundle/Tests/Functional/Entity/RouteRepositoryTest.php
 
 		-
-			message: '#^Property Sulu\\Bundle\\RouteBundle\\Tests\\Functional\\Controller\\RouteRepositoryTest\:\:\$route \(Sulu\\Bundle\\RouteBundle\\Entity\\Route\) does not accept Sulu\\Bundle\\RouteBundle\\Model\\RouteInterface\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: src/Sulu/Bundle/RouteBundle/Tests/Functional/Entity/RouteRepositoryTest.php
-
-		-
-			message: '#^Property Sulu\\Bundle\\RouteBundle\\Tests\\Functional\\Controller\\RouteRepositoryTest\:\:\$route is never read, only written\.$#'
-			identifier: property.onlyWritten
-			count: 1
-			path: src/Sulu/Bundle/RouteBundle/Tests/Functional/Entity/RouteRepositoryTest.php
-
-		-
 			message: '#^Cannot access offset ''schema'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
@@ -51707,6 +50783,12 @@ parameters:
 			identifier: missingType.iterableValue
 			count: 1
 			path: src/Sulu/Bundle/SearchBundle/Build/IndexBuilder.php
+
+		-
+			message: '#^Cannot call method getOption\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: src/Sulu/Bundle/SearchBundle/Build/InitBuilder.php
 
 		-
 			message: '#^Cannot cast mixed to int\.$#'
@@ -52435,12 +51517,6 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/Admin/SecurityAdmin.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\SecurityBundle\\Build\\SecurityBuilder\:\:getDependencies\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Build/SecurityBuilder.php
-
-		-
 			message: '#^Cannot call method findOneByUsername\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -52486,12 +51562,6 @@ parameters:
 			message: '#^Cannot call method writeln\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 4
-			path: src/Sulu/Bundle/SecurityBundle/Build/UserBuilder.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\SecurityBundle\\Build\\UserBuilder\:\:getDependencies\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Build/UserBuilder.php
 
 		-
@@ -54673,12 +53743,6 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/Security/Exception/UsernameNotUniqueException.php
 
 		-
-			message: '#^Binary operation "\." between ''sulu\.webspaces\.'' and mixed results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Serializer/Subscriber/SecuritySubscriber.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\SecurityBundle\\Serializer\\Subscriber\\SecuritySubscriber\:\:getSubscribedEvents\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -55381,12 +54445,6 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/RoleControllerTest.php
 
 		-
-			message: '#^Property Sulu\\Bundle\\SecurityBundle\\Tests\\Functional\\Controller\\RoleControllerTest\:\:\$role3 is never read, only written\.$#'
-			identifier: property.onlyWritten
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/RoleControllerTest.php
-
-		-
 			message: '#^Binary operation "\." between non\-falsy\-string and mixed results in an error\.$#'
 			identifier: binaryOp.invalid
 			count: 2
@@ -55612,12 +54670,6 @@ parameters:
 			message: '#^Parameter \#2 \$haystack of method PHPUnit\\Framework\\Assert\:\:assertStringContainsString\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 4
-			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/UserControllerTest.php
-
-		-
-			message: '#^Property Sulu\\Bundle\\SecurityBundle\\Tests\\Functional\\Controller\\UserControllerTest\:\:\$contact3 is never read, only written\.$#'
-			identifier: property.onlyWritten
-			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/UserControllerTest.php
 
 		-
@@ -59053,12 +58105,6 @@ parameters:
 			path: src/Sulu/Bundle/SnippetBundle/Tests/Functional/Controller/SnippetControllerTest.php
 
 		-
-			message: '#^Property Sulu\\Bundle\\SnippetBundle\\Tests\\Functional\\Controller\\SnippetControllerTest\:\:\$phpcrSession is never read, only written\.$#'
-			identifier: property.onlyWritten
-			count: 1
-			path: src/Sulu/Bundle/SnippetBundle/Tests/Functional/Controller/SnippetControllerTest.php
-
-		-
 			message: '#^Call to an undefined method Sulu\\Component\\Snippet\\Export\\SnippetExportInterface\:\:getExportData\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -59097,18 +58143,6 @@ parameters:
 		-
 			message: '#^Method Sulu\\Bundle\\PageBundle\\Tests\\Functional\\Export\\SnippetTest\:\:prepareData\(\) has no return type specified\.$#'
 			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/SnippetBundle/Tests/Functional/Export/SnippetTest.php
-
-		-
-			message: '#^Property Sulu\\Bundle\\PageBundle\\Tests\\Functional\\Export\\SnippetTest\:\:\$creator is unused\.$#'
-			identifier: property.unused
-			count: 1
-			path: src/Sulu/Bundle/SnippetBundle/Tests/Functional/Export/SnippetTest.php
-
-		-
-			message: '#^Property Sulu\\Bundle\\PageBundle\\Tests\\Functional\\Export\\SnippetTest\:\:\$extensionManager is unused\.$#'
-			identifier: property.unused
 			count: 1
 			path: src/Sulu/Bundle/SnippetBundle/Tests/Functional/Export/SnippetTest.php
 
@@ -59497,30 +58531,6 @@ parameters:
 			path: src/Sulu/Bundle/SnippetBundle/Tests/Unit/Content/SnippetDataProviderTest.php
 
 		-
-			message: '#^Call to an undefined method Prophecy\\Prophecy\\MethodProphecy\|Sulu\\Bundle\\AdminBundle\\Metadata\\MetadataInterface\:\:shouldBeCalled\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/Sulu/Bundle/SnippetBundle/Tests/Unit/Content/SnippetDataProviderTest.php
-
-		-
-			message: '#^Call to an undefined method Prophecy\\Prophecy\\ObjectProphecy\|Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\FormMetadataProvider\:\:reveal\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/Sulu/Bundle/SnippetBundle/Tests/Unit/Content/SnippetDataProviderTest.php
-
-		-
-			message: '#^Call to an undefined method Prophecy\\Prophecy\\ObjectProphecy\|Symfony\\Component\\Security\\Core\\Authentication\\Token\\Storage\\TokenStorageInterface\:\:reveal\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/Sulu/Bundle/SnippetBundle/Tests/Unit/Content/SnippetDataProviderTest.php
-
-		-
-			message: '#^Call to an undefined method Prophecy\\Prophecy\\ObjectProphecy\|Symfony\\Component\\Security\\Core\\Authentication\\Token\\TokenInterface\:\:reveal\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/Sulu/Bundle/SnippetBundle/Tests/Unit/Content/SnippetDataProviderTest.php
-
-		-
 			message: '#^Call to method PHPUnit\\Framework\\Assert\:\:assertInstanceOf\(\) with ''Sulu\\\\Component\\\\SmartContent\\\\Configuration\\\\ProviderConfigurationInterface'' and Sulu\\Component\\SmartContent\\Configuration\\ProviderConfigurationInterface will always evaluate to true\.$#'
 			identifier: method.alreadyNarrowedType
 			count: 1
@@ -59542,24 +58552,6 @@ parameters:
 			message: '#^Cannot access offset ''webspaceKey'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 2
-			path: src/Sulu/Bundle/SnippetBundle/Tests/Unit/Content/SnippetDataProviderTest.php
-
-		-
-			message: '#^Cannot call method shouldBeCalled\(\) on Prophecy\\Prophecy\\MethodProphecy\|Symfony\\Component\\Security\\Core\\Authentication\\Token\\TokenInterface\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Bundle/SnippetBundle/Tests/Unit/Content/SnippetDataProviderTest.php
-
-		-
-			message: '#^Cannot call method shouldBeCalled\(\) on Prophecy\\Prophecy\\MethodProphecy\|Symfony\\Component\\Security\\Core\\User\\UserInterface\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Bundle/SnippetBundle/Tests/Unit/Content/SnippetDataProviderTest.php
-
-		-
-			message: '#^Cannot call method shouldBeCalled\(\) on Prophecy\\Prophecy\\MethodProphecy\|string\.$#'
-			identifier: method.nonObject
-			count: 1
 			path: src/Sulu/Bundle/SnippetBundle/Tests/Unit/Content/SnippetDataProviderTest.php
 
 		-
@@ -59701,54 +58693,6 @@ parameters:
 			path: src/Sulu/Bundle/SnippetBundle/Tests/Unit/Content/SnippetDataProviderTest.php
 
 		-
-			message: '#^PHPDoc tag @var for variable \$formMetadataProvider contains generic class Prophecy\\Prophecy\\ObjectProphecy but does not specify its types\: T$#'
-			identifier: missingType.generics
-			count: 1
-			path: src/Sulu/Bundle/SnippetBundle/Tests/Unit/Content/SnippetDataProviderTest.php
-
-		-
-			message: '#^PHPDoc tag @var for variable \$token contains generic class Prophecy\\Prophecy\\ObjectProphecy but does not specify its types\: T$#'
-			identifier: missingType.generics
-			count: 1
-			path: src/Sulu/Bundle/SnippetBundle/Tests/Unit/Content/SnippetDataProviderTest.php
-
-		-
-			message: '#^PHPDoc tag @var for variable \$tokenStorage contains generic class Prophecy\\Prophecy\\ObjectProphecy but does not specify its types\: T$#'
-			identifier: missingType.generics
-			count: 1
-			path: src/Sulu/Bundle/SnippetBundle/Tests/Unit/Content/SnippetDataProviderTest.php
-
-		-
-			message: '#^PHPDoc tag @var for variable \$user contains generic class Prophecy\\Prophecy\\ObjectProphecy but does not specify its types\: T$#'
-			identifier: missingType.generics
-			count: 1
-			path: src/Sulu/Bundle/SnippetBundle/Tests/Unit/Content/SnippetDataProviderTest.php
-
-		-
-			message: '#^PHPDoc tag @var with type Prophecy\\Prophecy\\ObjectProphecy\|Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\FormMetadataProvider is not subtype of native type Prophecy\\Prophecy\\ObjectProphecy\.$#'
-			identifier: varTag.nativeType
-			count: 1
-			path: src/Sulu/Bundle/SnippetBundle/Tests/Unit/Content/SnippetDataProviderTest.php
-
-		-
-			message: '#^PHPDoc tag @var with type Prophecy\\Prophecy\\ObjectProphecy\|Sulu\\Component\\Security\\Authentication\\UserInterface is not subtype of native type Prophecy\\Prophecy\\ObjectProphecy\.$#'
-			identifier: varTag.nativeType
-			count: 1
-			path: src/Sulu/Bundle/SnippetBundle/Tests/Unit/Content/SnippetDataProviderTest.php
-
-		-
-			message: '#^PHPDoc tag @var with type Prophecy\\Prophecy\\ObjectProphecy\|Symfony\\Component\\Security\\Core\\Authentication\\Token\\Storage\\TokenStorageInterface is not subtype of native type Prophecy\\Prophecy\\ObjectProphecy\.$#'
-			identifier: varTag.nativeType
-			count: 1
-			path: src/Sulu/Bundle/SnippetBundle/Tests/Unit/Content/SnippetDataProviderTest.php
-
-		-
-			message: '#^PHPDoc tag @var with type Prophecy\\Prophecy\\ObjectProphecy\|Symfony\\Component\\Security\\Core\\Authentication\\Token\\TokenInterface is not subtype of native type Prophecy\\Prophecy\\ObjectProphecy\.$#'
-			identifier: varTag.nativeType
-			count: 1
-			path: src/Sulu/Bundle/SnippetBundle/Tests/Unit/Content/SnippetDataProviderTest.php
-
-		-
 			message: '#^Parameter \#1 \$filters of method Sulu\\Bundle\\SnippetBundle\\Content\\SnippetDataProvider\:\:resolveDataItems\(\) expects array\{dataSource\?\: int\|string\|null, sortMethod\?\: ''asc''\|''desc'', sortBy\?\: string, tags\?\: array\<string\>, tagOperator\?\: ''and''\|''or'', types\?\: array\<string\>, categories\?\: array\<int\>, categoryOperator\?\: ''and''\|''or'', \.\.\.\}, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -59840,18 +58784,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#6 \$pageSize of method Sulu\\Bundle\\SnippetBundle\\Content\\SnippetDataProvider\:\:resolveResourceItems\(\) expects int\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/SnippetBundle/Tests/Unit/Content/SnippetDataProviderTest.php
-
-		-
-			message: '#^Parameter \#8 \$formMetadataProvider of class Sulu\\Bundle\\SnippetBundle\\Content\\SnippetDataProvider constructor expects Sulu\\Bundle\\AdminBundle\\Metadata\\MetadataProviderInterface\|null, object given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/SnippetBundle/Tests/Unit/Content/SnippetDataProviderTest.php
-
-		-
-			message: '#^Parameter \#9 \$tokenStorage of class Sulu\\Bundle\\SnippetBundle\\Content\\SnippetDataProvider constructor expects Symfony\\Component\\Security\\Core\\Authentication\\Token\\Storage\\TokenStorageInterface\|null, object given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/SnippetBundle/Tests/Unit/Content/SnippetDataProviderTest.php
@@ -60079,12 +59011,6 @@ parameters:
 			path: src/Sulu/Bundle/SnippetBundle/Tests/Unit/Snippet/DefaultSnippetManagerTest.php
 
 		-
-			message: '#^Call to an undefined method Prophecy\\Prophecy\\ObjectProphecy\|Sulu\\Bundle\\SnippetBundle\\Document\\SnippetDocument\:\:reveal\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/Sulu/Bundle/SnippetBundle/Tests/Unit/Snippet/SnippetResolverTest.php
-
-		-
 			message: '#^Cannot access offset ''uuid'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 4
@@ -60109,12 +59035,6 @@ parameters:
 			path: src/Sulu/Bundle/SnippetBundle/Tests/Unit/Snippet/SnippetResolverTest.php
 
 		-
-			message: '#^Cannot call method shouldBeCalled\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: src/Sulu/Bundle/SnippetBundle/Tests/Unit/Snippet/SnippetResolverTest.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\SnippetBundle\\Snippet\\SnippetResolverTest\:\:dataProvider\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -60135,18 +59055,6 @@ parameters:
 		-
 			message: '#^Method Sulu\\Bundle\\SnippetBundle\\Snippet\\SnippetResolverTest\:\:testResolve\(\) has parameter \$webspaceKey with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/SnippetBundle/Tests/Unit/Snippet/SnippetResolverTest.php
-
-		-
-			message: '#^PHPDoc tag @var for variable \$snippetDocument contains generic class Prophecy\\Prophecy\\ObjectProphecy but does not specify its types\: T$#'
-			identifier: missingType.generics
-			count: 1
-			path: src/Sulu/Bundle/SnippetBundle/Tests/Unit/Snippet/SnippetResolverTest.php
-
-		-
-			message: '#^PHPDoc tag @var with type Prophecy\\Prophecy\\ObjectProphecy\|Sulu\\Bundle\\SnippetBundle\\Document\\SnippetDocument is not subtype of native type Prophecy\\Prophecy\\ObjectProphecy\.$#'
-			identifier: varTag.nativeType
 			count: 1
 			path: src/Sulu/Bundle/SnippetBundle/Tests/Unit/Snippet/SnippetResolverTest.php
 
@@ -63007,12 +61915,6 @@ parameters:
 			path: src/Sulu/Bundle/WebsiteBundle/EventListener/RouterListener.php
 
 		-
-			message: '#^Binary operation "\." between ''sulu\.webspaces\.'' and mixed results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/EventListener/SecurityListener.php
-
-		-
 			message: '#^Cannot call method hasWebsiteSecurity\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -64045,12 +62947,6 @@ parameters:
 			path: src/Sulu/Bundle/WebsiteBundle/Routing/ContentRouteProvider.php
 
 		-
-			message: '#^Parameter \#4 \$webspaceKey of method Sulu\\Component\\Webspace\\Manager\\WebspaceManagerInterface\:\:findUrlByResourceLocator\(\) expects string\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Routing/ContentRouteProvider.php
-
-		-
 			message: '#^Property Sulu\\Bundle\\WebsiteBundle\\Routing\\ContentRouteProvider\:\:\$defaultOptions type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -64097,12 +62993,6 @@ parameters:
 			identifier: if.alwaysTrue
 			count: 1
 			path: src/Sulu/Bundle/WebsiteBundle/Routing/RequestListener.php
-
-		-
-			message: '#^Property Sulu\\Bundle\\WebsiteBundle\\Sitemap\\Sitemap\:\:\$lastmod \(DateTime\) does not accept DateTime\|null\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Sitemap/Sitemap.php
 
 		-
 			message: '#^Method Sulu\\Bundle\\WebsiteBundle\\Sitemap\\SitemapContentQueryBuilder\:\:buildSelect\(\) has no return type specified\.$#'
@@ -65743,12 +64633,6 @@ parameters:
 			path: src/Sulu/Bundle/WebsiteBundle/Tests/Unit/Sitemap/SitemapGeneratorTest.php
 
 		-
-			message: '#^Call to method PHPUnit\\Framework\\Assert\:\:assertNull\(\) with DateTime will always evaluate to false\.$#'
-			identifier: method.impossibleType
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Tests/Unit/Sitemap/SitemapProviderPoolTest.php
-
-		-
 			message: '#^Class Sulu\\Bundle\\WebsiteBundle\\Sitemap\\XmlSitemapRenderer constructor invoked with 3 parameters, 2 required\.$#'
 			identifier: arguments.count
 			count: 1
@@ -66331,68 +65215,8 @@ parameters:
 			path: src/Sulu/Bundle/WebsiteBundle/Twig/Sitemap/SitemapTwigExtension.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\WebsiteBundle\\Twig\\Sitemap\\SitemapTwigExtension\:\:sitemapFunction\(\) has parameter \$locale with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Twig/Sitemap/SitemapTwigExtension.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\WebsiteBundle\\Twig\\Sitemap\\SitemapTwigExtension\:\:sitemapFunction\(\) has parameter \$webspaceKey with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Twig/Sitemap/SitemapTwigExtension.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\WebsiteBundle\\Twig\\Sitemap\\SitemapTwigExtension\:\:sitemapUrlFunction\(\) has no return type specified\.$#'
 			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Twig/Sitemap/SitemapTwigExtension.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\WebsiteBundle\\Twig\\Sitemap\\SitemapTwigExtension\:\:sitemapUrlFunction\(\) has parameter \$locale with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Twig/Sitemap/SitemapTwigExtension.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\WebsiteBundle\\Twig\\Sitemap\\SitemapTwigExtension\:\:sitemapUrlFunction\(\) has parameter \$url with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Twig/Sitemap/SitemapTwigExtension.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\WebsiteBundle\\Twig\\Sitemap\\SitemapTwigExtension\:\:sitemapUrlFunction\(\) has parameter \$webspaceKey with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Twig/Sitemap/SitemapTwigExtension.php
-
-		-
-			message: '#^Parameter \#1 \$resourceLocator of method Sulu\\Component\\Webspace\\Manager\\WebspaceManagerInterface\:\:findUrlByResourceLocator\(\) expects string\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Twig/Sitemap/SitemapTwigExtension.php
-
-		-
-			message: '#^Parameter \#1 \$webspaceKey of method Sulu\\Bundle\\WebsiteBundle\\Sitemap\\SitemapGeneratorInterface\:\:generate\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Twig/Sitemap/SitemapTwigExtension.php
-
-		-
-			message: '#^Parameter \#2 \$locale of method Sulu\\Bundle\\WebsiteBundle\\Sitemap\\SitemapGeneratorInterface\:\:generate\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Twig/Sitemap/SitemapTwigExtension.php
-
-		-
-			message: '#^Parameter \#3 \$languageCode of method Sulu\\Component\\Webspace\\Manager\\WebspaceManagerInterface\:\:findUrlByResourceLocator\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Twig/Sitemap/SitemapTwigExtension.php
-
-		-
-			message: '#^Parameter \#4 \$webspaceKey of method Sulu\\Component\\Webspace\\Manager\\WebspaceManagerInterface\:\:findUrlByResourceLocator\(\) expects string\|null, mixed given\.$#'
-			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/WebsiteBundle/Twig/Sitemap/SitemapTwigExtension.php
 
@@ -66415,38 +65239,8 @@ parameters:
 			path: src/Sulu/Bundle/WebsiteBundle/Twig/Sitemap/SitemapTwigExtensionInterface.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\WebsiteBundle\\Twig\\Sitemap\\SitemapTwigExtensionInterface\:\:sitemapFunction\(\) has parameter \$locale with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Twig/Sitemap/SitemapTwigExtensionInterface.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\WebsiteBundle\\Twig\\Sitemap\\SitemapTwigExtensionInterface\:\:sitemapFunction\(\) has parameter \$webspaceKey with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Twig/Sitemap/SitemapTwigExtensionInterface.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\WebsiteBundle\\Twig\\Sitemap\\SitemapTwigExtensionInterface\:\:sitemapUrlFunction\(\) has no return type specified\.$#'
 			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Twig/Sitemap/SitemapTwigExtensionInterface.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\WebsiteBundle\\Twig\\Sitemap\\SitemapTwigExtensionInterface\:\:sitemapUrlFunction\(\) has parameter \$locale with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Twig/Sitemap/SitemapTwigExtensionInterface.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\WebsiteBundle\\Twig\\Sitemap\\SitemapTwigExtensionInterface\:\:sitemapUrlFunction\(\) has parameter \$url with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Twig/Sitemap/SitemapTwigExtensionInterface.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\WebsiteBundle\\Twig\\Sitemap\\SitemapTwigExtensionInterface\:\:sitemapUrlFunction\(\) has parameter \$webspaceKey with no type specified\.$#'
-			identifier: missingType.parameter
 			count: 1
 			path: src/Sulu/Bundle/WebsiteBundle/Twig/Sitemap/SitemapTwigExtensionInterface.php
 
@@ -67513,12 +66307,6 @@ parameters:
 			path: src/Sulu/Component/Content/Compat/Block/BlockPropertyWrapper.php
 
 		-
-			message: '#^Method Sulu\\Component\\Content\\Compat\\Block\\BlockPropertyWrapper\:\:getBlock\(\) should return Sulu\\Component\\Content\\Compat\\Block\\BlockPropertyInterface but returns Sulu\\Component\\Content\\Compat\\PropertyInterface\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Sulu/Component/Content/Compat/Block/BlockPropertyWrapper.php
-
-		-
 			message: '#^Method Sulu\\Component\\Content\\Compat\\Block\\BlockPropertyWrapper\:\:getParams\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -68180,6 +66968,12 @@ parameters:
 
 		-
 			message: '#^Parameter \#1 \$structure of class Sulu\\Component\\Content\\Compat\\Structure\\PageBridge constructor expects Sulu\\Component\\Content\\Metadata\\StructureMetadata, Sulu\\Component\\Content\\Metadata\\StructureMetadata\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Sulu/Component/Content/Compat/Serializer/PageBridgeHandler.php
+
+		-
+			message: '#^Parameter \#2 \$type of method JMS\\Serializer\\GraphNavigatorInterface\:\:accept\(\) expects array\{name\: string, params\: array\}\|null, array\{name\: mixed\} given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Component/Content/Compat/Serializer/PageBridgeHandler.php
@@ -69799,20 +68593,8 @@ parameters:
 			path: src/Sulu/Component/Content/Document/Behavior/LocalizedAuthorBehavior.php
 
 		-
-			message: '#^Method Sulu\\Component\\Content\\Document\\Behavior\\NavigationContextBehavior\:\:getNavigationContexts\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Component/Content/Document/Behavior/NavigationContextBehavior.php
-
-		-
 			message: '#^Method Sulu\\Component\\Content\\Document\\Behavior\\NavigationContextBehavior\:\:setNavigationContexts\(\) has no return type specified\.$#'
 			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Component/Content/Document/Behavior/NavigationContextBehavior.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Document\\Behavior\\NavigationContextBehavior\:\:setNavigationContexts\(\) has parameter \$navigationContexts with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
 			count: 1
 			path: src/Sulu/Component/Content/Document/Behavior/NavigationContextBehavior.php
 
@@ -69893,12 +68675,6 @@ parameters:
 			identifier: missingType.return
 			count: 1
 			path: src/Sulu/Component/Content/Document/Behavior/TargetBehavior.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Document\\Behavior\\WebspaceBehavior\:\:getWebspaceName\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Component/Content/Document/Behavior/WebspaceBehavior.php
 
 		-
 			message: '#^Method Sulu\\Component\\Content\\Document\\Behavior\\WorkflowStageBehavior\:\:setWorkflowStage\(\) has no return type specified\.$#'
@@ -70519,14 +69295,8 @@ parameters:
 			path: src/Sulu/Component/Content/Document/Subscriber/CopyLocaleSubscriber.php
 
 		-
-			message: '#^Parameter \#1 \$webspaceKey of method Sulu\\Component\\Content\\Types\\ResourceLocator\\Strategy\\ResourceLocatorStrategyPoolInterface\:\:getStrategyByWebspaceKey\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Content/Document/Subscriber/CopyLocaleSubscriber.php
-
-		-
-			message: '#^Parameter \#3 \$webspaceKey of method Sulu\\Component\\Content\\Types\\ResourceLocator\\Strategy\\ResourceLocatorStrategyInterface\:\:generate\(\) expects string, mixed given\.$#'
-			identifier: argument.type
+			message: '#^Strict comparison using \!\=\= between null and string will always evaluate to true\.$#'
+			identifier: notIdentical.alwaysTrue
 			count: 1
 			path: src/Sulu/Component/Content/Document/Subscriber/CopyLocaleSubscriber.php
 
@@ -70892,12 +69662,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#1 \$history of method Sulu\\Component\\Content\\Document\\Behavior\\RouteBehavior\:\:setHistory\(\) expects bool, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Content/Document/Subscriber/RouteSubscriber.php
-
-		-
-			message: '#^Parameter \#1 \$webspaceKey of method Sulu\\Component\\PHPCR\\SessionManager\\SessionManagerInterface\:\:getRoutePath\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Component/Content/Document/Subscriber/RouteSubscriber.php
@@ -72325,12 +71089,6 @@ parameters:
 			path: src/Sulu/Component/Content/Import/WebspaceImport.php
 
 		-
-			message: '#^Parameter \#3 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: src/Sulu/Component/Content/Import/WebspaceImport.php
-
-		-
 			message: '#^Parameter \#4 \$overrideSettings of method Sulu\\Component\\Content\\Import\\WebspaceImport\:\:setDocumentSettings\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -73693,18 +72451,6 @@ parameters:
 			path: src/Sulu/Component/Content/Metadata/ItemMetadata.php
 
 		-
-			message: '#^Argument of an invalid type \(DOMNamedNodeMap&iterable\<DOMAttr\>\)\|null supplied for foreach, only iterables are supported\.$#'
-			identifier: foreach.nonIterable
-			count: 2
-			path: src/Sulu/Component/Content/Metadata/Loader/AbstractLoader.php
-
-		-
-			message: '#^Argument of an invalid type DOMNodeList\<DOMNode\>\|false supplied for foreach, only iterables are supported\.$#'
-			identifier: foreach.nonIterable
-			count: 3
-			path: src/Sulu/Component/Content/Metadata/Loader/AbstractLoader.php
-
-		-
 			message: '#^Cannot access offset ''title'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
@@ -74311,7 +73057,7 @@ parameters:
 			path: src/Sulu/Component/Content/Metadata/Loader/StructureXmlLoader.php
 
 		-
-			message: '#^Argument of an invalid type \(DOMNamedNodeMap&iterable\<DOMAttr\>\)\|null supplied for foreach, only iterables are supported\.$#'
+			message: '#^Argument of an invalid type DOMNamedNodeMap\|null supplied for foreach, only iterables are supported\.$#'
 			identifier: foreach.nonIterable
 			count: 1
 			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
@@ -74451,7 +73197,7 @@ parameters:
 		-
 			message: '#^Cannot access offset mixed on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 3
+			count: 4
 			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
 
 		-
@@ -74461,9 +73207,9 @@ parameters:
 			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
 
 		-
-			message: '#^Cannot assign offset mixed to array\<string\>\|string\|null\.$#'
-			identifier: offsetAssign.dimType
-			count: 1
+			message: '#^Cannot access property \$value on mixed\.$#'
+			identifier: property.nonObject
+			count: 2
 			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
 
 		-
@@ -75781,7 +74527,7 @@ parameters:
 			path: src/Sulu/Component/Content/Query/ListToTreeConverter.php
 
 		-
-			message: '#^PHPDoc tag @var with type array\<string\> is not subtype of native type list\<string\>\|false\.$#'
+			message: '#^PHPDoc tag @var with type array\<string\> is not subtype of native type list\<array\{string, int\<0, max\>\}\|string\>\|false\.$#'
 			identifier: varTag.nativeType
 			count: 1
 			path: src/Sulu/Component/Content/Query/ListToTreeConverter.php
@@ -77467,6 +76213,12 @@ parameters:
 			path: src/Sulu/Component/Content/Tests/Unit/Compat/PropertyTest.php
 
 		-
+			message: '#^Parameter \#3 \$type of class JMS\\Serializer\\EventDispatcher\\ObjectEvent constructor expects array\{name\: string, params\: array\}, array\{type\: ''Sulu\\\\Component\\\\Content\\\\Compat\\\\Structure\\\\PageBridge'', params\: array\{\}\} given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Sulu/Component/Content/Tests/Unit/Compat/Serializer/PageBridgeSubscriberTest.php
+
+		-
 			message: '#^Call to an undefined method Sulu\\Component\\Content\\Compat\\PropertyInterface\:\:getLocalization\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -77659,201 +76411,9 @@ parameters:
 			path: src/Sulu/Component/Content/Tests/Unit/Document/Subscriber/BlameSubscriberTest.php
 
 		-
-			message: '#^Call to an undefined method Prophecy\\Prophecy\\MethodProphecy\|Sulu\\Bundle\\RouteBundle\\Model\\RouteInterface\:\:willReturn\(\)\.$#'
-			identifier: method.notFound
-			count: 6
-			path: src/Sulu/Component/Content/Tests/Unit/Document/Subscriber/CopyLocaleSubscriberTest.php
-
-		-
-			message: '#^Call to an undefined method Prophecy\\Prophecy\\MethodProphecy\|Sulu\\Component\\Content\\Document\\Structure\\PropertyValue\:\:willReturn\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/Sulu/Component/Content/Tests/Unit/Document/Subscriber/CopyLocaleSubscriberTest.php
-
-		-
-			message: '#^Call to an undefined method Prophecy\\Prophecy\\MethodProphecy\|Sulu\\Component\\Content\\Document\\Structure\\StructureInterface\:\:willReturn\(\)\.$#'
-			identifier: method.notFound
-			count: 9
-			path: src/Sulu/Component/Content/Tests/Unit/Document/Subscriber/CopyLocaleSubscriberTest.php
-
-		-
-			message: '#^Call to an undefined method Prophecy\\Prophecy\\ObjectProphecy\|Sulu\\Bundle\\PageBundle\\Document\\PageDocument\:\:reveal\(\)\.$#'
-			identifier: method.notFound
-			count: 14
-			path: src/Sulu/Component/Content/Tests/Unit/Document/Subscriber/CopyLocaleSubscriberTest.php
-
-		-
-			message: '#^Call to an undefined method Prophecy\\Prophecy\\ObjectProphecy\|Sulu\\Component\\Content\\Document\\Structure\\StructureInterface\:\:reveal\(\)\.$#'
-			identifier: method.notFound
-			count: 10
-			path: src/Sulu/Component/Content/Tests/Unit/Document/Subscriber/CopyLocaleSubscriberTest.php
-
-		-
-			message: '#^Call to an undefined method Prophecy\\Prophecy\\ObjectProphecy\|Sulu\\Component\\Content\\Types\\ResourceLocator\\Strategy\\ResourceLocatorStrategyInterface\:\:reveal\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/Sulu/Component/Content/Tests/Unit/Document/Subscriber/CopyLocaleSubscriberTest.php
-
-		-
-			message: '#^Call to an undefined method Prophecy\\Prophecy\\ObjectProphecy\|Sulu\\Component\\DocumentManager\\Event\\CopyLocaleEvent\:\:reveal\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/Sulu/Component/Content/Tests/Unit/Document/Subscriber/CopyLocaleSubscriberTest.php
-
-		-
-			message: '#^Call to an undefined method Prophecy\\Prophecy\\ObjectProphecy\|Sulu\\Component\\Route\\Document\\Behavior\\RoutableBehavior\:\:reveal\(\)\.$#'
-			identifier: method.notFound
-			count: 7
-			path: src/Sulu/Component/Content/Tests/Unit/Document/Subscriber/CopyLocaleSubscriberTest.php
-
-		-
-			message: '#^Call to an undefined method object\:\:willReturn\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/Sulu/Component/Content/Tests/Unit/Document/Subscriber/CopyLocaleSubscriberTest.php
-
-		-
-			message: '#^Cannot call method shouldBeCalled\(\) on Prophecy\\Prophecy\\MethodProphecy\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Component/Content/Tests/Unit/Document/Subscriber/CopyLocaleSubscriberTest.php
-
-		-
-			message: '#^Cannot call method shouldBeCalled\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 12
-			path: src/Sulu/Component/Content/Tests/Unit/Document/Subscriber/CopyLocaleSubscriberTest.php
-
-		-
-			message: '#^Cannot call method willReturn\(\) on Prophecy\\Prophecy\\MethodProphecy\|string\.$#'
-			identifier: method.nonObject
-			count: 20
-			path: src/Sulu/Component/Content/Tests/Unit/Document/Subscriber/CopyLocaleSubscriberTest.php
-
-		-
-			message: '#^Cannot call method willReturn\(\) on Prophecy\\Prophecy\\MethodProphecy\|string\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Component/Content/Tests/Unit/Document/Subscriber/CopyLocaleSubscriberTest.php
-
-		-
-			message: '#^Cannot call method willReturn\(\) on array\<array\<mixed\>\>\|Prophecy\\Prophecy\\MethodProphecy\|Sulu\\Component\\Content\\Document\\Extension\\ExtensionContainer\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Component/Content/Tests/Unit/Document/Subscriber/CopyLocaleSubscriberTest.php
-
-		-
-			message: '#^Cannot call method willReturn\(\) on array\|Prophecy\\Prophecy\\MethodProphecy\.$#'
-			identifier: method.nonObject
-			count: 8
-			path: src/Sulu/Component/Content/Tests/Unit/Document/Subscriber/CopyLocaleSubscriberTest.php
-
-		-
-			message: '#^Cannot call method willReturn\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Component/Content/Tests/Unit/Document/Subscriber/CopyLocaleSubscriberTest.php
-
-		-
 			message: '#^Missing call to parent\:\:setUp\(\) method\.$#'
 			identifier: phpunit.callParent
 			count: 1
-			path: src/Sulu/Component/Content/Tests/Unit/Document/Subscriber/CopyLocaleSubscriberTest.php
-
-		-
-			message: '#^PHPDoc tag @var for variable \$destDocument contains generic class Prophecy\\Prophecy\\ObjectProphecy but does not specify its types\: T$#'
-			identifier: missingType.generics
-			count: 8
-			path: src/Sulu/Component/Content/Tests/Unit/Document/Subscriber/CopyLocaleSubscriberTest.php
-
-		-
-			message: '#^PHPDoc tag @var for variable \$destStructure contains generic class Prophecy\\Prophecy\\ObjectProphecy but does not specify its types\: T$#'
-			identifier: missingType.generics
-			count: 1
-			path: src/Sulu/Component/Content/Tests/Unit/Document/Subscriber/CopyLocaleSubscriberTest.php
-
-		-
-			message: '#^PHPDoc tag @var for variable \$document contains generic class Prophecy\\Prophecy\\ObjectProphecy but does not specify its types\: T$#'
-			identifier: missingType.generics
-			count: 8
-			path: src/Sulu/Component/Content/Tests/Unit/Document/Subscriber/CopyLocaleSubscriberTest.php
-
-		-
-			message: '#^PHPDoc tag @var for variable \$event contains generic class Prophecy\\Prophecy\\ObjectProphecy but does not specify its types\: T$#'
-			identifier: missingType.generics
-			count: 8
-			path: src/Sulu/Component/Content/Tests/Unit/Document/Subscriber/CopyLocaleSubscriberTest.php
-
-		-
-			message: '#^PHPDoc tag @var for variable \$parentDocument contains generic class Prophecy\\Prophecy\\ObjectProphecy but does not specify its types\: T$#'
-			identifier: missingType.generics
-			count: 1
-			path: src/Sulu/Component/Content/Tests/Unit/Document/Subscriber/CopyLocaleSubscriberTest.php
-
-		-
-			message: '#^PHPDoc tag @var for variable \$resourceLocatorStrategy contains generic class Prophecy\\Prophecy\\ObjectProphecy but does not specify its types\: T$#'
-			identifier: missingType.generics
-			count: 1
-			path: src/Sulu/Component/Content/Tests/Unit/Document/Subscriber/CopyLocaleSubscriberTest.php
-
-		-
-			message: '#^PHPDoc tag @var for variable \$structure contains generic class Prophecy\\Prophecy\\ObjectProphecy but does not specify its types\: T$#'
-			identifier: missingType.generics
-			count: 8
-			path: src/Sulu/Component/Content/Tests/Unit/Document/Subscriber/CopyLocaleSubscriberTest.php
-
-		-
-			message: '#^PHPDoc tag @var with type Prophecy\\Prophecy\\ObjectProphecy\|Sulu\\Bundle\\PageBundle\\Document\\PageDocument is not subtype of native type Prophecy\\Prophecy\\ObjectProphecy\.$#'
-			identifier: varTag.nativeType
-			count: 10
-			path: src/Sulu/Component/Content/Tests/Unit/Document/Subscriber/CopyLocaleSubscriberTest.php
-
-		-
-			message: '#^PHPDoc tag @var with type Prophecy\\Prophecy\\ObjectProphecy\|Sulu\\Component\\Content\\Document\\Structure\\StructureInterface is not subtype of native type Prophecy\\Prophecy\\ObjectProphecy\.$#'
-			identifier: varTag.nativeType
-			count: 9
-			path: src/Sulu/Component/Content/Tests/Unit/Document/Subscriber/CopyLocaleSubscriberTest.php
-
-		-
-			message: '#^PHPDoc tag @var with type Prophecy\\Prophecy\\ObjectProphecy\|Sulu\\Component\\Content\\Types\\ResourceLocator\\Strategy\\ResourceLocatorStrategyInterface is not subtype of native type Prophecy\\Prophecy\\ObjectProphecy\.$#'
-			identifier: varTag.nativeType
-			count: 1
-			path: src/Sulu/Component/Content/Tests/Unit/Document/Subscriber/CopyLocaleSubscriberTest.php
-
-		-
-			message: '#^PHPDoc tag @var with type Prophecy\\Prophecy\\ObjectProphecy\|Sulu\\Component\\DocumentManager\\Event\\CopyLocaleEvent is not subtype of native type Prophecy\\Prophecy\\ObjectProphecy\.$#'
-			identifier: varTag.nativeType
-			count: 8
-			path: src/Sulu/Component/Content/Tests/Unit/Document/Subscriber/CopyLocaleSubscriberTest.php
-
-		-
-			message: '#^PHPDoc tag @var with type Prophecy\\Prophecy\\ObjectProphecy\|Sulu\\Component\\Route\\Document\\Behavior\\RoutableBehavior is not subtype of native type Prophecy\\Prophecy\\ObjectProphecy\.$#'
-			identifier: varTag.nativeType
-			count: 7
-			path: src/Sulu/Component/Content/Tests/Unit/Document/Subscriber/CopyLocaleSubscriberTest.php
-
-		-
-			message: '#^Parameter \#1 \$destDocument of method Sulu\\Component\\Content\\Document\\Subscriber\\CopyLocaleSubscriber\:\:checkPageTreeRoute\(\) expects Sulu\\Component\\Route\\Document\\Behavior\\RoutableBehavior, object given\.$#'
-			identifier: argument.type
-			count: 7
-			path: src/Sulu/Component/Content/Tests/Unit/Document/Subscriber/CopyLocaleSubscriberTest.php
-
-		-
-			message: '#^Parameter \#1 \$event of method Sulu\\Component\\Content\\Document\\Subscriber\\CopyLocaleSubscriber\:\:handleCopyLocale\(\) expects Sulu\\Component\\DocumentManager\\Event\\CopyLocaleEvent, object given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Content/Tests/Unit/Document/Subscriber/CopyLocaleSubscriberTest.php
-
-		-
-			message: '#^Parameter \#1 \$extensions of method Prophecy\\Prophecy\\ObjectProphecy\<object\>\:\:setExtensionsData\(\) expects array\<array\<mixed\>\>\|Sulu\\Component\\Content\\Document\\Extension\\ExtensionContainer, array\<string, string\> given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Content/Tests/Unit/Document/Subscriber/CopyLocaleSubscriberTest.php
-
-		-
-			message: '#^Parameter \#2 \$document of method Sulu\\Component\\Content\\Document\\Subscriber\\CopyLocaleSubscriber\:\:checkPageTreeRoute\(\) expects Sulu\\Component\\Content\\Document\\Behavior\\StructureBehavior, object given\.$#'
-			identifier: argument.type
-			count: 7
 			path: src/Sulu/Component/Content/Tests/Unit/Document/Subscriber/CopyLocaleSubscriberTest.php
 
 		-
@@ -77935,40 +76495,10 @@ parameters:
 			path: src/Sulu/Component/Content/Tests/Unit/Document/Subscriber/ExtensionSubscriberTest.php
 
 		-
-			message: '#^Call to an undefined method Sulu\\Component\\Content\\Document\\Behavior\\StructureBehavior\:\:reveal\(\)\.$#'
-			identifier: method.notFound
-			count: 8
-			path: src/Sulu/Component/Content/Tests/Unit/Document/Subscriber/FallbackLocalizationSubscriberTest.php
-
-		-
-			message: '#^Property Sulu\\Component\\Content\\Tests\\Unit\\Document\\Subscriber\\FallbackLocalizationSubscriberTest\:\:\$document \(Sulu\\Component\\Content\\Document\\Behavior\\StructureBehavior\) does not accept Prophecy\\Prophecy\\ObjectProphecy\<Sulu\\Component\\Content\\Document\\Behavior\\StructureBehavior&Sulu\\Component\\Content\\Document\\Behavior\\WebspaceBehavior\>\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: src/Sulu/Component/Content/Tests/Unit/Document/Subscriber/FallbackLocalizationSubscriberTest.php
-
-		-
 			message: '#^Class Sulu\\Component\\Content\\Document\\Subscriber\\RedirectTypeSubscriber does not have a constructor and must be instantiated without any parameters\.$#'
 			identifier: new.noConstructor
 			count: 1
 			path: src/Sulu/Component/Content/Tests/Unit/Document/Subscriber/RedirectTypeSubscriberTest.php
-
-		-
-			message: '#^Call to an undefined method Prophecy\\Prophecy\\ObjectProphecy\|Sulu\\Component\\Content\\Document\\Behavior\\ResourceSegmentBehavior\:\:getRedirectType\(\)\.$#'
-			identifier: method.notFound
-			count: 2
-			path: src/Sulu/Component/Content/Tests/Unit/Document/Subscriber/ResourceSegmentSubscriberTest.php
-
-		-
-			message: '#^Call to an undefined method Prophecy\\Prophecy\\ObjectProphecy\|Sulu\\Component\\Content\\Document\\Behavior\\ResourceSegmentBehavior\:\:getStructure\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/Sulu/Component/Content/Tests/Unit/Document/Subscriber/ResourceSegmentSubscriberTest.php
-
-		-
-			message: '#^Call to an undefined method Prophecy\\Prophecy\\ObjectProphecy\|Sulu\\Component\\Content\\Document\\Behavior\\ResourceSegmentBehavior\:\:reveal\(\)\.$#'
-			identifier: method.notFound
-			count: 42
-			path: src/Sulu/Component/Content/Tests/Unit/Document/Subscriber/ResourceSegmentSubscriberTest.php
 
 		-
 			message: '#^Cannot call method getRedirectType\(\) on mixed\.$#'
@@ -77991,13 +76521,7 @@ parameters:
 		-
 			message: '#^Cannot call method shouldBeCalled\(\) on mixed\.$#'
 			identifier: method.nonObject
-			count: 9
-			path: src/Sulu/Component/Content/Tests/Unit/Document/Subscriber/ResourceSegmentSubscriberTest.php
-
-		-
-			message: '#^Cannot call method willReturn\(\) on Prophecy\\Prophecy\\MethodProphecy\|string\.$#'
-			identifier: method.nonObject
-			count: 1
+			count: 8
 			path: src/Sulu/Component/Content/Tests/Unit/Document/Subscriber/ResourceSegmentSubscriberTest.php
 
 		-
@@ -78009,12 +76533,6 @@ parameters:
 		-
 			message: '#^Method Sulu\\Component\\Content\\Tests\\Unit\\Document\\Subscriber\\ResourceSegmentSubscriberTest\:\:getDocumentMock\(\) has no return type specified\.$#'
 			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Component/Content/Tests/Unit/Document/Subscriber/ResourceSegmentSubscriberTest.php
-
-		-
-			message: '#^Property Sulu\\Component\\Content\\Tests\\Unit\\Document\\Subscriber\\ResourceSegmentSubscriberTest\:\:\$document with generic class Prophecy\\Prophecy\\ObjectProphecy does not specify its types\: T$#'
-			identifier: missingType.generics
 			count: 1
 			path: src/Sulu/Component/Content/Tests/Unit/Document/Subscriber/ResourceSegmentSubscriberTest.php
 
@@ -78991,30 +77509,6 @@ parameters:
 			path: src/Sulu/Component/Content/Tests/Unit/SmartContent/Orm/BaseDataProviderTest.php
 
 		-
-			message: '#^Call to an undefined method Prophecy\\Prophecy\\MethodProphecy\|Sulu\\Bundle\\AdminBundle\\Metadata\\MetadataInterface\:\:shouldBeCalled\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/Sulu/Component/Content/Tests/Unit/SmartContent/PageDataProviderTest.php
-
-		-
-			message: '#^Call to an undefined method Prophecy\\Prophecy\\ObjectProphecy\|Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\FormMetadataProvider\:\:reveal\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/Sulu/Component/Content/Tests/Unit/SmartContent/PageDataProviderTest.php
-
-		-
-			message: '#^Call to an undefined method Prophecy\\Prophecy\\ObjectProphecy\|Symfony\\Component\\Security\\Core\\Authentication\\Token\\Storage\\TokenStorageInterface\:\:reveal\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/Sulu/Component/Content/Tests/Unit/SmartContent/PageDataProviderTest.php
-
-		-
-			message: '#^Call to an undefined method Prophecy\\Prophecy\\ObjectProphecy\|Symfony\\Component\\Security\\Core\\Authentication\\Token\\TokenInterface\:\:reveal\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/Sulu/Component/Content/Tests/Unit/SmartContent/PageDataProviderTest.php
-
-		-
 			message: '#^Call to method PHPUnit\\Framework\\Assert\:\:assertInstanceOf\(\) with ''Sulu\\\\Component\\\\Content\\\\Compat\\\\PropertyParameter'' and Sulu\\Component\\Content\\Compat\\PropertyParameter will always evaluate to true\.$#'
 			identifier: method.alreadyNarrowedType
 			count: 1
@@ -79042,24 +77536,6 @@ parameters:
 			message: '#^Cannot call method initializeProxy\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 10
-			path: src/Sulu/Component/Content/Tests/Unit/SmartContent/PageDataProviderTest.php
-
-		-
-			message: '#^Cannot call method shouldBeCalled\(\) on Prophecy\\Prophecy\\MethodProphecy\|Symfony\\Component\\Security\\Core\\Authentication\\Token\\TokenInterface\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Component/Content/Tests/Unit/SmartContent/PageDataProviderTest.php
-
-		-
-			message: '#^Cannot call method shouldBeCalled\(\) on Prophecy\\Prophecy\\MethodProphecy\|Symfony\\Component\\Security\\Core\\User\\UserInterface\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Component/Content/Tests/Unit/SmartContent/PageDataProviderTest.php
-
-		-
-			message: '#^Cannot call method shouldBeCalled\(\) on Prophecy\\Prophecy\\MethodProphecy\|string\.$#'
-			identifier: method.nonObject
-			count: 1
 			path: src/Sulu/Component/Content/Tests/Unit/SmartContent/PageDataProviderTest.php
 
 		-
@@ -79108,66 +77584,6 @@ parameters:
 			message: '#^Offset 1 might not exist on array\<Sulu\\Component\\Content\\Compat\\PropertyParameter\>\|null\.$#'
 			identifier: offsetAccess.notFound
 			count: 2
-			path: src/Sulu/Component/Content/Tests/Unit/SmartContent/PageDataProviderTest.php
-
-		-
-			message: '#^PHPDoc tag @var for variable \$formMetadataProvider contains generic class Prophecy\\Prophecy\\ObjectProphecy but does not specify its types\: T$#'
-			identifier: missingType.generics
-			count: 1
-			path: src/Sulu/Component/Content/Tests/Unit/SmartContent/PageDataProviderTest.php
-
-		-
-			message: '#^PHPDoc tag @var for variable \$token contains generic class Prophecy\\Prophecy\\ObjectProphecy but does not specify its types\: T$#'
-			identifier: missingType.generics
-			count: 1
-			path: src/Sulu/Component/Content/Tests/Unit/SmartContent/PageDataProviderTest.php
-
-		-
-			message: '#^PHPDoc tag @var for variable \$tokenStorage contains generic class Prophecy\\Prophecy\\ObjectProphecy but does not specify its types\: T$#'
-			identifier: missingType.generics
-			count: 1
-			path: src/Sulu/Component/Content/Tests/Unit/SmartContent/PageDataProviderTest.php
-
-		-
-			message: '#^PHPDoc tag @var for variable \$user contains generic class Prophecy\\Prophecy\\ObjectProphecy but does not specify its types\: T$#'
-			identifier: missingType.generics
-			count: 1
-			path: src/Sulu/Component/Content/Tests/Unit/SmartContent/PageDataProviderTest.php
-
-		-
-			message: '#^PHPDoc tag @var with type Prophecy\\Prophecy\\ObjectProphecy\|Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\FormMetadataProvider is not subtype of native type Prophecy\\Prophecy\\ObjectProphecy\.$#'
-			identifier: varTag.nativeType
-			count: 1
-			path: src/Sulu/Component/Content/Tests/Unit/SmartContent/PageDataProviderTest.php
-
-		-
-			message: '#^PHPDoc tag @var with type Prophecy\\Prophecy\\ObjectProphecy\|Sulu\\Component\\Security\\Authentication\\UserInterface is not subtype of native type Prophecy\\Prophecy\\ObjectProphecy\.$#'
-			identifier: varTag.nativeType
-			count: 1
-			path: src/Sulu/Component/Content/Tests/Unit/SmartContent/PageDataProviderTest.php
-
-		-
-			message: '#^PHPDoc tag @var with type Prophecy\\Prophecy\\ObjectProphecy\|Symfony\\Component\\Security\\Core\\Authentication\\Token\\Storage\\TokenStorageInterface is not subtype of native type Prophecy\\Prophecy\\ObjectProphecy\.$#'
-			identifier: varTag.nativeType
-			count: 1
-			path: src/Sulu/Component/Content/Tests/Unit/SmartContent/PageDataProviderTest.php
-
-		-
-			message: '#^PHPDoc tag @var with type Prophecy\\Prophecy\\ObjectProphecy\|Symfony\\Component\\Security\\Core\\Authentication\\Token\\TokenInterface is not subtype of native type Prophecy\\Prophecy\\ObjectProphecy\.$#'
-			identifier: varTag.nativeType
-			count: 1
-			path: src/Sulu/Component/Content/Tests/Unit/SmartContent/PageDataProviderTest.php
-
-		-
-			message: '#^Parameter \#10 \$formMetadataProvider of class Sulu\\Component\\Content\\SmartContent\\PageDataProvider constructor expects Sulu\\Bundle\\AdminBundle\\Metadata\\MetadataProviderInterface\|null, object given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Content/Tests/Unit/SmartContent/PageDataProviderTest.php
-
-		-
-			message: '#^Parameter \#11 \$tokenStorage of class Sulu\\Component\\Content\\SmartContent\\PageDataProvider constructor expects Symfony\\Component\\Security\\Core\\Authentication\\Token\\Storage\\TokenStorageInterface\|null, object given\.$#'
-			identifier: argument.type
-			count: 1
 			path: src/Sulu/Component/Content/Tests/Unit/SmartContent/PageDataProviderTest.php
 
 		-
@@ -80510,12 +78926,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#2 \.\.\.\$arrays of function array_merge expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/CustomUrl/Manager/CustomUrlManager.php
-
-		-
-			message: '#^Parameter \#2 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Component/CustomUrl/Manager/CustomUrlManager.php
@@ -85293,7 +83703,7 @@ parameters:
 		-
 			message: '#^Method Sulu\\Component\\Import\\Format\\Xliff12\:\:utf8ToCharset\(\) should return string but returns string\|false\.$#'
 			identifier: return.type
-			count: 1
+			count: 2
 			path: src/Sulu/Component/Import/Format/Xliff12.php
 
 		-
@@ -85603,12 +84013,6 @@ parameters:
 			path: src/Sulu/Component/Media/SmartContent/MediaDataProvider.php
 
 		-
-			message: '#^Method Sulu\\Component\\Media\\SystemCollections\\SystemCollectionBuilder\:\:getDependencies\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Component/Media/SystemCollections/SystemCollectionBuilder.php
-
-		-
 			message: '#^Method Sulu\\Component\\Media\\SystemCollections\\SystemCollectionBuilder\:\:setContext\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -85831,30 +84235,6 @@ parameters:
 			path: src/Sulu/Component/Media/Tests/Unit/SmartContent/MediaDataProviderTest.php
 
 		-
-			message: '#^Call to an undefined method Doctrine\\ORM\\EntityManagerInterface\|Prophecy\\Prophecy\\ObjectProphecy\:\:reveal\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/Sulu/Component/Media/Tests/Unit/SmartContent/MediaDataProviderTest.php
-
-		-
-			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<Sulu\\Bundle\\MediaBundle\\Entity\\MediaType\>\:\:shouldBeCalled\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/Sulu/Component/Media/Tests/Unit/SmartContent/MediaDataProviderTest.php
-
-		-
-			message: '#^Call to an undefined method Doctrine\\Persistence\\ObjectRepository\|Prophecy\\Prophecy\\ObjectProphecy\:\:reveal\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/Sulu/Component/Media/Tests/Unit/SmartContent/MediaDataProviderTest.php
-
-		-
-			message: '#^Call to an undefined method Prophecy\\Prophecy\\ObjectProphecy\|Symfony\\Contracts\\Translation\\TranslatorInterface\:\:reveal\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/Sulu/Component/Media/Tests/Unit/SmartContent/MediaDataProviderTest.php
-
-		-
 			message: '#^Call to method PHPUnit\\Framework\\Assert\:\:assertInstanceOf\(\) with ''Sulu\\\\Component\\\\SmartContent\\\\Configuration\\\\ProviderConfigurationInterface'' and Sulu\\Component\\SmartContent\\Configuration\\ProviderConfigurationInterface will always evaluate to true\.$#'
 			identifier: method.alreadyNarrowedType
 			count: 2
@@ -85886,24 +84266,6 @@ parameters:
 
 		-
 			message: '#^Cannot call method getName\(\) on string\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Component/Media/Tests/Unit/SmartContent/MediaDataProviderTest.php
-
-		-
-			message: '#^Cannot call method shouldBeCalled\(\) on Prophecy\\Prophecy\\MethodProphecy\|string\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: src/Sulu/Component/Media/Tests/Unit/SmartContent/MediaDataProviderTest.php
-
-		-
-			message: '#^Cannot call method shouldBeCalled\(\) on array\<int, object\>\|Prophecy\\Prophecy\\MethodProphecy\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Component/Media/Tests/Unit/SmartContent/MediaDataProviderTest.php
-
-		-
-			message: '#^Cannot call method willReturn\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 1
 			path: src/Sulu/Component/Media/Tests/Unit/SmartContent/MediaDataProviderTest.php
@@ -86065,44 +84427,8 @@ parameters:
 			path: src/Sulu/Component/Media/Tests/Unit/SmartContent/MediaDataProviderTest.php
 
 		-
-			message: '#^PHPDoc tag @var for variable \$entityManager contains generic class Prophecy\\Prophecy\\ObjectProphecy but does not specify its types\: T$#'
-			identifier: missingType.generics
-			count: 1
-			path: src/Sulu/Component/Media/Tests/Unit/SmartContent/MediaDataProviderTest.php
-
-		-
-			message: '#^PHPDoc tag @var for variable \$mediaTypeRepository contains generic class Prophecy\\Prophecy\\ObjectProphecy but does not specify its types\: T$#'
-			identifier: missingType.generics
-			count: 1
-			path: src/Sulu/Component/Media/Tests/Unit/SmartContent/MediaDataProviderTest.php
-
-		-
 			message: '#^PHPDoc tag @var for variable \$mediaTypeRepository contains generic interface Doctrine\\Persistence\\ObjectRepository but does not specify its types\: TEntityClass$#'
 			identifier: missingType.generics
-			count: 1
-			path: src/Sulu/Component/Media/Tests/Unit/SmartContent/MediaDataProviderTest.php
-
-		-
-			message: '#^PHPDoc tag @var for variable \$translator contains generic class Prophecy\\Prophecy\\ObjectProphecy but does not specify its types\: T$#'
-			identifier: missingType.generics
-			count: 1
-			path: src/Sulu/Component/Media/Tests/Unit/SmartContent/MediaDataProviderTest.php
-
-		-
-			message: '#^PHPDoc tag @var with type Doctrine\\ORM\\EntityManagerInterface\|Prophecy\\Prophecy\\ObjectProphecy is not subtype of native type Prophecy\\Prophecy\\ObjectProphecy\.$#'
-			identifier: varTag.nativeType
-			count: 1
-			path: src/Sulu/Component/Media/Tests/Unit/SmartContent/MediaDataProviderTest.php
-
-		-
-			message: '#^PHPDoc tag @var with type Doctrine\\Persistence\\ObjectRepository\|Prophecy\\Prophecy\\ObjectProphecy is not subtype of native type Prophecy\\Prophecy\\ObjectProphecy\.$#'
-			identifier: varTag.nativeType
-			count: 1
-			path: src/Sulu/Component/Media/Tests/Unit/SmartContent/MediaDataProviderTest.php
-
-		-
-			message: '#^PHPDoc tag @var with type Prophecy\\Prophecy\\ObjectProphecy\|Symfony\\Contracts\\Translation\\TranslatorInterface is not subtype of native type Prophecy\\Prophecy\\ObjectProphecy\.$#'
-			identifier: varTag.nativeType
 			count: 1
 			path: src/Sulu/Component/Media/Tests/Unit/SmartContent/MediaDataProviderTest.php
 
@@ -86138,18 +84464,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#1 \$title of method Sulu\\Bundle\\MediaBundle\\Entity\\FileVersionMeta\:\:setTitle\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Media/Tests/Unit/SmartContent/MediaDataProviderTest.php
-
-		-
-			message: '#^Parameter \#10 \$entityManager of class Sulu\\Component\\Media\\SmartContent\\MediaDataProvider constructor expects Doctrine\\ORM\\EntityManagerInterface\|null, object given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Media/Tests/Unit/SmartContent/MediaDataProviderTest.php
-
-		-
-			message: '#^Parameter \#11 \$translator of class Sulu\\Component\\Media\\SmartContent\\MediaDataProvider constructor expects Symfony\\Contracts\\Translation\\TranslatorInterface\|null, object given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Component/Media/Tests/Unit/SmartContent/MediaDataProviderTest.php
@@ -87007,42 +85321,6 @@ parameters:
 			path: src/Sulu/Component/Persistence/EventSubscriber/ORM/UserBlameSubscriber.php
 
 		-
-			message: '#^Call to an undefined method Doctrine\\Persistence\\Mapping\\Driver\\MappingDriver\|Prophecy\\Prophecy\\ObjectProphecy\:\:reveal\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/Sulu/Component/Persistence/Tests/Unit/EventSubscriber/ORM/MetadataSubscriberTest.php
-
-		-
-			message: '#^Cannot call method shouldNotBeCalled\(\) on Prophecy\\Prophecy\\MethodProphecy\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Component/Persistence/Tests/Unit/EventSubscriber/ORM/MetadataSubscriberTest.php
-
-		-
-			message: '#^Cannot call method willReturn\(\) on list\<class\-string\>\|Prophecy\\Prophecy\\MethodProphecy\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Component/Persistence/Tests/Unit/EventSubscriber/ORM/MetadataSubscriberTest.php
-
-		-
-			message: '#^PHPDoc tag @var for variable \$mappingDriver contains generic class Prophecy\\Prophecy\\ObjectProphecy but does not specify its types\: T$#'
-			identifier: missingType.generics
-			count: 1
-			path: src/Sulu/Component/Persistence/Tests/Unit/EventSubscriber/ORM/MetadataSubscriberTest.php
-
-		-
-			message: '#^PHPDoc tag @var with type Doctrine\\Persistence\\Mapping\\Driver\\MappingDriver\|Prophecy\\Prophecy\\ObjectProphecy is not subtype of native type Prophecy\\Prophecy\\ObjectProphecy\.$#'
-			identifier: varTag.nativeType
-			count: 1
-			path: src/Sulu/Component/Persistence/Tests/Unit/EventSubscriber/ORM/MetadataSubscriberTest.php
-
-		-
-			message: '#^Parameter \#2 \$metadata of method Doctrine\\Persistence\\Mapping\\Driver\\MappingDriver\:\:loadMetadataForClass\(\) expects Doctrine\\Persistence\\Mapping\\ClassMetadata\<stdClass\>, Prophecy\\Argument\\Token\\TypeToken given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Persistence/Tests/Unit/EventSubscriber/ORM/MetadataSubscriberTest.php
-
-		-
 			message: '#^Property Sulu\\Component\\Persistence\\Tests\\Unit\\EventSubscriber\\ORM\\MetadataSubscriberTest\:\:\$classMetadata with generic class Doctrine\\ORM\\Mapping\\ClassMetadata does not specify its types\: T$#'
 			identifier: missingType.generics
 			count: 1
@@ -87139,12 +85417,6 @@ parameters:
 			path: src/Sulu/Component/Persistence/Tests/Unit/EventSubscriber/ORM/UserBlameSubscriberTest.php
 
 		-
-			message: '#^Cannot call method reveal\(\) on stdClass\.$#'
-			identifier: method.nonObject
-			count: 7
-			path: src/Sulu/Component/Persistence/Tests/Unit/EventSubscriber/ORM/UserBlameSubscriberTest.php
-
-		-
 			message: '#^Cannot call method willReturn\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 6
@@ -87169,38 +85441,8 @@ parameters:
 			path: src/Sulu/Component/Persistence/Tests/Unit/EventSubscriber/ORM/UserBlameSubscriberTest.php
 
 		-
-			message: '#^Method Sulu\\Component\\Persistence\\Tests\\Unit\\EventSubscriber\\ORM\\UserBlameSubscriberTest\:\:testOnFlush\(\) has parameter \$expectedFields with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Component/Persistence/Tests/Unit/EventSubscriber/ORM/UserBlameSubscriberTest.php
-
-		-
-			message: '#^Method Sulu\\Component\\Persistence\\Tests\\Unit\\EventSubscriber\\ORM\\UserBlameSubscriberTest\:\:testOnFlush\(\) has parameter \$insert with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Component/Persistence/Tests/Unit/EventSubscriber/ORM/UserBlameSubscriberTest.php
-
-		-
 			message: '#^Method Sulu\\Component\\Persistence\\Tests\\Unit\\EventSubscriber\\ORM\\UserBlameSubscriberTest\:\:testOnFlushOtherUser\(\) has parameter \$changeset with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Component/Persistence/Tests/Unit/EventSubscriber/ORM/UserBlameSubscriberTest.php
-
-		-
-			message: '#^Parameter \#1 \$object of function get_class expects object, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: src/Sulu/Component/Persistence/Tests/Unit/EventSubscriber/ORM/UserBlameSubscriberTest.php
-
-		-
-			message: '#^Parameter \#1 \$value of function count expects array\|Countable, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Persistence/Tests/Unit/EventSubscriber/ORM/UserBlameSubscriberTest.php
-
-		-
-			message: '#^Parameter \#2 \$haystack of function in_array expects array, mixed given\.$#'
-			identifier: argument.type
 			count: 1
 			path: src/Sulu/Component/Persistence/Tests/Unit/EventSubscriber/ORM/UserBlameSubscriberTest.php
 
@@ -87213,12 +85455,6 @@ parameters:
 		-
 			message: '#^Property Sulu\\Component\\Persistence\\Tests\\Unit\\EventSubscriber\\ORM\\UserBlameSubscriberTest\:\:\$refl with generic class ReflectionClass does not specify its types\: T$#'
 			identifier: missingType.generics
-			count: 1
-			path: src/Sulu/Component/Persistence/Tests/Unit/EventSubscriber/ORM/UserBlameSubscriberTest.php
-
-		-
-			message: '#^Property Sulu\\Component\\Persistence\\Tests\\Unit\\EventSubscriber\\ORM\\UserBlameSubscriberTest\:\:\$userBlameObject \(stdClass\) does not accept Prophecy\\Prophecy\\ObjectProphecy\<stdClass&Sulu\\Component\\Persistence\\Model\\UserBlameInterface\>\.$#'
-			identifier: assign.propertyType
 			count: 1
 			path: src/Sulu/Component/Persistence/Tests/Unit/EventSubscriber/ORM/UserBlameSubscriberTest.php
 
@@ -93493,18 +91729,6 @@ parameters:
 			path: src/Sulu/Component/Util/SuluNodeHelper.php
 
 		-
-			message: '#^Method Sulu\\Component\\Util\\SuluNodeHelper\:\:getNextNode\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Component/Util/SuluNodeHelper.php
-
-		-
-			message: '#^Method Sulu\\Component\\Util\\SuluNodeHelper\:\:getPreviousNode\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Component/Util/SuluNodeHelper.php
-
-		-
 			message: '#^Method Sulu\\Component\\Util\\SuluNodeHelper\:\:getStructureTypeForNode\(\) should return string but empty return statement found\.$#'
 			identifier: return.empty
 			count: 1
@@ -93739,48 +91963,6 @@ parameters:
 			path: src/Sulu/Component/Util/Tests/Unit/SortUtilsTest.php
 
 		-
-			message: '#^Call to an undefined method PHPCR\\NodeInterface\:\:expects\(\)\.$#'
-			identifier: method.notFound
-			count: 3
-			path: src/Sulu/Component/Util/Tests/Unit/SuluNodeHelperTest.php
-
-		-
-			message: '#^Call to an undefined method PHPCR\\SessionInterface\:\:expects\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/Sulu/Component/Util/Tests/Unit/SuluNodeHelperTest.php
-
-		-
-			message: '#^Cannot call method expects\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 4
-			path: src/Sulu/Component/Util/Tests/Unit/SuluNodeHelperTest.php
-
-		-
-			message: '#^Cannot call method getPath\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 4
-			path: src/Sulu/Component/Util/Tests/Unit/SuluNodeHelperTest.php
-
-		-
-			message: '#^Cannot call method method\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 8
-			path: src/Sulu/Component/Util/Tests/Unit/SuluNodeHelperTest.php
-
-		-
-			message: '#^Cannot call method willReturn\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 8
-			path: src/Sulu/Component/Util/Tests/Unit/SuluNodeHelperTest.php
-
-		-
-			message: '#^Cannot call method with\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 3
-			path: src/Sulu/Component/Util/Tests/Unit/SuluNodeHelperTest.php
-
-		-
 			message: '#^Method Sulu\\Component\\Content\\Tests\\Unit\\Mapper\\Translation\\SuluNodeHelperTest\:\:provideExtractSnippetTypeFromPath\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -93859,18 +92041,6 @@ parameters:
 			path: src/Sulu/Component/Util/Tests/Unit/SuluNodeHelperTest.php
 
 		-
-			message: '#^Parameter \#1 \$node of method Sulu\\Component\\Util\\SuluNodeHelper\:\:getNextNode\(\) expects PHPCR\\NodeInterface, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Util/Tests/Unit/SuluNodeHelperTest.php
-
-		-
-			message: '#^Parameter \#1 \$node of method Sulu\\Component\\Util\\SuluNodeHelper\:\:getPreviousNode\(\) expects PHPCR\\NodeInterface, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Util/Tests/Unit/SuluNodeHelperTest.php
-
-		-
 			message: '#^Parameter \#1 \$path of method Sulu\\Component\\Util\\SuluNodeHelper\:\:extractSnippetTypeFromPath\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -93886,24 +92056,6 @@ parameters:
 			message: '#^Parameter \#2 \$suluNodeTypes of method Sulu\\Component\\Util\\SuluNodeHelper\:\:hasSuluNodeType\(\) expects array\|string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
-			path: src/Sulu/Component/Util/Tests/Unit/SuluNodeHelperTest.php
-
-		-
-			message: '#^Undefined variable\: \$node1$#'
-			identifier: variable.undefined
-			count: 2
-			path: src/Sulu/Component/Util/Tests/Unit/SuluNodeHelperTest.php
-
-		-
-			message: '#^Undefined variable\: \$node2$#'
-			identifier: variable.undefined
-			count: 4
-			path: src/Sulu/Component/Util/Tests/Unit/SuluNodeHelperTest.php
-
-		-
-			message: '#^Undefined variable\: \$node3$#'
-			identifier: variable.undefined
-			count: 2
 			path: src/Sulu/Component/Util/Tests/Unit/SuluNodeHelperTest.php
 
 		-
@@ -94501,6 +92653,12 @@ parameters:
 			path: src/Sulu/Component/Webspace/Loader/BaseXmlFileLoader.php
 
 		-
+			message: '#^Cannot call method getNamedItem\(\) on \(DOMNamedNodeMap&iterable\<DOMAttr\>\)\|null\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: src/Sulu/Component/Webspace/Loader/BaseXmlFileLoader.php
+
+		-
 			message: '#^Method Sulu\\Component\\Webspace\\Loader\\BaseXmlFileLoader\:\:supports\(\) has parameter \$type with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -94587,7 +92745,7 @@ parameters:
 		-
 			message: '#^Argument of an invalid type DOMNodeList\<DOMNode\>\|false supplied for foreach, only iterables are supported\.$#'
 			identifier: foreach.nonIterable
-			count: 11
+			count: 9
 			path: src/Sulu/Component/Webspace/Loader/XmlFileLoader10.php
 
 		-
@@ -94605,7 +92763,7 @@ parameters:
 		-
 			message: '#^Cannot access property \$length on DOMNodeList\<DOMNode\>\|false\.$#'
 			identifier: property.nonObject
-			count: 4
+			count: 3
 			path: src/Sulu/Component/Webspace/Loader/XmlFileLoader10.php
 
 		-
@@ -94623,13 +92781,19 @@ parameters:
 		-
 			message: '#^Cannot call method getNamedItem\(\) on \(DOMNamedNodeMap&iterable\<DOMAttr\>\)\|null\.$#'
 			identifier: method.nonObject
+			count: 5
+			path: src/Sulu/Component/Webspace/Loader/XmlFileLoader10.php
+
+		-
+			message: '#^Cannot call method getNamedItem\(\) on DOMNamedNodeMap\|null\.$#'
+			identifier: method.nonObject
 			count: 12
 			path: src/Sulu/Component/Webspace/Loader/XmlFileLoader10.php
 
 		-
 			message: '#^Cannot call method item\(\) on DOMNodeList\<DOMNode\>\|false\.$#'
 			identifier: method.nonObject
-			count: 9
+			count: 8
 			path: src/Sulu/Component/Webspace/Loader/XmlFileLoader10.php
 
 		-
@@ -94933,10 +93097,10 @@ parameters:
 			path: src/Sulu/Component/Webspace/Loader/XmlFileLoader10.php
 
 		-
-			message: '#^Argument of an invalid type DOMNodeList\<DOMNode\>\|false supplied for foreach, only iterables are supported\.$#'
-			identifier: foreach.nonIterable
-			count: 3
-			path: src/Sulu/Component/Webspace/Loader/XmlFileLoader11.php
+			message: '#^Using nullsafe method call on non\-nullable type DOMNodeList\<DOMNode\>\|false\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 2
+			path: src/Sulu/Component/Webspace/Loader/XmlFileLoader10.php
 
 		-
 			message: '#^Cannot access property \$nodeValue on \(TNode of DOMNode\)\|null\.$#'
@@ -94945,7 +93109,7 @@ parameters:
 			path: src/Sulu/Component/Webspace/Loader/XmlFileLoader11.php
 
 		-
-			message: '#^Cannot call method getNamedItem\(\) on \(DOMNamedNodeMap&iterable\<DOMAttr\>\)\|null\.$#'
+			message: '#^Cannot call method getNamedItem\(\) on DOMNamedNodeMap\|null\.$#'
 			identifier: method.nonObject
 			count: 2
 			path: src/Sulu/Component/Webspace/Loader/XmlFileLoader11.php

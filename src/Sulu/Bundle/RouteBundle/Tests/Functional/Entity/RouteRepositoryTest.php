@@ -18,11 +18,6 @@ use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 class RouteRepositoryTest extends SuluTestCase
 {
     /**
-     * @var Route
-     */
-    private $route;
-
-    /**
      * @var int
      */
     private $routeId;
@@ -46,8 +41,6 @@ class RouteRepositoryTest extends SuluTestCase
         $entityManager->persist($route);
         $entityManager->flush();
         $entityManager->clear();
-
-        $this->route = $route;
         $this->routeId = $route->getId();
     }
 

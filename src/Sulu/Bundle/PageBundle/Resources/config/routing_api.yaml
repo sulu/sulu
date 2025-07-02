@@ -1,0 +1,138 @@
+# Page Resource Locator
+sulu_page.post_page_resourcelocator_generate:
+    path: '/pages/resourcelocators/generates.{_format}'
+    methods: POST
+    controller: 'sulu_page.page_resource_locator_controller::postGenerateAction'
+    format: json
+    requirements:
+        _format: json|csv
+
+sulu_page.get_page_resourcelocators:
+    path: '/pages/{id}/resourcelocators.{_format}'
+    methods: GET
+    controller: 'sulu_page.page_resource_locator_controller::cgetAction'
+    format: json
+    requirements:
+        _format: json|csv
+
+sulu_page.delete_page_resourcelocators:
+    path: '/pages/{id}/resourcelocators.{_format}'
+    methods: DELETE
+    controller: 'sulu_page.page_resource_locator_controller::cdeleteAction'
+    format: json
+    requirements:
+        _format: json|csv
+
+# Resource Locator
+sulu_page.post_resourcelocator:
+    path: '/resourcelocators.{_format}'
+    methods: POST
+    controller: 'sulu_page.resource_locator_controller::postAction'
+    format: json
+    requirements:
+        _format: json|csv
+
+# Page
+sulu_page.get_page:
+    path: '/pages/{id}.{_format}'
+    methods: GET
+    controller: 'sulu_page.page_controller::getAction'
+    format: json
+    requirements:
+        _format: json|csv
+
+sulu_page.post_page:
+    path: '/pages.{_format}'
+    methods: POST
+    controller: 'sulu_page.page_controller::postAction'
+    format: json
+    requirements:
+        _format: json|csv
+
+sulu_page.put_page:
+    path: '/pages/{id}.{_format}'
+    methods: PUT
+    controller: 'sulu_page.page_controller::putAction'
+    format: json
+    requirements:
+        _format: json|csv
+
+sulu_page.delete_page:
+    path: '/pages/{id}.{_format}'
+    methods: DELETE
+    controller: 'sulu_page.page_controller::deleteAction'
+    format: json
+    requirements:
+        _format: json|csv
+
+sulu_page.get_pages:
+    path: '/pages.{_format}'
+    methods: GET
+    controller: 'sulu_page.page_controller::cgetAction'
+    format: json
+    requirements:
+        _format: json|csv
+
+sulu_page.post_page_trigger:
+    path: '/pages/{id}.{_format}'
+    methods: POST
+    controller: 'sulu_page.page_controller::postTriggerAction'
+    format: json
+    requirements:
+        _format: json|csv
+
+# Webspace Localization
+sulu_page.get_webspace_localizations:
+    path: '/webspace/localizations.{_format}'
+    methods: GET
+    controller: 'sulu_page.webspace_localization_controller::cgetAction'
+    format: json
+    requirements:
+        _format: json|csv
+
+# Smart Content
+sulu_page.get_items:
+    path: '/items.{_format}'
+    methods: GET
+    controller: 'sulu_page.smart_content_item_controller::getItemsAction'
+    format: json
+    requirements:
+        _format: json|csv
+
+# Webspace
+sulu_page.get_webspaces:
+    path: '/webspaces.{_format}'
+    methods: GET
+    controller: 'sulu_page.webspace_controller::cgetAction'
+    format: json
+    requirements:
+        _format: json|csv
+
+sulu_page.get_webspace:
+    path: '/webspaces/{webspaceKey}.{_format}'
+    methods: GET
+    controller: 'sulu_page.webspace_controller::getAction'
+    format: json
+    requirements:
+        _format: json|csv
+
+# Teaser
+sulu_page.get_teasers:
+    path: '/teasers.{_format}'
+    methods: GET
+    controller: 'sulu_page.teaser_controller::cgetAction'
+    format: json
+    requirements:
+        _format: json|csv
+
+# Icon
+sulu_page.get_icons:
+    path: '/icons.{_format}'
+    methods: GET
+    controller: 'sulu_admin.icon_controller::cgetAction'
+    format: json
+    requirements:
+        _format: json|csv
+
+sulu_page_api_version:
+    resource: "@SuluPageBundle/Resources/config/routing_versioning_api.yaml"

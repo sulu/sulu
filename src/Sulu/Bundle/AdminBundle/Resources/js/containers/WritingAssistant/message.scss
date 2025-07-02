@@ -8,15 +8,17 @@
     margin: 16px 0;
     display: flex;
     flex-direction: column;
-    max-height: 150px;
 }
 
 .text {
-    overflow: scroll;
+    overflow: auto;
     border: 1px solid #ccc;
     border-radius: 3px;
     padding: 5px;
-    line-height: 1.7em;
+    line-height: 28px;
+    max-height: 300px;
+    resize: vertical;
+    min-height: 40px;
 }
 
 .actions {

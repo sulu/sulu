@@ -280,11 +280,16 @@ class FileVersion implements AuditableInterface
         return null;
     }
 
+    /**
+     * @param array<string, string|null> $storageOptions
+     *
+     * @return FileVersion
+     */
     public function setStorageOptions(array $storageOptions)
     {
         $serializedText = \json_encode($storageOptions);
         if (false === $serializedText) {
-            return;
+            return $this;
         }
 
         $this->storageOptions = $serializedText;
@@ -293,10 +298,11 @@ class FileVersion implements AuditableInterface
     }
 
     /**
-     * @return mixed[]
+     * @return array<string, string|null>
      */
     public function getStorageOptions(): array
     {
+        /** @var array<string, string|null>|false $storageOptions */
         $storageOptions = \json_decode($this->storageOptions ?? '', true);
         if (!$storageOptions) {
             return [];

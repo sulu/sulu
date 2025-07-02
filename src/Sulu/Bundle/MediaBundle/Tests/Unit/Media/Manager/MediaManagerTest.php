@@ -201,7 +201,7 @@ class MediaManagerTest extends TestCase
     #[\PHPUnit\Framework\Attributes\DataProvider('provideGetByIds')]
     public function testGetByIds(array $ids, ?SuluUserInterface $user, ?int $permissions, array $media, array $result): void
     {
-        /** @var TokenInterface|ObjectProphecy $token */
+        /** @var ObjectProphecy<TokenInterface> $token */
         $token = $this->prophesize(TokenInterface::class);
 
         if (!$permissions) {
@@ -347,7 +347,7 @@ class MediaManagerTest extends TestCase
     #[\PHPUnit\Framework\Attributes\DataProvider('provideSpecialCharacterFileName')]
     public function testSpecialCharacterFileName(string $fileName, string $cleanUpArgument, string $cleanUpResult, string $extension): void
     {
-        /** @var UploadedFile|ObjectProphecy $uploadedFile */
+        /** @var ObjectProphecy<UploadedFile> $uploadedFile */
         $uploadedFile = $this->prophesize(UploadedFile::class)->willBeConstructedWith([__DIR__ . \DIRECTORY_SEPARATOR . 'test.txt', 1, null, null, 1, true]);
         $uploadedFile->getClientOriginalName()->willReturn($fileName);
         $uploadedFile->getPathname()->willReturn('');

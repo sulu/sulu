@@ -1,0 +1,16 @@
+sulu_website.sitemap_index:
+    path: /sitemap.xml
+    controller: sulu_website.sitemap_controller::indexAction
+
+sulu_website.paginated_sitemap:
+    path: /sitemaps/{alias}-{page}.xml
+    controller: sulu_website.sitemap_controller::sitemapPaginatedAction
+    requirements: {page: \d+}
+
+sulu_website.sitemap:
+    path: /sitemaps/{alias}.xml
+    controller: sulu_website.sitemap_controller::sitemapAction
+
+sulu_website.segment_switch:
+    path: '%sulu_website.segment_switch_url%'
+    controller: sulu_website.segment_controller::switchAction

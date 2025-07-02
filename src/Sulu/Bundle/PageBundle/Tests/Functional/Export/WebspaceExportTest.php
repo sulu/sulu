@@ -21,7 +21,6 @@ use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
 use Sulu\Component\Content\Document\Behavior\ShadowLocaleBehavior;
 use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\Content\Export\WebspaceExportInterface;
-use Sulu\Component\Content\Extension\ExtensionManagerInterface;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\Exception\DocumentManagerException;
 use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
@@ -43,11 +42,6 @@ class WebspaceExportTest extends SuluTestCase
     private $documentManager;
 
     /**
-     * @var ExtensionManagerInterface
-     */
-    private $extensionManager;
-
-    /**
      * @var int
      */
     private $creator;
@@ -56,7 +50,6 @@ class WebspaceExportTest extends SuluTestCase
     {
         parent::initPhpcr();
         $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
-        $this->extensionManager = $this->getContainer()->get('sulu_page.extension.manager');
         $this->webspaceExporter = $this->getContainer()->get('sulu_page.export.webspace');
     }
 

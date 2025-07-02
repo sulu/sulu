@@ -1,43 +1,37 @@
 sulu_admin:
-    resource: "@SuluAdminBundle/Resources/config/routing.yml"
+    resource: "@SuluAdminBundle/Resources/config/routing.yaml"
     prefix: /admin
 
 sulu_category_api:
-    resource: "@SuluAudienceTargetingBundle/Resources/config/routing_api.yml"
-    type: rest
+    resource: "@SuluAudienceTargetingBundle/Resources/config/routing_api.yaml"
     prefix: /api
 
 # The following route are necessary to get AdminController::configAction work.
 # Can be removed once its content is not hardcoded anymore.
 sulu_media:
-    resource: "@SuluMediaBundle/Resources/config/routing.yml"
+    resource: "@SuluMediaBundle/Resources/config/routing.yaml"
     prefix: /admin/media
 
 sulu_preview:
-    type: rest
-    resource: "@SuluPreviewBundle/Resources/config/routing.yml"
+    resource: "@SuluPreviewBundle/Resources/config/routing.yaml"
     prefix: /admin
 
 sulu_security:
-    type: rest
-    resource: "@SuluSecurityBundle/Resources/config/routing.yml"
+    resource: "@SuluSecurityBundle/Resources/config/routing.yaml"
     prefix: /admin
 
 sulu_security_api:
-    type: rest
-    resource: "@SuluSecurityBundle/Resources/config/routing_api.yml"
+    resource: "@SuluSecurityBundle/Resources/config/routing_api.yaml"
     prefix: /admin/api
 
 sulu_website:
-    type: rest
-    resource: "@SuluWebsiteBundle/Resources/config/routing.yml"
+    resource: "@SuluWebsiteBundle/Resources/config/routing.yaml"
     prefix: /admin
 
 sulu_preview_api:
-    type: rest
-    resource: "@SuluPreviewBundle/Resources/config/routing_api.yml"
+    resource: "@SuluPreviewBundle/Resources/config/routing_api.yaml"
     prefix: /admin/api
 
 sulu_preview_public:
-    resource: "@SuluPreviewBundle/Resources/config/routing_public.yml"
+    resource: "@SuluPreviewBundle/Resources/config/routing_public.yaml"
     prefix: /admin/p

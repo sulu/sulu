@@ -103,8 +103,8 @@ class XmlFileLoader10 extends BaseXmlFileLoader
 
         // set simple webspace properties
         $this->webspace = new Webspace();
-        $this->webspace->setName($this->xpath->query('/x:webspace/x:name')->item(0)->nodeValue);
-        $this->webspace->setKey($this->xpath->query('/x:webspace/x:key')->item(0)->nodeValue);
+        $this->webspace->setName($this->xpath->query('/x:webspace/x:name')?->item(0)->nodeValue);
+        $this->webspace->setKey($this->xpath->query('/x:webspace/x:key')?->item(0)->nodeValue);
         $this->webspace->setTheme($this->generateTheme());
         $this->webspace->setNavigation($this->generateNavigation());
         $this->webspace->setResourceLocatorStrategy('tree_leaf_edit');
@@ -281,7 +281,7 @@ class XmlFileLoader10 extends BaseXmlFileLoader
     protected function generateSecurity()
     {
         $securityNodeList = $this->xpath->query('/x:webspace/x:security');
-        if ($securityNodeList->length > 0) {
+        if ($securityNodeList && $securityNodeList->length > 0) {
             $securityNode = $securityNodeList->item(0);
             $securitySystemNode = $this->xpath->query('x:system', $securityNode);
             $permissionCheckAttribute = $securityNode->attributes->getNamedItem('permission-check');
@@ -310,8 +310,7 @@ class XmlFileLoader10 extends BaseXmlFileLoader
      */
     protected function generateSegments()
     {
-        foreach ($this->xpath->query('/x:webspace/x:segments/x:segment') as $segmentNode) {
-            /** @var \DOMNode $segmentNode */
+        foreach ($this->xpath->query('/x:webspace/x:segments/x:segment') ?: [] as $segmentNode) {
             $segment = new Segment();
             $segment->setKey($segmentNode->attributes->getNamedItem('key')->nodeValue);
             $segment->setMetadata($this->loadMeta('x:meta/x:*', $segmentNode));
@@ -383,8 +382,7 @@ class XmlFileLoader10 extends BaseXmlFileLoader
     {
         $defaultErrorTemplates = 0;
 
-        foreach ($this->xpath->query('/x:webspace/x:theme/x:error-templates/x:error-template') as $errorTemplateNode) {
-            /* @var \DOMNode $errorTemplateNode */
+        foreach ($this->xpath->query('/x:webspace/x:theme/x:error-templates/x:error-template') ?: [] as $errorTemplateNode) {
             $template = $errorTemplateNode->nodeValue;
             if (null !== ($codeNode = $errorTemplateNode->attributes->getNamedItem('code'))) {
                 $webspace->addTemplate('error-' . $codeNode->nodeValue, $template);

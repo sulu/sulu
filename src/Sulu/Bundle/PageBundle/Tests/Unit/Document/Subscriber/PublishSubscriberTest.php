@@ -249,7 +249,7 @@ class PublishSubscriberTest extends TestCase
         $properties = [];
 
         for ($i = 0; $i < 10; ++$i) {
-            /** @var PropertyInterface|ObjectProphecy $property */
+            /** @var ObjectProphecy<PropertyInterface> $property */
             $property = $this->prophesize(PropertyInterface::class);
             $property->remove()->shouldBeCalled();
 

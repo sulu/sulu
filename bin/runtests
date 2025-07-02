@@ -351,11 +351,23 @@ if ($target = $input->getOption('target')) {
     $bundles = get_bundles($target);
 }
 
+write_header('Bundle tests');
+$enableGrouping = getenv('CI_GROUP_OUTPUT') === 'true';
 foreach ($bundles as $bundle) {
+    if ($enableGrouping) {
+        echo "::group::". basename($bundle->getPath()). PHP_EOL;
+    }
     run_bundle_tests($bundle);
+    if ($enableGrouping) {
+        echo "::endgroup::\n";
+    }
 }
+echo "\n";
 
 if (false === $input->getOption('no-component-tests') || $input->getOption('all')) {
+    if ($enableGrouping) {
+        echo "::group::Components". PHP_EOL;
+    }
     write_header('Components');
 
     $process = exec_cmd(
@@ -363,6 +375,10 @@ if (false === $input->getOption('no-component-tests') || $input->getOption('all'
         true,
         false
     );
+
+    if ($enableGrouping) {
+        echo "::endgroup::\n";
+    }
 
     if ($process->getExitCode() !== 0) {
         $failedTests[] = 'Components';

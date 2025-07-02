@@ -43,11 +43,6 @@ class UserControllerTest extends SuluTestCase
     private $contact2;
 
     /**
-     * @var Contact
-     */
-    private $contact3;
-
-    /**
      * @var Role
      */
     private $role1;
@@ -133,14 +128,12 @@ class UserControllerTest extends SuluTestCase
         $contact3->setLastName('User');
         $contact3->addEmail($email);
         $this->em->persist($contact3);
-        $this->contact3 = $contact3;
 
         $contact4 = new Contact();
         $contact4->setFirstName('Locked');
         $contact4->setLastName('User');
         $contact4->addEmail($email);
         $this->em->persist($contact4);
-        $this->contact3 = $contact4;
 
         $this->em->flush();
 

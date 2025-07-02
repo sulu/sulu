@@ -1,0 +1,47 @@
+sulu_audience_targeting.get_target-groups:
+    path: '/target-groups.{_format}'
+    methods: GET
+    controller: 'sulu_audience_targeting.target_group_controller::cgetAction'
+    format: json
+    requirements:
+        _format: json|csv
+
+sulu_audience_targeting.get_target-group:
+    path: '/target-groups/{id}.{_format}'
+    methods: GET
+    controller: 'sulu_audience_targeting.target_group_controller::getAction'
+    format: json
+    requirements:
+        _format: json|csv
+
+sulu_audience_targeting.post_target-group:
+    path: '/target-groups.{_format}'
+    methods: POST
+    controller: 'sulu_audience_targeting.target_group_controller::postAction'
+    format: json
+    requirements:
+        _format: json|csv
+
+sulu_audience_targeting.put_target-group:
+    path: '/target-groups/{id}.{_format}'
+    methods: PUT
+    controller: 'sulu_audience_targeting.target_group_controller::putAction'
+    format: json
+    requirements:
+        _format: json|csv
+
+sulu_audience_targeting.delete_target-group:
+    path: '/target-groups/{id}.{_format}'
+    methods: DELETE
+    controller: 'sulu_audience_targeting.target_group_controller::deleteAction'
+    format: json
+    requirements:
+        _format: json|csv
+
+sulu_audience_targeting.delete_target-groups:
+    path: '/target-groups.{_format}'
+    methods: DELETE
+    controller: 'sulu_audience_targeting.target_group_controller::cdeleteAction'
+    format: json
+    requirements:
+        _format: json|csv

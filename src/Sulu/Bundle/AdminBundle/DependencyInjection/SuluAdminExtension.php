@@ -57,6 +57,9 @@ class SuluAdminExtension extends Extension implements PrependExtensionInterface
                             'sulu_admin.collaboration_cache' => [
                                 'adapter' => 'cache.app',
                             ],
+                            'sulu_admin.icon_cache' => [
+                                'adapter' => 'cache.app',
+                            ],
                         ],
                     ],
                     'translator' => [
@@ -135,6 +138,9 @@ class SuluAdminExtension extends Extension implements PrependExtensionInterface
                         ],
                     ],
                 ],
+                'icon_sets' => [
+                    'sulu' => 'icomoon://' . __DIR__ . '/../Resources/js/components/Icon/selection.json',
+                ],
             ]
         );
     }
@@ -154,6 +160,7 @@ class SuluAdminExtension extends Extension implements PrependExtensionInterface
 
         $container->setParameter($this->getAlias() . '.forms.directories', $config['forms']['directories'] ?? []);
         $container->setParameter($this->getAlias() . '.lists.directories', $config['lists']['directories'] ?? []);
+        $container->setParameter($this->getAlias() . '.icon_sets', $config['icon_sets'] ?? []);
 
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.xml');

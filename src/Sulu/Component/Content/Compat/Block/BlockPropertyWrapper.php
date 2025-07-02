@@ -115,7 +115,7 @@ class BlockPropertyWrapper implements PropertyInterface
     }
 
     /**
-     * @param BlockPropertyInterface $block
+     * @param PropertyInterface $block
      */
     public function setBlock($block)
     {
@@ -123,7 +123,7 @@ class BlockPropertyWrapper implements PropertyInterface
     }
 
     /**
-     * @return BlockPropertyInterface
+     * @return PropertyInterface
      */
     public function getBlock()
     {

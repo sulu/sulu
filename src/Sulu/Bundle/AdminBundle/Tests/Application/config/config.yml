@@ -26,6 +26,8 @@ sulu_admin:
     forms:
         directories:
             - "%kernel.project_dir%/config/forms"
+    icon_sets:
+        test_svg: "svg://%kernel.project_dir%/config/iconSet/svgs"
 
 services:
     sulu_admin_test.form_metadata_provider:
