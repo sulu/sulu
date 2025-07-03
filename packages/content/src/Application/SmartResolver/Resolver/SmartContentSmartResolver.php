@@ -16,8 +16,12 @@ namespace Sulu\Content\Application\SmartResolver\Resolver;
 use Sulu\Bundle\AdminBundle\SmartContent\SmartContentProviderInterface;
 use Sulu\Content\Application\ContentResolver\Value\ContentView;
 use Sulu\Content\Application\ContentResolver\Value\SmartResolvable;
+use Sulu\Content\Application\PropertyResolver\Resolver\SmartContentPropertyResolver;
 use Symfony\Component\DependencyInjection\ServiceLocator;
 
+/**
+ * @phpstan-import-type SmartContentBaseFilters from SmartContentPropertyResolver
+ */
 class SmartContentSmartResolver implements SmartResolverInterface
 {
     /**
@@ -31,22 +35,23 @@ class SmartContentSmartResolver implements SmartResolverInterface
     public function resolve(SmartResolvable $resolvable, ?string $locale = null): ContentView
     {
         /** @var array{
-         *     value?: array<string, mixed>,
-         *     filters?: array<string, mixed>,
-         *     sortBys?: array<string, string>,
-         *     parameters?: array<string, mixed>,
+         *     value: array<string, mixed>,
+         *     filters: SmartContentBaseFilters,
+         *     sortBys: array<string, string>,
+         *     parameters: array<string, mixed>,
          * } $data
          */
         $data = $resolvable->getData();
 
-        $filters = $data['filters'] ?? [];
-        $sortBys = $data['sortBys'] ?? [];
-        $parameters = $data['parameters'] ?? [];
+        $value = $data['value'];
+        $filters = $data['filters'];
+        $sortBys = $data['sortBys'];
+        $parameters = $data['parameters'];
 
         /** @var int|null $limit */
-        $limit = $filters['limitResult'] ?? null;
+        $limit = $filters['limit'] ?? null;
         /** @var int $page */
-        $page = $filters['page'] ?? 1;
+        $page = $filters['page'];
 
         $provider = $parameters['provider'] ?? null;
 
@@ -65,30 +70,38 @@ class SmartContentSmartResolver implements SmartResolverInterface
         }
         $smartContentProvider = $this->smartContentProviders->get($provider);
 
-        $params = ['value' => $data['value'] ?? null, ...$parameters];
+        $params = ['value' => $value, ...$parameters];
         $result = $smartContentProvider->findFlatBy($filters, $sortBys, $params);
-        $total = ($limit && \count($result) < $limit) ? \count($result) : $smartContentProvider->countBy($filters, $params);
+        $total = ($limit && \count($result) <= $limit) ? \count($result) : $smartContentProvider->countBy($filters, $params);
 
-        // TODO verify filters
         $view = [
-            ...$filters,
-            ...$sortBys,
-            'provider' => $provider,
+            'dataSource' => $filters['dataSource'],
+            'includeSubFolders' => $filters['includeSubFolders'],
+            'categories' => $filters['categories'],
+            'categoryOperator' => $filters['categoryOperator'],
+            'tags' => $value['tags'] ?? [],
+            'tagOperator' => $filters['tagOperator'],
+            'types' => $value['types'] ?? [],
+            'typesOperator' => $filters['typesOperator'],
+            'websiteCategories' => $filters['websiteCategories'],
+            'websiteCategoryOperator' => $filters['websiteCategoryOperator'],
+            'categoryRoot' => $parameters['categoryRoot'] ?? null,
+            'websiteTags' => $filters['websiteTags'],
+            'websiteTagOperator' => $filters['websiteTagOperator'],
+            'websiteTypes' => $filters['websiteTypes'],
+            'sortBys' => $sortBys,
+            'presentAs' => $value['presentAs'] ?? null,
+            'limitResult' => $filters['limit'],
+
             'page' => $page,
             'hasNextPage' => null !== $limit && ($total > ($limit * $page)),
             'paginated' => null !== $limit,
             'total' => $total,
             'maxPage' => (null !== $limit) ? (int) \ceil($total / $limit) : null,
             'limit' => $limit,
-            // categoryRoot
-            // categoriesParameter
-            // tagsParameter
-            // excluded
-            // category
-            // websiteTags
-            // websiteTagsOperator
-            // websiteCategories
-            // websiteCategoriesOperator
+
+            // TODO duplicates
+            'excluded' => [],
         ];
 
         return ContentView::createResolvables(

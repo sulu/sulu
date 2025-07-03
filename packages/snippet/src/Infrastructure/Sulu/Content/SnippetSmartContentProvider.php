@@ -78,11 +78,11 @@ class SnippetSmartContentProvider implements SmartContentProviderInterface
     /**
      * @param array{
      *     locale?: string|null,
-     *     categoryIds?: int[],
+     *     categories?: int[],
      *     categoryOperator?: 'AND'|'OR',
      *     tagIds?: int[],
      *     tagOperator?: 'AND'|'OR',
-     *     templateKeys?: string[],
+     *     types?: string[],
      * } $filters
      */
     public function countBy(array $filters, array $params = []): int
@@ -90,11 +90,11 @@ class SnippetSmartContentProvider implements SmartContentProviderInterface
         /**
          * @var array{
          *     locale?: string|null,
-         *     categoryIds?: int[],
+         *     categories?: int[],
          *     categoryOperator?: 'AND'|'OR',
          *     tagIds?: int[],
          *     tagOperator?: 'AND'|'OR',
-         *     templateKeys?: string[],
+         *     types?: string[],
          *     stage: string,
          * } $filters
          */
@@ -102,6 +102,7 @@ class SnippetSmartContentProvider implements SmartContentProviderInterface
 
         $alias = 'snippet';
         $queryBuilder = $this->entityRepository->createQueryBuilder($alias);
+
         $filters = $this->mapFilters($filters);
         $this->dimensionContentQueryEnhancer->addFilters(
             $queryBuilder,
@@ -118,11 +119,11 @@ class SnippetSmartContentProvider implements SmartContentProviderInterface
     /**
      * @param array{
      *     locale?: string|null,
-     *     categoryIds?: int[],
+     *     categories?: int[],
      *     categoryOperator?: 'AND'|'OR',
-     *     tagNames?: string[],
+     *     tags?: string[],
      *     tagOperator?: 'AND'|'OR',
-     *     templateKeys?: string[],
+     *     types?: string[],
      *     limit?: int,
      *     page?: int,
      * } $filters
@@ -140,11 +141,11 @@ class SnippetSmartContentProvider implements SmartContentProviderInterface
         /**
          * @var array{
          *      locale?: string|null,
-         *      categoryIds?: int[],
+         *      categories?: int[],
          *      categoryOperator?: 'AND'|'OR',
-         *      tagNames?: string[],
+         *      tags?: string[],
          *      tagOperator?: 'AND'|'OR',
-         *      templateKeys?: string[],
+         *      types?: string[],
          *      limit?: int,
          *      page?: int,
          *      stage: string,
@@ -154,6 +155,7 @@ class SnippetSmartContentProvider implements SmartContentProviderInterface
 
         $alias = 'snippet';
         $queryBuilder = $this->entityRepository->createQueryBuilder($alias);
+
         $filters = $this->mapFilters($filters);
         $this->dimensionContentQueryEnhancer->addFilters(
             $queryBuilder,
@@ -215,11 +217,15 @@ class SnippetSmartContentProvider implements SmartContentProviderInterface
     /**
      * @param array{
      *     locale?: string|null,
-     *     categoryIds?: array<int>,
+     *     categories?: array<int>,
      *     categoryOperator?: 'AND'|'OR',
-     *     tagNames?: array<string>,
+     *     tags?: array<string>,
      *     tagOperator?: 'AND'|'OR',
      *     types?: array<string>,
+     *     loadGhost?: bool,
+     *     types?: array<string>,
+     *     webspaceKey?: string,
+     *     dataSource?: string|null,
      *     page?: int,
      *     limit?: int,
      *     stage?: string,
@@ -233,6 +239,9 @@ class SnippetSmartContentProvider implements SmartContentProviderInterface
      *     tagNames?: array<string>,
      *     tagOperator?: 'AND'|'OR',
      *     templateKeys?: array<string>,
+     *     loadGhost?: bool,
+     *     webspaceKey?: string,
+     *     dataSource?: string|null,
      *     page?: int,
      *     limit?: int,
      * }
@@ -242,6 +251,16 @@ class SnippetSmartContentProvider implements SmartContentProviderInterface
         if ($filters['types'] ?? null) {
             $filters['templateKeys'] = $filters['types'];
             unset($filters['types']);
+        }
+
+        if ($filters['categories'] ?? null) {
+            $filters['categoryIds'] = $filters['categories'];
+            unset($filters['categories']);
+        }
+
+        if ($filters['tags'] ?? null) {
+            $filters['tagNames'] = $filters['tags'];
+            unset($filters['tags']);
         }
 
         return $filters;

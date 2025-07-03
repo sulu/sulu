@@ -110,7 +110,8 @@ class ContentResolver implements ContentResolverInterface
                         $result = $this->resolveContentView($resource, '0', $depth);
                         $resolvedValue = [
                             'content' => $result['content']['0'],
-                            'view' => $result['view']['0'],
+                            // All resolved resources have the same view structure, so we can just take the first one
+                            'view' => \reset($result['view']['0']) ?? $result['view']['0'],
                         ];
 
                         // Add resolvable resources to priority queue

@@ -35,19 +35,27 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @phpstan-type MediaSmartContentFilters array{
- *      page?: int,
- *      pageSize?: int|null,
- *      limit?: int|null,
- *      types?: string[],
- *      tagNames?: string[],
- *      categoryIds?: int[],
- *      tagOperator?: 'AND'|'OR',
- *      categoryOperator?: 'AND'|'OR',
- *      targetGroupId?: string,
- *      dataSource?: string,
- *      includeSubFolders?: bool|string,
- *      webspaceKey?: string,
- *      locale: string,
+ *       categories: int[],
+ *       categoryOperator: 'AND'|'OR',
+ *       websiteCategories: string[],
+ *       websiteCategoryOperator: 'AND'|'OR',
+ *       tags: string[],
+ *       tagOperator: 'AND'|'OR',
+ *       websiteTags: string[],
+ *       websiteTagOperator: 'AND'|'OR',
+ *       types: string[],
+ *       typesOperator: 'OR',
+ *       websiteTypes: string[],
+ *       locale: string,
+ *       webspaceKey: string|null,
+ *       dataSource: string|null,
+ *       limit: int|null,
+ *       page: int,
+ *       maxPerPage: int|null,
+ *       includeSubFolders: bool,
+ *       excludeDuplicates: bool,
+ *       audienceTargeting?: bool,
+ *       targetGroupId?: string|null,
  *  }
  */
 class MediaSmartContentProvider implements SmartContentProviderInterface
@@ -142,9 +150,6 @@ class MediaSmartContentProvider implements SmartContentProviderInterface
      */
     public function findFlatBy(array $filters, array $sortBys, array $params = []): array
     {
-        $page = $filters['page'] ?? 1;
-        $pageSize = $filters['pageSize'] ?? null;
-        $limit = $filters['limit'] ?? null;
         $locale = $filters['locale'];
 
         $alias = 'media';
@@ -163,15 +168,7 @@ class MediaSmartContentProvider implements SmartContentProviderInterface
             MediaInterface::class,
         );
 
-        if (null !== $pageSize && $pageSize > 0) {
-            $pageOffset = ($page - 1) * $pageSize;
-            $restLimit = $limit - $pageOffset;
-
-            $queryBuilder->setMaxResults($restLimit);
-            $queryBuilder->setFirstResult($pageOffset);
-        } elseif (null !== $limit) {
-            $queryBuilder->setMaxResults($limit);
-        }
+        $this->setPagination($queryBuilder, $filters);
 
         /** @var array<array{id: string, title: string}> $queryResult */
         $queryResult = $queryBuilder->getQuery()->getArrayResult();
@@ -249,8 +246,7 @@ class MediaSmartContentProvider implements SmartContentProviderInterface
         }
 
         if (($filters['dataSource'] ?? null) && '' !== $filters['dataSource']) {
-            $includeSubFolders = ($filters['includeSubFolders'] ?? null) === 'true' || ($filters['includeSubFolders'] ?? null) === true;
-            if (!$includeSubFolders) {
+            if (!$filters['includeSubFolders']) {
                 $queryBuilder->andWhere('collection.id = :collectionId');
                 $queryBuilder->setParameter('collectionId', $filters['dataSource']);
             } else {
@@ -266,37 +262,40 @@ class MediaSmartContentProvider implements SmartContentProviderInterface
             }
         }
 
-        if (($filters['tagNames'] ?? null) && [] !== $filters['tagNames'] && ($filters['tagOperator'] ?? null)) {
+        $tagNames = $filters['tags'];
+        if ([] !== $tagNames) {
             $this->addJoinFilter(
                 $queryBuilder,
                 'fileVersion.tags',
                 'filterTagName',
                 'name',
                 'tagNames',
-                $filters['tagNames'],
+                $tagNames,
                 $filters['tagOperator'],
             );
         }
 
-        if (($filters['types'] ?? null) && [] !== $filters['types']) {
+        $types = $filters['types'];
+        if ([] !== $types) {
             $this->addJoinFilter(
                 $queryBuilder,
                 $alias . '.type',
                 'filterTypeId',
                 'id',
                 'typeId',
-                $filters['types'],
+                $types,
             );
         }
 
-        if (($filters['categoryIds'] ?? null) && [] !== $filters['categoryIds'] && ($filters['categoryOperator'] ?? null)) {
+        $categoryIds = $filters['categories'];
+        if ([] !== $categoryIds) {
             $this->addJoinFilter(
                 $queryBuilder,
                 'fileVersion.categories',
                 'filterCategoryId',
                 'id',
                 'categoryIds',
-                $filters['categoryIds'],
+                $categoryIds,
                 $filters['categoryOperator'],
             );
         }
@@ -408,5 +407,28 @@ class MediaSmartContentProvider implements SmartContentProviderInterface
     public function getResourceLoaderKey(): string
     {
         return MediaResourceLoader::RESOURCE_LOADER_KEY;
+    }
+
+    /**
+     * @param array{
+     *     page: int,
+     *     maxPerPage: int|null,
+     *     limit: int|null,
+     * } $filters
+     */
+    public function setPagination(QueryBuilder $queryBuilder, array $filters): void
+    {
+        $page = $filters['page'];
+        $maxPerPage = $filters['maxPerPage'];
+        $limit = $filters['limit'];
+        if (null !== $maxPerPage && $maxPerPage > 0) {
+            $pageOffset = ($page - 1) * $maxPerPage;
+            $restLimit = $limit - $pageOffset;
+
+            $queryBuilder->setMaxResults($restLimit);
+            $queryBuilder->setFirstResult($pageOffset);
+        } elseif (null !== $limit) {
+            $queryBuilder->setMaxResults($limit);
+        }
     }
 }

@@ -27,8 +27,8 @@ use Sulu\Bundle\ContactBundle\Infrastructure\Sulu\Content\ResourceLoader\Contact
  *      page?: int,
  *      pageSize?: int|null,
  *      limit?: int|null,
- *      tagNames?: string[],
- *      categoryIds?: int[],
+ *      tags?: string[],
+ *      categories?: int[],
  *      tagOperator?: 'AND'|'OR',
  *      categoryOperator?: 'AND'|'OR',
  *  }
@@ -123,8 +123,8 @@ class ContactSmartContentProvider implements SmartContentProviderInterface
 
     /**
      * @param array{
-     *     tagNames?: string[],
-     *     categoryIds?: int[],
+     *     tags?: string[],
+     *     categories?: int[],
      *     tagOperator?: 'AND'|'OR',
      *     categoryOperator?: 'AND'|'OR',
      * } $filters
@@ -136,34 +136,33 @@ class ContactSmartContentProvider implements SmartContentProviderInterface
         array $sortBys,
         string $alias,
     ): void {
-        $tagRelation = $alias . '.tags';
-        $categoryRelation = $alias . '.categories';
-
         foreach ($sortBys as $sortBy => $sortMethod) {
             $queryBuilder->orderBy($sortBy, $sortMethod);
             $queryBuilder->addSelect($sortBy);
         }
 
-        if (($filters['tagNames'] ?? null) && [] !== $filters['tagNames'] && ($filters['tagOperator'] ?? null)) {
+        $tagNames = $filters['tags'] ?? [];
+        if ([] !== $tagNames && ($filters['tagOperator'] ?? null)) {
             $this->addJoinFilter(
                 $queryBuilder,
-                $tagRelation,
+                $alias . '.tags',
                 'filterTagName',
                 'name',
                 'tagNames',
-                $filters['tagNames'],
+                $tagNames,
                 $filters['tagOperator'],
             );
         }
 
-        if (($filters['categoryIds'] ?? null) && [] !== $filters['categoryIds'] && ($filters['categoryOperator'] ?? null)) {
+        $categoryIds = $filters['categories'] ?? [];
+        if ([] !== $categoryIds && ($filters['categoryOperator'] ?? null)) {
             $this->addJoinFilter(
                 $queryBuilder,
-                $categoryRelation,
+                $alias . '.categories',
                 'filterCategoryId',
                 'id',
                 'categoryIds',
-                $filters['categoryIds'],
+                $categoryIds,
                 $filters['categoryOperator'],
             );
         }

@@ -79,11 +79,11 @@ class ArticleSmartContentProvider implements SmartContentProviderInterface
     /**
      * @param array{
      *     locale?: string|null,
-     *     categoryIds?: int[],
+     *     categories?: int[],
      *     categoryOperator?: 'AND'|'OR',
      *     tagIds?: int[],
      *     tagOperator?: 'AND'|'OR',
-     *     templateKeys?: string[],
+     *     types?: string[],
      *     loadGhost?: bool,
      * } $filters
      */
@@ -92,11 +92,11 @@ class ArticleSmartContentProvider implements SmartContentProviderInterface
         /**
          * @var array{
          *     locale?: string|null,
-         *     categoryIds?: int[],
+         *     categories?: int[],
          *     categoryOperator?: 'AND'|'OR',
          *     tagIds?: int[],
          *     tagOperator?: 'AND'|'OR',
-         *     templateKeys?: string[],
+         *     types?: string[],
          *     loadGhost?: bool,
          *     stage: string,
          * } $filters
@@ -105,6 +105,8 @@ class ArticleSmartContentProvider implements SmartContentProviderInterface
 
         $alias = 'article';
         $queryBuilder = $this->entityRepository->createQueryBuilder($alias);
+
+        $filters = $this->mapFilters($filters);
         $this->dimensionContentQueryEnhancer->addFilters(
             $queryBuilder,
             $alias,
@@ -120,11 +122,11 @@ class ArticleSmartContentProvider implements SmartContentProviderInterface
     /**
      * @param array{
      *     locale?: string|null,
-     *     categoryIds?: int[],
+     *     categories?: int[],
      *     categoryOperator?: 'AND'|'OR',
-     *     tagNames?: string[],
+     *     tags?: string[],
      *     tagOperator?: 'AND'|'OR',
-     *     templateKeys?: string[],
+     *     types?: string[],
      *     loadGhost?: bool,
      *     limit?: int,
      *     page?: int,
@@ -144,11 +146,11 @@ class ArticleSmartContentProvider implements SmartContentProviderInterface
         /**
          * @var array{
          *      locale?: string|null,
-         *      categoryIds?: int[],
+         *      categories?: int[],
          *      categoryOperator?: 'AND'|'OR',
-         *      tagNames?: string[],
+         *      tags?: string[],
          *      tagOperator?: 'AND'|'OR',
-         *      templateKeys?: string[],
+         *      types?: string[],
          *      loadGhost?: bool,
          *      limit?: int,
          *      page?: int,
@@ -159,6 +161,8 @@ class ArticleSmartContentProvider implements SmartContentProviderInterface
 
         $alias = 'article';
         $queryBuilder = $this->entityRepository->createQueryBuilder($alias);
+
+        $filters = $this->mapFilters($filters);
         $this->dimensionContentQueryEnhancer->addFilters(
             $queryBuilder,
             $alias,
@@ -205,6 +209,58 @@ class ArticleSmartContentProvider implements SmartContentProviderInterface
         ];
 
         return \array_merge($dimensionAttributes, $filters);
+    }
+
+    /**
+     * @param array{
+     *     locale?: string|null,
+     *     categories?: array<int>,
+     *     categoryOperator?: 'AND'|'OR',
+     *     tags?: array<string>,
+     *     tagOperator?: 'AND'|'OR',
+     *     types?: array<string>,
+     *     loadGhost?: bool,
+     *     types?: array<string>,
+     *     webspaceKey?: string,
+     *     dataSource?: string|null,
+     *     page?: int,
+     *     limit?: int,
+     *     stage?: string,
+     * } $filters
+     *
+     * @return array{
+     *     locale?: string|null,
+     *     stage?: string|null,
+     *     categoryIds?: array<int>,
+     *     categoryOperator?: 'AND'|'OR',
+     *     tagNames?: array<string>,
+     *     tagOperator?: 'AND'|'OR',
+     *     templateKeys?: array<string>,
+     *     loadGhost?: bool,
+     *     webspaceKey?: string,
+     *     dataSource?: string|null,
+     *     page?: int,
+     *     limit?: int,
+     * }
+     */
+    protected function mapFilters(array $filters): array
+    {
+        if ($filters['types'] ?? null) {
+            $filters['templateKeys'] = $filters['types'];
+            unset($filters['types']);
+        }
+
+        if ($filters['categories'] ?? null) {
+            $filters['categoryIds'] = $filters['categories'];
+            unset($filters['categories']);
+        }
+
+        if ($filters['tags'] ?? null) {
+            $filters['tagNames'] = $filters['tags'];
+            unset($filters['tags']);
+        }
+
+        return $filters;
     }
 
     public function getType(): string

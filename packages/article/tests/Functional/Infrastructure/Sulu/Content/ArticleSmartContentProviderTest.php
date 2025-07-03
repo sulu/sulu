@@ -237,7 +237,7 @@ class ArticleSmartContentProviderTest extends SuluTestCase
     {
         $result = $this->smartContentProvider->findFlatBy([
             'locale' => 'en',
-            'categoryIds' => [self::$categories['tech']->getId()],
+            'categories' => [self::$categories['tech']->getId()],
             'categoryOperator' => 'OR',
         ], []);
 
@@ -246,7 +246,7 @@ class ArticleSmartContentProviderTest extends SuluTestCase
             5,
             $this->smartContentProvider->countBy([
                 'locale' => 'en',
-                'categoryIds' => [self::$categories['tech']->getId()],
+                'categories' => [self::$categories['tech']->getId()],
                 'categoryOperator' => 'OR',
             ]),
         );
@@ -275,7 +275,7 @@ class ArticleSmartContentProviderTest extends SuluTestCase
     {
         $result = $this->smartContentProvider->findFlatBy([
             'locale' => 'en',
-            'categoryIds' => [self::$categories['tech']->getId(), self::$categories['health']->getId()],
+            'categories' => [self::$categories['tech']->getId(), self::$categories['health']->getId()],
             'categoryOperator' => 'OR',
         ], ['title' => 'asc']);
 
@@ -285,7 +285,7 @@ class ArticleSmartContentProviderTest extends SuluTestCase
             8,
             $this->smartContentProvider->countBy([
                 'locale' => 'en',
-                'categoryIds' => [self::$categories['tech']->getId(), self::$categories['health']->getId()],
+                'categories' => [self::$categories['tech']->getId(), self::$categories['health']->getId()],
                 'categoryOperator' => 'OR',
             ]),
         );
@@ -310,7 +310,7 @@ class ArticleSmartContentProviderTest extends SuluTestCase
     {
         $result = $this->smartContentProvider->findFlatBy([
             'locale' => 'en',
-            'categoryIds' => [self::$categories['health']->getId()],
+            'categories' => [self::$categories['health']->getId()],
             'categoryOperator' => 'AND',
         ], []);
 
@@ -319,7 +319,7 @@ class ArticleSmartContentProviderTest extends SuluTestCase
             5,
             $this->smartContentProvider->countBy([
                 'locale' => 'en',
-                'categoryIds' => [self::$categories['health']->getId()],
+                'categories' => [self::$categories['health']->getId()],
                 'categoryOperator' => 'AND',
             ]),
         );
@@ -340,7 +340,7 @@ class ArticleSmartContentProviderTest extends SuluTestCase
     {
         $result = $this->smartContentProvider->findFlatBy([
             'locale' => 'en',
-            'categoryIds' => [self::$categories['tech']->getId(), self::$categories['health']->getId()],
+            'categories' => [self::$categories['tech']->getId(), self::$categories['health']->getId()],
             'categoryOperator' => 'AND',
         ], []);
 
@@ -350,7 +350,7 @@ class ArticleSmartContentProviderTest extends SuluTestCase
             2,
             $this->smartContentProvider->countBy([
                 'locale' => 'en',
-                'categoryIds' => [self::$categories['tech']->getId(), self::$categories['health']->getId()],
+                'categories' => [self::$categories['tech']->getId(), self::$categories['health']->getId()],
                 'categoryOperator' => 'AND',
             ]),
         );
@@ -371,7 +371,7 @@ class ArticleSmartContentProviderTest extends SuluTestCase
     {
         $result = $this->smartContentProvider->findFlatBy([
             'locale' => 'en',
-            'tagNames' => [self::$tags['mobile']],
+            'tags' => [self::$tags['mobile']],
             'tagOperator' => 'OR',
         ], []);
 
@@ -381,7 +381,7 @@ class ArticleSmartContentProviderTest extends SuluTestCase
             3,
             $this->smartContentProvider->countBy([
                 'locale' => 'en',
-                'tagNames' => [self::$tags['mobile']],
+                'tags' => [self::$tags['mobile']],
                 'tagOperator' => 'OR',
             ]),
         );
@@ -402,7 +402,7 @@ class ArticleSmartContentProviderTest extends SuluTestCase
     {
         $result = $this->smartContentProvider->findFlatBy([
             'locale' => 'en',
-            'tagNames' => [self::$tags['mobile'], self::$tags['cloud']],
+            'tags' => [self::$tags['mobile'], self::$tags['cloud']],
             'tagOperator' => 'OR',
         ], ['title' => 'asc']);
 
@@ -412,7 +412,7 @@ class ArticleSmartContentProviderTest extends SuluTestCase
             5,
             $this->smartContentProvider->countBy([
                 'locale' => 'en',
-                'tagNames' => [self::$tags['mobile'], self::$tags['cloud']],
+                'tags' => [self::$tags['mobile'], self::$tags['cloud']],
                 'tagOperator' => 'OR',
             ]),
         );
@@ -433,7 +433,7 @@ class ArticleSmartContentProviderTest extends SuluTestCase
     {
         $result = $this->smartContentProvider->findFlatBy([
             'locale' => 'en',
-            'tagNames' => [self::$tags['fitness']],
+            'tags' => [self::$tags['fitness']],
             'tagOperator' => 'AND',
         ], []);
 
@@ -443,7 +443,7 @@ class ArticleSmartContentProviderTest extends SuluTestCase
             5,
             $this->smartContentProvider->countBy([
                 'locale' => 'en',
-                'tagNames' => [self::$tags['fitness']],
+                'tags' => [self::$tags['fitness']],
                 'tagOperator' => 'AND',
             ]),
         );
@@ -464,7 +464,7 @@ class ArticleSmartContentProviderTest extends SuluTestCase
     {
         $result = $this->smartContentProvider->findFlatBy([
             'locale' => 'en',
-            'tagNames' => [self::$tags['mobile'], self::$tags['fitness']],
+            'tags' => [self::$tags['mobile'], self::$tags['fitness']],
             'tagOperator' => 'AND',
         ], []);
 
@@ -474,7 +474,7 @@ class ArticleSmartContentProviderTest extends SuluTestCase
             2,
             $this->smartContentProvider->countBy([
                 'locale' => 'en',
-                'tagNames' => [self::$tags['mobile'], self::$tags['fitness']],
+                'tags' => [self::$tags['mobile'], self::$tags['fitness']],
                 'tagOperator' => 'AND',
             ]),
         );
@@ -495,8 +495,8 @@ class ArticleSmartContentProviderTest extends SuluTestCase
     {
         $result = $this->smartContentProvider->findFlatBy([
             'locale' => 'en',
-            'categoryIds' => [self::$categories['health']->getId()],
-            'tagNames' => [self::$tags['fitness']],
+            'categories' => [self::$categories['health']->getId()],
+            'tags' => [self::$tags['fitness']],
         ], []);
 
         // Should include health1, health2, tech_health, sports_health, multi_category_multi_tag
@@ -505,8 +505,8 @@ class ArticleSmartContentProviderTest extends SuluTestCase
             5,
             $this->smartContentProvider->countBy([
                 'locale' => 'en',
-                'categoryIds' => [self::$categories['health']->getId()],
-                'tagNames' => [self::$tags['fitness']],
+                'categories' => [self::$categories['health']->getId()],
+                'tags' => [self::$tags['fitness']],
             ]),
         );
 

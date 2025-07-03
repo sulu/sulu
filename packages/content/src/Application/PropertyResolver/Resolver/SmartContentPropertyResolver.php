@@ -20,6 +20,30 @@ use Sulu\Component\Webspace\Webspace;
 use Sulu\Content\Application\ContentResolver\Value\ContentView;
 use Symfony\Component\HttpFoundation\RequestStack;
 
+/**
+ * @phpstan-type SmartContentBaseFilters array{
+ *      categories: int[],
+ *      categoryOperator: 'AND'|'OR',
+ *      websiteCategories: string[],
+ *      websiteCategoryOperator: 'AND'|'OR',
+ *      tags: string[],
+ *      tagOperator: 'AND'|'OR',
+ *      websiteTags: string[],
+ *      websiteTagOperator: 'AND'|'OR',
+ *      types: string[],
+ *      typesOperator: 'OR',
+ *      websiteTypes: string[],
+ *      locale: string,
+ *      webspaceKey: string|null,
+ *      dataSource: string|null,
+ *      limit: int|null,
+ *      page: int,
+ *      maxPerPage: int|null,
+ *      includeSubFolders: bool,
+ *      excludeDuplicates: bool,
+ *      audienceTargeting?: bool
+ *  }
+ */
 class SmartContentPropertyResolver implements PropertyResolverInterface
 {
     public function __construct(
@@ -38,6 +62,10 @@ class SmartContentPropertyResolver implements PropertyResolverInterface
      *     limitResult?: int|null,
      *     dataSource?: string|null,
      *     types?: string[]|null,
+     *     presentAs?: string|null,
+     *     includeSubFolders?: bool|null,
+     *     excludeDuplicates?: bool,
+     *     audienceTargeting?: bool
      * } $data
      * @param array<string, mixed> $params
      */
@@ -53,24 +81,28 @@ class SmartContentPropertyResolver implements PropertyResolverInterface
         }
 
         $parameters = $this->getOptions($metadata);
+
         // Default parameters
         /**
          * @var array{
          *     locale: string|null,
          *     page_parameter: string,
          *     tags_parameter: string,
+         *     types_parameter: string,
          *     categories_parameter: string,
          *     website_tags_operator: 'AND'|'OR',
          *     website_categories_operator: 'AND'|'OR',
-         *     exclude_duplicates: bool,
+         *     exclude_duplicates: bool|string,
          *     provider: string,
+         *     max_per_page?: int,
          *     } $parameters
          */
         $parameters = \array_merge([
-            'provider' => 'pages', // TODO Should we use default provider for backwards compatibility?
+            'provider' => 'pages',
             'locale' => $locale,
             'page_parameter' => 'p',
             'tags_parameter' => 'tags',
+            'types_parameter' => 'types',
             'categories_parameter' => 'categories',
             'website_tags_operator' => 'OR',
             'website_categories_operator' => 'OR',
@@ -86,56 +118,39 @@ class SmartContentPropertyResolver implements PropertyResolverInterface
         /** @var Webspace|null $webspace */
         $webspace = $suluAttributes?->getAttribute('webspace');
 
-        /** @var array{
-         *     locale: string|null,
-         *     webspaceKey: string|null,
-         *     categoryIds: array<int>,
-         *     tagNames: array<string>,
-         *     types: array<string>,
-         *     categoryOperator: 'AND'|'OR',
-         *     tagOperator: 'AND'|'OR',
-         *     dataSource: string|null,
-         *     limit: int|null,
-         *     page: int
-         * } $filters
-         */
+        /** @var SmartContentBaseFilters $filters */
         $filters = [
+            // Categories
+            'categories' => $data['categories'] ?? [],
+            'categoryOperator' => \strtoupper($data['categoryOperator'] ?? 'OR'),
+            'websiteCategories' => \array_filter(\explode(',', $request->query->getString($parameters['categories_parameter']))),
+            'websiteCategoryOperator' => \strtoupper($parameters['website_categories_operator']),
+
+            // Tags
+            'tags' => $data['tags'] ?? [],
+            'tagOperator' => \strtoupper($data['tagOperator'] ?? 'OR'),
+            'websiteTags' => \array_filter(\explode(',', $request->query->getString($parameters['tags_parameter']))),
+            'websiteTagOperator' => \strtoupper($parameters['website_tags_operator']),
+
+            // Types
+            'types' => $data['types'] ?? [],
+            'typesOperator' => 'OR',
+            'websiteTypes' => \array_filter(\explode(',', $request->query->getString($parameters['types_parameter']))),
+
+            // Other filters
             'locale' => $parameters['locale'],
             'webspaceKey' => $webspace?->getKey() ?? null,
-            'categoryIds' => \array_merge(
-                $data['categories'] ?? [],
-                \array_filter(
-                    \explode(
-                        ',',
-                        $request->query->getString($parameters['categories_parameter']),
-                    ),
-                ),
-            ),
-            'tagNames' => \array_merge(
-                $data['tags'] ?? [],
-                \array_filter(
-                    \explode(
-                        ',',
-                        $request->query->getString($parameters['tags_parameter']),
-                    ),
-                ),
-            ),
-            'types' => \array_merge(
-                $data['types'] ?? [],
-                \array_filter(
-                    \explode(
-                        ',',
-                        $request->query->getString('types'),
-                    ),
-                ),
-            ),
-            'categoryOperator' => \strtoupper($data['categoryOperator'] ?? $parameters['website_categories_operator']),
-            'tagOperator' => \strtoupper($data['tagOperator'] ?? $parameters['website_tags_operator']),
             'dataSource' => $data['dataSource'] ?? null,
             'limit' => $data['limitResult'] ?? null,
             'page' => $request->query->getInt($parameters['page_parameter'], 1),
-            // TODO exclude_duplicates
+            'maxPerPage' => $parameters['max_per_page'] ?? null,
+            'includeSubFolders' => $data['includeSubFolders'] ?? false,
+            'excludeDuplicates' => 'true' === $parameters['exclude_duplicates'] || true === $parameters['exclude_duplicates'],
         ];
+
+        if ($data['audienceTargeting'] ?? null) {
+            $filters['audienceTargeting'] = $data['audienceTargeting'];
+        }
 
         $sortBys = $data['sortBy'] ?? null ? [$data['sortBy'] => $data['sortMethod'] ?? 'ASC'] : null;
 
@@ -149,7 +164,7 @@ class SmartContentPropertyResolver implements PropertyResolverInterface
         return ContentView::createSmartResolvable(
             data: $result,
             resourceLoaderKey: 'smart_content',
-            view: $result,
+            view: [], // This will be filled in the SmartContentSmartResolver
         );
     }
 

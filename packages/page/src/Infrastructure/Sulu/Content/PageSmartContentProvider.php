@@ -93,11 +93,11 @@ class PageSmartContentProvider implements SmartContentProviderInterface
     /**
      * @param array{
      *     locale?: string|null,
-     *     categoryIds?: int[],
+     *     categoriess?: int[],
      *     categoryOperator?: 'AND'|'OR',
-     *     tagNames?: int[],
+     *     tags?: int[],
      *     tagOperator?: 'AND'|'OR',
-     *     templateKeys?: string[],
+     *     types?: string[],
      *     loadGhost?: bool,
      * } $filters
      */
@@ -106,11 +106,11 @@ class PageSmartContentProvider implements SmartContentProviderInterface
         /**
          * @var array{
          *      locale?: string|null,
-         *      categoryIds?: int[],
+         *      categoriess?: int[],
          *      categoryOperator?: 'AND'|'OR',
-         *      tagNames?: string[],
+         *      tags?: string[],
          *      tagOperator?: 'AND'|'OR',
-         *      templateKeys?: string[],
+         *      types?: string[],
          *      loadGhost?: bool,
          *      limit?: int,
          *      page?: int,
@@ -122,6 +122,7 @@ class PageSmartContentProvider implements SmartContentProviderInterface
 
         $alias = 'page';
         $queryBuilder = $this->entityRepository->createQueryBuilder($alias);
+
         $filters = $this->mapFilters($filters);
         $this->dimensionContentQueryEnhancer->addFilters(
             $queryBuilder,
@@ -140,11 +141,11 @@ class PageSmartContentProvider implements SmartContentProviderInterface
     /**
      * @param array{
      *     locale?: string|null,
-     *     categoryIds?: int[],
+     *     categoriess?: int[],
      *     categoryOperator?: 'AND'|'OR',
-     *     tagNames?: string[],
+     *     tags?: string[],
      *     tagOperator?: 'AND'|'OR',
-     *     templateKeys?: string[],
+     *     types?: string[],
      *     loadGhost?: bool,
      *     limit?: int,
      *     page?: int,
@@ -166,11 +167,11 @@ class PageSmartContentProvider implements SmartContentProviderInterface
         /**
          * @var array{
          *      locale?: string|null,
-         *      categoryIds?: int[],
+         *      categoriess?: int[],
          *      categoryOperator?: 'AND'|'OR',
-         *      tagNames?: string[],
+         *      tags?: string[],
          *      tagOperator?: 'AND'|'OR',
-         *      templateKeys?: string[],
+         *      types?: string[],
          *      loadGhost?: bool,
          *      limit?: int,
          *      page?: int,
@@ -182,6 +183,7 @@ class PageSmartContentProvider implements SmartContentProviderInterface
 
         $alias = 'page';
         $queryBuilder = $this->entityRepository->createQueryBuilder($alias);
+
         $filters = $this->mapFilters($filters);
         $this->dimensionContentQueryEnhancer->addFilters(
             $queryBuilder,
@@ -221,11 +223,11 @@ class PageSmartContentProvider implements SmartContentProviderInterface
     /**
      * @param array{
      *     locale?: string|null,
-     *     categoryIds?: array<int>,
+     *     categories?: array<int>,
      *     categoryOperator?: 'AND'|'OR',
-     *     tagNames?: array<string>,
+     *     tags?: array<string>,
      *     tagOperator?: 'AND'|'OR',
-     *     templateKeys?: array<string>,
+     *     types?: array<string>,
      *     loadGhost?: bool,
      *     types?: array<string>,
      *     webspaceKey?: string,
@@ -255,6 +257,16 @@ class PageSmartContentProvider implements SmartContentProviderInterface
         if ($filters['types'] ?? null) {
             $filters['templateKeys'] = $filters['types'];
             unset($filters['types']);
+        }
+
+        if ($filters['categories'] ?? null) {
+            $filters['categoryIds'] = $filters['categories'];
+            unset($filters['categories']);
+        }
+
+        if ($filters['tags'] ?? null) {
+            $filters['tagNames'] = $filters['tags'];
+            unset($filters['tags']);
         }
 
         return $filters;
