@@ -11,6 +11,7 @@ Deprecated compiler passes:
 * `Sulu\Bundle\AudienceTargetingBundle\DependencyInjection\Compiler\AddRulesPass` -> (`sulu.audience_target_rule`) `tagged_iterator`
 * `Sulu\Component\Symfony\CompilerPass\TaggedServiceCollectorCompilerPass` -> `tagged_iterator`
 * `Sulu\Bundle\CoreBundle\DependencyInjection\Compiler\RegisterLocalizationProvidersPass` (`sulu.localization_provider`) `tagged_iterator`
+* `Sulu\Bundle\AdminBundle\DependencyInjection\Compiler\AddAdminPass` (`sulu.admin`) `tagged_iterator`
 
 ## 2.6.11
 
