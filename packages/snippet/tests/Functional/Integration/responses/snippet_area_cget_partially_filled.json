@@ -5,8 +5,8 @@
                 "key": "car",
                 "template": "car",
                 "title": "Car",
-                "defaultUuid": null,
-                "defaultTitle": null,
+                "defaultUuid": "@string@",
+                "defaultTitle": "Test Snippet",
                 "valid": true
             },
             {

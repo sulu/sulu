@@ -22,7 +22,12 @@ use Sulu\Snippet\Domain\Model\SnippetAreaInterface;
  */
 interface SnippetAreaRepositoryInterface
 {
-    public function createNew(string $areaKey, string $webspaceKey, ?string $uuid): SnippetAreaInterface;
+    public function createNew(string $areaKey, string $webspaceKey, ?string $uuid = null): SnippetAreaInterface;
+
+    /**
+     * @return array<string, SnippetAreaInterface>
+     */
+    public function findByWebspace(string $webspaceKey): array;
 
     public function findOneByWebspaceAndKey(string $webspaceKey, string $areaKey): ?SnippetAreaInterface;
 }

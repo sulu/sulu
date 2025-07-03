@@ -46,7 +46,7 @@ use Sulu\Snippet\Infrastructure\Sulu\Content\SnippetSmartContentProvider;
 use Sulu\Snippet\Infrastructure\Sulu\Reference\SnippetReferenceRefresher;
 use Sulu\Snippet\Trash\SnippetTrashItemHandler;
 use Sulu\Snippet\Infrastructure\Symfony\CompilerPass\SnippetAreaCompilerPass;
-use Sulu\Snippet\Infrastructure\Symfony\Normalizer\SnippetNormalizer;
+use Sulu\Snippet\Infrastructure\Symfony\Normalizer\SnippetAreaNormalizer;
 use Sulu\Snippet\UserInterface\Controller\Admin\SnippetAreaController;
 use Sulu\Snippet\UserInterface\Controller\Admin\SnippetController;
 use Symfony\Component\Config\Definition\Configurator\DefinitionConfigurator;
@@ -220,7 +220,7 @@ final class SuluSnippetBundle extends AbstractBundle
             ->tag('sulu.context', ['context' => 'admin'])
             ->tag('sulu.admin');
 
-        $services->set('sulu_snippet.normalizer.snippet_area', SnippetNormalizer::class)
+        $services->set('sulu_snippet.normalizer.snippet_area', SnippetAreaNormalizer::class)
             ->args([
                 new Reference('serializer.normalizer.object'),
                 param(SnippetAreaCompilerPass::SNIPPET_AREA_PARAM),
@@ -276,6 +276,7 @@ final class SuluSnippetBundle extends AbstractBundle
                 new Reference('sulu_core.list_builder.field_descriptor_factory'),
                 new Reference('sulu_core.doctrine_list_builder_factory'),
                 new Reference('sulu_core.doctrine_rest_helper'),
+                new Reference(SnippetAreaRepositoryInterface::class),
                 param(SnippetAreaCompilerPass::SNIPPET_AREA_PARAM),
             ])
             ->tag('sulu.context', ['context' => 'admin']);

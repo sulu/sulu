@@ -13,7 +13,7 @@
         <field name="webspaceKey" type="string" />
         <field name="areaKey" type="string" />
 
-        <one-to-one field="snippet" target-entity="Sulu\Snippet\Domain\Model\Snippet">
+        <one-to-one field="snippet" target-entity="Sulu\Snippet\Domain\Model\SnippetInterface">
             <join-column name="idSnippet" referenced-column-name="uuid" on-delete="CASCADE" nullable="false"/>
         </one-to-one>
     </mapped-superclass>

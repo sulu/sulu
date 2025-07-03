@@ -69,12 +69,12 @@ class SnippetArea implements SnippetAreaInterface
         return $this->areaKey;
     }
 
-    public function setSnippet(Snippet $snippet): void
+    public function setSnippet(?SnippetInterface $snippet): void
     {
         $this->snippet = $snippet;
     }
 
-    public function getSnippet(): ?Snippet
+    public function getSnippet(): ?SnippetInterface
     {
         return $this->snippet;
     }

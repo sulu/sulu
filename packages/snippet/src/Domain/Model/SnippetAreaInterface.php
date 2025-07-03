@@ -25,7 +25,7 @@ interface SnippetAreaInterface
 
     public function getAreaKey(): string;
 
-    public function setSnippet(Snippet $snippet): void;
+    public function setSnippet(?SnippetInterface $snippet): void;
 
-    public function getSnippet(): ?Snippet;
+    public function getSnippet(): ?SnippetInterface;
 }

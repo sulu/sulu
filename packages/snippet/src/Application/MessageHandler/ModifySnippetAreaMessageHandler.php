@@ -34,7 +34,7 @@ class ModifySnippetAreaMessageHandler
 
         $snippetArea = $this->snippetAreaRepository->findOneByWebspaceAndKey($webspaceKey, $areaKey);
         if (null === $snippetArea) {
-            $snippetArea = $this->snippetAreaRepository->createNew(null, $areaKey, $webspaceKey);
+            $snippetArea = $this->snippetAreaRepository->createNew($areaKey, $webspaceKey);
 
             $this->entityManager->persist($snippetArea);
         }

@@ -22,6 +22,7 @@ use Sulu\Snippet\Application\Message\ModifySnippetAreaMessage;
 use Sulu\Snippet\Application\Message\RemoveSnippetAreaMessage;
 use Sulu\Snippet\Domain\Model\SnippetArea;
 use Sulu\Snippet\Domain\Model\SnippetAreaInterface;
+use Sulu\Snippet\Domain\Repository\SnippetAreaRepositoryInterface;
 use Sulu\Snippet\Infrastructure\Symfony\CompilerPass\SnippetAreaCompilerPass;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -52,6 +53,7 @@ final class SnippetAreaController
         private FieldDescriptorFactoryInterface $fieldDescriptorFactory,
         private DoctrineListBuilderFactoryInterface $listBuilderFactory,
         private RestHelperInterface $restHelper,
+        private SnippetAreaRepositoryInterface $snippetAreaRepository,
         private array $snippetArea,
     ) {
         // Setting the message bus of the HandleTrait
@@ -61,30 +63,18 @@ final class SnippetAreaController
     public function cgetAction(Request $request): Response
     {
         /** @var DoctrineFieldDescriptorInterface[]|null $fieldDescriptors */
-        $fieldDescriptors = $this->fieldDescriptorFactory->getFieldDescriptors(SnippetAreaInterface::RESOURCE_KEY);
-        Assert::notNull($fieldDescriptors, 'Could not find field descriptors for resource key: ' . SnippetAreaInterface::RESOURCE_KEY);
+        //$fieldDescriptors = $this->fieldDescriptorFactory->getFieldDescriptors(SnippetAreaInterface::RESOURCE_KEY);
+        //Assert::notNull($fieldDescriptors, 'Could not find field descriptors for resource key: ' . SnippetAreaInterface::RESOURCE_KEY);
 
         /** @var DoctrineListBuilder $listBuilder */
-        $listBuilder = $this->listBuilderFactory->create(SnippetAreaInterface::class);
-        $listBuilder->setIdField($fieldDescriptors['id']); // We need to set this because it's the uuid doctrine column
-        $listBuilder->setParameter('locale', $request->query->get('locale'));
-        $listBuilder->setParameter('webspace', $request->query->get('webspace'));
+        //$listBuilder = $this->listBuilderFactory->create(SnippetAreaInterface::class);
+        //$listBuilder->setIdField($fieldDescriptors['id']); // We need to set this because it's the uuid doctrine column
+        //$listBuilder->setParameter('locale', $request->query->get('locale'));
+        //$listBuilder->setParameter('webspace', $request->query->get('webspace'));
 
-        $this->restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
+        //$this->restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
 
-        $snippetAreas = [];
-
-        // Load the existing snippets from the database
-        $results = $listBuilder->execute();
-        foreach ($results as $result) {
-            $areaKey = $result['key'];
-            $snippetAreas[$areaKey] = new SnippetArea(
-                areaKey: $areaKey,
-                webspaceKey: $request->attributes->getString('webspace'),
-            );
-
-            // todo: handle the snippet somehow
-        }
+        $snippetAreas = $this->snippetAreaRepository->findByWebspace($request->query->get('webspace'));
 
         // Add the empty snippet areas as placeholders
         foreach ($this->snippetArea as $snippetArea) {

@@ -54,10 +54,11 @@ class SnippetAreaControllerTest extends SuluTestCase
         self::ensureKernelShutdown();
     }
 
-    public function testPut(): void
+    public function testPost(): void
     {
         self::purgeDatabase();
 
+        // Creating the snippet
         $this->client->jsonRequest('POST', '/admin/api/snippets?locale=en', [
             'template' => 'snippet',
             'title' => 'Test Snippet',
@@ -74,6 +75,7 @@ class SnippetAreaControllerTest extends SuluTestCase
         $response = $this->client->getResponse();
         $id = \json_decode((string) $response->getContent(), true)['id'];
 
+        // Setting the snippet into the snippet area
         $this->client->jsonRequest('PUT', '/admin/api/snippet-areas/car', [
             'snippet' => ['uuid' => (string) $id],
             'webspace' => 'sulu-io',

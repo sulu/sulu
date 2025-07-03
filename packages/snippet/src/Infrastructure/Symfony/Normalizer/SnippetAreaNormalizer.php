@@ -23,7 +23,7 @@ use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 /**
  * @phpstan-import-type Entry from SnippetAreaCompilerPass
  */
-final class SnippetNormalizer implements NormalizerInterface
+final class SnippetAreaNormalizer implements NormalizerInterface
 {
     /**
      * @param array<string, Entry> $snippetAreas
@@ -44,8 +44,17 @@ final class SnippetNormalizer implements NormalizerInterface
         ?string $format = null,
         array $context = [],
     ): array {
+        /** @var SnippetAreaInterface $data */
+        $snippet = $data->getSnippet();
+        if (null !== $snippet) {
+            $data->setSnippet(null);
+        }
+
         /** @var array<mixed> $normalizedData */
         $normalizedData = $this->objectNormalizer->normalize($data, $format, $context);
+
+        $data->setSnippet($snippet);
+
         unset($normalizedData['snippet']);
 
         $metaData = $this->snippetAreas[$normalizedData['areaKey']];
@@ -59,7 +68,7 @@ final class SnippetNormalizer implements NormalizerInterface
 
         /** @var SnippetInterface|null $snippet */
         $snippet = $data->getSnippet();
-        $normalizedData['defaultTitle'] = $snippet?->getTitle();
+        $normalizedData['defaultTitle'] = $this->getTitle($snippet);
         $normalizedData['defaultUuid'] = $snippet?->getId();
         $normalizedData['template'] = $metaData['template'];
         $normalizedData['title'] = $title;
@@ -68,6 +77,23 @@ final class SnippetNormalizer implements NormalizerInterface
         $normalizedData['valid'] = true;
 
         return $normalizedData;
+    }
+
+    private static function getTitle(?SnippetInterface $snippet): ?string
+    {
+        if (null === $snippet) {
+            return null;
+        }
+
+        // TODO: Currently gets the first title in any locale. We need to load the locale of the request here.
+        // Also: Use a repository for this for more performance
+        $dim = $snippet->getDimensionContents()
+            ->map(fn ($snippet) => $snippet->getTitle())
+            ->filter(fn ($snippet) => null !== $snippet)
+            ->first()
+        ;
+
+        return $dim ?: 'unknown';
     }
 
     public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool

@@ -34,7 +34,30 @@ class SnippetAreaRepository implements SnippetAreaRepositoryInterface
         $this->snippetAreaClassName = $this->entityRepository->getClassName();
     }
 
-    public function createNew(string $areaKey, string $webspaceKey, ?string $uuid): SnippetAreaInterface
+    /**
+     * @return array<string, SnippetAreaInterface>
+     */
+    public function findByWebspace(string $webspaceKey): array
+    {
+        $result = [];
+
+        /** @var array<SnippetAreaInterface> $queryResult */
+        $queryResult = $this->entityRepository->createQueryBuilder('o')
+            ->join('o.snippet', 's')
+            ->andWhere('o.webspaceKey = :webspaceKey')
+            ->setParameter('webspaceKey', $webspaceKey)
+            ->getQuery()
+            ->getResult()
+        ;
+
+        foreach ($queryResult as $row) {
+            $result[$row->getAreaKey()] = $row;
+        }
+
+        return $result;
+    }
+
+    public function createNew(string $areaKey, string $webspaceKey, ?string $uuid = null): SnippetAreaInterface
     {
         /** @var class-string<SnippetAreaInterface> $className */
         $className = $this->snippetAreaClassName;

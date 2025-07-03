@@ -24,7 +24,7 @@ class ModifySnippetAreaMessage
     private array $snippet;
 
     /**
-     * @param array{webspace: string, areaKey: string, snippet: array{uuid: string}} $requestData
+     * @param array{webspace: string, key: string, snippet: array{uuid: string}} $requestData
      */
     public function __construct(array $requestData)
     {
