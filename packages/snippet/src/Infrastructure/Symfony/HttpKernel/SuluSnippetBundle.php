@@ -179,14 +179,13 @@ final class SuluSnippetBundle extends AbstractBundle
             ->args([
                 new Reference(SnippetAreaRepositoryInterface::class),
                 new Reference(SnippetRepositoryInterface::class),
-                new Reference(EntityManagerInterface::class),
             ])
             ->tag('messenger.message_handler');
 
         $services->set('sulu_snippet.remove_snippet_area_handler')
             ->class(RemoveSnippetAreaMessageHandler::class)
             ->args([
-                new Reference(EntityManagerInterface::class),
+                new Reference('sulu_snippet.snippet_area_repository'),
             ])
             ->tag('messenger.message_handler');
 

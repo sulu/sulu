@@ -13,28 +13,30 @@ declare(strict_types=1);
 
 namespace Sulu\Snippet\Application\MessageHandler;
 
-use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Snippet\Application\Message\RemoveSnippetAreaMessage;
-use Sulu\Snippet\Domain\Model\SnippetArea;
+use Sulu\Snippet\Domain\Model\SnippetAreaInterface;
+use Sulu\Snippet\Domain\Repository\SnippetAreaRepositoryInterface;
 
 class RemoveSnippetAreaMessageHandler
 {
-    public function __construct(private EntityManagerInterface $entityManager)
-    {
+    public function __construct(
+        private SnippetAreaRepositoryInterface $snippetAreaRepository,
+    ) {
     }
 
-    public function __invoke(RemoveSnippetAreaMessage $message): void
+    public function __invoke(RemoveSnippetAreaMessage $message): ?SnippetAreaInterface
     {
-        $snippetAreaRepository = $this->entityManager->getRepository(SnippetArea::class);
-        $entityToDelete = $snippetAreaRepository->findOneBy([
-            'webspaceKey' => $message->getWebspaceKey(),
-            'areaKey' => $message->getAreaKey(),
-        ]);
+        $entityToDelete = $this->snippetAreaRepository->findOneByWebspaceAndKey(
+            $message->getWebspaceKey(),
+            $message->getAreaKey(),
+        );
 
         if (null === $entityToDelete) {
-            return;
+            return null;
         }
 
-        $this->entityManager->remove($entityToDelete);
+        $this->snippetAreaRepository->remove($entityToDelete);
+
+        return $entityToDelete;
     }
 }

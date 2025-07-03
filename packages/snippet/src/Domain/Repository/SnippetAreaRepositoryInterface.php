@@ -16,7 +16,7 @@ namespace Sulu\Snippet\Domain\Repository;
 use Sulu\Snippet\Domain\Model\SnippetAreaInterface;
 
 /**
- * Implementation can be found in the following class:.
+ * Implementation can be found in the following class.
  *
  * @see Sulu\Snippet\Infrastructure\Doctrine\Repository\SnippetAreaRepository
  */
@@ -30,4 +30,8 @@ interface SnippetAreaRepositoryInterface
     public function findByWebspace(string $webspaceKey): array;
 
     public function findOneByWebspaceAndKey(string $webspaceKey, string $areaKey): ?SnippetAreaInterface;
+
+    public function add(SnippetAreaInterface $snippetArea): void;
+
+    public function remove(SnippetAreaInterface $snippetArea): void;
 }

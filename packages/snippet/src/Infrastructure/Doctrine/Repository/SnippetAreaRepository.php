@@ -28,9 +28,9 @@ class SnippetAreaRepository implements SnippetAreaRepositoryInterface
     private string $snippetAreaClassName;
 
     public function __construct(
-        EntityManagerInterface $entityManager,
+        private EntityManagerInterface $entityManager,
     ) {
-        $this->entityRepository = $entityManager->getRepository(SnippetAreaInterface::class);
+        $this->entityRepository = $this->entityManager->getRepository(SnippetAreaInterface::class);
         $this->snippetAreaClassName = $this->entityRepository->getClassName();
     }
 
@@ -42,9 +42,9 @@ class SnippetAreaRepository implements SnippetAreaRepositoryInterface
         $result = [];
 
         /** @var array<SnippetAreaInterface> $queryResult */
-        $queryResult = $this->entityRepository->createQueryBuilder('o')
-            ->join('o.snippet', 's')
-            ->andWhere('o.webspaceKey = :webspaceKey')
+        $queryResult = $this->entityRepository->createQueryBuilder('area')
+            ->join('area.snippet', 'snippet')
+            ->andWhere('area.webspaceKey = :webspaceKey')
             ->setParameter('webspaceKey', $webspaceKey)
             ->getQuery()
             ->getResult()
@@ -68,5 +68,15 @@ class SnippetAreaRepository implements SnippetAreaRepositoryInterface
     public function findOneByWebspaceAndKey(string $webspaceKey, string $areaKey): ?SnippetAreaInterface
     {
         return $this->entityRepository->findOneBy(['webspaceKey' => $webspaceKey, 'areaKey' => $areaKey]);
+    }
+
+    public function add(SnippetAreaInterface $snippetArea): void
+    {
+        $this->entityManager->persist($snippetArea);
+    }
+
+    public function remove(SnippetAreaInterface $snippetArea): void
+    {
+        $this->entityManager->remove($snippetArea);
     }
 }

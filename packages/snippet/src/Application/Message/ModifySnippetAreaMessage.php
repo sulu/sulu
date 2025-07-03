@@ -21,7 +21,7 @@ class ModifySnippetAreaMessage
     /**
      * @var array{ uuid: string }
      */
-    private array $snippet;
+    private array $snippetIdentifier;
 
     /**
      * @param array{webspace: string, key: string, snippet: array{uuid: string}} $requestData
@@ -30,7 +30,7 @@ class ModifySnippetAreaMessage
     {
         $this->webspace = $requestData['webspace'];
         $this->areaKey = $requestData['key'];
-        $this->snippet = $requestData['snippet'];
+        $this->snippetIdentifier = $requestData['snippet'];
     }
 
     public function getWebspace(): string
@@ -46,8 +46,8 @@ class ModifySnippetAreaMessage
     /**
      * @return array{ uuid: string }
      */
-    public function getSnippet(): array
+    public function getSnippetIdentifier(): array
     {
-        return $this->snippet;
+        return $this->snippetIdentifier;
     }
 }

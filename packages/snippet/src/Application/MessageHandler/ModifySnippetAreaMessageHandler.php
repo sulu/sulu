@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Sulu\Snippet\Application\MessageHandler;
 
-use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Snippet\Application\Message\ModifySnippetAreaMessage;
 use Sulu\Snippet\Domain\Repository\SnippetAreaRepositoryInterface;
 use Sulu\Snippet\Domain\Repository\SnippetRepositoryInterface;
@@ -23,7 +22,6 @@ class ModifySnippetAreaMessageHandler
     public function __construct(
         private readonly SnippetAreaRepositoryInterface $snippetAreaRepository,
         private readonly SnippetRepositoryInterface $snippetRepository,
-        private readonly EntityManagerInterface $entityManager,
     ) {
     }
 
@@ -36,10 +34,11 @@ class ModifySnippetAreaMessageHandler
         if (null === $snippetArea) {
             $snippetArea = $this->snippetAreaRepository->createNew($areaKey, $webspaceKey);
 
-            $this->entityManager->persist($snippetArea);
+            $this->snippetAreaRepository->add($snippetArea);
         }
 
-        $snippet = $this->snippetRepository->getOneBy($message->getSnippet());
+        // TODO: This crashes when persisting if there is no snippet with this identifier as the snippet is non-nullable
+        $snippet = $this->snippetRepository->getOneBy($message->getSnippetIdentifier());
 
         $snippetArea->setSnippet($snippet);
     }

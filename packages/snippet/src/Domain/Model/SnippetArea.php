@@ -17,9 +17,6 @@ use Symfony\Component\Uid\Uuid;
 
 class SnippetArea implements SnippetAreaInterface
 {
-    /**
-     * @var string
-     */
     protected string $uuid;
 
     private string $webspaceKey;

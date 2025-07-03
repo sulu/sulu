@@ -122,8 +122,8 @@ final class SnippetAreaController
         $message = new RemoveSnippetAreaMessage($request->attributes->all());
 
         /** @see Sulu\Snippet\Application\MessageHandler\RemoveSnippetAreaMessageHandler */
-        $this->handle(new Envelope($message, [new EnableFlushStamp()]));
+        $deletedSnippetArea = $this->handle(new Envelope($message, [new EnableFlushStamp()]));
 
-        return new Response(null, Response::HTTP_NO_CONTENT);
+        return new Response($deletedSnippetArea, Response::HTTP_NO_CONTENT);
     }
 }
