@@ -15,18 +15,41 @@ namespace Sulu\Bundle\AdminBundle\SmartContent;
 
 use Sulu\Bundle\AdminBundle\SmartContent\Configuration\ProviderConfigurationInterface;
 
+/**
+ * @phpstan-type SmartContentBaseFilters array{
+ *      categories: int[],
+ *      categoryOperator: 'AND'|'OR',
+ *      websiteCategories: string[],
+ *      websiteCategoryOperator: 'AND'|'OR',
+ *      tags: string[],
+ *      tagOperator: 'AND'|'OR',
+ *      websiteTags: string[],
+ *      websiteTagOperator: 'AND'|'OR',
+ *      types: string[],
+ *      typesOperator: 'OR',
+ *      locale: string,
+ *      webspaceKey: string|null,
+ *      dataSource: string|null,
+ *      limit: int|null,
+ *      page: int,
+ *      maxPerPage: int|null,
+ *      includeSubFolders: bool,
+ *      excludeDuplicates: bool,
+ *      audienceTargeting?: bool
+ *  }
+ */
 interface SmartContentProviderInterface
 {
     public function getConfiguration(): ProviderConfigurationInterface;
 
     /**
-     * @param array<string, mixed> $filters
+     * @param SmartContentBaseFilters $filters
      * @param array<string, mixed> $params
      */
     public function countBy(array $filters, array $params = []): int;
 
     /**
-     * @param array<string, mixed> $filters
+     * @param SmartContentBaseFilters $filters
      * @param array<string, string> $sortBys
      * @param array<string, mixed> $params
      *

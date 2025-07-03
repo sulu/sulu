@@ -21,6 +21,7 @@ use Sulu\Bundle\AdminBundle\SmartContent\SmartContentProviderInterface;
 use Sulu\Bundle\ContactBundle\Admin\ContactAdmin;
 use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
 use Sulu\Bundle\ContactBundle\Infrastructure\Sulu\Content\ResourceLoader\AccountResourceLoader;
+use Sulu\Content\Infrastructure\Doctrine\JoinFilterTrait;
 
 /**
  * @phpstan-type AccountSmartContentFilters array{
@@ -35,6 +36,8 @@ use Sulu\Bundle\ContactBundle\Infrastructure\Sulu\Content\ResourceLoader\Account
  */
 class AccountSmartContentProvider implements SmartContentProviderInterface
 {
+    use JoinFilterTrait;
+
     public function __construct(
         private EntityManagerInterface $entityManager,
     ) {
@@ -151,44 +154,6 @@ class AccountSmartContentProvider implements SmartContentProviderInterface
                 'categoryIds',
                 $categoryIds,
                 $filters['categoryOperator'],
-            );
-        }
-    }
-
-    /**
-     * @param int[]|string[] $parameters
-     * @param 'AND'|'OR' $operator
-     */
-    private function addJoinFilter(
-        QueryBuilder $queryBuilder,
-        string $join,
-        string $targetAlias,
-        string $targetField,
-        string $filterKey,
-        array $parameters,
-        string $operator = 'OR',
-    ): void {
-        if ('OR' === $operator) {
-            $queryBuilder->leftJoin(
-                $join,
-                $targetAlias,
-            );
-
-            $queryBuilder->andWhere($targetAlias . '.' . $targetField . ' IN (:' . $filterKey . ')')
-                ->setParameter($filterKey, $parameters);
-        } elseif ('AND' === $operator) {
-            foreach (\array_values($parameters) as $key => $parameter) {
-                $queryBuilder->leftJoin(
-                    $join,
-                    $targetAlias . $key,
-                );
-
-                $queryBuilder->andWhere($targetAlias . $key . '.' . $targetField . ' = :' . $filterKey . $key)
-                    ->setParameter($filterKey . $key, $parameter);
-            }
-        } else {
-            throw new \InvalidArgumentException(
-                \sprintf('The operator "%s" is not supported for this filter.', $operator),
             );
         }
     }

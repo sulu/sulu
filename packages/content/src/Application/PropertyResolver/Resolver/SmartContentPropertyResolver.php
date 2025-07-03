@@ -15,34 +15,14 @@ namespace Sulu\Content\Application\PropertyResolver\Resolver;
 
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\OptionMetadata;
+use Sulu\Bundle\AdminBundle\SmartContent\SmartContentProviderInterface;
 use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
 use Sulu\Component\Webspace\Webspace;
 use Sulu\Content\Application\ContentResolver\Value\ContentView;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
- * @phpstan-type SmartContentBaseFilters array{
- *      categories: int[],
- *      categoryOperator: 'AND'|'OR',
- *      websiteCategories: string[],
- *      websiteCategoryOperator: 'AND'|'OR',
- *      tags: string[],
- *      tagOperator: 'AND'|'OR',
- *      websiteTags: string[],
- *      websiteTagOperator: 'AND'|'OR',
- *      types: string[],
- *      typesOperator: 'OR',
- *      websiteTypes: string[],
- *      locale: string,
- *      webspaceKey: string|null,
- *      dataSource: string|null,
- *      limit: int|null,
- *      page: int,
- *      maxPerPage: int|null,
- *      includeSubFolders: bool,
- *      excludeDuplicates: bool,
- *      audienceTargeting?: bool
- *  }
+ * @phpstan-import-type SmartContentBaseFilters from SmartContentProviderInterface
  */
 class SmartContentPropertyResolver implements PropertyResolverInterface
 {
@@ -135,7 +115,6 @@ class SmartContentPropertyResolver implements PropertyResolverInterface
             // Types
             'types' => $data['types'] ?? [],
             'typesOperator' => 'OR',
-            'websiteTypes' => \array_filter(\explode(',', $request->query->getString($parameters['types_parameter']))),
 
             // Other filters
             'locale' => $parameters['locale'],

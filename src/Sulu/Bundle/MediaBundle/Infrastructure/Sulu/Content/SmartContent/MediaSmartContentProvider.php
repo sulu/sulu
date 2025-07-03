@@ -29,6 +29,7 @@ use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
+use Sulu\Content\Infrastructure\Doctrine\JoinFilterTrait;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -45,7 +46,6 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  *       websiteTagOperator: 'AND'|'OR',
  *       types: string[],
  *       typesOperator: 'OR',
- *       websiteTypes: string[],
  *       locale: string,
  *       webspaceKey: string|null,
  *       dataSource: string|null,
@@ -60,6 +60,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class MediaSmartContentProvider implements SmartContentProviderInterface
 {
+    use JoinFilterTrait;
+
     /**
      * @param mixed[]|null $permissions
      */
@@ -350,44 +352,6 @@ class MediaSmartContentProvider implements SmartContentProviderInterface
         }
 
         return \array_filter($queryOptions);
-    }
-
-    /**
-     * @param int[]|string[] $parameters
-     * @param 'AND'|'OR' $operator
-     */
-    private function addJoinFilter(
-        QueryBuilder $queryBuilder,
-        string $join,
-        string $targetAlias,
-        string $targetField,
-        string $filterKey,
-        array $parameters,
-        string $operator = 'OR',
-    ): void {
-        if ('OR' === $operator) {
-            $queryBuilder->leftJoin(
-                $join,
-                $targetAlias,
-            );
-
-            $queryBuilder->andWhere($targetAlias . '.' . $targetField . ' IN (:' . $filterKey . ')')
-                ->setParameter($filterKey, $parameters);
-        } elseif ('AND' === $operator) {
-            foreach (\array_values($parameters) as $key => $parameter) {
-                $queryBuilder->leftJoin(
-                    $join,
-                    $targetAlias . $key,
-                );
-
-                $queryBuilder->andWhere($targetAlias . $key . '.' . $targetField . ' = :' . $filterKey . $key)
-                    ->setParameter($filterKey . $key, $parameter);
-            }
-        } else {
-            throw new \InvalidArgumentException(
-                \sprintf('The operator "%s" is not supported for this filter.', $operator),
-            );
-        }
     }
 
     public function createQueryBuilder(string $alias): QueryBuilder

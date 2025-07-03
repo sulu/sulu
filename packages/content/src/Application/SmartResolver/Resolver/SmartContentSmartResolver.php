@@ -16,11 +16,10 @@ namespace Sulu\Content\Application\SmartResolver\Resolver;
 use Sulu\Bundle\AdminBundle\SmartContent\SmartContentProviderInterface;
 use Sulu\Content\Application\ContentResolver\Value\ContentView;
 use Sulu\Content\Application\ContentResolver\Value\SmartResolvable;
-use Sulu\Content\Application\PropertyResolver\Resolver\SmartContentPropertyResolver;
 use Symfony\Component\DependencyInjection\ServiceLocator;
 
 /**
- * @phpstan-import-type SmartContentBaseFilters from SmartContentPropertyResolver
+ * @phpstan-import-type SmartContentBaseFilters from SmartContentProviderInterface
  */
 class SmartContentSmartResolver implements SmartResolverInterface
 {
@@ -88,7 +87,6 @@ class SmartContentSmartResolver implements SmartResolverInterface
             'categoryRoot' => $parameters['categoryRoot'] ?? null,
             'websiteTags' => $filters['websiteTags'],
             'websiteTagOperator' => $filters['websiteTagOperator'],
-            'websiteTypes' => $filters['websiteTypes'],
             'sortBys' => $sortBys,
             'presentAs' => $value['presentAs'] ?? null,
             'limitResult' => $filters['limit'],

@@ -16,18 +16,45 @@ namespace Sulu\Snippet\Infrastructure\Sulu\Content;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query\Expr\OrderBy;
+use Doctrine\ORM\QueryBuilder;
 use Sulu\Bundle\AdminBundle\SmartContent\Configuration\Builder;
 use Sulu\Bundle\AdminBundle\SmartContent\Configuration\BuilderInterface;
 use Sulu\Bundle\AdminBundle\SmartContent\Configuration\ProviderConfigurationInterface;
 use Sulu\Bundle\AdminBundle\SmartContent\SmartContentProviderInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer;
+use Sulu\Content\Infrastructure\Doctrine\JoinFilterTrait;
 use Sulu\Snippet\Domain\Model\SnippetDimensionContentInterface;
 use Sulu\Snippet\Domain\Model\SnippetInterface;
 use Sulu\Snippet\Infrastructure\Sulu\Content\ResourceLoader\SnippetResourceLoader;
 
+/**
+ * @phpstan-type SnippetSmartContentFilters array{
+ *       categories: int[],
+ *       categoryOperator: 'AND'|'OR',
+ *       websiteCategories: string[],
+ *       websiteCategoryOperator: 'AND'|'OR',
+ *       tags: string[],
+ *       tagOperator: 'AND'|'OR',
+ *       websiteTags: string[],
+ *       websiteTagOperator: 'AND'|'OR',
+ *       types: string[],
+ *       typesOperator: 'OR',
+ *       locale: string,
+ *       webspaceKey: string|null,
+ *       dataSource: string|null,
+ *       limit: int|null,
+ *       page: int,
+ *       maxPerPage: int|null,
+ *       includeSubFolders: bool,
+ *       excludeDuplicates: bool,
+ *       audienceTargeting?: bool
+ *   }
+ */
 class SnippetSmartContentProvider implements SmartContentProviderInterface
 {
+    use JoinFilterTrait;
+
     /**
      * @var EntityRepository<SnippetInterface>
      */
@@ -76,28 +103,11 @@ class SnippetSmartContentProvider implements SmartContentProviderInterface
     }
 
     /**
-     * @param array{
-     *     locale?: string|null,
-     *     categories?: int[],
-     *     categoryOperator?: 'AND'|'OR',
-     *     tagIds?: int[],
-     *     tagOperator?: 'AND'|'OR',
-     *     types?: string[],
-     * } $filters
+     * @param SnippetSmartContentFilters $filters
      */
     public function countBy(array $filters, array $params = []): int
     {
-        /**
-         * @var array{
-         *     locale?: string|null,
-         *     categories?: int[],
-         *     categoryOperator?: 'AND'|'OR',
-         *     tagIds?: int[],
-         *     tagOperator?: 'AND'|'OR',
-         *     types?: string[],
-         *     stage: string,
-         * } $filters
-         */
+        /** @var SnippetSmartContentFilters $filters */
         $filters = $this->enhanceWithDimensionAttributes($filters);
 
         $alias = 'snippet';
@@ -111,22 +121,14 @@ class SnippetSmartContentProvider implements SmartContentProviderInterface
             $filters,
             [],
         );
+        $this->addInternalFilters($queryBuilder, $filters, $alias);
         $queryBuilder->select('COUNT(DISTINCT snippet.uuid)');
 
         return (int) $queryBuilder->getQuery()->getSingleScalarResult();
     }
 
     /**
-     * @param array{
-     *     locale?: string|null,
-     *     categories?: int[],
-     *     categoryOperator?: 'AND'|'OR',
-     *     tags?: string[],
-     *     tagOperator?: 'AND'|'OR',
-     *     types?: string[],
-     *     limit?: int,
-     *     page?: int,
-     * } $filters
+     * @param SnippetSmartContentFilters $filters
      * @param array{
      *     title?: 'asc'|'desc',
      *     workflowPublished?: 'asc'|'desc',
@@ -138,24 +140,11 @@ class SnippetSmartContentProvider implements SmartContentProviderInterface
      */
     public function findFlatBy(array $filters, array $sortBys, array $params = []): array
     {
-        /**
-         * @var array{
-         *      locale?: string|null,
-         *      categories?: int[],
-         *      categoryOperator?: 'AND'|'OR',
-         *      tags?: string[],
-         *      tagOperator?: 'AND'|'OR',
-         *      types?: string[],
-         *      limit?: int,
-         *      page?: int,
-         *      stage: string,
-         *  } $filters
-         */
-        $filters = $this->enhanceWithDimensionAttributes($filters);
-
         $alias = 'snippet';
         $queryBuilder = $this->entityRepository->createQueryBuilder($alias);
 
+        /** @var SnippetSmartContentFilters $filters */
+        $filters = $this->enhanceWithDimensionAttributes($filters);
         $filters = $this->mapFilters($filters);
         $this->dimensionContentQueryEnhancer->addFilters(
             $queryBuilder,
@@ -164,9 +153,9 @@ class SnippetSmartContentProvider implements SmartContentProviderInterface
             $filters,
             $sortBys,
         );
+        $this->addInternalFilters($queryBuilder, $filters, $alias);
 
-        if (($page = ($filters['page'] ?? null))
-            && ($limit = ($filters['limit'] ?? null))) {
+        if (($page = $filters['page']) && ($limit = $filters['limit'])) {
             $this->dimensionContentQueryEnhancer->addPagination($queryBuilder, $page, $limit);
         }
 
@@ -215,55 +204,85 @@ class SnippetSmartContentProvider implements SmartContentProviderInterface
     }
 
     /**
-     * @param array{
-     *     locale?: string|null,
-     *     categories?: array<int>,
-     *     categoryOperator?: 'AND'|'OR',
-     *     tags?: array<string>,
-     *     tagOperator?: 'AND'|'OR',
-     *     types?: array<string>,
-     *     loadGhost?: bool,
-     *     types?: array<string>,
-     *     webspaceKey?: string,
-     *     dataSource?: string|null,
-     *     page?: int,
-     *     limit?: int,
-     *     stage?: string,
-     * } $filters
+     * @param SnippetSmartContentFilters $filters
      *
      * @return array{
-     *     locale?: string|null,
-     *     stage?: string|null,
-     *     categoryIds?: array<int>,
-     *     categoryOperator?: 'AND'|'OR',
-     *     tagNames?: array<string>,
-     *     tagOperator?: 'AND'|'OR',
-     *     templateKeys?: array<string>,
-     *     loadGhost?: bool,
-     *     webspaceKey?: string,
-     *     dataSource?: string|null,
-     *     page?: int,
-     *     limit?: int,
-     * }
+     *         categoryIds?: int[],
+     *         categoryOperator: 'AND'|'OR',
+     *         websiteCategories: string[],
+     *         websiteCategoryOperator: 'AND'|'OR',
+     *         tagNames?: string[],
+     *         tagOperator: 'AND'|'OR',
+     *         websiteTags: string[],
+     *         websiteTagOperator: 'AND'|'OR',
+     *         templateKeys?: string[],
+     *         typesOperator: 'OR',
+     *         locale: string,
+     *         webspaceKey: string|null,
+     *         dataSource: string|null,
+     *         limit: int|null,
+     *         page: int,
+     *         maxPerPage: int|null,
+     *         includeSubFolders: bool,
+     *         excludeDuplicates: bool,
+     *         audienceTargeting?: bool
+     *     }
      */
     protected function mapFilters(array $filters): array
     {
-        if ($filters['types'] ?? null) {
+        if ($filters['types']) {
             $filters['templateKeys'] = $filters['types'];
             unset($filters['types']);
         }
 
-        if ($filters['categories'] ?? null) {
+        if ($filters['categories']) {
             $filters['categoryIds'] = $filters['categories'];
             unset($filters['categories']);
         }
 
-        if ($filters['tags'] ?? null) {
+        if ($filters['tags']) {
             $filters['tagNames'] = $filters['tags'];
             unset($filters['tags']);
         }
 
         return $filters;
+    }
+
+    /**
+     * @param array{
+     *     websiteCategories: string[],
+     *     websiteCategoryOperator: 'AND'|'OR',
+     *     websiteTags: string[],
+     *     websiteTagOperator: 'AND'|'OR',
+     *  } $filters
+     */
+    protected function addInternalFilters(QueryBuilder $queryBuilder, array $filters, string $alias): void
+    {
+        $websiteCategoryIds = $filters['websiteCategories'];
+        if ([] !== $websiteCategoryIds) {
+            $this->addJoinFilter(
+                $queryBuilder,
+                'filterDimensionContent.excerptCategories',
+                'websiteFilterCategoryId',
+                'id',
+                'websiteCategoryIds',
+                $websiteCategoryIds,
+                $filters['websiteCategoryOperator'],
+            );
+        }
+
+        $websiteTagNames = $filters['websiteTags'];
+        if ([] !== $websiteTagNames) {
+            $this->addJoinFilter(
+                $queryBuilder,
+                'filterDimensionContent.excerptTags',
+                'websiteFilterTagName',
+                'name',
+                'websiteTagNames',
+                $websiteTagNames,
+                $filters['websiteTagOperator'],
+            );
+        }
     }
 
     public function getType(): string

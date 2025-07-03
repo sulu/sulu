@@ -42,6 +42,8 @@ use Symfony\Component\Messenger\Stamp\HandledStamp;
  *     author?: int|null,
  *     authored?: string|null,
  * }
+ *
+ * @phpstan-import-type SmartContentBaseFilters from SmartContentProviderInterface
  */
 class PageSmartContentProviderTest extends SuluTestCase
 {
@@ -322,10 +324,10 @@ class PageSmartContentProviderTest extends SuluTestCase
 
     public function testFindFlatByNoParameters(): void
     {
-        $result = $this->smartContentProvider->findFlatBy(['locale' => 'en'], []);
+        $result = $this->smartContentProvider->findFlatBy([...$this->getDefaultFilters(), ...['locale' => 'en']], []);
 
         $this->assertCount(17, $result); // 15 pages + 2 parent pages
-        $count = $this->smartContentProvider->countBy(['locale' => 'en']);
+        $count = $this->smartContentProvider->countBy([...$this->getDefaultFilters(), ...['locale' => 'en']]);
         $this->assertSame(17, $count);
 
         $resultIds = \array_map(
@@ -347,18 +349,24 @@ class PageSmartContentProviderTest extends SuluTestCase
     public function testFindFlatByCategoryFiltersSingleCategoryOR(): void
     {
         $result = $this->smartContentProvider->findFlatBy([
-            'locale' => 'en',
-            'categories' => [self::$categories['tech']->getId()],
-            'categoryOperator' => 'OR',
+            ...$this->getDefaultFilters(),
+            ...[
+                'locale' => 'en',
+                'categories' => [self::$categories['tech']->getId()],
+                'categoryOperator' => 'OR',
+            ],
         ], []);
 
         $this->assertCount(5, $result);
         $this->assertSame(
             5,
             $this->smartContentProvider->countBy([
-                'locale' => 'en',
-                'categories' => [self::$categories['tech']->getId()],
-                'categoryOperator' => 'OR',
+                ...$this->getDefaultFilters(),
+                ...[
+                    'locale' => 'en',
+                    'categories' => [self::$categories['tech']->getId()],
+                    'categoryOperator' => 'OR',
+                ],
             ]),
         );
 
@@ -385,9 +393,12 @@ class PageSmartContentProviderTest extends SuluTestCase
     public function testFindFlatByCategoryFiltersMultipleCategoriesOR(): void
     {
         $result = $this->smartContentProvider->findFlatBy([
-            'locale' => 'en',
-            'categories' => [self::$categories['tech']->getId(), self::$categories['health']->getId()],
-            'categoryOperator' => 'OR',
+            ...$this->getDefaultFilters(),
+            ...[
+                'locale' => 'en',
+                'categories' => [self::$categories['tech']->getId(), self::$categories['health']->getId()],
+                'categoryOperator' => 'OR',
+            ],
         ], ['title' => 'asc']);
 
         // Should include tech1, tech2, health1, health2, tech_health, sports_health, business_tech, multi_category_multi_tag
@@ -395,9 +406,12 @@ class PageSmartContentProviderTest extends SuluTestCase
         $this->assertSame(
             8,
             $this->smartContentProvider->countBy([
-                'locale' => 'en',
-                'categories' => [self::$categories['tech']->getId(), self::$categories['health']->getId()],
-                'categoryOperator' => 'OR',
+                ...$this->getDefaultFilters(),
+                ...[
+                    'locale' => 'en',
+                    'categories' => [self::$categories['tech']->getId(), self::$categories['health']->getId()],
+                    'categoryOperator' => 'OR',
+                ],
             ]),
         );
 
@@ -428,18 +442,24 @@ class PageSmartContentProviderTest extends SuluTestCase
     public function testFindFlatByCategoryFiltersSingleCategoryAND(): void
     {
         $result = $this->smartContentProvider->findFlatBy([
-            'locale' => 'en',
-            'categories' => [self::$categories['health']->getId()],
-            'categoryOperator' => 'AND',
+            ...$this->getDefaultFilters(),
+            ...[
+                'locale' => 'en',
+                'categories' => [self::$categories['health']->getId()],
+                'categoryOperator' => 'AND',
+            ],
         ], []);
 
         $this->assertCount(5, $result);
         $this->assertSame(
             5,
             $this->smartContentProvider->countBy([
-                'locale' => 'en',
-                'categories' => [self::$categories['health']->getId()],
-                'categoryOperator' => 'AND',
+                ...$this->getDefaultFilters(),
+                ...[
+                    'locale' => 'en',
+                    'categories' => [self::$categories['health']->getId()],
+                    'categoryOperator' => 'AND',
+                ],
             ]),
         );
 
@@ -458,9 +478,12 @@ class PageSmartContentProviderTest extends SuluTestCase
     public function testFindFlatByCategoryFiltersMultipleCategoriesAND(): void
     {
         $result = $this->smartContentProvider->findFlatBy([
-            'locale' => 'en',
-            'categories' => [self::$categories['tech']->getId(), self::$categories['health']->getId()],
-            'categoryOperator' => 'AND',
+            ...$this->getDefaultFilters(),
+            ...[
+                'locale' => 'en',
+                'categories' => [self::$categories['tech']->getId(), self::$categories['health']->getId()],
+                'categoryOperator' => 'AND',
+            ],
         ], []);
 
         // Should include tech_health and multi_category_multi_tag
@@ -468,9 +491,12 @@ class PageSmartContentProviderTest extends SuluTestCase
         $this->assertSame(
             2,
             $this->smartContentProvider->countBy([
-                'locale' => 'en',
-                'categories' => [self::$categories['tech']->getId(), self::$categories['health']->getId()],
-                'categoryOperator' => 'AND',
+                ...$this->getDefaultFilters(),
+                ...[
+                    'locale' => 'en',
+                    'categories' => [self::$categories['tech']->getId(), self::$categories['health']->getId()],
+                    'categoryOperator' => 'AND',
+                ],
             ]),
         );
 
@@ -489,9 +515,12 @@ class PageSmartContentProviderTest extends SuluTestCase
     public function testFindFlatByTagFiltersSingleTagOR(): void
     {
         $result = $this->smartContentProvider->findFlatBy([
-            'locale' => 'en',
-            'tags' => [self::$tags['mobile']],
-            'tagOperator' => 'OR',
+            ...$this->getDefaultFilters(),
+            ...[
+                'locale' => 'en',
+                'tags' => [self::$tags['mobile']],
+                'tagOperator' => 'OR',
+            ],
         ], []);
 
         // Should include tech1, tech_health, multi_category_multi_tag
@@ -499,9 +528,12 @@ class PageSmartContentProviderTest extends SuluTestCase
         $this->assertSame(
             3,
             $this->smartContentProvider->countBy([
-                'locale' => 'en',
-                'tags' => [self::$tags['mobile']],
-                'tagOperator' => 'OR',
+                ...$this->getDefaultFilters(),
+                ...[
+                    'locale' => 'en',
+                    'tags' => [self::$tags['mobile']],
+                    'tagOperator' => 'OR',
+                ],
             ]),
         );
 
@@ -520,9 +552,12 @@ class PageSmartContentProviderTest extends SuluTestCase
     public function testFindFlatByTagFiltersMultipleTagsOR(): void
     {
         $result = $this->smartContentProvider->findFlatBy([
-            'locale' => 'en',
-            'tags' => [self::$tags['mobile'], self::$tags['cloud']],
-            'tagOperator' => 'OR',
+            ...$this->getDefaultFilters(),
+            ...[
+                'locale' => 'en',
+                'tags' => [self::$tags['mobile'], self::$tags['cloud']],
+                'tagOperator' => 'OR',
+            ],
         ], ['title' => 'asc']);
 
         // Should include tech1, tech2, tech_health, business_tech, multi_category_multi_tag
@@ -530,9 +565,12 @@ class PageSmartContentProviderTest extends SuluTestCase
         $this->assertSame(
             5,
             $this->smartContentProvider->countBy([
-                'locale' => 'en',
-                'tags' => [self::$tags['mobile'], self::$tags['cloud']],
-                'tagOperator' => 'OR',
+                ...$this->getDefaultFilters(),
+                ...[
+                    'locale' => 'en',
+                    'tags' => [self::$tags['mobile'], self::$tags['cloud']],
+                    'tagOperator' => 'OR',
+                ],
             ]),
         );
 
@@ -551,9 +589,12 @@ class PageSmartContentProviderTest extends SuluTestCase
     public function testFindFlatByTagFiltersSingleTagAND(): void
     {
         $result = $this->smartContentProvider->findFlatBy([
-            'locale' => 'en',
-            'tags' => [self::$tags['fitness']],
-            'tagOperator' => 'AND',
+            ...$this->getDefaultFilters(),
+            ...[
+                'locale' => 'en',
+                'tags' => [self::$tags['fitness']],
+                'tagOperator' => 'AND',
+            ],
         ], []);
 
         // Should include health1, health2, tech_health, sports_health, multi_category_multi_tag
@@ -561,9 +602,12 @@ class PageSmartContentProviderTest extends SuluTestCase
         $this->assertSame(
             5,
             $this->smartContentProvider->countBy([
-                'locale' => 'en',
-                'tags' => [self::$tags['fitness']],
-                'tagOperator' => 'AND',
+                ...$this->getDefaultFilters(),
+                ...[
+                    'locale' => 'en',
+                    'tags' => [self::$tags['fitness']],
+                    'tagOperator' => 'AND',
+                ],
             ]),
         );
 
@@ -582,9 +626,12 @@ class PageSmartContentProviderTest extends SuluTestCase
     public function testFindFlatByTagFiltersMultipleTagsAND(): void
     {
         $result = $this->smartContentProvider->findFlatBy([
-            'locale' => 'en',
-            'tags' => [self::$tags['mobile'], self::$tags['fitness']],
-            'tagOperator' => 'AND',
+            ...$this->getDefaultFilters(),
+            ...[
+                'locale' => 'en',
+                'tags' => [self::$tags['mobile'], self::$tags['fitness']],
+                'tagOperator' => 'AND',
+            ],
         ], []);
 
         // Should include tech_health, multi_category_multi_tag
@@ -592,9 +639,12 @@ class PageSmartContentProviderTest extends SuluTestCase
         $this->assertSame(
             2,
             $this->smartContentProvider->countBy([
-                'locale' => 'en',
-                'tags' => [self::$tags['mobile'], self::$tags['fitness']],
-                'tagOperator' => 'AND',
+                ...$this->getDefaultFilters(),
+                ...[
+                    'locale' => 'en',
+                    'tags' => [self::$tags['mobile'], self::$tags['fitness']],
+                    'tagOperator' => 'AND',
+                ],
             ]),
         );
 
@@ -613,9 +663,12 @@ class PageSmartContentProviderTest extends SuluTestCase
     public function testFindFlatByCategoryAndTagFilters(): void
     {
         $result = $this->smartContentProvider->findFlatBy([
-            'locale' => 'en',
-            'categories' => [self::$categories['health']->getId()],
-            'tags' => [self::$tags['fitness']],
+            ...$this->getDefaultFilters(),
+            ...[
+                'locale' => 'en',
+                'categories' => [self::$categories['health']->getId()],
+                'tags' => [self::$tags['fitness']],
+            ],
         ], []);
 
         // Should include health1, health2, tech_health, sports_health, multi_category_multi_tag
@@ -623,9 +676,12 @@ class PageSmartContentProviderTest extends SuluTestCase
         $this->assertSame(
             5,
             $this->smartContentProvider->countBy([
-                'locale' => 'en',
-                'categories' => [self::$categories['health']->getId()],
-                'tags' => [self::$tags['fitness']],
+                ...$this->getDefaultFilters(),
+                ...[
+                    'locale' => 'en',
+                    'categories' => [self::$categories['health']->getId()],
+                    'tags' => [self::$tags['fitness']],
+                ],
             ]),
         );
 
@@ -644,9 +700,12 @@ class PageSmartContentProviderTest extends SuluTestCase
     public function testFindFlatByLimitAndPageFirst(): void
     {
         $result = $this->smartContentProvider->findFlatBy([
-            'locale' => 'en',
-            'limit' => 5,
-            'page' => 1,
+            ...$this->getDefaultFilters(),
+            ...[
+                'locale' => 'en',
+                'limit' => 5,
+                'page' => 1,
+            ],
         ], [
             'title' => 'asc',
         ]);
@@ -655,9 +714,12 @@ class PageSmartContentProviderTest extends SuluTestCase
         $this->assertSame(
             17, // 15 pages + 2 parent pages
             $this->smartContentProvider->countBy([
-                'locale' => 'en',
-                'limit' => 5,
-                'page' => 1,
+                ...$this->getDefaultFilters(),
+                ...[
+                    'locale' => 'en',
+                    'limit' => 5,
+                    'page' => 1,
+                ],
             ]),
         );
 
@@ -676,9 +738,12 @@ class PageSmartContentProviderTest extends SuluTestCase
     public function testFindFlatByLimitAndPageSecond(): void
     {
         $result = $this->smartContentProvider->findFlatBy([
-            'locale' => 'en',
-            'limit' => 5,
-            'page' => 2,
+            ...$this->getDefaultFilters(),
+            ...[
+                'locale' => 'en',
+                'limit' => 5,
+                'page' => 2,
+            ],
         ], [
             'title' => 'asc',
         ]);
@@ -687,9 +752,12 @@ class PageSmartContentProviderTest extends SuluTestCase
         $this->assertSame(
             17, // 15 pages + 2 parent pages
             $this->smartContentProvider->countBy([
-                'locale' => 'en',
-                'limit' => 5,
-                'page' => 2,
+                ...$this->getDefaultFilters(),
+                ...[
+                    'locale' => 'en',
+                    'limit' => 5,
+                    'page' => 2,
+                ],
             ]),
         );
 
@@ -714,7 +782,7 @@ class PageSmartContentProviderTest extends SuluTestCase
 
     public function testSortByTitleAsc(): void
     {
-        $result = $this->smartContentProvider->findFlatBy(['locale' => 'en'], [
+        $result = $this->smartContentProvider->findFlatBy([...$this->getDefaultFilters(), ...['locale' => 'en']], [
             'title' => 'asc',
         ]);
 
@@ -744,7 +812,7 @@ class PageSmartContentProviderTest extends SuluTestCase
 
     public function testSortByTitleDesc(): void
     {
-        $result = $this->smartContentProvider->findFlatBy(['locale' => 'en'], [
+        $result = $this->smartContentProvider->findFlatBy([...$this->getDefaultFilters(), ...['locale' => 'en']], [
             'title' => 'desc',
         ]);
 
@@ -768,13 +836,13 @@ class PageSmartContentProviderTest extends SuluTestCase
         $this->assertLessThan(
             \array_search(self::$pages['health1']->getUuid(), $resultIds),
             \array_search(self::$pages['entertainment1']->getUuid(), $resultIds),
-            "'Movie Reviews' should come before 'Fitness Tips' in descending order"
+            "'Movie Reviews' should come before 'Fitness Tips' in descending authored order"
         );
     }
 
     public function testSortByAuthoredAsc(): void
     {
-        $result = $this->smartContentProvider->findFlatBy(['locale' => 'en'], [
+        $result = $this->smartContentProvider->findFlatBy([...$this->getDefaultFilters(), ...['locale' => 'en']], [
             'authored' => 'asc',
         ]);
 
@@ -812,7 +880,7 @@ class PageSmartContentProviderTest extends SuluTestCase
 
     public function testSortByAuthoredDesc(): void
     {
-        $result = $this->smartContentProvider->findFlatBy(['locale' => 'en'], [
+        $result = $this->smartContentProvider->findFlatBy([...$this->getDefaultFilters(), ...['locale' => 'en']], [
             'authored' => 'desc',
         ]);
 
@@ -851,8 +919,11 @@ class PageSmartContentProviderTest extends SuluTestCase
     {
         // Test filtering by sulu_io webspace
         $result = $this->smartContentProvider->findFlatBy([
-            'locale' => 'en',
-            'webspaceKey' => 'sulu_io',
+            ...$this->getDefaultFilters(),
+            ...[
+                'locale' => 'en',
+                'webspaceKey' => 'sulu_io',
+            ],
         ], []);
 
         // Count pages in sulu_io webspace (8 regular pages + 1 parent page)
@@ -860,8 +931,11 @@ class PageSmartContentProviderTest extends SuluTestCase
         $this->assertSame(
             9,
             $this->smartContentProvider->countBy([
-                'locale' => 'en',
-                'webspaceKey' => 'sulu_io',
+                ...$this->getDefaultFilters(),
+                ...[
+                    'locale' => 'en',
+                    'webspaceKey' => 'sulu_io',
+                ],
             ]),
         );
 
@@ -890,8 +964,11 @@ class PageSmartContentProviderTest extends SuluTestCase
 
         // Test filtering by blog webspace
         $result = $this->smartContentProvider->findFlatBy([
-            'locale' => 'en',
-            'webspaceKey' => 'blog',
+            ...$this->getDefaultFilters(),
+            ...[
+                'locale' => 'en',
+                'webspaceKey' => 'blog',
+            ],
         ], []);
 
         // Count pages in blog webspace (7 regular pages + 1 parent page)
@@ -899,8 +976,11 @@ class PageSmartContentProviderTest extends SuluTestCase
         $this->assertSame(
             8,
             $this->smartContentProvider->countBy([
-                'locale' => 'en',
-                'webspaceKey' => 'blog',
+                ...$this->getDefaultFilters(),
+                ...[
+                    'locale' => 'en',
+                    'webspaceKey' => 'blog',
+                ],
             ]),
         );
 
@@ -925,16 +1005,22 @@ class PageSmartContentProviderTest extends SuluTestCase
     public function testFindFlatByTypesSingleTemplateFilter(): void
     {
         $result = $this->smartContentProvider->findFlatBy([
-            'locale' => 'en',
-            'types' => ['default'],
+            ...$this->getDefaultFilters(),
+            ...[
+                'locale' => 'en',
+                'types' => ['default'],
+            ],
         ], []);
 
         $this->assertCount(8, $result); // 6 regular pages + 2 parent pages
         $this->assertSame(
             8,
             $this->smartContentProvider->countBy([
-                'locale' => 'en',
-                'types' => ['default'],
+                ...$this->getDefaultFilters(),
+                ...[
+                    'locale' => 'en',
+                    'types' => ['default'],
+                ],
             ]),
         );
 
@@ -963,16 +1049,22 @@ class PageSmartContentProviderTest extends SuluTestCase
     public function testFindFlatByTypesMultipleTemplateFilter(): void
     {
         $result = $this->smartContentProvider->findFlatBy([
-            'locale' => 'en',
-            'types' => ['blog', 'landing_page'],
+            ...$this->getDefaultFilters(),
+            ...[
+                'locale' => 'en',
+                'types' => ['blog', 'landing_page'],
+            ],
         ], []);
 
         $this->assertCount(7, $result);
         $this->assertSame(
             7,
             $this->smartContentProvider->countBy([
-                'locale' => 'en',
-                'types' => ['blog', 'landing_page'],
+                ...$this->getDefaultFilters(),
+                ...[
+                    'locale' => 'en',
+                    'types' => ['blog', 'landing_page'],
+                ],
             ]),
         );
 
@@ -1008,16 +1100,22 @@ class PageSmartContentProviderTest extends SuluTestCase
     {
         // Test filtering using templateKeys instead of types
         $result = $this->smartContentProvider->findFlatBy([
-            'locale' => 'en',
-            'types' => ['homepage'],
+            ...$this->getDefaultFilters(),
+            ...[
+                'locale' => 'en',
+                'types' => ['homepage'],
+            ],
         ], []);
 
         $this->assertCount(2, $result);
         $this->assertSame(
             2,
             $this->smartContentProvider->countBy([
-                'locale' => 'en',
-                'types' => ['homepage'],
+                ...$this->getDefaultFilters(),
+                ...[
+                    'locale' => 'en',
+                    'types' => ['homepage'],
+                ],
             ]),
         );
     }
@@ -1026,31 +1124,43 @@ class PageSmartContentProviderTest extends SuluTestCase
     {
         // Test filtering by parent page (dataSource)
         $result = $this->smartContentProvider->findFlatBy([
-            'locale' => 'en',
-            'dataSource' => self::$parentPages['sulu_io'],
+            ...$this->getDefaultFilters(),
+            ...[
+                'locale' => 'en',
+                'dataSource' => self::$parentPages['sulu_io'],
+            ],
         ], []);
 
         $this->assertCount(8, $result);
         $this->assertSame(
             8,
             $this->smartContentProvider->countBy([
-                'locale' => 'en',
-                'dataSource' => self::$parentPages['sulu_io'],
+                ...$this->getDefaultFilters(),
+                ...[
+                    'locale' => 'en',
+                    'dataSource' => self::$parentPages['sulu_io'],
+                ],
             ]),
         );
 
         // Test filtering by the other parent page
         $result = $this->smartContentProvider->findFlatBy([
-            'locale' => 'en',
-            'dataSource' => self::$parentPages['blog'],
+            ...$this->getDefaultFilters(),
+            ...[
+                'locale' => 'en',
+                'dataSource' => self::$parentPages['blog'],
+            ],
         ], []);
 
         $this->assertCount(7, $result);
         $this->assertSame(
             7,
             $this->smartContentProvider->countBy([
-                'locale' => 'en',
-                'dataSource' => self::$parentPages['blog'],
+                ...$this->getDefaultFilters(),
+                ...[
+                    'locale' => 'en',
+                    'dataSource' => self::$parentPages['blog'],
+                ],
             ]),
         );
     }
@@ -1059,22 +1169,28 @@ class PageSmartContentProviderTest extends SuluTestCase
     {
         // Test combination of webspaceKey, template, and category filters
         $result = $this->smartContentProvider->findFlatBy([
-            'locale' => 'en',
-            'webspaceKey' => 'sulu_io',
-            'types' => ['default'],
-            'categories' => [self::$categories['tech']->getId()],
-            'categoryOperator' => 'OR',
+            ...$this->getDefaultFilters(),
+            ...[
+                'locale' => 'en',
+                'webspaceKey' => 'sulu_io',
+                'types' => ['default'],
+                'categories' => [self::$categories['tech']->getId()],
+                'categoryOperator' => 'OR',
+            ],
         ], []);
 
         $this->assertCount(3, $result); // tech1, tech_health, multi_category_multi_tag
         $this->assertSame(
             3,
             $this->smartContentProvider->countBy([
-                'locale' => 'en',
-                'webspaceKey' => 'sulu_io',
-                'types' => ['default'],
-                'categories' => [self::$categories['tech']->getId()],
-                'categoryOperator' => 'OR',
+                ...$this->getDefaultFilters(),
+                ...[
+                    'locale' => 'en',
+                    'webspaceKey' => 'sulu_io',
+                    'types' => ['default'],
+                    'categories' => [self::$categories['tech']->getId()],
+                    'categoryOperator' => 'OR',
+                ],
             ]),
         );
     }
@@ -1114,5 +1230,32 @@ class PageSmartContentProviderTest extends SuluTestCase
         );
 
         return $page;
+    }
+
+    /**
+     * @return SmartContentBaseFilters
+     */
+    private function getDefaultFilters(): array
+    {
+        return [
+            'categories' => [],
+            'categoryOperator' => 'OR',
+            'websiteCategories' => [],
+            'websiteCategoryOperator' => 'OR',
+            'tags' => [],
+            'tagOperator' => 'OR',
+            'websiteTags' => [],
+            'websiteTagOperator' => 'OR',
+            'types' => [],
+            'typesOperator' => 'OR',
+            'locale' => 'en',
+            'webspaceKey' => null,
+            'dataSource' => null,
+            'limit' => null,
+            'page' => 1,
+            'maxPerPage' => null,
+            'includeSubFolders' => false,
+            'excludeDuplicates' => false,
+        ];
     }
 }

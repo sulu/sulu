@@ -28,6 +28,8 @@ use Webmozart\Assert\Assert;
  */
 class DimensionContentQueryEnhancer
 {
+    use JoinFilterTrait;
+
     /**
      * Withs represents additional selects which can be load to join and select specific sub entities.
      * They are used by groups and fields.
@@ -207,44 +209,6 @@ class DimensionContentQueryEnhancer
     {
         $queryBuilder->setMaxResults($limit);
         $queryBuilder->setFirstResult(($page - 1) * $limit);
-    }
-
-    /**
-     * @param int[]|string[] $parameters
-     * @param 'AND'|'OR' $operator
-     */
-    private function addJoinFilter(
-        QueryBuilder $queryBuilder,
-        string $join,
-        string $targetAlias,
-        string $targetField,
-        string $filterKey,
-        array $parameters,
-        string $operator = 'OR',
-    ): void {
-        if ('OR' === $operator) {
-            $queryBuilder->leftJoin(
-                $join,
-                $targetAlias,
-            );
-
-            $queryBuilder->andWhere($targetAlias . '.' . $targetField . ' IN (:' . $filterKey . ')')
-                ->setParameter($filterKey, $parameters);
-        } elseif ('AND' === $operator) {
-            foreach (\array_values($parameters) as $key => $parameter) {
-                $queryBuilder->leftJoin(
-                    $join,
-                    $targetAlias . $key,
-                );
-
-                $queryBuilder->andWhere($targetAlias . $key . '.' . $targetField . ' = :' . $filterKey . $key)
-                    ->setParameter($filterKey . $key, $parameter);
-            }
-        } else {
-            throw new \InvalidArgumentException(
-                \sprintf('The operator "%s" is not supported for this filter.', $operator),
-            );
-        }
     }
 
     /**
