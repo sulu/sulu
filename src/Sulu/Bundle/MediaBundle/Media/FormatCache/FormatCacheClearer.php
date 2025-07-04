@@ -19,9 +19,17 @@ use Sulu\Bundle\MediaBundle\Media\Exception\CacheNotFoundException;
 class FormatCacheClearer implements FormatCacheClearerInterface
 {
     /**
-     * @var FormatCacheInterface[]
+     * @var array<string, FormatCacheInterface>
      */
     private $caches = [];
+
+    /**
+     * @param iterable<string, FormatCacheInterface> $caches
+     */
+    public function __construct(iterable $caches = [])
+    {
+        $this->caches = [...$caches];
+    }
 
     /**
      * Clear all or the given cache.
@@ -47,6 +55,8 @@ class FormatCacheClearer implements FormatCacheClearerInterface
 
     /**
      * Adds a cache to the aggregate.
+     *
+     * @deprecated use the constructor instead
      *
      * @param FormatCacheInterface $cache The cache
      * @param string $alias The cache alias

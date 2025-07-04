@@ -24,6 +24,7 @@ use Sulu\Bundle\MediaBundle\Media\Exception\FormatNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\FormatOptionsMissingParameterException;
 use Sulu\Bundle\MediaBundle\Media\Exception\MediaException;
 use Sulu\Bundle\MediaBundle\Media\Exception\MediaNotFoundException;
+use Sulu\Bundle\MediaBundle\Media\FormatCache\FormatCacheClearerInterface;
 use Sulu\Bundle\MediaBundle\Media\PropertiesProvider\MediaPropertiesProviderInterface;
 use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
 use Sulu\Bundle\PersistenceBundle\DependencyInjection\PersistenceExtensionTrait;
@@ -408,6 +409,9 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
 
         $container->registerForAutoconfiguration(MediaPropertiesProviderInterface::class)
             ->addTag('sulu_media.media_properties_provider');
+
+        $container->registerForAutoconfiguration(FormatCacheClearerInterface::class)
+            ->addTag('sulu_media.format_cache');
     }
 
     private function configureStorage(array $config, ContainerBuilder $container, LoaderInterface $loader)

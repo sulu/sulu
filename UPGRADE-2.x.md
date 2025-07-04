@@ -7,6 +7,7 @@
 Deprecated compiler passes:
 
 * `Sulu\Bundle\SecurityBundle\DependencyInjection\Compiler\AccessControlProviderPass` -> `tagged_iterator`
+* `Sulu\Bundle\MediaBundle\DependencyInjection\FormatCacheClearerCompilerPass` (sulu_media.format_cache)
 
 ## 2.6.11
 
