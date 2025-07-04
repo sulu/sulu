@@ -18,6 +18,8 @@ use Sulu\Component\Localization\Localization;
  */
 interface LocalizationProviderInterface
 {
+    public const SERVICE_TAG = 'sulu.localization_provider';
+
     /**
      * @return Localization[]
      */

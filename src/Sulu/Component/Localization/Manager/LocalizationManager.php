@@ -26,6 +26,14 @@ class LocalizationManager implements LocalizationManagerInterface
      */
     private $localizationProviders = [];
 
+    /**
+     * @param array<LocalizationProviderInterface> $localizationProviders
+     */
+    public function __construct(iterable $localizationProviders = [])
+    {
+        $this->localizationProviders = [...$localizationProviders];
+    }
+
     public function getLocalizations(): array
     {
         $localizations = [];
@@ -51,6 +59,9 @@ class LocalizationManager implements LocalizationManagerInterface
         );
     }
 
+    /**
+     * @deprecated Use the constructor instead
+     */
     public function addLocalizationProvider(LocalizationProviderInterface $localizationProvider)
     {
         $this->localizationProviders[] = $localizationProvider;
