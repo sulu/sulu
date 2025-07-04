@@ -30,8 +30,12 @@ class Link extends SimpleContentType
 
     public function __construct(
         private LinkProviderPoolInterface $providerPool,
-        private ReferenceStorePoolInterface $referenceStorePool,
+        private ?ReferenceStorePoolInterface $referenceStorePool = null,
     ) {
+        if (!$this->referenceStorePool instanceof ReferenceStorePoolInterface) {
+            @trigger_deprecation('sulu/sulu', '2.5', 'Initializing "' . __CLASS__ . '" without referenceStorePool is deprecated.');
+        }
+
         parent::__construct('Link');
     }
 
@@ -117,14 +121,14 @@ class Link extends SimpleContentType
             $url = \sprintf('%s#%s', $url, $value['anchor']);
         }
 
-        $mediaReferenceStore = $this->getMediaReferenceStore($value['provider']);
-        if (!$mediaReferenceStore) {
+        $referenceStore = $this->getReferenceStore($value['provider']);
+        if (!$referenceStore) {
             return $url;
         }
 
         foreach ($linkItems as $linkItem) {
             if ($linkItem->getId()) {
-                $mediaReferenceStore->add($linkItem->getId());
+                $referenceStore->add($linkItem->getId());
             }
         }
 
@@ -144,9 +148,13 @@ class Link extends SimpleContentType
         $this->write($node, $property, $userId, $webspaceKey, $languageCode, $segmentKey);
     }
 
-    private function getMediaReferenceStore(string $provider): ?ReferenceStoreInterface
+    private function getReferenceStore(string $provider): ?ReferenceStoreInterface
     {
         try {
+            if (!$this->referenceStorePool instanceof ReferenceStorePoolInterface) {
+                return null;
+            }
+
             return $this->referenceStorePool->getStore($provider);
         } catch (ReferenceStoreNotExistsException $exception) {
             return null;
