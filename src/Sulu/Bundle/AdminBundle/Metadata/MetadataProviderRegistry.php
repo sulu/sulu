@@ -11,14 +11,31 @@
 
 namespace Sulu\Bundle\AdminBundle\Metadata;
 
+use Psr\Container\ContainerInterface;
 use Sulu\Bundle\AdminBundle\Exception\MetadataProviderNotFoundException;
 
 class MetadataProviderRegistry
 {
     private $metadataProviders = [];
 
+    public function __construct(
+        private ?ContainerInterface $container = null,
+    ) {
+        if (null === $container) {
+            trigger_deprecation('sulu/sulu', '2.6', 'Not using the tagged_locator to pass MetadataProviders is deprecated');
+        }
+    }
+
     public function getMetadataProvider(string $type): MetadataProviderInterface
     {
+        if (null !== $this->container) {
+            if (!$this->container->has($type)) {
+                throw new MetadataProviderNotFoundException($type);
+            }
+
+            return $this->container->get($type);
+        }
+
         if (!\array_key_exists($type, $this->metadataProviders)) {
             throw new MetadataProviderNotFoundException($type);
         }
@@ -26,8 +43,13 @@ class MetadataProviderRegistry
         return $this->metadataProviders[$type];
     }
 
+    /**
+     * @deprecated since Sulu 2.6 use the constructor instead
+     */
     public function addMetadataProvider(string $type, MetadataProviderInterface $metadataProvider)
     {
+        trigger_deprecation('sulu/sulu', '2.6', 'Do not add metadata Providers manually. Use the constructor');
+
         $this->metadataProviders[$type] = $metadataProvider;
     }
 }
