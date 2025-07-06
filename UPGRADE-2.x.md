@@ -1,5 +1,13 @@
 # Upgrade
 
+## 2.6.11
+
+### Using `tagged_locator` and `tagged_iterator` over custom compiler passes
+
+Deprecated compiler passes:
+
+* `Sulu\Bundle\SecurityBundle\DependencyInjection\Compiler\AccessControlProviderPass` -> `tagged_iterator`
+
 ## 2.6.10
 
 ### Deprecate usage of fos rest routing

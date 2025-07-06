@@ -14,8 +14,10 @@ namespace Sulu\Bundle\SecurityBundle\DependencyInjection\Compiler;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
+/** @deprecated use tagged_iterator instead */
 class AccessControlProviderPass implements CompilerPassInterface
 {
+    /** @deprecated use Sulu\Component\Security\Authorization\AccessControl\AccessControlProviderInterface::SERVICE_TAG instead */
     public const ACCESS_CONTROL_TAG = 'sulu.access_control';
 
     public function process(ContainerBuilder $container)

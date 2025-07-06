@@ -40,6 +40,7 @@ class AccessControlManager implements AccessControlManagerInterface
     /**
      * @param DescendantProviderInterface[] $descendantProviders
      * @param array<string, int> $permissions
+     * @param AccessControlProviderInterface[] $accessControlProviders
      */
     public function __construct(
         private MaskConverterInterface $maskConverter,
@@ -49,8 +50,10 @@ class AccessControlManager implements AccessControlManagerInterface
         private RoleRepositoryInterface $roleRepository,
         private AccessControlRepositoryInterface $accessControlRepository,
         private Security|SymfonyCoreSecurity|null $security,
-        private array $permissions
+        private array $permissions,
+        array $accessControlProviders = [],
     ) {
+        $this->accessControlProviders = [...$accessControlProviders];
     }
 
     public function setPermissions($type, $identifier, $permissions, $inherit = false)
@@ -189,6 +192,8 @@ class AccessControlManager implements AccessControlManagerInterface
 
     /**
      * Adds a new AccessControlProvider.
+     *
+     * @deprecated Use the constructor instead
      *
      * @param AccessControlProviderInterface $accessControlProvider The AccessControlProvider to add
      */
