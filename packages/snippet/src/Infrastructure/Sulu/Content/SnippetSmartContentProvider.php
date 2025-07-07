@@ -50,6 +50,7 @@ use Sulu\Snippet\Infrastructure\Sulu\Content\ResourceLoader\SnippetResourceLoade
  *       excludeDuplicates: bool,
  *       audienceTargeting?: bool,
  *       targetGroupId?: int,
+ *       segmentKey?: string,
  *   }
  */
 class SnippetSmartContentProvider implements SmartContentProviderInterface

@@ -84,6 +84,7 @@ class DimensionContentQueryEnhancer
      *     includeSubFolders?: bool,
      *     audienceTargeting?: bool,
      *     targetGroupId?: int,
+     *     segmentKey?: string,
      * } $filters
      * @param array{
      *     title?: 'asc'|'desc',
@@ -197,13 +198,13 @@ class DimensionContentQueryEnhancer
             }
         }
 
-        // TODO add audience targeting filter when the dimension content supports it.
-        if ($filters['audienceTargeting'] ?? false) {
-            $targetGroupId = $filters['targetGroupId'] ?? null;
-            //            if (null !== $targetGroupId) {
-            //                $queryBuilder->andWhere('filterDimensionContent.targetGroup = :targetGroupId')
-            //                    ->setParameter('targetGroupId', $targetGroupId);
-            //            }
+        if (($filters['audienceTargeting'] ?? false) && ($filters['targetGroupId'] ?? null)) {
+            // TODO add audience targeting filter when the dimension content supports it.
+        }
+
+        if ($filters['segmentKey'] ?? null) {
+            $segmentKey = $filters['segmentKey'];
+            // TODO add segment filter when the dimension content supports it.
         }
 
         // Sort by

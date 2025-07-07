@@ -56,6 +56,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
  *       excludeDuplicates: bool,
  *       audienceTargeting?: bool,
  *       targetGroupId?: int,
+ *       segmentKey?: string,
  *   }
  */
 class PageSmartContentProvider implements SmartContentProviderInterface

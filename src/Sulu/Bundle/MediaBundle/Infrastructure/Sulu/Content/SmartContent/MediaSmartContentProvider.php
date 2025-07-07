@@ -56,6 +56,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  *       excludeDuplicates: bool,
  *       audienceTargeting?: bool,
  *       targetGroupId?: int,
+ *       segmentKey?: string,
  *  }
  */
 class MediaSmartContentProvider implements SmartContentProviderInterface

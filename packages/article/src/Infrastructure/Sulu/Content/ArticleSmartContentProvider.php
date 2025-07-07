@@ -51,6 +51,7 @@ use Sulu\Content\Infrastructure\Doctrine\JoinFilterTrait;
  *       audienceTargeting?: bool,
  *       audienceTargeting?: bool,
  *       targetGroupId?: int,
+ *       segmentKey?: string,
  *   }
  */
 class ArticleSmartContentProvider implements SmartContentProviderInterface
