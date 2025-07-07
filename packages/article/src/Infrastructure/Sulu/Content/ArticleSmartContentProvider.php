@@ -48,7 +48,9 @@ use Sulu\Content\Infrastructure\Doctrine\JoinFilterTrait;
  *       maxPerPage: int|null,
  *       includeSubFolders: bool,
  *       excludeDuplicates: bool,
- *       audienceTargeting?: bool
+ *       audienceTargeting?: bool,
+ *       audienceTargeting?: bool,
+ *       targetGroupId?: int,
  *   }
  */
 class ArticleSmartContentProvider implements SmartContentProviderInterface
@@ -92,6 +94,7 @@ class ArticleSmartContentProvider implements SmartContentProviderInterface
             ->enableLimit()
             ->enablePagination()
             ->enablePresentAs()
+            ->enableAudienceTargeting()
             ->enableSorting(
                 [
                     ['column' => 'workflowPublished', 'title' => 'sulu_admin.published'],

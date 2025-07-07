@@ -55,7 +55,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  *       includeSubFolders: bool,
  *       excludeDuplicates: bool,
  *       audienceTargeting?: bool,
- *       targetGroupId?: string|null,
+ *       targetGroupId?: int,
  *  }
  */
 class MediaSmartContentProvider implements SmartContentProviderInterface
@@ -302,7 +302,7 @@ class MediaSmartContentProvider implements SmartContentProviderInterface
             );
         }
 
-        if (($filters['targetGroupId'] ?? null) && '' !== $filters['targetGroupId']) {
+        if ($filters['targetGroupId'] ?? null) {
             $this->addJoinFilter(
                 $queryBuilder,
                 'fileVersion.targetGroups',

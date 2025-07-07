@@ -35,7 +35,9 @@ use Sulu\Bundle\AdminBundle\SmartContent\Configuration\ProviderConfigurationInte
  *      maxPerPage: int|null,
  *      includeSubFolders: bool,
  *      excludeDuplicates: bool,
- *      audienceTargeting?: bool
+ *      audienceTargeting?: bool,
+ *      targetGroupId?: int,
+ *      segmentKey?: string,
  *  }
  */
 interface SmartContentProviderInterface

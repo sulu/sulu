@@ -82,6 +82,8 @@ class DimensionContentQueryEnhancer
      *     loadGhost?: bool,
      *     excludedIds?: string[],
      *     includeSubFolders?: bool,
+     *     audienceTargeting?: bool,
+     *     targetGroupId?: int,
      * } $filters
      * @param array{
      *     title?: 'asc'|'desc',
@@ -193,6 +195,15 @@ class DimensionContentQueryEnhancer
                 $queryBuilder->andWhere('filterDimensionContent.templateKey IN (:templateKeys)')
                     ->setParameter('templateKeys', $templateKeys);
             }
+        }
+
+        // TODO add audience targeting filter when the dimension content supports it.
+        if ($filters['audienceTargeting'] ?? false) {
+            $targetGroupId = $filters['targetGroupId'] ?? null;
+            //            if (null !== $targetGroupId) {
+            //                $queryBuilder->andWhere('filterDimensionContent.targetGroup = :targetGroupId')
+            //                    ->setParameter('targetGroupId', $targetGroupId);
+            //            }
         }
 
         // Sort by

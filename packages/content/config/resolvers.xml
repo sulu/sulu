@@ -137,6 +137,8 @@
         <service id="sulu_content.smart_content_property_resolver"
                  class="Sulu\Content\Application\PropertyResolver\Resolver\SmartContentPropertyResolver">
             <argument type="service" id="request_stack"/>
+            <argument type="service" id="sulu_core.webspace.request_analyzer"/>
+            <argument type="service" id="sulu_audience_targeting.target_group_store" on-invalid="null"/>
 
             <tag name="sulu_content.property_resolver"/>
         </service>

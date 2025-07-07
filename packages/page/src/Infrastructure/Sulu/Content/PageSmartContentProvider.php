@@ -54,7 +54,8 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
  *       maxPerPage: int|null,
  *       includeSubFolders: bool,
  *       excludeDuplicates: bool,
- *       audienceTargeting?: bool
+ *       audienceTargeting?: bool,
+ *       targetGroupId?: int,
  *   }
  */
 class PageSmartContentProvider implements SmartContentProviderInterface
@@ -221,7 +222,9 @@ class PageSmartContentProvider implements SmartContentProviderInterface
      *        maxPerPage: int|null,
      *        includeSubFolders: bool,
      *        excludeDuplicates: bool,
-     *        audienceTargeting?: bool
+     *        audienceTargeting?: bool,
+     *        targetGroupId?: int,
+     *        segmentKey?: string,
      *    }
      */
     protected function mapFilters(array $filters): array

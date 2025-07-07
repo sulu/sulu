@@ -48,7 +48,8 @@ use Sulu\Snippet\Infrastructure\Sulu\Content\ResourceLoader\SnippetResourceLoade
  *       maxPerPage: int|null,
  *       includeSubFolders: bool,
  *       excludeDuplicates: bool,
- *       audienceTargeting?: bool
+ *       audienceTargeting?: bool,
+ *       targetGroupId?: int,
  *   }
  */
 class SnippetSmartContentProvider implements SmartContentProviderInterface
@@ -92,6 +93,7 @@ class SnippetSmartContentProvider implements SmartContentProviderInterface
             ->enableLimit()
             ->enablePagination()
             ->enablePresentAs()
+            ->enableAudienceTargeting()
             ->enableSorting(
                 [
                     ['column' => 'workflowPublished', 'title' => 'sulu_admin.published'],

@@ -16,7 +16,9 @@ namespace Sulu\Content\Application\PropertyResolver\Resolver;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\OptionMetadata;
 use Sulu\Bundle\AdminBundle\SmartContent\SmartContentProviderInterface;
-use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
+use Sulu\Bundle\AudienceTargetingBundle\TargetGroup\TargetGroupStoreInterface;
+use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
+use Sulu\Component\Webspace\Segment;
 use Sulu\Component\Webspace\Webspace;
 use Sulu\Content\Application\ContentResolver\Value\ContentView;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -28,6 +30,8 @@ class SmartContentPropertyResolver implements PropertyResolverInterface
 {
     public function __construct(
         private RequestStack $requestStack,
+        private RequestAnalyzerInterface $requestAnalyzer,
+        private ?TargetGroupStoreInterface $targetGroupStore,
     ) {
     }
 
@@ -93,10 +97,8 @@ class SmartContentPropertyResolver implements PropertyResolverInterface
         $request = $this->requestStack->getCurrentRequest();
         \assert(null !== $request, 'Request must not be null');
 
-        /** @var RequestAttributes|null $suluAttributes */
-        $suluAttributes = $request->attributes->get('_sulu');
         /** @var Webspace|null $webspace */
-        $webspace = $suluAttributes?->getAttribute('webspace');
+        $webspace = $this->requestAnalyzer->getWebspace();
 
         /** @var SmartContentBaseFilters $filters */
         $filters = [
@@ -127,8 +129,15 @@ class SmartContentPropertyResolver implements PropertyResolverInterface
             'excludeDuplicates' => 'true' === $parameters['exclude_duplicates'] || true === $parameters['exclude_duplicates'],
         ];
 
-        if ($data['audienceTargeting'] ?? null) {
+        if (($data['audienceTargeting'] ?? null) && $this->targetGroupStore) {
             $filters['audienceTargeting'] = $data['audienceTargeting'];
+            $filters['targetGroupId'] = $this->targetGroupStore->getTargetGroupId();
+        }
+
+        /** @var Segment|null $segment */
+        $segment = $this->requestAnalyzer->getSegment(); // @phpstan-ignore function.alreadyNarrowedType
+        if (null !== $segment) {
+            $filters['segmentKey'] = $segment->getKey();
         }
 
         $sortBys = $data['sortBy'] ?? null ? [$data['sortBy'] => $data['sortMethod'] ?? 'ASC'] : null;
