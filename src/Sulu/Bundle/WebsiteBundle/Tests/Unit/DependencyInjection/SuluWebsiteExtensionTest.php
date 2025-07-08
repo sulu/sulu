@@ -31,7 +31,7 @@ class SuluWebsiteExtensionTest extends AbstractExtensionTestCase
         $this->assertContainerBuilderNotHasService('sulu_website.data_collector.sulu_collector');
     }
 
-    public function testLoadWithContextWebsite(): void
+    public function testLoadWithContextWebsiteWithDebugEnabled(): void
     {
         $this->container->setParameter('sulu.context', 'website');
         $this->container->setParameter('kernel.bundles', []);

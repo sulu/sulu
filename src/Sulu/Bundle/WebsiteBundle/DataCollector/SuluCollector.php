@@ -11,9 +11,7 @@
 
 namespace Sulu\Bundle\WebsiteBundle\DataCollector;
 
-use Sulu\Component\Persistence\Model\AuditableInterface;
-use Sulu\Component\Security\Authentication\UserInterface;
-use Sulu\Component\Util\ArrayableInterface;
+use Sulu\Bundle\AdminBundle\Admin\View\ResourceViewUrlGeneratorInterface;
 use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
 use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\Webspace;
@@ -32,7 +30,8 @@ use Symfony\Component\HttpKernel\DataCollector\DataCollector;
 class SuluCollector extends DataCollector
 {
     public function __construct(
-        private string $kernelEnvironment = 'dev'
+        private string $kernelEnvironment = 'dev',
+        private ?ResourceViewUrlGeneratorInterface $resourceViewUrlGenerator,
     ) {
     }
 
@@ -110,6 +109,12 @@ class SuluCollector extends DataCollector
                     $structure['created'] = $this->renderUserAndTimeStamp($resource->getCreator(), $resource->getCreated());
                     $structure['changed'] = $this->renderUserAndTimeStamp($resource->getChanger(), $resource->getChanged());
                 }
+
+                $this->data['adminUrl'] = $this->resourceViewUrlGenerator->generate(
+                    'pages',
+                    'detail',
+                    ['locale' => $request->getLocale(), 'id' => $resource->getId()],
+                );
             }
 
             if ($object instanceof TemplateInterface) {

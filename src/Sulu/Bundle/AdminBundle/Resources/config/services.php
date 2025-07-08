@@ -134,7 +134,7 @@ return static function(ContainerConfigurator $container) {
     $services->set('sulu_admin.admin_pool', AdminPool::class)
         ->public()
         ->args([tagged_iterator('sulu.admin', defaultPriorityMethod: 'getPriority')])
-        ->tag('sulu.context', ['context' => 'admin']);
+    ;
 
     $services->set('sulu_admin.metadata_provider_registry', MetadataProviderRegistry::class)
         ->args([tagged_locator('sulu_admin.metadata_provider', indexAttribute: 'type')]);
@@ -310,7 +310,7 @@ return static function(ContainerConfigurator $container) {
 
     $services->set('sulu_admin.view_registry', ViewRegistry::class)
         ->args([new Reference('sulu_admin.admin_pool')])
-        ->tag('sulu.context', ['context' => 'admin']);
+    ;
 
     $services->set('sulu_admin.view_url_generator', ViewUrlGenerator::class)
         ->args([
@@ -318,7 +318,7 @@ return static function(ContainerConfigurator $container) {
             new Reference('sulu_admin.view_registry'),
             new Reference('request_stack'),
         ])
-        ->tag('sulu.context', ['context' => 'admin']);
+    ;
 
     $services->alias(ViewUrlGeneratorInterface::class, 'sulu_admin.view_url_generator');
 
@@ -328,7 +328,7 @@ return static function(ContainerConfigurator $container) {
             '%sulu_admin.resources%',
             tagged_iterator('sulu_admin.resource_view_parameter_provider'),
         ])
-        ->tag('sulu.context', ['context' => 'admin']);
+    ;
 
     $services->alias(ResourceViewUrlGeneratorInterface::class, 'sulu_admin.resource_view_url_generator');
 
@@ -338,7 +338,7 @@ return static function(ContainerConfigurator $container) {
             new Reference('sulu_admin.admin_pool'),
             new Reference('sulu_admin.view_registry'),
         ])
-        ->tag('sulu.context', ['context' => 'admin']);
+    ;
 
     $services->set('sulu_admin.field_type_option_registry', FieldTypeOptionRegistry::class);
 
