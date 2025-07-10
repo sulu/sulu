@@ -449,8 +449,78 @@ class PageControllerTest extends SuluTestCase
         $this->assertResponseSnapshot('page_cget_exclude_ghost_shadow.json', $response, 200);
     }
 
+    #[Depends('testGetListIncludeGhostShadow')]
+    public function testCopy(): string
+    {
+        $this->client->request(
+            'POST',
+            \sprintf('/admin/api/pages?locale=en&action=publish&parentId=%s&webspace=sulu-io', '123-123-123'),
+            [], [], [],
+            \json_encode(
+                [
+                    'template' => 'default',
+                    'title' => 'Test page for copy',
+                    'url' => '/test-page-for-copy',
+                    'navigationContexts' => ['main'],
+                    'images' => null,
+                    'lastModified' => '2022-05-08T00:00:00+00:00',
+                    'lastModifiedEnabled' => true,
+                    'seoTitle' => 'Seo Title',
+                    'seoDescription' => 'Seo Description',
+                    'seoCanonicalUrl' => 'https://sulu.io/',
+                    'seoKeywords' => 'Seo Keyword 1, Seo Keyword 2',
+                    'seoNoIndex' => true,
+                    'seoNoFollow' => true,
+                    'seoHideInSitemap' => true,
+                    'excerptTitle' => 'Excerpt Title',
+                    'excerptDescription' => 'Excerpt Description',
+                    'excerptMore' => 'Excerpt More',
+                    'excerptTags' => ['Tag 1', 'Tag 2'],
+                    'excerptCategories' => [],
+                    'excerptIcon' => null,
+                    'excerptMedia' => null,
+                    'authored' => '2020-05-08T00:00:00+00:00',
+                ],
+            ) ?: null,
+        );
+
+        $response = $this->client->getResponse();
+        /** @var array<string, mixed> $content */
+        $content = \json_decode((string) $response->getContent(), true);
+        /** @var string $id */
+        $id = $content['id'] ?? null; // @phpstan-ignore-line
+
+        $this->client->request('POST', \sprintf('/admin/api/pages/%s?locale=en&action=copy&destination=%s', $id, $id));
+        $response = $this->client->getResponse();
+        $this->assertResponseSnapshot('page_post_copy.json', $response);
+
+        $this->client->request('GET', '/admin/api/pages?locale=en&webspace=sulu-io&expandedIds=' . $id);
+        $response = $this->client->getResponse();
+        $this->assertResponseSnapshot('page_cget_after_copy.json', $response);
+
+        /** @var array<string, mixed> $content */
+        $content = \json_decode((string) $response->getContent(), true);
+        /** @var string $copiedPageId */
+        $copiedPageId = $content['_embedded']['pages'][0]['_embedded']['pages'][1]['_embedded']['pages'][0]['id']; // @phpstan-ignore-line
+
+        return $copiedPageId;
+    }
+
+    #[Depends('testCopy')]
+    public function testMove(string $id): void
+    {
+        $this->client->request('POST', '/admin/api/pages/' . $id . '?locale=en&action=move&destination=123-123-123');
+
+        $response = $this->client->getResponse();
+        $this->assertResponseSnapshot('page_post_move.json', $response);
+
+        $this->client->request('GET', '/admin/api/pages?locale=en&webspace=sulu-io&expandedIds=' . $id);
+        $response = $this->client->getResponse();
+        $this->assertResponseSnapshot('page_cget_after_move.json', $response);
+    }
+
     #[Depends('testPost')]
-    #[Depends('testGetList')]
+    #[Depends('testOrderPages')]
     public function testDelete(string $id): void
     {
         $this->client->request('DELETE', '/admin/api/pages/' . $id . '?locale=en');

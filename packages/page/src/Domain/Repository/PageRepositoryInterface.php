@@ -187,4 +187,14 @@ interface PageRepositoryInterface
      * } $filters
      */
     public function reorderOneBy(array $filters, int $position): void;
+
+    /**
+     * @param array{
+     *     uuid?: string,
+     * } $sourceFilters
+     * @param array{
+     *     uuid?: string,
+     * } $destinationFilters
+     */
+    public function moveOneBy(array $sourceFilters, array $destinationFilters): void;
 }

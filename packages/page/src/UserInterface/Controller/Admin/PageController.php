@@ -25,8 +25,10 @@ use Sulu\Content\Domain\Model\WorkflowInterface;
 use Sulu\Messenger\Infrastructure\Symfony\Messenger\FlushMiddleware\EnableFlushStamp;
 use Sulu\Page\Application\Message\ApplyWorkflowTransitionPageMessage;
 use Sulu\Page\Application\Message\CopyLocalePageMessage;
+use Sulu\Page\Application\Message\CopyPageMessage;
 use Sulu\Page\Application\Message\CreatePageMessage;
 use Sulu\Page\Application\Message\ModifyPageMessage;
+use Sulu\Page\Application\Message\MovePageMessage;
 use Sulu\Page\Application\Message\OrderPageMessage;
 use Sulu\Page\Application\Message\RemovePageMessage;
 use Sulu\Page\Domain\Model\PageInterface;
@@ -217,6 +219,20 @@ final class PageController
             );
 
             /** @see Sulu\Page\Application\MessageHandler\CopyLocalePageMessageHandler */
+            /** @var null */
+            return $this->handle(new Envelope($message, [new EnableFlushStamp()]));
+        } elseif ('move' === $action) {
+            $destinationUuid = $request->query->getString('destination');
+            $message = new MovePageMessage(['uuid' => $uuid], ['uuid' => $destinationUuid]);
+
+            /** @see Sulu\Page\Application\MessageHandler\MovePageMessageHandler */
+            /** @var null */
+            return $this->handle(new Envelope($message, [new EnableFlushStamp()]));
+        } elseif ('copy' == $action) {
+            $destinationUuid = $request->query->getString('destination');
+            $message = new CopyPageMessage(['uuid' => $uuid], ['uuid' => $destinationUuid]);
+
+            /** @see Sulu\Page\Application\MessageHandler\CopyPageMessageHandler */
             /** @var null */
             return $this->handle(new Envelope($message, [new EnableFlushStamp()]));
         } elseif ('order' === $action) {

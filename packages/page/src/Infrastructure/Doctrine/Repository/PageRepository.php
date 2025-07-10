@@ -164,7 +164,6 @@ class PageRepository implements PageRepositoryInterface
         $queryBuilder->select('DISTINCT page.uuid');
 
         // we need to select the fields which are used in the order by clause
-
         /** @var OrderBy[] $orderBys */
         $orderBys = $queryBuilder->getDQLPart('orderBy');
         foreach ($orderBys as $orderBy) {
@@ -222,10 +221,18 @@ class PageRepository implements PageRepositoryInterface
         } elseif ($movementSteps < 0) {
             $this->entityRepository->moveDown($page, \abs($movementSteps));
         }
+    }
 
-        if (true !== $this->entityRepository->verify()) {
-            $this->entityRepository->recover();
+    public function moveOneBy(array $sourceFilters, array $destinationFilters): void
+    {
+        $sourcePage = $this->getOneBy($sourceFilters);
+        $destinationPage = $this->getOneBy($destinationFilters);
+
+        if ($sourcePage === $destinationPage) {
+            return;
         }
+
+        $this->entityRepository->persistAsLastChildOf($sourcePage, $destinationPage);
     }
 
     /**
@@ -271,7 +278,6 @@ class PageRepository implements PageRepositoryInterface
                 $selects = \array_replace_recursive($selects, self::SELECTS[$selectGroup]);
             }
         }
-
         $queryBuilder = $this->entityRepository->createQueryBuilder('page');
 
         $uuid = $filters['uuid'] ?? null;
