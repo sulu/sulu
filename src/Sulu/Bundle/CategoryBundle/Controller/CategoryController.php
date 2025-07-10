@@ -260,7 +260,7 @@ class CategoryController extends AbstractRestController implements ClassResource
             }
         }
 
-        if (!empty($expandedIds)) {
+        if (!empty($expandedIds) && $request->get('search', false)) {
             $categoriesByParentId = [];
             foreach ($categories as &$category) {
                 $categoryParentId = $category['parent'];
