@@ -105,6 +105,7 @@
         <xs:restriction base="xs:string">
             <xs:enumeration value="collection"/>
             <xs:enumeration value="string"/>
+            <xs:enumeration value="expression"/>
         </xs:restriction>
     </xs:simpleType>
 

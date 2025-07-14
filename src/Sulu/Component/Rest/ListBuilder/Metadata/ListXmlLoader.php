@@ -256,9 +256,9 @@ class ListXmlLoader
                 );
 
                 if (null === $name) {
-                    $parameters[] = $value;
+                    $parameters[] = 'expression' === $type ? ['type' => $type, 'value' => $value] : $value;
                 } else {
-                    $parameters[$name] = $value;
+                    $parameters[$name] = 'expression' === $type ? ['type' => $type, 'value' => $value] : $value;
                 }
             }
         }
