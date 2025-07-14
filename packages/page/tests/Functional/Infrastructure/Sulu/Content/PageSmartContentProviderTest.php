@@ -284,7 +284,7 @@ class PageSmartContentProviderTest extends SuluTestCase
             'sulu_io',
             self::$parentPages['sulu_io'],
             [
-                'title' => 'Tech Investments',
+                'title' => 'Zero Tech Investments',
                 'excerptCategories' => [self::$categories['business']->getId(), self::$categories['tech']->getId()],
                 'excerptTags' => [self::$tags['startup'], self::$tags['cloud']],
                 'authored' => '2024-01-10T11:00:00+00:00',
@@ -793,8 +793,8 @@ class PageSmartContentProviderTest extends SuluTestCase
         $this->assertSame(self::$pages['multi_category_multi_tag']->getUuid(), $result[0]['id'], "First result should be 'Digital Lifestyle'");
 
         // Check if last article is alphabetically last among sulu_io pages
-        $this->assertStringContainsString('Tech Investments', $result[7]['title']);
-        $this->assertSame(self::$pages['business_tech']->getUuid(), $result[7]['id'], "Last result should be 'Tech Investments'");
+        $this->assertStringContainsString('Zero Tech Investments', $result[7]['title']);
+        $this->assertSame(self::$pages['business_tech']->getUuid(), $result[7]['id'], "Last result should be 'Zero Tech Investments'");
 
         // Verify the order of some key pages
         $resultIds = \array_map(fn ($page) => $page['id'], $result);
@@ -819,8 +819,8 @@ class PageSmartContentProviderTest extends SuluTestCase
         $this->assertCount(8, $result);
 
         // Check if first article is alphabetically last among sulu_io pages
-        $this->assertStringContainsString('Tech Investments', $result[0]['title']);
-        $this->assertSame(self::$pages['business_tech']->getUuid(), $result[0]['id'], "First result should be 'Tech Investments'");
+        $this->assertStringContainsString('Zero Tech Investments', $result[0]['title']);
+        $this->assertSame(self::$pages['business_tech']->getUuid(), $result[0]['id'], "First result should be 'Zero Tech Investments'");
 
         // Check if last article is alphabetically first among sulu_io pages
         $this->assertStringContainsString('Digital Lifestyle', $result[7]['title']);
@@ -831,7 +831,7 @@ class PageSmartContentProviderTest extends SuluTestCase
         $this->assertLessThan(
             \array_search(self::$pages['multi_category_multi_tag']->getUuid(), $resultIds),
             \array_search(self::$pages['business_tech']->getUuid(), $resultIds),
-            "'Tech Investments' should come before 'Digital Lifestyle' in descending order"
+            "'Zero Tech Investments' should come before 'Digital Lifestyle' in descending order"
         );
         $this->assertLessThan(
             \array_search(self::$pages['health1']->getUuid(), $resultIds),
@@ -865,7 +865,7 @@ class PageSmartContentProviderTest extends SuluTestCase
         $this->assertLessThan(
             \array_search(self::$pages['multi_category_multi_tag']->getUuid(), $resultIds),
             \array_search(self::$pages['business_tech']->getUuid(), $resultIds),
-            "'Tech Investments' should come before 'Digital Lifestyle' in ascending authored order"
+            "'Zero Tech Investments' should come before 'Digital Lifestyle' in ascending authored order"
         );
 
         // Last should have newest authored date among sulu_io pages
@@ -892,7 +892,7 @@ class PageSmartContentProviderTest extends SuluTestCase
         $this->assertLessThan(
             \array_search(self::$pages['business_tech']->getUuid(), $resultIds),
             \array_search(self::$pages['multi_category_multi_tag']->getUuid(), $resultIds),
-            "'Digital Lifestyle' should come before 'Tech Investments' in descending authored order"
+            "'Digital Lifestyle' should come before 'Zero Tech Investments' in descending authored order"
         );
         $this->assertLessThan(
             \array_search(self::$pages['tech1']->getUuid(), $resultIds),
