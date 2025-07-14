@@ -43,6 +43,8 @@ class TagManager implements TagManagerInterface
     /**
      * Loads all the tags managed in this system.
      *
+     * @deprecated use the Repository findAll method
+     *
      * @return TagInterface[]
      */
     public function findAll()

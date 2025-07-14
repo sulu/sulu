@@ -41,7 +41,9 @@ interface TagRepositoryInterface extends RepositoryInterface
     /**
      * Searches for all tags.
      *
-     * @return array
+     * @deprecated use the Repository findAll method
+     *
+     * @return array<TagInterface>
      */
     public function findAllTags();
 }

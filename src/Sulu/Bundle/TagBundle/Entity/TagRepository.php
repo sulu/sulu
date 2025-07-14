@@ -51,6 +51,9 @@ class TagRepository extends EntityRepository implements TagRepositoryInterface
         }
     }
 
+    /**
+     * @deprecated use the Repository findAll method
+     */
     public function findAllTags()
     {
         return $this->findAll();

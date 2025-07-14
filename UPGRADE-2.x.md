@@ -2,6 +2,11 @@
 
 ## 2.6.10
 
+### Deprecate functions as preparation for 3.0
+
+* Sulu\Bundle\TagBundle\Entity\TagRepository::findAllTags -> Sulu\Bundle\TagBundle\Entity\TagRepository::findAll
+* Sulu\Bundle\TagBundle\Tag\TagManager::findAll -> Sulu\Bundle\TagBundle\Entity\TagRepository::findAll
+
 ### Deprecate usage of fos rest routing
 
 We are no longer considering the [fos rest routing](https://github.com/handcraftedinthealps/RestRoutingBundle) as a best practice.

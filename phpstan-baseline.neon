@@ -59533,12 +59533,6 @@ parameters:
 			path: src/Sulu/Bundle/TagBundle/DependencyInjection/SuluTagExtension.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\TagBundle\\Entity\\TagRepository\:\:findAllTags\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/TagBundle/Entity/TagRepository.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\TagBundle\\Entity\\TagRepository\:\:findTagById\(\) should return Sulu\\Bundle\\TagBundle\\Tag\\TagInterface\|null but returns mixed\.$#'
 			identifier: return.type
 			count: 1
@@ -59589,12 +59583,6 @@ parameters:
 		-
 			message: '#^Method Sulu\\Bundle\\TagBundle\\Tag\\TagManager\:\:delete\(\) has no return type specified\.$#'
 			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/TagBundle/Tag/TagManager.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\TagBundle\\Tag\\TagManager\:\:findAll\(\) should return array\<Sulu\\Bundle\\TagBundle\\Tag\\TagInterface\> but returns array\.$#'
-			identifier: return.type
 			count: 1
 			path: src/Sulu/Bundle/TagBundle/Tag/TagManager.php
 
@@ -59771,12 +59759,6 @@ parameters:
 			identifier: missingType.iterableValue
 			count: 1
 			path: src/Sulu/Bundle/TagBundle/Tag/TagManagerInterface.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\TagBundle\\Tag\\TagRepositoryInterface\:\:findAllTags\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/TagBundle/Tag/TagRepositoryInterface.php
 
 		-
 			message: '#^Cannot access property \$form on mixed\.$#'
