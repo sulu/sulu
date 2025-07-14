@@ -16,11 +16,8 @@ namespace Sulu\Content\Application\PropertyResolver\Resolver;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\OptionMetadata;
 use Sulu\Bundle\AdminBundle\SmartContent\SmartContentProviderInterface;
-use Sulu\Bundle\AudienceTargetingBundle\TargetGroup\TargetGroupStoreInterface;
-use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
-use Sulu\Component\Webspace\Segment;
-use Sulu\Component\Webspace\Webspace;
 use Sulu\Content\Application\ContentResolver\Value\ContentView;
+use Sulu\Content\Application\Visitor\SmartContentFiltersVisitorInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
@@ -28,10 +25,12 @@ use Symfony\Component\HttpFoundation\RequestStack;
  */
 class SmartContentPropertyResolver implements PropertyResolverInterface
 {
+    /**
+     * @param iterable<SmartContentFiltersVisitorInterface> $smartContentFiltersVisitors
+     */
     public function __construct(
         private RequestStack $requestStack,
-        private RequestAnalyzerInterface $requestAnalyzer,
-        private ?TargetGroupStoreInterface $targetGroupStore,
+        private iterable $smartContentFiltersVisitors,
     ) {
     }
 
@@ -55,8 +54,8 @@ class SmartContentPropertyResolver implements PropertyResolverInterface
      */
     public function resolve(mixed $data, string $locale, array $params = []): ContentView
     {
-        if (!\is_array($data)) { // @phpstan-ignore function.alreadyNarrowedType
-            return ContentView::create($data, $params);
+        if (!\is_array($data) || ([] !== $data && \array_is_list($data))) { // @phpstan-ignore-line
+            return ContentView::create([], $params);
         }
 
         $metadata = $params['metadata'] ?? null;
@@ -97,9 +96,6 @@ class SmartContentPropertyResolver implements PropertyResolverInterface
         $request = $this->requestStack->getCurrentRequest();
         \assert(null !== $request, 'Request must not be null');
 
-        /** @var Webspace|null $webspace */
-        $webspace = $this->requestAnalyzer->getWebspace();
-
         /** @var SmartContentBaseFilters $filters */
         $filters = [
             // Categories
@@ -120,7 +116,6 @@ class SmartContentPropertyResolver implements PropertyResolverInterface
 
             // Other filters
             'locale' => $parameters['locale'],
-            'webspaceKey' => $webspace?->getKey() ?? null,
             'dataSource' => $data['dataSource'] ?? null,
             'limit' => $data['limitResult'] ?? null,
             'page' => $request->query->getInt($parameters['page_parameter'], 1),
@@ -128,19 +123,11 @@ class SmartContentPropertyResolver implements PropertyResolverInterface
             'includeSubFolders' => $data['includeSubFolders'] ?? false,
             'excludeDuplicates' => 'true' === $parameters['exclude_duplicates'] || true === $parameters['exclude_duplicates'],
         ];
-
-        if (($data['audienceTargeting'] ?? null) && $this->targetGroupStore) {
-            $filters['audienceTargeting'] = $data['audienceTargeting'];
-            $filters['targetGroupId'] = $this->targetGroupStore->getTargetGroupId();
-        }
-
-        /** @var Segment|null $segment */
-        $segment = $this->requestAnalyzer->getSegment(); // @phpstan-ignore function.alreadyNarrowedType
-        if (null !== $segment) {
-            $filters['segmentKey'] = $segment->getKey();
-        }
-
         $sortBys = $data['sortBy'] ?? null ? [$data['sortBy'] => $data['sortMethod'] ?? 'ASC'] : null;
+
+        foreach ($this->smartContentFiltersVisitors as $visitor) {
+            $filters = $visitor->visit($data, $filters, $parameters);
+        }
 
         $result = [
             'value' => $data,

@@ -382,7 +382,6 @@
         <service id="sulu_media.media_smart_content_provider" class="Sulu\Bundle\MediaBundle\Infrastructure\Sulu\Content\SmartContent\MediaSmartContentProvider">
             <argument type="service" id="doctrine.orm.default_entity_manager"/>
             <argument type="service" id="translator"/>
-            <argument type="service" id="request_stack"/>
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>
             <argument type="service" id="sulu_security.access_control_query_enhancer"/>
             <argument type="service" id="security.helper" on-invalid="ignore"/>
@@ -390,6 +389,13 @@
             <argument>%sulu_security.permissions%</argument>
 
             <tag name="sulu_content.smart_content_provider" type="media"/>
+        </service>
+
+        <service id="sulu_media.media_smart_content_filters_visitor" class="Sulu\Bundle\MediaBundle\Infrastructure\Sulu\Content\Visitor\MediaSmartContentFiltersVisitor">
+            <argument type="service" id="sulu_core.webspace.request_analyzer"/>
+            <argument type="service" id="request_stack"/>
+
+            <tag name="sulu_content.smart_content_filters_visitor"/>
         </service>
 
         <service id="sulu_media.system_collections.cache" class="Sulu\Component\Cache\DataCache">

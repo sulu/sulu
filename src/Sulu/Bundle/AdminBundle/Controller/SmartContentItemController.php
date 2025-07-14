@@ -107,7 +107,6 @@ class SmartContentItemController extends AbstractRestController
 
             // Other filters
             'locale' => $locale,
-            'webspaceKey' => $filters['webspace'] ?? null,
             'dataSource' => $filters['dataSource'] ?? null,
             'limit' => $filters['limitResult'] ?? null,
             'page' => (int) ($filters['page'] ?? 1),

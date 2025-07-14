@@ -41,7 +41,6 @@ use Sulu\Content\Infrastructure\Doctrine\JoinFilterTrait;
  *       types: string[],
  *       typesOperator: 'OR',
  *       locale: string,
- *       webspaceKey: string|null,
  *       dataSource: string|null,
  *       limit: int|null,
  *       page: int,
@@ -89,13 +88,12 @@ class ArticleSmartContentProvider implements SmartContentProviderInterface
 
     protected function getConfigurationBuilder(): BuilderInterface
     {
-        return Builder::create()
+        $builder = Builder::create()
             ->enableTags()
             ->enableCategories()
             ->enableLimit()
             ->enablePagination()
             ->enablePresentAs()
-            ->enableAudienceTargeting()
             ->enableSorting(
                 [
                     ['column' => 'workflowPublished', 'title' => 'sulu_admin.published'],
@@ -105,6 +103,13 @@ class ArticleSmartContentProvider implements SmartContentProviderInterface
                     ['column' => 'title', 'title' => 'sulu_admin.title'],
                 ],
             );
+
+        // TODO
+        //        if ($this->hasAudienceTargeting) {
+        //            $builder->enableAudienceTargeting();
+        //        }
+
+        return $builder;
     }
 
     /**
@@ -217,7 +222,6 @@ class ArticleSmartContentProvider implements SmartContentProviderInterface
      *         templateKeys?: string[],
      *         typesOperator: 'OR',
      *         locale: string,
-     *         webspaceKey: string|null,
      *         dataSource: string|null,
      *         limit: int|null,
      *         page: int,

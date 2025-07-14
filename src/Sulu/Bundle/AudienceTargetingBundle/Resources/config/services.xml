@@ -164,5 +164,13 @@
             <argument type="service" id="sulu_audience_targeting.target_group_store"/>
             <tag name="sulu_content.deprecated_block_visitor" />
         </service>
+
+        <!-- SmartContent -->
+        <service id="sulu_audience_targeting.audience_targeting_smart_content_filters_visitor"
+                 class="Sulu\Bundle\AudienceTargetingBundle\Visitor\AudienceTargetingSmartContentFiltersVisitor">
+            <argument type="service" id="sulu_audience_targeting.target_group_store"/>
+
+            <tag name="sulu_content.smart_content_filters_visitor"/>
+        </service>
     </services>
 </container>

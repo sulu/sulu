@@ -44,6 +44,7 @@ use Sulu\Page\Infrastructure\Sulu\Content\PropertyResolver\BlockVisitor\SegmentB
 use Sulu\Page\Infrastructure\Sulu\Content\PropertyResolver\PageSelectionPropertyResolver;
 use Sulu\Page\Infrastructure\Sulu\Content\PropertyResolver\SinglePageSelectionPropertyResolver;
 use Sulu\Page\Infrastructure\Sulu\Content\ResourceLoader\PageResourceLoader;
+use Sulu\Page\Infrastructure\Sulu\Content\Visitor\SegmentSmartContentFiltersVisitor;
 use Sulu\Page\Infrastructure\Sulu\Route\WebspaceSiteRouteGenerator;
 use Sulu\Page\Infrastructure\Symfony\Twig\Extension\NavigationTwigExtension;
 use Sulu\Page\UserInterface\Command\InitializeHomepageCommand;
@@ -321,6 +322,13 @@ final class SuluPageBundle extends AbstractBundle
                 new Reference('doctrine.orm.entity_manager'),
             ])
             ->tag('sulu_content.smart_content_provider', ['type' => PageInterface::RESOURCE_KEY]);
+
+        $services->set('sulu_page.page_smart_content_filters_visitor')
+            ->class(SegmentSmartContentFiltersVisitor::class)
+            ->args([
+                new Reference('sulu_core.webspace.request_analyzer'),
+            ])
+            ->tag('sulu_content.smart_content_filters_visitor');
 
         // Navigation
         $services->set('sulu_page.navigation_repository')

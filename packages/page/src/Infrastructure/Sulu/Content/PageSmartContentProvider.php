@@ -47,7 +47,6 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
  *       types: string[],
  *       typesOperator: 'OR',
  *       locale: string,
- *       webspaceKey: string|null,
  *       dataSource: string|null,
  *       limit: int|null,
  *       page: int,
@@ -91,7 +90,11 @@ class PageSmartContentProvider implements SmartContentProviderInterface
 
     public function getConfiguration(): ProviderConfigurationInterface
     {
-        /** @var BuilderInterface $builder */
+        return $this->getConfigurationBuilder()->getConfiguration();
+    }
+
+    protected function getConfigurationBuilder(): BuilderInterface
+    {
         $builder = Builder::create()
             ->enableTags()
             ->enableCategories()
@@ -116,7 +119,7 @@ class PageSmartContentProvider implements SmartContentProviderInterface
         //            $builder->enableAudienceTargeting();
         //        }
 
-        return $builder->getConfiguration();
+        return $builder;
     }
 
     /**
@@ -216,7 +219,6 @@ class PageSmartContentProvider implements SmartContentProviderInterface
      *        templateKeys?: string[],
      *        typesOperator: 'OR',
      *        locale: string,
-     *        webspaceKey: string|null,
      *        dataSource: string|null,
      *        limit: int|null,
      *        page: int,
@@ -250,7 +252,6 @@ class PageSmartContentProvider implements SmartContentProviderInterface
 
     /**
      * @param array{
-     *     webspaceKey: string|null,
      *     dataSource: string|null,
      *     includeSubFolders: bool,
      *     websiteCategories: string[],
@@ -261,27 +262,21 @@ class PageSmartContentProvider implements SmartContentProviderInterface
      */
     protected function addInternalFilters(QueryBuilder $queryBuilder, array $filters, string $alias): void
     {
-        if ($webspaceKey = $filters['webspaceKey']) {
-            $queryBuilder->andWhere($alias . '.webspaceKey = :webspaceKey')
-                ->setParameter('webspaceKey', $webspaceKey);
-        }
-
-        if ($datasource = $filters['dataSource']) {
-            if ($filters['includeSubFolders']) {
-                // Join with the dataSource page to get its lft and rgt values
-                $queryBuilder->leftJoin(
-                    PageInterface::class,
-                    'datasourcePage',
-                    Join::WITH,
-                    'datasourcePage.uuid = :datasource'
-                )
-                    ->andWhere($alias . '.lft >= datasourcePage.lft')
-                    ->andWhere($alias . '.rgt <= datasourcePage.rgt')
-                    ->setParameter('datasource', $datasource);
-            } else {
-                $queryBuilder->andWhere($alias . '.parent = :datasource')
-                    ->setParameter('datasource', $datasource);
-            }
+        $datasource = $filters['dataSource'] ?? null;
+        if ($filters['includeSubFolders']) {
+            // Join with the dataSource page to get its lft and rgt values
+            $queryBuilder->leftJoin(
+                PageInterface::class,
+                'datasourcePage',
+                Join::WITH,
+                'datasourcePage.uuid = :datasource'
+            )
+                ->andWhere($alias . '.lft >= datasourcePage.lft')
+                ->andWhere($alias . '.rgt <= datasourcePage.rgt')
+                ->setParameter('datasource', $datasource);
+        } else {
+            $queryBuilder->andWhere($alias . '.parent = :datasource')
+                ->setParameter('datasource', $datasource);
         }
 
         $websiteCategoryIds = $filters['websiteCategories'];

@@ -31,7 +31,6 @@ use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Content\Infrastructure\Doctrine\JoinFilterTrait;
 use Symfony\Bundle\SecurityBundle\Security;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -47,7 +46,6 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  *       types: string[],
  *       typesOperator: 'OR',
  *       locale: string,
- *       webspaceKey: string|null,
  *       dataSource: string|null,
  *       limit: int|null,
  *       page: int,
@@ -57,6 +55,9 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  *       audienceTargeting?: bool,
  *       targetGroupId?: int,
  *       segmentKey?: string,
+ *       webspaceKey?: string,
+ *       mimetype?: string|null,
+ *       type?: string|null,
  *  }
  */
 class MediaSmartContentProvider implements SmartContentProviderInterface
@@ -69,7 +70,6 @@ class MediaSmartContentProvider implements SmartContentProviderInterface
     public function __construct(
         private EntityManagerInterface $entityManager,
         private TranslatorInterface $translator,
-        private RequestStack $requestStack,
         private WebspaceManagerInterface $webspaceManager,
         private AccessControlQueryEnhancer $accessControlQueryEnhancer,
         private Security $security,
@@ -139,7 +139,6 @@ class MediaSmartContentProvider implements SmartContentProviderInterface
             [],
             $filters['locale'],
             $alias,
-            $this->getOptions($params),
             MediaInterface::class,
         );
 
@@ -167,7 +166,6 @@ class MediaSmartContentProvider implements SmartContentProviderInterface
             $sortBys,
             $locale,
             $alias,
-            $this->getOptions($params),
             MediaInterface::class,
         );
 
@@ -193,7 +191,6 @@ class MediaSmartContentProvider implements SmartContentProviderInterface
      *
      * @param MediaSmartContentFilters $filters
      * @param array<string, string> $sortBys
-     * @param array{mimetype?: string, type?: string} $options
      * @param class-string|null $entityClass
      */
     private function enhanceQueryBuilder(
@@ -202,7 +199,6 @@ class MediaSmartContentProvider implements SmartContentProviderInterface
         array $sortBys,
         string $locale,
         string $alias,
-        array $options = [],
         ?string $entityClass = null,
     ): void {
         $webspace = $this->webspaceManager->findWebspaceByKey($filters['webspaceKey'] ?? null);
@@ -236,16 +232,16 @@ class MediaSmartContentProvider implements SmartContentProviderInterface
             $queryBuilder->addSelect($sortBy);
         }
 
-        if ($options['mimetype'] ?? null) {
+        if ($filters['mimetype'] ?? null) {
             $queryBuilder
                 ->andWhere('fileVersion.mimeType = :mimeType')
-                ->setParameter('mimeType', $options['mimetype']);
+                ->setParameter('mimeType', $filters['mimetype']);
         }
-        if ($options['type'] ?? null) {
+        if ($filters['type'] ?? null) {
             $queryBuilder
                 ->innerJoin($alias . '.type', 'type')
                 ->andWhere('type.name = :type')
-                ->setParameter('type', $options['type']);
+                ->setParameter('type', $filters['type']);
         }
 
         if (($filters['dataSource'] ?? null) && '' !== $filters['dataSource']) {
@@ -324,35 +320,6 @@ class MediaSmartContentProvider implements SmartContentProviderInterface
                 $alias,
             );
         }
-    }
-
-    /**
-     * @param PropertyParameter[] $propertyParameter
-     *
-     * @return array{mimetype?: string, type?: string}
-     */
-    protected function getOptions(array $propertyParameter): array
-    {
-        $request = $this->requestStack->getCurrentRequest();
-        if (null === $request) {
-            return [];
-        }
-
-        $queryOptions = [];
-        if ($propertyParameter['mimetype_parameter'] ?? null) {
-            $mimetypeParameter = $propertyParameter['mimetype_parameter']->getValue();
-            if (\is_string($mimetypeParameter)) {
-                $queryOptions['mimetype'] = $mimetypeParameter;
-            }
-        }
-        if ($propertyParameter['type_parameter'] ?? null) {
-            $typeParameter = $propertyParameter['type_parameter']->getValue();
-            if (\is_string($typeParameter)) {
-                $queryOptions['type'] = $typeParameter;
-            }
-        }
-
-        return \array_filter($queryOptions);
     }
 
     public function createQueryBuilder(string $alias): QueryBuilder

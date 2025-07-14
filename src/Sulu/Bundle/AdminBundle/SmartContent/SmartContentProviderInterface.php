@@ -28,16 +28,12 @@ use Sulu\Bundle\AdminBundle\SmartContent\Configuration\ProviderConfigurationInte
  *      types: string[],
  *      typesOperator: 'OR',
  *      locale: string,
- *      webspaceKey: string|null,
  *      dataSource: string|null,
  *      limit: int|null,
  *      page: int,
  *      maxPerPage: int|null,
  *      includeSubFolders: bool,
  *      excludeDuplicates: bool,
- *      audienceTargeting?: bool,
- *      targetGroupId?: int,
- *      segmentKey?: string,
  *  }
  */
 interface SmartContentProviderInterface
