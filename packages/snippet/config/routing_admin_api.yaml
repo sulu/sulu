@@ -49,11 +49,13 @@ sulu_snippet_area.get_snippet_areas:
     format: json
 
 sulu_snippet_area.put_snippet_area:
-    path: /snippet-areas/{key}
+    path: /snippet-areas/{key}.{_format}
     methods: PUT
     controller: sulu_snippet.admin_snippet_area_controller::putAction
+    format: json
 
 sulu_snippet_area.delete_snippet_area:
-    path: /snippet-areas/{key}
+    path: /snippet-areas/{key}.{_format}
     methods: PUT
     controller: sulu_snippet.admin_snippet_area_controller::deleteAction
+    format: json
