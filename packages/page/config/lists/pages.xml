@@ -28,7 +28,7 @@
             <entity-name>dimensionContent</entity-name>
             <field-name>Sulu\Page\Domain\Model\PageInterface.dimensionContents</field-name>
             <method>LEFT</method>
-            <condition>dimensionContent.locale = :locale AND dimensionContent.stage = 'draft'</condition>
+            <condition>dimensionContent.locale = :locale AND dimensionContent.stage = 'draft' AND dimensionContent.version = 0</condition>
         </join>
     </joins>
 

@@ -20,6 +20,7 @@ use Sulu\Content\Domain\Model\DimensionContentCollectionInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Domain\Model\ShadowInterface;
 use Sulu\Content\Domain\Model\TemplateInterface;
+use Sulu\Content\Domain\Model\VersionInterface;
 use Sulu\Content\Domain\Model\WorkflowInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Workflow\Event\TransitionEvent;
@@ -83,6 +84,16 @@ class PublishTransitionSubscriber implements EventSubscriberInterface
 
         /** @var string $locale */
         $locale = $dimensionContent->getLocale();
+
+        if ($dimensionContent instanceof VersionInterface) {
+            $this->contentCopier->copy(
+                $contentRichEntity,
+                \array_merge($dimensionAttributes, ['locale' => $locale]),
+                $contentRichEntity,
+                \array_merge($dimensionAttributes, ['locale' => $locale, 'version' => time()]),
+                ['ignoredAttributes' => ['url']] // ignore url, because we cannot restore it from a version
+            );
+        }
 
         if (!$shadowLocale) {
             $publishedDimensionContent = $this->contentCopier->copyFromDimensionContentCollection(

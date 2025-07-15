@@ -28,6 +28,7 @@ use Sulu\Content\Domain\Model\RoutableInterface;
 use Sulu\Content\Domain\Model\SeoInterface;
 use Sulu\Content\Domain\Model\ShadowInterface;
 use Sulu\Content\Domain\Model\TemplateInterface;
+use Sulu\Content\Domain\Model\VersionInterface;
 use Sulu\Content\Domain\Model\WebspaceInterface;
 use Sulu\Content\Domain\Model\WorkflowInterface;
 use Sulu\Route\Domain\Model\Route;
@@ -126,6 +127,12 @@ final class MetadataLoader
 
             $this->addIndex($metadata, 'workflow_place', ['workflowPlace']);
             $this->addIndex($metadata, 'workflow_published', ['workflowPublished']);
+        }
+
+        if ($reflection->implementsInterface(VersionInterface::class)) {
+            $this->addField($metadata, 'version', 'integer', ['columnName' => 'version', 'nullable' => false]);
+
+            $this->addIndex($metadata, 'version', ['version']);
         }
     }
 

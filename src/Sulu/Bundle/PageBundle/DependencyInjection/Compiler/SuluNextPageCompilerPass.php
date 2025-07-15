@@ -51,7 +51,7 @@ class SuluNextPageCompilerPass implements CompilerPassInterface
                     $definition = $methodCall[1][0];
                     if ($definition instanceof Definition) {
                         $class = $definition->getClass();
-                        if ('%sulu_page.admin.class%' === $class) {
+                        if ('Sulu\Bundle\PageBundle\Admin\PageAdmin' === $class) {
                             unset($methodCalls[$key]);
                             break;
                         }
