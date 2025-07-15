@@ -20,7 +20,7 @@ class SnippetArea implements SnippetAreaInterface
     /**
      * @var string
      */
-    protected $uuid;
+    protected string $uuid;
 
     private string $webspaceKey;
 
