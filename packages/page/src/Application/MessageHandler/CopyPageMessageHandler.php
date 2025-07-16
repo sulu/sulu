@@ -38,7 +38,7 @@ final class CopyPageMessageHandler
         $sourcePage = $this->pageRepository->getOneBy($message->getSourceIdentifier());
         $targetParentPage = $this->pageRepository->getOneBy($message->getTargetParentIdentifier());
 
-        $targetPage = $this->pageRepository->createNew();
+        $targetPage = $this->pageRepository->createNew($message->getTargetUuid());
         $targetPage->setWebspaceKey($targetParentPage->getWebspaceKey());
         $targetPage->setParent($targetParentPage);
         $this->pageRepository->add($targetPage);
