@@ -34,5 +34,6 @@
     "template" : "default",
     "title" : "Test page for copy",
     "url" : null,
+    "webspace": "sulu-io",
     "workflowPlace" : "unpublished"
 }

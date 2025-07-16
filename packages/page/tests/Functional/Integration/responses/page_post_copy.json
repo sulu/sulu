@@ -18,8 +18,8 @@
     "lastModifiedEnabled" : true,
     "locale" : "en",
     "navigationContexts" : [ "main" ],
-    "published" : "@datetime@",
-    "publishedState" : true,
+    "published" : null,
+    "publishedState" : false,
     "seoCanonicalUrl" : "https://sulu.io/",
     "seoDescription" : "Seo Description",
     "seoHideInSitemap" : true,
@@ -33,6 +33,7 @@
     "stage" : "draft",
     "template" : "default",
     "title" : "Test page for copy",
-    "url" : "/test-page-for-copy",
-    "workflowPlace" : "published"
+    "url" : null,
+    "webspace": "sulu-io",
+    "workflowPlace" : "unpublished"
 }

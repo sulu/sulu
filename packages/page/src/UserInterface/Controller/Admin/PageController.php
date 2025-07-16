@@ -171,9 +171,9 @@ final class PageController
 
     public function postTriggerAction(Request $request, string $id): Response
     {
-        $this->handleAction($request, $id);
+        $result = $this->handleAction($request, $id);
 
-        return $this->getAction($request, $id);
+        return $this->getAction($request, $result?->getUuid() ?? $id);
     }
 
     public function deleteAction(Request $request, string $id): Response // TODO route should be a uuid
@@ -219,21 +219,21 @@ final class PageController
             );
 
             /** @see Sulu\Page\Application\MessageHandler\CopyLocalePageMessageHandler */
-            /** @var null */
+            /** @var PageInterface|null */
             return $this->handle(new Envelope($message, [new EnableFlushStamp()]));
         } elseif ('move' === $action) {
             $destinationUuid = $request->query->getString('destination');
             $message = new MovePageMessage(['uuid' => $uuid], ['uuid' => $destinationUuid]);
 
             /** @see Sulu\Page\Application\MessageHandler\MovePageMessageHandler */
-            /** @var null */
+            /** @var PageInterface|null */
             return $this->handle(new Envelope($message, [new EnableFlushStamp()]));
         } elseif ('copy' == $action) {
             $destinationUuid = $request->query->getString('destination');
             $message = new CopyPageMessage(['uuid' => $uuid], ['uuid' => $destinationUuid]);
 
             /** @see Sulu\Page\Application\MessageHandler\CopyPageMessageHandler */
-            /** @var null */
+            /** @var PageInterface|null */
             return $this->handle(new Envelope($message, [new EnableFlushStamp()]));
         } elseif ('order' === $action) {
             $position = $request->request->getInt('position');
@@ -243,13 +243,13 @@ final class PageController
             );
 
             /** @see Sulu\Page\Application\MessageHandler\OrderPageMessageHandler */
-            /** @var null */
+            /** @var PageInterface|null */
             return $this->handle(new Envelope($message, [new EnableFlushStamp()]));
         }
         $message = new ApplyWorkflowTransitionPageMessage(['uuid' => $uuid], $this->getLocale($request), $action);
 
         /** @see Sulu\Page\Application\MessageHandler\ApplyWorkflowTransitionPageMessageHandler */
-        /** @var null */
+        /** @var PageInterface|null */
         return $this->handle(new Envelope($message, [new EnableFlushStamp()]));
     }
 

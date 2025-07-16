@@ -201,6 +201,11 @@ final class SuluPageBundle extends AbstractBundle
             ->class(NavigationContextMerger::class)
             ->tag('sulu_content.merger');
 
+        // Normalizer service
+        $services->set('sulu_page.page_normalizer')
+            ->class('Sulu\Page\Application\Normalizer\PageNormalizer')
+            ->tag('sulu_content.normalizer');
+
         // Property Resolver services
         $services->set('sulu_page.page_selection_property_resolver')
             ->class(PageSelectionPropertyResolver::class)
