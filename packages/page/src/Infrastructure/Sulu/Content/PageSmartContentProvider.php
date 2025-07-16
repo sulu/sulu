@@ -180,7 +180,6 @@ readonly class PageSmartContentProvider implements SmartContentProviderInterface
         $queryBuilder->addSelect('page.webspaceKey as webspace');
         $queryBuilder->addSelect('filterDimensionContent.title');
         $this->smartContentQueryEnhancer->addOrderBySelects($queryBuilder);
-
         $this->smartContentQueryEnhancer->addPagination($queryBuilder, $filters['page'], $filters['limit'], $filters['maxPerPage']);
 
         /** @var array{id: string, title: string, webspace: string}[] $queryResult */

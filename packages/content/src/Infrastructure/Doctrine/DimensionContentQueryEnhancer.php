@@ -215,12 +215,6 @@ class DimensionContentQueryEnhancer
         }
     }
 
-    public function addPagination(QueryBuilder $queryBuilder, int $page, int $limit): void
-    {
-        $queryBuilder->setMaxResults($limit);
-        $queryBuilder->setFirstResult(($page - 1) * $limit);
-    }
-
     /**
      * TODO it should be possible to add custom select for all contents here example when the
      *     excerpt tab and entity get extended with additional relation.

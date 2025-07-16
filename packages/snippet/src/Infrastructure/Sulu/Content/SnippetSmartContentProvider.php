@@ -153,15 +153,12 @@ readonly class SnippetSmartContentProvider implements SmartContentProviderInterf
         );
         $this->addInternalFilters($queryBuilder, $filters, $alias);
 
-        if (($page = $filters['page']) && ($limit = $filters['limit'])) {
-            $this->dimensionContentQueryEnhancer->addPagination($queryBuilder, $page, $limit);
-        }
-
         // TODO refactor this to not use distinct
         // We need the distinct here, because joins due to tags/categories can lead to duplicate results
         $queryBuilder->select('DISTINCT snippet.uuid as id');
         $queryBuilder->addSelect('filterDimensionContent.title');
         $this->smartContentQueryEnhancer->addOrderBySelects($queryBuilder);
+
         $this->smartContentQueryEnhancer->addPagination($queryBuilder, $filters['page'], $filters['limit'], $filters['maxPerPage']);
 
         /** @var array{id: string, title: string, changed?: string, authored?: string}[] $queryResult */
