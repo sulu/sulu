@@ -15,6 +15,7 @@ use Sulu\Component\Localization\Manager\LocalizationManagerInterface;
 use Sulu\Content\Application\ContentCopier\ContentCopierInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Page\Application\Message\CopyPageMessage;
+use Sulu\Page\Domain\Model\PageInterface;
 use Sulu\Page\Domain\Repository\PageRepositoryInterface;
 
 /**
@@ -32,25 +33,26 @@ final class CopyPageMessageHandler
     ) {
     }
 
-    public function __invoke(CopyPageMessage $message): void
+    public function __invoke(CopyPageMessage $message): PageInterface
     {
-        $page = $this->pageRepository->getOneBy($message->getIdentifier());
-        $targetParentPage = $this->pageRepository->getOneBy($message->getDestinationIdentifier());
+        $sourcePage = $this->pageRepository->getOneBy($message->getSourceIdentifier());
+        $targetParentPage = $this->pageRepository->getOneBy($message->getTargetParentIdentifier());
 
         $targetPage = $this->pageRepository->createNew();
         $targetPage->setWebspaceKey($targetParentPage->getWebspaceKey());
         $targetPage->setParent($targetParentPage);
         $this->pageRepository->add($targetPage);
 
+        // TODO we should not depend on the LocalizationManager here, but rather use the `availableLocales` from the sourceDimensionContent itself.
         foreach ($this->localizationManager->getLocalizations() as $localization) {
-            $exists = $this->pageRepository->countBy([...$message->getIdentifier(), 'locale' => $localization->getLocale(), 'stage' => DimensionContentInterface::STAGE_DRAFT]);
+            $exists = $this->pageRepository->countBy([...$message->getSourceIdentifier(), 'locale' => $localization->getLocale(), 'stage' => DimensionContentInterface::STAGE_DRAFT]);
             if (!$exists) {
                 // If the page does not exist in the target locale, we cannot copy content for that locale.
                 continue;
             }
 
             $this->contentCopier->copy(
-                $page,
+                $sourcePage,
                 [
                     'stage' => DimensionContentInterface::STAGE_DRAFT,
                     'locale' => $localization->getLocale(),
@@ -67,5 +69,7 @@ final class CopyPageMessageHandler
                 ]
             );
         }
+
+        return $targetPage;
     }
 }

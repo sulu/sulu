@@ -29,6 +29,6 @@ class MovePageMessageHandler
 
     public function __invoke(MovePageMessage $message): void
     {
-        $this->pageRepository->moveOneBy($message->getIdentifier(), $message->getDestinationIdentifier());
+        $this->pageRepository->moveOneBy($message->getIdentifier(), $message->getTargetParentIdentifier());
     }
 }

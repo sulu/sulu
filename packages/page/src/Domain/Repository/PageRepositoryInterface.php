@@ -194,7 +194,7 @@ interface PageRepositoryInterface
      * } $sourceFilters
      * @param array{
      *     uuid?: string,
-     * } $destinationFilters
+     * } $targetParentFilters
      */
-    public function moveOneBy(array $sourceFilters, array $destinationFilters): void;
+    public function moveOneBy(array $sourceFilters, array $targetParentFilters): void;
 }

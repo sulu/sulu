@@ -223,10 +223,10 @@ class PageRepository implements PageRepositoryInterface
         }
     }
 
-    public function moveOneBy(array $sourceFilters, array $destinationFilters): void
+    public function moveOneBy(array $sourceFilters, array $targetParentFilters): void
     {
         $sourcePage = $this->getOneBy($sourceFilters);
-        $destinationPage = $this->getOneBy($destinationFilters);
+        $destinationPage = $this->getOneBy($targetParentFilters);
 
         if ($sourcePage === $destinationPage) {
             return;

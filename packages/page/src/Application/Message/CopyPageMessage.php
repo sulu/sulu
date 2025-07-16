@@ -16,13 +16,16 @@ class CopyPageMessage
     /**
      * @param array{
      *     uuid?: string
-     * } $identifier
+     * } $sourceIdentifier
      * @param array{
      *     uuid?: string
-     * } $destinationIdentifier
+     * } $targetParentIdentifier
      */
-    public function __construct(private array $identifier, private array $destinationIdentifier)
-    {
+    public function __construct(
+        private array $sourceIdentifier,
+        private array $targetParentIdentifier,
+        private ?string $targetUuid = null
+    ) {
     }
 
     /**
@@ -30,9 +33,9 @@ class CopyPageMessage
      *     uuid?: string
      * }
      */
-    public function getIdentifier(): array
+    public function getSourceIdentifier(): array
     {
-        return $this->identifier;
+        return $this->sourceIdentifier;
     }
 
     /**
@@ -40,8 +43,13 @@ class CopyPageMessage
      *     uuid?: string
      * }
      */
-    public function getDestinationIdentifier(): array
+    public function getTargetParentIdentifier(): array
     {
-        return $this->destinationIdentifier;
+        return $this->targetParentIdentifier;
+    }
+
+    public function getTargetUuid(): ?string
+    {
+        return $this->targetUuid;
     }
 }

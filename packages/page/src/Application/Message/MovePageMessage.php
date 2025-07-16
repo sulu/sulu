@@ -19,11 +19,11 @@ class MovePageMessage
      * } $identifier
      * @param array{
      *     uuid?: string
-     * } $destinationIdentifier
+     * } $targetParentIdentifier
      */
     public function __construct(
         private array $identifier,
-        private array $destinationIdentifier,
+        private array $targetParentIdentifier,
     ) {
     }
 
@@ -42,8 +42,8 @@ class MovePageMessage
      *     uuid?: string
      * }
      */
-    public function getDestinationIdentifier(): array
+    public function getTargetParentIdentifier(): array
     {
-        return $this->destinationIdentifier;
+        return $this->targetParentIdentifier;
     }
 }
