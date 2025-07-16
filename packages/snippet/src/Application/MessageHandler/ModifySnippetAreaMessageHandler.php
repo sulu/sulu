@@ -14,18 +14,19 @@ declare(strict_types=1);
 namespace Sulu\Snippet\Application\MessageHandler;
 
 use Sulu\Snippet\Application\Message\ModifySnippetAreaMessage;
+use Sulu\Snippet\Domain\Model\SnippetAreaInterface;
 use Sulu\Snippet\Domain\Repository\SnippetAreaRepositoryInterface;
 use Sulu\Snippet\Domain\Repository\SnippetRepositoryInterface;
 
-class ModifySnippetAreaMessageHandler
+readonly class ModifySnippetAreaMessageHandler
 {
     public function __construct(
-        private readonly SnippetAreaRepositoryInterface $snippetAreaRepository,
-        private readonly SnippetRepositoryInterface $snippetRepository,
+        private SnippetAreaRepositoryInterface $snippetAreaRepository,
+        private SnippetRepositoryInterface $snippetRepository,
     ) {
     }
 
-    public function __invoke(ModifySnippetAreaMessage $message): void
+    public function __invoke(ModifySnippetAreaMessage $message): SnippetAreaInterface
     {
         $webspaceKey = $message->getWebspace();
         $areaKey = $message->getAreaKey();
@@ -41,5 +42,7 @@ class ModifySnippetAreaMessageHandler
         $snippet = $this->snippetRepository->getOneBy($message->getSnippetIdentifier());
 
         $snippetArea->setSnippet($snippet);
+
+        return $snippetArea;
     }
 }

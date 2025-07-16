@@ -104,24 +104,32 @@ final class SnippetAreaController
         ));
     }
 
-    public function putAction(Request $request): Response
+    public function putAction(Request $request): JsonResponse
     {
         $message = new ModifySnippetAreaMessage([
             ...$request->attributes->all('_route_params'),
             ...$request->request->all(),
         ]);
 
-        /** @see Sulu\Snippet\Application\MessageHandler\SetSnippetAreaMessageHandler */
-        $this->handle(new Envelope($message, [new EnableFlushStamp()]));
+        /** @see \Sulu\Snippet\Application\MessageHandler\ModifySnippetMessageHandler */
+        $updatedSnippetArea = $this->handle(new Envelope($message, [new EnableFlushStamp()]));
 
-        return new Response(null, Response::HTTP_OK);
+        return new JsonResponse($this->normalizer->normalize(
+            $updatedSnippetArea,
+            'json',
+            [
+                'locale' => $request->getLocale(),
+                'sulu_admin' => true,
+                'sulu_admin_snippet' => true,
+            ],
+        ));
     }
 
     public function deleteAction(Request $request): Response
     {
         $message = new RemoveSnippetAreaMessage($request->attributes->all());
 
-        /** @see Sulu\Snippet\Application\MessageHandler\RemoveSnippetAreaMessageHandler */
+        /** @see \Sulu\Snippet\Application\MessageHandler\RemoveSnippetAreaMessageHandler */
         $deletedSnippetArea = $this->handle(new Envelope($message, [new EnableFlushStamp()]));
 
         return new Response($deletedSnippetArea, Response::HTTP_NO_CONTENT);

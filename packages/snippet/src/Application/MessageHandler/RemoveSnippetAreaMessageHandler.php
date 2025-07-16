@@ -17,7 +17,7 @@ use Sulu\Snippet\Application\Message\RemoveSnippetAreaMessage;
 use Sulu\Snippet\Domain\Model\SnippetAreaInterface;
 use Sulu\Snippet\Domain\Repository\SnippetAreaRepositoryInterface;
 
-class RemoveSnippetAreaMessageHandler
+readonly class RemoveSnippetAreaMessageHandler
 {
     public function __construct(
         private SnippetAreaRepositoryInterface $snippetAreaRepository,

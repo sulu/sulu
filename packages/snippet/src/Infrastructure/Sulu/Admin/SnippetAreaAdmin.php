@@ -20,6 +20,9 @@ use Sulu\Bundle\PageBundle\Admin\PageAdmin;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 
+/**
+ * @final
+ */
 class SnippetAreaAdmin extends Admin
 {
     public const SECURITY_CONTEXT = 'sulu.snippet.snippet_areas';
