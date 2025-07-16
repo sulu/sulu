@@ -102,7 +102,7 @@ class OptionMetadata
             $this->value = [];
         }
 
-        $this->value[] = $option;
+        $this->value[] = $option; // @phpstan-ignore assign.propertyType
     }
 
     public function getTitle(string $locale): ?string

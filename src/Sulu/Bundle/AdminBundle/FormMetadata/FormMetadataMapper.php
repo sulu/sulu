@@ -130,6 +130,13 @@ class FormMetadataMapper
         return $field;
     }
 
+    /**
+     * @param array{
+     *     name: string,
+     *     type: string,
+     *     value: bool|int|string|null|OptionMetadata[],
+     * } $parameter
+     */
     private function mapOption(array $parameter): OptionMetadata
     {
         $option = new OptionMetadata();

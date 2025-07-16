@@ -161,7 +161,7 @@ class NumberTest extends TestCase
         $fieldMetadata = new FieldMetadata('property-name');
         $multipleOfOption = new OptionMetadata();
         $multipleOfOption->setName('multiple_of');
-        $multipleOfOption->setValue(0.5);
+        $multipleOfOption->setValue('0.5'); // float values are by the XmlParserTrait always strings
         $fieldMetadata->addOption($multipleOfOption);
 
         $jsonSchema = $this->number->mapPropertyMetadata($fieldMetadata)->toJsonSchema();
@@ -344,10 +344,10 @@ class NumberTest extends TestCase
         $fieldMetadata = new FieldMetadata('property-name');
         $minOption = new OptionMetadata();
         $minOption->setName('min');
-        $minOption->setValue(1.2);
+        $minOption->setValue('1.2'); // float values are by the XmlParserTrait always strings
         $maxOption = new OptionMetadata();
         $maxOption->setName('max');
-        $maxOption->setValue(3.4);
+        $maxOption->setValue('3.4'); // float values are by the XmlParserTrait always strings
         $fieldMetadata->addOption($minOption);
         $fieldMetadata->addOption($maxOption);
 
