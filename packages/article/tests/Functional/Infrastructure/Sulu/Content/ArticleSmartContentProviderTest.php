@@ -538,11 +538,11 @@ class ArticleSmartContentProviderTest extends SuluTestCase
         $this->assertSame('Cloud Computing', $result[0]['title']);
     }
 
-    public function testFindFlatByLimitAndPageSecond(): void
+    public function testFindFlatByMaxPerPageAndPageSecond(): void
     {
         $result = $this->smartContentProvider->findFlatBy([
             ...$this->getDefaultFilters(),
-            ...['locale' => 'en', 'limit' => 5, 'page' => 2],
+            ...['locale' => 'en', 'maxPerPage' => 5, 'page' => 2],
         ], [
             'sortBy' => 'title',
             'sortMethod' => 'asc',
@@ -553,7 +553,7 @@ class ArticleSmartContentProviderTest extends SuluTestCase
             15,
             $this->smartContentProvider->countBy([
                 ...$this->getDefaultFilters(),
-                ...['locale' => 'en', 'limit' => 5, 'page' => 2],
+                ...['locale' => 'en', 'maxPerPage' => 5, 'page' => 2],
             ]),
         );
     }

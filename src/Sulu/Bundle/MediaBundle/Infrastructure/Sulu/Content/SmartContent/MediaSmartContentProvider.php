@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /*
  * This file is part of Sulu.
  *
@@ -19,6 +17,7 @@ use Doctrine\ORM\QueryBuilder;
 use Sulu\Bundle\AdminBundle\SmartContent\Configuration\Builder;
 use Sulu\Bundle\AdminBundle\SmartContent\Configuration\ProviderConfigurationInterface;
 use Sulu\Bundle\AdminBundle\SmartContent\SmartContentProviderInterface;
+use Sulu\Bundle\AdminBundle\SmartContent\SmartContentQueryEnhancer;
 use Sulu\Bundle\MediaBundle\Admin\MediaAdmin;
 use Sulu\Bundle\MediaBundle\Entity\CollectionInterface;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
@@ -29,7 +28,6 @@ use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
-use Sulu\Content\Infrastructure\Doctrine\JoinFilterTrait;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -60,15 +58,14 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  *       type?: string|null,
  *  }
  */
-class MediaSmartContentProvider implements SmartContentProviderInterface
+readonly class MediaSmartContentProvider implements SmartContentProviderInterface
 {
-    use JoinFilterTrait;
-
     /**
      * @param mixed[]|null $permissions
      */
     public function __construct(
         private EntityManagerInterface $entityManager,
+        private SmartContentQueryEnhancer $smartContentQueryEnhancer,
         private TranslatorInterface $translator,
         private WebspaceManagerInterface $webspaceManager,
         private AccessControlQueryEnhancer $accessControlQueryEnhancer,
@@ -169,7 +166,10 @@ class MediaSmartContentProvider implements SmartContentProviderInterface
             MediaInterface::class,
         );
 
-        $this->setPagination($queryBuilder, $filters);
+        $page = $filters['page'];
+        $pageSize = $filters['maxPerPage'];
+        $limit = $filters['limit'];
+        $this->smartContentQueryEnhancer->addPagination($queryBuilder, $page, $pageSize, $limit);
 
         /** @var array<array{id: string, title: string}> $queryResult */
         $queryResult = $queryBuilder->getQuery()->getArrayResult();
@@ -263,7 +263,7 @@ class MediaSmartContentProvider implements SmartContentProviderInterface
 
         $tagNames = $filters['tags'];
         if ([] !== $tagNames) {
-            $this->addJoinFilter(
+            $this->smartContentQueryEnhancer->addJoinFilter(
                 $queryBuilder,
                 'fileVersion.tags',
                 'filterTagName',
@@ -276,7 +276,7 @@ class MediaSmartContentProvider implements SmartContentProviderInterface
 
         $types = $filters['types'];
         if ([] !== $types) {
-            $this->addJoinFilter(
+            $this->smartContentQueryEnhancer->addJoinFilter(
                 $queryBuilder,
                 $alias . '.type',
                 'filterTypeId',
@@ -288,7 +288,7 @@ class MediaSmartContentProvider implements SmartContentProviderInterface
 
         $categoryIds = $filters['categories'];
         if ([] !== $categoryIds) {
-            $this->addJoinFilter(
+            $this->smartContentQueryEnhancer->addJoinFilter(
                 $queryBuilder,
                 'fileVersion.categories',
                 'filterCategoryId',
@@ -299,8 +299,8 @@ class MediaSmartContentProvider implements SmartContentProviderInterface
             );
         }
 
-        if ($filters['targetGroupId'] ?? null) {
-            $this->addJoinFilter(
+        if (($filters['audienceTargeting'] ?? null) && ($filters['targetGroupId'] ?? null)) {
+            $this->smartContentQueryEnhancer->addJoinFilter(
                 $queryBuilder,
                 'fileVersion.targetGroups',
                 'filterTargetGroupId',
@@ -339,28 +339,5 @@ class MediaSmartContentProvider implements SmartContentProviderInterface
     public function getResourceLoaderKey(): string
     {
         return MediaResourceLoader::RESOURCE_LOADER_KEY;
-    }
-
-    /**
-     * @param array{
-     *     page: int,
-     *     maxPerPage: int|null,
-     *     limit: int|null,
-     * } $filters
-     */
-    public function setPagination(QueryBuilder $queryBuilder, array $filters): void
-    {
-        $page = $filters['page'];
-        $maxPerPage = $filters['maxPerPage'];
-        $limit = $filters['limit'];
-        if (null !== $maxPerPage && $maxPerPage > 0) {
-            $pageOffset = ($page - 1) * $maxPerPage;
-            $restLimit = $limit - $pageOffset;
-
-            $queryBuilder->setMaxResults($restLimit);
-            $queryBuilder->setFirstResult($pageOffset);
-        } elseif (null !== $limit) {
-            $queryBuilder->setMaxResults($limit);
-        }
     }
 }

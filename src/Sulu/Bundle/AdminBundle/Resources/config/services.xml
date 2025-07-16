@@ -403,6 +403,10 @@
             <tag name="sulu.context" context="admin"/>
         </service>
 
+        <service id="sulu_admin.smart_content_query_enhancer"
+                 class="Sulu\Bundle\AdminBundle\SmartContent\SmartContentQueryEnhancer">
+        </service>
+
         <!-- Teaser -->
         <service
             id="sulu_admin.teaser_controller"

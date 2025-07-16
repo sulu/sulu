@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /*
  * This file is part of Sulu.
  *
@@ -18,10 +16,10 @@ use Doctrine\ORM\QueryBuilder;
 use Sulu\Bundle\AdminBundle\SmartContent\Configuration\Builder;
 use Sulu\Bundle\AdminBundle\SmartContent\Configuration\ProviderConfigurationInterface;
 use Sulu\Bundle\AdminBundle\SmartContent\SmartContentProviderInterface;
+use Sulu\Bundle\AdminBundle\SmartContent\SmartContentQueryEnhancer;
 use Sulu\Bundle\ContactBundle\Admin\ContactAdmin;
 use Sulu\Bundle\ContactBundle\Entity\ContactInterface;
 use Sulu\Bundle\ContactBundle\Infrastructure\Sulu\Content\ResourceLoader\ContactResourceLoader;
-use Sulu\Content\Infrastructure\Doctrine\JoinFilterTrait;
 
 /**
  * @phpstan-type ContactSmartContentFilters array{
@@ -34,12 +32,11 @@ use Sulu\Content\Infrastructure\Doctrine\JoinFilterTrait;
  *      categoryOperator?: 'AND'|'OR',
  *  }
  */
-class ContactSmartContentProvider implements SmartContentProviderInterface
+readonly class ContactSmartContentProvider implements SmartContentProviderInterface
 {
-    use JoinFilterTrait;
-
     public function __construct(
         private EntityManagerInterface $entityManager,
+        private SmartContentQueryEnhancer $smartContentQueryEnhancer,
     ) {
     }
 
@@ -95,22 +92,9 @@ class ContactSmartContentProvider implements SmartContentProviderInterface
         $queryBuilder->addSelect($alias . '.lastName as lastName');
         $queryBuilder->distinct();
 
-        $this->enhanceQueryBuilder(
-            $queryBuilder,
-            $filters,
-            $sortBys,
-            $alias
-        );
-
-        if (null !== $pageSize && $pageSize > 0) {
-            $pageOffset = ($page - 1) * $pageSize;
-            $restLimit = $limit - $pageOffset;
-
-            $queryBuilder->setMaxResults($restLimit);
-            $queryBuilder->setFirstResult($pageOffset);
-        } elseif (null !== $limit) {
-            $queryBuilder->setMaxResults($limit);
-        }
+        $this->smartContentQueryEnhancer->addOrderBySelects($queryBuilder);
+        $this->enhanceQueryBuilder($queryBuilder, $filters, $sortBys, $alias);
+        $this->smartContentQueryEnhancer->addPagination($queryBuilder, $page, $pageSize, $limit);
 
         /** @var array{id: string, firstName: string, lastName: string}[] $queryResult */
         $queryResult = $queryBuilder->getQuery()->getArrayResult();
@@ -141,12 +125,11 @@ class ContactSmartContentProvider implements SmartContentProviderInterface
     ): void {
         foreach ($sortBys as $sortBy => $sortMethod) {
             $queryBuilder->orderBy($sortBy, $sortMethod);
-            $queryBuilder->addSelect($sortBy);
         }
 
         $tagNames = $filters['tags'] ?? [];
         if ([] !== $tagNames && ($filters['tagOperator'] ?? null)) {
-            $this->addJoinFilter(
+            $this->smartContentQueryEnhancer->addJoinFilter(
                 $queryBuilder,
                 $alias . '.tags',
                 'filterTagName',
@@ -159,7 +142,7 @@ class ContactSmartContentProvider implements SmartContentProviderInterface
 
         $categoryIds = $filters['categories'] ?? [];
         if ([] !== $categoryIds && ($filters['categoryOperator'] ?? null)) {
-            $this->addJoinFilter(
+            $this->smartContentQueryEnhancer->addJoinFilter(
                 $queryBuilder,
                 $alias . '.categories',
                 'filterCategoryId',

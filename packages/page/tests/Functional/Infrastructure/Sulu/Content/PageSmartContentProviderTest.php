@@ -742,14 +742,14 @@ class PageSmartContentProviderTest extends SuluTestCase
         $this->assertSame(self::$pages['multi_category_multi_tag']->getUuid(), $result[0]['id']);
     }
 
-    public function testFindFlatByLimitAndPageSecond(): void
+    public function testFindFlatByMaxPerPageAndPageSecond(): void
     {
         $result = $this->smartContentProvider->findFlatBy([
             ...$this->getDefaultFilters(),
             ...[
                 'locale' => 'en',
-                'limit' => 5,
                 'page' => 2,
+                'maxPerPage' => 5,
             ],
         ], [
             'title' => 'asc',
@@ -762,8 +762,8 @@ class PageSmartContentProviderTest extends SuluTestCase
                 ...$this->getDefaultFilters(),
                 ...[
                     'locale' => 'en',
-                    'limit' => 5,
                     'page' => 2,
+                    'maxPerPage' => 5,
                 ],
             ]),
         );

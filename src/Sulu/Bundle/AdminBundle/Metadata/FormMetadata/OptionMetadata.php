@@ -32,7 +32,7 @@ class OptionMetadata
     protected $type;
 
     /**
-     * @var bool|int|string|float|OptionMetadata[]|null|mixed
+     * @var bool|int|string|OptionMetadata[]|null
      */
     protected $value;
 
@@ -81,7 +81,7 @@ class OptionMetadata
     }
 
     /**
-     * @return bool|int|string|float|OptionMetadata[]|mixed|null
+     * @return bool|int|string|OptionMetadata[]|null
      */
     public function getValue()
     {
@@ -89,7 +89,7 @@ class OptionMetadata
     }
 
     /**
-     * @param bool|int|string|float|OptionMetadata[]|mixed $value
+     * @param bool|int|string|OptionMetadata[]|null $value
      */
     public function setValue($value): void
     {

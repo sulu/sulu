@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /*
  * This file is part of Sulu.
  *
@@ -16,7 +14,6 @@ namespace Sulu\Page\Infrastructure\Sulu\Content;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query\Expr\Join;
-use Doctrine\ORM\Query\Expr\OrderBy;
 use Doctrine\ORM\QueryBuilder;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderInterface;
@@ -24,10 +21,10 @@ use Sulu\Bundle\AdminBundle\SmartContent\Configuration\Builder;
 use Sulu\Bundle\AdminBundle\SmartContent\Configuration\BuilderInterface;
 use Sulu\Bundle\AdminBundle\SmartContent\Configuration\ProviderConfigurationInterface;
 use Sulu\Bundle\AdminBundle\SmartContent\SmartContentProviderInterface;
+use Sulu\Bundle\AdminBundle\SmartContent\SmartContentQueryEnhancer;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer;
-use Sulu\Content\Infrastructure\Doctrine\JoinFilterTrait;
 use Sulu\Page\Domain\Model\PageDimensionContentInterface;
 use Sulu\Page\Domain\Model\PageInterface;
 use Sulu\Page\Infrastructure\Sulu\Admin\PageAdmin;
@@ -58,10 +55,8 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
  *       segmentKey?: string,
  *   }
  */
-class PageSmartContentProvider implements SmartContentProviderInterface
+readonly class PageSmartContentProvider implements SmartContentProviderInterface
 {
-    use JoinFilterTrait;
-
     /**
      * @var EntityRepository<PageInterface>
      */
@@ -78,8 +73,9 @@ class PageSmartContentProvider implements SmartContentProviderInterface
     private string $pageDimensionContentClassName;
 
     public function __construct(
-        private readonly DimensionContentQueryEnhancer $dimensionContentQueryEnhancer,
+        private DimensionContentQueryEnhancer $dimensionContentQueryEnhancer,
         private MetadataProviderInterface $formMetadataProvider,
+        private SmartContentQueryEnhancer $smartContentQueryEnhancer,
         private ?TokenStorageInterface $tokenStorage,
         EntityManagerInterface $entityManager,
     ) {
@@ -176,27 +172,16 @@ class PageSmartContentProvider implements SmartContentProviderInterface
             $filters,
             $sortBys,
         );
-
         $this->addInternalFilters($queryBuilder, $filters, $alias);
-
-        if (($page = $filters['page']) && ($limit = $filters['limit'])) {
-            $this->dimensionContentQueryEnhancer->addPagination($queryBuilder, $page, $limit);
-        }
 
         // TODO refactor this part to not use distinct
         // we need the distinct here, because joins due to tags/categories can lead to duplicate results
         $queryBuilder->select('DISTINCT page.uuid as id');
         $queryBuilder->addSelect('page.webspaceKey as webspace');
         $queryBuilder->addSelect('filterDimensionContent.title');
+        $this->smartContentQueryEnhancer->addOrderBySelects($queryBuilder);
 
-        /** @var OrderBy[]|null $queryParts */
-        $queryParts = $queryBuilder->getDQLPart('orderBy');
-        foreach ($queryParts ?? [] as $orderBy) {
-            foreach ($orderBy->getParts() as $order) {
-                [$column] = \explode(' ', $order);
-                $queryBuilder->addSelect($column);
-            }
-        }
+        $this->smartContentQueryEnhancer->addPagination($queryBuilder, $filters['page'], $filters['limit'], $filters['maxPerPage']);
 
         /** @var array{id: string, title: string, webspace: string}[] $queryResult */
         $queryResult = $queryBuilder->getQuery()->getArrayResult();
@@ -281,7 +266,7 @@ class PageSmartContentProvider implements SmartContentProviderInterface
 
         $websiteCategoryIds = $filters['websiteCategories'];
         if ([] !== $websiteCategoryIds) {
-            $this->addJoinFilter(
+            $this->smartContentQueryEnhancer->addJoinFilter(
                 $queryBuilder,
                 'filterDimensionContent.excerptCategories',
                 'websiteFilterCategoryId',
@@ -294,7 +279,7 @@ class PageSmartContentProvider implements SmartContentProviderInterface
 
         $websiteTagNames = $filters['websiteTags'];
         if ([] !== $websiteTagNames) {
-            $this->addJoinFilter(
+            $this->smartContentQueryEnhancer->addJoinFilter(
                 $queryBuilder,
                 'filterDimensionContent.excerptTags',
                 'websiteFilterTagName',

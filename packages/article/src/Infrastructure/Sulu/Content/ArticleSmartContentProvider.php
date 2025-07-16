@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /*
  * This file is part of Sulu.
  *
@@ -15,7 +13,6 @@ namespace Sulu\Article\Infrastructure\Sulu\Content;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\Query\Expr\OrderBy;
 use Doctrine\ORM\QueryBuilder;
 use Sulu\Article\Domain\Model\ArticleDimensionContentInterface;
 use Sulu\Article\Domain\Model\ArticleInterface;
@@ -24,9 +21,9 @@ use Sulu\Bundle\AdminBundle\SmartContent\Configuration\Builder;
 use Sulu\Bundle\AdminBundle\SmartContent\Configuration\BuilderInterface;
 use Sulu\Bundle\AdminBundle\SmartContent\Configuration\ProviderConfigurationInterface;
 use Sulu\Bundle\AdminBundle\SmartContent\SmartContentProviderInterface;
+use Sulu\Bundle\AdminBundle\SmartContent\SmartContentQueryEnhancer;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer;
-use Sulu\Content\Infrastructure\Doctrine\JoinFilterTrait;
 
 /**
  * @phpstan-type ArticleSmartContentFilters array{
@@ -53,10 +50,8 @@ use Sulu\Content\Infrastructure\Doctrine\JoinFilterTrait;
  *       segmentKey?: string,
  *   }
  */
-class ArticleSmartContentProvider implements SmartContentProviderInterface
+readonly class ArticleSmartContentProvider implements SmartContentProviderInterface
 {
-    use JoinFilterTrait;
-
     /**
      * @var EntityRepository<ArticleInterface>
      */
@@ -73,7 +68,8 @@ class ArticleSmartContentProvider implements SmartContentProviderInterface
     private string $articleDimensionContentClassName;
 
     public function __construct(
-        private readonly DimensionContentQueryEnhancer $dimensionContentQueryEnhancer,
+        private DimensionContentQueryEnhancer $dimensionContentQueryEnhancer,
+        private SmartContentQueryEnhancer $smartContentQueryEnhancer,
         EntityManagerInterface $entityManager,
     ) {
         $this->entityRepository = $entityManager->getRepository(ArticleInterface::class);
@@ -174,17 +170,11 @@ class ArticleSmartContentProvider implements SmartContentProviderInterface
 
         // TODO refactor this part to not use distinct
         // we need the distinct here, because joins due to tags/categories can lead to duplicate results
-        $queryBuilder->select('DISTINCT article.uuid as id');
+        $queryBuilder->select('DISTINCT ' . $alias . '.uuid as id');
         $queryBuilder->addSelect('filterDimensionContent.title');
+        $this->smartContentQueryEnhancer->addOrderBySelects($queryBuilder);
 
-        /** @var OrderBy[]|null $queryParts */
-        $queryParts = $queryBuilder->getDQLPart('orderBy');
-        foreach ($queryParts ?? [] as $orderBy) {
-            foreach ($orderBy->getParts() as $order) {
-                [$column] = \explode(' ', $order);
-                $queryBuilder->addSelect($column);
-            }
-        }
+        $this->smartContentQueryEnhancer->addPagination($queryBuilder, $filters['page'], $filters['limit'], $filters['maxPerPage']);
 
         /** @var array{id: string, title: string}[] $result */
         $result = $queryBuilder->getQuery()->getArrayResult();
@@ -263,7 +253,7 @@ class ArticleSmartContentProvider implements SmartContentProviderInterface
     {
         $websiteCategoryIds = $filters['websiteCategories'];
         if ([] !== $websiteCategoryIds) {
-            $this->addJoinFilter(
+            $this->smartContentQueryEnhancer->addJoinFilter(
                 $queryBuilder,
                 'filterDimensionContent.excerptCategories',
                 'websiteFilterCategoryId',
@@ -276,7 +266,7 @@ class ArticleSmartContentProvider implements SmartContentProviderInterface
 
         $websiteTagNames = $filters['websiteTags'];
         if ([] !== $websiteTagNames) {
-            $this->addJoinFilter(
+            $this->smartContentQueryEnhancer->addJoinFilter(
                 $queryBuilder,
                 'filterDimensionContent.excerptTags',
                 'websiteFilterTagName',

@@ -235,6 +235,7 @@ final class SuluSnippetBundle extends AbstractBundle
             ->class(SnippetSmartContentProvider::class)
             ->args([
                 new Reference('sulu_content.dimension_content_query_enhancer'),
+                new Reference('sulu_admin.smart_content_query_enhancer'),
                 new Reference('doctrine.orm.entity_manager'),
             ])
             ->tag('sulu_content.smart_content_provider', ['type' => SnippetInterface::RESOURCE_KEY]);

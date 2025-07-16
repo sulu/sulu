@@ -318,6 +318,7 @@ final class SuluPageBundle extends AbstractBundle
             ->args([
                 new Reference('sulu_content.dimension_content_query_enhancer'),
                 new Reference('sulu_admin.form_metadata_provider'),
+                new Reference('sulu_admin.smart_content_query_enhancer'),
                 new Reference('security.token_storage', ContainerInterface::NULL_ON_INVALID_REFERENCE),
                 new Reference('doctrine.orm.entity_manager'),
             ])

@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /*
  * This file is part of Sulu.
  *
@@ -15,15 +13,14 @@ namespace Sulu\Snippet\Infrastructure\Sulu\Content;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\Query\Expr\OrderBy;
 use Doctrine\ORM\QueryBuilder;
 use Sulu\Bundle\AdminBundle\SmartContent\Configuration\Builder;
 use Sulu\Bundle\AdminBundle\SmartContent\Configuration\BuilderInterface;
 use Sulu\Bundle\AdminBundle\SmartContent\Configuration\ProviderConfigurationInterface;
 use Sulu\Bundle\AdminBundle\SmartContent\SmartContentProviderInterface;
+use Sulu\Bundle\AdminBundle\SmartContent\SmartContentQueryEnhancer;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer;
-use Sulu\Content\Infrastructure\Doctrine\JoinFilterTrait;
 use Sulu\Snippet\Domain\Model\SnippetDimensionContentInterface;
 use Sulu\Snippet\Domain\Model\SnippetInterface;
 use Sulu\Snippet\Infrastructure\Sulu\Content\ResourceLoader\SnippetResourceLoader;
@@ -52,10 +49,8 @@ use Sulu\Snippet\Infrastructure\Sulu\Content\ResourceLoader\SnippetResourceLoade
  *       segmentKey?: string,
  *   }
  */
-class SnippetSmartContentProvider implements SmartContentProviderInterface
+readonly class SnippetSmartContentProvider implements SmartContentProviderInterface
 {
-    use JoinFilterTrait;
-
     /**
      * @var EntityRepository<SnippetInterface>
      */
@@ -72,7 +67,8 @@ class SnippetSmartContentProvider implements SmartContentProviderInterface
     private string $snippetDimensionContentClassName;
 
     public function __construct(
-        private readonly DimensionContentQueryEnhancer $dimensionContentQueryEnhancer,
+        private DimensionContentQueryEnhancer $dimensionContentQueryEnhancer,
+        private SmartContentQueryEnhancer $smartContentQueryEnhancer,
         EntityManagerInterface $entityManager,
     ) {
         $this->entityRepository = $entityManager->getRepository(SnippetInterface::class);
@@ -165,15 +161,8 @@ class SnippetSmartContentProvider implements SmartContentProviderInterface
         // We need the distinct here, because joins due to tags/categories can lead to duplicate results
         $queryBuilder->select('DISTINCT snippet.uuid as id');
         $queryBuilder->addSelect('filterDimensionContent.title');
-
-        /** @var OrderBy[]|null $queryParts */
-        $queryParts = $queryBuilder->getDQLPart('orderBy');
-        foreach ($queryParts ?? [] as $orderBy) {
-            foreach ($orderBy->getParts() as $order) {
-                [$column] = \explode(' ', $order);
-                $queryBuilder->addSelect($column);
-            }
-        }
+        $this->smartContentQueryEnhancer->addOrderBySelects($queryBuilder);
+        $this->smartContentQueryEnhancer->addPagination($queryBuilder, $filters['page'], $filters['limit'], $filters['maxPerPage']);
 
         /** @var array{id: string, title: string, changed?: string, authored?: string}[] $queryResult */
         $queryResult = $queryBuilder->getQuery()->getArrayResult();
@@ -261,7 +250,7 @@ class SnippetSmartContentProvider implements SmartContentProviderInterface
     {
         $websiteCategoryIds = $filters['websiteCategories'];
         if ([] !== $websiteCategoryIds) {
-            $this->addJoinFilter(
+            $this->smartContentQueryEnhancer->addJoinFilter(
                 $queryBuilder,
                 'filterDimensionContent.excerptCategories',
                 'websiteFilterCategoryId',
@@ -274,7 +263,7 @@ class SnippetSmartContentProvider implements SmartContentProviderInterface
 
         $websiteTagNames = $filters['websiteTags'];
         if ([] !== $websiteTagNames) {
-            $this->addJoinFilter(
+            $this->smartContentQueryEnhancer->addJoinFilter(
                 $queryBuilder,
                 'filterDimensionContent.excerptTags',
                 'websiteFilterTagName',
