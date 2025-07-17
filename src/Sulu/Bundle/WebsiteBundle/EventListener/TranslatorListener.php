@@ -45,6 +45,10 @@ class TranslatorListener implements EventSubscriberInterface
             return;
         }
 
+        if (!\method_exists($this->translator, 'setLocale')) {
+            return;
+        }
+
         $this->translator->setLocale($localization->getLocale(Localization::LCID));
     }
 

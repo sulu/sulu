@@ -13,7 +13,6 @@ namespace Sulu\Bundle\RouteBundle\Generator;
 
 use Symfony\Component\ExpressionLanguage\ExpressionFunction;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
-use Symfony\Contracts\Translation\LocaleAwareInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -22,7 +21,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class SymfonyExpressionTokenProvider implements TokenProviderInterface
 {
     /**
-     * @var TranslatorInterface&LocaleAwareInterface
+     * @var TranslatorInterface
      */
     private $translator;
 
@@ -33,15 +32,6 @@ class SymfonyExpressionTokenProvider implements TokenProviderInterface
 
     public function __construct(TranslatorInterface $translator)
     {
-        if (!$translator instanceof LocaleAwareInterface) {
-            throw new \LogicException(\sprintf(
-                'Expected "translator" in "%s" to be instance of "%s" but "%s" given.',
-                __CLASS__,
-                LocaleAwareInterface::class,
-                \get_class($translator)
-            ));
-        }
-
         $this->translator = $translator;
 
         $this->expressionLanguage = new ExpressionLanguage();
@@ -80,7 +70,7 @@ class SymfonyExpressionTokenProvider implements TokenProviderInterface
             }
 
             if ($entityLocale) {
-                $this->translator->setLocale($entityLocale);
+                $this->setLocale($entityLocale);
             }
 
             $result = $this->expressionLanguage->evaluate($name, [
@@ -93,6 +83,13 @@ class SymfonyExpressionTokenProvider implements TokenProviderInterface
         } catch (\Exception $e) {
             throw new CannotEvaluateTokenException($name, $entity, $e);
         } finally {
+            $this->setLocale($locale);
+        }
+    }
+
+    private function setLocale(string $locale): void
+    {
+        if (\method_exists($this->translator, 'setLocale')) {
             $this->translator->setLocale($locale);
         }
     }

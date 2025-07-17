@@ -16,7 +16,7 @@ use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\RouteBundle\Generator\CannotEvaluateTokenException;
 use Sulu\Bundle\RouteBundle\Generator\SymfonyExpressionTokenProvider;
-use Sulu\Bundle\RouteBundle\Model\RoutableInterface;
+use Sulu\Bundle\RouteBundle\Tests\Unit\TestRoutable;
 use Symfony\Component\Translation\Translator;
 
 class SymfonyExpressionTokenProviderTest extends TestCase
@@ -28,31 +28,30 @@ class SymfonyExpressionTokenProviderTest extends TestCase
         $translator = $this->prophesize(Translator::class);
         $translator->getLocale()->willReturn('de');
         $translator->setLocale('de')->shouldBeCalled();
-        $entity = $this->prophesize(RoutableInterface::class);
-        $entity->getLocale()->willReturn('en');
 
-        $entity->getLocale = function() {
-            return 'en';
-        };
+        $entity = new TestRoutable(locale: 'de');
         $entity->name = 'TEST';
+
         $provider = new SymfonyExpressionTokenProvider($translator->reveal());
         $this->assertEquals('TEST', $provider->provide($entity, 'object.name'));
     }
 
     public function testResolveTranslation(): void
     {
+        $baseLocale = 'de';
         $translator = $this->prophesize(Translator::class);
-        $translator->getLocale()->willReturn('de');
-        $translator->setLocale('de')->shouldBeCalled();
+        $translator->getLocale()->willReturn($baseLocale);
+
+        // Setting the locale to english and then resetting it back to the base locale
+        $translator->setLocale('en')->shouldBeCalled();
+        $translator->setLocale($baseLocale)->shouldBeCalled();
+
         $translator->trans(Argument::cetera())->will(function($args) {
             return \ucfirst(\str_replace(['-', '_', '.'], [' '], $args[0]));
         });
-        $entity = $this->prophesize(RoutableInterface::class);
-        $entity->getLocale()->willReturn('en');
 
-        $entity->getLocale = function() {
-            return 'en';
-        };
+        $entity = new TestRoutable(locale: 'en');
+
         $provider = new SymfonyExpressionTokenProvider($translator->reveal());
         $this->assertEquals('Test key', $provider->provide($entity, 'translator.trans("test-key")'));
     }
@@ -141,6 +140,7 @@ class SymfonyExpressionTokenProviderTest extends TestCase
         $translator = $this->prophesize(Translator::class);
         $translator->getLocale()->willReturn('en');
         $translator->setLocale('en')->shouldBeCalled();
+
         $entity = new \stdClass();
         $provider = new SymfonyExpressionTokenProvider($translator->reveal());
         $provider->provide($entity, 'object:title');
@@ -153,12 +153,9 @@ class SymfonyExpressionTokenProviderTest extends TestCase
         $translator = $this->prophesize(Translator::class);
         $translator->getLocale()->willReturn('de');
         $translator->setLocale('de')->shouldBeCalled();
-        $entity = $this->prophesize(RoutableInterface::class);
-        $entity->getLocale()->willReturn('en');
 
-        $entity->getLocale = function() {
-            return 'en';
-        };
+        $entity = new TestRoutable(locale: 'de');
+
         $provider = new SymfonyExpressionTokenProvider($translator->reveal());
         $provider->provide($entity, 'translator.addResource("php", "/test.php")');
     }

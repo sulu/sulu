@@ -24911,11 +24911,6 @@ parameters:
 			path: src/Sulu/Bundle/RouteBundle/Model/RoutableInterface.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\RouteBundle\\\\Model\\\\RoutableInterface\\:\\:setRoute\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/RouteBundle/Model/RoutableInterface.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\RouteBundle\\\\PageTree\\\\NullPageTreeUpdater\\:\\:update\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/RouteBundle/PageTree/NullPageTreeUpdater.php
@@ -25134,26 +25129,6 @@ parameters:
 			message: "#^Property Sulu\\\\Bundle\\\\RouteBundle\\\\Tests\\\\Unit\\\\Generator\\\\ChainRouteGeneratorTest\\:\\:\\$mappings type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/RouteBundle/Tests/Unit/Generator/ChainRouteGeneratorTest.php
-
-		-
-			message: "#^Access to an undefined property Prophecy\\\\Prophecy\\\\ObjectProphecy\\<Sulu\\\\Bundle\\\\RouteBundle\\\\Model\\\\RoutableInterface\\>\\:\\:\\$getLocale\\.$#"
-			count: 3
-			path: src/Sulu/Bundle/RouteBundle/Tests/Unit/Generator/SymfonyExpressionTokenProviderTest.php
-
-		-
-			message: "#^Access to an undefined property Prophecy\\\\Prophecy\\\\ObjectProphecy\\<Sulu\\\\Bundle\\\\RouteBundle\\\\Model\\\\RoutableInterface\\>\\:\\:\\$name\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/RouteBundle/Tests/Unit/Generator/SymfonyExpressionTokenProviderTest.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\RouteBundle\\\\Tests\\\\Unit\\\\Manager\\\\TestRoutable\\:\\:getId\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/RouteBundle/Tests/Unit/Manager/RouteManagerTest.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\RouteBundle\\\\Tests\\\\Unit\\\\Manager\\\\TestRoutable\\:\\:getRoute\\(\\) should return Sulu\\\\Bundle\\\\RouteBundle\\\\Model\\\\RouteInterface but returns Sulu\\\\Bundle\\\\RouteBundle\\\\Model\\\\RouteInterface\\|null\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/RouteBundle/Tests/Unit/Manager/RouteManagerTest.php
 
 		-
 			message: "#^Call to method PHPUnit\\\\Framework\\\\Assert\\:\\:assertNull\\(\\) with array will always evaluate to false\\.$#"
@@ -43747,7 +43722,7 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Component\\\\Import\\\\Format\\\\Xliff12\\:\\:utf8ToCharset\\(\\) should return string but returns string\\|false\\.$#"
-			count: 2
+			count: 1
 			path: src/Sulu/Component/Import/Format/Xliff12.php
 
 		-
