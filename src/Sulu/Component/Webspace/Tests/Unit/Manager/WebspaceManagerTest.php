@@ -897,8 +897,8 @@ class WebspaceManagerTest extends WebspaceTestCase
         $this->assertEquals('dancmf_at', $portals['dancmf_at']->getKey());
         $this->assertEquals('sulucmf_singlelanguage_at', $portals['sulucmf_singlelanguage_at']->getKey());
         $this->assertEquals(
-            'sulucmf_withoutportallocalizations_at',
-            $portals['sulucmf_withoutportallocalizations_at']->getKey()
+            'sulucmf_withoutportallocale_at',
+            $portals['sulucmf_withoutportallocale_at']->getKey()
         );
     }
 

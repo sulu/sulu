@@ -300,7 +300,7 @@ class XmlFileLoader11Test extends WebspaceTestCase
         );
 
         $this->assertEquals('Sulu CMF', $webspace->getName());
-        $this->assertEquals('sulu_io_without_portal_localization', $webspace->getKey());
+        $this->assertEquals('sulu_io_without_portal_locale', $webspace->getKey());
 
         $this->assertNull($webspace->getSecurity());
 

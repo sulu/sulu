@@ -4,7 +4,7 @@
            xsi:schemaLocation="http://schemas.sulu.io/webspace/webspace http://schemas.sulu.io/webspace/webspace-1.1.xsd">
 
     <name>Sulu CMF</name>
-    <key>sulu_io_without_portal_localization</key>
+    <key>sulu_io_without_portal_locale</key>
 
     <localizations>
         <localization language="en" country="us" shadow="auto">
@@ -44,7 +44,7 @@
     <portals>
         <portal>
             <name>Sulu CMF AT</name>
-            <key>sulucmf_withoutportallocalizations_at</key>
+            <key>sulucmf_withoutportallocale_at</key>
 
             <environments>
                 <environment type="prod">
