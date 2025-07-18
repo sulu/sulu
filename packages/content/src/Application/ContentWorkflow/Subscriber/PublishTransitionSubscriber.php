@@ -90,7 +90,7 @@ class PublishTransitionSubscriber implements EventSubscriberInterface
                 $contentRichEntity,
                 \array_merge($dimensionAttributes, ['locale' => $locale]),
                 $contentRichEntity,
-                \array_merge($dimensionAttributes, ['locale' => $locale, 'version' => time()]),
+                \array_merge($dimensionAttributes, ['locale' => $locale, 'version' => \time()]),
                 ['ignoredAttributes' => ['url']] // ignore url, because we cannot restore it from a version
             );
         }

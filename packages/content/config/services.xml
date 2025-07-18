@@ -17,8 +17,16 @@
 
             <tag name="sulu.context" context="admin"/>
         </service>
-
         <service id="Sulu\Content\Infrastructure\Sulu\Admin\ContentViewBuilderFactoryInterface" alias="sulu_content.content_view_builder_factory"/>
+
+        <service id="sulu_content.content_version_view_builder_factory" class="Sulu\Content\Infrastructure\Sulu\Admin\ContentVersionViewBuilderFactory">
+            <argument type="service" id="sulu_admin.view_builder_factory"/>
+            <argument type="service" id="sulu_security.security_checker"/>
+
+            <tag name="sulu.context" context="admin"/>
+        </service>
+        <service id="Sulu\Content\Infrastructure\Sulu\Admin\ContentVersionViewBuilderFactoryInterface" alias="sulu_content.content_version_view_builder_factory"/>
+
         <service
             id="sulu_content.webspace_select"
             class="Sulu\Content\Infrastructure\Sulu\Page\Select\WebspaceSelect"

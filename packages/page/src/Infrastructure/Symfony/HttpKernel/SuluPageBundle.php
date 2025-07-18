@@ -245,6 +245,7 @@ final class SuluPageBundle extends AbstractBundle
                 new Reference('sulu_security.security_checker'),
                 new Reference('sulu_activity.activity_list_view_builder_factory'),
                 new Reference('sulu_content.content_view_builder_factory'),
+                new Reference('sulu_content.content_version_view_builder_factory'),
             ])
             ->tag('sulu.context', ['context' => 'admin'])
             ->tag('sulu.admin');
@@ -354,6 +355,15 @@ final class SuluPageBundle extends AbstractBundle
                 new Reference('sulu_core.webspace.request_analyzer'),
             ])
             ->tag('sulu_content.smart_content_filters_visitor');
+
+        // Version Restorer
+        $services->set('sulu_page.page_version_restorer')
+            ->class('Sulu\Page\Infrastructure\Sulu\Content\VersionRestorer\PageVersionRestorer')
+            ->args([
+                new Reference('sulu_page.page_repository'),
+                new Reference('sulu_content.content_copier'),
+            ])
+            ->tag('sulu_content.version_restorer', ['type' => PageInterface::RESOURCE_KEY]);
 
         // Navigation
         $services->set('sulu_page.navigation_repository')

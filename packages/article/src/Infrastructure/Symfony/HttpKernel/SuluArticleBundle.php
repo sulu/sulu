@@ -155,6 +155,8 @@ final class SuluArticleBundle extends AbstractBundle
                 new Reference('sulu_content.content_view_builder_factory'),
                 new Reference('sulu_security.security_checker'),
                 new Reference('sulu.core.localization_manager'),
+                new Reference('sulu_activity.activity_list_view_builder_factory'),
+                new Reference('sulu_content.content_version_view_builder_factory'),
             ])
             ->tag('sulu.context', ['context' => 'admin'])
             ->tag('sulu.admin');
@@ -251,6 +253,15 @@ final class SuluArticleBundle extends AbstractBundle
                 new Reference('doctrine.orm.entity_manager'),
             ])
         ->tag('sulu_content.smart_content_provider', ['type' => ArticleInterface::RESOURCE_KEY]);
+
+        // Version Restorer
+        $services->set('sulu_article.article_version_restorer')
+            ->class('Sulu\Article\Infrastructure\Sulu\Content\VersionRestorer\ArticleVersionRestorer')
+            ->args([
+                new Reference('sulu_article.article_repository'),
+                new Reference('sulu_content.content_copier'),
+            ])
+            ->tag('sulu_content.version_restorer', ['type' => ArticleInterface::RESOURCE_KEY]);
     }
 
     /**

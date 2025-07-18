@@ -37,7 +37,7 @@
             <entity-name>unlocalizedDimensionContent</entity-name>
             <field-name>Sulu\Page\Domain\Model\PageInterface.dimensionContents</field-name>
             <method>LEFT</method>
-            <condition>unlocalizedDimensionContent.locale IS NULL AND unlocalizedDimensionContent.stage = 'draft'</condition>
+            <condition>unlocalizedDimensionContent.locale IS NULL AND unlocalizedDimensionContent.stage = 'draft' AND unlocalizedDimensionContent.version = 0</condition>
         </join>
     </joins>
 
@@ -55,7 +55,7 @@
             <entity-name>shadowDimensionContent</entity-name>
             <field-name>Sulu\Page\Domain\Model\PageInterface.dimensionContents</field-name>
             <method>LEFT</method>
-            <condition>shadowDimensionContent.locale = dimensionContent.shadowLocale AND shadowDimensionContent.stage = 'draft'</condition>
+            <condition>shadowDimensionContent.locale = dimensionContent.shadowLocale AND shadowDimensionContent.stage = 'draft' AND shadowDimensionContent.version = 0</condition>
         </join>
     </joins>
 
@@ -78,6 +78,11 @@
         <property name="id" translation="sulu_admin.uuid">
             <field-name>uuid</field-name>
             <entity-name>Sulu\Page\Domain\Model\PageInterface</entity-name>
+        </property>
+
+        <property name="version" visibility="yes">
+            <field-name>version</field-name>
+            <entity-name>dimensionContent</entity-name>
         </property>
 
         <property name="webspaceKey" visibility="never">

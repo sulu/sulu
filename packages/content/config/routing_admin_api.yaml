@@ -1,0 +1,11 @@
+sulu_content.get_versions:
+    path: /versions/{id}.{_format}
+    methods: GET
+    controller: sulu_content.version_controller::cgetAction
+    format: json
+
+sulu_content.post_version:
+    path: /versions/{id}.{_format}
+    methods: POST
+    controller: sulu_content.version_controller::postTriggerAction
+    format: json

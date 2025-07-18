@@ -3,6 +3,22 @@
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <services>
+        <!-- Admin Controller -->
+        <service id="sulu_content.version_controller"
+                 class="Sulu\Content\UserInterface\Controller\Admin\VersionController"
+                 public="true">
+            <argument type="service" id="sulu_core.list_builder.field_descriptor_factory"/>
+            <argument type="service" id="sulu_core.doctrine_list_builder_factory"/>
+            <argument type="service" id="sulu_core.doctrine_rest_helper"/>
+            <argument type="service" id="serializer"/>
+            <argument type="service" id="sulu_message_bus"/>
+            <argument type="service" id="sulu_content.content_manager"/>
+
+            <tag name="sulu.context" context="admin"/>
+            <tag name="controller.service_arguments"/>
+        </service>
+
+        <!-- Website Controller -->
         <service id="sulu_content.content_controller"
                  class="Sulu\Content\UserInterface\Controller\Website\ContentController"
                  public="true">

@@ -56,6 +56,7 @@ final class SuluContentBundle extends AbstractBundle
         $loader->load('controller.xml');
         $loader->load('resolvers.xml');
         $loader->load('resource-loader.xml');
+        $loader->load('message-handler.xml');
     }
 
     /**
@@ -70,6 +71,14 @@ final class SuluContentBundle extends AbstractBundle
                     'forms' => [
                         'directories' => [
                             \dirname(__DIR__, 4) . '/config/forms',
+                        ],
+                    ],
+                    'resources' => [
+                        'versions' => [
+                            'routes' => [
+                                'list' => 'sulu_content.get_versions',
+                                'detail' => 'sulu_content.post_version',
+                            ],
                         ],
                     ],
                 ]

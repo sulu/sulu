@@ -8,19 +8,19 @@ import {ResourceRequester} from 'sulu-admin-bundle/services';
 import type {Node} from 'react';
 
 export default class RestoreVersionItemAction extends AbstractListItemAction {
-    @observable versionIdToBeRestored: ?string | number = undefined;
+    @observable versionToBeRestored: ?number = undefined;
     @observable restoring: boolean = false;
 
-    @action handleRestoreClick = (versionId: string | number) => {
-        this.versionIdToBeRestored = versionId;
+    @action handleRestoreClick = (version: number) => {
+        this.versionToBeRestored = version;
     };
 
     @action handleDialogCancel = () => {
-        this.versionIdToBeRestored = undefined;
+        this.versionToBeRestored = undefined;
     };
 
     @action handleDialogConfirm = () => {
-        const {success_view: successView} = this.options;
+        const {success_view: successView, type} = this.options;
         const {id, locale, webspace} = this.router.attributes;
 
         if (typeof successView !== 'string') {
@@ -31,14 +31,15 @@ export default class RestoreVersionItemAction extends AbstractListItemAction {
         ResourceRequester
             .post(this.listStore.resourceKey, {}, {
                 action: 'restore',
-                version: this.versionIdToBeRestored,
+                version: this.versionToBeRestored,
+                type,
                 id,
                 locale,
                 webspace,
             })
             .then(action(() => {
                 this.restoring = false;
-                this.versionIdToBeRestored = undefined;
+                this.versionToBeRestored = undefined;
 
                 this.router.navigate(successView, {id, locale, webspace});
             }));
@@ -47,8 +48,8 @@ export default class RestoreVersionItemAction extends AbstractListItemAction {
     getItemActionConfig(item: ?Object) {
         return {
             icon: 'su-process',
-            onClick: item?.id ? () => this.handleRestoreClick(item.id) : undefined,
-            disabled: !item?.id,
+            onClick: item?.version ? () => this.handleRestoreClick(item.version) : undefined,
+            disabled: !item?.version,
         };
     }
 
@@ -61,7 +62,7 @@ export default class RestoreVersionItemAction extends AbstractListItemAction {
                 key="restore_version"
                 onCancel={this.handleDialogCancel}
                 onConfirm={this.handleDialogConfirm}
-                open={!!this.versionIdToBeRestored}
+                open={!!this.versionToBeRestored}
                 title={translate('sulu_page.restore_version')}
             >
                 {translate('sulu_page.restore_version_text')}

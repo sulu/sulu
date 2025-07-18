@@ -16,7 +16,6 @@ use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItem;
 use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItemCollection;
 use Sulu\Bundle\AdminBundle\Admin\View\DropdownToolbarAction;
-use Sulu\Bundle\AdminBundle\Admin\View\ListItemAction;
 use Sulu\Bundle\AdminBundle\Admin\View\PreviewFormViewBuilder;
 use Sulu\Bundle\AdminBundle\Admin\View\SaveWithFormDialogToolbarAction;
 use Sulu\Bundle\AdminBundle\Admin\View\ToolbarAction;
@@ -26,6 +25,7 @@ use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Webspace;
+use Sulu\Content\Infrastructure\Sulu\Admin\ContentVersionViewBuilderFactoryInterface;
 use Sulu\Content\Infrastructure\Sulu\Admin\ContentViewBuilderFactoryInterface;
 use Sulu\Page\Domain\Model\PageInterface;
 
@@ -61,8 +61,8 @@ class PageAdmin extends Admin
         private SecurityCheckerInterface $securityChecker,
         private ActivityViewBuilderFactoryInterface $activityViewBuilderFactory,
         private ContentViewBuilderFactoryInterface $contentViewBuilderFactory,
-    )
-    {
+        private ContentVersionViewBuilderFactoryInterface $contentVersionViewBuilderFactory,
+    ) {
     }
 
     public function configureNavigationItems(NavigationItemCollection $navigationItemCollection): void
@@ -300,50 +300,38 @@ class PageAdmin extends Admin
                     ->setParent(static::EDIT_FORM_VIEW)
             );
 
-            if ($this->activityViewBuilderFactory->hasActivityListPermission()) {
-                $activityResourceTabViewName = PageAdmin::EDIT_FORM_VIEW . '.activity';
+            if ($this->activityViewBuilderFactory->hasActivityListPermission() || $this->contentVersionViewBuilderFactory->hasContentVersionListPermission()) {
+                $insightsResourceTabViewName = PageAdmin::EDIT_FORM_VIEW . '.insights';
 
                 $viewCollection->add(
                     $this->viewBuilderFactory
-                        ->createResourceTabViewBuilder($activityResourceTabViewName, '/activity')
+                        ->createResourceTabViewBuilder($insightsResourceTabViewName, '/insights')
                         ->setResourceKey(PageInterface::RESOURCE_KEY)
                         ->setTabOrder(6144)
-                        ->setTabTitle('sulu_admin.activity_versions')
+                        ->setTabTitle('sulu_admin.insights')
                         ->setParent(PageAdmin::EDIT_FORM_VIEW)
                 );
 
                 $viewCollection->add(
                     $this->activityViewBuilderFactory
                         ->createActivityListViewBuilder(
-                            $activityResourceTabViewName . '.activity',
+                            $insightsResourceTabViewName . '.activity',
                             '/activities',
                             PageInterface::RESOURCE_KEY
                         )
-                        ->setParent($activityResourceTabViewName)
+                        ->setParent($insightsResourceTabViewName)
                 );
 
                 $viewCollection->add(
-                    $this->viewBuilderFactory
-                        ->createListViewBuilder($activityResourceTabViewName . '.versions', '/versions')
-                        ->setTabTitle('sulu_admin.versions')
-                        ->setResourceKey('page_versions')
-                        ->setListKey('page_versions')
-                        ->addListAdapters(['table'])
-                        ->addAdapterOptions([
-                            'table' => [
-                                'skin' => 'flat',
-                            ],
-                        ])
-                        ->disableTabGap()
-                        ->disableSearching()
-                        ->disableSelection()
-                        ->disableColumnOptions()
-                        ->disableFiltering()
-                        ->addRouterAttributesToListRequest(['id', 'webspace'])
-                        ->addItemActions([
-                            new ListItemAction('restore_version', ['success_view' => PageAdmin::EDIT_FORM_VIEW]),
-                        ])
-                        ->setParent($activityResourceTabViewName)
+                    $this->contentVersionViewBuilderFactory
+                    ->createContentVersionListViewBuilder(
+                        $insightsResourceTabViewName . '.versions',
+                        '/versions',
+                        PageInterface::RESOURCE_KEY,
+                        'page_versions',
+                        PageAdmin::EDIT_FORM_VIEW,
+                    )
+                    ->setParent($insightsResourceTabViewName)
                 );
             }
         }
@@ -457,7 +445,7 @@ class PageAdmin extends Admin
     public function getConfig(): array
     {
         $webspaces = $this->webspaceManager->getWebspaceCollection()->getWebspaces();
-        \uasort($webspaces, function ($w1, $w2) {
+        \uasort($webspaces, function($w1, $w2) {
             return \strcmp($w1->getName(), $w2->getName());
         });
 

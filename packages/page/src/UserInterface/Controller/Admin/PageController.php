@@ -301,6 +301,7 @@ final class PageController
         $listBuilder->addSelectField($fieldDescriptors['lft']);
         $listBuilder->addSelectField($fieldDescriptors['rgt']);
         $listBuilder->addSelectField($fieldDescriptors['parentId']);
+        $listBuilder->addSelectField($fieldDescriptors['version']);
         $listBuilder->sort($fieldDescriptors['lft'], 'asc');
 
         // collect entities of which the children should be included in the response

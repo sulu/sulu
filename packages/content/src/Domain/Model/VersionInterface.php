@@ -17,6 +17,9 @@ interface VersionInterface
 {
     public const DEFAULT_VERSION = 0;
 
+    public const RESOURCE_KEY = 'versions';
+    public const LIST_KEY = 'versions';
+
     public function getVersion(): int;
 
     public function setVersion(int $version): void;
