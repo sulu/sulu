@@ -18,10 +18,8 @@ use Sulu\Bundle\PersistenceBundle\DependencyInjection\PersistenceExtensionTrait;
 use Sulu\Bundle\PersistenceBundle\PersistenceBundleTrait;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStore;
 use Sulu\Content\Infrastructure\Sulu\Preview\ContentObjectProvider;
-use Sulu\Page\Application\DataMapper\NavigationContextDataMapper;
 use Sulu\Page\Application\Mapper\PageContentMapper;
 use Sulu\Page\Application\Mapper\PageMapperInterface;
-use Sulu\Page\Application\Merger\NavigationContextMerger;
 use Sulu\Page\Application\MessageHandler\ApplyWorkflowTransitionPageMessageHandler;
 use Sulu\Page\Application\MessageHandler\CopyLocalePageMessageHandler;
 use Sulu\Page\Application\MessageHandler\CopyPageMessageHandler;
@@ -39,6 +37,9 @@ use Sulu\Page\Infrastructure\Doctrine\Repository\NavigationRepository;
 use Sulu\Page\Infrastructure\Doctrine\Repository\PageRepository;
 use Sulu\Page\Infrastructure\Sulu\Admin\PageAdmin;
 use Sulu\Page\Infrastructure\Sulu\Build\HomepageBuilder;
+use Sulu\Page\Infrastructure\Sulu\Content\DataMapper\NavigationContextDataMapper;
+use Sulu\Page\Infrastructure\Sulu\Content\Merger\NavigationContextMerger;
+use Sulu\Page\Infrastructure\Sulu\Content\Normalizer\PageNormalizer;
 use Sulu\Page\Infrastructure\Sulu\Content\PageLinkProvider;
 use Sulu\Page\Infrastructure\Sulu\Content\PageSmartContentProvider;
 use Sulu\Page\Infrastructure\Sulu\Content\PageTeaserProvider;
@@ -203,7 +204,7 @@ final class SuluPageBundle extends AbstractBundle
 
         // Normalizer service
         $services->set('sulu_page.page_normalizer')
-            ->class('Sulu\Page\Application\Normalizer\PageNormalizer')
+            ->class(PageNormalizer::class)
             ->tag('sulu_content.normalizer');
 
         // Property Resolver services

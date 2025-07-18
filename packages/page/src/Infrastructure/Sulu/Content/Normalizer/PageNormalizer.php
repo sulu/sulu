@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Page\Application\Normalizer;
+namespace Sulu\Page\Infrastructure\Sulu\Content\Normalizer;
 
 use Sulu\Content\Application\ContentNormalizer\Normalizer\NormalizerInterface;
 use Sulu\Page\Domain\Model\PageDimensionContentInterface;

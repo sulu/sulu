@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Page\Application\DataMapper;
+namespace Sulu\Page\Infrastructure\Sulu\Content\DataMapper;
 
 use Sulu\Content\Application\ContentDataMapper\DataMapper\DataMapperInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;

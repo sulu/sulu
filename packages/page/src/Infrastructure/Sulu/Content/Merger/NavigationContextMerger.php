@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Page\Application\Merger;
+namespace Sulu\Page\Infrastructure\Sulu\Content\Merger;
 
 use Sulu\Content\Application\ContentMerger\Merger\MergerInterface;
 use Sulu\Page\Domain\Model\PageDimensionContentInterface;

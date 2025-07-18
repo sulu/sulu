@@ -9,17 +9,17 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\Page\Tests\Unit\Application\Merger\NavigationContextMerger;
+namespace Sulu\Bundle\Page\Tests\Unit\Infrastructure\Sulu\Content\Merger;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Content\Application\ContentMerger\Merger\MergerInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
-use Sulu\Page\Application\Merger\NavigationContextMerger;
 use Sulu\Page\Domain\Model\Page;
 use Sulu\Page\Domain\Model\PageDimensionContent;
 use Sulu\Page\Domain\Model\PageDimensionContentInterface;
+use Sulu\Page\Infrastructure\Sulu\Content\Merger\NavigationContextMerger;
 
 class NavigationContextMergerTest extends TestCase
 {
