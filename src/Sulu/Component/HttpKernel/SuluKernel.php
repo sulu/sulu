@@ -26,8 +26,14 @@ abstract class SuluKernel extends Kernel
 {
     use MicroKernelTrait;
 
+    /**
+     * @internal Only for internal use, do not use in your code, might be removed in the future.
+     */
     public const CONTEXT_ADMIN = 'admin';
 
+    /**
+     * @internal Only for internal use, do not use in your code, might be removed in the future.
+     */
     public const CONTEXT_WEBSITE = 'website';
 
     /**
