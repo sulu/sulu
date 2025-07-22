@@ -73,6 +73,10 @@ interface DimensionContentInterface
      */
     public function markAsMerged(): void;
 
+    public function getVersion(): int;
+
+    public function setVersion(int $version): void;
+
     /**
      * @return mixed[]
      */

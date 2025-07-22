@@ -16,6 +16,7 @@ namespace Sulu\Content\Tests\Unit\Content\Domain\Model;
 use PHPUnit\Framework\TestCase;
 use Sulu\Content\Domain\Model\DimensionContentCollection;
 use Sulu\Content\Domain\Model\DimensionContentCollectionInterface;
+use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\Example;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\ExampleDimensionContent;
 
@@ -143,6 +144,7 @@ class DimensionContentCollectionTest extends TestCase
             [
                 'locale' => 'de',
                 'stage' => 'draft',
+                'version' => DimensionContentInterface::DEFAULT_VERSION,
             ],
             $dimensionContentCollection->getDimensionAttributes()
         );

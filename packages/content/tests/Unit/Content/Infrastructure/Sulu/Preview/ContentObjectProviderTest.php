@@ -312,7 +312,7 @@ class ContentObjectProviderTest extends TestCase
                     return $exampleDimensionContent === $dimensionContentCollection->getDimensionContent([]);
                 }
             ),
-            ['locale' => 'de', 'stage' => 'draft'],
+            ['locale' => 'de', 'stage' => 'draft', 'version' => 0],
             $data
         )->shouldBeCalledTimes(1);
     }

@@ -72,6 +72,8 @@ class ContentMergerTest extends TestCase
             ->shouldBeCalled();
         $mergedDimensionContent->markAsMerged()
             ->shouldBeCalled();
+        $mergedDimensionContent->setVersion(ExampleDimensionContent::DEFAULT_VERSION)
+            ->shouldBeCalled();
 
         $dimensionContentCollection = new DimensionContentCollection([
             $dimensionContent1,

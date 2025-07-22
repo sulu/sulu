@@ -71,6 +71,7 @@ class DimensionContentCollectionFactoryTest extends TestCase
         $attributes = [
             'locale' => 'de',
             'stage' => 'draft',
+            'version' => 0,
         ];
 
         $data = [
@@ -129,6 +130,7 @@ class DimensionContentCollectionFactoryTest extends TestCase
         $attributes = [
             'locale' => 'de',
             'stage' => 'draft',
+            'version' => 0,
         ];
 
         $data = [
@@ -187,6 +189,7 @@ class DimensionContentCollectionFactoryTest extends TestCase
         $attributes = [
             'locale' => 'de',
             'stage' => 'draft',
+            'version' => 0,
         ];
 
         $data = [

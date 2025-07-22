@@ -130,6 +130,7 @@ class WorkflowDataMapperTest extends TestCase
             [
                 'stage' => 'draft',
                 'locale' => 'en',
+                'version' => DimensionContentInterface::DEFAULT_VERSION,
             ],
             $localizedDimensionContent::getWorkflowTransitionEdit()
         )->willReturn($localizedDimensionContent);
@@ -159,6 +160,7 @@ class WorkflowDataMapperTest extends TestCase
             [
                 'stage' => 'draft',
                 'locale' => 'en',
+                'version' => DimensionContentInterface::DEFAULT_VERSION,
             ],
             $localizedDimensionContent::getWorkflowTransitionEdit()
         )->shouldBeCalled()->willReturn($localizedDimensionContent);

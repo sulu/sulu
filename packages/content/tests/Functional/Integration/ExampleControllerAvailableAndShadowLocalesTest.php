@@ -560,6 +560,7 @@ class ExampleControllerAvailableAndShadowLocalesTest extends SuluTestCase
             ->addSelect('dimensionContent.shadowLocales')
             ->addSelect('dimensionContent.templateData')
             ->where('IDENTITY(dimensionContent.example) = :id')
+            ->andWhere('dimensionContent.version = 0')
             ->orderBy('dimensionContent.id')
             ->setParameter('id', $id);
 

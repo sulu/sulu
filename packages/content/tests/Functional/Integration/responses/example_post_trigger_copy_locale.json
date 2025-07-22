@@ -42,5 +42,6 @@
     "template": "example-2",
     "title": "Test Example",
     "url": "/my-example",
+    "version": 0,
     "workflowPlace": "unpublished"
 }

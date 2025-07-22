@@ -130,6 +130,7 @@ class DimensionContentTraitTest extends TestCase
         $this->assertSame([
             'locale' => null,
             'stage' => 'draft',
+            'version' => DimensionContentInterface::DEFAULT_VERSION,
         ], $model::getDefaultDimensionAttributes());
     }
 

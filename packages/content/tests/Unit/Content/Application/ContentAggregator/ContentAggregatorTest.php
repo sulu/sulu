@@ -58,6 +58,7 @@ class ContentAggregatorTest extends TestCase
         $expectedAttributes = [
             'locale' => 'de',
             'stage' => DimensionContentInterface::STAGE_DRAFT,
+            'version' => DimensionContentInterface::DEFAULT_VERSION,
         ];
 
         $dimensionContentCollection = new DimensionContentCollection(
@@ -102,6 +103,7 @@ class ContentAggregatorTest extends TestCase
         $expectedAttributes = [
             'locale' => 'de',
             'stage' => DimensionContentInterface::STAGE_DRAFT,
+            'version' => DimensionContentInterface::DEFAULT_VERSION,
         ];
 
         $dimensionContentCollection = new DimensionContentCollection(

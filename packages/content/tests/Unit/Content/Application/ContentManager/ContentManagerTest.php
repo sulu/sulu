@@ -48,7 +48,7 @@ class ContentManagerTest extends TestCase
     {
         $dimensionContent = $this->prophesize(DimensionContentInterface::class);
         $contentRichEntity = $this->prophesize(ContentRichEntityInterface::class);
-        $dimensionAttributes = ['locale' => 'de', 'stage' => 'draft'];
+        $dimensionAttributes = ['locale' => 'de', 'stage' => 'draft', 'version' => DimensionContentInterface::DEFAULT_VERSION];
 
         $contentAggregator = $this->prophesize(ContentAggregatorInterface::class);
         $contentPersister = $this->prophesize(ContentPersisterInterface::class);
@@ -79,7 +79,7 @@ class ContentManagerTest extends TestCase
         $dimensionContent = $this->prophesize(DimensionContentInterface::class);
         $contentRichEntity = $this->prophesize(ContentRichEntityInterface::class);
         $data = ['data' => 'value'];
-        $dimensionAttributes = ['locale' => 'de', 'stage' => 'draft'];
+        $dimensionAttributes = ['locale' => 'de', 'stage' => 'draft', 'version' => DimensionContentInterface::DEFAULT_VERSION];
 
         $contentAggregator = $this->prophesize(ContentAggregatorInterface::class);
         $contentPersister = $this->prophesize(ContentPersisterInterface::class);

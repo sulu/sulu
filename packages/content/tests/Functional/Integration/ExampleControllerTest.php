@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Sulu\Content\Tests\Functional\Integration;
 
+use PHPUnit\Framework\Attributes\Depends;
 use Sulu\Bundle\TestBundle\Testing\AssertSnapshotTrait;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Route\Domain\Repository\RouteRepositoryInterface;
@@ -92,7 +93,7 @@ class ExampleControllerTest extends SuluTestCase
         return $id;
     }
 
-    #[\PHPUnit\Framework\Attributes\Depends('testPostPublish')]
+    #[Depends('testPostPublish')]
     public function testPostTriggerUnpublish(int $id): void
     {
         $this->client->request('POST', '/admin/api/examples/' . $id . '?locale=en&action=unpublish');
@@ -152,7 +153,7 @@ class ExampleControllerTest extends SuluTestCase
         return $id;
     }
 
-    #[\PHPUnit\Framework\Attributes\Depends('testPost')]
+    #[Depends('testPost')]
     public function testGet(int $id): void
     {
         $this->client->request('GET', '/admin/api/examples/' . $id . '?locale=en');
@@ -168,7 +169,7 @@ class ExampleControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(404, $response);
     }
 
-    #[\PHPUnit\Framework\Attributes\Depends('testPost')]
+    #[Depends('testPost')]
     public function testGetGhostLocale(int $id): void
     {
         $this->client->request('GET', '/admin/api/examples/' . $id . '?locale=de');
@@ -184,7 +185,7 @@ class ExampleControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(404, $response);
     }
 
-    #[\PHPUnit\Framework\Attributes\Depends('testPost')]
+    #[Depends('testPost')]
     public function testPostTriggerCopyLocale(int $id): void
     {
         $this->client->request('POST', '/admin/api/examples/' . $id . '?locale=de&action=copy-locale&src=en&dest=de');
@@ -194,8 +195,8 @@ class ExampleControllerTest extends SuluTestCase
         $this->assertResponseSnapshot('example_post_trigger_copy_locale.json', $response, 200);
     }
 
-    #[\PHPUnit\Framework\Attributes\Depends('testPost')]
-    #[\PHPUnit\Framework\Attributes\Depends('testGet')]
+    #[Depends('testPost')]
+    #[Depends('testGet')]
     public function testPut(int $id): void
     {
         $this->client->request('PUT', '/admin/api/examples/' . $id . '?locale=en', [], [], [], \json_encode([
@@ -231,8 +232,8 @@ class ExampleControllerTest extends SuluTestCase
         $this->assertResponseSnapshot('example_put.json', $response, 200);
     }
 
-    #[\PHPUnit\Framework\Attributes\Depends('testPost')]
-    #[\PHPUnit\Framework\Attributes\Depends('testPut')]
+    #[Depends('testPost')]
+    #[Depends('testPut')]
     public function testGetList(): void
     {
         $this->client->request('GET', '/admin/api/examples?locale=en');
@@ -241,8 +242,8 @@ class ExampleControllerTest extends SuluTestCase
         $this->assertResponseSnapshot('example_cget.json', $response, 200);
     }
 
-    #[\PHPUnit\Framework\Attributes\Depends('testPost')]
-    #[\PHPUnit\Framework\Attributes\Depends('testGetList')]
+    #[Depends('testPost')]
+    #[Depends('testGetList')]
     public function testDelete(int $id): void
     {
         $this->client->request('DELETE', '/admin/api/examples/' . $id . '?locale=en');

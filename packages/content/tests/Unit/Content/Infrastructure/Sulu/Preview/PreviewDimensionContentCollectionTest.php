@@ -79,7 +79,7 @@ class PreviewDimensionContentCollectionTest extends TestCase
         );
 
         $this->assertSame(
-            ['locale' => 'es', 'stage' => 'draft'],
+            ['locale' => 'es', 'stage' => 'draft', 'version' => 0],
             $previewDimensionContentCollection->getDimensionAttributes()
         );
     }

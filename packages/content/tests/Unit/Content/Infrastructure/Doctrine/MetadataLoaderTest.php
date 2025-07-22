@@ -133,6 +133,7 @@ class MetadataLoaderTest extends TestCase
                 'stage' => false,
                 'ghostLocale' => false,
                 'availableLocales' => false,
+                'version' => false,
             ],
             [],
             [
@@ -148,6 +149,7 @@ class MetadataLoaderTest extends TestCase
                 'stage' => true,
                 'ghostLocale' => true,
                 'availableLocales' => true,
+                'version' => true,
             ],
             [],
             [

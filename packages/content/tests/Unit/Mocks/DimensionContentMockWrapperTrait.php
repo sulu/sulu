@@ -90,6 +90,16 @@ trait DimensionContentMockWrapperTrait
         $this->instance->markAsMerged();
     }
 
+    public function getVersion(): int
+    {
+        return $this->instance->getVersion();
+    }
+
+    public function setVersion(int $version): void
+    {
+        $this->instance->setVersion($version);
+    }
+
     public static function getDefaultDimensionAttributes(): array
     {
         return [

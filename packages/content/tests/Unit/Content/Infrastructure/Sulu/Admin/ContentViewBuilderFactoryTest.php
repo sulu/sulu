@@ -17,6 +17,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Sulu\Bundle\ActivityBundle\Infrastructure\Sulu\Admin\ActivityAdmin;
 use Sulu\Bundle\ActivityBundle\Infrastructure\Sulu\Admin\View\ActivityViewBuilderFactory;
 use Sulu\Bundle\AdminBundle\Admin\View\FormViewBuilderInterface;
 use Sulu\Bundle\AdminBundle\Admin\View\PreviewFormViewBuilderInterface;
@@ -112,6 +113,7 @@ class ContentViewBuilderFactoryTest extends TestCase
     public function testCreateViews(): void
     {
         $securityChecker = $this->prophesize(SecurityCheckerInterface::class);
+        $securityChecker->hasPermission(ActivityAdmin::SECURITY_CONTEXT, PermissionTypes::VIEW)->willReturn(true);
 
         $contentMetadataInspector = $this->prophesize(ContentMetadataInspectorInterface::class);
         $contentMetadataInspector->getDimensionContentClass(Example::class)
@@ -127,7 +129,7 @@ class ContentViewBuilderFactoryTest extends TestCase
 
         $views = $contentViewBuilder->createViews(Example::class, 'edit_parent_key');
 
-        $this->assertCount(4, $views);
+        $this->assertCount(7, $views);
 
         $this->assertInstanceOf(FormViewBuilderInterface::class, $views[0]);
         $this->assertSame('edit_parent_key.content', $views[0]->getName());
@@ -143,7 +145,7 @@ class ContentViewBuilderFactoryTest extends TestCase
 
         $views = $contentViewBuilder->createViews(Example::class, 'edit_parent_key', 'add_parent_key');
 
-        $this->assertCount(5, $views);
+        $this->assertCount(8, $views);
 
         $this->assertInstanceOf(FormViewBuilderInterface::class, $views[0]);
         $this->assertSame('add_parent_key.content', $views[0]->getName());
@@ -174,6 +176,7 @@ class ContentViewBuilderFactoryTest extends TestCase
     public function testCreateViewsWithPreview(): void
     {
         $securityChecker = $this->prophesize(SecurityCheckerInterface::class);
+        $securityChecker->hasPermission(ActivityAdmin::SECURITY_CONTEXT, PermissionTypes::VIEW)->willReturn(true);
 
         $entityManager = $this->prophesize(EntityManagerInterface::class);
         $contentMetadataInspector = $this->prophesize(ContentMetadataInspectorInterface::class);
@@ -201,7 +204,7 @@ class ContentViewBuilderFactoryTest extends TestCase
 
         $views = $contentViewBuilder->createViews(Example::class, 'edit_parent_key');
 
-        $this->assertCount(4, $views);
+        $this->assertCount(7, $views);
         $this->assertInstanceOf(PreviewFormViewBuilderInterface::class, $views[0]);
         $this->assertInstanceOf(PreviewFormViewBuilderInterface::class, $views[1]);
         $this->assertInstanceOf(PreviewFormViewBuilderInterface::class, $views[2]);
@@ -227,6 +230,8 @@ class ContentViewBuilderFactoryTest extends TestCase
                     ['sulu_admin.save_with_publishing', 'sulu_admin.dropdown'],
                     ['sulu_admin.save_with_publishing', 'sulu_admin.dropdown'],
                     ['sulu_admin.save_with_publishing', 'sulu_admin.dropdown'],
+                    [],
+                    [],
                 ],
             ],
             [
@@ -241,6 +246,8 @@ class ContentViewBuilderFactoryTest extends TestCase
                     ['sulu_admin.save_with_publishing', 'sulu_admin.dropdown'],
                     ['sulu_admin.save_with_publishing', 'sulu_admin.dropdown'],
                     ['sulu_admin.save_with_publishing', 'sulu_admin.dropdown'],
+                    [],
+                    [],
                 ],
             ],
             [
@@ -255,6 +262,8 @@ class ContentViewBuilderFactoryTest extends TestCase
                     ['sulu_admin.save_with_publishing', 'sulu_admin.dropdown'],
                     ['sulu_admin.save_with_publishing', 'sulu_admin.dropdown'],
                     ['sulu_admin.save_with_publishing', 'sulu_admin.dropdown'],
+                    [],
+                    [],
                 ],
             ],
             [
@@ -281,6 +290,8 @@ class ContentViewBuilderFactoryTest extends TestCase
                     ['sulu_admin.save_with_publishing', 'sulu_admin.dropdown'],
                     ['sulu_admin.save_with_publishing', 'sulu_admin.dropdown'],
                     ['sulu_admin.save_with_publishing', 'sulu_admin.dropdown'],
+                    [],
+                    [],
                 ],
             ],
             [
@@ -296,6 +307,8 @@ class ContentViewBuilderFactoryTest extends TestCase
                     ['sulu_admin.save_with_publishing', 'sulu_admin.dropdown'],
                     ['sulu_admin.save_with_publishing', 'sulu_admin.dropdown'],
                     ['sulu_admin.save_with_publishing', 'sulu_admin.dropdown'],
+                    [],
+                    [],
                 ],
             ],
         ];
@@ -309,6 +322,7 @@ class ContentViewBuilderFactoryTest extends TestCase
     public function testCreateViewsWithSecurityContext(array $permissions, array $expectedToolbarActions): void
     {
         $securityChecker = $this->prophesize(SecurityCheckerInterface::class);
+        $securityChecker->hasPermission(ActivityAdmin::SECURITY_CONTEXT, PermissionTypes::VIEW)->willReturn(false);
 
         $contentMetadataInspector = $this->prophesize(ContentMetadataInspectorInterface::class);
         $contentMetadataInspector->getDimensionContentClass(Example::class)
@@ -331,7 +345,7 @@ class ContentViewBuilderFactoryTest extends TestCase
 
         foreach ($views as $index => $viewBuilder) {
             /** @var ToolbarAction[] $toolbarActions */
-            $toolbarActions = $viewBuilder->getView()->getOption('toolbarActions');
+            $toolbarActions = $viewBuilder->getView()->getOption('toolbarActions') ?? [];
             $toolbarActionTypes = \array_map(function($toolbarAction) {
                 return $toolbarAction->getType();
             }, $toolbarActions);
@@ -369,6 +383,8 @@ class ContentViewBuilderFactoryTest extends TestCase
                     ['sulu_admin.save'],
                     ['sulu_admin.save'],
                     ['sulu_admin.save'],
+                    [],
+                    [],
                 ],
             ],
             [
@@ -402,6 +418,8 @@ class ContentViewBuilderFactoryTest extends TestCase
                     ['sulu_admin.save'],
                     ['sulu_admin.save'],
                     ['sulu_admin.save'],
+                    [],
+                    [],
                 ],
             ],
             [
@@ -436,6 +454,8 @@ class ContentViewBuilderFactoryTest extends TestCase
                     ['sulu_admin.save_with_publishing', 'sulu_admin.dropdown'],
                     ['sulu_admin.save_with_publishing', 'sulu_admin.dropdown'],
                     ['sulu_admin.save_with_publishing', 'sulu_admin.dropdown'],
+                    [],
+                    [],
                 ],
             ],
         ];
@@ -451,6 +471,7 @@ class ContentViewBuilderFactoryTest extends TestCase
     public function testCreateViewsWithContentRichEntityClass(DimensionContentInterface $dimensionContentObject, array $expectedToolbarActions): void
     {
         $securityChecker = $this->prophesize(SecurityCheckerInterface::class);
+        $securityChecker->hasPermission(ActivityAdmin::SECURITY_CONTEXT, PermissionTypes::VIEW)->willReturn(false);
 
         $contentMetadataInspector = $this->prophesize(ContentMetadataInspectorInterface::class);
         $contentMetadataInspector->getDimensionContentClass(Example::class)
@@ -468,7 +489,7 @@ class ContentViewBuilderFactoryTest extends TestCase
 
         foreach ($views as $index => $viewBuilder) {
             /** @var ToolbarAction[] $toolbarActions */
-            $toolbarActions = $viewBuilder->getView()->getOption('toolbarActions');
+            $toolbarActions = $viewBuilder->getView()->getOption('toolbarActions') ?? [];
             $toolbarActionTypes = \array_map(function($toolbarAction) {
                 return $toolbarAction->getType();
             }, $toolbarActions);
