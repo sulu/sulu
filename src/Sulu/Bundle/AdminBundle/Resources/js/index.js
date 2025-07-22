@@ -127,6 +127,7 @@ import {initializeJexl} from './utils/jexl';
 import {ExternalLinkTypeOverlay, LinkTypeOverlay} from './containers/Link';
 import linkTypeRegistry from './containers/Link/registries/linkTypeRegistry';
 import AiApplication from './containers/AiApplication';
+import RestoreVersionItemAction from "./views/List/itemActions/RestoreVersionItemAction";
 
 configure({enforceActions: 'observed'});
 
@@ -244,6 +245,7 @@ function registerListFieldTransformers() {
 function registerListItemActions() {
     listItemActionRegistry.add('link', ListLinkItemAction);
     listItemActionRegistry.add('detail_link', ListDetailLinkItemAction);
+    listItemActionRegistry.add('restore_version', RestoreVersionItemAction);
 }
 
 function registerFieldTypes(fieldTypeOptions) {

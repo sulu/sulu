@@ -299,7 +299,7 @@ final class SuluArticleBundle extends AbstractBundle
                         'articles_versions' => [
                             'routes' => [
                                 'list' => 'sulu_article.get_article_versions',
-                                'detail' => 'sulu_article.post_article',
+                                'detail' => 'sulu_article.get_article',
                             ],
                         ],
                     ],
