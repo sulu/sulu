@@ -421,9 +421,11 @@ export default withToolbar(List, function() {
     const {router} = this.props;
 
     const {
+        attributes,
         route: {
             options: {
                 backView,
+                routerAttributesToBackView,
             },
         },
     } = router;
@@ -432,6 +434,16 @@ export default withToolbar(List, function() {
         ? {
             onClick: () => {
                 const options = {};
+
+                if (routerAttributesToBackView) {
+                    Object.keys(toJS(routerAttributesToBackView)).forEach((key) => {
+                        const formOptionKey = routerAttributesToBackView[key];
+                        const attributeName = isNaN(key) ? key : routerAttributesToBackView[key];
+
+                        options[formOptionKey] = attributes[attributeName];
+                    });
+                }
+
                 if (this.locale) {
                     options.locale = this.locale.get();
                 }

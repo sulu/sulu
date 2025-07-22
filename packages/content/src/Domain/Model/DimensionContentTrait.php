@@ -40,6 +40,8 @@ trait DimensionContentTrait
      */
     private $isMerged = false;
 
+    private int $version = DimensionContentInterface::DEFAULT_VERSION;
+
     /**
      * @internal should only be set by content bundle services not from outside
      */
@@ -127,11 +129,22 @@ trait DimensionContentTrait
         $this->isMerged = true;
     }
 
+    public function getVersion(): int
+    {
+        return $this->version;
+    }
+
+    public function setVersion(int $version): void
+    {
+        $this->version = $version;
+    }
+
     public static function getDefaultDimensionAttributes(): array
     {
         return [
             'locale' => null,
             'stage' => DimensionContentInterface::STAGE_DRAFT,
+            'version' => DimensionContentInterface::DEFAULT_VERSION,
         ];
     }
 

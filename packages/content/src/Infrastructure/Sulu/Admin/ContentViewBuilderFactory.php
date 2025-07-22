@@ -13,8 +13,11 @@ declare(strict_types=1);
 
 namespace Sulu\Content\Infrastructure\Sulu\Admin;
 
+use Sulu\Article\Domain\Model\ArticleInterface;
+use Sulu\Bundle\ActivityBundle\Infrastructure\Sulu\Admin\View\ActivityViewBuilderFactoryInterface;
 use Sulu\Bundle\AdminBundle\Admin\View\DropdownToolbarAction;
 use Sulu\Bundle\AdminBundle\Admin\View\FormViewBuilderInterface;
+use Sulu\Bundle\AdminBundle\Admin\View\ListItemAction;
 use Sulu\Bundle\AdminBundle\Admin\View\PreviewFormViewBuilderInterface;
 use Sulu\Bundle\AdminBundle\Admin\View\ToolbarAction;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewBuilderFactoryInterface;
@@ -35,45 +38,16 @@ use Sulu\Content\Domain\Model\WorkflowInterface;
 class ContentViewBuilderFactory implements ContentViewBuilderFactoryInterface
 {
     /**
-     * @var ViewBuilderFactoryInterface
-     */
-    private $viewBuilderFactory;
-
-    /**
-     * @var PreviewObjectProviderRegistryInterface
-     */
-    private $objectProviderRegistry;
-
-    /**
-     * @var ContentMetadataInspectorInterface
-     */
-    private $contentMetadataInspector;
-
-    /**
-     * @var SecurityCheckerInterface
-     */
-    private $securityChecker;
-
-    /**
-     * @var array<string, array{instanceOf: class-string}>
-     */
-    private $settingsForms;
-
-    /**
      * @param array<string, array{instanceOf: class-string}> $settingsForms
      */
     public function __construct(
-        ViewBuilderFactoryInterface $viewBuilderFactory,
-        PreviewObjectProviderRegistryInterface $objectProviderRegistry,
-        ContentMetadataInspectorInterface $contentMetadataInspector,
-        SecurityCheckerInterface $securityChecker,
-        array $settingsForms
+        private ViewBuilderFactoryInterface $viewBuilderFactory,
+        private ActivityViewBuilderFactoryInterface $activityViewBuilderFactory,
+        private PreviewObjectProviderRegistryInterface $objectProviderRegistry,
+        private ContentMetadataInspectorInterface $contentMetadataInspector,
+        private SecurityCheckerInterface $securityChecker,
+        private array $settingsForms
     ) {
-        $this->viewBuilderFactory = $viewBuilderFactory;
-        $this->objectProviderRegistry = $objectProviderRegistry;
-        $this->contentMetadataInspector = $contentMetadataInspector;
-        $this->securityChecker = $securityChecker;
-        $this->settingsForms = $settingsForms;
     }
 
     public function getDefaultToolbarActions(
@@ -240,6 +214,14 @@ class ContentViewBuilderFactory implements ContentViewBuilderFactoryInterface
                 $settingsToolbarActions,
                 $dimensionContentClass
             );
+
+            $views = \array_merge(
+                $views,
+                $this->createInsightsFormViews(
+                    $editParentView,
+                    $resourceKey,
+                )
+            );
         }
 
         return $views;
@@ -328,6 +310,70 @@ class ContentViewBuilderFactory implements ContentViewBuilderFactoryInterface
             ->addToolbarActions(\array_values($toolbarActions))
             ->setTabOrder(50)
             ->setParent($parentView);
+    }
+
+    /**
+     * @return array<ViewBuilderInterface>
+     */
+    private function createInsightsFormViews(
+        string $parentView,
+        string $resourceKey,
+        ?string $versionsResourceKey = null,
+        ?string $versionsListKey = null,
+    ): array {
+        $insightsResourceTabViewName = $parentView . '.insights';
+
+        if (null === $versionsResourceKey) {
+            $versionsResourceKey = $resourceKey . '_versions';
+        }
+
+        if (null === $versionsListKey) {
+            $versionsListKey = $resourceKey . '_versions';
+        }
+
+        $views = [
+            $this->viewBuilderFactory
+                ->createResourceTabViewBuilder($insightsResourceTabViewName, '/insights')
+                ->setResourceKey($resourceKey)
+                ->setTabOrder(6144)
+                ->setTabTitle('sulu_admin.insights')
+                ->addRouterAttributesToBackView(['webspace'])
+                ->setParent($parentView),
+
+            $this->viewBuilderFactory
+                ->createListViewBuilder($insightsResourceTabViewName . '.versions', '/versions')
+                ->setTabTitle('sulu_admin.versions')
+                ->setResourceKey($versionsResourceKey)
+                ->setListKey($versionsListKey)
+                ->addListAdapters(['table'])
+                ->addAdapterOptions([
+                    'table' => [
+                        'skin' => 'flat',
+                    ],
+                ])
+                ->disableTabGap()
+                ->disableSearching()
+                ->disableSelection()
+                ->disableColumnOptions()
+                ->disableFiltering()
+                ->addRouterAttributesToListRequest(['id', 'webspace'])
+                ->addItemActions([
+                    new ListItemAction('restore_version', ['success_view' => $parentView]),
+                ])
+                ->setParent($insightsResourceTabViewName),
+        ];
+
+        if ($this->activityViewBuilderFactory->hasActivityListPermission()) {
+            $views[] = $this->activityViewBuilderFactory
+                ->createActivityListViewBuilder(
+                    $insightsResourceTabViewName . '.activity',
+                    '/activities',
+                    ArticleInterface::RESOURCE_KEY
+                )
+                ->setParent($insightsResourceTabViewName);
+        }
+
+        return $views;
     }
 
     /**

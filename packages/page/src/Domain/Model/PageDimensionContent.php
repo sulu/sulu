@@ -24,8 +24,6 @@ use Sulu\Content\Domain\Model\RoutableTrait;
 use Sulu\Content\Domain\Model\SeoTrait;
 use Sulu\Content\Domain\Model\ShadowTrait;
 use Sulu\Content\Domain\Model\TemplateTrait;
-use Sulu\Content\Domain\Model\VersionInterface;
-use Sulu\Content\Domain\Model\VersionTrait;
 use Sulu\Content\Domain\Model\WorkflowTrait;
 use Sulu\Route\Domain\Model\Route;
 
@@ -47,7 +45,6 @@ class PageDimensionContent implements PageDimensionContentInterface
     }
     use WorkflowTrait;
     use AuditableTrait;
-    use VersionTrait;
 
     protected int $id;
 

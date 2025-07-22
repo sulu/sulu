@@ -342,8 +342,8 @@ class PageAdmin extends Admin
                         $this->viewBuilderFactory
                             ->createListViewBuilder($activityResourceTabViewName . '.versions', '/versions')
                             ->setTabTitle('sulu_admin.versions')
-                            ->setResourceKey('page_versions')
-                            ->setListKey('page_versions')
+                            ->setResourceKey('pages_versions')
+                            ->setListKey('pages_versions')
                             ->addListAdapters(['table'])
                             ->addAdapterOptions([
                                 'table' => [

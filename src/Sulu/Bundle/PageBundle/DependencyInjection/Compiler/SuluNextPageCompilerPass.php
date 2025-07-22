@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\PageBundle\DependencyInjection\Compiler;
 
+use Sulu\Bundle\PageBundle\Admin\PageAdmin;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
@@ -51,7 +52,7 @@ class SuluNextPageCompilerPass implements CompilerPassInterface
                     $definition = $methodCall[1][0];
                     if ($definition instanceof Definition) {
                         $class = $definition->getClass();
-                        if ('Sulu\Bundle\PageBundle\Admin\PageAdmin' === $class) {
+                        if (PageAdmin::class === $class) {
                             unset($methodCalls[$key]);
                             break;
                         }

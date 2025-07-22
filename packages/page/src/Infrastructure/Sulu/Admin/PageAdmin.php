@@ -11,7 +11,6 @@
 
 namespace Sulu\Page\Infrastructure\Sulu\Admin;
 
-use Sulu\Bundle\ActivityBundle\Infrastructure\Sulu\Admin\View\ActivityViewBuilderFactoryInterface;
 use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItem;
 use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItemCollection;
@@ -25,7 +24,6 @@ use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Webspace;
-use Sulu\Content\Infrastructure\Sulu\Admin\ContentVersionViewBuilderFactoryInterface;
 use Sulu\Content\Infrastructure\Sulu\Admin\ContentViewBuilderFactoryInterface;
 use Sulu\Page\Domain\Model\PageInterface;
 
@@ -59,9 +57,7 @@ class PageAdmin extends Admin
         private ViewBuilderFactoryInterface $viewBuilderFactory,
         private WebspaceManagerInterface $webspaceManager,
         private SecurityCheckerInterface $securityChecker,
-        private ActivityViewBuilderFactoryInterface $activityViewBuilderFactory,
         private ContentViewBuilderFactoryInterface $contentViewBuilderFactory,
-        private ContentVersionViewBuilderFactoryInterface $contentVersionViewBuilderFactory,
     ) {
     }
 
@@ -299,41 +295,6 @@ class PageAdmin extends Admin
                     ->setTabOrder(5120)
                     ->setParent(static::EDIT_FORM_VIEW)
             );
-
-            if ($this->activityViewBuilderFactory->hasActivityListPermission() || $this->contentVersionViewBuilderFactory->hasContentVersionListPermission()) {
-                $insightsResourceTabViewName = PageAdmin::EDIT_FORM_VIEW . '.insights';
-
-                $viewCollection->add(
-                    $this->viewBuilderFactory
-                        ->createResourceTabViewBuilder($insightsResourceTabViewName, '/insights')
-                        ->setResourceKey(PageInterface::RESOURCE_KEY)
-                        ->setTabOrder(6144)
-                        ->setTabTitle('sulu_admin.insights')
-                        ->setParent(PageAdmin::EDIT_FORM_VIEW)
-                );
-
-                $viewCollection->add(
-                    $this->activityViewBuilderFactory
-                        ->createActivityListViewBuilder(
-                            $insightsResourceTabViewName . '.activity',
-                            '/activities',
-                            PageInterface::RESOURCE_KEY
-                        )
-                        ->setParent($insightsResourceTabViewName)
-                );
-
-                $viewCollection->add(
-                    $this->contentVersionViewBuilderFactory
-                    ->createContentVersionListViewBuilder(
-                        $insightsResourceTabViewName . '.versions',
-                        '/versions',
-                        PageInterface::RESOURCE_KEY,
-                        'page_versions',
-                        PageAdmin::EDIT_FORM_VIEW,
-                    )
-                    ->setParent($insightsResourceTabViewName)
-                );
-            }
         }
     }
 

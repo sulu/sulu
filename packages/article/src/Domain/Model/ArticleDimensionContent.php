@@ -23,8 +23,6 @@ use Sulu\Content\Domain\Model\SeoTrait;
 use Sulu\Content\Domain\Model\ShadowTrait;
 use Sulu\Content\Domain\Model\TemplateTrait;
 //use Sulu\Content\Domain\Model\WebspaceTrait;
-use Sulu\Content\Domain\Model\VersionInterface;
-use Sulu\Content\Domain\Model\VersionTrait;
 use Sulu\Content\Domain\Model\WebspaceTrait;
 use Sulu\Content\Domain\Model\WorkflowTrait;
 
@@ -35,9 +33,7 @@ class ArticleDimensionContent implements ArticleDimensionContentInterface
 {
     use AuditableTrait;
     use AuthorTrait;
-    use DimensionContentTrait {
-        getEffectiveDimensionAttributes as parentGetEffectiveDimensionAttributes;
-    }
+    use DimensionContentTrait;
     use ExcerptTrait;
     use RoutableTrait;
     use SeoTrait;
@@ -47,7 +43,6 @@ class ArticleDimensionContent implements ArticleDimensionContentInterface
     }
     use WebspaceTrait;
     use WorkflowTrait;
-    use VersionTrait;
 
     /**
      * @var int
@@ -101,13 +96,5 @@ class ArticleDimensionContent implements ArticleDimensionContentInterface
     public static function getResourceKey(): string
     {
         return ArticleInterface::RESOURCE_KEY;
-    }
-
-    public static function getEffectiveDimensionAttributes(array $dimensionAttributes): array
-    {
-        $parentEffectiveDimensionAttributes = self::parentGetEffectiveDimensionAttributes($dimensionAttributes);
-        $parentEffectiveDimensionAttributes['version'] = $dimensionAttributes['version'] ?? VersionInterface::DEFAULT_VERSION;
-
-        return $parentEffectiveDimensionAttributes;
     }
 }

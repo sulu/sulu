@@ -9,17 +9,21 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Article\Infrastructure\Sulu\Content\VersionRestorer;
+namespace Sulu\Article\Application\MessageHandler;
 
+use Sulu\Article\Application\Message\RestoreArticleVersionMessage;
 use Sulu\Article\Domain\Model\ArticleInterface;
 use Sulu\Article\Domain\Repository\ArticleRepositoryInterface;
 use Sulu\Content\Application\ContentCopier\ContentCopierInterface;
-use Sulu\Content\Application\ContentRestorer\ContentVersionRestorerInterface;
-use Sulu\Content\Domain\Model\ContentRichEntityInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
-use Sulu\Content\Domain\Model\VersionInterface;
 
-class ArticleVersionRestorer implements ContentVersionRestorerInterface
+/**
+ * @experimental
+ *
+ * @internal This class should not be instantiated by a project.
+ *           Create your own Message and Handler instead.
+ */
+class RestoreArticleVersionMessageHandler
 {
     public function __construct(
         private ArticleRepositoryInterface $articleRepository,
@@ -27,25 +31,23 @@ class ArticleVersionRestorer implements ContentVersionRestorerInterface
     ) {
     }
 
-    /**
-     * @return ContentRichEntityInterface<ArticleInterface>
-     */
-    public function restore(array $contentRichEntityIdentifier, int $version, array $options): ContentRichEntityInterface
+    public function __invoke(RestoreArticleVersionMessage $message): ArticleInterface
     {
-        $article = $this->articleRepository->getOneBy($contentRichEntityIdentifier);
+        $article = $this->articleRepository->getOneBy($message->getArticleIdentifier());
+        $options = $message->getOptions();
 
         $dimensionContent = $this->contentCopier->copy(
             $article,
             [
                 'stage' => $options['stage'] ?? DimensionContentInterface::STAGE_DRAFT,
                 'locale' => $options['locale'] ?? null,
-                'version' => $version,
+                'version' => $message->getVersion(),
             ],
             $article,
             [
                 'stage' => $options['stage'] ?? DimensionContentInterface::STAGE_DRAFT,
                 'locale' => $options['locale'] ?? null,
-                'version' => VersionInterface::DEFAULT_VERSION,
+                'version' => DimensionContentInterface::DEFAULT_VERSION,
             ],
             [
                 'ignoredAttributes' => ['url'],
@@ -53,10 +55,5 @@ class ArticleVersionRestorer implements ContentVersionRestorerInterface
         );
 
         return $dimensionContent->getResource();
-    }
-
-    public function getType(): string
-    {
-        return ArticleInterface::RESOURCE_KEY;
     }
 }

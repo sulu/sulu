@@ -20,7 +20,6 @@ use Sulu\Content\Domain\Model\DimensionContentCollectionInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Domain\Model\ShadowInterface;
 use Sulu\Content\Domain\Model\TemplateInterface;
-use Sulu\Content\Domain\Model\VersionInterface;
 use Sulu\Content\Domain\Model\WorkflowInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Workflow\Event\TransitionEvent;
@@ -50,12 +49,6 @@ class PublishTransitionSubscriber implements EventSubscriberInterface
             return;
         }
 
-        if ($dimensionContent instanceof WorkflowInterface) {
-            if (!$dimensionContent->getWorkflowPublished()) {
-                $dimensionContent->setWorkflowPublished(new \DateTimeImmutable());
-            }
-        }
-
         $context = $transitionEvent->getContext();
 
         $dimensionContentCollection = $context[ContentWorkflowInterface::DIMENSION_CONTENT_COLLECTION_CONTEXT_KEY] ?? null;
@@ -78,22 +71,29 @@ class PublishTransitionSubscriber implements EventSubscriberInterface
         $targetDimensionAttributes = $dimensionAttributes;
         $targetDimensionAttributes['stage'] = DimensionContentInterface::STAGE_LIVE;
 
-        $shadowLocale = $dimensionContent instanceof ShadowInterface
-            ? $dimensionContent->getShadowLocale()
-            : null;
-
         /** @var string $locale */
         $locale = $dimensionContent->getLocale();
 
-        if ($dimensionContent instanceof VersionInterface) {
-            $this->contentCopier->copy(
-                $contentRichEntity,
-                \array_merge($dimensionAttributes, ['locale' => $locale]),
-                $contentRichEntity,
-                \array_merge($dimensionAttributes, ['locale' => $locale, 'version' => \time()]),
-                ['ignoredAttributes' => ['url']] // ignore url, because we cannot restore it from a version
-            );
+        if ($dimensionContent instanceof WorkflowInterface) {
+            // only copy content if the dimension content is already published
+            if (null !== $dimensionContent->getWorkflowPublished()) {
+                $this->contentCopier->copy(
+                    $contentRichEntity,
+                    \array_merge($dimensionAttributes, ['locale' => $locale, 'stage' => DimensionContentInterface::STAGE_LIVE]),
+                    $contentRichEntity,
+                    \array_merge($dimensionAttributes, ['locale' => $locale, 'version' => \time()]), // TODO what datetime should we use here?
+                    ['ignoredAttributes' => ['url']] // ignore url, because we cannot restore it from a version
+                );
+            }
+
+            if (!$dimensionContent->getWorkflowPublished()) {
+                $dimensionContent->setWorkflowPublished(new \DateTimeImmutable());
+            }
         }
+
+        $shadowLocale = $dimensionContent instanceof ShadowInterface
+            ? $dimensionContent->getShadowLocale()
+            : null;
 
         if (!$shadowLocale) {
             $publishedDimensionContent = $this->contentCopier->copyFromDimensionContentCollection(

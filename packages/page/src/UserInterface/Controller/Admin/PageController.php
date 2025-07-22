@@ -16,8 +16,10 @@ use Sulu\Component\Rest\ListBuilder\CollectionRepresentation;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilder;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactoryInterface;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
+use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptorInterface;
 use Sulu\Component\Rest\ListBuilder\ListBuilderInterface;
 use Sulu\Component\Rest\ListBuilder\Metadata\FieldDescriptorFactoryInterface;
+use Sulu\Component\Rest\ListBuilder\PaginatedRepresentation;
 use Sulu\Component\Rest\RestHelperInterface;
 use Sulu\Content\Application\ContentManager\ContentManagerInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
@@ -31,6 +33,7 @@ use Sulu\Page\Application\Message\ModifyPageMessage;
 use Sulu\Page\Application\Message\MovePageMessage;
 use Sulu\Page\Application\Message\OrderPageMessage;
 use Sulu\Page\Application\Message\RemovePageMessage;
+use Sulu\Page\Application\Message\RestorePageVersionMessage;
 use Sulu\Page\Domain\Model\PageInterface;
 use Sulu\Page\Domain\Repository\PageRepositoryInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -106,6 +109,37 @@ final class PageController
             'json',
             ['sulu_admin' => true, 'sulu_admin_page' => true, 'sulu_admin_page_list' => true],
         ));
+    }
+
+    public function getVersionsAction(Request $request, string $id): JsonResponse
+    {
+        $locale = $request->query->get('locale');
+
+        /** @var DoctrineFieldDescriptorInterface[] $fieldDescriptors */
+        $fieldDescriptors = $this->fieldDescriptorFactory->getFieldDescriptors('pages_versions');
+        /** @var DoctrineListBuilder $listBuilder */
+        $listBuilder = $this->listBuilderFactory->create(PageInterface::class);
+        $listBuilder->setParameter('locale', $locale);
+        $listBuilder->setParameter('id', $id);
+        $listBuilder->setIdField($fieldDescriptors['id']); // TODO should be uuid field descriptor
+        $this->restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
+
+        $result = $listBuilder->execute();
+        $listRepresentation = new PaginatedRepresentation(
+            $result,
+            'pages_versions',
+            $listBuilder->getCurrentPage(),
+            (int) $listBuilder->getLimit(),
+            $listBuilder->count(),
+        );
+
+        return new JsonResponse(
+            $this->normalizer->normalize(
+                $listRepresentation->toArray(),
+                'json',
+                ['sulu_admin' => true, 'sulu_admin_page' => true, 'sulu_admin_page_list' => true],
+            )
+        );
     }
 
     public function getAction(Request $request, string $id): Response // TODO route should be a uuid?
@@ -243,6 +277,21 @@ final class PageController
             );
 
             /** @see Sulu\Page\Application\MessageHandler\OrderPageMessageHandler */
+            /** @var PageInterface|null */
+            return $this->handle(new Envelope($message, [new EnableFlushStamp()]));
+        } elseif ('restore' === $action) {
+            $version = \intval($request->query->get('version'));
+            if (!$version) {
+                throw new \InvalidArgumentException('The "version" query parameter is required for restoring a version.');
+            }
+
+            $message = new RestorePageVersionMessage(
+                ['uuid' => $uuid],
+                $version,
+                $request->query->all(),
+            );
+
+            /** @see Sulu\Page\Application\MessageHandler\RestorePageVersionMessageHandler */
             /** @var PageInterface|null */
             return $this->handle(new Envelope($message, [new EnableFlushStamp()]));
         }

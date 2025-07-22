@@ -19,7 +19,6 @@ use Sulu\Content\Domain\Model\ContentRichEntityInterface;
 use Sulu\Content\Domain\Model\DimensionContentCollection;
 use Sulu\Content\Domain\Model\DimensionContentCollectionInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
-use Sulu\Content\Domain\Model\VersionInterface;
 use Sulu\Content\Domain\Repository\DimensionContentRepositoryInterface;
 
 class DimensionContentRepository implements DimensionContentRepositoryInterface
@@ -67,12 +66,9 @@ class DimensionContentRepository implements DimensionContentRepositoryInterface
         $queryBuilder = $this->entityManager->createQueryBuilder()
             ->from($dimensionContentClass, 'dimensionContent')
             ->where('dimensionContent.' . $mappingProperty . ' = :id')
-            ->setParameter('id', $contentRichEntity->getId());
-
-        if (\is_subclass_of($dimensionAttributes, VersionInterface::class)) {
-            $queryBuilder->andWhere('dimensionContent.version = :version')
-                ->setParameter('version', $dimensionAttributes['version'] ?? VersionInterface::DEFAULT_VERSION);
-        }
+            ->setParameter('id', $contentRichEntity->getId())
+            ->andWhere('dimensionContent.version = :version')
+            ->setParameter('version', $dimensionAttributes['version'] ?? DimensionContentInterface::DEFAULT_VERSION);
 
         $this->dimensionContentQueryEnhancer->addSelects(
             $queryBuilder,

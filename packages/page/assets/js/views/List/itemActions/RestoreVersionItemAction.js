@@ -20,7 +20,7 @@ export default class RestoreVersionItemAction extends AbstractListItemAction {
     };
 
     @action handleDialogConfirm = () => {
-        const {success_view: successView, type} = this.options;
+        const {success_view: successView} = this.options;
         const {id, locale, webspace} = this.router.attributes;
 
         if (typeof successView !== 'string') {
@@ -32,7 +32,6 @@ export default class RestoreVersionItemAction extends AbstractListItemAction {
             .post(this.listStore.resourceKey, {}, {
                 action: 'restore',
                 version: this.versionToBeRestored,
-                type,
                 id,
                 locale,
                 webspace,

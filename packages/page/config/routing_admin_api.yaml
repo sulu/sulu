@@ -4,6 +4,12 @@ sulu_page.get_pages:
     controller: sulu_page.admin_page_controller::cgetAction
     format: json
 
+sulu_page.get_page_versions:
+    path: /pages/{id}/versions.{_format}
+    methods: GET
+    controller: sulu_page.admin_page_controller::getVersionsAction
+    format: json
+
 sulu_page.get_page:
     path: /pages/{id}.{_format}
     methods: GET

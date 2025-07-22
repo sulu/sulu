@@ -9,17 +9,21 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Page\Infrastructure\Sulu\Content\VersionRestorer;
+namespace Sulu\Page\Application\MessageHandler;
 
 use Sulu\Content\Application\ContentCopier\ContentCopierInterface;
-use Sulu\Content\Application\ContentRestorer\ContentVersionRestorerInterface;
-use Sulu\Content\Domain\Model\ContentRichEntityInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
-use Sulu\Content\Domain\Model\VersionInterface;
+use Sulu\Page\Application\Message\RestorePageVersionMessage;
 use Sulu\Page\Domain\Model\PageInterface;
 use Sulu\Page\Domain\Repository\PageRepositoryInterface;
 
-class PageVersionRestorer implements ContentVersionRestorerInterface
+/**
+ * @experimental
+ *
+ * @internal This class should not be instantiated by a project.
+ *           Create your own Message and Handler instead.
+ */
+class RestorePageVersionMessageHandler
 {
     public function __construct(
         private PageRepositoryInterface $pageRepository,
@@ -27,22 +31,23 @@ class PageVersionRestorer implements ContentVersionRestorerInterface
     ) {
     }
 
-    public function restore(array $contentRichEntityIdentifier, int $version, array $options): ContentRichEntityInterface
+    public function __invoke(RestorePageVersionMessage $message): PageInterface
     {
-        $page = $this->pageRepository->getOneBy($contentRichEntityIdentifier);
+        $page = $this->pageRepository->getOneBy($message->getPageIdentifier());
+        $options = $message->getOptions();
 
         $dimensionContent = $this->contentCopier->copy(
             $page,
             [
                 'stage' => $options['stage'] ?? DimensionContentInterface::STAGE_DRAFT,
                 'locale' => $options['locale'] ?? null,
-                'version' => $version,
+                'version' => $message->getVersion(),
             ],
             $page,
             [
                 'stage' => $options['stage'] ?? DimensionContentInterface::STAGE_DRAFT,
                 'locale' => $options['locale'] ?? null,
-                'version' => VersionInterface::DEFAULT_VERSION,
+                'version' => DimensionContentInterface::DEFAULT_VERSION,
             ],
             [
                 'ignoredAttributes' => ['url'],
@@ -50,10 +55,5 @@ class PageVersionRestorer implements ContentVersionRestorerInterface
         );
 
         return $dimensionContent->getResource();
-    }
-
-    public function getType(): string
-    {
-        return PageInterface::RESOURCE_KEY;
     }
 }

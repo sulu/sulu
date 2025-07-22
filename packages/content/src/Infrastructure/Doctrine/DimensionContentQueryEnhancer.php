@@ -19,7 +19,6 @@ use Doctrine\ORM\QueryBuilder;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Domain\Model\ExcerptInterface;
 use Sulu\Content\Domain\Model\TemplateInterface;
-use Sulu\Content\Domain\Model\VersionInterface;
 use Webmozart\Assert\Assert;
 
 /**
@@ -126,10 +125,9 @@ class DimensionContentQueryEnhancer
                 ->setParameter($key, $value);
         }
 
-        if (\is_subclass_of($dimensionContentClassName, VersionInterface::class)) {
-            $version = $filters['version'] ?? null;
+        if ($version = $filters['version'] ?? null) {
             $queryBuilder->andWhere('filterDimensionContent.version = :version')
-                ->setParameter('version', $version ?? VersionInterface::DEFAULT_VERSION);
+                ->setParameter('version', $version);
         }
 
         if (\is_subclass_of($dimensionContentClassName, ExcerptInterface::class)) {

@@ -1,14 +1,13 @@
 <?xml version="1.0" ?>
 <list xmlns="http://schemas.sulu.io/list-builder/list">
-    <key>page_versions</key>
+    <key>pages_versions</key>
 
     <joins name="dimensionContent">
         <join>
             <entity-name>dimensionContent</entity-name>
             <field-name>Sulu\Page\Domain\Model\PageInterface.dimensionContents</field-name>
-            <method>LEFT</method>
-            <condition>dimensionContent.locale = :locale AND dimensionContent.stage = 'draft' AND dimensionContent.version > 0
-            </condition>
+            <method>INNER</method>
+            <condition>dimensionContent.locale = :locale AND dimensionContent.stage = 'draft' AND dimensionContent.version > 0 AND Sulu\Page\Domain\Model\PageInterface.uuid = :id</condition>
         </join>
     </joins>
 
@@ -46,7 +45,7 @@
             <transformer type="title"/>
         </property>
 
-        <property name="version" translation="sulu_admin.published" visibility="yes">
+        <property name="version" translation="sulu_admin.published" visibility="always">
             <field-name>version</field-name>
             <entity-name>dimensionContent</entity-name>
 

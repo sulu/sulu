@@ -16,6 +16,7 @@ use Sulu\Article\Application\Message\CopyLocaleArticleMessage;
 use Sulu\Article\Application\Message\CreateArticleMessage;
 use Sulu\Article\Application\Message\ModifyArticleMessage;
 use Sulu\Article\Application\Message\RemoveArticleMessage;
+use Sulu\Article\Application\Message\RestoreArticleVersionMessage;
 use Sulu\Article\Domain\Model\ArticleInterface;
 use Sulu\Article\Domain\Repository\ArticleRepositoryInterface;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilder;
@@ -133,6 +134,37 @@ final class ArticleController
         ));
     }
 
+    public function getVersionsAction(Request $request, string $id): JsonResponse
+    {
+        $locale = $request->query->get('locale');
+
+        /** @var DoctrineFieldDescriptorInterface[] $fieldDescriptors */
+        $fieldDescriptors = $this->fieldDescriptorFactory->getFieldDescriptors('articles_versions');
+        /** @var DoctrineListBuilder $listBuilder */
+        $listBuilder = $this->listBuilderFactory->create(ArticleInterface::class);
+        $listBuilder->setParameter('locale', $locale);
+        $listBuilder->setParameter('id', $id);
+        $listBuilder->setIdField($fieldDescriptors['id']); // TODO should be uuid field descriptor
+        $this->restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
+
+        $result = $listBuilder->execute();
+        $listRepresentation = new PaginatedRepresentation(
+            $result,
+            'articles_versions',
+            $listBuilder->getCurrentPage(),
+            (int) $listBuilder->getLimit(),
+            $listBuilder->count(),
+        );
+
+        return new JsonResponse(
+            $this->normalizer->normalize(
+                $listRepresentation->toArray(),
+                'json',
+                ['sulu_admin' => true, 'sulu_admin_page' => true, 'sulu_admin_page_list' => true],
+            )
+        );
+    }
+
     public function getAction(Request $request, string $id): Response // TODO route should be a uuid?
     {
         $dimensionAttributes = [
@@ -242,7 +274,22 @@ final class ArticleController
             );
 
             /** @see Sulu\Article\Application\MessageHandler\CopyLocaleArticleMessageHandler */
-            /** @var null */
+            /** @var ArticleInterface|null */
+            return $this->handle(new Envelope($message, [new EnableFlushStamp()]));
+        } elseif ('restore' === $action) {
+            $version = \intval($request->query->get('version'));
+            if (!$version) {
+                throw new \InvalidArgumentException('The "version" query parameter is required for restoring a version.');
+            }
+
+            $message = new RestoreArticleVersionMessage(
+                ['uuid' => $uuid],
+                $version,
+                $request->query->all(),
+            );
+
+            /** @see Sulu\Article\Application\MessageHandler\RestoreArticleVersionMessageHandler */
+            /** @var ArticleInterface|null */
             return $this->handle(new Envelope($message, [new EnableFlushStamp()]));
         } else {
             $message = new ApplyWorkflowTransitionArticleMessage(['uuid' => $uuid], $this->getLocale($request), $action);

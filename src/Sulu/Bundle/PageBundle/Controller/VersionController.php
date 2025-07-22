@@ -93,7 +93,7 @@ class VersionController extends AbstractRestController implements
 
         $versionCollection = new PaginatedRepresentation(
             $versionData,
-            'page_versions',
+            'pages_versions',
             (int) $this->listRestHelper->getPage(),
             (int) $limit,
             (int) $total

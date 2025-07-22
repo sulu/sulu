@@ -17,6 +17,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Sulu\Bundle\ActivityBundle\Infrastructure\Sulu\Admin\View\ActivityViewBuilderFactory;
 use Sulu\Bundle\AdminBundle\Admin\View\FormViewBuilderInterface;
 use Sulu\Bundle\AdminBundle\Admin\View\PreviewFormViewBuilderInterface;
 use Sulu\Bundle\AdminBundle\Admin\View\ToolbarAction;
@@ -68,6 +69,7 @@ class ContentViewBuilderFactoryTest extends TestCase
 
         return new ContentViewBuilderFactory(
             new ViewBuilderFactory(),
+            new ActivityViewBuilderFactory(new ViewBuilderFactory(), $securityChecker),
             $previewObjectProviderRegistry,
             $contentMetadataInspector,
             $securityChecker,

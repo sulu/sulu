@@ -9,20 +9,19 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Content\Application\Message;
+namespace Sulu\Article\Application\Message;
 
-class RestoreContentVersionMessage
+class RestoreArticleVersionMessage
 {
     /**
      * @param array{
      *     uuid?: string,
-     * } $contentRichEntityIdentifier
+     * } $articleIdentifier
      * @param array<string, mixed> $options
      */
     public function __construct(
-        private array $contentRichEntityIdentifier,
+        private array $articleIdentifier,
         private int $version,
-        private string $resourceKey,
         private array $options = []
     ) {
     }
@@ -32,19 +31,14 @@ class RestoreContentVersionMessage
      *     uuid?: string,
      * }
      */
-    public function getContentRichEntityIdentifier(): array
+    public function getArticleIdentifier(): array
     {
-        return $this->contentRichEntityIdentifier;
+        return $this->articleIdentifier;
     }
 
     public function getVersion(): int
     {
         return $this->version;
-    }
-
-    public function getResourceKey(): string
-    {
-        return $this->resourceKey;
     }
 
     /**

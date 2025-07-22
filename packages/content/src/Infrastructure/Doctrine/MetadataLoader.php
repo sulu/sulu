@@ -28,7 +28,6 @@ use Sulu\Content\Domain\Model\RoutableInterface;
 use Sulu\Content\Domain\Model\SeoInterface;
 use Sulu\Content\Domain\Model\ShadowInterface;
 use Sulu\Content\Domain\Model\TemplateInterface;
-use Sulu\Content\Domain\Model\VersionInterface;
 use Sulu\Content\Domain\Model\WebspaceInterface;
 use Sulu\Content\Domain\Model\WorkflowInterface;
 use Sulu\Route\Domain\Model\Route;
@@ -50,9 +49,12 @@ final class MetadataLoader
             $this->addField($metadata, 'locale', 'string', ['length' => 15, 'nullable' => true]);
             $this->addField($metadata, 'ghostLocale', 'string', ['length' => 15, 'nullable' => true]);
             $this->addField($metadata, 'availableLocales', 'json', ['nullable' => true, 'options' => ['jsonb' => true]]);
+            $this->addField($metadata, 'version', 'integer', ['columnName' => 'version', 'nullable' => false]);
+
             $this->addIndex($metadata, 'dimension', ['stage', 'locale']);
             $this->addIndex($metadata, 'locale', ['locale']);
             $this->addIndex($metadata, 'stage', ['stage']);
+            $this->addIndex($metadata, 'version', ['version']);
         }
 
         if ($reflection->implementsInterface(ShadowInterface::class)) {
@@ -127,12 +129,6 @@ final class MetadataLoader
 
             $this->addIndex($metadata, 'workflow_place', ['workflowPlace']);
             $this->addIndex($metadata, 'workflow_published', ['workflowPublished']);
-        }
-
-        if ($reflection->implementsInterface(VersionInterface::class)) {
-            $this->addField($metadata, 'version', 'integer', ['columnName' => 'version', 'nullable' => false]);
-
-            $this->addIndex($metadata, 'version', ['version']);
         }
     }
 
