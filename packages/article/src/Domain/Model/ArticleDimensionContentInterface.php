@@ -11,6 +11,7 @@
 
 namespace Sulu\Article\Domain\Model;
 
+use Sulu\Content\Domain\Model\AuditableInterface;
 use Sulu\Content\Domain\Model\AuthorInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Domain\Model\ExcerptInterface;
@@ -26,7 +27,7 @@ use Sulu\Content\Domain\Model\WorkflowInterface;
  *
  * @extends DimensionContentInterface<ArticleInterface>
  */
-interface ArticleDimensionContentInterface extends DimensionContentInterface, ExcerptInterface, SeoInterface, TemplateInterface, RoutableInterface, WorkflowInterface, ShadowInterface, WebspaceInterface, AuthorInterface
+interface ArticleDimensionContentInterface extends DimensionContentInterface, ExcerptInterface, SeoInterface, TemplateInterface, RoutableInterface, WorkflowInterface, ShadowInterface, WebspaceInterface, AuthorInterface, AuditableInterface
 {
     public function getTitle(): ?string;
 }

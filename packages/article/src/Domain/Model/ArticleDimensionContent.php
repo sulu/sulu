@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Sulu\Article\Domain\Model;
 
-use Sulu\Content\Domain\Model\AuditableInterface;
 use Sulu\Content\Domain\Model\AuditableTrait;
 use Sulu\Content\Domain\Model\AuthorTrait;
 use Sulu\Content\Domain\Model\ContentRichEntityInterface;
@@ -29,7 +28,7 @@ use Sulu\Content\Domain\Model\WorkflowTrait;
 /**
  * @experimental
  */
-class ArticleDimensionContent implements ArticleDimensionContentInterface, AuditableInterface
+class ArticleDimensionContent implements ArticleDimensionContentInterface
 {
     use AuditableTrait;
     use AuthorTrait;
