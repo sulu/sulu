@@ -26,6 +26,7 @@ use Sulu\Snippet\Application\Message\CopyLocaleSnippetMessage;
 use Sulu\Snippet\Application\Message\CreateSnippetMessage;
 use Sulu\Snippet\Application\Message\ModifySnippetMessage;
 use Sulu\Snippet\Application\Message\RemoveSnippetMessage;
+use Sulu\Snippet\Application\Message\RestoreSnippetVersionMessage;
 use Sulu\Snippet\Domain\Model\SnippetInterface;
 use Sulu\Snippet\Domain\Repository\SnippetRepositoryInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -131,6 +132,36 @@ final class SnippetController
             'json',
             ['sulu_admin' => true, 'sulu_admin_snippet' => true, 'sulu_admin_snippet_list' => true],
         ));
+    }
+
+    public function getVersionsAction(Request $request, string $id): JsonResponse
+    {
+        $locale = $request->query->get('locale');
+
+        /** @var DoctrineFieldDescriptorInterface[] $fieldDescriptors */
+        $fieldDescriptors = $this->fieldDescriptorFactory->getFieldDescriptors('snippets_versions');
+        /** @var DoctrineListBuilder $listBuilder */
+        $listBuilder = $this->listBuilderFactory->create(SnippetInterface::class);
+        $listBuilder->setParameter('locale', $locale);
+        $listBuilder->setParameter('id', $id);
+        $listBuilder->setIdField($fieldDescriptors['id']); // TODO should be uuid field descriptor
+        $this->restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
+
+        $result = $listBuilder->execute();
+        $listRepresentation = new PaginatedRepresentation(
+            $result,
+            'snippets_versions',
+            $listBuilder->getCurrentPage(),
+            (int) $listBuilder->getLimit(),
+            $listBuilder->count(),
+        );
+
+        return new JsonResponse(
+            $this->normalizer->normalize(
+                $listRepresentation->toArray(),
+                'json',
+            )
+        );
     }
 
     public function getAction(Request $request, string $id): Response // TODO route should be a uuid?
@@ -243,6 +274,21 @@ final class SnippetController
 
             /** @see Sulu\Snippet\Application\MessageHandler\CopyLocaleSnippetMessageHandler */
             /** @var null */
+            return $this->handle(new Envelope($message, [new EnableFlushStamp()]));
+        } elseif ('restore' === $action) {
+            $version = \intval($request->query->get('version'));
+            if (!$version) {
+                throw new \InvalidArgumentException('The "version" query parameter is required for restoring a version.');
+            }
+
+            $message = new RestoreSnippetVersionMessage(
+                ['uuid' => $uuid],
+                $version,
+                $request->query->all(),
+            );
+
+            /** @see Sulu\Snippet\Application\MessageHandler\RestoreSnippetVersionMessageHandler */
+            /** @var SnippetInterface|null */
             return $this->handle(new Envelope($message, [new EnableFlushStamp()]));
         } else {
             $message = new ApplyWorkflowTransitionSnippetMessage(['uuid' => $uuid], $this->getLocale($request), $action);

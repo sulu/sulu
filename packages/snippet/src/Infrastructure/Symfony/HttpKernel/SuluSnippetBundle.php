@@ -23,6 +23,7 @@ use Sulu\Snippet\Application\MessageHandler\CopyLocaleSnippetMessageHandler;
 use Sulu\Snippet\Application\MessageHandler\CreateSnippetMessageHandler;
 use Sulu\Snippet\Application\MessageHandler\ModifySnippetMessageHandler;
 use Sulu\Snippet\Application\MessageHandler\RemoveSnippetMessageHandler;
+use Sulu\Snippet\Application\MessageHandler\RestoreSnippetVersionMessageHandler;
 use Sulu\Snippet\Domain\Model\Snippet;
 use Sulu\Snippet\Domain\Model\SnippetDimensionContent;
 use Sulu\Snippet\Domain\Model\SnippetDimensionContentInterface;
@@ -132,6 +133,14 @@ final class SuluSnippetBundle extends AbstractBundle
 
         $services->set('sulu_snippet.copy_locale_snippet_handler')
             ->class(CopyLocaleSnippetMessageHandler::class)
+            ->args([
+                new Reference('sulu_snippet.snippet_repository'),
+                new Reference('sulu_content.content_copier'),
+            ])
+            ->tag('messenger.message_handler');
+
+        $services->set('sulu_snippet.restore_snippet_version_handler')
+            ->class(RestoreSnippetVersionMessageHandler::class)
             ->args([
                 new Reference('sulu_snippet.snippet_repository'),
                 new Reference('sulu_content.content_copier'),
@@ -272,6 +281,12 @@ final class SuluSnippetBundle extends AbstractBundle
                         'snippets' => [
                             'routes' => [
                                 'list' => 'sulu_snippet.get_snippets',
+                                'detail' => 'sulu_snippet.get_snippet',
+                            ],
+                        ],
+                        'snippets_versions' => [
+                            'routes' => [
+                                'list' => 'sulu_snippet.get_snippet_versions',
                                 'detail' => 'sulu_snippet.get_snippet',
                             ],
                         ],

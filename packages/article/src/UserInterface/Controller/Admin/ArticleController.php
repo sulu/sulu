@@ -160,7 +160,6 @@ final class ArticleController
             $this->normalizer->normalize(
                 $listRepresentation->toArray(),
                 'json',
-                ['sulu_admin' => true, 'sulu_admin_page' => true, 'sulu_admin_page_list' => true],
             )
         );
     }

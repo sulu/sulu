@@ -1,0 +1,76 @@
+<?xml version="1.0" ?>
+<list xmlns="http://schemas.sulu.io/list-builder/list">
+    <key>snippets_versions</key>
+
+    <joins name="dimensionContent">
+        <join>
+            <entity-name>dimensionContent</entity-name>
+            <field-name>Sulu\Snippet\Domain\Model\SnippetInterface.dimensionContents</field-name>
+            <method>INNER</method>
+            <condition>dimensionContent.locale = :locale AND dimensionContent.stage = 'draft' AND dimensionContent.version > 0 AND Sulu\Snippet\Domain\Model\SnippetInterface.uuid = :id</condition>
+        </join>
+    </joins>
+
+    <joins name="changer">
+        <join>
+            <entity-name>%sulu.model.user.class%</entity-name>
+            <field-name>Sulu\Snippet\Domain\Model\SnippetInterface.changer</field-name>
+        </join>
+        <join>
+            <entity-name>%sulu.model.contact.class%</entity-name>
+            <field-name>%sulu.model.user.class%.contact</field-name>
+        </join>
+    </joins>
+
+    <joins name="author">
+        <join>
+            <entity-name>authorEntity</entity-name>
+            <field-name>dimensionContent.author</field-name>
+        </join>
+    </joins>
+
+    <properties>
+        <!-- TODO should be uuid not id -->
+        <property name="id" translation="sulu_admin.uuid" visibility="never">
+            <field-name>uuid</field-name>
+            <entity-name>Sulu\Snippet\Domain\Model\SnippetInterface</entity-name>
+        </property>
+
+        <property name="title" translation="sulu_admin.title" visibility="always" searchability="yes">
+            <field-name>title</field-name>
+            <entity-name>dimensionContent</entity-name>
+
+            <joins ref="dimensionContent"/>
+
+            <transformer type="title"/>
+        </property>
+
+        <property name="version" translation="sulu_admin.published" visibility="yes">
+            <field-name>version</field-name>
+            <entity-name>dimensionContent</entity-name>
+
+            <transformer type="datetime"/>
+        </property>
+
+        <concatenation-property name="changer" glue=" " translation="sulu_admin.changer" sortable="false" visibility="yes">
+            <field>
+                <field-name>firstName</field-name>
+                <entity-name>%sulu.model.contact.class%</entity-name>
+
+                <joins ref="changer"/>
+            </field>
+            <field>
+                <field-name>lastName</field-name>
+                <entity-name>%sulu.model.contact.class%</entity-name>
+
+                <joins ref="changer"/>
+            </field>
+        </concatenation-property>
+
+        <property name="changed" translation="sulu_admin.changed">
+            <field-name>changed</field-name>
+            <entity-name>Sulu\Snippet\Domain\Model\SnippetInterface</entity-name>
+            <transformer type="datetime"/>
+        </property>
+    </properties>
+</list>
