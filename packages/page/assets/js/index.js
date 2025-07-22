@@ -6,7 +6,6 @@ import {
     viewRegistry,
     ResourceLocator,
 } from 'sulu-admin-bundle/containers';
-import {listItemActionRegistry} from 'sulu-admin-bundle/views';
 import webspaceConditionDataProvider from './containers/Form/conditionDataProviders/webspaceConditionDataProvider';
 import SearchResult from './containers/Form/fields/SearchResult';
 import SegmentSelect from './containers/Form/fields/SegmentSelect';

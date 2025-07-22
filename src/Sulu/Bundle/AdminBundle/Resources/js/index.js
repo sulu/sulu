@@ -127,7 +127,7 @@ import {initializeJexl} from './utils/jexl';
 import {ExternalLinkTypeOverlay, LinkTypeOverlay} from './containers/Link';
 import linkTypeRegistry from './containers/Link/registries/linkTypeRegistry';
 import AiApplication from './containers/AiApplication';
-import RestoreVersionItemAction from "./views/List/itemActions/RestoreVersionItemAction";
+import RestoreVersionItemAction from './views/List/itemActions/RestoreVersionItemAction';
 
 configure({enforceActions: 'observed'});
 

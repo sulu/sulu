@@ -1,10 +1,10 @@
 // @flow
 import React from 'react';
-import {AbstractListItemAction} from 'sulu-admin-bundle/views';
 import {action, observable} from 'mobx';
-import {Dialog} from 'sulu-admin-bundle/components';
-import {translate} from 'sulu-admin-bundle/utils/Translator';
-import {ResourceRequester} from 'sulu-admin-bundle/services';
+import {AbstractListItemAction} from '../../../views';
+import {Dialog} from '../../../components';
+import {translate} from '../../../utils/Translator';
+import {ResourceRequester} from '../../../services';
 import type {Node} from 'react';
 
 export default class RestoreVersionItemAction extends AbstractListItemAction {
