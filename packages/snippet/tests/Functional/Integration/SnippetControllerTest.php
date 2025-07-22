@@ -80,16 +80,16 @@ class SnippetControllerTest extends SuluTestCase
     }
 
     #[Depends('testPostPublish')]
-    public function testEmptyVersionListAfterPublish(string $id): string
+    public function testVersionListAfterPublish(string $id): string
     {
         $this->client->request('GET', '/admin/api/snippets/' . $id . '/versions?page=1&locale=en&fields=title,version,changer,id');
         $response = $this->client->getResponse();
-        $this->assertResponseSnapshot('snippet_get_versions_empty.json', $response, 200);
+        $this->assertResponseSnapshot('snippet_get_versions.json', $response, 200);
 
         return $id;
     }
 
-    #[Depends('testEmptyVersionListAfterPublish')]
+    #[Depends('testVersionListAfterPublish')]
     public function testVersionListAfterPostModifyAndPublish(string $id): string
     {
         $this->client->request(
@@ -118,7 +118,7 @@ class SnippetControllerTest extends SuluTestCase
         $content = \json_decode((string) $response->getContent(), true);
 
         /** @var string $version */
-        $version = $content['_embedded']['snippets_versions'][0]['version'] ?? null; // @phpstan-ignore-line
+        $version = $content['_embedded']['snippets_versions'][1]['version'] ?? null; // @phpstan-ignore-line
         $this->assertNotEmpty($version, 'Version should not be empty after publish');
 
         return $id . '::' . $version;

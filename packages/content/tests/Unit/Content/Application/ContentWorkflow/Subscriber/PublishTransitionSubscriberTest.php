@@ -180,6 +180,24 @@ class PublishTransitionSubscriberTest extends TestCase
             ->willReturn($resolvedCopiedContent->reveal())
             ->shouldBeCalled();
 
+        $resolvedVersionCopiedContent = $this->prophesize(DimensionContentInterface::class);
+        $contentCopier->copy(
+            $contentRichEntity->reveal(),
+            ['locale' => 'en', 'stage' => DimensionContentInterface::STAGE_DRAFT, 'version' => DimensionContentInterface::DEFAULT_VERSION],
+            $contentRichEntity->reveal(),
+            /** @var array<string, mixed> $attributes */
+            Argument::that(
+                static fn (array $attributes) => 'en' === $attributes['locale']
+                    && DimensionContentInterface::STAGE_DRAFT === $attributes['stage']
+                    && $attributes['version'] > DimensionContentInterface::DEFAULT_VERSION
+            ),
+            [
+                'ignoredAttributes' => ['url'],
+            ]
+        )
+            ->shouldBeCalled()
+            ->willReturn($resolvedVersionCopiedContent->reveal());
+
         $contentPublishSubscriber = $this->createContentPublisherSubscriberInstance($contentCopier->reveal());
 
         $contentPublishSubscriber->onPublish($event);
@@ -223,10 +241,14 @@ class PublishTransitionSubscriberTest extends TestCase
         $resolvedVersionCopiedContent = $this->prophesize(DimensionContentInterface::class);
         $contentCopier->copy(
             $contentRichEntity->reveal(),
-            ['locale' => 'en', 'stage' => 'live', 'version' => DimensionContentInterface::DEFAULT_VERSION],
+            ['locale' => 'en', 'stage' => DimensionContentInterface::STAGE_DRAFT, 'version' => DimensionContentInterface::DEFAULT_VERSION],
             $contentRichEntity->reveal(),
             /** @var array<string, mixed> $attributes */
-            Argument::that(static fn (array $attributes) => 'en' === $attributes['locale'] && 'draft' === $attributes['stage'] && $attributes['version'] > DimensionContentInterface::DEFAULT_VERSION),
+            Argument::that(
+                static fn (array $attributes) => 'en' === $attributes['locale']
+                    && DimensionContentInterface::STAGE_DRAFT === $attributes['stage']
+                    && $attributes['version'] > DimensionContentInterface::DEFAULT_VERSION
+            ),
             [
                 'ignoredAttributes' => ['url'],
             ]
@@ -289,6 +311,24 @@ class PublishTransitionSubscriberTest extends TestCase
             ->willReturn($resolvedCopiedContent->reveal())
             ->shouldBeCalled();
 
+        $resolvedVersionCopiedContent = $this->prophesize(DimensionContentInterface::class);
+        $contentCopier->copy(
+            $contentRichEntity->reveal(),
+            ['locale' => 'en', 'stage' => DimensionContentInterface::STAGE_DRAFT, 'version' => DimensionContentInterface::DEFAULT_VERSION],
+            $contentRichEntity->reveal(),
+            /** @var array<string, mixed> $attributes */
+            Argument::that(
+                static fn (array $attributes) => 'en' === $attributes['locale']
+                    && DimensionContentInterface::STAGE_DRAFT === $attributes['stage']
+                    && $attributes['version'] > DimensionContentInterface::DEFAULT_VERSION
+            ),
+            [
+                'ignoredAttributes' => ['url'],
+            ]
+        )
+            ->shouldBeCalled()
+            ->willReturn($resolvedVersionCopiedContent->reveal());
+
         $contentPublishSubscriber = $this->createContentPublisherSubscriberInstance($contentCopier->reveal());
 
         $contentPublishSubscriber->onPublish($event);
@@ -349,6 +389,24 @@ class PublishTransitionSubscriberTest extends TestCase
         )
             ->willReturn($resolvedCopiedContent->reveal())
             ->shouldBeCalled();
+
+        $resolvedVersionCopiedContent = $this->prophesize(DimensionContentInterface::class);
+        $contentCopier->copy(
+            $contentRichEntity->reveal(),
+            ['locale' => 'en', 'stage' => DimensionContentInterface::STAGE_DRAFT, 'version' => DimensionContentInterface::DEFAULT_VERSION],
+            $contentRichEntity->reveal(),
+            /** @var array<string, mixed> $attributes */
+            Argument::that(
+                static fn (array $attributes) => 'en' === $attributes['locale']
+                    && DimensionContentInterface::STAGE_DRAFT === $attributes['stage']
+                    && $attributes['version'] > DimensionContentInterface::DEFAULT_VERSION
+            ),
+            [
+                'ignoredAttributes' => ['url'],
+            ]
+        )
+            ->shouldBeCalled()
+            ->willReturn($resolvedVersionCopiedContent->reveal());
 
         $contentPublishSubscriber = $this->createContentPublisherSubscriberInstance($contentCopier->reveal());
 

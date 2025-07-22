@@ -2,12 +2,6 @@
     "_embedded": {
         "pages_versions": [
             {
-                "title": "Test modified version page",
-                "version": "@integer@",
-                "changer": "Max Mustermann",
-                "id": "@string@"
-            },
-            {
                 "title": "Test Page",
                 "version": "@integer@",
                 "changer": "Max Mustermann",
@@ -16,7 +10,7 @@
         ]
     },
     "limit": 10,
-    "total": 2,
+    "total": 1,
     "page": 1,
     "pages": 1
 }

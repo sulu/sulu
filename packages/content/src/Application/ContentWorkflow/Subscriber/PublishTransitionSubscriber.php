@@ -75,21 +75,19 @@ class PublishTransitionSubscriber implements EventSubscriberInterface
         $locale = $dimensionContent->getLocale();
 
         if ($dimensionContent instanceof WorkflowInterface) {
-            // only copy content if the dimension content is already published
-            if (null !== $dimensionContent->getWorkflowPublished()) {
-                $this->contentCopier->copy(
-                    $contentRichEntity,
-                    \array_merge($dimensionAttributes, ['locale' => $locale, 'stage' => DimensionContentInterface::STAGE_LIVE]),
-                    $contentRichEntity,
-                    \array_merge($dimensionAttributes, ['locale' => $locale, 'version' => \time()]), // TODO what datetime should we use here?
-                    ['ignoredAttributes' => ['url']] // ignore url, because we cannot restore it from a version
-                );
-            }
-
             if (!$dimensionContent->getWorkflowPublished()) {
                 $dimensionContent->setWorkflowPublished(new \DateTimeImmutable());
             }
         }
+
+        // Create a new version of the content before it is published
+        $this->contentCopier->copy(
+            $contentRichEntity,
+            \array_merge($dimensionAttributes, ['locale' => $locale, 'version' => DimensionContentInterface::DEFAULT_VERSION]),
+            $contentRichEntity,
+            \array_merge($dimensionAttributes, ['locale' => $locale, 'version' => \time()]),
+            ['ignoredAttributes' => ['url']] // ignore url, because we cannot restore it from a version
+        );
 
         $shadowLocale = $dimensionContent instanceof ShadowInterface
             ? $dimensionContent->getShadowLocale()

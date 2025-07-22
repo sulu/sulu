@@ -1,9 +1,0 @@
-{
-    "_embedded": {
-        "articles_versions": []
-    },
-    "limit": 10,
-    "total": 0,
-    "page": 1,
-    "pages": 1
-}
