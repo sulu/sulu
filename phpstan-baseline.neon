@@ -93139,7 +93139,7 @@ parameters:
 			path: src/Sulu/Component/Webspace/Manager/WebspaceCollection.php
 
 		-
-			message: '#^Method Sulu\\Component\\Webspace\\Manager\\WebspaceCollection\:\:getPortalInformations\(\) should return array\<Sulu\\Component\\Webspace\\PortalInformation\> but returns \(array\|null\)\.$#'
+			message: '#^Method Sulu\\Component\\Webspace\\Manager\\WebspaceCollection\:\:getPortalInformations\(\) should return array\<Sulu\\Component\\Webspace\\PortalInformation\> but returns array\.$#'
 			identifier: return.type
 			count: 1
 			path: src/Sulu/Component/Webspace/Manager/WebspaceCollection.php
