@@ -23,6 +23,7 @@
     "publishedState": true,
     "stage": "draft",
     "template": "snippet",
+    "version": 0,
     "title": "Test Snippet",
     "workflowPlace": "published"
 }

@@ -23,6 +23,7 @@
     "publishedState": false,
     "stage": "draft",
     "template": "snippet",
+    "version": 0,
     "title": "Test Snippet",
     "workflowPlace": "unpublished"
 }

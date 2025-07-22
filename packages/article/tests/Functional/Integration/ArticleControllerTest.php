@@ -141,7 +141,7 @@ class ArticleControllerTest extends SuluTestCase
         $this->client->request('GET', '/admin/api/articles/' . $id . '/versions?page=1&locale=en&fields=title,version,changer,id');
         $response = $this->client->getResponse();
         $this->assertResponseSnapshot('article_get_versions_after_modify_and_publish.json', $response, 200);
-        $content = \json_decode((string)$response->getContent(), true);
+        $content = \json_decode((string) $response->getContent(), true);
 
         /** @var string $version */
         $version = $content['_embedded']['articles_versions'][0]['version'] ?? null; // @phpstan-ignore-line

@@ -1,10 +1,7 @@
 {
     "availableLocales": [
-        "en",
-        "de"
+        "en"
     ],
-    "changer" : null,
-    "creator" : null,
     "description": null,
     "excerptCategories": [],
     "excerptDescription": "Excerpt Description",
@@ -19,12 +16,12 @@
     "ghostLocale": "en",
     "id": "@string@",
     "image": null,
-    "locale": "de",
-    "published": null,
+    "locale": "en",
+    "published": "@dateTime@",
     "publishedState": false,
     "stage": "draft",
     "template": "snippet",
-    "version": 0,
     "title": "Test Snippet",
-    "workflowPlace": "unpublished"
+    "version": 0,
+    "workflowPlace": "draft"
 }

@@ -15,6 +15,7 @@ namespace Sulu\Snippet\Tests\Functional\Integration;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\SchemaTool;
+use PHPUnit\Framework\Attributes\Depends;
 use Sulu\Bundle\TestBundle\Testing\AssertSnapshotTrait;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
@@ -78,7 +79,68 @@ class SnippetControllerTest extends SuluTestCase
         return $id;
     }
 
-    #[\PHPUnit\Framework\Attributes\Depends('testPostPublish')]
+    #[Depends('testPostPublish')]
+    public function testEmptyVersionListAfterPublish(string $id): string
+    {
+        $this->client->request('GET', '/admin/api/snippets/' . $id . '/versions?page=1&locale=en&fields=title,version,changer,id');
+        $response = $this->client->getResponse();
+        $this->assertResponseSnapshot('snippet_get_versions_empty.json', $response, 200);
+
+        return $id;
+    }
+
+    #[Depends('testEmptyVersionListAfterPublish')]
+    public function testVersionListAfterPostModifyAndPublish(string $id): string
+    {
+        $this->client->request(
+            'PUT', '/admin/api/snippets/' . $id . '?locale=en&action=publish', [], [], [],
+            \json_encode(
+                [
+                    'template' => 'snippet',
+                    'title' => 'Test modified version snippet',
+                    'description' => 'modified version',
+                    'excerptTitle' => 'Modified Excerpt Title',
+                    'excerptDescription' => 'Modified Excerpt Description',
+                    'excerptMore' => 'Modified Excerpt More',
+                    'excerptTags' => ['Modified Tag 1', 'Modified Tag 2'],
+                    'excerptCategories' => [],
+                    'excerptIcon' => null,
+                    'excerptMedia' => null,
+                ],
+            ) ?: null,
+        );
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(200, $response);
+
+        $this->client->request('GET', '/admin/api/snippets/' . $id . '/versions?page=1&locale=en&fields=title,version,changer,id');
+        $response = $this->client->getResponse();
+        $this->assertResponseSnapshot('snippet_get_versions_after_modify_and_publish.json', $response, 200);
+        $content = \json_decode((string) $response->getContent(), true);
+
+        /** @var string $version */
+        $version = $content['_embedded']['snippets_versions'][0]['version'] ?? null; // @phpstan-ignore-line
+        $this->assertNotEmpty($version, 'Version should not be empty after publish');
+
+        return $id . '::' . $version;
+    }
+
+    #[Depends('testVersionListAfterPostModifyAndPublish')]
+    public function testRestoreVersion(string $idVersion): string
+    {
+        [$id, $version] = \explode('::', $idVersion, 2);
+
+        $this->client->request('POST', '/admin/api/snippets/' . $id . '?locale=en&action=restore&version=' . $version);
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(200, $response);
+
+        $this->client->request('GET', '/admin/api/snippets/' . $id . '?locale=en');
+        $response = $this->client->getResponse();
+        $this->assertResponseSnapshot('snippet_get_after_restore.json', $response, 200);
+
+        return $id;
+    }
+
+    #[Depends('testPostPublish')]
     public function testPostTriggerUnpublish(string $id): void
     {
         $this->client->request('POST', '/admin/api/snippets/' . $id . '?locale=en&action=unpublish');
@@ -115,7 +177,7 @@ class SnippetControllerTest extends SuluTestCase
         return $id;
     }
 
-    #[\PHPUnit\Framework\Attributes\Depends('testPost')]
+    #[Depends('testPost')]
     public function testGet(string $id): void
     {
         $this->client->request('GET', '/admin/api/snippets/' . $id . '?locale=en');
@@ -123,7 +185,7 @@ class SnippetControllerTest extends SuluTestCase
         $this->assertResponseSnapshot('snippet_get.json', $response, 200);
     }
 
-    #[\PHPUnit\Framework\Attributes\Depends('testPost')]
+    #[Depends('testPost')]
     public function testGetGhostLocale(string $id): void
     {
         $this->client->request('GET', '/admin/api/snippets/' . $id . '?locale=de');
@@ -131,7 +193,7 @@ class SnippetControllerTest extends SuluTestCase
         $this->assertResponseSnapshot('snippet_get_ghost_locale.json', $response, 200);
     }
 
-    #[\PHPUnit\Framework\Attributes\Depends('testPost')]
+    #[Depends('testPost')]
     public function testPostTriggerCopyLocale(string $id): void
     {
         $this->client->request('POST', '/admin/api/snippets/' . $id . '?locale=de&action=copy-locale&src=en&dest=de');
@@ -141,8 +203,8 @@ class SnippetControllerTest extends SuluTestCase
         $this->assertResponseSnapshot('snippet_post_trigger_copy_locale.json', $response, 200);
     }
 
-    #[\PHPUnit\Framework\Attributes\Depends('testPost')]
-    #[\PHPUnit\Framework\Attributes\Depends('testGet')]
+    #[Depends('testPost')]
+    #[Depends('testGet')]
     public function testPut(string $id): void
     {
         $this->client->request('PUT', '/admin/api/snippets/' . $id . '?locale=en', [], [], [], \json_encode([
@@ -163,8 +225,8 @@ class SnippetControllerTest extends SuluTestCase
         $this->assertResponseSnapshot('snippet_put.json', $response, 200);
     }
 
-    #[\PHPUnit\Framework\Attributes\Depends('testPost')]
-    #[\PHPUnit\Framework\Attributes\Depends('testPut')]
+    #[Depends('testPost')]
+    #[Depends('testPut')]
     public function testGetList(): void
     {
         $this->client->request('GET', '/admin/api/snippets?locale=en');
@@ -173,8 +235,8 @@ class SnippetControllerTest extends SuluTestCase
         $this->assertResponseSnapshot('snippet_cget.json', $response, 200);
     }
 
-    #[\PHPUnit\Framework\Attributes\Depends('testPost')]
-    #[\PHPUnit\Framework\Attributes\Depends('testGetList')]
+    #[Depends('testPost')]
+    #[Depends('testGetList')]
     public function testDelete(string $id): void
     {
         $this->client->request('DELETE', '/admin/api/snippets/' . $id . '?locale=en');

@@ -66,8 +66,7 @@ class PageControllerTest extends SuluTestCase
     private function createPage(
         string $parentId,
         array $data = [],
-    ): PageInterface
-    {
+    ): PageInterface {
         $data = \array_merge(
             [
                 'title' => 'Test Page',
@@ -93,8 +92,7 @@ class PageControllerTest extends SuluTestCase
     private function modifyPage(
         string $id,
         array $data = [],
-    ): PageInterface
-    {
+    ): PageInterface {
         $data = \array_merge(
             [
                 'title' => 'Test Page',
@@ -158,7 +156,7 @@ class PageControllerTest extends SuluTestCase
         );
 
         $response = $this->client->getResponse();
-        $content = \json_decode((string)$response->getContent(), true);
+        $content = \json_decode((string) $response->getContent(), true);
         /** @var string $id */
         $id = $content['id'] ?? null; // @phpstan-ignore-line
 
@@ -225,7 +223,7 @@ class PageControllerTest extends SuluTestCase
         $this->client->request('GET', '/admin/api/pages/' . $id . '/versions?page=1&locale=en&webspace=sulu-io&fields=title,version,changer,id');
         $response = $this->client->getResponse();
         $this->assertResponseSnapshot('page_get_versions_after_modify_and_publish.json', $response, 200);
-        $content = \json_decode((string)$response->getContent(), true);
+        $content = \json_decode((string) $response->getContent(), true);
 
         /** @var string $version */
         $version = $content['_embedded']['pages_versions'][0]['version'] ?? null; // @phpstan-ignore-line

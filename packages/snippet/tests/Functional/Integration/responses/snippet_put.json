@@ -24,6 +24,7 @@
     "publishedState": false,
     "stage": "draft",
     "template": "snippet",
+    "version": 0,
     "title": "Test Snippet 2",
     "workflowPlace": "unpublished"
 }
