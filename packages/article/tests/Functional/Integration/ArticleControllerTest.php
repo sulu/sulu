@@ -108,6 +108,8 @@ class ArticleControllerTest extends SuluTestCase
     #[Depends('testVersionListAfterPublish')]
     public function testVersionListAfterPostModifyAndPublish(string $id): string
     {
+        \sleep(1); // Ensure that the version timestamp is different from the previous version
+
         $this->client->request(
             'PUT', '/admin/api/articles/' . $id . '?locale=en&action=publish', [], [], [],
             \json_encode(

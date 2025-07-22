@@ -122,6 +122,7 @@ final class PageController
         $listBuilder->setParameter('locale', $locale);
         $listBuilder->setParameter('id', $id);
         $listBuilder->setIdField($fieldDescriptors['id']); // TODO should be uuid field descriptor
+        $listBuilder->sort($fieldDescriptors['version'], 'DESC');
         $this->restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
 
         $result = $listBuilder->execute();
