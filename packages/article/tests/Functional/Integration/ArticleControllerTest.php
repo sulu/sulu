@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace Sulu\Article\Tests\Functional\Integration;
 
+use PHPUnit\Framework\Attributes\CoversNothing;
+use PHPUnit\Framework\Attributes\Depends;
 use Sulu\Bundle\TestBundle\Testing\AssertSnapshotTrait;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Route\Domain\Repository\RouteRepositoryInterface;
@@ -21,7 +23,7 @@ use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 /**
  * The integration test should have no impact on the coverage so we set it to coversNothing.
  */
-#[\PHPUnit\Framework\Attributes\CoversNothing]
+#[CoversNothing]
 class ArticleControllerTest extends SuluTestCase
 {
     use AssertSnapshotTrait;
@@ -93,7 +95,78 @@ class ArticleControllerTest extends SuluTestCase
         return $id;
     }
 
-    #[\PHPUnit\Framework\Attributes\Depends('testPostPublish')]
+    #[Depends('testPostPublish')]
+    public function testEmptyVersionListAfterPublish(string $id): string
+    {
+        $this->client->request('GET', '/admin/api/articles/' . $id . '/versions?page=1&locale=en&fields=title,version,changer,id');
+        $response = $this->client->getResponse();
+        $this->assertResponseSnapshot('article_get_versions_empty.json', $response, 200);
+
+        return $id;
+    }
+
+    #[Depends('testEmptyVersionListAfterPublish')]
+    public function testVersionListAfterPostModifyAndPublish(string $id): string
+    {
+        $this->client->request(
+            'PUT', '/admin/api/articles/' . $id . '?locale=en&action=publish', [], [], [],
+            \json_encode(
+                [
+                    'template' => 'article',
+                    'title' => 'Test modified version article',
+                    'url' => '/my-article',
+                    'description' => 'modified version',
+                    'image' => null,
+                    'seoTitle' => 'Modified Seo Title',
+                    'seoDescription' => 'Modified Seo Description',
+                    'seoCanonicalUrl' => 'https://modified-sulu.io/',
+                    'seoKeywords' => 'Modified Seo Keyword 1, Modified Seo Keyword 2',
+                    'seoNoIndex' => true,
+                    'seoNoFollow' => true,
+                    'seoHideInSitemap' => true,
+                    'excerptTitle' => 'Modified Excerpt Title',
+                    'excerptDescription' => 'Modified Excerpt Description',
+                    'excerptMore' => 'Modified Excerpt More',
+                    'excerptTags' => ['Modified Tag 1', 'Modified Tag 2'],
+                    'excerptCategories' => [],
+                    'excerptIcon' => null,
+                    'excerptMedia' => null,
+                    'navigationContexts' => ['main'],
+                ],
+            ) ?: null,
+        );
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(200, $response);
+
+        $this->client->request('GET', '/admin/api/articles/' . $id . '/versions?page=1&locale=en&fields=title,version,changer,id');
+        $response = $this->client->getResponse();
+        $this->assertResponseSnapshot('article_get_versions_after_modify_and_publish.json', $response, 200);
+        $content = \json_decode((string)$response->getContent(), true);
+
+        /** @var string $version */
+        $version = $content['_embedded']['articles_versions'][0]['version'] ?? null; // @phpstan-ignore-line
+        $this->assertNotEmpty($version, 'Version should not be empty after publish');
+
+        return $id . '::' . $version;
+    }
+
+    #[Depends('testVersionListAfterPostModifyAndPublish')]
+    public function testRestoreVersion(string $idVersion): string
+    {
+        [$id, $version] = \explode('::', $idVersion, 2);
+
+        $this->client->request('POST', '/admin/api/articles/' . $id . '?locale=en&action=restore&version=' . $version);
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(200, $response);
+
+        $this->client->request('GET', '/admin/api/articles/' . $id . '?locale=en');
+        $response = $this->client->getResponse();
+        $this->assertResponseSnapshot('article_get_after_restore.json', $response, 200);
+
+        return $id;
+    }
+
+    #[Depends('testPostPublish')]
     public function testPostTriggerUnpublish(string $id): void
     {
         $this->client->request('POST', '/admin/api/articles/' . $id . '?locale=en&action=unpublish');
@@ -153,7 +226,7 @@ class ArticleControllerTest extends SuluTestCase
         return $id;
     }
 
-    #[\PHPUnit\Framework\Attributes\Depends('testPost')]
+    #[Depends('testPost')]
     public function testGet(string $id): void
     {
         $this->client->request('GET', '/admin/api/articles/' . $id . '?locale=en');
@@ -169,7 +242,7 @@ class ArticleControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(404, $response);
     }
 
-    #[\PHPUnit\Framework\Attributes\Depends('testPost')]
+    #[Depends('testPost')]
     public function testGetGhostLocale(string $id): void
     {
         $this->client->request('GET', '/admin/api/articles/' . $id . '?locale=de');
@@ -185,7 +258,7 @@ class ArticleControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(404, $response);
     }
 
-    #[\PHPUnit\Framework\Attributes\Depends('testPost')]
+    #[Depends('testPost')]
     public function testPostTriggerCopyLocale(string $id): void
     {
         $this->client->request('POST', '/admin/api/articles/' . $id . '?locale=de&action=copy-locale&src=en&dest=de');
@@ -195,8 +268,8 @@ class ArticleControllerTest extends SuluTestCase
         $this->assertResponseSnapshot('article_post_trigger_copy_locale.json', $response, 200);
     }
 
-    #[\PHPUnit\Framework\Attributes\Depends('testPost')]
-    #[\PHPUnit\Framework\Attributes\Depends('testGet')]
+    #[Depends('testPost')]
+    #[Depends('testGet')]
     public function testPut(string $id): void
     {
         $this->client->request('PUT', '/admin/api/articles/' . $id . '?locale=en', [], [], [], \json_encode([
@@ -230,8 +303,8 @@ class ArticleControllerTest extends SuluTestCase
         $this->assertResponseSnapshot('article_put.json', $response, 200);
     }
 
-    #[\PHPUnit\Framework\Attributes\Depends('testPost')]
-    #[\PHPUnit\Framework\Attributes\Depends('testPut')]
+    #[Depends('testPost')]
+    #[Depends('testPut')]
     public function testGetList(): void
     {
         $this->client->request('GET', '/admin/api/articles?locale=en');
@@ -240,8 +313,8 @@ class ArticleControllerTest extends SuluTestCase
         $this->assertResponseSnapshot('article_cget.json', $response, 200);
     }
 
-    #[\PHPUnit\Framework\Attributes\Depends('testPost')]
-    #[\PHPUnit\Framework\Attributes\Depends('testGetList')]
+    #[Depends('testPost')]
+    #[Depends('testGetList')]
     public function testDelete(string $id): void
     {
         $this->client->request('DELETE', '/admin/api/articles/' . $id . '?locale=en');

@@ -32,6 +32,7 @@
     "shadowOn": false,
     "stage": "draft",
     "template": null,
+    "version": 0,
     "title": null,
     "workflowPlace": null
 }

@@ -41,6 +41,7 @@
     "stage": "draft",
     "template": "article",
     "title": "Test Article",
+    "version": 0,
     "url": "/my-article",
     "workflowPlace": "unpublished",
     "mainWebspace": "sulu-io"
