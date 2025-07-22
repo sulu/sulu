@@ -45,6 +45,7 @@
     "template": "default",
     "title": "Test Page",
     "url": "/my-page",
+    "version" : 0,
     "webspace": "sulu-io",
     "workflowPlace": "unpublished"
 }

@@ -3,6 +3,7 @@
         "pages": [
             {
                 "id": "123-123-123",
+                "version" : null,
                 "title": null,
                 "author": null,
                 "created" : null,
@@ -20,6 +21,7 @@
                     "pages": [
                         {
                             "id": "@string@",
+                            "version" : 0,
                             "title": "Test Page",
                             "author": null,
                             "created": "@datetime@",
@@ -37,6 +39,7 @@
                                 "pages": [
                                     {
                                         "id": "@string@",
+                                        "version" : null,
                                         "title": "Test Page",
                                         "author": null,
                                         "created" : null,
@@ -53,6 +56,7 @@
                                     },
                                     {
                                         "id": "@string@",
+                                        "version" : null,
                                         "title": "Test Page",
                                         "author": null,
                                         "created" : null,
@@ -69,6 +73,7 @@
                                     },
                                     {
                                         "id": "@string@",
+                                        "version" : null,
                                         "title": "Test Page",
                                         "author": null,
                                         "created" : null,
@@ -84,6 +89,7 @@
                                         "hasChildren": false
                                     },
                                     {
+                                        "version" : null,
                                         "author": null,
                                         "changed": "@datetime@",
                                         "changer": null,

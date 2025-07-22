@@ -20,6 +20,7 @@
                     "pages": [
                         {
                             "id": "@string@",
+                            "version" : 0,
                             "title": "Test Page 2",
                             "author": null,
                             "created": "@datetime@",
@@ -36,6 +37,7 @@
                         },
                         {
                             "id": "@string@",
+                            "version" : 0,
                             "title": "Test page for copy",
                             "author": null,
                             "created": "@datetime@",
@@ -53,6 +55,7 @@
                                 "pages": [
                                     {
                                         "id": "@string@",
+                                        "version" : 0,
                                         "title": "Test page for copy",
                                         "author": null,
                                         "created": "@datetime@",

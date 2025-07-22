@@ -14,6 +14,7 @@
             "ghostLocale" : null,
             "webspaceKey" : "sulu-io",
             "template" : null,
+            "version" : null,
             "hasChildren" : true,
             "_embedded" : {
                 "pages" : [ {
@@ -30,6 +31,7 @@
                     "ghostLocale" : null,
                     "webspaceKey" : "sulu-io",
                     "template" : "default",
+                    "version" : 0,
                     "hasChildren" : false
                 } ]
             }

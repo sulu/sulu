@@ -36,6 +36,7 @@
     "template" : "default",
     "title" : "Test page for copy",
     "url" : null,
+    "version" : 0,
     "webspace": "sulu-io",
     "workflowPlace" : "unpublished"
 }

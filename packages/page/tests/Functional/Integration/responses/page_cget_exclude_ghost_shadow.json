@@ -3,6 +3,7 @@
         "pages": [
             {
                 "id": "123-123-123",
+                "version" : 0,
                 "title": null,
                 "author": null,
                 "created" : null,
@@ -27,6 +28,7 @@
                             "ghostLocale": null,
                             "hasChildren": true,
                             "id": "@string@",
+                            "version" : 0,
                             "locale": "de",
                             "publishedState": false,
                             "shadowLocale": null,

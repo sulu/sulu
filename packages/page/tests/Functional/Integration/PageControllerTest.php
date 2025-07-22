@@ -66,7 +66,8 @@ class PageControllerTest extends SuluTestCase
     private function createPage(
         string $parentId,
         array $data = [],
-    ): PageInterface {
+    ): PageInterface
+    {
         $data = \array_merge(
             [
                 'title' => 'Test Page',
@@ -92,7 +93,8 @@ class PageControllerTest extends SuluTestCase
     private function modifyPage(
         string $id,
         array $data = [],
-    ): PageInterface {
+    ): PageInterface
+    {
         $data = \array_merge(
             [
                 'title' => 'Test Page',
@@ -156,7 +158,7 @@ class PageControllerTest extends SuluTestCase
         );
 
         $response = $this->client->getResponse();
-        $content = \json_decode((string) $response->getContent(), true);
+        $content = \json_decode((string)$response->getContent(), true);
         /** @var string $id */
         $id = $content['id'] ?? null; // @phpstan-ignore-line
 
@@ -178,6 +180,77 @@ class PageControllerTest extends SuluTestCase
     }
 
     #[Depends('testPostPublish')]
+    public function testEmptyVersionListAfterPublish(string $id): string
+    {
+        $this->client->request('GET', '/admin/api/pages/' . $id . '/versions?page=1&locale=en&webspace=sulu-io&fields=title,version,changer,id');
+        $response = $this->client->getResponse();
+        $this->assertResponseSnapshot('page_get_versions_empty.json', $response, 200);
+
+        return $id;
+    }
+
+    #[Depends('testEmptyVersionListAfterPublish')]
+    public function testVersionListAfterPostModifyAndPublish(string $id): string
+    {
+        $this->client->request(
+            'PUT', '/admin/api/pages/' . $id . '?locale=en&action=publish', [], [], [],
+            \json_encode(
+                [
+                    'template' => 'default',
+                    'title' => 'Test modified version page',
+                    'url' => '/my-page',
+                    'description' => 'modified version',
+                    'image' => null,
+                    'seoTitle' => 'Modified Seo Title',
+                    'seoDescription' => 'Modified Seo Description',
+                    'seoCanonicalUrl' => 'https://modified-sulu.io/',
+                    'seoKeywords' => 'Modified Seo Keyword 1, Modified Seo Keyword 2',
+                    'seoNoIndex' => true,
+                    'seoNoFollow' => true,
+                    'seoHideInSitemap' => true,
+                    'excerptTitle' => 'Modified Excerpt Title',
+                    'excerptDescription' => 'Modified Excerpt Description',
+                    'excerptMore' => 'Modified Excerpt More',
+                    'excerptTags' => ['Modified Tag 1', 'Modified Tag 2'],
+                    'excerptCategories' => [],
+                    'excerptIcon' => null,
+                    'excerptMedia' => null,
+                    'navigationContexts' => ['main'],
+                ],
+            ) ?: null,
+        );
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(200, $response);
+
+        $this->client->request('GET', '/admin/api/pages/' . $id . '/versions?page=1&locale=en&webspace=sulu-io&fields=title,version,changer,id');
+        $response = $this->client->getResponse();
+        $this->assertResponseSnapshot('page_get_versions_after_modify_and_publish.json', $response, 200);
+        $content = \json_decode((string)$response->getContent(), true);
+
+        /** @var string $version */
+        $version = $content['_embedded']['pages_versions'][0]['version'] ?? null; // @phpstan-ignore-line
+        $this->assertNotEmpty($version, 'Version should not be empty after publish');
+
+        return $id . '::' . $version;
+    }
+
+    #[Depends('testVersionListAfterPostModifyAndPublish')]
+    public function testRestoreVersion(string $idVersion): string
+    {
+        [$id, $version] = \explode('::', $idVersion, 2);
+
+        $this->client->request('POST', '/admin/api/pages/' . $id . '?locale=en&action=restore&version=' . $version);
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(200, $response);
+
+        $this->client->request('GET', '/admin/api/pages/' . $id . '?locale=en&webspace=sulu-io');
+        $response = $this->client->getResponse();
+        $this->assertResponseSnapshot('page_get_after_restore.json', $response, 200);
+
+        return $id;
+    }
+
+    #[Depends('testRestoreVersion')]
     public function testPostTriggerUnpublish(string $id): void
     {
         $this->client->request('POST', '/admin/api/pages/' . $id . '?locale=en&action=unpublish');
@@ -439,7 +512,6 @@ class PageControllerTest extends SuluTestCase
 
         $this->client->request('GET', '/admin/api/pages?locale=de&webspace=sulu-io&expandedIds=' . $id . '&exclude-ghosts=false&exclude-shadows=false');
         $response = $this->client->getResponse();
-
         $this->assertResponseSnapshot('page_cget_ghost_shadow.json', $response, 200);
 
         return $id;
