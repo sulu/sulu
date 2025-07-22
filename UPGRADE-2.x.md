@@ -4,9 +4,9 @@
 
 ### Deprecate usage of `sulu.context` parameter
 
-The `sulu.context` parameter is deprecated and services should not longer depend on it.
+The `sulu.context` parameter is deprecated and services should no longer depend on it.
 
-If some services behave differently between an `admin` or a `website` request you should depend on
+If some services behave differently between an `admin` or a `website` request, you should depend on
 [Symfony Firewall Config](https://symfony.com/doc/7.4/security.html#fetching-the-firewall-configuration-for-a-request)
 instead.
 
@@ -14,8 +14,8 @@ instead.
 $suluContext = $this->security?->getFirewallConfig($request)?->getName() === 'admin' ? 'admin' : 'website';
 ```
 
-Still best practices is that your services do not depend on such states, instead of controllers or commands
-should be based on the request or command arguments give other parameters to your service to control its behavior.
+Still, best practices is that your services do not depend on such states. Instead controllers or commands
+should be based on the request or command arguments, giving other parameters to your service to control its behavior.
 
 ## 2.6.10
 
