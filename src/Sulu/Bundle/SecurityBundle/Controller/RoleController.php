@@ -161,9 +161,9 @@ class RoleController extends AbstractRestController implements ClassResourceInte
      */
     public function postAction(Request $request)
     {
-        $name = $request->request->get('name');
-        $key = $request->request->get('key');
-        $system = $request->request->get('system');
+        $name = $request->getPayload()->get('name');
+        $key = $request->getPayload()->get('key');
+        $system = $request->getPayload()->get('system');
 
         try {
             if (null === $name) {
@@ -179,7 +179,7 @@ class RoleController extends AbstractRestController implements ClassResourceInte
             $role->setKey($key);
             $role->setSystem($system);
 
-            $permissions = $request->request->all('permissions');
+            $permissions = $request->getPayload()->all('permissions');
 
             if (!empty($permissions)) {
                 foreach ($permissions as $permissionData) {
@@ -187,14 +187,14 @@ class RoleController extends AbstractRestController implements ClassResourceInte
                 }
             }
 
-            $securityTypeData = $request->request->all('securityType');
+            $securityTypeData = $request->getPayload()->all('securityType');
             if ($this->checkSecurityTypeData($securityTypeData)) {
                 $this->setSecurityType($role, $securityTypeData);
             }
 
             try {
                 $this->entityManager->persist($role);
-                $this->eventCollector->collect(new RoleCreatedEvent($role, $request->request->all()));
+                $this->eventCollector->collect(new RoleCreatedEvent($role, $request->getPayload()->all()));
                 $this->entityManager->flush();
 
                 $view = $this->view($this->convertRole($role), 200);
@@ -221,9 +221,9 @@ class RoleController extends AbstractRestController implements ClassResourceInte
     {
         /** @var RoleInterface $role */
         $role = $this->roleRepository->findRoleById($id);
-        $name = $request->request->get('name');
-        $key = $request->request->get('key');
-        $system = $request->request->get('system');
+        $name = $request->getPayload()->get('name');
+        $key = $request->getPayload()->get('key');
+        $system = $request->getPayload()->get('system');
 
         try {
             if (!$role) {
@@ -233,18 +233,18 @@ class RoleController extends AbstractRestController implements ClassResourceInte
                 $role->setKey($key);
                 $role->setSystem($system);
 
-                if (!$this->processPermissions($role, $request->request->all('permissions'))) {
+                if (!$this->processPermissions($role, $request->getPayload()->all('permissions'))) {
                     throw new RestException('Could not update dependencies!');
                 }
 
-                $securityTypeData = $request->request->all('securityType');
+                $securityTypeData = $request->getPayload()->all('securityType');
                 if ($this->checkSecurityTypeData($securityTypeData)) {
                     $this->setSecurityType($role, $securityTypeData);
                 } else {
                     $role->setSecurityType(null);
                 }
 
-                $this->eventCollector->collect(new RoleModifiedEvent($role, $request->request->all()));
+                $this->eventCollector->collect(new RoleModifiedEvent($role, $request->getPayload()->all()));
                 $this->entityManager->flush();
                 $view = $this->view($this->convertRole($role), 200);
             }

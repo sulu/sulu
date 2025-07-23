@@ -62,8 +62,8 @@ class SingleSignOnLoginRequestSubscriber implements EventSubscriberInterface
         }
 
         $isResetPassword = 'sulu_security.reset_password.email' === $route;
-        $identifier = $request->request->get('username') ?? $request->request->get('user');
-        $password = $request->request->get('password');
+        $identifier = $request->getPayload()->get('username') ?? $request->getPayload()->get('user');
+        $password = $request->getPassword()->get('password');
 
         if (!$identifier || !\is_string($identifier)) {
             return;

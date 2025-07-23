@@ -92,7 +92,7 @@ class PreviewRenderer implements PreviewRendererInterface
         $currentRequest = $this->requestStack->getCurrentRequest();
         if (null !== $currentRequest) {
             $query = $currentRequest->query->all();
-            $request = $currentRequest->request->all();
+            $request = $currentRequest->getPayload()->all();
         }
 
         $attributes = $this->routeDefaultsProvider->getByEntity(\get_class($object), $id, $locale, $object);
