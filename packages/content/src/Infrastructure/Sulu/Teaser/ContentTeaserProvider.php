@@ -65,13 +65,7 @@ abstract class ContentTeaserProvider implements TeaserProviderInterface
     protected $contentRichEntityClass;
 
     /**
-     * @var bool
-     */
-    protected $showDrafts;
-
-    /**
      * @param class-string<T> $contentRichEntityClass
-     * @param bool $showDrafts Inject parameter "sulu_document_manager.show_drafts" here
      */
     public function __construct(
         ContentManagerInterface $contentManager,
@@ -79,14 +73,12 @@ abstract class ContentTeaserProvider implements TeaserProviderInterface
         ContentMetadataInspectorInterface $contentMetadataInspector,
         MetadataProviderRegistry $metadataProviderRegistry,
         string $contentRichEntityClass,
-        bool $showDrafts
     ) {
         $this->contentManager = $contentManager;
         $this->entityManager = $entityManager;
         $this->contentMetadataInspector = $contentMetadataInspector;
         $this->metadataProviderRegistry = $metadataProviderRegistry;
         $this->contentRichEntityClass = $contentRichEntityClass;
-        $this->showDrafts = $showDrafts;
     }
 
     /**

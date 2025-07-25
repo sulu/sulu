@@ -40,7 +40,6 @@ services:
             - '@sulu_content.content_metadata_inspector'
             - '@sulu_admin.metadata_provider_registry'
             - '@translator'
-            - '%sulu_document_manager.show_drafts%'
         tags:
             - { name: sulu.teaser.provider, alias: examples }
 

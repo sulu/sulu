@@ -40,9 +40,8 @@ class PageTeaserProvider extends ContentTeaserProvider
         ContentMetadataInspectorInterface $contentMetadataInspector,
         MetadataProviderRegistry $metadataProviderRegistry,
         TranslatorInterface $translator,
-        bool $showDrafts,
     ) {
-        parent::__construct($contentManager, $entityManager, $contentMetadataInspector, $metadataProviderRegistry, PageInterface::class, $showDrafts);
+        parent::__construct($contentManager, $entityManager, $contentMetadataInspector, $metadataProviderRegistry, PageInterface::class);
 
         $this->translator = $translator;
     }
