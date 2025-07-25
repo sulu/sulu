@@ -67,24 +67,6 @@ parameters:
 			path: packages/content/src/Application/PropertyResolver/Resolver/BlockPropertyResolver.php
 
 		-
-			message: '#^Method Sulu\\Content\\Infrastructure\\Sulu\\SmartContent\\DataItem\\ContentDataItem\:\:getTitle\(\) should return string\|null but returns mixed\.$#'
-			identifier: return.type
-			count: 2
-			path: packages/content/src/Infrastructure/Sulu/SmartContent/DataItem/ContentDataItem.php
-
-		-
-			message: '#^Binary operation "\." between mixed and ''\.templateKey IN \(\\'''' results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 1
-			path: packages/content/src/Infrastructure/Sulu/SmartContent/Repository/ContentDataProviderRepository.php
-
-		-
-			message: '#^Method Sulu\\Content\\Infrastructure\\Sulu\\SmartContent\\Repository\\ContentDataProviderRepository\:\:findEntityIdsByFilters\(\) should return array\<int\|string\> but returns array\<int\<0, max\>, mixed\>\.$#'
-			identifier: return.type
-			count: 1
-			path: packages/content/src/Infrastructure/Sulu/SmartContent/Repository/ContentDataProviderRepository.php
-
-		-
 			message: '#^Method Sulu\\Content\\Tests\\Unit\\Content\\Application\\PropertyResolver\\BlockVisitor\\ScheduleBlockVisitorTest\:\:provideVisit\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
