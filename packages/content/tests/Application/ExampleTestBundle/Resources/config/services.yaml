@@ -54,15 +54,6 @@ services:
         tags:
             - { name: sulu.link.provider, alias: examples }
 
-    example_test.example_data_provider_repository:
-        class: Sulu\Content\Infrastructure\Sulu\SmartContent\Repository\ContentDataProviderRepository
-        public: true
-        arguments:
-            - '@sulu_content.content_manager'
-            - '@doctrine.orm.entity_manager'
-            - '%sulu_document_manager.show_drafts%'
-            - Sulu\Content\Tests\Application\ExampleTestBundle\Entity\Example
-
     example_test.example_reference_store:
         class: Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStore
         public: true
