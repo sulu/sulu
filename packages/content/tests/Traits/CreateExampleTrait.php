@@ -15,13 +15,13 @@ namespace Sulu\Content\Tests\Traits;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
-use Sulu\Bundle\RouteBundle\Entity\Route;
 use Sulu\Content\Application\ContentDataMapper\ContentDataMapper;
 use Sulu\Content\Domain\Model\DimensionContentCollection;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Domain\Model\WorkflowInterface;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\Example;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\ExampleDimensionContent;
+use Sulu\Route\Domain\Model\Route;
 use Symfony\Component\String\Slugger\AsciiSlugger;
 use Webmozart\Assert\Assert;
 
@@ -143,14 +143,15 @@ trait CreateExampleTrait
                 );
 
                 if ($options['create_route'] ?? false) {
-                    $route = new Route();
-                    $route->setLocale($locale);
-
                     /** @var array{url: string} $draftTemplateData */
                     $draftTemplateData = $draftLocalizedDimension->getTemplateData();
-                    $route->setPath($draftTemplateData['url']);
-                    $route->setEntityId($example->getId()); // @phpstan-ignore-line
-                    $route->setEntityClass($example::class);
+
+                    $route = Route::createRouteWithTempId(
+                        Example::RESOURCE_KEY,
+                        fn () => (string) $example->getId(),
+                        $locale,
+                        $draftTemplateData['url'],
+                    );
 
                     $entityManager->persist($route);
                 }
