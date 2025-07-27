@@ -47,7 +47,7 @@ class RestoreSnippetVersionMessageHandler
             [
                 'stage' => $options['stage'] ?? DimensionContentInterface::STAGE_DRAFT,
                 'locale' => $options['locale'] ?? null,
-                'version' => DimensionContentInterface::DEFAULT_VERSION,
+                'version' => DimensionContentInterface::CURRENT_VERSION,
             ],
             [
                 'ignoredAttributes' => ['url'],

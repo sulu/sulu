@@ -11,6 +11,7 @@
 
 namespace Sulu\Snippet\Infrastructure\Sulu\Admin;
 
+use Sulu\Bundle\ActivityBundle\Infrastructure\Sulu\Admin\View\ActivityViewBuilderFactoryInterface;
 use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItem;
 use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItemCollection;
@@ -42,36 +43,13 @@ class SnippetAdmin extends Admin
 
     public const EDIT_TABS_VIEW = 'sulu_snippet.snippet.edit_tabs';
 
-    /**
-     * @var ViewBuilderFactoryInterface
-     */
-    private $viewBuilderFactory;
-
-    /**
-     * @var ContentViewBuilderFactoryInterface
-     */
-    private $contentViewBuilderFactory;
-
-    /**
-     * @var SecurityCheckerInterface
-     */
-    private $securityChecker;
-
-    /**
-     * @var LocalizationManagerInterface
-     */
-    private $localizationManager;
-
     public function __construct(
-        ViewBuilderFactoryInterface $viewBuilderFactory,
-        ContentViewBuilderFactoryInterface $contentViewBuilderFactory,
-        SecurityCheckerInterface $securityChecker,
-        LocalizationManagerInterface $localizationManager
+        private ViewBuilderFactoryInterface $viewBuilderFactory,
+        private ContentViewBuilderFactoryInterface $contentViewBuilderFactory,
+        private SecurityCheckerInterface $securityChecker,
+        private LocalizationManagerInterface $localizationManager,
+        private ActivityViewBuilderFactoryInterface $activityViewBuilderFactory,
     ) {
-        $this->viewBuilderFactory = $viewBuilderFactory;
-        $this->contentViewBuilderFactory = $contentViewBuilderFactory;
-        $this->securityChecker = $securityChecker;
-        $this->localizationManager = $localizationManager;
     }
 
     public function configureNavigationItems(NavigationItemCollection $navigationItemCollection): void
@@ -142,6 +120,19 @@ class SnippetAdmin extends Admin
 
             foreach ($viewBuilders as $viewBuilder) {
                 $viewCollection->add($viewBuilder);
+            }
+
+            if ($this->activityViewBuilderFactory->hasActivityListPermission()) {
+                $insightsResourceTabViewName = SnippetAdmin::EDIT_TABS_VIEW . '.insights';
+                $viewCollection->add(
+                    $this->activityViewBuilderFactory
+                        ->createActivityListViewBuilder(
+                            $insightsResourceTabViewName . '.activity',
+                            '/activities',
+                            SnippetInterface::RESOURCE_KEY
+                        )
+                        ->setParent($insightsResourceTabViewName)
+                );
             }
         }
     }

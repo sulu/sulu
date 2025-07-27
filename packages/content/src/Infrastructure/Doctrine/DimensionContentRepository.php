@@ -68,7 +68,7 @@ class DimensionContentRepository implements DimensionContentRepositoryInterface
             ->where('dimensionContent.' . $mappingProperty . ' = :id')
             ->setParameter('id', $contentRichEntity->getId())
             ->andWhere('dimensionContent.version = :version')
-            ->setParameter('version', $dimensionAttributes['version'] ?? DimensionContentInterface::DEFAULT_VERSION);
+            ->setParameter('version', $dimensionAttributes['version'] ?? DimensionContentInterface::CURRENT_VERSION);
 
         $this->dimensionContentQueryEnhancer->addSelects(
             $queryBuilder,

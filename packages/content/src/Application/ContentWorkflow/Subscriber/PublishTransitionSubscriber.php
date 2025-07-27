@@ -81,10 +81,9 @@ class PublishTransitionSubscriber implements EventSubscriberInterface
         }
 
         // Create a new version of the content before it is published
-        echo \time() . \PHP_EOL;
         $this->contentCopier->copy(
             $contentRichEntity,
-            \array_merge($dimensionAttributes, ['locale' => $locale, 'version' => DimensionContentInterface::DEFAULT_VERSION]),
+            \array_merge($dimensionAttributes, ['locale' => $locale, 'version' => DimensionContentInterface::CURRENT_VERSION]),
             $contentRichEntity,
             \array_merge($dimensionAttributes, ['locale' => $locale, 'version' => \time()]),
             ['ignoredAttributes' => ['url']] // ignore url, because we cannot restore it from a version

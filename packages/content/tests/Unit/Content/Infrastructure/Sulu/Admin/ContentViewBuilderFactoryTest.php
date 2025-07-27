@@ -70,7 +70,6 @@ class ContentViewBuilderFactoryTest extends TestCase
 
         return new ContentViewBuilderFactory(
             new ViewBuilderFactory(),
-            new ActivityViewBuilderFactory(new ViewBuilderFactory(), $securityChecker),
             $previewObjectProviderRegistry,
             $contentMetadataInspector,
             $securityChecker,
@@ -113,7 +112,6 @@ class ContentViewBuilderFactoryTest extends TestCase
     public function testCreateViews(): void
     {
         $securityChecker = $this->prophesize(SecurityCheckerInterface::class);
-        $securityChecker->hasPermission(ActivityAdmin::SECURITY_CONTEXT, PermissionTypes::VIEW)->willReturn(true);
 
         $contentMetadataInspector = $this->prophesize(ContentMetadataInspectorInterface::class);
         $contentMetadataInspector->getDimensionContentClass(Example::class)
@@ -129,7 +127,7 @@ class ContentViewBuilderFactoryTest extends TestCase
 
         $views = $contentViewBuilder->createViews(Example::class, 'edit_parent_key');
 
-        $this->assertCount(7, $views);
+        $this->assertCount(6, $views);
 
         $this->assertInstanceOf(FormViewBuilderInterface::class, $views[0]);
         $this->assertSame('edit_parent_key.content', $views[0]->getName());
@@ -145,7 +143,7 @@ class ContentViewBuilderFactoryTest extends TestCase
 
         $views = $contentViewBuilder->createViews(Example::class, 'edit_parent_key', 'add_parent_key');
 
-        $this->assertCount(8, $views);
+        $this->assertCount(7, $views);
 
         $this->assertInstanceOf(FormViewBuilderInterface::class, $views[0]);
         $this->assertSame('add_parent_key.content', $views[0]->getName());
@@ -176,7 +174,6 @@ class ContentViewBuilderFactoryTest extends TestCase
     public function testCreateViewsWithPreview(): void
     {
         $securityChecker = $this->prophesize(SecurityCheckerInterface::class);
-        $securityChecker->hasPermission(ActivityAdmin::SECURITY_CONTEXT, PermissionTypes::VIEW)->willReturn(true);
 
         $entityManager = $this->prophesize(EntityManagerInterface::class);
         $contentMetadataInspector = $this->prophesize(ContentMetadataInspectorInterface::class);
@@ -204,7 +201,7 @@ class ContentViewBuilderFactoryTest extends TestCase
 
         $views = $contentViewBuilder->createViews(Example::class, 'edit_parent_key');
 
-        $this->assertCount(7, $views);
+        $this->assertCount(6, $views);
         $this->assertInstanceOf(PreviewFormViewBuilderInterface::class, $views[0]);
         $this->assertInstanceOf(PreviewFormViewBuilderInterface::class, $views[1]);
         $this->assertInstanceOf(PreviewFormViewBuilderInterface::class, $views[2]);
@@ -322,7 +319,6 @@ class ContentViewBuilderFactoryTest extends TestCase
     public function testCreateViewsWithSecurityContext(array $permissions, array $expectedToolbarActions): void
     {
         $securityChecker = $this->prophesize(SecurityCheckerInterface::class);
-        $securityChecker->hasPermission(ActivityAdmin::SECURITY_CONTEXT, PermissionTypes::VIEW)->willReturn(false);
 
         $contentMetadataInspector = $this->prophesize(ContentMetadataInspectorInterface::class);
         $contentMetadataInspector->getDimensionContentClass(Example::class)
@@ -471,7 +467,6 @@ class ContentViewBuilderFactoryTest extends TestCase
     public function testCreateViewsWithContentRichEntityClass(DimensionContentInterface $dimensionContentObject, array $expectedToolbarActions): void
     {
         $securityChecker = $this->prophesize(SecurityCheckerInterface::class);
-        $securityChecker->hasPermission(ActivityAdmin::SECURITY_CONTEXT, PermissionTypes::VIEW)->willReturn(false);
 
         $contentMetadataInspector = $this->prophesize(ContentMetadataInspectorInterface::class);
         $contentMetadataInspector->getDimensionContentClass(Example::class)

@@ -98,7 +98,7 @@ class ContentNormalizerTest extends TestCase
             'id' => 5,
             'locale' => 'de',
             'stage' => 'live',
-            'version' => DimensionContentInterface::DEFAULT_VERSION,
+            'version' => DimensionContentInterface::CURRENT_VERSION,
         ], $contentNormalizer->normalize($object));
     }
 
@@ -220,7 +220,7 @@ class ContentNormalizerTest extends TestCase
             'someTemplate' => 'data',
             'stage' => 'live',
             'template' => 'template-key',
-            'version' => DimensionContentInterface::DEFAULT_VERSION,
+            'version' => DimensionContentInterface::CURRENT_VERSION,
             'workflowPlace' => 'draft',
         ], $contentNormalizer->normalize($object));
     }

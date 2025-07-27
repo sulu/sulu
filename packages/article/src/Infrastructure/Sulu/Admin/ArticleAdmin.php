@@ -12,6 +12,7 @@
 namespace Sulu\Article\Infrastructure\Sulu\Admin;
 
 use Sulu\Article\Domain\Model\ArticleInterface;
+use Sulu\Bundle\ActivityBundle\Infrastructure\Sulu\Admin\View\ActivityViewBuilderFactoryInterface;
 use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItem;
 use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItemCollection;
@@ -47,6 +48,7 @@ class ArticleAdmin extends Admin
         private ContentViewBuilderFactoryInterface $contentViewBuilderFactory,
         private SecurityCheckerInterface $securityChecker,
         private LocalizationManagerInterface $localizationManager,
+        private ActivityViewBuilderFactoryInterface $activityViewBuilderFactory,
     ) {
     }
 
@@ -118,6 +120,19 @@ class ArticleAdmin extends Admin
 
             foreach ($viewBuilders as $viewBuilder) {
                 $viewCollection->add($viewBuilder);
+            }
+
+            if ($this->activityViewBuilderFactory->hasActivityListPermission()) {
+                $insightsResourceTabViewName = ArticleAdmin::EDIT_TABS_VIEW . '.insights';
+                $viewCollection->add(
+                    $this->activityViewBuilderFactory
+                        ->createActivityListViewBuilder(
+                            $insightsResourceTabViewName . '.activity',
+                            '/activities',
+                            ArticleInterface::RESOURCE_KEY
+                        )
+                        ->setParent($insightsResourceTabViewName)
+                );
             }
         }
     }

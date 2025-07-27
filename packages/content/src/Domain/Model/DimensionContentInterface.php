@@ -21,7 +21,7 @@ interface DimensionContentInterface
     public const STAGE_DRAFT = 'draft';
     public const STAGE_LIVE = 'live';
 
-    public const DEFAULT_VERSION = 0;
+    public const CURRENT_VERSION = 0;
 
     public static function getResourceKey(): string;
 

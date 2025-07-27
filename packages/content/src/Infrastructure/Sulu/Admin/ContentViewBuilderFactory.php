@@ -13,8 +13,6 @@ declare(strict_types=1);
 
 namespace Sulu\Content\Infrastructure\Sulu\Admin;
 
-use Sulu\Article\Domain\Model\ArticleInterface;
-use Sulu\Bundle\ActivityBundle\Infrastructure\Sulu\Admin\View\ActivityViewBuilderFactoryInterface;
 use Sulu\Bundle\AdminBundle\Admin\View\DropdownToolbarAction;
 use Sulu\Bundle\AdminBundle\Admin\View\FormViewBuilderInterface;
 use Sulu\Bundle\AdminBundle\Admin\View\ListItemAction;
@@ -42,7 +40,6 @@ class ContentViewBuilderFactory implements ContentViewBuilderFactoryInterface
      */
     public function __construct(
         private ViewBuilderFactoryInterface $viewBuilderFactory,
-        private ActivityViewBuilderFactoryInterface $activityViewBuilderFactory,
         private PreviewObjectProviderRegistryInterface $objectProviderRegistry,
         private ContentMetadataInspectorInterface $contentMetadataInspector,
         private SecurityCheckerInterface $securityChecker,
@@ -331,7 +328,7 @@ class ContentViewBuilderFactory implements ContentViewBuilderFactoryInterface
             $versionsListKey = $resourceKey . '_versions';
         }
 
-        $views = [
+        return [
             $this->viewBuilderFactory
                 ->createResourceTabViewBuilder($insightsResourceTabViewName, '/insights')
                 ->setResourceKey($resourceKey)
@@ -362,18 +359,6 @@ class ContentViewBuilderFactory implements ContentViewBuilderFactoryInterface
                 ])
                 ->setParent($insightsResourceTabViewName),
         ];
-
-        if ($this->activityViewBuilderFactory->hasActivityListPermission()) {
-            $views[] = $this->activityViewBuilderFactory
-                ->createActivityListViewBuilder(
-                    $insightsResourceTabViewName . '.activity',
-                    '/activities',
-                    ArticleInterface::RESOURCE_KEY
-                )
-                ->setParent($insightsResourceTabViewName);
-        }
-
-        return $views;
     }
 
     /**

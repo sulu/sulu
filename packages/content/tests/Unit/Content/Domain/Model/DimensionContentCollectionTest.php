@@ -144,7 +144,7 @@ class DimensionContentCollectionTest extends TestCase
             [
                 'locale' => 'de',
                 'stage' => 'draft',
-                'version' => DimensionContentInterface::DEFAULT_VERSION,
+                'version' => DimensionContentInterface::CURRENT_VERSION,
             ],
             $dimensionContentCollection->getDimensionAttributes()
         );

@@ -43,8 +43,8 @@ class ContentDataMapperTest extends TestCase
             $dataMapper2->reveal(),
         ]);
 
-        $unlocalizedDimensionAttributes = ['stage' => 'draft', 'locale' => null, 'version' => DimensionContentInterface::DEFAULT_VERSION];
-        $localizedDimensionAttributes = ['stage' => 'draft', 'locale' => 'en', 'version' => DimensionContentInterface::DEFAULT_VERSION];
+        $unlocalizedDimensionAttributes = ['stage' => 'draft', 'locale' => null, 'version' => DimensionContentInterface::CURRENT_VERSION];
+        $localizedDimensionAttributes = ['stage' => 'draft', 'locale' => 'en', 'version' => DimensionContentInterface::CURRENT_VERSION];
 
         $data = ['test-key' => 'test-value'];
         $dimensionContentCollection = $this->prophesize(DimensionContentCollectionInterface::class);
@@ -70,8 +70,8 @@ class ContentDataMapperTest extends TestCase
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('Create unlocalized and localized dimension content.');
 
-        $unlocalizedDimensionAttributes = ['stage' => 'draft', 'locale' => null, 'version' => DimensionContentInterface::DEFAULT_VERSION];
-        $localizedDimensionAttributes = ['stage' => 'draft', 'locale' => 'en', 'version' => DimensionContentInterface::DEFAULT_VERSION];
+        $unlocalizedDimensionAttributes = ['stage' => 'draft', 'locale' => null, 'version' => DimensionContentInterface::CURRENT_VERSION];
+        $localizedDimensionAttributes = ['stage' => 'draft', 'locale' => 'en', 'version' => DimensionContentInterface::CURRENT_VERSION];
 
         $data = ['test-key' => 'test-value'];
         $dimensionContentCollection = $this->prophesize(DimensionContentCollectionInterface::class);
