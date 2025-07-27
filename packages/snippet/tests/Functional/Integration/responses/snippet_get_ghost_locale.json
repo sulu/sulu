@@ -1,5 +1,7 @@
 {
     "availableLocales": ["en"],
+    "changer" : null,
+    "creator" : null,
     "excerptCategories": [],
     "excerptDescription": null,
     "excerptIcon": null,

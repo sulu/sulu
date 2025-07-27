@@ -1,6 +1,8 @@
 {
     "author": null,
     "authored": "2020-06-09T00:00:00+00:00",
+    "changer": null,
+    "creator": null,
     "availableLocales": [
         "en",
         "de"

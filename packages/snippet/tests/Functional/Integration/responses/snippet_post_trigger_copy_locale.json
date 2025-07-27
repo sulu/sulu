@@ -3,6 +3,8 @@
         "en",
         "de"
     ],
+    "changer" : null,
+    "creator" : null,
     "description": null,
     "excerptCategories": [],
     "excerptDescription": "Excerpt Description",
