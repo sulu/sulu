@@ -505,8 +505,8 @@ from the SuluContentBundle. Be aware that also your custom controllers have to b
 
 ### Page, CustomUrl, Snippet, Search JS includes path changed
 
-The paths to the page, custom url and snippet bundle has changed so its JS package
-paths need also be changed. This step is normally automatically done by `bin/console sulu:admin:update-build` command,
+Some bundles have undergone path changes, requiring corresponding updates to their JS package
+paths. This step is normally automatically handled by the `bin/console sulu:admin:update-build` command,
 kept here for completeness:
 
 ```diff
