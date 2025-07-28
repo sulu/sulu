@@ -112,7 +112,7 @@ composer remove massive/search-bundle --no-scripts
 composer remove handcraftedinthealps/zendsearch --no-scripts
 ```
 
-The `config/bundles.php` upgrade:
+Remove the bundles from your `config/bundles.php` file:
 
 ```diff
 // config/bundles.php
