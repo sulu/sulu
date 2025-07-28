@@ -5,8 +5,8 @@
     "repository": "https://github.com/sulu/sulu.git",
     "devDependencies": {
         "enzyme": "^3.3.0",
-        "sulu-admin-bundle": "file:../../../AdminBundle/Resources/js",
-        "sulu-page-bundle": "file:../../../PageBundle/Resources/js",
+        "sulu-admin-bundle": "file:../../../src/Sulu/Bundle/AdminBundle/Resources/js",
+        "sulu-page-bundle": "file:../../page/assets/js",
         "@testing-library/jest-dom": "^5.17.0",
         "@testing-library/react": "^12.1.5",
         "@testing-library/user-event": "^14.5.2"
