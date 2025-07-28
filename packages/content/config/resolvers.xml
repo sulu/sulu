@@ -14,6 +14,7 @@
             <argument type="service" id="sulu_content.resource_loader_provider"/>
             <argument type="service" id="sulu_content.content_aggregator"/>
             <argument type="service" id="sulu_content.smart_resolver_provider"/>
+            <argument type="service" id="property_accessor"/>
         </service>
         <service id="Sulu\Content\Application\ContentResolver\ContentResolverInterface" alias="sulu_content.content_resolver"/>
 

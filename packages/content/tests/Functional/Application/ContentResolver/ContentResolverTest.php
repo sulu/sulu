@@ -139,8 +139,6 @@ class ContentResolverTest extends SuluTestCase
 
     public function testResolveMedias(): void
     {
-        self::markTestSkipped('This test is skipped because it somehow fails in the CI.');
-
         // @phpstan-ignore-next-line
         $collection1 = self::createCollection(['title' => 'collection-1', 'locale' => 'en']);
         $mediaType = self::createMediaType(['name' => 'Image', 'description' => 'This is an image']);
@@ -204,20 +202,18 @@ class ContentResolverTest extends SuluTestCase
         self::assertSame($media1->getId(), $contentMedia1->getId());
 
         /** @var mixed[] $excerpt */
-        $excerpt = $content['excerpt'];
-        $contentMedia1 = $excerpt['excerptIcon'];
+        $excerpt = $result['extension']['excerpt'];
+        $contentMedia1 = $excerpt['icon'];
         self::assertInstanceOf(Media::class, $contentMedia1);
         self::assertSame($media1->getId(), $contentMedia1->getId());
 
-        $contentMedia2 = $excerpt['excerptImage'];
+        $contentMedia2 = $excerpt['image'];
         self::assertInstanceOf(Media::class, $contentMedia2);
         self::assertSame($media2->getId(), $contentMedia2->getId());
     }
 
     public function testResolveCollections(): void
     {
-        self::markTestSkipped('This test is skipped because it somehow fails in the CI.');
-
         // @phpstan-ignore-next-line
         $collection1 = self::createCollection(['title' => 'collection-1', 'locale' => 'en']);
         $collection2 = self::createCollection([
@@ -270,8 +266,6 @@ class ContentResolverTest extends SuluTestCase
 
     public function testResolveCategories(): void
     {
-        self::markTestSkipped('This test is skipped because it somehow fails in the CI.');
-
         // @phpstan-ignore-next-line
         $category1 = self::createCategory(['key' => 'category-1']);
         $category2 = self::createCategory(['key' => 'category-2']);
@@ -305,9 +299,12 @@ class ContentResolverTest extends SuluTestCase
         $categorySelection = $content['category_selection'];
         self::assertIsArray($categorySelection);
         self::assertCount(2, $categorySelection);
+
         $contentCategory1 = $categorySelection[0];
+        self::assertInstanceOf(Category::class, $contentCategory1);
         self::assertSame($category1->getId(), $contentCategory1->getId());
         $contentCategory2 = $categorySelection[1];
+        self::assertInstanceOf(Category::class, $contentCategory2);
         self::assertSame($category2->getId(), $contentCategory2->getId());
 
         $singleCategorySelection = $content['single_category_selection'];
@@ -315,14 +312,15 @@ class ContentResolverTest extends SuluTestCase
         self::assertSame($category1->getId(), $singleCategorySelection->getId());
 
         /** @var mixed[] $excerpt */
-        $excerpt = $content['excerpt'];
-
-        $excerptCategories = $excerpt['excerptCategories'];
+        $excerpt = $result['extension']['excerpt'];
+        $excerptCategories = $excerpt['categories'];
         self::assertIsArray($excerptCategories);
         self::assertCount(2, $excerptCategories);
         $excerptCategory1 = $excerptCategories[0];
+        self::assertInstanceOf(Category::class, $excerptCategory1);
         self::assertSame($category1->getId(), $excerptCategory1->getId());
         $excerptCategory2 = $excerptCategories[1];
+        self::assertInstanceOf(Category::class, $excerptCategory2);
         self::assertSame($category2->getId(), $excerptCategory2->getId());
     }
 
@@ -370,8 +368,6 @@ class ContentResolverTest extends SuluTestCase
 
     public function testResolveContentBlocks(): void
     {
-        self::markTestSkipped('This test is skipped because it somehow fails in the CI.');
-
         // @phpstan-ignore-next-line
         $collection1 = self::createCollection(['title' => 'collection-1', 'locale' => 'en']);
         $mediaType = self::createMediaType(['name' => 'Image', 'description' => 'This is an image']);
@@ -425,39 +421,50 @@ class ContentResolverTest extends SuluTestCase
         static::getEntityManager()->flush();
 
         $dimensionContent = $this->contentAggregator->aggregate($example1, ['locale' => 'en', 'stage' => 'live']);
-        /** @var mixed[] $result */
+        /** @var array{content: array{title: string, url: string, blocks: array<int, mixed>}} $result */
         $result = $this->contentResolver->resolve($dimensionContent);
 
-        /** @var mixed[] $content */
+        /** @var array{title: string, url: string, blocks: array<int, mixed>} $content */
         $content = $result['content'];
 
         self::assertSame('Lorem Ipsum', $content['title']);
         self::assertSame('/lorem-ipsum', $content['url']);
 
         // block 0
-        self::assertSame('editor', $content['blocks'][0]['type']);
-        self::assertSame('<p>Block Level 0: Lorem Ipsum dolor sit amet</p>', $content['blocks'][0]['text_editor']);
+        /** @var array{type: string, text_editor: string} $block0 */
+        $block0 = $content['blocks'][0];
+        self::assertSame('editor', $block0['type']);
+        self::assertSame('<p>Block Level 0: Lorem Ipsum dolor sit amet</p>', $block0['text_editor']);
 
         // block 1
-        self::assertSame('media', $content['blocks'][1]['type']);
-        $mediaSelection = $content['blocks'][1]['media_selection'];
+        /** @var array{type: string, media_selection: mixed[]} $block1 */
+        $block1 = $content['blocks'][1];
+        self::assertSame('media', $block1['type']);
+        $mediaSelection = $block1['media_selection'];
         self::assertCount(1, $mediaSelection);
         $mediaApi1 = $mediaSelection[0];
         self::assertInstanceOf(Media::class, $mediaApi1);
         self::assertSame($media1->getId(), $mediaApi1->getId());
 
         // block 2
-        self::assertSame('block', $content['blocks'][2]['type']);
-        self::assertSame('<p>Block Level 1: Lorem Ipsum dolor sit amet</p>', $content['blocks'][2]['blocks'][0]['text_editor']);
-        self::assertSame('editor', $content['blocks'][2]['blocks'][0]['type']);
+        /** @var array{type: string, blocks: array<int, mixed>} $block2 */
+        $block2 = $content['blocks'][2];
+        self::assertSame('block', $block2['type']);
 
-        self::assertSame('media', $content['blocks'][2]['blocks'][1]['type']);
-        $mediaSelection = $content['blocks'][2]['blocks'][1]['media_selection'];
+        /** @var array{type: string, text_editor: string} $block2_0 */
+        $block2_0 = $block2['blocks'][0];
+        self::assertSame('<p>Block Level 1: Lorem Ipsum dolor sit amet</p>', $block2_0['text_editor']);
+        self::assertSame('editor', $block2_0['type']);
+
+        /** @var array{type: string, media_selection: mixed[]} $block2_1 */
+        $block2_1 = $block2['blocks'][1];
+        self::assertSame('media', $block2_1['type']);
+        $mediaSelection = $block2_1['media_selection'];
         self::assertCount(2, $mediaSelection);
-        $mediaApi1 = $content['blocks'][2]['blocks'][1]['media_selection'][0];
+        $mediaApi1 = $block2_1['media_selection'][0];
         self::assertInstanceOf(Media::class, $mediaApi1);
         self::assertSame($media1->getId(), $mediaApi1->getId());
-        $mediaApi2 = $content['blocks'][2]['blocks'][1]['media_selection'][1];
+        $mediaApi2 = $block2_1['media_selection'][1];
         self::assertInstanceOf(Media::class, $mediaApi2);
         self::assertSame($media2->getId(), $mediaApi2->getId());
     }

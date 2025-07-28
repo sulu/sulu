@@ -24,6 +24,7 @@ use Sulu\Content\Application\ResourceLoader\ResourceLoaderProvider;
 use Sulu\Content\Application\SmartResolver\SmartResolverProviderInterface;
 use Sulu\Content\Domain\Model\ContentRichEntityInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
+use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Webmozart\Assert\Assert;
 
 /**
@@ -42,6 +43,7 @@ class ContentResolver implements ContentResolverInterface
         private ResourceLoaderProvider $resourceLoaderProvider,
         private ContentAggregatorInterface $contentAggregator,
         private SmartResolverProviderInterface $smartResolverProvider,
+        private PropertyAccessorInterface $propertyAccessor
     ) {
     }
 
@@ -95,10 +97,10 @@ class ContentResolver implements ContentResolverInterface
                         ]);
 
                         // Resolve this entity
-                        $result = $this->resolveInternal($resourceDimension, $depth, $priorityQueue);
+                        $normalizedContentData = $this->resolveInternal($resourceDimension, $depth, $priorityQueue);
                         $resolvedValue = $this->normalizeContentData(
-                            $result['content'],
-                            $result['view'],
+                            $normalizedContentData['content'],
+                            $normalizedContentData['view'],
                             $resource,
                         );
                     } elseif ($resource instanceof ContentView) {
@@ -106,17 +108,18 @@ class ContentResolver implements ContentResolverInterface
                          *     content: array{'0': array<string, mixed>},
                          *     view: array{'0': array<string, mixed>},
                          *     resolvableResources: array<int, array<string, array<int, array<int|string, ResolvableInterface>>>>
-                         * } $result */
-                        $result = $this->resolveContentView($resource, '0', $depth);
+                         * } $normalizedContentData
+                         */
+                        $normalizedContentData = $this->resolveContentView($resource, '0', $depth);
                         $resolvedValue = [
-                            'content' => $result['content']['0'],
+                            'content' => $normalizedContentData['content']['0'],
                             // All resolved resources have the same view structure, so we can just take the first one
-                            'view' => \reset($result['view']['0']) ?? $result['view']['0'],
+                            'view' => \reset($normalizedContentData['view']['0']) ?? $normalizedContentData['view']['0'],
                         ];
 
                         // Add resolvable resources to priority queue
                         $priorityQueue = $this->mergeResolvableResources(
-                            $result['resolvableResources'],
+                            $normalizedContentData['resolvableResources'],
                             $priorityQueue,
                         );
                     } else {
@@ -136,11 +139,62 @@ class ContentResolver implements ContentResolverInterface
             1, // Start at depth 1 since the initial resolution was at depth 0
         );
 
-        return $this->normalizeContentData(
+        $normalizedContentData = $this->normalizeContentData(
             $finalContent,
             $resolvedContent['view'],
             $dimensionContent->getResource(),
         );
+
+        $this->replaceNestedContentViews($normalizedContentData, '[content]');
+
+        return $normalizedContentData;
+    }
+
+    /**
+     * @param array{
+     *     resource: object,
+     *     content: array<string, mixed>,
+     *     view: array<string, mixed>,
+     *     extension: array<string, array<string, mixed>>
+     * } $normalizedContentData
+     */
+    private function replaceNestedContentViews(array &$normalizedContentData, string $path): void
+    {
+        $pathValues = [];
+        $iterable = $this->propertyAccessor->getValue($normalizedContentData, $path) ?? [];
+        if (!\is_array($iterable)) {
+            return;
+        }
+
+        /** @var string $key */
+        foreach ($iterable as $key => $entry) {
+            if (\is_array($entry)) {
+                if ([] !== $entry) {
+                    $this->replaceNestedContentViews($normalizedContentData, $path . '[' . $key . ']');
+                }
+                if ('view' === $key) {
+                    $value = $this->propertyAccessor->getValue($normalizedContentData, $path . '[' . $key . ']');
+                    // Replace 'content' with 'view' in the path
+                    $viewPath = \substr_replace($path, '[view]', 0, 9);
+
+                    // If there are more [content] positions, we need to remove them, only keep the first one from the root property resolver
+                    $viewPath = (($nextContentPosition = \strpos($viewPath, '[content]')) !== false) ? \substr($viewPath, 0, $nextContentPosition) : $viewPath;
+
+                    // Only override empty view paths
+                    if (($this->propertyAccessor->getValue($normalizedContentData, $viewPath) ?? []) === []) {
+                        $pathValues[$viewPath] = $value;
+                    }
+                }
+                if ('content' === $key) {
+                    $value = $this->propertyAccessor->getValue($normalizedContentData, $path . '[' . $key . ']');
+                    $pathValues[$path] = $value;
+                }
+            }
+        }
+
+        foreach ($pathValues as $path => $value) {
+            $this->propertyAccessor->setValue($normalizedContentData, $path, $value); // @phpstan-ignore-line
+        }
     }
 
     /**
