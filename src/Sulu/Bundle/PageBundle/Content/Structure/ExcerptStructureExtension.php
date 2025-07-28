@@ -14,7 +14,6 @@ namespace Sulu\Bundle\PageBundle\Content\Structure;
 use PHPCR\NodeInterface;
 use Sulu\Bundle\ReferenceBundle\Application\Collector\ReferenceCollectorInterface;
 use Sulu\Bundle\ReferenceBundle\Infrastructure\Sulu\ContentType\ReferenceContentTypeInterface;
-use Sulu\Bundle\SearchBundle\Search\Factory;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
@@ -77,23 +76,16 @@ class ExcerptStructureExtension extends AbstractExtension implements ExportExten
      */
     private $languageCode;
 
-    /**
-     * @var Factory
-     */
-    private $factory;
-
     public function __construct(
         StructureManagerInterface $structureManager,
         ContentTypeManagerInterface $contentTypeManager,
         ExportManagerInterface $exportManager,
         ImportManagerInterface $importManager,
-        Factory $factory
     ) {
         $this->contentTypeManager = $contentTypeManager;
         $this->structureManager = $structureManager;
         $this->exportManager = $exportManager;
         $this->importManager = $importManager;
-        $this->factory = $factory;
     }
 
     public function save(NodeInterface $node, $data, $webspaceKey, $languageCode)
@@ -177,25 +169,6 @@ class ExcerptStructureExtension extends AbstractExtension implements ExportExten
         }
 
         return $data;
-    }
-
-    public function getFieldMapping()
-    {
-        $mappings = parent::getFieldMapping();
-
-        foreach ($this->getExcerptStructure()->getPropertiesByTagName('sulu.search.field') as $property) {
-            $tag = $property->getTag('sulu.search.field');
-            $tagAttributes = $tag->getAttributes();
-
-            $mappings['excerpt' . \ucfirst($property->getName())] = [
-                'type' => isset($tagAttributes['type']) ? $tagAttributes['type'] : 'string',
-                'field' => $this->factory->createMetadataExpression(
-                    \sprintf('object.getExtensionsData()["excerpt"]["%s"]', $property->getName())
-                ),
-            ];
-        }
-
-        return $mappings;
     }
 
     /**

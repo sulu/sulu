@@ -15,14 +15,6 @@
             <argument type="service" id="sulu_activity.activity_list_view_builder_factory"/>
         </service>
 
-        <!-- content -->
-        <service id="sulu_page.permission_listener" class="Sulu\Bundle\PageBundle\Search\EventListener\PermissionListener">
-            <argument type="service" id="sulu_document_manager.document_manager"/>
-            <argument type="service" id="massive_search.search_manager"/>
-
-            <tag name="kernel.event_subscriber"/>
-        </service>
-
         <!-- webspace settings -->
         <service id="sulu_page.webspace.serializer.event_subscriber"
                  class="Sulu\Bundle\PageBundle\EventListener\WebspaceSerializeEventSubscriber">
@@ -128,7 +120,6 @@
             <argument type="service" id="sulu.content.type_manager"/>
             <argument type="service" id="sulu_page.export.manager" />
             <argument type="service" id="sulu_page.import.manager" />
-            <argument type="service" id="massive_search.factory" />
 
             <tag name="sulu.structure.extension"/>
         </service>

@@ -102,6 +102,29 @@ Then you need to update the route configuration in your `config/routes/sulu_admi
 +    prefix: /admin/api
 ```
 
+### Massive Search Bundle was removed
+
+The Admin and Website search does no longer use the `MassiveSearchBundle` and so it can be removed from your project.
+Remove the `massive/search-bundle` from your composer dependencies:
+
+```bash
+composer remove massive/search-bundle --no-scripts
+composer remove handcraftedinthealps/zendsearch --no-scripts
+```
+
+The `config/bundles.php` upgrade:
+
+```diff
+// config/bundles.php
+
+return [
+-    Massive\Bundle\SearchBundle\MassiveSearchBundle::class => ['all' => true],
+-    Sulu\Bundle\SearchBundle\SuluSearchBundle::class => ['all' => true],
+```
+
+Remove eventually registered routes `config/routes/sulu_website.yaml` and `config/routes/sulu_admin.yaml`
+or usages in the twig templates e.g.: `{{ path('sulu_search.website_search') }}`.
+
 ### Add new Content storage tables
 
 The new content storage architecture requires a new database schema. You can execute the following sql statements

@@ -30,7 +30,6 @@ final class SuluPageBundle extends Bundle
 
         $container->addCompilerPass(new SuluNextPageCompilerPass());
         $container->addCompilerPass(new ContentExportCompilerPass());
-        $container->addCompilerPass(new WebspacesPass());
         $container->addCompilerPass(new StructureExtensionCompilerPass());
         $container->addCompilerPass(new VersioningCompilerPass());
     }

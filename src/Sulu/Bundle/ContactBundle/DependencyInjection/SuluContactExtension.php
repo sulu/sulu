@@ -37,40 +37,6 @@ class SuluContactExtension extends Extension implements PrependExtensionInterfac
      */
     public function prepend(ContainerBuilder $container)
     {
-        if ($container->hasExtension('sulu_search')) {
-            $container->prependExtensionConfig(
-                'sulu_search',
-                [
-                    'indexes' => [
-                        'contact' => [
-                            'name' => 'sulu_contact.people',
-                            'icon' => 'su-user',
-                            'view' => [
-                                'name' => ContactAdmin::CONTACT_EDIT_FORM_VIEW,
-                                'result_to_view' => [
-                                    'id' => 'id',
-                                    'locale' => 'locale',
-                                ],
-                            ],
-                            'security_context' => 'sulu.contact.people',
-                        ],
-                        'account' => [
-                            'name' => 'sulu_contact.organizations',
-                            'icon' => 'su-house',
-                            'view' => [
-                                'name' => ContactAdmin::ACCOUNT_EDIT_FORM_VIEW,
-                                'result_to_view' => [
-                                    'id' => 'id',
-                                    'locale' => 'locale',
-                                ],
-                            ],
-                            'security_context' => 'sulu.contact.organizations',
-                        ],
-                    ],
-                ]
-            );
-        }
-
         if ($container->hasExtension('sulu_media')) {
             $container->prependExtensionConfig(
                 'sulu_media',

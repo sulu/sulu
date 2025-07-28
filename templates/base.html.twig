@@ -54,10 +54,12 @@
         {% endblock %}
     </header>
 
+    {# Todo: reimplement search form
     <form action="{{ path('sulu_search.website_search') }}" method="GET">
         <input name="q" type="text" placeholder="Search"/>
         <input type="submit" value="Go"/>
     </form>
+    #}
 
     <section id="content" vocab="http://schema.org/" typeof="Content">
         {% block content %}{% endblock %}

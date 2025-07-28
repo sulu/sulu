@@ -47,13 +47,9 @@ class SuluTestKernel extends SuluKernel
             new \FOS\JsRoutingBundle\FOSJsRoutingBundle(),
             new \League\FlysystemBundle\FlysystemBundle(),
 
-            // Massive
-            new \Massive\Bundle\SearchBundle\MassiveSearchBundle(),
-
             // Sulu
             new \Sulu\Messenger\Infrastructure\Symfony\HttpKernel\SuluMessengerBundle(),
             new \Sulu\Bundle\AdminBundle\SuluAdminBundle(),
-            new \Sulu\Bundle\SearchBundle\SuluSearchBundle(),
             new \Sulu\Bundle\PersistenceBundle\SuluPersistenceBundle(),
             new \Sulu\Bundle\PageBundle\SuluPageBundle(),
             new \Sulu\Bundle\ContactBundle\SuluContactBundle(),

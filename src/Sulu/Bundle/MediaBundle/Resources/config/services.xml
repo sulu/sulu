@@ -369,12 +369,6 @@
             <argument type="service" id="sulu_media.ffmpeg" on-invalid="null"/>
         </service>
 
-        <service id="sulu_media.permission_listener" class="Sulu\Bundle\MediaBundle\Search\EventListener\PermissionListener">
-            <argument type="service" id="sulu_media.file_version_meta_repository"/>
-            <argument type="service" id="massive_search.search_manager"/>
-            <tag name="kernel.event_subscriber"/>
-        </service>
-
         <service id="sulu_media.security_context" class="Sulu\Component\Security\Authorization\SecurityCondition">
             <argument>sulu.media.collections</argument>
         </service>

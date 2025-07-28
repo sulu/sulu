@@ -228,31 +228,6 @@ class SuluPageExtension extends Extension implements PrependExtensionInterface
             );
         }
 
-        if ($container->hasExtension('sulu_search')) {
-            $container->prependExtensionConfig(
-                'sulu_page',
-                [
-                    'search' => [
-                        'mapping' => [
-                            PageDocument::class => ['index' => 'page', 'decorate_index' => true],
-                            HomeDocument::class => ['index' => 'page', 'decorate_index' => true],
-                        ],
-                    ],
-                ]
-            );
-
-            $container->prependExtensionConfig(
-                'sulu_search',
-                [
-                    'website' => [
-                        'indexes' => [
-                            'pages' => 'page_#webspace#_published',
-                        ],
-                    ],
-                ]
-            );
-        }
-
         if ($container->hasExtension('sulu_document_manager')) {
             $container->prependExtensionConfig(
                 'sulu_document_manager',
@@ -286,10 +261,6 @@ class SuluPageExtension extends Extension implements PrependExtensionInterface
         $config = $this->processConfiguration($configuration, $configs);
 
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
-
-        if (\array_key_exists('SuluSearchBundle', $bundles)) {
-            $this->processSearch($config, $loader, $container);
-        }
 
         $loader->load('services.xml');
         $loader->load('smart_content.xml');
@@ -327,12 +298,6 @@ class SuluPageExtension extends Extension implements PrependExtensionInterface
         if ($container->has('controller_name_converter')) {
             $container->setAlias('sulu_page.controller_name_converter', 'controller_name_converter')->setPublic(true);
         }
-    }
-
-    private function processSearch($config, LoaderInterface $loader, ContainerBuilder $container)
-    {
-        $container->setParameter('sulu_page.search.mapping', $config['search']['mapping']);
-        $loader->load('search.xml');
     }
 
     /**

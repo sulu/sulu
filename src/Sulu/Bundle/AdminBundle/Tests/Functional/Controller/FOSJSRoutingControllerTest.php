@@ -99,8 +99,6 @@ class FOSJSRoutingControllerTest extends SuluTestCase
             'sulu_page.post_page_version_trigger',
             'sulu_preview.get_preview-link',
             'sulu_routes.get_routes',
-            'sulu_search_indexes',
-            'sulu_search_search',
             'sulu_security.get_permissions',
             'sulu_security.get_profile',
             'sulu_security.get_role',

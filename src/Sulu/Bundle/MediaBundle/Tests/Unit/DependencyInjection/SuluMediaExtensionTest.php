@@ -58,7 +58,6 @@ class SuluMediaExtensionTest extends AbstractExtensionTestCase
         $this->assertContainerBuilderHasParameter('sulu_media.format_manager.response_headers', [
             'Cache-Control' => 'public, immutable, max-age=31536000',
         ]);
-        $this->assertContainerBuilderHasParameter('sulu_media.search.default_image_format', 'sulu-100x100');
         $this->assertContainerBuilderHasParameter('sulu_media.collection.type.default', [
             'id' => 1,
         ]);

@@ -28,7 +28,6 @@ use Sulu\Bundle\MediaBundle\Media\PropertiesProvider\MediaPropertiesProviderInte
 use Sulu\Bundle\MediaBundle\Media\Storage\FlysystemStorage;
 use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
 use Sulu\Bundle\PersistenceBundle\DependencyInjection\PersistenceExtensionTrait;
-use Sulu\Bundle\SearchBundle\SuluSearchBundle;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -54,28 +53,6 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
 
     public function prepend(ContainerBuilder $container)
     {
-        if ($container->hasExtension('sulu_search')) {
-            $container->prependExtensionConfig(
-                'sulu_search',
-                [
-                    'indexes' => [
-                        MediaInterface::RESOURCE_KEY => [
-                            'name' => 'sulu_media.media',
-                            'icon' => 'su-image',
-                            'view' => [
-                                'name' => MediaAdmin::EDIT_FORM_VIEW,
-                                'result_to_view' => [
-                                    'id' => 'id',
-                                    'locale' => 'locale',
-                                ],
-                            ],
-                            'security_context' => 'sulu.media.collections',
-                        ],
-                    ],
-                ]
-            );
-        }
-
         if ($container->hasExtension('sulu_media')) {
             $container->prependExtensionConfig(
                 'sulu_media',
@@ -94,7 +71,6 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
                         __DIR__ . '/../Resources/config/image-formats.xml',
                         '%kernel.project_dir%/config/image-formats.xml',
                     ],
-                    'search' => ['enabled' => $container->hasExtension('massive_search')],
                 ]
             );
         }
@@ -285,9 +261,6 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
         // media
         $container->setParameter('sulu_media.media.types', $config['format_manager']['types']);
 
-        // search
-        $container->setParameter('sulu_media.search.default_image_format', $config['search']['default_image_format']);
-
         // disposition type
         $container->setParameter('sulu_media.disposition_type.default', $config['disposition_type']['default']);
         $container->setParameter(
@@ -353,17 +326,6 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
         } else {
             // set used adapter for imagine
             $container->setAlias('sulu_media.adapter', 'sulu_media.adapter.' . $adapter);
-        }
-
-        // enable search
-        if (true === $config['search']['enabled']) {
-            if (!\class_exists(SuluSearchBundle::class)) {
-                throw new \InvalidArgumentException(
-                    'You have enabled sulu search integration for the SuluMediaBundle, but the SuluSearchBundle must be installed'
-                );
-            }
-
-            $loader->load('search.xml');
         }
 
         if (\array_key_exists('SuluAudienceTargetingBundle', $bundles)) {

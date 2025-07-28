@@ -1,3 +1,0 @@
-test_search:
-    path: /{locale}/search
-    defaults: { _controller: sulu_test.search_controller::queryAction }

@@ -1,9 +1,0 @@
-sulu_media_website:
-    resource: "@SuluMediaBundle/Resources/config/routing_website.yaml"
-
-sulu_search_website:
-    resource: "@SuluSearchBundle/Resources/config/routing_website.yaml"
-
-sulu_search_api:
-    resource: "@SuluSearchBundle/Resources/config/routing.yaml"
-    prefix: /search

@@ -1,9 +1,4 @@
-massive_search:
-    adapter: test
-
 sulu_media:
-    search:
-        enabled: true
     image_format_files:
         - "%kernel.project_dir%/config/image-formats.xml"
     ffmpeg:

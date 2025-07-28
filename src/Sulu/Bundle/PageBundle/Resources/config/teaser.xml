@@ -3,16 +3,6 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <services>
         <!-- content provider -->
-        <service id="sulu_page.teaser.provider.content"
-                 class="Sulu\Bundle\PageBundle\Teaser\PageTeaserProvider">
-            <argument type="service" id="massive_search.search_manager"/>
-            <argument type="service" id="translator"/>
-            <argument>%sulu_document_manager.show_drafts%</argument>
-            <argument type="service" id="sulu_page.teaser.provider.phpcr"/>
-
-            <tag name="sulu.teaser.provider" alias="pages"/>
-        </service>
-
         <service id="sulu_page.teaser.provider.phpcr"
                  class="Sulu\Bundle\PageBundle\Teaser\PHPCRPageTeaserProvider">
             <argument type="service" id="sulu.content.query_executor"/>

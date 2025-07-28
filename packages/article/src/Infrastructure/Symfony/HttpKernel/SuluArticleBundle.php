@@ -383,25 +383,6 @@ final class SuluArticleBundle extends AbstractBundle
                 ],
             );
         }
-
-        if ($builder->hasExtension('sulu_search')) {
-            $suluSearchConfigs = $builder->getExtensionConfig('sulu_search');
-
-            foreach ($suluSearchConfigs as $suluSearchConfig) {
-                if (isset($suluSearchConfig['website']['indexes'])) { // @phpstan-ignore-line
-                    $builder->prependExtensionConfig(
-                        'sulu_search',
-                        [
-                            'website' => [
-                                'indexes' => [
-                                    ArticleInterface::RESOURCE_KEY => ArticleInterface::RESOURCE_KEY . '_published',
-                                ],
-                            ],
-                        ],
-                    );
-                }
-            }
-        }
     }
 
     /**
