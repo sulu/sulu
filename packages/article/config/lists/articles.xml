@@ -28,7 +28,7 @@
             <entity-name>dimensionContent</entity-name>
             <field-name>Sulu\Article\Domain\Model\ArticleInterface.dimensionContents</field-name>
             <method>LEFT</method>
-            <condition>dimensionContent.locale = :locale AND dimensionContent.stage = 'draft'</condition>
+            <condition>dimensionContent.locale = :locale AND dimensionContent.stage = 'draft' AND dimensionContent.version = 0</condition>
         </join>
     </joins>
 
@@ -37,7 +37,7 @@
             <entity-name>unlocalizedDimensionContent</entity-name>
             <field-name>Sulu\Article\Domain\Model\ArticleInterface.dimensionContents</field-name>
             <method>LEFT</method>
-            <condition>unlocalizedDimensionContent.locale IS NULL AND unlocalizedDimensionContent.stage = 'draft'</condition>
+            <condition>unlocalizedDimensionContent.locale IS NULL AND unlocalizedDimensionContent.stage = 'draft' AND unlocalizedDimensionContent.version = 0</condition>
         </join>
     </joins>
 
@@ -62,6 +62,11 @@
         <property name="id" translation="sulu_admin.uuid">
             <field-name>uuid</field-name>
             <entity-name>Sulu\Article\Domain\Model\ArticleInterface</entity-name>
+        </property>
+
+        <property name="version" visibility="never">
+            <field-name>version</field-name>
+            <entity-name>dimensionContent</entity-name>
         </property>
 
         <case-property name="title" translation="sulu_admin.title" visibility="always" searchability="yes">

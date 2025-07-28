@@ -1,0 +1,22 @@
+{
+    "_embedded": {
+        "examples_versions": [
+            {
+                "title": "Test modified version example",
+                "version": "@integer@",
+                "changer": "Max Mustermann",
+                "id": "@integer@"
+            },
+            {
+                "title": "Test Example",
+                "version": "@integer@",
+                "changer": "Max Mustermann",
+                "id": "@integer@"
+            }
+        ]
+    },
+    "limit": 10,
+    "total": 2,
+    "page": 1,
+    "pages": 1
+}

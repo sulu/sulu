@@ -80,7 +80,7 @@
             <entity-name>Sulu\Page\Domain\Model\PageInterface</entity-name>
         </property>
 
-        <property name="version" visibility="yes">
+        <property name="version" visibility="never">
             <field-name>version</field-name>
             <entity-name>dimensionContent</entity-name>
         </property>

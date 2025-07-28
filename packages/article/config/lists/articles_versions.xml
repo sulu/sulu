@@ -14,18 +14,11 @@
     <joins name="changer">
         <join>
             <entity-name>%sulu.model.user.class%</entity-name>
-            <field-name>Sulu\Article\Domain\Model\ArticleInterface.changer</field-name>
+            <field-name>dimensionContent.changer</field-name>
         </join>
         <join>
             <entity-name>%sulu.model.contact.class%</entity-name>
             <field-name>%sulu.model.user.class%.contact</field-name>
-        </join>
-    </joins>
-
-    <joins name="author">
-        <join>
-            <entity-name>authorEntity</entity-name>
-            <field-name>dimensionContent.author</field-name>
         </join>
     </joins>
 

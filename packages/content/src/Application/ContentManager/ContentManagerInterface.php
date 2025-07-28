@@ -55,6 +55,7 @@ interface ContentManagerInterface
      * @param mixed[] $sourceDimensionAttributes
      * @param ContentRichEntityInterface<T> $targetContentRichEntity
      * @param mixed[] $targetDimensionAttributes
+     * @param array{data?: array<string, mixed>, ignoredAttributes?: string[]} $options
      *
      * @return T
      */
@@ -62,7 +63,8 @@ interface ContentManagerInterface
         ContentRichEntityInterface $sourceContentRichEntity,
         array $sourceDimensionAttributes,
         ContentRichEntityInterface $targetContentRichEntity,
-        array $targetDimensionAttributes
+        array $targetDimensionAttributes,
+        array $options = []
     ): DimensionContentInterface;
 
     /**

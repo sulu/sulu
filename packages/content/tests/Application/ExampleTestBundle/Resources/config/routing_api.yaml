@@ -8,6 +8,16 @@ example_test.get_examples:
     options:
         api_dimension_listener: true
 
+example_test.get_example_versions:
+    path: /examples/{id}/versions.{_format}
+    methods: GET
+    controller: 'example_test.example_controller::getVersionsAction'
+    format: json
+    requirements:
+        _format: json|csv
+    options:
+        api_dimension_listener: true
+
 example_test.get_example:
     path: '/examples/{id}.{_format}'
     methods: GET

@@ -20,6 +20,7 @@ use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilder;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactoryInterface;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptorInterface;
+use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
 use Sulu\Component\Rest\ListBuilder\Metadata\FieldDescriptorFactoryInterface;
 use Sulu\Component\Rest\ListBuilder\PaginatedRepresentation;
 use Sulu\Component\Rest\RestHelperInterface;
@@ -98,6 +99,32 @@ class ExampleController extends AbstractRestController
             (int) $listBuilder->getCurrentPage(),
             (int) $listBuilder->getLimit(),
             $listBuilder->count()
+        );
+
+        return $this->handleView($this->view($listRepresentation));
+    }
+
+    public function getVersionsAction(Request $request, string $id): Response
+    {
+        $locale = $request->query->get('locale');
+
+        /** @var DoctrineFieldDescriptorInterface[] $fieldDescriptors */
+        $fieldDescriptors = $this->fieldDescriptorFactory->getFieldDescriptors('examples_versions');
+        /** @var DoctrineListBuilder $listBuilder */
+        $listBuilder = $this->listBuilderFactory->create(Example::class);
+        $listBuilder->setParameter('locale', $locale);
+        $listBuilder->setParameter('id', $id);
+        $listBuilder->setIdField($fieldDescriptors['id']);
+        $listBuilder->sort($fieldDescriptors['version'], 'DESC');
+        $this->restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
+
+        $result = $listBuilder->execute();
+        $listRepresentation = new PaginatedRepresentation(
+            $result,
+            'examples_versions',
+            (int) $listBuilder->getCurrentPage(),
+            (int) $listBuilder->getLimit(),
+            $listBuilder->count(),
         );
 
         return $this->handleView($this->view($listRepresentation));
@@ -202,6 +229,29 @@ class ExampleController extends AbstractRestController
                 $this->entityManager->flush();
 
                 return $this->handleView($this->view($this->normalize($example, $dimensionContent)));
+            case 'restore':
+                $version = (int) $request->query->get('version');
+                $dimensionContent = $this->contentManager->copy(
+                    $example,
+                    [
+                        'stage' => $dimensionAttributes['stage'] ?? DimensionContentInterface::STAGE_DRAFT,
+                        'locale' => $dimensionAttributes['locale'] ?? null,
+                        'version' => $version,
+                    ],
+                    $example,
+                    [
+                        'stage' => $dimensionAttributes['stage'] ?? DimensionContentInterface::STAGE_DRAFT,
+                        'locale' => $dimensionAttributes['locale'] ?? null,
+                        'version' => DimensionContentInterface::CURRENT_VERSION,
+                    ],
+                    [
+                        'ignoredAttributes' => ['url'],
+                    ]
+                );
+
+                $this->entityManager->flush();
+
+                return $this->handleView($this->view($this->normalize($example, $dimensionContent)));
             default:
                 throw new RestException('Unrecognized action: ' . $action);
         }
@@ -293,5 +343,39 @@ class ExampleController extends AbstractRestController
         $normalizedContent = $this->contentManager->normalize($dimensionContent);
 
         return $normalizedContent;
+    }
+
+    /**
+     * Get versions for an example.
+     */
+    public function versionsAction(Request $request, int $id): Response
+    {
+        /** @var Example|null $example */
+        $example = $this->entityManager->getRepository(Example::class)->findOneBy(['id' => $id]);
+
+        if (!$example) {
+            throw new NotFoundHttpException();
+        }
+
+        $locale = $request->query->get('locale');
+        /** @var FieldDescriptorInterface[] $fieldDescriptors */
+        $fieldDescriptors = $this->fieldDescriptorFactory->getFieldDescriptors('examples_versions');
+
+        /** @var DoctrineListBuilder $listBuilder */
+        $listBuilder = $this->listBuilderFactory->create(ExampleDimensionContent::class);
+        $listBuilder->setParameter('resourceId', $id);
+        $listBuilder->setParameter('locale', $locale);
+
+        $this->restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
+
+        $listRepresentation = new PaginatedRepresentation(
+            $listBuilder->execute(),
+            'examples_versions',
+            (int) $listBuilder->getCurrentPage(),
+            (int) $listBuilder->getLimit(),
+            $listBuilder->count()
+        );
+
+        return $this->handleView($this->view($listRepresentation));
     }
 }

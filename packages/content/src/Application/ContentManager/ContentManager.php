@@ -81,13 +81,15 @@ class ContentManager implements ContentManagerInterface
         ContentRichEntityInterface $sourceContentRichEntity,
         array $sourceDimensionAttributes,
         ContentRichEntityInterface $targetContentRichEntity,
-        array $targetDimensionAttributes
+        array $targetDimensionAttributes,
+        array $options = []
     ): DimensionContentInterface {
         return $this->contentCopier->copy(
             $sourceContentRichEntity,
             $sourceDimensionAttributes,
             $targetContentRichEntity,
-            $targetDimensionAttributes
+            $targetDimensionAttributes,
+            $options
         );
     }
 

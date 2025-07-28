@@ -160,7 +160,8 @@ class ContentManagerTest extends TestCase
             $sourceContentRichEntity->reveal(),
             $sourceDimensionAttributes,
             $targetContentRichEntity->reveal(),
-            $targetDimensionAttributes
+            $targetDimensionAttributes,
+            []
         )
             ->willReturn($copiedContent->reveal())
             ->shouldBeCalled();

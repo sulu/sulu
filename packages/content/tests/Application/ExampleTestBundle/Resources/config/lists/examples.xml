@@ -7,7 +7,7 @@
             <entity-name>dimensionContent</entity-name>
             <field-name>Sulu\Content\Tests\Application\ExampleTestBundle\Entity\Example.dimensionContents</field-name>
             <method>LEFT</method>
-            <condition>dimensionContent.locale = :locale AND dimensionContent.stage = 'draft'</condition>
+            <condition>dimensionContent.locale = :locale AND dimensionContent.stage = 'draft' AND dimensionContent.version = 0</condition>
         </join>
     </joins>
 
@@ -16,7 +16,7 @@
             <entity-name>unlocalizedDimensionContent</entity-name>
             <field-name>Sulu\Content\Tests\Application\ExampleTestBundle\Entity\Example.dimensionContents</field-name>
             <method>LEFT</method>
-            <condition>unlocalizedDimensionContent.locale IS NULL AND unlocalizedDimensionContent.stage = 'draft'</condition>
+            <condition>unlocalizedDimensionContent.locale IS NULL AND unlocalizedDimensionContent.stage = 'draft' AND unlocalizedDimensionContent.version = 0</condition>
         </join>
     </joins>
 
@@ -25,7 +25,7 @@
             <entity-name>ghostDimensionContent</entity-name>
             <field-name>Sulu\Content\Tests\Application\ExampleTestBundle\Entity\Example.dimensionContents</field-name>
             <method>LEFT</method>
-            <condition>dimensionContent.locale IS NULL AND ghostDimensionContent.locale = unlocalizedDimensionContent.ghostLocale AND ghostDimensionContent.stage = 'draft'</condition>
+            <condition>dimensionContent.locale IS NULL AND ghostDimensionContent.locale = unlocalizedDimensionContent.ghostLocale AND ghostDimensionContent.stage = 'draft' AND dimensionContent IS NULL</condition>
         </join>
     </joins>
 
@@ -33,6 +33,11 @@
         <property name="id" translation="sulu_admin.id">
             <field-name>id</field-name>
             <entity-name>Sulu\Content\Tests\Application\ExampleTestBundle\Entity\Example</entity-name>
+        </property>
+
+        <property name="version" visibility="never">
+            <field-name>version</field-name>
+            <entity-name>dimensionContent</entity-name>
         </property>
 
         <case-property name="title" translation="sulu_admin.title" visibility="always" searchability="yes">

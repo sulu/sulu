@@ -1,13 +1,13 @@
 <?xml version="1.0" ?>
 <list xmlns="http://schemas.sulu.io/list-builder/list">
-    <key>pages_versions</key>
+    <key>examples_versions</key>
 
     <joins name="dimensionContent">
         <join>
             <entity-name>dimensionContent</entity-name>
-            <field-name>Sulu\Page\Domain\Model\PageInterface.dimensionContents</field-name>
+            <field-name>Sulu\Content\Tests\Application\ExampleTestBundle\Entity\Example.dimensionContents</field-name>
             <method>INNER</method>
-            <condition>dimensionContent.locale = :locale AND dimensionContent.stage = 'draft' AND dimensionContent.version > 0 AND Sulu\Page\Domain\Model\PageInterface.uuid = :id</condition>
+            <condition>dimensionContent.locale = :locale AND dimensionContent.stage = 'draft' AND dimensionContent.version > 0 AND Sulu\Content\Tests\Application\ExampleTestBundle\Entity\Example.id = :id</condition>
         </join>
     </joins>
 
@@ -22,11 +22,17 @@
         </join>
     </joins>
 
+    <joins name="author">
+        <join>
+            <entity-name>authorEntity</entity-name>
+            <field-name>dimensionContent.author</field-name>
+        </join>
+    </joins>
+
     <properties>
-        <!-- TODO should be uuid not id -->
         <property name="id" translation="sulu_admin.uuid" visibility="never">
-            <field-name>uuid</field-name>
-            <entity-name>Sulu\Page\Domain\Model\PageInterface</entity-name>
+            <field-name>id</field-name>
+            <entity-name>Sulu\Content\Tests\Application\ExampleTestBundle\Entity\Example</entity-name>
         </property>
 
         <property name="title" translation="sulu_admin.title" visibility="always" searchability="yes">
@@ -38,7 +44,7 @@
             <transformer type="title"/>
         </property>
 
-        <property name="version" translation="sulu_admin.published" visibility="always">
+        <property name="version" translation="sulu_admin.published" visibility="yes">
             <field-name>version</field-name>
             <entity-name>dimensionContent</entity-name>
 
@@ -62,7 +68,8 @@
 
         <property name="changed" translation="sulu_admin.changed">
             <field-name>changed</field-name>
-            <entity-name>Sulu\Page\Domain\Model\PageInterface</entity-name>
+            <entity-name>dimensionContent</entity-name>
+
             <transformer type="datetime"/>
         </property>
     </properties>

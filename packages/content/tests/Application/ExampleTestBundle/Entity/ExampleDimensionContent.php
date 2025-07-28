@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace Sulu\Content\Tests\Application\ExampleTestBundle\Entity;
 
+use Sulu\Content\Domain\Model\AuditableInterface;
+use Sulu\Content\Domain\Model\AuditableTrait;
 use Sulu\Content\Domain\Model\AuthorInterface;
 use Sulu\Content\Domain\Model\AuthorTrait;
 use Sulu\Content\Domain\Model\ContentRichEntityInterface;
@@ -45,7 +47,8 @@ class ExampleDimensionContent implements
     WorkflowInterface,
     AuthorInterface,
     WebspaceInterface,
-    ShadowInterface
+    ShadowInterface,
+    AuditableInterface
 {
     use AuthorTrait;
     use DimensionContentTrait;
@@ -58,6 +61,7 @@ class ExampleDimensionContent implements
     }
     use WebspaceTrait;
     use WorkflowTrait;
+    use AuditableTrait;
 
     /**
      * @var int

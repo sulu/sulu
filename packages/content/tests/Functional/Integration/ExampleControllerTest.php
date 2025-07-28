@@ -94,6 +94,82 @@ class ExampleControllerTest extends SuluTestCase
     }
 
     #[Depends('testPostPublish')]
+    public function testVersionListAfterPublish(int $id): int
+    {
+        $this->client->request('GET', '/admin/api/examples/' . $id . '/versions?page=1&locale=en&fields=title,version,changer,id');
+        $response = $this->client->getResponse();
+        $this->assertResponseSnapshot('example_get_versions.json', $response, 200);
+
+        return $id;
+    }
+
+    #[Depends('testVersionListAfterPublish')]
+    public function testVersionListAfterPostModifyAndPublish(int $id): string
+    {
+        \sleep(1); // Ensure that the version timestamp is different from the previous version
+
+        $this->client->request(
+            'PUT', '/admin/api/examples/' . $id . '?locale=en&action=publish', [], [], [],
+            \json_encode(
+                [
+                    'template' => 'example-2',
+                    'title' => 'Test modified version example',
+                    'url' => '/my-example',
+                    'images' => null,
+                    'seoTitle' => 'Modified Seo Title',
+                    'seoDescription' => 'Modified Seo Description',
+                    'seoCanonicalUrl' => 'https://modified-sulu.io/',
+                    'seoKeywords' => 'Modified Seo Keyword 1, Modified Seo Keyword 2',
+                    'seoNoIndex' => true,
+                    'seoNoFollow' => true,
+                    'seoHideInSitemap' => true,
+                    'excerptTitle' => 'Modified Excerpt Title',
+                    'excerptDescription' => 'Modified Excerpt Description',
+                    'excerptMore' => 'Modified Excerpt More',
+                    'excerptTags' => ['Modified Tag 1', 'Modified Tag 2'],
+                    'excerptCategories' => [],
+                    'excerptIcon' => null,
+                    'excerptMedia' => null,
+                    'author' => null,
+                    'authored' => '2020-05-08T00:00:00+00:00',
+                    'lastModifiedEnabled' => true,
+                    'lastModified' => '2022-05-08T00:00:00+00:00',
+                    'mainWebspace' => 'sulu-io',
+                ],
+            ) ?: null,
+        );
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(200, $response);
+
+        $this->client->request('GET', '/admin/api/examples/' . $id . '/versions?page=1&locale=en&fields=title,version,changer,id');
+        $response = $this->client->getResponse();
+        $this->assertResponseSnapshot('example_get_versions_after_modify_and_publish.json', $response, 200);
+        $content = \json_decode((string) $response->getContent(), true);
+
+        /** @var string $version */
+        $version = $content['_embedded']['examples_versions'][1]['version'] ?? null; // @phpstan-ignore-line
+        $this->assertNotEmpty($version, 'Version should not be empty after publish');
+
+        return $id . '::' . $version;
+    }
+
+    #[Depends('testVersionListAfterPostModifyAndPublish')]
+    public function testRestoreVersion(string $idVersion): int
+    {
+        [$id, $version] = \explode('::', $idVersion, 2);
+
+        $this->client->request('POST', '/admin/api/examples/' . $id . '?locale=en&action=restore&version=' . $version);
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(200, $response);
+
+        $this->client->request('GET', '/admin/api/examples/' . $id . '?locale=en');
+        $response = $this->client->getResponse();
+        $this->assertResponseSnapshot('example_get_after_restore.json', $response, 200);
+
+        return (int) $id;
+    }
+
+    #[Depends('testRestoreVersion')]
     public function testPostTriggerUnpublish(int $id): void
     {
         $this->client->request('POST', '/admin/api/examples/' . $id . '?locale=en&action=unpublish');
