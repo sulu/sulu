@@ -3,6 +3,7 @@
         "pages": [
             {
                 "id": "123-123-123",
+                "version": null,
                 "title": null,
                 "author": null,
                 "created" : null,

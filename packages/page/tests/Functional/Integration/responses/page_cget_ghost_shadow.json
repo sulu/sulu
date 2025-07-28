@@ -89,7 +89,7 @@
                                         "hasChildren": false
                                     },
                                     {
-                                        "version" : null,
+                                        "version" : 0,
                                         "author": null,
                                         "changed": "@datetime@",
                                         "changer": null,

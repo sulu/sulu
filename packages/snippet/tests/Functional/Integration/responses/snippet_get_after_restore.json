@@ -1,4 +1,6 @@
 {
+    "changer" : null,
+    "creator" : null,
     "availableLocales": [
         "en"
     ],
