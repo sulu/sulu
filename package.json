@@ -25,7 +25,7 @@
         "sulu-page-bundle": "file:packages/page/assets/js",
         "sulu-preview-bundle": "file:src/Sulu/Bundle/PreviewBundle/Resources/js",
         "sulu-route-bundle": "file:src/Sulu/Bundle/RouteBundle/Resources/js",
-        "sulu-search-bundle": "file:src/Sulu/Bundle/SearchBundle/Resources/js",
+        "sulu-search-bundle": "file:packages/search/assets/js",
         "sulu-security-bundle": "file:src/Sulu/Bundle/SecurityBundle/Resources/js",
         "sulu-snippet-bundle": "file:packages/snippet/assets/js",
         "sulu-trash-bundle": "file:src/Sulu/Bundle/TrashBundle/Resources/js",
