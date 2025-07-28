@@ -22,7 +22,6 @@ use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 use Sulu\Component\Content\Exception\ResourceLocatorAlreadyExistsException;
 use Sulu\Page\Domain\Model\PageInterface;
 use Symfony\Component\Config\FileLocator;
-use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;

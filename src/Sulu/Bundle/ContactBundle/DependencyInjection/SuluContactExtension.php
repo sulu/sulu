@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\ContactBundle\DependencyInjection;
 
-use Sulu\Bundle\ContactBundle\Admin\ContactAdmin;
 use Sulu\Bundle\ContactBundle\Entity\AccountRepositoryInterface;
 use Sulu\Bundle\ContactBundle\Entity\ContactRepositoryInterface;
 use Sulu\Bundle\PersistenceBundle\DependencyInjection\PersistenceExtensionTrait;

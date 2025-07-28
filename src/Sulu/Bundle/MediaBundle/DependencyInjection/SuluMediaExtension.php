@@ -14,7 +14,6 @@ namespace Sulu\Bundle\MediaBundle\DependencyInjection;
 use Contao\ImagineSvg\Imagine as SvgImagine;
 use FFMpeg\FFMpeg;
 use Imagine\Vips\Imagine as VipsImagine;
-use Sulu\Bundle\MediaBundle\Admin\MediaAdmin;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\CollectionInterface;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;

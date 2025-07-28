@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\CategoryBundle\DependencyInjection;
 
-use Sulu\Bundle\CategoryBundle\Admin\CategoryAdmin;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryMetaRepositoryInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryRepositoryInterface;
