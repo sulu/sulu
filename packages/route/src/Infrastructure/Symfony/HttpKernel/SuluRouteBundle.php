@@ -51,7 +51,7 @@ final class SuluRouteBundle extends AbstractBundle
         $this->extensionAlias = 'sulu_next_route'; // TODO also change route table from `ro_next_routes` to `ro_routes`
     }
 
-    public function build(ContainerBuilder $container)
+    public function build(ContainerBuilder $container): void
     {
         $container->addCompilerPass(new RouteDefaultsOptionsCompilerPass());
     }
