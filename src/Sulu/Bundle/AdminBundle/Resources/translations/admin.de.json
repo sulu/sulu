@@ -235,6 +235,8 @@
     "sulu_admin.select_all": "Alle auswählen",
     "sulu_admin.deselect_all": "Alle abwählen",
     "sulu_admin.select_multiple_blocks": "Mehrere Blöcke auswählen",
+    "sulu_admin.collapse_all_blocks": "Alle Blöcke ausblenden",
+    "sulu_admin.expand_all_blocks": "Alle Blöcke erweitern",
     "sulu_admin.%count%_blocks_copied": "{count} {count, plural, =1 {Block} other {Blöcke}} zur Zwischenablage kopiert.",
     "sulu_admin.%count%_blocks_duplicated": "{count} {count, plural, =1 {Block} other {Blöcke}} dupliziert.",
     "sulu_admin.%count%_blocks_removed": "{count} {count, plural, =1 {Block} other {Blöcke}} gelöscht.",

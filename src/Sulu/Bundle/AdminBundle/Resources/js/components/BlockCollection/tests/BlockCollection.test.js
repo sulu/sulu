@@ -282,6 +282,47 @@ test('Should allow to collapse blocks', () => {
     expect(blockCollection.find('Block').at(1).prop('expanded')).toEqual(true);
 });
 
+test('Should allow to collapse all blocks', () => {
+    const blockCollection = mount(
+        <BlockCollection
+            defaultType="editor"
+            onChange={jest.fn()}
+            renderBlockContent={jest.fn()}
+            value={[{content: 'Test 1', type: 'editor'}, {content: 'Test 2', type: 'editor'}]}
+        />
+    );
+
+    blockCollection.find('Block').at(0).simulate('click');
+    blockCollection.find('Block').at(1).simulate('click');
+
+    expect(blockCollection.find('Block').at(0).prop('expanded')).toEqual(true);
+    expect(blockCollection.find('Block').at(1).prop('expanded')).toEqual(true);
+
+    blockCollection.find('button.blockCollectionActionButton').last().simulate('click');
+
+    expect(blockCollection.find('Block').at(0).prop('expanded')).toEqual(false);
+    expect(blockCollection.find('Block').at(1).prop('expanded')).toEqual(false);
+});
+
+test('Should allow to expand all blocks', () => {
+    const blockCollection = mount(
+        <BlockCollection
+            defaultType="editor"
+            onChange={jest.fn()}
+            renderBlockContent={jest.fn()}
+            value={[{content: 'Test 1', type: 'editor'}, {content: 'Test 2', type: 'editor'}]}
+        />
+    );
+
+    expect(blockCollection.find('Block').at(0).prop('expanded')).toEqual(false);
+    expect(blockCollection.find('Block').at(1).prop('expanded')).toEqual(false);
+
+    blockCollection.find('button.blockCollectionActionButton').last().simulate('click');
+
+    expect(blockCollection.find('Block').at(0).prop('expanded')).toEqual(true);
+    expect(blockCollection.find('Block').at(1).prop('expanded')).toEqual(true);
+});
+
 test('Should allow to reorder blocks by using drag and drop', () => {
     const changeSpy = jest.fn();
     const sortEndSpy = jest.fn();
@@ -961,7 +1002,7 @@ test('Should not show BlockToolbarButton when have no blocks', () => {
         />
     );
 
-    expect(blockCollection.find('button.selectMultipleButton').length).toBe(0);
+    expect(blockCollection.find('button.blockCollectionActionButton').length).toBe(0);
     expect(blockCollection.find('BlockToolbar').length).toBe(0);
 });
 
@@ -987,7 +1028,7 @@ test('Should not show BlockToolbarButton when have only one block', () => {
         />
     );
 
-    expect(blockCollection.find('button.selectMultipleButton').length).toBe(0);
+    expect(blockCollection.find('button.blockCollectionActionButton').length).toBe(0);
     expect(blockCollection.find('BlockToolbar').length).toBe(0);
 });
 
@@ -1018,7 +1059,7 @@ test('Should show BlockToolbarButton when have two or more blocks', () => {
         />
     );
 
-    expect(blockCollection.find('button.selectMultipleButton').length).toBe(1);
+    expect(blockCollection.find('.blockCollectionActionButtonContainer').length).toBe(1);
     expect(blockCollection.find('BlockToolbar').length).toBe(0);
 });
 
@@ -1049,11 +1090,11 @@ test('Show BlockToolbar when select multiple button is clicked', () => {
         />
     );
 
-    const selectMultipleButton = blockCollection.find('button.selectMultipleButton');
+    const blockCollectionActionButton = blockCollection.find('button.blockCollectionActionButton');
 
-    selectMultipleButton.simulate('click');
+    blockCollectionActionButton.first().simulate('click');
 
-    expect(blockCollection.find('button.selectMultipleButton').length).toBe(0);
+    expect(blockCollection.find('button.blockCollectionActionButton').length).toBe(0);
     expect(blockCollection.find('BlockToolbar').length).toBe(1);
 });
 
@@ -1084,13 +1125,13 @@ test('Hide BlockToolbar when cancel of BlockToolbar is clicked', () => {
         />
     );
 
-    const selectMultipleButton = blockCollection.find('button.selectMultipleButton');
-    selectMultipleButton.simulate('click');
+    const blockCollectionActionButton = blockCollection.find('button.blockCollectionActionButton');
+    blockCollectionActionButton.first().simulate('click');
     const blockToolbar = blockCollection.find('BlockToolbar');
 
     blockToolbar.find('button').last().simulate('click');
 
-    expect(blockCollection.find('button.selectMultipleButton').length).toBe(1);
+    expect(blockCollection.find('.blockCollectionActionButtonContainer').length).toBe(1);
 });
 
 test('Show selection handle when BlockToolbar is open', () => {
@@ -1122,8 +1163,8 @@ test('Show selection handle when BlockToolbar is open', () => {
 
     expect(blockCollection.find('SelectionHandle').length).toBe(0);
 
-    const selectMultipleButton = blockCollection.find('button.selectMultipleButton');
-    selectMultipleButton.simulate('click');
+    const blockCollectionActionButton = blockCollection.find('button.blockCollectionActionButton');
+    blockCollectionActionButton.first().simulate('click');
 
     expect(blockCollection.find('SelectionHandle').length).toBe(2);
 });
@@ -1155,8 +1196,8 @@ test('Count selected blocks in BlockToolbar', () => {
         />
     );
 
-    const selectMultipleButton = blockCollection.find('button.selectMultipleButton');
-    selectMultipleButton.simulate('click');
+    const blockCollectionActionButton = blockCollection.find('button.blockCollectionActionButton');
+    blockCollectionActionButton.first().simulate('click');
 
     expect(blockCollection.find('BlockToolbar').props().selectedCount).toBe(0);
 
@@ -1199,8 +1240,8 @@ test('Copy selected blocks via the BlockToolbar', () => {
         />
     );
 
-    const selectMultipleButton = blockCollection.find('button.selectMultipleButton');
-    selectMultipleButton.simulate('click');
+    const blockCollectionActionButton = blockCollection.find('button.blockCollectionActionButton');
+    blockCollectionActionButton.first().simulate('click');
     const blockToolbar = blockCollection.find('BlockToolbar');
     const selectionHandles = blockCollection.find('SelectionHandle');
     selectionHandles.first().simulate('click');
@@ -1243,8 +1284,8 @@ test('Duplicate selected blocks via the BlockToolbar', () => {
         />
     );
 
-    const selectMultipleButton = blockCollection.find('button.selectMultipleButton');
-    selectMultipleButton.simulate('click');
+    const blockCollectionActionButton = blockCollection.find('button.blockCollectionActionButton');
+    blockCollectionActionButton.first().simulate('click');
     const blockToolbar = blockCollection.find('BlockToolbar');
     const selectionHandles = blockCollection.find('SelectionHandle');
     selectionHandles.first().simulate('click');
@@ -1287,8 +1328,8 @@ test('Cut selected blocks via the BlockToolbar', () => {
         />
     );
 
-    const selectMultipleButton = blockCollection.find('button.selectMultipleButton');
-    selectMultipleButton.simulate('click');
+    const blockCollectionActionButton = blockCollection.find('button.blockCollectionActionButton');
+    blockCollectionActionButton.first().simulate('click');
     const blockToolbar = blockCollection.find('BlockToolbar');
     const selectionHandles = blockCollection.find('SelectionHandle');
     selectionHandles.first().simulate('click');
@@ -1331,8 +1372,8 @@ test('Remove selected blocks via the BlockToolbar', () => {
         />
     );
 
-    const selectMultipleButton = blockCollection.find('button.selectMultipleButton');
-    selectMultipleButton.simulate('click');
+    const blockCollectionActionButton = blockCollection.find('button.blockCollectionActionButton');
+    blockCollectionActionButton.first().simulate('click');
     const blockToolbar = blockCollection.find('BlockToolbar');
     const selectionHandles = blockCollection.find('SelectionHandle');
     selectionHandles.first().simulate('click');
