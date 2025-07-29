@@ -151,27 +151,18 @@ class ContentResolverTest extends TestCase
 
         /**
          * @var array{
-         *   resource: Page,
+         *   resource: mixed,
          *   content: array{
          *     title: string,
          *     url: string,
-         *     article: string|null,
-         *     pages: array{
-         *       array{
-         *         title: string,
-         *         url: string,
-         *         article: string|null,
-         *         pages?: array<mixed>|null
-         *       }
-         *     }
+         *     article: mixed,
+         *     pages: array<int, mixed>
          *   },
          *   view: array{
          *     title: mixed[],
          *     url: mixed[],
          *     article: mixed[],
-         *     pages: array{
-         *       array{ids: array<string>}
-         *     }
+         *     pages: array{ids: array<string>}
          *   }
          * } $result
          */
@@ -184,13 +175,15 @@ class ContentResolverTest extends TestCase
         self::assertSame('/page', $content['url']);
         self::assertNull($content['article']);
 
+        /** @var array{title: mixed[], url: mixed[], article: mixed[], pages: array{ids: array<string>}} $view */
         $view = $result['view'];
         self::assertSame([], $view['title']);
         self::assertSame([], $view['url']);
         self::assertSame([], $view['article']);
-        self::assertSame(['111-111-222'], $view['pages'][0]['ids']);
+        self::assertSame(['111-111-222'], $view['pages']['ids']);
 
         // SubEntity
+        /** @var array{title: string, url: string, article: string} $innerContent */
         $innerContent = $content['pages'][0];
         self::assertSame('Page 2', $innerContent['title']);
         self::assertSame('/page-2', $innerContent['url']);
@@ -299,14 +292,14 @@ class ContentResolverTest extends TestCase
          *     title: mixed[],
          *     url: mixed[],
          *     article: mixed[],
-         *     pages: array<int, array{ids: array<string>}>
+         *     pages: array{ids: array<string>}
          * } $view
          */
         $view = $result['view'];
         self::assertSame([], $view['title']);
         self::assertSame([], $view['url']);
         self::assertSame([], $view['article']);
-        self::assertSame(['111-111-222'], $view['pages'][0]['ids']);
+        self::assertSame(['111-111-222'], $view['pages']['ids']);
 
         // Loop through expected levels and verify the content
         for ($level = 0; $level < 6; ++$level) {

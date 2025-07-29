@@ -421,20 +421,29 @@ class ContentResolverTest extends SuluTestCase
         static::getEntityManager()->flush();
 
         $dimensionContent = $this->contentAggregator->aggregate($example1, ['locale' => 'en', 'stage' => 'live']);
-        /** @var array{content: array{title: string, url: string, blocks: array<int, mixed>}} $result */
+        /** @var array{content: array{title: string, url: string, blocks: array<int, mixed>}, view: array{blocks: array<int, mixed>}} $result */
         $result = $this->contentResolver->resolve($dimensionContent);
 
         /** @var array{title: string, url: string, blocks: array<int, mixed>} $content */
         $content = $result['content'];
-
         self::assertSame('Lorem Ipsum', $content['title']);
         self::assertSame('/lorem-ipsum', $content['url']);
+
+        /** @var array{blocks: array<int, mixed>} $view */
+        $view = $result['view'];
+        /** @var array<int, mixed> $viewBlocks */
+        $viewBlocks = $view['blocks'];
+        self::assertCount(3, $viewBlocks);
 
         // block 0
         /** @var array{type: string, text_editor: string} $block0 */
         $block0 = $content['blocks'][0];
         self::assertSame('editor', $block0['type']);
         self::assertSame('<p>Block Level 0: Lorem Ipsum dolor sit amet</p>', $block0['text_editor']);
+
+        /** @var array{text_editor: mixed} $viewBlock0 */
+        $viewBlock0 = $viewBlocks[0];
+        self::assertSame([], $viewBlock0['text_editor']);
 
         // block 1
         /** @var array{type: string, media_selection: mixed[]} $block1 */
@@ -446,15 +455,28 @@ class ContentResolverTest extends SuluTestCase
         self::assertInstanceOf(Media::class, $mediaApi1);
         self::assertSame($media1->getId(), $mediaApi1->getId());
 
+        /** @var array{media_selection: array{ids: mixed[], displayOption: mixed}} $viewBlock1 */
+        $viewBlock1 = $viewBlocks[1];
+        $mediaSelectionView = $viewBlock1['media_selection'];
+        self::assertSame([$media1->getId()], $mediaSelectionView['ids']);
+        self::assertNull($mediaSelectionView['displayOption']);
+
         // block 2
         /** @var array{type: string, blocks: array<int, mixed>} $block2 */
         $block2 = $content['blocks'][2];
         self::assertSame('block', $block2['type']);
+        /** @var array{blocks: array<int, mixed>} $viewBlock2 */
+        $viewBlock2 = $viewBlocks[2];
+        /** @var array<int, mixed> $viewBlocks2 */
+        $viewBlocks2 = $viewBlock2['blocks'];
 
         /** @var array{type: string, text_editor: string} $block2_0 */
         $block2_0 = $block2['blocks'][0];
         self::assertSame('<p>Block Level 1: Lorem Ipsum dolor sit amet</p>', $block2_0['text_editor']);
         self::assertSame('editor', $block2_0['type']);
+        /** @var array{text_editor: mixed} $viewBlock2_0 */
+        $viewBlock2_0 = $viewBlocks2[0];
+        self::assertSame([], $viewBlock2_0['text_editor']);
 
         /** @var array{type: string, media_selection: mixed[]} $block2_1 */
         $block2_1 = $block2['blocks'][1];
@@ -467,5 +489,11 @@ class ContentResolverTest extends SuluTestCase
         $mediaApi2 = $block2_1['media_selection'][1];
         self::assertInstanceOf(Media::class, $mediaApi2);
         self::assertSame($media2->getId(), $mediaApi2->getId());
+
+        /** @var array{media_selection: array{ids: mixed[], displayOption: mixed}} $viewBlock2_1 */
+        $viewBlock2_1 = $viewBlocks2[1];
+        $mediaSelectionView = $viewBlock2_1['media_selection'];
+        self::assertSame([$media1->getId(), $media2->getId()], $mediaSelectionView['ids']);
+        self::assertNull($mediaSelectionView['displayOption']);
     }
 }

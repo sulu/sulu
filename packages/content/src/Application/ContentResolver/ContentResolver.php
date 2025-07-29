@@ -336,9 +336,12 @@ class ContentResolver implements ContentResolverInterface
                 $result['content'][$name][$key] = $entry;
                 if (isset($view[$key])) {
                     $result['view'][$name][$key] = $view[$key];
-                } else {
-                    $result['view'][$name][$key] = $view;
                 }
+            }
+
+            // If the view is not set for this name, we can use the root view
+            if (($result['view'][$name] ?? null) === null) {
+                $result['view'][$name] = $view;
             }
 
             $result['resolvableResources'] = $resolvableResources;
