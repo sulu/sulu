@@ -29,7 +29,7 @@
             <entity-name>Sulu\Page\Domain\Model\PageInterface</entity-name>
         </property>
 
-        <property name="title" translation="sulu_admin.title" visibility="always" searchability="yes">
+        <property name="title" translation="sulu_admin.title" visibility="always" sortable="false">
             <field-name>title</field-name>
             <entity-name>dimensionContent</entity-name>
 
@@ -38,14 +38,14 @@
             <transformer type="title"/>
         </property>
 
-        <property name="version" translation="sulu_admin.published" visibility="always">
+        <property name="version" translation="sulu_admin.published" visibility="always" sortable="false">
             <field-name>version</field-name>
             <entity-name>dimensionContent</entity-name>
 
             <transformer type="datetime"/>
         </property>
 
-        <concatenation-property name="changer" glue=" " translation="sulu_admin.changer" sortable="false" visibility="yes">
+        <concatenation-property name="changer" glue=" " translation="sulu_admin.changer" visibility="always" sortable="false" >
             <field>
                 <field-name>firstName</field-name>
                 <entity-name>%sulu.model.contact.class%</entity-name>
@@ -59,11 +59,5 @@
                 <joins ref="changer"/>
             </field>
         </concatenation-property>
-
-        <property name="changed" translation="sulu_admin.changed">
-            <field-name>changed</field-name>
-            <entity-name>Sulu\Page\Domain\Model\PageInterface</entity-name>
-            <transformer type="datetime"/>
-        </property>
     </properties>
 </list>
