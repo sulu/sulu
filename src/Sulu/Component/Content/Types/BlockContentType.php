@@ -240,7 +240,8 @@ class BlockContentType extends ComplexContentType implements ContentTypeExportIn
                     $isImport
                 );
 
-                if (\is_array($blockSettings = $blockPropertyType->getSettings())) {
+                $blockSettings = $blockPropertyType->getSettings();
+                if (\is_array($blockSettings)) {
                     $this->writeProperty(
                         $settingsProperty,
                         $property,
