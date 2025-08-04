@@ -737,4 +737,122 @@ class ContentResolverTest extends SuluTestCase
         self::assertSame([$media2->getId()], $viewViewBlock2['media']['ids']);
         self::assertNull($viewViewBlock2['media']['displayOption']);
     }
+
+    public function testResolveImageMap(): void
+    {
+        $collection1 = self::createCollection(['title' => 'collection-1', 'locale' => 'en']);
+        $mediaType = self::createMediaType(['name' => 'Image', 'description' => 'This is an image']);
+        $mainMedia = self::createMedia($collection1, $mediaType, ['title' => 'media-main', 'locale' => 'en']);
+        $media1 = self::createMedia($collection1, $mediaType, ['title' => 'media-1', 'locale' => 'en']);
+
+        self::getEntityManager()->flush();
+
+        $example1 = static::createExample(
+            [
+                'en' => [
+                    'live' => [
+                        'template' => 'full-content',
+                        'title' => 'Lorem Ipsum',
+                        'url' => '/lorem-ipsum',
+                        'image_map' => [
+                            'imageId' => $mainMedia->getId(),
+                            'hotspots' => [
+                                [
+                                    'type' => 'basic',
+                                    'hotspot' => [
+                                        'type' => 'circle',
+                                        'left' => 0.5052987808664333,
+                                        'top' => 0.5940029375917998,
+                                        'radius' => 0.09,
+                                    ],
+                                    'title' => 'Basic title',
+                                    'description' => 'Basic description',
+                                ],
+                                [
+                                    'type' => 'advanced',
+                                    'hotspot' => [
+                                        'type' => 'rectangle',
+                                        'width' => 1,
+                                        'height' => 0.20797524922653826,
+                                        'left' => 0,
+                                        'top' => 0.7920247507734617,
+                                    ],
+                                    'text' => '<p>Advanced <b>ckeditor</b> text</p>',
+                                    'media' => [
+                                        'ids' => [$media1->getId()],
+                                        'displayOption' => null,
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            [
+                'create_route' => true,
+            ]
+        );
+
+        static::getEntityManager()->flush();
+
+        $dimensionContent = $this->contentAggregator->aggregate($example1, ['locale' => 'en', 'stage' => 'live']);
+        $result = $this->contentResolver->resolve($dimensionContent);
+
+        $content = $result['content'];
+
+        // Assert that image_map exists in content
+        self::assertArrayHasKey('image_map', $content);
+        $imageMap = $content['image_map'];
+        self::assertIsArray($imageMap);
+        self::assertCount(2, $imageMap);
+
+        // Assert the main image
+        self::assertArrayHasKey('image', $imageMap);
+        self::assertInstanceOf(Media::class, $imageMap['image']);
+        self::assertSame($mainMedia->getId(), $imageMap['image']->getId());
+
+        // Assert hotspots structure
+        self::assertArrayHasKey('hotspots', $imageMap);
+        $hotspots = $imageMap['hotspots'];
+        self::assertIsArray($hotspots);
+        self::assertCount(2, $hotspots);
+
+        // Assert basic hotspot
+        /** @var array<string, mixed> $basicHotspot */
+        $basicHotspot = $hotspots[0];
+        self::assertSame('basic', $basicHotspot['type']);
+        self::assertArrayHasKey('hotspot', $basicHotspot);
+        self::assertIsArray($basicHotspot['hotspot']);
+
+        $basicHotspotData = $basicHotspot['hotspot'];
+        self::assertSame('circle', $basicHotspotData['type']);
+        self::assertSame(0.5052987808664333, $basicHotspotData['left']);
+        self::assertSame(0.5940029375917998, $basicHotspotData['top']);
+        self::assertSame(0.09, $basicHotspotData['radius']);
+        self::assertSame('Basic title', $basicHotspot['title']);
+        self::assertSame('Basic description', $basicHotspot['description']);
+
+        // Assert advanced hotspot
+        /** @var array<string, mixed> $advancedHotspot */
+        $advancedHotspot = $hotspots[1];
+        self::assertSame('advanced', $advancedHotspot['type']);
+        self::assertArrayHasKey('hotspot', $advancedHotspot);
+        self::assertIsArray($advancedHotspot['hotspot']);
+
+        $advancedHotspotData = $advancedHotspot['hotspot'];
+        self::assertSame('rectangle', $advancedHotspotData['type']);
+        self::assertSame(1, $advancedHotspotData['width']);
+        self::assertSame(0.20797524922653826, $advancedHotspotData['height']);
+        self::assertSame(0, $advancedHotspotData['left']);
+        self::assertSame(0.7920247507734617, $advancedHotspotData['top']);
+        self::assertSame('<p>Advanced <b>ckeditor</b> text</p>', $advancedHotspot['text']);
+
+        // Assert advanced hotspot media
+        self::assertArrayHasKey('media', $advancedHotspot);
+        $advancedMedia = $advancedHotspot['media'];
+        self::assertIsArray($advancedMedia);
+        self::assertCount(1, $advancedMedia);
+        self::assertInstanceOf(Media::class, $advancedMedia[0]);
+        self::assertSame($media1->getId(), $advancedMedia[0]->getId());
+    }
 }

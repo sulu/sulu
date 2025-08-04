@@ -502,6 +502,12 @@
                                 <title lang="de">Text</title>
                             </meta>
                         </property>
+                        <property name="media" type="media_selection">
+                            <meta>
+                                <title lang="en">Media Selection</title>
+                                <title lang="de">Medienauswahl</title>
+                            </meta>
+                        </property>
                     </properties>
                 </type>
             </types>

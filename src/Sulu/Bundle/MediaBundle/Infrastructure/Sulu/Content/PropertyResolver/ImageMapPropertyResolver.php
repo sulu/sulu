@@ -67,10 +67,9 @@ class ImageMapPropertyResolver implements PropertyResolverInterface // TODO we m
         ) {
             return ContentView::create([
                 'image' => null,
-                'hotspots' => $hotspots->getContent(),
+                'hotspots' => $hotspots,
             ], [
                 'imageId' => null,
-                'hotspots' => $hotspots->getView(),
                 ...$returnedParams,
             ]);
         }
@@ -82,11 +81,10 @@ class ImageMapPropertyResolver implements PropertyResolverInterface // TODO we m
         return ContentView::create(
             [
                 'image' => new ResolvableResource($imageId, $resourceLoaderKey, -50),
-                'hotspots' => $hotspots->getContent(),
+                'hotspots' => $hotspots,
             ],
             [
                 'imageId' => $imageId,
-                'hotspots' => $hotspots->getView(),
                 ...$returnedParams,
             ],
         );
@@ -101,8 +99,6 @@ class ImageMapPropertyResolver implements PropertyResolverInterface // TODO we m
         $metadata = $params['metadata'] ?? null;
         \assert($metadata instanceof FieldMetadata, 'Metadata must be set to resolve hotspots.');
         $metadataTypes = $metadata->getTypes();
-        $content = [];
-        $view = [];
 
         $typedFormMetadata = $this->metadataProviderRegistry->getMetadataProvider('form')
             ->getMetadata('block', $locale, []);
@@ -110,6 +106,7 @@ class ImageMapPropertyResolver implements PropertyResolverInterface // TODO we m
         \assert($typedFormMetadata instanceof TypedFormMetadata, 'Block form metadata not found for image map resolving.');
 
         $globalBlocksMetadata = $typedFormMetadata->getForms();
+        $innerContentViews = [];
         foreach ($hotspots as $key => $block) {
             if (!\is_array($block) || !isset($block['type']) || !\is_string($block['type'])) {
                 continue;
@@ -147,20 +144,19 @@ class ImageMapPropertyResolver implements PropertyResolverInterface // TODO we m
                 $formMetadata = $globalBlocksMetadata[$globalBlockType];
             }
 
-            $content[$key] = [
-                'type' => $type,
-                'hotspot' => $block['hotspot'],
-            ];
-
-            $view[$key] = [];
-
-            foreach ($this->metadataResolver->resolveItems($formMetadata->getItems(), $block, $locale) as $field => $resolvedItem) {
-                $content[$key][$field] = $resolvedItem->getContent();
-                $view[$key][$field] = $resolvedItem->getView();
-            }
+            $innerContentViews[$key] = ContentView::create(
+                \array_merge(
+                    [
+                        'type' => $type,
+                        'hotspot' => $block['hotspot'],
+                    ],
+                    $this->metadataResolver->resolveItems($formMetadata->getItems(), $block, $locale)
+                ),
+                []
+            );
         }
 
-        return ContentView::create(\array_values($content), \array_values($view));
+        return ContentView::create(\array_values($innerContentViews), []);
     }
 
     private function getGlobalBlockType(FormMetadata $fieldMetadata): ?string
