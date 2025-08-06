@@ -137,6 +137,103 @@ class ContentResolverTest extends SuluTestCase
         self::assertTrue($seo['hideInSitemap']);
     }
 
+    public function testResolveContentWithProperties(): void
+    {
+        $example0 = static::createExample(
+            [
+                'en' => [
+                    'live' => [
+                        'template' => 'default-example-selection',
+                        'title' => 'Lorem Ipsum',
+                        'url' => '/lorem-ipsum',
+                        'description' => 'Lorem Ipsum dolor sit amet',
+
+                        'excerptTitle' => 'excerpt-example-title-0',
+                        'excerptDescription' => 'excerpt-example-description-0',
+
+                        'seoTitle' => 'seo-example-title-0',
+                        'seoDescription' => 'seo-example-description-0',
+                    ],
+                ],
+            ]
+        );
+        static::getEntityManager()->flush();
+
+        $example1 = static::createExample(
+            [
+                'en' => [
+                    'live' => [
+                        'template' => 'default-example-selection',
+                        'title' => 'Lorem Ipsum',
+                        'url' => '/lorem-ipsum',
+                        'examples' => [$example0->getId()],
+                        'examples_with_properties' => [$example0->getId()],
+                        'excerptTitle' => 'excerpt-title-1',
+                        'excerptMore' => 'excerpt-more-1',
+                        'excerptDescription' => 'excerpt-description-1',
+
+                        'seoTitle' => 'seo-title-1',
+                        'seoDescription' => 'seo-description-1',
+                        'seoKeywords' => 'seo-keywords-1',
+                        'seoCanonicalUrl' => 'https://sulu.io',
+                        'seoNoIndex' => true,
+                        'seoNoFollow' => true,
+                        'seoHideInSitemap' => true,
+                    ],
+                ],
+            ]
+        );
+
+        static::getEntityManager()->flush();
+
+        $dimensionContent = $this->contentAggregator->aggregate($example1, ['locale' => 'en', 'stage' => 'live']);
+        $result = $this->contentResolver->resolve(
+            $dimensionContent,
+        );
+
+        $content = $result['content'];
+
+        $excerpt = $result['extension']['excerpt'] ?? null;
+        $seo = $result['extension']['seo'] ?? null;
+
+        self::assertIsArray($excerpt);
+        self::assertIsArray($seo);
+
+        self::assertSame('Lorem Ipsum', $content['title']);
+        self::assertSame('/lorem-ipsum', $content['url']);
+        self::assertSame('<p>Lorem Ipsum dolor sit amet</p>', $content['text_editor']);
+        self::assertSame('Lorem Ipsum dolor sit amet', $content['text_line']);
+        self::assertSame(1337, $content['number']);
+        self::assertSame('+49 123 456 789', $content['phone']);
+        self::assertSame('value-2', $content['single_select']);
+        self::assertSame(['value-2', 'value-3'], $content['select']);
+        self::assertTrue($content['checkbox']);
+        self::assertSame('#ff0000', $content['color']);
+        self::assertSame('13:37', $content['time']);
+        self::assertSame('2020-01-01', $content['date']);
+
+        /** @var \DateTimeInterface|null $dateTime */
+        $dateTime = $content['datetime'];
+        self::assertSame(1577885820 /* 2020-01-01T13:37:00 */, $dateTime?->getTimestamp());
+        self::assertSame('example@sulu.io', $content['email']);
+        self::assertSame('https://sulu.io', $content['external_url']);
+        self::assertSame('Lorem Ipsum dolor sit amet', $content['text_area']);
+
+        // Excerpt
+        self::assertSame('excerpt-title-1', $excerpt['title']);
+        self::assertSame('excerpt-more-1', $excerpt['more']);
+        self::assertSame('excerpt-description-1', $excerpt['description']);
+
+        // Seo
+        self::assertSame('seo-title-1', $seo['title']);
+        self::assertSame('seo-description-1', $seo['description']);
+        self::assertSame('seo-keywords-1', $seo['keywords']);
+        self::assertSame('https://sulu.io', $seo['canonicalUrl']);
+        self::assertTrue($seo['noIndex']);
+        self::assertTrue($seo['noFollow']);
+        self::assertTrue($seo['hideInSitemap']);
+    }
+
     public function testResolveMedias(): void
     {
         // @phpstan-ignore-next-line

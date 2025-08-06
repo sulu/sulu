@@ -37,8 +37,8 @@ class MetadataResolver
     public function resolveItems(array $items, array $data, string $locale): array
     {
         $contentViews = [];
-        foreach ($items as $item) {
-            $name = $item->getName();
+        foreach ($items as $key => $item) {
+            $name = $key;
             $type = $item->getType();
             if ($item instanceof SectionMetadata) {
                 $contentViews = \array_merge(

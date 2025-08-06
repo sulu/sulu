@@ -49,7 +49,7 @@ readonly class SettingsResolver implements ResolverInterface
     ) {
     }
 
-    public function resolve(DimensionContentInterface $dimensionContent): ?ContentView
+    public function resolve(DimensionContentInterface $dimensionContent, ?array $properties = null): ?ContentView
     {
         /** @var SettingsData $result */
         $result = [

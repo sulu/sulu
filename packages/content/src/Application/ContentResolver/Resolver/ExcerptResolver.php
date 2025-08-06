@@ -30,7 +30,7 @@ readonly class ExcerptResolver implements ResolverInterface
     ) {
     }
 
-    public function resolve(DimensionContentInterface $dimensionContent): ?ContentView
+    public function resolve(DimensionContentInterface $dimensionContent, ?array $properties = null): ?ContentView
     {
         if (!$dimensionContent instanceof ExcerptInterface) {
             return null;
@@ -41,9 +41,41 @@ readonly class ExcerptResolver implements ResolverInterface
 
         /** @var FormMetadata $formMetadata */
         $formMetadata = $this->formMetadataProvider->getMetadata($this->getFormKey(), $locale, []);
-        $resolvedItems = $this->metadataResolver->resolveItems($formMetadata->getItems(), $this->getExcerptData($dimensionContent), $locale);
 
-        return ContentView::create($this->normalizeResolvedItems($resolvedItems), []);
+        $formMetadataItems = $formMetadata->getItems();
+        $data = $this->getExcerptData($dimensionContent);
+        if ($properties !== null) {
+            $filteredFormMetadataItems = [];
+            $filteredTemplateData = [];
+            $properties = $this->filterProperties($properties);
+            foreach ($properties as $key => $value) {
+                if (\array_key_exists($value, $formMetadataItems)) {
+                    $filteredFormMetadataItems[$key] = $formMetadataItems[$value];
+                }
+                if (\array_key_exists($value, $data)) {
+                    $filteredTemplateData[$key] = $data[$value];
+                }
+            }
+            $formMetadataItems = $filteredFormMetadataItems;
+            $data = $filteredTemplateData;
+        }
+
+        $resolvedItems = $this->metadataResolver->resolveItems($formMetadataItems, $data, $locale);
+
+        return ContentView::create($this->normalizeResolvedItems($resolvedItems, $properties), []);
+    }
+
+    private function filterProperties(array $properties): array
+    {
+        $filteredProperties = [];
+        foreach ($properties as $key => $value) {
+            if (\str_starts_with((string)$value, self::getPrefix())) {
+                $normalizedValue = 'excerpt' . \ucfirst(\substr((string)$value, \strlen(self::getPrefix())));
+                $filteredProperties[$key] = $normalizedValue;
+            }
+        }
+
+        return $filteredProperties;
     }
 
     /**
@@ -51,11 +83,16 @@ readonly class ExcerptResolver implements ResolverInterface
      *
      * @return mixed[]
      */
-    protected function normalizeResolvedItems(array $resolvedItems): array
+    protected function normalizeResolvedItems(array $resolvedItems, ?array $properties): array
     {
         $result = [];
         foreach ($resolvedItems as $key => $item) {
-            $normalizedKey = \str_starts_with((string) $key, 'excerpt') ? \lcfirst(\substr((string) $key, \strlen('excerpt'))) : $key;
+            if ($properties !== null && \array_key_exists($key, $properties)) {
+                $normalizedKey = $key;
+            } else {
+                $normalizedKey = \str_starts_with((string) $key, 'excerpt') ? \lcfirst(\substr((string) $key, \strlen('excerpt'))) : $key;
+            }
+
             $result[$normalizedKey] = $item;
         }
 
@@ -94,5 +131,10 @@ readonly class ExcerptResolver implements ResolverInterface
             'excerptIcon' => $dimensionContent->getExcerptIcon(),
             'excerptImage' => $dimensionContent->getExcerptImage(),
         ];
+    }
+
+    public static function getPrefix(): string
+    {
+        return 'excerpt.';
     }
 }

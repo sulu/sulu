@@ -22,6 +22,7 @@ interface ContentResolverInterface
      * @template T of ContentRichEntityInterface
      *
      * @param DimensionContentInterface<T> $dimensionContent
+     * @param array<string, mixed>|null $properties
      *
      * @return array{
      *     resource: object,
@@ -30,5 +31,5 @@ interface ContentResolverInterface
      *     extension: array<string, array<string, mixed>>,
      * }
      */
-    public function resolve(DimensionContentInterface $dimensionContent): array;
+    public function resolve(DimensionContentInterface $dimensionContent, ?array $properties = null): array;
 }

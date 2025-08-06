@@ -70,3 +70,15 @@ services:
         tags:
             - { name: 'sulu.context', context: 'admin' }
             - { name: 'sulu_preview.object_provider', provider-key: 'examples' }
+
+    example_test.example_selection_property_resolver:
+        class: Sulu\Content\Tests\Application\ExampleTestBundle\PropertyResolver\ExampleSelectionPropertyResolver
+        tags:
+            - { name: 'sulu_content.property_resolver', alias: 'example_selection' }
+
+    example_test.example_resource_loader:
+        class: Sulu\Content\Tests\Application\ExampleTestBundle\ResourceLoader\ExampleResourceLoader
+        arguments:
+            - '@example_test.example_repository'
+        tags:
+            - { name: 'sulu_content.resource_loader', alias: 'example' }

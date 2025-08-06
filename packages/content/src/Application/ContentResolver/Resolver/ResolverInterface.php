@@ -23,6 +23,7 @@ interface ResolverInterface
      * @template T of ContentRichEntityInterface
      *
      * @param DimensionContentInterface<T> $dimensionContent
+     * @param array<string, mixed>|null $properties
      */
-    public function resolve(DimensionContentInterface $dimensionContent): ?ContentView;
+    public function resolve(DimensionContentInterface $dimensionContent, ?array $properties = null): ?ContentView;
 }

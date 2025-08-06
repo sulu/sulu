@@ -28,7 +28,7 @@ readonly class SeoResolver implements ResolverInterface
     ) {
     }
 
-    public function resolve(DimensionContentInterface $dimensionContent): ?ContentView
+    public function resolve(DimensionContentInterface $dimensionContent, ?array $properties = null): ?ContentView
     {
         if (!$dimensionContent instanceof SeoInterface) {
             return null;
@@ -40,12 +40,42 @@ readonly class SeoResolver implements ResolverInterface
         /** @var FormMetadata $formMetadata */
         $formMetadata = $this->formMetadataProvider->getMetadata($this->getFormKey(), $locale, []);
 
-        $items = \array_filter($formMetadata->getItems(), function($item) {
+        $formMetadataItems = \array_filter($formMetadata->getItems(), function ($item) {
             return !\in_array($item->getType(), $this->excludedPropertyTypes(), true);
         });
-        $resolvedItems = $this->metadataResolver->resolveItems($items, $this->getSeoData($dimensionContent), $locale);
+        $data = $this->getSeoData($dimensionContent);
+        if ($properties !== null) {
+            $filteredFormMetadataItems = [];
+            $filteredTemplateData = [];
+            $properties = $this->filterProperties($properties);
+            foreach ($properties as $key => $value) {
+                if (\array_key_exists($value, $formMetadataItems)) {
+                    $filteredFormMetadataItems[$key] = $formMetadataItems[$value];
+                }
+                if (\array_key_exists($value, $data)) {
+                    $filteredTemplateData[$key] = $data[$value];
+                }
+            }
+            $formMetadataItems = $filteredFormMetadataItems;
+            $data = $filteredTemplateData;
+        }
 
-        return ContentView::create($this->normalizeResolvedItems($resolvedItems), []);
+        $resolvedItems = $this->metadataResolver->resolveItems($formMetadataItems, $data, $locale);
+
+        return ContentView::create($this->normalizeResolvedItems($resolvedItems, $properties), []);
+    }
+
+    private function filterProperties(array $properties): array
+    {
+        $filteredProperties = [];
+        foreach ($properties as $key => $value) {
+            if (\str_starts_with((string)$value, self::getPrefix())) {
+                $normalizedValue = 'seo' . \ucfirst(\substr((string)$value, \strlen(self::getPrefix())));
+                $filteredProperties[$key] = $normalizedValue;
+            }
+        }
+
+        return $filteredProperties;
     }
 
     /**
@@ -53,11 +83,16 @@ readonly class SeoResolver implements ResolverInterface
      *
      * @return mixed[]
      */
-    protected function normalizeResolvedItems(array $resolvedItems): array
+    protected function normalizeResolvedItems(array $resolvedItems, ?array $properties): array
     {
         $result = [];
         foreach ($resolvedItems as $key => $item) {
-            $normalizedKey = \lcfirst(\substr((string) $key, \strlen('seo')));
+            if ($properties !== null && \array_key_exists($key, $properties)) {
+                $normalizedKey = $key;
+            } else {
+                $normalizedKey = \str_starts_with((string)$key, 'seo') ? \lcfirst(\substr((string)$key, \strlen('seo'))) : $key;
+            }
+
             $result[$normalizedKey] = $item;
         }
 
@@ -99,5 +134,10 @@ readonly class SeoResolver implements ResolverInterface
             'seoNoFollow' => $dimensionContent->getSeoNoFollow(),
             'seoHideInSitemap' => $dimensionContent->getSeoHideInSitemap(),
         ];
+    }
+
+    public static function getPrefix(): string
+    {
+        return 'seo.';
     }
 }

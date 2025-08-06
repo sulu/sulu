@@ -54,6 +54,14 @@
             <tag name="sulu_content.content_resolver" type="seo"/>
         </service>
 
+        <!-- DimensionContent Resolver -->
+        <service id="sulu_content.dimension_content_resolver"
+                 class="Sulu\Content\Application\ContentResolver\Resolver\DimensionContentResolver">
+            <argument type="service" id="property_accessor"/>
+
+            <tag name="sulu_content.content_resolver" type="object"/>
+        </service>
+
         <!-- Metadata Resolver -->
         <service id="sulu_content.metadata_resolver"
                  class="Sulu\Content\Application\MetadataResolver\MetadataResolver">

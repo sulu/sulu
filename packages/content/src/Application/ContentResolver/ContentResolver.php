@@ -47,7 +47,7 @@ class ContentResolver implements ContentResolverInterface
     ) {
     }
 
-    public function resolve(DimensionContentInterface $dimensionContent): array
+    public function resolve(DimensionContentInterface $dimensionContent, ?array $properties = null): array
     {
         $locale = $dimensionContent->getLocale();
         Assert::string($locale, 'Locale must be a string');
@@ -58,7 +58,7 @@ class ContentResolver implements ContentResolverInterface
         $priorityQueue = [];
         $resolvedResources = [];
 
-        $resolvedContent = $this->resolveInternal($dimensionContent, 0, $priorityQueue);
+        $resolvedContent = $this->resolveInternal($dimensionContent, 0, $priorityQueue, $properties);
         // Process the priority queue until it's empty
         while (!empty($priorityQueue)) {
             // Get the highest priority resources (first key due to krsort in mergeResolvableResources)
@@ -143,6 +143,7 @@ class ContentResolver implements ContentResolverInterface
             $finalContent,
             $resolvedContent['view'],
             $dimensionContent->getResource(),
+            $properties
         );
 
         $this->replaceNestedContentViews($normalizedContentData, '[content]');
@@ -205,6 +206,7 @@ class ContentResolver implements ContentResolverInterface
      * @param DimensionContentInterface<T> $dimensionContent
      * @param int $depth Current depth
      * @param array<int, array<string, array<int, array<int|string, ResolvableInterface>>>> $priorityQueue Reference to the priority queue
+     * @param array<string, mixed>|null $properties
      *
      * @return array{
      *     content: array<string, mixed>,
@@ -216,8 +218,9 @@ class ContentResolver implements ContentResolverInterface
         DimensionContentInterface $dimensionContent,
         int $depth,
         array &$priorityQueue,
+        ?array $properties = null
     ): array {
-        $contentViews = $this->getContentViews($dimensionContent);
+        $contentViews = $this->getContentViews($dimensionContent, $properties);
         $resolvedContent = $this->resolveContentViews($contentViews, $depth);
 
         // Add resolvable resources to priority queue
@@ -233,10 +236,11 @@ class ContentResolver implements ContentResolverInterface
      * @template T of ContentRichEntityInterface
      *
      * @param DimensionContentInterface<T> $dimensionContent
+     * @param array<string, mixed>|null $properties
      *
      * @return array<string|int, ContentView>
      */
-    private function getContentViews(DimensionContentInterface $dimensionContent): array
+    private function getContentViews(DimensionContentInterface $dimensionContent, ?array $properties = null): array
     {
         $contentViews = [];
 
@@ -245,7 +249,7 @@ class ContentResolver implements ContentResolverInterface
          * @var ResolverInterface $contentResolver
          */
         foreach ($this->contentResolvers as $resolverKey => $contentResolver) {
-            $contentView = $contentResolver->resolve($dimensionContent);
+            $contentView = $contentResolver->resolve($dimensionContent, $properties);
 
             if (!$contentView instanceof ContentView) {
                 continue;
@@ -526,14 +530,14 @@ class ContentResolver implements ContentResolverInterface
      *     extension: array<string, array<string, mixed>>,
      * }
      */
-    private function normalizeContentData(array $content, array $view, ContentRichEntityInterface $resource): array
+    private function normalizeContentData(array $content, array $view, ContentRichEntityInterface $resource, ?array $properties = null): array
     {
         /** @var array<string, mixed> $templateData */
-        $templateData = $content['template'] ?? [];
+        $templateData = array_merge($content['object'] ?? [], $content['template'] ?? []);
         unset($content['template']);
 
         /** @var array<string, mixed> $templateView */
-        $templateView = $view['template'] ?? [];
+        $templateView = array_merge($view['object'], $view['template'] ?? []);
         unset($view['template']);
 
         /** @var SettingsData $settingsData */
@@ -543,7 +547,7 @@ class ContentResolver implements ContentResolverInterface
         /** @var array<string, array<string, mixed>> $extensionData */
         $extensionData = $content;
 
-        return \array_merge(
+        $result = \array_merge(
             [
                 'resource' => $resource,
                 'content' => $templateData,
@@ -552,5 +556,34 @@ class ContentResolver implements ContentResolverInterface
             ],
             $settingsData,
         );
+
+        if ($properties !== null && $properties !== []) {
+            $this->recursivelyMapProperties($result, ($properties));
+        }
+
+        return $result;
+    }
+
+    private function recursivelyMapProperties(array &$data, array $properties, string $path = '', int $depth = 0): void
+    {
+        $iterable = $path === '' ? $data : ($this->propertyAccessor->getValue($data, $path) ?? []);
+        foreach ($iterable as $key => $value) {
+            if (
+                ($properties[$key] ?? null) &&
+                $depth === (substr_count($path, '][') + 1)
+            ) {
+                $parent = $this->propertyAccessor->getValue($data, $path);
+                unset($parent[$key]);
+                $this->propertyAccessor->setValue($data, $path, $parent);
+
+                $rootPath = '[' . implode('][', explode('.', $key)) . ']';
+                $this->propertyAccessor->setValue($data, $rootPath, $value);
+            }
+
+            // do not walk into 'view' as views cannot be mapped via properties
+            if (is_array($value) && $key !== 'view') {
+                $this->recursivelyMapProperties($data, $properties, $path . '[' . $key . ']', $depth + 1);
+            }
+        }
     }
 }
