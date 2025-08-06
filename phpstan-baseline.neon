@@ -23103,19 +23103,19 @@ parameters:
 		-
 			message: '#^Cannot access offset ''dispatcher'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
+			count: 2
 			path: src/Sulu/Bundle/DocumentManagerBundle/DependencyInjection/Compiler/RegisterListenersPass.php
 
 		-
 			message: '#^Cannot access offset ''event'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
+			count: 5
 			path: src/Sulu/Bundle/DocumentManagerBundle/DependencyInjection/Compiler/RegisterListenersPass.php
 
 		-
 			message: '#^Cannot access offset ''method'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
+			count: 4
 			path: src/Sulu/Bundle/DocumentManagerBundle/DependencyInjection/Compiler/RegisterListenersPass.php
 
 		-
@@ -74295,13 +74295,19 @@ parameters:
 		-
 			message: '#^Cannot access offset ''children'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 6
+			count: 16
 			path: src/Sulu/Component/Content/Query/ListToTreeConverter.php
 
 		-
 			message: '#^Cannot access offset ''path'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
+			path: src/Sulu/Component/Content/Query/ListToTreeConverter.php
+
+		-
+			message: '#^Cannot access offset int\<0, max\> on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 5
 			path: src/Sulu/Component/Content/Query/ListToTreeConverter.php
 
 		-
@@ -74395,7 +74401,19 @@ parameters:
 			path: src/Sulu/Component/Content/Query/ListToTreeConverter.php
 
 		-
+			message: '#^Parameter \#1 \$array of function array_splice expects array, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Sulu/Component/Content/Query/ListToTreeConverter.php
+
+		-
 			message: '#^Parameter \#1 \$array of function array_values expects array\<T\>, mixed given\.$#'
+			identifier: argument.type
+			count: 3
+			path: src/Sulu/Component/Content/Query/ListToTreeConverter.php
+
+		-
+			message: '#^Parameter \#1 \$value of function count expects array\|Countable, mixed given\.$#'
 			identifier: argument.type
 			count: 2
 			path: src/Sulu/Component/Content/Query/ListToTreeConverter.php
