@@ -574,17 +574,28 @@ class WebspaceCopyCommand extends Command
         $localeSource,
         $localeDestination
     ) {
-        if (!isset($structureArray[$property->getName()]['provider']) || empty($structureArray[$property->getName()]['href'])) {
+        if (!isset($structureArray[$property->getName()]['provider'])) {
             return;
         }
+
+        if($structureArray[$property->getName()]['provider'] !== 'page') {
+            return;
+        }
+
+        if(empty($structureArray[$property->getName()]['href'])) {
+            return;
+        }
+
         $targetDocumentDestination = $this->getTargetDocumentDestination(
             $structureArray[$property->getName()]['href'],
             $localeSource,
             $localeDestination
         );
+
         if (!$targetDocumentDestination) {
             return;
         }
+
         $structureArray[$property->getName()]['href'] = $targetDocumentDestination->getUuid();
     }
 
