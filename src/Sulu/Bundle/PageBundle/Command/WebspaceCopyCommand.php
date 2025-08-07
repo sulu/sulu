@@ -443,6 +443,14 @@ class WebspaceCopyCommand extends Command
                     $localeDestination
                 );
                 break;
+            case 'link':
+                $this->updateLinkSelection(
+                    $structureArray,
+                    $property,
+                    $localeSource,
+                    $localeDestination
+                );
+                break;
         }
     }
 
@@ -552,6 +560,32 @@ class WebspaceCopyCommand extends Command
 
             $structureArray[$property->getName()]['items'][$key]['id'] = $targetDocumentDestination->getUuid();
         }
+    }
+
+    /**
+     * Updates references in structure for content type `link`.
+     *
+     * @param string $localeSource
+     * @param string $localeDestination
+     */
+    protected function updateLinkSelection(
+        array &$structureArray,
+        PropertyMetadata $property,
+        $localeSource,
+        $localeDestination
+    ) {
+        if (!isset($structureArray[$property->getName()]['provider']) || empty($structureArray[$property->getName()]['href'])) {
+            return;
+        }
+        $targetDocumentDestination = $this->getTargetDocumentDestination(
+            $structureArray[$property->getName()]['href'],
+            $localeSource,
+            $localeDestination
+        );
+        if (!$targetDocumentDestination) {
+            return;
+        }
+        $structureArray[$property->getName()]['href'] = $targetDocumentDestination->getUuid();
     }
 
     /**
