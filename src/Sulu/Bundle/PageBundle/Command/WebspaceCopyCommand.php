@@ -581,11 +581,11 @@ class WebspaceCopyCommand extends Command
             return;
         }
 
-        if($structureArray[$property->getName()]['provider'] !== 'page') {
+        if ('page' !== $structureArray[$property->getName()]['provider']) {
             return;
         }
 
-        if(empty($structureArray[$property->getName()]['href'])) {
+        if (empty($structureArray[$property->getName()]['href'])) {
             return;
         }
 

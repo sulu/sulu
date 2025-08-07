@@ -459,7 +459,7 @@ class WebspaceCopyCommandTest extends SuluTestCase
                     'href' => $page5->getUuid(),
                     'title' => null,
                     'rel' => null,
-                    'locale' => 'de'
+                    'locale' => 'de',
                 ],
                 'external_link' => [
                     'provider' => 'external',
@@ -469,7 +469,7 @@ class WebspaceCopyCommandTest extends SuluTestCase
                     'href' => 'https://sulu.io',
                     'title' => null,
                     'rel' => null,
-                    'locale' => 'de'
+                    'locale' => 'de',
                 ],
             ]
         );
