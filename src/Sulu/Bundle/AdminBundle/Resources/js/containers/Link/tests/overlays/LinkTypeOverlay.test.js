@@ -27,6 +27,7 @@ test('Render overlay with minimal config', () => {
                     listAdapter: 'column_list',
                     overlayTitle: 'Choose page',
                     resourceKey: 'pages',
+                    targets: ['_blank', '_self', '_parent', '_top'],
                 }
             }
         />
@@ -65,6 +66,7 @@ test('Render overlay with query enabled', () => {
                     listAdapter: 'column_list',
                     overlayTitle: 'Choose page',
                     resourceKey: 'pages',
+                    targets: ['_blank', '_self', '_parent', '_top'],
                 }
             }
         />
@@ -90,6 +92,7 @@ test('Render overlay with anchor enabled', () => {
                     listAdapter: 'column_list',
                     overlayTitle: 'Choose page',
                     resourceKey: 'pages',
+                    targets: ['_blank', '_self', '_parent', '_top'],
                 }
             }
         />
@@ -115,6 +118,7 @@ test('Render overlay with target enabled', () => {
                     listAdapter: 'column_list',
                     overlayTitle: 'Choose page',
                     resourceKey: 'pages',
+                    targets: ['_blank', '_self', '_parent', '_top'],
                 }
             }
         />
@@ -140,6 +144,7 @@ test('Render overlay with title enabled', () => {
                     listAdapter: 'column_list',
                     overlayTitle: 'Choose page',
                     resourceKey: 'pages',
+                    targets: ['_blank', '_self', '_parent', '_top'],
                 }
             }
         />

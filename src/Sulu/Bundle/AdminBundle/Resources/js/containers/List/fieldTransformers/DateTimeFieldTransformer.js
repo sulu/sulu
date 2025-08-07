@@ -16,10 +16,19 @@ export default class DateTimeFieldTransformer implements FieldTransformer {
             return null;
         }
 
-        const momentObject = moment(value, moment.ISO_8601);
+        let momentObject;
+
+        if (typeof value === 'number' || (typeof value === 'string' && /^\d+$/.test(value))) {
+            const timestamp = Number(value);
+            // If timestamp is in seconds (less than 10 digits), convert to milliseconds
+            const timestampMs = timestamp < 10000000000 ? timestamp * 1000 : timestamp;
+            momentObject = moment(timestampMs);
+        } else {
+            momentObject = moment(value, moment.ISO_8601);
+        }
 
         if (!momentObject.isValid()) {
-            log.error('Invalid date given: "' + value + '". Format needs to be in "ISO 8601"');
+            log.error('Invalid date given: "' + value + '". Format needs to be in "ISO 8601" or a valid timestamp.');
 
             return null;
         }

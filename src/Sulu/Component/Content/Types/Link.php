@@ -23,6 +23,9 @@ use Sulu\Component\Content\SimpleContentType;
  */
 class Link extends SimpleContentType
 {
+    /**
+     * @deprecated
+     */
     public const LINK_TYPE_EXTERNAL = 'external';
 
     public function __construct(private LinkProviderPoolInterface $providerPool)
@@ -92,10 +95,6 @@ class Link extends SimpleContentType
 
         if (!$value || !isset($value['provider'])) {
             return null;
-        }
-
-        if (self::LINK_TYPE_EXTERNAL === $value['provider']) {
-            return $value['href'];
         }
 
         $provider = $this->providerPool->getProvider($value['provider']);

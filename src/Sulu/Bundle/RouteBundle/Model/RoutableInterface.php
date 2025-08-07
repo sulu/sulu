@@ -30,6 +30,8 @@ interface RoutableInterface
 
     /**
      * Set route.
+     *
+     * @return void
      */
     public function setRoute(RouteInterface $route);
 

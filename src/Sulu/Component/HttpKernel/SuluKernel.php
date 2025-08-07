@@ -26,8 +26,14 @@ abstract class SuluKernel extends Kernel
 {
     use MicroKernelTrait;
 
+    /**
+     * @internal only for internal use, do not use in your code, might be removed in the future
+     */
     public const CONTEXT_ADMIN = 'admin';
 
+    /**
+     * @internal only for internal use, do not use in your code, might be removed in the future
+     */
     public const CONTEXT_WEBSITE = 'website';
 
     /**
@@ -237,6 +243,9 @@ abstract class SuluKernel extends Kernel
      *
      * The context indicates to the runtime code which
      * front controller has been accessed (e.g. website or admin)
+     *
+     * @internal Only for internal use, do not use in your code, might be removed in the future.
+     *           Check for the current Symfony firewall name instead: https://symfony.com/doc/7.4/security.html#fetching-the-firewall-configuration-for-a-request
      */
     protected function getContext(): string
     {
@@ -247,6 +256,8 @@ abstract class SuluKernel extends Kernel
      * Set context.
      *
      * @return $this
+     *
+     * @internal only for internal use, do not use in your code, might be removed in the future
      */
     protected function setContext(string $context)
     {

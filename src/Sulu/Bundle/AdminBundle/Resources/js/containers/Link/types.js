@@ -28,6 +28,7 @@ export type LinkTypeOptions = {|
     listAdapter?: string,
     overlayTitle?: string,
     resourceKey: string,
+    targets?: string[],
 |};
 
 export type LinkValue = {|

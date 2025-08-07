@@ -89,5 +89,9 @@
     "sulu_activity.description.pages.preview_link_generated": "{userFullName} has generated a public preview link \"{resourceTitle}\"",
     "sulu_activity.description.pages.preview_link_revoked": "{userFullName} has revoked the public preview link \"{resourceTitle}\"",
     "sulu_reference.resource.pages": "Page",
-    "sulu_reference.resource.snippets": "Snippet"
+    "sulu_reference.resource.snippets": "Snippet",
+    "sulu_admin.link_target_blank":  "_blank",
+    "sulu_admin.link_target_self": "_self",
+    "sulu_admin.link_target_parent": "_parent",
+    "sulu_admin.link_target_top": "_top"
 }

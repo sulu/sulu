@@ -251,5 +251,9 @@
     "sulu_admin.translator_error": "Fehler beim Übersetzen",
     "sulu_admin.send_feedback": "Feedback senden",
     "sulu_admin.feedback": "Feedback",
-    "sulu_admin.send": "Senden"
+    "sulu_admin.send": "Senden",
+    "sulu_admin.link_target_blank":  "_blank",
+    "sulu_admin.link_target_self": "_self",
+    "sulu_admin.link_target_parent": "_parent",
+    "sulu_admin.link_target_top": "_top"
 }

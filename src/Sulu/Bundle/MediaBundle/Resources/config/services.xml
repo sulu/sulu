@@ -472,6 +472,7 @@
         <service id="sulu_media.media_link_provider" class="Sulu\Bundle\MediaBundle\Markup\Link\MediaLinkProvider">
             <argument type="service" id="sulu.repository.media" />
             <argument type="service" id="sulu_media.media_manager"/>
+            <argument type="service" id="translator"/>
             <tag name="sulu.link.provider" alias="media"/>
         </service>
 

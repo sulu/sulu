@@ -18,6 +18,12 @@ test('Render overlay with an undefined URL', () => {
             onTargetChange={jest.fn()}
             onTitleChange={jest.fn()}
             open={true}
+            options={
+                {
+                    displayProperties: [],
+                    resourceKey: '',
+                }
+            }
             rel={undefined}
             target={undefined}
             title={undefined}
@@ -38,6 +44,12 @@ test('Render overlay with mailto URL', () => {
             onTargetChange={jest.fn()}
             onTitleChange={jest.fn()}
             open={true}
+            options={
+                {
+                    displayProperties: [],
+                    resourceKey: '',
+                }
+            }
             rel={undefined}
             target={undefined}
             title={undefined}
@@ -58,6 +70,12 @@ test('Render overlay with a URL', () => {
             onTargetChange={jest.fn()}
             onTitleChange={jest.fn()}
             open={true}
+            options={
+                {
+                    displayProperties: [],
+                    resourceKey: '',
+                }
+            }
             rel={undefined}
             target={undefined}
             title={undefined}
@@ -81,6 +99,12 @@ test('Pass correct props to Dialog', () => {
             onTargetChange={jest.fn()}
             onTitleChange={jest.fn()}
             open={false}
+            options={
+                {
+                    displayProperties: [],
+                    resourceKey: '',
+                }
+            }
             rel={undefined}
             target={undefined}
             title={undefined}
@@ -105,6 +129,12 @@ test('Display given URL with query parameters in href input', () => {
             onTargetChange={targetChangeSpy}
             onTitleChange={jest.fn()}
             open={true}
+            options={
+                {
+                    displayProperties: [],
+                    resourceKey: '',
+                }
+            }
             target="_blank"
             title={undefined}
         />
@@ -127,6 +157,12 @@ test('Do not call onHrefChange handler if input did not loose focus', () => {
             onTargetChange={targetChangeSpy}
             onTitleChange={jest.fn()}
             open={true}
+            options={
+                {
+                    displayProperties: [],
+                    resourceKey: '',
+                }
+            }
             rel={undefined}
             target="_blank"
             title={undefined}
@@ -151,6 +187,12 @@ test('Fields should change immediately after protocol was changed', () => {
             onTargetChange={targetChangeSpy}
             onTitleChange={jest.fn()}
             open={true}
+            options={
+                {
+                    displayProperties: [],
+                    resourceKey: '',
+                }
+            }
             rel={undefined}
             target="_blank"
             title={undefined}
@@ -183,6 +225,12 @@ test('Call onHrefChange with URL that includes mail subject and mail body for ma
             onTargetChange={targetChangeSpy}
             onTitleChange={jest.fn()}
             open={true}
+            options={
+                {
+                    displayProperties: [],
+                    resourceKey: '',
+                }
+            }
             rel={undefined}
             target="_blank"
             title={undefined}
@@ -221,6 +269,12 @@ test('Should not include mail subject and body in URL after switching to another
             onTargetChange={jest.fn()}
             onTitleChange={jest.fn()}
             open={true}
+            options={
+                {
+                    displayProperties: [],
+                    resourceKey: '',
+                }
+            }
             target="_blank"
             title={undefined}
         />
@@ -247,6 +301,12 @@ test('Reset target to self when a mailto link is entered', () => {
             onTargetChange={targetChangeSpy}
             onTitleChange={jest.fn()}
             open={true}
+            options={
+                {
+                    displayProperties: [],
+                    resourceKey: '',
+                }
+            }
             rel={undefined}
             target="_blank"
             title={undefined}
@@ -273,6 +333,12 @@ test('Should not reset target to self when a non-mail URL is entered', () => {
             onTargetChange={targetChangeSpy}
             onTitleChange={jest.fn()}
             open={true}
+            options={
+                {
+                    displayProperties: [],
+                    resourceKey: '',
+                }
+            }
             rel={undefined}
             target="_blank"
             title={undefined}
@@ -299,6 +365,12 @@ test('Rel value should be transformed correctly', () => {
             onTargetChange={jest.fn()}
             onTitleChange={jest.fn()}
             open={true}
+            options={
+                {
+                    displayProperties: [],
+                    resourceKey: '',
+                }
+            }
             rel="noopener  noreferrer "
             target={undefined}
             title={undefined}

@@ -25,7 +25,9 @@ test('Test undefined', () => {
 
 test('Test invalid format', () => {
     expect(dateTimeFieldTransformer.transform('xxx', {})).toBe(null);
-    expect(log.error).toBeCalledWith('Invalid date given: "xxx". Format needs to be in "ISO 8601"');
+    expect(log.error).toBeCalledWith(
+        'Invalid date given: "xxx". Format needs to be in "ISO 8601" or a valid timestamp.'
+    );
 });
 
 test('Test valid example', () => {
@@ -77,4 +79,106 @@ test('Test relative format lastWeek example', () => {
     // $FlowFixMe
     expect(dateTime.props.children).toContain(momentObject.format('LLL'));
     expect(translate).toHaveBeenCalledWith('sulu_admin.lastDay');
+});
+
+test('Test timestamp in seconds', () => {
+    // March 10, 2018 1:09:04 PM UTC (timestamp: 1520690944)
+    const timestamp = 1520690944;
+    const result = dateTimeFieldTransformer.transform(timestamp, {});
+
+    // Check that it's a valid React element
+    expect(React.isValidElement(result)).toBe(true);
+    // $FlowFixMe
+    expect(result.type).toBe('span');
+    // $FlowFixMe
+    expect(result.props.className).toBe('default');
+    // $FlowFixMe
+    expect(result.props.children).toContain('March 10, 2018');
+});
+
+test('Test timestamp in milliseconds', () => {
+    // March 10, 2018 1:09:04 PM UTC (timestamp: 1520690944000)
+    const timestamp = 1520690944000;
+    const result = dateTimeFieldTransformer.transform(timestamp, {});
+
+    expect(React.isValidElement(result)).toBe(true);
+    // $FlowFixMe
+    expect(result.type).toBe('span');
+    // $FlowFixMe
+    expect(result.props.className).toBe('default');
+    // $FlowFixMe
+    expect(result.props.children).toContain('March 10, 2018');
+});
+
+test('Test timestamp as string (seconds)', () => {
+    // March 10, 2018 1:09:04 PM UTC (timestamp: "1520690944")
+    const timestamp = '1520690944';
+    const result = dateTimeFieldTransformer.transform(timestamp, {});
+
+    expect(React.isValidElement(result)).toBe(true);
+    // $FlowFixMe
+    expect(result.type).toBe('span');
+    // $FlowFixMe
+    expect(result.props.className).toBe('default');
+    // $FlowFixMe
+    expect(result.props.children).toContain('March 10, 2018');
+});
+
+test('Test timestamp as string (milliseconds)', () => {
+    // March 10, 2018 1:09:04 PM UTC (timestamp: "1520690944000")
+    const timestamp = '1520690944000';
+    const result = dateTimeFieldTransformer.transform(timestamp, {});
+
+    expect(React.isValidElement(result)).toBe(true);
+    // $FlowFixMe
+    expect(result.type).toBe('span');
+    // $FlowFixMe
+    expect(result.props.className).toBe('default');
+    // $FlowFixMe
+    expect(result.props.children).toContain('March 10, 2018');
+});
+
+test('Test timestamp with light skin', () => {
+    const timestamp = 1520690944;
+    const result = dateTimeFieldTransformer.transform(timestamp, {'skin': 'light'});
+
+    expect(React.isValidElement(result)).toBe(true);
+    // $FlowFixMe
+    expect(result.type).toBe('span');
+    // $FlowFixMe
+    expect(result.props.className).toBe('light');
+    // $FlowFixMe
+    expect(result.props.children).toContain('March 10, 2018');
+});
+
+test('Test timestamp with relative format - current timestamp', () => {
+    const currentTimestamp = Math.floor(Date.now() / 1000);
+    const dateTime = dateTimeFieldTransformer.transform(currentTimestamp, {format: 'relative'});
+
+    // $FlowFixMe
+    expect(dateTime.props.children).toContain('sulu_admin.sameDay');
+    expect(translate).toHaveBeenCalledWith('sulu_admin.sameDay');
+});
+
+test('Test invalid timestamp (non-numeric string)', () => {
+    expect(dateTimeFieldTransformer.transform('not-a-timestamp', {})).toBe(null);
+    expect(log.error).toBeCalledWith(
+        'Invalid date given: "not-a-timestamp". Format needs to be in "ISO 8601" or a valid timestamp.'
+    );
+});
+
+test('Test negative timestamp', () => {
+    // December 31, 1969 23:59:59 UTC (timestamp: -1)
+    const timestamp = -1;
+    const result = dateTimeFieldTransformer.transform(timestamp, {});
+
+    expect(React.isValidElement(result)).toBe(true);
+    // $FlowFixMe
+    expect(result.type).toBe('span');
+    // $FlowFixMe
+    expect(result.props.className).toBe('default');
+    // Check for December 31, 1969 or January 1, 1970 depending on timezone
+    // $FlowFixMe
+    const dateString = result.props.children;
+    expect(dateString).toMatch(/December 31, 1969|January 1, 1970/);
 });

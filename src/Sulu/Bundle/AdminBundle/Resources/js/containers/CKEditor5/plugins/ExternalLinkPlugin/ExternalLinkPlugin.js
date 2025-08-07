@@ -7,6 +7,7 @@ import ButtonView from '@ckeditor/ckeditor5-ui/src/button/buttonview';
 import ContextualBalloon from '@ckeditor/ckeditor5-ui/src/panel/balloon/contextualballoon';
 import ClickObserver from '@ckeditor/ckeditor5-engine/src/view/observer/clickobserver';
 import {render, unmountComponentAtNode} from 'react-dom';
+import linkTypeRegistry from '../../../Link/registries/linkTypeRegistry';
 import {translate} from '../../../../utils';
 import {addLinkConversion, findModelItemInSelection, findViewLinkItemInSelection} from '../../utils';
 import LinkBalloonView from '../../LinkBalloonView';
@@ -79,7 +80,7 @@ export default class ExternalLinkPlugin extends Plugin {
                             onTargetChange={this.handleTargetChange}
                             onTitleChange={this.handleTitleChange}
                             open={this.open}
-                            options={undefined}
+                            options={linkTypeRegistry.getOptions('external')}
                             rel={this.rel}
                             target={this.target}
                             title={this.title}

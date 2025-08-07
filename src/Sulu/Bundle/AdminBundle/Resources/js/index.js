@@ -18,7 +18,6 @@ import userStore, {
 } from './stores/userStore';
 import {Config, resourceRouteRegistry} from './services';
 import initializer from './services/initializer';
-import {translate} from './utils';
 import ResourceTabs from './views/ResourceTabs';
 import List, {
     listItemActionRegistry,
@@ -124,7 +123,7 @@ import {smartContentConfigStore} from './containers/SmartContent';
 import PreviewForm from './views/PreviewForm';
 import FormOverlayList from './views/FormOverlayList';
 import {initializeJexl} from './utils/jexl';
-import {ExternalLinkTypeOverlay, LinkTypeOverlay} from './containers/Link';
+import {ExternalLinkTypeOverlay, linkOverlayRegistry, LinkTypeOverlay} from './containers/Link';
 import linkTypeRegistry from './containers/Link/registries/linkTypeRegistry';
 import AiApplication from './containers/AiApplication';
 
@@ -173,6 +172,7 @@ initializer.addUpdateConfigHook('sulu_admin', (config: Object, initialized: bool
         registerListItemActions();
         registerFieldTypes(config.fieldTypeOptions);
         registerTextEditors();
+        registerLinkOverlays();
         registerInternalLinkTypes(config.internalLinkTypes);
         registerFormToolbarActions();
         registerListToolbarActions();
@@ -303,12 +303,19 @@ function registerTextEditors() {
     textEditorRegistry.add('ckeditor5', CKEditor5);
 }
 
+function registerLinkOverlays() {
+    linkOverlayRegistry.setDefaultOverlay(LinkTypeOverlay);
+    linkOverlayRegistry.add('external', ExternalLinkTypeOverlay);
+}
+
 function registerInternalLinkTypes(internalLinkTypes) {
     for (const internalLinkTypeKey in internalLinkTypes) {
         const internalLinkType = internalLinkTypes[internalLinkTypeKey];
+        const overlay = linkOverlayRegistry.getOverlay(internalLinkTypeKey);
+
         linkTypeRegistry.add(
             internalLinkTypeKey,
-            LinkTypeOverlay,
+            overlay,
             internalLinkType.title,
             {
                 displayProperties: internalLinkType.displayProperties,
@@ -317,17 +324,10 @@ function registerInternalLinkTypes(internalLinkTypes) {
                 listAdapter: internalLinkType.listAdapter,
                 overlayTitle: internalLinkType.overlayTitle,
                 resourceKey: internalLinkType.resourceKey,
+                targets: internalLinkType.targets,
             }
         );
     }
-
-    // Add external LinkType
-    linkTypeRegistry.add(
-        'external',
-        ExternalLinkTypeOverlay,
-        translate('sulu_admin.external_link'),
-        undefined
-    );
 }
 
 function registerFormToolbarActions() {

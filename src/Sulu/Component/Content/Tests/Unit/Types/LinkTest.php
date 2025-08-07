@@ -313,6 +313,19 @@ class LinkTest extends TestCase
             ->shouldBeCalled()
             ->willReturn($this->structure->reveal());
 
+        $this->providerPool->getProvider(Argument::type('string'))
+            ->shouldBeCalled()
+            ->willReturn($this->provider->reveal());
+
+        $linkItem = $this->prophesize(LinkItem::class);
+        $linkItem->getUrl()
+            ->shouldBeCalled()
+            ->willReturn('/test/test2');
+
+        $this->provider->preload(['/test/test2'], 'de', true)
+            ->shouldBeCalled()
+            ->willReturn([$linkItem]);
+
         $result = $this->link->getContentData($this->property->reveal());
 
         $this->assertSame('/test/test2', $result);

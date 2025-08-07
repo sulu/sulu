@@ -23497,12 +23497,6 @@ parameters:
 			path: src/Sulu/Bundle/DocumentManagerBundle/Session/Session.php
 
 		-
-			message: '#^Parameter \#1 \$source of method DOMDocument\:\:loadXML\(\) expects string, string\|false given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/DocumentManagerBundle/Session/Session.php
-
-		-
 			message: '#^Parameter \#1 \$stream of function rewind expects resource, resource\|false given\.$#'
 			identifier: argument.type
 			count: 1
@@ -25489,12 +25483,6 @@ parameters:
 			path: src/Sulu/Bundle/MarkupBundle/Markup/Link/LinkConfiguration.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\MarkupBundle\\Markup\\Link\\LinkConfigurationBuilder\:\:create\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/MarkupBundle/Markup/Link/LinkConfigurationBuilder.php
-
-		-
 			message: '#^Binary operation "\." between mixed and ''\-'' results in an error\.$#'
 			identifier: binaryOp.invalid
 			count: 4
@@ -25727,24 +25715,6 @@ parameters:
 			identifier: missingType.parameter
 			count: 1
 			path: src/Sulu/Bundle/MarkupBundle/Tests/Unit/Markup/HtmlTagExtractorTest.php
-
-		-
-			message: '#^Call to an undefined method Sulu\\Bundle\\MarkupBundle\\Markup\\Link\\LinkProviderInterface\:\:reveal\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/Sulu/Bundle/MarkupBundle/Tests/Unit/Markup/Link/LinkProviderPoolTest.php
-
-		-
-			message: '#^Cannot call method willReturn\(\) on Sulu\\Bundle\\MarkupBundle\\Markup\\Link\\LinkConfiguration\|null\.$#'
-			identifier: method.nonObject
-			count: 3
-			path: src/Sulu/Bundle/MarkupBundle/Tests/Unit/Markup/Link/LinkProviderPoolTest.php
-
-		-
-			message: '#^Property Sulu\\Bundle\\MarkupBundle\\Tests\\Unit\\Markup\\Link\\LinkProviderPoolTest\:\:\$providers \(array\<Sulu\\Bundle\\MarkupBundle\\Markup\\Link\\LinkProviderInterface\>\) does not accept array\<string, Prophecy\\Prophecy\\ObjectProphecy\<Sulu\\Bundle\\MarkupBundle\\Markup\\Link\\LinkProviderInterface\>\>\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: src/Sulu/Bundle/MarkupBundle/Tests/Unit/Markup/Link/LinkProviderPoolTest.php
 
 		-
 			message: '#^Cannot access offset ''href'' on mixed\.$#'
@@ -29661,12 +29631,6 @@ parameters:
 		-
 			message: '#^Cannot access property \$nodeValue on mixed\.$#'
 			identifier: property.nonObject
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Media/FormatLoader/BaseXmlFormatLoader.php
-
-		-
-			message: '#^Cannot call method getNamedItem\(\) on \(DOMNamedNodeMap&iterable\<DOMAttr\>\)\|null\.$#'
-			identifier: method.nonObject
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Media/FormatLoader/BaseXmlFormatLoader.php
 
@@ -39097,12 +39061,6 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Form/Type/UnstructuredType.php
 
 		-
-			message: '#^Cannot call method getLinkConfiguration\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Markup/Link/PageLinkProvider.php
-
-		-
 			message: '#^Cannot call method getSecurity\(\) on Sulu\\Component\\Webspace\\Webspace\|null\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -39111,54 +39069,6 @@ parameters:
 		-
 			message: '#^Cannot call method hasWebsiteSecurity\(\) on Sulu\\Component\\Webspace\\Webspace\|null\.$#'
 			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Markup/Link/PageLinkProvider.php
-
-		-
-			message: '#^Cannot call method setDisplayProperties\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Markup/Link/PageLinkProvider.php
-
-		-
-			message: '#^Cannot call method setEmptyText\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Markup/Link/PageLinkProvider.php
-
-		-
-			message: '#^Cannot call method setIcon\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Markup/Link/PageLinkProvider.php
-
-		-
-			message: '#^Cannot call method setListAdapter\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Markup/Link/PageLinkProvider.php
-
-		-
-			message: '#^Cannot call method setOverlayTitle\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Markup/Link/PageLinkProvider.php
-
-		-
-			message: '#^Cannot call method setResourceKey\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Markup/Link/PageLinkProvider.php
-
-		-
-			message: '#^Cannot call method setTitle\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Markup/Link/PageLinkProvider.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Markup\\Link\\PageLinkProvider\:\:getConfiguration\(\) should return Sulu\\Bundle\\MarkupBundle\\Markup\\Link\\LinkConfiguration\|null but returns mixed\.$#'
-			identifier: return.type
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Markup/Link/PageLinkProvider.php
 
@@ -50161,12 +50071,6 @@ parameters:
 			path: src/Sulu/Bundle/RouteBundle/Generator/SymfonyExpressionTokenProvider.php
 
 		-
-			message: '#^Parameter \#1 \$locale of method Symfony\\Contracts\\Translation\\LocaleAwareInterface\:\:setLocale\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/RouteBundle/Generator/SymfonyExpressionTokenProvider.php
-
-		-
 			message: '#^Parameter \#1 \$separator of function implode expects array\|string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -50228,12 +50132,6 @@ parameters:
 
 		-
 			message: '#^Method Sulu\\Bundle\\RouteBundle\\Model\\RoutableInterface\:\:getId\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/RouteBundle/Model/RoutableInterface.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\RouteBundle\\Model\\RoutableInterface\:\:setRoute\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
 			path: src/Sulu/Bundle/RouteBundle/Model/RoutableInterface.php
@@ -50653,18 +50551,6 @@ parameters:
 			path: src/Sulu/Bundle/RouteBundle/Tests/Unit/Generator/ChainRouteGeneratorTest.php
 
 		-
-			message: '#^Access to an undefined property Prophecy\\Prophecy\\ObjectProphecy\<Sulu\\Bundle\\RouteBundle\\Model\\RoutableInterface\>\:\:\$getLocale\.$#'
-			identifier: property.notFound
-			count: 3
-			path: src/Sulu/Bundle/RouteBundle/Tests/Unit/Generator/SymfonyExpressionTokenProviderTest.php
-
-		-
-			message: '#^Access to an undefined property Prophecy\\Prophecy\\ObjectProphecy\<Sulu\\Bundle\\RouteBundle\\Model\\RoutableInterface\>\:\:\$name\.$#'
-			identifier: property.notFound
-			count: 1
-			path: src/Sulu/Bundle/RouteBundle/Tests/Unit/Generator/SymfonyExpressionTokenProviderTest.php
-
-		-
 			message: '#^Cannot access offset 0 on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 2
@@ -50675,18 +50561,6 @@ parameters:
 			identifier: argument.type
 			count: 2
 			path: src/Sulu/Bundle/RouteBundle/Tests/Unit/Generator/SymfonyExpressionTokenProviderTest.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\RouteBundle\\Tests\\Unit\\Manager\\TestRoutable\:\:getId\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/RouteBundle/Tests/Unit/Manager/RouteManagerTest.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\RouteBundle\\Tests\\Unit\\Manager\\TestRoutable\:\:getRoute\(\) should return Sulu\\Bundle\\RouteBundle\\Model\\RouteInterface but returns Sulu\\Bundle\\RouteBundle\\Model\\RouteInterface\|null\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Sulu/Bundle/RouteBundle/Tests/Unit/Manager/RouteManagerTest.php
 
 		-
 			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
@@ -61987,20 +61861,8 @@ parameters:
 			path: src/Sulu/Bundle/WebsiteBundle/EventListener/SegmentSubscriber.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\WebsiteBundle\\EventListener\\TranslatorListener\:\:__construct\(\) has parameter \$translator with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/EventListener/TranslatorListener.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\WebsiteBundle\\EventListener\\TranslatorListener\:\:onKernelRequest\(\) has no return type specified\.$#'
 			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/EventListener/TranslatorListener.php
-
-		-
-			message: '#^Property Sulu\\Bundle\\WebsiteBundle\\EventListener\\TranslatorListener\:\:\$translator \(Symfony\\Contracts\\Translation\\LocaleAwareInterface\) does not accept mixed\.$#'
-			identifier: assign.propertyType
 			count: 1
 			path: src/Sulu/Bundle/WebsiteBundle/EventListener/TranslatorListener.php
 
@@ -78003,7 +77865,7 @@ parameters:
 		-
 			message: '#^Cannot access offset ''href'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 3
+			count: 2
 			path: src/Sulu/Component/Content/Types/Link.php
 
 		-
@@ -78044,12 +77906,6 @@ parameters:
 
 		-
 			message: '#^Method Sulu\\Component\\Content\\Types\\Link\:\:decodeValue\(\) should return array\<mixed\> but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Sulu/Component/Content/Types/Link.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Types\\Link\:\:getContentData\(\) should return string\|null but returns mixed\.$#'
 			identifier: return.type
 			count: 1
 			path: src/Sulu/Component/Content/Types/Link.php
@@ -83703,7 +83559,7 @@ parameters:
 		-
 			message: '#^Method Sulu\\Component\\Import\\Format\\Xliff12\:\:utf8ToCharset\(\) should return string but returns string\|false\.$#'
 			identifier: return.type
-			count: 2
+			count: 1
 			path: src/Sulu/Component/Import/Format/Xliff12.php
 
 		-
@@ -92653,12 +92509,6 @@ parameters:
 			path: src/Sulu/Component/Webspace/Loader/BaseXmlFileLoader.php
 
 		-
-			message: '#^Cannot call method getNamedItem\(\) on \(DOMNamedNodeMap&iterable\<DOMAttr\>\)\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Component/Webspace/Loader/BaseXmlFileLoader.php
-
-		-
 			message: '#^Method Sulu\\Component\\Webspace\\Loader\\BaseXmlFileLoader\:\:supports\(\) has parameter \$type with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -92776,12 +92626,6 @@ parameters:
 			message: '#^Cannot access property \$nodeValue on DOMNode\|null\.$#'
 			identifier: property.nonObject
 			count: 8
-			path: src/Sulu/Component/Webspace/Loader/XmlFileLoader10.php
-
-		-
-			message: '#^Cannot call method getNamedItem\(\) on \(DOMNamedNodeMap&iterable\<DOMAttr\>\)\|null\.$#'
-			identifier: method.nonObject
-			count: 5
 			path: src/Sulu/Component/Webspace/Loader/XmlFileLoader10.php
 
 		-
@@ -93229,7 +93073,7 @@ parameters:
 			path: src/Sulu/Component/Webspace/Manager/WebspaceCollection.php
 
 		-
-			message: '#^Method Sulu\\Component\\Webspace\\Manager\\WebspaceCollection\:\:getPortalInformations\(\) should return array\<Sulu\\Component\\Webspace\\PortalInformation\> but returns \(array\|null\)\.$#'
+			message: '#^Method Sulu\\Component\\Webspace\\Manager\\WebspaceCollection\:\:getPortalInformations\(\) should return array\<Sulu\\Component\\Webspace\\PortalInformation\> but returns array\.$#'
 			identifier: return.type
 			count: 1
 			path: src/Sulu/Component/Webspace/Manager/WebspaceCollection.php
