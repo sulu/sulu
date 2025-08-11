@@ -3,18 +3,37 @@
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <services>
-        <!-- main Content Resolver -->
-        <service id="sulu_content.content_resolver"
-                 class="Sulu\Content\Application\ContentResolver\ContentResolver">
+        <!-- main Content Resolver services -->
+        <service id="sulu_content.resolvable_resource_loader" class="Sulu\Content\Application\ContentResolver\ResolvableResourceLoader\ResolvableResourceLoader">
+            <argument type="service" id="sulu_content.resource_loader_provider" />
+            <argument type="service" id="sulu_content.smart_resolver_provider" />
+        </service>
+
+        <service id="sulu_content.resolvable_resource_queue_processor" class="Sulu\Content\Application\ContentResolver\ResolvableResourceQueue\ResolvableResourceQueueProcessor" />
+        <service id="sulu_content.resolvable_resource_replacer" class="Sulu\Content\Application\ContentResolver\ResolvableResourceReplacer\ResolvableResourceReplacer"/>
+
+        <service id="sulu_content.content_view_resolver" class="Sulu\Content\Application\ContentResolver\ContentViewResolver\ContentViewResolver">
+            <argument type="service" id="sulu_content.resolvable_resource_queue_processor" />
             <argument
                 type="tagged_iterator"
                 tag="sulu_content.content_resolver"
                 index-by="type"
             />
-            <argument type="service" id="sulu_content.resource_loader_provider"/>
-            <argument type="service" id="sulu_content.content_aggregator"/>
-            <argument type="service" id="sulu_content.smart_resolver_provider"/>
-            <argument type="service" id="property_accessor"/>
+        </service>
+
+        <service id="sulu_content.content_view_data_normalizer" class="Sulu\Content\Application\ContentResolver\DataNormalizer\ContentViewDataNormalizer">
+            <argument type="service" id="property_accessor" />
+        </service>
+
+        <service id="sulu_content.content_resolver" class="Sulu\Content\Application\ContentResolver\ContentResolver" public="true">
+            <argument type="service" id="sulu_content.content_view_resolver" />
+            <argument type="service" id="sulu_content.resolvable_resource_loader" />
+            <argument type="service" id="sulu_content.resolvable_resource_queue_processor" />
+            <argument type="service" id="sulu_content.resolvable_resource_replacer" />
+            <argument type="service" id="sulu_content.content_view_data_normalizer" />
+            <argument type="service" id="sulu_content.content_aggregator" />
+            <!--  TODO          <argument>%sulu_content.resource_resolver.max_depth%</argument>-->
+            <argument>5</argument>
         </service>
         <service id="Sulu\Content\Application\ContentResolver\ContentResolverInterface" alias="sulu_content.content_resolver"/>
 

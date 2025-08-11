@@ -56,6 +56,7 @@ readonly class SettingsResolver implements ResolverInterface
             'availableLocales' => $dimensionContent->getAvailableLocales() ?? [],
         ];
 
+        // TODO handle properties filtering
         if ($dimensionContent instanceof RoutableInterface && $dimensionContent instanceof TemplateInterface) {
             $result = \array_merge($result, $this->getLocalizationsData($dimensionContent));
         }

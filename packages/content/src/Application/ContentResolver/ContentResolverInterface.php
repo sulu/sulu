@@ -22,7 +22,7 @@ interface ContentResolverInterface
      * @template T of ContentRichEntityInterface
      *
      * @param DimensionContentInterface<T> $dimensionContent
-     * @param array<string, mixed>|null $properties
+     * @param array<string, string>|null $properties
      *
      * @return array{
      *     resource: object,

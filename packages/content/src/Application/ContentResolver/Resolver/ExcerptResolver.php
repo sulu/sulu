@@ -44,7 +44,7 @@ readonly class ExcerptResolver implements ResolverInterface
 
         $formMetadataItems = $formMetadata->getItems();
         $data = $this->getExcerptData($dimensionContent);
-        if ($properties !== null) {
+        if (null !== $properties) {
             $filteredFormMetadataItems = [];
             $filteredTemplateData = [];
             $properties = $this->filterProperties($properties);
@@ -65,12 +65,17 @@ readonly class ExcerptResolver implements ResolverInterface
         return ContentView::create($this->normalizeResolvedItems($resolvedItems, $properties), []);
     }
 
+    /**
+     * @param array<string, string> $properties
+     *
+     * @return array<string, string>
+     */
     private function filterProperties(array $properties): array
     {
         $filteredProperties = [];
         foreach ($properties as $key => $value) {
-            if (\str_starts_with((string)$value, self::getPrefix())) {
-                $normalizedValue = 'excerpt' . \ucfirst(\substr((string)$value, \strlen(self::getPrefix())));
+            if (\str_starts_with((string) $value, self::getPrefix())) {
+                $normalizedValue = 'excerpt' . \ucfirst(\substr((string) $value, \strlen(self::getPrefix())));
                 $filteredProperties[$key] = $normalizedValue;
             }
         }
@@ -80,6 +85,7 @@ readonly class ExcerptResolver implements ResolverInterface
 
     /**
      * @param mixed[] $resolvedItems
+     * @param array<string, string> $properties
      *
      * @return mixed[]
      */
@@ -87,7 +93,7 @@ readonly class ExcerptResolver implements ResolverInterface
     {
         $result = [];
         foreach ($resolvedItems as $key => $item) {
-            if ($properties !== null && \array_key_exists($key, $properties)) {
+            if (null !== $properties && \array_key_exists($key, $properties)) {
                 $normalizedKey = $key;
             } else {
                 $normalizedKey = \str_starts_with((string) $key, 'excerpt') ? \lcfirst(\substr((string) $key, \strlen('excerpt'))) : $key;

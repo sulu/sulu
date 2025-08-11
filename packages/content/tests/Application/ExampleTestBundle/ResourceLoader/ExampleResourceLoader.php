@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of Sulu.
+ *
+ * (c) Sulu GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Sulu\Content\Tests\Application\ExampleTestBundle\ResourceLoader;
 
 use Sulu\Content\Application\ResourceLoader\Loader\ResourceLoaderInterface;
@@ -15,7 +24,7 @@ class ExampleResourceLoader implements ResourceLoaderInterface
     }
 
     /**
-     * @param string[] $ids
+     * @param int[] $ids
      */
     public function load(array $ids, ?string $locale, array $params = []): array
     {

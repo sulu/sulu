@@ -57,15 +57,23 @@ class ContentView
 
     /**
      * @param mixed[] $view
+     * @param array<string, mixed>|null $metadata
      */
-    public static function createResolvable(string|int $id, string $resourceLoaderKey, array $view, int $priority = 0, ?\Closure $closure = null): self
-    {
+    public static function createResolvable(
+        string|int $id,
+        string $resourceLoaderKey,
+        array $view,
+        int $priority = 0,
+        ?\Closure $closure = null,
+        ?array $metadata = null,
+    ): self {
         return new self(
             new ResolvableResource(
                 id: $id,
                 resourceLoaderKey: $resourceLoaderKey,
                 priority: $priority,
                 resourceCallback: $closure,
+                metadata: $metadata,
             ),
             $view,
         );
@@ -74,12 +82,14 @@ class ContentView
     /**
      * @param array<string|int> $ids
      * @param mixed[] $view
+     * @param array<string, mixed>|null $metadata
      */
     public static function createResolvables(
         array $ids,
         string $resourceLoaderKey,
         array $view,
         int $priority = 0,
+        ?array $metadata = null,
     ): self {
         $resolvableResources = [];
 
@@ -88,6 +98,7 @@ class ContentView
                 id: $id,
                 resourceLoaderKey: $resourceLoaderKey,
                 priority: $priority,
+                metadata: $metadata
             );
         }
 

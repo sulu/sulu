@@ -82,7 +82,7 @@ class TemplateResolverTest extends TestCase
         $defaultFormMetadata = new FormMetadata();
         $fieldMetadata = new FieldMetadata('title');
         $fieldMetadata->setType('text_line');
-        $defaultFormMetadata->setItems([$fieldMetadata]);
+        $defaultFormMetadata->setItems(['title' => $fieldMetadata]);
         $formMetadata->addForm('default', $defaultFormMetadata);
         $formMetadataProvider = $this->prophesize(MetadataProviderInterface::class);
         $formMetadataProvider->getMetadata('example', 'en', [])

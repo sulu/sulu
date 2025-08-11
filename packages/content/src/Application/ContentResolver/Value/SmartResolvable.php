@@ -22,12 +22,14 @@ class SmartResolvable implements ResolvableInterface
 
     /**
      * @param mixed[] $data
+     * @param array<string, mixed>|null $metadata Optional metadata for additional context
      */
     public function __construct(
         private array $data,
         private string $resourceLoaderKey,
         private int $priority,
         ?\Closure $resourceCallback = null,
+        private ?array $metadata = null,
     ) {
         $this->callback = $resourceCallback ?? (static fn (mixed $resource) => $resource);
     }
@@ -61,5 +63,19 @@ class SmartResolvable implements ResolvableInterface
     public function getData(): array
     {
         return $this->data;
+    }
+
+    /**
+     * @return array<string, mixed>|null
+     */
+    public function getMetadata(): ?array
+    {
+        return $this->metadata;
+    }
+
+    public function getMetadataIdentifier(): string
+    {
+        // TODO do we need a rekursive key sort?
+        return $this->metadata ? \md5((string) \json_encode($this->metadata)) : '';
     }
 }

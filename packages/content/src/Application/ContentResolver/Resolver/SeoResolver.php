@@ -40,11 +40,11 @@ readonly class SeoResolver implements ResolverInterface
         /** @var FormMetadata $formMetadata */
         $formMetadata = $this->formMetadataProvider->getMetadata($this->getFormKey(), $locale, []);
 
-        $formMetadataItems = \array_filter($formMetadata->getItems(), function ($item) {
+        $formMetadataItems = \array_filter($formMetadata->getItems(), function($item) {
             return !\in_array($item->getType(), $this->excludedPropertyTypes(), true);
         });
         $data = $this->getSeoData($dimensionContent);
-        if ($properties !== null) {
+        if (null !== $properties) {
             $filteredFormMetadataItems = [];
             $filteredTemplateData = [];
             $properties = $this->filterProperties($properties);
@@ -65,12 +65,17 @@ readonly class SeoResolver implements ResolverInterface
         return ContentView::create($this->normalizeResolvedItems($resolvedItems, $properties), []);
     }
 
+    /**
+     * @param array<string, string> $properties
+     *
+     * @return array<string, string>
+     */
     private function filterProperties(array $properties): array
     {
         $filteredProperties = [];
         foreach ($properties as $key => $value) {
-            if (\str_starts_with((string)$value, self::getPrefix())) {
-                $normalizedValue = 'seo' . \ucfirst(\substr((string)$value, \strlen(self::getPrefix())));
+            if (\str_starts_with((string) $value, self::getPrefix())) {
+                $normalizedValue = 'seo' . \ucfirst(\substr((string) $value, \strlen(self::getPrefix())));
                 $filteredProperties[$key] = $normalizedValue;
             }
         }
@@ -80,6 +85,7 @@ readonly class SeoResolver implements ResolverInterface
 
     /**
      * @param mixed[] $resolvedItems
+     * @param array<string, string> $properties
      *
      * @return mixed[]
      */
@@ -87,10 +93,10 @@ readonly class SeoResolver implements ResolverInterface
     {
         $result = [];
         foreach ($resolvedItems as $key => $item) {
-            if ($properties !== null && \array_key_exists($key, $properties)) {
+            if (null !== $properties && \array_key_exists($key, $properties)) {
                 $normalizedKey = $key;
             } else {
-                $normalizedKey = \str_starts_with((string)$key, 'seo') ? \lcfirst(\substr((string)$key, \strlen('seo'))) : $key;
+                $normalizedKey = \str_starts_with((string) $key, 'seo') ? \lcfirst(\substr((string) $key, \strlen('seo'))) : $key;
             }
 
             $result[$normalizedKey] = $item;

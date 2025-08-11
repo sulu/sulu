@@ -41,8 +41,8 @@ class MetadataResolverTest extends TestCase
         $fieldMetadata2 = new FieldMetadata('field2');
         $fieldMetadata2->setType('text_line');
         $items = [
-            $sectionMetadata,
-            $fieldMetadata2,
+            'section1' => $sectionMetadata,
+            'field2' => $fieldMetadata2,
         ];
         $data = [
             'field1' => 'value1',

@@ -144,9 +144,9 @@ class ContentResolverTest extends SuluTestCase
                 'en' => [
                     'live' => [
                         'template' => 'default-example-selection',
-                        'title' => 'Lorem Ipsum',
-                        'url' => '/lorem-ipsum',
-                        'description' => 'Lorem Ipsum dolor sit amet',
+                        'title' => 'Nested example',
+                        'url' => '/nested-example',
+                        'description' => 'Nested example description',
 
                         'excerptTitle' => 'excerpt-example-title-0',
                         'excerptDescription' => 'excerpt-example-description-0',
@@ -189,49 +189,51 @@ class ContentResolverTest extends SuluTestCase
         $dimensionContent = $this->contentAggregator->aggregate($example1, ['locale' => 'en', 'stage' => 'live']);
         $result = $this->contentResolver->resolve(
             $dimensionContent,
+            [
+                'title' => 'title',
+                'url' => 'url',
+                'examplesWithProperties' => 'examples_with_properties',
+                'examplesWithoutProperties' => 'examples',
+            ]
         );
 
-        $content = $result['content'];
+        self::assertEmpty($result['content']); // content is empty because all fields are extracted to root // TODO is this correct?
 
-        $excerpt = $result['extension']['excerpt'] ?? null;
-        $seo = $result['extension']['seo'] ?? null;
+        // The result contains dynamically mapped properties at the root level
+        // PHPStan doesn't know about these dynamic properties, so we suppress the warnings
+        // @phpstan-ignore-next-line offsetAccess.notFound
+        self::assertSame('Lorem Ipsum', $result['title']);
+        // @phpstan-ignore-next-line offsetAccess.notFound
+        self::assertSame('/lorem-ipsum', $result['url']);
 
-        self::assertIsArray($excerpt);
-        self::assertIsArray($seo);
+        /** @var array<int, mixed> $examplesWithProperties */
+        // @phpstan-ignore-next-line offsetAccess.notFound
+        $examplesWithProperties = $result['examplesWithProperties'];
+        self::assertCount(1, $examplesWithProperties);
 
-        self::assertSame('Lorem Ipsum', $content['title']);
-        self::assertSame('/lorem-ipsum', $content['url']);
-        self::assertSame('<p>Lorem Ipsum dolor sit amet</p>', $content['text_editor']);
-        self::assertSame('Lorem Ipsum dolor sit amet', $content['text_line']);
-        self::assertSame(1337, $content['number']);
-        self::assertSame('+49 123 456 789', $content['phone']);
-        self::assertSame('value-2', $content['single_select']);
-        self::assertSame(['value-2', 'value-3'], $content['select']);
-        self::assertTrue($content['checkbox']);
-        self::assertSame('#ff0000', $content['color']);
-        self::assertSame('13:37', $content['time']);
-        self::assertSame('2020-01-01', $content['date']);
+        /** @var array<int, mixed> $examplesWithoutProperties */
+        // @phpstan-ignore-next-line offsetAccess.notFound
+        $examplesWithoutProperties = $result['examplesWithoutProperties'];
+        self::assertCount(1, $examplesWithoutProperties);
 
-        /** @var \DateTimeInterface|null $dateTime */
-        $dateTime = $content['datetime'];
-        self::assertSame(1577885820 /* 2020-01-01T13:37:00 */, $dateTime?->getTimestamp());
-        self::assertSame('example@sulu.io', $content['email']);
-        self::assertSame('https://sulu.io', $content['external_url']);
-        self::assertSame('Lorem Ipsum dolor sit amet', $content['text_area']);
+        /** @var array<string, mixed> $exampleWithProperties */
+        $exampleWithProperties = $examplesWithProperties[0];
+        self::assertIsInt($exampleWithProperties['id']);
+        self::assertSame('Nested example', $exampleWithProperties['title']);
+        self::assertSame('Nested example description', $exampleWithProperties['description']);
+        self::assertSame('excerpt-example-title-0', $exampleWithProperties['excerptTitle']);
+        self::assertSame('excerpt-example-description-0', $exampleWithProperties['excerptDescription']);
+        self::assertSame('seo-example-title-0', $exampleWithProperties['seoTitle']);
+        self::assertSame('seo-example-description-0', $exampleWithProperties['seoDescription']);
 
-        // Excerpt
-        self::assertSame('excerpt-title-1', $excerpt['title']);
-        self::assertSame('excerpt-more-1', $excerpt['more']);
-        self::assertSame('excerpt-description-1', $excerpt['description']);
-
-        // Seo
-        self::assertSame('seo-title-1', $seo['title']);
-        self::assertSame('seo-description-1', $seo['description']);
-        self::assertSame('seo-keywords-1', $seo['keywords']);
-        self::assertSame('https://sulu.io', $seo['canonicalUrl']);
-        self::assertTrue($seo['noIndex']);
-        self::assertTrue($seo['noFollow']);
-        self::assertTrue($seo['hideInSitemap']);
+        /** @var array<string, mixed> $exampleWithoutProperties */
+        $exampleWithoutProperties = $examplesWithoutProperties[0];
+        self::assertSame('Nested example', $exampleWithoutProperties['title']);
+        self::assertSame('/nested-example', $exampleWithoutProperties['url']);
+        self::assertSame('Nested example description', $exampleWithoutProperties['description']);
+        self::assertNull($exampleWithoutProperties['image']);
+        self::assertEmpty($exampleWithoutProperties['examples']);
+        self::assertEmpty($exampleWithoutProperties['examples_with_properties']);
     }
 
     public function testResolveMedias(): void

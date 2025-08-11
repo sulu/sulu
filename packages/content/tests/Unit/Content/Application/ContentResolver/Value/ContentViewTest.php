@@ -23,8 +23,8 @@ class ContentViewTest extends TestCase
     {
         $contentView = ContentView::create('content', ['view' => 'data']);
 
-        $this->assertSame('content', $contentView->getContent());
-        $this->assertSame(['view' => 'data'], $contentView->getView());
+        self::assertSame('content', $contentView->getContent());
+        self::assertSame(['view' => 'data'], $contentView->getView());
     }
 
     public function testCreateResolvable(): void
@@ -34,9 +34,9 @@ class ContentViewTest extends TestCase
         $content = $contentView->getContent();
         /** @var ResolvableResource $resolvable */
         $resolvable = $content;
-        $this->assertSame(5, $resolvable->getId());
-        $this->assertSame('resourceLoaderKey', $resolvable->getResourceLoaderKey());
-        $this->assertSame(['view' => 'data'], $contentView->getView());
+        self::assertSame(5, $resolvable->getId());
+        self::assertSame('resourceLoaderKey', $resolvable->getResourceLoaderKey());
+        self::assertSame(['view' => 'data'], $contentView->getView());
     }
 
     public function testCreateResolvables(): void
@@ -45,25 +45,25 @@ class ContentViewTest extends TestCase
 
         /** @var ResolvableResource[] $resolvables */
         $resolvables = $contentView->getContent();
-        $this->assertCount(2, $resolvables);
-        $this->assertSame(5, $resolvables[0]->getId());
-        $this->assertSame('resourceLoaderKey', $resolvables[0]->getResourceLoaderKey());
-        $this->assertSame(6, $resolvables[1]->getId());
-        $this->assertSame('resourceLoaderKey', $resolvables[1]->getResourceLoaderKey());
-        $this->assertSame(['view' => 'data'], $contentView->getView());
+        self::assertCount(2, $resolvables);
+        self::assertSame(5, $resolvables[0]->getId());
+        self::assertSame('resourceLoaderKey', $resolvables[0]->getResourceLoaderKey());
+        self::assertSame(6, $resolvables[1]->getId());
+        self::assertSame('resourceLoaderKey', $resolvables[1]->getResourceLoaderKey());
+        self::assertSame(['view' => 'data'], $contentView->getView());
     }
 
     public function testGetContent(): void
     {
         $contentView = ContentView::create('content', ['view' => 'data']);
 
-        $this->assertSame('content', $contentView->getContent());
+        self::assertSame('content', $contentView->getContent());
     }
 
     public function testGetView(): void
     {
         $contentView = ContentView::create('content', ['view' => 'data']);
 
-        $this->assertSame(['view' => 'data'], $contentView->getView());
+        self::assertSame(['view' => 'data'], $contentView->getView());
     }
 }

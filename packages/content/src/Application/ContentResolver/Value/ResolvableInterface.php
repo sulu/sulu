@@ -23,4 +23,13 @@ interface ResolvableInterface
     public function getPriority(): int;
 
     public function executeResourceCallback(mixed $resource): mixed;
+
+    /**
+     * Returns the metadata associated with this resolvable resource.
+     *
+     * @return array<string, mixed>|null
+     */
+    public function getMetadata(): ?array;
+
+    public function getMetadataIdentifier(): string;
 }

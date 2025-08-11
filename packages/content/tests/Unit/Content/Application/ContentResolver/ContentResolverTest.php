@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Sulu.
  *
@@ -14,356 +16,267 @@ namespace Sulu\Content\Tests\Unit\Content\Application\ContentResolver;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
-use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
-use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
-use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
-use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderInterface;
-use Sulu\Bundle\TestBundle\Testing\SetGetPrivatePropertyTrait;
 use Sulu\Content\Application\ContentAggregator\ContentAggregatorInterface;
 use Sulu\Content\Application\ContentResolver\ContentResolver;
+use Sulu\Content\Application\ContentResolver\ContentViewResolver\ContentViewResolver;
+use Sulu\Content\Application\ContentResolver\DataNormalizer\ContentViewDataNormalizer;
+use Sulu\Content\Application\ContentResolver\ResolvableResourceLoader\ResolvableResourceLoaderInterface;
+use Sulu\Content\Application\ContentResolver\ResolvableResourceQueue\ResolvableResourceQueueProcessor;
+use Sulu\Content\Application\ContentResolver\ResolvableResourceReplacer\ResolvableResourceReplacer;
 use Sulu\Content\Application\ContentResolver\Resolver\ResolverInterface;
-use Sulu\Content\Application\ContentResolver\Resolver\TemplateResolver;
-use Sulu\Content\Application\MetadataResolver\MetadataResolver;
-use Sulu\Content\Application\PropertyResolver\PropertyResolverProvider;
-use Sulu\Content\Application\PropertyResolver\Resolver\DefaultPropertyResolver;
-use Sulu\Content\Application\ResourceLoader\Loader\ResourceLoaderInterface;
-use Sulu\Content\Application\ResourceLoader\ResourceLoaderProvider;
-use Sulu\Content\Application\SmartResolver\Resolver\SmartResolverInterface;
-use Sulu\Content\Application\SmartResolver\SmartResolverProvider;
-use Sulu\Page\Domain\Model\Page;
-use Sulu\Page\Domain\Model\PageDimensionContentInterface;
-use Sulu\Page\Infrastructure\Sulu\Content\PropertyResolver\PageSelectionPropertyResolver;
-use Symfony\Component\DependencyInjection\ServiceLocator;
+use Sulu\Content\Application\ContentResolver\Value\ContentView;
+use Sulu\Content\Application\ContentResolver\Value\ResolvableResource;
+use Sulu\Content\Domain\Model\ContentRichEntityInterface;
+use Sulu\Content\Domain\Model\ContentRichEntityTrait;
+use Sulu\Content\Domain\Model\DimensionContentInterface;
+use Sulu\Content\Domain\Model\DimensionContentTrait;
 use Symfony\Component\PropertyAccess\PropertyAccessor;
 
 class ContentResolverTest extends TestCase
 {
     use ProphecyTrait;
-    use SetGetPrivatePropertyTrait;
-
-    private PropertyResolverProvider $propertyResolverProvider;
-
-    private ResourceLoaderProvider $resourceLoaderProvider;
-
-    private MetadataResolver $metadataResolver;
 
     private ContentResolver $contentResolver;
+    private ResolvableResourceQueueProcessor $resolvableResourceQueueProcessor;
+    private ResolvableResourceReplacer $resolvableResourceReplacer;
+    private ContentViewDataNormalizer $contentViewDataNormalizer;
+    private ContentViewResolver $contentViewResolver;
+    private TestTemplateResolver $templateResolver;
 
     /**
-     * @var ObjectProphecy<MetadataProviderInterface>
+     * @var ObjectProphecy<ResolvableResourceLoaderInterface>
      */
-    private $metadataProvider;
+    private ObjectProphecy $resolvableResourceLoader;
 
     /**
      * @var ObjectProphecy<ContentAggregatorInterface>
      */
-    private $contentAggregator;
-
-    /**
-     * @var ResolverInterface[]
-     */
-    private array $resolvers = [];
-
-    /**
-     * @var ObjectProphecy<ResourceLoaderInterface>[]
-     */
-    private array $resourceLoaders = [];
+    private ObjectProphecy $contentAggregator;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->propertyResolverProvider = new PropertyResolverProvider(
-            new \ArrayIterator([
-                'default' => new DefaultPropertyResolver(),
-                'page_selection' => new PageSelectionPropertyResolver(),
-            ])
+        $this->resolvableResourceQueueProcessor = new ResolvableResourceQueueProcessor();
+        $this->resolvableResourceReplacer = new ResolvableResourceReplacer();
+        $this->contentViewDataNormalizer = new ContentViewDataNormalizer(new PropertyAccessor());
+
+        $this->templateResolver = new TestTemplateResolver();
+
+        $this->contentViewResolver = new ContentViewResolver(
+            $this->resolvableResourceQueueProcessor,
+            ['template' => $this->templateResolver]
         );
-        $this->metadataResolver = new MetadataResolver($this->propertyResolverProvider);
-        $this->metadataProvider = $this->prophesize(MetadataProviderInterface::class);
 
-        // ResourceLoaders
-        $pageResourceLoader = $this->prophesize(ResourceLoaderInterface::class);
-        $this->resourceLoaders['page'] = $pageResourceLoader;
-
-        // Resolvers
-        $templateResolver = new TemplateResolver(
-            $this->metadataProvider->reveal(),
-            $this->metadataResolver
-        );
-        $this->resolvers = ['template' => $templateResolver];
-
-        $this->resourceLoaderProvider = new ResourceLoaderProvider(\array_map(fn (ObjectProphecy $resourceLoader) => $resourceLoader->reveal(), $this->resourceLoaders));
+        $this->resolvableResourceLoader = $this->prophesize(ResolvableResourceLoaderInterface::class);
         $this->contentAggregator = $this->prophesize(ContentAggregatorInterface::class);
+        $maxDepth = 5;
 
-        /** @var ServiceLocator<SmartResolverInterface> $serviceLocator */
-        $serviceLocator = new ServiceLocator([]);
         $this->contentResolver = new ContentResolver(
-            $this->resolvers,
-            $this->resourceLoaderProvider,
+            $this->contentViewResolver,
+            $this->resolvableResourceLoader->reveal(),
+            $this->resolvableResourceQueueProcessor,
+            $this->resolvableResourceReplacer,
+            $this->contentViewDataNormalizer,
             $this->contentAggregator->reveal(),
-            new SmartResolverProvider($serviceLocator),
-            new PropertyAccessor()
+            $maxDepth
         );
     }
 
-    public function testResolveSubPage(): void
+    public function testResolveSimpleExample(): void
     {
-        $contentRichEntity = new Page();
-        $this->setPrivateProperty($contentRichEntity, 'uuid', '111-111-111');
-        /** @var PageDimensionContentInterface $dimensionContent */
-        $dimensionContent = $contentRichEntity->createDimensionContent();
+        $example = new TestExample();
+        $example->id = 111;
+
+        $dimensionContent = new TestExampleDimensionContent($example);
+        $example->addDimensionContent($dimensionContent);
         $dimensionContent->setStage('live');
         $dimensionContent->setLocale('en');
-        $dimensionContent->setTemplateKey('default_with_page_selection');
-        $dimensionContent->setTemplateData([
-            'title' => 'Sulu',
-            'url' => '/page',
-            'pages' => [
-                '111-111-222', //$page2 uuid
-            ],
-        ]);
 
-        $page2 = new Page();
-        $this->setPrivateProperty($page2, 'uuid', '111-111-222');
-        /** @var PageDimensionContentInterface $dimensionContent2 */
-        $dimensionContent2 = $page2->createDimensionContent();
-        $dimensionContent2->setStage('live');
-        $dimensionContent2->setLocale('en');
-        $dimensionContent2->setTemplateKey('default');
-        $dimensionContent2->setTemplateData([
-            'title' => 'Page 2',
-            'url' => '/page-2',
-            'article' => '<p>Page 2 article</p>',
-        ]);
+        $templateContentView = ContentView::create(
+            ['title' => 'Test Example', 'article' => '<p>Test content</p>'],
+            ['title' => 'Title Field', 'article' => 'Article Field']
+        );
+        $this->templateResolver->setContentView($templateContentView);
 
-        $this->resourceLoaders['page']->load(['111-111-222' => '111-111-222'], 'en')
-            ->shouldBeCalledOnce()
-            ->willReturn(['111-111-222' => $page2]);
-
-        $this->contentAggregator->aggregate($page2, ['stage' => 'live', 'locale' => 'en'])
-            ->shouldBeCalledOnce()
-            ->willReturn($dimensionContent2);
-
-        $this->metadataProvider->getMetadata('page', 'en', [])
-            ->shouldBeCalled()
-            ->willReturn($this->getTemplateFormMetadata('page'));
-
-        /**
-         * @var array{
-         *   resource: mixed,
-         *   content: array{
-         *     title: string,
-         *     url: string,
-         *     article: mixed,
-         *     pages: array<int, mixed>
-         *   },
-         *   view: array{
-         *     title: mixed[],
-         *     url: mixed[],
-         *     article: mixed[],
-         *     pages: array{ids: array<string>}
-         *   }
-         * } $result
-         */
         $result = $this->contentResolver->resolve($dimensionContent);
 
-        self::assertSame($contentRichEntity, $result['resource']);
-
-        $content = $result['content'];
-        self::assertSame('Sulu', $content['title']);
-        self::assertSame('/page', $content['url']);
-        self::assertNull($content['article']);
-
-        /** @var array{title: mixed[], url: mixed[], article: mixed[], pages: array{ids: array<string>}} $view */
-        $view = $result['view'];
-        self::assertSame([], $view['title']);
-        self::assertSame([], $view['url']);
-        self::assertSame([], $view['article']);
-        self::assertSame(['111-111-222'], $view['pages']['ids']);
-
-        // SubEntity
-        /** @var array{title: string, url: string, article: string} $innerContent */
-        $innerContent = $content['pages'][0];
-        self::assertSame('Page 2', $innerContent['title']);
-        self::assertSame('/page-2', $innerContent['url']);
-        self::assertSame('<p>Page 2 article</p>', $innerContent['article']);
+        self::assertSame($example, $result['resource']);
+        self::assertSame(['title' => 'Test Example', 'article' => '<p>Test content</p>'], $result['content']);
+        self::assertSame(['title' => 'Title Field', 'article' => 'Article Field'], $result['view']);
+        self::assertSame([], $result['extension']);
     }
 
-    public function testResolveCircularLoopPages(): void
+    public function testResolveExampleWithResolvableResources(): void
     {
-        $page1 = new Page();
-        $this->setPrivateProperty($page1, 'uuid', '111-111-111');
-        /** @var PageDimensionContentInterface $dimensionContent1 */
-        $dimensionContent1 = $page1->createDimensionContent();
-        $dimensionContent1->setStage('live');
-        $dimensionContent1->setLocale('en');
-        $dimensionContent1->setTemplateKey('default_with_page_selection');
-        $dimensionContent1->setTemplateData([
-            'title' => 'Sulu',
-            'url' => '/page',
-            'pages' => [
-                '111-111-222', //$page2 uuid
-            ],
-        ]);
+        $example = new TestExample();
+        $example->id = 222;
 
-        $page2 = new Page();
-        $this->setPrivateProperty($page2, 'uuid', '111-111-222');
-        /** @var PageDimensionContentInterface $dimensionContent2 */
-        $dimensionContent2 = $page2->createDimensionContent();
-        $dimensionContent2->setStage('live');
-        $dimensionContent2->setLocale('en');
-        $dimensionContent2->setTemplateKey('default_with_page_selection');
-        $dimensionContent2->setTemplateData([
-            'title' => 'Page 2',
-            'url' => '/page-2',
-            'article' => '<p>Page 2 article</p>',
-            'pages' => [
-                '111-111-111', //$page1 uuid
-            ],
-        ]);
+        $dimensionContent = new TestExampleDimensionContent($example);
+        $example->addDimensionContent($dimensionContent);
+        $dimensionContent->setStage('live');
+        $dimensionContent->setLocale('en');
 
-        $this->resourceLoaders['page']->load(['111-111-222' => '111-111-222'], 'en')
-            ->shouldBeCalled()
-            ->willReturn(['111-111-222' => $page2]);
+        $templateContentView = ContentView::create(
+            ['title' => 'Main Example', 'description' => 'A simple example'],
+            ['title' => 'Title Field', 'description' => 'Description Field']
+        );
+        $this->templateResolver->setContentView($templateContentView);
 
-        $this->resourceLoaders['page']->load(['111-111-111' => '111-111-111'], 'en')
-            ->shouldBeCalled()
-            ->willReturn(['111-111-111' => $page1]);
+        $result = $this->contentResolver->resolve($dimensionContent);
 
-        $this->contentAggregator->aggregate($page1, ['stage' => 'live', 'locale' => 'en'])
-            ->shouldBeCalled()
-            ->willReturn($dimensionContent1);
-
-        $this->contentAggregator->aggregate($page2, ['stage' => 'live', 'locale' => 'en'])
-            ->shouldBeCalled()
-            ->willReturn($dimensionContent2);
-
-        $this->metadataProvider->getMetadata('page', 'en', [])
-            ->shouldBeCalled()
-            ->willReturn($this->getTemplateFormMetadata('page'));
-
-        $result = $this->contentResolver->resolve($dimensionContent1);
-
-        // Define expected data for each level in the circular reference
-        $expectedData = [
-            // Level 0 - page1
-            [
-                'title' => 'Sulu',
-                'url' => '/page',
-                'article' => null,
-            ],
-            // Level 1 - page2
-            [
-                'title' => 'Page 2',
-                'url' => '/page-2',
-                'article' => '<p>Page 2 article</p>',
-            ],
-            // Levels 2, 4 - page1 (repeats)
-            [
-                'title' => 'Sulu',
-                'url' => '/page',
-                'article' => null,
-            ],
-            // Levels 3, 5 - page2 (repeats)
-            [
-                'title' => 'Page 2',
-                'url' => '/page-2',
-                'article' => '<p>Page 2 article</p>',
-            ],
-            // Back to page1 for level 4
-            [
-                'title' => 'Sulu',
-                'url' => '/page',
-                'article' => null,
-            ],
-            // Back to page2 for level 5
-            [
-                'title' => 'Page 2',
-                'url' => '/page-2',
-                'article' => '<p>Page 2 article</p>',
-            ],
-        ];
-
-        $contentPointer = $result['content'];
-
-        /**
-         * @var array{
-         *     title: mixed[],
-         *     url: mixed[],
-         *     article: mixed[],
-         *     pages: array{ids: array<string>}
-         * } $view
-         */
-        $view = $result['view'];
-        self::assertSame([], $view['title']);
-        self::assertSame([], $view['url']);
-        self::assertSame([], $view['article']);
-        self::assertSame(['111-111-222'], $view['pages']['ids']);
-
-        // Loop through expected levels and verify the content
-        for ($level = 0; $level < 6; ++$level) {
-            $expectedLevel = $expectedData[$level % \count($expectedData)];
-
-            // Test based on the level index
-            self::assertSame($expectedLevel['title'], $contentPointer['title'], "Level $level title incorrect"); //@phpstan-ignore-line
-            self::assertSame($expectedLevel['url'], $contentPointer['url'], "Level $level url incorrect"); //@phpstan-ignore-line
-            self::assertSame($expectedLevel['article'], $contentPointer['article'], "Level $level article incorrect"); //@phpstan-ignore-line
-
-            // Level 5 is where we expect it to break the circular reference
-            if (5 === $level) {
-                self::assertNull($contentPointer['pages'][0], 'Circular reference should break after level 5'); //@phpstan-ignore-line
-                break;
-            }
-
-            // Move the pointer to the next page in the reference chain
-            $contentPointer = $contentPointer['pages'][0]; //@phpstan-ignore-line
-        }
+        self::assertSame($example, $result['resource']);
+        self::assertSame('Main Example', $result['content']['title']);
+        self::assertSame('A simple example', $result['content']['description']);
+        self::assertSame(['title' => 'Title Field', 'description' => 'Description Field'], $result['view']);
+        self::assertSame([], $result['extension']);
     }
 
-    private function getTemplateFormMetadata(string $templateType): TypedFormMetadata
+    public function testResolveExampleWithMultiplePriorities(): void
     {
-        return match ($templateType) {
-            'page' => $this->getTypedFormMetadataForPage(),
-            default => throw new \RuntimeException('TemplateType with type "' . $templateType . '" not configured.'),
-        };
+        $example = new TestExample();
+        $example->id = 333;
+
+        $dimensionContent = new TestExampleDimensionContent($example);
+        $example->addDimensionContent($dimensionContent);
+        $dimensionContent->setStage('live');
+        $dimensionContent->setLocale('en');
+
+        $highPriorityResource = new ResolvableResource('333', 'example', 10, fn ($resource) => $resource);
+        $lowPriorityResource = new ResolvableResource('444', 'example', 1, fn ($resource) => $resource);
+
+        $templateContentView = ContentView::create(
+            [
+                'title' => 'Main Example',
+                'high_priority_example' => $highPriorityResource,
+                'low_priority_example' => $lowPriorityResource,
+            ],
+            ['title' => 'Title Field', 'high_priority_example' => 'High Priority', 'low_priority_example' => 'Low Priority']
+        );
+        $this->templateResolver->setContentView($templateContentView);
+
+        $this->resolvableResourceLoader->loadResources(
+            ['example' => ['333' => [$highPriorityResource->getMetadataIdentifier() => $highPriorityResource]]],
+            'en'
+        )->willReturn(['example' => ['333' => [$highPriorityResource->getMetadataIdentifier() => 'High Priority Result']]]);
+
+        $this->resolvableResourceLoader->loadResources(
+            ['example' => ['444' => [$lowPriorityResource->getMetadataIdentifier() => $lowPriorityResource]]],
+            'en'
+        )->willReturn(['example' => ['444' => [$lowPriorityResource->getMetadataIdentifier() => 'Low Priority Result']]]);
+
+        $result = $this->contentResolver->resolve($dimensionContent);
+
+        self::assertSame($example, $result['resource']);
+        self::assertSame('Main Example', $result['content']['title']);
+        self::assertArrayHasKey('high_priority_example', $result['content']);
+        self::assertArrayHasKey('low_priority_example', $result['content']);
     }
 
-    private function getTypedFormMetadataForPage(): TypedFormMetadata
+    public function testResolveWithEmptyResources(): void
     {
-        $typedFormMetadata = new TypedFormMetadata();
-        foreach (['default', 'default_with_page_selection'] as $templateKey) {
-            $formMetadata = new FormMetadata();
+        $example = new TestExample();
+        $example->id = 444;
 
-            $fieldMetadataCallback = match ($templateKey) {
-                'default' => function() {
-                    $titleFieldMetadata = new FieldMetadata('title');
-                    $titleFieldMetadata->setType('text_line');
-                    $urlFieldMetadata = new FieldMetadata('url');
-                    $urlFieldMetadata->setType('resource_locator');
-                    $articleFieldMetadata = new FieldMetadata('article');
-                    $articleFieldMetadata->setType('text_editor');
+        $dimensionContent = new TestExampleDimensionContent($example);
+        $example->addDimensionContent($dimensionContent);
+        $dimensionContent->setStage('live');
+        $dimensionContent->setLocale('en');
 
-                    return [$titleFieldMetadata, $urlFieldMetadata, $articleFieldMetadata];
-                },
-                'default_with_page_selection' => function() {
-                    $titleFieldMetadata = new FieldMetadata('title');
-                    $titleFieldMetadata->setType('text_line');
-                    $urlFieldMetadata = new FieldMetadata('url');
-                    $urlFieldMetadata->setType('resource_locator');
-                    $articleFieldMetadata = new FieldMetadata('article');
-                    $articleFieldMetadata->setType('text_editor');
-                    $pagesFieldMetadata = new FieldMetadata('pages');
-                    $pagesFieldMetadata->setType('page_selection');
+        $templateContentView = ContentView::create(
+            ['title' => 'Empty Example', 'content' => ''],
+            ['title' => 'Title Field', 'content' => 'Content Field']
+        );
+        $this->templateResolver->setContentView($templateContentView);
 
-                    return [$titleFieldMetadata, $urlFieldMetadata, $articleFieldMetadata, $pagesFieldMetadata];
-                },
-            };
+        $result = $this->contentResolver->resolve($dimensionContent);
 
-            $formMetadata->setItems($fieldMetadataCallback());
-            $typedFormMetadata->addForm($templateKey, $formMetadata);
-        }
+        self::assertSame($example, $result['resource']);
+        self::assertSame(['title' => 'Empty Example', 'content' => ''], $result['content']);
+        self::assertSame(['title' => 'Title Field', 'content' => 'Content Field'], $result['view']);
+        self::assertSame([], $result['extension']);
+    }
+}
 
-        return $typedFormMetadata;
+class TestTemplateResolver implements ResolverInterface
+{
+    private ?ContentView $contentView = null;
+
+    public function setContentView(?ContentView $contentView): void
+    {
+        $this->contentView = $contentView;
+    }
+
+    public function resolve(DimensionContentInterface $dimensionContent, ?array $properties = null): ?ContentView
+    {
+        return $this->contentView;
+    }
+}
+
+/**
+ * @implements ContentRichEntityInterface<TestExampleDimensionContent>
+ */
+class TestExample implements ContentRichEntityInterface
+{
+    /**
+     * @phpstan-use ContentRichEntityTrait<TestExampleDimensionContent>
+     */
+    use ContentRichEntityTrait;
+
+    public const RESOURCE_KEY = 'examples';
+    public const TEMPLATE_TYPE = 'example';
+
+    public int $id;
+
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    public function createDimensionContent(): DimensionContentInterface
+    {
+        return new TestExampleDimensionContent($this);
+    }
+
+    public static function getResourceKey(): string
+    {
+        return self::RESOURCE_KEY;
+    }
+}
+
+/**
+ * @implements DimensionContentInterface<TestExample>
+ */
+class TestExampleDimensionContent implements DimensionContentInterface
+{
+    use DimensionContentTrait;
+
+    protected int $id;
+    protected TestExample $example;
+    protected ?string $title = null;
+
+    public function __construct(TestExample $example)
+    {
+        $this->example = $example;
+    }
+
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    public function getResource(): ContentRichEntityInterface
+    {
+        return $this->example;
+    }
+
+    public function getTitle(): ?string
+    {
+        return $this->title;
+    }
+
+    public static function getResourceKey(): string
+    {
+        return TestExample::RESOURCE_KEY;
     }
 }

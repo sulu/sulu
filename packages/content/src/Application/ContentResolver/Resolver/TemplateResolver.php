@@ -52,15 +52,16 @@ readonly class TemplateResolver implements ResolverInterface
 
         $formMetadataItems = $formMetadata->getItems();
         $data = $dimensionContent->getTemplateData();
-        if ($properties !== null) {
+        if (null !== $properties) {
             $filteredFormMetadataItems = [];
             $filteredTemplateData = [];
+            /** @var int|string $value */
             foreach ($properties as $key => $value) {
-                if (\array_key_exists($key, $formMetadataItems)) {
-                    $filteredFormMetadataItems[$key] = $formMetadataItems[$key];
+                if (\array_key_exists($value, $formMetadataItems)) {
+                    $filteredFormMetadataItems[$key] = $formMetadataItems[$value];
                 }
-                if (\array_key_exists($key, $data)) {
-                    $filteredTemplateData[$key] = $data[$key];
+                if (\array_key_exists($value, $data)) {
+                    $filteredTemplateData[$key] = $data[$value];
                 }
             }
             $formMetadataItems = $filteredFormMetadataItems;

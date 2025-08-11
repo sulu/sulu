@@ -20,11 +20,15 @@ class ResolvableResource implements ResolvableInterface
 {
     private \Closure $callback;
 
+    /**
+     * @param array<string, mixed>|null $metadata Optional metadata for additional context
+     */
     public function __construct(
         private string|int $id,
         private string $resourceLoaderKey,
         private int $priority,
         ?\Closure $resourceCallback = null,
+        private ?array $metadata = null,
     ) {
         $this->callback = $resourceCallback ?? (static fn (mixed $resource) => $resource);
     }
@@ -47,5 +51,19 @@ class ResolvableResource implements ResolvableInterface
     public function getPriority(): int
     {
         return $this->priority;
+    }
+
+    /**
+     * @return array<string, mixed>|null
+     */
+    public function getMetadata(): ?array
+    {
+        return $this->metadata;
+    }
+
+    public function getMetadataIdentifier(): string
+    {
+        // TODO do we need a rekursive key sort?
+        return $this->metadata ? \md5((string) \json_encode($this->metadata)) : '';
     }
 }
