@@ -32,6 +32,7 @@ use Sulu\Route\Domain\Model\Route;
  */
 class PageDimensionContent implements PageDimensionContentInterface
 {
+    use AuditableTrait;
     use AuthorTrait;
     use DimensionContentTrait;
     use ExcerptTrait;
@@ -44,7 +45,6 @@ class PageDimensionContent implements PageDimensionContentInterface
         TemplateTrait::setTemplateData as parentSetTemplateData;
     }
     use WorkflowTrait;
-    use AuditableTrait;
 
     protected int $id;
 
@@ -110,7 +110,7 @@ class PageDimensionContent implements PageDimensionContentInterface
     {
         return \array_map(
             fn ($context) => $context->getNavigationContext(),
-            $this->navigationContexts->toArray()
+            $this->navigationContexts->toArray(),
         );
     }
 
@@ -148,7 +148,7 @@ class PageDimensionContent implements PageDimensionContentInterface
     {
         return new PageDimensionContentNavigationContext(
             $navigationContext,
-            $this
+            $this,
         );
     }
 

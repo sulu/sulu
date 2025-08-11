@@ -45,6 +45,11 @@ trait ExcerptTrait
     private $excerptTags;
 
     /**
+     * @var string|null
+     */
+    private $excerptSegment;
+
+    /**
      * @var int|null
      */
     private $excerptImageId;
@@ -156,6 +161,16 @@ trait ExcerptTrait
         foreach ($excerptTags as $excerptTag) {
             $this->excerptTags->add($excerptTag);
         }
+    }
+
+    public function getExcerptSegment(): ?string
+    {
+        return $this->excerptSegment ?? null;
+    }
+
+    public function setExcerptSegment(?string $excerptSegment): void
+    {
+        $this->excerptSegment = $excerptSegment;
     }
 
     /**

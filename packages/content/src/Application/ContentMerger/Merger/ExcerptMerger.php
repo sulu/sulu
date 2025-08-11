@@ -43,6 +43,10 @@ final class ExcerptMerger implements MergerInterface
             $targetObject->setExcerptMore($excerptMore);
         }
 
+        if ($excerptSegment = $sourceObject->getExcerptSegment()) {
+            $targetObject->setExcerptSegment($excerptSegment);
+        }
+
         if ($excerptIcon = $sourceObject->getExcerptIcon()) {
             $targetObject->setExcerptIcon($excerptIcon);
         }

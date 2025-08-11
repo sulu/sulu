@@ -13,13 +13,15 @@ declare(strict_types=1);
 
 namespace Sulu\Content\Application\ContentNormalizer\Normalizer;
 
+use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Domain\Model\ExcerptInterface;
+use Sulu\Page\Domain\Model\PageInterface;
 
 class ExcerptNormalizer implements NormalizerInterface
 {
     public function enhance(object $object, array $normalizedData): array
     {
-        if (!$object instanceof ExcerptInterface) {
+        if (!$object instanceof ExcerptInterface || !$object instanceof DimensionContentInterface) {
             return $normalizedData;
         }
 
@@ -27,6 +29,13 @@ class ExcerptNormalizer implements NormalizerInterface
         unset($normalizedData['excerptTagNames']);
         $normalizedData['excerptCategories'] = $normalizedData['excerptCategoryIds'];
         unset($normalizedData['excerptCategoryIds']);
+
+        $resource = $object->getResource();
+        if ($resource instanceof PageInterface) {
+            $normalizedData['excerptSegment'] = null !== $object->getExcerptSegment() ? [
+                $resource->getWebspaceKey() => $object->getExcerptSegment(),
+            ] : null;
+        }
 
         return $normalizedData;
     }

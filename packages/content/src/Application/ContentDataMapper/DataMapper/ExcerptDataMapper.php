@@ -40,7 +40,7 @@ class ExcerptDataMapper implements DataMapperInterface
     public function map(
         DimensionContentInterface $unlocalizedDimensionContent,
         DimensionContentInterface $localizedDimensionContent,
-        array $data
+        array $data,
     ): void {
         if (!$localizedDimensionContent instanceof ExcerptInterface) {
             return;
@@ -66,6 +66,14 @@ class ExcerptDataMapper implements DataMapperInterface
             Assert::nullOrString($data['excerptMore']);
             $dimensionContent->setExcerptMore($data['excerptMore']);
         }
+        if (\array_key_exists('excerptSegment', $data)) {
+            $segment = $data['excerptSegment'];
+            if (\is_array($data['excerptSegment'])) {
+                $segment = \array_values($segment)[0] ?? null;
+            }
+            Assert::nullOrString($segment);
+            $dimensionContent->setExcerptSegment($segment);
+        }
         if (\array_key_exists('excerptImage', $data)) {
             Assert::nullOrIsArray($data['excerptImage']);
             Assert::nullOrInteger($data['excerptImage']['id'] ?? null);
@@ -85,7 +93,7 @@ class ExcerptDataMapper implements DataMapperInterface
             Assert::isArray($data['excerptCategories']);
             Assert::allInteger($data['excerptCategories']);
             $dimensionContent->setExcerptCategories(
-                $this->categoryFactory->create($data['excerptCategories'])
+                $this->categoryFactory->create($data['excerptCategories']),
             );
         }
     }

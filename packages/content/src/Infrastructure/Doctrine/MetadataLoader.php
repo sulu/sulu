@@ -83,6 +83,7 @@ final class MetadataLoader
             $this->addField($metadata, 'excerptTitle');
             $this->addField($metadata, 'excerptMore', 'string', ['length' => 63]);
             $this->addField($metadata, 'excerptDescription', 'text');
+            $this->addField($metadata, 'excerptSegment');
             $this->addField($metadata, 'excerptImageId', 'integer', [
                 'columnName' => 'excerptImageId',
                 '_custom' => [

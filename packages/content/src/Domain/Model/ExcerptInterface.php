@@ -60,6 +60,10 @@ interface ExcerptInterface
      */
     public function setExcerptTags(array $excerptTags): void;
 
+    public function getExcerptSegment(): ?string;
+
+    public function setExcerptSegment(?string $excerptSegment): void;
+
     /**
      * @return array{id: int}|null
      */

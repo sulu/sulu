@@ -22,6 +22,7 @@ interface NavigationRepositoryInterface
         string $navigationContext,
         string $locale,
         string $webspaceKey,
+        ?string $segmentKey,
         int $depth = 1,
         array $properties = []
     ): array;
@@ -35,6 +36,7 @@ interface NavigationRepositoryInterface
         string $navigationContext,
         string $locale,
         string $webspaceKey,
+        ?string $segmentKey,
         int $depth = 1,
         array $properties = []
     ): array;

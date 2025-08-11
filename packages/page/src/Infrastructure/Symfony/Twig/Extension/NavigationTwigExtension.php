@@ -49,11 +49,13 @@ class NavigationTwigExtension extends AbstractExtension
     {
         $webspaceKey = $this->requestAnalyzer->getWebspace()->getKey();
         $locale = $this->requestAnalyzer->getCurrentLocalization()->getLocale();
+        $segment = $this->requestAnalyzer->getSegment();
 
         return $this->navigationRepository->getNavigationFlat(
             $navigationContext,
             $locale,
             $webspaceKey,
+            $segment?->getKey() ?? null,
             $depth,
             ['loadExcerpt' => $loadExcerpt]
         );
@@ -66,11 +68,13 @@ class NavigationTwigExtension extends AbstractExtension
     {
         $webspaceKey = $this->requestAnalyzer->getWebspace()->getKey();
         $locale = $this->requestAnalyzer->getCurrentLocalization()->getLocale();
+        $segment = $this->requestAnalyzer->getSegment();
 
         return $this->navigationRepository->getNavigationTree(
             $navigationContext,
             $locale,
             $webspaceKey,
+            $segment?->getKey() ?? null,
             $depth,
             ['excerpt' => $loadExcerpt]
         );

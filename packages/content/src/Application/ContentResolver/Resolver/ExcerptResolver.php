@@ -130,6 +130,7 @@ readonly class ExcerptResolver implements ResolverInterface
             'excerptTitle' => $dimensionContent->getExcerptTitle(),
             'excerptMore' => $dimensionContent->getExcerptMore(),
             'excerptDescription' => $dimensionContent->getExcerptDescription(),
+            'excerptSegment' => $dimensionContent->getExcerptSegment(),
             'excerptCategories' => \array_map(
                 fn (CategoryInterface $category) => $category->getId(),
                 $dimensionContent->getExcerptCategories()

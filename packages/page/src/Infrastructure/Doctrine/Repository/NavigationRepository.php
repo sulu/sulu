@@ -66,6 +66,7 @@ class NavigationRepository implements NavigationRepositoryInterface
         string $navigationContext,
         string $locale,
         string $webspaceKey,
+        ?string $segmentKey,
         int $depth = 1,
         array $properties = []
     ): array {
@@ -74,6 +75,7 @@ class NavigationRepository implements NavigationRepositoryInterface
             'navigationContexts' => [$navigationContext],
             'depth' => $depth,
             'webspaceKey' => $webspaceKey,
+            'segmentKey' => $segmentKey,
             'stage' => DimensionContentInterface::STAGE_LIVE,
         ]);
 
@@ -86,6 +88,7 @@ class NavigationRepository implements NavigationRepositoryInterface
         string $navigationContext,
         string $locale,
         string $webspaceKey,
+        ?string $segmentKey,
         int $depth = 1,
         array $properties = []
     ): array {
@@ -94,6 +97,7 @@ class NavigationRepository implements NavigationRepositoryInterface
             'navigationContexts' => [$navigationContext],
             'depth' => $depth,
             'webspaceKey' => $webspaceKey,
+            'segmentKey' => $segmentKey,
             'stage' => DimensionContentInterface::STAGE_LIVE,
         ]);
 
@@ -238,6 +242,7 @@ class NavigationRepository implements NavigationRepositoryInterface
      *      locale?: string|null,
      *      stage?: string|null,
      *      webspaceKey?: string,
+     *      segmentKey?: string|null,
      *      page?: int,
      *      limit?: int,
      *      navigationContexts?: string[],
@@ -261,6 +266,7 @@ class NavigationRepository implements NavigationRepositoryInterface
      *      locale?: string|null,
      *      stage?: string|null,
      *      webspaceKey?: string,
+     *      segmentKey?: string|null,
      *      page?: int,
      *      limit?: int,
      *      navigationContexts?: string[],
