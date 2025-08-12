@@ -29,6 +29,8 @@ class ExcerptNormalizer implements NormalizerInterface
         unset($normalizedData['excerptTagNames']);
         $normalizedData['excerptCategories'] = $normalizedData['excerptCategoryIds'];
         unset($normalizedData['excerptCategoryIds']);
+        $normalizedData['excerptAudienceTargetGroups'] = $normalizedData['excerptAudienceTargetGroupIds'] ?? [];
+        unset($normalizedData['excerptAudienceTargetGroupIds']);
 
         $resource = $object->getResource();
         if ($resource instanceof PageInterface) {
@@ -49,6 +51,7 @@ class ExcerptNormalizer implements NormalizerInterface
         return [
             'excerptTags',
             'excerptCategories',
+            'excerptAudienceTargetGroups',
         ];
     }
 }

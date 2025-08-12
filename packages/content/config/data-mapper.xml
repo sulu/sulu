@@ -13,6 +13,7 @@
         <service id="sulu_content.excerpt_data_mapper" class="Sulu\Content\Application\ContentDataMapper\DataMapper\ExcerptDataMapper">
             <argument type="service" id="sulu_content.tag_factory"/>
             <argument type="service" id="sulu_content.category_factory"/>
+            <argument type="service" id="sulu_audience_targeting.target_group_factory" on-invalid="null"/>
 
             <tag name="sulu_content.data_mapper" priority="64"/>
         </service>

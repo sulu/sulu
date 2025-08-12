@@ -15,26 +15,18 @@ namespace Sulu\Content\Application\ContentDataMapper\DataMapper;
 
 use Sulu\Content\Domain\Factory\CategoryFactoryInterface;
 use Sulu\Content\Domain\Factory\TagFactoryInterface;
+use Sulu\Content\Domain\Factory\TargetGroupFactoryInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Domain\Model\ExcerptInterface;
 use Webmozart\Assert\Assert;
 
 class ExcerptDataMapper implements DataMapperInterface
 {
-    /**
-     * @var TagFactoryInterface
-     */
-    private $tagFactory;
-
-    /**
-     * @var CategoryFactoryInterface
-     */
-    private $categoryFactory;
-
-    public function __construct(TagFactoryInterface $tagFactory, CategoryFactoryInterface $categoryFactory)
-    {
-        $this->tagFactory = $tagFactory;
-        $this->categoryFactory = $categoryFactory;
+    public function __construct(
+        private TagFactoryInterface $tagFactory,
+        private CategoryFactoryInterface $categoryFactory,
+        private ?TargetGroupFactoryInterface $targetGroupFactory,
+    ) {
     }
 
     public function map(
@@ -94,6 +86,13 @@ class ExcerptDataMapper implements DataMapperInterface
             Assert::allInteger($data['excerptCategories']);
             $dimensionContent->setExcerptCategories(
                 $this->categoryFactory->create($data['excerptCategories']),
+            );
+        }
+        if (\array_key_exists('excerptAudienceTargetGroups', $data) && $this->targetGroupFactory) {
+            Assert::isArray($data['excerptAudienceTargetGroups']);
+            Assert::allInteger($data['excerptAudienceTargetGroups']);
+            $dimensionContent->setExcerptAudienceTargetGroups(
+                $this->targetGroupFactory->create($data['excerptAudienceTargetGroups']),
             );
         }
     }

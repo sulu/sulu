@@ -15,6 +15,7 @@ namespace Sulu\Content\Application\ContentResolver\Resolver;
 
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderInterface;
+use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\TagBundle\Tag\TagInterface;
 use Sulu\Content\Application\ContentResolver\Value\ContentView;
@@ -26,7 +27,7 @@ readonly class ExcerptResolver implements ResolverInterface
 {
     public function __construct(
         private MetadataProviderInterface $formMetadataProvider,
-        private MetadataResolver $metadataResolver
+        private MetadataResolver $metadataResolver,
     ) {
     }
 
@@ -133,10 +134,15 @@ readonly class ExcerptResolver implements ResolverInterface
             'excerptSegment' => $dimensionContent->getExcerptSegment(),
             'excerptCategories' => \array_map(
                 fn (CategoryInterface $category) => $category->getId(),
-                $dimensionContent->getExcerptCategories()
+                $dimensionContent->getExcerptCategories(),
             ),
             'excerptTags' => \array_map(
-                fn (TagInterface $tag) => $tag->getName(), $dimensionContent->getExcerptTags()
+                fn (TagInterface $tag) => $tag->getName(),
+                $dimensionContent->getExcerptTags(),
+            ),
+            'excerptAudienceTargetGroups' => \array_map(
+                fn (TargetGroupInterface $audienceTargetGroup) => $audienceTargetGroup->getId(),
+                $dimensionContent->getExcerptAudienceTargetGroups(),
             ),
             'excerptIcon' => $dimensionContent->getExcerptIcon(),
             'excerptImage' => $dimensionContent->getExcerptImage(),

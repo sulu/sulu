@@ -36,6 +36,12 @@
             </meta>
         </property>
 
+        <property name="excerptAudienceTargetGroups" type="target_group_selection" onInvalid="ignore">
+            <meta>
+                <title>sulu_audience_targeting.target_groups</title>
+            </meta>
+        </property>
+
         <property
             name="excerptSegment"
             type="segment_select"

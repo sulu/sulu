@@ -17,6 +17,7 @@ use Doctrine\Inflector\InflectorFactory;
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 use Doctrine\ORM\Mapping\Builder\ClassMetadataBuilder;
 use Doctrine\ORM\Mapping\ClassMetadata;
+use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\ContactBundle\Entity\ContactInterface;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
@@ -37,6 +38,11 @@ use Sulu\Route\Domain\Model\Route;
  */
 final class MetadataLoader
 {
+    public function __construct(
+        private readonly array $bundles,
+    ) {
+    }
+
     public function loadClassMetadata(LoadClassMetadataEventArgs $event): void
     {
         /** @var ClassMetadata<object> $metadata */
@@ -108,6 +114,9 @@ final class MetadataLoader
 
             $this->addManyToMany($event, $metadata, 'excerptTags', TagInterface::class, 'tag_id');
             $this->addManyToMany($event, $metadata, 'excerptCategories', CategoryInterface::class, 'category_id');
+            if ($this->bundles['SuluAudienceTargetingBundle'] ?? false) {
+                $this->addManyToMany($event, $metadata, 'excerptAudienceTargetGroups', TargetGroupInterface::class, 'target_group_id');
+            }
         }
 
         if ($reflection->implementsInterface(RoutableInterface::class)) {

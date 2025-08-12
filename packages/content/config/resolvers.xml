@@ -188,7 +188,7 @@
                 default-index-method="getType"
                 index-by="type"
             />
-            <argument type="service" id="request_stack"/>
+            <argument type="service" id="sulu_audience_targeting.target_group_store" on-invalid="null"/>
 
             <tag name="sulu_content.smart_resolver" type="smart_content"/>
         </service>

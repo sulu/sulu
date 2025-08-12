@@ -203,7 +203,10 @@ class DimensionContentQueryEnhancer
         }
 
         if (($filters['audienceTargeting'] ?? false) && ($filters['targetGroupId'] ?? null)) {
-            // TODO add audience targeting filter when the dimension content supports it.
+            Assert::integerish($filters['targetGroupId']); // @phpstan-ignore staticMethod.alreadyNarrowedType
+            $queryBuilder->leftJoin('filterDimensionContent.excerptAudienceTargetGroups', 'filterAudienceTargetGroup')
+                ->andWhere('filterAudienceTargetGroup.id = :targetGroupId OR filterAudienceTargetGroup IS NULL')
+                ->setParameter('targetGroupId', (int) $filters['targetGroupId']);
         }
 
         if ($filters['segmentKey'] ?? null) {
