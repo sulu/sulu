@@ -106,6 +106,9 @@ class SmartContentSmartResolver implements SmartResolverInterface
             ids: \array_map(static fn (array $item) => $item['id'], $result),
             resourceLoaderKey: $smartContentProvider->getResourceLoaderKey(),
             view: $view,
+            metadata: [
+                'properties' => $params['properties'] ?? null,
+            ]
         );
     }
 

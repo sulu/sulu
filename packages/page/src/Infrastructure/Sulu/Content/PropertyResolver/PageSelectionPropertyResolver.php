@@ -11,6 +11,8 @@
 
 namespace Sulu\Page\Infrastructure\Sulu\Content\PropertyResolver;
 
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\OptionMetadata;
 use Sulu\Content\Application\ContentResolver\Value\ContentView;
 use Sulu\Content\Application\PropertyResolver\Resolver\PropertyResolverInterface;
 use Sulu\Page\Infrastructure\Sulu\Content\ResourceLoader\PageResourceLoader;
@@ -22,6 +24,12 @@ use Sulu\Page\Infrastructure\Sulu\Content\ResourceLoader\PageResourceLoader;
  */
 class PageSelectionPropertyResolver implements PropertyResolverInterface
 {
+    /**
+     * @param array{
+     *     resourceLoader?: string,
+     *     metadata?: FieldMetadata|null,
+     * } $params
+     */
     public function resolve(mixed $data, string $locale, array $params = []): ContentView
     {
         if (!\is_array($data)
@@ -44,8 +52,30 @@ class PageSelectionPropertyResolver implements PropertyResolverInterface
                 'ids' => $ids,
                 ...$params,
             ],
-            priority: 150
+            priority: 150,
+            metadata: [
+                'properties' => $this->getProperties($params['metadata'] ?? null),
+            ]
         );
+    }
+
+    /**
+     * @return array<string, mixed>|null
+     */
+    private function getProperties(?FieldMetadata $metadata): ?array
+    {
+        $properties = null;
+        if ($metadata instanceof FieldMetadata && $propertiesMetadata = $metadata->getOptions()['properties'] ?? null) {
+            $properties = [];
+
+            /** @var OptionMetadata[] $optionsMetadataArray */
+            $optionsMetadataArray = $propertiesMetadata->getValue();
+            foreach ($optionsMetadataArray as $optionMetadata) {
+                $properties[(string) $optionMetadata->getName()] = $optionMetadata->getValue();
+            }
+        }
+
+        return $properties;
     }
 
     public static function getType(): string

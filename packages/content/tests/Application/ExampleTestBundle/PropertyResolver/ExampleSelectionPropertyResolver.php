@@ -19,6 +19,12 @@ use Sulu\Content\Tests\Application\ExampleTestBundle\ResourceLoader\ExampleResou
 
 class ExampleSelectionPropertyResolver implements PropertyResolverInterface
 {
+    /**
+     * @param array{
+     *     resourceLoader?: string,
+     *     metadata?: FieldMetadata|null,
+     * } $params
+     */
     public function resolve(mixed $data, string $locale, array $params = []): ContentView
     {
         if (!\is_array($data)
@@ -34,18 +40,6 @@ class ExampleSelectionPropertyResolver implements PropertyResolverInterface
         /** @var string[] $ids */
         $ids = $data;
 
-        $metadata = $params['metadata'] ?? null;
-        $properties = null;
-        if ($metadata instanceof FieldMetadata && $propertiesMetadata = $metadata->getOptions()['properties'] ?? null) {
-            $properties = [];
-
-            /** @var OptionMetadata[] $optionsMetadataArray */
-            $optionsMetadataArray = $propertiesMetadata->getValue();
-            foreach ($optionsMetadataArray as $optionMetadata) {
-                $properties[$optionMetadata->getName()] = $optionMetadata->getValue();
-            }
-        }
-
         return ContentView::createResolvables(
             ids: $ids,
             resourceLoaderKey: $resourceLoaderKey,
@@ -55,9 +49,28 @@ class ExampleSelectionPropertyResolver implements PropertyResolverInterface
             ],
             priority: 150,
             metadata: [
-                'properties' => $properties,
+                'properties' => $this->getProperties($params['metadata'] ?? null),
             ]
         );
+    }
+
+    /**
+     * @return array<string, mixed>|null
+     */
+    private function getProperties(?FieldMetadata $metadata): ?array
+    {
+        $properties = null;
+        if ($metadata instanceof FieldMetadata && $propertiesMetadata = $metadata->getOptions()['properties'] ?? null) {
+            $properties = [];
+
+            /** @var OptionMetadata[] $optionsMetadataArray */
+            $optionsMetadataArray = $propertiesMetadata->getValue();
+            foreach ($optionsMetadataArray as $optionMetadata) {
+                $properties[(string) $optionMetadata->getName()] = $optionMetadata->getValue();
+            }
+        }
+
+        return $properties;
     }
 
     public static function getType(): string

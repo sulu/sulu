@@ -14,6 +14,8 @@ namespace Sulu\Bundle\Page\Tests\Unit\Infrastructure\Sulu\Content\PropertyResolv
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\OptionMetadata;
 use Sulu\Content\Application\ContentResolver\Value\ResolvableResource;
 use Sulu\Page\Infrastructure\Sulu\Content\PropertyResolver\SinglePageSelectionPropertyResolver;
 
@@ -100,5 +102,61 @@ class SinglePageSelectionPropertyResolverTest extends TestCase
         $this->assertInstanceOf(ResolvableResource::class, $content);
         $this->assertSame('1', $content->getId());
         $this->assertSame('custom_Page', $content->getResourceLoaderKey());
+    }
+
+    public function testResolveWithMetadata(): void
+    {
+        $propertyOption1 = new OptionMetadata();
+        $propertyOption1->setName('property1');
+        $propertyOption1->setValue('value1');
+
+        $propertyOption2 = new OptionMetadata();
+        $propertyOption2->setName('property2');
+        $propertyOption2->setValue('value2');
+
+        $propertiesOption = new OptionMetadata();
+        $propertiesOption->setName('properties');
+        $propertiesOption->setValue([$propertyOption1, $propertyOption2]);
+
+        $metadata = new FieldMetadata('test_field');
+        $metadata->addOption($propertiesOption);
+
+        $contentView = $this->resolver->resolve('1', 'en', ['metadata' => $metadata]);
+
+        $content = $contentView->getContent();
+        $this->assertInstanceOf(ResolvableResource::class, $content);
+
+        $this->assertSame([
+            'properties' => [
+                'property1' => 'value1',
+                'property2' => 'value2',
+            ],
+        ], $content->getMetadata());
+    }
+
+    public function testResolveWithoutMetadata(): void
+    {
+        $contentView = $this->resolver->resolve('1', 'en');
+
+        $content = $contentView->getContent();
+        $this->assertInstanceOf(ResolvableResource::class, $content);
+
+        $this->assertSame([
+            'properties' => null,
+        ], $content->getMetadata());
+    }
+
+    public function testResolveWithEmptyMetadata(): void
+    {
+        $metadata = new FieldMetadata('test_field');
+
+        $contentView = $this->resolver->resolve('1', 'en', ['metadata' => $metadata]);
+
+        $content = $contentView->getContent();
+        $this->assertInstanceOf(ResolvableResource::class, $content);
+
+        $this->assertSame([
+            'properties' => null,
+        ], $content->getMetadata());
     }
 }
