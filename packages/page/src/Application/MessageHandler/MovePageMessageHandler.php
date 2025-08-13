@@ -11,7 +11,12 @@
 
 namespace Sulu\Page\Application\MessageHandler;
 
+use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
+use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
+use Sulu\Content\Domain\Model\DimensionContentCollection;
 use Sulu\Page\Application\Message\MovePageMessage;
+use Sulu\Page\Domain\Event\PageMovedEvent;
+use Sulu\Page\Domain\Model\PageDimensionContent;
 use Sulu\Page\Domain\Repository\PageRepositoryInterface;
 
 /**
@@ -24,11 +29,30 @@ class MovePageMessageHandler
 {
     public function __construct(
         private PageRepositoryInterface $pageRepository,
+        private DomainEventCollectorInterface $domainEventCollector,
+        private RequestAnalyzerInterface $requestAnalyzer,
     ) {
     }
 
     public function __invoke(MovePageMessage $message): void
     {
+        $page = $this->pageRepository->getOneBy($message->getIdentifier());
+        $previousParent = $page->getParent();
+        $targentParent = $this->pageRepository->getOneBy($message->getTargetParentIdentifier());
+
         $this->pageRepository->moveOneBy($message->getIdentifier(), $message->getTargetParentIdentifier());
+
+        $locale = $this->requestAnalyzer->getAttribute('locale');
+        $previousParentDimensionContentCollection = new DimensionContentCollection($previousParent->getDimensionContents()->toArray(), [], PageDimensionContent::class);
+        /** @var PageDimensionContent $previousParentLocalizedDimensionContent */
+        $previousParentLocalizedDimensionContent = $previousParentDimensionContentCollection->getDimensionContent(['locale' => $locale]);
+
+        $this->domainEventCollector->collect(new PageMovedEvent(
+            $page,
+            $locale,
+            $previousParent->getId(),
+            $previousParent->getWebspaceKey(),
+            $previousParentLocalizedDimensionContent->getTitle(),
+        ));
     }
 }

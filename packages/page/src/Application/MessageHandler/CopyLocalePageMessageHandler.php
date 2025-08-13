@@ -11,9 +11,11 @@
 
 namespace Sulu\Page\Application\MessageHandler;
 
+use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
 use Sulu\Content\Application\ContentCopier\ContentCopierInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Page\Application\Message\CopyLocalePageMessage;
+use Sulu\Page\Domain\Event\PageTranslationCopiedEvent;
 use Sulu\Page\Domain\Repository\PageRepositoryInterface;
 
 /**
@@ -24,22 +26,11 @@ use Sulu\Page\Domain\Repository\PageRepositoryInterface;
  */
 final class CopyLocalePageMessageHandler
 {
-    /**
-     * @var PageRepositoryInterface
-     */
-    private $pageRepository;
-
-    /**
-     * @var ContentCopierInterface
-     */
-    private $contentCopier;
-
     public function __construct(
-        PageRepositoryInterface $pageRepository,
-        ContentCopierInterface $contentCopier
+        private PageRepositoryInterface $pageRepository,
+        private ContentCopierInterface $contentCopier,
+        private DomainEventCollectorInterface $domainEventCollector,
     ) {
-        $this->pageRepository = $pageRepository;
-        $this->contentCopier = $contentCopier;
     }
 
     public function __invoke(CopyLocalePageMessage $message): void
@@ -58,5 +49,12 @@ final class CopyLocalePageMessageHandler
                 'locale' => $message->getTargetLocale(),
             ]
         );
+
+        $this->domainEventCollector->collect(new PageTranslationCopiedEvent(
+            $page,
+            $message->getTargetLocale(),
+            $message->getSourceLocale(),
+            [],
+        ));
     }
 }

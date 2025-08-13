@@ -11,9 +11,11 @@
 
 namespace Sulu\Page\Application\MessageHandler;
 
+use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
 use Sulu\Content\Application\ContentCopier\ContentCopierInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Page\Application\Message\RestorePageVersionMessage;
+use Sulu\Page\Domain\Event\PageVersionRestoredEvent;
 use Sulu\Page\Domain\Model\PageInterface;
 use Sulu\Page\Domain\Repository\PageRepositoryInterface;
 
@@ -27,7 +29,8 @@ class RestorePageVersionMessageHandler
 {
     public function __construct(
         private PageRepositoryInterface $pageRepository,
-        private ContentCopierInterface $contentCopier
+        private ContentCopierInterface $contentCopier,
+        private DomainEventCollectorInterface $domainEventCollector,
     ) {
     }
 
@@ -53,6 +56,8 @@ class RestorePageVersionMessageHandler
                 'ignoredAttributes' => ['url'],
             ]
         );
+
+        $this->domainEventCollector->collect(new PageVersionRestoredEvent($page, $options['locale'], $message->getVersion()));
 
         return $dimensionContent->getResource();
     }
