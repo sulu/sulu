@@ -41,13 +41,15 @@ final class ModifyPageMessageHandler
     {
         $identifier = $message->getIdentifier();
         $data = $message->getData();
+        /** @var string $locale */
+        $locale = $data['locale'];
         $page = $this->pageRepository->getOneBy($identifier);
 
         foreach ($this->pageMappers as $pageMapper) {
             $pageMapper->mapPageData($page, $data);
         }
 
-        $this->domainEventCollector->collect(new PageModifiedEvent($page, $data['locale'], $data));
+        $this->domainEventCollector->collect(new PageModifiedEvent($page, $locale, $data));
 
         return $page;
     }

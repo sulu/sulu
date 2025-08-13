@@ -17,12 +17,12 @@ use Sulu\Bundle\ActivityBundle\Domain\Event\DomainEvent;
 use Sulu\Bundle\PageBundle\Admin\PageAdmin;
 use Sulu\Bundle\PageBundle\Document\BasePageDocument;
 use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
-use Sulu\Page\Domain\Model\Page;
+use Sulu\Page\Domain\Model\PageInterface;
 
 class PageCopiedEvent extends DomainEvent
 {
     public function __construct(
-        private Page $page,
+        private PageInterface $page,
         private string $sourcePageId,
         private string $sourcePageWebspaceKey,
         private ?string $sourcePageTitle,
@@ -31,7 +31,7 @@ class PageCopiedEvent extends DomainEvent
         parent::__construct();
     }
 
-    public function getPage(): Page
+    public function getPage(): PageInterface
     {
         return $this->page;
     }
@@ -63,7 +63,7 @@ class PageCopiedEvent extends DomainEvent
 
     public function getResourceWebspaceKey(): string
     {
-        return $this->page->getWebspaceName();
+        return $this->page->getWebspaceKey();
     }
 
     public function getResourceTitle(): ?string

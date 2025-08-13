@@ -19,18 +19,19 @@ use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 use Sulu\Content\Domain\Model\DimensionContentCollection;
 use Sulu\Page\Domain\Model\Page;
 use Sulu\Page\Domain\Model\PageDimensionContent;
+use Sulu\Page\Domain\Model\PageInterface;
 
 class PageOrderedEvent extends DomainEvent
 {
     public function __construct(
-        private Page $page,
+        private PageInterface $page,
         private string $locale,
         private int $targetPosition,
     ) {
         parent::__construct();
     }
 
-    public function getPage(): Page
+    public function getPage(): PageInterface
     {
         return $this->page;
     }
@@ -65,9 +66,8 @@ class PageOrderedEvent extends DomainEvent
     public function getResourceTitle(): ?string
     {
         $dimensionContentCollection = new DimensionContentCollection($this->page->getDimensionContents()->toArray(), [], PageDimensionContent::class);
-        $localizedDimensionContent = $dimensionContentCollection->getDimensionContent(['locale' => $this->locale]);
 
-        return $localizedDimensionContent->getTitle();
+        return $dimensionContentCollection->getDimensionContent(['locale' => $this->locale])?->getTitle();
     }
 
     public function getResourceTitleLocale(): ?string

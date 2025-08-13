@@ -19,17 +19,18 @@ use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 use Sulu\Content\Domain\Model\DimensionContentCollection;
 use Sulu\Page\Domain\Model\Page;
 use Sulu\Page\Domain\Model\PageDimensionContent;
+use Sulu\Page\Domain\Model\PageInterface;
 
 class PageDraftRemovedEvent extends DomainEvent
 {
     public function __construct(
-        private Page $page,
+        private PageInterface $page,
         private string $locale,
     ) {
         parent::__construct();
     }
 
-    public function getPageDocument(): Page
+    public function getPage(): PageInterface
     {
         return $this->page;
     }
@@ -63,7 +64,7 @@ class PageDraftRemovedEvent extends DomainEvent
     {
         $dimensionContentCollection = new DimensionContentCollection($this->page->getDimensionContents()->toArray(), [], PageDimensionContent::class);
 
-        return $dimensionContentCollection->getDimensionContent(['locale' => $this->locale])->getTitle();
+        return $dimensionContentCollection->getDimensionContent(['locale' => $this->locale])?->getTitle();
     }
 
     public function getResourceTitleLocale(): ?string

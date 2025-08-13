@@ -41,6 +41,8 @@ final class CreatePageMessageHandler
     public function __invoke(CreatePageMessage $message): PageInterface
     {
         $data = $message->getData();
+        /** @var string $locale */
+        $locale = $data['locale'];
         $page = $this->pageRepository->createNew($message->getUuid());
         $page->setWebspaceKey($message->getWebspaceKey());
         $page = $this->setParent($message->getParentId(), $page);
@@ -51,7 +53,7 @@ final class CreatePageMessageHandler
 
         $this->pageRepository->add($page);
 
-        $this->domainEventCollector->collect(new PageCreatedEvent($page, $data['locale'], $data));
+        $this->domainEventCollector->collect(new PageCreatedEvent($page, $locale, $data));
 
         return $page;
     }

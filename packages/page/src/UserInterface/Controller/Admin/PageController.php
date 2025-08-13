@@ -295,7 +295,10 @@ final class PageController
             /** @see Sulu\Page\Application\MessageHandler\RestorePageVersionMessageHandler */
             /** @var PageInterface|null */
             return $this->handle(new Envelope($message, [new EnableFlushStamp()]));
+        } elseif ('remove-draft' === $action) {
+            $action = 'remove_draft';
         }
+
         $message = new ApplyWorkflowTransitionPageMessage(['uuid' => $uuid], $this->getLocale($request), $action);
 
         /** @see Sulu\Page\Application\MessageHandler\ApplyWorkflowTransitionPageMessageHandler */

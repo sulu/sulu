@@ -57,7 +57,10 @@ class RestorePageVersionMessageHandler
             ]
         );
 
-        $this->domainEventCollector->collect(new PageVersionRestoredEvent($page, $options['locale'], $message->getVersion()));
+        /** @var string $locale */
+        $locale = $options['locale'];
+
+        $this->domainEventCollector->collect(new PageVersionRestoredEvent($page, $locale, $message->getVersion()));
 
         return $dimensionContent->getResource();
     }

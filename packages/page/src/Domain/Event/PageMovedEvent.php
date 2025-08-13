@@ -19,11 +19,12 @@ use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 use Sulu\Content\Domain\Model\DimensionContentCollection;
 use Sulu\Page\Domain\Model\Page;
 use Sulu\Page\Domain\Model\PageDimensionContent;
+use Sulu\Page\Domain\Model\PageInterface;
 
 class PageMovedEvent extends DomainEvent
 {
     public function __construct(
-        private Page $page,
+        private PageInterface $page,
         private string $locale,
         private ?string $previousParentId,
         private ?string $previousParentWebspaceKey,
@@ -32,7 +33,7 @@ class PageMovedEvent extends DomainEvent
         parent::__construct();
     }
 
-    public function getPage(): Page
+    public function getPage(): PageInterface
     {
         return $this->page;
     }
@@ -63,14 +64,12 @@ class PageMovedEvent extends DomainEvent
         }
 
         $newParentDimensionContentCollection = new DimensionContentCollection($newParent->getDimensionContents()->toArray(), [], PageDimensionContent::class);
-        dump($newParentDimensionContentCollection);
         $newParentLocalizedDimensionContent = $newParentDimensionContentCollection->getDimensionContent(['locale' => $this->locale]);
-        dump($newParentLocalizedDimensionContent);
 
         return \array_merge($eventContext, [
             'newParentId' => $newParent->getUuid(),
             'newParentWebspaceKey' => $newParent->getWebspaceKey(),
-            'newParentTitle' => $newParentLocalizedDimensionContent->getTitle(),
+            'newParentTitle' => $newParentLocalizedDimensionContent?->getTitle(),
             'newParentTitleLocale' => $this->locale,
         ]);
     }
@@ -93,9 +92,8 @@ class PageMovedEvent extends DomainEvent
     public function getResourceTitle(): ?string
     {
         $dimensionContentCollection = new DimensionContentCollection($this->page->getDimensionContents()->toArray(), [], PageDimensionContent::class);
-        $localizedDimensionContent = $dimensionContentCollection->getDimensionContent(['locale' => $this->locale]);
 
-        return $localizedDimensionContent->getTitle();
+        return $dimensionContentCollection->getDimensionContent(['locale' => $this->locale])?->getTitle();
     }
 
     public function getResourceTitleLocale(): ?string
