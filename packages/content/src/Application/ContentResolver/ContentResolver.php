@@ -109,7 +109,7 @@ readonly class ContentResolver implements ContentResolverInterface
                             $resolvedValue = [
                                 'content' => $normalizedContentData['content']['0'],
                                 // All resolved resources have the same view structure, so we can just take the first one
-                                'view' => \reset($normalizedContentData['view']['0']) ?? $normalizedContentData['view']['0'],
+                                'view' => $normalizedContentData['view']['0'],
                             ];
 
                             // Add resolvable resources to priority queue

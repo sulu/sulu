@@ -102,20 +102,35 @@ class ContentViewDataNormalizer implements ContentViewDataNormalizerInterface
                 if ([] !== $entry) {
                     $this->replaceNestedContentViews($contentData, $path . '[' . $key . ']');
                 }
-                if ('view' === $key) {
-                    $value = $this->propertyAccessor->getValue($contentData, $path . '[' . $key . ']');
-                    // Replace 'content' with 'view' in the path
-                    $viewPath = \substr_replace($path, '[view]', 0, 9);
 
+                if (!$this->isExtractableIterable($iterable)) {
+                    continue;
+                }
+
+                if ('view' === $key) {
                     // If there are more [content] positions, we need to remove them, only keep the first one from the root property resolver
-                    $viewPath = (($nextContentPosition = \strpos($viewPath, '[content]')) !== false) ? \substr($viewPath, 0, $nextContentPosition) : $viewPath;
+                    $contentLength = \strlen('[content]');
+                    // search for the next occurrence of '[content]' after the current position
+                    $nextContentPosition = \strpos($path, '[content]', $contentLength);
+                    $viewPath = (false !== $nextContentPosition) ? \substr($path, 0, $nextContentPosition) : $path;
+
+                    $value = null;
+                    if ($this->propertyAccessor->isReadable($contentData, $viewPath . '[' . $key . ']')) {
+                        $value = $this->propertyAccessor->getValue($contentData, $viewPath . '[' . $key . ']');
+                    }
+
+                    if (null === $value || [] === $value) {
+                        $value = $this->propertyAccessor->getValue($contentData, $path . '[' . $key . ']');
+                    }
+
+                    // Replace first 'content' with 'view' in the path
+                    $viewPath = \substr_replace($viewPath, '[view]', 0, $contentLength);
 
                     // Only override empty view paths
                     if (($this->propertyAccessor->getValue($contentData, $viewPath) ?? []) === []) {
                         $pathValues[$viewPath] = $value;
                     }
-                }
-                if ('content' === $key) {
+                } elseif ('content' === $key) {
                     $value = $this->propertyAccessor->getValue($contentData, $path . '[' . $key . ']');
                     $pathValues[$path] = $value;
                 }
@@ -125,6 +140,20 @@ class ContentViewDataNormalizer implements ContentViewDataNormalizerInterface
         foreach ($pathValues as $path => $value) {
             $this->propertyAccessor->setValue($contentData, $path, $value); // @phpstan-ignore-line
         }
+    }
+
+    /**
+     * @param array<int|string, mixed> $iterable
+     */
+    private function isExtractableIterable(array $iterable): bool
+    {
+        return
+            \array_key_exists('content', $iterable)
+            && \array_key_exists('view', $iterable)
+            && (
+                2 === \count($iterable) // SmartResolvedResource e.g. SmartContent do not have a resource
+                || ($iterable['resource'] ?? null) instanceof ContentRichEntityInterface // resolved ContentRichEntities always have a resource
+            );
     }
 
     /**

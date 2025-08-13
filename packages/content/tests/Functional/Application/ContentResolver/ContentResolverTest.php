@@ -595,4 +595,146 @@ class ContentResolverTest extends SuluTestCase
         self::assertSame([$media1->getId(), $media2->getId()], $mediaSelectionView['ids']);
         self::assertNull($mediaSelectionView['displayOption']);
     }
+
+    public function testResolvePropertyNamedContentView(): void
+    {
+        $collection1 = self::createCollection(['title' => 'collection-1', 'locale' => 'en']);
+        $mediaType = self::createMediaType(['name' => 'Image', 'description' => 'This is an image']);
+        $media1 = self::createMedia($collection1, $mediaType, ['title' => 'media-1', 'locale' => 'en']);
+        $media2 = self::createMedia($collection1, $mediaType, ['title' => 'media-2', 'locale' => 'en']);
+        self::getEntityManager()->flush();
+
+        $example1 = static::createExample(
+            [
+                'en' => [
+                    'live' => [
+                        'template' => 'default-content-view-properties',
+                        'title' => 'Lorem Ipsum',
+                        'url' => '/lorem-ipsum',
+                        'content' => [
+                            [
+                                'type' => 'text',
+                                'text' => '<p>Content text 2</p>',
+                            ],
+                            [
+                                'type' => 'text',
+                                'text' => '<p>Content text 2</p>',
+                            ],
+                            [
+                                'type' => 'media',
+                                'media' => [
+                                    'ids' => [$media1->getId()],
+                                ],
+                            ],
+                        ],
+                        'view' => [
+                            [
+                                'type' => 'text',
+                                'text' => '<p>View text 2</p>',
+                            ],
+                            [
+                                'type' => 'text',
+                                'text' => '<p>View text 2</p>',
+                            ],
+                            [
+                                'type' => 'media',
+                                'media' => [
+                                    'ids' => [$media2->getId()],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        );
+        static::getEntityManager()->flush();
+
+        $dimensionContent = $this->contentAggregator->aggregate($example1, ['locale' => 'en', 'stage' => 'live']);
+
+        /** @var array{content: array{title: string, url: string, content: array<int, mixed>, view: array<int, mixed>}, view: array{content: array<int, mixed>, view: array<int, mixed>}} $result */
+        $result = $this->contentResolver->resolve($dimensionContent);
+
+        /** @var array{title: string, url: string, content: array<int, mixed>, view: array<int, mixed>} $content */
+        $content = $result['content'];
+        self::assertSame('Lorem Ipsum', $content['title']);
+        self::assertSame('/lorem-ipsum', $content['url']);
+
+        // content.content blocks
+        /** @var array<int, mixed> $contentBlocks */
+        $contentBlocks = $content['content'];
+        self::assertCount(3, $contentBlocks);
+        /** @var array{type: string, text?: string, media?: mixed[]} $contentBlock0 */
+        $contentBlock0 = $contentBlocks[0];
+        self::assertSame('text', $contentBlock0['type']);
+        self::assertArrayHasKey('text', $contentBlock0);
+        self::assertSame('<p>Content text 2</p>', $contentBlock0['text']);
+        /** @var array{type: string, text?: string, media?: mixed[]} $contentBlock1 */
+        $contentBlock1 = $contentBlocks[1];
+        self::assertSame('text', $contentBlock1['type']);
+        self::assertArrayHasKey('text', $contentBlock1);
+        self::assertSame('<p>Content text 2</p>', $contentBlock1['text']);
+        /** @var array{type: string, media: mixed[]} $contentBlock2 */
+        $contentBlock2 = $contentBlocks[2];
+        self::assertSame('media', $contentBlock2['type']);
+        self::assertCount(1, $contentBlock2['media']);
+        $contentMedia = $contentBlock2['media'][0];
+        self::assertInstanceOf(Media::class, $contentMedia);
+        self::assertSame($media1->getId(), $contentMedia->getId());
+
+        // content.view blocks
+        /** @var array<int, mixed> $contentViewBlocks */
+        $contentViewBlocks = $content['view'];
+        self::assertCount(3, $contentViewBlocks);
+        /** @var array{type: string, text?: string, media?: mixed[]} $contentViewBlock0 */
+        $contentViewBlock0 = $contentViewBlocks[0];
+        self::assertSame('text', $contentViewBlock0['type']);
+        self::assertArrayHasKey('text', $contentViewBlock0);
+        self::assertSame('<p>View text 2</p>', $contentViewBlock0['text']);
+        /** @var array{type: string, text?: string, media?: mixed[]} $contentViewBlock1 */
+        $contentViewBlock1 = $contentViewBlocks[1];
+        self::assertSame('text', $contentViewBlock1['type']);
+        self::assertArrayHasKey('text', $contentViewBlock1);
+        self::assertSame('<p>View text 2</p>', $contentViewBlock1['text']);
+        /** @var array{type: string, media: mixed[]} $contentViewBlock2 */
+        $contentViewBlock2 = $contentViewBlocks[2];
+        self::assertSame('media', $contentViewBlock2['type']);
+        self::assertCount(1, $contentViewBlock2['media']);
+        $contentViewMedia = $contentViewBlock2['media'][0];
+        self::assertInstanceOf(Media::class, $contentViewMedia);
+        self::assertSame($media2->getId(), $contentViewMedia->getId());
+
+        // root view mapping (ids/displayOption); ignore metadata
+        /** @var array{content: array<int, mixed>, view: array<int, mixed>, title: array<mixed>, url: array<mixed>} $view */
+        $view = $result['view'];
+        self::assertSame([], $view['title']);
+        self::assertSame([], $view['url']);
+
+        /** @var array<int, mixed> $viewContentBlocks */
+        $viewContentBlocks = $view['content'];
+        self::assertCount(3, $viewContentBlocks);
+        /** @var array{text: mixed} $viewContentBlock0 */
+        $viewContentBlock0 = $viewContentBlocks[0];
+        self::assertSame([], $viewContentBlock0['text']);
+        /** @var array{text: mixed} $viewContentBlock1 */
+        $viewContentBlock1 = $viewContentBlocks[1];
+        self::assertSame([], $viewContentBlock1['text']);
+        /** @var array{media: array{ids: mixed[], displayOption: mixed}} $viewContentBlock2 */
+        $viewContentBlock2 = $viewContentBlocks[2];
+        self::assertSame([$media1->getId()], $viewContentBlock2['media']['ids']);
+        self::assertNull($viewContentBlock2['media']['displayOption']);
+
+        /** @var array<int, mixed> $viewViewBlocks */
+        $viewViewBlocks = $view['view'];
+        self::assertCount(3, $viewViewBlocks);
+        /** @var array{text: mixed} $viewViewBlock0 */
+        $viewViewBlock0 = $viewViewBlocks[0];
+        self::assertSame([], $viewViewBlock0['text']);
+        /** @var array{text: mixed} $viewViewBlock1 */
+        $viewViewBlock1 = $viewViewBlocks[1];
+        self::assertSame([], $viewViewBlock1['text']);
+        /** @var array{media: array{ids: mixed[], displayOption: mixed}} $viewViewBlock2 */
+        $viewViewBlock2 = $viewViewBlocks[2];
+        self::assertSame([$media2->getId()], $viewViewBlock2['media']['ids']);
+        self::assertNull($viewViewBlock2['media']['displayOption']);
+    }
 }
