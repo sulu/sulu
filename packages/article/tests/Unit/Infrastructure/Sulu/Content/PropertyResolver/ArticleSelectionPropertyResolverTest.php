@@ -18,7 +18,6 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Sulu\Article\Infrastructure\Sulu\Content\PropertyResolver\ArticleSelectionPropertyResolver;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
-use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\OptionMetadata;
 use Sulu\Content\Application\ContentResolver\Value\ResolvableResource;
 
 #[CoversClass(ArticleSelectionPropertyResolver::class)]
@@ -125,22 +124,12 @@ class ArticleSelectionPropertyResolverTest extends TestCase
 
     public function testResolveWithMetadata(): void
     {
-        $propertyOption1 = new OptionMetadata();
-        $propertyOption1->setName('property1');
-        $propertyOption1->setValue('value1');
-
-        $propertyOption2 = new OptionMetadata();
-        $propertyOption2->setName('property2');
-        $propertyOption2->setValue('value2');
-
-        $propertiesOption = new OptionMetadata();
-        $propertiesOption->setName('properties');
-        $propertiesOption->setValue([$propertyOption1, $propertyOption2]);
-
-        $metadata = new FieldMetadata('test_field');
-        $metadata->addOption($propertiesOption);
-
-        $contentView = $this->resolver->resolve(['1'], 'en', ['metadata' => $metadata]);
+        $contentView = $this->resolver->resolve(['1'], 'en', [
+            'properties' => [
+                'property1' => 'value1',
+                'property2' => 'value2',
+            ],
+        ]);
 
         $content = $contentView->getContent();
         $this->assertIsArray($content);

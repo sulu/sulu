@@ -13,8 +13,6 @@ declare(strict_types=1);
 
 namespace Sulu\Content\Application\PropertyResolver\Resolver;
 
-use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
-use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\OptionMetadata;
 use Sulu\Bundle\AdminBundle\SmartContent\SmartContentProviderInterface;
 use Sulu\Content\Application\ContentResolver\Value\ContentView;
 use Sulu\Content\Application\Visitor\SmartContentFiltersVisitorInterface;
@@ -50,20 +48,16 @@ class SmartContentPropertyResolver implements PropertyResolverInterface
      *     excludeDuplicates?: bool,
      *     audienceTargeting?: bool
      * } $data
-     * @param array<string, mixed> $params
+     * @param array{
+     *     resourceLoader?: string,
+     *     properties?: array<string, mixed>|null,
+     * } $params
      */
     public function resolve(mixed $data, string $locale, array $params = []): ContentView
     {
         if (!\is_array($data) || ([] !== $data && \array_is_list($data))) { // @phpstan-ignore-line
             return ContentView::create([], $params);
         }
-
-        $metadata = $params['metadata'] ?? null;
-        if (!$metadata instanceof FieldMetadata) {
-            throw new \InvalidArgumentException('The "metadata" parameter must be an instance of FieldMetadata.');
-        }
-
-        $parameters = $this->getOptions($metadata);
 
         // Default parameters
         /**
@@ -90,7 +84,7 @@ class SmartContentPropertyResolver implements PropertyResolverInterface
             'website_tags_operator' => 'OR',
             'website_categories_operator' => 'OR',
             'exclude_duplicates' => false,
-        ], $parameters);
+        ], $params['properties'] ?? []);
         $this->validateParameters($parameters);
 
         $request = $this->requestStack->getCurrentRequest();
@@ -146,46 +140,6 @@ class SmartContentPropertyResolver implements PropertyResolverInterface
     public static function getType(): string
     {
         return 'smart_content';
-    }
-
-    /**
-     * @return array<string|int, string|int|mixed[]|bool|null>
-     */
-    private function getOptions(FieldMetadata $metadata): array
-    {
-        $parameters = [];
-        foreach ($metadata->getOptions() as $option) {
-            $parameters[$option->getName()] = $this->getOption($option);
-        }
-
-        return $parameters;
-    }
-
-    /**
-     * @return array<string|int, mixed>|string|int|bool|null
-     */
-    private function getOption(OptionMetadata $metadata): string|int|array|bool|null
-    {
-        if (OptionMetadata::TYPE_COLLECTION === $metadata->getType()) {
-            $values = [];
-            /** @var OptionMetadata[]|null $metadataValues */
-            $metadataValues = $metadata->getValue();
-            if (!\is_array($metadataValues)) {
-                throw new \InvalidArgumentException(
-                    \sprintf('The value of option "%s" from type %s, must be an array, %s given.', $metadata->getName(), $metadata->getType(), \gettype($metadataValues)),
-                );
-            }
-            foreach ($metadataValues as $option) {
-                $values[$option->getName()] = $this->getOption($option);
-            }
-
-            return $values;
-        }
-
-        /** @var string|int|bool|null $result */
-        $result = $metadata->getValue() ?? $metadata->getName();
-
-        return $result;
     }
 
     /**

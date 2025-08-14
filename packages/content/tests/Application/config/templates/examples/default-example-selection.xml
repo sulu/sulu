@@ -72,7 +72,7 @@
 
             <params>
                 <param name="properties" type="collection">
-                    <param name="id" value="object.id"/>
+                    <param name="id" value="object.resource.id"/>
                     <param name="title" value="title"/>
                     <param name="description" value="description"/>
                     <param name="excerptTitle" value="excerpt.title"/>

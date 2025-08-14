@@ -13,7 +13,9 @@ declare(strict_types=1);
 
 namespace Sulu\Content\Application\MetadataResolver;
 
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\ItemMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\OptionMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\SectionMetadata;
 use Sulu\Content\Application\ContentResolver\Value\ContentView;
 use Sulu\Content\Application\PropertyResolver\PropertyResolverProviderInterface;
@@ -46,7 +48,12 @@ class MetadataResolver
                     $this->resolveItems($item->getItems(), $data, $locale)
                 );
             } else {
-                $contentViews[$name] = $this->resolveProperty($type, $data[$name] ?? null, $locale, ['metadata' => $item]);
+                // TODO remove metadata as soon as we implemented a MetadataAwarePropertyResolverInterface
+                $params = [
+                    'metadata' => $item,
+                    ...($item instanceof FieldMetadata ? $this->serializeFieldMetadataOptions($item) : []),
+                ];
+                $contentViews[$name] = $this->resolveProperty($type, $data[$name] ?? null, $locale, $params);
             }
         }
 
@@ -61,5 +68,49 @@ class MetadataResolver
         $propertyResolver = $this->propertyResolverProvider->getPropertyResolver($type);
 
         return $propertyResolver->resolve($data, $locale, $params);
+    }
+
+    /**
+     * @return array<string, string|int|mixed[]|bool|null>
+     */
+    private function serializeFieldMetadataOptions(ItemMetadata $metadata): array
+    {
+        $parameters = [];
+        if (!$metadata instanceof FieldMetadata) {
+            return [];
+        }
+
+        foreach ($metadata->getOptions() as $option) {
+            $parameters[(string) $option->getName()] = $this->serializeOptionMetadata($option);
+        }
+
+        return $parameters;
+    }
+
+    /**
+     * @return array<string|int, mixed>|string|int|bool|null
+     */
+    private function serializeOptionMetadata(OptionMetadata $metadata): string|int|array|bool|null
+    {
+        if (OptionMetadata::TYPE_COLLECTION === $metadata->getType()) {
+            $values = [];
+            /** @var OptionMetadata[]|null $metadataValues */
+            $metadataValues = $metadata->getValue();
+            if (!\is_array($metadataValues)) {
+                throw new \InvalidArgumentException(
+                    \sprintf('The value of option "%s" from type %s, must be an array, %s given.', $metadata->getName(), $metadata->getType(), \gettype($metadataValues)),
+                );
+            }
+            foreach ($metadataValues as $option) {
+                $values[$option->getName()] = $this->serializeOptionMetadata($option);
+            }
+
+            return $values;
+        }
+
+        /** @var string|int|bool|null $result */
+        $result = $metadata->getValue() ?? $metadata->getName();
+
+        return $result;
     }
 }
