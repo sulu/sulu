@@ -94,6 +94,41 @@ class ExampleControllerTest extends SuluTestCase
     }
 
     #[Depends('testPostPublish')]
+    public function testWebsite406ForNotExistFormat(int $id): int
+    {
+        self::ensureKernelShutdown();
+
+        $websiteClient = $this->createWebsiteClient();
+        $websiteClient->request('GET', '/en/my-example.rss');
+
+        $response = $websiteClient->getResponse();
+        $this->assertHttpStatusCode(406, $response);
+
+        return $id;
+    }
+
+    #[Depends('testPostPublish')]
+    public function testWebsiteAcceptHeaderNotUsed(int $id): int
+    {
+        self::ensureKernelShutdown();
+
+        $websiteClient = $this->createWebsiteClient();
+        $websiteClient->request('GET', '/en/my-example', [], [], [
+            'HTTP_ACCEPT' => 'text/plain',
+        ]);
+
+        $response = $websiteClient->getResponse();
+        $this->assertHttpStatusCode(200, $response);
+
+        $this->assertStringStartsWith(
+            'text/html',
+            $response->headers->get('Content-Type')
+        );
+
+        return $id;
+    }
+
+    #[Depends('testPostPublish')]
     public function testVersionListAfterPublish(int $id): int
     {
         $this->client->request('GET', '/admin/api/examples/' . $id . '/versions?page=1&locale=en&fields=title,version,changer,id');

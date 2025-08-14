@@ -142,10 +142,6 @@ class SuluWebsiteExtension extends Extension implements PrependExtensionInterfac
 
             // default local provider
             $container->setAlias('sulu_website.default_locale.provider', $config['default_locale']['provider_service_id']);
-
-            // add alias for default controller
-            $container->setAlias(DefaultController::class, 'sulu_website.default_controller')
-                ->setPublic(true);
         }
 
         $this->configurePersistence($config['objects'], $container);

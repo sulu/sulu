@@ -5,8 +5,8 @@
 
     <key>overview</key>
 
-    <view>page.html.twig</view>
-    <controller>SuluPageBundle:Default:index</controller>
+    <view>pages/overview</view>
+    <controller>Sulu\Content\UserInterface\Controller\Website\ContentController::indexAction</controller>
     <cacheLifetime>2400</cacheLifetime>
 
     <properties>
@@ -22,4 +22,3 @@
         <property name="external" type="url" mandatory="false" />
     </properties>
 </template>
-

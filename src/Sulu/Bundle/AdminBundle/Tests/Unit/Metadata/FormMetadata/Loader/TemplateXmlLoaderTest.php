@@ -77,8 +77,8 @@ class TemplateXmlLoaderTest extends TestCase
 
         $this->assertSame([
             'template' => [
-                'controller' => 'Sulu\Bundle\WebsiteBundle\Controller\DefaultController::indexAction',
-                'view' => 'ClientWebsiteBundle:templates:animals',
+                'controller' => 'Sulu\Content\UserInterface\Controller\Website\ContentController::indexAction',
+                'view' => 'pages/animals',
                 'cacheLifetime' => [
                     'type' => 'seconds',
                     'value' => '2400',
@@ -268,8 +268,8 @@ class TemplateXmlLoaderTest extends TestCase
 
         $this->assertSame([
             'template' => [
-                'controller' => 'SuluPageBundle:Default:index',
-                'view' => 'page',
+                'controller' => 'Sulu\Content\UserInterface\Controller\Website\ContentController::indexAction',
+                'view' => 'pages/overview',
                 'cacheLifetime' => [
                     'type' => 'expression',
                     'value' => '0 2 * * *',

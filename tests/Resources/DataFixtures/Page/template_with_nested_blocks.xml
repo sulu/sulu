@@ -5,8 +5,8 @@
 
     <key>default</key>
 
-    <view>templates/pages/default</view>
-    <controller>Sulu\Bundle\WebsiteBundle\Controller\DefaultController::indexAction</controller>
+    <view>pages/template_with_nested_blocks</view>
+    <controller>Sulu\Content\UserInterface\Controller\Website\ContentController::indexAction</controller>
     <cacheLifetime>604800</cacheLifetime>
 
     <meta>

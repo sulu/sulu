@@ -7,8 +7,8 @@
 
     <key>default</key>
 
-    <view>ClientWebsiteBundle:templates:animals</view>
-    <controller>Sulu\Bundle\WebsiteBundle\Controller\DefaultController::indexAction</controller>
+    <view>pages/animals</view>
+    <controller>Sulu\Content\UserInterface\Controller\Website\ContentController::indexAction</controller>
     <cacheLifetime>2400</cacheLifetime>
 
     <meta>

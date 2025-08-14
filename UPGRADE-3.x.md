@@ -125,6 +125,17 @@ return [
 Remove eventually registered routes `config/routes/sulu_website.yaml` and `config/routes/sulu_admin.yaml`
 or usages in the twig templates e.g.: `{{ path('sulu_search.website_search') }}`.
 
+### Template Controller changes
+
+The `DefaultController` and it's parent class `WebsiteController` has been removed in favor
+of the new `ContentController`. Update your controllers to extend the new `ContentController`
+and update your templates definition to use the new controller:
+
+```diff
+-<controller>Sulu\Bundle\WebsiteBundle\Controller\DefaultController::indexAction</controller>
++<controller>Sulu\Content\UserInterface\Controller\Website\ContentController::indexAction</controller>
+```
+
 ### Add new Content storage tables
 
 The new content storage architecture requires a new database schema. You can execute the following sql statements
@@ -621,6 +632,8 @@ Removed classes / services:
 - `Sulu\Component\Content\Mapper\Event\ContentNodeDeleteEvent`
 - `Sulu\Component\Content\Mapper\Event\ContentNodeEvent`
 - `Sulu\Component\Content\Mapper\Event\ContentNodeOrderEvent`
+- `Sulu\Bundle\WebsiteBundle\Controller\DefaultController` (use new `ContentController` instead)
+- `Sulu\Bundle\WebsiteBundle\Controller\WebsiteController` (use new `ContentController` instead)
 
 Removed deprecated functions and properties:
 

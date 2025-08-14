@@ -5,8 +5,8 @@
 >
     <key>overview</key>
 
-    <view>default</view>
-    <controller>Sulu\Bundle\WebsiteBundle\Controller\DefaultController::indexAction</controller>
+    <view>pages/default</view>
+    <controller>Sulu\Content\UserInterface\Controller\Website\ContentController::indexAction</controller>
     <cacheLifetime>2400</cacheLifetime>
 
     <properties>
@@ -23,4 +23,3 @@
         <property name="internal_link" type="page_selection" mandatory="false" />
     </properties>
 </template>
-

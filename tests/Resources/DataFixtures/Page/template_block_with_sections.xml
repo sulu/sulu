@@ -6,8 +6,8 @@
 
     <key>template_block</key>
 
-    <view>ClientWebsiteBundle:Website:complex.html.twig</view>
-    <controller>Sulu\Bundle\WebsiteBundle\Controller\DefaultController::indexAction</controller>
+    <view>pages/template_block_with_sections</view>
+    <controller>Sulu\Content\UserInterface\Controller\Website\ContentController::indexAction</controller>
     <cacheLifetime>4800</cacheLifetime>
 
     <properties>
