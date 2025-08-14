@@ -21,6 +21,7 @@ use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TemplateMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
+use Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeRequestStore;
 use Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeResolverInterface;
 use Sulu\Content\Application\ContentAggregator\ContentAggregatorInterface;
 use Sulu\Content\Domain\Exception\ContentNotFoundException;
@@ -106,12 +107,18 @@ class ContentRouteDefaultsProvider implements RouteDefaultsProviderInterface
 
         $templateMetadata = $this->resolveTemplateMetadata($dimensionContent::getTemplateType(), $templateKey, $contentLocale);
 
-        return [
+        $attributes = [
             'object' => $dimensionContent,
             'view' => $templateMetadata->getView(),
             '_controller' => $templateMetadata->getController(),
-            '_cacheLifetime' => $this->getCacheLifetime($templateMetadata),
         ];
+
+        $cacheLifetime = $this->getCacheLifetime($templateMetadata);
+        if ($cacheLifetime) {
+            $attributes[CacheLifetimeRequestStore::ATTRIBUTE_KEY] = $cacheLifetime;
+        }
+
+        return $attributes;
     }
 
     /**

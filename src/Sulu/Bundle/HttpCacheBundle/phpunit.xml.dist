@@ -25,5 +25,4 @@
         <env name="SYMFONY_DEPRECATIONS_HELPER" value="weak"/>
         <ini name="date.timezone" value="UTC"/>
     </php>
-
 </phpunit>

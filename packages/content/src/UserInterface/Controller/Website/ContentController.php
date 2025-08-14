@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Sulu\Content\UserInterface\Controller\Website;
 
+use Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeEnhancerInterface;
 use Sulu\Bundle\PreviewBundle\Preview\Preview;
 use Sulu\Content\Application\ContentResolver\ContentResolverInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
@@ -68,10 +69,7 @@ class ContentController extends AbstractController
             $response = new Response($this->renderSuluView($view, $requestFormat, $parameters, $preview, $partial));
         }
 
-        $response->setPublic();
-
-        // TODO resolve cachelifetime
-        // TODO implement cacheLifetimeRequestStore
+        $this->enhanceSuluCacheLifeTime($response);
 
         return $response;
     }
@@ -84,6 +82,11 @@ class ContentController extends AbstractController
     protected function resolveSuluParameters(DimensionContentInterface $object, bool $normalize): array
     {
         return $this->container->get('sulu_content.content_resolver')->resolve($object); // TODO should the resolver already normalize the data based on metadata inside the template (serialization group)
+    }
+
+    protected function enhanceSuluCacheLifeTime(Response $response): void
+    {
+        $this->container->get('sulu_http_cache.cache_lifetime.enhancer')->enhance($response);
     }
 
     /**
@@ -120,6 +123,7 @@ class ContentController extends AbstractController
         $services = parent::getSubscribedServices();
 
         $services['sulu_content.content_resolver'] = ContentResolverInterface::class;
+        $services['sulu_http_cache.cache_lifetime.enhancer'] = CacheLifetimeEnhancerInterface::class;
 
         return $services;
     }

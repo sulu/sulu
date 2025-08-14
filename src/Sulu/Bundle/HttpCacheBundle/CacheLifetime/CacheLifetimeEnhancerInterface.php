@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\HttpCacheBundle\CacheLifetime;
 
-use Sulu\Component\Content\Compat\StructureInterface;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -22,5 +21,5 @@ interface CacheLifetimeEnhancerInterface
     /**
      * Call this method to enhance the response.
      */
-    public function enhance(Response $response, StructureInterface $structure);
+    public function enhance(Response $response): void;
 }

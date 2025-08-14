@@ -59,7 +59,7 @@ class ContentRouteDefaultsProviderTest extends TestCase
      */
     private ObjectProphecy $formMetadataProvider;
 
-    private CacheLifetimeResolverInterface $cacheLifetimeResolver;
+    private CacheLifetimeResolver $cacheLifetimeResolver;
 
     private ContentRouteDefaultsProvider $contentRouteDefaultsProvider;
 

@@ -93,6 +93,7 @@
             <argument type="service" id="sulu_content.content_aggregator"/>
             <argument type="service" id="sulu_admin.metadata_provider_registry"/>
             <argument type="service" id="sulu_http_cache.cache_lifetime.resolver"/>
+            <argument type="service" id="sulu_http_cache.cache_lifetime.request_store"/>
 
             <tag name="sulu_route.route_defaults_provider" resource-key="examples"/>
             <tag name="sulu_route.route_defaults_provider" resource-key="articles"/>

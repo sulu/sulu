@@ -16,8 +16,11 @@ namespace Sulu\Content\Tests\Functional\Integration;
 use PHPUnit\Framework\Attributes\Depends;
 use Sulu\Bundle\TestBundle\Testing\AssertSnapshotTrait;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
+use Sulu\Component\HttpKernel\SuluKernel;
+use Sulu\Content\Tests\Application\AppCache;
 use Sulu\Route\Domain\Repository\RouteRepositoryInterface;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
+use Symfony\Component\BrowserKit\CookieJar;
 
 /**
  * The integration test should have no impact on the coverage so we set it to coversNothing.
@@ -91,6 +94,39 @@ class ExampleControllerTest extends SuluTestCase
         $this->assertStringContainsString('EXAMPLE 2 TEMPLATE', $content);
 
         return $id;
+    }
+
+    #[Depends('testPostPublish')]
+    public function testCaching(): void
+    {
+        self::ensureKernelShutdown();
+
+        $cacheKernel = new AppCache(self::bootKernel(['sulu.context' => SuluKernel::CONTEXT_WEBSITE]));
+        $cookieJar = new CookieJar();
+        $client = new KernelBrowser($cacheKernel, [], null, $cookieJar);
+        $client->disableReboot();
+
+        $client->request('PURGE', 'http://localhost');
+        $cookieJar->clear();
+
+        // first request should be cache miss
+        $client->request('GET', '/en/my-example');
+        $response = $client->getResponse();
+        $this->assertHttpStatusCode(200, $response);
+        $this->assertSame('GET /en/my-example: miss, store', $response->headers->get('x-symfony-cache'));
+        $this->assertTrue($response->isCacheable());
+        $this->assertSame('max-age=240, public, s-maxage=240', $response->headers->get('Cache-Control'));
+        $this->assertCount(0, $response->headers->getCookies());
+
+        // second request should be cache hit
+        $client->request('GET', '/en/my-example');
+        $response = $client->getResponse();
+
+        $this->assertHttpStatusCode(200, $response);
+        $this->assertSame('GET /en/my-example: fresh', $response->headers->get('x-symfony-cache'));
+        $this->assertTrue($response->isCacheable());
+        $this->assertSame('max-age=240, public, s-maxage=240', $response->headers->get('Cache-Control'));
+        $this->assertCount(0, $response->headers->getCookies());
     }
 
     #[Depends('testPostPublish')]

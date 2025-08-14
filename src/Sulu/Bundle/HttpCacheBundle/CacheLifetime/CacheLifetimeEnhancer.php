@@ -12,39 +12,22 @@
 namespace Sulu\Bundle\HttpCacheBundle\CacheLifetime;
 
 use Sulu\Bundle\HttpCacheBundle\Cache\SuluHttpCache;
-use Sulu\Component\Content\Compat\StructureInterface;
 use Symfony\Component\HttpFoundation\Response;
 
 class CacheLifetimeEnhancer implements CacheLifetimeEnhancerInterface
 {
     public function __construct(
-        private CacheLifetimeResolverInterface $cacheLifetimeResolver,
+        private CacheLifetimeRequestStore $cacheLifetimeRequestStore,
         private int $maxAge,
         private int $sharedMaxAge,
-        private CacheLifetimeRequestStore $cacheLifetimeRequestStore
     ) {
     }
 
-    public function enhance(Response $response, StructureInterface $structure)
+    public function enhance(Response $response): void
     {
-        if (!\method_exists($structure, 'getCacheLifeTime')) {
-            return;
-        }
+        $cacheLifetime = $this->cacheLifetimeRequestStore->getCacheLifetime();
 
-        $cacheLifetimeData = $structure->getCacheLifeTime();
-        $cacheLifetime = $this->cacheLifetimeResolver->resolve(
-            $cacheLifetimeData['type'],
-            $cacheLifetimeData['value']
-        );
-
-        $requestCacheLifetime = $this->cacheLifetimeRequestStore->getCacheLifetime();
-
-        if (null !== $requestCacheLifetime && $requestCacheLifetime < $cacheLifetime) {
-            $cacheLifetime = $requestCacheLifetime;
-        }
-
-        // when structure cache-lifetime disabled - return
-        if (0 === $cacheLifetime) {
+        if (!$cacheLifetime) {
             return;
         }
 
@@ -53,6 +36,6 @@ class CacheLifetimeEnhancer implements CacheLifetimeEnhancerInterface
         $response->setSharedMaxAge($this->sharedMaxAge);
 
         // set reverse-proxy TTL (Symfony HttpCache, Varnish, ...) to avoid caching of intermediate proxies
-        $response->headers->set(SuluHttpCache::HEADER_REVERSE_PROXY_TTL, $cacheLifetime);
+        $response->headers->set(SuluHttpCache::HEADER_REVERSE_PROXY_TTL, (string) $cacheLifetime);
     }
 }

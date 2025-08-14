@@ -669,10 +669,11 @@ Removed kernel parameters:
 - All `sulu_*.class` parameters for services where removed (use compilerpasses to replace class of a service definition)
 - Parameter `%permissions%` was replaced in favor of `%sulu_security.permissions%`
 
-### Added return type hints for TimestampableInterface and UserBlameInterface
+### Added return type hints
 
-Return type hints have been added to the `TimestampableInterface` and `UserBlameInterface` methods in Sulu 3.0. This affects the following methods:
+The following methods have been updated with a return type hint:
 
+- `CacheLifetimeRequestStore::setCacheLifetime()` now returns `void`
 - `TimestampableInterface::getCreated()`: now returns `\DateTimeImmutable`
 - `TimestampableInterface::getChanged()`: now returns `\DateTimeImmutable`
 - `UserBlameInterface::getCreator()`: now returns `?UserInterface`

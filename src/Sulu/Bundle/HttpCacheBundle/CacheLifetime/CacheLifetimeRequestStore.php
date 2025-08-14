@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\HttpCacheBundle\CacheLifetime;
 
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 class CacheLifetimeRequestStore
@@ -21,11 +22,11 @@ class CacheLifetimeRequestStore
     {
     }
 
-    public function setCacheLifetime(int $cacheLifetime)
+    public function setCacheLifetime(int $cacheLifetime): void
     {
         $request = $this->requestStack->getCurrentRequest();
 
-        if (!$request) {
+        if (!$request instanceof Request) {
             return;
         }
 
@@ -43,7 +44,7 @@ class CacheLifetimeRequestStore
     {
         $request = $this->requestStack->getCurrentRequest();
 
-        if (!$request) {
+        if (!$request instanceof Request) {
             return null;
         }
 

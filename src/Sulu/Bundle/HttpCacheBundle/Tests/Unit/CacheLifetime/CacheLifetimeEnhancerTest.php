@@ -12,57 +12,29 @@
 namespace Sulu\Bundle\HttpCacheBundle\Tests\Unit\CacheLifetime;
 
 use PHPUnit\Framework\TestCase;
-use Prophecy\Argument;
-use Prophecy\PhpUnit\ProphecyTrait;
-use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\HttpCacheBundle\Cache\SuluHttpCache;
 use Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeEnhancer;
 use Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeRequestStore;
-use Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeResolver;
-use Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeResolverInterface;
-use Sulu\Component\Content\Compat\Structure\PageBridge;
-use Sulu\Component\Content\Compat\Structure\SnippetBridge;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
 class CacheLifetimeEnhancerTest extends TestCase
 {
-    use ProphecyTrait;
-
     /**
      * @var CacheLifetimeEnhancer
      */
     private $cacheLifetimeEnhancer;
 
     /**
-     * @var ObjectProphecy<CacheLifetimeRequestStore>
+     * @var CacheLifetimeRequestStore
      */
     private $cacheLifetimeRequestStore;
 
     /**
-     * @var ObjectProphecy<CacheLifetimeResolver>
+     * @var RequestStack
      */
-    private $cacheLifetimeResolver;
-
-    /**
-     * @var ObjectProphecy<PageBridge>
-     */
-    private $page;
-
-    /**
-     * @var ObjectProphecy<SnippetBridge>
-     */
-    private $snippet;
-
-    /**
-     * @var ObjectProphecy<Response>
-     */
-    private $response;
-
-    /**
-     * @var ObjectProphecy<ResponseHeaderBag>
-     */
-    private $responseHeaderBag;
+    private $requestStack;
 
     /**
      * @var int
@@ -76,67 +48,47 @@ class CacheLifetimeEnhancerTest extends TestCase
 
     public function setUp(): void
     {
-        $this->cacheLifetimeResolver = $this->prophesize(CacheLifetimeResolver::class);
-        $this->cacheLifetimeRequestStore = $this->prophesize(CacheLifetimeRequestStore::class);
-
-        $this->page = $this->prophesize(PageBridge::class);
-        $this->snippet = $this->prophesize(SnippetBridge::class);
-        $this->response = $this->prophesize(Response::class);
-        $this->responseHeaderBag = $this->prophesize(ResponseHeaderBag::class);
-        $this->response->headers = $this->responseHeaderBag;
+        $this->requestStack = new RequestStack();
+        $this->cacheLifetimeRequestStore = new CacheLifetimeRequestStore($this->requestStack);
 
         $this->cacheLifetimeEnhancer = new CacheLifetimeEnhancer(
-            $this->cacheLifetimeResolver->reveal(),
+            $this->cacheLifetimeRequestStore,
             $this->maxAge,
             $this->sharedMaxAge,
-            $this->cacheLifetimeRequestStore->reveal()
         );
     }
 
     public static function provideCacheLifeTime()
     {
-        return [
-            [50, null, 50],
-            [500, null, 500],
-            [0, null, 0],
-            [700, 800, 700],
-            [600, 400, 400],
-        ];
+        yield [50, null, 50];
+        yield [500, null, 500];
+        yield [0, null, 0];
+        yield [700, 800, 700];
+        yield [600, 400, 400];
     }
 
     #[\PHPUnit\Framework\Attributes\DataProvider('provideCacheLifeTime')]
     public function testEnhance(int $cacheLifetime, ?int $requestCacheLifetime, int $expectedCacheLifetime): void
     {
-        $this->page->getCacheLifeTime()->willReturn(
-            ['type' => CacheLifetimeResolverInterface::TYPE_SECONDS, 'value' => $cacheLifetime]
-        );
+        $this->requestStack->push(new Request());
+
+        if (null !== $requestCacheLifetime) {
+            $this->cacheLifetimeRequestStore->setCacheLifetime($requestCacheLifetime);
+        }
+
+        $this->cacheLifetimeRequestStore->setCacheLifetime($cacheLifetime);
+
+        $response = new Response();
+        $this->cacheLifetimeEnhancer->enhance($response);
 
         if ($expectedCacheLifetime > 0) {
-            $this->responseHeaderBag
-                ->set(SuluHttpCache::HEADER_REVERSE_PROXY_TTL, $expectedCacheLifetime)
-                ->shouldBeCalled();
-
-            $this->response->setPublic()->shouldBeCalled()->willReturn($this->response->reveal());
-            $this->response->setMaxAge($this->maxAge)->shouldBeCalled()->willReturn($this->response->reveal());
-            $this->response->setSharedMaxAge($this->sharedMaxAge)->shouldBeCalled()->willReturn($this->response->reveal());
+            $this->assertTrue($response->isCacheable());
+            $this->assertSame('max-age=200, public, s-maxage=300', $response->headers->get('Cache-Control'));
+            $this->assertSame((string) $expectedCacheLifetime, $response->headers->get(SuluHttpCache::HEADER_REVERSE_PROXY_TTL));
         } else {
-            $this->responseHeaderBag->set(Argument::cetera())->shouldNotBeCalled();
-            $this->response->setPublic()->shouldNotBeCalled()->willReturn($this->response->reveal());
-            $this->response->setMaxAge(Argument::any())->shouldNotBeCalled()->willReturn($this->response->reveal());
-            $this->response->setSharedMaxAge(Argument::any())->shouldNotBeCalled()->willReturn($this->response->reveal());
+            $this->assertFalse($response->isCacheable());
+            $this->assertFalse($response->headers->has(SuluHttpCache::HEADER_REVERSE_PROXY_TTL));
+            $this->assertSame('no-cache, private', $response->headers->get('Cache-Control'));
         }
-
-        if ($requestCacheLifetime) {
-            $this->cacheLifetimeRequestStore->getCacheLifetime()->willReturn($requestCacheLifetime);
-        }
-
-        $this->cacheLifetimeResolver->resolve(Argument::cetera())->willReturn($cacheLifetime);
-        $this->cacheLifetimeEnhancer->enhance($this->response->reveal(), $this->page->reveal());
-    }
-
-    public function testEnhanceSnippet(): void
-    {
-        $this->cacheLifetimeEnhancer->enhance($this->response->reveal(), $this->snippet->reveal());
-        $this->response->setPublic()->shouldNotBeCalled();
     }
 }

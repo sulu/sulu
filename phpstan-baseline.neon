@@ -23701,42 +23701,6 @@ parameters:
 			path: src/Sulu/Bundle/HttpCacheBundle/Cache/SuluHttpCache.php
 
 		-
-			message: '#^Cannot access offset ''type'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/HttpCacheBundle/CacheLifetime/CacheLifetimeEnhancer.php
-
-		-
-			message: '#^Cannot access offset ''value'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/HttpCacheBundle/CacheLifetime/CacheLifetimeEnhancer.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\HttpCacheBundle\\CacheLifetime\\CacheLifetimeEnhancer\:\:enhance\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/HttpCacheBundle/CacheLifetime/CacheLifetimeEnhancer.php
-
-		-
-			message: '#^Parameter \#1 \$type of method Sulu\\Bundle\\HttpCacheBundle\\CacheLifetime\\CacheLifetimeResolverInterface\:\:resolve\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/HttpCacheBundle/CacheLifetime/CacheLifetimeEnhancer.php
-
-		-
-			message: '#^Parameter \#2 \$values of method Symfony\\Component\\HttpFoundation\\ResponseHeaderBag\:\:set\(\) expects array\<string\>\|string\|null, int\<min, \-1\>\|int\<1, max\> given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/HttpCacheBundle/CacheLifetime/CacheLifetimeEnhancer.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\HttpCacheBundle\\CacheLifetime\\CacheLifetimeEnhancerInterface\:\:enhance\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/HttpCacheBundle/CacheLifetime/CacheLifetimeEnhancerInterface.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\HttpCacheBundle\\CacheLifetime\\CacheLifetimeRequestStore\:\:getCacheLifetime\(\) should return int\|null but returns mixed\.$#'
 			identifier: return.type
 			count: 1
