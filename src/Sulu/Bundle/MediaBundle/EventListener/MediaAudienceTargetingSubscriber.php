@@ -32,7 +32,7 @@ class MediaAudienceTargetingSubscriber implements EventSubscriber
 
     public function loadClassMetadata(LoadClassMetadataEventArgs $event)
     {
-        /** @var $metadata ClassMetadataInfo */
+        /** @var ClassMetadataInfo $metadata */
         $metadata = $event->getClassMetadata();
         $reflection = $metadata->getReflectionClass();
 

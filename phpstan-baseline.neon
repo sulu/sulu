@@ -14171,11 +14171,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Entity/MediaRepositoryInterface.php
 
 		-
-			message: "#^Call to an undefined method Doctrine\\\\Persistence\\\\Mapping\\\\ClassMetadata\\<object\\>\\:\\:mapManyToMany\\(\\)\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/EventListener/MediaAudienceTargetingSubscriber.php
-
-		-
 			message: "#^Left side of && is always true\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/EventListener/MediaAudienceTargetingSubscriber.php
@@ -14187,11 +14182,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\EventListener\\\\MediaAudienceTargetingSubscriber\\:\\:loadClassMetadata\\(\\) has parameter \\$event with generic class Doctrine\\\\Persistence\\\\Event\\\\LoadClassMetadataEventArgs but does not specify its types\\: TClassMetadata, TObjectManager$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/EventListener/MediaAudienceTargetingSubscriber.php
-
-		-
-			message: "#^PHPDoc tag @var has invalid value \\(\\$metadata ClassMetadataInfo\\)\\: Unexpected token \"\\$metadata\", expected type at offset 9$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/EventListener/MediaAudienceTargetingSubscriber.php
 
@@ -26192,16 +26182,6 @@ parameters:
 
 		-
 			message: "#^Cannot call method getParameter\\(\\) on Symfony\\\\Component\\\\DependencyInjection\\\\ContainerInterface\\|null\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/DataFixtures/ORM/LoadSecurityTypes.php
-
-		-
-			message: "#^PHPDoc tag @var has invalid value \\(\\$child \\\\DOMNode\\)\\: Unexpected token \"\\$child\", expected type at offset 9$#"
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/DataFixtures/ORM/LoadSecurityTypes.php
-
-		-
-			message: "#^PHPDoc tag @var has invalid value \\(\\$element \\\\DOMNode\\)\\: Unexpected token \"\\$element\", expected type at offset 9$#"
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/DataFixtures/ORM/LoadSecurityTypes.php
 
