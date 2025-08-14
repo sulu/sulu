@@ -122,7 +122,7 @@ class ExampleControllerTest extends SuluTestCase
 
         $this->assertStringStartsWith(
             'text/html',
-            $response->headers->get('Content-Type')
+            $response->headers->get('Content-Type', '')
         );
 
         return $id;
