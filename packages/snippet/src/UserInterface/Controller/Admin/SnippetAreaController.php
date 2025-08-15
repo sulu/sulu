@@ -50,9 +50,9 @@ final class SnippetAreaController
     public function __construct(
         MessageBusInterface $messageBus,
         private NormalizerInterface $normalizer,
-        private FieldDescriptorFactoryInterface $fieldDescriptorFactory,
-        private DoctrineListBuilderFactoryInterface $listBuilderFactory,
-        private RestHelperInterface $restHelper,
+        //private FieldDescriptorFactoryInterface $fieldDescriptorFactory,
+        //private DoctrineListBuilderFactoryInterface $listBuilderFactory,
+        //private RestHelperInterface $restHelper,
         private SnippetAreaRepositoryInterface $snippetAreaRepository,
         private array $snippetArea,
     ) {
@@ -62,19 +62,20 @@ final class SnippetAreaController
 
     public function cgetAction(Request $request): Response
     {
-        /** @var DoctrineFieldDescriptorInterface[]|null $fieldDescriptors */
+        /* @var DoctrineFieldDescriptorInterface[]|null $fieldDescriptors */
         //$fieldDescriptors = $this->fieldDescriptorFactory->getFieldDescriptors(SnippetAreaInterface::RESOURCE_KEY);
         //Assert::notNull($fieldDescriptors, 'Could not find field descriptors for resource key: ' . SnippetAreaInterface::RESOURCE_KEY);
 
-        /** @var DoctrineListBuilder $listBuilder */
+        /* @var DoctrineListBuilder $listBuilder */
         //$listBuilder = $this->listBuilderFactory->create(SnippetAreaInterface::class);
         //$listBuilder->setIdField($fieldDescriptors['id']); // We need to set this because it's the uuid doctrine column
         //$listBuilder->setParameter('locale', $request->query->get('locale'));
         //$listBuilder->setParameter('webspace', $request->query->get('webspace'));
 
         //$this->restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
+        $webspaceKey = $request->query->getString('webspace');
 
-        $snippetAreas = $this->snippetAreaRepository->findByWebspace($request->query->get('webspace'));
+        $snippetAreas = $this->snippetAreaRepository->findByWebspace($webspaceKey);
 
         // Add the empty snippet areas as placeholders
         foreach ($this->snippetArea as $snippetArea) {
@@ -82,7 +83,7 @@ final class SnippetAreaController
             if (!\array_key_exists($key, $snippetAreas)) {
                 $snippetAreas[$key] = new SnippetArea(
                     areaKey: $snippetArea['key'],
-                    webspaceKey: $request->attributes->getString('webspace'),
+                    webspaceKey: $webspaceKey,
                 );
             }
         }
@@ -132,6 +133,14 @@ final class SnippetAreaController
         /** @see \Sulu\Snippet\Application\MessageHandler\RemoveSnippetAreaMessageHandler */
         $deletedSnippetArea = $this->handle(new Envelope($message, [new EnableFlushStamp()]));
 
-        return new Response($deletedSnippetArea, Response::HTTP_NO_CONTENT);
+        return new JsonResponse($this->normalizer->normalize(
+            $deletedSnippetArea,
+            'json',
+            [
+                'locale' => $request->getLocale(),
+                'sulu_admin' => true,
+                'sulu_admin_snippet' => true,
+            ],
+        ));
     }
 }

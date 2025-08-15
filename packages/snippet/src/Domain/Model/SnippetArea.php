@@ -23,7 +23,7 @@ class SnippetArea implements SnippetAreaInterface
 
     private string $areaKey;
 
-    private ?Snippet $snippet = null;
+    private ?SnippetInterface $snippet = null;
 
     public function __construct(
         string $areaKey,
@@ -36,7 +36,10 @@ class SnippetArea implements SnippetAreaInterface
         $this->webspaceKey = $webspaceKey;
     }
 
-    public function getId(): string // TODO should be replaced by uuid
+    /**
+     * @deprecated use getUuid
+     */
+    public function getId(): string
     {
         return $this->uuid;
     }

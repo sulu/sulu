@@ -73,7 +73,13 @@ class SnippetAreaControllerTest extends SuluTestCase
         ]);
 
         $response = $this->client->getResponse();
-        $id = \json_decode((string) $response->getContent(), true)['id'];
+
+        $responseContent = \json_decode((string) $response->getContent(), true) ?? [];
+        $this->assertIsArray($responseContent);
+        $this->assertArrayHasKey($responseContent, 'id');
+        $id = $responseContent['id'];
+
+        $this->assertIsString($id, 'Expecting snippet area id to be a string');
 
         // Setting the snippet into the snippet area
         $this->client->jsonRequest('PUT', '/admin/api/snippet-areas/car', [
