@@ -62,7 +62,7 @@ class ImageMapPropertyResolverTest extends TestCase
 
     public function testResolveEmpty(): void
     {
-        $contentView = $this->resolver->resolve(null, 'en');
+        $contentView = $this->resolver->resolve(null, 'en', $this->createMetadata());
 
         $content = $contentView->getContent();
         $this->assertIsArray($content);
@@ -78,7 +78,7 @@ class ImageMapPropertyResolverTest extends TestCase
 
     public function testResolveParams(): void
     {
-        $contentView = $this->resolver->resolve(null, 'en', ['custom' => 'params']);
+        $contentView = $this->resolver->resolve(null, 'en', $this->createMetadata(), ['custom' => 'params']);
 
         $content = $contentView->getContent();
         $this->assertIsArray($content);
@@ -98,7 +98,7 @@ class ImageMapPropertyResolverTest extends TestCase
     #[DataProvider('provideUnresolvableData')]
     public function testResolveUnresolvableData(mixed $data): void
     {
-        $contentView = $this->resolver->resolve($data, 'en');
+        $contentView = $this->resolver->resolve($data, 'en', $this->createMetadata());
 
         $content = $contentView->getContent();
         $this->assertIsArray($content);
@@ -143,7 +143,7 @@ class ImageMapPropertyResolverTest extends TestCase
     #[DataProvider('provideResolvableData')]
     public function testResolveResolvableData(array $data): void
     {
-        $contentView = $this->resolver->resolve($data, 'en', ['metadata' => $this->createMetadata()]);
+        $contentView = $this->resolver->resolve($data, 'en', $this->createMetadata());
 
         $content = $contentView->getContent();
         $this->assertIsArray($content);
@@ -203,19 +203,31 @@ class ImageMapPropertyResolverTest extends TestCase
         yield 'empty' => [[]];
         yield 'int_id' => [['imageId' => 1]];
         yield 'int_id_with_hotspots' => [
-            ['imageId' => 1, 'hotspots' => [['type' => 'text', 'hotspot' => ['type' => 'circle'], 'title' => 'Title 1'], ['type' => 'text', 'hotspot' => ['type' => 'circle'], 'title' => 'Title 2']]],
+            ['imageId' => 1, 'hotspots' => [
+                ['type' => 'text', 'hotspot' => ['type' => 'circle'], 'title' => 'Title 1'],
+                ['type' => 'text', 'hotspot' => ['type' => 'circle'], 'title' => 'Title 2'],
+            ]],
         ];
         yield 'string_id' => [['imageId' => '1']];
-        yield 'string_id_with_hotspots' => [['imageId' => '1', 'hotspots' => [['type' => 'text', 'hotspot' => ['type' => 'circle'], 'title' => 'Title 1'], ['type' => 'text', 'hotspot' => ['type' => 'circle'], 'title' => 'Title 2']]]];
+        yield 'string_id_with_hotspots' => [[
+            'imageId' => '1',
+            'hotspots' => [
+                ['type' => 'text', 'hotspot' => ['type' => 'circle'], 'title' => 'Title 1'],
+                ['type' => 'text', 'hotspot' => ['type' => 'circle'], 'title' => 'Title 2'],
+            ],
+        ]];
     }
 
     public function testCustomResourceLoader(): void
     {
         $contentView = $this->resolver->resolve(
-            ['imageId' => 1, 'hotspots' => [['type' => 'text', 'title' => 'Title'], ['type' => 'text', 'title' => 'Title']]],
+            ['imageId' => 1, 'hotspots' => [
+                ['type' => 'text', 'hotspot' => ['type' => 'circle'], 'title' => 'Title'],
+                ['type' => 'text', 'hotspot' => ['type' => 'circle'], 'title' => 'Title'],
+            ]],
             'en',
+            $this->createMetadata(),
             [
-                'metadata' => $this->createMetadata(),
                 'resourceLoader' => 'custom_media',
             ]
         );
@@ -234,6 +246,10 @@ class ImageMapPropertyResolverTest extends TestCase
 
         $this->assertSame([
             'imageId' => 1,
+            'hotspots' => [
+                ['title' => []],
+                ['title' => []],
+            ],
             'resourceLoader' => 'custom_media',
         ], $contentView->getView());
         $this->assertCount(0, $this->logger->cleanLogs());
@@ -252,7 +268,7 @@ class ImageMapPropertyResolverTest extends TestCase
     #[DataProvider('provideUnresolvableHotspotData')]
     public function testResolveUnresolvableHotspotData(array $data): void
     {
-        $contentView = $this->resolver->resolve($data, 'en', ['metadata' => $this->createMetadata()]);
+        $contentView = $this->resolver->resolve($data, 'en', $this->createMetadata());
 
         $content = $contentView->getContent();
         $this->assertIsArray($content);
@@ -301,7 +317,10 @@ class ImageMapPropertyResolverTest extends TestCase
 
     public function testResolveGlobalBlockHotspot(): void
     {
-        $data = ['imageId' => 1, 'hotspots' => [['type' => 'text', 'hotspot' => ['type' => 'circle'], 'title' => 'Title 1'], ['type' => 'text', 'hotspot' => ['type' => 'circle'], 'title' => 'Title 2']]];
+        $data = ['imageId' => 1, 'hotspots' => [
+            ['type' => 'text', 'hotspot' => ['type' => 'circle'], 'title' => 'Title 1'],
+            ['type' => 'text', 'hotspot' => ['type' => 'circle'], 'title' => 'Title 2'],
+        ]];
 
         $textFormMetadata = new FormMetadata();
         $textFormMetadata->setKey('text');
@@ -322,7 +341,7 @@ class ImageMapPropertyResolverTest extends TestCase
             }
         });
 
-        $contentView = $this->resolver->resolve($data, 'en', ['metadata' => $this->createGlobalBlockMetadata()]);
+        $contentView = $this->resolver->resolve($data, 'en', $this->createGlobalBlockMetadata());
 
         $content = $contentView->getContent();
         $this->assertIsArray($content);

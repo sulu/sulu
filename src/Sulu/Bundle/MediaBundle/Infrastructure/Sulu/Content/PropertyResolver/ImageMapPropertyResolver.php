@@ -22,14 +22,14 @@ use Sulu\Bundle\MediaBundle\Infrastructure\Sulu\Content\ResourceLoader\MediaReso
 use Sulu\Content\Application\ContentResolver\Value\ContentView;
 use Sulu\Content\Application\ContentResolver\Value\ResolvableResource;
 use Sulu\Content\Application\MetadataResolver\MetadataResolver;
-use Sulu\Content\Application\PropertyResolver\Resolver\PropertyResolverInterface;
+use Sulu\Content\Application\PropertyResolver\Resolver\PropertyResolverMetadataAwareInterface;
 
 /**
  * @internal if you need to override this service, create a new service with based on ResourceLoaderInterface instead of extending this class
  *
  * @final
  */
-class ImageMapPropertyResolver implements PropertyResolverInterface // TODO we may should implement a PropertyResolverAwareMetadataInterface
+class ImageMapPropertyResolver implements PropertyResolverMetadataAwareInterface
 {
     private MetadataResolver $metadataResolver;
 
@@ -50,16 +50,18 @@ class ImageMapPropertyResolver implements PropertyResolverInterface // TODO we m
         $this->metadataResolver = $metadataResolver;
     }
 
-    public function resolve(mixed $data, string $locale, array $params = []): ContentView
+    /**
+     * @param array<string, mixed> $params
+     */
+    public function resolve(mixed $data, string $locale, FieldMetadata $metadata, array $params = []): ContentView
     {
         $hotspots = (\is_array($data) && isset($data['hotspots']) && \is_array($data['hotspots'])) && \array_is_list($data['hotspots'])
             ? $data['hotspots']
             : [];
 
-        $hotspots = [] !== $hotspots ? $this->resolveHotspots($hotspots, $locale, $params) : ContentView::create([], []);
+        $hotspots = [] !== $hotspots ? $this->resolveHotspots($hotspots, $locale, $metadata) : ContentView::create([], []);
 
         $returnedParams = $params;
-        unset($returnedParams['metadata']); // TODO we may should implement a PropertyResolverAwareMetadataInterface
 
         if (!\is_array($data)
             || !isset($data['imageId'])
@@ -92,12 +94,9 @@ class ImageMapPropertyResolver implements PropertyResolverInterface // TODO we m
 
     /**
      * @param non-empty-list<mixed> $hotspots
-     * @param array<string, mixed> $params
      */
-    private function resolveHotspots(array $hotspots, string $locale, array $params): ContentView
+    private function resolveHotspots(array $hotspots, string $locale, FieldMetadata $metadata): ContentView
     {
-        $metadata = $params['metadata'] ?? null;
-        \assert($metadata instanceof FieldMetadata, 'Metadata must be set to resolve hotspots.');
         $metadataTypes = $metadata->getTypes();
 
         $typedFormMetadata = $this->metadataProviderRegistry->getMetadataProvider('form')

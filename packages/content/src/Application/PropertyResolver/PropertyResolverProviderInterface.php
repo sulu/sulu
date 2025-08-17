@@ -14,8 +14,9 @@ declare(strict_types=1);
 namespace Sulu\Content\Application\PropertyResolver;
 
 use Sulu\Content\Application\PropertyResolver\Resolver\PropertyResolverInterface;
+use Sulu\Content\Application\PropertyResolver\Resolver\PropertyResolverMetadataAwareInterface;
 
 interface PropertyResolverProviderInterface
 {
-    public function getPropertyResolver(string $type): PropertyResolverInterface;
+    public function getPropertyResolver(string $type): PropertyResolverInterface|PropertyResolverMetadataAwareInterface;
 }

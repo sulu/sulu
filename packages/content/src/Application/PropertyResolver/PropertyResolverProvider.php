@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Sulu\Content\Application\PropertyResolver;
 
 use Sulu\Content\Application\PropertyResolver\Resolver\PropertyResolverInterface;
+use Sulu\Content\Application\PropertyResolver\Resolver\PropertyResolverMetadataAwareInterface;
 
 /**
  * @internal The constructor of this class may change in future releases to add new features or improve performance.
@@ -26,19 +27,19 @@ use Sulu\Content\Application\PropertyResolver\Resolver\PropertyResolverInterface
 final class PropertyResolverProvider implements PropertyResolverProviderInterface
 {
     /**
-     * @var PropertyResolverInterface[]
+     * @var array<PropertyResolverInterface|PropertyResolverMetadataAwareInterface>
      */
     private array $propertyResolvers;
 
     /**
-     * @param iterable<PropertyResolverInterface> $propertyResolvers
+     * @param iterable<PropertyResolverInterface|PropertyResolverMetadataAwareInterface> $propertyResolvers
      */
     public function __construct(iterable $propertyResolvers)
     {
         $this->propertyResolvers = \iterator_to_array($propertyResolvers);
     }
 
-    public function getPropertyResolver(string $type): PropertyResolverInterface
+    public function getPropertyResolver(string $type): PropertyResolverInterface|PropertyResolverMetadataAwareInterface
     {
         if (!\array_key_exists($type, $this->propertyResolvers)) {
             return $this->propertyResolvers['default'];

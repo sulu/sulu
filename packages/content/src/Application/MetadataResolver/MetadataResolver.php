@@ -19,6 +19,7 @@ use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\OptionMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\SectionMetadata;
 use Sulu\Content\Application\ContentResolver\Value\ContentView;
 use Sulu\Content\Application\PropertyResolver\PropertyResolverProviderInterface;
+use Sulu\Content\Application\PropertyResolver\Resolver\PropertyResolverMetadataAwareInterface;
 
 /**
  * @internal This class is intended for internal use only within the library. Modifying or depending on this class may result in unexpected behavior and is not supported.
@@ -48,12 +49,8 @@ class MetadataResolver
                     $this->resolveItems($item->getItems(), $data, $locale)
                 );
             } else {
-                // TODO remove metadata as soon as we implemented a MetadataAwarePropertyResolverInterface
-                $params = [
-                    'metadata' => $item,
-                    ...($item instanceof FieldMetadata ? $this->serializeFieldMetadataOptions($item) : []),
-                ];
-                $contentViews[$name] = $this->resolveProperty($type, $data[$name] ?? null, $locale, $params);
+                $params = $item instanceof FieldMetadata ? $this->serializeFieldMetadataOptions($item) : [];
+                $contentViews[$name] = $this->resolveProperty($type, $data[$name] ?? null, $locale, $item, $params);
             }
         }
 
@@ -63,10 +60,15 @@ class MetadataResolver
     /**
      * @param array<string, mixed> $params
      */
-    private function resolveProperty(string $type, mixed $data, string $locale, array $params = []): ContentView
+    private function resolveProperty(string $type, mixed $data, string $locale, ItemMetadata $metadata, array $params = []): ContentView
     {
         $propertyResolver = $this->propertyResolverProvider->getPropertyResolver($type);
 
+        if ($propertyResolver instanceof PropertyResolverMetadataAwareInterface && $metadata instanceof FieldMetadata) {
+            return $propertyResolver->resolve($data, $locale, $metadata, $params);
+        }
+
+        // ensure metadata is not included in params for non-aware resolvers
         return $propertyResolver->resolve($data, $locale, $params);
     }
 

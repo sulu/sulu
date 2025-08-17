@@ -15,7 +15,6 @@ namespace Sulu\Content\Tests\Unit\Content\Application\PropertyResolver\Resolver;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
-use PHPUnit\Util\Type;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TagMetadata;
@@ -65,7 +64,7 @@ class BlockPropertyResolverTest extends TestCase
 
     public function testResolveEmpty(): void
     {
-        $contentView = $this->resolver->resolve(null, 'en');
+        $contentView = $this->resolver->resolve(null, 'en', new FieldMetadata('example'));
 
         $this->assertSame([], $contentView->getContent());
         $this->assertSame([], $contentView->getView());
@@ -74,7 +73,7 @@ class BlockPropertyResolverTest extends TestCase
 
     public function testResolveParams(): void
     {
-        $contentView = $this->resolver->resolve([], 'en', ['metadata' => new FieldMetadata('example'), 'custom' => 'params']);
+        $contentView = $this->resolver->resolve([], 'en', new FieldMetadata('example'), ['custom' => 'params']);
 
         $this->assertSame([], $contentView->getContent());
         $this->assertSame([
@@ -100,7 +99,7 @@ class BlockPropertyResolverTest extends TestCase
     #[DataProvider('provideUnresolvableData')]
     public function testResolveUnresolvableData(mixed $data): void
     {
-        $contentView = $this->resolver->resolve($data, 'en', ['metadata' => new FieldMetadata('example')]);
+        $contentView = $this->resolver->resolve($data, 'en', new FieldMetadata('example'));
 
         $this->assertSame([], $contentView->getContent());
         $this->assertSame([], $contentView->getView());
@@ -131,11 +130,8 @@ class BlockPropertyResolverTest extends TestCase
 
         $formMetadata->addItem($tileFieldMetadata);
         $formMetadata->addItem($descriptionFieldMetadata);
-        $params = [
-            'metadata' => $blockFieldMetadata,
-        ];
 
-        $content = $this->resolver->resolve($data, $locale, $params);
+        $content = $this->resolver->resolve($data, $locale, $blockFieldMetadata);
         /** @var ContentView[] $innerContent */
         $innerContent = $content->getContent();
         $this->assertCount(1, $innerContent);
@@ -174,10 +170,6 @@ class BlockPropertyResolverTest extends TestCase
         $blockFieldMetadata = new FieldMetadata('text_block');
         $blockFieldMetadata->addType($formMetadata);
 
-        $params = [
-            'metadata' => $blockFieldMetadata,
-        ];
-
         $globalFormMetadata = new FormMetadata();
         $globalFormMetadata->setKey('text_block');
         $globalBlockFieldMetadata = new FieldMetadata('text_block');
@@ -203,7 +195,7 @@ class BlockPropertyResolverTest extends TestCase
             }
         });
 
-        $content = $this->resolver->resolve($data, $locale, $params);
+        $content = $this->resolver->resolve($data, $locale, $blockFieldMetadata);
         /** @var ContentView[] $innerContent */
         $innerContent = $content->getContent();
         $this->assertCount(1, $innerContent);
@@ -247,11 +239,7 @@ class BlockPropertyResolverTest extends TestCase
         $formMetadata->addItem($tileFieldMetadata);
         $formMetadata->addItem($descriptionFieldMetadata);
 
-        $params = [
-            'metadata' => $blockFieldMetadata,
-        ];
-
-        $content = $this->resolver->resolve($data, $locale, $params);
+        $content = $this->resolver->resolve($data, $locale, $blockFieldMetadata);
         /** @var array<string, mixed> $innerContent */
         $innerContent = $content->getContent();
         // title / description / type
