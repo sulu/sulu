@@ -82,3 +82,12 @@ services:
             - '@example_test.example_repository'
         tags:
             - { name: 'sulu_content.resource_loader', alias: 'example' }
+
+    example_test.example_smart_content_provider:
+        class: Sulu\Content\Tests\Application\ExampleTestBundle\SmartContent\ExampleSmartContentProvider
+        arguments:
+            - '@sulu_content.dimension_content_query_enhancer'
+            - '@sulu_admin.smart_content_query_enhancer'
+            - '@doctrine.orm.entity_manager'
+        tags:
+            - { name: 'sulu_content.smart_content_provider', type: 'examples' }

@@ -36,7 +36,7 @@ class SmartContentSmartResolver implements SmartResolverInterface
         /** @var array{
          *     value: array<string, mixed>,
          *     filters: SmartContentBaseFilters,
-         *     sortBys: array<string, string>,
+         *     sortBys: array<string, string>|null,
          *     parameters: array<string, mixed>,
          * } $data
          */
@@ -44,7 +44,7 @@ class SmartContentSmartResolver implements SmartResolverInterface
 
         $value = $data['value'];
         $filters = $data['filters'];
-        $sortBys = $data['sortBys'];
+        $sortBys = $data['sortBys'] ?? [];
         $parameters = $data['parameters'];
 
         /** @var int|null $limit */

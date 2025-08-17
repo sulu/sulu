@@ -72,6 +72,7 @@ class SmartContentPropertyResolver implements PropertyResolverInterface
          *     exclude_duplicates: bool|string,
          *     provider: string,
          *     max_per_page?: int,
+         *     properties?: array<string, mixed>|null,
          *     } $parameters
          */
         $parameters = \array_merge([
@@ -84,7 +85,7 @@ class SmartContentPropertyResolver implements PropertyResolverInterface
             'website_tags_operator' => 'OR',
             'website_categories_operator' => 'OR',
             'exclude_duplicates' => false,
-        ], $params['properties'] ?? []);
+        ], $params);
         $this->validateParameters($parameters);
 
         $request = $this->requestStack->getCurrentRequest();
