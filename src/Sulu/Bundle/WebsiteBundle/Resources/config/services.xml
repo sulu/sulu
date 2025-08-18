@@ -84,20 +84,6 @@
             <tag name="twig.extension"/>
         </service>
 
-        <!-- twig extension: navigation -->
-        <service id="sulu_website.twig.navigation" class="Sulu\Bundle\WebsiteBundle\Twig\Navigation\NavigationTwigExtension">
-            <argument type="service" id="sulu.content.mapper"/>
-            <argument type="service" id="sulu_website.navigation_mapper"/>
-            <argument type="service" id="sulu_core.webspace.request_analyzer" on-invalid="null"/>
-        </service>
-        <service id="sulu_website.twig.navigation.memoized" class="Sulu\Bundle\WebsiteBundle\Twig\Navigation\MemoizedNavigationTwigExtension">
-            <argument type="service" id="sulu_website.twig.navigation"/>
-            <argument type="service" id="sulu_core.cache.memoize"/>
-            <argument type="string">%sulu_website.navigation.cache.lifetime%</argument>
-
-            <tag name="twig.extension"/>
-        </service>
-
         <!-- twig extension: sitemap -->
         <service id="sulu_website.twig.sitemap" class="Sulu\Bundle\WebsiteBundle\Twig\Sitemap\SitemapTwigExtension">
             <argument type="service" id="sulu_website.sitemap"/>

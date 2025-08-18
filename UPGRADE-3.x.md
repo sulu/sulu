@@ -634,6 +634,9 @@ Removed classes / services:
 - `Sulu\Component\Content\Mapper\Event\ContentNodeOrderEvent`
 - `Sulu\Bundle\WebsiteBundle\Controller\DefaultController` (use new `ContentController` instead)
 - `Sulu\Bundle\WebsiteBundle\Controller\WebsiteController` (use new `ContentController` instead)
+- `Sulu\Bundle\WebsiteBundle\Twig\Navigation\MemoizedNavigationTwigExtension`
+- `Sulu\Bundle\WebsiteBundle\Twig\Navigation\NavigationTwigExtension`
+- `Sulu\Bundle\WebsiteBundle\Twig\Navigation\NavigationTwigExtensionInterface`
 
 Removed deprecated functions and properties:
 
