@@ -106,7 +106,6 @@ class SuluHttpCacheExtensionTest extends AbstractExtensionTestCase
         $this->compile();
 
         $this->assertTrue($this->container->has('sulu_http_cache.cache_lifetime.resolver'));
-        $this->assertTrue($this->container->has('sulu_http_cache.event_subscriber.invalidation'));
         $this->assertFalse($this->container->has('sulu_http_cache.cache_manager'));
         $this->assertContainerBuilderHasParameter('sulu_http_cache.cache.shared_max_age', 240);
         $this->assertContainerBuilderHasParameter('sulu_http_cache.cache.max_age', 240);

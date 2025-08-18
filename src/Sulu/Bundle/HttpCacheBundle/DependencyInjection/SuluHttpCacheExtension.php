@@ -73,7 +73,6 @@ class SuluHttpCacheExtension extends Extension implements PrependExtensionInterf
     public function load(array $configs, ContainerBuilder $container)
     {
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
-        $loader->load('event-subscribers.xml');
         $loader->load('services.xml');
 
         $configuration = $this->getConfiguration($configs, $container);

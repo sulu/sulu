@@ -18,7 +18,6 @@ class SuluTestCase extends WebTestCase
     use KernelTrait;
     use AssertHttpStatusCodeTrait;
     use CreateClientTrait;
-    use PhpCrInitTrait;
     use PurgeDatabaseTrait;
     use TestUserTrait;
 }

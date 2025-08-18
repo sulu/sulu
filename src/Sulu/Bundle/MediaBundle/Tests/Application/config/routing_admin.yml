@@ -23,10 +23,6 @@ sulu_media_website:
     prefix:
 
 # Including a portal route to test if media download is still working
-sulu_pages_api:
-    resource: "@SuluPageBundle/Resources/config/routing_api.yaml"
-    prefix: /api
-
 sulu_security_api:
     resource: "@SuluSecurityBundle/Resources/config/routing_api.yaml"
     prefix: /api

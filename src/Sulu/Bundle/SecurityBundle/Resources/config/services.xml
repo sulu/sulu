@@ -111,13 +111,6 @@
 
         <service id="Sulu\Bundle\SecurityBundle\System\SystemStoreInterface" alias="sulu_security.system_store"/>
 
-        <service id="sulu_security.phpcr_access_control_provider" class="Sulu\Component\Security\Authorization\AccessControl\PhpcrAccessControlProvider">
-            <argument type="service" id="sulu_document_manager.document_manager"/>
-            <argument type="service" id="sulu.repository.role"/>
-            <argument>%sulu_security.permissions%</argument>
-            <tag name="sulu.access_control"/>
-        </service>
-
         <service id="sulu_security.doctrine_access_control_provider" class="Sulu\Component\Security\Authorization\AccessControl\DoctrineAccessControlProvider">
             <argument type="service" id="doctrine.orm.default_entity_manager"/>
             <argument type="service" id="sulu.repository.role"/>
@@ -293,13 +286,6 @@
         >
             <argument type="service" id="sulu_security.access_control_manager" />
             <tag name="doctrine.event_listener" event="postPersist"/>
-        </service>
-
-        <service id="sulu_security.phpcr_security_subscriber" class="Sulu\Bundle\SecurityBundle\EventListener\PhpcrSecuritySubscriber">
-            <argument type="service" id="sulu_security.phpcr_access_control_provider" />
-            <argument type="service" id="sulu_security.doctrine_access_control_provider" />
-
-            <tag name="kernel.event_subscriber"/>
         </service>
 
         <service id="sulu_security.user_manager" class="Sulu\Bundle\SecurityBundle\UserManager\UserManager" public="true">

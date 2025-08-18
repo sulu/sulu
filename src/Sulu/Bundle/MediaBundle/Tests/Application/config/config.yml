@@ -10,10 +10,6 @@ framework:
     router: { resource: '%kernel.project_dir%/config/routing_admin.yml' }
 
 services:
-    sulu_document_manager_test.node_manager:
-        alias: sulu_document_manager.node_manager
-        public: true
-
     sulu_media_test.system_collections.cache:
         alias: sulu_media.system_collections.cache
         public: true

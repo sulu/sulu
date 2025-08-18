@@ -18,24 +18,6 @@ doctrine:
     dbal:
         url: '%env(DATABASE_URL)%'
 
-sulu_document_manager:
-    sessions:
-        default:
-            backend:
-                type: '%phpcr.transport%'
-                url:  '%phpcr.backend_url%'
-            workspace: '%phpcr.workspace%'
-            username: '%phpcr.username%'
-            password: '%phpcr.password%'
-        live:
-            backend:
-                type: '%phpcr.transport%'
-                url:  '%phpcr.backend_url%'
-            workspace: '%phpcr.workspace%_live'
-            username: '%phpcr.username%'
-            password: '%phpcr.password%'
-    debug: false
-
 jms_serializer:
     metadata:
         debug: '%kernel.debug%'

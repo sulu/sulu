@@ -9,9 +9,5 @@ sulu_security:
     checker:
         enabled: true
 
-sulu_document_manager:
-    default_session: default
-    live_session: live
-
 sulu_test:
     enable_test_user_provider: true

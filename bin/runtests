@@ -304,8 +304,6 @@ function init_bundle()
     write_info('Doctrine ORM detected, updating the schema for the bundle.');
 
     $process = exec_sf_cmd('doctrine:schema:update --force');
-
-    $process = exec_sf_cmd('sulu:document:initialize --purge --force --ansi');
 }
 
 function is_everything_ok()

@@ -2,10 +2,6 @@ sulu_website:
     resource: "@SuluWebsiteBundle/Resources/config/routing.yaml"
     prefix: /sulu_website
 
-sulu_page_api:
-    resource: "@SuluPageBundle/Resources/config/routing_api.yaml"
-    prefix: /api
-
 sulu_website_api:
     resource: "@SuluWebsiteBundle/Resources/config/routing_api.yaml"
     prefix: /api

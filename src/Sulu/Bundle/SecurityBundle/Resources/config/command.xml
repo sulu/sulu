@@ -34,14 +34,5 @@
             <tag name="console.command" />
             <tag name="sulu.context" context="admin"/>
         </service>
-
-        <service id="sulu_security.command.sync_phpcr_permissions"
-                 class="Sulu\Bundle\SecurityBundle\Command\SyncPhpcrPermissionsCommand">
-            <argument type="service" id="doctrine.orm.default_entity_manager"/>
-            <argument type="service" id="sulu_document_manager.document_manager"/>
-            <argument type="service" id="sulu_security.doctrine_access_control_provider"/>
-            <tag name="console.command"/>
-            <tag name="sulu.context" context="admin"/>
-        </service>
     </services>
 </container>

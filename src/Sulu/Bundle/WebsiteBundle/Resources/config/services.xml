@@ -60,11 +60,6 @@
             <tag name="routing.loader"/>
         </service>
 
-        <service id="sulu_website.resolver.structure" class="Sulu\Bundle\WebsiteBundle\Resolver\StructureResolver" public="true">
-            <argument type="service" id="sulu.content.type_manager" />
-            <argument type="service" id="sulu_page.extension.manager"/>
-        </service>
-
         <service id="sulu_website.resolver.request_analyzer" class="Sulu\Bundle\WebsiteBundle\Resolver\RequestAnalyzerResolver">
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>
             <argument>%kernel.environment%</argument>
@@ -83,17 +78,6 @@
 
         <service id="Sulu\Bundle\WebsiteBundle\Resolver\TemplateAttributeResolverInterface"
                  alias="sulu_website.resolver.template_attribute"/>
-
-        <service id="sulu_website.resolver.parameter" class="Sulu\Bundle\WebsiteBundle\Resolver\ParameterResolver" public="true">
-            <argument type="service" id="sulu_website.resolver.structure"/>
-            <argument type="service" id="sulu_website.resolver.request_analyzer"/>
-            <argument type="service" id="sulu_core.webspace.webspace_manager" />
-            <argument type="service" id="request_stack"/>
-            <argument>%sulu_website.segment_switch_url%</argument>
-        </service>
-
-        <service id="Sulu\Bundle\WebsiteBundle\Resolver\ParameterResolverInterface"
-                 alias="sulu_website.resolver.parameter"/>
 
         <service id="sulu_website.routing.request_listener" class="Sulu\Bundle\WebsiteBundle\Routing\RequestListener">
             <argument type="service" id="router"/>

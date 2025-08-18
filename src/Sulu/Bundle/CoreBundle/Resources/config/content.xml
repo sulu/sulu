@@ -21,100 +21,10 @@
 
         <service id="sulu.content.template_resolver" public="false" class="Sulu\Component\Content\Template\TemplateResolver"/>
 
-        <!-- content mapper -->
-        <service id="sulu.content.mapper" class="Sulu\Component\Content\Mapper\ContentMapper" public="true">
-            <argument type="service" id="sulu_document_manager.document_manager" />
-            <argument type="service" id="sulu_core.webspace.webspace_manager"/>
-            <argument type="service" id="form.factory" />
-            <argument type="service" id="sulu_document_manager.document_inspector" />
-            <argument type="service" id="sulu_document_manager.property_encoder" />
-            <argument type="service" id="sulu.content.structure_manager"/>
-            <argument type="service" id="sulu_page.extension.manager"/>
-            <argument type="service" id="sulu.content.type_manager"/>
-            <argument type="service" id="sulu.phpcr.session"/>
-            <argument type="service" id="sulu.content.resource_locator.strategy_pool"/>
-            <argument type="service" id="sulu_document_manager.namespace_registry" />
-            <argument type="service" id="sulu_security.access_control_manager" />
-            <argument>%sulu_security.permissions%</argument>
-            <argument type="service" id="security.helper" on-invalid="ignore" />
-        </service>
-
         <!-- content type manager -->
         <service id="sulu.content.type_manager" class="Sulu\Component\Content\ContentTypeManager" public="true">
             <argument type="service" id="service_container"/>
         </service>
-
-        <!-- structure manager -->
-        <service id="sulu.content.structure_manager" class="Sulu\Component\Content\Compat\StructureManager" public="true">
-            <argument type="service" id="sulu_page.structure.factory" />
-            <argument type="service" id="sulu_document_manager.document_inspector" />
-            <argument type="service" id="sulu_page.compat.structure.legacy_property_factory" />
-            <argument>%sulu.content.structure.type_map%</argument>
-        </service>
-
-        <service id="sulu.content.webspace_structure_provider.cache_adapter" class="Symfony\Component\Cache\Adapter\FilesystemAdapter">
-            <argument type="string"></argument>
-            <argument>0</argument>
-            <argument type="string">%sulu.cache_dir%/webspace_structures</argument>
-        </service>
-
-        <service id="sulu.content.webspace_structure_provider.cache" class="Doctrine\Common\Cache\CacheProvider">
-            <factory class="Doctrine\Common\Cache\Psr6\DoctrineProvider" method="wrap"/>
-            <argument type="service" id="sulu.content.webspace_structure_provider.cache_adapter" />
-        </service>
-
-        <service id="sulu.content.webspace_structure_provider" class="Sulu\Component\Webspace\StructureProvider\WebspaceStructureProvider" public="true">
-            <argument type="service" id="twig"/>
-            <argument type="service" id="sulu.content.structure_manager"/>
-            <argument type="service" id="sulu.content.webspace_structure_provider.cache"/>
-        </service>
-
-        <!-- rlp mapper -->
-        <service id="sulu.content.resource_locator.mapper.phpcr"
-                 class="Sulu\Component\Content\Types\ResourceLocator\Mapper\PhpcrMapper" public="false">
-            <argument type="service" id="sulu.phpcr.session"/>
-            <argument type="service" id="sulu_document_manager.document_manager"/>
-            <argument type="service" id="sulu_document_manager.document_inspector"/>
-        </service>
-
-        <!-- rlp strategies -->
-        <service id="sulu.content.resource_locator.strategy_pool"
-                 class="Sulu\Component\Content\Types\ResourceLocator\Strategy\ResourceLocatorStrategyPool">
-            <argument type="collection"/>
-            <argument type="service" id="sulu_core.webspace.webspace_manager"/>
-        </service>
-        <service id="sulu.content.resource_locator.strategy.tree_generator"
-                 class="Sulu\Component\Content\Types\ResourceLocator\Strategy\TreeGenerator"/>
-        <service id="sulu.content.resource_locator.strategy.tree_leaf_edit"
-                 class="Sulu\Component\Content\Types\ResourceLocator\Strategy\TreeLeafEditStrategy">
-            <argument type="service" id="sulu.content.resource_locator.mapper.phpcr"/>
-            <argument type="service" id="sulu.content.path_cleaner"/>
-            <argument type="service" id="sulu.content.structure_manager" />
-            <argument type="service" id="sulu.content.type_manager"/>
-            <argument type="service" id="sulu.util.node_helper"/>
-            <argument type="service" id="sulu_document_manager.document_inspector"/>
-            <argument type="service" id="sulu_document_manager.document_manager"/>
-            <argument type="service" id="sulu.content.resource_locator.strategy.tree_generator"/>
-
-            <tag name="sulu.resource_locator.strategy" alias="tree_leaf_edit"/>
-        </service>
-        <service id="sulu.content.resource_locator.strategy.tree_full_edit"
-                 class="Sulu\Component\Content\Types\ResourceLocator\Strategy\TreeFullEditStrategy">
-            <argument type="service" id="sulu.content.resource_locator.mapper.phpcr"/>
-            <argument type="service" id="sulu.content.path_cleaner"/>
-            <argument type="service" id="sulu.content.structure_manager"/>
-            <argument type="service" id="sulu.content.type_manager"/>
-            <argument type="service" id="sulu.util.node_helper"/>
-            <argument type="service" id="sulu_document_manager.document_inspector"/>
-            <argument type="service" id="sulu_document_manager.document_manager"/>
-            <argument type="service" id="sulu.content.resource_locator.strategy.tree_generator"/>
-
-            <tag name="sulu.resource_locator.strategy" alias="tree_full_edit"/>
-        </service>
-
-        <!-- deprecated -->
-        <service id="sulu.content.rlp.mapper.phpcr" alias="sulu.content.resource_locator.mapper.phpcr"/>
-        <service id="sulu.content.rlp.strategy.tree" alias="sulu.content.resource_locator.strategy.tree_leaf_edit"/>
 
         <!-- simple content types -->
         <service id="sulu.content.type.number" class="Sulu\Component\Content\Types\Number">
@@ -192,32 +102,7 @@
             <tag name="sulu_admin.form_metadata_visitor" />
         </service>
 
-        <!-- content query -->
-        <service id="sulu.content.query_executor" class="Sulu\Component\Content\Query\ContentQueryExecutor">
-            <argument type="service" id="sulu.phpcr.session"/>
-            <argument type="service" id="sulu.content.mapper"/>
-            <argument type="service" id="debug.stopwatch" on-invalid="null"/>
-        </service>
-
-        <!-- cache warmer for structures -->
-        <service id="sulu.cache.warmer.structure" class="Sulu\Bundle\CoreBundle\Cache\StructureWarmer">
-            <argument type="service" id="sulu.content.structure_manager" />
-            <tag name="kernel.cache_warmer" />
-        </service>
-
         <!-- sulu node helper -->
-        <service id="sulu.util.node_helper" class="Sulu\Component\Util\SuluNodeHelper" public="true">
-            <argument type="service" id="sulu_document_manager.default_session"/>
-            <argument>%sulu.content.language.namespace%</argument>
-            <argument type="collection">
-                <argument key="base">%sulu.content.node_names.base%</argument>
-                <argument key="content">%sulu.content.node_names.content%</argument>
-                <argument key="route">%sulu.content.node_names.route%</argument>
-                <argument key="snippet">%sulu.content.node_names.snippet%</argument>
-            </argument>
-            <argument type="service" id="sulu_page.structure.factory"/>
-        </service>
-
         <service id="sulu.content.localization_finder" class="Sulu\Component\Content\Compat\LocalizationFinder" public="true">
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>
         </service>

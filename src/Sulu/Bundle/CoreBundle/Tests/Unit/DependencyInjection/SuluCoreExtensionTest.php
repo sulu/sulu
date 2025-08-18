@@ -56,9 +56,6 @@ class SuluCoreExtensionTest extends AbstractExtensionTestCase
             'translations' => ['de', 'en'],
             'fallback_locale' => 'en',
         ]);
-        $this->assertContainerBuilderHasServiceDefinitionWithTag(
-            'sulu.cache.warmer.structure', 'kernel.cache_warmer'
-        );
 
         $this->assertEquals(
             'default',

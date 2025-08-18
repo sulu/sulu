@@ -5,15 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    {% block meta %}
-        {% include "@SuluWebsite/Extension/seo.html.twig" with {
-            "seo": extension.seo|default([]),
-            "content": content|default([]),
-            "urls": urls|default([]),
-            "shadowBaseLocale": shadowBaseLocale|default(),
-            "defaultLocale": app.request.locale
-        } %}
-    {% endblock %}
+    {% block meta %}{% endblock %}
 
     {% block style %}{% endblock %}
 </head>
