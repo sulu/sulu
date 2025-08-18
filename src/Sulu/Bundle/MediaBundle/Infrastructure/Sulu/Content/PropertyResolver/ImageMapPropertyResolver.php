@@ -53,11 +53,15 @@ class ImageMapPropertyResolver implements PropertyResolverMetadataAwareInterface
     /**
      * @param array<string, mixed> $params
      */
-    public function resolve(mixed $data, string $locale, FieldMetadata $metadata, array $params = []): ContentView
+    public function resolve(mixed $data, string $locale, array $params = [], ?FieldMetadata $metadata = null): ContentView
     {
         $hotspots = (\is_array($data) && isset($data['hotspots']) && \is_array($data['hotspots'])) && \array_is_list($data['hotspots'])
             ? $data['hotspots']
             : [];
+
+        if (null === $metadata) {
+            throw new \InvalidArgumentException('Metadata must be provided for block resolving.');
+        }
 
         $hotspots = [] !== $hotspots ? $this->resolveHotspots($hotspots, $locale, $metadata) : ContentView::create([], []);
 

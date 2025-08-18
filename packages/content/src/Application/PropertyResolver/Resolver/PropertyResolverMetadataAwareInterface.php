@@ -19,12 +19,12 @@ use Sulu\Content\Application\ContentResolver\Value\ContentView;
 /**
  * Implement this interface for resolvers that need direct access to the field metadata.
  */
-interface PropertyResolverMetadataAwareInterface
+interface PropertyResolverMetadataAwareInterface extends PropertyResolverInterface
 {
     /**
      * @param array<string, mixed> $params
      */
-    public function resolve(mixed $data, string $locale, FieldMetadata $metadata, array $params = []): ContentView;
+    public function resolve(mixed $data, string $locale, array $params = [], ?FieldMetadata $metadata = null): ContentView;
 
     public static function getType(): string;
 }

@@ -65,10 +65,9 @@ class MetadataResolver
         $propertyResolver = $this->propertyResolverProvider->getPropertyResolver($type);
 
         if ($propertyResolver instanceof PropertyResolverMetadataAwareInterface && $metadata instanceof FieldMetadata) {
-            return $propertyResolver->resolve($data, $locale, $metadata, $params);
+            return $propertyResolver->resolve($data, $locale, $params, $metadata);
         }
 
-        // ensure metadata is not included in params for non-aware resolvers
         return $propertyResolver->resolve($data, $locale, $params);
     }
 

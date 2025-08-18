@@ -46,12 +46,16 @@ class BlockPropertyResolver implements PropertyResolverMetadataAwareInterface
     /**
      * @param array<string, mixed> $params
      */
-    public function resolve(mixed $data, string $locale, FieldMetadata $metadata, array $params = []): ContentView
+    public function resolve(mixed $data, string $locale, array $params = [], ?FieldMetadata $metadata = null): ContentView
     {
         $returnedParams = $params;
 
         if (!\is_array($data) || !\array_is_list($data)) {
             return ContentView::create([], [...$returnedParams]);
+        }
+
+        if (null === $metadata) {
+            throw new \InvalidArgumentException('Metadata must be provided for block resolving.');
         }
 
         $metadataTypes = $metadata->getTypes();
