@@ -38,7 +38,6 @@ class AdminControllerTest extends SuluTestCase
 
     public function testContactsConfig(): void
     {
-        $this->initPhpcr();
         $em = $this->getEntityManager();
 
         $addressType1 = new AddressType();
