@@ -62,21 +62,6 @@ class SuluWebsiteExtension extends Extension implements PrependExtensionInterfac
             return;
         }
 
-        if (!$container->hasExtension('sulu_next_route')) {
-            $container->prependExtensionConfig('cmf_routing', [
-                'chain' => [
-                    'routers_by_id' => [
-                        'router.default' => 100,
-                        'cmf_routing.dynamic_router' => 20,
-                    ],
-                ],
-                'dynamic' => [
-                    'enabled' => true,
-                    'route_provider_service_id' => 'sulu_website.provider.content',
-                ],
-            ]);
-        }
-
         $container->prependExtensionConfig('fos_rest', [
             'exception' => [
                 'enabled' => false,

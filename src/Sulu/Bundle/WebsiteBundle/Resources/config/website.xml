@@ -10,19 +10,6 @@
             <tag name="sulu.context" context="website"/>
         </service>
 
-        <service id="sulu_website.provider.content" class="Sulu\Bundle\WebsiteBundle\Routing\ContentRouteProvider">
-            <argument type="service" id="sulu_document_manager.document_manager"/>
-            <argument type="service" id="sulu_document_manager.document_inspector"/>
-            <argument type="service" id="sulu.content.resource_locator.strategy_pool"/>
-            <argument type="service" id="sulu.content.structure_manager"/>
-            <argument type="service" id="sulu_core.webspace.webspace_manager"/>
-            <argument type="service" id="sulu_core.webspace.request_analyzer"/>
-            <argument>null</argument><!-- not longer required -->
-            <argument type="collection" />
-
-            <tag name="sulu.context" context="website"/>
-        </service>
-
         <service id="sulu_website.redirect_exception_listener"
                  class="Sulu\Bundle\WebsiteBundle\EventListener\RedirectExceptionSubscriber">
             <argument type="service" id="router"/>
