@@ -26,7 +26,6 @@ class AdminControllerTest extends SuluTestCase
         $this->client = $this->createAuthenticatedClient();
         parent::setUp();
         $this->purgeDatabase();
-        $this->initPhpcr();
     }
 
     public function testRulesConfig(): void
