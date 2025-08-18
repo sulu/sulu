@@ -652,6 +652,9 @@ Removed classes / services:
 - `Sulu\Component\Content\Mapper\Event\ContentNodeOrderEvent`
 - `Sulu\Bundle\WebsiteBundle\Controller\DefaultController` (use new `ContentController` instead)
 - `Sulu\Bundle\WebsiteBundle\Controller\WebsiteController` (use new `ContentController` instead)
+- `Sulu\Bundle\PageBundle\Routing\DecoratedContentRouteProvider`
+- `Sulu\Bundle\PageBundle\Routing\DecoratedContentRouteProvider`
+- `Sulu\Bundle\WebsiteBundle\DependencyInjection\Compiler\RouteProviderCompilerPass`
 - `Sulu\Bundle\WebsiteBundle\Twig\Navigation\MemoizedNavigationTwigExtension`
 - `Sulu\Bundle\WebsiteBundle\Twig\Navigation\NavigationTwigExtension`
 - `Sulu\Bundle\WebsiteBundle\Twig\Navigation\NavigationTwigExtensionInterface`

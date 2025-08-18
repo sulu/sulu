@@ -234,16 +234,6 @@ class SuluPageExtension extends Extension implements PrependExtensionInterface
                 ]
             );
         }
-
-        if ($container->hasExtension('cmf_routing')
-            && !$container->hasExtension('sulu_next_route')
-        ) {
-            $container->prependExtensionConfig('cmf_routing', [
-                'dynamic' => [
-                    'route_provider_service_id' => 'sulu_page.decorated_content_route_provider',
-                ],
-            ]);
-        }
     }
 
     public function load(array $configs, ContainerBuilder $container)

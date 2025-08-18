@@ -183,13 +183,5 @@
 
             <tag name="sulu_document_manager.event_subscriber" />
         </service>
-
-        <!-- routing -->
-        <service id="sulu_page.decorated_content_route_provider"
-                 class="Sulu\Bundle\PageBundle\Routing\DecoratedContentRouteProvider"
-                 decorates="sulu_website.provider.content" decoration-on-invalid="null">
-            <argument type="service" id="service_container"/>
-            <argument type="service" id=".inner"/>
-        </service>
     </services>
 </container>
