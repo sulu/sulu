@@ -65,7 +65,8 @@ class ImageMapPropertyResolverTest extends TestCase
         $contentView = $this->resolver->resolve(null, 'en');
 
         $content = $contentView->getContent();
-        $this->assertSame(null, $content['image'] ?? null);
+        $this->assertIsArray($content);
+        $this->assertNull($content['image'] ?? null);
         $this->assertArrayHasKey('hotspots', $content);
         $this->assertInstanceOf(ContentView::class, $content['hotspots']);
         $this->assertSame([], $content['hotspots']->getContent());
@@ -80,7 +81,8 @@ class ImageMapPropertyResolverTest extends TestCase
         $contentView = $this->resolver->resolve(null, 'en', ['custom' => 'params']);
 
         $content = $contentView->getContent();
-        $this->assertSame(null, $content['image'] ?? null);
+        $this->assertIsArray($content);
+        $this->assertNull($content['image'] ?? null);
         $this->assertArrayHasKey('hotspots', $content);
         $this->assertInstanceOf(ContentView::class, $content['hotspots']);
         $this->assertSame([], $content['hotspots']->getContent());
@@ -99,7 +101,8 @@ class ImageMapPropertyResolverTest extends TestCase
         $contentView = $this->resolver->resolve($data, 'en');
 
         $content = $contentView->getContent();
-        $this->assertSame(null, $content['image'] ?? null);
+        $this->assertIsArray($content);
+        $this->assertNull($content['image'] ?? null);
         $this->assertArrayHasKey('hotspots', $content);
         $this->assertInstanceOf(ContentView::class, $content['hotspots']);
         $this->assertSame([], $content['hotspots']->getContent());
@@ -133,7 +136,7 @@ class ImageMapPropertyResolverTest extends TestCase
      *     hotspots?: array<array{
      *         type: string,
      *         hotspot: array{type: string},
-     *         ...
+     *         title?: string,
      *     }>,
      * } $data
      */
@@ -165,6 +168,7 @@ class ImageMapPropertyResolverTest extends TestCase
             $hotspotView = $hotspots[$key] ?? null;
             $this->assertInstanceOf(ContentView::class, $hotspotView);
             $hotspotContent = $hotspotView->getContent();
+            $this->assertIsArray($hotspotContent);
             $this->assertSame($hotspotInput['type'], $hotspotContent['type'] ?? null);
             $this->assertSame($hotspotInput['hotspot'], $hotspotContent['hotspot'] ?? null);
 
@@ -185,8 +189,12 @@ class ImageMapPropertyResolverTest extends TestCase
     /**
      * @return iterable<array{
      *     0: array{
-     *         id?: string|int,
-     *         displayOption?: string|null,
+     *         imageId?: string|int,
+     *         hotspots?: array<array{
+     *             type?: string,
+     *             hotspot?: array{type: string},
+     *             title?: string,
+     *         }>,
      *     },
      * }>
      */
@@ -242,7 +250,7 @@ class ImageMapPropertyResolverTest extends TestCase
      * } $data
      */
     #[DataProvider('provideUnresolvableHotspotData')]
-    public function testResolveUnresolvableHotspotData(mixed $data): void
+    public function testResolveUnresolvableHotspotData(array $data): void
     {
         $contentView = $this->resolver->resolve($data, 'en', ['metadata' => $this->createMetadata()]);
 
@@ -330,6 +338,7 @@ class ImageMapPropertyResolverTest extends TestCase
             $hotspotView = $hotspots[$key] ?? null;
             $this->assertInstanceOf(ContentView::class, $hotspotView);
             $hotspotContent = $hotspotView->getContent();
+            $this->assertIsArray($hotspotContent);
             $this->assertSame($hotspotInput['type'], $hotspotContent['type'] ?? null);
             $this->assertSame($hotspotInput['hotspot'], $hotspotContent['hotspot'] ?? null);
             $this->assertInstanceOf(ContentView::class, $hotspotContent['title'] ?? null);
