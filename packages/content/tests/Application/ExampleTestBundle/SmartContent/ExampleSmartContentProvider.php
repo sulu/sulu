@@ -149,9 +149,8 @@ readonly class ExampleSmartContentProvider implements SmartContentProviderInterf
         );
         $this->addInternalFilters($queryBuilder, $filters, $alias);
 
-        // prevent duplicates caused by joins
         $queryBuilder->select('DISTINCT ' . $alias . '.id as id');
-        // Removed addOrderBySelects to avoid referencing joined alias in SELECT for static analysis
+        $this->smartContentQueryEnhancer->addOrderBySelects($queryBuilder);
         $this->smartContentQueryEnhancer->addPagination($queryBuilder, $filters['page'], $filters['limit'], $filters['maxPerPage']);
 
         /** @var array{id: int|string, title?: string}[] $queryResult */
@@ -161,7 +160,6 @@ readonly class ExampleSmartContentProvider implements SmartContentProviderInterf
         $result = \array_map(
             static fn (array $item) => [
                 'id' => (string) $item['id'],
-                // Title may not be part of SELECT in some analysis contexts; default to empty string
                 'title' => (string) ($item['title'] ?? ''),
             ],
             $queryResult
