@@ -12,7 +12,6 @@
 namespace Sulu\Bundle\TagBundle\Tests\Functional\Controller;
 
 use Doctrine\ORM\EntityManagerInterface;
-use PHPCR\SessionInterface;
 use Sulu\Bundle\TagBundle\Tag\TagRepositoryInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
@@ -23,11 +22,6 @@ class TagControllerTest extends SuluTestCase
      * @var EntityManagerInterface
      */
     protected $em;
-
-    /**
-     * @var SessionInterface
-     */
-    protected $session;
 
     /**
      * @var TagRepositoryInterface
@@ -44,7 +38,6 @@ class TagControllerTest extends SuluTestCase
         $this->client = $this->createAuthenticatedClient();
         $this->em = $this->getEntityManager();
 
-        $this->session = $this->getContainer()->get('doctrine_phpcr')->getConnection();
         $this->tagRepository = $this->getContainer()->get('sulu.repository.tag');
 
         $this->initOrm();
