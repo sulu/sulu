@@ -641,6 +641,12 @@ Removed classes / services:
 - `Sulu\Bundle\WebsiteBundle\Navigation\NavigationMapper`
 - `Sulu\Bundle\WebsiteBundle\Navigation\NavigationMapperInterface`
 - `Sulu\Bundle\WebsiteBundle\Navigation\NavigationItem`
+- `Sulu\Bundle\WebsiteBundle\Sitemap\SitemapContentQueryBuilder`
+- `Sulu\Bundle\WebsiteBundle\Sitemap\SitemapGenerator`
+- `Sulu\Bundle\WebsiteBundle\Sitemap\SitemapGeneratorInterface`
+- `Sulu\Bundle\WebsiteBundle\Twig\Sitemap\MemoizedSitemapTwigExtension`
+- `Sulu\Bundle\WebsiteBundle\Twig\Sitemap\SitemapTwigExtension`
+- `Sulu\Bundle\WebsiteBundle\Twig\Sitemap\SitemapTwigExtensionInterface`
 
 Removed deprecated functions and properties:
 
