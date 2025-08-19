@@ -47,39 +47,11 @@
             <tag name="sulu.context" context="admin"/>
         </service>
 
-        <!-- sitemap generator -->
-        <service id="sulu_website.sitemap.query_builder" class="Sulu\Bundle\WebsiteBundle\Sitemap\SitemapContentQueryBuilder" public="false">
-            <argument type="service" id="sulu.content.structure_manager"/>
-            <argument type="service" id="sulu_page.extension.manager"/>
-            <argument>%sulu.content.language.namespace%</argument>
-        </service>
-        <service id="sulu_website.sitemap" class="Sulu\Bundle\WebsiteBundle\Sitemap\SitemapGenerator">
-            <argument type="service" id="sulu.content.query_executor"/>
-            <argument type="service" id="sulu_core.webspace.webspace_manager"/>
-            <argument type="service" id="sulu_website.sitemap.query_builder"/>
-            <argument>%kernel.environment%</argument>
-        </service>
-
         <!-- twig extension: content path -->
         <service id="sulu_website.twig.content_path" class="Sulu\Bundle\WebsiteBundle\Twig\Content\ContentPathTwigExtension">
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>
             <argument>%kernel.environment%</argument>
             <argument type="service" id="sulu_core.webspace.request_analyzer" on-invalid="ignore"/>
-
-            <tag name="twig.extension"/>
-        </service>
-
-        <!-- twig extension: sitemap -->
-        <service id="sulu_website.twig.sitemap" class="Sulu\Bundle\WebsiteBundle\Twig\Sitemap\SitemapTwigExtension">
-            <argument type="service" id="sulu_website.sitemap"/>
-            <argument type="service" id="sulu_core.webspace.webspace_manager"/>
-            <argument>%kernel.environment%</argument>
-            <argument type="service" id="sulu_core.webspace.request_analyzer" on-invalid="ignore"/>
-        </service>
-        <service id="sulu_website.twig.sitemap.memoized" class="Sulu\Bundle\WebsiteBundle\Twig\Sitemap\MemoizedSitemapTwigExtension">
-            <argument type="service" id="sulu_website.twig.sitemap"/>
-            <argument type="service" id="sulu_core.cache.memoize"/>
-            <argument type="string">%sulu_website.sitemap.cache.lifetime%</argument>
 
             <tag name="twig.extension"/>
         </service>
