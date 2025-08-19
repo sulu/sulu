@@ -38,7 +38,7 @@ final class OrderPageMessageHandler
 
         $page = $this->pageRepository->getOneBy($message->getIdentifier());
 
-        /** @var string $locale */
+        /** @var ?string $locale */
         $locale = $this->requestAnalyzer->getAttribute('locale');
 
         $this->domainEventCollector->collect(new PageOrderedEvent($page, $locale, $message->getPosition()));

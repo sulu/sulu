@@ -41,7 +41,7 @@ class MovePageMessageHandler
 
         $this->pageRepository->moveOneBy($message->getIdentifier(), $message->getTargetParentIdentifier());
 
-        /** @var string $locale */
+        /** @var ?string $locale */
         $locale = $this->requestAnalyzer->getAttribute('locale');
 
         if (null === $previousParent) {
@@ -58,7 +58,7 @@ class MovePageMessageHandler
 
         $previousParentDimensionContentCollection = new DimensionContentCollection($previousParent->getDimensionContents()->toArray(), [], PageDimensionContent::class);
         /** @var PageDimensionContent $previousParentLocalizedDimensionContent */
-        $previousParentLocalizedDimensionContent = $previousParentDimensionContentCollection->getDimensionContent(['locale' => $locale]);
+        $previousParentLocalizedDimensionContent = $previousParentDimensionContentCollection->getDimensionContent($locale ? ['locale' => $locale] : []);
 
         $this->domainEventCollector->collect(new PageMovedEvent(
             $page,

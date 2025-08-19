@@ -25,7 +25,7 @@ class PageVersionRestoredEvent extends DomainEvent
 {
     public function __construct(
         private PageInterface $page,
-        private string $locale,
+        private ?string $locale,
         private int $version
     ) {
         parent::__construct();
@@ -72,7 +72,7 @@ class PageVersionRestoredEvent extends DomainEvent
     {
         $dimensionContentCollection = new DimensionContentCollection($this->page->getDimensionContents()->toArray(), [], PageDimensionContent::class);
 
-        return $dimensionContentCollection->getDimensionContent(['locale' => $this->locale])?->getTitle();
+        return $dimensionContentCollection->getDimensionContent($this->locale ? ['locale' => $this->locale] : [])?->getTitle();
     }
 
     public function getResourceTitleLocale(): ?string

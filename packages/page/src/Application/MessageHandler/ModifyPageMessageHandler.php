@@ -41,7 +41,7 @@ final class ModifyPageMessageHandler
     {
         $identifier = $message->getIdentifier();
         $data = $message->getData();
-        /** @var string $locale */
+        /** @var ?string $locale */
         $locale = $data['locale'];
         $page = $this->pageRepository->getOneBy($identifier);
 

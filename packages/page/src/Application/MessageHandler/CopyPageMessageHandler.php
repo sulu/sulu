@@ -77,11 +77,11 @@ final class CopyPageMessageHandler
             );
         }
 
-        /** @var string $locale */
+        /** @var ?string $locale */
         $locale = $this->requestAnalyzer->getAttribute('locale');
         $dimensionContentCollection = new DimensionContentCollection($sourcePage->getDimensionContents()->toArray(), [], PageDimensionContent::class);
         /** @var PageDimensionContent $localizedDimensionContent */
-        $localizedDimensionContent = $dimensionContentCollection->getDimensionContent(['locale' => $locale]);
+        $localizedDimensionContent = $dimensionContentCollection->getDimensionContent($locale ? ['locale' => $locale] : []);
 
         $this->domainEventCollector->collect(new PageCopiedEvent($sourcePage, $sourcePage->getId(), $sourcePage->getWebspaceKey(), $localizedDimensionContent->getTitle(), $locale));
 

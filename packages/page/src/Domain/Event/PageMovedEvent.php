@@ -25,7 +25,7 @@ class PageMovedEvent extends DomainEvent
 {
     public function __construct(
         private PageInterface $page,
-        private string $locale,
+        private ?string $locale,
         private ?string $previousParentId,
         private ?string $previousParentWebspaceKey,
         private ?string $previousParentTitle,
@@ -64,7 +64,7 @@ class PageMovedEvent extends DomainEvent
         }
 
         $newParentDimensionContentCollection = new DimensionContentCollection($newParent->getDimensionContents()->toArray(), [], PageDimensionContent::class);
-        $newParentLocalizedDimensionContent = $newParentDimensionContentCollection->getDimensionContent(['locale' => $this->locale]);
+        $newParentLocalizedDimensionContent = $newParentDimensionContentCollection->getDimensionContent($this->locale ? ['locale' => $this->locale] : []);
 
         return \array_merge($eventContext, [
             'newParentId' => $newParent->getUuid(),

@@ -41,10 +41,11 @@ final class RemovePageMessageHandler
 
         $this->pageRepository->remove($page);
 
+        /** @var ?string $locale */
         $locale = $this->requestAnalyzer->getAttribute('locale');
         $dimensionContentCollection = new DimensionContentCollection($page->getDimensionContents()->toArray(), [], PageDimensionContent::class);
         /** @var PageDimensionContent $localizedDimensionContent */
-        $localizedDimensionContent = $dimensionContentCollection->getDimensionContent(['locale' => $locale]);
+        $localizedDimensionContent = $dimensionContentCollection->getDimensionContent($locale ? ['locale' => $locale] : []);
 
         $this->domainEventCollector->collect(new PageRemovedEvent(
             $page->getUuid(),
