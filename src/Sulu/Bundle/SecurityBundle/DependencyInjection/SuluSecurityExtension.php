@@ -177,9 +177,6 @@ class SuluSecurityExtension extends Extension implements PrependExtensionInterfa
                 'framework',
                 [
                     'csrf_protection' => true,
-                    'session' => [
-                        'cookie_path' => '/admin',
-                    ],
                     'fragments' => [
                         'path' => '/admin/_fragments',
                     ],
