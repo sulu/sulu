@@ -637,6 +637,10 @@ Removed classes / services:
 - `Sulu\Bundle\WebsiteBundle\Twig\Navigation\MemoizedNavigationTwigExtension`
 - `Sulu\Bundle\WebsiteBundle\Twig\Navigation\NavigationTwigExtension`
 - `Sulu\Bundle\WebsiteBundle\Twig\Navigation\NavigationTwigExtensionInterface`
+- `Sulu\Bundle\WebsiteBundle\Navigation\NavigationQueryBuilder`
+- `Sulu\Bundle\WebsiteBundle\Navigation\NavigationMapper`
+- `Sulu\Bundle\WebsiteBundle\Navigation\NavigationMapperInterface`
+- `Sulu\Bundle\WebsiteBundle\Navigation\NavigationItem`
 
 Removed deprecated functions and properties:
 

@@ -47,21 +47,6 @@
             <tag name="sulu.context" context="admin"/>
         </service>
 
-        <!-- navigation mapper -->
-        <service id="sulu_website.navigation_mapper.query_builder" class="Sulu\Bundle\WebsiteBundle\Navigation\NavigationQueryBuilder" public="false">
-            <argument type="service" id="sulu.content.structure_manager"/>
-            <argument type="service" id="sulu_page.extension.manager"/>
-            <argument>%sulu.content.language.namespace%</argument>
-        </service>
-        <service id="sulu_website.navigation_mapper" class="Sulu\Bundle\WebsiteBundle\Navigation\NavigationMapper">
-            <argument type="service" id="sulu.content.mapper"/>
-            <argument type="service" id="sulu.content.query_executor"/>
-            <argument type="service" id="sulu_website.navigation_mapper.query_builder"/>
-            <argument type="service" id="sulu.phpcr.session"/>
-            <argument type="service" id="debug.stopwatch" on-invalid="null"/>
-            <argument>%sulu_security.permissions%</argument>
-        </service>
-
         <!-- sitemap generator -->
         <service id="sulu_website.sitemap.query_builder" class="Sulu\Bundle\WebsiteBundle\Sitemap\SitemapContentQueryBuilder" public="false">
             <argument type="service" id="sulu.content.structure_manager"/>
