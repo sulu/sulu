@@ -239,17 +239,27 @@ class ImageMapPropertyResolverTest extends TestCase
         $this->assertSame(1, $image->getId());
         $this->assertSame('custom_media', $image->getResourceLoaderKey());
 
-        // hotspots represented as ContentView
         $this->assertInstanceOf(ContentView::class, $content['hotspots'] ?? null);
-        $this->assertSame([], $content['hotspots']->getContent());
-        $this->assertSame([], $content['hotspots']->getView());
+        $hotspotsContentView = $content['hotspots'];
+        $this->assertSame([], $hotspotsContentView->getView());
+
+        $hotspots = $hotspotsContentView->getContent();
+        $this->assertIsArray($hotspots);
+        $this->assertCount(2, $hotspots);
+
+        foreach ($hotspots as $hotspotView) {
+            $this->assertInstanceOf(ContentView::class, $hotspotView);
+            $hotspotContent = $hotspotView->getContent();
+            $this->assertIsArray($hotspotContent);
+            $this->assertSame('text', $hotspotContent['type'] ?? null);
+            $this->assertSame(['type' => 'circle'], $hotspotContent['hotspot'] ?? null);
+            $this->assertInstanceOf(ContentView::class, $hotspotContent['title'] ?? null);
+            $this->assertSame('Title', $hotspotContent['title']->getContent());
+            $this->assertSame([], $hotspotContent['title']->getView());
+        }
 
         $this->assertSame([
             'imageId' => 1,
-            'hotspots' => [
-                ['title' => []],
-                ['title' => []],
-            ],
             'resourceLoader' => 'custom_media',
         ], $contentView->getView());
         $this->assertCount(0, $this->logger->cleanLogs());
