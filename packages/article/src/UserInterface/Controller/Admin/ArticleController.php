@@ -233,7 +233,7 @@ final class ArticleController
 
     public function deleteAction(Request $request, string $id): Response // TODO route should be a uuid
     {
-        $message = new RemoveArticleMessage(['uuid' => $id]);
+        $message = new RemoveArticleMessage(['uuid' => $id], $this->getLocale($request));
         /** @see Sulu\Article\Application\MessageHandler\RemoveArticleMessageHandler */
         $this->handle(new Envelope($message, [new EnableFlushStamp()]));
 
@@ -285,6 +285,7 @@ final class ArticleController
             $message = new RestoreArticleVersionMessage(
                 ['uuid' => $uuid],
                 $version,
+                $this->getLocale($request),
                 $request->query->all(),
             );
 

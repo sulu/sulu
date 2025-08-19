@@ -13,8 +13,10 @@ namespace Sulu\Article\Application\MessageHandler;
 
 use Sulu\Article\Application\Mapper\ArticleMapperInterface;
 use Sulu\Article\Application\Message\ModifyArticleMessage;
+use Sulu\Article\Domain\Event\ArticleModifiedEvent;
 use Sulu\Article\Domain\Model\ArticleInterface;
 use Sulu\Article\Domain\Repository\ArticleRepositoryInterface;
+use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
 
 /**
  * @experimental
@@ -24,25 +26,12 @@ use Sulu\Article\Domain\Repository\ArticleRepositoryInterface;
  */
 final class ModifyArticleMessageHandler
 {
-    /**
-     * @var ArticleRepositoryInterface
-     */
-    private $articleRepository;
-
-    /**
-     * @var iterable<ArticleMapperInterface>
-     */
-    private $articleMappers;
-
-    /**
-     * @param iterable<ArticleMapperInterface> $articleMappers
-     */
     public function __construct(
-        ArticleRepositoryInterface $articleRepository,
-        iterable $articleMappers
+        private ArticleRepositoryInterface $articleRepository,
+        /** @var iterable<ArticleMapperInterface> */
+        private iterable $articleMappers,
+        private DomainEventCollectorInterface $domainEventCollector
     ) {
-        $this->articleRepository = $articleRepository;
-        $this->articleMappers = $articleMappers;
     }
 
     public function __invoke(ModifyArticleMessage $message): ArticleInterface
@@ -54,6 +43,11 @@ final class ModifyArticleMessageHandler
         foreach ($this->articleMappers as $articleMapper) {
             $articleMapper->mapArticleData($article, $data);
         }
+
+        /** @var string $locale */
+        $locale = $data['locale'];
+
+        $this->domainEventCollector->collect(new ArticleModifiedEvent($article, $locale, $data));
 
         return $article;
     }

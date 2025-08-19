@@ -13,8 +13,10 @@ namespace Sulu\Article\Application\MessageHandler;
 
 use Sulu\Article\Application\Mapper\ArticleMapperInterface;
 use Sulu\Article\Application\Message\CreateArticleMessage;
+use Sulu\Article\Domain\Event\ArticleCreatedEvent;
 use Sulu\Article\Domain\Model\ArticleInterface;
 use Sulu\Article\Domain\Repository\ArticleRepositoryInterface;
+use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
 
 /**
  * @experimental
@@ -24,25 +26,12 @@ use Sulu\Article\Domain\Repository\ArticleRepositoryInterface;
  */
 final class CreateArticleMessageHandler
 {
-    /**
-     * @var ArticleRepositoryInterface
-     */
-    private $articleRepository;
-
-    /**
-     * @var iterable<ArticleMapperInterface>
-     */
-    private $articleMappers;
-
-    /**
-     * @param iterable<ArticleMapperInterface> $articleMappers
-     */
     public function __construct(
-        ArticleRepositoryInterface $articleRepository,
-        iterable $articleMappers
+        private ArticleRepositoryInterface $articleRepository,
+        /** @var iterable<ArticleMapperInterface> */
+        private iterable $articleMappers,
+        private DomainEventCollectorInterface $domainEventCollector
     ) {
-        $this->articleRepository = $articleRepository;
-        $this->articleMappers = $articleMappers;
     }
 
     public function __invoke(CreateArticleMessage $message): ArticleInterface
@@ -55,6 +44,11 @@ final class CreateArticleMessageHandler
         }
 
         $this->articleRepository->add($article);
+
+        /** @var string $locale */
+        $locale = $data['locale'];
+
+        $this->domainEventCollector->collect(new ArticleCreatedEvent($article, $locale, $data));
 
         return $article;
     }

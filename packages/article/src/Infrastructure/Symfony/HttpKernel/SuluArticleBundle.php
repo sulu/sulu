@@ -108,6 +108,7 @@ final class SuluArticleBundle extends AbstractBundle
             ->args([
                 new Reference('sulu_article.article_repository'),
                 tagged_iterator('sulu_article.article_mapper'),
+                new Reference('sulu_activity.domain_event_collector'),
             ])
             ->tag('messenger.message_handler');
 
@@ -116,6 +117,7 @@ final class SuluArticleBundle extends AbstractBundle
             ->args([
                 new Reference('sulu_article.article_repository'),
                 tagged_iterator('sulu_article.article_mapper'),
+                new Reference('sulu_activity.domain_event_collector'),
             ])
             ->tag('messenger.message_handler');
 
@@ -123,6 +125,8 @@ final class SuluArticleBundle extends AbstractBundle
             ->class(RemoveArticleMessageHandler::class)
             ->args([
                 new Reference('sulu_article.article_repository'),
+                new Reference('sulu_activity.domain_event_collector'),
+                new Reference('sulu_core.webspace.request_analyzer'),
             ])
             ->tag('messenger.message_handler');
 
@@ -131,6 +135,7 @@ final class SuluArticleBundle extends AbstractBundle
             ->args([
                 new Reference('sulu_article.article_repository'),
                 new Reference('sulu_content.content_workflow'),
+                new Reference('sulu_activity.domain_event_collector'),
             ])
             ->tag('messenger.message_handler');
 
@@ -139,6 +144,7 @@ final class SuluArticleBundle extends AbstractBundle
             ->args([
                 new Reference('sulu_article.article_repository'),
                 new Reference('sulu_content.content_copier'),
+                new Reference('sulu_activity.domain_event_collector'),
             ])
             ->tag('messenger.message_handler');
 
@@ -147,6 +153,7 @@ final class SuluArticleBundle extends AbstractBundle
             ->args([
                 new Reference('sulu_article.article_repository'),
                 new Reference('sulu_content.content_copier'),
+                new Reference('sulu_activity.domain_event_collector'),
             ])
             ->tag('messenger.message_handler');
 

@@ -16,21 +16,11 @@ namespace Sulu\Article\Application\Message;
  */
 class RemoveArticleMessage
 {
-    /**
-     * @var array{
-     *     uuid?: string
-     * }
-     */
-    private $identifier;
-
-    /**
-     * @param array{
-     *     uuid?: string
-     * } $identifier
-     */
-    public function __construct(array $identifier)
-    {
-        $this->identifier = $identifier;
+    public function __construct(
+        /** @var array{ uuid?: string } $identifier */
+        private array $identifier,
+        private string $locale,
+    ) {
     }
 
     /**
@@ -41,5 +31,10 @@ class RemoveArticleMessage
     public function getIdentifier(): array
     {
         return $this->identifier;
+    }
+
+    public function getLocale(): string
+    {
+        return $this->locale;
     }
 }
