@@ -22,6 +22,7 @@ class RestoreSnippetVersionMessage
     public function __construct(
         private array $snippetIdentifier,
         private int $version,
+        private string $locale,
         private array $options = []
     ) {
     }
@@ -47,5 +48,10 @@ class RestoreSnippetVersionMessage
     public function getOptions(): array
     {
         return $this->options;
+    }
+
+    public function getLocale(): string
+    {
+        return $this->locale;
     }
 }

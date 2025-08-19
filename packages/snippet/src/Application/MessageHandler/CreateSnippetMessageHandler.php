@@ -11,8 +11,10 @@
 
 namespace Sulu\Snippet\Application\MessageHandler;
 
+use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
 use Sulu\Snippet\Application\Mapper\SnippetMapperInterface;
 use Sulu\Snippet\Application\Message\CreateSnippetMessage;
+use Sulu\Snippet\Domain\Event\SnippetCreatedEvent;
 use Sulu\Snippet\Domain\Model\SnippetInterface;
 use Sulu\Snippet\Domain\Repository\SnippetRepositoryInterface;
 
@@ -24,25 +26,12 @@ use Sulu\Snippet\Domain\Repository\SnippetRepositoryInterface;
  */
 final class CreateSnippetMessageHandler
 {
-    /**
-     * @var SnippetRepositoryInterface
-     */
-    private $snippetRepository;
-
-    /**
-     * @var iterable<SnippetMapperInterface>
-     */
-    private $snippetMappers;
-
-    /**
-     * @param iterable<SnippetMapperInterface> $snippetMappers
-     */
     public function __construct(
-        SnippetRepositoryInterface $snippetRepository,
-        iterable $snippetMappers
+        private SnippetRepositoryInterface $snippetRepository,
+        /** @var iterable<SnippetMapperInterface> */
+        private iterable $snippetMappers,
+        private DomainEventCollectorInterface $domainEventCollector
     ) {
-        $this->snippetRepository = $snippetRepository;
-        $this->snippetMappers = $snippetMappers;
     }
 
     public function __invoke(CreateSnippetMessage $message): SnippetInterface
@@ -55,6 +44,11 @@ final class CreateSnippetMessageHandler
         }
 
         $this->snippetRepository->add($snippet);
+
+        /** @var string $locale */
+        $locale = $data['locale'];
+
+        $this->domainEventCollector->collect(new SnippetCreatedEvent($snippet, $locale, $data));
 
         return $snippet;
     }

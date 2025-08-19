@@ -11,9 +11,11 @@
 
 namespace Sulu\Snippet\Application\MessageHandler;
 
+use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
 use Sulu\Content\Application\ContentCopier\ContentCopierInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Snippet\Application\Message\CopyLocaleSnippetMessage;
+use Sulu\Snippet\Domain\Event\SnippetTranslationCopiedEvent;
 use Sulu\Snippet\Domain\Repository\SnippetRepositoryInterface;
 
 /**
@@ -24,22 +26,11 @@ use Sulu\Snippet\Domain\Repository\SnippetRepositoryInterface;
  */
 final class CopyLocaleSnippetMessageHandler
 {
-    /**
-     * @var SnippetRepositoryInterface
-     */
-    private $snippetRepository;
-
-    /**
-     * @var ContentCopierInterface
-     */
-    private $contentCopier;
-
     public function __construct(
-        SnippetRepositoryInterface $snippetRepository,
-        ContentCopierInterface $contentCopier
+        private SnippetRepositoryInterface $snippetRepository,
+        private ContentCopierInterface $contentCopier,
+        private DomainEventCollectorInterface $domainEventCollector,
     ) {
-        $this->snippetRepository = $snippetRepository;
-        $this->contentCopier = $contentCopier;
     }
 
     public function __invoke(CopyLocaleSnippetMessage $message): void
@@ -58,5 +49,7 @@ final class CopyLocaleSnippetMessageHandler
                 'locale' => $message->getTargetLocale(),
             ]
         );
+
+        $this->domainEventCollector->collect(new SnippetTranslationCopiedEvent($snippet, $message->getTargetLocale(), $message->getSourceLocale(), []));
     }
 }

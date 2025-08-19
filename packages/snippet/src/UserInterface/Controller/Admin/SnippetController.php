@@ -233,7 +233,7 @@ final class SnippetController
 
     public function deleteAction(Request $request, string $id): Response // TODO route should be a uuid
     {
-        $message = new RemoveSnippetMessage(['uuid' => $id]);
+        $message = new RemoveSnippetMessage(['uuid' => $id], $this->getLocale($request));
         /** @see Sulu\Snippet\Application\MessageHandler\RemoveSnippetMessageHandler */
         $this->handle(new Envelope($message, [new EnableFlushStamp()]));
 
@@ -285,6 +285,7 @@ final class SnippetController
             $message = new RestoreSnippetVersionMessage(
                 ['uuid' => $uuid],
                 $version,
+                $this->getLocale($request),
                 $request->query->all(),
             );
 

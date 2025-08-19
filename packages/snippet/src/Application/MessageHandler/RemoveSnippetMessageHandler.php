@@ -11,7 +11,11 @@
 
 namespace Sulu\Snippet\Application\MessageHandler;
 
+use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
+use Sulu\Content\Domain\Model\DimensionContentCollection;
 use Sulu\Snippet\Application\Message\RemoveSnippetMessage;
+use Sulu\Snippet\Domain\Event\SnippetRemovedEvent;
+use Sulu\Snippet\Domain\Model\SnippetDimensionContent;
 use Sulu\Snippet\Domain\Repository\SnippetRepositoryInterface;
 
 /**
@@ -22,14 +26,10 @@ use Sulu\Snippet\Domain\Repository\SnippetRepositoryInterface;
  */
 final class RemoveSnippetMessageHandler
 {
-    /**
-     * @var SnippetRepositoryInterface
-     */
-    private $snippetRepository;
-
-    public function __construct(SnippetRepositoryInterface $snippetRepository)
-    {
-        $this->snippetRepository = $snippetRepository;
+    public function __construct(
+        private SnippetRepositoryInterface $snippetRepository,
+        private DomainEventCollectorInterface $domainEventCollector,
+    ) {
     }
 
     public function __invoke(RemoveSnippetMessage $message): void
@@ -37,5 +37,11 @@ final class RemoveSnippetMessageHandler
         $snippet = $this->snippetRepository->getOneBy($message->getIdentifier());
 
         $this->snippetRepository->remove($snippet);
+
+        $dimensionContentCollection = new DimensionContentCollection($snippet->getDimensionContents()->toArray(), [], SnippetDimensionContent::class);
+        /** @var SnippetDimensionContent $localizedDimensionContent */
+        $localizedDimensionContent = $dimensionContentCollection->getDimensionContent(['locale' => $message->getLocale()]);
+
+        $this->domainEventCollector->collect(new SnippetRemovedEvent($snippet->getId(), $localizedDimensionContent->getTitle(), []));
     }
 }
