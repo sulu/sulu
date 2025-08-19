@@ -40,11 +40,6 @@ sulu_page.teaser:
     name_prefix: sulu_page.
     resource: sulu_page.teaser_controller
 
-sulu_page.icon:
-    type: rest
-    name_prefix: sulu_page.
-    resource: sulu_admin.icon_controller
-
 sulu_page.page.versioning:
     type: versioning_rest
     resource: "@SuluPageBundle/Resources/config/routing_versioning_api.yml"

@@ -121,6 +121,11 @@ class SuluAdminExtension extends Extension implements PrependExtensionInterface
                         __DIR__ . '/../Resources/config/forms',
                     ],
                 ],
+                'lists' => [
+                    'directories' => [
+                        __DIR__ . '/../Resources/config/lists',
+                    ],
+                ],
                 'resources' => [
                     'collaborations' => [
                         'routes' => [
@@ -135,6 +140,11 @@ class SuluAdminExtension extends Extension implements PrependExtensionInterface
                     'teasers' => [
                         'routes' => [
                             'list' => 'sulu_page.get_teasers',
+                        ],
+                    ],
+                    'icons' => [
+                        'routes' => [
+                            'list' => 'sulu_admin.get_icons',
                         ],
                     ],
                 ],
