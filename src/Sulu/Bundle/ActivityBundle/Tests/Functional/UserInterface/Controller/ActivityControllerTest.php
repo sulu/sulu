@@ -42,7 +42,7 @@ class ActivityControllerTest extends SuluTestCase
         $role = static::setUpUserRole();
 
         $count = 0;
-        foreach (['pages', 'other'] as $resourceKey) {
+        foreach (['examples', 'other'] as $resourceKey) {
             foreach ([null, 'en', 'de'] as $resourceLocale) {
                 foreach ([null, self::GRANTED_CONTEXT, self::NOT_GRANTED_CONTEXT] as $resourceSecurityContext) {
                     foreach ([null, true, false] as $objectSecurity) {
@@ -100,7 +100,7 @@ class ActivityControllerTest extends SuluTestCase
         ];
 
         yield [
-            ['resourceKey' => 'pages'],
+            ['resourceKey' => 'examples'],
             12,
         ];
 
@@ -115,17 +115,17 @@ class ActivityControllerTest extends SuluTestCase
         ];
 
         yield [
-            ['resourceKey' => 'pages', 'resourceId' => 1],
+            ['resourceKey' => 'examples', 'resourceId' => 1],
             1,
         ];
 
         yield [
-            ['resourceKey' => 'pages', 'resourceId' => 3], // Not granted object permission
+            ['resourceKey' => 'examples', 'resourceId' => 3], // Not granted object permission
             0,
         ];
 
         yield [
-            ['resourceKey' => 'pages', 'resourceId' => 7], // Not granted context permission
+            ['resourceKey' => 'examples', 'resourceId' => 7], // Not granted context permission
             0,
         ];
     }
@@ -150,19 +150,19 @@ class ActivityControllerTest extends SuluTestCase
     public function testCgetActionActivityText(): void
     {
         $this->client->jsonRequest('GET', '/api/activities', [
-            'resourceKey' => 'pages',
+            'resourceKey' => 'examples',
             'resourceId' => 1,
         ]);
 
         $content = \json_decode((string) $this->client->getResponse()->getContent());
 
         self::assertSame(
-            '<b>Max Mustermann</b> has created the page "Test Page 1234"',
+            '<b>Max Mustermann</b> has created the example "Test Example 1234"',
             $content->_embedded->activities[0]->description
         );
 
         self::assertSame(
-            'Page',
+            'Example',
             $content->_embedded->activities[0]->resource
         );
     }
@@ -170,14 +170,14 @@ class ActivityControllerTest extends SuluTestCase
     public function testCgetActionActivityResource(): void
     {
         $this->client->jsonRequest('GET', '/api/activities', [
-            'resourceKey' => 'pages',
+            'resourceKey' => 'examples',
             'resourceId' => 1,
         ]);
 
         $content = \json_decode((string) $this->client->getResponse()->getContent());
 
         self::assertSame(
-            'Page',
+            'Example',
             $content->_embedded->activities[0]->resource
         );
     }
@@ -204,7 +204,7 @@ class ActivityControllerTest extends SuluTestCase
         $activity->setResourceId($resourceId);
         $activity->setResourceLocale($resourceLocale);
         $activity->setResourceWebspaceKey('sulu-io');
-        $activity->setResourceTitle('Test Page 1234');
+        $activity->setResourceTitle('Test Example 1234');
         $activity->setResourceTitleLocale('en');
         $activity->setResourceSecurityContext($resourceSecurityContext);
         $activity->setResourceSecurityObjectType($resourceSecurityObjectType);

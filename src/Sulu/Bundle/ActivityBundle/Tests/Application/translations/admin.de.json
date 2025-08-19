@@ -1,0 +1,4 @@
+{
+    "sulu_activity.description.examples.created": "{userFullName} hat das Beispiel \"{resourceTitle}\" erstellt",
+    "sulu_activity.resource.examples": "Beispiel"
+}
