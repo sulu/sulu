@@ -15,7 +15,6 @@ use Sulu\Bundle\PersistenceBundle\PersistenceBundleTrait;
 use Sulu\Bundle\WebsiteBundle\DependencyInjection\Compiler\DeregisterDefaultRouteListenerCompilerPass;
 use Sulu\Bundle\WebsiteBundle\Entity\AnalyticsInterface;
 use Sulu\Component\Symfony\CompilerPass\TaggedServiceCollectorCompilerPass;
-use Sulu\Component\Util\SuluVersionPass;
 use Sulu\Route\Infrastructure\Symfony\DependencyInjection\RouteDefaultsOptionsCompilerPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
@@ -31,7 +30,6 @@ final class SuluWebsiteBundle extends Bundle
     {
         parent::build($container);
 
-        $container->addCompilerPass(new SuluVersionPass());
         $container->addCompilerPass(new RouteDefaultsOptionsCompilerPass()); // TODO remove in 3.0 as already registered by new RouteBundle
         $container->addCompilerPass(new DeregisterDefaultRouteListenerCompilerPass());
         $container->addCompilerPass(

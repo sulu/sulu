@@ -647,6 +647,7 @@ Removed classes / services:
 - `Sulu\Bundle\WebsiteBundle\Twig\Sitemap\MemoizedSitemapTwigExtension`
 - `Sulu\Bundle\WebsiteBundle\Twig\Sitemap\SitemapTwigExtension`
 - `Sulu\Bundle\WebsiteBundle\Twig\Sitemap\SitemapTwigExtensionInterface`
+- `Sulu\Bundle\AdminBundle\DependencyInjection\Compiler\SuluVersionPass` (moved and internal)
 
 Removed deprecated functions and properties:
 

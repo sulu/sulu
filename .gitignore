@@ -21,7 +21,7 @@ phpunit.stdout
 
 # composer
 /composer.phar
-composer.lock
+/composer.lock
 /vendor
 /packages/*/vendor
 

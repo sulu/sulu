@@ -9,11 +9,11 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Util\Tests\Unit;
+namespace Sulu\Bundle\AdminBundle\Tests\Unit\DependencyInjection\Compiler;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
-use Sulu\Component\Util\SuluVersionPass;
+use Sulu\Bundle\AdminBundle\DependencyInjection\Compiler\SuluVersionPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 class SuluVersionPassTest extends TestCase
@@ -24,7 +24,7 @@ class SuluVersionPassTest extends TestCase
     {
         $versionPass = new SuluVersionPass();
         $container = $this->prophesize(ContainerBuilder::class);
-        $container->getParameter('kernel.project_dir')->willReturn(\dirname(__DIR__) . '/Resources/VersionPass');
+        $container->getParameter('kernel.project_dir')->willReturn(__DIR__ . '/Resources/VersionPass');
 
         $container->setParameter('sulu.version', '1.5.2')->shouldBeCalled();
         $container->setParameter('app.version', '1.2.3')->shouldBeCalled();
