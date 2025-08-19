@@ -24,12 +24,10 @@ class ErrorControllerTest extends WebsiteTestCase
     public function setUp(): void
     {
         $this->client = $this->createWebsiteClient();
-        $this->initPhpcr();
     }
 
     public function test404ErrorTemplate(): void
     {
-        /* @var KernelBrowser $client */
         $this->client->request('GET', 'http://sulu.lo/_error/404');
 
         $response = $this->client->getResponse();
@@ -39,7 +37,6 @@ class ErrorControllerTest extends WebsiteTestCase
 
     public function testDefaultErrorTemplate(): void
     {
-        /* @var KernelBrowser $client */
         $this->client->request('GET', 'http://sulu.lo/_error/500');
 
         $response = $this->client->getResponse();
