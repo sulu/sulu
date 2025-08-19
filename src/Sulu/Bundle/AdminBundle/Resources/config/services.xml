@@ -272,6 +272,17 @@
         </service>
 
         <service
+            id="sulu_admin.valid_build_command"
+            class="Sulu\Bundle\AdminBundle\Command\ValidateBuildCommand"
+        >
+            <argument type="service" id="assets.packages" />
+            <argument type="string">%kernel.project_dir%</argument>
+            <argument type="string">%sulu.version%</argument>
+            <tag name="sulu.context" context="admin"/>
+            <tag name="console.command"/>
+        </service>
+
+        <service
             id="sulu_admin.debug_view_command"
             class="Sulu\Bundle\AdminBundle\Command\ViewDebugCommand"
         >
