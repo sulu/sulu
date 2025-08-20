@@ -20,7 +20,8 @@ class OrderPageMessage
      */
     public function __construct(
         private array $identifier,
-        private int $position
+        private int $position,
+        private string $locale,
     ) {
     }
 
@@ -37,5 +38,10 @@ class OrderPageMessage
     public function getPosition(): int
     {
         return $this->position;
+    }
+
+    public function getLocale(): string
+    {
+        return $this->locale;
     }
 }

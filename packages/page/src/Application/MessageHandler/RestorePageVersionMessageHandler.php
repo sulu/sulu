@@ -43,13 +43,13 @@ class RestorePageVersionMessageHandler
             $page,
             [
                 'stage' => $options['stage'] ?? DimensionContentInterface::STAGE_DRAFT,
-                'locale' => $options['locale'] ?? null,
+                'locale' => $message->getLocale(),
                 'version' => $message->getVersion(),
             ],
             $page,
             [
                 'stage' => $options['stage'] ?? DimensionContentInterface::STAGE_DRAFT,
-                'locale' => $options['locale'] ?? null,
+                'locale' => $message->getLocale(),
                 'version' => DimensionContentInterface::CURRENT_VERSION,
             ],
             [
@@ -57,10 +57,7 @@ class RestorePageVersionMessageHandler
             ]
         );
 
-        /** @var ?string $locale */
-        $locale = $options['locale'];
-
-        $this->domainEventCollector->collect(new PageVersionRestoredEvent($page, $locale, $message->getVersion()));
+        $this->domainEventCollector->collect(new PageVersionRestoredEvent($page, $message->getLocale(), $message->getVersion()));
 
         return $dimensionContent->getResource();
     }

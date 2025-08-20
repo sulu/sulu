@@ -24,7 +24,8 @@ class CopyPageMessage
     public function __construct(
         private array $sourceIdentifier,
         private array $targetParentIdentifier,
-        private ?string $targetUuid = null
+        private string $locale,
+        private ?string $targetUuid = null,
     ) {
     }
 
@@ -51,5 +52,10 @@ class CopyPageMessage
     public function getTargetUuid(): ?string
     {
         return $this->targetUuid;
+    }
+
+    public function getLocale(): string
+    {
+        return $this->locale;
     }
 }

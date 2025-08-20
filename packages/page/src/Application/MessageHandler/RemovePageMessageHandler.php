@@ -12,7 +12,6 @@
 namespace Sulu\Page\Application\MessageHandler;
 
 use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
-use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Content\Domain\Model\DimensionContentCollection;
 use Sulu\Page\Application\Message\RemovePageMessage;
 use Sulu\Page\Domain\Event\PageRemovedEvent;
@@ -30,7 +29,6 @@ final class RemovePageMessageHandler
     public function __construct(
         private PageRepositoryInterface $pageRepository,
         private DomainEventCollectorInterface $domainEventCollector,
-        private RequestAnalyzerInterface $requestAnalyzer,
     ) {
         $this->pageRepository = $pageRepository;
     }
@@ -41,11 +39,9 @@ final class RemovePageMessageHandler
 
         $this->pageRepository->remove($page);
 
-        /** @var ?string $locale */
-        $locale = $this->requestAnalyzer->getAttribute('locale');
         $dimensionContentCollection = new DimensionContentCollection($page->getDimensionContents()->toArray(), [], PageDimensionContent::class);
         /** @var PageDimensionContent $localizedDimensionContent */
-        $localizedDimensionContent = $dimensionContentCollection->getDimensionContent($locale ? ['locale' => $locale] : []);
+        $localizedDimensionContent = $dimensionContentCollection->getDimensionContent(['locale' => $message->getLocale()]);
 
         $this->domainEventCollector->collect(new PageRemovedEvent(
             $page->getUuid(),

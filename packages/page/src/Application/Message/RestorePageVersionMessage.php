@@ -22,7 +22,8 @@ class RestorePageVersionMessage
     public function __construct(
         private array $pageIdentifier,
         private int $version,
-        private array $options = []
+        private string $locale,
+        private array $options = [],
     ) {
     }
 
@@ -47,5 +48,10 @@ class RestorePageVersionMessage
     public function getOptions(): array
     {
         return $this->options;
+    }
+
+    public function getLocale(): string
+    {
+        return $this->locale;
     }
 }

@@ -12,7 +12,6 @@
 namespace Sulu\Page\Application\MessageHandler;
 
 use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
-use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Content\Domain\Model\DimensionContentCollection;
 use Sulu\Page\Application\Message\MovePageMessage;
 use Sulu\Page\Domain\Event\PageMovedEvent;
@@ -30,7 +29,6 @@ class MovePageMessageHandler
     public function __construct(
         private PageRepositoryInterface $pageRepository,
         private DomainEventCollectorInterface $domainEventCollector,
-        private RequestAnalyzerInterface $requestAnalyzer,
     ) {
     }
 
@@ -41,13 +39,10 @@ class MovePageMessageHandler
 
         $this->pageRepository->moveOneBy($message->getIdentifier(), $message->getTargetParentIdentifier());
 
-        /** @var ?string $locale */
-        $locale = $this->requestAnalyzer->getAttribute('locale');
-
         if (null === $previousParent) {
             $this->domainEventCollector->collect(new PageMovedEvent(
                 $page,
-                $locale,
+                $message->getLocale(),
                 null,
                 null,
                 null,
@@ -58,11 +53,11 @@ class MovePageMessageHandler
 
         $previousParentDimensionContentCollection = new DimensionContentCollection($previousParent->getDimensionContents()->toArray(), [], PageDimensionContent::class);
         /** @var PageDimensionContent $previousParentLocalizedDimensionContent */
-        $previousParentLocalizedDimensionContent = $previousParentDimensionContentCollection->getDimensionContent($locale ? ['locale' => $locale] : []);
+        $previousParentLocalizedDimensionContent = $previousParentDimensionContentCollection->getDimensionContent(['locale' => $message->getLocale()]);
 
         $this->domainEventCollector->collect(new PageMovedEvent(
             $page,
-            $locale,
+            $message->getLocale(),
             $previousParent->getUuid(),
             $previousParent->getWebspaceKey(),
             $previousParentLocalizedDimensionContent->getTitle(),

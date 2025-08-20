@@ -41,7 +41,7 @@ final class CreatePageMessageHandler
     public function __invoke(CreatePageMessage $message): PageInterface
     {
         $data = $message->getData();
-        /** @var ?string $locale */
+        /** @var string $locale */
         $locale = $data['locale'];
         $page = $this->pageRepository->createNew($message->getUuid());
         $page->setWebspaceKey($message->getWebspaceKey());

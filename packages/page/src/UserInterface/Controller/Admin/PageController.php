@@ -213,7 +213,7 @@ final class PageController
 
     public function deleteAction(Request $request, string $id): Response // TODO route should be a uuid
     {
-        $message = new RemovePageMessage(['uuid' => $id]);
+        $message = new RemovePageMessage(['uuid' => $id], $this->getLocale($request));
         /** @see Sulu\Page\Application\MessageHandler\RemovePageMessageHandler */
         $this->handle(new Envelope($message, [new EnableFlushStamp()]));
 
@@ -258,14 +258,14 @@ final class PageController
             return $this->handle(new Envelope($message, [new EnableFlushStamp()]));
         } elseif ('move' === $action) {
             $destinationUuid = $request->query->getString('destination');
-            $message = new MovePageMessage(['uuid' => $uuid], ['uuid' => $destinationUuid]);
+            $message = new MovePageMessage(['uuid' => $uuid], ['uuid' => $destinationUuid], $this->getLocale($request));
 
             /** @see Sulu\Page\Application\MessageHandler\MovePageMessageHandler */
             /** @var PageInterface|null */
             return $this->handle(new Envelope($message, [new EnableFlushStamp()]));
         } elseif ('copy' == $action) {
             $destinationUuid = $request->query->getString('destination');
-            $message = new CopyPageMessage(['uuid' => $uuid], ['uuid' => $destinationUuid]);
+            $message = new CopyPageMessage(['uuid' => $uuid], ['uuid' => $destinationUuid], $this->getLocale($request), $destinationUuid);
 
             /** @see Sulu\Page\Application\MessageHandler\CopyPageMessageHandler */
             /** @var PageInterface|null */
@@ -275,6 +275,7 @@ final class PageController
             $message = new OrderPageMessage(
                 ['uuid' => $uuid],
                 $position,
+                $this->getLocale($request),
             );
 
             /** @see Sulu\Page\Application\MessageHandler\OrderPageMessageHandler */
@@ -289,14 +290,13 @@ final class PageController
             $message = new RestorePageVersionMessage(
                 ['uuid' => $uuid],
                 $version,
+                $this->getLocale($request),
                 $request->query->all(),
             );
 
             /** @see Sulu\Page\Application\MessageHandler\RestorePageVersionMessageHandler */
             /** @var PageInterface|null */
             return $this->handle(new Envelope($message, [new EnableFlushStamp()]));
-        } elseif ('remove-draft' === $action) {
-            $action = 'remove_draft';
         }
 
         $message = new ApplyWorkflowTransitionPageMessage(['uuid' => $uuid], $this->getLocale($request), $action);

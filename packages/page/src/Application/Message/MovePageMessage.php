@@ -24,6 +24,7 @@ class MovePageMessage
     public function __construct(
         private array $identifier,
         private array $targetParentIdentifier,
+        private string $locale,
     ) {
     }
 
@@ -45,5 +46,10 @@ class MovePageMessage
     public function getTargetParentIdentifier(): array
     {
         return $this->targetParentIdentifier;
+    }
+
+    public function getLocale(): string
+    {
+        return $this->locale;
     }
 }

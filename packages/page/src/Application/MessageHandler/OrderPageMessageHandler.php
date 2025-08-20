@@ -12,7 +12,6 @@
 namespace Sulu\Page\Application\MessageHandler;
 
 use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
-use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Page\Application\Message\OrderPageMessage;
 use Sulu\Page\Domain\Event\PageOrderedEvent;
 use Sulu\Page\Domain\Repository\PageRepositoryInterface;
@@ -28,7 +27,6 @@ final class OrderPageMessageHandler
     public function __construct(
         private PageRepositoryInterface $pageRepository,
         private DomainEventCollectorInterface $domainEventCollector,
-        private RequestAnalyzerInterface $requestAnalyzer,
     ) {
     }
 
@@ -38,9 +36,6 @@ final class OrderPageMessageHandler
 
         $page = $this->pageRepository->getOneBy($message->getIdentifier());
 
-        /** @var ?string $locale */
-        $locale = $this->requestAnalyzer->getAttribute('locale');
-
-        $this->domainEventCollector->collect(new PageOrderedEvent($page, $locale, $message->getPosition()));
+        $this->domainEventCollector->collect(new PageOrderedEvent($page, $message->getLocale(), $message->getPosition()));
     }
 }

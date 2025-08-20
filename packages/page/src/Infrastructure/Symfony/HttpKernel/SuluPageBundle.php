@@ -151,7 +151,6 @@ final class SuluPageBundle extends AbstractBundle
             ->args([
                 new Reference('sulu_page.page_repository'),
                 new Reference('sulu_activity.domain_event_collector'),
-                new Reference('sulu_core.webspace.request_analyzer'),
             ])
             ->tag('messenger.message_handler');
 
@@ -178,7 +177,6 @@ final class SuluPageBundle extends AbstractBundle
             ->args([
                 new Reference('sulu_page.page_repository'),
                 new Reference('sulu_activity.domain_event_collector'),
-                new Reference('sulu_core.webspace.request_analyzer'),
             ])
             ->tag('messenger.message_handler');
 
@@ -187,7 +185,6 @@ final class SuluPageBundle extends AbstractBundle
             ->args([
                 new Reference('sulu_page.page_repository'),
                 new Reference('sulu_activity.domain_event_collector'),
-                new Reference('sulu_core.webspace.request_analyzer'),
             ])
             ->tag('messenger.message_handler');
 
@@ -198,7 +195,6 @@ final class SuluPageBundle extends AbstractBundle
                 new Reference('sulu_content.content_copier'),
                 new Reference('sulu.core.localization_manager'),
                 new Reference('sulu_activity.domain_event_collector'),
-                new Reference('sulu_core.webspace.request_analyzer'),
             ])
             ->tag('messenger.message_handler');
 

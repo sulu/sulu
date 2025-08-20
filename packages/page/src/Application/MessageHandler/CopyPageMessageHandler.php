@@ -13,7 +13,6 @@ namespace Sulu\Page\Application\MessageHandler;
 
 use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
 use Sulu\Component\Localization\Manager\LocalizationManagerInterface;
-use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Content\Application\ContentCopier\ContentCopierInterface;
 use Sulu\Content\Domain\Model\DimensionContentCollection;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
@@ -36,7 +35,6 @@ final class CopyPageMessageHandler
         private ContentCopierInterface $contentCopier,
         private LocalizationManagerInterface $localizationManager,
         private DomainEventCollectorInterface $domainEventCollector,
-        private RequestAnalyzerInterface $requestAnalyzer,
     ) {
     }
 
@@ -77,13 +75,11 @@ final class CopyPageMessageHandler
             );
         }
 
-        /** @var ?string $locale */
-        $locale = $this->requestAnalyzer->getAttribute('locale');
         $dimensionContentCollection = new DimensionContentCollection($sourcePage->getDimensionContents()->toArray(), [], PageDimensionContent::class);
         /** @var PageDimensionContent $localizedDimensionContent */
-        $localizedDimensionContent = $dimensionContentCollection->getDimensionContent($locale ? ['locale' => $locale] : []);
+        $localizedDimensionContent = $dimensionContentCollection->getDimensionContent(['locale' => $message->getLocale()]);
 
-        $this->domainEventCollector->collect(new PageCopiedEvent($sourcePage, $sourcePage->getId(), $sourcePage->getWebspaceKey(), $localizedDimensionContent->getTitle(), $locale));
+        $this->domainEventCollector->collect(new PageCopiedEvent($sourcePage, $sourcePage->getId(), $sourcePage->getWebspaceKey(), $localizedDimensionContent->getTitle(), $message->getLocale()));
 
         return $targetPage;
     }
