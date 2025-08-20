@@ -683,6 +683,14 @@ Removed deprecated functions and properties:
 - `Sulu\Bundle\CategoryBundle\Entity\Category::addChildren`
 - `Sulu\Bundle\CategoryBundle\Entity\Category::removeChildren`
 - `Sulu\Bundle\AdminBundle\Admin\View\FormOverlayListViewBuilder::setRequestParameters` (use `addRequestParameters()` instead)
+- `Sulu\Component\Rest\ListBuilder\ListBuilderInterface::setFields` (use `setSelectFields()` instead)
+- `Sulu\Component\Rest\ListBuilder\ListBuilderInterface::addField` (use `addSelectField()` instead)
+- `Sulu\Component\Rest\ListBuilder\ListBuilderInterface::hasField` (use `hasSelectField()` instead)
+- `Sulu\Component\Rest\ListBuilder\ListBuilderInterface::whereNot` (use `where()` instead)
+- `Sulu\Component\Rest\ListBuilder\AbstractListBuilder::setFields` (use `setSelectFields()` instead)
+- `Sulu\Component\Rest\ListBuilder\AbstractListBuilder::addField` (use `addSelectField()` instead)
+- `Sulu\Component\Rest\ListBuilder\AbstractListBuilder::hasField` (use `hasSelectField()` instead)
+- `Sulu\Component\Rest\ListBuilder\AbstractListBuilder::whereNot` (use `where()` instead)
 
 Removed unused arguments:
 
