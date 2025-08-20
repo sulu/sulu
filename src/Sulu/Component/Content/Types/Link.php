@@ -33,7 +33,7 @@ class Link extends SimpleContentType
         private ?ReferenceStorePoolInterface $referenceStorePool = null,
     ) {
         if (!$this->referenceStorePool instanceof ReferenceStorePoolInterface) {
-            @trigger_deprecation('sulu/sulu', '2.5', 'Initializing "' . __CLASS__ . '" without referenceStorePool is deprecated.');
+            @trigger_deprecation('sulu/sulu', '2.5.27', 'Initializing "' . __CLASS__ . '" without referenceStorePool is deprecated.');
         }
 
         parent::__construct('Link');
