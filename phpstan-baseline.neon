@@ -15835,38 +15835,8 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Content/Types/SingleContactSelection.php
 
 		-
-			message: '#^Binary operation "\." between mixed and ''\.fileVersions'' results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 6
-			path: src/Sulu/Bundle/ContactBundle/Controller/AbstractMediaController.php
-
-		-
 			message: '#^Binary operation "\." between mixed and ''\.id \= '' results in an error\.$#'
 			identifier: binaryOp.invalid
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Controller/AbstractMediaController.php
-
-		-
-			message: '#^Binary operation "\." between mixed and ''\.meta'' results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 2
-			path: src/Sulu/Bundle/ContactBundle/Controller/AbstractMediaController.php
-
-		-
-			message: '#^Binary operation "\." between mixed and ''\.version \= '' results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 6
-			path: src/Sulu/Bundle/ContactBundle/Controller/AbstractMediaController.php
-
-		-
-			message: '#^Binary operation "\." between non\-falsy\-string and mixed results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 7
-			path: src/Sulu/Bundle/ContactBundle/Controller/AbstractMediaController.php
-
-		-
-			message: '#^Call to an undefined method Sulu\\Component\\Rest\\ListBuilder\\ListBuilderInterface\:\:setIdField\(\)\.$#'
-			identifier: method.notFound
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Controller/AbstractMediaController.php
 
@@ -15885,18 +15855,6 @@ parameters:
 		-
 			message: '#^Call to an undefined method object\:\:removeMedia\(\)\.$#'
 			identifier: method.notFound
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Controller/AbstractMediaController.php
-
-		-
-			message: '#^Cannot access offset ''thumbnails'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Controller/AbstractMediaController.php
-
-		-
-			message: '#^Cannot access offset ''url'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Controller/AbstractMediaController.php
 
@@ -15925,48 +15883,6 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Controller/AbstractMediaController.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Controller\\AbstractMediaController\:\:addThumbnails\(\) has parameter \$entities with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Controller/AbstractMediaController.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Controller\\AbstractMediaController\:\:addThumbnails\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Controller/AbstractMediaController.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Controller\\AbstractMediaController\:\:addUrls\(\) has parameter \$entities with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Controller/AbstractMediaController.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Controller\\AbstractMediaController\:\:addUrls\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Controller/AbstractMediaController.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Controller\\AbstractMediaController\:\:getFieldDescriptors\(\) has parameter \$id with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Controller/AbstractMediaController.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Controller\\AbstractMediaController\:\:getFieldDescriptors\(\) should return array\<Sulu\\Component\\Rest\\ListBuilder\\Doctrine\\FieldDescriptor\\DoctrineFieldDescriptor\> but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Controller/AbstractMediaController.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Controller\\AbstractMediaController\:\:getListRepresentation\(\) has parameter \$contactId with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Controller/AbstractMediaController.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\ContactBundle\\Controller\\AbstractMediaController\:\:getMultipleView\(\) has parameter \$contactId with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -15979,49 +15895,19 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Controller/AbstractMediaController.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Controller\\AbstractMediaController\:\:initFieldDescriptors\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Controller/AbstractMediaController.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Controller\\AbstractMediaController\:\:initFieldDescriptors\(\) has parameter \$id with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Controller/AbstractMediaController.php
-
-		-
 			message: '#^Parameter \#1 \$className of method Doctrine\\ORM\\EntityManagerInterface\:\:getRepository\(\) expects class\-string\<object\>, string given\.$#'
 			identifier: argument.type
 			count: 2
 			path: src/Sulu/Bundle/ContactBundle/Controller/AbstractMediaController.php
 
 		-
-			message: '#^Parameter \#1 \$entities of method Sulu\\Bundle\\ContactBundle\\Controller\\AbstractMediaController\:\:addThumbnails\(\) expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Controller/AbstractMediaController.php
-
-		-
 			message: '#^Parameter \#1 \$entityName of class Sulu\\Component\\Rest\\ListBuilder\\Doctrine\\FieldDescriptor\\DoctrineJoinDescriptor constructor expects string, mixed given\.$#'
 			identifier: argument.type
-			count: 15
+			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Controller/AbstractMediaController.php
 
 		-
 			message: '#^Parameter \#1 \$id of method Sulu\\Bundle\\ContactBundle\\Contact\\ContactManagerInterface\<mixed,mixed,mixed\>\:\:getById\(\) expects int, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Controller/AbstractMediaController.php
-
-		-
-			message: '#^Parameter \#1 \$key of function array_key_exists expects int\|string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Controller/AbstractMediaController.php
-
-		-
-			message: '#^Parameter \#2 \$array of function array_key_exists expects array, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Controller/AbstractMediaController.php
@@ -16045,31 +15931,13 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Controller/AbstractMediaController.php
 
 		-
-			message: '#^Parameter \#2 \$rel of class Sulu\\Component\\Rest\\ListBuilder\\PaginatedRepresentation constructor expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Controller/AbstractMediaController.php
-
-		-
 			message: '#^Parameter \#2 \$value of method Sulu\\Component\\Rest\\ListBuilder\\AbstractListBuilder\:\:where\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Controller/AbstractMediaController.php
 
 		-
-			message: '#^Parameter \#3 \$entityName of class Sulu\\Component\\Rest\\ListBuilder\\Doctrine\\FieldDescriptor\\DoctrineFieldDescriptor constructor expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 6
-			path: src/Sulu/Bundle/ContactBundle/Controller/AbstractMediaController.php
-
-		-
 			message: '#^Parameter \#3 \$rel of method Sulu\\Bundle\\MediaBundle\\Media\\ListRepresentationFactory\\MediaListRepresentationFactory\:\:getListRepresentation\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Controller/AbstractMediaController.php
-
-		-
-			message: '#^Parameter \#5 \$locale of method Sulu\\Bundle\\ContactBundle\\Controller\\AbstractMediaController\:\:getListRepresentation\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Controller/AbstractMediaController.php
@@ -16105,8 +15973,26 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Controller/AbstractMediaController.php
 
 		-
+			message: '#^Property Sulu\\Bundle\\ContactBundle\\Controller\\AbstractMediaController\:\:\$listBuilderFactory is never read, only written\.$#'
+			identifier: property.onlyWritten
+			count: 1
+			path: src/Sulu/Bundle/ContactBundle/Controller/AbstractMediaController.php
+
+		-
 			message: '#^Property Sulu\\Bundle\\ContactBundle\\Controller\\AbstractMediaController\:\:\$mediaEntityKey has no type specified\.$#'
 			identifier: missingType.property
+			count: 1
+			path: src/Sulu/Bundle/ContactBundle/Controller/AbstractMediaController.php
+
+		-
+			message: '#^Property Sulu\\Bundle\\ContactBundle\\Controller\\AbstractMediaController\:\:\$mediaManager is never read, only written\.$#'
+			identifier: property.onlyWritten
+			count: 1
+			path: src/Sulu/Bundle/ContactBundle/Controller/AbstractMediaController.php
+
+		-
+			message: '#^Property Sulu\\Bundle\\ContactBundle\\Controller\\AbstractMediaController\:\:\$restHelper is never read, only written\.$#'
+			identifier: property.onlyWritten
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Controller/AbstractMediaController.php
 

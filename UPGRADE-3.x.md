@@ -738,6 +738,10 @@ The corresponding traits `TimestampableTrait` and `UserBlameTrait` have been upd
  - `src/Sulu/Component/Content/Metadata/Loader/schema/template-1.0.xsd` -> `src/Sulu/Bundle/AdminBundle/Resources/config/schema/template-1.0.xsd`
  - `src/Sulu/Component/Content/Metadata/Loader/schema/xml.xsd` -> `src/Sulu/Bundle/AdminBundle/Resources/config/schema/xml.xsd`
 
+### Changed methods for 3.0
+
+- `Sulu\Bundle\ContactBundle\Controller\AbstractMediaController::__construct`
+
 ### Piwik replaced with Matomo script
 
 The script provided by Sulu for the piwik implementation has been updated to use mataomo path so the script is now pointing to matomo.php instead of the piwik.php file.
