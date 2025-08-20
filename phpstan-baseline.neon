@@ -469,12 +469,6 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Admin/View/FormOverlayListViewBuilder.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\AdminBundle\\Admin\\View\\FormOverlayListViewBuilder\:\:setRequestParameters\(\) has parameter \$requestParameters with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/View/FormOverlayListViewBuilder.php
-
-		-
 			message: '#^Parameter \#1 \.\.\.\$arrays of function array_merge expects array, mixed given\.$#'
 			identifier: argument.type
 			count: 17
@@ -494,12 +488,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#2 \$metadataRequestParameters of method Sulu\\Bundle\\AdminBundle\\Admin\\View\\FormOverlayListViewBuilder\:\:addMetadataRequestParametersToView\(\) expects array\<string, mixed\>, array given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/View/FormOverlayListViewBuilder.php
-
-		-
-			message: '#^Parameter \#2 \$requestParameters of method Sulu\\Bundle\\AdminBundle\\Admin\\View\\FormOverlayListViewBuilder\:\:setRequestParametersToView\(\) expects array\<string, mixed\>, array given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/AdminBundle/Admin/View/FormOverlayListViewBuilder.php
@@ -9355,12 +9343,6 @@ parameters:
 			path: src/Sulu/Bundle/CategoryBundle/DependencyInjection/SuluCategoryExtension.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\CategoryBundle\\Entity\\CategoryRepository\:\:findCategories\(\) should return array\<Sulu\\Bundle\\CategoryBundle\\Entity\\CategoryInterface\> but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Entity/CategoryRepository.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\CategoryBundle\\Entity\\CategoryRepository\:\:findCategoriesByIds\(\) has parameter \$ids with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -9375,12 +9357,6 @@ parameters:
 		-
 			message: '#^Method Sulu\\Bundle\\CategoryBundle\\Entity\\CategoryRepository\:\:findCategoryById\(\) should return Sulu\\Bundle\\CategoryBundle\\Entity\\CategoryInterface\|null but returns mixed\.$#'
 			identifier: return.type
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Entity/CategoryRepository.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\CategoryBundle\\Entity\\CategoryRepository\:\:findCategoryByIds\(\) has parameter \$ids with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
 			count: 1
 			path: src/Sulu/Bundle/CategoryBundle/Entity/CategoryRepository.php
 
@@ -9434,12 +9410,6 @@ parameters:
 
 		-
 			message: '#^Method Sulu\\Bundle\\CategoryBundle\\Entity\\CategoryRepositoryInterface\:\:findCategoriesByIds\(\) has parameter \$ids with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Entity/CategoryRepositoryInterface.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\CategoryBundle\\Entity\\CategoryRepositoryInterface\:\:findCategoryByIds\(\) has parameter \$ids with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
 			path: src/Sulu/Bundle/CategoryBundle/Entity/CategoryRepositoryInterface.php

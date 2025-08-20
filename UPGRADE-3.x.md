@@ -670,6 +670,19 @@ Removed deprecated functions and properties:
 - `Sulu\Bundle\WebsiteBundle\Twig\Core\UtilTwigExtension::extract()`
 - `Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata::setName()` (use `setKey()` instead)
 - `Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata::getName()` (use `getKey()` instead)
+- `Sulu\Bundle\CategoryBundle\Category\CategoryManager::find`
+- `Sulu\Bundle\CategoryBundle\Category\CategoryManager::findChildren`
+- `Sulu\Bundle\CategoryBundle\Category\CategoryManagerInterface::find`
+- `Sulu\Bundle\CategoryBundle\Category\CategoryManagerInterface::findChildren`
+- `Sulu\Bundle\CategoryBundle\Entity\CategoryRepository::findByCategoryIds`
+- `Sulu\Bundle\CategoryBundle\Entity\CategoryRepository::findCategories`
+- `Sulu\Bundle\CategoryBundle\Entity\CategoryRepository::findChildren`
+- `Sulu\Bundle\CategoryBundle\Entity\CategoryRepositoryInterface::findByCategoryIds`
+- `Sulu\Bundle\CategoryBundle\Entity\CategoryRepositoryInterface::findCategories`
+- `Sulu\Bundle\CategoryBundle\Entity\CategoryRepositoryInterface::findChildren`
+- `Sulu\Bundle\CategoryBundle\Entity\Category::addChildren`
+- `Sulu\Bundle\CategoryBundle\Entity\Category::removeChildren`
+- `Sulu\Bundle\AdminBundle\Admin\View\FormOverlayListViewBuilder::setRequestParameters` (use `addRequestParameters()` instead)
 
 Removed unused arguments:
 
