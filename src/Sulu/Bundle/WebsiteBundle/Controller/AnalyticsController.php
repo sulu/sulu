@@ -58,6 +58,7 @@ class AnalyticsController extends AbstractRestController implements SecuredContr
         RequestStack $requestStack
     ) {
         parent::__construct($viewHandler);
+
         $this->analyticsManager = $analyticsManager;
         $this->entityManager = $entityManager;
         $this->cacheClearer = $cacheClearer;

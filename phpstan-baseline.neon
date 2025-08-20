@@ -36673,48 +36673,6 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Controller/VersionController.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Controller\\WebspaceController\:\:getRequestParameter\(\) should return string but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Controller/WebspaceController.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Controller\\WebspaceController\:\:getSecurityContext\(\) should return string but returns null\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Controller/WebspaceController.php
-
-		-
-			message: '#^Parameter \#1 \$webspaceKey of method Sulu\\Bundle\\PageBundle\\Controller\\WebspaceController\:\:getSecurityContextByWebspace\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Controller/WebspaceController.php
-
-		-
-			message: '#^Strict comparison using \!\=\= between false and string will always evaluate to true\.$#'
-			identifier: notIdentical.alwaysTrue
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Controller/WebspaceController.php
-
-		-
-			message: '#^Strict comparison using \!\=\= between true and string will always evaluate to true\.$#'
-			identifier: notIdentical.alwaysTrue
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Controller/WebspaceController.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between false and string will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Controller/WebspaceController.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between true and string will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Controller/WebspaceController.php
-
-		-
 			message: '#^Parameter \#1 \$key of method Sulu\\Component\\Webspace\\Manager\\WebspaceManagerInterface\:\:findWebspaceByKey\(\) expects string\|null, mixed given\.$#'
 			identifier: argument.type
 			count: 1

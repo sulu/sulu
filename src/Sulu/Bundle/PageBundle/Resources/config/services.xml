@@ -87,18 +87,6 @@
         </service>
 
         <!-- webspace -->
-        <service id="sulu_page.webspace_controller"
-                 class="Sulu\Bundle\PageBundle\Controller\WebspaceController"
-                 public="true"
-        >
-            <argument type="service" id="fos_rest.view_handler"/>
-            <argument type="service" id="sulu_core.webspace.webspace_manager"/>
-            <argument type="service" id="sulu_security.security_checker"/>
-            <argument type="service" id="request_stack"/>
-
-            <tag name="sulu.context" context="admin"/>
-        </service>
-
         <service id="sulu_page.webspace_localization_controller"
                  class="Sulu\Bundle\PageBundle\Controller\WebspaceLocalizationController"
                  public="true"

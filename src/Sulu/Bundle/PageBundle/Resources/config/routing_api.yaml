@@ -90,22 +90,5 @@ sulu_page.get_webspace_localizations:
     requirements:
         _format: json|csv
 
-# Webspace
-sulu_page.get_webspaces:
-    path: '/webspaces.{_format}'
-    methods: GET
-    controller: 'sulu_page.webspace_controller::cgetAction'
-    format: json
-    requirements:
-        _format: json|csv
-
-sulu_page.get_webspace:
-    path: '/webspaces/{webspaceKey}.{_format}'
-    methods: GET
-    controller: 'sulu_page.webspace_controller::getAction'
-    format: json
-    requirements:
-        _format: json|csv
-
 sulu_page_api_version:
     resource: "@SuluPageBundle/Resources/config/routing_versioning_api.yaml"
