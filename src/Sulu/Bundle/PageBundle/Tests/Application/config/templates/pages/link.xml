@@ -15,6 +15,7 @@
             <tag name="sulu.rlp"/>
         </property>
         <property name="link_to_page" type="link"/>
+        <property name="link_to_other_page" type="link"/>
         <property name="external_link" type="link"/>
     </properties>
 </template>

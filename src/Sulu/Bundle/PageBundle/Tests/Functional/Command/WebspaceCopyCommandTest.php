@@ -201,13 +201,20 @@ class WebspaceCopyCommandTest extends SuluTestCase
         $this->assertStringContainsString($targetDocument->getUuid(), $page4->getStructure()->toArray()['article'][0]['text']);
     }
 
+    /**
+     * @return void
+     * @throws \Sulu\Component\DocumentManager\Exception\DocumentManagerException
+     */
     protected function checkLinkContentType()
     {
         /** @var PageDocument $targetDocument */
         $targetDocument = $this->documentManager->find('/cmf/destination_io/contents/node5', 'de');
+        /** @var PageDocument $targetDocumentMagicProvider */
+        $targetDocumentMagicProvider = $this->documentManager->find('/cmf/destination_io/contents/node4', 'de');
         /** @var PageDocument $page6 */
         $page6 = $this->documentManager->find('/cmf/destination_io/contents/node6', 'de');
         $this->assertSame($targetDocument->getUuid(), $page6->getStructure()->toArray()['link_to_page']['href']);
+        $this->assertSame($targetDocumentMagicProvider->getUuid(), $page6->getStructure()->toArray()['link_to_other_page']['href']);
         $this->assertSame('https://sulu.io', $page6->getStructure()->toArray()['external_link']['href']);
     }
 
@@ -445,6 +452,9 @@ class WebspaceCopyCommandTest extends SuluTestCase
             ]
         );
 
+        /** @var PageDocument $page4 */
+        /** @var PageDocument $page5 */
+        /** @var PageDocument $page6 */
         $page6 = $this->documentManager->create('page');
         $page6->setStructureType('link');
         $page6->setTitle('Node6');
@@ -457,6 +467,16 @@ class WebspaceCopyCommandTest extends SuluTestCase
                     'anchor' => null,
                     'query' => null,
                     'href' => $page5->getUuid(),
+                    'title' => null,
+                    'rel' => null,
+                    'locale' => 'de',
+                ],
+                'link_to_other_page' => [
+                    'provider' => null,
+                    'target' => '_self',
+                    'anchor' => null,
+                    'query' => null,
+                    'href' => $page4->getUuid(),
                     'title' => null,
                     'rel' => null,
                     'locale' => 'de',

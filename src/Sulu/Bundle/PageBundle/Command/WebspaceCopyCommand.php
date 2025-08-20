@@ -13,6 +13,7 @@ namespace Sulu\Bundle\PageBundle\Command;
 
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Bundle\MarkupBundle\Markup\HtmlTagExtractor;
+use Sulu\Bundle\MarkupBundle\Markup\LinkTag;
 use Sulu\Bundle\MarkupBundle\Markup\TagMatchGroup;
 use Sulu\Bundle\PageBundle\Document\BasePageDocument;
 use Sulu\Bundle\PageBundle\Document\HomeDocument;
@@ -570,6 +571,7 @@ class WebspaceCopyCommand extends Command
      *
      * @param string $localeSource
      * @param string $localeDestination
+     * @return void
      */
     protected function updateLinkSelection(
         array &$structureArray,
@@ -577,11 +579,11 @@ class WebspaceCopyCommand extends Command
         $localeSource,
         $localeDestination
     ) {
-        if (!isset($structureArray[$property->getName()]['provider'])) {
+        if (!\is_array($structureArray[$property->getName()])) {
             return;
         }
-
-        if ('page' !== $structureArray[$property->getName()]['provider']) {
+        $linkProvider = $structureArray[$property->getName()]['provider'] ?? LinkTag::DEFAULT_PROVIDER;
+        if ('page' !== $linkProvider) {
             return;
         }
 
