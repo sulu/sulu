@@ -571,6 +571,7 @@ class WebspaceCopyCommand extends Command
      *
      * @param string $localeSource
      * @param string $localeDestination
+     *
      * @return void
      */
     protected function updateLinkSelection(

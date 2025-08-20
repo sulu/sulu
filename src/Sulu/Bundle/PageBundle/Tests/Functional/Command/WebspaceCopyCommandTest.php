@@ -203,6 +203,7 @@ class WebspaceCopyCommandTest extends SuluTestCase
 
     /**
      * @return void
+     *
      * @throws \Sulu\Component\DocumentManager\Exception\DocumentManagerException
      */
     protected function checkLinkContentType()
