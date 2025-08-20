@@ -204,6 +204,18 @@ class RestHelperTest extends TestCase
         $this->restHelper->initializeListBuilder($this->listBuilder->reveal(), ['name' => $field->reveal()]);
     }
 
+    public function testInitializeListBuilderSortWithNonExistingColumn(): void
+    {
+        $field = $this->prophesize(FieldDescriptor::class);
+
+        $this->listRestHelper->getSortColumn()->willReturn('non-existing');
+        $this->listRestHelper->getSortOrder()->willReturn('ASC');
+
+        $this->listBuilder->sort(Argument::any())->shouldNotBeCalled();
+
+        $this->restHelper->initializeListBuilder($this->listBuilder->reveal(), ['name' => $field->reveal()]);
+    }
+
     public function testprocessSubEntitiesEmpty(): void
     {
         $mock = $this->getMockBuilder('Mock')->setMethods(['delete', 'update', 'add', 'get'])->getMock();
