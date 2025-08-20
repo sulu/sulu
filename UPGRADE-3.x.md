@@ -686,6 +686,9 @@ Removed JavaScript files and methods:
  - `sulu-security-bundle/stores/securityContextStore/securityContextStore.js` `loadSecurityContextGroups`
  - `sulu-security-bundle/stores/securityContextStore/securityContextStore.js` `loadAvailableActions`
  - `sulu-admin-bundle/containers/List/loadingStrategies/FullLoadingStrategy.js`
+ - `sulu-admin-bundle/stores/localizationStore/localizationStore.js` `loadLocalizations`
+ - `sulu-page-bundle/stores/webspaceStore/webspaceStore.js` `loadWebspaces`
+ - `sulu-page-bundle/stores/webspaceStore/webspaceStore.js` `loadWebspace`
 
 Removed container parameters:
 
