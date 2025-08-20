@@ -28,7 +28,7 @@ class PageCreatedEvent extends DomainEvent
      */
     public function __construct(
         private PageInterface $page,
-        private ?string $locale,
+        private string $locale,
         private array $payload
     ) {
         parent::__construct();
@@ -73,7 +73,7 @@ class PageCreatedEvent extends DomainEvent
     {
         $dimensionContentCollection = new DimensionContentCollection($this->page->getDimensionContents()->toArray(), [], PageDimensionContent::class);
 
-        return $dimensionContentCollection->getDimensionContent($this->locale ? ['locale' => $this->locale] : [])?->getTitle();
+        return $dimensionContentCollection->getDimensionContent(['locale' => $this->locale])?->getTitle();
     }
 
     public function getResourceTitleLocale(): ?string

@@ -25,7 +25,7 @@ class PageOrderedEvent extends DomainEvent
 {
     public function __construct(
         private PageInterface $page,
-        private ?string $locale,
+        private string $locale,
         private int $targetPosition,
     ) {
         parent::__construct();
@@ -67,7 +67,7 @@ class PageOrderedEvent extends DomainEvent
     {
         $dimensionContentCollection = new DimensionContentCollection($this->page->getDimensionContents()->toArray(), [], PageDimensionContent::class);
 
-        return $dimensionContentCollection->getDimensionContent($this->locale ? ['locale' => $this->locale] : [])?->getTitle();
+        return $dimensionContentCollection->getDimensionContent(['locale' => $this->locale])?->getTitle();
     }
 
     public function getResourceTitleLocale(): ?string

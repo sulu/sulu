@@ -265,7 +265,7 @@ final class PageController
             return $this->handle(new Envelope($message, [new EnableFlushStamp()]));
         } elseif ('copy' == $action) {
             $destinationUuid = $request->query->getString('destination');
-            $message = new CopyPageMessage(['uuid' => $uuid], ['uuid' => $destinationUuid], $this->getLocale($request), $destinationUuid);
+            $message = new CopyPageMessage(['uuid' => $uuid], ['uuid' => $destinationUuid], $this->getLocale($request));
 
             /** @see Sulu\Page\Application\MessageHandler\CopyPageMessageHandler */
             /** @var PageInterface|null */
