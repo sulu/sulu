@@ -2,3 +2,21 @@ services:
     sulu_preview_test.preview.renderer:
         alias: sulu_preview.preview.renderer
         public: true
+
+    sulu_preview_test.example_preview_object_provider:
+        class: Sulu\Bundle\PreviewBundle\Tests\Application\ExamplePreviewDefaultsProvider
+        arguments: []
+        tags:
+            - { name: 'sulu.context', context: 'admin' }
+            - { name: 'sulu_preview.object_provider', provider-key: 'examples' }
+
+    sulu_preview.preview.kernel_factory:
+        class: Sulu\Bundle\PreviewBundle\Tests\Application\PreviewKernelFactory
+        arguments:
+            - '%kernel.environment%'
+
+sulu_admin: # ToDo Remove as soon as not required anymore
+    templates:
+        page:
+            directories:
+                app: '%kernel.project_dir%/config/templates/pages'

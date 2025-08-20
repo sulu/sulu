@@ -23,3 +23,6 @@ class Kernel extends SuluTestKernel
         $loader->load(__DIR__ . '/config/config.yml');
     }
 }
+
+// Needed for preview PreviewKernelFactory
+\class_alias(Kernel::class, 'App\\Kernel');

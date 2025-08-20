@@ -11,35 +11,22 @@
 
 namespace Sulu\Bundle\PreviewBundle\Tests\Functional\UserInterface\Controller;
 
-use Sulu\Bundle\PageBundle\Document\BasePageDocument;
-use Sulu\Bundle\PageBundle\Document\PageDocument;
 use Sulu\Bundle\PreviewBundle\Domain\Model\PreviewLinkInterface;
-use Sulu\Bundle\TestBundle\Kernel\SuluKernelBrowser;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
-use Sulu\Component\DocumentManager\DocumentManagerInterface;
-use Sulu\Component\DocumentManager\Slugifier\NodeNameSlugifier;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
+use Symfony\Component\Uid\Uuid;
 
 class PreviewLinkControllerTest extends SuluTestCase
 {
     /**
-     * @var SuluKernelBrowser
+     * @var KernelBrowser
      */
     private $client;
 
     /**
-     * @var BasePageDocument
-     */
-    private $homePage;
-
-    /**
-     * @var DocumentManagerInterface
-     */
-    private $documentManager;
-
-    /**
      * @var string
      */
-    private $resourceKey = 'pages';
+    private $resourceKey = 'examples';
 
     /**
      * @var string
@@ -51,29 +38,14 @@ class PreviewLinkControllerTest extends SuluTestCase
      */
     private $locale = 'en';
 
-    private NodeNameSlugifier $urlizer;
-
     public function setUp(): void
     {
-        /** @var SuluKernelBrowser $client */
-        $client = static::createAuthenticatedClient();
-
-        $this->client = $client;
-
-        static::initPhpcr();
-        $this->documentManager = static::getContainer()->get('sulu_document_manager.document_manager');
-
-        /** @var BasePageDocument $document */
-        $document = $this->documentManager->find(\sprintf('/cmf/%s/contents', $this->webspaceKey), $this->locale);
-        $this->homePage = $document;
-
-        $this->urlizer = static::getContainer()->get('sulu_document_manager.node_name_slugifier');
+        $this->client = static::createAuthenticatedClient();
     }
 
     public function testGetAction(): void
     {
-        $page = $this->createPage(__METHOD__);
-        $resourceId = $page->getUuid();
+        $resourceId = Uuid::v4()->toRfc4122();
 
         $this->createPreviewLink($this->resourceKey, $resourceId, $this->locale, $this->webspaceKey);
 
@@ -95,15 +67,22 @@ class PreviewLinkControllerTest extends SuluTestCase
         static::assertEquals($resourceId, $json['resourceId']);
         static::assertEquals($this->locale, $json['locale']);
         static::assertEquals(['webspaceKey' => $this->webspaceKey], $json['options']);
-        static::assertIsString($json['token']);
+        $token = $json['token'] ?? null;
+        static::assertIsString($token);
         static::assertNotNull($json['lastVisit']);
         static::assertSame(1, $json['visitCount']);
+
+        static::ensureKernelShutdown();
+        $this->client->request('GET', '/p/' . $token . '/render');
+        $previewResponse = $this->client->getResponse();
+        static::assertHttpStatusCode(200, $previewResponse);
+        $this->assertStringContainsString('ID: ' . $resourceId, $previewResponse->getContent() ?: '');
+        $this->assertStringContainsString('Locale: ' . $this->locale, $previewResponse->getContent() ?: '');
     }
 
     public function testGetActionNotFound(): void
     {
-        $page = $this->createPage(__METHOD__);
-        $resourceId = $page->getUuid();
+        $resourceId = Uuid::v4()->toRfc4122();
 
         $this->client->jsonRequest(
             'GET',
@@ -121,8 +100,7 @@ class PreviewLinkControllerTest extends SuluTestCase
 
     public function testGenerate(): void
     {
-        $page = $this->createPage(__METHOD__);
-        $resourceId = $page->getUuid();
+        $resourceId = Uuid::v4()->toRfc4122();
 
         $this->client->jsonRequest(
             'POST',
@@ -149,8 +127,7 @@ class PreviewLinkControllerTest extends SuluTestCase
 
     public function testRevoke(): void
     {
-        $page = $this->createPage(__METHOD__);
-        $resourceId = $page->getUuid();
+        $resourceId = Uuid::v4()->toRfc4122();
 
         $this->createPreviewLink($this->resourceKey, $resourceId, $this->locale, $this->webspaceKey);
 
@@ -181,25 +158,5 @@ class PreviewLinkControllerTest extends SuluTestCase
         $repository->commit();
 
         return $previewLink;
-    }
-
-    private function createPage(string $title): BasePageDocument
-    {
-        $page = new PageDocument();
-        $page->setTitle($title);
-        $page->setResourceSegment('/' . $this->urlizer->slugify($title));
-        $page->setParent($this->homePage);
-        $page->setStructureType('default');
-        $page->getStructure()->bind(
-            [
-                'title' => 'World',
-            ],
-            true
-        );
-
-        $this->documentManager->persist($page, $this->locale);
-        $this->documentManager->flush();
-
-        return $page;
     }
 }
