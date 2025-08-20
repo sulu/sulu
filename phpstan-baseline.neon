@@ -27525,7 +27525,7 @@ parameters:
 		-
 			message: '#^Binary operation "\." between mixed and ''MB'' results in an error\.$#'
 			identifier: binaryOp.invalid
-			count: 2
+			count: 1
 			path: src/Sulu/Bundle/MediaBundle/DependencyInjection/SuluMediaExtension.php
 
 		-
@@ -27591,7 +27591,7 @@ parameters:
 		-
 			message: '#^Cannot access offset ''max_filesize'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 3
+			count: 2
 			path: src/Sulu/Bundle/MediaBundle/DependencyInjection/SuluMediaExtension.php
 
 		-
