@@ -17676,6 +17676,11 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Command/WebspaceCopyCommand.php
 
 		-
+			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Command\\\\WebspaceCopyCommand\\:\\:updateLinkSelection\\(\\) has parameter \\$structureArray with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/PageBundle/Command/WebspaceCopyCommand.php
+
+		-
 			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Command\\\\WebspaceCopyCommand\\:\\:updatePageSelection\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Command/WebspaceCopyCommand.php
@@ -17757,6 +17762,11 @@ parameters:
 
 		-
 			message: "#^Parameter \\#2 \\$property of method Sulu\\\\Bundle\\\\PageBundle\\\\Command\\\\WebspaceCopyCommand\\:\\:updateHtmlSuluLinks\\(\\) expects Sulu\\\\Component\\\\Content\\\\Metadata\\\\PropertyMetadata, Sulu\\\\Component\\\\Content\\\\Metadata\\\\ItemMetadata given\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/PageBundle/Command/WebspaceCopyCommand.php
+
+		-
+			message: "#^Parameter \\#2 \\$property of method Sulu\\\\Bundle\\\\PageBundle\\\\Command\\\\WebspaceCopyCommand\\:\\:updateLinkSelection\\(\\) expects Sulu\\\\Component\\\\Content\\\\Metadata\\\\PropertyMetadata, Sulu\\\\Component\\\\Content\\\\Metadata\\\\ItemMetadata given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Command/WebspaceCopyCommand.php
 
