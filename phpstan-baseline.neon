@@ -48451,108 +48451,6 @@ parameters:
 			path: src/Sulu/Bundle/WebsiteBundle/Controller/ErrorController.php
 
 		-
-			message: '#^Binary operation "\." between ''\#'' and mixed results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Controller/RedirectController.php
-
-		-
-			message: '#^Binary operation "\." between ''\:'' and mixed results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Controller/RedirectController.php
-
-		-
-			message: '#^Binary operation "\." between ''\?'' and mixed results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Controller/RedirectController.php
-
-		-
-			message: '#^Binary operation "\." between mixed and ''/'' results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Controller/RedirectController.php
-
-		-
-			message: '#^Binary operation "\.\=" between non\-falsy\-string and mixed results in an error\.$#'
-			identifier: assignOp.invalid
-			count: 2
-			path: src/Sulu/Bundle/WebsiteBundle/Controller/RedirectController.php
-
-		-
-			message: '#^Cannot call method getAttribute\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Controller/RedirectController.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\WebsiteBundle\\Controller\\RedirectController\:\:parseUrl\(\) should return string but returns array\<string, int\|string\>\|false\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Controller/RedirectController.php
-
-		-
-			message: '#^Offset ''fragment'' on string in isset\(\) does not exist\.$#'
-			identifier: isset.offset
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Controller/RedirectController.php
-
-		-
-			message: '#^Offset ''host'' does not exist on string\.$#'
-			identifier: offsetAccess.notFound
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Controller/RedirectController.php
-
-		-
-			message: '#^Offset ''host'' on string in isset\(\) does not exist\.$#'
-			identifier: isset.offset
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Controller/RedirectController.php
-
-		-
-			message: '#^Offset ''path'' on string in isset\(\) does not exist\.$#'
-			identifier: isset.offset
-			count: 3
-			path: src/Sulu/Bundle/WebsiteBundle/Controller/RedirectController.php
-
-		-
-			message: '#^Offset ''port'' on string in isset\(\) does not exist\.$#'
-			identifier: isset.offset
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Controller/RedirectController.php
-
-		-
-			message: '#^Offset ''query'' on string in isset\(\) does not exist\.$#'
-			identifier: isset.offset
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Controller/RedirectController.php
-
-		-
-			message: '#^Offset ''scheme'' does not exist on string\.$#'
-			identifier: offsetAccess.notFound
-			count: 2
-			path: src/Sulu/Bundle/WebsiteBundle/Controller/RedirectController.php
-
-		-
-			message: '#^Parameter \#1 \$haystack of function strpos expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: src/Sulu/Bundle/WebsiteBundle/Controller/RedirectController.php
-
-		-
-			message: '#^Parameter \#1 \$redirectUrl of method Sulu\\Bundle\\WebsiteBundle\\Controller\\RedirectController\:\:resolveRedirectUrl\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Controller/RedirectController.php
-
-		-
-			message: '#^Parameter \#1 \$string of function substr expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Controller/RedirectController.php
-
-		-
 			message: '#^Parameter \#1 \$url of class Symfony\\Component\\HttpFoundation\\RedirectResponse constructor expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -48561,36 +48459,6 @@ parameters:
 		-
 			message: '#^Parameter \#1 \.\.\.\$arrays of function array_merge expects array, mixed given\.$#'
 			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Controller/RedirectController.php
-
-		-
-			message: '#^Parameter \#2 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: src/Sulu/Bundle/WebsiteBundle/Controller/RedirectController.php
-
-		-
-			message: '#^Parameter \#3 \$resourceLocatorPrefix of method Sulu\\Bundle\\WebsiteBundle\\Controller\\RedirectController\:\:resolveRedirectUrl\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Controller/RedirectController.php
-
-		-
-			message: '#^Parameter \#3 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: src/Sulu/Bundle/WebsiteBundle/Controller/RedirectController.php
-
-		-
-			message: '#^Result of && is always false\.$#'
-			identifier: booleanAnd.alwaysFalse
-			count: 2
-			path: src/Sulu/Bundle/WebsiteBundle/Controller/RedirectController.php
-
-		-
-			message: '#^Result of \|\| is always true\.$#'
-			identifier: booleanOr.alwaysTrue
 			count: 1
 			path: src/Sulu/Bundle/WebsiteBundle/Controller/RedirectController.php
 
@@ -48662,12 +48530,6 @@ parameters:
 
 		-
 			message: '#^Method Sulu\\Bundle\\WebsiteBundle\\Controller\\WebsiteController\:\:getAttributes\(\) should return array\<mixed\> but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Controller/WebsiteController.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\WebsiteBundle\\Controller\\WebsiteController\:\:getRequest\(\) should return Symfony\\Component\\HttpFoundation\\Request but returns Symfony\\Component\\HttpFoundation\\Request\|null\.$#'
 			identifier: return.type
 			count: 1
 			path: src/Sulu/Bundle/WebsiteBundle/Controller/WebsiteController.php
@@ -51253,80 +51115,8 @@ parameters:
 			path: src/Sulu/Bundle/WebsiteBundle/Tests/Unit/Controller/RedirectControllerTest.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\WebsiteBundle\\Tests\\Unit\\Controller\\RedirectControllerTest\:\:getRequestMock\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Tests/Unit/Controller/RedirectControllerTest.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\WebsiteBundle\\Tests\\Unit\\Controller\\RedirectControllerTest\:\:getRequestMock\(\) has parameter \$portalUrl with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Tests/Unit/Controller/RedirectControllerTest.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\WebsiteBundle\\Tests\\Unit\\Controller\\RedirectControllerTest\:\:getRequestMock\(\) has parameter \$prefix with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Tests/Unit/Controller/RedirectControllerTest.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\WebsiteBundle\\Tests\\Unit\\Controller\\RedirectControllerTest\:\:getRequestMock\(\) has parameter \$redirectUrl with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Tests/Unit/Controller/RedirectControllerTest.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\WebsiteBundle\\Tests\\Unit\\Controller\\RedirectControllerTest\:\:getRequestMock\(\) has parameter \$requestUrl with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Tests/Unit/Controller/RedirectControllerTest.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\WebsiteBundle\\Tests\\Unit\\Controller\\RedirectControllerTest\:\:provideRedirectAction\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Tests/Unit/Controller/RedirectControllerTest.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\WebsiteBundle\\Tests\\Unit\\Controller\\RedirectControllerTest\:\:provideRedirectToRouteAction\(\) has no return type specified\.$#'
 			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Tests/Unit/Controller/RedirectControllerTest.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\WebsiteBundle\\Tests\\Unit\\Controller\\RedirectControllerTest\:\:provideRedirectWebspaceAction\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Tests/Unit/Controller/RedirectControllerTest.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\WebsiteBundle\\Tests\\Unit\\Controller\\RedirectControllerTest\:\:testRedirectAction\(\) has parameter \$expectedTargetUrl with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Tests/Unit/Controller/RedirectControllerTest.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\WebsiteBundle\\Tests\\Unit\\Controller\\RedirectControllerTest\:\:testRedirectAction\(\) has parameter \$portalUrl with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Tests/Unit/Controller/RedirectControllerTest.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\WebsiteBundle\\Tests\\Unit\\Controller\\RedirectControllerTest\:\:testRedirectAction\(\) has parameter \$prefix with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Tests/Unit/Controller/RedirectControllerTest.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\WebsiteBundle\\Tests\\Unit\\Controller\\RedirectControllerTest\:\:testRedirectAction\(\) has parameter \$redirectUrl with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Tests/Unit/Controller/RedirectControllerTest.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\WebsiteBundle\\Tests\\Unit\\Controller\\RedirectControllerTest\:\:testRedirectAction\(\) has parameter \$requestUri with no type specified\.$#'
-			identifier: missingType.parameter
 			count: 1
 			path: src/Sulu/Bundle/WebsiteBundle/Tests/Unit/Controller/RedirectControllerTest.php
 
@@ -51361,33 +51151,9 @@ parameters:
 			path: src/Sulu/Bundle/WebsiteBundle/Tests/Unit/Controller/RedirectControllerTest.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\WebsiteBundle\\Tests\\Unit\\Controller\\RedirectControllerTest\:\:testRedirectWebspaceAction\(\) has parameter \$expectedTargetUrl with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Tests/Unit/Controller/RedirectControllerTest.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\WebsiteBundle\\Tests\\Unit\\Controller\\RedirectControllerTest\:\:testRedirectWebspaceAction\(\) has parameter \$redirectUri with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Tests/Unit/Controller/RedirectControllerTest.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\WebsiteBundle\\Tests\\Unit\\Controller\\RedirectControllerTest\:\:testRedirectWebspaceAction\(\) has parameter \$uri with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Tests/Unit/Controller/RedirectControllerTest.php
-
-		-
 			message: '#^PHPDoc tag @var with type Symfony\\Component\\Routing\\RouterInterface is not subtype of native type Prophecy\\Prophecy\\ObjectProphecy\.$#'
 			identifier: varTag.nativeType
 			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Tests/Unit/Controller/RedirectControllerTest.php
-
-		-
-			message: '#^Parameter \#1 \$request of method Sulu\\Bundle\\WebsiteBundle\\Controller\\RedirectController\:\:redirectWebspaceAction\(\) expects Symfony\\Component\\HttpFoundation\\Request, mixed given\.$#'
-			identifier: argument.type
-			count: 2
 			path: src/Sulu/Bundle/WebsiteBundle/Tests/Unit/Controller/RedirectControllerTest.php
 
 		-

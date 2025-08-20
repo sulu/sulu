@@ -33,26 +33,6 @@ class RedirectController
     }
 
     /**
-     * Creates a redirect for configured webspaces.
-     *
-     * @return RedirectResponse
-     *
-     * @deprecated since 1.6 will be removed with 2.0. Replaced by ExceptionListener::redirectPartialMatch
-     */
-    public function redirectWebspaceAction(Request $request)
-    {
-        @trigger_deprecation('sulu/sulu', '1.6', __METHOD__ . '() is deprecated and will be removed in 2.0. Replaced by ExceptionListener::redirectPartialMatch.');
-
-        $url = $this->resolveRedirectUrl(
-            $request->get('redirect'),
-            $request->getUri(),
-            $request->get('_sulu')->getAttribute('resourceLocatorPrefix')
-        );
-
-        return new RedirectResponse($url, 301, ['Cache-Control' => 'private']);
-    }
-
-    /**
      * Creates a redirect for *.html to * (without html).
      *
      * @return RedirectResponse
@@ -84,77 +64,5 @@ class RedirectController
             $permanent ? 301 : 302,
             ['Cache-Control' => 'private']
         );
-    }
-
-    /**
-     * Resolve the redirect URL, appending any additional path data.
-     *
-     * @param string $redirectUrl Redirect webspace URI
-     * @param string $requestUri The actual incoming request URI
-     * @param string $resourceLocatorPrefix The prefix of the actual portal
-     *
-     * @return string URL to redirect to
-     */
-    private function resolveRedirectUrl($redirectUrl, $requestUri, $resourceLocatorPrefix)
-    {
-        $redirectInfo = $this->parseUrl($redirectUrl);
-        $requestInfo = $this->parseUrl($requestUri);
-
-        $url = \sprintf('%s://%s', $requestInfo['scheme'], $requestInfo['host']);
-
-        if (isset($redirectInfo['host'])) {
-            $url = \sprintf('%s://%s', $requestInfo['scheme'], $redirectInfo['host']);
-        }
-
-        if (isset($requestInfo['port'])) {
-            $url .= ':' . $requestInfo['port'];
-        }
-
-        if (isset($redirectInfo['path'])
-            && (
-                // if requested url not starting with redirectUrl it need to be added
-                !isset($requestInfo['path'])
-                || 0 !== \strpos($requestInfo['path'], $redirectInfo['path'] . '/')
-            )
-        ) {
-            $url .= $redirectInfo['path'];
-        }
-
-        if (isset($requestInfo['path']) && $resourceLocatorPrefix !== $requestInfo['path']) {
-            $path = $requestInfo['path'];
-            if (0 === \strpos($path, $resourceLocatorPrefix)) {
-                $path = \substr($path, \strlen($resourceLocatorPrefix));
-            }
-
-            $url .= $path;
-            $url = \rtrim($url, '/');
-        }
-
-        if (isset($requestInfo['query'])) {
-            $url .= '?' . $requestInfo['query'];
-        }
-
-        if (isset($requestInfo['fragment'])) {
-            $url .= '#' . $requestInfo['fragment'];
-        }
-
-        return $url;
-    }
-
-    /**
-     * Prefix http to the URL if it is missing and
-     * then parse the string using parse_url.
-     *
-     * @param string $url
-     *
-     * @return string
-     */
-    private function parseUrl($url)
-    {
-        if (!\preg_match('{^https?://}', $url)) {
-            $url = 'http://' . $url;
-        }
-
-        return \parse_url($url);
     }
 }
