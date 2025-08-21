@@ -34,18 +34,11 @@ final readonly class TextPropertyMetadataMapper implements PropertyMetadataMappe
     {
         $mandatory = $fieldMetadata->isRequired();
 
-        $minMaxValue = (object) [
-            'min' => null,
-            'max' => null,
-        ];
-
-        if (null !== $this->propertyMetadataMinMaxValueResolver) {
-            $minMaxValue = $this->propertyMetadataMinMaxValueResolver->resolveMinMaxValue(
-                $fieldMetadata,
-                'min_length',
-                'max_length'
-            );
-        }
+        $minMaxValue = $this->propertyMetadataMinMaxValueResolver->resolveMinMaxValue(
+            $fieldMetadata,
+            'min_length',
+            'max_length'
+        );
 
         $pattern = $fieldMetadata->findOption('pattern')?->getValue();
         \assert(\is_string($pattern) || null === $pattern, 'The option "pattern" must be a string or null.');

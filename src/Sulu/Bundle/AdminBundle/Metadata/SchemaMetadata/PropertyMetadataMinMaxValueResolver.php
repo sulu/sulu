@@ -23,6 +23,11 @@ class PropertyMetadataMinMaxValueResolver
      * ?int $max - value of max parameter
      * </code>.
      *
+     * @return object{
+     *     min: int|null,
+     *     max: int|null,
+     * }
+     *
      * @throws \InvalidArgumentException
      */
     public function resolveMinMaxValue(

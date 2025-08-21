@@ -31,6 +31,9 @@ class SelectionPropertyMetadataMapperTest extends TestCase
         );
     }
 
+    /**
+     * @return array{type: 'null'}
+     */
     private function getNullSchema(): array
     {
         return [
@@ -38,6 +41,13 @@ class SelectionPropertyMetadataMapperTest extends TestCase
         ];
     }
 
+    /**
+     * @return array{
+     *     type: 'array',
+     *     items: array{type: array<string>},
+     *     maxItems: 0,
+     * }
+     */
     private function getEmptyArraySchema(): array
     {
         return [

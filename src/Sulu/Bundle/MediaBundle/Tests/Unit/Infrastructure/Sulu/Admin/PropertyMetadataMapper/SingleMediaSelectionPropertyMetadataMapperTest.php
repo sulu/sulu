@@ -24,6 +24,9 @@ class SingleMediaSelectionPropertyMetadataMapperTest extends TestCase
         $this->singleMediaSelectionPropertyMetadataMapper = new SingleMediaSelectionPropertyMetadataMapper();
     }
 
+    /**
+     * @return array{type: 'null'}
+     */
     private function getNullSchema(): array
     {
         return [

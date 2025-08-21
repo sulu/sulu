@@ -1268,7 +1268,6 @@ class ImageMapContentTypeTest extends TestCase
             new ReferenceStore(),
             $this->prophesize(RequestAnalyzerInterface::class)->reveal(),
             null,
-            null
         );
         $this->contentTypeManager->get('media_selection')->willReturn($mediaSelectionContentType);
 

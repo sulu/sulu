@@ -31,6 +31,9 @@ class TextPropertyMetadataMapperTest extends TestCase
         );
     }
 
+    /**
+     * @return array{type: 'null'}
+     */
     private function getNullSchema(): array
     {
         return [
@@ -38,6 +41,9 @@ class TextPropertyMetadataMapperTest extends TestCase
         ];
     }
 
+    /**
+     * @return array{type: 'string', maxLength: 0}
+     */
     private function getEmptyStringSchema(): array
     {
         return [

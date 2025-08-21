@@ -40,7 +40,7 @@ final readonly class ImageMapPropertyMetadataMapper implements PropertyMetadataM
             $tag = $blockType->findTag('sulu.global_block');
             if ($tag instanceof TagMetadata) {
                 $blockName = $tag->getAttributes()['global_block'] ?? null;
-                \assert(null !== $blockName, 'Global block name is expected to be not null.');
+                \assert(\is_string($blockName), 'Global block name is expected to be a string.');
 
                 $blockTypeSchemas[] = new IfThenElseMetadata(
                     new SchemaMetadata([

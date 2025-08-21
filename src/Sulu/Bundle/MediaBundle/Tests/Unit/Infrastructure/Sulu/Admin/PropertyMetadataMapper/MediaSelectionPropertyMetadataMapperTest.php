@@ -19,7 +19,7 @@ use Sulu\Bundle\MediaBundle\Infrastructure\Sulu\Admin\PropertyMetadataMapper\Med
 
 class MediaSelectionPropertyMetadataMapperTest extends TestCase
 {
-    private MediaSelectionPropertyMetadataMapper $mediaSelectionPropertyMetadataMapperPropertyMetadataMapper;
+    private MediaSelectionPropertyMetadataMapper $mediaSelectionPropertyMetadataMapper;
 
     protected function setUp(): void
     {
@@ -28,6 +28,9 @@ class MediaSelectionPropertyMetadataMapperTest extends TestCase
         );
     }
 
+    /**
+     * @return array{type: 'null'}
+     */
     private function getNullSchema(): array
     {
         return [
@@ -35,6 +38,13 @@ class MediaSelectionPropertyMetadataMapperTest extends TestCase
         ];
     }
 
+    /**
+     * @return array{
+     *     type: 'array',
+     *     items: array{type: array<string>},
+     *     maxItems: 0,
+     * }
+     */
     private function getEmptyArraySchema(): array
     {
         return [

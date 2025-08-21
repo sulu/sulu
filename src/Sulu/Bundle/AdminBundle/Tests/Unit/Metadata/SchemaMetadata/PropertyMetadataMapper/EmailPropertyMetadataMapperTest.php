@@ -24,6 +24,9 @@ class EmailPropertyMetadataMapperTest extends TestCase
         $this->emailPropertyMetadataMapper = new EmailPropertyMetadataMapper();
     }
 
+    /**
+     * @return array{type: 'null'}
+     */
     private function getNullSchema(): array
     {
         return [
@@ -31,6 +34,12 @@ class EmailPropertyMetadataMapperTest extends TestCase
         ];
     }
 
+    /**
+     * @return array{
+     *     type: 'string',
+     *     maxLength: 0,
+     * }
+     */
     private function getEmptyStringSchema(): array
     {
         return [

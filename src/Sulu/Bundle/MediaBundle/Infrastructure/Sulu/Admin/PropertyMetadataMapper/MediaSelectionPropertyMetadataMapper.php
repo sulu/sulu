@@ -37,14 +37,7 @@ final readonly class MediaSelectionPropertyMetadataMapper implements PropertyMet
     {
         $mandatory = $fieldMetadata->isRequired();
 
-        $minMaxValue = (object) [
-            'min' => null,
-            'max' => null,
-        ];
-
-        if (null !== $this->propertyMetadataMinMaxValueResolver) {
-            $minMaxValue = $this->propertyMetadataMinMaxValueResolver->resolveMinMaxValue($fieldMetadata);
-        }
+        $minMaxValue = $this->propertyMetadataMinMaxValueResolver->resolveMinMaxValue($fieldMetadata);
 
         $idsMetadata = new ArrayMetadata(
             new NumberMetadata(),

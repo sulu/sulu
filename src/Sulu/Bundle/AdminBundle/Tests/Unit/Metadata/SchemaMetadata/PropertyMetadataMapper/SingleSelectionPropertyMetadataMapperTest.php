@@ -27,6 +27,9 @@ class SingleSelectionPropertyMetadataMapperTest extends TestCase
         $this->singleSelectionPropertyMetadataMapper = new SingleSelectionPropertyMetadataMapper();
     }
 
+    /**
+     * @return array{type: 'null'}
+     */
     private function getNullSchema(): array
     {
         return [
@@ -34,6 +37,9 @@ class SingleSelectionPropertyMetadataMapperTest extends TestCase
         ];
     }
 
+    /**
+     * @return array{type: 'object', maxProperties: 0}
+     */
     private function getEmptyObjectSchema(): array
     {
         return [

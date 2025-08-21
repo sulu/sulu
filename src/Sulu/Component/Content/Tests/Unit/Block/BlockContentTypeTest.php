@@ -926,7 +926,6 @@ class BlockContentTypeTest extends TestCase
             new ReferenceStore(),
             null,
             null,
-            null
         );
         $this->contentTypeManager->get('media_selection')->willReturn($mediaSelectionContentType);
         $singleMediaSelection = new SingleMediaSelection(
@@ -964,7 +963,6 @@ class BlockContentTypeTest extends TestCase
             new ReferenceStore(),
             null,
             null,
-            null
         );
         $this->contentTypeManager->get('media_selection')->willReturn($mediaSelectionContentType);
         $singleMediaSelection = new SingleMediaSelection(

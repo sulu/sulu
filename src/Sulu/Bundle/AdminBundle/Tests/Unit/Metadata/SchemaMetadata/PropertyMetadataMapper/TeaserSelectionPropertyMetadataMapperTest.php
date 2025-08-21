@@ -28,6 +28,9 @@ class TeaserSelectionPropertyMetadataMapperTest extends TestCase
         );
     }
 
+    /**
+     * @return array{type: 'null'}
+     */
     private function getNullSchema(): array
     {
         return [
@@ -35,6 +38,13 @@ class TeaserSelectionPropertyMetadataMapperTest extends TestCase
         ];
     }
 
+    /**
+     * @return array{
+     *     type: 'array',
+     *     items: array{type: array<string>},
+     *     maxItems: 0,
+     * }
+     */
     private function getEmptyArraySchema(): array
     {
         return [
@@ -46,6 +56,13 @@ class TeaserSelectionPropertyMetadataMapperTest extends TestCase
         ];
     }
 
+    /**
+     * @return array{
+     *     type: 'object',
+     *     properties: array<string, mixed>,
+     *     required: array<string>,
+     * }
+     */
     private function getTeaserItemSchema(): array
     {
         return [
