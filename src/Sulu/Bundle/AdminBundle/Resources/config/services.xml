@@ -206,22 +206,42 @@
 
         <service
             id="sulu_admin.property_metadata_mapper.text"
-            class="Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\TextPropertyMetadataMapper">
+            class="Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadataMapper\TextPropertyMetadataMapper">
             <argument type="service" id="sulu_admin.property_metadata_min_max_value_resolver"/>
 
             <tag name="sulu_admin.property_metadata_mapper" type="text_line"/>
             <tag name="sulu_admin.property_metadata_mapper" type="text_area"/>
         </service>
 
+        <service id="sulu_admin.property_metadata_mapper.email" class="Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadataMapper\EmailPropertyMetadataMapper">
+            <tag name="sulu_admin.property_metadata_mapper" type="email"/>
+        </service>
+
+        <service id="sulu_admin.property_metadata_mapper.number" class="Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadataMapper\NumberPropertyMetadataMapper">
+            <tag name="sulu_admin.property_metadata_mapper" type="number"/>
+        </service>
+
+        <service id="sulu_admin.property_metadata_mapper.block" class="Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadataMapper\BlockPropertyMetadataMapper">
+            <argument type="service" id="sulu_admin.schema_metadata_provider"/>
+
+            <tag name="sulu_admin.property_metadata_mapper" type="block" />
+        </service>
+
         <service
             id="sulu_admin.property_metadata_mapper.selection"
-            class="Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\SelectionPropertyMetadataMapper">
+            class="Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadataMapper\SelectionPropertyMetadataMapper">
             <argument type="service" id="sulu_admin.property_metadata_min_max_value_resolver"/>
         </service>
 
         <service
             id="sulu_admin.property_metadata_mapper.single_selection"
-            class="Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\SingleSelectionPropertyMetadataMapper"/>
+            class="Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadataMapper\SingleSelectionPropertyMetadataMapper"/>
+
+        <service id="sulu_admin.property_metadata_mapper.teaser_selection"
+                 class="Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadataMapper\TeaserSelectionPropertyMetadataMapper">
+            <argument type="service" id="sulu_admin.property_metadata_min_max_value_resolver"/>
+            <tag name="sulu_admin.property_metadata_mapper" type="teaser_selection" />
+        </service>
 
         <service
             id="sulu_admin.schema_metadata_provider"

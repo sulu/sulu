@@ -333,6 +333,10 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
             $loader->load('services_content.xml');
         }
 
+        if (\array_key_exists('SuluAdminBundle', $bundles)) {
+            $loader->load('services_admin.xml');
+        }
+
         $ffmpegBinary = $container->resolveEnvPlaceholders($config['ffmpeg']['ffmpeg_binary'] ?? null, true);
         $ffprobeBinary = $container->resolveEnvPlaceholders($config['ffmpeg']['ffprobe_binary'] ?? null, true);
 

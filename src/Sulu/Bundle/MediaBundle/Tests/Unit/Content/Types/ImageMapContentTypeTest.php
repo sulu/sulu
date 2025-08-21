@@ -17,12 +17,6 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
-use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
-use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
-use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\SchemaMetadataProvider;
-use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TagMetadata;
-use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadata as SchemaPropertyMetadata;
-use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\SchemaMetadata;
 use Sulu\Bundle\MediaBundle\Api\Media;
 use Sulu\Bundle\MediaBundle\Content\Types\ImageMapContentType;
 use Sulu\Bundle\MediaBundle\Content\Types\MediaSelectionContentType;
@@ -63,24 +57,17 @@ class ImageMapContentTypeTest extends TestCase
      */
     private $contentTypeManager;
 
-    /**
-     * @var ObjectProphecy<SchemaMetadataProvider>
-     */
-    private $schemaMetadataProvider;
-
     protected function setUp(): void
     {
         $this->textLineContentType = $this->prophesize(TextLine::class);
         $this->singleMediaSelectionContentType = $this->prophesize(SingleMediaSelection::class);
         $this->contentTypeManager = $this->prophesize(ContentTypeManagerInterface::class);
-        $this->schemaMetadataProvider = $this->prophesize(SchemaMetadataProvider::class);
 
         $this->contentTypeManager->get('text_line')->willReturn($this->textLineContentType);
         $this->contentTypeManager->get('single_media_selection')->willReturn($this->singleMediaSelectionContentType);
 
         $this->imageMapContentType = new ImageMapContentType(
             $this->contentTypeManager->reveal(),
-            $this->schemaMetadataProvider->reveal(),
         );
     }
 
@@ -1189,179 +1176,6 @@ class ImageMapContentTypeTest extends TestCase
 
         $property->setValue($value);
         $this->imageMapContentType->preResolve($property);
-    }
-
-    public function testMapPropertyMetadata(): void
-    {
-        $types = [
-            'headline' => [
-                'isGlobalBlock' => true,
-            ],
-            'text' => [
-                'children' => [
-                    'text' => 'text_line',
-                ],
-            ],
-        ];
-
-        $metadata = new FieldMetadata('imageMap');
-        $metadata->setRequired(true);
-        foreach ($types as $key => $config) {
-            $type = new FormMetadata();
-            $type->setKey($key);
-
-            $isGlobalBlock = $config['isGlobalBlock'] ?? false;
-            if ($isGlobalBlock) {
-                $tagMetadata = new TagMetadata();
-                $tagMetadata->setName('sulu.global_block');
-                $tagMetadata->setAttributes([
-                    'global_block' => $key,
-                ]);
-                $type->addTag($tagMetadata);
-            }
-
-            foreach ($config['children'] ?? [] as $childName => $childType) {
-                $itemMetadata = new FieldMetadata($childName);
-                $type->addItem($itemMetadata);
-            }
-
-            if (!$isGlobalBlock) {
-                $itemSchemaMetadata = new SchemaMetadata([
-                    new SchemaPropertyMetadata('type', false),
-                ]);
-                $this->schemaMetadataProvider->getMetadata($type->getItems())->willReturn($itemSchemaMetadata);
-            }
-            $metadata->addType($type);
-        }
-
-        $result = $this->imageMapContentType->mapPropertyMetadata($metadata);
-        $this->assertSame([
-            'type' => 'object',
-            'properties' => [
-                'hotspots' => [
-                    'type' => 'array',
-                    'items' => [
-                        'allOf' => [
-                            [
-                                'if' => [
-                                    'type' => 'object',
-                                    'properties' => [
-                                        'type' => [
-                                            'const' => 'headline',
-                                        ],
-                                    ],
-                                    'required' => ['type'],
-                                ],
-                                'then' => [
-                                    '$ref' => '#/definitions/headline',
-                                ],
-                            ],
-                            [
-                                'if' => [
-                                    'type' => 'object',
-                                    'properties' => [
-                                        'type' => [
-                                            'const' => 'text',
-                                        ],
-                                    ],
-                                    'required' => ['type'],
-                                ],
-                                'then' => [
-                                    'type' => ['number', 'string', 'boolean', 'object', 'array', 'null'],
-                                ],
-                            ],
-                        ],
-                    ],
-                ],
-            ],
-            'required' => ['imageId', 'hotspots'],
-        ], $result->toJsonSchema());
-    }
-
-    public function testMapPropertyMetatadaWithRequiredFalse(): void
-    {
-        $types = [
-            'headline' => [
-                'isGlobalBlock' => true,
-            ],
-            'text' => [
-                'children' => [
-                    'text' => 'text_line',
-                ],
-            ],
-        ];
-
-        $metadata = new FieldMetadata('imageMap');
-        $metadata->setRequired(false);
-        foreach ($types as $key => $config) {
-            $type = new FormMetadata();
-            $type->setKey($key);
-
-            $isGlobalBlock = $config['isGlobalBlock'] ?? false;
-            if ($isGlobalBlock) {
-                $tagMetadata = new TagMetadata();
-                $tagMetadata->setName('sulu.global_block');
-                $tagMetadata->setAttributes([
-                    'global_block' => $key,
-                ]);
-                $type->addTag($tagMetadata);
-            }
-
-            foreach ($config['children'] ?? [] as $childName => $childType) {
-                $itemMetadata = new FieldMetadata($childName);
-                $type->addItem($itemMetadata);
-            }
-
-            if (!$isGlobalBlock) {
-                $itemSchemaMetadata = new SchemaMetadata([
-                    new SchemaPropertyMetadata('type', false),
-                ]);
-                $this->schemaMetadataProvider->getMetadata($type->getItems())->willReturn($itemSchemaMetadata);
-            }
-            $metadata->addType($type);
-        }
-
-        $result = $this->imageMapContentType->mapPropertyMetadata($metadata);
-        $this->assertSame([
-            'type' => 'object',
-            'properties' => [
-                'hotspots' => [
-                    'type' => 'array',
-                    'items' => [
-                        'allOf' => [
-                            [
-                                'if' => [
-                                    'type' => 'object',
-                                    'properties' => [
-                                        'type' => [
-                                            'const' => 'headline',
-                                        ],
-                                    ],
-                                    'required' => ['type'],
-                                ],
-                                'then' => [
-                                    '$ref' => '#/definitions/headline',
-                                ],
-                            ],
-                            [
-                                'if' => [
-                                    'type' => 'object',
-                                    'properties' => [
-                                        'type' => [
-                                            'const' => 'text',
-                                        ],
-                                    ],
-                                    'required' => ['type'],
-                                ],
-                                'then' => [
-                                    'type' => ['number', 'string', 'boolean', 'object', 'array', 'null'],
-                                ],
-                            ],
-                        ],
-                    ],
-                ],
-            ],
-        ], $result->toJsonSchema());
     }
 
     public function testGetReferenceImageMap(): void

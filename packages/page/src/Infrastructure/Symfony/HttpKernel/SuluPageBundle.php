@@ -37,6 +37,7 @@ use Sulu\Page\Domain\Repository\PageRepositoryInterface;
 use Sulu\Page\Infrastructure\Doctrine\Repository\NavigationRepository;
 use Sulu\Page\Infrastructure\Doctrine\Repository\PageRepository;
 use Sulu\Page\Infrastructure\Sulu\Admin\PageAdmin;
+use Sulu\Page\Infrastructure\Sulu\Admin\PropertyMetadataMapper\PageTreeRoutePropertyMetadataMapper;
 use Sulu\Page\Infrastructure\Sulu\Build\HomepageBuilder;
 use Sulu\Page\Infrastructure\Sulu\Content\DataMapper\NavigationContextDataMapper;
 use Sulu\Page\Infrastructure\Sulu\Content\Merger\NavigationContextMerger;
@@ -215,6 +216,11 @@ final class SuluPageBundle extends AbstractBundle
         $services->set('sulu_page.page_normalizer')
             ->class(PageNormalizer::class)
             ->tag('sulu_content.normalizer');
+
+        // Property Metadata Mapper services
+        $services->set('sulu_page.page_tree_route_property_metadata_mapper')
+            ->class(PageTreeRoutePropertyMetadataMapper::class)
+            ->tag('sulu_admin.property_metadata_mapper', ['type' => 'page_tree_route']);
 
         // Property Resolver services
         $services->set('sulu_page.page_selection_property_resolver')

@@ -18,7 +18,6 @@
 
             <tag name="sulu.content.type" alias="page_tree_route"/>
             <tag name="sulu.content.export" format="1.2.xliff" translate="false" />
-            <tag name="sulu_admin.property_metadata_mapper" type="page_tree_route"/>
         </service>
 
         <service id="sulu_route.subscriber.routable"

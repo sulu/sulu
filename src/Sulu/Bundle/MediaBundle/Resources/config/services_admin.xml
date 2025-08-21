@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    <services>
+        <!-- PropertyMetadataMapper -->
+        <service id="sulu_media.type.media_selection_property_metadata_mapper" class="Sulu\Bundle\MediaBundle\Infrastructure\Sulu\Admin\PropertyMetadataMapper\MediaSelectionPropertyMetadataMapper">
+            <argument type="service" id="sulu_admin.property_metadata_min_max_value_resolver"/>
+
+            <tag name="sulu_admin.property_metadata_mapper" type="media_selection"/>
+        </service>
+
+        <service id="sulu_media.type.single_media_selection_property_metadata_mapper" class="Sulu\Bundle\MediaBundle\Infrastructure\Sulu\Admin\PropertyMetadataMapper\SingleMediaSelectionPropertyMetadataMapper">
+            <tag name="sulu_admin.property_metadata_mapper" type="single_media_selection"/>
+        </service>
+
+        <service id="sulu_media.type.image_map_property_metadata_mapper" class="Sulu\Bundle\MediaBundle\Infrastructure\Sulu\Admin\PropertyMetadataMapper\ImageMapPropertyMetadataMapper">
+            <argument type="service" id="sulu_admin.schema_metadata_provider"/>
+
+            <tag name="sulu_admin.property_metadata_mapper" type="image_map" />
+        </service>
+    </services>
+</container>

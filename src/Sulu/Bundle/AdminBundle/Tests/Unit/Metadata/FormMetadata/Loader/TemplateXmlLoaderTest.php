@@ -23,9 +23,8 @@ use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Parser\TagXmlParser;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Parser\TemplateXmlParser;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\SchemaMetadataProvider;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TagMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadataMapper\BlockPropertyMetadataMapper;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadataMapperRegistry;
-use Sulu\Component\Content\ContentTypeManagerInterface;
-use Sulu\Component\Content\Types\BlockContentType;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -61,10 +60,8 @@ class TemplateXmlLoaderTest extends TestCase
         $container = new Container();
         $propertyMetadataMapperRegistry = new PropertyMetadataMapperRegistry($container);
         $schemaMetadataProvider = new SchemaMetadataProvider($propertyMetadataMapperRegistry);
-        $blockMetadataProvider = new BlockContentType(
-            $this->prophesize(ContentTypeManagerInterface::class)->reveal(),
+        $blockMetadataProvider = new BlockPropertyMetadataMapper(
             $schemaMetadataProvider,
-            [],
         );
         $container->set('block', $blockMetadataProvider);
 

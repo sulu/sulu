@@ -9,20 +9,26 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata;
+namespace Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadataMapper;
 
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\AnyOfsMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\ArrayMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\EmptyArrayMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\NullMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\NumberMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadataMapperInterface;
+use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadataMinMaxValueResolver;
+use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\StringMetadata;
 
-class SelectionPropertyMetadataMapper implements PropertyMetadataMapperInterface
+/**
+ * @internal use symfony dependency injection container to override the service if you want to change the behavior
+ */
+final readonly class SelectionPropertyMetadataMapper implements PropertyMetadataMapperInterface
 {
-    /**
-     * @var PropertyMetadataMinMaxValueResolver
-     */
-    private $propertyMetadataMinMaxValueResolver;
-
-    public function __construct(PropertyMetadataMinMaxValueResolver $propertyMetadataMinMaxValueResolver)
+    public function __construct(private PropertyMetadataMinMaxValueResolver $propertyMetadataMinMaxValueResolver)
     {
-        $this->propertyMetadataMinMaxValueResolver = $propertyMetadataMinMaxValueResolver;
     }
 
     public function mapPropertyMetadata(FieldMetadata $fieldMetadata): PropertyMetadata

@@ -316,11 +316,9 @@
             <argument type="service" id="sulu_media.reference_store.media"/>
             <argument type="service" id="sulu_core.webspace.request_analyzer"/>
             <argument>%sulu_security.permissions%</argument>
-            <argument type="service" id="sulu_admin.property_metadata_min_max_value_resolver" on-invalid="null"/>
 
             <tag name="sulu.content.type" alias="media_selection"/>
             <tag name="sulu.content.export" format="1.2.xliff" translate="false" />
-            <tag name="sulu_admin.property_metadata_mapper" type="media_selection"/>
         </service>
 
         <service id="sulu_media.type.single_media_selection" class="Sulu\Bundle\MediaBundle\Content\Types\SingleMediaSelection">
@@ -331,16 +329,13 @@
 
             <tag name="sulu.content.type" alias="single_media_selection"/>
             <tag name="sulu.content.export" format="1.2.xliff" translate="false" />
-            <tag name="sulu_admin.property_metadata_mapper" type="single_media_selection"/>
         </service>
 
         <service id="sulu_media.type.image_map" class="Sulu\Bundle\MediaBundle\Content\Types\ImageMapContentType">
             <argument type="service" id="sulu.content.type_manager"/>
-            <argument type="service" id="sulu_admin.schema_metadata_provider"/>
 
             <tag name="sulu.content.type" alias="image_map"/>
             <tag name="sulu.content.export" format="1.2.xliff" translate="false" />
-            <tag name="sulu_admin.property_metadata_mapper" type="image_map" />
         </service>
 
         <service id="sulu_media.collection_manager" class="Sulu\Bundle\MediaBundle\Collection\Manager\CollectionManager" public="true">

@@ -17,7 +17,6 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
-use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
 use Sulu\Bundle\MediaBundle\Api\Media;
 use Sulu\Bundle\MediaBundle\Content\Types\SingleMediaSelection;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
@@ -346,61 +345,6 @@ class SingleMediaSelectionTest extends TestCase
         $this->mediaReferenceStore->add(11)->shouldBeCalled();
 
         $this->singleMediaSelection->preResolve($property);
-    }
-
-    private function getNullSchema(): array
-    {
-        return [
-            'type' => 'null',
-        ];
-    }
-
-    public function testMapPropertyMetadata(): void
-    {
-        $fieldMetadata = new FieldMetadata('property-name');
-
-        $jsonSchema = $this->singleMediaSelection->mapPropertyMetadata($fieldMetadata)->toJsonSchema();
-
-        $this->assertEquals([
-            'anyOf' => [
-                $this->getNullSchema(),
-                [
-                    'type' => 'object',
-                    'properties' => [
-                        'id' => [
-                            'anyOf' => [
-                                $this->getNullSchema(),
-                                ['type' => 'number'],
-                            ],
-                        ],
-                        'displayOption' => [
-                            'type' => 'string',
-                        ],
-                    ],
-                ],
-            ],
-        ], $jsonSchema);
-    }
-
-    public function testMapPropertyMetadataRequired(): void
-    {
-        $fieldMetadata = new FieldMetadata('property-name');
-        $fieldMetadata->setRequired(true);
-
-        $jsonSchema = $this->singleMediaSelection->mapPropertyMetadata($fieldMetadata)->toJsonSchema();
-
-        $this->assertEquals([
-            'type' => 'object',
-            'properties' => [
-                'id' => [
-                    'type' => 'number',
-                ],
-                'displayOption' => [
-                    'type' => 'string',
-                ],
-            ],
-            'required' => ['id'],
-        ], $jsonSchema);
     }
 
     public function testGetReferencesWithNullProperty(): void

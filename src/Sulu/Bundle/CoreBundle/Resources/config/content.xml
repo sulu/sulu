@@ -118,7 +118,6 @@
 
         <!-- simple content types -->
         <service id="sulu.content.type.number" class="Sulu\Component\Content\Types\Number">
-            <tag name="sulu_admin.property_metadata_mapper" type="number"/>
             <tag name="sulu.content.type" alias="number"/>
             <tag name="sulu.content.export" format="1.2.xliff" translate="false" />
         </service>
@@ -153,12 +152,10 @@
         <!-- complex content types -->
         <service id="sulu.content.type.block" class="Sulu\Component\Content\Types\BlockContentType">
             <argument type="service" id="sulu.content.type_manager"/>
-            <argument type="service" id="sulu_admin.schema_metadata_provider"/>
             <argument type="tagged" tag="sulu_content.deprecated_block_visitor" />
 
             <tag name="sulu.content.type" alias="block"/>
             <tag name="sulu.content.export" format="1.2.xliff" translate="false" />
-            <tag name="sulu_admin.property_metadata_mapper" type="block" />
         </service>
 
         <service

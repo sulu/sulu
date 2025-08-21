@@ -12,14 +12,6 @@
 namespace Sulu\Bundle\MediaBundle\Content\Types;
 
 use PHPCR\NodeInterface;
-use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
-use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\AnyOfsMetadata;
-use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\NullMetadata;
-use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\NumberMetadata;
-use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\ObjectMetadata;
-use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadata;
-use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadataMapperInterface;
-use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\StringMetadata;
 use Sulu\Bundle\MediaBundle\Admin\MediaAdmin;
 use Sulu\Bundle\MediaBundle\Api\Media;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
@@ -37,7 +29,7 @@ use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Sulu\Component\Security\Authorization\SecurityCondition;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 
-class SingleMediaSelection extends SimpleContentType implements PreResolvableContentTypeInterface, PropertyMetadataMapperInterface, ReferenceContentTypeInterface
+class SingleMediaSelection extends SimpleContentType implements PreResolvableContentTypeInterface, ReferenceContentTypeInterface
 {
     public function __construct(
         private MediaManagerInterface $mediaManager,
@@ -135,34 +127,6 @@ class SingleMediaSelection extends SimpleContentType implements PreResolvableCon
         }
 
         return \json_decode($value, true);
-    }
-
-    public function mapPropertyMetadata(FieldMetadata $fieldMetadata): PropertyMetadata
-    {
-        $mandatory = $fieldMetadata->isRequired();
-
-        $idMetadata = new NumberMetadata();
-
-        if (!$mandatory) {
-            $idMetadata = new AnyOfsMetadata([
-                new NullMetadata(),
-                $idMetadata,
-            ]);
-        }
-
-        $singleMediaSelectionMetadata = new ObjectMetadata([
-            new PropertyMetadata('id', $mandatory, $idMetadata),
-            new PropertyMetadata('displayOption', false, new StringMetadata()),
-        ]);
-
-        if (!$mandatory) {
-            $singleMediaSelectionMetadata = new AnyOfsMetadata([
-                new NullMetadata(),
-                $singleMediaSelectionMetadata,
-            ]);
-        }
-
-        return new PropertyMetadata($fieldMetadata->getName(), $mandatory, $singleMediaSelectionMetadata);
     }
 
     public function getReferences(PropertyInterface $property, ReferenceCollectorInterface $referenceCollector, string $propertyPrefix = ''): void

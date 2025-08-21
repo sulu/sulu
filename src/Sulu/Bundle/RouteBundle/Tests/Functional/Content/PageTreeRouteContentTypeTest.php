@@ -17,7 +17,6 @@ use PHPCR\PropertyType;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
-use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Bundle\PageBundle\Document\BasePageDocument;
 use Sulu\Bundle\RouteBundle\Content\Type\PageTreeRouteContentType;
@@ -457,64 +456,5 @@ class PageTreeRouteContentTypeTest extends TestCase
         $this->property->getValue()->willReturn($value);
 
         $this->assertEquals($value, $this->contentType->getViewData($this->property->reveal()));
-    }
-
-    public function testMapPropertyMetadata(): void
-    {
-        $fieldMetadata = new FieldMetadata('property-name');
-
-        $jsonSchema = $this->contentType->mapPropertyMetadata($fieldMetadata)->toJsonSchema();
-
-        $this->assertEquals([
-            'anyOf' => [
-                [
-                    'type' => 'null',
-                ],
-                [
-                    'type' => 'object',
-                    'properties' => [
-                        'page' => [
-                            'anyOf' => [
-                                ['type' => 'null'],
-                                [
-                                    'type' => 'object',
-                                    'properties' => [
-                                        'uuid' => ['type' => 'string'],
-                                        'path' => ['type' => 'string'],
-                                    ],
-                                ],
-                            ],
-                        ],
-                        'path' => ['type' => 'string'],
-                        'suffix' => ['type' => 'string'],
-                    ],
-                ],
-            ],
-        ], $jsonSchema);
-    }
-
-    public function testMapPropertyMetadataRequired(): void
-    {
-        $fieldMetadata = new FieldMetadata('property-name');
-        $fieldMetadata->setRequired(true);
-
-        $jsonSchema = $this->contentType->mapPropertyMetadata($fieldMetadata)->toJsonSchema();
-
-        $this->assertEquals([
-            'type' => 'object',
-            'properties' => [
-                'page' => [
-                    'type' => 'object',
-                    'properties' => [
-                        'uuid' => ['type' => 'string'],
-                        'path' => ['type' => 'string'],
-                    ],
-                    'required' => ['uuid', 'path'],
-                ],
-                'path' => ['type' => 'string'],
-                'suffix' => ['type' => 'string'],
-            ],
-            'required' => ['page'],
-        ], $jsonSchema);
     }
 }

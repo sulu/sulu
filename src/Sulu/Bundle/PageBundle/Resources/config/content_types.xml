@@ -39,7 +39,6 @@
         <service id="sulu.content.type.email" class="Sulu\Bundle\PageBundle\Content\Types\Email">
             <tag name="sulu.content.type" alias="email"/>
             <tag name="sulu.content.export" format="1.2.xliff" translate="false" />
-            <tag name="sulu_admin.property_metadata_mapper" type="email"/>
         </service>
         <service id="sulu.content.type.date" class="Sulu\Bundle\PageBundle\Content\Types\Date">
             <tag name="sulu.content.type" alias="date"/>

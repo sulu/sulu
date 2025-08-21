@@ -12,17 +12,6 @@
 namespace Sulu\Bundle\MediaBundle\Content\Types;
 
 use PHPCR\NodeInterface;
-use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
-use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\AnyOfsMetadata;
-use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\ArrayMetadata;
-use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\EmptyArrayMetadata;
-use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\NullMetadata;
-use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\NumberMetadata;
-use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\ObjectMetadata;
-use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadata;
-use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadataMapperInterface;
-use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadataMinMaxValueResolver;
-use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\StringMetadata;
 use Sulu\Bundle\MediaBundle\Content\MediaSelectionContainer;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
@@ -41,7 +30,7 @@ use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 /**
  * content type for image selection.
  */
-class MediaSelectionContentType extends ComplexContentType implements ContentTypeExportInterface, PreResolvableContentTypeInterface, PropertyMetadataMapperInterface, ReferenceContentTypeInterface
+class MediaSelectionContentType extends ComplexContentType implements ContentTypeExportInterface, PreResolvableContentTypeInterface, ReferenceContentTypeInterface
 {
     /**
      * @param array<string,int>|null $permissions;
@@ -51,7 +40,6 @@ class MediaSelectionContentType extends ComplexContentType implements ContentTyp
         private ReferenceStoreInterface $referenceStore,
         private ?RequestAnalyzerInterface $requestAnalyzer = null,
         private $permissions = null,
-        private ?PropertyMetadataMinMaxValueResolver $propertyMetadataMinMaxValueResolver = null
     ) {
     }
 
@@ -182,48 +170,6 @@ class MediaSelectionContentType extends ComplexContentType implements ContentTyp
         foreach ($data['ids'] as $id) {
             $this->referenceStore->add($id);
         }
-    }
-
-    public function mapPropertyMetadata(FieldMetadata $fieldMetadata): PropertyMetadata
-    {
-        $mandatory = $fieldMetadata->isRequired();
-
-        $minMaxValue = (object) [
-            'min' => null,
-            'max' => null,
-        ];
-
-        if (null !== $this->propertyMetadataMinMaxValueResolver) {
-            $minMaxValue = $this->propertyMetadataMinMaxValueResolver->resolveMinMaxValue($fieldMetadata);
-        }
-
-        $idsMetadata = new ArrayMetadata(
-            new NumberMetadata(),
-            $minMaxValue->min,
-            $minMaxValue->max,
-            true
-        );
-
-        if (!$mandatory) {
-            $idsMetadata = new AnyOfsMetadata([
-                new EmptyArrayMetadata(),
-                $idsMetadata,
-            ]);
-        }
-
-        $mediaSelectionMetadata = new ObjectMetadata([
-            new PropertyMetadata('ids', $mandatory, $idsMetadata),
-            new PropertyMetadata('displayOption', false, new StringMetadata()),
-        ]);
-
-        if (!$mandatory) {
-            $mediaSelectionMetadata = new AnyOfsMetadata([
-                new NullMetadata(),
-                $mediaSelectionMetadata,
-            ]);
-        }
-
-        return new PropertyMetadata($fieldMetadata->getName(), $mandatory, $mediaSelectionMetadata);
     }
 
     public function getReferences(PropertyInterface $property, ReferenceCollectorInterface $referenceCollector, string $propertyPrefix = ''): void

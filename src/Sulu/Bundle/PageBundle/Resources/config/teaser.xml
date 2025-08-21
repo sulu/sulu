@@ -18,11 +18,9 @@
             <argument type="service" id="sulu_admin.teaser_provider_pool"/>
             <argument type="service" id="sulu_admin.teaser_manager"/>
             <argument type="service" id="sulu_website.reference_store_pool"/>
-            <argument type="service" id="sulu_admin.property_metadata_min_max_value_resolver" on-invalid="null"/>
 
             <tag name="sulu.content.type" alias="teaser_selection"/>
             <tag name="sulu.content.export" format="1.2.xliff" translate="false" />
-            <tag name="sulu_admin.property_metadata_mapper" type="teaser_selection" />
         </service>
 
         <!-- serialization -->

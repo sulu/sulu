@@ -12,17 +12,6 @@
 namespace Sulu\Bundle\MediaBundle\Content\Types;
 
 use PHPCR\NodeInterface;
-use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
-use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\SchemaMetadataProvider;
-use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TagMetadata;
-use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\AllOfsMetadata;
-use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\ArrayMetadata;
-use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\ConstMetadata;
-use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\IfThenElseMetadata;
-use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadata;
-use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadataMapperInterface;
-use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\RefSchemaMetadata;
-use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\SchemaMetadata;
 use Sulu\Bundle\ReferenceBundle\Application\Collector\ReferenceCollectorInterface;
 use Sulu\Bundle\ReferenceBundle\Infrastructure\Sulu\ContentType\ReferenceContentTypeInterface;
 use Sulu\Component\Content\Compat\Block\BlockPropertyWrapper;
@@ -37,11 +26,10 @@ use Sulu\Component\Content\Document\Subscriber\PHPCR\SuluNode;
 use Sulu\Component\Content\Exception\UnexpectedPropertyType;
 use Sulu\Component\Content\PreResolvableContentTypeInterface;
 
-class ImageMapContentType extends ComplexContentType implements ContentTypeExportInterface, PreResolvableContentTypeInterface, PropertyMetadataMapperInterface, ReferenceContentTypeInterface
+class ImageMapContentType extends ComplexContentType implements ContentTypeExportInterface, PreResolvableContentTypeInterface, ReferenceContentTypeInterface
 {
     public function __construct(
         private ContentTypeManagerInterface $contentTypeManager,
-        private SchemaMetadataProvider $schemaMetadataProvider,
     ) {
     }
 
@@ -452,46 +440,6 @@ class ImageMapContentType extends ComplexContentType implements ContentTypeExpor
                 return $contentType->preResolve($property);
             },
             false
-        );
-    }
-
-    public function mapPropertyMetadata(FieldMetadata $fieldMetadata): PropertyMetadata
-    {
-        $blockTypeSchemas = [];
-        foreach ($fieldMetadata->getTypes() as $blockType) {
-            $tag = $blockType->findTag('sulu.global_block');
-            if ($tag instanceof TagMetadata) {
-                $blockName = $tag->getAttributes()['global_block'] ?? null;
-                \assert(null !== $blockName, 'Global block name is expected to be not null.');
-
-                $blockTypeSchemas[] = new IfThenElseMetadata(
-                    new SchemaMetadata([
-                        new PropertyMetadata('type', true, new ConstMetadata($blockType->getKey())),
-                    ]),
-                    new RefSchemaMetadata('#/definitions/' . $blockName)
-                );
-
-                continue;
-            }
-
-            $blockTypeSchemas[] = new IfThenElseMetadata(
-                new SchemaMetadata([
-                    new PropertyMetadata('type', true, new ConstMetadata($blockType->getKey())),
-                ]),
-                $this->schemaMetadataProvider->getMetadata($blockType->getItems()),
-            );
-        }
-
-        return new PropertyMetadata(
-            $fieldMetadata->getName(),
-            $fieldMetadata->isRequired(),
-            new SchemaMetadata([
-                new PropertyMetadata('imageId', $fieldMetadata->isRequired()),
-                new PropertyMetadata(
-                    'hotspots', $fieldMetadata->isRequired(), new ArrayMetadata(
-                        new AllOfsMetadata($blockTypeSchemas)
-                    )),
-            ])
         );
     }
 

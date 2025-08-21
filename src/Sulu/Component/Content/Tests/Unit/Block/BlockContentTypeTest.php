@@ -16,7 +16,6 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
-use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\SchemaMetadataProvider;
 use Sulu\Bundle\MediaBundle\Content\Types\MediaSelectionContentType;
 use Sulu\Bundle\MediaBundle\Content\Types\SingleMediaSelection;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
@@ -67,11 +66,6 @@ class BlockContentTypeTest extends TestCase
     private $contentTypeValueMap;
 
     /**
-     * @var ObjectProphecy<SchemaMetadataProvider>
-     */
-    private $schemaMetadataProvider;
-
-    /**
      * @var ObjectProphecy<ContentTypeManager>
      */
     private $contentTypeManager;
@@ -97,11 +91,8 @@ class BlockContentTypeTest extends TestCase
         $this->blockVisitor1->visit(Argument::any())->will(function($arguments) {return $arguments[0]; });
         $this->blockVisitor2->visit(Argument::any())->will(function($arguments) {return $arguments[0]; });
 
-        $this->schemaMetadataProvider = $this->prophesize(SchemaMetadataProvider::class);
-
         $this->blockContentType = new BlockContentType(
             $this->contentTypeManager->reveal(),
-            $this->schemaMetadataProvider->reveal(),
             [
                 $this->blockVisitor1->reveal(),
                 $this->blockVisitor2->reveal(),

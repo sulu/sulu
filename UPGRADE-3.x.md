@@ -620,8 +620,10 @@ Removed classes / services:
 - `Sulu\Bundle\AdminBundle\Metadata\FormMetadata\LocalizedFormMetadataCollection`
 - `src\Sulu\Component\Content\Metadata\XmlParserTrait`  (internal)
 - `Sulu\Component\Content\Metadata\Parser\PropertiesXmlParser` (moved and internal)
-- `Sulu\Component\Content\Metadata\Parser\PropertiesXmlParser` (moved and internal)
-- `Sulu\Bundle\AdminBundle\FormMetadata\FormXmlLoader` (moved and internal)
+- `Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\TextPropertyMetadataMapper` (moved and internal)
+- `Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\SelectionPropertyMetadataMapper` (moved and internal)
+- `Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\SingleSelectionPropertyMetadataMapper` (moved and internal)
+- `ContentTypes` implementing `PropertyMetadataMapperInterface` (moved and internal)
 - `Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Loader\AbstractLoader` (moved and internal)
 - `Sulu\Commponent\Content\Document\Subscriber\Compat\ContentMapperSubscriber`
 - `Sulu\Component\Content\Mapper\ContentEvents`

@@ -12,17 +12,6 @@
 namespace Sulu\Bundle\PageBundle\Teaser;
 
 use PHPCR\NodeInterface;
-use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
-use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\AnyOfsMetadata;
-use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\ArrayMetadata;
-use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\EmptyArrayMetadata;
-use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\NullMetadata;
-use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\NumberMetadata;
-use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\ObjectMetadata;
-use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadata;
-use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadataMapperInterface;
-use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadataMinMaxValueResolver;
-use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\StringMetadata;
 use Sulu\Bundle\AdminBundle\Teaser\Provider\TeaserProviderPoolInterface;
 use Sulu\Bundle\AdminBundle\Teaser\TeaserManagerInterface;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
@@ -36,13 +25,12 @@ use Sulu\Component\Content\SimpleContentType;
 /**
  * Provides content-type for selecting teasers.
  */
-class TeaserContentType extends SimpleContentType implements PreResolvableContentTypeInterface, PropertyMetadataMapperInterface
+class TeaserContentType extends SimpleContentType implements PreResolvableContentTypeInterface
 {
     public function __construct(
         private TeaserProviderPoolInterface $teaserProviderPool,
         private TeaserManagerInterface $teaserManager,
         private ReferenceStorePoolInterface $referenceStorePool,
-        private ?PropertyMetadataMinMaxValueResolver $propertyMetadataMinMaxValueResolver = null
     ) {
         parent::__construct('teaser_selection');
     }
@@ -160,56 +148,5 @@ class TeaserContentType extends SimpleContentType implements PreResolvableConten
         }
 
         return \array_merge($default, $property->getValue());
-    }
-
-    public function mapPropertyMetadata(FieldMetadata $fieldMetadata): PropertyMetadata
-    {
-        $mandatory = $fieldMetadata->isRequired();
-
-        $minMaxValue = (object) [
-            'min' => null,
-            'max' => null,
-        ];
-
-        if (null !== $this->propertyMetadataMinMaxValueResolver) {
-            $minMaxValue = $this->propertyMetadataMinMaxValueResolver->resolveMinMaxValue($fieldMetadata);
-        }
-
-        $itemsMetadata = new ArrayMetadata(
-            new ObjectMetadata([
-                new PropertyMetadata('id', true, new AnyOfsMetadata([
-                    new StringMetadata(),
-                    new NumberMetadata(),
-                ])),
-                new PropertyMetadata('type', true, new StringMetadata()),
-                new PropertyMetadata('title', false, new StringMetadata()),
-                new PropertyMetadata('description', false, new StringMetadata()),
-                new PropertyMetadata('mediaId', false, new NumberMetadata()),
-            ]),
-            $minMaxValue->min,
-            $minMaxValue->max,
-            true
-        );
-
-        if (!$mandatory) {
-            $itemsMetadata = new AnyOfsMetadata([
-                new EmptyArrayMetadata(),
-                $itemsMetadata,
-            ]);
-        }
-
-        $teaserSelectionMetadata = new ObjectMetadata([
-            new PropertyMetadata('items', $mandatory, $itemsMetadata),
-            new PropertyMetadata('presentAs', false, new StringMetadata()),
-        ]);
-
-        if (!$mandatory) {
-            $teaserSelectionMetadata = new AnyOfsMetadata([
-                new NullMetadata(),
-                $teaserSelectionMetadata,
-            ]);
-        }
-
-        return new PropertyMetadata($fieldMetadata->getName(), $mandatory, $teaserSelectionMetadata);
     }
 }
