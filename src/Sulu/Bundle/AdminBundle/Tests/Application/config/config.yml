@@ -37,7 +37,3 @@ services:
     sulu_admin_test.xml_form_metadata_loader:
         alias: sulu_admin.xml_form_metadata_loader
         public: true
-
-    sulu_admin_test.structure_form_metadata_loader:
-        alias: sulu_admin.structure_form_metadata_loader
-        public: true
