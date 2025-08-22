@@ -13,6 +13,7 @@ namespace Sulu\Snippet\Infrastructure\Sulu\Content\PropertyResolver;
 
 use Sulu\Content\Application\ContentResolver\Value\ContentView;
 use Sulu\Content\Application\PropertyResolver\Resolver\PropertyResolverInterface;
+use Sulu\Snippet\Domain\Model\SnippetInterface;
 use Sulu\Snippet\Infrastructure\Sulu\Content\ResourceLoader\SnippetResourceLoader;
 
 /**
@@ -49,9 +50,10 @@ class SnippetSelectionPropertyResolver implements PropertyResolverInterface
         /** @var string $resourceLoaderKey */
         $resourceLoaderKey = $params['resourceLoader'] ?? SnippetResourceLoader::getKey();
 
-        return ContentView::createResolvables(
+        return ContentView::createResolvablesWithReferences(
             ids: $identifiers,
             resourceLoaderKey: $resourceLoaderKey,
+            resourceKey: SnippetInterface::RESOURCE_KEY,
             view: [
                 'ids' => $identifiers,
                 ...$params,

@@ -57,6 +57,7 @@ final class SuluContentBundle extends AbstractBundle
         $loader->load('controller.xml');
         $loader->load('resolvers.xml');
         $loader->load('resource-loader.xml');
+        $loader->load('reference.xml');
     }
 
     /**

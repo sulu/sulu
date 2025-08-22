@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Sulu\Bundle\ContactBundle\Infrastructure\Sulu\Content\PropertyResolver;
 
+use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
 use Sulu\Bundle\ContactBundle\Infrastructure\Sulu\Content\ResourceLoader\AccountResourceLoader;
 use Sulu\Content\Application\ContentResolver\Value\ContentView;
 use Sulu\Content\Application\PropertyResolver\Resolver\PropertyResolverInterface;
@@ -33,9 +34,10 @@ class SingleAccountSelectionPropertyResolver implements PropertyResolverInterfac
         /** @var string $resourceLoaderKey */
         $resourceLoaderKey = $params['resourceLoader'] ?? AccountResourceLoader::getKey();
 
-        return ContentView::createResolvable(
+        return ContentView::createResolvableWithReferences(
             (int) $data,
             $resourceLoaderKey,
+            AccountInterface::RESOURCE_KEY,
             [
                 'id' => $data,
                 ...$params,

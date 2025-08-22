@@ -13,9 +13,12 @@ declare(strict_types=1);
 
 namespace Sulu\Bundle\ContactBundle\Infrastructure\Sulu\Content\PropertyResolver;
 
+use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
+use Sulu\Bundle\ContactBundle\Entity\ContactInterface;
 use Sulu\Bundle\ContactBundle\Infrastructure\Sulu\Content\ResourceLoader\AccountResourceLoader;
 use Sulu\Bundle\ContactBundle\Infrastructure\Sulu\Content\ResourceLoader\ContactResourceLoader;
 use Sulu\Content\Application\ContentResolver\Value\ContentView;
+use Sulu\Content\Application\ContentResolver\Value\Reference;
 use Sulu\Content\Application\ContentResolver\Value\ResolvableResource;
 use Sulu\Content\Application\PropertyResolver\Resolver\PropertyResolverInterface;
 
@@ -45,6 +48,7 @@ class ContactAccountSelectionPropertyResolver implements PropertyResolverInterfa
         $accountResourceLoaderKey = $params['accountResourceLoader'] ?? AccountResourceLoader::getKey();
 
         $resolvableResources = [];
+        $references = [];
         foreach ($data as $id) {
             if (!\is_string($id)) {
                 continue;
@@ -62,18 +66,25 @@ class ContactAccountSelectionPropertyResolver implements PropertyResolverInterfa
             // but in this case we need to use it to load resources depending on the key correctly
             // the ResolvableResource is kept internal to the content bundle and should not be used by other bundles
             match ($key) {
-                self::PREFIX_CONTACT => $resolvableResources[] = new ResolvableResource($id, $contactResourceLoaderKey, 0),
-                self::PREFIX_ACCOUNT => $resolvableResources[] = new ResolvableResource($id, $accountResourceLoaderKey, 0),
+                self::PREFIX_CONTACT => [
+                    $resolvableResources[] = new ResolvableResource($id, $contactResourceLoaderKey, 0),
+                    $references[] = new Reference($id, ContactInterface::RESOURCE_KEY),
+                ],
+                self::PREFIX_ACCOUNT => [
+                    $resolvableResources[] = new ResolvableResource($id, $accountResourceLoaderKey, 0),
+                    $references[] = new Reference($id, AccountInterface::RESOURCE_KEY),
+                ],
                 default => null,
             };
         }
 
-        return ContentView::create(
+        return ContentView::createWithReferences(
             $resolvableResources,
             [
                 'ids' => 0 === \count($resolvableResources) ? [] : $data,
                 ...$params,
             ],
+            $references
         );
     }
 

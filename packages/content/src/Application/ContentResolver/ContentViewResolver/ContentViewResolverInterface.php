@@ -15,6 +15,7 @@ namespace Sulu\Content\Application\ContentResolver\ContentViewResolver;
 
 use Sulu\Content\Application\ContentResolver\Value\ContentView;
 use Sulu\Content\Application\ContentResolver\Value\ResolvableInterface;
+use Sulu\Content\Domain\Model\ContentRichEntityInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 
 /**
@@ -24,7 +25,7 @@ use Sulu\Content\Domain\Model\DimensionContentInterface;
 interface ContentViewResolverInterface
 {
     /**
-     * @template T of \Sulu\Content\Domain\Model\ContentRichEntityInterface
+     * @template T of ContentRichEntityInterface
      *
      * @param DimensionContentInterface<T> $dimensionContent
      * @param array<string, mixed>|null $properties

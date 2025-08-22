@@ -42,10 +42,20 @@
             <tag name="sulu.context" context="admin"/>
         </service>
 
+        <!-- MessageHandler -->
+        <service id="sulu_reference.refresh_reference_message_handler"
+                 class="Sulu\Bundle\ReferenceBundle\Application\MessageHandler\RefreshReferenceMessageHandler">
+            <argument type="service" id="sulu_reference.reference_repository"/>
+            <argument type="tagged_iterator" tag="sulu_reference.refresher" default-index-method="getResourceKey" index-by="resourceKey"/>
+            <argument>%sulu.context%</argument>
+
+            <tag name="messenger.message_handler"/>
+        </service>
+
         <!-- Command -->
         <service id="sulu_reference.refresh_command"
                  class="Sulu\Bundle\ReferenceBundle\UserInterface\Command\RefreshCommand">
-            <argument type="tagged_iterator" tag="sulu_reference.refresher"/>
+            <argument type="tagged_iterator" tag="sulu_reference.refresher" default-index-method="getResourceKey"/>
             <argument type="service" id="sulu_reference.reference_repository"/>
             <argument>%sulu.context%</argument>
 

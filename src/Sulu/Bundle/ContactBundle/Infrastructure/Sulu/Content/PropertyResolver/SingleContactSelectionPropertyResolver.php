@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Sulu\Bundle\ContactBundle\Infrastructure\Sulu\Content\PropertyResolver;
 
+use Sulu\Bundle\ContactBundle\Entity\ContactInterface;
 use Sulu\Bundle\ContactBundle\Infrastructure\Sulu\Content\ResourceLoader\ContactResourceLoader;
 use Sulu\Content\Application\ContentResolver\Value\ContentView;
 use Sulu\Content\Application\PropertyResolver\Resolver\PropertyResolverInterface;
@@ -33,9 +34,10 @@ class SingleContactSelectionPropertyResolver implements PropertyResolverInterfac
         /** @var string $resourceLoaderKey */
         $resourceLoaderKey = $params['resourceLoader'] ?? ContactResourceLoader::getKey();
 
-        return ContentView::createResolvable(
+        return ContentView::createResolvableWithReferences(
             (int) $data,
             $resourceLoaderKey,
+            ContactInterface::RESOURCE_KEY,
             [
                 'id' => $data,
                 ...$params,

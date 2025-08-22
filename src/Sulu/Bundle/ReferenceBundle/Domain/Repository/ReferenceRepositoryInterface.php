@@ -18,6 +18,7 @@ use Sulu\Bundle\ReferenceBundle\Domain\Model\ReferenceInterface;
  * @phpstan-type ReferenceFilters array{
  *     id?: int,
  *     resourceId?: string,
+ *     resourceIds?: string[],
  *     resourceKey?: string,
  *     referenceResourceKey?: string,
  *     referenceResourceId?: string,

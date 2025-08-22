@@ -13,7 +13,9 @@ declare(strict_types=1);
 
 namespace Sulu\Content\Application\ContentResolver\Resolver;
 
+use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Content\Application\ContentResolver\Value\ContentView;
+use Sulu\Content\Application\ContentResolver\Value\Reference;
 use Sulu\Content\Domain\Model\AuthorInterface;
 use Sulu\Content\Domain\Model\ContentRichEntityInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
@@ -23,6 +25,8 @@ use Sulu\Content\Domain\Model\TemplateInterface;
 use Sulu\Content\Domain\Model\WebspaceInterface;
 use Sulu\Route\Application\Routing\Generator\RouteGeneratorInterface;
 use Sulu\Route\Domain\Repository\RouteRepositoryInterface;
+use Sulu\Route\Domain\Value\RequestAttributeEnum;
+use Symfony\Component\Routing\RequestContext;
 
 /**
  * @phpstan-type SettingsData array{
@@ -46,6 +50,7 @@ readonly class SettingsResolver implements ResolverInterface
     public function __construct(
         private RouteGeneratorInterface $routeGenerator,
         private RouteRepositoryInterface $routeRepository,
+        private RequestContext $requestContext
     ) {
     }
 
@@ -55,6 +60,8 @@ readonly class SettingsResolver implements ResolverInterface
         $result = [
             'availableLocales' => $dimensionContent->getAvailableLocales() ?? [],
         ];
+
+        $references = [];
 
         // TODO handle properties filtering
         if ($dimensionContent instanceof RoutableInterface && $dimensionContent instanceof TemplateInterface) {
@@ -77,7 +84,7 @@ readonly class SettingsResolver implements ResolverInterface
             $result = \array_merge($result, $this->getShadowData($dimensionContent));
         }
 
-        return ContentView::create($result, []);
+        return ContentView::createWithReferences($result, [], $references);
     }
 
     /**
@@ -110,6 +117,11 @@ readonly class SettingsResolver implements ResolverInterface
         ]);
 
         foreach ($routes as $route) {
+            // TODO remove this hack, when we have a better way to determine the current site
+            if (null === $this->requestContext->getParameter(RequestAttributeEnum::SITE->value)) {
+                $this->requestContext->setParameter(RequestAttributeEnum::SITE->value, $route->getSite());
+            }
+
             $locale = $route->getLocale();
 
             $resolvedUrl = $this->routeGenerator->generate(
@@ -158,14 +170,23 @@ readonly class SettingsResolver implements ResolverInterface
 
     /**
      * @return array{
-     *     author: int|null,
+     *     author: ContentView|null,
      *     authored: \DateTimeInterface|null
      * }
      */
     protected function getAuthorData(AuthorInterface $dimensionContent): array
     {
+        $authorId = $dimensionContent->getAuthor()?->getId();
+        $author = ContentView::createWithReferences(
+            $authorId,
+            [],
+            $authorId ?
+                [new Reference($authorId, UserInterface::RESOURCE_KEY)] :
+                []
+        );
+
         return [
-            'author' => $dimensionContent->getAuthor()?->getId(),
+            'author' => $author,
             'authored' => $dimensionContent->getAuthored(),
             'lastModified' => $dimensionContent->getLastModified(),
         ];

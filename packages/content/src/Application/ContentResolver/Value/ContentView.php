@@ -20,10 +20,12 @@ class ContentView
 {
     /**
      * @param mixed[] $view
+     * @param array<Reference> $references
      */
     private function __construct(
         private mixed $content,
         private array $view,
+        private array $references = [],
     ) {
     }
 
@@ -33,6 +35,15 @@ class ContentView
     public static function create(mixed $content, array $view): self
     {
         return new self($content, $view);
+    }
+
+    /**
+     * @param mixed[] $view
+     * @param array<Reference> $references
+     */
+    public static function createWithReferences(mixed $content, array $view, array $references): self
+    {
+        return new self($content, $view, $references);
     }
 
     /**
@@ -80,6 +91,32 @@ class ContentView
     }
 
     /**
+     * @param mixed[] $view
+     * @param array<string, mixed>|null $metadata
+     */
+    public static function createResolvableWithReferences(
+        string|int $id,
+        string $resourceLoaderKey,
+        string $resourceKey,
+        array $view,
+        int $priority = 0,
+        ?\Closure $closure = null,
+        ?array $metadata = null,
+    ): self {
+        return new self(
+            new ResolvableResource(
+                id: $id,
+                resourceLoaderKey: $resourceLoaderKey,
+                priority: $priority,
+                resourceCallback: $closure,
+                metadata: $metadata,
+            ),
+            $view,
+            [new Reference($id, $resourceKey)]
+        );
+    }
+
+    /**
      * @param array<string|int> $ids
      * @param mixed[] $view
      * @param array<string, mixed>|null $metadata
@@ -103,6 +140,34 @@ class ContentView
         }
 
         return new self($resolvableResources, $view);
+    }
+
+    /**
+     * @param array<string|int> $ids
+     * @param mixed[] $view
+     * @param array<string, mixed>|null $metadata
+     */
+    public static function createResolvablesWithReferences(
+        array $ids,
+        string $resourceLoaderKey,
+        string $resourceKey,
+        array $view,
+        int $priority = 0,
+        ?array $metadata = null,
+    ): self {
+        $resolvableResources = [];
+        $references = [];
+        foreach ($ids as $id) {
+            $resolvableResources[] = new ResolvableResource(
+                id: $id,
+                resourceLoaderKey: $resourceLoaderKey,
+                priority: $priority,
+                metadata: $metadata
+            );
+            $references[] = new Reference($id, $resourceKey);
+        }
+
+        return new self($resolvableResources, $view, $references);
     }
 
     public function getContent(): mixed
@@ -131,6 +196,24 @@ class ContentView
     public function setView(array $view): self
     {
         $this->view = $view;
+
+        return $this;
+    }
+
+    /**
+     * @return array<Reference>
+     */
+    public function getReferences(): array
+    {
+        return $this->references;
+    }
+
+    /**
+     * @param array<Reference> $references
+     */
+    public function setReferences(array $references): self
+    {
+        $this->references = $references;
 
         return $this;
     }

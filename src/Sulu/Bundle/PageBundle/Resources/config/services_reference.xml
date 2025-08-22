@@ -11,14 +11,14 @@
             <tag name="sulu_document_manager.reference_provider" />
         </service>
 
-        <service id="sulu_page.page_reference_refresher" class="Sulu\Bundle\PageBundle\Reference\Refresh\PageReferenceRefresher">
-            <argument type="service" id="sulu_document_manager.default_session"/>
-            <argument type="service" id="sulu_core.webspace.webspace_manager"/>
-            <argument type="service" id="sulu_document_manager.document_manager"/>
-            <argument type="service" id="sulu_page.reference_provider"/>
-            <argument>%sulu.context%</argument>
+<!--        <service id="sulu_page.page_reference_refresher" class="Sulu\Bundle\PageBundle\Reference\Refresh\PageReferenceRefresher">-->
+<!--            <argument type="service" id="sulu_document_manager.default_session"/>-->
+<!--            <argument type="service" id="sulu_core.webspace.webspace_manager"/>-->
+<!--            <argument type="service" id="sulu_document_manager.document_manager"/>-->
+<!--            <argument type="service" id="sulu_page.reference_provider"/>-->
+<!--            <argument>%sulu.context%</argument>-->
 
-            <tag name="sulu_reference.refresher"/>
-        </service>
+<!--            <tag name="sulu_reference.refresher"/>-->
+<!--        </service>-->
     </services>
 </container>

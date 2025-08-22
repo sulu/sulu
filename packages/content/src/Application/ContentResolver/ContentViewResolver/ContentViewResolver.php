@@ -17,7 +17,6 @@ use Sulu\Content\Application\ContentResolver\ResolvableResourceQueue\ResolvableR
 use Sulu\Content\Application\ContentResolver\Resolver\ResolverInterface;
 use Sulu\Content\Application\ContentResolver\Value\ContentView;
 use Sulu\Content\Application\ContentResolver\Value\ResolvableInterface;
-use Sulu\Content\Domain\Model\ContentRichEntityInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 
 /**
@@ -35,14 +34,6 @@ class ContentViewResolver implements ContentViewResolverInterface
     ) {
     }
 
-    /**
-     * @template T of ContentRichEntityInterface
-     *
-     * @param DimensionContentInterface<T> $dimensionContent
-     * @param array<string, string>|null $properties
-     *
-     * @return array<string|int, ContentView>
-     */
     public function getContentViews(DimensionContentInterface $dimensionContent, ?array $properties = null): array
     {
         $contentViews = [];

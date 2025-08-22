@@ -50,6 +50,7 @@ use Sulu\Page\Infrastructure\Sulu\Content\PropertyResolver\PageSelectionProperty
 use Sulu\Page\Infrastructure\Sulu\Content\PropertyResolver\SinglePageSelectionPropertyResolver;
 use Sulu\Page\Infrastructure\Sulu\Content\ResourceLoader\PageResourceLoader;
 use Sulu\Page\Infrastructure\Sulu\Content\Visitor\SegmentSmartContentFiltersVisitor;
+use Sulu\Page\Infrastructure\Sulu\Reference\PageReferenceRefresher;
 use Sulu\Page\Infrastructure\Sulu\Route\WebspaceSiteRouteGenerator;
 use Sulu\Page\Infrastructure\Symfony\Twig\Extension\NavigationTwigExtension;
 use Sulu\Page\UserInterface\Command\InitializeHomepageCommand;
@@ -389,6 +390,17 @@ final class SuluPageBundle extends AbstractBundle
                 new Reference('sulu_core.webspace.request_analyzer'),
             ])
             ->tag('twig.extension');
+
+        // Reference
+        $services->set('sulu_page.page_reference_refresher')
+            ->class(PageReferenceRefresher::class)
+            ->args([
+                new Reference('doctrine.orm.entity_manager'),
+                new Reference('sulu_reference.reference_repository'),
+                new Reference('sulu_content.content_view_resolver'),
+                new Reference('sulu_content.content_merger'),
+            ])
+            ->tag('sulu_reference.refresher'); // TODO add resource key?
     }
 
     /**

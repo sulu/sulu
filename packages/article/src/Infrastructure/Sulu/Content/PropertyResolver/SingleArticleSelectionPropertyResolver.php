@@ -11,6 +11,7 @@
 
 namespace Sulu\Article\Infrastructure\Sulu\Content\PropertyResolver;
 
+use Sulu\Article\Domain\Model\ArticleInterface;
 use Sulu\Article\Infrastructure\Sulu\Content\ResourceLoader\ArticleResourceLoader;
 use Sulu\Content\Application\ContentResolver\Value\ContentView;
 use Sulu\Content\Application\PropertyResolver\Resolver\PropertyResolverInterface;
@@ -37,9 +38,10 @@ class SingleArticleSelectionPropertyResolver implements PropertyResolverInterfac
         /** @var string $resourceLoaderKey */
         $resourceLoaderKey = $params['resourceLoader'] ?? ArticleResourceLoader::getKey();
 
-        return ContentView::createResolvable(
+        return ContentView::createResolvableWithReferences(
             id: $data,
             resourceLoaderKey: $resourceLoaderKey,
+            resourceKey: ArticleInterface::RESOURCE_KEY,
             view: [
                 'id' => $data,
                 ...$params,

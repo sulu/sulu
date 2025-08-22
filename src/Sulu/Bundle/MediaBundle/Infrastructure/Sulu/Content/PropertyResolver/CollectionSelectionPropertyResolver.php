@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Sulu\Bundle\MediaBundle\Infrastructure\Sulu\Content\PropertyResolver;
 
+use Sulu\Bundle\MediaBundle\Entity\CollectionInterface;
 use Sulu\Bundle\MediaBundle\Infrastructure\Sulu\Content\ResourceLoader\CollectionResourceLoader;
 use Sulu\Content\Application\ContentResolver\Value\ContentView;
 use Sulu\Content\Application\PropertyResolver\Resolver\PropertyResolverInterface;
@@ -39,9 +40,10 @@ class CollectionSelectionPropertyResolver implements PropertyResolverInterface
         /** @var string $resourceLoaderKey */
         $resourceLoaderKey = $params['resourceLoader'] ?? CollectionResourceLoader::getKey();
 
-        return ContentView::createResolvables(
+        return ContentView::createResolvablesWithReferences(
             $ids,
             $resourceLoaderKey,
+            CollectionInterface::RESOURCE_KEY,
             ['ids' => $ids, ...$params],
         );
     }

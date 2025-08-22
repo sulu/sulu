@@ -62,7 +62,10 @@ readonly class ExcerptResolver implements ResolverInterface
 
         $resolvedItems = $this->metadataResolver->resolveItems($formMetadataItems, $data, $locale);
 
-        return ContentView::create($this->normalizeResolvedItems($resolvedItems, $properties), []);
+        return ContentView::create(
+            $this->normalizeResolvedItems($resolvedItems, $properties),
+            [],
+        );
     }
 
     /**

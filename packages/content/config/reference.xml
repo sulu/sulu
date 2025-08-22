@@ -1,0 +1,18 @@
+<?xml version="1.0" ?>
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    <services>
+        <!-- Reference Services -->
+        <service id="sulu_content.reference_doctrine_event_listener"
+                 class="Sulu\Content\Infrastructure\Sulu\Reference\ReferenceDoctrineEventListener">
+            <argument type="service" id="sulu_message_bus"/>
+
+            <tag name="doctrine.event_listener" event="prePersist" lazy="true" method="prePersist"/>
+            <tag name="doctrine.event_listener" event="preUpdate" lazy="true" method="preUpdate"/>
+            <tag name="doctrine.event_listener" event="preRemove" lazy="true" method="preRemove"/>
+            <tag name="doctrine.event_listener" event="postFlush" lazy="true" method="postFlush"/>
+            <tag name="doctrine.event_listener" event="onClear" lazy="true" method="onClear"/>
+        </service>
+    </services>
+</container>

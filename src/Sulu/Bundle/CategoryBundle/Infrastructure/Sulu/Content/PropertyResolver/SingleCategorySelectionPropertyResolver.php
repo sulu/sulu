@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Sulu\Bundle\CategoryBundle\Infrastructure\Sulu\Content\PropertyResolver;
 
+use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\CategoryBundle\Infrastructure\Sulu\Content\ResourceLoader\CategoryResourceLoader;
 use Sulu\Content\Application\ContentResolver\Value\ContentView;
 use Sulu\Content\Application\PropertyResolver\Resolver\PropertyResolverInterface;
@@ -33,9 +34,10 @@ class SingleCategorySelectionPropertyResolver implements PropertyResolverInterfa
         /** @var string $resourceLoaderKey */
         $resourceLoaderKey = $params['resourceLoader'] ?? CategoryResourceLoader::getKey();
 
-        return ContentView::createResolvable(
+        return ContentView::createResolvableWithReferences(
             $data,
             $resourceLoaderKey,
+            CategoryInterface::RESOURCE_KEY,
             \array_merge(['id' => $data], $params),
         );
     }

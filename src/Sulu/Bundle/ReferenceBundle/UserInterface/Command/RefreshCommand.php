@@ -42,19 +42,18 @@ class RefreshCommand extends Command
     protected function configure(): void
     {
         $this->setDescription('Refresh references of all resources');
-        $this->addArgument('resource-key', InputArgument::OPTIONAL, 'The resource key which should be refreshed');
+        $this->addArgument('resource-key', InputArgument::OPTIONAL, 'The resource key(s) which should be refreshed, comma separated.');
     }
 
     public function execute(InputInterface $input, OutputInterface $output): int
     {
-        $resourceKeyFilter = $input->getArgument('resource-key');
+        $resourceKeyFilter = \explode(',', (string) $input->getArgument('resource-key'))[0] ?? null;
 
         $ui = new SymfonyStyle($input, $output);
 
         $referenceRefresherPerResourceKey = [];
 
-        foreach ($this->referenceRefreshers as $referenceRefresher) {
-            $resourceKey = $referenceRefresher::getResourceKey();
+        foreach ($this->referenceRefreshers as $resourceKey => $referenceRefresher) {
             if (null !== $resourceKeyFilter && $resourceKeyFilter !== $resourceKey) {
                 continue;
             }
@@ -70,7 +69,7 @@ class RefreshCommand extends Command
             $counter = 0;
             foreach ($referenceRefreshers as $referenceRefresher) {
                 foreach ($referenceRefresher->refresh() as $object) {
-                    if (0 === $counter % 100) {
+                    if (0 === $counter++ % 100) {
                         $this->referenceRepository->flush();
                     }
 

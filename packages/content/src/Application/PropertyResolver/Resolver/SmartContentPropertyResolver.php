@@ -16,6 +16,7 @@ namespace Sulu\Content\Application\PropertyResolver\Resolver;
 use Sulu\Bundle\AdminBundle\SmartContent\SmartContentProviderInterface;
 use Sulu\Content\Application\ContentResolver\Value\ContentView;
 use Sulu\Content\Application\Visitor\SmartContentFiltersVisitorInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
@@ -88,8 +89,7 @@ class SmartContentPropertyResolver implements PropertyResolverInterface
         ], $params);
         $this->validateParameters($parameters);
 
-        $request = $this->requestStack->getCurrentRequest();
-        \assert(null !== $request, 'Request must not be null');
+        $request = $this->requestStack->getCurrentRequest() ?? new Request();
 
         /** @var SmartContentBaseFilters $filters */
         $filters = [

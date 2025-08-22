@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Sulu\Bundle\TagBundle\Infrastructure\Sulu\Content\PropertyResolver;
 
 use Sulu\Bundle\TagBundle\Infrastructure\Sulu\Content\ResourceLoader\TagResourceLoader;
+use Sulu\Bundle\TagBundle\Tag\TagInterface;
 use Sulu\Content\Application\ContentResolver\Value\ContentView;
 use Sulu\Content\Application\PropertyResolver\Resolver\PropertyResolverInterface;
 
@@ -39,9 +40,10 @@ class TagSelectionPropertyResolver implements PropertyResolverInterface
         /** @var string $resourceLoaderKey */
         $resourceLoaderKey = $params['resourceLoader'] ?? TagResourceLoader::getKey();
 
-        return ContentView::createResolvables(
+        return ContentView::createResolvablesWithReferences(
             $names,
             $resourceLoaderKey,
+            TagInterface::RESOURCE_KEY,
             ['ids' => $names, ...$params],
         );
     }

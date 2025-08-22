@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Sulu\Bundle\MediaBundle\Infrastructure\Sulu\Content\PropertyResolver;
 
+use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\MediaBundle\Infrastructure\Sulu\Content\ResourceLoader\MediaResourceLoader;
 use Sulu\Content\Application\ContentResolver\Value\ContentView;
 use Sulu\Content\Application\PropertyResolver\Resolver\PropertyResolverInterface;
@@ -41,9 +42,10 @@ class SingleMediaSelectionPropertyResolver implements PropertyResolverInterface
         $resourceLoaderKey = $params['resourceLoader'] ?? MediaResourceLoader::getKey();
         $id = (int) $data['id'];
 
-        return ContentView::createResolvable(
+        return ContentView::createResolvableWithReferences(
             id: $id,
             resourceLoaderKey: $resourceLoaderKey,
+            resourceKey: MediaInterface::RESOURCE_KEY,
             view: [
                 'id' => $id,
                 'displayOption' => $displayOption,

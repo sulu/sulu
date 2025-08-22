@@ -13,6 +13,7 @@ namespace Sulu\Page\Infrastructure\Sulu\Content\PropertyResolver;
 
 use Sulu\Content\Application\ContentResolver\Value\ContentView;
 use Sulu\Content\Application\PropertyResolver\Resolver\PropertyResolverInterface;
+use Sulu\Page\Domain\Model\PageInterface;
 use Sulu\Page\Infrastructure\Sulu\Content\ResourceLoader\PageResourceLoader;
 
 /**
@@ -43,9 +44,10 @@ class PageSelectionPropertyResolver implements PropertyResolverInterface
         /** @var string[] $ids */
         $ids = $data;
 
-        return ContentView::createResolvables(
+        return ContentView::createResolvablesWithReferences(
             ids: $ids,
             resourceLoaderKey: $resourceLoaderKey,
+            resourceKey: PageInterface::RESOURCE_KEY,
             view: [
                 'ids' => $ids,
                 ...$params,

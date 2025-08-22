@@ -44,7 +44,7 @@ class PageReferenceRefresher implements ReferenceRefresherInterface
         return BasePageDocument::RESOURCE_KEY;
     }
 
-    public function refresh(): \Generator
+    public function refresh(?array $filter = null): \Generator
     {
         foreach ($this->webspaceManager->getWebspaceCollection()->getWebspaces() as $webspace) {
             $webspaceKey = $webspace->getKey();
