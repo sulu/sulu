@@ -774,15 +774,16 @@ class WebspaceCopyCommand extends Command
     protected function getBlockConfigChildren(ItemMetadata $component): array
     {
         $children = $component->getChildren();
-        if ($component->hasTag('sulu.global_block') === false) {
+        if (!$component->hasTag('sulu.global_block')) {
             return $children;
         }
         $tag = $component->getTag('sulu.global_block');
         $refType = $tag['attributes']['global_block'] ?? null;
-        if(empty($refType)) {
+        if (empty($refType)) {
             return $children;
         }
         $result = $this->structureMetadataFactory->getStructureMetadata('block', $refType);
+
         return $result->getProperties();
     }
 }
