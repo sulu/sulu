@@ -476,13 +476,7 @@ class WebspaceCopyCommand extends Command
         foreach ($structureArray[$property->getName()] as &$structure) {
             /** @var ItemMetadata $component */
             $component = $property->getComponentByName($structure['type']);
-            $children = $component->getChildren();
-            if ($component->hasTag('sulu.global_block')) {
-                $tag = $component->getTag('sulu.global_block');
-                $refType = $tag['attributes']['global_block'];
-                $result = $this->structureMetadataFactory->getStructureMetadata('block', $refType);
-                $children = $result->getProperties();
-            }
+            $children = $this->getBlockConfigChildren($component);
             /** @var PropertyMetadata $child */
             foreach ($children as $child) {
                 if ($structure[$child->getName()]) {
@@ -771,5 +765,24 @@ class WebspaceCopyCommand extends Command
 
         $this->documentManager->persist($document, $locale, $persistOptions);
         $this->documentManager->flush();
+    }
+
+    /**
+     * @param ItemMetadata $component
+     * @return PropertyMetadata[]
+     */
+    protected function getBlockConfigChildren(ItemMetadata $component): array
+    {
+        $children = $component->getChildren();
+        if ($component->hasTag('sulu.global_block') === false) {
+            return $children;
+        }
+        $tag = $component->getTag('sulu.global_block');
+        $refType = $tag['attributes']['global_block'] ?? null;
+        if(empty($refType)) {
+            return $children;
+        }
+        $result = $this->structureMetadataFactory->getStructureMetadata('block', $refType);
+        return $result->getProperties();
     }
 }
