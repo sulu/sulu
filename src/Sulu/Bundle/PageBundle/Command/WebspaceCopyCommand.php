@@ -768,7 +768,6 @@ class WebspaceCopyCommand extends Command
     }
 
     /**
-     * @param ItemMetadata $component
      * @return PropertyMetadata[]
      */
     protected function getBlockConfigChildren(ItemMetadata $component): array
