@@ -24,6 +24,7 @@ use Sulu\Component\Content\Document\LocalizationState;
 use Sulu\Component\Content\Document\RedirectType;
 use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\Content\Metadata\BlockMetadata;
+use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactoryInterface;
 use Sulu\Component\Content\Metadata\ItemMetadata;
 use Sulu\Component\Content\Metadata\PropertyMetadata;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
@@ -63,7 +64,8 @@ class WebspaceCopyCommand extends Command
         private DocumentManagerInterface $documentManager,
         private SessionManagerInterface $sessionManager,
         private DocumentInspector $documentInspector,
-        private HtmlTagExtractor $htmlTagExtractor
+        private HtmlTagExtractor $htmlTagExtractor,
+        private StructureMetadataFactoryInterface $structureMetadataFactory,
     ) {
         parent::__construct();
     }
@@ -474,8 +476,15 @@ class WebspaceCopyCommand extends Command
         foreach ($structureArray[$property->getName()] as &$structure) {
             /** @var ItemMetadata $component */
             $component = $property->getComponentByName($structure['type']);
+            $children = $component->getChildren();
+            if ($component->hasTag('sulu.global_block')) {
+                $tag = $component->getTag('sulu.global_block');
+                $refType = $tag['attributes']['global_block'];
+                $result = $this->structureMetadataFactory->getStructureMetadata('block', $refType);
+                $children = $result->getProperties();
+            }
             /** @var PropertyMetadata $child */
-            foreach ($component->getChildren() as $child) {
+            foreach ($children as $child) {
                 if ($structure[$child->getName()]) {
                     $this->processContentType(
                         $child,

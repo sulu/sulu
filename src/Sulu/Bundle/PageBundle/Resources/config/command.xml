@@ -65,6 +65,7 @@
             <argument type="service" id="sulu.phpcr.session"/>
             <argument type="service" id="sulu_document_manager.document_inspector"/>
             <argument type="service" id="sulu_markup.parser.html_extractor"/>
+            <argument type="service" id="sulu_page.structure.factory"/>
 
             <tag name="console.command"/>
         </service>
