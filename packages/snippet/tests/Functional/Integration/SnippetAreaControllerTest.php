@@ -76,7 +76,7 @@ class SnippetAreaControllerTest extends SuluTestCase
 
         $responseContent = \json_decode((string) $response->getContent(), true) ?? [];
         $this->assertIsArray($responseContent);
-        $this->assertArrayHasKey($responseContent, 'id');
+        $this->assertArrayHasKey('id', $responseContent);
         $id = $responseContent['id'];
 
         $this->assertIsString($id, 'Expecting snippet area id to be a string');

@@ -24,13 +24,13 @@ class ModifySnippetAreaMessage
     private array $snippetIdentifier;
 
     /**
-     * @param array{webspace: string, key: string, snippet: array{uuid: string}} $requestData
+     * @param array{webspace: string, key: string, snippet: array{uuid: string}} $data
      */
-    public function __construct(array $requestData)
+    public function __construct(array $data)
     {
-        $this->webspace = $requestData['webspace'];
-        $this->areaKey = $requestData['key'];
-        $this->snippetIdentifier = $requestData['snippet'];
+        $this->webspace = $data['webspace'];
+        $this->areaKey = $data['key'];
+        $this->snippetIdentifier = $data['snippet'];
     }
 
     public function getWebspace(): string

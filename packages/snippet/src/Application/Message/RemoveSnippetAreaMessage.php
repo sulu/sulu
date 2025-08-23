@@ -19,12 +19,12 @@ class RemoveSnippetAreaMessage
     private string $areaKey;
 
     /**
-     * @param array<string, string> $requestData
+     * @param array<string, string> $data
      */
-    public function __construct(array $requestData)
+    public function __construct(array $data)
     {
-        $this->webspaceKey = $requestData['webspaceKey'];
-        $this->areaKey = $requestData['areaKey'];
+        $this->webspaceKey = $data['webspaceKey'];
+        $this->areaKey = $data['areaKey'];
     }
 
     public function getWebspaceKey(): string

@@ -15,6 +15,7 @@ namespace Sulu\Snippet\Infrastructure\Doctrine\Repository;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Sulu\Snippet\Domain\Model\SnippetAreaInterface;
 use Sulu\Snippet\Domain\Repository\SnippetAreaRepositoryInterface;
 
@@ -35,6 +36,23 @@ class SnippetAreaRepository implements SnippetAreaRepositoryInterface
     }
 
     /**
+     * @param array{webspaceKey?: string} $filters
+     */
+    private function createQueryBuilder(array $filters): QueryBuilder
+    {
+        $queryBuilder = $this->entityRepository->createQueryBuilder('area')
+            ->join('area.snippet', 'snippet');
+
+        $webspaceKey = $filters['webspaceKey'] ?? null;
+        if (null !== $webspaceKey) {
+            $queryBuilder->andWhere('area.webspaceKey = :webspaceKey')
+                ->setParameter('webspaceKey', $webspaceKey);
+        }
+
+        return $queryBuilder;
+    }
+
+    /**
      * @return array<string, SnippetAreaInterface>
      */
     public function findByWebspace(string $webspaceKey): array
@@ -42,10 +60,7 @@ class SnippetAreaRepository implements SnippetAreaRepositoryInterface
         $result = [];
 
         /** @var array<SnippetAreaInterface> $queryResult */
-        $queryResult = $this->entityRepository->createQueryBuilder('area')
-            ->join('area.snippet', 'snippet')
-            ->andWhere('area.webspaceKey = :webspaceKey')
-            ->setParameter('webspaceKey', $webspaceKey)
+        $queryResult = $this->createQueryBuilder(['webspaceKey' => $webspaceKey])
             ->getQuery()
             ->getResult()
         ;
