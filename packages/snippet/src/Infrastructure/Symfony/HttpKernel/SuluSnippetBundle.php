@@ -219,7 +219,7 @@ final class SuluSnippetBundle extends AbstractBundle
             ->tag('sulu.context', ['context' => 'admin'])
             ->tag('sulu.admin');
 
-        $services->set('sulu_snippet.normalizer.snippet_area', SnippetAreaNormalizer::class)
+        $services->set('sulu_snippet.snippet_area_normalizer', SnippetAreaNormalizer::class)
             ->args([
                 new Reference('serializer.normalizer.object'),
                 param(SnippetAreaCompilerPass::SNIPPET_AREA_PARAM),
