@@ -516,6 +516,7 @@ class WebspaceCopyCommandTest extends SuluTestCase
             ]
         );
 
+        /** @var PageDocument $page7 */
         $page7 = $this->documentManager->create('page');
         $page7->setStructureType('ref_content_links');
         $page7->setTitle('Node7');

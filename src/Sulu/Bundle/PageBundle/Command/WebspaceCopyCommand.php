@@ -27,6 +27,7 @@ use Sulu\Component\Content\Metadata\BlockMetadata;
 use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactoryInterface;
 use Sulu\Component\Content\Metadata\ItemMetadata;
 use Sulu\Component\Content\Metadata\PropertyMetadata;
+use Sulu\Component\Content\Metadata\StructureMetadata;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
@@ -768,7 +769,7 @@ class WebspaceCopyCommand extends Command
     }
 
     /**
-     * @return PropertyMetadata[]
+     * @return ItemMetadata[]
      */
     protected function getBlockConfigChildren(ItemMetadata $component): array
     {
@@ -782,6 +783,9 @@ class WebspaceCopyCommand extends Command
             return $children;
         }
         $result = $this->structureMetadataFactory->getStructureMetadata('block', $refType);
+        if(!$result) {
+            return $children;
+        }
 
         return $result->getProperties();
     }
