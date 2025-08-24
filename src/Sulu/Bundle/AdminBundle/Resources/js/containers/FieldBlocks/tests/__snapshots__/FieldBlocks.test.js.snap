@@ -12,8 +12,8 @@ exports[`Render block with schema 1`] = `
       type="button"
     >
       <span
-        aria-label="su-check-circle"
-        class="su-check-circle blockCollectionActionButtonIcon"
+        aria-label="su-check"
+        class="su-check blockCollectionActionButtonIcon"
       />
       <span
         class="blockCollectionActionButtonText"
@@ -308,8 +308,8 @@ exports[`Render block with schema and error on fields already being modified 1`]
       type="button"
     >
       <span
-        aria-label="su-check-circle"
-        class="su-check-circle blockCollectionActionButtonIcon"
+        aria-label="su-check"
+        class="su-check blockCollectionActionButtonIcon"
       />
       <span
         class="blockCollectionActionButtonText"
@@ -645,8 +645,8 @@ exports[`Render block with schema and error on fields already being modified 2`]
       type="button"
     >
       <span
-        aria-label="su-check-circle"
-        class="su-check-circle blockCollectionActionButtonIcon"
+        aria-label="su-check"
+        class="su-check blockCollectionActionButtonIcon"
       />
       <span
         class="blockCollectionActionButtonText"
@@ -985,8 +985,8 @@ exports[`Render collapsed blocks with block previews 1`] = `
       type="button"
     >
       <span
-        aria-label="su-check-circle"
-        class="su-check-circle blockCollectionActionButtonIcon"
+        aria-label="su-check"
+        class="su-check blockCollectionActionButtonIcon"
       />
       <span
         class="blockCollectionActionButtonText"
@@ -1157,8 +1157,8 @@ exports[`Render collapsed blocks with block previews 2`] = `
       type="button"
     >
       <span
-        aria-label="su-check-circle"
-        class="su-check-circle blockCollectionActionButtonIcon"
+        aria-label="su-check"
+        class="su-check blockCollectionActionButtonIcon"
       />
       <span
         class="blockCollectionActionButtonText"
@@ -1325,8 +1325,8 @@ exports[`Render collapsed blocks with block previews and sections 1`] = `
       type="button"
     >
       <span
-        aria-label="su-check-circle"
-        class="su-check-circle blockCollectionActionButtonIcon"
+        aria-label="su-check"
+        class="su-check blockCollectionActionButtonIcon"
       />
       <span
         class="blockCollectionActionButtonText"
@@ -1487,8 +1487,8 @@ exports[`Render collapsed blocks with block previews without tags 1`] = `
       type="button"
     >
       <span
-        aria-label="su-check-circle"
-        class="su-check-circle blockCollectionActionButtonIcon"
+        aria-label="su-check"
+        class="su-check blockCollectionActionButtonIcon"
       />
       <span
         class="blockCollectionActionButtonText"
@@ -1655,8 +1655,8 @@ exports[`Render collapsed blocks with block previews without tags and with secti
       type="button"
     >
       <span
-        aria-label="su-check-circle"
-        class="su-check-circle blockCollectionActionButtonIcon"
+        aria-label="su-check"
+        class="su-check blockCollectionActionButtonIcon"
       />
       <span
         class="blockCollectionActionButtonText"
