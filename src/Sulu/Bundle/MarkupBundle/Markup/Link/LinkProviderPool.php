@@ -47,7 +47,18 @@ class LinkProviderPool implements LinkProviderPoolInterface
     {
         $configuration = [];
         foreach ($this->providers as $name => $provider) {
-            $configuration[$name] = $provider->getConfiguration();
+            /** @var LinkConfiguration|LinkConfigurationBuilder|null $providerConfiguration */
+            $providerConfiguration = $provider->getConfiguration();
+
+            if ($providerConfiguration instanceof LinkConfiguration) {
+                @trigger_deprecation(
+                    'sulu/sulu',
+                    '2.6',
+                    'The LinkProvider should return a LinkConfigurationBuilder and not a LinkConfiguration. The LinkConfiguration will not be supported in 3.0.'
+                );
+            }
+
+            $configuration[$name] = $providerConfiguration instanceof LinkConfigurationBuilder ? $providerConfiguration->getLinkConfiguration() : $providerConfiguration;
         }
 
         return \array_filter($configuration);

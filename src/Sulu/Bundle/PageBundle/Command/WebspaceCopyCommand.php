@@ -13,6 +13,7 @@ namespace Sulu\Bundle\PageBundle\Command;
 
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Bundle\MarkupBundle\Markup\HtmlTagExtractor;
+use Sulu\Bundle\MarkupBundle\Markup\LinkTag;
 use Sulu\Bundle\MarkupBundle\Markup\TagMatchGroup;
 use Sulu\Bundle\PageBundle\Document\BasePageDocument;
 use Sulu\Bundle\PageBundle\Document\HomeDocument;
@@ -443,6 +444,14 @@ class WebspaceCopyCommand extends Command
                     $localeDestination
                 );
                 break;
+            case 'link':
+                $this->updateLinkSelection(
+                    $structureArray,
+                    $property,
+                    $localeSource,
+                    $localeDestination
+                );
+                break;
         }
     }
 
@@ -552,6 +561,45 @@ class WebspaceCopyCommand extends Command
 
             $structureArray[$property->getName()]['items'][$key]['id'] = $targetDocumentDestination->getUuid();
         }
+    }
+
+    /**
+     * Updates references in structure for content type `link`.
+     *
+     * @param string $localeSource
+     * @param string $localeDestination
+     *
+     * @return void
+     */
+    protected function updateLinkSelection(
+        array &$structureArray,
+        PropertyMetadata $property,
+        $localeSource,
+        $localeDestination
+    ) {
+        if (!\is_array($structureArray[$property->getName()])) {
+            return;
+        }
+        $linkProvider = $structureArray[$property->getName()]['provider'] ?? LinkTag::DEFAULT_PROVIDER;
+        if ('page' !== $linkProvider) {
+            return;
+        }
+
+        if (empty($structureArray[$property->getName()]['href'])) {
+            return;
+        }
+
+        $targetDocumentDestination = $this->getTargetDocumentDestination(
+            $structureArray[$property->getName()]['href'],
+            $localeSource,
+            $localeDestination
+        );
+
+        if (!$targetDocumentDestination) {
+            return;
+        }
+
+        $structureArray[$property->getName()]['href'] = $targetDocumentDestination->getUuid();
     }
 
     /**

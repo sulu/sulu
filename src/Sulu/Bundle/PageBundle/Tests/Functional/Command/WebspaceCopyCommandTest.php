@@ -109,7 +109,7 @@ class WebspaceCopyCommandTest extends SuluTestCase
 
         /** @var HomeDocument $baseDocument */
         $homeDocumentDestination = $this->documentManager->find('/cmf/destination_io/contents');
-        $this->assertCount(5, $homeDocumentDestination->getChildren());
+        $this->assertCount(6, $homeDocumentDestination->getChildren());
 
         $this->checkRedirectInternal();
         $this->checkSmartContentReference();
@@ -118,6 +118,7 @@ class WebspaceCopyCommandTest extends SuluTestCase
         $this->checkTeaserSelection();
         $this->checkSingleInternalLink();
         $this->checkTextEditorLinkInBlock();
+        $this->checkLinkContentType();
     }
 
     protected function checkRedirectInternal()
@@ -198,6 +199,24 @@ class WebspaceCopyCommandTest extends SuluTestCase
         /** @var PageDocument $page4 */
         $page4 = $this->documentManager->find('/cmf/destination_io/contents/node4', 'es');
         $this->assertStringContainsString($targetDocument->getUuid(), $page4->getStructure()->toArray()['article'][0]['text']);
+    }
+
+    /**
+     * @return void
+     *
+     * @throws \Sulu\Component\DocumentManager\Exception\DocumentManagerException
+     */
+    protected function checkLinkContentType()
+    {
+        /** @var PageDocument $targetDocument */
+        $targetDocument = $this->documentManager->find('/cmf/destination_io/contents/node5', 'de');
+        /** @var PageDocument $targetDocumentMagicProvider */
+        $targetDocumentMagicProvider = $this->documentManager->find('/cmf/destination_io/contents/node4', 'de');
+        /** @var PageDocument $page6 */
+        $page6 = $this->documentManager->find('/cmf/destination_io/contents/node6', 'de');
+        $this->assertSame($targetDocument->getUuid(), $page6->getStructure()->toArray()['link_to_page']['href']);
+        $this->assertSame($targetDocumentMagicProvider->getUuid(), $page6->getStructure()->toArray()['link_to_other_page']['href']);
+        $this->assertSame('https://sulu.io', $page6->getStructure()->toArray()['external_link']['href']);
     }
 
     /**
@@ -433,6 +452,56 @@ class WebspaceCopyCommandTest extends SuluTestCase
                 'parent_path' => '/cmf/sulu_io/contents',
             ]
         );
+
+        /** @var PageDocument $page4 */
+        /** @var PageDocument $page5 */
+        /** @var PageDocument $page6 */
+        $page6 = $this->documentManager->create('page');
+        $page6->setStructureType('link');
+        $page6->setTitle('Node6');
+        $page6->getStructure()->bind(
+            [
+                'title' => 'Node6',
+                'link_to_page' => [
+                    'provider' => 'page',
+                    'target' => '_self',
+                    'anchor' => null,
+                    'query' => null,
+                    'href' => $page5->getUuid(),
+                    'title' => null,
+                    'rel' => null,
+                    'locale' => 'de',
+                ],
+                'link_to_other_page' => [
+                    'provider' => null,
+                    'target' => '_self',
+                    'anchor' => null,
+                    'query' => null,
+                    'href' => $page4->getUuid(),
+                    'title' => null,
+                    'rel' => null,
+                    'locale' => 'de',
+                ],
+                'external_link' => [
+                    'provider' => 'external',
+                    'target' => '_self',
+                    'anchor' => null,
+                    'query' => null,
+                    'href' => 'https://sulu.io',
+                    'title' => null,
+                    'rel' => null,
+                    'locale' => 'de',
+                ],
+            ]
+        );
+        $this->documentManager->persist(
+            $page6,
+            'de',
+            [
+                'parent_path' => '/cmf/sulu_io/contents',
+            ]
+        );
+
         $this->documentManager->flush();
     }
 }

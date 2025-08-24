@@ -53,12 +53,12 @@ class LoadSecurityTypes implements FixtureInterface, OrderedFixtureInterface
         $elements = $xpath->query('/security-types/security-type');
 
         if (!\is_null($elements)) {
-            /** @var $element \DOMNode */
+            /** @var \DOMNode $element */
             foreach ($elements as $element) {
                 $typeId = null;
                 $typeName = null;
 
-                /** @var $child \DOMNode */
+                /** @var \DOMNode $child */
                 foreach ($element->childNodes as $child) {
                     if (isset($child->nodeName)) {
                         if ('id' == $child->nodeName) {
@@ -74,6 +74,7 @@ class LoadSecurityTypes implements FixtureInterface, OrderedFixtureInterface
                     continue;
                 }
 
+                /** @var SecurityType $securityType */
                 $securityType = (\array_key_exists($typeId, $present)) ? $present[$typeId] : new SecurityType();
                 $securityType->setId($typeId);
                 $securityType->setName($typeName);

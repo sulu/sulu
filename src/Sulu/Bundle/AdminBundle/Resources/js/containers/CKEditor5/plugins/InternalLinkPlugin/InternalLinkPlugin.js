@@ -47,7 +47,7 @@ export default class InternalLinkPlugin extends Plugin {
     balloon: typeof ContextualBalloon;
 
     @computed get internalLinkTypes(): Array<string> {
-        return linkTypeRegistry.getKeys().filter((type) => type !== 'external');
+        return linkTypeRegistry.getKeys();
     }
 
     @computed get href(): ?string | number {

@@ -11,22 +11,34 @@
 
 namespace Sulu\Bundle\MediaBundle\Markup\Link;
 
+use Sulu\Bundle\MarkupBundle\Markup\Link\LinkConfigurationBuilder;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkItem;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkProviderInterface;
 use Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class MediaLinkProvider implements LinkProviderInterface
 {
     public function __construct(
         private MediaRepositoryInterface $mediaRepository,
         private MediaManagerInterface $mediaManager,
+        private TranslatorInterface $translator,
     ) {
     }
 
     public function getConfiguration()
     {
-        return null;
+        $linkConfigurationBuilder = LinkConfigurationBuilder::create();
+
+        return $linkConfigurationBuilder
+            ->setTitle($this->translator->trans('sulu_media.media', [], 'admin'))
+            ->setResourceKey('media')
+            ->setDisplayProperties(['title'])
+            ->setListAdapter('')
+            ->setOverlayTitle('')
+            ->setEmptyText('')
+            ->setIcon('');
     }
 
     public function preload(array $hrefs, $locale, $published = true)

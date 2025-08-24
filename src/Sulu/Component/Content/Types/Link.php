@@ -15,6 +15,9 @@ namespace Sulu\Component\Content\Types;
 
 use PHPCR\NodeInterface;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkProviderPoolInterface;
+use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
+use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreNotExistsException;
+use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStorePoolInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\SimpleContentType;
 
@@ -23,10 +26,19 @@ use Sulu\Component\Content\SimpleContentType;
  */
 class Link extends SimpleContentType
 {
+    /**
+     * @deprecated
+     */
     public const LINK_TYPE_EXTERNAL = 'external';
 
-    public function __construct(private LinkProviderPoolInterface $providerPool)
-    {
+    public function __construct(
+        private LinkProviderPoolInterface $providerPool,
+        private ?ReferenceStorePoolInterface $referenceStorePool = null,
+    ) {
+        if (!$this->referenceStorePool instanceof ReferenceStorePoolInterface) {
+            @trigger_deprecation('sulu/sulu', '2.5.27', 'Initializing "' . __CLASS__ . '" without referenceStorePool is deprecated.');
+        }
+
         parent::__construct('Link');
     }
 
@@ -94,10 +106,6 @@ class Link extends SimpleContentType
             return null;
         }
 
-        if (self::LINK_TYPE_EXTERNAL === $value['provider']) {
-            return $value['href'];
-        }
-
         $provider = $this->providerPool->getProvider($value['provider']);
 
         $linkItems = $provider->preload([$value['href']], $locale, true);
@@ -114,6 +122,17 @@ class Link extends SimpleContentType
             $url = \sprintf('%s#%s', $url, $value['anchor']);
         }
 
+        $referenceStore = $this->getReferenceStore($value['provider']);
+        if (!$referenceStore) {
+            return $url;
+        }
+
+        foreach ($linkItems as $linkItem) {
+            if ($linkItem->getId()) {
+                $referenceStore->add($linkItem->getId());
+            }
+        }
+
         return $url;
     }
 
@@ -128,5 +147,18 @@ class Link extends SimpleContentType
     ): void {
         $property->setValue(\json_decode($value, true));
         $this->write($node, $property, $userId, $webspaceKey, $languageCode, $segmentKey);
+    }
+
+    private function getReferenceStore(string $provider): ?ReferenceStoreInterface
+    {
+        try {
+            if (!$this->referenceStorePool instanceof ReferenceStorePoolInterface) {
+                return null;
+            }
+
+            return $this->referenceStorePool->getStore($provider);
+        } catch (ReferenceStoreNotExistsException $exception) {
+            return null;
+        }
     }
 }
