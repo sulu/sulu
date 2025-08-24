@@ -570,7 +570,7 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
                     <Icon
                         aria-hidden={true}
                         className={blockCollectionStyles.blockCollectionActionButtonIcon}
-                        name="su-check-circle"
+                        name="su-check"
                     />
                     <span className={blockCollectionStyles.blockCollectionActionButtonText}>
                         {translate('sulu_admin.select_multiple_blocks')}
