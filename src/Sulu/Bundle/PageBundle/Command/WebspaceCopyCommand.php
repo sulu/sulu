@@ -783,7 +783,7 @@ class WebspaceCopyCommand extends Command
             return $children;
         }
         $result = $this->structureMetadataFactory->getStructureMetadata('block', $refType);
-        if(!$result) {
+        if (!$result) {
             return $children;
         }
 
