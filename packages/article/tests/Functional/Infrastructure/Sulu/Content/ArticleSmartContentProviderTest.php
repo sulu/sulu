@@ -23,6 +23,7 @@ use Sulu\Content\Domain\Model\WorkflowInterface;
 use Sulu\Content\Tests\Traits\CreateCategoryTrait;
 use Sulu\Content\Tests\Traits\CreateTagTrait;
 use Sulu\Messenger\Infrastructure\Symfony\Messenger\FlushMiddleware\EnableFlushStamp;
+use Sulu\Route\Domain\Value\RequestAttributeEnum;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\HandleTrait;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
@@ -81,6 +82,11 @@ class ArticleSmartContentProviderTest extends SuluTestCase
 
         $container = self::getContainer();
         $entityManager = $container->get('doctrine.orm.entity_manager');
+
+        // TODO this should not be necessary
+        $requestContext = $container->get('router.request_context');
+        $requestContext->setParameter(RequestAttributeEnum::SITE->value, 'sulu-io');
+        // TODO this should not be necessary
 
         // Create categories
         self::$categories['tech'] = self::createCategory(['en' => ['title' => 'Technology']]);

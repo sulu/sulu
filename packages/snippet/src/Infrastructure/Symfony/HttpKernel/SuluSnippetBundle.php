@@ -37,6 +37,7 @@ use Sulu\Snippet\Infrastructure\Sulu\Content\ResourceLoader\SnippetResourceLoade
 use Sulu\Snippet\Infrastructure\Sulu\Content\SingleSnippetSelectionContentType;
 use Sulu\Snippet\Infrastructure\Sulu\Content\SnippetSelectionContentType;
 use Sulu\Snippet\Infrastructure\Sulu\Content\SnippetSmartContentProvider;
+use Sulu\Snippet\Infrastructure\Sulu\Reference\SnippetReferenceRefresher;
 use Sulu\Snippet\UserInterface\Controller\Admin\SnippetController;
 use Symfony\Component\Config\Definition\Configurator\DefinitionConfigurator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -249,6 +250,17 @@ final class SuluSnippetBundle extends AbstractBundle
                 new Reference('doctrine.orm.entity_manager'),
             ])
             ->tag('sulu_content.smart_content_provider', ['type' => SnippetInterface::RESOURCE_KEY]);
+
+        // Reference services
+        $services->set('sulu_snippet.snippet_reference_refresher')
+            ->class(SnippetReferenceRefresher::class)
+            ->args([
+                new Reference('doctrine.orm.entity_manager'),
+                new Reference('sulu_reference.reference_repository'),
+                new Reference('sulu_content.content_view_resolver'),
+                new Reference('sulu_content.content_merger'),
+            ])
+            ->tag('sulu_reference.refresher');
     }
 
     /**

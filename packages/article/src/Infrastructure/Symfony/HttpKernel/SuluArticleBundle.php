@@ -34,6 +34,7 @@ use Sulu\Article\Infrastructure\Sulu\Content\ArticleTeaserProvider;
 use Sulu\Article\Infrastructure\Sulu\Content\PropertyResolver\ArticleSelectionPropertyResolver;
 use Sulu\Article\Infrastructure\Sulu\Content\PropertyResolver\SingleArticleSelectionPropertyResolver;
 use Sulu\Article\Infrastructure\Sulu\Content\ResourceLoader\ArticleResourceLoader;
+use Sulu\Article\Infrastructure\Sulu\Reference\ArticleReferenceRefresher;
 use Sulu\Article\UserInterface\Controller\Admin\ArticleController;
 use Sulu\Bundle\PersistenceBundle\DependencyInjection\PersistenceExtensionTrait;
 use Sulu\Bundle\PersistenceBundle\PersistenceBundleTrait;
@@ -261,6 +262,17 @@ final class SuluArticleBundle extends AbstractBundle
                 new Reference('doctrine.orm.entity_manager'),
             ])
         ->tag('sulu_content.smart_content_provider', ['type' => ArticleInterface::RESOURCE_KEY]);
+
+        // Reference services
+        $services->set('sulu_article.article_reference_refresher')
+            ->class(ArticleReferenceRefresher::class)
+            ->args([
+                new Reference('doctrine.orm.entity_manager'),
+                new Reference('sulu_reference.reference_repository'),
+                new Reference('sulu_content.content_view_resolver'),
+                new Reference('sulu_content.content_merger'),
+            ])
+            ->tag('sulu_reference.refresher');
     }
 
     /**

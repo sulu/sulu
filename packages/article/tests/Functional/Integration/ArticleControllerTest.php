@@ -18,6 +18,7 @@ use PHPUnit\Framework\Attributes\Depends;
 use Sulu\Bundle\TestBundle\Testing\AssertSnapshotTrait;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Route\Domain\Repository\RouteRepositoryInterface;
+use Sulu\Route\Domain\Value\RequestAttributeEnum;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 /**
@@ -39,6 +40,11 @@ class ArticleControllerTest extends SuluTestCase
             [],
             ['CONTENT_TYPE' => 'application/json', 'HTTP_ACCEPT' => 'application/json']
         );
+
+        // TODO this should not be necessary
+        $requestContext = self::getContainer()->get('router.request_context');
+        $requestContext->setParameter(RequestAttributeEnum::SITE->value, 'sulu-io');
+        // TODO this should not be necessary
     }
 
     public function testPostPublish(): string
