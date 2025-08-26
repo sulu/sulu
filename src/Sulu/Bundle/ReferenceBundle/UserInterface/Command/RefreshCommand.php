@@ -47,7 +47,8 @@ class RefreshCommand extends Command
 
     public function execute(InputInterface $input, OutputInterface $output): int
     {
-        $resourceKeyFilter = \explode(',', (string) $input->getArgument('resource-key'))[0] ?? null;
+        $resourceKeyArgument = $input->getArgument('resource-key');
+        $resourceKeyFilter = $resourceKeyArgument ? \explode(',', (string) $resourceKeyArgument)[0] : null;
 
         $ui = new SymfonyStyle($input, $output);
 

@@ -16,6 +16,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
 use Sulu\Content\Application\ContentResolver\Value\ResolvableResource;
+use Sulu\Page\Domain\Model\PageInterface;
 use Sulu\Page\Infrastructure\Sulu\Content\PropertyResolver\SinglePageSelectionPropertyResolver;
 
 #[CoversClass(SinglePageSelectionPropertyResolver::class)]
@@ -80,6 +81,11 @@ class SinglePageSelectionPropertyResolverTest extends TestCase
         $this->assertSame('page', $content->getResourceLoaderKey());
 
         $this->assertSame(['id' => $data], $contentView->getView());
+
+        $references = $contentView->getReferences();
+        $this->assertCount(1, $references);
+        $this->assertSame($data, $references[0]->getResourceId());
+        $this->assertSame(PageInterface::RESOURCE_KEY, $references[0]->getResourceKey());
     }
 
     /**
@@ -101,6 +107,11 @@ class SinglePageSelectionPropertyResolverTest extends TestCase
         $this->assertInstanceOf(ResolvableResource::class, $content);
         $this->assertSame('1', $content->getId());
         $this->assertSame('custom_Page', $content->getResourceLoaderKey());
+
+        $references = $contentView->getReferences();
+        $this->assertCount(1, $references);
+        $this->assertSame('1', $references[0]->getResourceId());
+        $this->assertSame(PageInterface::RESOURCE_KEY, $references[0]->getResourceKey());
     }
 
     public function testResolveWithMetadata(): void
@@ -121,6 +132,11 @@ class SinglePageSelectionPropertyResolverTest extends TestCase
                 'property2' => 'value2',
             ],
         ], $content->getMetadata());
+
+        $references = $contentView->getReferences();
+        $this->assertCount(1, $references);
+        $this->assertSame('1', $references[0]->getResourceId());
+        $this->assertSame(PageInterface::RESOURCE_KEY, $references[0]->getResourceKey());
     }
 
     public function testResolveWithoutMetadata(): void
@@ -133,6 +149,11 @@ class SinglePageSelectionPropertyResolverTest extends TestCase
         $this->assertSame([
             'properties' => null,
         ], $content->getMetadata());
+
+        $references = $contentView->getReferences();
+        $this->assertCount(1, $references);
+        $this->assertSame('1', $references[0]->getResourceId());
+        $this->assertSame(PageInterface::RESOURCE_KEY, $references[0]->getResourceKey());
     }
 
     public function testResolveWithEmptyMetadata(): void
@@ -147,5 +168,10 @@ class SinglePageSelectionPropertyResolverTest extends TestCase
         $this->assertSame([
             'properties' => null,
         ], $content->getMetadata());
+
+        $references = $contentView->getReferences();
+        $this->assertCount(1, $references);
+        $this->assertSame('1', $references[0]->getResourceId());
+        $this->assertSame(PageInterface::RESOURCE_KEY, $references[0]->getResourceKey());
     }
 }

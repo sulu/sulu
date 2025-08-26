@@ -16,6 +16,7 @@ namespace Sulu\Bundle\ArticleBundle\Tests\Unit\Infrastructure\Sulu\Content\Prope
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
+use Sulu\Article\Domain\Model\ArticleInterface;
 use Sulu\Article\Infrastructure\Sulu\Content\PropertyResolver\SingleArticleSelectionPropertyResolver;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
 use Sulu\Content\Application\ContentResolver\Value\ResolvableResource;
@@ -71,8 +72,11 @@ class SingleArticleSelectionPropertyResolverTest extends TestCase
         yield 'id_list' => [['id' => [1, 2]]];
     }
 
+    /**
+     * @param mixed $data
+     */
     #[DataProvider('provideResolvableData')]
-    public function testResolveResolvableData(string $data): void
+    public function testResolveResolvableData($data): void
     {
         $contentView = $this->resolver->resolve($data, 'en');
 
@@ -84,6 +88,11 @@ class SingleArticleSelectionPropertyResolverTest extends TestCase
         $this->assertSame([
             'id' => $data,
         ], $contentView->getView());
+
+        $references = $contentView->getReferences();
+        $this->assertCount(1, $references);
+        $this->assertSame($data, $references[0]->getResourceId());
+        $this->assertSame(ArticleInterface::RESOURCE_KEY, $references[0]->getResourceKey());
     }
 
     /**
@@ -102,6 +111,11 @@ class SingleArticleSelectionPropertyResolverTest extends TestCase
         $this->assertInstanceOf(ResolvableResource::class, $content);
         $this->assertSame('1', $content->getId());
         $this->assertSame('custom_article', $content->getResourceLoaderKey());
+
+        $references = $contentView->getReferences();
+        $this->assertCount(1, $references);
+        $this->assertSame('1', $references[0]->getResourceId());
+        $this->assertSame(ArticleInterface::RESOURCE_KEY, $references[0]->getResourceKey());
     }
 
     public function testResolveWithMetadata(): void
@@ -122,6 +136,11 @@ class SingleArticleSelectionPropertyResolverTest extends TestCase
                 'property2' => 'value2',
             ],
         ], $content->getMetadata());
+
+        $references = $contentView->getReferences();
+        $this->assertCount(1, $references);
+        $this->assertSame('1', $references[0]->getResourceId());
+        $this->assertSame(ArticleInterface::RESOURCE_KEY, $references[0]->getResourceKey());
     }
 
     public function testResolveWithoutMetadata(): void
@@ -134,6 +153,11 @@ class SingleArticleSelectionPropertyResolverTest extends TestCase
         $this->assertSame([
             'properties' => null,
         ], $content->getMetadata());
+
+        $references = $contentView->getReferences();
+        $this->assertCount(1, $references);
+        $this->assertSame('1', $references[0]->getResourceId());
+        $this->assertSame(ArticleInterface::RESOURCE_KEY, $references[0]->getResourceKey());
     }
 
     public function testResolveWithEmptyMetadata(): void
@@ -148,5 +172,10 @@ class SingleArticleSelectionPropertyResolverTest extends TestCase
         $this->assertSame([
             'properties' => null,
         ], $content->getMetadata());
+
+        $references = $contentView->getReferences();
+        $this->assertCount(1, $references);
+        $this->assertSame('1', $references[0]->getResourceId());
+        $this->assertSame(ArticleInterface::RESOURCE_KEY, $references[0]->getResourceKey());
     }
 }

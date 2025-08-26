@@ -24,7 +24,7 @@ class RefreshReferenceMessageHandler
     public function __construct(
         private ReferenceRepositoryInterface $referenceRepository,
         private iterable $referenceRefreshers,
-        private string $suluContext,
+        private string $suluContext, // @phpstan-ignore-line - parameter for future use
     ) {
     }
 
@@ -32,13 +32,12 @@ class RefreshReferenceMessageHandler
     {
         $resourceKey = $message->getReferenceResourceKey();
 
-        /** @var ReferenceRefresherInterface $referenceRefresher */
-        $referenceRefresher = \iterator_to_array($this->referenceRefreshers)[$resourceKey] ?? null;
+        $refreshers = \iterator_to_array($this->referenceRefreshers);
+        /** @var ReferenceRefresherInterface|null $referenceRefresher */
+        $referenceRefresher = $refreshers[$resourceKey] ?? null;
         if (!$referenceRefresher) {
-            throw new \RuntimeException(\sprintf('No reference refresher found for resource key "%s". Available refreshers: %s',
-                $resourceKey,
-                \implode(', ', \array_keys($this->referenceRefreshers))
-            ));
+            // TODO add a logger warning here
+            return;
         }
 
         $counter = 0;
@@ -54,7 +53,7 @@ class RefreshReferenceMessageHandler
 
         $this->referenceRepository->flush();
         $this->referenceRepository->removeBy([
-            'resourceIds' => $resourceIds,
+            'resourceIds' => \array_map('strval', $resourceIds),
         ]);
     }
 }

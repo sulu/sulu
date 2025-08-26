@@ -12,8 +12,8 @@
 namespace Sulu\Page\Infrastructure\Sulu\Reference;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query\Expr\Join;
-use Doctrine\Persistence\ObjectRepository;
 use Sulu\Bundle\ReferenceBundle\Application\Collector\ReferenceCollector;
 use Sulu\Bundle\ReferenceBundle\Application\Refresh\ReferenceRefresherInterface;
 use Sulu\Bundle\ReferenceBundle\Domain\Repository\ReferenceRepositoryInterface;
@@ -29,9 +29,9 @@ use Sulu\Page\Domain\Model\PageDimensionContentInterface;
 class PageReferenceRefresher implements ReferenceRefresherInterface
 {
     /**
-     * @var ObjectRepository<PageDimensionContentInterface>
+     * @var EntityRepository<PageDimensionContentInterface>
      */
-    private ObjectRepository $pageDimensionContentRepository;
+    private EntityRepository $pageDimensionContentRepository;
 
     public function __construct(
         private EntityManagerInterface $entityManager,
@@ -39,7 +39,9 @@ class PageReferenceRefresher implements ReferenceRefresherInterface
         private ContentViewResolverInterface $contentViewResolver,
         private ContentMergerInterface $contentMerger,
     ) {
-        $this->pageDimensionContentRepository = $this->entityManager->getRepository(PageDimensionContentInterface::class);
+        /** @var EntityRepository<PageDimensionContentInterface> $repository */
+        $repository = $this->entityManager->getRepository(PageDimensionContentInterface::class);
+        $this->pageDimensionContentRepository = $repository;
     }
 
     public static function getResourceKey(): string
@@ -53,6 +55,7 @@ class PageReferenceRefresher implements ReferenceRefresherInterface
 
         $currentResourceId = null;
         $currentGroup = [];
+        /** @var PageDimensionContentInterface $dimensionContent */
         foreach ($pageDimensionContentsGenerator as $dimensionContent) {
             $resourceId = $dimensionContent->getResourceId();
 
@@ -92,12 +95,12 @@ class PageReferenceRefresher implements ReferenceRefresherInterface
         $referenceCollector = new ReferenceCollector(
             referenceRepository: $this->referenceRepository,
             referenceResourceKey: $pageDimensionContent->getResourceKey(),
-            referenceResourceId: $pageDimensionContent->getResourceId(),
-            referenceLocale: $pageDimensionContent->getLocale(),
-            referenceTitle: $pageDimensionContent->getTitle(),
+            referenceResourceId: (string) $pageDimensionContent->getResourceId(),
+            referenceLocale: $pageDimensionContent->getLocale() ?? '',
+            referenceTitle: $pageDimensionContent->getTitle() ?? '',
             referenceContext: DimensionContentInterface::STAGE_LIVE === $pageDimensionContent->getStage() ? 'website' : 'admin',
             referenceRouterAttributes: [
-                'locale' => $pageDimensionContent->getLocale(),
+                'locale' => $pageDimensionContent->getLocale() ?? '',
                 'webspace' => $pageDimensionContent->getResource()->getWebspaceKey(),
             ]
         );
@@ -108,7 +111,7 @@ class PageReferenceRefresher implements ReferenceRefresherInterface
             $this->addReferences(
                 $referenceCollector,
                 $contentView,
-                'template' !== $key ? $key : ''
+                'template' !== $key ? (string) $key : ''
             );
         }
 
@@ -148,12 +151,21 @@ class PageReferenceRefresher implements ReferenceRefresherInterface
                 ->setParameter('stage', $filter['stage']);
         }
 
-        return $queryBuilder->getQuery()->toIterable();
+        /** @var iterable<PageDimensionContentInterface> $result */
+        $result = $queryBuilder->getQuery()->toIterable();
+
+        return $result;
     }
 
+    /**
+     * @param iterable<PageDimensionContentInterface> $pageDimensionContents
+     *
+     * @return \Generator<PageDimensionContentInterface>
+     */
     private function resolvePageDimensionContents(iterable $pageDimensionContents): \Generator
     {
         $groupedPageDimensionContents = [];
+        /** @var PageDimensionContentInterface $pageDimensionContent */
         foreach ($pageDimensionContents as $pageDimensionContent) {
             $groupedPageDimensionContents[$pageDimensionContent->getResourceId()][$pageDimensionContent->getStage()][$pageDimensionContent->getLocale()] = $pageDimensionContent;
         }
@@ -161,6 +173,7 @@ class PageReferenceRefresher implements ReferenceRefresherInterface
         foreach ($groupedPageDimensionContents as $pageDimensionContentByStage) {
             foreach ($pageDimensionContentByStage as $stage => $pageDimensionContentByLocale) {
                 $unlocalizedDimensionContent = $pageDimensionContentByLocale[null] ?? null;
+                /** @var PageDimensionContentInterface $pageDimensionContent */
                 foreach ($pageDimensionContentByLocale as $locale => $pageDimensionContent) {
                     if ('' === $locale) {
                         continue;
@@ -184,7 +197,8 @@ class PageReferenceRefresher implements ReferenceRefresherInterface
 
         if (\is_iterable($content)) {
             foreach ($content as $key => $value) {
-                $newPath = \ltrim($path . '.' . $key, '.');
+                $keyStr = \is_string($key) || \is_numeric($key) ? (string) $key : '';
+                $newPath = \ltrim($path . '.' . $keyStr, '.');
                 if ($value instanceof ContentView) {
                     $this->addReferences($referenceCollector, $value, $newPath);
                 }
@@ -193,7 +207,7 @@ class PageReferenceRefresher implements ReferenceRefresherInterface
         foreach ($contentView->getReferences() as $reference) {
             $referenceCollector->addReference(
                 $reference->getResourceKey(),
-                $reference->getResourceId(),
+                (string) $reference->getResourceId(),
                 $path
             );
         }

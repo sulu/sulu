@@ -16,6 +16,7 @@ use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\Persistence\Event\LifecycleEventArgs;
 use Doctrine\Persistence\Event\OnClearEventArgs;
 use Sulu\Bundle\ReferenceBundle\Application\Message\RefreshReferenceMessage;
+use Sulu\Content\Domain\Model\ContentRichEntityInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Symfony\Component\Messenger\HandleTrait;
 use Symfony\Component\Messenger\MessageBusInterface;
@@ -26,25 +27,15 @@ class ReferenceDoctrineEventListener implements ResetInterface
     use HandleTrait;
 
     /**
-     * @var array<DimensionContentInterface>
+     * @var array<DimensionContentInterface<ContentRichEntityInterface>>
      */
-    private array $dimensionContents = [];
+    private array $dimensionContents = [];  // @phpstan-ignore-line missingType.generics
 
-    public function __construct(private MessageBusInterface $messageBus)
+    public function __construct(private MessageBusInterface $messageBus) // @phpstan-ignore-line property.onlyWritten (the HandleTrait is using it)
     {
     }
 
-    public function prePersist(LifecycleEventArgs $args): void
-    {
-        $object = $args->getObject();
-        if (!$object instanceof DimensionContentInterface || DimensionContentInterface::CURRENT_VERSION !== $object->getVersion()) {
-            return;
-        }
-
-        $this->dimensionContents[] = $object;
-    }
-
-    public function preUpdate(PreUpdateEventArgs $args): void
+    public function prePersist(LifecycleEventArgs $args): void // @phpstan-ignore-line missingType.generics
     {
         $object = $args->getObject();
         if (!$object instanceof DimensionContentInterface || DimensionContentInterface::CURRENT_VERSION !== $object->getVersion()) {
@@ -54,7 +45,17 @@ class ReferenceDoctrineEventListener implements ResetInterface
         $this->dimensionContents[] = $object;
     }
 
-    public function preRemove(LifecycleEventArgs $args): void
+    public function preUpdate(PreUpdateEventArgs $args): void // @phpstan-ignore-line missingType.generics
+    {
+        $object = $args->getObject();
+        if (!$object instanceof DimensionContentInterface || DimensionContentInterface::CURRENT_VERSION !== $object->getVersion()) {
+            return;
+        }
+
+        $this->dimensionContents[] = $object;
+    }
+
+    public function preRemove(LifecycleEventArgs $args): void // @phpstan-ignore-line missingType.generics
     {
         $object = $args->getObject();
         if (!$object instanceof DimensionContentInterface || DimensionContentInterface::CURRENT_VERSION !== $object->getVersion()) {
@@ -68,12 +69,12 @@ class ReferenceDoctrineEventListener implements ResetInterface
         }
     }
 
-    public function onClear(OnClearEventArgs $args): void
+    public function onClear(OnClearEventArgs $args): void // @phpstan-ignore-line missingType.generics
     {
         $this->reset();
     }
 
-    public function postFlush(PostFlushEventArgs $args): void
+    public function postFlush(PostFlushEventArgs $args): void // @phpstan-ignore-line missingType.generics
     {
         $dimensionContents = $this->dimensionContents;
 
@@ -82,11 +83,19 @@ class ReferenceDoctrineEventListener implements ResetInterface
 
         foreach ($dimensionContents as $dimensionContent) {
             $resource = $dimensionContent->getResource();
+            $locale = $dimensionContent->getLocale();
+            $resourceId = $resource->getId();
+
+            // Skip dimension content that doesn't have required values
+            if (null === $locale) {
+                continue;
+            }
+
             $this->handle(
                 new RefreshReferenceMessage(
                     $dimensionContent::getResourceKey(),
-                    $resource->getId(),
-                    $dimensionContent->getLocale(),
+                    (string) $resourceId,
+                    $locale,
                     $dimensionContent->getStage()
                 )
             );

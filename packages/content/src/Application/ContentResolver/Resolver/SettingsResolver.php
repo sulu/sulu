@@ -39,7 +39,7 @@ use Symfony\Component\Routing\RequestContext;
  *      }>,
  *      mainWebspace?: string|null,
  *      template?: string|null,
- *      author?: int|null,
+ *      author?: ContentView|null,
  *      authored?: \DateTime|null,
  *      shadowBaseLocale?: string|null,
  *      lastModified?: \DateTimeImmutable|null

@@ -19,13 +19,16 @@ use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\TestBundle\Testing\SetGetPrivatePropertyTrait;
+use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Content\Application\ContentResolver\Resolver\SettingsResolver;
 use Sulu\Content\Application\ContentResolver\Value\ContentView;
+use Sulu\Content\Application\ContentResolver\Value\Reference;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\Example;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\ExampleDimensionContent;
 use Sulu\Route\Application\Routing\Generator\RouteGeneratorInterface;
 use Sulu\Route\Domain\Model\Route;
 use Sulu\Route\Domain\Repository\RouteRepositoryInterface;
+use Symfony\Component\Routing\RequestContext;
 
 /**
  * @phpstan-import-type SettingsData from SettingsResolver
@@ -43,14 +46,23 @@ class SettingsResolverTest extends TestCase
     /** @var ObjectProphecy<RouteRepositoryInterface> */
     private ObjectProphecy $routeRepository;
 
+    /** @var ObjectProphecy<RequestContext> */
+    private ObjectProphecy $requestContext;
+
     protected function setUp(): void
     {
         $this->routeGenerator = $this->prophesize(RouteGeneratorInterface::class);
         $this->routeRepository = $this->prophesize(RouteRepositoryInterface::class);
+        $this->requestContext = $this->prophesize(RequestContext::class);
+
+        // Mock RequestContext methods
+        $this->requestContext->getParameter(Argument::any())->willReturn(null);
+        $this->requestContext->setParameter(Argument::any(), Argument::any())->willReturn($this->requestContext->reveal());
 
         $this->resolver = new SettingsResolver(
             $this->routeGenerator->reveal(),
             $this->routeRepository->reveal(),
+            $this->requestContext->reveal(),
         );
     }
 
@@ -220,7 +232,16 @@ class SettingsResolverTest extends TestCase
         /** @var SettingsData $content */
         $content = $result->getContent();
 
-        self::assertSame(1, $content['author'] ?? null);
+        // Test author is now a ContentView with Reference
+        $authorContentView = $content['author'] ?? null;
+        self::assertInstanceOf(ContentView::class, $authorContentView);
+        self::assertSame(1, $authorContentView->getContent());
+
+        $references = $authorContentView->getReferences();
+        self::assertCount(1, $references);
+        self::assertSame(1, $references[0]->getResourceId());
+        self::assertSame(UserInterface::RESOURCE_KEY, $references[0]->getResourceKey());
+
         self::assertSame('2021-01-01', $content['authored']?->format('Y-m-d'));
         self::assertSame('2021-01-01', $content['lastModified']?->format('Y-m-d'));
     }
@@ -238,5 +259,24 @@ class SettingsResolverTest extends TestCase
         $content = $result->getContent();
 
         self::assertSame('de', $content['shadowBaseLocale'] ?? null);
+    }
+
+    public function testResolveAuthorDataWithNullAuthor(): void
+    {
+        $example = new Example();
+        $exampleDimension = new ExampleDimensionContent($example);
+        $exampleDimension->setAuthor(null);
+
+        $result = $this->resolver->resolve($exampleDimension);
+        self::assertInstanceOf(ContentView::class, $result);
+
+        /** @var SettingsData $content */
+        $content = $result->getContent();
+
+        // Test author is ContentView with null content and empty references
+        $authorContentView = $content['author'] ?? null;
+        self::assertInstanceOf(ContentView::class, $authorContentView);
+        self::assertNull($authorContentView->getContent());
+        self::assertEmpty($authorContentView->getReferences());
     }
 }

@@ -34,6 +34,9 @@ class ContentViewResolver implements ContentViewResolverInterface
     ) {
     }
 
+    /**
+     * @param array<string, string>|null $properties
+     */
     public function getContentViews(DimensionContentInterface $dimensionContent, ?array $properties = null): array
     {
         $contentViews = [];

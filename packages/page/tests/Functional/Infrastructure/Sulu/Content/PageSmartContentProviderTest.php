@@ -22,6 +22,7 @@ use Sulu\Content\Tests\Traits\CreateTagTrait;
 use Sulu\Messenger\Infrastructure\Symfony\Messenger\FlushMiddleware\EnableFlushStamp;
 use Sulu\Page\Application\Message\ApplyWorkflowTransitionPageMessage;
 use Sulu\Page\Application\Message\CreatePageMessage;
+use Sulu\Page\Application\Message\ModifyPageMessage;
 use Sulu\Page\Application\MessageHandler\CreatePageMessageHandler;
 use Sulu\Page\Domain\Model\PageInterface;
 use Symfony\Component\Messenger\Envelope;
@@ -69,7 +70,7 @@ class PageSmartContentProviderTest extends SuluTestCase
     /**
      * @var array<string>
      */
-    private static array $webspaces = ['sulu_io', 'blog'];
+    private static array $webspaces = ['sulu-io', 'blog'];
 
     /**
      * @var array<string, string>
@@ -125,15 +126,15 @@ class PageSmartContentProviderTest extends SuluTestCase
                 'authored' => '2023-01-14T12:00:00+00:00',
             ];
 
-            $parentPage = self::createPage($webspaceKey, CreatePageMessageHandler::HOMEPAGE_PARENT_ID, $parentData);
+            $parentPage = self::createPage($webspaceKey, CreatePageMessageHandler::HOMEPAGE_PARENT_ID, $parentData, ['de']);
             self::$parentPages[$webspaceKey] = $parentPage->getUuid();
         }
 
         // Create pages with various combinations of categories, tags, templates, and webspaces
         // Technology pages
         self::$pages['tech1'] = self::createPage(
-            'sulu_io',
-            self::$parentPages['sulu_io'],
+            'sulu-io',
+            self::$parentPages['sulu-io'],
             [
                 'title' => 'Latest in Tech',
                 'excerptCategories' => [self::$categories['tech']->getId()],
@@ -157,8 +158,8 @@ class PageSmartContentProviderTest extends SuluTestCase
 
         // Sports pages
         self::$pages['sports1'] = self::createPage(
-            'sulu_io',
-            self::$parentPages['sulu_io'],
+            'sulu-io',
+            self::$parentPages['sulu-io'],
             [
                 'title' => 'Football Season',
                 'excerptCategories' => [self::$categories['sports']->getId()],
@@ -182,8 +183,8 @@ class PageSmartContentProviderTest extends SuluTestCase
 
         // Health pages
         self::$pages['health1'] = self::createPage(
-            'sulu_io',
-            self::$parentPages['sulu_io'],
+            'sulu-io',
+            self::$parentPages['sulu-io'],
             [
                 'title' => 'Fitness Tips',
                 'excerptCategories' => [self::$categories['health']->getId()],
@@ -207,8 +208,8 @@ class PageSmartContentProviderTest extends SuluTestCase
 
         // Business pages
         self::$pages['business1'] = self::createPage(
-            'sulu_io',
-            self::$parentPages['sulu_io'],
+            'sulu-io',
+            self::$parentPages['sulu-io'],
             [
                 'title' => 'Startup News',
                 'excerptCategories' => [self::$categories['business']->getId()],
@@ -232,8 +233,8 @@ class PageSmartContentProviderTest extends SuluTestCase
 
         // Entertainment pages
         self::$pages['entertainment1'] = self::createPage(
-            'sulu_io',
-            self::$parentPages['sulu_io'],
+            'sulu-io',
+            self::$parentPages['sulu-io'],
             [
                 'title' => 'Movie Reviews',
                 'excerptCategories' => [self::$categories['entertainment']->getId()],
@@ -257,8 +258,8 @@ class PageSmartContentProviderTest extends SuluTestCase
 
         // Cross-category pages
         self::$pages['tech_health'] = self::createPage(
-            'sulu_io',
-            self::$parentPages['sulu_io'],
+            'sulu-io',
+            self::$parentPages['sulu-io'],
             [
                 'title' => 'Tech in Healthcare',
                 'excerptCategories' => [self::$categories['tech']->getId(), self::$categories['health']->getId()],
@@ -281,8 +282,8 @@ class PageSmartContentProviderTest extends SuluTestCase
         );
 
         self::$pages['business_tech'] = self::createPage(
-            'sulu_io',
-            self::$parentPages['sulu_io'],
+            'sulu-io',
+            self::$parentPages['sulu-io'],
             [
                 'title' => 'Zero Tech Investments',
                 'excerptCategories' => [self::$categories['business']->getId(), self::$categories['tech']->getId()],
@@ -305,8 +306,8 @@ class PageSmartContentProviderTest extends SuluTestCase
         );
 
         self::$pages['multi_category_multi_tag'] = self::createPage(
-            'sulu_io',
-            self::$parentPages['sulu_io'],
+            'sulu-io',
+            self::$parentPages['sulu-io'],
             [
                 'title' => 'Digital Lifestyle',
                 'excerptCategories' => [
@@ -325,7 +326,7 @@ class PageSmartContentProviderTest extends SuluTestCase
     {
         $result = $this->smartContentProvider->findFlatBy([...$this->getDefaultFilters(), ...['locale' => 'en']], []);
 
-        $this->assertCount(8, $result); // 8 sulu_io pages (parent page excluded)
+        $this->assertCount(8, $result); // 8 sulu-io pages (parent page excluded)
         $count = $this->smartContentProvider->countBy([...$this->getDefaultFilters(), ...['locale' => 'en']]);
         $this->assertSame(8, $count);
 
@@ -334,14 +335,14 @@ class PageSmartContentProviderTest extends SuluTestCase
             $result,
         );
 
-        // Verify sulu_io pages are returned
+        // Verify sulu-io pages are returned
         $expectedSuluIoPages = ['tech1', 'sports1', 'health1', 'business1', 'entertainment1', 'tech_health', 'business_tech', 'multi_category_multi_tag'];
         foreach ($expectedSuluIoPages as $key) {
             $this->assertContains(self::$pages[$key]->getUuid(), $resultIds);
         }
 
-        // Verify sulu_io parent page is NOT returned (data source should not be in results)
-        $this->assertNotContains(self::$parentPages['sulu_io'], $resultIds);
+        // Verify sulu-io parent page is NOT returned (data source should not be in results)
+        $this->assertNotContains(self::$parentPages['sulu-io'], $resultIds);
 
         // Verify blog pages are NOT returned (different data source)
         $blogPages = ['tech2', 'sports2', 'health2', 'business2', 'entertainment2', 'sports_health', 'entertainment_business'];
@@ -361,7 +362,7 @@ class PageSmartContentProviderTest extends SuluTestCase
             ],
         ], []);
 
-        $this->assertCount(4, $result); // Only sulu_io tech pages
+        $this->assertCount(4, $result); // Only sulu-io tech pages
         $this->assertSame(
             4,
             $this->smartContentProvider->countBy([
@@ -379,7 +380,7 @@ class PageSmartContentProviderTest extends SuluTestCase
             $result,
         );
 
-        // Verify correct sulu_io pages are returned
+        // Verify correct sulu-io pages are returned
         $expectedKeys = ['tech1', 'tech_health', 'business_tech', 'multi_category_multi_tag'];
         foreach ($expectedKeys as $key) {
             $this->assertContains(self::$pages[$key]->getUuid(), $resultIds, "Page '$key' should be in the result");
@@ -400,7 +401,7 @@ class PageSmartContentProviderTest extends SuluTestCase
             ],
         ], ['title' => 'asc']);
 
-        // Should include only sulu_io pages with tech or health categories
+        // Should include only sulu-io pages with tech or health categories
         $this->assertCount(5, $result);
         $this->assertSame(
             5,
@@ -419,7 +420,7 @@ class PageSmartContentProviderTest extends SuluTestCase
             $result,
         );
 
-        // Verify correct sulu_io pages are returned
+        // Verify correct sulu-io pages are returned
         $expectedKeys = ['tech1', 'health1', 'tech_health', 'business_tech', 'multi_category_multi_tag'];
         foreach ($expectedKeys as $key) {
             $this->assertContains(self::$pages[$key]->getUuid(), $resultIds, "Page '$key' should be in the result");
@@ -443,7 +444,7 @@ class PageSmartContentProviderTest extends SuluTestCase
             ],
         ], []);
 
-        $this->assertCount(3, $result); // Only sulu_io health pages
+        $this->assertCount(3, $result); // Only sulu-io health pages
         $this->assertSame(
             3,
             $this->smartContentProvider->countBy([
@@ -461,7 +462,7 @@ class PageSmartContentProviderTest extends SuluTestCase
             $result,
         );
 
-        // Verify correct sulu_io pages are returned
+        // Verify correct sulu-io pages are returned
         $expectedKeys = ['health1', 'tech_health', 'multi_category_multi_tag'];
         foreach ($expectedKeys as $key) {
             $this->assertContains(self::$pages[$key]->getUuid(), $resultIds, "Page '$key' should be in the result");
@@ -483,7 +484,7 @@ class PageSmartContentProviderTest extends SuluTestCase
             ],
         ], []);
 
-        // Should include only sulu_io pages with both tech and health categories
+        // Should include only sulu-io pages with both tech and health categories
         $this->assertCount(2, $result);
         $this->assertSame(
             2,
@@ -502,7 +503,7 @@ class PageSmartContentProviderTest extends SuluTestCase
             $result,
         );
 
-        // Verify correct sulu_io pages are returned
+        // Verify correct sulu-io pages are returned
         $expectedKeys = ['tech_health', 'multi_category_multi_tag'];
         foreach ($expectedKeys as $key) {
             $this->assertContains(self::$pages[$key]->getUuid(), $resultIds, "Page '$key' should be in the result");
@@ -520,7 +521,7 @@ class PageSmartContentProviderTest extends SuluTestCase
             ],
         ], []);
 
-        // Should include only sulu_io pages with mobile tag
+        // Should include only sulu-io pages with mobile tag
         $this->assertCount(3, $result);
         $this->assertSame(
             3,
@@ -539,7 +540,7 @@ class PageSmartContentProviderTest extends SuluTestCase
             $result,
         );
 
-        // Verify correct sulu_io pages are returned
+        // Verify correct sulu-io pages are returned
         $expectedKeys = ['tech1', 'tech_health', 'multi_category_multi_tag'];
         foreach ($expectedKeys as $key) {
             $this->assertContains(self::$pages[$key]->getUuid(), $resultIds, "Page '$key' should be in the result");
@@ -557,7 +558,7 @@ class PageSmartContentProviderTest extends SuluTestCase
             ],
         ], ['title' => 'asc']);
 
-        // Should include only sulu_io pages with mobile or cloud tags
+        // Should include only sulu-io pages with mobile or cloud tags
         $this->assertCount(4, $result);
         $this->assertSame(
             4,
@@ -576,7 +577,7 @@ class PageSmartContentProviderTest extends SuluTestCase
             $result,
         );
 
-        // Verify correct sulu_io pages are returned
+        // Verify correct sulu-io pages are returned
         $expectedKeys = ['tech1', 'tech_health', 'business_tech', 'multi_category_multi_tag'];
         foreach ($expectedKeys as $key) {
             $this->assertContains(self::$pages[$key]->getUuid(), $resultIds, "Page '$key' should be in the result");
@@ -597,7 +598,7 @@ class PageSmartContentProviderTest extends SuluTestCase
             ],
         ], []);
 
-        // Should include only sulu_io pages with fitness tag
+        // Should include only sulu-io pages with fitness tag
         $this->assertCount(3, $result);
         $this->assertSame(
             3,
@@ -616,7 +617,7 @@ class PageSmartContentProviderTest extends SuluTestCase
             $result,
         );
 
-        // Verify correct sulu_io pages are returned
+        // Verify correct sulu-io pages are returned
         $expectedKeys = ['health1', 'tech_health', 'multi_category_multi_tag'];
         foreach ($expectedKeys as $key) {
             $this->assertContains(self::$pages[$key]->getUuid(), $resultIds, "Page '$key' should be in the result");
@@ -638,7 +639,7 @@ class PageSmartContentProviderTest extends SuluTestCase
             ],
         ], []);
 
-        // Should include only sulu_io pages with both mobile and fitness tags
+        // Should include only sulu-io pages with both mobile and fitness tags
         $this->assertCount(2, $result);
         $this->assertSame(
             2,
@@ -657,7 +658,7 @@ class PageSmartContentProviderTest extends SuluTestCase
             $result,
         );
 
-        // Verify correct sulu_io pages are returned
+        // Verify correct sulu-io pages are returned
         $expectedKeys = ['tech_health', 'multi_category_multi_tag'];
         foreach ($expectedKeys as $key) {
             $this->assertContains(self::$pages[$key]->getUuid(), $resultIds, "Page '$key' should be in the result");
@@ -675,7 +676,7 @@ class PageSmartContentProviderTest extends SuluTestCase
             ],
         ], []);
 
-        // Should include only sulu_io pages with health category and fitness tag
+        // Should include only sulu-io pages with health category and fitness tag
         $this->assertCount(3, $result);
         $this->assertSame(
             3,
@@ -694,7 +695,7 @@ class PageSmartContentProviderTest extends SuluTestCase
             $result,
         );
 
-        // Verify correct sulu_io pages are returned
+        // Verify correct sulu-io pages are returned
         $expectedKeys = ['health1', 'tech_health', 'multi_category_multi_tag'];
         foreach ($expectedKeys as $key) {
             $this->assertContains(self::$pages[$key]->getUuid(), $resultIds, "Page '$key' should be in the result");
@@ -720,7 +721,7 @@ class PageSmartContentProviderTest extends SuluTestCase
 
         $this->assertCount(5, $result);
         $this->assertSame(
-            8, // 8 sulu_io pages (parent page excluded)
+            8, // 8 sulu-io pages (parent page excluded)
             $this->smartContentProvider->countBy([
                 ...$this->getDefaultFilters(),
                 ...[
@@ -737,7 +738,7 @@ class PageSmartContentProviderTest extends SuluTestCase
         );
 
         // With sorting by title ascending, verify the results are in the correct order
-        // and only include sulu_io pages
+        // and only include sulu-io pages
         $this->assertSame('Digital Lifestyle', $result[0]['title']);
         $this->assertSame(self::$pages['multi_category_multi_tag']->getUuid(), $result[0]['id']);
     }
@@ -755,9 +756,9 @@ class PageSmartContentProviderTest extends SuluTestCase
             'title' => 'asc',
         ]);
 
-        $this->assertCount(3, $result); // Remaining sulu_io pages
+        $this->assertCount(3, $result); // Remaining sulu-io pages
         $this->assertSame(
-            8, // 8 sulu_io pages (parent page excluded)
+            8, // 8 sulu-io pages (parent page excluded)
             $this->smartContentProvider->countBy([
                 ...$this->getDefaultFilters(),
                 ...[
@@ -788,11 +789,11 @@ class PageSmartContentProviderTest extends SuluTestCase
 
         $this->assertCount(8, $result);
 
-        // Check if first article is alphabetically first among sulu_io pages
+        // Check if first article is alphabetically first among sulu-io pages
         $this->assertStringContainsString('Digital Lifestyle', $result[0]['title']);
         $this->assertSame(self::$pages['multi_category_multi_tag']->getUuid(), $result[0]['id'], "First result should be 'Digital Lifestyle'");
 
-        // Check if last article is alphabetically last among sulu_io pages
+        // Check if last article is alphabetically last among sulu-io pages
         $this->assertStringContainsString('Zero Tech Investments', $result[7]['title']);
         $this->assertSame(self::$pages['business_tech']->getUuid(), $result[7]['id'], "Last result should be 'Zero Tech Investments'");
 
@@ -818,11 +819,11 @@ class PageSmartContentProviderTest extends SuluTestCase
 
         $this->assertCount(8, $result);
 
-        // Check if first article is alphabetically last among sulu_io pages
+        // Check if first article is alphabetically last among sulu-io pages
         $this->assertStringContainsString('Zero Tech Investments', $result[0]['title']);
         $this->assertSame(self::$pages['business_tech']->getUuid(), $result[0]['id'], "First result should be 'Zero Tech Investments'");
 
-        // Check if last article is alphabetically first among sulu_io pages
+        // Check if last article is alphabetically first among sulu-io pages
         $this->assertStringContainsString('Digital Lifestyle', $result[7]['title']);
         $this->assertSame(self::$pages['multi_category_multi_tag']->getUuid(), $result[7]['id'], "Last result should be 'Digital Lifestyle'");
 
@@ -848,7 +849,7 @@ class PageSmartContentProviderTest extends SuluTestCase
 
         $this->assertCount(8, $result);
 
-        // First should have oldest authored date among sulu_io pages (not parent page)
+        // First should have oldest authored date among sulu-io pages (not parent page)
         $this->assertStringContainsString('Latest in Tech', $result[0]['title']);
         $this->assertSame(self::$pages['tech1']->getUuid(), $result[0]['id']);
 
@@ -868,7 +869,7 @@ class PageSmartContentProviderTest extends SuluTestCase
             "'Zero Tech Investments' should come before 'Digital Lifestyle' in ascending authored order"
         );
 
-        // Last should have newest authored date among sulu_io pages
+        // Last should have newest authored date among sulu-io pages
         $this->assertSame(self::$pages['multi_category_multi_tag']->getUuid(), $result[7]['id']);
         $this->assertStringContainsString('Digital Lifestyle', $result[7]['title']);
     }
@@ -881,7 +882,7 @@ class PageSmartContentProviderTest extends SuluTestCase
 
         $this->assertCount(8, $result);
 
-        // First should have newest authored date among sulu_io pages
+        // First should have newest authored date among sulu-io pages
         $this->assertStringContainsString('Digital Lifestyle', $result[0]['title']);
         $this->assertSame(self::$pages['multi_category_multi_tag']->getUuid(), $result[0]['id'], "First result should be 'Digital Lifestyle'");
 
@@ -900,7 +901,7 @@ class PageSmartContentProviderTest extends SuluTestCase
             "'Football Season' should come before 'Latest in Tech' in descending authored order"
         );
 
-        // Last should have oldest authored date among sulu_io pages (not parent page)
+        // Last should have oldest authored date among sulu-io pages (not parent page)
         $this->assertStringContainsString('Latest in Tech', $result[7]['title']);
         $this->assertSame(self::$pages['tech1']->getUuid(), $result[7]['id']);
     }
@@ -932,16 +933,16 @@ class PageSmartContentProviderTest extends SuluTestCase
             $result,
         );
 
-        // Verify all default template pages from sulu_io are returned
+        // Verify all default template pages from sulu-io are returned
         $expectedKeys = ['tech1', 'sports1', 'health1', 'tech_health', 'multi_category_multi_tag'];
         foreach ($expectedKeys as $key) {
             $this->assertContains(self::$pages[$key]->getUuid(), $resultIds, "Page '$key' should be in the default template result");
         }
 
-        // Verify sulu_io parent page is NOT returned (data source should not be in results)
-        $this->assertNotContains(self::$parentPages['sulu_io'], $resultIds, 'Parent page of sulu_io should not be in the result');
+        // Verify sulu-io parent page is NOT returned (data source should not be in results)
+        $this->assertNotContains(self::$parentPages['sulu-io'], $resultIds, 'Parent page of sulu-io should not be in the result');
 
-        // Verify non-default template pages from sulu_io are not returned
+        // Verify non-default template pages from sulu-io are not returned
         $nonDefaultTemplateKeys = ['business1', 'entertainment1', 'business_tech'];
         foreach ($nonDefaultTemplateKeys as $key) {
             $this->assertNotContains(self::$pages[$key]->getUuid(), $resultIds, "Page '$key' should not be in the default template result");
@@ -964,7 +965,7 @@ class PageSmartContentProviderTest extends SuluTestCase
             ],
         ], []);
 
-        $this->assertCount(2, $result); // Only sulu_io pages with blog/landing_page templates
+        $this->assertCount(2, $result); // Only sulu-io pages with blog/landing_page templates
         $this->assertSame(
             2,
             $this->smartContentProvider->countBy([
@@ -981,19 +982,19 @@ class PageSmartContentProviderTest extends SuluTestCase
             $result,
         );
 
-        // Verify blog template pages from sulu_io are returned
+        // Verify blog template pages from sulu-io are returned
         $blogTemplateKeys = ['entertainment1'];
         foreach ($blogTemplateKeys as $key) {
             $this->assertContains(self::$pages[$key]->getUuid(), $resultIds, "Page '$key' should be in the blog template result");
         }
 
-        // Verify landing_page template pages from sulu_io are returned
+        // Verify landing_page template pages from sulu-io are returned
         $landingPageTemplateKeys = ['business_tech'];
         foreach ($landingPageTemplateKeys as $key) {
             $this->assertContains(self::$pages[$key]->getUuid(), $resultIds, "Page '$key' should be in the landing_page template result");
         }
 
-        // Verify pages with other templates from sulu_io are not returned
+        // Verify pages with other templates from sulu-io are not returned
         $otherTemplateKeys = ['tech1', 'sports1', 'health1', 'business1', 'tech_health', 'multi_category_multi_tag'];
         foreach ($otherTemplateKeys as $key) {
             $this->assertNotContains(self::$pages[$key]->getUuid(), $resultIds, "Page '$key' should not be in the blog/landing_page template result");
@@ -1006,7 +1007,7 @@ class PageSmartContentProviderTest extends SuluTestCase
         }
 
         // Verify parent pages are not returned (they use default template)
-        $this->assertNotContains(self::$parentPages['sulu_io'], $resultIds, 'Parent page of sulu_io should not be in the result');
+        $this->assertNotContains(self::$parentPages['sulu-io'], $resultIds, 'Parent page of sulu-io should not be in the result');
         $this->assertNotContains(self::$parentPages['blog'], $resultIds, 'Parent page of blog should not be in the result');
     }
 
@@ -1021,7 +1022,7 @@ class PageSmartContentProviderTest extends SuluTestCase
             ],
         ], []);
 
-        $this->assertCount(1, $result); // Only sulu_io homepage
+        $this->assertCount(1, $result); // Only sulu-io homepage
         $this->assertSame(
             1,
             $this->smartContentProvider->countBy([
@@ -1038,7 +1039,7 @@ class PageSmartContentProviderTest extends SuluTestCase
             $result,
         );
 
-        // Verify sulu_io homepage is returned
+        // Verify sulu-io homepage is returned
         $this->assertContains(self::$pages['business1']->getUuid(), $resultIds, "Page 'business1' should be in the homepage template result");
 
         // Verify blog homepage is not returned (different data source)
@@ -1047,23 +1048,23 @@ class PageSmartContentProviderTest extends SuluTestCase
 
     public function testFindFlatByDataSourceFilter(): void
     {
-        // Test filtering by sulu_io parent page (dataSource)
+        // Test filtering by sulu-io parent page (dataSource)
         $result = $this->smartContentProvider->findFlatBy([
             ...$this->getDefaultFilters(),
             ...[
                 'locale' => 'en',
-                'dataSource' => self::$parentPages['sulu_io'],
+                'dataSource' => self::$parentPages['sulu-io'],
             ],
         ], []);
 
-        $this->assertCount(8, $result); // 8 sulu_io pages (parent page excluded)
+        $this->assertCount(8, $result); // 8 sulu-io pages (parent page excluded)
         $this->assertSame(
             8,
             $this->smartContentProvider->countBy([
                 ...$this->getDefaultFilters(),
                 ...[
                     'locale' => 'en',
-                    'dataSource' => self::$parentPages['sulu_io'],
+                    'dataSource' => self::$parentPages['sulu-io'],
                 ],
             ]),
         );
@@ -1073,14 +1074,14 @@ class PageSmartContentProviderTest extends SuluTestCase
             $result,
         );
 
-        // Verify sulu_io pages are returned
+        // Verify sulu-io pages are returned
         $expectedSuluIoPages = ['tech1', 'sports1', 'health1', 'business1', 'entertainment1', 'tech_health', 'business_tech', 'multi_category_multi_tag'];
         foreach ($expectedSuluIoPages as $key) {
-            $this->assertContains(self::$pages[$key]->getUuid(), $resultIds, "Page '$key' should be in the sulu_io result");
+            $this->assertContains(self::$pages[$key]->getUuid(), $resultIds, "Page '$key' should be in the sulu-io result");
         }
 
-        // Verify sulu_io parent page is NOT returned (data source should not be in results)
-        $this->assertNotContains(self::$parentPages['sulu_io'], $resultIds, 'Parent page of sulu_io should not be in the result');
+        // Verify sulu-io parent page is NOT returned (data source should not be in results)
+        $this->assertNotContains(self::$parentPages['sulu-io'], $resultIds, 'Parent page of sulu-io should not be in the result');
 
         // Test filtering by blog parent page
         $result = $this->smartContentProvider->findFlatBy([
@@ -1154,7 +1155,7 @@ class PageSmartContentProviderTest extends SuluTestCase
         // Verify blog parent page is NOT returned (data source should not be in results)
         $this->assertNotContains(self::$parentPages['blog'], $resultIds, 'Parent page of blog should not be in the result');
 
-        // Verify sulu_io pages are NOT returned
+        // Verify sulu-io pages are NOT returned
         $suluIoPages = ['tech1', 'sports1', 'health1', 'business1', 'entertainment1', 'tech_health', 'business_tech', 'multi_category_multi_tag'];
         foreach ($suluIoPages as $key) {
             $this->assertNotContains(self::$pages[$key]->getUuid(), $resultIds, "Page '$key' should not be in the blog result");
@@ -1199,7 +1200,7 @@ class PageSmartContentProviderTest extends SuluTestCase
             $this->assertContains(self::$pages[$key]->getUuid(), $resultIds, "Page '$key' should be in the blog tech result");
         }
 
-        // Verify sulu_io tech pages are not returned
+        // Verify sulu-io tech pages are not returned
         $suluIoTechPages = ['tech1', 'tech_health', 'business_tech', 'multi_category_multi_tag'];
         foreach ($suluIoTechPages as $key) {
             $this->assertNotContains(self::$pages[$key]->getUuid(), $resultIds, "Page '$key' should not be in the blog tech result");
@@ -1208,11 +1209,13 @@ class PageSmartContentProviderTest extends SuluTestCase
 
     /**
      * @param PageData $data
+     * @param string[] $additionalLocales
      */
     private static function createPage(
         string $webspaceKey,
         string $parentId,
         array $data = [],
+        array $additionalLocales = [],
     ): PageInterface {
         $data = \array_merge([
             'title' => 'Example Page',
@@ -1240,6 +1243,20 @@ class PageSmartContentProviderTest extends SuluTestCase
             ),
         );
 
+        foreach ($additionalLocales as $locale) {
+            $messageBus->dispatch(new Envelope(new ModifyPageMessage(['uuid' => $page->getUuid()], \array_merge($data, ['locale' => $locale])), [new EnableFlushStamp()]));
+            $messageBus->dispatch(
+                new Envelope(
+                    new ApplyWorkflowTransitionPageMessage(
+                        identifier: ['uuid' => $page->getUuid()],
+                        locale: $locale,
+                        transitionName: WorkflowInterface::WORKFLOW_TRANSITION_PUBLISH,
+                    ),
+                    [new EnableFlushStamp()],
+                ),
+            );
+        }
+
         return $page;
     }
 
@@ -1260,7 +1277,7 @@ class PageSmartContentProviderTest extends SuluTestCase
             'types' => [],
             'typesOperator' => 'OR',
             'locale' => 'en',
-            'dataSource' => self::$parentPages['sulu_io'],
+            'dataSource' => self::$parentPages['sulu-io'],
             'limit' => null,
             'page' => 1,
             'maxPerPage' => null,
@@ -1282,7 +1299,7 @@ class PageSmartContentProviderTest extends SuluTestCase
             ],
         ], []);
 
-        $this->assertCount(3, $result); // Only sulu_io default template tech pages
+        $this->assertCount(3, $result); // Only sulu-io default template tech pages
         $this->assertSame(
             3,
             $this->smartContentProvider->countBy([
@@ -1301,7 +1318,7 @@ class PageSmartContentProviderTest extends SuluTestCase
             $result,
         );
 
-        // Verify correct sulu_io pages are returned
+        // Verify correct sulu-io pages are returned
         $expectedKeys = ['tech1', 'tech_health', 'multi_category_multi_tag'];
         foreach ($expectedKeys as $key) {
             $this->assertContains(self::$pages[$key]->getUuid(), $resultIds, "Page '$key' should be in the combined filter result");

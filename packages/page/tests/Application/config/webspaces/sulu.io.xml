@@ -44,20 +44,22 @@
             <environments>
                 <environment type="prod">
                     <urls>
-                        <url language="de">{host}</url>
-                        <url language="en">{host}/en</url>
+                        <url>{host}/{localization}</url>
                     </urls>
                 </environment>
-                <environment type="dev">
+                <environment type="stage">
                     <urls>
-                        <url language="de">{host}</url>
-                        <url language="en">{host}/en</url>
+                        <url>{host}/{localization}</url>
                     </urls>
                 </environment>
                 <environment type="test">
                     <urls>
-                        <url language="de">{host}</url>
-                        <url language="en">{host}/en</url>
+                        <url>{host}/{localization}</url>
+                    </urls>
+                </environment>
+                <environment type="dev">
+                    <urls>
+                        <url>{host}/{localization}</url>
                     </urls>
                 </environment>
             </environments>
