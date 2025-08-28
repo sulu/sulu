@@ -39,7 +39,6 @@ class SearchStore {
     }
 
     @action search(query: ?string, index: ?string) {
-        this.resetResults();
         this.query = query;
         this.indexName = index;
     }
