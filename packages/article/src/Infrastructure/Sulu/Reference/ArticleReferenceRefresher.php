@@ -27,10 +27,10 @@ use Sulu\Content\Domain\Model\DimensionContentCollection;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 
 /**
- * @internal This service is intended for internal use only within the package/library.
- * Modifying or depending on this service may result in unexpected behavior and is not supported.
+ * @internal Modifying or depending on this service may result in unexpected behavior and is not supported.
  *
- * You can create a custom implementation of ReferenceRefresherInterface if you need to change the behavior.
+ * To customize the behavior of this class, override the service by providing your own class that implements
+ * ReferenceRefresherInterface, and register it using the same resource key.
  */
 class ArticleReferenceRefresher implements ReferenceRefresherInterface
 {
