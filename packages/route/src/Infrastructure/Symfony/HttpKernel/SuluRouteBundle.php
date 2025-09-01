@@ -13,6 +13,9 @@ declare(strict_types=1);
 
 namespace Sulu\Route\Infrastructure\Symfony\HttpKernel;
 
+use Sulu\Route\Application\ResourceLocator\PathCleanup\PathCleanup;
+use Sulu\Route\Application\ResourceLocator\PathCleanup\PathCleanupInterface;
+use Sulu\Route\Application\ResourceLocator\ResourceLocatorGenerator;
 use Sulu\Route\Application\Routing\Generator\RouteGenerator;
 use Sulu\Route\Application\Routing\Generator\RouteGeneratorInterface;
 use Sulu\Route\Application\Routing\Generator\SiteRouteGeneratorInterface;
@@ -26,6 +29,7 @@ use Sulu\Route\Infrastructure\Doctrine\EventListener\RouteChangedUpdater;
 use Sulu\Route\Infrastructure\Doctrine\Repository\RouteRepository;
 use Sulu\Route\Infrastructure\Symfony\DependencyInjection\RouteDefaultsOptionsCompilerPass;
 use Sulu\Route\Infrastructure\SymfonyCmf\Routing\CmfRouteProvider;
+use Sulu\Route\Userinterface\Controller\Admin\ResourceLocatorGenerateController;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
@@ -37,6 +41,7 @@ use function Symfony\Component\DependencyInjection\Loader\Configurator\tagged_lo
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
+use Symfony\Component\String\Slugger\AsciiSlugger;
 
 /**
  * @experimental
@@ -103,6 +108,26 @@ final class SuluRouteBundle extends AbstractBundle
                 new Reference('request_stack'),
             ]);
 
+        $sluggerService = $services->set('sulu_route.slugger')
+            ->class(AsciiSlugger::class);
+
+        if (
+            !\method_exists(\Symfony\Component\String\AbstractUnicodeString::class, 'localeUpper') // BC Layer <= Symfony 7.0 // @phpstan-ignore-line function.alreadyNarrowedType
+            || \class_exists(\Symfony\Component\Emoji\EmojiTransliterator::class) // Symfony >= 7.1 requires symfony/emoji
+        ) {
+            $sluggerService->call('withEmoji');
+        }
+
+        $services->set('sulu_route.path_cleanup')
+            ->class(PathCleanup::class)
+            ->args([
+                new Reference('sulu_route.slugger'),
+                // TODO replacers for `&` and what is not handled by the slugger
+            ]);
+
+        $services->alias(PathCleanupInterface::class, 'sulu_route.path_cleanup')
+            ->public();
+
         $services->alias(RouteGeneratorInterface::class, 'sulu_route.route_generator')
             ->public();
 
@@ -122,6 +147,20 @@ final class SuluRouteBundle extends AbstractBundle
                 new Reference('sulu_route.route_generator'),
             ])
             ->tag('sulu_route.route_defaults_provider');
+
+        $services->set('sulu_route.resource_locator_generator')
+            ->class(ResourceLocatorGenerator::class)
+            ->args([
+                new Reference('sulu_route.route_repository'),
+                new Reference('sulu_route.path_cleanup'),
+            ]);
+
+        $services->set('sulu_route.resource_locator_generate_controller')
+            ->class(ResourceLocatorGenerateController::class)
+            ->args([
+                new Reference('sulu_route.resource_locator_generator'),
+            ])
+            ->tag('controller.service_arguments');
 
         $builder->registerForAutoconfiguration(SiteRouteGeneratorInterface::class)
             ->addTag('sulu_route.site_route_generator');

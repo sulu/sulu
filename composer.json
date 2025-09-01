@@ -146,6 +146,7 @@
         "symfony/debug-bundle": "^6.4 || ^7.1",
         "symfony/dotenv": "^6.4 || ^7.1",
         "symfony/error-handler": "^6.4 || ^7.1",
+        "symfony/emoji": "^7.1",
         "symfony/monolog-bundle": "^3.7",
         "symfony/phpunit-bridge": "^6.4 || ^7.1",
         "symfony/runtime": "^6.4 || ^7.1",

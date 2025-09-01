@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Route\Tests\Unit\Application\Matcher;
+namespace Sulu\Route\Tests\Unit\Application\Routing\Matcher;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;

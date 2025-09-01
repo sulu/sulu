@@ -49,6 +49,15 @@ class RouteRepository implements RouteRepositoryInterface
         return $queryBuilder->getQuery()->getOneOrNullResult(Query::HYDRATE_OBJECT);
     }
 
+    public function existBy(array $filters): bool
+    {
+        $queryBuilder = $this->createQueryBuilder($filters);
+        $queryBuilder->setMaxResults(1);
+        $queryBuilder->select('route.id');
+
+        return $queryBuilder->getQuery()->getOneOrNullResult() ? true : false;
+    }
+
     public function findBy(array $filters): iterable
     {
         $queryBuilder = $this->createQueryBuilder($filters);
@@ -106,6 +115,19 @@ class RouteRepository implements RouteRepositoryInterface
         if (null !== $resourceId) {
             $queryBuilder->andWhere('route.resourceId = :resourceId')
                 ->setParameter('resourceId', $resourceId);
+        }
+
+        $excludeResource = $filters['excludeResource'] ?? null;
+        if (null !== $excludeResource) {
+            $expr = $queryBuilder->expr();
+
+            $queryBuilder
+                ->andWhere($expr->not($expr->andX(
+                    $expr->eq('route.resourceKey', ':excludeResourceKey'),
+                    $expr->eq('route.resourceId', ':excludeResourceId')
+                )))
+                ->setParameter('excludeResourceKey', $excludeResource['resourceKey'])
+                ->setParameter('excludeResourceId', $excludeResource['resourceId']);
         }
 
         return $queryBuilder;

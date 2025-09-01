@@ -45,16 +45,16 @@ test('Should load data using the Requester', () => {
         '/value',
         {
             limit: 0,
-            entityClass: 'Foo',
+            resourceKey: 'Foo',
         },
         {
-            id: 'entityId',
+            id: 'resourceId',
             locale: 'locale',
         },
         mockTabViewRoute
     );
 
-    expect(Requester.get).toBeCalledWith('foo?entityId=5&locale=en&limit=0&entityClass=Foo');
+    expect(Requester.get).toBeCalledWith('foo?resourceId=5&locale=en&limit=0&resourceKey=Foo');
 
     return promise.then(() => {
         expect(badgeStore.value).toEqual('2');
@@ -77,16 +77,16 @@ test('Should load data without datapath', () => {
         null,
         {
             limit: 0,
-            entityClass: 'Foo',
+            resourceKey: 'Foo',
         },
         {
-            id: 'entityId',
+            id: 'resourceId',
             locale: 'locale',
         },
         mockTabViewRoute
     );
 
-    expect(Requester.get).toBeCalledWith('foo?entityId=5&locale=en&limit=0&entityClass=Foo');
+    expect(Requester.get).toBeCalledWith('foo?resourceId=5&locale=en&limit=0&resourceKey=Foo');
 
     return promise.then(() => {
         expect(badgeStore.value).toEqual('hello');
@@ -109,20 +109,20 @@ test('Should load data if route changes', () => {
         null,
         {
             limit: 0,
-            entityClass: 'Foo',
+            resourceKey: 'Foo',
         },
         {
-            id: 'entityId',
+            id: 'resourceId',
             locale: 'locale',
         },
         mockTabViewRoute
     );
 
-    expect(Requester.get).toHaveBeenNthCalledWith(1, 'foo?entityId=5&locale=en&limit=0&entityClass=Foo');
+    expect(Requester.get).toHaveBeenNthCalledWith(1, 'foo?resourceId=5&locale=en&limit=0&resourceKey=Foo');
 
     router.route = ({property: 'value', parent: mockTabViewRoute}: any);
 
-    expect(Requester.get).toHaveBeenNthCalledWith(2, 'foo?entityId=5&locale=en&limit=0&entityClass=Foo');
+    expect(Requester.get).toHaveBeenNthCalledWith(2, 'foo?resourceId=5&locale=en&limit=0&resourceKey=Foo');
 });
 
 test('Should not load data if route changes to other parent', () => {
@@ -141,17 +141,17 @@ test('Should not load data if route changes to other parent', () => {
         null,
         {
             limit: 0,
-            entityClass: 'Foo',
+            resourceKey: 'Foo',
         },
         {
-            id: 'entityId',
+            id: 'resourceId',
             locale: 'locale',
         },
         mockTabViewRoute
     );
 
     expect(Requester.get).toHaveBeenCalledTimes(1);
-    expect(Requester.get).toHaveBeenNthCalledWith(1, 'foo?entityId=5&locale=en&limit=0&entityClass=Foo');
+    expect(Requester.get).toHaveBeenNthCalledWith(1, 'foo?resourceId=5&locale=en&limit=0&resourceKey=Foo');
 
     router.route = ({property: 'value', parent: {other: true}}: any);
 
@@ -174,10 +174,10 @@ test('Should load data on response hook callback', () => {
         null,
         {
             limit: 0,
-            entityClass: 'Foo',
+            resourceKey: 'Foo',
         },
         {
-            id: 'entityId',
+            id: 'resourceId',
             locale: 'locale',
         },
         mockTabViewRoute
@@ -187,7 +187,7 @@ test('Should load data on response hook callback', () => {
 
     // Initial request
     expect(Requester.get).toHaveBeenCalledTimes(1);
-    expect(Requester.get).toHaveBeenNthCalledWith(1, 'foo?entityId=5&locale=en&limit=0&entityClass=Foo');
+    expect(Requester.get).toHaveBeenNthCalledWith(1, 'foo?resourceId=5&locale=en&limit=0&resourceKey=Foo');
 
     // Should not perform request because of a "GET" request
     const response1: any = {url: 'http://sulu.lo/admin/api/anything'};
@@ -204,7 +204,7 @@ test('Should load data on response hook callback', () => {
         {method: 'POST'}
     );
     expect(Requester.get).toHaveBeenCalledTimes(2);
-    expect(Requester.get).toHaveBeenNthCalledWith(2, 'foo?entityId=5&locale=en&limit=0&entityClass=Foo');
+    expect(Requester.get).toHaveBeenNthCalledWith(2, 'foo?resourceId=5&locale=en&limit=0&resourceKey=Foo');
 
     // Should perform request
     const response3: any = {url: 'http://sulu.lo/admin/api/anything'};
@@ -213,7 +213,7 @@ test('Should load data on response hook callback', () => {
         {method: 'PUT'}
     );
     expect(Requester.get).toHaveBeenCalledTimes(3);
-    expect(Requester.get).toHaveBeenNthCalledWith(3, 'foo?entityId=5&locale=en&limit=0&entityClass=Foo');
+    expect(Requester.get).toHaveBeenNthCalledWith(3, 'foo?resourceId=5&locale=en&limit=0&resourceKey=Foo');
 
     // Should perform request
     const response4: any = {url: 'http://sulu.lo/admin/api/anything'};
@@ -222,7 +222,7 @@ test('Should load data on response hook callback', () => {
         {method: 'PATCH'}
     );
     expect(Requester.get).toHaveBeenCalledTimes(4);
-    expect(Requester.get).toHaveBeenNthCalledWith(4, 'foo?entityId=5&locale=en&limit=0&entityClass=Foo');
+    expect(Requester.get).toHaveBeenNthCalledWith(4, 'foo?resourceId=5&locale=en&limit=0&resourceKey=Foo');
 
     // Should perform request
     const response5: any = {url: 'http://sulu.lo/admin/api/anything'};
@@ -231,7 +231,7 @@ test('Should load data on response hook callback', () => {
         {method: 'DELETE'}
     );
     expect(Requester.get).toHaveBeenCalledTimes(5);
-    expect(Requester.get).toHaveBeenNthCalledWith(5, 'foo?entityId=5&locale=en&limit=0&entityClass=Foo');
+    expect(Requester.get).toHaveBeenNthCalledWith(5, 'foo?resourceId=5&locale=en&limit=0&resourceKey=Foo');
 
     // Should not perform request because of a collaboration request
     const response6: any = {url: 'http://sulu.lo/admin/api/collaborations?id=1234&resourceKey=pages'};

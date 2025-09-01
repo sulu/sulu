@@ -93,6 +93,10 @@ Then you need to update the route configuration in your `config/routes/sulu_admi
 +    resource: "@SuluSnippetBundle/config/routing_admin_api.yaml"
      prefix: /admin/api
 
++sulu_next_route_api:
++    resource: "@SuluNextRouteBundle/config/routing_admin_api.yaml"
++    prefix: /admin/api
++
 +sulu_next_page_api:
 +    resource: "@SuluNextPageBundle/config/routing_admin_api.yaml"
 +    prefix: /admin/api
@@ -485,6 +489,12 @@ now independent of the locale and contain all metadata for all locales this mean
 -$metadata->setPlaceholder($placeholder);
 +$metadata->setPlaceholder($placeholder, $locale);
 ```
+
+### ResourceLocator endpoint changed
+
+The ResourceLocator endpoint was moved from PageBundle to the new RouteBundle.  
+It changed from `/admin/api/resourcelocators?action=generate` to `/admin/api/resource-locators`.
+Also, the endpoint no longer expects `entityClass` or `entityId` instead the `resourceKey` and `resourceId` are expected.
 
 ### FOSRestRouting Bundle removed
 

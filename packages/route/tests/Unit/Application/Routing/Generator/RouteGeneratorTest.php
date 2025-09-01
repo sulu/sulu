@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Route\Tests\Unit\Application\Generator;
+namespace Sulu\Route\Tests\Unit\Application\Routing\Generator;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;

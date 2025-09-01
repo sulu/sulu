@@ -127,9 +127,6 @@ class ResourceLocator extends React.Component<FieldTypeProps<?string>> {
             formInspector,
             onChange,
             schemaOptions: {
-                entity_class: {
-                    value: entityClass,
-                } = {},
                 route_schema: {
                     value: routeSchema,
                 } = {},
@@ -155,7 +152,6 @@ class ResourceLocator extends React.Component<FieldTypeProps<?string>> {
                 resourceKey: formInspector.resourceKey,
                 locale: formInspector.locale ? formInspector.locale.get() : userStore.contentLocale,
                 id: formInspector.id,
-                entityClass,
                 routeSchema,
                 ...requestOptions,
             }
@@ -206,11 +202,6 @@ class ResourceLocator extends React.Component<FieldTypeProps<?string>> {
             dataPath,
             disabled,
             formInspector,
-            schemaOptions: {
-                entity_class: {
-                    value: entityClass,
-                } = {},
-            } = {},
             value,
         } = this.props;
 
@@ -245,7 +236,6 @@ class ResourceLocator extends React.Component<FieldTypeProps<?string>> {
                             locale: formInspector.locale ? formInspector.locale.get() : userStore.contentLocale,
                             resourceKey: formInspector.resourceKey,
                             webspace: formInspector.options.webspace,
-                            entityClass,
                             ...options,
                         }}
                         resourceKey={historyResourceKey}

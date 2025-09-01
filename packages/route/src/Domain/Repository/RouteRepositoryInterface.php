@@ -21,6 +21,10 @@ use Sulu\Route\Domain\Model\Route;
  *     slug?: string,
  *     resourceKey?: string,
  *     resourceId?: string,
+ *     excludeResource?: array{
+ *         resourceKey: string,
+ *         resourceId: string,
+ *     },
  * }
  */
 interface RouteRepositoryInterface
@@ -31,6 +35,11 @@ interface RouteRepositoryInterface
      * @param RouteFilter $filters
      */
     public function findOneBy(array $filters): ?Route;
+
+    /**
+     * @param RouteFilter $filters
+     */
+    public function existBy(array $filters): bool;
 
     /**
      * @param RouteFilter $filters

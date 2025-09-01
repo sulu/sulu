@@ -145,4 +145,35 @@ class RouteRepositoryTest extends KernelTestCase
 
         $this->assertNull($route);
     }
+
+    public function testExistBySiteSlugLocale(): void
+    {
+        $this->assertTrue($this->routeRepository->existBy([
+            'site' => 'the_site',
+            'slug' => '/example',
+            'locale' => 'en',
+        ]));
+    }
+
+    public function testExistBySiteWithExclude(): void
+    {
+        $this->assertFalse($this->routeRepository->existBy([
+            'site' => 'the_site',
+            'slug' => '/example',
+            'locale' => 'en',
+            'excludeResource' => [
+                'resourceKey' => 'example',
+                'resourceId' => '1',
+            ],
+        ]));
+    }
+
+    public function testExistBySiteSlugLocaleNotFound(): void
+    {
+        $this->assertFalse($this->routeRepository->existBy([
+            'site' => 'the_site',
+            'slug' => '/example-1',
+            'locale' => 'en',
+        ]));
+    }
 }

@@ -1,0 +1,5 @@
+sulu_route.post_resource_locator:
+    path: /resource-locators.{_format}
+    methods: POST
+    controller: sulu_route.resource_locator_generate_controller
+    format: json
