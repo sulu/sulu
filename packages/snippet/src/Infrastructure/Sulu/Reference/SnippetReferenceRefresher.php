@@ -26,6 +26,12 @@ use Sulu\Snippet\Domain\Model\Snippet;
 use Sulu\Snippet\Domain\Model\SnippetDimensionContent;
 use Sulu\Snippet\Domain\Model\SnippetDimensionContentInterface;
 
+/**
+ * @internal This service is intended for internal use only within the package/library.
+ * Modifying or depending on this service may result in unexpected behavior and is not supported.
+ *
+ * You can create a custom implementation of ReferenceRefresherInterface if you need to change the behavior.
+ */
 class SnippetReferenceRefresher implements ReferenceRefresherInterface
 {
     /**
