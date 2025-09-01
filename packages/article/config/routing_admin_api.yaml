@@ -4,12 +4,6 @@ sulu_article.get_articles:
     controller: sulu_article.admin_article_controller::cgetAction
     format: json
 
-sulu_article.get_article_versions:
-    path: /articles/{id}/versions.{_format}
-    methods: GET
-    controller: sulu_article.admin_article_controller::getVersionsAction
-    format: json
-
 sulu_article.get_article:
     path: /articles/{id}.{_format}
     methods: GET
@@ -38,4 +32,10 @@ sulu_article.post_article_trigger:
     path: /articles/{id}.{_format}
     methods: POST
     controller: sulu_article.admin_article_controller::postTriggerAction
+    format: json
+
+sulu_article.get_article_versions:
+    path: /articles/{id}/versions.{_format}
+    methods: GET
+    controller: sulu_article.admin_article_controller::getVersionsAction
     format: json

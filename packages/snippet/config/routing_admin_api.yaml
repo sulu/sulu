@@ -4,12 +4,6 @@ sulu_snippet.get_snippets:
     controller: sulu_snippet.admin_snippet_controller::cgetAction
     format: json
 
-sulu_snippet.get_snippet_versions:
-    path: /snippets/{id}/versions.{_format}
-    methods: GET
-    controller: sulu_snippet.admin_snippet_controller::getVersionsAction
-    format: json
-
 sulu_snippet.get_snippet:
     path: /snippets/{id}.{_format}
     methods: GET
@@ -38,4 +32,10 @@ sulu_snippet.post_snippet_trigger:
     path: /snippets/{id}.{_format}
     methods: POST
     controller: sulu_snippet.admin_snippet_controller::postTriggerAction
+    format: json
+
+sulu_snippet.get_snippet_versions:
+    path: /snippets/{id}/versions.{_format}
+    methods: GET
+    controller: sulu_snippet.admin_snippet_controller::getVersionsAction
     format: json
