@@ -802,9 +802,9 @@ The corresponding traits `TimestampableTrait` and `UserBlameTrait` have been upd
 
 ### RouteBundle replaced
 
-The `Sulu\Bundle\RouteBundle` was rewritten from stretch and is replaced by the new `Sulu\Route` classes and services.
-Services like the `RouteManager` (`sulu_route.manager.route_manager`) are replaced by the new `RouteRepository` and changing the new `Route` entity directly
-is enough.
+The `Sulu\Bundle\RouteBundle` was completely rewritten from scratch and is now replaced by the new `Sulu\Route` classes and services.
+Services such as the `RouteManager` (`sulu_route.manager.route_manager`) have been replaced by the new `RouteRepository`,
+and directly modifying the new `Route` entity is sufficient.
 
 ### Changed methods for 3.0
 
