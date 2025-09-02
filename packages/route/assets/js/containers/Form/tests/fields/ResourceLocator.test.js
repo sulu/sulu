@@ -27,8 +27,8 @@ jest.mock(
         mockExtendObservable(this, {
             data: {},
         });
-    }
-    ));
+    })
+);
 
 jest.mock(
     'sulu-admin-bundle/containers/Form/stores/ResourceFormStore',
@@ -38,8 +38,8 @@ jest.mock(
         this.locale = resourceStore.locale;
         this.options = options || {};
         this.resourceStore = resourceStore;
-    }
-    ));
+    })
+);
 
 jest.mock('sulu-admin-bundle/containers/Form/FormInspector', () => jest.fn(function(formStore) {
     this.id = formStore.id;
