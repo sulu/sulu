@@ -4,8 +4,10 @@ import {
     conditionDataProviderRegistry,
     fieldRegistry,
     viewRegistry,
-    ResourceLocator,
 } from 'sulu-admin-bundle/containers';
+import {
+    ResourceLocator,
+} from 'sulu-route-bundle/containers';
 import webspaceConditionDataProvider from './containers/Form/conditionDataProviders/webspaceConditionDataProvider';
 import SearchResult from './containers/Form/fields/SearchResult';
 import SegmentSelect from './containers/Form/fields/SegmentSelect';

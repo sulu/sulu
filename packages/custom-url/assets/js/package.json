@@ -6,6 +6,7 @@
     "devDependencies": {
         "enzyme": "^3.3.0",
         "sulu-admin-bundle": "file:../../../src/Sulu/Bundle/AdminBundle/Resources/js",
+        "sulu-route-bundle": "file:../../route/assets/js",
         "sulu-page-bundle": "file:../../page/assets/js",
         "@testing-library/jest-dom": "^5.17.0",
         "@testing-library/react": "^12.1.5",
@@ -16,6 +17,7 @@
         "mobx-react": "^5.0.0",
         "react": "^16.2.0 || ^17.0.0",
         "sulu-admin-bundle": "*",
+        "sulu-route-bundle": "*",
         "sulu-page-bundle": "*"
     }
 }

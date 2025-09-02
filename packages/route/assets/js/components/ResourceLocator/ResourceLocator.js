@@ -2,7 +2,7 @@
 import React from 'react';
 import {action, computed, observable} from 'mobx';
 import {observer} from 'mobx-react';
-import Input from '../Input';
+import Input from 'sulu-admin-bundle/components/Input';
 import resourceLocatorStyles from './resourceLocator.scss';
 import type {IObservableValue} from 'mobx/lib/mobx';
 

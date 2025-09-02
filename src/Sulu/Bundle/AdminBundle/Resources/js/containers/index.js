@@ -28,10 +28,8 @@ import Form, {
     metadataStore as formMetadataStore,
     ResourceFormStore,
     resourceFormStoreFactory,
-    ResourceLocator,
     Renderer,
 } from './Form';
-import ResourceLocatorHistory from './ResourceLocatorHistory';
 import ResourceMultiSelect from './ResourceMultiSelect';
 import ResourceSingleSelect from './ResourceSingleSelect';
 import MultiAutoComplete from './MultiAutoComplete';
@@ -86,8 +84,6 @@ export {
     Renderer,
     ResourceFormStore,
     resourceFormStoreFactory,
-    ResourceLocator,
-    ResourceLocatorHistory,
     ResourceMultiSelect,
     ResourceSingleSelect,
     SingleAutoComplete,

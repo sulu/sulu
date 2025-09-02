@@ -1,7 +1,8 @@
 // @flow
 import React from 'react';
 import {shallow} from 'enzyme';
-import {FormInspector, ResourceFormStore, ResourceLocatorHistory} from 'sulu-admin-bundle/containers';
+import {FormInspector, ResourceFormStore} from 'sulu-admin-bundle/containers';
+import {ResourceLocatorHistory} from 'sulu-route-bundle/containers';
 import {ResourceStore} from 'sulu-admin-bundle/stores';
 import {fieldTypeDefaultProps} from 'sulu-admin-bundle/utils/TestHelper';
 import CustomUrl from '../../fields/CustomUrl';

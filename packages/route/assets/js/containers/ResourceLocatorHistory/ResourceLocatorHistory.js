@@ -2,12 +2,12 @@
 import React, {Fragment} from 'react';
 import {action, observable} from 'mobx';
 import {observer} from 'mobx-react';
-import {translate} from '../../utils/Translator';
-import Dialog from '../../components/Dialog';
-import Loader from '../../components/Loader';
-import Overlay from '../../components/Overlay';
-import Table from '../../components/Table';
-import ResourceListStore from '../../stores/ResourceListStore';
+import {translate} from 'sulu-admin-bundle/utils/Translator';
+import Dialog from 'sulu-admin-bundle/components/Dialog';
+import Loader from 'sulu-admin-bundle/components/Loader';
+import Overlay from 'sulu-admin-bundle/components/Overlay';
+import Table from 'sulu-admin-bundle/components/Table';
+import ResourceListStore from 'sulu-admin-bundle/stores/ResourceListStore';
 import resourceLocatorHistoryStyles from './resourceLocatorHistory.scss';
 
 type Props = {|

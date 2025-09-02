@@ -36,7 +36,6 @@ import Popover from './Popover';
 import PublishIndicator from './PublishIndicator';
 import QRCode from './QRCode';
 import RectangleSelection from './RectangleSelection';
-import ResourceLocator from './ResourceLocator';
 import SingleSelect from './SingleSelect';
 import Table from './Table';
 import Tabs from './Tabs';
@@ -84,7 +83,6 @@ export {
     PublishIndicator,
     QRCode,
     RectangleSelection,
-    ResourceLocator,
     SingleSelect,
     Table,
     Tabs,

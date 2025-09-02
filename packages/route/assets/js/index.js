@@ -1,6 +1,7 @@
 // @flow
 import {Config} from 'sulu-admin-bundle/services';
-import {fieldRegistry, ResourceLocator} from 'sulu-admin-bundle/containers';
+import {fieldRegistry} from 'sulu-admin-bundle/containers';
+import {ResourceLocator} from './containers';
 import initializer from 'sulu-admin-bundle/services/initializer';
 import type {FieldTypeProps} from 'sulu-admin-bundle/containers/Form/types';
 

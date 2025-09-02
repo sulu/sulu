@@ -28,7 +28,6 @@ import Phone from './fields/Phone';
 import QRCode from './fields/QRCode';
 import SingleSelect from './fields/SingleSelect';
 import Select from './fields/Select';
-import ResourceLocator from './fields/ResourceLocator';
 import Renderer from './Renderer';
 import SmartContent from './fields/SmartContent';
 import TextArea from './fields/TextArea';
@@ -65,7 +64,6 @@ export {
     Phone,
     QRCode,
     Renderer,
-    ResourceLocator,
     Select,
     SmartContent,
     SingleSelect,

@@ -2,22 +2,22 @@
 import React from 'react';
 import {mount, shallow} from 'enzyme';
 import {extendObservable as mockExtendObservable, observable} from 'mobx';
-import fieldTypeDefaultProps from '../../../../utils/TestHelper/fieldTypeDefaultProps';
-import FormInspector from '../../FormInspector';
-import ResourceFormStore from '../../stores/ResourceFormStore';
-import Requester from '../../../../services/Requester';
-import ResourceStore from '../../../../stores/ResourceStore';
+import fieldTypeDefaultProps from 'sulu-admin-bundle/utils/TestHelper/fieldTypeDefaultProps';
+import FormInspector from 'sulu-admin-bundle/Form/FormInspector';
+import ResourceFormStore from 'sulu-admin-bundle/Form/stores/ResourceFormStore';
+import Requester from 'sulu-admin-bundle/services/Requester';
+import ResourceStore from 'sulu-admin-bundle/stores/ResourceStore';
 import ResourceLocator from '../../fields/ResourceLocator';
-import ResourceLocatorComponent from '../../../../components/ResourceLocator';
-import userStore from '../../../../stores/userStore';
+import ResourceLocatorComponent from 'sulu-admin-bundle/components/ResourceLocator';
+import userStore from 'sulu-admin-bundle/stores/userStore';
 
-jest.mock('../../../../utils/Translator', () => ({
+jest.mock('sulu-admin-bundle/utils/Translator', () => ({
     translate: jest.fn((key) => key),
 }));
 
-jest.mock('../../../../stores/userStore', () => ({}));
+jest.mock('sulu-admin-bundle/stores/userStore', () => ({}));
 
-jest.mock('../../../../stores/ResourceStore', () => jest.fn(function(resourceKey, id, observableOptions = {}) {
+jest.mock('sulu-admin-bundle/stores/ResourceStore', () => jest.fn(function(resourceKey, id, observableOptions = {}) {
     this.resourceKey = resourceKey;
     this.id = id;
     this.locale = observableOptions.locale;
@@ -48,7 +48,7 @@ jest.mock('../../FormInspector', () => jest.fn(function(formStore) {
     this.isFieldModified = jest.fn().mockReturnValue(false);
 }));
 
-jest.mock('../../../../services/Requester', () => ({
+jest.mock('sulu-admin-bundle/services/Requester', () => ({
     post: jest.fn(),
 }));
 

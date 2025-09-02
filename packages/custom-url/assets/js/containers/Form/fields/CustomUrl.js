@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import {observer} from 'mobx-react';
-import {ResourceLocatorHistory} from 'sulu-admin-bundle/containers';
+import {ResourceLocatorHistory} from 'sulu-route-bundle/containers';
 import CustomUrlComponent from '../../../components/CustomUrl';
 import customUrlStyles from './customUrl.scss';
 import type {FieldTypeProps} from 'sulu-admin-bundle/types';
