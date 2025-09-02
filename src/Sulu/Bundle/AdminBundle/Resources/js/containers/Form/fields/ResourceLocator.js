@@ -156,7 +156,7 @@ class ResourceLocator extends React.Component<FieldTypeProps<?string>> {
                 ...requestOptions,
             }
         ).then(action((response) => {
-            onChange(response.resourcelocator);
+            onChange(response.resourceLocator);
         }));
     };
 

@@ -95,7 +95,7 @@ class AdminController
             'forgotPasswordReset' => $this->urlGenerator->generate('sulu_security.reset_password.email'),
             'resetPassword' => $this->urlGenerator->generate('sulu_security.reset_password.reset'),
             'translations' => $this->urlGenerator->generate('sulu_admin.translation'),
-            'generateUrl' => $this->urlGenerator->generate('sulu_page.post_resourcelocator', ['action' => 'generate']),
+            'generateUrl' => $this->urlGenerator->generate('sulu_route.post_resource_locator'),
             'routing' => $this->urlGenerator->generate('fos_js_routing_js'),
             'has_single_sign_on' => $this->hasSingleSignOnProvider,
         ];

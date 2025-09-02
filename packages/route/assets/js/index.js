@@ -1,15 +1,13 @@
 // @flow
-import {resourceRouteRegistry} from 'sulu-admin-bundle/services/ResourceRequester';
+import {Config} from 'sulu-admin-bundle/services';
 import {fieldRegistry, ResourceLocator} from 'sulu-admin-bundle/containers';
 import initializer from 'sulu-admin-bundle/services/initializer';
 import type {FieldTypeProps} from 'sulu-admin-bundle/containers/Form/types';
 
-initializer.addUpdateConfigHook('sulu_admin', (config: Object, initialized: boolean) => {
+initializer.addUpdateConfigHook('sulu_route', (config: Object, initialized: boolean) => {
     if (initialized) {
         return;
     }
-
-    const routeGenerationUrl = resourceRouteRegistry.getUrl('list', 'routes', {action: 'generate'});
 
     fieldRegistry.add(
         'route',
@@ -27,7 +25,7 @@ initializer.addUpdateConfigHook('sulu_admin', (config: Object, initialized: bool
 
                 return Promise.resolve(mode);
             },
-            generationUrl: routeGenerationUrl,
+            generationUrl: Config.endpoints.generateUrl,
             options: {history: true},
         }
     );

@@ -131,7 +131,7 @@ test('Pass correct options to ResourceLocatorHistory if resource already existed
         <ResourceLocator
             {...fieldTypeDefaultProps}
             fieldTypeOptions={{
-                generationUrl: '/admin/api/resourcelocators',
+                generationUrl: '/admin/api/resource-locators',
                 historyResourceKey: 'resource-locators',
                 modeResolver: () => modePromise,
                 options: {history: true},
@@ -311,7 +311,7 @@ test('Should automatically request new URL when part field is finished on add fo
     });
 
     const resourceLocatorPromise = Promise.resolve({
-        resourcelocator: '/test',
+        resourceLocator: '/test',
     });
     Requester.post.mockReturnValue(resourceLocatorPromise);
 
@@ -381,7 +381,7 @@ test('Should request URL with parameters from FormInspector options, fieldTypeOp
     });
 
     const resourceLocatorPromise = Promise.resolve({
-        resourcelocator: '/test',
+        resourceLocator: '/test',
     });
     Requester.post.mockReturnValue(resourceLocatorPromise);
 
@@ -870,7 +870,7 @@ test('Should request new URL with correct options and disable button when refres
         />
     );
     const resourceLocatorPromise = Promise.resolve({
-        resourcelocator: '/test',
+        resourceLocator: '/test',
     });
     Requester.post.mockReturnValue(resourceLocatorPromise);
 
