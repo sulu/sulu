@@ -43,8 +43,6 @@ class Kernel extends SuluTestKernel
     {
         $bundles = [...parent::registerBundles()];
 
-        $bundles[] = new SuluPageBundle();
-        $bundles[] = new SuluContentBundle();
         $bundles[] = new SuluArticleBundle();
         $bundles[] = new ExampleTestBundle(); // TODO currently required for test content bundle, everybody should setup database by its own
         $bundles[] = new SuluSnippetBundle();

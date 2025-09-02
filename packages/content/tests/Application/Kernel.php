@@ -26,8 +26,6 @@ class Kernel extends SuluTestKernel
     public function registerBundles(): iterable
     {
         $bundles = [...parent::registerBundles()];
-        $bundles[] = new SuluContentBundle();
-        $bundles[] = new SuluPageBundle();
         $bundles[] = new ExampleTestBundle();
         $bundles[] = new SuluSnippetBundle();
 

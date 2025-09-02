@@ -12,7 +12,6 @@
 namespace Sulu\Bundle\WebsiteBundle\Tests\Application;
 
 use Sulu\Bundle\TestBundle\Kernel\SuluTestKernel;
-use Sulu\Route\Infrastructure\Symfony\HttpKernel\SuluRouteBundle;
 use Symfony\Bundle\SecurityBundle\SecurityBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
 
@@ -56,12 +55,6 @@ class Kernel extends SuluTestKernel
     public function registerBundles(): iterable
     {
         $bundles = [...parent::registerBundles()];
-
-        foreach ($bundles as $key => $bundle) {
-            if (SuluRouteBundle::class === $bundle::class) { // TODO remove all routing based stuff from WebsiteBundle then conflict should go away
-                unset($bundles[$key]);
-            }
-        }
 
         if ('with_security' === $this->appContext) {
             $bundles[] = new SecurityBundle();
