@@ -32,6 +32,10 @@ sulu_page_api:
     resource: "@SuluPageBundle/Resources/config/routing_api.yaml"
     prefix: /admin/api
 
+sulu_next_route_api:
+    resource: "@SuluNextRouteBundle/config/routing_admin_api.yaml"
+    prefix: /admin/api
+
 sulu_media:
     resource: "@SuluMediaBundle/Resources/config/routing.yaml"
     prefix: /admin/media
@@ -61,10 +65,6 @@ sulu_website:
 
 sulu_website_api:
     resource: "@SuluWebsiteBundle/Resources/config/routing_api.yaml"
-    prefix: /admin/api
-
-sulu_route_api:
-    resource: "@SuluRouteBundle/Resources/config/routing_api.yaml"
     prefix: /admin/api
 
 sulu_preview:

@@ -64,7 +64,6 @@ class SuluTestKernel extends SuluKernel
             new \Sulu\Bundle\DocumentManagerBundle\SuluDocumentManagerBundle(),
             new \Sulu\Bundle\HashBundle\SuluHashBundle(),
             new \Sulu\Bundle\ActivityBundle\SuluActivityBundle(),
-            new \Sulu\Bundle\RouteBundle\SuluRouteBundle(), // TODO replace with new routing bundle
             new \Sulu\Route\Infrastructure\Symfony\HttpKernel\SuluRouteBundle(),
             new \Sulu\Bundle\MarkupBundle\SuluMarkupBundle(),
             new \Sulu\Bundle\PreviewBundle\SuluPreviewBundle(),

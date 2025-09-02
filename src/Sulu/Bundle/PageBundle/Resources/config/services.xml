@@ -133,16 +133,6 @@
             <tag name="sulu.context" context="admin"/>
         </service>
 
-        <!-- preview -->
-        <service id="sulu_page.preview.defaults_provider"
-                 class="Sulu\Bundle\PageBundle\Preview\PageRouteDefaultsProvider">
-            <argument type="service" id="sulu_page.structure.factory"/>
-            <argument type="service" id="sulu_document_manager.document_inspector"/>
-            <argument type="service" id="sulu.content.structure_manager"/>
-
-            <tag name="sulu_route.defaults_provider"/>
-        </service>
-
         <!-- builder -->
         <service id="sulu_core.build.builder.node_order" class="Sulu\Bundle\PageBundle\Build\NodeOrderBuilder">
             <argument type="service" id="sulu.phpcr.session"/>

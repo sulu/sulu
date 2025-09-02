@@ -12,7 +12,6 @@
 namespace Sulu\Route\Tests\Application;
 
 use Sulu\Bundle\PreviewBundle\SuluPreviewBundle;
-use Sulu\Bundle\RouteBundle\SuluRouteBundle as DeprecatedSuluRouteBundle;
 use Sulu\Bundle\TestBundle\Kernel\SuluTestKernel;
 use Sulu\Component\HttpKernel\SuluKernel;
 use Sulu\Route\Domain\Value\RequestAttributeEnum;
@@ -57,8 +56,7 @@ class Kernel extends SuluTestKernel implements CompilerPassInterface
         $hasDynamicRouting = false;
         foreach ($bundles as $key => $bundle) {
             // remove old route bundle to avoid conflicts
-            if (DeprecatedSuluRouteBundle::class === $bundle::class
-                || SuluPreviewBundle::class === $bundle::class
+            if (SuluPreviewBundle::class === $bundle::class
                 || \str_contains($bundle::class, 'Sulu')
                 || \str_contains($bundle::class, 'Massive')
                 || \str_contains($bundle::class, 'PHPCR')

@@ -12,8 +12,6 @@
 namespace Sulu\Component\Content\Document\Subscriber;
 
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
-use Sulu\Bundle\PageBundle\Document\PageDocument;
-use Sulu\Bundle\RouteBundle\Model\RouteInterface;
 use Sulu\Component\Content\Document\Behavior\ExtensionBehavior;
 use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
 use Sulu\Component\Content\Document\Behavior\StructureBehavior;
@@ -29,7 +27,6 @@ use Sulu\Component\DocumentManager\DocumentAccessor;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\Event\CopyLocaleEvent;
 use Sulu\Component\DocumentManager\Events;
-use Sulu\Component\Route\Document\Behavior\RoutableBehavior;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class CopyLocaleSubscriber implements EventSubscriberInterface
@@ -96,11 +93,7 @@ class CopyLocaleSubscriber implements EventSubscriberInterface
         }
 
         if ($destDocument instanceof StructureBehavior && $document instanceof StructureBehavior) {
-            if ($destDocument instanceof RoutableBehavior) {
-                $documentStructure = $this->checkPageTreeRoute($destDocument, $document, $destLocale);
-            } else {
-                $documentStructure = $document->getStructure()->toArray();
-            }
+            $documentStructure = $document->getStructure()->toArray();
 
             $destDocument->setStructureType($document->getStructureType());
             $destDocument->getStructure()->bind($documentStructure);
@@ -134,54 +127,6 @@ class CopyLocaleSubscriber implements EventSubscriberInterface
         $this->documentManager->persist($destDocument, $destLocale, ['omit_modified_domain_event' => true]);
 
         $event->setDestDocument($destDocument);
-    }
-
-    /**
-     * @return array<mixed>
-     */
-    public function checkPageTreeRoute(RoutableBehavior $destDocument, StructureBehavior $document, string $destLocale): array
-    {
-        $documentStructure = $document->getStructure()->toArray();
-        $pageTreeRoutePropertyName = $this->getPageTreeRoutePropertyName($document);
-        $routePath = $documentStructure[$pageTreeRoutePropertyName] ?? null;
-
-        if (!$routePath || !\is_array($routePath) || !\array_key_exists('page', $routePath)) {
-            return $documentStructure;
-        }
-
-        $parentPageUuid = $routePath['page']['uuid'] ?? null;
-
-        /** @var ?PageDocument $destParentDocument */
-        $destParentDocument = $this->documentManager->find(
-            $parentPageUuid,
-            $destLocale
-        );
-
-        if ($destParentDocument instanceof PageDocument) {
-            $destParentUrl = $destParentDocument->getStructure()->getProperty('url')->getValue();
-        } else {
-            $destParentUrl = '';
-            $parentPageUuid = null;
-        }
-
-        $routePathProp = $destParentUrl . $routePath['suffix'];
-        $documentStructure[$pageTreeRoutePropertyName] = [
-            'page' => [
-                'uuid' => $parentPageUuid,
-                'path' => $destParentUrl,
-            ],
-            'path' => $routePathProp,
-            'suffix' => $routePath['suffix'],
-        ];
-        $destDocument->setRoutePath($routePathProp);
-
-        /** @var RouteInterface|null $route */
-        $route = $destDocument->getRoute();
-        if ($route && $route->getLocale() === $destLocale) {
-            $route->setPath($routePathProp);
-        }
-
-        return $documentStructure;
     }
 
     /**

@@ -1,4 +1,0 @@
-{
-    "sulu_activity.resource.routes": "Route",
-    "sulu_activity.description.routes.route_removed": "{userFullName} hat die Route \"{resourceTitle}\" gelöscht."
-}
