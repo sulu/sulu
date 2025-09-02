@@ -664,7 +664,13 @@ Removed classes / services:
 - `Sulu\Bundle\WebsiteBundle\Sitemap\SitemapGeneratorInterface`
 - `Sulu\Bundle\WebsiteBundle\Twig\Sitemap\MemoizedSitemapTwigExtension`
 - `Sulu\Bundle\WebsiteBundle\Twig\Sitemap\SitemapTwigExtension`
-- `Sulu\Bundle\WebsiteBundle\Twig\Sitemap\SitemapTwigExtensionInterface`
+- `Sulu\Bundle\WebsiteBundle\Twig\Content\ContentPathInterface`
+- `Sulu\Bundle\WebsiteBundle\Twig\Content\ContentPathTwigExtension` (moved and internal)
+- `Sulu\Bundle\WebsiteBundle\Twig\Content\ContentTwigExtension`
+- `Sulu\Bundle\WebsiteBundle\Twig\Content\ContentTwigExtensionInterface`
+- `Sulu\Bundle\WebsiteBundle\Twig\Content\MemoizedContentTwigExtensionInterface`
+- `Sulu\Bundle\WebsiteBundle\Twig\Content\ParentNotFoundException`
+- `Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\SingleSelectionPropertyMetadataMapper` (moved and internal)
 - `Sulu\Bundle\PreviewBundle\Preview\Object\PreviewObjectProviderInterface` (use new `PreviewDefaultsProviderInterface` instead)
 - `Sulu\Bundle\PreviewBundle\Preview\Object\PreviewObjectProviderRegistryInterface` (internal)
 - `Sulu\Bundle\PreviewBundle\Preview\Object\PreviewObjectProviderRegistry` (internal)
