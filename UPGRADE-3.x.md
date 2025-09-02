@@ -543,7 +543,7 @@ from the SuluContentBundle. Be aware that also your custom controllers have to b
 +        <controller>Sulu\Content\UserInterface\Controller\Website\ContentController::indexAction</controller>
 ```
 
-### Page, CustomUrl, Snippet, Search JS includes path changed
+### Page, CustomUrl, Snippet, Route, Search JS includes path changed
 
 Some bundles have undergone path changes, requiring corresponding updates to their JS package
 paths. This step is normally automatically handled by the `bin/console sulu:admin:update-build` command,
@@ -556,6 +556,8 @@ kept here for completeness:
 +        "sulu-page-bundle": "file:../../vendor/sulu/sulu/packages/page/assets/js",
 -        "sulu-search-bundle": "file:../../vendor/sulu/sulu/src/Sulu/Bundle/SearchBundle/Resources/js",
 +        "sulu-search-bundle": "file:../../vendor/sulu/sulu/packages/search/assets/js",
+-        "sulu-route-bundle": "file:../../vendor/sulu/sulu/src/Sulu/Bundle/RouteBundle/Resources/js",
++        "sulu-route-bundle": "file:../../vendor/sulu/sulu/packages/route/assets/js",
 -        "sulu-snippet-bundle": "file:../../vendor/sulu/sulu/src/Sulu/Bundle/SnippetBundle/Resources/js",
 +        "sulu-snippet-bundle": "file:../../vendor/sulu/sulu/packages/snippet/assets/js",
 ```

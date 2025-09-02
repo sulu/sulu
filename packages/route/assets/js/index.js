@@ -2,7 +2,6 @@
 import {resourceRouteRegistry} from 'sulu-admin-bundle/services/ResourceRequester';
 import {fieldRegistry, ResourceLocator} from 'sulu-admin-bundle/containers';
 import initializer from 'sulu-admin-bundle/services/initializer';
-import PageTreeRoute from './containers/Form/fields/PageTreeRoute';
 import type {FieldTypeProps} from 'sulu-admin-bundle/containers/Form/types';
 
 initializer.addUpdateConfigHook('sulu_admin', (config: Object, initialized: boolean) => {
@@ -30,16 +29,6 @@ initializer.addUpdateConfigHook('sulu_admin', (config: Object, initialized: bool
             },
             generationUrl: routeGenerationUrl,
             options: {history: true},
-        }
-    );
-
-    fieldRegistry.add(
-        'page_tree_route',
-        PageTreeRoute,
-        {
-            modeResolver: () => {
-                return Promise.resolve('leaf');
-            },
         }
     );
 });

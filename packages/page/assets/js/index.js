@@ -19,6 +19,7 @@ import {loadResourceLocatorInputTypeByWebspace} from './utils/Webspace';
 import PageTabs from './views/PageTabs';
 import PageList from './views/PageList';
 import WebspaceTabs from './views/WebspaceTabs';
+import PageTreeRoute from './containers/Form/fields/PageTreeRoute';
 
 initializer.addUpdateConfigHook('sulu_page', (config: Object, initialized: boolean) => {
     // $FlowFixMe
@@ -49,6 +50,16 @@ initializer.addUpdateConfigHook('sulu_page', (config: Object, initialized: boole
             historyResourceKey: 'page_resourcelocators',
             resourceStorePropertiesToRequest: {
                 parentUuid: 'parentId',
+            },
+        }
+    );
+
+    fieldRegistry.add(
+        'page_tree_route',
+        PageTreeRoute,
+        {
+            modeResolver: () => {
+                return Promise.resolve('leaf');
             },
         }
     );
