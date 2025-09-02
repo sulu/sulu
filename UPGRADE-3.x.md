@@ -502,7 +502,7 @@ It changed from `/admin/api/resourcelocators?action=generate` to `/admin/api/res
 Also, the endpoint no longer expects `entityClass` or `entityId` instead the `resourceKey` and `resourceId` are expected.
 
 Also the `generateUrl` from the `Config` variable was removed if you want to receive it in your JS you need to
-register a hook via `initializer.addUpdateConfigHook('sulu_route', (config, initialized) => {`
+register a hook via `initializer.addUpdateConfigHook('sulu_route', (config, initialized) => {});`.
 
 ### FOSRestRouting Bundle removed
 
