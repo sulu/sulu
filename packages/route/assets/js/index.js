@@ -1,8 +1,7 @@
 // @flow
-import {Config} from 'sulu-admin-bundle/services';
 import {fieldRegistry} from 'sulu-admin-bundle/containers';
-import {ResourceLocator} from './containers';
 import initializer from 'sulu-admin-bundle/services/initializer';
+import {ResourceLocator} from './containers';
 import type {FieldTypeProps} from 'sulu-admin-bundle/containers/Form/types';
 
 initializer.addUpdateConfigHook('sulu_route', (config: Object, initialized: boolean) => {
@@ -26,7 +25,7 @@ initializer.addUpdateConfigHook('sulu_route', (config: Object, initialized: bool
 
                 return Promise.resolve(mode);
             },
-            generationUrl: Config.endpoints.generateUrl,
+            generationUrl: config.generateUrl,
             options: {history: true},
         }
     );

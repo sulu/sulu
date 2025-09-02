@@ -58,6 +58,9 @@ abstract class Admin implements ViewProviderInterface, NavigationProviderInterfa
         return $this->getSecurityContexts();
     }
 
+    /**
+     * @return array<string, mixed>|null
+     */
     public function getConfig(): ?array
     {
         return null;

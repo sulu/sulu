@@ -9,6 +9,11 @@ sulu_contact_api:
 sulu_media:
     resource: "@SuluMediaBundle/Resources/config/routing.yaml"
     prefix:
+
+sulu_next_route_api:
+    resource: "@SuluNextRouteBundle/config/routing_admin_api.yaml"
+    prefix: /admin/api
+
 sulu_security_api:
     resource: "@SuluSecurityBundle/Resources/config/routing_api.yaml"
     prefix: /admin

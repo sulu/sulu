@@ -19,6 +19,8 @@ use Sulu\Route\Domain\Value\RequestAttributeEnum;
 use Sulu\Route\Infrastructure\Symfony\HttpKernel\SuluRouteBundle;
 use Symfony\Cmf\Bundle\RoutingBundle\CmfRoutingBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
+use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -26,7 +28,7 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 /**
  * AppKernel for functional tests.
  */
-class Kernel extends SuluTestKernel
+class Kernel extends SuluTestKernel implements CompilerPassInterface
 {
     /**
      * @var string|null
@@ -40,6 +42,12 @@ class Kernel extends SuluTestKernel
         $this->config = $environmentParts[1] ?? $this->config;
 
         parent::__construct($environment, $debug, $suluContext);
+    }
+
+    public function process(ContainerBuilder $container): void
+    {
+        $container->getDefinition('sulu_route.route_admin')
+            ->setPublic(true);
     }
 
     public function registerBundles(): iterable

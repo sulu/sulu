@@ -3,13 +3,13 @@ import React from 'react';
 import {mount, shallow} from 'enzyme';
 import {extendObservable as mockExtendObservable, observable} from 'mobx';
 import fieldTypeDefaultProps from 'sulu-admin-bundle/utils/TestHelper/fieldTypeDefaultProps';
-import FormInspector from 'sulu-admin-bundle/Form/FormInspector';
-import ResourceFormStore from 'sulu-admin-bundle/Form/stores/ResourceFormStore';
+import FormInspector from 'sulu-admin-bundle/containers/Form/FormInspector';
+import ResourceFormStore from 'sulu-admin-bundle/containers/Form/stores/ResourceFormStore';
 import Requester from 'sulu-admin-bundle/services/Requester';
 import ResourceStore from 'sulu-admin-bundle/stores/ResourceStore';
-import ResourceLocator from '../../fields/ResourceLocator';
-import ResourceLocatorComponent from 'sulu-admin-bundle/components/ResourceLocator';
 import userStore from 'sulu-admin-bundle/stores/userStore';
+import ResourceLocator from '../../fields/ResourceLocator';
+import ResourceLocatorComponent from '../../../../components/ResourceLocator';
 
 jest.mock('sulu-admin-bundle/utils/Translator', () => ({
     translate: jest.fn((key) => key),
@@ -17,25 +17,31 @@ jest.mock('sulu-admin-bundle/utils/Translator', () => ({
 
 jest.mock('sulu-admin-bundle/stores/userStore', () => ({}));
 
-jest.mock('sulu-admin-bundle/stores/ResourceStore', () => jest.fn(function(resourceKey, id, observableOptions = {}) {
-    this.resourceKey = resourceKey;
-    this.id = id;
-    this.locale = observableOptions.locale;
+jest.mock(
+    'sulu-admin-bundle/containers/Form/stores/ResourceFormStore',
+    () => jest.fn(function(resourceKey, id, observableOptions = {}) {
+        this.resourceKey = resourceKey;
+        this.id = id;
+        this.locale = observableOptions.locale;
 
-    mockExtendObservable(this, {
-        data: {},
-    });
-}));
+        mockExtendObservable(this, {
+            data: {},
+        });
+    }
+    ));
 
-jest.mock('../../stores/ResourceFormStore', () => jest.fn(function(resourceStore, formKey, options) {
-    this.resourceKey = resourceStore.resourceKey;
-    this.id = resourceStore.id;
-    this.locale = resourceStore.locale;
-    this.options = options || {};
-    this.resourceStore = resourceStore;
-}));
+jest.mock(
+    'sulu-admin-bundle/containers/Form/stores/ResourceFormStore',
+    () => jest.fn(function(resourceStore, formKey, options) {
+        this.resourceKey = resourceStore.resourceKey;
+        this.id = resourceStore.id;
+        this.locale = resourceStore.locale;
+        this.options = options || {};
+        this.resourceStore = resourceStore;
+    }
+    ));
 
-jest.mock('../../FormInspector', () => jest.fn(function(formStore) {
+jest.mock('sulu-admin-bundle/containers/Form/FormInspector', () => jest.fn(function(formStore) {
     this.id = formStore.id;
     this.locale = formStore.locale;
     this.options = formStore.options;

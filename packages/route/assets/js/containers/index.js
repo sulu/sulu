@@ -1,5 +1,5 @@
 // @flow
-import { ResourceLocator } from './Form';
+import {ResourceLocator} from './Form';
 import ResourceLocatorHistory from './ResourceLocatorHistory';
 
 export {

@@ -27,6 +27,7 @@ use Sulu\Route\Domain\Model\Route;
 use Sulu\Route\Domain\Repository\RouteRepositoryInterface;
 use Sulu\Route\Infrastructure\Doctrine\EventListener\RouteChangedUpdater;
 use Sulu\Route\Infrastructure\Doctrine\Repository\RouteRepository;
+use Sulu\Route\Infrastructure\Sulu\Admin\RouteAdmin;
 use Sulu\Route\Infrastructure\Symfony\DependencyInjection\RouteDefaultsOptionsCompilerPass;
 use Sulu\Route\Infrastructure\SymfonyCmf\Routing\CmfRouteProvider;
 use Sulu\Route\Userinterface\Controller\Admin\ResourceLocatorGenerateController;
@@ -74,7 +75,6 @@ final class SuluRouteBundle extends AbstractBundle
 
         $services = $container->services();
 
-        // Doctrine Route Updater Listener
         $services->set('sulu_route.doctrine_route_changed_updater')
             ->class(RouteChangedUpdater::class)
             ->tag('doctrine.event_listener', ['event' => 'preUpdate', 'entity' => Route::class, 'method' => 'preUpdate'])
@@ -83,7 +83,6 @@ final class SuluRouteBundle extends AbstractBundle
             ->tag('doctrine.event_listener', ['event' => 'onClear', 'method' => 'onClear'])
             ->tag('kernel.reset', ['method' => 'reset']);
 
-        // Repositories services
         $services->set('sulu_route.route_repository')
             ->class(RouteRepository::class)
             ->args([
@@ -161,6 +160,14 @@ final class SuluRouteBundle extends AbstractBundle
                 new Reference('sulu_route.resource_locator_generator'),
             ])
             ->tag('controller.service_arguments');
+
+        $services->set('sulu_route.route_admin')
+            ->class(RouteAdmin::class)
+            ->args([
+                new Reference('router'),
+            ])
+            ->tag('sulu.context', ['context' => 'admin'])
+            ->tag('sulu.admin');
 
         $builder->registerForAutoconfiguration(SiteRouteGeneratorInterface::class)
             ->addTag('sulu_route.site_route_generator');

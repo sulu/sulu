@@ -2,12 +2,12 @@
 import React, {Fragment} from 'react';
 import {action, comparer, computed, observable, reaction, toJS} from 'mobx';
 import {observer} from 'mobx-react';
-import ResourceLocatorComponent from '../../../components/ResourceLocator';
-import ResourceLocatorHistory from '../../../containers/ResourceLocatorHistory';
 import Requester from 'sulu-admin-bundle/services/Requester';
 import {translate} from 'sulu-admin-bundle/utils/Translator';
 import Button from 'sulu-admin-bundle/components/Button';
 import userStore from 'sulu-admin-bundle/stores/userStore';
+import ResourceLocatorHistory from '../../../containers/ResourceLocatorHistory';
+import ResourceLocatorComponent from '../../../components/ResourceLocator';
 import resourceLocatorStyles from './resourceLocator.scss';
 import type {FieldTypeProps} from 'sulu-admin-bundle/types';
 

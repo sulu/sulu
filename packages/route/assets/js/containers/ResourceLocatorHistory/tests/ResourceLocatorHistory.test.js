@@ -3,13 +3,13 @@
 import {extendObservable as mockExtendObservable} from 'mobx';
 // import {shallow} from 'enzyme';
 // import ResourceLocatorHistory from '../ResourceLocatorHistory';
-import ResourceListStore from '../../../stores/ResourceListStore';
+import ResourceListStore from 'sulu-admin-bundle/stores/ResourceListStore';
 
-jest.mock('../../../utils/Translator', () => ({
+jest.mock('sulu-admin-bundle/utils/Translator', () => ({
     translate: jest.fn((key) => key),
 }));
 
-jest.mock('../../../stores/ResourceListStore', () => jest.fn(function() {
+jest.mock('sulu-admin-bundle/stores/ResourceListStore', () => jest.fn(function() {
     this.deleteList = jest.fn();
 
     mockExtendObservable(this, {

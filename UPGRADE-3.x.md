@@ -496,6 +496,9 @@ The ResourceLocator endpoint was moved from PageBundle to the new RouteBundle.
 It changed from `/admin/api/resourcelocators?action=generate` to `/admin/api/resource-locators`.
 Also, the endpoint no longer expects `entityClass` or `entityId` instead the `resourceKey` and `resourceId` are expected.
 
+Also the `generateUrl` from the `Config` variable was removed if you want to receive it in your JS you need to
+register a hook via `initializer.addUpdateConfigHook('sulu_route', (config, initialized) => {});`.
+
 ### FOSRestRouting Bundle removed
 
 As announced in Sulu [2.6.10](https://github.com/sulu/sulu/blob/2.6/UPGRADE-2.x.md)

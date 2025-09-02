@@ -6,6 +6,7 @@
         "preinstall": "node preinstall.js",
         "lint:js": "eslint . --cache",
         "lint:scss": "stylelint src/Sulu/Bundle/*/Resources/js/**/*.scss packages/*/assets/js/**/*.scss",
+        "lint": "npm run lint:js && npm run lint:scss && npm run flow && npm run depcruise",
         "flow": "flow",
         "test": "jest",
         "depcruise": "depcruise src/Sulu/Bundle/*/Resources/js packages/*/assets/js -c dependency-cruiser.json",

@@ -1,7 +1,8 @@
 // @flow
 import React from 'react';
 import {mount} from 'enzyme';
-import {FormInspector, ResourceFormStore, SingleSelection, ResourceLocator} from 'sulu-admin-bundle/containers';
+import {FormInspector, ResourceFormStore, SingleSelection} from 'sulu-admin-bundle/containers';
+import {ResourceLocator} from 'sulu-route-bundle/containers';
 import {fieldTypeDefaultProps} from 'sulu-admin-bundle/utils/TestHelper';
 import {ResourceStore, SingleSelectionStore} from 'sulu-admin-bundle/stores';
 import {extendObservable as mockExtendObservable, observable} from 'mobx';

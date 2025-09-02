@@ -128,7 +128,6 @@ class AdminControllerTest extends SuluTestCase
                 'forgotPasswordReset' => '/admin/security/reset/email',
                 'resetPassword' => '/admin/security/reset',
                 'translations' => '/admin/translations',
-                'generateUrl' => '/admin/api/resourcelocators?action=generate',
                 'routing' => '/admin/js/routing',
                 'has_single_sign_on' => false,
             ],
