@@ -23,12 +23,11 @@ class FixturesBuilder extends SuluBuilder
 
     public function getDependencies()
     {
-        return ['database', 'phpcr'];
+        return ['database'];
     }
 
     public function build()
     {
         $this->execCommand('Loading ORM fixtures', 'doctrine:fixtures:load', ['--no-interaction' => true, '--append' => true]);
-        $this->execCommand('Loading SULU fixtures', 'sulu:document:fixtures:load', ['--no-interaction' => true, '--append' => true]);
     }
 }

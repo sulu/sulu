@@ -225,9 +225,7 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
                     'prod' => [
                         'dependencies' => [
                             'database' => [],
-                            'phpcr' => [],
                             'fixtures' => [],
-                            'phpcr_migrations' => [],
                             'system_collections' => [],
                             'security' => [],
                         ],
@@ -236,9 +234,7 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
                         'dependencies' => [
                             'database' => [],
                             'fixtures' => [],
-                            'phpcr' => [],
                             'user' => [],
-                            'phpcr_migrations' => [],
                             'system_collections' => [],
                             'security' => [],
                         ],
@@ -246,7 +242,6 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
                     'maintain' => [
                         'dependencies' => [
                             'node_order' => [],
-                            'phpcr_migrations' => [],
                         ],
                     ],
                 ],
@@ -259,12 +254,6 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
             if ($contentPageBundle) {
                 $massiveBuildConfig['targets']['prod']['dependencies']['homepage'] = [];
                 $massiveBuildConfig['targets']['dev']['dependencies']['homepage'] = [];
-            }
-
-            $phpcrPageBundle = \array_key_exists('SuluPageBundle', $bundles) ? $bundles['SuluPageBundle'] : null;
-            if ($phpcrPageBundle) {
-                $massiveBuildConfig['targets']['prod']['dependencies']['phpcr'] = [];
-                $massiveBuildConfig['targets']['dev']['dependencies']['phpcr'] = [];
             }
 
             $container->prependExtensionConfig(

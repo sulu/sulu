@@ -21415,18 +21415,6 @@ parameters:
 			path: src/Sulu/Bundle/CoreBundle/Build/DatabaseBuilder.php
 
 		-
-			message: '#^Cannot call method getOption\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Bundle/CoreBundle/Build/PhpcrBuilder.php
-
-		-
-			message: '#^Cannot call method initialize\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Bundle/CoreBundle/Build/PhpcrMigrationsBuilder.php
-
-		-
 			message: '#^Cannot access offset ''command'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1

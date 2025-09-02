@@ -7,17 +7,6 @@
             <tag name="massive_build.builder" />
         </service>
 
-        <service id="sulu_core.build.builder.phpcr" class="Sulu\Bundle\CoreBundle\Build\PhpcrBuilder">
-            <tag name="massive_build.builder" />
-        </service>
-
-        <service id="sulu_core.build.builder.phpcr_migrations" class="Sulu\Bundle\CoreBundle\Build\PhpcrMigrationsBuilder">
-            <argument type="service" id="phpcr_migrations.migrator_factory"/>
-            <argument type="service" id="phpcr_migrations.version_storage"/>
-
-            <tag name="massive_build.builder" />
-        </service>
-
         <service id="sulu_core.build.builder.fixtures" class="Sulu\Bundle\CoreBundle\Build\FixturesBuilder">
             <tag name="massive_build.builder" />
         </service>
