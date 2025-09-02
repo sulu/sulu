@@ -23,7 +23,7 @@ class MediaAudienceTargetingSubscriber
 {
     public function loadClassMetadata(LoadClassMetadataEventArgs $event)
     {
-        /** @var $metadata ClassMetadataInfo */
+        /** @var ClassMetadataInfo<object> $metadata */
         $metadata = $event->getClassMetadata();
         $reflection = $metadata->getReflectionClass();
 

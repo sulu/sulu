@@ -76,7 +76,7 @@ class RestHelper implements RestHelperInterface
         }
 
         $sortBy = $this->listRestHelper->getSortColumn();
-        if (null != $sortBy) {
+        if (null != $sortBy && \array_key_exists($sortBy, $fieldDescriptors)) {
             $listBuilder->sort($fieldDescriptors[$sortBy], $this->listRestHelper->getSortOrder());
         }
     }

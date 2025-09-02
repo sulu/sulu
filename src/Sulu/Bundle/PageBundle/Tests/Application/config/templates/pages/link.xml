@@ -1,0 +1,21 @@
+<?xml version="1.0" ?>
+<template xmlns="http://schemas.sulu.io/template/template"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/template.xsd">
+
+    <key>internallinks</key>
+
+    <view>default</view>
+    <controller>Sulu\Bundle\WebsiteBundle\Controller\DefaultController::indexAction</controller>
+    <cacheLifetime>2400</cacheLifetime>
+
+    <properties>
+        <property name="title" type="text_line"/>
+        <property name="url" type="resource_locator">
+            <tag name="sulu.rlp"/>
+        </property>
+        <property name="link_to_page" type="link"/>
+        <property name="link_to_other_page" type="link"/>
+        <property name="external_link" type="link"/>
+    </properties>
+</template>
