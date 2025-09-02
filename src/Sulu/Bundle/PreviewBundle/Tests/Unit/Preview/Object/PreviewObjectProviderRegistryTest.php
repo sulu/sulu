@@ -14,8 +14,8 @@ namespace Sulu\Bundle\PreviewBundle\Tests\Unit\Preview\Object;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\PreviewBundle\Preview\Exception\ProviderNotFoundException;
-use Sulu\Bundle\PreviewBundle\Preview\Object\PreviewObjectProviderInterface;
 use Sulu\Bundle\PreviewBundle\Preview\Object\PreviewObjectProviderRegistry;
+use Sulu\Bundle\PreviewBundle\Preview\Provider\PreviewDefaultsProviderInterface;
 
 class PreviewObjectProviderRegistryTest extends TestCase
 {
@@ -23,7 +23,7 @@ class PreviewObjectProviderRegistryTest extends TestCase
 
     public function testGetPreviewObjectProviders(): void
     {
-        $provider = $this->prophesize(PreviewObjectProviderInterface::class);
+        $provider = $this->prophesize(PreviewDefaultsProviderInterface::class);
         $providerKey = 'test-provider';
         $providers = [$providerKey => $provider->reveal()];
         $previewObjectProviderRegistry = new PreviewObjectProviderRegistry($providers);
@@ -37,7 +37,7 @@ class PreviewObjectProviderRegistryTest extends TestCase
 
     public function testGetPreviewObjectProvider(): void
     {
-        $provider = $this->prophesize(PreviewObjectProviderInterface::class);
+        $provider = $this->prophesize(PreviewDefaultsProviderInterface::class);
         $providerKey = 'test-provider';
         $providers = [$providerKey => $provider->reveal()];
         $previewObjectProviderRegistry = new PreviewObjectProviderRegistry($providers);
@@ -58,7 +58,7 @@ class PreviewObjectProviderRegistryTest extends TestCase
 
     public function testHasPreviewObjectProvider(): void
     {
-        $provider = $this->prophesize(PreviewObjectProviderInterface::class);
+        $provider = $this->prophesize(PreviewDefaultsProviderInterface::class);
         $providerKey = 'test-provider';
         $providers = [$providerKey => $provider->reveal()];
         $previewObjectProviderRegistry = new PreviewObjectProviderRegistry($providers);

@@ -18,7 +18,6 @@ use Sulu\Bundle\PreviewBundle\Domain\Model\PreviewLinkInterface;
 use Sulu\Bundle\PreviewBundle\Domain\Repository\PreviewLinkRepositoryInterface;
 use Sulu\Bundle\PreviewBundle\Preview\Object\PreviewObjectProviderRegistryInterface;
 use Sulu\Bundle\PreviewBundle\Preview\PreviewContext;
-use Sulu\Bundle\PreviewBundle\Preview\Provider\PreviewDefaultsProviderInterface;
 use Symfony\Component\Routing\RouterInterface;
 
 class PreviewLinkManager implements PreviewLinkManagerInterface
@@ -90,10 +89,6 @@ class PreviewLinkManager implements PreviewLinkManagerInterface
     {
         $provider = $this->previewObjectProviderRegistry->getPreviewObjectProvider($resourceKey);
 
-        if ($provider instanceof PreviewDefaultsProviderInterface) {
-            return $provider->getSecurityContext(new PreviewContext($resourceId, $locale));
-        }
-
-        return $provider->getSecurityContext($resourceId, $locale);
+        return $provider->getSecurityContext(new PreviewContext($resourceId, $locale));
     }
 }

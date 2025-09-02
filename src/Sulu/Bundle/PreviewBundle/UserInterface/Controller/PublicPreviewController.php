@@ -14,7 +14,6 @@ namespace Sulu\Bundle\PreviewBundle\UserInterface\Controller;
 use Sulu\Bundle\PreviewBundle\Domain\Repository\PreviewLinkRepositoryInterface;
 use Sulu\Bundle\PreviewBundle\Preview\Object\PreviewObjectProviderRegistryInterface;
 use Sulu\Bundle\PreviewBundle\Preview\PreviewContext;
-use Sulu\Bundle\PreviewBundle\Preview\Provider\PreviewDefaultsProviderInterface;
 use Sulu\Bundle\PreviewBundle\Preview\Renderer\PreviewRendererInterface;
 use Sulu\Component\Rest\RequestParametersTrait;
 use Symfony\Component\HttpFoundation\Response;
@@ -64,12 +63,8 @@ class PublicPreviewController
         $options['locale'] = $locale;
 
         $provider = $this->previewObjectProviderRegistry->getPreviewObjectProvider($resourceKey);
-        if ($provider instanceof PreviewDefaultsProviderInterface) {
-            $previewContext = new PreviewContext($resourceId, $locale);
-            $object = $provider->getDefaults($previewContext);
-        } else {
-            $object = $provider->getObject($resourceId, $locale);
-        }
+        $previewContext = new PreviewContext($resourceId, $locale);
+        $object = $provider->getDefaults($previewContext);
 
         $content = $this->previewRenderer->render($object, $resourceId, false, $options);
 

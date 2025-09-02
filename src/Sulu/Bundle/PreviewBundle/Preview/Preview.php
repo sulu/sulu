@@ -15,7 +15,6 @@ use Doctrine\Common\Cache\Cache;
 use Psr\Cache\CacheItemPoolInterface;
 use Sulu\Bundle\PreviewBundle\Preview\Exception\ProviderNotFoundException;
 use Sulu\Bundle\PreviewBundle\Preview\Exception\TokenNotFoundException;
-use Sulu\Bundle\PreviewBundle\Preview\Object\PreviewObjectProviderInterface;
 use Sulu\Bundle\PreviewBundle\Preview\Object\PreviewObjectProviderRegistryInterface;
 use Sulu\Bundle\PreviewBundle\Preview\Provider\PreviewDefaultsProviderInterface;
 use Sulu\Bundle\PreviewBundle\Preview\Renderer\PreviewRendererInterface;
@@ -62,20 +61,11 @@ class Preview
 
         $previewContext = new PreviewContext($id, $locale);
 
-        if ($provider instanceof PreviewDefaultsProviderInterface) {
-            /** @var array<string, mixed> $object */
-            $object = $provider->getDefaults($previewContext);
+        /** @var array<string, mixed> $object */
+        $object = $provider->getDefaults($previewContext);
 
-            if (!empty($data)) {
-                $object = $provider->updateValues($previewContext, $object, $data);
-            }
-        } else {
-            /** @var object $object */
-            $object = $provider->getObject($id, $locale);
-
-            if (!empty($data)) {
-                $provider->setValues($object, $locale, $data);
-            }
+        if (!empty($data)) {
+            $object = $provider->updateValues($previewContext, $object, $data);
         }
 
         $cacheItem = new PreviewCacheItem($id, $locale, $userId, $providerKey, $object);
@@ -124,15 +114,10 @@ class Preview
 
         $provider = $this->getProvider($cacheItem->getProviderKey());
         if (!empty($data)) {
-            if ($provider instanceof PreviewDefaultsProviderInterface) {
-                /** @var array<string, mixed> $defaults */
-                $defaults = $cacheItem->getObject();
-                $previewContext = new PreviewContext($id, $locale);
-                $object = $provider->updateValues($previewContext, $defaults, $data);
-                $cacheItem->setObject($object);
-            } else {
-                $provider->setValues($cacheItem->getObject(), $locale, $data);
-            }
+            $defaults = $cacheItem->getObject();
+            $previewContext = new PreviewContext($id, $locale);
+            $object = $provider->updateValues($previewContext, $defaults, $data);
+            $cacheItem->setObject($object);
 
             $this->save($cacheItem);
         }
@@ -163,13 +148,9 @@ class Preview
         $provider = $this->getProvider($cacheItem->getProviderKey());
         $object = $cacheItem->getObject();
         if (!empty($data)) {
-            if ($provider instanceof PreviewDefaultsProviderInterface) {
-                /** @var array<string, mixed> $defaults */
-                $defaults = $object;
-                $object = $provider->updateValues($previewContext, $defaults, $data);
-            } else {
-                $provider->setValues($object, $locale, $data);
-            }
+            /** @var array<string, mixed> $defaults */
+            $defaults = $object;
+            $object = $provider->updateValues($previewContext, $defaults, $data);
         }
 
         if (0 === \count($context)) {
@@ -181,13 +162,8 @@ class Preview
             );
         }
 
-        if ($provider instanceof PreviewDefaultsProviderInterface) {
-            /** @var array<string, mixed> $defaults */
-            $defaults = $cacheItem->getObject();
-            $object = $provider->updateContext($previewContext, $defaults, $context);
-        } else {
-            $object = $provider->setContext($cacheItem->getObject(), $locale, $context);
-        }
+        $defaults = $cacheItem->getObject();
+        $object = $provider->updateContext($previewContext, $defaults, $context);
 
         $cacheItem->setObject($object);
 
@@ -230,6 +206,9 @@ class Preview
         return $this->renderPartial($cacheItem, $options);
     }
 
+    /**
+     * @param array<string, mixed> $options
+     */
     protected function renderPartial(
         PreviewCacheItem $cacheItem,
         array $options = []
@@ -255,19 +234,15 @@ class Preview
         return $parts[0] . self::CONTENT_REPLACER . $parts[2];
     }
 
-    protected function getProvider(string $providerKey): PreviewObjectProviderInterface|PreviewDefaultsProviderInterface
+    protected function getProvider(string $providerKey): PreviewDefaultsProviderInterface
     {
         return $this->previewObjectProviderRegistry->getPreviewObjectProvider($providerKey);
     }
 
     protected function save(PreviewCacheItem $item): void
     {
-        $provider = $this->getProvider($item->getProviderKey());
         $object = $item->getObject();
         $objectType = \get_debug_type($object);
-        if ($provider instanceof PreviewObjectProviderInterface) {
-            $object = $provider->serialize($item->getObject());
-        }
 
         $data = [
             'id' => $item->getId(),
@@ -302,11 +277,7 @@ class Preview
         $data = \json_decode($this->cache->fetch($token), true);
         $provider = $this->getProvider($data['providerKey']);
 
-        if ($provider instanceof PreviewDefaultsProviderInterface) {
-            $object = $provider->getDefaults(new PreviewContext($data['id'], $data['locale']));
-        } else {
-            $object = $provider->deserialize($data['object'], $data['objectClass']);
-        }
+        $object = $provider->getDefaults(new PreviewContext($data['id'], $data['locale']));
 
         $cacheItem = new PreviewCacheItem(
             $data['id'],

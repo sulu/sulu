@@ -31,7 +31,6 @@
         </service>
 
         <service id="sulu_preview.preview.renderer" class="Sulu\Bundle\PreviewBundle\Preview\Renderer\PreviewRenderer">
-            <argument type="service" id="sulu_route.routing.defaults_provider" on-invalid="null"/>
             <argument type="service" id="request_stack"/>
             <argument type="service" id="sulu_preview.preview.kernel_factory"/>
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>

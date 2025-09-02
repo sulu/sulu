@@ -19,16 +19,15 @@ interface PreviewRendererInterface
     /**
      * Renders object in given webspace and locale.
      *
-     * @param mixed $object
-     * @param string $id
-     * @param bool $partial
+     * @param array<string, mixed> $object
+     * @param array<string, mixed> $options
      *
      * @return string
      */
     public function render(
-        $object,
-        $id,
-        $partial = false,
-        $options = []
+        array $object,
+        string $id,
+        bool $partial = false,
+        array $options = []
     );
 }

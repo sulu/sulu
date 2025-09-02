@@ -21,14 +21,14 @@ interface PreviewObjectProviderRegistryInterface
     /**
      * Returns all PreviewObjectProviders.
      *
-     * @return array<PreviewObjectProviderInterface|PreviewDefaultsProviderInterface>
+     * @return array<PreviewDefaultsProviderInterface>
      */
     public function getPreviewObjectProviders(): array;
 
     /**
      * Returns the PreviewObjectProvider for given $providerKey.
      */
-    public function getPreviewObjectProvider(string $providerKey): PreviewObjectProviderInterface|PreviewDefaultsProviderInterface;
+    public function getPreviewObjectProvider(string $providerKey): PreviewDefaultsProviderInterface;
 
     /**
      * Returns true if a PreviewObjectProvider for given $providerKey exists.

@@ -22,7 +22,6 @@ use Sulu\Bundle\AdminBundle\Admin\View\PreviewFormViewBuilderInterface;
 use Sulu\Bundle\AdminBundle\Admin\View\ToolbarAction;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewBuilderFactory;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
-use Sulu\Bundle\PreviewBundle\Preview\Object\PreviewObjectProviderInterface;
 use Sulu\Bundle\PreviewBundle\Preview\Object\PreviewObjectProviderRegistry;
 use Sulu\Bundle\PreviewBundle\Preview\Object\PreviewObjectProviderRegistryInterface;
 use Sulu\Bundle\PreviewBundle\Preview\Provider\PreviewDefaultsProviderInterface;
@@ -76,7 +75,7 @@ class ContentViewBuilderFactoryTest extends TestCase
     }
 
     /**
-     * @param array<string, PreviewObjectProviderInterface|PreviewDefaultsProviderInterface> $providers
+     * @param array<string, PreviewDefaultsProviderInterface> $providers
      */
     protected function createPreviewObjectProviderRegistry(array $providers): PreviewObjectProviderRegistryInterface
     {

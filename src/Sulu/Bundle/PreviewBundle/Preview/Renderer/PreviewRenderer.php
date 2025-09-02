@@ -13,13 +13,11 @@ namespace Sulu\Bundle\PreviewBundle\Preview\Renderer;
 
 use Sulu\Bundle\PreviewBundle\Preview\Events;
 use Sulu\Bundle\PreviewBundle\Preview\Events\PreRenderEvent;
-use Sulu\Bundle\PreviewBundle\Preview\Exception\RouteDefaultsProviderNotFoundException;
 use Sulu\Bundle\PreviewBundle\Preview\Exception\TemplateNotFoundException;
 use Sulu\Bundle\PreviewBundle\Preview\Exception\TwigException;
 use Sulu\Bundle\PreviewBundle\Preview\Exception\UnexpectedException;
 use Sulu\Bundle\PreviewBundle\Preview\Exception\WebspaceLocalizationNotFoundException;
 use Sulu\Bundle\PreviewBundle\Preview\Exception\WebspaceNotFoundException;
-use Sulu\Bundle\RouteBundle\Routing\Defaults\RouteDefaultsProviderInterface;
 use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzer;
 use Sulu\Component\Webspace\Environment;
@@ -42,7 +40,6 @@ use Twig\Error\Error;
 class PreviewRenderer implements PreviewRendererInterface
 {
     public function __construct(
-        private ?RouteDefaultsProviderInterface $routeDefaultsProvider,
         private RequestStack $requestStack,
         private KernelFactoryInterface $kernelFactory,
         private WebspaceManagerInterface $webspaceManager,
@@ -54,10 +51,10 @@ class PreviewRenderer implements PreviewRendererInterface
     }
 
     public function render(
-        $object,
-        $id,
-        $partial = false,
-        $options = []
+        array $object,
+        string $id,
+        bool $partial = false,
+        array $options = []
     ) {
         /** @var string|null $webspaceKey */
         $webspaceKey = $options['webspaceKey'] ?? null;
@@ -89,21 +86,7 @@ class PreviewRenderer implements PreviewRendererInterface
             $request = $currentRequest->request->all();
         }
 
-        if (\is_array($object)) {
-            $attributes = [...$object];
-        } else {
-            if (!$this->routeDefaultsProvider instanceof RouteDefaultsProviderInterface
-                || !\is_object($object)
-            ) {
-                throw new \RuntimeException('This is deprecated replace it with the new PreviewDefaultsProviderInterface');
-            }
-
-            if (!$this->routeDefaultsProvider->supports(\get_class($object))) {
-                throw new RouteDefaultsProviderNotFoundException($object, $id, $webspaceKey, $locale);
-            }
-
-            $attributes = $this->routeDefaultsProvider->getByEntity(\get_class($object), $id, $locale, $object);
-        }
+        $attributes = [...$object];
 
         $attributes['preview'] = true;
         $attributes['partial'] = $partial;

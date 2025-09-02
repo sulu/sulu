@@ -12,13 +12,13 @@
 namespace Sulu\Bundle\PreviewBundle\Tests\Unit\UserInterface\Controller;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
-use Sulu\Bundle\PageBundle\Document\PageDocument;
 use Sulu\Bundle\PreviewBundle\Domain\Model\PreviewLinkInterface;
 use Sulu\Bundle\PreviewBundle\Domain\Repository\PreviewLinkRepositoryInterface;
-use Sulu\Bundle\PreviewBundle\Preview\Object\PreviewObjectProviderInterface;
 use Sulu\Bundle\PreviewBundle\Preview\Object\PreviewObjectProviderRegistryInterface;
+use Sulu\Bundle\PreviewBundle\Preview\Provider\PreviewDefaultsProviderInterface;
 use Sulu\Bundle\PreviewBundle\Preview\Renderer\PreviewRendererInterface;
 use Sulu\Bundle\PreviewBundle\UserInterface\Controller\PublicPreviewController;
 use Twig\Environment;
@@ -101,14 +101,25 @@ class PublicPreviewControllerTest extends TestCase
 
         $this->previewLinkRepository->findByToken('1234567890123')->willReturn($previewLink->reveal());
 
-        $page = $this->prophesize(PageDocument::class);
+        $page = $this->prophesize(\stdClass::class);
 
-        $provider = $this->prophesize(PreviewObjectProviderInterface::class);
-        $provider->getObject('123-123-123', 'de')->willReturn($page->reveal());
+        $provider = $this->prophesize(PreviewDefaultsProviderInterface::class);
+        $provider->getDefaults(Argument::cetera())->willReturn([
+            'object' => $page->reveal(),
+            '_controller' => 'SuluWebsiteBundle:Default:index',
+        ]);
 
         $this->previewObjectProviderRegistry->getPreviewObjectProvider('pages')->willReturn($provider->reveal());
 
-        $this->previewRenderer->render($page->reveal(), '123-123-123', false, \array_merge($options, ['locale' => 'de']))
+        $this->previewRenderer->render(
+            [
+                'object' => $page->reveal(),
+                '_controller' => 'SuluWebsiteBundle:Default:index',
+            ],
+            '123-123-123',
+            false,
+            \array_merge($options, ['locale' => 'de'])
+        )
             ->willReturn('<html><body><h1>Hello World</h1></body></html>');
 
         $response = $this->publicPreviewController->renderAction('1234567890123');

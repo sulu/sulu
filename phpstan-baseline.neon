@@ -379,12 +379,6 @@ parameters:
 			path: src/Sulu/Bundle/ActivityBundle/UserInterface/Controller/ActivityController.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\AdminBundle\\Admin\\Admin\:\:getConfig\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/Admin.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\AdminBundle\\Admin\\AdminPool\:\:getSecurityContexts\(\) should return array\<string, array\<string, array\<string, array\<string\>\>\>\> but returns array\.$#'
 			identifier: return.type
 			count: 1
@@ -1837,198 +1831,6 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/FieldType/FieldTypeOptionRegistryInterface.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\AdminBundle\\FormMetadata\\FormMetadata\:\:setKey\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/FormMetadata/FormMetadata.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\AdminBundle\\FormMetadata\\FormMetadata\:\:setSchema\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/FormMetadata/FormMetadata.php
-
-		-
-			message: '#^Argument of an invalid type array\<Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\OptionMetadata\>\|bool\|int\|string\|null supplied for foreach, only iterables are supported\.$#'
-			identifier: foreach.nonIterable
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/FormMetadata/FormMetadataMapper.php
-
-		-
-			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
-			identifier: foreach.nonIterable
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/FormMetadata/FormMetadataMapper.php
-
-		-
-			message: '#^Cannot access offset ''attributes'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/FormMetadata/FormMetadataMapper.php
-
-		-
-			message: '#^Cannot access offset ''name'' on Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\OptionMetadata\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/FormMetadata/FormMetadataMapper.php
-
-		-
-			message: '#^Cannot access offset ''name'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/FormMetadata/FormMetadataMapper.php
-
-		-
-			message: '#^Cannot access offset ''priority'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/FormMetadata/FormMetadataMapper.php
-
-		-
-			message: '#^Cannot access offset ''value'' on Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\OptionMetadata\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/FormMetadata/FormMetadataMapper.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\AdminBundle\\FormMetadata\\FormMetadataMapper\:\:mapChildren\(\) has parameter \$children with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/FormMetadata/FormMetadataMapper.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\AdminBundle\\FormMetadata\\FormMetadataMapper\:\:mapOptionMeta\(\) has parameter \$parameterValue with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/FormMetadata/FormMetadataMapper.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\AdminBundle\\FormMetadata\\FormMetadataMapper\:\:mapTags\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/FormMetadata/FormMetadataMapper.php
-
-		-
-			message: '#^Parameter \#1 \$attributes of method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\TagMetadata\:\:setAttributes\(\) expects array\<string, string\>, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/FormMetadata/FormMetadataMapper.php
-
-		-
-			message: '#^Parameter \#1 \$descriptions of method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\ItemMetadata\:\:setDescriptions\(\) expects array\<string, string\>, array given\.$#'
-			identifier: argument.type
-			count: 2
-			path: src/Sulu/Bundle/AdminBundle/FormMetadata/FormMetadataMapper.php
-
-		-
-			message: '#^Parameter \#1 \$infoTexts of method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\OptionMetadata\:\:setInfoTexts\(\) expects array\<string, string\>, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/FormMetadata/FormMetadataMapper.php
-
-		-
-			message: '#^Parameter \#1 \$key of method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\FormMetadata\:\:setKey\(\) expects string, float\|int\|string given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/FormMetadata/FormMetadataMapper.php
-
-		-
-			message: '#^Parameter \#1 \$labels of method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\ItemMetadata\:\:setLabels\(\) expects array\<string, string\>, array given\.$#'
-			identifier: argument.type
-			count: 2
-			path: src/Sulu/Bundle/AdminBundle/FormMetadata/FormMetadataMapper.php
-
-		-
-			message: '#^Parameter \#1 \$name of class Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\FieldMetadata constructor expects string, float\|int\|string given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/FormMetadata/FormMetadataMapper.php
-
-		-
-			message: '#^Parameter \#1 \$name of class Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\SectionMetadata constructor expects string, float\|int\|string given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/FormMetadata/FormMetadataMapper.php
-
-		-
-			message: '#^Parameter \#1 \$name of method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\OptionMetadata\:\:setName\(\) expects float\|int\|string\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/FormMetadata/FormMetadataMapper.php
-
-		-
-			message: '#^Parameter \#1 \$name of method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\TagMetadata\:\:setName\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/FormMetadata/FormMetadataMapper.php
-
-		-
-			message: '#^Parameter \#1 \$object of function get_class expects object, array\<string, array\<Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\OptionMetadata\>\|bool\|int\|string\|null\> given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/FormMetadata/FormMetadataMapper.php
-
-		-
-			message: '#^Parameter \#1 \$object of function get_class expects object, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/FormMetadata/FormMetadataMapper.php
-
-		-
-			message: '#^Parameter \#1 \$parameter of method Sulu\\Bundle\\AdminBundle\\FormMetadata\\FormMetadataMapper\:\:mapOption\(\) expects array\{name\: string, type\: string, value\: array\<Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\OptionMetadata\>\|bool\|int\|string\|null\}, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/FormMetadata/FormMetadataMapper.php
-
-		-
-			message: '#^Parameter \#1 \$parameterValue of method Sulu\\Bundle\\AdminBundle\\FormMetadata\\FormMetadataMapper\:\:mapOptionMeta\(\) expects array, Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\OptionMetadata given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/FormMetadata/FormMetadataMapper.php
-
-		-
-			message: '#^Parameter \#1 \$placeholders of method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\OptionMetadata\:\:setPlaceholders\(\) expects array\<string, string\>, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/FormMetadata/FormMetadataMapper.php
-
-		-
-			message: '#^Parameter \#1 \$priority of method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\TagMetadata\:\:setPriority\(\) expects int\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/FormMetadata/FormMetadataMapper.php
-
-		-
-			message: '#^Parameter \#1 \$tags of method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\FieldMetadata\:\:setTags\(\) expects array\<Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\TagMetadata\>, array given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/FormMetadata/FormMetadataMapper.php
-
-		-
-			message: '#^Parameter \#1 \$tags of method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\FormMetadata\:\:setTags\(\) expects array\<Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\TagMetadata\>, array given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/FormMetadata/FormMetadataMapper.php
-
-		-
-			message: '#^Parameter \#1 \$titles of method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\FormMetadata\:\:setTitles\(\) expects array\<string, string\>, array given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/FormMetadata/FormMetadataMapper.php
-
-		-
-			message: '#^Parameter \#1 \$titles of method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\OptionMetadata\:\:setTitles\(\) expects array\<string, string\>, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/FormMetadata/FormMetadataMapper.php
-
-		-
-			message: '#^Parameter \#1 \$value of method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\OptionMetadata\:\:setValue\(\) expects array\<Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\OptionMetadata\>\|bool\|int\|string\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/FormMetadata/FormMetadataMapper.php
-
-		-
 			message: '#^Parameter \#1 \$value of method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\OptionMetadata\:\:setValue\(\) expects array\<Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\OptionMetadata\>\|bool\|int\|string\|null, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -3319,90 +3121,6 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/Parser/SchemaXmlParser.php
 
 		-
-			message: '#^Cannot call method getDefaultTemplate\(\) on Sulu\\Component\\Webspace\\Webspace\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/StructureFormMetadataLoader.php
-
-		-
-			message: '#^Cannot call method getExcludedTemplates\(\) on Sulu\\Component\\Webspace\\Webspace\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/StructureFormMetadataLoader.php
-
-		-
-			message: '#^Cannot call method removeForm\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/StructureFormMetadataLoader.php
-
-		-
-			message: '#^Cannot call method setDefaultType\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/StructureFormMetadataLoader.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\StructureFormMetadataLoader\:\:__construct\(\) has parameter \$defaultTypes with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/StructureFormMetadataLoader.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\StructureFormMetadataLoader\:\:__construct\(\) has parameter \$locales with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/StructureFormMetadataLoader.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\StructureFormMetadataLoader\:\:getMetadata\(\) should return Sulu\\Bundle\\AdminBundle\\Metadata\\MetadataInterface\|null but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/StructureFormMetadataLoader.php
-
-		-
-			message: '#^Parameter \#1 \$data of function unserialize expects string, string\|false given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/StructureFormMetadataLoader.php
-
-		-
-			message: '#^Parameter \#1 \$key of method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\FormMetadata\:\:setKey\(\) expects string, float\|int\|string given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/StructureFormMetadataLoader.php
-
-		-
-			message: '#^Parameter \#1 \$key of method Sulu\\Component\\Webspace\\Manager\\WebspaceManagerInterface\:\:findWebspaceByKey\(\) expects string\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/StructureFormMetadataLoader.php
-
-		-
-			message: '#^Parameter \#1 \$tags of method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\FormMetadata\:\:setTags\(\) expects array\<Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\TagMetadata\>, array given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/StructureFormMetadataLoader.php
-
-		-
-			message: '#^Parameter \#1 \$titles of method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\FormMetadata\:\:setTitles\(\) expects array\<string, string\>, array given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/StructureFormMetadataLoader.php
-
-		-
-			message: '#^Property Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\StructureFormMetadataLoader\:\:\$defaultTypes \(array\<string\>\) does not accept array\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/StructureFormMetadataLoader.php
-
-		-
-			message: '#^Property Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\StructureFormMetadataLoader\:\:\$locales \(array\<string\>\) does not accept array\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/StructureFormMetadataLoader.php
-
-		-
 			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
 			identifier: foreach.nonIterable
 			count: 1
@@ -3595,58 +3313,10 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Metadata/SchemaMetadata/SchemaMetadataInterface.php
 
 		-
-			message: '#^Access to an undefined property object\:\:\$max\.$#'
-			identifier: property.notFound
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Metadata/SchemaMetadata/SelectionPropertyMetadataMapper.php
-
-		-
-			message: '#^Access to an undefined property object\:\:\$min\.$#'
-			identifier: property.notFound
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Metadata/SchemaMetadata/SelectionPropertyMetadataMapper.php
-
-		-
-			message: '#^Parameter \#2 \$minItems of class Sulu\\Bundle\\AdminBundle\\Metadata\\SchemaMetadata\\ArrayMetadata constructor expects int\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Metadata/SchemaMetadata/SelectionPropertyMetadataMapper.php
-
-		-
-			message: '#^Parameter \#3 \$maxItems of class Sulu\\Bundle\\AdminBundle\\Metadata\\SchemaMetadata\\ArrayMetadata constructor expects int\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Metadata/SchemaMetadata/SelectionPropertyMetadataMapper.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\AdminBundle\\Metadata\\SchemaMetadata\\StringMetadata\:\:toJsonSchema\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
 			path: src/Sulu/Bundle/AdminBundle/Metadata/SchemaMetadata/StringMetadata.php
-
-		-
-			message: '#^Access to an undefined property object\:\:\$max\.$#'
-			identifier: property.notFound
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Metadata/SchemaMetadata/TextPropertyMetadataMapper.php
-
-		-
-			message: '#^Access to an undefined property object\:\:\$min\.$#'
-			identifier: property.notFound
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Metadata/SchemaMetadata/TextPropertyMetadataMapper.php
-
-		-
-			message: '#^Parameter \#1 \$minLength of class Sulu\\Bundle\\AdminBundle\\Metadata\\SchemaMetadata\\StringMetadata constructor expects int\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Metadata/SchemaMetadata/TextPropertyMetadataMapper.php
-
-		-
-			message: '#^Parameter \#2 \$maxLength of class Sulu\\Bundle\\AdminBundle\\Metadata\\SchemaMetadata\\StringMetadata constructor expects int\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Metadata/SchemaMetadata/TextPropertyMetadataMapper.php
 
 		-
 			message: '#^Method Sulu\\Bundle\\AdminBundle\\Serializer\\Handler\\SchemaHandler\:\:getSubscribingMethods\(\) return type has no value type specified in iterable type array\.$#'
@@ -4241,54 +3911,6 @@ parameters:
 			identifier: assign.propertyType
 			count: 1
 			path: src/Sulu/Bundle/AdminBundle/Tests/Functional/Metadata/FormMetadata/FormMetadataProviderTest.php
-
-		-
-			message: '#^Call to an undefined method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\ItemMetadata\:\:getOptions\(\)\.$#'
-			identifier: method.notFound
-			count: 2
-			path: src/Sulu/Bundle/AdminBundle/Tests/Functional/Metadata/FormMetadata/StructureFormMetadataLoaderTest.php
-
-		-
-			message: '#^Call to method PHPUnit\\Framework\\Assert\:\:assertInstanceOf\(\) with ''Sulu\\\\Bundle\\\\AdminBundle\\\\Metadata\\\\FormMetadata\\\\FormMetadata'' and Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\FormMetadata will always evaluate to true\.$#'
-			identifier: method.alreadyNarrowedType
-			count: 5
-			path: src/Sulu/Bundle/AdminBundle/Tests/Functional/Metadata/FormMetadata/StructureFormMetadataLoaderTest.php
-
-		-
-			message: '#^Call to method PHPUnit\\Framework\\Assert\:\:assertInstanceOf\(\) with ''Sulu\\\\Bundle\\\\AdminBundle\\\\Metadata\\\\SchemaMetadata\\\\SchemaMetadata'' and Sulu\\Bundle\\AdminBundle\\Metadata\\SchemaMetadata\\SchemaMetadata will always evaluate to true\.$#'
-			identifier: method.alreadyNarrowedType
-			count: 5
-			path: src/Sulu/Bundle/AdminBundle/Tests/Functional/Metadata/FormMetadata/StructureFormMetadataLoaderTest.php
-
-		-
-			message: '#^Call to method PHPUnit\\Framework\\Assert\:\:assertNotNull\(\) with Sulu\\Bundle\\AdminBundle\\Metadata\\SchemaMetadata\\SchemaMetadata will always evaluate to true\.$#'
-			identifier: method.alreadyNarrowedType
-			count: 5
-			path: src/Sulu/Bundle/AdminBundle/Tests/Functional/Metadata/FormMetadata/StructureFormMetadataLoaderTest.php
-
-		-
-			message: '#^Cannot access offset ''settings_form_key'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: src/Sulu/Bundle/AdminBundle/Tests/Functional/Metadata/FormMetadata/StructureFormMetadataLoaderTest.php
-
-		-
-			message: '#^Cannot call method getValue\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: src/Sulu/Bundle/AdminBundle/Tests/Functional/Metadata/FormMetadata/StructureFormMetadataLoaderTest.php
-
-		-
-			message: '#^Parameter \#2 \$haystack of method PHPUnit\\Framework\\Assert\:\:assertCount\(\) expects Countable\|iterable, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Tests/Functional/Metadata/FormMetadata/StructureFormMetadataLoaderTest.php
-
-		-
-			message: '#^Property Sulu\\Bundle\\AdminBundle\\Tests\\Functional\\Metadata\\FormMetadata\\StructureFormMetadataLoaderTest\:\:\$structureFormMetadataLoader \(Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\StructureFormMetadataLoader\) does not accept object\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Tests/Functional/Metadata/FormMetadata/StructureFormMetadataLoaderTest.php
 
 		-
 			message: '#^Call to an undefined method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\ItemMetadata\:\:getItems\(\)\.$#'
@@ -4993,96 +4615,6 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/Entity/CollaborationRepositoryTest.php
 
 		-
-			message: '#^Access to an undefined property Sulu\\Component\\Content\\Metadata\\ItemMetadata\:\:\$defaultComponentName\.$#'
-			identifier: property.notFound
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/FormMetadata/FormMetadataMapperTest.php
-
-		-
-			message: '#^Call to an undefined method Sulu\\Component\\Content\\Metadata\\ItemMetadata\:\:addComponent\(\)\.$#'
-			identifier: method.notFound
-			count: 2
-			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/FormMetadata/FormMetadataMapperTest.php
-
-		-
-			message: '#^Call to an undefined method Sulu\\Component\\Content\\Metadata\\ItemMetadata\:\:setMaxOccurs\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/FormMetadata/FormMetadataMapperTest.php
-
-		-
-			message: '#^Call to an undefined method Sulu\\Component\\Content\\Metadata\\ItemMetadata\:\:setMinOccurs\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/FormMetadata/FormMetadataMapperTest.php
-
-		-
-			message: '#^Cannot access offset 0 on array\<Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\OptionMetadata\>\|bool\|int\|string\|null\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 6
-			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/FormMetadata/FormMetadataMapperTest.php
-
-		-
-			message: '#^Cannot call method getAttribute\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/FormMetadata/FormMetadataMapperTest.php
-
-		-
-			message: '#^Cannot call method getAttributes\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/FormMetadata/FormMetadataMapperTest.php
-
-		-
-			message: '#^Cannot call method getInfoText\(\) on string\|Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\OptionMetadata\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/FormMetadata/FormMetadataMapperTest.php
-
-		-
-			message: '#^Cannot call method getName\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/FormMetadata/FormMetadataMapperTest.php
-
-		-
-			message: '#^Cannot call method getName\(\) on string\|Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\OptionMetadata\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/FormMetadata/FormMetadataMapperTest.php
-
-		-
-			message: '#^Cannot call method getPlaceholder\(\) on string\|Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\OptionMetadata\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/FormMetadata/FormMetadataMapperTest.php
-
-		-
-			message: '#^Cannot call method getPriority\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/FormMetadata/FormMetadataMapperTest.php
-
-		-
-			message: '#^Cannot call method getTitle\(\) on string\|Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\OptionMetadata\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/FormMetadata/FormMetadataMapperTest.php
-
-		-
-			message: '#^Cannot call method getType\(\) on string\|Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\OptionMetadata\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/FormMetadata/FormMetadataMapperTest.php
-
-		-
-			message: '#^Cannot call method getValue\(\) on string\|Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\OptionMetadata\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/FormMetadata/FormMetadataMapperTest.php
-
-		-
 			message: '#^Call to an undefined method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\ItemMetadata\:\:getItems\(\)\.$#'
 			identifier: method.notFound
 			count: 4
@@ -5449,42 +4981,6 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/Metadata/SchemaMetadata/PropertyMetadataTest.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\AdminBundle\\Tests\\Unit\\Metadata\\SchemaMetadata\\SelectionPropertyMetadataMapperTest\:\:getEmptyArraySchema\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/Metadata/SchemaMetadata/SelectionPropertyMetadataMapperTest.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\AdminBundle\\Tests\\Unit\\Metadata\\SchemaMetadata\\SelectionPropertyMetadataMapperTest\:\:getNullSchema\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/Metadata/SchemaMetadata/SelectionPropertyMetadataMapperTest.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\AdminBundle\\Tests\\Unit\\Metadata\\SchemaMetadata\\SingleSelectionPropertyMetadataMapperTest\:\:getEmptyObjectSchema\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/Metadata/SchemaMetadata/SingleSelectionPropertyMetadataMapperTest.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\AdminBundle\\Tests\\Unit\\Metadata\\SchemaMetadata\\SingleSelectionPropertyMetadataMapperTest\:\:getNullSchema\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/Metadata/SchemaMetadata/SingleSelectionPropertyMetadataMapperTest.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\AdminBundle\\Tests\\Unit\\Metadata\\SchemaMetadata\\TextPropertyMetadataMapperTest\:\:getEmptyStringSchema\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/Metadata/SchemaMetadata/TextPropertyMetadataMapperTest.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\AdminBundle\\Tests\\Unit\\Metadata\\SchemaMetadata\\TextPropertyMetadataMapperTest\:\:getNullSchema\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/Metadata/SchemaMetadata/TextPropertyMetadataMapperTest.php
-
-		-
 			message: '#^Cannot access offset ''title'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 6
@@ -5567,12 +5063,6 @@ parameters:
 			identifier: missingType.iterableValue
 			count: 1
 			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/Teaser/TeaserManagerTest.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\AudienceTargetingBundle\\Admin\\AudienceTargetingAdmin\:\:getConfig\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/AudienceTargetingBundle/Admin/AudienceTargetingAdmin.php
 
 		-
 			message: '#^Parameter \#1 \$addView of method Sulu\\Bundle\\AdminBundle\\Admin\\View\\ListViewBuilderInterface\:\:setAddView\(\) expects string, mixed given\.$#'
@@ -10546,12 +10036,6 @@ parameters:
 			message: '#^If condition is always true\.$#'
 			identifier: if.alwaysTrue
 			count: 2
-			path: src/Sulu/Bundle/ContactBundle/Admin/ContactAdmin.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Admin\\ContactAdmin\:\:getConfig\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Admin/ContactAdmin.php
 
 		-
@@ -24799,12 +24283,6 @@ parameters:
 			path: src/Sulu/Bundle/MarkupBundle/Tests/Unit/Tag/TagRegistryTest.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\Admin\\MediaAdmin\:\:getConfig\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Admin/MediaAdmin.php
-
-		-
 			message: '#^Parameter \#1 \$backView of method Sulu\\Bundle\\AdminBundle\\Admin\\View\\ResourceTabViewBuilderInterface\:\:setBackView\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -26101,12 +25579,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Content/Types/ImageMapContentType.php
 
 		-
-			message: '#^Binary operation "\." between ''\#/definitions/'' and mixed results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Content/Types/ImageMapContentType.php
-
-		-
 			message: '#^Binary operation "\." between non\-falsy\-string and mixed results in an error\.$#'
 			identifier: binaryOp.invalid
 			count: 1
@@ -26371,18 +25843,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Content/Types/ImageMapContentType.php
 
 		-
-			message: '#^Access to an undefined property object\:\:\$max\.$#'
-			identifier: property.notFound
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Content/Types/MediaSelectionContentType.php
-
-		-
-			message: '#^Access to an undefined property object\:\:\$min\.$#'
-			identifier: property.notFound
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Content/Types/MediaSelectionContentType.php
-
-		-
 			message: '#^Cannot access offset ''config'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
@@ -26473,19 +25933,7 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Content/Types/MediaSelectionContentType.php
 
 		-
-			message: '#^Parameter \#2 \$minItems of class Sulu\\Bundle\\AdminBundle\\Metadata\\SchemaMetadata\\ArrayMetadata constructor expects int\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Content/Types/MediaSelectionContentType.php
-
-		-
 			message: '#^Parameter \#2 \$value of class Sulu\\Component\\Content\\Compat\\PropertyParameter constructor expects array\|bool\|string, null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Content/Types/MediaSelectionContentType.php
-
-		-
-			message: '#^Parameter \#3 \$maxItems of class Sulu\\Bundle\\AdminBundle\\Metadata\\SchemaMetadata\\ArrayMetadata constructor expects int\|null, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Content/Types/MediaSelectionContentType.php
@@ -32773,18 +32221,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Tests/Unit/Content/Types/ImageMapContentTypeTest.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\Tests\\Unit\\Content\\Types\\MediaSelectionContentTypeTest\:\:getEmptyArraySchema\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Unit/Content/Types/MediaSelectionContentTypeTest.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\Tests\\Unit\\Content\\Types\\MediaSelectionContentTypeTest\:\:getNullSchema\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Unit/Content/Types/MediaSelectionContentTypeTest.php
-
-		-
 			message: '#^Parameter \#2 \$metaData of class Sulu\\Component\\Content\\Compat\\Property constructor expects array\<string, mixed\>\|string, Sulu\\Component\\Content\\Compat\\Metadata given\.$#'
 			identifier: argument.type
 			count: 2
@@ -32793,12 +32229,6 @@ parameters:
 		-
 			message: '#^Call to method PHPUnit\\Framework\\Assert\:\:assertNull\(\) with array\<mixed\> will always evaluate to false\.$#'
 			identifier: method.impossibleType
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Unit/Content/Types/SingleMediaSelectionTest.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\Tests\\Unit\\Content\\Types\\SingleMediaSelectionTest\:\:getNullSchema\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Unit/Content/Types/SingleMediaSelectionTest.php
 
@@ -33922,12 +33352,6 @@ parameters:
 			message: '#^Cannot call method setTitleVisible\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 3
-			path: src/Sulu/Bundle/PageBundle/Admin/PageAdmin.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Admin\\PageAdmin\:\:getConfig\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
 			path: src/Sulu/Bundle/PageBundle/Admin/PageAdmin.php
 
 		-
@@ -37021,42 +36445,6 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Markup/Link/PageLinkProvider.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Preview\\PageObjectProvider\:\:deserialize\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Preview/PageObjectProvider.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Preview\\PageObjectProvider\:\:getObject\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Preview/PageObjectProvider.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Preview\\PageObjectProvider\:\:setValues\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Preview/PageObjectProvider.php
-
-		-
-			message: '#^Parameter \#1 \$data of class Sulu\\Component\\Content\\Document\\Extension\\ExtensionContainer constructor expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Preview/PageObjectProvider.php
-
-		-
-			message: '#^Parameter \#1 \$document of method Sulu\\Bundle\\DocumentManagerBundle\\Bridge\\DocumentInspector\:\:getWebspace\(\) expects object, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Preview/PageObjectProvider.php
-
-		-
-			message: '#^Parameter \#1 \$structureType of method Sulu\\Bundle\\PageBundle\\Document\\BasePageDocument\:\:setStructureType\(\) expects string\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Preview/PageObjectProvider.php
-
-		-
 			message: '#^Call to an undefined method Sulu\\Component\\Content\\Compat\\StructureInterface\:\:setDocument\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -39115,18 +38503,6 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Teaser/PHPCRPageTeaserProvider.php
 
 		-
-			message: '#^Access to an undefined property object\:\:\$max\.$#'
-			identifier: property.notFound
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Teaser/TeaserContentType.php
-
-		-
-			message: '#^Access to an undefined property object\:\:\$min\.$#'
-			identifier: property.notFound
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Teaser/TeaserContentType.php
-
-		-
 			message: '#^Cannot access offset ''id'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
@@ -39196,18 +38572,6 @@ parameters:
 			message: '#^Parameter \#1 \$json of function json_decode expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 2
-			path: src/Sulu/Bundle/PageBundle/Teaser/TeaserContentType.php
-
-		-
-			message: '#^Parameter \#2 \$minItems of class Sulu\\Bundle\\AdminBundle\\Metadata\\SchemaMetadata\\ArrayMetadata constructor expects int\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Teaser/TeaserContentType.php
-
-		-
-			message: '#^Parameter \#3 \$maxItems of class Sulu\\Bundle\\AdminBundle\\Metadata\\SchemaMetadata\\ArrayMetadata constructor expects int\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 1
 			path: src/Sulu/Bundle/PageBundle/Teaser/TeaserContentType.php
 
 		-
@@ -39349,12 +38713,6 @@ parameters:
 			path: src/Sulu/Bundle/PreviewBundle/Admin/PreviewAdmin.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\PreviewBundle\\Admin\\PreviewAdmin\:\:getConfig\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/PreviewBundle/Admin/PreviewAdmin.php
-
-		-
 			message: '#^Parameter \#5 \$options of class Sulu\\Bundle\\PreviewBundle\\Domain\\Model\\PreviewLink constructor expects array\<string, mixed\>, array\<mixed\> given\.$#'
 			identifier: argument.type
 			count: 1
@@ -39397,54 +38755,6 @@ parameters:
 			path: src/Sulu/Bundle/PreviewBundle/Preview/Exception/PreviewRendererException.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\PreviewBundle\\Preview\\Object\\PreviewObjectProviderInterface\:\:deserialize\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/PreviewBundle/Preview/Object/PreviewObjectProviderInterface.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PreviewBundle\\Preview\\Object\\PreviewObjectProviderInterface\:\:getObject\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/PreviewBundle/Preview/Object/PreviewObjectProviderInterface.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PreviewBundle\\Preview\\Object\\PreviewObjectProviderInterface\:\:serialize\(\) has parameter \$object with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/PreviewBundle/Preview/Object/PreviewObjectProviderInterface.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PreviewBundle\\Preview\\Object\\PreviewObjectProviderInterface\:\:setContext\(\) has parameter \$object with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/PreviewBundle/Preview/Object/PreviewObjectProviderInterface.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PreviewBundle\\Preview\\Object\\PreviewObjectProviderInterface\:\:setValues\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/PreviewBundle/Preview/Object/PreviewObjectProviderInterface.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PreviewBundle\\Preview\\Object\\PreviewObjectProviderInterface\:\:setValues\(\) has parameter \$object with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/PreviewBundle/Preview/Object/PreviewObjectProviderInterface.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PreviewBundle\\Preview\\Preview\:\:renderPartial\(\) has parameter \$options with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/PreviewBundle/Preview/Preview.php
-
-		-
-			message: '#^Parameter \#1 \$serializedObject of method Sulu\\Bundle\\PreviewBundle\\Preview\\Object\\PreviewObjectProviderInterface\:\:deserialize\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/PreviewBundle/Preview/Preview.php
-
-		-
 			message: '#^Parameter \#2 \$value of method Sulu\\Bundle\\PreviewBundle\\Preview\\PreviewCache\:\:save\(\) expects string, string\|false given\.$#'
 			identifier: argument.type
 			count: 1
@@ -39469,18 +38779,6 @@ parameters:
 			path: src/Sulu/Bundle/PreviewBundle/Preview/PreviewCache.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\PreviewBundle\\Preview\\PreviewCacheItem\:\:getObject\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/PreviewBundle/Preview/PreviewCacheItem.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PreviewBundle\\Preview\\PreviewCacheItem\:\:setObject\(\) has parameter \$object with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/PreviewBundle/Preview/PreviewCacheItem.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\PreviewBundle\\Preview\\Renderer\\PreviewKernel\:\:getKernelParameters\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -39491,36 +38789,6 @@ parameters:
 			identifier: argument.type
 			count: 2
 			path: src/Sulu/Bundle/PreviewBundle/Preview/Renderer/PreviewKernel.php
-
-		-
-			message: '#^Cannot access offset ''dateTime'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/PreviewBundle/Preview/Renderer/PreviewRenderer.php
-
-		-
-			message: '#^Cannot access offset ''locale'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/PreviewBundle/Preview/Renderer/PreviewRenderer.php
-
-		-
-			message: '#^Cannot access offset ''segmentKey'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/PreviewBundle/Preview/Renderer/PreviewRenderer.php
-
-		-
-			message: '#^Cannot access offset ''targetGroupId'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/PreviewBundle/Preview/Renderer/PreviewRenderer.php
-
-		-
-			message: '#^Cannot access offset ''webspaceKey'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/PreviewBundle/Preview/Renderer/PreviewRenderer.php
 
 		-
 			message: '#^Cannot call method getHost\(\) on Symfony\\Component\\HttpFoundation\\Request\|null\.$#'
@@ -39549,12 +38817,6 @@ parameters:
 		-
 			message: '#^Method Sulu\\Bundle\\PreviewBundle\\Preview\\Renderer\\PreviewRenderer\:\:createServerAttributes\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/PreviewBundle/Preview/Renderer/PreviewRenderer.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PreviewBundle\\Preview\\Renderer\\PreviewRenderer\:\:render\(\) has parameter \$options with no type specified\.$#'
-			identifier: missingType.parameter
 			count: 1
 			path: src/Sulu/Bundle/PreviewBundle/Preview/Renderer/PreviewRenderer.php
 
@@ -39619,25 +38881,7 @@ parameters:
 			path: src/Sulu/Bundle/PreviewBundle/Preview/Renderer/PreviewRenderer.php
 
 		-
-			message: '#^Parameter \#3 \$locale of method Sulu\\Bundle\\RouteBundle\\Routing\\Defaults\\RouteDefaultsProviderInterface\:\:getByEntity\(\) expects string, string\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/PreviewBundle/Preview/Renderer/PreviewRenderer.php
-
-		-
-			message: '#^Parameter \#3 \$webspaceKey of class Sulu\\Bundle\\PreviewBundle\\Preview\\Exception\\RouteDefaultsProviderNotFoundException constructor expects string, string\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/PreviewBundle/Preview/Renderer/PreviewRenderer.php
-
-		-
 			message: '#^Parameter \#3 \$webspaceKey of method Sulu\\Bundle\\PreviewBundle\\Preview\\Renderer\\PreviewRenderer\:\:createPortalInformation\(\) expects string, string\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/PreviewBundle/Preview/Renderer/PreviewRenderer.php
-
-		-
-			message: '#^Parameter \#4 \$locale of class Sulu\\Bundle\\PreviewBundle\\Preview\\Exception\\RouteDefaultsProviderNotFoundException constructor expects string, string\|null given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/PreviewBundle/Preview/Renderer/PreviewRenderer.php
@@ -39689,12 +38933,6 @@ parameters:
 			identifier: property.onlyWritten
 			count: 1
 			path: src/Sulu/Bundle/PreviewBundle/Preview/Renderer/PreviewRenderer.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PreviewBundle\\Preview\\Renderer\\PreviewRendererInterface\:\:render\(\) has parameter \$options with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/PreviewBundle/Preview/Renderer/PreviewRendererInterface.php
 
 		-
 			message: '#^Method Sulu\\Bundle\\PreviewBundle\\Tests\\Functional\\Preview\\Renderer\\PreviewRendererTest\:\:readObjectAttribute\(\) has no return type specified\.$#'
@@ -39751,9 +38989,27 @@ parameters:
 			path: src/Sulu/Bundle/PreviewBundle/Tests/Functional/UserInterface/Controller/PreviewLinkControllerTest.php
 
 		-
+			message: '#^Method Sulu\\Bundle\\PreviewBundle\\Preview\\Provider\\PreviewDefaultsProviderInterface@anonymous/src/Sulu/Bundle/PreviewBundle/Tests/Unit/Preview/PreviewTest\.php\:78\:\:getSecurityContext\(\) never returns null so it can be removed from the return type\.$#'
+			identifier: return.unusedType
+			count: 1
+			path: src/Sulu/Bundle/PreviewBundle/Tests/Unit/Preview/PreviewTest.php
+
+		-
+			message: '#^Only iterables can be unpacked, mixed given\.$#'
+			identifier: arrayUnpacking.nonIterable
+			count: 2
+			path: src/Sulu/Bundle/PreviewBundle/Tests/Unit/Preview/PreviewTest.php
+
+		-
 			message: '#^Parameter \#1 \$json of function json_decode expects string, mixed given\.$#'
 			identifier: argument.type
-			count: 7
+			count: 10
+			path: src/Sulu/Bundle/PreviewBundle/Tests/Unit/Preview/PreviewTest.php
+
+		-
+			message: '#^Property Sulu\\Bundle\\PreviewBundle\\Tests\\Unit\\Preview\\PreviewTest\:\:\$cacheLifeTime is never read, only written\.$#'
+			identifier: property.onlyWritten
+			count: 1
 			path: src/Sulu/Bundle/PreviewBundle/Tests/Unit/Preview/PreviewTest.php
 
 		-
@@ -39787,8 +39043,8 @@ parameters:
 			path: src/Sulu/Bundle/PreviewBundle/Tests/Unit/Preview/Renderer/PreviewRendererTest.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\PreviewBundle\\Tests\\Unit\\Preview\\Renderer\\PreviewRendererTest\:\:render\(\) has parameter \$object with generic class Prophecy\\Prophecy\\ObjectProphecy but does not specify its types\: T$#'
-			identifier: missingType.generics
+			message: '#^Method Sulu\\Bundle\\PreviewBundle\\Tests\\Unit\\Preview\\Renderer\\PreviewRendererTest\:\:render\(\) has parameter \$expectedScheme with no type specified\.$#'
+			identifier: missingType.parameter
 			count: 1
 			path: src/Sulu/Bundle/PreviewBundle/Tests/Unit/Preview/Renderer/PreviewRendererTest.php
 
@@ -39805,15 +39061,9 @@ parameters:
 			path: src/Sulu/Bundle/PreviewBundle/Tests/Unit/Preview/Renderer/PreviewRendererTest.php
 
 		-
-			message: '#^Parameter \#2 \$expectedScheme of method Sulu\\Bundle\\PreviewBundle\\Tests\\Unit\\Preview\\Renderer\\PreviewRendererTest\:\:render\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/PreviewBundle/Tests/Unit/Preview/Renderer/PreviewRendererTest.php
-
-		-
 			message: '#^Parameter \#2 \$id of method Sulu\\Bundle\\PreviewBundle\\Preview\\Renderer\\PreviewRendererInterface\:\:render\(\) expects string, int given\.$#'
 			identifier: argument.type
-			count: 13
+			count: 12
 			path: src/Sulu/Bundle/PreviewBundle/Tests/Unit/Preview/Renderer/PreviewRendererTest.php
 
 		-
@@ -40013,12 +39263,6 @@ parameters:
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
 			path: src/Sulu/Bundle/ReferenceBundle/Tests/Unit/Application/Collector/ReferenceCollectorTest.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between 0 and 0 will always evaluate to true\.$#'
-			identifier: identical.alwaysTrue
-			count: 1
-			path: src/Sulu/Bundle/ReferenceBundle/UserInterface/Command/RefreshCommand.php
 
 		-
 			message: '#^Parameter \#2 \$destination of method Sulu\\Bundle\\RouteBundle\\PageTree\\PageTreeMoverInterface\:\:move\(\) expects Sulu\\Bundle\\PageBundle\\Document\\BasePageDocument, object given\.$#'
@@ -41222,12 +40466,6 @@ parameters:
 
 		-
 			message: '#^Method Sulu\\Bundle\\SecurityBundle\\Admin\\SecurityAdmin\:\:__construct\(\) has parameter \$resources with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Admin/SecurityAdmin.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\SecurityBundle\\Admin\\SecurityAdmin\:\:getConfig\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Admin/SecurityAdmin.php
@@ -46475,12 +45713,6 @@ parameters:
 			identifier: missingType.iterableValue
 			count: 1
 			path: src/Sulu/Bundle/WebsiteBundle/Admin/Helper/UrlSelect.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\WebsiteBundle\\Admin\\WebsiteAdmin\:\:getConfig\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Admin/WebsiteAdmin.php
 
 		-
 			message: '#^Method Sulu\\Bundle\\WebsiteBundle\\Admin\\WebsiteAdmin\:\:getSecurityContextPermissions\(\) has no return type specified\.$#'
@@ -59021,18 +58253,6 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Component/Content/Tests/Unit/Types/Block/ScheduleBlockVisitorTest.php
-
-		-
-			message: '#^Class Sulu\\Component\\Content\\Types\\Number constructor invoked with 1 parameter, 0 required\.$#'
-			identifier: arguments.count
-			count: 1
-			path: src/Sulu/Component/Content/Tests/Unit/Types/NumberTest.php
-
-		-
-			message: '#^Property Sulu\\Component\\Content\\Tests\\Unit\\Types\\NumberTest\:\:\$template is never written, only read\.$#'
-			identifier: property.onlyRead
-			count: 1
-			path: src/Sulu/Component/Content/Tests/Unit/Types/NumberTest.php
 
 		-
 			message: '#^Cannot access offset ''days'' on mixed\.$#'

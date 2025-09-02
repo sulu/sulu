@@ -22,14 +22,14 @@ class PreviewCacheItem
     private $html;
 
     /**
-     * @param mixed $object
+     * @param array<string, mixed> $object
      */
     public function __construct(
         private string $id,
         private ?string $locale,
         private int $userId,
         private string $providerKey,
-        private $object,
+        private array $object,
     ) {
     }
 
@@ -53,12 +53,18 @@ class PreviewCacheItem
         return $this->providerKey;
     }
 
-    public function getObject()
+    /**
+     * @return array<string, mixed>
+     */
+    public function getObject(): array
     {
         return $this->object;
     }
 
-    public function setObject($object): void
+    /**
+     * @param array<string, mixed> $object
+     */
+    public function setObject(array $object): void
     {
         $this->object = $object;
     }

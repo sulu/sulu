@@ -660,6 +660,21 @@ Removed classes / services:
 - `Sulu\Bundle\WebsiteBundle\Twig\Sitemap\MemoizedSitemapTwigExtension`
 - `Sulu\Bundle\WebsiteBundle\Twig\Sitemap\SitemapTwigExtension`
 - `Sulu\Bundle\WebsiteBundle\Twig\Sitemap\SitemapTwigExtensionInterface`
+- `Sulu\Bundle\PreviewBundle\Preview\Object\PreviewObjectProviderInterface` (use new `PreviewDefaultsProviderInterface` instead)
+- `Sulu\Bundle\PreviewBundle\Preview\Object\PreviewObjectProviderRegistryInterface` (internal)
+- `Sulu\Bundle\PreviewBundle\Preview\Object\PreviewObjectProviderRegistry` (internal)
+- `Sulu\Bundle\PreviewBundle\Preview\Renderer\PreviewKernel` (internal)
+- `Sulu\Bundle\PreviewBundle\Preview\Renderer\KernelFactoryInterface` (internal)
+- `Sulu\Bundle\PreviewBundle\Preview\Renderer\PreviewRendererInterface` (internal)
+- `Sulu\Bundle\PreviewBundle\Preview\Renderer\PreviewRenderer` (internal)
+- `Sulu\Bundle\PreviewBundle\Preview\Renderer\WebsiteKernelFactory` (internal)
+- `Sulu\Bundle\PreviewBundle\Preview\Renderer\WebsiteKernelFactory` (internal)
+- `Sulu\Bundle\PreviewBundle\Preview\Preview` (internal)
+- `Sulu\Bundle\PreviewBundle\Preview\PreviewCache` (internal)
+- `Sulu\Bundle\PreviewBundle\Preview\PreviewCacheItem` (internal)
+- `Sulu\Bundle\PreviewBundle\UserInterface\Controller\PreviewController` (internal)
+- `Sulu\Bundle\PreviewBundle\UserInterface\Controller\PreviewLinkController` (internal)
+- `Sulu\Bundle\PreviewBundle\UserInterface\Controller\PublicPreviewController` (internal)
 - `Sulu\Bundle\AdminBundle\DependencyInjection\Compiler\SuluVersionPass` (moved and internal)
 - `Sulu\Bundle\PageBundle\Controller\WebspaceController`
 

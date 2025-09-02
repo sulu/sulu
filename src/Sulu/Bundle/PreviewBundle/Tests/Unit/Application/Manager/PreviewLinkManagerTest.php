@@ -22,8 +22,8 @@ use Sulu\Bundle\PreviewBundle\Domain\Event\PreviewLinkGeneratedEvent;
 use Sulu\Bundle\PreviewBundle\Domain\Event\PreviewLinkRevokedEvent;
 use Sulu\Bundle\PreviewBundle\Domain\Model\PreviewLinkInterface;
 use Sulu\Bundle\PreviewBundle\Domain\Repository\PreviewLinkRepositoryInterface;
-use Sulu\Bundle\PreviewBundle\Preview\Object\PreviewObjectProviderInterface;
 use Sulu\Bundle\PreviewBundle\Preview\Object\PreviewObjectProviderRegistryInterface;
+use Sulu\Bundle\PreviewBundle\Preview\Provider\PreviewDefaultsProviderInterface;
 use Symfony\Component\Routing\RouterInterface;
 
 class PreviewLinkManagerTest extends TestCase
@@ -46,7 +46,7 @@ class PreviewLinkManagerTest extends TestCase
     private $previewObjectProviderRegistry;
 
     /**
-     * @var ObjectProphecy<PreviewObjectProviderInterface>
+     * @var ObjectProphecy<PreviewDefaultsProviderInterface>
      */
     private $previewObjectProvider;
 
@@ -70,7 +70,7 @@ class PreviewLinkManagerTest extends TestCase
         $this->previewLinkRepository = $this->prophesize(PreviewLinkRepositoryInterface::class);
         $this->domainEventCollector = $this->prophesize(DomainEventCollectorInterface::class);
         $this->previewObjectProviderRegistry = $this->prophesize(PreviewObjectProviderRegistryInterface::class);
-        $this->previewObjectProvider = $this->prophesize(PreviewObjectProviderInterface::class);
+        $this->previewObjectProvider = $this->prophesize(PreviewDefaultsProviderInterface::class);
         $this->router = $this->prophesize(RouterInterface::class);
 
         $this->previewLinkManager = new PreviewLinkManager(
@@ -90,7 +90,7 @@ class PreviewLinkManagerTest extends TestCase
         $locale = 'en';
         $link = 'http://loclhost/admin/p/123';
 
-        $this->previewObjectProvider->getSecurityContext($resourceId, $locale)
+        $this->previewObjectProvider->getSecurityContext(Argument::any())
             ->willReturn(PageAdmin::getPageSecurityContext('example'));
 
         $previewLink = $this->prophesize(PreviewLinkInterface::class);
@@ -128,7 +128,7 @@ class PreviewLinkManagerTest extends TestCase
         $locale = 'en';
         $link = 'http://loclhost/admin/p/123';
 
-        $this->previewObjectProvider->getSecurityContext($resourceId, $locale)->willReturn(
+        $this->previewObjectProvider->getSecurityContext(Argument::any())->willReturn(
             PageAdmin::getPageSecurityContext('example')
         );
 

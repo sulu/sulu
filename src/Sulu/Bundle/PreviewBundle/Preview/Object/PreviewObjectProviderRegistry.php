@@ -20,7 +20,7 @@ use Sulu\Bundle\PreviewBundle\Preview\Provider\PreviewDefaultsProviderInterface;
 class PreviewObjectProviderRegistry implements PreviewObjectProviderRegistryInterface
 {
     /**
-     * @param array<string, PreviewObjectProviderInterface|PreviewDefaultsProviderInterface> $previewObjectProviders
+     * @param array<string, PreviewDefaultsProviderInterface> $previewObjectProviders
      */
     public function __construct(private array $previewObjectProviders)
     {
@@ -31,7 +31,7 @@ class PreviewObjectProviderRegistry implements PreviewObjectProviderRegistryInte
         return $this->previewObjectProviders;
     }
 
-    public function getPreviewObjectProvider(string $providerKey): PreviewObjectProviderInterface|PreviewDefaultsProviderInterface
+    public function getPreviewObjectProvider(string $providerKey): PreviewDefaultsProviderInterface
     {
         if (!$this->hasPreviewObjectProvider($providerKey)) {
             throw new ProviderNotFoundException($providerKey);
