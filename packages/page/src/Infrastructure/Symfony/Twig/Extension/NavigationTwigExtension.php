@@ -16,6 +16,12 @@ use Sulu\Page\Domain\Repository\NavigationRepositoryInterface;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
+/**
+ * @final
+ *
+ * @internal This class is internal and should not be extended or overwritten.
+ *           You can create an own Twig Extension to override the behaviour.
+ */
 class NavigationTwigExtension extends AbstractExtension
 {
     public function __construct(

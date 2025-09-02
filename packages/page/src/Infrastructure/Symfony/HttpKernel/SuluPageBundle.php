@@ -52,6 +52,7 @@ use Sulu\Page\Infrastructure\Sulu\Content\ResourceLoader\PageResourceLoader;
 use Sulu\Page\Infrastructure\Sulu\Content\Visitor\SegmentSmartContentFiltersVisitor;
 use Sulu\Page\Infrastructure\Sulu\Reference\PageReferenceRefresher;
 use Sulu\Page\Infrastructure\Sulu\Route\WebspaceSiteRouteGenerator;
+use Sulu\Page\Infrastructure\Symfony\Twig\Extension\ContentPathTwigExtension;
 use Sulu\Page\Infrastructure\Symfony\Twig\Extension\NavigationTwigExtension;
 use Sulu\Page\UserInterface\Command\InitializeHomepageCommand;
 use Sulu\Page\UserInterface\Controller\Admin\PageController;
@@ -383,11 +384,19 @@ final class SuluPageBundle extends AbstractBundle
 
         $services->alias(NavigationRepository::class, 'sulu_page.navigation_repository');
 
+        // Twig Extensions
         $services->set('sulu_page.navigation_twig_extension')
             ->class(NavigationTwigExtension::class)
             ->args([
                 new Reference('sulu_page.navigation_repository'),
                 new Reference('sulu_core.webspace.request_analyzer'),
+            ])
+            ->tag('twig.extension');
+
+        $services->set('sulu_page.content_path_twig_extension')
+            ->class(ContentPathTwigExtension::class)
+            ->args([
+                new Reference('sulu_route.route_generator'),
             ])
             ->tag('twig.extension');
 

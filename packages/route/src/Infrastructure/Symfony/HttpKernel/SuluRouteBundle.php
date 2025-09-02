@@ -105,6 +105,7 @@ final class SuluRouteBundle extends AbstractBundle
                 tagged_locator('sulu_route.site_route_generator', 'site', 'getSite'),
                 new Reference('router.request_context'),
                 new Reference('request_stack'),
+                new Reference('translation.locale_switcher'),
             ]);
 
         $sluggerService = $services->set('sulu_route.slugger')

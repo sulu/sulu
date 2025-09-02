@@ -52,9 +52,9 @@
     <p>{{ content.link }}</p>
 
     {% if content.single_page_selection %}
-        {% set page = sulu_content_load(content.single_page_selection) %}
+        {% set page = content.single_page_selection %}
         {% if page %}
-            <a href="{{ sulu_content_path(page.content.url) }}">{{ page.content.title }}</a>
+            <a href="{{ sulu_content_path(page.url) }}">{{ page.title }}</a>
         {% endif %}
     {% endif %}
 

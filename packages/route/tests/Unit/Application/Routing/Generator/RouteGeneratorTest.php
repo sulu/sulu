@@ -19,6 +19,7 @@ use Sulu\Route\Domain\Exception\MissingRequestContextParameterException;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RequestContext;
+use Symfony\Component\Translation\LocaleSwitcher;
 
 #[CoversClass(RouteGenerator::class)]
 class RouteGeneratorTest extends TestCase
@@ -62,7 +63,7 @@ class RouteGeneratorTest extends TestCase
         });
 
         $this->requestContext = new RequestContext();
-        $this->routeGenerator = new RouteGenerator($container, $this->requestContext, new RequestStack());
+        $this->routeGenerator = new RouteGenerator($container, $this->requestContext, new RequestStack(), new LocaleSwitcher('en', [], $this->requestContext));
     }
 
     public function testGenerate(): void
@@ -79,10 +80,10 @@ class RouteGeneratorTest extends TestCase
 
     public function testGenerateRequestContextLocale(): void
     {
-        $this->requestContext->setParameter('_locale', 'en');
+        $this->requestContext->setParameter('_locale', 'de');
 
         $result = $this->routeGenerator->generate('/test', null, 'the_site');
-        $this->assertSame('/en/test', $result);
+        $this->assertSame('/de/test', $result);
     }
 
     public function testGenerateRequestContextSite(): void
@@ -95,10 +96,8 @@ class RouteGeneratorTest extends TestCase
 
     public function testGenerateRequestContextLocaleMissing(): void
     {
-        $this->expectException(MissingRequestContextParameterException::class);
-        $this->expectExceptionMessage('Missing request context parameter "_locale".');
-
-        $this->routeGenerator->generate('/test', null, 'default');
+        $result = $this->routeGenerator->generate('/test', null, 'the_site');
+        $this->assertSame('/en/test', $result);
     }
 
     public function testGenerateRequestContextSiteMissing(): void

@@ -47,34 +47,6 @@
             <tag name="sulu.context" context="admin"/>
         </service>
 
-        <!-- twig extension: content path -->
-        <service id="sulu_website.twig.content_path" class="Sulu\Bundle\WebsiteBundle\Twig\Content\ContentPathTwigExtension">
-            <argument type="service" id="sulu_core.webspace.webspace_manager"/>
-            <argument>%kernel.environment%</argument>
-            <argument type="service" id="sulu_core.webspace.request_analyzer" on-invalid="ignore"/>
-
-            <tag name="twig.extension"/>
-        </service>
-
-        <!-- twig extension: content -->
-        <service id="sulu_website.twig.content" class="Sulu\Bundle\WebsiteBundle\Twig\Content\ContentTwigExtension">
-            <argument type="service" id="sulu.content.mapper"/>
-            <argument type="service" id="sulu_website.resolver.structure"/>
-            <argument type="service" id="sulu.phpcr.session"/>
-            <argument type="service" id="sulu_core.webspace.request_analyzer"/>
-            <argument type="service" id="logger" on-invalid="null"/>
-            <argument type="service" id="sulu_security.security_checker" on-invalid="null"/>
-            <argument type="service" id="sulu_core.webspace.webspace_manager"/>
-            <argument type="service" id="request_stack"/>
-        </service>
-        <service id="sulu_website.twig.content.memoized" class="Sulu\Bundle\WebsiteBundle\Twig\Content\MemoizedContentTwigExtension">
-            <argument type="service" id="sulu_website.twig.content"/>
-            <argument type="service" id="sulu_core.cache.memoize"/>
-            <argument type="string">%sulu_website.content.cache.lifetime%</argument>
-
-            <tag name="twig.extension"/>
-        </service>
-
         <!-- twig extension: util -->
         <service id="sulu_website.twig.util" class="Sulu\Bundle\WebsiteBundle\Twig\Core\UtilTwigExtension">
             <tag name="twig.extension"/>

@@ -16,6 +16,7 @@ use Sulu\Route\Domain\Exception\MissingRequestContextParameterException;
 use Sulu\Route\Domain\Value\RequestAttributeEnum;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RequestContext;
+use Symfony\Component\Translation\LocaleSwitcher;
 
 final class RouteGenerator implements RouteGeneratorInterface
 {
@@ -23,6 +24,7 @@ final class RouteGenerator implements RouteGeneratorInterface
         private ContainerInterface $siteRouteGeneratorLocator,
         private RequestContext $requestContext,
         private RequestStack $requestStack,
+        private LocaleSwitcher $localeSwitcher,
     ) {
     }
 
@@ -44,12 +46,11 @@ final class RouteGenerator implements RouteGeneratorInterface
 
         if (null === $locale) {
             $requestLocale = $this->requestContext->getParameter('_locale');
-
-            if (!\is_string($requestLocale)) {
-                throw new MissingRequestContextParameterException('_locale');
-            }
-
             $locale = $requestLocale;
+
+            if (!\is_string($locale)) {
+                $locale = $this->localeSwitcher->getLocale();
+            }
         }
 
         $siteRouteGenerator = null;
