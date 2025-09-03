@@ -1,6 +1,15 @@
 <?php
 
-namespace Sulu\Page\Tests\Functional\Infrastructure\JMS\Serializer;
+/*
+ * This file is part of Sulu.
+ *
+ * (c) Sulu GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
+namespace Sulu\Page\Tests\Functional\Infrastructure\Sulu\Admin;
 
 use Sulu\Bundle\TestBundle\Testing\AssertSnapshotTrait;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
