@@ -14,7 +14,6 @@ namespace Sulu\Bundle\TestBundle\Kernel;
 use Sulu\Bundle\TestBundle\SuluTestBundle;
 use Sulu\Component\HttpKernel\SuluKernel;
 use Symfony\Component\Config\Loader\LoaderInterface;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 
 /**

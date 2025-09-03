@@ -14,9 +14,7 @@ namespace Sulu\Page\Tests\Application;
 use Sulu\Bundle\PageBundle\SuluPageBundle as DeprecatedSuluPageBundle;
 use Sulu\Bundle\TestBundle\Kernel\SuluTestKernel;
 use Sulu\Component\HttpKernel\SuluKernel;
-use Sulu\Content\Infrastructure\Symfony\HttpKernel\SuluContentBundle;
 use Sulu\Content\Tests\Application\ExampleTestBundle\ExampleTestBundle;
-use Sulu\Page\Infrastructure\Symfony\HttpKernel\SuluPageBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
 
 /**

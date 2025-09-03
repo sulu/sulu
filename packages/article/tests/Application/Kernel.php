@@ -14,9 +14,7 @@ namespace Sulu\Article\Tests\Application;
 use Sulu\Article\Infrastructure\Symfony\HttpKernel\SuluArticleBundle;
 use Sulu\Bundle\TestBundle\Kernel\SuluTestKernel;
 use Sulu\Component\HttpKernel\SuluKernel;
-use Sulu\Content\Infrastructure\Symfony\HttpKernel\SuluContentBundle;
 use Sulu\Content\Tests\Application\ExampleTestBundle\ExampleTestBundle;
-use Sulu\Page\Infrastructure\Symfony\HttpKernel\SuluPageBundle;
 use Sulu\Snippet\Infrastructure\Symfony\HttpKernel\SuluSnippetBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
 

@@ -31,7 +31,6 @@ use Sulu\Route\Infrastructure\Sulu\Admin\RouteAdmin;
 use Sulu\Route\Infrastructure\Symfony\DependencyInjection\RouteDefaultsOptionsCompilerPass;
 use Sulu\Route\Infrastructure\SymfonyCmf\Routing\CmfRouteProvider;
 use Sulu\Route\Userinterface\Controller\Admin\ResourceLocatorGenerateController;
-use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 
@@ -39,7 +38,6 @@ use function Symfony\Component\DependencyInjection\Loader\Configurator\param;
 use function Symfony\Component\DependencyInjection\Loader\Configurator\tagged_iterator;
 use function Symfony\Component\DependencyInjection\Loader\Configurator\tagged_locator;
 
-use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
 use Symfony\Component\String\Slugger\AsciiSlugger;
