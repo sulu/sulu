@@ -79,6 +79,144 @@ parameters:
 			path: packages/content/tests/Unit/Content/Application/PropertyResolver/BlockVisitor/ScheduleBlockVisitorTest.php
 
 		-
+			message: '#^Call to an undefined method JMS\\Serializer\\VisitorInterface\:\:visitProperty\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: packages/page/src/Infrastructure/JMS/Serializer/WebspaceSerializeEventSubscriber.php
+
+		-
+			message: '#^Cannot access offset ''locales'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: packages/page/src/Infrastructure/JMS/Serializer/WebspaceSerializeEventSubscriber.php
+
+		-
+			message: '#^Cannot call method getUser\(\) on Symfony\\Component\\Security\\Core\\Authentication\\Token\\TokenInterface\|null\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: packages/page/src/Infrastructure/JMS/Serializer/WebspaceSerializeEventSubscriber.php
+
+		-
+			message: '#^Method Sulu\\Page\\Infrastructure\\JMS\\Serializer\\WebspaceSerializeEventSubscriber\:\:appendCustomUrls\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: packages/page/src/Infrastructure/JMS/Serializer/WebspaceSerializeEventSubscriber.php
+
+		-
+			message: '#^Method Sulu\\Page\\Infrastructure\\JMS\\Serializer\\WebspaceSerializeEventSubscriber\:\:appendNavigations\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: packages/page/src/Infrastructure/JMS/Serializer/WebspaceSerializeEventSubscriber.php
+
+		-
+			message: '#^Method Sulu\\Page\\Infrastructure\\JMS\\Serializer\\WebspaceSerializeEventSubscriber\:\:appendPermissions\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: packages/page/src/Infrastructure/JMS/Serializer/WebspaceSerializeEventSubscriber.php
+
+		-
+			message: '#^Method Sulu\\Page\\Infrastructure\\JMS\\Serializer\\WebspaceSerializeEventSubscriber\:\:appendPortalInformation\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: packages/page/src/Infrastructure/JMS/Serializer/WebspaceSerializeEventSubscriber.php
+
+		-
+			message: '#^Method Sulu\\Page\\Infrastructure\\JMS\\Serializer\\WebspaceSerializeEventSubscriber\:\:appendResourceLocatorStrategy\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: packages/page/src/Infrastructure/JMS/Serializer/WebspaceSerializeEventSubscriber.php
+
+		-
+			message: '#^Method Sulu\\Page\\Infrastructure\\JMS\\Serializer\\WebspaceSerializeEventSubscriber\:\:appendSegments\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: packages/page/src/Infrastructure/JMS/Serializer/WebspaceSerializeEventSubscriber.php
+
+		-
+			message: '#^Method Sulu\\Page\\Infrastructure\\JMS\\Serializer\\WebspaceSerializeEventSubscriber\:\:appendUrls\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: packages/page/src/Infrastructure/JMS/Serializer/WebspaceSerializeEventSubscriber.php
+
+		-
+			message: '#^Method Sulu\\Page\\Infrastructure\\JMS\\Serializer\\WebspaceSerializeEventSubscriber\:\:getCustomUrlsForEnvironment\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: packages/page/src/Infrastructure/JMS/Serializer/WebspaceSerializeEventSubscriber.php
+
+		-
+			message: '#^Method Sulu\\Page\\Infrastructure\\JMS\\Serializer\\WebspaceSerializeEventSubscriber\:\:getSubscribedEvents\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: packages/page/src/Infrastructure/JMS/Serializer/WebspaceSerializeEventSubscriber.php
+
+		-
+			message: '#^Method Sulu\\Page\\Infrastructure\\JMS\\Serializer\\WebspaceSerializeEventSubscriber\:\:onPostSerialize\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: packages/page/src/Infrastructure/JMS/Serializer/WebspaceSerializeEventSubscriber.php
+
+		-
+			message: '#^Parameter \#1 \$locale of method Sulu\\Component\\Webspace\\NavigationContext\:\:getTitle\(\) expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: packages/page/src/Infrastructure/JMS/Serializer/WebspaceSerializeEventSubscriber.php
+
+		-
+			message: '#^Parameter \#1 \$locale of method Sulu\\Component\\Webspace\\Segment\:\:getTitle\(\) expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: packages/page/src/Infrastructure/JMS/Serializer/WebspaceSerializeEventSubscriber.php
+
+		-
+			message: '#^Parameter \#2 \$user of method Sulu\\Component\\Security\\Authorization\\AccessControl\\AccessControlManagerInterface\:\:getUserPermissions\(\) expects Sulu\\Component\\Security\\Authentication\\UserInterface\|null, Symfony\\Component\\Security\\Core\\User\\UserInterface\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: packages/page/src/Infrastructure/JMS/Serializer/WebspaceSerializeEventSubscriber.php
+
+		-
+			message: '#^Parameter \#3 \$visitor of method Sulu\\Page\\Infrastructure\\JMS\\Serializer\\WebspaceSerializeEventSubscriber\:\:appendCustomUrls\(\) expects JMS\\Serializer\\Visitor\\SerializationVisitorInterface, JMS\\Serializer\\VisitorInterface given\.$#'
+			identifier: argument.type
+			count: 1
+			path: packages/page/src/Infrastructure/JMS/Serializer/WebspaceSerializeEventSubscriber.php
+
+		-
+			message: '#^Parameter \#3 \$visitor of method Sulu\\Page\\Infrastructure\\JMS\\Serializer\\WebspaceSerializeEventSubscriber\:\:appendNavigations\(\) expects JMS\\Serializer\\Visitor\\SerializationVisitorInterface, JMS\\Serializer\\VisitorInterface given\.$#'
+			identifier: argument.type
+			count: 1
+			path: packages/page/src/Infrastructure/JMS/Serializer/WebspaceSerializeEventSubscriber.php
+
+		-
+			message: '#^Parameter \#3 \$visitor of method Sulu\\Page\\Infrastructure\\JMS\\Serializer\\WebspaceSerializeEventSubscriber\:\:appendPermissions\(\) expects JMS\\Serializer\\Visitor\\SerializationVisitorInterface, JMS\\Serializer\\VisitorInterface given\.$#'
+			identifier: argument.type
+			count: 1
+			path: packages/page/src/Infrastructure/JMS/Serializer/WebspaceSerializeEventSubscriber.php
+
+		-
+			message: '#^Parameter \#3 \$visitor of method Sulu\\Page\\Infrastructure\\JMS\\Serializer\\WebspaceSerializeEventSubscriber\:\:appendPortalInformation\(\) expects JMS\\Serializer\\Visitor\\SerializationVisitorInterface, JMS\\Serializer\\VisitorInterface given\.$#'
+			identifier: argument.type
+			count: 1
+			path: packages/page/src/Infrastructure/JMS/Serializer/WebspaceSerializeEventSubscriber.php
+
+		-
+			message: '#^Parameter \#3 \$visitor of method Sulu\\Page\\Infrastructure\\JMS\\Serializer\\WebspaceSerializeEventSubscriber\:\:appendResourceLocatorStrategy\(\) expects JMS\\Serializer\\Visitor\\SerializationVisitorInterface, JMS\\Serializer\\VisitorInterface given\.$#'
+			identifier: argument.type
+			count: 1
+			path: packages/page/src/Infrastructure/JMS/Serializer/WebspaceSerializeEventSubscriber.php
+
+		-
+			message: '#^Parameter \#3 \$visitor of method Sulu\\Page\\Infrastructure\\JMS\\Serializer\\WebspaceSerializeEventSubscriber\:\:appendSegments\(\) expects JMS\\Serializer\\Visitor\\SerializationVisitorInterface, JMS\\Serializer\\VisitorInterface given\.$#'
+			identifier: argument.type
+			count: 1
+			path: packages/page/src/Infrastructure/JMS/Serializer/WebspaceSerializeEventSubscriber.php
+
+		-
+			message: '#^Parameter \#3 \$visitor of method Sulu\\Page\\Infrastructure\\JMS\\Serializer\\WebspaceSerializeEventSubscriber\:\:appendUrls\(\) expects JMS\\Serializer\\Visitor\\SerializationVisitorInterface, JMS\\Serializer\\VisitorInterface given\.$#'
+			identifier: argument.type
+			count: 1
+			path: packages/page/src/Infrastructure/JMS/Serializer/WebspaceSerializeEventSubscriber.php
+
+		-
 			message: '#^Cannot access offset non\-falsy\-string on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1

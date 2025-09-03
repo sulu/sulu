@@ -36,6 +36,7 @@ use Sulu\Page\Domain\Model\PageInterface;
 use Sulu\Page\Domain\Repository\PageRepositoryInterface;
 use Sulu\Page\Infrastructure\Doctrine\Repository\NavigationRepository;
 use Sulu\Page\Infrastructure\Doctrine\Repository\PageRepository;
+use Sulu\Page\Infrastructure\JMS\Serializer\WebspaceSerializeEventSubscriber;
 use Sulu\Page\Infrastructure\Sulu\Admin\PageAdmin;
 use Sulu\Page\Infrastructure\Sulu\Admin\PropertyMetadataMapper\PageTreeRoutePropertyMetadataMapper;
 use Sulu\Page\Infrastructure\Sulu\Build\HomepageBuilder;
@@ -63,6 +64,7 @@ use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigura
 
 use function Symfony\Component\DependencyInjection\Loader\Configurator\tagged_iterator;
 
+use Symfony\Component\DependencyInjection\Parameter;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
 
@@ -410,6 +412,34 @@ final class SuluPageBundle extends AbstractBundle
                 new Reference('sulu_content.content_merger'),
             ])
             ->tag('sulu_reference.refresher'); // TODO add resource key?
+
+        // Serialization
+        $services->set('sulu_page.webspace.serializer.event_subscriber')
+            ->class(WebspaceSerializeEventSubscriber::class)
+            ->args([
+                new Reference('sulu_core.webspace.webspace_manager'),
+                new Reference('sulu_core.webspace.url_provider'),
+                new Reference('sulu_security.access_control_manager'),
+                new Reference('security.token_storage', ContainerInterface::NULL_ON_INVALID_REFERENCE),
+                new Parameter('kernel.environment'),
+            ])
+            ->tag('jms_serializer.event_subscriber');
+
+        /*
+         *
+        <service id="sulu_page.webspace.serializer.event_subscriber"
+                 class="Sulu\Bundle\PageBundle\EventListener\WebspaceSerializeEventSubscriber">
+            <argument type="service" id="sulu_core.webspace.webspace_manager"/>
+            <argument type="service" id="sulu_core.webspace.url_provider"/>
+            <argument type="service" id="sulu.content.resource_locator.strategy_pool"/>
+            <argument type="service" id="sulu_security.access_control_manager"/>
+            <argument type="service" id="security.token_storage" on-invalid="null"/>
+            <argument type="string">%kernel.environment%</argument>
+
+            <tag name="jms_serializer.event_subscriber" />
+            <tag name="sulu.context" context="admin"/>
+        </service>
+         */
     }
 
     /**
@@ -549,6 +579,23 @@ final class SuluPageBundle extends AbstractBundle
                         ],
                     ],
                 ],
+            );
+        }
+
+        if ($builder->hasExtension('jms_serializer')) {
+            $builder->prependExtensionConfig(
+                'jms_serializer',
+                [
+                    'metadata' => [
+                        'directories' => [
+                            [
+                                'name' => 'sulu_page.webspace',
+                                'path' => __DIR__ . '/../../../../config/serializer',
+                                'namespace_prefix' => 'Sulu\Component\Webspace',
+                            ],
+                        ],
+                    ],
+                ]
             );
         }
     }
