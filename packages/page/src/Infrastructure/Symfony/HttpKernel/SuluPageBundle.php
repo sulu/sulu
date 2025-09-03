@@ -424,22 +424,6 @@ final class SuluPageBundle extends AbstractBundle
                 new Parameter('kernel.environment'),
             ])
             ->tag('jms_serializer.event_subscriber');
-
-        /*
-         *
-        <service id="sulu_page.webspace.serializer.event_subscriber"
-                 class="Sulu\Bundle\PageBundle\EventListener\WebspaceSerializeEventSubscriber">
-            <argument type="service" id="sulu_core.webspace.webspace_manager"/>
-            <argument type="service" id="sulu_core.webspace.url_provider"/>
-            <argument type="service" id="sulu.content.resource_locator.strategy_pool"/>
-            <argument type="service" id="sulu_security.access_control_manager"/>
-            <argument type="service" id="security.token_storage" on-invalid="null"/>
-            <argument type="string">%kernel.environment%</argument>
-
-            <tag name="jms_serializer.event_subscriber" />
-            <tag name="sulu.context" context="admin"/>
-        </service>
-         */
     }
 
     /**
