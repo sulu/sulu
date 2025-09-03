@@ -12,7 +12,7 @@
 namespace Sulu\Bundle\WebsiteBundle\Domain\Event;
 
 use Sulu\Bundle\ActivityBundle\Domain\Event\DomainEvent;
-use Sulu\Bundle\PageBundle\Admin\PageAdmin;
+use Sulu\Page\Infrastructure\Sulu\Admin\PageAdmin;
 
 class CacheClearedEvent extends DomainEvent
 {

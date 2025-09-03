@@ -13,12 +13,12 @@ namespace Sulu\Bundle\WebsiteBundle\Tests\Functional\Controller;
 
 use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
-use Sulu\Bundle\PageBundle\Admin\PageAdmin;
 use Sulu\Bundle\SecurityBundle\Entity\Permission;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\SecurityBundle\Entity\UserRole;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
+use Sulu\Page\Infrastructure\Sulu\Admin\PageAdmin;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
 

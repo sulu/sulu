@@ -455,9 +455,4 @@ class PageAdmin extends Admin
     {
         return \sprintf('%s%s', self::SECURITY_CONTEXT_PREFIX, $webspaceKey);
     }
-
-    public static function getPriority(): int
-    {
-        return \Sulu\Bundle\PageBundle\Admin\PageAdmin::getPriority() - 1;
-    }
 }

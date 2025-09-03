@@ -16,7 +16,6 @@ use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
-use Sulu\Bundle\PageBundle\Admin\PageAdmin;
 use Sulu\Bundle\PreviewBundle\Application\Manager\PreviewLinkManager;
 use Sulu\Bundle\PreviewBundle\Domain\Event\PreviewLinkGeneratedEvent;
 use Sulu\Bundle\PreviewBundle\Domain\Event\PreviewLinkRevokedEvent;
@@ -24,6 +23,7 @@ use Sulu\Bundle\PreviewBundle\Domain\Model\PreviewLinkInterface;
 use Sulu\Bundle\PreviewBundle\Domain\Repository\PreviewLinkRepositoryInterface;
 use Sulu\Bundle\PreviewBundle\Preview\Object\PreviewObjectProviderRegistryInterface;
 use Sulu\Bundle\PreviewBundle\Preview\Provider\PreviewDefaultsProviderInterface;
+use Sulu\Page\Infrastructure\Sulu\Admin\PageAdmin;
 use Symfony\Component\Routing\RouterInterface;
 
 class PreviewLinkManagerTest extends TestCase

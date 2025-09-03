@@ -13,9 +13,9 @@ namespace Sulu\Bundle\SecurityBundle\EventListener;
 
 use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\SecurityBundle\System\SystemStoreInterface;
-use Sulu\Component\DocumentManager\Subscriber\EventSubscriberInterface;
 use Sulu\Component\HttpKernel\SuluKernel;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
