@@ -8941,13 +8941,13 @@ parameters:
 			path: src/Sulu/Bundle/CategoryBundle/Controller/KeywordController.php
 
 		-
-			message: '#^Call to function array_key_exists\(\) with ''SuluContentBundle'' and array\{FrameworkBundle\: string, TwigBundle\: string, MonologBundle\: string, FlysystemBundle\: string, SuluCoreBundle\: string, DoctrineBundle\: string, DoctrineFixturesBundle\: string, DoctrinePHPCRBundle\: string, \.\.\.\} will always evaluate to true\.$#'
+			message: '#^Call to function array_key_exists\(\) with ''SuluContentBundle'' and array\{FrameworkBundle\: string, TwigBundle\: string, MonologBundle\: string, FlysystemBundle\: string, SuluCoreBundle\: string, DoctrineBundle\: string, DoctrineFixturesBundle\: string, StofDoctrineExtensionsBundle\: string, \.\.\.\} will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 1
 			path: src/Sulu/Bundle/CategoryBundle/DependencyInjection/SuluCategoryExtension.php
 
 		-
-			message: '#^Call to function array_key_exists\(\) with ''SuluTrashBundle'' and array\{FrameworkBundle\: string, TwigBundle\: string, MonologBundle\: string, FlysystemBundle\: string, SuluCoreBundle\: string, DoctrineBundle\: string, DoctrineFixturesBundle\: string, DoctrinePHPCRBundle\: string, \.\.\.\} will always evaluate to true\.$#'
+			message: '#^Call to function array_key_exists\(\) with ''SuluTrashBundle'' and array\{FrameworkBundle\: string, TwigBundle\: string, MonologBundle\: string, FlysystemBundle\: string, SuluCoreBundle\: string, DoctrineBundle\: string, DoctrineFixturesBundle\: string, StofDoctrineExtensionsBundle\: string, \.\.\.\} will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 1
 			path: src/Sulu/Bundle/CategoryBundle/DependencyInjection/SuluCategoryExtension.php
@@ -16837,13 +16837,13 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/DependencyInjection/Configuration.php
 
 		-
-			message: '#^Call to function array_key_exists\(\) with ''SuluContentBundle'' and array\{FrameworkBundle\: string, TwigBundle\: string, MonologBundle\: string, FlysystemBundle\: string, SuluCoreBundle\: string, DoctrineBundle\: string, DoctrineFixturesBundle\: string, DoctrinePHPCRBundle\: string, \.\.\.\} will always evaluate to true\.$#'
+			message: '#^Call to function array_key_exists\(\) with ''SuluContentBundle'' and array\{FrameworkBundle\: string, TwigBundle\: string, MonologBundle\: string, FlysystemBundle\: string, SuluCoreBundle\: string, DoctrineBundle\: string, DoctrineFixturesBundle\: string, StofDoctrineExtensionsBundle\: string, \.\.\.\} will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/DependencyInjection/SuluContactExtension.php
 
 		-
-			message: '#^Call to function array_key_exists\(\) with ''SuluTrashBundle'' and array\{FrameworkBundle\: string, TwigBundle\: string, MonologBundle\: string, FlysystemBundle\: string, SuluCoreBundle\: string, DoctrineBundle\: string, DoctrineFixturesBundle\: string, DoctrinePHPCRBundle\: string, \.\.\.\} will always evaluate to true\.$#'
+			message: '#^Call to function array_key_exists\(\) with ''SuluTrashBundle'' and array\{FrameworkBundle\: string, TwigBundle\: string, MonologBundle\: string, FlysystemBundle\: string, SuluCoreBundle\: string, DoctrineBundle\: string, DoctrineFixturesBundle\: string, StofDoctrineExtensionsBundle\: string, \.\.\.\} will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/DependencyInjection/SuluContactExtension.php
@@ -21799,7 +21799,7 @@ parameters:
 			path: src/Sulu/Bundle/CoreBundle/DependencyInjection/SuluCoreExtension.php
 
 		-
-			message: '#^Call to function array_key_exists\(\) with ''SuluAdminBundle'' and array\{FrameworkBundle\: string, TwigBundle\: string, MonologBundle\: string, FlysystemBundle\: string, SuluCoreBundle\: string, DoctrineBundle\: string, DoctrineFixturesBundle\: string, DoctrinePHPCRBundle\: string, \.\.\.\} will always evaluate to true\.$#'
+			message: '#^Call to function array_key_exists\(\) with ''SuluAdminBundle'' and array\{FrameworkBundle\: string, TwigBundle\: string, MonologBundle\: string, FlysystemBundle\: string, SuluCoreBundle\: string, DoctrineBundle\: string, DoctrineFixturesBundle\: string, StofDoctrineExtensionsBundle\: string, \.\.\.\} will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 1
 			path: src/Sulu/Bundle/CoreBundle/DependencyInjection/SuluCoreExtension.php
@@ -22387,10 +22387,64 @@ parameters:
 			path: src/Sulu/Bundle/DocumentManagerBundle/Command/FixturesLoadCommand.php
 
 		-
+			message: '#^Parameter \#1 \$groups of method Sulu\\Bundle\\DocumentManagerBundle\\Command\\FixturesLoadCommand\:\:getFixturesByGroups\(\) expects array\<string\>, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Sulu/Bundle/DocumentManagerBundle/Command/FixturesLoadCommand.php
+
+		-
+			message: '#^Parameter \#2 \$purge of method Sulu\\Bundle\\DocumentManagerBundle\\Initializer\\Initializer\:\:initialize\(\) expects bool, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Sulu/Bundle/DocumentManagerBundle/Command/InitializeCommand.php
+
+		-
+			message: '#^Binary operation "\." between ''Debug file\: '' and mixed results in an error\.$#'
+			identifier: binaryOp.invalid
+			count: 1
+			path: src/Sulu/Bundle/DocumentManagerBundle/Command/PHPCRCleanupCommand.php
+
+		-
 			message: '#^Cannot access offset 0 on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
 			path: src/Sulu/Bundle/DocumentManagerBundle/Command/PHPCRCleanupCommand.php
+
+		-
+			message: '#^Cannot cast mixed to int\.$#'
+			identifier: cast.int
+			count: 1
+			path: src/Sulu/Bundle/DocumentManagerBundle/Command/PHPCRCleanupCommand.php
+
+		-
+			message: '#^Parameter \#1 \$filename of function fopen expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Sulu/Bundle/DocumentManagerBundle/Command/PHPCRCleanupCommand.php
+
+		-
+			message: '#^Parameter \#2 \$dryRun of method Sulu\\Bundle\\DocumentManagerBundle\\Command\\PHPCRCleanupCommand\:\:createProcess\(\) expects bool, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Sulu/Bundle/DocumentManagerBundle/Command/PHPCRCleanupCommand.php
+
+		-
+			message: '#^Parameter \#2 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Sulu/Bundle/DocumentManagerBundle/Command/PHPCRCleanupCommand.php
+
+		-
+			message: '#^Parameter \#3 \$debug of method Sulu\\Bundle\\DocumentManagerBundle\\Command\\PHPCRCleanupCommand\:\:createProcess\(\) expects bool, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Sulu/Bundle/DocumentManagerBundle/Command/PHPCRCleanupCommand.php
+
+		-
+			message: '#^Access to constant HTTP_CACHE_INVALIDATION_OPTION on an unknown class Sulu\\Bundle\\HttpCacheBundle\\EventSubscriber\\InvalidationSubscriber\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Sulu/Bundle/DocumentManagerBundle/Command/PHPCRCleanupSingleNodeCommand.php
 
 		-
 			message: '#^Method Sulu\\Bundle\\DocumentManagerBundle\\Command\\PHPCRCleanupSingleNodeCommand\:\:cleanupNode\(\) has parameter \$writtenProperties with no value type specified in iterable type array\.$#'
@@ -22401,6 +22455,18 @@ parameters:
 		-
 			message: '#^Method Sulu\\Bundle\\DocumentManagerBundle\\Command\\PHPCRCleanupSingleNodeCommand\:\:getLocales\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
+			count: 1
+			path: src/Sulu/Bundle/DocumentManagerBundle/Command/PHPCRCleanupSingleNodeCommand.php
+
+		-
+			message: '#^Parameter \#1 \$id of method PHPCR\\SessionInterface\:\:getNodeByIdentifier\(\) expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Sulu/Bundle/DocumentManagerBundle/Command/PHPCRCleanupSingleNodeCommand.php
+
+		-
+			message: '#^Parameter \#1 \$identifier of method Sulu\\Component\\DocumentManager\\DocumentManagerInterface\:\:find\(\) expects string, mixed given\.$#'
+			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/DocumentManagerBundle/Command/PHPCRCleanupSingleNodeCommand.php
 
@@ -22435,6 +22501,12 @@ parameters:
 			path: src/Sulu/Bundle/DocumentManagerBundle/Command/PHPCRCleanupSingleNodeCommand.php
 
 		-
+			message: '#^Parameter \#4 \$dryRun of method Sulu\\Bundle\\DocumentManagerBundle\\Command\\PHPCRCleanupSingleNodeCommand\:\:cleanupNode\(\) expects bool, mixed given\.$#'
+			identifier: argument.type
+			count: 2
+			path: src/Sulu/Bundle/DocumentManagerBundle/Command/PHPCRCleanupSingleNodeCommand.php
+
+		-
 			message: '#^Variable \$liveCleanupNode might not be defined\.$#'
 			identifier: variable.undefined
 			count: 1
@@ -22443,6 +22515,12 @@ parameters:
 		-
 			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
 			identifier: foreach.nonIterable
+			count: 1
+			path: src/Sulu/Bundle/DocumentManagerBundle/Command/SubscriberDebugCommand.php
+
+		-
+			message: '#^Binary operation "\." between ''sulu_document…'' and mixed results in an error\.$#'
+			identifier: binaryOp.invalid
 			count: 1
 			path: src/Sulu/Bundle/DocumentManagerBundle/Command/SubscriberDebugCommand.php
 
@@ -23311,144 +23389,6 @@ parameters:
 			path: src/Sulu/Bundle/HttpCacheBundle/DependencyInjection/SuluHttpCacheExtension.php
 
 		-
-			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
-			identifier: foreach.nonIterable
-			count: 1
-			path: src/Sulu/Bundle/HttpCacheBundle/EventSubscriber/InvalidationSubscriber.php
-
-		-
-			message: '#^Call to an undefined method Sulu\\Component\\Content\\Compat\\StructureInterface\:\:setDocument\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/Sulu/Bundle/HttpCacheBundle/EventSubscriber/InvalidationSubscriber.php
-
-		-
-			message: '#^Call to an undefined method Sulu\\Component\\Content\\Document\\Behavior\\StructureBehavior\:\:getUuid\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/Sulu/Bundle/HttpCacheBundle/EventSubscriber/InvalidationSubscriber.php
-
-		-
-			message: '#^Cannot access offset ''categories'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/HttpCacheBundle/EventSubscriber/InvalidationSubscriber.php
-
-		-
-			message: '#^Cannot access offset ''tags'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/HttpCacheBundle/EventSubscriber/InvalidationSubscriber.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\HttpCacheBundle\\EventSubscriber\\InvalidationSubscriber\:\:getLocaleUrls\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/HttpCacheBundle/EventSubscriber/InvalidationSubscriber.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\HttpCacheBundle\\EventSubscriber\\InvalidationSubscriber\:\:invalidateDocumentBeforePublishing\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/HttpCacheBundle/EventSubscriber/InvalidationSubscriber.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\HttpCacheBundle\\EventSubscriber\\InvalidationSubscriber\:\:invalidateDocumentBeforeRemoving\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/HttpCacheBundle/EventSubscriber/InvalidationSubscriber.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\HttpCacheBundle\\EventSubscriber\\InvalidationSubscriber\:\:invalidateDocumentBeforeRemovingLocale\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/HttpCacheBundle/EventSubscriber/InvalidationSubscriber.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\HttpCacheBundle\\EventSubscriber\\InvalidationSubscriber\:\:invalidateDocumentBeforeUnpublishing\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/HttpCacheBundle/EventSubscriber/InvalidationSubscriber.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\HttpCacheBundle\\EventSubscriber\\InvalidationSubscriber\:\:invalidateDocumentExcerpt\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/HttpCacheBundle/EventSubscriber/InvalidationSubscriber.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\HttpCacheBundle\\EventSubscriber\\InvalidationSubscriber\:\:invalidateDocumentStructure\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/HttpCacheBundle/EventSubscriber/InvalidationSubscriber.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\HttpCacheBundle\\EventSubscriber\\InvalidationSubscriber\:\:invalidateDocumentUrls\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/HttpCacheBundle/EventSubscriber/InvalidationSubscriber.php
-
-		-
-			message: '#^Parameter \#1 \$document of method Sulu\\Bundle\\DocumentManagerBundle\\Bridge\\DocumentInspector\:\:getPublishedLocales\(\) expects Sulu\\Component\\Content\\Document\\Behavior\\ShadowLocaleBehavior, Sulu\\Component\\Content\\Document\\Behavior\\ResourceSegmentBehavior given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/HttpCacheBundle/EventSubscriber/InvalidationSubscriber.php
-
-		-
-			message: '#^Parameter \#1 \$name of method Sulu\\Component\\DocumentManager\\Event\\AbstractMappingEvent\:\:getOption\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 3
-			path: src/Sulu/Bundle/HttpCacheBundle/EventSubscriber/InvalidationSubscriber.php
-
-		-
-			message: '#^Parameter \#1 \$name of method Sulu\\Component\\DocumentManager\\Event\\RemoveEvent\:\:getOption\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/HttpCacheBundle/EventSubscriber/InvalidationSubscriber.php
-
-		-
-			message: '#^Parameter \#1 \$option of method Symfony\\Component\\OptionsResolver\\OptionsResolver\:\:setDefault\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/HttpCacheBundle/EventSubscriber/InvalidationSubscriber.php
-
-		-
-			message: '#^Parameter \#1 \$path of method Sulu\\Bundle\\HttpCacheBundle\\Cache\\CacheManager\:\:invalidatePath\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/HttpCacheBundle/EventSubscriber/InvalidationSubscriber.php
-
-		-
-			message: '#^Parameter \#1 \$tag of method Sulu\\Bundle\\HttpCacheBundle\\Cache\\CacheManager\:\:invalidateTag\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/HttpCacheBundle/EventSubscriber/InvalidationSubscriber.php
-
-		-
-			message: '#^Parameter \#2 \$id of method Sulu\\Bundle\\HttpCacheBundle\\Cache\\CacheManager\:\:invalidateReference\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: src/Sulu/Bundle/HttpCacheBundle/EventSubscriber/InvalidationSubscriber.php
-
-		-
-			message: '#^Parameter \#2 \$locale of method Sulu\\Bundle\\HttpCacheBundle\\EventSubscriber\\InvalidationSubscriber\:\:invalidateDocumentUrls\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/HttpCacheBundle/EventSubscriber/InvalidationSubscriber.php
-
-		-
-			message: '#^Parameter \#2 \$locale of method Sulu\\Bundle\\HttpCacheBundle\\EventSubscriber\\InvalidationSubscriber\:\:invalidateDocumentUrls\(\) expects string, string\|null given\.$#'
-			identifier: argument.type
-			count: 2
-			path: src/Sulu/Bundle/HttpCacheBundle/EventSubscriber/InvalidationSubscriber.php
-
-		-
-			message: '#^Parameter \#2 \$structure of method Sulu\\Component\\Content\\Compat\\StructureManagerInterface\:\:wrapStructure\(\) expects Sulu\\Component\\Content\\Metadata\\StructureMetadata, Sulu\\Component\\Content\\Metadata\\StructureMetadata\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/HttpCacheBundle/EventSubscriber/InvalidationSubscriber.php
-
-		-
 			message: '#^Binary operation "\." between mixed and ''\-'' results in an error\.$#'
 			identifier: binaryOp.invalid
 			count: 1
@@ -23531,36 +23471,6 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/HttpCacheBundle/Tests/Unit/CacheLifetime/CacheLifetimeRequestStoreTest.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\HttpCacheBundle\\Tests\\Unit\\EventSubscriber\\InvalidationSubscriberTest\:\:provideRequest\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/HttpCacheBundle/Tests/Unit/EventSubscriber/InvalidationSubscriberTest.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\HttpCacheBundle\\Tests\\Unit\\EventSubscriber\\InvalidationSubscriberTest\:\:testInvalidateDocumentBeforePublishing\(\) has parameter \$scheme with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/HttpCacheBundle/Tests/Unit/EventSubscriber/InvalidationSubscriberTest.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\HttpCacheBundle\\Tests\\Unit\\EventSubscriber\\InvalidationSubscriberTest\:\:testInvalidateDocumentBeforeRemoving\(\) has parameter \$scheme with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/HttpCacheBundle/Tests/Unit/EventSubscriber/InvalidationSubscriberTest.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\HttpCacheBundle\\Tests\\Unit\\EventSubscriber\\InvalidationSubscriberTest\:\:testInvalidateDocumentBeforeRemovingLocale\(\) has parameter \$scheme with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/HttpCacheBundle/Tests/Unit/EventSubscriber/InvalidationSubscriberTest.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\HttpCacheBundle\\Tests\\Unit\\EventSubscriber\\InvalidationSubscriberTest\:\:testInvalidateDocumentBeforeUnpublishing\(\) has parameter \$scheme with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/HttpCacheBundle/Tests/Unit/EventSubscriber/InvalidationSubscriberTest.php
 
 		-
 			message: '#^Method Sulu\\Bundle\\LocationBundle\\Content\\Types\\LocationContentType\:\:read\(\) has no return type specified\.$#'
@@ -33571,6 +33481,24 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Command/CleanupHistoryCommand.php
 
 		-
+			message: '#^Parameter \#1 \$string of function ltrim expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Sulu/Bundle/PageBundle/Command/CleanupHistoryCommand.php
+
+		-
+			message: '#^Parameter \#1 \$webspaceKey of method Sulu\\Component\\PHPCR\\SessionManager\\SessionManagerInterface\:\:getRoutePath\(\) expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Sulu/Bundle/PageBundle/Command/CleanupHistoryCommand.php
+
+		-
+			message: '#^Parameter \#2 \$languageCode of method Sulu\\Component\\PHPCR\\SessionManager\\SessionManagerInterface\:\:getRoutePath\(\) expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Sulu/Bundle/PageBundle/Command/CleanupHistoryCommand.php
+
+		-
 			message: '#^Parameter \#2 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -33589,15 +33517,57 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Command/CleanupHistoryCommand.php
 
 		-
+			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
+			identifier: foreach.nonIterable
+			count: 1
+			path: src/Sulu/Bundle/PageBundle/Command/ContentLocaleCopyCommand.php
+
+		-
 			message: '#^Call to an undefined method Sulu\\Component\\Content\\Compat\\StructureInterface\:\:getResourceLocator\(\)\.$#'
 			identifier: method.notFound
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Command/ContentLocaleCopyCommand.php
 
 		-
+			message: '#^Call to method copyLanguage\(\) on an unknown class Sulu\\Component\\Content\\Mapper\\ContentMapperInterface\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Sulu/Bundle/PageBundle/Command/ContentLocaleCopyCommand.php
+
+		-
+			message: '#^Call to method load\(\) on an unknown class Sulu\\Component\\Content\\Mapper\\ContentMapperInterface\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Sulu/Bundle/PageBundle/Command/ContentLocaleCopyCommand.php
+
+		-
+			message: '#^Call to method loadByParent\(\) on an unknown class Sulu\\Component\\Content\\Mapper\\ContentMapperInterface\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Sulu/Bundle/PageBundle/Command/ContentLocaleCopyCommand.php
+
+		-
+			message: '#^Call to method loadStartPage\(\) on an unknown class Sulu\\Component\\Content\\Mapper\\ContentMapperInterface\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Sulu/Bundle/PageBundle/Command/ContentLocaleCopyCommand.php
+
+		-
+			message: '#^Cannot call method getName\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: src/Sulu/Bundle/PageBundle/Command/ContentLocaleCopyCommand.php
+
+		-
+			message: '#^Cannot call method getType\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 2
+			path: src/Sulu/Bundle/PageBundle/Command/ContentLocaleCopyCommand.php
+
+		-
 			message: '#^Left side of && is always true\.$#'
 			identifier: booleanAnd.leftAlwaysTrue
-			count: 2
+			count: 1
 			path: src/Sulu/Bundle/PageBundle/Command/ContentLocaleCopyCommand.php
 
 		-
@@ -33691,51 +33661,9 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Command/ContentLocaleCopyCommand.php
 
 		-
-			message: '#^Parameter \#1 \$webspaceKey of method Sulu\\Component\\Content\\Mapper\\ContentMapperInterface\:\:loadStartPage\(\) expects string, mixed given\.$#'
+			message: '#^Parameter \#1 \$structure of method Sulu\\Bundle\\PageBundle\\Command\\ContentLocaleCopyCommand\:\:copyNodeRecursive\(\) expects Sulu\\Component\\Content\\Compat\\StructureInterface, mixed given\.$#'
 			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Command/ContentLocaleCopyCommand.php
-
-		-
-			message: '#^Parameter \#2 \$languageCode of method Sulu\\Component\\Content\\Mapper\\ContentMapperInterface\:\:loadStartPage\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Command/ContentLocaleCopyCommand.php
-
-		-
-			message: '#^Parameter \#2 \$userId of method Sulu\\Component\\Content\\Mapper\\ContentMapperInterface\:\:copyLanguage\(\) expects string, int given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Command/ContentLocaleCopyCommand.php
-
-		-
-			message: '#^Parameter \#2 \$webspaceKey of method Sulu\\Component\\Content\\Mapper\\ContentMapperInterface\:\:load\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Command/ContentLocaleCopyCommand.php
-
-		-
-			message: '#^Parameter \#2 \$webspaceKey of method Sulu\\Component\\Content\\Mapper\\ContentMapperInterface\:\:loadByParent\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Command/ContentLocaleCopyCommand.php
-
-		-
-			message: '#^Parameter \#3 \$languageCode of method Sulu\\Component\\Content\\Mapper\\ContentMapperInterface\:\:load\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Command/ContentLocaleCopyCommand.php
-
-		-
-			message: '#^Parameter \#3 \$languageCode of method Sulu\\Component\\Content\\Mapper\\ContentMapperInterface\:\:loadByParent\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Command/ContentLocaleCopyCommand.php
-
-		-
-			message: '#^Parameter \#3 \$webspaceKey of method Sulu\\Component\\Content\\Mapper\\ContentMapperInterface\:\:copyLanguage\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
+			count: 2
 			path: src/Sulu/Bundle/PageBundle/Command/ContentLocaleCopyCommand.php
 
 		-
@@ -33745,14 +33673,14 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Command/ContentLocaleCopyCommand.php
 
 		-
-			message: '#^Parameter \#4 \$srcLanguageCode of method Sulu\\Component\\Content\\Mapper\\ContentMapperInterface\:\:copyLanguage\(\) expects string, mixed given\.$#'
-			identifier: argument.type
+			message: '#^Parameter \$contentMapper of method Sulu\\Bundle\\PageBundle\\Command\\ContentLocaleCopyCommand\:\:__construct\(\) has invalid type Sulu\\Component\\Content\\Mapper\\ContentMapperInterface\.$#'
+			identifier: class.notFound
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Command/ContentLocaleCopyCommand.php
 
 		-
-			message: '#^Parameter \#5 \$destLanguageCodes of method Sulu\\Component\\Content\\Mapper\\ContentMapperInterface\:\:copyLanguage\(\) expects string, mixed given\.$#'
-			identifier: argument.type
+			message: '#^Property Sulu\\Bundle\\PageBundle\\Command\\ContentLocaleCopyCommand\:\:\$contentMapper has unknown class Sulu\\Component\\Content\\Mapper\\ContentMapperInterface as its type\.$#'
+			identifier: class.notFound
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Command/ContentLocaleCopyCommand.php
 
@@ -33839,6 +33767,30 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Command/MaintainResourceLocatorCommand.php
+
+		-
+			message: '#^Parameter \#1 \$key of method Sulu\\Component\\Webspace\\Manager\\WebspaceManagerInterface\:\:findWebspaceByKey\(\) expects string\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Sulu/Bundle/PageBundle/Command/ValidatePagesCommand.php
+
+		-
+			message: '#^Parameter \#1 \$webspaceKey of method Sulu\\Component\\Webspace\\StructureProvider\\WebspaceStructureProviderInterface\:\:getStructures\(\) expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Sulu/Bundle/PageBundle/Command/ValidatePagesCommand.php
+
+		-
+			message: '#^Parameter \#3 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 2
+			path: src/Sulu/Bundle/PageBundle/Command/ValidatePagesCommand.php
+
+		-
+			message: '#^Parameter \#4 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Sulu/Bundle/PageBundle/Command/ValidatePagesCommand.php
 
 		-
 			message: '#^Call to an undefined method Sulu\\Component\\Content\\Compat\\StructureInterface\:\:getInternal\(\)\.$#'
@@ -33956,6 +33908,24 @@ parameters:
 
 		-
 			message: '#^Binary operation "\." between ''\<info\>Processing\: \<…'' and mixed results in an error\.$#'
+			identifier: binaryOp.invalid
+			count: 1
+			path: src/Sulu/Bundle/PageBundle/Command/WebspaceCopyCommand.php
+
+		-
+			message: '#^Binary operation "\." between ''\<info\>The whole…'' and mixed results in an error\.$#'
+			identifier: binaryOp.invalid
+			count: 1
+			path: src/Sulu/Bundle/PageBundle/Command/WebspaceCopyCommand.php
+
+		-
+			message: '#^Binary operation "\." between ''Webspace\: '' and mixed results in an error\.$#'
+			identifier: binaryOp.invalid
+			count: 1
+			path: src/Sulu/Bundle/PageBundle/Command/WebspaceCopyCommand.php
+
+		-
+			message: '#^Binary operation "\." between non\-falsy\-string and mixed results in an error\.$#'
 			identifier: binaryOp.invalid
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Command/WebspaceCopyCommand.php
@@ -34363,6 +34333,12 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Command/WebspaceCopyCommand.php
 
 		-
+			message: '#^Parameter \#2 \$string of function explode expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 2
+			path: src/Sulu/Bundle/PageBundle/Command/WebspaceCopyCommand.php
+
+		-
 			message: '#^Parameter \#2 \$structureArray of method Sulu\\Bundle\\PageBundle\\Command\\WebspaceCopyCommand\:\:processContentType\(\) expects array, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -34375,13 +34351,109 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Command/WebspaceCopyCommand.php
 
 		-
-			message: '#^Parameter \#6 \$nodes of method Sulu\\Component\\Content\\Export\\WebspaceExportInterface\:\:export\(\) expects array\|null, list\<string\>\|string\|null given\.$#'
+			message: '#^Property Sulu\\Bundle\\PageBundle\\Command\\WebspaceCopyCommand\:\:\$webspaceKeyDestination \(string\) does not accept mixed\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: src/Sulu/Bundle/PageBundle/Command/WebspaceCopyCommand.php
+
+		-
+			message: '#^Property Sulu\\Bundle\\PageBundle\\Command\\WebspaceCopyCommand\:\:\$webspaceKeySource \(string\) does not accept mixed\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: src/Sulu/Bundle/PageBundle/Command/WebspaceCopyCommand.php
+
+		-
+			message: '#^Binary operation "\." between ''Format\: '' and mixed results in an error\.$#'
+			identifier: binaryOp.invalid
+			count: 1
+			path: src/Sulu/Bundle/PageBundle/Command/WebspaceExportCommand.php
+
+		-
+			message: '#^Binary operation "\." between ''Locale\: '' and mixed results in an error\.$#'
+			identifier: binaryOp.invalid
+			count: 1
+			path: src/Sulu/Bundle/PageBundle/Command/WebspaceExportCommand.php
+
+		-
+			message: '#^Binary operation "\." between ''Target\: '' and mixed results in an error\.$#'
+			identifier: binaryOp.invalid
+			count: 1
+			path: src/Sulu/Bundle/PageBundle/Command/WebspaceExportCommand.php
+
+		-
+			message: '#^Binary operation "\." between ''UUID\: '' and mixed results in an error\.$#'
+			identifier: binaryOp.invalid
+			count: 1
+			path: src/Sulu/Bundle/PageBundle/Command/WebspaceExportCommand.php
+
+		-
+			message: '#^Binary operation "\." between ''Webspace\: '' and mixed results in an error\.$#'
+			identifier: binaryOp.invalid
+			count: 1
+			path: src/Sulu/Bundle/PageBundle/Command/WebspaceExportCommand.php
+
+		-
+			message: '#^Binary operation "\." between non\-falsy\-string and mixed results in an error\.$#'
+			identifier: binaryOp.invalid
+			count: 1
+			path: src/Sulu/Bundle/PageBundle/Command/WebspaceExportCommand.php
+
+		-
+			message: '#^Call to an undefined method Symfony\\Component\\Console\\Helper\\HelperInterface\:\:ask\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Sulu/Bundle/PageBundle/Command/WebspaceExportCommand.php
+
+		-
+			message: '#^Parameter \#1 \$filename of function file_put_contents expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Command/WebspaceExportCommand.php
 
 		-
-			message: '#^Parameter \#7 \$ignoredNodes of method Sulu\\Component\\Content\\Export\\WebspaceExportInterface\:\:export\(\) expects array\|null, list\<string\>\|string\|null given\.$#'
+			message: '#^Parameter \#1 \$haystack of function strpos expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Sulu/Bundle/PageBundle/Command/WebspaceExportCommand.php
+
+		-
+			message: '#^Parameter \#1 \$webspaceKey of method Sulu\\Component\\Content\\Export\\WebspaceExportInterface\:\:export\(\) expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Sulu/Bundle/PageBundle/Command/WebspaceExportCommand.php
+
+		-
+			message: '#^Parameter \#2 \$locale of method Sulu\\Component\\Content\\Export\\WebspaceExportInterface\:\:export\(\) expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Sulu/Bundle/PageBundle/Command/WebspaceExportCommand.php
+
+		-
+			message: '#^Parameter \#2 \$string of function explode expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 2
+			path: src/Sulu/Bundle/PageBundle/Command/WebspaceExportCommand.php
+
+		-
+			message: '#^Parameter \#4 \$format of method Sulu\\Component\\Content\\Export\\WebspaceExportInterface\:\:export\(\) expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Sulu/Bundle/PageBundle/Command/WebspaceExportCommand.php
+
+		-
+			message: '#^Parameter \#5 \$uuid of method Sulu\\Component\\Content\\Export\\WebspaceExportInterface\:\:export\(\) expects string\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Sulu/Bundle/PageBundle/Command/WebspaceExportCommand.php
+
+		-
+			message: '#^Parameter \#6 \$nodes of method Sulu\\Component\\Content\\Export\\WebspaceExportInterface\:\:export\(\) expects array\|null, float\|int\|list\<string\>\|string\|false\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Sulu/Bundle/PageBundle/Command/WebspaceExportCommand.php
+
+		-
+			message: '#^Parameter \#7 \$ignoredNodes of method Sulu\\Component\\Content\\Export\\WebspaceExportInterface\:\:export\(\) expects array\|null, float\|int\|list\<string\>\|string\|false\|null given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Command/WebspaceExportCommand.php
@@ -34405,6 +34477,54 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Command/WebspaceImportCommand.php
 
 		-
+			message: '#^Binary operation "\." between ''Format\: '' and mixed results in an error\.$#'
+			identifier: binaryOp.invalid
+			count: 1
+			path: src/Sulu/Bundle/PageBundle/Command/WebspaceImportCommand.php
+
+		-
+			message: '#^Binary operation "\." between ''Locale\: '' and mixed results in an error\.$#'
+			identifier: binaryOp.invalid
+			count: 1
+			path: src/Sulu/Bundle/PageBundle/Command/WebspaceImportCommand.php
+
+		-
+			message: '#^Binary operation "\." between ''Override Setting\: '' and mixed results in an error\.$#'
+			identifier: binaryOp.invalid
+			count: 1
+			path: src/Sulu/Bundle/PageBundle/Command/WebspaceImportCommand.php
+
+		-
+			message: '#^Binary operation "\." between ''Sulu Version by…'' and mixed results in an error\.$#'
+			identifier: binaryOp.invalid
+			count: 1
+			path: src/Sulu/Bundle/PageBundle/Command/WebspaceImportCommand.php
+
+		-
+			message: '#^Binary operation "\." between ''UUID\: '' and mixed results in an error\.$#'
+			identifier: binaryOp.invalid
+			count: 1
+			path: src/Sulu/Bundle/PageBundle/Command/WebspaceImportCommand.php
+
+		-
+			message: '#^Binary operation "\." between ''Webspace\: '' and mixed results in an error\.$#'
+			identifier: binaryOp.invalid
+			count: 1
+			path: src/Sulu/Bundle/PageBundle/Command/WebspaceImportCommand.php
+
+		-
+			message: '#^Binary operation "\." between non\-falsy\-string and mixed results in an error\.$#'
+			identifier: binaryOp.invalid
+			count: 1
+			path: src/Sulu/Bundle/PageBundle/Command/WebspaceImportCommand.php
+
+		-
+			message: '#^Call to an undefined method Symfony\\Component\\Console\\Helper\\HelperInterface\:\:ask\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Sulu/Bundle/PageBundle/Command/WebspaceImportCommand.php
+
+		-
 			message: '#^Cannot access offset ''ignore'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
@@ -34423,6 +34543,12 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Command/WebspaceImportCommand.php
 
 		-
+			message: '#^Parameter \#1 \$haystack of function strpos expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Sulu/Bundle/PageBundle/Command/WebspaceImportCommand.php
+
+		-
 			message: '#^Parameter \#1 \$message of method Psr\\Log\\LoggerInterface\:\:info\(\) expects string\|Stringable, mixed given\.$#'
 			identifier: argument.type
 			count: 2
@@ -34435,7 +34561,25 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Command/WebspaceImportCommand.php
 
 		-
+			message: '#^Parameter \#1 \$webspaceKey of method Sulu\\Component\\Content\\Import\\WebspaceImportInterface\:\:import\(\) expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Sulu/Bundle/PageBundle/Command/WebspaceImportCommand.php
+
+		-
+			message: '#^Parameter \#2 \$locale of method Sulu\\Component\\Content\\Import\\WebspaceImportInterface\:\:import\(\) expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Sulu/Bundle/PageBundle/Command/WebspaceImportCommand.php
+
+		-
 			message: '#^Parameter \#2 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Sulu/Bundle/PageBundle/Command/WebspaceImportCommand.php
+
+		-
+			message: '#^Parameter \#3 \$filePath of method Sulu\\Component\\Content\\Import\\WebspaceImportInterface\:\:import\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Command/WebspaceImportCommand.php
@@ -34447,13 +34591,25 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Command/WebspaceImportCommand.php
 
 		-
-			message: '#^Parameter \#7 \$overrideSettings of method Sulu\\Component\\Content\\Import\\WebspaceImportInterface\:\:import\(\) expects bool, string\|null given\.$#'
+			message: '#^Parameter \#5 \$format of method Sulu\\Component\\Content\\Import\\WebspaceImportInterface\:\:import\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Command/WebspaceImportCommand.php
 
 		-
-			message: '#^Parameter \#8 \$exportSuluVersion of method Sulu\\Component\\Content\\Import\\WebspaceImportInterface\:\:import\(\) expects string, string\|null given\.$#'
+			message: '#^Parameter \#6 \$uuid of method Sulu\\Component\\Content\\Import\\WebspaceImportInterface\:\:import\(\) expects string\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Sulu/Bundle/PageBundle/Command/WebspaceImportCommand.php
+
+		-
+			message: '#^Parameter \#7 \$overrideSettings of method Sulu\\Component\\Content\\Import\\WebspaceImportInterface\:\:import\(\) expects bool, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Sulu/Bundle/PageBundle/Command/WebspaceImportCommand.php
+
+		-
+			message: '#^Parameter \#8 \$exportSuluVersion of method Sulu\\Component\\Content\\Import\\WebspaceImportInterface\:\:import\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Command/WebspaceImportCommand.php
@@ -35155,14 +35311,14 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Content/Types/Url.php
 
 		-
-			message: '#^Call to an undefined method Sulu\\Component\\Content\\Compat\\StructureInterface\:\:getTitle\(\)\.$#'
+			message: '#^Call to an undefined method object\:\:getUuid\(\)\.$#'
 			identifier: method.notFound
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Controller/PageController.php
 
 		-
-			message: '#^Call to an undefined method object\:\:getUuid\(\)\.$#'
-			identifier: method.notFound
+			message: '#^Call to method load\(\) on an unknown class Sulu\\Component\\Content\\Mapper\\ContentMapperInterface\.$#'
+			identifier: class.notFound
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Controller/PageController.php
 
@@ -35170,6 +35326,18 @@ parameters:
 			message: '#^Cannot call method getId\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 2
+			path: src/Sulu/Bundle/PageBundle/Controller/PageController.php
+
+		-
+			message: '#^Cannot call method getTitle\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: src/Sulu/Bundle/PageBundle/Controller/PageController.php
+
+		-
+			message: '#^Cannot call method getUuid\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
 			path: src/Sulu/Bundle/PageBundle/Controller/PageController.php
 
 		-
@@ -35329,7 +35497,7 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Controller/PageController.php
 
 		-
-			message: '#^Parameter \#2 \$referencingResources of class Sulu\\Component\\Rest\\Exception\\ReferencingResourcesFoundException constructor expects array\<array\{id\: int\|string, resourceKey\: string, title\: string\|null\}\>, non\-empty\-list\<array\{id\: string, resourceKey\: ''pages'', title\: mixed\}\> given\.$#'
+			message: '#^Parameter \#2 \$referencingResources of class Sulu\\Component\\Rest\\Exception\\ReferencingResourcesFoundException constructor expects array\<array\{id\: int\|string, resourceKey\: string, title\: string\|null\}\>, non\-empty\-list\<array\{id\: mixed, resourceKey\: ''pages'', title\: mixed\}\> given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Controller/PageController.php
@@ -35342,12 +35510,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#2 \$subject of function preg_split expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Controller/PageController.php
-
-		-
-			message: '#^Parameter \#2 \$webspaceKey of method Sulu\\Component\\Content\\Mapper\\ContentMapperInterface\:\:load\(\) expects string, string\|null given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Controller/PageController.php
@@ -35421,6 +35583,18 @@ parameters:
 		-
 			message: '#^Parameter \#6 \$user of method Sulu\\Bundle\\PageBundle\\Controller\\PageController\:\:getTreeContent\(\) expects Sulu\\Component\\Security\\Authentication\\UserInterface, mixed given\.$#'
 			identifier: argument.type
+			count: 1
+			path: src/Sulu/Bundle/PageBundle/Controller/PageController.php
+
+		-
+			message: '#^Parameter \$contentMapper of method Sulu\\Bundle\\PageBundle\\Controller\\PageController\:\:__construct\(\) has invalid type Sulu\\Component\\Content\\Mapper\\ContentMapperInterface\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Sulu/Bundle/PageBundle/Controller/PageController.php
+
+		-
+			message: '#^Property Sulu\\Bundle\\PageBundle\\Controller\\PageController\:\:\$contentMapper has unknown class Sulu\\Component\\Content\\Mapper\\ContentMapperInterface as its type\.$#'
+			identifier: class.notFound
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Controller/PageController.php
 
@@ -35809,10 +35983,34 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/DependencyInjection/Compiler/StructureExtensionCompilerPass.php
 
 		-
-			message: '#^Call to function array_key_exists\(\) with ''SuluNextPageBundle'' and array\{FrameworkBundle\: string, TwigBundle\: string, MonologBundle\: string, FlysystemBundle\: string, SuluCoreBundle\: string, DoctrineBundle\: string, DoctrineFixturesBundle\: string, DoctrinePHPCRBundle\: string, \.\.\.\} will always evaluate to true\.$#'
+			message: '#^Call to function array_key_exists\(\) with ''SuluNextPageBundle'' and array\{FrameworkBundle\: string, TwigBundle\: string, MonologBundle\: string, FlysystemBundle\: string, SuluCoreBundle\: string, DoctrineBundle\: string, DoctrineFixturesBundle\: string, StofDoctrineExtensionsBundle\: string, \.\.\.\} will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/DependencyInjection/Compiler/SuluNextPageCompilerPass.php
+
+		-
+			message: '#^Argument of an invalid type array\|bool\|float\|int\|string\|null supplied for foreach, only iterables are supported\.$#'
+			identifier: foreach.nonIterable
+			count: 1
+			path: src/Sulu/Bundle/PageBundle/DependencyInjection/SuluPageExtension.php
+
+		-
+			message: '#^Cannot access offset ''alias'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: src/Sulu/Bundle/PageBundle/DependencyInjection/SuluPageExtension.php
+
+		-
+			message: '#^Cannot access offset ''set_default_author'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: src/Sulu/Bundle/PageBundle/DependencyInjection/SuluPageExtension.php
+
+		-
+			message: '#^Cannot access offset \(int\|string\) on non\-empty\-array\|bool\|float\|int\|string\|null\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: src/Sulu/Bundle/PageBundle/DependencyInjection/SuluPageExtension.php
 
 		-
 			message: '#^Method Sulu\\Bundle\\PageBundle\\DependencyInjection\\SuluPageExtension\:\:appendDefaultAuthor\(\) has no return type specified\.$#'
@@ -36573,7 +36771,7 @@ parameters:
 		-
 			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
 			identifier: foreach.nonIterable
-			count: 1
+			count: 2
 			path: src/Sulu/Bundle/PageBundle/Repository/NodeRepository.php
 
 		-
@@ -36583,26 +36781,56 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Repository/NodeRepository.php
 
 		-
-			message: '#^Call to an undefined method Sulu\\Component\\Content\\Compat\\StructureInterface\:\:getExt\(\)\.$#'
-			identifier: method.notFound
-			count: 2
-			path: src/Sulu/Bundle/PageBundle/Repository/NodeRepository.php
-
-		-
-			message: '#^Call to an undefined method Sulu\\Component\\Content\\Compat\\StructureInterface\:\:getResourceLocator\(\)\.$#'
-			identifier: method.notFound
-			count: 2
-			path: src/Sulu/Bundle/PageBundle/Repository/NodeRepository.php
-
-		-
-			message: '#^Call to an undefined method Sulu\\Component\\Content\\Mapper\\ContentMapperInterface\:\:loadNodeAndAncestors\(\)\.$#'
-			identifier: method.notFound
+			message: '#^Call to function is_array\(\) with array will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Repository/NodeRepository.php
 
 		-
-			message: '#^Call to function is_array\(\) with array will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
+			message: '#^Call to method copyLanguage\(\) on an unknown class Sulu\\Component\\Content\\Mapper\\ContentMapperInterface\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Sulu/Bundle/PageBundle/Repository/NodeRepository.php
+
+		-
+			message: '#^Call to method load\(\) on an unknown class Sulu\\Component\\Content\\Mapper\\ContentMapperInterface\.$#'
+			identifier: class.notFound
+			count: 3
+			path: src/Sulu/Bundle/PageBundle/Repository/NodeRepository.php
+
+		-
+			message: '#^Call to method loadBreadcrumb\(\) on an unknown class Sulu\\Component\\Content\\Mapper\\ContentMapperInterface\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Sulu/Bundle/PageBundle/Repository/NodeRepository.php
+
+		-
+			message: '#^Call to method loadByParent\(\) on an unknown class Sulu\\Component\\Content\\Mapper\\ContentMapperInterface\.$#'
+			identifier: class.notFound
+			count: 2
+			path: src/Sulu/Bundle/PageBundle/Repository/NodeRepository.php
+
+		-
+			message: '#^Call to method loadNodeAndAncestors\(\) on an unknown class Sulu\\Component\\Content\\Mapper\\ContentMapperInterface\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Sulu/Bundle/PageBundle/Repository/NodeRepository.php
+
+		-
+			message: '#^Call to method loadStartPage\(\) on an unknown class Sulu\\Component\\Content\\Mapper\\ContentMapperInterface\.$#'
+			identifier: class.notFound
+			count: 2
+			path: src/Sulu/Bundle/PageBundle/Repository/NodeRepository.php
+
+		-
+			message: '#^Call to method orderAt\(\) on an unknown class Sulu\\Component\\Content\\Mapper\\ContentMapperInterface\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Sulu/Bundle/PageBundle/Repository/NodeRepository.php
+
+		-
+			message: '#^Call to method saveExtension\(\) on an unknown class Sulu\\Component\\Content\\Mapper\\ContentMapperInterface\.$#'
+			identifier: class.notFound
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Repository/NodeRepository.php
 
@@ -36667,6 +36895,18 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Repository/NodeRepository.php
 
 		-
+			message: '#^Cannot call method getDepth\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: src/Sulu/Bundle/PageBundle/Repository/NodeRepository.php
+
+		-
+			message: '#^Cannot call method getExt\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 2
+			path: src/Sulu/Bundle/PageBundle/Repository/NodeRepository.php
+
+		-
 			message: '#^Cannot call method getKey\(\) on Sulu\\Component\\Webspace\\Webspace\|null\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -36685,6 +36925,30 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Repository/NodeRepository.php
 
 		-
+			message: '#^Cannot call method getPath\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 2
+			path: src/Sulu/Bundle/PageBundle/Repository/NodeRepository.php
+
+		-
+			message: '#^Cannot call method getPublished\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: src/Sulu/Bundle/PageBundle/Repository/NodeRepository.php
+
+		-
+			message: '#^Cannot call method getPublishedState\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: src/Sulu/Bundle/PageBundle/Repository/NodeRepository.php
+
+		-
+			message: '#^Cannot call method getResourceLocator\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 2
+			path: src/Sulu/Bundle/PageBundle/Repository/NodeRepository.php
+
+		-
 			message: '#^Cannot call method getType\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -36693,7 +36957,13 @@ parameters:
 		-
 			message: '#^Cannot call method getUuid\(\) on mixed\.$#'
 			identifier: method.nonObject
-			count: 3
+			count: 5
+			path: src/Sulu/Bundle/PageBundle/Repository/NodeRepository.php
+
+		-
+			message: '#^Cannot call method toArray\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
 			path: src/Sulu/Bundle/PageBundle/Repository/NodeRepository.php
 
 		-
@@ -36763,6 +37033,12 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Repository/NodeRepository.php
 
 		-
+			message: '#^Method Sulu\\Bundle\\PageBundle\\Repository\\NodeRepository\:\:getMapper\(\) has invalid return type Sulu\\Component\\Content\\Mapper\\ContentMapperInterface\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Sulu/Bundle/PageBundle/Repository/NodeRepository.php
+
+		-
 			message: '#^Method Sulu\\Bundle\\PageBundle\\Repository\\NodeRepository\:\:getNode\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -36790,6 +37066,12 @@ parameters:
 			message: '#^Method Sulu\\Bundle\\PageBundle\\Repository\\NodeRepository\:\:getNodesTree\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
+			path: src/Sulu/Bundle/PageBundle/Repository/NodeRepository.php
+
+		-
+			message: '#^Method Sulu\\Bundle\\PageBundle\\Repository\\NodeRepository\:\:getParentNode\(\) should return Sulu\\Component\\Content\\Compat\\StructureInterface but returns mixed\.$#'
+			identifier: return.type
+			count: 2
 			path: src/Sulu/Bundle/PageBundle/Repository/NodeRepository.php
 
 		-
@@ -36931,15 +37213,15 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Repository/NodeRepository.php
 
 		-
-			message: '#^Parameter \#1 \$structure of method Sulu\\Bundle\\PageBundle\\Repository\\NodeRepository\:\:prepareNode\(\) expects Sulu\\Component\\Content\\Compat\\StructureInterface, mixed given\.$#'
+			message: '#^Parameter \#1 \$nodes of method Sulu\\Bundle\\PageBundle\\Repository\\NodeRepository\:\:prepareNodesTree\(\) expects array\<Sulu\\Component\\Content\\Compat\\StructureInterface\>, mixed given\.$#'
 			identifier: argument.type
-			count: 1
+			count: 2
 			path: src/Sulu/Bundle/PageBundle/Repository/NodeRepository.php
 
 		-
-			message: '#^Parameter \#1 \$uuid of method Sulu\\Component\\Content\\Mapper\\ContentMapperInterface\:\:loadByParent\(\) expects string, null given\.$#'
+			message: '#^Parameter \#1 \$structure of method Sulu\\Bundle\\PageBundle\\Repository\\NodeRepository\:\:prepareNode\(\) expects Sulu\\Component\\Content\\Compat\\StructureInterface, mixed given\.$#'
 			identifier: argument.type
-			count: 1
+			count: 5
 			path: src/Sulu/Bundle/PageBundle/Repository/NodeRepository.php
 
 		-
@@ -36967,43 +37249,13 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Repository/NodeRepository.php
 
 		-
-			message: '#^Parameter \#2 \$userId of method Sulu\\Component\\Content\\Mapper\\ContentMapperInterface\:\:copyLanguage\(\) expects string, int given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Repository/NodeRepository.php
-
-		-
 			message: '#^Parameter \#2 \$webspaceKey of method Sulu\\Bundle\\PageBundle\\Repository\\NodeRepository\:\:prepareNodesTree\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Repository/NodeRepository.php
 
 		-
-			message: '#^Parameter \#2 \$webspaceKey of method Sulu\\Component\\Content\\Mapper\\ContentMapperInterface\:\:loadByParent\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Repository/NodeRepository.php
-
-		-
 			message: '#^Parameter \#3 \$languageCode of method Sulu\\Bundle\\PageBundle\\Repository\\NodeRepository\:\:prepareNodesTree\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Repository/NodeRepository.php
-
-		-
-			message: '#^Parameter \#3 \$languageCode of method Sulu\\Component\\Content\\Mapper\\ContentMapperInterface\:\:loadByParent\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Repository/NodeRepository.php
-
-		-
-			message: '#^Parameter \#4 \$depth of method Sulu\\Component\\Content\\Mapper\\ContentMapperInterface\:\:loadByParent\(\) expects int, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Repository/NodeRepository.php
-
-		-
-			message: '#^Parameter \#5 \$destLanguageCodes of method Sulu\\Component\\Content\\Mapper\\ContentMapperInterface\:\:copyLanguage\(\) expects string, array\<string\> given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Repository/NodeRepository.php
@@ -37021,8 +37273,14 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Repository/NodeRepository.php
 
 		-
-			message: '#^Parameter \#7 \$excludeGhosts of method Sulu\\Component\\Content\\Mapper\\ContentMapperInterface\:\:loadByParent\(\) expects bool, mixed given\.$#'
-			identifier: argument.type
+			message: '#^Parameter \$mapper of method Sulu\\Bundle\\PageBundle\\Repository\\NodeRepository\:\:__construct\(\) has invalid type Sulu\\Component\\Content\\Mapper\\ContentMapperInterface\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Sulu/Bundle/PageBundle/Repository/NodeRepository.php
+
+		-
+			message: '#^Property Sulu\\Bundle\\PageBundle\\Repository\\NodeRepository\:\:\$mapper has unknown class Sulu\\Component\\Content\\Mapper\\ContentMapperInterface as its type\.$#'
+			identifier: class.notFound
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Repository/NodeRepository.php
 
@@ -37169,1014 +37427,6 @@ parameters:
 			identifier: missingType.iterableValue
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Repository/ResourceLocatorRepositoryInterface.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Version201504271608\:\:migrateHome\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201504271608.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Version201504271608\:\:migrateHome\(\) has parameter \$from with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201504271608.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Version201504271608\:\:migrateHome\(\) has parameter \$referenceWebspace with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201504271608.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Version201504271608\:\:migrateHome\(\) has parameter \$to with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201504271608.php
-
-		-
-			message: '#^Parameter \#1 \$mixinName of method PHPCR\\NodeInterface\:\:addMixin\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201504271608.php
-
-		-
-			message: '#^Parameter \#1 \$mixinName of method PHPCR\\NodeInterface\:\:removeMixin\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201504271608.php
-
-		-
-			message: '#^Cannot call method getIdentifier\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201504281842.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Version201504281842\:\:migrateInternalLinks\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201504281842.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Version201504281842\:\:migrateInternalLinks\(\) has parameter \$directionUp with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201504281842.php
-
-		-
-			message: '#^Parameter \#1 \$id of method PHPCR\\SessionInterface\:\:getNodeByIdentifier\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201504281842.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Version201507231648\:\:getCategories\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201507231648.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Version201507231648\:\:getCategories\(\) should return array but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201507231648.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Version201507231648\:\:getNavigationContext\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201507231648.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Version201507231648\:\:getNavigationContext\(\) should return array but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201507231648.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Version201507231648\:\:getTags\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201507231648.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Version201507231648\:\:getTags\(\) should return array but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201507231648.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Version201507231648\:\:upgradeNode\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201507231648.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Version201507231648\:\:upgradeWebspace\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201507231648.php
-
-		-
-			message: '#^Parameter \#2 \$locale of method Sulu\\Bundle\\PageBundle\\Version201507231648\:\:getCategories\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201507231648.php
-
-		-
-			message: '#^Parameter \#2 \$locale of method Sulu\\Bundle\\PageBundle\\Version201507231648\:\:getNavigationContext\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201507231648.php
-
-		-
-			message: '#^Parameter \#2 \$locale of method Sulu\\Bundle\\PageBundle\\Version201507231648\:\:getTags\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201507231648.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Version201507281529\:\:migrateExternalLinks\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201507281529.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Version201507281529\:\:migrateExternalLinks\(\) has parameter \$directionUp with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201507281529.php
-
-		-
-			message: '#^Call to an undefined method Sulu\\Component\\Content\\Metadata\\ItemMetadata\:\:getType\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201510210733.php
-
-		-
-			message: '#^Cannot access an offset on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201510210733.php
-
-		-
-			message: '#^Cannot access offset ''type'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201510210733.php
-
-		-
-			message: '#^Cannot access offset ''url'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201510210733.php
-
-		-
-			message: '#^Cannot access offset float\|int\|string on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201510210733.php
-
-		-
-			message: '#^Cannot call method get\(\) on Symfony\\Component\\DependencyInjection\\ContainerInterface\|null\.$#'
-			identifier: method.nonObject
-			count: 5
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201510210733.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Version201510210733\:\:downgradeUrl\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201510210733.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Version201510210733\:\:findUrlBlockProperties\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201510210733.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Version201510210733\:\:findUrlBlockProperties\(\) has parameter \$properties with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201510210733.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Version201510210733\:\:findUrlProperties\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201510210733.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Version201510210733\:\:findUrlProperties\(\) has parameter \$properties with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201510210733.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Version201510210733\:\:iterateStructureNodes\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201510210733.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Version201510210733\:\:iterateStructureNodes\(\) has parameter \$properties with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201510210733.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Version201510210733\:\:iterateStructures\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201510210733.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Version201510210733\:\:upgradeExternalLinks\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201510210733.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Version201510210733\:\:upgradeNode\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201510210733.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Version201510210733\:\:upgradeNode\(\) has parameter \$properties with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201510210733.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Version201510210733\:\:upgradeProperty\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201510210733.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Version201510210733\:\:upgradeUrl\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201510210733.php
-
-		-
-			message: '#^Parameter \#1 \$name of method Sulu\\Component\\Content\\Document\\Structure\\StructureInterface\:\:getProperty\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201510210733.php
-
-		-
-			message: '#^Parameter \#1 \$value of method Sulu\\Bundle\\PageBundle\\Version201510210733\:\:downgradeUrl\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 3
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201510210733.php
-
-		-
-			message: '#^Parameter \#1 \$value of method Sulu\\Bundle\\PageBundle\\Version201510210733\:\:upgradeUrl\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 3
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201510210733.php
-
-		-
-			message: '#^Parameter \#2 \$properties of method Sulu\\Bundle\\PageBundle\\Version201510210733\:\:iterateStructureNodes\(\) expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201510210733.php
-
-		-
-			message: '#^Parameter \#2 \$structureName of method Sulu\\Bundle\\PageBundle\\Version201510210733\:\:findUrlBlockProperties\(\) expects string, float\|int\|string given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201510210733.php
-
-		-
-			message: '#^Variable \$blockProperties in empty\(\) is never defined\.$#'
-			identifier: empty.variable
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201510210733.php
-
-		-
-			message: '#^Call to an undefined method Sulu\\Component\\Content\\Metadata\\ItemMetadata\:\:getType\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511171538.php
-
-		-
-			message: '#^Cannot access an offset on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511171538.php
-
-		-
-			message: '#^Cannot access offset float\|int\|string on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511171538.php
-
-		-
-			message: '#^Cannot call method format\(\) on string\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511171538.php
-
-		-
-			message: '#^Instanceof between string and DateTime will always evaluate to false\.$#'
-			identifier: instanceof.alwaysFalse
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511171538.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Version201511171538\:\:downgradeDate\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511171538.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Version201511171538\:\:findDateBlockProperties\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511171538.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Version201511171538\:\:findDateBlockProperties\(\) has parameter \$properties with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511171538.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Version201511171538\:\:findDateProperties\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511171538.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Version201511171538\:\:findDateProperties\(\) has parameter \$properties with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511171538.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Version201511171538\:\:iterateStructureNodes\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511171538.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Version201511171538\:\:iterateStructureNodes\(\) has parameter \$properties with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511171538.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Version201511171538\:\:iterateStructures\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511171538.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Version201511171538\:\:upgradeDate\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511171538.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Version201511171538\:\:upgradeNode\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511171538.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Version201511171538\:\:upgradeNode\(\) has parameter \$properties with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511171538.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Version201511171538\:\:upgradeNode\(\) has parameter \$up with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511171538.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Version201511171538\:\:upgradeProperty\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511171538.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Version201511171538\:\:upgradeProperty\(\) has parameter \$up with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511171538.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Version201511171538\:\:upgradeProperty\(\) has parameter \$value with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511171538.php
-
-		-
-			message: '#^Parameter \#1 \$name of method Sulu\\Component\\DocumentManager\\PropertyEncoder\:\:localizedContentName\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511171538.php
-
-		-
-			message: '#^Parameter \#1 \$value of method Sulu\\Bundle\\PageBundle\\Version201511171538\:\:downgradeDate\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511171538.php
-
-		-
-			message: '#^Parameter \#1 \$value of method Sulu\\Bundle\\PageBundle\\Version201511171538\:\:upgradeDate\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511171538.php
-
-		-
-			message: '#^Parameter \#2 \$properties of method Sulu\\Bundle\\PageBundle\\Version201511171538\:\:iterateStructureNodes\(\) expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511171538.php
-
-		-
-			message: '#^Parameter \#2 \$structureName of method Sulu\\Bundle\\PageBundle\\Version201511171538\:\:findDateBlockProperties\(\) expects string, float\|int\|string given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511171538.php
-
-		-
-			message: '#^Parameter &\$value by\-ref type of method Sulu\\Bundle\\PageBundle\\Version201511171538\:\:downgradeDate\(\) expects string, mixed given\.$#'
-			identifier: parameterByRef.type
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511171538.php
-
-		-
-			message: '#^Parameter &\$value by\-ref type of method Sulu\\Bundle\\PageBundle\\Version201511171538\:\:upgradeDate\(\) expects string, DateTime\|false given\.$#'
-			identifier: parameterByRef.type
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511171538.php
-
-		-
-			message: '#^Property Sulu\\Bundle\\PageBundle\\Version201511171538\:\:\$documentInspector is never read, only written\.$#'
-			identifier: property.onlyWritten
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511171538.php
-
-		-
-			message: '#^Property Sulu\\Bundle\\PageBundle\\Version201511171538\:\:\$documentManager is never read, only written\.$#'
-			identifier: property.onlyWritten
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511171538.php
-
-		-
-			message: '#^Variable \$blockProperties in empty\(\) is never defined\.$#'
-			identifier: empty.variable
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511171538.php
-
-		-
-			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
-			identifier: foreach.nonIterable
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511240843.php
-
-		-
-			message: '#^Call to an undefined method Sulu\\Component\\Content\\Metadata\\ItemMetadata\:\:getType\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511240843.php
-
-		-
-			message: '#^Cannot access an offset on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511240843.php
-
-		-
-			message: '#^Cannot access offset ''children'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511240843.php
-
-		-
-			message: '#^Cannot access offset ''component'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511240843.php
-
-		-
-			message: '#^Cannot access offset ''components'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511240843.php
-
-		-
-			message: '#^Cannot access offset ''property'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511240843.php
-
-		-
-			message: '#^Cannot access offset float\|int\|string on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511240843.php
-
-		-
-			message: '#^Cannot call method format\(\) on string\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511240843.php
-
-		-
-			message: '#^Cannot call method getName\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511240843.php
-
-		-
-			message: '#^Instanceof between string and DateTime will always evaluate to false\.$#'
-			identifier: instanceof.alwaysFalse
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511240843.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Version201511240843\:\:downgradeDate\(\) should return string but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511240843.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Version201511240843\:\:findDateBlockProperties\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511240843.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Version201511240843\:\:findDateBlockProperties\(\) has parameter \$properties with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511240843.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Version201511240843\:\:findDateProperties\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511240843.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Version201511240843\:\:findDateProperties\(\) has parameter \$properties with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511240843.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Version201511240843\:\:iterateStructureNodes\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511240843.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Version201511240843\:\:iterateStructureNodes\(\) has parameter \$properties with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511240843.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Version201511240843\:\:iterateStructures\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511240843.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Version201511240843\:\:upgradeBlockProperty\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511240843.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Version201511240843\:\:upgradeBlockProperty\(\) has parameter \$components with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511240843.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Version201511240843\:\:upgradeDate\(\) should return string but returns DateTime\|false\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511240843.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Version201511240843\:\:upgradeNode\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511240843.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Version201511240843\:\:upgradeNode\(\) has parameter \$properties with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511240843.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Version201511240843\:\:upgradeProperty\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511240843.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Version201511240843\:\:upgradeProperty\(\) has parameter \$locale with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511240843.php
-
-		-
-			message: '#^Parameter \#1 \$property of method Sulu\\Bundle\\PageBundle\\Version201511240843\:\:upgradeProperty\(\) expects Sulu\\Component\\Content\\Metadata\\PropertyMetadata, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511240843.php
-
-		-
-			message: '#^Parameter \#1 \$value of method Sulu\\Bundle\\PageBundle\\Version201511240843\:\:downgradeDate\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511240843.php
-
-		-
-			message: '#^Parameter \#1 \$value of method Sulu\\Bundle\\PageBundle\\Version201511240843\:\:upgradeDate\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511240843.php
-
-		-
-			message: '#^Parameter \#2 \$components of method Sulu\\Bundle\\PageBundle\\Version201511240843\:\:upgradeBlockProperty\(\) expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511240843.php
-
-		-
-			message: '#^Parameter \#2 \$properties of method Sulu\\Bundle\\PageBundle\\Version201511240843\:\:iterateStructureNodes\(\) expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511240843.php
-
-		-
-			message: '#^Parameter \#2 \$structureName of method Sulu\\Bundle\\PageBundle\\Version201511240843\:\:findDateBlockProperties\(\) expects string, float\|int\|string given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511240843.php
-
-		-
-			message: '#^Parameter \#2 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511240843.php
-
-		-
-			message: '#^Parameter \#4 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511240843.php
-
-		-
-			message: '#^Parameter &\$value by\-ref type of method Sulu\\Bundle\\PageBundle\\Version201511240843\:\:downgradeDate\(\) expects string, mixed given\.$#'
-			identifier: parameterByRef.type
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511240843.php
-
-		-
-			message: '#^Parameter &\$value by\-ref type of method Sulu\\Bundle\\PageBundle\\Version201511240843\:\:upgradeDate\(\) expects string, DateTime\|false given\.$#'
-			identifier: parameterByRef.type
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511240843.php
-
-		-
-			message: '#^Variable \$blockProperties in empty\(\) is never defined\.$#'
-			identifier: empty.variable
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511240843.php
-
-		-
-			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
-			identifier: foreach.nonIterable
-			count: 2
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511240844.php
-
-		-
-			message: '#^Call to an undefined method Sulu\\Component\\Content\\Metadata\\ItemMetadata\:\:getType\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511240844.php
-
-		-
-			message: '#^Cannot access an offset on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511240844.php
-
-		-
-			message: '#^Cannot access offset ''children'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511240844.php
-
-		-
-			message: '#^Cannot access offset ''component'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511240844.php
-
-		-
-			message: '#^Cannot access offset ''components'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511240844.php
-
-		-
-			message: '#^Cannot access offset ''property'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511240844.php
-
-		-
-			message: '#^Cannot access offset ''type'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511240844.php
-
-		-
-			message: '#^Cannot access offset float\|int\|string on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511240844.php
-
-		-
-			message: '#^Cannot access offset mixed on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511240844.php
-
-		-
-			message: '#^Cannot call method getName\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 7
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511240844.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Version201511240844\:\:findUrlBlockProperties\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511240844.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Version201511240844\:\:findUrlBlockProperties\(\) has parameter \$properties with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511240844.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Version201511240844\:\:findUrlProperties\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511240844.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Version201511240844\:\:findUrlProperties\(\) has parameter \$properties with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511240844.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Version201511240844\:\:iterateStructureNodes\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511240844.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Version201511240844\:\:iterateStructureNodes\(\) has parameter \$properties with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511240844.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Version201511240844\:\:iterateStructures\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511240844.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Version201511240844\:\:upgradeBlockProperty\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511240844.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Version201511240844\:\:upgradeBlockProperty\(\) has parameter \$components with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511240844.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Version201511240844\:\:upgradeExternalLinks\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511240844.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Version201511240844\:\:upgradeNode\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511240844.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Version201511240844\:\:upgradeNode\(\) has parameter \$properties with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511240844.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Version201511240844\:\:upgradeProperty\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511240844.php
-
-		-
-			message: '#^Parameter \#1 \$name of method Sulu\\Component\\Content\\Document\\Structure\\StructureInterface\:\:getProperty\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511240844.php
-
-		-
-			message: '#^Parameter \#1 \$value of method Sulu\\Bundle\\PageBundle\\Version201511240844\:\:downgradeUrl\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 3
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511240844.php
-
-		-
-			message: '#^Parameter \#1 \$value of method Sulu\\Bundle\\PageBundle\\Version201511240844\:\:upgradeUrl\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 3
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511240844.php
-
-		-
-			message: '#^Parameter \#2 \$components of method Sulu\\Bundle\\PageBundle\\Version201511240844\:\:upgradeBlockProperty\(\) expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511240844.php
-
-		-
-			message: '#^Parameter \#2 \$properties of method Sulu\\Bundle\\PageBundle\\Version201511240844\:\:iterateStructureNodes\(\) expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511240844.php
-
-		-
-			message: '#^Parameter \#2 \$structureName of method Sulu\\Bundle\\PageBundle\\Version201511240844\:\:findUrlBlockProperties\(\) expects string, float\|int\|string given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511240844.php
-
-		-
-			message: '#^Variable \$blockProperties in empty\(\) is never defined\.$#'
-			identifier: empty.variable
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511240844.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Version201512090753\:\:upgradeNode\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201512090753.php
-
-		-
-			message: '#^Parameter \#2 \$stream of method Sulu\\Bundle\\DocumentManagerBundle\\Session\\Session\:\:exportSystemView\(\) expects resource, resource\|false given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201607181533.php
-
-		-
-			message: '#^Call to an undefined method Sulu\\Component\\Security\\Authentication\\UserInterface\:\:getContact\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201702021447.php
-
-		-
-			message: '#^Cannot call method getId\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201702021447.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Version201702021447\:\:downgrade\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201702021447.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Version201702021447\:\:upgrade\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201702021447.php
-
-		-
-			message: '#^Parameter \#1 \$id of method Sulu\\Component\\Security\\Authentication\\UserRepositoryInterface\:\:findUserById\(\) expects int, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201702021447.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Version201903271333\:\:downgrade\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201903271333.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Version201903271333\:\:upgrade\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201903271333.php
-
-		-
-			message: '#^Parameter \#1 \$haystack of function strpos expects string, string\|null given\.$#'
-			identifier: argument.type
-			count: 2
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201903271333.php
-
-		-
-			message: '#^Parameter \#3 \$subject of function preg_replace expects array\<float\|int\|string\>\|string, string\|null given\.$#'
-			identifier: argument.type
-			count: 2
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201903271333.php
-
-		-
-			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
-			identifier: foreach.nonIterable
-			count: 2
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201905071542.php
-
-		-
-			message: '#^Cannot access offset ''type'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201905071542.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Version201905071542\:\:downgrade\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201905071542.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Version201905071542\:\:upgrade\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201905071542.php
-
-		-
-			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
-			identifier: foreach.nonIterable
-			count: 2
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version202005191116.php
-
-		-
-			message: '#^Cannot access offset ''type'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version202005191116.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Version202005191116\:\:downgrade\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version202005191116.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Version202005191116\:\:upgrade\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version202005191116.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Version202005250917\:\:downgrade\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version202005250917.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Version202005250917\:\:upgrade\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version202005250917.php
-
-		-
-			message: '#^Unreachable statement \- code above always terminates\.$#'
-			identifier: deadCode.unreachable
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Routing/DecoratedContentRouteProvider.php
 
 		-
 			message: '#^Cannot access property \$headers on Symfony\\Component\\HttpFoundation\\Request\|null\.$#'
@@ -39605,18 +38855,6 @@ parameters:
 			identifier: function.alreadyNarrowedType
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Command/InitCommand.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\SecurityBundle\\Command\\SyncPhpcrPermissionsCommand\:\:findDocuments\(\) should return iterable\<object\>&Sulu\\Component\\DocumentManager\\Collection\\QueryResultCollection but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Command/SyncPhpcrPermissionsCommand.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\SecurityBundle\\Command\\SyncPhpcrPermissionsCommand\:\:getRoleIds\(\) should return array\<int\> but returns list\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Command/SyncPhpcrPermissionsCommand.php
 
 		-
 			message: '#^Binary operation "\." between ''The resourceKey "'' and mixed results in an error\.$#'
@@ -43255,13 +42493,13 @@ parameters:
 			path: src/Sulu/Bundle/TagBundle/Controller/TagController.php
 
 		-
-			message: '#^Call to function array_key_exists\(\) with ''SuluContentBundle'' and array\{FrameworkBundle\: string, TwigBundle\: string, MonologBundle\: string, FlysystemBundle\: string, SuluCoreBundle\: string, DoctrineBundle\: string, DoctrineFixturesBundle\: string, DoctrinePHPCRBundle\: string, \.\.\.\} will always evaluate to true\.$#'
+			message: '#^Call to function array_key_exists\(\) with ''SuluContentBundle'' and array\{FrameworkBundle\: string, TwigBundle\: string, MonologBundle\: string, FlysystemBundle\: string, SuluCoreBundle\: string, DoctrineBundle\: string, DoctrineFixturesBundle\: string, StofDoctrineExtensionsBundle\: string, \.\.\.\} will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 1
 			path: src/Sulu/Bundle/TagBundle/DependencyInjection/SuluTagExtension.php
 
 		-
-			message: '#^Call to function array_key_exists\(\) with ''SuluTrashBundle'' and array\{FrameworkBundle\: string, TwigBundle\: string, MonologBundle\: string, FlysystemBundle\: string, SuluCoreBundle\: string, DoctrineBundle\: string, DoctrineFixturesBundle\: string, DoctrinePHPCRBundle\: string, \.\.\.\} will always evaluate to true\.$#'
+			message: '#^Call to function array_key_exists\(\) with ''SuluTrashBundle'' and array\{FrameworkBundle\: string, TwigBundle\: string, MonologBundle\: string, FlysystemBundle\: string, SuluCoreBundle\: string, DoctrineBundle\: string, DoctrineFixturesBundle\: string, StofDoctrineExtensionsBundle\: string, \.\.\.\} will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 1
 			path: src/Sulu/Bundle/TagBundle/DependencyInjection/SuluTagExtension.php
@@ -43951,19 +43189,7 @@ parameters:
 			path: src/Sulu/Bundle/TestBundle/Kernel/SuluKernelBrowser.php
 
 		-
-			message: '#^PHPDoc tag @var with type iterable\<Symfony\\Component\\HttpKernel\\Bundle\\BundleInterface\> is not subtype of native type array\{0\: Symfony\\Bundle\\FrameworkBundle\\FrameworkBundle, 1\: Symfony\\Bundle\\TwigBundle\\TwigBundle, 2\: Sulu\\Bundle\\CoreBundle\\SuluCoreBundle, 3\: Doctrine\\Bundle\\DoctrineBundle\\DoctrineBundle, 4\: Doctrine\\Bundle\\PHPCRBundle\\DoctrinePHPCRBundle, 5\: Stof\\DoctrineExtensionsBundle\\StofDoctrineExtensionsBundle, 6\: JMS\\SerializerBundle\\JMSSerializerBundle, 7\: FOS\\RestBundle\\FOSRestBundle, \.\.\.\}\.$#'
-			identifier: varTag.nativeType
-			count: 1
-			path: src/Sulu/Bundle/TestBundle/Kernel/SuluTestKernel.php
-
-		-
 			message: '#^Parameter \#1 \$path of function dirname expects string, string\|false given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/TestBundle/Kernel/SuluTestKernel.php
-
-		-
-			message: '#^Parameter \#2 \$value of method Symfony\\Component\\DependencyInjection\\Container\:\:setParameter\(\) expects array\|bool\|float\|int\|string\|UnitEnum\|null, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/TestBundle/Kernel/SuluTestKernel.php
@@ -44125,75 +43351,15 @@ parameters:
 			path: src/Sulu/Bundle/TestBundle/Testing/SuluTestCase.php
 
 		-
-			message: '#^Parameter \#1 \$object of function get_class expects object, Symfony\\Component\\HttpKernel\\KernelInterface\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/TestBundle/Testing/SuluTestCase.php
-
-		-
 			message: '#^Parameter \#1 \$string of function rawurldecode expects string, string\|null given\.$#'
 			identifier: argument.type
 			count: 2
 			path: src/Sulu/Bundle/TestBundle/Testing/SuluTestCase.php
 
 		-
-			message: '#^Parameter \#2 \$code of class TypeError constructor expects int, string given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/TestBundle/Testing/SuluTestCase.php
-
-		-
 			message: '#^Parameter \#2 \$string of function explode expects string, string\|false given\.$#'
 			identifier: argument.type
 			count: 1
-			path: src/Sulu/Bundle/TestBundle/Testing/SuluTestCase.php
-
-		-
-			message: '#^Parameter \#3 \$previous of class TypeError constructor expects Throwable\|null, class\-string\<Symfony\\Component\\HttpKernel\\KernelInterface\>\|false given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/TestBundle/Testing/SuluTestCase.php
-
-		-
-			message: '#^Property Sulu\\Bundle\\TestBundle\\Testing\\SuluTestCase\:\:\$workspaceInitialized has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: src/Sulu/Bundle/TestBundle/Testing/SuluTestCase.php
-
-		-
-			message: '#^Unsafe call to private method Sulu\\Bundle\\TestBundle\\Testing\\SuluTestCase\:\:dumpPhpcr\(\) through static\:\:\.$#'
-			identifier: staticClassAccess.privateMethod
-			count: 2
-			path: src/Sulu/Bundle/TestBundle/Testing/SuluTestCase.php
-
-		-
-			message: '#^Unsafe call to private method Sulu\\Bundle\\TestBundle\\Testing\\SuluTestCase\:\:getInitializer\(\) through static\:\:\.$#'
-			identifier: staticClassAccess.privateMethod
-			count: 1
-			path: src/Sulu/Bundle/TestBundle/Testing/SuluTestCase.php
-
-		-
-			message: '#^Unsafe call to private method Sulu\\Bundle\\TestBundle\\Testing\\SuluTestCase\:\:getInitializerDumpFilePath\(\) through static\:\:\.$#'
-			identifier: staticClassAccess.privateMethod
-			count: 2
-			path: src/Sulu/Bundle/TestBundle/Testing/SuluTestCase.php
-
-		-
-			message: '#^Unsafe call to private method Sulu\\Bundle\\TestBundle\\Testing\\SuluTestCase\:\:getPhpcrDefaultSession\(\) through static\:\:\.$#'
-			identifier: staticClassAccess.privateMethod
-			count: 1
-			path: src/Sulu/Bundle/TestBundle/Testing/SuluTestCase.php
-
-		-
-			message: '#^Unsafe call to private method Sulu\\Bundle\\TestBundle\\Testing\\SuluTestCase\:\:getPhpcrLiveSession\(\) through static\:\:\.$#'
-			identifier: staticClassAccess.privateMethod
-			count: 1
-			path: src/Sulu/Bundle/TestBundle/Testing/SuluTestCase.php
-
-		-
-			message: '#^Unsafe call to private method Sulu\\Bundle\\TestBundle\\Testing\\SuluTestCase\:\:importSession\(\) through static\:\:\.$#'
-			identifier: staticClassAccess.privateMethod
-			count: 2
 			path: src/Sulu/Bundle/TestBundle/Testing/SuluTestCase.php
 
 		-
@@ -44989,7 +44155,7 @@ parameters:
 			path: src/Sulu/Bundle/WebsiteBundle/DataCollector/SuluCollector.php
 
 		-
-			message: '#^Call to function array_key_exists\(\) with ''SuluTrashBundle'' and array\{FrameworkBundle\: string, TwigBundle\: string, MonologBundle\: string, FlysystemBundle\: string, SuluCoreBundle\: string, DoctrineBundle\: string, DoctrineFixturesBundle\: string, DoctrinePHPCRBundle\: string, \.\.\.\} will always evaluate to true\.$#'
+			message: '#^Call to function array_key_exists\(\) with ''SuluTrashBundle'' and array\{FrameworkBundle\: string, TwigBundle\: string, MonologBundle\: string, FlysystemBundle\: string, SuluCoreBundle\: string, DoctrineBundle\: string, DoctrineFixturesBundle\: string, StofDoctrineExtensionsBundle\: string, \.\.\.\} will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 1
 			path: src/Sulu/Bundle/WebsiteBundle/DependencyInjection/SuluWebsiteExtension.php
@@ -52065,930 +51231,6 @@ parameters:
 		-
 			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
 			identifier: foreach.nonIterable
-			count: 2
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Binary operation "\." between ''sulu\.webspaces\.'' and mixed results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Call to an undefined method Sulu\\Component\\Content\\Compat\\StructureInterface\:\:setDocument\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Call to an undefined method Sulu\\Component\\Content\\Document\\Behavior\\ResourceSegmentBehavior\:\:getTitle\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Call to an undefined method Sulu\\Component\\Content\\Document\\Behavior\\SecurityBehavior\:\:getLocale\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Call to an undefined method Sulu\\Component\\Content\\Document\\Behavior\\SecurityBehavior\:\:getWebspaceName\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Call to an undefined method Sulu\\Component\\Content\\Document\\Behavior\\StructureBehavior\:\:getTitle\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Call to an undefined method object\:\:getChanged\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Call to an undefined method object\:\:getChanger\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Call to an undefined method object\:\:getCreated\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Call to an undefined method object\:\:getCreator\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Call to an undefined method object\:\:getPublished\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Call to an undefined method object\:\:getStructure\(\)\.$#'
-			identifier: method.notFound
-			count: 2
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Call to an undefined method object\:\:getStructureType\(\)\.$#'
-			identifier: method.notFound
-			count: 3
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Call to an undefined method object\:\:getTitle\(\)\.$#'
-			identifier: method.notFound
-			count: 2
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Call to an undefined method object\:\:getUuid\(\)\.$#'
-			identifier: method.notFound
-			count: 2
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Call to an undefined method object\:\:setExtensionsData\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Call to an undefined method object\:\:setLocale\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Call to an undefined method object\:\:setStructureType\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Call to an undefined method object\:\:setTitle\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Call to function is_array\(\) with string will always evaluate to false\.$#'
-			identifier: function.impossibleType
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Call to method getUser\(\) on an unknown class Symfony\\Component\\Security\\Core\\Security\.$#'
-			identifier: class.notFound
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Cannot access offset ''column'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Cannot access offset ''extension'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Cannot access offset ''load_ghost_content'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Cannot access offset ''name'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 3
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Cannot access offset ''property'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Cannot access offset ''target'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Cannot access offset ''templateKey'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Cannot access offset mixed on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Cannot call method bind\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Cannot call method generate\(\) on Sulu\\Component\\Content\\Types\\ResourceLocator\\Strategy\\ResourceLocatorStrategyInterface\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Cannot call method getContentViewProperty\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Cannot call method getIdentifier\(\) on PHPCR\\NodeInterface\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Cannot call method getStructure\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Cannot call method getSystem\(\) on Sulu\\Component\\Webspace\\Security\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Cannot call method getUuid\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 3
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Cannot call method getUuid\(\) on object\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Cannot call method getValue\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Cannot call method hasProperty\(\) on PHPCR\\NodeInterface\|null\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Cannot call method toArray\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Dead catch \- Sulu\\Component\\Content\\Metadata\\Factory\\Exception\\StructureTypeNotFoundException is never thrown in the try block\.$#'
-			identifier: catch.neverThrown
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Mapper\\ContentMapper\:\:convertQueryResultToArray\(\) has parameter \$fields with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Mapper\\ContentMapper\:\:convertQueryResultToArray\(\) has parameter \$onlyPublished with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Mapper\\ContentMapper\:\:convertQueryResultToArray\(\) has parameter \$permission with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Mapper\\ContentMapper\:\:convertQueryResultToArray\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Mapper\\ContentMapper\:\:copyLanguage\(\) has parameter \$structureType with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Mapper\\ContentMapper\:\:delete\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Mapper\\ContentMapper\:\:documentToStructure\(\) should return Sulu\\Component\\Content\\Compat\\StructureInterface but empty return statement found\.$#'
-			identifier: return.empty
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Mapper\\ContentMapper\:\:documentsToStructureCollection\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Mapper\\ContentMapper\:\:documentsToStructureCollection\(\) has parameter \$filterOptions with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Mapper\\ContentMapper\:\:getContentDocument\(\) has parameter \$locale with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Mapper\\ContentMapper\:\:getContentDocument\(\) has parameter \$options with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Mapper\\ContentMapper\:\:getContentDocument\(\) should return Sulu\\Bundle\\PageBundle\\Document\\BasePageDocument but returns object\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Mapper\\ContentMapper\:\:getExtensionData\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Mapper\\ContentMapper\:\:getExtensionData\(\) has parameter \$locale with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Mapper\\ContentMapper\:\:getExtensionData\(\) has parameter \$propertyName with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Mapper\\ContentMapper\:\:getExtensionData\(\) has parameter \$webspaceKey with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Mapper\\ContentMapper\:\:getFieldData\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Mapper\\ContentMapper\:\:getFieldData\(\) has parameter \$document with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Mapper\\ContentMapper\:\:getFieldData\(\) has parameter \$field with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Mapper\\ContentMapper\:\:getFieldData\(\) has parameter \$locale with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Mapper\\ContentMapper\:\:getFieldData\(\) has parameter \$templateKey with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Mapper\\ContentMapper\:\:getFieldData\(\) has parameter \$webspaceKey with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Mapper\\ContentMapper\:\:getFieldsData\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Mapper\\ContentMapper\:\:getFieldsData\(\) has parameter \$document with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Mapper\\ContentMapper\:\:getFieldsData\(\) has parameter \$fields with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Mapper\\ContentMapper\:\:getFieldsData\(\) has parameter \$locale with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Mapper\\ContentMapper\:\:getFieldsData\(\) has parameter \$templateKey with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Mapper\\ContentMapper\:\:getFieldsData\(\) has parameter \$webspaceKey with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Mapper\\ContentMapper\:\:getPropertyData\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Mapper\\ContentMapper\:\:getPropertyData\(\) has parameter \$document with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Mapper\\ContentMapper\:\:getResourceLocator\(\) should return Sulu\\Component\\Content\\Types\\ResourceLocator but returns Sulu\\Component\\Content\\ContentTypeInterface\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Mapper\\ContentMapper\:\:getRootRouteNode\(\) should return PHPCR\\NodeInterface but returns object\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Mapper\\ContentMapper\:\:initializeExtensionCache\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Mapper\\ContentMapper\:\:loadByNode\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Mapper\\ContentMapper\:\:loadByParent\(\) should return array\<Sulu\\Component\\Content\\Compat\\StructureInterface\> but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Mapper\\ContentMapper\:\:loadByQuery\(\) should return array\<Sulu\\Component\\Content\\Compat\\StructureInterface\> but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Mapper\\ContentMapper\:\:loadBySql2\(\) should return array\<Sulu\\Component\\Content\\Compat\\StructureInterface\> but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Mapper\\ContentMapper\:\:loadDocument\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Mapper\\ContentMapper\:\:loadDocument\(\) has parameter \$locale with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Mapper\\ContentMapper\:\:loadDocument\(\) has parameter \$options with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Mapper\\ContentMapper\:\:loadDocument\(\) has parameter \$pathOrUuid with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Mapper\\ContentMapper\:\:loadDocument\(\) has parameter \$shouldExclude with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Mapper\\ContentMapper\:\:loadExtensionData\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Mapper\\ContentMapper\:\:loadExtensionData\(\) has parameter \$locale with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Mapper\\ContentMapper\:\:loadExtensionData\(\) has parameter \$webspaceKey with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Mapper\\ContentMapper\:\:loadNodeAndAncestors\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Mapper\\ContentMapper\:\:loadNodeAndAncestors\(\) has parameter \$excludeGhost with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Mapper\\ContentMapper\:\:loadNodeAndAncestors\(\) has parameter \$excludeShadow with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Mapper\\ContentMapper\:\:loadNodeAndAncestors\(\) has parameter \$locale with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Mapper\\ContentMapper\:\:loadNodeAndAncestors\(\) has parameter \$uuid with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Mapper\\ContentMapper\:\:loadNodeAndAncestors\(\) has parameter \$webspaceKey with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Mapper\\ContentMapper\:\:optionsShouldExcludeDocument\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Mapper\\ContentMapper\:\:optionsShouldExcludeDocument\(\) has parameter \$document with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Mapper\\ContentMapper\:\:optionsShouldExcludeDocument\(\) has parameter \$options with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Mapper\\ContentMapper\:\:rowToArray\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Mapper\\ContentMapper\:\:rowToArray\(\) has parameter \$fields with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Mapper\\ContentMapper\:\:rowToArray\(\) has parameter \$locale with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Mapper\\ContentMapper\:\:rowToArray\(\) has parameter \$onlyPublished with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Mapper\\ContentMapper\:\:rowToArray\(\) has parameter \$permission with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Mapper\\ContentMapper\:\:rowToArray\(\) has parameter \$webspaceKey with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Mapper\\ContentMapper\:\:saveExtension\(\) has parameter \$data with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Method Sulu\\Component\\DocumentManager\\DocumentManagerInterface\:\:remove\(\) invoked with 2 parameters, 1 required\.$#'
-			identifier: arguments.count
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Parameter \#1 \$columnName of method Jackalope\\Query\\Row\:\:getValue\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Parameter \#1 \$document of method Sulu\\Bundle\\DocumentManagerBundle\\Bridge\\DocumentInspector\:\:getContentPath\(\) expects Sulu\\Component\\DocumentManager\\Behavior\\Mapping\\PathBehavior, object given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Parameter \#1 \$document of method Sulu\\Bundle\\DocumentManagerBundle\\Bridge\\DocumentInspector\:\:getLocalizationState\(\) expects object, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Parameter \#1 \$document of method Sulu\\Component\\Content\\Mapper\\ContentMapper\:\:documentToStructure\(\) expects Sulu\\Component\\Content\\Document\\Behavior\\StructureBehavior, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Parameter \#1 \$document of method Sulu\\Component\\Content\\Mapper\\ContentMapper\:\:documentToStructure\(\) expects Sulu\\Component\\Content\\Document\\Behavior\\StructureBehavior, object given\.$#'
-			identifier: argument.type
-			count: 5
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Parameter \#1 \$document of method Sulu\\Component\\DocumentManager\\DocumentInspector\:\:getChildren\(\) expects object, object\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Parameter \#1 \$document of method Sulu\\Component\\DocumentManager\\DocumentInspector\:\:getDepth\(\) expects object, object\|null given\.$#'
-			identifier: argument.type
-			count: 2
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Parameter \#1 \$document of method Sulu\\Component\\DocumentManager\\DocumentInspector\:\:getParent\(\) expects object, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Parameter \#1 \$document of method Sulu\\Component\\DocumentManager\\DocumentInspector\:\:getUuid\(\) expects object, object\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Parameter \#1 \$documents of method Sulu\\Component\\Content\\Mapper\\ContentMapper\:\:documentsToStructureCollection\(\) expects array\<object\>, array given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Parameter \#1 \$documents of method Sulu\\Component\\Content\\Mapper\\ContentMapper\:\:documentsToStructureCollection\(\) expects array\<object\>, list given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Parameter \#1 \$documents of method Sulu\\Component\\Content\\Mapper\\ContentMapper\:\:documentsToStructureCollection\(\) expects array\<object\>, list\<mixed\> given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Parameter \#1 \$documents of method Sulu\\Component\\Content\\Mapper\\ContentMapper\:\:documentsToStructureCollection\(\) expects array\<object\>, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Parameter \#1 \$haystack of function substr_count expects string, string\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Parameter \#1 \$identifier of method Sulu\\Component\\DocumentManager\\DocumentManagerInterface\:\:find\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Parameter \#1 \$key of method Sulu\\Component\\Webspace\\Manager\\WebspaceManagerInterface\:\:findWebspaceByKey\(\) expects string\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Parameter \#1 \$languageCode of method Sulu\\Component\\Content\\Extension\\ExtensionInterface\:\:setLanguageCode\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Parameter \#1 \$locale of method Sulu\\Component\\Security\\Authorization\\AccessControl\\AccessControlManagerInterface\:\:getUserPermissionByArray\(\) expects string\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Parameter \#1 \$object of function get_class expects object, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Parameter \#1 \$page of method Sulu\\Bundle\\DocumentManagerBundle\\Bridge\\DocumentInspector\:\:getLocalizedUrlsForPage\(\) expects Sulu\\Bundle\\PageBundle\\Document\\BasePageDocument, object given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Parameter \#1 \$row of method Sulu\\Component\\Content\\Mapper\\ContentMapper\:\:rowToArray\(\) expects Jackalope\\Query\\Row, PHPCR\\Query\\RowInterface given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Parameter \#1 \$uuid of method Sulu\\Component\\Content\\Mapper\\ContentMapper\:\:loadByParent\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Parameter \#1 \.\.\.\$arrays of function array_merge expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Parameter \#2 \$data of method Sulu\\Component\\Content\\Document\\Behavior\\ExtensionBehavior\:\:setExtension\(\) expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Parameter \#2 \$destId of method Sulu\\Component\\DocumentManager\\DocumentManagerInterface\:\:reorder\(\) expects string\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Parameter \#2 \$extension of method Sulu\\Component\\Content\\Mapper\\ContentMapper\:\:getExtensionData\(\) expects Sulu\\Component\\Content\\Extension\\ExtensionInterface, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Parameter \#2 \$locale of method Sulu\\Component\\DocumentManager\\DocumentManagerInterface\:\:find\(\) expects string\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 3
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Parameter \#2 \$locale of method Sulu\\Component\\DocumentManager\\PropertyEncoder\:\:localizedSystemName\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Parameter \#2 \$node of method Sulu\\Component\\Content\\Mapper\\ContentMapper\:\:getFieldsData\(\) expects PHPCR\\NodeInterface, PHPCR\\NodeInterface\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Parameter \#2 \$options of method Sulu\\Component\\Content\\Mapper\\ContentMapper\:\:optionsShouldExcludeDocument\(\) expects array\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Parameter \#2 \$property of method Sulu\\Component\\Content\\Mapper\\ContentMapper\:\:getPropertyData\(\) expects Sulu\\Component\\Content\\Compat\\Property, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Parameter \#2 \$structure of method Sulu\\Component\\Content\\Compat\\StructureManagerInterface\:\:wrapStructure\(\) expects Sulu\\Component\\Content\\Metadata\\StructureMetadata, Sulu\\Component\\Content\\Metadata\\StructureMetadata\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Parameter \#2 \$webspaceKey of method Sulu\\Component\\Content\\Extension\\ExtensionInterface\:\:load\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Parameter \#2 \.\.\.\$arrays of function array_merge expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Parameter \#2 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Parameter \#3 \$languageCode of method Sulu\\Component\\Content\\Extension\\ExtensionInterface\:\:load\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Parameter \#3 \$options of method Sulu\\Component\\DocumentManager\\DocumentManagerInterface\:\:find\(\) expects array\<string, mixed\>, array given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Parameter \#3 \$title of class Sulu\\Component\\Content\\BreadcrumbItem constructor expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Parameter \#4 \$user of method Sulu\\Component\\Security\\Authorization\\AccessControl\\AccessControlManagerInterface\:\:getUserPermissionByArray\(\) expects Sulu\\Component\\Security\\Authentication\\UserInterface\|null, Symfony\\Component\\Security\\Core\\User\\UserInterface\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Parameter \$security of method Sulu\\Component\\Content\\Mapper\\ContentMapper\:\:__construct\(\) has invalid type Symfony\\Component\\Security\\Core\\Security\.$#'
-			identifier: class.notFound
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Property Sulu\\Component\\Content\\Mapper\\ContentMapper\:\:\$formFactory is never read, only written\.$#'
-			identifier: property.onlyWritten
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Property Sulu\\Component\\Content\\Mapper\\ContentMapper\:\:\$security has unknown class Symfony\\Component\\Security\\Core\\Security as its type\.$#'
-			identifier: class.notFound
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between null and Sulu\\Component\\Content\\Document\\Behavior\\StructureBehavior will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between null and int will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 2
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Mapper\\ContentMapperInterface\:\:convertQueryResultToArray\(\) has parameter \$fields with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapperInterface.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Mapper\\ContentMapperInterface\:\:convertQueryResultToArray\(\) has parameter \$onlyPublished with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapperInterface.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Mapper\\ContentMapperInterface\:\:convertQueryResultToArray\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapperInterface.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Mapper\\ContentMapperInterface\:\:delete\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapperInterface.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Mapper\\ContentMapperInterface\:\:loadByNode\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapperInterface.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Mapper\\ContentMapperInterface\:\:saveExtension\(\) has parameter \$data with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapperInterface.php
-
-		-
-			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
-			identifier: foreach.nonIterable
 			count: 1
 			path: src/Sulu/Component/Content/Mapper/Translation/MultipleTranslatedProperties.php
 
@@ -54287,96 +52529,6 @@ parameters:
 			identifier: missingType.iterableValue
 			count: 1
 			path: src/Sulu/Component/Content/Query/ContentQueryBuilderInterface.php
-
-		-
-			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
-			identifier: foreach.nonIterable
-			count: 1
-			path: src/Sulu/Component/Content/Query/ContentQueryExecutor.php
-
-		-
-			message: '#^Cannot call method execute\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Component/Content/Query/ContentQueryExecutor.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Mapper\\ContentMapperInterface\:\:convertQueryResultToArray\(\) invoked with 7 parameters, 5\-6 required\.$#'
-			identifier: arguments.count
-			count: 1
-			path: src/Sulu/Component/Content/Query/ContentQueryExecutor.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Query\\ContentQueryExecutor\:\:createSql2Query\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Component/Content/Query/ContentQueryExecutor.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Query\\ContentQueryExecutor\:\:createSql2Query\(\) has parameter \$limit with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Component/Content/Query/ContentQueryExecutor.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Query\\ContentQueryExecutor\:\:createSql2Query\(\) has parameter \$offset with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Component/Content/Query/ContentQueryExecutor.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Query\\ContentQueryExecutor\:\:createSql2Query\(\) has parameter \$sql2 with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Component/Content/Query/ContentQueryExecutor.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Query\\ContentQueryExecutor\:\:execute\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Component/Content/Query/ContentQueryExecutor.php
-
-		-
-			message: '#^Parameter \#1 \$absPaths of method PHPCR\\SessionInterface\:\:getNodes\(\) expects array\<string\>\|Traversable\<mixed, string\>, list\<string\|null\> given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Content/Query/ContentQueryExecutor.php
-
-		-
-			message: '#^Parameter \#1 \$haystack of function substr_count expects string, string\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Content/Query/ContentQueryExecutor.php
-
-		-
-			message: '#^Parameter \#1 \$limit of method PHPCR\\Query\\QueryInterface\:\:setLimit\(\) expects int, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Content/Query/ContentQueryExecutor.php
-
-		-
-			message: '#^Parameter \#1 \$offset of method PHPCR\\Query\\QueryInterface\:\:setOffset\(\) expects int, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Content/Query/ContentQueryExecutor.php
-
-		-
-			message: '#^Parameter \#1 \$queryResult of method Sulu\\Component\\Content\\Mapper\\ContentMapperInterface\:\:convertQueryResultToArray\(\) expects PHPCR\\Query\\QueryResultInterface, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Content/Query/ContentQueryExecutor.php
-
-		-
-			message: '#^Parameter \#1 \$statement of method PHPCR\\Query\\QueryManagerInterface\:\:createQuery\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Content/Query/ContentQueryExecutor.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between null and int will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 1
-			path: src/Sulu/Component/Content/Query/ContentQueryExecutor.php
 
 		-
 			message: '#^Method Sulu\\Component\\Content\\Query\\ContentQueryExecutorInterface\:\:execute\(\) return type has no value type specified in iterable type array\.$#'
@@ -66805,42 +64957,6 @@ parameters:
 			path: src/Sulu/Component/Security/Authorization/AccessControl/DoctrineAccessControlProvider.php
 
 		-
-			message: '#^Call to an undefined method object\:\:setPermissions\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/Sulu/Component/Security/Authorization/AccessControl/PhpcrAccessControlProvider.php
-
-		-
-			message: '#^Method Sulu\\Component\\Security\\Authorization\\AccessControl\\PhpcrAccessControlProvider\:\:__construct\(\) has parameter \$permissions with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Component/Security/Authorization/AccessControl/PhpcrAccessControlProvider.php
-
-		-
-			message: '#^Method Sulu\\Component\\Security\\Authorization\\AccessControl\\PhpcrAccessControlProvider\:\:getPermissions\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Component/Security/Authorization/AccessControl/PhpcrAccessControlProvider.php
-
-		-
-			message: '#^Method Sulu\\Component\\Security\\Authorization\\AccessControl\\PhpcrAccessControlProvider\:\:setPermissions\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Component/Security/Authorization/AccessControl/PhpcrAccessControlProvider.php
-
-		-
-			message: '#^Parameter \#1 \$objectOrClass of class ReflectionClass constructor expects class\-string\<T of object\>\|T of object, string given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Security/Authorization/AccessControl/PhpcrAccessControlProvider.php
-
-		-
-			message: '#^Property Sulu\\Component\\Security\\Authorization\\AccessControl\\PhpcrAccessControlProvider\:\:\$permissions is never read, only written\.$#'
-			identifier: property.onlyWritten
-			count: 1
-			path: src/Sulu/Component/Security/Authorization/AccessControl/PhpcrAccessControlProvider.php
-
-		-
 			message: '#^Binary operation "&" between int and mixed results in an error\.$#'
 			identifier: binaryOp.invalid
 			count: 7
@@ -67079,30 +65195,6 @@ parameters:
 			identifier: argument.type
 			count: 4
 			path: src/Sulu/Component/Security/Tests/Unit/Authorization/AccessControl/DoctrineAccessControlProviderTest.php
-
-		-
-			message: '#^Method Sulu\\Component\\Security\\Tests\\Unit\\Authorization\\AccessControl\\PhpcrAccessControlProviderTest\:\:provideSupport\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Component/Security/Tests/Unit/Authorization/AccessControl/PhpcrAccessControlProviderTest.php
-
-		-
-			message: '#^Method Sulu\\Component\\Security\\Tests\\Unit\\Authorization\\AccessControl\\PhpcrAccessControlProviderTest\:\:testSupport\(\) has parameter \$supported with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Component/Security/Tests/Unit/Authorization/AccessControl/PhpcrAccessControlProviderTest.php
-
-		-
-			message: '#^Method Sulu\\Component\\Security\\Tests\\Unit\\Authorization\\AccessControl\\PhpcrAccessControlProviderTest\:\:testSupport\(\) has parameter \$type with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Component/Security/Tests/Unit/Authorization/AccessControl/PhpcrAccessControlProviderTest.php
-
-		-
-			message: '#^Parameter \#1 \$type of method Sulu\\Component\\Security\\Authorization\\AccessControl\\PhpcrAccessControlProvider\:\:supports\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Security/Tests/Unit/Authorization/AccessControl/PhpcrAccessControlProviderTest.php
 
 		-
 			message: '#^Parameter \#2 \$permissions of class Sulu\\Component\\Security\\Authorization\\SecurityContextVoter constructor expects array\<mixed\>, mixed given\.$#'

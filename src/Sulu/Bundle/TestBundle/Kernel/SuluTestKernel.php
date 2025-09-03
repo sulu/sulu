@@ -33,6 +33,7 @@ class SuluTestKernel extends SuluKernel
 
     public function registerBundles(): iterable
     {
+        /** @var array<mixed, BundleInterface> $bundles */
         $bundles = [
             // Dependencies
             new \Symfony\Bundle\FrameworkBundle\FrameworkBundle(),
@@ -94,7 +95,6 @@ class SuluTestKernel extends SuluKernel
             $bundles[] = new \Symfony\Bundle\SecurityBundle\SecurityBundle();
         }
 
-        /** @var iterable<mixed, BundleInterface> */
         return $bundles;
     }
 
