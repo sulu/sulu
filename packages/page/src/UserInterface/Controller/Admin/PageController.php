@@ -101,7 +101,7 @@ final class PageController
             parentId: $parentId,
             expandedIds: $expandedIds,
             includedFields: $includedFields,
-            listKey: 'pages_next',
+            listKey: 'pages',
         );
 
         return new JsonResponse($this->normalizer->normalize(
