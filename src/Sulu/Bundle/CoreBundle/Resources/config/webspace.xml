@@ -48,5 +48,13 @@
             <tag name="sulu.localization_provider"/>
         </service>
         <service id="Sulu\Component\Webspace\Manager\WebspaceManagerInterface" alias="sulu_core.webspace.webspace_manager"/>
+
+        <service id="sulu_core.webspace.url_provider" class="Sulu\Component\Webspace\Url\WebspaceUrlChainProvider">
+            <argument type="collection"/>
+        </service>
+
+        <service id="sulu_core.webspace.url_provider.default" class="Sulu\Component\Webspace\Url\WebspaceUrlProvider">
+            <tag name="sulu.webspace.url_provider"/>
+        </service>
     </services>
 </container>
