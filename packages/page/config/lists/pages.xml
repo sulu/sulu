@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <list xmlns="http://schemas.sulu.io/list-builder/list">
-    <key>pages_next</key>
+    <key>pages</key>
 
     <joins name="creator" ref="dimensionContent">
         <join>
