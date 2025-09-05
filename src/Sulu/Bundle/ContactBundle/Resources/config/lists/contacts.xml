@@ -31,6 +31,15 @@
         </join>
     </joins>
 
+    <joins name="excludedAccountContacts">
+        <join>
+            <entity-name>excludedAccountContact</entity-name>
+            <field-name>%sulu.model.contact.class%.accountContacts</field-name>
+            <method>LEFT</method>
+            <condition>IDENTITY(excludedAccountContact.account) = :excludedAccountId</condition>
+        </join>
+    </joins>
+
     <joins name="tags">
         <join>
             <entity-name>Sulu\Bundle\TagBundle\Entity\Tag</entity-name>
@@ -110,7 +119,7 @@
             </joins>
         </property>
 
-        <identity-property name="accountId" visibility="never" translation="sulu_contact.organization">
+        <identity-property name="accountId" visibility="never">
             <field-name>account</field-name>
             <entity-name>Sulu\Bundle\ContactBundle\Entity\AccountContact</entity-name>
 
@@ -122,6 +131,13 @@
                     <param name="resourceKey" value="accounts" />
                 </params>
             </filter>
+        </identity-property>
+
+        <identity-property name="excludedAccountId" visibility="never">
+            <field-name>account</field-name>
+            <entity-name>excludedAccountContact</entity-name>
+
+            <joins ref="excludedAccountContacts"/>
         </identity-property>
 
         <property name="city" visibility="always" translation="sulu_contact.city">

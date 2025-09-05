@@ -222,7 +222,8 @@ class ContactController extends AbstractRestController implements SecuredControl
 
         $excludedAccountId = $request->query->get('excludedAccountId');
         if ($excludedAccountId) {
-            $listBuilder->where($fieldDescriptors['accountId'], $excludedAccountId, $listBuilder::WHERE_COMPARATOR_UNEQUAL);
+            $listBuilder->setParameter('excludedAccountId', $excludedAccountId);
+            $listBuilder->where($fieldDescriptors['excludedAccountId'], null);
         }
 
         $listResponse = $this->prepareListResponse($listBuilder, $locale);

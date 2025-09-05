@@ -822,6 +822,7 @@ The corresponding traits `TimestampableTrait` and `UserBlameTrait` have been upd
 ### Admin API changes for 3.0
 
 - The `?flat=true` is default for all list endpoints in `ContactBundle` none flatted result is no longer supported.
+- The `/admin/api/contacts` no longer provides the `bySystem=true` parameter.
 
 ### RouteBundle replaced
 

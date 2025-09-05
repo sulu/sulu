@@ -901,41 +901,6 @@ class ContactControllerTest extends SuluTestCase
         $this->assertEquals('Erika Mustermann', $response->_embedded->contacts[0]->fullName);
     }
 
-    public function testGetListBySystem(): void
-    {
-        $suluContact = new Contact();
-        $suluContact->setFirstName('Max');
-        $suluContact->setLastName('Mustermann');
-
-        $user = new User();
-        $user->setUsername('max');
-        $user->setPassword('max');
-        $user->setLocale('de');
-        $user->setSalt('salt');
-        $role = new Role();
-        $role->setName('User');
-        $role->setSystem('Sulu');
-        $userRole = new UserRole();
-        $userRole->setRole($role);
-        $userRole->setUser($user);
-        $userRole->setLocale('[]');
-        $user->setContact($suluContact);
-
-        $this->em->persist($suluContact);
-        $this->em->persist($user);
-        $this->em->persist($userRole);
-        $this->em->persist($role);
-        $this->em->flush();
-
-        $this->client->jsonRequest('GET', '/api/contacts?bySystem=true');
-
-        $this->assertHttpStatusCode(200, $this->client->getResponse());
-        $response = \json_decode($this->client->getResponse()->getContent());
-
-        $this->assertCount(1, $response->_embedded->contacts);
-        $this->assertEquals('Max Mustermann', $response->_embedded->contacts[0]->fullName);
-    }
-
     public function testPut(): void
     {
         $title = $this->createTitle('MSc');
