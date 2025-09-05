@@ -116,7 +116,7 @@
                  public="true">
             <argument type="service" id="sulu_media.disposition_type.resolver"/>
             <argument type="service" id="sulu.repository.media"/>
-            <argument type="service" id="sulu.content.path_cleaner"/>
+            <argument type="service" id="sulu_route.path_cleanup"/>
             <argument type="service" id="sulu_media.format_manager"/>
             <argument type="service" id="sulu_media.format_cache"/>
             <argument type="service" id="sulu_media.media_manager"/>
@@ -243,7 +243,7 @@
             <argument type="service" id="sulu_media.format_manager" />
             <argument type="service" id="sulu_tag.tag_manager" />
             <argument type="service" id="sulu_media.type_manager" />
-            <argument type="service" id="sulu.content.path_cleaner" />
+            <argument type="service" id="sulu_route.path_cleanup" />
             <argument type="service" id="sulu_activity.domain_event_collector"/>
             <argument type="service" id="security.token_storage" on-invalid="null" />
             <argument type="service" id="sulu_security.security_checker" on-invalid="null" />

@@ -813,6 +813,8 @@ The corresponding traits `TimestampableTrait` and `UserBlameTrait` have been upd
 - `Sulu\Bundle\PageBundle\Teaser\TeaserManagerInterface`: `Sulu\Bundle\AdminBundle\Teaser\TeaserManagerInterface`
 - `Sulu\Bundle\PageBundle\Teaser\Configuration\TeaserConfiguration`: `Sulu\Bundle\AdminBundle\Teaser\Configuration\TeaserConfiguration`
 - `Sulu\Bundle\PageBundle\Teaser\Provider\TeaserProviderInterface`: `Sulu\Bundle\AdminBundle\Teaser\Provider\TeaserProviderInterface`
+- `Sulu\Component\PHPCR\PathCleanupInterface`: `Sulu\Route\Application\ResourceLocator\PathCleanup\PathCleanupInterface`
+- `Sulu\Component\PHPCR\PathCleanup`: `Sulu\Route\Application\ResourceLocator\PathCleanup\PathCleanup`
 
 ### Moved services for 3.0:
 
@@ -823,6 +825,8 @@ The corresponding traits `TimestampableTrait` and `UserBlameTrait` have been upd
 - `sulu_page.teaser.provider_pool`: `sulu_admin.teaser_provider_pool`
 - `sulu_page.teaser.manager`: `sulu_admin.teaser_manager`
 - `sulu_page.teaser_controller`: `sulu_admin.teaser_controller`
+- `sulu_page.teaser_controller`: `sulu_admin.teaser_controller`
+- `sulu.content.path_cleaner`: `sulu_route.path_cleanup`
 
 ### Moved files for 3.0
 

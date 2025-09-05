@@ -43,15 +43,17 @@ use Sulu\Bundle\MediaBundle\Media\TypeManager\TypeManagerInterface;
 use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Bundle\TestBundle\Testing\SetGetPrivatePropertyTrait;
-use Sulu\Component\PHPCR\PathCleanupInterface;
 use Sulu\Component\Security\Authentication\UserInterface as SuluUserInterface;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Sulu\Component\Security\Authorization\SecurityCondition;
+use Sulu\Route\Application\ResourceLocator\PathCleanup\PathCleanup;
+use Sulu\Route\Application\ResourceLocator\PathCleanup\PathCleanupInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\String\Slugger\AsciiSlugger;
 
 class MediaManagerTest extends TestCase
 {
@@ -119,9 +121,9 @@ class MediaManagerTest extends TestCase
     private $typeManager;
 
     /**
-     * @var ObjectProphecy<PathCleanupInterface>
+     * @var PathCleanupInterface
      */
-    private $pathCleaner;
+    private $pathCleanup;
 
     /**
      * @var ObjectProphecy<DomainEventCollectorInterface>
@@ -164,7 +166,7 @@ class MediaManagerTest extends TestCase
         $this->tagManager = $this->prophesize(TagManagerInterface::class);
         $this->categoryManager = $this->prophesize(CategoryManagerInterface::class);
         $this->typeManager = $this->prophesize(TypeManagerInterface::class);
-        $this->pathCleaner = $this->prophesize(PathCleanupInterface::class);
+        $this->pathCleanup = new PathCleanup(new AsciiSlugger(), []);
         $this->domainEventCollector = $this->prophesize(DomainEventCollectorInterface::class);
         $this->tokenStorage = $this->prophesize(TokenStorageInterface::class);
         $this->securityChecker = $this->prophesize(SecurityCheckerInterface::class);
@@ -181,7 +183,7 @@ class MediaManagerTest extends TestCase
             $this->formatManager->reveal(),
             $this->tagManager->reveal(),
             $this->typeManager->reveal(),
-            $this->pathCleaner->reveal(),
+            $this->pathCleanup,
             $this->domainEventCollector->reveal(),
             $this->tokenStorage->reveal(),
             $this->securityChecker->reveal(),
@@ -345,7 +347,7 @@ class MediaManagerTest extends TestCase
     }
 
     #[\PHPUnit\Framework\Attributes\DataProvider('provideSpecialCharacterFileName')]
-    public function testSpecialCharacterFileName(string $fileName, string $cleanUpArgument, string $cleanUpResult, string $extension): void
+    public function testSpecialCharacterFileName(string $fileName, string $cleanUpResult, string $extension): void
     {
         /** @var ObjectProphecy<UploadedFile> $uploadedFile */
         $uploadedFile = $this->prophesize(UploadedFile::class)->willBeConstructedWith([__DIR__ . \DIRECTORY_SEPARATOR . 'test.txt', 1, null, null, 1, true]);
@@ -364,8 +366,6 @@ class MediaManagerTest extends TestCase
             ->provide($uploadedFile->reveal())
             ->willReturn([])
             ->shouldBeCalled();
-
-        $this->pathCleaner->cleanup(Argument::exact($cleanUpArgument))->shouldBeCalled()->willReturn($cleanUpResult);
 
         $this->domainEventCollector->collect(Argument::type(MediaCreatedEvent::class))->shouldBeCalled();
 
@@ -554,8 +554,8 @@ class MediaManagerTest extends TestCase
     public static function provideSpecialCharacterFileName()
     {
         return [
-            ['aäüßa', 'aäüßa', 'aaeuesa', ''],
-            ['aäüßa.mp4', 'aäüßa', 'aaeuesa', '.mp4'],
+            ['aäüßa', 'aaeuesa', ''],
+            ['aäüßa.mp4', 'aaeuesa', '.mp4'],
         ];
     }
 
