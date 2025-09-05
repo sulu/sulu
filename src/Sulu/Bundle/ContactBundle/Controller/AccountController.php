@@ -1196,25 +1196,4 @@ class AccountController extends AbstractRestController implements SecuredControl
 
         return $accounts;
     }
-
-    /**
-     * Retrieves the ids from the request.
-     *
-     * @return array
-     */
-    private function retrieveFilter(Request $request)
-    {
-        $filter = [];
-        $ids = $request->get('ids');
-
-        if ($ids) {
-            if (\is_string($ids)) {
-                $ids = \explode(',', $ids);
-            }
-
-            $filter['id'] = $ids;
-        }
-
-        return $filter;
-    }
 }

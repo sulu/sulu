@@ -79,27 +79,6 @@ class AccountRepositoryTest extends SuluTestCase
         $this->assertNull($this->em->find(AccountInterface::class, $account1Id));
     }
 
-    private function createTag($name)
-    {
-        $tag = $this->getContainer()->get('sulu.repository.tag')->createNew();
-        $tag->setName($name);
-
-        $this->em->persist($tag);
-
-        return $tag;
-    }
-
-    private function createCategory($key)
-    {
-        $category = $this->getContainer()->get('sulu.repository.category')->createNew();
-        $category->setKey($key);
-        $category->setDefaultLocale('en');
-
-        $this->em->persist($category);
-
-        return $category;
-    }
-
     private function createAccount($name, $tags = [], $categories = [])
     {
         $account = new Account();

@@ -327,13 +327,6 @@ class AccountRepository extends NestedTreeRepository implements AccountRepositor
         }
     }
 
-    /**
-     * Append joins to query builder for "findByFilters" function.
-     */
-    protected function appendJoins(QueryBuilder $queryBuilder, $alias, $locale)
-    {
-    }
-
     public function createNew()
     {
         /** @var class-string<AccountInterface> $className */

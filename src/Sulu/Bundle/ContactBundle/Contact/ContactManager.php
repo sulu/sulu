@@ -44,12 +44,11 @@ use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Bundle\TrashBundle\Application\TrashManager\TrashManagerInterface;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Security\Authentication\UserInterface;
-use Sulu\Component\SmartContent\Orm\DataProviderRepositoryInterface;
 
 /**
  * @extends AbstractContactManager<ContactInterface, ContactApi, ContactAddress>
  */
-class ContactManager extends AbstractContactManager implements DataProviderRepositoryInterface
+class ContactManager extends AbstractContactManager
 {
     public function __construct(
         ObjectManager $em,
@@ -735,17 +734,5 @@ class ContactManager extends AbstractContactManager implements DataProviderRepos
     public function getPosition($id)
     {
         return $this->em->getRepository(self::$positionEntityName)->find($id);
-    }
-
-    public function findByFilters($filters, $page, $pageSize, $limit, $locale, $options = [])
-    {
-        $entities = $this->contactRepository->findByFilters($filters, $page, $pageSize, $limit, $locale, $options);
-
-        return \array_map(
-            function($contact) use ($locale) {
-                return $this->getApiObject($contact, $locale);
-            },
-            $entities
-        );
     }
 }

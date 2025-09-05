@@ -149,27 +149,6 @@ class ContactRepositoryTest extends SuluTestCase
         $this->assertEquals('Anne', $result[0]['firstName']);
     }
 
-    private function createTag($name)
-    {
-        $tag = $this->getContainer()->get('sulu.repository.tag')->createNew();
-        $tag->setName($name);
-
-        $this->em->persist($tag);
-
-        return $tag;
-    }
-
-    private function createCategory($key)
-    {
-        $category = $this->getContainer()->get('sulu.repository.category')->createNew();
-        $category->setKey($key);
-        $category->setDefaultLocale('en');
-
-        $this->em->persist($category);
-
-        return $category;
-    }
-
     private function createContact($firstName, $lastName, $tags = [], $categories = [])
     {
         $contact = new Contact();
