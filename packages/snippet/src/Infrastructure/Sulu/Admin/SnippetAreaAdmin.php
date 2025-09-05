@@ -51,4 +51,20 @@ class SnippetAreaAdmin extends Admin
                 ->addRerenderAttribute('webspace')
         );
     }
+
+    /**
+     * @return mixed[]
+     */
+    public function getSecurityContexts(): array
+    {
+        return [
+            'Sulu' => [
+                'Global' => [
+                    static::SECURITY_CONTEXT => [
+                        PermissionTypes::EDIT,
+                    ],
+                ],
+            ],
+        ];
+    }
 }
