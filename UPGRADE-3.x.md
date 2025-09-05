@@ -652,6 +652,11 @@ Removed classes / services:
 - `Sulu\Component\Content\Mapper\Event\ContentNodeOrderEvent`
 - `Sulu\Bundle\WebsiteBundle\Controller\DefaultController` (use new `ContentController` instead)
 - `Sulu\Bundle\WebsiteBundle\Controller\WebsiteController` (use new `ContentController` instead)
+- `Sulu\Bundle\ContactBundle\Content\Types\AccountSelection`
+- `Sulu\Bundle\ContactBundle\Content\Types\ContactAccountSelection`
+- `Sulu\Bundle\ContactBundle\Content\Types\ContactSelection`
+- `Sulu\Bundle\ContactBundle\Content\Types\SingleContactSelection`
+- `Sulu\Bundle\ContactBundle\Content\Types\SingleAccountSelection`
 - `Sulu\Bundle\PageBundle\Routing\DecoratedContentRouteProvider`
 - `Sulu\Bundle\PageBundle\Routing\DecoratedContentRouteProvider`
 - `Sulu\Bundle\WebsiteBundle\DependencyInjection\Compiler\RouteProviderCompilerPass`
@@ -694,40 +699,44 @@ Removed classes / services:
 
 Removed deprecated functions and properties:
 
-- `Sulu\Component\Security\Event\PermissionUpdateEvent::getSecurityIdentity`
-- `Sulu\Component\Webspace\Portal::getXDefaultLocalization`
-- `Sulu\Component\Webspace\Portal::setXDefaultLocalization`
-- `Sulu\Component\Localization\Localization::isXDefault`
-- `Sulu\Bundle\ContactBundle\Controller\AccountController::$contactEntityKey`
-- `Sulu\Bundle\ContactBundle\Controller\AccountController::$entityKey`
-- `Sulu\Bundle\WebsiteBundle\Controller\AnalyticsController::$entityKey`
-- `Sulu\Bundle\CategoryBundle\Controller\CategoryController::$entityKey`
-- `Sulu\Bundle\MediaBundle\Controller\CollectionController::$entityKey`
-- `Sulu\Bundle\MediaBundle\Controller\MediaController::$entityKey`
-- `Sulu\Bundle\PageBundle\Controller\PageController::$entityKey`
-- `Sulu\Bundle\TagBundle\Controller\TagController::$entityKey`
-- `Sulu\Bundle\SecurityBundle\Controller\UserController::$entityKey`
-- `Sulu\Bundle\ContactBundle\Controller\ContactTitleController::$entityKey`
-- `Sulu\Bundle\ContactBundle\Controller\ContactController::$entityKey`
-- `Sulu\Bundle\ContactBundle\Controller\PositionController::$entityKey`
-- `Sulu\Bundle\WebsiteBundle\Controller\RedirectController::redirectWebspaceAction`
+- `Sulu\Component\Security\Event\PermissionUpdateEvent::getSecurityIdentity` (use `getPermissions()` instead)
+- `Sulu\Component\Webspace\Portal::getXDefaultLocalization` (use `getDefaultLocalizations()` instead)
+- `Sulu\Component\Webspace\Portal::setXDefaultLocalization` (use `setDefaultLocalization()` instead)
+- `Sulu\Component\Localization\Localization::isXDefault` (use `isDefault()` instead)
+- `Sulu\Bundle\ContactBundle\Controller\AccountController::$contactEntityKey` (use `Contact::class` instead)
+- `Sulu\Bundle\ContactBundle\Controller\AccountController::$entityKey` (use `Account::class` instead)
+- `Sulu\Bundle\WebsiteBundle\Controller\AnalyticsController::$entityKey` (use `Analytics::class` instead)
+- `Sulu\Bundle\CategoryBundle\Controller\CategoryController::$entityKey` (use `Category::class` instead)
+- `Sulu\Bundle\MediaBundle\Controller\CollectionController::$entityKey` (use `Collection::class` instead)
+- `Sulu\Bundle\MediaBundle\Controller\MediaController::$entityKey` (use `Media::class` instead)
+- `Sulu\Bundle\PageBundle\Controller\PageController::$entityKey` (use `Page::class` instead)
+- `Sulu\Bundle\TagBundle\Controller\TagController::$entityKey` (use `Tag::class` instead)
+- `Sulu\Bundle\SecurityBundle\Controller\UserController::$entityKey` (use `User::class` instead)
+- `Sulu\Bundle\ContactBundle\Controller\ContactTitleController::$entityKey` (use `ContactTitle::class` instead)
+- `Sulu\Bundle\ContactBundle\Controller\ContactController::$entityKey` (use `Contact::class` instead)
+- `Sulu\Bundle\ContactBundle\Controller\PositionController::$entityKey` (use `Position::class` instead)
+- `Sulu\Bundle\WebsiteBundle\Controller\RedirectController::redirectWebspaceAction` (use Symfony RedirectController instead)
 - `Sulu\Component\Cache\Memoize::memoize()`
 - `Sulu\Component\Cache\MemoizeInterface::memoize()`
 - `Sulu\Bundle\WebsiteBundle\Twig\Core\UtilTwigExtension::extract()`
 - `Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata::setName()` (use `setKey()` instead)
 - `Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata::getName()` (use `getKey()` instead)
-- `Sulu\Bundle\CategoryBundle\Category\CategoryManager::find`
-- `Sulu\Bundle\CategoryBundle\Category\CategoryManager::findChildren`
-- `Sulu\Bundle\CategoryBundle\Category\CategoryManagerInterface::find`
-- `Sulu\Bundle\CategoryBundle\Category\CategoryManagerInterface::findChildren`
-- `Sulu\Bundle\CategoryBundle\Entity\CategoryRepository::findByCategoryIds`
-- `Sulu\Bundle\CategoryBundle\Entity\CategoryRepository::findCategories`
-- `Sulu\Bundle\CategoryBundle\Entity\CategoryRepository::findChildren`
-- `Sulu\Bundle\CategoryBundle\Entity\CategoryRepositoryInterface::findByCategoryIds`
-- `Sulu\Bundle\CategoryBundle\Entity\CategoryRepositoryInterface::findCategories`
-- `Sulu\Bundle\CategoryBundle\Entity\CategoryRepositoryInterface::findChildren`
-- `Sulu\Bundle\CategoryBundle\Entity\Category::addChildren`
-- `Sulu\Bundle\CategoryBundle\Entity\Category::removeChildren`
+- `Sulu\Bundle\ContactBundle\Contact\AccountManager::findAll` (use Repository instead)
+- `Sulu\Bundle\ContactBundle\Entity\AccountRepository::findByFilter` (use custom Doctrine queryBuilder instead)
+- `Sulu\Bundle\ContactBundle\Entity\AccountRepositoryInterface::findByFilter`(use custom Doctrine queryBuilder instead)
+- `Sulu\Bundle\ContactBundle\Entity\ContactRepository::findByFilter` (use custom Doctrine queryBuilder instead)
+- `Sulu\Bundle\CategoryBundle\Category\CategoryManager::find` (use Repository instead)
+- `Sulu\Bundle\CategoryBundle\Category\CategoryManager::findChildren` (use Repository instead)
+- `Sulu\Bundle\CategoryBundle\Category\CategoryManagerInterface::find` (use Repository instead)
+- `Sulu\Bundle\CategoryBundle\Category\CategoryManagerInterface::findChildren` (use Repository instead)
+- `Sulu\Bundle\CategoryBundle\Entity\CategoryRepository::findByCategoryIds` (use custom Doctrine queryBuilder instead)
+- `Sulu\Bundle\CategoryBundle\Entity\CategoryRepository::findCategories` (use custom Doctrine queryBuilder instead)
+- `Sulu\Bundle\CategoryBundle\Entity\CategoryRepository::findChildren` (use custom Doctrine queryBuilder instead)
+- `Sulu\Bundle\CategoryBundle\Entity\CategoryRepositoryInterface::findByCategoryIds` (use custom Doctrine queryBuilder instead)
+- `Sulu\Bundle\CategoryBundle\Entity\CategoryRepositoryInterface::findCategories` (use custom Doctrine queryBuilder instead)
+- `Sulu\Bundle\CategoryBundle\Entity\CategoryRepositoryInterface::findChildren` (use custom Doctrine queryBuilder instead)
+- `Sulu\Bundle\CategoryBundle\Entity\Category::addChildren` (use `addChild()` instead)
+- `Sulu\Bundle\CategoryBundle\Entity\Category::removeChildren` (use `removeChild()` instead)
 - `Sulu\Bundle\AdminBundle\Admin\View\FormOverlayListViewBuilder::setRequestParameters` (use `addRequestParameters()` instead)
 - `Sulu\Component\Rest\ListBuilder\ListBuilderInterface::setFields` (use `setSelectFields()` instead)
 - `Sulu\Component\Rest\ListBuilder\ListBuilderInterface::addField` (use `addSelectField()` instead)
@@ -808,6 +817,10 @@ The corresponding traits `TimestampableTrait` and `UserBlameTrait` have been upd
  - `src/Sulu/Component/Content/Metadata/Loader/schema/schema-1.0.xsd` -> `src/Sulu/Bundle/AdminBundle/Resources/config/schema/schema-1.0.xsd`
  - `src/Sulu/Component/Content/Metadata/Loader/schema/template-1.0.xsd` -> `src/Sulu/Bundle/AdminBundle/Resources/config/schema/template-1.0.xsd`
  - `src/Sulu/Component/Content/Metadata/Loader/schema/xml.xsd` -> `src/Sulu/Bundle/AdminBundle/Resources/config/schema/xml.xsd`
+
+### Admin API changes for 3.0
+
+- The `?flat=true` is default for all list endpoints in `ContactBundle` none flatted result is no longer supported.
 
 ### RouteBundle replaced
 
