@@ -408,8 +408,4 @@ class ContactRepository extends EntityRepository implements ContactRepositoryInt
             return;
         }
     }
-
-    protected function appendJoins(QueryBuilder $queryBuilder, $alias, $locale)
-    {
-    }
 }

@@ -14581,12 +14581,6 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Contact/AccountManager.php
 
 		-
-			message: '#^Call to an undefined method Sulu\\Bundle\\ContactBundle\\Entity\\AccountRepositoryInterface\:\:findByFilters\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AccountManager.php
-
-		-
 			message: '#^Call to an undefined method Sulu\\Bundle\\MediaBundle\\Entity\\MediaRepositoryInterface\:\:findById\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -14617,12 +14611,6 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Contact/AccountManager.php
 
 		-
-			message: '#^Default value of the parameter \#6 \$options \(array\{\}\) of method Sulu\\Bundle\\ContactBundle\\Contact\\AccountManager\:\:findByFilters\(\) is incompatible with type array\{webspaceKey\?\: string, locale\: string\}\.$#'
-			identifier: parameter.defaultValue
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AccountManager.php
-
-		-
 			message: '#^If condition is always true\.$#'
 			identifier: if.alwaysTrue
 			count: 2
@@ -14637,24 +14625,6 @@ parameters:
 		-
 			message: '#^Method Sulu\\Bundle\\ContactBundle\\Contact\\AccountManager\:\:deleteBankAccounts\(\) has no return type specified\.$#'
 			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AccountManager.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Contact\\AccountManager\:\:findAll\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AccountManager.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Contact\\AccountManager\:\:findAll\(\) should return array\|null but empty return statement found\.$#'
-			identifier: return.empty
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AccountManager.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Contact\\AccountManager\:\:findByFilters\(\) has parameter \$filters with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Contact/AccountManager.php
 
@@ -14725,12 +14695,6 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Contact/AccountManager.php
 
 		-
-			message: '#^Parameter \#1 \$account of method Sulu\\Bundle\\ContactBundle\\Contact\\AccountManager\:\:getApiObject\(\) expects Sulu\\Bundle\\ContactBundle\\Entity\\AccountInterface, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AccountManager.php
-
-		-
 			message: '#^Parameter \#1 \$ids of method Sulu\\Bundle\\ContactBundle\\Entity\\AccountRepositoryInterface\:\:findByIds\(\) expects array\<int\>, array\<mixed, mixed\> given\.$#'
 			identifier: argument.type
 			count: 1
@@ -14751,7 +14715,7 @@ parameters:
 		-
 			message: '#^Parameter \#2 \$array of function array_map expects array, mixed given\.$#'
 			identifier: argument.type
-			count: 2
+			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Contact/AccountManager.php
 
 		-
@@ -14869,20 +14833,8 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Contact/ContactManager.php
 
 		-
-			message: '#^Default value of the parameter \#6 \$options \(array\{\}\) of method Sulu\\Bundle\\ContactBundle\\Contact\\ContactManager\:\:findByFilters\(\) is incompatible with type array\{webspaceKey\?\: string, locale\: string\}\.$#'
-			identifier: parameter.defaultValue
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/ContactManager.php
-
-		-
 			message: '#^If condition is always true\.$#'
 			identifier: if.alwaysTrue
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/ContactManager.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Contact\\ContactManager\:\:findByFilters\(\) has parameter \$filters with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Contact/ContactManager.php
 
@@ -14977,12 +14929,6 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Contact/ContactManager.php
 
 		-
-			message: '#^Parameter \#1 \$contact of method Sulu\\Bundle\\ContactBundle\\Contact\\ContactManager\:\:getApiObject\(\) expects Sulu\\Bundle\\ContactBundle\\Entity\\ContactInterface, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/ContactManager.php
-
-		-
 			message: '#^Parameter \#1 \$data of method Sulu\\Bundle\\ContactBundle\\Contact\\ContactManager\:\:getProperty\(\) expects array, string\|null given\.$#'
 			identifier: argument.type
 			count: 10
@@ -15074,12 +15020,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#2 \$addresses of method Sulu\\Bundle\\ContactBundle\\Contact\\AbstractContactManager\<Sulu\\Bundle\\ContactBundle\\Entity\\ContactInterface,Sulu\\Bundle\\ContactBundle\\Api\\Contact,Sulu\\Bundle\\ContactBundle\\Entity\\ContactAddress\>\:\:processAddresses\(\) expects array, string\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/ContactManager.php
-
-		-
-			message: '#^Parameter \#2 \$array of function array_map expects array, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Contact/ContactManager.php
@@ -15241,144 +15181,6 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Contact/ContactManagerInterface.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Content\\Types\\AccountSelection\:\:getContentData\(\) should return array\<Sulu\\Bundle\\ContactBundle\\Api\\Account\> but returns list\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Content/Types/AccountSelection.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Content\\Types\\AccountSelection\:\:preResolve\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Content/Types/AccountSelection.php
-
-		-
-			message: '#^Parameter \#1 \$array of function array_flip expects array\<int\|string\>, array\<mixed, mixed\> given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Content/Types/AccountSelection.php
-
-		-
-			message: '#^Parameter \#2 \$callback of function usort expects callable\(mixed, mixed\)\: int, Closure\(Sulu\\Bundle\\ContactBundle\\Api\\Account, Sulu\\Bundle\\ContactBundle\\Api\\Account\)\: int given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Content/Types/AccountSelection.php
-
-		-
-			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
-			identifier: foreach.nonIterable
-			count: 2
-			path: src/Sulu/Bundle/ContactBundle/Content/Types/ContactAccountSelection.php
-
-		-
-			message: '#^Binary operation "\." between ''a''\|''c'' and mixed results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 2
-			path: src/Sulu/Bundle/ContactBundle/Content/Types/ContactAccountSelection.php
-
-		-
-			message: '#^Cannot call method getId\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: src/Sulu/Bundle/ContactBundle/Content/Types/ContactAccountSelection.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Content\\Types\\ContactAccountSelection\:\:__construct\(\) has parameter \$accountManager with generic interface Sulu\\Bundle\\ContactBundle\\Contact\\ContactManagerInterface but does not specify its types\: DoctrineEntity, ApiEntity, AddressRelationEntity$#'
-			identifier: missingType.generics
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Content/Types/ContactAccountSelection.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Content\\Types\\ContactAccountSelection\:\:__construct\(\) has parameter \$contactManager with generic interface Sulu\\Bundle\\ContactBundle\\Contact\\ContactManagerInterface but does not specify its types\: DoctrineEntity, ApiEntity, AddressRelationEntity$#'
-			identifier: missingType.generics
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Content/Types/ContactAccountSelection.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Content\\Types\\ContactAccountSelection\:\:getContentData\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Content/Types/ContactAccountSelection.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Content\\Types\\ContactAccountSelection\:\:getDefaultValue\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Content/Types/ContactAccountSelection.php
-
-		-
-			message: '#^Parameter \#1 \$ids of method Sulu\\Bundle\\ContactBundle\\Contact\\ContactManagerInterface\<mixed,mixed,mixed\>\:\:getByIds\(\) expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: src/Sulu/Bundle/ContactBundle/Content/Types/ContactAccountSelection.php
-
-		-
-			message: '#^Parameter \#1 \$json of function json_decode expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Content/Types/ContactAccountSelection.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Content\\Types\\ContactSelection\:\:preResolve\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Content/Types/ContactSelection.php
-
-		-
-			message: '#^Parameter \#1 \$array of function array_flip expects array\<int\|string\>, array\<mixed, mixed\> given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Content/Types/ContactSelection.php
-
-		-
-			message: '#^Parameter \#1 \$ids of method Sulu\\Bundle\\ContactBundle\\Entity\\ContactRepositoryInterface\:\:findByIds\(\) expects array\<int\>, array\<mixed, mixed\> given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Content/Types/ContactSelection.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Content\\Types\\SingleAccountSelection\:\:preResolve\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Content/Types/SingleAccountSelection.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Content\\Types\\SingleAccountSelection\:\:read\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Content/Types/SingleAccountSelection.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Content\\Types\\SingleAccountSelection\:\:remove\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Content/Types/SingleAccountSelection.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Content\\Types\\SingleAccountSelection\:\:write\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Content/Types/SingleAccountSelection.php
-
-		-
-			message: '#^Parameter \#1 \$id of method Sulu\\Bundle\\ContactBundle\\Contact\\AccountManager\:\:getById\(\) expects int, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Content/Types/SingleAccountSelection.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Content\\Types\\SingleContactSelection\:\:preResolve\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Content/Types/SingleContactSelection.php
-
-		-
-			message: '#^Parameter \#1 \$id of method Sulu\\Bundle\\ContactBundle\\Entity\\ContactRepositoryInterface\:\:findById\(\) expects int, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Content/Types/SingleContactSelection.php
-
-		-
 			message: '#^Binary operation "\." between mixed and ''\.id \= '' results in an error\.$#'
 			identifier: binaryOp.invalid
 			count: 1
@@ -15415,12 +15217,6 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Controller/AbstractMediaController.php
 
 		-
-			message: '#^Cannot call method getMedias\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Controller/AbstractMediaController.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\ContactBundle\\Controller\\AbstractMediaController\:\:addMediaToEntity\(\) should return Sulu\\Bundle\\MediaBundle\\Api\\Media but returns Symfony\\Component\\HttpFoundation\\Response\.$#'
 			identifier: return.type
 			count: 1
@@ -15451,25 +15247,7 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Controller/AbstractMediaController.php
 
 		-
-			message: '#^Parameter \#1 \$id of method Sulu\\Bundle\\ContactBundle\\Contact\\ContactManagerInterface\<mixed,mixed,mixed\>\:\:getById\(\) expects int, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Controller/AbstractMediaController.php
-
-		-
-			message: '#^Parameter \#2 \$locale of method Sulu\\Bundle\\ContactBundle\\Contact\\ContactManagerInterface\<mixed,mixed,mixed\>\:\:getById\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Controller/AbstractMediaController.php
-
-		-
 			message: '#^Parameter \#2 \$locale of method Sulu\\Bundle\\MediaBundle\\Media\\ListRepresentationFactory\\MediaListRepresentationFactory\:\:getListRepresentation\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Controller/AbstractMediaController.php
-
-		-
-			message: '#^Parameter \#2 \$rel of class Sulu\\Component\\Rest\\ListBuilder\\CollectionRepresentation constructor expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Controller/AbstractMediaController.php
@@ -15817,12 +15595,6 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Controller/AccountController.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Controller\\AccountController\:\:retrieveFilter\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Controller/AccountController.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\ContactBundle\\Controller\\AccountController\:\:setParent\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -15985,12 +15757,6 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Controller/AccountController.php
 
 		-
-			message: '#^Parameter \#1 \$locale of method Sulu\\Bundle\\ContactBundle\\Contact\\AccountManager\:\:findAll\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Controller/AccountController.php
-
-		-
 			message: '#^Parameter \#1 \$main of method Sulu\\Bundle\\ContactBundle\\Entity\\AccountContact\:\:setMain\(\) expects bool, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -16094,12 +15860,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#2 \$fieldDescriptors of method Sulu\\Component\\Rest\\RestHelperInterface\:\:initializeListBuilder\(\) expects array\<Sulu\\Component\\Rest\\ListBuilder\\FieldDescriptorInterface\>, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Controller/AccountController.php
-
-		-
-			message: '#^Parameter \#2 \$filter of method Sulu\\Bundle\\ContactBundle\\Contact\\AccountManager\:\:findAll\(\) expects array\<string, mixed\>\|null, array given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Controller/AccountController.php
@@ -16345,12 +16105,6 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Controller/AccountMediaController.php
 
 		-
-			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
-			identifier: foreach.nonIterable
-			count: 2
-			path: src/Sulu/Bundle/ContactBundle/Controller/ContactController.php
-
-		-
 			message: '#^Binary operation "\." between mixed and ''\.position'' results in an error\.$#'
 			identifier: binaryOp.invalid
 			count: 1
@@ -16365,7 +16119,7 @@ parameters:
 		-
 			message: '#^Call to an undefined method Sulu\\Bundle\\ContactBundle\\Contact\\ContactManagerInterface\:\:getContact\(\)\.$#'
 			identifier: method.notFound
-			count: 4
+			count: 3
 			path: src/Sulu/Bundle/ContactBundle/Controller/ContactController.php
 
 		-
@@ -16375,13 +16129,7 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Controller/ContactController.php
 
 		-
-			message: '#^Call to an undefined method Sulu\\Bundle\\ContactBundle\\Entity\\ContactRepositoryInterface\:\:findByExcludedAccountId\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Controller/ContactController.php
-
-		-
-			message: '#^Call to an undefined method Sulu\\Component\\Security\\Authentication\\UserRepositoryInterface\:\:findUserBySystem\(\)\.$#'
+			message: '#^Call to an undefined method Sulu\\Component\\Rest\\ListBuilder\\ListBuilderInterface\:\:setParameter\(\)\.$#'
 			identifier: method.notFound
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Controller/ContactController.php
@@ -16399,15 +16147,15 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Controller/ContactController.php
 
 		-
-			message: '#^Cannot access offset ''id'' on mixed\.$#'
+			message: '#^Cannot access offset ''excludedAccountId'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 3
+			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Controller/ContactController.php
 
 		-
-			message: '#^Cannot call method getContact\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
+			message: '#^Cannot access offset ''id'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 3
 			path: src/Sulu/Bundle/ContactBundle/Controller/ContactController.php
 
 		-
@@ -16442,12 +16190,6 @@ parameters:
 
 		-
 			message: '#^Method Sulu\\Bundle\\ContactBundle\\Controller\\ContactController\:\:getAccountContactFieldDescriptors\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Controller/ContactController.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Controller\\ContactController\:\:getContactsByUserSystem\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Controller/ContactController.php
@@ -16497,13 +16239,7 @@ parameters:
 		-
 			message: '#^Parameter \#1 \$fieldDescriptor of method Sulu\\Component\\Rest\\ListBuilder\\ListBuilderInterface\:\:where\(\) expects Sulu\\Component\\Rest\\ListBuilder\\FieldDescriptorInterface, mixed given\.$#'
 			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Controller/ContactController.php
-
-		-
-			message: '#^Parameter \#1 \$groups of method FOS\\RestBundle\\Context\\Context\:\:setGroups\(\) expects array\<string\>\|null, array given\.$#'
-			identifier: argument.type
-			count: 1
+			count: 2
 			path: src/Sulu/Bundle/ContactBundle/Controller/ContactController.php
 
 		-
@@ -16567,7 +16303,7 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Controller/ContactController.php
 
 		-
-			message: '#^Parameter \#2 \.\.\.\$arrays of function array_merge expects array, mixed given\.$#'
+			message: '#^Parameter \#2 \$value of method Sulu\\Component\\Rest\\ListBuilder\\ListBuilderInterface\:\:where\(\) expects string, null given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Controller/ContactController.php
@@ -16933,20 +16669,8 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Entity/AccountRepository.php
 
 		-
-			message: '#^Binary operation "\." between ''entity\.'' and mixed results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 2
-			path: src/Sulu/Bundle/ContactBundle/Entity/AccountRepository.php
-
-		-
 			message: '#^Binary operation "\." between non\-falsy\-string and mixed results in an error\.$#'
 			identifier: binaryOp.invalid
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Entity/AccountRepository.php
-
-		-
-			message: '#^Cannot access offset ''id'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Entity/AccountRepository.php
 
@@ -16999,18 +16723,6 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Entity/AccountRepository.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Entity\\AccountRepository\:\:findByFilters\(\) has parameter \$filters with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Entity/AccountRepository.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Entity\\AccountRepository\:\:findByFiltersIds\(\) has parameter \$filters with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Entity/AccountRepository.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\ContactBundle\\Entity\\AccountRepository\:\:findByIds\(\) should return array\<Sulu\\Bundle\\ContactBundle\\Entity\\AccountInterface\> but returns mixed\.$#'
 			identifier: return.type
 			count: 1
@@ -17025,60 +16737,6 @@ parameters:
 		-
 			message: '#^Method Sulu\\Bundle\\ContactBundle\\Entity\\AccountRepository\:\:findOneByContactId\(\) should return Sulu\\Bundle\\ContactBundle\\Entity\\AccountInterface but returns mixed\.$#'
 			identifier: return.type
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Entity/AccountRepository.php
-
-		-
-			message: '#^Parameter \#1 \$datasource of method Sulu\\Bundle\\ContactBundle\\Entity\\AccountRepository\:\:appendDatasource\(\) expects int\|string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Entity/AccountRepository.php
-
-		-
-			message: '#^Parameter \#1 \$haystack of function strpos expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: src/Sulu/Bundle/ContactBundle/Entity/AccountRepository.php
-
-		-
-			message: '#^Parameter \#1 \$sortBy of method Sulu\\Bundle\\ContactBundle\\Entity\\AccountRepository\:\:appendSortBy\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: src/Sulu/Bundle/ContactBundle/Entity/AccountRepository.php
-
-		-
-			message: '#^Parameter \#1 \$string of function strtolower expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 4
-			path: src/Sulu/Bundle/ContactBundle/Entity/AccountRepository.php
-
-		-
-			message: '#^Parameter \#1 \$value of method Sulu\\Bundle\\ContactBundle\\Entity\\AccountRepository\:\:getBoolean\(\) expects bool\|string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Entity/AccountRepository.php
-
-		-
-			message: '#^Parameter \#2 \$sortMethod of method Sulu\\Bundle\\ContactBundle\\Entity\\AccountRepository\:\:appendSortBy\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: src/Sulu/Bundle/ContactBundle/Entity/AccountRepository.php
-
-		-
-			message: '#^Parameter \#3 \$values of method Sulu\\Bundle\\ContactBundle\\Entity\\AccountRepository\:\:appendRelation\(\) expects array\<int\>, array\<int, mixed\> given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Entity/AccountRepository.php
-
-		-
-			message: '#^Parameter \#3 \$values of method Sulu\\Bundle\\ContactBundle\\Entity\\AccountRepository\:\:appendRelation\(\) expects array\<int\>, mixed given\.$#'
-			identifier: argument.type
-			count: 5
-			path: src/Sulu/Bundle/ContactBundle/Entity/AccountRepository.php
-
-		-
-			message: '#^Strict comparison using \!\=\= between null and int will always evaluate to true\.$#'
-			identifier: notIdentical.alwaysTrue
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Entity/AccountRepository.php
 
@@ -17227,18 +16885,6 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Entity/ContactRepository.php
 
 		-
-			message: '#^Binary operation "\." between ''entity\.'' and mixed results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 2
-			path: src/Sulu/Bundle/ContactBundle/Entity/ContactRepository.php
-
-		-
-			message: '#^Cannot access offset ''id'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Entity/ContactRepository.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\ContactBundle\\Entity\\ContactRepository\:\:addSorting\(\) has parameter \$sorting with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -17271,24 +16917,6 @@ parameters:
 		-
 			message: '#^Method Sulu\\Bundle\\ContactBundle\\Entity\\ContactRepository\:\:findByCriteriaEmailAndPhone\(\) should return Sulu\\Bundle\\ContactBundle\\Entity\\ContactInterface\|null but returns mixed\.$#'
 			identifier: return.type
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Entity/ContactRepository.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Entity\\ContactRepository\:\:findByExcludedAccountId\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Entity/ContactRepository.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Entity\\ContactRepository\:\:findByFilters\(\) has parameter \$filters with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Entity/ContactRepository.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Entity\\ContactRepository\:\:findByFiltersIds\(\) has parameter \$filters with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Entity/ContactRepository.php
 
@@ -17353,68 +16981,14 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Entity/ContactRepository.php
 
 		-
-			message: '#^Parameter \#1 \$datasource of method Sulu\\Bundle\\ContactBundle\\Entity\\ContactRepository\:\:appendDatasource\(\) expects int\|string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Entity/ContactRepository.php
-
-		-
-			message: '#^Parameter \#1 \$haystack of function strpos expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: src/Sulu/Bundle/ContactBundle/Entity/ContactRepository.php
-
-		-
-			message: '#^Parameter \#1 \$sortBy of method Sulu\\Bundle\\ContactBundle\\Entity\\ContactRepository\:\:appendSortBy\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: src/Sulu/Bundle/ContactBundle/Entity/ContactRepository.php
-
-		-
-			message: '#^Parameter \#1 \$string of function strtolower expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 4
-			path: src/Sulu/Bundle/ContactBundle/Entity/ContactRepository.php
-
-		-
-			message: '#^Parameter \#1 \$value of method Sulu\\Bundle\\ContactBundle\\Entity\\ContactRepository\:\:getBoolean\(\) expects bool\|string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Entity/ContactRepository.php
-
-		-
 			message: '#^Parameter \#2 \$order of method Doctrine\\ORM\\QueryBuilder\:\:addOrderBy\(\) expects string\|null, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Entity/ContactRepository.php
 
 		-
-			message: '#^Parameter \#2 \$sortMethod of method Sulu\\Bundle\\ContactBundle\\Entity\\ContactRepository\:\:appendSortBy\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: src/Sulu/Bundle/ContactBundle/Entity/ContactRepository.php
-
-		-
 			message: '#^Parameter \#2 \$sorting of method Sulu\\Bundle\\ContactBundle\\Entity\\ContactRepository\:\:addSorting\(\) expects array, array\|null given\.$#'
 			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Entity/ContactRepository.php
-
-		-
-			message: '#^Parameter \#3 \$values of method Sulu\\Bundle\\ContactBundle\\Entity\\ContactRepository\:\:appendRelation\(\) expects array\<int\>, array\<int, mixed\> given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Entity/ContactRepository.php
-
-		-
-			message: '#^Parameter \#3 \$values of method Sulu\\Bundle\\ContactBundle\\Entity\\ContactRepository\:\:appendRelation\(\) expects array\<int\>, mixed given\.$#'
-			identifier: argument.type
-			count: 5
-			path: src/Sulu/Bundle/ContactBundle/Entity/ContactRepository.php
-
-		-
-			message: '#^Strict comparison using \!\=\= between null and int will always evaluate to true\.$#'
-			identifier: notIdentical.alwaysTrue
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Entity/ContactRepository.php
 
@@ -17703,37 +17277,13 @@ parameters:
 		-
 			message: '#^Cannot access offset ''_embedded'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 7
-			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/AccountControllerTest.php
-
-		-
-			message: '#^Cannot access offset ''accountContacts'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
+			count: 5
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/AccountControllerTest.php
 
 		-
 			message: '#^Cannot access offset ''account_contacts'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 5
-			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/AccountControllerTest.php
-
-		-
-			message: '#^Cannot access offset ''accounts'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/AccountControllerTest.php
-
-		-
-			message: '#^Cannot access offset ''contact'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/AccountControllerTest.php
-
-		-
-			message: '#^Cannot access offset ''contacts'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/AccountControllerTest.php
 
 		-
@@ -17757,7 +17307,7 @@ parameters:
 		-
 			message: '#^Cannot access offset 0 on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 134
+			count: 130
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/AccountControllerTest.php
 
 		-
@@ -18273,7 +17823,7 @@ parameters:
 		-
 			message: '#^Parameter \#1 \$account of method Sulu\\Bundle\\ContactBundle\\Tests\\Functional\\Controller\\AccountControllerTest\:\:createContact\(\) expects Sulu\\Bundle\\ContactBundle\\Entity\\Account\|null, Sulu\\Bundle\\ContactBundle\\Entity\\AccountInterface given\.$#'
 			identifier: argument.type
-			count: 3
+			count: 2
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/AccountControllerTest.php
 
 		-
@@ -18327,7 +17877,7 @@ parameters:
 		-
 			message: '#^Parameter \#1 \$json of function json_decode expects string, string\|false given\.$#'
 			identifier: argument.type
-			count: 48
+			count: 47
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/AccountControllerTest.php
 
 		-
@@ -18370,12 +17920,6 @@ parameters:
 			message: '#^Parameter \#14 \$note of method Sulu\\Bundle\\ContactBundle\\Tests\\Functional\\Controller\\AccountControllerTest\:\:createAddress\(\) expects string\|null, float given\.$#'
 			identifier: argument.type
 			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/AccountControllerTest.php
-
-		-
-			message: '#^Parameter \#2 \$array of method PHPUnit\\Framework\\Assert\:\:assertArrayNotHasKey\(\) expects array\<mixed\>\|ArrayAccess\<\(int\|string\), mixed\>, mixed given\.$#'
-			identifier: argument.type
-			count: 2
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/AccountControllerTest.php
 
 		-
@@ -18789,7 +18333,7 @@ parameters:
 		-
 			message: '#^Cannot access offset 0 on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 140
+			count: 139
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/ContactControllerTest.php
 
 		-
@@ -18807,7 +18351,7 @@ parameters:
 		-
 			message: '#^Cannot access property \$_embedded on mixed\.$#'
 			identifier: property.nonObject
-			count: 31
+			count: 29
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/ContactControllerTest.php
 
 		-
@@ -18879,7 +18423,7 @@ parameters:
 		-
 			message: '#^Cannot access property \$contacts on mixed\.$#'
 			identifier: property.nonObject
-			count: 31
+			count: 29
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/ContactControllerTest.php
 
 		-
@@ -18945,7 +18489,7 @@ parameters:
 		-
 			message: '#^Cannot access property \$fullName on mixed\.$#'
 			identifier: property.nonObject
-			count: 11
+			count: 10
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/ContactControllerTest.php
 
 		-
@@ -19377,7 +18921,7 @@ parameters:
 		-
 			message: '#^Parameter \#1 \$json of function json_decode expects string, string\|false given\.$#'
 			identifier: argument.type
-			count: 46
+			count: 45
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/ContactControllerTest.php
 
 		-
@@ -19473,7 +19017,7 @@ parameters:
 		-
 			message: '#^Parameter \#2 \$haystack of method PHPUnit\\Framework\\Assert\:\:assertCount\(\) expects Countable\|iterable, mixed given\.$#'
 			identifier: argument.type
-			count: 5
+			count: 4
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/ContactControllerTest.php
 
 		-
@@ -19831,30 +19375,6 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Entity/AccountRepositoryTest.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Tests\\Functional\\Entity\\AccountRepositoryTest\:\:createCategory\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Entity/AccountRepositoryTest.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Tests\\Functional\\Entity\\AccountRepositoryTest\:\:createCategory\(\) has parameter \$key with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Entity/AccountRepositoryTest.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Tests\\Functional\\Entity\\AccountRepositoryTest\:\:createTag\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Entity/AccountRepositoryTest.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Tests\\Functional\\Entity\\AccountRepositoryTest\:\:createTag\(\) has parameter \$name with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Entity/AccountRepositoryTest.php
-
-		-
 			message: '#^Parameter \#1 \$category of method Sulu\\Bundle\\ContactBundle\\Entity\\Account\:\:addCategory\(\) expects Sulu\\Bundle\\CategoryBundle\\Entity\\CategoryInterface, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -19873,19 +19393,7 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Entity/AccountRepositoryTest.php
 
 		-
-			message: '#^Parameter \#1 \$key of method Sulu\\Bundle\\CategoryBundle\\Entity\\CategoryInterface\:\:setKey\(\) expects string\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Entity/AccountRepositoryTest.php
-
-		-
 			message: '#^Parameter \#1 \$name of method Sulu\\Bundle\\ContactBundle\\Entity\\Account\:\:setName\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Entity/AccountRepositoryTest.php
-
-		-
-			message: '#^Parameter \#1 \$name of method Sulu\\Bundle\\TagBundle\\Tag\\TagInterface\:\:setName\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Entity/AccountRepositoryTest.php
@@ -19894,12 +19402,6 @@ parameters:
 			message: '#^Parameter \#1 \$tag of method Sulu\\Bundle\\ContactBundle\\Entity\\Account\:\:addTag\(\) expects Sulu\\Bundle\\TagBundle\\Tag\\TagInterface, mixed given\.$#'
 			identifier: argument.type
 			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Entity/AccountRepositoryTest.php
-
-		-
-			message: '#^Parameter \#2 \$page of method Sulu\\Bundle\\ContactBundle\\Entity\\AccountRepository\:\:findByFilters\(\) expects int, null given\.$#'
-			identifier: argument.type
-			count: 18
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Entity/AccountRepositoryTest.php
 
 		-
@@ -19923,19 +19425,7 @@ parameters:
 		-
 			message: '#^Cannot call method getId\(\) on mixed\.$#'
 			identifier: method.nonObject
-			count: 18
-			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Entity/ContactRepositoryTest.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Tests\\Functional\\Entity\\ContactRepositoryTest\:\:createCategory\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Entity/ContactRepositoryTest.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Tests\\Functional\\Entity\\ContactRepositoryTest\:\:createCategory\(\) has parameter \$key with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
+			count: 2
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Entity/ContactRepositoryTest.php
 
 		-
@@ -19969,18 +19459,6 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Entity/ContactRepositoryTest.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Tests\\Functional\\Entity\\ContactRepositoryTest\:\:createTag\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Entity/ContactRepositoryTest.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Tests\\Functional\\Entity\\ContactRepositoryTest\:\:createTag\(\) has parameter \$name with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Entity/ContactRepositoryTest.php
-
-		-
 			message: '#^Parameter \#1 \$category of method Sulu\\Bundle\\ContactBundle\\Entity\\Contact\:\:addCategory\(\) expects Sulu\\Bundle\\CategoryBundle\\Entity\\CategoryInterface, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -19999,19 +19477,7 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Entity/ContactRepositoryTest.php
 
 		-
-			message: '#^Parameter \#1 \$key of method Sulu\\Bundle\\CategoryBundle\\Entity\\CategoryInterface\:\:setKey\(\) expects string\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Entity/ContactRepositoryTest.php
-
-		-
 			message: '#^Parameter \#1 \$lastName of method Sulu\\Bundle\\ContactBundle\\Entity\\Contact\:\:setLastName\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Entity/ContactRepositoryTest.php
-
-		-
-			message: '#^Parameter \#1 \$name of method Sulu\\Bundle\\TagBundle\\Tag\\TagInterface\:\:setName\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Entity/ContactRepositoryTest.php
@@ -20023,22 +19489,10 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Entity/ContactRepositoryTest.php
 
 		-
-			message: '#^Parameter \#2 \$page of method Sulu\\Bundle\\ContactBundle\\Entity\\ContactRepository\:\:findByFilters\(\) expects int, null given\.$#'
-			identifier: argument.type
-			count: 18
-			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Entity/ContactRepositoryTest.php
-
-		-
 			message: '#^Property Sulu\\Bundle\\ContactBundle\\Tests\\Functional\\Entity\\ContactRepositoryTest\:\:\$em \(Doctrine\\ORM\\EntityManager\) does not accept Doctrine\\ORM\\EntityManagerInterface\.$#'
 			identifier: assign.propertyType
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Entity/ContactRepositoryTest.php
-
-		-
-			message: '#^Parameter \#3 \$userId of method Sulu\\Component\\Content\\SimpleContentType\:\:write\(\) expects int, null given\.$#'
-			identifier: argument.type
-			count: 2
-			path: src/Sulu/Bundle/ContactBundle/Tests/Unit/AccountSelectionTest.php
 
 		-
 			message: '#^Method Sulu\\Bundle\\ContactBundle\\Tests\\Unit\\CacheInvalidationListenerTest\:\:provideData\(\) has no return type specified\.$#'
@@ -20131,24 +19585,6 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Tests/Unit/CacheInvalidationListenerTest.php
 
 		-
-			message: '#^Property Sulu\\Bundle\\ContactBundle\\Tests\\Unit\\ContactAccountSelectionTest\:\:\$accountManager with generic interface Sulu\\Bundle\\ContactBundle\\Contact\\ContactManagerInterface does not specify its types\: DoctrineEntity, ApiEntity, AddressRelationEntity$#'
-			identifier: missingType.generics
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Tests/Unit/ContactAccountSelectionTest.php
-
-		-
-			message: '#^Property Sulu\\Bundle\\ContactBundle\\Tests\\Unit\\ContactAccountSelectionTest\:\:\$contactManager with generic interface Sulu\\Bundle\\ContactBundle\\Contact\\ContactManagerInterface does not specify its types\: DoctrineEntity, ApiEntity, AddressRelationEntity$#'
-			identifier: missingType.generics
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Tests/Unit/ContactAccountSelectionTest.php
-
-		-
-			message: '#^Parameter \#3 \$userId of method Sulu\\Component\\Content\\SimpleContentType\:\:write\(\) expects int, null given\.$#'
-			identifier: argument.type
-			count: 2
-			path: src/Sulu/Bundle/ContactBundle/Tests/Unit/ContactSelectionTest.php
-
-		-
 			message: '#^Cannot call method getFullName\(\) on Sulu\\Bundle\\ContactBundle\\Entity\\ContactInterface\|null\.$#'
 			identifier: method.nonObject
 			count: 2
@@ -20237,24 +19673,6 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Tests/Unit/IndexComparatorTest.php
-
-		-
-			message: '#^Parameter \#1 \$structure of method Sulu\\Component\\Content\\Compat\\Property\:\:setStructure\(\) expects Sulu\\Component\\Content\\Compat\\StructureInterface, Prophecy\\Prophecy\\ObjectProphecy\<Sulu\\Component\\Content\\Compat\\StructureInterface\> given\.$#'
-			identifier: argument.type
-			count: 2
-			path: src/Sulu/Bundle/ContactBundle/Tests/Unit/SingleAccountSelectionTest.php
-
-		-
-			message: '#^Parameter \#3 \$userId of method Sulu\\Bundle\\ContactBundle\\Content\\Types\\SingleAccountSelection\:\:write\(\) expects int, null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Tests/Unit/SingleAccountSelectionTest.php
-
-		-
-			message: '#^Parameter \#3 \$userId of method Sulu\\Component\\Content\\SimpleContentType\:\:write\(\) expects int, null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Tests/Unit/SingleContactSelectionTest.php
 
 		-
 			message: '#^Cannot access offset 0 on mixed\.$#'
@@ -37711,12 +37129,6 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Sitemap/PagesSitemapProvider.php
 
 		-
-			message: '#^Parameter \#4 \$lastmod of class Sulu\\Bundle\\WebsiteBundle\\Sitemap\\SitemapUrl constructor expects DateTime\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Sitemap/PagesSitemapProvider.php
-
-		-
 			message: '#^Parameter \#4 \$webspaceKey of method Sulu\\Component\\Webspace\\Manager\\WebspaceManagerInterface\:\:findUrlByResourceLocator\(\) expects string\|null, mixed given\.$#'
 			identifier: argument.type
 			count: 2
@@ -45104,12 +44516,6 @@ parameters:
 
 		-
 			message: '#^Property Sulu\\Bundle\\WebsiteBundle\\Sitemap\\SitemapUrl\:\:\$defaultLocale \(string\) does not accept string\|null\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Sitemap/SitemapUrl.php
-
-		-
-			message: '#^Property Sulu\\Bundle\\WebsiteBundle\\Sitemap\\SitemapUrl\:\:\$lastmod \(DateTime\) does not accept DateTime\|null\.$#'
 			identifier: assign.propertyType
 			count: 1
 			path: src/Sulu/Bundle/WebsiteBundle/Sitemap/SitemapUrl.php

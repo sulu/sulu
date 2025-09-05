@@ -157,12 +157,9 @@
             <argument type="service" id="sulu_core.list_builder.field_descriptor_factory"/>
             <argument type="service" id="sulu_core.doctrine_list_builder_factory"/>
             <argument type="service" id="sulu_contact.contact_manager"/>
-            <argument type="service" id="sulu.repository.contact"/>
             <argument type="service" id="sulu_media.media_manager"/>
-            <argument type="service" id="sulu.repository.user"/>
             <argument type="service" id="sulu_contact.util.index_comparator"/>
             <argument>%sulu.model.contact.class%</argument>
-            <argument>%sulu_security.system%</argument>
 
             <tag name="sulu.context" context="admin"/>
         </service>

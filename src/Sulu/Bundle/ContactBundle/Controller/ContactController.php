@@ -14,9 +14,7 @@ namespace Sulu\Bundle\ContactBundle\Controller;
 use FOS\RestBundle\Context\Context;
 use FOS\RestBundle\View\ViewHandlerInterface;
 use Sulu\Bundle\ContactBundle\Contact\ContactManagerInterface;
-use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\ContactBundle\Entity\ContactInterface;
-use Sulu\Bundle\ContactBundle\Entity\ContactRepositoryInterface;
 use Sulu\Bundle\ContactBundle\Util\IndexComparatorInterface;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Sulu\Component\Rest\AbstractRestController;
@@ -32,7 +30,6 @@ use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
 use Sulu\Component\Rest\ListBuilder\Metadata\FieldDescriptorFactoryInterface;
 use Sulu\Component\Rest\ListBuilder\PaginatedRepresentation;
 use Sulu\Component\Rest\RestHelperInterface;
-use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -79,12 +76,9 @@ class ContactController extends AbstractRestController implements SecuredControl
         private FieldDescriptorFactoryInterface $fieldDescriptorFactory,
         private DoctrineListBuilderFactoryInterface $listBuilderFactory,
         private ContactManagerInterface $contactManager,
-        private ContactRepositoryInterface $contactRepository,
         private MediaManagerInterface $mediaManager,
-        private UserRepositoryInterface $userRepository,
         private IndexComparatorInterface $indexComparator,
         private string $contactClass,
-        private string $suluSecuritySystem
     ) {
         parent::__construct($viewHandler, $tokenStorage);
     }
@@ -183,19 +177,11 @@ class ContactController extends AbstractRestController implements SecuredControl
      */
     public function cgetAction(Request $request)
     {
-        $serializationGroups = [];
         $locale = $this->getLocale($request);
 
         $list = $this->getList($request, $locale);
 
         $view = $this->view($list, 200);
-
-        // set serialization groups
-        if (\count($serializationGroups) > 0) {
-            $context = new Context();
-            $context->setGroups($serializationGroups);
-            $view->setContext($context);
-        }
 
         return $this->handleView($view);
     }
