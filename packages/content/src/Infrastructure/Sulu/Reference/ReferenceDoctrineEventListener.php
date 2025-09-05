@@ -100,8 +100,6 @@ class ReferenceDoctrineEventListener implements ResetInterface
                 )
             );
         }
-
-        $this->reset();
     }
 
     public function reset(): void

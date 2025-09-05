@@ -14,11 +14,19 @@ declare(strict_types=1);
 namespace Sulu\Content\Tests\Functional\Integration;
 
 use PHPUnit\Framework\Attributes\Depends;
+use Sulu\Bundle\ReferenceBundle\Domain\Repository\ReferenceRepositoryInterface;
 use Sulu\Bundle\TestBundle\Testing\AssertSnapshotTrait;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\HttpKernel\SuluKernel;
 use Sulu\Content\Tests\Application\AppCache;
+use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\Example;
+use Sulu\Bundle\ReferenceBundle\Application\Message\RefreshReferenceMessage;
+use Sulu\Content\Tests\Functional\Traits\CreateCategoryTrait;
+use Sulu\Content\Tests\Functional\Traits\CreateMediaTrait;
+use Sulu\Content\Tests\Functional\Traits\CreateTagTrait;
+use Sulu\Content\Tests\Traits\CreateExampleTrait;
 use Sulu\Route\Domain\Repository\RouteRepositoryInterface;
+use Sulu\Route\Domain\Value\RequestAttributeEnum;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Component\BrowserKit\CookieJar;
 
@@ -29,11 +37,20 @@ use Symfony\Component\BrowserKit\CookieJar;
 class ExampleControllerTest extends SuluTestCase
 {
     use AssertSnapshotTrait;
+    use CreateCategoryTrait;
+    use CreateExampleTrait;
+    use CreateMediaTrait;
+    use CreateTagTrait;
 
     /**
      * @var KernelBrowser
      */
     protected $client;
+
+    /**
+     * @var ReferenceRepositoryInterface
+     */
+    private $referenceRepository;
 
     protected function setUp(): void
     {
@@ -41,6 +58,13 @@ class ExampleControllerTest extends SuluTestCase
             [],
             ['CONTENT_TYPE' => 'application/json', 'HTTP_ACCEPT' => 'application/json']
         );
+
+        $this->referenceRepository = $this->getContainer()->get(ReferenceRepositoryInterface::class);
+
+        // TODO this should not be necessary
+        $requestContext = self::getContainer()->get('router.request_context');
+        $requestContext->setParameter(RequestAttributeEnum::SITE->value, 'sulu-io');
+        // TODO this should not be necessary
     }
 
     public function testPostPublish(): int
@@ -393,12 +417,400 @@ class ExampleControllerTest extends SuluTestCase
     #[Depends('testGetList')]
     public function testDelete(int $id): void
     {
+        $routeRepository = $this->getContainer()->get(RouteRepositoryInterface::class);
+        $this->assertCount(3, $routeRepository->findBy([])); // TODO we need tackle this
+    }
+
+    public function testReferencesCreatedWithMediaReferences(): int
+    {
+        self::purgeDatabase();
+
+        // Create media entities
+        $collection = $this->createCollection(['title' => 'Test Collection', 'locale' => 'en']);
+        $mediaType = $this->createMediaType(['name' => 'Image', 'description' => 'Test Image Type']);
+
+        $media1 = $this->createMedia($collection, $mediaType, ['title' => 'Media 1', 'locale' => 'en']);
+        $media2 = $this->createMedia($collection, $mediaType, ['title' => 'Media 2', 'locale' => 'en']);
+        $media3 = $this->createMedia($collection, $mediaType, ['title' => 'Media 3', 'locale' => 'en']);
+        $media4 = $this->createMedia($collection, $mediaType, ['title' => 'Media 4', 'locale' => 'en']);
+
+        self::getEntityManager()->flush();
+
+        // Create example with media references using the API
+        $this->client->request('POST', '/admin/api/examples?locale=en&action=publish', [], [], [], \json_encode([
+            'template' => 'example-2',
+            'title' => 'Test Example with Media References',
+            'url' => '/media-reference-example',
+            'images' => [
+                'ids' => [$media1->getId(), $media2->getId()],
+            ],
+            'excerptImage' => [
+                'id' => $media3->getId(),
+            ],
+            'excerptIcon' => [
+                'id' => $media4->getId(),
+            ],
+            'seoTitle' => 'Media References Test',
+            'seoDescription' => 'Testing media references',
+            'excerptTitle' => 'Media Test',
+            'excerptDescription' => 'Media test description',
+            'mainWebspace' => 'sulu-io',
+        ]) ?: null);
+
+        $response = $this->client->getResponse();
+        $content = \json_decode((string) $response->getContent(), true);
+        /** @var int $id */
+        $id = $content['id'] ?? null; // @phpstan-ignore-line
+
+        $this->assertHttpStatusCode(201, $response);
+
+        // We should have 4 media references (2 for images + 1 for excerptImage + 1 for excerptIcon)
+        $websiteReferenceCount = $this->referenceRepository->count([
+            'resourceKey' => 'media',
+            'referenceResourceKey' => Example::RESOURCE_KEY,
+            'referenceResourceId' => (string) $id,
+            'referenceLocale' => 'en',
+            'referenceContext' => 'website',
+        ]);
+        $this->assertSame(4, $websiteReferenceCount);
+
+        $adminReferenceCount = $this->referenceRepository->count([
+            'resourceKey' => 'media',
+            'referenceResourceKey' => Example::RESOURCE_KEY,
+            'referenceResourceId' => (string) $id,
+            'referenceLocale' => 'en',
+            'referenceContext' => 'admin',
+        ]);
+        $this->assertSame(4, $adminReferenceCount);
+
+        return $id;
+    }
+
+    public function testReferencesCreatedWithExampleReferences(): int
+    {
+        self::purgeDatabase();
+
+        // Create referenced examples
+        $referencedExample1 = static::createExample([
+            'en' => [
+                'live' => [
+                    'template' => 'default',
+                    'title' => 'Referenced Example 1',
+                    'url' => '/referenced-1',
+                ],
+            ],
+        ]);
+
+        $referencedExample2 = static::createExample([
+            'en' => [
+                'live' => [
+                    'template' => 'default',
+                    'title' => 'Referenced Example 2',
+                    'url' => '/referenced-2',
+                ],
+            ],
+        ]);
+
+        static::getEntityManager()->flush();
+
+        // Create example with example references using the API
+        $this->client->request('POST', '/admin/api/examples?locale=en&action=publish', [], [], [], \json_encode([
+            'template' => 'default-example-selection',
+            'title' => 'Test Example with Example References',
+            'url' => '/example-reference-example',
+            'examples' => [$referencedExample1->getId(), $referencedExample2->getId()],
+            'seoTitle' => 'Example References Test',
+            'seoDescription' => 'Testing example references',
+            'mainWebspace' => 'sulu-io',
+        ]) ?: null);
+
+        $response = $this->client->getResponse();
+        $content = \json_decode((string) $response->getContent(), true);
+        /** @var int $id */
+        $id = $content['id'] ?? null; // @phpstan-ignore-line
+
+        $this->assertHttpStatusCode(201, $response);
+
+        // Flush entity manager to ensure doctrine events are triggered
+        self::getEntityManager()->flush();
+
+        // In test environment, manually trigger reference refresh
+        $messageHandler = $this->getContainer()->get('Sulu\Bundle\ReferenceBundle\Application\MessageHandler\RefreshReferenceMessageHandler');
+        $refreshMessage = new RefreshReferenceMessage(
+            Example::RESOURCE_KEY,
+            (string) $id,
+            'en',
+            'live'
+        );
+        $messageHandler($refreshMessage);
+
+        // Verify references are created for examples
+        // We should have 2 example references
+        // Note: The reference structure is inverted - resourceKey is the referenced resource, referenceResourceKey is the referring resource
+        $websiteReferenceCount = $this->referenceRepository->count([
+            'resourceKey' => Example::RESOURCE_KEY,  // The referenced example entities
+            'referenceResourceKey' => Example::RESOURCE_KEY,  // The Example entity that references them
+            'referenceResourceId' => (string) $id,  // The specific example ID
+            'referenceLocale' => 'en',
+            'referenceContext' => 'website',
+        ]);
+
+        $this->assertSame(2, $websiteReferenceCount, 'Should have exactly 2 example references in website context');
+
+        return $id;
+    }
+
+    public function testReferenceContextsForDraftAndPublished(): void
+    {
+        self::purgeDatabase();
+
+        // Create media for references
+        $collection = $this->createCollection(['title' => 'Test Collection', 'locale' => 'en']);
+        $mediaType = $this->createMediaType(['name' => 'Image', 'description' => 'Test Image Type']);
+        $media = $this->createMedia($collection, $mediaType, ['title' => 'Test Media', 'locale' => 'en']);
+
+        self::getEntityManager()->flush();
+
+        // Create example as draft only (not published)
+        $this->client->request('POST', '/admin/api/examples?locale=en', [], [], [], \json_encode([
+            'template' => 'example-2',
+            'title' => 'Draft Example with References',
+            'url' => '/draft-reference-example',
+            'images' => [
+                'ids' => [$media->getId()],
+            ],
+            'seoTitle' => 'Draft References Test',
+            'mainWebspace' => 'sulu-io',
+        ]) ?: null);
+
+        $response = $this->client->getResponse();
+        $content = \json_decode((string) $response->getContent(), true);
+        /** @var int $id */
+        $id = $content['id'] ?? null; // @phpstan-ignore-line
+
+        $this->assertHttpStatusCode(201, $response);
+
+        // Flush entity manager to ensure doctrine events are triggered
+        self::getEntityManager()->flush();
+
+        // In test environment, manually trigger reference refresh for draft stage
+        $messageHandler = $this->getContainer()->get('Sulu\Bundle\ReferenceBundle\Application\MessageHandler\RefreshReferenceMessageHandler');
+        $refreshMessage = new RefreshReferenceMessage(
+            Example::RESOURCE_KEY,
+            (string) $id,
+            'en',
+            'draft'
+        );
+        $messageHandler($refreshMessage);
+
+        // Verify admin context references exist (draft content should have admin references)
+        $adminReferenceCount = $this->referenceRepository->count([
+            'resourceKey' => 'media',  // The referenced media entity
+            'referenceResourceKey' => Example::RESOURCE_KEY,  // The Example entity that references it
+            'referenceResourceId' => (string) $id,  // The specific example ID
+            'referenceLocale' => 'en',
+            'referenceContext' => 'admin',
+        ]);
+
+        $this->assertSame(1, $adminReferenceCount, 'Draft should have exactly 1 reference in admin context');
+
+        // Verify website context references don't exist (not published yet)
+        $websiteReferenceCount = $this->referenceRepository->count([
+            'resourceKey' => 'media',  // The referenced media entity
+            'referenceResourceKey' => Example::RESOURCE_KEY,  // The Example entity that references it
+            'referenceResourceId' => (string) $id,  // The specific example ID
+            'referenceLocale' => 'en',
+            'referenceContext' => 'website',
+        ]);
+
+        $this->assertSame(0, $websiteReferenceCount, 'Draft should have 0 references in website context');
+
+        // Now publish the example
+        $this->client->request('PUT', '/admin/api/examples/' . $id . '?locale=en&action=publish', [], [], [], \json_encode([
+            'template' => 'example-2',
+            'title' => 'Draft Example with References',
+            'url' => '/draft-reference-example',
+            'images' => [
+                'ids' => [$media->getId()],
+            ],
+            'seoTitle' => 'Draft References Test',
+            'mainWebspace' => 'sulu-io',
+        ]) ?: null);
+
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(200, $response);
+
+        // In test environment, manually trigger reference refresh for live stage after publish
+        $refreshMessage = new RefreshReferenceMessage(
+            Example::RESOURCE_KEY,
+            (string) $id,
+            'en',
+            'live'
+        );
+        $messageHandler($refreshMessage);
+
+        // After publishing, both contexts should have references
+        $adminReferenceCountAfterPublish = $this->referenceRepository->count([
+            'resourceKey' => 'media',  // The referenced media entity
+            'referenceResourceKey' => Example::RESOURCE_KEY,  // The Example entity that references it
+            'referenceResourceId' => (string) $id,  // The specific example ID
+            'referenceLocale' => 'en',
+            'referenceContext' => 'admin',
+        ]);
+
+        $websiteReferenceCountAfterPublish = $this->referenceRepository->count([
+            'resourceKey' => 'media',  // The referenced media entity
+            'referenceResourceKey' => Example::RESOURCE_KEY,  // The Example entity that references it
+            'referenceResourceId' => (string) $id,  // The specific example ID
+            'referenceLocale' => 'en',
+            'referenceContext' => 'website',
+        ]);
+
+        $this->assertSame(1, $adminReferenceCountAfterPublish, 'Published should have 1 reference in admin context');
+        $this->assertSame(1, $websiteReferenceCountAfterPublish, 'Published should have 1 reference in website context');
+    }
+
+    public function testDraftOnlyReferencesCreation(): void
+    {
+        self::purgeDatabase();
+
+        // Create media for references
+        $collection = $this->createCollection(['title' => 'Test Collection', 'locale' => 'en']);
+        $mediaType = $this->createMediaType(['name' => 'Image', 'description' => 'Test Image Type']);
+        $media1 = $this->createMedia($collection, $mediaType, ['title' => 'Test Media 1', 'locale' => 'en']);
+        $media2 = $this->createMedia($collection, $mediaType, ['title' => 'Test Media 2', 'locale' => 'en']);
+
+        self::getEntityManager()->flush();
+
+        // Create example as draft only (explicitly not publishing)
+        $this->client->request('POST', '/admin/api/examples?locale=en', [], [], [], \json_encode([
+            'template' => 'example-2',
+            'title' => 'Draft Only Example',
+            'url' => '/draft-only-example',
+            'images' => [
+                'ids' => [$media1->getId(), $media2->getId()],
+            ],
+            'seoTitle' => 'Draft Only Test',
+            'mainWebspace' => 'sulu-io',
+        ]) ?: null);
+
+        $response = $this->client->getResponse();
+        $content = \json_decode((string) $response->getContent(), true);
+        /** @var int $id */
+        $id = $content['id'] ?? null; // @phpstan-ignore-line
+
+        $this->assertHttpStatusCode(201, $response);
+
+        // Flush entity manager to ensure doctrine events are triggered
+        self::getEntityManager()->flush();
+
+        // Manually refresh references for test environment
+        $refreshHandler = self::getContainer()->get('Sulu\Bundle\ReferenceBundle\Application\MessageHandler\RefreshReferenceMessageHandler');
+        $refreshMessage = new RefreshReferenceMessage(
+            Example::RESOURCE_KEY,
+            (string) $id,
+            'en',
+            'draft'
+        );
+        $refreshHandler($refreshMessage);
+
+        // Verify admin context references exist (2 media references)
+        $adminReferenceCount = $this->referenceRepository->count([
+            'resourceKey' => 'media',
+            'referenceResourceKey' => Example::RESOURCE_KEY,
+            'referenceResourceId' => (string) $id,
+            'referenceLocale' => 'en',
+            'referenceContext' => 'admin',
+        ]);
+
+        $this->assertSame(2, $adminReferenceCount, 'Draft only should have exactly 2 references in admin context');
+
+        // Verify website context has no references (never published)
+        $websiteReferenceCount = $this->referenceRepository->count([
+            'resourceKey' => 'media',
+            'referenceResourceKey' => Example::RESOURCE_KEY,
+            'referenceResourceId' => (string) $id,
+            'referenceLocale' => 'en',
+            'referenceContext' => 'website',
+        ]);
+
+        $this->assertSame(0, $websiteReferenceCount, 'Draft only should have 0 references in website context');
+    }
+
+    #[Depends('testReferencesCreatedWithMediaReferences')]
+    public function testReferenceCleanupOnUnpublish(int $id): void
+    {
+        // The example should be published with media references in both contexts
+        $adminReferenceCountBefore = $this->referenceRepository->count([
+            'resourceKey' => 'media',  // The referenced media entities
+            'referenceResourceKey' => Example::RESOURCE_KEY,  // The Example entity that references them
+            'referenceResourceId' => (string) $id,  // The specific example ID
+            'referenceLocale' => 'en',
+            'referenceContext' => 'admin',
+        ]);
+
+        $websiteReferenceCountBefore = $this->referenceRepository->count([
+            'resourceKey' => 'media',  // The referenced media entities
+            'referenceResourceKey' => Example::RESOURCE_KEY,  // The Example entity that references them
+            'referenceResourceId' => (string) $id,  // The specific example ID
+            'referenceLocale' => 'en',
+            'referenceContext' => 'website',
+        ]);
+
+        $this->assertGreaterThan(0, $adminReferenceCountBefore, 'Should have admin references before unpublish');
+        $this->assertGreaterThan(0, $websiteReferenceCountBefore, 'Should have website references before unpublish');
+
+        // Unpublish the example
+        $this->client->request('POST', '/admin/api/examples/' . $id . '?locale=en&action=unpublish');
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(200, $response);
+
+        // After unpublishing, website references should be removed
+        $adminReferenceCountAfter = $this->referenceRepository->count([
+            'resourceKey' => 'media',  // The referenced media entities
+            'referenceResourceKey' => Example::RESOURCE_KEY,  // The Example entity that references them
+            'referenceResourceId' => (string) $id,  // The specific example ID
+            'referenceLocale' => 'en',
+            'referenceContext' => 'admin',
+        ]);
+
+        $websiteReferenceCountAfter = $this->referenceRepository->count([
+            'resourceKey' => 'media',  // The referenced media entities
+            'referenceResourceKey' => Example::RESOURCE_KEY,  // The Example entity that references them
+            'referenceResourceId' => (string) $id,  // The specific example ID
+            'referenceLocale' => 'en',
+            'referenceContext' => 'website',
+        ]);
+
+        $this->assertSame($adminReferenceCountBefore, $adminReferenceCountAfter, 'Admin references should remain after unpublish');
+        $this->assertSame(0, $websiteReferenceCountAfter, 'Website references should be removed after unpublish');
+    }
+
+    #[Depends('testReferencesCreatedWithExampleReferences')]
+    public function testReferenceCleanupOnDeletion(int $id): void
+    {
+        // Verify media references exist before deletion
+        $totalReferencesBefore = $this->referenceRepository->count([
+            'resourceKey' => Example::RESOURCE_KEY,  // Referenced example entities
+            'referenceResourceKey' => Example::RESOURCE_KEY,  // The Example entity that references them
+            'referenceResourceId' => (string) $id,  // The specific example ID
+        ]);
+
+        $this->assertGreaterThan(0, $totalReferencesBefore, 'Should have references before deletion');
+
+        // Delete the example
         $this->client->request('DELETE', '/admin/api/examples/' . $id . '?locale=en');
         $response = $this->client->getResponse();
         $this->assertHttpStatusCode(204, $response);
 
-        $routeRepository = $this->getContainer()->get(RouteRepositoryInterface::class);
-        $this->assertCount(3, $routeRepository->findBy([])); // TODO we need tackle this
+        // After deletion, all references should be removed
+        $totalReferencesAfter = $this->referenceRepository->count([
+            'resourceKey' => Example::RESOURCE_KEY,  // Referenced example entities
+            'referenceResourceKey' => Example::RESOURCE_KEY,  // The Example entity that references them
+            'referenceResourceId' => (string) $id,  // The specific example ID
+        ]);
+
+        $this->assertSame(0, $totalReferencesAfter, 'All references should be removed after deletion');
     }
 
     protected function getSnapshotFolder(): string

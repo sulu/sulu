@@ -91,3 +91,17 @@ services:
             - '@doctrine.orm.entity_manager'
         tags:
             - { name: 'sulu_content.smart_content_provider', type: 'examples' }
+
+    example_test.example_reference_refresher:
+        class: Sulu\Content\Tests\Application\ExampleTestBundle\Reference\ExampleReferenceRefresher
+        arguments:
+            - '@doctrine.orm.entity_manager'
+            - '@Sulu\Bundle\ReferenceBundle\Domain\Repository\ReferenceRepositoryInterface'
+            - '@sulu_content.content_view_resolver'
+            - '@sulu_content.content_merger'
+        tags:
+            - { name: 'sulu_reference.refresher' }
+
+    Sulu\Bundle\ReferenceBundle\Application\MessageHandler\RefreshReferenceMessageHandler:
+        alias: sulu_reference.refresh_reference_message_handler
+        public: true

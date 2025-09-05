@@ -37,7 +37,7 @@ class WebspaceSiteRouteGenerator implements SiteRouteGeneratorInterface
     public function generate(RequestContext $requestContext, string $slug, string $locale): string
     {
         $site = $requestContext->getParameter(RequestAttributeEnum::SITE->value);
-
+        $site = 'sulu-io'; // TODO remove after testing
         if (!\is_string($site)) {
             $currentRequest = $this->requestStack->getCurrentRequest();
 

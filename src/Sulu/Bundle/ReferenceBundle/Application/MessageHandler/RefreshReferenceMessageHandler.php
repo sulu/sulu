@@ -24,7 +24,6 @@ class RefreshReferenceMessageHandler
     public function __construct(
         private ReferenceRepositoryInterface $referenceRepository,
         private iterable $referenceRefreshers,
-        private string $suluContext, // @phpstan-ignore-line - parameter for future use
     ) {
     }
 
@@ -42,18 +41,20 @@ class RefreshReferenceMessageHandler
 
         $counter = 0;
         $resourceIds = [];
+        $now = new \DateTimeImmutable();
         foreach ($referenceRefresher->refresh($message->getFilter()) as $object) {
             if (0 === (++$counter % 100)) {
                 $this->referenceRepository->flush();
             }
             if ($object instanceof DimensionContentInterface) {
-                $resourceIds[] = $object->getResource()->getId();
+                $resourceIds[] = (string) $object->getResource()->getId();
             }
         }
 
         $this->referenceRepository->flush();
         $this->referenceRepository->removeBy([
-            'resourceIds' => \array_map('strval', $resourceIds),
+            'resourceIds' => $resourceIds,
+            'changedOlderThan' => $now
         ]);
     }
 }
