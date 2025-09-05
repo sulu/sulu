@@ -629,6 +629,8 @@ Removed classes / services:
 - `Sulu\Component\Rest\Listing\ListQueryBuilder`
 - `Sulu\Component\Rest\Listing\ListRepository`
 - `Sulu\Component\Rest\Listing\ListRestHelper`
+- `Sulu\Component\SmartContent\Orm\DataProviderRepositoryInterface`
+- `Sulu\Component\SmartContent\Orm\DataProviderRepositoryTrait`
 - `Sulu\Bundle\CoreBundle\Controller\LocalizationController`
 - `Sulu\Bundle\MediaBundle\Media\Storage\AzureBlobStorage`
 - `Sulu\Bundle\MediaBundle\Media\Storage\GoogleCloudStorage`
