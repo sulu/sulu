@@ -635,6 +635,14 @@ Removed classes / services:
 - `Sulu\Bundle\MediaBundle\Media\Storage\LocalStorage`
 - `Sulu\Bundle\MediaBundle\Media\Storage\S3Storage`
 - `Sulu\Bundle\MediaBundle\DependencyInjection\S3ClientCompilerPass` (internal)
+- `Sulu\Bundle\MediaBundle\Media\Storage\S3Storage`
+- `Sulu\Bundle\MediaBundle\Content\MediaSelectionContainer`
+- `Sulu\Bundle\MediaBundle\Content\Types\CollectionSelection`
+- `Sulu\Bundle\MediaBundle\Content\Types\MediaSelectionContentType`
+- `Sulu\Bundle\MediaBundle\Content\Types\ImageMapContentType`
+- `Sulu\Bundle\MediaBundle\Content\Types\SingleCollectionSelection`
+- `Sulu\Bundle\MediaBundle\Content\Types\SingleMediaSelection`
+- `Sulu\Bundle\MediaBundle\Content\Entity\MediaDataProviderRepository`
 - `Sulu\Bundle\AdminBundle\Command\DownloadBuildCommand`
 - `Sulu\Component\Rest\ListBuilder\ListRepresentation`
 - `Sulu\Bundle\AdminBundle\Metadata\FormMetadata\LocalizedFormMetadataCollection`
