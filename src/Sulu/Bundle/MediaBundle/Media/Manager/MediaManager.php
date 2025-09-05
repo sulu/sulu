@@ -91,7 +91,7 @@ class MediaManager implements MediaManagerInterface
         private FormatManagerInterface $formatManager,
         private TagManagerInterface $tagManager,
         protected TypeManagerInterface $typeManager,
-        private PathCleanupInterface $pathCleaner,
+        private PathCleanupInterface $pathCleanup,
         private DomainEventCollectorInterface $domainEventCollector,
         private ?TokenStorageInterface $tokenStorage,
         private ?SecurityCheckerInterface $securityChecker,
@@ -265,6 +265,8 @@ class MediaManager implements MediaManagerInterface
 
         $shouldEmitModifiedEvent = true;
 
+        /** @var string $locale */
+        $locale = $data['locale'] ?? 'en';
         if ($uploadedFile) {
             // new uploaded file
             ++$version;
@@ -276,7 +278,7 @@ class MediaManager implements MediaManagerInterface
 
             $data['storageOptions'] = $this->storage->save(
                 $uploadedFile->getPathname(),
-                $this->getNormalizedFileName($uploadedFile->getClientOriginalName()),
+                $this->getNormalizedFileName($uploadedFile->getClientOriginalName(), $locale),
                 $currentFileVersion->getStorageOptions()
             );
             $data['name'] = $uploadedFile->getClientOriginalName();
@@ -336,7 +338,6 @@ class MediaManager implements MediaManagerInterface
             }
         }
 
-        $locale = $data['locale'];
         $media = new Media($mediaEntity, $locale, null);
 
         $isNewLocale = true;
@@ -396,9 +397,11 @@ class MediaManager implements MediaManagerInterface
 
         $this->validator->validate($uploadedFile);
 
+        /** @var string $locale */
+        $locale = $data['locale'] ?? 'en';
         $data['storageOptions'] = $this->storage->save(
             $uploadedFile->getPathname(),
-            $this->getNormalizedFileName($uploadedFile->getClientOriginalName())
+            $this->getNormalizedFileName($uploadedFile->getClientOriginalName(), $locale)
         );
 
         $data['name'] = $uploadedFile->getClientOriginalName();
@@ -893,18 +896,16 @@ class MediaManager implements MediaManagerInterface
     /**
      * Returns file name without special characters and preserves file extension.
      *
-     * @param string $originalFileName
-     *
      * @return string
      */
-    private function getNormalizedFileName($originalFileName)
+    private function getNormalizedFileName(string $originalFileName, string $locale)
     {
         if (false !== \strpos($originalFileName, '.')) {
             $pathParts = \pathinfo($originalFileName);
-            $fileName = $this->pathCleaner->cleanup($pathParts['filename']);
+            $fileName = $this->pathCleanup->cleanup($pathParts['filename'], $locale);
             $fileName .= '.' . $pathParts['extension'];
         } else {
-            $fileName = $this->pathCleaner->cleanup($originalFileName);
+            $fileName = $this->pathCleanup->cleanup($originalFileName, $locale);
         }
 
         return $fileName;

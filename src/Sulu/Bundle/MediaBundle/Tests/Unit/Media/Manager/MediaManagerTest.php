@@ -548,14 +548,13 @@ class MediaManagerTest extends TestCase
      *     0: string,
      *     1: string,
      *     2: string,
-     *     3: string
      * }>
      */
     public static function provideSpecialCharacterFileName()
     {
         return [
-            ['aäüßa', 'aaeuesa', ''],
-            ['aäüßa.mp4', 'aaeuesa', '.mp4'],
+            ['aäüßa', 'aaussa', ''],
+            ['aäüßa.mp4', 'aaussa', '.mp4'],
         ];
     }
 

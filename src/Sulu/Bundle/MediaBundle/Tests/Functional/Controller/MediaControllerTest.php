@@ -445,13 +445,13 @@ class MediaControllerTest extends SuluTestCase
         \ob_start();
         $this->client->request(
             'GET',
-            '/media/' . $media->getId() . '/download/wöchentlich.jpeg?inline=1'
+            '/media/' . $media->getId() . '/download/wöchentlich.jpeg?inline=1?locale=de'
         );
         \ob_end_clean();
 
         $this->assertHttpStatusCode(200, $this->client->getResponse());
         $this->assertEquals(
-            'inline; filename=woechentlich.jpeg; filename*=utf-8\'\'w%C3%B6chentlich.jpeg',
+            'inline; filename=wochentlich.jpeg; filename*=utf-8\'\'w%C3%B6chentlich.jpeg',
             \str_replace('"', '', $this->client->getResponse()->headers->get('Content-Disposition'))
         );
     }

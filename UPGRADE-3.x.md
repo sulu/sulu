@@ -825,7 +825,6 @@ The corresponding traits `TimestampableTrait` and `UserBlameTrait` have been upd
 - `sulu_page.teaser.provider_pool`: `sulu_admin.teaser_provider_pool`
 - `sulu_page.teaser.manager`: `sulu_admin.teaser_manager`
 - `sulu_page.teaser_controller`: `sulu_admin.teaser_controller`
-- `sulu_page.teaser_controller`: `sulu_admin.teaser_controller`
 - `sulu.content.path_cleaner`: `sulu_route.path_cleanup`
 
 ### Moved files for 3.0

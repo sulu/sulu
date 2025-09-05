@@ -41,7 +41,7 @@ class MediaStreamController
     public function __construct(
         protected DispositionTypeResolver $dispositionTypeResolver,
         protected MediaRepositoryInterface $mediaRepository,
-        protected PathCleanupInterface $pathCleaner,
+        protected PathCleanupInterface $pathCleanup,
         protected FormatManagerInterface $formatManager,
         protected FormatCacheInterface $formatCache,
         protected MediaManagerInterface $mediaManager,
@@ -255,7 +255,7 @@ class MediaStreamController
     private function cleanUpFileName($fileName, $locale, $extension)
     {
         $pathInfo = \pathinfo($fileName);
-        $cleanedFileName = $this->pathCleaner->cleanup($pathInfo['filename'], $locale);
+        $cleanedFileName = $this->pathCleanup->cleanup($pathInfo['filename'], $locale);
         if ($extension) {
             $cleanedFileName .= '.' . $extension;
         }
