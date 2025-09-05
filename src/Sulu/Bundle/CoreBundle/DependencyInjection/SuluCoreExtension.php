@@ -418,8 +418,6 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
         }
 
         $container->setParameter('sulu.content.structure.paths', $paths);
-
-        $loader->load('content.xml');
     }
 
     /**

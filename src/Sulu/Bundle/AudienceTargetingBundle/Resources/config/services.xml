@@ -112,13 +112,6 @@
             <argument type="service" id="translator"/>
             <tag name="sulu.audience_target_rule" alias="device"/>
         </service>
-        <!--CONTENT TYPES-->
-        <service id="sulu_audience_targeting.content.type.target_group_selection"
-                 class="Sulu\Bundle\AudienceTargetingBundle\Content\Types\TargetGroupSelection">
-            <tag name="sulu.content.type" alias="target_group_selection"/>
-            <tag name="sulu.content.export" format="1.2.xliff" translate="false" />
-            <argument type="service" id="sulu.repository.target_group"/>
-        </service>
         <!--TARGET GROUPS-->
         <service id="sulu_audience_targeting.target_group_evaluation_controller"
                  class="Sulu\Bundle\AudienceTargetingBundle\Controller\TargetGroupEvaluationController" public="true">
@@ -155,14 +148,6 @@
         >
             <argument type="service" id="sulu_audience_targeting.target_group_store"/>
             <tag name="sulu_content.block_visitor" />
-        </service>
-
-        <service
-            id="sulu_audience_targeting.deprecated_target_group_block_visitor"
-            class="Sulu\Bundle\AudienceTargetingBundle\Content\Types\Block\TargetGroupBlockVisitor"
-        >
-            <argument type="service" id="sulu_audience_targeting.target_group_store"/>
-            <tag name="sulu_content.deprecated_block_visitor" />
         </service>
 
         <!-- SmartContent -->

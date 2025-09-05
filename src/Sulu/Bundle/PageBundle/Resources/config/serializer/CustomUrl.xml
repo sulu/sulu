@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<serializer>
-    <class name="Sulu\Component\Webspace\CustomUrl" exclusion-policy="ALL">
-        <property name="url" type="string" expose="true" groups="frontend,Default"/>
-    </class>
-</serializer>
