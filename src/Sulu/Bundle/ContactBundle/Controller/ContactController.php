@@ -186,33 +186,8 @@ class ContactController extends AbstractRestController implements SecuredControl
     {
         $serializationGroups = [];
         $locale = $this->getLocale($request);
-        $excludedAccountId = $request->query->get('excludedAccountId');
 
-        if ('true' == $request->get('flat')) {
-            $list = $this->getList($request, $locale);
-        } else {
-            if (true == $request->get('bySystem')) {
-                $contacts = $this->getContactsByUserSystem();
-                $serializationGroups[] = 'select';
-            } elseif ($excludedAccountId) {
-                $contacts = $this->contactRepository->findByExcludedAccountId($excludedAccountId, $request->get('search'));
-                $serializationGroups[] = 'select';
-            } else {
-                $contacts = $this->contactRepository->findAll();
-                $serializationGroups = \array_merge(
-                    $serializationGroups,
-                    static::$contactSerializationGroups
-                );
-            }
-
-            // convert to api-contacts
-            $apiContacts = [];
-            foreach ($contacts as $contact) {
-                $apiContacts[] = $this->contactManager->getContact($contact, $locale);
-            }
-
-            $list = new CollectionRepresentation($apiContacts, ContactInterface::RESOURCE_KEY);
-        }
+        $list = $this->getList($request, $locale);
 
         $view = $this->view($list, 200);
 

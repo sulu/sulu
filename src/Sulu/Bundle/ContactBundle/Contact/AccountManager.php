@@ -35,7 +35,7 @@ use Sulu\Component\SmartContent\Orm\DataProviderRepositoryInterface;
  *
  * @extends AbstractContactManager<AccountInterface, AccountApi, AccountAddressEntity>
  */
-class AccountManager extends AbstractContactManager implements DataProviderRepositoryInterface
+class AccountManager extends AbstractContactManager
 {
     protected $addressEntity = AddressEntity::class;
 
@@ -287,34 +287,6 @@ class AccountManager extends AbstractContactManager implements DataProviderRepos
     }
 
     /**
-     * Returns all accounts.
-     *
-     * @param string $locale
-     * @param array<string, mixed>|null $filter
-     *
-     * @return array|null
-     */
-    public function findAll($locale, $filter = null)
-    {
-        if ($filter) {
-            $accountEntities = $this->accountRepository->findByFilter($filter);
-        } else {
-            $accountEntities = $this->accountRepository->findAll();
-        }
-
-        if (!empty($accountEntities)) {
-            $accounts = [];
-            foreach ($accountEntities as $account) {
-                $accounts[] = $this->getApiObject($account, $locale);
-            }
-
-            return $accounts;
-        }
-
-        return;
-    }
-
-    /**
      * Returns an api entity for an doctrine entity.
      *
      * @param AccountInterface $account
@@ -347,18 +319,6 @@ class AccountManager extends AbstractContactManager implements DataProviderRepos
         if ($entity->getBankAccounts()) {
             $this->deleteAllEntitiesOfCollection($entity->getBankAccounts());
         }
-    }
-
-    public function findByFilters($filters, $page, $pageSize, $limit, $locale, $options = [])
-    {
-        $entities = $this->accountRepository->findByFilters($filters, $page, $pageSize, $limit, $locale, $options);
-
-        return \array_map(
-            function($contact) use ($locale) {
-                return $this->getApiObject($contact, $locale);
-            },
-            $entities
-        );
     }
 
     /**

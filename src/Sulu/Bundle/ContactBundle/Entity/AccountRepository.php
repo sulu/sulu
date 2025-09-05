@@ -20,10 +20,8 @@ use Sulu\Component\SmartContent\Orm\DataProviderRepositoryTrait;
 /**
  * @extends NestedTreeRepository<AccountInterface>
  */
-class AccountRepository extends NestedTreeRepository implements DataProviderRepositoryInterface, AccountRepositoryInterface
+class AccountRepository extends NestedTreeRepository implements AccountRepositoryInterface
 {
-    use DataProviderRepositoryTrait;
-
     public function findById(int $id): ?AccountInterface
     {
         /** @var AccountInterface */
@@ -180,25 +178,6 @@ class AccountRepository extends NestedTreeRepository implements DataProviderRepo
         } catch (NoResultException $ex) {
             return [];
         }
-    }
-
-    public function findByFilter(array $filter): ?array
-    {
-        $qb = $this->createQueryBuilder('account');
-
-        foreach ($filter as $key => $value) {
-            switch ($key) {
-                case 'id':
-                    $qb->where('account.id IN (:ids)');
-                    $qb->setParameter('ids', $value);
-                    break;
-            }
-        }
-
-        $query = $qb->getQuery();
-
-        /** @var AccountInterface[] */
-        return $query->getResult();
     }
 
     public function findAllSelect(array $fields = []): array

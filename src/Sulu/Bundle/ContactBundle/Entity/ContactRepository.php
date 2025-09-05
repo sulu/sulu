@@ -14,18 +14,14 @@ namespace Sulu\Bundle\ContactBundle\Entity;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\QueryBuilder;
 use Sulu\Component\Persistence\Repository\ORM\EntityRepository;
-use Sulu\Component\SmartContent\Orm\DataProviderRepositoryInterface;
-use Sulu\Component\SmartContent\Orm\DataProviderRepositoryTrait;
 
 /**
  * Repository for the contacts, implementing some additional functions for querying objects.
  *
  * @extends EntityRepository<ContactInterface>
  */
-class ContactRepository extends EntityRepository implements DataProviderRepositoryInterface, ContactRepositoryInterface
+class ContactRepository extends EntityRepository implements ContactRepositoryInterface
 {
-    use DataProviderRepositoryTrait;
-
     public function findById($id)
     {
         // Create basic query

@@ -37,13 +37,6 @@ interface AccountRepositoryInterface extends RepositoryInterface
     public function findByIds(array $ids): array;
 
     /**
-     * @param array<string, mixed> $filter
-     *
-     * @return AccountInterface[]
-     */
-    public function findByFilter(array $filter): ?array;
-
-    /**
      * Find all accounts but only selects given fields.
      */
     public function findAllSelect(array $fields = []): array;

@@ -337,30 +337,23 @@ class AccountController extends AbstractRestController implements SecuredControl
     {
         $locale = $this->getUser()->getLocale();
 
-        if ('true' == $request->get('flat')) {
-            $fieldDescriptors = $this->getFieldDescriptors();
-            $listBuilder = $this->generateFlatListBuilder();
-            $listBuilder->addGroupBy($fieldDescriptors['id']);
-            $this->restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
-            $this->applyRequestParameters($request, $listBuilder);
+        $fieldDescriptors = $this->getFieldDescriptors();
+        $listBuilder = $this->generateFlatListBuilder();
+        $listBuilder->addGroupBy($fieldDescriptors['id']);
+        $this->restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
+        $this->applyRequestParameters($request, $listBuilder);
 
-            $listResponse = $listBuilder->execute();
-            $listResponse = $this->addLogos($listResponse, $locale);
+        $listResponse = $listBuilder->execute();
+        $listResponse = $this->addLogos($listResponse, $locale);
 
-            $list = new PaginatedRepresentation(
-                $listResponse,
-                AccountInterface::RESOURCE_KEY,
-                (int) $listBuilder->getCurrentPage(),
-                (int) $listBuilder->getLimit(),
-                (int) $listBuilder->count()
-            );
-            $view = $this->view($list, 200);
-        } else {
-            $filter = $this->retrieveFilter($request);
-            $accounts = $this->accountManager->findAll($locale, $filter);
-            $list = new CollectionRepresentation($accounts, AccountInterface::RESOURCE_KEY);
-            $view = $this->view($list, 200);
-        }
+        $list = new PaginatedRepresentation(
+            $listResponse,
+            AccountInterface::RESOURCE_KEY,
+            (int) $listBuilder->getCurrentPage(),
+            (int) $listBuilder->getLimit(),
+            (int) $listBuilder->count()
+        );
+        $view = $this->view($list, 200);
 
         $context = new Context();
         $context->setGroups(['fullAccount', 'partialContact', 'Default']);
