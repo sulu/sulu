@@ -5,13 +5,6 @@
     <services>
         <service id="sulu.content.slugger" class="Symfony\Component\String\Slugger\AsciiSlugger" />
 
-        <service id="sulu.content.path_cleaner.replacer_loader.file_locator" class="Symfony\Component\Config\FileLocator" synthetic="false">
-        </service>
-
-        <service id="sulu.content.path_cleaner.replacer_loader" class="Sulu\Bundle\CoreBundle\DataFixtures\ReplacerXmlLoader" synthetic="false">
-            <argument type="service" id="sulu.content.path_cleaner.replacer_loader.file_locator"/>
-        </service>
-
         <service id="sulu.content.path_cleaner" class="Sulu\Component\PHPCR\PathCleanup" public="true">
             <argument type="collection" key="$replacers">
             </argument>

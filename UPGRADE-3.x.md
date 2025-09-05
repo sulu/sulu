@@ -667,6 +667,8 @@ Removed classes / services:
 - `Sulu\Bundle\ContactBundle\Content\Types\ContactSelection`
 - `Sulu\Bundle\ContactBundle\Content\Types\SingleContactSelection`
 - `Sulu\Bundle\ContactBundle\Content\Types\SingleAccountSelection`
+- `Sulu\Bundle\CoreBundle\DataFixtures\ReplacerXmlLoader`
+- `Sulu\Bundle\CoreBundle\DependencyInjection\Compiler\ReplacersCompilerPass`
 - `Sulu\Bundle\PageBundle\Routing\DecoratedContentRouteProvider`
 - `Sulu\Bundle\PageBundle\Routing\DecoratedContentRouteProvider`
 - `Sulu\Bundle\WebsiteBundle\DependencyInjection\Compiler\RouteProviderCompilerPass`
