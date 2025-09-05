@@ -725,6 +725,7 @@ Removed deprecated functions and properties:
 - `Sulu\Bundle\ContactBundle\Entity\AccountRepository::findByFilter` (use custom Doctrine queryBuilder instead)
 - `Sulu\Bundle\ContactBundle\Entity\AccountRepositoryInterface::findByFilter`(use custom Doctrine queryBuilder instead)
 - `Sulu\Bundle\ContactBundle\Entity\ContactRepository::findByFilter` (use custom Doctrine queryBuilder instead)
+- `Sulu\Bundle\ContactBundle\Entity\ContactRepository::findByExcludedAccountId` (use custom Doctrine queryBuilder instead)
 - `Sulu\Bundle\CategoryBundle\Category\CategoryManager::find` (use Repository instead)
 - `Sulu\Bundle\CategoryBundle\Category\CategoryManager::findChildren` (use Repository instead)
 - `Sulu\Bundle\CategoryBundle\Category\CategoryManagerInterface::find` (use Repository instead)

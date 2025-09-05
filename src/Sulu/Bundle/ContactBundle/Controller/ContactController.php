@@ -215,9 +215,14 @@ class ContactController extends AbstractRestController implements SecuredControl
         $listBuilder->addGroupBy($fieldDescriptors['id']);
         $this->restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
 
-        $account = $request->get('accountId');
-        if ($account) {
-            $listBuilder->where($fieldDescriptors['accountId'], $account);
+        $accountId = $request->get('accountId');
+        if ($accountId) {
+            $listBuilder->where($fieldDescriptors['accountId'], $accountId);
+        }
+
+        $excludedAccountId = $request->query->get('excludedAccountId');
+        if ($excludedAccountId) {
+            $listBuilder->where($fieldDescriptors['accountId'], $excludedAccountId, $listBuilder::WHERE_COMPARATOR_UNEQUAL);
         }
 
         $listResponse = $this->prepareListResponse($listBuilder, $locale);
@@ -388,21 +393,6 @@ class ContactController extends AbstractRestController implements SecuredControl
         }
 
         return $this->handleView($view);
-    }
-
-    /**
-     * Returns a list of contacts which have a user in the sulu system.
-     */
-    protected function getContactsByUserSystem()
-    {
-        $users = $this->userRepository->findUserBySystem($this->suluSecuritySystem);
-        $contacts = [];
-
-        foreach ($users as $user) {
-            $contacts[] = $user->getContact();
-        }
-
-        return $contacts;
     }
 
     public function getSecurityContext()

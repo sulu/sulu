@@ -836,17 +836,17 @@ class ContactControllerTest extends SuluTestCase
 
         // dont use max here because the user for tests also is called max
 
-        $this->client->jsonRequest('GET', '/api/contacts?flat=false&search=Erika&excludedAccountId=' . $account1->getId());
+        $this->client->jsonRequest('GET', '/api/contacts?flat=true&search=Erika&excludedAccountId=' . $account1->getId());
         $this->assertHttpStatusCode(200, $this->client->getResponse());
         $response = \json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(0, \count($response->_embedded->contacts));
 
-        $this->client->jsonRequest('GET', '/api/contacts?flat=false&search=Erika&excludedAccountId=' . $account2->getId());
+        $this->client->jsonRequest('GET', '/api/contacts?flat=true&search=Erika&excludedAccountId=' . $account2->getId());
         $this->assertHttpStatusCode(200, $this->client->getResponse());
         $response = \json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(0, \count($response->_embedded->contacts));
 
-        $this->client->jsonRequest('GET', '/api/contacts?flat=false&search=Erika&excludedAccountId=' . $account3->getId());
+        $this->client->jsonRequest('GET', '/api/contacts?flat=true&search=Erika&excludedAccountId=' . $account3->getId());
         $this->assertHttpStatusCode(200, $this->client->getResponse());
         $response = \json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(1, \count($response->_embedded->contacts));

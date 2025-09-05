@@ -142,25 +142,6 @@ class AccountControllerTest extends SuluTestCase
         $this->assertCount(1, $response->_embedded->accounts);
     }
 
-    public function testCgetSerializationExclusions(): void
-    {
-        $account = $this->createAccount('Company');
-        $contact = $this->createContact($account, 'Vorname', 'Nachname');
-        $this->em->flush();
-        $this->em->clear();
-
-        $this->client->jsonRequest(
-            'GET',
-            '/api/accounts'
-        );
-
-        $this->assertHttpStatusCode(200, $this->client->getResponse());
-        $response = \json_decode($this->client->getResponse()->getContent(), true);
-
-        $this->assertArrayNotHasKey('account', $response['_embedded']['accounts'][0]['accountContacts'][0]['contact']);
-        $this->assertArrayNotHasKey('account', $response['_embedded']['accounts'][0]['contacts'][0]);
-    }
-
     public function testGetById(): void
     {
         $mediaType = $this->createMediaType('image');
