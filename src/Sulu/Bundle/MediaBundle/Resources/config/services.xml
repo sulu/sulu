@@ -295,49 +295,6 @@
             <argument type="service" id="logger" on-invalid="null"/>
         </service>
 
-        <service id="sulu_media.type.collection_selection" class="Sulu\Bundle\MediaBundle\Content\Types\CollectionSelection">
-            <argument type="service" id="sulu_media.collection_manager"/>
-            <argument type="service" id="sulu_media.reference_store.collection"/>
-
-            <tag name="sulu.content.type" alias="collection_selection"/>
-            <tag name="sulu.content.export" format="1.2.xliff" translate="false" />
-        </service>
-
-        <service id="sulu_media.type.single_collection_selection" class="Sulu\Bundle\MediaBundle\Content\Types\SingleCollectionSelection">
-            <argument type="service" id="sulu_media.collection_manager"/>
-            <argument type="service" id="sulu_media.reference_store.collection"/>
-
-            <tag name="sulu.content.type" alias="single_collection_selection"/>
-            <tag name="sulu.content.export" format="1.2.xliff" translate="false" />
-        </service>
-
-        <service id="sulu_media.type.media_selection" class="Sulu\Bundle\MediaBundle\Content\Types\MediaSelectionContentType">
-            <argument type="service" id="sulu_media.media_manager"/>
-            <argument type="service" id="sulu_media.reference_store.media"/>
-            <argument type="service" id="sulu_core.webspace.request_analyzer"/>
-            <argument>%sulu_security.permissions%</argument>
-
-            <tag name="sulu.content.type" alias="media_selection"/>
-            <tag name="sulu.content.export" format="1.2.xliff" translate="false" />
-        </service>
-
-        <service id="sulu_media.type.single_media_selection" class="Sulu\Bundle\MediaBundle\Content\Types\SingleMediaSelection">
-            <argument type="service" id="sulu_media.media_manager"/>
-            <argument type="service" id="sulu_media.reference_store.media"/>
-            <argument type="service" id="sulu_core.webspace.request_analyzer"/>
-            <argument type="service" id="sulu_security.security_checker" on-invalid="null"/>
-
-            <tag name="sulu.content.type" alias="single_media_selection"/>
-            <tag name="sulu.content.export" format="1.2.xliff" translate="false" />
-        </service>
-
-        <service id="sulu_media.type.image_map" class="Sulu\Bundle\MediaBundle\Content\Types\ImageMapContentType">
-            <argument type="service" id="sulu.content.type_manager"/>
-
-            <tag name="sulu.content.type" alias="image_map"/>
-            <tag name="sulu.content.export" format="1.2.xliff" translate="false" />
-        </service>
-
         <service id="sulu_media.collection_manager" class="Sulu\Bundle\MediaBundle\Collection\Manager\CollectionManager" public="true">
             <argument type="service" id="sulu_media.collection_repository" />
             <argument type="service" id="sulu.repository.media" />
