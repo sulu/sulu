@@ -28,7 +28,6 @@ use Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
-use Sulu\Component\SmartContent\Orm\DataProviderRepositoryInterface;
 
 /**
  * This Manager handles Account functionality.

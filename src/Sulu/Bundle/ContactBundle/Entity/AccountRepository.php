@@ -14,8 +14,6 @@ namespace Sulu\Bundle\ContactBundle\Entity;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\QueryBuilder;
 use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
-use Sulu\Component\SmartContent\Orm\DataProviderRepositoryInterface;
-use Sulu\Component\SmartContent\Orm\DataProviderRepositoryTrait;
 
 /**
  * @extends NestedTreeRepository<AccountInterface>
