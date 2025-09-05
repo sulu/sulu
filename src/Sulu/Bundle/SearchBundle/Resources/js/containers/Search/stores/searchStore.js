@@ -39,12 +39,12 @@ class SearchStore {
     }
 
     @action search(query: ?string, index: ?string) {
+        this.resetResults();
         this.query = query;
         this.indexName = index;
     }
 
     @action resetResults() {
-        this.result.splice(0, this.result.length);
         this.page = 1;
         this.pages = undefined;
         this.total = undefined;
