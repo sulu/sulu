@@ -25,6 +25,7 @@ use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Page\Domain\Model\Page;
 use Sulu\Page\Domain\Model\PageDimensionContent;
 use Sulu\Page\Domain\Model\PageDimensionContentInterface;
+use Sulu\Page\Domain\Model\PageInterface;
 
 /**
  * @internal Modifying or depending on this service may result in unexpected behavior and is not supported.
@@ -52,7 +53,7 @@ class PageReferenceRefresher implements ReferenceRefresherInterface
 
     public static function getResourceKey(): string
     {
-        return Page::RESOURCE_KEY;
+        return PageInterface::RESOURCE_KEY;
     }
 
     public function refresh(?array $filter = null): \Generator
@@ -104,7 +105,7 @@ class PageReferenceRefresher implements ReferenceRefresherInterface
             referenceResourceId: (string) $pageDimensionContent->getResourceId(),
             referenceLocale: $pageDimensionContent->getLocale() ?? '',
             referenceTitle: $pageDimensionContent->getTitle() ?? '',
-            referenceContext: DimensionContentInterface::STAGE_LIVE === $pageDimensionContent->getStage() ? 'website' : 'admin',
+            referenceContext: $pageDimensionContent->getStage(),
             referenceRouterAttributes: [
                 'locale' => $pageDimensionContent->getLocale() ?? '',
                 'webspace' => $pageDimensionContent->getResource()->getWebspaceKey(),

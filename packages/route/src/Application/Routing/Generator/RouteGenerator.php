@@ -33,7 +33,6 @@ final class RouteGenerator implements RouteGeneratorInterface
         if (null === $site) {
             $requestSite = $this->requestContext->getParameter(RequestAttributeEnum::SITE->value);
 
-            $requestSite = 'sulu-io'; // TODO remove after testing
             if (!\is_string($requestSite)) {
                 $requestSite = $this->requestStack->getCurrentRequest()?->attributes->get(RequestAttributeEnum::SITE->value);
             }

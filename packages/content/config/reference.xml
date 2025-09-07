@@ -7,6 +7,7 @@
         <service id="sulu_content.reference_doctrine_event_listener"
                  class="Sulu\Content\Infrastructure\Sulu\Reference\ReferenceDoctrineEventListener">
             <argument type="service" id="sulu_message_bus"/>
+            <argument type="service" id="sulu_reference.reference_repository"/>
 
             <tag name="doctrine.event_listener" event="prePersist" lazy="true" method="prePersist"/>
             <tag name="doctrine.event_listener" event="preUpdate" lazy="true" method="preUpdate"/>

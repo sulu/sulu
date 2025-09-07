@@ -17,6 +17,7 @@ use Doctrine\ORM\Query\Expr\Join;
 use Sulu\Article\Domain\Model\Article;
 use Sulu\Article\Domain\Model\ArticleDimensionContent;
 use Sulu\Article\Domain\Model\ArticleDimensionContentInterface;
+use Sulu\Article\Domain\Model\ArticleInterface;
 use Sulu\Bundle\ReferenceBundle\Application\Collector\ReferenceCollector;
 use Sulu\Bundle\ReferenceBundle\Application\Refresh\ReferenceRefresherInterface;
 use Sulu\Bundle\ReferenceBundle\Domain\Repository\ReferenceRepositoryInterface;
@@ -52,7 +53,7 @@ class ArticleReferenceRefresher implements ReferenceRefresherInterface
 
     public static function getResourceKey(): string
     {
-        return Article::RESOURCE_KEY;
+        return ArticleInterface::RESOURCE_KEY;
     }
 
     public function refresh(?array $filter = null): \Generator
@@ -104,7 +105,7 @@ class ArticleReferenceRefresher implements ReferenceRefresherInterface
             referenceResourceId: (string) $articleDimensionContent->getResourceId(),
             referenceLocale: $articleDimensionContent->getLocale() ?? '',
             referenceTitle: $articleDimensionContent->getTitle() ?? '',
-            referenceContext: DimensionContentInterface::STAGE_LIVE === $articleDimensionContent->getStage() ? 'website' : 'admin',
+            referenceContext: $articleDimensionContent->getStage(),
             referenceRouterAttributes: [
                 'locale' => $articleDimensionContent->getLocale() ?? '',
             ]

@@ -13,6 +13,7 @@ namespace Sulu\Content\Tests\Application\ExampleTestBundle\PropertyResolver;
 
 use Sulu\Content\Application\ContentResolver\Value\ContentView;
 use Sulu\Content\Application\PropertyResolver\Resolver\PropertyResolverInterface;
+use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\Example;
 use Sulu\Content\Tests\Application\ExampleTestBundle\ResourceLoader\ExampleResourceLoader;
 
 class ExampleSelectionPropertyResolver implements PropertyResolverInterface
@@ -38,9 +39,10 @@ class ExampleSelectionPropertyResolver implements PropertyResolverInterface
         /** @var string[] $ids */
         $ids = $data;
 
-        return ContentView::createResolvables(
+        return ContentView::createResolvablesWithReferences(
             ids: $ids,
             resourceLoaderKey: $resourceLoaderKey,
+            resourceKey: Example::RESOURCE_KEY,
             view: [
                 'ids' => $ids,
                 ...$params,

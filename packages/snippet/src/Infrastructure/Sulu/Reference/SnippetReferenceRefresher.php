@@ -25,6 +25,7 @@ use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Snippet\Domain\Model\Snippet;
 use Sulu\Snippet\Domain\Model\SnippetDimensionContent;
 use Sulu\Snippet\Domain\Model\SnippetDimensionContentInterface;
+use Sulu\Snippet\Domain\Model\SnippetInterface;
 
 /**
  * @internal Modifying or depending on this service may result in unexpected behavior and is not supported.
@@ -52,7 +53,7 @@ class SnippetReferenceRefresher implements ReferenceRefresherInterface
 
     public static function getResourceKey(): string
     {
-        return Snippet::RESOURCE_KEY;
+        return SnippetInterface::RESOURCE_KEY;
     }
 
     public function refresh(?array $filter = null): \Generator
@@ -104,7 +105,7 @@ class SnippetReferenceRefresher implements ReferenceRefresherInterface
             referenceResourceId: (string) $snippetDimensionContent->getResource()->getId(),
             referenceLocale: $snippetDimensionContent->getLocale() ?? '',
             referenceTitle: $snippetDimensionContent->getTitle() ?? '',
-            referenceContext: DimensionContentInterface::STAGE_LIVE === $snippetDimensionContent->getStage() ? 'website' : 'admin',
+            referenceContext: $snippetDimensionContent->getStage(),
             referenceRouterAttributes: [
                 'locale' => $snippetDimensionContent->getLocale() ?? '',
             ]

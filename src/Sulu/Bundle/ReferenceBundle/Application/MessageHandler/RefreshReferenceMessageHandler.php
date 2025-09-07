@@ -14,7 +14,6 @@ namespace Sulu\Bundle\ReferenceBundle\Application\MessageHandler;
 use Sulu\Bundle\ReferenceBundle\Application\Message\RefreshReferenceMessage;
 use Sulu\Bundle\ReferenceBundle\Application\Refresh\ReferenceRefresherInterface;
 use Sulu\Bundle\ReferenceBundle\Domain\Repository\ReferenceRepositoryInterface;
-use Sulu\Content\Domain\Model\DimensionContentInterface;
 
 class RefreshReferenceMessageHandler
 {
@@ -40,21 +39,15 @@ class RefreshReferenceMessageHandler
         }
 
         $counter = 0;
-        $resourceIds = [];
-        $now = new \DateTimeImmutable();
         foreach ($referenceRefresher->refresh($message->getFilter()) as $object) {
             if (0 === (++$counter % 100)) {
                 $this->referenceRepository->flush();
             }
-            if ($object instanceof DimensionContentInterface) {
-                $resourceIds[] = (string) $object->getResource()->getId();
-            }
         }
 
-        $this->referenceRepository->flush();
-        $this->referenceRepository->removeBy([
-            'resourceIds' => $resourceIds,
-            'changedOlderThan' => $now
-        ]);
+        // Only flush if there are remaining unflushed changes
+        if (0 !== ($counter % 100)) {
+            $this->referenceRepository->flush();
+        }
     }
 }

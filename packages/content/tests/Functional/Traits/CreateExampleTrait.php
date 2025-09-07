@@ -66,7 +66,7 @@ trait CreateExampleTrait
         $localizedDimensionContent->setWorkflowPlace($data['workflowPlace'] ?? null);
         $localizedDimensionContent->setWorkflowPublished($data['workflowPublished'] ?? null);
 
-        $templateKey = $data['templateKey'] ?? null;
+        $templateKey = $data['templateKey'] ?? 'default';
         if ($templateKey) {
             $localizedDimensionContent->setTemplateKey($templateKey);
         }

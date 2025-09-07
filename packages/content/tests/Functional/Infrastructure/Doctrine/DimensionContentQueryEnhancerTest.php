@@ -381,22 +381,22 @@ class DimensionContentQueryEnhancerTest extends SuluTestCase
         $example = static::createExample();
         $example2 = static::createExample();
         $example3 = static::createExample();
-        static::createExampleContent($example, ['title' => 'Example A', 'templateKey' => 'a']);
-        static::createExampleContent($example2, ['title' => 'Example B', 'templateKey' => 'b']);
-        static::createExampleContent($example3, ['title' => 'Example C', 'templateKey' => 'c']);
+        static::createExampleContent($example, ['title' => 'Example A', 'templateKey' => 'default']);
+        static::createExampleContent($example2, ['title' => 'Example B', 'templateKey' => 'default-example-selection']);
+        static::createExampleContent($example3, ['title' => 'Example C', 'templateKey' => 'default-example-smart-content']);
         static::getEntityManager()->flush();
         static::getEntityManager()->clear();
 
         $this->assertCount(2, \iterator_to_array($this->exampleRepository->findBy([
             'locale' => 'en',
             'stage' => 'draft',
-            'templateKeys' => ['a', 'c'],
+            'templateKeys' => ['default', 'default-example-smart-content'],
         ])));
 
         $this->assertSame(2, $this->exampleRepository->countBy([
             'locale' => 'en',
             'stage' => 'draft',
-            'templateKeys' => ['a', 'c'],
+            'templateKeys' => ['default', 'default-example-smart-content'],
         ]));
     }
 
@@ -407,9 +407,9 @@ class DimensionContentQueryEnhancerTest extends SuluTestCase
         $example = static::createExample();
         $example2 = static::createExample();
         $example3 = static::createExample();
-        static::createExampleContent($example, ['title' => 'Example A', 'templateKey' => 'a']);
-        static::createExampleContent($example2, ['title' => 'Example B', 'templateKey' => 'b']);
-        static::createExampleContent($example3, ['title' => 'Example C', 'templateKey' => 'c']);
+        static::createExampleContent($example, ['title' => 'Example A', 'templateKey' => 'default']);
+        static::createExampleContent($example2, ['title' => 'Example B', 'templateKey' => 'default-example-selection']);
+        static::createExampleContent($example3, ['title' => 'Example C', 'templateKey' => 'default-example-smart-content']);
         static::getEntityManager()->flush();
         static::getEntityManager()->clear();
 
@@ -436,9 +436,9 @@ class DimensionContentQueryEnhancerTest extends SuluTestCase
         $example = static::createExample();
         $example2 = static::createExample();
         $example3 = static::createExample();
-        static::createExampleContent($example, ['templateData' => ['title' => 'Example A'], 'templateKey' => 'a']);
-        static::createExampleContent($example2, ['templateData' => ['title' => 'Example B'], 'templateKey' => 'b']);
-        static::createExampleContent($example3, ['templateData' => ['title' => 'Example C'], 'templateKey' => 'c']);
+        static::createExampleContent($example, ['templateData' => ['title' => 'Example A'], 'templateKey' => 'default']);
+        static::createExampleContent($example2, ['templateData' => ['title' => 'Example B'], 'templateKey' => 'default-example-selection']);
+        static::createExampleContent($example3, ['templateData' => ['title' => 'Example C'], 'templateKey' => 'default-example-smart-content']);
         static::getEntityManager()->flush();
         static::getEntityManager()->clear();
 

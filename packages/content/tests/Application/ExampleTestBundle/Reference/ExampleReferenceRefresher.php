@@ -99,7 +99,7 @@ class ExampleReferenceRefresher implements ReferenceRefresherInterface
             referenceResourceId: (string) $exampleDimensionContent->getResourceId(),
             referenceLocale: $exampleDimensionContent->getLocale() ?? '',
             referenceTitle: $exampleDimensionContent->getTitle() ?? '',
-            referenceContext: DimensionContentInterface::STAGE_LIVE === $exampleDimensionContent->getStage() ? 'website' : 'admin',
+            referenceContext: $exampleDimensionContent->getStage(),
             referenceRouterAttributes: [
                 'locale' => $exampleDimensionContent->getLocale() ?? '',
             ]
