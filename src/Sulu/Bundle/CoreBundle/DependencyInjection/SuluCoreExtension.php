@@ -23,7 +23,6 @@ use Sulu\Component\Rest\Exception\MissingParameterException;
 use Sulu\Component\Rest\Exception\ReferencingResourcesFoundExceptionInterface;
 use Sulu\Component\Rest\Exception\RemoveDependantResourcesFoundExceptionInterface;
 use Sulu\Component\Rest\ListBuilder\Filter\InvalidFilterTypeOptionsException;
-use Symfony\Bundle\TwigBundle\Controller\ExceptionController;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -133,13 +132,6 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
                     ],
                 ]
             );
-        }
-
-        if ($container->hasExtension('twig') && \class_exists(ExceptionController::class)) {
-            // Disable the deprecated exception_controller to support the newer fos_rest bundle
-            $container->prependExtensionConfig('twig', [
-                'exception_controller' => null,
-            ]);
         }
 
         if ($container->hasExtension('handcraftedinthealps_rest_routing')) {

@@ -688,6 +688,8 @@ Removed classes / services:
 - `Sulu\Bundle\WebsiteBundle\Twig\Content\ContentTwigExtensionInterface`
 - `Sulu\Bundle\WebsiteBundle\Twig\Content\MemoizedContentTwigExtensionInterface`
 - `Sulu\Bundle\WebsiteBundle\Twig\Content\ParentNotFoundException`
+- `Sulu\Bundle\WebsiteBundle\Resolver\ParameterResolver`
+- `Sulu\Bundle\WebsiteBundle\Resolver\ParameterResolverInterface`
 - `Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\SingleSelectionPropertyMetadataMapper` (moved and internal)
 - `Sulu\Bundle\PreviewBundle\Preview\Object\PreviewObjectProviderInterface` (use new `PreviewDefaultsProviderInterface` instead)
 - `Sulu\Bundle\PreviewBundle\Preview\Object\PreviewObjectProviderRegistryInterface` (internal)
