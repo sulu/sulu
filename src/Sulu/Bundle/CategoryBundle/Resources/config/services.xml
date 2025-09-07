@@ -22,22 +22,8 @@
             <argument type="service" id="sulu_activity.domain_event_collector"/>
             <argument type="service" id="sulu_trash.trash_manager" on-invalid="null"/>
         </service>
+
         <service id="Sulu\Bundle\CategoryBundle\Category\CategoryManagerInterface" alias="sulu_category.category_manager"/>
-
-        <service id="sulu_category.content.type.category_selection" class="Sulu\Bundle\CategoryBundle\Content\Types\CategorySelection">
-            <tag name="sulu.content.type" alias="category_selection"/>
-            <tag name="sulu.content.export" format="1.2.xliff" translate="false" />
-            <argument type="service" id="sulu_category.category_manager"/>
-        </service>
-
-        <service
-            id="sulu_category.content.type.single_category_selection"
-            class="Sulu\Bundle\CategoryBundle\Content\Types\SingleCategorySelection"
-        >
-            <tag name="sulu.content.type" alias="single_category_selection"/>
-            <tag name="sulu.content.export" format="1.2.xliff" translate="false" />
-            <argument type="service" id="sulu_category.category_manager"/>
-        </service>
 
         <service id="sulu_category.category_request_handler" class="Sulu\Component\Category\Request\CategoryRequestHandler">
             <argument type="service" id="request_stack"/>
