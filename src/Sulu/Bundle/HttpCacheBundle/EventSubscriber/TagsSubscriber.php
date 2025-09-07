@@ -14,14 +14,16 @@ namespace Sulu\Bundle\HttpCacheBundle\EventSubscriber;
 use FOS\HttpCacheBundle\Http\SymfonyResponseTagger;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStorePoolInterface;
-use Sulu\Component\Content\Compat\StructureInterface;
+use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Uid\Uuid;
 
 /**
- * Adds tags to the Symfony response tagger from all available reference stores.
+ * @internal This class should not be extended or initialized by any application outside of sulu.
+ *           You can create your own response listener to change the behaviour or use Symfony
+ *           dependency injection container to replace this service.
  */
 class TagsSubscriber implements EventSubscriberInterface
 {
@@ -39,15 +41,12 @@ class TagsSubscriber implements EventSubscriberInterface
         ];
     }
 
-    /**
-     * Adds tags from the reference store to the response tagger.
-     */
     public function addTags(): void
     {
         $tags = $this->getTags();
-        $currentStructureUuid = $this->getCurrentStructureUuid();
-        if ($currentStructureUuid && !\in_array($currentStructureUuid, $tags)) {
-            $tags[] = $currentStructureUuid;
+        $objectTag = $this->getObjectTag();
+        if ($objectTag && !\in_array($objectTag, $tags)) {
+            $tags[] = $objectTag;
         }
 
         if (\count($tags) <= 0) {
@@ -57,9 +56,6 @@ class TagsSubscriber implements EventSubscriberInterface
         $this->symfonyResponseTagger->addTags($tags);
     }
 
-    /**
-     * Merges tags from all registered stores.
-     */
     private function getTags(): array
     {
         $tags = [];
@@ -70,9 +66,6 @@ class TagsSubscriber implements EventSubscriberInterface
         return $tags;
     }
 
-    /**
-     * Returns tags from given store.
-     */
     private function getTagsFromStore($alias, ReferenceStoreInterface $referenceStore): array
     {
         $tags = [];
@@ -88,21 +81,23 @@ class TagsSubscriber implements EventSubscriberInterface
         return $tags;
     }
 
-    /**
-     * Returns uuid of current structure.
-     */
-    private function getCurrentStructureUuid(): ?string
+    private function getObjectTag(): ?string
     {
         $request = $this->requestStack->getCurrentRequest();
         if (!$request) {
             return null;
         }
 
-        $structure = $request->get('structure');
-        if (!$structure || !$structure instanceof StructureInterface) {
+        $object = $request->attributes->get('object');
+        if (!$object instanceof DimensionContentInterface) {
             return null;
         }
 
-        return $structure->getUuid();
+        $objectTag = (string) $object->getResource()->getId();
+        if (Uuid::isValid($objectTag)) {
+            return $objectTag;
+        }
+
+        return $object::getResourceKey() . '-' . $objectTag;
     }
 }

@@ -19,7 +19,8 @@ use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\HttpCacheBundle\EventSubscriber\TagsSubscriber;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStorePoolInterface;
-use Sulu\Component\Content\Compat\StructureInterface;
+use Sulu\Content\Domain\Model\ContentRichEntityInterface;
+use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Uid\Uuid;
@@ -44,24 +45,24 @@ class TagsSubscriberTest extends TestCase
     private $symfonyResponseTagger;
 
     /**
-     * @var ObjectProphecy<Request>
+     * @var Request
      */
     private $request;
 
     /**
-     * @var ObjectProphecy<RequestStack>
+     * @var RequestStack
      */
     private $requestStack;
+
+    /**
+     * @var ObjectProphecy<DimensionContentInterface>
+     */
+    private $dimensionContent; // @phpstan-ignore-line missingType.generics
 
     /**
      * @var array<ObjectProphecy<ReferenceStoreInterface>>
      */
     private $referenceStores = [];
-
-    /**
-     * @var ObjectProphecy<StructureInterface>
-     */
-    private $structure;
 
     /**
      * @var string
@@ -76,13 +77,13 @@ class TagsSubscriberTest extends TestCase
     /**
      * @var string
      */
-    private $currentStructureUuid;
+    private $contentId;
 
     public function setUp(): void
     {
         $this->uuid1 = Uuid::v7()->toRfc4122();
         $this->uuid2 = Uuid::v7()->toRfc4122();
-        $this->currentStructureUuid = Uuid::v7()->toRfc4122();
+        $this->contentId = Uuid::v7()->toRfc4122();
 
         $testReferenceStore = $this->prophesize(ReferenceStoreInterface::class);
         $testReferenceStore->getAll()->willReturn(['1', '2']);
@@ -97,30 +98,32 @@ class TagsSubscriberTest extends TestCase
 
         $this->symfonyResponseTagger = $this->prophesize(SymfonyResponseTagger::class);
 
-        $this->structure = $this->prophesize(StructureInterface::class);
-        $this->structure->getUuid()->willReturn($this->currentStructureUuid);
+        $this->dimensionContent = $this->prophesize(DimensionContentInterface::class);
+        $contentRichEntityInterface = $this->prophesize(ContentRichEntityInterface::class);
+        $this->dimensionContent->getResource()->willReturn($contentRichEntityInterface);
+        $contentRichEntityInterface->getId()->willReturn($this->contentId);
 
-        $this->request = $this->prophesize(Request::class);
-        $this->request->get('structure')->willReturn($this->structure->reveal());
-
-        $this->requestStack = $this->prophesize(RequestStack::class);
-        $this->requestStack->getCurrentRequest()->willReturn($this->request);
+        $this->request = new Request();
+        $this->requestStack = new RequestStack();
+        $this->requestStack->push($this->request);
 
         $this->tagsSubscriber = new TagsSubscriber(
             $this->referenceStorePool->reveal(),
             $this->symfonyResponseTagger->reveal(),
-            $this->requestStack->reveal()
+            $this->requestStack,
         );
     }
 
     public function testGet(): void
     {
+        $this->request->attributes->set('object', $this->dimensionContent->reveal());
+
         $expectedTags = [
             'test-1',
             'test-2',
             $this->uuid1,
             $this->uuid2,
-            $this->currentStructureUuid,
+            $this->contentId,
         ];
         $this->symfonyResponseTagger->addTags($expectedTags)->shouldBeCalled();
         $this->tagsSubscriber->addTags();
@@ -128,11 +131,13 @@ class TagsSubscriberTest extends TestCase
 
     public function testGetEmptyReferenceStore(): void
     {
+        $this->request->attributes->set('object', $this->dimensionContent->reveal());
+
         $this->referenceStores['test_uuid']->getAll()->willReturn([]);
         $expectedTags = [
             'test-1',
             'test-2',
-            $this->currentStructureUuid,
+            $this->contentId,
         ];
         $this->symfonyResponseTagger->addTags($expectedTags)->shouldBeCalled();
         $this->tagsSubscriber->addTags();
@@ -140,7 +145,6 @@ class TagsSubscriberTest extends TestCase
 
     public function testGetWithoutStructure(): void
     {
-        $this->request->get('structure')->willReturn(null);
         $expectedTags = [
             'test-1',
             'test-2',
@@ -153,7 +157,7 @@ class TagsSubscriberTest extends TestCase
 
     public function testGetWithWrongStructure(): void
     {
-        $this->request->get('structure')->willReturn(\stdClass::class);
+        $this->request->attributes->set('object', new \stdClass());
         $expectedTags = [
             'test-1',
             'test-2',
@@ -166,7 +170,7 @@ class TagsSubscriberTest extends TestCase
 
     public function testGetWithoutRequest(): void
     {
-        $this->requestStack->getCurrentRequest()->willReturn(null);
+        $this->requestStack->pop();
         $expectedTags = [
             'test-1',
             'test-2',
@@ -179,7 +183,7 @@ class TagsSubscriberTest extends TestCase
 
     public function testEmptyReferenceStore(): void
     {
-        $this->request->get('structure')->willReturn(null);
+        $this->request->attributes->set('object', null);
         $this->referenceStores['test_uuid']->getAll()->willReturn([]);
         $this->referenceStores['test']->getAll()->willReturn([]);
         $this->symfonyResponseTagger->addTags(Argument::any())->shouldNotBeCalled();
