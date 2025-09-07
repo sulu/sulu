@@ -15,6 +15,7 @@ use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRepositoryInterface;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRuleInterface;
 use Sulu\Bundle\AudienceTargetingBundle\TargetGroup\TargetGroupEvaluatorInterface;
 use Sulu\Bundle\AudienceTargetingBundle\TargetGroup\TargetGroupStoreInterface;
+use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Cookie;
@@ -23,6 +24,7 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
+use Symfony\Component\Uid\Uuid;
 use Twig\Environment;
 
 class TargetGroupSubscriber implements EventSubscriberInterface
@@ -251,7 +253,7 @@ class TargetGroupSubscriber implements EventSubscriberInterface
             'urlHeader' => $this->urlHeader,
             'refererHeader' => $this->referrerHeader,
             'uuidHeader' => $this->uuidHeader,
-            'uuid' => $request->attributes->has('structure') ? $request->attributes->get('structure')->getUuid() : null,
+            'uuid' => $this->getUuid($request),
         ]);
 
         $response->setContent(\str_replace(
@@ -259,5 +261,20 @@ class TargetGroupSubscriber implements EventSubscriberInterface
             $script . '</body>',
             $response->getContent()
         ));
+    }
+
+    private function getUuid(Request $request): ?string
+    {
+        $object = $request->attributes->get('object');
+        if (!$object instanceof DimensionContentInterface) {
+            return null;
+        }
+
+        $objectTag = (string) $object->getResource()->getId();
+        if (Uuid::isValid($objectTag)) {
+            return $objectTag;
+        }
+
+        return $object::getResourceKey() . '-' . $objectTag;
     }
 }

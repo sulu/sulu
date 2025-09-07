@@ -23,7 +23,9 @@ use Sulu\Bundle\AudienceTargetingBundle\EventListener\TargetGroupSubscriber;
 use Sulu\Bundle\AudienceTargetingBundle\TargetGroup\TargetGroupEvaluatorInterface;
 use Sulu\Bundle\AudienceTargetingBundle\TargetGroup\TargetGroupStoreInterface;
 use Sulu\Bundle\TestBundle\Testing\SetGetPrivatePropertyTrait;
-use Sulu\Component\Content\Compat\Structure\StructureBridge;
+use Sulu\Content\Domain\Model\ContentRichEntityInterface;
+use Sulu\Content\Domain\Model\DimensionContentInterface;
+use Sulu\Content\Domain\Model\DimensionContentTrait;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -424,9 +426,30 @@ class TargetGroupSubscriberTest extends TestCase
         );
         $request = new Request();
         if (null !== $uuid) {
-            $structureBridge = $this->prophesize(StructureBridge::class);
-            $structureBridge->getUuid()->willReturn($uuid);
-            $request->attributes->set('structure', $structureBridge->reveal());
+            $resource = $this->prophesize(ContentRichEntityInterface::class);
+            $resource->getId()->willReturn($uuid);
+
+            $object = new class($resource->reveal()) implements DimensionContentInterface {
+                use DimensionContentTrait;
+
+                public function __construct(private ContentRichEntityInterface $resource) // @phpstan-ignore-line missingType.generics
+                {
+                }
+
+                public static function getResourceKey(): string
+                {
+                    return 'examples';
+                }
+
+                /**
+                 * @return ContentRichEntityInterface<self>
+                 */
+                public function getResource(): ContentRichEntityInterface
+                {
+                    return $this->resource;
+                }
+            };
+            $request->attributes->set('object', $object);
         }
 
         $response = new Response('<body></body>');
@@ -459,9 +482,9 @@ class TargetGroupSubscriberTest extends TestCase
     public static function provideAddTargetGroupHitScript(): iterable
     {
         return [
-            ['/_target_group_hit', 'X-Forwarded-URL', 'X-Fowarded-Referer', 'X-Forwarded-UUID', 'some-uuid'],
+            ['/_target_group_hit', 'X-Forwarded-URL', 'X-Fowarded-Referer', 'X-Forwarded-UUID', '01992532-8b98-7f62-9ed6-6f6ece28d1a2'],
             ['/_target_group_hit', 'X-Forwarded-URL', 'X-Fowarded-Referer', 'X-Forwarded-UUID', null],
-            ['/_group_hit', 'X-Other-URL', 'X-Other-Referer', 'X-Uuid', 'some-other-uuid'],
+            ['/_group_hit', 'X-Other-URL', 'X-Other-Referer', 'X-Uuid', '01992532-aa75-7840-812b-608567aabac2'],
         ];
     }
 
