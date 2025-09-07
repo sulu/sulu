@@ -19,12 +19,6 @@
         </service>
         <service id="Sulu\Bundle\TagBundle\Tag\TagManagerInterface" alias="sulu_tag.tag_manager"/>
 
-        <service id="sulu_tag.content.type.tag_selection" class="Sulu\Bundle\TagBundle\Content\Types\TagSelection">
-            <tag name="sulu.content.type" alias="tag_selection"/>
-            <tag name="sulu.content.export" format="1.2.xliff" translate="false" />
-            <argument type="service" id="sulu_tag.tag_manager"/>
-        </service>
-
         <service id="sulu_tag.tag_request_handler" class="Sulu\Component\Tag\Request\TagRequestHandler">
             <argument type="service" id="request_stack"/>
         </service>

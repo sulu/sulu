@@ -669,6 +669,7 @@ Removed classes / services:
 - `Sulu\Bundle\ContactBundle\Content\Types\SingleAccountSelection`
 - `Sulu\Bundle\PageBundle\Routing\DecoratedContentRouteProvider`
 - `Sulu\Bundle\PageBundle\Routing\DecoratedContentRouteProvider`
+- `Sulu\Bundle\TagBundle\Content\Types\TagSelection`
 - `Sulu\Bundle\WebsiteBundle\DependencyInjection\Compiler\RouteProviderCompilerPass`
 - `Sulu\Bundle\WebsiteBundle\Twig\Navigation\MemoizedNavigationTwigExtension`
 - `Sulu\Bundle\WebsiteBundle\Twig\Navigation\NavigationTwigExtension`
