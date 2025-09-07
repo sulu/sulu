@@ -34,8 +34,6 @@ use Sulu\Snippet\Infrastructure\Sulu\Admin\SnippetAdmin;
 use Sulu\Snippet\Infrastructure\Sulu\Content\PropertyResolver\SingleSnippetSelectionPropertyResolver;
 use Sulu\Snippet\Infrastructure\Sulu\Content\PropertyResolver\SnippetSelectionPropertyResolver;
 use Sulu\Snippet\Infrastructure\Sulu\Content\ResourceLoader\SnippetResourceLoader;
-use Sulu\Snippet\Infrastructure\Sulu\Content\SingleSnippetSelectionContentType;
-use Sulu\Snippet\Infrastructure\Sulu\Content\SnippetSelectionContentType;
 use Sulu\Snippet\Infrastructure\Sulu\Content\SnippetSmartContentProvider;
 use Sulu\Snippet\Infrastructure\Sulu\Reference\SnippetReferenceRefresher;
 use Sulu\Snippet\UserInterface\Controller\Admin\SnippetController;
@@ -220,26 +218,6 @@ final class SuluSnippetBundle extends AbstractBundle
         $services->set('sulu_snippet.snippet_reference_store')
             ->class(ReferenceStore::class)
             ->tag('sulu_website.reference_store', ['alias' => SnippetInterface::RESOURCE_KEY]);
-
-        // TODO remove this
-        $services->set('sulu_snippet.content_types.single_snippet_selection')
-            ->class(SingleSnippetSelectionContentType::class)
-            ->args([
-                new Reference('sulu_snippet.snippet_repository'),
-                new Reference('sulu_content.content_manager'),
-                new Reference('sulu_snippet.snippet_reference_store'),
-            ])
-            ->tag('sulu.content.type', ['alias' => 'single_snippet_selection']);
-
-        // TODO remove this
-        $services->set('sulu_snippet.content_types.snippet_selection')
-            ->class(SnippetSelectionContentType::class)
-            ->args([
-                new Reference('sulu_snippet.snippet_repository'),
-                new Reference('sulu_content.content_manager'),
-                new Reference('sulu_snippet.snippet_reference_store'),
-            ])
-            ->tag('sulu.content.type', ['alias' => 'snippet_selection']);
 
         // Smart Content services
         $services->set('sulu_snippet.snippet_smart_content_provider')
