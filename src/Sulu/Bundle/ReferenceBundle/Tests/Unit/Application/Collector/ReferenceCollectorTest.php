@@ -18,7 +18,6 @@ use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\ReferenceBundle\Application\Collector\ReferenceCollector;
 use Sulu\Bundle\ReferenceBundle\Domain\Model\Reference;
 use Sulu\Bundle\ReferenceBundle\Domain\Repository\ReferenceRepositoryInterface;
-use Sulu\Component\Content\Document\WorkflowStage;
 
 class ReferenceCollectorTest extends TestCase
 {
@@ -76,7 +75,6 @@ class ReferenceCollectorTest extends TestCase
             referenceRouterAttributes: [
                 'webspace' => 'sulu',
             ],
-            referenceWorkflowStage: WorkflowStage::PUBLISHED,
         );
         $reference = $referenceCollector->addReference('media', '1', 'headerImage');
 
@@ -128,7 +126,6 @@ class ReferenceCollectorTest extends TestCase
         string $referenceTitle = 'Title',
         string $referenceContext = 'default',
         array $referenceRouterAttributes = [],
-        ?int $referenceWorkflowStage = null
     ): ReferenceCollector {
         return new ReferenceCollector(
             $this->referenceRepository->reveal(),
