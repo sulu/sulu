@@ -92,16 +92,6 @@
             <tag name="sulu_content.deprecated_block_visitor" />
         </service>
 
-        <service
-            id="sulu.content.type.block.global_block_visitor"
-            class="Sulu\Component\Content\Types\Metadata\GlobalBlocksTypedFormMetadataVisitor"
-        >
-            <argument type="service" id="sulu_admin.metadata_provider_registry" />
-
-            <tag name="sulu_admin.typed_form_metadata_visitor"/>
-            <tag name="sulu_admin.form_metadata_visitor" />
-        </service>
-
         <!-- sulu node helper -->
         <service id="sulu.content.localization_finder" class="Sulu\Component\Content\Compat\LocalizationFinder" public="true">
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>

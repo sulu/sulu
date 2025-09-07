@@ -11,18 +11,14 @@ declare(strict_types=1);
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content\Types\Metadata;
+namespace Sulu\Bundle\AdminBundle\Metadata\FormMetadata;
 
-use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
-use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
-use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadataVisitorInterface;
-use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\ItemMetadata;
-use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\SectionMetadata;
-use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
-use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadataVisitorInterface;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\SchemaMetadata;
 
+/**
+ * @internal this class is not part of the public API and may be changed or removed without further notice
+ */
 class GlobalBlocksTypedFormMetadataVisitor implements TypedFormMetadataVisitorInterface, FormMetadataVisitorInterface
 {
     public function __construct(
@@ -72,6 +68,7 @@ class GlobalBlocksTypedFormMetadataVisitor implements TypedFormMetadataVisitorIn
                 }
 
                 $globalBlockType = $globalBlockTag->getAttribute('global_block');
+                \assert(\is_string($globalBlockType), 'The "global_block" attribute of the "sulu.global_block" tag must be a string' . \get_debug_type($globalBlockType) . ' given.');
                 $blockMetadata = $this->getGlobalBlockMetadata($globalBlockType, $locale);
                 if (!$blockMetadata) {
                     continue;

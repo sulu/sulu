@@ -121,6 +121,16 @@
         </service>
 
         <service
+            id="sulu_admin.global_block_form_metadata_visitor"
+            class="Sulu\Bundle\AdminBundle\Metadata\FormMetadata\GlobalBlocksTypedFormMetadataVisitor"
+        >
+            <argument type="service" id="sulu_admin.metadata_provider_registry" />
+
+            <tag name="sulu_admin.typed_form_metadata_visitor"/>
+            <tag name="sulu_admin.form_metadata_visitor" />
+        </service>
+
+        <service
             id="sulu_admin.xml_form_metadata_loader"
             class="Sulu\Bundle\AdminBundle\Metadata\FormMetadata\XmlFormMetadataLoader"
         >
