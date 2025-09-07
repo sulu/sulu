@@ -4,12 +4,6 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <services>
         <!-- request analyzer data collector -->
-        <service id="sulu_website.data_collector.sulu_collector" class="Sulu\Bundle\WebsiteBundle\DataCollector\SuluCollector">
-            <argument>%kernel.environment%</argument>
-            <tag name="data_collector" template="@SuluWebsite/Profiler/layout.html.twig" id="sulu"/>
-            <tag name="sulu.context" context="website"/>
-        </service>
-
         <service id="sulu_website.redirect_exception_listener"
                  class="Sulu\Bundle\WebsiteBundle\EventListener\RedirectExceptionSubscriber">
             <argument type="service" id="router"/>
