@@ -632,6 +632,7 @@ Removed classes / services:
 - `Sulu\Component\SmartContent\Orm\DataProviderRepositoryInterface`
 - `Sulu\Component\SmartContent\Orm\DataProviderRepositoryTrait`
 - `Sulu\Bundle\CoreBundle\Controller\LocalizationController`
+- `Sulu\Bundle\CoreBundle\Cache\StructureWarmer`
 - `Sulu\Bundle\MediaBundle\Media\Storage\AzureBlobStorage`
 - `Sulu\Bundle\MediaBundle\Media\Storage\GoogleCloudStorage`
 - `Sulu\Bundle\MediaBundle\Media\Storage\LocalStorage`
