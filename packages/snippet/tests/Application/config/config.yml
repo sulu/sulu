@@ -1,11 +1,5 @@
 sulu_snippet: {}
 
-sulu_core:
-    content:
-        structure:
-            default_type:
-                snippet: 'snippet'
-
 framework:
     # symfony recipe default configuration:
     workflows: null

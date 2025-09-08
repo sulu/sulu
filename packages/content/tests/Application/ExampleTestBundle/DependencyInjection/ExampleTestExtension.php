@@ -24,27 +24,6 @@ class ExampleTestExtension extends Extension implements PrependExtensionInterfac
 {
     public function prepend(ContainerBuilder $container): void
     {
-        if ($container->hasExtension('sulu_core')) {
-            $container->prependExtensionConfig(
-                'sulu_core',
-                [
-                    'content' => [
-                        'structure' => [
-                            'paths' => [
-                                Example::TEMPLATE_TYPE => [
-                                    'path' => '%kernel.project_dir%/config/templates/examples',
-                                    'type' => 'example',
-                                ],
-                            ],
-                            'default_type' => [
-                                Example::TEMPLATE_TYPE => 'default', // TODO should not be hardcoded
-                            ],
-                        ],
-                    ],
-                ]
-            );
-        }
-
         if ($container->hasExtension('sulu_admin')) {
             $container->prependExtensionConfig(
                 'sulu_admin',

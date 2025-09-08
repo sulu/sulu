@@ -1,9 +1,3 @@
-sulu_core:
-    content:
-        structure:
-            default_type:
-                page: 'page'
-
 framework:
     # symfony recipe default configuration:
     workflows: null

@@ -540,27 +540,6 @@ final class SuluPageBundle extends AbstractBundle
             );
         }
 
-        if ($builder->hasExtension('sulu_core')) {
-            $builder->prependExtensionConfig(
-                'sulu_core',
-                [
-                    'content' => [
-                        'structure' => [
-                            'paths' => [
-                                PageInterface::TEMPLATE_TYPE => [
-                                    'path' => '%kernel.project_dir%/config/templates/pages',
-                                    'type' => 'page',
-                                ],
-                            ],
-                            'default_type' => [
-                                PageInterface::TEMPLATE_TYPE => 'default',
-                            ],
-                        ],
-                    ],
-                ],
-            );
-        }
-
         if ($builder->hasExtension('sulu_route')) {
             $builder->prependExtensionConfig(
                 'sulu_route',

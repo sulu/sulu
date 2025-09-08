@@ -495,6 +495,34 @@ now independent of the locale and contain all metadata for all locales this mean
 +$metadata->setPlaceholder($placeholder, $locale);
 ```
 
+### Template path configuration changed
+
+**Old**:
+
+```yaml
+sulu_core:
+    content:
+        structure:
+            default_type:
+                snippet: 'my_snippet_key'
+            paths:
+                snippet_project_a:
+                    path: '%kernel.project_dir%/config/templates/snippets/projectA'
+                    type: snippet
+```
+
+**New**:
+
+```yaml
+sulu_admin:
+    templates:
+        snippets:
+            default_type: 'my_snippet_key'
+            directories:
+                snippet_project_a:
+                    path: '%kernel.project_dir%/config/templates/snippets/projectA'
+```
+
 ### ResourceLocator endpoint changed
 
 The ResourceLocator endpoint was moved from PageBundle to the new RouteBundle.  

@@ -374,27 +374,6 @@ final class SuluArticleBundle extends AbstractBundle
             );
         }
 
-        if ($builder->hasExtension('sulu_core')) {
-            $builder->prependExtensionConfig(
-                'sulu_core',
-                [
-                    'content' => [
-                        'structure' => [
-                            'paths' => [
-                                ArticleInterface::TEMPLATE_TYPE => [
-                                    'path' => '%kernel.project_dir%/config/templates/articles',
-                                    'type' => 'article',
-                                ],
-                            ],
-                            'default_type' => [
-                                ArticleInterface::TEMPLATE_TYPE => 'default',
-                            ],
-                        ],
-                    ],
-                ],
-            );
-        }
-
         if ($builder->hasExtension('sulu_route')) {
             $builder->prependExtensionConfig(
                 'sulu_route',

@@ -13,8 +13,6 @@ namespace Sulu\Bundle\CoreBundle\Tests\Unit\DependencyInjection;
 
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractExtensionTestCase;
 use Sulu\Bundle\CoreBundle\DependencyInjection\SuluCoreExtension;
-use Sulu\Component\Content\Compat\Structure\PageBridge;
-use Sulu\Component\Content\Compat\Structure\SnippetBridge;
 
 class SuluCoreExtensionTest extends AbstractExtensionTestCase
 {
@@ -37,61 +35,23 @@ class SuluCoreExtensionTest extends AbstractExtensionTestCase
 
     public function testLoadNoConfig(): void
     {
-        $this->load([
-            'content' => [
-                'structure' => [
-                    'default_type' => [
-                        'snippet' => 'default',
-                        'test' => 'default_test',
-                    ],
-                    'paths' => [],
-                    'type_map' => [
-                        'page' => '\\' . PageBridge::class,
-                        'home' => '\\' . PageBridge::class,
-                        'snippet' => '\\' . SnippetBridge::class,
-                    ],
-                ],
-            ],
-            'locales' => ['en' => 'English', 'de' => 'Deutsch'],
-            'translations' => ['de', 'en'],
-            'fallback_locale' => 'en',
-        ]);
+        $this->load([]);
 
         $this->assertEquals(
-            'default',
-            $this->container->getParameter('sulu.content.structure.default_type.snippet')
+            ['de', 'en'],
+            $this->container->getParameter('sulu_core.locales')
         );
-
         $this->assertEquals(
-            'default_test',
-            $this->container->getParameter('sulu.content.structure.default_type.test')
+            ['en' => 'English', 'de' => 'Deutsch'],
+            $this->container->getParameter('sulu_core.translated_locales')
         );
-    }
-
-    public function testDefaults(): void
-    {
-        $this->load([
-            'content' => [
-                'structure' => [
-                    'default_type' => [
-                        'snippet' => 'barfoo',
-                    ],
-                    'paths' => [],
-                    'type_map' => [
-                        'page' => '\\' . PageBridge::class,
-                        'home' => '\\' . PageBridge::class,
-                        'snippet' => '\\' . SnippetBridge::class,
-                    ],
-                ],
-            ],
-            'locales' => ['en' => 'English', 'de' => 'Deutsch'],
-            'translations' => ['de', 'en'],
-            'fallback_locale' => 'en',
-        ]);
-
         $this->assertEquals(
-            'barfoo',
-            $this->container->getParameter('sulu.content.structure.default_type.snippet')
+            ['de', 'en'],
+            $this->container->getParameter('sulu_core.translations')
+        );
+        $this->assertEquals(
+            'en',
+            $this->container->getParameter('sulu_core.fallback_locale')
         );
     }
 
@@ -99,19 +59,6 @@ class SuluCoreExtensionTest extends AbstractExtensionTestCase
     {
         $this->load(
             [
-                'content' => [
-                    'structure' => [
-                        'default_type' => [
-                            'snippet' => 'barfoo',
-                        ],
-                        'paths' => [],
-                        'type_map' => [
-                            'page' => '\\' . PageBridge::class,
-                            'home' => '\\' . PageBridge::class,
-                            'snippet' => '\\' . SnippetBridge::class,
-                        ],
-                    ],
-                ],
                 'locales' => ['en' => 'English', 'de' => 'Deutsch', 'fr' => 'France'],
                 'translations' => ['de', 'en'],
                 'fallback_locale' => 'en',
