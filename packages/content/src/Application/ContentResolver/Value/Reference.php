@@ -16,6 +16,7 @@ class Reference
     public function __construct(
         private string|int $resourceId,
         private string $resourceKey,
+        private string $path = '',
     ) {
     }
 
@@ -27,5 +28,10 @@ class Reference
     public function getResourceId(): string|int
     {
         return $this->resourceId;
+    }
+
+    public function getPath(): string
+    {
+        return $this->path;
     }
 }

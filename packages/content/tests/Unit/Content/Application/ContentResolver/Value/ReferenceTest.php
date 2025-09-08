@@ -41,4 +41,31 @@ class ReferenceTest extends TestCase
         self::assertSame(456, $reference->getResourceId());
         self::assertSame('contacts', $reference->getResourceKey());
     }
+
+    public function testConstructorWithPath(): void
+    {
+        $reference = new Reference(789, 'pages', 'content.blocks.0');
+
+        self::assertSame(789, $reference->getResourceId());
+        self::assertSame('pages', $reference->getResourceKey());
+        self::assertSame('content.blocks.0', $reference->getPath());
+    }
+
+    public function testConstructorWithoutPath(): void
+    {
+        $reference = new Reference('uuid-123', 'articles');
+
+        self::assertSame('uuid-123', $reference->getResourceId());
+        self::assertSame('articles', $reference->getResourceKey());
+        self::assertSame('', $reference->getPath());
+    }
+
+    public function testConstructorWithEmptyPath(): void
+    {
+        $reference = new Reference(999, 'snippets', '');
+
+        self::assertSame(999, $reference->getResourceId());
+        self::assertSame('snippets', $reference->getResourceKey());
+        self::assertSame('', $reference->getPath());
+    }
 }

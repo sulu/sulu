@@ -217,4 +217,37 @@ class ContentView
 
         return $this;
     }
+
+    /**
+     * Recursively collect all references from this ContentView and nested ContentViews.
+     * Each reference will have its path set to indicate where it was found.
+     *
+     * @return array<Reference>
+     */
+    public function getAllReferencesRecursively(string $basePath = ''): array
+    {
+        $allReferences = [];
+
+        foreach ($this->references as $reference) {
+            $allReferences[] = new Reference(
+                $reference->getResourceId(),
+                $reference->getResourceKey(),
+                $basePath
+            );
+        }
+
+        $content = $this->getContent();
+        if (\is_iterable($content)) {
+            foreach ($content as $key => $value) {
+                if ($value instanceof ContentView) {
+                    $keyStr = \is_string($key) || \is_numeric($key) ? (string) $key : '';
+                    $newPath = \ltrim($basePath . '.' . $keyStr, '.');
+                    $nestedReferences = $value->getAllReferencesRecursively($newPath);
+                    $allReferences = \array_merge($allReferences, $nestedReferences);
+                }
+            }
+        }
+
+        return $allReferences;
+    }
 }

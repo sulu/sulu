@@ -21,7 +21,6 @@ use Sulu\Bundle\ReferenceBundle\Application\Refresh\ReferenceRefresherInterface;
 use Sulu\Bundle\ReferenceBundle\Domain\Repository\ReferenceRepositoryInterface;
 use Sulu\Content\Application\ContentMerger\ContentMergerInterface;
 use Sulu\Content\Application\ContentResolver\ContentViewResolver\ContentViewResolverInterface;
-use Sulu\Content\Application\ContentResolver\Value\ContentView;
 use Sulu\Content\Domain\Model\DimensionContentCollection;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\Example;
@@ -108,11 +107,16 @@ class ExampleReferenceRefresher implements ReferenceRefresherInterface
         $contentViews = $this->contentViewResolver->getContentViews(dimensionContent: $exampleDimensionContent);
 
         foreach ($contentViews as $key => $contentView) {
-            $this->addReferences(
-                $referenceCollector,
-                $contentView,
-                'template' !== $key ? (string) $key : ''
-            );
+            $basePath = 'template' !== $key ? (string) $key : '';
+            $references = $contentView->getAllReferencesRecursively($basePath);
+
+            foreach ($references as $reference) {
+                $referenceCollector->addReference(
+                    $reference->getResourceKey(),
+                    (string) $reference->getResourceId(),
+                    $reference->getPath()
+                );
+            }
         }
 
         $referenceCollector->persistReferences();
@@ -188,28 +192,6 @@ class ExampleReferenceRefresher implements ReferenceRefresherInterface
                 }
                 $unlocalizedDimensionContent = null;
             }
-        }
-    }
-
-    private function addReferences(ReferenceCollector $referenceCollector, ContentView $contentView, string $path): void
-    {
-        $content = $contentView->getContent();
-
-        if (\is_iterable($content)) {
-            foreach ($content as $key => $value) {
-                $keyStr = \is_string($key) || \is_numeric($key) ? (string) $key : '';
-                $newPath = \ltrim($path . '.' . $keyStr, '.');
-                if ($value instanceof ContentView) {
-                    $this->addReferences($referenceCollector, $value, $newPath);
-                }
-            }
-        }
-        foreach ($contentView->getReferences() as $reference) {
-            $referenceCollector->addReference(
-                $reference->getResourceKey(),
-                (string) $reference->getResourceId(),
-                $path
-            );
         }
     }
 }
