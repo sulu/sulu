@@ -17,6 +17,9 @@ use Sulu\Component\Webspace\Exception\PortalLocalizationNotFoundException;
 
 /**
  * Container for a portal configuration.
+ *
+ * @phpstan-import-type LocalizationArray from Localization
+ * @phpstan-import-type EnvironmentArray from Environment
  */
 class Portal
 {
@@ -62,6 +65,8 @@ class Portal
      * Sets the name of the portal.
      *
      * @param string $name The name of the portal
+     *
+     * @return void
      */
     public function setName($name)
     {
@@ -80,6 +85,8 @@ class Portal
 
     /**
      * @param string $key
+     *
+     * @return void
      */
     public function setKey($key)
     {
@@ -96,6 +103,8 @@ class Portal
 
     /**
      * Adds the given language to the portal.
+     *
+     * @return void
      */
     public function addLocalization(Localization $localization)
     {
@@ -110,6 +119,8 @@ class Portal
      * Sets the localizations to this portal.
      *
      * @param Localization[] $localizations
+     *
+     * @return void
      */
     public function setLocalizations($localizations)
     {
@@ -126,6 +137,9 @@ class Portal
         return $this->localizations;
     }
 
+    /**
+     * @return Localization
+     */
     public function getLocalization($locale)
     {
         foreach ($this->getLocalizations() as $localization) {
@@ -139,6 +153,8 @@ class Portal
 
     /**
      * @param Localization $defaultLocalization
+     *
+     * @return void
      */
     public function setDefaultLocalization($defaultLocalization)
     {
@@ -157,6 +173,8 @@ class Portal
      * Adds an environment to this portal.
      *
      * @param Environment $environment Environment The environment to add
+     *
+     * @return void
      */
     public function addEnvironment($environment)
     {
@@ -167,6 +185,8 @@ class Portal
      * Sets the environments for this portal.
      *
      * @param Environment[] $environments
+     *
+     * @return void
      */
     public function setEnvironments(array $environments)
     {
@@ -205,6 +225,9 @@ class Portal
         return $this->environments[$type];
     }
 
+    /**
+     * @return void
+     */
     public function setWebspace(Webspace $webspace)
     {
         $this->webspace = $webspace;
@@ -218,6 +241,10 @@ class Portal
         return $this->webspace;
     }
 
+    /**
+     * @return array{name: string, key: string, localizations: array<int, LocalizationArray>, environments?: array<int,
+     * EnvironmentArray>}
+     */
     public function toArray($depth = null)
     {
         $res = [];

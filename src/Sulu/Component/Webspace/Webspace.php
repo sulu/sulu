@@ -16,6 +16,8 @@ use Sulu\Component\Util\ArrayableInterface;
 
 /**
  * Container for a webspace definition.
+ *
+ * @phpstan-import-type LocalizationArray from Localization
  */
 class Webspace implements ArrayableInterface
 {
@@ -590,7 +592,20 @@ class Webspace implements ArrayableInterface
     }
 
     /**
-     * @return array
+     * @return array{
+     *  key: string,
+     *  name: string,
+     *  localizations: array<int, LocalizationArray>,
+     *  templates: array<string>,
+     *  defaultTemplates: array<string>,
+     *  excludedTemplates: array<string>,
+     *  segments: array<array>,
+     *  theme: ?string,
+     *  portals: array<int, mixed>,
+     *  navigation: array{
+     *      contexts: array<int, mixed>
+     *  },
+     * }
      */
     public function toArray($depth = null)
     {

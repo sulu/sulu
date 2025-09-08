@@ -68,10 +68,8 @@ class SuluCollector extends DataCollector
 
         if ($portal instanceof Portal) {
             $this->data['portal'] = $portal->toArray();
-            $this->data['portal']['environments'] = \array_combine(
-                \array_column($this->data['portal']['environments'] ?? [], 'type'),
-                $this->data['portal']['environments'] ?? [],
-            );
+            $environments = $this->data['portal']['environments'] ?? [];
+            $this->data['portal']['environments'] = \array_combine(\array_column($environments, 'type'), $environments);
             $this->flattenLocalization($this->data['portal']['localizations']);
             $this->data['environment'] = $portal->getEnvironment($this->kernelEnvironment);
         }

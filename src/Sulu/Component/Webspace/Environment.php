@@ -11,6 +11,9 @@
 
 namespace Sulu\Component\Webspace;
 
+/**
+ * @phpstan-type EnvironmentArray array{type: string, urls?: list<mixed>, customUrls?: list<mixed>}
+ */
 class Environment
 {
     /**
@@ -146,6 +149,7 @@ class Environment
         $this->customUrls[] = $customUrl;
     }
 
+    /** @return EnvironmentArray */
     public function toArray($depth = null)
     {
         $res = [];

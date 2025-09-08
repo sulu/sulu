@@ -17,6 +17,15 @@ use Sulu\Component\Util\ArrayableInterface;
 
 /**
  * Represents a localization of a webspace definition.
+ *
+ * @phpstan-type LocalizationArray array{
+ *    country: string,
+ *    language: string,
+ *    localization: string,
+ *    default: bool,
+ *    children: list<array<string, mixed>>,
+ *    shadow: string
+ * }
  */
 class Localization implements \JsonSerializable, ArrayableInterface
 {
@@ -349,6 +358,9 @@ class Localization implements \JsonSerializable, ArrayableInterface
         ];
     }
 
+    /**
+     * @return LocalizationArray
+     */
     public function toArray($depth = null)
     {
         $res = [];
