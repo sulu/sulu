@@ -15,7 +15,6 @@ use Gedmo\Exception;
 use Oro\ORM\Query\AST\Functions\Cast;
 use Oro\ORM\Query\AST\Functions\String\GroupConcat;
 use Sulu\Bundle\CoreBundle\CommandOptional\SuluBuildCommand;
-use Sulu\Component\Content\Types\Block\BlockVisitorInterface;
 use Sulu\Component\Rest\Csv\ObjectNotSupportedException;
 use Sulu\Component\Rest\Exception\InsufficientDescendantPermissionsException;
 use Sulu\Component\Rest\Exception\InvalidHashException;
@@ -44,38 +43,6 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
         $parameterBag = $container->getParameterBag();
         $configs = $parameterBag->resolveValue($configs);
         $config = $this->processConfiguration(new Configuration(), $configs);
-
-        if (isset($config['phpcr']) && $container->hasExtension('doctrine_phpcr')) {
-            $phpcrConfig = $config['phpcr'];
-
-            // TODO: Workaround for issue: https://github.com/doctrine/DoctrinePHPCRBundle/issues/178
-            if (!isset($phpcrConfig['backend']['check_login_on_server'])) {
-                $phpcrConfig['backend']['check_login_on_server'] = false;
-            }
-
-            $container->prependExtensionConfig(
-                'doctrine_phpcr',
-                [
-                    'session' => $phpcrConfig,
-                ]
-            );
-        }
-
-        $container->prependExtensionConfig(
-            'sulu_core',
-            [
-                'content' => [
-                    'structure' => [
-                        'paths' => [
-                            'blocks' => [
-                                'path' => '%kernel.project_dir%/config/templates/blocks',
-                                'type' => 'block',
-                            ],
-                        ],
-                    ],
-                ],
-            ]
-        );
 
         $container->prependExtensionConfig(
             'sulu_admin',
@@ -310,11 +277,6 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
 
         $container->setParameter('sulu_core.proxy_cache_dir', $proxyCacheDirectory);
 
-        // Content
-        if (isset($config['content'])) {
-            $this->initContent($config['content'], $container, $loader);
-        }
-
         // Webspace
         if (isset($config['webspace'])) {
             $this->initWebspace($config['webspace'], $container, $loader);
@@ -338,9 +300,6 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
         $loader->load('serializer.xml');
         $loader->load('request_analyzer.xml');
         $loader->load('doctrine.xml');
-
-        $container->registerForAutoconfiguration(BlockVisitorInterface::class)
-            ->addTag('sulu_content.block_visitor');
     }
 
     /**
@@ -360,64 +319,6 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
     {
         $container->setParameter('sulu.fields_defaults.translations', $fieldsConfig['translations']);
         $container->setParameter('sulu.fields_defaults.widths', $fieldsConfig['widths']);
-    }
-
-    /**
-     * @return void
-     */
-    private function initContent(array $contentConfig, ContainerBuilder $container, XmlFileLoader $loader)
-    {
-        // Default Language
-        $container->setParameter('sulu.content.language.namespace', $contentConfig['language']['namespace']);
-        $container->setParameter('sulu.content.language.default', $contentConfig['language']['default']);
-
-        // Node names
-        $container->setParameter('sulu.content.node_names.base', $contentConfig['node_names']['base']);
-        $container->setParameter('sulu.content.node_names.content', $contentConfig['node_names']['content']);
-        $container->setParameter('sulu.content.node_names.route', $contentConfig['node_names']['route']);
-        $container->setParameter('sulu.content.node_names.snippet', $contentConfig['node_names']['snippet']);
-
-        // Default template
-        $container->setParameter(
-            'sulu.content.structure.default_types',
-            $contentConfig['structure']['default_type']
-        );
-
-        foreach ($contentConfig['structure']['default_type'] as $type => $default) {
-            $container->setParameter(
-                'sulu.content.structure.default_type.' . $type,
-                $default
-            );
-        }
-
-        $container->setParameter(
-            'sulu.content.structure.required_properties',
-            $contentConfig['structure']['required_properties']
-        );
-        $container->setParameter(
-            'sulu.content.structure.required_tags',
-            $contentConfig['structure']['required_tags']
-        );
-        $container->setParameter(
-            'sulu.content.internal_prefix',
-            $contentConfig['internal_prefix']
-        );
-        $container->setParameter(
-            'sulu.content.structure.type_map',
-            $contentConfig['structure']['type_map']
-        );
-
-        // Template
-        $paths = [];
-        foreach ($contentConfig['structure']['paths'] as $pathConfig) {
-            $pathType = $pathConfig['type'];
-            if (!isset($paths[$pathType])) {
-                $paths[$pathType] = [];
-            }
-            $paths[$pathType][] = $pathConfig;
-        }
-
-        $container->setParameter('sulu.content.structure.paths', $paths);
     }
 
     /**
