@@ -43,5 +43,5 @@ test.each([
 test('Do not send search request when no search term is given', () => {
     searchStore.search(undefined);
     expect(ResourceRequester.getList).not.toBeCalled();
-    expect(searchStore.result).toEqual([{ id: 1 }]);
+    expect(searchStore.result).toEqual([{id: 1}]);
 });
