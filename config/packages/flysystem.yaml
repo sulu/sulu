@@ -4,3 +4,9 @@ flysystem:
             adapter: 'local'
             options:
                 directory: '%kernel.project_dir%/var/uploads'
+
+when@test:
+    flysystem:
+        storages:
+            default.storage:
+                    adapter: 'memory'
