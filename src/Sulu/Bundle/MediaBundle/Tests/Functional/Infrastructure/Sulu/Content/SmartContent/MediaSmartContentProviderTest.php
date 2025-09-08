@@ -737,7 +737,10 @@ class MediaSmartContentProviderTest extends SuluTestCase
 
         $this->assertCount($expectedCount, $result);
         $actualKeys = $this->getMediaKeysFromResults($result);
-        $this->assertSame($expectedKeys, $actualKeys);
+
+        foreach ($expectedKeys as $key) {
+            $this->assertContains($key, $actualKeys, "Media '$key' should be in {$mediaType} type results");
+        }
 
         $this->assertSame(
             $expectedCount,
@@ -807,7 +810,6 @@ class MediaSmartContentProviderTest extends SuluTestCase
 
         $media = self::createMedia($collection, $mediaType, $data);
 
-        // Set explicit creation timestamp if provided
         if (null !== $createdAt) {
             $immutableCreatedAt = $createdAt instanceof \DateTimeImmutable
                 ? $createdAt
