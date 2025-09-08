@@ -36,14 +36,20 @@ trait CreateMediaTrait
      *     key?: string,
      * } $data
      */
-    private function createCollection(array $data = []): CollectionInterface
+    protected static function createCollection(array $data = []): CollectionInterface
     {
         $manager = self::getContainer()->get('doctrine.orm.entity_manager');
 
         $collection = new Collection();
 
         /** @var CollectionType|null $collectionType */
-        $collectionType = $manager->getRepository(CollectionType::class)->find(1);
+        $collectionType = $manager->getRepository(CollectionType::class)
+            ->findOneBy(['key' => $data['key'] ?? 'default']);
+
+        if (!$collectionType) {
+            $collectionType = $manager->getRepository(CollectionType::class)->find(1);
+        }
+
         if (!$collectionType) {
             $collectionType = new CollectionType();
             $collectionType->setId(1);
@@ -73,7 +79,7 @@ trait CreateMediaTrait
      *     description?: string,
      * } $data
      */
-    private function createMediaType(array $data): MediaType
+    protected static function createMediaType(array $data): MediaType
     {
         $manager = self::getContainer()->get('doctrine.orm.entity_manager');
 
@@ -93,7 +99,7 @@ trait CreateMediaTrait
      *     locale?: string,
      * } $data
      */
-    private function createMedia(
+    protected static function createMedia(
         CollectionInterface $collection,
         MediaType $mediaType,
         array $data = [],
