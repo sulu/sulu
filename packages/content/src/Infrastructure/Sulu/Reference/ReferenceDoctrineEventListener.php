@@ -73,14 +73,9 @@ class ReferenceDoctrineEventListener implements ResetInterface
         $object = $args->getObject();
 
         if ($object instanceof DimensionContentInterface) {
+            // We only remove references for the current version of a DimensionContent
             if (DimensionContentInterface::CURRENT_VERSION !== $object->getVersion()) {
                 return;
-            }
-
-            foreach ($this->dimensionContents as $key => $content) {
-                if ($content === $object) {
-                    unset($this->dimensionContents[$key]);
-                }
             }
 
             $this->removedDimensionContents[] = $object;
@@ -108,7 +103,6 @@ class ReferenceDoctrineEventListener implements ResetInterface
         // reset here to avoid infinite loop due to flushes in the handler
         $this->reset();
 
-        // Process updated/created dimension contents
         foreach ($dimensionContents as $dimensionContent) {
             $resource = $dimensionContent->getResource();
             $locale = $dimensionContent->getLocale();
@@ -129,26 +123,24 @@ class ReferenceDoctrineEventListener implements ResetInterface
             );
         }
 
-        // Process removed dimension contents for reference cleanup
-//        foreach ($removedDimensionContents as $dimensionContent) {
-//            $resource = $dimensionContent->getResource();
-//            $locale = $dimensionContent->getLocale();
-//            $resourceId = $resource->getId();
-//
-//            // Skip dimension content that doesn't have required values
-//            if (null === $locale) {
-//                continue;
-//            }
-//
-//            $this->referenceRepository->removeBy([
-//                'referenceResourceKey' => $dimensionContent::getResourceKey(),
-//                'referenceResourceId' => (string) $resourceId,
-//                'referenceLocale' => $locale,
-//                'referenceContext' => $dimensionContent->getStage(),
-//            ]);
-//        }
+        foreach ($removedDimensionContents as $dimensionContent) {
+            $resource = $dimensionContent->getResource();
+            $locale = $dimensionContent->getLocale();
+            $resourceId = $resource->getId();
 
-        // Process removed ContentRichEntities for reference cleanup
+            // Skip dimension content that doesn't have required values
+            if (null === $locale) {
+                continue;
+            }
+
+            $this->referenceRepository->removeBy([
+                'referenceResourceKey' => $dimensionContent::getResourceKey(),
+                'referenceResourceId' => (string) $resourceId,
+                'referenceLocale' => $locale,
+                'referenceContext' => $dimensionContent->getStage(),
+            ]);
+        }
+
         foreach ($removedContentRichEntityIds as $entityInfo) {
             // Remove ALL references for this entity (all locales, all contexts)
             $this->referenceRepository->removeBy([
@@ -166,9 +158,11 @@ class ReferenceDoctrineEventListener implements ResetInterface
     }
 
     /**
-     * @return class-string<DimensionContentInterface>
+     * @param ContentRichEntityInterface<DimensionContentInterface> $entity
+     *
+     * @return class-string<DimensionContentInterface<ContentRichEntityInterface>>
      */
-    private function getDimensionContentClass(ContentRichEntityInterface $entity): string
+    private function getDimensionContentClass(ContentRichEntityInterface $entity): string // @phpstan-ignore-line missingType.generics
     {
         $dimensionContent = $entity->createDimensionContent();
 

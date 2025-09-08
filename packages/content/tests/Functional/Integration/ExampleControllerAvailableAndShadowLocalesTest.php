@@ -16,6 +16,7 @@ namespace Sulu\Content\Tests\Functional\Integration;
 use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\ExampleDimensionContent;
+use Sulu\Route\Domain\Value\RequestAttributeEnum;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 /**
@@ -38,6 +39,12 @@ class ExampleControllerAvailableAndShadowLocalesTest extends SuluTestCase
             [],
             ['CONTENT_TYPE' => 'application/json', 'HTTP_ACCEPT' => 'application/json']
         );
+
+        // TODO this should not be necessary
+        $this->client->disableReboot();
+        $requestContext = self::getContainer()->get('router.request_context');
+        $requestContext->setParameter(RequestAttributeEnum::SITE->value, 'sulu-io');
+        // TODO this should not be necessary
     }
 
     public function testPostCreateEnDraft(): int

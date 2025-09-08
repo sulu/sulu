@@ -124,6 +124,7 @@ class DimensionContentRepositoryTest extends SuluTestCase
     private function createContentDimension(Example $example, array $dimensionAttributes = []): ExampleDimensionContent
     {
         $exampleDimension = new ExampleDimensionContent($example);
+        $exampleDimension->setTemplateKey('default');
         $exampleDimension->setStage($dimensionAttributes['stage'] ?? DimensionContentInterface::STAGE_DRAFT);
         $exampleDimension->setLocale($dimensionAttributes['locale'] ?? null);
 

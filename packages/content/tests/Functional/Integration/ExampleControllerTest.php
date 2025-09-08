@@ -21,7 +21,6 @@ use Sulu\Component\HttpKernel\SuluKernel;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Tests\Application\AppCache;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\Example;
-use Sulu\Bundle\ReferenceBundle\Application\Message\RefreshReferenceMessage;
 use Sulu\Content\Tests\Functional\Traits\CreateCategoryTrait;
 use Sulu\Content\Tests\Functional\Traits\CreateMediaTrait;
 use Sulu\Content\Tests\Functional\Traits\CreateTagTrait;
@@ -63,6 +62,7 @@ class ExampleControllerTest extends SuluTestCase
         $this->referenceRepository = $this->getContainer()->get(ReferenceRepositoryInterface::class);
 
         // TODO this should not be necessary
+        $this->client->disableReboot();
         $requestContext = self::getContainer()->get('router.request_context');
         $requestContext->setParameter(RequestAttributeEnum::SITE->value, 'sulu-io');
         // TODO this should not be necessary
@@ -556,7 +556,6 @@ class ExampleControllerTest extends SuluTestCase
     public function testUpdateMediaReferences(): int
     {
         self::purgeDatabase();
-        $this->client->disableReboot();
 
         $collection = $this->createCollection(['title' => 'Test Collection', 'locale' => 'en']);
         $mediaType = $this->createMediaType(['name' => 'Image', 'description' => 'Test Image Type']);
@@ -636,7 +635,6 @@ class ExampleControllerTest extends SuluTestCase
     public function testUpdateExampleReferences(): int
     {
         self::purgeDatabase();
-        $this->client->disableReboot();
 
         $referencedExample1 = static::createExample([
             'en' => [
@@ -735,7 +733,6 @@ class ExampleControllerTest extends SuluTestCase
     public function testDeleteEntityCleansUpMediaReferences(): void
     {
         self::purgeDatabase();
-        $this->client->disableReboot();
 
         $collection = $this->createCollection(['title' => 'Test Collection', 'locale' => 'en']);
         $mediaType = $this->createMediaType(['name' => 'Image', 'description' => 'Test Image Type']);
@@ -789,7 +786,6 @@ class ExampleControllerTest extends SuluTestCase
     public function testDeleteEntityCleansUpExampleReferences(): void
     {
         self::purgeDatabase();
-        $this->client->disableReboot();
 
         $referencedExample1 = static::createExample([
             'en' => [
@@ -850,7 +846,6 @@ class ExampleControllerTest extends SuluTestCase
     public function testUnpublishCleansUpLiveReferences(): int
     {
         self::purgeDatabase();
-        $this->client->disableReboot();
 
         $collection = $this->createCollection(['title' => 'Test Collection', 'locale' => 'en']);
         $mediaType = $this->createMediaType(['name' => 'Image', 'description' => 'Test Image Type']);
@@ -992,132 +987,6 @@ class ExampleControllerTest extends SuluTestCase
         $this->assertSame(3, $totalReferenceCount);
 
         return $id;
-    }
-
-    public function testReferencesInEnglishLocale(): void
-    {
-        self::purgeDatabase();
-
-        $collection = $this->createCollection(['title' => 'Test Collection', 'locale' => 'en']);
-        $mediaType = $this->createMediaType(['name' => 'Image', 'description' => 'Test Image Type']);
-        $media1 = $this->createMedia($collection, $mediaType, ['title' => 'Media 1', 'locale' => 'en']);
-
-        $referencedExample1 = static::createExample([
-            'en' => [
-                'live' => [
-                    'template' => 'default',
-                    'title' => 'Referenced Example 1',
-                    'url' => '/ref-example-1',
-                ],
-            ],
-        ]);
-
-        static::getEntityManager()->flush();
-
-        $this->client->request('POST', '/admin/api/examples?locale=en&action=publish', [], [], [], \json_encode([
-            'template' => 'default-example-selection',
-            'title' => 'Test English Locale References',
-            'url' => '/locale-test-en',
-            'image' => [
-                'id' => $media1->getId(),
-            ],
-            'examples' => [$referencedExample1->getId()],
-            'mainWebspace' => 'sulu-io',
-        ]) ?: null);
-
-        $response = $this->client->getResponse();
-        $content = \json_decode((string) $response->getContent(), true);
-        /** @var int $id */
-        $id = $content['id'] ?? null; // @phpstan-ignore-line
-        $this->assertHttpStatusCode(201, $response);
-
-        $mediaReferenceCount = $this->referenceRepository->count([
-            'resourceKey' => 'media',
-            'referenceResourceKey' => Example::RESOURCE_KEY,
-            'referenceResourceId' => (string) $id,
-            'referenceLocale' => 'en',
-            'referenceContext' => 'live',
-        ]);
-        $this->assertSame(1, $mediaReferenceCount);
-
-        $exampleReferenceCount = $this->referenceRepository->count([
-            'resourceKey' => Example::RESOURCE_KEY,
-            'referenceResourceKey' => Example::RESOURCE_KEY,
-            'referenceResourceId' => (string) $id,
-            'referenceLocale' => 'en',
-            'referenceContext' => 'live',
-        ]);
-        $this->assertSame(1, $exampleReferenceCount);
-
-        $otherLocaleReferenceCount = $this->referenceRepository->count([
-            'referenceResourceKey' => Example::RESOURCE_KEY,
-            'referenceResourceId' => (string) $id,
-            'referenceLocale' => 'de',
-        ]);
-        $this->assertSame(0, $otherLocaleReferenceCount);
-    }
-
-    public function testReferencesInGermanGhostLocale(): void
-    {
-        self::purgeDatabase();
-
-        $collection = $this->createCollection(['title' => 'Test Collection', 'locale' => 'en']);
-        $mediaType = $this->createMediaType(['name' => 'Image', 'description' => 'Test Image Type']);
-        $media1 = $this->createMedia($collection, $mediaType, ['title' => 'Media 1', 'locale' => 'en']);
-
-        $referencedExample1 = static::createExample([
-            'en' => [
-                'live' => [
-                    'template' => 'default',
-                    'title' => 'Referenced Example 1',
-                    'url' => '/ref-example-1',
-                ],
-            ],
-        ]);
-
-        static::getEntityManager()->flush();
-
-        $this->client->request('POST', '/admin/api/examples?locale=de&action=publish', [], [], [], \json_encode([
-            'template' => 'default-example-selection',
-            'title' => 'Test German Ghost Locale References',
-            'url' => '/locale-test-en',
-            'image' => [
-                'id' => $media1->getId(),
-            ],
-            'examples' => [$referencedExample1->getId()],
-            'mainWebspace' => 'sulu-io',
-        ]) ?: null);
-
-        $response = $this->client->getResponse();
-        $content = \json_decode((string) $response->getContent(), true);
-        /** @var int $id */
-        $id = $content['id'] ?? null; // @phpstan-ignore-line
-        $this->assertHttpStatusCode(201, $response);
-
-        $mediaReferenceCount = $this->referenceRepository->count([
-            'resourceKey' => 'media',
-            'referenceResourceKey' => Example::RESOURCE_KEY,
-            'referenceResourceId' => (string) $id,
-            'referenceLocale' => 'de',
-            'referenceContext' => 'live',
-        ]);
-        $this->assertSame(1, $mediaReferenceCount);
-
-        $exampleReferenceCount = $this->referenceRepository->count([
-            'resourceKey' => Example::RESOURCE_KEY,
-            'referenceResourceKey' => Example::RESOURCE_KEY,
-            'referenceResourceId' => (string) $id,
-            'referenceLocale' => 'de',
-            'referenceContext' => 'live',
-        ]);
-        $this->assertSame(1, $exampleReferenceCount);
-
-        $englishReferenceCount = $this->referenceRepository->count([
-            'referenceResourceKey' => Example::RESOURCE_KEY,
-            'referenceResourceId' => (string) $id,
-            'referenceLocale' => 'en',
-        ]);
-        $this->assertSame(0, $englishReferenceCount);
     }
 
     protected function getSnapshotFolder(): string

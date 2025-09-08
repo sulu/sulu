@@ -22,6 +22,7 @@ use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\ReferenceBundle\Application\Message\RefreshReferenceMessage;
+use Sulu\Bundle\ReferenceBundle\Domain\Repository\ReferenceRepositoryInterface;
 use Sulu\Bundle\TestBundle\Testing\SetGetPrivatePropertyTrait;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Infrastructure\Sulu\Reference\ReferenceDoctrineEventListener;
@@ -41,15 +42,22 @@ class ReferenceDoctrineEventListenerTest extends TestCase
     /** @var ObjectProphecy<MessageBusInterface> */
     private ObjectProphecy $messageBus;
 
+    /** @var ObjectProphecy<ReferenceRepositoryInterface> */
+    private ObjectProphecy $referenceRepository;
+
     protected function setUp(): void
     {
         $this->messageBus = $this->prophesize(MessageBusInterface::class);
+        $this->referenceRepository = $this->prophesize(ReferenceRepositoryInterface::class);
 
         // Setup default mock behavior to return envelopes
         $envelope = new Envelope(new RefreshReferenceMessage('test', 'test', 'test', 'test'));
         $this->messageBus->dispatch(Argument::any(), Argument::any())->willReturn($envelope);
 
-        $this->listener = new ReferenceDoctrineEventListener($this->messageBus->reveal());
+        $this->listener = new ReferenceDoctrineEventListener(
+            $this->messageBus->reveal(),
+            $this->referenceRepository->reveal()
+        );
     }
 
     public function testPrePersistWithCurrentVersion(): void
