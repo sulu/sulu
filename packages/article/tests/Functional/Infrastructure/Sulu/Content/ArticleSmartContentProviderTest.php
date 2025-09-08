@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Sulu\Article\Tests\Functional\Infrastructure\Sulu\Content;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use Sulu\Article\Application\Message\ApplyWorkflowTransitionArticleMessage;
 use Sulu\Article\Application\Message\CreateArticleMessage;
 use Sulu\Article\Domain\Model\ArticleInterface;
@@ -241,130 +242,132 @@ class ArticleSmartContentProviderTest extends SuluTestCase
         }
     }
 
-    public function testFindFlatByCategoryFiltersSingleCategoryOR(): void
+    /**
+     * @return array<string, array{0: string[], 1: string, 2: int}>
+     */
+    public static function categoryFilterProvider(): array
     {
-        $result = $this->smartContentProvider->findFlatBy([
-            ...$this->getDefaultFilters(),
-            ...['locale' => 'en', 'categories' => [self::$categories['tech']->getId()], 'categoryOperator' => 'OR'],
-        ], []);
-
-        $this->assertCount(5, $result);
-        $this->assertSame(
-            5,
-            $this->smartContentProvider->countBy([
-                ...$this->getDefaultFilters(),
-                ...['locale' => 'en', 'categories' => [self::$categories['tech']->getId()], 'categoryOperator' => 'OR'],
-            ]),
-        );
-
-        $resultIds = \array_map(
-            fn ($article) => $article['id'],
-            $result,
-        );
-
-        // Verify correct articles are returned
-        $expectedKeys = ['tech1', 'tech2', 'tech_health', 'business_tech', 'multi_category_multi_tag'];
-        foreach ($expectedKeys as $key) {
-            $this->assertContains(self::$articles[$key]->getUuid(), $resultIds, "Article '$key' should be in the result");
-        }
-
-        // Verify other articles are not returned
-        $allKeys = \array_keys(self::$articles);
-        $unexpectedKeys = \array_diff($allKeys, $expectedKeys);
-
-        foreach ($unexpectedKeys as $key) {
-            $this->assertNotContains(self::$articles[$key]->getUuid(), $resultIds, "Article '$key' should not be in the result");
-        }
-    }
-
-    public function testFindFlatByCategoryFiltersMultipleCategoriesOR(): void
-    {
-        $result = $this->smartContentProvider->findFlatBy([
-            ...$this->getDefaultFilters(),
-            ...['locale' => 'en', 'categories' => [self::$categories['tech']->getId(), self::$categories['health']->getId()], 'categoryOperator' => 'OR'],
-        ], ['title' => 'asc']);
-
-        // Should include tech1, tech2, health1, health2, tech_health, sports_health, business_tech, multi_category_multi_tag
-        $this->assertCount(8, $result);
-        $this->assertSame(
-            8,
-            $this->smartContentProvider->countBy([
-                ...$this->getDefaultFilters(),
-                ...['locale' => 'en', 'categories' => [self::$categories['tech']->getId(), self::$categories['health']->getId()], 'categoryOperator' => 'OR'],
-            ]),
-        );
-
-        $resultIds = \array_map(
-            fn ($article) => $article['id'],
-            $result,
-        );
-
-        // Verify correct articles are returned
-        $expectedKeys = [
-            'tech1', 'tech2', 'health1', 'health2', 'tech_health',
-            'sports_health', 'business_tech', 'multi_category_multi_tag',
+        return [
+            'single_category_OR' => [
+                ['tech'],
+                'OR',
+                5,
+            ],
+            'multiple_categories_OR' => [
+                ['tech', 'health'],
+                'OR',
+                8,
+            ],
+            'single_category_AND' => [
+                ['health'],
+                'AND',
+                5,
+            ],
+            'multiple_categories_AND' => [
+                ['tech', 'health'],
+                'AND',
+                2,
+            ],
         ];
-
-        foreach ($expectedKeys as $key) {
-            $this->assertContains(self::$articles[$key]->getUuid(), $resultIds, "Article '$key' should be in the result");
-        }
     }
 
-    public function testFindFlatByCategoryFiltersSingleCategoryAND(): void
+    /**
+     * @param string[] $categoryKeys
+     * @param 'AND'|'OR' $operator
+     */
+    #[DataProvider('categoryFilterProvider')]
+    public function testCategoryFiltering(array $categoryKeys, string $operator, int $expectedCount): void
     {
+        $categoryIds = \array_map(fn ($key) => self::$categories[$key]->getId(), $categoryKeys);
+
+        /** @var 'AND'|'OR' $categoryOperator */
+        $categoryOperator = $operator;
+
         $result = $this->smartContentProvider->findFlatBy([
             ...$this->getDefaultFilters(),
-            ...['locale' => 'en', 'categories' => [self::$categories['health']->getId()], 'categoryOperator' => 'AND'],
+            ...[
+                'locale' => 'en',
+                'categories' => $categoryIds,
+                'categoryOperator' => $categoryOperator,
+            ],
         ], []);
 
-        $this->assertCount(5, $result);
+        $this->assertCount($expectedCount, $result);
         $this->assertSame(
-            5,
+            $expectedCount,
             $this->smartContentProvider->countBy([
                 ...$this->getDefaultFilters(),
-                ...['locale' => 'en', 'categories' => [self::$categories['health']->getId()], 'categoryOperator' => 'AND'],
+                ...[
+                    'locale' => 'en',
+                    'categories' => $categoryIds,
+                    'categoryOperator' => $categoryOperator,
+                ],
             ]),
         );
-
-        $resultIds = \array_map(
-            fn ($article) => $article['id'],
-            $result,
-        );
-
-        // Verify correct articles are returned
-        $expectedKeys = ['health1', 'health2', 'tech_health', 'sports_health', 'multi_category_multi_tag'];
-        foreach ($expectedKeys as $key) {
-            $this->assertContains(self::$articles[$key]->getUuid(), $resultIds, "Article '$key' should be in the result");
-        }
     }
 
-    public function testFindFlatByCategoryFiltersMultipleCategoriesAND(): void
+    /**
+     * @return array<string, array{0: string[], 1: string, 2: int}>
+     */
+    public static function tagFilterProvider(): array
     {
+        return [
+            'single_tag_OR_mobile' => [
+                ['mobile'],
+                'OR',
+                3,
+            ],
+            'multiple_tags_OR_mobile_cloud' => [
+                ['mobile', 'cloud'],
+                'OR',
+                5,
+            ],
+            'single_tag_AND_fitness' => [
+                ['fitness'],
+                'AND',
+                5,
+            ],
+            'multiple_tags_AND_mobile_fitness' => [
+                ['mobile', 'fitness'],
+                'AND',
+                2,
+            ],
+        ];
+    }
+
+    /**
+     * @param string[] $tagNames
+     * @param 'AND'|'OR' $operator
+     */
+    #[DataProvider('tagFilterProvider')]
+    public function testTagFiltering(array $tagNames, string $operator, int $expectedCount): void
+    {
+        $tags = \array_map(fn ($name) => self::$tags[$name], $tagNames);
+
+        /** @var 'AND'|'OR' $tagOperator */
+        $tagOperator = $operator;
+
         $result = $this->smartContentProvider->findFlatBy([
             ...$this->getDefaultFilters(),
-            ...['locale' => 'en', 'categories' => [self::$categories['tech']->getId(), self::$categories['health']->getId()], 'categoryOperator' => 'AND'],
+            ...[
+                'locale' => 'en',
+                'tags' => $tags,
+                'tagOperator' => $tagOperator,
+            ],
         ], []);
 
-        // Should include tech_health and multi_category_multi_tag
-        $this->assertCount(2, $result);
+        $this->assertCount($expectedCount, $result);
         $this->assertSame(
-            2,
+            $expectedCount,
             $this->smartContentProvider->countBy([
                 ...$this->getDefaultFilters(),
-                ...['locale' => 'en', 'categories' => [self::$categories['tech']->getId(), self::$categories['health']->getId()], 'categoryOperator' => 'AND'],
+                ...[
+                    'locale' => 'en',
+                    'tags' => $tags,
+                    'tagOperator' => $tagOperator,
+                ],
             ]),
         );
-
-        $resultIds = \array_map(
-            fn ($article) => $article['id'],
-            $result,
-        );
-
-        // Verify correct articles are returned
-        $expectedKeys = ['tech_health', 'multi_category_multi_tag'];
-        foreach ($expectedKeys as $key) {
-            $this->assertContains(self::$articles[$key]->getUuid(), $resultIds, "Article '$key' should be in the result");
-        }
     }
 
     public function testFindFlatByTagFiltersSingleTagOR(): void
@@ -562,6 +565,48 @@ class ArticleSmartContentProviderTest extends SuluTestCase
                 ...['locale' => 'en', 'maxPerPage' => 5, 'page' => 2],
             ]),
         );
+    }
+
+    /**
+     * @return array<string, array{0: array<string, string>, 1: string, 2: string}>
+     */
+    public static function sortingProvider(): array
+    {
+        return [
+            'title_asc' => [
+                ['title' => 'asc'],
+                'Cloud',
+                'Tennis',
+            ],
+            'title_desc' => [
+                ['title' => 'desc'],
+                'Tennis',
+                'Cloud',
+            ],
+            'authored_asc' => [
+                ['authored' => 'asc'],
+                'Latest in Tech',
+                'Digital Lifestyle',
+            ],
+            'authored_desc' => [
+                ['authored' => 'desc'],
+                'Digital Lifestyle',
+                'Latest in Tech',
+            ],
+        ];
+    }
+
+    /**
+     * @param array<string, string> $sortBy
+     */
+    #[DataProvider('sortingProvider')]
+    public function testSorting(array $sortBy, string $firstTitle, string $lastTitle): void
+    {
+        $result = $this->smartContentProvider->findFlatBy([...$this->getDefaultFilters(), ...['locale' => 'en']], $sortBy);
+
+        $this->assertCount(15, $result);
+        $this->assertStringContainsString($firstTitle, $result[0]['title']);
+        $this->assertStringContainsString($lastTitle, $result[14]['title']);
     }
 
     public function testSortByTitleAsc(): void

@@ -127,6 +127,7 @@ class MediaSmartContentProviderTest extends SuluTestCase
             ],
             [self::$categories['tech']->getId()],
             [self::$tags['mobile'], self::$tags['web']],
+            new \DateTime('2023-01-01 10:00:00'),
         );
 
         self::$media['tech2'] = self::createAndEnhanceMedia(
@@ -139,6 +140,7 @@ class MediaSmartContentProviderTest extends SuluTestCase
             ],
             [self::$categories['tech']->getId(), self::$categories['business']->getId()],
             [self::$tags['cloud']],
+            new \DateTime('2023-01-01 11:00:00'),
         );
 
         // Sports media
@@ -152,6 +154,7 @@ class MediaSmartContentProviderTest extends SuluTestCase
             ],
             [self::$categories['sports']->getId()],
             [self::$tags['football']],
+            new \DateTime('2023-01-01 12:00:00'),
         );
 
         self::$media['sports2'] = self::createAndEnhanceMedia(
@@ -164,6 +167,7 @@ class MediaSmartContentProviderTest extends SuluTestCase
             ],
             [self::$categories['sports']->getId()],
             [self::$tags['tennis']],
+            new \DateTime('2023-01-01 13:00:00'),
         );
 
         // Health media
@@ -177,6 +181,7 @@ class MediaSmartContentProviderTest extends SuluTestCase
             ],
             [self::$categories['health']->getId()],
             [self::$tags['fitness']],
+            new \DateTime('2023-01-01 14:00:00'),
         );
 
         self::$media['health2'] = self::createAndEnhanceMedia(
@@ -189,6 +194,7 @@ class MediaSmartContentProviderTest extends SuluTestCase
             ],
             [self::$categories['health']->getId()],
             [self::$tags['diet'], self::$tags['fitness']],
+            new \DateTime('2023-01-01 15:00:00'),
         );
 
         // Business media
@@ -202,6 +208,7 @@ class MediaSmartContentProviderTest extends SuluTestCase
             ],
             [self::$categories['business']->getId()],
             [self::$tags['startup']],
+            new \DateTime('2023-01-01 16:00:00'),
         );
 
         self::$media['business2'] = self::createAndEnhanceMedia(
@@ -214,6 +221,7 @@ class MediaSmartContentProviderTest extends SuluTestCase
             ],
             [self::$categories['business']->getId()],
             [self::$tags['finance']],
+            new \DateTime('2023-01-01 17:00:00'),
         );
 
         // Entertainment media
@@ -227,6 +235,7 @@ class MediaSmartContentProviderTest extends SuluTestCase
             ],
             [self::$categories['entertainment']->getId()],
             [self::$tags['movies']],
+            new \DateTime('2023-01-01 18:00:00'),
         );
 
         self::$media['entertainment2'] = self::createAndEnhanceMedia(
@@ -239,6 +248,7 @@ class MediaSmartContentProviderTest extends SuluTestCase
             ],
             [self::$categories['entertainment']->getId()],
             [self::$tags['music']],
+            new \DateTime('2023-01-01 19:00:00'),
         );
 
         // Cross-category media
@@ -252,6 +262,7 @@ class MediaSmartContentProviderTest extends SuluTestCase
             ],
             [self::$categories['tech']->getId(), self::$categories['health']->getId()],
             [self::$tags['mobile'], self::$tags['fitness']],
+            new \DateTime('2023-01-01 20:00:00'),
         );
 
         self::$media['sports_health'] = self::createAndEnhanceMedia(
@@ -264,6 +275,7 @@ class MediaSmartContentProviderTest extends SuluTestCase
             ],
             [self::$categories['sports']->getId(), self::$categories['health']->getId()],
             [self::$tags['fitness'], self::$tags['diet']],
+            new \DateTime('2023-01-01 21:00:00'),
         );
 
         self::$media['business_tech'] = self::createAndEnhanceMedia(
@@ -276,6 +288,7 @@ class MediaSmartContentProviderTest extends SuluTestCase
             ],
             [self::$categories['business']->getId(), self::$categories['tech']->getId()],
             [self::$tags['startup'], self::$tags['cloud']],
+            new \DateTime('2023-01-01 22:00:00'),
         );
 
         self::$media['entertainment_business'] = self::createAndEnhanceMedia(
@@ -288,6 +301,7 @@ class MediaSmartContentProviderTest extends SuluTestCase
             ],
             [self::$categories['entertainment']->getId(), self::$categories['business']->getId()],
             [self::$tags['movies'], self::$tags['finance']],
+            new \DateTime('2023-01-01 23:00:00'),
         );
 
         self::$media['multi_category_multi_tag'] = self::createAndEnhanceMedia(
@@ -304,6 +318,7 @@ class MediaSmartContentProviderTest extends SuluTestCase
                 self::$categories['entertainment']->getId(),
             ],
             [self::$tags['mobile'], self::$tags['fitness'], self::$tags['music']],
+            new \DateTime('2023-01-02 00:00:00'),
         );
 
         $entityManager->flush();
@@ -786,10 +801,19 @@ class MediaSmartContentProviderTest extends SuluTestCase
         array $data = [],
         array $categoryIds = [],
         array $tagNames = [],
+        ?\DateTimeInterface $createdAt = null,
     ): MediaInterface {
         $entityManager = self::getContainer()->get('doctrine.orm.entity_manager');
 
         $media = self::createMedia($collection, $mediaType, $data);
+
+        // Set explicit creation timestamp if provided
+        if (null !== $createdAt) {
+            $immutableCreatedAt = $createdAt instanceof \DateTimeImmutable
+                ? $createdAt
+                : \DateTimeImmutable::createFromInterface($createdAt);
+            $media->setCreated($immutableCreatedAt);
+        }
 
         $file = $media->getFiles()->first();
         if ($file) {

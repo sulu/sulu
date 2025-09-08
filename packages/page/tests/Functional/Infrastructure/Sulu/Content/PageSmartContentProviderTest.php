@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Sulu\Page\Tests\Functional\Infrastructure\Sulu\Content;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use Sulu\Bundle\AdminBundle\SmartContent\SmartContentProviderInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
@@ -351,163 +352,132 @@ class PageSmartContentProviderTest extends SuluTestCase
         }
     }
 
-    public function testFindFlatByCategoryFiltersSingleCategoryOR(): void
+    /**
+     * @return array<string, array{0: string[], 1: string, 2: int}>
+     */
+    public static function categoryFilterProvider(): array
     {
+        return [
+            'single_category_OR' => [
+                ['tech'],
+                'OR',
+                4,
+            ],
+            'multiple_categories_OR' => [
+                ['tech', 'health'],
+                'OR',
+                5,
+            ],
+            'single_category_AND' => [
+                ['health'],
+                'AND',
+                3,
+            ],
+            'multiple_categories_AND' => [
+                ['tech', 'health'],
+                'AND',
+                2,
+            ],
+        ];
+    }
+
+    /**
+     * @param string[] $categoryKeys
+     * @param 'AND'|'OR' $operator
+     */
+    #[DataProvider('categoryFilterProvider')]
+    public function testCategoryFiltering(array $categoryKeys, string $operator, int $expectedCount): void
+    {
+        $categoryIds = \array_map(fn ($key) => self::$categories[$key]->getId(), $categoryKeys);
+
+        /** @var 'AND'|'OR' $categoryOperator */
+        $categoryOperator = $operator;
+
         $result = $this->smartContentProvider->findFlatBy([
             ...$this->getDefaultFilters(),
             ...[
                 'locale' => 'en',
-                'categories' => [self::$categories['tech']->getId()],
-                'categoryOperator' => 'OR',
+                'categories' => $categoryIds,
+                'categoryOperator' => $categoryOperator,
             ],
         ], []);
 
-        $this->assertCount(4, $result); // Only sulu-io tech pages
+        $this->assertCount($expectedCount, $result);
         $this->assertSame(
-            4,
+            $expectedCount,
             $this->smartContentProvider->countBy([
                 ...$this->getDefaultFilters(),
                 ...[
                     'locale' => 'en',
-                    'categories' => [self::$categories['tech']->getId()],
-                    'categoryOperator' => 'OR',
+                    'categories' => $categoryIds,
+                    'categoryOperator' => $categoryOperator,
                 ],
             ]),
         );
-
-        $resultIds = \array_map(
-            fn ($page) => $page['id'],
-            $result,
-        );
-
-        // Verify correct sulu-io pages are returned
-        $expectedKeys = ['tech1', 'tech_health', 'business_tech', 'multi_category_multi_tag'];
-        foreach ($expectedKeys as $key) {
-            $this->assertContains(self::$pages[$key]->getUuid(), $resultIds, "Page '$key' should be in the result");
-        }
-
-        // Verify blog tech pages are not returned
-        $this->assertNotContains(self::$pages['tech2']->getUuid(), $resultIds, "Page 'tech2' should not be in the result");
     }
 
-    public function testFindFlatByCategoryFiltersMultipleCategoriesOR(): void
+    /**
+     * @return array<string, array{0: string[], 1: string, 2: int}>
+     */
+    public static function tagFilterProvider(): array
     {
-        $result = $this->smartContentProvider->findFlatBy([
-            ...$this->getDefaultFilters(),
-            ...[
-                'locale' => 'en',
-                'categories' => [self::$categories['tech']->getId(), self::$categories['health']->getId()],
-                'categoryOperator' => 'OR',
+        return [
+            'single_tag_OR_mobile' => [
+                ['mobile'],
+                'OR',
+                3,
             ],
-        ], ['title' => 'asc']);
-
-        // Should include only sulu-io pages with tech or health categories
-        $this->assertCount(5, $result);
-        $this->assertSame(
-            5,
-            $this->smartContentProvider->countBy([
-                ...$this->getDefaultFilters(),
-                ...[
-                    'locale' => 'en',
-                    'categories' => [self::$categories['tech']->getId(), self::$categories['health']->getId()],
-                    'categoryOperator' => 'OR',
-                ],
-            ]),
-        );
-
-        $resultIds = \array_map(
-            fn ($page) => $page['id'],
-            $result,
-        );
-
-        // Verify correct sulu-io pages are returned
-        $expectedKeys = ['tech1', 'health1', 'tech_health', 'business_tech', 'multi_category_multi_tag'];
-        foreach ($expectedKeys as $key) {
-            $this->assertContains(self::$pages[$key]->getUuid(), $resultIds, "Page '$key' should be in the result");
-        }
-
-        // Verify blog pages are not returned
-        $blogPages = ['tech2', 'health2', 'sports_health'];
-        foreach ($blogPages as $key) {
-            $this->assertNotContains(self::$pages[$key]->getUuid(), $resultIds, "Page '$key' should not be in the result");
-        }
+            'multiple_tags_OR_mobile_cloud' => [
+                ['mobile', 'cloud'],
+                'OR',
+                4,
+            ],
+            'single_tag_AND_fitness' => [
+                ['fitness'],
+                'AND',
+                3,
+            ],
+            'multiple_tags_AND_mobile_fitness' => [
+                ['mobile', 'fitness'],
+                'AND',
+                2,
+            ],
+        ];
     }
 
-    public function testFindFlatByCategoryFiltersSingleCategoryAND(): void
+    /**
+     * @param string[] $tagNames
+     * @param 'AND'|'OR' $operator
+     */
+    #[DataProvider('tagFilterProvider')]
+    public function testTagFiltering(array $tagNames, string $operator, int $expectedCount): void
     {
+        $tags = \array_map(fn ($name) => self::$tags[$name], $tagNames);
+
+        /** @var 'AND'|'OR' $tagOperator */
+        $tagOperator = $operator;
+
         $result = $this->smartContentProvider->findFlatBy([
             ...$this->getDefaultFilters(),
             ...[
                 'locale' => 'en',
-                'categories' => [self::$categories['health']->getId()],
-                'categoryOperator' => 'AND',
+                'tags' => $tags,
+                'tagOperator' => $tagOperator,
             ],
         ], []);
 
-        $this->assertCount(3, $result); // Only sulu-io health pages
+        $this->assertCount($expectedCount, $result);
         $this->assertSame(
-            3,
+            $expectedCount,
             $this->smartContentProvider->countBy([
                 ...$this->getDefaultFilters(),
                 ...[
                     'locale' => 'en',
-                    'categories' => [self::$categories['health']->getId()],
-                    'categoryOperator' => 'AND',
+                    'tags' => $tags,
+                    'tagOperator' => $tagOperator,
                 ],
             ]),
         );
-
-        $resultIds = \array_map(
-            fn ($page) => $page['id'],
-            $result,
-        );
-
-        // Verify correct sulu-io pages are returned
-        $expectedKeys = ['health1', 'tech_health', 'multi_category_multi_tag'];
-        foreach ($expectedKeys as $key) {
-            $this->assertContains(self::$pages[$key]->getUuid(), $resultIds, "Page '$key' should be in the result");
-        }
-
-        // Verify blog health pages are not returned
-        $this->assertNotContains(self::$pages['health2']->getUuid(), $resultIds, "Page 'health2' should not be in the result");
-        $this->assertNotContains(self::$pages['sports_health']->getUuid(), $resultIds, "Page 'sports_health' should not be in the result");
-    }
-
-    public function testFindFlatByCategoryFiltersMultipleCategoriesAND(): void
-    {
-        $result = $this->smartContentProvider->findFlatBy([
-            ...$this->getDefaultFilters(),
-            ...[
-                'locale' => 'en',
-                'categories' => [self::$categories['tech']->getId(), self::$categories['health']->getId()],
-                'categoryOperator' => 'AND',
-            ],
-        ], []);
-
-        // Should include only sulu-io pages with both tech and health categories
-        $this->assertCount(2, $result);
-        $this->assertSame(
-            2,
-            $this->smartContentProvider->countBy([
-                ...$this->getDefaultFilters(),
-                ...[
-                    'locale' => 'en',
-                    'categories' => [self::$categories['tech']->getId(), self::$categories['health']->getId()],
-                    'categoryOperator' => 'AND',
-                ],
-            ]),
-        );
-
-        $resultIds = \array_map(
-            fn ($page) => $page['id'],
-            $result,
-        );
-
-        // Verify correct sulu-io pages are returned
-        $expectedKeys = ['tech_health', 'multi_category_multi_tag'];
-        foreach ($expectedKeys as $key) {
-            $this->assertContains(self::$pages[$key]->getUuid(), $resultIds, "Page '$key' should be in the result");
-        }
     }
 
     public function testFindFlatByTagFiltersSingleTagOR(): void
@@ -779,6 +749,48 @@ class PageSmartContentProviderTest extends SuluTestCase
         foreach ($blogPages as $key) {
             $this->assertNotContains(self::$pages[$key]->getUuid(), $resultIds, "Second page should not include '$key'");
         }
+    }
+
+    /**
+     * @return array<string, array{0: array<string, string>, 1: string, 2: string}>
+     */
+    public static function sortingProvider(): array
+    {
+        return [
+            'title_asc' => [
+                ['title' => 'asc'],
+                'Digital Lifestyle',
+                'Zero Tech Investments',
+            ],
+            'title_desc' => [
+                ['title' => 'desc'],
+                'Zero Tech Investments',
+                'Digital Lifestyle',
+            ],
+            'authored_asc' => [
+                ['authored' => 'asc'],
+                'Latest in Tech',
+                'Digital Lifestyle',
+            ],
+            'authored_desc' => [
+                ['authored' => 'desc'],
+                'Digital Lifestyle',
+                'Latest in Tech',
+            ],
+        ];
+    }
+
+    /**
+     * @param array<string, string> $sortBy
+     */
+    #[DataProvider('sortingProvider')]
+    public function testSorting(array $sortBy, string $firstTitle, string $lastTitle): void
+    {
+        $result = $this->smartContentProvider->findFlatBy([...$this->getDefaultFilters(), ...['locale' => 'en']], $sortBy);
+
+        $this->assertCount(8, $result);
+        $this->assertStringContainsString($firstTitle, $result[0]['title']);
+        $this->assertStringContainsString($lastTitle, $result[7]['title']);
     }
 
     public function testSortByTitleAsc(): void
