@@ -75,13 +75,6 @@
             <argument>%sulu_core.translated_locales%</argument>
         </service>
 
-        <service id="sulu_admin.deprecated_properties_xml_parser"
-                 class="Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Parser\DeprecatedPropertiesXmlParser"
-                 public="false">
-            <argument type="service" id="translator" />
-            <argument>%sulu_core.translated_locales%</argument>
-        </service>
-
         <service id="sulu_admin.schema_xml_parser"
                  class="Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Parser\SchemaXmlParser"
                  public="false">
