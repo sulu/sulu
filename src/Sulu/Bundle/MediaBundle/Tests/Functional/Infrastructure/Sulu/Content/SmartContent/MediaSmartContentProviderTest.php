@@ -791,6 +791,7 @@ class MediaSmartContentProviderTest extends SuluTestCase
         foreach ($expectedKeys as $key) {
             $this->assertContains(self::$media[$key]->getId(), $resultIds, "Media '$key' should be in the combined filter result");
         }
+        $this->assertCount(\count($expectedKeys), $resultIds);
     }
 
     /**
