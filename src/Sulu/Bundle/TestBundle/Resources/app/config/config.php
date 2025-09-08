@@ -38,4 +38,8 @@ return static function(PhpFileLoader $loader, ContainerBuilder $container) {
     } else {
         $loader->import('symfony-5-4.yml');
     }
+
+    if (\str_starts_with($container->getParameter('kernel.environment'), 'test')) {
+        $loader->import('flysystem_test.yml');
+    }
 };

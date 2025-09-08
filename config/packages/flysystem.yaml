@@ -9,4 +9,4 @@ when@test:
     flysystem:
         storages:
             default.storage:
-                    adapter: 'memory'
+                adapter: 'memory'
