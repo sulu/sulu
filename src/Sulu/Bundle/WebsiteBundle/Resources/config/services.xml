@@ -143,13 +143,6 @@
             <tag name="kernel.event_subscriber"/>
         </service>
 
-        <service id="sulu_website.event_listener.security_listener"
-                 class="Sulu\Bundle\WebsiteBundle\EventListener\SecurityListener">
-            <argument type="service" id="sulu_security.security_checker" on-invalid="null"/>
-
-            <tag name="kernel.event_subscriber"/>
-        </service>
-
         <!-- reference-store -->
         <service id="sulu_website.reference_store_pool"
                  class="Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStorePool">
