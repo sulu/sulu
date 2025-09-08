@@ -16,6 +16,7 @@ parameters:
     level: max
     parallel:
         processTimeout: 300.0
+    reportUnmatchedIgnoredErrors: false
     excludePaths:
         - %currentWorkingDirectory%/node_modules/*
         - %currentWorkingDirectory%/var/*

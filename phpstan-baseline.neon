@@ -7086,26 +7086,6 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Contact/ContactManager.php
 
 		-
-			message: "#^Call to an undefined method Sulu\\\\Bundle\\\\PageBundle\\\\Content\\\\Types\\\\Email\\:\\:getAccounts\\(\\)\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/ContactManager.php
-
-		-
-			message: "#^Call to an undefined method Sulu\\\\Bundle\\\\PageBundle\\\\Content\\\\Types\\\\Email\\:\\:getContacts\\(\\)\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/ContactManager.php
-
-		-
-			message: "#^Call to an undefined method Sulu\\\\Bundle\\\\PageBundle\\\\Content\\\\Types\\\\Phone\\:\\:getAccounts\\(\\)\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/ContactManager.php
-
-		-
-			message: "#^Call to an undefined method Sulu\\\\Bundle\\\\PageBundle\\\\Content\\\\Types\\\\Phone\\:\\:getContacts\\(\\)\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/ContactManager.php
-
-		-
 			message: "#^Call to function is_array\\(\\) with string will always evaluate to false\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Contact/ContactManager.php
