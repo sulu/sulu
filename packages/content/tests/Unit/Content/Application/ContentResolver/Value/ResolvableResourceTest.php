@@ -31,4 +31,18 @@ class ResolvableResourceTest extends TestCase
 
         self::assertSame('resourceLoaderKey', $resolvableResource->getResourceLoaderKey());
     }
+
+    public function testGetResourceKeyReturnsNullByDefault(): void
+    {
+        $resolvableResource = new ResolvableResource(5, 'resourceLoaderKey', 0);
+
+        self::assertNull($resolvableResource->getResourceKey());
+    }
+
+    public function testGetResourceKeyReturnsProvidedValue(): void
+    {
+        $resolvableResource = new ResolvableResource(5, 'resourceLoaderKey', 0, null, null, 'pages');
+
+        self::assertSame('pages', $resolvableResource->getResourceKey());
+    }
 }

@@ -48,8 +48,6 @@ readonly class SettingsResolver implements ResolverInterface
             'availableLocales' => $dimensionContent->getAvailableLocales() ?? [],
         ];
 
-        $references = [];
-
         if ($dimensionContent instanceof WebspaceInterface) {
             $result = \array_merge($result, $this->getWebspaceData($dimensionContent));
         }
@@ -66,7 +64,7 @@ readonly class SettingsResolver implements ResolverInterface
             $result = \array_merge($result, $this->getShadowData($dimensionContent));
         }
 
-        return ContentView::createWithReferences($result, [], $references);
+        return ContentView::create($result, []);
     }
 
     /**

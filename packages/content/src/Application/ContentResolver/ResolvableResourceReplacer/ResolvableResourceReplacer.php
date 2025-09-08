@@ -15,6 +15,8 @@ namespace Sulu\Content\Application\ContentResolver\ResolvableResourceReplacer;
 
 use Sulu\Content\Application\ContentResolver\Value\ResolvableInterface;
 use Sulu\Content\Application\ContentResolver\Value\ResolvableResource;
+use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStorePoolInterface;
+use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreNotExistsException;
 
 /**
  * @internal This service is intended for internal use only within the package/library.
@@ -22,6 +24,10 @@ use Sulu\Content\Application\ContentResolver\Value\ResolvableResource;
  */
 class ResolvableResourceReplacer implements ResolvableResourceReplacerInterface
 {
+    public function __construct(
+        private ?ReferenceStorePoolInterface $referenceStorePool = null
+    ) {
+    }
     public function replaceResolvableResourcesWithResolvedValues(
         array $content,
         array $resolvedResources,
@@ -50,6 +56,12 @@ class ResolvableResourceReplacer implements ResolvableResourceReplacerInterface
                 $value instanceof ResolvableInterface
             ) {
                 $resource = $resolvedResources[$value->getResourceLoaderKey()][$value->getId()][$value->getMetadataIdentifier()] ?? null;
+                
+                // Populate ReferenceStore if resource was successfully loaded and has resourceKey
+                if ($resource !== null && $value instanceof ResolvableResource && $value->getResourceKey()) {
+                    $this->populateReferenceStore($value->getResourceKey(), $value->getId());
+                }
+                
                 $value = $value->executeResourceCallback(
                     $resource,
                 );
@@ -72,5 +84,40 @@ class ResolvableResourceReplacer implements ResolvableResourceReplacerInterface
         }
 
         return $content;
+    }
+
+    /**
+     * Populate ReferenceStore with the loaded resource reference.
+     */
+    private function populateReferenceStore(string $resourceKey, string|int $resourceId): void
+    {
+        if (!$this->referenceStorePool) {
+            return;
+        }
+
+        // Simple mapping of resource keys to store aliases
+        $storeMapping = [
+            'pages' => 'pages',
+            'media' => 'media',
+            'tags' => 'tag',
+            'categories' => 'category',
+            'contacts' => 'contact',
+            'accounts' => 'account',
+            'collections' => 'collection',
+            'snippets' => 'snippets',
+            'articles' => 'articles',
+        ];
+
+        $storeAlias = $storeMapping[$resourceKey] ?? null;
+        if (!$storeAlias) {
+            return;
+        }
+
+        try {
+            $store = $this->referenceStorePool->getStore($storeAlias);
+            $store->add($resourceId);
+        } catch (ReferenceStoreNotExistsException) {
+            // Store doesn't exist for this alias, skip silently
+        }
     }
 }

@@ -26,7 +26,7 @@ class ResolvableResourceReplacerTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->replacer = new ResolvableResourceReplacer();
+        $this->replacer = new ResolvableResourceReplacer(null); // ReferenceStorePool not needed for unit tests
     }
 
     public function testReplaceResolvableResourcesWithResolvedValues(): void

@@ -180,6 +180,7 @@ readonly class ContentResolver implements ContentResolverInterface
         ?array $properties = null
     ): array {
         $contentViews = $this->contentViewResolver->getContentViews($dimensionContent, $properties);
+
         $resolvedContent = $this->contentViewResolver->resolveContentViews($contentViews, $depth, $priorityQueue);
 
         // Add resolvable resources to priority queue

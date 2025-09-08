@@ -53,6 +53,7 @@ class ContentResolverTest extends TestCase
      */
     private ObjectProphecy $contentAggregator;
 
+
     protected function setUp(): void
     {
         parent::setUp();

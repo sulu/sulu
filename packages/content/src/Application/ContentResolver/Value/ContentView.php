@@ -110,6 +110,7 @@ class ContentView
                 priority: $priority,
                 resourceCallback: $closure,
                 metadata: $metadata,
+                resourceKey: $resourceKey,
             ),
             $view,
             [new Reference($id, $resourceKey)]
@@ -162,7 +163,8 @@ class ContentView
                 id: $id,
                 resourceLoaderKey: $resourceLoaderKey,
                 priority: $priority,
-                metadata: $metadata
+                metadata: $metadata,
+                resourceKey: $resourceKey
             );
             $references[] = new Reference($id, $resourceKey);
         }

@@ -101,6 +101,11 @@ class ContentViewTest extends TestCase
         $references = $contentView->getReferences();
         self::assertCount(1, $references);
         $this->assertReferenceEquals(5, 'pages', '', $references[0]);
+
+        // Test that ResolvableResource also has the resourceKey
+        /** @var ResolvableResource $resolvable */
+        $resolvable = $contentView->getContent();
+        self::assertSame('pages', $resolvable->getResourceKey());
     }
 
     public function testCreateResolvablesWithReferences(): void
@@ -117,8 +122,10 @@ class ContentViewTest extends TestCase
         self::assertCount(2, $resolvables);
         self::assertSame(5, $resolvables[0]->getId());
         self::assertSame('resourceLoaderKey', $resolvables[0]->getResourceLoaderKey());
+        self::assertSame('articles', $resolvables[0]->getResourceKey());
         self::assertSame(6, $resolvables[1]->getId());
         self::assertSame('resourceLoaderKey', $resolvables[1]->getResourceLoaderKey());
+        self::assertSame('articles', $resolvables[1]->getResourceKey());
         self::assertSame(['view' => 'data'], $contentView->getView());
 
         $expectedReferences = [

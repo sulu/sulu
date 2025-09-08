@@ -94,7 +94,7 @@ class SuluHttpCacheExtension extends Extension implements PrependExtensionInterf
 
         $loader->load('cache-lifetime-enhancer.xml');
 
-        if ($proxyClientAvailable) {
+        if (true || $proxyClientAvailable) {
             $loader->load('cache-manager.xml');
 
             if (true === $config['tags']['enabled']) {

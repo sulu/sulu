@@ -29,6 +29,7 @@ class ResolvableResource implements ResolvableInterface
         private int $priority,
         ?\Closure $resourceCallback = null,
         private ?array $metadata = null,
+        private ?string $resourceKey = null,
     ) {
         $this->callback = $resourceCallback ?? (static fn (mixed $resource) => $resource);
     }
@@ -65,5 +66,10 @@ class ResolvableResource implements ResolvableInterface
     {
         // TODO do we need a rekursive key sort?
         return $this->metadata ? \md5((string) \json_encode($this->metadata)) : '';
+    }
+
+    public function getResourceKey(): ?string
+    {
+        return $this->resourceKey;
     }
 }
