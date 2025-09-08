@@ -1,17 +1,2 @@
 parameters:
-    phpcr.transport: '%env(PHPCR_TRANSPORT)%'
-    phpcr.backend_url: '%env(PHPCR_BACKEND_URL)%'
-    phpcr.username: '%env(PHPCR_USERNAME)%'
-    phpcr.password: '%env(PHPCR_PASSWORD)%'
-    phpcr.workspace: '%env(PHPCR_WORKSPACE)%'
-
-
-    # Fallback values (used if environmental variables are not set)
-
     env(DATABASE_URL): mysql://root:ChangeMe@127.0.0.1:3306/sulu_test?serverVersion=5.7&charset=utf8mb4
-
-    env(PHPCR_TRANSPORT): doctrinedbal
-    env(PHPCR_BACKEND_URL): http://localhost:8080/server/
-    env(PHPCR_USERNAME): admin
-    env(PHPCR_PASSWORD): admin
-    env(PHPCR_WORKSPACE): test

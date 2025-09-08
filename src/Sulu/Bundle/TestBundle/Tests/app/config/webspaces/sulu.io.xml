@@ -54,7 +54,7 @@
             </localizations>
 
             <environments>
-                <environment type="phpcr">
+                <environment type="stage">
                     <urls>
                         <url>sulu.lo/{localization}</url>
                         <url language="en">localhost</url>
