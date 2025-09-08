@@ -13,6 +13,7 @@ namespace Sulu\Bundle\WebsiteBundle\DataCollector;
 
 use Sulu\Component\Persistence\Model\AuditableInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
+use Sulu\Component\Util\ArrayableInterface;
 use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
 use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\Webspace;
@@ -43,8 +44,10 @@ class SuluCollector extends DataCollector
             return;
         }
 
-        /** @var RequestAttributes $requestAttributes */
         $requestAttributes = $request->attributes->get('_sulu');
+        if (!$requestAttributes instanceof RequestAttributes) {
+            return;
+        }
 
         /** @var ?Webspace $webspace */
         $webspace = $requestAttributes->getAttribute('webspace');
@@ -57,13 +60,13 @@ class SuluCollector extends DataCollector
         $this->data['portal_url'] = $requestAttributes->getAttribute('portalUrl');
         $this->data['segment'] = $requestAttributes->getAttribute('segment');
 
-        if ($webspace) {
+        if ($webspace instanceof ArrayableInterface) {
             $this->data['webspace'] = $webspace->toArray();
             unset($this->data['webspace']['portals']);
             $this->flattenLocalization($this->data['webspace']['localizations']);
         }
 
-        if ($portal) {
+        if ($portal instanceof Portal) {
             $this->data['portal'] = $portal->toArray();
             $this->data['portal']['environments'] = \array_combine(
                 \array_column($this->data['portal']['environments'] ?? [], 'type'),
@@ -73,7 +76,7 @@ class SuluCollector extends DataCollector
             $this->data['environment'] = $portal->getEnvironment($this->kernelEnvironment);
         }
 
-        if ($segment) {
+        if ($segment instanceof ArrayableInterface) {
             $this->data['segment'] = $segment->toArray();
         }
 

@@ -22,6 +22,8 @@ interface ArrayableInterface
      *
      * @param int $depth - Optional depth parameter. May or may not be used
      *                   by the implementing object
+     *
+     * @return array
      */
     public function toArray($depth = null);
 }

@@ -12,15 +12,15 @@
 namespace Sulu\Bundle\WebsiteBundle\Tests\Unit\DataCollector;
 
 use PHPUnit\Framework\TestCase;
-use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\WebsiteBundle\DataCollector\SuluCollector;
-use Sulu\Component\Content\Compat\Structure\PageBridge;
 use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
 use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\Segment;
 use Sulu\Component\Webspace\Webspace;
+use Sulu\Content\Domain\Model\ContentRichEntityInterface;
+use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -30,30 +30,19 @@ class SuluCollectorTest extends TestCase
     use ProphecyTrait;
 
     /**
-     * @var ObjectProphecy<Request>
-     */
-    protected $request;
-
-    /**
      * @var ObjectProphecy<ParameterBag>
      */
-    protected $attributes;
+    protected ObjectProphecy $attributes;
 
     /**
      * @var ObjectProphecy<Response>
      */
-    protected $response;
+    protected ObjectProphecy $response;
 
-    /**
-     * @var SuluCollector
-     */
-    private $suluCollector;
+    private SuluCollector $suluCollector;
 
     public function setUp(): void
     {
-        $this->request = $this->prophesize(Request::class);
-        $this->attributes = $this->prophesize(ParameterBag::class);
-        $this->request->reveal()->attributes = $this->attributes->reveal();
         $this->response = $this->prophesize(Response::class);
 
         $this->suluCollector = new SuluCollector();
@@ -61,41 +50,84 @@ class SuluCollectorTest extends TestCase
 
     public function testCollectorNoComplexObjects(): void
     {
-        $this->attributes->has('_sulu')->willReturn(false)->shouldBeCalled();
-        $this->attributes->get(Argument::any())->shouldNotBeCalled();
-        $this->suluCollector->collect($this->request->reveal(), $this->response->reveal());
+        $request = Request::create('/', parameters: []);
+
+        $this->suluCollector->collect($request, $this->response->reveal());
+        $this->assertEquals(null, $this->suluCollector->data('structure'));
     }
 
-    public function testCollector(): void
+    public function testCollectorWithAnyPage(): void
     {
-        $structure = $this->prophesize(PageBridge::class);
-
         $webspace = $this->prophesize(Webspace::class);
         $portal = $this->prophesize(Portal::class);
         $segment = $this->prophesize(Segment::class);
 
-        $this->attributes->has('_sulu')->willReturn(true)->shouldBeCalled();
-        $this->attributes->get('_sulu')->willReturn(new RequestAttributes(
-            [
-                'webspace' => $webspace->reveal(),
-                'portal' => $portal->reveal(),
-                'segment' => $segment->reveal(),
-                'matchType' => 'match',
-                'redirect' => 'red',
-                'portalUrl' => '/foo',
-                'localization' => 'de_de',
-                'resourceLocator' => '/asd',
-                'resourceLocatorPrefix' => '/asd/',
-            ]
-        ))->shouldBeCalled();
-
-        $this->attributes->has('object')->willReturn(false);
+        $request = Request::create('/');
+        $request->attributes->set('_sulu', new RequestAttributes([
+            'webspace' => $webspace->reveal(),
+            'portal' => $portal->reveal(),
+            'segment' => $segment->reveal(),
+            'matchType' => 'match',
+            'redirect' => 'red',
+            'portalUrl' => '/foo',
+            'localization' => 'de_de',
+            'resourceLocator' => '/asd',
+            'resourceLocatorPrefix' => '/asd/',
+        ]));
 
         $webspace->toArray()->shouldBeCalled();
         $portal->toArray()->shouldBeCalled();
         $portal->getEnvironment('dev')->shouldBeCalled()->willReturn([]);
         $segment->toArray()->shouldBeCalled();
 
-        $this->suluCollector->collect($this->request->reveal(), $this->response->reveal());
+        $this->suluCollector->collect($request, $this->response->reveal());
+        $this->assertEquals(null, $this->suluCollector->data('structure'));
+    }
+
+    public function testCollectorWithDocument(): void
+    {
+        $webspace = $this->prophesize(Webspace::class);
+        $portal = $this->prophesize(Portal::class);
+        $segment = $this->prophesize(Segment::class);
+
+        $page = $this->prophesize(DimensionContentInterface::class);
+        $resource = $this->prophesize(ContentRichEntityInterface::class);
+        $resource->getId()->willReturn('123');
+
+        $page->getResource()->willReturn($resource->reveal());
+        $page->getStage()->willReturn('published');
+        $page->getLocale()->willReturn('de');
+        $page->getAvailableLocales()->willReturn(['de', 'en']);
+        $page->getGhostLocale()->willReturn(null);
+
+        $request = Request::create('/');
+        $request->attributes->set('_sulu', new RequestAttributes([
+            'webspace' => $webspace->reveal(),
+            'portal' => $portal->reveal(),
+            'segment' => $segment->reveal(),
+            'matchType' => 'match',
+            'redirect' => 'red',
+            'portalUrl' => '/foo',
+            'localization' => 'de_de',
+            'resourceLocator' => '/asd',
+            'resourceLocatorPrefix' => '/asd/',
+        ]));
+        $request->attributes->set('object', $page->reveal());
+
+        $webspace->toArray()->shouldBeCalled();
+        $portal->toArray()->shouldBeCalled();
+        $portal->getEnvironment('dev')->shouldBeCalled()->willReturn([]);
+        $segment->toArray()->shouldBeCalled();
+
+        $this->suluCollector->collect($request, $this->response->reveal());
+        $this->assertEquals([
+            'id' => '123',
+            'class' => ($resource->reveal())::class,
+            'dimensionClass' => ($page->reveal())::class,
+            'nodeState' => 'published',
+            'locale' => 'de',
+            'availableLocales' => ['de', 'en'],
+            'ghostLocale' => null,
+        ], $this->suluCollector->data('structure'));
     }
 }
