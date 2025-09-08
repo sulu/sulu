@@ -18,7 +18,6 @@ use Sulu\Bundle\ActivityBundle\Domain\Event\DomainEvent;
 use Sulu\Bundle\ActivityBundle\Domain\Model\ActivityInterface;
 use Sulu\Bundle\ActivityBundle\Infrastructure\Doctrine\Repository\ActivityRepository;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
-use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 use Sulu\Component\Security\Authentication\UserInterface;
 
 class ActivityRepositoryTest extends SuluTestCase
@@ -60,7 +59,7 @@ class ActivityRepositoryTest extends SuluTestCase
         $this->domainEvent->getResourceTitle()->willReturn('Test Page 1234');
         $this->domainEvent->getResourceTitleLocale()->willReturn('en');
         $this->domainEvent->getResourceSecurityContext()->willReturn('sulu.webspaces.sulu-io');
-        $this->domainEvent->getResourceSecurityObjectType()->willReturn(SecurityBehavior::class);
+        $this->domainEvent->getResourceSecurityObjectType()->willReturn('pages');
         $this->domainEvent->getResourceSecurityObjectId()->willReturn('1234-1234-1234-1234');
     }
 
@@ -87,7 +86,7 @@ class ActivityRepositoryTest extends SuluTestCase
         static::assertSame('Test Page 1234', $activity->getResourceTitle());
         static::assertSame('en', $activity->getResourceTitleLocale());
         static::assertSame('sulu.webspaces.sulu-io', $activity->getResourceSecurityContext());
-        static::assertSame(SecurityBehavior::class, $activity->getResourceSecurityObjectType());
+        static::assertSame('pages', $activity->getResourceSecurityObjectType());
         static::assertSame('1234-1234-1234-1234', $activity->getResourceSecurityObjectId());
     }
 

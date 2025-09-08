@@ -14,7 +14,6 @@ namespace Sulu\Bundle\ActivityBundle\Tests\Unit\Model\Event;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\ActivityBundle\Domain\Model\Activity;
-use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 use Sulu\Component\Security\Authentication\UserInterface;
 
 class ActivityTest extends TestCase
@@ -143,8 +142,8 @@ class ActivityTest extends TestCase
         $event = $this->createActivity();
 
         static::assertNull($event->getResourceSecurityObjectType());
-        static::assertSame($event, $event->setResourceSecurityObjectType(SecurityBehavior::class));
-        static::assertSame(SecurityBehavior::class, $event->getResourceSecurityObjectType());
+        static::assertSame($event, $event->setResourceSecurityObjectType('pages'));
+        static::assertSame('pages', $event->getResourceSecurityObjectType());
     }
 
     public function testResourceSecurityObjectId(): void
