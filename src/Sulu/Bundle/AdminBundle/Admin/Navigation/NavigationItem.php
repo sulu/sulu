@@ -374,11 +374,8 @@ class NavigationItem implements \Iterator
      * Return the current element.
      *
      * @see http://php.net/manual/en/iterator.current.php
-     *
-     * @return mixed Can return any type
      */
-    #[\ReturnTypeWillChange]
-    public function current()
+    public function current(): self
     {
         return $this->children[$this->position];
     }
@@ -388,8 +385,7 @@ class NavigationItem implements \Iterator
      *
      * @see http://php.net/manual/en/iterator.next.php
      */
-    #[\ReturnTypeWillChange]
-    public function next()
+    public function next(): void
     {
         ++$this->position;
     }
@@ -401,8 +397,7 @@ class NavigationItem implements \Iterator
      *
      * @return mixed scalar on success, or null on failure
      */
-    #[\ReturnTypeWillChange]
-    public function key()
+    public function key(): int
     {
         return $this->position;
     }
@@ -415,8 +410,7 @@ class NavigationItem implements \Iterator
      * @return bool The return value will be casted to boolean and then evaluated.
      *              Returns true on success or false on failure
      */
-    #[\ReturnTypeWillChange]
-    public function valid()
+    public function valid(): bool
     {
         return $this->position < \count($this->children);
     }
@@ -426,8 +420,7 @@ class NavigationItem implements \Iterator
      *
      * @see http://php.net/manual/en/iterator.rewind.php
      */
-    #[\ReturnTypeWillChange]
-    public function rewind()
+    public function rewind(): void
     {
         $this->position = 0;
     }

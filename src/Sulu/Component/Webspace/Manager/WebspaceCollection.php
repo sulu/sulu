@@ -132,8 +132,7 @@ class WebspaceCollection implements \IteratorAggregate
         return \count($this->webspaces);
     }
 
-    #[\ReturnTypeWillChange]
-    public function getIterator()
+    public function getIterator(): \Traversable
     {
         return new \ArrayIterator($this->webspaces);
     }
