@@ -52,5 +52,4 @@ jobs:
             - name: Upload translations to crowdin
               env:
                   CROWDIN_TOKEN: ${{ secrets.CrowdinToken }}
-              run: |
-                  java -jar $(find . -name crowdin-cli.jar) upload sources -s "admin.en.json" -t "admin.%two_letters_code%.json" -i 15 --base-url=https://sulu.crowdin.com --base-path=. --token=$CROWDIN_TOKEN
+              run: java -jar $(find . -name crowdin-cli.jar) upload sources -s "admin.en.json" -t "admin.%two_letters_code%.json" -i 15 --base-url=https://sulu.crowdin.com --base-path=. --token=$CROWDIN_TOKEN
