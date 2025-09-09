@@ -107,6 +107,20 @@ class RouteRepositoryTest extends KernelTestCase
         $this->assertSame('the_site', $route->getSite());
     }
 
+    public function testFindFirstBySiteSlugLocale(): void
+    {
+        $route = $this->routeRepository->findFirstBy([
+            'site' => null,
+            'slug' => '/test',
+            'locale' => 'en',
+        ], ['site' => 'DESC']);
+
+        $this->assertNotNull($route);
+        $this->assertSame('/test', $route->getSlug());
+        $this->assertSame('en', $route->getLocale());
+        $this->assertNull($route->getSite());
+    }
+
     public function testFindFirstByNotExist(): void
     {
         $route = $this->routeRepository->findFirstBy([

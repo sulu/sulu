@@ -27,7 +27,6 @@ use Sulu\Route\Domain\Model\Route;
  *         resourceId: string,
  *     },
  * }
- *
  * @phpstan-type RouteSortBy array{
  *     site?: 'asc'|'desc',
  * }
