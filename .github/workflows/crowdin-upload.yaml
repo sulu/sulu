@@ -1,6 +1,7 @@
 name: Crowdin Upload
 
 on:
+    pull_request: ~
     push:
         tags:
             - '*'
@@ -36,15 +37,19 @@ jobs:
 
             - name: Merge all translation files from 3.0
               run: |
-                  jq -s '.|add' var/translations/admin-2-6.en.json src/Sulu/Bundle/*/Resources/translations/admin.en.json packages/*/translations/admin.en.json > var/translations/admin.en.json
+                  jq -s '.|add' src/Sulu/Bundle/*/Resources/translations/admin.en.json packages/*/translations/admin.en.json > var/translations/admin-3-0.en.json
 
             - name: Output merged translations 3.0
               run: |
-                  cat var/translations/admin.en.json
+                  cat var/translations/admin-3-0.en.json
 
-            - name: Move to root directory for upload
+            - name: Merge branches
               run: |
-                  mv var/translations/admin.en.json admin.en.json                
+                  jq -s '.|add' ar/translations/admin-2-6.en.json ar/translations/admin-3-0.en.json > admin.en.json
+
+            - name: Output merged translations 3.0
+              run: |
+                  cat var/translations/admin.en.json           
 
             - name: Download Crowdin CLI
               run: curl "https://downloads.crowdin.com/cli/v3/crowdin-cli.zip" --output crowdin-cli.zip && unzip crowdin-cli.zip
