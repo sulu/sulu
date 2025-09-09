@@ -16,6 +16,7 @@ use Sulu\Route\Domain\Model\Route;
 /**
  * @phpstan-type RouteFilter array{
  *     site?: string|null,
+ *     siteOrNull?: string|null,
  *     locale?: string,
  *     locales?: string[],
  *     slug?: string,
@@ -25,6 +26,10 @@ use Sulu\Route\Domain\Model\Route;
  *         resourceKey: string,
  *         resourceId: string,
  *     },
+ * }
+ *
+ * @phpstan-type RouteSortBy array{
+ *     site?: 'asc'|'desc',
  * }
  */
 interface RouteRepositoryInterface
@@ -38,13 +43,20 @@ interface RouteRepositoryInterface
 
     /**
      * @param RouteFilter $filters
+     * @param RouteSortBy $sortBys
+     */
+    public function findFirstBy(array $filters, array $sortBys = []): ?Route;
+
+    /**
+     * @param RouteFilter $filters
      */
     public function existBy(array $filters): bool;
 
     /**
      * @param RouteFilter $filters
+     * @param RouteSortBy $sortBys
      *
      * @return iterable<Route>
      */
-    public function findBy(array $filters): iterable;
+    public function findBy(array $filters, array $sortBys = []): iterable;
 }

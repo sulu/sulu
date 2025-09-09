@@ -80,7 +80,6 @@ class ResourceLocatorGeneratorTest extends TestCase
             'resourceId' => 'cff165a7-ae8e-46b4-8f32-f0a339173207',
             'resourceKey' => 'pages',
             'locale' => 'de',
-            'site' => 'website',
         ])
             ->willReturn($parentRoute)
             ->shouldBeCalled();

@@ -33,7 +33,6 @@ final readonly class ResourceLocatorGenerator implements ResourceLocatorGenerato
                 'resourceKey' => $request->parentResourceKey,
                 'resourceId' => $request->parentResourceId,
                 'locale' => $request->locale,
-                'site' => $request->site,
             ]);
 
             $parentPath = $parentRoute?->getSlug() ?: '/';

@@ -45,7 +45,6 @@ final readonly class RouteHistoryDefaultsProvider implements RouteDefaultsProvid
         $targetRoute = $this->routeRepository->findOneBy([
             'resourceKey' => $resourceKey,
             'resourceId' => $resourceId,
-            'site' => $route->getSite(),
             'locale' => $route->getLocale(),
         ]);
 

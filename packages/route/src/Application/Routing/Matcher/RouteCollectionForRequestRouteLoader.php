@@ -83,7 +83,7 @@ final readonly class RouteCollectionForRequestRouteLoader implements RouteCollec
         }
 
         $route = $this->routeRepository->findOneBy([
-            'site' => $site,
+            'siteOrNull' => $site,
             'locale' => $locale,
             'slug' => $slug,
         ]);
