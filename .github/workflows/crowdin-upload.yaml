@@ -1,6 +1,7 @@
 name: Crowdin Upload
 
 on:
+    pull_request:
     push:
         tags:
             - '*'
@@ -14,9 +15,34 @@ jobs:
 
         steps:
             - uses: actions/checkout@v4
+              with:
+                  ref: '2.6'
 
-            - name: Merge all translation files
-              run: jq -s '.|add' src/Sulu/Bundle/*/Resources/translations/admin.*.json > admin.en.json
+            - name: Prepare translation directory
+              run: |
+                  mkdir -p var/translations
+                  echo '{}' > var/translations/admin.en.json
+
+            - name: Merge all translation files from 2.6
+              run: |
+                  jq -s '.|add' var/translations/admin.en.json src/Sulu/Bundle/*/Resources/translations/admin.en.json > var/translations/admin.en.json
+
+            - name: Switch Branch to 3.0
+              run: |
+                  git fetch origin 3.0
+                  git checkout 3.0
+
+            - name: Output merged translations 2.6
+              run: |
+                  cat var/translations/admin.en.json
+
+            - name: Merge all translation files from 3.0
+              run: |
+                  jq -s '.|add' var/translations/admin.en.json src/Sulu/Bundle/*/Resources/translations/admin.en.json packages/*/translations/admin.en.json > var/translations/admin.en.json
+
+            - name: Output merged translations 3.0
+              run: |
+                  cat var/translations/admin.en.json
 
             - name: Download Crowdin CLI
               run: curl "https://downloads.crowdin.com/cli/v3/crowdin-cli.zip" --output crowdin-cli.zip && unzip crowdin-cli.zip
@@ -24,4 +50,5 @@ jobs:
             - name: Upload translations to crowdin
               env:
                   CROWDIN_TOKEN: ${{ secrets.CrowdinToken }}
-              run: java -jar $(find . -name crowdin-cli.jar) upload sources -s "admin.en.json" -t "admin.%two_letters_code%.json" -i 15 --base-url=https://sulu.crowdin.com --base-path=. --token=$CROWDIN_TOKEN
+              run: |
+                  # java -jar $(find . -name crowdin-cli.jar) upload sources -s "admin.en.json" -t "admin.%two_letters_code%.json" -i 15 --base-url=https://sulu.crowdin.com --base-path=. --token=$CROWDIN_TOKEN
