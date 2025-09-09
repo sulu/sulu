@@ -219,6 +219,8 @@ class ContentView
     }
 
     /**
+     * @internal This method can be removed at any time no backwards compatibility promise is given for this.
+     *
      * Recursively collect all references from this ContentView and nested ContentViews.
      * Each reference will have its path set to indicate where it was found.
      *
