@@ -26,6 +26,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\DataCollector\DataCollector;
 
+/**
+ * @internal No backwards compatibility promise is given for this class it can be removed at any time.
+ */
 class SuluCollector extends DataCollector
 {
     public function __construct(
