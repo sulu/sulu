@@ -30,9 +30,10 @@ jobs:
               run: |
                   cat var/translations/admin-2-6.en.json
 
-            - uses: actions/checkout@v4
-              with:
-                  ref: '3.0'
+            - name: Switch Branch to 3.0
+              run: |
+                  git fetch origin 3.0
+                  git checkout origin/3.0
 
             - name: Merge all translation files from 3.0
               run: |
