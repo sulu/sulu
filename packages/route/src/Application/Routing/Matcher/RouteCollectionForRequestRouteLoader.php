@@ -86,7 +86,7 @@ final readonly class RouteCollectionForRequestRouteLoader implements RouteCollec
             'siteOrNull' => $site,
             'locale' => $locale,
             'slug' => $slug,
-        ], ['site' => 'DESC']);
+        ], ['site' => 'desc']);
 
         if (null === $route) {
             return new RouteCollection();
