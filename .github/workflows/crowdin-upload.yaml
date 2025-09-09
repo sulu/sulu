@@ -45,11 +45,11 @@ jobs:
 
             - name: Merge branches
               run: |
-                  jq -s '.|add' ar/translations/admin-2-6.en.json ar/translations/admin-3-0.en.json > admin.en.json
+                  jq -s '.|add' var/translations/admin-2-6.en.json var/translations/admin-3-0.en.json > admin.en.json
 
             - name: Output merged translations 3.0
               run: |
-                  cat var/translations/admin.en.json           
+                  cat admin.en.json          
 
             - name: Download Crowdin CLI
               run: curl "https://downloads.crowdin.com/cli/v3/crowdin-cli.zip" --output crowdin-cli.zip && unzip crowdin-cli.zip
