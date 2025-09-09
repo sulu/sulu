@@ -71,6 +71,8 @@ class Position implements \JsonSerializable
      * Specify data which should be serialized to JSON.
      *
      * @see http://php.net/manual/en/jsonserializable.jsonserialize.php
+     *
+     * @return array{id: int, position: string}
      */
     public function jsonSerialize(): array
     {

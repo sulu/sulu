@@ -394,8 +394,6 @@ class NavigationItem implements \Iterator
      * Return the key of the current element.
      *
      * @see http://php.net/manual/en/iterator.key.php
-     *
-     * @return mixed scalar on success, or null on failure
      */
     public function key(): int
     {

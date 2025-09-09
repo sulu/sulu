@@ -151,6 +151,9 @@ class PropertyParameter implements \JsonSerializable
         }
     }
 
+    /**
+     * @return array{value: mixed, type: string}
+     */
     public function jsonSerialize(): array
     {
         return [

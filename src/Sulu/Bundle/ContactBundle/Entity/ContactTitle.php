@@ -71,6 +71,8 @@ class ContactTitle implements \JsonSerializable
      * Specify data which should be serialized to JSON.
      *
      * @see http://php.net/manual/en/jsonserializable.jsonserialize.php
+     *
+     * @return array{id: int, title: string}
      */
     public function jsonSerialize(): array
     {
