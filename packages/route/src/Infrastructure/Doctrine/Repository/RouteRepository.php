@@ -11,6 +11,8 @@
 
 namespace Sulu\Route\Infrastructure\Doctrine\Repository;
 
+use Doctrine\DBAL\Platforms\OraclePlatform;
+use Doctrine\DBAL\Platforms\PostgreSQLPlatform;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
@@ -157,6 +159,22 @@ class RouteRepository implements RouteRepositoryInterface
 
         if ([] !== $sortBys) {
             foreach ($sortBys as $field => $order) {
+                $order = match (true) {
+                    // if we filter by siteOrNull and order by site we need invert the order for specific platforms
+                    // TODO if possible in future use something like ASC NULLS FIRST / DESC NULLS LAST directly
+                    ('site' === $field // @phpstan-ignore-line identical.alwaysTrue
+                        && (
+                            $this->entityManager->getConnection()->getDatabasePlatform() instanceof PostgreSQLPlatform
+                            || $this->entityManager->getConnection()->getDatabasePlatform() instanceof OraclePlatform
+                        )
+                        && \array_key_exists('siteOrNull', $filters)
+                    ) => match ($order) {
+                        'asc' => 'desc',
+                        'desc' => 'asc',
+                    },
+                    default => $order,
+                };
+
                 $queryBuilder->addOrderBy(\sprintf('route.%s', $field), $order);
             }
         }
