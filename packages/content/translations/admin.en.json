@@ -11,6 +11,7 @@
     "sulu_content.enable_shadow_page": "Enable Shadow page",
     "sulu_content.enable_shadow_page_info_text": "This function is disabled if the current locale is already used as shadow locale.",
     "sulu_content.shadow_locale": "Shadow locale",
+    "sulu_content.settings": "Settings",
     "sulu_content.webspace": "Webspace",
     "sulu_content.main_webspace": "Main Webspace",
     "sulu_content.additional_webspaces": "Additional Webspaces",

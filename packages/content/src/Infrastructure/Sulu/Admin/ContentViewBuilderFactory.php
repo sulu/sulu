@@ -302,7 +302,7 @@ class ContentViewBuilderFactory implements ContentViewBuilderFactoryInterface
             ->addMetadataRequestParameters(['forms' => $forms])
             ->setResourceKey($resourceKey)
             ->setFormKey('content_settings')
-            ->setTabTitle('sulu_page.settings')
+            ->setTabTitle('sulu_content.settings')
             ->setTitleVisible(true)
             ->addToolbarActions(\array_values($toolbarActions))
             ->setTabOrder(50)
