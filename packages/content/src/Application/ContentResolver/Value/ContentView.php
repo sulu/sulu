@@ -224,14 +224,12 @@ class ContentView
      * Recursively collect all references from this ContentView and nested ContentViews.
      * Each reference will have its path set to indicate where it was found.
      *
-     * @return array<Reference>
+     * @return iterable<Reference>
      */
-    public function getAllReferencesRecursively(string $basePath = ''): array
+    public function getAllReferencesRecursively(string $basePath = ''): iterable
     {
-        $allReferences = [];
-
         foreach ($this->references as $reference) {
-            $allReferences[] = new Reference(
+            yield new Reference(
                 $reference->getResourceId(),
                 $reference->getResourceKey(),
                 $basePath
@@ -241,15 +239,28 @@ class ContentView
         $content = $this->getContent();
         if (\is_iterable($content)) {
             foreach ($content as $key => $value) {
+                $keyStr = \is_string($key) || \is_numeric($key) ? (string) $key : '';
+                $newPath = \ltrim($basePath . '.' . $keyStr, '.');
+
                 if ($value instanceof ContentView) {
-                    $keyStr = \is_string($key) || \is_numeric($key) ? (string) $key : '';
-                    $newPath = \ltrim($basePath . '.' . $keyStr, '.');
                     $nestedReferences = $value->getAllReferencesRecursively($newPath);
-                    $allReferences = \array_merge($allReferences, $nestedReferences);
+                    foreach ($nestedReferences as $reference) {
+                        yield $reference;
+                    }
+                } elseif (\is_iterable($value)) {
+                    // Handle arrays that might contain ContentViews
+                    foreach ($value as $subKey => $subValue) {
+                        if ($subValue instanceof ContentView) {
+                            $subKeyStr = \is_string($subKey) || \is_numeric($subKey) ? (string) $subKey : '';
+                            $subPath = \ltrim($newPath . '.' . $subKeyStr, '.');
+                            $nestedReferences = $subValue->getAllReferencesRecursively($subPath);
+                            foreach ($nestedReferences as $reference) {
+                                yield $reference;
+                            }
+                        }
+                    }
                 }
             }
         }
-
-        return $allReferences;
     }
 }

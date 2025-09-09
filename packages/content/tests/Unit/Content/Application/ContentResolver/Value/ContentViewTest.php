@@ -170,7 +170,7 @@ class ContentViewTest extends TestCase
     ): void {
         $contentView = ContentView::createWithReferences($content, ['view' => 'data'], $inputReferences);
 
-        $allReferences = $contentView->getAllReferencesRecursively($basePath);
+        $allReferences = \iterator_to_array($contentView->getAllReferencesRecursively($basePath));
 
         $this->assertReferencesMatch($expectedReferences, $allReferences);
     }
@@ -190,7 +190,7 @@ class ContentViewTest extends TestCase
             [$mainRef]
         );
 
-        $allReferences = $mainContentView->getAllReferencesRecursively('content');
+        $allReferences = \iterator_to_array($mainContentView->getAllReferencesRecursively('content'));
 
         $expectedReferences = [
             ['id' => 1, 'key' => 'pages', 'path' => 'content'],
@@ -209,7 +209,7 @@ class ContentViewTest extends TestCase
         $middleContentView = ContentView::createWithReferences(['level3' => $deepNestedContentView], [], []);
         $topContentView = ContentView::createWithReferences(['level2' => $middleContentView], [], []);
 
-        $allReferences = $topContentView->getAllReferencesRecursively('content');
+        $allReferences = \iterator_to_array($topContentView->getAllReferencesRecursively('content'));
 
         $this->assertReferenceEquals(100, 'contacts', 'content.level2.level3', $allReferences[0]);
         self::assertCount(1, $allReferences);
@@ -230,7 +230,7 @@ class ContentViewTest extends TestCase
         $mainRef = new Reference(1, 'pages');
         $mainContentView = ContentView::createWithReferences($mixedContent, [], [$mainRef]);
 
-        $allReferences = $mainContentView->getAllReferencesRecursively();
+        $allReferences = \iterator_to_array($mainContentView->getAllReferencesRecursively());
 
         $expectedReferences = [
             ['id' => 1, 'key' => 'pages', 'path' => ''],
@@ -245,7 +245,7 @@ class ContentViewTest extends TestCase
     {
         $contentView = ContentView::create('simple content', []);
 
-        $allReferences = $contentView->getAllReferencesRecursively();
+        $allReferences = \iterator_to_array($contentView->getAllReferencesRecursively());
 
         self::assertEmpty($allReferences);
     }
