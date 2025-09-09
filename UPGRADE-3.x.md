@@ -906,6 +906,11 @@ The `referenceContext` of the `Reference` entity has been adjusted to be consist
 and DimensionContentInterface::STAGE_LIVE constants. Therefore `referenceContext` now uses `draft` and `live` instead of
 `admin` and `website`.
 
+To update the references call the following command:
+
+```bash
+bin/console sulu:reference:refresh
+
 ### Upgrading Data from Sulu 2.6 to Sulu 3.0
 
 To migrate the data from PHPCR to the new content storage a migration bundle was developed.
