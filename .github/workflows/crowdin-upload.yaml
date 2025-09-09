@@ -1,7 +1,6 @@
 name: Crowdin Upload
 
 on:
-    pull_request:
     push:
         tags:
             - '*'
