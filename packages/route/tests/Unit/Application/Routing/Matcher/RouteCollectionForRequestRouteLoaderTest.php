@@ -68,7 +68,7 @@ class RouteCollectionForRequestRouteLoaderTest extends TestCase
         $request = Request::create('/en/test');
         $request->attributes->set(RequestAttributeEnum::SLUG->value, new \stdClass());
 
-        $this->routeRepository->findOneBy(Argument::any())->shouldNotBeCalled();
+        $this->routeRepository->findFirstBy(Argument::cetera())->shouldNotBeCalled();
         $routeCollection = $this->routeCollectionForRequestRouteLoader->getRouteCollectionForRequest($request);
 
         $this->assertCount(0, $routeCollection);
@@ -79,7 +79,7 @@ class RouteCollectionForRequestRouteLoaderTest extends TestCase
         $request = Request::create('/en/test');
         $request->attributes->set(RequestAttributeEnum::SITE->value, 'the_site');
 
-        $this->routeRepository->findOneBy(Argument::any())->shouldNotBeCalled();
+        $this->routeRepository->findFirstBy(Argument::cetera())->shouldNotBeCalled();
         $routeCollection = $this->routeCollectionForRequestRouteLoader->getRouteCollectionForRequest($request);
 
         $this->assertCount(0, $routeCollection);
@@ -91,7 +91,7 @@ class RouteCollectionForRequestRouteLoaderTest extends TestCase
         $request->attributes->set(RequestAttributeEnum::SITE->value, 'the_site');
         $request->attributes->set(RequestAttributeEnum::SLUG->value, '/test');
 
-        $this->routeRepository->findOneBy(Argument::any())->willReturn(null);
+        $this->routeRepository->findFirstBy(Argument::cetera())->willReturn(null);
         $routeCollection = $this->routeCollectionForRequestRouteLoader->getRouteCollectionForRequest($request);
 
         $this->assertCount(0, $routeCollection);
@@ -106,7 +106,7 @@ class RouteCollectionForRequestRouteLoaderTest extends TestCase
         $routeModel = new Route('resource_key_example', '1', 'en', '/test', 'the_site');
         static::setPrivateProperty($routeModel, 'id', 1);
 
-        $this->routeRepository->findOneBy(Argument::any())->willReturn($routeModel);
+        $this->routeRepository->findFirstBy(Argument::cetera())->willReturn($routeModel);
         $routeCollection = $this->routeCollectionForRequestRouteLoader->getRouteCollectionForRequest($request);
 
         $this->assertCount(1, $routeCollection);
