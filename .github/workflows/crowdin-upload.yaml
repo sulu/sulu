@@ -18,14 +18,9 @@ jobs:
               with:
                   ref: '2.6'
 
-            - name: Prepare translation directory
-              run: |
-                  mkdir -p var/translations
-                  echo '{}' > var/translations/admin.en.json
-
             - name: Merge all translation files from 2.6
               run: |
-                  jq -s '.|add' var/translations/admin.en.json src/Sulu/Bundle/*/Resources/translations/admin.en.json > var/translations/admin.en.json
+                  jq -s '.|add' src/Sulu/Bundle/*/Resources/translations/admin.en.json > var/translations/admin-2-6.en.json
 
             - name: Switch Branch to 3.0
               run: |
@@ -34,11 +29,11 @@ jobs:
 
             - name: Output merged translations 2.6
               run: |
-                  cat var/translations/admin.en.json
+                  cat var/translations/admin-2-6.en.json
 
             - name: Merge all translation files from 3.0
               run: |
-                  jq -s '.|add' var/translations/admin.en.json src/Sulu/Bundle/*/Resources/translations/admin.en.json packages/*/translations/admin.en.json > var/translations/admin.en.json
+                  jq -s '.|add' var/translations/admin-2-6.en.json src/Sulu/Bundle/*/Resources/translations/admin.en.json packages/*/translations/admin.en.json > var/translations/admin.en.json
 
             - name: Output merged translations 3.0
               run: |
