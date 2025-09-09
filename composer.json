@@ -112,7 +112,7 @@
     "require-dev": {
         "coduo/php-matcher": "^6.0.14",
         "jangregor/phpstan-prophecy": "^2.0",
-        "league/flysystem-memory": "^3.29",
+        "league/flysystem-memory": "^3.0",
         "matthiasnoback/symfony-config-test": "^6.0",
         "matthiasnoback/symfony-dependency-injection-test": "^6.1",
         "monolog/monolog": "^1.26.1 || ^2.3 || ^3.0",

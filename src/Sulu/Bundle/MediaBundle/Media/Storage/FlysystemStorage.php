@@ -54,7 +54,7 @@ class FlysystemStorage implements StorageInterface
         try {
             $this->filesystem->writeStream(
                 $filePath,
-                \fopen($tempPath, 'r'),
+                @\fopen($tempPath, 'r'),
                 ['visibility' => Visibility::PUBLIC]
             );
         } catch (FilesystemException) {
