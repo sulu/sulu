@@ -18,6 +18,10 @@ jobs:
               with:
                   ref: '2.6'
 
+            - name: Prepare Directory
+              run: |
+                  mkdir -p var/translations
+
             - name: Merge all translation files from 2.6
               run: |
                   jq -s '.|add' src/Sulu/Bundle/*/Resources/translations/admin.en.json > var/translations/admin-2-6.en.json
