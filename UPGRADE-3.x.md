@@ -829,6 +829,22 @@ The following methods have been updated with a return type hint:
 - `TimestampableInterface::getChanged()`: now returns `\DateTimeImmutable`
 - `UserBlameInterface::getCreator()`: now returns `?UserInterface`
 - `UserBlameInterface::getChanger()`: now returns `?UserInterface`
+- `NavigationItem::current()`: returns `NavigationItem`
+- `NavigationItem::next()`: returns `void`
+- `NavigationItem::key()`: returns `int`
+- `NavigationItem::valid()`: returns `bool`
+- `NavigationItem::rewind()`: returns `void`
+- `AddressType::jsonSerialize()` returns `array` (see its typehint for the exact shape)
+- `ContactType::jsonSerialize()` returns `array` (see its typehint for the exact shape)
+- `EmailType::jsonSerialize()` returns `array` (see its typehint for the exact shape)
+- `FaxType::jsonSerialize()` returns `array` (see its typehint for the exact shape)
+- `PhoneType::jsonSerialize()` returns `array` (see its typehint for the exact shape)
+- `Position::jsonSerialize()` returns `array` (see its typehint for the exact shape)
+- `SocialMediaProfileType::jsonSerialize()` returns `array` (see its typehint for the exact shape)
+- `UrlType::jsonSerialize()` returns `array` (see its typehint for the exact shape)
+- `PropertyParameter::jsonSerialize()` returns `array` (see its typehint for the exact shape)
+- `Localization::jsonSerialize()` returns `array` (see its typehint for the exact shape)
+- `WebspaceCollection::getIterator()` returns `\Traversable`
 
 The corresponding traits `TimestampableTrait` and `UserBlameTrait` have been updated with these return type hints.
 
