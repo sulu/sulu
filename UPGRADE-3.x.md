@@ -889,6 +889,11 @@ The corresponding traits `TimestampableTrait` and `UserBlameTrait` have been upd
  - `src/Sulu/Component/Content/Metadata/Loader/schema/template-1.0.xsd` -> `src/Sulu/Bundle/AdminBundle/Resources/config/schema/template-1.0.xsd`
  - `src/Sulu/Component/Content/Metadata/Loader/schema/xml.xsd` -> `src/Sulu/Bundle/AdminBundle/Resources/config/schema/xml.xsd`
 
+### PathCleanup replacers xml no longer exists
+
+The `replacers.xml` read for the PathCleanup service do no longer exists.
+If you want to add custom replacers decorate the `PathCleanup` service via the `PathCleanupInterface`.
+
 ### Admin API changes for 3.0
 
 - The `?flat=true` is default for all list endpoints in `ContactBundle` none flatted result is no longer supported.

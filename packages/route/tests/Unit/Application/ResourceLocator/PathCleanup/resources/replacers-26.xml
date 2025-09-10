@@ -1,0 +1,1220 @@
+<?xml version="1.0" encoding="utf-8"?>
+<replacers>
+    <item>
+        <column name="locale">default</column>
+        <column name="from"> </column>
+        <column name="to">-</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">+</column>
+        <column name="to">-</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">.</column>
+        <column name="to">-</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">^</column>
+        <column name="to">-</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">~</column>
+        <column name="to">-</column>
+    </item>
+
+    <!-- brackets -->
+    <item>
+        <column name="locale">default</column>
+        <column name="from">[</column>
+        <column name="to">-</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">]</column>
+        <column name="to">-</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">(</column>
+        <column name="to">-</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">)</column>
+        <column name="to">-</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">{</column>
+        <column name="to">-</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">}</column>
+        <column name="to">-</column>
+    </item>
+
+    <!-- letters with acute -->
+    <item>
+        <column name="locale">default</column>
+        <column name="from">Á</column>
+        <column name="to">A</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">á</column>
+        <column name="to">a</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">Ć</column>
+        <column name="to">C</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">ć</column>
+        <column name="to">c</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">É</column>
+        <column name="to">E</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">é</column>
+        <column name="to">e</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">Í</column>
+        <column name="to">I</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">í</column>
+        <column name="to">i</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">Ĺ</column>
+        <column name="to">L</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">ĺ</column>
+        <column name="to">l</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">Ń</column>
+        <column name="to">N</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">ń</column>
+        <column name="to">n</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">Ó</column>
+        <column name="to">O</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">ó</column>
+        <column name="to">o</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">Ő</column>
+        <column name="to">O</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">ő</column>
+        <column name="to">o</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">Ŕ</column>
+        <column name="to">R</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">ŕ</column>
+        <column name="to">r</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">Ś</column>
+        <column name="to">S</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">ś</column>
+        <column name="to">s</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">Ú</column>
+        <column name="to">U</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">ú</column>
+        <column name="to">u</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">Ű</column>
+        <column name="to">U</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">ű</column>
+        <column name="to">u</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">Ý</column>
+        <column name="to">Y</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">ý</column>
+        <column name="to">y</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">Ź</column>
+        <column name="to">Z</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">ź</column>
+        <column name="to">z</column>
+    </item>
+
+    <!-- letters with breve -->
+    <item>
+        <column name="locale">default</column>
+        <column name="from">Ă</column>
+        <column name="to">A</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">ă</column>
+        <column name="to">a</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">Ĕ</column>
+        <column name="to">E</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">ĕ</column>
+        <column name="to">e</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">Ğ</column>
+        <column name="to">G</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">ğ</column>
+        <column name="to">g</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">Ĭ</column>
+        <column name="to">I</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">ĭ</column>
+        <column name="to">i</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">Ŏ</column>
+        <column name="to">o</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">ŏ</column>
+        <column name="to">o</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">Ŭ</column>
+        <column name="to">U</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">ŭ</column>
+        <column name="to">u</column>
+    </item>
+
+    <!-- letters with wedge -->
+    <item>
+        <column name="locale">default</column>
+        <column name="from">Č</column>
+        <column name="to">C</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">č</column>
+        <column name="to">c</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">Ď</column>
+        <column name="to">D</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">Ě</column>
+        <column name="to">E</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">ě</column>
+        <column name="to">e</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">Ň</column>
+        <column name="to">N</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">ň</column>
+        <column name="to">n</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">Ř</column>
+        <column name="to">R</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">ř</column>
+        <column name="to">r</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">Š</column>
+        <column name="to">S</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">š</column>
+        <column name="to">s</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">Ť</column>
+        <column name="to">T</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">Ž</column>
+        <column name="to">Z</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">ž</column>
+        <column name="to">z</column>
+    </item>
+
+    <!-- letters with cedilla -->
+    <item>
+        <column name="locale">default</column>
+        <column name="from">Ç</column>
+        <column name="to">C</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">ç</column>
+        <column name="to">c</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">Ģ</column>
+        <column name="to">G</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">ģ</column>
+        <column name="to">g</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">Ķ</column>
+        <column name="to">K</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">ķ</column>
+        <column name="to">k</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">Ļ</column>
+        <column name="to">L</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">ļ</column>
+        <column name="to">l</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">Ņ</column>
+        <column name="to">N</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">ņ</column>
+        <column name="to">n</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">Ŗ</column>
+        <column name="to">R</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">ŗ</column>
+        <column name="to">r</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">Ş</column>
+        <column name="to">S</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">ş</column>
+        <column name="to">s</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">Ţ</column>
+        <column name="to">T</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">ţ</column>
+        <column name="to">t</column>
+    </item>
+
+    <!-- letters with diaeresis -->
+    <item>
+        <column name="locale">default</column>
+        <column name="from">Ä</column>
+        <column name="to">Ae</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">ä</column>
+        <column name="to">ae</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">Ë</column>
+        <column name="to">E</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">ë</column>
+        <column name="to">e</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">Ï</column>
+        <column name="to">I</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">ï</column>
+        <column name="to">i</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">Ö</column>
+        <column name="to">Oe</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">ö</column>
+        <column name="to">oe</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">Ü</column>
+        <column name="to">Ue</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">ü</column>
+        <column name="to">ue</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">Ÿ</column>
+        <column name="to">Y</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">ÿ</column>
+        <column name="to">y</column>
+    </item>
+
+    <!-- letters with grave -->
+    <item>
+        <column name="locale">default</column>
+        <column name="from">À</column>
+        <column name="to">A</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">à</column>
+        <column name="to">a</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">È</column>
+        <column name="to">E</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">è</column>
+        <column name="to">e</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">Ì</column>
+        <column name="to">I</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">ì</column>
+        <column name="to">i</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">Ò</column>
+        <column name="to">O</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">ò</column>
+        <column name="to">o</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">Ù</column>
+        <column name="to">U</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">ù</column>
+        <column name="to">u</column>
+    </item>
+
+    <!-- letters with macron -->
+    <item>
+        <column name="locale">default</column>
+        <column name="from">Ā</column>
+        <column name="to">A</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">ā</column>
+        <column name="to">a</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">Ē</column>
+        <column name="to">E</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">ē</column>
+        <column name="to">e</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">Ī</column>
+        <column name="to">I</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">ī</column>
+        <column name="to">i</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">Ō</column>
+        <column name="to">O</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">ō</column>
+        <column name="to">o</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">Ū</column>
+        <column name="to">U</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">ū</column>
+        <column name="to">u</column>
+    </item>
+
+    <!-- letters with ogonek -->
+    <item>
+        <column name="locale">default</column>
+        <column name="from">Ą</column>
+        <column name="to">A</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">ą</column>
+        <column name="to">a</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">Ę</column>
+        <column name="to">E</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">ę</column>
+        <column name="to">e</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">Į</column>
+        <column name="to">I</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">į</column>
+        <column name="to">i</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">Ų</column>
+        <column name="to">U</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">ų</column>
+        <column name="to">u</column>
+    </item>
+
+    <!-- letters with point above -->
+    <item>
+        <column name="locale">default</column>
+        <column name="from">Ḃ</column>
+        <column name="to">B</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">ḃ</column>
+        <column name="to">b</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">Ċ</column>
+        <column name="to">C</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">ċ</column>
+        <column name="to">c</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">Ḋ</column>
+        <column name="to">D</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">ḋ</column>
+        <column name="to">d</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">Ė</column>
+        <column name="to">E</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">ė</column>
+        <column name="to">e</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">Ḟ</column>
+        <column name="to">F</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">Ġ</column>
+        <column name="to">G</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">ġ</column>
+        <column name="to">g</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">Ḣ</column>
+        <column name="to">H</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">ḣ</column>
+        <column name="to">h</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">İ</column>
+        <column name="to">I</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">Ṁ</column>
+        <column name="to">M</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">ṁ</column>
+        <column name="to">m</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">Ṅ</column>
+        <column name="to">N</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">ṅ</column>
+        <column name="to">n</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">Ṗ</column>
+        <column name="to">P</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">ṗ</column>
+        <column name="to">p</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">Ṙ</column>
+        <column name="to">R</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">ṙ</column>
+        <column name="to">r</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">Ṡ</column>
+        <column name="to">S</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">ṡ</column>
+        <column name="to">s</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">Ṫ</column>
+        <column name="to">T</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">ṫ</column>
+        <column name="to">t</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">Ż</column>
+        <column name="to">Z</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">ż</column>
+        <column name="to">z</column>
+    </item>
+
+    <!-- letters with point below -->
+    <item>
+        <column name="locale">default</column>
+        <column name="from">Ḍ</column>
+        <column name="to">D</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">ḍ</column>
+        <column name="to">d</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">Ḥ</column>
+        <column name="to">H</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">ḥ</column>
+        <column name="to">h</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">Ḳ</column>
+        <column name="to">K</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">ḳ</column>
+        <column name="to">k</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">Ḷ</column>
+        <column name="to">L</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">ḷ</column>
+        <column name="to">l</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">Ṃ</column>
+        <column name="to">M</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">ṃ</column>
+        <column name="to">m</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">Ṛ</column>
+        <column name="to">R</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">ṛ</column>
+        <column name="to">r</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">Ṣ</column>
+        <column name="to">S</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">ṣ</column>
+        <column name="to">s</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">Ṭ</column>
+        <column name="to">T</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">ṭ</column>
+        <column name="to">t</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">Ṿ</column>
+        <column name="to">V</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">ṿ</column>
+        <column name="to">v</column>
+    </item>
+
+    <!-- letters with dash -->
+    <item>
+        <column name="locale">default</column>
+        <column name="from">Đ</column>
+        <column name="to">D</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">đ</column>
+        <column name="to">d</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">Ħ</column>
+        <column name="to">H</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">ħ</column>
+        <column name="to">h</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">Ŧ</column>
+        <column name="to">T</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">ŧ</column>
+        <column name="to">t</column>
+    </item>
+
+    <!-- letters with ring -->
+    <item>
+        <column name="locale">default</column>
+        <column name="from">Å</column>
+        <column name="to">A</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">å</column>
+        <column name="to">a</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">Ů</column>
+        <column name="to">U</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">ů</column>
+        <column name="to">u</column>
+    </item>
+
+    <!-- letters with ring -->
+    <item>
+        <column name="locale">default</column>
+        <column name="from">Ł</column>
+        <column name="to">L</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">ł</column>
+        <column name="to">l</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">Ø</column>
+        <column name="to">O</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">ø</column>
+        <column name="to">o</column>
+    </item>
+
+    <!-- letters with tilde -->
+    <item>
+        <column name="locale">default</column>
+        <column name="from">Ã</column>
+        <column name="to">A</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">ã</column>
+        <column name="to">a</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">Ĩ</column>
+        <column name="to">I</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">ĩ</column>
+        <column name="to">i</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">Ñ</column>
+        <column name="to">N</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">ñ</column>
+        <column name="to">n</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">Õ</column>
+        <column name="to">O</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">õ</column>
+        <column name="to">o</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">Ũ</column>
+        <column name="to">U</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">ũ</column>
+        <column name="to">u</column>
+    </item>
+
+    <!-- letters with circumflex -->
+    <item>
+        <column name="locale">default</column>
+        <column name="from">Â</column>
+        <column name="to">A</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">â</column>
+        <column name="to">a</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">Ĉ</column>
+        <column name="to">C</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">ĉ</column>
+        <column name="to">c</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">Ê</column>
+        <column name="to">E</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">ê</column>
+        <column name="to">e</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">Ĝ</column>
+        <column name="to">G</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">ĝ</column>
+        <column name="to">g</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">Ĥ</column>
+        <column name="to">H</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">ĥ</column>
+        <column name="to">h</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">Î</column>
+        <column name="to">I</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">î</column>
+        <column name="to">i</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">Ĵ</column>
+        <column name="to">J</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">ĵ</column>
+        <column name="to">j</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">Ô</column>
+        <column name="to">O</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">ô</column>
+        <column name="to">o</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">Ŝ</column>
+        <column name="to">S</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">ŝ</column>
+        <column name="to">s</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">Û</column>
+        <column name="to">U</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">û</column>
+        <column name="to">u</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">Ŵ</column>
+        <column name="to">W</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">ŵ</column>
+        <column name="to">w</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">Ŷ</column>
+        <column name="to">Y</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">ŷ</column>
+        <column name="to">y</column>
+    </item>
+
+    <!-- special letters -->
+    <item>
+        <column name="locale">default</column>
+        <column name="from">Æ</column>
+        <column name="to">AE</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">æ</column>
+        <column name="to">ae</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">ß</column>
+        <column name="to">ss</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">Œ</column>
+        <column name="to">OE</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">œ</column>
+        <column name="to">oe</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">Ĳ</column>
+        <column name="to">IJ</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">ª</column>
+        <column name="to">a</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">º</column>
+        <column name="to">o</column>
+    </item>
+
+    <!-- language specific -->
+    <item>
+        <column name="locale">DE</column>
+        <column name="from">&amp;</column>
+        <column name="to">und</column>
+    </item>
+    <item>
+        <column name="locale">EN</column>
+        <column name="from">&amp;</column>
+        <column name="to">and</column>
+    </item>
+    <item>
+        <column name="locale">FR</column>
+        <column name="from">&amp;</column>
+        <column name="to">et</column>
+    </item>
+    <item>
+        <column name="locale">IT</column>
+        <column name="from">&amp;</column>
+        <column name="to">e</column>
+    </item>
+    <item>
+        <column name="locale">NL</column>
+        <column name="from">&amp;</column>
+        <column name="to">en</column>
+    </item>
+    <item>
+        <column name="locale">ES</column>
+        <column name="from">&amp;</column>
+        <column name="to">y</column>
+    </item>
+    <item>
+        <column name="locale">DE</column>
+        <column name="from"><![CDATA[&]]></column>
+        <column name="to">und</column>
+    </item>
+    <item>
+        <column name="locale">EN</column>
+        <column name="from"><![CDATA[&]]></column>
+        <column name="to">and</column>
+    </item>
+    <item>
+        <column name="locale">FR</column>
+        <column name="from"><![CDATA[&]]></column>
+        <column name="to">et</column>
+    </item>
+    <item>
+        <column name="locale">IT</column>
+        <column name="from"><![CDATA[&]]></column>
+        <column name="to">e</column>
+    </item>
+    <item>
+        <column name="locale">NL</column>
+        <column name="from"><![CDATA[&]]></column>
+        <column name="to">en</column>
+    </item>
+    <item>
+        <column name="locale">ES</column>
+        <column name="from"><![CDATA[&]]></column>
+        <column name="to">y</column>
+    </item>
+
+    <item>
+        <column name="locale">BG</column>
+        <column name="from"><![CDATA[&]]></column>
+        <column name="to">и</column>
+    </item>
+</replacers>

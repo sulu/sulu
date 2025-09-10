@@ -20,7 +20,16 @@ final readonly class PathCleanup implements PathCleanupInterface
      */
     public function __construct(
         private SluggerInterface $slugger,
-        private array $replacers = [],
+        private array $replacers = [
+            'default' => PathCleanupInterface::DEFAULT_REPLACERS,
+            'de' => PathCleanupInterface::DE_REPLACERS,
+            'en' => PathCleanupInterface::EN_REPLACERS,
+            'fr' => PathCleanupInterface::FR_REPLACERS,
+            'it' => PathCleanupInterface::IT_REPLACERS,
+            'nl' => PathCleanupInterface::NL_REPLACERS,
+            'es' => PathCleanupInterface::ES_REPLACERS,
+            'bg' => PathCleanupInterface::BG_REPLACERS,
+        ],
     ) {
     }
 
@@ -39,6 +48,7 @@ final readonly class PathCleanup implements PathCleanupInterface
                 $path = \str_replace($key, $value, $path);
             }
         }
+
         // replace multiple dash with one
         $path = \preg_replace('/([-]+)/', '-', $path);
 

@@ -116,7 +116,6 @@ final class SuluRouteBundle extends AbstractBundle
             ->class(PathCleanup::class)
             ->args([
                 new Reference('sulu_route.slugger'),
-                // TODO replacers for `&` and what is not handled by the slugger
             ]);
 
         $services->alias(PathCleanupInterface::class, 'sulu_route.path_cleanup')

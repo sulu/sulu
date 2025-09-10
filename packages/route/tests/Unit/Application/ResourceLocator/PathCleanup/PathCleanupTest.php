@@ -16,6 +16,7 @@ use PHPUnit\Framework\Attributes\TestWith;
 use PHPUnit\Framework\TestCase;
 use Sulu\Route\Application\ResourceLocator\PathCleanup\PathCleanup;
 use Sulu\Route\Application\ResourceLocator\PathCleanup\PathCleanupInterface;
+use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\String\Slugger\AsciiSlugger;
 
 #[CoversClass(PathCleanup::class)]
@@ -28,32 +29,7 @@ class PathCleanupTest extends TestCase
         $slugger = new AsciiSlugger();
         $slugger = $slugger->withEmoji();
 
-        $this->pathCleanup = new PathCleanup(
-            $slugger,
-            replacers: [
-                'default' => [
-                    ' ' => '-',
-                    '+' => '-',
-                    '.' => '-',
-                ],
-                'de' => [
-                    'ä' => 'ae',
-                    'ö' => 'oe',
-                    'ü' => 'ue',
-                    'Ä' => 'ae',
-                    'Ö' => 'oe',
-                    'Ü' => 'ue',
-                    'ß' => 'ss',
-                    '&' => 'und',
-                ],
-                'en' => [
-                    '&' => 'and',
-                ],
-                'bg' => [
-                    '&' => 'и',
-                ],
-            ],
-        );
+        $this->pathCleanup = new PathCleanup($slugger);
     }
 
     #[TestWith(['-Hello World-', 'hello-world'])]
@@ -91,6 +67,12 @@ class PathCleanupTest extends TestCase
         $this->assertSame($expected, $this->pathCleanup->cleanup($input, 'en'));
     }
 
+    #[TestWith(['The 🍕 and 🍝 World', 'the-pizza-and-spaghetti-world'])]
+    public function testEmoji(string $input, string $expected): void
+    {
+        $this->assertSame($expected, $this->pathCleanup->cleanup($input, 'en'));
+    }
+
     #[TestWith(['Hallo & Welt', 'hallo-und-welt'])]
     #[TestWith(['Hällö Welt', 'haelloe-welt'])]
     public function testReplacers(string $input, string $expected): void
@@ -98,9 +80,40 @@ class PathCleanupTest extends TestCase
         $this->assertSame($expected, $this->pathCleanup->cleanup($input, 'de'));
     }
 
-    #[TestWith(['The 🍕 and 🍝 World', 'the-pizza-and-spaghetti-world'])]
-    public function testEmoji(string $input, string $expected): void
+    public function testSulu26Replacers(): void
     {
-        $this->assertSame($expected, $this->pathCleanup->cleanup($input, 'en'));
+        $content = \file_get_contents(__DIR__ . '/resources/replacers-26.xml');
+        self::assertIsString($content, 'Could not read replacers file');
+        $crawler = new Crawler($content);
+        $crawler = $crawler->filter('item');
+
+        /** @var array<string, array<string, string>> $fromToPerLocale */
+        $fromToPerLocale = [];
+        $crawler->each(function(Crawler $node) use (&$fromToPerLocale) {
+            $locale = $node->filter('column[name=locale]')->text(null, false);
+            $from = $node->filter('column[name=from]')->text(null, false);
+            $to = $node->filter('column[name=to]')->text(null, false);
+
+            $fromToPerLocale[$locale][$from] = $to;
+        });
+
+        foreach ($fromToPerLocale as $locale => $fromTo) {
+            foreach ($fromTo as $from => $to) {
+                // to avoid strip away of leading or trailing dashes
+                $usedFrom = 'x' . $from . 'z';
+                $usedTo = \str_replace(['и'], ['i'], 'x' . $to . 'z');
+
+                $usedLocale = \strtolower($locale);
+                if ('default' === $locale) {
+                    $usedLocale = 'en';
+                }
+
+                $this->assertSame(
+                    \mb_strtolower($usedTo),
+                    $this->pathCleanup->cleanup($usedFrom, $usedLocale),
+                    \sprintf('Failed asserting that "%s" is cleaned up to "%s" for locale "%s"', $from, $to, $locale),
+                );
+            }
+        }
     }
 }
