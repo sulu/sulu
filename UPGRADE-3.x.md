@@ -597,6 +597,18 @@ kept here for completeness:
 +        "sulu-snippet-bundle": "file:../../vendor/sulu/sulu/packages/snippet/assets/js",
 ```
 
+### Bundles per context behaviour was removed
+
+In previous version in the `config/bundles.php` a `context` with value `website` or `admin` could
+be defined to only load the bundle in the specific context.
+
+This is no longer supported. If a service or bundle need behave differently in admin and website
+context check the current Firewall context.
+
+```php
+$suluContext = $this->security?->getFirewallConfig($request)?->getName() === 'admin' ? 'admin' : 'website';
+```
+
 ### Removing deprecated twig functions
 
 - `sulu_meta_alternate` (use the SEO template instead `@SuluWebsite/Extension/seo.html.twig`)

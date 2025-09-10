@@ -28,3 +28,14 @@ flysystem:
             adapter: 'local'
             options:
                 directory: '%kernel.project_dir%/var/uploads'
+
+sulu_admin:
+    name: SULU 2.0
+    email: installation.email@sulu.test
+
+sulu_security:
+    checker:
+        enabled: true
+
+sulu_test:
+    enable_test_user_provider: true

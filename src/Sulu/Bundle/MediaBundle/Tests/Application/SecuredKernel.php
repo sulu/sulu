@@ -12,24 +12,10 @@
 namespace Sulu\Bundle\MediaBundle\Tests\Application;
 
 use Sulu\Component\HttpKernel\SuluKernel;
-use Symfony\Bundle\SecurityBundle\SecurityBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
-use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 
 class SecuredKernel extends Kernel
 {
-    public function registerBundles(): iterable
-    {
-        /** @var array<mixed, BundleInterface> $bundles */
-        $bundles = parent::registerBundles();
-
-        if (self::CONTEXT_WEBSITE === $this->getContext()) {
-            $bundles[] = new SecurityBundle();
-        }
-
-        return $bundles;
-    }
-
     public function getCacheDir(): string
     {
         return $this->getProjectDir() . \DIRECTORY_SEPARATOR

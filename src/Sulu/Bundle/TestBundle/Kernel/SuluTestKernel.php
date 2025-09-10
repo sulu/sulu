@@ -45,6 +45,7 @@ class SuluTestKernel extends SuluKernel
             new \FOS\RestBundle\FOSRestBundle(),
             new \FOS\JsRoutingBundle\FOSJsRoutingBundle(),
             new \League\FlysystemBundle\FlysystemBundle(),
+            new \Symfony\Bundle\SecurityBundle\SecurityBundle(),
 
             // Sulu
             new \Sulu\Messenger\Infrastructure\Symfony\HttpKernel\SuluMessengerBundle(),
@@ -87,12 +88,8 @@ class SuluTestKernel extends SuluKernel
             $bundles[] = new \FOS\HttpCacheBundle\FOSHttpCacheBundle();
         }
 
-        if (self::CONTEXT_WEBSITE === $this->getContext()) {
+        if (\class_exists(\Symfony\Cmf\Bundle\RoutingBundle\CmfRoutingBundle::class)) {
             $bundles[] = new \Symfony\Cmf\Bundle\RoutingBundle\CmfRoutingBundle();
-        }
-
-        if (self::CONTEXT_ADMIN === $this->getContext()) {
-            $bundles[] = new \Symfony\Bundle\SecurityBundle\SecurityBundle();
         }
 
         return $bundles;
