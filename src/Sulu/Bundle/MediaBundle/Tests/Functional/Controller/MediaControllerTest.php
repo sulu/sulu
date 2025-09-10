@@ -451,7 +451,7 @@ class MediaControllerTest extends SuluTestCase
 
         $this->assertHttpStatusCode(200, $this->client->getResponse());
         $this->assertEquals(
-            'inline; filename=wochentlich.jpeg; filename*=utf-8\'\'w%C3%B6chentlich.jpeg',
+            'inline; filename=woechentlich.jpeg; filename*=utf-8\'\'w%C3%B6chentlich.jpeg',
             \str_replace('"', '', $this->client->getResponse()->headers->get('Content-Disposition'))
         );
     }
