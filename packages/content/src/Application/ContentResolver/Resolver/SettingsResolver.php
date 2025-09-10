@@ -17,15 +17,12 @@ use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Content\Application\ContentResolver\Value\ContentView;
 use Sulu\Content\Application\ContentResolver\Value\Reference;
 use Sulu\Content\Domain\Model\AuthorInterface;
-use Sulu\Content\Domain\Model\ContentRichEntityInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
-use Sulu\Content\Domain\Model\RoutableInterface;
 use Sulu\Content\Domain\Model\ShadowInterface;
 use Sulu\Content\Domain\Model\TemplateInterface;
 use Sulu\Content\Domain\Model\WebspaceInterface;
 use Sulu\Route\Application\Routing\Generator\RouteGeneratorInterface;
 use Sulu\Route\Domain\Repository\RouteRepositoryInterface;
-use Sulu\Route\Domain\Value\RequestAttributeEnum;
 use Symfony\Component\Routing\RequestContext;
 
 /**
@@ -63,11 +60,6 @@ readonly class SettingsResolver implements ResolverInterface
 
         $references = [];
 
-        // TODO handle properties filtering
-        if ($dimensionContent instanceof RoutableInterface && $dimensionContent instanceof TemplateInterface) {
-            $result = \array_merge($result, $this->getLocalizationsData($dimensionContent));
-        }
-
         if ($dimensionContent instanceof WebspaceInterface) {
             $result = \array_merge($result, $this->getWebspaceData($dimensionContent));
         }
@@ -85,63 +77,6 @@ readonly class SettingsResolver implements ResolverInterface
         }
 
         return ContentView::createWithReferences($result, [], $references);
-    }
-
-    /**
-     * @template T of ContentRichEntityInterface
-     *
-     * @param RoutableInterface&TemplateInterface&DimensionContentInterface<T> $dimensionContent
-     *
-     * @return array{
-     *     localizations?: array<string, array{
-     *         locale: string,
-     *         url: string,
-     *         alternate: bool
-     *     }>
-     * }
-     */
-    protected function getLocalizationsData(RoutableInterface&TemplateInterface&DimensionContentInterface $dimensionContent): array
-    {
-        $localizationData = [];
-
-        $availableLocales = $dimensionContent->getAvailableLocales();
-
-        if (null === $availableLocales) {
-            return [];
-        }
-
-        $routes = $this->routeRepository->findBy([
-            'locales' => $availableLocales,
-            'resourceKey' => $dimensionContent->getResourceKey(),
-            'resourceId' => (string) $dimensionContent->getResourceId(),
-        ]);
-
-        foreach ($routes as $route) {
-            // TODO remove this hack, when we have a better way to determine the current site
-            if (null === $this->requestContext->getParameter(RequestAttributeEnum::SITE->value)) {
-                $this->requestContext->setParameter(RequestAttributeEnum::SITE->value, $route->getSite());
-            }
-
-            $locale = $route->getLocale();
-
-            $resolvedUrl = $this->routeGenerator->generate(
-                $route->getSlug(),
-                $locale,
-                $route->getSite(),
-            );
-
-            $localizationData[$locale] = [
-                'locale' => $locale,
-                'url' => $resolvedUrl,
-                'alternate' => '' !== $resolvedUrl,
-            ];
-        }
-
-        \ksort($localizationData);
-
-        return [
-            'localizations' => $localizationData,
-        ];
     }
 
     /**

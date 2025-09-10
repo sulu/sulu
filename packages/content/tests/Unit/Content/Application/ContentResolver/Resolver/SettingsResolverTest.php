@@ -26,7 +26,6 @@ use Sulu\Content\Application\ContentResolver\Value\Reference;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\Example;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\ExampleDimensionContent;
 use Sulu\Route\Application\Routing\Generator\RouteGeneratorInterface;
-use Sulu\Route\Domain\Model\Route;
 use Sulu\Route\Domain\Repository\RouteRepositoryInterface;
 use Symfony\Component\Routing\RequestContext;
 
@@ -77,10 +76,6 @@ class SettingsResolverTest extends TestCase
         $exampleDimension->addAvailableLocale('en');
         $example->addDimensionContent($exampleDimension);
 
-        $this->routeRepository->findBy(Argument::cetera())
-            ->willReturn([])
-            ->shouldBeCalled();
-
         $result = $this->resolver->resolve($exampleDimension);
         self::assertInstanceOf(ContentView::class, $result);
 
@@ -102,87 +97,6 @@ class SettingsResolverTest extends TestCase
         $content = $result->getContent();
 
         self::assertSame([], $content['availableLocales'] ?? null);
-    }
-
-    public function testResolveLocalizationsNoUrl(): void
-    {
-        $example = new Example();
-        $this->setPrivateProperty($example, 'id', 1);
-        $exampleDimensionUnlocalized = new ExampleDimensionContent($example);
-        $example->addDimensionContent($exampleDimensionUnlocalized);
-        $exampleDimension = new ExampleDimensionContent($example);
-        $exampleDimension->addAvailableLocale('de');
-        $exampleDimension->addAvailableLocale('en');
-        $example->addDimensionContent($exampleDimension);
-
-        $this->routeRepository->findBy(Argument::cetera())
-            ->willReturn([])
-            ->shouldBeCalled();
-
-        $result = $this->resolver->resolve($exampleDimension);
-        self::assertInstanceOf(ContentView::class, $result);
-
-        /** @var SettingsData $content */
-        $content = $result->getContent();
-
-        self::assertSame([], $content['localizations'] ?? null);
-    }
-
-    public function testResolveLocalizations(): void
-    {
-        $example = new Example();
-        $this->setPrivateProperty($example, 'id', 1);
-        $exampleDimensionUnlocalized = new ExampleDimensionContent($example);
-        $exampleDimension = new ExampleDimensionContent($example);
-        $exampleDimension->setLocale('de');
-        $exampleDimension->setTemplateData(['url' => '/test']);
-        $exampleDimension->setMainWebspace('sulu_io');
-        $exampleDimension->addAvailableLocale('de');
-        $exampleDimension->addAvailableLocale('en');
-        $example->addDimensionContent($exampleDimensionUnlocalized);
-        $example->addDimensionContent($exampleDimension);
-
-        $routeEn = new Route('example', '1', 'en', '/example');
-        $this->setPrivateProperty($routeEn, 'id', 10);
-        $routeDe = new Route('example', '1', 'de', '/beispiel');
-        $this->setPrivateProperty($routeEn, 'id', 11);
-        $routeFr = new Route('example', '1', 'fr', '/exemple');
-        $this->setPrivateProperty($routeFr, 'id', 12);
-
-        $this->routeRepository->findBy([
-            'locales' => ['de', 'en'],
-            'resourceKey' => 'examples',
-            'resourceId' => '1',
-        ])
-            ->willReturn([$routeDe, $routeEn])
-            ->shouldBeCalled();
-
-        $this->routeGenerator->generate('/example', 'en', null)
-            ->willReturn('/en/example')
-            ->shouldBeCalled();
-
-        $this->routeGenerator->generate('/beispiel', 'de', null)
-            ->willReturn('/de/beispiel')
-            ->shouldBeCalled();
-
-        $result = $this->resolver->resolve($exampleDimension);
-        self::assertInstanceOf(ContentView::class, $result);
-
-        /** @var SettingsData $content */
-        $content = $result->getContent();
-
-        self::assertSame([
-            'de' => [
-                'locale' => 'de',
-                'url' => '/de/beispiel',
-                'alternate' => true,
-            ],
-            'en' => [
-                'locale' => 'en',
-                'url' => '/en/example',
-                'alternate' => true,
-            ],
-        ], $content['localizations'] ?? null);
     }
 
     public function testResolveWebspace(): void
