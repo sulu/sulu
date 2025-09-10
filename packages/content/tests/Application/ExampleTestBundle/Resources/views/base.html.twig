@@ -11,6 +11,14 @@
 </head>
 <body>
 <header>
+    {% for localization in localizations|default([]) %}
+        <nav aria-label="Language switcher">
+            <a href="{{ localization.url }}">
+                {{ localization.locale }}
+            </a>
+        </nav>
+    {% endfor %}
+
     {% block header %}{% endblock %}
 </header>
 

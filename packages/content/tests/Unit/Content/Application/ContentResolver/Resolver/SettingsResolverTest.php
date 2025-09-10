@@ -14,20 +14,14 @@ declare(strict_types=1);
 namespace Sulu\Content\Tests\Unit\Content\Application\ContentResolver\Resolver;
 
 use PHPUnit\Framework\TestCase;
-use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
-use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\TestBundle\Testing\SetGetPrivatePropertyTrait;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Content\Application\ContentResolver\Resolver\SettingsResolver;
 use Sulu\Content\Application\ContentResolver\Value\ContentView;
-use Sulu\Content\Application\ContentResolver\Value\Reference;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\Example;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\ExampleDimensionContent;
-use Sulu\Route\Application\Routing\Generator\RouteGeneratorInterface;
-use Sulu\Route\Domain\Repository\RouteRepositoryInterface;
-use Symfony\Component\Routing\RequestContext;
 
 /**
  * @phpstan-import-type SettingsData from SettingsResolver
@@ -39,30 +33,9 @@ class SettingsResolverTest extends TestCase
 
     private SettingsResolver $resolver;
 
-    /** @var ObjectProphecy<RouteGeneratorInterface> */
-    private ObjectProphecy $routeGenerator;
-
-    /** @var ObjectProphecy<RouteRepositoryInterface> */
-    private ObjectProphecy $routeRepository;
-
-    /** @var ObjectProphecy<RequestContext> */
-    private ObjectProphecy $requestContext;
-
     protected function setUp(): void
     {
-        $this->routeGenerator = $this->prophesize(RouteGeneratorInterface::class);
-        $this->routeRepository = $this->prophesize(RouteRepositoryInterface::class);
-        $this->requestContext = $this->prophesize(RequestContext::class);
-
-        // Mock RequestContext methods
-        $this->requestContext->getParameter(Argument::any())->willReturn(null);
-        $this->requestContext->setParameter(Argument::any(), Argument::any())->willReturn($this->requestContext->reveal());
-
-        $this->resolver = new SettingsResolver(
-            $this->routeGenerator->reveal(),
-            $this->routeRepository->reveal(),
-            $this->requestContext->reveal(),
-        );
+        $this->resolver = new SettingsResolver();
     }
 
     public function testResolveAvailableLocales(): void

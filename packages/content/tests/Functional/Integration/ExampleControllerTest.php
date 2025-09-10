@@ -26,9 +26,9 @@ use Sulu\Content\Tests\Functional\Traits\CreateMediaTrait;
 use Sulu\Content\Tests\Functional\Traits\CreateTagTrait;
 use Sulu\Content\Tests\Traits\CreateExampleTrait;
 use Sulu\Route\Domain\Repository\RouteRepositoryInterface;
-use Sulu\Route\Domain\Value\RequestAttributeEnum;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Component\BrowserKit\CookieJar;
+use Symfony\Component\DomCrawler\Crawler;
 
 /**
  * The integration test should have no impact on the coverage so we set it to coversNothing.
@@ -60,12 +60,6 @@ class ExampleControllerTest extends SuluTestCase
         );
 
         $this->referenceRepository = $this->getContainer()->get(ReferenceRepositoryInterface::class);
-
-        // TODO this should not be necessary
-        $this->client->disableReboot();
-        $requestContext = self::getContainer()->get('router.request_context');
-        $requestContext->setParameter(RequestAttributeEnum::SITE->value, 'sulu-io');
-        // TODO this should not be necessary
     }
 
     public function testPostPublish(): int
@@ -110,13 +104,23 @@ class ExampleControllerTest extends SuluTestCase
         self::ensureKernelShutdown();
 
         $websiteClient = $this->createWebsiteClient();
-        $websiteClient->request('GET', '/en/my-example');
+        $crawler = $websiteClient->request('GET', '/en/my-example');
 
         $response = $websiteClient->getResponse();
         $this->assertHttpStatusCode(200, $response);
         $content = $response->getContent();
         $this->assertIsString($content);
         $this->assertStringContainsString('EXAMPLE 2 TEMPLATE', $content);
+
+        $urls = [];
+        $crawler->filter('nav[aria-label="Language switcher"] a')->each(function(Crawler $node) use (&$urls) {
+            $urls[$node->text()] = $node->attr('href');
+        });
+
+        $this->assertSame([
+            'en' => '/en/my-example',
+            'de' => '/',
+        ], $urls);
 
         return $id;
     }

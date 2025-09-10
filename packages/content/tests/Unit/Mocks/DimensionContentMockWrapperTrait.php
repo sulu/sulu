@@ -57,7 +57,7 @@ trait DimensionContentMockWrapperTrait
 
     public function removeAvailableLocale(string $availableLocale): void
     {
-        $this->instance->removeAvailableLocale();
+        $this->instance->removeAvailableLocale($availableLocale);
     }
 
     public function addAvailableLocale(string $availableLocale): void

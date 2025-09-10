@@ -49,10 +49,6 @@
         <!-- Settings Resolver -->
         <service id="sulu_content.settings_resolver"
                  class="Sulu\Content\Application\ContentResolver\Resolver\SettingsResolver">
-            <argument type="service" id="sulu_route.route_generator"/>
-            <argument type="service" id="sulu_route.route_repository"/>
-            <argument type="service" id="router.request_context"/>
-
             <tag name="sulu_content.content_resolver" type="settings"/>
         </service>
 

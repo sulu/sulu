@@ -21,9 +21,6 @@ use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Domain\Model\ShadowInterface;
 use Sulu\Content\Domain\Model\TemplateInterface;
 use Sulu\Content\Domain\Model\WebspaceInterface;
-use Sulu\Route\Application\Routing\Generator\RouteGeneratorInterface;
-use Sulu\Route\Domain\Repository\RouteRepositoryInterface;
-use Symfony\Component\Routing\RequestContext;
 
 /**
  * @phpstan-type SettingsData array{
@@ -44,13 +41,6 @@ use Symfony\Component\Routing\RequestContext;
  */
 readonly class SettingsResolver implements ResolverInterface
 {
-    public function __construct(
-        private RouteGeneratorInterface $routeGenerator,
-        private RouteRepositoryInterface $routeRepository,
-        private RequestContext $requestContext
-    ) {
-    }
-
     public function resolve(DimensionContentInterface $dimensionContent, ?array $properties = null): ?ContentView
     {
         /** @var SettingsData $result */
