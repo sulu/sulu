@@ -32,6 +32,7 @@ use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
 use Sulu\Bundle\AdminBundle\SmartContent\SmartContentProviderInterface;
 use Sulu\Bundle\ContactBundle\Contact\ContactManagerInterface;
 use Sulu\Bundle\ContactBundle\Entity\ContactInterface;
+use Sulu\Bundle\MarkupBundle\Markup\Link\LinkProviderPool;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkProviderPoolInterface;
 use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Component\Localization\Manager\LocalizationManagerInterface;
@@ -123,10 +124,7 @@ class AdminControllerTest extends TestCase
      */
     private $smartContentProviders;
 
-    /**
-     * @var ObjectProphecy<LinkProviderPoolInterface>
-     */
-    private $linkProviderPool;
+    private LinkProviderPoolInterface $linkProviderPool;
 
     /**
      * @var ObjectProphecy<LocalizationManagerInterface>
@@ -196,7 +194,7 @@ class AdminControllerTest extends TestCase
         $this->fieldTypeOptionRegistry = $this->prophesize(FieldTypeOptionRegistryInterface::class);
         $this->contactManager = $this->prophesize(ContactManagerInterface::class);
         $this->smartContentProviders = new \ArrayIterator([]);
-        $this->linkProviderPool = $this->prophesize(LinkProviderPoolInterface::class);
+        $this->linkProviderPool = new LinkProviderPool([]);
         $this->localizationManager = $this->prophesize(LocalizationManagerInterface::class);
 
         $this->localizationManager->getLocalizations()->willReturn([]);
@@ -217,7 +215,7 @@ class AdminControllerTest extends TestCase
             $this->fieldTypeOptionRegistry->reveal(),
             $this->contactManager->reveal(),
             $this->smartContentProviders,
-            $this->linkProviderPool->reveal(),
+            $this->linkProviderPool,
             $this->localizationManager->reveal(),
             $this->environment,
             $this->suluVersion,

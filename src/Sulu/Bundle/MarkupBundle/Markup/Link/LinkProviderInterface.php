@@ -16,6 +16,8 @@ interface LinkProviderInterface
     public function getConfigurationBuilder(): LinkConfigurationBuilder;
 
     /**
+     * @param string[] $hrefs
+     *
      * @return LinkItem[]
      */
     public function preload(array $hrefs, string $locale, bool $published = true): iterable;

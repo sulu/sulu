@@ -124,13 +124,13 @@ class ContentLinkProviderTest extends WebsiteTestCase
 
     public function testPreloadDE(): void
     {
-        $links = $this->exampleLinkProvider->preload(self::$exampleIds, 'de');
+        $links = [...$this->exampleLinkProvider->preload(self::$exampleIds, 'de')];
         $this->assertArraySnapshot('links_de.json', $this->mapLinks($links));
     }
 
     public function testPreloadEN(): void
     {
-        $links = $this->exampleLinkProvider->preload(self::$exampleIds, 'en');
+        $links = [...$this->exampleLinkProvider->preload(self::$exampleIds, 'en')];
         $this->assertArraySnapshot('links_en.json', $this->mapLinks($links));
     }
 

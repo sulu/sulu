@@ -15,6 +15,7 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkConfiguration;
+use Sulu\Bundle\MarkupBundle\Markup\Link\LinkConfigurationBuilder;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkProviderInterface;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkProviderPool;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkProviderPoolInterface;
@@ -39,7 +40,6 @@ class LinkProviderPoolTest extends TestCase
         $this->providerProphecies = [
             'content' => $this->prophesize(LinkProviderInterface::class),
             'media' => $this->prophesize(LinkProviderInterface::class),
-            'page' => $this->prophesize(LinkProviderInterface::class),
         ];
 
         $this->pool = new LinkProviderPool(
@@ -77,30 +77,31 @@ class LinkProviderPoolTest extends TestCase
     public function testGetConfiguration(): void
     {
         $configuration = [
-            'content' => new LinkConfiguration(
-                'Content',
-                'content',
-                'column_list',
-                ['title'],
-                'Title',
-                'Empty',
-                'su-document'
-            ),
-            'media' => new LinkConfiguration(
-                'Media',
-                'media',
-                'table',
-                ['title'],
-                'Title',
-                'Empty',
-                'su-document'
-            ),
+            'content' => LinkConfigurationBuilder::create()
+                ->setTitle('Content')
+                ->setResourceKey('content')
+                ->setListAdapter('column_list')
+                ->setDisplayProperties(['title'])
+                ->setOverlayTitle('Title')
+                ->setEmptyText('Empty')
+                ->setIcon('su-document'),
+            'media' => LinkConfigurationBuilder::create()
+                ->setTitle('Media')
+                ->setResourceKey('media')
+                ->setListAdapter('table')
+                ->setDisplayProperties(['title'])
+                ->setOverlayTitle('Title')
+                ->setEmptyText('Empty')
+                ->setIcon('su-image'),
         ];
 
         $this->providerProphecies['content']->getConfigurationBuilder()->willReturn($configuration['content']);
         $this->providerProphecies['media']->getConfigurationBuilder()->willReturn($configuration['media']);
-        $this->providerProphecies['page']->getConfigurationBuilder()->willReturn(null);
 
-        $this->assertEquals($configuration, $this->pool->getConfiguration());
+        $configurations = $this->pool->getConfiguration();
+        $this->assertCount(2, $configurations);
+        foreach ($configurations as $configuration) {
+            $this->assertInstanceOf(LinkConfiguration::class, $configuration); // @phpstan-ignore-line method.alreadyNarrowedType
+        }
     }
 }

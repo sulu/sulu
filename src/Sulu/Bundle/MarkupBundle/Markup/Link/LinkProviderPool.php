@@ -11,25 +11,16 @@
 
 namespace Sulu\Bundle\MarkupBundle\Markup\Link;
 
-/**
- * Contains all providers.
- */
-class LinkProviderPool implements LinkProviderPoolInterface
+final class LinkProviderPool implements LinkProviderPoolInterface
 {
     /**
-     * @var LinkProviderInterface[]
+     * @param array<string, LinkProviderInterface> $providers
      */
-    private $providers;
-
-    /**
-     * @param LinkProviderInterface[] $providers
-     */
-    public function __construct(array $providers)
+    public function __construct(private readonly array $providers)
     {
-        $this->providers = $providers;
     }
 
-    public function getProvider($name): LinkProviderInterface
+    public function getProvider(string $name): LinkProviderInterface
     {
         if (!$this->hasProvider($name)) {
             throw new ProviderNotFoundException($name, \array_keys($this->providers));
@@ -38,7 +29,7 @@ class LinkProviderPool implements LinkProviderPoolInterface
         return $this->providers[$name];
     }
 
-    public function hasProvider($name): bool
+    public function hasProvider(string $name): bool
     {
         return \array_key_exists($name, $this->providers);
     }

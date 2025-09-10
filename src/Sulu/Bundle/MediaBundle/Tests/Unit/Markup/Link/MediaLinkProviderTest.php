@@ -90,7 +90,7 @@ class MediaLinkProviderTest extends TestCase
         $this->mediaManager->getUrl(3, 'test1.jpg', 3)->willReturn('/test1.jpg?version=3');
         $this->mediaManager->getUrl(6, 'test2.jpg', 1)->willReturn('/test2.jpg?version=1');
 
-        $mediaLinks = $this->mediaLinkProvider->preload([3, 6], 'de', false);
+        $mediaLinks = [...$this->mediaLinkProvider->preload([3, 6], 'de', false)];
 
         $this->assertEquals(3, $mediaLinks[0]->getId());
         $this->assertEquals('Test1', $mediaLinks[0]->getTitle());
