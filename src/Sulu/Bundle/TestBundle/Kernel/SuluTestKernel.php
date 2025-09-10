@@ -45,6 +45,7 @@ class SuluTestKernel extends SuluKernel
             new \FOS\RestBundle\FOSRestBundle(),
             new \FOS\JsRoutingBundle\FOSJsRoutingBundle(),
             new \League\FlysystemBundle\FlysystemBundle(),
+            new \CmsIg\Seal\Integration\Symfony\SealBundle(),
 
             // Sulu
             new \Sulu\Messenger\Infrastructure\Symfony\HttpKernel\SuluMessengerBundle(),
@@ -69,6 +70,7 @@ class SuluTestKernel extends SuluKernel
             new \Sulu\Bundle\ReferenceBundle\SuluReferenceBundle(),
             new \Sulu\Content\Infrastructure\Symfony\HttpKernel\SuluContentBundle(),
             new \Sulu\Page\Infrastructure\Symfony\HttpKernel\SuluPageBundle(),
+            new \Sulu\Search\Infrastructure\Symfony\HttpKernel\SuluSearchBundle(),
         ];
 
         if (\class_exists(\Symfony\Bundle\MonologBundle\MonologBundle::class)) {

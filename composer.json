@@ -30,6 +30,8 @@
         "ext-json": "*",
         "ext-simplexml": "*",
         "composer-runtime-api": "^2.0",
+        "cmsig/seal": "^0.12.2",
+        "cmsig/seal-symfony-bundle": "^0.12.2",
         "composer/semver": "^3.4",
         "contao/imagine-svg": "^1.0",
         "doctrine/annotations": "^1.14 || ^2.0",
@@ -43,8 +45,6 @@
         "doctrine/orm": "^2.15",
         "doctrine/persistence": "^3.1",
         "dragonmantank/cron-expression": "^1.1 || ^2.0 || ^3.0",
-        "league/flysystem": "^3.0",
-        "league/flysystem-bundle": "^3.0",
         "friendsofphp/proxy-manager-lts": "^1.0",
         "friendsofsymfony/http-cache": "^3.0",
         "friendsofsymfony/http-cache-bundle": "^3.0",
@@ -56,6 +56,8 @@
         "imagine/imagine": "^1.0",
         "jms/serializer": "^3.19",
         "jms/serializer-bundle": "^4.0.1 || ^5.0",
+        "league/flysystem": "^3.0",
+        "league/flysystem-bundle": "^3.0",
         "massive/build-bundle": "^0.5.7",
         "matomo/device-detector": "^3.9 || ^4.0.1 || ^5.0 || ^6.0",
         "nyholm/psr7": "^1.3",
@@ -109,6 +111,8 @@
         "webmozart/assert": "^1.11"
     },
     "require-dev": {
+        "cmsig/seal-loupe-adapter": "^0.12.2",
+        "cmsig/seal-memory-adapter": "^0.12.2",
         "coduo/php-matcher": "^6.0.14",
         "jangregor/phpstan-prophecy": "^2.0",
         "league/flysystem-memory": "^3.0",
@@ -137,8 +141,8 @@
         "symfony/browser-kit": "^6.4 || ^7.1",
         "symfony/debug-bundle": "^6.4 || ^7.1",
         "symfony/dotenv": "^6.4 || ^7.1",
-        "symfony/error-handler": "^6.4 || ^7.1",
         "symfony/emoji": "^7.1",
+        "symfony/error-handler": "^6.4 || ^7.1",
         "symfony/monolog-bundle": "^3.7",
         "symfony/phpunit-bridge": "^6.4 || ^7.1",
         "symfony/runtime": "^6.4 || ^7.1",
@@ -198,6 +202,7 @@
             "Sulu\\Snippet\\": "packages/snippet/src",
             "Sulu\\Page\\": "packages/page/src",
             "Sulu\\Route\\": "packages/route/src",
+            "Sulu\\Search\\": "packages/search/src",
             "Sulu\\Content\\": "packages/content/src"
         },
         "exclude-from-classmap": [
@@ -212,6 +217,7 @@
             "Sulu\\Snippet\\Tests\\": "packages/snippet/tests",
             "Sulu\\Page\\Tests\\": "packages/page/tests",
             "Sulu\\Route\\Tests\\": "packages/route/tests",
+            "Sulu\\Search\\Tests\\": "packages/search/tests",
             "Sulu\\Content\\Tests\\": "packages/content/tests"
         }
     },

@@ -1,0 +1,7 @@
+cmsig_seal:
+    schemas:
+        default:
+            dir: '%kernel.project_dir%/config/schemas'
+    engines:
+        default:
+            adapter: 'loupe://%kernel.project_dir%/var/indexes'

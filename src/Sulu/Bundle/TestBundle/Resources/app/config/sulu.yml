@@ -28,3 +28,8 @@ flysystem:
             adapter: 'local'
             options:
                 directory: '%kernel.project_dir%/var/uploads'
+
+cmsig_seal:
+    engines:
+        default:
+            adapter: 'memory://'
