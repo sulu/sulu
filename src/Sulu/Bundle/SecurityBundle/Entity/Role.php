@@ -88,18 +88,6 @@ class Role implements RoleInterface
         return $this->id;
     }
 
-    /**
-     * @deprecated since 2.1 and will be removed in 3.0. Use "getIdentifier" instead.
-     *
-     * @return string
-     */
-    public function getRole()
-    {
-        @trigger_deprecation('sulu/sulu', '2.1', 'The "%s" method is deprecated, use "%s" instead.', __METHOD__, 'getIdentifier');
-
-        return $this->getIdentifier();
-    }
-
     public function getIdentifier()
     {
         if ($this->anonymous) {

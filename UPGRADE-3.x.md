@@ -791,6 +791,7 @@ Removed deprecated functions and properties:
 - `Sulu\Component\Rest\ListBuilder\AbstractListBuilder::addField` (use `addSelectField()` instead)
 - `Sulu\Component\Rest\ListBuilder\AbstractListBuilder::hasField` (use `hasSelectField()` instead)
 - `Sulu\Component\Rest\ListBuilder\AbstractListBuilder::whereNot` (use `where()` instead)
+- `Sulu\Bundle\Security\Entity\Role::getRole` (use `getIdentifier` instead)
 
 Removed unused arguments:
 
