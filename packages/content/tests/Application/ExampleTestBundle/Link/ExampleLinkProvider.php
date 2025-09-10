@@ -32,7 +32,7 @@ final class ExampleLinkProvider implements LinkProviderInterface
     ) {
     }
 
-    public function getConfigurationBuilder(): LinkConfiguration
+    public function getConfigurationBuilder(): LinkConfigurationBuilder
     {
         return LinkConfigurationBuilder::create()
             ->setTitle('Example')
@@ -41,8 +41,7 @@ final class ExampleLinkProvider implements LinkProviderInterface
             ->setDisplayProperties(['id'])
             ->setOverlayTitle('Select Example')
             ->setEmptyText('No example selected')
-            ->setIcon('su-document')
-            ->getLinkConfiguration();
+            ->setIcon('su-document');
     }
 
     public function preload(array $hrefs, string $locale, bool $published = true): iterable
