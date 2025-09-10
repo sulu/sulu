@@ -18,8 +18,6 @@ return new Index('admin', [
     'resourceId' => new Field\TextField('resourceId', searchable: false),
     'locale' => new Field\TextField('locale', searchable: false, filterable: true),
     'title' => new Field\TextField('title'),
-    'description' => new Field\TextField('description'),
-    'content' => new Field\TextField('content', multiple: true),
     'changedAt' => new Field\DateTimeField('changedAt'),
     'createdAt' => new Field\DateTimeField('createdAt'),
 ]);
