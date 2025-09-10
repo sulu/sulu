@@ -97,6 +97,6 @@ class WebspaceTagSubscriberTest extends TestCase
         $events = WebspaceTagSubscriber::getSubscribedEvents();
 
         self::assertArrayHasKey('kernel.response', $events);
-        self::assertEquals(['addWebspaceTag', 1024], $events['kernel.response']);
+        self::assertEquals(['addWebspaceTag', 2048], $events['kernel.response']);
     }
 }

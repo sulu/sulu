@@ -31,7 +31,7 @@ class WebspaceTagSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            KernelEvents::RESPONSE => ['addWebspaceTag', 1024],
+            KernelEvents::RESPONSE => ['addWebspaceTag', 2048], // Priority needs to be higher than the TagsSubscriber (1024)
         ];
     }
 

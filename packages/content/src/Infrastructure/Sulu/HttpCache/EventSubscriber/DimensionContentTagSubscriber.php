@@ -30,7 +30,7 @@ class DimensionContentTagSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            KernelEvents::RESPONSE => ['addTag', 1024],
+            KernelEvents::RESPONSE => ['addTag', 2048], // Priority needs to be higher than the TagsSubscriber (1024)
         ];
     }
 

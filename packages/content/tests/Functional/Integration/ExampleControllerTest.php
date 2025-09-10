@@ -20,6 +20,7 @@ use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\HttpKernel\SuluKernel;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Tests\Application\AppCache;
+use Sulu\Content\Tests\Application\CacheTagsKernel;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\Example;
 use Sulu\Content\Tests\Functional\Traits\CreateCategoryTrait;
 use Sulu\Content\Tests\Functional\Traits\CreateMediaTrait;
@@ -60,6 +61,19 @@ class ExampleControllerTest extends SuluTestCase
         );
 
         $this->referenceRepository = $this->getContainer()->get(ReferenceRepositoryInterface::class);
+    }
+
+    /**
+     * Create a website client with cache tags enabled for testing cache tag functionality.
+     */
+    private function createCacheTagsWebsiteClient(): KernelBrowser
+    {
+        $kernel = new CacheTagsKernel('test', true, SuluKernel::CONTEXT_WEBSITE);
+        $kernel->boot();
+
+        $client = new KernelBrowser($kernel);
+
+        return $client;
     }
 
     public function testPostPublish(): int
@@ -156,6 +170,30 @@ class ExampleControllerTest extends SuluTestCase
         $this->assertTrue($response->isCacheable());
         $this->assertSame('max-age=240, public, s-maxage=240', $response->headers->get('Cache-Control'));
         $this->assertCount(0, $response->headers->getCookies());
+    }
+
+    #[Depends('testPostPublish')]
+    public function testCacheTagsAreGenerated(int $id): void
+    {
+        self::ensureKernelShutdown();
+
+        $websiteClient = $this->createCacheTagsWebsiteClient();
+        $websiteClient->request('GET', '/en/my-example');
+
+        $response = $websiteClient->getResponse();
+        $this->assertHttpStatusCode(200, $response);
+
+        $cacheTags = $response->headers->get('x-cache-tags');
+        $this->assertNotNull($cacheTags, 'Cache tags header should be present in website response');
+
+        $tags = \explode(',', $cacheTags);
+        $tags = \array_map('trim', $tags);
+
+        // 2 tags + webspace + example entity
+        $this->assertCount(4, $tags, 'Cache tags should be present in response');
+
+        $this->assertContains('webspace-sulu-io', $tags, 'Webspace cache tag should be in ReferenceStore');
+        $this->assertContains('examples-' . $id, $tags, 'Example content cache tag should be in ReferenceStore');
     }
 
     #[Depends('testPostPublish')]

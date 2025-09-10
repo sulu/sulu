@@ -94,6 +94,6 @@ class DimensionContentTagSubscriberTest extends TestCase
         $events = DimensionContentTagSubscriber::getSubscribedEvents();
 
         self::assertArrayHasKey('kernel.response', $events);
-        self::assertEquals(['addTag', 1024], $events['kernel.response']);
+        self::assertEquals(['addTag', 2048], $events['kernel.response']);
     }
 }
