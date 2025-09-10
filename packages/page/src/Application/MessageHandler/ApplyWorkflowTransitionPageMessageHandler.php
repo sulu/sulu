@@ -14,7 +14,7 @@ namespace Sulu\Page\Application\MessageHandler;
 use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
 use Sulu\Content\Application\ContentWorkflow\ContentWorkflowInterface;
 use Sulu\Page\Application\Message\ApplyWorkflowTransitionPageMessage;
-use Sulu\Page\Domain\Event\PageWorkflowTransitionEvent;
+use Sulu\Page\Domain\Event\PageWorkflowTransitionAppliedEvent;
 use Sulu\Page\Domain\Repository\PageRepositoryInterface;
 
 /**
@@ -42,6 +42,6 @@ final class ApplyWorkflowTransitionPageMessageHandler
             $message->getTransitionName()
         );
 
-        $this->domainEventCollector->collect(new PageWorkflowTransitionEvent($page, $message->getTransitionName(), $message->getLocale()));
+        $this->domainEventCollector->collect(new PageWorkflowTransitionAppliedEvent($page, $message->getTransitionName(), $message->getLocale()));
     }
 }

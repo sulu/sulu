@@ -19,7 +19,7 @@ use Sulu\Page\Domain\Model\PageDimensionContent;
 use Sulu\Page\Domain\Model\PageInterface;
 use Sulu\Page\Infrastructure\Sulu\Admin\PageAdmin;
 
-class PageWorkflowTransitionEvent extends DomainEvent
+class PageWorkflowTransitionAppliedEvent extends DomainEvent
 {
     public function __construct(
         private PageInterface $page,
