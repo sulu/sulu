@@ -1,7 +1,13 @@
 cmsig_seal:
-    schemas:
-        default:
-            dir: '%kernel.project_dir%/config/schemas'
+    # schemas:
+    #    default:
+    #        dir: '%kernel.project_dir%/config/schemas'
+    #        engine: default
     engines:
         default:
-            adapter: 'loupe://%kernel.project_dir%/var/indexes'
+            adapter: '%env(resolve:SEAL_DSN)%'
+
+when@test:
+    cmsig_seal:
+        # "TEST_TOKEN" is typically set by ParaTest
+        index_name_prefix: 'test_%env(default::TEST_TOKEN)%'

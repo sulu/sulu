@@ -15,16 +15,18 @@ use CmsIg\Seal\Adapter\Memory\MemoryAdapter;
 use CmsIg\Seal\Engine;
 use CmsIg\Seal\Reindex\ReindexConfig;
 use CmsIg\Seal\Reindex\ReindexProviderInterface;
+use CmsIg\Seal\Schema\Index;
 use CmsIg\Seal\Schema\Schema;
 use PHPUnit\Framework\TestCase;
 use Sulu\Search\Application\MessageHandler\ReindexMessageHandler;
+use Webmozart\Assert\Assert;
 
 class ReindexMessageHandlerTest extends TestCase
 {
     private Engine $engine;
 
     /**
-     * @var \ArrayObject<ReindexProviderInterface>
+     * @var \ArrayObject<int|string, ReindexProviderInterface>
      */
     private \ArrayObject $reindexProviders;
 
@@ -32,10 +34,13 @@ class ReindexMessageHandlerTest extends TestCase
 
     public function setUp(): void
     {
+        $adminIndex = require \dirname(__DIR__, 4) . '/config/schemas/admin.php';
+        Assert::isInstanceOf($adminIndex, Index::class);
+
         $this->engine = new Engine(
             new MemoryAdapter(),
             new Schema([
-                'admin' => require (\dirname(__DIR__, 4) . '/config/schemas/admin.php'),
+                'admin' => $adminIndex,
             ]),
         );
         $this->engine->createSchema();

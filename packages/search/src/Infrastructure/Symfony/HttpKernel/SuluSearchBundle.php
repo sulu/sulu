@@ -13,16 +13,15 @@ declare(strict_types=1);
 
 namespace Sulu\Search\Infrastructure\Symfony\HttpKernel;
 
-use Sulu\Page\Application\MessageHandler\CreatePageMessageHandler;
 use Sulu\Search\Application\MessageHandler\ReindexMessageHandler;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 
-use Symfony\Component\DependencyInjection\Reference;
 use function Symfony\Component\DependencyInjection\Loader\Configurator\param;
-
-use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
 use function Symfony\Component\DependencyInjection\Loader\Configurator\tagged_iterator;
+
+use Symfony\Component\DependencyInjection\Reference;
+use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
 
 /**
  * @experimental
@@ -44,7 +43,7 @@ final class SuluSearchBundle extends AbstractBundle
         $services->set('sulu_search.reindex_message_handler')
             ->class(ReindexMessageHandler::class)
             ->args([
-                new Reference('cmsig_seal.engine'),
+                new Reference('cmsig_seal.engine.default'),
                 tagged_iterator('cmsig_seal.reindex_provider'),
             ])
             ->tag('messenger.message_handler');

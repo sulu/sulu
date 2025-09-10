@@ -30,6 +30,8 @@ flysystem:
                 directory: '%kernel.project_dir%/var/uploads'
 
 cmsig_seal:
+    # "TEST_TOKEN" is typically set by ParaTest
+    index_name_prefix: 'test_%env(default::TEST_TOKEN)%'
     engines:
         default:
             adapter: 'memory://'
