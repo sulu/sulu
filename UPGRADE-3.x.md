@@ -1,4 +1,3 @@
-
 ## 3.0.0
 
 The upgrade from Sulu 2.6 to Sulu 3.0 is a major upgrade and will require some migration steps.
@@ -834,17 +833,22 @@ The following methods have been updated with a return type hint:
 - `NavigationItem::key()`: returns `int`
 - `NavigationItem::valid()`: returns `bool`
 - `NavigationItem::rewind()`: returns `void`
-- `AddressType::jsonSerialize()` returns `array` (see its typehint for the exact shape)
-- `ContactType::jsonSerialize()` returns `array` (see its typehint for the exact shape)
-- `EmailType::jsonSerialize()` returns `array` (see its typehint for the exact shape)
-- `FaxType::jsonSerialize()` returns `array` (see its typehint for the exact shape)
-- `PhoneType::jsonSerialize()` returns `array` (see its typehint for the exact shape)
-- `Position::jsonSerialize()` returns `array` (see its typehint for the exact shape)
-- `SocialMediaProfileType::jsonSerialize()` returns `array` (see its typehint for the exact shape)
-- `UrlType::jsonSerialize()` returns `array` (see its typehint for the exact shape)
-- `PropertyParameter::jsonSerialize()` returns `array` (see its typehint for the exact shape)
-- `Localization::jsonSerialize()` returns `array` (see its typehint for the exact shape)
-- `WebspaceCollection::getIterator()` returns `\Traversable`
+- `AddressType::jsonSerialize()`: returns `array` (see its typehint for the exact shape)
+- `ContactType::jsonSerialize()`: returns `array` (see its typehint for the exact shape)
+- `EmailType::jsonSerialize()`: returns `array` (see its typehint for the exact shape)
+- `FaxType::jsonSerialize()`: returns `array` (see its typehint for the exact shape)
+- `PhoneType::jsonSerialize()`: returns `array` (see its typehint for the exact shape)
+- `Position::jsonSerialize()`: returns `array` (see its typehint for the exact shape)
+- `SocialMediaProfileType::jsonSerialize()`: returns `array` (see its typehint for the exact shape)
+- `UrlType::jsonSerialize()`: returns `array` (see its typehint for the exact shape)
+- `PropertyParameter::jsonSerialize()`: returns `array` (see its typehint for the exact shape)
+- `Localization::jsonSerialize()`: returns `array` (see its typehint for the exact shape)
+- `WebspaceCollection::getIterator():` returns `\Traversable`
+- `LinkProviderInterface::getConfiguration()`: replaced by `LinkProviderInterface::getConfigurationBuilder(): LinkConfigurationBuilder`
+- `LinkProviderInterface::preload()`: returns `iterable`
+- `LinkProviderPoolInterface::getProvider()`: returns `LinkProviderInterface`
+- `LinkProviderPoolInterface::hasProvider()`: returns `bool`
+- `LinkProviderPoolInterface::getConfiguration()`: returns `array`
 
 The corresponding traits `TimestampableTrait` and `UserBlameTrait` have been updated with these return type hints.
 
