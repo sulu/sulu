@@ -143,18 +143,6 @@
             <tag name="kernel.event_subscriber"/>
         </service>
 
-        <!-- reference-store -->
-        <service id="sulu_website.reference_store_pool"
-                 class="Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStorePool">
-            <argument type="tagged_iterator" tag="sulu_website.reference_store" index-by="alias" />
-        </service>
-
-        <service id="sulu_website.webspace_reference_store"
-                 class="Sulu\Bundle\WebsiteBundle\ReferenceStore\WebspaceReferenceStore">
-            <argument type="service" id="sulu_core.webspace.request_analyzer" on-invalid="null"/>
-
-            <tag name="sulu_website.reference_store" alias="webspace"/>
-        </service>
 
         <service
             id="sulu_website.url_select_helper"
@@ -163,6 +151,14 @@
         >
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>
             <argument>%kernel.environment%</argument>
+        </service>
+
+        <service id="sulu_website.webspace_tag_subscriber" class="Sulu\Component\Webspace\EventSubscriber\WebspaceTagSubscriber">
+            <argument type="service" id="sulu_http_cache.reference_store" on-invalid="null"/>
+            <argument type="service" id="sulu_core.webspace.request_analyzer"/>
+
+            <tag name="sulu.context" context="website"/>
+            <tag name="kernel.event_subscriber"/>
         </service>
     </services>
 </container>

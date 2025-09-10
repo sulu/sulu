@@ -11,7 +11,7 @@
 
         <service id="sulu_content.resolvable_resource_queue_processor" class="Sulu\Content\Application\ContentResolver\ResolvableResourceQueue\ResolvableResourceQueueProcessor" />
         <service id="sulu_content.resolvable_resource_replacer" class="Sulu\Content\Application\ContentResolver\ResolvableResourceReplacer\ResolvableResourceReplacer">
-            <argument type="service" id="sulu_website.reference_store_pool" on-invalid="null" />
+            <argument type="service" id="sulu_http_cache.reference_store"/>
         </service>
 
         <service id="sulu_content.content_view_resolver" class="Sulu\Content\Application\ContentResolver\ContentViewResolver\ContentViewResolver">
@@ -26,7 +26,6 @@
         <service id="sulu_content.content_view_data_normalizer" class="Sulu\Content\Application\ContentResolver\DataNormalizer\ContentViewDataNormalizer">
             <argument type="service" id="property_accessor" />
         </service>
-
 
         <service id="sulu_content.content_resolver" class="Sulu\Content\Application\ContentResolver\ContentResolver" public="true">
             <argument type="service" id="sulu_content.content_view_resolver" />

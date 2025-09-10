@@ -39,7 +39,6 @@ use Sulu\Article\Infrastructure\Sulu\Sitemap\ArticlesSitemapProvider;
 use Sulu\Article\UserInterface\Controller\Admin\ArticleController;
 use Sulu\Bundle\PersistenceBundle\DependencyInjection\PersistenceExtensionTrait;
 use Sulu\Bundle\PersistenceBundle\PersistenceBundleTrait;
-use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStore;
 use Sulu\Content\Infrastructure\Sulu\Preview\ContentObjectProvider;
 use Symfony\Component\Config\Definition\Configurator\DefinitionConfigurator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -252,14 +251,10 @@ final class SuluArticleBundle extends AbstractBundle
             ->args([
                 new Reference('sulu_content.content_manager'),
                 new Reference('sulu_article.article_repository'),
-                new Reference('sulu_article.article_reference_store'),
+                new Reference('sulu_http_cache.reference_store'),
                 new Reference('translator'),
             ])
             ->tag('sulu.link.provider', ['alias' => 'article']);
-
-        $services->set('sulu_article.article_reference_store')
-            ->class(ReferenceStore::class)
-            ->tag('sulu_website.reference_store', ['alias' => ArticleInterface::RESOURCE_KEY]);
 
         // Smart Content services
         $services->set('sulu_article.article_smart_content_provider')

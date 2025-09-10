@@ -16,6 +16,7 @@ namespace Sulu\Content\Tests\Unit\Content\Application\ContentResolver;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
+use Sulu\Bundle\HttpCacheBundle\ReferenceStore\ReferenceStore;
 use Sulu\Content\Application\ContentAggregator\ContentAggregatorInterface;
 use Sulu\Content\Application\ContentResolver\ContentResolver;
 use Sulu\Content\Application\ContentResolver\ContentViewResolver\ContentViewResolver;
@@ -53,13 +54,12 @@ class ContentResolverTest extends TestCase
      */
     private ObjectProphecy $contentAggregator;
 
-
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->resolvableResourceQueueProcessor = new ResolvableResourceQueueProcessor();
-        $this->resolvableResourceReplacer = new ResolvableResourceReplacer();
+        $this->resolvableResourceReplacer = new ResolvableResourceReplacer(new ReferenceStore());
         $this->contentViewDataNormalizer = new ContentViewDataNormalizer(new PropertyAccessor());
 
         $this->templateResolver = new TestTemplateResolver();

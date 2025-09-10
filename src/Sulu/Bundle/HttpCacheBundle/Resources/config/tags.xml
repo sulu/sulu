@@ -4,9 +4,8 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <services>
         <service id="sulu_http_cache.event_subscriber.tags" class="Sulu\Bundle\HttpCacheBundle\EventSubscriber\TagsSubscriber">
-            <argument type="service" id="sulu_website.reference_store_pool"/>
+            <argument type="service" id="sulu_http_cache.reference_store"/>
             <argument type="service" id="fos_http_cache.http.symfony_response_tagger"/>
-            <argument type="service" id="request_stack"/>
 
             <tag name="sulu.context" context="website"/>
             <tag name="kernel.event_subscriber"/>

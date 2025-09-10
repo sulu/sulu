@@ -13,10 +13,10 @@ declare(strict_types=1);
 
 namespace Sulu\Content\Tests\Application\ExampleTestBundle\Link;
 
+use Sulu\Bundle\HttpCacheBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkConfigurationBuilder;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkItem;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkProviderInterface;
-use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Content\Application\ContentManager\ContentManagerInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\Example;
@@ -60,7 +60,7 @@ final class ExampleLinkProvider implements LinkProviderInterface
         $result = [];
         foreach ($examples as $example) {
             $dimensionContent = $this->contentManager->resolve($example, $dimensionAttributes);
-            $this->exampleReferenceStore->add($example->getId());
+            $this->exampleReferenceStore->add((string) $example->getId(), Example::RESOURCE_KEY);
 
             /** @var string|null $url */
             $url = $dimensionContent->getTemplateData()['url'] ?? null;

@@ -161,6 +161,15 @@
             <tag name="kernel.event_subscriber"/>
         </service>
 
+        <!-- Cache Tag Subscriber -->
+        <service id="sulu_content.dimension_content_tag_subscriber" class="Sulu\Content\Infrastructure\Sulu\HttpCache\EventSubscriber\DimensionContentTagSubscriber">
+            <argument type="service" id="sulu_http_cache.reference_store"/>
+            <argument type="service" id="request_stack"/>
+
+            <tag name="sulu.context" context="website"/>
+            <tag name="kernel.event_subscriber"/>
+        </service>
+
         <!-- Content Manager -->
         <service id="sulu_content.content_manager" class="Sulu\Content\Application\ContentManager\ContentManager">
             <argument type="service" id="sulu_content.content_aggregator"/>

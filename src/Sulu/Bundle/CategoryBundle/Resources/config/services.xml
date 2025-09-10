@@ -47,11 +47,6 @@
             <argument type="service" id="sulu_activity.domain_event_collector"/>
         </service>
 
-        <service id="sulu_category.reference_store.category"
-                 class="Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStore">
-            <tag name="sulu_website.reference_store" alias="category"/>
-            <tag name="kernel.reset" method="reset"/>
-        </service>
 
         <service id="sulu_category.category_controller"
                  class="Sulu\Bundle\CategoryBundle\Controller\CategoryController"

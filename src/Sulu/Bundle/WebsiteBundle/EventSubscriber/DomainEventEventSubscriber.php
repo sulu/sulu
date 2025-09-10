@@ -15,7 +15,6 @@ use Sulu\Bundle\ActivityBundle\Application\Dispatcher\DomainEventDispatcherInter
 use Sulu\Bundle\WebsiteBundle\Domain\Event\CacheClearedEvent;
 use Sulu\Bundle\WebsiteBundle\Event\CacheClearEvent;
 use Sulu\Bundle\WebsiteBundle\Events;
-use Sulu\Bundle\WebsiteBundle\ReferenceStore\WebspaceReferenceStore;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -74,7 +73,7 @@ class DomainEventEventSubscriber implements EventSubscriberInterface
     {
         $parts = \explode('-', $tag, 2);
 
-        if (!isset($parts[1]) || WebspaceReferenceStore::WEBSPACE_REFERENCE_ALIAS !== $parts[0]) {
+        if (!isset($parts[1]) || 'webspace' !== $parts[0]) {
             return null;
         }
 

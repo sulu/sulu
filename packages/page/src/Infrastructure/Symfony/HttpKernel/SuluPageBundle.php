@@ -16,7 +16,6 @@ namespace Sulu\Page\Infrastructure\Symfony\HttpKernel;
 use Gedmo\Tree\Hydrator\ORM\TreeObjectHydrator;
 use Sulu\Bundle\PersistenceBundle\DependencyInjection\PersistenceExtensionTrait;
 use Sulu\Bundle\PersistenceBundle\PersistenceBundleTrait;
-use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStore;
 use Sulu\Content\Infrastructure\Sulu\Preview\ContentObjectProvider;
 use Sulu\Page\Application\Mapper\PageContentMapper;
 use Sulu\Page\Application\Mapper\PageMapperInterface;
@@ -355,14 +354,10 @@ final class SuluPageBundle extends AbstractBundle
             ->args([
                 new Reference('sulu_content.content_manager'),
                 new Reference('sulu_page.page_repository'),
-                new Reference('sulu_page.page_reference_store'),
+                new Reference('sulu_http_cache.reference_store'),
                 new Reference('translator'),
             ])
             ->tag('sulu.link.provider', ['alias' => 'page']);
-
-        $services->set('sulu_page.page_reference_store')
-            ->class(ReferenceStore::class)
-            ->tag('sulu_website.reference_store', ['alias' => PageInterface::RESOURCE_KEY]);
 
         // Smart Content services
         $services->set('sulu_page.page_smart_content_provider')

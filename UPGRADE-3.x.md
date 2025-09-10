@@ -654,6 +654,73 @@ So a few constructor of specific classes has been changed:
 
 - `Sulu\Component\Webspace\Manager\WebspaceManager` 
 
+### ReferenceStore Refactoring
+
+The ReferenceStore classes have been refactored and moved from the `WebsiteBundle` to the `HttpCacheBundle` to improve cache tag handling architecture.
+
+**Moved classes**
+
+- `Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStore` → `Sulu\Bundle\HttpCacheBundle\ReferenceStore\ReferenceStore`
+- `Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface` → `Sulu\Bundle\HttpCacheBundle\ReferenceStore\ReferenceStoreInterface`
+
+**Removed classes**
+
+- `Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreNotExistsException`
+- `Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStorePool`
+- `Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStorePoolInterface`
+- `Sulu\Bundle\WebsiteBundle\ReferenceStore\WebspaceReferenceStore`
+
+**Interface changes**
+
+The `ReferenceStoreInterface::add()` method signature has changed:
+
+```diff
+- public function add($id);
++ public function add(string $id, string $resourceKey);
+```
+
+**Architecture changes**
+
+Previously, each bundle registered its own ReferenceStore with a specific alias (e.g., "page", "article", "snippet"). This approach has been consolidated to use a single ReferenceStore throughout the application. All bundle-specific ReferenceStore registrations have been removed.
+
+**Service definition migration example**
+
+Before (bundle-specific ReferenceStore):
+
+```yaml
+# config/services.yaml or bundle's services.xml
+services:
+    app.my_service:
+        arguments:
+            - '@sulu_page.reference_store.content'  # or any other bundle-specific alias
+```
+
+After (global ReferenceStore):
+
+```yaml
+# config/services.yaml
+services:
+    app.my_service:
+        arguments:
+            - '@sulu_http_cache.reference_store'  # Use the single global reference store
+```
+
+If you were injecting the ReferenceStore in PHP:
+```diff
+- use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
++ use Sulu\Bundle\HttpCacheBundle\ReferenceStore\ReferenceStoreInterface;
+
+class MyService
+{
+    public function __construct(ReferenceStoreInterface $referenceStore)
+    {
+        // ...
+    }
+}
+```
+
+**Impact:** If you have custom code that directly uses the old ReferenceStore classes from the WebsiteBundle, you need to update your imports to use the new classes from the HttpCacheBundle. Update any calls to `add($id)` method to include the `$resourceKey` parameter: `add($id, $resourceKey)`. Remove any custom ReferenceStore registrations that were specific to individual bundles, as the application now uses a single centralized ReferenceStore. The removed classes are no longer available and their functionality has been consolidated into the refactored architecture.
+
 ### Removed deprecations for 3.0
 
 Removed classes / services / interfaces / traits:
@@ -758,6 +825,10 @@ Removed classes / services / interfaces / traits:
 - `Sulu/Bundle/AdminBundle/DependencyInjection/Compiler/AddAdminPass` (replaced by a `tagged_iterator`)
 - `Sulu\Bundle\AudienceTargetingBundle\DependencyInjection\Compiler\AddRulesPass` -> (`sulu.audience_target_rule`)
 - `Sulu\Bundle\CoreBundle\DependencyInjection\Compiler\RegisterLocalizationProvidersPass` (`sulu.localization_provider`)
+- `Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreNotExistsException`
+- `Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStorePool`
+- `Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStorePoolInterface`
+- `Sulu\Bundle\WebsiteBundle\ReferenceStore\WebspaceReferenceStore`
 
 Removed deprecated functions and properties:
 
@@ -891,6 +962,8 @@ The corresponding traits `TimestampableTrait` and `UserBlameTrait` have been upd
 - `Sulu\Bundle\PageBundle\Teaser\Provider\TeaserProviderInterface`: `Sulu\Bundle\AdminBundle\Teaser\Provider\TeaserProviderInterface`
 - `Sulu\Component\PHPCR\PathCleanupInterface`: `Sulu\Route\Application\ResourceLocator\PathCleanup\PathCleanupInterface`
 - `Sulu\Component\PHPCR\PathCleanup`: `Sulu\Route\Application\ResourceLocator\PathCleanup\PathCleanup`
+- `Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStore`: `Sulu\Bundle\HttpCacheBundle\ReferenceStore\ReferenceStore`
+- `Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface`: `Sulu\Bundle\HttpCacheBundle\ReferenceStore\ReferenceStoreInterface`
 
 ### Moved services for 3.0:
 

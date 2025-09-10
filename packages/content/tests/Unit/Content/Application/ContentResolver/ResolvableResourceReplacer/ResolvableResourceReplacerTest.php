@@ -15,6 +15,8 @@ namespace Sulu\Content\Tests\Unit\Content\Application\ContentResolver\Resolvable
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Sulu\Bundle\HttpCacheBundle\ReferenceStore\ReferenceStore;
+use Sulu\Bundle\HttpCacheBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Content\Application\ContentResolver\ResolvableResourceReplacer\ResolvableResourceReplacer;
 use Sulu\Content\Application\ContentResolver\Value\ResolvableResource;
 
@@ -24,9 +26,12 @@ class ResolvableResourceReplacerTest extends TestCase
 
     private ResolvableResourceReplacer $replacer;
 
+    private ReferenceStoreInterface $referenceStore;
+
     protected function setUp(): void
     {
-        $this->replacer = new ResolvableResourceReplacer(null); // ReferenceStorePool not needed for unit tests
+        $this->referenceStore = new ReferenceStore();
+        $this->replacer = new ResolvableResourceReplacer($this->referenceStore);
     }
 
     public function testReplaceResolvableResourcesWithResolvedValues(): void
@@ -37,7 +42,9 @@ class ResolvableResourceReplacerTest extends TestCase
             1,
             function(array $resource) {
                 return $resource['title'] ?? 'Default Title';
-            }
+            },
+            null,
+            'pages'
         );
 
         $content = [
@@ -70,6 +77,11 @@ class ResolvableResourceReplacerTest extends TestCase
         self::assertIsArray($result['nested']);
         self::assertArrayHasKey('page', $result['nested']);
         self::assertSame('Resolved Page Title', $result['nested']['page']);
+
+        // Verify ReferenceStore was populated
+        $tags = $this->referenceStore->getAll();
+        self::assertContains('pages-123', $tags);
+        self::assertCount(1, $tags);
     }
 
     public function testReplaceWithNestedResolvableResources(): void
@@ -80,7 +92,9 @@ class ResolvableResourceReplacerTest extends TestCase
             1,
             function(array $resource) {
                 return ['nested_page' => $resource['nested_resolvable']];
-            }
+            },
+            null,
+            'pages'
         );
 
         $nestedResource = new ResolvableResource(
@@ -89,7 +103,9 @@ class ResolvableResourceReplacerTest extends TestCase
             1,
             function(array $resource) {
                 return $resource['title'] ?? 'Default Title';
-            }
+            },
+            null,
+            'articles'
         );
 
         $content = [
@@ -120,24 +136,30 @@ class ResolvableResourceReplacerTest extends TestCase
         );
 
         self::assertSame(['nested_page' => 'Article Title'], $result['page']);
+
+        // Verify ReferenceStore was populated for both resources
+        $tags = $this->referenceStore->getAll();
+        self::assertContains('pages-123', $tags);
+        self::assertContains('articles-456', $tags);
+        self::assertCount(2, $tags);
     }
 
     public function testReplaceWithMaxDepthExceeded(): void
     {
-        $replacer = new ResolvableResourceReplacer();
-
         $resolvableResource = new ResolvableResource(
             '123',
             'page',
             1,
             function(mixed $resource) {
                 return $resource;
-            });
+            },
+            null,
+            'pages');
 
         $content = ['page' => $resolvableResource];
         $resolvedResources = [];
 
-        $result = $replacer->replaceResolvableResourcesWithResolvedValues(
+        $result = $this->replacer->replaceResolvableResourcesWithResolvedValues(
             $content,
             $resolvedResources,
             3,
@@ -146,6 +168,10 @@ class ResolvableResourceReplacerTest extends TestCase
 
         // Should replace with null when max depth exceeded
         self::assertNull($result['page']);
+
+        // ReferenceStore should be empty when max depth exceeded
+        $tags = $this->referenceStore->getAll();
+        self::assertEmpty($tags);
     }
 
     public function testReplaceWithEmptyResolvedResources(): void
@@ -156,7 +182,9 @@ class ResolvableResourceReplacerTest extends TestCase
             1,
             function(mixed $resource) {
                 return $resource;
-            }
+            },
+            null,
+            'pages'
         );
 
         $content = ['page' => $resolvableResource];
@@ -171,6 +199,10 @@ class ResolvableResourceReplacerTest extends TestCase
 
         // Should remain unchanged when no resolved resources
         self::assertSame($resolvableResource, $result['page']);
+
+        // ReferenceStore should be empty when no resources resolved
+        $tags = $this->referenceStore->getAll();
+        self::assertEmpty($tags);
     }
 
     public function testReplaceWithMissingResource(): void
@@ -181,7 +213,9 @@ class ResolvableResourceReplacerTest extends TestCase
             1,
             function(mixed $resource) {
                 return $resource ?? 'fallback';
-            });
+            },
+            null,
+            'pages');
 
         $content = ['page' => $resolvableResource];
 
@@ -200,6 +234,10 @@ class ResolvableResourceReplacerTest extends TestCase
 
         // Should use callback with null resource
         self::assertSame('fallback', $result['page']);
+
+        // ReferenceStore should be empty when resource not found
+        $tags = $this->referenceStore->getAll();
+        self::assertEmpty($tags);
     }
 
     public function testReplaceWithComplexNestedStructure(): void
@@ -210,7 +248,9 @@ class ResolvableResourceReplacerTest extends TestCase
             1,
             function(mixed $resource) {
                 return $resource;
-            });
+            },
+            null,
+            'pages');
 
         $articleResource = new ResolvableResource(
             '456',
@@ -218,7 +258,9 @@ class ResolvableResourceReplacerTest extends TestCase
             1,
             function(array $resource) {
                 return $resource['title'];
-            });
+            },
+            null,
+            'articles');
 
         $content = [
             'items' => [
@@ -256,6 +298,12 @@ class ResolvableResourceReplacerTest extends TestCase
         ];
 
         self::assertSame($expected, $result);
+
+        // Verify ReferenceStore was populated for both resources
+        $tags = $this->referenceStore->getAll();
+        self::assertContains('pages-123', $tags);
+        self::assertContains('articles-456', $tags);
+        self::assertCount(2, $tags);
     }
 
     public function testReplaceWithArrayOfResolvableResources(): void
@@ -266,7 +314,9 @@ class ResolvableResourceReplacerTest extends TestCase
             1,
             function(array $resource) {
                 return $resource['title'];
-            });
+            },
+            null,
+            'pages');
 
         $resource2 = new ResolvableResource(
             '456',
@@ -274,7 +324,9 @@ class ResolvableResourceReplacerTest extends TestCase
             1,
             function(array $resource) {
                 return $resource['title'];
-            });
+            },
+            null,
+            'pages');
 
         $content = [
             'pages' => [$resource1, $resource2],
@@ -298,5 +350,90 @@ class ResolvableResourceReplacerTest extends TestCase
         );
 
         self::assertSame(['First Page', 'Second Page'], $result['pages']);
+
+        // Verify ReferenceStore was populated for both pages
+        $tags = $this->referenceStore->getAll();
+        self::assertContains('pages-123', $tags);
+        self::assertContains('pages-456', $tags);
+        self::assertCount(2, $tags);
+    }
+
+    public function testReferenceStoreWithUuidResources(): void
+    {
+        // Create a ResolvableResource with a UUID as ID
+        $uuid = '550e8400-e29b-41d4-a716-446655440000';
+        $resolvableResource = new ResolvableResource(
+            $uuid,
+            'page',
+            1,
+            function(array $resource) {
+                return $resource['title'] ?? 'Default Title';
+            },
+            null,
+            'pages'
+        );
+
+        $content = ['page' => $resolvableResource];
+
+        $metadataId = $resolvableResource->getMetadataIdentifier();
+        $resolvedResources = [
+            'page' => [
+                $uuid => [
+                    $metadataId => ['title' => 'UUID Page Title'],
+                ],
+            ],
+        ];
+
+        $result = $this->replacer->replaceResolvableResourcesWithResolvedValues(
+            $content,
+            $resolvedResources,
+            0,
+            5
+        );
+
+        self::assertSame('UUID Page Title', $result['page']);
+
+        // Verify ReferenceStore stores UUID directly without prefix
+        $tags = $this->referenceStore->getAll();
+        self::assertContains($uuid, $tags);
+        self::assertCount(1, $tags);
+    }
+
+    public function testReferenceStoreNotPopulatedWithoutResourceKey(): void
+    {
+        // Create a ResolvableResource without resourceKey
+        $resolvableResource = new ResolvableResource(
+            '123',
+            'page',
+            1,
+            function(array $resource) {
+                return $resource['title'] ?? 'Default Title';
+            }
+            // No metadata and no resourceKey provided
+        );
+
+        $content = ['page' => $resolvableResource];
+
+        $metadataId = $resolvableResource->getMetadataIdentifier();
+        $resolvedResources = [
+            'page' => [
+                '123' => [
+                    $metadataId => ['title' => 'Page Without Key'],
+                ],
+            ],
+        ];
+
+        $result = $this->replacer->replaceResolvableResourcesWithResolvedValues(
+            $content,
+            $resolvedResources,
+            0,
+            5
+        );
+
+        self::assertSame('Page Without Key', $result['page']);
+
+        // Verify ReferenceStore is empty when resourceKey is not provided
+        $tags = $this->referenceStore->getAll();
+        self::assertEmpty($tags);
     }
 }

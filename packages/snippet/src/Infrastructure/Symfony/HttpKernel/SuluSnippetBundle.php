@@ -13,9 +13,9 @@ declare(strict_types=1);
 
 namespace Sulu\Snippet\Infrastructure\Symfony\HttpKernel;
 
+use Sulu\Bundle\HttpCacheBundle\ReferenceStore\ReferenceStore;
 use Sulu\Bundle\PersistenceBundle\DependencyInjection\PersistenceExtensionTrait;
 use Sulu\Bundle\PersistenceBundle\PersistenceBundleTrait;
-use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStore;
 use Sulu\Snippet\Application\Mapper\SnippetContentMapper;
 use Sulu\Snippet\Application\Mapper\SnippetMapperInterface;
 use Sulu\Snippet\Application\MessageHandler\ApplyWorkflowTransitionSnippetMessageHandler;

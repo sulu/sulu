@@ -4,5 +4,10 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <services>
         <service id="sulu_http_cache.cache_lifetime.resolver" class="Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeResolver"/>
+
+        <service id="sulu_http_cache.reference_store" class="Sulu\Bundle\HttpCacheBundle\ReferenceStore\ReferenceStore"/>
+
+        <service id="Sulu\Bundle\HttpCacheBundle\ReferenceStore\ReferenceStoreInterface"
+                 alias="sulu_http_cache.reference_store"/>
     </services>
 </container>

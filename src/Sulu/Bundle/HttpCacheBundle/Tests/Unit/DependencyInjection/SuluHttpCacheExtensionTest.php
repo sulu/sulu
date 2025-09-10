@@ -18,8 +18,9 @@ use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
 use Sulu\Bundle\HttpCacheBundle\DependencyInjection\SuluHttpCacheExtension;
+use Sulu\Bundle\HttpCacheBundle\ReferenceStore\ReferenceStore;
+use Sulu\Bundle\HttpCacheBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
-use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStorePoolInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Url\ReplacerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -44,17 +45,11 @@ class SuluHttpCacheExtensionTest extends AbstractExtensionTestCase
     private $replacer;
 
     /**
-     * @var ReplacerInterface
-     */
-    /**
      * @var ObjectProphecy<LoggerInterface>
      */
     private $logger;
 
-    /**
-     * @var ObjectProphecy<ReferenceStorePoolInterface>
-     */
-    private $referenceStore;
+    private ReferenceStoreInterface $referenceStore;
 
     public function setUp(): void
     {
@@ -67,13 +62,13 @@ class SuluHttpCacheExtensionTest extends AbstractExtensionTestCase
         $this->requestStack = $this->prophesize(RequestStack::class);
         $this->replacer = $this->prophesize(ReplacerInterface::class);
         $this->logger = $this->prophesize(LoggerInterface::class);
-        $this->referenceStore = $this->prophesize(ReferenceStorePoolInterface::class);
+        $this->referenceStore = new ReferenceStore();
 
         $this->container->set('sulu_core.webspace.webspace_manager', $this->webspaceManager->reveal());
         $this->container->set('request_stack', $this->requestStack->reveal());
         $this->container->set('sulu_core.webspace.webspace_manager.url_replacer', $this->replacer->reveal());
         $this->container->set('logger', $this->logger->reveal());
-        $this->container->set('sulu_website.reference_store_pool', $this->referenceStore->reveal());
+        $this->container->set('sulu_http_cache.reference_store', $this->referenceStore);
         $this->container->set('sulu_tag.tag_manager', $this->prophesize(TagManagerInterface::class)->reveal());
         $this->container->set('fos_http_cache.cache_manager', $this->prophesize(CacheManager::class)->reveal());
         $this->container->set('fos_http_cache.http.symfony_response_tagger', $this->prophesize(SymfonyResponseTagger::class)->reveal());
@@ -92,7 +87,7 @@ class SuluHttpCacheExtensionTest extends AbstractExtensionTestCase
         $this->compile();
 
         $this->assertTrue($this->container->has('sulu_http_cache.cache_lifetime.resolver'));
-        $this->assertFalse($this->container->has('sulu_http_cache.cache_manager'));
+        $this->assertTrue($this->container->has('sulu_http_cache.reference_store'));
         $this->assertContainerBuilderHasParameter('sulu_http_cache.cache.shared_max_age', 240);
         $this->assertContainerBuilderHasParameter('sulu_http_cache.cache.max_age', 240);
     }

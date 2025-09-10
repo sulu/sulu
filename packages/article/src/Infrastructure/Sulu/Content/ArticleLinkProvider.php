@@ -15,10 +15,10 @@ namespace Sulu\Article\Infrastructure\Sulu\Content;
 
 use Sulu\Article\Domain\Model\ArticleInterface;
 use Sulu\Article\Domain\Repository\ArticleRepositoryInterface;
+use Sulu\Bundle\HttpCacheBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkConfigurationBuilder;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkItem;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkProviderInterface;
-use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Content\Application\ContentManager\ContentManagerInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -64,7 +64,7 @@ final class ArticleLinkProvider implements LinkProviderInterface
         $result = [];
         foreach ($articles as $article) {
             $dimensionContent = $this->contentManager->resolve($article, $dimensionAttributes);
-            $this->articleReferenceStore->add($article->getId());
+            $this->articleReferenceStore->add($article->getId(), ArticleInterface::RESOURCE_KEY);
 
             /** @var string|null $url */
             $url = $dimensionContent->getTemplateData()['url'] ?? null;

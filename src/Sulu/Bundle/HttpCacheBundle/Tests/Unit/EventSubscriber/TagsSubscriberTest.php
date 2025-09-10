@@ -9,184 +9,120 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\HttpCacheBundle\Tests\Unit\EventListener;
+namespace Sulu\Bundle\HttpCacheBundle\Tests\Unit\EventSubscriber;
 
 use FOS\HttpCacheBundle\Http\SymfonyResponseTagger;
 use PHPUnit\Framework\TestCase;
-use Prophecy\Argument;
-use Prophecy\PhpUnit\ProphecyTrait;
-use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\HttpCacheBundle\EventSubscriber\TagsSubscriber;
-use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
-use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStorePoolInterface;
-use Sulu\Content\Domain\Model\ContentRichEntityInterface;
-use Sulu\Content\Domain\Model\DimensionContentInterface;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\Uid\Uuid;
+use Sulu\Bundle\HttpCacheBundle\ReferenceStore\ReferenceStore;
 
 class TagsSubscriberTest extends TestCase
 {
-    use ProphecyTrait;
+    private TagsSubscriber $tagsSubscriber;
+    private ReferenceStore $referenceStore;
+    private MockSymfonyResponseTagger $symfonyResponseTagger;
 
-    /**
-     * @var TagsSubscriber
-     */
-    private $tagsSubscriber;
-
-    /**
-     * @var ObjectProphecy<ReferenceStorePoolInterface>
-     */
-    private $referenceStorePool;
-
-    /**
-     * @var ObjectProphecy<SymfonyResponseTagger>
-     */
-    private $symfonyResponseTagger;
-
-    /**
-     * @var Request
-     */
-    private $request;
-
-    /**
-     * @var RequestStack
-     */
-    private $requestStack;
-
-    /**
-     * @var ObjectProphecy<DimensionContentInterface>
-     */
-    private $dimensionContent; // @phpstan-ignore-line missingType.generics
-
-    /**
-     * @var array<ObjectProphecy<ReferenceStoreInterface>>
-     */
-    private $referenceStores = [];
-
-    /**
-     * @var string
-     */
-    private $uuid1;
-
-    /**
-     * @var string
-     */
-    private $uuid2;
-
-    /**
-     * @var string
-     */
-    private $contentId;
-
-    public function setUp(): void
+    protected function setUp(): void
     {
-        $this->uuid1 = Uuid::v7()->toRfc4122();
-        $this->uuid2 = Uuid::v7()->toRfc4122();
-        $this->contentId = Uuid::v7()->toRfc4122();
-
-        $testReferenceStore = $this->prophesize(ReferenceStoreInterface::class);
-        $testReferenceStore->getAll()->willReturn(['1', '2']);
-        $this->referenceStores['test'] = $testReferenceStore;
-
-        $testReferenceStore2 = $this->prophesize(ReferenceStoreInterface::class);
-        $testReferenceStore2->getAll()->willReturn([$this->uuid1, $this->uuid2]);
-        $this->referenceStores['test_uuid'] = $testReferenceStore2;
-
-        $this->referenceStorePool = $this->prophesize(ReferenceStorePoolInterface::class);
-        $this->referenceStorePool->getStores()->willReturn($this->referenceStores);
-
-        $this->symfonyResponseTagger = $this->prophesize(SymfonyResponseTagger::class);
-
-        $this->dimensionContent = $this->prophesize(DimensionContentInterface::class);
-        $contentRichEntityInterface = $this->prophesize(ContentRichEntityInterface::class);
-        $this->dimensionContent->getResource()->willReturn($contentRichEntityInterface);
-        $contentRichEntityInterface->getId()->willReturn($this->contentId);
-
-        $this->request = new Request();
-        $this->requestStack = new RequestStack();
-        $this->requestStack->push($this->request);
+        $this->referenceStore = new ReferenceStore();
+        $this->symfonyResponseTagger = new MockSymfonyResponseTagger();
 
         $this->tagsSubscriber = new TagsSubscriber(
-            $this->referenceStorePool->reveal(),
-            $this->symfonyResponseTagger->reveal(),
-            $this->requestStack,
+            $this->referenceStore,
+            $this->symfonyResponseTagger
         );
     }
 
-    public function testGet(): void
+    public function testAddTagsWithTags(): void
     {
-        $this->request->attributes->set('object', $this->dimensionContent->reveal());
+        $this->referenceStore->add('1', 'test');
+        $this->referenceStore->add('2', 'test');
+        $this->referenceStore->add('123', 'page');
+        $this->referenceStore->add('example', 'webspace');
 
         $expectedTags = [
-            'test-1',
-            'test-2',
-            $this->uuid1,
-            $this->uuid2,
-            $this->contentId,
+            'test-1' => 'test-1',
+            'test-2' => 'test-2',
+            'page-123' => 'page-123',
+            'webspace-example' => 'webspace-example',
         ];
-        $this->symfonyResponseTagger->addTags($expectedTags)->shouldBeCalled();
+
         $this->tagsSubscriber->addTags();
+
+        self::assertEquals($expectedTags, $this->symfonyResponseTagger->addedTags);
     }
 
-    public function testGetEmptyReferenceStore(): void
+    public function testAddTagsWithEmptyTags(): void
     {
-        $this->request->attributes->set('object', $this->dimensionContent->reveal());
+        $this->tagsSubscriber->addTags();
 
-        $this->referenceStores['test_uuid']->getAll()->willReturn([]);
+        self::assertNull($this->symfonyResponseTagger->addedTags);
+    }
+
+    public function testAddTagsWithUuidTags(): void
+    {
+        $uuid1 = '550e8400-e29b-41d4-a716-446655440000';
+        $uuid2 = '6ba7b810-9dad-11d1-80b4-00c04fd430c8';
+
+        $this->referenceStore->add($uuid1, 'pages');
+        $this->referenceStore->add($uuid2, 'articles');
+
         $expectedTags = [
-            'test-1',
-            'test-2',
-            $this->contentId,
+            $uuid1 => $uuid1,
+            $uuid2 => $uuid2,
         ];
-        $this->symfonyResponseTagger->addTags($expectedTags)->shouldBeCalled();
+
         $this->tagsSubscriber->addTags();
+
+        self::assertEquals($expectedTags, $this->symfonyResponseTagger->addedTags);
     }
 
-    public function testGetWithoutStructure(): void
+    public function testAddTagsWithMixedTags(): void
     {
+        $uuid = '550e8400-e29b-41d4-a716-446655440000';
+        $this->referenceStore->add($uuid, 'pages');
+        $this->referenceStore->add('123', 'articles');
+        $this->referenceStore->add('test', 'webspace');
+
         $expectedTags = [
-            'test-1',
-            'test-2',
-            $this->uuid1,
-            $this->uuid2,
+            $uuid => $uuid,
+            'articles-123' => 'articles-123',
+            'webspace-test' => 'webspace-test',
         ];
-        $this->symfonyResponseTagger->addTags($expectedTags)->shouldBeCalled();
+
         $this->tagsSubscriber->addTags();
+
+        self::assertEquals($expectedTags, $this->symfonyResponseTagger->addedTags);
     }
 
-    public function testGetWithWrongStructure(): void
+    public function testGetSubscribedEvents(): void
     {
-        $this->request->attributes->set('object', new \stdClass());
-        $expectedTags = [
-            'test-1',
-            'test-2',
-            $this->uuid1,
-            $this->uuid2,
-        ];
-        $this->symfonyResponseTagger->addTags($expectedTags)->shouldBeCalled();
-        $this->tagsSubscriber->addTags();
+        $events = TagsSubscriber::getSubscribedEvents();
+
+        self::assertArrayHasKey('kernel.response', $events);
+        self::assertEquals(['addTags', 1024], $events['kernel.response']);
+    }
+}
+
+class MockSymfonyResponseTagger extends SymfonyResponseTagger
+{
+    /**
+     * @var string[]|null
+     */
+    public ?array $addedTags = null;
+
+    public function __construct()
+    {
+        // Don't call parent constructor to avoid complex setup
     }
 
-    public function testGetWithoutRequest(): void
+    /**
+     * @param string[] $tags
+     */
+    public function addTags(array $tags): static
     {
-        $this->requestStack->pop();
-        $expectedTags = [
-            'test-1',
-            'test-2',
-            $this->uuid1,
-            $this->uuid2,
-        ];
-        $this->symfonyResponseTagger->addTags($expectedTags)->shouldBeCalled();
-        $this->tagsSubscriber->addTags();
-    }
+        $this->addedTags = $tags;
 
-    public function testEmptyReferenceStore(): void
-    {
-        $this->request->attributes->set('object', null);
-        $this->referenceStores['test_uuid']->getAll()->willReturn([]);
-        $this->referenceStores['test']->getAll()->willReturn([]);
-        $this->symfonyResponseTagger->addTags(Argument::any())->shouldNotBeCalled();
-        $this->tagsSubscriber->addTags();
+        return $this;
     }
 }

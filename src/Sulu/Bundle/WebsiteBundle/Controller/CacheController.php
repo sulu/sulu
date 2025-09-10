@@ -12,7 +12,6 @@
 namespace Sulu\Bundle\WebsiteBundle\Controller;
 
 use Sulu\Bundle\WebsiteBundle\Cache\CacheClearerInterface;
-use Sulu\Bundle\WebsiteBundle\ReferenceStore\WebspaceReferenceStore;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
@@ -67,7 +66,7 @@ class CacheController
 
         $tags = [];
         if ($webspaceKey) {
-            $tags[] = WebspaceReferenceStore::generateTagByWebspaceKey($webspaceKey);
+            $tags[] = 'webspace-' . $webspaceKey;
         }
 
         $this->cacheClearer->clear(empty($tags) ? null : $tags);

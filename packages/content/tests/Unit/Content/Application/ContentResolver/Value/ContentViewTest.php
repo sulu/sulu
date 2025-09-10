@@ -102,7 +102,6 @@ class ContentViewTest extends TestCase
         self::assertCount(1, $references);
         $this->assertReferenceEquals(5, 'pages', '', $references[0]);
 
-        // Test that ResolvableResource also has the resourceKey
         /** @var ResolvableResource $resolvable */
         $resolvable = $contentView->getContent();
         self::assertSame('pages', $resolvable->getResourceKey());

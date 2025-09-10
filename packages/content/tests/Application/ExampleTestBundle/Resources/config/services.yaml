@@ -49,15 +49,9 @@ services:
         arguments:
             - '@sulu_content.content_manager'
             - '@example_test.example_repository'
-            - '@example_test.example_reference_store'
+            - '@sulu_http_cache.reference_store'
         tags:
             - { name: sulu.link.provider, alias: examples }
-
-    example_test.example_reference_store:
-        class: Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStore
-        public: true
-        tags:
-            - { name: 'sulu_website.reference_store', alias: 'example' }
 
     example_test.example_preview_object_provider:
         class: Sulu\Content\Infrastructure\Sulu\Preview\ContentObjectProvider

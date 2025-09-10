@@ -375,14 +375,6 @@
             <argument>%sulu_media.disposition_type.mime_types_attachment%</argument>
         </service>
 
-        <service id="sulu_media.reference_store.media" class="Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStore">
-            <tag name="sulu_website.reference_store" alias="media"/>
-            <tag name="kernel.reset" method="reset"/>
-        </service>
-
-        <service id="sulu_media.reference_store.collection" class="Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStore">
-            <tag name="sulu_website.reference_store" alias="collection"/>
-        </service>
 
         <service id="sulu_media.doctrine.invalidation_listener"
                  class="Sulu\Bundle\MediaBundle\EventListener\CacheInvalidationListener">
