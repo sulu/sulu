@@ -16,7 +16,7 @@ namespace Sulu\Content\Infrastructure\Doctrine;
 use Doctrine\Inflector\InflectorFactory;
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 use Doctrine\ORM\Mapping\Builder\ClassMetadataBuilder;
-use Doctrine\ORM\Mapping\ClassMetadataInfo;
+use Doctrine\ORM\Mapping\ClassMetadata;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\ContactBundle\Entity\ContactInterface;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
@@ -39,7 +39,7 @@ final class MetadataLoader
 {
     public function loadClassMetadata(LoadClassMetadataEventArgs $event): void
     {
-        /** @var ClassMetadataInfo<object> $metadata */
+        /** @var ClassMetadata<object> $metadata */
         $metadata = $event->getClassMetadata();
         $reflection = $metadata->getReflectionClass();
         $tableName = $metadata->getTableName();
@@ -135,12 +135,12 @@ final class MetadataLoader
     /**
      * @codeCoverageIgnore
      *
-     * @param ClassMetadataInfo<object> $metadata
+     * @param ClassMetadata<object> $metadata
      * @param class-string $class
      */
     private function addManyToOne(
         LoadClassMetadataEventArgs $event,
-        ClassMetadataInfo $metadata,
+        ClassMetadata $metadata,
         string $name,
         string $class,
         bool $nullable = false,
@@ -157,7 +157,7 @@ final class MetadataLoader
             'targetEntity' => $class,
             'joinColumns' => [
                 [
-                    'name' => $namingStrategy->joinKeyColumnName($name), // @phpstan-ignore-line
+                    'name' => $namingStrategy->joinKeyColumnName($name, null), // @phpstan-ignore-line
                     'referencedColumnName' => $referencedColumnName,
                     'nullable' => $nullable,
                     'onDelete' => 'CASCADE',
@@ -168,12 +168,12 @@ final class MetadataLoader
     }
 
     /**
-     * @param ClassMetadataInfo<object> $metadata
+     * @param ClassMetadata<object> $metadata
      * @param class-string $class
      */
     private function addManyToMany(
         LoadClassMetadataEventArgs $event,
-        ClassMetadataInfo $metadata,
+        ClassMetadata $metadata,
         string $name,
         string $class,
         string $inverseColumnName
@@ -194,7 +194,7 @@ final class MetadataLoader
                 'name' => $this->getRelationTableName($metadata, $name),
                 'joinColumns' => [
                     [
-                        'name' => $namingStrategy->joinKeyColumnName($metadata->getName()),
+                        'name' => $namingStrategy->joinKeyColumnName($metadata->getName(), null),
                         'referencedColumnName' => $referencedColumnName,
                         'onDelete' => 'CASCADE',
                         'onUpdate' => 'CASCADE',
@@ -213,10 +213,10 @@ final class MetadataLoader
     }
 
     /**
-     * @param ClassMetadataInfo<object> $metadata
+     * @param ClassMetadata<object> $metadata
      * @param array<string, mixed> $mapping
      */
-    private function addField(ClassMetadataInfo $metadata, string $name, string $type = 'string', array $mapping = []): void
+    private function addField(ClassMetadata $metadata, string $name, string $type = 'string', array $mapping = []): void
     {
         if ($metadata->hasField($name)) {
             return;
@@ -236,10 +236,10 @@ final class MetadataLoader
     }
 
     /**
-     * @param ClassMetadataInfo<object> $metadata
+     * @param ClassMetadata<object> $metadata
      * @param list<string> $fields
      */
-    private function addIndex(ClassMetadataInfo $metadata, string $name, array $fields): void
+    private function addIndex(ClassMetadata $metadata, string $name, array $fields): void
     {
         $builder = new ClassMetadataBuilder($metadata);
 
@@ -249,9 +249,9 @@ final class MetadataLoader
     }
 
     /**
-     * @param ClassMetadataInfo<object> $metadata
+     * @param ClassMetadata<object> $metadata
      */
-    private function getRelationTableName(ClassMetadataInfo $metadata, string $relationName): string
+    private function getRelationTableName(ClassMetadata $metadata, string $relationName): string
     {
         $inflector = InflectorFactory::create()->build();
         $tableNameParts = \explode('_', $metadata->getTableName());

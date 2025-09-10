@@ -14,11 +14,10 @@ namespace Sulu\Component\Persistence\EventSubscriber\ORM;
 use Doctrine\ORM\Configuration;
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 use Doctrine\ORM\Mapping\ClassMetadata;
-use Doctrine\ORM\Mapping\ClassMetadataInfo;
 use Doctrine\Persistence\Mapping\ReflectionService;
 
 /**
- * Doctrine subscriber used to manipulate metadata.
+ * @internal
  */
 class MetadataSubscriber
 {
@@ -38,7 +37,6 @@ class MetadataSubscriber
 
     public function loadClassMetadata(LoadClassMetadataEventArgs $event)
     {
-        /** @var ClassMetadataInfo $metadata */
         $metadata = $event->getClassMetadata();
 
         $this->process($metadata);
@@ -55,7 +53,10 @@ class MetadataSubscriber
         }
     }
 
-    private function process(ClassMetadataInfo $metadata)
+    /**
+     * @param ClassMetadata<object> $metadata
+     */
+    private function process(ClassMetadata $metadata): void
     {
         foreach ($this->objects as $application => $classes) {
             foreach ($classes as $class) {
@@ -70,11 +71,14 @@ class MetadataSubscriber
         }
     }
 
+    /**
+     * @param ClassMetadata<object> $metadata
+     */
     private function setAssociationMappings(
-        ClassMetadataInfo $metadata,
+        ClassMetadata $metadata,
         Configuration $configuration,
         ReflectionService $reflectionService
-    ) {
+    ): void {
         if (!\class_exists($metadata->getName())) {
             return;
         }
@@ -102,7 +106,10 @@ class MetadataSubscriber
         }
     }
 
-    private function unsetAssociationMappings(ClassMetadataInfo $metadata)
+    /**
+     * @param ClassMetadata<object> $metadata
+     */
+    private function unsetAssociationMappings(ClassMetadata $metadata): void
     {
         foreach ($metadata->getAssociationMappings() as $key => $value) {
             if ($this->hasRelation($value['type'])) {
@@ -113,17 +120,15 @@ class MetadataSubscriber
 
     /**
      * @param int $type
-     *
-     * @return bool
      */
-    private function hasRelation($type)
+    private function hasRelation($type): bool
     {
         return \in_array(
             $type,
             [
-                ClassMetadataInfo::MANY_TO_MANY,
-                ClassMetadataInfo::ONE_TO_MANY,
-                ClassMetadataInfo::ONE_TO_ONE,
+                ClassMetadata::MANY_TO_MANY,
+                ClassMetadata::ONE_TO_MANY,
+                ClassMetadata::ONE_TO_ONE,
             ],
             true
         );

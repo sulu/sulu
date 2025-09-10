@@ -96,12 +96,10 @@ interface MediaRepositoryInterface extends RepositoryInterface
     /**
      * Returns amount of affected rows.
      *
-     * @return int
-     *
      * @throws NoResultException
      * @throws NonUniqueResultException
      */
-    public function count(array $filter);
+    public function count(array $filter): int;
 
     /**
      * @return array<array{id: int, resourceKey: string, depth: int}>

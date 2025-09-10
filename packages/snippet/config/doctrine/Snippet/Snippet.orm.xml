@@ -6,7 +6,7 @@
         name="Sulu\Snippet\Domain\Model\Snippet"
         table="sn_snippets"
     >
-        <id name="uuid" type="string" column="uuid">
+        <id name="uuid" type="string" column="uuid" length="36">
             <generator strategy="NONE"/>
         </id>
 

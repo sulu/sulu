@@ -704,6 +704,7 @@ Removed classes / services:
 - `Sulu\Bundle\WebsiteBundle\Twig\Navigation\MemoizedNavigationTwigExtension`
 - `Sulu\Bundle\WebsiteBundle\Twig\Navigation\NavigationTwigExtension`
 - `Sulu\Bundle\WebsiteBundle\Twig\Navigation\NavigationTwigExtensionInterface`
+- `Sulu\Component\Persistence\EventSubscriber\ORM\MetadataSubscriber` (internal)
 - `Sulu\Bundle\WebsiteBundle\Navigation\NavigationQueryBuilder`
 - `Sulu\Bundle\WebsiteBundle\Navigation\NavigationMapper`
 - `Sulu\Bundle\WebsiteBundle\Navigation\NavigationMapperInterface`
@@ -849,6 +850,7 @@ The following methods have been updated with a return type hint:
 - `LinkProviderPoolInterface::getProvider()`: returns `LinkProviderInterface`
 - `LinkProviderPoolInterface::hasProvider()`: returns `bool`
 - `LinkProviderPoolInterface::getConfiguration()`: returns `array`
+- `MediaRepositoryInterface::count()`: returns `int`
 
 The corresponding traits `TimestampableTrait` and `UserBlameTrait` have been updated with these return type hints.
 

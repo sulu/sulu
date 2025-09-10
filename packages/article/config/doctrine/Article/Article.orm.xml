@@ -6,7 +6,7 @@
         name="Sulu\Article\Domain\Model\Article"
         table="ar_articles"
     >
-        <id name="uuid" type="string" column="uuid">
+        <id name="uuid" type="string" column="uuid" length="36">
             <generator strategy="NONE"/>
         </id>
 
