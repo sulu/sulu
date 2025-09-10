@@ -19,11 +19,12 @@ use Sulu\Page\Domain\Model\PageDimensionContent;
 use Sulu\Page\Domain\Model\PageInterface;
 use Sulu\Page\Infrastructure\Sulu\Admin\PageAdmin;
 
-class PagePublishedEvent extends DomainEvent
+class PageWorkflowTransitionEvent extends DomainEvent
 {
     public function __construct(
         private PageInterface $page,
-        private string $locale
+        private string $workflowTransitionName,
+        private string $locale,
     ) {
         parent::__construct();
     }
@@ -33,9 +34,14 @@ class PagePublishedEvent extends DomainEvent
         return $this->page;
     }
 
+    public function getWorkflowTransitionName(): string
+    {
+        return $this->workflowTransitionName;
+    }
+
     public function getEventType(): string
     {
-        return 'published';
+        return 'workflow_transition.' . $this->workflowTransitionName;
     }
 
     public function getResourceKey(): string

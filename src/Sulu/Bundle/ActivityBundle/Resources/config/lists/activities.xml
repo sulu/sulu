@@ -47,12 +47,15 @@
                         <param name="moved" value="su-arrows-alt"/>
                         <param name="copied" value="su-copy"/>
                         <param name="published" value="su-publish"/>
+                        <param name="workflow_transition.publish" value="su-publish"/>
                         <param name="unpublished" value="su-unpublish"/>
+                        <param name="workflow_transition.unpublish" value="su-unpublish"/>
                         <param name="merged" value="su-merge"/>
                         <param name="enabled" value="su-toggler-enabled"/>
                         <param name="locked" value="su-lock"/>
                         <param name="unlocked" value="su-lock-open"/>
                         <param name="draft_removed" value="su-trash-alt"/>
+                        <param name="workflow_transition.remove_draft" value="su-trash-alt"/>
                         <param name="children_reordered" value="su-exchange"/>
                         <param name="translation_added" value="su-language-plus"/>
                         <param name="translation_copied" value="su-language-copy"/>

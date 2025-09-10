@@ -12,12 +12,9 @@
 namespace Sulu\Page\Application\MessageHandler;
 
 use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
-use Sulu\Bundle\ActivityBundle\Domain\Event\DomainEvent;
 use Sulu\Content\Application\ContentWorkflow\ContentWorkflowInterface;
 use Sulu\Page\Application\Message\ApplyWorkflowTransitionPageMessage;
-use Sulu\Page\Domain\Event\PageDraftRemovedEvent;
-use Sulu\Page\Domain\Event\PagePublishedEvent;
-use Sulu\Page\Domain\Event\PageUnpublishedEvent;
+use Sulu\Page\Domain\Event\PageWorkflowTransitionEvent;
 use Sulu\Page\Domain\Repository\PageRepositoryInterface;
 
 /**
@@ -45,15 +42,6 @@ final class ApplyWorkflowTransitionPageMessageHandler
             $message->getTransitionName()
         );
 
-        $event = match ($message->getTransitionName()) {
-            'publish' => new PagePublishedEvent($page, $message->getLocale()),
-            'unpublish' => new PageUnpublishedEvent($page, $message->getLocale()),
-            'remove_draft' => new PageDraftRemovedEvent($page, $message->getLocale()),
-            default => null,
-        };
-
-        if ($event instanceof DomainEvent) {
-            $this->domainEventCollector->collect($event);
-        }
+        $this->domainEventCollector->collect(new PageWorkflowTransitionEvent($page, $message->getTransitionName(), $message->getLocale()));
     }
 }
