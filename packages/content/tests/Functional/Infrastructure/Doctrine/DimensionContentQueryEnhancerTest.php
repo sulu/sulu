@@ -421,10 +421,12 @@ class DimensionContentQueryEnhancerTest extends SuluTestCase
         ));
 
         foreach ($this->exampleRepository->findBy(['locale' => 'en', 'stage' => 'draft'], ['invalid' => 'asc']) as $key => $example) {
+            self::assertArrayHasKey($key, $unsortedResult);
             self::assertSame($unsortedResult[$key]->getId(), $example->getId());
         }
 
         foreach ($this->exampleRepository->findBy(['locale' => 'en', 'stage' => 'draft'], ['invalid' => 'desc']) as $key => $example) {
+            self::assertArrayHasKey($key, $unsortedResult);
             self::assertSame($unsortedResult[$key]->getId(), $example->getId());
         }
     }

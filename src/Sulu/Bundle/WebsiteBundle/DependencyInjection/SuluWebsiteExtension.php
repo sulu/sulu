@@ -117,7 +117,7 @@ class SuluWebsiteExtension extends Extension implements PrependExtensionInterfac
             $loader->load('analytics.xml');
         }
 
-        if ($analyticsEnabled && \array_key_exists('SuluTrashBundle', $bundles)) {
+        if ($analyticsEnabled && \array_key_exists('SuluTrashBundle', $bundles)) { // @phpstan-ignore-line function.alreadyNarrowedType
             $loader->load('analytics_trash.xml');
         }
 

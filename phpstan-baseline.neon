@@ -36163,12 +36163,6 @@ parameters:
 			path: src/Sulu/Bundle/WebsiteBundle/Controller/SitemapController.php
 
 		-
-			message: '#^Call to function array_key_exists\(\) with ''SuluTrashBundle'' and array\{FrameworkBundle\: string, TwigBundle\: string, MonologBundle\: string, FlysystemBundle\: string, SuluCoreBundle\: string, DoctrineBundle\: string, DoctrineFixturesBundle\: string, StofDoctrineExtensionsBundle\: string, \.\.\.\} will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/DependencyInjection/SuluWebsiteExtension.php
-
-		-
 			message: '#^Call to function array_key_exists\(\) with ''model'' and array\{model\: class\-string, repository\?\: class\-string\} will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 1
