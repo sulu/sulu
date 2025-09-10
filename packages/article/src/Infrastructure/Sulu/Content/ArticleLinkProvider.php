@@ -15,7 +15,6 @@ namespace Sulu\Article\Infrastructure\Sulu\Content;
 
 use Sulu\Article\Domain\Model\ArticleInterface;
 use Sulu\Article\Domain\Repository\ArticleRepositoryInterface;
-use Sulu\Bundle\MarkupBundle\Markup\Link\LinkConfiguration;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkConfigurationBuilder;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkItem;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkProviderInterface;
@@ -24,7 +23,11 @@ use Sulu\Content\Application\ContentManager\ContentManagerInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class ArticleLinkProvider implements LinkProviderInterface
+/**
+ * @interal This class is an integration to the SuluMarkupBundle and can be changed any time.
+ *          Use Symfony dependency injection service decoration and change the behaviour if you need.
+ */
+final class ArticleLinkProvider implements LinkProviderInterface
 {
     public function __construct(
         private readonly ContentManagerInterface $contentManager,
@@ -34,7 +37,7 @@ class ArticleLinkProvider implements LinkProviderInterface
     ) {
     }
 
-    public function getConfiguration(): LinkConfiguration
+    public function getConfigurationBuilder(): LinkConfigurationBuilder
     {
         return LinkConfigurationBuilder::create()
             ->setTitle($this->translator->trans('sulu_article.articles', [], 'admin'))
@@ -43,11 +46,10 @@ class ArticleLinkProvider implements LinkProviderInterface
             ->setDisplayProperties(['id'])
             ->setOverlayTitle($this->translator->trans('sulu_article.selection_overlay_title', [], 'admin'))
             ->setEmptyText($this->translator->trans('sulu_article.no_article_selected', [], 'admin'))
-            ->setIcon('su-document')
-            ->getLinkConfiguration();
+            ->setIcon('su-document');
     }
 
-    public function preload(array $hrefs, $locale, $published = true)
+    public function preload(array $hrefs, string $locale, bool $published = true): iterable
     {
         $dimensionAttributes = [
             'locale' => $locale,

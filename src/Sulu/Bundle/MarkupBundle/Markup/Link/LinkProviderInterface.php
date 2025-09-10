@@ -11,26 +11,12 @@
 
 namespace Sulu\Bundle\MarkupBundle\Markup\Link;
 
-/**
- * Provides links.
- */
 interface LinkProviderInterface
 {
-    /**
-     * Return configuration for content-type.
-     *
-     * @return LinkConfiguration|LinkConfigurationBuilder|null
-     */
-    public function getConfiguration();
+    public function getConfigurationBuilder(): LinkConfigurationBuilder;
 
     /**
-     * Load given items identified by the given hrefs.
-     *
-     * @param string[] $hrefs
-     * @param string $locale
-     * @param bool $published
-     *
      * @return LinkItem[]
      */
-    public function preload(array $hrefs, $locale, $published = true);
+    public function preload(array $hrefs, string $locale, bool $published = true): iterable;
 }

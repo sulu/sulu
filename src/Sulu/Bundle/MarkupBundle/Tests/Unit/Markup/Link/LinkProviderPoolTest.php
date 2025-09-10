@@ -97,9 +97,9 @@ class LinkProviderPoolTest extends TestCase
             ),
         ];
 
-        $this->providerProphecies['content']->getConfiguration()->willReturn($configuration['content']);
-        $this->providerProphecies['media']->getConfiguration()->willReturn($configuration['media']);
-        $this->providerProphecies['page']->getConfiguration()->willReturn(null);
+        $this->providerProphecies['content']->getConfigurationBuilder()->willReturn($configuration['content']);
+        $this->providerProphecies['media']->getConfigurationBuilder()->willReturn($configuration['media']);
+        $this->providerProphecies['page']->getConfigurationBuilder()->willReturn(null);
 
         $this->assertEquals($configuration, $this->pool->getConfiguration());
     }

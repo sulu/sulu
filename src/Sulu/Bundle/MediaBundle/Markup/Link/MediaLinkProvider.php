@@ -18,7 +18,11 @@ use Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class MediaLinkProvider implements LinkProviderInterface
+/**
+ * @interal This class is an integration to the SuluMarkupBundle and can be changed any time.
+ *          Use Symfony dependency injection service decoration and change the behaviour if you need.
+ */
+final class MediaLinkProvider implements LinkProviderInterface
 {
     public function __construct(
         private MediaRepositoryInterface $mediaRepository,
@@ -27,11 +31,9 @@ class MediaLinkProvider implements LinkProviderInterface
     ) {
     }
 
-    public function getConfiguration()
+    public function getConfigurationBuilder(): LinkConfigurationBuilder
     {
-        $linkConfigurationBuilder = LinkConfigurationBuilder::create();
-
-        return $linkConfigurationBuilder
+        return LinkConfigurationBuilder::create()
             ->setTitle($this->translator->trans('sulu_media.media', [], 'admin'))
             ->setResourceKey('media')
             ->setDisplayProperties(['title'])
@@ -41,7 +43,7 @@ class MediaLinkProvider implements LinkProviderInterface
             ->setIcon('');
     }
 
-    public function preload(array $hrefs, $locale, $published = true)
+    public function preload(array $hrefs, string $locale, bool $published = true): iterable
     {
         $medias = $this->mediaRepository->findMediaDisplayInfo($hrefs, $locale);
 

@@ -14,21 +14,19 @@ namespace Sulu\Bundle\MarkupBundle\Markup\Link;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
- * @internal
+ * @interal This class is an integration to the SuluMarkupBundle and can be changed any time.
+ *          Use Symfony dependency injection service decoration and change the behaviour if you need.
  */
-class ExternalLinkProvider implements LinkProviderInterface
+final class ExternalLinkProvider implements LinkProviderInterface
 {
     public function __construct(
         private TranslatorInterface $translator,
     ) {
     }
 
-    public function getConfiguration()
+    public function getConfigurationBuilder(): LinkConfigurationBuilder
     {
-        /** @var LinkConfigurationBuilder $linkConfigurationBuilder */
-        $linkConfigurationBuilder = LinkConfigurationBuilder::create();
-
-        return $linkConfigurationBuilder
+        return LinkConfigurationBuilder::create()
             ->setTitle($this->translator->trans('sulu_admin.external_link', [], 'admin'))
             ->setResourceKey('')
             ->setListAdapter('')
@@ -38,7 +36,7 @@ class ExternalLinkProvider implements LinkProviderInterface
             ->setIcon('');
     }
 
-    public function preload(array $hrefs, $locale, $published = true)
+    public function preload(array $hrefs, string $locale, bool $published = true): iterable
     {
         if (0 === \count($hrefs)) {
             return [];

@@ -63,7 +63,7 @@ class MediaLinkProviderTest extends TestCase
     public function testGetConfiguration(): void
     {
         /** @var LinkConfigurationBuilder $configurationBuilder */
-        $configurationBuilder = $this->mediaLinkProvider->getConfiguration();
+        $configurationBuilder = $this->mediaLinkProvider->getConfigurationBuilder();
 
         $this->assertEquals(
             new LinkConfiguration(

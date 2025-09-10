@@ -50,7 +50,7 @@ class ExternalLinkProviderTest extends TestCase
         $this->translator->trans('sulu_admin.external_link', [], 'admin')->willReturn('External Link');
 
         /** @var LinkConfigurationBuilder $configurationBuilder */
-        $configurationBuilder = $this->externalLinkProvider->getConfiguration();
+        $configurationBuilder = $this->externalLinkProvider->getConfigurationBuilder();
         $this->assertEquals(
             new LinkConfiguration(
                 'External Link',

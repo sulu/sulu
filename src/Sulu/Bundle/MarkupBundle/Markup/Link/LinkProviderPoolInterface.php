@@ -11,35 +11,14 @@
 
 namespace Sulu\Bundle\MarkupBundle\Markup\Link;
 
-/**
- * Interface for link-provider-pool.
- */
 interface LinkProviderPoolInterface
 {
-    /**
-     * Returns provider by name.
-     *
-     * @param string $name
-     *
-     * @return LinkProviderInterface
-     *
-     * @throws ProviderNotFoundException
-     */
-    public function getProvider($name);
+    public function getProvider(string $name): LinkProviderInterface;
+
+    public function hasProvider(string $name): bool;
 
     /**
-     * Returns true if provider exists.
-     *
-     * @param string $name
-     *
-     * @return bool
+     * @return array<string, LinkConfiguration>
      */
-    public function hasProvider($name);
-
-    /**
-     * Returns configuration for content-type.
-     *
-     * @return LinkConfiguration[]
-     */
-    public function getConfiguration();
+    public function getConfiguration(): array;
 }
