@@ -14,12 +14,10 @@ declare(strict_types=1);
 namespace Sulu\Page\Domain\Event;
 
 use Sulu\Bundle\ActivityBundle\Domain\Event\DomainEvent;
-use Sulu\Bundle\PageBundle\Admin\PageAdmin;
-use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 use Sulu\Content\Domain\Model\DimensionContentCollection;
-use Sulu\Page\Domain\Model\Page;
 use Sulu\Page\Domain\Model\PageDimensionContent;
 use Sulu\Page\Domain\Model\PageInterface;
+use Sulu\Page\Infrastructure\Sulu\Admin\PageAdmin;
 
 class PageCreatedEvent extends DomainEvent
 {
@@ -51,7 +49,7 @@ class PageCreatedEvent extends DomainEvent
 
     public function getResourceKey(): string
     {
-        return Page::RESOURCE_KEY;
+        return PageInterface::RESOURCE_KEY;
     }
 
     public function getResourceId(): string
@@ -84,10 +82,5 @@ class PageCreatedEvent extends DomainEvent
     public function getResourceSecurityContext(): ?string
     {
         return PageAdmin::getPageSecurityContext(static::getResourceWebspaceKey());
-    }
-
-    public function getResourceSecurityObjectType(): ?string
-    {
-        return SecurityBehavior::class;
     }
 }
