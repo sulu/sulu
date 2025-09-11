@@ -80,7 +80,7 @@ class FormMetadataProviderTest extends KernelTestCase
     {
         $typedForm = $this->formMetadataProvider->getMetadata('page', 'en');
         $this->assertInstanceOf(TypedFormMetadata::class, $typedForm);
-        $this->assertCount(2, $typedForm->getForms());
+        $this->assertCount(3, $typedForm->getForms());
     }
 
     public function testGetMetadataTagFiltered(): void
@@ -125,8 +125,8 @@ class FormMetadataProviderTest extends KernelTestCase
             ['tags' => ['test' => false]]
         );
         $this->assertInstanceOf(TypedFormMetadata::class, $typedForm);
-        $this->assertCount(1, $typedForm->getForms());
-        $this->assertEquals(['overview'], \array_keys($typedForm->getForms()));
+        $this->assertCount(2, $typedForm->getForms());
+        $this->assertEquals(['overview', 'grouped'], \array_keys($typedForm->getForms()));
 
         $typedForm = $this->formMetadataProvider->getMetadata(
             'page',

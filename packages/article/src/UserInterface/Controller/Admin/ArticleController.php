@@ -83,7 +83,7 @@ final class ArticleController
         ContentManagerInterface $contentManager,
         FieldDescriptorFactoryInterface $fieldDescriptorFactory,
         DoctrineListBuilderFactoryInterface $listBuilderFactory,
-        RestHelperInterface $restHelper
+        RestHelperInterface $restHelper,
     ) {
         $this->articleRepository = $articleRepository;
         $this->messageBus = $messageBus;
@@ -98,6 +98,9 @@ final class ArticleController
 
     public function cgetAction(Request $request): Response
     {
+        $templatesParam = $request->get('templates', '');
+        $templates = \array_filter(\explode(',', \is_string($templatesParam) ? $templatesParam : ''));
+
         // TODO this should be ArticleRepository::findFlatBy / ::countFlatBy methods
         //      but first we would need to avoid that the restHelper requires the request.
         //
@@ -112,6 +115,22 @@ final class ArticleController
         $listBuilder->addSelectField($fieldDescriptors['publishedState']);
         $listBuilder->setParameter('locale', $request->query->get('locale'));
         $this->restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
+        if (0 !== \count($templates)) {
+            $dimensionContentTemplateKey = $fieldDescriptors['dimensionContentTemplateKey'];
+            $ghostDimensionContentTemplateKey = $fieldDescriptors['ghostDimensionContentTemplateKey'];
+            $expression = $listBuilder->createOrExpression([
+                $listBuilder->createAndExpression([
+                    $listBuilder->createIsNotNullExpression($dimensionContentTemplateKey),
+                    $listBuilder->createInExpression($dimensionContentTemplateKey, $templates),
+                ]),
+                $listBuilder->createAndExpression([
+                    $listBuilder->createIsNullExpression($dimensionContentTemplateKey),
+                    $listBuilder->createInExpression($ghostDimensionContentTemplateKey, $templates),
+                ]),
+            ]);
+
+            $listBuilder->addExpression($expression);
+        }
 
         $listRepresentation = new PaginatedRepresentation(
             $listBuilder->execute(),
@@ -161,7 +180,7 @@ final class ArticleController
             $this->normalizer->normalize(
                 $listRepresentation->toArray(),
                 'json',
-            )
+            ),
         );
     }
 
@@ -182,7 +201,7 @@ final class ArticleController
             ),
             [
                 ArticleRepositoryInterface::GROUP_SELECT_ARTICLE_ADMIN => true,
-            ]
+            ],
         );
 
         // TODO the `$article` should just be serialized
@@ -249,7 +268,7 @@ final class ArticleController
             $request->request->all(),
             [
                 'locale' => $this->getLocale($request),
-            ]
+            ],
         );
     }
 
@@ -270,14 +289,14 @@ final class ArticleController
             $message = new CopyLocaleArticleMessage(
                 ['uuid' => $uuid],
                 (string) $request->query->get('src'),
-                (string) $request->query->get('dest')
+                (string) $request->query->get('dest'),
             );
 
             /** @see Sulu\Article\Application\MessageHandler\CopyLocaleArticleMessageHandler */
             /** @var ArticleInterface|null */
             return $this->handle(new Envelope($message, [new EnableFlushStamp()]));
         } elseif ('restore' === $action) {
-            $version = \intval($request->query->get('version'));
+            $version = (int) $request->query->get('version');
             if (!$version) {
                 throw new \InvalidArgumentException('The "version" query parameter is required for restoring a version.');
             }
@@ -292,12 +311,11 @@ final class ArticleController
             /** @see Sulu\Article\Application\MessageHandler\RestoreArticleVersionMessageHandler */
             /** @var ArticleInterface|null */
             return $this->handle(new Envelope($message, [new EnableFlushStamp()]));
-        } else {
-            $message = new ApplyWorkflowTransitionArticleMessage(['uuid' => $uuid], $this->getLocale($request), $action);
-
-            /** @see Sulu\Article\Application\MessageHandler\ApplyWorkflowTransitionArticleMessageHandler */
-            /** @var null */
-            return $this->handle(new Envelope($message, [new EnableFlushStamp()]));
         }
+        $message = new ApplyWorkflowTransitionArticleMessage(['uuid' => $uuid], $this->getLocale($request), $action);
+
+        /** @see Sulu\Article\Application\MessageHandler\ApplyWorkflowTransitionArticleMessageHandler */
+        /** @var null */
+        return $this->handle(new Envelope($message, [new EnableFlushStamp()]));
     }
 }

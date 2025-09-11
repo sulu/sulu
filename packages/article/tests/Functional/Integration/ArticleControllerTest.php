@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /*
  * This file is part of Sulu.
  *
@@ -40,7 +38,7 @@ class ArticleControllerTest extends SuluTestCase
     {
         $this->client = $this->createAuthenticatedClient(
             [],
-            ['CONTENT_TYPE' => 'application/json', 'HTTP_ACCEPT' => 'application/json']
+            ['CONTENT_TYPE' => 'application/json', 'HTTP_ACCEPT' => 'application/json'],
         );
 
         // TODO this should not be necessary
@@ -120,7 +118,11 @@ class ArticleControllerTest extends SuluTestCase
         \sleep(1); // Ensure that the version timestamp is different from the previous version
 
         $this->client->request(
-            'PUT', '/admin/api/articles/' . $id . '?locale=en&action=publish', [], [], [],
+            'PUT',
+            '/admin/api/articles/' . $id . '?locale=en&action=publish',
+            [],
+            [],
+            [],
             \json_encode(
                 [
                     'template' => 'article',
@@ -362,6 +364,113 @@ class ArticleControllerTest extends SuluTestCase
         $this->client->request('GET', '/admin/api/articles/' . $trashItem->getResourceId() . '?locale=en');
         $response = $this->client->getResponse();
         $this->assertResponseSnapshot('article_post_restore.json', $response, 200);
+    }
+
+    public function testGetListWithTemplateFiltering(): void
+    {
+        self::purgeDatabase();
+
+        // Create articles with different templates
+        $this->client->request('POST', '/admin/api/articles?locale=en&action=publish', [], [], [], \json_encode([
+            'template' => 'article',
+            'title' => 'Article Template Test',
+            'url' => '/article-template',
+            'mainWebspace' => 'sulu-io',
+        ]) ?: null);
+
+        $response1 = $this->client->getResponse();
+        $this->assertHttpStatusCode(201, $response1);
+        $content1 = \json_decode((string) $response1->getContent(), true);
+        $this->assertIsArray($content1);
+        $articleId = $content1['id'];
+
+        $this->client->request('POST', '/admin/api/articles?locale=en&action=publish', [], [], [], \json_encode([
+            'template' => 'blog',
+            'title' => 'Blog Template Test',
+            'url' => '/blog-template',
+            'mainWebspace' => 'sulu-io',
+        ]) ?: null);
+
+        $response2 = $this->client->getResponse();
+        $this->assertHttpStatusCode(201, $response2);
+
+        $this->client->request('POST', '/admin/api/articles?locale=en&action=publish', [], [], [], \json_encode([
+            'template' => 'news',
+            'title' => 'News Template Test',
+            'url' => '/news-template',
+            'mainWebspace' => 'sulu-io',
+        ]) ?: null);
+
+        $response3 = $this->client->getResponse();
+        $this->assertHttpStatusCode(201, $response3);
+
+        // Test single template filter
+        $this->client->request('GET', '/admin/api/articles?locale=en&templates=article');
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(200, $response);
+        $content = \json_decode((string) $response->getContent(), true);
+        $this->assertIsArray($content);
+
+        $this->assertSame(1, $content['total']);
+        $this->assertIsArray($content['_embedded']);
+        $this->assertIsArray($content['_embedded']['articles']);
+        $this->assertIsArray($content['_embedded']['articles'][0]);
+        $this->assertSame('Article Template Test', $content['_embedded']['articles'][0]['title']);
+
+        // Test multiple template filter
+        $this->client->request('GET', '/admin/api/articles?locale=en&templates=article,blog');
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(200, $response);
+        $content = \json_decode((string) $response->getContent(), true);
+        $this->assertIsArray($content);
+
+        $this->assertSame(2, $content['total']);
+        $this->assertIsArray($content['_embedded']);
+        $this->assertIsArray($content['_embedded']['articles']);
+        $titles = \array_column($content['_embedded']['articles'], 'title');
+        $this->assertContains('Article Template Test', $titles);
+        $this->assertContains('Blog Template Test', $titles);
+
+        // Test template filter with empty values (should be filtered out)
+        $this->client->request('GET', '/admin/api/articles?locale=en&templates=article,,blog,');
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(200, $response);
+        $content = \json_decode((string) $response->getContent(), true);
+        $this->assertIsArray($content);
+
+        $this->assertSame(2, $content['total']);
+        $this->assertIsArray($content['_embedded']);
+        $this->assertIsArray($content['_embedded']['articles']);
+        $titles = \array_column($content['_embedded']['articles'], 'title');
+        $this->assertContains('Article Template Test', $titles);
+        $this->assertContains('Blog Template Test', $titles);
+
+        // Test all templates (no filter)
+        $this->client->request('GET', '/admin/api/articles?locale=en');
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(200, $response);
+        $content = \json_decode((string) $response->getContent(), true);
+        $this->assertIsArray($content);
+
+        $this->assertSame(3, $content['total']);
+
+        // Test empty template filter (should return all)
+        $this->client->request('GET', '/admin/api/articles?locale=en&templates=');
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(200, $response);
+        $content = \json_decode((string) $response->getContent(), true);
+        $this->assertIsArray($content);
+
+        $this->assertSame(3, $content['total']);
+
+        // Test non-existent template (should return no results)
+        $this->client->request('GET', '/admin/api/articles?locale=en&templates=nonexistent');
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(200, $response);
+        $content = \json_decode((string) $response->getContent(), true);
+        $this->assertIsArray($content);
+
+        $this->assertSame(0, $content['total']);
     }
 
     protected function getSnapshotFolder(): string

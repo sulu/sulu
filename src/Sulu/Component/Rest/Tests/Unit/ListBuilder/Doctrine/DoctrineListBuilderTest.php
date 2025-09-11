@@ -36,6 +36,8 @@ use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescri
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescriptor;
 use Sulu\Component\Rest\ListBuilder\Event\ListBuilderCreateEvent;
 use Sulu\Component\Rest\ListBuilder\Event\ListBuilderEvents;
+use Sulu\Component\Rest\ListBuilder\Expression\Doctrine\DoctrineIsNotNullExpression;
+use Sulu\Component\Rest\ListBuilder\Expression\Doctrine\DoctrineIsNullExpression;
 use Sulu\Component\Rest\ListBuilder\FieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Filter\FilterTypeInterface;
 use Sulu\Component\Rest\ListBuilder\Filter\FilterTypeRegistry;
@@ -105,12 +107,7 @@ class DoctrineListBuilderTest extends TestCase
         ['id' => '3'],
     ];
 
-    /**
-     * @var class-string
-     *
-     * @phpstan-ignore property.defaultValue
-     */
-    private static $entityName = 'Sulu\Bundle\CoreBundle\Entity\Example';
+    private static string $entityName = 'Sulu\Bundle\CoreBundle\Entity\Example';
 
     /** @var string */
     private static $entityNameAlias = 'Sulu_Bundle_CoreBundle_Entity_Example';
@@ -155,7 +152,7 @@ class DoctrineListBuilderTest extends TestCase
 
         $this->doctrineListBuilder = new DoctrineListBuilder(
             $this->entityManager->reveal(),
-            self::$entityName,
+            self::$entityName, // @phpstan-ignore-line
             $this->filterTypeRegistry->reveal(),
             $this->eventDispatcher->reveal(),
             [PermissionTypes::VIEW => 64],
@@ -1563,5 +1560,27 @@ class DoctrineListBuilderTest extends TestCase
         $this->queryBuilder->setParameter('accessControlIds', [42])->shouldBeCalled();
 
         $this->doctrineListBuilder->execute();
+    }
+
+    public function testCreateIsNullExpression(): void
+    {
+        $fieldDescriptor = new DoctrineFieldDescriptor('test', 'test', self::$entityName);
+        $this->queryBuilder->addOrderBy(Argument::cetera())->shouldNotBeCalled();
+
+        $expression = $this->doctrineListBuilder->createIsNullExpression($fieldDescriptor);
+
+        $this->assertInstanceOf(DoctrineIsNullExpression::class, $expression);
+        $this->assertEquals('test', $expression->getFieldName());
+    }
+
+    public function testCreateIsNotNullExpression(): void
+    {
+        $fieldDescriptor = new DoctrineFieldDescriptor('test', 'test', self::$entityName);
+        $this->queryBuilder->addOrderBy(Argument::cetera())->shouldNotBeCalled();
+
+        $expression = $this->doctrineListBuilder->createIsNotNullExpression($fieldDescriptor);
+
+        $this->assertInstanceOf(DoctrineIsNotNullExpression::class, $expression);
+        $this->assertEquals('test', $expression->getFieldName());
     }
 }

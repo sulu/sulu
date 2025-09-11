@@ -25,6 +25,7 @@
                     </xs:restriction>
                 </xs:simpleType>
             </xs:element>
+            <xs:element type="xs:string" name="group" minOccurs="0" maxOccurs="1"/>
             <xs:element type="indexType" name="index" minOccurs="1" maxOccurs="1"/>
             <xs:element type="tagType" name="tag" maxOccurs="unbounded"/>
             <xs:element type="xs:string" name="view" minOccurs="1" maxOccurs="1"/>

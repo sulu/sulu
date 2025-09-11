@@ -42,13 +42,13 @@ class TemplateXmlLoaderTest extends TestCase
      */
     private $translator;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->translator = $this->prophesize(TranslatorInterface::class);
         $tagXmlParser = new TagXmlParser();
         $metaXmlParser = new MetaXmlParser(
             $this->translator->reveal(),
-            ['en' => 'en', 'de' => 'de', 'fr' => 'fr', 'nl' => 'nl']
+            ['en' => 'en', 'de' => 'de', 'fr' => 'fr', 'nl' => 'nl'],
         );
         $propertiesXmlParser = new PropertiesXmlParser(
             $tagXmlParser,
@@ -445,6 +445,23 @@ class TemplateXmlLoaderTest extends TestCase
                 ],
             ],
         ], $this->metadataToArray($formMetadata));
+    }
+
+    public function testLoadGroupedTemplate(): void
+    {
+        $formMetadata = $this->loader->load($this->getTemplatesDirectory() . 'grouped.xml');
+
+        $this->assertSame('grouped', $formMetadata->getKey());
+        $this->assertSame('content', $formMetadata->getGroup());
+    }
+
+    public function testLoadTemplateWithoutGroup(): void
+    {
+        // Test that templates without a group element return null for the group
+        $formMetadata = $this->loader->load($this->getTemplatesDirectory() . 'overview.xml');
+
+        $this->assertSame('overview', $formMetadata->getKey());
+        $this->assertNull($formMetadata->getGroup());
     }
 
     /**

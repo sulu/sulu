@@ -66,6 +66,12 @@ class TemplateXmlLoader extends AbstractLoader
         \assert(\is_string($templateKey), 'Expected the template key of "' . $resource . '" to be defined.');
         $form->setKey($templateKey);
 
+        $templateGroup = $this->getValueFromXPath('/x:template/x:group', $xpath);
+        if (null !== $templateGroup) {
+            \assert(\is_string($templateGroup), 'Expected the template group to be "' . $resource . '" string or undefined.');
+        }
+        $form->setGroup($templateGroup);
+
         $tagNodes = $xpath->query('/x:template/x:tag') ?: [];
         $form->setTags($this->tagXmlParser->load($xpath, $tagNodes));
 
