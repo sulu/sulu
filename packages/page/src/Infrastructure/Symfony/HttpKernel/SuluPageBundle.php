@@ -494,7 +494,7 @@ final class SuluPageBundle extends AbstractBundle
                                 'resource_key' => 'pages',
                                 'types' => [
                                     'list_overlay' => [
-                                        'adapter' => 'table',
+                                        'adapter' => 'column_list',
                                         'list_key' => 'pages',
                                         'display_properties' => ['title', 'routePath'],
                                         'icon' => 'su-newspaper',
@@ -510,7 +510,7 @@ final class SuluPageBundle extends AbstractBundle
                                 'resource_key' => 'pages',
                                 'types' => [
                                     'list_overlay' => [
-                                        'adapter' => 'table',
+                                        'adapter' => 'column_list',
                                         'list_key' => 'pages',
                                         'display_properties' => ['title'],
                                         'empty_text' => 'sulu_page.no_page_selected',
