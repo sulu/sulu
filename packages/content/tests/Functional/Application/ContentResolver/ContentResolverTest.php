@@ -855,4 +855,86 @@ class ContentResolverTest extends SuluTestCase
         self::assertInstanceOf(Media::class, $advancedMedia[0]);
         self::assertSame($media1->getId(), $advancedMedia[0]->getId());
     }
+
+    public function testResolveLinkExternal(): void
+    {
+        $example1 = static::createExample(
+            [
+                'en' => [
+                    'live' => [
+                        'template' => 'full-content',
+                        'title' => 'Lorem Ipsum',
+                        'url' => '/lorem-ipsum',
+                        'link' => [
+                            'provider' => 'external',
+                            'href' => 'https://sulu.io',
+                            'title' => 'Sulu Website',
+                        ],
+                    ],
+                ],
+            ],
+            [
+                'create_route' => true,
+            ]
+        );
+
+        static::getEntityManager()->flush();
+
+        $dimensionContent = $this->contentAggregator->aggregate($example1, ['locale' => 'en', 'stage' => 'live']);
+        $result = $this->contentResolver->resolve($dimensionContent);
+
+        $content = $result['content'];
+
+        self::assertArrayHasKey('link', $content);
+        self::assertSame('https://sulu.io', $content['link']);
+    }
+
+    public function testResolveLinkInternal(): void
+    {
+        $linkedExample = static::createExample(
+            [
+                'en' => [
+                    'live' => [
+                        'template' => 'full-content',
+                        'title' => 'Linked Example',
+                        'url' => '/linked-example',
+                    ],
+                ],
+            ],
+            [
+                'create_route' => true,
+            ]
+        );
+
+        $example1 = static::createExample(
+            [
+                'en' => [
+                    'live' => [
+                        'template' => 'full-content',
+                        'title' => 'Lorem Ipsum',
+                        'url' => '/lorem-ipsum',
+                        'link' => [
+                            'provider' => 'examples',
+                            'href' => $linkedExample->getId(),
+                            'title' => 'Linked Example',
+                        ],
+                    ],
+                ],
+            ],
+            [
+                'create_route' => true,
+            ]
+        );
+
+        static::getEntityManager()->flush();
+
+        $dimensionContent = $this->contentAggregator->aggregate($example1, ['locale' => 'en', 'stage' => 'live']);
+        $result = $this->contentResolver->resolve($dimensionContent);
+
+        $content = $result['content'];
+
+        self::assertArrayHasKey('link', $content);
+        $link = $content['link'];
+        self::assertSame('/linked-example', $link);
+    }
 }

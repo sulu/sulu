@@ -235,7 +235,7 @@ function init_dbal()
 
     write_info('Updating schema');
     $process = exec_sf_cmd(
-        'doctrine:schema:update --force'
+        'doctrine:schema:update --force --complete'
     );
     if ($process->getExitCode() !== 0) {
         exit($process->getExitCode());

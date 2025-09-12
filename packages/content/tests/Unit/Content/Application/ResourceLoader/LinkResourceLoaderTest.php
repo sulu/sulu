@@ -84,4 +84,30 @@ class LinkResourceLoaderTest extends TestCase
             'article::321-321-321' => $link2,
         ], $result);
     }
+
+    public function testLoadExternal(): void
+    {
+        $link = new LinkItem(
+            'https://sulu.io',
+            'Sulu',
+            'https://sulu.io',
+            true
+        );
+
+        $externalLinkProvider = $this->prophesize(LinkProviderInterface::class);
+        $externalLinkProvider->preload(
+            ['https://sulu.io'],
+            'en'
+        )
+            ->willReturn([$link])
+            ->shouldBeCalled();
+
+        $this->linkProviderPool->getProvider('external')->willReturn($externalLinkProvider->reveal());
+
+        $result = $this->loader->load(['external::https://sulu.io'], 'en', []);
+
+        $this->assertSame([
+            'external::https://sulu.io' => $link,
+        ], $result);
+    }
 }

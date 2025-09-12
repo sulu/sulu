@@ -53,10 +53,6 @@ class LinkResourceLoader implements ResourceLoaderInterface
      */
     private function loadLinks(string $provider, array $ids, ?string $locale): array
     {
-        if (self::LINK_TYPE_EXTERNAL === $provider) {
-            return \array_combine($ids, $ids);
-        }
-
         if (null === $locale) {
             throw new \RuntimeException('Locale is required to resolve non external Links');
         }

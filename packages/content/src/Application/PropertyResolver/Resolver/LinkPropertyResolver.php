@@ -25,7 +25,7 @@ class LinkPropertyResolver implements PropertyResolverInterface
             !\is_array($data)
             || !\array_key_exists('href', $data)
             || !\array_key_exists('provider', $data)
-            || !\is_string($data['href'])
+            || !(\is_string($data['href']) || \is_integer($data['href']))
             || !\is_string($data['provider'])
         ) {
             return ContentView::create($data, [...$params]);
@@ -43,11 +43,7 @@ class LinkPropertyResolver implements PropertyResolverInterface
             ],
             priority: -50,
             // external links are not passed as a LinkItem
-            closure: static function(string|LinkItem $linkItem) use ($data) {
-                if (\is_string($linkItem)) {
-                    return $linkItem;
-                }
-
+            closure: static function(LinkItem $linkItem) use ($data) {
                 $url = $linkItem->getUrl();
                 if (isset($data['query']) && \is_string($data['query'])) {
                     $url = \sprintf('%s?%s', $url, \ltrim($data['query'], '?'));
