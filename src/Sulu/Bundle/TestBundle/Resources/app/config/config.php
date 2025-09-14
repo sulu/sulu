@@ -23,14 +23,12 @@ return static function(PhpFileLoader $loader, ContainerBuilder $container) {
         $filesystem->copy($path . 'parameters.yml.dist', $path . 'parameters.yml');
     }
     $loader->import('parameters.yml');
-    $loader->import('context_' . $context . '.yml');
+    $loader->import('config.yml');
 
-    if ('admin' === $context) {
-        if (\class_exists(Symfony\Bundle\SecurityBundle\Command\UserPasswordEncoderCommand::class)) { // detect Symfony <= 5.4
-            $loader->import('security-5-4.yml');
-        } else {
-            $loader->import('security-6.yml');
-        }
+    if (\class_exists(Symfony\Bundle\SecurityBundle\Command\UserPasswordEncoderCommand::class)) { // detect Symfony <= 5.4
+        $loader->import('security-5-4.yml');
+    } else {
+        $loader->import('security-6.yml');
     }
 
     if (\version_compare(Kernel::VERSION, '6.0.0', '>=')) {

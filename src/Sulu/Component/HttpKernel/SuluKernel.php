@@ -77,21 +77,6 @@ abstract class SuluKernel extends Kernel
         parent::__construct($environment, $debug);
     }
 
-    public function registerBundles(): iterable
-    {
-        $contents = require $this->getProjectDir() . '/config/bundles.php';
-        foreach ($contents as $class => $envs) {
-            if (
-                // if is all or current environment
-                (isset($envs['all']) || isset($envs[$this->environment]))
-                // and if not registered for other context.
-                && !isset($envs[$this->reversedContext])
-            ) {
-                yield new $class();
-            }
-        }
-    }
-
     protected function configureContainer(ContainerBuilder $container, LoaderInterface $loader)
     {
         $container->addResource(new FileResource($this->getProjectDir() . '/config/bundles.php'));
