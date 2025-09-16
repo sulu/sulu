@@ -157,6 +157,7 @@
         "scheb/2fa-google-authenticator": "^6.0",
         "scheb/2fa-totp": "^6.0",
         "scheb/2fa-trusted-device": "^6.0",
+        "shipmonk/composer-dependency-analyser": "^1.8",
         "superbalist/flysystem-google-storage": "^7.1",
         "symfony/browser-kit": "^5.4 || ^6.0",
         "symfony/debug-bundle": "^5.4 || ^6.0",
@@ -246,6 +247,7 @@
             "@lint-yaml",
             "@lint-container",
             "@lint-composer",
+            "@lint-composer-dependencies",
             "@lint-doctrine",
             "@lint-rector",
             "@lint-translations",
@@ -279,6 +281,7 @@
             "@php vendor/bin/rector process"
         ],
         "lint-composer": "@composer validate --strict",
+        "lint-composer-dependencies": "@php vendor/bin/composer-dependency-analyser --show-all-usages",
         "lint-twig": "@php bin/adminconsole lint:twig templates",
         "lint-yaml": "@php bin/adminconsole lint:yaml config",
         "lint-translations": [
