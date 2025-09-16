@@ -308,6 +308,7 @@
         },
         "sort-packages": true,
         "allow-plugins": {
+            "composer/package-versions-deprecated": true,
             "symfony/runtime": true,
             "php-http/discovery": true
         }
