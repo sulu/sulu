@@ -51,7 +51,8 @@ class SmartContentItemController extends AbstractRestController
      */
     public function getItemsAction(Request $request)
     {
-        $locale = $request->getLocale();
+        /** @var string $locale */
+        $locale = $request->query->get('locale') ?? $request->getLocale();
 
         /** @var array{
          *     locale: string,

@@ -219,7 +219,7 @@ readonly class MediaSmartContentProvider implements SmartContentProviderInterfac
             );
 
         $queryBuilder
-            ->leftJoin(
+            ->innerJoin(
                 'fileVersion.meta',
                 'fileVersionMeta',
                 Join::WITH,

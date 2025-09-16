@@ -105,7 +105,7 @@ class SmartContentItemControllerTest extends SuluTestCase
         $this->assertEquals($media4->getId(), $result['_embedded']['items'][3]['id']);
     }
 
-    private function createType($name)
+    private function createType(string $name): MediaType
     {
         $type = new MediaType();
         $type->setName($name);
@@ -115,7 +115,7 @@ class SmartContentItemControllerTest extends SuluTestCase
         return $type;
     }
 
-    private function createMedia($title, $collection, $mimeType, $type)
+    private function createMedia(string $title, Collection $collection, string $mimeType, MediaType $type, string $locale = 'en'): Media
     {
         $media = new Media();
         $media->setType($type);
@@ -123,7 +123,7 @@ class SmartContentItemControllerTest extends SuluTestCase
         $fileVersion = new FileVersion();
         $fileVersionMeta = new FileVersionMeta();
         $fileVersionMeta->setTitle($title);
-        $fileVersionMeta->setLocale('en');
+        $fileVersionMeta->setLocale($locale);
         $fileVersionMeta->setFileVersion($fileVersion);
         $fileVersion->addMeta($fileVersionMeta);
         $fileVersion->setVersion(1);
@@ -142,7 +142,92 @@ class SmartContentItemControllerTest extends SuluTestCase
         return $media;
     }
 
-    private function createCollection($name)
+    public function testGetItemsWithLocaleParameterOverridesRequestLocale(): void
+    {
+        $collection = $this->createCollection('Test');
+        $type = $this->createType('image');
+
+        $media1En = $this->createMedia('media-1-en', $collection, 'image/jpeg', $type, 'en');
+        $media2En = $this->createMedia('media-2-en', $collection, 'image/jpeg', $type, 'en');
+
+        $media1De = $this->createMedia('media-1-de', $collection, 'image/jpeg', $type, 'de');
+        $media2De = $this->createMedia('media-2-de', $collection, 'image/jpeg', $type, 'de');
+
+        $this->em->persist($collection);
+        $this->em->persist($media1En);
+        $this->em->persist($media2En);
+        $this->em->persist($media1De);
+        $this->em->persist($media2De);
+        $this->em->flush();
+
+        // Set the client's default locale to German
+        $this->client->setServerParameter('HTTP_ACCEPT_LANGUAGE', 'de');
+
+        // But explicitly request English locale via query parameter
+        $this->client->jsonRequest(
+            'GET',
+            '/api/items?provider=media&locale=en&dataSource=' . $collection->getId()
+        );
+
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+
+        $responseContent = $this->client->getResponse()->getContent();
+        $this->assertIsString($responseContent);
+        /** @var array{_embedded: array{items: array<array{title: string}>}} $result */
+        $result = \json_decode($responseContent, true);
+
+        $this->assertCount(2, $result['_embedded']['items']);
+
+        $items = $result['_embedded']['items'];
+        $titles = \array_map(function(array $item): string {
+            return $item['title'];
+        }, $items);
+
+        $this->assertContains('media-1-en', $titles);
+        $this->assertContains('media-2-en', $titles);
+
+        $this->assertNotContains('media-1-de', $titles);
+        $this->assertNotContains('media-2-de', $titles);
+    }
+
+    public function testGetItemsWithoutLocaleParameterUsesRequestLocale(): void
+    {
+        $collection = $this->createCollection('Test');
+        $type = $this->createType('image');
+
+        $media1En = $this->createMedia('media-1-en', $collection, 'image/jpeg', $type, 'en');
+        $media2En = $this->createMedia('media-2-en', $collection, 'image/jpeg', $type, 'en');
+
+        $this->em->persist($collection);
+        $this->em->persist($media1En);
+        $this->em->persist($media2En);
+        $this->em->flush();
+
+        // Make request WITHOUT locale parameter - should use request's default locale
+        // The default locale is typically 'en' unless explicitly changed
+        $this->client->jsonRequest(
+            'GET',
+            '/api/items?provider=media&dataSource=' . $collection->getId()
+        );
+
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+
+        $responseContent = $this->client->getResponse()->getContent();
+        $this->assertIsString($responseContent);
+        /** @var array{_embedded: array{items: array<array{title: string}>}} $result */
+        $result = \json_decode($responseContent, true);
+        $this->assertCount(2, $result['_embedded']['items']);
+
+        $items = $result['_embedded']['items'];
+        $titles = \array_map(function(array $item): string {
+            return $item['title'];
+        }, $items);
+
+        $this->assertContains('media-1-en', $titles);
+        $this->assertContains('media-2-en', $titles);
+    }
+
+    private function createCollection(string $name): Collection
     {
         $collection = new Collection();
         $collectionType = new CollectionType();
