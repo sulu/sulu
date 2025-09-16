@@ -16,7 +16,6 @@ use Doctrine\ORM\Event\OnFlushEventArgs;
 use Doctrine\Persistence\Event\LoadClassMetadataEventArgs;
 use Sulu\Component\Persistence\Model\UserBlameInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
-use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
@@ -86,7 +85,7 @@ class UserBlameSubscriber
         $token = $this->tokenStorage->getToken();
 
         // if no token, do nothing
-        if (null === $token || $token instanceof AnonymousToken) {
+        if (null === $token) {
             return;
         }
 

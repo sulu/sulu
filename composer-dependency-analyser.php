@@ -25,7 +25,6 @@ return $config
     // UnknownClasses
     ->ignoreUnknownClasses([
         // bc layer for lowest
-        'Symfony\Component\Security\Core\Authentication\Token\AnonymousToken',
         'Symfony\Component\Security\Core\Event\AuthenticationFailureEvent',
         'Symfony\Component\Security\Core\Exception\UsernameNotFoundException',
         'Symfony\Component\Security\Http\Logout\LogoutSuccessHandlerInterface',
