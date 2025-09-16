@@ -55,7 +55,7 @@ return $config
     ->ignoreErrorsOnPackage('symfony/stopwatch', [ErrorType::DEV_DEPENDENCY_IN_PROD])
     ->ignoreErrorsOnPackage('symfony/monolog-bundle', [ErrorType::DEV_DEPENDENCY_IN_PROD]) // false positive only used in SuluTestKernel
     // UNUSED_DEPENDENCY
-    ->ignoreErrorsOnPackage('composer/package-versions-deprecated', [ErrorType::UNUSED_DEPENDENCY])
+    ->ignoreErrorsOnPackage('composer/package-versions-deprecated', [ErrorType::UNUSED_DEPENDENCY]) // required to
     ->ignoreErrorsOnPackage('doctrine/annotations', [ErrorType::UNUSED_DEPENDENCY])
     ->ignoreErrorsOnPackage('guzzlehttp/promises', [ErrorType::UNUSED_DEPENDENCY]) // required for faster fos http cache clearing
     ->ignoreErrorsOnPackage('nyholm/psr7', [ErrorType::UNUSED_DEPENDENCY]) // required for faster fos http cache clearing
