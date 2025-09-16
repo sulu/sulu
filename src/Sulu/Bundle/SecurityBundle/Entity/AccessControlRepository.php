@@ -72,12 +72,12 @@ class AccessControlRepository extends EntityRepository implements AccessControlR
         ?string $system,
         ?int $anonymousRoleId
     ): array {
-        $systemRoleQueryBuilder = $this->_em->createQueryBuilder()
+        $systemRoleQueryBuilder = $this->getEntityManager()->createQueryBuilder()
             ->from(RoleInterface::class, 'systemRoles')
             ->select('systemRoles.id')
             ->where('systemRoles.system = :system');
 
-        $queryBuilder = $this->_em->createQueryBuilder()
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()
             ->select('accessControl.entityId as id')
             ->distinct()
             ->from(AccessControl::class, 'accessControl')

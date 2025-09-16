@@ -38,7 +38,8 @@ class RoleSettingRepository extends EntityRepository implements RoleSettingRepos
             ->join('s.role', 'r')
             ->where('r.id = :roleId')
             ->andWhere('s.key = :key')
-            ->setParameters(['roleId' => $roleId, 'key' => $key]);
+            ->setParameter('roleId', $roleId)
+            ->setParameter('key', $key);
 
         try {
             /** @var string $value */
@@ -64,7 +65,8 @@ class RoleSettingRepository extends EntityRepository implements RoleSettingRepos
             ->join('s.role', 'r')
             ->where('r.id = :roleId')
             ->andWhere('s.key = :key')
-            ->setParameters(['roleId' => $roleId, 'key' => $key]);
+            ->setParameter('roleId', $roleId)
+            ->setParameter('key', $key);
 
         try {
             return $queryBuilder->getQuery()->getSingleResult();

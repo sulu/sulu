@@ -313,6 +313,12 @@ parameters:
 			path: src/Sulu/Bundle/ActivityBundle/Infrastructure/Doctrine/Repository/ActivityRepository.php
 
 		-
+			message: '#^Call to function method_exists\(\) with Doctrine\\ORM\\Id\\AbstractIdGenerator and ''generateId'' will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: src/Sulu/Bundle/ActivityBundle/Infrastructure/Doctrine/Repository/ActivityRepository.php
+
+		-
 			message: '#^Parameter \#2 \$value of method Doctrine\\DBAL\\Query\\QueryBuilder\:\:setValue\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -39201,48 +39207,6 @@ parameters:
 		-
 			message: '#^Method Sulu\\Component\\Persistence\\EventSubscriber\\ORM\\MetadataSubscriber\:\:loadClassMetadata\(\) has no return type specified\.$#'
 			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Component/Persistence/EventSubscriber/ORM/MetadataSubscriber.php
-
-		-
-			message: '#^Method Sulu\\Component\\Persistence\\EventSubscriber\\ORM\\MetadataSubscriber\:\:process\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Component/Persistence/EventSubscriber/ORM/MetadataSubscriber.php
-
-		-
-			message: '#^Method Sulu\\Component\\Persistence\\EventSubscriber\\ORM\\MetadataSubscriber\:\:process\(\) has parameter \$metadata with generic class Doctrine\\ORM\\Mapping\\ClassMetadataInfo but does not specify its types\: T$#'
-			identifier: missingType.generics
-			count: 1
-			path: src/Sulu/Component/Persistence/EventSubscriber/ORM/MetadataSubscriber.php
-
-		-
-			message: '#^Method Sulu\\Component\\Persistence\\EventSubscriber\\ORM\\MetadataSubscriber\:\:setAssociationMappings\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Component/Persistence/EventSubscriber/ORM/MetadataSubscriber.php
-
-		-
-			message: '#^Method Sulu\\Component\\Persistence\\EventSubscriber\\ORM\\MetadataSubscriber\:\:setAssociationMappings\(\) has parameter \$metadata with generic class Doctrine\\ORM\\Mapping\\ClassMetadataInfo but does not specify its types\: T$#'
-			identifier: missingType.generics
-			count: 1
-			path: src/Sulu/Component/Persistence/EventSubscriber/ORM/MetadataSubscriber.php
-
-		-
-			message: '#^Method Sulu\\Component\\Persistence\\EventSubscriber\\ORM\\MetadataSubscriber\:\:unsetAssociationMappings\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Component/Persistence/EventSubscriber/ORM/MetadataSubscriber.php
-
-		-
-			message: '#^Method Sulu\\Component\\Persistence\\EventSubscriber\\ORM\\MetadataSubscriber\:\:unsetAssociationMappings\(\) has parameter \$metadata with generic class Doctrine\\ORM\\Mapping\\ClassMetadataInfo but does not specify its types\: T$#'
-			identifier: missingType.generics
-			count: 1
-			path: src/Sulu/Component/Persistence/EventSubscriber/ORM/MetadataSubscriber.php
-
-		-
-			message: '#^PHPDoc tag @var for variable \$metadata contains generic class Doctrine\\ORM\\Mapping\\ClassMetadataInfo but does not specify its types\: T$#'
-			identifier: missingType.generics
 			count: 1
 			path: src/Sulu/Component/Persistence/EventSubscriber/ORM/MetadataSubscriber.php
 
