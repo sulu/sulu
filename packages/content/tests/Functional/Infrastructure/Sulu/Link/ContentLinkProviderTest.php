@@ -145,12 +145,18 @@ class ContentLinkProviderTest extends WebsiteTestCase
      */
     private function mapLinks(array $links): array
     {
-        return \array_map(function(LinkItem $linkItem) {
+        $linkItems = \array_map(function(LinkItem $linkItem) {
             return [
                 'id' => $linkItem->getId(),
                 'url' => $linkItem->getUrl(),
                 'title' => $linkItem->getTitle(),
             ];
         }, $links);
+
+        \usort($linkItems, function($a, $b) {
+            return $a['id'] <=> $b['id'];
+        });
+
+        return $linkItems;
     }
 }
