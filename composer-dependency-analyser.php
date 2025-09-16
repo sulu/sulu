@@ -25,7 +25,6 @@ return $config
     // UnknownClasses
     ->ignoreUnknownClasses([
         // bc layer for lowest
-        'FOS\RestBundle\Controller\FOSRestController',
         'Symfony\Component\Security\Core\Authentication\Token\AnonymousToken',
         'Symfony\Component\Security\Core\Event\AuthenticationFailureEvent',
         'Symfony\Component\Security\Core\Exception\UsernameNotFoundException',
@@ -54,5 +53,5 @@ return $config
     ->ignoreErrorsOnPackage('symfony/css-selector', [ErrorType::UNUSED_DEPENDENCY]) // we use caches mostly via psr interfaces
     // PROD_DEPENDENCY_ONLY_IN_DEV
     ->ignoreErrorsOnPackage('symfony/yaml', [ErrorType::PROD_DEPENDENCY_ONLY_IN_DEV]) // we use yaml configurations
-    ->ignoreErrorsOnPackage('symfony/cache', [ErrorType::PROD_DEPENDENCY_ONLY_IN_DEV]) // we use yaml configurations
+    ->ignoreErrorsOnPackage('symfony/cache', [ErrorType::PROD_DEPENDENCY_ONLY_IN_DEV]) // we use cache via psr/cache interface
 ;
