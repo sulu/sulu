@@ -12,7 +12,6 @@
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\HttpKernel\Kernel;
 
 return static function(PhpFileLoader $loader, ContainerBuilder $container) {
     $filesystem = new Filesystem();
