@@ -26,16 +26,8 @@ return static function(PhpFileLoader $loader, ContainerBuilder $container) {
     $loader->import('context_' . $context . '.yml');
 
     if ('admin' === $context) {
-        if (\class_exists(Symfony\Bundle\SecurityBundle\Command\UserPasswordEncoderCommand::class)) { // detect Symfony <= 5.4
-            $loader->import('security-5-4.yml');
-        } else {
-            $loader->import('security-6.yml');
-        }
+        $loader->import('security-6.yml');
     }
 
-    if (\version_compare(Kernel::VERSION, '6.0.0', '>=')) {
-        $loader->import('symfony-6.yml');
-    } else {
-        $loader->import('symfony-5-4.yml');
-    }
+    $loader->import('symfony-6.yml');
 };

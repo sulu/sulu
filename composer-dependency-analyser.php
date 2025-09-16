@@ -26,7 +26,6 @@ return $config
     ->ignoreUnknownClasses([
         // bc layer for lowest
         'FOS\RestBundle\Controller\FOSRestController',
-        'Symfony\Bundle\SecurityBundle\Command\UserPasswordEncoderCommand',
         'Symfony\Component\Security\Core\Authentication\Token\AnonymousToken',
         'Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface',
         'Symfony\Component\Security\Core\Event\AuthenticationFailureEvent',
