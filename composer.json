@@ -120,7 +120,6 @@
         "cmsig/seal-memory-adapter": "^0.12.2",
         "coduo/php-matcher": "^6.0.14",
         "jangregor/phpstan-prophecy": "^2.0",
-        "league/flysystem-local": "^3.0",
         "league/flysystem-memory": "^3.0",
         "matthiasnoback/symfony-config-test": "^6.0",
         "matthiasnoback/symfony-dependency-injection-test": "^6.1",

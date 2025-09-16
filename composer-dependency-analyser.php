@@ -44,7 +44,7 @@ return $config
     ->ignoreErrorsOnPackage('scheb/2fa-totp', [ErrorType::DEV_DEPENDENCY_IN_PROD])
     ->ignoreErrorsOnPackage('scheb/2fa-trusted-device', [ErrorType::DEV_DEPENDENCY_IN_PROD])
     ->ignoreErrorsOnPackage('symfony/emoji', [ErrorType::DEV_DEPENDENCY_IN_PROD])
-    ->ignoreErrorsOnPackage('league/flysystem-local', [ErrorType::DEV_DEPENDENCY_IN_PROD])
+    ->ignoreErrorsOnPackage('league/flysystem-local', [ErrorType::SHADOW_DEPENDENCY]) // we support flysystem 3.0 which includes local so we can not require it directly
     ->ignoreErrorsOnPackage('coduo/php-matcher', [ErrorType::DEV_DEPENDENCY_IN_PROD]) // false positive TestBundle requirement
     ->ignoreErrorsOnPackage('league/flysystem-memory', [ErrorType::DEV_DEPENDENCY_IN_PROD]) // only for tests
     ->ignoreErrorsOnPackage('symfony/monolog-bundle', [ErrorType::DEV_DEPENDENCY_IN_PROD]) // false positive only used in SuluTestKernel
