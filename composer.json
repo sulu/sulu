@@ -43,6 +43,7 @@
         "doctrine/dbal": "^2.13 || ^3.0",
         "doctrine/doctrine-bundle": "^2.4",
         "doctrine/doctrine-fixtures-bundle": "^3.3",
+        "doctrine/event-manager": "^1.0 || ^2.0",
         "doctrine/inflector": "^1.4.1 || ^2.0.1",
         "doctrine/orm": "^2.8",
         "doctrine/persistence": "^2.0",
@@ -302,6 +303,9 @@
     "config": {
         "preferred-install": {
             "*": "dist"
+        },
+        "platform": {
+            "php": "8.0.30"
         },
         "sort-packages": true,
         "allow-plugins": {
