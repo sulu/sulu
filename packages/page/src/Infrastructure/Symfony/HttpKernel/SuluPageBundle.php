@@ -55,6 +55,7 @@ use Sulu\Page\Infrastructure\Sulu\Route\WebspaceSiteRouteGenerator;
 use Sulu\Page\Infrastructure\Sulu\Sitemap\PagesSitemapProvider;
 use Sulu\Page\Infrastructure\Symfony\Twig\Extension\ContentPathTwigExtension;
 use Sulu\Page\Infrastructure\Symfony\Twig\Extension\NavigationTwigExtension;
+use Sulu\Page\Trash\PageTrashItemHandler;
 use Sulu\Page\UserInterface\Command\InitializeHomepageCommand;
 use Sulu\Page\UserInterface\Controller\Admin\PageController;
 use Symfony\Component\Config\Definition\Configurator\DefinitionConfigurator;
@@ -150,6 +151,7 @@ final class SuluPageBundle extends AbstractBundle
             ->args([
                 new Reference('sulu_page.page_repository'),
                 new Reference('sulu_activity.domain_event_collector'),
+                new Reference('sulu_trash.trash_manager'),
             ])
             ->tag('messenger.message_handler');
 
@@ -213,6 +215,21 @@ final class SuluPageBundle extends AbstractBundle
                 new Reference('sulu_content.content_persister'),
             ])
             ->tag('sulu_page.page_mapper');
+
+        // Trash services
+        $services->set('sulu_page.trash_item_handler')
+            ->class(PageTrashItemHandler::class)
+            ->args([
+                new Reference('sulu_trash.trash_item_repository'),
+                new Reference('sulu_page.page_repository'),
+                new Reference('sulu_content.content_normalizer'),
+                new Reference('sulu_content.content_merger'),
+                tagged_iterator('sulu_page.page_mapper'),
+                new Reference('doctrine.orm.entity_manager'),
+            ])
+            ->tag('sulu_trash.store_trash_item_handler')
+            ->tag('sulu_trash.restore_trash_item_handler')
+            ->tag('sulu_trash.restore_configuration_provider');
 
         // DataMapper service
         $services->set('sulu_page.navigation_context_data_mapper')

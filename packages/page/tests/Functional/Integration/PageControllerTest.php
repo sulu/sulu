@@ -17,6 +17,7 @@ use PHPUnit\Framework\Attributes\CoversNothing;
 use PHPUnit\Framework\Attributes\Depends;
 use Sulu\Bundle\TestBundle\Testing\AssertSnapshotTrait;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
+use Sulu\Bundle\TrashBundle\Domain\Repository\TrashItemRepositoryInterface;
 use Sulu\Page\Application\Message\CreatePageMessage;
 use Sulu\Page\Application\Message\ModifyPageMessage;
 use Sulu\Page\Application\MessageHandler\CreatePageMessageHandler;
@@ -601,14 +602,43 @@ class PageControllerTest extends SuluTestCase
 
     #[Depends('testPost')]
     #[Depends('testOrderPages')]
-    public function testDelete(string $id): void
+    public function testDelete(string $id): int
     {
+        $this->client->request('GET', '/admin/api/pages/' . $id . '?locale=en');
+        $response = $this->client->getResponse();
+
         $this->client->request('DELETE', '/admin/api/pages/' . $id . '?locale=en');
         $response = $this->client->getResponse();
         $this->assertHttpStatusCode(204, $response);
 
         $routeRepository = $this->getContainer()->get(RouteRepositoryInterface::class);
         $this->assertCount(10, $routeRepository->findBy([])); // TODO we need tackle this
+
+        $trashRepository = self::getContainer()->get(TrashItemRepositoryInterface::class);
+        $trashItem = $trashRepository->findOneBy([
+            'resourceKey' => PageInterface::RESOURCE_KEY,
+            'resourceId' => $id,
+        ]);
+        $this->assertNotNull($trashItem);
+        $id = $trashItem->getId();
+        $this->assertNotEmpty($id);
+
+        return $id;
+    }
+
+    #[Depends('testDelete')]
+    public function testRestore(int $trashItemId): void
+    {
+        $trashItem = $this->getContainer()->get(TrashItemRepositoryInterface::class)->findOneBy(['id' => $trashItemId]);
+        $this->assertNotNull($trashItem);
+
+        $this->client->request('POST', '/admin/api/trash-items/' . $trashItemId . '?action=restore');
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(200, $response);
+
+        $this->client->request('GET', '/admin/api/pages/' . $trashItem->getResourceId() . '?locale=en');
+        $response = $this->client->getResponse();
+        $this->assertResponseSnapshot('page_post_restore.json', $response, 200);
     }
 
     protected function getSnapshotFolder(): string

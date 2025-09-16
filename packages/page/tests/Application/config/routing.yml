@@ -29,3 +29,7 @@ sulu_preview_public:
 
 sulu_website_frontend:
     resource: "@SuluWebsiteBundle/Resources/config/routing_website.yaml"
+
+sulu_trash_api:
+    resource: "@SuluTrashBundle/Resources/config/routing_api.yaml"
+    prefix: /admin/api

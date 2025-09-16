@@ -12,6 +12,7 @@
 namespace Sulu\Page\Application\MessageHandler;
 
 use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
+use Sulu\Bundle\TrashBundle\Application\TrashManager\TrashManagerInterface;
 use Sulu\Content\Domain\Model\DimensionContentCollection;
 use Sulu\Page\Application\Message\RemovePageMessage;
 use Sulu\Page\Domain\Event\PageRemovedEvent;
@@ -29,8 +30,8 @@ final class RemovePageMessageHandler
     public function __construct(
         private PageRepositoryInterface $pageRepository,
         private DomainEventCollectorInterface $domainEventCollector,
+        private TrashManagerInterface $trashManager
     ) {
-        $this->pageRepository = $pageRepository;
     }
 
     public function __invoke(RemovePageMessage $message): void
@@ -38,6 +39,10 @@ final class RemovePageMessageHandler
         $page = $this->pageRepository->getOneBy($message->getIdentifier());
 
         $this->pageRepository->remove($page);
+
+        /** @var string $resourceKey */
+        $resourceKey = $page::RESOURCE_KEY;
+        $this->trashManager->store($resourceKey, $page);
 
         $dimensionContentCollection = new DimensionContentCollection($page->getDimensionContents()->toArray(), [], PageDimensionContent::class);
         /** @var PageDimensionContent $localizedDimensionContent */
