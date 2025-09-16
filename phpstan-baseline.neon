@@ -92089,13 +92089,13 @@ parameters:
 			path: src/Sulu/Component/Util/Tests/Unit/SortUtilsTest.php
 
 		-
-			message: '#^Parameter \#1 \$values of static method Sulu\\Component\\Util\\SortUtils\:\:multisort\(\) expects array, ArrayObject\<int, Sulu\\Component\\Util\\Tests\\Unit\\FoobarTestClass\> given\.$#'
+			message: '#^Parameter \#1 \$values of static method Sulu\\Component\\Util\\SortUtils\:\:multisort\(\) expects array, ArrayObject\<int, \(object\{0\: string, 1\: string\}&stdClass\)\> given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Component/Util/Tests/Unit/SortUtilsTest.php
 
 		-
-			message: '#^Parameter \#1 \$values of static method Sulu\\Component\\Util\\SortUtils\:\:multisort\(\) expects array, ArrayObject\<int, object\{\}&stdClass\> given\.$#'
+			message: '#^Parameter \#1 \$values of static method Sulu\\Component\\Util\\SortUtils\:\:multisort\(\) expects array, ArrayObject\<int, Sulu\\Component\\Util\\Tests\\Unit\\FoobarTestClass\> given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Component/Util/Tests/Unit/SortUtilsTest.php
