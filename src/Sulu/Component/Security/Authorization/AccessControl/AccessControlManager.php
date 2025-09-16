@@ -24,7 +24,6 @@ use Sulu\Component\Security\Event\PermissionUpdateEvent;
 use Sulu\Component\Security\Event\SecurityEvents;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\Security\Core\Security as SymfonyCoreSecurity;
 
 /**
  * An implementation of the AccessControlManagerInterface, which supports registering AccessControlProvider. All method
@@ -48,7 +47,7 @@ class AccessControlManager implements AccessControlManagerInterface
         private iterable $descendantProviders,
         private RoleRepositoryInterface $roleRepository,
         private AccessControlRepositoryInterface $accessControlRepository,
-        private Security|SymfonyCoreSecurity|null $security,
+        private ?Security $security,
         private array $permissions
     ) {
     }

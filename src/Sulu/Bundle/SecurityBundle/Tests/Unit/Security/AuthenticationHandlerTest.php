@@ -23,7 +23,6 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
-use Symfony\Component\Security\Core\Security as SymfonyCoreSecurity;
 use Symfony\Component\Security\Http\SecurityRequestAttributes;
 
 class AuthenticationHandlerTest extends TestCase
@@ -71,9 +70,8 @@ class AuthenticationHandlerTest extends TestCase
         $session->set(
             \class_exists(SecurityRequestAttributes::class)
                 ? SecurityRequestAttributes::AUTHENTICATION_ERROR
-                : (\class_exists(Security::class)
-                    ? Security::AUTHENTICATION_ERROR // BC layer to Symfony <=6.4
-                    : SymfonyCoreSecurity::AUTHENTICATION_ERROR), // BC layer to Symfony <=5.4
+                : Security::AUTHENTICATION_ERROR // BC layer to Symfony <=6.4
+            ,
             $this->exception->reveal()
         )->will(function() {});
         $this->request->getSession()

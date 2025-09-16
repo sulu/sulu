@@ -28,7 +28,6 @@ return $config
         'Symfony\Component\Security\Core\Event\AuthenticationFailureEvent',
         'Symfony\Component\Security\Core\Exception\UsernameNotFoundException',
         'Symfony\Component\Security\Http\Logout\LogoutSuccessHandlerInterface',
-        'Symfony\Component\Security\Core\Security',
         'Symfony\Component\Serializer\Normalizer\ContextAwareNormalizerInterface',
     ])
     // DEV_DEPENDENCY_IN_PROD: optional dependency
