@@ -77,6 +77,7 @@ class AuhenticationFailureListenerTest extends TestCase
         $request = Request::create('/admin/login', 'POST');
         $request->request->add(['username' => 'tester', 'password' => 'test']);
         $authenticator = $this->prophesize(AuthenticatorInterface::class);
+
         return new LoginFailureEvent(
             new BadCredentialsException('Bad credentials.', 0, new UserNotFoundException('User "tester" not found')),
             $authenticator->reveal(),
