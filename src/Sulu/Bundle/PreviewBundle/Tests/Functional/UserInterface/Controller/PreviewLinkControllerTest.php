@@ -159,5 +159,4 @@ class PreviewLinkControllerTest extends SuluTestCase
 
         return $previewLink;
     }
-
 }
