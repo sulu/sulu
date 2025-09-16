@@ -21,7 +21,7 @@ use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
 /**
  * This listener ensures, that requests with invalid usernames have the same response time as valid users.
  */
-class AuthenticationFailureListener implements EventSubscriberInterface
+class AuhenticationFailureListener implements EventSubscriberInterface
 {
     /**
      * @param PasswordHasherFactoryInterface $passwordHasherFactory
