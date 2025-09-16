@@ -21,7 +21,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 /**
  * @internal the following class is only for internal use don't use it in your project
  */
-class FlattenExceptionNormalizer implements ContextAwareNormalizerInterface
+class FlattenExceptionNormalizer implements NormalizerInterface
 {
     public function __construct(private NormalizerInterface $decoratedNormalizer, private TranslatorInterface $translator)
     {
