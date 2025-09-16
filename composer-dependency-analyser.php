@@ -31,6 +31,12 @@ return $config
         'Symfony\Bundle\FrameworkBundle\Controller\ControllerNameParser',
         'Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle',
         'Symfony\Bundle\TwigBundle\Controller\ExceptionController',
+        'Symfony\Bundle\SecurityBundle\Command\UserPasswordEncoderCommand',
+        'Symfony\Component\Security\Core\Authentication\Token\AnonymousToken',
+        'Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface',
+        'Symfony\Component\Security\Core\Event\AuthenticationFailureEvent',
+        'Symfony\Component\Security\Core\Exception\UsernameNotFoundException',
+        'Symfony\Component\Security\Http\Logout\LogoutSuccessHandlerInterface',
     ])
     // DEV_DEPENDENCY_IN_PROD: optional dependency
     ->ignoreErrorsOnPackage('league/flysystem', [ErrorType::DEV_DEPENDENCY_IN_PROD])
