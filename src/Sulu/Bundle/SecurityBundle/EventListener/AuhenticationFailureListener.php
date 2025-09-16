@@ -13,13 +13,13 @@ namespace Sulu\Bundle\SecurityBundle\EventListener;
 
 use Ramsey\Uuid\Uuid;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
-use Symfony\Component\Security\Http\Event\LoginFailureEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 use Symfony\Component\Security\Core\Event\AuthenticationFailureEvent;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
+use Symfony\Component\Security\Core\Exception\UserNotFoundException;
+use Symfony\Component\Security\Http\Event\LoginFailureEvent;
 
 /**
  * This listener ensures, that requests with invalid usernames have the same response time as valid users.

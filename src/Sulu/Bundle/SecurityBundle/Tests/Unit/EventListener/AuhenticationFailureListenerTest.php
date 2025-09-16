@@ -11,20 +11,19 @@
 
 namespace Sulu\Bundle\SecurityBundle\EventListener;
 
-use Prophecy\Argument;
 use PHPUnit\Framework\TestCase;
+use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\SecurityBundle\Entity\User;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Http\Event\LoginFailureEvent;
-use Symfony\Component\PasswordHasher\PasswordHasherInterface;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
-use Symfony\Component\Security\Core\Exception\UserNotFoundException;
-use Symfony\Component\Security\Core\Exception\BadCredentialsException;
-use Symfony\Component\Security\Http\Authenticator\AuthenticatorInterface;
-use Sulu\Bundle\SecurityBundle\EventListener\AuhenticationFailureListener;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
+use Symfony\Component\PasswordHasher\PasswordHasherInterface;
+use Symfony\Component\Security\Core\Exception\BadCredentialsException;
+use Symfony\Component\Security\Core\Exception\UserNotFoundException;
+use Symfony\Component\Security\Http\Authenticator\AuthenticatorInterface;
+use Symfony\Component\Security\Http\Event\LoginFailureEvent;
 
 class AuhenticationFailureListenerTest extends TestCase
 {
@@ -85,6 +84,5 @@ class AuhenticationFailureListenerTest extends TestCase
             null,
             $firewall
         );
-
     }
 }
