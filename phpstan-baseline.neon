@@ -26517,7 +26517,7 @@ parameters:
 
 		-
 			message: "#^Class Symfony\\\\Component\\\\Security\\\\Core\\\\Event\\\\AuthenticationFailureEvent not found\\.$#"
-			count: 1
+			count: 2
 			path: src/Sulu/Bundle/SecurityBundle/EventListener/AuhenticationFailureListener.php
 
 		-
