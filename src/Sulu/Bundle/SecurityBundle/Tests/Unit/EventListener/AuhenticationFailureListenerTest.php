@@ -23,10 +23,10 @@ use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 use Symfony\Component\Security\Http\Authenticator\AuthenticatorInterface;
-use Sulu\Bundle\SecurityBundle\EventListener\AuthenticationFailureListener;
+use Sulu\Bundle\SecurityBundle\EventListener\AuhenticationFailureListener;
 use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
 
-class AuthenticationFailureListenerTest extends TestCase
+class AuhenticationFailureListenerTest extends TestCase
 {
     use ProphecyTrait;
 
@@ -50,7 +50,7 @@ class AuthenticationFailureListenerTest extends TestCase
     {
         $failureEvent = $this->createLoginFailureEvent('admin');
 
-        $authFailureListener = $this->createAuthenticationFailureListener();
+        $authFailureListener = $this->createAuhenticationFailureListener();
 
         $authFailureListener->onLoginFailure($failureEvent);
 
@@ -58,7 +58,7 @@ class AuthenticationFailureListenerTest extends TestCase
             ->shouldBeCalled();
     }
 
-    private function createAuthenticationFailureListener(): AuthenticationFailureListener
+    private function createAuhenticationFailureListener(): AuhenticationFailureListener
     {
         $user = $this->prophesize(User::class);
         $this->userRepository->createNew()->willReturn($user->reveal());
@@ -69,7 +69,7 @@ class AuthenticationFailureListenerTest extends TestCase
         $this->passwordHasher->getPasswordHasher($user->reveal())
             ->willReturn($hasher->reveal());
 
-        return new AuthenticationFailureListener($this->passwordHasher->reveal(), $this->userRepository->reveal());
+        return new AuhenticationFailureListener($this->passwordHasher->reveal(), $this->userRepository->reveal());
     }
 
     private function createLoginFailureEvent(string $firewall): LoginFailureEvent
