@@ -304,9 +304,6 @@
         "preferred-install": {
             "*": "dist"
         },
-        "platform": {
-            "php": "8.0.30"
-        },
         "sort-packages": true,
         "allow-plugins": {
             "composer/package-versions-deprecated": true,
