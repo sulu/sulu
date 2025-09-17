@@ -17,6 +17,10 @@ require __DIR__ . '/vendor/symfony/dependency-injection/Loader/Configurator/Cont
 $config = new Configuration();
 
 return $config
+    // UnknownClasses
+    ->ignoreUnknownClasses([
+        // for bc layers
+    ])
     // SHADOW_DEPENDENCY
     ->ignoreErrorsOnExtension('ext-imagick', [ErrorType::SHADOW_DEPENDENCY]) // optional fallback to gd or vips
     ->ignoreErrorsOnExtension('ext-openssl', [ErrorType::SHADOW_DEPENDENCY]) // fallbacks to random_bytes
