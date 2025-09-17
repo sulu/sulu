@@ -33,7 +33,6 @@ use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\Security\Http\AccessToken\AccessTokenExtractorInterface;
-use Symfony\Component\Security\Http\Logout\LogoutSuccessHandlerInterface;
 
 /**
  * This is the class that loads and manages your bundle configuration.
@@ -85,10 +84,6 @@ class SuluSecurityExtension extends Extension implements PrependExtensionInterfa
             if (\interface_exists(AuthCodeMailerInterface::class)) {
                 $loader->load('2fa_email.xml');
             }
-        }
-
-        if (\interface_exists(LogoutSuccessHandlerInterface::class)) {
-            $loader->load('logout_success_handler.xml');
         }
 
         if ($config['checker']['enabled']) {
