@@ -249,7 +249,7 @@
         </service>
 
         <service id="sulu_security.login_failure_listener"
-                 class="Sulu\Bundle\SecurityBundle\EventListener\AuhenticationFailureListener">
+                 class="Sulu\Bundle\SecurityBundle\EventListener\AuthenticationFailureListener">
             <argument type="service" id="security.password_hasher_factory"/>
             <argument type="service" id="sulu.repository.user"/>
 

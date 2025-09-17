@@ -16,7 +16,7 @@ use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\SecurityBundle\Entity\User;
-use Sulu\Bundle\SecurityBundle\EventListener\AuhenticationFailureListener;
+use Sulu\Bundle\SecurityBundle\EventListener\AuthenticationFailureListener;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
@@ -26,7 +26,7 @@ use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Http\Authenticator\AuthenticatorInterface;
 use Symfony\Component\Security\Http\Event\LoginFailureEvent;
 
-class AuhenticationFailureListenerTest extends TestCase
+class AuthenticationFailureListenerTest extends TestCase
 {
     use ProphecyTrait;
 
@@ -58,7 +58,7 @@ class AuhenticationFailureListenerTest extends TestCase
             ->shouldBeCalled();
     }
 
-    private function createAuhenticationFailureListener(): AuhenticationFailureListener
+    private function createAuhenticationFailureListener(): AuthenticationFailureListener
     {
         $user = $this->prophesize(User::class);
         $this->userRepository->createNew()->willReturn($user->reveal());
@@ -69,7 +69,7 @@ class AuhenticationFailureListenerTest extends TestCase
         $this->passwordHasher->getPasswordHasher($user->reveal())
             ->willReturn($hasher->reveal());
 
-        return new AuhenticationFailureListener($this->passwordHasher->reveal(), $this->userRepository->reveal());
+        return new AuthenticationFailureListener($this->passwordHasher->reveal(), $this->userRepository->reveal());
     }
 
     private function createLoginFailureEvent(string $firewall): LoginFailureEvent

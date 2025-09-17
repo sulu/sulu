@@ -283,24 +283,6 @@ parameters:
 			path: public/maintenance.php
 
 		-
-			message: '#^Call to method getUser\(\) on an unknown class Symfony\\Component\\Security\\Core\\Security\.$#'
-			identifier: class.notFound
-			count: 1
-			path: src/Sulu/Bundle/ActivityBundle/Application/Subscriber/SetDomainEventUserSubscriber.php
-
-		-
-			message: '#^Parameter \$security of method Sulu\\Bundle\\ActivityBundle\\Application\\Subscriber\\SetDomainEventUserSubscriber\:\:__construct\(\) has invalid type Symfony\\Component\\Security\\Core\\Security\.$#'
-			identifier: class.notFound
-			count: 1
-			path: src/Sulu/Bundle/ActivityBundle/Application/Subscriber/SetDomainEventUserSubscriber.php
-
-		-
-			message: '#^Property Sulu\\Bundle\\ActivityBundle\\Application\\Subscriber\\SetDomainEventUserSubscriber\:\:\$security has unknown class Symfony\\Component\\Security\\Core\\Security as its type\.$#'
-			identifier: class.notFound
-			count: 1
-			path: src/Sulu/Bundle/ActivityBundle/Application/Subscriber/SetDomainEventUserSubscriber.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\ActivityBundle\\Domain\\Repository\\NullActivityRepository\:\:createFromDomainEvent\(\) should return Sulu\\Bundle\\ActivityBundle\\Domain\\Model\\ActivityInterface but returns object\.$#'
 			identifier: return.type
 			count: 1
@@ -413,18 +395,6 @@ parameters:
 			identifier: staticClassAccess.privateMethod
 			count: 1
 			path: src/Sulu/Bundle/ActivityBundle/Tests/Functional/UserInterface/Controller/ActivityControllerTest.php
-
-		-
-			message: '#^Class Symfony\\Component\\Security\\Core\\Security not found\.$#'
-			identifier: class.notFound
-			count: 1
-			path: src/Sulu/Bundle/ActivityBundle/Tests/Unit/Application/Subscriber/SetDomainEventUserSubscriberTest.php
-
-		-
-			message: '#^Property Sulu\\Bundle\\ActivityBundle\\Tests\\Unit\\Application\\Subscriber\\SetDomainEventUserSubscriberTest\:\:\$security has unknown class Symfony\\Component\\Security\\Core\\Security as its type\.$#'
-			identifier: class.notFound
-			count: 1
-			path: src/Sulu/Bundle/ActivityBundle/Tests/Unit/Application/Subscriber/SetDomainEventUserSubscriberTest.php
 
 		-
 			message: '#^Cannot cast mixed to string\.$#'
@@ -28339,12 +28309,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/MediaWebsiteControllerTest.php
 
 		-
-			message: '#^Binary operation "\." between ''/api/items\?provider…'' and mixed results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 2
-			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/SmartContentItemControllerTest.php
-
-		-
 			message: '#^Cannot access offset ''_embedded'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 10
@@ -28387,117 +28351,9 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/SmartContentItemControllerTest.php
 
 		-
-			message: '#^Cannot call method getId\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 10
-			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/SmartContentItemControllerTest.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\Tests\\Functional\\Controller\\SmartContentItemControllerTest\:\:createCollection\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/SmartContentItemControllerTest.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\Tests\\Functional\\Controller\\SmartContentItemControllerTest\:\:createCollection\(\) has parameter \$name with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/SmartContentItemControllerTest.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\Tests\\Functional\\Controller\\SmartContentItemControllerTest\:\:createMedia\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/SmartContentItemControllerTest.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\Tests\\Functional\\Controller\\SmartContentItemControllerTest\:\:createMedia\(\) has parameter \$collection with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/SmartContentItemControllerTest.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\Tests\\Functional\\Controller\\SmartContentItemControllerTest\:\:createMedia\(\) has parameter \$mimeType with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/SmartContentItemControllerTest.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\Tests\\Functional\\Controller\\SmartContentItemControllerTest\:\:createMedia\(\) has parameter \$title with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/SmartContentItemControllerTest.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\Tests\\Functional\\Controller\\SmartContentItemControllerTest\:\:createMedia\(\) has parameter \$type with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/SmartContentItemControllerTest.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\Tests\\Functional\\Controller\\SmartContentItemControllerTest\:\:createType\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/SmartContentItemControllerTest.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\Tests\\Functional\\Controller\\SmartContentItemControllerTest\:\:createType\(\) has parameter \$name with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/SmartContentItemControllerTest.php
-
-		-
-			message: '#^Parameter \#1 \$collection of method Sulu\\Bundle\\MediaBundle\\Entity\\Media\:\:setCollection\(\) expects Sulu\\Bundle\\MediaBundle\\Entity\\CollectionInterface, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/SmartContentItemControllerTest.php
-
-		-
 			message: '#^Parameter \#1 \$json of function json_decode expects string, string\|false given\.$#'
 			identifier: argument.type
 			count: 2
-			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/SmartContentItemControllerTest.php
-
-		-
-			message: '#^Parameter \#1 \$mimeType of method Sulu\\Bundle\\MediaBundle\\Entity\\FileVersion\:\:setMimeType\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/SmartContentItemControllerTest.php
-
-		-
-			message: '#^Parameter \#1 \$name of method Sulu\\Bundle\\MediaBundle\\Entity\\CollectionType\:\:setName\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/SmartContentItemControllerTest.php
-
-		-
-			message: '#^Parameter \#1 \$name of method Sulu\\Bundle\\MediaBundle\\Entity\\FileVersion\:\:setName\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/SmartContentItemControllerTest.php
-
-		-
-			message: '#^Parameter \#1 \$name of method Sulu\\Bundle\\MediaBundle\\Entity\\MediaType\:\:setName\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/SmartContentItemControllerTest.php
-
-		-
-			message: '#^Parameter \#1 \$object of method Doctrine\\Persistence\\ObjectManager\:\:persist\(\) expects object, mixed given\.$#'
-			identifier: argument.type
-			count: 10
-			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/SmartContentItemControllerTest.php
-
-		-
-			message: '#^Parameter \#1 \$title of method Sulu\\Bundle\\MediaBundle\\Entity\\FileVersionMeta\:\:setTitle\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/SmartContentItemControllerTest.php
-
-		-
-			message: '#^Parameter \#1 \$type of method Sulu\\Bundle\\MediaBundle\\Entity\\Media\:\:setType\(\) expects Sulu\\Bundle\\MediaBundle\\Entity\\MediaType, mixed given\.$#'
-			identifier: argument.type
-			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/SmartContentItemControllerTest.php
 
 		-
@@ -32131,46 +31987,10 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/Entity/UserSettingRepository.php
 
 		-
-			message: '#^Call to method getAuthenticationException\(\) on an unknown class Symfony\\Component\\Security\\Core\\Event\\AuthenticationFailureEvent\.$#'
-			identifier: class.notFound
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/EventListener/AuhenticationFailureListener.php
-
-		-
-			message: '#^Cannot call method getPrevious\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/EventListener/AuhenticationFailureListener.php
-
-		-
-			message: '#^Class Symfony\\Component\\Security\\Core\\Event\\AuthenticationFailureEvent not found\.$#'
-			identifier: class.notFound
-			count: 2
-			path: src/Sulu/Bundle/SecurityBundle/EventListener/AuhenticationFailureListener.php
-
-		-
-			message: '#^Class Symfony\\Component\\Security\\Core\\Exception\\UsernameNotFoundException not found\.$#'
-			identifier: class.notFound
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/EventListener/AuhenticationFailureListener.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\SecurityBundle\\EventListener\\AuhenticationFailureListener\:\:onLoginFailure\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/EventListener/AuhenticationFailureListener.php
-
-		-
 			message: '#^Parameter \#1 \$user of method Symfony\\Component\\PasswordHasher\\Hasher\\PasswordHasherFactoryInterface\:\:getPasswordHasher\(\) expects string\|Symfony\\Component\\PasswordHasher\\Hasher\\PasswordHasherAwareInterface\|Symfony\\Component\\Security\\Core\\User\\PasswordAuthenticatedUserInterface, Sulu\\Component\\Security\\Authentication\\UserInterface given\.$#'
 			identifier: argument.type
 			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/EventListener/AuhenticationFailureListener.php
-
-		-
-			message: '#^Parameter \$event of method Sulu\\Bundle\\SecurityBundle\\EventListener\\AuhenticationFailureListener\:\:onLoginFailure\(\) has invalid type Symfony\\Component\\Security\\Core\\Event\\AuthenticationFailureEvent\.$#'
-			identifier: class.notFound
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/EventListener/AuhenticationFailureListener.php
+			path: src/Sulu/Bundle/SecurityBundle/EventListener/AuthenticationFailureListener.php
 
 		-
 			message: '#^Call to an undefined method Sulu\\Component\\Security\\Authentication\\UserInterface\:\:setLastLogin\(\)\.$#'
@@ -32327,30 +32147,6 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Exception/UserNotInSystemException.php
-
-		-
-			message: '#^Call to method getUser\(\) on an unknown class Symfony\\Component\\Security\\Core\\Security\.$#'
-			identifier: class.notFound
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Metadata/TwoFactorFormMetadataVisitor.php
-
-		-
-			message: '#^Parameter \$security of method Sulu\\Bundle\\SecurityBundle\\Metadata\\TwoFactorFormMetadataVisitor\:\:__construct\(\) has invalid type Symfony\\Component\\Security\\Core\\Security\.$#'
-			identifier: class.notFound
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Metadata/TwoFactorFormMetadataVisitor.php
-
-		-
-			message: '#^Property Sulu\\Bundle\\SecurityBundle\\Metadata\\TwoFactorFormMetadataVisitor\:\:\$security has unknown class Symfony\\Component\\Security\\Core\\Security as its type\.$#'
-			identifier: class.notFound
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Metadata/TwoFactorFormMetadataVisitor.php
-
-		-
-			message: '#^Access to constant AUTHENTICATION_ERROR on an unknown class Symfony\\Component\\Security\\Core\\Security\.$#'
-			identifier: class.notFound
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Security/AuthenticationHandler.php
 
 		-
 			message: '#^Access to undefined constant Symfony\\Bundle\\SecurityBundle\\Security\:\:AUTHENTICATION_ERROR\.$#'
@@ -33491,12 +33287,6 @@ parameters:
 			identifier: new.noConstructor
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Tests/Unit/Security/AuthenticationEntryPointTest.php
-
-		-
-			message: '#^Access to constant AUTHENTICATION_ERROR on an unknown class Symfony\\Component\\Security\\Core\\Security\.$#'
-			identifier: class.notFound
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Tests/Unit/Security/AuthenticationHandlerTest.php
 
 		-
 			message: '#^Access to undefined constant Symfony\\Bundle\\SecurityBundle\\Security\:\:AUTHENTICATION_ERROR\.$#'
@@ -35329,26 +35119,8 @@ parameters:
 			path: src/Sulu/Bundle/TrashBundle/Application/TrashManager/TrashManager.php
 
 		-
-			message: '#^Call to method getUser\(\) on an unknown class Symfony\\Component\\Security\\Core\\Security\.$#'
-			identifier: class.notFound
-			count: 1
-			path: src/Sulu/Bundle/TrashBundle/Infrastructure/Doctrine/Repository/TrashItemRepository.php
-
-		-
 			message: '#^Parameter \#1 \$criteria of method Doctrine\\ORM\\EntityRepository\<Sulu\\Bundle\\TrashBundle\\Domain\\Model\\TrashItemInterface\>\:\:findOneBy\(\) expects array\<string, mixed\>, array\<mixed\> given\.$#'
 			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/TrashBundle/Infrastructure/Doctrine/Repository/TrashItemRepository.php
-
-		-
-			message: '#^Parameter \$security of method Sulu\\Bundle\\TrashBundle\\Infrastructure\\Doctrine\\Repository\\TrashItemRepository\:\:__construct\(\) has invalid type Symfony\\Component\\Security\\Core\\Security\.$#'
-			identifier: class.notFound
-			count: 1
-			path: src/Sulu/Bundle/TrashBundle/Infrastructure/Doctrine/Repository/TrashItemRepository.php
-
-		-
-			message: '#^Property Sulu\\Bundle\\TrashBundle\\Infrastructure\\Doctrine\\Repository\\TrashItemRepository\:\:\$security has unknown class Symfony\\Component\\Security\\Core\\Security as its type\.$#'
-			identifier: class.notFound
 			count: 1
 			path: src/Sulu/Bundle/TrashBundle/Infrastructure/Doctrine/Repository/TrashItemRepository.php
 
@@ -38947,48 +38719,6 @@ parameters:
 			path: src/Sulu/Component/Persistence/EventSubscriber/ORM/MetadataSubscriber.php
 
 		-
-			message: '#^Method Sulu\\Component\\Persistence\\EventSubscriber\\ORM\\MetadataSubscriber\:\:process\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Component/Persistence/EventSubscriber/ORM/MetadataSubscriber.php
-
-		-
-			message: '#^Method Sulu\\Component\\Persistence\\EventSubscriber\\ORM\\MetadataSubscriber\:\:process\(\) has parameter \$metadata with generic class Doctrine\\ORM\\Mapping\\ClassMetadataInfo but does not specify its types\: T$#'
-			identifier: missingType.generics
-			count: 1
-			path: src/Sulu/Component/Persistence/EventSubscriber/ORM/MetadataSubscriber.php
-
-		-
-			message: '#^Method Sulu\\Component\\Persistence\\EventSubscriber\\ORM\\MetadataSubscriber\:\:setAssociationMappings\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Component/Persistence/EventSubscriber/ORM/MetadataSubscriber.php
-
-		-
-			message: '#^Method Sulu\\Component\\Persistence\\EventSubscriber\\ORM\\MetadataSubscriber\:\:setAssociationMappings\(\) has parameter \$metadata with generic class Doctrine\\ORM\\Mapping\\ClassMetadataInfo but does not specify its types\: T$#'
-			identifier: missingType.generics
-			count: 1
-			path: src/Sulu/Component/Persistence/EventSubscriber/ORM/MetadataSubscriber.php
-
-		-
-			message: '#^Method Sulu\\Component\\Persistence\\EventSubscriber\\ORM\\MetadataSubscriber\:\:unsetAssociationMappings\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Component/Persistence/EventSubscriber/ORM/MetadataSubscriber.php
-
-		-
-			message: '#^Method Sulu\\Component\\Persistence\\EventSubscriber\\ORM\\MetadataSubscriber\:\:unsetAssociationMappings\(\) has parameter \$metadata with generic class Doctrine\\ORM\\Mapping\\ClassMetadataInfo but does not specify its types\: T$#'
-			identifier: missingType.generics
-			count: 1
-			path: src/Sulu/Component/Persistence/EventSubscriber/ORM/MetadataSubscriber.php
-
-		-
-			message: '#^PHPDoc tag @var for variable \$metadata contains generic class Doctrine\\ORM\\Mapping\\ClassMetadataInfo but does not specify its types\: T$#'
-			identifier: missingType.generics
-			count: 1
-			path: src/Sulu/Component/Persistence/EventSubscriber/ORM/MetadataSubscriber.php
-
-		-
 			message: '#^Parameter \#1 \$repositoryClassName of method Doctrine\\ORM\\Mapping\\ClassMetadataInfo\<object\>\:\:setCustomRepositoryClass\(\) expects class\-string\<Doctrine\\ORM\\EntityRepository\>\|null, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -39076,12 +38806,6 @@ parameters:
 			message: '#^Call to an undefined method Doctrine\\Persistence\\Mapping\\ClassMetadata\<object\>\:\:mapManyToOne\(\)\.$#'
 			identifier: method.notFound
 			count: 2
-			path: src/Sulu/Component/Persistence/EventSubscriber/ORM/UserBlameSubscriber.php
-
-		-
-			message: '#^Class Symfony\\Component\\Security\\Core\\Authentication\\Token\\AnonymousToken not found\.$#'
-			identifier: class.notFound
-			count: 1
 			path: src/Sulu/Component/Persistence/EventSubscriber/ORM/UserBlameSubscriber.php
 
 		-
@@ -42703,12 +42427,6 @@ parameters:
 			path: src/Sulu/Component/Security/Authorization/AccessControl/AccessControlManager.php
 
 		-
-			message: '#^Call to method getUser\(\) on an unknown class Symfony\\Component\\Security\\Core\\Security\.$#'
-			identifier: class.notFound
-			count: 1
-			path: src/Sulu/Component/Security/Authorization/AccessControl/AccessControlManager.php
-
-		-
 			message: '#^Cannot call method getLocales\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -42967,18 +42685,6 @@ parameters:
 			path: src/Sulu/Component/Security/Authorization/AccessControl/AccessControlManager.php
 
 		-
-			message: '#^Parameter \$security of method Sulu\\Component\\Security\\Authorization\\AccessControl\\AccessControlManager\:\:__construct\(\) has invalid type Symfony\\Component\\Security\\Core\\Security\.$#'
-			identifier: class.notFound
-			count: 1
-			path: src/Sulu/Component/Security/Authorization/AccessControl/AccessControlManager.php
-
-		-
-			message: '#^Property Sulu\\Component\\Security\\Authorization\\AccessControl\\AccessControlManager\:\:\$security has unknown class Symfony\\Component\\Security\\Core\\Security as its type\.$#'
-			identifier: class.notFound
-			count: 1
-			path: src/Sulu/Component/Security/Authorization/AccessControl/AccessControlManager.php
-
-		-
 			message: '#^Method Sulu\\Component\\Security\\Authorization\\AccessControl\\AccessControlManagerInterface\:\:setPermissions\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -43177,12 +42883,6 @@ parameters:
 			path: src/Sulu/Component/Security/Tests/Unit/Authorization/AccessControl/AccessControlManagerTest.php
 
 		-
-			message: '#^Class Symfony\\Component\\Security\\Core\\Security not found\.$#'
-			identifier: class.notFound
-			count: 1
-			path: src/Sulu/Component/Security/Tests/Unit/Authorization/AccessControl/AccessControlManagerTest.php
-
-		-
 			message: '#^Method Sulu\\Component\\Security\\Tests\\Unit\\Authorization\\AccessControl\\AccessControlManagerTest\:\:provideUserPermission\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -43251,12 +42951,6 @@ parameters:
 		-
 			message: '#^Parameter \#2 \$user of method Sulu\\Component\\Security\\Authorization\\AccessControl\\AccessControlManager\:\:getUserPermissions\(\) expects Sulu\\Component\\Security\\Authentication\\UserInterface\|null, string given\.$#'
 			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Security/Tests/Unit/Authorization/AccessControl/AccessControlManagerTest.php
-
-		-
-			message: '#^Property Sulu\\Component\\Security\\Tests\\Unit\\Authorization\\AccessControl\\AccessControlManagerTest\:\:\$security has unknown class Symfony\\Component\\Security\\Core\\Security as its type\.$#'
-			identifier: class.notFound
 			count: 1
 			path: src/Sulu/Component/Security/Tests/Unit/Authorization/AccessControl/AccessControlManagerTest.php
 

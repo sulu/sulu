@@ -14,42 +14,38 @@ namespace Sulu\Bundle\SecurityBundle\EventListener;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
-use Symfony\Component\Security\Core\Event\AuthenticationFailureEvent;
-use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Http\Event\LoginFailureEvent;
 use Symfony\Component\Uid\Uuid;
 
 /**
  * This listener ensures, that requests with invalid usernames have the same response time as valid users.
+ *
+ * {@internal}
  */
-class AuhenticationFailureListener implements EventSubscriberInterface
+class AuthenticationFailureListener implements EventSubscriberInterface
 {
-    /**
-     * @param PasswordHasherFactoryInterface $passwordHasherFactory
-     */
-    public function __construct(private $passwordHasherFactory, private UserRepositoryInterface $userRepository)
-    {
+    public function __construct(
+        private PasswordHasherFactoryInterface $passwordHasherFactory,
+        private UserRepositoryInterface $userRepository,
+    ) {
     }
 
+    /**
+     * @return array<string, string>
+     */
     public static function getSubscribedEvents()
     {
         return [
-            AuthenticationFailureEvent::class => 'onLoginFailure',
             LoginFailureEvent::class => 'onLoginFailure',
         ];
     }
 
-    public function onLoginFailure(AuthenticationFailureEvent|LoginFailureEvent $event)
+    public function onLoginFailure(LoginFailureEvent $event): void
     {
-        if ($event instanceof AuthenticationFailureEvent) {
-            $previousException = $event->getAuthenticationException()->getPrevious();
-        } else {
-            $previousException = $event->getException()->getPrevious();
-        }
+        $previousException = $event->getException()->getPrevious();
 
-        if ($previousException instanceof UsernameNotFoundException
-            || $previousException instanceof UserNotFoundException) {
+        if ($previousException instanceof UserNotFoundException) {
             $user = $this->userRepository->createNew();
 
             $hasher = $this->passwordHasherFactory->getPasswordHasher($user);

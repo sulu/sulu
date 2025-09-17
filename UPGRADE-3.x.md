@@ -741,6 +741,7 @@ Removed classes / services:
 - `Sulu\Bundle\AdminBundle\DependencyInjection\Compiler\SuluVersionPass` (moved and internal)
 - `Sulu\Bundle\PageBundle\Controller\WebspaceController`
 - `Sulu\Bundle\SecurityBundle\Security\LogoutSuccessHandler` (replaced by `LogoutEventSubscriber`)
+- `Sulu\Bundle\SecurityBundle\EventListener\AuhenticationFailureListener` (moved and internal)
 
 Removed deprecated functions and properties:
 
