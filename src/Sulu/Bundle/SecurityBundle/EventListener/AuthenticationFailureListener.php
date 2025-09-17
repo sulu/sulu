@@ -21,7 +21,7 @@ use Symfony\Component\Uid\Uuid;
 /**
  * This listener ensures, that requests with invalid usernames have the same response time as valid users.
  *
- * {@internal}
+ * @internal no backwards compatibility promise given for this class it can be removed or changed at any time
  */
 class AuthenticationFailureListener implements EventSubscriberInterface
 {
