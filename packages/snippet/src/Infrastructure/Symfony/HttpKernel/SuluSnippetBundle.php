@@ -483,6 +483,12 @@ final class SuluSnippetBundle extends AbstractBundle
             SnippetAreaInterface::class => 'sulu.model.snippet_area.class',
         ], $container);
 
-        $container->addCompilerPass(new SnippetAreaCompilerPass());
+        $configDirectory = \join(\DIRECTORY_SEPARATOR, [
+            $container->getParameter('kernel.project_dir'),
+            'config',
+            'templates',
+            'snippets',
+        ]);
+        $container->addCompilerPass(new SnippetAreaCompilerPass($configDirectory));
     }
 }

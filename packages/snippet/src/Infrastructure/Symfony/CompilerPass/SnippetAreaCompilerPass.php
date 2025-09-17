@@ -11,67 +11,53 @@
 
 namespace Sulu\Snippet\Infrastructure\Symfony\CompilerPass;
 
-use Sulu\Component\Content\Compat\Structure;
-use Sulu\Component\Content\Metadata\StructureMetadata;
+use Dom\NodeList;
+use Dom\XMLDocument;
+use Sulu\Bundle\AdminBundle\Metadata\XmlParserTrait;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\Finder\Finder;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @phpstan-type Entry array{key: string, template: string, title: array<string, string>, cache-invalidation: mixed}
  */
 class SnippetAreaCompilerPass implements CompilerPassInterface
 {
+    use XmlParserTrait;
+
     public const SNIPPET_AREA_PARAM = 'sulu_snippet.areas';
+
+    private TranslatorInterface $translator;
+
+    /** @var array<string> */
+    private array $locales;
+
+    public function __construct(
+        private string $configDirectory
+    ) {
+    }
 
     public function process(ContainerBuilder $container): void
     {
-        //$structureFactory = $container->get('sulu_page.structure.factory');
-        //$structures = $structureFactory->getStructures(Structure::TYPE_SNIPPET);
-        $structures = [];
+        $this->locales = $container->getParameter('sulu_core.locales');
 
-        $structure = new StructureMetadata();
-        $structure->setName('car');
-        $structure->setAreas([
-            ['key' => 'car', 'template' => 'car', 'cache-invalidation' => true, 'title' => ['Car']],
-        ]);
-        $structures[] = $structure;
+        $metaData = [];
+        foreach (new Finder()->in($this->configDirectory)->files()->name('*.xml') as $file) {
+            $xml = XMLDocument::createFromFile($file);
 
-        $structure = new StructureMetadata();
-        $structure->setName('hotel');
-        $structure->setAreas([
-            ['key' => 'golf_hotel', 'template' => 'golf_hotel', 'cache-invalidation' => true, 'title' => ['Golf hotel']],
-            ['key' => 'sport_hotel', 'template' => 'sport_hotel', 'cache-invalidation' => true, 'title' => ['Sport hotel']],
-        ]);
-        $structures[] = $structure;
-
-        $locales = $container->getParameter('sulu_core.locales');
-
-        $areas = [];
-
-        /** @var StructureMetadata $structure */
-        foreach ($structures as $structure) {
-            $template = $structure->getName();
-
-            $templateTitles = [];
-            foreach ($locales as $locale) {
-                $templateTitles[$locale] = $structure->getTitle($locale);
+            $element = [];
+            foreach ($xml->querySelectorAll('area') as $areaXml) {
+                $element = [
+                    'key' => $areaXml->attributes->getNamedItem('key')->textContent,
+                    'template' => $areaXml->querySelector('template')?->textContent,
+                    'title' => $this->getTitles($this->locales, $areaXml->querySelectorAll('meta title')),
+                    'cache-invalidation' => $areaXml->querySelector('cache-invalidation'),
+                ];
             }
+            $key = $xml->querySelector('key')->textContent;
 
-            foreach ($structure->getAreas() as $area) {
-                $areaKey = $area['key'];
-                $area = $this->getArea($container, (string) $template, $area, $locales, $templateTitles);
-
-                if (\array_key_exists($areaKey, $areas)) {
-                    throw new \InvalidArgumentException(\sprintf(
-                        'Snippet area "%s" need to be unique it is defined in "%s" and "%s"',
-                        $areaKey,
-                        $areas[$areaKey]['template'] . '.xml',
-                        $area['template'] . '.xml'
-                    ));
-                }
-
-                $areas[$area['key']] = $area;
-            }
+            $metaData[$key] = $element;
         }
 
         \ksort($areas);
@@ -80,44 +66,28 @@ class SnippetAreaCompilerPass implements CompilerPassInterface
     }
 
     /**
-     * @param Entry $area
      * @param array<string> $locales
-     * @param array<string, string> $templateTitles
      *
-     * @return Entry
+     * @return array<string, string>
      */
-    private function getArea(
-        ContainerBuilder $container,
-        string $template,
-        array $area,
-        array $locales,
-        array $templateTitles,
-    ): array {
-        $key = $area['key'];
-        $cacheInvalidation = $area['cache-invalidation'];
-
+    private function getTitles(array $locales, NodeList $templateTitles): array
+    {
         $titles = [];
-        $areaTitles = $area['title'];
 
         // If we only have one title and no locale (indexed 0) then it's a translation key
-        if (1 === \count($areaTitles) && \array_key_exists(0, $areaTitles)) {
+        if (1 === $templateTitles->length && 0 === $templateTitles->item(0)->attributes->length) {
             //$translator = $container->get('translator');
-            $titleToTranslate = \reset($areaTitles);
+            $titleToTranslate = $templateTitles->item(0)->textContent;
             foreach ($locales as $locale) {
-                // $titles[$locale] = $translator->trans($titleToTranslate, [], 'admin', $locale);
-                $titles[$locale] = $titleToTranslate;
+                // $titles[$locale] = $this->translator->trans($titleToTranslate, [], 'admin', $locale);
+                $titles[$locale] = \trim($titleToTranslate);
             }
         } else {
-            foreach ($locales as $locale) {
-                $titles[$locale] = $areaTitles[$locale] ?? ($templateTitles[$locale] . ' ' . \ucfirst($key));
+            foreach ($templateTitles->getIterator() as $title) {
+                $titles[$title->attributes->getNamedItem('lang')->textContent] = $title->textContent;
             }
         }
 
-        return [
-            'key' => $key,
-            'template' => $template,
-            'title' => $titles,
-            'cache-invalidation' => $cacheInvalidation,
-        ];
+        return $titles;
     }
 }
