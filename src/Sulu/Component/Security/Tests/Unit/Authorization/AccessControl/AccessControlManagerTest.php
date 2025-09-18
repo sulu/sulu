@@ -160,7 +160,7 @@ class AccessControlManagerTest extends TestCase
         $accessControlProvider2->supports(Argument::any())->willReturn(true);
         $accessControlProvider2->setPermissions(\stdClass::class, '1', [])->shouldBeCalled();
 
-        self::setPrivateProperty($this->accessControlManager, [
+        self::setPrivateProperty($this->accessControlManager, 'accessControlProviders', [
             $accessControlProvider1->reveal(), $accessControlProvider2->reveal()]);
 
         $this->eventDispatcher->dispatch(
@@ -186,7 +186,7 @@ class AccessControlManagerTest extends TestCase
         $this->descendantProvider1->supportsDescendantType(\stdClass::class)->willReturn(true);
         $this->descendantProvider1->findDescendantIdsById('1')->willReturn(['2', '3', '5']);
 
-        self::setPrivateProperty($this->accessControlManager, [$accessControlProvider->reveal()]);
+        self::setPrivateProperty($this->accessControlManager, 'accessControlProviders', [$accessControlProvider->reveal()]);
         $this->accessControlRepository->findIdsWithGrantedPermissions(
             $this->user->reveal(),
             $this->permissions[PermissionTypes::SECURITY],
@@ -230,7 +230,7 @@ class AccessControlManagerTest extends TestCase
         $this->descendantProvider1->supportsDescendantType(\stdClass::class)->willReturn(false);
         $this->descendantProvider2->supportsDescendantType(\stdClass::class)->willReturn(false);
 
-        self::setPrivateProperty($this->accessControlManager, [$accessControlProvider->reveal()]);
+        self::setPrivateProperty($this->accessControlManager, 'accessControlProviders', [$accessControlProvider->reveal()]);
 
         $this->eventDispatcher->dispatch(Argument::any())->shouldNotBeCalled();
 
@@ -251,7 +251,7 @@ class AccessControlManagerTest extends TestCase
         $this->descendantProvider1->supportsDescendantType(\stdClass::class)->willReturn(true);
         $this->descendantProvider1->findDescendantIdsById('1')->willReturn(['2', '3', '5']);
 
-        self::setPrivateProperty($this->accessControlManager, [$accessControlProvider->reveal()]);
+        self::setPrivateProperty($this->accessControlManager, 'accessControlProviders', [$accessControlProvider->reveal()]);
         $this->accessControlRepository->findIdsWithGrantedPermissions(
             $this->user->reveal(),
             $this->permissions[PermissionTypes::SECURITY],
@@ -279,10 +279,12 @@ class AccessControlManagerTest extends TestCase
         $accessControlProvider1->getPermissions(Argument::cetera())->shouldNotBeCalled();
         $accessControlProvider2 = $this->prophesize(AccessControlProviderInterface::class);
         $accessControlProvider2->supports(Argument::any())->willReturn(true);
-        $accessControlProvider2->getPermissions(\stdClass::class, '1', null)->shouldBeCalled();
+        $accessControlProvider2->getPermissions(\stdClass::class, '1', $system)->shouldBeCalled();
 
-        self::setPrivateProperty($this->accessControlManager, [
-            $accessControlProvider1->reveal(), $accessControlProvider2->reveal()]);
+        self::setPrivateProperty($this->accessControlManager, 'accessControlProviders', [
+            $accessControlProvider1->reveal(),
+            $accessControlProvider2->reveal(),
+        ]);
 
         $this->accessControlManager->getPermissions(\stdClass::class, '1', $system);
     }
@@ -312,7 +314,7 @@ class AccessControlManagerTest extends TestCase
         $accessControlProvider = $this->prophesize(AccessControlProviderInterface::class);
         $accessControlProvider->supports(\stdClass::class)->willReturn(true);
         $accessControlProvider->getPermissions(\stdClass::class, '1', $system)->willReturn($rolePermissions);
-        self::setPrivateProperty($this->accessControlManager, [$accessControlProvider->reveal()]);
+        self::setPrivateProperty($this->accessControlManager, 'accessControlProviders', [$accessControlProvider->reveal()]);
 
         // create role for given role permissions from data provider
         $permission1 = $this->prophesize(Permission::class);
@@ -359,7 +361,7 @@ class AccessControlManagerTest extends TestCase
         $accessControlProvider->supports(\stdClass::class)->willReturn(true);
         $accessControlProvider->getPermissions(\stdClass::class, '1', 'Sulu')
             ->willReturn([2 => ['view' => true, 'edit' => true]]);
-        self::setPrivateProperty($this->accessControlManager, [$accessControlProvider->reveal()]);
+        self::setPrivateProperty($this->accessControlManager, 'accessControlProviders', [$accessControlProvider->reveal()]);
 
         // create role for given role permissions from data provider
         $permission1 = $this->prophesize(Permission::class);
@@ -394,7 +396,7 @@ class AccessControlManagerTest extends TestCase
         $accessControlProvider->supports(\stdClass::class)->willReturn(true);
         $accessControlProvider->getPermissions(\stdClass::class, '1', 'Sulu')
             ->willReturn([2 => ['view' => true, 'edit' => true]]);
-        self::setPrivateProperty($this->accessControlManager, [$accessControlProvider->reveal()]);
+        self::setPrivateProperty($this->accessControlManager, 'accessControlProviders', [$accessControlProvider->reveal()]);
 
         $permission1 = $this->prophesize(Permission::class);
         $permission1->getPermissions()->willReturn(64);
@@ -421,7 +423,7 @@ class AccessControlManagerTest extends TestCase
         $accessControlProvider = $this->prophesize(AccessControlProviderInterface::class);
         $accessControlProvider->supports(\stdClass::class)->willReturn(true);
         $accessControlProvider->getPermissions(Argument::cetera())->shouldNotBeCalled();
-        $this->accessControlManager->addAccessControlProvider($accessControlProvider->reveal());
+        self::setPrivateProperty($this->accessControlManager, 'accessControlProviders', [$accessControlProvider->reveal()]);
 
         $permissions = $this->accessControlManager->getUserPermissions(
             new SecurityCondition('example', 'de', \stdClass::class, '1'),
@@ -446,7 +448,7 @@ class AccessControlManagerTest extends TestCase
         $accessControlProvider = $this->prophesize(AccessControlProviderInterface::class);
         $accessControlProvider->supports(\stdClass::class)->willReturn(true);
         $accessControlProvider->getPermissions(\stdClass::class, '1', 'system2')->shouldBeCalled();
-        $this->accessControlManager->addAccessControlProvider($accessControlProvider->reveal());
+        self::setPrivateProperty($this->accessControlManager, 'accessControlProviders', [$accessControlProvider->reveal()]);
 
         $permission1 = $this->prophesize(Permission::class);
         $permission1->getPermissions()->willReturn(64);
@@ -596,7 +598,7 @@ class AccessControlManagerTest extends TestCase
         $accessControlProvider->supports(\stdClass::class)->willReturn(true);
         $accessControlProvider->getPermissions(\stdClass::class, '1', 'Sulu')
             ->willReturn([2 => ['view' => true, 'edit' => true]]);
-        $this->accessControlManager->addAccessControlProvider($accessControlProvider->reveal());
+        self::setPrivateProperty($this->accessControlManager, 'accessControlProviders', [$accessControlProvider->reveal()]);
 
         $permission1 = $this->prophesize(Permission::class);
         $permission1->getPermissions()->willReturn(64);
@@ -621,8 +623,10 @@ class AccessControlManagerTest extends TestCase
         $accessControlProvider1 = $this->prophesize(AccessControlProviderInterface::class);
         $accessControlProvider2 = $this->prophesize(AccessControlProviderInterface::class);
 
-        $this->accessControlManager->addAccessControlProvider($accessControlProvider1->reveal());
-        $this->accessControlManager->addAccessControlProvider($accessControlProvider2->reveal());
+        self::setPrivateProperty($this->accessControlManager, 'accessControlProviders', [
+            $accessControlProvider1->reveal(),
+            $accessControlProvider2->reveal(),
+        ]);
 
         $this->assertCount(2, $this->readObjectAttribute($this->accessControlManager, 'accessControlProviders'));
         $this->assertContains(

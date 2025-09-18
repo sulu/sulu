@@ -50,7 +50,7 @@ class AccessControlManager implements AccessControlManagerInterface
         private AccessControlRepositoryInterface $accessControlRepository,
         private ?Security $security,
         private array $permissions,
-        array $accessControlProviders = [],
+        iterable $accessControlProviders = [],
     ) {
         $this->accessControlProviders = [...$accessControlProviders];
     }
