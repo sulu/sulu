@@ -9,6 +9,27 @@
     <controller>Sulu\Content\UserInterface\Controller\Website\ContentController::indexAction</controller>
     <cacheLifetime>604800</cacheLifetime>
 
+    <areas>
+        <area key="hotel" cache-invalidation="false">
+            <meta>
+                <title>snippet_type.hotel</title>
+            </meta>
+        </area>
+
+        <area key="test" cache-invalidation="false">
+            <meta>
+                <title lang="en">Menu Social Media Links</title>
+            </meta>
+        </area>
+
+        <area key="with-cache" cache-invalidation="true">
+            <meta>
+                <title lang="en">With cache</title>
+                <title lang="de">Mit cache</title>
+            </meta>
+        </area>
+    </areas>
+
     <meta>
         <title lang="en">Snippet</title>
         <title lang="de">Schnipsel</title>
