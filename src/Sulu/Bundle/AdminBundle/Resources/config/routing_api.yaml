@@ -1,3 +1,4 @@
+# Collaboration
 sulu_admin.put_collaborations:
     path: /collaborations.{_format}
     controller: sulu_admin.collaboration_controller::cputAction
@@ -10,6 +11,15 @@ sulu_admin.delete_collaborations:
     path: /collaborations.{_format}
     controller: sulu_admin.collaboration_controller::cdeleteAction
     methods: DELETE
+    format: json
+    requirements:
+        _format: json|csv
+
+# Icon
+sulu_admin.get_icons:
+    path: '/icons.{_format}'
+    methods: GET
+    controller: 'sulu_admin.icon_controller::cgetAction'
     format: json
     requirements:
         _format: json|csv

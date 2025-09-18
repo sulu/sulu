@@ -107,6 +107,14 @@
             <tag name="sulu_admin.list_metadata_loader"/>
         </service>
 
+        <service
+            id="sulu_admin.expression_list_metadata_visitor"
+            class="Sulu\Bundle\AdminBundle\Metadata\ListMetadata\ExpressionListMetadataVisitor"
+        >
+            <argument type="service" id="sulu_core.expression_language" />
+            <tag name="sulu_admin.list_metadata_visitor" />
+        </service>
+
         <service id="sulu_admin.view_builder_factory" class="Sulu\Bundle\AdminBundle\Admin\View\ViewBuilderFactory" />
         <service
             id="Sulu\Bundle\AdminBundle\Admin\View\ViewBuilderFactoryInterface"
@@ -260,6 +268,17 @@
             <argument type="service" id="filesystem" />
             <argument>%kernel.project_dir%</argument>
             <argument>%sulu_core.locales%</argument>
+            <tag name="console.command"/>
+        </service>
+
+        <service
+            id="sulu_admin.valid_build_command"
+            class="Sulu\Bundle\AdminBundle\Command\ValidateBuildCommand"
+        >
+            <argument type="service" id="assets.packages" />
+            <argument type="string">%kernel.project_dir%</argument>
+            <argument type="string">%sulu.version%</argument>
+            <tag name="sulu.context" context="admin"/>
             <tag name="console.command"/>
         </service>
 

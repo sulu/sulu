@@ -1,6 +1,6 @@
 # Upgrade
 
-## 2.6.11
+## 2.6.13
 
 ### Using `tagged_locator` and `tagged_iterator` over custom compiler passes
 
@@ -8,7 +8,29 @@ Deprecated compiler passes:
 
 * `Sulu\Bundle\SecurityBundle\DependencyInjection\Compiler\AccessControlProviderPass` -> `tagged_iterator`
 
+## 2.6.11
+
+### Deprecate usage of `sulu.context` parameter
+
+The `sulu.context` parameter is deprecated and services should no longer depend on it.
+
+If some services behave differently between an `admin` or a `website` request, you should depend on
+[Symfony Firewall Config](https://symfony.com/doc/7.4/security.html#fetching-the-firewall-configuration-for-a-request)
+instead.
+
+```php
+$suluContext = $this->security?->getFirewallConfig($request)?->getName() === 'admin' ? 'admin' : 'website';
+```
+
+Still, best practices is that your services do not depend on such states. Instead controllers or commands
+should be based on the request or command arguments, giving other parameters to your service to control its behavior.
+
 ## 2.6.10
+
+### Deprecate functions as preparation for 3.0
+
+* Sulu\Bundle\TagBundle\Entity\TagRepository::findAllTags -> Sulu\Bundle\TagBundle\Entity\TagRepository::findAll
+* Sulu\Bundle\TagBundle\Tag\TagManager::findAll -> Sulu\Bundle\TagBundle\Entity\TagRepository::findAll
 
 ### Deprecate usage of fos rest routing
 

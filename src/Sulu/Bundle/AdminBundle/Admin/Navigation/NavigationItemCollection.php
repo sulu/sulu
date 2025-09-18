@@ -46,4 +46,13 @@ class NavigationItemCollection
     {
         return $this->navigationItems;
     }
+
+    public function remove(string $navigationItemName): void
+    {
+        if (!\array_key_exists($navigationItemName, $this->navigationItems)) {
+            throw new NavigationItemNotFoundException($navigationItemName);
+        }
+
+        unset($this->navigationItems[$navigationItemName]);
+    }
 }

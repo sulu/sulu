@@ -13,6 +13,7 @@ namespace Sulu\Bundle\MarkupBundle\Tests\Unit\Markup\Link;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkConfiguration;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkProviderInterface;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkProviderPool;
@@ -24,9 +25,9 @@ class LinkProviderPoolTest extends TestCase
     use ProphecyTrait;
 
     /**
-     * @var LinkProviderInterface[]
+     * @var ObjectProphecy<LinkProviderInterface>[]
      */
-    protected $providers = [];
+    protected $providerProphecies = [];
 
     /**
      * @var LinkProviderPoolInterface
@@ -35,7 +36,7 @@ class LinkProviderPoolTest extends TestCase
 
     public function setUp(): void
     {
-        $this->providers = [
+        $this->providerProphecies = [
             'content' => $this->prophesize(LinkProviderInterface::class),
             'media' => $this->prophesize(LinkProviderInterface::class),
             'page' => $this->prophesize(LinkProviderInterface::class),
@@ -46,14 +47,14 @@ class LinkProviderPoolTest extends TestCase
                 function($provider) {
                     return $provider->reveal();
                 },
-                $this->providers
+                $this->providerProphecies
             )
         );
     }
 
     public function testGetProvider(): void
     {
-        $this->assertEquals($this->providers['content']->reveal(), $this->pool->getProvider('content'));
+        $this->assertEquals($this->providerProphecies['content']->reveal(), $this->pool->getProvider('content'));
     }
 
     public function testGetProviderNotFound(): void
@@ -96,9 +97,9 @@ class LinkProviderPoolTest extends TestCase
             ),
         ];
 
-        $this->providers['content']->getConfiguration()->willReturn($configuration['content']);
-        $this->providers['media']->getConfiguration()->willReturn($configuration['media']);
-        $this->providers['page']->getConfiguration()->willReturn(null);
+        $this->providerProphecies['content']->getConfiguration()->willReturn($configuration['content']);
+        $this->providerProphecies['media']->getConfiguration()->willReturn($configuration['media']);
+        $this->providerProphecies['page']->getConfiguration()->willReturn(null);
 
         $this->assertEquals($configuration, $this->pool->getConfiguration());
     }

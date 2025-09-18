@@ -1,0 +1,12 @@
+<template xmlns="http://schemas.sulu.io/template/template"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/template-1.0.xsd"
+>
+    <key>link</key>
+    <meta>
+        <title>Link</title>
+    </meta>
+    <properties>
+        <property name="link_to_page" type="link"/>
+    </properties>
+</template>

@@ -67,4 +67,24 @@ class ViewCollectionTest extends TestCase
         $viewCollection = new ViewCollection();
         $viewCollection->get('not-existing');
     }
+
+    public function testRemove(): void
+    {
+        $viewBuilder = new ViewBuilder('sulu_test', '/test', 'test');
+
+        $viewCollection = new ViewCollection();
+        $viewCollection->add($viewBuilder);
+
+        $this->assertTrue($viewCollection->has('sulu_test'));
+        $viewCollection->remove($viewBuilder->getName());
+        $this->assertFalse($viewCollection->has('sulu_test'));
+    }
+
+    public function testRemoveHasNotExisting(): void
+    {
+        $this->expectException(ViewNotFoundException::class);
+
+        $viewCollection = new ViewCollection();
+        $viewCollection->remove('not-existing');
+    }
 }

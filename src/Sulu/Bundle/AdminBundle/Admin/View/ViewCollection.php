@@ -46,4 +46,13 @@ class ViewCollection
     {
         return $this->views;
     }
+
+    public function remove(string $viewName): void
+    {
+        if (!\array_key_exists($viewName, $this->views)) {
+            throw new ViewNotFoundException($viewName);
+        }
+
+        unset($this->views[$viewName]);
+    }
 }

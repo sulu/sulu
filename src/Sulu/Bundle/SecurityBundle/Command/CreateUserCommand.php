@@ -16,7 +16,6 @@ use Sulu\Bundle\ContactBundle\Entity\ContactInterface;
 use Sulu\Bundle\ContactBundle\Entity\ContactRepositoryInterface;
 use Sulu\Bundle\SecurityBundle\Entity\UserRepository;
 use Sulu\Bundle\SecurityBundle\Entity\UserRole;
-use Sulu\Component\Localization\Localization;
 use Sulu\Component\Localization\Manager\LocalizationManagerInterface;
 use Sulu\Component\Security\Authentication\RoleInterface;
 use Sulu\Component\Security\Authentication\RoleRepositoryInterface;
@@ -70,14 +69,6 @@ class CreateUserCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $localizations = $this->localizationManager->getLocalizations();
-        $locales = [];
-
-        foreach ($localizations as $localization) {
-            /* @var Localization $localization */
-            $locales[] = $localization->getLocale();
-        }
-
         $username = $input->getArgument('username');
         $firstName = $input->getArgument('firstName');
         $lastName = $input->getArgument('lastName');
@@ -137,7 +128,7 @@ class CreateUserCommand extends Command
         $userRole = new UserRole();
         $userRole->setRole($role);
         $userRole->setUser($user);
-        $userRole->setLocale(\json_encode($locales)); // set all locales
+        $userRole->setLocale(\json_encode($this->localizationManager->getLocales())); // set all locales
         $this->entityManager->persist($userRole);
 
         $this->entityManager->persist($user);

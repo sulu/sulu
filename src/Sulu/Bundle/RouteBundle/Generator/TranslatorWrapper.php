@@ -19,9 +19,6 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class TranslatorWrapper implements TranslatorInterface, LocaleAwareInterface
 {
-    /**
-     * @param TranslatorInterface&LocaleAwareInterface $translator
-     */
     public function __construct(private TranslatorInterface $translator)
     {
     }

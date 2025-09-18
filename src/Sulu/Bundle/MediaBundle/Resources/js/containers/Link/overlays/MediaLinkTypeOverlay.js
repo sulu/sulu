@@ -30,7 +30,10 @@ export default class MediaLinkTypeOverlay extends React.Component<LinkTypeOverla
             title,
             target,
             anchor,
+            options,
         } = this.props;
+
+        const targets = options?.targets || ['_blank', '_self', '_parent', '_top'];
 
         if (typeof href === 'string') {
             throw new Error('The id of a media should always be a number!');
@@ -63,10 +66,11 @@ export default class MediaLinkTypeOverlay extends React.Component<LinkTypeOverla
                     {!!onTargetChange &&
                         <Form.Field label={translate('sulu_admin.link_target')} required={true}>
                             <SingleSelect onChange={onTargetChange} value={target}>
-                                <SingleSelect.Option value="_blank">_blank</SingleSelect.Option>
-                                <SingleSelect.Option value="_self">_self</SingleSelect.Option>
-                                <SingleSelect.Option value="_parent">_parent</SingleSelect.Option>
-                                <SingleSelect.Option value="_top">_top</SingleSelect.Option>
+                                {targets.map((targetValue) => (
+                                    <SingleSelect.Option key={targetValue} value={targetValue}>
+                                        {translate(`sulu_admin.link_target${targetValue}`)}
+                                    </SingleSelect.Option>
+                                ))}
                             </SingleSelect>
                         </Form.Field>
                     }

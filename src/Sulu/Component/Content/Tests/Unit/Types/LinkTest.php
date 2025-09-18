@@ -19,6 +19,7 @@ use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkItem;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkProviderInterface;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkProviderPoolInterface;
+use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStorePoolInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Types\Link;
@@ -52,14 +53,20 @@ class LinkTest extends TestCase
      */
     private $structure;
 
+    /**
+     * @var ObjectProphecy<ReferenceStorePoolInterface>
+     */
+    private ObjectProphecy $referenceStorePool;
+
     public function setUp(): void
     {
         $this->providerPool = $this->prophesize(LinkProviderPoolInterface::class);
+        $this->referenceStorePool = $this->prophesize(ReferenceStorePoolInterface::class);
         $this->property = $this->prophesize(PropertyInterface::class);
         $this->structure = $this->prophesize(StructureInterface::class);
         $this->provider = $this->prophesize(LinkProviderInterface::class);
 
-        $this->link = new Link($this->providerPool->reveal());
+        $this->link = new Link($this->providerPool->reveal(), $this->referenceStorePool->reveal());
     }
 
     public function testGetViewData(): void
@@ -312,6 +319,19 @@ class LinkTest extends TestCase
         $this->property->getStructure()
             ->shouldBeCalled()
             ->willReturn($this->structure->reveal());
+
+        $this->providerPool->getProvider(Argument::type('string'))
+            ->shouldBeCalled()
+            ->willReturn($this->provider->reveal());
+
+        $linkItem = $this->prophesize(LinkItem::class);
+        $linkItem->getUrl()
+            ->shouldBeCalled()
+            ->willReturn('/test/test2');
+
+        $this->provider->preload(['/test/test2'], 'de', true)
+            ->shouldBeCalled()
+            ->willReturn([$linkItem]);
 
         $result = $this->link->getContentData($this->property->reveal());
 

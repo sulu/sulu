@@ -49,6 +49,7 @@ class FOSJSRoutingControllerTest extends SuluTestCase
 
         foreach ([
             'sulu_activity.get_activities',
+            'sulu_admin.get_icons',
             'sulu_admin.metadata',
             'sulu_admin.put_collaborations',
             'sulu_audience_targeting.get_target-group',
@@ -90,7 +91,6 @@ class FOSJSRoutingControllerTest extends SuluTestCase
             'sulu_media.post_media_preview',
             'sulu_media.put_media_format',
             'sulu_media.redirect',
-            'sulu_page.get_icons',
             'sulu_page.get_items',
             'sulu_page.get_page',
             'sulu_page.get_page_resourcelocators',

@@ -40,8 +40,8 @@ test.each([
     });
 });
 
-test('Do not send search request when no search term is given and reset to empty array', () => {
+test('Do not send search request when no search term is given', () => {
     searchStore.search(undefined);
     expect(ResourceRequester.getList).not.toBeCalled();
-    expect(searchStore.result).toEqual([]);
+    expect(searchStore.result).toEqual([{id: 1}]);
 });

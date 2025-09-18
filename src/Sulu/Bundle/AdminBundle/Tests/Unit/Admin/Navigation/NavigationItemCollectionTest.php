@@ -67,4 +67,24 @@ class NavigationItemCollectionTest extends TestCase
         $navigationItemCollection = new NavigationItemCollection();
         $navigationItemCollection->get('not-existing');
     }
+
+    public function testRemove(): void
+    {
+        $navigationItem = new NavigationItem('sulu_test');
+
+        $navigationItemCollection = new NavigationItemCollection();
+        $navigationItemCollection->add($navigationItem);
+
+        $this->assertTrue($navigationItemCollection->has('sulu_test'));
+        $navigationItemCollection->remove($navigationItem->getName());
+        $this->assertFalse($navigationItemCollection->has('sulu_test'));
+    }
+
+    public function testRemoveNotExistingRoute(): void
+    {
+        $this->expectException(NavigationItemNotFoundException::class);
+
+        $navigationItemCollection = new NavigationItemCollection();
+        $navigationItemCollection->remove('not-existing');
+    }
 }

@@ -15,20 +15,11 @@ use Sulu\Component\Security\Authentication\UserInterface;
 
 abstract class DomainEvent
 {
-    /**
-     * @var \DateTimeImmutable
-     */
-    private $eventDateTime;
+    private \DateTimeImmutable $eventDateTime;
 
-    /**
-     * @var string|null
-     */
-    private $eventBatch;
+    private ?string $eventBatch = null;
 
-    /**
-     * @var UserInterface|null
-     */
-    private $user;
+    private ?UserInterface $user = null;
 
     public function __construct()
     {

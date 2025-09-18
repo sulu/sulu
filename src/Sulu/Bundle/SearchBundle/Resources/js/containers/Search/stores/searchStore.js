@@ -45,7 +45,6 @@ class SearchStore {
     }
 
     @action resetResults() {
-        this.result.splice(0, this.result.length);
         this.page = 1;
         this.pages = undefined;
         this.total = undefined;

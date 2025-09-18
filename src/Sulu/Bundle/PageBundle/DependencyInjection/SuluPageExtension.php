@@ -75,11 +75,6 @@ class SuluPageExtension extends Extension implements PrependExtensionInterface
                                 'detail' => 'sulu_page.get_webspace',
                             ],
                         ],
-                        'icons' => [
-                            'routes' => [
-                                'list' => 'sulu_page.get_icons',
-                            ],
-                        ],
                     ],
                     'field_type_options' => [
                         'selection' => [

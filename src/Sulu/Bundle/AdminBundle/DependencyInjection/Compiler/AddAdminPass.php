@@ -38,6 +38,7 @@ class AddAdminPass implements CompilerPassInterface
 
             /** @var callable $callable */
             $callable = [$class, 'getPriority'];
+            /** @var int $priority */
             $priority = \call_user_func($callable);
 
             $adminServiceDefinitions[$priority][] = $serviceDefinition;

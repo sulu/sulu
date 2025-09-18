@@ -40,12 +40,13 @@
     }
 }
 
-.selectMultipleButtonContainer {
+.blockCollectionActionButtonContainer {
     display: flex;
     justify-content: flex-end;
+    gap: 20px;
 }
 
-.selectMultipleButton {
+.blockCollectionActionButton {
     align-items: center;
     background: none;
     border: none;
@@ -53,12 +54,12 @@
     display: flex;
 }
 
-.selectMultipleButtonIcon {
+.blockCollectionActionButtonIcon {
     display: inline-block;
-    font-size: 18px;
+    font-size: 14px;
     margin-right: 7px;
 }
 
-.selectMultipleButtonText {
+.blockCollectionActionButtonText {
     text-decoration: underline;
 }

@@ -24,6 +24,7 @@ use Sulu\Bundle\RouteBundle\Manager\RouteManager;
 use Sulu\Bundle\RouteBundle\Manager\RouteNotCreatedException;
 use Sulu\Bundle\RouteBundle\Model\RoutableInterface;
 use Sulu\Bundle\RouteBundle\Model\RouteInterface;
+use Sulu\Bundle\RouteBundle\Tests\Unit\TestRoutable;
 
 class RouteManagerTest extends TestCase
 {
@@ -589,33 +590,6 @@ class RouteManagerTest extends TestCase
         $result = $this->manager->createOrUpdateByAttributes($entityClass, $entityId, $locale, $path, true);
 
         $this->assertEquals($resolvedRoute->reveal(), $result);
-    }
-}
-
-class TestRoutable implements RoutableInterface
-{
-    public function __construct(private ?RouteInterface $route = null)
-    {
-    }
-
-    public function getId()
-    {
-        return 1;
-    }
-
-    public function getRoute()
-    {
-        return $this->route;
-    }
-
-    public function setRoute(RouteInterface $route): void
-    {
-        $this->route = $route;
-    }
-
-    public function getLocale()
-    {
-        return 'de';
     }
 }
 

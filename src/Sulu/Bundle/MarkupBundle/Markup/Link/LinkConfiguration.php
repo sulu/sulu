@@ -57,6 +57,20 @@ class LinkConfiguration
     #[Groups(['frontend'])]
     private $icon;
 
+    /**
+     * @var string[]
+     */
+    #[Groups(['frontend'])]
+    private $targets = [
+        '_blank',
+        '_self',
+        '_parent',
+        '_top',
+    ];
+
+    /**
+     * @param array<string>|null $targets
+     */
     public function __construct(
         string $title,
         string $resourceKey,
@@ -64,7 +78,8 @@ class LinkConfiguration
         array $displayProperties,
         string $overlayTitle,
         string $emptyText,
-        string $icon
+        string $icon,
+        ?array $targets = null
     ) {
         $this->title = $title;
         $this->resourceKey = $resourceKey;
@@ -73,5 +88,6 @@ class LinkConfiguration
         $this->overlayTitle = $overlayTitle;
         $this->emptyText = $emptyText;
         $this->icon = $icon;
+        $this->targets = $targets ?? $this->targets;
     }
 }

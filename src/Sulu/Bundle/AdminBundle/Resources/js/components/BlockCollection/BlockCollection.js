@@ -496,6 +496,18 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
         this.mode = 'selectable';
     };
 
+    @action handleClickCollapseAll = () => {
+        this.expandedBlocks.forEach((element, index) => {
+            this.expandedBlocks[index] = false;
+        });
+    };
+
+    @action handleClickExpandAll = () => {
+        this.expandedBlocks.forEach((element, index) => {
+            this.expandedBlocks[index] = true;
+        });
+    };
+
     @action handleBlockToolbarSelectAll = () => {
         this.selectedBlocks.forEach((element, index) => {
             this.selectedBlocks[index] = true;
@@ -547,20 +559,38 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
     };
 
     renderBlockToolbarButton = () => {
+        const allCollapsed = this.expandedBlocks.every((v) => !v);
         return (
-            <div className={blockCollectionStyles.selectMultipleButtonContainer}>
+            <div className={blockCollectionStyles.blockCollectionActionButtonContainer}>
                 <button
-                    className={blockCollectionStyles.selectMultipleButton}
+                    className={blockCollectionStyles.blockCollectionActionButton}
                     onClick={this.handleClickSelectMultiple}
                     type="button"
                 >
                     <Icon
                         aria-hidden={true}
-                        className={blockCollectionStyles.selectMultipleButtonIcon}
-                        name="su-check-circle"
+                        className={blockCollectionStyles.blockCollectionActionButtonIcon}
+                        name="su-check"
                     />
-                    <span className={blockCollectionStyles.selectMultipleButtonText}>
+                    <span className={blockCollectionStyles.blockCollectionActionButtonText}>
                         {translate('sulu_admin.select_multiple_blocks')}
+                    </span>
+                </button>
+                <button
+                    className={blockCollectionStyles.blockCollectionActionButton}
+                    onClick={allCollapsed ? this.handleClickExpandAll : this.handleClickCollapseAll}
+                    type="button"
+                >
+                    <Icon
+                        aria-hidden={true}
+                        className={blockCollectionStyles.blockCollectionActionButtonIcon}
+                        name={allCollapsed ? 'su-expand-vertical' : 'su-collapse-vertical'}
+                    />
+                    <span className={blockCollectionStyles.blockCollectionActionButtonText}>
+                        {allCollapsed
+                            ? translate('sulu_admin.expand_all_blocks')
+                            : translate('sulu_admin.collapse_all_blocks')
+                        }
                     </span>
                 </button>
             </div>

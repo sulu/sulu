@@ -1327,7 +1327,7 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Command/ViewDebugCommand.php
 
 		-
-			message: '#^Parameter \#2 \$array of function implode expects array\|null, mixed given\.$#'
+			message: '#^Parameter \#2 \$array of function implode expects array, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/AdminBundle/Command/ViewDebugCommand.php
@@ -1756,6 +1756,12 @@ parameters:
 			message: '#^Parameter \#2 \$callback of function array_filter expects \(callable\(mixed\)\: bool\)\|null, Closure\(Sulu\\Bundle\\AdminBundle\\Entity\\Collaboration\)\: bool given\.$#'
 			identifier: argument.type
 			count: 2
+			path: src/Sulu/Bundle/AdminBundle/Entity/CollaborationRepository.php
+
+		-
+			message: '#^Possibly invalid array key type mixed\.$#'
+			identifier: offsetAccess.invalidOffset
+			count: 1
 			path: src/Sulu/Bundle/AdminBundle/Entity/CollaborationRepository.php
 
 		-
@@ -2359,6 +2365,12 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/TypedFormMetadata.php
 
 		-
+			message: '#^Possibly invalid array key type mixed\.$#'
+			identifier: offsetAccess.invalidOffset
+			count: 2
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/TypedFormMetadata.php
+
+		-
 			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
 			identifier: foreach.nonIterable
 			count: 1
@@ -2422,6 +2434,12 @@ parameters:
 			message: '#^Parameter \#2 \$locale of method Sulu\\Bundle\\AdminBundle\\Metadata\\FormMetadata\\XmlFormMetadataLoader\:\:getConfigCache\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/XmlFormMetadataLoader.php
+
+		-
+			message: '#^Possibly invalid array key type mixed\.$#'
+			identifier: offsetAccess.invalidOffset
+			count: 2
 			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/XmlFormMetadataLoader.php
 
 		-
@@ -4717,6 +4735,12 @@ parameters:
 			path: src/Sulu/Bundle/AudienceTargetingBundle/DependencyInjection/Compiler/AddRulesPass.php
 
 		-
+			message: '#^Possibly invalid array key type mixed\.$#'
+			identifier: offsetAccess.invalidOffset
+			count: 1
+			path: src/Sulu/Bundle/AudienceTargetingBundle/DependencyInjection/Compiler/AddRulesPass.php
+
+		-
 			message: '#^Method Sulu\\Bundle\\AudienceTargetingBundle\\DependencyInjection\\Configuration\:\:addObjectsSection\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -5143,6 +5167,12 @@ parameters:
 			path: src/Sulu/Bundle/AudienceTargetingBundle/Rule/LocaleRule.php
 
 		-
+			message: '#^Possibly invalid array key type mixed\.$#'
+			identifier: offsetAccess.invalidOffset
+			count: 2
+			path: src/Sulu/Bundle/AudienceTargetingBundle/Rule/LocaleRule.php
+
+		-
 			message: '#^Method Sulu\\Bundle\\AudienceTargetingBundle\\Rule\\OperatingSystemRule\:\:evaluate\(\) has parameter \$options with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -5247,6 +5277,12 @@ parameters:
 		-
 			message: '#^Parameter \#3 \$subject of function str_replace expects array\<string\>\|string, mixed given\.$#'
 			identifier: argument.type
+			count: 1
+			path: src/Sulu/Bundle/AudienceTargetingBundle/Rule/ReferrerRule.php
+
+		-
+			message: '#^Possibly invalid array key type mixed\.$#'
+			identifier: offsetAccess.invalidOffset
 			count: 1
 			path: src/Sulu/Bundle/AudienceTargetingBundle/Rule/ReferrerRule.php
 
@@ -6835,6 +6871,12 @@ parameters:
 			path: src/Sulu/Bundle/AudienceTargetingBundle/Tests/Unit/Rule/TargetGroupEvaluatorTest.php
 
 		-
+			message: '#^Possibly invalid array key type mixed\.$#'
+			identifier: offsetAccess.invalidOffset
+			count: 1
+			path: src/Sulu/Bundle/AudienceTargetingBundle/Tests/Unit/Rule/TargetGroupEvaluatorTest.php
+
+		-
 			message: '#^Parameter \#1 \$addView of method Sulu\\Bundle\\AdminBundle\\Admin\\View\\ListViewBuilderInterface\:\:setAddView\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -8083,6 +8125,12 @@ parameters:
 			path: src/Sulu/Bundle/CategoryBundle/Controller/CategoryController.php
 
 		-
+			message: '#^Possibly invalid array key type mixed\.$#'
+			identifier: offsetAccess.invalidOffset
+			count: 6
+			path: src/Sulu/Bundle/CategoryBundle/Controller/CategoryController.php
+
+		-
 			message: '#^Strict comparison using \!\=\= between false and string will always evaluate to true\.$#'
 			identifier: notIdentical.alwaysTrue
 			count: 1
@@ -8679,7 +8727,7 @@ parameters:
 		-
 			message: '#^Cannot access property \$meta on mixed\.$#'
 			identifier: property.nonObject
-			count: 21
+			count: 23
 			path: src/Sulu/Bundle/CategoryBundle/Tests/Functional/Controller/CategoryControllerTest.php
 
 		-
@@ -8949,7 +8997,7 @@ parameters:
 		-
 			message: '#^Cannot access property \$category_keywords on mixed\.$#'
 			identifier: property.nonObject
-			count: 3
+			count: 4
 			path: src/Sulu/Bundle/CategoryBundle/Tests/Functional/Controller/KeywordControllerTest.php
 
 		-
@@ -13027,12 +13075,6 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Contact\\AbstractContactManager\:\:createAddress\(\) never assigns null to &\$isMain so it can be removed from the by\-ref type\.$#'
-			identifier: parameterByRef.unusedType
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\ContactBundle\\Contact\\AbstractContactManager\:\:deleteAddresses\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -13311,12 +13353,6 @@ parameters:
 		-
 			message: '#^Method Sulu\\Bundle\\ContactBundle\\Contact\\AbstractContactManager\:\:setMainUrl\(\) has no return type specified\.$#'
 			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Contact\\AbstractContactManager\:\:updateAddress\(\) never assigns null to &\$isMain so it can be removed from the by\-ref type\.$#'
-			identifier: parameterByRef.unusedType
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
 
@@ -14209,30 +14245,6 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Contact/ContactManager.php
 
 		-
-			message: '#^Call to an undefined method Sulu\\Bundle\\PageBundle\\Content\\Types\\Email\:\:getAccounts\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/ContactManager.php
-
-		-
-			message: '#^Call to an undefined method Sulu\\Bundle\\PageBundle\\Content\\Types\\Email\:\:getContacts\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/ContactManager.php
-
-		-
-			message: '#^Call to an undefined method Sulu\\Bundle\\PageBundle\\Content\\Types\\Phone\:\:getAccounts\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/ContactManager.php
-
-		-
-			message: '#^Call to an undefined method Sulu\\Bundle\\PageBundle\\Content\\Types\\Phone\:\:getContacts\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/ContactManager.php
-
-		-
 			message: '#^Call to function array_key_exists\(\) with ''id'' and \*NEVER\* will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 1
@@ -14260,12 +14272,6 @@ parameters:
 			message: '#^Cannot access offset ''id'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/ContactManager.php
-
-		-
-			message: '#^Cannot call method count\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 4
 			path: src/Sulu/Bundle/ContactBundle/Contact/ContactManager.php
 
 		-
@@ -17331,7 +17337,7 @@ parameters:
 		-
 			message: '#^Cannot access property \$addresses on mixed\.$#'
 			identifier: property.nonObject
-			count: 121
+			count: 123
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/AccountControllerTest.php
 
 		-
@@ -18211,12 +18217,6 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/AdminControllerTest.php
 
 		-
-			message: '#^Parameter \#2 \$array of method PHPUnit\\Framework\\Assert\:\:assertArrayHasKey\(\) expects array\<mixed\>\|ArrayAccess\<\(int\|string\), mixed\>, non\-empty\-array\|ArrayAccess given\.$#'
-			identifier: argument.type
-			count: 3
-			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/AdminControllerTest.php
-
-		-
 			message: '#^Binary operation "\." between ''/api/contacts/'' and mixed results in an error\.$#'
 			identifier: binaryOp.invalid
 			count: 24
@@ -18351,7 +18351,7 @@ parameters:
 		-
 			message: '#^Cannot access property \$addresses on mixed\.$#'
 			identifier: property.nonObject
-			count: 92
+			count: 93
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/ContactControllerTest.php
 
 		-
@@ -21529,6 +21529,12 @@ parameters:
 			path: src/Sulu/Bundle/CoreBundle/DependencyInjection/SuluCoreExtension.php
 
 		-
+			message: '#^Possibly invalid array key type mixed\.$#'
+			identifier: offsetAccess.invalidOffset
+			count: 3
+			path: src/Sulu/Bundle/CoreBundle/DependencyInjection/SuluCoreExtension.php
+
+		-
 			message: '#^Binary operation "\." between ''/'' and mixed results in an error\.$#'
 			identifier: binaryOp.invalid
 			count: 1
@@ -22282,18 +22288,6 @@ parameters:
 			message: '#^Parameter \#2 \$array of method PHPUnit\\Framework\\Assert\:\:assertArrayHasKey\(\) expects array\<mixed\>\|ArrayAccess\<\(int\|string\), mixed\>, mixed given\.$#'
 			identifier: argument.type
 			count: 4
-			path: src/Sulu/Bundle/CustomUrlBundle/Tests/Functional/Controller/CustomUrlControllerTest.php
-
-		-
-			message: '#^Parameter \#2 \$array of method PHPUnit\\Framework\\Assert\:\:assertArrayHasKey\(\) expects array\<mixed\>\|ArrayAccess\<\(int\|string\), mixed\>, non\-empty\-array\|ArrayAccess given\.$#'
-			identifier: argument.type
-			count: 4
-			path: src/Sulu/Bundle/CustomUrlBundle/Tests/Functional/Controller/CustomUrlControllerTest.php
-
-		-
-			message: '#^Parameter \#2 \$array of method PHPUnit\\Framework\\Assert\:\:assertArrayNotHasKey\(\) expects array\<mixed\>\|ArrayAccess\<\(int\|string\), mixed\>, non\-empty\-array\|ArrayAccess given\.$#'
-			identifier: argument.type
-			count: 3
 			path: src/Sulu/Bundle/CustomUrlBundle/Tests/Functional/Controller/CustomUrlControllerTest.php
 
 		-
@@ -23215,6 +23209,12 @@ parameters:
 			path: src/Sulu/Bundle/DocumentManagerBundle/DependencyInjection/Compiler/RegisterListenersPass.php
 
 		-
+			message: '#^Possibly invalid array key type mixed\.$#'
+			identifier: offsetAccess.invalidOffset
+			count: 4
+			path: src/Sulu/Bundle/DocumentManagerBundle/DependencyInjection/Compiler/RegisterListenersPass.php
+
+		-
 			message: '#^Property Sulu\\Bundle\\DocumentManagerBundle\\DependencyInjection\\Compiler\\ExtractingEventDispatcher\:\:\$aliases has no type specified\.$#'
 			identifier: missingType.property
 			count: 1
@@ -23473,6 +23473,12 @@ parameters:
 			path: src/Sulu/Bundle/DocumentManagerBundle/Reference/Provider/AbstractDocumentReferenceProvider.php
 
 		-
+			message: '#^Possibly invalid array key type mixed\.$#'
+			identifier: offsetAccess.invalidOffset
+			count: 1
+			path: src/Sulu/Bundle/DocumentManagerBundle/Reference/Subscriber/DocumentReferenceSubscriber.php
+
+		-
 			message: '#^Property Sulu\\Bundle\\DocumentManagerBundle\\Reference\\Subscriber\\DocumentReferenceSubscriber\:\:\$documentReferenceProviders \(array\<string, Sulu\\Bundle\\DocumentManagerBundle\\Reference\\Provider\\DocumentReferenceProviderInterface\>\) does not accept array\<Sulu\\Bundle\\DocumentManagerBundle\\Reference\\Provider\\DocumentReferenceProviderInterface\>\.$#'
 			identifier: assign.propertyType
 			count: 1
@@ -23493,12 +23499,6 @@ parameters:
 		-
 			message: '#^Argument of an invalid type DOMNodeList\<DOMNode\>\|false supplied for foreach, only iterables are supported\.$#'
 			identifier: foreach.nonIterable
-			count: 1
-			path: src/Sulu/Bundle/DocumentManagerBundle/Session/Session.php
-
-		-
-			message: '#^Parameter \#1 \$source of method DOMDocument\:\:loadXML\(\) expects string, string\|false given\.$#'
-			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/DocumentManagerBundle/Session/Session.php
 
@@ -25003,6 +25003,12 @@ parameters:
 			path: src/Sulu/Bundle/LocationBundle/Geolocator/Service/GoogleGeolocator.php
 
 		-
+			message: '#^Possibly invalid array key type mixed\.$#'
+			identifier: offsetAccess.invalidOffset
+			count: 3
+			path: src/Sulu/Bundle/LocationBundle/Geolocator/Service/GoogleGeolocator.php
+
+		-
 			message: '#^Cannot access offset ''statuscode'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
@@ -25357,6 +25363,12 @@ parameters:
 			path: src/Sulu/Bundle/MarkupBundle/DependencyInjection/CompilerPass/ParserCompilerPass.php
 
 		-
+			message: '#^Possibly invalid array key type mixed\.$#'
+			identifier: offsetAccess.invalidOffset
+			count: 1
+			path: src/Sulu/Bundle/MarkupBundle/DependencyInjection/CompilerPass/ParserCompilerPass.php
+
+		-
 			message: '#^Cannot access offset ''tag'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
@@ -25378,6 +25390,12 @@ parameters:
 			message: '#^Parameter \#2 \$array of function array_key_exists expects array, mixed given\.$#'
 			identifier: argument.type
 			count: 1
+			path: src/Sulu/Bundle/MarkupBundle/DependencyInjection/CompilerPass/TagCompilerPass.php
+
+		-
+			message: '#^Possibly invalid array key type mixed\.$#'
+			identifier: offsetAccess.invalidOffset
+			count: 4
 			path: src/Sulu/Bundle/MarkupBundle/DependencyInjection/CompilerPass/TagCompilerPass.php
 
 		-
@@ -25487,12 +25505,6 @@ parameters:
 			identifier: property.onlyWritten
 			count: 1
 			path: src/Sulu/Bundle/MarkupBundle/Markup/Link/LinkConfiguration.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\MarkupBundle\\Markup\\Link\\LinkConfigurationBuilder\:\:create\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/MarkupBundle/Markup/Link/LinkConfigurationBuilder.php
 
 		-
 			message: '#^Binary operation "\." between mixed and ''\-'' results in an error\.$#'
@@ -25627,6 +25639,12 @@ parameters:
 			path: src/Sulu/Bundle/MarkupBundle/Markup/LinkTag.php
 
 		-
+			message: '#^Possibly invalid array key type mixed\.$#'
+			identifier: offsetAccess.invalidOffset
+			count: 2
+			path: src/Sulu/Bundle/MarkupBundle/Markup/LinkTag.php
+
+		-
 			message: '#^Method Sulu\\Bundle\\MarkupBundle\\Markup\\TagMatchGroup\:\:__construct\(\) has parameter \$tags with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -25729,22 +25747,10 @@ parameters:
 			path: src/Sulu/Bundle/MarkupBundle/Tests/Unit/Markup/HtmlTagExtractorTest.php
 
 		-
-			message: '#^Call to an undefined method Sulu\\Bundle\\MarkupBundle\\Markup\\Link\\LinkProviderInterface\:\:reveal\(\)\.$#'
-			identifier: method.notFound
+			message: '#^Possibly invalid array key type mixed\.$#'
+			identifier: offsetAccess.invalidOffset
 			count: 1
-			path: src/Sulu/Bundle/MarkupBundle/Tests/Unit/Markup/Link/LinkProviderPoolTest.php
-
-		-
-			message: '#^Cannot call method willReturn\(\) on Sulu\\Bundle\\MarkupBundle\\Markup\\Link\\LinkConfiguration\|null\.$#'
-			identifier: method.nonObject
-			count: 3
-			path: src/Sulu/Bundle/MarkupBundle/Tests/Unit/Markup/Link/LinkProviderPoolTest.php
-
-		-
-			message: '#^Property Sulu\\Bundle\\MarkupBundle\\Tests\\Unit\\Markup\\Link\\LinkProviderPoolTest\:\:\$providers \(array\<Sulu\\Bundle\\MarkupBundle\\Markup\\Link\\LinkProviderInterface\>\) does not accept array\<string, Prophecy\\Prophecy\\ObjectProphecy\<Sulu\\Bundle\\MarkupBundle\\Markup\\Link\\LinkProviderInterface\>\>\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: src/Sulu/Bundle/MarkupBundle/Tests/Unit/Markup/Link/LinkProviderPoolTest.php
+			path: src/Sulu/Bundle/MarkupBundle/Tests/Unit/Markup/HtmlTagExtractorTest.php
 
 		-
 			message: '#^Cannot access offset ''href'' on mixed\.$#'
@@ -25798,6 +25804,12 @@ parameters:
 			message: '#^Parameter \#2 \$subject of function preg_split expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
+			path: src/Sulu/Bundle/MarkupBundle/Tests/Unit/Markup/LinkTagTest.php
+
+		-
+			message: '#^Possibly invalid array key type mixed\.$#'
+			identifier: offsetAccess.invalidOffset
+			count: 2
 			path: src/Sulu/Bundle/MarkupBundle/Tests/Unit/Markup/LinkTagTest.php
 
 		-
@@ -28315,6 +28327,12 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/DependencyInjection/AbstractImageFormatCompilerPass.php
 
 		-
+			message: '#^Possibly invalid array key type mixed\.$#'
+			identifier: offsetAccess.invalidOffset
+			count: 1
+			path: src/Sulu/Bundle/MediaBundle/DependencyInjection/AbstractImageFormatCompilerPass.php
+
+		-
 			message: '#^Property Sulu\\Bundle\\MediaBundle\\DependencyInjection\\AbstractImageFormatCompilerPass\:\:\$globalOptions type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -29377,12 +29395,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Entity/MediaRepositoryInterface.php
 
 		-
-			message: '#^Call to an undefined method Doctrine\\Persistence\\Mapping\\ClassMetadata\<object\>\:\:mapManyToMany\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/EventListener/MediaAudienceTargetingSubscriber.php
-
-		-
 			message: '#^Left side of && is always true\.$#'
 			identifier: booleanAnd.leftAlwaysTrue
 			count: 1
@@ -29397,12 +29409,6 @@ parameters:
 		-
 			message: '#^Method Sulu\\Bundle\\MediaBundle\\EventListener\\MediaAudienceTargetingSubscriber\:\:loadClassMetadata\(\) has parameter \$event with generic class Doctrine\\Persistence\\Event\\LoadClassMetadataEventArgs but does not specify its types\: TClassMetadata, TObjectManager$#'
 			identifier: missingType.generics
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/EventListener/MediaAudienceTargetingSubscriber.php
-
-		-
-			message: '#^PHPDoc tag @var has invalid value \(\$metadata ClassMetadataInfo\)\: Unexpected token "\$metadata", expected type at offset 9 on line 1$#'
-			identifier: phpDoc.parseError
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/EventListener/MediaAudienceTargetingSubscriber.php
 
@@ -29647,7 +29653,7 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Media/FormatLoader/BaseXmlFormatLoader.php
 
 		-
-			message: '#^Cannot access property \$nodeValue on \(TNode of DOMNode\)\|null\.$#'
+			message: '#^Cannot access property \$nodeValue on DOMAttr\|null\.$#'
 			identifier: property.nonObject
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Media/FormatLoader/BaseXmlFormatLoader.php
@@ -29661,12 +29667,6 @@ parameters:
 		-
 			message: '#^Cannot access property \$nodeValue on mixed\.$#'
 			identifier: property.nonObject
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Media/FormatLoader/BaseXmlFormatLoader.php
-
-		-
-			message: '#^Cannot call method getNamedItem\(\) on \(DOMNamedNodeMap&iterable\<DOMAttr\>\)\|null\.$#'
-			identifier: method.nonObject
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Media/FormatLoader/BaseXmlFormatLoader.php
 
@@ -30070,6 +30070,12 @@ parameters:
 			message: '#^Parameter \#3 \$format of method Sulu\\Bundle\\MediaBundle\\Media\\FormatCache\\FormatCacheInterface\:\:purge\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
+			path: src/Sulu/Bundle/MediaBundle/Media/FormatManager/FormatManager.php
+
+		-
+			message: '#^Possibly invalid array key type mixed\.$#'
+			identifier: offsetAccess.invalidOffset
+			count: 2
 			path: src/Sulu/Bundle/MediaBundle/Media/FormatManager/FormatManager.php
 
 		-
@@ -31321,6 +31327,12 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Media/TypeManager/TypeManager.php
 
 		-
+			message: '#^Possibly invalid array key type mixed\.$#'
+			identifier: offsetAccess.invalidOffset
+			count: 3
+			path: src/Sulu/Bundle/MediaBundle/Media/TypeManager/TypeManager.php
+
+		-
 			message: '#^Property Sulu\\Bundle\\MediaBundle\\Media\\TypeManager\\TypeManager\:\:\$blockedMimeTypes is never read, only written\.$#'
 			identifier: property.onlyWritten
 			count: 1
@@ -32188,6 +32200,12 @@ parameters:
 			message: '#^Parameter \#2 \.\.\.\$arrays of function array_merge expects array, mixed given\.$#'
 			identifier: argument.type
 			count: 1
+			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/CollectionControllerTest.php
+
+		-
+			message: '#^Possibly invalid array key type mixed\.$#'
+			identifier: offsetAccess.invalidOffset
+			count: 3
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/CollectionControllerTest.php
 
 		-
@@ -33709,6 +33727,12 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Entity/CollectionRepositoryTest.php
 
 		-
+			message: '#^Possibly invalid array key type mixed\.$#'
+			identifier: offsetAccess.invalidOffset
+			count: 4
+			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Entity/CollectionRepositoryTest.php
+
+		-
 			message: '#^Property Sulu\\Bundle\\MediaBundle\\Tests\\Functional\\Entity\\CollectionRepositoryTest\:\:\$collectionData type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -34051,6 +34075,12 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Entity/MediaDataProviderRepositoryTest.php
 
 		-
+			message: '#^Possibly invalid array key type mixed\.$#'
+			identifier: offsetAccess.invalidOffset
+			count: 3
+			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Entity/MediaDataProviderRepositoryTest.php
+
+		-
 			message: '#^Property Sulu\\Bundle\\MediaBundle\\Tests\\Functional\\Entity\\MediaDataProviderRepositoryTest\:\:\$em \(Doctrine\\ORM\\EntityManager\) does not accept Doctrine\\ORM\\EntityManagerInterface\.$#'
 			identifier: assign.propertyType
 			count: 1
@@ -34270,6 +34300,12 @@ parameters:
 			message: '#^Parameter \#4 \$user of method Sulu\\Bundle\\MediaBundle\\Entity\\MediaRepository\:\:findMedia\(\) expects Sulu\\Component\\Security\\Authentication\\UserInterface\|null, mixed given\.$#'
 			identifier: argument.type
 			count: 3
+			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Entity/MediaRepositoryTest.php
+
+		-
+			message: '#^Possibly invalid array key type mixed\.$#'
+			identifier: offsetAccess.invalidOffset
+			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Entity/MediaRepositoryTest.php
 
 		-
@@ -36511,6 +36547,12 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Command/WebspaceCopyCommand.php
 
 		-
+			message: '#^Method Sulu\\Bundle\\PageBundle\\Command\\WebspaceCopyCommand\:\:updateLinkSelection\(\) has parameter \$structureArray with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Sulu/Bundle/PageBundle/Command/WebspaceCopyCommand.php
+
+		-
 			message: '#^Method Sulu\\Bundle\\PageBundle\\Command\\WebspaceCopyCommand\:\:updatePageSelection\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -36627,7 +36669,7 @@ parameters:
 		-
 			message: '#^Parameter \#1 \$uuid of method Sulu\\Bundle\\PageBundle\\Command\\WebspaceCopyCommand\:\:getTargetDocumentDestination\(\) expects string, mixed given\.$#'
 			identifier: argument.type
-			count: 5
+			count: 6
 			path: src/Sulu/Bundle/PageBundle/Command/WebspaceCopyCommand.php
 
 		-
@@ -36650,6 +36692,12 @@ parameters:
 
 		-
 			message: '#^Parameter \#2 \$property of method Sulu\\Bundle\\PageBundle\\Command\\WebspaceCopyCommand\:\:updateHtmlSuluLinks\(\) expects Sulu\\Component\\Content\\Metadata\\PropertyMetadata, Sulu\\Component\\Content\\Metadata\\ItemMetadata given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Sulu/Bundle/PageBundle/Command/WebspaceCopyCommand.php
+
+		-
+			message: '#^Parameter \#2 \$property of method Sulu\\Bundle\\PageBundle\\Command\\WebspaceCopyCommand\:\:updateLinkSelection\(\) expects Sulu\\Component\\Content\\Metadata\\PropertyMetadata, Sulu\\Component\\Content\\Metadata\\ItemMetadata given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Command/WebspaceCopyCommand.php
@@ -36883,6 +36931,12 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Content/PageSelectionContainer.php
 
 		-
+			message: '#^Possibly invalid array key type mixed\.$#'
+			identifier: offsetAccess.invalidOffset
+			count: 1
+			path: src/Sulu/Bundle/PageBundle/Content/PageSelectionContainer.php
+
+		-
 			message: '#^Property Sulu\\Bundle\\PageBundle\\Content\\PageSelectionContainer\:\:\$data \(array\<Sulu\\Component\\Content\\Compat\\StructureInterface\>\) does not accept mixed\.$#'
 			identifier: assign.propertyType
 			count: 1
@@ -37071,6 +37125,12 @@ parameters:
 		-
 			message: '#^Parameter \#1 \$key of function array_key_exists expects int\|string, mixed given\.$#'
 			identifier: argument.type
+			count: 1
+			path: src/Sulu/Bundle/PageBundle/Content/Structure/ExcerptValueContainer.php
+
+		-
+			message: '#^Possibly invalid array key type mixed\.$#'
+			identifier: offsetAccess.invalidOffset
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Content/Structure/ExcerptValueContainer.php
 
@@ -37443,12 +37503,6 @@ parameters:
 		-
 			message: '#^Parameter \#3 \$subject of function str_replace expects array\<string\>\|string, mixed given\.$#'
 			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Content/Types/SegmentSelect.php
-
-		-
-			message: '#^Possibly invalid array key type \(list\<string\>\|string\)\.$#'
-			identifier: offsetAccess.invalidOffset
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Content/Types/SegmentSelect.php
 
@@ -37903,7 +37957,7 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Controller/ResourcelocatorController.php
 
 		-
-			message: '#^Parameter \#2 \$array of function implode expects array\|null, string given\.$#'
+			message: '#^Parameter \#2 \$array of function implode expects array, string given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Controller/ResourcelocatorController.php
@@ -38144,12 +38198,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#3 \$subject of function str_replace expects array\<string\>\|string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Controller/VersionController.php
-
-		-
-			message: '#^Parameter \#3 \$version of method Sulu\\Component\\DocumentManager\\DocumentManagerInterface\:\:restore\(\) expects string, list\<string\>\|string given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Controller/VersionController.php
@@ -39097,12 +39145,6 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Form/Type/UnstructuredType.php
 
 		-
-			message: '#^Cannot call method getLinkConfiguration\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Markup/Link/PageLinkProvider.php
-
-		-
 			message: '#^Cannot call method getSecurity\(\) on Sulu\\Component\\Webspace\\Webspace\|null\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -39111,54 +39153,6 @@ parameters:
 		-
 			message: '#^Cannot call method hasWebsiteSecurity\(\) on Sulu\\Component\\Webspace\\Webspace\|null\.$#'
 			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Markup/Link/PageLinkProvider.php
-
-		-
-			message: '#^Cannot call method setDisplayProperties\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Markup/Link/PageLinkProvider.php
-
-		-
-			message: '#^Cannot call method setEmptyText\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Markup/Link/PageLinkProvider.php
-
-		-
-			message: '#^Cannot call method setIcon\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Markup/Link/PageLinkProvider.php
-
-		-
-			message: '#^Cannot call method setListAdapter\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Markup/Link/PageLinkProvider.php
-
-		-
-			message: '#^Cannot call method setOverlayTitle\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Markup/Link/PageLinkProvider.php
-
-		-
-			message: '#^Cannot call method setResourceKey\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Markup/Link/PageLinkProvider.php
-
-		-
-			message: '#^Cannot call method setTitle\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Markup/Link/PageLinkProvider.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Markup\\Link\\PageLinkProvider\:\:getConfiguration\(\) should return Sulu\\Bundle\\MarkupBundle\\Markup\\Link\\LinkConfiguration\|null but returns mixed\.$#'
-			identifier: return.type
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Markup/Link/PageLinkProvider.php
 
@@ -39763,6 +39757,12 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Repository/NodeRepository.php
 
 		-
+			message: '#^Possibly invalid array key type mixed\.$#'
+			identifier: offsetAccess.invalidOffset
+			count: 3
+			path: src/Sulu/Bundle/PageBundle/Repository/NodeRepository.php
+
+		-
 			message: '#^Method Sulu\\Bundle\\PageBundle\\Repository\\NodeRepositoryInterface\:\:copyLocale\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -40069,12 +40069,6 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201510210733.php
 
 		-
-			message: '#^Cannot access offset float\|int\|string on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201510210733.php
-
-		-
 			message: '#^Cannot call method get\(\) on Symfony\\Component\\DependencyInjection\\ContainerInterface\|null\.$#'
 			identifier: method.nonObject
 			count: 5
@@ -40204,12 +40198,6 @@ parameters:
 			message: '#^Cannot access an offset on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 2
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511171538.php
-
-		-
-			message: '#^Cannot access offset float\|int\|string on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
 			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511171538.php
 
 		-
@@ -40417,12 +40405,6 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511240843.php
 
 		-
-			message: '#^Cannot access offset float\|int\|string on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511240843.php
-
-		-
 			message: '#^Cannot call method format\(\) on string\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -40591,6 +40573,12 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511240843.php
 
 		-
+			message: '#^Possibly invalid array key type mixed\.$#'
+			identifier: offsetAccess.invalidOffset
+			count: 1
+			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511240843.php
+
+		-
 			message: '#^Variable \$blockProperties in empty\(\) is never defined\.$#'
 			identifier: empty.variable
 			count: 1
@@ -40642,12 +40630,6 @@ parameters:
 			message: '#^Cannot access offset ''type'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 2
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511240844.php
-
-		-
-			message: '#^Cannot access offset float\|int\|string on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
 			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511240844.php
 
 		-
@@ -40773,6 +40755,12 @@ parameters:
 		-
 			message: '#^Parameter \#2 \$structureName of method Sulu\\Bundle\\PageBundle\\Version201511240844\:\:findUrlBlockProperties\(\) expects string, float\|int\|string given\.$#'
 			identifier: argument.type
+			count: 1
+			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511240844.php
+
+		-
+			message: '#^Possibly invalid array key type mixed\.$#'
+			identifier: offsetAccess.invalidOffset
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511240844.php
 
@@ -42193,6 +42181,12 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Teaser/TeaserManager.php
 
 		-
+			message: '#^Possibly invalid array key type mixed\.$#'
+			identifier: offsetAccess.invalidOffset
+			count: 6
+			path: src/Sulu/Bundle/PageBundle/Teaser/TeaserManager.php
+
+		-
 			message: '#^Method Sulu\\Bundle\\PageBundle\\Teaser\\TeaserManagerInterface\:\:find\(\) has parameter \$items with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -42379,15 +42373,21 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Command/WebspaceCopyCommandTest.php
 
 		-
+			message: '#^Cannot access offset ''href'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 4
+			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Command/WebspaceCopyCommandTest.php
+
+		-
 			message: '#^Cannot access offset ''id'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 3
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Command/WebspaceCopyCommandTest.php
 
 		-
-			message: '#^Cannot access offset ''items'' on mixed\.$#'
+			message: '#^Cannot access offset ''link_to_page'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 3
+			count: 1
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Command/WebspaceCopyCommandTest.php
 
 		-
@@ -42399,7 +42399,7 @@ parameters:
 		-
 			message: '#^Cannot access offset 0 on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
+			count: 3
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Command/WebspaceCopyCommandTest.php
 
 		-
@@ -42542,12 +42542,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#2 \$array of method PHPUnit\\Framework\\Assert\:\:assertArrayHasKey\(\) expects array\<mixed\>\|ArrayAccess\<\(int\|string\), mixed\>, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Compat/StructureBridgeSerializationTest.php
-
-		-
-			message: '#^Parameter \#2 \$array of method PHPUnit\\Framework\\Assert\:\:assertArrayHasKey\(\) expects array\<mixed\>\|ArrayAccess\<\(int\|string\), mixed\>, non\-empty\-array\|ArrayAccess given\.$#'
 			identifier: argument.type
 			count: 2
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Compat/StructureBridgeSerializationTest.php
@@ -43035,7 +43029,7 @@ parameters:
 		-
 			message: '#^Cannot access offset ''title'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 16
+			count: 14
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/PageControllerFieldsTest.php
 
 		-
@@ -43132,6 +43126,12 @@ parameters:
 			message: '#^Binary operation "\." between non\-falsy\-string and mixed results in an error\.$#'
 			identifier: binaryOp.invalid
 			count: 2
+			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/PageControllerTest.php
+
+		-
+			message: '#^Call to method PHPUnit\\Framework\\Assert\:\:assertArrayHasKey\(\) with ''contentLocales'' and non\-empty\-array will always evaluate to true\.$#'
+			identifier: method.alreadyNarrowedType
+			count: 1
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/PageControllerTest.php
 
 		-
@@ -43639,21 +43639,9 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/PageControllerTest.php
 
 		-
-			message: '#^Parameter \#2 \$array of method PHPUnit\\Framework\\Assert\:\:assertArrayHasKey\(\) expects array\<mixed\>\|ArrayAccess\<\(int\|string\), mixed\>, non\-empty\-array\|ArrayAccess given\.$#'
-			identifier: argument.type
-			count: 14
-			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/PageControllerTest.php
-
-		-
 			message: '#^Parameter \#2 \$array of method PHPUnit\\Framework\\Assert\:\:assertArrayNotHasKey\(\) expects array\<mixed\>\|ArrayAccess\<\(int\|string\), mixed\>, mixed given\.$#'
 			identifier: argument.type
 			count: 4
-			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/PageControllerTest.php
-
-		-
-			message: '#^Parameter \#2 \$array of method PHPUnit\\Framework\\Assert\:\:assertArrayNotHasKey\(\) expects array\<mixed\>\|ArrayAccess\<\(int\|string\), mixed\>, non\-empty\-array\|ArrayAccess given\.$#'
-			identifier: argument.type
-			count: 5
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/PageControllerTest.php
 
 		-
@@ -44659,6 +44647,12 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Export/WebspaceExportTest.php
 
 		-
+			message: '#^Possibly invalid array key type mixed\.$#'
+			identifier: offsetAccess.invalidOffset
+			count: 2
+			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Export/WebspaceExportTest.php
+
+		-
 			message: '#^Property Sulu\\Bundle\\PageBundle\\Tests\\Functional\\Export\\WebspaceExportTest\:\:\$creator is never written, only read\.$#'
 			identifier: property.onlyRead
 			count: 1
@@ -45289,12 +45283,6 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Mapper/ContentMapperTest.php
 
 		-
-			message: '#^Cannot access offset ''news\-en'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Mapper/ContentMapperTest.php
-
-		-
 			message: '#^Cannot access offset ''nodeType'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
@@ -45303,7 +45291,7 @@ parameters:
 		-
 			message: '#^Cannot access offset ''root'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 4
+			count: 3
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Mapper/ContentMapperTest.php
 
 		-
@@ -45970,12 +45958,6 @@ parameters:
 			message: '#^Call to method PHPUnit\\Framework\\Assert\:\:assertSame\(\) with array\{uuid\: string, hasChildren\: true, children\: null, permissions\: non\-empty\-array\<array\{view\: false, add\: false, edit\: true, delete\: false\}\|array\{view\: false, add\: true, edit\: false, delete\: false\}\|array\{view\: true, add\: false, edit\: false, delete\: false, archive\: true\}\>\} and array\{uuid\: string, hasChildren\: bool, children\: array\<Sulu\\Component\\Content\\Repository\\Content\>, permissions\: array\} will always evaluate to false\.$#'
 			identifier: method.impossibleType
 			count: 2
-			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Repository/ContentRepositoryTest.php
-
-		-
-			message: '#^Cannot access offset ''title'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Repository/ContentRepositoryTest.php
 
 		-
@@ -47653,12 +47635,6 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/SmartContent/QueryBuilderTest.php
 
 		-
-			message: '#^Cannot access offset string on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Tests/Functional/SmartContent/QueryBuilderTest.php
-
-		-
 			message: '#^Cannot call method bind\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -47815,6 +47791,12 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/SmartContent/QueryBuilderTest.php
 
 		-
+			message: '#^Possibly invalid array key type mixed\.$#'
+			identifier: offsetAccess.invalidOffset
+			count: 4
+			path: src/Sulu/Bundle/PageBundle/Tests/Functional/SmartContent/QueryBuilderTest.php
+
+		-
 			message: '#^Property Sulu\\Bundle\\PageBundle\\Tests\\Functional\\SmartContent\\QueryBuilderTest\:\:\$contentQuery \(Sulu\\Component\\Content\\Query\\ContentQueryExecutor\) does not accept object\.$#'
 			identifier: assign.propertyType
 			count: 1
@@ -47872,6 +47854,12 @@ parameters:
 			message: '#^Parameter \#3 \$namespace of method Sulu\\Component\\Content\\Extension\\AbstractExtension\:\:setLanguageCode\(\) expects string, null given\.$#'
 			identifier: argument.type
 			count: 4
+			path: src/Sulu/Bundle/PageBundle/Tests/Unit/Content/Structure/SeoStructureExtensionTest.php
+
+		-
+			message: '#^Possibly invalid array key type mixed\.$#'
+			identifier: offsetAccess.invalidOffset
+			count: 5
 			path: src/Sulu/Bundle/PageBundle/Tests/Unit/Content/Structure/SeoStructureExtensionTest.php
 
 		-
@@ -49843,6 +49831,12 @@ parameters:
 			path: src/Sulu/Bundle/RouteBundle/DependencyInjection/RouteGeneratorCompilerPass.php
 
 		-
+			message: '#^Possibly invalid array key type mixed\.$#'
+			identifier: offsetAccess.invalidOffset
+			count: 3
+			path: src/Sulu/Bundle/RouteBundle/DependencyInjection/RouteGeneratorCompilerPass.php
+
+		-
 			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
 			identifier: foreach.nonIterable
 			count: 1
@@ -49900,6 +49894,12 @@ parameters:
 			message: '#^Parameter \#2 \$value of method Symfony\\Component\\DependencyInjection\\Container\:\:setParameter\(\) expects array\|bool\|float\|int\|string\|UnitEnum\|null, mixed given\.$#'
 			identifier: argument.type
 			count: 1
+			path: src/Sulu/Bundle/RouteBundle/DependencyInjection/SuluRouteExtension.php
+
+		-
+			message: '#^Possibly invalid array key type mixed\.$#'
+			identifier: offsetAccess.invalidOffset
+			count: 2
 			path: src/Sulu/Bundle/RouteBundle/DependencyInjection/SuluRouteExtension.php
 
 		-
@@ -50125,6 +50125,12 @@ parameters:
 			path: src/Sulu/Bundle/RouteBundle/Generator/ChainRouteGenerator.php
 
 		-
+			message: '#^Possibly invalid array key type mixed\.$#'
+			identifier: offsetAccess.invalidOffset
+			count: 1
+			path: src/Sulu/Bundle/RouteBundle/Generator/ChainRouteGenerator.php
+
+		-
 			message: '#^Method Sulu\\Bundle\\RouteBundle\\Generator\\NullRouteGenerator\:\:generate\(\) should return string but returns null\.$#'
 			identifier: return.type
 			count: 1
@@ -50161,13 +50167,7 @@ parameters:
 			path: src/Sulu/Bundle/RouteBundle/Generator/SymfonyExpressionTokenProvider.php
 
 		-
-			message: '#^Parameter \#1 \$locale of method Symfony\\Contracts\\Translation\\LocaleAwareInterface\:\:setLocale\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/RouteBundle/Generator/SymfonyExpressionTokenProvider.php
-
-		-
-			message: '#^Parameter \#1 \$separator of function implode expects array\|string, mixed given\.$#'
+			message: '#^Parameter \#1 \$separator of function implode expects array, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/RouteBundle/Generator/SymfonyExpressionTokenProvider.php
@@ -50228,12 +50228,6 @@ parameters:
 
 		-
 			message: '#^Method Sulu\\Bundle\\RouteBundle\\Model\\RoutableInterface\:\:getId\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/RouteBundle/Model/RoutableInterface.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\RouteBundle\\Model\\RoutableInterface\:\:setRoute\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
 			path: src/Sulu/Bundle/RouteBundle/Model/RoutableInterface.php
@@ -50385,6 +50379,12 @@ parameters:
 		-
 			message: '#^Parameter \#1 \$key of function array_key_exists expects int\|string, mixed given\.$#'
 			identifier: argument.type
+			count: 1
+			path: src/Sulu/Bundle/RouteBundle/Routing/Defaults/RouteDefaultsProvider.php
+
+		-
+			message: '#^Possibly invalid array key type mixed\.$#'
+			identifier: offsetAccess.invalidOffset
 			count: 1
 			path: src/Sulu/Bundle/RouteBundle/Routing/Defaults/RouteDefaultsProvider.php
 
@@ -50653,18 +50653,6 @@ parameters:
 			path: src/Sulu/Bundle/RouteBundle/Tests/Unit/Generator/ChainRouteGeneratorTest.php
 
 		-
-			message: '#^Access to an undefined property Prophecy\\Prophecy\\ObjectProphecy\<Sulu\\Bundle\\RouteBundle\\Model\\RoutableInterface\>\:\:\$getLocale\.$#'
-			identifier: property.notFound
-			count: 3
-			path: src/Sulu/Bundle/RouteBundle/Tests/Unit/Generator/SymfonyExpressionTokenProviderTest.php
-
-		-
-			message: '#^Access to an undefined property Prophecy\\Prophecy\\ObjectProphecy\<Sulu\\Bundle\\RouteBundle\\Model\\RoutableInterface\>\:\:\$name\.$#'
-			identifier: property.notFound
-			count: 1
-			path: src/Sulu/Bundle/RouteBundle/Tests/Unit/Generator/SymfonyExpressionTokenProviderTest.php
-
-		-
 			message: '#^Cannot access offset 0 on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 2
@@ -50675,18 +50663,6 @@ parameters:
 			identifier: argument.type
 			count: 2
 			path: src/Sulu/Bundle/RouteBundle/Tests/Unit/Generator/SymfonyExpressionTokenProviderTest.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\RouteBundle\\Tests\\Unit\\Manager\\TestRoutable\:\:getId\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/RouteBundle/Tests/Unit/Manager/RouteManagerTest.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\RouteBundle\\Tests\\Unit\\Manager\\TestRoutable\:\:getRoute\(\) should return Sulu\\Bundle\\RouteBundle\\Model\\RouteInterface but returns Sulu\\Bundle\\RouteBundle\\Model\\RouteInterface\|null\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Sulu/Bundle/RouteBundle/Tests/Unit/Manager/RouteManagerTest.php
 
 		-
 			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
@@ -51985,6 +51961,12 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/Controller/PermissionController.php
 
 		-
+			message: '#^Possibly invalid array key type mixed\.$#'
+			identifier: offsetAccess.invalidOffset
+			count: 5
+			path: src/Sulu/Bundle/SecurityBundle/Controller/PermissionController.php
+
+		-
 			message: '#^Property Sulu\\Bundle\\SecurityBundle\\Controller\\PermissionController\:\:\$roleRepository is never read, only written\.$#'
 			identifier: property.onlyWritten
 			count: 1
@@ -52299,7 +52281,7 @@ parameters:
 		-
 			message: '#^Cannot access offset ''id'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 5
+			count: 4
 			path: src/Sulu/Bundle/SecurityBundle/Controller/RoleController.php
 
 		-
@@ -52711,31 +52693,7 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/DataFixtures/ORM/LoadSecurityTypes.php
 
 		-
-			message: '#^Cannot call method setId\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/DataFixtures/ORM/LoadSecurityTypes.php
-
-		-
-			message: '#^Cannot call method setName\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/DataFixtures/ORM/LoadSecurityTypes.php
-
-		-
-			message: '#^PHPDoc tag @var has invalid value \(\$child \\DOMNode\)\: Unexpected token "\$child", expected type at offset 9 on line 1$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/DataFixtures/ORM/LoadSecurityTypes.php
-
-		-
-			message: '#^PHPDoc tag @var has invalid value \(\$element \\DOMNode\)\: Unexpected token "\$element", expected type at offset 9 on line 1$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/DataFixtures/ORM/LoadSecurityTypes.php
-
-		-
-			message: '#^Parameter \#1 \$object of method Doctrine\\Persistence\\ObjectManager\:\:persist\(\) expects object, mixed given\.$#'
+			message: '#^Parameter \#1 \$id of method Sulu\\Bundle\\SecurityBundle\\Entity\\SecurityType\:\:setId\(\) expects int, string given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/DataFixtures/ORM/LoadSecurityTypes.php
@@ -53397,7 +53355,7 @@ parameters:
 		-
 			message: '#^Class Symfony\\Component\\Security\\Core\\Event\\AuthenticationFailureEvent not found\.$#'
 			identifier: class.notFound
-			count: 1
+			count: 2
 			path: src/Sulu/Bundle/SecurityBundle/EventListener/AuhenticationFailureListener.php
 
 		-
@@ -53753,12 +53711,6 @@ parameters:
 			identifier: missingType.return
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Serializer/Subscriber/SecuritySubscriber.php
-
-		-
-			message: '#^Cannot access offset ''state'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/SingleSignOn/Adapter/OpenId/OpenIdSingleSignOnAdapter.php
 
 		-
 			message: '#^Instanceof between Sulu\\Bundle\\SecurityBundle\\Entity\\User and Sulu\\Bundle\\SecurityBundle\\Entity\\User will always evaluate to true\.$#'
@@ -54901,6 +54853,12 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/Tests/Unit/Controller/PermissionControllerTest.php
 
 		-
+			message: '#^Possibly invalid array key type mixed\.$#'
+			identifier: offsetAccess.invalidOffset
+			count: 1
+			path: src/Sulu/Bundle/SecurityBundle/Tests/Unit/Controller/PermissionControllerTest.php
+
+		-
 			message: '#^Property Sulu\\Bundle\\SecurityBundle\\Tests\\Unit\\Controller\\PermissionControllerTest\:\:\$resources type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -55903,12 +55861,6 @@ parameters:
 			path: src/Sulu/Bundle/SnippetBundle/Admin/SnippetAdmin.php
 
 		-
-			message: '#^Cannot access offset string on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/SnippetBundle/Admin/SnippetAdmin.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\SnippetBundle\\Admin\\SnippetAdmin\:\:getGlobalSnippetsSecurityContext\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -56626,6 +56578,12 @@ parameters:
 			message: '#^Parameter \#4 \$locale of method Sulu\\Bundle\\SnippetBundle\\Snippet\\DefaultSnippetManagerInterface\:\:save\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
+			path: src/Sulu/Bundle/SnippetBundle/Controller/SnippetAreaController.php
+
+		-
+			message: '#^Possibly invalid array key type mixed\.$#'
+			identifier: offsetAccess.invalidOffset
+			count: 2
 			path: src/Sulu/Bundle/SnippetBundle/Controller/SnippetAreaController.php
 
 		-
@@ -59095,6 +59053,12 @@ parameters:
 			path: src/Sulu/Bundle/SnippetBundle/Tests/Unit/Snippet/SnippetResolverTest.php
 
 		-
+			message: '#^Possibly invalid array key type mixed\.$#'
+			identifier: offsetAccess.invalidOffset
+			count: 3
+			path: src/Sulu/Bundle/SnippetBundle/Tests/Unit/Snippet/SnippetResolverTest.php
+
+		-
 			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
 			identifier: foreach.nonIterable
 			count: 1
@@ -59401,7 +59365,7 @@ parameters:
 			path: src/Sulu/Bundle/TagBundle/Content/Types/TagSelection.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\TagBundle\\Controller\\Exception\\ConstraintViolationException\:\:toArray\(\) should return array\{code\: int, message\: string\} but returns array\{code\: mixed, message\: mixed, field\: string\}\.$#'
+			message: '#^Method Sulu\\Bundle\\TagBundle\\Controller\\Exception\\ConstraintViolationException\:\:toArray\(\) should return array\{code\: int, message\: string\} but returns array\{code\: mixed, message\: string, field\: string\}\.$#'
 			identifier: return.type
 			count: 1
 			path: src/Sulu/Bundle/TagBundle/Controller/Exception/ConstraintViolationException.php
@@ -59533,12 +59497,6 @@ parameters:
 			path: src/Sulu/Bundle/TagBundle/DependencyInjection/SuluTagExtension.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\TagBundle\\Entity\\TagRepository\:\:findAllTags\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/TagBundle/Entity/TagRepository.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\TagBundle\\Entity\\TagRepository\:\:findTagById\(\) should return Sulu\\Bundle\\TagBundle\\Tag\\TagInterface\|null but returns mixed\.$#'
 			identifier: return.type
 			count: 1
@@ -59589,12 +59547,6 @@ parameters:
 		-
 			message: '#^Method Sulu\\Bundle\\TagBundle\\Tag\\TagManager\:\:delete\(\) has no return type specified\.$#'
 			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/TagBundle/Tag/TagManager.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\TagBundle\\Tag\\TagManager\:\:findAll\(\) should return array\<Sulu\\Bundle\\TagBundle\\Tag\\TagInterface\> but returns array\.$#'
-			identifier: return.type
 			count: 1
 			path: src/Sulu/Bundle/TagBundle/Tag/TagManager.php
 
@@ -59771,12 +59723,6 @@ parameters:
 			identifier: missingType.iterableValue
 			count: 1
 			path: src/Sulu/Bundle/TagBundle/Tag/TagManagerInterface.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\TagBundle\\Tag\\TagRepositoryInterface\:\:findAllTags\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/TagBundle/Tag/TagRepositoryInterface.php
 
 		-
 			message: '#^Cannot access property \$form on mixed\.$#'
@@ -60769,12 +60715,6 @@ parameters:
 			path: src/Sulu/Bundle/TrashBundle/Tests/Functional/UserInterface/Controller/Admin/TrashItemControllerTest.php
 
 		-
-			message: '#^Parameter \#2 \$array of static method PHPUnit\\Framework\\Assert\:\:assertArrayNotHasKey\(\) expects array\<mixed\>\|ArrayAccess\<\(int\|string\), mixed\>, non\-empty\-array\|ArrayAccess given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/TrashBundle/Tests/Functional/UserInterface/Controller/Admin/TrashItemControllerTest.php
-
-		-
 			message: '#^Parameter \#2 \$haystack of static method PHPUnit\\Framework\\Assert\:\:assertCount\(\) expects Countable\|iterable, mixed given\.$#'
 			identifier: argument.type
 			count: 2
@@ -61531,6 +61471,12 @@ parameters:
 			path: src/Sulu/Bundle/WebsiteBundle/DataCollector/SuluCollector.php
 
 		-
+			message: '#^Possibly invalid array key type mixed\.$#'
+			identifier: offsetAccess.invalidOffset
+			count: 1
+			path: src/Sulu/Bundle/WebsiteBundle/DataCollector/SuluCollector.php
+
+		-
 			message: '#^Call to function array_key_exists\(\) with ''SuluTrashBundle'' and array\{FrameworkBundle\: string, TwigBundle\: string, MonologBundle\: string, SuluCoreBundle\: string, DoctrineBundle\: string, DoctrineFixturesBundle\: string, DoctrinePHPCRBundle\: string, StofDoctrineExtensionsBundle\: string, \.\.\.\} will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 1
@@ -61987,20 +61933,8 @@ parameters:
 			path: src/Sulu/Bundle/WebsiteBundle/EventListener/SegmentSubscriber.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\WebsiteBundle\\EventListener\\TranslatorListener\:\:__construct\(\) has parameter \$translator with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/EventListener/TranslatorListener.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\WebsiteBundle\\EventListener\\TranslatorListener\:\:onKernelRequest\(\) has no return type specified\.$#'
 			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/EventListener/TranslatorListener.php
-
-		-
-			message: '#^Property Sulu\\Bundle\\WebsiteBundle\\EventListener\\TranslatorListener\:\:\$translator \(Symfony\\Contracts\\Translation\\LocaleAwareInterface\) does not accept mixed\.$#'
-			identifier: assign.propertyType
 			count: 1
 			path: src/Sulu/Bundle/WebsiteBundle/EventListener/TranslatorListener.php
 
@@ -62821,6 +62755,12 @@ parameters:
 			path: src/Sulu/Bundle/WebsiteBundle/Resolver/TemplateAttributeResolver.php
 
 		-
+			message: '#^Possibly invalid array key type mixed\.$#'
+			identifier: offsetAccess.invalidOffset
+			count: 2
+			path: src/Sulu/Bundle/WebsiteBundle/Resolver/TemplateAttributeResolver.php
+
+		-
 			message: '#^Property Sulu\\Bundle\\WebsiteBundle\\Resolver\\TemplateAttributeResolver\:\:\$enabledTwigAttributes type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -62986,6 +62926,12 @@ parameters:
 			message: '#^Parameter \#3 \$requirements of class Symfony\\Component\\Routing\\Route constructor expects array\<string\|Stringable\>, array given\.$#'
 			identifier: argument.type
 			count: 1
+			path: src/Sulu/Bundle/WebsiteBundle/Routing/PortalLoader.php
+
+		-
+			message: '#^Possibly invalid array key type mixed\.$#'
+			identifier: offsetAccess.invalidOffset
+			count: 2
 			path: src/Sulu/Bundle/WebsiteBundle/Routing/PortalLoader.php
 
 		-
@@ -64387,6 +64333,12 @@ parameters:
 			path: src/Sulu/Bundle/WebsiteBundle/Tests/Unit/EventListener/SegmentSubscriberTest.php
 
 		-
+			message: '#^Possibly invalid array key type mixed\.$#'
+			identifier: offsetAccess.invalidOffset
+			count: 3
+			path: src/Sulu/Bundle/WebsiteBundle/Tests/Unit/EventListener/SegmentSubscriberTest.php
+
+		-
 			message: '#^Method RequestAnalyzerResolverTest\:\:prepareWebspaceManager\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -65017,6 +64969,12 @@ parameters:
 			path: src/Sulu/Bundle/WebsiteBundle/Twig/Content/ContentTwigExtension.php
 
 		-
+			message: '#^Possibly invalid array key type mixed\.$#'
+			identifier: offsetAccess.invalidOffset
+			count: 2
+			path: src/Sulu/Bundle/WebsiteBundle/Twig/Content/ContentTwigExtension.php
+
+		-
 			message: '#^Property Sulu\\Bundle\\WebsiteBundle\\Twig\\Content\\ContentTwigExtension\:\:\$securityChecker \(Sulu\\Component\\Security\\Authorization\\SecurityCheckerInterface\|null\) does not accept mixed\.$#'
 			identifier: assign.propertyType
 			count: 1
@@ -65311,7 +65269,7 @@ parameters:
 			path: src/Sulu/Component/Cache/Memoize.php
 
 		-
-			message: '#^Offset ''function'' on array\{function\: string, line\?\: int, file\?\: string, class\: class\-string, type\?\: ''\-\>''\|''\:\:'', args\?\: array\<mixed\>, object\?\: object\} in isset\(\) always exists and is not nullable\.$#'
+			message: '#^Offset ''function'' on array\{function\: string, line\?\: int, file\?\: string, class\: class\-string, type\?\: ''\-\>''\|''\:\:'', args\?\: list\<mixed\>, object\?\: object\} in isset\(\) always exists and is not nullable\.$#'
 			identifier: isset.offset
 			count: 1
 			path: src/Sulu/Component/Cache/Memoize.php
@@ -66769,6 +66727,12 @@ parameters:
 			path: src/Sulu/Component/Content/Compat/Property.php
 
 		-
+			message: '#^Possibly invalid array key type mixed\.$#'
+			identifier: offsetAccess.invalidOffset
+			count: 1
+			path: src/Sulu/Component/Content/Compat/Property.php
+
+		-
 			message: '#^Property Sulu\\Component\\Content\\Compat\\Property\:\:\$value is never read, only written\.$#'
 			identifier: property.onlyWritten
 			count: 1
@@ -67327,6 +67291,12 @@ parameters:
 			path: src/Sulu/Component/Content/Compat/Structure.php
 
 		-
+			message: '#^Possibly invalid array key type mixed\.$#'
+			identifier: offsetAccess.invalidOffset
+			count: 1
+			path: src/Sulu/Component/Content/Compat/Structure.php
+
+		-
 			message: '#^Property Sulu\\Component\\Content\\Compat\\Structure\:\:\$contentLocales type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -67509,6 +67479,12 @@ parameters:
 		-
 			message: '#^Parameter \#8 \$params of class Sulu\\Component\\Content\\Compat\\Property constructor expects array\<mixed\>, mixed given\.$#'
 			identifier: argument.type
+			count: 1
+			path: src/Sulu/Component/Content/Compat/Structure/LegacyPropertyFactory.php
+
+		-
+			message: '#^Possibly invalid array key type mixed\.$#'
+			identifier: offsetAccess.invalidOffset
 			count: 1
 			path: src/Sulu/Component/Content/Compat/Structure/LegacyPropertyFactory.php
 
@@ -68305,6 +68281,12 @@ parameters:
 			path: src/Sulu/Component/Content/Compat/Structure/StructureBridge.php
 
 		-
+			message: '#^Possibly invalid array key type mixed\.$#'
+			identifier: offsetAccess.invalidOffset
+			count: 3
+			path: src/Sulu/Component/Content/Compat/Structure/StructureBridge.php
+
+		-
 			message: '#^Property Sulu\\Component\\Content\\Compat\\Structure\\StructureBridge\:\:\$loadedProperties type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -68719,6 +68701,12 @@ parameters:
 			path: src/Sulu/Component/Content/Document/Extension/ExtensionContainer.php
 
 		-
+			message: '#^Possibly invalid array key type mixed\.$#'
+			identifier: offsetAccess.invalidOffset
+			count: 5
+			path: src/Sulu/Component/Content/Document/Extension/ExtensionContainer.php
+
+		-
 			message: '#^Property Sulu\\Component\\Content\\Document\\Extension\\ExtensionContainer\:\:\$data \(array\) in isset\(\) is not nullable\.$#'
 			identifier: isset.property
 			count: 1
@@ -68863,6 +68851,12 @@ parameters:
 			path: src/Sulu/Component/Content/Document/Structure/PropertyValue.php
 
 		-
+			message: '#^Possibly invalid array key type mixed\.$#'
+			identifier: offsetAccess.invalidOffset
+			count: 4
+			path: src/Sulu/Component/Content/Document/Structure/PropertyValue.php
+
+		-
 			message: '#^Cannot call method getValue\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -68953,21 +68947,15 @@ parameters:
 			path: src/Sulu/Component/Content/Document/Structure/Structure.php
 
 		-
-			message: '#^Method Sulu\\Component\\Content\\Document\\Structure\\Structure\:\:toArray\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Component/Content/Document/Structure/Structure.php
-
-		-
 			message: '#^Parameter \#1 \$name of method Sulu\\Component\\Content\\Document\\Structure\\Structure\:\:getProperty\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 2
 			path: src/Sulu/Component/Content/Document/Structure/Structure.php
 
 		-
-			message: '#^Property Sulu\\Component\\Content\\Document\\Structure\\Structure\:\:\$properties type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
+			message: '#^Possibly invalid array key type mixed\.$#'
+			identifier: offsetAccess.invalidOffset
+			count: 2
 			path: src/Sulu/Component/Content/Document/Structure/Structure.php
 
 		-
@@ -69020,12 +69008,6 @@ parameters:
 
 		-
 			message: '#^Method Sulu\\Component\\Content\\Document\\Structure\\StructureInterface\:\:setStagedData\(\) has parameter \$stagedData with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Component/Content/Document/Structure/StructureInterface.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Document\\Structure\\StructureInterface\:\:toArray\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
 			path: src/Sulu/Component/Content/Document/Structure/StructureInterface.php
@@ -69819,6 +69801,12 @@ parameters:
 		-
 			message: '#^Parameter \#2 \$haystack of function in_array expects array, mixed given\.$#'
 			identifier: argument.type
+			count: 1
+			path: src/Sulu/Component/Content/Document/Subscriber/SecuritySubscriber.php
+
+		-
+			message: '#^Possibly invalid array key type mixed\.$#'
+			identifier: offsetAccess.invalidOffset
 			count: 1
 			path: src/Sulu/Component/Content/Document/Subscriber/SecuritySubscriber.php
 
@@ -70672,6 +70660,12 @@ parameters:
 			message: '#^Parameter \#1 \$uuids of method Sulu\\Component\\Content\\Export\\WebspaceExport\:\:getPathsByUuids\(\) expects array\<string\>, array given\.$#'
 			identifier: argument.type
 			count: 1
+			path: src/Sulu/Component/Content/Export/WebspaceExport.php
+
+		-
+			message: '#^Possibly invalid array key type mixed\.$#'
+			identifier: offsetAccess.invalidOffset
+			count: 2
 			path: src/Sulu/Component/Content/Export/WebspaceExport.php
 
 		-
@@ -71989,6 +71983,12 @@ parameters:
 			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
 
 		-
+			message: '#^Possibly invalid array key type mixed\.$#'
+			identifier: offsetAccess.invalidOffset
+			count: 6
+			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
+
+		-
 			message: '#^Property Sulu\\Component\\Content\\Mapper\\ContentMapper\:\:\$formFactory is never read, only written\.$#'
 			identifier: property.onlyWritten
 			count: 1
@@ -72111,6 +72111,12 @@ parameters:
 		-
 			message: '#^Method Sulu\\Component\\Content\\Mapper\\Translation\\MultipleTranslatedProperties\:\:setStructureType\(\) has no return type specified\.$#'
 			identifier: missingType.return
+			count: 1
+			path: src/Sulu/Component/Content/Mapper/Translation/MultipleTranslatedProperties.php
+
+		-
+			message: '#^Possibly invalid array key type mixed\.$#'
+			identifier: offsetAccess.invalidOffset
 			count: 1
 			path: src/Sulu/Component/Content/Mapper/Translation/MultipleTranslatedProperties.php
 
@@ -72562,6 +72568,12 @@ parameters:
 			message: '#^Parameter \#1 \$expression of method DOMXPath\:\:query\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 2
+			path: src/Sulu/Component/Content/Metadata/Loader/AbstractLoader.php
+
+		-
+			message: '#^Possibly invalid array key type mixed\.$#'
+			identifier: offsetAccess.invalidOffset
+			count: 7
 			path: src/Sulu/Component/Content/Metadata/Loader/AbstractLoader.php
 
 		-
@@ -73051,13 +73063,19 @@ parameters:
 			path: src/Sulu/Component/Content/Metadata/Loader/StructureXmlLoader.php
 
 		-
+			message: '#^Possibly invalid array key type mixed\.$#'
+			identifier: offsetAccess.invalidOffset
+			count: 2
+			path: src/Sulu/Component/Content/Metadata/Loader/StructureXmlLoader.php
+
+		-
 			message: '#^Property Sulu\\Component\\Content\\Metadata\\Loader\\StructureXmlLoader\:\:\$reservedPropertyNames type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
 			path: src/Sulu/Component/Content/Metadata/Loader/StructureXmlLoader.php
 
 		-
-			message: '#^Argument of an invalid type DOMNamedNodeMap\|null supplied for foreach, only iterables are supported\.$#'
+			message: '#^Argument of an invalid type DOMNamedNodeMap\<DOMAttr\>\|null supplied for foreach, only iterables are supported\.$#'
 			identifier: foreach.nonIterable
 			count: 1
 			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
@@ -73197,7 +73215,7 @@ parameters:
 		-
 			message: '#^Cannot access offset mixed on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 4
+			count: 3
 			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
 
 		-
@@ -73207,9 +73225,9 @@ parameters:
 			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
 
 		-
-			message: '#^Cannot access property \$value on mixed\.$#'
-			identifier: property.nonObject
-			count: 2
+			message: '#^Cannot assign offset mixed to array\<string\>\|string\|null\.$#'
+			identifier: offsetAssign.dimType
+			count: 1
 			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
 
 		-
@@ -73711,6 +73729,12 @@ parameters:
 			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
 
 		-
+			message: '#^Possibly invalid array key type mixed\.$#'
+			identifier: offsetAccess.invalidOffset
+			count: 8
+			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
+
+		-
 			message: '#^Property Sulu\\Component\\Content\\Metadata\\PropertyMetadata\:\:\$defaultComponentName \(string\) does not accept mixed\.$#'
 			identifier: assign.propertyType
 			count: 1
@@ -73935,6 +73959,12 @@ parameters:
 		-
 			message: '#^Method Sulu\\Component\\Content\\Metadata\\PropertyMetadata\:\:setPlaceholders\(\) has parameter \$placeholders with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
+			count: 1
+			path: src/Sulu/Component/Content/Metadata/PropertyMetadata.php
+
+		-
+			message: '#^Possibly invalid array key type mixed\.$#'
+			identifier: offsetAccess.invalidOffset
 			count: 1
 			path: src/Sulu/Component/Content/Metadata/PropertyMetadata.php
 
@@ -74731,6 +74761,12 @@ parameters:
 			path: src/Sulu/Component/Content/Repository/Content.php
 
 		-
+			message: '#^Possibly invalid array key type mixed\.$#'
+			identifier: offsetAccess.invalidOffset
+			count: 1
+			path: src/Sulu/Component/Content/Repository/Content.php
+
+		-
 			message: '#^Property Sulu\\Component\\Content\\Repository\\Content\:\:\$data type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -75094,6 +75130,12 @@ parameters:
 			message: '#^Parameter \#6 \$permissions of method Sulu\\Component\\Content\\Repository\\ContentRepository\:\:resolveContent\(\) expects array, mixed given\.$#'
 			identifier: argument.type
 			count: 2
+			path: src/Sulu/Component/Content/Repository/ContentRepository.php
+
+		-
+			message: '#^Possibly invalid array key type mixed\.$#'
+			identifier: offsetAccess.invalidOffset
+			count: 7
 			path: src/Sulu/Component/Content/Repository/ContentRepository.php
 
 		-
@@ -76108,6 +76150,12 @@ parameters:
 			message: '#^Method Sulu\\Component\\Content\\Tests\\Unit\\Block\\BlockContentTypeTest\:\:prepareSingleBlockProperty\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
+			path: src/Sulu/Component/Content/Tests/Unit/Block/BlockContentTypeTest.php
+
+		-
+			message: '#^Possibly invalid array key type mixed\.$#'
+			identifier: offsetAccess.invalidOffset
+			count: 3
 			path: src/Sulu/Component/Content/Tests/Unit/Block/BlockContentTypeTest.php
 
 		-
@@ -78003,7 +78051,7 @@ parameters:
 		-
 			message: '#^Cannot access offset ''href'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 3
+			count: 2
 			path: src/Sulu/Component/Content/Types/Link.php
 
 		-
@@ -78049,12 +78097,6 @@ parameters:
 			path: src/Sulu/Component/Content/Types/Link.php
 
 		-
-			message: '#^Method Sulu\\Component\\Content\\Types\\Link\:\:getContentData\(\) should return string\|null but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Sulu/Component/Content/Types/Link.php
-
-		-
 			message: '#^Parameter \#1 \$hrefs of method Sulu\\Bundle\\MarkupBundle\\Markup\\Link\\LinkProviderInterface\:\:preload\(\) expects array\<string\>, array\<int, mixed\> given\.$#'
 			identifier: argument.type
 			count: 1
@@ -78068,6 +78110,12 @@ parameters:
 
 		-
 			message: '#^Parameter \#1 \$name of method Sulu\\Bundle\\MarkupBundle\\Markup\\Link\\LinkProviderPoolInterface\:\:getProvider\(\) expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Sulu/Component/Content/Types/Link.php
+
+		-
+			message: '#^Parameter \#1 \$provider of method Sulu\\Component\\Content\\Types\\Link\:\:getReferenceStore\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Component/Content/Types/Link.php
@@ -79087,6 +79135,12 @@ parameters:
 			path: src/Sulu/Component/CustomUrl/Repository/RowsIterator.php
 
 		-
+			message: '#^Possibly invalid array key type mixed\.$#'
+			identifier: offsetAccess.invalidOffset
+			count: 1
+			path: src/Sulu/Component/CustomUrl/Repository/RowsIterator.php
+
+		-
 			message: '#^Property Sulu\\Component\\CustomUrl\\Repository\\RowsIterator\:\:\$targets \(array\<Sulu\\Component\\Content\\Repository\\Content\>\) does not accept array\.$#'
 			identifier: assign.propertyType
 			count: 1
@@ -79885,6 +79939,12 @@ parameters:
 			path: src/Sulu/Component/DocumentManager/DocumentRegistry.php
 
 		-
+			message: '#^Possibly invalid array key type mixed\.$#'
+			identifier: offsetAccess.invalidOffset
+			count: 3
+			path: src/Sulu/Component/DocumentManager/DocumentRegistry.php
+
+		-
 			message: '#^Property Sulu\\Component\\DocumentManager\\DocumentRegistry\:\:\$documentLocaleMap type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -80536,6 +80596,12 @@ parameters:
 			message: '#^Parameter \#2 \.\.\.\$arrays of function array_merge expects array, mixed given\.$#'
 			identifier: argument.type
 			count: 1
+			path: src/Sulu/Component/DocumentManager/Metadata/BaseMetadataFactory.php
+
+		-
+			message: '#^Possibly invalid array key type mixed\.$#'
+			identifier: offsetAccess.invalidOffset
+			count: 6
 			path: src/Sulu/Component/DocumentManager/Metadata/BaseMetadataFactory.php
 
 		-
@@ -81297,6 +81363,12 @@ parameters:
 		-
 			message: '#^Parameter \#3 \$autoRename of method Sulu\\Component\\DocumentManager\\Subscriber\\Behavior\\Path\\AutoNameSubscriber\:\:getName\(\) expects bool, mixed given\.$#'
 			identifier: argument.type
+			count: 2
+			path: src/Sulu/Component/DocumentManager/Subscriber/Behavior/Path/AutoNameSubscriber.php
+
+		-
+			message: '#^Possibly invalid array key type mixed\.$#'
+			identifier: offsetAccess.invalidOffset
 			count: 2
 			path: src/Sulu/Component/DocumentManager/Subscriber/Behavior/Path/AutoNameSubscriber.php
 
@@ -82651,6 +82723,12 @@ parameters:
 			path: src/Sulu/Component/DocumentManager/Tests/Unit/PropertyEncoderTest.php
 
 		-
+			message: '#^Possibly invalid array key type mixed\.$#'
+			identifier: offsetAccess.invalidOffset
+			count: 1
+			path: src/Sulu/Component/DocumentManager/Tests/Unit/PropertyEncoderTest.php
+
+		-
 			message: '#^Call to an undefined method ProxyManager\\Proxy\\GhostObjectInterface\:\:getTitle\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -83703,7 +83781,7 @@ parameters:
 		-
 			message: '#^Method Sulu\\Component\\Import\\Format\\Xliff12\:\:utf8ToCharset\(\) should return string but returns string\|false\.$#'
 			identifier: return.type
-			count: 2
+			count: 1
 			path: src/Sulu/Component/Import/Format/Xliff12.php
 
 		-
@@ -83728,6 +83806,12 @@ parameters:
 			message: '#^Parameter \#3 \$data of method Sulu\\Component\\Import\\Format\\Xliff12\:\:getBlockData\(\) expects array, mixed given\.$#'
 			identifier: argument.type
 			count: 1
+			path: src/Sulu/Component/Import/Format/Xliff12.php
+
+		-
+			message: '#^Possibly invalid array key type mixed\.$#'
+			identifier: offsetAccess.invalidOffset
+			count: 2
 			path: src/Sulu/Component/Import/Format/Xliff12.php
 
 		-
@@ -85759,7 +85843,7 @@ parameters:
 			path: src/Sulu/Component/Rest/Exception/InvalidHashException.php
 
 		-
-			message: '#^Method Sulu\\Component\\Rest\\Exception\\RestException\:\:toArray\(\) should return array\{code\: int, message\: string\} but returns array\{code\: mixed, message\: mixed\}\.$#'
+			message: '#^Method Sulu\\Component\\Rest\\Exception\\RestException\:\:toArray\(\) should return array\{code\: int, message\: string\} but returns array\{code\: mixed, message\: string\}\.$#'
 			identifier: return.type
 			count: 1
 			path: src/Sulu/Component/Rest/Exception/RestException.php
@@ -86308,6 +86392,12 @@ parameters:
 			message: '#^Parameter \#3 \$permission of method Sulu\\Component\\Rest\\ListBuilder\\Doctrine\\DoctrineListBuilder\:\:addAccessControl\(\) expects int, mixed given\.$#'
 			identifier: argument.type
 			count: 1
+			path: src/Sulu/Component/Rest/ListBuilder/Doctrine/DoctrineListBuilder.php
+
+		-
+			message: '#^Possibly invalid array key type mixed\.$#'
+			identifier: offsetAccess.invalidOffset
+			count: 2
 			path: src/Sulu/Component/Rest/ListBuilder/Doctrine/DoctrineListBuilder.php
 
 		-
@@ -87247,6 +87337,12 @@ parameters:
 			path: src/Sulu/Component/Rest/ListBuilder/Metadata/FieldDescriptorFactory.php
 
 		-
+			message: '#^Possibly invalid array key type mixed\.$#'
+			identifier: offsetAccess.invalidOffset
+			count: 4
+			path: src/Sulu/Component/Rest/ListBuilder/Metadata/FieldDescriptorFactory.php
+
+		-
 			message: '#^Argument of an invalid type DOMNodeList\<DOMNode\>\|false supplied for foreach, only iterables are supported\.$#'
 			identifier: foreach.nonIterable
 			count: 5
@@ -87697,6 +87793,12 @@ parameters:
 			path: src/Sulu/Component/Rest/Listing/ListQueryBuilder.php
 
 		-
+			message: '#^Possibly invalid array key type mixed\.$#'
+			identifier: offsetAccess.invalidOffset
+			count: 1
+			path: src/Sulu/Component/Rest/Listing/ListQueryBuilder.php
+
+		-
 			message: '#^Property Sulu\\Component\\Rest\\Listing\\ListQueryBuilder\:\:\$fields type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -87916,6 +88018,12 @@ parameters:
 			message: '#^Parameter \#9 \$joinConditions of class Sulu\\Component\\Rest\\Listing\\ListQueryBuilder constructor expects array\<string\>, array given\.$#'
 			identifier: argument.type
 			count: 1
+			path: src/Sulu/Component/Rest/Listing/ListRepository.php
+
+		-
+			message: '#^Possibly invalid array key type mixed\.$#'
+			identifier: offsetAccess.invalidOffset
+			count: 3
 			path: src/Sulu/Component/Rest/Listing/ListRepository.php
 
 		-
@@ -88186,6 +88294,12 @@ parameters:
 			message: '#^Parameter &\$matchedKey by\-ref type of method Sulu\\Component\\Rest\\RestHelper\:\:findMatchByCallback\(\) expects string, null given\.$#'
 			identifier: parameterByRef.type
 			count: 1
+			path: src/Sulu/Component/Rest/RestHelper.php
+
+		-
+			message: '#^Possibly invalid array key type mixed\.$#'
+			identifier: offsetAccess.invalidOffset
+			count: 2
 			path: src/Sulu/Component/Rest/RestHelper.php
 
 		-
@@ -89917,6 +90031,12 @@ parameters:
 			path: src/Sulu/Component/Security/Authorization/SecurityContextVoter.php
 
 		-
+			message: '#^Possibly invalid array key type mixed\.$#'
+			identifier: offsetAccess.invalidOffset
+			count: 2
+			path: src/Sulu/Component/Security/Authorization/SecurityContextVoter.php
+
+		-
 			message: '#^Cannot call method getUser\(\) on Symfony\\Component\\Security\\Core\\Authentication\\Token\\TokenInterface\|null\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -91375,6 +91495,12 @@ parameters:
 			path: src/Sulu/Component/Symfony/CompilerPass/TaggedServiceCollectorCompilerPass.php
 
 		-
+			message: '#^Possibly invalid array key type mixed\.$#'
+			identifier: offsetAccess.invalidOffset
+			count: 3
+			path: src/Sulu/Component/Symfony/CompilerPass/TaggedServiceCollectorCompilerPass.php
+
+		-
 			message: '#^Cannot access offset ''t1'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
@@ -91927,13 +92053,13 @@ parameters:
 			path: src/Sulu/Component/Util/Tests/Unit/SortUtilsTest.php
 
 		-
-			message: '#^Parameter \#1 \$values of static method Sulu\\Component\\Util\\SortUtils\:\:multisort\(\) expects array, ArrayObject\<int, Sulu\\Component\\Util\\Tests\\Unit\\FoobarTestClass\> given\.$#'
+			message: '#^Parameter \#1 \$values of static method Sulu\\Component\\Util\\SortUtils\:\:multisort\(\) expects array, ArrayObject\<int, \(object\{0\: string, 1\: string\}&stdClass\)\> given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Component/Util/Tests/Unit/SortUtilsTest.php
 
 		-
-			message: '#^Parameter \#1 \$values of static method Sulu\\Component\\Util\\SortUtils\:\:multisort\(\) expects array, ArrayObject\<int, object\{\}&stdClass\> given\.$#'
+			message: '#^Parameter \#1 \$values of static method Sulu\\Component\\Util\\SortUtils\:\:multisort\(\) expects array, ArrayObject\<int, Sulu\\Component\\Util\\Tests\\Unit\\FoobarTestClass\> given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Component/Util/Tests/Unit/SortUtilsTest.php
@@ -92647,14 +92773,8 @@ parameters:
 			path: src/Sulu/Component/Webspace/Loader/BaseXmlFileLoader.php
 
 		-
-			message: '#^Cannot access property \$nodeValue on \(TNode of DOMNode\)\|null\.$#'
+			message: '#^Cannot access property \$nodeValue on DOMAttr\|null\.$#'
 			identifier: property.nonObject
-			count: 1
-			path: src/Sulu/Component/Webspace/Loader/BaseXmlFileLoader.php
-
-		-
-			message: '#^Cannot call method getNamedItem\(\) on \(DOMNamedNodeMap&iterable\<DOMAttr\>\)\|null\.$#'
-			identifier: method.nonObject
 			count: 1
 			path: src/Sulu/Component/Webspace/Loader/BaseXmlFileLoader.php
 
@@ -92767,7 +92887,7 @@ parameters:
 			path: src/Sulu/Component/Webspace/Loader/XmlFileLoader10.php
 
 		-
-			message: '#^Cannot access property \$nodeValue on \(TNode of DOMNode\)\|null\.$#'
+			message: '#^Cannot access property \$nodeValue on DOMAttr\|null\.$#'
 			identifier: property.nonObject
 			count: 5
 			path: src/Sulu/Component/Webspace/Loader/XmlFileLoader10.php
@@ -92779,13 +92899,7 @@ parameters:
 			path: src/Sulu/Component/Webspace/Loader/XmlFileLoader10.php
 
 		-
-			message: '#^Cannot call method getNamedItem\(\) on \(DOMNamedNodeMap&iterable\<DOMAttr\>\)\|null\.$#'
-			identifier: method.nonObject
-			count: 5
-			path: src/Sulu/Component/Webspace/Loader/XmlFileLoader10.php
-
-		-
-			message: '#^Cannot call method getNamedItem\(\) on DOMNamedNodeMap\|null\.$#'
+			message: '#^Cannot call method getNamedItem\(\) on DOMNamedNodeMap\<DOMAttr\>\|null\.$#'
 			identifier: method.nonObject
 			count: 12
 			path: src/Sulu/Component/Webspace/Loader/XmlFileLoader10.php
@@ -93103,13 +93217,13 @@ parameters:
 			path: src/Sulu/Component/Webspace/Loader/XmlFileLoader10.php
 
 		-
-			message: '#^Cannot access property \$nodeValue on \(TNode of DOMNode\)\|null\.$#'
+			message: '#^Cannot access property \$nodeValue on DOMAttr\|null\.$#'
 			identifier: property.nonObject
 			count: 2
 			path: src/Sulu/Component/Webspace/Loader/XmlFileLoader11.php
 
 		-
-			message: '#^Cannot call method getNamedItem\(\) on DOMNamedNodeMap\|null\.$#'
+			message: '#^Cannot call method getNamedItem\(\) on DOMNamedNodeMap\<DOMAttr\>\|null\.$#'
 			identifier: method.nonObject
 			count: 2
 			path: src/Sulu/Component/Webspace/Loader/XmlFileLoader11.php
@@ -93229,7 +93343,7 @@ parameters:
 			path: src/Sulu/Component/Webspace/Manager/WebspaceCollection.php
 
 		-
-			message: '#^Method Sulu\\Component\\Webspace\\Manager\\WebspaceCollection\:\:getPortalInformations\(\) should return array\<Sulu\\Component\\Webspace\\PortalInformation\> but returns \(array\|null\)\.$#'
+			message: '#^Method Sulu\\Component\\Webspace\\Manager\\WebspaceCollection\:\:getPortalInformations\(\) should return array\<Sulu\\Component\\Webspace\\PortalInformation\> but returns array\.$#'
 			identifier: return.type
 			count: 1
 			path: src/Sulu/Component/Webspace/Manager/WebspaceCollection.php
@@ -93285,6 +93399,12 @@ parameters:
 		-
 			message: '#^Parameter \#2 \$callback of function array_filter expects \(callable\(mixed\)\: bool\)\|null, Closure\(Sulu\\Component\\Webspace\\PortalInformation\)\: bool given\.$#'
 			identifier: argument.type
+			count: 1
+			path: src/Sulu/Component/Webspace/Manager/WebspaceCollection.php
+
+		-
+			message: '#^Possibly invalid array key type mixed\.$#'
+			identifier: offsetAccess.invalidOffset
 			count: 1
 			path: src/Sulu/Component/Webspace/Manager/WebspaceCollection.php
 
@@ -93361,21 +93481,9 @@ parameters:
 			path: src/Sulu/Component/Webspace/Manager/WebspaceCollectionBuilder.php
 
 		-
-			message: '#^Offset \*NEVER\* does not exist on array\{\}\.$#'
-			identifier: offsetAccess.notFound
+			message: '#^Parameter \#1 \$array of function uksort contains unresolvable type\.$#'
+			identifier: argument.unresolvableType
 			count: 1
-			path: src/Sulu/Component/Webspace/Manager/WebspaceCollectionBuilder.php
-
-		-
-			message: '#^Parameter \#1 \$array of function uksort expects TArray of array\<TKey of int\|string, T\>, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Webspace/Manager/WebspaceCollectionBuilder.php
-
-		-
-			message: '#^Parameter \#1 \$string of function strlen expects string, TKey of int\|string given\.$#'
-			identifier: argument.type
-			count: 2
 			path: src/Sulu/Component/Webspace/Manager/WebspaceCollectionBuilder.php
 
 		-
@@ -93387,6 +93495,18 @@ parameters:
 		-
 			message: '#^Parameter \#5 \$localization of method Sulu\\Component\\Webspace\\Manager\\WebspaceCollectionBuilder\:\:buildUrlFullMatch\(\) expects Sulu\\Component\\Localization\\Localization, mixed given\.$#'
 			identifier: argument.type
+			count: 1
+			path: src/Sulu/Component/Webspace/Manager/WebspaceCollectionBuilder.php
+
+		-
+			message: '#^Possibly invalid array key type mixed\.$#'
+			identifier: offsetAccess.invalidOffset
+			count: 1
+			path: src/Sulu/Component/Webspace/Manager/WebspaceCollectionBuilder.php
+
+		-
+			message: '#^Property Sulu\\Component\\Webspace\\Manager\\WebspaceCollectionBuilder\:\:\$portalInformations \(array\<array\<Sulu\\Component\\Webspace\\PortalInformation\>\>\) does not accept array\<array\<mixed\>\>\.$#'
+			identifier: assign.propertyType
 			count: 1
 			path: src/Sulu/Component/Webspace/Manager/WebspaceCollectionBuilder.php
 
@@ -94702,6 +94822,12 @@ parameters:
 			message: '#^Parameter \#2 \$haystack of method PHPUnit\\Framework\\Assert\:\:assertCount\(\) expects Countable\|iterable, mixed given\.$#'
 			identifier: argument.type
 			count: 8
+			path: src/Sulu/Component/Webspace/Tests/Unit/Manager/WebspaceCollectionBuilderTest.php
+
+		-
+			message: '#^Possibly invalid array key type mixed\.$#'
+			identifier: offsetAccess.invalidOffset
+			count: 1
 			path: src/Sulu/Component/Webspace/Tests/Unit/Manager/WebspaceCollectionBuilderTest.php
 
 		-

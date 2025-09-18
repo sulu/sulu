@@ -125,14 +125,5 @@ sulu_page.get_teasers:
     requirements:
         _format: json|csv
 
-# Icon
-sulu_page.get_icons:
-    path: '/icons.{_format}'
-    methods: GET
-    controller: 'sulu_admin.icon_controller::cgetAction'
-    format: json
-    requirements:
-        _format: json|csv
-
 sulu_page_api_version:
     resource: "@SuluPageBundle/Resources/config/routing_versioning_api.yaml"

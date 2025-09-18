@@ -235,6 +235,8 @@
     "sulu_admin.select_all": "Select all",
     "sulu_admin.deselect_all": "Deselect all",
     "sulu_admin.select_multiple_blocks": "Select multiple blocks",
+    "sulu_admin.collapse_all_blocks": "Collapse all blocks",
+    "sulu_admin.expand_all_blocks": "Expand all blocks",
     "sulu_admin.%count%_blocks_copied": "{count} {count, plural, =1 {block} other {blocks}} copied to clipboard.",
     "sulu_admin.%count%_blocks_duplicated": "{count} {count, plural, =1 {block} other {blocks}} duplicated.",
     "sulu_admin.%count%_blocks_removed": "{count} {count, plural, =1 {block} other {blocks}} removed.",
