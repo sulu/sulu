@@ -11,8 +11,6 @@
 
 namespace Sulu\Snippet\Infrastructure\Symfony\CompilerPass;
 
-use DOMNodeList;
-use DOMDocument;
 use Sulu\Bundle\AdminBundle\Metadata\XmlParserTrait;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -56,7 +54,7 @@ class SnippetAreaCompilerPass implements CompilerPassInterface
 
         $metaData = [];
         foreach ($files as $file) {
-            $xml = new DOMDocument();
+            $xml = new \DOMDocument();
             $xml->resolveExternals = false;
             $xml->substituteEntities = false;
             $xml->loadXML($file->getContents(), \LIBXML_NONET);
@@ -75,9 +73,9 @@ class SnippetAreaCompilerPass implements CompilerPassInterface
             $metaData[$key] = $element;
         }
 
-        \ksort($areas);
+        \ksort($metaData);
 
-        $container->setParameter(self::SNIPPET_AREA_PARAM, $areas);
+        $container->setParameter(self::SNIPPET_AREA_PARAM, $metaData);
     }
 
     /**
@@ -85,7 +83,7 @@ class SnippetAreaCompilerPass implements CompilerPassInterface
      *
      * @return array<string, string>
      */
-    private function getTitles(array $locales, DOMNodeList $templateTitles): array
+    private function getTitles(array $locales, \DOMNodeList $templateTitles): array
     {
         $titles = [];
 
