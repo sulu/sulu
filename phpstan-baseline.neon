@@ -42375,7 +42375,7 @@ parameters:
 		-
 			message: '#^Cannot access offset ''href'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 3
+			count: 4
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Command/WebspaceCopyCommandTest.php
 
 		-
@@ -42385,9 +42385,9 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Command/WebspaceCopyCommandTest.php
 
 		-
-			message: '#^Cannot access offset ''items'' on mixed\.$#'
+			message: '#^Cannot access offset ''link_to_page'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 3
+			count: 1
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Command/WebspaceCopyCommandTest.php
 
 		-
@@ -42399,7 +42399,7 @@ parameters:
 		-
 			message: '#^Cannot access offset 0 on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
+			count: 3
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Command/WebspaceCopyCommandTest.php
 
 		-
@@ -68965,12 +68965,6 @@ parameters:
 			path: src/Sulu/Component/Content/Document/Structure/Structure.php
 
 		-
-			message: '#^Method Sulu\\Component\\Content\\Document\\Structure\\Structure\:\:toArray\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Component/Content/Document/Structure/Structure.php
-
-		-
 			message: '#^Parameter \#1 \$name of method Sulu\\Component\\Content\\Document\\Structure\\Structure\:\:getProperty\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 2
@@ -68980,12 +68974,6 @@ parameters:
 			message: '#^Possibly invalid array key type mixed\.$#'
 			identifier: offsetAccess.invalidOffset
 			count: 2
-			path: src/Sulu/Component/Content/Document/Structure/Structure.php
-
-		-
-			message: '#^Property Sulu\\Component\\Content\\Document\\Structure\\Structure\:\:\$properties type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
 			path: src/Sulu/Component/Content/Document/Structure/Structure.php
 
 		-
@@ -69038,12 +69026,6 @@ parameters:
 
 		-
 			message: '#^Method Sulu\\Component\\Content\\Document\\Structure\\StructureInterface\:\:setStagedData\(\) has parameter \$stagedData with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Component/Content/Document/Structure/StructureInterface.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Document\\Structure\\StructureInterface\:\:toArray\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
 			path: src/Sulu/Component/Content/Document/Structure/StructureInterface.php

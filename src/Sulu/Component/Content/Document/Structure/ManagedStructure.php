@@ -35,12 +35,12 @@ class ManagedStructure extends Structure
     private $node;
 
     /**
-     * @var PropertyInterface[]
+     * @var array<string, PropertyInterface>
      */
     private $legacyProperties = [];
 
     /**
-     * @var PropertyValue[]
+     * @var array<string, PropertyValue>
      */
     private $propertyValues = [];
 

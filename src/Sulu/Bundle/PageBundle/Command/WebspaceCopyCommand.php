@@ -777,8 +777,11 @@ class WebspaceCopyCommand extends Command
             return $children;
         }
         $tag = $component->getTag('sulu.global_block');
+        if (!\is_array($tag['attributes'] ?? null)) {
+            return $children;
+        }
         $refType = $tag['attributes']['global_block'] ?? null;
-        if (empty($refType)) {
+        if (!\is_string($refType)) {
             return $children;
         }
         $result = $this->structureMetadataFactory->getStructureMetadata('block', $refType);

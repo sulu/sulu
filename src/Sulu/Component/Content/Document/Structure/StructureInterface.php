@@ -56,7 +56,7 @@ interface StructureInterface extends \ArrayAccess
     /**
      * Return an array representation of the containers property values.
      *
-     * @return array
+     * @return array<string, mixed>
      */
     public function toArray();
 

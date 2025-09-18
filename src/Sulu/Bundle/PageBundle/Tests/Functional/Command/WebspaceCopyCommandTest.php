@@ -163,7 +163,8 @@ class WebspaceCopyCommandTest extends SuluTestCase
         $targetDocument3 = $this->documentManager->find('/cmf/test_io/contents', 'es');
         /** @var PageDocument $page2_1 */
         $page2_1 = $this->documentManager->find('/cmf/destination_io/contents/node5', 'es');
-        $structure = $page2_1->getStructure()->toArray()['teasers'];
+        $structure = $page2_1->getStructure()->toArray()['teasers'] ?? [];
+        $this->assertIsArray($structure);
         $this->assertSame($targetDocument1->getUuid(), $structure['items'][0]['id']);
         $this->assertSame($targetDocument2->getUuid(), $structure['items'][1]['id']);
         $this->assertSame($targetDocument3->getUuid(), $structure['items'][2]['id']);
