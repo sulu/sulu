@@ -11,8 +11,8 @@
 
 namespace Sulu\Snippet\Infrastructure\Symfony\CompilerPass;
 
-use Dom\NodeList;
-use Dom\XMLDocument;
+use DOMNodeList;
+use DOMDocument;
 use Sulu\Bundle\AdminBundle\Metadata\XmlParserTrait;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -56,18 +56,21 @@ class SnippetAreaCompilerPass implements CompilerPassInterface
 
         $metaData = [];
         foreach ($files as $file) {
-            $xml = XMLDocument::createFromFile($file);
+            $xml = new DOMDocument();
+            $xml->resolveExternals = false;
+            $xml->substituteEntities = false;
+            $xml->loadXML($file->getContents(), \LIBXML_NONET);
 
             $element = [];
-            foreach ($xml->querySelectorAll('area') as $areaXml) {
+            foreach ($xml->getElementsByTagName('area') as $areaXml) {
                 $element = [
                     'key' => $areaXml->attributes->getNamedItem('key')->textContent,
-                    'template' => $areaXml->querySelector('template')?->textContent,
-                    'title' => $this->getTitles($this->locales, $areaXml->querySelectorAll('meta title')),
-                    'cache-invalidation' => $areaXml->querySelector('cache-invalidation'),
+                    'template' => $areaXml->getElementsByTagName('template')->item(0)?->textContent,
+                    'title' => $this->getTitles($this->locales, $areaXml->getElementsByTagName('title')),
+                    'cache-invalidation' => (bool) $areaXml->attributes->getNamedItem('cache-invalidation'),
                 ];
             }
-            $key = $xml->querySelector('key')->textContent;
+            $key = $xml->getElementsByTagName('key')->item(0)->textContent;
 
             $metaData[$key] = $element;
         }
@@ -82,7 +85,7 @@ class SnippetAreaCompilerPass implements CompilerPassInterface
      *
      * @return array<string, string>
      */
-    private function getTitles(array $locales, NodeList $templateTitles): array
+    private function getTitles(array $locales, DOMNodeList $templateTitles): array
     {
         $titles = [];
 
