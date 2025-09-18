@@ -16,6 +16,7 @@ use Dom\XMLDocument;
 use Sulu\Bundle\AdminBundle\Metadata\XmlParserTrait;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\Finder\Exception\DirectoryNotFoundException;
 use Symfony\Component\Finder\Finder;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -42,8 +43,19 @@ class SnippetAreaCompilerPass implements CompilerPassInterface
     {
         $this->locales = $container->getParameter('sulu_core.locales');
 
+        try {
+            $files = (new Finder())
+                ->in($this->configDirectory)
+                ->files()
+                ->name('*.xml')
+            ;
+        } catch (DirectoryNotFoundException) {
+            // If the directory does not exist we don't have any snippet areas.
+            $container->setParameter(self::SNIPPET_AREA_PARAM, []);
+        }
+
         $metaData = [];
-        foreach (new Finder()->in($this->configDirectory)->files()->name('*.xml') as $file) {
+        foreach ($files as $file) {
             $xml = XMLDocument::createFromFile($file);
 
             $element = [];
