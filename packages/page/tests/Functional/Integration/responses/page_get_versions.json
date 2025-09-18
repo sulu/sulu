@@ -4,7 +4,7 @@
             {
                 "title": "Test Page",
                 "version": "@integer@",
-                "changer": "Max Mustermann",
+                "changer": "@string@",
                 "id": "@string@"
             }
         ]

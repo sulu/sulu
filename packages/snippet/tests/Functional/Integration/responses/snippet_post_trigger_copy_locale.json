@@ -3,8 +3,10 @@
         "en",
         "de"
     ],
-    "changer" : null,
-    "creator" : null,
+    "changed": "@datetime@",
+    "changer" : "@integer@",
+    "created": "@datetime@",
+    "creator" : "@integer@",
     "description": null,
     "excerptCategories": [],
     "excerptDescription": "Excerpt Description",

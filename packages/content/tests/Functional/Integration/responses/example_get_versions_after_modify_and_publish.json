@@ -4,13 +4,13 @@
             {
                 "title": "Test modified version example",
                 "version": "@integer@",
-                "changer": "Max Mustermann",
+                "changer": "@string@",
                 "id": "@integer@"
             },
             {
                 "title": "Test Example",
                 "version": "@integer@",
-                "changer": "Max Mustermann",
+                "changer": "@string@",
                 "id": "@integer@"
             }
         ]

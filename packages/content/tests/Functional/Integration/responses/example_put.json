@@ -1,8 +1,10 @@
 {
     "author": null,
     "authored": "2020-06-09T00:00:00+00:00",
-    "changer" : null,
-    "creator" : null,
+    "changer" : "@integer@",
+    "changed": "@datetime@",
+    "creator" : "@integer@",
+    "created": "@datetime@",
     "article": "<p>Test Article 2</p>",
     "availableLocales": [
         "en",

@@ -4,9 +4,9 @@
             {
                 "author": null,
                 "changed": "@datetime@",
-                "changer": "Max Mustermann",
+                "changer": "@string@",
                 "created": "@datetime@",
-                "creator": "Max Mustermann",
+                "creator": "@string@",
                 "id": "@string@",
                 "publishedState": false,
                 "title": "Test Article 2"

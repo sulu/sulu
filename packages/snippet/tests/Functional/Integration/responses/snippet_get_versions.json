@@ -4,7 +4,7 @@
             {
                 "title": "Test Snippet",
                 "version": "@integer@",
-                "changer": "Max Mustermann",
+                "changer": "@string@",
                 "id": "@string@"
             }
         ]

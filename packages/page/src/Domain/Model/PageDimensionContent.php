@@ -61,6 +61,8 @@ class PageDimensionContent implements PageDimensionContentInterface
     {
         $this->page = $page;
         $this->navigationContexts = new ArrayCollection();
+        $this->created = new \DateTimeImmutable();
+        $this->changed = new \DateTimeImmutable();
     }
 
     /**

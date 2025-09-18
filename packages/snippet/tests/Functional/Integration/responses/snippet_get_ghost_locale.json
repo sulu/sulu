@@ -1,7 +1,9 @@
 {
     "availableLocales": ["en"],
-    "changer" : null,
-    "creator" : null,
+    "changed": "@datetime@",
+    "changer" : "@integer@",
+    "created": "@datetime@",
+    "creator" : "@integer@",
     "excerptCategories": [],
     "excerptDescription": null,
     "excerptIcon": null,

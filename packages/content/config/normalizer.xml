@@ -31,5 +31,9 @@
         <service id="sulu_content.shadow_normalizer" class="Sulu\Content\Application\ContentNormalizer\Normalizer\ShadowNormalizer">
             <tag name="sulu_content.normalizer" priority="4"/>
         </service>
+
+        <service id="sulu_content.auditable_normalizer" class="Sulu\Content\Application\ContentNormalizer\Normalizer\AuditableNormalizer">
+            <tag name="sulu_content.normalizer" priority="2"/>
+        </service>
     </services>
 </container>

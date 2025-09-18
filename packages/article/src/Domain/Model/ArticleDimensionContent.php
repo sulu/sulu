@@ -62,6 +62,8 @@ class ArticleDimensionContent implements ArticleDimensionContentInterface
     public function __construct(ArticleInterface $article)
     {
         $this->article = $article;
+        $this->created = new \DateTimeImmutable();
+        $this->changed = new \DateTimeImmutable();
     }
 
     /**

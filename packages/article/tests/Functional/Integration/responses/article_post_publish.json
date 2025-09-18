@@ -4,11 +4,13 @@
     "availableLocales": [
         "en"
     ],
-    "changer": null,
+    "changed": "@datetime@",
+    "changer": "@integer@",
     "contentLocales": [
         "en"
     ],
-    "creator": null,
+    "created": "@datetime@",
+    "creator": "@integer@",
     "description": null,
     "excerptCategories": [],
     "excerptDescription": "Excerpt Description",

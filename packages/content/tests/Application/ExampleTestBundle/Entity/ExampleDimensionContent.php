@@ -81,6 +81,8 @@ class ExampleDimensionContent implements
     public function __construct(Example $example)
     {
         $this->example = $example;
+        $this->created = new \DateTimeImmutable();
+        $this->changed = new \DateTimeImmutable();
     }
 
     public function getId(): int

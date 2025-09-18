@@ -1,8 +1,10 @@
 {
     "author": null,
     "authored": null,
-    "changer": null,
-    "creator": null,
+    "changed": "@datetime@",
+    "changer": "@integer@",
+    "created": "@datetime@",
+    "creator": "@integer@",
     "availableLocales": ["en"],
     "contentLocales": ["en"],
     "excerptCategories": [],

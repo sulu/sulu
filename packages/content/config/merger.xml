@@ -35,5 +35,9 @@
         <service id="sulu_content.shadow_merger" class="Sulu\Content\Application\ContentMerger\Merger\ShadowMerger">
             <tag name="sulu_content.merger" priority="4"/>
         </service>
+
+        <service id="sulu_content.auditable_merger" class="Sulu\Content\Application\ContentMerger\Merger\AuditableMerger">
+            <tag name="sulu_content.merger" priority="2"/>
+        </service>
     </services>
 </container>

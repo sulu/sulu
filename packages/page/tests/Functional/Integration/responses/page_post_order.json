@@ -1,7 +1,9 @@
 {
     "author": null,
     "authored": null,
+    "changed": "@datetime@",
     "changer": null,
+    "created": "@datetime@",
     "creator": null,
     "availableLocales": [
         "en"

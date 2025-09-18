@@ -51,6 +51,8 @@ class SnippetDimensionContent implements SnippetDimensionContentInterface
     public function __construct(SnippetInterface $snippet)
     {
         $this->snippet = $snippet;
+        $this->created = new \DateTimeImmutable();
+        $this->changed = new \DateTimeImmutable();
     }
 
     /**
