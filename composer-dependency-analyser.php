@@ -64,7 +64,6 @@ return $config
     ->ignoreErrorsOnPackage('doctrine/annotations', [ErrorType::UNUSED_DEPENDENCY])
     ->ignoreErrorsOnPackage('guzzlehttp/promises', [ErrorType::UNUSED_DEPENDENCY]) // required for faster fos http cache clearing
     ->ignoreErrorsOnPackage('nyholm/psr7', [ErrorType::UNUSED_DEPENDENCY]) // required for faster fos http cache clearing
-    ->ignoreErrorsOnPackage('symfony/asset', [ErrorType::UNUSED_DEPENDENCY]) // false positive we use assets
     ->ignoreErrorsOnPackage('symfony/css-selector', [ErrorType::UNUSED_DEPENDENCY]) // we use caches mostly via psr interfaces
     ->ignoreErrorsOnPackage('symfony/proxy-manager-bridge', [ErrorType::UNUSED_DEPENDENCY]) // can only be removed when min symfony version is 6.2
     ->ignoreErrorsOnPackage('symfony/yaml', [ErrorType::UNUSED_DEPENDENCY]) // we use yaml configurations
