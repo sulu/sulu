@@ -21,11 +21,16 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Webmozart\Assert\Assert;
 
+/**
+ * @internal no backwards compatibility promise is given for this class it can be removed, moved or changed at any time
+ *           it still save to add `sulu:admin:validate-build` to your CI and sciprts. The command and its arguments
+ *           are under the backards compatibility promise.
+ */
 #[AsCommand(
     name: 'sulu:admin:validate-build',
     description: 'Validate that the admin build version is the same version as the installed sulu package.',
 )]
-class ValidateBuildCommand extends Command
+final class ValidateBuildCommand extends Command
 {
     public function __construct(
         private Packages $assets,
