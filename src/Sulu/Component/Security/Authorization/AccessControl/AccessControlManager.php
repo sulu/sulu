@@ -190,20 +190,6 @@ class AccessControlManager implements AccessControlManagerInterface
     }
 
     /**
-     * Adds a new AccessControlProvider.
-     *
-     * @deprecated Use the constructor instead
-     *
-     * @param AccessControlProviderInterface $accessControlProvider The AccessControlProvider to add
-     *
-     * @return void
-     */
-    public function addAccessControlProvider(AccessControlProviderInterface $accessControlProvider)
-    {
-        $this->accessControlProviders[] = $accessControlProvider;
-    }
-
-    /**
      * Returns the permissions for the given object for the given user.
      *
      * @param SecurityCondition $securityCondition The condition to check

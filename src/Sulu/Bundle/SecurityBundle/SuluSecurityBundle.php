@@ -12,7 +12,6 @@
 namespace Sulu\Bundle\SecurityBundle;
 
 use Sulu\Bundle\PersistenceBundle\PersistenceBundleTrait;
-use Sulu\Bundle\SecurityBundle\DependencyInjection\Compiler\AccessControlProviderPass;
 use Sulu\Bundle\SecurityBundle\DependencyInjection\Compiler\TwoFactorCompilerPass;
 use Sulu\Component\Security\Authentication\RoleInterface;
 use Sulu\Component\Security\Authentication\RoleSettingInterface;
@@ -40,7 +39,6 @@ final class SuluSecurityBundle extends Bundle
             $container
         );
 
-        $container->addCompilerPass(new AccessControlProviderPass());
         $container->addCompilerPass(new TwoFactorCompilerPass());
 
         parent::build($container);
