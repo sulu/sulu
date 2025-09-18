@@ -50,6 +50,8 @@ class SnippetAreaCompilerPass implements CompilerPassInterface
         } catch (DirectoryNotFoundException) {
             // If the directory does not exist we don't have any snippet areas.
             $container->setParameter(self::SNIPPET_AREA_PARAM, []);
+
+            return;
         }
 
         $metaData = [];
@@ -61,11 +63,10 @@ class SnippetAreaCompilerPass implements CompilerPassInterface
 
             $element = [];
             foreach ($xml->getElementsByTagName('area') as $areaXml) {
-                $element = [
+                $element[] = [
                     'key' => $areaXml->attributes->getNamedItem('key')->textContent,
-                    'template' => $areaXml->getElementsByTagName('template')->item(0)?->textContent,
                     'title' => $this->getTitles($this->locales, $areaXml->getElementsByTagName('title')),
-                    'cache-invalidation' => (bool) $areaXml->attributes->getNamedItem('cache-invalidation'),
+                    'cache-invalidation' => (bool) $areaXml->attributes->getNamedItem('cache-invalidation')?->value,
                 ];
             }
             $key = $xml->getElementsByTagName('key')->item(0)->textContent;

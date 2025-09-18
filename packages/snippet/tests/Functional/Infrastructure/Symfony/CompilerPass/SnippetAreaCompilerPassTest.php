@@ -18,6 +18,20 @@ class SnippetAreaCompilerPassTest extends KernelTestCase
 {
     public function testWithoutAreas(): void
     {
-        dd(self::getContainer()->getParameter(SnippetAreaCompilerPass::SNIPPET_AREA_PARAM));
+        // see packages/snippet/tests/Application/config/templates/snippets/snippet.xml for context
+        $this->assertEquals(
+            [
+                'snippet' => [
+                    'key' => 'with-cache',
+                    'template' => null,
+                    'title' => [
+                        'en' => 'With cache',
+                        'de' => 'Mit cache',
+                    ],
+                    'cache-invalidation' => true,
+                ],
+            ],
+            self::getContainer()->getParameter(SnippetAreaCompilerPass::SNIPPET_AREA_PARAM)
+        );
     }
 }
