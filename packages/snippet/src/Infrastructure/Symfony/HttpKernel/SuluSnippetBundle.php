@@ -50,6 +50,7 @@ use Sulu\Snippet\Infrastructure\Symfony\Normalizer\SnippetAreaNormalizer;
 use Sulu\Snippet\UserInterface\Controller\Admin\SnippetAreaController;
 use Sulu\Snippet\UserInterface\Controller\Admin\SnippetController;
 use Symfony\Component\Config\Definition\Configurator\DefinitionConfigurator;
+use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
@@ -489,6 +490,6 @@ final class SuluSnippetBundle extends AbstractBundle
             'templates',
             'snippets',
         ]);
-        $container->addCompilerPass(new SnippetAreaCompilerPass($configDirectory));
+        $container->addCompilerPass(new SnippetAreaCompilerPass($configDirectory), PassConfig::TYPE_BEFORE_OPTIMIZATION);
     }
 }

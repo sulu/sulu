@@ -21,14 +21,25 @@ class SnippetAreaCompilerPassTest extends KernelTestCase
         // see packages/snippet/tests/Application/config/templates/snippets/snippet.xml for context
         $this->assertEquals(
             [
-                'snippet' => [
-                    'key' => 'with-cache',
-                    'template' => null,
+                'with-cache' => [
                     'title' => [
                         'en' => 'With cache',
                         'de' => 'Mit cache',
                     ],
                     'cache-invalidation' => true,
+                ],
+                'hotel' => [
+                    'title' => [
+                        'en' => 'snippet_type.hotel',
+                        'de' => 'snippet_type.hotel',
+                    ],
+                    'cache-invalidation' => false,
+                ],
+                'test' => [
+                    'title' => [
+                        'en' => 'Menu Social Media Links',
+                    ],
+                    'cache-invalidation' => false,
                 ],
             ],
             self::getContainer()->getParameter(SnippetAreaCompilerPass::SNIPPET_AREA_PARAM)

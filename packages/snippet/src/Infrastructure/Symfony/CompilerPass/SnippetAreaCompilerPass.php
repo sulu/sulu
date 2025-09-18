@@ -40,6 +40,7 @@ class SnippetAreaCompilerPass implements CompilerPassInterface
     public function process(ContainerBuilder $container): void
     {
         $this->locales = $container->getParameter('sulu_core.locales');
+        //$this->translator = $container->get('translator');
 
         try {
             $files = (new Finder())
@@ -54,7 +55,69 @@ class SnippetAreaCompilerPass implements CompilerPassInterface
             return;
         }
 
-        $metaData = [];
+        $keyLocations = [];
+
+        $areas = [];
+        foreach ($this->getAreaIterator($files) as $filePath => $areaXml) {
+            $areaKey = $areaXml->attributes->getNamedItem('key')->textContent;
+
+            // We don't allow duplicate definitions of area keys
+            if (\array_key_exists($areaKey, $keyLocations)) {
+                throw new \InvalidArgumentException(\sprintf(
+                    'Snippet area "%s" need to be unique it is defined in "%s" and "%s"',
+                    $areaKey,
+                    $keyLocations[$areaKey],
+                    $filePath,
+                ));
+            }
+
+            $areas[$areaKey] = [
+                'title' => $this->getTitles($areaXml->getElementsByTagName('title')),
+                'cache-invalidation' => 'true' === $areaXml->attributes->getNamedItem('cache-invalidation')?->value,
+            ];
+
+            $keyLocations[$areaKey] = $filePath;
+        }
+
+        \ksort($areas);
+
+        $container->setParameter(self::SNIPPET_AREA_PARAM, $areas);
+    }
+
+    /**
+     * @param \DOMNodeList<DOMNode|DOMNameSpaceNode> $templateTitles
+     *
+     * @return array<string, string>
+     */
+    private function getTitles(\DOMNodeList $templateTitles): array
+    {
+        $titles = [];
+
+        // If we only have one title and no locale (indexed 0) then it's a translation key
+        if (1 === $templateTitles->length && 0 === $templateTitles->item(0)->attributes->length) {
+            //$translator = $container->get('translator');
+            $titleToTranslate = $templateTitles->item(0)->textContent;
+            foreach ($this->locales as $locale) {
+                $titleToTranslate = \trim($titleToTranslate);
+                // $titles[$locale] = $this->translator->trans($titleToTranslate, [], 'admin', $locale);
+                $titles[$locale] = $titleToTranslate;
+            }
+        } else {
+            foreach ($templateTitles->getIterator() as $title) {
+                $titles[$title->attributes->getNamedItem('lang')->textContent] = \trim($title->textContent);
+            }
+        }
+
+        return $titles;
+    }
+
+    /**
+     * Returns a map of file path to area dom element.
+     *
+     * @return \Generator<string, DOMElement>
+     */
+    private function getAreaIterator(Finder $files): \Generator
+    {
         foreach ($files as $file) {
             $xml = new \DOMDocument();
             $xml->resolveExternals = false;
@@ -63,45 +126,8 @@ class SnippetAreaCompilerPass implements CompilerPassInterface
 
             $element = [];
             foreach ($xml->getElementsByTagName('area') as $areaXml) {
-                $element[] = [
-                    'key' => $areaXml->attributes->getNamedItem('key')->textContent,
-                    'title' => $this->getTitles($this->locales, $areaXml->getElementsByTagName('title')),
-                    'cache-invalidation' => (bool) $areaXml->attributes->getNamedItem('cache-invalidation')?->value,
-                ];
-            }
-            $key = $xml->getElementsByTagName('key')->item(0)->textContent;
-
-            $metaData[$key] = $element;
-        }
-
-        \ksort($metaData);
-
-        $container->setParameter(self::SNIPPET_AREA_PARAM, $metaData);
-    }
-
-    /**
-     * @param array<string> $locales
-     *
-     * @return array<string, string>
-     */
-    private function getTitles(array $locales, \DOMNodeList $templateTitles): array
-    {
-        $titles = [];
-
-        // If we only have one title and no locale (indexed 0) then it's a translation key
-        if (1 === $templateTitles->length && 0 === $templateTitles->item(0)->attributes->length) {
-            //$translator = $container->get('translator');
-            $titleToTranslate = $templateTitles->item(0)->textContent;
-            foreach ($locales as $locale) {
-                // $titles[$locale] = $this->translator->trans($titleToTranslate, [], 'admin', $locale);
-                $titles[$locale] = \trim($titleToTranslate);
-            }
-        } else {
-            foreach ($templateTitles->getIterator() as $title) {
-                $titles[$title->attributes->getNamedItem('lang')->textContent] = $title->textContent;
+                yield $file->getPath => $areaXml;
             }
         }
-
-        return $titles;
     }
 }
