@@ -38,6 +38,9 @@ class UrlGeneratorTest extends KernelTestCase
     #[TestWith(['sulu_snippet.delete_snippet', ['id' => '019905eb-ae9a-7136-93f2-06557330e3ad'], '/admin/api/snippets/019905eb-ae9a-7136-93f2-06557330e3ad'])]
     #[TestWith(['sulu_snippet.post_snippet_trigger', ['id' => '019905eb-ae9a-7136-93f2-06557330e3ad'], '/admin/api/snippets/019905eb-ae9a-7136-93f2-06557330e3ad'])]
     #[TestWith(['sulu_snippet.get_snippet_versions', ['id' => '019905eb-ae9a-7136-93f2-06557330e3ad'], '/admin/api/snippets/019905eb-ae9a-7136-93f2-06557330e3ad/versions'])]
+    #[TestWith(['sulu_snippet_area.get_snippet_areas', [], '/admin/api/snippet-areas'])]
+    #[TestWith(['sulu_snippet_area.put_snippet_area', ['key' => 'test'], '/admin/api/snippet-areas/test'])]
+    #[TestWith(['sulu_snippet_area.delete_snippet_area', ['key' => 'test'], '/admin/api/snippet-areas/test'])]
     public function testRoutes(string $route, array $params, string $expectedUrl): void
     {
         $urlGenerator = static::getContainer()->get(UrlGeneratorInterface::class);

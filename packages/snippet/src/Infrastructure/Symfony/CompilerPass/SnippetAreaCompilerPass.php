@@ -19,7 +19,7 @@ use Symfony\Component\Finder\Finder;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
- * @phpstan-type Entry array{key: string, template: string, title: array<string, string>, cache-invalidation: mixed}
+ * @phpstan-type SnippetAreaConfig array<string, array{title: array<string, string>, cache-invalidation: bool}>
  */
 class SnippetAreaCompilerPass implements CompilerPassInterface
 {

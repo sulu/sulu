@@ -21,12 +21,12 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 
 /**
- * @phpstan-import-type Entry from SnippetAreaCompilerPass
+ * @phpstan-import-type SnippetAreaconfig from SnippetAreaCompilerPass
  */
 final class SnippetAreaNormalizer implements NormalizerInterface
 {
     /**
-     * @param array<string, Entry> $snippetAreas
+     * @param SnippetAreaconfig $snippetAreas
      */
     public function __construct(
         private ObjectNormalizer $objectNormalizer,
@@ -70,7 +70,6 @@ final class SnippetAreaNormalizer implements NormalizerInterface
         $snippet = $data->getSnippet();
         $normalizedData['defaultTitle'] = $this->getTitle($snippet);
         $normalizedData['defaultUuid'] = $snippet?->getId();
-        $normalizedData['template'] = $metaData['template'];
         $normalizedData['title'] = $title;
 
         // Why would this would be false?

@@ -38,14 +38,14 @@ use Webmozart\Assert\Assert;
  *           Use instead a request or response listener to
  *           extend the endpoints behaviours
  *
- * @phpstan-import-type Entry from SnippetAreaCompilerPass
+ * @phpstan-import-type SnippetAreaConfig from SnippetAreaCompilerPass
  */
 final class SnippetAreaController
 {
     use HandleTrait;
 
     /**
-     * @param array<Entry> $snippetArea
+     * @param SnippetAreaConfig $snippetArea
      */
     public function __construct(
         MessageBusInterface $messageBus,
@@ -78,14 +78,11 @@ final class SnippetAreaController
         $snippetAreas = $this->snippetAreaRepository->findByWebspace($webspaceKey);
 
         // Add the empty snippet areas as placeholders
-        foreach ($this->snippetArea as $snippetArea) {
-            $key = $snippetArea['key'];
-            if (!\array_key_exists($key, $snippetAreas)) {
-                $snippetAreas[$key] = new SnippetArea(
-                    areaKey: $snippetArea['key'],
-                    webspaceKey: $webspaceKey,
-                );
-            }
+        foreach ($this->snippetArea as $key) {
+            $snippetAreas[$key] = new SnippetArea(
+                areaKey: $key,
+                webspaceKey: $webspaceKey,
+            );
         }
 
         $listRepresentation = new CollectionRepresentation(
