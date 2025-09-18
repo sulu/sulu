@@ -23,6 +23,8 @@ interface FormatCacheClearerInterface
      *
      * @param string $cache The alias of the cache
      *
+     * @return void
+     *
      * @throws CacheNotFoundException if the cache is not found
      */
     public function clear($cache = null);

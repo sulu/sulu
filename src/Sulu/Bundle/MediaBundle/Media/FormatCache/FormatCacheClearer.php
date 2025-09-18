@@ -31,13 +31,6 @@ class FormatCacheClearer implements FormatCacheClearerInterface
         $this->caches = [...$caches];
     }
 
-    /**
-     * Clear all or the given cache.
-     *
-     * @param string $cache The alias of the cache
-     *
-     * @throws CacheNotFoundException if the cache is not found
-     */
     public function clear($cache = null)
     {
         if (null !== $cache) {
@@ -51,18 +44,5 @@ class FormatCacheClearer implements FormatCacheClearerInterface
                 $cache->clear();
             }
         }
-    }
-
-    /**
-     * Adds a cache to the aggregate.
-     *
-     * @deprecated use the constructor instead
-     *
-     * @param FormatCacheInterface $cache The cache
-     * @param string $alias The cache alias
-     */
-    public function add(FormatCacheInterface $cache, $alias)
-    {
-        $this->caches[$alias] = $cache;
     }
 }

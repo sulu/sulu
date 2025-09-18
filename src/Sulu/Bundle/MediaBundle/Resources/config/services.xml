@@ -161,7 +161,11 @@
             <argument>%sulu_media.entity.file_version_meta%</argument>
         </service>
         <service id="sulu_media.file_validator" class="Sulu\Bundle\MediaBundle\Media\FileValidator\FileValidator" />
-        <service id="sulu_media.format_cache_clearer" class="Sulu\Bundle\MediaBundle\Media\FormatCache\FormatCacheClearer" />
+
+        <service id="sulu_media.format_cache_clearer" class="Sulu\Bundle\MediaBundle\Media\FormatCache\FormatCacheClearer">
+            <argument type="tagged_iterator" tag="sulu_media.format_cache" index-by="alias" />
+        </service>
+
         <service id="sulu_media.format_cache" class="Sulu\Bundle\MediaBundle\Media\FormatCache\LocalFormatCache" public="true">
             <argument type="service" id="filesystem"/>
             <argument>%sulu_media.format_cache.path%</argument>

@@ -23692,12 +23692,6 @@ parameters:
 			message: '#^Cannot access offset ''alias'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
-			path: src/Sulu/Bundle/MediaBundle/DependencyInjection/FormatCacheClearerCompilerPass.php
-
-		-
-			message: '#^Cannot access offset ''alias'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
 			path: src/Sulu/Bundle/MediaBundle/DependencyInjection/ImageTransformationCompilerPass.php
 
 		-
@@ -24743,24 +24737,6 @@ parameters:
 			identifier: missingType.iterableValue
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Media/FileValidator/FileValidatorInterface.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\Media\\FormatCache\\FormatCacheClearer\:\:add\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Media/FormatCache/FormatCacheClearer.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\Media\\FormatCache\\FormatCacheClearer\:\:clear\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Media/FormatCache/FormatCacheClearer.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\Media\\FormatCache\\FormatCacheClearerInterface\:\:clear\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Media/FormatCache/FormatCacheClearerInterface.php
 
 		-
 			message: '#^Method Sulu\\Bundle\\MediaBundle\\Media\\FormatCache\\FormatCacheInterface\:\:analyzedMediaUrl\(\) return type has no value type specified in iterable type array\.$#'
