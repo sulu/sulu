@@ -163,7 +163,6 @@
         "symfony/dotenv": "^5.4 || ^6.0 || ^7.0",
         "symfony/monolog-bundle": "^3.5",
         "symfony/phpunit-bridge": "^5.4 || ^6.0 || ^7.0",
-        "symfony/polyfill-php81": "^1.23",
         "symfony/runtime": "^5.4 || ^6.0 || ^7.0",
         "symfony/stopwatch": "^5.4 || ^6.0 || ^7.0",
         "symfony/var-dumper": "^5.4 || ^6.0 || ^7.0",
