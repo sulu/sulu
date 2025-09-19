@@ -25,8 +25,6 @@ abstract class Admin implements ViewProviderInterface, NavigationProviderInterfa
 
     public const SETTINGS_NAVIGATION_ITEM = 'sulu_admin.settings';
 
-    public const SERVICE_TAG = 'sulu.admin';
-
     public static function getPriority(): int
     {
         return 0;
