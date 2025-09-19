@@ -18,7 +18,6 @@ use Sulu\Component\Localization\Localization;
  */
 interface LocalizationProviderInterface
 {
-
     /**
      * @return Localization[]
      */
