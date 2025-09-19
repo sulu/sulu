@@ -21,7 +21,6 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
  */
 class RegisterLocalizationProvidersPass implements CompilerPassInterface
 {
-    /** @deprecated since 2.6 use Sulu\Component\Localization\Provider\LocalizationProviderInterface::SERVICE_TAG */
     public const LOCALIZATION_PROVIDER_TAG = 'sulu.localization_provider';
 
     public function process(ContainerBuilder $container)
