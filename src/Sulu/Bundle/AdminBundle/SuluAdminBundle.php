@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\AdminBundle;
 
-use Sulu\Bundle\AdminBundle\DependencyInjection\Compiler\AddAdminPass;
 use Sulu\Bundle\AdminBundle\DependencyInjection\Compiler\AddMetadataProviderPass;
 use Sulu\Bundle\AdminBundle\DependencyInjection\Compiler\ExposeResourceRoutesPass;
 use Sulu\Bundle\AdminBundle\DependencyInjection\Compiler\SuluVersionPass;
@@ -29,7 +28,6 @@ final class SuluAdminBundle extends Bundle
         parent::build($container);
 
         $container->addCompilerPass(new SuluVersionPass());
-        $container->addCompilerPass(new AddAdminPass());
         $container->addCompilerPass(new AddMetadataProviderPass());
         $container->addCompilerPass(
             new TaggedServiceCollectorCompilerPass(

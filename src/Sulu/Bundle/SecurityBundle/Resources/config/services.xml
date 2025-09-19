@@ -45,11 +45,11 @@
 
             <tag name="sulu.context" context="admin"/>
         </service>
-        <service id="sulu_security.admin" class="Sulu\Bundle\SecurityBundle\Admin\SecurityAdmin">
+        <service id="sulu_security.admin" class="Sulu\Bundle\SecurityBundle\Admin\SecurityAdmin" lazy="true">
             <argument type="service" id="Sulu\Bundle\AdminBundle\Admin\View\ViewBuilderFactoryInterface"/>
             <argument type="service" id="sulu_security.security_checker"/>
             <argument type="service" id="translator"/>
-            <argument type="service" id="sulu_admin.admin_pool"/>
+            <argument type="service" id="sulu_admin.admin_pool" />
             <argument>%sulu_admin.resources%</argument>
             <tag name="sulu.admin"/>
             <tag name="sulu.context" context="admin"/>

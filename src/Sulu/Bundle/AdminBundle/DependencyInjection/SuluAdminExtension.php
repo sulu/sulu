@@ -12,7 +12,6 @@
 namespace Sulu\Bundle\AdminBundle\DependencyInjection;
 
 use Sulu\Bundle\AdminBundle\Admin\Admin;
-use Sulu\Bundle\AdminBundle\DependencyInjection\Compiler\AddAdminPass;
 use Sulu\Bundle\AdminBundle\Exception\MetadataNotFoundException;
 use Sulu\Bundle\AdminBundle\Exception\MetadataProviderNotFoundException;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadataVisitorInterface;
@@ -178,7 +177,7 @@ class SuluAdminExtension extends Extension implements PrependExtensionInterface
         $loader->load('services.xml');
 
         $container->registerForAutoconfiguration(Admin::class)
-            ->addTag(AddAdminPass::ADMIN_TAG)
+            ->addTag('sulu.admin')
             ->addTag(RemoveForeignContextServicesPass::SULU_CONTEXT_TAG, ['context' => SuluKernel::CONTEXT_ADMIN]);
 
         $container->registerForAutoconfiguration(ListMetadataLoaderInterface::class)

@@ -17,8 +17,6 @@ namespace Sulu\Bundle\AdminBundle\Admin;
 class AdminPool
 {
     /**
-     * The array for all the admin-objects.
-     *
      * @var Admin[]
      */
     private $pool = [];
@@ -29,18 +27,6 @@ class AdminPool
     public function __construct(iterable $admins = [])
     {
         $this->pool = [...$admins];
-    }
-
-    /**
-     * Adds a new admin.
-     *
-     * @param Admin $admin
-     *
-     * @return void
-     */
-    public function addAdmin($admin)
-    {
-        $this->pool[] = $admin;
     }
 
     /**

@@ -34,6 +34,8 @@
         </service>
 
         <service id="sulu_admin.admin_pool" class="Sulu\Bundle\AdminBundle\Admin\AdminPool" public="true">
+            <argument type="tagged_iterator" tag="sulu.admin" default-priority-method="getPriority" />
+
             <tag name="sulu.context" context="admin"/>
         </service>
 

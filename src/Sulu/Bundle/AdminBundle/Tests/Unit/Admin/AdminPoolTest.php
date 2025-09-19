@@ -48,8 +48,7 @@ class AdminPoolTest extends TestCase
         $this->admin1 = $this->prophesize(Admin::class);
         $this->admin2 = $this->prophesize(Admin::class);
 
-        $this->adminPool->addAdmin($this->admin1->reveal());
-        $this->adminPool->addAdmin($this->admin2->reveal());
+        $this->adminPool = new AdminPool([$this->admin1->reveal(), $this->admin2->reveal()]);
     }
 
     public function testAdmins(): void
