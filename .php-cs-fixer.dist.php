@@ -20,7 +20,7 @@ $config
     ->setRiskyAllowed(true)
     ->setParallelConfig(PhpCsFixer\Runner\Parallel\ParallelConfigFactory::detect())
     ->registerCustomFixers([
-        new PhpCsFixer\InternalClassFixer(),
+        new App\PhpCsFixer\InternalClassFixer(),
     ])
     ->setRules([
         '@Symfony' => true,

@@ -231,8 +231,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "App\\": "tests/",
-            "PhpCsFixer\\": "tests/php-cs-fixer/"
+            "App\\": "tests/"
         }
     },
     "scripts": {
