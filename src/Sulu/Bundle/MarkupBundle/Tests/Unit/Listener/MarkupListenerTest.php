@@ -15,7 +15,6 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
-use Psr\Container\ContainerInterface;
 use Sulu\Bundle\MarkupBundle\Listener\MarkupListener;
 use Sulu\Bundle\MarkupBundle\Markup\MarkupParserInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -73,34 +72,7 @@ class MarkupListenerTest extends TestCase
             $this->response->reveal()
         );
 
-        $container = new class([
-            'html' => $this->markupParser->reveal(),
-        ]) implements ContainerInterface {
-            /**
-             * @param array<string,object> $services
-             */
-            public function __construct(private array $services)
-            {
-            }
-
-            /**
-             * @param string $id
-             */
-            public function get($id)
-            {
-                return $this->services[$id];
-            }
-
-            /**
-             * @param string $id
-             */
-            public function has($id): bool
-            {
-                return \array_key_exists($id, $this->services);
-            }
-        };
-
-        $this->listener = new MarkupListener($container);
+        $this->listener = new MarkupListener(['html' => $this->markupParser->reveal()]);
     }
 
     public function testReplaceMarkup(): void
