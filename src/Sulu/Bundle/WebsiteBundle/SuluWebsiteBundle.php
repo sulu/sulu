@@ -14,8 +14,6 @@ namespace Sulu\Bundle\WebsiteBundle;
 use Sulu\Bundle\PersistenceBundle\PersistenceBundleTrait;
 use Sulu\Bundle\WebsiteBundle\DependencyInjection\Compiler\DeregisterDefaultRouteListenerCompilerPass;
 use Sulu\Bundle\WebsiteBundle\Entity\AnalyticsInterface;
-use Sulu\Component\Route\RouteDefaultOptionsCompilerPass;
-use Sulu\Component\Util\SuluVersionPass;
 use Sulu\Route\Infrastructure\Symfony\DependencyInjection\RouteDefaultsOptionsCompilerPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
