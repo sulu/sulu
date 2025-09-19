@@ -20,12 +20,12 @@ use Sulu\Bundle\PreviewBundle\Preview\Provider\PreviewDefaultsProviderInterface;
 class PreviewObjectProviderRegistry implements PreviewObjectProviderRegistryInterface
 {
     /**
-     * @var array<string, PreviewObjectProviderInterface>
+     * @var array<string, PreviewDefaultsProviderInterface>
      */
     private $previewObjectProviders;
 
     /**
-     * @param iterable<string, PreviewObjectProviderInterface> $previewObjectProviders
+     * @param iterable<string, PreviewDefaultsProviderInterface> $previewObjectProviders
      */
     public function __construct(iterable $previewObjectProviders)
     {
