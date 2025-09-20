@@ -4,7 +4,9 @@
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <services>
-        <service id="sulu.core.localization_manager" class="Sulu\Component\Localization\Manager\LocalizationManager" public="true"/>
+        <service id="sulu.core.localization_manager" class="Sulu\Component\Localization\Manager\LocalizationManager" public="true">
+            <argument type="tagged_iterator" tag="sulu.localization_provider" />
+        </service>
         <service id="Sulu\Component\Localization\Manager\LocalizationManagerInterface" alias="sulu.core.localization_manager"/>
     </services>
 </container>
