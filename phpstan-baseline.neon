@@ -4777,18 +4777,6 @@ parameters:
 			path: src/Sulu/Bundle/AudienceTargetingBundle/Controller/TargetGroupEvaluationController.php
 
 		-
-			message: '#^Cannot access offset ''alias'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/AudienceTargetingBundle/DependencyInjection/Compiler/AddRulesPass.php
-
-		-
-			message: '#^Possibly invalid array key type mixed\.$#'
-			identifier: offsetAccess.invalidOffset
-			count: 1
-			path: src/Sulu/Bundle/AudienceTargetingBundle/DependencyInjection/Compiler/AddRulesPass.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\AudienceTargetingBundle\\DependencyInjection\\Configuration\:\:addObjectsSection\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1

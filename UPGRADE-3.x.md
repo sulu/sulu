@@ -744,6 +744,7 @@ Removed classes / services / interfaces / traits:
 - `Sulu\Bundle\SecurityBundle\EventListener\AuhenticationFailureListener` (moved and internal)
 - `Sulu\Bundle\MediaBundle\DependencyInjection\FormatCacheClearerCompilerPass` (use tagged_iterator)
 - `Sulu\Component\Security\Authorization\AccessControl\SecuredEntityRepositoryTrait`
+- `Sulu\Bundle\AudienceTargetingBundle\DependencyInjection\Compiler\AddRulesPass` -> (`sulu.audience_target_rule`)
 
 Removed deprecated functions and properties:
 
