@@ -5293,18 +5293,6 @@ parameters:
 			path: src/Sulu/Bundle/AudienceTargetingBundle/Rule/ReferrerRule.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\AudienceTargetingBundle\\Rule\\RuleCollection\:\:__construct\(\) has parameter \$rules with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/AudienceTargetingBundle/Rule/RuleCollection.php
-
-		-
-			message: '#^Property Sulu\\Bundle\\AudienceTargetingBundle\\Rule\\RuleCollection\:\:\$rules \(array\<Sulu\\Bundle\\AudienceTargetingBundle\\Rule\\RuleInterface\>\) does not accept array\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: src/Sulu/Bundle/AudienceTargetingBundle/Rule/RuleCollection.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\AudienceTargetingBundle\\Rule\\RuleInterface\:\:evaluate\(\) has parameter \$options with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -44355,7 +44343,7 @@ parameters:
 		-
 			message: '#^Cannot access offset ''block'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 9
+			count: 12
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Export/WebspaceExportTest.php
 
 		-
@@ -44437,6 +44425,12 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Export/WebspaceExportTest.php
 
 		-
+			message: '#^Cannot access offset ''settings'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 3
+			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Export/WebspaceExportTest.php
+
+		-
 			message: '#^Cannot access offset ''subtitle'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 2
@@ -44457,7 +44451,7 @@ parameters:
 		-
 			message: '#^Cannot access offset ''type'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 3
+			count: 4
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Export/WebspaceExportTest.php
 
 		-
@@ -44475,19 +44469,19 @@ parameters:
 		-
 			message: '#^Cannot access offset ''value'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 9
+			count: 13
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Export/WebspaceExportTest.php
 
 		-
 			message: '#^Cannot access offset 0 on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 7
+			count: 9
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Export/WebspaceExportTest.php
 
 		-
 			message: '#^Cannot access offset 1 on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 3
+			count: 4
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Export/WebspaceExportTest.php
 
 		-
@@ -50359,32 +50353,8 @@ parameters:
 			path: src/Sulu/Bundle/RouteBundle/Routing/Defaults/RouteDefaultsProvider.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\RouteBundle\\Routing\\Defaults\\RouteDefaultsProvider\:\:getDefaultProvider\(\) has parameter \$entityClass with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/RouteBundle/Routing/Defaults/RouteDefaultsProvider.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\RouteBundle\\Routing\\Defaults\\RouteDefaultsProvider\:\:isPublished\(\) should return bool but returns mixed\.$#'
 			identifier: return.type
-			count: 1
-			path: src/Sulu/Bundle/RouteBundle/Routing/Defaults/RouteDefaultsProvider.php
-
-		-
-			message: '#^Parameter \#1 \$entityClass of method Sulu\\Bundle\\RouteBundle\\Routing\\Defaults\\RouteDefaultsProviderInterface\:\:supports\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/RouteBundle/Routing/Defaults/RouteDefaultsProvider.php
-
-		-
-			message: '#^Parameter \#1 \$key of function array_key_exists expects int\|string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/RouteBundle/Routing/Defaults/RouteDefaultsProvider.php
-
-		-
-			message: '#^Possibly invalid array key type mixed\.$#'
-			identifier: offsetAccess.invalidOffset
 			count: 1
 			path: src/Sulu/Bundle/RouteBundle/Routing/Defaults/RouteDefaultsProvider.php
 
@@ -83133,6 +83103,12 @@ parameters:
 		-
 			message: '#^Call to an undefined method Sulu\\Component\\Content\\Document\\Behavior\\StructureBehavior\:\:getUuid\(\)\.$#'
 			identifier: method.notFound
+			count: 1
+			path: src/Sulu/Component/Export/Export.php
+
+		-
+			message: '#^Cannot access offset ''settings'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
 			path: src/Sulu/Component/Export/Export.php
 
