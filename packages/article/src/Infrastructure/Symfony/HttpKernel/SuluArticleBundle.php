@@ -36,12 +36,14 @@ use Sulu\Article\Infrastructure\Sulu\Content\PropertyResolver\SingleArticleSelec
 use Sulu\Article\Infrastructure\Sulu\Content\ResourceLoader\ArticleResourceLoader;
 use Sulu\Article\Infrastructure\Sulu\Reference\ArticleReferenceRefresher;
 use Sulu\Article\Infrastructure\Sulu\Sitemap\ArticlesSitemapProvider;
+use Sulu\Article\Trash\ArticleTrashItemHandler;
 use Sulu\Article\UserInterface\Controller\Admin\ArticleController;
 use Sulu\Bundle\PersistenceBundle\DependencyInjection\PersistenceExtensionTrait;
 use Sulu\Bundle\PersistenceBundle\PersistenceBundleTrait;
 use Sulu\Content\Infrastructure\Sulu\Preview\ContentObjectProvider;
 use Symfony\Component\Config\Definition\Configurator\DefinitionConfigurator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 
 use function Symfony\Component\DependencyInjection\Loader\Configurator\tagged_iterator;
@@ -125,7 +127,7 @@ final class SuluArticleBundle extends AbstractBundle
             ->args([
                 new Reference('sulu_article.article_repository'),
                 new Reference('sulu_activity.domain_event_collector'),
-                new Reference('sulu_core.webspace.request_analyzer'),
+                new Reference('sulu_trash.trash_manager', ContainerInterface::NULL_ON_INVALID_REFERENCE),
             ])
             ->tag('messenger.message_handler');
 
@@ -287,6 +289,24 @@ final class SuluArticleBundle extends AbstractBundle
                 new Reference('sulu_security.access_control_manager'),
             ])
             ->tag('sulu.sitemap.provider');
+
+        // Trash services
+        /** @var array<string, class-string> $bundles */
+        $bundles = $builder->getParameter('kernel.bundles');
+        if (isset($bundles['SuluTrashBundle'])) {
+            $services->set('sulu_article.trash_item_handler')
+                ->class(ArticleTrashItemHandler::class)
+                ->args([
+                    new Reference('sulu_trash.trash_item_repository'),
+                    new Reference('sulu_article.article_repository'),
+                    new Reference('sulu_content.content_normalizer'),
+                    new Reference('sulu_content.content_merger'),
+                    tagged_iterator('sulu_article.article_mapper'),
+                ])
+                ->tag('sulu_trash.store_trash_item_handler')
+                ->tag('sulu_trash.restore_trash_item_handler')
+                ->tag('sulu_trash.restore_configuration_provider');
+        }
     }
 
     /**

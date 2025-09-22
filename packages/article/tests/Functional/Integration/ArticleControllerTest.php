@@ -15,8 +15,10 @@ namespace Sulu\Article\Tests\Functional\Integration;
 
 use PHPUnit\Framework\Attributes\CoversNothing;
 use PHPUnit\Framework\Attributes\Depends;
+use Sulu\Article\Domain\Model\ArticleInterface;
 use Sulu\Bundle\TestBundle\Testing\AssertSnapshotTrait;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
+use Sulu\Bundle\TrashBundle\Domain\Repository\TrashItemRepositoryInterface;
 use Sulu\Route\Domain\Repository\RouteRepositoryInterface;
 use Sulu\Route\Domain\Value\RequestAttributeEnum;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
@@ -323,7 +325,7 @@ class ArticleControllerTest extends SuluTestCase
 
     #[Depends('testPost')]
     #[Depends('testGetList')]
-    public function testDelete(string $id): void
+    public function testDelete(string $id): int
     {
         $this->client->request('DELETE', '/admin/api/articles/' . $id . '?locale=en');
         $response = $this->client->getResponse();
@@ -331,6 +333,32 @@ class ArticleControllerTest extends SuluTestCase
 
         $routeRepository = $this->getContainer()->get(RouteRepositoryInterface::class);
         $this->assertCount(3, $routeRepository->findBy([])); // TODO we need tackle this
+
+        $trashRepository = self::getContainer()->get(TrashItemRepositoryInterface::class);
+        $trashItem = $trashRepository->findOneBy([
+            'resourceKey' => ArticleInterface::RESOURCE_KEY,
+            'resourceId' => $id,
+        ]);
+        $this->assertNotNull($trashItem);
+        $id = $trashItem->getId();
+        $this->assertNotEmpty($id);
+
+        return $id;
+    }
+
+    #[Depends('testDelete')]
+    public function testRestore(int $trashItemId): void
+    {
+        $trashItem = $this->getContainer()->get(TrashItemRepositoryInterface::class)->findOneBy(['id' => $trashItemId]);
+        $this->assertNotNull($trashItem);
+
+        $this->client->request('POST', '/admin/api/trash-items/' . $trashItemId . '?action=restore');
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(200, $response);
+
+        $this->client->request('GET', '/admin/api/articles/' . $trashItem->getResourceId() . '?locale=en');
+        $response = $this->client->getResponse();
+        $this->assertResponseSnapshot('article_post_restore.json', $response, 200);
     }
 
     protected function getSnapshotFolder(): string
