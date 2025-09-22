@@ -58,12 +58,4 @@ class LocalizationManager implements LocalizationManagerInterface
             )
         );
     }
-
-    /**
-     * @deprecated Use the constructor instead
-     */
-    public function addLocalizationProvider(LocalizationProviderInterface $localizationProvider)
-    {
-        $this->localizationProviders[] = $localizationProvider;
-    }
 }
