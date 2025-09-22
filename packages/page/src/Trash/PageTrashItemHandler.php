@@ -93,6 +93,16 @@ final class PageTrashItemHandler implements
 
         Assert::notNull($unlocalizedDimensionContent, 'Expected to find an unlocalized dimension content for the page.');
         Assert::notEmpty($localizedDimensionContents, 'Expected to find at least one localized dimension content for the page.');
+
+        // sort dimensionContents after the availableLocales from the unlocalizedDimension
+        $availableLocales = $unlocalizedDimensionContent->getAvailableLocales();
+        Assert::isArray($availableLocales, 'Expected availableLocales to be an array');
+        /** @var array<string, PageDimensionContentInterface> $localizedDimensionContents */
+        $localizedDimensionContents = \array_merge(
+            \array_flip($availableLocales),
+            $localizedDimensionContents
+        );
+
         foreach ($localizedDimensionContents as $locale => $localizedDimensionContent) {
             /** @var array<int, PageDimensionContent> $dimensionContents */
             $dimensionContents = [$unlocalizedDimensionContent, $localizedDimensionContent];
@@ -102,7 +112,6 @@ final class PageTrashItemHandler implements
                     $dimensionContents,
                     [
                         'locale' => $locale,
-                        // TODO handle other stages?
                         'stage' => DimensionContentInterface::STAGE_DRAFT,
                         'version' => DimensionContentInterface::CURRENT_VERSION,
                     ],
@@ -111,7 +120,7 @@ final class PageTrashItemHandler implements
             );
 
             $normalizedContent = $this->contentNormalizer->normalize($mergedDimensionContent);
-            $data['dimensionContents'][$locale] = $normalizedContent;
+            $data['dimensionContents'][] = $normalizedContent;
 
             $title = $localizedDimensionContent->getTitle();
 
@@ -163,7 +172,7 @@ final class PageTrashItemHandler implements
 
         $dimensionContents = $restoreData['dimensionContents'] ?? [];
         Assert::isArray($dimensionContents, 'Expected dimensionContents to be an array');
-        foreach ($dimensionContents as $locale => $dimensionContentData) {
+        foreach ($dimensionContents as $dimensionContentData) {
             Assert::isArray($dimensionContentData, 'Expected dimensionContentData to be an array');
             unset($dimensionContentData['url']); // TODO old route is not removed on delete?
             foreach ($this->pageMappers as $pageMapper) {

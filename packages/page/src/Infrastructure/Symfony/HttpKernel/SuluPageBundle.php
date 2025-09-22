@@ -91,24 +91,24 @@ final class SuluPageBundle extends AbstractBundle
     public function configure(DefinitionConfigurator $definition): void
     {
         $definition->rootNode() // @phpstan-ignore-line
-        ->children()
-            ->arrayNode('objects')
-            ->addDefaultsIfNotSet()
             ->children()
-            ->arrayNode('page')
-            ->addDefaultsIfNotSet()
-            ->children()
-            ->scalarNode('model')->defaultValue(Page::class)->end()
-            ->end()
-            ->end()
-            ->arrayNode('page_content')
-            ->addDefaultsIfNotSet()
-            ->children()
-            ->scalarNode('model')->defaultValue(PageDimensionContent::class)->end()
-            ->end()
-            ->end()
-            ->end()
-            ->end()
+                ->arrayNode('objects')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->arrayNode('page')
+                            ->addDefaultsIfNotSet()
+                            ->children()
+                                ->scalarNode('model')->defaultValue(Page::class)->end()
+                            ->end()
+                        ->end()
+                        ->arrayNode('page_content')
+                            ->addDefaultsIfNotSet()
+                            ->children()
+                                ->scalarNode('model')->defaultValue(PageDimensionContent::class)->end()
+                            ->end()
+                        ->end()
+                    ->end()
+                ->end()
             ->end();
     }
 
@@ -453,7 +453,6 @@ final class SuluPageBundle extends AbstractBundle
                     new Reference('sulu_content.content_normalizer'),
                     new Reference('sulu_content.content_merger'),
                     tagged_iterator('sulu_page.page_mapper'),
-                    new Reference('doctrine.orm.entity_manager'),
                 ])
                 ->tag('sulu_trash.store_trash_item_handler')
                 ->tag('sulu_trash.restore_trash_item_handler')
