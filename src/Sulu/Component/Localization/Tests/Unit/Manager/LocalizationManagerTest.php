@@ -15,24 +15,11 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Localization\Manager\LocalizationManager;
-use Sulu\Component\Localization\Manager\LocalizationManagerInterface;
 use Sulu\Component\Localization\Provider\LocalizationProviderInterface;
 
 class LocalizationManagerTest extends TestCase
 {
     use ProphecyTrait;
-
-    /**
-     * @var LocalizationManagerInterface
-     */
-    private $localizationManager;
-
-    public function setUp(): void
-    {
-        parent::setUp();
-
-        $this->localizationManager = new LocalizationManager();
-    }
 
     public function testGetAllLocalizations(): void
     {
@@ -40,10 +27,12 @@ class LocalizationManagerTest extends TestCase
         $localization2 = new Localization('en');
         $localization3 = new Localization('fr');
 
-        $this->addLocalizationProvider([$localization1, $localization2]);
-        $this->addLocalizationProvider([$localization3]);
+        $providers = [
+            $this->createLocalizationProvider([$localization1, $localization2]),
+            $this->createLocalizationProvider([$localization3]),
+        ];
 
-        $localizations = $this->localizationManager->getLocalizations();
+        $localizations = (new LocalizationManager($providers))->getLocalizations();
 
         $this->assertCount(3, $localizations);
         $this->assertContains($localization1, $localizations);
@@ -56,21 +45,26 @@ class LocalizationManagerTest extends TestCase
         $localization1 = new Localization('de');
         $localization2 = new Localization('en');
 
-        $this->addLocalizationProvider([$localization1, $localization2]);
-        $this->addLocalizationProvider([$localization2]);
+        $providers = [
+            $this->createLocalizationProvider([$localization1, $localization2]),
+            $this->createLocalizationProvider([$localization2]),
+        ];
 
-        $localizations = $this->localizationManager->getLocalizations();
+        $localizations = (new LocalizationManager($providers))->getLocalizations();
 
         $this->assertCount(2, $localizations);
         $this->assertContains($localization1, $localizations);
         $this->assertContains($localization2, $localizations);
     }
 
-    private function addLocalizationProvider($localizations)
+    /**
+     * @param array<Localization> $localizations
+     */
+    private function createLocalizationProvider(array $localizations): LocalizationProviderInterface
     {
-        $localizationProvider1 = $this->prophesize(LocalizationProviderInterface::class);
-        $localizationProvider1->getAllLocalizations()->willReturn($localizations);
+        $localizationProvider = $this->prophesize(LocalizationProviderInterface::class);
+        $localizationProvider->getAllLocalizations()->willReturn($localizations);
 
-        $this->localizationManager->addLocalizationProvider($localizationProvider1->reveal());
+        return $localizationProvider->reveal();
     }
 }

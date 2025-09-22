@@ -745,6 +745,8 @@ Removed classes / services / interfaces / traits:
 - `Sulu\Bundle\MediaBundle\DependencyInjection\FormatCacheClearerCompilerPass` (use tagged_iterator)
 - `Sulu\Component\Security\Authorization\AccessControl\SecuredEntityRepositoryTrait`
 - `Sulu/Bundle/AdminBundle/DependencyInjection/Compiler/AddAdminPass` (replaced by a `tagged_iterator`)
+- `Sulu\Bundle\AudienceTargetingBundle\DependencyInjection\Compiler\AddRulesPass` -> (`sulu.audience_target_rule`)
+- `Sulu\Bundle\CoreBundle\DependencyInjection\Compiler\RegisterLocalizationProvidersPass` (`sulu.localization_provider`)
 
 Removed deprecated functions and properties:
 

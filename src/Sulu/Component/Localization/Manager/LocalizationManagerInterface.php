@@ -12,7 +12,6 @@
 namespace Sulu\Component\Localization\Manager;
 
 use Sulu\Component\Localization\Localization;
-use Sulu\Component\Localization\Provider\LocalizationProviderInterface;
 
 /**
  * Interface for the management of localizations, the implementing class will manage the localizations based
@@ -29,9 +28,4 @@ interface LocalizationManagerInterface
      * @return string[]
      */
     public function getLocales(): array;
-
-    /**
-     * @deprecated since Use the constructor instead
-     */
-    public function addLocalizationProvider(LocalizationProviderInterface $localizationProvider);
 }
