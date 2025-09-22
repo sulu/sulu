@@ -12,8 +12,7 @@
 namespace Sulu\Bundle\MediaBundle\Tests\Unit\Collection;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\EntityManager;
-use PHPUnit\Framework\TestCase;
+use Doctrine\ORM\EntityManagerInterface;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
@@ -27,10 +26,12 @@ use Sulu\Bundle\MediaBundle\Entity\CollectionRepository;
 use Sulu\Bundle\MediaBundle\Entity\CollectionType;
 use Sulu\Bundle\MediaBundle\Entity\MediaRepository;
 use Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface;
+use Sulu\Bundle\TestBundle\Testing\KernelTestCase;
 use Sulu\Bundle\TrashBundle\Application\TrashManager\TrashManagerInterface;
+use Sulu\Component\Media\SystemCollections\SystemCollectionManagerInterface;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 
-class CollectionManagerTest extends TestCase
+class CollectionManagerTest extends KernelTestCase
 {
     use ProphecyTrait;
 
@@ -55,7 +56,7 @@ class CollectionManagerTest extends TestCase
     private $userRepository;
 
     /**
-     * @var ObjectProphecy<EntityManager>
+     * @var ObjectProphecy<EntityManagerInterface>
      */
     private $entityManager;
 
@@ -76,11 +77,13 @@ class CollectionManagerTest extends TestCase
 
     public function setUp(): void
     {
+        parent::setUp();
+
         $this->collectionRepository = $this->prophesize(CollectionRepository::class);
         $this->mediaRepository = $this->prophesize(MediaRepository::class);
         $this->formatManager = $this->prophesize(FormatManagerInterface::class);
         $this->userRepository = $this->prophesize(UserRepositoryInterface::class);
-        $this->entityManager = $this->prophesize(EntityManager::class);
+        $this->entityManager = $this->prophesize(EntityManagerInterface::class);
         $this->domainEventCollector = $this->prophesize(DomainEventCollectorInterface::class);
         $this->trashManager = $this->prophesize(TrashManagerInterface::class);
 
@@ -195,7 +198,7 @@ class CollectionManagerTest extends TestCase
     }
 
     /**
-     * This is e.g. needed for createing SystemCollections during installation.
+     * This is e.g. needed for creating SystemCollections during installation.
      */
     public function testSaveWithoutUserId(): void
     {
@@ -216,5 +219,39 @@ class CollectionManagerTest extends TestCase
             ],
             null
         );
+    }
+
+    public function testDeletingCollectionDeletesMeta(): void
+    {
+        /** @var EntityManagerInterface $entityManager */
+        $entityManager = self::getContainer()->get(EntityManagerInterface::class);
+        $metaRepository = $entityManager->getRepository(CollectionMeta::class);
+
+        $collectionType = new CollectionType();
+        $collectionType->setName('internal');
+        $collectionType->setKey(SystemCollectionManagerInterface::COLLECTION_KEY);
+
+        $meta = new CollectionMeta();
+        $meta->setTitle('Cool collection');
+        $meta->setLocale('en');
+
+        $collection = new Collection();
+        $collection->setKey('cool');
+        $collection->setType($collectionType);
+        $collection->addMeta($meta);
+        $collection->setDefaultMeta($meta);
+
+        $meta->setCollection($collection);
+
+        $entityManager->persist($collectionType);
+        $entityManager->persist($meta);
+        $entityManager->persist($collection);
+        $entityManager->flush();
+
+        self::assertEquals(1, $metaRepository->count([]));
+
+        $this->collectionManager->delete($collection->getId());
+
+        self::assertEquals(0, $metaRepository->count([]));
     }
 }

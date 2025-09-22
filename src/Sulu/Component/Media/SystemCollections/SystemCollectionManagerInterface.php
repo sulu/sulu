@@ -39,7 +39,7 @@ interface SystemCollectionManagerInterface
      *
      * @param int $id
      *
-     * @returns bool
+     * @return bool
      */
     public function isSystemCollection($id);
 }
