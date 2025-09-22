@@ -27,7 +27,7 @@ final class ExampleLinkProvider implements LinkProviderInterface
     public function __construct(
         private readonly ContentManagerInterface $contentManager,
         private readonly ExampleRepository $exampleRepository,
-        private readonly ReferenceStoreInterface $exampleReferenceStore,
+        private readonly ReferenceStoreInterface $referenceStore,
     ) {
     }
 
@@ -60,7 +60,7 @@ final class ExampleLinkProvider implements LinkProviderInterface
         $result = [];
         foreach ($examples as $example) {
             $dimensionContent = $this->contentManager->resolve($example, $dimensionAttributes);
-            $this->exampleReferenceStore->add((string) $example->getId(), Example::RESOURCE_KEY);
+            $this->referenceStore->add((string) $example->getId(), Example::RESOURCE_KEY);
 
             /** @var string|null $url */
             $url = $dimensionContent->getTemplateData()['url'] ?? null;

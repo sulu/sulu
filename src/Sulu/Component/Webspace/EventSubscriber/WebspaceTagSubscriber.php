@@ -18,7 +18,9 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
- * Adds webspace-specific cache tags based on the current webspace to the reference store.
+ * @internal This class should not be extended or initialized by any application outside of sulu.
+ *           You can create your own response listener to change the behaviour or use Symfony
+ *           dependency injection container to replace this service.
  */
 class WebspaceTagSubscriber implements EventSubscriberInterface
 {

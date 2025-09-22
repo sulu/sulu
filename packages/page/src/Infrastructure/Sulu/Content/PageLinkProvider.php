@@ -32,7 +32,7 @@ final class PageLinkProvider implements LinkProviderInterface
     public function __construct(
         private readonly ContentManagerInterface $contentManager,
         private readonly PageRepositoryInterface $pageRepository,
-        private readonly ReferenceStoreInterface $pageReferenceStore,
+        private readonly ReferenceStoreInterface $referenceStore,
         private readonly TranslatorInterface $translator,
     ) {
     }
@@ -64,7 +64,7 @@ final class PageLinkProvider implements LinkProviderInterface
         $result = [];
         foreach ($pages as $page) {
             $dimensionContent = $this->contentManager->resolve($page, $dimensionAttributes);
-            $this->pageReferenceStore->add($page->getId(), PageInterface::RESOURCE_KEY);
+            $this->referenceStore->add($page->getId(), PageInterface::RESOURCE_KEY);
 
             /** @var string|null $url */
             $url = $dimensionContent->getTemplateData()['url'] ?? null;

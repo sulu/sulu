@@ -19,7 +19,12 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\KernelEvents;
 
-class DimensionContentTagSubscriber implements EventSubscriberInterface
+/**
+ * @internal This class should not be extended or initialized by any application outside of sulu.
+ *           You can create your own response listener to change the behaviour or use Symfony
+ *           dependency injection container to replace this service.
+ */
+final class DimensionContentTagSubscriber implements EventSubscriberInterface
 {
     public function __construct(
         private ReferenceStoreInterface $referenceStore,

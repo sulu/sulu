@@ -32,7 +32,7 @@ final class ArticleLinkProvider implements LinkProviderInterface
     public function __construct(
         private readonly ContentManagerInterface $contentManager,
         private readonly ArticleRepositoryInterface $articleRepository,
-        private readonly ReferenceStoreInterface $articleReferenceStore,
+        private readonly ReferenceStoreInterface $referenceStore,
         private readonly TranslatorInterface $translator,
     ) {
     }
@@ -64,7 +64,7 @@ final class ArticleLinkProvider implements LinkProviderInterface
         $result = [];
         foreach ($articles as $article) {
             $dimensionContent = $this->contentManager->resolve($article, $dimensionAttributes);
-            $this->articleReferenceStore->add($article->getId(), ArticleInterface::RESOURCE_KEY);
+            $this->referenceStore->add($article->getId(), ArticleInterface::RESOURCE_KEY);
 
             /** @var string|null $url */
             $url = $dimensionContent->getTemplateData()['url'] ?? null;
