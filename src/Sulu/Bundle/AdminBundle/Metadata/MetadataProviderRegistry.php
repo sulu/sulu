@@ -21,9 +21,6 @@ class MetadataProviderRegistry
     public function __construct(
         private ?ContainerInterface $container = null,
     ) {
-        if (null === $container) {
-            trigger_deprecation('sulu/sulu', '2.6', 'Not using the tagged_locator to pass MetadataProviders is deprecated');
-        }
     }
 
     public function getMetadataProvider(string $type): MetadataProviderInterface
@@ -48,8 +45,6 @@ class MetadataProviderRegistry
      */
     public function addMetadataProvider(string $type, MetadataProviderInterface $metadataProvider)
     {
-        trigger_deprecation('sulu/sulu', '2.6', 'Do not add metadata Providers manually. Use the constructor');
-
         $this->metadataProviders[$type] = $metadataProvider;
     }
 }

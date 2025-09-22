@@ -13,7 +13,5 @@ namespace Sulu\Bundle\AdminBundle\Metadata;
 
 interface MetadataProviderInterface
 {
-    public const SERVICE_TAG = 'sulu_admin.metadata_provider';
-
     public function getMetadata(string $key, string $locale, array $metadataOptions): MetadataInterface;
 }
