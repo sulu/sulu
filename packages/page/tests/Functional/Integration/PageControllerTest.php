@@ -604,9 +604,6 @@ class PageControllerTest extends SuluTestCase
     #[Depends('testOrderPages')]
     public function testDelete(string $id): int
     {
-        $this->client->request('GET', '/admin/api/pages/' . $id . '?locale=en');
-        $response = $this->client->getResponse();
-
         $this->client->request('DELETE', '/admin/api/pages/' . $id . '?locale=en');
         $response = $this->client->getResponse();
         $this->assertHttpStatusCode(204, $response);

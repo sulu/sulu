@@ -91,24 +91,24 @@ final class SuluPageBundle extends AbstractBundle
     public function configure(DefinitionConfigurator $definition): void
     {
         $definition->rootNode() // @phpstan-ignore-line
+        ->children()
+            ->arrayNode('objects')
+            ->addDefaultsIfNotSet()
             ->children()
-                ->arrayNode('objects')
-                    ->addDefaultsIfNotSet()
-                    ->children()
-                        ->arrayNode('page')
-                            ->addDefaultsIfNotSet()
-                            ->children()
-                                ->scalarNode('model')->defaultValue(Page::class)->end()
-                            ->end()
-                        ->end()
-                        ->arrayNode('page_content')
-                            ->addDefaultsIfNotSet()
-                            ->children()
-                                ->scalarNode('model')->defaultValue(PageDimensionContent::class)->end()
-                            ->end()
-                        ->end()
-                    ->end()
-                ->end()
+            ->arrayNode('page')
+            ->addDefaultsIfNotSet()
+            ->children()
+            ->scalarNode('model')->defaultValue(Page::class)->end()
+            ->end()
+            ->end()
+            ->arrayNode('page_content')
+            ->addDefaultsIfNotSet()
+            ->children()
+            ->scalarNode('model')->defaultValue(PageDimensionContent::class)->end()
+            ->end()
+            ->end()
+            ->end()
+            ->end()
             ->end();
     }
 
@@ -216,21 +216,6 @@ final class SuluPageBundle extends AbstractBundle
             ])
             ->tag('sulu_page.page_mapper');
 
-        // Trash services
-        $services->set('sulu_page.trash_item_handler')
-            ->class(PageTrashItemHandler::class)
-            ->args([
-                new Reference('sulu_trash.trash_item_repository'),
-                new Reference('sulu_page.page_repository'),
-                new Reference('sulu_content.content_normalizer'),
-                new Reference('sulu_content.content_merger'),
-                tagged_iterator('sulu_page.page_mapper'),
-                new Reference('doctrine.orm.entity_manager'),
-            ])
-            ->tag('sulu_trash.store_trash_item_handler')
-            ->tag('sulu_trash.restore_trash_item_handler')
-            ->tag('sulu_trash.restore_configuration_provider');
-
         // DataMapper service
         $services->set('sulu_page.navigation_context_data_mapper')
             ->class(NavigationContextDataMapper::class)
@@ -300,8 +285,7 @@ final class SuluPageBundle extends AbstractBundle
                 new Reference('sulu_core.webspace.webspace_manager'),
                 new Reference('request_stack'),
             ])
-            ->tag('sulu_route.site_route_generator', ['site' => '.default'])
-        ;
+            ->tag('sulu_route.site_route_generator', ['site' => '.default']);
 
         // Repositories services
         $services->set('sulu_page.page_repository')
@@ -456,6 +440,25 @@ final class SuluPageBundle extends AbstractBundle
                 new Reference('sulu_security.access_control_manager'),
             ])
             ->tag('sulu.sitemap.provider');
+
+        // Trash services
+        /** @var array<string, class-string> $bundles */
+        $bundles = $builder->getParameter('kernel.bundles');
+        if (isset($bundles['SuluTrashBundle'])) {
+            $services->set('sulu_page.trash_item_handler')
+                ->class(PageTrashItemHandler::class)
+                ->args([
+                    new Reference('sulu_trash.trash_item_repository'),
+                    new Reference('sulu_page.page_repository'),
+                    new Reference('sulu_content.content_normalizer'),
+                    new Reference('sulu_content.content_merger'),
+                    tagged_iterator('sulu_page.page_mapper'),
+                    new Reference('doctrine.orm.entity_manager'),
+                ])
+                ->tag('sulu_trash.store_trash_item_handler')
+                ->tag('sulu_trash.restore_trash_item_handler')
+                ->tag('sulu_trash.restore_configuration_provider');
+        }
     }
 
     /**

@@ -48,8 +48,7 @@ final class PageTrashItemHandler implements
         private ContentNormalizerInterface $contentNormalizer,
         private ContentMergerInterface $contentMerger,
         private iterable $pageMappers,
-    )
-    {
+    ) {
     }
 
     public static function getResourceKey(): string

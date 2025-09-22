@@ -1,16 +1,10 @@
 {
     "author": null,
     "authored": "2020-06-09T00:00:00+00:00",
-    "availableLocales": [
-        "de",
-        "en"
-    ],
+    "availableLocales": "@array@.inArray(\"de\", \"en\")",
     "changed": "@datetime@",
     "changer": "@integer@",
-    "contentLocales": [
-        "de",
-        "en"
-    ],
+    "contentLocales": "@array@.inArray(\"de\", \"en\")",
     "created": "@datetime@",
     "creator": "@integer@",
     "description": "<p>Test Page 2</p>",
