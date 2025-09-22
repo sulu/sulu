@@ -799,6 +799,7 @@ Removed deprecated functions and properties:
 - `Sulu\Component\Rest\ListBuilder\AbstractListBuilder::hasField` (use `hasSelectField()` instead)
 - `Sulu\Component\Rest\ListBuilder\AbstractListBuilder::whereNot` (use `where()` instead)
 - `Sulu\Bundle\Security\Entity\Role::getRole` (use `getIdentifier` instead)
+- `Sulu\Bundle\AdminBundle\Admin\AdminPool::addAdmin` (use dependency injection via tagged service instead)
 
 Removed unused arguments:
 
