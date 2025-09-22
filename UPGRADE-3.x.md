@@ -1,3 +1,5 @@
+# Upgrade
+
 ## 3.0.0
 
 The upgrade from Sulu 2.6 to Sulu 3.0 is a major upgrade and will require some migration steps.
@@ -10,6 +12,15 @@ Make sure that you have all PHPCR migration run via:
 ```shell
 php bin/adminconsole phpcr:migrations:migrate
 ```
+
+### Pre Update strict webspace, template and navigation context key validation
+
+In Sulu 3.0 the webspace and template keys are now strictly validated.
+This means that the webspace, template and navigation context keys need to match
+the pattern `[a-z0-9_-]+` and with a max length of 31 characters.
+
+If you have webspace or template keys that do not match this pattern, you need to change them before
+via [a PHPCR migration](https://docs.sulu.io/en/2.6/cookbook/migrate-content-data.html) or manually in the database.
 
 ### Pre Update step to 3.0 Sulu Article Bundle
 
