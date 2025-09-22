@@ -19,6 +19,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Routing\RequestContext;
 
 #[AsCommand(name: 'sulu:website:dump-sitemap')]
 class DumpSitemapCommand extends Command
@@ -53,24 +54,15 @@ class DumpSitemapCommand extends Command
      */
     private $baseDirectory;
 
-    /**
-     * @var string
-     */
-    private $defaultHost;
-
-    /**
-     * @var string
-     */
-    private $scheme;
-
     public function __construct(
         WebspaceManagerInterface $webspaceManager,
         XmlSitemapDumperInterface $sitemapDumper,
         Filesystem $filesystem,
         string $baseDirectory,
         string $environment,
-        string $scheme,
-        string $defaultHost
+        private string $scheme,
+        string $defaultHost,
+        ?RequestContext $requestContext = null
     ) {
         parent::__construct();
 
@@ -79,8 +71,12 @@ class DumpSitemapCommand extends Command
         $this->filesystem = $filesystem;
         $this->environment = $environment;
         $this->baseDirectory = $baseDirectory;
-        $this->scheme = $scheme;
-        $this->defaultHost = $defaultHost;
+
+        if (null === $requestContext) {
+            @trigger_deprecation('sulu/sulu', '2.6', 'It is deprecated to not pass the request context to "%s".', self::class);
+        } elseif ($requestContext->getScheme() !== $scheme) {
+            @trigger_deprecation('sulu/sulu', '2.6', 'It is deprecated to define a different scheme in kernel parameter "router.request_context.scheme" and "framework.router.default_uri" config. Starting with Sulu 3.0 only "framework.router.default_uri" will be respected in "%s".', self::class);
+        }
     }
 
     protected function configure(): void
@@ -124,7 +120,7 @@ class DumpSitemapCommand extends Command
     /**
      * Clear the sitemap-cache.
      */
-    private function clear()
+    private function clear(): void
     {
         $this->filesystem->remove(\rtrim($this->baseDirectory, '/') . '/' . $this->scheme);
     }

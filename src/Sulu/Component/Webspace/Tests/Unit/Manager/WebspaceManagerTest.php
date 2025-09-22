@@ -34,6 +34,7 @@ use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Routing\RequestContext;
 
 class WebspaceManagerTest extends WebspaceTestCase
 {
@@ -56,6 +57,11 @@ class WebspaceManagerTest extends WebspaceTestCase
     protected WebspaceManager $webspaceManager;
 
     private string $cacheDirectory;
+
+    /**
+     * @var ObjectProphecy<RequestContext>
+     */
+    private $requestContext;
 
     public function setUp(): void
     {
@@ -93,6 +99,10 @@ class WebspaceManagerTest extends WebspaceTestCase
         $typedMetadata->addForm($overviewMetadata->getKey(), $overviewMetadata);
         $this->formMetadataProvider->getMetadata('page', Argument::cetera())->willReturn($typedMetadata);
 
+        $this->requestContext = $this->prophesize(RequestContext::class);
+        $this->requestContext->getScheme()->willReturn('http');
+        $this->requestContext->getHost()->willReturn('sulu.io');
+
         $this->webspaceManager = new WebspaceManager(
             $this->loader,
             new Replacer(),
@@ -103,8 +113,7 @@ class WebspaceManagerTest extends WebspaceTestCase
                 'cache_class' => 'WebspaceCollectionCache' . \uniqid(),
             ],
             'test',
-            'sulu.io',
-            'http',
+            $this->requestContext->reveal(),
             $this->metadataProviderRegistry,
         );
     }
@@ -564,8 +573,7 @@ class WebspaceManagerTest extends WebspaceTestCase
                 'cache_class' => 'WebspaceCollectionCache' . \uniqid(),
             ],
             'test',
-            'sulu.io',
-            'http',
+            $this->requestContext->reveal(),
             $this->metadataProviderRegistry
         );
 
@@ -606,8 +614,7 @@ class WebspaceManagerTest extends WebspaceTestCase
                 'cache_class' => 'WebspaceCollectionCache' . \uniqid(),
             ],
             'prod',
-            'sulu.io',
-            'http',
+            $this->requestContext->reveal(),
             $this->metadataProviderRegistry,
         );
 
@@ -628,9 +635,8 @@ class WebspaceManagerTest extends WebspaceTestCase
                 'cache_class' => 'WebspaceCollectionCache' . \uniqid(),
             ],
             'prod',
-            'sulu.io',
-            'http',
-            $this->metadataProviderRegistry
+            $this->requestContext->reveal(),
+            $this->metadataProviderRegistry,
         );
 
         $webspaces = $this->webspaceManager->getWebspaceCollection();

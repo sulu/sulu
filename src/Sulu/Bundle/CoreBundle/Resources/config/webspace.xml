@@ -41,8 +41,7 @@
                 <argument key="base_class">%sulu_core.webspace.base_class%</argument>
             </argument>
             <argument>%kernel.environment%</argument>
-            <argument>%router.request_context.host%</argument>
-            <argument>%router.request_context.scheme%</argument>
+            <argument type="service" id="router.request_context" />
             <argument type="service" id="sulu_admin.metadata_provider_registry" />
 
             <tag name="sulu.localization_provider"/>

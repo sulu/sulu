@@ -11,6 +11,7 @@
             <argument>%kernel.environment%</argument>
             <argument>%router.request_context.scheme%</argument>
             <argument>%router.request_context.host%</argument>
+            <argument type="service" id="router.request_context" />
 
             <tag name="console.command" />
         </service>
