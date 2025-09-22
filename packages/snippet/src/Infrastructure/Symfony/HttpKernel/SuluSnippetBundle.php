@@ -36,9 +36,11 @@ use Sulu\Snippet\Infrastructure\Sulu\Content\PropertyResolver\SnippetSelectionPr
 use Sulu\Snippet\Infrastructure\Sulu\Content\ResourceLoader\SnippetResourceLoader;
 use Sulu\Snippet\Infrastructure\Sulu\Content\SnippetSmartContentProvider;
 use Sulu\Snippet\Infrastructure\Sulu\Reference\SnippetReferenceRefresher;
+use Sulu\Snippet\Trash\SnippetTrashItemHandler;
 use Sulu\Snippet\UserInterface\Controller\Admin\SnippetController;
 use Symfony\Component\Config\Definition\Configurator\DefinitionConfigurator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 
 use function Symfony\Component\DependencyInjection\Loader\Configurator\tagged_iterator;
@@ -122,6 +124,7 @@ final class SuluSnippetBundle extends AbstractBundle
             ->args([
                 new Reference('sulu_snippet.snippet_repository'),
                 new Reference('sulu_activity.domain_event_collector'),
+                new Reference('sulu_trash.trash_manager', ContainerInterface::NULL_ON_INVALID_REFERENCE),
             ])
             ->tag('messenger.message_handler');
 
@@ -245,6 +248,24 @@ final class SuluSnippetBundle extends AbstractBundle
                 new Reference('sulu_content.content_merger'),
             ])
             ->tag('sulu_reference.refresher');
+
+        // Trash services
+        /** @var array<string, class-string> $bundles */
+        $bundles = $builder->getParameter('kernel.bundles');
+        if (isset($bundles['SuluTrashBundle'])) {
+            $services->set('sulu_snippet.trash_item_handler')
+                ->class(SnippetTrashItemHandler::class)
+                ->args([
+                    new Reference('sulu_trash.trash_item_repository'),
+                    new Reference('sulu_snippet.snippet_repository'),
+                    new Reference('sulu_content.content_normalizer'),
+                    new Reference('sulu_content.content_merger'),
+                    tagged_iterator('sulu_snippet.snippet_mapper'),
+                ])
+                ->tag('sulu_trash.store_trash_item_handler')
+                ->tag('sulu_trash.restore_trash_item_handler')
+                ->tag('sulu_trash.restore_configuration_provider');
+        }
     }
 
     /**

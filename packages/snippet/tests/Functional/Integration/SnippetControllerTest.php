@@ -18,6 +18,8 @@ use Doctrine\ORM\Tools\SchemaTool;
 use PHPUnit\Framework\Attributes\Depends;
 use Sulu\Bundle\TestBundle\Testing\AssertSnapshotTrait;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
+use Sulu\Bundle\TrashBundle\Domain\Repository\TrashItemRepositoryInterface;
+use Sulu\Snippet\Domain\Model\SnippetInterface;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 /**
@@ -239,11 +241,37 @@ class SnippetControllerTest extends SuluTestCase
 
     #[Depends('testPost')]
     #[Depends('testGetList')]
-    public function testDelete(string $id): void
+    public function testDelete(string $id): int
     {
         $this->client->request('DELETE', '/admin/api/snippets/' . $id . '?locale=en');
         $response = $this->client->getResponse();
         $this->assertHttpStatusCode(204, $response);
+
+        $trashRepository = self::getContainer()->get(TrashItemRepositoryInterface::class);
+        $trashItem = $trashRepository->findOneBy([
+            'resourceKey' => SnippetInterface::RESOURCE_KEY,
+            'resourceId' => $id,
+        ]);
+        $this->assertNotNull($trashItem);
+        $id = $trashItem->getId();
+        $this->assertNotEmpty($id);
+
+        return $id;
+    }
+
+    #[Depends('testDelete')]
+    public function testRestore(int $trashItemId): void
+    {
+        $trashItem = $this->getContainer()->get(TrashItemRepositoryInterface::class)->findOneBy(['id' => $trashItemId]);
+        $this->assertNotNull($trashItem);
+
+        $this->client->request('POST', '/admin/api/trash-items/' . $trashItemId . '?action=restore');
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(200, $response);
+
+        $this->client->request('GET', '/admin/api/snippets/' . $trashItem->getResourceId() . '?locale=en');
+        $response = $this->client->getResponse();
+        $this->assertResponseSnapshot('snippet_post_restore.json', $response, 200);
     }
 
     protected function getSnapshotFolder(): string

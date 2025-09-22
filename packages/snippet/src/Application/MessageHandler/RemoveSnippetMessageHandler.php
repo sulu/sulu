@@ -12,6 +12,7 @@
 namespace Sulu\Snippet\Application\MessageHandler;
 
 use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
+use Sulu\Bundle\TrashBundle\Application\TrashManager\TrashManagerInterface;
 use Sulu\Content\Domain\Model\DimensionContentCollection;
 use Sulu\Snippet\Application\Message\RemoveSnippetMessage;
 use Sulu\Snippet\Domain\Event\SnippetRemovedEvent;
@@ -29,6 +30,7 @@ final class RemoveSnippetMessageHandler
     public function __construct(
         private SnippetRepositoryInterface $snippetRepository,
         private DomainEventCollectorInterface $domainEventCollector,
+        private ?TrashManagerInterface $trashManager = null,
     ) {
     }
 
@@ -37,6 +39,10 @@ final class RemoveSnippetMessageHandler
         $snippet = $this->snippetRepository->getOneBy($message->getIdentifier());
 
         $this->snippetRepository->remove($snippet);
+
+        /** @var string $resourceKey */
+        $resourceKey = $snippet::RESOURCE_KEY;
+        $this->trashManager?->store($resourceKey, $snippet);
 
         $dimensionContentCollection = new DimensionContentCollection($snippet->getDimensionContents()->toArray(), [], SnippetDimensionContent::class);
         /** @var SnippetDimensionContent $localizedDimensionContent */
