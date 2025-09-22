@@ -30,7 +30,7 @@ final class RemovePageMessageHandler
     public function __construct(
         private PageRepositoryInterface $pageRepository,
         private DomainEventCollectorInterface $domainEventCollector,
-        private TrashManagerInterface $trashManager
+        private ?TrashManagerInterface $trashManager = null,
     ) {
     }
 
@@ -42,7 +42,7 @@ final class RemovePageMessageHandler
 
         /** @var string $resourceKey */
         $resourceKey = $page::RESOURCE_KEY;
-        $this->trashManager->store($resourceKey, $page);
+        $this->trashManager?->store($resourceKey, $page);
 
         $dimensionContentCollection = new DimensionContentCollection($page->getDimensionContents()->toArray(), [], PageDimensionContent::class);
         /** @var PageDimensionContent $localizedDimensionContent */

@@ -104,7 +104,7 @@ final class PageTrashItemHandler implements
                     [
                         'locale' => $locale,
                         // TODO handle other stages?
-                        'stage' => DimensionContentInterface::STAGE_LIVE,
+                        'stage' => DimensionContentInterface::STAGE_DRAFT,
                         'version' => DimensionContentInterface::CURRENT_VERSION,
                     ],
                     PageDimensionContent::class
