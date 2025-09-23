@@ -203,7 +203,7 @@ class ContentController extends AbstractController
             ?->getAllLocalizations() ?? [];
 
         foreach ($webspaceLocales as $webspaceLocale) {
-            $locale = $webspaceLocale->getLocale(Localization::DASH);
+            $locale = $webspaceLocale->getLocale(Localization::UNDERSCORE);
             if (\array_key_exists($locale, $localizations)) {
                 continue;
             }
