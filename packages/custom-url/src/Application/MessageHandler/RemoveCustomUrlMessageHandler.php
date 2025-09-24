@@ -39,6 +39,8 @@ final class RemoveCustomUrlMessageHandler
             throw new AccessDeniedException(\sprintf('Entity from webspace "%s" does not belong to webspace "%s"', $customUrl->getWebspace(), $message->getWebspaceKey()));
         }
 
+        $this->trashManager->store(CustomUrl::RESOURCE_KEY, $document);
+
         $this->documentDomainEventCollector->collect(new CustomUrlRemovedEvent($customUrl));
 
         $this->customUrlRepository->remove($customUrl);

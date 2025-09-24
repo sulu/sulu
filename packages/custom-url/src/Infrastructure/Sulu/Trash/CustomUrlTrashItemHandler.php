@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Sulu\CustomUrl\Infrastructure\Sulu\Trash;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Sulu\Bundle\DocumentManagerBundle\Collector\DocumentDomainEventCollectorInterface;
+use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
 use Sulu\Bundle\TrashBundle\Application\RestoreConfigurationProvider\RestoreConfiguration;
 use Sulu\Bundle\TrashBundle\Application\RestoreConfigurationProvider\RestoreConfigurationProviderInterface;
 use Sulu\Bundle\TrashBundle\Application\TrashItemHandler\RestoreTrashItemHandlerInterface;
@@ -59,7 +59,7 @@ final class CustomUrlTrashItemHandler implements
         private CustomUrlRepositoryInterface $customUrlRepository,
         private readonly iterable $customUrlMappers,
         private TrashItemRepositoryInterface $trashItemRepository,
-        private DocumentDomainEventCollectorInterface $documentDomainEventCollector,
+        private DomainEventCollectorInterface $domainEventCollector,
         private EntityManagerInterface $entityManager,
     ) {
     }
@@ -94,7 +94,7 @@ final class CustomUrlTrashItemHandler implements
             $options,
             CustomUrlAdmin::getCustomUrlSecurityContext($customUrl->getWebspace()),
             null,
-            null
+            null,
         );
     }
 
@@ -116,7 +116,7 @@ final class CustomUrlTrashItemHandler implements
         $customUrl->setCreated(new \DateTimeImmutable($data['created']));
 
         $this->entityManager->persist($customUrl);
-        $this->documentDomainEventCollector->collect(new CustomUrlRestoredEvent($customUrl, $data));
+        $this->domainEventCollector->collect(new CustomUrlRestoredEvent($customUrl, $data));
         $this->entityManager->flush();
 
         return $customUrl;
@@ -132,7 +132,7 @@ final class CustomUrlTrashItemHandler implements
         return new RestoreConfiguration(
             null,
             CustomUrlAdmin::LIST_VIEW,
-            ['webspace' => 'webspace']
+            ['webspace' => 'webspace'],
         );
     }
 }

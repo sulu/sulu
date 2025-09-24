@@ -61,6 +61,7 @@ class CustomUrlController implements SecuredControllerInterface
         /** @var DoctrineListBuilder $listBuilder */
         $listBuilder = $this->listBuilderFactory->create(CustomUrlInterface::class);
         $this->restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
+        $listBuilder->addSelectField($fieldDescriptors['publishedState']);
         $listBuilder->setParameter('locale', $request->query->get('locale'));
         $listBuilder->where($fieldDescriptors['webspace'], $webspace);
 

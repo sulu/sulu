@@ -2,6 +2,27 @@
 <list xmlns="http://schemas.sulu.io/list-builder/list">
     <key>custom_urls</key>
 
+    <joins name="creator">
+        <join>
+            <entity-name>%sulu.model.user.class%</entity-name>
+            <field-name>Sulu\CustomUrl\Domain\Model\CustomUrlInterface.creator</field-name>
+        </join>
+        <join>
+            <entity-name>%sulu.model.contact.class%</entity-name>
+            <field-name>%sulu.model.user.class%.contact</field-name>
+        </join>
+    </joins>
+    <joins name="changer">
+        <join>
+            <entity-name>%sulu.model.user.class%</entity-name>
+            <field-name>Sulu\CustomUrl\Domain\Model\CustomUrlInterface.changer</field-name>
+        </join>
+        <join>
+            <entity-name>%sulu.model.contact.class%</entity-name>
+            <field-name>%sulu.model.user.class%.contact</field-name>
+        </join>
+    </joins>
+
     <properties>
         <property name="id" visibility="no" translation="sulu_admin.id" sortable="false">
             <field-name>id</field-name>
@@ -19,32 +40,13 @@
             <entity-name>Sulu\CustomUrl\Domain\Model\CustomUrlInterface</entity-name>
         </property>
 
-        <property name="published" visibility="yes" translation="sulu_custom_url.published" sortable="false">
+        <property name="publishedState" visibility="never" translation="sulu_custom_url.published" sortable="false">
             <field-name>published</field-name>
             <entity-name>Sulu\CustomUrl\Domain\Model\CustomUrlInterface</entity-name>
-            <transformer type="bool"/>
-            <filter type="boolean" />
-        </property>
-
-        <property name="targetDocument" visibility="yes" translation="sulu_custom_url.target_title" sortable="false">
-            <field-name>targetDocument</field-name>
-            <entity-name>Sulu\CustomUrl\Domain\Model\CustomUrlInterface</entity-name>
-        </property>
-
-        <property name="targetLocale" visibility="yes" translation="sulu_custom_url.target_locale" sortable="false">
-            <field-name>targetLocale</field-name>
-            <entity-name>Sulu\CustomUrl\Domain\Model\CustomUrlInterface</entity-name>
-        </property>
-
-        <property name="redirect" visibility="yes" translation="sulu_custom_url.redirect" sortable="false">
-            <field-name>redirect</field-name>
-            <entity-name>Sulu\CustomUrl\Domain\Model\CustomUrlInterface</entity-name>
-            <transformer type="bool"/>
         </property>
 
         <property
             name="created"
-            visibility="yes"
             translation="sulu_admin.created"
             sortable="false"
         >
@@ -52,5 +54,47 @@
             <entity-name>Sulu\CustomUrl\Domain\Model\CustomUrlInterface</entity-name>
             <transformer type="datetime"/>
         </property>
+
+        <property
+            name="changed"
+            translation="sulu_admin.created"
+            sortable="false"
+        >
+            <field-name>changed</field-name>
+            <entity-name>Sulu\CustomUrl\Domain\Model\CustomUrlInterface</entity-name>
+            <transformer type="datetime"/>
+        </property>
+
+        <concatenation-property name="creator" visibility="yes" glue=" "
+                                translation="sulu_admin.creator" sortable="false">
+            <field>
+                <field-name>firstName</field-name>
+                <entity-name>%sulu.model.contact.class%</entity-name>
+
+                <joins ref="creator"/>
+            </field>
+            <field>
+                <field-name>lastName</field-name>
+                <entity-name>%sulu.model.contact.class%</entity-name>
+
+                <joins ref="creator"/>
+            </field>
+        </concatenation-property>
+
+        <concatenation-property name="changer" glue=" " translation="sulu_admin.changer"
+                                sortable="false">
+            <field>
+                <field-name>firstName</field-name>
+                <entity-name>%sulu.model.contact.class%</entity-name>
+
+                <joins ref="changer"/>
+            </field>
+            <field>
+                <field-name>lastName</field-name>
+                <entity-name>%sulu.model.contact.class%</entity-name>
+
+                <joins ref="changer"/>
+            </field>
+        </concatenation-property>
     </properties>
 </list>
