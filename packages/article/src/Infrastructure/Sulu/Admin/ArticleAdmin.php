@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Sulu.
  *
@@ -62,15 +64,19 @@ class ArticleAdmin extends Admin
         }
 
         $hasArticleTypeWithEditPermissions = false;
-        foreach ($this->groupProvider->getGroups() as $group) {
-            $securityContext = static::getArticleSecurityContext($group->identifier);
-            if (!$this->securityChecker->hasPermission($securityContext, PermissionTypes::EDIT)) {
-                continue;
-            }
-
+        if (1 === \count($this->groupProvider->getGroups())) {
             $hasArticleTypeWithEditPermissions = true;
+        } else {
+            foreach ($this->groupProvider->getGroups() as $group) {
+                $securityContext = static::getArticleSecurityContext($group->identifier);
+                if (!$this->securityChecker->hasPermission($securityContext, PermissionTypes::EDIT)) {
+                    continue;
+                }
 
-            break;
+                $hasArticleTypeWithEditPermissions = true;
+
+                break;
+            }
         }
 
         if (!$hasArticleTypeWithEditPermissions) {
@@ -99,23 +105,29 @@ class ArticleAdmin extends Admin
                 ->addRouterAttributesToBlacklist(['active', 'filter', 'limit', 'page', 'search', 'sortColumn', 'sortOrder']),
         );
 
-        foreach ($this->groupProvider->getGroups() as $group) {
-            $this->configureGroupViews($group, $locales, $resourceKey, $viewCollection);
+        $groups = $this->groupProvider->getGroups();
+        foreach ($groups as $group) {
+            $securityContext = static::getArticleSecurityContext($group->identifier);
+            if (1 === \count($groups)) {
+                $securityContext = static::SECURITY_CONTEXT;
+            }
+
+            $this->configureGroupViews($group, $locales, $resourceKey, $viewCollection, $securityContext);
         }
     }
 
-    private function hasPermission(string $groupIdentifier, string $permission): bool
+    private function hasPermission(string $groupIdentifier, string $permission, bool $checkGroup): bool
     {
         return $this->securityChecker->hasPermission(static::SECURITY_CONTEXT, $permission)
-            && $this->securityChecker->hasPermission(static::getArticleSecurityContext($groupIdentifier), $permission);
+            && (false === $checkGroup || $this->securityChecker->hasPermission(static::getArticleSecurityContext($groupIdentifier), $permission));
     }
 
     /**
      * @param string[] $locales
      */
-    private function configureGroupViews(FormGroup $group, array $locales, string $resourceKey, ViewCollection $viewCollection): void
+    private function configureGroupViews(FormGroup $group, array $locales, string $resourceKey, ViewCollection $viewCollection, string $securityContext): void
     {
-        if (!$this->securityChecker->hasPermission(static::SECURITY_CONTEXT, PermissionTypes::EDIT)) {
+        if (!$this->securityChecker->hasPermission($securityContext, PermissionTypes::EDIT)) {
             return;
         }
 
@@ -123,15 +135,15 @@ class ArticleAdmin extends Admin
 
         $listToolbarActions = [];
 
-        if ($this->hasPermission($groupIdentifier, PermissionTypes::ADD)) {
+        if ($this->hasPermission($groupIdentifier, PermissionTypes::ADD, $securityContext !== static::SECURITY_CONTEXT)) {
             $listToolbarActions[] = new ToolbarAction('sulu_admin.add');
         }
 
-        if ($this->hasPermission($groupIdentifier, PermissionTypes::DELETE)) {
+        if ($this->hasPermission($groupIdentifier, PermissionTypes::DELETE, $securityContext !== static::SECURITY_CONTEXT)) {
             $listToolbarActions[] = new ToolbarAction('sulu_admin.delete');
         }
 
-        if ($this->hasPermission($groupIdentifier, PermissionTypes::VIEW)) {
+        if ($this->hasPermission($groupIdentifier, PermissionTypes::VIEW, $securityContext !== static::SECURITY_CONTEXT)) {
             $listToolbarActions[] = new ToolbarAction('sulu_admin.export');
         }
 
@@ -154,13 +166,13 @@ class ArticleAdmin extends Admin
             $this->viewBuilderFactory->createResourceTabViewBuilder(static::ADD_TABS_VIEW . '_' . $groupIdentifier, '/:locale/' . $groupIdentifier . '/add')
                 ->setResourceKey($resourceKey)
                 ->addLocales($locales)
-                ->setBackView(static::LIST_VIEW),
+                ->setBackView(static::LIST_VIEW . '_' . $groupIdentifier),
         );
         $viewCollection->add(
             $this->viewBuilderFactory->createResourceTabViewBuilder(static::EDIT_TABS_VIEW . '_' . $groupIdentifier, '/:locale/' . $groupIdentifier . '/:id') // TODO should be uuid
                 ->setResourceKey($resourceKey)
                 ->addLocales($locales)
-                ->setBackView(static::LIST_VIEW)
+                ->setBackView(static::LIST_VIEW . '_' . $groupIdentifier)
                 ->setTitleProperty('name'),
         );
 
@@ -168,8 +180,12 @@ class ArticleAdmin extends Admin
             ArticleInterface::class,
             static::EDIT_TABS_VIEW . '_' . $groupIdentifier,
             static::ADD_TABS_VIEW . '_' . $groupIdentifier,
-            $this->getArticleSecurityContext($groupIdentifier),
+            $securityContext,
         );
+
+        if (0 === \count($viewBuilders)) {
+            return;
+        }
 
         foreach ($viewBuilders as $viewBuilder) {
             $viewCollection->add($viewBuilder);
@@ -206,15 +222,17 @@ class ArticleAdmin extends Admin
     public function getSecurityContexts()
     {
         $securityContext = [];
-
-        foreach ($this->groupProvider->getGroups() as $group) {
-            $securityContext[static::getArticleSecurityContext($group->identifier)] = [
-                PermissionTypes::VIEW,
-                PermissionTypes::ADD,
-                PermissionTypes::EDIT,
-                PermissionTypes::DELETE,
-                PermissionTypes::LIVE,
-            ];
+        $groups = $this->groupProvider->getGroups();
+        if (1 !== \count($groups)) {
+            foreach ($this->groupProvider->getGroups() as $group) {
+                $securityContext[static::getArticleSecurityContext($group->identifier)] = [
+                    PermissionTypes::VIEW,
+                    PermissionTypes::ADD,
+                    PermissionTypes::EDIT,
+                    PermissionTypes::DELETE,
+                    PermissionTypes::LIVE,
+                ];
+            }
         }
 
         return [
