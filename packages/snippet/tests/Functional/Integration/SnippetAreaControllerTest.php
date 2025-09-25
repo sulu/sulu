@@ -47,7 +47,7 @@ class SnippetAreaControllerTest extends SuluTestCase
     {
         self::purgeDatabase();
 
-        $this->client->jsonRequest('GET', '/admin/api/snippet-areas?webspace=sulu-io');
+        $this->client->jsonRequest('GET', '/admin/api/snippet-areas?webspaceKey=sulu-io');
 
         $this->assertResponseSnapshot('snippet_area_cget.json', $this->client->getResponse(), 200);
 
@@ -58,8 +58,7 @@ class SnippetAreaControllerTest extends SuluTestCase
     {
         self::purgeDatabase();
 
-        // Creating the snippet
-        $this->client->jsonRequest('POST', '/admin/api/snippets?locale=en', [
+        $this->client->jsonRequest('POST', '/admin/api/snippets?locale=en&action=publish', [
             'template' => 'snippet',
             'title' => 'Test Snippet',
             'images' => null,
@@ -75,23 +74,81 @@ class SnippetAreaControllerTest extends SuluTestCase
         $response = $this->client->getResponse();
 
         $responseContent = \json_decode((string) $response->getContent(), true) ?? [];
-        $this->assertIsArray($responseContent);
-        $this->assertArrayHasKey('id', $responseContent);
+        /** @var array{id: string} $responseContent */
         $id = $responseContent['id'];
 
-        $this->assertIsString($id, 'Expecting snippet area id to be a string');
-
-        // Setting the snippet into the snippet area
-        $this->client->jsonRequest('PUT', '/admin/api/snippet-areas/car', [
-            'snippet' => ['uuid' => (string) $id],
-            'webspace' => 'sulu-io',
+        $this->client->jsonRequest('PUT', '/admin/api/snippet-areas/hotel?webspaceKey=sulu-io', [
+            'snippetUuid' => (string) $id,
         ]);
         $this->assertResponseStatusCodeSame(200);
 
-        $this->client->jsonRequest('GET', '/admin/api/snippet-areas?webspace=sulu-io');
+        $this->client->jsonRequest('GET', '/admin/api/snippet-areas?webspaceKey=sulu-io');
         $this->assertResponseSnapshot('snippet_area_cget_partially_filled.json', $this->client->getResponse(), 200);
 
         self::ensureKernelShutdown();
+    }
+
+    public function testPostWithInvalidSnippetUuid(): void
+    {
+        self::purgeDatabase();
+
+        $this->client->jsonRequest('PUT', '/admin/api/snippet-areas/hotel?webspaceKey=sulu-io', [
+            'snippetUuid' => 'invalid-uuid',
+        ]);
+
+        $this->assertResponseStatusCodeSame(500);
+        $response = $this->client->getResponse();
+        $this->assertStringContainsString('invalid-uuid', (string) $response->getContent());
+        $this->assertStringContainsString('not found', (string) $response->getContent());
+    }
+
+    public function testPostWithoutSnippetUuid(): void
+    {
+        self::purgeDatabase();
+
+        $this->client->jsonRequest('PUT', '/admin/api/snippet-areas/hotel?webspaceKey=sulu-io', []);
+
+        $this->assertResponseStatusCodeSame(500);
+        $response = $this->client->getResponse();
+        $this->assertStringContainsString('snippetUuid must be a string', (string) $response->getContent());
+    }
+
+    public function testPostWithNonStringSnippetUuid(): void
+    {
+        self::purgeDatabase();
+
+        $this->client->jsonRequest('PUT', '/admin/api/snippet-areas/hotel?webspaceKey=sulu-io', [
+            'snippetUuid' => 123,
+        ]);
+
+        $this->assertResponseStatusCodeSame(500);
+        $response = $this->client->getResponse();
+        $this->assertStringContainsString('snippetUuid must be a string', (string) $response->getContent());
+    }
+
+    public function testPostWithNonExistentAreaKey(): void
+    {
+        self::purgeDatabase();
+
+        $this->client->jsonRequest('PUT', '/admin/api/snippet-areas/nonexistent?webspaceKey=sulu-io', [
+            'snippetUuid' => '01234567-1234-1234-1234-123456789abc',
+        ]);
+
+        $this->assertResponseStatusCodeSame(500);
+        $response = $this->client->getResponse();
+        $this->assertStringContainsString('not found', (string) $response->getContent());
+    }
+
+    public function testSnippetAreaParametersIncludeCacheSettings(): void
+    {
+        $snippetAreas = self::getContainer()->getParameter('sulu_snippet.areas');
+        /** @var array<string, array{cache-invalidation: bool}> $snippetAreas */
+        $this->assertArrayHasKey('with-cache', $snippetAreas);
+        $this->assertArrayHasKey('hotel', $snippetAreas);
+
+        $this->assertTrue($snippetAreas['with-cache']['cache-invalidation'], 'with-cache area should have cache-invalidation = true');
+        $this->assertFalse($snippetAreas['hotel']['cache-invalidation'], 'hotel area should have cache-invalidation = false');
+        $this->assertFalse($snippetAreas['test']['cache-invalidation'], 'test area should have cache-invalidation = false');
     }
 
     protected function getSnapshotFolder(): string

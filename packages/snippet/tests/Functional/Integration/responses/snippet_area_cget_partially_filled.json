@@ -2,28 +2,27 @@
     "_embedded": {
         "snippet_areas": [
             {
-                "key": "car",
-                "template": "car",
-                "title": "Car",
-                "defaultUuid": "@string@",
-                "defaultTitle": "Test Snippet",
-                "valid": true
+                "areaKey": "hotel",
+                "id": "@string@",
+                "key": "hotel",
+                "snippetTitle": "Test Snippet",
+                "snippetUuid": "@string@",
+                "templateKey": "snippet",
+                "title": "snippet_type.hotel"
             },
             {
-                "key": "golf_hotel",
-                "template": "hotel",
-                "title": "Golf hotel",
-                "defaultUuid": null,
-                "defaultTitle": null,
-                "valid": true
+                "key": "test",
+                "snippetTitle": null,
+                "snippetUuid": null,
+                "templateKey": "snippet",
+                "title": "Menu Social Media Links"
             },
             {
-                "key": "sport_hotel",
-                "template": "hotel",
-                "title": "Sport hotel",
-                "defaultUuid": null,
-                "defaultTitle": null,
-                "valid": true
+                "key": "with-cache",
+                "snippetTitle": null,
+                "snippetUuid": null,
+                "templateKey": "snippet",
+                "title": "With cache"
             }
         ]
     }

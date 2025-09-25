@@ -11,11 +11,16 @@
 
 namespace Sulu\Snippet\Tests\Functional\Infrastructure\Symfony\CompilerPass;
 
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\TestBundle\Testing\KernelTestCase;
 use Sulu\Snippet\Infrastructure\Symfony\CompilerPass\SnippetAreaCompilerPass;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class SnippetAreaCompilerPassTest extends KernelTestCase
 {
+    use ProphecyTrait;
+
     public function testWithoutAreas(): void
     {
         // see packages/snippet/tests/Application/config/templates/snippets/snippet.xml for context
@@ -27,6 +32,8 @@ class SnippetAreaCompilerPassTest extends KernelTestCase
                         'de' => 'Mit cache',
                     ],
                     'cache-invalidation' => true,
+                    'areaKey' => 'with-cache',
+                    'template' => 'snippet',
                 ],
                 'hotel' => [
                     'title' => [
@@ -34,15 +41,78 @@ class SnippetAreaCompilerPassTest extends KernelTestCase
                         'de' => 'snippet_type.hotel',
                     ],
                     'cache-invalidation' => false,
+                    'areaKey' => 'hotel',
+                    'template' => 'snippet',
                 ],
                 'test' => [
                     'title' => [
                         'en' => 'Menu Social Media Links',
                     ],
                     'cache-invalidation' => false,
+                    'areaKey' => 'test',
+                    'template' => 'snippet',
                 ],
             ],
             self::getContainer()->getParameter(SnippetAreaCompilerPass::SNIPPET_AREA_PARAM)
         );
+    }
+
+    public function testDuplicateAreaKeysThrowException(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Snippet area "hotel" must be unique. It is defined in both');
+
+        $translator = $this->prophesize(TranslatorInterface::class);
+        // Set up minimal translator expectations - the exception should happen before translation
+        $translator->trans('snippet_type.hotel', [], 'admin', 'en')->willReturn('Hotel');
+        $translator->trans('snippet_type.hotel', [], 'admin', 'de')->willReturn('Hotel');
+        $translator->trans('', [], 'admin', 'en')->willReturn('');
+        $translator->trans('', [], 'admin', 'de')->willReturn('');
+
+        $container = new ContainerBuilder();
+        $container->set('translator', $translator->reveal());
+        $container->setParameter('sulu_core.locales', ['en', 'de']);
+        $container->setParameter('sulu_admin.templates.configuration', [
+            'snippet' => [
+                'directories' => [
+                    __DIR__ . '/../../../../Application/config/templates/snippets',
+                ],
+            ],
+        ]);
+
+        $compilerPass = new SnippetAreaCompilerPass();
+        $compilerPass->process($container);
+    }
+
+    public function testDuplicateAreaKeyErrorMessage(): void
+    {
+        $translator = $this->prophesize(TranslatorInterface::class);
+        // Set up minimal translator expectations - the exception should happen before translation
+        $translator->trans('snippet_type.hotel', [], 'admin', 'en')->willReturn('Hotel');
+        $translator->trans('snippet_type.hotel', [], 'admin', 'de')->willReturn('Hotel');
+        $translator->trans('', [], 'admin', 'en')->willReturn('');
+        $translator->trans('', [], 'admin', 'de')->willReturn('');
+
+        $container = new ContainerBuilder();
+        $container->set('translator', $translator->reveal());
+        $container->setParameter('sulu_core.locales', ['en', 'de']);
+        $container->setParameter('sulu_admin.templates.configuration', [
+            'snippet' => [
+                'directories' => [
+                    __DIR__ . '/../../../../Application/config/templates/snippets',
+                ],
+            ],
+        ]);
+
+        $compilerPass = new SnippetAreaCompilerPass();
+
+        try {
+            $compilerPass->process($container);
+            $this->fail('Expected InvalidArgumentException was not thrown');
+        } catch (\InvalidArgumentException $e) {
+            $this->assertStringContainsString('Snippet area "hotel" must be unique', $e->getMessage());
+            $this->assertStringContainsString('snippet.xml', $e->getMessage());
+            $this->assertStringContainsString('duplicate-hotel.xml', $e->getMessage());
+        }
     }
 }
