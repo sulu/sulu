@@ -276,7 +276,6 @@ final class SuluSnippetBundle extends AbstractBundle
                 new Reference('sulu_core.list_builder.field_descriptor_factory'),
                 new Reference('sulu_core.doctrine_list_builder_factory'),
                 new Reference('sulu_core.doctrine_rest_helper'),
-                new Reference(SnippetAreaRepositoryInterface::class),
                 param(SnippetAreaCompilerPass::SNIPPET_AREA_PARAM),
             ])
             ->tag('sulu.context', ['context' => 'admin']);
