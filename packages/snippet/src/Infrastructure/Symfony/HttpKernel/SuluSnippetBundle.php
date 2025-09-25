@@ -45,6 +45,7 @@ use Sulu\Snippet\Infrastructure\Sulu\Content\SnippetSmartContentProvider;
 use Sulu\Snippet\Infrastructure\Sulu\Reference\SnippetReferenceRefresher;
 use Sulu\Snippet\Infrastructure\Symfony\CompilerPass\SnippetAreaCompilerPass;
 use Sulu\Snippet\Infrastructure\Symfony\Normalizer\SnippetAreaNormalizer;
+use Sulu\Snippet\Infrastructure\Symfony\Twig\SnippetAreaTwigExtension;
 use Sulu\Snippet\Trash\SnippetTrashItemHandler;
 use Sulu\Snippet\UserInterface\Controller\Admin\SnippetAreaController;
 use Sulu\Snippet\UserInterface\Controller\Admin\SnippetController;
@@ -227,6 +228,17 @@ final class SuluSnippetBundle extends AbstractBundle
             ])
             ->tag('serializer.normalizer')
         ;
+
+        // Twig services
+        $services->set('sulu_snippet.snippet_area_twig_extension')
+            ->class(SnippetAreaTwigExtension::class)
+            ->args([
+                new Reference('sulu_snippet.snippet_area_repository'),
+                new Reference('sulu_content.content_aggregator'),
+                new Reference('sulu_core.webspace.request_analyzer'),
+                new Reference('sulu_snippet.snippet_reference_store'),
+            ])
+            ->tag('twig.extension');
 
         // Repositories services
         $services->set('sulu_snippet.snippet_repository')
