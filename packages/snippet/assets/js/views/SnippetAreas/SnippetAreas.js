@@ -142,10 +142,10 @@ class SnippetAreas extends React.Component<ViewProps> {
                 </Table>
                 <SingleListOverlay
                     adapter="table"
-                    locale={observable.box(locale)}
                     confirmLoading={this.snippetAreaStore.saving}
                     key={this.openedAreaKey}
                     listKey="snippets"
+                    locale={observable.box(locale)}
                     onClose={this.handleListOverlayClose}
                     onConfirm={this.handleListOverlayConfirm}
                     open={!!this.openedAreaKey}

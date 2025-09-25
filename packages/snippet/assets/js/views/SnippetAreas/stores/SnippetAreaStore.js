@@ -13,7 +13,7 @@ export default class SnippetAreaStore {
     constructor(webspaceKey: string) {
         this.webspaceKey = webspaceKey;
 
-        ResourceRequester.getList('snippet_areas', {webspaceKey: webspaceKey}).then(action((response) => {
+        ResourceRequester.getList('snippet_areas', {webspaceKey}).then(action((response) => {
             this.snippetAreas = response._embedded.snippet_areas.reduce((snippetAreas, snippetArea) => {
                 snippetAreas[snippetArea.key] = snippetArea;
 

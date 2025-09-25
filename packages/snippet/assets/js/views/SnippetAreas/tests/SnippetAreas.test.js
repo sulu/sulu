@@ -53,13 +53,13 @@ test('Render snippet areas with data as table', () => {
     SnippetAreaStore.mockImplementation(function() {
         this.snippetAreas = {
             default: {
-                defaultTitle: null,
+                snippetTitle: null,
                 snippetUuid: null,
                 key: 'default',
                 title: 'Default',
             },
             footer: {
-                defaultTitle: 'Footer Snippet',
+                snippetTitle: 'Footer Snippet',
                 snippetUuid: 'some-other-uuid',
                 key: 'footer',
                 title: 'Footer',
@@ -82,7 +82,7 @@ test('Close after clicking add without choosing a snippet', () => {
     SnippetAreaStore.mockImplementation(function() {
         this.snippetAreas = {
             default: {
-                defaultTitle: null,
+                snippetTitle: null,
                 snippetUuid: null,
                 key: 'default',
                 title: 'Default',
@@ -121,7 +121,7 @@ test('Save after adding a new snippet area', () => {
     SnippetAreaStore.mockImplementation(function() {
         this.snippetAreas = {
             default: {
-                defaultTitle: null,
+                snippetTitle: null,
                 snippetUuid: null,
                 key: 'default',
                 title: 'Default',
@@ -159,7 +159,7 @@ test('Close after clicking delete and cancel dialog', () => {
     SnippetAreaStore.mockImplementation(function() {
         this.snippetAreas = {
             default: {
-                defaultTitle: 'Default Snippet',
+                snippetTitle: 'Default Snippet',
                 snippetUuid: 'some-uuid',
                 key: 1,
                 title: 'Default',
@@ -196,7 +196,7 @@ test('Delete after confirming the confirmation dialog', () => {
     SnippetAreaStore.mockImplementation(function() {
         this.snippetAreas = {
             default: {
-                defaultTitle: 'Default Snippet',
+                snippetTitle: 'Default Snippet',
                 snippetUuid: 'some-uuid',
                 key: 'default',
                 title: 'Default',
@@ -242,7 +242,7 @@ test('Navigate when selected default snippet is clicked', () => {
     SnippetAreaStore.mockImplementation(function() {
         this.snippetAreas = {
             default: {
-                defaultTitle: 'Default Snippet',
+                snippetTitle: 'Default Snippet',
                 snippetUuid: 'some-uuid',
                 key: 1,
                 title: 'Default',
@@ -271,7 +271,7 @@ test('Should use CacheClearToolbarAction for cache clearing', () => {
     SnippetAreaStore.mockImplementation(function() {
         this.snippetAreas = {
             default: {
-                defaultTitle: 'Default Snippet',
+                snippetTitle: 'Default Snippet',
                 snippetUuid: 'some-uuid',
                 key: 'default',
                 title: 'Default',
