@@ -47,8 +47,10 @@ class SmartContentSmartResolver implements SmartResolverInterface
         $sortBys = $data['sortBys'] ?? [];
         $parameters = $data['parameters'];
 
-        /** @var int|null $limit */
+        /** @var int|null $limit Total max items across all pages (null = no limit) */
         $limit = $filters['limit'] ?? null;
+        /** @var int|null $maxPerPage Items per page for pagination (null = no pagination) */
+        $maxPerPage = $filters['maxPerPage'] ?? null;
         /** @var int $page */
         $page = $filters['page'];
 
@@ -67,11 +69,18 @@ class SmartContentSmartResolver implements SmartResolverInterface
                 ),
             );
         }
+
+        if (null !== $maxPerPage && $maxPerPage <= 0) {
+            throw new \InvalidArgumentException('The "maxPerPage" parameter must be a positive integer.');
+        }
+
         $smartContentProvider = $this->smartContentProviders->get($provider);
 
         $params = ['value' => $value, ...$parameters];
         $result = $smartContentProvider->findFlatBy($filters, $sortBys, $params);
-        $total = ($limit && \count($result) <= $limit) ? \count($result) : $smartContentProvider->countBy($filters, $params);
+
+        $fullTotal = $smartContentProvider->countBy($filters, $params);
+        $total = $limit ? \min($limit, $fullTotal) : $fullTotal;
 
         $view = [
             'dataSource' => $filters['dataSource'],
@@ -92,11 +101,12 @@ class SmartContentSmartResolver implements SmartResolverInterface
             'limitResult' => $filters['limit'],
 
             'page' => $page,
-            'hasNextPage' => null !== $limit && ($total > ($limit * $page)),
-            'paginated' => null !== $limit,
+            'hasNextPage' => null !== $maxPerPage && ($total > ($maxPerPage * $page)),
+            'paginated' => null !== $maxPerPage,
             'total' => $total,
-            'maxPage' => (null !== $limit) ? (int) \ceil($total / $limit) : null,
+            'maxPage' => null !== $maxPerPage ? (int) \ceil($total / $maxPerPage) : null,
             'limit' => $limit,
+            'maxPerPage' => $maxPerPage,
 
             // TODO duplicates
             'excluded' => [],

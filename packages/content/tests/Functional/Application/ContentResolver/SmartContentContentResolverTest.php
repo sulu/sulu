@@ -278,14 +278,15 @@ class SmartContentContentResolverTest extends SuluTestCase
         self::assertSame('Alpha', $examples[0]['title']);
         self::assertSame('Bravo', $examples[1]['title']);
 
-        /** @var array{total: int|null, paginated: bool, hasNextPage: bool, maxPage: int|null, limit: int|null} $view */
+        /** @var array{total: int|null, paginated: bool, hasNextPage: bool|null, maxPage: int|null, limit: int|null, maxPerPage: int|null} $view */
         $view = $result['view']['examples'];
-        self::assertTrue($view['paginated']);
+        self::assertFalse($view['paginated']);
 
         self::assertFalse($view['hasNextPage']);
         self::assertSame(2, $view['total']);
-        self::assertSame(1, $view['maxPage']);
+        self::assertNull($view['maxPage']);
         self::assertSame(2, $view['limit']);
+        self::assertNull($view['maxPerPage']);
     }
 
     public function testResolveExampleSmartContentFilterByCategoriesAndTagsWithOperators(): void
@@ -505,22 +506,21 @@ class SmartContentContentResolverTest extends SuluTestCase
 
     public function testPaginationSecondPageWithLimit(): void
     {
+        static::createExample(['en' => ['live' => ['template' => 'default', 'title' => 'Three', 'url' => '/three']]]);
         static::createExample(['en' => ['live' => ['template' => 'default', 'title' => 'One', 'url' => '/one']]]);
         static::createExample(['en' => ['live' => ['template' => 'default', 'title' => 'Two', 'url' => '/two']]]);
-        static::createExample(['en' => ['live' => ['template' => 'default', 'title' => 'Three', 'url' => '/three']]]);
         static::getEntityManager()->flush();
 
         $page = static::createExample([
             'en' => [
                 'live' => [
-                    'template' => 'default-example-smart-content',
+                    'template' => 'example-smart-paginated',
                     'title' => 'Paged',
                     'url' => '/paged',
                     'examples' => [
                         'types' => ['default'],
                         'sortBy' => 'title',
                         'sortMethod' => 'ASC',
-                        'limitResult' => 1,
                     ],
                 ],
             ],
@@ -536,12 +536,17 @@ class SmartContentContentResolverTest extends SuluTestCase
         /** @var array<int, array<string, mixed>> $items */
         $items = $result['content']['examples'];
         self::assertCount(1, $items);
-        // title ASC: One, Three, Two => second page should be Three, but provider may apply stable sorting differently; assert page marker instead
+        self::assertSame('Three', $items[0]['title']);
+
         /** @var array<string, mixed> $view */
         $view = $result['view']['examples'];
         self::assertSame(2, $view['page']);
         self::assertTrue($view['paginated']);
-        self::assertSame(1, $view['limit']);
+        self::assertNull($view['limit']);
+        self::assertSame(1, $view['maxPerPage']);
+        self::assertTrue($view['hasNextPage']);
+        self::assertSame(3, $view['maxPage']);
+        self::assertSame(3, $view['total']);
     }
 
     public function testRecursionMaxDepthReplacesDeepWithNull(): void
