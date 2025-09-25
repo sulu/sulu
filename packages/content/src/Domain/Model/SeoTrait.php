@@ -16,24 +16,9 @@ namespace Sulu\Content\Domain\Model;
 trait SeoTrait
 {
     /**
-     * @var string|null
+     * @var array<string, mixed>
      */
-    private $seoTitle;
-
-    /**
-     * @var string|null
-     */
-    private $seoDescription;
-
-    /**
-     * @var string|null
-     */
-    private $seoKeywords;
-
-    /**
-     * @var string|null
-     */
-    private $seoCanonicalUrl;
+    private $seoData = [];
 
     /**
      * @var bool
@@ -50,44 +35,17 @@ trait SeoTrait
      */
     private $seoHideInSitemap = false;
 
-    public function getSeoTitle(): ?string
+    public function getSeoData(): array
     {
-        return $this->seoTitle;
+        return $this->seoData;
     }
 
-    public function setSeoTitle(?string $seoTitle): void
+    /**
+     * @param array<string, mixed> $seoData
+     */
+    public function setSeoData(array $seoData): void
     {
-        $this->seoTitle = $seoTitle;
-    }
-
-    public function getSeoDescription(): ?string
-    {
-        return $this->seoDescription;
-    }
-
-    public function setSeoDescription(?string $seoDescription): void
-    {
-        $this->seoDescription = $seoDescription;
-    }
-
-    public function getSeoKeywords(): ?string
-    {
-        return $this->seoKeywords;
-    }
-
-    public function setSeoKeywords(?string $seoKeywords): void
-    {
-        $this->seoKeywords = $seoKeywords;
-    }
-
-    public function getSeoCanonicalUrl(): ?string
-    {
-        return $this->seoCanonicalUrl;
-    }
-
-    public function setSeoCanonicalUrl(?string $seoCanonicalUrl): void
-    {
-        $this->seoCanonicalUrl = $seoCanonicalUrl;
+        $this->seoData = $seoData;
     }
 
     public function getSeoNoIndex(): bool

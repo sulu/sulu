@@ -20,19 +20,9 @@ use Sulu\Bundle\TagBundle\Tag\TagInterface;
 trait ExcerptTrait
 {
     /**
-     * @var string|null
+     * @var array<string, mixed>
      */
-    private $excerptTitle;
-
-    /**
-     * @var string|null
-     */
-    private $excerptDescription;
-
-    /**
-     * @var string|null
-     */
-    private $excerptMore;
+    private $excerptData = [];
 
     /**
      * @var ArrayCollection<int, CategoryInterface>
@@ -44,44 +34,17 @@ trait ExcerptTrait
      */
     private $excerptTags;
 
+    public function getExcerptData(): array
+    {
+        return $this->excerptData;
+    }
+
     /**
-     * @var int|null
+     * @param array<string, mixed> $excerptData
      */
-    private $excerptImageId;
-
-    /**
-     * @var int|null
-     */
-    private $excerptIconId;
-
-    public function getExcerptTitle(): ?string
+    public function setExcerptData(array $excerptData): void
     {
-        return $this->excerptTitle;
-    }
-
-    public function setExcerptTitle(?string $excerptTitle): void
-    {
-        $this->excerptTitle = $excerptTitle;
-    }
-
-    public function getExcerptDescription(): ?string
-    {
-        return $this->excerptDescription;
-    }
-
-    public function setExcerptDescription(?string $excerptDescription): void
-    {
-        $this->excerptDescription = $excerptDescription;
-    }
-
-    public function getExcerptMore(): ?string
-    {
-        return $this->excerptMore;
-    }
-
-    public function setExcerptMore(?string $excerptMore): void
-    {
-        $this->excerptMore = $excerptMore;
+        $this->excerptData = $excerptData;
     }
 
     /**
@@ -156,50 +119,6 @@ trait ExcerptTrait
         foreach ($excerptTags as $excerptTag) {
             $this->excerptTags->add($excerptTag);
         }
-    }
-
-    /**
-     * @return array{id: int}|null
-     */
-    public function getExcerptImage(): ?array
-    {
-        if (!$this->excerptImageId) {
-            return null;
-        }
-
-        return [
-            'id' => $this->excerptImageId,
-        ];
-    }
-
-    /**
-     * @param array{id?: int}|null $excerptImage
-     */
-    public function setExcerptImage(?array $excerptImage): void
-    {
-        $this->excerptImageId = $excerptImage['id'] ?? null;
-    }
-
-    /**
-     * @return array{id: int}|null
-     */
-    public function getExcerptIcon(): ?array
-    {
-        if (!$this->excerptIconId) {
-            return null;
-        }
-
-        return [
-            'id' => $this->excerptIconId,
-        ];
-    }
-
-    /**
-     * @param array{id?: int}|null $excerptIcon
-     */
-    public function setExcerptIcon(?array $excerptIcon): void
-    {
-        $this->excerptIconId = $excerptIcon['id'] ?? null;
     }
 
     private function initializeTags(): void

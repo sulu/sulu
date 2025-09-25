@@ -15,21 +15,15 @@ namespace Sulu\Content\Domain\Model;
 
 interface SeoInterface
 {
-    public function getSeoTitle(): ?string;
+    /**
+     * @return array<string, mixed>
+     */
+    public function getSeoData(): array;
 
-    public function setSeoTitle(?string $seoTitle): void;
-
-    public function getSeoDescription(): ?string;
-
-    public function setSeoDescription(?string $seoDescription): void;
-
-    public function getSeoKeywords(): ?string;
-
-    public function setSeoKeywords(?string $seoKeywords): void;
-
-    public function getSeoCanonicalUrl(): ?string;
-
-    public function setSeoCanonicalUrl(?string $seoCanonicalUrl): void;
+    /**
+     * @param array<string, mixed> $seoData
+     */
+    public function setSeoData(array $seoData): void;
 
     public function getSeoNoIndex(): bool;
 

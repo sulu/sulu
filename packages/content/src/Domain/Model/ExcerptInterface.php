@@ -18,17 +18,15 @@ use Sulu\Bundle\TagBundle\Tag\TagInterface;
 
 interface ExcerptInterface
 {
-    public function getExcerptTitle(): ?string;
+    /**
+     * @return array<string, mixed>
+     */
+    public function getExcerptData(): array;
 
-    public function setExcerptTitle(?string $excerptTitle): void;
-
-    public function getExcerptMore(): ?string;
-
-    public function setExcerptMore(?string $excerptMore): void;
-
-    public function getExcerptDescription(): ?string;
-
-    public function setExcerptDescription(?string $excerptDescription): void;
+    /**
+     * @param array<string, mixed> $excerptData
+     */
+    public function setExcerptData(array $excerptData): void;
 
     /**
      * @return CategoryInterface[]
@@ -59,24 +57,4 @@ interface ExcerptInterface
      * @param TagInterface[] $excerptTags
      */
     public function setExcerptTags(array $excerptTags): void;
-
-    /**
-     * @return array{id: int}|null
-     */
-    public function getExcerptImage(): ?array;
-
-    /**
-     * @param array{id?: int}|null $excerptImage
-     */
-    public function setExcerptImage(?array $excerptImage): void;
-
-    /**
-     * @return array{id: int}|null
-     */
-    public function getExcerptIcon(): ?array;
-
-    /**
-     * @param array{id?: int}|null $excerptIcon
-     */
-    public function setExcerptIcon(?array $excerptIcon): void;
 }
