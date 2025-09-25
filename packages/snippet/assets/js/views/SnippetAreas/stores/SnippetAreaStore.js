@@ -13,7 +13,7 @@ export default class SnippetAreaStore {
     constructor(webspaceKey: string) {
         this.webspaceKey = webspaceKey;
 
-        ResourceRequester.getList('snippet_areas', {webspace: webspaceKey}).then(action((response) => {
+        ResourceRequester.getList('snippet_areas', {webspaceKey: webspaceKey}).then(action((response) => {
             this.snippetAreas = response._embedded.snippet_areas.reduce((snippetAreas, snippetArea) => {
                 snippetAreas[snippetArea.key] = snippetArea;
 
@@ -23,10 +23,10 @@ export default class SnippetAreaStore {
         }));
     }
 
-    @action save(areaKey: string, defaultUuid: string) {
+    @action save(areaKey: string, snippetUuid: string) {
         this.saving = true;
 
-        return ResourceRequester.put('snippet_areas', {defaultUuid}, {key: areaKey, webspace: this.webspaceKey})
+        return ResourceRequester.put('snippet_areas', {snippetUuid}, {key: areaKey, webspaceKey: this.webspaceKey})
             .then(action((response) => {
                 this.snippetAreas[areaKey] = response;
                 this.saving = false;
@@ -36,7 +36,7 @@ export default class SnippetAreaStore {
     @action delete(areaKey: string) {
         this.deleting = true;
 
-        return ResourceRequester.delete('snippet_areas', {key: areaKey, webspace: this.webspaceKey})
+        return ResourceRequester.delete('snippet_areas', {key: areaKey, webspaceKey: this.webspaceKey})
             .then(action((response) => {
                 this.snippetAreas[areaKey] = response;
                 this.deleting = false;

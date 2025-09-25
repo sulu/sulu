@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace Sulu\Snippet\Infrastructure\Symfony\Normalizer;
 
+use Sulu\Content\Application\ContentAggregator\ContentAggregatorInterface;
+use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Snippet\Domain\Model\SnippetArea;
 use Sulu\Snippet\Domain\Model\SnippetAreaInterface;
 use Sulu\Snippet\Domain\Model\SnippetInterface;
@@ -21,15 +23,16 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 
 /**
- * @phpstan-import-type SnippetAreaconfig from SnippetAreaCompilerPass
+ * @phpstan-import-type SnippetAreaConfig from SnippetAreaCompilerPass
  */
 final class SnippetAreaNormalizer implements NormalizerInterface
 {
     /**
-     * @param SnippetAreaconfig $snippetAreas
+     * @param SnippetAreaConfig $snippetAreas
      */
     public function __construct(
         private ObjectNormalizer $objectNormalizer,
+        private ContentAggregatorInterface $contentAggregator,
         private array $snippetAreas,
     ) {
     }
@@ -50,6 +53,11 @@ final class SnippetAreaNormalizer implements NormalizerInterface
             $data->setSnippet(null);
         }
 
+        $locale = $context['locale'] ?? null;
+        if (null === $locale || !\is_string($locale)) {
+            throw new \InvalidArgumentException('The "locale" context parameter is required and must be a string.');
+        }
+
         /** @var array<mixed> $normalizedData */
         $normalizedData = $this->objectNormalizer->normalize($data, $format, $context);
 
@@ -57,8 +65,13 @@ final class SnippetAreaNormalizer implements NormalizerInterface
 
         unset($normalizedData['snippet']);
 
-        $metaData = $this->snippetAreas[$normalizedData['areaKey']];
-        $title = $metaData['title'][$context['locale']];
+        $areaKey = $normalizedData['areaKey'] ?? null;
+        if (!\is_string($areaKey) || !isset($this->snippetAreas[$areaKey])) {
+            throw new \InvalidArgumentException('Invalid or missing areaKey.');
+        }
+
+        $metaData = $this->snippetAreas[$areaKey];
+        $title = $metaData['title'][$locale] ?? '';
 
         // Remove ids because that's an implementation detail
         unset($normalizedData['id'], $normalizedData['uuid']);
@@ -68,8 +81,8 @@ final class SnippetAreaNormalizer implements NormalizerInterface
 
         /** @var SnippetInterface|null $snippet */
         $snippet = $data->getSnippet();
-        $normalizedData['defaultTitle'] = $this->getTitle($snippet);
-        $normalizedData['defaultUuid'] = $snippet?->getId();
+        $normalizedData['snippetTitle'] = $this->getTitle($snippet, $locale);
+        $normalizedData['snippetUuid'] = $snippet?->getId();
         $normalizedData['title'] = $title;
 
         // Why would this would be false?
@@ -78,21 +91,22 @@ final class SnippetAreaNormalizer implements NormalizerInterface
         return $normalizedData;
     }
 
-    private static function getTitle(?SnippetInterface $snippet): ?string
+    private function getTitle(?SnippetInterface $snippet, string $locale): ?string
     {
         if (null === $snippet) {
             return null;
         }
 
-        // TODO: Currently gets the first title in any locale. We need to load the locale of the request here.
-        // Also: Use a repository for this for more performance
-        $dim = $snippet->getDimensionContents()
-            ->map(fn ($snippet) => $snippet->getTitle())
-            ->filter(fn ($snippet) => null !== $snippet)
-            ->first()
-        ;
+        $dimensionContent = $this->contentAggregator->aggregate(
+            $snippet,
+            [
+                'locale' => $locale,
+                'stage' => DimensionContentInterface::STAGE_LIVE,
+                'version' => DimensionContentInterface::CURRENT_VERSION,
+            ]
+        );
 
-        return $dim ?: 'unknown';
+        return $dimensionContent->getTitle();
     }
 
     public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool

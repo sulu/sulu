@@ -54,13 +54,13 @@ test('Render snippet areas with data as table', () => {
         this.snippetAreas = {
             default: {
                 defaultTitle: null,
-                defaultUuid: null,
+                snippetUuid: null,
                 key: 'default',
                 title: 'Default',
             },
             footer: {
                 defaultTitle: 'Footer Snippet',
-                defaultUuid: 'some-other-uuid',
+                snippetUuid: 'some-other-uuid',
                 key: 'footer',
                 title: 'Footer',
             },
@@ -83,7 +83,7 @@ test('Close after clicking add without choosing a snippet', () => {
         this.snippetAreas = {
             default: {
                 defaultTitle: null,
-                defaultUuid: null,
+                snippetUuid: null,
                 key: 'default',
                 title: 'Default',
             },
@@ -122,7 +122,7 @@ test('Save after adding a new snippet area', () => {
         this.snippetAreas = {
             default: {
                 defaultTitle: null,
-                defaultUuid: null,
+                snippetUuid: null,
                 key: 'default',
                 title: 'Default',
             },
@@ -160,7 +160,7 @@ test('Close after clicking delete and cancel dialog', () => {
         this.snippetAreas = {
             default: {
                 defaultTitle: 'Default Snippet',
-                defaultUuid: 'some-uuid',
+                snippetUuid: 'some-uuid',
                 key: 1,
                 title: 'Default',
             },
@@ -197,7 +197,7 @@ test('Delete after confirming the confirmation dialog', () => {
         this.snippetAreas = {
             default: {
                 defaultTitle: 'Default Snippet',
-                defaultUuid: 'some-uuid',
+                snippetUuid: 'some-uuid',
                 key: 'default',
                 title: 'Default',
             },
@@ -243,7 +243,7 @@ test('Navigate when selected default snippet is clicked', () => {
         this.snippetAreas = {
             default: {
                 defaultTitle: 'Default Snippet',
-                defaultUuid: 'some-uuid',
+                snippetUuid: 'some-uuid',
                 key: 1,
                 title: 'Default',
             },
@@ -272,7 +272,7 @@ test('Should use CacheClearToolbarAction for cache clearing', () => {
         this.snippetAreas = {
             default: {
                 defaultTitle: 'Default Snippet',
-                defaultUuid: 'some-uuid',
+                snippetUuid: 'some-uuid',
                 key: 'default',
                 title: 'Default',
             },

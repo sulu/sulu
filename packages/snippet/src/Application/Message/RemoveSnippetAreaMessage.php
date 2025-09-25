@@ -19,7 +19,7 @@ class RemoveSnippetAreaMessage
     private string $areaKey;
 
     /**
-     * @param array<string, string> $data
+     * @param array{webspaceKey: string, areaKey: string} $data
      */
     public function __construct(array $data)
     {

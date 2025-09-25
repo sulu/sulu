@@ -31,16 +31,14 @@ readonly class ModifySnippetAreaMessageHandler
         $webspaceKey = $message->getWebspace();
         $areaKey = $message->getAreaKey();
 
-        $snippetArea = $this->snippetAreaRepository->findOneByWebspaceAndKey($webspaceKey, $areaKey);
+        $snippetArea = $this->snippetAreaRepository->findOneBy(['webspaceKey' => $webspaceKey, 'areaKey' => $areaKey]);
         if (null === $snippetArea) {
             $snippetArea = $this->snippetAreaRepository->createNew($areaKey, $webspaceKey);
 
             $this->snippetAreaRepository->add($snippetArea);
         }
 
-        // TODO: This crashes when persisting if there is no snippet with this identifier as the snippet is non-nullable
         $snippet = $this->snippetRepository->getOneBy($message->getSnippetIdentifier());
-
         $snippetArea->setSnippet($snippet);
 
         return $snippetArea;

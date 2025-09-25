@@ -1,8 +1,8 @@
 // @flow
 
 export type SnippetArea = {
-    defaultTitle: ?string,
-    defaultUuid: ?string,
+    snippetTitle: ?string,
+    snippetUuid: ?string,
     key: string,
     template: string,
     title: string,

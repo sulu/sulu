@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Sulu\Snippet\Infrastructure\Symfony\HttpKernel;
 
-use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Bundle\HttpCacheBundle\ReferenceStore\ReferenceStore;
 use Sulu\Bundle\PersistenceBundle\DependencyInjection\PersistenceExtensionTrait;
 use Sulu\Bundle\PersistenceBundle\PersistenceBundleTrait;
@@ -44,9 +43,9 @@ use Sulu\Snippet\Infrastructure\Sulu\Content\PropertyResolver\SnippetSelectionPr
 use Sulu\Snippet\Infrastructure\Sulu\Content\ResourceLoader\SnippetResourceLoader;
 use Sulu\Snippet\Infrastructure\Sulu\Content\SnippetSmartContentProvider;
 use Sulu\Snippet\Infrastructure\Sulu\Reference\SnippetReferenceRefresher;
-use Sulu\Snippet\Trash\SnippetTrashItemHandler;
 use Sulu\Snippet\Infrastructure\Symfony\CompilerPass\SnippetAreaCompilerPass;
 use Sulu\Snippet\Infrastructure\Symfony\Normalizer\SnippetAreaNormalizer;
+use Sulu\Snippet\Trash\SnippetTrashItemHandler;
 use Sulu\Snippet\UserInterface\Controller\Admin\SnippetAreaController;
 use Sulu\Snippet\UserInterface\Controller\Admin\SnippetController;
 use Symfony\Component\Config\Definition\Configurator\DefinitionConfigurator;
@@ -223,6 +222,7 @@ final class SuluSnippetBundle extends AbstractBundle
         $services->set('sulu_snippet.snippet_area_normalizer', SnippetAreaNormalizer::class)
             ->args([
                 new Reference('serializer.normalizer.object'),
+                new Reference('sulu_content.content_aggregator'),
                 param(SnippetAreaCompilerPass::SNIPPET_AREA_PARAM),
             ])
             ->tag('serializer.normalizer')
@@ -259,6 +259,7 @@ final class SuluSnippetBundle extends AbstractBundle
                 new Reference('sulu_core.list_builder.field_descriptor_factory'),
                 new Reference('sulu_core.doctrine_list_builder_factory'),
                 new Reference('sulu_core.doctrine_rest_helper'),
+                param(SnippetAreaCompilerPass::SNIPPET_AREA_PARAM),
             ])
             ->tag('sulu.context', ['context' => 'admin']);
 
@@ -272,10 +273,9 @@ final class SuluSnippetBundle extends AbstractBundle
             ->args([
                 new Reference('sulu_message_bus'),
                 new Reference('serializer'),
-                // additional services to be removed when no longer needed
-                //new Reference('sulu_core.list_builder.field_descriptor_factory'),
-                //new Reference('sulu_core.doctrine_list_builder_factory'),
-                //new Reference('sulu_core.doctrine_rest_helper'),
+                new Reference('sulu_core.list_builder.field_descriptor_factory'),
+                new Reference('sulu_core.doctrine_list_builder_factory'),
+                new Reference('sulu_core.doctrine_rest_helper'),
                 new Reference(SnippetAreaRepositoryInterface::class),
                 param(SnippetAreaCompilerPass::SNIPPET_AREA_PARAM),
             ])
@@ -385,6 +385,7 @@ final class SuluSnippetBundle extends AbstractBundle
                         ],
                         'snippet_areas' => [
                             'routes' => [
+                                'detail' => 'sulu_snippet_area.put_snippet_area',
                                 'list' => 'sulu_snippet_area.get_snippet_areas',
                             ],
                         ],
@@ -484,12 +485,6 @@ final class SuluSnippetBundle extends AbstractBundle
             SnippetAreaInterface::class => 'sulu.model.snippet_area.class',
         ], $container);
 
-        $configDirectory = \join(\DIRECTORY_SEPARATOR, [
-            $container->getParameter('kernel.project_dir'),
-            'config',
-            'templates',
-            'snippets',
-        ]);
-        $container->addCompilerPass(new SnippetAreaCompilerPass($configDirectory), PassConfig::TYPE_BEFORE_OPTIMIZATION);
+        $container->addCompilerPass(new SnippetAreaCompilerPass(), PassConfig::TYPE_BEFORE_OPTIMIZATION, -1024);
     }
 }

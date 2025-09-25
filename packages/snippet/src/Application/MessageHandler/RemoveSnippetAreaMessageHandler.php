@@ -26,17 +26,19 @@ readonly class RemoveSnippetAreaMessageHandler
 
     public function __invoke(RemoveSnippetAreaMessage $message): ?SnippetAreaInterface
     {
-        $entityToDelete = $this->snippetAreaRepository->findOneByWebspaceAndKey(
-            $message->getWebspaceKey(),
-            $message->getAreaKey(),
-        );
+        $snippetArea = $this->snippetAreaRepository->findOneBy([
+            'webspaceKey' => $message->getWebspaceKey(),
+            'areaKey' => $message->getAreaKey(),
+        ]);
 
-        if (null === $entityToDelete) {
+        if (null === $snippetArea) {
             return null;
         }
 
-        $this->snippetAreaRepository->remove($entityToDelete);
+        $this->snippetAreaRepository->remove($snippetArea);
 
-        return $entityToDelete;
+        $snippetArea->setSnippet(null);
+
+        return $snippetArea;
     }
 }

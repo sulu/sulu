@@ -29,6 +29,7 @@ use Sulu\Snippet\Application\Message\RemoveSnippetMessage;
 use Sulu\Snippet\Application\Message\RestoreSnippetVersionMessage;
 use Sulu\Snippet\Domain\Model\SnippetInterface;
 use Sulu\Snippet\Domain\Repository\SnippetRepositoryInterface;
+use Sulu\Snippet\Infrastructure\Symfony\CompilerPass\SnippetAreaCompilerPass;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -41,59 +42,27 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
  * @internal this class should not be instated by a project
  *           Use instead a request or response listener to
  *           extend the endpoints behaviours
+ *
+ * @phpstan-import-type SnippetAreaConfig from SnippetAreaCompilerPass
  */
 final class SnippetController
 {
     use HandleTrait;
 
     /**
-     * @var SnippetRepositoryInterface
+     * @param SnippetAreaConfig $snippetAreas
      */
-    private $snippetRepository;
-
-    /**
-     * @var NormalizerInterface
-     */
-    private $normalizer;
-
-    /**
-     * @var ContentManagerInterface
-     */
-    private $contentManager;
-
-    /**
-     * @var FieldDescriptorFactoryInterface
-     */
-    private $fieldDescriptorFactory;
-
-    /**
-     * @var DoctrineListBuilderFactoryInterface
-     */
-    private $listBuilderFactory;
-
-    /**
-     * @var RestHelperInterface
-     */
-    private $restHelper;
-
     public function __construct(
-        SnippetRepositoryInterface $snippetRepository,
+        private SnippetRepositoryInterface $snippetRepository,
         MessageBusInterface $messageBus,
-        NormalizerInterface $normalizer,
-        ContentManagerInterface $contentManager,
-        FieldDescriptorFactoryInterface $fieldDescriptorFactory,
-        DoctrineListBuilderFactoryInterface $listBuilderFactory,
-        RestHelperInterface $restHelper
+        private NormalizerInterface $normalizer,
+        private ContentManagerInterface $contentManager,
+        private FieldDescriptorFactoryInterface $fieldDescriptorFactory,
+        private DoctrineListBuilderFactoryInterface $listBuilderFactory,
+        private RestHelperInterface $restHelper,
+        private array $snippetAreas = []
     ) {
-        $this->snippetRepository = $snippetRepository;
         $this->messageBus = $messageBus;
-        $this->normalizer = $normalizer;
-
-        // TODO controller should not need more then Repository, MessageBus, Serializer
-        $this->fieldDescriptorFactory = $fieldDescriptorFactory;
-        $this->listBuilderFactory = $listBuilderFactory;
-        $this->restHelper = $restHelper;
-        $this->contentManager = $contentManager;
     }
 
     public function cgetAction(Request $request): Response
@@ -112,6 +81,27 @@ final class SnippetController
         $listBuilder->addSelectField($fieldDescriptors['publishedState']);
         $listBuilder->setParameter('locale', $request->query->get('locale'));
         $this->restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
+
+        $areasParam = $request->query->get('areas');
+        if (null !== $areasParam) {
+            $areas = \explode(',', (string) $areasParam);
+            $types = [];
+            foreach ($areas as $area) {
+                if (!\array_key_exists($area, $this->snippetAreas)) {
+                    continue;
+                }
+
+                $type = $this->snippetAreas[$area]['template'];
+                if (empty($type)) {
+                    continue;
+                }
+                $types[] = $type;
+            }
+
+            if (!empty($types)) {
+                $listBuilder->in($fieldDescriptors['templateKey'], $types);
+            }
+        }
 
         $listRepresentation = new PaginatedRepresentation(
             $listBuilder->execute(),

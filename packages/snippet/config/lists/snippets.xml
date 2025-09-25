@@ -144,5 +144,12 @@
             <field-name>workflowPlace</field-name>
             <entity-name>dimensionContent</entity-name>
         </property>
+
+        <property name="templateKey" type="string" visibility="yes" translation="sulu_admin.type">
+            <field-name>templateKey</field-name>
+            <entity-name>dimensionContent</entity-name>
+
+            <joins ref="dimensionContent"/>
+        </property>
     </properties>
 </list>

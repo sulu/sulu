@@ -55,6 +55,6 @@ sulu_snippet_area.put_snippet_area:
 
 sulu_snippet_area.delete_snippet_area:
     path: /snippet-areas/{key}.{_format}
-    methods: PUT
+    methods: DELETE
     controller: sulu_snippet.admin_snippet_area_controller::deleteAction
     format: json

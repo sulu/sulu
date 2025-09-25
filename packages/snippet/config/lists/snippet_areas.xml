@@ -4,25 +4,97 @@
 
     <joins name="snippet">
         <join>
-            <entity-name>%sulu.model.user.class%</entity-name>
-            <field-name>Sulu\Snippet\Domain\Model\SnippetAreaInterface.snippet</field-name>
-        </join>
-        <join>
             <entity-name>%sulu.model.snippet.class%</entity-name>
-            <field-name>%sulu.model.snippet.class%.uuid</field-name>
+            <field-name>Sulu\Snippet\Domain\Model\SnippetAreaInterface.snippet</field-name>
+            <method>LEFT</method>
+        </join>
+    </joins>
+
+    <joins name="dimensionContent" ref="snippet">
+        <join>
+            <entity-name>dimensionContent</entity-name>
+            <field-name>%sulu.model.snippet.class%.dimensionContents</field-name>
+            <method>LEFT</method>
+            <condition>dimensionContent.locale = :locale AND dimensionContent.stage = 'draft' AND dimensionContent.version = 0</condition>
+        </join>
+    </joins>
+
+    <joins name="unlocalizedDimensionContent" ref="snippet">
+        <join>
+            <entity-name>unlocalizedDimensionContent</entity-name>
+            <field-name>%sulu.model.snippet.class%.dimensionContents</field-name>
+            <method>LEFT</method>
+            <condition>unlocalizedDimensionContent.locale IS NULL AND unlocalizedDimensionContent.stage = 'draft' AND unlocalizedDimensionContent.version = 0</condition>
+        </join>
+    </joins>
+
+    <joins name="ghostDimensionContent" ref="unlocalizedDimensionContent">
+        <join>
+            <entity-name>ghostDimensionContent</entity-name>
+            <field-name>%sulu.model.snippet.class%.dimensionContents</field-name>
+            <method>LEFT</method>
+            <condition>ghostDimensionContent.locale = unlocalizedDimensionContent.ghostLocale AND ghostDimensionContent.stage = 'draft' AND dimensionContent IS NULL</condition>
         </join>
     </joins>
 
     <properties>
-        <!-- TODO should be uuid not id -->
         <property name="id" translation="sulu_admin.uuid" visibility="never">
             <field-name>uuid</field-name>
             <entity-name>Sulu\Snippet\Domain\Model\SnippetAreaInterface</entity-name>
         </property>
 
-        <property name="key" translation="sulu_admin.uuid">
+        <property name="areaKey" translation="sulu_snippet.area_key" visibility="always" searchability="yes">
             <field-name>areaKey</field-name>
             <entity-name>Sulu\Snippet\Domain\Model\SnippetAreaInterface</entity-name>
+        </property>
+
+        <property name="webspaceKey" translation="sulu_admin.webspace" visibility="never">
+            <field-name>webspaceKey</field-name>
+            <entity-name>Sulu\Snippet\Domain\Model\SnippetAreaInterface</entity-name>
+        </property>
+
+        <property name="snippetUuid" translation="sulu_snippet.snippet" visibility="yes">
+            <field-name>uuid</field-name>
+            <entity-name>%sulu.model.snippet.class%</entity-name>
+
+            <joins ref="snippet"/>
+        </property>
+
+        <case-property name="snippetTitle" translation="sulu_snippet.snippet_title" visibility="yes">
+            <field>
+                <field-name>title</field-name>
+                <entity-name>dimensionContent</entity-name>
+
+                <joins ref="dimensionContent"/>
+            </field>
+
+            <field>
+                <field-name>title</field-name>
+                <entity-name>ghostDimensionContent</entity-name>
+
+                <joins ref="ghostDimensionContent"/>
+            </field>
+
+            <transformer type="title"/>
+        </case-property>
+
+        <property name="locale" translation="sulu_admin.locale" visibility="never">
+            <field-name>locale</field-name>
+            <entity-name>dimensionContent</entity-name>
+        </property>
+
+        <property name="ghostLocale" translation="sulu_admin.ghost_locale" visibility="never">
+            <field-name>locale</field-name>
+            <entity-name>ghostDimensionContent</entity-name>
+
+            <joins ref="ghostDimensionContent"/>
+        </property>
+
+        <property name="templateKey" translation="sulu_admin.type" visibility="yes">
+            <field-name>templateKey</field-name>
+            <entity-name>dimensionContent</entity-name>
+
+            <joins ref="dimensionContent"/>
         </property>
     </properties>
 </list>

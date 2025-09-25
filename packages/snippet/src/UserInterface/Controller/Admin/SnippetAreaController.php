@@ -20,9 +20,7 @@ use Sulu\Component\Rest\RestHelperInterface;
 use Sulu\Messenger\Infrastructure\Symfony\Messenger\FlushMiddleware\EnableFlushStamp;
 use Sulu\Snippet\Application\Message\ModifySnippetAreaMessage;
 use Sulu\Snippet\Application\Message\RemoveSnippetAreaMessage;
-use Sulu\Snippet\Domain\Model\SnippetArea;
 use Sulu\Snippet\Domain\Model\SnippetAreaInterface;
-use Sulu\Snippet\Domain\Repository\SnippetAreaRepositoryInterface;
 use Sulu\Snippet\Infrastructure\Symfony\CompilerPass\SnippetAreaCompilerPass;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -31,7 +29,6 @@ use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\HandleTrait;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
-use Webmozart\Assert\Assert;
 
 /**
  * @internal this class should not be instated by a project
@@ -45,44 +42,63 @@ final class SnippetAreaController
     use HandleTrait;
 
     /**
-     * @param SnippetAreaConfig $snippetArea
+     * @param SnippetAreaConfig $snippetAreas
      */
     public function __construct(
         MessageBusInterface $messageBus,
         private NormalizerInterface $normalizer,
-        //private FieldDescriptorFactoryInterface $fieldDescriptorFactory,
-        //private DoctrineListBuilderFactoryInterface $listBuilderFactory,
-        //private RestHelperInterface $restHelper,
-        private SnippetAreaRepositoryInterface $snippetAreaRepository,
-        private array $snippetArea,
+        private FieldDescriptorFactoryInterface $fieldDescriptorFactory,
+        private DoctrineListBuilderFactoryInterface $listBuilderFactory,
+        private RestHelperInterface $restHelper,
+        private array $snippetAreas,
     ) {
-        // Setting the message bus of the HandleTrait
         $this->messageBus = $messageBus;
     }
 
     public function cgetAction(Request $request): Response
     {
-        /* @var DoctrineFieldDescriptorInterface[]|null $fieldDescriptors */
-        //$fieldDescriptors = $this->fieldDescriptorFactory->getFieldDescriptors(SnippetAreaInterface::RESOURCE_KEY);
-        //Assert::notNull($fieldDescriptors, 'Could not find field descriptors for resource key: ' . SnippetAreaInterface::RESOURCE_KEY);
+        /** @var DoctrineFieldDescriptorInterface[] $fieldDescriptors */
+        $fieldDescriptors = $this->fieldDescriptorFactory->getFieldDescriptors(SnippetAreaInterface::RESOURCE_KEY);
 
-        /* @var DoctrineListBuilder $listBuilder */
-        //$listBuilder = $this->listBuilderFactory->create(SnippetAreaInterface::class);
-        //$listBuilder->setIdField($fieldDescriptors['id']); // We need to set this because it's the uuid doctrine column
-        //$listBuilder->setParameter('locale', $request->query->get('locale'));
-        //$listBuilder->setParameter('webspace', $request->query->get('webspace'));
+        /** @var DoctrineListBuilder $listBuilder */
+        $listBuilder = $this->listBuilderFactory->create(SnippetAreaInterface::class);
+        $listBuilder->setIdField($fieldDescriptors['id']);
+        $listBuilder->addSelectField($fieldDescriptors['snippetUuid']);
+        $listBuilder->addSelectField($fieldDescriptors['snippetTitle']);
+        $listBuilder->setParameter('locale', $this->getLocale($request));
 
-        //$this->restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
-        $webspaceKey = $request->query->getString('webspace');
+        $this->restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
 
-        $snippetAreas = $this->snippetAreaRepository->findByWebspace($webspaceKey);
+        $webspaceKey = $request->query->getString('webspaceKey');
+        if ($webspaceKey) {
+            $listBuilder->where($fieldDescriptors['webspaceKey'], $webspaceKey);
+        }
+
+        $result = $listBuilder->execute();
+
+        $snippetAreas = [];
+        foreach ($result as $row) {
+            if (\is_array($row) && isset($row['areaKey'])) {
+                /** @var string $areaKey */
+                $areaKey = $row['areaKey'];
+                $snippetAreas[$areaKey] = $row;
+            }
+        }
 
         // Add the empty snippet areas as placeholders
-        foreach ($this->snippetArea as $key) {
-            $snippetAreas[$key] = new SnippetArea(
-                areaKey: $key,
-                webspaceKey: $webspaceKey,
-            );
+        foreach ($this->snippetAreas as $key => $snippetArea) {
+            $existingData = $snippetAreas[$key] ?? [];
+            $snippetAreas[$key] =
+                \array_merge(
+                    [
+                        'key' => $key,
+                        'snippetTitle' => null,
+                        'snippetUuid' => null,
+                        'templateKey' => $snippetArea['template'],
+                        'title' => $snippetArea['title'][$this->getLocale($request)],
+                    ],
+                    $existingData
+                );
         }
 
         $listRepresentation = new CollectionRepresentation(
@@ -94,7 +110,7 @@ final class SnippetAreaController
             $listRepresentation->toArray(),
             'json',
             [
-                'locale' => $request->getLocale(),
+                'locale' => $this->getLocale($request),
                 'sulu_admin' => true,
                 'sulu_admin_snippet' => true,
                 'sulu_admin_snippet_list' => true,
@@ -102,12 +118,19 @@ final class SnippetAreaController
         ));
     }
 
-    public function putAction(Request $request): JsonResponse
+    public function putAction(Request $request, string $key): JsonResponse
     {
-        $message = new ModifySnippetAreaMessage([
-            ...$request->attributes->all('_route_params'),
-            ...$request->request->all(),
-        ]);
+        $snippetUuid = $request->request->get('snippetUuid');
+        if (!\is_string($snippetUuid)) {
+            throw new \InvalidArgumentException('snippetUuid must be a string.');
+        }
+
+        $data = [
+            'webspaceKey' => $request->query->getString('webspaceKey'),
+            'snippetIdentifier' => ['uuid' => $snippetUuid],
+            'key' => $key,
+        ];
+        $message = new ModifySnippetAreaMessage($data);
 
         /** @see \Sulu\Snippet\Application\MessageHandler\ModifySnippetMessageHandler */
         $updatedSnippetArea = $this->handle(new Envelope($message, [new EnableFlushStamp()]));
@@ -116,16 +139,20 @@ final class SnippetAreaController
             $updatedSnippetArea,
             'json',
             [
-                'locale' => $request->getLocale(),
+                'locale' => $this->getLocale($request),
                 'sulu_admin' => true,
                 'sulu_admin_snippet' => true,
             ],
         ));
     }
 
-    public function deleteAction(Request $request): Response
+    public function deleteAction(Request $request, string $key): Response
     {
-        $message = new RemoveSnippetAreaMessage($request->attributes->all());
+        $data = [
+            'webspaceKey' => $request->query->getString('webspaceKey'),
+            'areaKey' => $key,
+        ];
+        $message = new RemoveSnippetAreaMessage($data);
 
         /** @see \Sulu\Snippet\Application\MessageHandler\RemoveSnippetAreaMessageHandler */
         $deletedSnippetArea = $this->handle(new Envelope($message, [new EnableFlushStamp()]));
@@ -134,10 +161,20 @@ final class SnippetAreaController
             $deletedSnippetArea,
             'json',
             [
-                'locale' => $request->getLocale(),
+                'locale' => $this->getLocale($request),
                 'sulu_admin' => true,
                 'sulu_admin_snippet' => true,
             ],
         ));
+    }
+
+    private function getLocale(Request $request): string
+    {
+        $locale = $request->query->get('locale');
+        if (\is_string($locale)) {
+            return $locale;
+        }
+
+        return $request->getLocale();
     }
 }
