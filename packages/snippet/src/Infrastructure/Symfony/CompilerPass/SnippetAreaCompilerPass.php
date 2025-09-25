@@ -41,7 +41,7 @@ class SnippetAreaCompilerPass implements CompilerPassInterface
         $this->translator = $container->get('translator');
 
         $snippetTemplateDirectories = $this->getSnippetTemplateDirectories($container);
-        $areas = $this->loadAreasFromXmlFiles($snippetTemplateDirectories);
+        $areas = $this->parseTemplateDirectories($snippetTemplateDirectories);
 
         \ksort($areas);
         $container->setParameter(self::SNIPPET_AREA_PARAM, $areas);
@@ -50,14 +50,10 @@ class SnippetAreaCompilerPass implements CompilerPassInterface
     /**
      * @param array<string> $templateDirectories
      *
-     * @return array<string, array{title: array<string, string>, cache-invalidation: bool, areaKey: string, template: string}>
+     * @return SnippetAreaConfig
      */
-    private function loadAreasFromXmlFiles(array $templateDirectories): array
+    private function parseTemplateDirectories(array $templateDirectories): array
     {
-        if (empty($templateDirectories)) {
-            return [];
-        }
-
         $areas = [];
         $keyLocations = [];
 
@@ -68,7 +64,7 @@ class SnippetAreaCompilerPass implements CompilerPassInterface
                 continue; // Skip directories that don't exist
             }
 
-            foreach ($this->getTemplateDataIterator($files) as $templateData) {
+            foreach ($this->parseTemplateFiles($files) as $templateData) {
                 $areas = \array_merge($areas, $this->processTemplateAreas($templateData, $keyLocations));
             }
         }
@@ -81,15 +77,13 @@ class SnippetAreaCompilerPass implements CompilerPassInterface
      */
     private function getSnippetTemplateDirectories(ContainerBuilder $container): array
     {
-        // Try to get directories from sulu_admin.templates.configuration parameter
-        if (!$container->hasParameter('sulu_admin.templates.configuration')) {
-            throw new \RuntimeException('The "sulu_admin.templates.configuration" parameter is not available. Make sure the SuluAdminBundle is properly configured.');
-        }
+        $this->validateTemplateConfiguration($container);
 
-        /** @var array<string, mixed> $templatesConfig */
+        /** @var array<string, array<string, mixed>> $templatesConfig */
         $templatesConfig = $container->getParameter('sulu_admin.templates.configuration');
+        $snippetConfig = $templatesConfig[SnippetInterface::TEMPLATE_TYPE];
 
-        if (!isset($templatesConfig[SnippetInterface::TEMPLATE_TYPE]) || !\is_array($templatesConfig[SnippetInterface::TEMPLATE_TYPE]) || !isset($templatesConfig[SnippetInterface::TEMPLATE_TYPE]['directories']) || !\is_array($templatesConfig[SnippetInterface::TEMPLATE_TYPE]['directories'])) {
+        if (!$this->hasValidDirectoriesConfig($snippetConfig)) {
             throw new \RuntimeException(\sprintf(
                 'No template directories configured for snippet template type "%s" in sulu_admin.templates.configuration parameter.',
                 SnippetInterface::TEMPLATE_TYPE
@@ -97,9 +91,26 @@ class SnippetAreaCompilerPass implements CompilerPassInterface
         }
 
         /** @var array<string, string> $directories */
-        $directories = (array) $templatesConfig[SnippetInterface::TEMPLATE_TYPE]['directories'];
+        $directories = (array) $snippetConfig['directories'];
 
         return $this->resolveDirectoryPaths($directories, $container);
+    }
+
+    private function validateTemplateConfiguration(ContainerBuilder $container): void
+    {
+        if (!$container->hasParameter('sulu_admin.templates.configuration')) {
+            throw new \RuntimeException('The "sulu_admin.templates.configuration" parameter is not available. Make sure the SuluAdminBundle is properly configured.');
+        }
+    }
+
+    /**
+     * @param mixed $config
+     */
+    private function hasValidDirectoriesConfig($config): bool
+    {
+        return \is_array($config)
+            && isset($config['directories'])
+            && \is_array($config['directories']);
     }
 
     /**
@@ -114,9 +125,11 @@ class SnippetAreaCompilerPass implements CompilerPassInterface
         foreach ($directories as $directory) {
             // Resolve parameter placeholders like %kernel.project_dir%
             $resolvedPath = $container->resolveEnvPlaceholders($directory, true);
-            if (\is_string($resolvedPath)) {
-                $resolvedPaths[] = $resolvedPath;
+            if (!\is_string($resolvedPath)) {
+                continue;
             }
+
+            $resolvedPaths[] = $resolvedPath;
         }
 
         return $resolvedPaths;
@@ -134,7 +147,7 @@ class SnippetAreaCompilerPass implements CompilerPassInterface
      * @param TemplateData $templateData
      * @param array<string, string> $keyLocations
      *
-     * @return array<string, array{title: array<string, string>, cache-invalidation: bool, areaKey: string, template: string}>
+     * @return SnippetAreaConfig
      */
     private function processTemplateAreas(array $templateData, array &$keyLocations): array
     {
@@ -146,17 +159,30 @@ class SnippetAreaCompilerPass implements CompilerPassInterface
 
             $this->validateUniqueAreaKey($areaKey, $keyLocations, $filePath);
 
-            $areas[$areaKey] = [
-                'title' => $areaData['titles'],
-                'cache-invalidation' => $areaData['cacheInvalidation'],
-                'areaKey' => $areaKey,
-                'template' => $templateData['templateKey'],
-            ];
+            $areas[$areaKey] = $this->createAreaConfig(
+                $areaData,
+                $templateData['templateKey']
+            );
 
             $keyLocations[$areaKey] = $filePath;
         }
 
         return $areas;
+    }
+
+    /**
+     * @param AreaData $areaData
+     *
+     * @return array{title: array<string, string>, cache-invalidation: bool, areaKey: string, template: string}
+     */
+    private function createAreaConfig(array $areaData, string $templateKey): array
+    {
+        return [
+            'title' => $areaData['titles'],
+            'cache-invalidation' => $areaData['cacheInvalidation'],
+            'areaKey' => $areaData['key'],
+            'template' => $templateKey,
+        ];
     }
 
     /**
@@ -177,7 +203,7 @@ class SnippetAreaCompilerPass implements CompilerPassInterface
     /**
      * @return \Generator<TemplateData>
      */
-    private function getTemplateDataIterator(Finder $files): \Generator
+    private function parseTemplateFiles(Finder $files): \Generator
     {
         foreach ($files as $file) {
             $templateData = $this->parseTemplateFile($file);
@@ -193,12 +219,17 @@ class SnippetAreaCompilerPass implements CompilerPassInterface
      */
     private function parseTemplateFile(\SplFileInfo $file): ?array
     {
-        $xml = $this->loadXmlDocument(\file_get_contents($file->getPathname()) ?: '');
+        $fileContent = \file_get_contents($file->getPathname());
+        if (false === $fileContent) {
+            return null;
+        }
+
+        $xml = $this->loadXmlDocument($fileContent);
         $templateKey = $this->extractTemplateKey($xml);
 
-        $areas = $this->extractAreas($xml);
+        $areas = $this->parseAreaElements($xml);
 
-        if (empty($areas)) {
+        if (0 === \count($areas)) {
             return null;
         }
 
@@ -235,13 +266,15 @@ class SnippetAreaCompilerPass implements CompilerPassInterface
             throw new \RuntimeException('Template key element is missing in XML document');
         }
 
-        return \trim($firstElement->textContent ?: '');
+        $textContent = $firstElement->textContent ?? '';
+
+        return \trim($textContent);
     }
 
     /**
      * @return array<AreaData>
      */
-    private function extractAreas(\DOMDocument $xml): array
+    private function parseAreaElements(\DOMDocument $xml): array
     {
         $areas = [];
         $areaElements = $xml->getElementsByTagName('area');
@@ -264,7 +297,7 @@ class SnippetAreaCompilerPass implements CompilerPassInterface
     {
         $keyAttribute = $areaElement->getAttribute('key');
 
-        if (empty($keyAttribute)) {
+        if ('' === $keyAttribute) {
             return null;
         }
 
@@ -292,7 +325,7 @@ class SnippetAreaCompilerPass implements CompilerPassInterface
             return $this->translateTitle('');
         }
 
-        return $this->processTitleElements($titleElements);
+        return $this->collectTitlesFromElements($titleElements);
     }
 
     /**
@@ -300,7 +333,7 @@ class SnippetAreaCompilerPass implements CompilerPassInterface
      *
      * @return array<string, string>
      */
-    private function processTitleElements(\DOMNodeList $titleElements): array
+    private function collectTitlesFromElements(\DOMNodeList $titleElements): array
     {
         $titles = [];
 
@@ -308,13 +341,13 @@ class SnippetAreaCompilerPass implements CompilerPassInterface
             $locale = $titleElement->getAttribute('lang');
             $titleText = \trim($titleElement->textContent);
 
-            if (empty($locale)) {
+            if ('' === $locale) {
                 // No lang attribute - translate for all locales
                 return $this->translateTitle($titleText);
             }
 
             // Has lang attribute - use as given
-            if (!empty($titleText)) {
+            if ('' !== $titleText) {
                 $titles[$locale] = $titleText;
             }
         }

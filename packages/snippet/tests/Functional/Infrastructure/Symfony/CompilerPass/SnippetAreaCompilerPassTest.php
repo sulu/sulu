@@ -76,6 +76,7 @@ class SnippetAreaCompilerPassTest extends KernelTestCase
             'snippet' => [
                 'directories' => [
                     __DIR__ . '/../../../../Application/config/templates/snippets',
+                    __DIR__ . '/../../../../Application/config/templates/snippet-duplicates',
                 ],
             ],
         ]);
@@ -100,6 +101,7 @@ class SnippetAreaCompilerPassTest extends KernelTestCase
             'snippet' => [
                 'directories' => [
                     __DIR__ . '/../../../../Application/config/templates/snippets',
+                    __DIR__ . '/../../../../Application/config/templates/snippet-duplicates',
                 ],
             ],
         ]);

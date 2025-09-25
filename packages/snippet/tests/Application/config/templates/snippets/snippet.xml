@@ -16,7 +16,7 @@
             </meta>
         </area>
 
-        <area key="test">
+        <area key="test" cache-invalidation="false">
             <meta>
                 <title lang="en">Menu Social Media Links</title>
             </meta>
