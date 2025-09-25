@@ -37,8 +37,8 @@ class SnippetAreaCompilerPassTest extends KernelTestCase
                 ],
                 'hotel' => [
                     'title' => [
-                        'en' => 'snippet_type.hotel',
-                        'de' => 'snippet_type.hotel',
+                        'en' => 'Hotel Snippet',
+                        'de' => 'Hotel Schnipsel',
                     ],
                     'cache-invalidation' => false,
                     'areaKey' => 'hotel',
