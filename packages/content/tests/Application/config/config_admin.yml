@@ -9,3 +9,8 @@ services:
         class: Sulu\Content\Tests\Application\PreviewKernelFactory
         arguments:
             - '%kernel.environment%'
+
+sulu_admin:
+    forms:
+        directories:
+            - '%kernel.project_dir%/config/forms'
