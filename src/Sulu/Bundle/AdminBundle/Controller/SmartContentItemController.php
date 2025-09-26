@@ -88,17 +88,16 @@ class SmartContentItemController extends AbstractRestController
             unset($filters['sortBy'], $filters['sortMethod']);
         }
 
-        /** @var SmartContentBaseFilters $filters */
         $filters = [
             // Categories
             'categories' => isset($filters['categories']) ? \array_filter(\explode(',', $filters['categories'])) : [],
-            'categoryOperator' => isset($filters['categoryOperator']) ? \strtoupper($filters['categoryOperator']) : null,
+            'categoryOperator' => isset($filters['categoryOperator']) ? \strtoupper($filters['categoryOperator']) : 'OR',
             'websiteCategories' => [],
             'websiteCategoryOperator' => 'OR',
 
             // Tags
             'tags' => isset($filters['tags']) ? \array_filter(\explode(',', $filters['tags'])) : [],
-            'tagOperator' => isset($filters['tagOperator']) ? \strtoupper($filters['tagOperator']) : null,
+            'tagOperator' => isset($filters['tagOperator']) ? \strtoupper($filters['tagOperator']) : 'OR',
             'websiteTags' => [],
             'websiteTagOperator' => 'OR',
 
@@ -116,6 +115,16 @@ class SmartContentItemController extends AbstractRestController
             'excludeDuplicates' => isset($params['exclude_duplicates']) && ('true' === $params['exclude_duplicates']->getValue() || true === $params['exclude_duplicates']->getValue()),
         ];
 
+        // Transform page/maxPerPage to offset for provider compatibility
+        $page = $filters['page'];
+        $maxPerPage = $filters['maxPerPage'];
+
+        $filters['offset'] = $maxPerPage ? (($page - 1) * (int) $maxPerPage) : 0;
+        // Keep limit unchanged - it's the overall result limit
+        // Remove pagination fields that providers don't expect
+        unset($filters['page'], $filters['maxPerPage']);
+
+        /** @var SmartContentBaseFilters $filters */
         if (!$this->smartContentProviderLocator->has($providerType)) {
             throw new \RuntimeException(
                 \sprintf(

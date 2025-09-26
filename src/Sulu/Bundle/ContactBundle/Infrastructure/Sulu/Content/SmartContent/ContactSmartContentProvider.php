@@ -23,13 +23,39 @@ use Sulu\Bundle\ContactBundle\Infrastructure\Sulu\Content\ResourceLoader\Contact
 
 /**
  * @phpstan-type ContactSmartContentFilters array{
- *      page?: int,
- *      pageSize?: int|null,
- *      limit?: int|null,
- *      tags?: string[],
- *      categories?: int[],
- *      tagOperator?: 'AND'|'OR',
- *      categoryOperator?: 'AND'|'OR',
+ *      categories: int[],
+ *      categoryOperator: 'AND'|'OR',
+ *      websiteCategories: string[],
+ *      websiteCategoryOperator: 'AND'|'OR',
+ *      tags: string[],
+ *      tagOperator: 'AND'|'OR',
+ *      websiteTags: string[],
+ *      websiteTagOperator: 'AND'|'OR',
+ *      types: string[],
+ *      typesOperator: 'OR',
+ *      locale: string,
+ *      dataSource: string|null,
+ *      limit: int|null,
+ *      offset: int,
+ *      includeSubFolders: bool,
+ *      excludeDuplicates: bool,
+ *  }
+ * @phpstan-type ContactSmartContentCountFilters array{
+ *      categories: int[],
+ *      categoryOperator: 'AND'|'OR',
+ *      websiteCategories: string[],
+ *      websiteCategoryOperator: 'AND'|'OR',
+ *      tags: string[],
+ *      tagOperator: 'AND'|'OR',
+ *      websiteTags: string[],
+ *      websiteTagOperator: 'AND'|'OR',
+ *      types: string[],
+ *      typesOperator: 'OR',
+ *      locale: string,
+ *      dataSource: string|null,
+ *      limit: int|null,
+ *      includeSubFolders: bool,
+ *      excludeDuplicates: bool,
  *  }
  */
 readonly class ContactSmartContentProvider implements SmartContentProviderInterface
@@ -59,7 +85,7 @@ readonly class ContactSmartContentProvider implements SmartContentProviderInterf
     }
 
     /**
-     * @param ContactSmartContentFilters $filters
+     * @param ContactSmartContentCountFilters $filters
      */
     public function countBy(array $filters, array $params = []): int
     {
@@ -81,10 +107,6 @@ readonly class ContactSmartContentProvider implements SmartContentProviderInterf
      */
     public function findFlatBy(array $filters, array $sortBys, array $params = []): array
     {
-        $page = $filters['page'] ?? 1;
-        $pageSize = $filters['pageSize'] ?? null;
-        $limit = $filters['limit'] ?? null;
-
         $alias = 'contact';
         $queryBuilder = $this->createQueryBuilder($alias);
         $queryBuilder->select($alias . '.id as id');
@@ -94,7 +116,7 @@ readonly class ContactSmartContentProvider implements SmartContentProviderInterf
 
         $this->smartContentQueryEnhancer->addOrderBySelects($queryBuilder);
         $this->enhanceQueryBuilder($queryBuilder, $filters, $sortBys, $alias);
-        $this->smartContentQueryEnhancer->addPagination($queryBuilder, $page, $pageSize, $limit);
+        $this->smartContentQueryEnhancer->addPagination($queryBuilder, $filters['offset'], $filters['limit']);
 
         /** @var array{id: string, firstName: string, lastName: string}[] $queryResult */
         $queryResult = $queryBuilder->getQuery()->getArrayResult();
@@ -109,12 +131,7 @@ readonly class ContactSmartContentProvider implements SmartContentProviderInterf
     }
 
     /**
-     * @param array{
-     *     tags?: string[],
-     *     categories?: int[],
-     *     tagOperator?: 'AND'|'OR',
-     *     categoryOperator?: 'AND'|'OR',
-     * } $filters
+     * @param ContactSmartContentFilters|ContactSmartContentCountFilters $filters
      * @param array<string, string> $sortBys
      */
     private function enhanceQueryBuilder(
@@ -127,8 +144,8 @@ readonly class ContactSmartContentProvider implements SmartContentProviderInterf
             $queryBuilder->orderBy($sortBy, $sortMethod);
         }
 
-        $tagNames = $filters['tags'] ?? [];
-        if ([] !== $tagNames && ($filters['tagOperator'] ?? null)) {
+        $tagNames = $filters['tags'];
+        if ([] !== $tagNames) {
             $this->smartContentQueryEnhancer->addJoinFilter(
                 $queryBuilder,
                 $alias . '.tags',
@@ -140,8 +157,8 @@ readonly class ContactSmartContentProvider implements SmartContentProviderInterf
             );
         }
 
-        $categoryIds = $filters['categories'] ?? [];
-        if ([] !== $categoryIds && ($filters['categoryOperator'] ?? null)) {
+        $categoryIds = $filters['categories'];
+        if ([] !== $categoryIds) {
             $this->smartContentQueryEnhancer->addJoinFilter(
                 $queryBuilder,
                 $alias . '.categories',

@@ -40,8 +40,7 @@ use Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer;
  *       locale: string,
  *       dataSource: string|null,
  *       limit: int|null,
- *       page: int,
- *       maxPerPage: int|null,
+ *       offset: int,
  *       includeSubFolders: bool,
  *       excludeDuplicates: bool,
  *       audienceTargeting?: bool,
@@ -49,6 +48,27 @@ use Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer;
  *       targetGroupId?: int,
  *       segmentKey?: string,
  *   }
+ * @phpstan-type ArticleSmartContentCountFilters array{
+ *        categories: int[],
+ *        categoryOperator: 'AND'|'OR',
+ *        websiteCategories: string[],
+ *        websiteCategoryOperator: 'AND'|'OR',
+ *        tags: string[],
+ *        tagOperator: 'AND'|'OR',
+ *        websiteTags: string[],
+ *        websiteTagOperator: 'AND'|'OR',
+ *        types: string[],
+ *        typesOperator: 'OR',
+ *        locale: string,
+ *        dataSource: string|null,
+ *        limit: int|null,
+ *        includeSubFolders: bool,
+ *        excludeDuplicates: bool,
+ *        audienceTargeting?: bool,
+ *        audienceTargeting?: bool,
+ *        targetGroupId?: int,
+ *        segmentKey?: string,
+ *    }
  */
 readonly class ArticleSmartContentProvider implements SmartContentProviderInterface
 {
@@ -109,11 +129,11 @@ readonly class ArticleSmartContentProvider implements SmartContentProviderInterf
     }
 
     /**
-     * @param ArticleSmartContentFilters $filters
+     * @param ArticleSmartContentCountFilters $filters
      */
     public function countBy(array $filters, array $params = []): int
     {
-        /** @var ArticleSmartContentFilters $filters */
+        /** @var ArticleSmartContentCountFilters $filters */
         $filters = $this->enhanceWithDimensionAttributes($filters);
 
         $alias = 'article';
@@ -169,7 +189,7 @@ readonly class ArticleSmartContentProvider implements SmartContentProviderInterf
         $queryBuilder->select('DISTINCT ' . $alias . '.uuid as id');
         $queryBuilder->addSelect('filterDimensionContent.title');
         $this->smartContentQueryEnhancer->addOrderBySelects($queryBuilder);
-        $this->smartContentQueryEnhancer->addPagination($queryBuilder, $filters['page'], $filters['limit'], $filters['maxPerPage']);
+        $this->smartContentQueryEnhancer->addPagination($queryBuilder, $filters['offset'] ?? 0, $filters['limit']);
 
         /** @var array{id: string, title: string}[] $result */
         $result = $queryBuilder->getQuery()->getArrayResult();
@@ -193,7 +213,7 @@ readonly class ArticleSmartContentProvider implements SmartContentProviderInterf
     }
 
     /**
-     * @param ArticleSmartContentFilters $filters
+     * @param ArticleSmartContentFilters|ArticleSmartContentCountFilters $filters
      *
      * @return array{
      *         categoryIds?: int[],
@@ -209,8 +229,7 @@ readonly class ArticleSmartContentProvider implements SmartContentProviderInterf
      *         locale: string,
      *         dataSource: string|null,
      *         limit: int|null,
-     *         page: int,
-     *         maxPerPage: int|null,
+     *         offset?: int,
      *         includeSubFolders: bool,
      *         excludeDuplicates: bool,
      *         audienceTargeting?: bool
