@@ -11,7 +11,7 @@ declare(strict_types=1);
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Page\Trash;
+namespace Sulu\Snippet\Infrastructure\Sulu\Trash;
 
 use Sulu\Bundle\TrashBundle\Application\RestoreConfigurationProvider\RestoreConfiguration;
 use Sulu\Bundle\TrashBundle\Application\RestoreConfigurationProvider\RestoreConfigurationProviderInterface;
@@ -23,59 +23,57 @@ use Sulu\Content\Application\ContentMerger\ContentMergerInterface;
 use Sulu\Content\Application\ContentNormalizer\ContentNormalizerInterface;
 use Sulu\Content\Domain\Model\DimensionContentCollection;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
-use Sulu\Page\Application\Mapper\PageMapperInterface;
-use Sulu\Page\Domain\Model\PageDimensionContent;
-use Sulu\Page\Domain\Model\PageDimensionContentInterface;
-use Sulu\Page\Domain\Model\PageInterface;
-use Sulu\Page\Domain\Repository\PageRepositoryInterface;
-use Sulu\Page\Infrastructure\Sulu\Admin\PageAdmin;
+use Sulu\Snippet\Application\Mapper\SnippetMapperInterface;
+use Sulu\Snippet\Domain\Model\SnippetDimensionContent;
+use Sulu\Snippet\Domain\Model\SnippetDimensionContentInterface;
+use Sulu\Snippet\Domain\Model\SnippetInterface;
+use Sulu\Snippet\Domain\Repository\SnippetRepositoryInterface;
+use Sulu\Snippet\Infrastructure\Sulu\Admin\SnippetAdmin;
 use Webmozart\Assert\Assert;
 
 /**
  * @internal
  */
-final class PageTrashItemHandler implements
+final class SnippetTrashItemHandler implements
     StoreTrashItemHandlerInterface,
     RestoreTrashItemHandlerInterface,
     RestoreConfigurationProviderInterface
 {
     /**
-     * @param iterable<PageMapperInterface> $pageMappers
+     * @param iterable<SnippetMapperInterface> $snippetMappers
      */
     public function __construct(
         private TrashItemRepositoryInterface $trashItemRepository,
-        private PageRepositoryInterface $pageRepository,
+        private SnippetRepositoryInterface $snippetRepository,
         private ContentNormalizerInterface $contentNormalizer,
         private ContentMergerInterface $contentMerger,
-        private iterable $pageMappers,
+        private iterable $snippetMappers,
     ) {
     }
 
     public static function getResourceKey(): string
     {
-        return PageInterface::RESOURCE_KEY;
+        return SnippetInterface::RESOURCE_KEY;
     }
 
     public function store(object $resource, array $options = []): TrashItemInterface
     {
-        Assert::isInstanceOf($resource, PageInterface::class);
+        Assert::isInstanceOf($resource, SnippetInterface::class);
 
-        $page = $resource;
+        $snippet = $resource;
 
         $data = [
-            'parentUuid' => $page->getParent()?->getUuid(),
-            'webspaceKey' => $page->getWebspaceKey(),
             'dimensionContents' => [],
         ];
 
         $restoreType = $options['locales'] ?? null ? 'translation' : null;
 
         $titles = [];
-        /** @var array<string, PageDimensionContentInterface> $localizedDimensionContents */
+        /** @var array<string, SnippetDimensionContentInterface> $localizedDimensionContents */
         $localizedDimensionContents = [];
-        /** @var PageDimensionContentInterface|null $unlocalizedDimensionContent */
+        /** @var SnippetDimensionContentInterface|null $unlocalizedDimensionContent */
         $unlocalizedDimensionContent = null;
-        foreach ($page->getDimensionContents() as $dimensionContent) {
+        foreach ($snippet->getDimensionContents() as $dimensionContent) {
             if (
                 DimensionContentInterface::CURRENT_VERSION !== $dimensionContent->getVersion()
                 && DimensionContentInterface::STAGE_LIVE !== $dimensionContent->getStage()
@@ -91,20 +89,20 @@ final class PageTrashItemHandler implements
             $localizedDimensionContents[$dimensionContent->getLocale()] = $dimensionContent;
         }
 
-        Assert::notNull($unlocalizedDimensionContent, 'Expected to find an unlocalized dimension content for the page.');
-        Assert::notEmpty($localizedDimensionContents, 'Expected to find at least one localized dimension content for the page.');
+        Assert::notNull($unlocalizedDimensionContent, 'Expected to find an unlocalized dimension content for the snippet.');
+        Assert::notEmpty($localizedDimensionContents, 'Expected to find at least one localized dimension content for the snippet.');
 
         // sort dimensionContents after the availableLocales from the unlocalizedDimension
         $availableLocales = $unlocalizedDimensionContent->getAvailableLocales();
         Assert::isArray($availableLocales, 'Expected availableLocales to be an array');
-        /** @var array<string, PageDimensionContentInterface> $localizedDimensionContents */
+        /** @var array<string, SnippetDimensionContentInterface> $localizedDimensionContents */
         $localizedDimensionContents = \array_merge(
             \array_flip($availableLocales),
             $localizedDimensionContents
         );
 
         foreach ($localizedDimensionContents as $locale => $localizedDimensionContent) {
-            /** @var array<int, PageDimensionContent> $dimensionContents */
+            /** @var array<int, SnippetDimensionContent> $dimensionContents */
             $dimensionContents = [$unlocalizedDimensionContent, $localizedDimensionContent];
 
             $mergedDimensionContent = $this->contentMerger->merge(
@@ -115,7 +113,7 @@ final class PageTrashItemHandler implements
                         'stage' => DimensionContentInterface::STAGE_DRAFT,
                         'version' => DimensionContentInterface::CURRENT_VERSION,
                     ],
-                    PageDimensionContent::class
+                    SnippetDimensionContent::class
                 )
             );
 
@@ -130,65 +128,48 @@ final class PageTrashItemHandler implements
         }
 
         return $this->trashItemRepository->create(
-            PageInterface::RESOURCE_KEY,
-            $page->getUuid(),
+            SnippetInterface::RESOURCE_KEY,
+            $snippet->getUuid(),
             $titles,
             $data,
             $restoreType,
             $options,
-            PageAdmin::getPageSecurityContext($page->getWebspaceKey()),
+            SnippetAdmin::SECURITY_CONTEXT,
             null, // TODO add Security
-            $page->getUuid(),
+            $snippet->getUuid(),
         );
     }
 
     /**
-     * @param array{
-     *     parentId?: string,
-     * } $restoreFormData
+     * @param array{} $restoreFormData
      */
     public function restore(TrashItemInterface $trashItem, array $restoreFormData = []): object
     {
         $restoreData = $trashItem->getRestoreData();
-        $pageUuid = $trashItem->getResourceId();
+        $snippetUuid = $trashItem->getResourceId();
 
-        // Create the page
-        $page = $this->pageRepository->createNew($pageUuid);
-        $webspaceKey = $restoreData['webspaceKey'];
-        Assert::string($webspaceKey, 'Expected webspaceKey to be a string');
-        $page->setWebspaceKey($webspaceKey);
-
-        // Set parent if exists
-        $parentUuid = $restoreFormData['parentId'] ?? $restoreData['parentUuid'];
-        if ($parentUuid) {
-            Assert::string($parentUuid, 'Expected parentUuid to be a string');
-            $parent = $this->pageRepository->findOneBy(['uuid' => $parentUuid]);
-            if ($parent) {
-                $page->setParent($parent);
-            }
-        }
-
-        $this->pageRepository->add($page);
+        $snippet = $this->snippetRepository->createNew($snippetUuid);
+        $this->snippetRepository->add($snippet);
 
         $dimensionContents = $restoreData['dimensionContents'] ?? [];
         Assert::isArray($dimensionContents, 'Expected dimensionContents to be an array');
+        /** @var array<string, mixed> $dimensionContentData */
         foreach ($dimensionContents as $dimensionContentData) {
-            Assert::isArray($dimensionContentData, 'Expected dimensionContentData to be an array');
             unset($dimensionContentData['url']); // TODO old route is not removed on delete?
-            foreach ($this->pageMappers as $pageMapper) {
-                $pageMapper->mapPageData($page, $dimensionContentData);
+            foreach ($this->snippetMappers as $snippetMapper) {
+                $snippetMapper->mapSnippetData($snippet, $dimensionContentData);
             }
         }
 
-        return $page;
+        return $snippet;
     }
 
     public function getConfiguration(): RestoreConfiguration
     {
         return new RestoreConfiguration(
-            'restore_page',
-            PageAdmin::EDIT_FORM_VIEW,
-            ['id' => 'id', 'webspace' => 'webspace'],
+            'restore_snippet',
+            SnippetAdmin::EDIT_TABS_VIEW,
+            ['id' => 'id'],
             null, // TODO serialization group?
         );
     }

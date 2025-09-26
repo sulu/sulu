@@ -36,7 +36,7 @@ use Sulu\Article\Infrastructure\Sulu\Content\PropertyResolver\SingleArticleSelec
 use Sulu\Article\Infrastructure\Sulu\Content\ResourceLoader\ArticleResourceLoader;
 use Sulu\Article\Infrastructure\Sulu\Reference\ArticleReferenceRefresher;
 use Sulu\Article\Infrastructure\Sulu\Sitemap\ArticlesSitemapProvider;
-use Sulu\Article\Trash\ArticleTrashItemHandler;
+use Sulu\Article\Infrastructure\Sulu\Trash\ArticleTrashItemHandler;
 use Sulu\Article\UserInterface\Controller\Admin\ArticleController;
 use Sulu\Bundle\PersistenceBundle\DependencyInjection\PersistenceExtensionTrait;
 use Sulu\Bundle\PersistenceBundle\PersistenceBundleTrait;

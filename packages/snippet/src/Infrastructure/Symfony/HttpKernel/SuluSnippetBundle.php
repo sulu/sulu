@@ -43,10 +43,10 @@ use Sulu\Snippet\Infrastructure\Sulu\Content\PropertyResolver\SnippetSelectionPr
 use Sulu\Snippet\Infrastructure\Sulu\Content\ResourceLoader\SnippetResourceLoader;
 use Sulu\Snippet\Infrastructure\Sulu\Content\SnippetSmartContentProvider;
 use Sulu\Snippet\Infrastructure\Sulu\Reference\SnippetReferenceRefresher;
+use Sulu\Snippet\Infrastructure\Sulu\Trash\SnippetTrashItemHandler;
 use Sulu\Snippet\Infrastructure\Symfony\CompilerPass\SnippetAreaCompilerPass;
 use Sulu\Snippet\Infrastructure\Symfony\Normalizer\SnippetAreaNormalizer;
 use Sulu\Snippet\Infrastructure\Symfony\Twig\SnippetAreaTwigExtension;
-use Sulu\Snippet\Trash\SnippetTrashItemHandler;
 use Sulu\Snippet\UserInterface\Controller\Admin\SnippetAreaController;
 use Sulu\Snippet\UserInterface\Controller\Admin\SnippetController;
 use Symfony\Component\Config\Definition\Configurator\DefinitionConfigurator;
