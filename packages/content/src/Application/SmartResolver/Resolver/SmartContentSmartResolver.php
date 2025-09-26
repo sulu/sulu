@@ -19,7 +19,25 @@ use Sulu\Content\Application\ContentResolver\Value\SmartResolvable;
 use Symfony\Component\DependencyInjection\ServiceLocator;
 
 /**
- * @phpstan-import-type SmartContentBaseFilters from SmartContentProviderInterface
+ * @phpstan-type SmartContentFilters array{
+ *       categories: int[],
+ *       categoryOperator: 'AND'|'OR',
+ *       websiteCategories: string[],
+ *       websiteCategoryOperator: 'AND'|'OR',
+ *       tags: string[],
+ *       tagOperator: 'AND'|'OR',
+ *       websiteTags: string[],
+ *       websiteTagOperator: 'AND'|'OR',
+ *       types: string[],
+ *       typesOperator: 'OR',
+ *       locale: string,
+ *       dataSource: string|null,
+ *       limit: int|null,
+ *       page: int,
+ *       maxPerPage: int|null,
+ *       includeSubFolders: bool,
+ *       excludeDuplicates: bool,
+ *   }
  */
 class SmartContentSmartResolver implements SmartResolverInterface
 {
@@ -35,7 +53,7 @@ class SmartContentSmartResolver implements SmartResolverInterface
     {
         /** @var array{
          *     value: array<string, mixed>,
-         *     filters: SmartContentBaseFilters,
+         *     filters: SmartContentFilters,
          *     sortBys: array<string, string>|null,
          *     parameters: array<string, mixed>,
          * } $data
@@ -76,10 +94,20 @@ class SmartContentSmartResolver implements SmartResolverInterface
 
         $smartContentProvider = $this->smartContentProviders->get($provider);
 
+        // Pagination filters
+        unset($filters['maxPerPage']);
+        unset($filters['page']);
+
+        $filters['offset'] = $maxPerPage ? (($page - 1) * $maxPerPage) : 0;
+        $filters['limit'] = $maxPerPage ?? $limit;
+
+        $countByFilters = $filters;
+        unset($countByFilters['offset']);
+
         $params = ['value' => $value, ...$parameters];
         $result = $smartContentProvider->findFlatBy($filters, $sortBys, $params);
 
-        $fullTotal = $smartContentProvider->countBy($filters, $params);
+        $fullTotal = $smartContentProvider->countBy($countByFilters, $params);
         $total = $limit ? \min($limit, $fullTotal) : $fullTotal;
 
         $view = [

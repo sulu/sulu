@@ -46,8 +46,30 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  *       locale: string,
  *       dataSource: string|null,
  *       limit: int|null,
- *       page: int,
- *       maxPerPage: int|null,
+ *       offset: int,
+ *       includeSubFolders: bool,
+ *       excludeDuplicates: bool,
+ *       audienceTargeting?: bool,
+ *       targetGroupId?: int,
+ *       segmentKey?: string,
+ *       webspaceKey?: string,
+ *       mimetype?: string|null,
+ *       type?: string|null,
+ *  }
+ * @phpstan-type MediaSmartContentCountFilters array{
+ *       categories: int[],
+ *       categoryOperator: 'AND'|'OR',
+ *       websiteCategories: string[],
+ *       websiteCategoryOperator: 'AND'|'OR',
+ *       tags: string[],
+ *       tagOperator: 'AND'|'OR',
+ *       websiteTags: string[],
+ *       websiteTagOperator: 'AND'|'OR',
+ *       types: string[],
+ *       typesOperator: 'OR',
+ *       locale: string,
+ *       dataSource: string|null,
+ *       limit: int|null,
  *       includeSubFolders: bool,
  *       excludeDuplicates: bool,
  *       audienceTargeting?: bool,
@@ -122,7 +144,7 @@ readonly class MediaSmartContentProvider implements SmartContentProviderInterfac
     }
 
     /**
-     * @param MediaSmartContentFilters $filters
+     * @param MediaSmartContentCountFilters $filters
      * @param PropertyParameter[] $params
      */
     public function countBy(array $filters, array $params = []): int
@@ -166,10 +188,7 @@ readonly class MediaSmartContentProvider implements SmartContentProviderInterfac
             MediaInterface::class,
         );
 
-        $page = $filters['page'];
-        $pageSize = $filters['maxPerPage'];
-        $limit = $filters['limit'];
-        $this->smartContentQueryEnhancer->addPagination($queryBuilder, $page, $pageSize, $limit);
+        $this->smartContentQueryEnhancer->addPagination($queryBuilder, $filters['offset'], $filters['limit']);
 
         /** @var array<array{id: string, title: string}> $queryResult */
         $queryResult = $queryBuilder->getQuery()->getArrayResult();
@@ -189,7 +208,7 @@ readonly class MediaSmartContentProvider implements SmartContentProviderInterfac
     /**
      * Enhances the query builder with filters, sorting, and access control.
      *
-     * @param MediaSmartContentFilters $filters
+     * @param MediaSmartContentFilters|MediaSmartContentCountFilters $filters
      * @param array<string, string> $sortBys
      * @param class-string|null $entityClass
      */

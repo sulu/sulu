@@ -30,18 +30,34 @@ use Sulu\Bundle\AdminBundle\SmartContent\Configuration\ProviderConfigurationInte
  *      locale: string,
  *      dataSource: string|null,
  *      limit: int|null,
- *      page: int,
- *      maxPerPage: int|null,
+ *      offset: int,
  *      includeSubFolders: bool,
  *      excludeDuplicates: bool,
  *  }
+ * @phpstan-type SmartContentCountBaseFilters array{
+ *       categories: int[],
+ *       categoryOperator: 'AND'|'OR',
+ *       websiteCategories: string[],
+ *       websiteCategoryOperator: 'AND'|'OR',
+ *       tags: string[],
+ *       tagOperator: 'AND'|'OR',
+ *       websiteTags: string[],
+ *       websiteTagOperator: 'AND'|'OR',
+ *       types: string[],
+ *       typesOperator: 'OR',
+ *       locale: string,
+ *       dataSource: string|null,
+ *       limit: int|null,
+ *       includeSubFolders: bool,
+ *       excludeDuplicates: bool,
+ *   }
  */
 interface SmartContentProviderInterface
 {
     public function getConfiguration(): ProviderConfigurationInterface;
 
     /**
-     * @param SmartContentBaseFilters $filters
+     * @param SmartContentCountBaseFilters $filters
      * @param array<string, mixed> $params
      */
     public function countBy(array $filters, array $params = []): int;

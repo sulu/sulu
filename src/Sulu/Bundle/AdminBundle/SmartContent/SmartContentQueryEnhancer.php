@@ -16,22 +16,11 @@ use Doctrine\ORM\QueryBuilder;
 
 class SmartContentQueryEnhancer
 {
-    public function addPagination(QueryBuilder $queryBuilder, int $page, ?int $limit, ?int $pageSize): void
+    public function addPagination(QueryBuilder $queryBuilder, int $offset, ?int $limit = null): void
     {
-        if (null !== $pageSize && $pageSize > 0) {
-            $pageOffset = ($page - 1) * $pageSize;
+        $queryBuilder->setFirstResult($offset);
 
-            if (null !== $limit) {
-                // remaining items after offset
-                $remainingItems = \max(0, $limit - $pageOffset);
-                $restLimit = \min($pageSize, $remainingItems);
-            } else {
-                $restLimit = $pageSize;
-            }
-
-            $queryBuilder->setMaxResults($restLimit);
-            $queryBuilder->setFirstResult($pageOffset);
-        } elseif (null !== $limit) {
+        if (null !== $limit) {
             $queryBuilder->setMaxResults($limit);
         }
     }

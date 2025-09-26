@@ -40,8 +40,27 @@ use Sulu\Snippet\Infrastructure\Sulu\Content\ResourceLoader\SnippetResourceLoade
  *       locale: string,
  *       dataSource: string|null,
  *       limit: int|null,
- *       page: int,
- *       maxPerPage: int|null,
+ *       offset: int,
+ *       includeSubFolders: bool,
+ *       excludeDuplicates: bool,
+ *       audienceTargeting?: bool,
+ *       targetGroupId?: int,
+ *       segmentKey?: string,
+ *   }
+ * @phpstan-type SnippetSmartContentCountFilters array{
+ *       categories: int[],
+ *       categoryOperator: 'AND'|'OR',
+ *       websiteCategories: string[],
+ *       websiteCategoryOperator: 'AND'|'OR',
+ *       tags: string[],
+ *       tagOperator: 'AND'|'OR',
+ *       websiteTags: string[],
+ *       websiteTagOperator: 'AND'|'OR',
+ *       types: string[],
+ *       typesOperator: 'OR',
+ *       locale: string,
+ *       dataSource: string|null,
+ *       limit: int|null,
  *       includeSubFolders: bool,
  *       excludeDuplicates: bool,
  *       audienceTargeting?: bool,
@@ -101,11 +120,11 @@ readonly class SnippetSmartContentProvider implements SmartContentProviderInterf
     }
 
     /**
-     * @param SnippetSmartContentFilters $filters
+     * @param SnippetSmartContentCountFilters $filters
      */
     public function countBy(array $filters, array $params = []): int
     {
-        /** @var SnippetSmartContentFilters $filters */
+        /** @var SnippetSmartContentCountFilters $filters */
         $filters = $this->enhanceWithDimensionAttributes($filters);
 
         $alias = 'snippet';
@@ -159,7 +178,7 @@ readonly class SnippetSmartContentProvider implements SmartContentProviderInterf
         $queryBuilder->addSelect('filterDimensionContent.title');
         $this->smartContentQueryEnhancer->addOrderBySelects($queryBuilder);
 
-        $this->smartContentQueryEnhancer->addPagination($queryBuilder, $filters['page'], $filters['limit'], $filters['maxPerPage']);
+        $this->smartContentQueryEnhancer->addPagination($queryBuilder, $filters['offset'] ?? 0, $filters['limit']);
 
         /** @var array{id: string, title: string, changed?: string, authored?: string}[] $queryResult */
         $queryResult = $queryBuilder->getQuery()->getArrayResult();
@@ -192,7 +211,7 @@ readonly class SnippetSmartContentProvider implements SmartContentProviderInterf
     }
 
     /**
-     * @param SnippetSmartContentFilters $filters
+     * @param SnippetSmartContentFilters|SnippetSmartContentCountFilters $filters
      *
      * @return array{
      *         categoryIds?: int[],
@@ -208,8 +227,7 @@ readonly class SnippetSmartContentProvider implements SmartContentProviderInterf
      *         locale: string,
      *         dataSource: string|null,
      *         limit: int|null,
-     *         page: int,
-     *         maxPerPage: int|null,
+     *         offset?: int,
      *         includeSubFolders: bool,
      *         excludeDuplicates: bool,
      *         audienceTargeting?: bool

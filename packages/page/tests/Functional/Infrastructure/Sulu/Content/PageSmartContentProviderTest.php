@@ -715,13 +715,12 @@ class PageSmartContentProviderTest extends SuluTestCase
 
     public function testFindFlatByMaxPerPageAndPageSecond(): void
     {
+        $page = 2;
+        $maxPerPage = 5;
+
         $result = $this->smartContentProvider->findFlatBy([
             ...$this->getDefaultFilters(),
-            ...[
-                'locale' => 'en',
-                'page' => 2,
-                'maxPerPage' => 5,
-            ],
+            ...['locale' => 'en', 'limit' => $maxPerPage, 'offset' => ($page - 1) * $maxPerPage],
         ], [
             'title' => 'asc',
         ]);
@@ -731,11 +730,7 @@ class PageSmartContentProviderTest extends SuluTestCase
             8, // 8 sulu-io pages (parent page excluded)
             $this->smartContentProvider->countBy([
                 ...$this->getDefaultFilters(),
-                ...[
-                    'locale' => 'en',
-                    'page' => 2,
-                    'maxPerPage' => 5,
-                ],
+                ...['locale' => 'en'],
             ]),
         );
 
@@ -1291,8 +1286,7 @@ class PageSmartContentProviderTest extends SuluTestCase
             'locale' => 'en',
             'dataSource' => self::$parentPages['sulu-io'],
             'limit' => null,
-            'page' => 1,
-            'maxPerPage' => null,
+            'offset' => 0,
             'includeSubFolders' => false,
             'excludeDuplicates' => false,
         ];

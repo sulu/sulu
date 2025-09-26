@@ -91,7 +91,6 @@ class SmartContentPropertyResolver implements PropertyResolverInterface
 
         $request = $this->requestStack->getCurrentRequest() ?? new Request();
 
-        /** @var SmartContentBaseFilters $filters */
         $filters = [
             // Categories
             'categories' => $data['categories'] ?? [],

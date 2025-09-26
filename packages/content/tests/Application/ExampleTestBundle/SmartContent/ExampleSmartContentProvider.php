@@ -42,8 +42,24 @@ use Sulu\Content\Tests\Application\ExampleTestBundle\ResourceLoader\ExampleResou
  *       locale: string,
  *       dataSource: string|null,
  *       limit: int|null,
- *       page: int,
- *       maxPerPage: int|null,
+ *       offset: int,
+ *       includeSubFolders: bool,
+ *       excludeDuplicates: bool,
+ *   }
+ * @phpstan-type ExampleSmartContentCountFilters array{
+ *       categories: int[],
+ *       categoryOperator: 'AND'|'OR',
+ *       websiteCategories: string[],
+ *       websiteCategoryOperator: 'AND'|'OR',
+ *       tags: string[],
+ *       tagOperator: 'AND'|'OR',
+ *       websiteTags: string[],
+ *       websiteTagOperator: 'AND'|'OR',
+ *       types: string[],
+ *       typesOperator: 'OR',
+ *       locale: string,
+ *       dataSource: string|null,
+ *       limit: int|null,
  *       includeSubFolders: bool,
  *       excludeDuplicates: bool,
  *   }
@@ -94,11 +110,11 @@ readonly class ExampleSmartContentProvider implements SmartContentProviderInterf
     }
 
     /**
-     * @param ExampleSmartContentFilters $filters
+     * @param ExampleSmartContentCountFilters $filters
      */
     public function countBy(array $filters, array $params = []): int
     {
-        /** @var ExampleSmartContentFilters $filters */
+        /** @var ExampleSmartContentCountFilters $filters */
         $filters = $this->enhanceWithDimensionAttributes($filters);
 
         $alias = 'example';
@@ -151,7 +167,7 @@ readonly class ExampleSmartContentProvider implements SmartContentProviderInterf
 
         $queryBuilder->select('DISTINCT ' . $alias . '.id as id');
         $this->smartContentQueryEnhancer->addOrderBySelects($queryBuilder);
-        $this->smartContentQueryEnhancer->addPagination($queryBuilder, $filters['page'], $filters['limit'], $filters['maxPerPage']);
+        $this->smartContentQueryEnhancer->addPagination($queryBuilder, $filters['offset'] ?? 0, $filters['limit']);
 
         /** @var array{id: int|string, title?: string}[] $queryResult */
         $queryResult = $queryBuilder->getQuery()->getArrayResult();
@@ -183,7 +199,7 @@ readonly class ExampleSmartContentProvider implements SmartContentProviderInterf
     }
 
     /**
-     * @param ExampleSmartContentFilters $filters
+     * @param ExampleSmartContentFilters|ExampleSmartContentCountFilters $filters
      *
      * @return array{
      *         categoryIds?: int[],
@@ -199,8 +215,7 @@ readonly class ExampleSmartContentProvider implements SmartContentProviderInterf
      *         locale: string,
      *         dataSource: string|null,
      *         limit: int|null,
-     *         page: int,
-     *         maxPerPage: int|null,
+     *         offset?: int,
      *         includeSubFolders: bool,
      *         excludeDuplicates: bool,
      *     }

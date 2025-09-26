@@ -46,8 +46,27 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
  *       locale: string,
  *       dataSource: string|null,
  *       limit: int|null,
- *       page: int,
- *       maxPerPage: int|null,
+ *       offset: int,
+ *       includeSubFolders: bool,
+ *       excludeDuplicates: bool,
+ *       audienceTargeting?: bool,
+ *       targetGroupId?: int,
+ *       segmentKey?: string,
+ *   }
+ * @phpstan-type PageSmartContentCountFilters array{
+ *       categories: int[],
+ *       categoryOperator: 'AND'|'OR',
+ *       websiteCategories: string[],
+ *       websiteCategoryOperator: 'AND'|'OR',
+ *       tags: string[],
+ *       tagOperator: 'AND'|'OR',
+ *       websiteTags: string[],
+ *       websiteTagOperator: 'AND'|'OR',
+ *       types: string[],
+ *       typesOperator: 'OR',
+ *       locale: string,
+ *       dataSource: string|null,
+ *       limit: int|null,
  *       includeSubFolders: bool,
  *       excludeDuplicates: bool,
  *       audienceTargeting?: bool,
@@ -119,7 +138,7 @@ readonly class PageSmartContentProvider implements SmartContentProviderInterface
     }
 
     /**
-     * @param PageSmartContentFilters $filters
+     * @param PageSmartContentCountFilters $filters
      */
     public function countBy(array $filters, array $params = []): int
     {
@@ -180,7 +199,7 @@ readonly class PageSmartContentProvider implements SmartContentProviderInterface
         $queryBuilder->addSelect('page.webspaceKey as webspace');
         $queryBuilder->addSelect('filterDimensionContent.title');
         $this->smartContentQueryEnhancer->addOrderBySelects($queryBuilder);
-        $this->smartContentQueryEnhancer->addPagination($queryBuilder, $filters['page'], $filters['limit'], $filters['maxPerPage']);
+        $this->smartContentQueryEnhancer->addPagination($queryBuilder, $filters['offset'] ?? 0, $filters['limit']);
 
         /** @var array{id: string, title: string, webspace: string}[] $queryResult */
         $queryResult = $queryBuilder->getQuery()->getArrayResult();
@@ -205,8 +224,7 @@ readonly class PageSmartContentProvider implements SmartContentProviderInterface
      *        locale: string,
      *        dataSource: string|null,
      *        limit: int|null,
-     *        page: int,
-     *        maxPerPage: int|null,
+     *        offset?: int,
      *        includeSubFolders: bool,
      *        excludeDuplicates: bool,
      *        audienceTargeting?: bool,
