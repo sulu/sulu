@@ -7,6 +7,7 @@ import {
 } from 'sulu-admin-bundle/containers';
 import {
     ResourceLocator,
+    modeResolverRegistry,
 } from 'sulu-route-bundle/containers';
 import webspaceConditionDataProvider from './containers/Form/conditionDataProviders/webspaceConditionDataProvider';
 import SearchResult from './containers/Form/fields/SearchResult';
@@ -43,11 +44,18 @@ initializer.addUpdateConfigHook('sulu_page', (config: Object, initialized: boole
 
     conditionDataProviderRegistry.add(webspaceConditionDataProvider);
 
+    modeResolverRegistry.add((props) => {
+        if (!props.formInspector.options.webspace) {
+            return Promise.resolve(null);
+        }
+
+        return loadResourceLocatorInputTypeByWebspace(props.formInspector.options.webspace)
+    });
+
     fieldRegistry.add(
         'resource_locator',
         ResourceLocator,
         {
-            modeResolver: (props) => loadResourceLocatorInputTypeByWebspace(props.formInspector.options.webspace),
             generationUrl: Config.endpoints.generateUrl,
             historyResourceKey: 'page_resourcelocators',
             resourceStorePropertiesToRequest: {

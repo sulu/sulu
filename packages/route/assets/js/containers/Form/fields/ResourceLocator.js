@@ -8,6 +8,7 @@ import Button from 'sulu-admin-bundle/components/Button';
 import userStore from 'sulu-admin-bundle/stores/userStore';
 import ResourceLocatorHistory from '../../../containers/ResourceLocatorHistory';
 import ResourceLocatorComponent from '../../../components/ResourceLocator';
+import modeResolverRegistry from '../registries/modeResolverRegistry';
 import resourceLocatorStyles from './resourceLocator.scss';
 import type {FieldTypeProps} from 'sulu-admin-bundle/types';
 
@@ -68,17 +69,18 @@ class ResourceLocator extends React.Component<FieldTypeProps<?string>> {
         const {
             fieldTypeOptions: {
                 generationUrl,
-                modeResolver,
             },
             formInspector,
             value,
         } = this.props;
 
-        if (!modeResolver) {
-            throw new Error('The "modeResolver" must be a function returning a promise with the desired mode');
+        for (const modeResolver of modeResolverRegistry.all()) {
+            modeResolver(this.props).then(action((mode) => {
+                if (!this.mode) {
+                    this.mode = mode;
+                }
+            }));
         }
-
-        modeResolver(this.props).then(action((mode) => this.mode = mode));
 
         if (value === HOMEPAGE_RESOURCE_LOCATOR) {
             return;
