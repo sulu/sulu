@@ -12,7 +12,7 @@ Deprecated compiler passes:
 * `Sulu\Component\Symfony\CompilerPass\TaggedServiceCollectorCompilerPass` -> `tagged_iterator`
 * `Sulu\Bundle\CoreBundle\DependencyInjection\Compiler\RegisterLocalizationProvidersPass` (`sulu.localization_provider`) `tagged_iterator`
 * `Sulu\Bundle\AdminBundle\DependencyInjection\Compiler\AddAdminPass` (`sulu.admin`) `tagged_iterator`
-* `Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry` (`sulu_admin.property_metadata_mapper`) `tagged_locator`
+* `Sulu\Bundle\AdminBundle\DependencyInjection\Compiler\AddMetadataProvider` (`sulu_admin.property_metadata_mapper`) `tagged_locator`
 
 ## 2.6.11
 

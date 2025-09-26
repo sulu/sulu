@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\AdminBundle\Metadata;
 
+use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Sulu\Bundle\AdminBundle\Exception\MetadataProviderNotFoundException;
 
@@ -23,6 +24,10 @@ class MetadataProviderRegistry
     ) {
     }
 
+    /**
+     * @throws MetadataProviderNotFoundException
+     * @throws ContainerExceptionInterface
+     */
     public function getMetadataProvider(string $type): MetadataProviderInterface
     {
         if (null !== $this->container) {
@@ -30,7 +35,10 @@ class MetadataProviderRegistry
                 throw new MetadataProviderNotFoundException($type);
             }
 
-            return $this->container->get($type);
+            /** @var MetadataProviderInterface $metadataProvider */
+            $metadataProvider = $this->container->get($type);
+
+            return $metadataProvider;
         }
 
         if (!\array_key_exists($type, $this->metadataProviders)) {
