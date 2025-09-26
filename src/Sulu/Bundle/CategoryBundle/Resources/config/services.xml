@@ -78,5 +78,25 @@
 
             <tag name="sulu.context" context="admin"/>
         </service>
+
+        <service
+                id="sulu_category.category_index_listener"
+                class="Sulu\Bundle\CategoryBundle\Infrastructure\Sulu\Search\CategoryIndexListener"
+        >
+            <argument type="service" id="sulu_message_bus"/>
+            <tag name="kernel.event_listener" event="Sulu\Bundle\CategoryBundle\Domain\Event\CategoryCreatedEvent" method="onCategoryChanged"/>
+            <tag name="kernel.event_listener" event="Sulu\Bundle\CategoryBundle\Domain\Event\CategoryModifiedEvent" method="onCategoryChanged"/>
+            <tag name="kernel.event_listener" event="Sulu\Bundle\CategoryBundle\Domain\Event\CategoryRemovedEvent" method="onCategoryChanged"/>
+            <tag name="kernel.event_listener" event="Sulu\Bundle\CategoryBundle\Domain\Event\CategoryTranslationAddedEvent" method="onCategoryChanged"/>
+            <tag name="kernel.event_listener" event="Sulu\Bundle\CategoryBundle\Domain\Event\CategoryRestoredEvent" method="onCategoryChanged"/>
+        </service>
+
+        <service
+                id="sulu_category.category_reindex_provider"
+                class="Sulu\Bundle\CategoryBundle\Infrastructure\Sulu\Search\CategoryReindexProvider"
+        >
+            <argument type="service" id="doctrine.orm.entity_manager"/>
+            <tag name="cmsig_seal.reindex_provider"/>
+        </service>
     </services>
 </container>

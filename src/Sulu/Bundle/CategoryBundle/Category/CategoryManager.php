@@ -275,8 +275,12 @@ class CategoryManager implements CategoryManagerInterface
             $this->trashManager->store(CategoryInterface::RESOURCE_KEY, $entity);
         }
 
+        $translationLocales = [];
+
         /** @var CategoryTranslationInterface $translation */
         foreach ($entity->getTranslations() as $translation) {
+            $translationLocales[] = $translation->getLocale();
+
             foreach ($translation->getKeywords() as $keyword) {
                 $this->keywordManager->delete($keyword, $entity);
             }
@@ -287,7 +291,7 @@ class CategoryManager implements CategoryManagerInterface
         $categoryName = $defaultTranslation ? $defaultTranslation->getTranslation() : null;
 
         $this->em->remove($entity);
-        $this->domainEventCollector->collect(new CategoryRemovedEvent($id, $categoryName, $defaultLocale));
+        $this->domainEventCollector->collect(new CategoryRemovedEvent($id, $categoryName, $defaultLocale, $translationLocales));
         $this->em->flush();
 
         // throw a category.delete event

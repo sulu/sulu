@@ -151,6 +151,7 @@ class CategoryManagerTest extends TestCase
 
         $translation = $this->prophesize(CategoryTranslationInterface::class);
         $translation->getTranslation()->willReturn('category-translation');
+        $translation->getLocale()->willReturn('de');
         $translation->getKeywords()->willReturn([$keyword1->reveal(), $keyword2->reveal()]);
 
         $category = $this->prophesize(CategoryInterface::class);
@@ -208,6 +209,7 @@ class CategoryManagerTest extends TestCase
 
         $translation = $this->prophesize(CategoryTranslationInterface::class);
         $translation->getTranslation()->willReturn('category-translation');
+        $translation->getLocale()->willReturn('de');
         $translation->getKeywords()->willReturn([$keyword1->reveal(), $keyword2->reveal()]);
 
         $category = $this->prophesize(CategoryInterface::class);
