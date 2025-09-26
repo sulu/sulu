@@ -26,6 +26,7 @@ use Sulu\Content\Application\ContentResolver\Value\ResolvableResource;
 use Sulu\Content\Application\MetadataResolver\MetadataResolver;
 use Sulu\Content\Application\PropertyResolver\PropertyResolverProvider;
 use Sulu\Content\Application\PropertyResolver\Resolver\DefaultPropertyResolver;
+use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\ErrorHandler\BufferingLogger;
 
 #[CoversClass(ImageMapPropertyResolver::class)]
@@ -39,13 +40,14 @@ class ImageMapPropertyResolverTest extends TestCase
 
     public function setUp(): void
     {
-        $this->metadataProviderRegistry = new MetadataProviderRegistry();
-        $this->metadataProviderRegistry->addMetadataProvider('form', new class() implements MetadataProviderInterface {
+        $container = new Container();
+        $container->set('form', new class() implements MetadataProviderInterface {
             public function getMetadata(string $key, string $locale, array $metadataOptions): TypedFormMetadata
             {
                 return new TypedFormMetadata();
             }
         });
+        $this->metadataProviderRegistry = new MetadataProviderRegistry($container);
 
         $this->logger = new BufferingLogger();
         $this->resolver = new ImageMapPropertyResolver(
@@ -340,7 +342,8 @@ class ImageMapPropertyResolverTest extends TestCase
         $typedFormMetadata = new TypedFormMetadata();
         $typedFormMetadata->addForm('text', $textFormMetadata);
 
-        $this->metadataProviderRegistry->addMetadataProvider('form', new class($typedFormMetadata) implements MetadataProviderInterface {
+        $container = new Container();
+        $container->set('form', new class() implements MetadataProviderInterface {
             public function __construct(private readonly TypedFormMetadata $typedFormMetadata)
             {
             }
@@ -350,6 +353,7 @@ class ImageMapPropertyResolverTest extends TestCase
                 return $this->typedFormMetadata;
             }
         });
+        $this->metadataProviderRegistry = new MetadataProviderRegistry($container);
 
         $contentView = $this->resolver->resolve($data, 'en', [], $this->createGlobalBlockMetadata());
 

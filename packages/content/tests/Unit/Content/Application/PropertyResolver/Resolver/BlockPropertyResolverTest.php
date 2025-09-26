@@ -26,6 +26,7 @@ use Sulu\Content\Application\MetadataResolver\MetadataResolver;
 use Sulu\Content\Application\PropertyResolver\PropertyResolverProvider;
 use Sulu\Content\Application\PropertyResolver\Resolver\BlockPropertyResolver;
 use Sulu\Content\Application\PropertyResolver\Resolver\DefaultPropertyResolver;
+use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\ErrorHandler\BufferingLogger;
 
 class BlockPropertyResolverTest extends TestCase
@@ -38,13 +39,14 @@ class BlockPropertyResolverTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->metadataProviderRegistry = new MetadataProviderRegistry();
-        $this->metadataProviderRegistry->addMetadataProvider('form', new class() implements MetadataProviderInterface {
+        $container = new Container();
+        $container->set('form', new class() implements MetadataProviderInterface {
             public function getMetadata(string $key, string $locale, array $metadataOptions): TypedFormMetadata
             {
                 return new TypedFormMetadata();
             }
         });
+        $this->metadataProviderRegistry = new MetadataProviderRegistry($container);
 
         $this->logger = new BufferingLogger();
         $this->resolver = new BlockPropertyResolver(
@@ -184,7 +186,8 @@ class BlockPropertyResolverTest extends TestCase
         $typedFormMetadata = new TypedFormMetadata();
         $typedFormMetadata->addForm('text_block', $globalFormMetadata);
 
-        $this->metadataProviderRegistry->addMetadataProvider('form', new class($typedFormMetadata) implements MetadataProviderInterface {
+        $container = new Container();
+        $container->set('form', new class($typedFormMetadata) implements MetadataProviderInterface {
             public function __construct(private readonly TypedFormMetadata $typedFormMetadata)
             {
             }
@@ -194,6 +197,7 @@ class BlockPropertyResolverTest extends TestCase
                 return $this->typedFormMetadata;
             }
         });
+        $this->metadataProviderRegistry = new MetadataProviderRegistry($container);
 
         $content = $this->resolver->resolve($data, $locale, [], $blockFieldMetadata);
         /** @var ContentView[] $innerContent */

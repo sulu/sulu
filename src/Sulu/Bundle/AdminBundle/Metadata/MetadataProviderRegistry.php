@@ -18,7 +18,7 @@ use Sulu\Bundle\AdminBundle\Exception\MetadataProviderNotFoundException;
 final readonly class MetadataProviderRegistry
 {
     public function __construct(
-        private ?ContainerInterface $container = null,
+        private ContainerInterface $container,
     ) {
     }
 
