@@ -879,6 +879,7 @@ Removed classes / services / interfaces / traits:
 - `Sulu/Bundle/AdminBundle/DependencyInjection/Compiler/AddMetadataProviderPass` (replaced by a `tagged_locator`)
 - `Sulu\Bundle\AudienceTargetingBundle\DependencyInjection\Compiler\AddRulesPass` -> (`sulu.audience_target_rule`)
 - `Sulu\Bundle\CoreBundle\DependencyInjection\Compiler\RegisterLocalizationProvidersPass` (`sulu.localization_provider`)
+- `Sulu\Component\Symfony\CompilerPass\TaggedServiceCollectorCompilerPass` (replaced by symfony's tagged_iterator)
 - `Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreNotExistsException`
 - `Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStorePool`
 - `Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStorePoolInterface`
