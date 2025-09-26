@@ -1,5 +1,3 @@
-sulu_article: {}
-
 framework:
     # symfony recipe default configuration:
     workflows: null
@@ -10,3 +8,6 @@ framework:
 twig:
     paths:
         - '%kernel.project_dir%/templates'
+
+sulu_article:
+    default_main_webspace: 'sulucmf_at'
