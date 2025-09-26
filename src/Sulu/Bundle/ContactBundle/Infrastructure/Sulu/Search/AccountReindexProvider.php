@@ -26,8 +26,11 @@ use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
  *     created: \DateTimeImmutable,
  *     name: string
  * }
+ *
+ * @internal this class is internal no backwards compatibility promise is given for this class
+ *            use Symfony Dependency Injection to override or create your own ReindexProvider instead
  */
-class AccountReindexProvider implements ReindexProviderInterface
+final class AccountReindexProvider implements ReindexProviderInterface
 {
     /**
      * @var EntityRepository<AccountInterface>
@@ -42,9 +45,9 @@ class AccountReindexProvider implements ReindexProviderInterface
         $this->accountRepository = $repository;
     }
 
-    public function total(): ?int
+    public function total(): int
     {
-        return null;
+        return $this->accountRepository->count([]);
     }
 
     public function provide(ReindexConfig $reindexConfig): \Generator

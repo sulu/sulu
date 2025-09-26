@@ -15,32 +15,35 @@ namespace Sulu\Bundle\ContactBundle\Tests\Functional\Infrastructure\Sulu\Search;
 
 use CmsIg\Seal\Reindex\ReindexConfig;
 use Doctrine\ORM\EntityManagerInterface;
-use Sulu\Bundle\ContactBundle\Entity\Account;
-use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
-use Sulu\Bundle\ContactBundle\Infrastructure\Sulu\Search\AccountReindexProvider;
+use Sulu\Bundle\ContactBundle\Entity\Contact;
+use Sulu\Bundle\ContactBundle\Entity\ContactInterface;
+use Sulu\Bundle\ContactBundle\Infrastructure\Sulu\Search\ContactReindexProvider;
+use Sulu\Bundle\TestBundle\Testing\SetGetPrivatePropertyTrait;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
-class AccountReindexProviderTest extends SuluTestCase
+class ContactReindexProviderTest extends SuluTestCase
 {
+    use SetGetPrivatePropertyTrait;
+
     private EntityManagerInterface $entityManager;
-    private AccountReindexProvider $provider;
+    private ContactReindexProvider $provider;
 
     protected function setUp(): void
     {
         $this->entityManager = $this->getEntityManager();
-        $this->provider = new AccountReindexProvider($this->entityManager);
+        $this->provider = new ContactReindexProvider($this->entityManager);
         $this->purgeDatabase();
     }
 
     public function testGetIndex(): void
     {
-        $this->assertSame('admin', AccountReindexProvider::getIndex());
+        $this->assertSame('admin', ContactReindexProvider::getIndex());
     }
 
     public function testTotal(): void
     {
-        $this->createAccount('Count 1');
-        $this->createAccount('Count 2');
+        $this->createContact();
+        $this->createContact();
 
         $this->entityManager->flush();
 
@@ -49,8 +52,8 @@ class AccountReindexProviderTest extends SuluTestCase
 
     public function testProvideAll(): void
     {
-        $account1 = $this->createAccount('Test Account 1');
-        $account2 = $this->createAccount('Test Account 2');
+        $contact1 = $this->createContact();
+        $contact2 = $this->createContact();
 
         $this->entityManager->flush();
 
@@ -58,16 +61,16 @@ class AccountReindexProviderTest extends SuluTestCase
         $changedDateString2 = '2024-06-01 15:30:00';
 
         $connection = self::getEntityManager()->getConnection();
-        $sql = 'UPDATE co_accounts SET changed = :changed WHERE id = :id';
+        $sql = 'UPDATE co_contacts SET changed = :changed WHERE id = :id';
 
         $connection->executeStatement($sql, [
             'changed' => $changedDateString1,
-            'id' => $account1->getId(),
+            'id' => $contact1->getId(),
         ]);
 
         $connection->executeStatement($sql, [
             'changed' => $changedDateString2,
-            'id' => $account2->getId(),
+            'id' => $contact2->getId(),
         ]);
 
         $config = ReindexConfig::create()->withIndex('admin');
@@ -78,20 +81,20 @@ class AccountReindexProviderTest extends SuluTestCase
         $this->assertSame(
             [
                 [
-                    'id' => AccountInterface::RESOURCE_KEY . '::' . $account1->getId(),
-                    'resourceKey' => AccountInterface::RESOURCE_KEY,
-                    'resourceId' => (string) $account1->getId(),
+                    'id' => ContactInterface::RESOURCE_KEY . '::' . $contact1->getId(),
+                    'resourceKey' => ContactInterface::RESOURCE_KEY,
+                    'resourceId' => (string) $contact1->getId(),
                     'changedAt' => (new \DateTimeImmutable($changedDateString1))->format('c'),
                     'createdAt' => (new \DateTimeImmutable('2000-01-01 12:00:00'))->format('c'),
-                    'title' => $account1->getName(),
+                    'title' => $contact1->getFullName(),
                 ],
                 [
-                    'id' => AccountInterface::RESOURCE_KEY . '::' . $account2->getId(),
-                    'resourceKey' => AccountInterface::RESOURCE_KEY,
-                    'resourceId' => (string) $account2->getId(),
+                    'id' => ContactInterface::RESOURCE_KEY . '::' . $contact2->getId(),
+                    'resourceKey' => ContactInterface::RESOURCE_KEY,
+                    'resourceId' => (string) $contact2->getId(),
                     'changedAt' => (new \DateTimeImmutable($changedDateString2))->format('c'),
                     'createdAt' => (new \DateTimeImmutable('2000-01-01 12:00:00'))->format('c'),
-                    'title' => $account2->getName(),
+                    'title' => $contact2->getFullName(),
                 ],
             ],
             [...$results],
@@ -100,15 +103,15 @@ class AccountReindexProviderTest extends SuluTestCase
 
     public function testProvideWithSpecificIdentifiers(): void
     {
-        $account1 = $this->createAccount('Account One');
-        $account2 = $this->createAccount('Account Two');
-        $account3 = $this->createAccount('Account Three');
+        $contact1 = $this->createContact();
+        $contact2 = $this->createContact('Fritz', 'Fantom');
+        $contact3 = $this->createContact('Thomas', 'Brezina');
 
         $this->entityManager->flush();
 
         $identifiers = [
-            AccountInterface::RESOURCE_KEY . '::' . $account1->getId(),
-            AccountInterface::RESOURCE_KEY . '::' . $account3->getId(),
+            ContactInterface::RESOURCE_KEY . '::' . $contact1->getId(),
+            ContactInterface::RESOURCE_KEY . '::' . $contact3->getId(),
         ];
 
         $config = ReindexConfig::create()
@@ -120,19 +123,20 @@ class AccountReindexProviderTest extends SuluTestCase
         $this->assertCount(2, $results);
 
         $resultTitles = \array_column($results, 'title');
-        $this->assertContains('Account One', $resultTitles);
-        $this->assertContains('Account Three', $resultTitles);
-        $this->assertNotContains('Account Two', $resultTitles);
+        $this->assertContains('Tom Turbo', $resultTitles);
+        $this->assertContains('Thomas Brezina', $resultTitles);
+        $this->assertNotContains('Fritz Fantom', $resultTitles);
     }
 
-    private function createAccount(string $name): Account
+    private function createContact(string $firstName = 'Tom', string $lastName = 'Turbo'): Contact
     {
-        $account = new Account();
-        $account->setName($name);
-        $account->setCreated(new \DateTimeImmutable('2000-01-01 12:00:00'));
+        $contact = new Contact();
+        $contact->setFirstName($firstName);
+        $contact->setLastName($lastName);
+        $contact->setCreated(new \DateTimeImmutable('2000-01-01 12:00:00'));
 
-        $this->entityManager->persist($account);
+        $this->entityManager->persist($contact);
 
-        return $account;
+        return $contact;
     }
 }

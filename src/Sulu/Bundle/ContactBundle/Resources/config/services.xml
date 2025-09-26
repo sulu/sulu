@@ -219,11 +219,24 @@
             <tag name="kernel.event_listener" event="Sulu\Bundle\ContactBundle\Domain\Event\AccountCreatedEvent" method="onAccountChanged"/>
             <tag name="kernel.event_listener" event="Sulu\Bundle\ContactBundle\Domain\Event\AccountModifiedEvent" method="onAccountChanged"/>
             <tag name="kernel.event_listener" event="Sulu\Bundle\ContactBundle\Domain\Event\AccountRemovedEvent" method="onAccountChanged"/>
+            <tag name="kernel.event_listener" event="Sulu\Bundle\ContactBundle\Domain\Event\AccountRestoredEvent" method="onAccountChanged"/>
+            <tag name="kernel.event_listener" event="Sulu\Bundle\ContactBundle\Domain\Event\ContactCreatedEvent" method="onContactChanged"/>
+            <tag name="kernel.event_listener" event="Sulu\Bundle\ContactBundle\Domain\Event\ContactModifiedEvent" method="onContactChanged"/>
+            <tag name="kernel.event_listener" event="Sulu\Bundle\ContactBundle\Domain\Event\ContactRemovedEvent" method="onContactChanged"/>
+            <tag name="kernel.event_listener" event="Sulu\Bundle\ContactBundle\Domain\Event\ContactRestoredEvent" method="onContactChanged"/>
         </service>
 
         <service
                 id="sulu_contact.account_reindex_provider"
                 class="Sulu\Bundle\ContactBundle\Infrastructure\Sulu\Search\AccountReindexProvider"
+        >
+            <argument type="service" id="doctrine.orm.entity_manager"/>
+            <tag name="cmsig_seal.reindex_provider"/>
+        </service>
+
+        <service
+                id="sulu_contact.contact_reindex_provider"
+                class="Sulu\Bundle\ContactBundle\Infrastructure\Sulu\Search\ContactReindexProvider"
         >
             <argument type="service" id="doctrine.orm.entity_manager"/>
             <tag name="cmsig_seal.reindex_provider"/>

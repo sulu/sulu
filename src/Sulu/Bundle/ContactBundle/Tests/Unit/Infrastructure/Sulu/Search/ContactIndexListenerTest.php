@@ -21,9 +21,17 @@ use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\ContactBundle\Domain\Event\AccountCreatedEvent;
 use Sulu\Bundle\ContactBundle\Domain\Event\AccountModifiedEvent;
 use Sulu\Bundle\ContactBundle\Domain\Event\AccountRemovedEvent;
+use Sulu\Bundle\ContactBundle\Domain\Event\AccountRestoredEvent;
+use Sulu\Bundle\ContactBundle\Domain\Event\ContactCreatedEvent;
+use Sulu\Bundle\ContactBundle\Domain\Event\ContactModifiedEvent;
+use Sulu\Bundle\ContactBundle\Domain\Event\ContactRemovedEvent;
+use Sulu\Bundle\ContactBundle\Domain\Event\ContactRestoredEvent;
 use Sulu\Bundle\ContactBundle\Entity\Account;
 use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
+use Sulu\Bundle\ContactBundle\Entity\Contact;
+use Sulu\Bundle\ContactBundle\Entity\ContactInterface;
 use Sulu\Bundle\ContactBundle\Infrastructure\Sulu\Search\ContactIndexListener;
+use Sulu\Bundle\TestBundle\Testing\SetGetPrivatePropertyTrait;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\MessageBusInterface;
 
@@ -31,6 +39,7 @@ use Symfony\Component\Messenger\MessageBusInterface;
 class ContactIndexListenerTest extends TestCase
 {
     use ProphecyTrait;
+    use SetGetPrivatePropertyTrait;
 
     /**
      * @var ObjectProphecy<MessageBusInterface>
@@ -94,5 +103,99 @@ class ContactIndexListenerTest extends TestCase
             ->shouldBeCalledOnce();
 
         $this->listener->onAccountChanged($event);
+    }
+
+    public function testOnAccountChangedWithAccountRestoredEvent(): void
+    {
+        $account = new Account();
+        $account->setId(789);
+        $account->setName('Sulu GmbH');
+        $event = new AccountRestoredEvent($account, []);
+
+        $expectedConfig = ReindexConfig::create()
+            ->withIndex('admin')
+            ->withIdentifiers([AccountInterface::RESOURCE_KEY . '::789']);
+
+        $this->messageBus->dispatch($expectedConfig)
+            ->willReturn(new Envelope($expectedConfig))
+            ->shouldBeCalledOnce();
+
+        $this->listener->onAccountChanged($event);
+    }
+
+    public function testOnContactChangedWithContactCreatedEvent(): void
+    {
+        $contact = $this->createContact(123);
+        $event = new ContactCreatedEvent($contact, []);
+
+        $expectedConfig = ReindexConfig::create()
+            ->withIndex('admin')
+            ->withIdentifiers([ContactInterface::RESOURCE_KEY . '::123']);
+
+        $this->messageBus->dispatch($expectedConfig)
+            ->willReturn(new Envelope($expectedConfig))
+            ->shouldBeCalledOnce();
+
+        $this->listener->onContactChanged($event);
+    }
+
+    public function testOnContactChangedWithContactModifiedEvent(): void
+    {
+        $contact = $this->createContact(456);
+        $event = new ContactModifiedEvent($contact, []);
+
+        $expectedConfig = ReindexConfig::create()
+            ->withIndex('admin')
+            ->withIdentifiers([ContactInterface::RESOURCE_KEY . '::456']);
+
+        $this->messageBus->dispatch($expectedConfig)
+            ->willReturn(new Envelope($expectedConfig))
+            ->shouldBeCalledOnce();
+
+        $this->listener->onContactChanged($event);
+    }
+
+    public function testOnContactChangedWithContactRemovedEvent(): void
+    {
+        $contact = $this->createContact(789);
+        $contact->setFirstName('Tom');
+        $contact->setLastName('Turbo');
+        $event = new ContactRemovedEvent($contact->getId(), $contact->getFullName());
+
+        $expectedConfig = ReindexConfig::create()
+            ->withIndex('admin')
+            ->withIdentifiers([ContactInterface::RESOURCE_KEY . '::789']);
+
+        $this->messageBus->dispatch($expectedConfig)
+            ->willReturn(new Envelope($expectedConfig))
+            ->shouldBeCalledOnce();
+
+        $this->listener->onContactChanged($event);
+    }
+
+    public function testOnContactChangedWithContactRestoredEvent(): void
+    {
+        $contact = $this->createContact(789);
+        $contact->setFirstName('Tom');
+        $contact->setLastName('Turbo');
+        $event = new ContactRestoredEvent($contact, []);
+
+        $expectedConfig = ReindexConfig::create()
+            ->withIndex('admin')
+            ->withIdentifiers([ContactInterface::RESOURCE_KEY . '::789']);
+
+        $this->messageBus->dispatch($expectedConfig)
+            ->willReturn(new Envelope($expectedConfig))
+            ->shouldBeCalledOnce();
+
+        $this->listener->onContactChanged($event);
+    }
+
+    private static function createContact(int $id): Contact
+    {
+        $contact = new Contact();
+        static::setPrivateProperty($contact, 'id', $id);
+
+        return $contact;
     }
 }
