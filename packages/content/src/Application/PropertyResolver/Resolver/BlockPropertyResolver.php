@@ -112,15 +112,26 @@ class BlockPropertyResolver implements PropertyResolverMetadataAwareInterface
                 $formMetadata = $globalBlocksMetadata[$globalBlockType];
             }
 
-            $contentViews[$key] = ContentView::create(
-                \array_merge(
-                    ['type' => $type],
-                    $this->metadataResolver->resolveItems($formMetadata->getItems(), $block, $locale)
-                ),
-                [
-                    ...$returnedParams,
-                ]
+            // Resolve block content fields
+            $resolvedBlock = \array_merge(
+                ['type' => $type],
+                $this->metadataResolver->resolveItems($formMetadata->getItems(), $block, $locale)
             );
+
+            // Resolve block settings if present
+            $settingsFormKeyOption = $metadata->findOption('settings_form_key');
+            if ($settingsFormKeyOption) {
+                $settingsFormKey = $settingsFormKeyOption->getValue();
+                if (\is_string($settingsFormKey) && isset($block['settings'])) {
+                    $resolvedBlock['settings'] = $this->resolveBlockSettings(
+                        $block,
+                        $settingsFormKey,
+                        $locale
+                    );
+                }
+            }
+
+            $contentViews[$key] = ContentView::create($resolvedBlock, [...$returnedParams]);
         }
 
         $minOccurs = $metadata->getMinOccurs();
@@ -141,6 +152,40 @@ class BlockPropertyResolver implements PropertyResolverMetadataAwareInterface
         $result = $tag?->getAttribute('global_block');
 
         return $result;
+    }
+
+    /**
+     * @param array<string, mixed> $block
+     *
+     * @return array<mixed>
+     */
+    private function resolveBlockSettings(array $block, string $settingsFormKey, string $locale): array
+    {
+        // Check if block has settings
+        if (!isset($block['settings']) || !\is_array($block['settings'])) {
+            return [];
+        }
+
+        $settingsData = $block['settings'];
+
+        // Load the settings form metadata using the form key from options
+        $typedFormMetadata = $this->metadataProviderRegistry->getMetadataProvider('form')
+            ->getMetadata($settingsFormKey, $locale, []);
+
+        if (!$typedFormMetadata instanceof TypedFormMetadata) {
+            // Return unresolved settings if metadata is missing
+            return $settingsData;
+        }
+
+        $formMetadata = $typedFormMetadata->getForms()['default'] ?? null;
+
+        if (!$formMetadata instanceof FormMetadata) {
+            // Return unresolved settings if form metadata is missing
+            return $settingsData;
+        }
+
+        // Resolve the settings using the metadata
+        return $this->metadataResolver->resolveItems($formMetadata->getItems(), $settingsData, $locale);
     }
 
     public static function getType(): string

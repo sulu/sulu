@@ -738,6 +738,96 @@ class ContentResolverTest extends SuluTestCase
         self::assertNull($viewViewBlock2['media']['displayOption']);
     }
 
+    public function testResolveContentBlocksWithSettings(): void
+    {
+        $example1 = static::createExample(
+            [
+                'en' => [
+                    'live' => [
+                        'template' => 'full-content',
+                        'title' => 'Lorem Ipsum',
+                        'url' => '/lorem-ipsum',
+                        'blocks' => [
+                            [
+                                'type' => 'editor',
+                                'text_editor' => '<p>Editor block with settings</p>',
+                                'settings' => [
+                                    'hidden' => false,
+                                    'schedules_enabled' => false,
+                                    'schedules' => [
+                                        [
+                                            'type' => 'fixed',
+                                            'start' => '2025-09-17T00:00:00',
+                                            'end' => '2025-09-25T00:00:00',
+                                        ],
+                                    ],
+                                    'segment_enabled' => null,
+                                    'segments' => null,
+                                    'target_groups_enabled' => null,
+                                    'target_groups' => null,
+                                ],
+                            ],
+                            [
+                                'type' => 'editor',
+                                'text_editor' => '<p>Editor block without settings</p>',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            [
+                'create_route' => true,
+            ]
+        );
+
+        static::getEntityManager()->flush();
+
+        $dimensionContent = $this->contentAggregator->aggregate($example1, ['locale' => 'en', 'stage' => 'live']);
+        $result = $this->contentResolver->resolve($dimensionContent);
+
+        $content = $result['content'];
+
+        self::assertArrayHasKey('blocks', $content);
+        $blocks = $content['blocks'];
+        self::assertIsArray($blocks);
+        self::assertCount(2, $blocks);
+
+        // First block with settings
+        /** @var array<string, mixed> $blockWithSettings */
+        $blockWithSettings = $blocks[0];
+        self::assertSame('editor', $blockWithSettings['type']);
+        self::assertSame('<p>Editor block with settings</p>', $blockWithSettings['text_editor']);
+
+        // Assert settings are resolved
+        self::assertArrayHasKey('settings', $blockWithSettings);
+        $settings = $blockWithSettings['settings'];
+        self::assertIsArray($settings);
+        self::assertFalse($settings['hidden']);
+        self::assertFalse($settings['schedules_enabled']);
+
+        self::assertArrayHasKey('schedules', $settings);
+        self::assertIsArray($settings['schedules']);
+        self::assertCount(1, $settings['schedules']);
+
+        /** @var array<string, mixed> $schedule */
+        $schedule = $settings['schedules'][0];
+        self::assertSame('fixed', $schedule['type']);
+        self::assertSame('2025-09-17T00:00:00', $schedule['start']);
+        self::assertSame('2025-09-25T00:00:00', $schedule['end']);
+
+        self::assertNull($settings['segment_enabled']);
+        self::assertNull($settings['segments']);
+        self::assertNull($settings['target_groups_enabled']);
+        self::assertNull($settings['target_groups']);
+
+        // Second block without settings
+        /** @var array<string, mixed> $blockWithoutSettings */
+        $blockWithoutSettings = $blocks[1];
+        self::assertSame('editor', $blockWithoutSettings['type']);
+        self::assertSame('<p>Editor block without settings</p>', $blockWithoutSettings['text_editor']);
+        self::assertArrayNotHasKey('settings', $blockWithoutSettings);
+    }
+
     public function testResolveImageMap(): void
     {
         $collection1 = self::createCollection(['title' => 'collection-1', 'locale' => 'en']);
