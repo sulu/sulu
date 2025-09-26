@@ -35,23 +35,23 @@ class BlockPropertyResolverTest extends TestCase
 
     private BufferingLogger $logger;
 
-    private MetadataProviderRegistry $metadataProviderRegistry;
+    private Container $container;
 
     protected function setUp(): void
     {
-        $container = new Container();
-        $container->set('form', new class() implements MetadataProviderInterface {
+        $this->container = new Container();
+        $this->container->set('form', new class() implements MetadataProviderInterface {
             public function getMetadata(string $key, string $locale, array $metadataOptions): TypedFormMetadata
             {
                 return new TypedFormMetadata();
             }
         });
-        $this->metadataProviderRegistry = new MetadataProviderRegistry($container);
+        $metadataProviderRegistry = new MetadataProviderRegistry($this->container);
 
         $this->logger = new BufferingLogger();
         $this->resolver = new BlockPropertyResolver(
             $this->logger,
-            $this->metadataProviderRegistry,
+            $metadataProviderRegistry,
             [],
             false,
         );
@@ -186,8 +186,7 @@ class BlockPropertyResolverTest extends TestCase
         $typedFormMetadata = new TypedFormMetadata();
         $typedFormMetadata->addForm('text_block', $globalFormMetadata);
 
-        $container = new Container();
-        $container->set('form', new class($typedFormMetadata) implements MetadataProviderInterface {
+        $this->container->set('form', new class($typedFormMetadata) implements MetadataProviderInterface {
             public function __construct(private readonly TypedFormMetadata $typedFormMetadata)
             {
             }
@@ -197,7 +196,6 @@ class BlockPropertyResolverTest extends TestCase
                 return $this->typedFormMetadata;
             }
         });
-        $this->metadataProviderRegistry = new MetadataProviderRegistry($container);
 
         $content = $this->resolver->resolve($data, $locale, [], $blockFieldMetadata);
         /** @var ContentView[] $innerContent */

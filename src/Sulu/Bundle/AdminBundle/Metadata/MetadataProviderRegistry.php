@@ -15,7 +15,7 @@ use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Sulu\Bundle\AdminBundle\Exception\MetadataProviderNotFoundException;
 
-final readonly class MetadataProviderRegistry
+readonly class MetadataProviderRegistry
 {
     public function __construct(
         private ContainerInterface $container,

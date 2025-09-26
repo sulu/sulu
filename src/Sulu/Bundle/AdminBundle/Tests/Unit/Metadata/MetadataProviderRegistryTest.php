@@ -38,7 +38,7 @@ class MetadataProviderRegistryTest extends TestCase
 
         $metadataProviderRegistry = new MetadataProviderRegistry($container);
 
-        $this->assertSame($metadataProvider1, $metadataProvider1->getMetadataProvider('form'));
+        $this->assertSame($metadataProvider1, $metadataProviderRegistry->getMetadataProvider('form'));
         $this->assertSame($metadataProvider2, $metadataProviderRegistry->getMetadataProvider('list'));
     }
 
@@ -47,7 +47,7 @@ class MetadataProviderRegistryTest extends TestCase
      */
     public function testGetNotExistingMetadataProvider(): void
     {
-        $metadataProviderRegistry = new MetadataProviderRegistry();
+        $metadataProviderRegistry = new MetadataProviderRegistry(new Container());
 
         $this->expectException(MetadataProviderNotFoundException::class);
 

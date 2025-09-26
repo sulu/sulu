@@ -36,23 +36,23 @@ class ImageMapPropertyResolverTest extends TestCase
 
     private BufferingLogger $logger;
 
-    private MetadataProviderRegistry $metadataProviderRegistry;
+    private Container $container;
 
     public function setUp(): void
     {
-        $container = new Container();
-        $container->set('form', new class() implements MetadataProviderInterface {
+        $this->container = new Container();
+        $this->container->set('form', new class() implements MetadataProviderInterface {
             public function getMetadata(string $key, string $locale, array $metadataOptions): TypedFormMetadata
             {
                 return new TypedFormMetadata();
             }
         });
-        $this->metadataProviderRegistry = new MetadataProviderRegistry($container);
+        $metadataProviderRegistry = new MetadataProviderRegistry($this->container);
 
         $this->logger = new BufferingLogger();
         $this->resolver = new ImageMapPropertyResolver(
             $this->logger,
-            $this->metadataProviderRegistry,
+            $metadataProviderRegistry,
             debug: false,
         );
         $metadataResolverProperty = new PropertyResolverProvider([
@@ -342,8 +342,7 @@ class ImageMapPropertyResolverTest extends TestCase
         $typedFormMetadata = new TypedFormMetadata();
         $typedFormMetadata->addForm('text', $textFormMetadata);
 
-        $container = new Container();
-        $container->set('form', new class() implements MetadataProviderInterface {
+        $this->container->set('form', new class($typedFormMetadata) implements MetadataProviderInterface {
             public function __construct(private readonly TypedFormMetadata $typedFormMetadata)
             {
             }
@@ -353,7 +352,6 @@ class ImageMapPropertyResolverTest extends TestCase
                 return $this->typedFormMetadata;
             }
         });
-        $this->metadataProviderRegistry = new MetadataProviderRegistry($container);
 
         $contentView = $this->resolver->resolve($data, 'en', [], $this->createGlobalBlockMetadata());
 

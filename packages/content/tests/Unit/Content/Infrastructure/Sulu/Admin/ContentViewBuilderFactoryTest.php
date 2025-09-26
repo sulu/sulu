@@ -47,6 +47,7 @@ use Sulu\Content\Infrastructure\Sulu\Admin\ContentViewBuilderFactoryInterface;
 use Sulu\Content\Infrastructure\Sulu\Preview\ContentObjectProvider;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\Example;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\ExampleDimensionContent;
+use Symfony\Component\DependencyInjection\Container;
 
 class ContentViewBuilderFactoryTest extends TestCase
 {
@@ -181,7 +182,7 @@ class ContentViewBuilderFactoryTest extends TestCase
         $contentDataMapper = $this->prophesize(ContentDataMapperInterface::class);
 
         $contentObjectProvider = $this->createContentObjectProvider(
-            new MetadataProviderRegistry(),
+            new MetadataProviderRegistry(new Container()),
             $entityManager->reveal(),
             $contentAggregator->reveal(),
             $contentDataMapper->reveal(),
