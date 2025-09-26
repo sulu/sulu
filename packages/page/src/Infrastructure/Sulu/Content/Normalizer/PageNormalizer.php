@@ -32,6 +32,7 @@ class PageNormalizer implements NormalizerInterface
         $page = $object->getResource();
 
         $normalizedData['webspace'] = $page->getWebspaceKey();
+        $normalizedData['parentUuid'] = $page->getParent()->getUuid();
 
         return $normalizedData;
     }

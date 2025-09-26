@@ -25,6 +25,10 @@ initializer.addUpdateConfigHook('sulu_route', (config: Object, initialized: bool
 
                 return Promise.resolve(mode);
             },
+            resourceStorePropertiesToRequest: { // TODO: Move in future to schemaOptions and prepend via MetadataListener
+                parentUuid: 'parentId',
+                parentId: 'parentId',
+            },
             generationUrl: config.generateUrl,
             options: {history: true},
         }
