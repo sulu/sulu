@@ -69,18 +69,10 @@ class MediaController extends AbstractMediaController implements
         private FieldDescriptorFactoryInterface $fieldDescriptorFactory,
         private string $mediaClass,
         private string $collectionClass,
-        private ?MediaListBuilderFactory $mediaListBuilderFactory = null,
-        private ?MediaListRepresentationFactory $mediaListRepresentationFactory = null
+        private MediaListBuilderFactory $mediaListBuilderFactory,
+        private MediaListRepresentationFactory $mediaListRepresentationFactory,
     ) {
         parent::__construct($viewHandler, $tokenStorage);
-
-        if (null === $this->mediaListBuilderFactory || null === $this->mediaListRepresentationFactory) {
-            @trigger_deprecation(
-                'sulu/sulu',
-                '2.3',
-                'Instantiating MediaController without the $mediaListBuilderFactory or $mediaListRepresentationFactory argument is deprecated.'
-            );
-        }
     }
 
     /**
@@ -134,183 +126,33 @@ class MediaController extends AbstractMediaController implements
      */
     public function cgetAction(Request $request)
     {
-        if (null === $this->mediaListBuilderFactory || null === $this->mediaListRepresentationFactory) {
-            $listRepresentation = $this->getListRepresentation($request);
-        } else {
-            /** @var UserInterface $user */
-            $user = $this->getUser();
-            $types = \array_filter(\explode(',', $request->get('types', '')));
-            $collectionId = $request->get('collection');
-            $collectionId = $collectionId ? (int) $collectionId : null;
-            $locale = $this->getRequestParameter($request, 'locale', true);
+        /** @var UserInterface $user */
+        $user = $this->getUser();
+        $types = \array_filter(\explode(',', $request->get('types', '')));
+        $collectionId = $request->get('collection');
+        $collectionId = $collectionId ? (int) $collectionId : null;
+        $locale = $this->getRequestParameter($request, 'locale', true);
 
-            $fieldDescriptors = $this->fieldDescriptorFactory->getFieldDescriptors('media');
-            $listBuilder = $this->mediaListBuilderFactory->getListBuilder(
-                $fieldDescriptors,
-                $user,
-                $types,
-                !$request->get('sortBy'),
-                $collectionId
-            );
+        $fieldDescriptors = $this->fieldDescriptorFactory->getFieldDescriptors('media');
+        $listBuilder = $this->mediaListBuilderFactory->getListBuilder(
+            $fieldDescriptors,
+            $user,
+            $types,
+            !$request->get('sortBy'),
+            $collectionId
+        );
 
-            $listRepresentation = $this->mediaListRepresentationFactory->getListRepresentation(
-                $listBuilder,
-                $locale,
-                MediaInterface::RESOURCE_KEY,
-                'sulu_media.cget_media',
-                $request->query->all()
-            );
-        }
+        $listRepresentation = $this->mediaListRepresentationFactory->getListRepresentation(
+            $listBuilder,
+            $locale,
+            MediaInterface::RESOURCE_KEY,
+            'sulu_media.cget_media',
+            $request->query->all()
+        );
 
         $view = $this->view($listRepresentation, 200);
 
         return $this->handleView($view);
-    }
-
-    /**
-     * @deprecated
-     */
-    private function getListRepresentation(Request $request): PaginatedRepresentation
-    {
-        $locale = $this->getRequestParameter($request, 'locale', true);
-        $fieldDescriptors = $this->fieldDescriptorFactory->getFieldDescriptors('media');
-        $types = \array_filter(\explode(',', $request->get('types')));
-        $listBuilder = $this->getListBuilder($request, $fieldDescriptors, $types);
-        $listBuilder->setParameter('locale', $locale);
-        $listResponse = $listBuilder->execute();
-
-        for ($i = 0, $length = \count($listResponse); $i < $length; ++$i) {
-            $format = $this->formatManager->getFormats(
-                $listResponse[$i]['previewImageId'] ?? $listResponse[$i]['id'],
-                $listResponse[$i]['previewImageName'] ?? $listResponse[$i]['name'],
-                $listResponse[$i]['previewImageVersion'] ?? $listResponse[$i]['version'],
-                $listResponse[$i]['previewImageSubVersion'] ?? $listResponse[$i]['subVersion'],
-                $listResponse[$i]['previewImageMimeType'] ?? $listResponse[$i]['mimeType']
-            );
-
-            if (0 < \count($format)) {
-                $listResponse[$i]['thumbnails'] = $format;
-            }
-
-            $listResponse[$i]['url'] = $this->mediaManager->getUrl(
-                $listResponse[$i]['id'],
-                $listResponse[$i]['name'],
-                $listResponse[$i]['version']
-            );
-
-            $listResponse[$i]['adminUrl'] = $this->mediaManager->getAdminUrl(
-                $listResponse[$i]['id'],
-                $listResponse[$i]['name'],
-                $listResponse[$i]['version']
-            );
-
-            if ($locale !== $listResponse[$i]['locale']) {
-                $listResponse[$i]['ghostLocale'] = $listResponse[$i]['locale'];
-            }
-        }
-
-        $ids = $listBuilder->getIds();
-        if (null != $ids) {
-            $result = [];
-            foreach ($listResponse as $item) {
-                $result[\array_search($item['id'], $ids)] = $item;
-            }
-            \ksort($result);
-            $listResponse = \array_values($result);
-        }
-
-        return new PaginatedRepresentation(
-            $listResponse,
-            MediaInterface::RESOURCE_KEY,
-            (int) $listBuilder->getCurrentPage(),
-            (int) $listBuilder->getLimit(),
-            (int) $listBuilder->count()
-        );
-    }
-
-    /**
-     * Returns a list-builder for media list.
-     *
-     * @deprecated
-     *
-     * @param FieldDescriptorInterface[] $fieldDescriptors
-     *
-     * @return DoctrineListBuilder
-     */
-    private function getListBuilder(Request $request, array $fieldDescriptors, array $types)
-    {
-        $listBuilder = $this->doctrineListBuilderFactory->create($this->mediaClass);
-        $this->restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
-
-        // default sort by created
-        if (!$request->get('sortBy')) {
-            $listBuilder->sort($fieldDescriptors['created'], 'desc');
-        }
-
-        $collectionId = $request->get('collection');
-        if ($collectionId) {
-            $collectionType = $this->collectionRepository->findCollectionTypeById($collectionId);
-            if (SystemCollectionManagerInterface::COLLECTION_TYPE === $collectionType) {
-                $this->securityChecker->checkPermission(
-                    'sulu.media.system_collections',
-                    PermissionTypes::VIEW
-                );
-            }
-            $listBuilder->addSelectField($fieldDescriptors['collection']);
-            $listBuilder->where($fieldDescriptors['collection'], $collectionId);
-        } else {
-            $listBuilder->addPermissionCheckField($fieldDescriptors['collection']);
-            $listBuilder->setPermissionCheck(
-                $this->getUser(),
-                PermissionTypes::VIEW,
-                $this->collectionClass
-            );
-        }
-
-        // set the types
-        if (\count($types)) {
-            $listBuilder->in($fieldDescriptors['type'], $types);
-        }
-
-        if (!$this->securityChecker->hasPermission('sulu.media.system_collections', PermissionTypes::VIEW)) {
-            $systemCollection = $this->collectionRepository
-                ->findCollectionByKey(SystemCollectionManagerInterface::COLLECTION_KEY);
-
-            $lftExpression = $listBuilder->createWhereExpression(
-                $fieldDescriptors['lft'],
-                $systemCollection->getLft(),
-                ListBuilderInterface::WHERE_COMPARATOR_LESS
-            );
-            $rgtExpression = $listBuilder->createWhereExpression(
-                $fieldDescriptors['rgt'],
-                $systemCollection->getRgt(),
-                ListBuilderInterface::WHERE_COMPARATOR_GREATER
-            );
-
-            $listBuilder->addExpression(
-                $listBuilder->createOrExpression([
-                    $lftExpression,
-                    $rgtExpression,
-                ])
-            );
-        }
-
-        // field which will be needed afterwards to generate route
-        $listBuilder->addSelectField($fieldDescriptors['previewImageId']);
-        $listBuilder->addSelectField($fieldDescriptors['previewImageName']);
-        $listBuilder->addSelectField($fieldDescriptors['previewImageVersion']);
-        $listBuilder->addSelectField($fieldDescriptors['previewImageSubVersion']);
-        $listBuilder->addSelectField($fieldDescriptors['previewImageMimeType']);
-        $listBuilder->addSelectField($fieldDescriptors['version']);
-        $listBuilder->addSelectField($fieldDescriptors['subVersion']);
-        $listBuilder->addSelectField($fieldDescriptors['name']);
-        $listBuilder->addSelectField($fieldDescriptors['locale']);
-        $listBuilder->addSelectField($fieldDescriptors['mimeType']);
-        $listBuilder->addSelectField($fieldDescriptors['storageOptions']);
-        $listBuilder->addSelectField($fieldDescriptors['id']);
-        $listBuilder->addSelectField($fieldDescriptors['collection']);
-
-        return $listBuilder;
     }
 
     /**
