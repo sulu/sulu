@@ -53,9 +53,9 @@ use Sulu\Page\Infrastructure\Sulu\Content\Visitor\SegmentSmartContentFiltersVisi
 use Sulu\Page\Infrastructure\Sulu\Reference\PageReferenceRefresher;
 use Sulu\Page\Infrastructure\Sulu\Route\WebspaceSiteRouteGenerator;
 use Sulu\Page\Infrastructure\Sulu\Sitemap\PagesSitemapProvider;
+use Sulu\Page\Infrastructure\Sulu\Trash\PageTrashItemHandler;
 use Sulu\Page\Infrastructure\Symfony\Twig\Extension\ContentPathTwigExtension;
 use Sulu\Page\Infrastructure\Symfony\Twig\Extension\NavigationTwigExtension;
-use Sulu\Page\Trash\PageTrashItemHandler;
 use Sulu\Page\UserInterface\Command\InitializeHomepageCommand;
 use Sulu\Page\UserInterface\Controller\Admin\PageController;
 use Symfony\Component\Config\Definition\Configurator\DefinitionConfigurator;

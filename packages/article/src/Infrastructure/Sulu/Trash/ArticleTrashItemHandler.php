@@ -11,8 +11,14 @@ declare(strict_types=1);
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Snippet\Trash;
+namespace Sulu\Article\Infrastructure\Sulu\Trash;
 
+use Sulu\Article\Application\Mapper\ArticleMapperInterface;
+use Sulu\Article\Domain\Model\ArticleDimensionContent;
+use Sulu\Article\Domain\Model\ArticleDimensionContentInterface;
+use Sulu\Article\Domain\Model\ArticleInterface;
+use Sulu\Article\Domain\Repository\ArticleRepositoryInterface;
+use Sulu\Article\Infrastructure\Sulu\Admin\ArticleAdmin;
 use Sulu\Bundle\TrashBundle\Application\RestoreConfigurationProvider\RestoreConfiguration;
 use Sulu\Bundle\TrashBundle\Application\RestoreConfigurationProvider\RestoreConfigurationProviderInterface;
 use Sulu\Bundle\TrashBundle\Application\TrashItemHandler\RestoreTrashItemHandlerInterface;
@@ -23,44 +29,38 @@ use Sulu\Content\Application\ContentMerger\ContentMergerInterface;
 use Sulu\Content\Application\ContentNormalizer\ContentNormalizerInterface;
 use Sulu\Content\Domain\Model\DimensionContentCollection;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
-use Sulu\Snippet\Application\Mapper\SnippetMapperInterface;
-use Sulu\Snippet\Domain\Model\SnippetDimensionContent;
-use Sulu\Snippet\Domain\Model\SnippetDimensionContentInterface;
-use Sulu\Snippet\Domain\Model\SnippetInterface;
-use Sulu\Snippet\Domain\Repository\SnippetRepositoryInterface;
-use Sulu\Snippet\Infrastructure\Sulu\Admin\SnippetAdmin;
 use Webmozart\Assert\Assert;
 
 /**
  * @internal
  */
-final class SnippetTrashItemHandler implements
+final class ArticleTrashItemHandler implements
     StoreTrashItemHandlerInterface,
     RestoreTrashItemHandlerInterface,
     RestoreConfigurationProviderInterface
 {
     /**
-     * @param iterable<SnippetMapperInterface> $snippetMappers
+     * @param iterable<ArticleMapperInterface> $articleMappers
      */
     public function __construct(
         private TrashItemRepositoryInterface $trashItemRepository,
-        private SnippetRepositoryInterface $snippetRepository,
+        private ArticleRepositoryInterface $articleRepository,
         private ContentNormalizerInterface $contentNormalizer,
         private ContentMergerInterface $contentMerger,
-        private iterable $snippetMappers,
+        private iterable $articleMappers,
     ) {
     }
 
     public static function getResourceKey(): string
     {
-        return SnippetInterface::RESOURCE_KEY;
+        return ArticleInterface::RESOURCE_KEY;
     }
 
     public function store(object $resource, array $options = []): TrashItemInterface
     {
-        Assert::isInstanceOf($resource, SnippetInterface::class);
+        Assert::isInstanceOf($resource, ArticleInterface::class);
 
-        $snippet = $resource;
+        $article = $resource;
 
         $data = [
             'dimensionContents' => [],
@@ -69,11 +69,11 @@ final class SnippetTrashItemHandler implements
         $restoreType = $options['locales'] ?? null ? 'translation' : null;
 
         $titles = [];
-        /** @var array<string, SnippetDimensionContentInterface> $localizedDimensionContents */
+        /** @var array<string, ArticleDimensionContentInterface> $localizedDimensionContents */
         $localizedDimensionContents = [];
-        /** @var SnippetDimensionContentInterface|null $unlocalizedDimensionContent */
+        /** @var ArticleDimensionContentInterface|null $unlocalizedDimensionContent */
         $unlocalizedDimensionContent = null;
-        foreach ($snippet->getDimensionContents() as $dimensionContent) {
+        foreach ($article->getDimensionContents() as $dimensionContent) {
             if (
                 DimensionContentInterface::CURRENT_VERSION !== $dimensionContent->getVersion()
                 && DimensionContentInterface::STAGE_LIVE !== $dimensionContent->getStage()
@@ -89,20 +89,20 @@ final class SnippetTrashItemHandler implements
             $localizedDimensionContents[$dimensionContent->getLocale()] = $dimensionContent;
         }
 
-        Assert::notNull($unlocalizedDimensionContent, 'Expected to find an unlocalized dimension content for the snippet.');
-        Assert::notEmpty($localizedDimensionContents, 'Expected to find at least one localized dimension content for the snippet.');
+        Assert::notNull($unlocalizedDimensionContent, 'Expected to find an unlocalized dimension content for the article.');
+        Assert::notEmpty($localizedDimensionContents, 'Expected to find at least one localized dimension content for the article.');
 
         // sort dimensionContents after the availableLocales from the unlocalizedDimension
         $availableLocales = $unlocalizedDimensionContent->getAvailableLocales();
         Assert::isArray($availableLocales, 'Expected availableLocales to be an array');
-        /** @var array<string, SnippetDimensionContentInterface> $localizedDimensionContents */
+        /** @var array<string, ArticleDimensionContentInterface> $localizedDimensionContents */
         $localizedDimensionContents = \array_merge(
             \array_flip($availableLocales),
             $localizedDimensionContents
         );
 
         foreach ($localizedDimensionContents as $locale => $localizedDimensionContent) {
-            /** @var array<int, SnippetDimensionContent> $dimensionContents */
+            /** @var array<int, ArticleDimensionContent> $dimensionContents */
             $dimensionContents = [$unlocalizedDimensionContent, $localizedDimensionContent];
 
             $mergedDimensionContent = $this->contentMerger->merge(
@@ -113,7 +113,7 @@ final class SnippetTrashItemHandler implements
                         'stage' => DimensionContentInterface::STAGE_DRAFT,
                         'version' => DimensionContentInterface::CURRENT_VERSION,
                     ],
-                    SnippetDimensionContent::class
+                    ArticleDimensionContent::class
                 )
             );
 
@@ -128,15 +128,15 @@ final class SnippetTrashItemHandler implements
         }
 
         return $this->trashItemRepository->create(
-            SnippetInterface::RESOURCE_KEY,
-            $snippet->getUuid(),
+            ArticleInterface::RESOURCE_KEY,
+            $article->getUuid(),
             $titles,
             $data,
             $restoreType,
             $options,
-            SnippetAdmin::SECURITY_CONTEXT,
+            ArticleAdmin::SECURITY_CONTEXT,
             null, // TODO add Security
-            $snippet->getUuid(),
+            $article->getUuid(),
         );
     }
 
@@ -146,29 +146,29 @@ final class SnippetTrashItemHandler implements
     public function restore(TrashItemInterface $trashItem, array $restoreFormData = []): object
     {
         $restoreData = $trashItem->getRestoreData();
-        $snippetUuid = $trashItem->getResourceId();
+        $articleUuid = $trashItem->getResourceId();
 
-        $snippet = $this->snippetRepository->createNew($snippetUuid);
-        $this->snippetRepository->add($snippet);
+        $article = $this->articleRepository->createNew($articleUuid);
+        $this->articleRepository->add($article);
 
         $dimensionContents = $restoreData['dimensionContents'] ?? [];
         Assert::isArray($dimensionContents, 'Expected dimensionContents to be an array');
         /** @var array<string, mixed> $dimensionContentData */
         foreach ($dimensionContents as $dimensionContentData) {
             unset($dimensionContentData['url']); // TODO old route is not removed on delete?
-            foreach ($this->snippetMappers as $snippetMapper) {
-                $snippetMapper->mapSnippetData($snippet, $dimensionContentData);
+            foreach ($this->articleMappers as $articleMapper) {
+                $articleMapper->mapArticleData($article, $dimensionContentData);
             }
         }
 
-        return $snippet;
+        return $article;
     }
 
     public function getConfiguration(): RestoreConfiguration
     {
         return new RestoreConfiguration(
-            'restore_snippet',
-            SnippetAdmin::EDIT_TABS_VIEW,
+            'restore_article',
+            ArticleAdmin::EDIT_TABS_VIEW,
             ['id' => 'id'],
             null, // TODO serialization group?
         );
