@@ -83,7 +83,7 @@ class TrashItemControllerTest extends SuluTestCase
             ['locale' => 'en']
         );
 
-        $this->client->jsonRequest('GET', '/api/trash-items', ['locale' => 'de']);
+        $this->client->jsonRequest('GET', '/api/trash-items?' . \http_build_query(['locale' => 'de']));
         $content = \json_decode((string) $this->client->getResponse()->getContent(), true);
 
         self::assertCount(2, $content['_embedded']['trash_items']);
@@ -92,7 +92,7 @@ class TrashItemControllerTest extends SuluTestCase
         self::assertSame('Example', $content['_embedded']['trash_items'][0]['resourceType']);
         self::assertSame('Example (Translation)', $content['_embedded']['trash_items'][1]['resourceType']);
 
-        $this->client->jsonRequest('GET', '/api/trash-items', ['locale' => 'en']);
+        $this->client->jsonRequest('GET', '/api/trash-items?' . \http_build_query(['locale' => 'en']));
         $content = \json_decode((string) $this->client->getResponse()->getContent(), true);
 
         self::assertCount(2, $content['_embedded']['trash_items']);
@@ -142,7 +142,7 @@ class TrashItemControllerTest extends SuluTestCase
             }
         }
 
-        $this->client->jsonRequest('GET', '/api/trash-items', ['limit' => 0]);
+        $this->client->jsonRequest('GET', '/api/trash-items?' . \http_build_query(['limit' => 0]));
         $content = \json_decode((string) $this->client->getResponse()->getContent());
 
         self::assertSame(4, $content->total);
@@ -169,7 +169,7 @@ class TrashItemControllerTest extends SuluTestCase
         $trashItem = static::createTrashItem();
         $id = $trashItem->getId();
 
-        $this->client->jsonRequest('GET', '/api/trash-items/' . $id, [], [
+        $this->client->jsonRequest('GET', '/api/trash-items/' . $id, [
             'PHP_AUTH_USER' => self::ALT_USER_USERNAME,
             'PHP_AUTH_PW' => 'test',
         ]);

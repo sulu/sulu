@@ -20,6 +20,7 @@ use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\SecurityBundle\Entity\UserRole;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mailer\DataCollector\MessageDataCollector;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Router;
@@ -245,7 +246,7 @@ class ResettingControllerTest extends SuluTestCase
         }
 
         // now this request should fail
-        $this->client->jsonRequest('GET', '/security/reset/email', [
+        $this->client->jsonRequest('POST', '/security/reset/email', [
             'user' => $this->users[2]->getEmail(),
         ]);
 
@@ -272,7 +273,7 @@ class ResettingControllerTest extends SuluTestCase
         $counter = 1;
         $maxNumberEmails = $this->getContainer()->getParameter('sulu_security.reset_password.mail.token_send_limit');
         for (; $counter < $maxNumberEmails; ++$counter) {
-            $this->client->jsonRequest('GET', '/security/reset/email', [
+            $this->client->jsonRequest('POST', '/security/reset/email', [
                 'user' => $this->users[2]->getEmail(),
             ]);
 
@@ -298,7 +299,7 @@ class ResettingControllerTest extends SuluTestCase
         $this->em->flush();
         $this->em->clear();
 
-        $this->client->jsonRequest('GET', '/security/reset/email', [
+        $this->client->jsonRequest('POST', '/security/reset/email', [
             'user' => $user->getEmail(),
         ]);
 
@@ -322,7 +323,7 @@ class ResettingControllerTest extends SuluTestCase
     {
         $this->client->enableProfiler();
 
-        $this->client->jsonRequest('GET', '/security/reset/email');
+        $this->client->jsonRequest('POST', '/security/reset/email');
 
         /** @var MessageDataCollector $mailCollector */
         $mailCollector = $this->client->getProfile()->getCollector('mailer');
@@ -382,12 +383,18 @@ class ResettingControllerTest extends SuluTestCase
     {
         $newPassword = 'anewpasswordishouldremeber';
 
-        $this->client->jsonRequest('GET', '/security/reset/email', [
+        $this->client->jsonRequest('POST', '/security/reset/email', [
             'user' => $this->users[2]->getUsername(),
         ]);
+
+        self::assertHttpStatusCode(Response::HTTP_NO_CONTENT, $this->client->getResponse());
+
         /** @var MessageDataCollector $mailCollector */
         $mailCollector = $this->client->getProfile()->getCollector('mailer');
-        $message = $mailCollector->getEvents()->getMessages()[0];
+        $messages = $mailCollector->getEvents()->getMessages();
+        self::assertNotCount(0, $messages, 'No emails have been sent');
+
+        $message = $messages[0];
         $this->assertInstanceOf(Email::class, $message);
 
         $htmlBody = $message->getHtmlBody();
@@ -396,7 +403,7 @@ class ResettingControllerTest extends SuluTestCase
         $this->assertArrayHasKey(1, $regexMatches);
         $token = $regexMatches[1];
 
-        $this->client->jsonRequest('GET', '/security/reset', [
+        $this->client->jsonRequest('POST', '/security/reset', [
             'token' => $token,
             'password' => $newPassword,
         ]);
@@ -426,7 +433,7 @@ class ResettingControllerTest extends SuluTestCase
     {
         $passwordBefore = $this->users[2]->getPassword();
 
-        $this->client->jsonRequest('GET', '/security/reset', [
+        $this->client->jsonRequest('POST', '/security/reset', [
             'password' => 'thispasswordshouldnotbeapplied',
         ]);
         $response = \json_decode($this->client->getResponse()->getContent());
