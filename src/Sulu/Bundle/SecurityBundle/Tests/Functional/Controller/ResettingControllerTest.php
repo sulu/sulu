@@ -387,7 +387,7 @@ class ResettingControllerTest extends SuluTestCase
     {
         $passwordBefore = $this->users[2]->getPassword();
 
-        $this->client->jsonRequest('GET', '/security/reset?'.http_build_query([
+        $this->client->jsonRequest('GET', '/security/reset?' . \http_build_query([
             'token' => 'thistokendoesnotexist',
             'password' => 'thispasswordshouldnotbeapplied',
         ]));
