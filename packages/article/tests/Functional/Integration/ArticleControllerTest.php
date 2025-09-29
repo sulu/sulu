@@ -83,11 +83,12 @@ class ArticleControllerTest extends SuluTestCase
 
         $response = $this->client->getResponse();
         $content = \json_decode((string) $response->getContent(), true);
+        $this->assertIsArray($content);
         /** @var string $id */
-        $id = $content['id'] ?? null; // @phpstan-ignore-line
+        $id = $content['id'] ?? null;
 
         $this->assertResponseSnapshot('article_post_publish.json', $response, 201);
-        $this->assertNotSame('2020-05-08T00:00:00+00:00', $content['published']); // @phpstan-ignore-line
+        $this->assertNotSame('2020-05-08T00:00:00+00:00', $content['published']);
 
         self::ensureKernelShutdown();
 
@@ -230,8 +231,10 @@ class ArticleControllerTest extends SuluTestCase
         $routeRepository = $this->getContainer()->get(RouteRepositoryInterface::class);
         $this->assertCount(1, $routeRepository->findBy([]));
 
+        $responseData = \json_decode((string) $response->getContent(), true);
+        $this->assertIsArray($responseData);
         /** @var string $id */
-        $id = \json_decode((string) $response->getContent(), true)['id'] ?? null; // @phpstan-ignore-line
+        $id = $responseData['id'] ?? null;
 
         return $id;
     }

@@ -47,7 +47,7 @@ trait PersistenceExtensionTrait
     }
 
     /**
-     * @param array<string, array{model: class-string, repository?: class-string}> $objects
+     * @param array<string, array{model?: class-string, repository?: class-string}> $objects
      */
     private function defineRepositories(array $objects, ContainerBuilder $container): void
     {

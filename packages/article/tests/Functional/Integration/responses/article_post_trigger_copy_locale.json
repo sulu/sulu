@@ -31,6 +31,8 @@
     "lastModifiedEnabled": true,
     "locale": "de",
     "mainWebspace": "sulu-io",
+    "additionalWebspaces": [],
+    "customizeWebspaceSettings": false,
     "published": null,
     "publishedState": false,
     "seoCanonicalUrl": "https://sulu.io/",

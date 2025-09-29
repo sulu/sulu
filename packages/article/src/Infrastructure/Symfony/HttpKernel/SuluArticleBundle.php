@@ -13,6 +13,9 @@ declare(strict_types=1);
 
 namespace Sulu\Article\Infrastructure\Symfony\HttpKernel;
 
+use Sulu\Article\Application\Content\DataMapper\AdditionalWebspacesDataMapper;
+use Sulu\Article\Application\Content\Merger\AdditionalWebspacesMerger;
+use Sulu\Article\Application\Content\Normalizer\AdditionalWebspacesNormalizer;
 use Sulu\Article\Application\Mapper\ArticleContentMapper;
 use Sulu\Article\Application\Mapper\ArticleMapperInterface;
 use Sulu\Article\Application\MessageHandler\ApplyWorkflowTransitionArticleMessageHandler;
@@ -21,11 +24,14 @@ use Sulu\Article\Application\MessageHandler\CreateArticleMessageHandler;
 use Sulu\Article\Application\MessageHandler\ModifyArticleMessageHandler;
 use Sulu\Article\Application\MessageHandler\RemoveArticleMessageHandler;
 use Sulu\Article\Application\MessageHandler\RestoreArticleVersionMessageHandler;
+use Sulu\Article\Application\Webspace\WebspaceResolver;
+use Sulu\Article\Application\Webspace\WebspaceSettingsConfigurationResolver;
 use Sulu\Article\Domain\Model\Article;
 use Sulu\Article\Domain\Model\ArticleDimensionContent;
 use Sulu\Article\Domain\Model\ArticleDimensionContentInterface;
 use Sulu\Article\Domain\Model\ArticleInterface;
 use Sulu\Article\Domain\Repository\ArticleRepositoryInterface;
+use Sulu\Article\Infrastructure\Doctrine\MetadataLoader;
 use Sulu\Article\Infrastructure\Doctrine\Repository\ArticleRepository;
 use Sulu\Article\Infrastructure\Sulu\Admin\ArticleAdmin;
 use Sulu\Article\Infrastructure\Sulu\Content\ArticleLinkProvider;
@@ -35,9 +41,11 @@ use Sulu\Article\Infrastructure\Sulu\Content\PropertyResolver\ArticleSelectionPr
 use Sulu\Article\Infrastructure\Sulu\Content\PropertyResolver\SingleArticleSelectionPropertyResolver;
 use Sulu\Article\Infrastructure\Sulu\Content\ResourceLoader\ArticleResourceLoader;
 use Sulu\Article\Infrastructure\Sulu\Reference\ArticleReferenceRefresher;
+use Sulu\Article\Infrastructure\Sulu\Route\ArticleRouteDefaultsProvider;
 use Sulu\Article\Infrastructure\Sulu\Sitemap\ArticlesSitemapProvider;
 use Sulu\Article\Infrastructure\Sulu\Trash\ArticleTrashItemHandler;
 use Sulu\Article\UserInterface\Controller\Admin\ArticleController;
+use Sulu\Bundle\HttpCacheBundle\ReferenceStore\ReferenceStore;
 use Sulu\Bundle\PersistenceBundle\DependencyInjection\PersistenceExtensionTrait;
 use Sulu\Bundle\PersistenceBundle\PersistenceBundleTrait;
 use Sulu\Content\Infrastructure\Sulu\Preview\ContentObjectProvider;
@@ -68,6 +76,32 @@ final class SuluArticleBundle extends AbstractBundle
     {
         $definition->rootNode() // @phpstan-ignore-line
             ->children()
+                ->arrayNode('default_main_webspace')
+                    ->useAttributeAsKey('locale')
+                    ->beforeNormalization()
+                        ->ifString()
+                        ->then(function($v) {
+                            return ['default' => $v];
+                        })
+                    ->end()
+                    ->prototype('scalar')->end()
+                ->end()
+                ->arrayNode('default_additional_webspaces')
+                    ->beforeNormalization()
+                        ->ifTrue(function($v) {
+                            if (!\is_array($v)) {
+                                return false;
+                            }
+
+                            return \count(\array_filter(\array_keys($v), 'is_string')) <= 0;
+                        })
+                        ->then(function($v) {
+                            return ['default' => $v];
+                        })
+                    ->end()
+                    ->prototype('array')->useAttributeAsKey('locale')->prototype('scalar')->end()->end()
+                    ->defaultValue([])
+                ->end()
                 ->arrayNode('objects')
                     ->addDefaultsIfNotSet()
                     ->children()
@@ -95,7 +129,16 @@ final class SuluArticleBundle extends AbstractBundle
      */
     public function loadExtension(array $config, ContainerConfigurator $container, ContainerBuilder $builder): void
     {
-        $this->configurePersistence($config['objects'], $builder); // @phpstan-ignore-line
+        /** @var array<string, array{model: class-string, repository?: class-string}> $objects */
+        $objects = $config['objects'] ?? [];
+        $this->configurePersistence($objects, $builder);
+
+        /** @var array<string, string> $defaultMainWebspace */
+        $defaultMainWebspace = $config['default_main_webspace'] ?? [];
+        /** @var array<string, array<string>> $defaultAdditionalWebspaces */
+        $defaultAdditionalWebspaces = $config['default_additional_webspaces'] ?? [];
+        $builder->setParameter('sulu_article.default_main_webspace', $defaultMainWebspace);
+        $builder->setParameter('sulu_article.default_additional_webspaces', $defaultAdditionalWebspaces);
 
         $services = $container->services();
 
@@ -158,7 +201,6 @@ final class SuluArticleBundle extends AbstractBundle
             ])
             ->tag('messenger.message_handler');
 
-        // Mapper service
         $services->set('sulu_article.article_content_mapper')
             ->class(ArticleContentMapper::class)
             ->args([
@@ -166,7 +208,39 @@ final class SuluArticleBundle extends AbstractBundle
             ])
             ->tag('sulu_article.article_mapper');
 
-        // Sulu Integration service
+        $services->set('sulu_article.additional_webspaces_data_mapper')
+            ->class(AdditionalWebspacesDataMapper::class)
+            ->tag('sulu_content.data_mapper');
+
+        $services->set('sulu_article.additional_webspaces_metadata_loader')
+            ->class(MetadataLoader::class)
+            ->tag('doctrine.event_listener', ['event' => 'loadClassMetadata']);
+
+        $services->set('sulu_article.additional_webspaces_merger')
+            ->class(AdditionalWebspacesMerger::class)
+            ->tag('sulu_content.merger', ['priority' => 12]);
+
+        $services->set('sulu_article.webspace_settings_configuration_resolver')
+            ->class(WebspaceSettingsConfigurationResolver::class)
+            ->args([
+                '%sulu_article.default_main_webspace%',
+                '%sulu_article.default_additional_webspaces%',
+            ]);
+
+        $services->set('sulu_article.webspace_resolver')
+            ->class(WebspaceResolver::class)
+            ->args([
+                new Reference('sulu_core.webspace.webspace_manager'),
+                new Reference('sulu_article.webspace_settings_configuration_resolver'),
+            ]);
+
+        $services->set('sulu_article.additional_webspaces_normalizer')
+            ->class(AdditionalWebspacesNormalizer::class)
+            ->args([
+                new Reference('sulu_article.webspace_resolver'),
+            ])
+            ->tag('sulu_content.normalizer');
+
         $services->set('sulu_article.article_admin')
             ->class(ArticleAdmin::class)
             ->args([
@@ -179,7 +253,6 @@ final class SuluArticleBundle extends AbstractBundle
             ->tag('sulu.context', ['context' => 'admin'])
             ->tag('sulu.admin');
 
-        // Repositories services
         $services->set('sulu_article.article_repository')
             ->class(ArticleRepository::class)
             ->args([
@@ -189,7 +262,6 @@ final class SuluArticleBundle extends AbstractBundle
 
         $services->alias(ArticleRepositoryInterface::class, 'sulu_article.article_repository');
 
-        // Controllers services
         $services->set('sulu_article.admin_article_controller')
             ->class(ArticleController::class)
             ->public()
@@ -197,7 +269,6 @@ final class SuluArticleBundle extends AbstractBundle
                 new Reference('sulu_article.article_repository'),
                 new Reference('sulu_message_bus'),
                 new Reference('serializer'),
-                // additional services to be removed when no longer needed
                 new Reference('sulu_content.content_manager'),
                 new Reference('sulu_core.list_builder.field_descriptor_factory'),
                 new Reference('sulu_core.doctrine_list_builder_factory'),
@@ -205,7 +276,6 @@ final class SuluArticleBundle extends AbstractBundle
             ])
             ->tag('sulu.context', ['context' => 'admin']);
 
-        // PropertyResolver services
         $services->set('sulu_article.single_article_selection_property_resolver')
             ->class(SingleArticleSelectionPropertyResolver::class)
             ->tag('sulu_content.property_resolver');
@@ -214,7 +284,6 @@ final class SuluArticleBundle extends AbstractBundle
             ->class(ArticleSelectionPropertyResolver::class)
             ->tag('sulu_content.property_resolver');
 
-        // ResourceLoader services
         $services->set('sulu_article.article_resource_loader')
             ->class(ArticleResourceLoader::class)
             ->args([
@@ -222,7 +291,6 @@ final class SuluArticleBundle extends AbstractBundle
             ])
             ->tag('sulu_content.resource_loader', ['type' => ArticleResourceLoader::RESOURCE_LOADER_KEY]);
 
-        // Preview service
         $services->set('sulu_article.article_preview_provider')
             ->class(ContentObjectProvider::class)
             ->args([
@@ -236,7 +304,6 @@ final class SuluArticleBundle extends AbstractBundle
             ->tag('sulu.context', ['context' => 'admin'])
             ->tag('sulu_preview.object_provider', ['provider-key' => 'articles']);
 
-        // Content services
         $services->set('sulu_article.article_teaser_provider')
             ->class(ArticleTeaserProvider::class)
             ->args([
@@ -267,6 +334,10 @@ final class SuluArticleBundle extends AbstractBundle
                 new Reference('doctrine.orm.entity_manager'),
             ])
         ->tag('sulu_content.smart_content_provider', ['type' => ArticleInterface::RESOURCE_KEY]);
+
+        $services->set('sulu_article.article_reference_store')
+            ->class(ReferenceStore::class)
+            ->tag('sulu_website.reference_store', ['alias' => ArticleInterface::RESOURCE_KEY]);
 
         // Reference services
         $services->set('sulu_article.article_reference_refresher')
@@ -307,6 +378,19 @@ final class SuluArticleBundle extends AbstractBundle
                 ->tag('sulu_trash.restore_trash_item_handler')
                 ->tag('sulu_trash.restore_configuration_provider');
         }
+
+        $services->set('sulu_article.article_route_defaults_provider')
+            ->class(ArticleRouteDefaultsProvider::class)
+            ->args([
+                new Reference('doctrine.orm.entity_manager'),
+                new Reference('sulu_content.content_aggregator'),
+                new Reference('sulu_admin.metadata_provider_registry'),
+                new Reference('sulu_http_cache.cache_lifetime.resolver'),
+                new Reference('sulu_core.webspace.webspace_manager'),
+                new Reference('sulu_article.webspace_resolver'),
+                '%kernel.environment%',
+            ])
+            ->tag('sulu_route.route_defaults_provider', ['resource_key' => 'articles']);
     }
 
     /**
@@ -325,7 +409,7 @@ final class SuluArticleBundle extends AbstractBundle
                     ],
                     'forms' => [
                         'directories' => [
-                            // \dirname(__DIR__, 4) . '/config/forms',
+                            \dirname(__DIR__, 4) . '/config/forms',
                         ],
                     ],
                     'templates' => [
@@ -423,6 +507,25 @@ final class SuluArticleBundle extends AbstractBundle
                     ],
                 ],
             );
+        }
+
+        if ($builder->hasExtension('sulu_search')) {
+            $suluSearchConfigs = $builder->getExtensionConfig('sulu_search');
+
+            foreach ($suluSearchConfigs as $suluSearchConfig) {
+                if (isset($suluSearchConfig['website']) && \is_array($suluSearchConfig['website']) && isset($suluSearchConfig['website']['indexes'])) {
+                    $builder->prependExtensionConfig(
+                        'sulu_search',
+                        [
+                            'website' => [
+                                'indexes' => [
+                                    ArticleInterface::RESOURCE_KEY => ArticleInterface::RESOURCE_KEY . '_published',
+                                ],
+                            ],
+                        ],
+                    );
+                }
+            }
         }
     }
 

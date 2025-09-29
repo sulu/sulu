@@ -164,6 +164,7 @@ class ArticlesSitemapProviderTest extends WebsiteTestCase
                 'locale' => 'en',
                 'url' => '/product',
                 'mainWebspace' => 'sulu-io',
+                'additionalWebspaces' => ['blog'],
             ],
         );
 
@@ -264,6 +265,7 @@ class ArticlesSitemapProviderTest extends WebsiteTestCase
             'template' => 'article',
             'locale' => 'en',
             'mainWebspace' => 'sulu-io',
+            'customizeWebspaceSettings' => true,
         ], $data);
 
         $messageBus = self::getContainer()->get('sulu_message_bus');
@@ -320,7 +322,7 @@ class ArticlesSitemapProviderTest extends WebsiteTestCase
             'url' => '/example-article-' . \uniqid(),
             'template' => 'article',
             'locale' => 'en',
-            'mainWebspace' => 'sulu-io',
+            'mainWebspace' => 'blog',
         ], $data);
 
         $messageBus = self::getContainer()->get('sulu_message_bus');

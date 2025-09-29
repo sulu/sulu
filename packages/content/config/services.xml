@@ -96,7 +96,6 @@
             <argument type="service" id="sulu_http_cache.cache_lifetime.request_store"/>
 
             <tag name="sulu_route.route_defaults_provider" resource-key="examples"/>
-            <tag name="sulu_route.route_defaults_provider" resource-key="articles"/>
             <tag name="sulu_route.route_defaults_provider" resource-key="pages"/>
         </service>
 

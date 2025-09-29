@@ -46,5 +46,7 @@
     "version": 0,
     "url": "\/my-article",
     "workflowPlace": "unpublished",
-    "mainWebspace": "sulu-io"
+    "mainWebspace": "sulu-io",
+    "additionalWebspaces": [],
+    "customizeWebspaceSettings": false
 }

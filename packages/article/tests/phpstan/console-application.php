@@ -16,7 +16,7 @@ use Symfony\Bundle\FrameworkBundle\Console\Application;
 
 require \dirname(__DIR__) . '/Application/config/bootstrap.php';
 $kernel = new Kernel(
-    $_SERVER['APP_ENV'], // @phpstan-ignore argument.type
+    \is_string($_SERVER['APP_ENV']) ? $_SERVER['APP_ENV'] : 'dev',
     (bool) $_SERVER['APP_DEBUG'],
     Kernel::CONTEXT_ADMIN,
 );
