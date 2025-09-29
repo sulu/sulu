@@ -15,6 +15,7 @@ namespace Sulu\Page\Tests\Functional\Integration;
 
 use PHPUnit\Framework\Attributes\CoversNothing;
 use PHPUnit\Framework\Attributes\Depends;
+use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroup;
 use Sulu\Bundle\TestBundle\Testing\AssertSnapshotTrait;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Bundle\TrashBundle\Domain\Repository\TrashItemRepositoryInterface;
@@ -59,6 +60,33 @@ class PageControllerTest extends SuluTestCase
         self::getEntityManager()->flush();
 
         return $homepage;
+    }
+
+    /**
+     * @return int[]
+     */
+    private function createTargetGroups(): array
+    {
+        /** @var array<string, mixed> $bundles */
+        $bundles = self::getContainer()->getParameter('kernel.bundles');
+        // Only create target groups if the bundle is available
+        if (!\array_key_exists('SuluAudienceTargetingBundle', $bundles)) {
+            return [];
+        }
+
+        $targetGroup1 = new TargetGroup();
+        $targetGroup1->setTitle('Marketing Segment');
+        $targetGroup1->setPriority(1);
+        self::getEntityManager()->persist($targetGroup1);
+
+        $targetGroup2 = new TargetGroup();
+        $targetGroup2->setTitle('Tech Segment');
+        $targetGroup2->setPriority(2);
+        self::getEntityManager()->persist($targetGroup2);
+
+        self::getEntityManager()->flush();
+
+        return [$targetGroup1->getId(), $targetGroup2->getId()];
     }
 
     /**
@@ -118,7 +146,25 @@ class PageControllerTest extends SuluTestCase
     {
         self::purgeDatabase();
 
+        $targetGroupIds = $this->createTargetGroups();
         $homepage = $this->createHomepage('123-123-123', 'sulu-io');
+
+        $excerptData = [
+            'excerptTitle' => 'Excerpt Title',
+            'excerptDescription' => 'Excerpt Description',
+            'excerptMore' => 'Excerpt More',
+            'excerptTags' => ['Tag 1', 'Tag 2'],
+            'excerptCategories' => [],
+            'excerptIcon' => null,
+            'excerptMedia' => null,
+            'excerptSegment' => 'premium-segment',
+        ];
+
+        // Add audience target groups if available
+        if (!empty($targetGroupIds)) {
+            $excerptData['excerptAudienceTargetGroups'] = $targetGroupIds;
+        }
+
         $this->client->request(
             'POST',
             \sprintf('/admin/api/pages?locale=en&action=publish&parentId=%s&webspace=sulu-io', $homepage->getId()),
@@ -126,7 +172,7 @@ class PageControllerTest extends SuluTestCase
             [],
             [],
             \json_encode(
-                [
+                \array_merge([
                     'template' => 'default',
                     'title' => 'Test Page',
                     'url' => '/my-page',
@@ -142,17 +188,10 @@ class PageControllerTest extends SuluTestCase
                     'seoNoIndex' => true,
                     'seoNoFollow' => true,
                     'seoHideInSitemap' => true,
-                    'excerptTitle' => 'Excerpt Title',
-                    'excerptDescription' => 'Excerpt Description',
-                    'excerptMore' => 'Excerpt More',
-                    'excerptTags' => ['Tag 1', 'Tag 2'],
-                    'excerptCategories' => [],
-                    'excerptIcon' => null,
-                    'excerptMedia' => null,
                     'author' => null,
                     'authored' => '2020-05-08T00:00:00+00:00',
                     'navigationContexts' => ['main'],
-                ],
+                ], $excerptData),
             ) ?: null,
         );
 
@@ -193,10 +232,32 @@ class PageControllerTest extends SuluTestCase
     {
         \sleep(1); // Ensure that the version timestamp is different from the previous version
 
+        $targetGroupIds = $this->createTargetGroups();
+
+        $excerptData = [
+            'excerptTitle' => 'Modified Excerpt Title',
+            'excerptDescription' => 'Modified Excerpt Description',
+            'excerptMore' => 'Modified Excerpt More',
+            'excerptTags' => ['Modified Tag 1', 'Modified Tag 2'],
+            'excerptCategories' => [],
+            'excerptIcon' => null,
+            'excerptMedia' => null,
+            'excerptSegment' => 'enterprise-segment',
+        ];
+
+        // Add audience target groups if available
+        if (!empty($targetGroupIds)) {
+            $excerptData['excerptAudienceTargetGroups'] = $targetGroupIds;
+        }
+
         $this->client->request(
-            'PUT', '/admin/api/pages/' . $id . '?locale=en&action=publish', [], [], [],
+            'PUT',
+            '/admin/api/pages/' . $id . '?locale=en&action=publish',
+            [],
+            [],
+            [],
             \json_encode(
-                [
+                \array_merge([
                     'template' => 'default',
                     'title' => 'Test modified version page',
                     'url' => '/my-page',
@@ -209,15 +270,8 @@ class PageControllerTest extends SuluTestCase
                     'seoNoIndex' => true,
                     'seoNoFollow' => true,
                     'seoHideInSitemap' => true,
-                    'excerptTitle' => 'Modified Excerpt Title',
-                    'excerptDescription' => 'Modified Excerpt Description',
-                    'excerptMore' => 'Modified Excerpt More',
-                    'excerptTags' => ['Modified Tag 1', 'Modified Tag 2'],
-                    'excerptCategories' => [],
-                    'excerptIcon' => null,
-                    'excerptMedia' => null,
                     'navigationContexts' => ['main'],
-                ],
+                ], $excerptData),
             ) ?: null,
         );
         $response = $this->client->getResponse();
@@ -273,14 +327,32 @@ class PageControllerTest extends SuluTestCase
     {
         self::purgeDatabase();
 
+        $targetGroupIds = $this->createTargetGroups();
         $homepage = $this->createHomepage('123-123-123', 'sulu-io');
+
+        $excerptData = [
+            'excerptTitle' => 'Excerpt Title',
+            'excerptDescription' => 'Excerpt Description',
+            'excerptMore' => 'Excerpt More',
+            'excerptTags' => ['Tag 1', 'Tag 2'],
+            'excerptCategories' => [],
+            'excerptIcon' => null,
+            'excerptMedia' => null,
+            'excerptSegment' => 'standard-segment',
+        ];
+
+        // Add audience target groups if available
+        if (!empty($targetGroupIds)) {
+            $excerptData['excerptAudienceTargetGroups'] = $targetGroupIds;
+        }
+
         $this->client->request(
             'POST',
             \sprintf('/admin/api/pages?locale=en&parentId=%s&webspace=sulu-io', $homepage->getId()),
             [],
             [],
             [],
-            \json_encode([
+            \json_encode(\array_merge([
                 'template' => 'default',
                 'title' => 'Test Page',
                 'url' => '/my-page',
@@ -294,15 +366,8 @@ class PageControllerTest extends SuluTestCase
                 'seoNoIndex' => true,
                 'seoNoFollow' => true,
                 'seoHideInSitemap' => true,
-                'excerptTitle' => 'Excerpt Title',
-                'excerptDescription' => 'Excerpt Description',
-                'excerptMore' => 'Excerpt More',
-                'excerptTags' => ['Tag 1', 'Tag 2'],
-                'excerptCategories' => [],
-                'excerptIcon' => null,
-                'excerptMedia' => null,
                 'authored' => '2020-05-08T00:00:00+00:00',
-            ]) ?: null,
+            ], $excerptData)) ?: null,
         );
 
         $response = $this->client->getResponse();
@@ -321,7 +386,25 @@ class PageControllerTest extends SuluTestCase
     #[Depends('testPost')]
     public function testPostPublishBlogWebspace(): void
     {
+        $targetGroupIds = $this->createTargetGroups();
         $homepage = $this->createHomepage('321-321-321', 'blog');
+
+        $excerptData = [
+            'excerptTitle' => 'Excerpt Title',
+            'excerptDescription' => 'Excerpt Description',
+            'excerptMore' => 'Excerpt More',
+            'excerptTags' => ['Tag 1', 'Tag 2'],
+            'excerptCategories' => [],
+            'excerptIcon' => null,
+            'excerptMedia' => null,
+            'excerptSegment' => 'blog-segment',
+        ];
+
+        // Add audience target groups if available
+        if (!empty($targetGroupIds)) {
+            $excerptData['excerptAudienceTargetGroups'] = $targetGroupIds;
+        }
+
         $this->client->request(
             'POST',
             \sprintf('/admin/api/pages?locale=en&action=publish&parentId=%s&webspace=blog', $homepage->getId()),
@@ -329,7 +412,7 @@ class PageControllerTest extends SuluTestCase
             [],
             [],
             \json_encode(
-                [
+                \array_merge([
                     'template' => 'default',
                     'title' => 'Test Blog',
                     'url' => '/my-blog',
@@ -345,17 +428,10 @@ class PageControllerTest extends SuluTestCase
                     'seoNoIndex' => true,
                     'seoNoFollow' => true,
                     'seoHideInSitemap' => true,
-                    'excerptTitle' => 'Excerpt Title',
-                    'excerptDescription' => 'Excerpt Description',
-                    'excerptMore' => 'Excerpt More',
-                    'excerptTags' => ['Tag 1', 'Tag 2'],
-                    'excerptCategories' => [],
-                    'excerptIcon' => null,
-                    'excerptMedia' => null,
                     'author' => null,
                     'authored' => '2020-05-08T00:00:00+00:00',
                     'navigationContexts' => ['main'],
-                ],
+                ], $excerptData),
             ) ?: null,
         );
 
@@ -426,7 +502,25 @@ class PageControllerTest extends SuluTestCase
     #[Depends('testGet')]
     public function testPut(string $id): void
     {
-        $this->client->request('PUT', '/admin/api/pages/' . $id . '?locale=en', [], [], [], \json_encode([
+        $targetGroupIds = $this->createTargetGroups();
+
+        $excerptData = [
+            'excerptTitle' => 'Excerpt Title 2',
+            'excerptDescription' => 'Excerpt Description 2',
+            'excerptMore' => 'Excerpt More 2',
+            'excerptTags' => ['Tag 3', 'Tag 4'],
+            'excerptCategories' => [],
+            'excerptIcon' => null,
+            'excerptMedia' => null,
+            'excerptSegment' => 'updated-segment',
+        ];
+
+        // Add audience target groups if available
+        if (!empty($targetGroupIds)) {
+            $excerptData['excerptAudienceTargetGroups'] = $targetGroupIds;
+        }
+
+        $this->client->request('PUT', '/admin/api/pages/' . $id . '?locale=en', [], [], [], \json_encode(\array_merge([
             'template' => 'default',
             'title' => 'Test Page 2',
             'url' => '/my-page-2',
@@ -438,15 +532,8 @@ class PageControllerTest extends SuluTestCase
             'seoNoIndex' => false,
             'seoNoFollow' => false,
             'seoHideInSitemap' => false,
-            'excerptTitle' => 'Excerpt Title 2',
-            'excerptDescription' => 'Excerpt Description 2',
-            'excerptMore' => 'Excerpt More 2',
-            'excerptTags' => ['Tag 3', 'Tag 4'],
-            'excerptCategories' => [],
-            'excerptIcon' => null,
-            'excerptMedia' => null,
             'authored' => '2020-06-09T00:00:00+00:00',
-        ]) ?: null);
+        ], $excerptData)) ?: null);
 
         $response = $this->client->getResponse();
 
@@ -530,12 +617,32 @@ class PageControllerTest extends SuluTestCase
     #[Depends('testGetListIncludeGhostShadow')]
     public function testCopy(): string
     {
+        $targetGroupIds = $this->createTargetGroups();
+
+        $excerptData = [
+            'excerptTitle' => 'Excerpt Title',
+            'excerptDescription' => 'Excerpt Description',
+            'excerptMore' => 'Excerpt More',
+            'excerptTags' => ['Tag 1', 'Tag 2'],
+            'excerptCategories' => [],
+            'excerptIcon' => null,
+            'excerptMedia' => null,
+            'excerptSegment' => 'copy-segment',
+        ];
+
+        // Add audience target groups if available
+        if (!empty($targetGroupIds)) {
+            $excerptData['excerptAudienceTargetGroups'] = $targetGroupIds;
+        }
+
         $this->client->request(
             'POST',
             \sprintf('/admin/api/pages?locale=en&action=publish&parentId=%s&webspace=sulu-io', '123-123-123'),
-            [], [], [],
+            [],
+            [],
+            [],
             \json_encode(
-                [
+                \array_merge([
                     'template' => 'default',
                     'title' => 'Test page for copy',
                     'url' => '/test-page-for-copy',
@@ -550,15 +657,8 @@ class PageControllerTest extends SuluTestCase
                     'seoNoIndex' => true,
                     'seoNoFollow' => true,
                     'seoHideInSitemap' => true,
-                    'excerptTitle' => 'Excerpt Title',
-                    'excerptDescription' => 'Excerpt Description',
-                    'excerptMore' => 'Excerpt More',
-                    'excerptTags' => ['Tag 1', 'Tag 2'],
-                    'excerptCategories' => [],
-                    'excerptIcon' => null,
-                    'excerptMedia' => null,
                     'authored' => '2020-05-08T00:00:00+00:00',
-                ],
+                ], $excerptData),
             ) ?: null,
         );
 

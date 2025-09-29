@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Sulu.
  *
@@ -12,6 +14,7 @@
 namespace Sulu\Page\Infrastructure\Symfony\Twig\Extension;
 
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
+use Sulu\Component\Webspace\Segment;
 use Sulu\Page\Domain\Repository\NavigationRepositoryInterface;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
@@ -26,7 +29,7 @@ class NavigationTwigExtension extends AbstractExtension
 {
     public function __construct(
         private NavigationRepositoryInterface $navigationRepository,
-        private RequestAnalyzerInterface $requestAnalyzer
+        private RequestAnalyzerInterface $requestAnalyzer,
     ) {
     }
 
@@ -49,15 +52,16 @@ class NavigationTwigExtension extends AbstractExtension
     {
         $webspaceKey = $this->requestAnalyzer->getWebspace()->getKey();
         $locale = $this->requestAnalyzer->getCurrentLocalization()->getLocale();
+        /** @var Segment|null $segment */
         $segment = $this->requestAnalyzer->getSegment();
 
         return $this->navigationRepository->getNavigationFlat(
             $navigationContext,
             $locale,
             $webspaceKey,
-            $segment?->getKey() ?? null,
+            $segment?->getKey(),
             $depth,
-            ['loadExcerpt' => $loadExcerpt]
+            ['loadExcerpt' => $loadExcerpt],
         );
     }
 
@@ -68,15 +72,16 @@ class NavigationTwigExtension extends AbstractExtension
     {
         $webspaceKey = $this->requestAnalyzer->getWebspace()->getKey();
         $locale = $this->requestAnalyzer->getCurrentLocalization()->getLocale();
+        /** @var Segment|null $segment */
         $segment = $this->requestAnalyzer->getSegment();
 
         return $this->navigationRepository->getNavigationTree(
             $navigationContext,
             $locale,
             $webspaceKey,
-            $segment?->getKey() ?? null,
+            $segment?->getKey(),
             $depth,
-            ['excerpt' => $loadExcerpt]
+            ['excerpt' => $loadExcerpt],
         );
     }
 

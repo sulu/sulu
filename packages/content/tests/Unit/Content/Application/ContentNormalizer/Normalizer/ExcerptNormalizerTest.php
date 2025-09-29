@@ -15,7 +15,10 @@ namespace Sulu\Content\Tests\Unit\Content\Application\ContentNormalizer\Normaliz
 
 use PHPUnit\Framework\TestCase;
 use Sulu\Content\Application\ContentNormalizer\Normalizer\ExcerptNormalizer;
+use Sulu\Content\Domain\Model\ContentRichEntityInterface;
+use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Domain\Model\ExcerptInterface;
+use Sulu\Page\Domain\Model\PageInterface;
 
 class ExcerptNormalizerTest extends TestCase
 {
@@ -46,6 +49,7 @@ class ExcerptNormalizerTest extends TestCase
             [
                 'excerptTags',
                 'excerptCategories',
+                'excerptAudienceTargetGroups',
             ],
             $normalizer->getIgnoredAttributes($object->reveal())
         );
@@ -70,7 +74,12 @@ class ExcerptNormalizerTest extends TestCase
     public function testEnhance(): void
     {
         $normalizer = $this->createExcerptNormalizerInstance();
+
+        $resource = $this->prophesize(ContentRichEntityInterface::class);
+
         $object = $this->prophesize(ExcerptInterface::class);
+        $object->willImplement(DimensionContentInterface::class);
+        $object->getResource()->willReturn($resource->reveal());
 
         $data = [
             'excerptTagNames' => ['Tag 1', 'Tag 2'],
@@ -80,6 +89,96 @@ class ExcerptNormalizerTest extends TestCase
         $expectedResult = [
             'excerptTags' => ['Tag 1', 'Tag 2'],
             'excerptCategories' => [3, 4],
+            'excerptAudienceTargetGroups' => [],
+        ];
+
+        $this->assertSame(
+            $expectedResult,
+            $normalizer->enhance($object->reveal(), $data)
+        );
+    }
+
+    public function testEnhanceWithAudienceTargetGroups(): void
+    {
+        $normalizer = $this->createExcerptNormalizerInstance();
+
+        $resource = $this->prophesize(ContentRichEntityInterface::class);
+
+        $object = $this->prophesize(ExcerptInterface::class);
+        $object->willImplement(DimensionContentInterface::class);
+        $object->getResource()->willReturn($resource->reveal());
+
+        $data = [
+            'excerptTagNames' => ['Tag 1', 'Tag 2'],
+            'excerptCategoryIds' => [3, 4],
+            'excerptAudienceTargetGroupIds' => [5, 6, 7],
+        ];
+
+        $expectedResult = [
+            'excerptTags' => ['Tag 1', 'Tag 2'],
+            'excerptCategories' => [3, 4],
+            'excerptAudienceTargetGroups' => [5, 6, 7],
+        ];
+
+        $this->assertSame(
+            $expectedResult,
+            $normalizer->enhance($object->reveal(), $data)
+        );
+    }
+
+    public function testEnhanceWithSegmentForPageResource(): void
+    {
+        $normalizer = $this->createExcerptNormalizerInstance();
+
+        $page = $this->prophesize(PageInterface::class);
+        $page->getWebspaceKey()->willReturn('example-webspace');
+
+        $object = $this->prophesize(ExcerptInterface::class);
+        $object->willImplement(DimensionContentInterface::class);
+        $object->getResource()->willReturn($page->reveal());
+        $object->getExcerptSegment()->willReturn('test-segment');
+
+        $data = [
+            'excerptTagNames' => [],
+            'excerptCategoryIds' => [],
+        ];
+
+        $expectedResult = [
+            'excerptTags' => [],
+            'excerptCategories' => [],
+            'excerptAudienceTargetGroups' => [],
+            'excerptSegment' => [
+                'example-webspace' => 'test-segment',
+            ],
+        ];
+
+        $this->assertSame(
+            $expectedResult,
+            $normalizer->enhance($object->reveal(), $data)
+        );
+    }
+
+    public function testEnhanceWithNullSegmentForPageResource(): void
+    {
+        $normalizer = $this->createExcerptNormalizerInstance();
+
+        $page = $this->prophesize(PageInterface::class);
+
+        $object = $this->prophesize(ExcerptInterface::class);
+        $object->willImplement(DimensionContentInterface::class);
+        $object->getResource()->willReturn($page->reveal());
+        $object->getExcerptSegment()->willReturn(null);
+
+        $data = [
+            'excerptTagNames' => [],
+            'excerptCategoryIds' => [],
+        ];
+
+        $expectedResult = [
+            'excerptTags' => [],
+            'excerptCategories' => [],
+            'excerptAudienceTargetGroups' => [],
+            'excerptSegment' => null,
         ];
 
         $this->assertSame(

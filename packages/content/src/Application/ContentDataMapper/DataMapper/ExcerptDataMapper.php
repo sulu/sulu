@@ -61,7 +61,7 @@ class ExcerptDataMapper implements DataMapperInterface
         if (\array_key_exists('excerptSegment', $data)) {
             $segment = $data['excerptSegment'];
             if (\is_array($data['excerptSegment'])) {
-                $segment = \array_values($segment)[0] ?? null;
+                $segment = \array_values($data['excerptSegment'])[0] ?? null;
             }
             Assert::nullOrString($segment);
             $dimensionContent->setExcerptSegment($segment);

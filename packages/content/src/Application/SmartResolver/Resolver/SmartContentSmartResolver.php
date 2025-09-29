@@ -47,7 +47,7 @@ class SmartContentSmartResolver implements SmartResolverInterface
      */
     public function __construct(
         private ServiceLocator $smartContentProviders,
-        private ?TargetGroupStoreInterface $targetGroupStore,
+        private ?TargetGroupStoreInterface $targetGroupStore = null,
     ) {
     }
 
@@ -63,12 +63,15 @@ class SmartContentSmartResolver implements SmartResolverInterface
         $data = $resolvable->getData();
 
         $value = $data['value'];
+        /** @var array<string, mixed> $filters */
         $filters = $data['filters'];
         $sortBys = $data['sortBys'] ?? [];
         $parameters = $data['parameters'];
 
-        if (($filters['audienceTargeting'] ?? null) && $this->targetGroupStore) {
+        if (isset($filters['audienceTargeting']) && $filters['audienceTargeting'] && $this->targetGroupStore) {
+            /** @var string|null $targetGroupId */
             $targetGroupId = $this->targetGroupStore->getTargetGroupId(internal: true);
+            // Check if target group is valid (not null and not the excluded group '-1')
             if (null !== $targetGroupId && '-1' !== $targetGroupId) {
                 $filters['targetGroupId'] = $targetGroupId;
             }

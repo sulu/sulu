@@ -11,11 +11,13 @@
     ],
     "created": "@datetime@",
     "creator": "@integer@",
+    "excerptAudienceTargetGroups": [],
     "excerptCategories": [],
     "excerptDescription": "Excerpt Description",
     "excerptIcon": null,
     "excerptImage": null,
     "excerptMore": "Excerpt More",
+    "excerptSegment": null,
     "excerptTags": [
         "Tag 1",
         "Tag 2"

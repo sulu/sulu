@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Sulu\Content\Tests\Functional\Infrastructure\Doctrine;
 
+use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroup;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Content\Application\ContentManager\ContentManagerInterface;
 use Sulu\Content\Domain\Model\DimensionContentCollection;
@@ -591,5 +592,123 @@ class DimensionContentQueryEnhancerTest extends SuluTestCase
         /** @var ExampleDimensionContent $exampleDimensionContent3 */
         $exampleDimensionContent3 = $this->contentManager->resolve($result[2], ['locale' => 'en', 'stage' => 'draft']);
         $this->assertSame('2020-03-01', $exampleDimensionContent3->getWorkflowPublished()?->format('Y-m-d'));
+    }
+
+    public function testAudienceTargetingFilters(): void
+    {
+        /** @var array<string, mixed> $bundles */
+        $bundles = self::getContainer()->getParameter('kernel.bundles');
+        if (!\array_key_exists('SuluAudienceTargetingBundle', $bundles)) {
+            $this->markTestSkipped('SuluAudienceTargetingBundle is not available');
+        }
+
+        static::purgeDatabase();
+
+        $targetGroup1 = new TargetGroup();
+        $targetGroup1->setTitle('Target Group 1');
+        $targetGroup1->setPriority(1);
+        static::getEntityManager()->persist($targetGroup1);
+
+        $targetGroup2 = new TargetGroup();
+        $targetGroup2->setTitle('Target Group 2');
+        $targetGroup2->setPriority(2);
+        static::getEntityManager()->persist($targetGroup2);
+
+        static::getEntityManager()->flush();
+
+        $targetGroupId1 = $targetGroup1->getId();
+        $targetGroupId2 = $targetGroup2->getId();
+
+        $example = static::createExample();
+        $example2 = static::createExample();
+        $example3 = static::createExample();
+        static::createExampleContent($example, ['title' => 'Example A', 'excerptAudienceTargetGroups' => [$targetGroup1]]);
+        static::createExampleContent($example2, ['title' => 'Example B']);
+        static::createExampleContent($example3, ['title' => 'Example C', 'excerptAudienceTargetGroups' => [$targetGroup1, $targetGroup2]]);
+        static::getEntityManager()->flush();
+        static::getEntityManager()->clear();
+
+        // Test filtering by target group 1
+        $this->assertCount(2, \iterator_to_array($this->exampleRepository->findBy([
+            'locale' => 'en',
+            'stage' => 'draft',
+            'audienceTargeting' => true,
+            'targetGroupId' => $targetGroupId1,
+        ])));
+
+        $this->assertSame(2, $this->exampleRepository->countBy([
+            'locale' => 'en',
+            'stage' => 'draft',
+            'audienceTargeting' => true,
+            'targetGroupId' => $targetGroupId1,
+        ]));
+
+        // Test filtering by target group 2
+        $this->assertCount(1, \iterator_to_array($this->exampleRepository->findBy([
+            'locale' => 'en',
+            'stage' => 'draft',
+            'audienceTargeting' => true,
+            'targetGroupId' => $targetGroupId2,
+        ])));
+
+        $this->assertSame(1, $this->exampleRepository->countBy([
+            'locale' => 'en',
+            'stage' => 'draft',
+            'audienceTargeting' => true,
+            'targetGroupId' => $targetGroupId2,
+        ]));
+    }
+
+    public function testSegmentFilters(): void
+    {
+        static::purgeDatabase();
+
+        $example = static::createExample();
+        $example2 = static::createExample();
+        $example3 = static::createExample();
+        static::createExampleContent($example, ['title' => 'Example A', 'excerptSegment' => 'segment-a']);
+        static::createExampleContent($example2, ['title' => 'Example B']);
+        static::createExampleContent($example3, ['title' => 'Example C', 'excerptSegment' => 'segment-b']);
+        static::getEntityManager()->flush();
+        static::getEntityManager()->clear();
+
+        // Test filtering by segment-a (should return Example A + Example B with null segment)
+        $this->assertCount(2, \iterator_to_array($this->exampleRepository->findBy([
+            'locale' => 'en',
+            'stage' => 'draft',
+            'segmentKey' => 'segment-a',
+        ])));
+
+        $this->assertSame(2, $this->exampleRepository->countBy([
+            'locale' => 'en',
+            'stage' => 'draft',
+            'segmentKey' => 'segment-a',
+        ]));
+
+        // Test filtering by segment-b (should return Example C + Example B with null segment)
+        $this->assertCount(2, \iterator_to_array($this->exampleRepository->findBy([
+            'locale' => 'en',
+            'stage' => 'draft',
+            'segmentKey' => 'segment-b',
+        ])));
+
+        $this->assertSame(2, $this->exampleRepository->countBy([
+            'locale' => 'en',
+            'stage' => 'draft',
+            'segmentKey' => 'segment-b',
+        ]));
+
+        // Test filtering by non-existent segment (should return Example B with null segment)
+        $this->assertCount(1, \iterator_to_array($this->exampleRepository->findBy([
+            'locale' => 'en',
+            'stage' => 'draft',
+            'segmentKey' => 'segment-nonexistent',
+        ])));
+
+        $this->assertSame(1, $this->exampleRepository->countBy([
+            'locale' => 'en',
+            'stage' => 'draft',
+            'segmentKey' => 'segment-nonexistent',
+        ]));
     }
 }

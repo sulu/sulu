@@ -38,6 +38,9 @@ use Sulu\Route\Domain\Model\Route;
  */
 final class MetadataLoader
 {
+    /**
+     * @param array<string, mixed> $bundles
+     */
     public function __construct(
         private readonly array $bundles,
     ) {

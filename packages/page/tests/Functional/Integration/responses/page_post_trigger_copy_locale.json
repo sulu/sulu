@@ -24,6 +24,13 @@
         "Tag 2"
     ],
     "excerptTitle": "Excerpt Title",
+    "excerptAudienceTargetGroups": [
+        "@integer@",
+        "@integer@"
+    ],
+    "excerptSegment": {
+        "sulu-io": "@string@"
+    },
     "ghostLocale": "en",
     "id": "@string@",
     "image": null,

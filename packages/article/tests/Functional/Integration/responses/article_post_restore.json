@@ -14,6 +14,7 @@
     "created": "@datetime@",
     "creator": "@integer@",
     "description": "<p>Test Article 2</p>",
+    "excerptAudienceTargetGroups": [],
     "excerptCategories": [],
     "excerptDescription": "Excerpt Description 2",
     "excerptIcon": null,

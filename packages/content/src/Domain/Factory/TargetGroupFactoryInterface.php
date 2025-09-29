@@ -13,9 +13,7 @@ declare(strict_types=1);
 
 namespace Sulu\Content\Domain\Factory;
 
-use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroup;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupInterface;
-use Sulu\Bundle\TagBundle\Tag\TagInterface;
 
 interface TargetGroupFactoryInterface
 {

@@ -108,10 +108,10 @@ class PageDimensionContent implements PageDimensionContentInterface
 
     public function getNavigationContexts(): array
     {
-        return \array_map(
+        return \array_values(\array_map(
             fn ($context) => $context->getNavigationContext(),
             $this->navigationContexts->toArray(),
-        );
+        ));
     }
 
     public function setNavigationContexts(array $navigationContexts): self

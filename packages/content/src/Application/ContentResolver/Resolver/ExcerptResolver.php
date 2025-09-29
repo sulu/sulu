@@ -119,8 +119,10 @@ readonly class ExcerptResolver implements ResolverInterface
      *     excerptTitle: string|null,
      *     excerptMore: string|null,
      *     excerptDescription: string|null,
+     *     excerptSegment: string|null,
      *     excerptCategories: int[],
      *     excerptTags: string[],
+     *     excerptAudienceTargetGroups: int[],
      *     excerptIcon: array{id: int}|null,
      *     excerptImage: array{id: int}|null
      * }

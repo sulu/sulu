@@ -93,6 +93,9 @@ readonly class PageSmartContentProvider implements SmartContentProviderInterface
      */
     private string $pageDimensionContentClassName;
 
+    /**
+     * @param array<string, mixed> $bundles
+     */
     public function __construct(
         private DimensionContentQueryEnhancer $dimensionContentQueryEnhancer,
         private MetadataProviderInterface $formMetadataProvider,

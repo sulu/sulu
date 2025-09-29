@@ -17,6 +17,7 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderInterface;
+use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroup;
 use Sulu\Bundle\CategoryBundle\Entity\Category;
 use Sulu\Bundle\TagBundle\Entity\Tag;
 use Sulu\Bundle\TestBundle\Testing\SetGetPrivatePropertyTrait;
@@ -74,10 +75,79 @@ class ExcerptResolverTest extends TestCase
             'excerptTitle' => 'Sulu',
             'excerptDescription' => 'Sulu is awesome',
             'excerptMore' => 'Sulu is more awesome',
+            'excerptSegment' => null,
             'excerptIcon' => ['id' => 1],
             'excerptImage' => ['id' => 2],
             'excerptTags' => ['Tag 1'],
             'excerptCategories' => [1],
+            'excerptAudienceTargetGroups' => [],
+        ], 'en')
+            ->willReturn(
+                [
+                    ContentView::create(['dummy' => 'data'], []),
+                ]
+            );
+
+        $excerptResolver = new ExcerptResolver(
+            $formMetadataProvider->reveal(),
+            $metadataResolver->reveal()
+        );
+
+        $contentView = $excerptResolver->resolve($dimensionContent);
+
+        self::assertInstanceOf(ContentView::class, $contentView);
+        $content = $contentView->getContent();
+        self::assertIsArray($content);
+        self::assertCount(1, $content);
+    }
+
+    public function testResolveWithSegmentAndAudienceTargetGroups(): void
+    {
+        $example = new Example();
+        $dimensionContent = new ExampleDimensionContent($example);
+        $example->addDimensionContent($dimensionContent);
+        $dimensionContent->setLocale('en');
+
+        $dimensionContent->setExcerptTitle('Sulu');
+        $dimensionContent->setExcerptDescription('Sulu is awesome');
+        $dimensionContent->setExcerptMore('Sulu is more awesome');
+        $dimensionContent->setExcerptSegment('test-segment');
+        $dimensionContent->setExcerptIcon(['id' => 1]);
+        $dimensionContent->setExcerptImage(['id' => 2]);
+
+        $tag = new Tag();
+        $tag->setName('Tag 1');
+        $this->setPrivateProperty($tag, 'id', 1);
+        $dimensionContent->setExcerptTags([$tag]);
+
+        $category = new Category();
+        $this->setPrivateProperty($category, 'id', 1);
+        $dimensionContent->setExcerptCategories([$category]);
+
+        $targetGroup1 = new TargetGroup();
+        $this->setPrivateProperty($targetGroup1, 'id', 5);
+        $targetGroup2 = new TargetGroup();
+        $this->setPrivateProperty($targetGroup2, 'id', 6);
+        $dimensionContent->setExcerptAudienceTargetGroups([$targetGroup1, $targetGroup2]);
+
+        $formMetadata = $this->prophesize(FormMetadata::class);
+        $formMetadata->getItems()
+            ->willReturn([]);
+        $formMetadataProvider = $this->prophesize(MetadataProviderInterface::class);
+        $formMetadataProvider->getMetadata('content_excerpt', 'en', [])
+            ->willReturn($formMetadata->reveal());
+
+        $metadataResolver = $this->prophesize(MetadataResolver::class);
+        $metadataResolver->resolveItems([], [
+            'excerptTitle' => 'Sulu',
+            'excerptDescription' => 'Sulu is awesome',
+            'excerptMore' => 'Sulu is more awesome',
+            'excerptSegment' => 'test-segment',
+            'excerptIcon' => ['id' => 1],
+            'excerptImage' => ['id' => 2],
+            'excerptTags' => ['Tag 1'],
+            'excerptCategories' => [1],
+            'excerptAudienceTargetGroups' => [5, 6],
         ], 'en')
             ->willReturn(
                 [

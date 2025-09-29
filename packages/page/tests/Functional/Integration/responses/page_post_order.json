@@ -19,6 +19,8 @@
     "excerptMore": null,
     "excerptTags": [],
     "excerptTitle": null,
+    "excerptAudienceTargetGroups": [],
+    "excerptSegment": null,
     "ghostLocale": "en",
     "id": "@string@",
     "image": null,
