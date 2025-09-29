@@ -144,6 +144,7 @@
         "shipmonk/composer-dependency-analyser": "^1.8",
         "symfony/browser-kit": "^6.4 || ^7.1",
         "symfony/debug-bundle": "^6.4 || ^7.1",
+        "symfony/dom-crawler": "^6.4 || ^7.1",
         "symfony/dotenv": "^6.4 || ^7.1",
         "symfony/emoji": "^7.1",
         "symfony/lock": "^6.4 || ^7.1",
