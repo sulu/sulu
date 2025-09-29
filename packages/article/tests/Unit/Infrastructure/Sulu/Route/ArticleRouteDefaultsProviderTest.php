@@ -35,6 +35,7 @@ use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Content\Application\ContentAggregator\ContentAggregatorInterface;
 use Sulu\Route\Application\Routing\Matcher\RouteDefaultsProviderInterface;
 use Sulu\Route\Domain\Model\Route;
+use Symfony\Component\DependencyInjection\Container;
 
 class ArticleRouteDefaultsProviderTest extends TestCase
 {
@@ -58,9 +59,10 @@ class ArticleRouteDefaultsProviderTest extends TestCase
         $this->entityManager = $this->prophesize(EntityManagerInterface::class);
         $this->contentAggregator = $this->prophesize(ContentAggregatorInterface::class);
         $this->cacheLifetimeResolver = new CacheLifetimeResolver();
-        $this->metadataProviderRegistry = new MetadataProviderRegistry();
         $this->formMetadataProvider = $this->prophesize(FormMetadataProvider::class);
-        $this->metadataProviderRegistry->addMetadataProvider('form', $this->formMetadataProvider->reveal());
+        $container = new Container();
+        $container->set('form', $this->formMetadataProvider->reveal());
+        $this->metadataProviderRegistry = new MetadataProviderRegistry($container);
         $this->webspaceManager = $this->prophesize(WebspaceManagerInterface::class);
         $this->webspaceResolver = $this->prophesize(WebspaceResolver::class);
     }
