@@ -273,7 +273,6 @@ class ResettingControllerTest extends SuluTestCase
             $user->getId()
         );
 
-
         /** @var MessageDataCollector $mailCollector */
         $mailCollector = $this->client->getProfile()->getCollector('mailer');
         $this->assertCount(1, $mailCollector->getEvents()->getMessages());
@@ -500,6 +499,6 @@ class ResettingControllerTest extends SuluTestCase
         }
         $this->client->jsonRequest('POST', '/security/reset/email', $parameters);
 
-        self::assertEquals(Response::HTTP_NO_CONTENT, $this->client->getResponse());
+        self::assertEquals(Response::HTTP_NO_CONTENT, $this->client->getResponse()->getStatusCode());
     }
 }

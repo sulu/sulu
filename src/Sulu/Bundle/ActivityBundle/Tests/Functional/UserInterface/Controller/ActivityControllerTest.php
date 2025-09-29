@@ -18,6 +18,7 @@ use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\SecurityBundle\Entity\Permission;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Bundle\SecurityBundle\Entity\UserRole;
+use Sulu\Bundle\TestBundle\Testing\AssertSnapshotTrait;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Security\Authorization\AccessControl\SecuredEntityInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
@@ -26,6 +27,8 @@ use Symfony\Component\HttpFoundation\Response;
 
 class ActivityControllerTest extends SuluTestCase
 {
+    use AssertSnapshotTrait;
+
     public const GRANTED_CONTEXT = 'sulu.context.granted';
     public const NOT_GRANTED_CONTEXT = 'sulu.context.not_granted';
 
@@ -137,6 +140,7 @@ class ActivityControllerTest extends SuluTestCase
         $this->client->jsonRequest('GET', '/api/activities?' . \http_build_query(['limit' => 0, ...$parameters]));
 
         $content = \json_decode((string) $this->client->getResponse()->getContent());
+        $content = \json_decode((string) $this->client->getResponse()->getContent());
 
         self::assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         self::assertSame($expectedTotal, $content->total);
@@ -146,22 +150,8 @@ class ActivityControllerTest extends SuluTestCase
     {
         $this->client->jsonRequest('GET', '/api/activities?resourceKey=pages&resourceId=1');
 
-        $content = \json_decode((string) $this->client->getResponse()->getContent());
-
-        self::assertSame(
-            '<b>Max Mustermann</b> has created the example "Test Example 1234"',
-            $content->_embedded->activities[0]->description
-        );
-
-        self::assertSame(
-            'Example',
-            $content->_embedded->activities[0]->resource
-        );
-
-        self::assertSame(
-            'Example',
-            $content->_embedded->activities[0]->resource
-        );
+        $response = $this->client->getResponse();
+        $this->assertResponseSnapshot('activity_with_resource_id.json', $response, Response::HTTP_OK);
     }
 
     private static function createActivity(
