@@ -97,10 +97,10 @@ class AccountControllerTest extends SuluTestCase
 
         $this->client->jsonRequest(
             'GET',
-            '/api/accounts?flat=true',
-            [
+            '/api/accounts?' . \http_build_query([
+                'flat' => true,
                 'ids' => \implode(',', $ids),
-            ]
+            ])
         );
 
         $response = \json_decode($this->client->getResponse()->getContent());
@@ -129,13 +129,14 @@ class AccountControllerTest extends SuluTestCase
 
         $this->client->jsonRequest(
             'GET',
-            '/api/accounts?flat=true',
-            [
-                'ids' => \implode(',', $ids),
-                'page' => 2,
-                'limit' => 10,
-            ]
-        );
+            '/api/accounts?' . \http_build_query(
+                [
+                    'flat' => true,
+                    'ids' => \implode(',', $ids),
+                    'page' => 2,
+                    'limit' => 10,
+                ]
+            ));
 
         $response = \json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
@@ -1565,10 +1566,10 @@ class AccountControllerTest extends SuluTestCase
 
         $this->client->jsonRequest(
             'GET',
-            '/api/accounts/multipledeleteinfo',
-            [
+            '/api/accounts/multipledeleteinfo' . \http_build_query([
                 'ids' => [$account->getId(), $acc->getId()],
             ]
+            )
         );
 
         // asserts
