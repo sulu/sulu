@@ -1566,7 +1566,7 @@ class AccountControllerTest extends SuluTestCase
 
         $this->client->jsonRequest(
             'GET',
-            '/api/accounts/multipledeleteinfo' . \http_build_query([
+            '/api/accounts/multipledeleteinfo?' . \http_build_query([
                 'ids' => [$account->getId(), $acc->getId()],
             ]
             )
