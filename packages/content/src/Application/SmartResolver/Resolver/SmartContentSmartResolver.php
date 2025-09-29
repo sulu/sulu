@@ -38,6 +38,9 @@ use Symfony\Component\DependencyInjection\ServiceLocator;
  *       maxPerPage: int|null,
  *       includeSubFolders: bool,
  *       excludeDuplicates: bool,
+ *       audienceTargeting?: bool,
+ *       targetGroupId?: string,
+ *       offset?: int,
  *   }
  */
 class SmartContentSmartResolver implements SmartResolverInterface
@@ -63,7 +66,6 @@ class SmartContentSmartResolver implements SmartResolverInterface
         $data = $resolvable->getData();
 
         $value = $data['value'];
-        /** @var array<string, mixed> $filters */
         $filters = $data['filters'];
         $sortBys = $data['sortBys'] ?? [];
         $parameters = $data['parameters'];
