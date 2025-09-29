@@ -32,10 +32,7 @@ class ActivityControllerTest extends SuluTestCase
     public const GRANTED_CONTEXT = 'sulu.context.granted';
     public const NOT_GRANTED_CONTEXT = 'sulu.context.not_granted';
 
-    /**
-     * @var KernelBrowser
-     */
-    private $client;
+    private KernelBrowser $client;
 
     public static function setUpBeforeClass(): void
     {
@@ -148,10 +145,19 @@ class ActivityControllerTest extends SuluTestCase
 
     public function testCgetActionWithResourceId(): void
     {
-        $this->client->jsonRequest('GET', '/api/activities?resourceKey=pages&resourceId=1');
+        $this->client->jsonRequest('GET', '/api/activities?resourceKey=examples&resourceId=1');
 
-        $response = $this->client->getResponse();
-        $this->assertResponseSnapshot('activity_with_resource_id.json', $response, Response::HTTP_OK);
+        $content = \json_decode((string) $this->client->getResponse()->getContent());
+
+        self::assertSame(
+            '<b>Max Mustermann</b> has created the example "Test Example 1234"',
+            $content->_embedded->activities[0]->description
+        );
+
+        self::assertSame(
+            'Example',
+            $content->_embedded->activities[0]->resource
+        );
     }
 
     private static function createActivity(
