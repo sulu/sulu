@@ -18,13 +18,14 @@ use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
 use Sulu\Content\Application\PropertyResolver\PropertyResolverProvider;
 use Sulu\Content\Application\PropertyResolver\Resolver\BlockPropertyResolver;
 use Sulu\Content\Application\PropertyResolver\Resolver\DefaultPropertyResolver;
+use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\ErrorHandler\BufferingLogger;
 
 class PropertyResolverProviderTest extends TestCase
 {
     public function testGetPropertyResolver(): void
     {
-        $metadataProviderRegistry = new MetadataProviderRegistry();
+        $metadataProviderRegistry = new MetadataProviderRegistry(new Container());
 
         $propertyResolverProvider = new PropertyResolverProvider(
             new \ArrayIterator([

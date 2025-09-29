@@ -30,6 +30,7 @@ use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\Config\FileLocatorInterface;
 use Symfony\Component\Config\Loader\DelegatingLoader;
 use Symfony\Component\Config\Loader\LoaderResolver;
+use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -78,9 +79,11 @@ class WebspaceManagerTest extends WebspaceTestCase
         $this->loader = new DelegatingLoader($resolver);
         $this->requestStack = $this->prophesize(RequestStack::class);
 
-        $this->metadataProviderRegistry = new MetadataProviderRegistry();
         $this->formMetadataProvider = $this->prophesize(FormMetadataProvider::class);
-        $this->metadataProviderRegistry->addMetadataProvider('form', $this->formMetadataProvider->reveal());
+        $container = new Container();
+        $container->set('form', $this->formMetadataProvider->reveal());
+        $this->metadataProviderRegistry = new MetadataProviderRegistry($container);
+
         $typedMetadata = new TypedFormMetadata();
         $defaultMetadata = new FormMetadata();
         $defaultMetadata->setKey('default');
@@ -586,9 +589,11 @@ class WebspaceManagerTest extends WebspaceTestCase
     {
         $this->expectException(InvalidTemplateException::class);
 
-        $this->metadataProviderRegistry = new MetadataProviderRegistry();
         $this->formMetadataProvider = $this->prophesize(FormMetadataProvider::class);
-        $this->metadataProviderRegistry->addMetadataProvider('form', $this->formMetadataProvider->reveal());
+        $container = new Container();
+        $container->set('form', $this->formMetadataProvider->reveal());
+        $this->metadataProviderRegistry = new MetadataProviderRegistry($container);
+
         $typedMetadata = new TypedFormMetadata();
         $this->formMetadataProvider->getMetadata('page', Argument::cetera())->willReturn($typedMetadata);
 

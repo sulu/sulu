@@ -37,6 +37,7 @@ use Sulu\Content\Infrastructure\Sulu\Route\ContentRouteDefaultsProvider;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\Example;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\ExampleDimensionContent;
 use Sulu\Route\Domain\Model\Route;
+use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Webmozart\Assert\Assert;
 
@@ -68,9 +69,10 @@ class ContentRouteDefaultsProviderTest extends TestCase
         $this->entityManager = $this->prophesize(EntityManagerInterface::class);
         $this->contentAggregator = $this->prophesize(ContentAggregatorInterface::class);
         $this->cacheLifetimeResolver = new CacheLifetimeResolver();
-        $metadataProviderRegistry = new MetadataProviderRegistry();
         $this->formMetadataProvider = $this->prophesize(FormMetadataProvider::class);
-        $metadataProviderRegistry->addMetadataProvider('form', $this->formMetadataProvider->reveal());
+        $container = new Container();
+        $container->set('form', $this->formMetadataProvider->reveal());
+        $metadataProviderRegistry = new MetadataProviderRegistry($container);
 
         $this->contentRouteDefaultsProvider = new ContentRouteDefaultsProvider(
             $this->entityManager->reveal(),

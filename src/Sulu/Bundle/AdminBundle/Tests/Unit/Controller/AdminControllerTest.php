@@ -36,6 +36,8 @@ use Sulu\Bundle\MarkupBundle\Markup\Link\LinkProviderPool;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkProviderPoolInterface;
 use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Component\Localization\Manager\LocalizationManagerInterface;
+use Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -94,10 +96,7 @@ class AdminControllerTest extends TestCase
      */
     private $translatorBag;
 
-    /**
-     * @var ObjectProphecy<MetadataProviderRegistry>
-     */
-    private $metadataProviderRegistry;
+    private ContainerInterface $metadataProviderContainer;
 
     /**
      * @var ObjectProphecy<ViewRegistry>
@@ -188,7 +187,9 @@ class AdminControllerTest extends TestCase
         $this->viewHandler = $this->prophesize(ViewHandlerInterface::class);
         $this->engine = $this->prophesize(Environment::class);
         $this->translatorBag = $this->prophesize(TranslatorBagInterface::class);
-        $this->metadataProviderRegistry = $this->prophesize(MetadataProviderRegistry::class);
+
+        $this->metadataProviderContainer = new Container();
+        $metadataProviderRegistry = new MetadataProviderRegistry($this->metadataProviderContainer);
         $this->viewRegistry = $this->prophesize(ViewRegistry::class);
         $this->navigationRegistry = $this->prophesize(NavigationRegistry::class);
         $this->fieldTypeOptionRegistry = $this->prophesize(FieldTypeOptionRegistryInterface::class);
@@ -209,7 +210,7 @@ class AdminControllerTest extends TestCase
             $this->viewHandler->reveal(),
             $this->engine->reveal(),
             $this->translatorBag->reveal(),
-            $this->metadataProviderRegistry->reveal(),
+            $metadataProviderRegistry,
             $this->viewRegistry->reveal(),
             $this->navigationRegistry->reveal(),
             $this->fieldTypeOptionRegistry->reveal(),
@@ -309,7 +310,7 @@ class AdminControllerTest extends TestCase
 
         $metadataProvider = $this->prophesize(MetadataProviderInterface::class);
         $metadataProvider->getMetadata('pages', 'en', [])->willReturn($form);
-        $this->metadataProviderRegistry->getMetadataProvider('form')->willReturn($metadataProvider);
+        $this->metadataProviderContainer->set('form', $metadataProvider->reveal());
 
         $this->viewHandler->handle(Argument::that(function(View $view) use ($form) {
             return $form === $view->getData();
@@ -326,7 +327,7 @@ class AdminControllerTest extends TestCase
 
         $metadataProvider = $this->prophesize(MetadataProviderInterface::class);
         $metadataProvider->getMetadata('pages', 'en', ['id' => 1])->willReturn($form);
-        $this->metadataProviderRegistry->getMetadataProvider('form')->willReturn($metadataProvider);
+        $this->metadataProviderContainer->set('form', $metadataProvider->reveal());
 
         $this->viewHandler->handle(Argument::that(function(View $view) use ($form) {
             return $form === $view->getData();

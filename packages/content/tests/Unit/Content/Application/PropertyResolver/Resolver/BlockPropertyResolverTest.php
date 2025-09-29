@@ -26,6 +26,7 @@ use Sulu\Content\Application\MetadataResolver\MetadataResolver;
 use Sulu\Content\Application\PropertyResolver\PropertyResolverProvider;
 use Sulu\Content\Application\PropertyResolver\Resolver\BlockPropertyResolver;
 use Sulu\Content\Application\PropertyResolver\Resolver\DefaultPropertyResolver;
+use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\ErrorHandler\BufferingLogger;
 
 class BlockPropertyResolverTest extends TestCase
@@ -34,22 +35,23 @@ class BlockPropertyResolverTest extends TestCase
 
     private BufferingLogger $logger;
 
-    private MetadataProviderRegistry $metadataProviderRegistry;
+    private Container $container;
 
     protected function setUp(): void
     {
-        $this->metadataProviderRegistry = new MetadataProviderRegistry();
-        $this->metadataProviderRegistry->addMetadataProvider('form', new class() implements MetadataProviderInterface {
+        $this->container = new Container();
+        $this->container->set('form', new class() implements MetadataProviderInterface {
             public function getMetadata(string $key, string $locale, array $metadataOptions): TypedFormMetadata
             {
                 return new TypedFormMetadata();
             }
         });
+        $metadataProviderRegistry = new MetadataProviderRegistry($this->container);
 
         $this->logger = new BufferingLogger();
         $this->resolver = new BlockPropertyResolver(
             $this->logger,
-            $this->metadataProviderRegistry,
+            $metadataProviderRegistry,
             [],
             false,
         );
@@ -184,7 +186,7 @@ class BlockPropertyResolverTest extends TestCase
         $typedFormMetadata = new TypedFormMetadata();
         $typedFormMetadata->addForm('text_block', $globalFormMetadata);
 
-        $this->metadataProviderRegistry->addMetadataProvider('form', new class($typedFormMetadata) implements MetadataProviderInterface {
+        $this->container->set('form', new class($typedFormMetadata) implements MetadataProviderInterface {
             public function __construct(private readonly TypedFormMetadata $typedFormMetadata)
             {
             }

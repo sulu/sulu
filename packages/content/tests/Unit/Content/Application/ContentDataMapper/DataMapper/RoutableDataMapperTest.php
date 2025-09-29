@@ -30,6 +30,7 @@ use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\Example;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\ExampleDimensionContent;
 use Sulu\Route\Domain\Model\Route;
 use Sulu\Route\Domain\Repository\RouteRepositoryInterface;
+use Symfony\Component\DependencyInjection\Container;
 
 class RoutableDataMapperTest extends TestCase
 {
@@ -48,8 +49,8 @@ class RoutableDataMapperTest extends TestCase
 
     protected function createRouteDataMapperInstance(TypedFormMetadata $typedFormMetadata): RoutableDataMapper
     {
-        $metadataProviderRegistry = new MetadataProviderRegistry();
-        $metadataProviderRegistry->addMetadataProvider('form', new class($typedFormMetadata) implements MetadataProviderInterface {
+        $container = new Container();
+        $container->set('form', new class($typedFormMetadata) implements MetadataProviderInterface {
             public function __construct(private readonly TypedFormMetadata $typedFormMetadata)
             {
             }
@@ -59,6 +60,7 @@ class RoutableDataMapperTest extends TestCase
                 return $this->typedFormMetadata;
             }
         });
+        $metadataProviderRegistry = new MetadataProviderRegistry($container);
 
         return new RoutableDataMapper(
             $this->routeRepository->reveal(),
