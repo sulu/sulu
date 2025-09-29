@@ -37,7 +37,7 @@ class PageControllerFieldsTest extends SuluTestCase
 
     public function setUp(): void
     {
-        $this->client = $this->createAuthenticatedClient();
+        $this->client = self::createAuthenticatedClient();
         $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
         $this->sessionManager = $this->getContainer()->get('sulu.phpcr.session');
         $this->initPhpcr();
