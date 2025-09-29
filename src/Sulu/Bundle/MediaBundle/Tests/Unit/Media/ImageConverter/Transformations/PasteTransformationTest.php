@@ -14,6 +14,7 @@ namespace Sulu\Bundle\MediaBundle\Tests\Unit\Media\ImageConverter\Transformation
 use Imagine\Gd\Imagine as GdImagine;
 use Imagine\Image\Box;
 use Imagine\Image\ImageInterface;
+use Imagine\Image\Point;
 use Imagine\Imagick\Imagine as ImagickImagine;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
@@ -61,12 +62,32 @@ class PasteTransformationTest extends SuluTestCase
     {
         $image = $this->prophesize(ImageInterface::class);
         $image->getSize()->willReturn(new Box(700, 500));
-        $image->paste(Argument::any(), Argument::any())->shouldBeCalled();
+        $image->paste(Argument::any(), new Point(0, 0))->shouldBeCalled();
 
         $returnImage = $this->pasteTransformation->execute(
             $image->reveal(),
             [
                 'image' => 'test.jpg',
+            ]
+        );
+
+        $this->assertInstanceOf(ImageInterface::class, $returnImage);
+    }
+
+    public function testPasteWithOffset(): void
+    {
+        $image = $this->prophesize(ImageInterface::class);
+        $image->getSize()->willReturn(new Box(700, 500));
+        $image->paste(Argument::any(), new Point(600, 200))->shouldBeCalled();
+
+        $returnImage = $this->pasteTransformation->execute(
+            $image->reveal(),
+            [
+                'image' => 'test.jpg',
+                'top' => 200,
+                'left' => 600,
+                'width' => 100,
+                'height' => 300,
             ]
         );
 
