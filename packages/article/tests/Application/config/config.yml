@@ -10,4 +10,4 @@ twig:
         - '%kernel.project_dir%/templates'
 
 sulu_article:
-    default_main_webspace: 'sulucmf_at'
+    default_main_webspace: 'sulu-io'
