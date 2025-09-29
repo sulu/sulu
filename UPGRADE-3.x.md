@@ -10,12 +10,17 @@ Altering these columns requires temporarily disabling foreign key checks, becaus
 
 ### Schema Optimization for Alpha/Beta Upgrades
 
-Run the following command to optimize your existing database schema:
-
-```bash
-php bin/console dbal:run-sql "SET FOREIGN_KEY_CHECKS=0" && \
-php bin/console doctrine:schema:update --force --complete && \
-php bin/console dbal:run-sql "SET FOREIGN_KEY_CHECKS=1"
+```sql
+SET FOREIGN_KEY_CHECKS=0;
+ALTER TABLE pa_page_dimension_contents CHANGE pageUuid pageUuid VARCHAR(36) NOT NULL;
+ALTER TABLE pa_page_dimension_content_navigation_contexts CHANGE name name VARCHAR(31) NOT NULL;
+ALTER TABLE pa_pages CHANGE uuid uuid VARCHAR(36) NOT NULL, CHANGE parent_id parent_id VARCHAR(36) DEFAULT NULL, CHANGE webspaceKey webspaceKey VARCHAR(31) NOT NULL;
+ALTER TABLE sn_snippet_dimension_contents CHANGE snippetUuid snippetUuid VARCHAR(36) NOT NULL;
+ALTER TABLE sn_snippets CHANGE uuid uuid VARCHAR(36) NOT NULL;
+ALTER TABLE ar_article_dimension_contents ADD customizeWebspaceSettings TINYINT(1) DEFAULT 0 NOT NULL, ADD additionalWebspaces JSON DEFAULT NULL, CHANGE articleUuid articleUuid VARCHAR(36) NOT NULL;
+ALTER TABLE ar_articles CHANGE uuid uuid VARCHAR(36) NOT NULL;
+ALTER TABLE ro_next_routes CHANGE site site VARCHAR(31) DEFAULT NULL;
+SET FOREIGN_KEY_CHECKS=1;
 ```
 
 ## 3.0.0
