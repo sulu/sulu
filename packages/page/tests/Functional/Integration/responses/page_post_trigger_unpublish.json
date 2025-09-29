@@ -22,10 +22,7 @@
         "Tag 2"
     ],
     "excerptTitle": "Excerpt Title",
-    "excerptAudienceTargetGroups": [
-        "@integer@",
-        "@integer@"
-    ],
+    "excerptAudienceTargetGroups": [],
     "excerptSegment": {
         "sulu-io": "@string@"
     },

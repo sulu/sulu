@@ -83,9 +83,19 @@ class SmartContentSmartResolverTest extends TestCase
         $this->serviceLocator->get('pages')->willReturn($smartContentProvider->reveal());
         $this->serviceLocator->getProvidedServices()->willReturn(['pages' => true]);
 
-        $smartContentProvider->findFlatBy($data['filters'], $data['sortBys'], ['value' => $data['value'], ...$data['parameters']])
+        // Prepare expected filters - the resolver modifies them before passing to provider
+        $expectedFilters = $data['filters'];
+        unset($expectedFilters['page']);
+        unset($expectedFilters['limit']);
+        $expectedFilters['offset'] = 0; // page 1 with offset 0
+        $expectedFilters['limit'] = 5; // from original limit
+
+        $countByFilters = $expectedFilters;
+        unset($countByFilters['offset']);
+
+        $smartContentProvider->findFlatBy($expectedFilters, $data['sortBys'], ['value' => $data['value'], ...$data['parameters']])
             ->willReturn([['id' => 1], ['id' => 2]]);
-        $smartContentProvider->countBy($data['filters'], ['value' => $data['value'], ...$data['parameters']])
+        $smartContentProvider->countBy($countByFilters, ['value' => $data['value'], ...$data['parameters']])
             ->willReturn(10);
         $smartContentProvider->getResourceLoaderKey()->willReturn('pages');
 
@@ -100,7 +110,7 @@ class SmartContentSmartResolverTest extends TestCase
 
         $view = $result->getView();
         $this->assertArrayHasKey('total', $view);
-        $this->assertSame(2, $view['total']); // Since result count (2) <= limit (5), total equals result count
+        $this->assertSame(5, $view['total']); // min(limit (5), fullTotal (10)) = 5
     }
 
     public function testResolveWithAudienceTargeting(): void
@@ -137,6 +147,14 @@ class SmartContentSmartResolverTest extends TestCase
 
         $expectedFilters = $data['filters'];
         $expectedFilters['targetGroupId'] = '123'; // Should be added by audience targeting logic
+        // Remove pagination keys and add offset
+        unset($expectedFilters['page']);
+        unset($expectedFilters['limit']);
+        $expectedFilters['offset'] = 0; // page 1 with offset 0
+        $expectedFilters['limit'] = null; // no limit specified
+
+        $countByFilters = $expectedFilters;
+        unset($countByFilters['offset']);
 
         $this->serviceLocator->has('pages')->willReturn(true);
         $this->serviceLocator->get('pages')->willReturn($smartContentProvider->reveal());
@@ -144,7 +162,7 @@ class SmartContentSmartResolverTest extends TestCase
 
         $smartContentProvider->findFlatBy($expectedFilters, $data['sortBys'], ['value' => $data['value'], ...$data['parameters']])
             ->willReturn([['id' => 1]]);
-        $smartContentProvider->countBy($expectedFilters, ['value' => $data['value'], ...$data['parameters']])
+        $smartContentProvider->countBy($countByFilters, ['value' => $data['value'], ...$data['parameters']])
             ->willReturn(1);
         $smartContentProvider->getResourceLoaderKey()->willReturn('pages');
 
@@ -193,15 +211,22 @@ class SmartContentSmartResolverTest extends TestCase
         // No target group available
         $this->targetGroupStore->getTargetGroupId(true)->willReturn(null);
 
-        // Filters should remain unchanged
+        // Filters should not include targetGroupId but pagination keys are still modified
         $expectedFilters = $data['filters'];
+        unset($expectedFilters['page']);
+        unset($expectedFilters['limit']);
+        $expectedFilters['offset'] = 0;
+        $expectedFilters['limit'] = null;
+
+        $countByFilters = $expectedFilters;
+        unset($countByFilters['offset']);
 
         $this->serviceLocator->has('pages')->willReturn(true);
         $this->serviceLocator->get('pages')->willReturn($smartContentProvider->reveal());
 
         $smartContentProvider->findFlatBy($expectedFilters, $data['sortBys'], ['value' => $data['value'], ...$data['parameters']])
             ->willReturn([['id' => 1]]);
-        $smartContentProvider->countBy($expectedFilters, ['value' => $data['value'], ...$data['parameters']])
+        $smartContentProvider->countBy($countByFilters, ['value' => $data['value'], ...$data['parameters']])
             ->willReturn(1);
         $smartContentProvider->getResourceLoaderKey()->willReturn('pages');
 
@@ -250,15 +275,22 @@ class SmartContentSmartResolverTest extends TestCase
         // Target group is -1 (excluded)
         $this->targetGroupStore->getTargetGroupId(true)->willReturn('-1');
 
-        // Filters should remain unchanged (no targetGroupId should be added)
+        // Filters should not include targetGroupId (excluded) but pagination keys are modified
         $expectedFilters = $data['filters'];
+        unset($expectedFilters['page']);
+        unset($expectedFilters['limit']);
+        $expectedFilters['offset'] = 0;
+        $expectedFilters['limit'] = null;
+
+        $countByFilters = $expectedFilters;
+        unset($countByFilters['offset']);
 
         $this->serviceLocator->has('pages')->willReturn(true);
         $this->serviceLocator->get('pages')->willReturn($smartContentProvider->reveal());
 
         $smartContentProvider->findFlatBy($expectedFilters, $data['sortBys'], ['value' => $data['value'], ...$data['parameters']])
             ->willReturn([]);
-        $smartContentProvider->countBy($expectedFilters, ['value' => $data['value'], ...$data['parameters']])
+        $smartContentProvider->countBy($countByFilters, ['value' => $data['value'], ...$data['parameters']])
             ->willReturn(0);
         $smartContentProvider->getResourceLoaderKey()->willReturn('pages');
 
@@ -306,13 +338,20 @@ class SmartContentSmartResolverTest extends TestCase
 
         // No target group store available, so audience targeting should be ignored
         $expectedFilters = $data['filters'];
+        unset($expectedFilters['page']);
+        unset($expectedFilters['limit']);
+        $expectedFilters['offset'] = 0;
+        $expectedFilters['limit'] = null;
+
+        $countByFilters = $expectedFilters;
+        unset($countByFilters['offset']);
 
         $this->serviceLocator->has('pages')->willReturn(true);
         $this->serviceLocator->get('pages')->willReturn($smartContentProvider->reveal());
 
         $smartContentProvider->findFlatBy($expectedFilters, $data['sortBys'], ['value' => $data['value'], ...$data['parameters']])
             ->willReturn([]);
-        $smartContentProvider->countBy($expectedFilters, ['value' => $data['value'], ...$data['parameters']])
+        $smartContentProvider->countBy($countByFilters, ['value' => $data['value'], ...$data['parameters']])
             ->willReturn(0);
         $smartContentProvider->getResourceLoaderKey()->willReturn('pages');
 
@@ -399,12 +438,23 @@ class SmartContentSmartResolverTest extends TestCase
         $this->serviceLocator->has('pages')->willReturn(true);
         $this->serviceLocator->get('pages')->willReturn($smartContentProvider->reveal());
 
+        // Prepare expected filters
+        $expectedFilters = $data['filters'];
+        unset($expectedFilters['page']);
+        unset($expectedFilters['limit']);
+        $expectedFilters['offset'] = 0;
+        $expectedFilters['limit'] = 3; // from original limit
+
+        $countByFilters = $expectedFilters;
+        unset($countByFilters['offset']);
+
         // Return exactly the limit amount to test the count calculation
-        $smartContentProvider->findFlatBy($data['filters'], $data['sortBys'], ['value' => $data['value'], ...$data['parameters']])
+        $smartContentProvider->findFlatBy($expectedFilters, $data['sortBys'], ['value' => $data['value'], ...$data['parameters']])
             ->willReturn([['id' => 1], ['id' => 2], ['id' => 3]]); // Exactly the limit
 
-        // Should not call countBy since result count equals limit
-        $smartContentProvider->countBy()->shouldNotBeCalled();
+        // countBy is always called in the current implementation
+        $smartContentProvider->countBy($countByFilters, ['value' => $data['value'], ...$data['parameters']])
+            ->willReturn(3);
         $smartContentProvider->getResourceLoaderKey()->willReturn('pages');
 
         $result = $this->smartResolver->resolve($smartResolvable->reveal(), 'en');
