@@ -166,7 +166,7 @@ test('Render collapsed blocks with block previews', () => {
             {...fieldTypeDefaultProps}
             defaultType="editor"
             formInspector={formInspector}
-            schemaOptions={{settings_form_key: {name: 'settings_form_key', value: 'page_block_settings'}}}
+            schemaOptions={{settings_form_key: {name: 'settings_form_key', value: 'content_block_settings'}}}
             types={types}
             value={value}
         />
@@ -1284,7 +1284,7 @@ test('Should open and close block settings overlay close button is clicked', () 
             {...fieldTypeDefaultProps}
             defaultType="editor"
             formInspector={formInspector}
-            schemaOptions={{settings_form_key: {name: 'settings_form_key', value: 'page_block_settings'}}}
+            schemaOptions={{settings_form_key: {name: 'settings_form_key', value: 'content_block_settings'}}}
             types={types}
             value={value}
         />
@@ -1336,14 +1336,14 @@ test('Should open and close block settings overlay when confirm button is clicke
             defaultType="editor"
             formInspector={formInspector}
             onChange={changeSpy}
-            schemaOptions={{settings_form_key: {name: 'settings_form_key', value: 'page_block_settings'}}}
+            schemaOptions={{settings_form_key: {name: 'settings_form_key', value: 'content_block_settings'}}}
             types={types}
             value={value}
         />
     );
 
-    expect(metadataStore.getSchema).toBeCalledWith('page_block_settings', undefined, undefined);
-    expect(metadataStore.getJsonSchema).toBeCalledWith('page_block_settings', undefined, undefined);
+    expect(metadataStore.getSchema).toBeCalledWith('content_block_settings', undefined, undefined);
+    expect(metadataStore.getJsonSchema).toBeCalledWith('content_block_settings', undefined, undefined);
     expect(fieldBlocks.exists('FormOverlay')).toEqual(false);
 
     fieldBlocks.find('Block').at(1).simulate('click');
@@ -1393,7 +1393,7 @@ test('Should destroy create new formstore when block settings overlay is opened 
             {...fieldTypeDefaultProps}
             defaultType="editor"
             formInspector={formInspector}
-            schemaOptions={{settings_form_key: {name: 'settings_form_key', value: 'page_block_settings'}}}
+            schemaOptions={{settings_form_key: {name: 'settings_form_key', value: 'content_block_settings'}}}
             types={types}
             value={value}
         />
@@ -1453,14 +1453,14 @@ test('Should not close block settings overlay when confirm button is clicked wit
             defaultType="editor"
             formInspector={formInspector}
             onChange={changeSpy}
-            schemaOptions={{settings_form_key: {name: 'settings_form_key', value: 'page_block_settings'}}}
+            schemaOptions={{settings_form_key: {name: 'settings_form_key', value: 'content_block_settings'}}}
             types={types}
             value={value}
         />
     );
 
-    expect(metadataStore.getSchema).toBeCalledWith('page_block_settings', undefined, undefined);
-    expect(metadataStore.getJsonSchema).toBeCalledWith('page_block_settings', undefined, undefined);
+    expect(metadataStore.getSchema).toBeCalledWith('content_block_settings', undefined, undefined);
+    expect(metadataStore.getJsonSchema).toBeCalledWith('content_block_settings', undefined, undefined);
     expect(fieldBlocks.exists('FormOverlay')).toEqual(false);
 
     fieldBlocks.find('Block').at(1).simulate('click');
@@ -1523,7 +1523,7 @@ test('Should display and update correct icons based on block settings data and s
             {...fieldTypeDefaultProps}
             defaultType="editor"
             formInspector={formInspector}
-            schemaOptions={{settings_form_key: {name: 'settings_form_key', value: 'page_block_settings'}}}
+            schemaOptions={{settings_form_key: {name: 'settings_form_key', value: 'content_block_settings'}}}
             types={types}
             value={value}
         />
@@ -1597,7 +1597,7 @@ test('Should display correct icons based on visibleCondition', () => {
             {...fieldTypeDefaultProps}
             defaultType="editor"
             formInspector={formInspector}
-            schemaOptions={{settings_form_key: {name: 'settings_form_key', value: 'page_block_settings'}}}
+            schemaOptions={{settings_form_key: {name: 'settings_form_key', value: 'content_block_settings'}}}
             types={types}
             value={value}
         />
@@ -1687,7 +1687,7 @@ test('Should recalculate visibleCondition only of changed blocks', () => {
             {...fieldTypeDefaultProps}
             defaultType="editor"
             formInspector={formInspector}
-            schemaOptions={{settings_form_key: {name: 'settings_form_key', value: 'page_block_settings'}}}
+            schemaOptions={{settings_form_key: {name: 'settings_form_key', value: 'content_block_settings'}}}
             types={types}
             value={value}
         />
@@ -1747,7 +1747,7 @@ test('Should destroy the block settings form-store on unmount', () => {
             {...fieldTypeDefaultProps}
             defaultType="editor"
             formInspector={formInspector}
-            schemaOptions={{settings_form_key: {name: 'settings_form_key', value: 'page_block_settings'}}}
+            schemaOptions={{settings_form_key: {name: 'settings_form_key', value: 'content_block_settings'}}}
             types={types}
         />
     );

@@ -118,7 +118,7 @@
                 "settings_form_key": {
                     "name": "settings_form_key",
                     "type": null,
-                    "value": "page_block_settings"
+                    "value": "content_block_settings"
                 }
             },
             "types": {
