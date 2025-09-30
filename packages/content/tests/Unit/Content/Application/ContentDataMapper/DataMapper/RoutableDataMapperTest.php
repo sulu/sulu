@@ -22,6 +22,7 @@ use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderInterface;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
+use Sulu\Bundle\AdminBundle\Tests\Unit\Metadata\TestMetadataProvider;
 use Sulu\Bundle\TestBundle\Testing\SetGetPrivatePropertyTrait;
 use Sulu\Content\Application\ContentDataMapper\DataMapper\RoutableDataMapper;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
@@ -50,22 +51,12 @@ class RoutableDataMapperTest extends TestCase
 
     protected function createRouteDataMapperInstance(TypedFormMetadata $typedFormMetadata): RoutableDataMapper
     {
-        $container = new Container();
-        $container->set('form', new class($typedFormMetadata) implements MetadataProviderInterface {
-            public function __construct(private readonly TypedFormMetadata $typedFormMetadata)
-            {
-            }
-
-            public function getMetadata(string $key, string $locale, array $metadataOptions): TypedFormMetadata
-            {
-                return $this->typedFormMetadata;
-            }
-        });
-        $metadataProviderRegistry = new MetadataProviderRegistry($container);
+        $metadataProvider = new TestMetadataProvider();
+        $metadataProvider->setMetaData($typedFormMetadata);
 
         return new RoutableDataMapper(
             $this->routeRepository->reveal(),
-            $metadataProviderRegistry,
+            $metadataProvider,
         );
     }
 

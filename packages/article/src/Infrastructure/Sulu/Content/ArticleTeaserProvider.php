@@ -16,6 +16,7 @@ namespace Sulu\Article\Infrastructure\Sulu\Content;
 use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Article\Domain\Model\ArticleDimensionContentInterface;
 use Sulu\Article\Domain\Model\ArticleInterface;
+use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderInterface;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
 use Sulu\Bundle\AdminBundle\Teaser\Configuration\TeaserConfiguration;
 use Sulu\Content\Application\ContentManager\ContentManagerInterface;
@@ -38,10 +39,10 @@ class ArticleTeaserProvider extends ContentTeaserProvider
         ContentManagerInterface $contentManager,
         EntityManagerInterface $entityManager,
         ContentMetadataInspectorInterface $contentMetadataInspector,
-        MetadataProviderRegistry $metadataProviderRegistry,
+        MetadataProviderInterface $metadataProvider,
         TranslatorInterface $translator,
     ) {
-        parent::__construct($contentManager, $entityManager, $contentMetadataInspector, $metadataProviderRegistry, ArticleInterface::class);
+        parent::__construct($contentManager, $entityManager, $contentMetadataInspector, $metadataProvider, ArticleInterface::class);
 
         $this->translator = $translator;
     }

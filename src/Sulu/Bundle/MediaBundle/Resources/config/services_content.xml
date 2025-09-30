@@ -17,7 +17,7 @@
         <service id="sulu_media.image_map_property_resolver"
                  class="Sulu\Bundle\MediaBundle\Infrastructure\Sulu\Content\PropertyResolver\ImageMapPropertyResolver">
             <argument type="service" id="logger"/>
-            <argument type="service" id="sulu_admin.metadata_provider_registry"/>
+            <argument type="service" id="sulu_admin.form_metadata_provider" />
             <argument>%kernel.debug%</argument>
 
             <call method="setMetadataResolver">

@@ -20,7 +20,7 @@ use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\CacheLifetimeMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TemplateMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
-use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
+use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderInterface;
 use Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeRequestStore;
 use Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeResolverInterface;
 use Sulu\Content\Application\ContentAggregator\ContentAggregatorInterface;
@@ -50,11 +50,6 @@ class ContentRouteDefaultsProvider implements RouteDefaultsProviderInterface
     protected $contentAggregator;
 
     /**
-     * @var MetadataProviderRegistry
-     */
-    private $metadataProviderRegistry;
-
-    /**
      * @var CacheLifetimeResolverInterface
      */
     private $cacheLifetimeResolver;
@@ -62,12 +57,11 @@ class ContentRouteDefaultsProvider implements RouteDefaultsProviderInterface
     public function __construct(
         EntityManagerInterface $entityManager,
         ContentAggregatorInterface $contentAggregator,
-        MetadataProviderRegistry $metadataProviderRegistry,
+        private MetadataProviderInterface $metadataProvider,
         CacheLifetimeResolverInterface $cacheLifetimeResolver,
     ) {
         $this->entityManager = $entityManager;
         $this->contentAggregator = $contentAggregator;
-        $this->metadataProviderRegistry = $metadataProviderRegistry;
         $this->cacheLifetimeResolver = $cacheLifetimeResolver;
     }
 
@@ -189,8 +183,7 @@ class ContentRouteDefaultsProvider implements RouteDefaultsProviderInterface
 
     private function resolveTemplateMetadata(string $type, string $templateKey, string $locale): TemplateMetadata
     {
-        $typedMetadata = $this->metadataProviderRegistry->getMetadataProvider('form')
-            ->getMetadata($type, $locale, []);
+        $typedMetadata = $this->metadataProvider->getMetadata($type, $locale, []);
 
         if (!$typedMetadata instanceof TypedFormMetadata) {
             throw new \RuntimeException(\sprintf('Could not find metadata "%s" of type "%s".', 'form', $type));

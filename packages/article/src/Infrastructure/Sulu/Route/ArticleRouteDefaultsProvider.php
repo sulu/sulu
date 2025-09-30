@@ -16,7 +16,7 @@ namespace Sulu\Article\Infrastructure\Sulu\Route;
 use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Article\Application\Webspace\WebspaceResolver;
 use Sulu\Article\Domain\Model\AdditionalWebspacesInterface;
-use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
+use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderInterface;
 use Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeResolverInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Content\Application\ContentAggregator\ContentAggregatorInterface;
@@ -33,13 +33,13 @@ class ArticleRouteDefaultsProvider extends ContentRouteDefaultsProvider implemen
     public function __construct(
         EntityManagerInterface $entityManager,
         ContentAggregatorInterface $contentAggregator,
-        MetadataProviderRegistry $metadataProviderRegistry,
+        MetadataProviderInterface $metadataProvider,
         CacheLifetimeResolverInterface $cacheLifetimeResolver,
         private WebspaceManagerInterface $webspaceManager,
         private WebspaceResolver $webspaceResolver,
         private string $environment = 'prod',
     ) {
-        parent::__construct($entityManager, $contentAggregator, $metadataProviderRegistry, $cacheLifetimeResolver);
+        parent::__construct($entityManager, $contentAggregator, $metadataProvider, $cacheLifetimeResolver);
     }
 
     public function getDefaults(Route $route): array

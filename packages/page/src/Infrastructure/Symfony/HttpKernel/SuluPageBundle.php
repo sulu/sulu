@@ -402,7 +402,7 @@ final class SuluPageBundle extends AbstractBundle
         $services->set('sulu_page.page_preview_provider')
             ->class(ContentObjectProvider::class)
             ->args([
-                new Reference('sulu_admin.metadata_provider_registry'),
+                new Reference('sulu_admin.form_metadata_provider'),
                 new Reference('doctrine.orm.entity_manager'),
                 new Reference('sulu_content.content_aggregator'),
                 new Reference('sulu_content.content_data_mapper'),

@@ -664,6 +664,20 @@ now independent of the locale and contain all metadata for all locales this mean
 +$metadata->setPlaceholder($placeholder, $locale);
 ```
 
+### MetadataProviderRegistry has been removed
+
+In Sulu 2.x there are two types of metadata providers:
+
+- `Sulu\Bundle\AdminBundle\Metadata\ListMetadata\ListMetadataProvider`
+            id="sulu_admin.list_metadata_provider"
+- `Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadataProvider`
+            id="sulu_admin.form_metadata_provider"
+
+These are usually not used together nor are they extensible so the metadata registry has been removed. This also
+includes the following other classes:
+
+- WebspaceManager now takes FormMetadataProvider
+
 ### Template path configuration changed
 
 **Old**:

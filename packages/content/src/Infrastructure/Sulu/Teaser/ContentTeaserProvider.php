@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Sulu\Content\Infrastructure\Sulu\Teaser;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderInterface;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
 use Sulu\Bundle\AdminBundle\Teaser\Provider\TeaserProviderInterface;
 use Sulu\Bundle\AdminBundle\Teaser\Teaser;
@@ -55,9 +56,9 @@ abstract class ContentTeaserProvider implements TeaserProviderInterface
     private $contentMetadataInspector;
 
     /**
-     * @var MetadataProviderRegistry
+     * @var MetadataProviderInterface
      */
-    protected $metadataProviderRegistry;
+    protected $metadataProvider;
 
     /**
      * @var class-string<T>
@@ -71,13 +72,13 @@ abstract class ContentTeaserProvider implements TeaserProviderInterface
         ContentManagerInterface $contentManager,
         EntityManagerInterface $entityManager,
         ContentMetadataInspectorInterface $contentMetadataInspector,
-        MetadataProviderRegistry $metadataProviderRegistry,
+        MetadataProviderInterface $metadataProvider,
         string $contentRichEntityClass,
     ) {
         $this->contentManager = $contentManager;
         $this->entityManager = $entityManager;
         $this->contentMetadataInspector = $contentMetadataInspector;
-        $this->metadataProviderRegistry = $metadataProviderRegistry;
+        $this->metadataProvider = $metadataProvider;
         $this->contentRichEntityClass = $contentRichEntityClass;
     }
 
@@ -251,9 +252,9 @@ abstract class ContentTeaserProvider implements TeaserProviderInterface
         return $this->entityManager;
     }
 
-    protected function getMetadataProviderRegistry(): MetadataProviderRegistry
+    protected function getMetadataProvider(): MetadataProviderInterface
     {
-        return $this->metadataProviderRegistry;
+        return $this->metadataProvider;
     }
 
     protected function getContentManager(): ContentManagerInterface

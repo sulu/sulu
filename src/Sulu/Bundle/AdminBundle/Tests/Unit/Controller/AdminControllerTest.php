@@ -189,7 +189,6 @@ class AdminControllerTest extends TestCase
         $this->translatorBag = $this->prophesize(TranslatorBagInterface::class);
 
         $this->metadataProviderContainer = new Container();
-        $metadataProviderRegistry = new MetadataProviderRegistry($this->metadataProviderContainer);
         $this->viewRegistry = $this->prophesize(ViewRegistry::class);
         $this->navigationRegistry = $this->prophesize(NavigationRegistry::class);
         $this->fieldTypeOptionRegistry = $this->prophesize(FieldTypeOptionRegistryInterface::class);
@@ -210,7 +209,7 @@ class AdminControllerTest extends TestCase
             $this->viewHandler->reveal(),
             $this->engine->reveal(),
             $this->translatorBag->reveal(),
-            $metadataProviderRegistry,
+            $this->metadataProviderContainer,
             $this->viewRegistry->reveal(),
             $this->navigationRegistry->reveal(),
             $this->fieldTypeOptionRegistry->reveal(),

@@ -15,7 +15,7 @@ namespace Sulu\Content\Infrastructure\Sulu\Traits;
 
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
-use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
+use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Domain\Model\TemplateInterface;
 
@@ -40,7 +40,7 @@ trait ResolveContentDimensionUrlTrait
         $type = $dimensionContent::getTemplateType();
         $template = $dimensionContent->getTemplateKey();
 
-        $metadata = $this->getMetadataProviderRegistry()->getMetadataProvider('form')
+        $metadata = $this->getMetadataProvider()
             ->getMetadata($type, $dimensionContent->getLocale() ?? 'en', []);
 
         if (!$metadata instanceof TypedFormMetadata) {
@@ -65,5 +65,5 @@ trait ResolveContentDimensionUrlTrait
         return null;
     }
 
-    abstract protected function getMetadataProviderRegistry(): MetadataProviderRegistry;
+    abstract protected function getMetadataProvider(): MetadataProviderInterface;
 }

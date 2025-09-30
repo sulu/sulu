@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Sulu\Bundle\AdminBundle\Metadata\FormMetadata;
 
-use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
+use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderInterface;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\SchemaMetadata;
 
 /**
@@ -22,7 +22,7 @@ use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\SchemaMetadata;
 class GlobalBlocksTypedFormMetadataVisitor implements TypedFormMetadataVisitorInterface, FormMetadataVisitorInterface
 {
     public function __construct(
-        private MetadataProviderRegistry $metadataProviderRegistry,
+        private MetadataProviderInterface $metadataProvider,
     ) {
     }
 
@@ -87,7 +87,7 @@ class GlobalBlocksTypedFormMetadataVisitor implements TypedFormMetadataVisitorIn
     {
         if (null === $this->globalBlocksMetadata) {
             /** @var TypedFormMetadata $globalBlocksMetadata */
-            $globalBlocksMetadata = $this->metadataProviderRegistry->getMetadataProvider('form')
+            $globalBlocksMetadata = $this->metadataProvider
                 ->getMetadata('block', $locale, ['ignore_global_blocks' => true]);
 
             $this->globalBlocksMetadata = $globalBlocksMetadata;

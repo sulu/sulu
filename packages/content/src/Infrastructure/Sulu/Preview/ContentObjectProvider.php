@@ -18,7 +18,7 @@ use Doctrine\ORM\NoResultException;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TemplateMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
-use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
+use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderInterface;
 use Sulu\Bundle\PreviewBundle\Preview\PreviewContext;
 use Sulu\Bundle\PreviewBundle\Preview\Provider\PreviewDefaultsProviderInterface;
 use Sulu\Content\Application\ContentAggregator\ContentAggregatorInterface;
@@ -36,9 +36,9 @@ use Sulu\Content\Domain\Model\TemplateInterface;
 class ContentObjectProvider implements PreviewDefaultsProviderInterface
 {
     /**
-     * @var MetadataProviderRegistry
+     * @var MetadataProviderInterface
      */
-    private $metadataProviderRegistry;
+    private $metadataProvider;
 
     /**
      * @var EntityManagerInterface
@@ -69,14 +69,14 @@ class ContentObjectProvider implements PreviewDefaultsProviderInterface
      * @param class-string<T> $contentRichEntityClass
      */
     public function __construct(
-        MetadataProviderRegistry $metadataProviderRegistry,
+        MetadataProviderInterface $metadataProvider,
         EntityManagerInterface $entityManager,
         ContentAggregatorInterface $contentAggregator,
         ContentDataMapperInterface $contentDataMapper,
         string $contentRichEntityClass,
         ?string $securityContext = null
     ) {
-        $this->metadataProviderRegistry = $metadataProviderRegistry;
+        $this->metadataProvider = $metadataProvider;
         $this->entityManager = $entityManager;
         $this->contentAggregator = $contentAggregator;
         $this->contentDataMapper = $contentDataMapper;
@@ -213,8 +213,7 @@ class ContentObjectProvider implements PreviewDefaultsProviderInterface
 
     private function resolveTemplateMetadata(string $type, string $templateKey, string $locale): ?TemplateMetadata
     {
-        $typedMetadata = $this->metadataProviderRegistry->getMetadataProvider('form')
-            ->getMetadata($type, $locale, []);
+        $typedMetadata = $this->metadataProvider->getMetadata($type, $locale, []);
 
         if (!$typedMetadata instanceof TypedFormMetadata) {
             return null;

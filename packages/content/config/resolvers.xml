@@ -128,7 +128,7 @@
         <service id="sulu_content.block_property_resolver"
                  class="Sulu\Content\Application\PropertyResolver\Resolver\BlockPropertyResolver">
             <argument type="service" id="logger"/>
-            <argument type="service" id="sulu_admin.metadata_provider_registry"/>
+            <argument type="service" id="sulu_admin.form_metadata_provider"/>
             <argument
                 type="tagged_iterator"
                 tag="sulu_content.block_visitor"

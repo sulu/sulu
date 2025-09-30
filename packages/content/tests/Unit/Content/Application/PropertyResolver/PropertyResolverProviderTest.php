@@ -14,24 +14,21 @@ declare(strict_types=1);
 namespace Sulu\Content\Tests\Unit\Content\Application\PropertyResolver;
 
 use PHPUnit\Framework\TestCase;
-use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
+use Sulu\Bundle\AdminBundle\Tests\Unit\Metadata\TestMetadataProvider;
 use Sulu\Content\Application\PropertyResolver\PropertyResolverProvider;
 use Sulu\Content\Application\PropertyResolver\Resolver\BlockPropertyResolver;
 use Sulu\Content\Application\PropertyResolver\Resolver\DefaultPropertyResolver;
-use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\ErrorHandler\BufferingLogger;
 
 class PropertyResolverProviderTest extends TestCase
 {
     public function testGetPropertyResolver(): void
     {
-        $metadataProviderRegistry = new MetadataProviderRegistry(new Container());
-
         $propertyResolverProvider = new PropertyResolverProvider(
             new \ArrayIterator([
                 'block' => new BlockPropertyResolver(
                     new BufferingLogger(),
-                    $metadataProviderRegistry,
+                    new TestMetadataProvider(),
                     [],
                     false
                 ),

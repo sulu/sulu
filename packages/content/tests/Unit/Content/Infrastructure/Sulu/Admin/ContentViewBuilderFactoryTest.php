@@ -21,6 +21,7 @@ use Sulu\Bundle\AdminBundle\Admin\View\FormViewBuilderInterface;
 use Sulu\Bundle\AdminBundle\Admin\View\PreviewFormViewBuilderInterface;
 use Sulu\Bundle\AdminBundle\Admin\View\ToolbarAction;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewBuilderFactory;
+use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderInterface;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
 use Sulu\Bundle\PreviewBundle\Preview\Object\PreviewObjectProviderRegistry;
 use Sulu\Bundle\PreviewBundle\Preview\Object\PreviewObjectProviderRegistryInterface;
@@ -92,14 +93,14 @@ class ContentViewBuilderFactoryTest extends TestCase
      * @return ContentObjectProvider<B, T>
      */
     protected function createContentObjectProvider(
-        MetadataProviderRegistry $metadataProviderRegistry,
+        MetadataProviderInterface $metadataProvider,
         EntityManagerInterface $entityManager,
         ContentAggregatorInterface $contentAggregator,
         ContentDataMapperInterface $contentDataMapper,
         string $entityClass
     ): ContentObjectProvider {
         return new ContentObjectProvider(
-            $metadataProviderRegistry,
+            $metadataProvider,
             $entityManager,
             $contentAggregator,
             $contentDataMapper,
@@ -182,7 +183,7 @@ class ContentViewBuilderFactoryTest extends TestCase
         $contentDataMapper = $this->prophesize(ContentDataMapperInterface::class);
 
         $contentObjectProvider = $this->createContentObjectProvider(
-            new MetadataProviderRegistry(new Container()),
+            $this->prophesize(MetadataProviderInterface::class)->reveal(),
             $entityManager->reveal(),
             $contentAggregator->reveal(),
             $contentDataMapper->reveal(),

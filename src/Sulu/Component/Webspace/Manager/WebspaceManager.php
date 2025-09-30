@@ -13,7 +13,7 @@ namespace Sulu\Component\Webspace\Manager;
 
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
-use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
+use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderInterface;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Util\WildcardUrlUtil;
 use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
@@ -56,7 +56,7 @@ class WebspaceManager implements WebspaceManagerInterface
         private string $environment,
         private string $defaultHost,
         private string $defaultScheme,
-        private MetadataProviderRegistry $metadataProviderRegistry,
+        private MetadataProviderInterface $formMetadataProvider,
     ) {
         $this->setOptions($options);
     }
@@ -402,8 +402,7 @@ class WebspaceManager implements WebspaceManagerInterface
             );
 
             if (!$cache->isFresh()) {
-                $metadataProvider = $this->metadataProviderRegistry->getMetadataProvider('form');
-                $metadata = $metadataProvider->getMetadata(PageInterface::TEMPLATE_TYPE, 'en', []);
+                $metadata = $this->formMetadataProvider->getMetadata(PageInterface::TEMPLATE_TYPE, 'en', []);
                 \assert($metadata instanceof TypedFormMetadata, \sprintf('Expected TypedFormMetadata instance for "%s" metadata.', PageInterface::TEMPLATE_TYPE));
 
                 $availableTemplates = \array_map(

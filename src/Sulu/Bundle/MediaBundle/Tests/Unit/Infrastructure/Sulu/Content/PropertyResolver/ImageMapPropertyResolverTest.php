@@ -19,7 +19,7 @@ use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TagMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderInterface;
-use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
+use Sulu\Bundle\AdminBundle\Tests\Unit\Metadata\TestMetadataProvider;
 use Sulu\Bundle\MediaBundle\Infrastructure\Sulu\Content\PropertyResolver\ImageMapPropertyResolver;
 use Sulu\Content\Application\ContentResolver\Value\ContentView;
 use Sulu\Content\Application\ContentResolver\Value\ResolvableResource;
@@ -36,23 +36,16 @@ class ImageMapPropertyResolverTest extends TestCase
 
     private BufferingLogger $logger;
 
-    private Container $container;
+    private TestMetadataProvider $metadataProvider;
 
     public function setUp(): void
     {
-        $this->container = new Container();
-        $this->container->set('form', new class() implements MetadataProviderInterface {
-            public function getMetadata(string $key, string $locale, array $metadataOptions): TypedFormMetadata
-            {
-                return new TypedFormMetadata();
-            }
-        });
-        $metadataProviderRegistry = new MetadataProviderRegistry($this->container);
+        $this->metadataProvider = new TestMetadataProvider();
 
         $this->logger = new BufferingLogger();
         $this->resolver = new ImageMapPropertyResolver(
             $this->logger,
-            $metadataProviderRegistry,
+            $this->metadataProvider,
             debug: false,
         );
         $metadataResolverProperty = new PropertyResolverProvider([
@@ -342,16 +335,7 @@ class ImageMapPropertyResolverTest extends TestCase
         $typedFormMetadata = new TypedFormMetadata();
         $typedFormMetadata->addForm('text', $textFormMetadata);
 
-        $this->container->set('form', new class($typedFormMetadata) implements MetadataProviderInterface {
-            public function __construct(private readonly TypedFormMetadata $typedFormMetadata)
-            {
-            }
-
-            public function getMetadata(string $key, string $locale, array $metadataOptions): TypedFormMetadata
-            {
-                return $this->typedFormMetadata;
-            }
-        });
+        $this->metadataProvider->setMetaData($typedFormMetadata);
 
         $contentView = $this->resolver->resolve($data, 'en', [], $this->createGlobalBlockMetadata());
 

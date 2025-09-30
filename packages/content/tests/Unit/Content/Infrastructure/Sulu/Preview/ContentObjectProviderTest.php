@@ -26,7 +26,6 @@ use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadataProvider;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TemplateMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
-use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
 use Sulu\Bundle\PreviewBundle\Preview\PreviewContext;
 use Sulu\Bundle\TestBundle\Testing\SetGetPrivatePropertyTrait;
 use Sulu\Content\Application\ContentAggregator\ContentAggregatorInterface;
@@ -40,7 +39,6 @@ use Sulu\Content\Tests\Application\ExampleTestBundle\Admin\ExampleAdmin;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\Example;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\ExampleDimensionContent;
 use Sulu\Content\UserInterface\Controller\Website\ContentController;
-use Symfony\Component\DependencyInjection\Container;
 
 class ContentObjectProviderTest extends TestCase
 {
@@ -75,16 +73,12 @@ class ContentObjectProviderTest extends TestCase
     protected function setUp(): void
     {
         $this->formMetadataProvider = $this->prophesize(FormMetadataProvider::class);
-        $container = new Container();
-        $container->set('form', $this->formMetadataProvider->reveal());
-        $metadataProviderRegistry = new MetadataProviderRegistry($container);
-
         $this->entityManager = $this->prophesize(EntityManagerInterface::class);
         $this->contentAggregator = $this->prophesize(ContentAggregatorInterface::class);
         $this->contentDataMapper = $this->prophesize(ContentDataMapperInterface::class);
 
         $this->contentObjectProvider = new ContentObjectProvider(
-            $metadataProviderRegistry,
+            $this->formMetadataProvider->reveal(),
             $this->entityManager->reveal(),
             $this->contentAggregator->reveal(),
             $this->contentDataMapper->reveal(),

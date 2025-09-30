@@ -45,7 +45,6 @@ class ArticleRouteDefaultsProviderTest extends TestCase
     private ObjectProphecy $entityManager;
     /** @var ObjectProphecy<ContentAggregatorInterface> */
     private ObjectProphecy $contentAggregator;
-    private MetadataProviderRegistry $metadataProviderRegistry;
     private CacheLifetimeResolver $cacheLifetimeResolver;
     /** @var ObjectProphecy<WebspaceManagerInterface> */
     private ObjectProphecy $webspaceManager;
@@ -60,9 +59,6 @@ class ArticleRouteDefaultsProviderTest extends TestCase
         $this->contentAggregator = $this->prophesize(ContentAggregatorInterface::class);
         $this->cacheLifetimeResolver = new CacheLifetimeResolver();
         $this->formMetadataProvider = $this->prophesize(FormMetadataProvider::class);
-        $container = new Container();
-        $container->set('form', $this->formMetadataProvider->reveal());
-        $this->metadataProviderRegistry = new MetadataProviderRegistry($container);
         $this->webspaceManager = $this->prophesize(WebspaceManagerInterface::class);
         $this->webspaceResolver = $this->prophesize(WebspaceResolver::class);
     }
@@ -72,7 +68,7 @@ class ArticleRouteDefaultsProviderTest extends TestCase
         return new ArticleRouteDefaultsProvider(
             $this->entityManager->reveal(),
             $this->contentAggregator->reveal(),
-            $this->metadataProviderRegistry,
+            $this->formMetadataProvider->reveal(),
             $this->cacheLifetimeResolver,
             $this->webspaceManager->reveal(),
             $this->webspaceResolver->reveal(),

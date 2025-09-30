@@ -9,7 +9,7 @@
             <argument type="service" id="fos_rest.view_handler"/>
             <argument type="service" id="twig"/>
             <argument type="service" id="translator.default"/>
-            <argument type="service" id="sulu_admin.metadata_provider_registry"/>
+            <argument type="tagged_locator" tag="sulu_admin.metadata_provider" index-by="type" />
             <argument type="service" id="sulu_admin.view_registry"/>
             <argument type="service" id="sulu_admin.navigation_registry"/>
             <argument type="service" id="sulu_admin.field_type_option_registry"/>
@@ -38,13 +38,6 @@
 
             <tag name="sulu.context" context="admin"/>
         </service>
-
-        <service
-            id="sulu_admin.metadata_provider_registry"
-            class="Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry"
-        >
-            <argument type="tagged_locator" tag="sulu_admin.metadata_provider" index-by="type" />
-         </service>
 
         <service id="sulu_admin.metadata_group_provider" class="Sulu\Bundle\AdminBundle\Metadata\GroupProvider">
             <argument type="service" id="sulu_admin.metadata_provider_registry"/>
@@ -126,7 +119,7 @@
             id="sulu_admin.global_block_form_metadata_visitor"
             class="Sulu\Bundle\AdminBundle\Metadata\FormMetadata\GlobalBlocksTypedFormMetadataVisitor"
         >
-            <argument type="service" id="sulu_admin.metadata_provider_registry" />
+            <argument type="service" id="sulu_admin.form_metadata_provider" />
 
             <tag name="sulu_admin.typed_form_metadata_visitor"/>
             <tag name="sulu_admin.form_metadata_visitor" />

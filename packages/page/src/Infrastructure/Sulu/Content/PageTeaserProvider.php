@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Sulu\Page\Infrastructure\Sulu\Content;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderInterface;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
 use Sulu\Bundle\AdminBundle\Teaser\Configuration\TeaserConfiguration;
 use Sulu\Content\Application\ContentEnhancer\ContentEnhancerInterface;
@@ -47,11 +48,11 @@ class PageTeaserProvider extends ContentTeaserProvider
         ContentManagerInterface $contentManager,
         EntityManagerInterface $entityManager,
         ContentMetadataInspectorInterface $contentMetadataInspector,
-        MetadataProviderRegistry $metadataProviderRegistry,
+        MetadataProviderInterface $metadataProvider,
         TranslatorInterface $translator,
         ContentEnhancerInterface $contentEnhancer,
     ) {
-        parent::__construct($contentManager, $entityManager, $contentMetadataInspector, $metadataProviderRegistry, PageInterface::class);
+        parent::__construct($contentManager, $entityManager, $contentMetadataInspector, $metadataProvider, PageInterface::class);
 
         $this->translator = $translator;
         $this->contentEnhancer = $contentEnhancer;

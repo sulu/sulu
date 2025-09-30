@@ -21,6 +21,7 @@ use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\ItemMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderInterface;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
+use Sulu\Bundle\AdminBundle\Tests\Unit\Metadata\TestMetadataProvider;
 use Sulu\Content\Application\ContentDataMapper\DataMapper\TemplateDataMapper;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\Example;
@@ -38,20 +39,9 @@ class TemplateDataMapperTest extends TestCase
         array $properties = [],
         ?string $defaultTemplateKey = null,
     ): TemplateDataMapper {
-        $container = new Container();
-        $container->set('form', new class($this->createTypedFormMetadata($properties, $defaultTemplateKey)) implements MetadataProviderInterface {
-            public function __construct(private readonly TypedFormMetadata $typedFormMetadata)
-            {
-            }
-
-            public function getMetadata(string $key, string $locale, array $metadataOptions): TypedFormMetadata
-            {
-                return $this->typedFormMetadata;
-            }
-        });
-        $metadataProviderRegistry = new MetadataProviderRegistry($container);
-
-        return new TemplateDataMapper($metadataProviderRegistry);
+        $metadataProvider = new TestMetadataProvider();
+        $metadataProvider->setMetaData($this->createTypedFormMetadata($properties, $defaultTemplateKey));
+        return new TemplateDataMapper($metadataProvider);
     }
 
     public function testMapNoTemplateInstance(): void

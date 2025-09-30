@@ -25,6 +25,7 @@ use Sulu\Bundle\AdminBundle\SmartContent\SmartContentProviderInterface;
 use Sulu\Bundle\ContactBundle\Contact\ContactManagerInterface;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkProviderPoolInterface;
 use Sulu\Component\Localization\Manager\LocalizationManagerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -57,7 +58,7 @@ class AdminController
         private ViewHandlerInterface $viewHandler,
         private Environment $engine,
         private TranslatorBagInterface $translatorBag,
-        private MetadataProviderRegistry $metadataProviderRegistry,
+        private ContainerInterface $metadataProviders,
         private ViewRegistry $viewRegistry,
         private NavigationRegistry $navigationRegistry,
         private FieldTypeOptionRegistryInterface $fieldTypeOptionRegistry,
@@ -196,8 +197,7 @@ class AdminController
         $locale = $user->getLocale();
 
         $metadataOptions = $request->query->all();
-        $metadata = $this->metadataProviderRegistry->getMetadataProvider($type)
-            ->getMetadata($key, $locale, $metadataOptions);
+        $metadata = $this->metadataProviders->get($type)->getMetadata($key, $locale, $metadataOptions);
 
         $context = new Context();
         $context->addGroup('Default');

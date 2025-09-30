@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Webspace\Tests\Unit;
+namespace Sulu\Component\Webspace\Tests\Unit\Manager;
 
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
@@ -17,7 +17,6 @@ use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadataProvider;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
-use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
 use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
 use Sulu\Component\Webspace\Exception\InvalidTemplateException;
 use Sulu\Component\Webspace\Loader\XmlFileLoader10;
@@ -25,12 +24,12 @@ use Sulu\Component\Webspace\Loader\XmlFileLoader11;
 use Sulu\Component\Webspace\Manager\WebspaceManager;
 use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\PortalInformation;
+use Sulu\Component\Webspace\Tests\Unit\WebspaceTestCase;
 use Sulu\Component\Webspace\Url\Replacer;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\Config\FileLocatorInterface;
 use Symfony\Component\Config\Loader\DelegatingLoader;
 use Symfony\Component\Config\Loader\LoaderResolver;
-use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -50,8 +49,6 @@ class WebspaceManagerTest extends WebspaceTestCase
      * @var ObjectProphecy<FormMetadataProvider>
      */
     private ObjectProphecy $formMetadataProvider;
-
-    protected MetadataProviderRegistry $metadataProviderRegistry;
 
     protected WebspaceManager $webspaceManager;
 
@@ -80,9 +77,6 @@ class WebspaceManagerTest extends WebspaceTestCase
         $this->requestStack = $this->prophesize(RequestStack::class);
 
         $this->formMetadataProvider = $this->prophesize(FormMetadataProvider::class);
-        $container = new Container();
-        $container->set('form', $this->formMetadataProvider->reveal());
-        $this->metadataProviderRegistry = new MetadataProviderRegistry($container);
 
         $typedMetadata = new TypedFormMetadata();
         $defaultMetadata = new FormMetadata();
@@ -105,7 +99,7 @@ class WebspaceManagerTest extends WebspaceTestCase
             'test',
             'sulu.io',
             'http',
-            $this->metadataProviderRegistry,
+            $this->formMetadataProvider->reveal(),
         );
     }
 
@@ -566,7 +560,7 @@ class WebspaceManagerTest extends WebspaceTestCase
             'test',
             'sulu.io',
             'http',
-            $this->metadataProviderRegistry
+            $this->formMetadataProvider->reveal()
         );
 
         $webspaces = $this->webspaceManager->getWebspaceCollection();
@@ -589,9 +583,6 @@ class WebspaceManagerTest extends WebspaceTestCase
         $this->expectException(InvalidTemplateException::class);
 
         $this->formMetadataProvider = $this->prophesize(FormMetadataProvider::class);
-        $container = new Container();
-        $container->set('form', $this->formMetadataProvider->reveal());
-        $this->metadataProviderRegistry = new MetadataProviderRegistry($container);
 
         $typedMetadata = new TypedFormMetadata();
         $this->formMetadataProvider->getMetadata('page', Argument::cetera())->willReturn($typedMetadata);
@@ -608,7 +599,7 @@ class WebspaceManagerTest extends WebspaceTestCase
             'prod',
             'sulu.io',
             'http',
-            $this->metadataProviderRegistry,
+            $this->formMetadataProvider->reveal(),
         );
 
         $webspaces = $this->webspaceManager->getWebspaceCollection();
@@ -630,7 +621,7 @@ class WebspaceManagerTest extends WebspaceTestCase
             'prod',
             'sulu.io',
             'http',
-            $this->metadataProviderRegistry
+            $this->formMetadataProvider->reveal(),
         );
 
         $webspaces = $this->webspaceManager->getWebspaceCollection();

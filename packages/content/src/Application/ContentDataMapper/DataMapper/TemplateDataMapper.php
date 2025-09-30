@@ -15,20 +15,15 @@ namespace Sulu\Content\Application\ContentDataMapper\DataMapper;
 
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
-use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
+use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Domain\Model\TemplateInterface;
 
 class TemplateDataMapper implements DataMapperInterface
 {
-    /**
-     * @var MetadataProviderRegistry
-     */
-    private $metadataProviderRegistry;
-
-    public function __construct(MetadataProviderRegistry $metadataProviderRegistry)
-    {
-        $this->metadataProviderRegistry = $metadataProviderRegistry;
+    public function __construct(
+        private MetadataProviderInterface $metadataProvider,
+    ) {
     }
 
     public function map(
@@ -48,8 +43,7 @@ class TemplateDataMapper implements DataMapperInterface
 
         \assert(\is_string($locale), 'Expected locale to be defined always when using TemplateInterface');
 
-        $typedMetadata = $this->metadataProviderRegistry->getMetadataProvider('form')
-            ->getMetadata($type, $locale, []);
+        $typedMetadata = $this->metadataProvider->getMetadata($type, $locale, []);
 
         if (!$typedMetadata instanceof TypedFormMetadata) {
             throw new \RuntimeException(\sprintf('Could not find metadata "%s" of type "%s".', 'form', $type));

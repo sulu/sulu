@@ -70,14 +70,11 @@ class ContentRouteDefaultsProviderTest extends TestCase
         $this->contentAggregator = $this->prophesize(ContentAggregatorInterface::class);
         $this->cacheLifetimeResolver = new CacheLifetimeResolver();
         $this->formMetadataProvider = $this->prophesize(FormMetadataProvider::class);
-        $container = new Container();
-        $container->set('form', $this->formMetadataProvider->reveal());
-        $metadataProviderRegistry = new MetadataProviderRegistry($container);
 
         $this->contentRouteDefaultsProvider = new ContentRouteDefaultsProvider(
             $this->entityManager->reveal(),
             $this->contentAggregator->reveal(),
-            $metadataProviderRegistry,
+            $this->formMetadataProvider->reveal(),
             $this->cacheLifetimeResolver,
         );
     }
