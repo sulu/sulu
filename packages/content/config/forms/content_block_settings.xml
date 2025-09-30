@@ -10,13 +10,13 @@
             <params>
                 <param name="description">
                     <meta>
-                        <title>sulu_page.hide_block_description</title>
+                        <title>sulu_content.hide_block_description</title>
                     </meta>
                 </param>
                 <param name="icon" value="su-hide" />
                 <param name="label">
                     <meta>
-                        <title>sulu_page.hide_block_label</title>
+                        <title>sulu_content.hide_block_label</title>
                     </meta>
                 </param>
                 <param name="skin" value="heading" />
@@ -32,13 +32,13 @@
                     <params>
                         <param name="description">
                             <meta>
-                                <title>sulu_page.schedules_description</title>
+                                <title>sulu_content.schedules_description</title>
                             </meta>
                         </param>
                         <param name="icon" value="su-clock" />
                         <param name="label">
                             <meta>
-                                <title>sulu_page.schedules_label</title>
+                                <title>sulu_content.schedules_label</title>
                             </meta>
                         </param>
                         <param name="skin" value="heading" />
@@ -52,7 +52,7 @@
                     <params>
                         <param name="add_button_text">
                             <meta>
-                                <title>sulu_page.add_schedule</title>
+                                <title>sulu_content.add_schedule</title>
                             </meta>
                         </param>
                         <param name="collapsable" value="false" />

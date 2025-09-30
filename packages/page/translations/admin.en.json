@@ -24,6 +24,8 @@
     "sulu_page.last_modified_or_authored": "Last modified or authored",
     "sulu_page.last_modified_enabled": "Enable last modified date",
     "sulu_page.last_modified_date": "Last modified date",
+    "sulu_page.segment_label": "Assign segment",
+    "sulu_page.segment_description": "The block will be automatically filtered on the website by the chosen segment.",
     "sulu_activity.resource.pages": "Page",
     "sulu_activity.resource.pages.translation": "Translation",
     "sulu_activity.description.pages.created": "{userFullName} has created the page \"{resourceTitle}\"",

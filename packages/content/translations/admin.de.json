@@ -15,5 +15,10 @@
     "sulu_content.webspace": "Webspace",
     "sulu_content.main_webspace": "Hauptwebspace",
     "sulu_content.additional_webspaces": "Weitere Webspaces",
-    "sulu_content.page_settings": "Seiteneinstellungen"
+    "sulu_content.page_settings": "Seiteneinstellungen",
+    "sulu_content.hide_block_label": "Nicht auf publizierter Website darstellen",
+    "sulu_content.hide_block_description": "Dieser Block wird nicht veröffentlicht, kann aber weiterhin im Admin bearbeitet werden.",
+    "sulu_content.schedules_label": "Zeitfenster zuweisen",
+    "sulu_content.schedules_description": "Der Block wird nur angezeigt, wenn mindestens einer der Bedingungen erfüllt wird.",
+    "sulu_content.add_schedule": "Zeitfenster hinzufügen"
 }

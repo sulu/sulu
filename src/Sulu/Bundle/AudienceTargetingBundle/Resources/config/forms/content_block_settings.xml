@@ -16,13 +16,13 @@
                     <params>
                         <param name="description">
                             <meta>
-                                <title>sulu_page.target_groups_description</title>
+                                <title>sulu_audience_targeting.target_groups_description</title>
                             </meta>
                         </param>
                         <param name="icon" value="su-user" />
                         <param name="label">
                             <meta>
-                                <title>sulu_page.target_groups_label</title>
+                                <title>sulu_audience_targeting.target_groups_label</title>
                             </meta>
                         </param>
                         <param name="skin" value="heading" />

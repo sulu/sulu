@@ -15,5 +15,10 @@
     "sulu_content.webspace": "Webspace",
     "sulu_content.main_webspace": "Main Webspace",
     "sulu_content.additional_webspaces": "Additional Webspaces",
-    "sulu_content.page_settings": "Page settings"
+    "sulu_content.page_settings": "Page settings",
+    "sulu_content.hide_block_label": "Don't display on public website",
+    "sulu_content.hide_block_description": "This block will not be published, but remains editable in the admin.",
+    "sulu_content.schedules_label": "Assign time schedule",
+    "sulu_content.schedules_description": "The block will only be visible if at least one condition is valid.",
+    "sulu_content.add_schedule": "Add schedule"
 }
