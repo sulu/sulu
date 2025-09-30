@@ -112,15 +112,20 @@ class BlockPropertyResolver implements PropertyResolverMetadataAwareInterface
                 $formMetadata = $globalBlocksMetadata[$globalBlockType];
             }
 
-            $contentViews[$key] = ContentView::create(
-                \array_merge(
-                    ['type' => $type],
-                    $this->metadataResolver->resolveItems($formMetadata->getItems(), $block, $locale)
-                ),
-                [
-                    ...$returnedParams,
-                ]
+            $resolvedBlock = \array_merge(
+                ['type' => $type],
+                $this->metadataResolver->resolveItems($formMetadata->getItems(), $block, $locale)
             );
+
+            $settingsFormKeyOption = $metadata->findOption('settings_form_key');
+            if ($settingsFormKeyOption) {
+                $settingsFormKey = $settingsFormKeyOption->getValue();
+                if (\is_string($settingsFormKey) && isset($block['settings'])) {
+                    $resolvedBlock['settings'] = $this->resolveBlockSettings($block, $settingsFormKey, $locale);
+                }
+            }
+
+            $contentViews[$key] = ContentView::create($resolvedBlock, [...$returnedParams]);
         }
 
         $minOccurs = $metadata->getMinOccurs();
@@ -141,6 +146,29 @@ class BlockPropertyResolver implements PropertyResolverMetadataAwareInterface
         $result = $tag?->getAttribute('global_block');
 
         return $result;
+    }
+
+    /**
+     * @param array<string, mixed> $block
+     */
+    private function resolveBlockSettings(array $block, string $settingsFormKey, string $locale): ContentView
+    {
+        if (!isset($block['settings']) || !\is_array($block['settings'])) {
+            return ContentView::create([], []);
+        }
+
+        $settingsData = $block['settings'];
+        $formMetadata = $this->metadataProviderRegistry->getMetadataProvider('form')
+            ->getMetadata($settingsFormKey, $locale, []);
+
+        if (!$formMetadata instanceof FormMetadata) {
+            return ContentView::create($settingsData, []);
+        }
+
+        return ContentView::create(
+            $this->metadataResolver->resolveItems($formMetadata->getItems(), $settingsData, $locale),
+            []
+        );
     }
 
     public static function getType(): string

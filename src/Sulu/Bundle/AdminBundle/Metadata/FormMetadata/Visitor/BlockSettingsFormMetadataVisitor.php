@@ -58,7 +58,7 @@ class BlockSettingsFormMetadataVisitor implements TypedFormMetadataVisitorInterf
 
             $optionMetadata = new OptionMetadata();
             $optionMetadata->setName('settings_form_key');
-            $optionMetadata->setValue('page_block_settings');
+            $optionMetadata->setValue('content_block_settings');
             $itemMetadata->addOption($optionMetadata);
         }
     }

@@ -23,5 +23,7 @@
     "sulu_audience_targeting.query_string_value": "Wert",
     "sulu_audience_targeting.smartphone": "Smartphone",
     "sulu_audience_targeting.tablet": "Tablet",
-    "sulu_audience_targeting.desktop": "Desktop"
+    "sulu_audience_targeting.desktop": "Desktop",
+    "sulu_audience_targeting.target_groups_label": "Zielgruppen zuweisen",
+    "sulu_audience_targeting.target_groups_description": "Der Block wird nur den ausgewählten Zielgruppen angezeigt."
 }

@@ -24,6 +24,8 @@
     "sulu_page.last_modified_or_authored": "Zuletzt geändert oder verfasst",
     "sulu_page.last_modified_enabled": "Aktualisierungsdatum aktivieren",
     "sulu_page.last_modified_date": "Datum der Aktualisierung",
+    "sulu_page.segment_label": "Segment zuweisen",
+    "sulu_page.segment_description": "Der Block wird automatisch nach dem gewählten Segment auf der Website gefiltert.",
     "sulu_activity.resource.pages": "Seite",
     "sulu_activity.resource.pages.translation": "Übersetzung",
     "sulu_activity.description.pages.created": "{userFullName} hat die Seite \"{resourceTitle}\" erstellt",
