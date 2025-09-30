@@ -20,12 +20,11 @@ use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItem;
 use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationRegistry;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewRegistry;
 use Sulu\Bundle\AdminBundle\FieldType\FieldTypeOptionRegistryInterface;
-use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
 use Sulu\Bundle\AdminBundle\SmartContent\SmartContentProviderInterface;
 use Sulu\Bundle\ContactBundle\Contact\ContactManagerInterface;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkProviderPoolInterface;
 use Sulu\Component\Localization\Manager\LocalizationManagerInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\DependencyInjection\ServiceLocator;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -58,7 +57,7 @@ class AdminController
         private ViewHandlerInterface $viewHandler,
         private Environment $engine,
         private TranslatorBagInterface $translatorBag,
-        private ContainerInterface $metadataProviders,
+        private ServiceLocator $metadataProviders,
         private ViewRegistry $viewRegistry,
         private NavigationRegistry $navigationRegistry,
         private FieldTypeOptionRegistryInterface $fieldTypeOptionRegistry,

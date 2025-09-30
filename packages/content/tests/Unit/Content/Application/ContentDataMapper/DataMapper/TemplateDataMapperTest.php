@@ -19,14 +19,11 @@ use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\ItemMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
-use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderInterface;
-use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
 use Sulu\Bundle\AdminBundle\Tests\Unit\Metadata\TestMetadataProvider;
 use Sulu\Content\Application\ContentDataMapper\DataMapper\TemplateDataMapper;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\Example;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\ExampleDimensionContent;
-use Symfony\Component\DependencyInjection\Container;
 
 class TemplateDataMapperTest extends TestCase
 {
@@ -41,6 +38,7 @@ class TemplateDataMapperTest extends TestCase
     ): TemplateDataMapper {
         $metadataProvider = new TestMetadataProvider();
         $metadataProvider->setMetaData($this->createTypedFormMetadata($properties, $defaultTemplateKey));
+
         return new TemplateDataMapper($metadataProvider);
     }
 

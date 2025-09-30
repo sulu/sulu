@@ -338,7 +338,7 @@ final class SuluArticleBundle extends AbstractBundle
                 new Reference('sulu_content.content_manager'), // TODO teaser provider should not build on manager
                 new Reference('doctrine.orm.entity_manager'),
                 new Reference('sulu_content.content_metadata_inspector'),
-                new Reference('sulu_admin.metadata_provider_registry'),
+                new Reference('sulu_admin.form_metadata_provider'),
                 new Reference('translator'),
             ])
             ->tag('sulu.teaser.provider', ['alias' => ArticleInterface::RESOURCE_KEY]);
@@ -438,7 +438,7 @@ final class SuluArticleBundle extends AbstractBundle
             ->args([
                 new Reference('doctrine.orm.entity_manager'),
                 new Reference('sulu_content.content_aggregator'),
-                new Reference('sulu_admin.metadata_provider_registry'),
+                new Reference('sulu_admin.form_metadata_provider'),
                 new Reference('sulu_http_cache.cache_lifetime.resolver'),
                 new Reference('sulu_core.webspace.webspace_manager'),
                 new Reference('sulu_article.webspace_resolver'),

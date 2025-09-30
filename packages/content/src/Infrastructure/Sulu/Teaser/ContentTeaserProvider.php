@@ -15,7 +15,6 @@ namespace Sulu\Content\Infrastructure\Sulu\Teaser;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderInterface;
-use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
 use Sulu\Bundle\AdminBundle\Teaser\Provider\TeaserProviderInterface;
 use Sulu\Bundle\AdminBundle\Teaser\Teaser;
 use Sulu\Content\Application\ContentManager\ContentManagerInterface;
