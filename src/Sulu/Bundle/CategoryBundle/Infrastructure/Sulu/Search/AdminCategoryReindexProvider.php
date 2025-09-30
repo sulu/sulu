@@ -119,7 +119,9 @@ final class AdminCategoryReindexProvider implements ReindexProviderInterface
             }
 
             $qb->where(\implode(' OR ', $conditions));
-            $qb->setParameters($parameters);
+            foreach ($parameters as $parameterKey => $parameterValue) {
+                $qb->setParameter($parameterKey, $parameterValue);
+            }
         }
 
         /** @var iterable<Category> */
