@@ -27,7 +27,6 @@ use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\FileVersionMeta;
 use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
-use Sulu\Bundle\MediaBundle\Entity\MediaType;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
 class CategoryTrashItemHandlerTest extends SuluTestCase
@@ -168,12 +167,8 @@ class CategoryTrashItemHandlerTest extends SuluTestCase
 
     protected function createMedia(string $name, CollectionInterface $collection, string $locale = 'en'): MediaInterface
     {
-        $mediaType = new MediaType();
-        $mediaType->setId(2);
-        $mediaType->setName('image');
-
         $media = new Media();
-        $media->setType($mediaType);
+        $media->setType(MediaInterface::TYPE_IMAGE);
         $extension = 'jpeg';
         $mimeType = 'image/jpg';
 
@@ -207,7 +202,6 @@ class CategoryTrashItemHandlerTest extends SuluTestCase
         $media->addFile($file);
         $media->setCollection($collection);
 
-        $this->entityManager->persist($mediaType);
         $this->entityManager->persist($media);
         $this->entityManager->persist($file);
         $this->entityManager->persist($fileVersionMeta);

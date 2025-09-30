@@ -19,7 +19,7 @@ use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\FileVersionMeta;
 use Sulu\Bundle\MediaBundle\Entity\Media;
-use Sulu\Bundle\MediaBundle\Entity\MediaType;
+use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\TestBundle\Testing\WebsiteTestCase;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
@@ -46,11 +46,6 @@ class MediaWebsiteControllerTest extends WebsiteTestCase
     private $collectionMeta;
 
     /**
-     * @var MediaType
-     */
-    private $imageType;
-
-    /**
      * @var string
      */
     protected $mediaDefaultTitle = 'photo';
@@ -72,7 +67,6 @@ class MediaWebsiteControllerTest extends WebsiteTestCase
         $this->em = $this->getEntityManager();
         $this->cleanImage();
         $this->setUpCollection();
-        $this->setUpMedia();
     }
 
     protected function cleanImage()
@@ -101,22 +95,11 @@ class MediaWebsiteControllerTest extends WebsiteTestCase
         }
     }
 
-    protected function setUpMedia()
-    {
-        $this->imageType = new MediaType();
-        $this->imageType->setName('image');
-        $this->imageType->setDescription('This is an image');
-
-        $this->em->persist($this->imageType);
-
-        $this->em->flush();
-    }
-
     protected function createMedia($name, $locale = 'en-gb')
     {
         $media = new Media();
+        $media->setType(MediaInterface::TYPE_IMAGE);
 
-        $media->setType($this->imageType);
         $extension = 'jpeg';
         $mimeType = 'image/jpg';
 

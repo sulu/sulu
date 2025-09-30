@@ -36,8 +36,7 @@ class ArticleTwigExtensionTest extends SuluTestCase
     public function testLoadArticleWithoutProperties(): void
     {
         $collection = self::createCollection(['title' => 'Test Collection', 'locale' => 'en']);
-        $mediaType = self::createMediaType(['name' => 'Image', 'description' => 'This is an image']);
-        $media = self::createMedia($collection, $mediaType, ['title' => 'Test Image', 'locale' => 'en']);
+        $media = self::createMedia($collection, ['title' => 'Test Image', 'locale' => 'en']);
 
         self::getEntityManager()->flush();
 
@@ -74,8 +73,7 @@ class ArticleTwigExtensionTest extends SuluTestCase
     public function testLoadArticleWithProperties(): void
     {
         $collection = self::createCollection(['title' => 'Test Collection', 'locale' => 'en']);
-        $mediaType = self::createMediaType(['name' => 'Image', 'description' => 'This is an image']);
-        $media = self::createMedia($collection, $mediaType, ['title' => 'Test Image', 'locale' => 'en']);
+        $media = self::createMedia($collection, ['title' => 'Test Image', 'locale' => 'en']);
 
         self::getEntityManager()->flush();
 

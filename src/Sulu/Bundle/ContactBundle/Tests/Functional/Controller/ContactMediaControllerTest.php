@@ -18,7 +18,7 @@ use Sulu\Bundle\MediaBundle\Entity\CollectionType;
 use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\Media;
-use Sulu\Bundle\MediaBundle\Entity\MediaType;
+use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
@@ -40,11 +40,6 @@ class ContactMediaControllerTest extends SuluTestCase
     private $contact;
 
     /**
-     * @var MediaType
-     */
-    private $imageType;
-
-    /**
      * @var Collection
      */
     protected $collection;
@@ -61,10 +56,6 @@ class ContactMediaControllerTest extends SuluTestCase
         $this->contact->setFormOfAddress(1);
         $this->contact->setSalutation('Sehr geehrter Herr Dr Mustermann');
 
-        $this->imageType = new MediaType();
-        $this->imageType->setName('image');
-        $this->imageType->setDescription('This is an image');
-
         $this->collection = new Collection();
         $collectionType = new CollectionType();
         $collectionType->setName('Default Collection Type');
@@ -73,7 +64,6 @@ class ContactMediaControllerTest extends SuluTestCase
         $this->collection->setType($collectionType);
 
         $this->em->persist($this->contact);
-        $this->em->persist($this->imageType);
         $this->em->persist($collectionType);
         $this->em->persist($this->collection);
 
@@ -235,7 +225,7 @@ class ContactMediaControllerTest extends SuluTestCase
         $this->em->persist($fileVersion);
 
         $media = new Media();
-        $media->setType($this->imageType);
+        $media->setType(MediaInterface::TYPE_IMAGE);
         $media->setCollection($this->collection);
         $media->addFile($file);
         $file->setMedia($media);

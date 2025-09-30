@@ -31,7 +31,6 @@ use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\FileVersionMeta;
 use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
-use Sulu\Bundle\MediaBundle\Entity\MediaType;
 use Sulu\Bundle\MediaBundle\Infrastructure\Sulu\Search\AdminMediaIndexListener;
 use Sulu\Bundle\TestBundle\Testing\SetGetPrivatePropertyTrait;
 use Symfony\Component\Messenger\Envelope;
@@ -49,8 +48,6 @@ class AdminMediaIndexListenerTest extends TestCase
     private ObjectProphecy $messageBus;
     private AdminMediaIndexListener $listener;
 
-    private MediaType $imageType;
-
     private Collection $collection;
 
     private CollectionType $collectionType;
@@ -61,7 +58,6 @@ class AdminMediaIndexListenerTest extends TestCase
     {
         $this->messageBus = $this->prophesize(MessageBusInterface::class);
         $this->listener = new AdminMediaIndexListener($this->messageBus->reveal());
-        $this->setUpMedia();
         $this->setUpCollection();
     }
 
@@ -147,18 +143,11 @@ class AdminMediaIndexListenerTest extends TestCase
         $this->listener->onMediaChanged($event);
     }
 
-    protected function setUpMedia(): void
-    {
-        $this->imageType = new MediaType();
-        $this->imageType->setName('image');
-        $this->imageType->setDescription('This is an image');
-    }
-
     protected function createMedia(string $name, string $locale = 'en'): Media
     {
         $media = new Media();
 
-        $media->setType($this->imageType);
+        $media->setType(MediaInterface::TYPE_IMAGE);
         $extension = 'jpeg';
         $mimeType = 'image/jpg';
 

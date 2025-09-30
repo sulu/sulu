@@ -40,7 +40,7 @@ class Media implements MediaInterface
     protected $collection;
 
     /**
-     * @var MediaType
+     * @var string
      */
     protected $type;
 
@@ -91,14 +91,14 @@ class Media implements MediaInterface
         return $this->collection;
     }
 
-    public function setType(MediaType $type)
+    public function setType(string $type): self
     {
         $this->type = $type;
 
         return $this;
     }
 
-    public function getType()
+    public function getType(): string
     {
         return $this->type;
     }

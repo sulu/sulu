@@ -19,7 +19,6 @@ use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\FormatOptions;
 use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
-use Sulu\Bundle\MediaBundle\Entity\MediaType;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
@@ -62,11 +61,8 @@ class MediaFormatControllerTest extends SuluTestCase
         $collection->setType($iconsType);
 
         $this->media = new Media();
+        $this->media->setType(MediaInterface::TYPE_IMAGE);
         $this->media->setCollection($collection);
-
-        $imageType = new MediaType();
-        $imageType->setName('image');
-        $this->media->setType($imageType);
 
         $file = new File();
         $file->setVersion(1);
@@ -83,7 +79,6 @@ class MediaFormatControllerTest extends SuluTestCase
         $this->em->persist($collection);
         $this->em->persist($iconsType);
         $this->em->persist($this->media);
-        $this->em->persist($imageType);
         $this->em->persist($file);
         $this->em->persist($fileVersion);
 

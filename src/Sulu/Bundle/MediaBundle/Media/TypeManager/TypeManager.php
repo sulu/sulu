@@ -11,59 +11,34 @@
 
 namespace Sulu\Bundle\MediaBundle\Media\TypeManager;
 
-use Doctrine\Persistence\ObjectManager;
-use Sulu\Bundle\MediaBundle\Entity\MediaType;
-use Sulu\Bundle\MediaBundle\Media\Exception\MediaTypeNotFoundException;
-
 /**
  * Class TypeManager
  * Default Type Manager used to get correct media type by a mime type.
  */
-class TypeManager implements TypeManagerInterface
+final readonly class TypeManager implements TypeManagerInterface
 {
     /**
-     * @var MediaType[]
-     */
-    private $mediaTypeEntities;
-
-    /**
-     * @param array $mediaTypes
-     * @param array $blockedMimeTypes
+     * @param array<array{mimeTypes: array<string>, type: string}> $mediaTypes
      */
     public function __construct(
-        private ObjectManager $objectManager,
-        private $mediaTypes,
-        private $blockedMimeTypes,
+        private array $mediaTypes,
     ) {
     }
 
-    public function get($id)
+    public function getMediaType(?string $fileMimeType): ?string
     {
-        /** @var MediaType $type */
-        $type = $this->objectManager->getRepository(self::ENTITY_NAME_MEDIATYPE)->find($id);
-        if (!$type) {
-            throw new MediaTypeNotFoundException('Collection Type with the ID ' . $id . ' not found');
+        if (null === $fileMimeType) {
+            return null;
         }
 
-        return $type;
-    }
-
-    public function getMediaType($fileMimeType)
-    {
-        $name = null;
-        foreach ($this->mediaTypes as $mediaType) {
+        foreach (\array_reverse($this->mediaTypes) as $mediaType) {
             foreach ($mediaType['mimeTypes'] as $mimeType) {
                 if (\fnmatch($mimeType, $fileMimeType)) {
-                    $name = $mediaType['type'];
+                    return $mediaType['type'];
                 }
             }
         }
 
-        if (!isset($this->mediaTypeEntities[$name])) {
-            $mediaType = $this->objectManager->getRepository(self::ENTITY_CLASS_MEDIATYPE)->findOneByName($name);
-            $this->mediaTypeEntities[$name] = $mediaType;
-        }
-
-        return $this->mediaTypeEntities[$name]->getId();
+        return null;
     }
 }

@@ -14,6 +14,7 @@ namespace Sulu\Bundle\ContactBundle\Tests\Functional\Controller;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ObjectRepository;
 use Sulu\Bundle\ActivityBundle\Domain\Model\ActivityInterface;
+use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\ContactBundle\Entity\Account;
 use Sulu\Bundle\ContactBundle\Entity\AccountAddress;
 use Sulu\Bundle\ContactBundle\Entity\AccountContact;
@@ -36,7 +37,7 @@ use Sulu\Bundle\MediaBundle\Entity\CollectionType;
 use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\Media;
-use Sulu\Bundle\MediaBundle\Entity\MediaType;
+use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Bundle\TrashBundle\Domain\Model\TrashItemInterface;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
@@ -145,13 +146,12 @@ class AccountControllerTest extends SuluTestCase
 
     public function testGetById(): void
     {
-        $mediaType = $this->createMediaType('image');
         $collectionType = $this->createCollectionType('My collection type');
         $collection = $this->createCollection($collectionType);
 
         $this->em->flush();
 
-        $logo = $this->createMedia('logo.jpeg', 'image/jpeg', $mediaType, $collection);
+        $logo = $this->createMedia('logo.jpeg', $collection);
         $urlType = $this->createUrlType('Private');
         $url = $this->createUrl('http://www.company.example', $urlType);
         $emailType = $this->createEmailType('Private');
@@ -384,13 +384,12 @@ class AccountControllerTest extends SuluTestCase
 
     public function testPost(): void
     {
-        $mediaType = $this->createMediaType('image');
         $collectionType = $this->createCollectionType('My collection type');
         $collection = $this->createCollection($collectionType);
 
         $this->em->flush();
 
-        $logo = $this->createMedia('logo.jpeg', 'image/jpeg', $mediaType, $collection);
+        $logo = $this->createMedia('logo.jpeg', $collection);
         $account = $this->createAccount('parent');
         $emailType = $this->createEmailType('Private');
         $phoneType = $this->createPhoneType('Private');
@@ -879,7 +878,6 @@ class AccountControllerTest extends SuluTestCase
 
     public function testPut(): void
     {
-        $mediaType = $this->createMediaType('image');
         $collectionType = $this->createCollectionType('My collection type');
         $collection = $this->createCollection($collectionType);
 
@@ -910,7 +908,7 @@ class AccountControllerTest extends SuluTestCase
                 $category2,
             ]
         );
-        $logo = $this->createMedia('logo.jpeg', 'image/jpeg', $mediaType, $collection);
+        $logo = $this->createMedia('logo.jpeg', $collection);
         $contact = $this->createContact($account, 'Vorname', 'Nachname');
 
         $this->em->flush();
@@ -1330,14 +1328,13 @@ class AccountControllerTest extends SuluTestCase
     public function testPatchAssignedMedias(): void
     {
         $account = $this->createAccount('Company');
-        $mediaType = $this->createMediaType('image');
         $collectionType = $this->createCollectionType('My collection type');
         $collection = $this->createCollection($collectionType);
 
         $this->em->flush();
 
-        $media1 = $this->createMedia('media1.jpeg', 'image/jpeg', $mediaType, $collection);
-        $media2 = $this->createMedia('media2.jpeg', 'image/jpeg', $mediaType, $collection);
+        $media1 = $this->createMedia('media1.jpeg', $collection);
+        $media2 = $this->createMedia('media2.jpeg', $collection);
         $this->em->flush();
         $this->em->clear();
 
@@ -2140,8 +2137,6 @@ class AccountControllerTest extends SuluTestCase
 
     /**
      * Creates a minimal account.
-     *
-     * @return AccountInterface
      */
     private function createAccount(
         string $name,
@@ -2156,7 +2151,7 @@ class AccountControllerTest extends SuluTestCase
         ?Media $logo = null,
         ?array $categories = null,
         ?Contact $mainContact = null
-    ) {
+    ): AccountInterface {
         $account = new Account();
         $account->setName($name);
         $account->setParent($parent);
@@ -2365,7 +2360,7 @@ class AccountControllerTest extends SuluTestCase
         string $lastName,
         ?string $middleName = null,
         ?int $formOfAddress = null
-    ) {
+    ): Contact {
         $contact = new Contact();
         $contact->setFirstName($firstName);
         $contact->setLastName($lastName);
@@ -2386,7 +2381,7 @@ class AccountControllerTest extends SuluTestCase
         return $contact;
     }
 
-    private function createCollection(CollectionType $collectionType)
+    private function createCollection(CollectionType $collectionType): Collection
     {
         $collection = new Collection();
         $collection->setType($collectionType);
@@ -2395,7 +2390,7 @@ class AccountControllerTest extends SuluTestCase
         return $collection;
     }
 
-    private function createCollectionType(string $name)
+    private function createCollectionType(string $name): CollectionType
     {
         $collectionType = new CollectionType();
         $collectionType->setName($name);
@@ -2404,25 +2399,15 @@ class AccountControllerTest extends SuluTestCase
         return $collectionType;
     }
 
-    private function createMediaType(string $name, ?string $description = null)
-    {
-        $mediaType = new MediaType();
-        $mediaType->setName($name);
-        $mediaType->setDescription($description);
-        $this->em->persist($mediaType);
-
-        return $mediaType;
-    }
-
-    private function createMedia(string $name, string $mimeType, MediaType $mediaType, Collection $collection)
+    private function createMedia(string $name, Collection $collection): Media
     {
         $file = new File();
         $file->setVersion(1);
 
         $fileVersion = new FileVersion();
         $fileVersion->setVersion(1);
-        $fileVersion->setName('media1.jpeg');
-        $fileVersion->setMimeType('image/jpg');
+        $fileVersion->setName($name);
+        $fileVersion->setMimeType('image/jpeg');
         $fileVersion->setFile($file);
         $fileVersion->setSize(111111);
         $fileVersion->setDownloadCounter(2);
@@ -2432,7 +2417,7 @@ class AccountControllerTest extends SuluTestCase
         $this->em->persist($fileVersion);
 
         $media = new Media();
-        $media->setType($mediaType);
+        $media->setType(MediaInterface::TYPE_IMAGE);
         $media->setCollection($collection);
         $media->addFile($file);
         $file->setMedia($media);
@@ -2442,7 +2427,7 @@ class AccountControllerTest extends SuluTestCase
         return $media;
     }
 
-    private function createNote(string $value)
+    private function createNote(string $value): Note
     {
         $note = new Note();
         $note->setValue($value);
@@ -2457,9 +2442,9 @@ class AccountControllerTest extends SuluTestCase
      *
      * @param int $number
      *
-     * @return array
+     * @return array<AccountInterface>
      */
-    private function createMultipleMinimalAccounts($number)
+    private function createMultipleMinimalAccounts($number): array
     {
         $accounts = [];
 
@@ -2470,7 +2455,7 @@ class AccountControllerTest extends SuluTestCase
         return $accounts;
     }
 
-    private function createCategory(string $key, string $locale, string $name, string $description)
+    private function createCategory(string $key, string $locale, string $name, string $description): CategoryInterface
     {
         $category = $this->getContainer()->get('sulu.repository.category')->createNew();
         $category->setKey($name);

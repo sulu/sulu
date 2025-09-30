@@ -265,9 +265,7 @@
         </service>
 
         <service id="sulu_media.type_manager" class="Sulu\Bundle\MediaBundle\Media\TypeManager\TypeManager">
-            <argument type="service" id="doctrine.orm.entity_manager" />
             <argument>%sulu_media.media.types%</argument>
-            <argument>%sulu_media.media.blocked_file_types%</argument>
         </service>
 
         <service id="Sulu\Bundle\MediaBundle\Media\TypeManager\TypeManagerInterface" alias="sulu_media.type_manager"/>
@@ -408,10 +406,6 @@
         </service>
 
         <service id="sulu_media.fixtures.collection_types" class="Sulu\Bundle\MediaBundle\DataFixtures\ORM\LoadCollectionTypes">
-            <tag name="doctrine.fixture.orm"/>
-        </service>
-
-        <service id="sulu_media.fixtures.media_types" class="Sulu\Bundle\MediaBundle\DataFixtures\ORM\LoadMediaTypes">
             <tag name="doctrine.fixture.orm"/>
         </service>
 

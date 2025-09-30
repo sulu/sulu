@@ -23,7 +23,6 @@ use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\FileVersionMeta;
 use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
-use Sulu\Bundle\MediaBundle\Entity\MediaType;
 use Sulu\Bundle\MediaBundle\Infrastructure\Sulu\Search\AdminMediaReindexProvider;
 use Sulu\Bundle\TestBundle\Testing\SetGetPrivatePropertyTrait;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
@@ -34,8 +33,6 @@ class AdminMediaReindexProviderTest extends SuluTestCase
 
     private EntityManagerInterface $entityManager;
     private AdminMediaReindexProvider $provider;
-
-    private MediaType $imageType;
 
     private Collection $collection;
 
@@ -48,7 +45,6 @@ class AdminMediaReindexProviderTest extends SuluTestCase
         $this->entityManager = $this->getEntityManager();
         $this->provider = new AdminMediaReindexProvider($this->entityManager);
         $this->purgeDatabase();
-        $this->setUpMedia();
         $this->setUpCollection();
     }
 
@@ -150,22 +146,11 @@ class AdminMediaReindexProviderTest extends SuluTestCase
         $this->assertNotContains('Cool Media EN 2', $resultTitles);
     }
 
-    protected function setUpMedia(): void
-    {
-        $this->imageType = new MediaType();
-        $this->imageType->setName('image');
-        $this->imageType->setDescription('This is an image');
-
-        $this->entityManager->persist($this->imageType);
-
-        $this->entityManager->flush();
-    }
-
     protected function createMedia(string $name, string $locale = 'en'): Media
     {
         $media = new Media();
 
-        $media->setType($this->imageType);
+        $media->setType(MediaInterface::TYPE_IMAGE);
         $extension = 'jpeg';
         $mimeType = 'image/jpg';
 

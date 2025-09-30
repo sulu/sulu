@@ -19,7 +19,7 @@ use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\FileVersionMeta;
 use Sulu\Bundle\MediaBundle\Entity\Media;
-use Sulu\Bundle\MediaBundle\Entity\MediaType;
+use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
@@ -46,11 +46,10 @@ class SmartContentItemControllerTest extends SuluTestCase
     public function testGetItems(): void
     {
         $collection = $this->createCollection('Test');
-        $type = $this->createType('image');
-        $media2 = $this->createMedia('media-2', $collection, 'image/jpeg', $type);
-        $media1 = $this->createMedia('media-1', $collection, 'image/jpeg', $type);
-        $media4 = $this->createMedia('media-4', $collection, 'image/jpeg', $type);
-        $media3 = $this->createMedia('media-3', $collection, 'image/jpeg', $type);
+        $media2 = $this->createMedia('media-2', $collection, 'image/jpeg');
+        $media1 = $this->createMedia('media-1', $collection, 'image/jpeg');
+        $media4 = $this->createMedia('media-4', $collection, 'image/jpeg');
+        $media3 = $this->createMedia('media-3', $collection, 'image/jpeg');
 
         $this->em->persist($collection);
         $this->em->persist($media2);
@@ -77,11 +76,10 @@ class SmartContentItemControllerTest extends SuluTestCase
     public function testGetItemsSorted(): void
     {
         $collection = $this->createCollection('Test');
-        $type = $this->createType('image');
-        $media2 = $this->createMedia('media-2', $collection, 'image/jpeg', $type);
-        $media1 = $this->createMedia('media-1', $collection, 'image/jpeg', $type);
-        $media4 = $this->createMedia('media-4', $collection, 'image/jpeg', $type);
-        $media3 = $this->createMedia('media-3', $collection, 'image/jpeg', $type);
+        $media2 = $this->createMedia('media-2', $collection, 'image/jpeg');
+        $media1 = $this->createMedia('media-1', $collection, 'image/jpeg');
+        $media4 = $this->createMedia('media-4', $collection, 'image/jpeg');
+        $media3 = $this->createMedia('media-3', $collection, 'image/jpeg');
 
         $this->em->persist($collection);
         $this->em->persist($media2);
@@ -105,20 +103,8 @@ class SmartContentItemControllerTest extends SuluTestCase
         $this->assertEquals($media4->getId(), $result['_embedded']['items'][3]['id']);
     }
 
-    private function createType(string $name): MediaType
+    private function createMedia(string $title, Collection $collection, string $mimeType, string $locale = 'en'): Media
     {
-        $type = new MediaType();
-        $type->setName($name);
-
-        $this->em->persist($type);
-
-        return $type;
-    }
-
-    private function createMedia(string $title, Collection $collection, string $mimeType, MediaType $type, string $locale = 'en'): Media
-    {
-        $media = new Media();
-        $media->setType($type);
         $file = new File();
         $fileVersion = new FileVersion();
         $fileVersionMeta = new FileVersionMeta();
@@ -133,6 +119,9 @@ class SmartContentItemControllerTest extends SuluTestCase
         $fileVersion->setFile($file);
         $file->setVersion(1);
         $file->addFileVersion($fileVersion);
+
+        $media = new Media();
+        $media->setType(MediaInterface::TYPE_IMAGE);
         $file->setMedia($media);
         $media->addFile($file);
         $media->setCollection($collection);
@@ -145,13 +134,12 @@ class SmartContentItemControllerTest extends SuluTestCase
     public function testGetItemsWithLocaleParameterOverridesRequestLocale(): void
     {
         $collection = $this->createCollection('Test');
-        $type = $this->createType('image');
 
-        $media1En = $this->createMedia('media-1-en', $collection, 'image/jpeg', $type, 'en');
-        $media2En = $this->createMedia('media-2-en', $collection, 'image/jpeg', $type, 'en');
+        $media1En = $this->createMedia('media-1-en', $collection, 'image/jpeg', 'en');
+        $media2En = $this->createMedia('media-2-en', $collection, 'image/jpeg', 'en');
 
-        $media1De = $this->createMedia('media-1-de', $collection, 'image/jpeg', $type, 'de');
-        $media2De = $this->createMedia('media-2-de', $collection, 'image/jpeg', $type, 'de');
+        $media1De = $this->createMedia('media-1-de', $collection, 'image/jpeg', 'de');
+        $media2De = $this->createMedia('media-2-de', $collection, 'image/jpeg', 'de');
 
         $this->em->persist($collection);
         $this->em->persist($media1En);
@@ -193,10 +181,9 @@ class SmartContentItemControllerTest extends SuluTestCase
     public function testGetItemsWithoutLocaleParameterUsesRequestLocale(): void
     {
         $collection = $this->createCollection('Test');
-        $type = $this->createType('image');
 
-        $media1En = $this->createMedia('media-1-en', $collection, 'image/jpeg', $type, 'en');
-        $media2En = $this->createMedia('media-2-en', $collection, 'image/jpeg', $type, 'en');
+        $media1En = $this->createMedia('media-1-en', $collection, 'image/jpeg', 'en');
+        $media2En = $this->createMedia('media-2-en', $collection, 'image/jpeg', 'en');
 
         $this->em->persist($collection);
         $this->em->persist($media1En);

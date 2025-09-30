@@ -21,8 +21,8 @@ use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\FileVersionMeta;
 use Sulu\Bundle\MediaBundle\Entity\FormatOptions;
 use Sulu\Bundle\MediaBundle\Entity\Media;
+use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\MediaBundle\Entity\MediaRepository;
-use Sulu\Bundle\MediaBundle\Entity\MediaType;
 use Sulu\Bundle\SecurityBundle\Entity\AccessControl;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Bundle\SecurityBundle\Entity\User;
@@ -38,11 +38,6 @@ class MediaRepositoryTest extends SuluTestCase
      * @var EntityManager
      */
     private $em;
-
-    /**
-     * @var MediaType[]
-     */
-    private $mediaTypes = [];
 
     /**
      * @var CollectionType[]
@@ -73,22 +68,6 @@ class MediaRepositoryTest extends SuluTestCase
 
     protected function setUpMedia(): void
     {
-        // Create Media Type
-        $documentType = new MediaType();
-        $documentType->setName('document');
-        $documentType->setDescription('This is a document');
-
-        $imageType = new MediaType();
-        $imageType->setName('image');
-        $imageType->setDescription('This is an image');
-
-        $videoType = new MediaType();
-        $videoType->setName('video');
-        $videoType->setDescription('This is a video');
-
-        $this->mediaTypes['image'] = $imageType;
-        $this->mediaTypes['video'] = $videoType;
-
         // Create Collection Type
         $defaultCollectionType = new CollectionType();
         $defaultCollectionType->setName('Default Collection Type');
@@ -116,9 +95,6 @@ class MediaRepositoryTest extends SuluTestCase
         $this->em->persist($systemCollectionType);
         $this->em->persist($tag1);
         $this->em->persist($tag2);
-        $this->em->persist($documentType);
-        $this->em->persist($imageType);
-        $this->em->persist($videoType);
     }
 
     private function createCollection(string $collectionType)
@@ -150,10 +126,10 @@ class MediaRepositoryTest extends SuluTestCase
         $this->em->persist($accessControl);
     }
 
-    protected function createMedia($name, $title, $collection, $type = 'image')
+    protected function createMedia($name, $title, $collection, string $type = MediaInterface::TYPE_IMAGE)
     {
         $media = new Media();
-        $media->setType($this->mediaTypes[$type]);
+        $media->setType($type);
 
         // create file
         $file = new File();
@@ -364,26 +340,26 @@ class MediaRepositoryTest extends SuluTestCase
 
         $this->em->flush();
 
-        $media1 = $this->createMedia('test-1', 'test-1', $collection, 'video');
-        $media2 = $this->createMedia('test-2', 'test-2', $collection, 'image');
-        $media3 = $this->createMedia('test-3', 'test-3', $collection, 'video');
-        $media4 = $this->createMedia('test-4', 'test-4', $collection, 'image');
+        $media1 = $this->createMedia('test-1', 'test-1', $collection, MediaInterface::TYPE_VIDEO);
+        $media2 = $this->createMedia('test-2', 'test-2', $collection, MediaInterface::TYPE_IMAGE);
+        $media3 = $this->createMedia('test-3', 'test-3', $collection, MediaInterface::TYPE_VIDEO);
+        $media4 = $this->createMedia('test-4', 'test-4', $collection, MediaInterface::TYPE_IMAGE);
 
         $this->em->flush();
 
-        $result = $this->mediaRepository->findMedia(['types' => ['video']]);
+        $result = $this->mediaRepository->findMedia(['types' => [MediaInterface::TYPE_VIDEO]]);
 
         $this->assertCount(2, $result);
         $this->assertEquals($media1->getId(), $result[0]->getId());
         $this->assertEquals($media3->getId(), $result[1]->getId());
 
-        $result = $this->mediaRepository->findMedia(['types' => ['image']]);
+        $result = $this->mediaRepository->findMedia(['types' => [MediaInterface::TYPE_IMAGE]]);
 
         $this->assertCount(2, $result);
         $this->assertEquals($media2->getId(), $result[0]->getId());
         $this->assertEquals($media4->getId(), $result[1]->getId());
 
-        $result = $this->mediaRepository->findMedia(['types' => ['image', 'video']]);
+        $result = $this->mediaRepository->findMedia(['types' => [MediaInterface::TYPE_IMAGE, MediaInterface::TYPE_VIDEO]]);
 
         $this->assertCount(4, $result);
         $this->assertEquals($media1->getId(), $result[0]->getId());
@@ -395,9 +371,9 @@ class MediaRepositoryTest extends SuluTestCase
 
         $this->assertCount(0, $result);
 
-        $this->assertEquals(2, $this->mediaRepository->count(['types' => ['image']]));
-        $this->assertEquals(2, $this->mediaRepository->count(['types' => ['video']]));
-        $this->assertEquals(4, $this->mediaRepository->count(['types' => ['image', 'video']]));
+        $this->assertEquals(2, $this->mediaRepository->count(['types' => [MediaInterface::TYPE_IMAGE]]));
+        $this->assertEquals(2, $this->mediaRepository->count(['types' => [MediaInterface::TYPE_VIDEO]]));
+        $this->assertEquals(4, $this->mediaRepository->count(['types' => [MediaInterface::TYPE_IMAGE, MediaInterface::TYPE_VIDEO]]));
         $this->assertEquals(0, $this->mediaRepository->count(['types' => ['asdf']]));
     }
 
@@ -407,29 +383,29 @@ class MediaRepositoryTest extends SuluTestCase
 
         $this->em->flush();
 
-        $media1 = $this->createMedia('test-1', 'test-1', $collection, 'video');
-        $media2 = $this->createMedia('test-2', 'test-2', $collection, 'video');
-        $media3 = $this->createMedia('test-3', 'test-3', $collection, 'video');
-        $media4 = $this->createMedia('test-4', 'test-4', $collection, 'image');
+        $media1 = $this->createMedia('test-1', 'test-1', $collection, MediaInterface::TYPE_VIDEO);
+        $media2 = $this->createMedia('test-2', 'test-2', $collection, MediaInterface::TYPE_VIDEO);
+        $media3 = $this->createMedia('test-3', 'test-3', $collection, MediaInterface::TYPE_VIDEO);
+        $media4 = $this->createMedia('test-4', 'test-4', $collection, MediaInterface::TYPE_IMAGE);
 
         $this->em->flush();
 
-        $result = $this->mediaRepository->findMedia(['types' => ['video']], 2, 0);
+        $result = $this->mediaRepository->findMedia(['types' => [MediaInterface::TYPE_VIDEO]], 2, 0);
 
         $this->assertCount(2, $result);
         $this->assertEquals($media1->getId(), $result[0]->getId());
         $this->assertEquals($media2->getId(), $result[1]->getId());
 
-        $result = $this->mediaRepository->findMedia(['types' => ['video']], 2, 2);
+        $result = $this->mediaRepository->findMedia(['types' => [MediaInterface::TYPE_VIDEO]], 2, 2);
 
         $this->assertCount(1, $result);
         $this->assertEquals($media3->getId(), $result[0]->getId());
 
-        $result = $this->mediaRepository->findMedia(['types' => ['video']], 2, 4);
+        $result = $this->mediaRepository->findMedia(['types' => [MediaInterface::TYPE_VIDEO]], 2, 4);
 
         $this->assertCount(0, $result);
 
-        $this->assertEquals(3, $this->mediaRepository->count(['types' => ['video']]));
+        $this->assertEquals(3, $this->mediaRepository->count(['types' => [MediaInterface::TYPE_VIDEO]]));
     }
 
     public function testFindMediaByCollection(): void
@@ -520,7 +496,7 @@ class MediaRepositoryTest extends SuluTestCase
         $this->em->flush();
 
         $this->assertCount(2, $this->mediaRepository->findMedia());
-        $this->assertCount(1, $this->mediaRepository->findMedia(['systemCollections' => false, 'types' => ['image']]));
+        $this->assertCount(1, $this->mediaRepository->findMedia(['systemCollections' => false, 'types' => [MediaInterface::TYPE_IMAGE]]));
     }
 
     public function testFindMediaByIds(): void
@@ -529,10 +505,10 @@ class MediaRepositoryTest extends SuluTestCase
 
         $this->em->flush();
 
-        $media1 = $this->createMedia('test-1', 'test-1', $collection, 'video');
-        $media2 = $this->createMedia('test-2', 'test-2', $collection, 'video');
-        $media3 = $this->createMedia('test-3', 'test-3', $collection, 'video');
-        $media4 = $this->createMedia('test-4', 'test-4', $collection, 'image');
+        $media1 = $this->createMedia('test-1', 'test-1', $collection, MediaInterface::TYPE_VIDEO);
+        $media2 = $this->createMedia('test-2', 'test-2', $collection, MediaInterface::TYPE_VIDEO);
+        $media3 = $this->createMedia('test-3', 'test-3', $collection, MediaInterface::TYPE_VIDEO);
+        $media4 = $this->createMedia('test-4', 'test-4', $collection, MediaInterface::TYPE_IMAGE);
 
         $this->em->flush();
 
@@ -549,10 +525,10 @@ class MediaRepositoryTest extends SuluTestCase
 
         $collection = $this->createCollection('default');
 
-        $media1 = $this->createMedia('test-1', 'test-1', $collection, 'video');
-        $media2 = $this->createMedia('test-2', 'test-2', $collection, 'video');
-        $media3 = $this->createMedia('test-3', 'test-3', $collection, 'video');
-        $media4 = $this->createMedia('test-4', 'test-4', $collection, 'image');
+        $media1 = $this->createMedia('test-1', 'test-1', $collection, MediaInterface::TYPE_VIDEO);
+        $media2 = $this->createMedia('test-2', 'test-2', $collection, MediaInterface::TYPE_VIDEO);
+        $media3 = $this->createMedia('test-3', 'test-3', $collection, MediaInterface::TYPE_VIDEO);
+        $media4 = $this->createMedia('test-4', 'test-4', $collection, MediaInterface::TYPE_IMAGE);
 
         $this->em->flush();
 
@@ -585,10 +561,10 @@ class MediaRepositoryTest extends SuluTestCase
         $this->createAccessControl($collection1, $role, 0);
         $this->createAccessControl($collection3, $role, 64);
 
-        $media1 = $this->createMedia('test-1', 'test-1', $collection1, 'video');
-        $media2 = $this->createMedia('test-2', 'test-2', $collection3, 'video');
-        $media3 = $this->createMedia('test-3', 'test-3', $collection1, 'video');
-        $media4 = $this->createMedia('test-4', 'test-4', $collection2, 'image');
+        $media1 = $this->createMedia('test-1', 'test-1', $collection1, MediaInterface::TYPE_VIDEO);
+        $media2 = $this->createMedia('test-2', 'test-2', $collection3, MediaInterface::TYPE_VIDEO);
+        $media3 = $this->createMedia('test-3', 'test-3', $collection1, MediaInterface::TYPE_VIDEO);
+        $media4 = $this->createMedia('test-4', 'test-4', $collection2, MediaInterface::TYPE_IMAGE);
 
         $this->em->flush();
 
@@ -620,8 +596,8 @@ class MediaRepositoryTest extends SuluTestCase
 
         $this->createAccessControl($collection1, $role, 0);
 
-        $media1 = $this->createMedia('test-1', 'test-1', $collection1, 'video');
-        $media2 = $this->createMedia('test-2', 'test-2', $collection2, 'image');
+        $media1 = $this->createMedia('test-1', 'test-1', $collection1, MediaInterface::TYPE_VIDEO);
+        $media2 = $this->createMedia('test-2', 'test-2', $collection2, MediaInterface::TYPE_IMAGE);
 
         $this->em->flush();
 
@@ -642,10 +618,10 @@ class MediaRepositoryTest extends SuluTestCase
     {
         $collection = $this->createCollection('default');
 
-        $media1 = $this->createMedia('test-1', 'test-1-title', $collection, 'image');
-        $media2 = $this->createMedia('test-2', 'test-2-title', $collection, 'image');
-        $media3 = $this->createMedia('test-3', 'test-3-title', $collection, 'video');
-        $media4 = $this->createMedia('test-4', 'test-4-title', $collection, 'video');
+        $media1 = $this->createMedia('test-1', 'test-1-title', $collection, MediaInterface::TYPE_IMAGE);
+        $media2 = $this->createMedia('test-2', 'test-2-title', $collection, MediaInterface::TYPE_IMAGE);
+        $media3 = $this->createMedia('test-3', 'test-3-title', $collection, MediaInterface::TYPE_VIDEO);
+        $media4 = $this->createMedia('test-4', 'test-4-title', $collection, MediaInterface::TYPE_VIDEO);
 
         $this->em->flush();
 
@@ -680,10 +656,10 @@ class MediaRepositoryTest extends SuluTestCase
     {
         $collection = $this->createCollection('default');
 
-        $media1 = $this->createMedia('test-1', 'test-1-title', $collection, 'image');
-        $media2 = $this->createMedia('test-2', 'test-2-title', $collection, 'image');
-        $media3 = $this->createMedia('test-3', 'test-3-title', $collection, 'video');
-        $media4 = $this->createMedia('test-4', 'test-4-title', $collection, 'video');
+        $this->createMedia('test-1', 'test-1-title', $collection, MediaInterface::TYPE_IMAGE);
+        $this->createMedia('test-2', 'test-2-title', $collection, MediaInterface::TYPE_IMAGE);
+        $this->createMedia('test-3', 'test-3-title', $collection, MediaInterface::TYPE_VIDEO);
+        $this->createMedia('test-4', 'test-4-title', $collection, MediaInterface::TYPE_VIDEO);
 
         $result = $this->mediaRepository->findMediaDisplayInfo([-1], 'en-gb');
 

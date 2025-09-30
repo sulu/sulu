@@ -8545,12 +8545,6 @@ parameters:
 			path: src/Sulu/Bundle/CategoryBundle/Tests/Functional/Controller/CategoryControllerTest.php
 
 		-
-			message: '#^Binary operation "\." between mixed and ''\.'' results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Tests/Functional/Controller/CategoryControllerTest.php
-
-		-
 			message: '#^Binary operation "\." between non\-falsy\-string and mixed results in an error\.$#'
 			identifier: binaryOp.invalid
 			count: 4
@@ -8685,7 +8679,7 @@ parameters:
 		-
 			message: '#^Cannot call method getId\(\) on mixed\.$#'
 			identifier: method.nonObject
-			count: 63
+			count: 55
 			path: src/Sulu/Bundle/CategoryBundle/Tests/Functional/Controller/CategoryControllerTest.php
 
 		-
@@ -8731,18 +8725,6 @@ parameters:
 			path: src/Sulu/Bundle/CategoryBundle/Tests/Functional/Controller/CategoryControllerTest.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\CategoryBundle\\Tests\\Functional\\Controller\\CategoryControllerTest\:\:createImageType\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Tests/Functional/Controller/CategoryControllerTest.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\CategoryBundle\\Tests\\Functional\\Controller\\CategoryControllerTest\:\:createMedia\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Tests/Functional/Controller/CategoryControllerTest.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\CategoryBundle\\Tests\\Functional\\Controller\\CategoryControllerTest\:\:createMedia\(\) has parameter \$collection with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -8755,27 +8737,9 @@ parameters:
 			path: src/Sulu/Bundle/CategoryBundle/Tests/Functional/Controller/CategoryControllerTest.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\CategoryBundle\\Tests\\Functional\\Controller\\CategoryControllerTest\:\:createMedia\(\) has parameter \$name with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Tests/Functional/Controller/CategoryControllerTest.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\CategoryBundle\\Tests\\Functional\\Controller\\CategoryControllerTest\:\:createMedia\(\) has parameter \$type with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Tests/Functional/Controller/CategoryControllerTest.php
-
-		-
 			message: '#^Parameter \#1 \$array of function usort expects TArray of array, mixed given\.$#'
 			identifier: argument.type
 			count: 15
-			path: src/Sulu/Bundle/CategoryBundle/Tests/Functional/Controller/CategoryControllerTest.php
-
-		-
-			message: '#^Parameter \#1 \$callback of function array_map expects \(callable\(mixed\)\: mixed\)\|null, Closure\(Sulu\\Bundle\\MediaBundle\\Entity\\Media\)\: int given\.$#'
-			identifier: argument.type
-			count: 1
 			path: src/Sulu/Bundle/CategoryBundle/Tests/Functional/Controller/CategoryControllerTest.php
 
 		-
@@ -8824,18 +8788,6 @@ parameters:
 			message: '#^Parameter \#1 \$string1 of function strcmp expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 2
-			path: src/Sulu/Bundle/CategoryBundle/Tests/Functional/Controller/CategoryControllerTest.php
-
-		-
-			message: '#^Parameter \#1 \$title of method Sulu\\Bundle\\MediaBundle\\Entity\\FileVersionMeta\:\:setTitle\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Tests/Functional/Controller/CategoryControllerTest.php
-
-		-
-			message: '#^Parameter \#1 \$type of method Sulu\\Bundle\\MediaBundle\\Entity\\Media\:\:setType\(\) expects Sulu\\Bundle\\MediaBundle\\Entity\\MediaType, mixed given\.$#'
-			identifier: argument.type
-			count: 1
 			path: src/Sulu/Bundle/CategoryBundle/Tests/Functional/Controller/CategoryControllerTest.php
 
 		-
@@ -15961,12 +15913,6 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/AccountControllerTest.php
 
 		-
-			message: '#^Binary operation "\." between non\-falsy\-string and mixed results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/AccountControllerTest.php
-
-		-
 			message: '#^Call to an undefined method Sulu\\Bundle\\ContactBundle\\Entity\\AccountInterface\:\:addChildren\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -16383,7 +16329,7 @@ parameters:
 		-
 			message: '#^Cannot call method getId\(\) on mixed\.$#'
 			identifier: method.nonObject
-			count: 86
+			count: 62
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/AccountControllerTest.php
 
 		-
@@ -16417,30 +16363,6 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/AccountControllerTest.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Tests\\Functional\\Controller\\AccountControllerTest\:\:createCategory\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/AccountControllerTest.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Tests\\Functional\\Controller\\AccountControllerTest\:\:createCollection\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/AccountControllerTest.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Tests\\Functional\\Controller\\AccountControllerTest\:\:createCollectionType\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/AccountControllerTest.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Tests\\Functional\\Controller\\AccountControllerTest\:\:createContact\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/AccountControllerTest.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\ContactBundle\\Tests\\Functional\\Controller\\AccountControllerTest\:\:createEmail\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -16460,30 +16382,6 @@ parameters:
 
 		-
 			message: '#^Method Sulu\\Bundle\\ContactBundle\\Tests\\Functional\\Controller\\AccountControllerTest\:\:createFaxType\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/AccountControllerTest.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Tests\\Functional\\Controller\\AccountControllerTest\:\:createMedia\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/AccountControllerTest.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Tests\\Functional\\Controller\\AccountControllerTest\:\:createMediaType\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/AccountControllerTest.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Tests\\Functional\\Controller\\AccountControllerTest\:\:createMultipleMinimalAccounts\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/AccountControllerTest.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Tests\\Functional\\Controller\\AccountControllerTest\:\:createNote\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/AccountControllerTest.php
@@ -16561,12 +16459,6 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/AccountControllerTest.php
 
 		-
-			message: '#^Parameter \#1 \$collectionType of method Sulu\\Bundle\\ContactBundle\\Tests\\Functional\\Controller\\AccountControllerTest\:\:createCollection\(\) expects Sulu\\Bundle\\MediaBundle\\Entity\\CollectionType, mixed given\.$#'
-			identifier: argument.type
-			count: 4
-			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/AccountControllerTest.php
-
-		-
 			message: '#^Parameter \#1 \$deliveryAddress of method Sulu\\Bundle\\ContactBundle\\Entity\\Address\:\:setDeliveryAddress\(\) expects bool, bool\|null given\.$#'
 			identifier: argument.type
 			count: 1
@@ -16606,18 +16498,6 @@ parameters:
 			message: '#^Parameter \#1 \$value of function count expects array\|Countable, mixed given\.$#'
 			identifier: argument.type
 			count: 22
-			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/AccountControllerTest.php
-
-		-
-			message: '#^Parameter \#10 \$logo of method Sulu\\Bundle\\ContactBundle\\Tests\\Functional\\Controller\\AccountControllerTest\:\:createAccount\(\) expects Sulu\\Bundle\\MediaBundle\\Entity\\Media\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/AccountControllerTest.php
-
-		-
-			message: '#^Parameter \#12 \$mainContact of method Sulu\\Bundle\\ContactBundle\\Tests\\Functional\\Controller\\AccountControllerTest\:\:createAccount\(\) expects Sulu\\Bundle\\ContactBundle\\Entity\\Contact\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/AccountControllerTest.php
 
 		-
@@ -16681,12 +16561,6 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/AccountControllerTest.php
 
 		-
-			message: '#^Parameter \#3 \$mediaType of method Sulu\\Bundle\\ContactBundle\\Tests\\Functional\\Controller\\AccountControllerTest\:\:createMedia\(\) expects Sulu\\Bundle\\MediaBundle\\Entity\\MediaType, mixed given\.$#'
-			identifier: argument.type
-			count: 5
-			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/AccountControllerTest.php
-
-		-
 			message: '#^Parameter \#3 \$url of method Sulu\\Bundle\\ContactBundle\\Tests\\Functional\\Controller\\AccountControllerTest\:\:createAccount\(\) expects Sulu\\Bundle\\ContactBundle\\Entity\\Url\|null, mixed given\.$#'
 			identifier: argument.type
 			count: 5
@@ -16696,12 +16570,6 @@ parameters:
 			message: '#^Parameter \#4 \$address of method Sulu\\Bundle\\ContactBundle\\Tests\\Functional\\Controller\\AccountControllerTest\:\:createAccount\(\) expects Sulu\\Bundle\\ContactBundle\\Entity\\Address\|null, mixed given\.$#'
 			identifier: argument.type
 			count: 6
-			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/AccountControllerTest.php
-
-		-
-			message: '#^Parameter \#4 \$collection of method Sulu\\Bundle\\ContactBundle\\Tests\\Functional\\Controller\\AccountControllerTest\:\:createMedia\(\) expects Sulu\\Bundle\\MediaBundle\\Entity\\Collection, mixed given\.$#'
-			identifier: argument.type
-			count: 5
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/AccountControllerTest.php
 
 		-
@@ -16718,12 +16586,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#7 \$fax of method Sulu\\Bundle\\ContactBundle\\Tests\\Functional\\Controller\\AccountControllerTest\:\:createAccount\(\) expects Sulu\\Bundle\\ContactBundle\\Entity\\Fax\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 3
-			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/AccountControllerTest.php
-
-		-
-			message: '#^Parameter \#8 \$note of method Sulu\\Bundle\\ContactBundle\\Tests\\Functional\\Controller\\AccountControllerTest\:\:createAccount\(\) expects Sulu\\Bundle\\ContactBundle\\Entity\\Note\|null, mixed given\.$#'
 			identifier: argument.type
 			count: 3
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/AccountControllerTest.php
@@ -17425,18 +17287,6 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/ContactControllerTest.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Tests\\Functional\\Controller\\ContactControllerTest\:\:createCollection\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/ContactControllerTest.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Tests\\Functional\\Controller\\ContactControllerTest\:\:createCollectionType\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/ContactControllerTest.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\ContactBundle\\Tests\\Functional\\Controller\\ContactControllerTest\:\:createContact\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -17468,12 +17318,6 @@ parameters:
 
 		-
 			message: '#^Method Sulu\\Bundle\\ContactBundle\\Tests\\Functional\\Controller\\ContactControllerTest\:\:createFaxType\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/ContactControllerTest.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Tests\\Functional\\Controller\\ContactControllerTest\:\:createMediaType\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/ContactControllerTest.php
@@ -17576,12 +17420,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#1 \$category of method Sulu\\Bundle\\ContactBundle\\Entity\\Contact\:\:addCategory\(\) expects Sulu\\Bundle\\CategoryBundle\\Entity\\CategoryInterface, mixed given\.$#'
-			identifier: argument.type
-			count: 4
-			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/ContactControllerTest.php
-
-		-
-			message: '#^Parameter \#1 \$collectionType of method Sulu\\Bundle\\ContactBundle\\Tests\\Functional\\Controller\\ContactControllerTest\:\:createCollection\(\) expects Sulu\\Bundle\\MediaBundle\\Entity\\CollectionType, mixed given\.$#'
 			identifier: argument.type
 			count: 4
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/ContactControllerTest.php
@@ -17728,18 +17566,6 @@ parameters:
 			message: '#^Parameter \#2 \$websiteType of method Sulu\\Bundle\\ContactBundle\\Tests\\Functional\\Controller\\ContactControllerTest\:\:createWebsite\(\) expects Sulu\\Bundle\\ContactBundle\\Entity\\UrlType, mixed given\.$#'
 			identifier: argument.type
 			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/ContactControllerTest.php
-
-		-
-			message: '#^Parameter \#3 \$mediaType of method Sulu\\Bundle\\ContactBundle\\Tests\\Functional\\Controller\\ContactControllerTest\:\:createMedia\(\) expects Sulu\\Bundle\\MediaBundle\\Entity\\MediaType, mixed given\.$#'
-			identifier: argument.type
-			count: 5
-			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/ContactControllerTest.php
-
-		-
-			message: '#^Parameter \#4 \$collection of method Sulu\\Bundle\\ContactBundle\\Tests\\Functional\\Controller\\ContactControllerTest\:\:createMedia\(\) expects Sulu\\Bundle\\MediaBundle\\Entity\\Collection, mixed given\.$#'
-			identifier: argument.type
-			count: 5
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/ContactControllerTest.php
 
 		-
@@ -21313,12 +21139,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Api/Media.php
 
 		-
-			message: '#^Call to an undefined method object\:\:getType\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Api/Media.php
-
-		-
 			message: '#^Call to an undefined method object\:\:setChanger\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -21495,12 +21315,6 @@ parameters:
 		-
 			message: '#^Method Sulu\\Bundle\\MediaBundle\\Api\\Media\:\:getThumbnails\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Api/Media.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\Api\\Media\:\:getType\(\) should return Sulu\\Bundle\\MediaBundle\\Entity\\MediaType but returns mixed\.$#'
-			identifier: return.type
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Api/Media.php
 
@@ -22595,18 +22409,6 @@ parameters:
 			identifier: method.notFound
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/DataFixtures/ORM/LoadCollectionTypes.php
-
-		-
-			message: '#^Call to an undefined method Doctrine\\Persistence\\Mapping\\ClassMetadata\<Sulu\\Bundle\\MediaBundle\\Entity\\MediaType\>\:\:setIdGenerator\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/DataFixtures/ORM/LoadMediaTypes.php
-
-		-
-			message: '#^Call to an undefined method Doctrine\\Persistence\\Mapping\\ClassMetadata\<Sulu\\Bundle\\MediaBundle\\Entity\\MediaType\>\:\:setIdGeneratorType\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/DataFixtures/ORM/LoadMediaTypes.php
 
 		-
 			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
@@ -24847,12 +24649,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Media/Manager/MediaManager.php
 
 		-
-			message: '#^Cannot access offset ''id'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Media/Manager/MediaManager.php
-
-		-
 			message: '#^Cannot call method checkPermission\(\) on Sulu\\Component\\Security\\Authorization\\SecurityCheckerInterface\|null\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -25051,12 +24847,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Media/Manager/MediaManager.php
 
 		-
-			message: '#^Parameter \#1 \$fileMimeType of method Sulu\\Bundle\\MediaBundle\\Media\\TypeManager\\TypeManagerInterface\:\:getMediaType\(\) expects string, string\|null given\.$#'
-			identifier: argument.type
-			count: 2
-			path: src/Sulu/Bundle/MediaBundle/Media/Manager/MediaManager.php
-
-		-
 			message: '#^Parameter \#1 \$focusPointX of method Sulu\\Bundle\\MediaBundle\\Api\\Media\:\:setFocusPointX\(\) expects int, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -25082,12 +24872,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#1 \$id of method Sulu\\Bundle\\MediaBundle\\Media\\Manager\\MediaManager\:\:getEntityById\(\) expects int, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Media/Manager/MediaManager.php
-
-		-
-			message: '#^Parameter \#1 \$id of method Sulu\\Bundle\\MediaBundle\\Media\\TypeManager\\TypeManagerInterface\:\:get\(\) expects int, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Media/Manager/MediaManager.php
@@ -25265,72 +25049,6 @@ parameters:
 			identifier: missingType.iterableValue
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Media/Manager/MediaManagerInterface.php
-
-		-
-			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
-			identifier: foreach.nonIterable
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Media/TypeManager/TypeManager.php
-
-		-
-			message: '#^Cannot access offset ''mimeTypes'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Media/TypeManager/TypeManager.php
-
-		-
-			message: '#^Cannot access offset ''type'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Media/TypeManager/TypeManager.php
-
-		-
-			message: '#^Cannot call method getId\(\) on Sulu\\Bundle\\MediaBundle\\Entity\\MediaType\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Media/TypeManager/TypeManager.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\Media\\TypeManager\\TypeManager\:\:__construct\(\) has parameter \$blockedMimeTypes with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Media/TypeManager/TypeManager.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\Media\\TypeManager\\TypeManager\:\:__construct\(\) has parameter \$mediaTypes with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Media/TypeManager/TypeManager.php
-
-		-
-			message: '#^Negated boolean expression is always false\.$#'
-			identifier: booleanNot.alwaysFalse
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Media/TypeManager/TypeManager.php
-
-		-
-			message: '#^Parameter \#1 \$pattern of function fnmatch expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Media/TypeManager/TypeManager.php
-
-		-
-			message: '#^Possibly invalid array key type mixed\.$#'
-			identifier: offsetAccess.invalidOffset
-			count: 3
-			path: src/Sulu/Bundle/MediaBundle/Media/TypeManager/TypeManager.php
-
-		-
-			message: '#^Property Sulu\\Bundle\\MediaBundle\\Media\\TypeManager\\TypeManager\:\:\$blockedMimeTypes is never read, only written\.$#'
-			identifier: property.onlyWritten
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Media/TypeManager/TypeManager.php
-
-		-
-			message: '#^Property Sulu\\Bundle\\MediaBundle\\Media\\TypeManager\\TypeManager\:\:\$mediaTypeEntities \(array\<Sulu\\Bundle\\MediaBundle\\Entity\\MediaType\>\) does not accept array\<Sulu\\Bundle\\MediaBundle\\Entity\\MediaType\|null\>\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Media/TypeManager/TypeManager.php
 
 		-
 			message: '#^Call to an undefined method FFMpeg\\Media\\Audio\:\:frame\(\)\.$#'
@@ -25795,12 +25513,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/CollectionControllerTest.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\Tests\\Functional\\Controller\\CollectionControllerTest\:\:createMediaType\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/CollectionControllerTest.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\MediaBundle\\Tests\\Functional\\Controller\\CollectionControllerTest\:\:createRole\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -25899,7 +25611,7 @@ parameters:
 		-
 			message: '#^Parameter \#1 \$object of method Doctrine\\Persistence\\ObjectManager\:\:persist\(\) expects object, mixed given\.$#'
 			identifier: argument.type
-			count: 3
+			count: 2
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/CollectionControllerTest.php
 
 		-
@@ -25982,12 +25694,6 @@ parameters:
 
 		-
 			message: '#^Property Sulu\\Bundle\\MediaBundle\\Tests\\Functional\\Controller\\CollectionControllerTest\:\:\$collectionType2 \(Sulu\\Bundle\\MediaBundle\\Entity\\CollectionType\) does not accept mixed\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/CollectionControllerTest.php
-
-		-
-			message: '#^Property Sulu\\Bundle\\MediaBundle\\Tests\\Functional\\Controller\\CollectionControllerTest\:\:\$mediaType \(Sulu\\Bundle\\MediaBundle\\Entity\\MediaType\) does not accept mixed\.$#'
 			identifier: assign.propertyType
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/CollectionControllerTest.php
@@ -26241,7 +25947,7 @@ parameters:
 		-
 			message: '#^Cannot access offset ''id'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 3
+			count: 2
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/MediaControllerTest.php
 
 		-
@@ -26259,7 +25965,7 @@ parameters:
 		-
 			message: '#^Cannot access offset ''name'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 4
+			count: 3
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/MediaControllerTest.php
 
 		-
@@ -26289,7 +25995,7 @@ parameters:
 		-
 			message: '#^Cannot access offset ''type'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
+			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/MediaControllerTest.php
 
 		-
@@ -26409,7 +26115,7 @@ parameters:
 		-
 			message: '#^Cannot access property \$id on mixed\.$#'
 			identifier: property.nonObject
-			count: 16
+			count: 15
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/MediaControllerTest.php
 
 		-
@@ -26427,7 +26133,7 @@ parameters:
 		-
 			message: '#^Cannot access property \$name on mixed\.$#'
 			identifier: property.nonObject
-			count: 14
+			count: 13
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/MediaControllerTest.php
 
 		-
@@ -26475,7 +26181,7 @@ parameters:
 		-
 			message: '#^Cannot access property \$type on mixed\.$#'
 			identifier: property.nonObject
-			count: 2
+			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/MediaControllerTest.php
 
 		-
@@ -26743,24 +26449,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/MediaFormatControllerTest.php
 
 		-
-			message: '#^Binary operation "\." between ''/api/media/'' and mixed results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 3
-			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/MediaPreviewControllerTest.php
-
-		-
-			message: '#^Binary operation "\." between mixed and ''\.'' results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 2
-			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/MediaPreviewControllerTest.php
-
-		-
-			message: '#^Binary operation "\." between non\-falsy\-string and mixed results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/MediaPreviewControllerTest.php
-
-		-
 			message: '#^Call to an undefined method object\:\:invalidate\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -26791,81 +26479,15 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/MediaPreviewControllerTest.php
 
 		-
-			message: '#^Cannot call method getId\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 6
-			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/MediaPreviewControllerTest.php
-
-		-
-			message: '#^Cannot call method getPreviewImage\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/MediaPreviewControllerTest.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\Tests\\Functional\\Controller\\MediaPreviewControllerTest\:\:createMedia\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/MediaPreviewControllerTest.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\Tests\\Functional\\Controller\\MediaPreviewControllerTest\:\:createMedia\(\) has parameter \$locale with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/MediaPreviewControllerTest.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\Tests\\Functional\\Controller\\MediaPreviewControllerTest\:\:createMedia\(\) has parameter \$name with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/MediaPreviewControllerTest.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\Tests\\Functional\\Controller\\MediaPreviewControllerTest\:\:createMedia\(\) has parameter \$type with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/MediaPreviewControllerTest.php
-
-		-
 			message: '#^Parameter \#1 \$json of function json_decode expects string, string\|false given\.$#'
 			identifier: argument.type
 			count: 3
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/MediaPreviewControllerTest.php
 
 		-
-			message: '#^Parameter \#1 \$locale of method Sulu\\Bundle\\MediaBundle\\Entity\\FileVersionMeta\:\:setLocale\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/MediaPreviewControllerTest.php
-
-		-
-			message: '#^Parameter \#1 \$title of method Sulu\\Bundle\\MediaBundle\\Entity\\FileVersionMeta\:\:setTitle\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/MediaPreviewControllerTest.php
-
-		-
 			message: '#^Parameter \#2 \$haystack of method PHPUnit\\Framework\\Assert\:\:assertStringContainsString\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 3
-			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/MediaPreviewControllerTest.php
-
-		-
-			message: '#^Parameter \#4 \$previewMedia of method Sulu\\Bundle\\MediaBundle\\Tests\\Functional\\Controller\\MediaPreviewControllerTest\:\:createMedia\(\) expects Sulu\\Bundle\\MediaBundle\\Entity\\Media\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/MediaPreviewControllerTest.php
-
-		-
-			message: '#^Variable \$extension might not be defined\.$#'
-			identifier: variable.undefined
-			count: 3
-			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/MediaPreviewControllerTest.php
-
-		-
-			message: '#^Variable \$mimeType might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/MediaPreviewControllerTest.php
 
 		-
@@ -27121,12 +26743,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/MediaWebsiteControllerTest.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\Tests\\Functional\\Controller\\MediaWebsiteControllerTest\:\:setUpMedia\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/MediaWebsiteControllerTest.php
-
-		-
 			message: '#^Parameter \#1 \$datetime of class DateTime constructor expects string, string\|null given\.$#'
 			identifier: argument.type
 			count: 1
@@ -27217,36 +26833,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Entity/CollectionRepositoryTest.php
 
 		-
-			message: '#^Cannot access offset 0 on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Entity/CollectionRepositoryTest.php
-
-		-
-			message: '#^Cannot access offset 1 on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Entity/CollectionRepositoryTest.php
-
-		-
-			message: '#^Cannot access offset 2 on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Entity/CollectionRepositoryTest.php
-
-		-
-			message: '#^Cannot access offset 3 on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Entity/CollectionRepositoryTest.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\Tests\\Functional\\Entity\\CollectionRepositoryTest\:\:addMedia\(\) has parameter \$numberMedia with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Entity/CollectionRepositoryTest.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\MediaBundle\\Tests\\Functional\\Entity\\CollectionRepositoryTest\:\:createCollection\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -27260,12 +26846,6 @@ parameters:
 
 		-
 			message: '#^Method Sulu\\Bundle\\MediaBundle\\Tests\\Functional\\Entity\\CollectionRepositoryTest\:\:createCollection\(\) has parameter \$name with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Entity/CollectionRepositoryTest.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\Tests\\Functional\\Entity\\CollectionRepositoryTest\:\:createCollection\(\) has parameter \$numberMedia with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Entity/CollectionRepositoryTest.php
@@ -27316,12 +26896,6 @@ parameters:
 			message: '#^Possibly invalid array key type mixed\.$#'
 			identifier: offsetAccess.invalidOffset
 			count: 4
-			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Entity/CollectionRepositoryTest.php
-
-		-
-			message: '#^Property Sulu\\Bundle\\MediaBundle\\Tests\\Functional\\Entity\\CollectionRepositoryTest\:\:\$collectionData type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Entity/CollectionRepositoryTest.php
 
 		-
@@ -27523,12 +27097,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Entity/MediaRepositoryTest.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\Tests\\Functional\\Entity\\MediaRepositoryTest\:\:createMedia\(\) has parameter \$type with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Entity/MediaRepositoryTest.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\MediaBundle\\Tests\\Functional\\Entity\\MediaRepositoryTest\:\:createRole\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -27598,12 +27166,6 @@ parameters:
 			message: '#^Parameter \#4 \$user of method Sulu\\Bundle\\MediaBundle\\Entity\\MediaRepository\:\:findMedia\(\) expects Sulu\\Component\\Security\\Authentication\\UserInterface\|null, mixed given\.$#'
 			identifier: argument.type
 			count: 3
-			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Entity/MediaRepositoryTest.php
-
-		-
-			message: '#^Possibly invalid array key type mixed\.$#'
-			identifier: offsetAccess.invalidOffset
-			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Entity/MediaRepositoryTest.php
 
 		-
@@ -28241,42 +27803,6 @@ parameters:
 			identifier: property.onlyWritten
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Unit/Media/Manager/MediaManagerTest.php
-
-		-
-			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
-			identifier: foreach.nonIterable
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Unit/Media/TypeManager/TypeManagerTest.php
-
-		-
-			message: '#^Cannot access offset ''type'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Unit/Media/TypeManager/TypeManagerTest.php
-
-		-
-			message: '#^If condition is always true\.$#'
-			identifier: if.alwaysTrue
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Unit/Media/TypeManager/TypeManagerTest.php
-
-		-
-			message: '#^Parameter \#1 \$name of method Sulu\\Bundle\\MediaBundle\\Entity\\MediaType\:\:setName\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Unit/Media/TypeManager/TypeManagerTest.php
-
-		-
-			message: '#^Parameter \#2 \$mediaTypes of class Sulu\\Bundle\\MediaBundle\\Media\\TypeManager\\TypeManager constructor expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Unit/Media/TypeManager/TypeManagerTest.php
-
-		-
-			message: '#^Property Sulu\\Bundle\\MediaBundle\\Media\\TypeManager\\TypeManagerTest\:\:\$mediaTypes has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Unit/Media/TypeManager/TypeManagerTest.php
 
 		-
 			message: '#^Method Sulu\\Bundle\\MediaBundle\\Twig\\DispositionTypeTwigExtensionTest\:\:getMediaMock\(\) return type with generic class Prophecy\\Prophecy\\ObjectProphecy does not specify its types\: T$#'

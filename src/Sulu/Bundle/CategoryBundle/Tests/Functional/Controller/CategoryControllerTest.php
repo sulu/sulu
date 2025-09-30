@@ -21,7 +21,7 @@ use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\FileVersionMeta;
 use Sulu\Bundle\MediaBundle\Entity\Media;
-use Sulu\Bundle\MediaBundle\Entity\MediaType;
+use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
@@ -1009,23 +1009,17 @@ class CategoryControllerTest extends SuluTestCase
     public function testPost(): void
     {
         $collection = $this->createCollection();
-        $type = $this->createImageType();
 
         $medias = [
-            $this->createMedia('test-1', $type, $collection),
-            $this->createMedia('test-2', $type, $collection),
-            $this->createMedia('test-3', $type, $collection),
+            $this->createMedia('test-1', $collection),
+            $this->createMedia('test-2', $collection),
+            $this->createMedia('test-3', $collection),
         ];
 
         $this->em->flush();
         $this->em->clear();
 
-        $ids = \array_map(
-            function(Media $media) {
-                return $media->getId();
-            },
-            $medias
-        );
+        $ids = \array_map(fn (MediaInterface $media) => $media->getId(), $medias);
 
         $this->client->jsonRequest(
             'POST',
@@ -1268,9 +1262,8 @@ class CategoryControllerTest extends SuluTestCase
     public function testSortingOfMedia(): void
     {
         $collection = $this->createCollection();
-        $type = $this->createImageType();
-        $media1 = $this->createMedia('test-1', $type, $collection);
-        $media2 = $this->createMedia('test-2', $type, $collection);
+        $media1 = $this->createMedia('test-1', $collection);
+        $media2 = $this->createMedia('test-2', $collection);
 
         $category1 = $this->createCategory('first-category-key', 'en');
         $categoryTranslation = $this->createCategoryTranslation($category1, 'en', 'First Category');
@@ -1693,17 +1686,6 @@ class CategoryControllerTest extends SuluTestCase
         $this->assertArrayNotHasKey('parent', $response);
     }
 
-    protected function createImageType()
-    {
-        $imageType = new MediaType();
-        $imageType->setName('image');
-        $imageType->setDescription('This is an image');
-
-        $this->em->persist($imageType);
-
-        return $imageType;
-    }
-
     private function createCategory(
         ?string $key = null,
         ?string $defaultLocale = null,
@@ -1765,10 +1747,10 @@ class CategoryControllerTest extends SuluTestCase
         return $collection;
     }
 
-    protected function createMedia($name, $type, $collection, $locale = 'en')
+    protected function createMedia(string $name, $collection, $locale = 'en'): MediaInterface
     {
         $media = new Media();
-        $media->setType($type);
+        $media->setType(MediaInterface::TYPE_IMAGE);
         $extension = 'jpeg';
         $mimeType = 'image/jpg';
 

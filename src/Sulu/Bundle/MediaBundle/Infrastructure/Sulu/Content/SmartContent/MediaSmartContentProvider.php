@@ -20,8 +20,8 @@ use Sulu\Bundle\AdminBundle\SmartContent\SmartContentProviderInterface;
 use Sulu\Bundle\AdminBundle\SmartContent\SmartContentQueryEnhancer;
 use Sulu\Bundle\MediaBundle\Admin\MediaAdmin;
 use Sulu\Bundle\MediaBundle\Entity\CollectionInterface;
+use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
-use Sulu\Bundle\MediaBundle\Entity\MediaType;
 use Sulu\Bundle\MediaBundle\Infrastructure\Sulu\Content\ResourceLoader\MediaResourceLoader;
 use Sulu\Bundle\SecurityBundle\AccessControl\AccessControlQueryEnhancer;
 use Sulu\Component\Content\Compat\PropertyParameter;
@@ -128,19 +128,19 @@ readonly class MediaSmartContentProvider implements SmartContentProviderInterfac
      */
     protected function getTypes(): array
     {
-        /** @var array{type: string, title: string}[] $types */
-        $types = [];
+        /** @var array<string> $types */
+        $types = $this->entityManager->createQueryBuilder()
+            ->distinct()
+            ->select('media.type as type')
+            ->from(Media::class, 'media')
+            ->getQuery()
+            ->getSingleColumnResult()
+        ;
 
-        $repository = $this->entityManager->getRepository(MediaType::class);
-        /** @var MediaType $mediaType */
-        foreach ($repository->findAll() as $mediaType) {
-            $types[] = [
-                'type' => (string) $mediaType->getId(),
-                'title' => $this->translator->trans('sulu_media.' . $mediaType->getName(), [], 'admin'),
-            ];
-        }
-
-        return $types;
+        return \array_map(fn (string $type) => [
+            'type' => $type,
+            'title' => $this->translator->trans('sulu_media.' . $type, [], 'admin'),
+        ], $types);
     }
 
     /**
@@ -256,12 +256,6 @@ readonly class MediaSmartContentProvider implements SmartContentProviderInterfac
                 ->andWhere('fileVersion.mimeType = :mimeType')
                 ->setParameter('mimeType', $filters['mimetype']);
         }
-        if ($filters['type'] ?? null) {
-            $queryBuilder
-                ->innerJoin($alias . '.type', 'type')
-                ->andWhere('type.name = :type')
-                ->setParameter('type', $filters['type']);
-        }
 
         if (($filters['dataSource'] ?? null) && '' !== $filters['dataSource']) {
             if (!$filters['includeSubFolders']) {
@@ -295,14 +289,9 @@ readonly class MediaSmartContentProvider implements SmartContentProviderInterfac
 
         $types = $filters['types'];
         if ([] !== $types) {
-            $this->smartContentQueryEnhancer->addJoinFilter(
-                $queryBuilder,
-                $alias . '.type',
-                'filterTypeId',
-                'id',
-                'typeId',
-                $types,
-            );
+            $queryBuilder
+                ->andWhere($alias . '.type IN (:types)')
+                ->setParameter('types', $filters['types']);
         }
 
         $categoryIds = $filters['categories'];

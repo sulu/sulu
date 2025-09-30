@@ -19,7 +19,7 @@ use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\FileVersionMeta;
 use Sulu\Bundle\MediaBundle\Entity\FileVersionMetaRepository;
 use Sulu\Bundle\MediaBundle\Entity\Media;
-use Sulu\Bundle\MediaBundle\Entity\MediaType;
+use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
 class FileVersionMetaRepositoryTest extends SuluTestCase
@@ -33,11 +33,6 @@ class FileVersionMetaRepositoryTest extends SuluTestCase
      * @var EntityManager
      */
     private $em;
-
-    /**
-     * @var MediaType
-     */
-    private $mediaType;
 
     /**
      * @var Collection
@@ -63,11 +58,7 @@ class FileVersionMetaRepositoryTest extends SuluTestCase
         $this->collection = new Collection();
         $this->collection->setType($this->collectionType);
 
-        $this->mediaType = new MediaType();
-        $this->mediaType->setName('image');
-
         $this->em->persist($this->collectionType);
-        $this->em->persist($this->mediaType);
         $this->em->persist($this->collection);
         $this->em->flush();
     }
@@ -123,7 +114,7 @@ class FileVersionMetaRepositoryTest extends SuluTestCase
     private function createFile($oldTitle, $newTitle, $collection = null): void
     {
         $media = new Media();
-        $media->setType($this->mediaType);
+        $media->setType(MediaInterface::TYPE_IMAGE);
         $media->setCollection($collection ?: $this->collection);
 
         $file = new File();

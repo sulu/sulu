@@ -23,15 +23,13 @@ use Sulu\Bundle\MediaBundle\Entity\CollectionType;
 use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\Media;
-use Sulu\Bundle\MediaBundle\Entity\MediaType;
+use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
 class AdminAccountReindexProviderTest extends SuluTestCase
 {
     private EntityManagerInterface $entityManager;
     private AdminAccountReindexProvider $provider;
-
-    private MediaType $imageType;
 
     protected Collection $collection;
 
@@ -41,10 +39,6 @@ class AdminAccountReindexProviderTest extends SuluTestCase
         $this->provider = new AdminAccountReindexProvider($this->entityManager);
         $this->purgeDatabase();
 
-        $this->imageType = new MediaType();
-        $this->imageType->setName('image');
-        $this->imageType->setDescription('This is an image');
-
         $this->collection = new Collection();
         $collectionType = new CollectionType();
         $collectionType->setName('Default Collection Type');
@@ -52,7 +46,6 @@ class AdminAccountReindexProviderTest extends SuluTestCase
 
         $this->collection->setType($collectionType);
 
-        $this->entityManager->persist($this->imageType);
         $this->entityManager->persist($collectionType);
         $this->entityManager->persist($this->collection);
 
@@ -188,7 +181,7 @@ class AdminAccountReindexProviderTest extends SuluTestCase
         $this->entityManager->persist($fileVersion);
 
         $media = new Media();
-        $media->setType($this->imageType);
+        $media->setType(MediaInterface::TYPE_IMAGE);
         $media->setCollection($this->collection);
         $media->addFile($file);
         $file->setMedia($media);

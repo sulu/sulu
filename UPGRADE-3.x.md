@@ -718,6 +718,28 @@ ALTER TABLE se_permissions DROP module;
 CREATE UNIQUE INDEX UNIQ_5CEC3EEAE25D857EA1FA6DDA ON se_permissions (context, idRoles);
 ```
 
+### Media Entity inlining
+
+The `Media::type` property was inlined from `MediaType` entity to a string. This means you need to run the following migration:
+```sql
+-- Creating the new columns
+ALTER TABLE me_media DROP FOREIGN KEY FK_A694E57284671716;
+ALTER TABLE me_media ADD type VARCHAR(10) NOT NULL;
+
+-- Migrating the data
+UPDATE me_media media INNER JOIN me_media_types `type` ON `type`.id = media.idMediaTypes SET media.type = `type`.name;
+
+-- Creating a new index
+CREATE INDEX IDX_A694E5728CDE5729 ON me_media (type);
+
+-- Removing the old data
+DROP TABLE me_media_types;
+DROP INDEX IDX_A694E57284671716 ON me_media;
+ALTER TABLE me_media DROP idMediaTypes;
+```
+
+If you have queries to the `MediaType` entity completely remove that.
+
 ### The StructureMetadataFactory service removed
 
 The StructureMetadataFactory service was removed and replaced by the MetadataProviderRegistry.

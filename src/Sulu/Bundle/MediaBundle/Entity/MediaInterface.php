@@ -21,6 +21,11 @@ interface MediaInterface extends AuditableInterface
 {
     public const RESOURCE_KEY = 'media';
 
+    public const TYPE_IMAGE = 'image';
+    public const TYPE_VIDEO = 'video';
+    public const TYPE_AUDIO = 'audio';
+    public const TYPE_DOCUMENT = 'document';
+
     /**
      * Get id.
      *
@@ -63,19 +68,9 @@ interface MediaInterface extends AuditableInterface
      */
     public function getCollection();
 
-    /**
-     * Set type.
-     *
-     * @return MediaInterface
-     */
-    public function setType(MediaType $type);
+    public function setType(string $type): self;
 
-    /**
-     * Get type.
-     *
-     * @return MediaType
-     */
-    public function getType();
+    public function getType(): string;
 
     /**
      * Set preview image.

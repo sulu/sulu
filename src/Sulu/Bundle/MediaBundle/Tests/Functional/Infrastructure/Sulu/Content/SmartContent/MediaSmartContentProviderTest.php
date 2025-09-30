@@ -19,7 +19,6 @@ use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\CollectionInterface;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
-use Sulu\Bundle\MediaBundle\Entity\MediaType;
 use Sulu\Bundle\TagBundle\Entity\Tag;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Content\Tests\Functional\Traits\CreateMediaTrait;
@@ -34,6 +33,7 @@ use Sulu\Content\Tests\Traits\CreateTagTrait;
  *     description?: string,
  *     locale?: string,
  *     tags?: string[],
+ *     type?: string,
  *     categories?: int[],
  * }
  *
@@ -66,11 +66,6 @@ class MediaSmartContentProviderTest extends SuluTestCase
      * @var array<string, CollectionInterface>
      */
     private static array $collections = [];
-
-    /**
-     * @var array<string, MediaType>
-     */
-    private static array $mediaTypes = [];
 
     protected function setUp(): void
     {
@@ -106,10 +101,6 @@ class MediaSmartContentProviderTest extends SuluTestCase
             'music' => 'music',
         ];
 
-        self::$mediaTypes['image'] = self::createMediaType(['name' => 'image', 'description' => 'Image files']);
-        self::$mediaTypes['video'] = self::createMediaType(['name' => 'video', 'description' => 'Video files']);
-        self::$mediaTypes['document'] = self::createMediaType(['name' => 'document', 'description' => 'Document files']);
-
         self::$collections['main'] = self::createCollection(['title' => 'Main Collection', 'locale' => 'en', 'key' => 'main']);
         self::$collections['tech'] = self::createCollection(['title' => 'Tech Collection', 'locale' => 'en', 'key' => 'tech']);
         self::$collections['sports'] = self::createCollection(['title' => 'Sports Collection', 'locale' => 'en', 'key' => 'sports']);
@@ -119,11 +110,11 @@ class MediaSmartContentProviderTest extends SuluTestCase
         // Technology media
         self::$media['tech1'] = self::createAndEnhanceMedia(
             self::$collections['tech'],
-            self::$mediaTypes['image'],
             [
                 'title' => 'Latest in Tech',
                 'description' => 'Technology image',
                 'locale' => 'en',
+                'type' => MediaInterface::TYPE_IMAGE,
             ],
             [self::$categories['tech']->getId()],
             [self::$tags['mobile'], self::$tags['web']],
@@ -132,11 +123,11 @@ class MediaSmartContentProviderTest extends SuluTestCase
 
         self::$media['tech2'] = self::createAndEnhanceMedia(
             self::$collections['tech'],
-            self::$mediaTypes['video'],
             [
                 'title' => 'Cloud Computing',
                 'description' => 'Cloud video',
                 'locale' => 'en',
+                'type' => MediaInterface::TYPE_VIDEO,
             ],
             [self::$categories['tech']->getId(), self::$categories['business']->getId()],
             [self::$tags['cloud']],
@@ -146,11 +137,11 @@ class MediaSmartContentProviderTest extends SuluTestCase
         // Sports media
         self::$media['sports1'] = self::createAndEnhanceMedia(
             self::$collections['sports'],
-            self::$mediaTypes['image'],
             [
                 'title' => 'Football Season',
                 'description' => 'Football image',
                 'locale' => 'en',
+                'type' => MediaInterface::TYPE_IMAGE,
             ],
             [self::$categories['sports']->getId()],
             [self::$tags['football']],
@@ -159,11 +150,11 @@ class MediaSmartContentProviderTest extends SuluTestCase
 
         self::$media['sports2'] = self::createAndEnhanceMedia(
             self::$collections['sports'],
-            self::$mediaTypes['video'],
             [
                 'title' => 'Tennis Championship',
                 'description' => 'Tennis video',
                 'locale' => 'en',
+                'type' => MediaInterface::TYPE_VIDEO,
             ],
             [self::$categories['sports']->getId()],
             [self::$tags['tennis']],
@@ -173,11 +164,11 @@ class MediaSmartContentProviderTest extends SuluTestCase
         // Health media
         self::$media['health1'] = self::createAndEnhanceMedia(
             self::$collections['main'],
-            self::$mediaTypes['document'],
             [
                 'title' => 'Fitness Tips',
                 'description' => 'Fitness document',
                 'locale' => 'en',
+                'type' => MediaInterface::TYPE_DOCUMENT,
             ],
             [self::$categories['health']->getId()],
             [self::$tags['fitness']],
@@ -186,11 +177,11 @@ class MediaSmartContentProviderTest extends SuluTestCase
 
         self::$media['health2'] = self::createAndEnhanceMedia(
             self::$collections['main'],
-            self::$mediaTypes['image'],
             [
                 'title' => 'Healthy Diet',
                 'description' => 'Diet image',
                 'locale' => 'en',
+                'type' => MediaInterface::TYPE_IMAGE,
             ],
             [self::$categories['health']->getId()],
             [self::$tags['diet'], self::$tags['fitness']],
@@ -200,11 +191,11 @@ class MediaSmartContentProviderTest extends SuluTestCase
         // Business media
         self::$media['business1'] = self::createAndEnhanceMedia(
             self::$collections['main'],
-            self::$mediaTypes['document'],
             [
                 'title' => 'Startup News',
                 'description' => 'Startup document',
                 'locale' => 'en',
+                'type' => MediaInterface::TYPE_DOCUMENT,
             ],
             [self::$categories['business']->getId()],
             [self::$tags['startup']],
@@ -213,11 +204,11 @@ class MediaSmartContentProviderTest extends SuluTestCase
 
         self::$media['business2'] = self::createAndEnhanceMedia(
             self::$collections['main'],
-            self::$mediaTypes['image'],
             [
                 'title' => 'Finance Report',
                 'description' => 'Finance image',
                 'locale' => 'en',
+                'type' => MediaInterface::TYPE_IMAGE,
             ],
             [self::$categories['business']->getId()],
             [self::$tags['finance']],
@@ -227,11 +218,11 @@ class MediaSmartContentProviderTest extends SuluTestCase
         // Entertainment media
         self::$media['entertainment1'] = self::createAndEnhanceMedia(
             self::$collections['main'],
-            self::$mediaTypes['video'],
             [
                 'title' => 'Movie Reviews',
                 'description' => 'Movie video',
                 'locale' => 'en',
+                'type' => MediaInterface::TYPE_VIDEO,
             ],
             [self::$categories['entertainment']->getId()],
             [self::$tags['movies']],
@@ -240,11 +231,11 @@ class MediaSmartContentProviderTest extends SuluTestCase
 
         self::$media['entertainment2'] = self::createAndEnhanceMedia(
             self::$collections['main'],
-            self::$mediaTypes['video'],
             [
                 'title' => 'Music Festival',
                 'description' => 'Music video',
                 'locale' => 'en',
+                'type' => MediaInterface::TYPE_VIDEO,
             ],
             [self::$categories['entertainment']->getId()],
             [self::$tags['music']],
@@ -254,11 +245,11 @@ class MediaSmartContentProviderTest extends SuluTestCase
         // Cross-category media
         self::$media['tech_health'] = self::createAndEnhanceMedia(
             self::$collections['main'],
-            self::$mediaTypes['image'],
             [
                 'title' => 'Tech in Healthcare',
                 'description' => 'Tech health image',
                 'locale' => 'en',
+                'type' => MediaInterface::TYPE_IMAGE,
             ],
             [self::$categories['tech']->getId(), self::$categories['health']->getId()],
             [self::$tags['mobile'], self::$tags['fitness']],
@@ -267,11 +258,11 @@ class MediaSmartContentProviderTest extends SuluTestCase
 
         self::$media['sports_health'] = self::createAndEnhanceMedia(
             self::$collections['sports'],
-            self::$mediaTypes['document'],
             [
                 'title' => 'Sports Nutrition',
                 'description' => 'Sports nutrition document',
                 'locale' => 'en',
+                'type' => MediaInterface::TYPE_DOCUMENT,
             ],
             [self::$categories['sports']->getId(), self::$categories['health']->getId()],
             [self::$tags['fitness'], self::$tags['diet']],
@@ -280,11 +271,11 @@ class MediaSmartContentProviderTest extends SuluTestCase
 
         self::$media['business_tech'] = self::createAndEnhanceMedia(
             self::$collections['tech'],
-            self::$mediaTypes['document'],
             [
                 'title' => 'Zero Tech Investments',
                 'description' => 'Tech investment document',
                 'locale' => 'en',
+                'type' => MediaInterface::TYPE_DOCUMENT,
             ],
             [self::$categories['business']->getId(), self::$categories['tech']->getId()],
             [self::$tags['startup'], self::$tags['cloud']],
@@ -293,11 +284,11 @@ class MediaSmartContentProviderTest extends SuluTestCase
 
         self::$media['entertainment_business'] = self::createAndEnhanceMedia(
             self::$collections['main'],
-            self::$mediaTypes['video'],
             [
                 'title' => 'Entertainment Industry',
                 'description' => 'Entertainment business video',
                 'locale' => 'en',
+                'type' => MediaInterface::TYPE_VIDEO,
             ],
             [self::$categories['entertainment']->getId(), self::$categories['business']->getId()],
             [self::$tags['movies'], self::$tags['finance']],
@@ -306,11 +297,11 @@ class MediaSmartContentProviderTest extends SuluTestCase
 
         self::$media['multi_category_multi_tag'] = self::createAndEnhanceMedia(
             self::$collections['main'],
-            self::$mediaTypes['image'],
             [
                 'title' => 'Digital Lifestyle',
                 'description' => 'Digital lifestyle image',
                 'locale' => 'en',
+                'type' => MediaInterface::TYPE_IMAGE,
             ],
             [
                 self::$categories['tech']->getId(),
@@ -697,17 +688,17 @@ class MediaSmartContentProviderTest extends SuluTestCase
     {
         return [
             'image_type' => [
-                'image',
+                MediaInterface::TYPE_IMAGE,
                 ['tech1', 'sports1', 'health2', 'business2', 'tech_health', 'multi_category_multi_tag'],
                 6,
             ],
             'video_type' => [
-                'video',
+                MediaInterface::TYPE_VIDEO,
                 ['tech2', 'sports2', 'entertainment1', 'entertainment2', 'entertainment_business'],
                 5,
             ],
             'document_type' => [
-                'document',
+                MediaInterface::TYPE_DOCUMENT,
                 ['health1', 'business1', 'sports_health', 'business_tech'],
                 4,
             ],
@@ -720,13 +711,11 @@ class MediaSmartContentProviderTest extends SuluTestCase
     #[DataProvider('typeFilterProvider')]
     public function testTypeFiltering(string $mediaType, array $expectedKeys, int $expectedCount): void
     {
-        $typeId = (string) self::$mediaTypes[$mediaType]->getId();
-
         $result = $this->smartContentProvider->findFlatBy([
             ...$this->getDefaultFilters(),
             ...[
                 'locale' => 'en',
-                'types' => [$typeId],
+                'types' => [$mediaType],
             ],
         ], []);
 
@@ -743,7 +732,7 @@ class MediaSmartContentProviderTest extends SuluTestCase
                 ...$this->getDefaultFilters(),
                 ...[
                     'locale' => 'en',
-                    'types' => [$typeId],
+                    'types' => [$mediaType],
                 ],
             ]),
         );
@@ -756,7 +745,7 @@ class MediaSmartContentProviderTest extends SuluTestCase
             ...[
                 'locale' => 'en',
                 'dataSource' => (string) self::$collections['main']->getId(),
-                'types' => [(string) self::$mediaTypes['image']->getId()],
+                'types' => [MediaInterface::TYPE_IMAGE],
                 'categories' => [self::$categories['health']->getId()],
                 'categoryOperator' => 'OR',
             ],
@@ -770,7 +759,7 @@ class MediaSmartContentProviderTest extends SuluTestCase
                 ...[
                     'locale' => 'en',
                     'dataSource' => (string) self::$collections['main']->getId(),
-                    'types' => [(string) self::$mediaTypes['image']->getId()],
+                    'types' => [MediaInterface::TYPE_IMAGE],
                     'categories' => [self::$categories['health']->getId()],
                     'categoryOperator' => 'OR',
                 ],
@@ -796,7 +785,6 @@ class MediaSmartContentProviderTest extends SuluTestCase
      */
     private static function createAndEnhanceMedia(
         CollectionInterface $collection,
-        MediaType $mediaType,
         array $data = [],
         array $categoryIds = [],
         array $tagNames = [],
@@ -804,7 +792,7 @@ class MediaSmartContentProviderTest extends SuluTestCase
     ): MediaInterface {
         $entityManager = self::getContainer()->get('doctrine.orm.entity_manager');
 
-        $media = self::createMedia($collection, $mediaType, $data);
+        $media = self::createMedia($collection, $data);
 
         if (null !== $createdAt) {
             $immutableCreatedAt = $createdAt instanceof \DateTimeImmutable

@@ -18,7 +18,7 @@ use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
 use Sulu\Bundle\MediaBundle\Entity\CollectionType;
 use Sulu\Bundle\MediaBundle\Entity\Media;
-use Sulu\Bundle\MediaBundle\Entity\MediaType;
+use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Bundle\SecurityBundle\Entity\UserRole;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
@@ -49,11 +49,6 @@ class CollectionControllerTest extends SuluTestCase
      * @var CollectionType
      */
     private $collectionType2;
-
-    /**
-     * @var MediaType
-     */
-    private $mediaType;
 
     /**
      * @var CacheInterface
@@ -149,8 +144,6 @@ class CollectionControllerTest extends SuluTestCase
             SystemCollectionManagerInterface::COLLECTION_TYPE,
             'System Collections'
         );
-        $this->mediaType = $this->createMediaType();
-        $this->em->persist($this->mediaType);
         $this->em->persist($this->collectionType1);
         $this->em->persist($this->collectionType2);
         $this->em->flush();
@@ -220,7 +213,7 @@ class CollectionControllerTest extends SuluTestCase
     {
         for ($i = 0; $i < $numberOfMedia; ++$i) {
             $media = new Media();
-            $media->setType($this->mediaType);
+            $media->setType(MediaInterface::TYPE_IMAGE);
             $media->setCollection($collection);
             $collection->addMedia($media);
             $this->em->persist($media);
@@ -238,15 +231,6 @@ class CollectionControllerTest extends SuluTestCase
         $collectionType->setDescription($description);
 
         return $collectionType;
-    }
-
-    private function createMediaType()
-    {
-        $mediaType = new MediaType();
-        $mediaType->setName('image');
-        $mediaType->setDescription('This is an image');
-
-        return $mediaType;
     }
 
     private function createRole(string $name = 'Role', string $system = 'Website')
