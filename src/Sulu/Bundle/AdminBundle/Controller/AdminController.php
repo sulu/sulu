@@ -15,6 +15,7 @@ use FOS\RestBundle\Context\Context;
 use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\ViewHandlerInterface;
 use JMS\Serializer\SerializerInterface;
+use Psr\Container\ContainerInterface;
 use Sulu\Bundle\AdminBundle\Admin\AdminPool;
 use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItem;
 use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationRegistry;
@@ -57,7 +58,7 @@ class AdminController
         private ViewHandlerInterface $viewHandler,
         private Environment $engine,
         private TranslatorBagInterface $translatorBag,
-        private ServiceLocator $metadataProviders,
+        private ContainerInterface $metadataProviders,
         private ViewRegistry $viewRegistry,
         private NavigationRegistry $navigationRegistry,
         private FieldTypeOptionRegistryInterface $fieldTypeOptionRegistry,
