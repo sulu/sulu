@@ -36,10 +36,7 @@ class TemplateDataMapperTest extends TestCase
         array $properties = [],
         ?string $defaultTemplateKey = null,
     ): TemplateDataMapper {
-        $metadataProvider = new TestMetadataProvider();
-        $metadataProvider->setMetaData($this->createTypedFormMetadata($properties, $defaultTemplateKey));
-
-        return new TemplateDataMapper($metadataProvider);
+        return new TemplateDataMapper(new TestMetadataProvider($this->createTypedFormMetadata($properties, $defaultTemplateKey)));
     }
 
     public function testMapNoTemplateInstance(): void

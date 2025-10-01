@@ -48,12 +48,9 @@ class RoutableDataMapperTest extends TestCase
 
     protected function createRouteDataMapperInstance(TypedFormMetadata $typedFormMetadata): RoutableDataMapper
     {
-        $metadataProvider = new TestMetadataProvider();
-        $metadataProvider->setMetaData($typedFormMetadata);
-
         return new RoutableDataMapper(
             $this->routeRepository->reveal(),
-            $metadataProvider,
+            new TestMetadataProvider($typedFormMetadata),
         );
     }
 

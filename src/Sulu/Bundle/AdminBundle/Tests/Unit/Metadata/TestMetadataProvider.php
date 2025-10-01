@@ -21,9 +21,9 @@ class TestMetadataProvider implements MetadataProviderInterface
 {
     private MetadataInterface $metadata;
 
-    public function __construct()
+    public function __construct(?MetadataInterface $metadata = null)
     {
-        $this->metadata = new TypedFormMetadata();
+        $this->metadata = $metadata ?? new TypedFormMetadata();
     }
 
     public function setMetaData(MetadataInterface $metadata): void

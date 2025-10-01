@@ -34,7 +34,6 @@ use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Content\Application\ContentAggregator\ContentAggregatorInterface;
 use Sulu\Route\Application\Routing\Matcher\RouteDefaultsProviderInterface;
 use Sulu\Route\Domain\Model\Route;
-use Symfony\Component\DependencyInjection\Container;
 
 class ArticleRouteDefaultsProviderTest extends TestCase
 {
