@@ -17,6 +17,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Sulu\Content\Domain\Model\AuditableTrait;
 use Sulu\Content\Domain\Model\AuthorTrait;
+use Sulu\Content\Domain\Model\ContentBehaviorTrait;
 use Sulu\Content\Domain\Model\ContentRichEntityInterface;
 use Sulu\Content\Domain\Model\DimensionContentTrait;
 use Sulu\Content\Domain\Model\ExcerptTrait;
@@ -44,6 +45,7 @@ class PageDimensionContent implements PageDimensionContentInterface
     use TemplateTrait {
         TemplateTrait::setTemplateData as parentSetTemplateData;
     }
+    use ContentBehaviorTrait;
     use WorkflowTrait;
 
     protected int $id;

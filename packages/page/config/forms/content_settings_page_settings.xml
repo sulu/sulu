@@ -24,6 +24,65 @@
                         <title>sulu_page.show_page_in</title>
                     </meta>
                 </property>
+
+                <section name="pageType" visibleCondition="shadowOn == false">
+                    <meta>
+                        <title>sulu_page.page_type</title>
+                    </meta>
+                    <properties>
+                        <property name="behavior" type="single_select" mandatory="true" colspan="12">
+                            <meta>
+                                <title>sulu_page.page_type</title>
+                            </meta>
+                            <params>
+                                <param name="default_value" value="content"/>
+                                <param name="values" type="collection">
+                                    <param name="content" value="content">
+                                        <meta>
+                                            <title>sulu_page.content</title>
+                                        </meta>
+                                    </param>
+                                    <param name="internal" value="internal">
+                                        <meta>
+                                            <title>sulu_page.internal_link</title>
+                                        </meta>
+                                    </param>
+                                    <param name="external" value="external">
+                                        <meta>
+                                            <title>sulu_page.external_link</title>
+                                        </meta>
+                                    </param>
+                                </param>
+                            </params>
+                        </property>
+
+                        <property name="behaviorDataInternal" type="link" visibleCondition="behavior == 'internal'" colspan="12">
+                            <meta>
+                                <title>sulu_page.linked_content</title>
+                            </meta>
+                            <params>
+                                <param name="enable_attributes" value="true"/>
+                                <param name="types" type="collection">
+                                    <param name="page"/>
+                                </param>
+                            </params>
+                        </property>
+
+                        <property name="behaviorDataExternal" type="link" visibleCondition="behavior == 'external'" colspan="12">
+                            <meta>
+                                <title>sulu_page.url</title>
+                            </meta>
+                            <params>
+                                <param name="enable_attributes" value="true"/>
+                                <param name="types" type="collection">
+                                    <param name="external"/>
+                                    <param name="media"/>
+                                    <param name="article"/>
+                                </param>
+                            </params>
+                        </property>
+                    </properties>
+                </section>
             </properties>
         </section>
     </properties>

@@ -17,6 +17,8 @@ use Sulu\Content\Domain\Model\AuditableInterface;
 use Sulu\Content\Domain\Model\AuditableTrait;
 use Sulu\Content\Domain\Model\AuthorInterface;
 use Sulu\Content\Domain\Model\AuthorTrait;
+use Sulu\Content\Domain\Model\ContentBehaviorInterface;
+use Sulu\Content\Domain\Model\ContentBehaviorTrait;
 use Sulu\Content\Domain\Model\ContentRichEntityInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Domain\Model\DimensionContentTrait;
@@ -48,7 +50,8 @@ class ExampleDimensionContent implements
     AuthorInterface,
     WebspaceInterface,
     ShadowInterface,
-    AuditableInterface
+    AuditableInterface,
+    ContentBehaviorInterface
 {
     use AuthorTrait;
     use DimensionContentTrait;
@@ -62,6 +65,7 @@ class ExampleDimensionContent implements
     use WebspaceTrait;
     use WorkflowTrait;
     use AuditableTrait;
+    use ContentBehaviorTrait;
 
     /**
      * @var int

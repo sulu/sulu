@@ -6,6 +6,8 @@
     "creator" : "@integer@",
     "created": "@datetime@",
     "availableLocales": ["en"],
+    "behavior": "content",
+    "behaviorData": null,
     "contentLocales": ["en"],
     "excerptAudienceTargetGroups": [],
     "excerptCategories": [],

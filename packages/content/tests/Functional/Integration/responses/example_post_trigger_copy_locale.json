@@ -9,6 +9,8 @@
         "en",
         "de"
     ],
+    "behavior": "content",
+    "behaviorData": null,
     "contentLocales": [
         "en",
         "de"

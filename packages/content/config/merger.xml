@@ -36,6 +36,10 @@
             <tag name="sulu_content.merger" priority="4"/>
         </service>
 
+        <service id="sulu_content.content_behavior_merger" class="Sulu\Content\Application\ContentMerger\Merger\ContentBehaviorMerger">
+            <tag name="sulu_content.merger" priority="3"/>
+        </service>
+
         <service id="sulu_content.auditable_merger" class="Sulu\Content\Application\ContentMerger\Merger\AuditableMerger">
             <tag name="sulu_content.merger" priority="2"/>
         </service>

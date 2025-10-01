@@ -23,6 +23,7 @@ use Sulu\Bundle\ContactBundle\Entity\ContactInterface;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\TagBundle\Tag\TagInterface;
 use Sulu\Content\Domain\Model\AuthorInterface;
+use Sulu\Content\Domain\Model\ContentBehaviorInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Domain\Model\ExcerptInterface;
 use Sulu\Content\Domain\Model\RoutableInterface;
@@ -142,6 +143,17 @@ final class MetadataLoader
 
             $this->addIndex($metadata, 'workflow_place', ['workflowPlace']);
             $this->addIndex($metadata, 'workflow_published', ['workflowPublished']);
+        }
+
+        if ($reflection->implementsInterface(ContentBehaviorInterface::class)) {
+            $this->addField($metadata, 'behavior', 'string', [
+                'length' => 31,
+                'nullable' => false,
+                'options' => ['default' => ContentBehaviorInterface::BEHAVIOR_CONTENT],
+            ]);
+            $this->addField($metadata, 'behaviorData', 'json', ['nullable' => true, 'options' => ['jsonb' => true]]);
+
+            $this->addIndex($metadata, 'behavior', ['behavior']);
         }
     }
 

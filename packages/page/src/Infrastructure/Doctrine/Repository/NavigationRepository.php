@@ -323,12 +323,12 @@ class NavigationRepository implements NavigationRepositoryInterface
      */
     private function resolvePageContent(PageInterface $page, string $locale): array
     {
-        $contentDimension = $this->contentAggregator->aggregate($page, [
+        $pageDimensionContent = $this->contentAggregator->aggregate($page, [
             'locale' => $locale,
             'stage' => DimensionContentInterface::STAGE_LIVE,
         ]);
 
-        return $this->contentResolver->resolve($contentDimension);
+        return $this->contentResolver->resolve($pageDimensionContent);
     }
 
     /**

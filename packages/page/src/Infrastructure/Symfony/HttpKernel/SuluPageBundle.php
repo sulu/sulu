@@ -17,6 +17,7 @@ use Gedmo\Tree\Hydrator\ORM\TreeObjectHydrator;
 use Sulu\Bundle\PersistenceBundle\DependencyInjection\PersistenceExtensionTrait;
 use Sulu\Bundle\PersistenceBundle\PersistenceBundleTrait;
 use Sulu\Content\Infrastructure\Sulu\Preview\ContentObjectProvider;
+use Sulu\Page\Application\ContentAggregator\PageContentBehaviorEnhancer;
 use Sulu\Page\Application\Mapper\PageContentMapper;
 use Sulu\Page\Application\Mapper\PageMapperInterface;
 use Sulu\Page\Application\MessageHandler\ApplyWorkflowTransitionPageMessageHandler;
@@ -247,6 +248,16 @@ final class SuluPageBundle extends AbstractBundle
         $services->set('sulu_page.page_excerpt_normalizer')
             ->class(PageExcerptNormalizer::class)
             ->tag('sulu_content.normalizer');
+
+        // Content Aggregation Enhancer service
+        $services->set('sulu_page.page_content_behavior_enhancer')
+            ->class(PageContentBehaviorEnhancer::class)
+            ->args([
+                new Reference('sulu_page.page_repository'),
+                new Reference('sulu_content.content_aggregator'),
+                new Reference('sulu_markup.link_tag.provider_pool'),
+            ])
+            ->tag('sulu_content.content_aggregation_enhancer');
 
         // Property Metadata Mapper services
         $services->set('sulu_page.page_tree_route_property_metadata_mapper')

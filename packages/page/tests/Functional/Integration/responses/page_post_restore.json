@@ -5,8 +5,11 @@
         "en",
         "de"
     ],
+    "behavior": "content",
+    "behaviorData": null,
     "changed": "@datetime@",
     "changer": "@integer@",
+
     "contentLocales": [
         "en",
         "de"

@@ -8,6 +8,8 @@
     "availableLocales": [
         "en"
     ],
+    "behavior": "content",
+    "behaviorData": null,
     "contentLocales": [
         "en"
     ],
