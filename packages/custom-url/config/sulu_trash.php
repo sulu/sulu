@@ -20,6 +20,7 @@ use Sulu\CustomUrl\Infrastructure\Sulu\Trash\CustomUrlTrashItemHandler;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 
 use function Symfony\Component\DependencyInjection\Loader\Configurator\service;
+use function Symfony\Component\DependencyInjection\Loader\Configurator\tagged_iterator;
 
 return static function(ContainerConfigurator $containerConfigurator): void {
     $services = $containerConfigurator->services();
@@ -27,7 +28,7 @@ return static function(ContainerConfigurator $containerConfigurator): void {
     $services->set('sulu_custom_urls.custom_url_trash_item_handler', CustomUrlTrashItemHandler::class)
         ->args([
             service(CustomUrlRepositoryInterface::class),
-            service(CustomUrlMapperInterface::class),
+            tagged_iterator(CustomUrlMapperInterface::SERVICE_TAG),
             service(TrashItemRepositoryInterface::class),
             service(DomainEventCollectorInterface::class),
             service(EntityManagerInterface::class),

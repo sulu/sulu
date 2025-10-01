@@ -124,6 +124,67 @@ class CustomUrlControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(Response::HTTP_NOT_FOUND, $this->client->getResponse());
     }
 
+    public function testDeleteWithTrashStore(): string
+    {
+        self::purgeDatabase();
+
+        $data = self::createCustomUrlData(
+            title: 'Trash Test',
+            baseDomain: '*.sulu.io/*',
+            domainParts: ['trash', 'test'],
+            targetDocument: Uuid::fromString('5cc1f411-e1ee-4dcc-8f07-6af4aa1d24cf'),
+        );
+
+        $this->client->jsonRequest('POST', '/admin/api/webspaces/sulu_io/custom-urls', $data);
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(Response::HTTP_OK, $response);
+
+        /** @var string $id */
+        $id = \json_decode((string) $response->getContent(), true)['id'] ?? null; // @phpstan-ignore-line
+
+        // Delete the custom URL (should create trash item)
+        $this->client->jsonRequest('DELETE', '/admin/api/webspaces/sulu_io/custom-urls/' . $id);
+        $this->assertHttpStatusCode(Response::HTTP_NO_CONTENT, $this->client->getResponse());
+
+        // Verify it's deleted
+        $this->client->jsonRequest('GET', '/admin/api/webspaces/sulu_io/custom-urls/' . $id);
+        $this->assertHttpStatusCode(Response::HTTP_NOT_FOUND, $this->client->getResponse());
+
+        return $id;
+    }
+
+    #[Depends('testDeleteWithTrashStore')]
+    public function testTrashRestore(string $deletedId): void
+    {
+        // Get the trash item for the deleted custom URL
+        $trashItemRepository = self::getContainer()->get('sulu_trash.trash_item_repository');
+        $customUrlTrashItem = $trashItemRepository->findOneBy([
+            'resourceKey' => 'custom_urls',
+            'resourceId' => $deletedId,
+        ]);
+
+        $this->assertNotNull($customUrlTrashItem, 'Trash item for custom URL should be created');
+        $this->assertSame('Trash Test', $customUrlTrashItem->getResourceTitle());
+
+        // Restore from trash using the handler directly
+        $trashItemHandler = self::getContainer()->get('sulu_custom_urls.custom_url_trash_item_handler');
+        $restoredCustomUrl = $trashItemHandler->restore($customUrlTrashItem, []);
+
+        $this->assertSame('Trash Test', $restoredCustomUrl->getTitle());
+        $this->assertSame($deletedId, $restoredCustomUrl->getUuid());
+        $this->assertSame('*.sulu.io/*', $restoredCustomUrl->getBaseDomain());
+        $this->assertSame(['trash', 'test'], $restoredCustomUrl->getDomainParts());
+
+        // Verify the custom URL can be retrieved via API
+        $this->client->jsonRequest('GET', '/admin/api/webspaces/sulu_io/custom-urls/' . $deletedId);
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(Response::HTTP_OK, $response);
+
+        /** @var array{title: string} $restoredContent */
+        $restoredContent = \json_decode((string) $response->getContent(), true); // @phpstan-ignore-line
+        $this->assertSame('Trash Test', $restoredContent['title']);
+    }
+
     public function testPostWithoutTargetDocument(): void
     {
         self::purgeDatabase();

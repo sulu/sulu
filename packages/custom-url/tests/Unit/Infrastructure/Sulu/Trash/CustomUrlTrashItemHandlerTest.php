@@ -40,14 +40,10 @@ class CustomUrlTrashItemHandlerTest extends SuluTestCase
 
     public function testStoreAndRestore(): void
     {
-        $user = $this->createMock(UserInterface::class);
-
         $originalCustomUrl = new CustomUrl();
         $originalCustomUrlUuid = $originalCustomUrl->getUuid();
         $originalCustomUrl->setTitle('test-title-1');
         $originalCustomUrl->setWebspace('sulu_io');
-        $originalCustomUrl->setCreator($user);
-        $originalCustomUrl->setChanger($user);
         $originalCustomUrl->setCreated(new \DateTimeImmutable('2025-04-20T00:00:00+00:00'));
         $originalCustomUrl->setChanged(new \DateTimeImmutable('2025-04-20T00:00:00+00:00'));
         $originalCustomUrl->setBaseDomain('sulu-test.localhost/*/*');
@@ -68,14 +64,22 @@ class CustomUrlTrashItemHandlerTest extends SuluTestCase
         static::assertSame('test-title-1', $trashItem->getResourceTitle());
         static::assertSame('sulu.webspaces.sulu_io.custom-urls', $trashItem->getResourceSecurityContext());
 
+        $restoreData = $trashItem->getRestoreData();
+        static::assertSame('test-title-1', $restoreData['title']);
+        static::assertSame(true, $restoreData['published']);
+        static::assertSame('sulu-test.localhost/*/*', $restoreData['baseDomain']);
+        static::assertSame(['custom-path-1', 'custom-path-2'], $restoreData['domainParts']);
+        static::assertNull($restoreData['creator']);
+        static::assertNull($restoreData['changer']);
+
         /** @var CustomUrl $restoredCustomUrl */
         $restoredCustomUrl = $this->customUrlTrashItemHandler->restore($trashItem, []);
 
         static::assertSame('test-title-1', $restoredCustomUrl->getTitle());
         static::assertSame($originalCustomUrl->getUuid(), $restoredCustomUrl->getUuid());
-        static::assertNull($restoredCustomUrl->getCreator());
-        static::assertNull($restoredCustomUrl->getChanger());
+        static::assertSame('sulu_io', $restoredCustomUrl->getWebspace());
         static::assertSame('2025-04-20T00:00:00+00:00', $restoredCustomUrl->getCreated()->format('c'));
+        static::assertNotNull($restoredCustomUrl->getChanged());
         static::assertSame('sulu-test.localhost/*/*', $restoredCustomUrl->getBaseDomain());
         static::assertSame(['custom-path-1', 'custom-path-2'], $restoredCustomUrl->getDomainParts());
         static::assertTrue($restoredCustomUrl->isCanonical());
@@ -84,6 +88,8 @@ class CustomUrlTrashItemHandlerTest extends SuluTestCase
         static::assertFalse($restoredCustomUrl->isNoIndex());
         static::assertSame('23232323', $restoredCustomUrl->getTargetDocument());
         static::assertSame('de', $restoredCustomUrl->getTargetLocale());
-        static::assertFalse($restoredCustomUrl->isPublished());
+        static::assertTrue($restoredCustomUrl->isPublished());
+        static::assertNull($restoredCustomUrl->getCreator());
+        static::assertNull($restoredCustomUrl->getChanger());
     }
 }

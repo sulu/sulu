@@ -130,6 +130,7 @@ final class SuluCustomUrlBundle extends AbstractBundle
         $services->set(RemoveCustomUrlMessageHandler::class)
             ->args([
                 new Reference(CustomUrlRepositoryInterface::class),
+                new Reference('sulu_trash.trash_manager'),
                 new Reference(DomainEventCollectorInterface::class),
             ])
             ->tag('messenger.message_handler');
@@ -173,7 +174,8 @@ final class SuluCustomUrlBundle extends AbstractBundle
             ])
             ->tag('serializer.normalizer');
 
-        if ($builder->hasExtension('sulu_trash')) {
+        $bundles = $builder->getParameter('kernel.bundles');
+        if (\array_key_exists('SuluTrashBundle', $bundles)) {
             $loader->load('sulu_trash.php');
         }
     }

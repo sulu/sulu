@@ -70,19 +70,20 @@ final class CustomUrlTrashItemHandler implements
 
         $data = [
             'title' => $customUrl->getTitle(),
-            'creator' => $customUrl->getCreator(),
-            'created' => $customUrl->getCreated()->format('c'),
-            'changer' => $customUrl->getChanger(),
-            'changed' => $customUrl->getChanged()->format('c'),
+            'published' => $customUrl->isPublished(),
             'baseDomain' => $customUrl->getBaseDomain(),
             'domainParts' => $customUrl->getDomainParts(),
+            'targetLocale' => $customUrl->getTargetLocale(),
+            'targetDocument' => $customUrl->getTargetDocument(),
             'canonical' => $customUrl->isCanonical(),
             'redirect' => $customUrl->isRedirect(),
             'noFollow' => $customUrl->isNoFollow(),
             'noIndex' => $customUrl->isNoIndex(),
-            'targetUuid' => $customUrl->getTargetDocument(),
-            'targetLocale' => $customUrl->getTargetLocale(),
             'webspaceKey' => $customUrl->getWebspace(),
+            'creator' => $customUrl->getCreator()?->getId(),
+            'created' => $customUrl->getCreated()->format('c'),
+            'changer' => $customUrl->getChanger()?->getId(),
+            'changed' => $customUrl->getChanged()->format('c'),
         ];
 
         return $this->trashItemRepository->create(
@@ -104,15 +105,22 @@ final class CustomUrlTrashItemHandler implements
 
         /** @var TrashRestoreData $data */
         $data = $trashItem->getRestoreData();
-        $data['published'] = false;
 
         $customUrl = $this->customUrlRepository->createNew($id);
+        $customUrl->setWebspace($data['webspaceKey']);
         foreach ($this->customUrlMappers as $customUrlMapper) {
             $customUrlMapper->mapCustomUrlData($customUrl, $data);
         }
 
-        $customUrl->setCreator($data['creator']);
+        if (isset($data['creator']) && null !== $data['creator']) {
+            $customUrl->setCreator($this->entityManager->getReference(UserInterface::class, $data['creator']));
+        }
         $customUrl->setCreated(new \DateTimeImmutable($data['created']));
+
+        if (isset($data['changer']) && null !== $data['changer']) {
+            $customUrl->setChanger($this->entityManager->getReference(UserInterface::class, $data['changer']));
+        }
+        $customUrl->setChanged(new \DateTimeImmutable($data['changed']));
 
         $this->entityManager->persist($customUrl);
         $this->domainEventCollector->collect(new CustomUrlRestoredEvent($customUrl, $data));
