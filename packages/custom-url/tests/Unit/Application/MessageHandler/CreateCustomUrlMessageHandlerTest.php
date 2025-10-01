@@ -16,8 +16,7 @@ namespace Sulu\CustomUrl\Tests\Unit\Application\MessageHandler;
 use Doctrine\ORM\EntityManagerInterface;
 use Sulu\CustomUrl\Application\MessageHandler\CreateCustomUrlMessageHandler;
 use Sulu\CustomUrl\Application\Messages\CreateCustomUrlMessage;
-use Sulu\CustomUrl\Infrastructure\Doctrine\Repository\CustomUrlRepositoryInterface;
-use Sulu\CustomUrl\Infrastructure\Doctrine\Repository\CustomUrlRouteRepositoryInterface;
+use Sulu\CustomUrl\Domain\Repository\CustomUrlRepositoryInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Uid\Uuid;
 
@@ -25,7 +24,6 @@ class CreateCustomUrlMessageHandlerTest extends KernelTestCase
 {
     private CreateCustomUrlMessageHandler $handler;
     private CustomUrlRepositoryInterface $customUrlRepository;
-    private CustomUrlRouteRepositoryInterface $customUrlRouteRepository;
     private EntityManagerInterface $entityManager;
 
     public function setup(): void
@@ -37,9 +35,9 @@ class CreateCustomUrlMessageHandlerTest extends KernelTestCase
 
         $this->customUrlRepository = $container->get('sulu_custom_urls.repository');
         // Delete all custom URLs to clear the db
-        $this->customUrlRepository->createQueryBuilder('t')->delete()->getQuery()->execute();
-
-        $this->customUrlRouteRepository = $container->get(CustomUrlRouteRepositoryInterface::class);
+        foreach ($this->customUrlRepository->findBy() as $customUrl) {
+            $this->customUrlRepository->remove($customUrl);
+        } $this->entityManager->flush();
     }
 
     public function testCreateCustomUrl(): void
@@ -58,14 +56,14 @@ class CreateCustomUrlMessageHandlerTest extends KernelTestCase
                 'redirect' => false,
                 'noFollow' => true,
                 'noIndex' => true,
-            ]
+            ],
         ));
 
         // Flushing is handled outside by a stamp
         $this->entityManager->flush();
 
         // Checking that the custom Url was created
-        $customUrl = $this->customUrlRepository->findAll()[0];
+        $customUrl = \iterator_to_array($this->customUrlRepository->findBy())[0];
         $this->assertSame('Some title', $customUrl->getTitle());
         $this->assertSame('sulu_io', $customUrl->getWebspace());
         $this->assertFalse($customUrl->isPublished());
@@ -79,7 +77,7 @@ class CreateCustomUrlMessageHandlerTest extends KernelTestCase
         $this->assertTrue($customUrl->isNoIndex());
 
         // Checking that the history was created
-        $routes = $this->customUrlRouteRepository->findByCustomUrl($customUrl);
+        $routes = \iterator_to_array($customUrl->getRoutes());
         $this->assertCount(1, $routes);
         $this->assertSame('localhost/test', $routes[0]->getPath());
     }

@@ -12,7 +12,6 @@
 use Sulu\CustomUrl\Tests\Application\Kernel;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Input\ArgvInput;
-use Symfony\Component\Debug\Debug;
 
 if (false === \in_array(\PHP_SAPI, ['cli', 'phpdbg', 'embed'], true)) {
     echo 'Warning: The console should be invoked via the CLI version of PHP, not the ' . \PHP_SAPI . ' SAPI' . \PHP_EOL;
@@ -38,10 +37,6 @@ require \dirname(__DIR__) . '/config/bootstrap.php';
 
 if ($_SERVER['APP_DEBUG']) {
     \umask(0000);
-
-    if (\class_exists(Debug::class)) {
-        Debug::enable();
-    }
 }
 
 \assert(\is_string($_SERVER['APP_ENV']));

@@ -18,8 +18,7 @@ use Sulu\CustomUrl\Application\MessageHandler\RemoveCustomUrlMessageHandler;
 use Sulu\CustomUrl\Application\Messages\CreateCustomUrlMessage;
 use Sulu\CustomUrl\Application\Messages\RemoveCustomUrlMessage;
 use Sulu\CustomUrl\Domain\Model\CustomUrlInterface;
-use Sulu\CustomUrl\Infrastructure\Doctrine\Repository\CustomUrlRepositoryInterface;
-use Sulu\CustomUrl\Infrastructure\Doctrine\Repository\CustomUrlRouteRepositoryInterface;
+use Sulu\CustomUrl\Domain\Repository\CustomUrlRepositoryInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
@@ -29,23 +28,24 @@ class RemoveCustomUrlMessageHandlerTest extends KernelTestCase
 {
     private RemoveCustomUrlMessageHandler $handler;
     private CustomUrlRepositoryInterface $customUrlRepository;
-    private CustomUrlRouteRepositoryInterface $customUrlRouteRepository;
     private EntityManagerInterface $entityManager;
 
     private string $idOfObjectToModify;
     private string $targetDocument;
 
-    public function setup(): void
+    protected function setup(): void
     {
         self::bootKernel();
         $container = $this->getContainer();
         $this->entityManager = $container->get(EntityManagerInterface::class);
         $this->handler = $container->get(RemoveCustomUrlMessageHandler::class);
-        $this->customUrlRouteRepository = $container->get(CustomUrlRouteRepositoryInterface::class);
 
         $this->customUrlRepository = $container->get('sulu_custom_urls.repository');
         // Delete all custom URLs to clear the db
-        $this->customUrlRepository->createQueryBuilder('t')->delete()->getQuery()->execute();
+        foreach ($this->customUrlRepository->findBy() as $customUrl) {
+            $this->customUrlRepository->remove($customUrl);
+        }
+        $this->entityManager->flush();
 
         $this->targetDocument = Uuid::v4()->toRfc4122();
 
@@ -63,11 +63,11 @@ class RemoveCustomUrlMessageHandlerTest extends KernelTestCase
                     'redirect' => false,
                     'noFollow' => true,
                     'noIndex' => true,
-                ]
+                ],
             ))->all(HandledStamp::class)[0]->getResult();
         $this->assertInstanceOf(CustomUrlInterface::class, $createdObject, 'Could not create custom url');
 
-        $this->idOfObjectToModify = $createdObject->getId();
+        $this->idOfObjectToModify = $createdObject->getUuid();
 
         // Flushing is handled outside by a stamp
         $this->entityManager->flush();
@@ -82,12 +82,8 @@ class RemoveCustomUrlMessageHandlerTest extends KernelTestCase
 
         $this->entityManager->flush();
 
-        // Checking that the custom Url was created
-        $customUrls = $this->customUrlRepository->findAll();
+        // Checking that the custom Url was removed
+        $customUrls = $this->customUrlRepository->findBy();
         $this->assertCount(0, $customUrls);
-
-        // Checking that the history was created
-        $routeCount = $this->customUrlRouteRepository->count();
-        $this->assertSame(0, $routeCount);
     }
 }

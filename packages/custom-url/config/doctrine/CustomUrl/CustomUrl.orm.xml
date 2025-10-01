@@ -3,13 +3,12 @@
     xmlns:xsi="https://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
      https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
-    <mapped-superclass name="Sulu\CustomUrl\Domain\Model\CustomUrl" table="cu_custom_url"
-        repository-class="Sulu\CustomUrl\Infrastructure\Doctrine\Repository\CustomUrlRepository">
+    <mapped-superclass name="Sulu\CustomUrl\Domain\Model\CustomUrl" table="cu_custom_url">
         <indexes>
             <index columns="webspace" />
         </indexes>
 
-        <id name="id" type="string" column="id">
+        <id name="uuid" type="string" column="uuid">
             <generator strategy="NONE"/>
         </id>
 
@@ -25,6 +24,10 @@
         <field name="noFollow" type="boolean" />
         <field name="noIndex" type="boolean" />
 
-        <one-to-many field="routes" target-entity="Sulu\CustomUrl\Domain\Model\CustomUrlRoute" mapped-by="customUrl" fetch="EXTRA_LAZY" orphan-removal="true" />
+        <one-to-many field="routes" target-entity="Sulu\CustomUrl\Domain\Model\CustomUrlRouteInterface" mapped-by="customUrl" fetch="EXTRA_LAZY" orphan-removal="true">
+            <cascade>
+                <cascade-all/>
+            </cascade>
+        </one-to-many>
     </mapped-superclass>
 </doctrine-mapping>

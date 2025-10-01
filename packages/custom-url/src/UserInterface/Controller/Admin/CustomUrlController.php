@@ -24,7 +24,7 @@ use Sulu\CustomUrl\Application\Messages\ModifyCustomUrlMessage;
 use Sulu\CustomUrl\Application\Messages\RemoveCustomUrlMessage;
 use Sulu\CustomUrl\Domain\Exception\MismatchingDomainPartException;
 use Sulu\CustomUrl\Domain\Model\CustomUrlInterface;
-use Sulu\CustomUrl\Infrastructure\Doctrine\Repository\CustomUrlRepositoryInterface;
+use Sulu\CustomUrl\Domain\Repository\CustomUrlRepositoryInterface;
 use Sulu\CustomUrl\Infrastructure\Sulu\Admin\CustomUrlAdmin;
 use Sulu\Messenger\Infrastructure\Symfony\Messenger\FlushMiddleware\EnableFlushStamp;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -61,6 +61,7 @@ class CustomUrlController implements SecuredControllerInterface
         /** @var DoctrineListBuilder $listBuilder */
         $listBuilder = $this->listBuilderFactory->create(CustomUrlInterface::class);
         $this->restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
+        $listBuilder->setIdField($fieldDescriptors['id']); // TODO should be uuid field descriptor
         $listBuilder->addSelectField($fieldDescriptors['publishedState']);
         $listBuilder->setParameter('locale', $request->query->get('locale'));
         $listBuilder->where($fieldDescriptors['webspace'], $webspace);
@@ -82,7 +83,7 @@ class CustomUrlController implements SecuredControllerInterface
 
     public function getAction(string $webspace, string $id, Request $request): Response
     {
-        $customUrl = $this->customUrlRepository->find($id);
+        $customUrl = $this->customUrlRepository->findOneBy(['uuid' => $id, 'webspace' => $webspace]);
         if (null === $customUrl) {
             return new Response(null, Response::HTTP_NOT_FOUND);
         }

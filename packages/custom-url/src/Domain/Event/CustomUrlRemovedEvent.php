@@ -36,7 +36,7 @@ class CustomUrlRemovedEvent extends DomainEvent
 
     public function getResourceId(): string
     {
-        return $this->customUrl->getId();
+        return $this->customUrl->getUuid();
     }
 
     public function getResourceWebspaceKey(): ?string

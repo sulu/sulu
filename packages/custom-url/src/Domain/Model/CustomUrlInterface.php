@@ -23,6 +23,10 @@ interface CustomUrlInterface extends AuditableInterface
 
     public function setId(string $id): void;
 
+    public function getUuid(): string;
+
+    public function setUuid(string $uuid): void;
+
     public function getTitle(): string;
 
     public function setTitle(string $title): void;
@@ -72,6 +76,15 @@ interface CustomUrlInterface extends AuditableInterface
     public function isNoIndex(): bool;
 
     public function setNoIndex(bool $noIndex): void;
+
+    /**
+     * @return iterable<CustomUrlRouteInterface>
+     */
+    public function getRoutes(): iterable;
+
+    public function addRoute(CustomUrlRouteInterface $route): void;
+
+    public function generateRoutes(): void;
 
     /**
      * @return array<mixed>

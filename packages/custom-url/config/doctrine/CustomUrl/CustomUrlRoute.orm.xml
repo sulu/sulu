@@ -11,7 +11,7 @@
         <field name="path" type="string" />
 
         <many-to-one field="customUrl" target-entity="Sulu\CustomUrl\Domain\Model\CustomUrlInterface" inversed-by="routes">
-            <join-column name="customUrl" referenced-column-name="id" nullable="false" on-delete="cascade" />
+            <join-column name="customUrl" referenced-column-name="uuid" nullable="false" on-delete="cascade" />
          </many-to-one>
 
         <indexes>

@@ -19,8 +19,7 @@ use Sulu\CustomUrl\Application\Messages\CreateCustomUrlMessage;
 use Sulu\CustomUrl\Application\Messages\ModifyCustomUrlMessage;
 use Sulu\CustomUrl\Domain\Exception\MismatchingDomainPartException;
 use Sulu\CustomUrl\Domain\Model\CustomUrlInterface;
-use Sulu\CustomUrl\Infrastructure\Doctrine\Repository\CustomUrlRepositoryInterface;
-use Sulu\CustomUrl\Infrastructure\Doctrine\Repository\CustomUrlRouteRepositoryInterface;
+use Sulu\CustomUrl\Domain\Repository\CustomUrlRepositoryInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
@@ -30,23 +29,23 @@ class ModifyCustomUrlMessageHandlerTest extends KernelTestCase
 {
     private ModifyCustomUrlMessageHandler $handler;
     private CustomUrlRepositoryInterface $customUrlRepository;
-    private CustomUrlRouteRepositoryInterface $customUrlRouteRepository;
     private EntityManagerInterface $entityManager;
 
     private string $idOfObjectToModify;
     private string $targetDocument;
 
-    public function setup(): void
+    protected function setup(): void
     {
         self::bootKernel();
         $container = $this->getContainer();
         $this->entityManager = $container->get(EntityManagerInterface::class);
         $this->handler = $container->get(ModifyCustomUrlMessageHandler::class);
-        $this->customUrlRouteRepository = $container->get(CustomUrlRouteRepositoryInterface::class);
 
         $this->customUrlRepository = $container->get('sulu_custom_urls.repository');
         // Delete all custom URLs to clear the db
-        $this->customUrlRepository->createQueryBuilder('t')->delete()->getQuery()->execute();
+        foreach ($this->customUrlRepository->findBy() as $customUrl) {
+            $this->customUrlRepository->remove($customUrl);
+        } $this->entityManager->flush();
 
         $this->targetDocument = Uuid::v4()->toRfc4122();
         $createdObject = $container->get(MessageBusInterface::class)
@@ -63,11 +62,11 @@ class ModifyCustomUrlMessageHandlerTest extends KernelTestCase
                     'redirect' => false,
                     'noFollow' => true,
                     'noIndex' => true,
-                ]
+                ],
             ))->all(HandledStamp::class)[0]->getResult();
         $this->assertInstanceOf(CustomUrlInterface::class, $createdObject, 'Could not create custom url');
 
-        $this->idOfObjectToModify = $createdObject->getId();
+        $this->idOfObjectToModify = $createdObject->getUuid();
 
         // Flushing is handled outside by a stamp
         $this->entityManager->flush();
@@ -82,13 +81,13 @@ class ModifyCustomUrlMessageHandlerTest extends KernelTestCase
                 'published' => true,
                 'baseDomain' => 'localhost/*/*',
                 'domainParts' => ['1', '2'],
-            ]
+            ],
         ));
 
         $this->entityManager->flush();
 
         // Checking that the custom Url was modified
-        $customUrl = $this->customUrlRepository->findAll()[0] ?? null;
+        $customUrl = $this->customUrlRepository->findOneBy(['uuid' => $this->idOfObjectToModify]);
         $this->assertInstanceOf(CustomUrlInterface::class, $customUrl);
 
         $this->assertTrue($customUrl->isPublished());
@@ -96,7 +95,7 @@ class ModifyCustomUrlMessageHandlerTest extends KernelTestCase
         $this->assertSame(['1', '2'], $customUrl->getDomainParts());
 
         // Checking that the history was modified
-        $routes = $this->customUrlRouteRepository->findByCustomUrl($customUrl);
+        $routes = \iterator_to_array($customUrl->getRoutes());
         $this->assertCount(2, $routes);
         $this->assertSame('localhost/test', $routes[0]->getPath());
         $this->assertSame('localhost/1/2', $routes[1]->getPath());
@@ -114,7 +113,7 @@ class ModifyCustomUrlMessageHandlerTest extends KernelTestCase
                 'published' => true,
                 'baseDomain' => 'localhost/*/*/*',
                 'domainParts' => ['1', '2'],
-            ]
+            ],
         ));
     }
 
@@ -130,7 +129,7 @@ class ModifyCustomUrlMessageHandlerTest extends KernelTestCase
                 'published' => true,
                 'baseDomain' => 'localhost/*/*',
                 'domainParts' => ['1', '2', '3'],
-            ]
+            ],
         ));
     }
 
@@ -141,12 +140,12 @@ class ModifyCustomUrlMessageHandlerTest extends KernelTestCase
             webspaceKey: 'sulu_io',
             data: [
                 'published' => true,
-            ]
+            ],
         ));
         $this->entityManager->flush();
 
         // Checking that the custom Url was created
-        $customUrl = $this->customUrlRepository->findAll()[0] ?? null;
+        $customUrl = $this->customUrlRepository->findOneBy(['uuid' => $this->idOfObjectToModify]);
         $this->assertInstanceOf(CustomUrlInterface::class, $customUrl);
 
         $this->assertTrue($customUrl->isPublished());
@@ -154,7 +153,7 @@ class ModifyCustomUrlMessageHandlerTest extends KernelTestCase
         $this->assertSame(['test'], $customUrl->getDomainParts());
 
         // Checking that the history was created
-        $routes = $this->customUrlRouteRepository->findByCustomUrl($customUrl);
+        $routes = \iterator_to_array($customUrl->getRoutes());
         $this->assertCount(1, $routes);
         $this->assertSame('localhost/test', $routes[0]->getPath());
     }
@@ -168,17 +167,18 @@ class ModifyCustomUrlMessageHandlerTest extends KernelTestCase
                 'published' => true,
                 'baseDomain' => 'localhost/*',
                 'domainParts' => ['some-other'],
-            ]
+            ],
         ));
         $this->entityManager->flush();
 
-        $customUrl = $this->customUrlRepository->findAll()[0];
+        $customUrl = $this->customUrlRepository->findOneBy(['uuid' => $this->idOfObjectToModify]);
+        $this->assertInstanceOf(CustomUrlInterface::class, $customUrl);
         $this->assertTrue($customUrl->isPublished());
         $this->assertSame('localhost/*', $customUrl->getBaseDomain());
         $this->assertSame(['some-other'], $customUrl->getDomainParts());
 
         // Checking that the history was created
-        $routes = $this->customUrlRouteRepository->findByCustomUrl($customUrl);
+        $routes = \iterator_to_array($customUrl->getRoutes());
         $this->assertCount(2, $routes);
         $this->assertSame('localhost/test', $routes[0]->getPath());
         $this->assertSame('localhost/some-other', $routes[1]->getPath());

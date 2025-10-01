@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Sulu.
  *
@@ -11,30 +13,33 @@
 
 namespace Sulu\CustomUrl\Tests\Functional\Integration;
 
-use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversNothing;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Depends;
 use Sulu\Bundle\TestBundle\Testing\AssertSnapshotTrait;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
-use Sulu\CustomUrl\UserInterface\Controller\Admin\CustomUrlController;
-use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Messenger\HandleTrait;
 use Symfony\Component\Uid\Uuid;
 
-#[CoversClass(CustomUrlController::class)]
+/**
+ * The integration test should have no impact on the coverage so we set it to coversNothing.
+ */
+#[CoversNothing]
 class CustomUrlControllerTest extends SuluTestCase
 {
     use AssertSnapshotTrait;
-    use HandleTrait;
 
-    protected KernelBrowser $client;
+    /**
+     * @var \Symfony\Bundle\FrameworkBundle\KernelBrowser
+     */
+    protected $client;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
-        $this->client = self::createAuthenticatedClient(
+        $this->client = $this->createAuthenticatedClient(
             [],
-            ['CONTENT_TYPE' => 'application/json', 'HTTP_ACCEPT' => 'application/json']
+            ['CONTENT_TYPE' => 'application/json', 'HTTP_ACCEPT' => 'application/json'],
         );
-        self::purgeDatabase();
     }
 
     /**
@@ -65,27 +70,68 @@ class CustomUrlControllerTest extends SuluTestCase
         ];
     }
 
-    public function testPost(): void
+    public function testPost(): string
     {
+        self::purgeDatabase();
+
         $data = self::createCustomUrlData(
             title: 'Test',
             baseDomain: '*.sulu.io/*',
             domainParts: ['test-1', 'test-2'],
-            targetDocument: Uuid::fromString('5cc1f411-e1ee-4dcc-8f07-6af4aa1d24cf')
+            targetDocument: Uuid::fromString('5cc1f411-e1ee-4dcc-8f07-6af4aa1d24cf'),
         );
 
         $this->client->jsonRequest('POST', '/admin/api/webspaces/sulu_io/custom-urls', $data);
 
         $response = $this->client->getResponse();
         $this->assertResponseSnapshot('custom_url_post.json', $response, Response::HTTP_OK);
+
+        /** @var string $id */
+        $id = \json_decode((string) $response->getContent(), true)['id'] ?? null; // @phpstan-ignore-line
+
+        return $id;
+    }
+
+    #[Depends('testPost')]
+    public function testGet(string $id): string
+    {
+        $this->client->jsonRequest('GET', '/admin/api/webspaces/sulu_io/custom-urls/' . $id);
+
+        $response = $this->client->getResponse();
+        $this->assertResponseSnapshot('custom_url_get.json', $response, Response::HTTP_OK);
+
+        return $id;
+    }
+
+    #[Depends('testGet')]
+    public function testCGet(string $id): string
+    {
+        $this->client->jsonRequest('GET', '/admin/api/webspaces/sulu_io/custom-urls');
+
+        $response = $this->client->getResponse();
+        $this->assertResponseSnapshot('custom_url_cget.json', $response, Response::HTTP_OK);
+
+        return $id;
+    }
+
+    #[Depends('testCGet')]
+    public function testDelete(string $id): void
+    {
+        $this->client->jsonRequest('DELETE', '/admin/api/webspaces/sulu_io/custom-urls/' . $id);
+        $this->assertHttpStatusCode(Response::HTTP_NO_CONTENT, $this->client->getResponse());
+
+        $this->client->jsonRequest('GET', '/admin/api/webspaces/sulu_io/custom-urls/' . $id);
+        $this->assertHttpStatusCode(Response::HTTP_NOT_FOUND, $this->client->getResponse());
     }
 
     public function testPostWithoutTargetDocument(): void
     {
+        self::purgeDatabase();
+
         $data = self::createCustomUrlData(
             title: 'Without target document',
             baseDomain: '*.sulu.io/*',
-            domainParts: ['foo', 'bar']
+            domainParts: ['foo', 'bar'],
         );
         unset($data['targetDocument']);
 
@@ -97,6 +143,8 @@ class CustomUrlControllerTest extends SuluTestCase
 
     public function testPostConflictingPaths(): void
     {
+        self::purgeDatabase();
+
         $data = self::createCustomUrlData(
             title: 'Test',
             baseDomain: '*.sulu.io/*',
@@ -117,10 +165,12 @@ class CustomUrlControllerTest extends SuluTestCase
 
     public function testPostWithTooLittleDomainParts(): void
     {
+        self::purgeDatabase();
+
         $data = self::createCustomUrlData(
             title: 'Too little domain parts',
             baseDomain: '*.sulu.io/*',
-            domainParts: ['test-1']
+            domainParts: ['test-1'],
         );
 
         $this->client->jsonRequest('POST', '/admin/api/webspaces/sulu_io/custom-urls', $data);
@@ -131,6 +181,8 @@ class CustomUrlControllerTest extends SuluTestCase
 
     public function testPostWithAlreadyExistingTitle(): void
     {
+        self::purgeDatabase();
+
         $data = self::createCustomUrlData(title: 'Test');
         $this->client->jsonRequest('POST', '/admin/api/webspaces/sulu_io/custom-urls', $data);
         $this->client->jsonRequest('POST', '/admin/api/webspaces/sulu_io/custom-urls', $data);
@@ -139,7 +191,7 @@ class CustomUrlControllerTest extends SuluTestCase
         $this->assertResponseSnapshot(
             'custom_url_post_with_already_existing_title.json',
             $response,
-            Response::HTTP_CONFLICT,
+            Response::HTTP_BAD_REQUEST,
         );
     }
 
@@ -181,17 +233,19 @@ class CustomUrlControllerTest extends SuluTestCase
 
         yield 'Already existing path' => [
             self::createCustomUrlData(title: 'Test-1'),
-            Response::HTTP_BAD_REQUEST,
+            Response::HTTP_CONFLICT,
             'custom_url_put_update_with_conflicting_path.json',
         ];
     }
 
     /**
-     * @param array{array<string,mixed>, int} $data
+     * @param array<string,mixed> $data
      */
-    #[\PHPUnit\Framework\Attributes\DataProvider('putProvider')]
+    #[DataProvider('putProvider')]
     public function testPut(array $data, int $statusCode, string $snapshotFile): void
     {
+        self::purgeDatabase();
+
         // Creating a default custom url to test update conflicts
         $this->createCustomUrl();
 
@@ -202,41 +256,13 @@ class CustomUrlControllerTest extends SuluTestCase
                 published: true,
                 baseDomain: '*.sulu.io/*',
                 domainParts: ['a', 'b'],
-            )
+            ),
         );
 
         $this->client->jsonRequest('PUT', '/admin/api/webspaces/sulu_io/custom-urls/' . $id, $data);
 
         $response = $this->client->getResponse();
         $this->assertResponseSnapshot($snapshotFile, $response, $statusCode);
-    }
-
-    public function testGet(): void
-    {
-        $id = $this->createCustomUrl();
-        $this->client->jsonRequest('GET', '/admin/api/webspaces/sulu_io/custom-urls/' . $id);
-
-        $response = $this->client->getResponse();
-        $this->assertResponseSnapshot('custom_url_get.json', $response, Response::HTTP_OK);
-    }
-
-    public function testCGet(): void
-    {
-        $this->client->jsonRequest('GET', '/admin/api/webspaces/sulu_io/custom-urls');
-
-        $response = $this->client->getResponse();
-        $this->assertResponseSnapshot('custom_url_cget.json', $response, Response::HTTP_OK);
-    }
-
-    public function testDelete(): void
-    {
-        $id = $this->createCustomUrl();
-
-        $this->client->jsonRequest('DELETE', '/admin/api/webspaces/sulu_io/custom-urls/' . $id);
-        $this->assertResponseStatusCodeSame(Response::HTTP_NO_CONTENT);
-
-        $this->client->jsonRequest('GET', '/admin/api/webspaces/sulu_io/custom-urls/' . $id);
-        $this->assertResponseStatusCodeSame(Response::HTTP_NOT_FOUND);
     }
 
     /**

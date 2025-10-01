@@ -1,5 +1,6 @@
 {
     "id": "@string@",
+    "uuid": "@string@",
     "title": "Without target document",
     "baseDomain": "*.sulu.io/*",
     "canonical": true,

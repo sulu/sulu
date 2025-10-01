@@ -50,7 +50,7 @@ class CustomUrlCreatedEvent extends DomainEvent
 
     public function getResourceId(): string
     {
-        return (string) $this->customUrl->getId();
+        return (string) $this->customUrl->getUuid();
     }
 
     public function getResourceWebspaceKey(): ?string

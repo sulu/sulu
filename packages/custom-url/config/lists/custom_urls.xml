@@ -23,9 +23,27 @@
         </join>
     </joins>
 
+    <joins name="targetPage">
+        <join>
+            <entity-name>Sulu\Page\Domain\Model\PageInterface</entity-name>
+            <method>LEFT</method>
+            <condition>Sulu\Page\Domain\Model\PageInterface.uuid = Sulu\CustomUrl\Domain\Model\CustomUrlInterface.targetDocument</condition>
+        </join>
+    </joins>
+
+    <joins name="targetPageDimensionContent" ref="targetPage">
+        <join>
+            <entity-name>targetPageDimensionContent</entity-name>
+            <field-name>Sulu\Page\Domain\Model\PageInterface.dimensionContents</field-name>
+            <method>LEFT</method>
+            <condition>targetPageDimensionContent.locale = Sulu\CustomUrl\Domain\Model\CustomUrlInterface.targetLocale AND targetPageDimensionContent.stage = 'draft' AND targetPageDimensionContent.version = 0</condition>
+        </join>
+    </joins>
+
     <properties>
-        <property name="id" visibility="no" translation="sulu_admin.id" sortable="false">
-            <field-name>id</field-name>
+        <!-- TODO should be uuid not id -->
+        <property name="id" visibility="no" translation="sulu_admin.uuid">
+            <field-name>uuid</field-name>
             <entity-name>Sulu\CustomUrl\Domain\Model\CustomUrlInterface</entity-name>
         </property>
 
@@ -33,6 +51,17 @@
             <field-name>title</field-name>
             <entity-name>Sulu\CustomUrl\Domain\Model\CustomUrlInterface</entity-name>
             <filter type="text" />
+        </property>
+
+        <property name="targetLocale" visibility="always" translation="sulu_custom_url.target_locale" sortable="false">
+            <field-name>targetLocale</field-name>
+            <entity-name>Sulu\CustomUrl\Domain\Model\CustomUrlInterface</entity-name>
+        </property>
+
+        <property name="targetPageTitle" visibility="always" translation="sulu_custom_url.target_page" sortable="false">
+            <field-name>title</field-name>
+            <entity-name>targetPageDimensionContent</entity-name>
+            <joins ref="targetPageDimensionContent"/>
         </property>
 
          <property name="webspace" visibility="never" sortable="false" searchability="never">

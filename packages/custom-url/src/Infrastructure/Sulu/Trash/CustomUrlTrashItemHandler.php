@@ -26,7 +26,7 @@ use Sulu\CustomUrl\Application\Mapper\CustomUrlMapperInterface;
 use Sulu\CustomUrl\Domain\Event\CustomUrlRestoredEvent;
 use Sulu\CustomUrl\Domain\Model\CustomUrl;
 use Sulu\CustomUrl\Domain\Model\CustomUrlInterface;
-use Sulu\CustomUrl\Infrastructure\Doctrine\Repository\CustomUrlRepositoryInterface;
+use Sulu\CustomUrl\Domain\Repository\CustomUrlRepositoryInterface;
 use Sulu\CustomUrl\Infrastructure\Sulu\Admin\CustomUrlAdmin;
 use Webmozart\Assert\Assert;
 
@@ -87,7 +87,7 @@ final class CustomUrlTrashItemHandler implements
 
         return $this->trashItemRepository->create(
             CustomUrl::RESOURCE_KEY,
-            (string) $customUrl->getId(),
+            (string) $customUrl->getUuid(),
             $customUrl->getTitle(),
             $data,
             null,
@@ -106,8 +106,7 @@ final class CustomUrlTrashItemHandler implements
         $data = $trashItem->getRestoreData();
         $data['published'] = false;
 
-        $customUrl = $this->customUrlRepository->createNew();
-        $customUrl->setId($id);
+        $customUrl = $this->customUrlRepository->createNew($id);
         foreach ($this->customUrlMappers as $customUrlMapper) {
             $customUrlMapper->mapCustomUrlData($customUrl, $data);
         }

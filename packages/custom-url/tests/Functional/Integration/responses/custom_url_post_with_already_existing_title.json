@@ -1,6 +1,4 @@
 {
     "code":9001,
-    "message":"Title \"Test\" already in use",
-    "detail":"The title \"Test\" is already used for another custom URL.",
-    "errors":"@array@"
+    "message":"Title \"Test\" already in use"
 }

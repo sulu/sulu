@@ -31,16 +31,11 @@ use Sulu\CustomUrl\Domain\Model\CustomUrl;
 use Sulu\CustomUrl\Domain\Model\CustomUrlInterface;
 use Sulu\CustomUrl\Domain\Model\CustomUrlRoute;
 use Sulu\CustomUrl\Domain\Model\CustomUrlRouteInterface;
-use Sulu\CustomUrl\Domain\Repository\CustomUrlRepository;
-use Sulu\CustomUrl\Domain\Repository\CustomUrlRouteRepository;
-use Sulu\CustomUrl\Infrastructure\Doctrine\Repository\CustomUrlRepositoryInterface;
-use Sulu\CustomUrl\Infrastructure\Doctrine\Repository\CustomUrlRouteRepositoryInterface;
+use Sulu\CustomUrl\Domain\Repository\CustomUrlRepositoryInterface;
+use Sulu\CustomUrl\Infrastructure\Doctrine\Repository\CustomUrlRepository;
 use Sulu\CustomUrl\Infrastructure\Sulu\Admin\CustomUrlAdmin;
-use Sulu\CustomUrl\Infrastructure\Sulu\HttpCache\CacheInvalidationSubscriber;
-use Sulu\CustomUrl\Infrastructure\Symfony\Fixtures\LoadCustomUrlFixture;
 use Sulu\CustomUrl\Infrastructure\Symfony\Serializer\CustomUrlNormalizer;
 use Sulu\CustomUrl\UserInterface\Controller\Admin\CustomUrlController;
-use Sulu\CustomUrl\UserInterface\Controller\Admin\CustomUrlRouteController;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Configurator\DefinitionConfigurator;
 use Symfony\Component\Config\FileLocator;
@@ -62,8 +57,8 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
  */
 final class SuluCustomUrlBundle extends AbstractBundle
 {
-    use PersistenceExtensionTrait;
     use PersistenceBundleTrait;
+    use PersistenceExtensionTrait;
 
     /**
      * @internal this method is not part of the public API and should only be called by the Symfony framework classes
@@ -113,8 +108,7 @@ final class SuluCustomUrlBundle extends AbstractBundle
 
         // Mapper
         $services->set(CustomUrlMapperInterface::class, CustomUrlMapper::class)
-            ->tag(CustomUrlMapperInterface::SERVICE_TAG)
-        ;
+            ->tag(CustomUrlMapperInterface::SERVICE_TAG);
 
         // Message Handler
         $services->set(CreateCustomUrlMessageHandler::class)
@@ -123,8 +117,7 @@ final class SuluCustomUrlBundle extends AbstractBundle
                 new Reference(CustomUrlRepositoryInterface::class),
                 new Reference(DomainEventCollectorInterface::class),
             ])
-            ->tag('messenger.message_handler')
-        ;
+            ->tag('messenger.message_handler');
 
         $services->set(ModifyCustomUrlMessageHandler::class)
             ->args([
@@ -132,16 +125,14 @@ final class SuluCustomUrlBundle extends AbstractBundle
                 new Reference(CustomUrlRepositoryInterface::class),
                 new Reference(DomainEventCollectorInterface::class),
             ])
-            ->tag('messenger.message_handler')
-        ;
+            ->tag('messenger.message_handler');
 
         $services->set(RemoveCustomUrlMessageHandler::class)
             ->args([
                 new Reference(CustomUrlRepositoryInterface::class),
                 new Reference(DomainEventCollectorInterface::class),
             ])
-            ->tag('messenger.message_handler')
-        ;
+            ->tag('messenger.message_handler');
 
         // Admin configuration
         $services->set('sulu_custom_urls.admin', CustomUrlAdmin::class)
@@ -152,8 +143,7 @@ final class SuluCustomUrlBundle extends AbstractBundle
                 service(SecurityCheckerInterface::class),
             ])
             ->tag('sulu.admin')
-            ->tag('sulu.context', ['context' => 'admin'])
-        ;
+            ->tag('sulu.context', ['context' => 'admin']);
         $services->alias(CustomUrlAdmin::class, 'sulu_custom_urls.admin');
 
         $services->set('sulu_custom_urls.custom_url_controller', CustomUrlController::class)
@@ -166,59 +156,22 @@ final class SuluCustomUrlBundle extends AbstractBundle
                 new Reference(FieldDescriptorFactoryInterface::class),
                 new Reference(DoctrineListBuilderFactoryInterface::class),
                 new Reference('sulu_core.doctrine_rest_helper'),
-            ])
-        ;
-
-        $services->set('sulu_custom_urls.custom_url_route_controller', CustomUrlRouteController::class)
-            ->public()
-            ->args([
-                new Reference(RequestStack::class),
-                new Reference(CustomUrlRouteRepositoryInterface::class),
-                new Reference(NormalizerInterface::class),
-            ])
-        ;
+            ]);
 
         // Repositories
         $services->set(CustomUrlRepositoryInterface::class, CustomUrlRepository::class)
             ->args([
-                new Reference('doctrine'),
-                new Reference(CustomUrlRouteRepositoryInterface::class),
-            ])
-        ;
+                new Reference(EntityManagerInterface::class),
+            ]);
 
         $services->alias('sulu_custom_urls.repository', CustomUrlRepositoryInterface::class);
-
-        $services->set(CustomUrlRouteRepositoryInterface::class, CustomUrlRouteRepository::class)
-            ->args([
-                new Reference(EntityManagerInterface::class),
-            ])
-        ;
-
-        // Cache invalidation
-        $services->set('sulu_custom_urls.event_subscriber.invalidation', CacheInvalidationSubscriber::class)
-            ->args([
-                new Reference(CustomUrlRepositoryInterface::class),
-                new Reference(CustomUrlRouteRepositoryInterface::class),
-                service('sulu_http_cache.cache_manager')->nullOnInvalid(),
-                new Reference(RequestStack::class),
-            ])
-            ->tag('sulu_document_manager.event_subscriber')
-        ;
 
         // Extending Symfony
         $services->set(CustomUrlNormalizer::class)
             ->args([
                 new Reference('serializer.normalizer.object'),
             ])
-            ->tag('serializer.normalizer')
-        ;
-
-        $services->set(LoadCustomUrlFixture::class)
-            ->args([
-                new Reference(CustomUrlRepositoryInterface::class),
-            ])
-            ->tag('doctrine.fixture.orm')
-        ;
+            ->tag('serializer.normalizer');
 
         if ($builder->hasExtension('sulu_trash')) {
             $loader->load('sulu_trash.php');
@@ -257,7 +210,7 @@ final class SuluCustomUrlBundle extends AbstractBundle
                             ],
                         ],
                     ],
-                ]
+                ],
             );
         }
 

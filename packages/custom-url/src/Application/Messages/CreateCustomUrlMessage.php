@@ -11,15 +11,32 @@
 
 namespace Sulu\CustomUrl\Application\Messages;
 
+use Webmozart\Assert\Assert;
+
 class CreateCustomUrlMessage
 {
     /**
-     * @param array<mixed> $data
+     * @var string|null
+     */
+    private $uuid;
+
+    /**
+     * @param array<string, mixed> $data
      */
     public function __construct(
         private string $webspaceKey,
-        private array $data
+        private array $data,
     ) {
+        $uuid = $data['uuid'] ?? null;
+
+        Assert::nullOrString($uuid, \sprintf('Expected a "uuid" string or null given. Got: %s', \gettype($uuid)));
+
+        $this->uuid = $uuid;
+    }
+
+    public function getUuid(): ?string
+    {
+        return $this->uuid;
     }
 
     public function getWebspaceKey(): string

@@ -1,5 +1,6 @@
 {
     "id": "@string@",
+    "uuid": "@string@",
     "baseDomain": "*.sulu.io/*",
     "canonical": true,
     "domainParts": [

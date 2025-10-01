@@ -43,7 +43,7 @@ class CustomUrlTrashItemHandlerTest extends SuluTestCase
         $user = $this->createMock(UserInterface::class);
 
         $originalCustomUrl = new CustomUrl();
-        $originalCustomUrlUuid = $originalCustomUrl->getId();
+        $originalCustomUrlUuid = $originalCustomUrl->getUuid();
         $originalCustomUrl->setTitle('test-title-1');
         $originalCustomUrl->setWebspace('sulu_io');
         $originalCustomUrl->setCreator($user);
@@ -72,7 +72,7 @@ class CustomUrlTrashItemHandlerTest extends SuluTestCase
         $restoredCustomUrl = $this->customUrlTrashItemHandler->restore($trashItem, []);
 
         static::assertSame('test-title-1', $restoredCustomUrl->getTitle());
-        static::assertSame($originalCustomUrl->getId(), $restoredCustomUrl->getId());
+        static::assertSame($originalCustomUrl->getUuid(), $restoredCustomUrl->getUuid());
         static::assertNull($restoredCustomUrl->getCreator());
         static::assertNull($restoredCustomUrl->getChanger());
         static::assertSame('2025-04-20T00:00:00+00:00', $restoredCustomUrl->getCreated()->format('c'));

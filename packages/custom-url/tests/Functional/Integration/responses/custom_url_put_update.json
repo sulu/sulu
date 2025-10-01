@@ -1,5 +1,6 @@
 {
     "id":"@string@",
+    "uuid":"@string@",
     "title":"Updated Custom URL",
     "published":true,
     "webspace":"sulu_io",

@@ -18,7 +18,7 @@ use Sulu\CustomUrl\Application\Mapper\CustomUrlMapperInterface;
 use Sulu\CustomUrl\Application\Messages\CreateCustomUrlMessage;
 use Sulu\CustomUrl\Domain\Event\CustomUrlCreatedEvent;
 use Sulu\CustomUrl\Domain\Model\CustomUrlInterface;
-use Sulu\CustomUrl\Infrastructure\Doctrine\Repository\CustomUrlRepositoryInterface;
+use Sulu\CustomUrl\Domain\Repository\CustomUrlRepositoryInterface;
 
 final class CreateCustomUrlMessageHandler
 {
@@ -36,7 +36,7 @@ final class CreateCustomUrlMessageHandler
     {
         $data = $message->getData();
 
-        $customUrl = $this->customUrlRepository->createNew();
+        $customUrl = $this->customUrlRepository->createNew($message->getUuid());
 
         foreach ($this->customUrlMappers as $customUrlMapper) {
             $customUrlMapper->mapCustomUrlData($customUrl, $data);

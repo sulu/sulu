@@ -33,11 +33,17 @@ final class CustomUrlNormalizer implements NormalizerInterface
         ?string $format = null,
         array $context = [],
     ): array {
-        $context[AbstractNormalizer::IGNORED_ATTRIBUTES] ??= [];
+        if (!\array_key_exists(AbstractNormalizer::IGNORED_ATTRIBUTES, $context)) {
+            $context[AbstractNormalizer::IGNORED_ATTRIBUTES] = [];
+        }
+
+        \assert(\is_array($context[AbstractNormalizer::IGNORED_ATTRIBUTES]));
+
         $context[AbstractNormalizer::IGNORED_ATTRIBUTES][] = 'created';
         $context[AbstractNormalizer::IGNORED_ATTRIBUTES][] = 'changed';
         $context[AbstractNormalizer::IGNORED_ATTRIBUTES][] = 'creator';
         $context[AbstractNormalizer::IGNORED_ATTRIBUTES][] = 'changer';
+        $context[AbstractNormalizer::IGNORED_ATTRIBUTES][] = 'routes';
 
         /** @var array<mixed> $normalizedData */
         $normalizedData = $this->objectNormalizer->normalize($data, $format, $context);

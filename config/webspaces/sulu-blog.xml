@@ -63,9 +63,6 @@
                     <urls>
                         <url language="en">{host}/blog</url>
                     </urls>
-                    <custom-urls>
-                        <custom-url>localhost/*</custom-url>
-                    </custom-urls>
                 </environment>
             </environments>
         </portal>
