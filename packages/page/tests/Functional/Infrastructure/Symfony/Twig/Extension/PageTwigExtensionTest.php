@@ -11,29 +11,29 @@ declare(strict_types=1);
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Snippet\Tests\Functional\Infrastructure\Symfony\Twig;
+namespace Sulu\Page\Tests\Functional\Infrastructure\Symfony\Twig\Extension;
 
 use Sulu\Bundle\MediaBundle\Api\Media;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Content\Tests\Functional\Traits\CreateMediaTrait;
-use Sulu\Snippet\Infrastructure\Symfony\Twig\SnippetAreaTwigExtension;
-use Sulu\Snippet\Tests\Traits\CreateSnippetTrait;
+use Sulu\Page\Infrastructure\Symfony\Twig\Extension\PageTwigExtension;
+use Sulu\Page\Tests\Traits\CreatePageTrait;
 
-class SnippetAreaTwigExtensionTest extends SuluTestCase
+class PageTwigExtensionTest extends SuluTestCase
 {
     use CreateMediaTrait;
-    use CreateSnippetTrait;
+    use CreatePageTrait;
 
-    private SnippetAreaTwigExtension $snippetAreaTwigExtension;
+    private PageTwigExtension $pageTwigExtension;
 
     protected function setUp(): void
     {
         self::purgeDatabase();
 
-        $this->snippetAreaTwigExtension = self::getContainer()->get('sulu_snippet.snippet_area_twig_extension');
+        $this->pageTwigExtension = self::getContainer()->get('sulu_page.page_twig_extension');
     }
 
-    public function testLoadSnippetByAreaWithoutProperties(): void
+    public function testLoadPageWithoutProperties(): void
     {
         $collection = self::createCollection(['title' => 'Test Collection', 'locale' => 'en']);
         $mediaType = self::createMediaType(['name' => 'Image', 'description' => 'This is an image']);
@@ -41,23 +41,21 @@ class SnippetAreaTwigExtensionTest extends SuluTestCase
 
         self::getEntityManager()->flush();
 
-        $snippet = static::createSnippet([
+        $page = static::createPage([
             'en' => [
                 'live' => [
-                    'template' => 'snippet',
-                    'title' => 'Test Snippet',
-                    'description' => 'This is a test snippet description',
+                    'template' => 'default',
+                    'title' => 'Test Page',
+                    'url' => '/test-page',
+                    'description' => 'This is a test page description',
                     'image' => [
                         'id' => $media->getId(),
                     ],
                 ],
             ],
         ]);
-        static::createSnippetArea('hotel', 'sulu-io', $snippet);
 
-        self::getEntityManager()->flush();
-
-        $result = $this->snippetAreaTwigExtension->loadSnippetByArea('hotel', 'sulu-io', 'en');
+        $result = $this->pageTwigExtension->loadPage($page->getUuid(), 'en');
 
         $this->assertIsArray($result);
         $this->assertArrayHasKey('content', $result);
@@ -65,15 +63,15 @@ class SnippetAreaTwigExtensionTest extends SuluTestCase
         /** @var array<string, mixed> $content */
         $content = $result['content'];
         $this->assertArrayHasKey('title', $content);
-        $this->assertSame('Test Snippet', $content['title']);
+        $this->assertSame('Test Page', $content['title']);
         $this->assertArrayHasKey('description', $content);
-        $this->assertSame('This is a test snippet description', $content['description']);
+        $this->assertSame('This is a test page description', $content['description']);
         $this->assertArrayHasKey('image', $content);
         $this->assertInstanceOf(Media::class, $content['image']);
         $this->assertSame($media->getId(), $content['image']->getId());
     }
 
-    public function testLoadSnippetByAreaWithProperties(): void
+    public function testLoadPageWithProperties(): void
     {
         $collection = self::createCollection(['title' => 'Test Collection', 'locale' => 'en']);
         $mediaType = self::createMediaType(['name' => 'Image', 'description' => 'This is an image']);
@@ -81,11 +79,12 @@ class SnippetAreaTwigExtensionTest extends SuluTestCase
 
         self::getEntityManager()->flush();
 
-        $snippet = static::createSnippet([
+        $page = static::createPage([
             'en' => [
                 'live' => [
-                    'template' => 'snippet',
-                    'title' => 'Test Snippet with Properties',
+                    'template' => 'default',
+                    'title' => 'Test Page with Properties',
+                    'url' => '/test-page-props',
                     'description' => 'Description for properties test',
                     'image' => [
                         'id' => $media->getId(),
@@ -93,20 +92,17 @@ class SnippetAreaTwigExtensionTest extends SuluTestCase
                 ],
             ],
         ]);
-        static::createSnippetArea('hotel', 'sulu-io', $snippet);
-
-        self::getEntityManager()->flush();
 
         $properties = [
             'title' => 'title',
             'description' => 'description',
         ];
 
-        $result = $this->snippetAreaTwigExtension->loadSnippetByArea('hotel', 'sulu-io', 'en', $properties);
+        $result = $this->pageTwigExtension->loadPage($page->getUuid(), 'en', $properties);
 
         $this->assertIsArray($result);
         $this->assertArrayHasKey('title', $result);
-        $this->assertSame('Test Snippet with Properties', $result['title']);
+        $this->assertSame('Test Page with Properties', $result['title']);
         $this->assertArrayHasKey('description', $result);
         $this->assertSame('Description for properties test', $result['description']);
 
@@ -116,27 +112,9 @@ class SnippetAreaTwigExtensionTest extends SuluTestCase
         $this->assertArrayNotHasKey('image', $result);
     }
 
-    public function testLoadSnippetByAreaReturnsNullWhenAreaNotFound(): void
+    public function testLoadPageReturnsNullWhenPageNotFound(): void
     {
-        $result = $this->snippetAreaTwigExtension->loadSnippetByArea('nonexistent', 'sulu-io', 'en');
-
-        $this->assertNull($result);
-    }
-
-    public function testLoadSnippetByAreaReturnsNullWhenNoSnippetAssigned(): void
-    {
-        $snippet = static::createSnippet([
-            'en' => [
-                'live' => [
-                    'template' => 'snippet',
-                    'title' => 'Test Snippet',
-                ],
-            ],
-        ]);
-
-        self::getEntityManager()->flush();
-
-        $result = $this->snippetAreaTwigExtension->loadSnippetByArea('hotel', 'sulu-io', 'en');
+        $result = $this->pageTwigExtension->loadPage('nonexistent-uuid', 'en');
 
         $this->assertNull($result);
     }
