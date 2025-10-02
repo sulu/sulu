@@ -109,6 +109,130 @@ class NavigationRepository implements NavigationRepositoryInterface
         return $result;
     }
 
+    public function getNavigationFlatByUuid(
+        string $uuid,
+        string $locale,
+        string $webspaceKey,
+        int $depth = 1,
+        ?string $navigationContext = null,
+        array $properties = []
+    ): array {
+        $parentPage = $this->entityRepository->find($uuid);
+
+        if (null === $parentPage) {
+            return [];
+        }
+
+        $filters = [
+            'locale' => $locale,
+            'webspaceKey' => $webspaceKey,
+            'stage' => DimensionContentInterface::STAGE_LIVE,
+        ];
+
+        if (null !== $navigationContext) {
+            $filters['navigationContexts'] = [$navigationContext];
+        }
+
+        // Get children within depth range relative to parent
+        $queryBuilder = $this->createQueryBuilder($filters);
+        $queryBuilder
+            ->andWhere('page.lft > :parentLft')
+            ->andWhere('page.rgt < :parentRgt')
+            ->andWhere('page.depth <= :maxDepth')
+            ->setParameter('parentLft', $parentPage->getLft())
+            ->setParameter('parentRgt', $parentPage->getRgt())
+            ->setParameter('maxDepth', $parentPage->getDepth() + $depth);
+
+        /** @var iterable<PageInterface> $pages */
+        $pages = $queryBuilder->getQuery()->getResult();
+
+        $loadExcerpt = (bool) ($properties['excerpt'] ?? false);
+
+        $result = [];
+        foreach ($pages as $page) {
+            $content = $this->resolvePageContent($page, $locale);
+            $result[] = $this->normalizePageContent($content, $loadExcerpt);
+        }
+
+        return $result;
+    }
+
+    public function getNavigationTreeByUuid(
+        string $uuid,
+        string $locale,
+        string $webspaceKey,
+        int $depth = 1,
+        ?string $navigationContext = null,
+        array $properties = []
+    ): array {
+        $parentPage = $this->entityRepository->find($uuid);
+
+        if (null === $parentPage) {
+            return [];
+        }
+
+        $filters = [
+            'locale' => $locale,
+            'webspaceKey' => $webspaceKey,
+            'stage' => DimensionContentInterface::STAGE_LIVE,
+        ];
+
+        if (null !== $navigationContext) {
+            $filters['navigationContexts'] = [$navigationContext];
+        }
+
+        // Get children within depth range relative to parent
+        $queryBuilder = $this->createQueryBuilder($filters);
+        $queryBuilder
+            ->andWhere('page.lft > :parentLft')
+            ->andWhere('page.rgt < :parentRgt')
+            ->andWhere('page.depth <= :maxDepth')
+            ->setParameter('parentLft', $parentPage->getLft())
+            ->setParameter('parentRgt', $parentPage->getRgt())
+            ->setParameter('maxDepth', $parentPage->getDepth() + $depth);
+
+        $query = $queryBuilder->getQuery();
+        $query->setHint(Query::HINT_INCLUDE_META_COLUMNS, true);
+
+        /** @var iterable<PageInterface> $pages */
+        $pages = $query->getResult('sulu_page_tree');
+
+        $loadExcerpt = (bool) ($properties['excerpt'] ?? false);
+
+        return $this->normalizePageTree($pages, $loadExcerpt, $locale, 1, $depth);
+    }
+
+    public function getBreadcrumb(
+        string $uuid,
+        string $locale,
+        string $webspaceKey,
+        array $properties = []
+    ): array {
+        $page = $this->entityRepository->find($uuid);
+
+        if (null === $page) {
+            return [];
+        }
+
+        $loadExcerpt = (bool) ($properties['excerpt'] ?? false);
+
+        // Build breadcrumb by traversing up the tree
+        $breadcrumb = [];
+        $currentPage = $page;
+
+        while (null !== $currentPage) {
+            $content = $this->resolvePageContent($currentPage, $locale);
+            $normalized = $this->normalizePageContent($content, $loadExcerpt);
+
+            // Prepend to maintain root -> current order
+            \array_unshift($breadcrumb, $normalized);
+
+            $currentPage = $currentPage->getParent();
+        }
+
+        return $breadcrumb;
+    }
+
     /**
      * @param array{
      *      locale?: string|null,
