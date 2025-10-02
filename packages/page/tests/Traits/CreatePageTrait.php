@@ -11,26 +11,24 @@ declare(strict_types=1);
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Snippet\Tests\Traits;
+namespace Sulu\Page\Tests\Traits;
 
-use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Content\Domain\Model\WorkflowInterface;
 use Sulu\Messenger\Infrastructure\Symfony\Messenger\FlushMiddleware\EnableFlushStamp;
-use Sulu\Snippet\Application\Message\ApplyWorkflowTransitionSnippetMessage;
-use Sulu\Snippet\Application\Message\CreateSnippetMessage;
-use Sulu\Snippet\Application\Message\ModifySnippetMessage;
-use Sulu\Snippet\Domain\Model\Snippet;
-use Sulu\Snippet\Domain\Model\SnippetArea;
-use Sulu\Snippet\Domain\Model\SnippetInterface;
+use Sulu\Page\Application\Message\ApplyWorkflowTransitionPageMessage;
+use Sulu\Page\Application\Message\CreatePageMessage;
+use Sulu\Page\Application\Message\ModifyPageMessage;
+use Sulu\Page\Application\MessageHandler\CreatePageMessageHandler;
+use Sulu\Page\Domain\Model\Page;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
 
-trait CreateSnippetTrait
+trait CreatePageTrait
 {
     /**
      * @param array<string, array{ draft?: array<string, mixed>, live?: array<string, mixed> }> $dataSet
      */
-    protected static function createSnippet(array $dataSet = []): Snippet
+    protected static function createPage(array $dataSet = [], string $webspaceKey = 'sulu-io'): Page
     {
         if (empty($dataSet)) {
             throw new \InvalidArgumentException('dataSet must contain at least one locale');
@@ -38,7 +36,7 @@ trait CreateSnippetTrait
 
         $messageBus = self::getContainer()->get('sulu_message_bus');
 
-        // Process first locale with CreateSnippetMessage
+        // Process first locale with CreatePageMessage
         $firstLocale = \array_key_first($dataSet);
         $firstLocaleData = $dataSet[$firstLocale];
 
@@ -46,10 +44,14 @@ trait CreateSnippetTrait
         $initialData = $firstLocaleData['live'] ?? $firstLocaleData['draft'] ?? [];
         $initialData['locale'] = $firstLocale;
 
-        // Create snippet
+        // Create page
         $envelope = $messageBus->dispatch(
             new Envelope(
-                new CreateSnippetMessage(data: $initialData),
+                new CreatePageMessage(
+                    webspaceKey: $webspaceKey,
+                    parentId: CreatePageMessageHandler::HOMEPAGE_PARENT_ID,
+                    data: $initialData
+                ),
                 [new EnableFlushStamp()]
             )
         );
@@ -57,8 +59,8 @@ trait CreateSnippetTrait
         /** @var HandledStamp[] $handledStamps */
         $handledStamps = $envelope->all(HandledStamp::class);
 
-        /** @var Snippet $snippet */
-        $snippet = $handledStamps[0]->getResult();
+        /** @var Page $page */
+        $page = $handledStamps[0]->getResult();
 
         // Handle first locale's live/draft stages
         $hasLive = isset($firstLocaleData['live']);
@@ -68,8 +70,8 @@ trait CreateSnippetTrait
             // Publish to create live dimension
             $messageBus->dispatch(
                 new Envelope(
-                    new ApplyWorkflowTransitionSnippetMessage(
-                        identifier: ['uuid' => $snippet->getUuid()],
+                    new ApplyWorkflowTransitionPageMessage(
+                        identifier: ['uuid' => $page->getUuid()],
                         locale: $firstLocale,
                         transitionName: WorkflowInterface::WORKFLOW_TRANSITION_PUBLISH
                     ),
@@ -84,8 +86,8 @@ trait CreateSnippetTrait
 
                 $messageBus->dispatch(
                     new Envelope(
-                        new ModifySnippetMessage(
-                            identifier: ['uuid' => $snippet->getUuid()],
+                        new ModifyPageMessage(
+                            identifier: ['uuid' => $page->getUuid()],
                             data: $draftData
                         ),
                         [new EnableFlushStamp()]
@@ -94,7 +96,7 @@ trait CreateSnippetTrait
             }
         }
 
-        // Process additional locales with ModifySnippetMessage
+        // Process additional locales with ModifyPageMessage
         $remainingLocales = \array_slice($dataSet, 1, null, true);
         foreach ($remainingLocales as $locale => $localeData) {
             $modifyData = $localeData['live'] ?? $localeData['draft'] ?? [];
@@ -102,8 +104,8 @@ trait CreateSnippetTrait
 
             $messageBus->dispatch(
                 new Envelope(
-                    new ModifySnippetMessage(
-                        identifier: ['uuid' => $snippet->getUuid()],
+                    new ModifyPageMessage(
+                        identifier: ['uuid' => $page->getUuid()],
                         data: $modifyData
                     ),
                     [new EnableFlushStamp()]
@@ -118,8 +120,8 @@ trait CreateSnippetTrait
                 // Publish to create live dimension
                 $messageBus->dispatch(
                     new Envelope(
-                        new ApplyWorkflowTransitionSnippetMessage(
-                            identifier: ['uuid' => $snippet->getUuid()],
+                        new ApplyWorkflowTransitionPageMessage(
+                            identifier: ['uuid' => $page->getUuid()],
                             locale: $locale,
                             transitionName: WorkflowInterface::WORKFLOW_TRANSITION_PUBLISH
                         ),
@@ -134,8 +136,8 @@ trait CreateSnippetTrait
 
                     $messageBus->dispatch(
                         new Envelope(
-                            new ModifySnippetMessage(
-                                identifier: ['uuid' => $snippet->getUuid()],
+                            new ModifyPageMessage(
+                                identifier: ['uuid' => $page->getUuid()],
                                 data: $draftData
                             ),
                             [new EnableFlushStamp()]
@@ -145,31 +147,6 @@ trait CreateSnippetTrait
             }
         }
 
-        return $snippet;
+        return $page;
     }
-
-    protected static function createSnippetArea(string $areaKey, string $webspaceKey, SnippetInterface $snippet): SnippetArea
-    {
-        $entityManager = static::getEntityManager();
-
-        $snippetAreaRepository = static::getContainer()->get('sulu_snippet.snippet_area_repository');
-        $existingSnippetArea = $snippetAreaRepository->findOneBy([
-            'areaKey' => $areaKey,
-            'webspaceKey' => $webspaceKey,
-        ]);
-
-        if ($existingSnippetArea instanceof SnippetArea) {
-            $existingSnippetArea->setSnippet($snippet);
-
-            return $existingSnippetArea;
-        }
-
-        $snippetArea = new SnippetArea($areaKey, $webspaceKey);
-        $snippetArea->setSnippet($snippet);
-        $entityManager->persist($snippetArea);
-
-        return $snippetArea;
-    }
-
-    abstract protected static function getEntityManager(): EntityManagerInterface;
 }

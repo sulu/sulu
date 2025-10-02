@@ -44,6 +44,7 @@ use Sulu\Article\Infrastructure\Sulu\Reference\ArticleReferenceRefresher;
 use Sulu\Article\Infrastructure\Sulu\Route\ArticleRouteDefaultsProvider;
 use Sulu\Article\Infrastructure\Sulu\Sitemap\ArticlesSitemapProvider;
 use Sulu\Article\Infrastructure\Sulu\Trash\ArticleTrashItemHandler;
+use Sulu\Article\Infrastructure\Symfony\Twig\ArticleTwigExtension;
 use Sulu\Article\UserInterface\Controller\Admin\ArticleController;
 use Sulu\Bundle\HttpCacheBundle\ReferenceStore\ReferenceStore;
 use Sulu\Bundle\PersistenceBundle\DependencyInjection\PersistenceExtensionTrait;
@@ -338,6 +339,18 @@ final class SuluArticleBundle extends AbstractBundle
         $services->set('sulu_article.article_reference_store')
             ->class(ReferenceStore::class)
             ->tag('sulu_website.reference_store', ['alias' => ArticleInterface::RESOURCE_KEY]);
+
+        // Twig Extensions
+        $services->set('sulu_article.article_twig_extension')
+            ->class(ArticleTwigExtension::class)
+            ->args([
+                new Reference('sulu_article.article_repository'),
+                new Reference('sulu_content.content_aggregator'),
+                new Reference('sulu_core.webspace.request_analyzer'),
+                new Reference('sulu_http_cache.reference_store'),
+                new Reference('sulu_content.content_resolver'),
+            ])
+            ->tag('twig.extension');
 
         // Reference services
         $services->set('sulu_article.article_reference_refresher')

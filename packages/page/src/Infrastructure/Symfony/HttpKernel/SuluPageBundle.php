@@ -56,6 +56,7 @@ use Sulu\Page\Infrastructure\Sulu\Sitemap\PagesSitemapProvider;
 use Sulu\Page\Infrastructure\Sulu\Trash\PageTrashItemHandler;
 use Sulu\Page\Infrastructure\Symfony\Twig\Extension\ContentPathTwigExtension;
 use Sulu\Page\Infrastructure\Symfony\Twig\Extension\NavigationTwigExtension;
+use Sulu\Page\Infrastructure\Symfony\Twig\Extension\PageTwigExtension;
 use Sulu\Page\UserInterface\Command\InitializeHomepageCommand;
 use Sulu\Page\UserInterface\Controller\Admin\PageController;
 use Symfony\Component\Config\Definition\Configurator\DefinitionConfigurator;
@@ -404,6 +405,17 @@ final class SuluPageBundle extends AbstractBundle
             ->class(ContentPathTwigExtension::class)
             ->args([
                 new Reference('sulu_route.route_generator'),
+            ])
+            ->tag('twig.extension');
+
+        $services->set('sulu_page.page_twig_extension')
+            ->class(PageTwigExtension::class)
+            ->args([
+                new Reference('sulu_page.page_repository'),
+                new Reference('sulu_content.content_aggregator'),
+                new Reference('sulu_core.webspace.request_analyzer'),
+                new Reference('sulu_http_cache.reference_store'),
+                new Reference('sulu_content.content_resolver'),
             ])
             ->tag('twig.extension');
 
