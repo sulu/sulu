@@ -39,6 +39,12 @@ class ReferrerRuleTest extends TestCase
         $this->translator = $this->prophesize(TranslatorInterface::class);
     }
 
+    /**
+     * @param string|null $referrerHeader
+     * @param string|null $referrer
+     * @param array<string, mixed> $options
+     * @param bool $result
+     */
     #[\PHPUnit\Framework\Attributes\DataProvider('provideEvaluationData')]
     public function testEvaluate($referrerHeader, $referrer, $options, $result): void
     {

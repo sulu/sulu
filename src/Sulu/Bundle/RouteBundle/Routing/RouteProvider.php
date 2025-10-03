@@ -138,7 +138,7 @@ class RouteProvider implements RouteProviderInterface
      * @param string $path
      * @param string $locale
      *
-     * @return SuluRoute
+     * @return RouteInterface|null
      */
     private function findRouteByPath($path, $locale)
     {

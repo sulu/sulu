@@ -32,12 +32,16 @@ use Sulu\Component\Webspace\Webspace;
  */
 class SnippetAdmin extends Admin
 {
+    /** @var string */
     public const SECURITY_CONTEXT = 'sulu.global.snippets';
 
+    /** @var string */
     public const LIST_VIEW = 'sulu_snippet.list';
 
+    /** @var string */
     public const ADD_FORM_VIEW = 'sulu_snippet.add_form';
 
+    /** @var string */
     public const EDIT_FORM_VIEW = 'sulu_snippet.edit_form';
 
     /**

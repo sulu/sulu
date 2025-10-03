@@ -139,6 +139,13 @@ class ContentRepositoryTest extends SuluTestCase
 
         $this->em->flush();
 
+        /** @var int $role1Id */
+        $role1Id = $role1->getId();
+        /** @var int $role2Id */
+        $role2Id = $role2->getId();
+        /** @var int $role3Id */
+        $role3Id = $role3->getId();
+
         $user = $this->prophesize(UserInterface::class);
         $user->getRoleObjects()->willReturn([$role1, $role2]);
 
@@ -150,9 +157,9 @@ class ContentRepositoryTest extends SuluTestCase
             [],
             null,
             [
-                $role1->getId() => ['edit' => true],
-                $role2->getId() => ['view' => true, 'archive' => true],
-                $role3->getId() => ['add' => true],
+                $role1Id => ['edit' => true],
+                $role2Id => ['view' => true, 'archive' => true],
+                $role3Id => ['add' => true],
             ]
         );
         $this->createPage('test-2', 'de');
@@ -179,15 +186,15 @@ class ContentRepositoryTest extends SuluTestCase
 
         $this->assertEquals(
             [
-                $role1->getId() => ['view' => false, 'add' => false, 'delete' => false, 'edit' => true],
-                $role2->getId() => [
+                $role1Id => ['view' => false, 'add' => false, 'delete' => false, 'edit' => true],
+                $role2Id => [
                     'view' => true,
                     'add' => false,
                     'edit' => false,
                     'delete' => false,
                     'archive' => true,
                 ],
-                $role3->getId() => [
+                $role3Id => [
                     'view' => false,
                     'add' => true,
                     'edit' => false,
@@ -481,6 +488,13 @@ class ContentRepositoryTest extends SuluTestCase
 
         $this->em->flush();
 
+        /** @var int $role1Id */
+        $role1Id = $role1->getId();
+        /** @var int $role2Id */
+        $role2Id = $role2->getId();
+        /** @var int $role3Id */
+        $role3Id = $role3->getId();
+
         $user = $this->prophesize(UserInterface::class);
         $user->getRoleObjects()->willReturn([$role1, $role2]);
 
@@ -492,9 +506,9 @@ class ContentRepositoryTest extends SuluTestCase
             [],
             null,
             [
-                $role1->getId() => ['edit' => true],
-                $role2->getId() => ['view' => true, 'archive' => true],
-                $role3->getId() => ['add' => true],
+                $role1Id => ['edit' => true],
+                $role2Id => ['view' => true, 'archive' => true],
+                $role3Id => ['add' => true],
             ]
         );
         $this->createPage('test-2', 'de');
@@ -511,15 +525,15 @@ class ContentRepositoryTest extends SuluTestCase
 
         $this->assertEquals(
             [
-                $role1->getId() => ['view' => false, 'add' => false, 'delete' => false, 'edit' => true],
-                $role2->getId() => [
+                $role1Id => ['view' => false, 'add' => false, 'delete' => false, 'edit' => true],
+                $role2Id => [
                     'view' => true,
                     'add' => false,
                     'edit' => false,
                     'delete' => false,
                     'archive' => true,
                 ],
-                $role3->getId() => [
+                $role3Id => [
                     'view' => false,
                     'add' => true,
                     'edit' => false,
@@ -890,6 +904,13 @@ class ContentRepositoryTest extends SuluTestCase
 
         $this->em->flush();
 
+        /** @var int $role1Id */
+        $role1Id = $role1->getId();
+        /** @var int $role2Id */
+        $role2Id = $role2->getId();
+        /** @var int $role3Id */
+        $role3Id = $role3->getId();
+
         $user = $this->prophesize(UserInterface::class);
         $user->getRoleObjects()->willReturn([$role1, $role2]);
 
@@ -901,9 +922,9 @@ class ContentRepositoryTest extends SuluTestCase
             [],
             null,
             [
-                $role1->getId() => ['edit' => true],
-                $role2->getId() => ['view' => true, 'archive' => true],
-                $role3->getId() => ['add' => true],
+                $role1Id => ['edit' => true],
+                $role2Id => ['view' => true, 'archive' => true],
+                $role3Id => ['add' => true],
             ]
         );
 
@@ -917,15 +938,15 @@ class ContentRepositoryTest extends SuluTestCase
 
         $this->assertEquals(
             [
-                $role1->getId() => ['view' => false, 'add' => false, 'delete' => false, 'edit' => true],
-                $role2->getId() => [
+                $role1Id => ['view' => false, 'add' => false, 'delete' => false, 'edit' => true],
+                $role2Id => [
                     'view' => true,
                     'add' => false,
                     'edit' => false,
                     'delete' => false,
                     'archive' => true,
                 ],
-                $role3->getId() => [
+                $role3Id => [
                     'view' => false,
                     'add' => true,
                     'edit' => false,
@@ -977,6 +998,13 @@ class ContentRepositoryTest extends SuluTestCase
 
         $this->em->flush();
 
+        /** @var int $role1Id */
+        $role1Id = $role1->getId();
+        /** @var int $role2Id */
+        $role2Id = $role2->getId();
+        /** @var int $role3Id */
+        $role3Id = $role3->getId();
+
         $user = $this->prophesize(UserInterface::class);
         $user->getRoleObjects()->willReturn([$role1, $role2]);
 
@@ -988,9 +1016,9 @@ class ContentRepositoryTest extends SuluTestCase
             [],
             null,
             [
-                $role1->getId() => ['edit' => false],
-                $role2->getId() => ['view' => false, 'archive' => false],
-                $role3->getId() => ['add' => false],
+                $role1Id => ['edit' => false],
+                $role2Id => ['view' => false, 'archive' => false],
+                $role3Id => ['add' => false],
             ]
         );
 
@@ -1004,9 +1032,9 @@ class ContentRepositoryTest extends SuluTestCase
 
         $this->assertEquals(
             [
-                $role1->getId() => ['view' => false, 'add' => false, 'delete' => false, 'edit' => false],
-                $role2->getId() => ['view' => false, 'add' => false, 'edit' => false, 'delete' => false],
-                $role3->getId() => [
+                $role1Id => ['view' => false, 'add' => false, 'delete' => false, 'edit' => false],
+                $role2Id => ['view' => false, 'add' => false, 'edit' => false, 'delete' => false],
+                $role3Id => [
                     'view' => false,
                     'add' => false,
                     'edit' => false,
@@ -1022,6 +1050,9 @@ class ContentRepositoryTest extends SuluTestCase
         return [['sulu_io'], ['test_io']];
     }
 
+    /**
+     * @param string $webspaceKey
+     */
     #[\PHPUnit\Framework\Attributes\DataProvider('provideWebspaceKeys')]
     public function testFindParentsWithSiblingsByUuid($webspaceKey): void
     {
@@ -1030,6 +1061,13 @@ class ContentRepositoryTest extends SuluTestCase
         $role3 = $this->createRole('Role 3', 'Website');
 
         $this->em->flush();
+
+        /** @var int $role1Id */
+        $role1Id = $role1->getId();
+        /** @var int $role2Id */
+        $role2Id = $role2->getId();
+        /** @var int $role3Id */
+        $role3Id = $role3->getId();
 
         $user = $this->prophesize(UserInterface::class);
         $user->getRoleObjects()->willReturn([$role1, $role2]);
@@ -1042,9 +1080,9 @@ class ContentRepositoryTest extends SuluTestCase
             [],
             null,
             [
-                $role1->getId() => ['edit' => true],
-                $role2->getId() => ['view' => true, 'archive' => true],
-                $role3->getId() => ['add' => true],
+                $role1Id => ['edit' => true],
+                $role2Id => ['view' => true, 'archive' => true],
+                $role3Id => ['add' => true],
             ]
         );
         $page2 = $this->createPage('test-2', 'de');
@@ -1073,15 +1111,15 @@ class ContentRepositoryTest extends SuluTestCase
         $this->assertEquals($page1->getUuid(), $layer[0]->getId());
         $this->assertEquals(
             [
-                $role1->getId() => ['view' => false, 'add' => false, 'delete' => false, 'edit' => true],
-                $role2->getId() => [
+                $role1Id => ['view' => false, 'add' => false, 'delete' => false, 'edit' => true],
+                $role2Id => [
                     'view' => true,
                     'add' => false,
                     'edit' => false,
                     'delete' => false,
                     'archive' => true,
                 ],
-                $role3->getId() => [
+                $role3Id => [
                     'view' => false,
                     'add' => true,
                     'edit' => false,
@@ -1155,6 +1193,13 @@ class ContentRepositoryTest extends SuluTestCase
 
         $this->em->flush();
 
+        /** @var int $role1Id */
+        $role1Id = $role1->getId();
+        /** @var int $role2Id */
+        $role2Id = $role2->getId();
+        /** @var int $role3Id */
+        $role3Id = $role3->getId();
+
         $user = $this->prophesize(UserInterface::class);
         $user->getRoleObjects()->willReturn([$role1, $role2]);
 
@@ -1166,9 +1211,9 @@ class ContentRepositoryTest extends SuluTestCase
             [],
             null,
             [
-                $role1->getId() => ['edit' => true],
-                $role2->getId() => ['view' => true, 'archive' => true],
-                $role3->getId() => ['add' => true],
+                $role1Id => ['edit' => true],
+                $role2Id => ['view' => true, 'archive' => true],
+                $role3Id => ['add' => true],
             ]
         );
         $page11 = $this->createPage('test-1/test-1', 'de', [], $page1);
@@ -1219,21 +1264,22 @@ class ContentRepositoryTest extends SuluTestCase
             $items[0]
         );
 
+        /* @phpstan-ignore method.impossibleType */
         $this->assertSame(
             [
                 'uuid' => $page1->getUuid(),
                 'hasChildren' => true,
                 'children' => null,
                 'permissions' => [
-                    $role1->getId() => ['view' => false, 'add' => false, 'edit' => true, 'delete' => false],
-                    $role2->getId() => [
+                    $role1Id => ['view' => false, 'add' => false, 'edit' => true, 'delete' => false],
+                    $role2Id => [
                         'view' => true,
                         'add' => false,
                         'edit' => false,
                         'delete' => false,
                         'archive' => true,
                     ],
-                    $role3->getId() => [
+                    $role3Id => [
                         'view' => false,
                         'add' => true,
                         'edit' => false,
@@ -1262,6 +1308,13 @@ class ContentRepositoryTest extends SuluTestCase
 
         $this->em->flush();
 
+        /** @var int $role1Id */
+        $role1Id = $role1->getId();
+        /** @var int $role2Id */
+        $role2Id = $role2->getId();
+        /** @var int $role3Id */
+        $role3Id = $role3->getId();
+
         $user = $this->prophesize(UserInterface::class);
         $user->getRoleObjects()->willReturn([$role1, $role2]);
 
@@ -1273,9 +1326,9 @@ class ContentRepositoryTest extends SuluTestCase
             [],
             null,
             [
-                $role1->getId() => ['edit' => true],
-                $role2->getId() => ['view' => true, 'archive' => true],
-                $role3->getId() => ['add' => true],
+                $role1Id => ['edit' => true],
+                $role2Id => ['view' => true, 'archive' => true],
+                $role3Id => ['add' => true],
             ]
         );
         $page11 = $this->createPage('test-1/test-1', 'de', [], $page1);
@@ -1303,21 +1356,22 @@ class ContentRepositoryTest extends SuluTestCase
             $result
         );
 
+        /* @phpstan-ignore method.impossibleType */
         $this->assertSame(
             [
                 'uuid' => $page1->getUuid(),
                 'hasChildren' => true,
                 'children' => null,
                 'permissions' => [
-                    $role1->getId() => ['view' => false, 'add' => false, 'edit' => true, 'delete' => false],
-                    $role2->getId() => [
+                    $role1Id => ['view' => false, 'add' => false, 'edit' => true, 'delete' => false],
+                    $role2Id => [
                         'view' => true,
                         'add' => false,
                         'edit' => false,
                         'delete' => false,
                         'archive' => true,
                     ],
-                    $role3->getId() => [
+                    $role3Id => [
                         'view' => false,
                         'add' => true,
                         'edit' => false,
@@ -1351,15 +1405,22 @@ class ContentRepositoryTest extends SuluTestCase
 
         $this->systemStore->setSystem('Sulu');
 
+        /** @var int $role1Id */
+        $role1Id = $role1->getId();
+        /** @var int $role2Id */
+        $role2Id = $role2->getId();
+        /** @var int $role3Id */
+        $role3Id = $role3->getId();
+
         $page1 = $this->createPage(
             'test-1',
             'de',
             [],
             null,
             [
-                $role1->getId() => ['edit' => true],
-                $role2->getId() => ['view' => true, 'archive' => true],
-                $role3->getId() => ['add' => true],
+                $role1Id => ['edit' => true],
+                $role2Id => ['view' => true, 'archive' => true],
+                $role3Id => ['add' => true],
             ]
         );
         $page11 = $this->createPage('test-1-1', 'de', [], $page1);
@@ -1395,15 +1456,15 @@ class ContentRepositoryTest extends SuluTestCase
 
         $this->assertContains(
             [
-                $role1->getId() => ['view' => false, 'add' => false, 'edit' => true, 'delete' => false],
-                $role2->getId() => [
+                $role1Id => ['view' => false, 'add' => false, 'edit' => true, 'delete' => false],
+                $role2Id => [
                     'view' => true,
                     'add' => false,
                     'edit' => false,
                     'delete' => false,
                     'archive' => true,
                 ],
-                $role3->getId() => [
+                $role3Id => [
                     'view' => false,
                     'add' => true,
                     'edit' => false,
@@ -1447,15 +1508,22 @@ class ContentRepositoryTest extends SuluTestCase
 
         $this->systemStore->setSystem('Sulu');
 
+        /** @var int $role1Id */
+        $role1Id = $role1->getId();
+        /** @var int $role2Id */
+        $role2Id = $role2->getId();
+        /** @var int $role3Id */
+        $role3Id = $role3->getId();
+
         $page1 = $this->createPage(
             'test-1',
             'de_at',
             [],
             null,
             [
-                $role1->getId() => ['edit' => true],
-                $role2->getId() => ['view' => true, 'archive' => true],
-                $role3->getId() => ['add' => true],
+                $role1Id => ['edit' => true],
+                $role2Id => ['view' => true, 'archive' => true],
+                $role3Id => ['add' => true],
             ]
         );
 
@@ -1472,15 +1540,15 @@ class ContentRepositoryTest extends SuluTestCase
 
         $this->assertCount(2, $result);
         $this->assertEquals([
-            $role1->getId() => ['view' => false, 'add' => false, 'delete' => false, 'edit' => true],
-            $role2->getId() => [
+            $role1Id => ['view' => false, 'add' => false, 'delete' => false, 'edit' => true],
+            $role2Id => [
                 'view' => true,
                 'add' => false,
                 'edit' => false,
                 'delete' => false,
                 'archive' => true,
             ],
-            $role3->getId() => [
+            $role3Id => [
                 'view' => false,
                 'add' => true,
                 'edit' => false,

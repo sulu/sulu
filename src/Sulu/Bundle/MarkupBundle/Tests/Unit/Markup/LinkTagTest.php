@@ -219,6 +219,12 @@ class LinkTagTest extends TestCase
         ];
     }
 
+    /**
+     * @param string $tag
+     * @param array<string, mixed> $attributes
+     * @param LinkItem[] $items
+     * @param string $expected
+     */
     #[\PHPUnit\Framework\Attributes\DataProvider('provideParseData')]
     public function testParseAll($tag, $attributes, $items, $expected): void
     {
