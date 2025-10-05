@@ -60,7 +60,9 @@ class NavigationRepositoryTest extends SuluTestCase
                 [new \Sulu\Messenger\Infrastructure\Symfony\Messenger\FlushMiddleware\EnableFlushStamp()]
             )
         );
-        $this->parent = $envelope->all(\Symfony\Component\Messenger\Stamp\HandledStamp::class)[0]->getResult();
+        $result = $envelope->all(\Symfony\Component\Messenger\Stamp\HandledStamp::class)[0]->getResult();
+        \assert($result instanceof \Sulu\Page\Domain\Model\Page);
+        $this->parent = $result;
 
         // Publish parent
         $messageBus->dispatch(
@@ -91,7 +93,9 @@ class NavigationRepositoryTest extends SuluTestCase
                 [new \Sulu\Messenger\Infrastructure\Symfony\Messenger\FlushMiddleware\EnableFlushStamp()]
             )
         );
-        $this->child1 = $envelope->all(\Symfony\Component\Messenger\Stamp\HandledStamp::class)[0]->getResult();
+        $result = $envelope->all(\Symfony\Component\Messenger\Stamp\HandledStamp::class)[0]->getResult();
+        \assert($result instanceof \Sulu\Page\Domain\Model\Page);
+        $this->child1 = $result;
 
         // Publish child1
         $messageBus->dispatch(
@@ -122,7 +126,9 @@ class NavigationRepositoryTest extends SuluTestCase
                 [new \Sulu\Messenger\Infrastructure\Symfony\Messenger\FlushMiddleware\EnableFlushStamp()]
             )
         );
-        $this->child2 = $envelope->all(\Symfony\Component\Messenger\Stamp\HandledStamp::class)[0]->getResult();
+        $result = $envelope->all(\Symfony\Component\Messenger\Stamp\HandledStamp::class)[0]->getResult();
+        \assert($result instanceof \Sulu\Page\Domain\Model\Page);
+        $this->child2 = $result;
 
         // Publish child2
         $messageBus->dispatch(
@@ -153,7 +159,9 @@ class NavigationRepositoryTest extends SuluTestCase
                 [new \Sulu\Messenger\Infrastructure\Symfony\Messenger\FlushMiddleware\EnableFlushStamp()]
             )
         );
-        $this->grandchild1 = $envelope->all(\Symfony\Component\Messenger\Stamp\HandledStamp::class)[0]->getResult();
+        $result = $envelope->all(\Symfony\Component\Messenger\Stamp\HandledStamp::class)[0]->getResult();
+        \assert($result instanceof \Sulu\Page\Domain\Model\Page);
+        $this->grandchild1 = $result;
 
         // Publish grandchild1
         $messageBus->dispatch(
@@ -179,7 +187,6 @@ class NavigationRepositoryTest extends SuluTestCase
             1
         );
 
-        $this->assertIsArray($result);
         $this->assertCount(2, $result);
         $this->assertSame('Child 1', $result[0]['title']);
         $this->assertSame('Child 2', $result[1]['title']);
@@ -260,7 +267,6 @@ class NavigationRepositoryTest extends SuluTestCase
             1
         );
 
-        $this->assertIsArray($result);
         $this->assertCount(2, $result);
         $this->assertSame('Child 1', $result[0]['title']);
         $this->assertArrayHasKey('children', $result[0]);
@@ -291,7 +297,9 @@ class NavigationRepositoryTest extends SuluTestCase
         );
 
         $this->assertCount(2, $result2);
+        \assert(\is_array($result2[0]['children']));
         $this->assertCount(1, $result2[0]['children']);
+        \assert(\is_array($result2[0]['children'][0]));
         $this->assertSame('Grandchild 1', $result2[0]['children'][0]['title']);
     }
 
@@ -308,7 +316,9 @@ class NavigationRepositoryTest extends SuluTestCase
 
         $this->assertCount(1, $result);
         $this->assertSame('Child 1', $result[0]['title']);
+        \assert(\is_array($result[0]['children']));
         $this->assertCount(1, $result[0]['children']);
+        \assert(\is_array($result[0]['children'][0]));
         $this->assertSame('Grandchild 1', $result[0]['children'][0]['title']);
     }
 
@@ -332,7 +342,6 @@ class NavigationRepositoryTest extends SuluTestCase
             'sulu-io'
         );
 
-        $this->assertIsArray($result);
         $this->assertCount(3, $result);
 
         // Verify root -> current order
