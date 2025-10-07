@@ -55,12 +55,16 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
  */
 class AccountController extends AbstractRestController implements SecuredControllerInterface
 {
+    /** @var class-string */
     protected static $positionEntityName = \Sulu\Bundle\ContactBundle\Entity\Position::class;
 
+    /** @var class-string */
     protected static $accountContactEntityName = AccountContactEntity::class;
 
+    /** @var class-string */
     protected static $addressEntityName = AddressEntity::class;
 
+    /** @var class-string */
     protected static $accountAddressEntityName = \Sulu\Bundle\ContactBundle\Entity\AccountAddress::class;
 
     protected static $accountSerializationGroups = [

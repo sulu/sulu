@@ -93,6 +93,12 @@ class TagTwigExtensionTest extends TestCase
         ];
     }
 
+    /**
+     * @param string $tagsParameter
+     * @param string $url
+     * @param string $tagsString
+     * @param string $expected
+     */
     #[\PHPUnit\Framework\Attributes\DataProvider('appendProvider')]
     public function testAppendTagUrl($tagsParameter, $url, $tagsString, $expected): void
     {
@@ -134,6 +140,12 @@ class TagTwigExtensionTest extends TestCase
         ];
     }
 
+    /**
+     * @param string $tagsParameter
+     * @param string $url
+     * @param string $tagsString
+     * @param string $expected
+     */
     #[\PHPUnit\Framework\Attributes\DataProvider('setProvider')]
     public function testSetTagUrl($tagsParameter, $url, $tagsString, $expected): void
     {
@@ -175,6 +187,11 @@ class TagTwigExtensionTest extends TestCase
         ];
     }
 
+    /**
+     * @param string $tagsParameter
+     * @param string $url
+     * @param string $tagsString
+     */
     #[\PHPUnit\Framework\Attributes\DataProvider('clearProvider')]
     public function testClearTagUrl($tagsParameter, $url, $tagsString): void
     {
