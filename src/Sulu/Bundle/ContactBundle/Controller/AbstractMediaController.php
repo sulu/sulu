@@ -38,14 +38,19 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
  */
 abstract class AbstractMediaController extends AbstractRestController
 {
+    /** @var class-string */
     protected static $collectionEntityName = \Sulu\Bundle\MediaBundle\Entity\Collection::class;
 
+    /** @var class-string */
     protected static $fileVersionEntityName = \Sulu\Bundle\MediaBundle\Entity\FileVersion::class;
 
+    /** @var class-string */
     protected static $fileEntityName = \Sulu\Bundle\MediaBundle\Entity\File::class;
 
+    /** @var class-string */
     protected static $fileVersionMetaEntityName = \Sulu\Bundle\MediaBundle\Entity\FileVersionMeta::class;
 
+    /** @var string */
     protected static $mediaEntityKey = 'media';
 
     protected $fieldDescriptors = null;

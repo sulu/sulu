@@ -134,10 +134,13 @@ class SortUtilsTest extends TestCase
     {
         $accessor = PropertyAccess::createPropertyAccessor();
 
-        $res = SortUtils::multisort($data, $methodName, $direction);
+        /** @var array<int, FoobarTestClass> $typedData */
+        $typedData = $data;
+        $res = SortUtils::multisort($typedData, $methodName, $direction);
 
         foreach ($expectedOrder as $expected) {
             $object = \array_shift($res);
+            $this->assertNotNull($object);
             $this->assertEquals($expected, $accessor->getValue($object, $checkField));
         }
     }

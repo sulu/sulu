@@ -801,8 +801,10 @@ class CollectionControllerTest extends SuluTestCase
 
         $generateColor = '#ffcc00';
 
+        /** @var int $roleId */
+        $roleId = $role->getId();
         $permissions = [
-            $role->getId() => [
+            $roleId => [
                 'view' => true,
                 'edit' => true,
                 'add' => true,
@@ -1343,8 +1345,10 @@ class CollectionControllerTest extends SuluTestCase
         $this->getTestUser()->addUserRole($userRole);
         $this->em->flush();
 
+        /** @var int $roleId */
+        $roleId = $role->getId();
         $permissions = [
-            $role->getId() => [
+            $roleId => [
                 'view' => true,
                 'edit' => true,
                 'add' => true,
@@ -1356,7 +1360,7 @@ class CollectionControllerTest extends SuluTestCase
         ];
 
         $fullPermissions = [
-            $role->getId() => [
+            $roleId => [
                 'view' => true,
                 'edit' => true,
                 'add' => true,

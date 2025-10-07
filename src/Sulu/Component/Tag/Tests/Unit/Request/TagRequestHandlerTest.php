@@ -34,6 +34,11 @@ class TagRequestHandlerTest extends TestCase
         ];
     }
 
+    /**
+     * @param string $tagsParameter
+     * @param string $tagsString
+     * @param string[] $expected
+     */
     #[\PHPUnit\Framework\Attributes\DataProvider('getProvider')]
     public function testGetTagsProvider($tagsParameter, $tagsString, $expected): void
     {
@@ -63,6 +68,12 @@ class TagRequestHandlerTest extends TestCase
         ];
     }
 
+    /**
+     * @param string $tagsParameter
+     * @param string $url
+     * @param string $tagsString
+     * @param string $expected
+     */
     #[\PHPUnit\Framework\Attributes\DataProvider('appendProvider')]
     public function testAppendTagToUrl($tagsParameter, $url, $tagsString, $expected): void
     {
@@ -95,6 +106,12 @@ class TagRequestHandlerTest extends TestCase
         ];
     }
 
+    /**
+     * @param string $tagsParameter
+     * @param string $url
+     * @param string $tagsString
+     * @param string $expected
+     */
     #[\PHPUnit\Framework\Attributes\DataProvider('setProvider')]
     public function testSetTagToUrl($tagsParameter, $url, $tagsString, $expected): void
     {
@@ -127,6 +144,11 @@ class TagRequestHandlerTest extends TestCase
         ];
     }
 
+    /**
+     * @param string $tagsParameter
+     * @param string $url
+     * @param string $tagsString
+     */
     #[\PHPUnit\Framework\Attributes\DataProvider('removeProvider')]
     public function testRemoveTagsFromUrl($tagsParameter, $url, $tagsString): void
     {
