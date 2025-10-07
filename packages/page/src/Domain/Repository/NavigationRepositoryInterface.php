@@ -38,4 +38,44 @@ interface NavigationRepositoryInterface
         int $depth = 1,
         array $properties = []
     ): array;
+
+    /**
+     * @param array<string, mixed> $properties
+     *
+     * @return array<string, mixed>[]
+     */
+    public function getNavigationFlatByUuid(
+        string $uuid,
+        string $locale,
+        string $webspaceKey,
+        int $depth = 1,
+        ?string $navigationContext = null,
+        array $properties = []
+    ): array;
+
+    /**
+     * @param array<string, mixed> $properties
+     *
+     * @return array<string, mixed>[]
+     */
+    public function getNavigationTreeByUuid(
+        string $uuid,
+        string $locale,
+        string $webspaceKey,
+        int $depth = 1,
+        ?string $navigationContext = null,
+        array $properties = []
+    ): array;
+
+    /**
+     * @param array<string, mixed> $properties
+     *
+     * @return array<string, mixed>[]
+     */
+    public function getBreadcrumb(
+        string $uuid,
+        string $locale,
+        string $webspaceKey,
+        array $properties = []
+    ): array;
 }
