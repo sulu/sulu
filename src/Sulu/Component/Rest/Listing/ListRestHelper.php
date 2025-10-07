@@ -98,7 +98,9 @@ class ListRestHelper
      */
     public function getSorting()
     {
+        /** @var string $sortOrder */
         $sortOrder = $this->getRequest()->get('sortOrder', 'asc');
+        /** @var string $sortBy */
         $sortBy = $this->getRequest()->get('sortBy', 'id');
 
         return [$sortBy => $sortOrder];

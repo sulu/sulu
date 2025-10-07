@@ -158,6 +158,11 @@ class LinkTagTest extends TestCase
         ];
     }
 
+    /**
+     * @param string $tag
+     * @param array<string, mixed> $attributes
+     * @param string $expected
+     */
     #[\PHPUnit\Framework\Attributes\DataProvider('provideParseDataDefaultProvider')]
     public function testParseAllDefaultProvider($tag, $attributes, $expected): void
     {

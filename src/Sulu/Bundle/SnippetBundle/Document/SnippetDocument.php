@@ -62,7 +62,7 @@ class SnippetDocument implements
     private $creator;
 
     /**
-     * @var int|null
+     * @var null
      */
     private $changer;
 

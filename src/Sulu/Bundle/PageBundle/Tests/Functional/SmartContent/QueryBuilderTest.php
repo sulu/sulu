@@ -1661,7 +1661,10 @@ class QueryBuilderTest extends SuluTestCase
 
         $this->documentManager->flush();
 
-        return [$document->getResourceSegment() => $document];
+        /** @var string $resourceSegment */
+        $resourceSegment = $document->getResourceSegment();
+
+        return [$resourceSegment => $document];
     }
 
     public function testShadow(): void

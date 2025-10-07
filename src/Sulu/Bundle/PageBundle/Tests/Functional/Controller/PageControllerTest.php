@@ -381,8 +381,10 @@ class PageControllerTest extends SuluTestCase
         /** @var BasePageDocument $homeDocument */
         $homeDocument = $this->documentManager->find('/cmf/sulu_io/contents');
 
+        /** @var int $roleId */
+        $roleId = $role->getId();
         $permissions = [
-            $role->getId() => [
+            $roleId => [
                 'view' => true,
                 'edit' => true,
                 'add' => true,
@@ -940,8 +942,10 @@ class PageControllerTest extends SuluTestCase
         $this->getTestUser()->addUserRole($userRole);
         $this->em->flush();
 
+        /** @var int $roleId */
+        $roleId = $role->getId();
         $permissions = [
-            $role->getId() => [
+            $roleId => [
                 'view' => true,
                 'edit' => true,
                 'add' => true,
@@ -953,7 +957,7 @@ class PageControllerTest extends SuluTestCase
         ];
 
         $fullPermissions = [
-            $role->getId() => [
+            $roleId => [
                 'view' => true,
                 'edit' => true,
                 'add' => true,
