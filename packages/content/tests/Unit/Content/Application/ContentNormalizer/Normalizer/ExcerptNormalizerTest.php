@@ -18,7 +18,6 @@ use Sulu\Content\Application\ContentNormalizer\Normalizer\ExcerptNormalizer;
 use Sulu\Content\Domain\Model\ContentRichEntityInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Domain\Model\ExcerptInterface;
-use Sulu\Page\Domain\Model\PageInterface;
 
 class ExcerptNormalizerTest extends TestCase
 {
@@ -118,67 +117,6 @@ class ExcerptNormalizerTest extends TestCase
             'excerptTags' => ['Tag 1', 'Tag 2'],
             'excerptCategories' => [3, 4],
             'excerptAudienceTargetGroups' => [5, 6, 7],
-        ];
-
-        $this->assertSame(
-            $expectedResult,
-            $normalizer->enhance($object->reveal(), $data)
-        );
-    }
-
-    public function testEnhanceWithSegmentForPageResource(): void
-    {
-        $normalizer = $this->createExcerptNormalizerInstance();
-
-        $page = $this->prophesize(PageInterface::class);
-        $page->getWebspaceKey()->willReturn('example-webspace');
-
-        $object = $this->prophesize(ExcerptInterface::class);
-        $object->willImplement(DimensionContentInterface::class);
-        $object->getResource()->willReturn($page->reveal());
-        $object->getExcerptSegment()->willReturn('test-segment');
-
-        $data = [
-            'excerptTagNames' => [],
-            'excerptCategoryIds' => [],
-        ];
-
-        $expectedResult = [
-            'excerptTags' => [],
-            'excerptCategories' => [],
-            'excerptAudienceTargetGroups' => [],
-            'excerptSegment' => [
-                'example-webspace' => 'test-segment',
-            ],
-        ];
-
-        $this->assertSame(
-            $expectedResult,
-            $normalizer->enhance($object->reveal(), $data)
-        );
-    }
-
-    public function testEnhanceWithNullSegmentForPageResource(): void
-    {
-        $normalizer = $this->createExcerptNormalizerInstance();
-
-        $page = $this->prophesize(PageInterface::class);
-
-        $object = $this->prophesize(ExcerptInterface::class);
-        $object->willImplement(DimensionContentInterface::class);
-        $object->getResource()->willReturn($page->reveal());
-        $object->getExcerptSegment()->willReturn(null);
-
-        $data = [
-            'excerptTagNames' => [],
-            'excerptCategoryIds' => [],
-        ];
-
-        $expectedResult = [
-            'excerptTags' => [],
-            'excerptCategories' => [],
-            'excerptAudienceTargetGroups' => [],
-            'excerptSegment' => null,
         ];
 
         $this->assertSame(

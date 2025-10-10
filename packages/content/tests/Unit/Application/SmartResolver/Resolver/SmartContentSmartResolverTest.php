@@ -17,7 +17,6 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\AdminBundle\SmartContent\SmartContentProviderInterface;
-use Sulu\Bundle\AudienceTargetingBundle\TargetGroup\TargetGroupStoreInterface;
 use Sulu\Content\Application\ContentResolver\Value\ResolvableResource;
 use Sulu\Content\Application\ContentResolver\Value\SmartResolvable;
 use Sulu\Content\Application\SmartResolver\Resolver\SmartContentSmartResolver;
@@ -30,19 +29,15 @@ class SmartContentSmartResolverTest extends TestCase
     private SmartContentSmartResolver $smartResolver;
     /** @var ObjectProphecy<ServiceLocator<SmartContentProviderInterface>> */
     private ObjectProphecy $serviceLocator;
-    /** @var ObjectProphecy<TargetGroupStoreInterface> */
-    private ObjectProphecy $targetGroupStore;
 
     protected function setUp(): void
     {
         /** @var ObjectProphecy<ServiceLocator<SmartContentProviderInterface>> $serviceLocator */
         $serviceLocator = $this->prophesize(ServiceLocator::class);
         $this->serviceLocator = $serviceLocator;
-        $this->targetGroupStore = $this->prophesize(TargetGroupStoreInterface::class);
 
         $this->smartResolver = new SmartContentSmartResolver(
             $this->serviceLocator->reveal(),
-            $this->targetGroupStore->reveal(),
         );
     }
 
@@ -111,259 +106,6 @@ class SmartContentSmartResolverTest extends TestCase
         $view = $result->getView();
         $this->assertArrayHasKey('total', $view);
         $this->assertSame(5, $view['total']); // min(limit (5), fullTotal (10)) = 5
-    }
-
-    public function testResolveWithAudienceTargeting(): void
-    {
-        $smartResolvable = $this->prophesize(SmartResolvable::class);
-        $smartContentProvider = $this->prophesize(SmartContentProviderInterface::class);
-
-        $data = [
-            'value' => ['tags' => ['tag1']],
-            'filters' => [
-                'dataSource' => 'root',
-                'includeSubFolders' => true,
-                'categories' => [],
-                'categoryOperator' => 'OR',
-                'tagOperator' => 'OR',
-                'types' => [],
-                'typesOperator' => 'OR',
-                'websiteCategories' => [],
-                'websiteCategoryOperator' => 'OR',
-                'websiteTags' => [],
-                'websiteTagOperator' => 'OR',
-                'audienceTargeting' => true, // Enable audience targeting
-                'limit' => null,
-                'page' => 1,
-            ],
-            'sortBys' => [],
-            'parameters' => ['provider' => 'pages'],
-        ];
-
-        $smartResolvable->getData()->willReturn($data);
-
-        // Mock target group store behavior
-        $this->targetGroupStore->getTargetGroupId(true)->willReturn('123');
-
-        $expectedFilters = $data['filters'];
-        $expectedFilters['targetGroupId'] = '123'; // Should be added by audience targeting logic
-        // Remove pagination keys and add offset
-        unset($expectedFilters['page']);
-        unset($expectedFilters['limit']);
-        $expectedFilters['offset'] = 0; // page 1 with offset 0
-        $expectedFilters['limit'] = null; // no limit specified
-
-        $countByFilters = $expectedFilters;
-        unset($countByFilters['offset']);
-
-        $this->serviceLocator->has('pages')->willReturn(true);
-        $this->serviceLocator->get('pages')->willReturn($smartContentProvider->reveal());
-        $this->serviceLocator->getProvidedServices()->willReturn(['pages' => true]);
-
-        $smartContentProvider->findFlatBy($expectedFilters, $data['sortBys'], ['value' => $data['value'], ...$data['parameters']])
-            ->willReturn([['id' => 1]]);
-        $smartContentProvider->countBy($countByFilters, ['value' => $data['value'], ...$data['parameters']])
-            ->willReturn(1);
-        $smartContentProvider->getResourceLoaderKey()->willReturn('pages');
-
-        $result = $this->smartResolver->resolve($smartResolvable->reveal(), 'en');
-
-        /** @var array<int, ResolvableResource> $content */
-        $content = $result->getContent();
-        $this->assertCount(1, $content);
-        $this->assertSame(1, $content[0]->getId());
-        $this->assertSame('pages', $content[0]->getResourceLoaderKey());
-
-        $view = $result->getView();
-        $this->assertArrayHasKey('total', $view);
-        $this->assertSame(1, $view['total']);
-    }
-
-    public function testResolveWithAudienceTargetingNoTargetGroup(): void
-    {
-        $smartResolvable = $this->prophesize(SmartResolvable::class);
-        $smartContentProvider = $this->prophesize(SmartContentProviderInterface::class);
-
-        $data = [
-            'value' => ['tags' => ['tag1']],
-            'filters' => [
-                'dataSource' => 'root',
-                'includeSubFolders' => true,
-                'categories' => [],
-                'categoryOperator' => 'OR',
-                'tagOperator' => 'OR',
-                'types' => [],
-                'typesOperator' => 'OR',
-                'websiteCategories' => [],
-                'websiteCategoryOperator' => 'OR',
-                'websiteTags' => [],
-                'websiteTagOperator' => 'OR',
-                'audienceTargeting' => true,
-                'limit' => null,
-                'page' => 1,
-            ],
-            'sortBys' => [],
-            'parameters' => ['provider' => 'pages'],
-        ];
-
-        $smartResolvable->getData()->willReturn($data);
-
-        // No target group available
-        $this->targetGroupStore->getTargetGroupId(true)->willReturn(null);
-
-        // Filters should not include targetGroupId but pagination keys are still modified
-        $expectedFilters = $data['filters'];
-        unset($expectedFilters['page']);
-        unset($expectedFilters['limit']);
-        $expectedFilters['offset'] = 0;
-        $expectedFilters['limit'] = null;
-
-        $countByFilters = $expectedFilters;
-        unset($countByFilters['offset']);
-
-        $this->serviceLocator->has('pages')->willReturn(true);
-        $this->serviceLocator->get('pages')->willReturn($smartContentProvider->reveal());
-
-        $smartContentProvider->findFlatBy($expectedFilters, $data['sortBys'], ['value' => $data['value'], ...$data['parameters']])
-            ->willReturn([['id' => 1]]);
-        $smartContentProvider->countBy($countByFilters, ['value' => $data['value'], ...$data['parameters']])
-            ->willReturn(1);
-        $smartContentProvider->getResourceLoaderKey()->willReturn('pages');
-
-        $result = $this->smartResolver->resolve($smartResolvable->reveal(), 'en');
-
-        /** @var array<int, ResolvableResource> $content */
-        $content = $result->getContent();
-        $this->assertCount(1, $content);
-        $this->assertSame(1, $content[0]->getId());
-        $this->assertSame('pages', $content[0]->getResourceLoaderKey());
-
-        $view = $result->getView();
-        $this->assertArrayHasKey('total', $view);
-        $this->assertSame(1, $view['total']);
-    }
-
-    public function testResolveWithAudienceTargetingExcludedTargetGroup(): void
-    {
-        $smartResolvable = $this->prophesize(SmartResolvable::class);
-        $smartContentProvider = $this->prophesize(SmartContentProviderInterface::class);
-
-        $data = [
-            'value' => [],
-            'filters' => [
-                'audienceTargeting' => true,
-                'limit' => null,
-                'page' => 1,
-                'dataSource' => 'root',
-                'includeSubFolders' => true,
-                'categories' => [],
-                'categoryOperator' => 'OR',
-                'tagOperator' => 'OR',
-                'types' => [],
-                'typesOperator' => 'OR',
-                'websiteCategories' => [],
-                'websiteCategoryOperator' => 'OR',
-                'websiteTags' => [],
-                'websiteTagOperator' => 'OR',
-            ],
-            'sortBys' => [],
-            'parameters' => ['provider' => 'pages'],
-        ];
-
-        $smartResolvable->getData()->willReturn($data);
-
-        // Target group is -1 (excluded)
-        $this->targetGroupStore->getTargetGroupId(true)->willReturn('-1');
-
-        // Filters should not include targetGroupId (excluded) but pagination keys are modified
-        $expectedFilters = $data['filters'];
-        unset($expectedFilters['page']);
-        unset($expectedFilters['limit']);
-        $expectedFilters['offset'] = 0;
-        $expectedFilters['limit'] = null;
-
-        $countByFilters = $expectedFilters;
-        unset($countByFilters['offset']);
-
-        $this->serviceLocator->has('pages')->willReturn(true);
-        $this->serviceLocator->get('pages')->willReturn($smartContentProvider->reveal());
-
-        $smartContentProvider->findFlatBy($expectedFilters, $data['sortBys'], ['value' => $data['value'], ...$data['parameters']])
-            ->willReturn([]);
-        $smartContentProvider->countBy($countByFilters, ['value' => $data['value'], ...$data['parameters']])
-            ->willReturn(0);
-        $smartContentProvider->getResourceLoaderKey()->willReturn('pages');
-
-        $result = $this->smartResolver->resolve($smartResolvable->reveal(), 'en');
-
-        /** @var array<int, ResolvableResource> $content */
-        $content = $result->getContent();
-        $this->assertCount(0, $content); // This test expects no results
-
-        $view = $result->getView();
-        $this->assertArrayHasKey('total', $view);
-        $this->assertSame(0, $view['total']);
-    }
-
-    public function testResolveWithoutTargetGroupStore(): void
-    {
-        $resolver = new SmartContentSmartResolver($this->serviceLocator->reveal(), null);
-
-        $smartResolvable = $this->prophesize(SmartResolvable::class);
-        $smartContentProvider = $this->prophesize(SmartContentProviderInterface::class);
-
-        $data = [
-            'value' => [],
-            'filters' => [
-                'audienceTargeting' => true,
-                'limit' => null,
-                'page' => 1,
-                'dataSource' => 'root',
-                'includeSubFolders' => true,
-                'categories' => [],
-                'categoryOperator' => 'OR',
-                'tagOperator' => 'OR',
-                'types' => [],
-                'typesOperator' => 'OR',
-                'websiteCategories' => [],
-                'websiteCategoryOperator' => 'OR',
-                'websiteTags' => [],
-                'websiteTagOperator' => 'OR',
-            ],
-            'sortBys' => [],
-            'parameters' => ['provider' => 'pages'],
-        ];
-
-        $smartResolvable->getData()->willReturn($data);
-
-        // No target group store available, so audience targeting should be ignored
-        $expectedFilters = $data['filters'];
-        unset($expectedFilters['page']);
-        unset($expectedFilters['limit']);
-        $expectedFilters['offset'] = 0;
-        $expectedFilters['limit'] = null;
-
-        $countByFilters = $expectedFilters;
-        unset($countByFilters['offset']);
-
-        $this->serviceLocator->has('pages')->willReturn(true);
-        $this->serviceLocator->get('pages')->willReturn($smartContentProvider->reveal());
-
-        $smartContentProvider->findFlatBy($expectedFilters, $data['sortBys'], ['value' => $data['value'], ...$data['parameters']])
-            ->willReturn([]);
-        $smartContentProvider->countBy($countByFilters, ['value' => $data['value'], ...$data['parameters']])
-            ->willReturn(0);
-        $smartContentProvider->getResourceLoaderKey()->willReturn('pages');
-
-        $result = $resolver->resolve($smartResolvable->reveal(), 'en');
-
-        /** @var array<int, ResolvableResource> $content */
-        $content = $result->getContent();
-        $this->assertCount(0, $content); // This test expects no results
-
-        $view = $result->getView();
-        $this->assertArrayHasKey('total', $view);
-        $this->assertSame(0, $view['total']);
     }
 
     public function testResolveWithInvalidProvider(): void

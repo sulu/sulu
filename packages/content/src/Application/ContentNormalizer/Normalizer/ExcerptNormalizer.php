@@ -15,7 +15,6 @@ namespace Sulu\Content\Application\ContentNormalizer\Normalizer;
 
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Domain\Model\ExcerptInterface;
-use Sulu\Page\Domain\Model\PageInterface;
 
 class ExcerptNormalizer implements NormalizerInterface
 {
@@ -31,13 +30,6 @@ class ExcerptNormalizer implements NormalizerInterface
         unset($normalizedData['excerptCategoryIds']);
         $normalizedData['excerptAudienceTargetGroups'] = $normalizedData['excerptAudienceTargetGroupIds'] ?? [];
         unset($normalizedData['excerptAudienceTargetGroupIds']);
-
-        $resource = $object->getResource();
-        if ($resource instanceof PageInterface) {
-            $normalizedData['excerptSegment'] = null !== $object->getExcerptSegment() ? [
-                $resource->getWebspaceKey() => $object->getExcerptSegment(),
-            ] : null;
-        }
 
         return $normalizedData;
     }

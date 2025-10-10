@@ -41,6 +41,7 @@ use Sulu\Page\Infrastructure\Sulu\Admin\PropertyMetadataMapper\PageTreeRouteProp
 use Sulu\Page\Infrastructure\Sulu\Build\HomepageBuilder;
 use Sulu\Page\Infrastructure\Sulu\Content\DataMapper\NavigationContextDataMapper;
 use Sulu\Page\Infrastructure\Sulu\Content\Merger\NavigationContextMerger;
+use Sulu\Page\Infrastructure\Sulu\Content\Normalizer\PageExcerptNormalizer;
 use Sulu\Page\Infrastructure\Sulu\Content\Normalizer\PageNormalizer;
 use Sulu\Page\Infrastructure\Sulu\Content\PageLinkProvider;
 use Sulu\Page\Infrastructure\Sulu\Content\PageSmartContentProvider;
@@ -228,9 +229,13 @@ final class SuluPageBundle extends AbstractBundle
             ->class(NavigationContextMerger::class)
             ->tag('sulu_content.merger');
 
-        // Normalizer service
+        // Normalizer services
         $services->set('sulu_page.page_normalizer')
             ->class(PageNormalizer::class)
+            ->tag('sulu_content.normalizer');
+
+        $services->set('sulu_page.page_excerpt_normalizer')
+            ->class(PageExcerptNormalizer::class)
             ->tag('sulu_content.normalizer');
 
         // Property Metadata Mapper services

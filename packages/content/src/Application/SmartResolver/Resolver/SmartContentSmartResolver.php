@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Sulu\Content\Application\SmartResolver\Resolver;
 
 use Sulu\Bundle\AdminBundle\SmartContent\SmartContentProviderInterface;
-use Sulu\Bundle\AudienceTargetingBundle\TargetGroup\TargetGroupStoreInterface;
 use Sulu\Content\Application\ContentResolver\Value\ContentView;
 use Sulu\Content\Application\ContentResolver\Value\SmartResolvable;
 use Symfony\Component\DependencyInjection\ServiceLocator;
@@ -50,7 +49,6 @@ class SmartContentSmartResolver implements SmartResolverInterface
      */
     public function __construct(
         private ServiceLocator $smartContentProviders,
-        private ?TargetGroupStoreInterface $targetGroupStore = null,
     ) {
     }
 
@@ -69,15 +67,6 @@ class SmartContentSmartResolver implements SmartResolverInterface
         $filters = $data['filters'];
         $sortBys = $data['sortBys'] ?? [];
         $parameters = $data['parameters'];
-
-        if (isset($filters['audienceTargeting']) && $filters['audienceTargeting'] && $this->targetGroupStore) {
-            /** @var string|null $targetGroupId */
-            $targetGroupId = $this->targetGroupStore->getTargetGroupId(internal: true);
-            // Check if target group is valid (not null and not the excluded group '-1')
-            if (null !== $targetGroupId && '-1' !== $targetGroupId) {
-                $filters['targetGroupId'] = $targetGroupId;
-            }
-        }
 
         /** @var int|null $limit Total max items across all pages (null = no limit) */
         $limit = $filters['limit'] ?? null;

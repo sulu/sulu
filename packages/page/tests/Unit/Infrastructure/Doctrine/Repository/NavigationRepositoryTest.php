@@ -180,6 +180,7 @@ class NavigationRepositoryTest extends TestCase
         $queryBuilder->andWhere('navigationContext.navigationContext IN (:navigationContexts)')->willReturn($queryBuilder->reveal());
         $queryBuilder->setParameter('navigationContexts', ['footer'])->willReturn($queryBuilder->reveal());
 
+        $query->toIterable()->willReturn([$page->reveal()]);
         $query->getResult()->willReturn([$page->reveal()]);
 
         // Setup content resolution
@@ -389,6 +390,7 @@ class NavigationRepositoryTest extends TestCase
         $queryBuilder->andWhere('navigationContext.navigationContext IN (:navigationContexts)')->willReturn($queryBuilder->reveal());
         $queryBuilder->setParameter('navigationContexts', ['main'])->willReturn($queryBuilder->reveal());
 
+        $query->toIterable()->willReturn([$page->reveal()]);
         $query->getResult()->willReturn([$page->reveal()]);
 
         // Setup content resolution with excerpt

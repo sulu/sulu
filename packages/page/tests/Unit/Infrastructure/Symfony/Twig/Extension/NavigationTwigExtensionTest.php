@@ -71,8 +71,9 @@ class NavigationTwigExtensionTest extends TestCase
 
         $localization = new Localization('en');
         $requestAnalyzer->getCurrentLocalization()->willReturn($localization);
+        $requestAnalyzer->getSegment()->willReturn(null);
 
-        $navigationRepository->getNavigationFlat('main', 'en', 'sulu-io', 1, ['loadExcerpt' => false])
+        $navigationRepository->getNavigationFlat('main', 'en', 'sulu-io', null, 1, ['loadExcerpt' => false])
             ->willReturn([['title' => 'Page 1']])
             ->shouldBeCalled();
 
@@ -97,8 +98,9 @@ class NavigationTwigExtensionTest extends TestCase
 
         $localization = new Localization('en');
         $requestAnalyzer->getCurrentLocalization()->willReturn($localization);
+        $requestAnalyzer->getSegment()->willReturn(null);
 
-        $navigationRepository->getNavigationTree('main', 'en', 'sulu-io', 2, ['excerpt' => true])
+        $navigationRepository->getNavigationTree('main', 'en', 'sulu-io', null, 2, ['excerpt' => true])
             ->willReturn([['title' => 'Page 1', 'children' => []]])
             ->shouldBeCalled();
 
