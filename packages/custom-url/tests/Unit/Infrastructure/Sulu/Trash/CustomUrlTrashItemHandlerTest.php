@@ -13,7 +13,6 @@ namespace Sulu\CustomUrl\Tests\Unit\Infrastructure\Sulu\Trash;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
-use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\CustomUrl\Domain\Model\CustomUrl;
 use Sulu\CustomUrl\Infrastructure\Sulu\Trash\CustomUrlTrashItemHandler;
 

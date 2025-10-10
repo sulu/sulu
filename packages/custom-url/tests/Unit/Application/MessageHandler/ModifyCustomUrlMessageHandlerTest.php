@@ -45,7 +45,9 @@ class ModifyCustomUrlMessageHandlerTest extends KernelTestCase
         // Delete all custom URLs to clear the db
         foreach ($this->customUrlRepository->findBy() as $customUrl) {
             $this->customUrlRepository->remove($customUrl);
-        } $this->entityManager->flush();
+        }
+        $this->entityManager->flush();
+        $this->entityManager->clear();
 
         $this->targetDocument = Uuid::v4()->toRfc4122();
         $createdObject = $container->get(MessageBusInterface::class)
