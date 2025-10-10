@@ -13,7 +13,9 @@ declare(strict_types=1);
 
 namespace Sulu\Snippet\Application\MessageHandler;
 
+use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
 use Sulu\Snippet\Application\Message\RemoveSnippetAreaMessage;
+use Sulu\Snippet\Domain\Event\SnippetAreaRemovedEvent;
 use Sulu\Snippet\Domain\Model\SnippetAreaInterface;
 use Sulu\Snippet\Domain\Repository\SnippetAreaRepositoryInterface;
 
@@ -21,6 +23,7 @@ readonly class RemoveSnippetAreaMessageHandler
 {
     public function __construct(
         private SnippetAreaRepositoryInterface $snippetAreaRepository,
+        private DomainEventCollectorInterface $domainEventCollector
     ) {
     }
 
@@ -38,6 +41,8 @@ readonly class RemoveSnippetAreaMessageHandler
         $this->snippetAreaRepository->remove($snippetArea);
 
         $snippetArea->setSnippet(null);
+
+        $this->domainEventCollector->collect(new SnippetAreaRemovedEvent($snippetArea->getUuid(), $message->getLocale(), $message->getData()));
 
         return $snippetArea;
     }

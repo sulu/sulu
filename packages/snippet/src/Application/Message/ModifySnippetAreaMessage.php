@@ -13,29 +13,35 @@ declare(strict_types=1);
 
 namespace Sulu\Snippet\Application\Message;
 
+/** @phpstan-type ModifySnippetAreaMessageData array{
+ *     webspaceKey: string,
+ *     areaKey: string,
+ *     snippetIdentifier: array{uuid: string},
+ *     locale: string,
+ *  }
+ */
 class ModifySnippetAreaMessage
 {
-    private string $webspace;
+    private string $webspaceKey;
     private string $areaKey;
-
-    /**
-     * @var array{ uuid: string }
-     */
+    private string $locale;
+    /** @var array{ uuid: string } */
     private array $snippetIdentifier;
 
     /**
-     * @param array{webspaceKey: string, key: string, snippetIdentifier: array{uuid: string}} $data
+     * @param ModifySnippetAreaMessageData $data
      */
     public function __construct(array $data)
     {
-        $this->webspace = $data['webspaceKey'];
-        $this->areaKey = $data['key'];
+        $this->webspaceKey = $data['webspaceKey'];
+        $this->areaKey = $data['areaKey'];
         $this->snippetIdentifier = $data['snippetIdentifier'];
+        $this->locale = $data['locale'];
     }
 
-    public function getWebspace(): string
+    public function getWebspaceKey(): string
     {
-        return $this->webspace;
+        return $this->webspaceKey;
     }
 
     public function getAreaKey(): string
@@ -49,5 +55,21 @@ class ModifySnippetAreaMessage
     public function getSnippetIdentifier(): array
     {
         return $this->snippetIdentifier;
+    }
+
+    public function getLocale(): string
+    {
+        return $this->locale;
+    }
+
+    /** @return ModifySnippetAreaMessageData */
+    public function getData(): array
+    {
+        return [
+            'webspaceKey' => $this->webspaceKey,
+            'snippetIdentifier' => ['uuid' => $this->snippetIdentifier],
+            'areaKey' => $this->areaKey,
+            'locale' => $this->locale,
+        ];
     }
 }

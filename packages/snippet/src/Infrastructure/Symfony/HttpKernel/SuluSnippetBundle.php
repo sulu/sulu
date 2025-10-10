@@ -180,6 +180,7 @@ final class SuluSnippetBundle extends AbstractBundle
             ->args([
                 new Reference(SnippetAreaRepositoryInterface::class),
                 new Reference(SnippetRepositoryInterface::class),
+                new Reference('sulu_activity.domain_event_collector'),
             ])
             ->tag('messenger.message_handler');
 
@@ -187,6 +188,7 @@ final class SuluSnippetBundle extends AbstractBundle
             ->class(RemoveSnippetAreaMessageHandler::class)
             ->args([
                 new Reference('sulu_snippet.snippet_area_repository'),
+                new Reference('sulu_activity.domain_event_collector'),
             ])
             ->tag('messenger.message_handler');
 
