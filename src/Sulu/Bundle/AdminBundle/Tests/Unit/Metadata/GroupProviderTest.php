@@ -14,6 +14,7 @@ namespace Sulu\Bundle\AdminBundle\Tests\Unit\Metadata;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
+use Psr\Container\ContainerInterface;
 use Sulu\Article\Domain\Model\ArticleInterface;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormGroup;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
@@ -28,10 +29,12 @@ class GroupProviderTest extends TestCase
 
     private GroupProvider $groupProvider;
 
+    private MetadataProviderRegistry $metadataProviderRegistry;
+
     /**
-     * @var ObjectProphecy<MetadataProviderRegistry>
+     * @var ObjectProphecy<ContainerInterface>
      */
-    private ObjectProphecy $metadataProviderRegistry;
+    private ObjectProphecy $container;
 
     /**
      * @var ObjectProphecy<MetadataProviderInterface>
@@ -40,10 +43,11 @@ class GroupProviderTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->metadataProviderRegistry = $this->prophesize(MetadataProviderRegistry::class);
+        $this->container = $this->prophesize(ContainerInterface::class);
         $this->metadataProvider = $this->prophesize(MetadataProviderInterface::class);
 
-        $this->groupProvider = new GroupProvider($this->metadataProviderRegistry->reveal());
+        $this->metadataProviderRegistry = new MetadataProviderRegistry($this->container->reveal());
+        $this->groupProvider = new GroupProvider($this->metadataProviderRegistry);
     }
 
     public function testGetGroupsWithSingleGroup(): void
@@ -60,9 +64,8 @@ class GroupProviderTest extends TestCase
         $typedFormMetadata->addForm('article', $formMetadata1);
         $typedFormMetadata->addForm('blog', $formMetadata2);
 
-        $this->metadataProviderRegistry
-            ->getMetadataProvider('form')
-            ->willReturn($this->metadataProvider->reveal());
+        $this->container->has('form')->willReturn(true);
+        $this->container->get('form')->willReturn($this->metadataProvider->reveal());
 
         $this->metadataProvider
             ->getMetadata(ArticleInterface::TEMPLATE_TYPE, '', [])
@@ -97,9 +100,8 @@ class GroupProviderTest extends TestCase
         $typedFormMetadata->addForm('blog', $formMetadata2);
         $typedFormMetadata->addForm('news', $formMetadata3);
 
-        $this->metadataProviderRegistry
-            ->getMetadataProvider('form')
-            ->willReturn($this->metadataProvider->reveal());
+        $this->container->has('form')->willReturn(true);
+        $this->container->get('form')->willReturn($this->metadataProvider->reveal());
 
         $this->metadataProvider
             ->getMetadata(ArticleInterface::TEMPLATE_TYPE, '', [])
@@ -134,9 +136,8 @@ class GroupProviderTest extends TestCase
         $typedFormMetadata = new TypedFormMetadata();
         $typedFormMetadata->addForm('article', $formMetadata1);
 
-        $this->metadataProviderRegistry
-            ->getMetadataProvider('form')
-            ->willReturn($this->metadataProvider->reveal());
+        $this->container->has('form')->willReturn(true);
+        $this->container->get('form')->willReturn($this->metadataProvider->reveal());
 
         $this->metadataProvider
             ->getMetadata(ArticleInterface::TEMPLATE_TYPE, '', [])
@@ -155,9 +156,8 @@ class GroupProviderTest extends TestCase
     {
         $typedFormMetadata = new TypedFormMetadata();
 
-        $this->metadataProviderRegistry
-            ->getMetadataProvider('form')
-            ->willReturn($this->metadataProvider->reveal());
+        $this->container->has('form')->willReturn(true);
+        $this->container->get('form')->willReturn($this->metadataProvider->reveal());
 
         $this->metadataProvider
             ->getMetadata(ArticleInterface::TEMPLATE_TYPE, '', [])
@@ -188,9 +188,8 @@ class GroupProviderTest extends TestCase
         $typedFormMetadata->addForm('blog', $formMetadata2);
         $typedFormMetadata->addForm('news', $formMetadata3);
 
-        $this->metadataProviderRegistry
-            ->getMetadataProvider('form')
-            ->willReturn($this->metadataProvider->reveal());
+        $this->container->has('form')->willReturn(true);
+        $this->container->get('form')->willReturn($this->metadataProvider->reveal());
 
         $this->metadataProvider
             ->getMetadata(ArticleInterface::TEMPLATE_TYPE, '', [])
