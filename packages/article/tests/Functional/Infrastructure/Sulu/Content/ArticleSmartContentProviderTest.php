@@ -125,6 +125,7 @@ class ArticleSmartContentProviderTest extends SuluTestCase
             'excerptCategories' => [self::$categories['tech']->getId(), self::$categories['business']->getId()],
             'excerptTags' => [self::$tags['cloud']],
             'authored' => '2023-02-20T14:30:00+00:00',
+            'template' => 'blog',
         ]);
 
         self::$articles['sports1'] = self::createArticle([
@@ -139,6 +140,7 @@ class ArticleSmartContentProviderTest extends SuluTestCase
             'excerptCategories' => [self::$categories['sports']->getId()],
             'excerptTags' => [self::$tags['tennis']],
             'authored' => '2023-04-05T16:45:00+00:00',
+            'template' => 'news',
         ]);
 
         self::$articles['health1'] = self::createArticle([
@@ -167,6 +169,7 @@ class ArticleSmartContentProviderTest extends SuluTestCase
             'excerptCategories' => [self::$categories['business']->getId()],
             'excerptTags' => [self::$tags['finance']],
             'authored' => '2023-08-30T13:45:00+00:00',
+            'template' => 'blog',
         ]);
 
         self::$articles['entertainment1'] = self::createArticle([
@@ -181,6 +184,7 @@ class ArticleSmartContentProviderTest extends SuluTestCase
             'excerptCategories' => [self::$categories['entertainment']->getId()],
             'excerptTags' => [self::$tags['music']],
             'authored' => '2023-10-12T17:15:00+00:00',
+            'template' => 'news',
         ]);
 
         self::$articles['tech_health'] = self::createArticle([
@@ -697,6 +701,53 @@ class ArticleSmartContentProviderTest extends SuluTestCase
         );
 
         return $article;
+    }
+
+    /**
+     * @param string[] $groups
+     * @param string[] $articleKeys
+     */
+    #[DataProvider('groupDataProvider')]
+    public function testFindFlatByTypesSingleGroupFilter(array $groups, array $articleKeys): void
+    {
+        $result = $this->smartContentProvider->findFlatBy([
+            ...$this->getDefaultFilters(),
+            ...['locale' => 'en', 'types' => $groups],
+        ], []);
+
+        $this->assertCount(\count($articleKeys), $result);
+        $this->assertSame(
+            \count($articleKeys),
+            $this->smartContentProvider->countBy([
+                ...$this->getDefaultFilters(),
+                ...['locale' => 'en', 'types' => $groups],
+            ]),
+        );
+
+        $resultIds = \array_map(
+            fn ($article) => $article['id'],
+            $result,
+        );
+
+        foreach (self::$articles as $key => $article) {
+            if (!\in_array($key, $articleKeys, true)) {
+                return;
+            }
+            $this->assertContains($article->getUuid(), $resultIds, "Article '$key' should be in the default group");
+        }
+    }
+
+    /**
+     * @return array<int, array{string[], string[]}>
+     */
+    public static function groupDataProvider(): array
+    {
+        return [
+            [['default'], ['tech1', 'sports1', 'health1', 'health2', 'business1', 'entertainment1', 'tech_health', 'sports_health', 'business_tech', 'entertainment_business', 'multi_category_multi_tag']],
+            [['blog-group'], ['tech2', 'business2']],
+            [['news-group'], ['sports2', 'entertainment2']],
+            [['blog-group', 'news-group'], ['tech2', 'business2', 'sports2', 'entertainment2']],
+        ];
     }
 
     /**

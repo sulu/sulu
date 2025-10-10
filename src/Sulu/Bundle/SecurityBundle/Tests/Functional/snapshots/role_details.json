@@ -132,6 +132,7 @@
         ]
     },
     "key": "role_details",
+    "group": null,
     "tags": [],
     "title": "Role details"
 }

@@ -250,6 +250,7 @@ final class SuluArticleBundle extends AbstractBundle
                 new Reference('sulu_security.security_checker'),
                 new Reference('sulu.core.localization_manager'),
                 new Reference('sulu_activity.activity_list_view_builder_factory'),
+                new Reference('sulu_admin.metadata_group_provider'),
             ])
             ->tag('sulu.context', ['context' => 'admin'])
             ->tag('sulu.admin');
@@ -333,6 +334,7 @@ final class SuluArticleBundle extends AbstractBundle
                 new Reference('sulu_content.dimension_content_query_enhancer'),
                 new Reference('sulu_admin.smart_content_query_enhancer'),
                 new Reference('doctrine.orm.entity_manager'),
+                new Reference('sulu_admin.metadata_group_provider'),
             ])
         ->tag('sulu_content.smart_content_provider', ['type' => ArticleInterface::RESOURCE_KEY]);
 

@@ -160,6 +160,7 @@
         ]
     },
     "key": "user_details",
+    "group": null,
     "tags": [],
     "title": "User details"
 }

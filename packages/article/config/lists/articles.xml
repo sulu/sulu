@@ -87,6 +87,20 @@
             <transformer type="title"/>
         </case-property>
 
+        <property name="dimensionContentTemplateKey" visibility="never">
+            <field-name>templateKey</field-name>
+            <entity-name>dimensionContent</entity-name>
+
+            <joins ref="dimensionContent"/>
+        </property>
+
+        <property name="ghostDimensionContentTemplateKey" visibility="never">
+            <field-name>templateKey</field-name>
+            <entity-name>ghostDimensionContent</entity-name>
+
+            <joins ref="ghostDimensionContent"/>
+        </property>
+
         <concatenation-property name="author" visibility="yes" translation="sulu_admin.author" glue=" " sortable="false">
             <field>
                 <field-name>firstName</field-name>

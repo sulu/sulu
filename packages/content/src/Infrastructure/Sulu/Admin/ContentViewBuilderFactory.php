@@ -73,7 +73,7 @@ class ContentViewBuilderFactory implements ContentViewBuilderFactoryInterface
                 'sulu_admin.type',
                 [
                     'disabled_condition' => '(_permissions && !_permissions.edit)',
-                ]
+                ],
             );
         }
 

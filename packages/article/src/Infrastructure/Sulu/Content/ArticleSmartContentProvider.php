@@ -17,6 +17,7 @@ use Doctrine\ORM\QueryBuilder;
 use Sulu\Article\Domain\Model\ArticleDimensionContentInterface;
 use Sulu\Article\Domain\Model\ArticleInterface;
 use Sulu\Article\Infrastructure\Sulu\Content\ResourceLoader\ArticleResourceLoader;
+use Sulu\Bundle\AdminBundle\Metadata\GroupProviderInterface;
 use Sulu\Bundle\AdminBundle\SmartContent\Configuration\Builder;
 use Sulu\Bundle\AdminBundle\SmartContent\Configuration\BuilderInterface;
 use Sulu\Bundle\AdminBundle\SmartContent\Configuration\ProviderConfigurationInterface;
@@ -91,6 +92,7 @@ readonly class ArticleSmartContentProvider implements SmartContentProviderInterf
         private DimensionContentQueryEnhancer $dimensionContentQueryEnhancer,
         private SmartContentQueryEnhancer $smartContentQueryEnhancer,
         EntityManagerInterface $entityManager,
+        private GroupProviderInterface $groupProvider,
     ) {
         $this->entityRepository = $entityManager->getRepository(ArticleInterface::class);
         $this->entityDimensionContentRepository = $entityManager->getRepository(ArticleDimensionContentInterface::class);
@@ -118,7 +120,16 @@ readonly class ArticleSmartContentProvider implements SmartContentProviderInterf
                     ['column' => 'changed', 'title' => 'sulu_admin.changed'],
                     ['column' => 'title', 'title' => 'sulu_admin.title'],
                 ],
-            );
+            )
+            ->enableTypes(\array_values(\array_map(
+                function($group) {
+                    return [
+                        'title' => $group->title,
+                        'type' => $group->identifier,
+                    ];
+                },
+                $this->groupProvider->getGroups(),
+            )));
 
         // TODO
         //        if ($this->hasAudienceTargeting) {
@@ -238,7 +249,14 @@ readonly class ArticleSmartContentProvider implements SmartContentProviderInterf
     protected function mapFilters(array $filters): array
     {
         if ($filters['types']) {
-            $filters['templateKeys'] = $filters['types'];
+            $templates = [];
+            foreach ($this->groupProvider->getGroups() as $group) {
+                if (\in_array($group->identifier, $filters['types'], true)) {
+                    $templates = \array_merge($templates, \array_filter($group->templates, 'is_string'));
+                }
+            }
+
+            $filters['templateKeys'] = $templates;
             unset($filters['types']);
         }
 

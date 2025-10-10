@@ -15,6 +15,8 @@ use Sulu\Component\Rest\ListBuilder\Expression\BetweenExpressionInterface;
 use Sulu\Component\Rest\ListBuilder\Expression\ConjunctionExpressionInterface;
 use Sulu\Component\Rest\ListBuilder\Expression\ExpressionInterface;
 use Sulu\Component\Rest\ListBuilder\Expression\InExpressionInterface;
+use Sulu\Component\Rest\ListBuilder\Expression\IsNotNullExpressionInterface;
+use Sulu\Component\Rest\ListBuilder\Expression\IsNullExpressionInterface;
 use Sulu\Component\Rest\ListBuilder\Expression\WhereExpressionInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
 
@@ -304,4 +306,18 @@ interface ListBuilderInterface
      * @return ConjunctionExpressionInterface
      */
     public function createOrExpression(array $expressions);
+
+    /**
+     * Creates an is null expression.
+     *
+     * @return IsNullExpressionInterface
+     */
+    public function createIsNullExpression(FieldDescriptorInterface $fieldDescriptor);
+
+    /**
+     * Creates an is not null expression.
+     *
+     * @return IsNotNullExpressionInterface
+     */
+    public function createIsNotNullExpression(FieldDescriptorInterface $fieldDescriptor);
 }

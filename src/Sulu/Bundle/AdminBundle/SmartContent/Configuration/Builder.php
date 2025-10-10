@@ -44,8 +44,8 @@ class Builder implements BuilderInterface
                 function($type) {
                     return new PropertyParameter($type['title'], $type['type']);
                 },
-                $types
-            )
+                $types,
+            ),
         );
 
         return $this;
@@ -102,8 +102,8 @@ class Builder implements BuilderInterface
                 function($item) {
                     return new PropertyParameter($item['column'], $item['title'] ?: \ucfirst($item['column']));
                 },
-                $sorting
-            )
+                $sorting,
+            ),
         );
 
         return $this;

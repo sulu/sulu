@@ -154,6 +154,7 @@
                         ]
                     },
                     "key": "editor",
+                    "group": null,
                     "tags": [],
                     "title": "Editor"
                 }
@@ -212,6 +213,7 @@
                         ]
                     },
                     "key": "editor",
+                    "group": null,
                     "tags": [],
                     "title": "Editor"
                 }
@@ -342,6 +344,7 @@
         ]
     },
     "key": "overview",
+    "group": null,
     "tags": [
         {
             "name": "test3",
