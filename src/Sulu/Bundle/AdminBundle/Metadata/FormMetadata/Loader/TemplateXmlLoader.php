@@ -68,7 +68,7 @@ class TemplateXmlLoader extends AbstractLoader
 
         $templateGroup = $this->getValueFromXPath('/x:template/x:group', $xpath);
         if (null !== $templateGroup) {
-            \assert(\is_string($templateGroup), 'Expected the template group to be "' . $resource . '" string or undefined.');
+            \assert(\is_string($templateGroup), 'Expected the template group to be "' . $templateGroup . '" string or undefined.');
         }
         $form->setGroup($templateGroup);
 
