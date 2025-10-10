@@ -36,6 +36,18 @@
             </meta>
         </property>
 
+        <property name="excerptAudienceTargetGroups" type="target_group_selection" onInvalid="ignore">
+            <meta>
+                <title>sulu_audience_targeting.target_groups</title>
+            </meta>
+        </property>
+
+        <property
+            name="excerptSegment"
+            type="segment_select"
+            visibleCondition="__webspace ? __webspace.segments|length &gt; 0 : false"
+        />
+
         <property name="excerptIcon" type="single_media_selection">
             <meta>
                 <title>sulu_page.icons</title>

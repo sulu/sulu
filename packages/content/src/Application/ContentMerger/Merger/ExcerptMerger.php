@@ -43,6 +43,10 @@ final class ExcerptMerger implements MergerInterface
             $targetObject->setExcerptMore($excerptMore);
         }
 
+        if ($excerptSegment = $sourceObject->getExcerptSegment()) {
+            $targetObject->setExcerptSegment($excerptSegment);
+        }
+
         if ($excerptIcon = $sourceObject->getExcerptIcon()) {
             $targetObject->setExcerptIcon($excerptIcon);
         }
@@ -60,6 +64,12 @@ final class ExcerptMerger implements MergerInterface
         if ($excerptCategories = $sourceObject->getExcerptCategories()) {
             if (\count($excerptCategories) > 0) { // @phpstan-ignore-line false positive for phpstan thinks it is a non-empty-array
                 $targetObject->setExcerptCategories($excerptCategories);
+            }
+        }
+
+        if ($excerptAudienceTargetGroups = $sourceObject->getExcerptAudienceTargetGroups()) {
+            if (\count($excerptAudienceTargetGroups) > 0) { // @phpstan-ignore-line false positive for phpstan thinks it is a non-empty-array
+                $targetObject->setExcerptAudienceTargetGroups($excerptAudienceTargetGroups);
             }
         }
     }

@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Sulu\Content\Tests\Functional\Integration;
 
+use PHPUnit\Framework\Attributes\CoversNothing;
 use PHPUnit\Framework\Attributes\Depends;
 use Sulu\Bundle\ReferenceBundle\Domain\Repository\ReferenceRepositoryInterface;
 use Sulu\Bundle\TestBundle\Testing\AssertSnapshotTrait;
@@ -34,7 +35,7 @@ use Symfony\Component\DomCrawler\Crawler;
 /**
  * The integration test should have no impact on the coverage so we set it to coversNothing.
  */
-#[\PHPUnit\Framework\Attributes\CoversNothing]
+#[CoversNothing]
 class ExampleControllerTest extends SuluTestCase
 {
     use AssertSnapshotTrait;
@@ -57,7 +58,7 @@ class ExampleControllerTest extends SuluTestCase
     {
         $this->client = $this->createAuthenticatedClient(
             [],
-            ['CONTENT_TYPE' => 'application/json', 'HTTP_ACCEPT' => 'application/json']
+            ['CONTENT_TYPE' => 'application/json', 'HTTP_ACCEPT' => 'application/json'],
         );
 
         $this->referenceRepository = $this->getContainer()->get(ReferenceRepositoryInterface::class);

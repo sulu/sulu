@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Sulu\Content\Domain\Model;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\TagBundle\Tag\TagInterface;
 
@@ -43,6 +44,16 @@ trait ExcerptTrait
      * @var ArrayCollection<int, TagInterface>
      */
     private $excerptTags;
+
+    /**
+     * @var ArrayCollection<int, TargetGroupInterface>
+     */
+    private $excerptAudienceTargetGroups;
+
+    /**
+     * @var string|null
+     */
+    private $excerptSegment;
 
     /**
      * @var int|null
@@ -158,6 +169,44 @@ trait ExcerptTrait
         }
     }
 
+    public function getExcerptAudienceTargetGroups(): array
+    {
+        $this->initializeAudienceTargetGroups();
+
+        return $this->excerptAudienceTargetGroups->toArray();
+    }
+
+    public function getExcerptAudienceTargetGroupIds(): array
+    {
+        $this->initializeAudienceTargetGroups();
+        $targetGroupIds = [];
+        foreach ($this->excerptAudienceTargetGroups as $excerptAudienceTargetGroup) {
+            $targetGroupIds[] = $excerptAudienceTargetGroup->getId();
+        }
+
+        return $targetGroupIds;
+    }
+
+    public function setExcerptAudienceTargetGroups(array $excerptAudienceTargetGroups): void
+    {
+        $this->initializeAudienceTargetGroups();
+        $this->excerptAudienceTargetGroups->clear();
+
+        foreach ($excerptAudienceTargetGroups as $excerptAudienceTargetGroup) {
+            $this->excerptAudienceTargetGroups->add($excerptAudienceTargetGroup);
+        }
+    }
+
+    public function getExcerptSegment(): ?string
+    {
+        return $this->excerptSegment ?? null;
+    }
+
+    public function setExcerptSegment(?string $excerptSegment): void
+    {
+        $this->excerptSegment = $excerptSegment;
+    }
+
     /**
      * @return array{id: int}|null
      */
@@ -213,6 +262,13 @@ trait ExcerptTrait
     {
         if (null === $this->excerptCategories) {
             $this->excerptCategories = new ArrayCollection();
+        }
+    }
+
+    private function initializeAudienceTargetGroups(): void
+    {
+        if (null === $this->excerptAudienceTargetGroups) {
+            $this->excerptAudienceTargetGroups = new ArrayCollection();
         }
     }
 }

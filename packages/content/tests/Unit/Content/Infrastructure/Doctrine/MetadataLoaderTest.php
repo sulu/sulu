@@ -21,6 +21,7 @@ use Doctrine\ORM\Mapping\UnderscoreNamingStrategy;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\TagBundle\Tag\TagInterface;
 use Sulu\Content\Domain\Model\AuthorInterface;
@@ -39,9 +40,12 @@ class MetadataLoaderTest extends TestCase
 {
     use \Prophecy\PhpUnit\ProphecyTrait;
 
-    protected function getMetadataLoader(): MetadataLoader
+    /**
+     * @param array<string, mixed> $bundles
+     */
+    protected function getMetadataLoader(array $bundles = []): MetadataLoader
     {
-        return new MetadataLoader();
+        return new MetadataLoader($bundles);
     }
 
     /**
@@ -114,6 +118,12 @@ class MetadataLoaderTest extends TestCase
             $entityManager->getClassMetadata(CategoryInterface::class)->willReturn($categoryClassMetadata->reveal());
         }
 
+        if (\array_key_exists('excerptAudienceTargetGroups', $manyToManyAssociations) && !$manyToManyAssociations['excerptAudienceTargetGroups']) {
+            $targetGroupClassMetadata = $this->prophesize(ClassMetadata::class);
+            $targetGroupClassMetadata->getIdentifierColumnNames()->willReturn(['id'])->shouldBeCalled();
+            $entityManager->getClassMetadata(TargetGroupInterface::class)->willReturn($targetGroupClassMetadata->reveal());
+        }
+
         $metadataLoader->loadClassMetadata(
             new LoadClassMetadataEventArgs($classMetadata->reveal(), $entityManager->reveal())
         );
@@ -164,6 +174,7 @@ class MetadataLoaderTest extends TestCase
                 'excerptTitle' => false,
                 'excerptDescription' => false,
                 'excerptMore' => false,
+                'excerptSegment' => false,
                 'excerptImageId' => false,
                 'excerptIconId' => false,
             ],
@@ -211,6 +222,7 @@ class MetadataLoaderTest extends TestCase
                 'excerptTitle' => true,
                 'excerptDescription' => false,
                 'excerptMore' => false,
+                'excerptSegment' => false,
                 'excerptImageId' => false,
                 'excerptIconId' => false,
             ],
@@ -271,5 +283,112 @@ class MetadataLoaderTest extends TestCase
             [],
             [],
         ];
+    }
+
+    public function testExcerptAudienceTargetGroupsWithoutBundle(): void
+    {
+        $metadataLoader = $this->getMetadataLoader([]); // No bundles
+        $reflectionClass = $this->prophesize(\ReflectionClass::class);
+
+        $reflectionClass->implementsInterface(ExcerptInterface::class)->willReturn(true);
+        $reflectionClass->implementsInterface(Argument::any())->willReturn(false);
+
+        $classMetadata = $this->prophesize(ClassMetadata::class);
+        $classMetadata->getReflectionClass()->willReturn($reflectionClass->reveal());
+        $classMetadata->getTableName()->willReturn('test_example');
+        $classMetadata->getIdentifierColumnNames()->willReturn(['id']);
+        $classMetadata->getName()->willReturn(ExampleDimensionContent::class);
+
+        // All excerpt fields should be added
+        $classMetadata->hasField('excerptTitle')->willReturn(false);
+        $classMetadata->hasField('excerptDescription')->willReturn(false);
+        $classMetadata->hasField('excerptMore')->willReturn(false);
+        $classMetadata->hasField('excerptSegment')->willReturn(false);
+        $classMetadata->hasField('excerptImageId')->willReturn(false);
+        $classMetadata->hasField('excerptIconId')->willReturn(false);
+
+        $classMetadata->mapField(Argument::any())->shouldBeCalledTimes(6);
+
+        // Tags and categories should be added
+        $classMetadata->hasAssociation('excerptTags')->willReturn(false);
+        $classMetadata->hasAssociation('excerptCategories')->willReturn(false);
+        $classMetadata->mapManyToMany(Argument::any())->shouldBeCalledTimes(2);
+
+        // Target groups should NOT be added (bundle not available)
+        $classMetadata->hasAssociation('excerptAudienceTargetGroups')->shouldNotBeCalled();
+
+        $configuration = $this->prophesize(Configuration::class);
+        $configuration->getNamingStrategy()->willReturn(new UnderscoreNamingStrategy());
+        $entityManager = $this->prophesize(EntityManager::class);
+        $entityManager->getConfiguration()->willReturn($configuration->reveal());
+
+        // Set up tag metadata
+        $tagClassMetadata = $this->prophesize(ClassMetadata::class);
+        $tagClassMetadata->getIdentifierColumnNames()->willReturn(['id']);
+        $entityManager->getClassMetadata(TagInterface::class)->willReturn($tagClassMetadata->reveal());
+
+        // Set up category metadata
+        $categoryClassMetadata = $this->prophesize(ClassMetadata::class);
+        $categoryClassMetadata->getIdentifierColumnNames()->willReturn(['id']);
+        $entityManager->getClassMetadata(CategoryInterface::class)->willReturn($categoryClassMetadata->reveal());
+
+        $metadataLoader->loadClassMetadata(
+            new LoadClassMetadataEventArgs($classMetadata->reveal(), $entityManager->reveal())
+        );
+    }
+
+    public function testExcerptAudienceTargetGroupsWithBundle(): void
+    {
+        $metadataLoader = $this->getMetadataLoader(['SuluAudienceTargetingBundle' => true]);
+        $reflectionClass = $this->prophesize(\ReflectionClass::class);
+
+        $reflectionClass->implementsInterface(ExcerptInterface::class)->willReturn(true);
+        $reflectionClass->implementsInterface(Argument::any())->willReturn(false);
+
+        $classMetadata = $this->prophesize(ClassMetadata::class);
+        $classMetadata->getReflectionClass()->willReturn($reflectionClass->reveal());
+        $classMetadata->getTableName()->willReturn('test_example');
+        $classMetadata->getIdentifierColumnNames()->willReturn(['id']);
+        $classMetadata->getName()->willReturn(ExampleDimensionContent::class);
+
+        // All excerpt fields should be added
+        $classMetadata->hasField('excerptTitle')->willReturn(false);
+        $classMetadata->hasField('excerptDescription')->willReturn(false);
+        $classMetadata->hasField('excerptMore')->willReturn(false);
+        $classMetadata->hasField('excerptSegment')->willReturn(false);
+        $classMetadata->hasField('excerptImageId')->willReturn(false);
+        $classMetadata->hasField('excerptIconId')->willReturn(false);
+
+        $classMetadata->mapField(Argument::any())->shouldBeCalledTimes(6);
+
+        // Tags, categories, and target groups should be added
+        $classMetadata->hasAssociation('excerptTags')->willReturn(false);
+        $classMetadata->hasAssociation('excerptCategories')->willReturn(false);
+        $classMetadata->hasAssociation('excerptAudienceTargetGroups')->willReturn(false);
+        $classMetadata->mapManyToMany(Argument::any())->shouldBeCalledTimes(3);
+
+        $configuration = $this->prophesize(Configuration::class);
+        $configuration->getNamingStrategy()->willReturn(new UnderscoreNamingStrategy());
+        $entityManager = $this->prophesize(EntityManager::class);
+        $entityManager->getConfiguration()->willReturn($configuration->reveal());
+
+        // Set up tag metadata
+        $tagClassMetadata = $this->prophesize(ClassMetadata::class);
+        $tagClassMetadata->getIdentifierColumnNames()->willReturn(['id']);
+        $entityManager->getClassMetadata(TagInterface::class)->willReturn($tagClassMetadata->reveal());
+
+        // Set up category metadata
+        $categoryClassMetadata = $this->prophesize(ClassMetadata::class);
+        $categoryClassMetadata->getIdentifierColumnNames()->willReturn(['id']);
+        $entityManager->getClassMetadata(CategoryInterface::class)->willReturn($categoryClassMetadata->reveal());
+
+        // Set up target group metadata
+        $targetGroupClassMetadata = $this->prophesize(ClassMetadata::class);
+        $targetGroupClassMetadata->getIdentifierColumnNames()->willReturn(['id']);
+        $entityManager->getClassMetadata(TargetGroupInterface::class)->willReturn($targetGroupClassMetadata->reveal());
+
+        $metadataLoader->loadClassMetadata(
+            new LoadClassMetadataEventArgs($classMetadata->reveal(), $entityManager->reveal())
+        );
     }
 }

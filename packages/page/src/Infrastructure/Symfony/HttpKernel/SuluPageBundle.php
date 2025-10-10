@@ -41,6 +41,7 @@ use Sulu\Page\Infrastructure\Sulu\Admin\PropertyMetadataMapper\PageTreeRouteProp
 use Sulu\Page\Infrastructure\Sulu\Build\HomepageBuilder;
 use Sulu\Page\Infrastructure\Sulu\Content\DataMapper\NavigationContextDataMapper;
 use Sulu\Page\Infrastructure\Sulu\Content\Merger\NavigationContextMerger;
+use Sulu\Page\Infrastructure\Sulu\Content\Normalizer\PageExcerptNormalizer;
 use Sulu\Page\Infrastructure\Sulu\Content\Normalizer\PageNormalizer;
 use Sulu\Page\Infrastructure\Sulu\Content\PageLinkProvider;
 use Sulu\Page\Infrastructure\Sulu\Content\PageSmartContentProvider;
@@ -64,6 +65,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 
+use function Symfony\Component\DependencyInjection\Loader\Configurator\param;
 use function Symfony\Component\DependencyInjection\Loader\Configurator\tagged_iterator;
 
 use Symfony\Component\DependencyInjection\Parameter;
@@ -227,9 +229,13 @@ final class SuluPageBundle extends AbstractBundle
             ->class(NavigationContextMerger::class)
             ->tag('sulu_content.merger');
 
-        // Normalizer service
+        // Normalizer services
         $services->set('sulu_page.page_normalizer')
             ->class(PageNormalizer::class)
+            ->tag('sulu_content.normalizer');
+
+        $services->set('sulu_page.page_excerpt_normalizer')
+            ->class(PageExcerptNormalizer::class)
             ->tag('sulu_content.normalizer');
 
         // Property Metadata Mapper services
@@ -370,6 +376,7 @@ final class SuluPageBundle extends AbstractBundle
                 new Reference('sulu_admin.smart_content_query_enhancer'),
                 new Reference('security.token_storage', ContainerInterface::NULL_ON_INVALID_REFERENCE),
                 new Reference('doctrine.orm.entity_manager'),
+                param('kernel.bundles'),
             ])
             ->tag('sulu_content.smart_content_provider', ['type' => PageInterface::RESOURCE_KEY]);
 

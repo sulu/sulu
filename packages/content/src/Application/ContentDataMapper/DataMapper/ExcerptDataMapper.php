@@ -15,32 +15,24 @@ namespace Sulu\Content\Application\ContentDataMapper\DataMapper;
 
 use Sulu\Content\Domain\Factory\CategoryFactoryInterface;
 use Sulu\Content\Domain\Factory\TagFactoryInterface;
+use Sulu\Content\Domain\Factory\TargetGroupFactoryInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Domain\Model\ExcerptInterface;
 use Webmozart\Assert\Assert;
 
 class ExcerptDataMapper implements DataMapperInterface
 {
-    /**
-     * @var TagFactoryInterface
-     */
-    private $tagFactory;
-
-    /**
-     * @var CategoryFactoryInterface
-     */
-    private $categoryFactory;
-
-    public function __construct(TagFactoryInterface $tagFactory, CategoryFactoryInterface $categoryFactory)
-    {
-        $this->tagFactory = $tagFactory;
-        $this->categoryFactory = $categoryFactory;
+    public function __construct(
+        private TagFactoryInterface $tagFactory,
+        private CategoryFactoryInterface $categoryFactory,
+        private ?TargetGroupFactoryInterface $targetGroupFactory,
+    ) {
     }
 
     public function map(
         DimensionContentInterface $unlocalizedDimensionContent,
         DimensionContentInterface $localizedDimensionContent,
-        array $data
+        array $data,
     ): void {
         if (!$localizedDimensionContent instanceof ExcerptInterface) {
             return;
@@ -66,6 +58,14 @@ class ExcerptDataMapper implements DataMapperInterface
             Assert::nullOrString($data['excerptMore']);
             $dimensionContent->setExcerptMore($data['excerptMore']);
         }
+        if (\array_key_exists('excerptSegment', $data)) {
+            $segment = $data['excerptSegment'];
+            if (\is_array($data['excerptSegment'])) {
+                $segment = \array_values($data['excerptSegment'])[0] ?? null;
+            }
+            Assert::nullOrString($segment);
+            $dimensionContent->setExcerptSegment($segment);
+        }
         if (\array_key_exists('excerptImage', $data)) {
             Assert::nullOrIsArray($data['excerptImage']);
             Assert::nullOrInteger($data['excerptImage']['id'] ?? null);
@@ -85,7 +85,14 @@ class ExcerptDataMapper implements DataMapperInterface
             Assert::isArray($data['excerptCategories']);
             Assert::allInteger($data['excerptCategories']);
             $dimensionContent->setExcerptCategories(
-                $this->categoryFactory->create($data['excerptCategories'])
+                $this->categoryFactory->create($data['excerptCategories']),
+            );
+        }
+        if (\array_key_exists('excerptAudienceTargetGroups', $data) && $this->targetGroupFactory) {
+            Assert::isArray($data['excerptAudienceTargetGroups']);
+            Assert::allInteger($data['excerptAudienceTargetGroups']);
+            $dimensionContent->setExcerptAudienceTargetGroups(
+                $this->targetGroupFactory->create($data['excerptAudienceTargetGroups']),
             );
         }
     }

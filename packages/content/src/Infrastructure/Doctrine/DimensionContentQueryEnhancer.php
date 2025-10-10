@@ -203,12 +203,17 @@ class DimensionContentQueryEnhancer
         }
 
         if (($filters['audienceTargeting'] ?? false) && ($filters['targetGroupId'] ?? null)) {
-            // TODO add audience targeting filter when the dimension content supports it.
+            Assert::integerish($filters['targetGroupId']); // @phpstan-ignore staticMethod.alreadyNarrowedType
+            $queryBuilder->leftJoin('filterDimensionContent.excerptAudienceTargetGroups', 'filterAudienceTargetGroup')
+                ->andWhere('filterAudienceTargetGroup.id = :targetGroupId OR filterAudienceTargetGroup IS NULL')
+                ->setParameter('targetGroupId', (int) $filters['targetGroupId']);
         }
 
         if ($filters['segmentKey'] ?? null) {
             $segmentKey = $filters['segmentKey'];
-            // TODO add segment filter when the dimension content supports it.
+            Assert::string($segmentKey); // @phpstan-ignore staticMethod.alreadyNarrowedType
+            $queryBuilder->andWhere('filterDimensionContent.excerptSegment = :segmentKey OR filterDimensionContent.excerptSegment IS NULL')
+                ->setParameter('segmentKey', $segmentKey);
         }
 
         // Sort by

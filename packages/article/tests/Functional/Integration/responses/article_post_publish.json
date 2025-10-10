@@ -14,11 +14,13 @@
     "creator": "@integer@",
     "customizeWebspaceSettings": false,
     "description": null,
+    "excerptAudienceTargetGroups": [],
     "excerptCategories": [],
     "excerptDescription": "Excerpt Description",
     "excerptIcon": null,
     "excerptImage": null,
     "excerptMore": "Excerpt More",
+    "excerptSegment": "test-segment",
     "excerptTags": [
         "Tag 1",
         "Tag 2"

@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Sulu\Content\Tests\Functional\Traits;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\ContactBundle\Entity\ContactInterface;
 use Sulu\Bundle\TagBundle\Tag\TagInterface;
@@ -41,6 +42,8 @@ trait CreateExampleTrait
      *     templateData?: array<string, mixed>,
      *     excerptCategories?: CategoryInterface[],
      *     excerptTags?: TagInterface[],
+     *     excerptSegment?: ?string,
+     *     excerptAudienceTargetGroups?: mixed[],
      *     author?: ?ContactInterface,
      *     authored?: ?\DateTimeImmutable,
      *     workflowPlace?: ?string,
@@ -73,6 +76,10 @@ trait CreateExampleTrait
         $localizedDimensionContent->setTemplateData($data['templateData'] ?? ['title' => '']);
         $localizedDimensionContent->setExcerptCategories($data['excerptCategories'] ?? []);
         $localizedDimensionContent->setExcerptTags($data['excerptTags'] ?? []);
+        $localizedDimensionContent->setExcerptSegment($data['excerptSegment'] ?? null);
+        /** @var TargetGroupInterface[] $targetGroups */
+        $targetGroups = $data['excerptAudienceTargetGroups'] ?? [];
+        $localizedDimensionContent->setExcerptAudienceTargetGroups($targetGroups);
 
         $example->addDimensionContent($localizedDimensionContent);
     }

@@ -192,6 +192,7 @@ class ContentNormalizerTest extends TestCase
 
         $this->assertSame([
             'availableLocales' => ['en', 'de'],
+            'excerptAudienceTargetGroups' => [],
             'excerptCategories' => [
                 3,
                 4,
@@ -200,6 +201,7 @@ class ContentNormalizerTest extends TestCase
             'excerptIcon' => ['id' => 9],
             'excerptImage' => ['id' => 8],
             'excerptMore' => 'Excerpt More',
+            'excerptSegment' => null,
             'excerptTags' => [
                 'Tag 1',
                 'Tag 2',
