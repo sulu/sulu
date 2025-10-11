@@ -1083,3 +1083,90 @@ In case of some errors on customized code, you can try to fix it and rerun the c
 rerun, the existing already migrated content will be overwritten and not duplicated.
 If everything is done and the migration is successful, you can log in to the Sulu admin interface, set the permissions
 for the articles and snippets and check if everything is working as expected.
+
+### Migrating from Article Types to Template Groups
+
+In Sulu 2.x with the SuluArticleBundle, article types were used to categorize different article templates with
+tab-based filtering in the admin interface and separate permissions per article type. This functionality was configured
+via the `sulu_article.types` configuration.
+
+In Sulu 3.0, this concept has been replaced with **template groups**, which provide the same functionality but are now
+defined directly in the template XML files.
+
+#### What Changed
+
+**Sulu 2.x (SuluArticleBundle):**
+- Article types defined in `config/packages/sulu_article.yaml`
+- Templates implicitly belonged to a type based on configuration
+- Only worked for articles
+
+**Sulu 3.0 (Template Groups):**
+- Template groups defined directly in template XML files using the `<group>` element
+- No separate YAML configuration needed
+- Provides the same tab-based filtering and permission separation
+
+#### Migration Steps
+
+**1. Remove Article Type Configuration**
+
+Remove the `types` configuration from your `config/packages/sulu_article.yaml` file:
+
+```diff
+# config/packages/sulu_article.yaml
+sulu_article:
+-    types:
+-        blog:
+-            translation_key: "app.article_types.blog"
+-        news:
+-            translation_key: "app.article_types.news"
+```
+
+**2. Add Group to Template XML Files**
+
+For each article template, add a `<group>` element to specify which group it belongs to:
+
+```diff
+<!-- config/templates/articles/blog.xml -->
+<template xmlns="http://schemas.sulu.io/template/template"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/template.xsd">
+
+    <key>blog</key>
++   <group>blog</group>
+
+    <view>views/articles/blog</view>
+    <controller>Sulu\Content\UserInterface\Controller\Website\ContentController::indexAction</controller>
+
+    <meta>
+        <title lang="en">Blog Article</title>
+        <title lang="de">Blog-Artikel</title>
+    </meta>
+
+    <properties>
+        <!-- ... -->
+    </properties>
+</template>
+```
+
+**3. Update Translations (Optional)**
+
+The group identifier (e.g., `blog`) will be automatically converted to a human-readable title using ucfirst
+(e.g., `Blog`). If you need custom translations, you can add them to your admin translations file
+(`translations/admin.en.yaml`):
+
+```yaml
+sulu_admin.template_group.blog: Blog Articles
+sulu_admin.template_group.news: News Articles
+```
+
+The translation key pattern is `sulu_admin.template_group.<group_name>`. If no translation is found, Sulu will
+fall back to using `ucfirst(<group_name>)`.
+
+**4. Update Permissions**
+
+After the migration, you'll need to update user role permissions in the Sulu admin interface. Template groups create
+separate permission contexts, so you'll need to grant permissions for each group to the appropriate user roles.
+
+1. Log in to the Sulu admin interface
+2. Navigate to Settings → User Roles
+3. Edit each role and grant permissions for the new template groups under the Articles section

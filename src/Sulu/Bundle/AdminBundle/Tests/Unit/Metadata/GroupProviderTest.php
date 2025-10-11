@@ -22,6 +22,7 @@ use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\GroupProvider;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderInterface;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class GroupProviderTest extends TestCase
 {
@@ -41,13 +42,19 @@ class GroupProviderTest extends TestCase
      */
     private ObjectProphecy $metadataProvider;
 
+    /**
+     * @var ObjectProphecy<TranslatorInterface>
+     */
+    private ObjectProphecy $translator;
+
     protected function setUp(): void
     {
         $this->container = $this->prophesize(ContainerInterface::class);
         $this->metadataProvider = $this->prophesize(MetadataProviderInterface::class);
+        $this->translator = $this->prophesize(TranslatorInterface::class);
 
         $this->metadataProviderRegistry = new MetadataProviderRegistry($this->container->reveal());
-        $this->groupProvider = new GroupProvider($this->metadataProviderRegistry);
+        $this->groupProvider = new GroupProvider($this->metadataProviderRegistry, $this->translator->reveal());
     }
 
     public function testGetGroupsWithSingleGroup(): void
@@ -70,6 +77,9 @@ class GroupProviderTest extends TestCase
         $this->metadataProvider
             ->getMetadata(ArticleInterface::TEMPLATE_TYPE, '', [])
             ->willReturn($typedFormMetadata);
+
+        $this->translator->trans(\Prophecy\Argument::any(), [], 'admin')
+            ->willReturnArgument(0);
 
         $groups = $this->groupProvider->getGroups();
 
@@ -107,6 +117,9 @@ class GroupProviderTest extends TestCase
             ->getMetadata(ArticleInterface::TEMPLATE_TYPE, '', [])
             ->willReturn($typedFormMetadata);
 
+        $this->translator->trans(\Prophecy\Argument::any(), [], 'admin')
+            ->willReturnArgument(0);
+
         $groups = $this->groupProvider->getGroups();
 
         $this->assertCount(3, $groups);
@@ -142,6 +155,9 @@ class GroupProviderTest extends TestCase
         $this->metadataProvider
             ->getMetadata(ArticleInterface::TEMPLATE_TYPE, '', [])
             ->willReturn($typedFormMetadata);
+
+        $this->translator->trans(\Prophecy\Argument::any(), [], 'admin')
+            ->willReturnArgument(0);
 
         $groups = $this->groupProvider->getGroups();
 
@@ -195,6 +211,9 @@ class GroupProviderTest extends TestCase
             ->getMetadata(ArticleInterface::TEMPLATE_TYPE, '', [])
             ->willReturn($typedFormMetadata);
 
+        $this->translator->trans(\Prophecy\Argument::any(), [], 'admin')
+            ->willReturnArgument(0);
+
         $groups = $this->groupProvider->getGroups();
 
         $this->assertCount(2, $groups);
@@ -208,6 +227,9 @@ class GroupProviderTest extends TestCase
     #[\PHPUnit\Framework\Attributes\DataProvider('groupTitleProvider')]
     public function testGetGroupTitle(string $groupIdentifier, string $expectedTitle): void
     {
+        // Mock translator to return the key itself (simulating no translation found)
+        $this->translator->trans(\Prophecy\Argument::any(), [], 'admin')->willReturnArgument(0);
+
         // Use reflection to test the private method
         $reflection = new \ReflectionClass($this->groupProvider);
         $method = $reflection->getMethod('getGroupTitle');
@@ -216,6 +238,22 @@ class GroupProviderTest extends TestCase
         $result = $method->invoke($this->groupProvider, $groupIdentifier);
 
         $this->assertSame($expectedTitle, $result);
+    }
+
+    public function testGetGroupTitleWithTranslation(): void
+    {
+        // Mock translator to return a custom translation
+        $this->translator->trans(\Prophecy\Argument::any(), [], 'admin')
+            ->willReturn('Blog Articles');
+
+        // Use reflection to test the private method
+        $reflection = new \ReflectionClass($this->groupProvider);
+        $method = $reflection->getMethod('getGroupTitle');
+        $method->setAccessible(true);
+
+        $result = $method->invoke($this->groupProvider, 'blog');
+
+        $this->assertSame('Blog Articles', $result);
     }
 
     /**
