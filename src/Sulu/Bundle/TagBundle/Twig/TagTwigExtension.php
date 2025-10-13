@@ -13,6 +13,7 @@ namespace Sulu\Bundle\TagBundle\Twig;
 
 use JMS\Serializer\SerializationContext;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
+use Sulu\Bundle\TagBundle\Tag\TagRepositoryInterface;
 use Sulu\Component\Cache\MemoizeInterface;
 use Sulu\Component\Serializer\ArraySerializerInterface;
 use Sulu\Component\Tag\Request\TagRequestHandlerInterface;
@@ -21,11 +22,8 @@ use Twig\TwigFunction;
 
 class TagTwigExtension extends AbstractExtension
 {
-    /**
-     * @deprecated Requiring the TagManagerInterface instead of the TagRepository
-     */
     public function __construct(
-        private TagManagerInterface $tagManager,
+        private TagRepositoryInterface $tagRepository,
         private TagRequestHandlerInterface $tagRequestHandler,
         private ArraySerializerInterface $serializer,
         private MemoizeInterface $memoizeCache,
@@ -54,7 +52,7 @@ class TagTwigExtension extends AbstractExtension
             'sulu_tags',
             \func_get_args(),
             function() {
-                $tags = $this->tagManager->findAll();
+                $tags = $this->tagRepository->findAll();
 
                 $context = SerializationContext::create();
                 $context->setSerializeNull(true);
