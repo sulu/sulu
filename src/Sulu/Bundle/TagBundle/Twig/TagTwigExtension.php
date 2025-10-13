@@ -12,7 +12,6 @@
 namespace Sulu\Bundle\TagBundle\Twig;
 
 use JMS\Serializer\SerializationContext;
-use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Bundle\TagBundle\Tag\TagRepositoryInterface;
 use Sulu\Component\Cache\MemoizeInterface;
 use Sulu\Component\Serializer\ArraySerializerInterface;
