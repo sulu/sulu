@@ -14,11 +14,13 @@ namespace Sulu\Bundle\AdminBundle\Metadata;
 use Sulu\Article\Domain\Model\ArticleInterface;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormGroup;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 final readonly class GroupProvider implements GroupProviderInterface
 {
     public function __construct(
         private MetadataProviderRegistry $metadataProviderRegistry,
+        private TranslatorInterface $translator,
     ) {
     }
 
@@ -44,6 +46,15 @@ final readonly class GroupProvider implements GroupProviderInterface
 
     private function getGroupTitle(string $groupIdentifier): string
     {
-        return \ucfirst($groupIdentifier);
+        $translationKey = 'sulu_admin.template_group.' . $groupIdentifier;
+        $translated = $this->translator->trans($translationKey, [], 'admin');
+
+        // If translation key doesn't exist, translator returns the key itself
+        // In that case, fall back to ucfirst of the group identifier
+        if ($translated === $translationKey) {
+            return \ucfirst($groupIdentifier);
+        }
+
+        return $translated;
     }
 }
