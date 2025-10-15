@@ -17,6 +17,7 @@ use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterfa
 use Sulu\CustomUrl\Application\Mapper\CustomUrlMapperInterface;
 use Sulu\CustomUrl\Application\Messages\CreateCustomUrlMessage;
 use Sulu\CustomUrl\Domain\Event\CustomUrlCreatedEvent;
+use Sulu\CustomUrl\Domain\Exception\CustomUrlAlreadyExistsException;
 use Sulu\CustomUrl\Domain\Model\CustomUrlInterface;
 use Sulu\CustomUrl\Domain\Repository\CustomUrlRepositoryInterface;
 
@@ -43,6 +44,13 @@ final class CreateCustomUrlMessageHandler
         }
 
         $customUrl->setWebspace($message->getWebspaceKey());
+
+        // Check if a custom URL with the same title already exists
+        $title = $customUrl->getTitle();
+        $existingCustomUrl = $this->customUrlRepository->findOneBy(['title' => $title]);
+        if (null !== $existingCustomUrl) {
+            throw new CustomUrlAlreadyExistsException($title);
+        }
 
         $this->customUrlRepository->add($customUrl);
 

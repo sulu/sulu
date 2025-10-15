@@ -101,6 +101,7 @@ class CustomUrlRepository implements CustomUrlRepositoryInterface
     /**
      * @param array{
      *     uuid?: string,
+     *     title?: string,
      *     url?: string,
      *     published?: bool,
      *     locale?: string,
@@ -117,6 +118,11 @@ class CustomUrlRepository implements CustomUrlRepositoryInterface
         if (isset($filters['uuid'])) {
             $queryBuilder->andWhere('customUrl.uuid = :uuid')
                 ->setParameter('uuid', $filters['uuid']);
+        }
+
+        if (isset($filters['title'])) {
+            $queryBuilder->andWhere('customUrl.title = :title')
+                ->setParameter('title', $filters['title']);
         }
 
         if (isset($filters['url'])) {

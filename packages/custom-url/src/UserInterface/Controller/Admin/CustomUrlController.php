@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Sulu.
  *
@@ -22,6 +24,7 @@ use Sulu\Component\Security\SecuredControllerInterface;
 use Sulu\CustomUrl\Application\Messages\CreateCustomUrlMessage;
 use Sulu\CustomUrl\Application\Messages\ModifyCustomUrlMessage;
 use Sulu\CustomUrl\Application\Messages\RemoveCustomUrlMessage;
+use Sulu\CustomUrl\Domain\Exception\CustomUrlAlreadyExistsException;
 use Sulu\CustomUrl\Domain\Exception\MismatchingDomainPartException;
 use Sulu\CustomUrl\Domain\Model\CustomUrlInterface;
 use Sulu\CustomUrl\Domain\Repository\CustomUrlRepositoryInterface;
@@ -103,19 +106,16 @@ class CustomUrlController implements SecuredControllerInterface
             /** @var CustomUrlInterface $customUrl */
             $customUrl = $this->handle(new Envelope(
                 new CreateCustomUrlMessage(
-                    data: $requestData,
                     webspaceKey: $webspace,
+                    data: $requestData,
                 ),
                 [new EnableFlushStamp()],
             ));
+        } catch (CustomUrlAlreadyExistsException $e) {
+            return $this->createErrorResponse(\sprintf('Title "%s" already in use', $e->getTitle()), 9001);
         } catch (UniqueConstraintViolationException $e) {
-            /** @var string $title */
-            $title = $requestData['title'];
-            if (\str_contains($e->getMessage(), 'Duplicate entry \'' . $title)) {
-                return $this->createErrorResponse(\sprintf('Title "%s" already in use', $title), 9001);
-            } else {
-                return new JsonResponse(null, Response::HTTP_CONFLICT);
-            }
+            // Path conflict - routes have unique constraint on path
+            return new JsonResponse(null, Response::HTTP_CONFLICT);
         } catch (MismatchingDomainPartException $e) {
             return $this->createErrorResponse($e->getMessage(), $e->getCode());
         }
@@ -143,14 +143,11 @@ class CustomUrlController implements SecuredControllerInterface
                 ),
                 [new EnableFlushStamp()],
             ));
+        } catch (CustomUrlAlreadyExistsException $e) {
+            return $this->createErrorResponse(\sprintf('Title "%s" already in use', $e->getTitle()), 9001);
         } catch (UniqueConstraintViolationException $e) {
-            /** @var string $title */
-            $title = $requestData['title'];
-            if (\str_contains($e->getMessage(), 'Duplicate entry \'' . $title)) {
-                return $this->createErrorResponse(\sprintf('Title "%s" already in use', $title), 9001);
-            } else {
-                return new JsonResponse(null, Response::HTTP_CONFLICT);
-            }
+            // Path conflict - routes have unique constraint on path
+            return new JsonResponse(null, Response::HTTP_CONFLICT);
         } catch (MismatchingDomainPartException $e) {
             return $this->createErrorResponse($e->getMessage(), $e->getCode());
         }
