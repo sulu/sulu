@@ -39,7 +39,7 @@
             <tag name="some.random.tag" one="1" two="2" three="three" />
         </property>
 
-        <property name="url" type="resource_locator" mandatory="true">
+        <property name="url" type="route" mandatory="true">
             <tag name="sulu.rlp" priority="1"/>
         </property>
 

@@ -13,7 +13,7 @@
     <properties>
         <property name="article" type="text_editor"/>
 
-        <property name="url" type="resource_locator" mandatory="true">
+        <property name="url" type="route" mandatory="true">
             <tag name="sulu.rlp" priority="1"/>
         </property>
     </properties>
