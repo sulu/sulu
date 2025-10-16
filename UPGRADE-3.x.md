@@ -268,6 +268,7 @@ These unused parameters have been removed:
 - `sulu_security.group_repository.class`
 - `sulu_security.entity_group.class`
 - `sulu_security.entity.group`
+- `sulu_media.adobe_creative_key`
 
 The resource routes has been removed:
 

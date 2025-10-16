@@ -33,7 +33,6 @@ final class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder('sulu_media');
         $rootNode = $treeBuilder->getRootNode();
         $rootNode->children()
-            ->scalarNode('adobe_creative_key')->defaultNull()->end()
             ->scalarNode('adapter')
                 ->defaultValue('auto')
             ->end()
