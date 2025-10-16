@@ -36,6 +36,7 @@
     "lastModifiedEnabled": true,
     "locale": "en",
     "navigationContexts": [],
+    "parentUuid" : "@uuid@",
     "published": null,
     "publishedState": false,
     "seoCanonicalUrl": "https://sulu.io/",

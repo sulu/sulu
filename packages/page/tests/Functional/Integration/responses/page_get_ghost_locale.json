@@ -22,6 +22,7 @@
     "lastModifiedEnabled": false,
     "locale": null,
     "navigationContexts": [],
+    "parentUuid" : "@uuid@",
     "published": null,
     "publishedState": false,
     "seoCanonicalUrl": null,

@@ -147,7 +147,7 @@ class PageControllerTest extends SuluTestCase
         self::purgeDatabase();
 
         $targetGroupIds = $this->createTargetGroups();
-        $homepage = $this->createHomepage('123-123-123', 'sulu-io');
+        $homepage = $this->createHomepage('0199ee04-c220-784e-a6fa-ac985870f2d5', 'sulu-io');
 
         $excerptData = [
             'excerptTitle' => 'Excerpt Title',
@@ -328,7 +328,7 @@ class PageControllerTest extends SuluTestCase
         self::purgeDatabase();
 
         $targetGroupIds = $this->createTargetGroups();
-        $homepage = $this->createHomepage('123-123-123', 'sulu-io');
+        $homepage = $this->createHomepage('0199ee04-c220-784e-a6fa-ac985870f2d5', 'sulu-io');
 
         $excerptData = [
             'excerptTitle' => 'Excerpt Title',
@@ -387,7 +387,7 @@ class PageControllerTest extends SuluTestCase
     public function testPostPublishBlogWebspace(): void
     {
         $targetGroupIds = $this->createTargetGroups();
-        $homepage = $this->createHomepage('321-321-321', 'blog');
+        $homepage = $this->createHomepage('0199ee13-6eae-7e0e-b559-ed579da52916', 'blog');
 
         $excerptData = [
             'excerptTitle' => 'Excerpt Title',
@@ -637,7 +637,7 @@ class PageControllerTest extends SuluTestCase
 
         $this->client->request(
             'POST',
-            \sprintf('/admin/api/pages?locale=en&action=publish&parentId=%s&webspace=sulu-io', '123-123-123'),
+            \sprintf('/admin/api/pages?locale=en&action=publish&parentId=%s&webspace=sulu-io', '0199ee04-c220-784e-a6fa-ac985870f2d5'),
             [],
             [],
             [],
@@ -690,7 +690,7 @@ class PageControllerTest extends SuluTestCase
     #[Depends('testCopy')]
     public function testMove(string $id): void
     {
-        $this->client->request('POST', '/admin/api/pages/' . $id . '?locale=en&action=move&destination=123-123-123');
+        $this->client->request('POST', '/admin/api/pages/' . $id . '?locale=en&action=move&destination=0199ee04-c220-784e-a6fa-ac985870f2d5');
 
         $response = $this->client->getResponse();
         $this->assertResponseSnapshot('page_post_move.json', $response);
