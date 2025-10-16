@@ -52,7 +52,7 @@ class SnippetAreaModifiedEvent extends DomainEvent
 
     public function getResourceId(): string
     {
-        return $this->snippetArea->getUuid();
+        return $this->snippetArea->getAreaKey();
     }
 
     public function getResourceLocale(): ?string
@@ -60,9 +60,9 @@ class SnippetAreaModifiedEvent extends DomainEvent
         return $this->locale;
     }
 
-    public function getResourceTitle(): ?string
+    public function getResourceTitle(): string
     {
-        return null;
+        return $this->snippetArea->getAreaKey();
     }
 
     public function getResourceTitleLocale(): ?string
