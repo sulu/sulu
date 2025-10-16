@@ -585,7 +585,23 @@ renamed to `url` in your templates and use the `route` always.
                 <title lang="de">Adresse</title>
             </meta>
 
-            <tag name="sulu_article.article_route"/>
+-            <tag name="sulu_article.article_route"/>
++            <tag name="sulu.rlp"/>
+        </property>
+```
+
+To make things easier between pages and articles the `resource_locator` field type is now replaced by the `route` 
+field type, so all routable entities use the same field type.:
+
+```diff
+-        <property name="url" type="resource_locator">
++        <property name="url" type="route">
+            <meta>
+                <title lang="en">Resourcelocator</title>
+                <title lang="de">Adresse</title>
+            </meta>
+            
+            <tag name="sulu.rlp"/>
         </property>
 ```
 
