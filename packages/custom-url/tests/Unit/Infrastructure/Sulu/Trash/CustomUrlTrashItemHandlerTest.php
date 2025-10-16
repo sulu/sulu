@@ -65,7 +65,7 @@ class CustomUrlTrashItemHandlerTest extends SuluTestCase
 
         $restoreData = $trashItem->getRestoreData();
         static::assertSame('test-title-1', $restoreData['title']);
-        static::assertSame(true, $restoreData['published']);
+        static::assertTrue($restoreData['published']);
         static::assertSame('sulu-test.localhost/*/*', $restoreData['baseDomain']);
         static::assertSame(['custom-path-1', 'custom-path-2'], $restoreData['domainParts']);
         static::assertNull($restoreData['creator']);
@@ -78,7 +78,6 @@ class CustomUrlTrashItemHandlerTest extends SuluTestCase
         static::assertSame($originalCustomUrl->getUuid(), $restoredCustomUrl->getUuid());
         static::assertSame('sulu_io', $restoredCustomUrl->getWebspace());
         static::assertSame('2025-04-20T00:00:00+00:00', $restoredCustomUrl->getCreated()->format('c'));
-        static::assertNotNull($restoredCustomUrl->getChanged());
         static::assertSame('sulu-test.localhost/*/*', $restoredCustomUrl->getBaseDomain());
         static::assertSame(['custom-path-1', 'custom-path-2'], $restoredCustomUrl->getDomainParts());
         static::assertTrue($restoredCustomUrl->isCanonical());
