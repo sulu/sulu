@@ -1,12 +1,12 @@
 // @flow
 import symfonyRouting from 'fos-jsrouting/router';
 import blockIdGenerator from '../blockIdGenerator';
-import ResourceRequester from '../../ResourceRequester';
+import Requester from '../../Requester';
 
-jest.mock('../../ResourceRequester', () => ({
+jest.mock('../../Requester', () => ({
     __esModule: true,
     default: {
-        post: jest.fn(),
+        get: jest.fn(),
     },
 }));
 
@@ -23,11 +23,11 @@ test('Should generate block ID by calling the backend API', () => {
     const mockUrl = '/admin/api/block-ids.json';
 
     symfonyRouting.generate.mockReturnValue(mockUrl);
-    ResourceRequester.post.mockReturnValue(Promise.resolve({id: mockId}));
+    Requester.get.mockReturnValue(Promise.resolve({id: mockId}));
 
     return blockIdGenerator.generateBlockId().then((id) => {
         expect(symfonyRouting.generate).toBeCalledWith('sulu_admin.post_block_ids');
-        expect(ResourceRequester.post).toBeCalledWith(mockUrl);
+        expect(Requester.get).toBeCalledWith(mockUrl);
         expect(id).toBe(mockId);
     });
 });
@@ -36,7 +36,7 @@ test('Should throw error when response is missing', () => {
     const mockUrl = '/admin/api/block-ids.json';
 
     symfonyRouting.generate.mockReturnValue(mockUrl);
-    ResourceRequester.post.mockReturnValue(Promise.resolve(null));
+    Requester.get.mockReturnValue(Promise.resolve(null));
 
     return blockIdGenerator.generateBlockId().catch((error) => {
         expect(error.message).toBe('Invalid response from block ID generator');
@@ -47,7 +47,7 @@ test('Should throw error when response is missing id property', () => {
     const mockUrl = '/admin/api/block-ids.json';
 
     symfonyRouting.generate.mockReturnValue(mockUrl);
-    ResourceRequester.post.mockReturnValue(Promise.resolve({}));
+    Requester.get.mockReturnValue(Promise.resolve({}));
 
     return blockIdGenerator.generateBlockId().catch((error) => {
         expect(error.message).toBe('Invalid response from block ID generator');
@@ -60,7 +60,7 @@ test('Should generate different IDs on multiple calls', () => {
     const mockId2 = 'def67890';
 
     symfonyRouting.generate.mockReturnValue(mockUrl);
-    ResourceRequester.post
+    Requester.get
         .mockReturnValueOnce(Promise.resolve({id: mockId1}))
         .mockReturnValueOnce(Promise.resolve({id: mockId2}));
 
@@ -71,7 +71,7 @@ test('Should generate different IDs on multiple calls', () => {
         expect(id1).toBe(mockId1);
         expect(id2).toBe(mockId2);
         expect(id1).not.toBe(id2);
-        expect(ResourceRequester.post).toHaveBeenCalledTimes(2);
+        expect(Requester.get).toHaveBeenCalledTimes(2);
     });
 });
 
@@ -80,7 +80,7 @@ test('Should handle API errors gracefully', () => {
     const mockError = new Error('Network error');
 
     symfonyRouting.generate.mockReturnValue(mockUrl);
-    ResourceRequester.post.mockReturnValue(Promise.reject(mockError));
+    Requester.get.mockReturnValue(Promise.reject(mockError));
 
     return blockIdGenerator.generateBlockId().catch((error) => {
         expect(error).toBe(mockError);

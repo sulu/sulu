@@ -49,3 +49,5 @@ sulu_admin.post_block_ids:
     format: json
     requirements:
         _format: json|csv
+    options:
+        expose: true
