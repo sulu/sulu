@@ -11,7 +11,7 @@
 
     <properties>
         <property name="title" type="text_line"/>
-        <property name="url" type="resource_locator">
+        <property name="url" type="route">
             <tag name="sulu.rlp"/>
         </property>
     </properties>

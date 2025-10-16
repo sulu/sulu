@@ -42,7 +42,7 @@
         "url": {
             "disabledCondition": null,
             "visibleCondition": null,
-            "type": "resource_locator",
+            "type": "route",
             "colSpan": 12,
             "options": [],
             "types": [],

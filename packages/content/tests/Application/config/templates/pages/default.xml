@@ -27,7 +27,7 @@
             <tag name="sulu.rlp.part"/>
         </property>
 
-        <property name="url" type="resource_locator" mandatory="true">
+        <property name="url" type="route" mandatory="true">
             <meta>
                 <title lang="en">Resourcelocator</title>
                 <title lang="de">Adresse</title>
