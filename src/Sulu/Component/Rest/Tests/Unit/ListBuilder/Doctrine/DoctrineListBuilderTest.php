@@ -107,7 +107,12 @@ class DoctrineListBuilderTest extends TestCase
         ['id' => '3'],
     ];
 
-    private static string $entityName = 'Sulu\Bundle\CoreBundle\Entity\Example';
+    /**
+     * @var class-string
+     *
+     * @phpstan-ignore property.defaultValue
+     */
+    private static $entityName = 'Sulu\Bundle\CoreBundle\Entity\Example';
 
     /** @var string */
     private static $entityNameAlias = 'Sulu_Bundle_CoreBundle_Entity_Example';

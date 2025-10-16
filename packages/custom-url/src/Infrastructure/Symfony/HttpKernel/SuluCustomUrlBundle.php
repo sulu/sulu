@@ -174,6 +174,7 @@ final class SuluCustomUrlBundle extends AbstractBundle
             ])
             ->tag('serializer.normalizer');
 
+        /** @var array<string, class-string> $bundles */
         $bundles = $builder->getParameter('kernel.bundles');
         if (\array_key_exists('SuluTrashBundle', $bundles)) {
             $loader->load('sulu_trash.php');
