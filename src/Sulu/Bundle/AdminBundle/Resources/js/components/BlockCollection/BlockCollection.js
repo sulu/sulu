@@ -12,11 +12,12 @@ import SortableBlockList from './SortableBlockList';
 import blockCollectionStyles from './blockCollection.scss';
 import type {RenderBlockContentCallback, BlockMode, Message} from './types';
 
-type Props<T: string, U: {type: T}> = {|
+type Props<T: string, U: {_id?: string, type: T, ...}> = {|
     addButtonText?: ?string,
     collapsable: boolean,
     defaultType: T,
     disabled: boolean,
+    generateBlockId?: () => Promise<string>,
     icons?: Array<Array<string>>,
     maxOccurs?: ?number,
     minOccurs?: ?number,
@@ -34,7 +35,7 @@ type Props<T: string, U: {type: T}> = {|
 const BLOCKS_CLIPBOARD_KEY = 'blocks';
 
 @observer
-class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, U>> {
+class BlockCollection<T: string, U: {_id?: string, type: T, ...}> extends React.Component<Props<T, U>> {
     static idCounter = 0;
 
     static defaultProps = {
@@ -128,8 +129,8 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
         return indexes;
     }
 
-    @action handleAddBlock = (insertionIndex: number) => {
-        const {defaultType, onChange, value} = this.props;
+    @action handleAddBlock = async(insertionIndex: number) => {
+        const {defaultType, generateBlockId, onChange, value} = this.props;
 
         if (this.hasMaximumReached) {
             throw new Error('The maximum amount of blocks has already been reached!');
@@ -142,13 +143,22 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
 
             const elementsBefore = value.slice(0, insertionIndex);
             const elementsAfter = value.slice(insertionIndex);
+
+            // $FlowFixMe: Dynamic property assignment
+            const newBlock: any = {type: defaultType};
+
+            // Generate block ID if function is provided
+            if (generateBlockId) {
+                newBlock._id = await generateBlockId();
+            }
+
             // $FlowFixMe
-            onChange([...elementsBefore, {type: defaultType}, ...elementsAfter]);
+            onChange([...elementsBefore, newBlock, ...elementsAfter]);
         }
     };
 
-    @action handlePasteBlocks = (insertionIndex: number) => {
-        const {onChange, onDisplaySnackbar, value} = this.props;
+    @action handlePasteBlocks = async(insertionIndex: number) => {
+        const {generateBlockId, onChange, onDisplaySnackbar, value} = this.props;
 
         if (this.hasMaximumReached) {
             throw new Error('The maximum amount of blocks has already been reached!');
@@ -168,14 +178,23 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
             insertionIndex, 0, ...this.pasteableBlocks.map(() => ++BlockCollection.idCounter)
         );
 
-        const newElements = this.pasteableBlocks.map((block) => {
-            // paste block with default type if type of block in clipboard is not known
-            if (!this.props.types?.[block.type]) {
-                return {...block, type: this.props.defaultType};
-            }
+        const newElements = await Promise.all(
+            this.pasteableBlocks.map(async(block) => {
+                // paste block with default type if type of block in clipboard is not known
+                const newBlock = !this.props.types?.[block.type]
+                    ? {...block, type: this.props.defaultType}
+                    : {...block};
 
-            return block;
-        });
+                // Generate new ID only if block doesn't have one (copy operation)
+                // Cut operation preserves the _id
+                if (generateBlockId && !newBlock._id) {
+                    newBlock._id = await generateBlockId();
+                }
+
+                return newBlock;
+            })
+        );
+
         const elementsBefore = value.slice(0, insertionIndex);
         const elementsAfter = value.slice(insertionIndex);
 
@@ -245,8 +264,8 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
         this.duplicateBlocks([index], index);
     };
 
-    @action duplicateBlocks = (indexes: Array<number>, insertAfterIndex: number) => {
-        const {onChange, onDisplaySnackbar, value} = this.props;
+    @action duplicateBlocks = async(indexes: Array<number>, insertAfterIndex: number) => {
+        const {generateBlockId, onChange, onDisplaySnackbar, value} = this.props;
 
         if (!value) {
             return;
@@ -254,7 +273,8 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
 
         let newValue = [...value];
 
-        indexes.forEach(( index, count) => {
+        for (let count = 0; count < indexes.length; count++) {
+            const index = indexes[count];
             if (this.hasMaximumReached) {
                 // TODO throw snackbar message or maybe its not required as fillArrays already refill the array
                 throw new Error('The maximum amount of blocks has already been reached!');
@@ -269,8 +289,15 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
             const elementsBefore = newValue.slice(0, currentInsertAfterIndex);
             const elementsAfter = newValue.slice(currentInsertAfterIndex);
 
-            newValue = [...elementsBefore, {...toJS(newValue[index])}, ...elementsAfter];
-        });
+            const duplicatedBlock = {...toJS(newValue[index])};
+
+            // Generate new ID for duplicated block
+            if (generateBlockId) {
+                duplicatedBlock._id = await generateBlockId();
+            }
+
+            newValue = [...elementsBefore, duplicatedBlock, ...elementsAfter];
+        }
 
         onChange(newValue);
 
@@ -292,7 +319,7 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
     };
 
     copyBlocks = (indexes: Array<number>, shouldDisplaySnackbar: boolean = true) => {
-        const {onDisplaySnackbar, value} = this.props;
+        const {generateBlockId, onDisplaySnackbar, value} = this.props;
 
         if (!value) {
             return;
@@ -301,7 +328,14 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
         const blocks = [];
 
         indexes.forEach(( index) => {
-            blocks.push({...toJS(value[index])});
+            const block = {...toJS(value[index])};
+
+            // Remove _id from copied blocks so new IDs are generated on paste
+            if (generateBlockId && block._id) {
+                delete block._id;
+            }
+
+            blocks.push(block);
         });
 
         clipboard.set(BLOCKS_CLIPBOARD_KEY, blocks);
@@ -324,9 +358,22 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
     };
 
     cutBlocks = (indexes: Array<number>) => {
-        const {onDisplaySnackbar} = this.props;
+        const {onDisplaySnackbar, value} = this.props;
 
-        this.copyBlocks(indexes, false);
+        if (!value) {
+            return;
+        }
+
+        const blocks = [];
+
+        indexes.forEach(( index) => {
+            const block = {...toJS(value[index])};
+
+            // Preserve _id for cut blocks (don't delete it like in copy)
+            blocks.push(block);
+        });
+
+        clipboard.set(BLOCKS_CLIPBOARD_KEY, blocks);
         this.removeBlocks(indexes, false);
 
         if (onDisplaySnackbar) {
@@ -457,7 +504,10 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
                     className={blockCollectionStyles.addButton}
                     disabled={disabled || this.hasMaximumReached}
                     icon="su-plus"
-                    onClick={this.handleAddBlock}
+                    // eslint-disable-next-line react/jsx-no-bind
+                    onClick={(value) => {
+                        this.handleAddBlock(value);
+                    }}
                     skin="secondary"
                     value={aboveBlockIndex + 1}
                 >
@@ -468,7 +518,10 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
                         className={blockCollectionStyles.addButton}
                         disabled={disabled || this.hasMaximumReached}
                         icon="su-copy"
-                        onClick={this.handlePasteBlocks}
+                        // eslint-disable-next-line react/jsx-no-bind
+                        onClick={(value) => {
+                            this.handlePasteBlocks(value);
+                        }}
                         skin="secondary"
                         value={aboveBlockIndex + 1}
                     >

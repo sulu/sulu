@@ -40,3 +40,12 @@ sulu_admin.get_items:
     format: json
     requirements:
         _format: json|csv
+
+# Block IDs
+sulu_admin.post_block_ids:
+    path: '/block-ids.{_format}'
+    methods: GET
+    controller: 'sulu_admin.block_id_controller::generateAction'
+    format: json
+    requirements:
+        _format: json|csv
