@@ -193,6 +193,7 @@ class AdminController
         $locale = $user->getLocale();
 
         $metadataOptions = $request->query->all();
+
         $metadata = $this->metadataProviderRegistry->getMetadataProvider($type)
             ->getMetadata($key, $locale, $metadataOptions);
 

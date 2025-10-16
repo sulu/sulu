@@ -44,19 +44,6 @@ initializer.addUpdateConfigHook('sulu_page', (config: Object, initialized: boole
     conditionDataProviderRegistry.add(webspaceConditionDataProvider);
 
     fieldRegistry.add(
-        'resource_locator',
-        ResourceLocator,
-        {
-            modeResolver: (props) => loadResourceLocatorInputTypeByWebspace(props.formInspector.options.webspace),
-            generationUrl: Config.endpoints.generateUrl,
-            historyResourceKey: 'page_resourcelocators',
-            resourceStorePropertiesToRequest: {
-                parentUuid: 'parentId',
-            },
-        }
-    );
-
-    fieldRegistry.add(
         'page_tree_route',
         PageTreeRoute,
         {
