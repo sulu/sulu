@@ -18,6 +18,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Depends;
 use Sulu\Bundle\TestBundle\Testing\AssertSnapshotTrait;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
+use Sulu\CustomUrl\Domain\Model\CustomUrl;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Uid\Uuid;
 
@@ -169,6 +170,7 @@ class CustomUrlControllerTest extends SuluTestCase
         // Restore from trash using the handler directly
         $trashItemHandler = self::getContainer()->get('sulu_custom_urls.custom_url_trash_item_handler');
         $restoredCustomUrl = $trashItemHandler->restore($customUrlTrashItem, []);
+        $this->assertInstanceOf(CustomUrl::class, $restoredCustomUrl);
 
         $this->assertSame('Trash Test', $restoredCustomUrl->getTitle());
         $this->assertSame($deletedId, $restoredCustomUrl->getUuid());

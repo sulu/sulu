@@ -32,19 +32,22 @@ use Webmozart\Assert\Assert;
 
 /** @phpstan-type TrashRestoreData array{
  *     title: string,
- *     creator: UserInterface,
- *     created: string,
- *     changer: string,
- *     changed: string,
+ *     published: bool,
  *     baseDomain: string,
  *     domainParts: array<string>,
- *     canonical: bool,
+ *     targetLocale: string,
+ *     targetDocument: null|string,
  *     redirect: bool,
+ *     canonical: bool,
  *     noFollow: bool,
  *     noIndex: bool,
  *     targetUuid: string,
  *     targetLocale: string,
  *     webspaceKey: string,
+ *     creator: null|string,
+ *     created: string,
+ *     changer: null|string,
+ *     changed: string,
  * }
  */
 final class CustomUrlTrashItemHandler implements
@@ -68,6 +71,7 @@ final class CustomUrlTrashItemHandler implements
     {
         Assert::isInstanceOf($customUrl, CustomUrlInterface::class);
 
+        /** @var TrashRestoreData $data */
         $data = [
             'title' => $customUrl->getTitle(),
             'published' => $customUrl->isPublished(),
@@ -112,12 +116,12 @@ final class CustomUrlTrashItemHandler implements
             $customUrlMapper->mapCustomUrlData($customUrl, $data);
         }
 
-        if (isset($data['creator']) && null !== $data['creator']) {
+        if (isset($data['creator'])) {
             $customUrl->setCreator($this->entityManager->getReference(UserInterface::class, $data['creator']));
         }
         $customUrl->setCreated(new \DateTimeImmutable($data['created']));
 
-        if (isset($data['changer']) && null !== $data['changer']) {
+        if (isset($data['changer'])) {
             $customUrl->setChanger($this->entityManager->getReference(UserInterface::class, $data['changer']));
         }
         $customUrl->setChanged(new \DateTimeImmutable($data['changed']));
