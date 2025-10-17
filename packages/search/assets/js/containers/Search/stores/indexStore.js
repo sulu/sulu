@@ -11,7 +11,7 @@ class IndexStore {
 
     sendRequest(): Promise<Object> {
         if (!this.indexPromise) {
-            this.indexPromise = ResourceRequester.getList('search_indexes');
+            this.indexPromise = ResourceRequester.getList('search_resources');
         }
 
         return this.indexPromise;
@@ -19,7 +19,7 @@ class IndexStore {
 
     loadIndexes(): Promise<Array<Index>> {
         return this.sendRequest().then((response: Object) => {
-            return response._embedded.search_indexes;
+            return response._embedded.search_resources;
         });
     }
 }

@@ -11,7 +11,10 @@
 
 namespace Sulu\Bundle\ContactBundle\DependencyInjection;
 
+use Sulu\Bundle\ContactBundle\Admin\ContactAdmin;
+use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
 use Sulu\Bundle\ContactBundle\Entity\AccountRepositoryInterface;
+use Sulu\Bundle\ContactBundle\Entity\ContactInterface;
 use Sulu\Bundle\ContactBundle\Entity\ContactRepositoryInterface;
 use Sulu\Bundle\PersistenceBundle\DependencyInjection\PersistenceExtensionTrait;
 use Sulu\Bundle\SecurityBundle\Security\Exception\EmailNotUniqueException;
@@ -212,6 +215,40 @@ class SuluContactExtension extends Extension implements PrependExtensionInterfac
                         ],
                     ],
                 ]
+            );
+        }
+
+        if ($container->hasExtension('sulu_search')) {
+            $container->prependExtensionConfig(
+                'sulu_search',
+                [
+                    'admin' => [
+                        'resources' => [
+                            AccountInterface::RESOURCE_KEY => [
+                                'name' => 'sulu_contact.organization',
+                                'icon' => 'su-house',
+                                'route' => [
+                                    'name' => ContactAdmin::ACCOUNT_EDIT_FORM_VIEW,
+                                    'resultToRoute' => [
+                                        'id' => 'id',
+                                    ],
+                                ],
+                                'securityContext' => ContactAdmin::ACCOUNT_SECURITY_CONTEXT,
+                            ],
+                            ContactInterface::RESOURCE_KEY => [
+                                'name' => 'sulu_contact.people',
+                                'icon' => 'su-user',
+                                'route' => [
+                                    'name' => ContactAdmin::CONTACT_EDIT_FORM_VIEW,
+                                    'resultToRoute' => [
+                                        'id' => 'id',
+                                    ],
+                                ],
+                                'securityContext' => ContactAdmin::CONTACT_SECURITY_CONTEXT,
+                            ],
+                        ],
+                    ],
+                ],
             );
         }
 

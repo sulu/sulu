@@ -77,41 +77,47 @@ class CategoryReindexProviderTest extends SuluTestCase
         ]);
 
         $config = ReindexConfig::create()->withIndex('admin');
+        /** @var array<array{id: string}> $results */
         $results = \iterator_to_array($this->provider->provide($config));
 
         $this->assertCount(3, $results);
 
-        $this->assertSame(
+        $expectedResult = [
             [
-                [
-                    'id' => CategoryInterface::RESOURCE_KEY . '::' . $category1->getId() . '::' . $category1Translation->getLocale(),
-                    'resourceKey' => CategoryInterface::RESOURCE_KEY,
-                    'resourceId' => (string) $category1->getId(),
-                    'changedAt' => (new \DateTimeImmutable($changedDateString1))->format('c'),
-                    'createdAt' => (new \DateTimeImmutable('2000-01-01 12:00:00'))->format('c'),
-                    'title' => $category1Translation->getTranslation(),
-                    'locale' => $category1Translation->getLocale(),
-                ],
-                [
-                    'id' => CategoryInterface::RESOURCE_KEY . '::' . $category2->getId() . '::' . $category2Translation1->getLocale(),
-                    'resourceKey' => CategoryInterface::RESOURCE_KEY,
-                    'resourceId' => (string) $category2->getId(),
-                    'changedAt' => (new \DateTimeImmutable($changedDateString2))->format('c'),
-                    'createdAt' => (new \DateTimeImmutable('2000-01-01 12:00:00'))->format('c'),
-                    'title' => $category2Translation1->getTranslation(),
-                    'locale' => $category2Translation1->getLocale(),
-                ],
-                [
-                    'id' => CategoryInterface::RESOURCE_KEY . '::' . $category2->getId() . '::' . $category2Translation2->getLocale(),
-                    'resourceKey' => CategoryInterface::RESOURCE_KEY,
-                    'resourceId' => (string) $category2->getId(),
-                    'changedAt' => (new \DateTimeImmutable($changedDateString2))->format('c'),
-                    'createdAt' => (new \DateTimeImmutable('2000-01-01 12:00:00'))->format('c'),
-                    'title' => $category2Translation2->getTranslation(),
-                    'locale' => $category2Translation2->getLocale(),
-                ],
+                'id' => CategoryInterface::RESOURCE_KEY . '::' . $category1->getId() . '::' . $category1Translation->getLocale(),
+                'resourceKey' => CategoryInterface::RESOURCE_KEY,
+                'resourceId' => (string) $category1->getId(),
+                'changedAt' => (new \DateTimeImmutable($changedDateString1))->format('c'),
+                'createdAt' => (new \DateTimeImmutable('2000-01-01 12:00:00'))->format('c'),
+                'title' => $category1Translation->getTranslation(),
+                'locale' => $category1Translation->getLocale(),
             ],
-            [...$results],
+            [
+                'id' => CategoryInterface::RESOURCE_KEY . '::' . $category2->getId() . '::' . $category2Translation1->getLocale(),
+                'resourceKey' => CategoryInterface::RESOURCE_KEY,
+                'resourceId' => (string) $category2->getId(),
+                'changedAt' => (new \DateTimeImmutable($changedDateString2))->format('c'),
+                'createdAt' => (new \DateTimeImmutable('2000-01-01 12:00:00'))->format('c'),
+                'title' => $category2Translation1->getTranslation(),
+                'locale' => $category2Translation1->getLocale(),
+            ],
+            [
+                'id' => CategoryInterface::RESOURCE_KEY . '::' . $category2->getId() . '::' . $category2Translation2->getLocale(),
+                'resourceKey' => CategoryInterface::RESOURCE_KEY,
+                'resourceId' => (string) $category2->getId(),
+                'changedAt' => (new \DateTimeImmutable($changedDateString2))->format('c'),
+                'createdAt' => (new \DateTimeImmutable('2000-01-01 12:00:00'))->format('c'),
+                'title' => $category2Translation2->getTranslation(),
+                'locale' => $category2Translation2->getLocale(),
+            ],
+        ];
+
+        \usort($expectedResult, fn ($a, $b) => \strcmp($a['id'], $b['id']));
+        \usort($results, fn ($a, $b) => \strcmp($a['id'], $b['id']));
+
+        $this->assertSame(
+            $expectedResult,
+            $results,
         );
     }
 

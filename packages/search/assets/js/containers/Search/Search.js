@@ -6,7 +6,6 @@ import {Icon, Loader} from 'sulu-admin-bundle/components';
 import Pagination from 'sulu-admin-bundle/components/Pagination';
 import {Router} from 'sulu-admin-bundle/services';
 import {translate} from 'sulu-admin-bundle/utils';
-import jsonpointer from 'json-pointer';
 import searchStore from './stores/searchStore';
 import indexStore from './stores/indexStore';
 import SearchField from './SearchField';
@@ -28,11 +27,8 @@ class Search extends React.Component<Props> {
     @action componentDidMount() {
         this.query = searchStore.query;
         this.indexName = searchStore.indexName;
-        indexStore.loadIndexes().then(action((indexes: Array<Index>) => {
-            this.indexes = indexes.reduce((indexesObject: Object, index) => {
-                indexesObject[index.indexName] = index;
-                return indexesObject;
-            }, {});
+        indexStore.loadIndexes().then(action((indexes: {[indexName: string]: Index}) => {
+            this.indexes = {...indexes};
         }));
     }
 
@@ -69,13 +65,20 @@ class Search extends React.Component<Props> {
                 name: routeName,
                 resultToRoute,
             },
-        } = this.indexes[result.document.index];
+        } = this.indexes[result.resourceKey];
+        const resultIdArray = result.id.split('::');
+        const resultId = resultIdArray[1] || null;
+        const resultLocale = resultIdArray[2] || null;
+        const resultParams = {
+            id: resultId,
+            locale: resultLocale,
+        };
 
         const {router} = this.props;
         router.navigate(
             routeName,
             Object.keys(resultToRoute).reduce((parameters, resultPath) => {
-                parameters[resultToRoute[resultPath]] = jsonpointer.get(result.document, '/' + resultPath);
+                parameters[resultPath] = resultParams[resultPath];
                 return parameters;
             }, {})
         );
@@ -90,19 +93,19 @@ class Search extends React.Component<Props> {
 
         const results = searchStore.result.map((result, index) => (
             <SearchResult
-                description={result.document.description}
-                icon={indexes[result.document.index].icon}
-                image={result.document.imageUrl}
+                description={result.description || ''}
+                icon={indexes[result.resourceKey] ? indexes[result.resourceKey].icon : null}
+                image={result.imageUrl || null}
                 index={index}
-                key={result.document.index + '_' + result.document.id + '_' + result.document.locale}
-                locale={result.document.locale}
+                key={result.id}
+                locale={result.locale || null}
                 onClick={this.handleResultClick}
                 resource={
-                    indexes[result.document.index]
-                        ? indexes[result.document.index].name
+                    indexes[result.resourceKey]
+                        ? translate(indexes[result.resourceKey].name)
                         : ''
                 }
-                title={result.document.title}
+                title={result.title}
             />
         ));
 

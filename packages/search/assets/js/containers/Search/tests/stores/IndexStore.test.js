@@ -15,16 +15,14 @@ beforeEach(() => {
 test('Load indexes', () => {
     const response = {
         _embedded: {
-            search_indexes: [
-                {
-                    indexName: 'contact',
+            search_resources: {
+                contacts: {
                     name: 'People',
                 },
-                {
-                    indexName: 'page_example',
+                pages: {
                     name: 'example.com',
                 },
-            ],
+            },
         },
     };
 
@@ -33,11 +31,11 @@ test('Load indexes', () => {
     ResourceRequester.getList.mockReturnValue(promise);
     const indexPromise = indexStore.loadIndexes();
 
-    expect(ResourceRequester.getList).toBeCalledWith('search_indexes');
+    expect(ResourceRequester.getList).toBeCalledWith('search_resources');
 
     return indexPromise.then((webspaces) => {
         // check if promise have been cached
         expect(indexStore.indexPromise).toEqual(promise);
-        expect(webspaces).toBe(response._embedded.search_indexes);
+        expect(webspaces).toBe(response._embedded.search_resources);
     });
 });

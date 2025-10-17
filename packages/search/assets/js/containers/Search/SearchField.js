@@ -31,7 +31,10 @@ class SearchField extends React.Component<Props> {
             return undefined;
         }
 
-        return (Object.values(indexes): any);
+        return Object.keys(indexes).map((key: string) => ({
+            ...indexes[key],
+            indexName: key,
+        }));
     }
 
     @computed get index(): ?Index {
@@ -108,7 +111,7 @@ class SearchField extends React.Component<Props> {
                             {this.allIndexes
                                 ? this.allIndexes.map((index: Index) => (
                                     <ArrowMenu.Item key={index.indexName} value={index.indexName}>
-                                        {index.name}
+                                        {translate(index.name)}
                                     </ArrowMenu.Item>
                                 ))
                                 : []

@@ -18,6 +18,12 @@ use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Bundle\ContactBundle\Entity\Account;
 use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
 use Sulu\Bundle\ContactBundle\Infrastructure\Sulu\Search\AccountReindexProvider;
+use Sulu\Bundle\MediaBundle\Entity\Collection;
+use Sulu\Bundle\MediaBundle\Entity\CollectionType;
+use Sulu\Bundle\MediaBundle\Entity\File;
+use Sulu\Bundle\MediaBundle\Entity\FileVersion;
+use Sulu\Bundle\MediaBundle\Entity\Media;
+use Sulu\Bundle\MediaBundle\Entity\MediaType;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
 class AccountReindexProviderTest extends SuluTestCase
@@ -25,11 +31,32 @@ class AccountReindexProviderTest extends SuluTestCase
     private EntityManagerInterface $entityManager;
     private AccountReindexProvider $provider;
 
+    private MediaType $imageType;
+
+    protected Collection $collection;
+
     protected function setUp(): void
     {
         $this->entityManager = $this->getEntityManager();
         $this->provider = new AccountReindexProvider($this->entityManager);
         $this->purgeDatabase();
+
+        $this->imageType = new MediaType();
+        $this->imageType->setName('image');
+        $this->imageType->setDescription('This is an image');
+
+        $this->collection = new Collection();
+        $collectionType = new CollectionType();
+        $collectionType->setName('Default Collection Type');
+        $collectionType->setDescription('Default Collection Type');
+
+        $this->collection->setType($collectionType);
+
+        $this->entityManager->persist($this->imageType);
+        $this->entityManager->persist($collectionType);
+        $this->entityManager->persist($this->collection);
+
+        $this->entityManager->flush();
     }
 
     public function testGetIndex(): void
@@ -49,7 +76,7 @@ class AccountReindexProviderTest extends SuluTestCase
 
     public function testProvideAll(): void
     {
-        $account1 = $this->createAccount('Test Account 1');
+        $account1 = $this->createAccount('Test Account 1', 'Media 1');
         $account2 = $this->createAccount('Test Account 2');
 
         $this->entityManager->flush();
@@ -81,6 +108,7 @@ class AccountReindexProviderTest extends SuluTestCase
                     'id' => AccountInterface::RESOURCE_KEY . '::' . $account1->getId(),
                     'resourceKey' => AccountInterface::RESOURCE_KEY,
                     'resourceId' => (string) $account1->getId(),
+                    'mediaId' => (string) $account1->getLogo()?->getId(),
                     'changedAt' => (new \DateTimeImmutable($changedDateString1))->format('c'),
                     'createdAt' => (new \DateTimeImmutable('2000-01-01 12:00:00'))->format('c'),
                     'title' => $account1->getName(),
@@ -89,6 +117,7 @@ class AccountReindexProviderTest extends SuluTestCase
                     'id' => AccountInterface::RESOURCE_KEY . '::' . $account2->getId(),
                     'resourceKey' => AccountInterface::RESOURCE_KEY,
                     'resourceId' => (string) $account2->getId(),
+                    'mediaId' => '',
                     'changedAt' => (new \DateTimeImmutable($changedDateString2))->format('c'),
                     'createdAt' => (new \DateTimeImmutable('2000-01-01 12:00:00'))->format('c'),
                     'title' => $account2->getName(),
@@ -125,14 +154,47 @@ class AccountReindexProviderTest extends SuluTestCase
         $this->assertNotContains('Account Two', $resultTitles);
     }
 
-    private function createAccount(string $name): Account
+    private function createAccount(string $name, ?string $mediaName = null): Account
     {
         $account = new Account();
         $account->setName($name);
         $account->setCreated(new \DateTimeImmutable('2000-01-01 12:00:00'));
 
+        if ($mediaName) {
+            $media = $this->createMedia($mediaName);
+            $account->setLogo($media);
+        }
+
         $this->entityManager->persist($account);
 
         return $account;
+    }
+
+    private function createMedia(string $name): Media
+    {
+        $file = new File();
+        $file->setVersion(1);
+
+        $fileVersion = new FileVersion();
+        $fileVersion->setVersion(1);
+        $fileVersion->setName($name);
+        $fileVersion->setMimeType('image/jpg');
+        $fileVersion->setFile($file);
+        $fileVersion->setSize(111111);
+        $fileVersion->setDownloadCounter(2);
+        $fileVersion->setChanged(new \DateTimeImmutable('1950-04-20'));
+        $fileVersion->setCreated(new \DateTimeImmutable('1950-04-20'));
+        $file->addFileVersion($fileVersion);
+        $this->entityManager->persist($fileVersion);
+
+        $media = new Media();
+        $media->setType($this->imageType);
+        $media->setCollection($this->collection);
+        $media->addFile($file);
+        $file->setMedia($media);
+        $this->entityManager->persist($media);
+        $this->entityManager->persist($file);
+
+        return $media;
     }
 }
