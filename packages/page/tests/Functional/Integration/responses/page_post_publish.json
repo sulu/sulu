@@ -37,6 +37,7 @@
     "locale": "en",
     "navigationContexts": ["main"],
     "published": "@string@.isDateTime()",
+    "parentUuid": "@uuid@",
     "publishedState": true,
     "seoCanonicalUrl": "https://sulu.io/",
     "seoDescription": "Seo Description",
