@@ -37,7 +37,45 @@ exports[`Render a PageTreeRoute 1`] = `
   </div>
   <div
     class="item colSpan colSpan-7 space-before-0 space-after-0"
-  />
+  >
+    <div
+      class="resourceLocator"
+    >
+      <span
+        class="fixed"
+      >
+        /
+      </span>
+      <div
+        class="input default left"
+      >
+        <input
+          id="/"
+          type="text"
+          value="hello"
+        />
+      </div>
+    </div>
+    <div
+      class="buttonsContainer"
+    >
+      <button
+        class="button link hasText refreshButton"
+        disabled=""
+        type="button"
+      >
+        <span
+          aria-label="su-sync"
+          class="su-sync buttonIcon"
+        />
+        <span
+          class="buttonText"
+        >
+          sulu_admin.refresh_url
+        </span>
+      </button>
+    </div>
+  </div>
 </div>
 `;
 
@@ -126,6 +164,44 @@ exports[`Render a PageTreeRoute without value 1`] = `
   </div>
   <div
     class="item colSpan colSpan-7 space-before-0 space-after-0"
-  />
+  >
+    <div
+      class="resourceLocator"
+    >
+      <span
+        class="fixed"
+      >
+        /
+      </span>
+      <div
+        class="input default left"
+      >
+        <input
+          id="/"
+          type="text"
+          value=""
+        />
+      </div>
+    </div>
+    <div
+      class="buttonsContainer"
+    >
+      <button
+        class="button link hasText refreshButton"
+        disabled=""
+        type="button"
+      >
+        <span
+          aria-label="su-sync"
+          class="su-sync buttonIcon"
+        />
+        <span
+          class="buttonText"
+        >
+          sulu_admin.refresh_url
+        </span>
+      </button>
+    </div>
+  </div>
 </div>
 `;

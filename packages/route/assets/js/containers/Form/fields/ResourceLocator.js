@@ -17,7 +17,6 @@ const HOMEPAGE_RESOURCE_LOCATOR = '/';
 
 @observer
 class ResourceLocator extends React.Component<FieldTypeProps<?string>> {
-    @observable mode: string;
     @observable inputChanged: boolean = false;
     @observable inputChangedSinceRefresh: boolean = false;
     @observable partsChangedSinceRefresh: boolean = false;
@@ -68,17 +67,10 @@ class ResourceLocator extends React.Component<FieldTypeProps<?string>> {
         const {
             fieldTypeOptions: {
                 generationUrl,
-                modeResolver,
             },
             formInspector,
             value,
         } = this.props;
-
-        if (!modeResolver) {
-            throw new Error('The "modeResolver" must be a function returning a promise with the desired mode');
-        }
-
-        modeResolver(this.props).then(action((mode) => this.mode = mode));
 
         if (value === HOMEPAGE_RESOURCE_LOCATOR) {
             return;
@@ -179,15 +171,17 @@ class ResourceLocator extends React.Component<FieldTypeProps<?string>> {
     };
 
     render() {
-        if (!this.mode) {
-            return null;
-        }
-
         const {
             fieldTypeOptions: {
                 historyResourceKey,
+                defaultMode,
                 options = {},
             },
+            schemaOptions: {
+                mode: {
+                    value: mode,
+                } = {},
+            } = {},
         } = this.props;
 
         if (!historyResourceKey || typeof historyResourceKey !== 'string') {
@@ -209,13 +203,19 @@ class ResourceLocator extends React.Component<FieldTypeProps<?string>> {
             return '/';
         }
 
+        const resourceLocatorMode = mode ? mode : defaultMode;
+
+        if (typeof resourceLocatorMode !== 'string') {
+            throw new Error('The "mode" schema option or the "defaultMode" field type option must be a string!');
+        }
+
         return (
             <Fragment>
                 <ResourceLocatorComponent
                     disabled={!!disabled}
                     id={dataPath}
                     locale={formInspector.locale ? formInspector.locale : observable.box(userStore.contentLocale)}
-                    mode={this.mode}
+                    mode={resourceLocatorMode}
                     onBlur={this.handleInputBlur}
                     onChange={this.handleInputChange}
                     value={value}

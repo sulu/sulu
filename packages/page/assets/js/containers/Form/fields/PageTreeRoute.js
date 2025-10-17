@@ -1,7 +1,7 @@
 // @flow
 import React, {Component, Fragment} from 'react';
 import {observer} from 'mobx-react';
-import {action, observable} from 'mobx';
+import {observable} from 'mobx';
 import {userStore} from 'sulu-admin-bundle/stores';
 import {Grid} from 'sulu-admin-bundle/components';
 import {SingleSelection} from 'sulu-admin-bundle/containers';
@@ -15,22 +15,8 @@ type Props = FieldTypeProps<?PageTreeRouteValue>;
 
 @observer
 class PageTreeRoute extends Component<Props> {
-    @observable mode: string;
-
     constructor(props: Props): void {
         super(props);
-
-        const {
-            fieldTypeOptions: {
-                modeResolver,
-            },
-        } = props;
-
-        if (!modeResolver) {
-            throw new Error('The "modeResolver" must be a function returning a promise with the desired mode');
-        }
-
-        modeResolver(props).then(action((mode) => this.mode = mode));
     }
 
     get locale(): IObservableValue<string> {
@@ -92,10 +78,6 @@ class PageTreeRoute extends Component<Props> {
     };
 
     render() {
-        if (!this.mode) {
-            return null;
-        }
-
         const {
             data,
             dataPath,
