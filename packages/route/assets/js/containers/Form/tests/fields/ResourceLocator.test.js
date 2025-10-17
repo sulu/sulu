@@ -877,7 +877,7 @@ test('Should request new URL with correct options and disable button when refres
     expect(Requester.post).toBeCalledWith(
         '/admin/api/resource-locators',
         {
-            id: 5,
+            resourceId: 5,
             locale: 'en',
             parts: {title: 'title-value', subtitle: 'subtitle-value'},
             resourceKey: 'test',

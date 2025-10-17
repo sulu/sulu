@@ -151,7 +151,7 @@ class RouteRepository implements RouteRepositoryInterface
             $queryBuilder
                 ->andWhere($expr->not($expr->andX(
                     $expr->eq('route.resourceKey', ':excludeResourceKey'),
-                    $expr->eq('route.resourceId', ':excludeResourceId')
+                    $expr->eq('route.resourceId', ':excludeResourceId'),
                 )))
                 ->setParameter('excludeResourceKey', $excludeResource['resourceKey'])
                 ->setParameter('excludeResourceId', $excludeResource['resourceId']);
