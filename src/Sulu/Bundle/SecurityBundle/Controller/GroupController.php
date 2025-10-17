@@ -36,6 +36,7 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class GroupController extends AbstractRestController implements ClassResourceInterface, SecuredControllerInterface
 {
+    /** @var class-string */
     protected static $entityName = 'SuluSecurityBundle:Group';
 
     protected static $entityKey = 'groups';

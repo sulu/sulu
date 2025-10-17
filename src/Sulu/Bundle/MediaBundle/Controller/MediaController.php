@@ -64,6 +64,10 @@ class MediaController extends AbstractMediaController implements
      */
     protected static $entityKey = MediaInterface::RESOURCE_KEY;
 
+    /**
+     * @param class-string $mediaClass
+     * @param class-string $collectionClass
+     */
     public function __construct(
         ViewHandlerInterface $viewHandler,
         TokenStorageInterface $tokenStorage,

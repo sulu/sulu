@@ -40,6 +40,9 @@ class ContactMediaController extends AbstractMediaController implements ClassRes
 {
     protected static $mediaEntityKey = 'contact_media';
 
+    /**
+     * @param class-string $contactClass
+     */
     public function __construct(
         ViewHandlerInterface $viewHandler,
         TokenStorageInterface $tokenStorage,

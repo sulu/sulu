@@ -3651,11 +3651,6 @@ parameters:
 			path: src/Sulu/Bundle/CategoryBundle/Content/Types/CategorySelection.php
 
 		-
-			message: "#^Call to an undefined method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\ListBuilderInterface\\:\\:setParameter\\(\\)\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Controller/CategoryController.php
-
-		-
 			message: "#^Left side of && is always true\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/CategoryBundle/Controller/CategoryController.php
@@ -3947,11 +3942,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#2 \\$string of function explode expects string, mixed given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Controller/KeywordController.php
-
-		-
-			message: "#^Parameter \\#2 \\$value of method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\AbstractListBuilder\\:\\:where\\(\\) expects string, Sulu\\\\Bundle\\\\CategoryBundle\\\\Entity\\\\CategoryTranslationInterface given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/CategoryBundle/Controller/KeywordController.php
 
@@ -7421,11 +7411,6 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Content/Types/SingleContactSelection.php
 
 		-
-			message: "#^Call to an undefined method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\ListBuilderInterface\\:\\:setIdField\\(\\)\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Controller/AbstractMediaController.php
-
-		-
 			message: "#^Call to an undefined method object\\:\\:addMedia\\(\\)\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Controller/AbstractMediaController.php
@@ -7586,11 +7571,6 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Controller/AccountController.php
 
 		-
-			message: "#^Call to an undefined method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\ListBuilderInterface\\:\\:setIdField\\(\\)\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Controller/AccountController.php
-
-		-
 			message: "#^Call to an undefined method object\\:\\:getAccountContacts\\(\\)\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Controller/AccountController.php
@@ -7682,11 +7662,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Controller\\\\AccountController\\:\\:doPut\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Controller/AccountController.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Controller\\\\AccountController\\:\\:generateFlatListBuilder\\(\\) should return Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Doctrine\\\\DoctrineListBuilder but returns Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\ListBuilderInterface\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Controller/AccountController.php
 
@@ -7901,16 +7876,6 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Controller/AccountController.php
 
 		-
-			message: "#^Parameter \\#2 \\$value of method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\AbstractListBuilder\\:\\:where\\(\\) expects string, null given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Controller/AccountController.php
-
-		-
-			message: "#^Parameter \\#2 \\$value of method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\ListBuilderInterface\\:\\:where\\(\\) expects string, int given\\.$#"
-			count: 2
-			path: src/Sulu/Bundle/ContactBundle/Controller/AccountController.php
-
-		-
 			message: "#^Property Sulu\\\\Bundle\\\\ContactBundle\\\\Controller\\\\AccountController\\:\\:\\$accountAddressEntityName has no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Controller/AccountController.php
@@ -8092,16 +8057,6 @@ parameters:
 
 		-
 			message: "#^Offset 'id' does not exist on array\\<Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\FieldDescriptorInterface\\>\\|null\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Controller/ContactController.php
-
-		-
-			message: "#^Parameter \\#1 \\$listBuilder of method Sulu\\\\Bundle\\\\ContactBundle\\\\Controller\\\\ContactController\\:\\:prepareListResponse\\(\\) expects Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Doctrine\\\\DoctrineListBuilder, Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\ListBuilderInterface given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Controller/ContactController.php
-
-		-
-			message: "#^Parameter \\#2 \\$value of method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\ListBuilderInterface\\:\\:where\\(\\) expects string, mixed given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Controller/ContactController.php
 
@@ -13381,22 +13336,12 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Controller/FormatController.php
 
 		-
-			message: "#^Call to an undefined method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\ListBuilderInterface\\:\\:addPermissionCheckField\\(\\)\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Controller/MediaController.php
-
-		-
 			message: "#^Cannot cast mixed to int\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Controller/MediaController.php
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Controller\\\\MediaController\\:\\:getListBuilder\\(\\) has parameter \\$types with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Controller/MediaController.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Controller\\\\MediaController\\:\\:getListBuilder\\(\\) should return Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Doctrine\\\\DoctrineListBuilder but returns Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\ListBuilderInterface\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Controller/MediaController.php
 
@@ -13411,7 +13356,7 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Controller/MediaController.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\ListBuilderInterface\\:\\:setPermissionCheck\\(\\) invoked with 3 parameters, 2 required\\.$#"
+			message: "#^Parameter \\#1 \\$fieldDescriptor of method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Doctrine\\\\DoctrineListBuilder\\:\\:addPermissionCheckField\\(\\) expects Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Doctrine\\\\FieldDescriptor\\\\DoctrineFieldDescriptor, Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\FieldDescriptorInterface given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Controller/MediaController.php
 
@@ -13433,11 +13378,6 @@ parameters:
 		-
 			message: "#^Parameter \\#2 \\$string of function explode expects string, mixed given\\.$#"
 			count: 2
-			path: src/Sulu/Bundle/MediaBundle/Controller/MediaController.php
-
-		-
-			message: "#^Parameter \\#2 \\$value of method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\ListBuilderInterface\\:\\:where\\(\\) expects string, mixed given\\.$#"
-			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Controller/MediaController.php
 
 		-
@@ -14797,11 +14737,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Media\\\\ListBuilderFactory\\\\MediaListBuilderFactory\\:\\:getListBuilder\\(\\) has parameter \\$types with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Media/ListBuilderFactory/MediaListBuilderFactory.php
-
-		-
-			message: "#^Parameter \\#2 \\$value of method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\AbstractListBuilder\\:\\:where\\(\\) expects string, int\\<min, \\-1\\>\\|int\\<1, max\\> given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Media/ListBuilderFactory/MediaListBuilderFactory.php
 
@@ -25691,11 +25626,6 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/Controller/GroupController.php
 
 		-
-			message: "#^Parameter \\#1 \\$className of method Doctrine\\\\ORM\\\\EntityManagerInterface\\:\\:getRepository\\(\\) expects class\\-string\\<object\\>, string given\\.$#"
-			count: 5
-			path: src/Sulu/Bundle/SecurityBundle/Controller/GroupController.php
-
-		-
 			message: "#^Parameter \\#1 \\$name of method Sulu\\\\Bundle\\\\SecurityBundle\\\\Entity\\\\Group\\:\\:setName\\(\\) expects string, mixed given\\.$#"
 			count: 2
 			path: src/Sulu/Bundle/SecurityBundle/Controller/GroupController.php
@@ -25721,8 +25651,8 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/Controller/GroupController.php
 
 		-
-			message: "#^Unable to resolve the template type T in call to method Doctrine\\\\ORM\\\\EntityManagerInterface\\:\\:getRepository\\(\\)$#"
-			count: 5
+			message: "#^Static property Sulu\\\\Bundle\\\\SecurityBundle\\\\Controller\\\\GroupController\\:\\:\\$entityName \\(class\\-string\\) does not accept default value of type string\\.$#"
+			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Controller/GroupController.php
 
 		-
@@ -26071,11 +26001,6 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/Controller/RoleController.php
 
 		-
-			message: "#^Parameter \\#2 \\$value of method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\ListBuilderInterface\\:\\:where\\(\\) expects string, false given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Controller/RoleController.php
-
-		-
 			message: "#^Property Sulu\\\\Bundle\\\\SecurityBundle\\\\Controller\\\\RoleController\\:\\:\\$fieldDescriptors \\(array\\) does not accept array\\<Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\FieldDescriptorInterface\\>\\|null\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Controller/RoleController.php
@@ -26136,22 +26061,12 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/Controller/UserController.php
 
 		-
-			message: "#^Parameter \\#1 \\$className of method Doctrine\\\\ORM\\\\EntityManagerInterface\\:\\:getRepository\\(\\) expects class\\-string\\<object\\>, string given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Controller/UserController.php
-
-		-
 			message: "#^Strict comparison using \\=\\=\\= between false and string will always evaluate to false\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Controller/UserController.php
 
 		-
 			message: "#^Strict comparison using \\=\\=\\= between true and string will always evaluate to false\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Controller/UserController.php
-
-		-
-			message: "#^Unable to resolve the template type T in call to method Doctrine\\\\ORM\\\\EntityManagerInterface\\:\\:getRepository\\(\\)$#"
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Controller/UserController.php
 
@@ -45356,11 +45271,6 @@ parameters:
 			path: src/Sulu/Component/Rest/ListBuilder/Filter/BooleanFilterType.php
 
 		-
-			message: "#^Parameter \\#2 \\$value of method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\ListBuilderInterface\\:\\:where\\(\\) expects string, bool given\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/Filter/BooleanFilterType.php
-
-		-
 			message: "#^Method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Filter\\\\DateFilterType\\:\\:filter\\(\\) has parameter \\$options with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/Rest/ListBuilder/Filter/DateFilterType.php
@@ -45377,11 +45287,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Filter\\\\NumberFilterType\\:\\:filter\\(\\) has parameter \\$options with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/Filter/NumberFilterType.php
-
-		-
-			message: "#^Parameter \\#2 \\$value of method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\ListBuilderInterface\\:\\:where\\(\\) expects string, float\\|int\\|string given\\.$#"
 			count: 1
 			path: src/Sulu/Component/Rest/ListBuilder/Filter/NumberFilterType.php
 
@@ -46348,16 +46253,6 @@ parameters:
 		-
 			message: "#^Method Sulu\\\\Component\\\\Rest\\\\Tests\\\\Unit\\\\ListBuilder\\\\Doctrine\\\\DoctrineListBuilderTest\\:\\:readObjectAttribute\\(\\) has no return type specified\\.$#"
 			count: 1
-			path: src/Sulu/Component/Rest/Tests/Unit/ListBuilder/Doctrine/DoctrineListBuilderTest.php
-
-		-
-			message: "#^Parameter \\#2 \\$value of method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\AbstractListBuilder\\:\\:where\\(\\) expects string, int given\\.$#"
-			count: 2
-			path: src/Sulu/Component/Rest/Tests/Unit/ListBuilder/Doctrine/DoctrineListBuilderTest.php
-
-		-
-			message: "#^Parameter \\#2 \\$value of method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\AbstractListBuilder\\:\\:where\\(\\) expects string, null given\\.$#"
-			count: 2
 			path: src/Sulu/Component/Rest/Tests/Unit/ListBuilder/Doctrine/DoctrineListBuilderTest.php
 
 		-

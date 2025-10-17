@@ -83,6 +83,9 @@ class ContactController extends AbstractRestController implements ClassResourceI
 
     protected $accountContactFieldDescriptors;
 
+    /**
+     * @param class-string $contactClass
+     */
     public function __construct(
         ViewHandlerInterface $viewHandler,
         TokenStorageInterface $tokenStorage,
