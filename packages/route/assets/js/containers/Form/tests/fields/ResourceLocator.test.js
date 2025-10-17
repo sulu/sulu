@@ -245,7 +245,10 @@ test.each(['tree_leaf_edit', 'tree_full_edit'])('Set mode correctly from schemaO
             }}
             formInspector={formInspector}
             schemaOptions={{
-                mode: {value: mode},
+                mode: {
+                    name: 'mode',
+                    value: mode,
+                },
             }}
             value="/test/xxx"
         />

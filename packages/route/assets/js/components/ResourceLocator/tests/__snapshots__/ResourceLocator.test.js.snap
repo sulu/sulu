@@ -21,7 +21,7 @@ exports[`ResourceLocator should render when disabled 1`] = `
 </div>
 `;
 
-exports[`ResourceLocator should render with type tree_full_edit 1`] = `
+exports[`ResourceLocator should render with type full 1`] = `
 <div
   class="resourceLocator"
 >
@@ -41,7 +41,7 @@ exports[`ResourceLocator should render with type tree_full_edit 1`] = `
 </div>
 `;
 
-exports[`ResourceLocator should render with type tree_full_edit and a value of undefined 1`] = `
+exports[`ResourceLocator should render with type full and a value of undefined 1`] = `
 <div
   class="resourceLocator"
 >
@@ -61,7 +61,7 @@ exports[`ResourceLocator should render with type tree_full_edit and a value of u
 </div>
 `;
 
-exports[`ResourceLocator should render with type tree_leaf_edit 1`] = `
+exports[`ResourceLocator should render with type leaf 1`] = `
 <div
   class="resourceLocator"
 >
@@ -81,7 +81,7 @@ exports[`ResourceLocator should render with type tree_leaf_edit 1`] = `
 </div>
 `;
 
-exports[`ResourceLocator should render with type tree_leaf_edit and a value of undefined 1`] = `
+exports[`ResourceLocator should render with type leaf and a value of undefined 1`] = `
 <div
   class="resourceLocator"
 >
