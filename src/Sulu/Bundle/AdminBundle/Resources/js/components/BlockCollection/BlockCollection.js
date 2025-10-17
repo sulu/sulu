@@ -18,6 +18,7 @@ type Props<T: string, U: {_id?: string, type: T, ...}> = {|
     defaultType: T,
     disabled: boolean,
     generateBlockId?: () => Promise<string>,
+    generateBlockIds?: (count: number) => Promise<Array<string>>,
     icons?: Array<Array<string>>,
     maxOccurs?: ?number,
     minOccurs?: ?number,
@@ -158,7 +159,7 @@ class BlockCollection<T: string, U: {_id?: string, type: T, ...}> extends React.
     };
 
     @action handlePasteBlocks = async(insertionIndex: number) => {
-        const {generateBlockId, onChange, onDisplaySnackbar, value} = this.props;
+        const {generateBlockId, generateBlockIds, onChange, onDisplaySnackbar, value} = this.props;
 
         if (this.hasMaximumReached) {
             throw new Error('The maximum amount of blocks has already been reached!');
@@ -178,6 +179,16 @@ class BlockCollection<T: string, U: {_id?: string, type: T, ...}> extends React.
             insertionIndex, 0, ...this.pasteableBlocks.map(() => ++BlockCollection.idCounter)
         );
 
+        // Count how many blocks need new IDs (blocks without _id are from copy operations)
+        const blocksNeedingIds = this.pasteableBlocks.filter((block) => !block._id).length;
+
+        // Generate IDs in batch if we have the batch function and multiple blocks need IDs
+        let generatedIds = [];
+        if (generateBlockIds && blocksNeedingIds > 1) {
+            generatedIds = await generateBlockIds(blocksNeedingIds);
+        }
+
+        let idIndex = 0;
         const newElements = await Promise.all(
             this.pasteableBlocks.map(async(block) => {
                 // paste block with default type if type of block in clipboard is not known
@@ -188,7 +199,12 @@ class BlockCollection<T: string, U: {_id?: string, type: T, ...}> extends React.
                 // Generate new ID only if block doesn't have one (copy operation)
                 // Cut operation preserves the _id
                 if (generateBlockId && !newBlock._id) {
-                    newBlock._id = await generateBlockId();
+                    // Use batch-generated ID if available, otherwise fall back to single generation
+                    if (generatedIds.length > 0) {
+                        newBlock._id = generatedIds[idIndex++];
+                    } else {
+                        newBlock._id = await generateBlockId();
+                    }
                 }
 
                 return newBlock;

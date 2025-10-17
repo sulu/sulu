@@ -44,7 +44,7 @@ sulu_admin.get_items:
 # Block IDs
 sulu_admin.post_block_ids:
     path: '/block-ids.{_format}'
-    methods: GET
+    methods: POST
     controller: 'sulu_admin.block_id_controller::generateAction'
     format: json
     requirements:

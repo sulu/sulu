@@ -30,7 +30,7 @@ class BlockIdControllerTest extends SuluTestCase
 
     public function testGenerate(): void
     {
-        $this->client->jsonRequest('GET', '/admin/api/block-ids.json');
+        $this->client->jsonRequest('POST', '/admin/api/block-ids.json');
 
         $this->assertHttpStatusCode(200, $this->client->getResponse());
 
@@ -45,5 +45,45 @@ class BlockIdControllerTest extends SuluTestCase
         $this->assertNotEmpty($response['id']);
         $this->assertSame(8, \strlen($response['id']));
         $this->assertMatchesRegularExpression('/^[a-f0-9]{8}$/', $response['id']);
+    }
+
+    public function testGenerateBatch(): void
+    {
+        $this->client->jsonRequest('POST', '/admin/api/block-ids.json?length=3');
+
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+
+        $content = $this->client->getResponse()->getContent();
+        $this->assertIsString($content);
+
+        $response = \json_decode($content, true);
+
+        $this->assertIsArray($response);
+        $this->assertArrayHasKey('_embedded', $response);
+        $this->assertIsArray($response['_embedded']);
+        $this->assertArrayHasKey('blockIds', $response['_embedded']);
+
+        $blockIds = $response['_embedded']['blockIds'];
+        $this->assertIsArray($blockIds);
+        $this->assertCount(3, $blockIds);
+
+        foreach ($blockIds as $blockId) {
+            $this->assertIsArray($blockId);
+            $this->assertArrayHasKey('id', $blockId);
+            $this->assertIsString($blockId['id']);
+            $this->assertNotEmpty($blockId['id']);
+            $this->assertSame(8, \strlen($blockId['id']));
+            $this->assertMatchesRegularExpression('/^[a-f0-9]{8}$/', $blockId['id']);
+        }
+
+        // Verify all IDs are unique
+        $ids = [];
+        foreach ($blockIds as $blockId) {
+            $this->assertIsArray($blockId);
+            $this->assertArrayHasKey('id', $blockId);
+            $ids[] = $blockId['id'];
+        }
+
+        $this->assertCount(\count($ids), \array_unique($ids));
     }
 }

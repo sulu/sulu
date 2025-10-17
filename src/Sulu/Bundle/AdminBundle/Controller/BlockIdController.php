@@ -15,6 +15,7 @@ namespace Sulu\Bundle\AdminBundle\Controller;
 
 use Sulu\Bundle\AdminBundle\Application\BlockIdGenerator\BlockIdGeneratorInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -28,10 +29,23 @@ class BlockIdController
     ) {
     }
 
-    public function generateAction(): Response
+    public function generateAction(Request $request): Response
     {
-        $id = $this->blockIdGenerator->generateId();
+        $length = $request->query->getInt('length', 1);
 
-        return new JsonResponse(['id' => $id]);
+        // Generate single ID for backwards compatibility
+        if (1 === $length) {
+            $id = $this->blockIdGenerator->generateId();
+
+            return new JsonResponse(['id' => $id]);
+        }
+
+        // Generate multiple IDs for batch operations
+        $blockIds = [];
+        for ($i = 0; $i < $length; ++$i) {
+            $blockIds[] = ['id' => $this->blockIdGenerator->generateId()];
+        }
+
+        return new JsonResponse(['_embedded' => ['blockIds' => $blockIds]]);
     }
 }

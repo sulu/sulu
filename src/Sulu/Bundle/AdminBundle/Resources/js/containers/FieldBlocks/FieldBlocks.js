@@ -555,6 +555,7 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
                     defaultType={defaultType}
                     disabled={!!disabled}
                     generateBlockId={this.generateBlockIds ? blockIdGenerator.generateBlockId : undefined}
+                    generateBlockIds={this.generateBlockIds ? blockIdGenerator.generateBlockIds : undefined}
                     icons={this.icons}
                     maxOccurs={maxOccurs}
                     minOccurs={minOccurs}
