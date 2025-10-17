@@ -22,7 +22,7 @@ use Sulu\Page\Domain\Model\PageInterface;
 
 /**
  * @internal no backwards compatibility promise is given for this class it could be removed or changed at any time.
- *           create your own TypedFormMetadataVisitorInterface service to customize the behavior if needed.
+ *           create your own service based on `TypedFormMetadataVisitorInterface` to customize the behavior if needed.
  */
 final class WebspaceRouteModeTypedFormMetadataVisitor implements TypedFormMetadataVisitorInterface
 {
@@ -41,19 +41,25 @@ final class WebspaceRouteModeTypedFormMetadataVisitor implements TypedFormMetada
 
         $webspaceKey = $metadataOptions['webspace'] ?? null;
 
+        if (null === $webspaceKey) {
+            return;
+        }
+
+        \assert(\is_string($webspaceKey), 'The webspace key must be a string, but got: ' . \get_debug_type($webspaceKey));
+
         foreach ($formMetadata->getForms() as $formMetadata) {
-            $this->searchAndEnhanceRouteProperty($formMetadata->getItems(), $webspaceKey);
+            $this->enhanceRouteProperty($formMetadata->getItems(), $webspaceKey);
         }
     }
 
     /**
      * @param ItemMetadata[] $itemsMetadata
      */
-    private function searchAndEnhanceRouteProperty(array $itemsMetadata, string $webspaceKey): void
+    private function enhanceRouteProperty(array $itemsMetadata, string $webspaceKey): void
     {
         foreach ($itemsMetadata as $itemMetadata) {
             if ($itemMetadata instanceof SectionMetadata) {
-                $this->searchAndEnhanceRouteProperty($itemMetadata->getItems(), $webspaceKey);
+                $this->enhanceRouteProperty($itemMetadata->getItems(), $webspaceKey);
 
                 continue;
             }
@@ -63,7 +69,7 @@ final class WebspaceRouteModeTypedFormMetadataVisitor implements TypedFormMetada
             }
 
             foreach ($itemMetadata->getTypes() as $type) {
-                $this->searchAndEnhanceRouteProperty($type->getItems(), $webspaceKey);
+                $this->enhanceRouteProperty($type->getItems(), $webspaceKey);
             }
 
             if ('route' !== $itemMetadata->getType()) {
@@ -87,8 +93,7 @@ final class WebspaceRouteModeTypedFormMetadataVisitor implements TypedFormMetada
 
     private function getModeForWebspace(string $webspaceKey): string
     {
-        $webspace = $this->webspaceManager->getWebspaceCollection()
-            ->getWebspace($webspaceKey);
+        $webspace = $this->webspaceManager->findWebspaceByKey($webspaceKey);
 
         \assert(null !== $webspace, \sprintf('The webspace with key "%s" does not exist.', $webspaceKey));
 

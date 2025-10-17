@@ -605,6 +605,9 @@ field type, so all routable entities use the same field type.:
         </property>
 ```
 
+The `ResourceLocator` JS React Component now uses `tree_leaf_edit` and `tree_full_edit` instead of `leaf` and `full`,
+to be consistent with the PHP naming.
+
 ### Upgrade the Controller references
 
 The controller in the page/article templates have to be adjusted use the new controller

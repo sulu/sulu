@@ -56,7 +56,7 @@ class ResourceLocator extends React.Component<Props> {
     splitLeafValue() {
         const {value, mode} = this.props;
 
-        if (mode === 'leaf' && value) {
+        if (mode === 'tree_leaf_edit' && value) {
             const parts = value.split('/');
             parts.pop();
             this.fixed = parts.join('/') + '/';
@@ -83,7 +83,7 @@ class ResourceLocator extends React.Component<Props> {
                 value = value.toLowerCase();
             }
 
-            if (mode === 'leaf') {
+            if (mode === 'tree_leaf_edit') {
                 value = value.replace(/\//g, '-');
             }
 
