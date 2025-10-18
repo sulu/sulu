@@ -33,14 +33,7 @@ class BlockIdController
     {
         $length = $request->query->getInt('length', 1);
 
-        // Generate single ID for backwards compatibility
-        if (1 === $length) {
-            $id = $this->blockIdGenerator->generateId();
-
-            return new JsonResponse(['id' => $id]);
-        }
-
-        // Generate multiple IDs for batch operations
+        // Generate IDs and always return array format
         $blockIds = [];
         for ($i = 0; $i < $length; ++$i) {
             $blockIds[] = ['id' => $this->blockIdGenerator->generateId()];

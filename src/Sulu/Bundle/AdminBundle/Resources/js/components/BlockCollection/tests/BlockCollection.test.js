@@ -1388,16 +1388,16 @@ test('Remove selected blocks via the BlockToolbar', () => {
     expect(changeSpy).toBeCalledWith([]);
 });
 
-test('Should generate ID when adding new block with generateBlockId enabled', async() => {
+test('Should generate ID when adding new block with generateBlockIds enabled', async() => {
     const mockId = 'abc12345';
-    const generateBlockIdSpy = jest.fn().mockReturnValue(Promise.resolve(mockId));
+    const generateBlockIdsSpy = jest.fn().mockReturnValue(Promise.resolve([mockId]));
 
     const changeSpy = jest.fn();
     const value = [{content: 'Test 1', type: 'editor'}];
     const blockCollection = mount(
         <BlockCollection
             defaultType="editor"
-            generateBlockId={generateBlockIdSpy}
+            generateBlockIds={generateBlockIdsSpy}
             onChange={changeSpy}
             renderBlockContent={jest.fn()}
             value={value}
@@ -1407,14 +1407,14 @@ test('Should generate ID when adding new block with generateBlockId enabled', as
     // Call the handler directly to properly await the async operation
     await blockCollection.instance().handleAddBlock(1);
 
-    expect(generateBlockIdSpy).toHaveBeenCalled();
+    expect(generateBlockIdsSpy).toHaveBeenCalledWith(1);
     expect(changeSpy).toHaveBeenCalledWith([
         {content: 'Test 1', type: 'editor'},
         {type: 'editor', _id: mockId},
     ]);
 });
 
-test('Should not generate ID when adding block without generateBlockId', async() => {
+test('Should not generate ID when adding block without generateBlockIds', async() => {
     const changeSpy = jest.fn();
     const value = [{content: 'Test 1', type: 'editor'}];
     const blockCollection = mount(
@@ -1438,14 +1438,14 @@ test('Should preserve ID when pasting cut blocks', async() => {
     const existingId = 'existing123';
     clipboard.set('blocks', [{content: 'Clipboard', type: 'editor', _id: existingId}]);
 
-    const generateBlockIdSpy = jest.fn();
+    const generateBlockIdsSpy = jest.fn();
 
     const changeSpy = jest.fn();
     const value = [{content: 'Test 1', type: 'editor'}];
     const blockCollection = mount(
         <BlockCollection
             defaultType="editor"
-            generateBlockId={generateBlockIdSpy}
+            generateBlockIds={generateBlockIdsSpy}
             onChange={changeSpy}
             renderBlockContent={jest.fn()}
             value={value}
@@ -1455,7 +1455,7 @@ test('Should preserve ID when pasting cut blocks', async() => {
     // Call the handler directly to properly await the async operation
     await blockCollection.instance().handlePasteBlocks(1);
 
-    expect(generateBlockIdSpy).not.toHaveBeenCalled();
+    expect(generateBlockIdsSpy).not.toHaveBeenCalled();
     expect(changeSpy).toHaveBeenCalledWith([
         {content: 'Test 1', type: 'editor'},
         {content: 'Clipboard', type: 'editor', _id: existingId},
@@ -1466,14 +1466,14 @@ test('Should generate new ID when pasting copied blocks without ID', async() => 
     const mockId = 'newid456';
     clipboard.set('blocks', [{content: 'Clipboard', type: 'editor'}]);
 
-    const generateBlockIdSpy = jest.fn().mockReturnValue(Promise.resolve(mockId));
+    const generateBlockIdsSpy = jest.fn().mockReturnValue(Promise.resolve([mockId]));
 
     const changeSpy = jest.fn();
     const value = [{content: 'Test 1', type: 'editor'}];
     const blockCollection = mount(
         <BlockCollection
             defaultType="editor"
-            generateBlockId={generateBlockIdSpy}
+            generateBlockIds={generateBlockIdsSpy}
             onChange={changeSpy}
             renderBlockContent={jest.fn()}
             value={value}
@@ -1485,7 +1485,7 @@ test('Should generate new ID when pasting copied blocks without ID', async() => 
     // Wait for async operation
     await new Promise((resolve) => setTimeout(resolve, 0));
 
-    expect(generateBlockIdSpy).toHaveBeenCalled();
+    expect(generateBlockIdsSpy).toHaveBeenCalledWith(1);
     expect(changeSpy).toHaveBeenCalledWith([
         {content: 'Test 1', type: 'editor'},
         {content: 'Clipboard', type: 'editor', _id: mockId},
@@ -1496,12 +1496,12 @@ test('Should remove ID from clipboard when copying blocks', () => {
     const clipboardSpy = jest.fn();
     clipboard.observe('blocks', clipboardSpy);
 
-    const generateBlockIdSpy = jest.fn();
+    const generateBlockIdsSpy = jest.fn();
     const value: any = observable([{content: 'Test 1', type: 'editor', _id: 'testid123'}]);
     const blockCollection = mount(
         <BlockCollection
             defaultType="editor"
-            generateBlockId={generateBlockIdSpy}
+            generateBlockIds={generateBlockIdsSpy}
             onChange={jest.fn()}
             renderBlockContent={jest.fn()}
             value={value}
@@ -1521,7 +1521,7 @@ test('Should preserve ID in clipboard when cutting blocks', () => {
     const clipboardSpy = jest.fn();
     clipboard.observe('blocks', clipboardSpy);
 
-    const generateBlockIdSpy = jest.fn();
+    const generateBlockIdsSpy = jest.fn();
     const value: any = observable([
         {content: 'Test 1', type: 'editor', _id: 'testid123'},
         {content: 'Test 2', type: 'editor'},
@@ -1533,7 +1533,7 @@ test('Should preserve ID in clipboard when cutting blocks', () => {
     const blockCollection = mount(
         <BlockCollection
             defaultType="editor"
-            generateBlockId={generateBlockIdSpy}
+            generateBlockIds={generateBlockIdsSpy}
             onChange={changeSpy}
             renderBlockContent={jest.fn()}
             value={value}

@@ -2021,7 +2021,7 @@ test('Throw error if passed add_button_text schema option is not a string', () =
     )).toThrow('The "block" field types only accepts strings as "add_button_text" schema option!');
 });
 
-test('Should pass generateBlockId function to BlockCollection when block_id_generator is true', () => {
+test('Should pass generateBlockIds function to BlockCollection when block_id_generator is true', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
     const types = {
         default: {
@@ -2046,10 +2046,10 @@ test('Should pass generateBlockId function to BlockCollection when block_id_gene
         />
     );
 
-    expect(fieldBlocks.find('BlockCollection').prop('generateBlockId')).toBeInstanceOf(Function);
+    expect(fieldBlocks.find('BlockCollection').prop('generateBlockIds')).toBeInstanceOf(Function);
 });
 
-test('Should not pass generateBlockId to BlockCollection when block_id_generator is false', () => {
+test('Should not pass generateBlockIds to BlockCollection when block_id_generator is false', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
     const types = {
         default: {
@@ -2074,7 +2074,7 @@ test('Should not pass generateBlockId to BlockCollection when block_id_generator
         />
     );
 
-    expect(fieldBlocks.find('BlockCollection').prop('generateBlockId')).toBeUndefined();
+    expect(fieldBlocks.find('BlockCollection').prop('generateBlockIds')).toBeUndefined();
 });
 
 test('Throw error if passed block_id_generator schema option is not a boolean', () => {

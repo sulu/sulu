@@ -18,17 +18,52 @@ beforeEach(() => {
     jest.clearAllMocks();
 });
 
-test('Should generate block ID by calling the backend API', () => {
+test('Should generate single block ID by calling the backend API', () => {
     const mockId = 'abc12345';
     const mockUrl = '/admin/api/block-ids.json';
 
     symfonyRouting.generate.mockReturnValue(mockUrl);
-    Requester.post.mockReturnValue(Promise.resolve({id: mockId}));
+    Requester.post.mockReturnValue(Promise.resolve({
+        _embedded: {
+            blockIds: [{id: mockId}],
+        },
+    }));
 
-    return blockIdGenerator.generateBlockId().then((id) => {
+    return blockIdGenerator.generateBlockIds(1).then((ids) => {
         expect(symfonyRouting.generate).toBeCalledWith('sulu_admin.post_block_ids');
-        expect(Requester.post).toBeCalledWith(mockUrl);
-        expect(id).toBe(mockId);
+        expect(Requester.post).toBeCalledWith(mockUrl + '?length=1');
+        expect(ids).toEqual([mockId]);
+    });
+});
+
+test('Should generate multiple block IDs in a single request', () => {
+    const mockId1 = 'abc12345';
+    const mockId2 = 'def67890';
+    const mockId3 = 'ghi13579';
+    const mockUrl = '/admin/api/block-ids.json';
+
+    symfonyRouting.generate.mockReturnValue(mockUrl);
+    Requester.post.mockReturnValue(Promise.resolve({
+        _embedded: {
+            blockIds: [
+                {id: mockId1},
+                {id: mockId2},
+                {id: mockId3},
+            ],
+        },
+    }));
+
+    return blockIdGenerator.generateBlockIds(3).then((ids) => {
+        expect(symfonyRouting.generate).toBeCalledWith('sulu_admin.post_block_ids');
+        expect(Requester.post).toBeCalledWith(mockUrl + '?length=3');
+        expect(ids).toEqual([mockId1, mockId2, mockId3]);
+    });
+});
+
+test('Should return empty array when count is 0', () => {
+    return blockIdGenerator.generateBlockIds(0).then((ids) => {
+        expect(ids).toEqual([]);
+        expect(Requester.post).not.toHaveBeenCalled();
     });
 });
 
@@ -38,40 +73,19 @@ test('Should throw error when response is missing', () => {
     symfonyRouting.generate.mockReturnValue(mockUrl);
     Requester.post.mockReturnValue(Promise.resolve(null));
 
-    return blockIdGenerator.generateBlockId().catch((error) => {
+    return blockIdGenerator.generateBlockIds(1).catch((error) => {
         expect(error.message).toBe('Invalid response from block ID generator');
     });
 });
 
-test('Should throw error when response is missing id property', () => {
+test('Should throw error when response is missing _embedded structure', () => {
     const mockUrl = '/admin/api/block-ids.json';
 
     symfonyRouting.generate.mockReturnValue(mockUrl);
     Requester.post.mockReturnValue(Promise.resolve({}));
 
-    return blockIdGenerator.generateBlockId().catch((error) => {
+    return blockIdGenerator.generateBlockIds(1).catch((error) => {
         expect(error.message).toBe('Invalid response from block ID generator');
-    });
-});
-
-test('Should generate different IDs on multiple calls', () => {
-    const mockUrl = '/admin/api/block-ids.json';
-    const mockId1 = 'abc12345';
-    const mockId2 = 'def67890';
-
-    symfonyRouting.generate.mockReturnValue(mockUrl);
-    Requester.post
-        .mockReturnValueOnce(Promise.resolve({id: mockId1}))
-        .mockReturnValueOnce(Promise.resolve({id: mockId2}));
-
-    return Promise.all([
-        blockIdGenerator.generateBlockId(),
-        blockIdGenerator.generateBlockId(),
-    ]).then(([id1, id2]) => {
-        expect(id1).toBe(mockId1);
-        expect(id2).toBe(mockId2);
-        expect(id1).not.toBe(id2);
-        expect(Requester.post).toHaveBeenCalledTimes(2);
     });
 });
 
@@ -82,7 +96,7 @@ test('Should handle API errors gracefully', () => {
     symfonyRouting.generate.mockReturnValue(mockUrl);
     Requester.post.mockReturnValue(Promise.reject(mockError));
 
-    return blockIdGenerator.generateBlockId().catch((error) => {
+    return blockIdGenerator.generateBlockIds(1).catch((error) => {
         expect(error).toBe(mockError);
     });
 });

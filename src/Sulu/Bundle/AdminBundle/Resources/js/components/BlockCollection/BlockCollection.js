@@ -17,7 +17,6 @@ type Props<T: string, U: {_id?: string, type: T, ...}> = {|
     collapsable: boolean,
     defaultType: T,
     disabled: boolean,
-    generateBlockId?: () => Promise<string>,
     generateBlockIds?: (count: number) => Promise<Array<string>>,
     icons?: Array<Array<string>>,
     maxOccurs?: ?number,
@@ -131,7 +130,7 @@ class BlockCollection<T: string, U: {_id?: string, type: T, ...}> extends React.
     }
 
     @action handleAddBlock = async(insertionIndex: number) => {
-        const {defaultType, generateBlockId, onChange, value} = this.props;
+        const {defaultType, generateBlockIds, onChange, value} = this.props;
 
         if (this.hasMaximumReached) {
             throw new Error('The maximum amount of blocks has already been reached!');
@@ -149,8 +148,9 @@ class BlockCollection<T: string, U: {_id?: string, type: T, ...}> extends React.
             const newBlock: any = {type: defaultType};
 
             // Generate block ID if function is provided
-            if (generateBlockId) {
-                newBlock._id = await generateBlockId();
+            if (generateBlockIds) {
+                const ids = await generateBlockIds(1);
+                newBlock._id = ids[0];
             }
 
             // $FlowFixMe
@@ -159,7 +159,7 @@ class BlockCollection<T: string, U: {_id?: string, type: T, ...}> extends React.
     };
 
     @action handlePasteBlocks = async(insertionIndex: number) => {
-        const {generateBlockId, generateBlockIds, onChange, onDisplaySnackbar, value} = this.props;
+        const {generateBlockIds, onChange, onDisplaySnackbar, value} = this.props;
 
         if (this.hasMaximumReached) {
             throw new Error('The maximum amount of blocks has already been reached!');
@@ -182,34 +182,27 @@ class BlockCollection<T: string, U: {_id?: string, type: T, ...}> extends React.
         // Count how many blocks need new IDs (blocks without _id are from copy operations)
         const blocksNeedingIds = this.pasteableBlocks.filter((block) => !block._id).length;
 
-        // Generate IDs in batch if we have the batch function and multiple blocks need IDs
+        // Generate IDs in batch if needed
         let generatedIds = [];
-        if (generateBlockIds && blocksNeedingIds > 1) {
+        if (generateBlockIds && blocksNeedingIds > 0) {
             generatedIds = await generateBlockIds(blocksNeedingIds);
         }
 
         let idIndex = 0;
-        const newElements = await Promise.all(
-            this.pasteableBlocks.map(async(block) => {
-                // paste block with default type if type of block in clipboard is not known
-                const newBlock = !this.props.types?.[block.type]
-                    ? {...block, type: this.props.defaultType}
-                    : {...block};
+        const newElements = this.pasteableBlocks.map((block) => {
+            // paste block with default type if type of block in clipboard is not known
+            const newBlock = !this.props.types?.[block.type]
+                ? {...block, type: this.props.defaultType}
+                : {...block};
 
-                // Generate new ID only if block doesn't have one (copy operation)
-                // Cut operation preserves the _id
-                if (generateBlockId && !newBlock._id) {
-                    // Use batch-generated ID if available, otherwise fall back to single generation
-                    if (generatedIds.length > 0) {
-                        newBlock._id = generatedIds[idIndex++];
-                    } else {
-                        newBlock._id = await generateBlockId();
-                    }
-                }
+            // Generate new ID only if block doesn't have one (copy operation)
+            // Cut operation preserves the _id
+            if (generateBlockIds && !newBlock._id) {
+                newBlock._id = generatedIds[idIndex++];
+            }
 
-                return newBlock;
-            })
-        );
+            return newBlock;
+        });
 
         const elementsBefore = value.slice(0, insertionIndex);
         const elementsAfter = value.slice(insertionIndex);
@@ -281,10 +274,16 @@ class BlockCollection<T: string, U: {_id?: string, type: T, ...}> extends React.
     };
 
     @action duplicateBlocks = async(indexes: Array<number>, insertAfterIndex: number) => {
-        const {generateBlockId, onChange, onDisplaySnackbar, value} = this.props;
+        const {generateBlockIds, onChange, onDisplaySnackbar, value} = this.props;
 
         if (!value) {
             return;
+        }
+
+        // Generate all IDs upfront in a single batch request
+        let generatedIds = [];
+        if (generateBlockIds) {
+            generatedIds = await generateBlockIds(indexes.length);
         }
 
         let newValue = [...value];
@@ -307,9 +306,9 @@ class BlockCollection<T: string, U: {_id?: string, type: T, ...}> extends React.
 
             const duplicatedBlock = {...toJS(newValue[index])};
 
-            // Generate new ID for duplicated block
-            if (generateBlockId) {
-                duplicatedBlock._id = await generateBlockId();
+            // Use pre-generated ID
+            if (generateBlockIds && generatedIds.length > count) {
+                duplicatedBlock._id = generatedIds[count];
             }
 
             newValue = [...elementsBefore, duplicatedBlock, ...elementsAfter];
@@ -335,7 +334,7 @@ class BlockCollection<T: string, U: {_id?: string, type: T, ...}> extends React.
     };
 
     copyBlocks = (indexes: Array<number>, shouldDisplaySnackbar: boolean = true) => {
-        const {generateBlockId, onDisplaySnackbar, value} = this.props;
+        const {generateBlockIds, onDisplaySnackbar, value} = this.props;
 
         if (!value) {
             return;
@@ -347,7 +346,7 @@ class BlockCollection<T: string, U: {_id?: string, type: T, ...}> extends React.
             const block = {...toJS(value[index])};
 
             // Remove _id from copied blocks so new IDs are generated on paste
-            if (generateBlockId && block._id) {
+            if (generateBlockIds && block._id) {
                 delete block._id;
             }
 

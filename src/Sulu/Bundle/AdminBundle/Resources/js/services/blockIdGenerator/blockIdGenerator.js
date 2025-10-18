@@ -3,34 +3,14 @@ import symfonyRouting from 'fos-jsrouting/router';
 import Requester from '../Requester';
 
 /**
- * Generate a unique block ID from the backend API.
+ * Generate unique block IDs from the backend API.
  *
- * @returns {Promise<string>} The generated block ID
- */
-function generateBlockId(): Promise<string> {
-    const url = symfonyRouting.generate('sulu_admin.post_block_ids');
-    return Requester.post(url)
-        .then((response) => {
-            if (!response || !response.id) {
-                throw new Error('Invalid response from block ID generator');
-            }
-            return response.id;
-        });
-}
-
-/**
- * Generate multiple unique block IDs from the backend API in a single request.
- *
- * @param {number} count - The number of IDs to generate
+ * @param {number} count - The number of IDs to generate (default: 1)
  * @returns {Promise<Array<string>>} Array of generated block IDs
  */
-function generateBlockIds(count: number): Promise<Array<string>> {
+function generateBlockIds(count: number = 1): Promise<Array<string>> {
     if (count <= 0) {
         return Promise.resolve([]);
-    }
-
-    if (count === 1) {
-        return generateBlockId().then((id) => [id]);
     }
 
     const url = symfonyRouting.generate('sulu_admin.post_block_ids') + '?length=' + count;
@@ -44,6 +24,5 @@ function generateBlockIds(count: number): Promise<Array<string>> {
 }
 
 export default {
-    generateBlockId,
     generateBlockIds,
 };

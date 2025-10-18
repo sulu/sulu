@@ -40,11 +40,21 @@ class BlockIdControllerTest extends SuluTestCase
         $response = \json_decode($content, true);
 
         $this->assertIsArray($response);
-        $this->assertArrayHasKey('id', $response);
-        $this->assertIsString($response['id']);
-        $this->assertNotEmpty($response['id']);
-        $this->assertSame(8, \strlen($response['id']));
-        $this->assertMatchesRegularExpression('/^[a-f0-9]{8}$/', $response['id']);
+        $this->assertArrayHasKey('_embedded', $response);
+        $this->assertIsArray($response['_embedded']);
+        $this->assertArrayHasKey('blockIds', $response['_embedded']);
+
+        $blockIds = $response['_embedded']['blockIds'];
+        $this->assertIsArray($blockIds);
+        $this->assertCount(1, $blockIds);
+
+        $blockId = $blockIds[0];
+        $this->assertIsArray($blockId);
+        $this->assertArrayHasKey('id', $blockId);
+        $this->assertIsString($blockId['id']);
+        $this->assertNotEmpty($blockId['id']);
+        $this->assertSame(8, \strlen($blockId['id']));
+        $this->assertMatchesRegularExpression('/^[a-f0-9]{8}$/', $blockId['id']);
     }
 
     public function testGenerateBatch(): void
