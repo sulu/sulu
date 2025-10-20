@@ -21,11 +21,13 @@ class SnippetRemovedEvent extends DomainEvent
 {
     /**
      * @param array<string, mixed> $context
+     * @param string[]|null $allLocales
      */
     public function __construct(
         private string $snippetId,
         private ?string $snippetTitle,
         private array $context = [],
+        private ?array $allLocales,
     ) {
         parent::__construct();
     }
@@ -58,5 +60,13 @@ class SnippetRemovedEvent extends DomainEvent
     public function getResourceSecurityContext(): ?string
     {
         return SnippetAdmin::SECURITY_CONTEXT;
+    }
+
+    /**
+     * @return string[]|null
+     */
+    public function getAllLocales(): ?array
+    {
+        return $this->allLocales;
     }
 }
