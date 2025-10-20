@@ -400,7 +400,7 @@ EOT;
      */
     private function getComponentChildren(ComponentMetadata $component): array
     {
-        if ($component->hasTag('sulu.global_block')) {
+        if (!$component->hasTag('sulu.global_block')) {
             return $component->getChildren();
         }
 
