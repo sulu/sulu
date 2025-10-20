@@ -8,11 +8,11 @@ exports[`Render hint that nothing was found 1`] = `
     class="searchField"
   >
     <button
-      class="indexButton"
+      class="searchResourceButton"
       type="button"
     >
       <span
-        class="index"
+        class="searchResource"
       >
         sulu_search.everything
       </span>
@@ -63,64 +63,6 @@ exports[`Render hint that nothing was found 1`] = `
 </div>
 `;
 
-exports[`Render loader while loading indexes and show SearchField afterwards 1`] = `
-<div
-  class="spinner"
-  style="width: 40px; height: 40px;"
->
-  <div
-    class="doubleBounce1"
-  />
-  <div
-    class="doubleBounce2"
-  />
-</div>
-`;
-
-exports[`Render loader while loading indexes and show SearchField afterwards 2`] = `
-<div
-  class="search"
->
-  <div
-    class="searchField"
-  >
-    <button
-      class="indexButton"
-      type="button"
-    >
-      <span
-        class="index"
-      >
-        sulu_search.everything
-      </span>
-      <span
-        aria-label="su-angle-down"
-        class="su-angle-down"
-      />
-    </button>
-    <div
-      class="inputContainer"
-    >
-      <input
-        class="input"
-        value=""
-      />
-      <span
-        aria-label="su-search"
-        class="su-search clickable searchIcon"
-        role="button"
-        tabindex="0"
-      />
-    </div>
-  </div>
-  <p
-    class="hint"
-  >
-    sulu_search.search_hint
-  </p>
-</div>
-`;
-
 exports[`Render loader while loading search results 1`] = `
 <div
   class="search"
@@ -129,11 +71,11 @@ exports[`Render loader while loading search results 1`] = `
     class="searchField"
   >
     <button
-      class="indexButton"
+      class="searchResourceButton"
       type="button"
     >
       <span
-        class="index"
+        class="searchResource"
       >
         sulu_search.everything
       </span>
@@ -176,6 +118,64 @@ exports[`Render loader while loading search results 1`] = `
 </div>
 `;
 
+exports[`Render loader while loading searchResources and show SearchField afterwards 1`] = `
+<div
+  class="spinner"
+  style="width: 40px; height: 40px;"
+>
+  <div
+    class="doubleBounce1"
+  />
+  <div
+    class="doubleBounce2"
+  />
+</div>
+`;
+
+exports[`Render loader while loading searchResources and show SearchField afterwards 2`] = `
+<div
+  class="search"
+>
+  <div
+    class="searchField"
+  >
+    <button
+      class="searchResourceButton"
+      type="button"
+    >
+      <span
+        class="searchResource"
+      >
+        sulu_search.everything
+      </span>
+      <span
+        aria-label="su-angle-down"
+        class="su-angle-down"
+      />
+    </button>
+    <div
+      class="inputContainer"
+    >
+      <input
+        class="input"
+        value=""
+      />
+      <span
+        aria-label="su-search"
+        class="su-search clickable searchIcon"
+        role="button"
+        tabindex="0"
+      />
+    </div>
+  </div>
+  <p
+    class="hint"
+  >
+    sulu_search.search_hint
+  </p>
+</div>
+`;
+
 exports[`Render search results 1`] = `
 <div
   class="search"
@@ -184,11 +184,11 @@ exports[`Render search results 1`] = `
     class="searchField"
   >
     <button
-      class="indexButton"
+      class="searchResourceButton"
       type="button"
     >
       <span
-        class="index"
+        class="searchResource"
       >
         sulu_search.everything
       </span>

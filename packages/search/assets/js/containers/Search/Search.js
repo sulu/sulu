@@ -7,12 +7,12 @@ import Pagination from 'sulu-admin-bundle/components/Pagination';
 import {Router} from 'sulu-admin-bundle/services';
 import {translate} from 'sulu-admin-bundle/utils';
 import searchStore from './stores/searchStore';
-import indexStore from './stores/indexStore';
+import searchResourceStore from './stores/searchResourceStore';
 import SearchField from './SearchField';
 import SearchResult from './SearchResult';
 import searchStyles from './search.scss';
 import searchResultStyles from './searchResult.scss';
-import type {Index} from './types';
+import type {SearchResource} from './types';
 
 type Props = {|
     router: Router,
@@ -21,19 +21,20 @@ type Props = {|
 @observer
 class Search extends React.Component<Props> {
     @observable query: ?string = undefined;
-    @observable indexes: ?{[indexName: string]: Index} = undefined;
-    @observable indexName: ?string = undefined;
+    @observable searchResources: ?{[resourceKey: string]: SearchResource} = undefined;
+    @observable resourceKey: ?string = undefined;
 
     @action componentDidMount() {
         this.query = searchStore.query;
-        this.indexName = searchStore.indexName;
-        indexStore.loadIndexes().then(action((indexes: {[indexName: string]: Index}) => {
-            this.indexes = {...indexes};
-        }));
+        this.resourceKey = searchStore.resourceKey;
+        searchResourceStore.loadSearchResources()
+            .then(action((searchResources: {[resourceKey: string]: SearchResource}) => {
+                this.searchResources = {...searchResources};
+            }));
     }
 
-    @action handleIndexChange = (indexName: ?string) => {
-        this.indexName = indexName;
+    @action handleSearchResourceChange = (resourceKey: ?string) => {
+        this.resourceKey = resourceKey;
     };
 
     @action handleQueryChange = (query: ?string) => {
@@ -49,11 +50,11 @@ class Search extends React.Component<Props> {
     };
 
     handleSearch = () => {
-        searchStore.search(this.query, this.indexName);
+        searchStore.search(this.query, this.resourceKey);
     };
 
     handleResultClick = (index: number) => {
-        if (!this.indexes) {
+        if (!this.searchResources) {
             throw new Error(
                 'The indexes must be available to route to a search result! This should not happen and is likely a bug.'
             );
@@ -65,10 +66,9 @@ class Search extends React.Component<Props> {
                 name: routeName,
                 resultToRoute,
             },
-        } = this.indexes[result.resourceKey];
-        const resultIdArray = result.id.split('::');
-        const resultId = resultIdArray[1] || null;
-        const resultLocale = resultIdArray[2] || null;
+        } = this.searchResources[result.resourceKey];
+        const resultId = result.resourceId || null;
+        const resultLocale = result.locale || null;
         const resultParams = {
             id: resultId,
             locale: resultLocale,
@@ -85,24 +85,24 @@ class Search extends React.Component<Props> {
     };
 
     render() {
-        const {indexes} = this;
+        const {searchResources} = this;
 
-        if (!indexes) {
+        if (!searchResources) {
             return <Loader />;
         }
 
         const results = searchStore.result.map((result, index) => (
             <SearchResult
                 description={result.description || ''}
-                icon={indexes[result.resourceKey] ? indexes[result.resourceKey].icon : null}
+                icon={searchResources[result.resourceKey] ? searchResources[result.resourceKey].icon : null}
                 image={result.imageUrl || null}
                 index={index}
                 key={result.id}
                 locale={result.locale || null}
                 onClick={this.handleResultClick}
                 resource={
-                    indexes[result.resourceKey]
-                        ? translate(indexes[result.resourceKey].name)
+                    searchResources[result.resourceKey]
+                        ? translate(searchResources[result.resourceKey].name)
                         : ''
                 }
                 title={result.title}
@@ -112,12 +112,12 @@ class Search extends React.Component<Props> {
         return (
             <div className={searchStyles.search}>
                 <SearchField
-                    indexes={indexes}
-                    indexName={this.indexName}
-                    onIndexChange={this.handleIndexChange}
                     onQueryChange={this.handleQueryChange}
                     onSearch={this.handleSearch}
+                    onSearchResourceChange={this.handleSearchResourceChange}
                     query={this.query || undefined}
+                    resourceKey={this.resourceKey}
+                    searchResources={searchResources}
                 />
                 {searchStore.loading &&
                     <Loader />

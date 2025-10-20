@@ -4,7 +4,7 @@ import {ResourceRequester} from 'sulu-admin-bundle/services';
 
 class SearchStore {
     @observable query: ?string = undefined;
-    @observable indexName: ?string = undefined;
+    @observable resourceKey: ?string = undefined;
     @observable result: Array<Object> = [];
     @observable page: number = 1;
     @observable limit: number = 10;
@@ -23,7 +23,7 @@ class SearchStore {
             ResourceRequester.getList('search',
                 {
                     q: this.query,
-                    index: this.indexName,
+                    resourceKey: this.resourceKey,
                     page: this.page, limit:
                         this.limit,
                 }
@@ -38,10 +38,10 @@ class SearchStore {
         });
     }
 
-    @action search(query: ?string, index: ?string) {
+    @action search(query: ?string, resourceKey: ?string) {
         this.resetResults();
         this.query = query;
-        this.indexName = index;
+        this.resourceKey = resourceKey;
     }
 
     @action resetResults() {

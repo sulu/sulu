@@ -15,7 +15,7 @@ test.each([
     ['test2', undefined, 1, undefined],
     ['test1', 'page', 1, undefined],
     ['test2', 'snippet', 1, undefined],
-])('Search results for "%s" in index "%s" should be loaded from server', async(query, index, page, limit) => {
+])('Search results for "%s" in resource "%s" should be loaded from server', async(query, resourceKey, page, limit) => {
     const result = [
         {id: 1},
     ];
@@ -29,8 +29,8 @@ test.each([
     ResourceRequester.getList.mockReturnValue(searchPromise);
 
     expect(searchStore.loading).toEqual(false);
-    searchStore.search(query, index);
-    expect(ResourceRequester.getList).toBeCalledWith('search', {q: query, index, page, limit});
+    searchStore.search(query, resourceKey);
+    expect(ResourceRequester.getList).toBeCalledWith('search', {q: query, resourceKey, page, limit});
     expect(searchStore.loading).toEqual(true);
 
     await searchPromise; // Wait for the promise to resolve

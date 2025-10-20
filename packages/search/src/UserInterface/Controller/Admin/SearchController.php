@@ -40,7 +40,7 @@ class SearchController
     public function queryAction(Request $request): JsonResponse
     {
         $query = $request->query->get('q', '');
-        $index = $request->query->get('index', null);
+        $resourceKey = $request->query->get('resourceKey', null);
         $locale = $request->query->get('locale', null);
 
         /** @var string $page */
@@ -57,8 +57,8 @@ class SearchController
             ->limit((int) $limit)
             ->offset($offset);
 
-        if ($index) {
-            $search->addFilter(Condition::equal('resourceKey', $index));
+        if ($resourceKey) {
+            $search->addFilter(Condition::equal('resourceKey', $resourceKey));
         }
 
         if ($locale) {
@@ -104,9 +104,22 @@ class SearchController
 
     public function indexAction(): JsonResponse
     {
+        $searchResources = [];
+
+        /**
+         * @var string $resourceKey
+         * @var mixed[] $resource
+         */
+        foreach ($this->resources as $resourceKey => $resource) {
+            $searchResources[$resourceKey] = [
+                'resourceKey' => $resourceKey,
+                ...$resource,
+            ];
+        }
+
         return new JsonResponse([
             '_embedded' => [
-                'search_resources' => $this->resources,
+                'search_resources' => $searchResources,
             ],
         ]);
     }

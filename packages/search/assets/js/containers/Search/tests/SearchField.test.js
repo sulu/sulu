@@ -7,23 +7,23 @@ jest.mock('sulu-admin-bundle/utils/Translator', () => ({
     translate: jest.fn((key) => key),
 }));
 
-test('Render without selected index', () => {
+test('Render without selected searchResource', () => {
     expect(render(
         <SearchField
-            indexes={undefined}
-            indexName={undefined}
-            onIndexChange={jest.fn()}
             onQueryChange={jest.fn()}
             onSearch={jest.fn()}
+            onSearchResourceChange={jest.fn()}
+            resourceKey={undefined}
+            searchResources={undefined}
         />
     )).toMatchSnapshot();
 });
 
 test('Render with selected and query', () => {
-    const indexes = {
+    const searchResources = {
         contact: {
             icon: 'su-test',
-            indexName: 'contact',
+            resourceKey: 'contact',
             name: 'Contact',
             route: {
                 name: 'sulu_contact.edit_form',
@@ -32,7 +32,7 @@ test('Render with selected and query', () => {
         },
         page: {
             icon: 'su-test',
-            indexName: 'page',
+            resourceKey: 'page',
             name: 'Page',
             route: {
                 name: 'sulu_page.edit_form',
@@ -43,23 +43,23 @@ test('Render with selected and query', () => {
 
     expect(render(
         <SearchField
-            indexes={indexes}
-            indexName="page"
-            onIndexChange={jest.fn()}
             onQueryChange={jest.fn()}
             onSearch={jest.fn()}
+            onSearchResourceChange={jest.fn()}
             query="Test"
+            resourceKey="page"
+            searchResources={searchResources}
         />
     )).toMatchSnapshot();
 });
 
-test('Call callback when index changes', () => {
-    const indexChangeSpy = jest.fn();
+test('Call callback when searchResource changes', () => {
+    const searchResourceChangeSpy = jest.fn();
 
-    const indexes = {
+    const searchResources = {
         contact: {
             icon: 'su-test',
-            indexName: 'contact',
+            resourceKey: 'contact',
             name: 'Contact',
             route: {
                 name: 'sulu_contact.edit_form',
@@ -68,7 +68,7 @@ test('Call callback when index changes', () => {
         },
         page: {
             icon: 'su-test',
-            indexName: 'page',
+            resourceKey: 'page',
             name: 'Page',
             route: {
                 name: 'sulu_page.edit_form',
@@ -79,21 +79,21 @@ test('Call callback when index changes', () => {
 
     const searchField = mount(
         <SearchField
-            indexes={indexes}
-            indexName="page"
-            onIndexChange={indexChangeSpy}
             onQueryChange={jest.fn()}
             onSearch={jest.fn()}
+            onSearchResourceChange={searchResourceChangeSpy}
+            resourceKey="page"
+            searchResources={searchResources}
         />
     );
 
     expect(searchField.find('ArrowMenu').prop('open')).toEqual(false);
-    searchField.find('button.indexButton').simulate('click');
+    searchField.find('button.searchResourceButton').simulate('click');
     expect(searchField.find('ArrowMenu').prop('open')).toEqual(true);
     searchField.find('Item[value="contact"] button').simulate('click');
     expect(searchField.find('ArrowMenu').prop('open')).toEqual(false);
 
-    expect(indexChangeSpy).toBeCalledWith('contact');
+    expect(searchResourceChangeSpy).toBeCalledWith('contact');
 });
 
 test('Call callback when query changes', () => {
@@ -101,11 +101,11 @@ test('Call callback when query changes', () => {
 
     const searchField = mount(
         <SearchField
-            indexes={undefined}
-            indexName={undefined}
-            onIndexChange={jest.fn()}
             onQueryChange={queryChangeSpy}
             onSearch={jest.fn()}
+            onSearchResourceChange={jest.fn()}
+            resourceKey={undefined}
+            searchResources={undefined}
         />
     );
 
@@ -119,12 +119,12 @@ test('Call search with query when enter is pressed', () => {
 
     const searchField = mount(
         <SearchField
-            indexes={undefined}
-            indexName={undefined}
-            onIndexChange={jest.fn()}
             onQueryChange={jest.fn()}
             onSearch={searchSpy}
+            onSearchResourceChange={jest.fn()}
             query="Test"
+            resourceKey={undefined}
+            searchResources={undefined}
         />
     );
 
@@ -138,12 +138,12 @@ test('Do not call search when other key than enter is pressed', () => {
 
     const searchField = mount(
         <SearchField
-            indexes={undefined}
-            indexName={undefined}
-            onIndexChange={jest.fn()}
             onQueryChange={jest.fn()}
             onSearch={searchSpy}
+            onSearchResourceChange={jest.fn()}
             query="Test"
+            resourceKey={undefined}
+            searchResources={undefined}
         />
     );
 
@@ -157,12 +157,12 @@ test('Call search with query when search icon is clicked', () => {
 
     const searchField = mount(
         <SearchField
-            indexes={undefined}
-            indexName={undefined}
-            onIndexChange={jest.fn()}
             onQueryChange={jest.fn()}
             onSearch={searchSpy}
+            onSearchResourceChange={jest.fn()}
             query="Test"
+            resourceKey={undefined}
+            searchResources={undefined}
         />
     );
 
@@ -177,12 +177,12 @@ test('Remove query when clear icon is clicked', () => {
 
     const searchField = mount(
         <SearchField
-            indexes={undefined}
-            indexName={undefined}
-            onIndexChange={jest.fn()}
             onQueryChange={queryChangeSpy}
             onSearch={searchSpy}
+            onSearchResourceChange={jest.fn()}
             query="Test"
+            resourceKey={undefined}
+            searchResources={undefined}
         />
     );
 
