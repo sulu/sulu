@@ -6,11 +6,11 @@ Array [
     class="searchField"
   >
     <button
-      class="indexButton"
+      class="searchResourceButton"
       type="button"
     >
       <span
-        class="index"
+        class="searchResource"
       >
         Page
       </span>
@@ -49,17 +49,17 @@ Array [
 ]
 `;
 
-exports[`Render without selected index 1`] = `
+exports[`Render without selected searchResource 1`] = `
 Array [
   <div
     class="searchField"
   >
     <button
-      class="indexButton"
+      class="searchResourceButton"
       type="button"
     >
       <span
-        class="index"
+        class="searchResource"
       >
         sulu_search.everything
       </span>

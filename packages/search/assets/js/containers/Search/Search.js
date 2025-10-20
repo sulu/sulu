@@ -6,14 +6,13 @@ import {Icon, Loader} from 'sulu-admin-bundle/components';
 import Pagination from 'sulu-admin-bundle/components/Pagination';
 import {Router} from 'sulu-admin-bundle/services';
 import {translate} from 'sulu-admin-bundle/utils';
-import jsonpointer from 'json-pointer';
 import searchStore from './stores/searchStore';
-import indexStore from './stores/indexStore';
+import searchResourceStore from './stores/searchResourceStore';
 import SearchField from './SearchField';
 import SearchResult from './SearchResult';
 import searchStyles from './search.scss';
 import searchResultStyles from './searchResult.scss';
-import type {Index} from './types';
+import type {SearchResource} from './types';
 
 type Props = {|
     router: Router,
@@ -22,22 +21,20 @@ type Props = {|
 @observer
 class Search extends React.Component<Props> {
     @observable query: ?string = undefined;
-    @observable indexes: ?{[indexName: string]: Index} = undefined;
-    @observable indexName: ?string = undefined;
+    @observable searchResources: ?{[resourceKey: string]: SearchResource} = undefined;
+    @observable resourceKey: ?string = undefined;
 
     @action componentDidMount() {
         this.query = searchStore.query;
-        this.indexName = searchStore.indexName;
-        indexStore.loadIndexes().then(action((indexes: Array<Index>) => {
-            this.indexes = indexes.reduce((indexesObject: Object, index) => {
-                indexesObject[index.indexName] = index;
-                return indexesObject;
-            }, {});
-        }));
+        this.resourceKey = searchStore.resourceKey;
+        searchResourceStore.loadSearchResources()
+            .then(action((searchResources: {[resourceKey: string]: SearchResource}) => {
+                this.searchResources = {...searchResources};
+            }));
     }
 
-    @action handleIndexChange = (indexName: ?string) => {
-        this.indexName = indexName;
+    @action handleSearchResourceChange = (resourceKey: ?string) => {
+        this.resourceKey = resourceKey;
     };
 
     @action handleQueryChange = (query: ?string) => {
@@ -53,11 +50,11 @@ class Search extends React.Component<Props> {
     };
 
     handleSearch = () => {
-        searchStore.search(this.query, this.indexName);
+        searchStore.search(this.query, this.resourceKey);
     };
 
     handleResultClick = (index: number) => {
-        if (!this.indexes) {
+        if (!this.searchResources) {
             throw new Error(
                 'The indexes must be available to route to a search result! This should not happen and is likely a bug.'
             );
@@ -69,52 +66,58 @@ class Search extends React.Component<Props> {
                 name: routeName,
                 resultToRoute,
             },
-        } = this.indexes[result.document.index];
+        } = this.searchResources[result.resourceKey];
+        const resultId = result.resourceId || null;
+        const resultLocale = result.locale || null;
+        const resultParams = {
+            id: resultId,
+            locale: resultLocale,
+        };
 
         const {router} = this.props;
         router.navigate(
             routeName,
             Object.keys(resultToRoute).reduce((parameters, resultPath) => {
-                parameters[resultToRoute[resultPath]] = jsonpointer.get(result.document, '/' + resultPath);
+                parameters[resultPath] = resultParams[resultPath];
                 return parameters;
             }, {})
         );
     };
 
     render() {
-        const {indexes} = this;
+        const {searchResources} = this;
 
-        if (!indexes) {
+        if (!searchResources) {
             return <Loader />;
         }
 
         const results = searchStore.result.map((result, index) => (
             <SearchResult
-                description={result.document.description}
-                icon={indexes[result.document.index].icon}
-                image={result.document.imageUrl}
+                description={result.description || ''}
+                icon={searchResources[result.resourceKey] ? searchResources[result.resourceKey].icon : null}
+                image={result.imageUrl || null}
                 index={index}
-                key={result.document.index + '_' + result.document.id + '_' + result.document.locale}
-                locale={result.document.locale}
+                key={result.id}
+                locale={result.locale || null}
                 onClick={this.handleResultClick}
                 resource={
-                    indexes[result.document.index]
-                        ? indexes[result.document.index].name
+                    searchResources[result.resourceKey]
+                        ? translate(searchResources[result.resourceKey].name)
                         : ''
                 }
-                title={result.document.title}
+                title={result.title}
             />
         ));
 
         return (
             <div className={searchStyles.search}>
                 <SearchField
-                    indexes={indexes}
-                    indexName={this.indexName}
-                    onIndexChange={this.handleIndexChange}
                     onQueryChange={this.handleQueryChange}
                     onSearch={this.handleSearch}
+                    onSearchResourceChange={this.handleSearchResourceChange}
                     query={this.query || undefined}
+                    resourceKey={this.resourceKey}
+                    searchResources={searchResources}
                 />
                 {searchStore.loading &&
                     <Loader />

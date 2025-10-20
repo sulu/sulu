@@ -1,6 +1,6 @@
 // @flow
 import {ResourceRequester} from 'sulu-admin-bundle/services';
-import indexStore from '../../stores/indexStore';
+import searchResourcesStores from '../../stores/searchResourceStore';
 
 jest.mock('sulu-admin-bundle/services/ResourceRequester', () => ({
     getList: jest.fn().mockReturnValue({
@@ -9,35 +9,33 @@ jest.mock('sulu-admin-bundle/services/ResourceRequester', () => ({
 }));
 
 beforeEach(() => {
-    indexStore.clear();
+    searchResourcesStores.clear();
 });
 
-test('Load indexes', () => {
+test('Load searchResources', () => {
     const response = {
         _embedded: {
-            search_indexes: [
-                {
-                    indexName: 'contact',
+            search_resources: {
+                contacts: {
                     name: 'People',
                 },
-                {
-                    indexName: 'page_example',
+                pages: {
                     name: 'example.com',
                 },
-            ],
+            },
         },
     };
 
     const promise = Promise.resolve(response);
 
     ResourceRequester.getList.mockReturnValue(promise);
-    const indexPromise = indexStore.loadIndexes();
+    const searchResourcesPromise = searchResourcesStores.loadSearchResources();
 
-    expect(ResourceRequester.getList).toBeCalledWith('search_indexes');
+    expect(ResourceRequester.getList).toBeCalledWith('search_resources');
 
-    return indexPromise.then((webspaces) => {
+    return searchResourcesPromise.then((webspaces) => {
         // check if promise have been cached
-        expect(indexStore.indexPromise).toEqual(promise);
-        expect(webspaces).toBe(response._embedded.search_indexes);
+        expect(searchResourcesStores.searchResourcePromise).toEqual(promise);
+        expect(webspaces).toBe(response._embedded.search_resources);
     });
 });

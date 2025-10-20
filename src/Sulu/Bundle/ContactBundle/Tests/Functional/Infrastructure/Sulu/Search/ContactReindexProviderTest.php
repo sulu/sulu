@@ -18,6 +18,12 @@ use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\ContactBundle\Entity\ContactInterface;
 use Sulu\Bundle\ContactBundle\Infrastructure\Sulu\Search\ContactReindexProvider;
+use Sulu\Bundle\MediaBundle\Entity\Collection;
+use Sulu\Bundle\MediaBundle\Entity\CollectionType;
+use Sulu\Bundle\MediaBundle\Entity\File;
+use Sulu\Bundle\MediaBundle\Entity\FileVersion;
+use Sulu\Bundle\MediaBundle\Entity\Media;
+use Sulu\Bundle\MediaBundle\Entity\MediaType;
 use Sulu\Bundle\TestBundle\Testing\SetGetPrivatePropertyTrait;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
@@ -28,11 +34,32 @@ class ContactReindexProviderTest extends SuluTestCase
     private EntityManagerInterface $entityManager;
     private ContactReindexProvider $provider;
 
+    private MediaType $imageType;
+
+    protected Collection $collection;
+
     protected function setUp(): void
     {
         $this->entityManager = $this->getEntityManager();
         $this->provider = new ContactReindexProvider($this->entityManager);
         $this->purgeDatabase();
+
+        $this->imageType = new MediaType();
+        $this->imageType->setName('image');
+        $this->imageType->setDescription('This is an image');
+
+        $this->collection = new Collection();
+        $collectionType = new CollectionType();
+        $collectionType->setName('Default Collection Type');
+        $collectionType->setDescription('Default Collection Type');
+
+        $this->collection->setType($collectionType);
+
+        $this->entityManager->persist($this->imageType);
+        $this->entityManager->persist($collectionType);
+        $this->entityManager->persist($this->collection);
+
+        $this->entityManager->flush();
     }
 
     public function testGetIndex(): void
@@ -52,7 +79,7 @@ class ContactReindexProviderTest extends SuluTestCase
 
     public function testProvideAll(): void
     {
-        $contact1 = $this->createContact();
+        $contact1 = $this->createContact('Tom', 'Turbo', 'avatar1');
         $contact2 = $this->createContact();
 
         $this->entityManager->flush();
@@ -84,6 +111,7 @@ class ContactReindexProviderTest extends SuluTestCase
                     'id' => ContactInterface::RESOURCE_KEY . '::' . $contact1->getId(),
                     'resourceKey' => ContactInterface::RESOURCE_KEY,
                     'resourceId' => (string) $contact1->getId(),
+                    'mediaId' => (string) $contact1->getAvatar()?->getId(),
                     'changedAt' => (new \DateTimeImmutable($changedDateString1))->format('c'),
                     'createdAt' => (new \DateTimeImmutable('2000-01-01 12:00:00'))->format('c'),
                     'title' => $contact1->getFullName(),
@@ -92,6 +120,7 @@ class ContactReindexProviderTest extends SuluTestCase
                     'id' => ContactInterface::RESOURCE_KEY . '::' . $contact2->getId(),
                     'resourceKey' => ContactInterface::RESOURCE_KEY,
                     'resourceId' => (string) $contact2->getId(),
+                    'mediaId' => '',
                     'changedAt' => (new \DateTimeImmutable($changedDateString2))->format('c'),
                     'createdAt' => (new \DateTimeImmutable('2000-01-01 12:00:00'))->format('c'),
                     'title' => $contact2->getFullName(),
@@ -128,15 +157,48 @@ class ContactReindexProviderTest extends SuluTestCase
         $this->assertNotContains('Fritz Fantom', $resultTitles);
     }
 
-    private function createContact(string $firstName = 'Tom', string $lastName = 'Turbo'): Contact
+    private function createContact(string $firstName = 'Tom', string $lastName = 'Turbo', ?string $avatarName = null): Contact
     {
         $contact = new Contact();
         $contact->setFirstName($firstName);
         $contact->setLastName($lastName);
         $contact->setCreated(new \DateTimeImmutable('2000-01-01 12:00:00'));
 
+        if (null !== $avatarName) {
+            $media = $this->createMedia($avatarName);
+            $contact->setAvatar($media);
+        }
+
         $this->entityManager->persist($contact);
 
         return $contact;
+    }
+
+    private function createMedia(string $name): Media
+    {
+        $file = new File();
+        $file->setVersion(1);
+
+        $fileVersion = new FileVersion();
+        $fileVersion->setVersion(1);
+        $fileVersion->setName($name);
+        $fileVersion->setMimeType('image/jpg');
+        $fileVersion->setFile($file);
+        $fileVersion->setSize(111111);
+        $fileVersion->setDownloadCounter(2);
+        $fileVersion->setChanged(new \DateTimeImmutable('1950-04-20'));
+        $fileVersion->setCreated(new \DateTimeImmutable('1950-04-20'));
+        $file->addFileVersion($fileVersion);
+        $this->entityManager->persist($fileVersion);
+
+        $media = new Media();
+        $media->setType($this->imageType);
+        $media->setCollection($this->collection);
+        $media->addFile($file);
+        $file->setMedia($media);
+        $this->entityManager->persist($media);
+        $this->entityManager->persist($file);
+
+        return $media;
     }
 }

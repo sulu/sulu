@@ -26,6 +26,7 @@ use Sulu\Bundle\ContactBundle\Entity\ContactInterface;
  *     created: \DateTimeImmutable,
  *     firstName: string,
  *     lastName: string,
+ *     mediaId: int|null
  * }
  *
  * @internal this class is internal no backwards compatibility promise is given for this class
@@ -61,6 +62,7 @@ final class ContactReindexProvider implements ReindexProviderInterface
                 'id' => ContactInterface::RESOURCE_KEY . '::' . ((string) $contact['id']),
                 'resourceKey' => ContactInterface::RESOURCE_KEY,
                 'resourceId' => (string) $contact['id'],
+                'mediaId' => (string) $contact['mediaId'],
                 'changedAt' => $contact['changed']->format('c'),
                 'createdAt' => $contact['created']->format('c'),
                 'title' => $contact['firstName'] . ' ' . $contact['lastName'],
@@ -79,6 +81,7 @@ final class ContactReindexProvider implements ReindexProviderInterface
             ->select('contact.id')
             ->addSelect('contact.firstName')
             ->addSelect('contact.lastName')
+            ->addSelect('IDENTITY(contact.avatar) as mediaId')
             ->addSelect('contact.created')
             ->addSelect('contact.changed');
 

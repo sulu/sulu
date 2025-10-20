@@ -16,7 +16,7 @@ $searchFieldHintColor: $gray;
     border-radius: 0 $searchFieldBorderRadius $searchFieldBorderRadius 0;
 }
 
-.index-button {
+.search-resource-button {
     display: flex;
     background: $searchFieldIndexButtonBackgroundColor;
     color: $searchFieldIndexButtonColor;
@@ -31,7 +31,7 @@ $searchFieldHintColor: $gray;
     align-items: center;
 }
 
-.index {
+.search-resource {
     width: 100%;
 }
 

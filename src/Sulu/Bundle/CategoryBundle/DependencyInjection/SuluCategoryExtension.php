@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Sulu.
  *
@@ -11,6 +13,7 @@
 
 namespace Sulu\Bundle\CategoryBundle\DependencyInjection;
 
+use Sulu\Bundle\CategoryBundle\Admin\CategoryAdmin;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryMetaRepositoryInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryRepositoryInterface;
@@ -58,7 +61,7 @@ class SuluCategoryExtension extends Extension implements PrependExtensionInterfa
                 CategoryMetaRepositoryInterface::class => 'sulu.repository.category_meta',
                 CategoryTranslationRepositoryInterface::class => 'sulu.repository.category_translation',
                 KeywordRepositoryInterface::class => 'sulu.repository.keyword',
-            ]
+            ],
         );
     }
 
@@ -78,7 +81,7 @@ class SuluCategoryExtension extends Extension implements PrependExtensionInterfa
                             KeywordNotUniqueException::class => 409,
                         ],
                     ],
-                ]
+                ],
             );
         }
 
@@ -95,7 +98,7 @@ class SuluCategoryExtension extends Extension implements PrependExtensionInterfa
                             ],
                         ],
                     ],
-                ]
+                ],
             );
         }
 
@@ -163,7 +166,31 @@ class SuluCategoryExtension extends Extension implements PrependExtensionInterfa
                             ],
                         ],
                     ],
-                ]
+                ],
+            );
+        }
+
+        if ($container->hasExtension('sulu_search')) {
+            $container->prependExtensionConfig(
+                'sulu_search',
+                [
+                    'admin' => [
+                        'resources' => [
+                            CategoryInterface::RESOURCE_KEY => [
+                                'name' => 'sulu_category.categories',
+                                'icon' => 'su-tag',
+                                'route' => [
+                                    'name' => 'sulu_category.edit_form',
+                                    'resultToRoute' => [
+                                        'id' => 'id',
+                                        'locale' => 'locale',
+                                    ],
+                                ],
+                                'securityContext' => CategoryAdmin::SECURITY_CONTEXT,
+                            ],
+                        ],
+                    ],
+                ],
             );
         }
     }
