@@ -11,6 +11,8 @@
 
 namespace Sulu\Bundle\TagBundle\Tag;
 
+use Sulu\Bundle\TagBundle\Tag\Exception\TagNotFoundException;
+
 /**
  * Defines the operations of the TagManager.
  * The TagManager is responsible for the centralized management of our tags.
@@ -47,6 +49,8 @@ interface TagManagerInterface
      *
      * @param array $data The data of the tag to save
      * @param number|null $id The id for saving the tag (optional)
+     *
+     * @throws Exception\TagNotFoundException
      */
     public function save($data, $id = null);
 
@@ -54,6 +58,8 @@ interface TagManagerInterface
      * Deletes the given Tag.
      *
      * @param number $id The tag to delete
+     *
+     * @throws Exception\TagNotFoundException
      */
     public function delete($id);
 
