@@ -41,6 +41,11 @@ class RouteRepository implements RouteRepositoryInterface
         $this->entityManager->persist($route);
     }
 
+    public function remove(Route $route): void
+    {
+        $this->entityManager->remove($route);
+    }
+
     public function findOneBy(array $filters): ?Route
     {
         $queryBuilder = $this->createQueryBuilder($filters);
@@ -112,6 +117,12 @@ class RouteRepository implements RouteRepositoryInterface
             if (null !== $site) {
                 $queryBuilder->setParameter('site', $site);
             }
+        }
+
+        $id = $filters['id'] ?? null;
+        if (null !== $id) {
+            $queryBuilder->andWhere('route.id = :id')
+                ->setParameter('id', $id);
         }
 
         $locale = $filters['locale'] ?? null;

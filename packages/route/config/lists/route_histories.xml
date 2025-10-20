@@ -1,0 +1,31 @@
+<?xml version="1.0" ?>
+<list xmlns="http://schemas.sulu.io/list-builder/list">
+    <key>route_histories</key>
+
+    <properties>
+        <property name="id" translation="sulu_admin.id">
+            <field-name>id</field-name>
+            <entity-name>Sulu\Route\Domain\Model\Route</entity-name>
+        </property>
+
+        <property name="slug" visibility="yes">
+            <field-name>slug</field-name>
+            <entity-name>Sulu\Route\Domain\Model\Route</entity-name>
+        </property>
+
+        <property name="locale" visibility="never">
+            <field-name>locale</field-name>
+            <entity-name>Sulu\Route\Domain\Model\Route</entity-name>
+        </property>
+
+        <property name="resourceKey" visibility="never">
+            <field-name>resourceKey</field-name>
+            <entity-name>Sulu\Route\Domain\Model\Route</entity-name>
+        </property>
+
+        <property name="resourceId" visibility="never">
+            <field-name>resourceId</field-name>
+            <entity-name>Sulu\Route\Domain\Model\Route</entity-name>
+        </property>
+    </properties>
+</list>

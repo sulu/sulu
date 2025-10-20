@@ -81,12 +81,12 @@ test('Show history routes in overlay', () => {
     resourceListStore.data = [
         {
             id: 3,
-            resourcelocator: 'sulu.io/test',
+            slug: '/test',
             created: '2019-04-10T13:06:16',
         },
         {
             id: 6,
-            resourcelocator: 'sulu.io/testing',
+            slug: '/testing',
             created: '2019-04-10T16:01:12',
         },
     ];
@@ -150,7 +150,7 @@ test('Do not delete if confirmation dialog is cancelled', () => {
     resourceListStore.data = [
         {
             id: 3,
-            resourcelocator: 'sulu.io/test',
+            slug: '/test',
             created: '2019-04-10T13:06:16',
         },
     ];
@@ -185,7 +185,7 @@ test('Delete if confirmation dialog is confirmed', () => {
     resourceListStore.data = [
         {
             id: 3,
-            resourcelocator: 'sulu.io/test',
+            slug: 'sulu.io/test',
             created: '2019-04-10T13:06:16',
         },
     ];

@@ -31,6 +31,7 @@ use Sulu\Route\Infrastructure\Sulu\Admin\RouteAdmin;
 use Sulu\Route\Infrastructure\Symfony\DependencyInjection\RouteDefaultsOptionsCompilerPass;
 use Sulu\Route\Infrastructure\SymfonyCmf\Routing\CmfRouteProvider;
 use Sulu\Route\Userinterface\Controller\Admin\ResourceLocatorGenerateController;
+use Sulu\Route\Userinterface\Controller\Admin\RouteHistoryController;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 
@@ -155,6 +156,16 @@ final class SuluRouteBundle extends AbstractBundle
             ])
             ->tag('controller.service_arguments');
 
+        $services->set('sulu_route.route_history_controller')
+            ->class(RouteHistoryController::class)
+            ->args([
+                new Reference('sulu_message_bus'),
+                new Reference('sulu_core.list_builder.field_descriptor_factory'),
+                new Reference('sulu_core.doctrine_list_builder_factory'),
+                new Reference('sulu_core.doctrine_rest_helper'),
+            ])
+            ->tag('controller.service_arguments');
+
         $services->set('sulu_route.route_admin')
             ->class(RouteAdmin::class)
             ->args([
@@ -178,6 +189,27 @@ final class SuluRouteBundle extends AbstractBundle
      */
     public function prependExtension(ContainerConfigurator $container, ContainerBuilder $builder): void
     {
+
+        if ($builder->hasExtension('sulu_admin')) {
+            $builder->prependExtensionConfig(
+                'sulu_admin',
+                [
+                    'lists' => [
+                        'directories' => [
+                            \dirname(__DIR__, 4) . '/config/lists',
+                        ],
+                    ],
+                    'resources' => [
+                        'route_histories' => [
+                            'routes' => [
+                                'list' => 'sulu_route.get_route_histories',
+                            ],
+                        ],
+                    ],
+                ],
+            );
+        }
+
         if ($builder->hasExtension('doctrine')) {
             $builder->prependExtensionConfig(
                 'doctrine',

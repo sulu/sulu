@@ -3,3 +3,15 @@ sulu_route.post_resource_locator:
     methods: POST
     controller: sulu_route.resource_locator_generate_controller
     format: json
+
+sulu_route.get_route_histories:
+    path: /route-histories.{_format}
+    methods: GET
+    controller: sulu_route.route_history_controller::cgetAction
+    format: json
+
+sulu_route.delete_route_histories:
+    path: /route-histories.{_format}
+    methods: DELETE
+    controller: sulu_route.route_history_controller::cdeleteAction
+    format: json

@@ -15,6 +15,7 @@ use Sulu\Route\Domain\Model\Route;
 
 /**
  * @phpstan-type RouteFilter array{
+ *     id?: int|null,
  *     site?: string|null,
  *     siteOrNull?: string|null,
  *     locale?: string,
@@ -34,6 +35,8 @@ use Sulu\Route\Domain\Model\Route;
 interface RouteRepositoryInterface
 {
     public function add(Route $route): void;
+
+    public function remove(Route $route): void;
 
     /**
      * @param RouteFilter $filters

@@ -12,7 +12,7 @@ initializer.addUpdateConfigHook('sulu_route', (config: Object, initialized: bool
         'route',
         ResourceLocator,
         {
-            historyResourceKey: 'routes',
+            historyResourceKey: 'route_histories',
             defaultMode: 'tree_leaf_edit',
             resourceStorePropertiesToRequest: { // maybe move to schemaOptions and prepend via MetadataListener
                 parentUuid: 'parentId',

@@ -3,6 +3,7 @@ import React, {Fragment} from 'react';
 import {action, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import {translate} from 'sulu-admin-bundle/utils/Translator';
+import Button from 'sulu-admin-bundle/components/Button';
 import Dialog from 'sulu-admin-bundle/components/Dialog';
 import Loader from 'sulu-admin-bundle/components/Loader';
 import Overlay from 'sulu-admin-bundle/components/Overlay';
@@ -11,7 +12,7 @@ import ResourceListStore from 'sulu-admin-bundle/stores/ResourceListStore';
 import resourceLocatorHistoryStyles from './resourceLocatorHistory.scss';
 
 type Props = {|
-    id: ?string | number,
+    disabled: boolean,
     options: Object,
     resourceKey: string,
 |};
@@ -24,8 +25,8 @@ class ResourceLocatorHistory extends React.Component<Props> {
     deleteId: ?string | number;
 
     @action handleButtonClick = () => {
-        const {id, options, resourceKey} = this.props;
-        this.resourceListStore = new ResourceListStore(resourceKey, {...options, id});
+        const {options, resourceKey} = this.props;
+        this.resourceListStore = new ResourceListStore(resourceKey, {...options});
         this.open = true;
     };
 
@@ -66,13 +67,13 @@ class ResourceLocatorHistory extends React.Component<Props> {
 
     render() {
         const {resourceListStore, props} = this;
-        const {id} = props;
+        const {disabled} = props;
 
         const historyRoutes = resourceListStore ? resourceListStore.data : [];
 
         return (
             <Fragment>
-                <Button disabled={!id} icon="su-process" onClick={this.handleButtonClick} skin="link">
+                <Button disabled={disabled} icon="su-process" onClick={this.handleButtonClick} skin="link">
                     {translate('sulu_admin.show_history')}
                 </Button>
                 <Overlay
@@ -96,7 +97,7 @@ class ResourceLocatorHistory extends React.Component<Props> {
                                 <Table.Body>
                                     {historyRoutes.map((historyRoute) => (
                                         <Table.Row id={historyRoute.id} key={historyRoute.id}>
-                                            <Table.Cell>{historyRoute.resourcelocator}</Table.Cell>
+                                            <Table.Cell>{historyRoute.slug}</Table.Cell>
                                             <Table.Cell>{(new Date(historyRoute.created)).toLocaleString()}</Table.Cell>
                                         </Table.Row>
                                     ))}

@@ -230,16 +230,20 @@ class ResourceLocator extends React.Component<FieldTypeProps<?string>> {
                     >
                         {translate('sulu_admin.refresh_url')}
                     </Button>
-                    <ResourceLocatorHistory
-                        id={formInspector.id}
-                        options={{
-                            locale: formInspector.locale ? formInspector.locale.get() : userStore.contentLocale,
-                            resourceKey: formInspector.resourceKey,
-                            webspace: formInspector.options.webspace,
-                            ...options,
-                        }}
-                        resourceKey={historyResourceKey}
-                    />
+                    { historyResourceKey
+                        ? <ResourceLocatorHistory
+                            disabled={!formInspector.id}
+                            options={{
+                                locale: formInspector.locale ? formInspector.locale.get() : userStore.contentLocale,
+                                resourceKey: formInspector.resourceKey,
+                                resourceId: formInspector.id,
+                                webspace: formInspector.options.webspace,
+                                ...options,
+                            }}
+                            resourceKey={historyResourceKey}
+                        />
+                        : null
+                    }
                 </div>
             </Fragment>
         );
