@@ -43,7 +43,7 @@ class GroupProviderTest extends TestCase
         $this->metadataProvider = $this->prophesize(MetadataProviderInterface::class);
         $this->translator = $this->prophesize(TranslatorInterface::class);
 
-        $this->groupProvider = new GroupProvider($this->metadataProvider, $this->translator->reveal());
+        $this->groupProvider = new GroupProvider($this->metadataProvider->reveal(), $this->translator->reveal());
     }
 
     public function testGetGroupsWithSingleGroup(): void

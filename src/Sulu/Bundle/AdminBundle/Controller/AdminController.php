@@ -26,6 +26,7 @@ use Sulu\Bundle\AdminBundle\SmartContent\SmartContentProviderInterface;
 use Sulu\Bundle\ContactBundle\Contact\ContactManagerInterface;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkProviderPoolInterface;
 use Sulu\Component\Localization\Manager\LocalizationManagerInterface;
+use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -197,15 +198,17 @@ class AdminController
         $locale = $user->getLocale();
 
         $metadataOptions = $request->query->all();
-        $metadataProvider = $this->metadataProviders->get($type);
-        if (!$metadataProvider instanceof MetadataProviderInterface) {
-            return new JsonResponse(null, Response::HTTP_BAD_REQUEST);
+        try {
+            /** @var MetadataProviderInterface $metadataProvider */
+            $metadataProvider = $this->metadataProviders->get($type);
+        } catch (ServiceNotFoundException) {
+            return new JsonResponse(null, Response::HTTP_NOT_FOUND);
         }
 
         $context = new Context();
         $context->addGroup('Default');
         $context->setAttribute('locale', $locale);
-        if (true === $request->query->getBoolean($metadataOptions['onlyKeys'])) {
+        if (true === $request->query->getBoolean('onlyKeys')) {
             $context->addGroup('admin_form_metadata_keys_only');
         }
 

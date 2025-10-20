@@ -16,7 +16,7 @@ namespace Sulu\CustomUrl\Application\Routing;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TemplateMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
-use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
+use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Content\Application\ContentAggregator\ContentAggregatorInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
@@ -46,7 +46,7 @@ final readonly class CustomUrlRouteCollectionLoader implements RouteCollectionFo
         private PageRepositoryInterface $pageRepository,
         private RouteRepositoryInterface $routeRepository,
         private ContentAggregatorInterface $contentAggregator,
-        private MetadataProviderRegistry $metadataProviderRegistry,
+        private MetadataProviderInterface $metadataProvider,
         private WebspaceManagerInterface $webspaceManager,
         private string $environment,
     ) {
@@ -378,8 +378,7 @@ final readonly class CustomUrlRouteCollectionLoader implements RouteCollectionFo
 
     private function resolveTemplateMetadata(string $type, string $templateKey, string $locale): mixed
     {
-        $typedMetadata = $this->metadataProviderRegistry->getMetadataProvider('form')
-            ->getMetadata($type, $locale, []);
+        $typedMetadata = $this->metadataProvider->getMetadata($type, $locale, []);
 
         if (!$typedMetadata instanceof TypedFormMetadata) {
             throw new \RuntimeException(\sprintf('Could not find metadata "%s" of type "%s".', 'form', $type));

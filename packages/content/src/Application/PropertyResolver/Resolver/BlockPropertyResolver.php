@@ -163,8 +163,7 @@ class BlockPropertyResolver implements PropertyResolverMetadataAwareInterface
         }
 
         $settingsData = $block['settings'];
-        $formMetadata = $this->metadataProviderRegistry->getMetadataProvider('form')
-            ->getMetadata($settingsFormKey, $locale, []);
+        $formMetadata = $this->metadataProvider->getMetadata($settingsFormKey, $locale, []);
 
         if (!$formMetadata instanceof FormMetadata) {
             return ContentView::create($settingsData, []);

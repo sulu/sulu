@@ -224,7 +224,7 @@ final class SuluCustomUrlBundle extends AbstractBundle
                 new Reference(PageRepositoryInterface::class),
                 new Reference(RouteRepositoryInterface::class),
                 new Reference('sulu_content.content_aggregator'),
-                new Reference('sulu_admin.metadata_provider_registry'),
+                new Reference('sulu_admin.form_metadata_provider'),
                 new Reference(WebspaceManagerInterface::class),
                 '%kernel.environment%',
             ])

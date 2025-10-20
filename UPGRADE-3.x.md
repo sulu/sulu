@@ -666,17 +666,20 @@ now independent of the locale and contain all metadata for all locales this mean
 
 ### MetadataProviderRegistry has been removed
 
-In Sulu 2.x there are two types of metadata providers:
+To remove indirection the MetadataProviderRegistry has been replaced by the explicit services.
 
-- `Sulu\Bundle\AdminBundle\Metadata\ListMetadata\ListMetadataProvider`
-            id="sulu_admin.list_metadata_provider"
-- `Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadataProvider`
-            id="sulu_admin.form_metadata_provider"
+In the following classes the `metadata_provider_registry` has been removed with the `sulu_admin.form_metadata_provider`:
+- Sulu\Component\Webspace\Manager\WebspaceManager
+- Sulu\Content\Infrastructure\Sulu\Route\ContentRouteDefaultsProvider
+- Sulu\Content\Application\ContentDataMapper\DataMapper\TemplateDataMapper
+- Sulu\Content\Application\ContentDataMapper\DataMapper\RoutableDataMapper
+- Sulu\Content\Application\PropertyResolver\Resolver\BlockPropertyResolver
+- Sulu\Content\Infrastructure\Sulu\Route\ContentRouteDefaultsProvider
+- Sulu\Bundle\AdminBundle\Metadata\FormMetadata\GlobalBlocksTypedFormMetadataVisitor
+- Sulu\Bundle\AdminBundle\Metadata\GroupProvider
 
-These are usually not used together nor are they extensible so the metadata registry has been removed. This also
-includes the following other classes:
-
-- WebspaceManager now takes FormMetadataProvider
+In the following classes the `metadata_provider_registry` has been removed with a `tagged_locator`:
+- Sulu\Bundle\AdminBundle\Controller\AdminController
 
 ### Template path configuration changed
 
