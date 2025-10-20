@@ -40,7 +40,7 @@
         </service>
 
         <service id="sulu_admin.metadata_group_provider" class="Sulu\Bundle\AdminBundle\Metadata\GroupProvider">
-            <argument type="service" id="sulu_admin.metadata_provider_registry"/>
+            <argument type="service" id="sulu_admin.form_metadata_provider"/>
             <argument type="service" id="translator"/>
         </service>
 

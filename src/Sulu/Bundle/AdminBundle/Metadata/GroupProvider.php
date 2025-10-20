@@ -19,7 +19,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 final readonly class GroupProvider implements GroupProviderInterface
 {
     public function __construct(
-        private MetadataProviderRegistry $metadataProviderRegistry,
+        private MetadataProviderInterface $metadataProvider,
         private TranslatorInterface $translator,
     ) {
     }
@@ -27,8 +27,7 @@ final readonly class GroupProvider implements GroupProviderInterface
     public function getGroups(): array
     {
         /** @var TypedFormMetadata $metadata */
-        $metadata = $this->metadataProviderRegistry->getMetadataProvider('form')
-            ->getMetadata(ArticleInterface::TEMPLATE_TYPE, '', []);
+        $metadata = $this->metadataProvider->getMetadata(ArticleInterface::TEMPLATE_TYPE, '', []);
 
         $groups = [];
 
