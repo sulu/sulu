@@ -30,6 +30,7 @@ use Sulu\Component\Content\Document\RedirectType;
 use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\Content\Extension\ExtensionManagerInterface;
 use Sulu\Component\Content\Metadata\BlockMetadata;
+use Sulu\Component\Content\Metadata\ComponentMetadata;
 use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactoryInterface;
 use Sulu\Component\Content\Metadata\ItemMetadata;
 use Sulu\Component\Content\Metadata\StructureMetadata;
@@ -283,8 +284,8 @@ EOT;
             $propertyMapping = new ComplexMetadata();
 
             foreach ($property->getComponents() as $component) {
-                /** @var \Sulu\Component\Content\Metadata\PropertyMetadata $componentProperty */
-                foreach ($component->getChildren() as $componentProperty) {
+                $children = $this->getComponentChildren($component);
+                foreach ($children as $componentProperty) {
                     $this->mapProperty(
                         $componentProperty,
                         $propertyMapping,
@@ -392,6 +393,28 @@ EOT;
                 ]
             );
         }
+    }
+
+    /**
+     * @return ItemMetadata[]
+     */
+    private function getComponentChildren(ComponentMetadata $component): array
+    {
+        if ($component->hasTag('sulu.global_block')) {
+            return $component->getChildren();
+        }
+
+        $tag = $component->getTag('sulu.global_block');
+        /** @var string[] $attributes */
+        $attributes = $tag['attributes'] ?? [];
+        $refType = $attributes['global_block'] ?? '';
+        $result = $this->structureFactory->getStructureMetadata('block', $refType);
+
+        if (!$result instanceof StructureMetadata) {
+            return $component->getChildren();
+        }
+
+        return $result->getChildren();
     }
 
     private function createIndexNameField(Metadata $documentMetadata, $indexName, $decorate)
