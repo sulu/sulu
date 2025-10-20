@@ -644,6 +644,8 @@ class MediaManager implements MediaManagerInterface
             $this->trashManager->store(MediaInterface::RESOURCE_KEY, $mediaEntity);
         }
 
+        $metaLocales = [];
+
         /** @var File $file */
         foreach ($mediaEntity->getFiles() as $file) {
             /** @var FileVersion $fileVersion */
@@ -658,6 +660,7 @@ class MediaManager implements MediaManagerInterface
 
                 foreach ($fileVersion->getMeta() as $fileVersionMeta) {
                     // this will trigger massive-search deindex
+                    $metaLocales[] = $fileVersionMeta->getLocale();
                     $this->em->remove($fileVersionMeta);
                 }
                 foreach ($fileVersion->getFormatOptions() as $formatOptions) {
@@ -671,7 +674,7 @@ class MediaManager implements MediaManagerInterface
         $this->em->remove($mediaEntity);
 
         $this->domainEventCollector->collect(
-            new MediaRemovedEvent($mediaEntity->getId(), $collectionId, $mediaTitle, $locale)
+            new MediaRemovedEvent($mediaEntity->getId(), $collectionId, $mediaTitle, $locale, $metaLocales)
         );
 
         $this->em->flush();
