@@ -42,7 +42,6 @@ final class RouteHistoryController
         private DoctrineListBuilderFactoryInterface $listBuilderFactory,
         private RestHelperInterface $restHelper,
     ) {
-        // TODO controller should not need more then Repository, MessageBus, Serializer
     }
 
     public function cgetAction(Request $request): Response
