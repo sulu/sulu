@@ -17,6 +17,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
+use Sulu\Route\Domain\Exception\RouteNotFoundException;
 use Sulu\Route\Domain\Model\Route;
 use Sulu\Route\Domain\Repository\RouteRepositoryInterface;
 
@@ -53,8 +54,19 @@ class RouteRepository implements RouteRepositoryInterface
 
         // Hydrate Object is default, but we need to specify it here to make PHPStan happy:
         //     see: https://github.com/phpstan/phpstan-doctrine?tab=readme-ov-file#supported-methods
-        /** @var Route */
+        /** @var Route|null */
         return $queryBuilder->getQuery()->getOneOrNullResult(Query::HYDRATE_OBJECT);
+    }
+
+    public function getOneBy(array $filters): Route
+    {
+        $route = $this->findOneBy($filters);
+
+        if (null === $route) {
+            throw new RouteNotFoundException($filters);
+        }
+
+        return $route;
     }
 
     public function findFirstBy(array $filters, array $sortBys = []): ?Route
@@ -65,7 +77,7 @@ class RouteRepository implements RouteRepositoryInterface
 
         // Hydrate Object is default, but we need to specify it here to make PHPStan happy:
         //     see: https://github.com/phpstan/phpstan-doctrine?tab=readme-ov-file#supported-methods
-        /** @var Route */
+        /** @var Route|null */
         return $queryBuilder->getQuery()->getOneOrNullResult(Query::HYDRATE_OBJECT);
     }
 

@@ -72,20 +72,35 @@ class RouteRepositoryTest extends KernelTestCase
 
         $this->routeRepository->add($route);
         $entityManager->flush();
+        $routeId = $route->getId();
         $entityManager->clear();
 
-        $route = $this->routeRepository->findOneBy(['id' => $route->getId()]);
+        $route = $this->routeRepository->findOneBy(['id' => $routeId]);
         $this->assertNotNull($route);
 
         $this->routeRepository->remove($route);
         $entityManager->flush();
         $entityManager->clear();
 
-        $route = $this->routeRepository->findOneBy(['id' => $route->getId()]);
+        $route = $this->routeRepository->findOneBy(['id' => $routeId]);
         $this->assertNull($route);
     }
 
     public function testFindOneBySiteSlugLocale(): void
+    {
+        $route = $this->routeRepository->findOneBy([
+            'site' => 'the_site',
+            'slug' => '/test',
+            'locale' => 'en',
+        ]);
+
+        $this->assertNotNull($route);
+        $this->assertSame('/test', $route->getSlug());
+        $this->assertSame('en', $route->getLocale());
+        $this->assertSame('the_site', $route->getSite());
+    }
+
+    public function testGetOneBySiteSlugLocale(): void
     {
         $route = $this->routeRepository->findOneBy([
             'site' => 'the_site',

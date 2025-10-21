@@ -11,6 +11,7 @@
 
 namespace Sulu\Route\Domain\Repository;
 
+use Sulu\Route\Domain\Exception\RouteNotFoundException;
 use Sulu\Route\Domain\Model\Route;
 
 /**
@@ -42,6 +43,13 @@ interface RouteRepositoryInterface
      * @param RouteFilter $filters
      */
     public function findOneBy(array $filters): ?Route;
+
+    /**
+     * @param RouteFilter $filters
+     *
+     * @throws RouteNotFoundException
+     */
+    public function getOneBy(array $filters): Route;
 
     /**
      * @param RouteFilter $filters

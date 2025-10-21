@@ -32,6 +32,8 @@ class UrlGeneratorTest extends KernelTestCase
      * @param array<string, mixed> $params
      */
     #[TestWith(['sulu_route.post_resource_locator', [], '/admin/api/resource-locators'])]
+    #[TestWith(['sulu_route.get_route_histories', [], '/admin/api/route-histories'])]
+    #[TestWith(['sulu_route.delete_route_histories', [], '/admin/api/route-histories'])]
     public function testRoutes(string $route, array $params, string $expectedUrl): void
     {
         $urlGenerator = static::getContainer()->get(UrlGeneratorInterface::class);

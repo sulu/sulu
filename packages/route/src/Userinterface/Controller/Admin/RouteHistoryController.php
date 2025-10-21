@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of Sulu.
+ *
+ * (c) Sulu GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Sulu\Route\Userinterface\Controller\Admin;
 
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilder;
@@ -8,10 +17,13 @@ use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescri
 use Sulu\Component\Rest\ListBuilder\Metadata\FieldDescriptorFactoryInterface;
 use Sulu\Component\Rest\ListBuilder\PaginatedRepresentation;
 use Sulu\Component\Rest\RestHelperInterface;
+use Sulu\Messenger\Infrastructure\Symfony\Messenger\FlushMiddleware\EnableFlushStamp;
+use Sulu\Route\Application\Message\RemoveRouteHistoryMessage;
 use Sulu\Route\Domain\Model\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\HandleTrait;
 use Symfony\Component\Messenger\MessageBusInterface;
 
@@ -71,12 +83,16 @@ final class RouteHistoryController
 
     public function cdeleteAction(Request $request): Response
     {
-        $ids = \array_filter(\explode(',', $request->query->getString('ids')));
+        /** @var numeric-string[] $ids */
+        $ids = \array_filter(\explode(',', $request->query->getString('ids')), function(string $id) {
+            return $id && \is_numeric($id);
+        });
 
         foreach ($ids as $id) {
-            // TODO
+            $message = new RemoveRouteHistoryMessage(['id' => (int) $id]);
+            $this->handle(new Envelope($message, [new EnableFlushStamp()]));
         }
 
-
+        return new JsonResponse(null, 204);
     }
 }
