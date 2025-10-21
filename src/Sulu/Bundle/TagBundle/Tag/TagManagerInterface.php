@@ -11,8 +11,6 @@
 
 namespace Sulu\Bundle\TagBundle\Tag;
 
-use Sulu\Bundle\TagBundle\Tag\Exception\TagNotFoundException;
-
 /**
  * Defines the operations of the TagManager.
  * The TagManager is responsible for the centralized management of our tags.
