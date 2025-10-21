@@ -65,7 +65,42 @@ class RouteRepositoryTest extends KernelTestCase
         $this->routeRepository = self::getContainer()->get('sulu_route.route_repository');
     }
 
+    public function testAddAndRemoveAndFindOneById(): void
+    {
+        $route = new Route('example', '019a0280-9c86-75e6-a8b6-3ba58910572d', 'en', '/test-route', 'the_site');
+        $entityManager = self::getContainer()->get(EntityManagerInterface::class);
+
+        $this->routeRepository->add($route);
+        $entityManager->flush();
+        $routeId = $route->getId();
+        $entityManager->clear();
+
+        $route = $this->routeRepository->findOneBy(['id' => $routeId]);
+        $this->assertNotNull($route);
+
+        $this->routeRepository->remove($route);
+        $entityManager->flush();
+        $entityManager->clear();
+
+        $route = $this->routeRepository->findOneBy(['id' => $routeId]);
+        $this->assertNull($route);
+    }
+
     public function testFindOneBySiteSlugLocale(): void
+    {
+        $route = $this->routeRepository->findOneBy([
+            'site' => 'the_site',
+            'slug' => '/test',
+            'locale' => 'en',
+        ]);
+
+        $this->assertNotNull($route);
+        $this->assertSame('/test', $route->getSlug());
+        $this->assertSame('en', $route->getLocale());
+        $this->assertSame('the_site', $route->getSite());
+    }
+
+    public function testGetOneBySiteSlugLocale(): void
     {
         $route = $this->routeRepository->findOneBy([
             'site' => 'the_site',

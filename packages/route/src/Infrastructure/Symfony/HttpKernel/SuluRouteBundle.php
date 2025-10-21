@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Sulu\Route\Infrastructure\Symfony\HttpKernel;
 
+use Sulu\Route\Application\MessageHandler\RemoveRouteHistoryMessageHandler;
 use Sulu\Route\Application\ResourceLocator\PathCleanup\PathCleanup;
 use Sulu\Route\Application\ResourceLocator\PathCleanup\PathCleanupInterface;
 use Sulu\Route\Application\ResourceLocator\ResourceLocatorGenerator;
@@ -31,6 +32,7 @@ use Sulu\Route\Infrastructure\Sulu\Admin\RouteAdmin;
 use Sulu\Route\Infrastructure\Symfony\DependencyInjection\RouteDefaultsOptionsCompilerPass;
 use Sulu\Route\Infrastructure\SymfonyCmf\Routing\CmfRouteProvider;
 use Sulu\Route\Userinterface\Controller\Admin\ResourceLocatorGenerateController;
+use Sulu\Route\Userinterface\Controller\Admin\RouteHistoryController;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 
@@ -88,6 +90,7 @@ final class SuluRouteBundle extends AbstractBundle
 
         $services->set('sulu_route.symfony_cmf_route_provider')
             ->class(CmfRouteProvider::class)
+            ->public()
             ->args([
                 tagged_iterator('sulu_route.route_collection_for_request_loader'),
                 param('sulu_route.route_default_options'),
@@ -148,6 +151,15 @@ final class SuluRouteBundle extends AbstractBundle
                 new Reference('sulu_route.path_cleanup'),
             ]);
 
+        // Message Handler services
+        $services->set('sulu_route.remove_route_history_message_handler')
+            ->class(RemoveRouteHistoryMessageHandler::class)
+            ->args([
+                new Reference('sulu_route.route_repository'),
+            ])
+            ->tag('messenger.message_handler');
+
+        // Controller services
         $services->set('sulu_route.resource_locator_generate_controller')
             ->class(ResourceLocatorGenerateController::class)
             ->args([
@@ -155,14 +167,25 @@ final class SuluRouteBundle extends AbstractBundle
             ])
             ->tag('controller.service_arguments');
 
+        $services->set('sulu_route.route_history_controller')
+            ->class(RouteHistoryController::class)
+            ->args([
+                new Reference('sulu_message_bus'),
+                new Reference('sulu_core.list_builder.field_descriptor_factory'),
+                new Reference('sulu_core.doctrine_list_builder_factory'),
+                new Reference('sulu_core.doctrine_rest_helper'),
+            ])
+            ->tag('controller.service_arguments');
+
+        // Sulu Integration
         $services->set('sulu_route.route_admin')
             ->class(RouteAdmin::class)
             ->args([
                 new Reference('router'),
             ])
-            ->tag('sulu.context', ['context' => 'admin'])
             ->tag('sulu.admin');
 
+        // Extension Points
         $builder->registerForAutoconfiguration(SiteRouteGeneratorInterface::class)
             ->addTag('sulu_route.site_route_generator');
 
@@ -178,6 +201,26 @@ final class SuluRouteBundle extends AbstractBundle
      */
     public function prependExtension(ContainerConfigurator $container, ContainerBuilder $builder): void
     {
+        if ($builder->hasExtension('sulu_admin')) {
+            $builder->prependExtensionConfig(
+                'sulu_admin',
+                [
+                    'lists' => [
+                        'directories' => [
+                            \dirname(__DIR__, 4) . '/config/lists',
+                        ],
+                    ],
+                    'resources' => [
+                        'route_histories' => [
+                            'routes' => [
+                                'list' => 'sulu_route.get_route_histories',
+                            ],
+                        ],
+                    ],
+                ],
+            );
+        }
+
         if ($builder->hasExtension('doctrine')) {
             $builder->prependExtensionConfig(
                 'doctrine',
@@ -209,25 +252,12 @@ final class SuluRouteBundle extends AbstractBundle
                         ],
                     ],
                     'dynamic' => [
-                        ...($builder->hasExtension('sulu_route') ? [] : [ // TODO remove this check when `deprecated_service_bridge.xml` removed
-                            'route_provider_service_id' => 'sulu_route.symfony_cmf_route_provider',
-                        ]),
+                        'route_provider_service_id' => 'sulu_route.symfony_cmf_route_provider',
                         'enabled' => true,
                         'uri_filter_regexp' => '/^(?!\/admin\b).*/', // exclude admin routes
                     ],
                 ]
             );
-
-            if ($builder->hasExtension('sulu_route')) {
-                $builder->prependExtensionConfig(
-                    'cmf_routing',
-                    [
-                        'dynamic' => [
-                            'route_provider_service_id' => 'sulu_route.symfony_cmf_route_provider',
-                        ],
-                    ]
-                );
-            }
         }
     }
 

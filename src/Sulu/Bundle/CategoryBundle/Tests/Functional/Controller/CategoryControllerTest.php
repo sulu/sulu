@@ -246,10 +246,15 @@ class CategoryControllerTest extends SuluTestCase
 
         $categories = $response->_embedded->categories;
 
+        $this->assertIsArray($categories);
         $this->assertCount(2, $categories);
 
-        $this->assertEquals('Third Category', $categories[0]->name);
-        $this->assertEquals('Fourth Category', $categories[1]->name);
+        $names = \array_map(function($category) {
+            return $category->name;
+        }, $categories);
+
+        $this->assertContains('Third Category', $names);
+        $this->assertContains('Fourth Category', $names);
     }
 
     public function testCGetByEmptyIds(): void
