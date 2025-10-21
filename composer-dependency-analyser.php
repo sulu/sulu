@@ -43,7 +43,6 @@ return $config
         'Symfony\Component\Security\Core\Event\AuthenticationFailureEvent',
         'Symfony\Component\Security\Core\Exception\UsernameNotFoundException',
         'Symfony\Component\Security\Http\Logout\LogoutSuccessHandlerInterface',
-        !\class_exists('Imagick') ? 'Imagick' : null, // optional fallback to gd or vips
     ]))
     // DEV_DEPENDENCY_IN_PROD: optional dependency
     ->ignoreErrorsOnPackage('league/flysystem', [ErrorType::DEV_DEPENDENCY_IN_PROD])
