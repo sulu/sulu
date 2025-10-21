@@ -14,11 +14,13 @@ use ShipMonk\ComposerDependencyAnalyser\Config\ErrorType;
 
 $config = new Configuration();
 
+$optionalIgnoreUnknownClasses = [];
+
 // optional fallback to gd or vips
 if (\extension_loaded('imagick')) {
     $config->ignoreErrorsOnExtension('ext-imagick', [ErrorType::SHADOW_DEPENDENCY]);
 } else {
-    $config->ignoreUnknownClasses('Imagick');
+    $optionalIgnoreUnknownClasses[] = 'Imagick';
 }
 
 return $config
@@ -29,6 +31,7 @@ return $config
     ->ignoreErrorsOnPackage('guzzlehttp/guzzle', [ErrorType::SHADOW_DEPENDENCY]) // bc layer replaced later by symfony/http-client
     // UnknownClasses
     ->ignoreUnknownClasses([
+        ...$optionalIgnoreUnknownClasses,
         // bc layer for lowest
         'FOS\RestBundle\Controller\FOSRestController',
         'Swift_Events_SendEvent',
