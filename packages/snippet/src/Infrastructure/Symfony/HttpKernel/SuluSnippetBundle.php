@@ -461,23 +461,6 @@ final class SuluSnippetBundle extends AbstractBundle
                 ],
             );
         }
-
-        if ($builder->hasExtension('sulu_route')) {
-            $builder->prependExtensionConfig(
-                'sulu_route',
-                [
-                    'mappings' => [
-                        SnippetInterface::class => [
-                            'generator' => 'schema',
-                            'options' => [
-                                'route_schema' => '/{object["title"]}',
-                            ],
-                            'resource_key' => SnippetInterface::RESOURCE_KEY,
-                        ],
-                    ],
-                ],
-            );
-        }
     }
 
     /**

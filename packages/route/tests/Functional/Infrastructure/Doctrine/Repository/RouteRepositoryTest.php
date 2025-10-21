@@ -25,7 +25,7 @@ class RouteRepositoryTest extends KernelTestCase
     public static function setUpBeforeClass(): void
     {
         $entityManager = self::getContainer()->get(EntityManagerInterface::class);
-        $entityManager->getConnection()->executeStatement('DELETE FROM ro_next_routes WHERE 1 = 1');
+        $entityManager->getConnection()->executeStatement('DELETE FROM ro_routes WHERE 1 = 1');
 
         $expectedRoute = new Route(Route::HISTORY_RESOURCE_KEY, 'example::1', 'en', '/test', 'the_site');
         $entityManager->persist($expectedRoute);
@@ -55,7 +55,7 @@ class RouteRepositoryTest extends KernelTestCase
     public static function tearDownAfterClass(): void
     {
         $entityManager = self::getContainer()->get(EntityManagerInterface::class);
-        $entityManager->getConnection()->executeStatement('DELETE FROM ro_next_routes WHERE 1 = 1');
+        $entityManager->getConnection()->executeStatement('DELETE FROM ro_routes WHERE 1 = 1');
 
         self::ensureKernelShutdown();
     }

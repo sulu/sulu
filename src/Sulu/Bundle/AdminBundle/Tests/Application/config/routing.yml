@@ -16,8 +16,8 @@ sulu_admin_api:
     resource: "@SuluAdminBundle/Resources/config/routing_api.yaml"
     prefix: /admin/api
 
-sulu_next_route_api:
-    resource: "@SuluNextRouteBundle/config/routing_admin_api.yaml"
+sulu_route_api:
+    resource: "@SuluRouteBundle/config/routing_admin_api.yaml"
     prefix: /admin/api
 
 sulu_contact_api:
@@ -33,7 +33,7 @@ sulu_security_api:
     prefix: /admin/api
 
 sulu_page_api:
-    resource: "@SuluNextPageBundle/config/routing_admin_api.yaml"
+    resource: "@SuluPageBundle/config/routing_admin_api.yaml"
     prefix: /admin/api
 
 sulu_content_api:

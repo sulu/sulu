@@ -53,8 +53,8 @@ final class SuluRouteBundle extends AbstractBundle
 {
     public function __construct()
     {
-        $this->name = 'SuluNextRouteBundle';
-        $this->extensionAlias = 'sulu_next_route'; // TODO also change route table from `ro_next_routes` to `ro_routes`
+        $this->name = 'SuluRouteBundle';
+        $this->extensionAlias = 'sulu_route';
     }
 
     public function build(ContainerBuilder $container): void

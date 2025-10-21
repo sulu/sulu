@@ -155,16 +155,16 @@ class ArticlesSitemapProvider extends AbstractSitemapProvider
 
         // Todo: Add additional webspaces.
         $queryBuilder->distinct()->join('article.dimensionContents', 'dimensionContent', 'WITH', '
-            dimensionContent.locale = :locale 
-            AND dimensionContent.stage = :stage 
-            AND dimensionContent.mainWebspace = :webspaceKey 
-            AND dimensionContent.version = :version 
+            dimensionContent.locale = :locale
+            AND dimensionContent.stage = :stage
+            AND dimensionContent.mainWebspace = :webspaceKey
+            AND dimensionContent.version = :version
             AND dimensionContent.seoHideInSitemap = :hide
         ')
             ->leftJoin('article.dimensionContents', 'unLocalizedDimensionContent', 'WITH', '
-            unLocalizedDimensionContent.locale IS NULL 
-            AND unLocalizedDimensionContent.stage = :stage 
-            AND unLocalizedDimensionContent.version = :version 
+            unLocalizedDimensionContent.locale IS NULL
+            AND unLocalizedDimensionContent.stage = :stage
+            AND unLocalizedDimensionContent.version = :version
             AND unLocalizedDimensionContent.seoHideInSitemap = :hide
         ')
             ->leftJoin('dimensionContent.route', 'route')
@@ -202,10 +202,10 @@ class ArticlesSitemapProvider extends AbstractSitemapProvider
 
         // Todo: Add additional webspaces.
         $queryBuilder->distinct()->leftJoin('article.dimensionContents', 'dimensionContent', 'WITH', '
-            dimensionContent.locale != :locale 
-            AND dimensionContent.locale IS NOT NULL 
+            dimensionContent.locale != :locale
+            AND dimensionContent.locale IS NOT NULL
             AND dimensionContent.stage = :stage
-            AND dimensionContent.mainWebspace = :webspaceKey 
+            AND dimensionContent.mainWebspace = :webspaceKey
             AND dimensionContent.version = :version
             AND dimensionContent.seoHideInSitemap = :hide
         ')
@@ -294,9 +294,8 @@ class ArticlesSitemapProvider extends AbstractSitemapProvider
         return $sitemapUrl;
     }
 
-    // Todo: Use articles.
     public function getAlias(): string
     {
-        return 'next_articles';
+        return 'articles';
     }
 }

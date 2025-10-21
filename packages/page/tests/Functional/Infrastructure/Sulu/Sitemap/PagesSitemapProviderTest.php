@@ -257,7 +257,7 @@ class PagesSitemapProviderTest extends WebsiteTestCase
 
     public function testBlogSitemapXML(): void
     {
-        self::$client->request('GET', 'http://blog.io/sitemaps/next_pages-1.xml');
+        self::$client->request('GET', 'http://blog.io/sitemaps/pages-1.xml');
         /** @var string $sitemap */
         $sitemap = self::$client->getResponse()->getContent();
 
@@ -266,7 +266,7 @@ class PagesSitemapProviderTest extends WebsiteTestCase
 
     public function testSuluSitemapXML(): void
     {
-        self::$client->request('GET', 'http://sulu.io/sitemaps/next_pages-1.xml');
+        self::$client->request('GET', 'http://sulu.io/sitemaps/pages-1.xml');
         /** @var string $sitemap */
         $sitemap = self::$client->getResponse()->getContent();
 
