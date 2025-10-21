@@ -469,5 +469,24 @@
             <tag name="kernel.event_subscriber"/>
         </service>
 
+        <service
+                id="sulu_media.media_index_listener"
+                class="Sulu\Bundle\MediaBundle\Infrastructure\Sulu\Search\MediaIndexListener"
+        >
+            <argument type="service" id="sulu_message_bus"/>
+            <tag name="kernel.event_listener" event="Sulu\Bundle\MediaBundle\Domain\Event\MediaCreatedEvent" method="onMediaChanged"/>
+            <tag name="kernel.event_listener" event="Sulu\Bundle\MediaBundle\Domain\Event\MediaModifiedEvent" method="onMediaChanged"/>
+            <tag name="kernel.event_listener" event="Sulu\Bundle\MediaBundle\Domain\Event\MediaRemovedEvent" method="onMediaChanged"/>
+            <tag name="kernel.event_listener" event="Sulu\Bundle\MediaBundle\Domain\Event\MediaRestoredEvent" method="onMediaChanged"/>
+            <tag name="kernel.event_listener" event="Sulu\Bundle\MediaBundle\Domain\Event\MediaVersionAddedEvent" method="onMediaChanged"/>
+        </service>
+
+        <service
+                id="sulu_media.media_reindex_provider"
+                class="Sulu\Bundle\MediaBundle\Infrastructure\Sulu\Search\MediaReindexProvider"
+        >
+            <argument type="service" id="doctrine.orm.entity_manager"/>
+            <tag name="cmsig_seal.reindex_provider"/>
+        </service>
     </services>
 </container>

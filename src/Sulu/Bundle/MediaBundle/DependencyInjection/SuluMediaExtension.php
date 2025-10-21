@@ -14,6 +14,7 @@ namespace Sulu\Bundle\MediaBundle\DependencyInjection;
 use Contao\ImagineSvg\Imagine as SvgImagine;
 use FFMpeg\FFMpeg;
 use Imagine\Vips\Imagine as VipsImagine;
+use Sulu\Bundle\MediaBundle\Admin\MediaAdmin;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\CollectionInterface;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
@@ -190,6 +191,30 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
                         ],
                     ],
                 ]
+            );
+        }
+
+        if ($container->hasExtension('sulu_search')) {
+            $container->prependExtensionConfig(
+                'sulu_search',
+                [
+                    'admin' => [
+                        'resources' => [
+                            MediaInterface::RESOURCE_KEY => [
+                                'name' => 'sulu_media.media',
+                                'icon' => 'su-image',
+                                'route' => [
+                                    'name' => MediaAdmin::EDIT_FORM_VIEW,
+                                    'resultToRoute' => [
+                                        'id' => 'id',
+                                        'locale' => 'locale',
+                                    ],
+                                ],
+                                'securityContext' => MediaAdmin::SECURITY_CONTEXT,
+                            ],
+                        ],
+                    ],
+                ],
             );
         }
     }
