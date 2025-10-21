@@ -14,10 +14,16 @@ use ShipMonk\ComposerDependencyAnalyser\Config\ErrorType;
 
 $config = new Configuration();
 
+// optional fallback to gd or vips
+if (\extension_loaded('imagick')) {
+    $config->ignoreErrorsOnExtension('ext-imagick', [ErrorType::SHADOW_DEPENDENCY]);
+} else {
+    $config->ignoreUnknownClasses('Imagick');
+}
+
 return $config
     // SHADOW_DEPENDENCY
     ->ignoreErrorsOnExtension('ext-iconv', [ErrorType::SHADOW_DEPENDENCY]) // fallbacks to mbstring
-    ->ignoreErrorsOnExtension('ext-imagick', [ErrorType::SHADOW_DEPENDENCY]) // optional fallback to gd or vips
     ->ignoreErrorsOnExtension('ext-openssl', [ErrorType::SHADOW_DEPENDENCY]) // fallbacks to random_bytes
     ->ignoreErrorsOnExtension('ext-zip', [ErrorType::SHADOW_DEPENDENCY]) // not required to run Sulu
     ->ignoreErrorsOnPackage('guzzlehttp/guzzle', [ErrorType::SHADOW_DEPENDENCY]) // bc layer replaced later by symfony/http-client
