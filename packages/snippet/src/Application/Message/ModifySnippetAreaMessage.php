@@ -67,7 +67,7 @@ class ModifySnippetAreaMessage
     {
         return [
             'webspaceKey' => $this->webspaceKey,
-            'snippetIdentifier' => ['uuid' => $this->snippetIdentifier],
+            'snippetIdentifier' => $this->snippetIdentifier,
             'areaKey' => $this->areaKey,
             'locale' => $this->locale,
         ];

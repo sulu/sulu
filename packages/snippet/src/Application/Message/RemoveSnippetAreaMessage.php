@@ -26,7 +26,7 @@ class RemoveSnippetAreaMessage
     private string $locale;
 
     /**
-     * @param array{webspaceKey: string, areaKey: string} $data
+     * @param array{webspaceKey: string, areaKey: string, locale: string} $data
      */
     public function __construct(array $data)
     {
