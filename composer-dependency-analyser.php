@@ -15,20 +15,32 @@ use ShipMonk\ComposerDependencyAnalyser\Config\ErrorType;
 $config = new Configuration();
 
 $optionalIgnoreUnknownClasses = [];
+$optionalIgnoreShadowDependencyExtensions = [];
 
 // optional fallback to gd or vips
 if (\extension_loaded('imagick')) {
-    $config->ignoreErrorsOnExtension('ext-imagick', [ErrorType::SHADOW_DEPENDENCY]);
+    $optionalIgnoreShadowDependencyExtensions[] = 'ext-imagick';
 } else {
     $optionalIgnoreUnknownClasses[] = 'Imagick';
 }
 
 return $config
     // SHADOW_DEPENDENCY
-    ->ignoreErrorsOnExtension('ext-iconv', [ErrorType::SHADOW_DEPENDENCY]) // fallbacks to mbstring
-    ->ignoreErrorsOnExtension('ext-openssl', [ErrorType::SHADOW_DEPENDENCY]) // fallbacks to random_bytes
-    ->ignoreErrorsOnExtension('ext-zip', [ErrorType::SHADOW_DEPENDENCY]) // not required to run Sulu
-    ->ignoreErrorsOnPackage('guzzlehttp/guzzle', [ErrorType::SHADOW_DEPENDENCY]) // bc layer replaced later by symfony/http-client
+    ->ignoreErrorsOnExtensions(
+        [
+            ...$optionalIgnoreShadowDependencyExtensions,
+            'ext-iconv', // fallbacks to mbstring
+            'ext-openssl', // fallbacks to random_bytes
+            'ext-zip',  // not required to run Sulu
+        ],
+        [ErrorType::SHADOW_DEPENDENCY],
+    )
+    ->ignoreErrorsOnPackages(
+        [
+            'guzzlehttp/guzzle', // bc layer replaced later by symfony/http-client
+        ],
+        [ErrorType::SHADOW_DEPENDENCY]
+    )
     // UnknownClasses
     ->ignoreUnknownClasses([
         ...$optionalIgnoreUnknownClasses,
@@ -48,28 +60,38 @@ return $config
         'Symfony\Component\Security\Http\Logout\LogoutSuccessHandlerInterface',
     ])
     // DEV_DEPENDENCY_IN_PROD: optional dependency
-    ->ignoreErrorsOnPackage('league/flysystem', [ErrorType::DEV_DEPENDENCY_IN_PROD])
-    ->ignoreErrorsOnPackage('league/flysystem-aws-s3-v3', [ErrorType::DEV_DEPENDENCY_IN_PROD])
-    ->ignoreErrorsOnPackage('league/flysystem-azure-blob-storage', [ErrorType::DEV_DEPENDENCY_IN_PROD])
-    ->ignoreErrorsOnPackage('microsoft/azure-storage-blob', [ErrorType::DEV_DEPENDENCY_IN_PROD])
-    ->ignoreErrorsOnPackage('php-ffmpeg/php-ffmpeg', [ErrorType::DEV_DEPENDENCY_IN_PROD])
-    ->ignoreErrorsOnPackage('rokka/imagine-vips', [ErrorType::DEV_DEPENDENCY_IN_PROD])
-    ->ignoreErrorsOnPackage('scheb/2fa-backup-code', [ErrorType::DEV_DEPENDENCY_IN_PROD])
-    ->ignoreErrorsOnPackage('scheb/2fa-bundle', [ErrorType::DEV_DEPENDENCY_IN_PROD])
-    ->ignoreErrorsOnPackage('scheb/2fa-email', [ErrorType::DEV_DEPENDENCY_IN_PROD])
-    ->ignoreErrorsOnPackage('scheb/2fa-google-authenticator', [ErrorType::DEV_DEPENDENCY_IN_PROD])
-    ->ignoreErrorsOnPackage('scheb/2fa-totp', [ErrorType::DEV_DEPENDENCY_IN_PROD])
-    ->ignoreErrorsOnPackage('scheb/2fa-trusted-device', [ErrorType::DEV_DEPENDENCY_IN_PROD])
-    ->ignoreErrorsOnPackage('superbalist/flysystem-google-storage', [ErrorType::DEV_DEPENDENCY_IN_PROD])
-    ->ignoreErrorsOnPackage('symfony/stopwatch', [ErrorType::DEV_DEPENDENCY_IN_PROD])
-    ->ignoreErrorsOnPackage('symfony/monolog-bundle', [ErrorType::DEV_DEPENDENCY_IN_PROD]) // false positive only used in SuluTestKernel
+    ->ignoreErrorsOnPackages(
+        [
+            'league/flysystem',
+            'league/flysystem-aws-s3-v3',
+            'league/flysystem-azure-blob-storage',
+            'microsoft/azure-storage-blob',
+            'php-ffmpeg/php-ffmpeg',
+            'rokka/imagine-vips',
+            'scheb/2fa-backup-code',
+            'scheb/2fa-bundle',
+            'scheb/2fa-email',
+            'scheb/2fa-google-authenticator',
+            'scheb/2fa-totp',
+            'scheb/2fa-trusted-device',
+            'superbalist/flysystem-google-storage',
+            'symfony/stopwatch',
+            'symfony/monolog-bundle', // false positive only used in SuluTestKernel
+        ],
+        [ErrorType::DEV_DEPENDENCY_IN_PROD],
+    )
     // UNUSED_DEPENDENCY
-    ->ignoreErrorsOnPackage('doctrine/annotations', [ErrorType::UNUSED_DEPENDENCY])
-    ->ignoreErrorsOnPackage('guzzlehttp/promises', [ErrorType::UNUSED_DEPENDENCY]) // required for faster fos http cache clearing
-    ->ignoreErrorsOnPackage('nyholm/psr7', [ErrorType::UNUSED_DEPENDENCY]) // required for faster fos http cache clearing
-    ->ignoreErrorsOnPackage('symfony/asset', [ErrorType::UNUSED_DEPENDENCY]) // false positive we use assets
-    ->ignoreErrorsOnPackage('symfony/cache', [ErrorType::UNUSED_DEPENDENCY]) // we use caches mostly via psr interfaces
-    ->ignoreErrorsOnPackage('symfony/css-selector', [ErrorType::UNUSED_DEPENDENCY]) // we use caches mostly via psr interfaces
-    ->ignoreErrorsOnPackage('symfony/proxy-manager-bridge', [ErrorType::UNUSED_DEPENDENCY]) // can only be removed when min symfony version is 6.2
-    ->ignoreErrorsOnPackage('symfony/yaml', [ErrorType::UNUSED_DEPENDENCY]) // we use yaml configurations
+    ->ignoreErrorsOnPackages(
+        [
+            'doctrine/annotations',
+            'guzzlehttp/promises', // required for faster fos http cache clearing
+            'nyholm/psr7', // required for faster fos http cache clearing
+            'symfony/asset', // false positive we use assets
+            'symfony/cache', // we use caches mostly via psr interfaces
+            'symfony/css-selector', // kept for future usage
+            'symfony/proxy-manager-bridge', // can only be removed when min symfony version is 6.2
+            'symfony/yaml', // we use yaml configurations
+        ],
+        [ErrorType::UNUSED_DEPENDENCY],
+    )
 ;
