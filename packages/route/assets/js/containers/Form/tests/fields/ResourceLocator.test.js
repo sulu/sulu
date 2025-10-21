@@ -76,7 +76,6 @@ test('Pass props correctly to ResourceLocator', () => {
             disabled={true}
             fieldTypeOptions={{
                 generationUrl: '/admin/api/resource-locators',
-                historyResourceKey: 'resource-locators',
                 defaultMode: 'tree_full_edit',
             }}
             formInspector={formInspector}
@@ -102,7 +101,6 @@ test('Render just slash instead of ResourceLocatorComponent if used on the homep
             disabled={true}
             fieldTypeOptions={{
                 generationUrl: '/admin/api/resource-locators',
-                historyResourceKey: 'resource-locators',
                 defaultMode: 'tree_leaf_edit',
             }}
             formInspector={formInspector}
@@ -128,7 +126,7 @@ test('Pass correct options to ResourceLocatorHistory if resource already existed
             {...fieldTypeDefaultProps}
             fieldTypeOptions={{
                 generationUrl: '/admin/api/resource-locators',
-                historyResourceKey: 'resource-locators',
+                historyResourceKey: 'route-histories',
                 defaultMode: 'tree_leaf_edit',
                 options: {history: true},
             }}
@@ -140,9 +138,9 @@ test('Pass correct options to ResourceLocatorHistory if resource already existed
     resourceLocator.update();
     expect(resourceLocator.find('ResourceLocatorHistory')).toHaveLength(1);
     expect(resourceLocator.find('ResourceLocatorHistory').prop('options'))
-        .toEqual({history: true, webspace: 'sulu', resourceKey: 'test'});
-    expect(resourceLocator.find('ResourceLocatorHistory').prop('resourceKey')).toEqual('resource-locators');
-    expect(resourceLocator.find('ResourceLocatorHistory').prop('id')).toEqual(1);
+        .toEqual({history: true, webspace: 'sulu', resourceId: 1, resourceKey: 'test'});
+    expect(resourceLocator.find('ResourceLocatorHistory').prop('resourceKey')).toEqual('route-histories');
+    expect(resourceLocator.find('ResourceLocatorHistory').prop('disabled')).toEqual(false);
 });
 
 test('Pass locale from userStore to ResourceLocator and ResourceLocatorHistory if form has no locale', () => {
@@ -163,7 +161,7 @@ test('Pass locale from userStore to ResourceLocator and ResourceLocatorHistory i
             disabled={true}
             fieldTypeOptions={{
                 generationUrl: '/admin/api/resource-locators',
-                historyResourceKey: 'resource-locators',
+                historyResourceKey: 'route-histories',
                 defaultMode: 'tree_full_edit',
                 options: {history: true},
             }}
@@ -183,7 +181,6 @@ test('Do not add an addFinishFieldHandler for URL generation if used on the home
             {...fieldTypeDefaultProps}
             fieldTypeOptions={{
                 generationUrl: '/admin/api/resource-locators',
-                historyResourceKey: 'resource-locators',
                 defaultMode: 'tree_leaf_edit',
             }}
             formInspector={formInspector}
@@ -201,7 +198,6 @@ test('Do not add an addFinishFieldHandler for URL generation if no generationUrl
         <ResourceLocator
             {...fieldTypeDefaultProps}
             fieldTypeOptions={{
-                historyResourceKey: 'resource-locators',
                 defaultMode: 'tree_leaf_edit',
             }}
             formInspector={formInspector}
@@ -219,7 +215,6 @@ test.each(['tree_leaf_edit', 'tree_full_edit'])('Set mode correctly from fieldTy
             {...fieldTypeDefaultProps}
             fieldTypeOptions={{
                 generationUrl: '/admin/api/resource-locators',
-                historyResourceKey: 'resource-locators',
                 defaultMode: mode,
             }}
             formInspector={formInspector}
@@ -239,7 +234,6 @@ test.each(['tree_leaf_edit', 'tree_full_edit'])('Set mode correctly from schemaO
             {...fieldTypeDefaultProps}
             fieldTypeOptions={{
                 generationUrl: '/admin/api/resource-locators',
-                historyResourceKey: 'resource-locators',
                 // invert to be sure that schemaOptions are used
                 defaultMode: (mode === 'tree_leaf_edit' ? 'tree_full_edit' : 'tree_leaf_edit'),
             }}
@@ -267,7 +261,6 @@ test('Should fire onFinish callback without argument when ResourceLocatorCompone
             {...fieldTypeDefaultProps}
             fieldTypeOptions={{
                 generationUrl: '/admin/api/resource-locators',
-                historyResourceKey: 'resource-locators',
                 defaultMode: 'tree_leaf_edit',
             }}
             formInspector={formInspector}
@@ -303,7 +296,6 @@ test('Should automatically request new URL when part field is finished on add fo
             dataPath="/block/0/url"
             fieldTypeOptions={{
                 generationUrl: '/admin/api/resource-locators',
-                historyResourceKey: 'resource-locators',
                 defaultMode: 'tree_leaf_edit',
             }}
             formInspector={formInspector}
@@ -367,7 +359,6 @@ test('Should request URL with parameters from FormInspector options, fieldTypeOp
             dataPath="/block/0/url"
             fieldTypeOptions={{
                 generationUrl: '/admin/api/resource-locators',
-                historyResourceKey: 'resource-locators',
                 defaultMode: 'tree_leaf_edit',
                 resourceStorePropertiesToRequest: {
                     propertyName: 'requestParamKey',
@@ -437,7 +428,6 @@ test('Should not request new URL when part field is finished on edit form', () =
             dataPath="/block/0/url"
             fieldTypeOptions={{
                 generationUrl: '/admin/api/resource-locators',
-                historyResourceKey: 'resource-locators',
                 defaultMode: 'tree_leaf_edit',
             }}
             formInspector={formInspector}
@@ -479,7 +469,6 @@ test('Should not request new URL when part field is finished if all parts are em
             dataPath="/block/0/url"
             fieldTypeOptions={{
                 generationUrl: '/admin/api/resource-locators',
-                historyResourceKey: 'resource-locators',
                 defaultMode: 'tree_leaf_edit',
             }}
             formInspector={formInspector}
@@ -528,7 +517,6 @@ test('Should not request new URL when part field is finished if input was alread
             dataPath="/block/0/url"
             fieldTypeOptions={{
                 generationUrl: '/admin/api/resource-locators',
-                historyResourceKey: 'resource-locators',
                 defaultMode: 'tree_leaf_edit',
             }}
             formInspector={formInspector}
@@ -574,7 +562,6 @@ test('Should not request new URL when field without the "sulu.rlp.part" tag is f
             dataPath="/block/0/url"
             fieldTypeOptions={{
                 generationUrl: '/admin/api/resource-locators',
-                historyResourceKey: 'resource-locators',
                 defaultMode: 'tree_leaf_edit',
             }}
             formInspector={formInspector}
@@ -617,7 +604,6 @@ test('Should not request new URL when field without any tags has finished editin
             dataPath="/block/0/url"
             fieldTypeOptions={{
                 generationUrl: '/admin/api/resource-locators',
-                historyResourceKey: 'resource-locators',
                 defaultMode: 'tree_leaf_edit',
             }}
             formInspector={formInspector}
@@ -656,7 +642,6 @@ test('Should enable refresh button when value of part field changes on edit form
             dataPath="/block/0/url"
             fieldTypeOptions={{
                 generationUrl: '/admin/api/resource-locators',
-                historyResourceKey: 'resource-locators',
                 defaultMode: 'tree_leaf_edit',
             }}
             formInspector={formInspector}
@@ -693,7 +678,6 @@ test('Should enable refresh button when input is changed manually on edit form',
             dataPath="/block/0/url"
             fieldTypeOptions={{
                 generationUrl: '/admin/api/resource-locators',
-                historyResourceKey: 'resource-locators',
                 defaultMode: 'tree_leaf_edit',
             }}
             formInspector={formInspector}
@@ -730,7 +714,6 @@ test('Should not enable refresh button when value of part field changes on add f
             dataPath="/block/0/url"
             fieldTypeOptions={{
                 generationUrl: '/admin/api/resource-locators',
-                historyResourceKey: 'resource-locators',
                 defaultMode: 'tree_leaf_edit',
             }}
             formInspector={formInspector}
@@ -767,7 +750,6 @@ test('Should enable refresh button when input is changed manually on add form', 
             dataPath="/block/0/url"
             fieldTypeOptions={{
                 generationUrl: '/admin/api/resource-locators',
-                historyResourceKey: 'resource-locators',
                 defaultMode: 'tree_leaf_edit',
             }}
             formInspector={formInspector}
@@ -804,7 +786,6 @@ test('Should not enable refresh button when value of part field changes if all p
             dataPath="/block/0/url"
             fieldTypeOptions={{
                 generationUrl: '/admin/api/resource-locators',
-                historyResourceKey: 'resource-locators',
                 defaultMode: 'tree_leaf_edit',
             }}
             formInspector={formInspector}
@@ -849,7 +830,6 @@ test('Should request new URL with correct options and disable button when refres
             dataPath="/block/0/url"
             fieldTypeOptions={{
                 generationUrl: '/admin/api/resource-locators',
-                historyResourceKey: 'resource-locators',
                 defaultMode: 'tree_leaf_edit',
                 resourceStorePropertiesToRequest: {
                     propertyName: 'requestParamKey',

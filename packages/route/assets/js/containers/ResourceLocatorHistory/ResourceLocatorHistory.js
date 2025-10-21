@@ -12,7 +12,7 @@ import ResourceListStore from 'sulu-admin-bundle/stores/ResourceListStore';
 import resourceLocatorHistoryStyles from './resourceLocatorHistory.scss';
 
 type Props = {|
-    disabled: boolean,
+    disabled?: boolean,
     options: Object,
     resourceKey: string,
 |};

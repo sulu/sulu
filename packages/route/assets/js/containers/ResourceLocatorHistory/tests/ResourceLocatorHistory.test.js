@@ -2,8 +2,8 @@
 import React from 'react';
 import {extendObservable as mockExtendObservable} from 'mobx';
 import {mount, shallow} from 'enzyme';
-import ResourceLocatorHistory from '../ResourceLocatorHistory';
 import ResourceListStore from 'sulu-admin-bundle/stores/ResourceListStore';
+import ResourceLocatorHistory from '../ResourceLocatorHistory';
 
 jest.mock('sulu-admin-bundle/utils/Translator', () => ({
     translate: jest.fn((key) => key),
@@ -21,21 +21,19 @@ jest.mock('sulu-admin-bundle/stores/ResourceListStore', () => jest.fn(function()
 test('Pass props correctly to ResourceListStore', () => {
     const resourceLocatorHistory = shallow(
         <ResourceLocatorHistory
-            id={5}
-            options={{webspace: 'sulu'}}
+            options={{webspace: 'sulu', resourceKey: 'text', resourceId: 5}}
             resourceKey="history_routes"
         />
     );
 
     expect(ResourceListStore).not.toBeCalled();
     resourceLocatorHistory.find('Button[icon="su-process"]').simulate('click');
-    expect(ResourceListStore).toBeCalledWith('history_routes', {id: 5, webspace: 'sulu'});
+    expect(ResourceListStore).toBeCalledWith('history_routes', {webspace: 'sulu', resourceKey: 'text', resourceId: 5});
 });
 
 test('Pass correct props to Button', () => {
     const resourceLocatorHistory = shallow(
         <ResourceLocatorHistory
-            id={5}
             options={{webspace: 'sulu'}}
             resourceKey="history_routes"
         />
@@ -48,10 +46,10 @@ test('Pass correct props to Button', () => {
     }));
 });
 
-test('Disable button if id is not set', () => {
+test('Disable button if disabled isset', () => {
     const resourceLocatorHistory = shallow(
         <ResourceLocatorHistory
-            id={undefined}
+            disabled={true}
             options={{webspace: 'sulu'}}
             resourceKey="history_routes"
         />
@@ -65,7 +63,6 @@ test('Disable button if id is not set', () => {
 test('Show history routes in overlay', () => {
     const resourceLocatorHistory = mount(
         <ResourceLocatorHistory
-            id={5}
             options={{webspace: 'sulu'}}
             resourceKey="history_routes"
         />
@@ -98,7 +95,6 @@ test('Show history routes in overlay', () => {
 test('Reload history routes each time overlay is opened', () => {
     const resourceLocatorHistory = mount(
         <ResourceLocatorHistory
-            id={5}
             options={{webspace: 'sulu'}}
             resourceKey="history_routes"
         />
@@ -116,7 +112,6 @@ test('Reload history routes each time overlay is opened', () => {
 test('Close overlay if button is clicked', () => {
     const resourceLocatorHistory = mount(
         <ResourceLocatorHistory
-            id={5}
             options={{webspace: 'sulu'}}
             resourceKey="history_routes"
         />
@@ -135,7 +130,6 @@ test('Close overlay if button is clicked', () => {
 test('Do not delete if confirmation dialog is cancelled', () => {
     const resourceLocatorHistory = mount(
         <ResourceLocatorHistory
-            id={5}
             options={{webspace: 'sulu'}}
             resourceKey="history_routes"
         />
@@ -170,7 +164,6 @@ test('Do not delete if confirmation dialog is cancelled', () => {
 test('Delete if confirmation dialog is confirmed', () => {
     const resourceLocatorHistory = mount(
         <ResourceLocatorHistory
-            id={5}
             options={{webspace: 'sulu'}}
             resourceKey="history_routes"
         />

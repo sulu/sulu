@@ -41,11 +41,12 @@ class CustomUrl extends React.Component<FieldTypeProps<Array<?string>>> {
                 </div>
                 {formInspector.id &&
                     <div className={customUrlStyles.resourceLocatorHistory}>
-                        <ResourceLocatorHistory
-                            id={formInspector.id}
-                            options={{webspace: formInspector.options.webspace}}
-                            resourceKey="custom_url_routes"
-                        />
+                        { formInspector.id
+                            ? <ResourceLocatorHistory
+                                options={{webspace: formInspector.options.webspace, id: formInspector.id}}
+                                resourceKey="custom_url_routes"
+                            /> : null
+                        }
                     </div>
                 }
             </div>

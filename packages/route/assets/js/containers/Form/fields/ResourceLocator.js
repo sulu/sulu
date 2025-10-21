@@ -184,7 +184,7 @@ class ResourceLocator extends React.Component<FieldTypeProps<?string>> {
             } = {},
         } = this.props;
 
-        if (!historyResourceKey || typeof historyResourceKey !== 'string') {
+        if (historyResourceKey && typeof historyResourceKey !== 'string') {
             throw new Error('The "historyResourceKey" field type option must be set to a string!');
         }
 
