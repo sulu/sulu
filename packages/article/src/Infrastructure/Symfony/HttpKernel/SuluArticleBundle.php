@@ -366,7 +366,7 @@ final class SuluArticleBundle extends AbstractBundle
             ->tag('sulu_reference.refresher');
 
         // Sitemap
-        $services->set('sulu_next_article.articles_sitemap_provider')
+        $services->set('sulu_article.articles_sitemap_provider')
             ->class(ArticlesSitemapProvider::class)
             ->args([
                 new Reference('doctrine.orm.entity_manager'),
@@ -501,23 +501,6 @@ final class SuluArticleBundle extends AbstractBundle
                                 'is_bundle' => false,
                                 'mapping' => true,
                             ],
-                        ],
-                    ],
-                ],
-            );
-        }
-
-        if ($builder->hasExtension('sulu_route')) {
-            $builder->prependExtensionConfig(
-                'sulu_route',
-                [
-                    'mappings' => [
-                        ArticleInterface::class => [
-                            'generator' => 'schema',
-                            'options' => [
-                                'route_schema' => '/{object["title"]}',
-                            ],
-                            'resource_key' => ArticleInterface::RESOURCE_KEY,
                         ],
                     ],
                 ],

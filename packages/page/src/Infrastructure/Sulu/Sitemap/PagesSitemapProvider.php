@@ -155,15 +155,15 @@ class PagesSitemapProvider extends AbstractSitemapProvider
             ->setParameter('webspaceKey', $webspaceKey);
 
         $queryBuilder->distinct()->join('page.dimensionContents', 'dimensionContent', 'WITH', '
-            dimensionContent.locale = :locale 
-            AND dimensionContent.stage = :stage 
-            AND dimensionContent.version = :version 
+            dimensionContent.locale = :locale
+            AND dimensionContent.stage = :stage
+            AND dimensionContent.version = :version
             AND dimensionContent.seoHideInSitemap = :hide
         ')
             ->leftJoin('page.dimensionContents', 'unLocalizedDimensionContent', 'WITH', '
-            unLocalizedDimensionContent.locale IS NULL 
-            AND unLocalizedDimensionContent.stage = :stage 
-            AND unLocalizedDimensionContent.version = :version 
+            unLocalizedDimensionContent.locale IS NULL
+            AND unLocalizedDimensionContent.stage = :stage
+            AND unLocalizedDimensionContent.version = :version
             AND unLocalizedDimensionContent.seoHideInSitemap = :hide
         ')
             ->leftJoin('dimensionContent.route', 'route')
@@ -201,10 +201,10 @@ class PagesSitemapProvider extends AbstractSitemapProvider
             ->setParameter('webspaceKey', $webspaceKey);
 
         $queryBuilder->distinct()->leftJoin('page.dimensionContents', 'dimensionContent', 'WITH', '
-            dimensionContent.locale != :locale 
-            AND dimensionContent.locale IS NOT NULL 
-            AND dimensionContent.stage = :stage 
-            AND dimensionContent.version = :version 
+            dimensionContent.locale != :locale
+            AND dimensionContent.locale IS NOT NULL
+            AND dimensionContent.stage = :stage
+            AND dimensionContent.version = :version
             AND dimensionContent.seoHideInSitemap = :hide
         ')
             ->leftJoin('dimensionContent.route', 'route')
@@ -291,9 +291,8 @@ class PagesSitemapProvider extends AbstractSitemapProvider
         return $sitemapUrl;
     }
 
-    // Todo: Use pages.
     public function getAlias(): string
     {
-        return 'next_pages';
+        return 'pages';
     }
 }

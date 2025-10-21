@@ -209,7 +209,7 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
             // Check sulu page bundle enabled
             /** @var array<string, string> $bundles */
             $bundles = $container->getParameter('kernel.bundles');
-            $contentPageBundle = \array_key_exists('SuluNextPageBundle', $bundles) ? $bundles['SuluNextPageBundle'] : null;
+            $contentPageBundle = \array_key_exists('SuluPageBundle', $bundles) ? $bundles['SuluPageBundle'] : null;
             if ($contentPageBundle) {
                 $massiveBuildConfig['targets']['prod']['dependencies']['homepage'] = [];
                 $massiveBuildConfig['targets']['dev']['dependencies']['homepage'] = [];

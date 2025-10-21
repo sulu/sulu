@@ -52,23 +52,6 @@ class ExampleTestExtension extends Extension implements PrependExtensionInterfac
                 ]
             );
         }
-
-        if ($container->hasExtension('sulu_route')) {
-            $container->prependExtensionConfig(
-                'sulu_route',
-                [
-                    'mappings' => [
-                        Example::class => [
-                            'generator' => 'schema',
-                            'options' => [
-                                'route_schema' => '/{object["title"]}',
-                            ],
-                            'resource_key' => Example::RESOURCE_KEY,
-                        ],
-                    ],
-                ]
-            );
-        }
     }
 
     public function load(array $configs, ContainerBuilder $container): void

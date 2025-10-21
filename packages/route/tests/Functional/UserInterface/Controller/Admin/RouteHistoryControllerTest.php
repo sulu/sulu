@@ -29,7 +29,7 @@ class RouteHistoryControllerTest extends SuluTestCase
     public static function setUpBeforeClass(): void
     {
         $entityManager = self::getContainer()->get(EntityManagerInterface::class);
-        $entityManager->getConnection()->executeStatement('DELETE FROM ro_next_routes WHERE 1 = 1');
+        $entityManager->getConnection()->executeStatement('DELETE FROM ro_routes WHERE 1 = 1');
 
         $historyRoutePageEn1A = new Route(Route::HISTORY_RESOURCE_KEY, 'pages::1', 'en', '/test-a', 'sulu-io');
         $entityManager->persist($historyRoutePageEn1A);
@@ -54,7 +54,7 @@ class RouteHistoryControllerTest extends SuluTestCase
     public static function tearDownAfterClass(): void
     {
         $entityManager = self::getContainer()->get(EntityManagerInterface::class);
-        $entityManager->getConnection()->executeStatement('DELETE FROM ro_next_routes WHERE 1 = 1');
+        $entityManager->getConnection()->executeStatement('DELETE FROM ro_routes WHERE 1 = 1');
 
         self::ensureKernelShutdown();
     }
