@@ -28,7 +28,7 @@ return $config
     ->ignoreErrorsOnExtension('ext-zip', [ErrorType::SHADOW_DEPENDENCY]) // not required to run Sulu
     ->ignoreErrorsOnPackage('guzzlehttp/guzzle', [ErrorType::SHADOW_DEPENDENCY]) // bc layer replaced later by symfony/http-client
     // UnknownClasses
-    ->ignoreUnknownClasses(\array_filter([
+    ->ignoreUnknownClasses([
         // bc layer for lowest
         'FOS\RestBundle\Controller\FOSRestController',
         'Swift_Events_SendEvent',
@@ -43,7 +43,7 @@ return $config
         'Symfony\Component\Security\Core\Event\AuthenticationFailureEvent',
         'Symfony\Component\Security\Core\Exception\UsernameNotFoundException',
         'Symfony\Component\Security\Http\Logout\LogoutSuccessHandlerInterface',
-    ]))
+    ])
     // DEV_DEPENDENCY_IN_PROD: optional dependency
     ->ignoreErrorsOnPackage('league/flysystem', [ErrorType::DEV_DEPENDENCY_IN_PROD])
     ->ignoreErrorsOnPackage('league/flysystem-aws-s3-v3', [ErrorType::DEV_DEPENDENCY_IN_PROD])
