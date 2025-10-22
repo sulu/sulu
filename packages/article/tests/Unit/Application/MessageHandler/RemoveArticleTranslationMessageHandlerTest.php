@@ -17,6 +17,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Article\Application\Message\RemoveArticleTranslationMessage;
 use Sulu\Article\Application\MessageHandler\RemoveArticleTranslationMessageHandler;
 use Sulu\Article\Domain\Event\ArticleTranslationRemovedEvent;
@@ -29,8 +30,10 @@ class RemoveArticleTranslationMessageHandlerTest extends TestCase
 {
     use ProphecyTrait;
 
-    private $articleRepository;
-    private $domainEventCollector;
+    /** @var ObjectProphecy<ArticleRepositoryInterface> */
+    private ObjectProphecy $articleRepository;
+    /** @var ObjectProphecy<DomainEventCollectorInterface> */
+    private ObjectProphecy $domainEventCollector;
     private RemoveArticleTranslationMessageHandler $handler;
 
     protected function setUp(): void
@@ -201,7 +204,7 @@ class RemoveArticleTranslationMessageHandlerTest extends TestCase
         $this->articleRepository->getOneBy($identifier)->willReturn($article->reveal());
         $article->getDimensionContents()->willReturn(new ArrayCollection([]));
 
-        $this->domainEventCollector->collect(Argument::that(function ($event) use ($article, $locale) {
+        $this->domainEventCollector->collect(Argument::that(function($event) use ($article, $locale) {
             return $event instanceof ArticleTranslationRemovedEvent
                 && $event->getArticle() === $article->reveal()
                 && $event->getResourceLocale() === $locale;

@@ -17,6 +17,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
 use Sulu\Snippet\Application\Message\RemoveSnippetTranslationMessage;
 use Sulu\Snippet\Application\MessageHandler\RemoveSnippetTranslationMessageHandler;
@@ -29,8 +30,10 @@ class RemoveSnippetTranslationMessageHandlerTest extends TestCase
 {
     use ProphecyTrait;
 
-    private $snippetRepository;
-    private $domainEventCollector;
+    /** @var ObjectProphecy<SnippetRepositoryInterface> */
+    private ObjectProphecy $snippetRepository;
+    /** @var ObjectProphecy<DomainEventCollectorInterface> */
+    private ObjectProphecy $domainEventCollector;
     private RemoveSnippetTranslationMessageHandler $handler;
 
     protected function setUp(): void
@@ -197,7 +200,7 @@ class RemoveSnippetTranslationMessageHandlerTest extends TestCase
         $this->snippetRepository->getOneBy($identifier)->willReturn($snippet->reveal());
         $snippet->getDimensionContents()->willReturn(new ArrayCollection([]));
 
-        $this->domainEventCollector->collect(Argument::that(function ($event) use ($snippet, $locale) {
+        $this->domainEventCollector->collect(Argument::that(function($event) use ($snippet, $locale) {
             return $event instanceof SnippetTranslationRemovedEvent
                 && $event->getSnippet() === $snippet->reveal()
                 && $event->getResourceLocale() === $locale;

@@ -37,9 +37,17 @@ export default class DeleteToolbarAction extends AbstractFormToolbarAction {
         parentResourceStore: ResourceStore,
     ) {
         const {
+            delete_locale: deleteLocaleOption,
             display_condition: displayCondition,
             visible_condition: visibleCondition,
         } = options;
+
+        if (deleteLocaleOption !== undefined && typeof deleteLocaleOption !== 'boolean') {
+            throw new Error(
+                'The "delete_locale" option must be a boolean, but received ' +
+                typeof deleteLocaleOption + '!'
+            );
+        }
 
         if (displayCondition) {
             // @deprecated
@@ -54,6 +62,11 @@ export default class DeleteToolbarAction extends AbstractFormToolbarAction {
         }
 
         super(resourceFormStore, form, router, locales, options, parentResourceStore);
+
+        // Initialize deleteLocale based on the option
+        if (deleteLocaleOption === true) {
+            this.deleteLocale = true;
+        }
     }
 
     handleDeleteReferencedResourcesDialogCancel = () => {
@@ -165,6 +178,7 @@ export default class DeleteToolbarAction extends AbstractFormToolbarAction {
 
     getToolbarItemConfig() {
         const {
+            delete_locale: deleteLocaleOption = false,
             visible_condition: visibleCondition,
             options: submitOptions,
         } = this.options;
@@ -173,53 +187,50 @@ export default class DeleteToolbarAction extends AbstractFormToolbarAction {
 
         const visibleConditionFulfilled = !visibleCondition || jexl.evalSync(visibleCondition, this.conditionData);
 
-        if (!visibleConditionFulfilled || !id) {
+        if (!visibleConditionFulfilled) {
             return;
         }
 
-        const options = [];
-        const hasMultipleLocales = this.locales && locale && this.locales.length > 1;
         const isOnlyOneContentLocale = jexl.evalSync("contentLocales && contentLocales|length == 1", this.conditionData);
 
-        // Add "Delete" option (delete entire resource)
-        options.push({
-            label: translate("sulu_admin.delete"),
-            onClick: action(() => {
-                this.deleteLocale = false;
-                this.showDialog = true;
-            }),
-        });
-
-        // Add "Delete locale" option if we have locales
-        if (hasMultipleLocales) {
-            options.push({
+        if (deleteLocaleOption) {
+            // Delete locale mode
+            return {
+                disabled: !id || !!isOnlyOneContentLocale,
+                icon: "su-trash-alt",
                 label: translate("sulu_admin.delete_locale"),
-                disabled: isOnlyOneContentLocale,
                 onClick: action(() => {
                     this.deleteLocale = true;
                     this.showDialog = true;
                 }),
-            });
-        }
+                type: "button",
+            };
+        } else {
+            // Regular delete mode
+            if (!id) {
+                return {
+                    disabled: true,
+                    icon: "su-trash-alt",
+                    label: translate("sulu_admin.delete"),
+                    onClick: action(() => {
+                        this.deleteLocale = false;
+                        this.showDialog = true;
+                    }),
+                    type: "button",
+                };
+            }
 
-        // If only one option, return as button instead of dropdown
-        if (options.length === 1) {
             return {
                 disabled: false,
                 icon: "su-trash-alt",
-                label: options[0].label,
-                onClick: options[0].onClick,
+                label: translate("sulu_admin.delete"),
+                onClick: action(() => {
+                    this.deleteLocale = false;
+                    this.showDialog = true;
+                }),
                 type: "button",
             };
         }
-
-        return {
-            type: "dropdown",
-            label: translate("sulu_admin.delete"),
-            icon: "su-trash-alt",
-            loading: this.resourceFormStore.deleting,
-            options,
-        };
     }
 
     navigateBack = () => {
