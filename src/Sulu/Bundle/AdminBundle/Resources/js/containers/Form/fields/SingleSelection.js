@@ -160,10 +160,6 @@ class SingleSelection extends React.Component<Props>
         const {value, dataPath} = this.props;
 
         if (value && typeof value === 'object') {
-            if (this.type === 'auto_complete' && this.useDeprecatedObjectDataFormat) {
-                return value.id;
-            }
-
             log.warn(
                 'The "SingleSelection" field with the path "' + dataPath + '" expects an id as value but '
                 + 'received an object instead. Is it possible that your API returns a serialized object?'
