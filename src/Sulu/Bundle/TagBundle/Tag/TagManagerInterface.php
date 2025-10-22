@@ -73,18 +73,4 @@ interface TagManagerInterface
      * @throws Exception\TagNotFoundException
      */
     public function merge($srcTagIds, $destTagId);
-
-    /**
-     * Resolves tag ids to names.
-     *
-     * @return array
-     */
-    public function resolveTagIds($tagIds);
-
-    /**
-     * Resolves tag names to ids.
-     *
-     * @return array
-     */
-    public function resolveTagNames($tagNames);
 }
