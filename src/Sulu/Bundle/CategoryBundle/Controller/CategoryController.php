@@ -237,14 +237,16 @@ class CategoryController extends AbstractRestController implements ClassResource
             );
         }
 
-        if (!$request->get('search')) {
+        $search = $request->get('search');
+
+        if (!$search) {
             // expand collected parents if search is not set
             if (\count($parentExpressions) >= 2) {
                 $listBuilder->addExpression($listBuilder->createOrExpression($parentExpressions));
             } elseif (\count($parentExpressions) >= 1) {
                 $listBuilder->addExpression($parentExpressions[0]);
             }
-        } elseif ($request->get('search') && $parentId && !$expandedIds) {
+        } elseif ($search && $parentId && !$expandedIds) {
             // filter for parentId when search is active and no expandedIds are set
             $listBuilder->addExpression($parentExpressions[0]);
         }
@@ -260,7 +262,7 @@ class CategoryController extends AbstractRestController implements ClassResource
             }
         }
 
-        if (!empty($expandedIds)) {
+        if (!empty($expandedIds) && !$search) {
             $categoriesByParentId = [];
             foreach ($categories as &$category) {
                 $categoryParentId = $category['parent'];
