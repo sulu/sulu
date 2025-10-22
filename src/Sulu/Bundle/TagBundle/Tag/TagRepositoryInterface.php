@@ -37,13 +37,4 @@ interface TagRepositoryInterface extends RepositoryInterface
      * @return TagInterface|null
      */
     public function findTagByName($name);
-
-    /**
-     * Searches for all tags.
-     *
-     * @deprecated use the Repository findAll method
-     *
-     * @return array<TagInterface>
-     */
-    public function findAllTags();
 }

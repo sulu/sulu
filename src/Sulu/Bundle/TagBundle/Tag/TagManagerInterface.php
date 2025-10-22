@@ -18,15 +18,6 @@ namespace Sulu\Bundle\TagBundle\Tag;
 interface TagManagerInterface
 {
     /**
-     * Loads all the tags managed in this system.
-     *
-     * @deprecated use the Repository findAll method
-     *
-     * @return TagInterface[]
-     */
-    public function findAll();
-
-    /**
      * Loads the tag with the given id.
      *
      * @param $id number The id of the tag
@@ -56,6 +47,8 @@ interface TagManagerInterface
      *
      * @param array $data The data of the tag to save
      * @param number|null $id The id for saving the tag (optional)
+     *
+     * @throws Exception\TagNotFoundException
      */
     public function save($data, $id = null);
 
@@ -63,6 +56,8 @@ interface TagManagerInterface
      * Deletes the given Tag.
      *
      * @param number $id The tag to delete
+     *
+     * @throws Exception\TagNotFoundException
      */
     public function delete($id);
 
