@@ -1,0 +1,21 @@
+{
+    "_embedded": {
+        "custom_urls": [
+            {
+                "changed": "@string@",
+                "changer": "@string@",
+                "created": "@string@",
+                "creator": "@string@",
+                "id": "@string@",
+                "publishedState": true,
+                "targetLocale": "en",
+                "targetPageTitle": null,
+                "title": "Test"
+            }
+        ]
+    },
+    "limit": 10,
+    "page": 1,
+    "pages": 1,
+    "total": 1
+}

@@ -314,7 +314,9 @@ class RoleControllerTest extends SuluTestCase
         unset($response['id']);
         $this->assertSame('ROLE_SULU_PORTAL_MANAGER', $response['identifier']);
         unset($response['identifier']);
-        $response['permissions'] = SortUtils::multisort($response['permissions'], '[id]');
+        /** @var array<int, array<string, mixed>> $permissions */
+        $permissions = $response['permissions'];
+        $response['permissions'] = SortUtils::multisort($permissions, '[id]');
         unset($response['permissions'][2]['id']);
 
         /** @var ActivityInterface $activity */
@@ -331,7 +333,9 @@ class RoleControllerTest extends SuluTestCase
         unset($response['id']);
         $this->assertSame('ROLE_SULU_PORTAL_MANAGER', $response['identifier']);
         unset($response['identifier']);
-        $response['permissions'] = SortUtils::multisort($response['permissions'], '[id]');
+        /** @var array<int, array<string, mixed>> $permissions2 */
+        $permissions2 = $response['permissions'];
+        $response['permissions'] = SortUtils::multisort($permissions2, '[id]');
         unset($response['permissions'][2]['id']);
 
         $this->assertSame($expectedData, $response);

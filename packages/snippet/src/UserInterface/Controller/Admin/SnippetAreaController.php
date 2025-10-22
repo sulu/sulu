@@ -120,6 +120,7 @@ final class SnippetAreaController
 
     public function putAction(Request $request, string $key): JsonResponse
     {
+        $locale = $this->getLocale($request);
         $snippetUuid = $request->request->get('snippetUuid');
         if (!\is_string($snippetUuid)) {
             throw new \InvalidArgumentException('snippetUuid must be a string.');
@@ -128,7 +129,8 @@ final class SnippetAreaController
         $data = [
             'webspaceKey' => $request->query->getString('webspaceKey'),
             'snippetIdentifier' => ['uuid' => $snippetUuid],
-            'key' => $key,
+            'areaKey' => $key,
+            'locale' => $locale,
         ];
         $message = new ModifySnippetAreaMessage($data);
 
@@ -151,6 +153,7 @@ final class SnippetAreaController
         $data = [
             'webspaceKey' => $request->query->getString('webspaceKey'),
             'areaKey' => $key,
+            'locale' => $this->getLocale($request),
         ];
         $message = new RemoveSnippetAreaMessage($data);
 

@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Sulu\Bundle\CategoryBundle\Infrastructure\Sulu\Search;
 
 use CmsIg\Seal\Reindex\ReindexConfig;
+use CmsIg\Seal\Reindex\ReindexProviderInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
@@ -31,7 +32,7 @@ use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslationInterface;
  * @internal this class is internal no backwards compatibility promise is given for this class
  *            use Symfony Dependency Injection to override or create your own ReindexProvider instead
  */
-final class CategoryReindexProvider
+final class CategoryReindexProvider implements ReindexProviderInterface
 {
     /**
      * @var EntityRepository<CategoryInterface>
@@ -96,12 +97,22 @@ final class CategoryReindexProvider
             $parameters = [];
 
             foreach ($identifiers as $index => $identifier) {
-                $id = \explode('::', $identifier)[1];
-                $locale = \explode('::', $identifier)[2];
+                $resourceKey = \explode('::', $identifier)[0];
+
+                if (CategoryInterface::RESOURCE_KEY !== $resourceKey) {
+                    continue;
+                }
+
+                $id = \explode('::', $identifier)[1] ?? '';
+                $locale = \explode('::', $identifier)[2] ?? '';
 
                 $conditions[] = "(category.id = :id{$index} AND translation.locale = :locale{$index})";
                 $parameters["id{$index}"] = $id;
                 $parameters["locale{$index}"] = $locale;
+            }
+
+            if (!$conditions) {
+                return [];
             }
 
             $qb->where(\implode(' OR ', $conditions));

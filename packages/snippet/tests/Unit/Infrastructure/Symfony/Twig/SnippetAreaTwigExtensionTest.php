@@ -23,6 +23,7 @@ use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Webspace;
 use Sulu\Content\Application\ContentAggregator\ContentAggregatorInterface;
+use Sulu\Content\Application\ContentResolver\ContentResolverInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Snippet\Domain\Exception\SnippetAreaNotFoundException;
 use Sulu\Snippet\Domain\Model\Snippet;
@@ -47,6 +48,9 @@ class SnippetAreaTwigExtensionTest extends TestCase
     /** @var ObjectProphecy<RequestAnalyzerInterface> */
     private ObjectProphecy $requestAnalyzer;
 
+    /** @var ObjectProphecy<ContentResolverInterface> */
+    private ObjectProphecy $contentResolver;
+
     private ReferenceStoreInterface $referenceStore;
 
     protected function setUp(): void
@@ -54,6 +58,7 @@ class SnippetAreaTwigExtensionTest extends TestCase
         $this->snippetAreaRepository = $this->prophesize(SnippetAreaRepositoryInterface::class);
         $this->contentAggregator = $this->prophesize(ContentAggregatorInterface::class);
         $this->requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
+        $this->contentResolver = $this->prophesize(ContentResolverInterface::class);
         $this->referenceStore = new ReferenceStore();
 
         $this->extension = new SnippetAreaTwigExtension(
@@ -61,6 +66,7 @@ class SnippetAreaTwigExtensionTest extends TestCase
             $this->contentAggregator->reveal(),
             $this->requestAnalyzer->reveal(),
             $this->referenceStore,
+            $this->contentResolver->reveal(),
         );
     }
 
@@ -87,6 +93,13 @@ class SnippetAreaTwigExtensionTest extends TestCase
         $snippetArea = new SnippetArea($areaKey, $webspaceKey);
         $snippetArea->setSnippet($snippet);
 
+        $resolvedContent = [
+            'content' => [
+                'title' => 'Test Snippet',
+                'description' => 'Test Description',
+            ],
+        ];
+
         $this->snippetAreaRepository->findOneBy([
             'webspaceKey' => $webspaceKey,
             'areaKey' => $areaKey,
@@ -101,10 +114,11 @@ class SnippetAreaTwigExtensionTest extends TestCase
             ]
         )->willReturn($snippetDimensionContent);
 
+        $this->contentResolver->resolve($snippetDimensionContent, null)->willReturn($resolvedContent);
+
         $result = $this->extension->loadSnippetByArea($areaKey, $webspaceKey, $locale);
 
-        $this->assertSame($snippetDimensionContent, $result);
-        $this->assertSame('Test Snippet', $result->getTitle());
+        $this->assertSame($resolvedContent, $result);
 
         $this->assertSame(
             [SnippetInterface::RESOURCE_KEY . '-test-snippet-uuid' => SnippetInterface::RESOURCE_KEY . '-test-snippet-uuid'],
@@ -134,6 +148,12 @@ class SnippetAreaTwigExtensionTest extends TestCase
         $snippetArea = new SnippetArea($areaKey, $webspaceKey);
         $snippetArea->setSnippet($snippet);
 
+        $resolvedContent = [
+            'content' => [
+                'title' => 'Footer Snippet',
+            ],
+        ];
+
         $this->snippetAreaRepository->findOneBy([
             'webspaceKey' => $webspaceKey,
             'areaKey' => $areaKey,
@@ -148,10 +168,11 @@ class SnippetAreaTwigExtensionTest extends TestCase
             ]
         )->willReturn($snippetDimensionContent);
 
+        $this->contentResolver->resolve($snippetDimensionContent, null)->willReturn($resolvedContent);
+
         $result = $this->extension->loadSnippetByArea($areaKey);
 
-        $this->assertSame($snippetDimensionContent, $result);
-        $this->assertSame('Footer Snippet', $result->getTitle());
+        $this->assertSame($resolvedContent, $result);
 
         $this->assertSame(
             [SnippetInterface::RESOURCE_KEY . '-footer-snippet-uuid' => SnippetInterface::RESOURCE_KEY . '-footer-snippet-uuid'],
@@ -231,5 +252,48 @@ class SnippetAreaTwigExtensionTest extends TestCase
 
         $this->expectException(SnippetAreaNotFoundException::class);
         $this->extension->loadSnippetByArea($areaKey, $webspaceKey, $locale);
+    }
+
+    public function testLoadSnippetByAreaWithProperties(): void
+    {
+        $areaKey = 'header';
+        $webspaceKey = 'example';
+        $locale = 'en';
+        $properties = [
+            'title' => 'title',
+            'description' => 'description',
+        ];
+
+        $snippet = new Snippet('test-snippet-uuid');
+        $snippetDimensionContent = new SnippetDimensionContent($snippet);
+        $snippetDimensionContent->setTemplateData(['title' => 'Test Snippet', 'description' => 'Test Description']);
+
+        $snippetArea = new SnippetArea($areaKey, $webspaceKey);
+        $snippetArea->setSnippet($snippet);
+
+        $resolvedContent = [
+            'title' => 'Test Snippet',
+            'description' => 'Test Description',
+        ];
+
+        $this->snippetAreaRepository->findOneBy([
+            'webspaceKey' => $webspaceKey,
+            'areaKey' => $areaKey,
+        ])->willReturn($snippetArea);
+
+        $this->contentAggregator->aggregate(
+            $snippet,
+            [
+                'locale' => $locale,
+                'stage' => DimensionContentInterface::STAGE_LIVE,
+                'version' => DimensionContentInterface::CURRENT_VERSION,
+            ]
+        )->willReturn($snippetDimensionContent);
+
+        $this->contentResolver->resolve($snippetDimensionContent, $properties)->willReturn($resolvedContent);
+
+        $result = $this->extension->loadSnippetByArea($areaKey, $webspaceKey, $locale, $properties);
+
+        $this->assertSame($resolvedContent, $result);
     }
 }

@@ -43,10 +43,10 @@ use Sulu\Snippet\Infrastructure\Sulu\Content\PropertyResolver\SnippetSelectionPr
 use Sulu\Snippet\Infrastructure\Sulu\Content\ResourceLoader\SnippetResourceLoader;
 use Sulu\Snippet\Infrastructure\Sulu\Content\SnippetSmartContentProvider;
 use Sulu\Snippet\Infrastructure\Sulu\Reference\SnippetReferenceRefresher;
+use Sulu\Snippet\Infrastructure\Sulu\Trash\SnippetTrashItemHandler;
 use Sulu\Snippet\Infrastructure\Symfony\CompilerPass\SnippetAreaCompilerPass;
 use Sulu\Snippet\Infrastructure\Symfony\Normalizer\SnippetAreaNormalizer;
 use Sulu\Snippet\Infrastructure\Symfony\Twig\SnippetAreaTwigExtension;
-use Sulu\Snippet\Trash\SnippetTrashItemHandler;
 use Sulu\Snippet\UserInterface\Controller\Admin\SnippetAreaController;
 use Sulu\Snippet\UserInterface\Controller\Admin\SnippetController;
 use Symfony\Component\Config\Definition\Configurator\DefinitionConfigurator;
@@ -180,6 +180,7 @@ final class SuluSnippetBundle extends AbstractBundle
             ->args([
                 new Reference(SnippetAreaRepositoryInterface::class),
                 new Reference(SnippetRepositoryInterface::class),
+                new Reference('sulu_activity.domain_event_collector'),
             ])
             ->tag('messenger.message_handler');
 
@@ -187,6 +188,7 @@ final class SuluSnippetBundle extends AbstractBundle
             ->class(RemoveSnippetAreaMessageHandler::class)
             ->args([
                 new Reference('sulu_snippet.snippet_area_repository'),
+                new Reference('sulu_activity.domain_event_collector'),
             ])
             ->tag('messenger.message_handler');
 
@@ -237,6 +239,7 @@ final class SuluSnippetBundle extends AbstractBundle
                 new Reference('sulu_content.content_aggregator'),
                 new Reference('sulu_core.webspace.request_analyzer'),
                 new Reference('sulu_snippet.snippet_reference_store'),
+                new Reference('sulu_content.content_resolver'),
             ])
             ->tag('twig.extension');
 
@@ -453,23 +456,6 @@ final class SuluSnippetBundle extends AbstractBundle
                                 'is_bundle' => false,
                                 'mapping' => true,
                             ],
-                        ],
-                    ],
-                ],
-            );
-        }
-
-        if ($builder->hasExtension('sulu_route')) {
-            $builder->prependExtensionConfig(
-                'sulu_route',
-                [
-                    'mappings' => [
-                        SnippetInterface::class => [
-                            'generator' => 'schema',
-                            'options' => [
-                                'route_schema' => '/{object["title"]}',
-                            ],
-                            'resource_key' => SnippetInterface::RESOURCE_KEY,
                         ],
                     ],
                 ],

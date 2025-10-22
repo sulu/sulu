@@ -151,7 +151,7 @@ class RoutableDataMapper implements DataMapperInterface
     {
         foreach ($metadata->getFlatFieldMetadata() as $property) {
             // TODO add support for page_tree_route field type: https://github.com/sulu/SuluContentBundle/issues/242
-            if ('route' === $property->getType() || 'resource_locator' === $property->getType()) {
+            if ('route' === $property->getType()) {
                 return $property;
             }
         }

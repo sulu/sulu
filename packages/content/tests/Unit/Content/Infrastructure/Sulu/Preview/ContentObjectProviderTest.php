@@ -40,6 +40,7 @@ use Sulu\Content\Tests\Application\ExampleTestBundle\Admin\ExampleAdmin;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\Example;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\ExampleDimensionContent;
 use Sulu\Content\UserInterface\Controller\Website\ContentController;
+use Symfony\Component\DependencyInjection\Container;
 
 class ContentObjectProviderTest extends TestCase
 {
@@ -73,9 +74,10 @@ class ContentObjectProviderTest extends TestCase
 
     protected function setUp(): void
     {
-        $metadataProviderRegistry = new MetadataProviderRegistry();
         $this->formMetadataProvider = $this->prophesize(FormMetadataProvider::class);
-        $metadataProviderRegistry->addMetadataProvider('form', $this->formMetadataProvider->reveal());
+        $container = new Container();
+        $container->set('form', $this->formMetadataProvider->reveal());
+        $metadataProviderRegistry = new MetadataProviderRegistry($container);
 
         $this->entityManager = $this->prophesize(EntityManagerInterface::class);
         $this->contentAggregator = $this->prophesize(ContentAggregatorInterface::class);

@@ -27,7 +27,7 @@
         "url": {
             "disabledCondition": null,
             "visibleCondition": null,
-            "type": "resource_locator",
+            "type": "route",
             "colSpan": 12,
             "options": [],
             "types": [],
@@ -94,7 +94,7 @@
                         "settings_form_key": {
                             "name": "settings_form_key",
                             "type": null,
-                            "value": "page_block_settings"
+                            "value": "content_block_settings"
                         }
                     },
                     "types": {
@@ -112,6 +112,7 @@
                                 ]
                             },
                             "key": "text_block",
+                            "group": null,
                             "tags": [
                                 {
                                     "name": "sulu.global_block",
@@ -137,6 +138,7 @@
                                 ]
                             },
                             "key": "text_block2",
+                            "group": null,
                             "tags": [
                                 {
                                     "name": "sulu.global_block",
@@ -180,6 +182,7 @@
                                 ]
                             },
                             "key": "editor",
+                            "group": null,
                             "tags": [],
                             "title": "Editor"
                         },
@@ -211,7 +214,7 @@
                                         "settings_form_key": {
                                             "name": "settings_form_key",
                                             "type": null,
-                                            "value": "page_block_settings"
+                                            "value": "content_block_settings"
                                         }
                                     },
                                     "types": {
@@ -229,6 +232,7 @@
                                                 ]
                                             },
                                             "key": "text_block2",
+                                            "group": null,
                                             "tags": [
                                                 {
                                                     "name": "sulu.global_block",
@@ -254,6 +258,7 @@
                                                 ]
                                             },
                                             "key": "text_block3",
+                                            "group": null,
                                             "tags": [
                                                 {
                                                     "name": "sulu.global_block",
@@ -287,6 +292,7 @@
                                 ]
                             },
                             "key": "block",
+                            "group": null,
                             "tags": [],
                             "title": "Block"
                         }
@@ -582,6 +588,7 @@
         }
     },
     "key": "default",
+    "group": null,
     "tags": [
         {
             "name": "test",

@@ -13,20 +13,20 @@ namespace Sulu\Route\Tests\Functional\Infrastructure\SymfonyCmf\Routing;
 
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
+use Sulu\Bundle\TestBundle\Testing\WebsiteTestCase;
 use Sulu\Route\Domain\Model\Route;
 use Sulu\Route\Domain\Value\RequestAttributeEnum;
 use Sulu\Route\Infrastructure\SymfonyCmf\Routing\CmfRouteProvider;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\RouteCompiler;
 
 #[CoversClass(CmfRouteProvider::class)]
-class CmfRouteProviderTest extends WebTestCase
+class CmfRouteProviderTest extends WebsiteTestCase
 {
     public static function setUpBeforeClass(): void
     {
         $entityManager = self::getContainer()->get(EntityManagerInterface::class);
-        $entityManager->getConnection()->executeStatement('DELETE FROM ro_next_routes WHERE 1 = 1');
+        $entityManager->getConnection()->executeStatement('DELETE FROM ro_routes WHERE 1 = 1');
 
         $expectedRoute = new Route(Route::HISTORY_RESOURCE_KEY, 'example::1', 'en', '/test-redirect', 'sulu-io');
         $entityManager->persist($expectedRoute);
@@ -42,14 +42,14 @@ class CmfRouteProviderTest extends WebTestCase
     public static function tearDownAfterClass(): void
     {
         $entityManager = self::getContainer()->get(EntityManagerInterface::class);
-        $entityManager->getConnection()->executeStatement('DELETE FROM ro_next_routes WHERE 1 = 1');
+        $entityManager->getConnection()->executeStatement('DELETE FROM ro_routes WHERE 1 = 1');
 
         self::ensureKernelShutdown();
     }
 
     public function testCmfRouter(): void
     {
-        $client = self::createClient();
+        $client = self::createWebsiteClient();
         $client->request('GET', '/en/test-redirect');
 
         $response = $client->getResponse();
@@ -60,7 +60,7 @@ class CmfRouteProviderTest extends WebTestCase
 
     public function testCmfRouter404(): void
     {
-        $client = self::createClient();
+        $client = self::createWebsiteClient();
         $client->request('GET', '/en/test-example/not-exists');
 
         $response = $client->getResponse();

@@ -34,6 +34,11 @@ class CategoryRequestHandlerTest extends TestCase
         ];
     }
 
+    /**
+     * @param string $parameter
+     * @param string $queryString
+     * @param string[] $expected
+     */
     #[\PHPUnit\Framework\Attributes\DataProvider('getProvider')]
     public function testGet($parameter, $queryString, $expected): void
     {
@@ -65,6 +70,12 @@ class CategoryRequestHandlerTest extends TestCase
         ];
     }
 
+    /**
+     * @param string $parameter
+     * @param string $url
+     * @param string $queryString
+     * @param string $expected
+     */
     #[\PHPUnit\Framework\Attributes\DataProvider('appendProvider')]
     public function testAppendToUrl($parameter, $url, $queryString, $expected): void
     {
@@ -99,6 +110,12 @@ class CategoryRequestHandlerTest extends TestCase
         ];
     }
 
+    /**
+     * @param string $parameter
+     * @param string $url
+     * @param string $queryString
+     * @param string $expected
+     */
     #[\PHPUnit\Framework\Attributes\DataProvider('removeSingleProvider')]
     public function testRemoveSingleFromUrl($parameter, $url, $queryString, $expected): void
     {
@@ -133,6 +150,12 @@ class CategoryRequestHandlerTest extends TestCase
         ];
     }
 
+    /**
+     * @param string $parameter
+     * @param string $url
+     * @param string $queryString
+     * @param string $expected
+     */
     #[\PHPUnit\Framework\Attributes\DataProvider('toggleProvider')]
     public function testToggleToUrl($parameter, $url, $queryString, $expected): void
     {
@@ -167,6 +190,12 @@ class CategoryRequestHandlerTest extends TestCase
         ];
     }
 
+    /**
+     * @param string $parameter
+     * @param string $url
+     * @param string $queryString
+     * @param string $expected
+     */
     #[\PHPUnit\Framework\Attributes\DataProvider('setProvider')]
     public function testSetToUrl($parameter, $url, $queryString, $expected): void
     {
@@ -200,6 +229,11 @@ class CategoryRequestHandlerTest extends TestCase
         ];
     }
 
+    /**
+     * @param string $parameter
+     * @param string $url
+     * @param string $queryString
+     */
     #[\PHPUnit\Framework\Attributes\DataProvider('removeProvider')]
     public function testRemoveFromUrl($parameter, $url, $queryString): void
     {

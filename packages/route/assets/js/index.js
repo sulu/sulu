@@ -2,7 +2,6 @@
 import {fieldRegistry} from 'sulu-admin-bundle/containers';
 import initializer from 'sulu-admin-bundle/services/initializer';
 import {ResourceLocator} from './containers';
-import type {FieldTypeProps} from 'sulu-admin-bundle/containers/Form/types';
 
 initializer.addUpdateConfigHook('sulu_route', (config: Object, initialized: boolean) => {
     if (initialized) {
@@ -13,17 +12,11 @@ initializer.addUpdateConfigHook('sulu_route', (config: Object, initialized: bool
         'route',
         ResourceLocator,
         {
-            historyResourceKey: 'routes',
-            modeResolver: (props: FieldTypeProps<?string>) => {
-                const {
-                    schemaOptions: {
-                        mode: {
-                            value: mode = 'full',
-                        } = {},
-                    },
-                } = props;
-
-                return Promise.resolve(mode);
+            historyResourceKey: 'route_histories',
+            defaultMode: 'tree_leaf_edit',
+            resourceStorePropertiesToRequest: { // maybe move to schemaOptions and prepend via MetadataListener
+                parentUuid: 'parentId',
+                parentId: 'parentId',
             },
             generationUrl: config.generateUrl,
             options: {history: true},

@@ -1,0 +1,46 @@
+<?php
+
+declare(strict_types=1);
+
+/*
+ * This file is part of Sulu.
+ *
+ * (c) Sulu GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
+namespace Sulu\Search\Infrastructure\Sulu\Admin;
+
+use Sulu\Bundle\AdminBundle\Admin\Admin;
+use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItem;
+use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItemCollection;
+use Sulu\Bundle\AdminBundle\Admin\View\ViewBuilderFactoryInterface;
+use Sulu\Bundle\AdminBundle\Admin\View\ViewCollection;
+
+class SearchAdmin extends Admin
+{
+    public const SEARCH_VIEW = 'sulu_search.search';
+
+    public function __construct(private ViewBuilderFactoryInterface $viewBuilderFactory)
+    {
+    }
+
+    public function configureNavigationItems(NavigationItemCollection $navigationItemCollection): void
+    {
+        $search = new NavigationItem('sulu_search.search');
+        $search->setPosition(0);
+        $search->setIcon('su-search');
+        $search->setView(self::SEARCH_VIEW);
+
+        $navigationItemCollection->add($search);
+    }
+
+    public function configureViews(ViewCollection $viewCollection): void
+    {
+        $viewCollection->add(
+            $this->viewBuilderFactory->createViewBuilder(self::SEARCH_VIEW, '/', 'sulu_search.search'),
+        );
+    }
+}

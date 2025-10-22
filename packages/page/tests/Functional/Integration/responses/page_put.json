@@ -24,6 +24,13 @@
         "Tag 4"
     ],
     "excerptTitle": "Excerpt Title 2",
+    "excerptAudienceTargetGroups": [
+        "@integer@",
+        "@integer@"
+    ],
+    "excerptSegment": {
+        "sulu-io": "@string@"
+    },
     "ghostLocale": "en",
     "id": "@string@",
     "image": null,
@@ -31,6 +38,7 @@
     "lastModifiedEnabled": true,
     "locale": "en",
     "navigationContexts": [],
+    "parentUuid" : "@uuid@",
     "published": null,
     "publishedState": false,
     "seoCanonicalUrl": "https://sulu.io/2",

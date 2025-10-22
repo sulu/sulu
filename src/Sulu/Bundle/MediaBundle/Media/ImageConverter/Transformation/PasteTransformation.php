@@ -64,7 +64,7 @@ class PasteTransformation implements TransformationInterface
         );
 
         // add mask to image
-        $image->paste($mask, new Point($top, $left));
+        $image->paste($mask, new Point($left, $top));
 
         return $image;
     }

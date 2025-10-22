@@ -29,12 +29,12 @@ class FormMetadataTest extends TestCase
 
         $this->assertSame(
             $tag1,
-            $formMetadata->findTag('tag1')
+            $formMetadata->findTag('tag1'),
         );
 
         $this->assertSame(
             $tag2,
-            $formMetadata->findTag('tag2')
+            $formMetadata->findTag('tag2'),
         );
 
         $this->assertNull($formMetadata->findTag('not-existing'));
@@ -53,5 +53,13 @@ class FormMetadataTest extends TestCase
         $this->assertTrue($formMetadata->hasTag('tag1'));
         $this->assertTrue($formMetadata->hasTag('tag2'));
         $this->assertFalse($formMetadata->hasTag('not-existing'));
+    }
+
+    public function testGroup(): void
+    {
+        $formMetadata = new FormMetadata();
+        $this->assertNull($formMetadata->getGroup());
+        $formMetadata->setGroup('test-group');
+        $this->assertSame('test-group', $formMetadata->getGroup());
     }
 }

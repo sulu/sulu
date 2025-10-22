@@ -1,0 +1,18 @@
+{
+    "id": "@string@",
+    "uuid": "@string@",
+    "title": "Without target document",
+    "baseDomain": "*.sulu.io/*",
+    "canonical": true,
+    "domainParts": [
+        "foo",
+        "bar"
+    ],
+    "noFollow": true,
+    "noIndex": true,
+    "published": true,
+    "redirect": true,
+    "targetDocument": null,
+    "targetLocale": "en",
+    "webspace": "sulu_io"
+}

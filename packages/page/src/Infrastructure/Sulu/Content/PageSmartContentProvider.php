@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Sulu.
  *
@@ -91,12 +93,16 @@ readonly class PageSmartContentProvider implements SmartContentProviderInterface
      */
     private string $pageDimensionContentClassName;
 
+    /**
+     * @param array<string, mixed> $bundles
+     */
     public function __construct(
         private DimensionContentQueryEnhancer $dimensionContentQueryEnhancer,
         private MetadataProviderInterface $formMetadataProvider,
         private SmartContentQueryEnhancer $smartContentQueryEnhancer,
         private ?TokenStorageInterface $tokenStorage,
         EntityManagerInterface $entityManager,
+        private array $bundles,
     ) {
         $this->entityRepository = $entityManager->getRepository(PageInterface::class);
         $this->entityDimensionContentRepository = $entityManager->getRepository(PageDimensionContentInterface::class);
@@ -129,10 +135,9 @@ readonly class PageSmartContentProvider implements SmartContentProviderInterface
             ->enableTypes($this->getTypes())
             ->enableView(PageAdmin::EDIT_FORM_VIEW, ['id' => 'id', 'webspace' => 'webspace']);
 
-        // TODO
-        //        if ($this->hasAudienceTargeting) {
-        //            $builder->enableAudienceTargeting();
-        //        }
+        if ($this->bundles['SuluAudienceTargetingBundle'] ?? false) {
+            $builder->enableAudienceTargeting();
+        }
 
         return $builder;
     }
@@ -271,7 +276,7 @@ readonly class PageSmartContentProvider implements SmartContentProviderInterface
                 PageInterface::class,
                 'datasourcePage',
                 Join::WITH,
-                'datasourcePage.uuid = :datasource'
+                'datasourcePage.uuid = :datasource',
             )
                 ->andWhere($alias . '.lft >= datasourcePage.lft')
                 ->andWhere($alias . '.rgt <= datasourcePage.rgt')

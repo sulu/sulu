@@ -36,11 +36,13 @@ use Sulu\Page\Domain\Repository\PageRepositoryInterface;
 use Sulu\Page\Infrastructure\Doctrine\Repository\NavigationRepository;
 use Sulu\Page\Infrastructure\Doctrine\Repository\PageRepository;
 use Sulu\Page\Infrastructure\JMS\Serializer\WebspaceSerializeEventSubscriber;
+use Sulu\Page\Infrastructure\Sulu\Admin\MetadataVisitor\WebspaceRouteModeTypedFormMetadataVisitor;
 use Sulu\Page\Infrastructure\Sulu\Admin\PageAdmin;
 use Sulu\Page\Infrastructure\Sulu\Admin\PropertyMetadataMapper\PageTreeRoutePropertyMetadataMapper;
 use Sulu\Page\Infrastructure\Sulu\Build\HomepageBuilder;
 use Sulu\Page\Infrastructure\Sulu\Content\DataMapper\NavigationContextDataMapper;
 use Sulu\Page\Infrastructure\Sulu\Content\Merger\NavigationContextMerger;
+use Sulu\Page\Infrastructure\Sulu\Content\Normalizer\PageExcerptNormalizer;
 use Sulu\Page\Infrastructure\Sulu\Content\Normalizer\PageNormalizer;
 use Sulu\Page\Infrastructure\Sulu\Content\PageLinkProvider;
 use Sulu\Page\Infrastructure\Sulu\Content\PageSmartContentProvider;
@@ -53,9 +55,10 @@ use Sulu\Page\Infrastructure\Sulu\Content\Visitor\SegmentSmartContentFiltersVisi
 use Sulu\Page\Infrastructure\Sulu\Reference\PageReferenceRefresher;
 use Sulu\Page\Infrastructure\Sulu\Route\WebspaceSiteRouteGenerator;
 use Sulu\Page\Infrastructure\Sulu\Sitemap\PagesSitemapProvider;
+use Sulu\Page\Infrastructure\Sulu\Trash\PageTrashItemHandler;
 use Sulu\Page\Infrastructure\Symfony\Twig\Extension\ContentPathTwigExtension;
 use Sulu\Page\Infrastructure\Symfony\Twig\Extension\NavigationTwigExtension;
-use Sulu\Page\Trash\PageTrashItemHandler;
+use Sulu\Page\Infrastructure\Symfony\Twig\Extension\PageTwigExtension;
 use Sulu\Page\UserInterface\Command\InitializeHomepageCommand;
 use Sulu\Page\UserInterface\Controller\Admin\PageController;
 use Symfony\Component\Config\Definition\Configurator\DefinitionConfigurator;
@@ -63,6 +66,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 
+use function Symfony\Component\DependencyInjection\Loader\Configurator\param;
 use function Symfony\Component\DependencyInjection\Loader\Configurator\tagged_iterator;
 
 use Symfony\Component\DependencyInjection\Parameter;
@@ -81,8 +85,8 @@ final class SuluPageBundle extends AbstractBundle
 
     public function __construct()
     {
-        $this->name = 'SuluNextPageBundle';
-        $this->extensionAlias = 'sulu_next_page';
+        $this->name = 'SuluPageBundle';
+        $this->extensionAlias = 'sulu_page';
     }
 
     /**
@@ -226,9 +230,13 @@ final class SuluPageBundle extends AbstractBundle
             ->class(NavigationContextMerger::class)
             ->tag('sulu_content.merger');
 
-        // Normalizer service
+        // Normalizer services
         $services->set('sulu_page.page_normalizer')
             ->class(PageNormalizer::class)
+            ->tag('sulu_content.normalizer');
+
+        $services->set('sulu_page.page_excerpt_normalizer')
+            ->class(PageExcerptNormalizer::class)
             ->tag('sulu_content.normalizer');
 
         // Property Metadata Mapper services
@@ -286,6 +294,13 @@ final class SuluPageBundle extends AbstractBundle
                 new Reference('request_stack'),
             ])
             ->tag('sulu_route.site_route_generator', ['site' => '.default']);
+
+        $services->set('sulu_page.webspace_route_mode_typed_form_metadata_visitor')
+            ->class(WebspaceRouteModeTypedFormMetadataVisitor::class)
+            ->args([
+                new Reference('sulu_core.webspace.webspace_manager'),
+            ])
+            ->tag('sulu_admin.typed_form_metadata_visitor');
 
         // Repositories services
         $services->set('sulu_page.page_repository')
@@ -369,6 +384,7 @@ final class SuluPageBundle extends AbstractBundle
                 new Reference('sulu_admin.smart_content_query_enhancer'),
                 new Reference('security.token_storage', ContainerInterface::NULL_ON_INVALID_REFERENCE),
                 new Reference('doctrine.orm.entity_manager'),
+                param('kernel.bundles'),
             ])
             ->tag('sulu_content.smart_content_provider', ['type' => PageInterface::RESOURCE_KEY]);
 
@@ -407,6 +423,17 @@ final class SuluPageBundle extends AbstractBundle
             ])
             ->tag('twig.extension');
 
+        $services->set('sulu_page.page_twig_extension')
+            ->class(PageTwigExtension::class)
+            ->args([
+                new Reference('sulu_page.page_repository'),
+                new Reference('sulu_content.content_aggregator'),
+                new Reference('sulu_core.webspace.request_analyzer'),
+                new Reference('sulu_http_cache.reference_store'),
+                new Reference('sulu_content.content_resolver'),
+            ])
+            ->tag('twig.extension');
+
         // Reference
         $services->set('sulu_page.page_reference_refresher')
             ->class(PageReferenceRefresher::class)
@@ -431,7 +458,7 @@ final class SuluPageBundle extends AbstractBundle
             ->tag('jms_serializer.event_subscriber');
 
         // Sitemap
-        $services->set('sulu_next_page.pages_sitemap_provider')
+        $services->set('sulu_page.pages_sitemap_provider')
             ->class(PagesSitemapProvider::class)
             ->args([
                 new Reference('doctrine.orm.entity_manager'),
@@ -556,23 +583,6 @@ final class SuluPageBundle extends AbstractBundle
                         ],
                         'hydrators' => [
                             'sulu_page_tree' => TreeObjectHydrator::class,
-                        ],
-                    ],
-                ],
-            );
-        }
-
-        if ($builder->hasExtension('sulu_route')) {
-            $builder->prependExtensionConfig(
-                'sulu_route',
-                [
-                    'mappings' => [
-                        PageInterface::class => [
-                            'generator' => 'schema',
-                            'options' => [
-                                'route_schema' => '/{object["title"]}',
-                            ],
-                            'resource_key' => PageInterface::RESOURCE_KEY,
                         ],
                     ],
                 ],

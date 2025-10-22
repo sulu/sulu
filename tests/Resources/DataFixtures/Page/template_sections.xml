@@ -33,7 +33,7 @@
                 <info_text lang="en">Info-EN</info_text>
             </meta>
             <properties>
-                <property name="url" type="resource_locator" mandatory="true" cssClass="test"
+                <property name="url" type="route" mandatory="true" cssClass="test"
                           colspan="6">
                     <tag name="sulu.rlp" priority="1"/>
                 </property>

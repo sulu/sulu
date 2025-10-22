@@ -738,6 +738,201 @@ class ContentResolverTest extends SuluTestCase
         self::assertNull($viewViewBlock2['media']['displayOption']);
     }
 
+    public function testResolveContentBlocksWithSettings(): void
+    {
+        $example1 = static::createExample(
+            [
+                'en' => [
+                    'live' => [
+                        'template' => 'full-content',
+                        'title' => 'Lorem Ipsum',
+                        'url' => '/lorem-ipsum',
+                        'blocks' => [
+                            [
+                                'type' => 'editor',
+                                'text_editor' => '<p>Editor block with settings</p>',
+                                'settings' => [
+                                    'hidden' => false,
+                                    'schedules_enabled' => false,
+                                    'schedules' => [
+                                        [
+                                            'type' => 'fixed',
+                                            'start' => '2025-09-17T00:00:00',
+                                            'end' => '2025-09-25T00:00:00',
+                                        ],
+                                    ],
+                                    'segment_enabled' => null,
+                                    'segments' => null,
+                                    'target_groups_enabled' => null,
+                                    'target_groups' => null,
+                                ],
+                            ],
+                            [
+                                'type' => 'editor',
+                                'text_editor' => '<p>Editor block without settings</p>',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            [
+                'create_route' => true,
+            ]
+        );
+
+        static::getEntityManager()->flush();
+
+        $dimensionContent = $this->contentAggregator->aggregate($example1, ['locale' => 'en', 'stage' => 'live']);
+        $result = $this->contentResolver->resolve($dimensionContent);
+
+        $content = $result['content'];
+
+        self::assertArrayHasKey('blocks', $content);
+        $blocks = $content['blocks'];
+        self::assertIsArray($blocks);
+        self::assertCount(2, $blocks);
+
+        // First block with settings
+        /** @var array<string, mixed> $blockWithSettings */
+        $blockWithSettings = $blocks[0];
+        self::assertSame('editor', $blockWithSettings['type']);
+        self::assertSame('<p>Editor block with settings</p>', $blockWithSettings['text_editor']);
+
+        // Assert settings are resolved
+        self::assertArrayHasKey('settings', $blockWithSettings);
+        $settings = $blockWithSettings['settings'];
+        self::assertIsArray($settings);
+        self::assertFalse($settings['hidden']);
+        self::assertFalse($settings['schedules_enabled']);
+
+        self::assertArrayHasKey('schedules', $settings);
+        self::assertIsArray($settings['schedules']);
+        self::assertCount(1, $settings['schedules']);
+
+        /** @var array{type: string, start: \DateTimeInterface, end: \DateTimeInterface} $schedule */
+        $schedule = $settings['schedules'][0];
+        self::assertSame('fixed', $schedule['type']);
+        self::assertSame((new \DateTimeImmutable('2025-09-17T00:00:00'))->getTimestamp(), $schedule['start']->getTimestamp());
+        self::assertSame((new \DateTimeImmutable('2025-09-25T00:00:00'))->getTimestamp(), $schedule['end']->getTimestamp());
+
+        self::assertNull($settings['segment_enabled']);
+        self::assertNull($settings['segments']);
+        self::assertNull($settings['target_groups_enabled']);
+        self::assertNull($settings['target_groups']);
+
+        // Second block without settings
+        /** @var array<string, mixed> $blockWithoutSettings */
+        $blockWithoutSettings = $blocks[1];
+        self::assertSame('editor', $blockWithoutSettings['type']);
+        self::assertSame('<p>Editor block without settings</p>', $blockWithoutSettings['text_editor']);
+        self::assertArrayNotHasKey('settings', $blockWithoutSettings);
+    }
+
+    public function testResolveContentBlocksWithCustomSettings(): void
+    {
+        $example1 = static::createExample(
+            [
+                'en' => [
+                    'live' => [
+                        'template' => 'default',
+                        'title' => 'Referenced Example 1',
+                        'url' => '/referenced-example-1',
+                        'description' => 'This example will be referenced in block settings',
+                    ],
+                ],
+            ]
+        );
+
+        $example2 = static::createExample(
+            [
+                'en' => [
+                    'live' => [
+                        'template' => 'default',
+                        'title' => 'Referenced Example 2',
+                        'url' => '/referenced-example-2',
+                        'description' => 'Another example for multi-selection testing',
+                    ],
+                ],
+            ]
+        );
+
+        static::getEntityManager()->flush();
+
+        $exampleWithCustomSettings = static::createExample(
+            [
+                'en' => [
+                    'live' => [
+                        'template' => 'blocks-with-custom-settings',
+                        'title' => 'Content with Custom Block Settings',
+                        'url' => '/custom-settings-test',
+                        'blocks_with_custom_settings_form_key' => [
+                            [
+                                'type' => 'editor',
+                                'text_editor' => '<p>Block with custom settings and entity references</p>',
+                                'settings' => [
+                                    'hidden' => false,
+                                    'custom_note' => 'This is a test note',
+                                    'examples' => [$example1->getId(), $example2->getId()],
+                                ],
+                            ],
+                            [
+                                'type' => 'editor',
+                                'text_editor' => '<p>Block without any settings</p>',
+                            ],
+                        ],
+                    ],
+                ],
+            ]
+        );
+
+        static::getEntityManager()->flush();
+
+        $dimensionContent = $this->contentAggregator->aggregate($exampleWithCustomSettings, ['locale' => 'en', 'stage' => 'live']);
+        $result = $this->contentResolver->resolve($dimensionContent);
+
+        $content = $result['content'];
+
+        self::assertArrayHasKey('blocks_with_custom_settings_form_key', $content);
+        $blocks = $content['blocks_with_custom_settings_form_key'];
+        self::assertIsArray($blocks);
+        self::assertCount(2, $blocks);
+
+        // Test first block with custom settings
+        /** @var array<string, mixed> $blockWithCustomSettings */
+        $blockWithCustomSettings = $blocks[0];
+        self::assertSame('editor', $blockWithCustomSettings['type']);
+        self::assertSame('<p>Block with custom settings and entity references</p>', $blockWithCustomSettings['text_editor']);
+
+        self::assertArrayHasKey('settings', $blockWithCustomSettings);
+        $settings = $blockWithCustomSettings['settings'];
+        self::assertIsArray($settings);
+
+        self::assertFalse($settings['hidden']);
+        self::assertSame('This is a test note', $settings['custom_note']);
+
+        self::assertArrayHasKey('examples', $settings);
+        $examples = $settings['examples'];
+        self::assertIsArray($examples);
+        self::assertCount(2, $examples);
+
+        /** @var array<string, mixed> $resolvedExample1 */
+        $resolvedExample1 = $examples[0];
+        self::assertSame('Referenced Example 1', $resolvedExample1['title']);
+        self::assertSame('This example will be referenced in block settings', $resolvedExample1['description']);
+
+        /** @var array<string, mixed> $resolvedExample2 */
+        $resolvedExample2 = $examples[1];
+        self::assertSame('Referenced Example 2', $resolvedExample2['title']);
+        self::assertSame('Another example for multi-selection testing', $resolvedExample2['description']);
+
+        // Test second block without settings
+        /** @var array<string, mixed> $blockWithoutSettings */
+        $blockWithoutSettings = $blocks[1];
+        self::assertSame('editor', $blockWithoutSettings['type']);
+        self::assertSame('<p>Block without any settings</p>', $blockWithoutSettings['text_editor']);
+        self::assertArrayNotHasKey('settings', $blockWithoutSettings);
+    }
+
     public function testResolveImageMap(): void
     {
         $collection1 = self::createCollection(['title' => 'collection-1', 'locale' => 'en']);

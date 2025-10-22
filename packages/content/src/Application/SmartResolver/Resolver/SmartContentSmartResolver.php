@@ -37,6 +37,9 @@ use Symfony\Component\DependencyInjection\ServiceLocator;
  *       maxPerPage: int|null,
  *       includeSubFolders: bool,
  *       excludeDuplicates: bool,
+ *       audienceTargeting?: bool,
+ *       targetGroupId?: string,
+ *       offset?: int,
  *   }
  */
 class SmartContentSmartResolver implements SmartResolverInterface

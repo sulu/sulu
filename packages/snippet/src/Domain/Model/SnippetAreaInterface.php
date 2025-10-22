@@ -28,4 +28,6 @@ interface SnippetAreaInterface
     public function setSnippet(?SnippetInterface $snippet): void;
 
     public function getSnippet(): ?SnippetInterface;
+
+    public function getUuid(): string;
 }

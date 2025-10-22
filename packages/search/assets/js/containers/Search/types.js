@@ -1,9 +1,9 @@
 // @flow
 
-export type Index = {|
+export type SearchResource = {|
     icon: string,
-    indexName: string,
     name: string,
+    resourceKey: string,
     route: {|
         name: string,
         resultToRoute: {[key: string]: string},

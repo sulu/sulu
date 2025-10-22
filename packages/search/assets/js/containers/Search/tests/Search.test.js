@@ -3,7 +3,7 @@ import React from 'react';
 import {mount} from 'enzyme';
 import {Router} from 'sulu-admin-bundle/services';
 import Search from '../Search';
-import indexStore from '../stores/indexStore';
+import searchResourcesStore from '../stores/searchResourceStore';
 import searchStore from '../stores/searchStore';
 
 jest.mock('sulu-admin-bundle/services/Router/Router', () => jest.fn(function() {
@@ -14,12 +14,12 @@ jest.mock('sulu-admin-bundle/utils/Translator', () => ({
     translate: jest.fn((key) => key),
 }));
 
-jest.mock('../stores/indexStore', () => ({
-    loadIndexes: jest.fn(),
+jest.mock('../stores/searchResourceStore', () => ({
+    loadSearchResources: jest.fn(),
 }));
 
 jest.mock('../stores/searchStore', () => ({
-    indexName: undefined,
+    resourceKey: undefined,
     query: undefined,
     results: [],
     search: jest.fn(),
@@ -28,34 +28,34 @@ jest.mock('../stores/searchStore', () => ({
 }));
 
 beforeEach(() => {
-    searchStore.indexName = undefined;
+    searchStore.resourceKey = undefined;
     searchStore.query = undefined;
     searchStore.loading = false;
     searchStore.result = [];
 });
 
-test('Render loader while loading indexes and show SearchField afterwards', () => {
+test('Render loader while loading searchResources and show SearchField afterwards', () => {
     const router = new Router({});
 
-    const indexes = [
-        {
-            indexName: 'page',
+    const searchResources = {
+        page: {
+            resourceKey: 'page',
             name: 'Page',
             route: {
                 name: 'sulu_page.edit_form',
                 resultToRoute: {},
             },
         },
-    ];
+    };
 
-    const indexPromise = Promise.resolve(indexes);
-    indexStore.loadIndexes.mockReturnValue(indexPromise);
+    const searchResourcesPromise = Promise.resolve(searchResources);
+    searchResourcesStore.loadSearchResources.mockReturnValue(searchResourcesPromise);
 
     const search = mount(<Search router={router} />);
 
     expect(search.render()).toMatchSnapshot();
 
-    return indexPromise.then(() => {
+    return searchResourcesPromise.then(() => {
         search.update();
         expect(search.render()).toMatchSnapshot();
     });
@@ -64,25 +64,25 @@ test('Render loader while loading indexes and show SearchField afterwards', () =
 test('Render loader while loading search results', () => {
     const router = new Router({});
 
-    const indexes = [
-        {
-            indexName: 'page',
+    const searchResources = {
+        page: {
+            resourceKey: 'page',
             name: 'Page',
             route: {
                 name: 'sulu_page.edit_form',
                 resultToRoute: {},
             },
         },
-    ];
+    };
 
-    const indexPromise = Promise.resolve(indexes);
-    indexStore.loadIndexes.mockReturnValue(indexPromise);
+    const searchResourcesPromise = Promise.resolve(searchResources);
+    searchResourcesStore.loadSearchResources.mockReturnValue(searchResourcesPromise);
 
     searchStore.loading = true;
 
     const search = mount(<Search router={router} />);
 
-    return indexPromise.then(() => {
+    return searchResourcesPromise.then(() => {
         search.update();
         expect(search.render()).toMatchSnapshot();
     });
@@ -91,19 +91,19 @@ test('Render loader while loading search results', () => {
 test('Render hint that nothing was found', () => {
     const router = new Router({});
 
-    const indexes = [
-        {
-            indexName: 'page',
+    const searchResources = {
+        page: {
+            resourceKey: 'page',
             name: 'Page',
             route: {
                 name: 'sulu_page.edit_form',
                 resultToRoute: {},
             },
         },
-    ];
+    };
 
-    const indexPromise = Promise.resolve(indexes);
-    indexStore.loadIndexes.mockReturnValue(indexPromise);
+    const searchResourcesPromise = Promise.resolve(searchResources);
+    searchResourcesStore.loadSearchResources.mockReturnValue(searchResourcesPromise);
 
     searchStore.loading = false;
     searchStore.result = [];
@@ -111,7 +111,7 @@ test('Render hint that nothing was found', () => {
 
     const search = mount(<Search router={router} />);
 
-    return indexPromise.then(() => {
+    return searchResourcesPromise.then(() => {
         search.update();
         expect(search.render()).toMatchSnapshot();
     });
@@ -120,123 +120,117 @@ test('Render hint that nothing was found', () => {
 test('Render search results', () => {
     const router = new Router({});
 
-    const indexes = [
-        {
+    const searchResources = {
+        page: {
             icon: 'su-page',
-            indexName: 'page',
+            resourceKey: 'page',
             name: 'Page',
             route: {
                 name: 'sulu_page.edit_form',
                 resultToRoute: {},
             },
         },
-        {
+        contact: {
             icon: 'su-contact',
-            indexName: 'contact',
+            resourceKey: 'contact',
             name: 'Contact',
             route: {
                 name: 'sulu_contact.edit_form',
                 resultToRoute: {},
             },
         },
-    ];
+    };
 
-    const indexPromise = Promise.resolve(indexes);
-    indexStore.loadIndexes.mockReturnValue(indexPromise);
+    const searchResourcesPromise = Promise.resolve(searchResources);
+    searchResourcesStore.loadSearchResources.mockReturnValue(searchResourcesPromise);
 
     searchStore.loading = false;
     searchStore.result = [
         {
-            document: {
-                description: 'something',
-                id: 3,
-                imageUrl: '/image.jgp',
-                index: 'page',
-                locale: 'de',
-                resource: 'page',
-                title: 'Test1',
-            },
+            description: 'something',
+            id: 'page::f0a1f99e-3c28-4db9-bc5d-94ed43d8a50f::de',
+            imageUrl: '/image.jgp',
+            locale: 'de',
+            resourceKey: 'page',
+            title: 'Test1',
         },
         {
-            document: {
-                description: 'something 2',
-                id: 5,
-                imageUrl: undefined,
-                index: 'contact',
-                locale: undefined,
-                resource: 'contact',
-                title: 'Max Mustermann',
-            },
+            description: 'something 2',
+            id: 'page::5',
+            imageUrl: undefined,
+            locale: undefined,
+            resourceKey: 'contact',
+            title: 'Max Mustermann',
         },
     ];
     searchStore.query = 'something';
 
     const search = mount(<Search router={router} />);
 
-    return indexPromise.then(() => {
+    return searchResourcesPromise.then(() => {
         search.update();
         expect(search.render()).toMatchSnapshot();
     });
 });
 
-test('Set the query and index name from the SearchStore as start value', () => {
+test('Set the query and searchResource from the SearchStore as start value', () => {
     const router = new Router({});
 
-    searchStore.indexName = undefined;
+    searchStore.resourceKey = undefined;
     searchStore.query = 'Test';
-    searchStore.indexName = 'page';
+    searchStore.resourceKey = 'page';
 
-    const indexes = [
-        {
-            indexName: 'page',
+    const searchResources = {
+        page: {
+            resourceKey: 'page',
             name: 'Page',
             route: {
                 name: 'sulu_page.edit_form',
                 resultToRoute: {},
             },
         },
-    ];
+    };
 
-    const indexPromise = Promise.resolve(indexes);
-    indexStore.loadIndexes.mockReturnValue(indexPromise);
+    const searchResourcesPromise = Promise.resolve(searchResources);
+    searchResourcesStore.loadSearchResources.mockReturnValue(searchResourcesPromise);
 
     const search = mount(<Search router={router} />);
 
-    return indexPromise.then(() => {
+    return searchResourcesPromise.then(() => {
         search.update();
         expect(search.find('SearchField input').prop('value')).toEqual('Test');
-        expect(search.find('SearchField .indexButton .index').prop('children')).toEqual('Page');
+        expect(search.find('SearchField .searchResourceButton .searchResource').prop('children')).toEqual('Page');
     });
 });
 
 test('Search when the search button is clicked', () => {
     const router = new Router({});
 
-    const indexes = [
-        {
-            indexName: 'page',
+    const searchResources = {
+        page: {
+            resourceKey: 'page',
             name: 'Page',
             route: {
                 name: 'sulu_page.edit_form',
                 resultToRoute: {},
             },
         },
-        {
-            indexName: 'contact',
+        contact: {
+            resourceKey: 'contact',
             name: 'Contact',
             route: {
                 name: 'sulu_contact.edit_form',
                 resultToRoute: {},
             },
         },
-    ];
+    };
 
-    const indexPromise = Promise.resolve(indexes);
-    indexStore.loadIndexes.mockReturnValue(indexPromise);
+    const searchResourcesPromise = Promise.resolve(searchResources);
+    searchResourcesStore.loadSearchResources.mockReturnValue(searchResourcesPromise);
 
     const search = mount(<Search router={router} />);
 
-    return indexPromise.then(() => {
+    return searchResourcesPromise.then(() => {
         search.update();
         search.find('SearchField input').prop('onChange')({currentTarget: {value: 'Test'}});
         search.find('Icon[name="su-search"]').prop('onClick')();
@@ -247,9 +241,9 @@ test('Search when the search button is clicked', () => {
 test('Navigate to route for search result item', () => {
     const router = new Router({});
 
-    const indexes = [
-        {
-            indexName: 'page',
+    const searchResources = {
+        page: {
+            resourceKey: 'page',
             name: 'Page',
             route: {
                 name: 'sulu_page.edit_form',
@@ -260,8 +254,8 @@ test('Navigate to route for search result item', () => {
                 },
             },
         },
-        {
-            indexName: 'contact',
+        contact: {
+            resourceKey: 'contact',
             name: 'Contact',
             route: {
                 name: 'sulu_contact.edit_form',
@@ -270,51 +264,48 @@ test('Navigate to route for search result item', () => {
                 },
             },
         },
-    ];
+    };
 
-    const indexPromise = Promise.resolve(indexes);
-    indexStore.loadIndexes.mockReturnValue(indexPromise);
+    const searchResourcesPromise = Promise.resolve(searchResources);
+    searchResourcesStore.loadSearchResources.mockReturnValue(searchResourcesPromise);
 
     searchStore.loading = false;
     searchStore.result = [
         {
-            document: {
-                description: 'something',
-                id: 3,
-                imageUrl: '/image.jgp',
-                index: 'page',
-                locale: 'de',
-                properties: {
-                    webspace_key: 'example',
-                },
-                resource: 'page',
-                title: 'Test1',
+            description: 'something',
+            id: 'page::f0a1f99e-3c28-4db9-bc5d-94ed43d8a50f::de',
+            imageUrl: '/image.jgp',
+            locale: 'de',
+            properties: {
+                webspace_key: 'example',
             },
+            resourceKey: 'page',
+            resourceId: 'f0a1f99e-3c28-4db9-bc5d-94ed43d8a50f',
+            title: 'Test1',
         },
         {
-            document: {
-                description: 'something 2',
-                id: 5,
-                index: 'contact',
-                imageUrl: '/image2.jgp',
-                locale: undefined,
-                resource: 'contact',
-                title: 'Max Mustermann',
-            },
+            description: 'something 2',
+            id: 'contact::5',
+            imageUrl: '/image2.jgp',
+            locale: undefined,
+            resourceKey: 'contact',
+            resourceId: '5',
+            title: 'Max Mustermann',
         },
     ];
     searchStore.query = 'something';
 
     const search = mount(<Search router={router} />);
 
-    return indexPromise.then(() => {
+    return searchResourcesPromise.then(() => {
         search.update();
         search.find('SearchResult').at(1).find('div').at(0).simulate('click');
-        expect(router.navigate).toHaveBeenLastCalledWith('sulu_contact.edit_form', {id: 5});
+        expect(router.navigate).toHaveBeenLastCalledWith('sulu_contact.edit_form', {id: '5'});
         search.find('SearchResult').at(0).find('div').at(0).simulate('click');
         expect(router.navigate).toHaveBeenLastCalledWith(
             'sulu_page.edit_form',
-            {id: 3, locale: 'de', webspace: 'example'}
+            // Todo: Add webspace key when pages are added to search.
+            {id: 'f0a1f99e-3c28-4db9-bc5d-94ed43d8a50f', locale: 'de', webspace: undefined}
         );
     });
 });

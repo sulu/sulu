@@ -108,12 +108,12 @@ Then you need to update the route configuration in your `config/routes/sulu_admi
 -    resource: "@SuluRouteBundle/Resources/config/routing_api.yaml"
 -    prefix: /admin/api
 -
-+sulu_next_route_api:
-+    resource: "@SuluNextRouteBundle/config/routing_admin_api.yaml"
++sulu_route_api:
++    resource: "@SuluRouteBundle/config/routing_admin_api.yaml"
 +    prefix: /admin/api
 +
-+sulu_next_page_api:
-+    resource: "@SuluNextPageBundle/config/routing_admin_api.yaml"
++sulu_page_api:
++    resource: "@SuluPageBundle/config/routing_admin_api.yaml"
 +    prefix: /admin/api
 +
 +sulu_article_api:
@@ -165,19 +165,19 @@ The following SQL statements are examples based on MySQL. You might generate the
 #### RouteBundle
 
 ```sql
-CREATE TABLE ro_next_routes (id INT AUTO_INCREMENT NOT NULL, parent_id INT DEFAULT NULL, site VARCHAR(31) DEFAULT NULL, locale VARCHAR(15) NOT NULL, slug VARCHAR(144) NOT NULL, resource_key VARCHAR(32) NOT NULL, resource_id VARCHAR(70) NOT NULL, INDEX IDX_BD51B2DA727ACA70 (parent_id), INDEX ro_routes_resource_idx (locale, resource_key, resource_id), UNIQUE INDEX ro_routes_unique (site, locale, slug), PRIMARY KEY(id));
-ALTER TABLE ro_next_routes ADD CONSTRAINT FK_BD51B2DA727ACA70 FOREIGN KEY (parent_id) REFERENCES ro_next_routes (id) ON DELETE SET NULL;
+CREATE TABLE ro_routes (id INT AUTO_INCREMENT NOT NULL, parent_id INT DEFAULT NULL, site VARCHAR(31) DEFAULT NULL, locale VARCHAR(15) NOT NULL, slug VARCHAR(144) NOT NULL, resource_key VARCHAR(32) NOT NULL, resource_id VARCHAR(70) NOT NULL, INDEX IDX_BD51B2DA727ACA70 (parent_id), INDEX ro_routes_resource_idx (locale, resource_key, resource_id), UNIQUE INDEX ro_routes_unique (site, locale, slug), PRIMARY KEY(id));
+ALTER TABLE ro_routes ADD CONSTRAINT FK_BD51B2DA727ACA70 FOREIGN KEY (parent_id) REFERENCES ro_routes (id) ON DELETE SET NULL;
 ```
 
 #### PageBundle
 
 ```sql
-CREATE TABLE pa_page_dimension_contents (id INT AUTO_INCREMENT NOT NULL, route_id INT DEFAULT NULL, author_id INT DEFAULT NULL, title VARCHAR(191) DEFAULT NULL, stage VARCHAR(15) NOT NULL, locale VARCHAR(15) DEFAULT NULL, ghostLocale VARCHAR(15) DEFAULT NULL, availableLocales JSON DEFAULT NULL, shadowLocale VARCHAR(15) DEFAULT NULL, shadowLocales JSON DEFAULT NULL, templateKey VARCHAR(31) DEFAULT NULL, templateData JSON NOT NULL, seoTitle VARCHAR(255) DEFAULT NULL, seoDescription LONGTEXT DEFAULT NULL, seoKeywords LONGTEXT DEFAULT NULL, seoCanonicalUrl LONGTEXT DEFAULT NULL, seoNoIndex TINYINT(1) NOT NULL, seoNoFollow TINYINT(1) NOT NULL, seoHideInSitemap TINYINT(1) NOT NULL, excerptTitle VARCHAR(255) DEFAULT NULL, excerptMore VARCHAR(63) DEFAULT NULL, excerptDescription LONGTEXT DEFAULT NULL, excerptImageId INT DEFAULT NULL, excerptIconId INT DEFAULT NULL, authored DATETIME DEFAULT NULL COMMENT '(DC2Type:datetime_immutable)', lastModified DATETIME DEFAULT NULL COMMENT '(DC2Type:datetime_immutable)', workflowPlace VARCHAR(31) DEFAULT NULL, workflowPublished DATETIME DEFAULT NULL COMMENT '(DC2Type:datetime_immutable)', created DATETIME NOT NULL COMMENT '(DC2Type:datetime_immutable)', changed DATETIME NOT NULL COMMENT '(DC2Type:datetime_immutable)', pageUuid VARCHAR(255) NOT NULL, idUsersCreator INT DEFAULT NULL, idUsersChanger INT DEFAULT NULL, INDEX IDX_209A42C034ECB4E6 (route_id), INDEX IDX_209A42C0F099EEF3 (pageUuid), INDEX IDX_209A42C0F675F31B (author_id), INDEX IDX_209A42C0DBF11E1D (idUsersCreator), INDEX IDX_209A42C030D07CD5 (idUsersChanger), INDEX idx_pa_page_dimension_contents_dimension (stage, locale), INDEX idx_pa_page_dimension_contents_locale (locale), INDEX idx_pa_page_dimension_contents_stage (stage), INDEX idx_pa_page_dimension_contents_template_key (templateKey), INDEX idx_pa_page_dimension_contents_workflow_place (workflowPlace), INDEX idx_pa_page_dimension_contents_workflow_published (workflowPublished), INDEX IDX_209A42C02F5A5F5D (excerptImageId), INDEX IDX_209A42C016996F78 (excerptIconId), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB;
+CREATE TABLE pa_page_dimension_contents (id INT AUTO_INCREMENT NOT NULL, route_id INT DEFAULT NULL, author_id INT DEFAULT NULL, title VARCHAR(191) DEFAULT NULL, stage VARCHAR(15) NOT NULL, locale VARCHAR(15) DEFAULT NULL, ghostLocale VARCHAR(15) DEFAULT NULL, availableLocales JSON DEFAULT NULL, shadowLocale VARCHAR(15) DEFAULT NULL, shadowLocales JSON DEFAULT NULL, templateKey VARCHAR(31) DEFAULT NULL, templateData JSON NOT NULL, seoTitle VARCHAR(255) DEFAULT NULL, seoDescription LONGTEXT DEFAULT NULL, seoKeywords LONGTEXT DEFAULT NULL, seoCanonicalUrl LONGTEXT DEFAULT NULL, seoNoIndex TINYINT(1) NOT NULL, seoNoFollow TINYINT(1) NOT NULL, seoHideInSitemap TINYINT(1) NOT NULL, excerptTitle VARCHAR(255) DEFAULT NULL, excerptMore VARCHAR(63) DEFAULT NULL, excerptDescription LONGTEXT DEFAULT NULL, excerptSegment VARCHAR(255) DEFAULT NULL, excerptImageId INT DEFAULT NULL, excerptIconId INT DEFAULT NULL, authored DATETIME DEFAULT NULL COMMENT '(DC2Type:datetime_immutable)', lastModified DATETIME DEFAULT NULL COMMENT '(DC2Type:datetime_immutable)', workflowPlace VARCHAR(31) DEFAULT NULL, workflowPublished DATETIME DEFAULT NULL COMMENT '(DC2Type:datetime_immutable)', created DATETIME NOT NULL COMMENT '(DC2Type:datetime_immutable)', changed DATETIME NOT NULL COMMENT '(DC2Type:datetime_immutable)', pageUuid VARCHAR(255) NOT NULL, idUsersCreator INT DEFAULT NULL, idUsersChanger INT DEFAULT NULL, INDEX IDX_209A42C034ECB4E6 (route_id), INDEX IDX_209A42C0F099EEF3 (pageUuid), INDEX IDX_209A42C0F675F31B (author_id), INDEX IDX_209A42C0DBF11E1D (idUsersCreator), INDEX IDX_209A42C030D07CD5 (idUsersChanger), INDEX idx_pa_page_dimension_contents_dimension (stage, locale), INDEX idx_pa_page_dimension_contents_locale (locale), INDEX idx_pa_page_dimension_contents_stage (stage), INDEX idx_pa_page_dimension_contents_template_key (templateKey), INDEX idx_pa_page_dimension_contents_workflow_place (workflowPlace), INDEX idx_pa_page_dimension_contents_workflow_published (workflowPublished), INDEX IDX_209A42C02F5A5F5D (excerptImageId), INDEX IDX_209A42C016996F78 (excerptIconId), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB;
 CREATE TABLE pa_page_dimension_content_excerpt_tags (page_dimension_content_id INT NOT NULL, tag_id INT NOT NULL, INDEX IDX_66C81FDB67C2CFD5 (page_dimension_content_id), INDEX IDX_66C81FDBBAD26311 (tag_id), PRIMARY KEY(page_dimension_content_id, tag_id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB;
 CREATE TABLE pa_page_dimension_content_excerpt_categories (page_dimension_content_id INT NOT NULL, category_id INT NOT NULL, INDEX IDX_BE45C16867C2CFD5 (page_dimension_content_id), INDEX IDX_BE45C16812469DE2 (category_id), PRIMARY KEY(page_dimension_content_id, category_id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB;
 CREATE TABLE pa_page_dimension_content_navigation_contexts (id INT AUTO_INCREMENT NOT NULL, page_dimension_content_id INT NOT NULL, name VARCHAR(31) NOT NULL, INDEX IDX_4C5FD8F767C2CFD5 (page_dimension_content_id), INDEX idx_page_navigation_context (name), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB;
-CREATE TABLE pa_pages (uuid VARCHAR(255) NOT NULL, parent_id VARCHAR(255) DEFAULT NULL, webspaceKey VARCHAR(64) NOT NULL, lft INT NOT NULL, rgt INT NOT NULL, depth INT NOT NULL, created DATETIME NOT NULL COMMENT '(DC2Type:datetime_immutable)', changed DATETIME NOT NULL COMMENT '(DC2Type:datetime_immutable)', idUsersCreator INT DEFAULT NULL, idUsersChanger INT DEFAULT NULL, INDEX IDX_FF3DA1E2727ACA70 (parent_id), INDEX IDX_FF3DA1E2DBF11E1D (idUsersCreator), INDEX IDX_FF3DA1E230D07CD5 (idUsersChanger), PRIMARY KEY(uuid)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB;
-ALTER TABLE pa_page_dimension_contents ADD CONSTRAINT FK_209A42C034ECB4E6 FOREIGN KEY (route_id) REFERENCES ro_next_routes (id) ON DELETE CASCADE;
+CREATE TABLE pa_pages (uuid VARCHAR(36) NOT NULL, parent_id VARCHAR(36) DEFAULT NULL, webspaceKey VARCHAR(31) NOT NULL, lft INT NOT NULL, rgt INT NOT NULL, depth INT NOT NULL, created DATETIME NOT NULL COMMENT '(DC2Type:datetime_immutable)', changed DATETIME NOT NULL COMMENT '(DC2Type:datetime_immutable)', idUsersCreator INT DEFAULT NULL, idUsersChanger INT DEFAULT NULL, INDEX IDX_FF3DA1E2727ACA70 (parent_id), INDEX IDX_FF3DA1E2DBF11E1D (idUsersCreator), INDEX IDX_FF3DA1E230D07CD5 (idUsersChanger), PRIMARY KEY(uuid)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB;
+ALTER TABLE pa_page_dimension_contents ADD CONSTRAINT FK_209A42C034ECB4E6 FOREIGN KEY (route_id) REFERENCES ro_routes (id) ON DELETE CASCADE;
 ALTER TABLE pa_page_dimension_contents ADD CONSTRAINT FK_209A42C0F099EEF3 FOREIGN KEY (pageUuid) REFERENCES pa_pages (uuid) ON DELETE CASCADE;
 ALTER TABLE pa_page_dimension_contents ADD CONSTRAINT FK_209A42C0F675F31B FOREIGN KEY (author_id) REFERENCES co_contacts (id) ON DELETE CASCADE;
 ALTER TABLE pa_page_dimension_contents ADD CONSTRAINT FK_209A42C0DBF11E1D FOREIGN KEY (idUsersCreator) REFERENCES se_users (id) ON DELETE SET NULL;
@@ -197,10 +197,10 @@ ALTER TABLE pa_pages ADD CONSTRAINT FK_FF3DA1E230D07CD5 FOREIGN KEY (idUsersChan
 #### SnippetBundle
 
 ```sql
-CREATE TABLE sn_snippet_dimension_contents (id INT AUTO_INCREMENT NOT NULL, title VARCHAR(191) DEFAULT NULL, stage VARCHAR(15) NOT NULL, locale VARCHAR(15) DEFAULT NULL, ghostLocale VARCHAR(15) DEFAULT NULL, availableLocales JSON DEFAULT NULL, templateKey VARCHAR(31) DEFAULT NULL, templateData JSON NOT NULL, excerptTitle VARCHAR(255) DEFAULT NULL, excerptMore VARCHAR(63) DEFAULT NULL, excerptDescription LONGTEXT DEFAULT NULL, excerptImageId INT DEFAULT NULL, excerptIconId INT DEFAULT NULL, workflowPlace VARCHAR(31) DEFAULT NULL, workflowPublished DATETIME DEFAULT NULL COMMENT '(DC2Type:datetime_immutable)', created DATETIME NOT NULL COMMENT '(DC2Type:datetime_immutable)', changed DATETIME NOT NULL COMMENT '(DC2Type:datetime_immutable)', snippetUuid VARCHAR(255) NOT NULL, idUsersCreator INT DEFAULT NULL, idUsersChanger INT DEFAULT NULL, INDEX IDX_46D6814477F33FFB (snippetUuid), INDEX IDX_46D68144DBF11E1D (idUsersCreator), INDEX IDX_46D6814430D07CD5 (idUsersChanger), INDEX idx_sn_snippet_dimension_contents_dimension (stage, locale), INDEX idx_sn_snippet_dimension_contents_locale (locale), INDEX idx_sn_snippet_dimension_contents_stage (stage), INDEX idx_sn_snippet_dimension_contents_template_key (templateKey), INDEX idx_sn_snippet_dimension_contents_workflow_place (workflowPlace), INDEX idx_sn_snippet_dimension_contents_workflow_published (workflowPublished), INDEX IDX_46D681442F5A5F5D (excerptImageId), INDEX IDX_46D6814416996F78 (excerptIconId), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB;
+CREATE TABLE sn_snippet_dimension_contents (id INT AUTO_INCREMENT NOT NULL, title VARCHAR(191) DEFAULT NULL, stage VARCHAR(15) NOT NULL, locale VARCHAR(15) DEFAULT NULL, ghostLocale VARCHAR(15) DEFAULT NULL, availableLocales JSON DEFAULT NULL, templateKey VARCHAR(31) DEFAULT NULL, templateData JSON NOT NULL, excerptTitle VARCHAR(255) DEFAULT NULL, excerptMore VARCHAR(63) DEFAULT NULL, excerptDescription LONGTEXT DEFAULT NULL, excerptSegment VARCHAR(255) DEFAULT NULL, excerptImageId INT DEFAULT NULL, excerptIconId INT DEFAULT NULL, workflowPlace VARCHAR(31) DEFAULT NULL, workflowPublished DATETIME DEFAULT NULL COMMENT '(DC2Type:datetime_immutable)', created DATETIME NOT NULL COMMENT '(DC2Type:datetime_immutable)', changed DATETIME NOT NULL COMMENT '(DC2Type:datetime_immutable)', snippetUuid VARCHAR(255) NOT NULL, idUsersCreator INT DEFAULT NULL, idUsersChanger INT DEFAULT NULL, INDEX IDX_46D6814477F33FFB (snippetUuid), INDEX IDX_46D68144DBF11E1D (idUsersCreator), INDEX IDX_46D6814430D07CD5 (idUsersChanger), INDEX idx_sn_snippet_dimension_contents_dimension (stage, locale), INDEX idx_sn_snippet_dimension_contents_locale (locale), INDEX idx_sn_snippet_dimension_contents_stage (stage), INDEX idx_sn_snippet_dimension_contents_template_key (templateKey), INDEX idx_sn_snippet_dimension_contents_workflow_place (workflowPlace), INDEX idx_sn_snippet_dimension_contents_workflow_published (workflowPublished), INDEX IDX_46D681442F5A5F5D (excerptImageId), INDEX IDX_46D6814416996F78 (excerptIconId), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB;
 CREATE TABLE sn_snippet_dimension_content_excerpt_tags (snippet_dimension_content_id INT NOT NULL, tag_id INT NOT NULL, INDEX IDX_96BD1E357891499D (snippet_dimension_content_id), INDEX IDX_96BD1E35BAD26311 (tag_id), PRIMARY KEY(snippet_dimension_content_id, tag_id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB;
 CREATE TABLE sn_snippet_dimension_content_excerpt_categories (snippet_dimension_content_id INT NOT NULL, category_id INT NOT NULL, INDEX IDX_464EB1547891499D (snippet_dimension_content_id), INDEX IDX_464EB15412469DE2 (category_id), PRIMARY KEY(snippet_dimension_content_id, category_id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB;
-CREATE TABLE sn_snippets (uuid VARCHAR(255) NOT NULL, created DATETIME NOT NULL COMMENT '(DC2Type:datetime_immutable)', changed DATETIME NOT NULL COMMENT '(DC2Type:datetime_immutable)', idUsersCreator INT DEFAULT NULL, idUsersChanger INT DEFAULT NULL, INDEX IDX_E68115CFDBF11E1D (idUsersCreator), INDEX IDX_E68115CF30D07CD5 (idUsersChanger), PRIMARY KEY(uuid)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB;
+CREATE TABLE sn_snippets (uuid VARCHAR(36) NOT NULL, created DATETIME NOT NULL COMMENT '(DC2Type:datetime_immutable)', changed DATETIME NOT NULL COMMENT '(DC2Type:datetime_immutable)', idUsersCreator INT DEFAULT NULL, idUsersChanger INT DEFAULT NULL, INDEX IDX_E68115CFDBF11E1D (idUsersCreator), INDEX IDX_E68115CF30D07CD5 (idUsersChanger), PRIMARY KEY(uuid)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB;
 ALTER TABLE sn_snippet_dimension_contents ADD CONSTRAINT FK_46D6814477F33FFB FOREIGN KEY (snippetUuid) REFERENCES sn_snippets (uuid) ON DELETE CASCADE;
 ALTER TABLE sn_snippet_dimension_contents ADD CONSTRAINT FK_46D68144DBF11E1D FOREIGN KEY (idUsersCreator) REFERENCES se_users (id) ON DELETE SET NULL;
 ALTER TABLE sn_snippet_dimension_contents ADD CONSTRAINT FK_46D6814430D07CD5 FOREIGN KEY (idUsersChanger) REFERENCES se_users (id) ON DELETE SET NULL;
@@ -217,11 +217,11 @@ ALTER TABLE sn_snippets ADD CONSTRAINT FK_E68115CF30D07CD5 FOREIGN KEY (idUsersC
 #### ArticleBundle
 
 ```sql
-CREATE TABLE ar_article_dimension_contents (id INT AUTO_INCREMENT NOT NULL, route_id INT DEFAULT NULL, author_id INT DEFAULT NULL, title VARCHAR(191) DEFAULT NULL, stage VARCHAR(15) NOT NULL, locale VARCHAR(15) DEFAULT NULL, ghostLocale VARCHAR(15) DEFAULT NULL, availableLocales JSON DEFAULT NULL, shadowLocale VARCHAR(15) DEFAULT NULL, shadowLocales JSON DEFAULT NULL, templateKey VARCHAR(31) DEFAULT NULL, templateData JSON NOT NULL, seoTitle VARCHAR(255) DEFAULT NULL, seoDescription LONGTEXT DEFAULT NULL, seoKeywords LONGTEXT DEFAULT NULL, seoCanonicalUrl LONGTEXT DEFAULT NULL, seoNoIndex TINYINT(1) NOT NULL, seoNoFollow TINYINT(1) NOT NULL, seoHideInSitemap TINYINT(1) NOT NULL, excerptTitle VARCHAR(255) DEFAULT NULL, excerptMore VARCHAR(63) DEFAULT NULL, excerptDescription LONGTEXT DEFAULT NULL, excerptImageId INT DEFAULT NULL, excerptIconId INT DEFAULT NULL, mainWebspace VARCHAR(255) DEFAULT NULL, authored DATETIME DEFAULT NULL COMMENT '(DC2Type:datetime_immutable)', lastModified DATETIME DEFAULT NULL COMMENT '(DC2Type:datetime_immutable)', workflowPlace VARCHAR(31) DEFAULT NULL, workflowPublished DATETIME DEFAULT NULL COMMENT '(DC2Type:datetime_immutable)', articleUuid VARCHAR(255) NOT NULL, created DATETIME NOT NULL, changed DATETIME NOT NULL, idUsersCreator INT DEFAULT NULL, idUsersChanger INT DEFAULT NULL, INDEX IDX_5674F7BF34ECB4E6 (route_id), INDEX IDX_5674F7BFAE39C518 (articleUuid), INDEX IDX_5674F7BFF675F31B (author_id), INDEX idx_ar_article_dimension_contents_dimension (stage, locale), INDEX idx_ar_article_dimension_contents_locale (locale), INDEX idx_ar_article_dimension_contents_stage (stage), INDEX idx_ar_article_dimension_contents_template_key (templateKey), INDEX idx_ar_article_dimension_contents_workflow_place (workflowPlace), INDEX idx_ar_article_dimension_contents_workflow_published (workflowPublished), INDEX IDX_5674F7BF2F5A5F5D (excerptImageId), INDEX IDX_5674F7BF16996F78 (excerptIconId), INDEX IDX_5674F7BFDBF11E1D (idUsersCreator), INDEX IDX_5674F7BF30D07CD5 (idUsersChanger), PRIMARY KEY(id));
+CREATE TABLE ar_article_dimension_contents (id INT AUTO_INCREMENT NOT NULL, route_id INT DEFAULT NULL, author_id INT DEFAULT NULL, title VARCHAR(191) DEFAULT NULL, stage VARCHAR(15) NOT NULL, locale VARCHAR(15) DEFAULT NULL, ghostLocale VARCHAR(15) DEFAULT NULL, availableLocales JSON DEFAULT NULL, shadowLocale VARCHAR(15) DEFAULT NULL, shadowLocales JSON DEFAULT NULL, templateKey VARCHAR(31) DEFAULT NULL, templateData JSON NOT NULL, seoTitle VARCHAR(255) DEFAULT NULL, seoDescription LONGTEXT DEFAULT NULL, seoKeywords LONGTEXT DEFAULT NULL, seoCanonicalUrl LONGTEXT DEFAULT NULL, seoNoIndex TINYINT(1) NOT NULL, seoNoFollow TINYINT(1) NOT NULL, seoHideInSitemap TINYINT(1) NOT NULL, excerptTitle VARCHAR(255) DEFAULT NULL, excerptMore VARCHAR(63) DEFAULT NULL, excerptDescription LONGTEXT DEFAULT NULL, excerptSegment VARCHAR(255) DEFAULT NULL, excerptImageId INT DEFAULT NULL, excerptIconId INT DEFAULT NULL, mainWebspace VARCHAR(255) DEFAULT NULL, authored DATETIME DEFAULT NULL COMMENT '(DC2Type:datetime_immutable)', lastModified DATETIME DEFAULT NULL COMMENT '(DC2Type:datetime_immutable)', workflowPlace VARCHAR(31) DEFAULT NULL, workflowPublished DATETIME DEFAULT NULL COMMENT '(DC2Type:datetime_immutable)', articleUuid VARCHAR(255) NOT NULL, created DATETIME NOT NULL, changed DATETIME NOT NULL, idUsersCreator INT DEFAULT NULL, idUsersChanger INT DEFAULT NULL, customizeWebspaceSettings TINYINT(1) DEFAULT 0 NOT NULL, additionalWebspaces JSON DEFAULT NULL, INDEX IDX_5674F7BF34ECB4E6 (route_id), INDEX IDX_5674F7BFAE39C518 (articleUuid), INDEX IDX_5674F7BFF675F31B (author_id), INDEX idx_ar_article_dimension_contents_dimension (stage, locale), INDEX idx_ar_article_dimension_contents_locale (locale), INDEX idx_ar_article_dimension_contents_stage (stage), INDEX idx_ar_article_dimension_contents_template_key (templateKey), INDEX idx_ar_article_dimension_contents_workflow_place (workflowPlace), INDEX idx_ar_article_dimension_contents_workflow_published (workflowPublished), INDEX IDX_5674F7BF2F5A5F5D (excerptImageId), INDEX IDX_5674F7BF16996F78 (excerptIconId), INDEX IDX_5674F7BFDBF11E1D (idUsersCreator), INDEX IDX_5674F7BF30D07CD5 (idUsersChanger), PRIMARY KEY(id));
 CREATE TABLE ar_article_dimension_content_excerpt_tags (article_dimension_content_id INT NOT NULL, tag_id INT NOT NULL, INDEX IDX_B45854027C1747D1 (article_dimension_content_id), INDEX IDX_B4585402BAD26311 (tag_id), PRIMARY KEY(article_dimension_content_id, tag_id));
 CREATE TABLE ar_article_dimension_content_excerpt_categories (article_dimension_content_id INT NOT NULL, category_id INT NOT NULL, INDEX IDX_971AE52D7C1747D1 (article_dimension_content_id), INDEX IDX_971AE52D12469DE2 (category_id), PRIMARY KEY(article_dimension_content_id, category_id));
-CREATE TABLE ar_articles (uuid VARCHAR(255) NOT NULL, created DATETIME NOT NULL, changed DATETIME NOT NULL, idUsersCreator INT DEFAULT NULL, idUsersChanger INT DEFAULT NULL, INDEX IDX_7F75CD17DBF11E1D (idUsersCreator), INDEX IDX_7F75CD1730D07CD5 (idUsersChanger), PRIMARY KEY(uuid));
-ALTER TABLE ar_article_dimension_contents ADD CONSTRAINT FK_5674F7BF34ECB4E6 FOREIGN KEY (route_id) REFERENCES ro_next_routes (id) ON DELETE CASCADE;
+CREATE TABLE ar_articles (uuid VARCHAR(36) NOT NULL, created DATETIME NOT NULL, changed DATETIME NOT NULL, idUsersCreator INT DEFAULT NULL, idUsersChanger INT DEFAULT NULL, INDEX IDX_7F75CD17DBF11E1D (idUsersCreator), INDEX IDX_7F75CD1730D07CD5 (idUsersChanger), PRIMARY KEY(uuid));
+ALTER TABLE ar_article_dimension_contents ADD CONSTRAINT FK_5674F7BF34ECB4E6 FOREIGN KEY (route_id) REFERENCES ro_routes (id) ON DELETE CASCADE;
 ALTER TABLE ar_article_dimension_contents ADD CONSTRAINT FK_5674F7BFAE39C518 FOREIGN KEY (articleUuid) REFERENCES ar_articles (uuid) ON DELETE CASCADE;
 ALTER TABLE ar_article_dimension_contents ADD CONSTRAINT FK_5674F7BFF675F31B FOREIGN KEY (author_id) REFERENCES co_contacts (id) ON DELETE CASCADE;
 ALTER TABLE ar_article_dimension_contents ADD CONSTRAINT FK_5674F7BF2F5A5F5D FOREIGN KEY (excerptImageId) REFERENCES me_media (id) ON DELETE SET NULL;
@@ -234,6 +234,16 @@ ALTER TABLE ar_article_dimension_content_excerpt_categories ADD CONSTRAINT FK_97
 ALTER TABLE ar_article_dimension_content_excerpt_categories ADD CONSTRAINT FK_971AE52D12469DE2 FOREIGN KEY (category_id) REFERENCES ca_categories (id) ON DELETE CASCADE;
 ALTER TABLE ar_articles ADD CONSTRAINT FK_7F75CD17DBF11E1D FOREIGN KEY (idUsersCreator) REFERENCES se_users (id) ON DELETE SET NULL;
 ALTER TABLE ar_articles ADD CONSTRAINT FK_7F75CD1730D07CD5 FOREIGN KEY (idUsersChanger) REFERENCES se_users (id) ON DELETE SET NULL;
+```
+
+#### CustomUrlBundle
+
+Custom URLs are no longer stored in PHPCR and have been migrated to Doctrine ORM tables.
+
+```sql
+CREATE TABLE cu_custom_url (uuid VARCHAR(36) NOT NULL, title VARCHAR(255) NOT NULL, published TINYINT(1) NOT NULL, baseDomain VARCHAR(255) NOT NULL, webspace VARCHAR(255) NOT NULL, domainParts JSON NOT NULL, targetDocument VARCHAR(255) DEFAULT NULL, targetLocale VARCHAR(255) NOT NULL, canonical TINYINT(1) NOT NULL, redirect TINYINT(1) NOT NULL, noFollow TINYINT(1) NOT NULL, noIndex TINYINT(1) NOT NULL, INDEX IDX_A06ACB06E9EDC6B8 (webspace), UNIQUE INDEX UNIQ_A06ACB062B36786B (title), PRIMARY KEY(uuid)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB;
+CREATE TABLE cu_custom_url_route (uuid VARCHAR(36) NOT NULL, customUrl VARCHAR(36) NOT NULL, path VARCHAR(255) NOT NULL, INDEX IDX_5927CCB8C085433C (customUrl), INDEX routes (path), UNIQUE INDEX cu_custom_url_route_unique (path), PRIMARY KEY(uuid)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB;
+ALTER TABLE cu_custom_url_route ADD CONSTRAINT FK_5927CCB8C085433C FOREIGN KEY (customUrl) REFERENCES cu_custom_url (uuid) ON DELETE CASCADE;
 ```
 
 ### Removed `SecurityType`
@@ -258,6 +268,7 @@ These unused parameters have been removed:
 - `sulu_security.group_repository.class`
 - `sulu_security.entity_group.class`
 - `sulu_security.entity.group`
+- `sulu_media.adobe_creative_key`
 
 The resource routes has been removed:
 
@@ -574,9 +585,28 @@ renamed to `url` in your templates and use the `route` always.
                 <title lang="de">Adresse</title>
             </meta>
 
-            <tag name="sulu_article.article_route"/>
+-            <tag name="sulu_article.article_route"/>
++            <tag name="sulu.rlp"/>
         </property>
 ```
+
+To make things easier between pages and articles the `resource_locator` field type is now replaced by the `route` 
+field type, so all routable entities use the same field type.:
+
+```diff
+-        <property name="url" type="resource_locator">
++        <property name="url" type="route">
+            <meta>
+                <title lang="en">Resourcelocator</title>
+                <title lang="de">Adresse</title>
+            </meta>
+            
+            <tag name="sulu.rlp"/>
+        </property>
+```
+
+The `ResourceLocator` JS React Component now uses `tree_leaf_edit` and `tree_full_edit` instead of `leaf` and `full`,
+to be consistent with the PHP naming.
 
 ### Upgrade the Controller references
 
@@ -823,6 +853,7 @@ Removed classes / services / interfaces / traits:
 - `Sulu\Bundle\MediaBundle\DependencyInjection\FormatCacheClearerCompilerPass` (use tagged_iterator)
 - `Sulu\Component\Security\Authorization\AccessControl\SecuredEntityRepositoryTrait`
 - `Sulu/Bundle/AdminBundle/DependencyInjection/Compiler/AddAdminPass` (replaced by a `tagged_iterator`)
+- `Sulu/Bundle/AdminBundle/DependencyInjection/Compiler/AddMetadataProviderPass` (replaced by a `tagged_locator`)
 - `Sulu\Bundle\AudienceTargetingBundle\DependencyInjection\Compiler\AddRulesPass` -> (`sulu.audience_target_rule`)
 - `Sulu\Bundle\CoreBundle\DependencyInjection\Compiler\RegisterLocalizationProvidersPass` (`sulu.localization_provider`)
 - `Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreNotExistsException`
@@ -884,6 +915,7 @@ Removed deprecated functions and properties:
 - `Sulu\Bundle\AdminBundle\Admin\AdminPool::addAdmin` (use dependency injection via tagged service instead)
 - `Sulu\Bundle\MediaBundle\Controller\MediaController::__construct` (MediaListBuilder and Representation are required
 and some parameters have been removed)
+- `Sulu\Bundle\AdminBundle\Metadata\MetadataProvierRegistry::addMetadataProiver` (use dependency injection via tagged service instead)
 
 Removed unused arguments:
 
@@ -1083,3 +1115,90 @@ In case of some errors on customized code, you can try to fix it and rerun the c
 rerun, the existing already migrated content will be overwritten and not duplicated.
 If everything is done and the migration is successful, you can log in to the Sulu admin interface, set the permissions
 for the articles and snippets and check if everything is working as expected.
+
+### Migrating from Article Types to Template Groups
+
+In Sulu 2.x with the SuluArticleBundle, article types were used to categorize different article templates with
+tab-based filtering in the admin interface and separate permissions per article type. This functionality was configured
+via the `sulu_article.types` configuration.
+
+In Sulu 3.0, this concept has been replaced with **template groups**, which provide the same functionality but are now
+defined directly in the template XML files.
+
+#### What Changed
+
+**Sulu 2.x (SuluArticleBundle):**
+- Article types defined in `config/packages/sulu_article.yaml`
+- Templates implicitly belonged to a type based on configuration
+- Only worked for articles
+
+**Sulu 3.0 (Template Groups):**
+- Template groups defined directly in template XML files using the `<group>` element
+- No separate YAML configuration needed
+- Provides the same tab-based filtering and permission separation
+
+#### Migration Steps
+
+**1. Remove Article Type Configuration**
+
+Remove the `types` configuration from your `config/packages/sulu_article.yaml` file:
+
+```diff
+# config/packages/sulu_article.yaml
+sulu_article:
+-    types:
+-        blog:
+-            translation_key: "app.article_types.blog"
+-        news:
+-            translation_key: "app.article_types.news"
+```
+
+**2. Add Group to Template XML Files**
+
+For each article template, add a `<group>` element to specify which group it belongs to:
+
+```diff
+<!-- config/templates/articles/blog.xml -->
+<template xmlns="http://schemas.sulu.io/template/template"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/template.xsd">
+
+    <key>blog</key>
++   <group>blog</group>
+
+    <view>views/articles/blog</view>
+    <controller>Sulu\Content\UserInterface\Controller\Website\ContentController::indexAction</controller>
+
+    <meta>
+        <title lang="en">Blog Article</title>
+        <title lang="de">Blog-Artikel</title>
+    </meta>
+
+    <properties>
+        <!-- ... -->
+    </properties>
+</template>
+```
+
+**3. Update Translations (Optional)**
+
+The group identifier (e.g., `blog`) will be automatically converted to a human-readable title using ucfirst
+(e.g., `Blog`). If you need custom translations, you can add them to your admin translations file
+(`translations/admin.en.yaml`):
+
+```yaml
+sulu_admin.template_group.blog: Blog Articles
+sulu_admin.template_group.news: News Articles
+```
+
+The translation key pattern is `sulu_admin.template_group.<group_name>`. If no translation is found, Sulu will
+fall back to using `ucfirst(<group_name>)`.
+
+**4. Update Permissions**
+
+After the migration, you'll need to update user role permissions in the Sulu admin interface. Template groups create
+separate permission contexts, so you'll need to grant permissions for each group to the appropriate user roles.
+
+1. Log in to the Sulu admin interface
+2. Navigate to Settings → User Roles
+3. Edit each role and grant permissions for the new template groups under the Articles section

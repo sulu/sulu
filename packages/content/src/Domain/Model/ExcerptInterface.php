@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Sulu\Content\Domain\Model;
 
+use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\TagBundle\Tag\TagInterface;
 
@@ -59,6 +60,25 @@ interface ExcerptInterface
      * @param TagInterface[] $excerptTags
      */
     public function setExcerptTags(array $excerptTags): void;
+
+    /**
+     * @return TargetGroupInterface[]
+     */
+    public function getExcerptAudienceTargetGroups(): array;
+
+    /**
+     * @return int[]
+     */
+    public function getExcerptAudienceTargetGroupIds(): array;
+
+    /**
+     * @param TargetGroupInterface[] $excerptAudienceTargetGroups
+     */
+    public function setExcerptAudienceTargetGroups(array $excerptAudienceTargetGroups): void;
+
+    public function getExcerptSegment(): ?string;
+
+    public function setExcerptSegment(?string $excerptSegment): void;
 
     /**
      * @return array{id: int}|null

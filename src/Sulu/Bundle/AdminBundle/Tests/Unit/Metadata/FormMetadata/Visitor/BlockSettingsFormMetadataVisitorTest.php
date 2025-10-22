@@ -44,7 +44,7 @@ class BlockSettingsFormMetadataVisitorTest extends TestCase
             [
                 'settings_form_key' => [
                     'name' => 'settings_form_key',
-                    'value' => 'page_block_settings',
+                    'value' => 'content_block_settings',
                 ],
             ],
             \array_map(function(OptionMetadata $optionMetadata): array {
@@ -115,7 +115,7 @@ class BlockSettingsFormMetadataVisitorTest extends TestCase
             [
                 'settings_form_key' => [
                     'name' => 'settings_form_key',
-                    'value' => 'page_block_settings',
+                    'value' => 'content_block_settings',
                 ],
             ],
             \array_map(function(OptionMetadata $optionMetadata): array {

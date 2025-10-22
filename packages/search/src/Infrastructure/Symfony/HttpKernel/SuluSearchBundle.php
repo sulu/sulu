@@ -14,6 +14,9 @@ declare(strict_types=1);
 namespace Sulu\Search\Infrastructure\Symfony\HttpKernel;
 
 use Sulu\Search\Application\MessageHandler\ReindexMessageHandler;
+use Sulu\Search\Infrastructure\Sulu\Admin\SearchAdmin;
+use Sulu\Search\UserInterface\Controller\Admin\SearchController;
+use Symfony\Component\Config\Definition\Configurator\DefinitionConfigurator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 
@@ -30,6 +33,45 @@ use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
  */
 final class SuluSearchBundle extends AbstractBundle
 {
+    public function configure(DefinitionConfigurator $definition): void
+    {
+        $definition->rootNode() // @phpstan-ignore-line
+            ->children()
+                ->arrayNode('admin')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->arrayNode('resources')
+                        ->arrayPrototype()
+                        ->children()
+                            ->scalarNode('name')
+                                ->defaultNull()
+                            ->end()
+                            ->scalarNode('icon')
+                                ->defaultNull()
+                            ->end()
+                            ->arrayNode('route')
+                            ->children()
+                                ->scalarNode('name')
+                                    ->isRequired()
+                                    ->cannotBeEmpty()
+                                ->end()
+                                ->arrayNode('resultToRoute')
+                                    ->useAttributeAsKey('name')
+                                    ->scalarPrototype()
+                                ->end()
+                            ->end()
+                        ->end()
+                    ->end()
+                ->scalarNode('securityContext')
+                    ->defaultNull()
+                ->end()
+                ->arrayNode('contexts')
+                    ->scalarPrototype()->end()
+                    ->defaultValue([])
+                ->end()
+        ->end();
+    }
+
     /**
      * @param array<string, mixed> $config
      *
@@ -39,6 +81,11 @@ final class SuluSearchBundle extends AbstractBundle
     {
         $services = $container->services();
 
+        /** @var array<string, array{resources?: string}> $admin */
+        $admin = $config['admin'] ?? [];
+
+        $builder->setParameter('sulu_search.admin_resources', $admin['resources'] ?? []);
+
         // Message Handler services
         $services->set('sulu_search.reindex_message_handler')
             ->class(ReindexMessageHandler::class)
@@ -47,6 +94,28 @@ final class SuluSearchBundle extends AbstractBundle
                 tagged_iterator('cmsig_seal.reindex_provider'),
             ])
             ->tag('messenger.message_handler');
+
+        // Sulu Integration service
+        $services->set('sulu_search.search_admin')
+            ->class(SearchAdmin::class)
+            ->args([
+                new Reference('sulu_admin.view_builder_factory'),
+            ])
+            ->tag('sulu.context', ['context' => 'admin'])
+            ->tag('sulu.admin');
+
+        // Controllers services
+        $services->set('sulu_search.admin_search_controller')
+            ->class(SearchController::class)
+            ->public()
+            ->args([
+                new Reference('cmsig_seal.engine.default'),
+                new Reference('sulu_core.list_rest_helper'),
+                param('sulu_search.admin_resources'),
+                new Reference('sulu_media.media_manager'),
+                new Reference('security.token_storage'),
+            ])
+            ->tag('sulu.context', ['context' => 'admin']);
     }
 
     /**
@@ -54,6 +123,26 @@ final class SuluSearchBundle extends AbstractBundle
      */
     public function prependExtension(ContainerConfigurator $container, ContainerBuilder $builder): void
     {
+        if ($builder->hasExtension('sulu_admin')) {
+            $builder->prependExtensionConfig(
+                'sulu_admin',
+                [
+                    'resources' => [
+                        'search' => [
+                            'routes' => [
+                                'list' => 'sulu_search.search',
+                            ],
+                        ],
+                        'search_resources' => [
+                            'routes' => [
+                                'list' => 'sulu_search.resources',
+                            ],
+                        ],
+                    ],
+                ]
+            );
+        }
+
         if ($builder->hasExtension('cmsig_seal')) {
             $builder->prependExtensionConfig(
                 'cmsig_seal',
@@ -66,6 +155,10 @@ final class SuluSearchBundle extends AbstractBundle
                     ],
                 ],
             );
+        }
+
+        if (!$builder->hasParameter('sulu_search.admin_resources')) {
+            $builder->setParameter('sulu_search.admin_resources', []);
         }
     }
 

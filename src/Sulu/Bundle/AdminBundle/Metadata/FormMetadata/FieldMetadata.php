@@ -78,7 +78,8 @@ class FieldMetadata extends ItemMetadata
 
     public function addOption(OptionMetadata $option): void
     {
-        $this->options[$option->getName()] = $option;
+        $name = $option->getName();
+        $this->options[\is_int($name) ? $name : ((string) $name)] = $option;
     }
 
     public function findOption(string $name): ?OptionMetadata

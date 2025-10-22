@@ -157,5 +157,9 @@
 
             <tag name="sulu_content.smart_content_filters_visitor"/>
         </service>
+
+        <service id="sulu_audience_targeting.target_group_factory" class="Sulu\Bundle\AudienceTargetingBundle\TargetGroup\TargetGroupFactory">
+            <argument type="service" id="doctrine.orm.entity_manager"/>
+        </service>
     </services>
 </container>

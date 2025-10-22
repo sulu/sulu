@@ -25,6 +25,7 @@ use Sulu\Content\Application\ContentDataMapper\DataMapper\TemplateDataMapper;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\Example;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\ExampleDimensionContent;
+use Symfony\Component\DependencyInjection\Container;
 
 class TemplateDataMapperTest extends TestCase
 {
@@ -37,8 +38,8 @@ class TemplateDataMapperTest extends TestCase
         array $properties = [],
         ?string $defaultTemplateKey = null,
     ): TemplateDataMapper {
-        $metadataProviderRegistry = new MetadataProviderRegistry();
-        $metadataProviderRegistry->addMetadataProvider('form', new class($this->createTypedFormMetadata($properties, $defaultTemplateKey)) implements MetadataProviderInterface {
+        $container = new Container();
+        $container->set('form', new class($this->createTypedFormMetadata($properties, $defaultTemplateKey)) implements MetadataProviderInterface {
             public function __construct(private readonly TypedFormMetadata $typedFormMetadata)
             {
             }
@@ -48,6 +49,7 @@ class TemplateDataMapperTest extends TestCase
                 return $this->typedFormMetadata;
             }
         });
+        $metadataProviderRegistry = new MetadataProviderRegistry($container);
 
         return new TemplateDataMapper($metadataProviderRegistry);
     }

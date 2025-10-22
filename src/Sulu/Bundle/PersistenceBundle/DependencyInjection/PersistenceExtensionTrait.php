@@ -52,13 +52,11 @@ trait PersistenceExtensionTrait
     private function defineRepositories(array $objects, ContainerBuilder $container): void
     {
         foreach ($objects as $object => $services) {
-            if (\array_key_exists('model', $services)) {
-                $repositoryDefinition = $this->getRepositoryDefinition($object, $services, $container);
+            $repositoryDefinition = $this->getRepositoryDefinition($object, $services, $container);
 
-                $container->setDefinition($this->getContainerKey('repository', $object), $repositoryDefinition)
-                    ->setPublic(true)
-                    ->setLazy(true);
-            }
+            $container->setDefinition($this->getContainerKey('repository', $object), $repositoryDefinition)
+                ->setPublic(true)
+                ->setLazy(true);
         }
     }
 

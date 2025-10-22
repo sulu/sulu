@@ -51,6 +51,12 @@ class FormMetadata extends AbstractMetadata
     private $key;
 
     /**
+     * @var string|null
+     */
+    #[Exclude(if: "'admin_form_metadata_keys_only' in context.getAttribute('groups')")]
+    private $group = null;
+
+    /**
      * @var TagMetadata[]
      */
     #[Exclude(if: "'admin_form_metadata_keys_only' in context.getAttribute('groups')")]
@@ -88,6 +94,16 @@ class FormMetadata extends AbstractMetadata
     public function getKey(): string
     {
         return $this->key;
+    }
+
+    public function setGroup(?string $group): void
+    {
+        $this->group = $group;
+    }
+
+    public function getGroup(): ?string
+    {
+        return $this->group;
     }
 
     public function setTitle(string $title, string $locale)

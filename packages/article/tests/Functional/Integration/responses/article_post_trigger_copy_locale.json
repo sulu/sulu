@@ -14,11 +14,13 @@
     "created": "@datetime@",
     "creator": "@integer@",
     "description": null,
+    "excerptAudienceTargetGroups": [],
     "excerptCategories": [],
     "excerptDescription": "Excerpt Description",
     "excerptIcon": null,
     "excerptImage": null,
     "excerptMore": "Excerpt More",
+    "excerptSegment": "draft-segment",
     "excerptTags": [
         "Tag 1",
         "Tag 2"
@@ -31,6 +33,8 @@
     "lastModifiedEnabled": true,
     "locale": "de",
     "mainWebspace": "sulu-io",
+    "additionalWebspaces": [],
+    "customizeWebspaceSettings": false,
     "published": null,
     "publishedState": false,
     "seoCanonicalUrl": "https://sulu.io/",

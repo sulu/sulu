@@ -24,7 +24,8 @@ use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
  *     id: int,
  *     changed: \DateTimeImmutable,
  *     created: \DateTimeImmutable,
- *     name: string
+ *     name: string,
+ *     mediaId: int|null,
  * }
  *
  * @internal this class is internal no backwards compatibility promise is given for this class
@@ -60,6 +61,7 @@ final class AccountReindexProvider implements ReindexProviderInterface
                 'id' => AccountInterface::RESOURCE_KEY . '::' . ((string) $account['id']),
                 'resourceKey' => AccountInterface::RESOURCE_KEY,
                 'resourceId' => (string) $account['id'],
+                'mediaId' => (string) $account['mediaId'],
                 'changedAt' => $account['changed']->format('c'),
                 'createdAt' => $account['created']->format('c'),
                 'title' => $account['name'],
@@ -77,6 +79,7 @@ final class AccountReindexProvider implements ReindexProviderInterface
         $qb = $this->accountRepository->createQueryBuilder('account')
             ->select('account.id')
             ->addSelect('account.name')
+            ->addSelect('IDENTITY(account.logo) as mediaId')
             ->addSelect('account.created')
             ->addSelect('account.changed');
 

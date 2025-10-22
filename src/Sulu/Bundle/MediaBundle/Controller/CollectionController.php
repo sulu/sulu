@@ -117,7 +117,9 @@ class CollectionController extends AbstractRestController implements SecuredCont
             $limit = $request->get('limit', null);
             $offset = $this->getOffset($request, $limit);
             $search = $this->listRestHelper->getSearchPattern();
+            /** @var string|null $sortBy */
             $sortBy = $request->get('sortBy');
+            /** @var string $sortOrder */
             $sortOrder = $request->get('sortOrder', 'ASC');
 
             $filter = [
@@ -172,7 +174,9 @@ class CollectionController extends AbstractRestController implements SecuredCont
             $limit = $request->get('limit', null);
             $offset = $this->getOffset($request, $limit);
             $search = $this->listRestHelper->getSearchPattern();
+            /** @var string|null $sortBy */
             $sortBy = $request->get('sortBy');
+            /** @var string $sortOrder */
             $sortOrder = $request->get('sortOrder', 'ASC');
             $includeRoot = $this->getBooleanRequestParameter($request, 'includeRoot', false, false);
 

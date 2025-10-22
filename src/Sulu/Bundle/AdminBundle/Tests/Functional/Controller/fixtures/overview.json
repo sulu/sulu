@@ -42,7 +42,7 @@
         "url": {
             "disabledCondition": null,
             "visibleCondition": null,
-            "type": "resource_locator",
+            "type": "route",
             "colSpan": 12,
             "options": [],
             "types": [],
@@ -118,7 +118,7 @@
                 "settings_form_key": {
                     "name": "settings_form_key",
                     "type": null,
-                    "value": "page_block_settings"
+                    "value": "content_block_settings"
                 }
             },
             "types": {
@@ -154,6 +154,7 @@
                         ]
                     },
                     "key": "editor",
+                    "group": null,
                     "tags": [],
                     "title": "Editor"
                 }
@@ -212,6 +213,7 @@
                         ]
                     },
                     "key": "editor",
+                    "group": null,
                     "tags": [],
                     "title": "Editor"
                 }
@@ -342,6 +344,7 @@
         ]
     },
     "key": "overview",
+    "group": null,
     "tags": [
         {
             "name": "test3",

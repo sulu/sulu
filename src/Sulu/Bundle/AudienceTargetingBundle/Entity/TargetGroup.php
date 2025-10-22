@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Sulu.
  *
@@ -147,10 +149,15 @@ class TargetGroup implements TargetGroupInterface
     #[SerializedName('webspaceKeys')]
     public function getWebspaceKeys()
     {
+        // @phpstan-ignore-next-line
+        if (null === $this->webspaces) {
+            return [];
+        }
+
         return \array_values(
             \array_map(function(TargetGroupWebspaceInterface $targetGroupWebspace) {
                 return $targetGroupWebspace->getWebspaceKey();
-            }, $this->webspaces->toArray())
+            }, $this->webspaces->toArray()),
         );
     }
 

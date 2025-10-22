@@ -10,7 +10,13 @@ test('ResourceLocator should render with type full', () => {
     const locale = observable.box('en');
 
     expect(
-        render(<ResourceLocator locale={locale} mode="full" onBlur={jest.fn()} onChange={onChange} value={value} />)
+        render(<ResourceLocator
+            locale={locale}
+            mode="tree_full_edit"
+            onBlur={jest.fn()}
+            onChange={onChange}
+            value={value}
+        />)
     ).toMatchSnapshot();
 });
 
@@ -19,7 +25,13 @@ test('ResourceLocator should render with type full and a value of undefined', ()
     const locale = observable.box('en');
 
     expect(
-        render(<ResourceLocator locale={locale} mode="full" onBlur={jest.fn()} onChange={onChange} value={undefined} />)
+        render(<ResourceLocator
+            locale={locale}
+            mode="tree_full_edit"
+            onBlur={jest.fn()}
+            onChange={onChange}
+            value={undefined}
+        />)
     ).toMatchSnapshot();
 });
 
@@ -29,7 +41,13 @@ test('ResourceLocator should render with type leaf', () => {
     const locale = observable.box('en');
 
     expect(
-        render(<ResourceLocator locale={locale} mode="leaf" onBlur={jest.fn()} onChange={onChange} value={value} />)
+        render(<ResourceLocator
+            locale={locale}
+            mode="tree_leaf_edit"
+            onBlur={jest.fn()}
+            onChange={onChange}
+            value={value}
+        />)
     ).toMatchSnapshot();
 });
 
@@ -38,7 +56,13 @@ test('ResourceLocator should render with type leaf and a value of undefined', ()
     const locale = observable.box('en');
 
     expect(
-        render(<ResourceLocator locale={locale} mode="leaf" onBlur={jest.fn()} onChange={onChange} value={undefined} />)
+        render(<ResourceLocator
+            locale={locale}
+            mode="tree_leaf_edit"
+            onBlur={jest.fn()}
+            onChange={onChange}
+            value={undefined}
+        />)
     ).toMatchSnapshot();
 });
 
@@ -52,7 +76,7 @@ test('ResourceLocator should render when disabled', () => {
             <ResourceLocator
                 disabled={true}
                 locale={locale}
-                mode="full"
+                mode="tree_full_edit"
                 onBlur={jest.fn()}
                 onChange={onChange}
                 value={value}
@@ -64,7 +88,7 @@ test('ResourceLocator should render when disabled', () => {
 test('ResourceLocator should update the split leaf representation when value changes', () => {
     const locale = observable.box('en');
     const resourceLocator = mount(
-        <ResourceLocator locale={locale} mode="leaf" onBlur={jest.fn()} onChange={jest.fn()} value="/child" />
+        <ResourceLocator locale={locale} mode="tree_leaf_edit" onBlur={jest.fn()} onChange={jest.fn()} value="/child" />
     );
 
     expect(resourceLocator.find('.fixed').prop('children')).toEqual('/');
@@ -81,7 +105,7 @@ test('ResourceLocator should call the onChange callback when the input changes w
     const value = '/parent';
     const locale = observable.box('en');
     const resourceLocator = mount(
-        <ResourceLocator locale={locale} mode="full" onBlur={jest.fn()} onChange={onChange} value={value} />
+        <ResourceLocator locale={locale} mode="tree_full_edit" onBlur={jest.fn()} onChange={onChange} value={value} />
     );
     resourceLocator.find('Input').props().onChange('parent-new');
     expect(onChange).toHaveBeenCalledWith('/parent-new');
@@ -92,7 +116,7 @@ test('ResourceLocator should call the onChange callback when the input changes w
     const value = '/parent/child';
     const locale = observable.box('en');
     const resourceLocator = mount(
-        <ResourceLocator locale={locale} mode="leaf" onBlur={jest.fn()} onChange={onChange} value={value} />
+        <ResourceLocator locale={locale} mode="tree_leaf_edit" onBlur={jest.fn()} onChange={onChange} value={value} />
     );
     resourceLocator.find('Input').props().onChange('child-new');
     expect(onChange).toHaveBeenCalledWith('/parent/child-new');
@@ -103,7 +127,7 @@ test('ResourceLocator should call the onChange callback and replace a typed slas
     const value = '/parent/child';
     const locale = observable.box('en');
     const resourceLocator = mount(
-        <ResourceLocator locale={locale} mode="leaf" onBlur={jest.fn()} onChange={onChange} value={value} />
+        <ResourceLocator locale={locale} mode="tree_leaf_edit" onBlur={jest.fn()} onChange={onChange} value={value} />
     );
     resourceLocator.find('Input').props().onChange('child/');
     expect(onChange).toBeCalledWith('/parent/child-');
@@ -114,7 +138,7 @@ test('ResourceLocator should call the onChange callback and replace a typed spac
     const value = '/parent/child';
     const locale = observable.box('en');
     const resourceLocator = mount(
-        <ResourceLocator locale={locale} mode="leaf" onBlur={jest.fn()} onChange={onChange} value={value} />
+        <ResourceLocator locale={locale} mode="tree_leaf_edit" onBlur={jest.fn()} onChange={onChange} value={value} />
     );
     resourceLocator.find('Input').props().onChange('child test child');
     expect(onChange).toBeCalledWith('/parent/child-test-child');
@@ -125,7 +149,7 @@ test('ResourceLocator should call the onChange callback and replace a typed spac
     const value = '/parent/child';
     const locale = observable.box('en');
     const resourceLocator = mount(
-        <ResourceLocator locale={locale} mode="full" onBlur={jest.fn()} onChange={onChange} value={value} />
+        <ResourceLocator locale={locale} mode="tree_full_edit" onBlur={jest.fn()} onChange={onChange} value={value} />
     );
     resourceLocator.find('Input').props().onChange('parent/child test child');
     expect(onChange).toBeCalledWith('/parent/child-test-child');
@@ -136,7 +160,7 @@ test('ResourceLocator should call the onChange callback and replace multiple sla
     const value = '/parent/child';
     const locale = observable.box('en');
     const resourceLocator = mount(
-        <ResourceLocator locale={locale} mode="full" onBlur={jest.fn()} onChange={onChange} value={value} />
+        <ResourceLocator locale={locale} mode="tree_full_edit" onBlur={jest.fn()} onChange={onChange} value={value} />
     );
     resourceLocator.find('Input').props().onChange('parent///child//test/child');
     expect(onChange).toBeCalledWith('/parent/child/test/child');
@@ -147,7 +171,7 @@ test('ResourceLocator should call the onChange callback and replace multiple das
     const value = '/parent/child';
     const locale = observable.box('en');
     const resourceLocator = mount(
-        <ResourceLocator locale={locale} mode="leaf" onBlur={jest.fn()} onChange={onChange} value={value} />
+        <ResourceLocator locale={locale} mode="tree_leaf_edit" onBlur={jest.fn()} onChange={onChange} value={value} />
     );
     resourceLocator.find('Input').props().onChange('child--- a /// test');
     expect(onChange).toBeCalledWith('/parent/child-a-test');
@@ -158,7 +182,7 @@ test('ResourceLocator should call the onChange callback and replace multiple das
     const value = '/parent/child';
     const locale = observable.box('en');
     const resourceLocator = mount(
-        <ResourceLocator locale={locale} mode="full" onBlur={jest.fn()} onChange={onChange} value={value} />
+        <ResourceLocator locale={locale} mode="tree_full_edit" onBlur={jest.fn()} onChange={onChange} value={value} />
     );
     resourceLocator.find('Input').props().onChange('parent/child---child--test-child');
     expect(onChange).toBeCalledWith('/parent/child-child-test-child');
@@ -169,7 +193,7 @@ test('ResourceLocator should call the onChange callback and replace dash before 
     const value = '/parent/child';
     const locale = observable.box('en');
     const resourceLocator = mount(
-        <ResourceLocator locale={locale} mode="full" onBlur={jest.fn()} onChange={onChange} value={value} />
+        <ResourceLocator locale={locale} mode="tree_full_edit" onBlur={jest.fn()} onChange={onChange} value={value} />
     );
     resourceLocator.find('Input').props().onChange('parent/-child-/-test-/-child');
     expect(onChange).toBeCalledWith('/parent/child/test/child');
@@ -180,7 +204,7 @@ test('ResourceLocator should call the onChange callback and remove dash at the b
     const value = '/parent/child';
     const locale = observable.box('en');
     const resourceLocator = mount(
-        <ResourceLocator locale={locale} mode="leaf" onBlur={jest.fn()} onChange={onChange} value={value} />
+        <ResourceLocator locale={locale} mode="tree_leaf_edit" onBlur={jest.fn()} onChange={onChange} value={value} />
     );
     resourceLocator.find('Input').props().onChange('-child');
     expect(onChange).toBeCalledWith('/parent/child');
@@ -191,7 +215,7 @@ test('ResourceLocator should call the onChange callback and remove dash at the b
     const value = '/parent/child';
     const locale = observable.box('en');
     const resourceLocator = mount(
-        <ResourceLocator locale={locale} mode="full" onBlur={jest.fn()} onChange={onChange} value={value} />
+        <ResourceLocator locale={locale} mode="tree_full_edit" onBlur={jest.fn()} onChange={onChange} value={value} />
     );
     resourceLocator.find('Input').props().onChange('-parent/child');
     expect(onChange).toBeCalledWith('/parent/child');
@@ -202,7 +226,7 @@ test('ResourceLocator should call the onChange callback and remove special chara
     const value = '/parent/child';
     const locale = observable.box('en');
     const resourceLocator = mount(
-        <ResourceLocator locale={locale} mode="leaf" onBlur={jest.fn()} onChange={onChange} value={value} />
+        <ResourceLocator locale={locale} mode="tree_leaf_edit" onBlur={jest.fn()} onChange={onChange} value={value} />
     );
     resourceLocator.find('Input').props().onChange('c!h"i$&()=$%`l`#+.,d%');
     expect(onChange).toBeCalledWith('/parent/child');
@@ -213,7 +237,7 @@ test('ResourceLocator should call the onChange callback and remove special chara
     const value = '/parent/child';
     const locale = observable.box('en');
     const resourceLocator = mount(
-        <ResourceLocator locale={locale} mode="full" onBlur={jest.fn()} onChange={onChange} value={value} />
+        <ResourceLocator locale={locale} mode="tree_full_edit" onBlur={jest.fn()} onChange={onChange} value={value} />
     );
     resourceLocator.find('Input').props().onChange('parent/chi!ld/te"§st/ch;:il%§d%');
     expect(onChange).toBeCalledWith('/parent/child/test/child');
@@ -224,7 +248,7 @@ test('ResourceLocator should replace capital letters with lower case in leaf mod
     const value = '/parent/child';
     const locale = observable.box('en');
     const resourceLocator = mount(
-        <ResourceLocator locale={locale} mode="leaf" onBlur={jest.fn()} onChange={onChange} value={value} />
+        <ResourceLocator locale={locale} mode="tree_leaf_edit" onBlur={jest.fn()} onChange={onChange} value={value} />
     );
     resourceLocator.find('Input').props().onChange('CHILD');
     expect(onChange).toBeCalledWith('/parent/child');
@@ -235,7 +259,7 @@ test('ResourceLocator should replace capital letters with lower case in full mod
     const value = '/parent/child';
     const locale = observable.box('en');
     const resourceLocator = mount(
-        <ResourceLocator locale={locale} mode="full" onBlur={jest.fn()} onChange={onChange} value={value} />
+        <ResourceLocator locale={locale} mode="tree_full_edit" onBlur={jest.fn()} onChange={onChange} value={value} />
     );
     resourceLocator.find('Input').props().onChange('parent/CHILD');
     expect(onChange).toBeCalledWith('/parent/child');
@@ -246,7 +270,7 @@ test('ResourceLocator should replace capital letters even when given locale is n
     const value = '/parent/child';
     const locale = observable.box('de_CH');
     const resourceLocator = mount(
-        <ResourceLocator locale={locale} mode="leaf" onBlur={jest.fn()} onChange={onChange} value={value} />
+        <ResourceLocator locale={locale} mode="tree_leaf_edit" onBlur={jest.fn()} onChange={onChange} value={value} />
     );
     resourceLocator.find('Input').props().onChange('CHILD');
     expect(onChange).toBeCalledWith('/parent/child');
@@ -257,7 +281,7 @@ test('ResourceLocator should call the onChange callback when a slash is typed in
     const value = '/parent/child';
     const locale = observable.box('en');
     const resourceLocator = mount(
-        <ResourceLocator locale={locale} mode="full" onBlur={jest.fn()} onChange={onChange} value={value} />
+        <ResourceLocator locale={locale} mode="tree_full_edit" onBlur={jest.fn()} onChange={onChange} value={value} />
     );
     resourceLocator.find('Input').props().onChange('parent/child/');
     expect(onChange).toBeCalledWith('/parent/child/');
@@ -266,7 +290,12 @@ test('ResourceLocator should call the onChange callback when a slash is typed in
 test('ResourceLocator should call the onChange callback with undefined if no input is given', () => {
     const onChange = jest.fn();
     const locale = observable.box('en');
-    const resourceLocator = mount(<ResourceLocator locale={locale} mode="leaf" onChange={onChange} value="/url" />);
+    const resourceLocator = mount(<ResourceLocator
+        locale={locale}
+        mode="tree_leaf_edit"
+        onChange={onChange}
+        value="/url"
+    />);
     resourceLocator.find('Input').prop('onChange')(undefined);
     expect(onChange).toHaveBeenCalledWith(undefined);
 });
@@ -277,7 +306,7 @@ test('ResourceLocator should call the onChange callback and replace "/" with "-"
     const value = '/parent';
     const locale = observable.box('en');
     const resourceLocator = mount(
-        <ResourceLocator locale={locale} mode="full" onBlur={jest.fn()} onChange={onChange} value={value} />
+        <ResourceLocator locale={locale} mode="tree_full_edit" onBlur={jest.fn()} onChange={onChange} value={value} />
     );
     resourceLocator.find('Input').props().onChange('parent/child/');
     expect(onChange).toBeCalledWith('/parent/child/');
@@ -288,7 +317,13 @@ test('ResourceLocator should call the onBlur callback when the Input finishes ed
     const locale = observable.box('en');
 
     const resourceLocator = shallow(
-        <ResourceLocator locale={locale} mode="leaf" onBlur={finishSpy} onChange={jest.fn()} value="/some/url" />
+        <ResourceLocator
+            locale={locale}
+            mode="tree_leaf_edit"
+            onBlur={finishSpy}
+            onChange={jest.fn()}
+            value="/some/url"
+        />
     );
 
     resourceLocator.find('Input').simulate('blur');

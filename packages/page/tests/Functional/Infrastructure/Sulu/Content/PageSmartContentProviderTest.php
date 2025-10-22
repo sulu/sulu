@@ -1292,6 +1292,13 @@ class PageSmartContentProviderTest extends SuluTestCase
         ];
     }
 
+    public function testGetConfigurationAudienceTargeting(): void
+    {
+        $configuration = $this->smartContentProvider->getConfiguration();
+
+        $this->assertTrue($configuration->hasAudienceTargeting(), 'Audience targeting should be enabled when SuluAudienceTargetingBundle is available');
+    }
+
     public function testFindFlatByCombinedFilters(): void
     {
         // Test combination of template, and category filters

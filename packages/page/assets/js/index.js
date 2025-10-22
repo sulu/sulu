@@ -1,13 +1,10 @@
 // @flow
-import {initializer, Config} from 'sulu-admin-bundle/services';
+import {initializer} from 'sulu-admin-bundle/services';
 import {
     conditionDataProviderRegistry,
     fieldRegistry,
     viewRegistry,
 } from 'sulu-admin-bundle/containers';
-import {
-    ResourceLocator,
-} from 'sulu-route-bundle/containers';
 import webspaceConditionDataProvider from './containers/Form/conditionDataProviders/webspaceConditionDataProvider';
 import SearchResult from './containers/Form/fields/SearchResult';
 import SegmentSelect from './containers/Form/fields/SegmentSelect';
@@ -17,7 +14,6 @@ import PageSettingsNavigationSelect from './containers/Form/fields/PageSettingsN
 import PageSettingsShadowLocaleSelect from './containers/Form/fields/PageSettingsShadowLocaleSelect';
 import SettingsVersions from './containers/Form/fields/SettingsVersions';
 import webspaceStore from './stores/webspaceStore';
-import {loadResourceLocatorInputTypeByWebspace} from './utils/Webspace';
 import PageTabs from './views/PageTabs';
 import PageList from './views/PageList';
 import WebspaceTabs from './views/WebspaceTabs';
@@ -44,25 +40,10 @@ initializer.addUpdateConfigHook('sulu_page', (config: Object, initialized: boole
     conditionDataProviderRegistry.add(webspaceConditionDataProvider);
 
     fieldRegistry.add(
-        'resource_locator',
-        ResourceLocator,
-        {
-            modeResolver: (props) => loadResourceLocatorInputTypeByWebspace(props.formInspector.options.webspace),
-            generationUrl: Config.endpoints.generateUrl,
-            historyResourceKey: 'page_resourcelocators',
-            resourceStorePropertiesToRequest: {
-                parentUuid: 'parentId',
-            },
-        }
-    );
-
-    fieldRegistry.add(
         'page_tree_route',
         PageTreeRoute,
         {
-            modeResolver: () => {
-                return Promise.resolve('leaf');
-            },
+            defaultMode: 'tree_leaf_edit',
         }
     );
 

@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /*
  * This file is part of Sulu.
  *
@@ -178,5 +176,46 @@ class BuilderTest extends TestCase
 
         $this->assertSame('edit_form', $configuration->getView());
         $this->assertSame(['id' => 'id'], $configuration->getResultToView());
+    }
+
+    public function testTypes(): void
+    {
+        $builder = Builder::create();
+
+        $this->assertSame($builder, $builder->enableTypes([
+            ['title' => 'Default Group', 'type' => 'default'],
+            ['title' => 'Blog Group', 'type' => 'blog'],
+            ['title' => 'News Group', 'type' => 'news'],
+        ]));
+
+        $configuration = $builder->getConfiguration();
+
+        $this->assertTrue($configuration->hasTypes());
+        $this->assertFalse($configuration->hasTags());
+        $this->assertFalse($configuration->hasDatasource());
+        $this->assertFalse($configuration->hasCategories());
+        $this->assertFalse($configuration->hasLimit());
+        $this->assertFalse($configuration->hasPresentAs());
+        $this->assertFalse($configuration->hasSorting());
+        $this->assertFalse($configuration->hasPagination());
+
+        $types = $configuration->getTypes();
+        $this->assertIsArray($types);
+        $this->assertCount(3, $types);
+
+        // Check first group
+        $this->assertEquals(PropertyParameter::class, \get_class($types[0]));
+        $this->assertSame('default', $types[0]->getValue());
+        $this->assertSame('Default Group', $types[0]->getName());
+
+        // Check second group
+        $this->assertEquals(PropertyParameter::class, \get_class($types[1]));
+        $this->assertSame('blog', $types[1]->getValue());
+        $this->assertSame('Blog Group', $types[1]->getName());
+
+        // Check third group
+        $this->assertEquals(PropertyParameter::class, \get_class($types[2]));
+        $this->assertSame('news', $types[2]->getValue());
+        $this->assertSame('News Group', $types[2]->getName());
     }
 }

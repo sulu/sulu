@@ -1,0 +1,11 @@
+sulu_search.search:
+    path: /query
+    methods: GET
+    controller: sulu_search.admin_search_controller::queryAction
+    format: json
+
+sulu_search.resources:
+    path: /resources
+    methods: GET
+    controller: sulu_search.admin_search_controller::indexAction
+    format: json

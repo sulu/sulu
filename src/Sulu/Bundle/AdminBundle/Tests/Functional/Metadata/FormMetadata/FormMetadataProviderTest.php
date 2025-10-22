@@ -80,7 +80,7 @@ class FormMetadataProviderTest extends KernelTestCase
     {
         $typedForm = $this->formMetadataProvider->getMetadata('page', 'en');
         $this->assertInstanceOf(TypedFormMetadata::class, $typedForm);
-        $this->assertCount(2, $typedForm->getForms());
+        $this->assertCount(3, $typedForm->getForms());
     }
 
     public function testGetMetadataTagFiltered(): void
@@ -116,8 +116,9 @@ class FormMetadataProviderTest extends KernelTestCase
             ['tags' => ['test2' => ['test' => 'test-value2']]]
         );
         $this->assertInstanceOf(TypedFormMetadata::class, $typedForm);
-        $this->assertCount(1, $typedForm->getForms());
-        $this->assertEquals(['default'], \array_keys($typedForm->getForms()));
+        $forms = $typedForm->getForms();
+        \ksort($forms);
+        $this->assertSame(['default'], \array_keys($forms));
 
         $typedForm = $this->formMetadataProvider->getMetadata(
             'page',
@@ -125,8 +126,9 @@ class FormMetadataProviderTest extends KernelTestCase
             ['tags' => ['test' => false]]
         );
         $this->assertInstanceOf(TypedFormMetadata::class, $typedForm);
-        $this->assertCount(1, $typedForm->getForms());
-        $this->assertEquals(['overview'], \array_keys($typedForm->getForms()));
+        $forms = $typedForm->getForms();
+        \ksort($forms);
+        $this->assertSame(['grouped', 'overview'], \array_keys($forms));
 
         $typedForm = $this->formMetadataProvider->getMetadata(
             'page',
@@ -134,8 +136,9 @@ class FormMetadataProviderTest extends KernelTestCase
             ['tags' => ['test' => true]]
         );
         $this->assertInstanceOf(TypedFormMetadata::class, $typedForm);
-        $this->assertCount(1, $typedForm->getForms());
-        $this->assertEquals(['default'], \array_keys($typedForm->getForms()));
+        $forms = $typedForm->getForms();
+        \ksort($forms);
+        $this->assertSame(['default'], \array_keys($forms));
 
         $typedForm = $this->formMetadataProvider->getMetadata(
             'page',
@@ -143,7 +146,8 @@ class FormMetadataProviderTest extends KernelTestCase
             ['tags' => ['test3' => ['value' => 'test-value']]]
         );
         $this->assertInstanceOf(TypedFormMetadata::class, $typedForm);
-        $this->assertCount(1, $typedForm->getForms());
-        $this->assertEquals(['default'], \array_keys($typedForm->getForms()));
+        $forms = $typedForm->getForms();
+        \ksort($forms);
+        $this->assertSame(['default'], \array_keys($forms));
     }
 }

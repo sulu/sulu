@@ -25,6 +25,7 @@ use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderInterface;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\SchemaMetadata;
+use Symfony\Component\DependencyInjection\Container;
 
 class GlobalBlocksTypedFormMetadataVisitorTest extends TestCase
 {
@@ -38,13 +39,14 @@ class GlobalBlocksTypedFormMetadataVisitorTest extends TestCase
 
     protected function setUp(): void
     {
-        $metadataProviderRegistryProphecy = $this->prophesize(MetadataProviderRegistry::class);
         $this->metadataProviderProphecy = $this->prophesize(MetadataProviderInterface::class);
 
-        $metadataProviderRegistryProphecy->getMetadataProvider('form')->willReturn($this->metadataProviderProphecy->reveal());
+        $container = new Container();
+        $container->set('form', $this->metadataProviderProphecy->reveal());
+        $metadataProviderRegistry = new MetadataProviderRegistry($container);
 
         $this->globalBlocksTypedFormMetadataVisitor = new GlobalBlocksTypedFormMetadataVisitor(
-            $metadataProviderRegistryProphecy->reveal(),
+            $metadataProviderRegistry
         );
     }
 

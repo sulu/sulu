@@ -40,8 +40,10 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
  */
 class ContactController extends AbstractRestController implements SecuredControllerInterface
 {
+    /** @var class-string */
     protected static $accountContactEntityName = \Sulu\Bundle\ContactBundle\Entity\AccountContact::class;
 
+    /** @var class-string */
     protected static $positionEntityName = \Sulu\Bundle\ContactBundle\Entity\Position::class;
 
     // serialization groups for contact

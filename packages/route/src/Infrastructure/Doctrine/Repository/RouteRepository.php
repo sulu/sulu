@@ -17,6 +17,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
+use Sulu\Route\Domain\Exception\RouteNotFoundException;
 use Sulu\Route\Domain\Model\Route;
 use Sulu\Route\Domain\Repository\RouteRepositoryInterface;
 
@@ -41,6 +42,11 @@ class RouteRepository implements RouteRepositoryInterface
         $this->entityManager->persist($route);
     }
 
+    public function remove(Route $route): void
+    {
+        $this->entityManager->remove($route);
+    }
+
     public function findOneBy(array $filters): ?Route
     {
         $queryBuilder = $this->createQueryBuilder($filters);
@@ -48,8 +54,19 @@ class RouteRepository implements RouteRepositoryInterface
 
         // Hydrate Object is default, but we need to specify it here to make PHPStan happy:
         //     see: https://github.com/phpstan/phpstan-doctrine?tab=readme-ov-file#supported-methods
-        /** @var Route */
+        /** @var Route|null */
         return $queryBuilder->getQuery()->getOneOrNullResult(Query::HYDRATE_OBJECT);
+    }
+
+    public function getOneBy(array $filters): Route
+    {
+        $route = $this->findOneBy($filters);
+
+        if (null === $route) {
+            throw new RouteNotFoundException($filters);
+        }
+
+        return $route;
     }
 
     public function findFirstBy(array $filters, array $sortBys = []): ?Route
@@ -60,7 +77,7 @@ class RouteRepository implements RouteRepositoryInterface
 
         // Hydrate Object is default, but we need to specify it here to make PHPStan happy:
         //     see: https://github.com/phpstan/phpstan-doctrine?tab=readme-ov-file#supported-methods
-        /** @var Route */
+        /** @var Route|null */
         return $queryBuilder->getQuery()->getOneOrNullResult(Query::HYDRATE_OBJECT);
     }
 
@@ -114,6 +131,12 @@ class RouteRepository implements RouteRepositoryInterface
             }
         }
 
+        $id = $filters['id'] ?? null;
+        if (null !== $id) {
+            $queryBuilder->andWhere('route.id = :id')
+                ->setParameter('id', $id);
+        }
+
         $locale = $filters['locale'] ?? null;
         if (null !== $locale) {
             $queryBuilder->andWhere('route.locale = :locale')
@@ -151,7 +174,7 @@ class RouteRepository implements RouteRepositoryInterface
             $queryBuilder
                 ->andWhere($expr->not($expr->andX(
                     $expr->eq('route.resourceKey', ':excludeResourceKey'),
-                    $expr->eq('route.resourceId', ':excludeResourceId')
+                    $expr->eq('route.resourceId', ':excludeResourceId'),
                 )))
                 ->setParameter('excludeResourceKey', $excludeResource['resourceKey'])
                 ->setParameter('excludeResourceId', $excludeResource['resourceId']);

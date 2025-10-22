@@ -103,7 +103,8 @@ class MetadataResolver
                 );
             }
             foreach ($metadataValues as $option) {
-                $values[$option->getName()] = $this->serializeOptionMetadata($option);
+                $name = $option->getName();
+                $values[\is_int($name) ? $name : ((string) $name)] = $this->serializeOptionMetadata($option);
             }
 
             return $values;

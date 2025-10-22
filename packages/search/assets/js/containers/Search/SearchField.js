@@ -5,15 +5,15 @@ import {observer} from 'mobx-react';
 import {ArrowMenu, Icon} from 'sulu-admin-bundle/components';
 import {translate} from 'sulu-admin-bundle/utils';
 import searchFieldStyles from './searchField.scss';
-import type {Index} from './types';
+import type {SearchResource} from './types';
 
 type Props = {|
-    indexes: ?{[indexName: string]: Index},
-    indexName: ?string,
-    onIndexChange: (indexName: ?string) => void,
     onQueryChange: (query: ?string) => void,
     onSearch: () => void,
+    onSearchResourceChange: (resourceKey: ?string) => void,
     query: string,
+    resourceKey: ?string,
+    searchResources: ?{[searchResource: string]: SearchResource},
 |};
 
 @observer
@@ -22,40 +22,40 @@ class SearchField extends React.Component<Props> {
         query: '',
     };
 
-    @observable showIndexes: boolean = false;
+    @observable showSearchResources: boolean = false;
 
-    @computed get allIndexes(): ?Array<Index> {
-        const {indexes} = this.props;
+    @computed get allSearchResources(): ?Array<SearchResource> {
+        const {searchResources} = this.props;
 
-        if (!indexes) {
+        if (!searchResources) {
             return undefined;
         }
 
-        return (Object.values(indexes): any);
+        return (Object.values(searchResources): any);
     }
 
-    @computed get index(): ?Index {
-        const {indexName, indexes} = this.props;
+    @computed get searchResource(): ?SearchResource {
+        const {resourceKey, searchResources} = this.props;
 
-        if (!indexName || !indexes) {
+        if (!resourceKey || !searchResources) {
             return undefined;
         }
 
-        return indexes[indexName];
+        return searchResources[resourceKey];
     }
 
-    @action handleIndexClick = () => {
-        this.showIndexes = true;
+    @action handleSearchResourceClick = () => {
+        this.showSearchResources = true;
     };
 
-    @action handleIndexClose = () => {
-        this.showIndexes = false;
+    @action handleSearchResourceClose = () => {
+        this.showSearchResources = false;
     };
 
-    @action handleIndexChange = (value: ?string) => {
-        const {onIndexChange, onSearch} = this.props;
-        this.showIndexes = false;
-        onIndexChange(value);
+    @action handleSearchResourceChange = (value: ?string) => {
+        const {onSearchResourceChange, onSearch} = this.props;
+        this.showSearchResources = false;
+        onSearchResourceChange(value);
         onSearch();
     };
 
@@ -87,28 +87,28 @@ class SearchField extends React.Component<Props> {
                     <ArrowMenu
                         anchorElement={
                             <button
-                                className={searchFieldStyles.indexButton}
-                                onClick={this.handleIndexClick}
+                                className={searchFieldStyles.searchResourceButton}
+                                onClick={this.handleSearchResourceClick}
                                 type="button"
                             >
-                                <span className={searchFieldStyles.index}>
-                                    {this.index ? this.index.name : everythingTranslation}
+                                <span className={searchFieldStyles.searchResource}>
+                                    {this.searchResource ? translate(this.searchResource.name) : everythingTranslation}
                                 </span>
                                 <Icon name="su-angle-down" />
                             </button>
                         }
-                        onClose={this.handleIndexClose}
-                        open={this.showIndexes}
+                        onClose={this.handleSearchResourceClose}
+                        open={this.showSearchResources}
                     >
                         <ArrowMenu.SingleItemSection
-                            onChange={this.handleIndexChange}
-                            value={this.index ? this.index.indexName : undefined}
+                            onChange={this.handleSearchResourceChange}
+                            value={this.searchResource ? this.searchResource.resourceKey : undefined}
                         >
                             <ArrowMenu.Item value={undefined}>{everythingTranslation}</ArrowMenu.Item>
-                            {this.allIndexes
-                                ? this.allIndexes.map((index: Index) => (
-                                    <ArrowMenu.Item key={index.indexName} value={index.indexName}>
-                                        {index.name}
+                            {this.allSearchResources
+                                ? this.allSearchResources.map((searchResource: SearchResource) => (
+                                    <ArrowMenu.Item key={searchResource.resourceKey} value={searchResource.resourceKey}>
+                                        {translate(searchResource.name)}
                                     </ArrowMenu.Item>
                                 ))
                                 : []

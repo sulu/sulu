@@ -73,8 +73,7 @@ test('Pass correct props to ResourceLocatorHistory component if id an existing r
 
     expect(customUrl.find('CustomUrl').prop('baseDomain')).toEqual('*.sulu.io/*');
     expect(customUrl.find('CustomUrl').prop('value')).toEqual(['a', 'b']);
-    expect(customUrl.find(ResourceLocatorHistory).prop('id')).toEqual(2);
-    expect(customUrl.find(ResourceLocatorHistory).prop('options')).toEqual({webspace: 'sulu_io'});
+    expect(customUrl.find(ResourceLocatorHistory).prop('options')).toEqual({webspace: 'sulu_io', id: 2});
     expect(customUrl.find(ResourceLocatorHistory).prop('resourceKey')).toEqual('custom_url_routes');
 });
 

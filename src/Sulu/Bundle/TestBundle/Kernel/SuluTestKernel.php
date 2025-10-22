@@ -63,6 +63,7 @@ class SuluTestKernel extends SuluKernel
             new \Sulu\Bundle\HashBundle\SuluHashBundle(),
             new \Sulu\Bundle\ActivityBundle\SuluActivityBundle(),
             new \Sulu\Route\Infrastructure\Symfony\HttpKernel\SuluRouteBundle(),
+            new \Sulu\CustomUrl\Infrastructure\Symfony\HttpKernel\SuluCustomUrlBundle(),
             new \Sulu\Bundle\MarkupBundle\SuluMarkupBundle(),
             new \Sulu\Bundle\PreviewBundle\SuluPreviewBundle(),
             new \Sulu\Bundle\AudienceTargetingBundle\SuluAudienceTargetingBundle(),

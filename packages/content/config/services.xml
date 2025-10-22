@@ -4,6 +4,8 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <services>
         <service id="sulu_content.metadata_loader" class="Sulu\Content\Infrastructure\Doctrine\MetadataLoader">
+            <argument>%kernel.bundles%</argument>
+
             <!-- Priority 100 as the MetadataLoader need to be before the ResolveTargetEntityListener of Doctrine -->
             <tag name="doctrine.event_listener" event="loadClassMetadata" priority="100"/>
         </service>
@@ -96,7 +98,6 @@
             <argument type="service" id="sulu_http_cache.cache_lifetime.request_store"/>
 
             <tag name="sulu_route.route_defaults_provider" resource-key="examples"/>
-            <tag name="sulu_route.route_defaults_provider" resource-key="articles"/>
             <tag name="sulu_route.route_defaults_provider" resource-key="pages"/>
         </service>
 

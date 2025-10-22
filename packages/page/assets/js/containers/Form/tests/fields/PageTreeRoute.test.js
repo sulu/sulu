@@ -87,12 +87,8 @@ jest.mock('sulu-admin-bundle/stores/SingleSelectionStore', () => jest.fn(functio
 }));
 
 test('Render a PageTreeRoute', () => {
-    const modePromiseValue = 'leaf';
-    const modePromise = Promise.resolve(modePromiseValue);
-    const modeResolver = jest.fn().mockImplementation(() => modePromise);
-
     const fieldTypeOptions = {
-        modeResolver,
+        defaultMode: 'tree_leaf_edit',
     };
 
     const value = {
@@ -119,33 +115,25 @@ test('Render a PageTreeRoute', () => {
         />
     );
 
-    expect(modeResolver).toHaveBeenCalled();
+    pageTreeRoute.update();
+    expect(pageTreeRoute.render()).toMatchSnapshot();
+    expect(pageTreeRoute.find(SingleSelection).prop('value')).toBe(value.page.uuid);
+    expect(SingleSelectionStore).toHaveBeenCalledWith('pages', 'uuid-uuid-uuid-uuid', locale, undefined);
 
-    return modePromise.then(() => {
-        pageTreeRoute.update();
-        expect(pageTreeRoute.render()).toMatchSnapshot();
-        expect(pageTreeRoute.find(SingleSelection).prop('value')).toBe(value.page.uuid);
-        expect(SingleSelectionStore).toHaveBeenCalledWith('pages', 'uuid-uuid-uuid-uuid', locale, undefined);
+    const singleSelection = pageTreeRoute.find(SingleSelection);
 
-        const singleSelection = pageTreeRoute.find(SingleSelection);
+    singleSelection.instance().singleSelectionStore.item = {};
+    singleSelection.update();
 
-        singleSelection.instance().singleSelectionStore.item = {};
-        singleSelection.update();
+    expect(singleSelection.find('.item').text()).toBe('/test/uuid-uuid-uuid-uuid');
+    expect(singleSelection.render()).toMatchSnapshot();
 
-        expect(singleSelection.find('.item').text()).toBe('/test/uuid-uuid-uuid-uuid');
-        expect(singleSelection.render()).toMatchSnapshot();
-
-        expect(pageTreeRoute.find(ResourceLocator).prop('value')).toBe(value.suffix);
-    });
+    expect(pageTreeRoute.find(ResourceLocator).prop('value')).toBe(value.suffix);
 });
 
 test('Render a PageTreeRoute without value', () => {
-    const modePromiseValue = 'leaf';
-    const modePromise = Promise.resolve(modePromiseValue);
-    const modeResolver = jest.fn().mockImplementation(() => modePromise);
-
     const fieldTypeOptions = {
-        modeResolver,
+        defaultMode: 'tree_leaf_edit',
     };
 
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('pages'), 'test'));
@@ -159,12 +147,8 @@ test('Render a PageTreeRoute without value', () => {
         />
     );
 
-    expect(modeResolver).toHaveBeenCalled();
-
-    return modePromise.then(() => {
-        pageTreeRoute.update();
-        expect(pageTreeRoute.render()).toMatchSnapshot();
-        expect(pageTreeRoute.find(SingleSelection).prop('value')).toBe(null);
-        expect(pageTreeRoute.find(ResourceLocator).prop('value')).toBe(null);
-    });
+    pageTreeRoute.update();
+    expect(pageTreeRoute.render()).toMatchSnapshot();
+    expect(pageTreeRoute.find(SingleSelection).prop('value')).toBe(null);
+    expect(pageTreeRoute.find(ResourceLocator).prop('value')).toBe(null);
 });
