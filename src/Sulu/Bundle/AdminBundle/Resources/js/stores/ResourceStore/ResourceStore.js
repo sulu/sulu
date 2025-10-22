@@ -276,7 +276,7 @@ export default class ResourceStore {
                 {},
                 {
                     ...options,
-                    action: 'copy-locale',
+                    action: 'copy_locale',
                     dest: locale,
                     id: this.id,
                     locale,

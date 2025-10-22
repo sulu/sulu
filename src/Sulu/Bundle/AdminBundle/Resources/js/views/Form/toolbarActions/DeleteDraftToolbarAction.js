@@ -115,7 +115,7 @@ export default class DeleteDraftToolbarAction extends AbstractFormToolbarAction 
             resourceKey,
             undefined,
             {
-                action: 'remove-draft',
+                action: 'remove_draft',
                 locale,
                 id,
                 webspace,

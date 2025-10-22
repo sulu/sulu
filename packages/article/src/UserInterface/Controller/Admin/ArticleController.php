@@ -297,7 +297,7 @@ final class ArticleController
             return null;
         }
 
-        if ('copy-locale' === $action) {
+        if ('copy_locale' === $action) {
             $message = new CopyLocaleArticleMessage(
                 ['uuid' => $uuid],
                 (string) $request->query->get('src'),

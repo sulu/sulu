@@ -200,7 +200,7 @@ class SnippetControllerTest extends SuluTestCase
     #[Depends('testPost')]
     public function testPostTriggerCopyLocale(string $id): void
     {
-        $this->client->request('POST', '/admin/api/snippets/' . $id . '?locale=de&action=copy-locale&src=en&dest=de');
+        $this->client->request('POST', '/admin/api/snippets/' . $id . '?locale=de&action=copy_locale&src=en&dest=de');
 
         $response = $this->client->getResponse();
 

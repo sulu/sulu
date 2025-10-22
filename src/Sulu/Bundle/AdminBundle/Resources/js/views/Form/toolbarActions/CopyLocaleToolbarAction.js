@@ -145,7 +145,7 @@ export default class CopyLocaleToolbarAction extends AbstractFormToolbarAction {
             {
                 id,
                 locale,
-                action: 'copy-locale',
+                action: 'copy_locale',
                 webspace,
                 ...options,
             }

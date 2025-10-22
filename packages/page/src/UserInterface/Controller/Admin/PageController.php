@@ -258,7 +258,7 @@ final class PageController
             return null;
         }
 
-        if ('copy-locale' === $action) {
+        if ('copy_locale' === $action) {
             $message = new CopyLocalePageMessage(
                 ['uuid' => $uuid],
                 (string) $request->query->get('src'),

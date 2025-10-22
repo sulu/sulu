@@ -234,7 +234,7 @@ test('Delete draft when dialog is confirmed', () => {
     expect(ResourceRequester.post).toBeCalledWith(
         'snippets',
         undefined,
-        {action: 'remove-draft', id: 3, locale: deleteDraftToolbarAction.resourceFormStore.locale, webspace: 'sulu_io'}
+        {action: 'remove_draft', id: 3, locale: deleteDraftToolbarAction.resourceFormStore.locale, webspace: 'sulu_io'}
     );
 
     return deleteDraftPromise.then(() => {

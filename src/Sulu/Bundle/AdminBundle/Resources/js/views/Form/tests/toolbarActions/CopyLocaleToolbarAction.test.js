@@ -309,7 +309,7 @@ test('Close dialog and show success message when onClose from CopyLocaleDialog i
         expect(ResourceRequester.post).toBeCalledWith(
             'snippets',
             undefined,
-            {action: 'copy-locale', dest: ['de', 'fr'], id: 3, locale, webspace: 'sulu_io'}
+            {action: 'copy_locale', dest: ['de', 'fr'], id: 3, locale, webspace: 'sulu_io'}
         );
 
         postPromise.then(() => {
@@ -378,7 +378,7 @@ test('Close dialog and show success message when onClose from CopyLocaleDialog i
         expect(ResourceRequester.post).toBeCalledWith(
             'snippets',
             undefined,
-            {action: 'copy-locale', dest: ['de', 'fr'], id: 3, locale, webspace: 'sulu_io', title: 'Test 123'}
+            {action: 'copy_locale', dest: ['de', 'fr'], id: 3, locale, webspace: 'sulu_io', title: 'Test 123'}
         );
 
         postPromise.then(() => {
