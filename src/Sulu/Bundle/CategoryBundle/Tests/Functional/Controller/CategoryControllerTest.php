@@ -65,7 +65,7 @@ class CategoryControllerTest extends SuluTestCase
         );
 
         $this->assertHttpStatusCode(200, $this->client->getResponse());
-        $response = \json_decode($this->client->getResponse()->getContent());
+        $response = \json_decode($this->client->getResponse()->getContent() ?: '');
 
         $this->assertEquals('First Category', $response->name);
         $this->assertEquals('first-category-key', $response->key);
@@ -1684,7 +1684,7 @@ class CategoryControllerTest extends SuluTestCase
         );
 
         $this->assertHttpStatusCode(200, $this->client->getResponse());
-        $response = \json_decode($this->client->getResponse()->getContent(), true);
+        $response = \json_decode($this->client->getResponse()->getContent() ?: '', true);
         $this->assertArrayNotHasKey('parent', $response);
     }
 
