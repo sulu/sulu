@@ -17,6 +17,7 @@ use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query\Expr\OrderBy;
 use Doctrine\ORM\QueryBuilder;
 use Sulu\Article\Domain\Exception\ArticleNotFoundException;
+use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Article\Domain\Model\ArticleDimensionContentInterface;
 use Sulu\Article\Domain\Model\ArticleInterface;
 use Sulu\Article\Domain\Repository\ArticleRepositoryInterface;
@@ -178,6 +179,11 @@ class ArticleRepository implements ArticleRepositoryInterface
     public function remove(ArticleInterface $article): void
     {
         $this->entityManager->remove($article);
+    }
+
+    public function removeDimensionContent(DimensionContentInterface $dimensionContent): void
+    {
+        $this->entityManager->remove($dimensionContent);
     }
 
     /**

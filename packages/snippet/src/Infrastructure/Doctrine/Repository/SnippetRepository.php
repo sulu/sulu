@@ -16,6 +16,7 @@ use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query\Expr\OrderBy;
 use Doctrine\ORM\QueryBuilder;
+use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer;
 use Sulu\Snippet\Domain\Exception\SnippetNotFoundException;
 use Sulu\Snippet\Domain\Model\SnippetDimensionContentInterface;
@@ -178,6 +179,11 @@ class SnippetRepository implements SnippetRepositoryInterface
     public function remove(SnippetInterface $snippet): void
     {
         $this->entityManager->remove($snippet);
+    }
+
+    public function removeDimensionContent(DimensionContentInterface $dimensionContent): void
+    {
+        $this->entityManager->remove($dimensionContent);
     }
 
     /**

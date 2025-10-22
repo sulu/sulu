@@ -11,6 +11,7 @@
 
 namespace Sulu\Snippet\Domain\Repository;
 
+use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Snippet\Domain\Exception\SnippetNotFoundException;
 use Sulu\Snippet\Domain\Model\SnippetInterface;
 
@@ -145,4 +146,7 @@ interface SnippetRepositoryInterface
     public function add(SnippetInterface $snippet): void;
 
     public function remove(SnippetInterface $snippet): void;
+
+    /** @param DimensionContentInterface<SnippetInterface> $dimensionContent */
+    public function removeDimensionContent(DimensionContentInterface $dimensionContent): void;
 }

@@ -11,6 +11,7 @@
 
 namespace Sulu\Page\Domain\Repository;
 
+use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Page\Domain\Exception\PageNotFoundException;
 use Sulu\Page\Domain\Model\PageInterface;
 
@@ -179,6 +180,9 @@ interface PageRepositoryInterface
     public function add(PageInterface $page): void;
 
     public function remove(PageInterface $page): void;
+
+    /** @param DimensionContentInterface<PageInterface> $dimensionContent */
+    public function removeDimensionContent(DimensionContentInterface $dimensionContent): void;
 
     /**
      * @param array{

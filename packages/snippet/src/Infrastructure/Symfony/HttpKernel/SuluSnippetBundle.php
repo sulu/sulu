@@ -25,6 +25,7 @@ use Sulu\Snippet\Application\MessageHandler\ModifySnippetAreaMessageHandler;
 use Sulu\Snippet\Application\MessageHandler\ModifySnippetMessageHandler;
 use Sulu\Snippet\Application\MessageHandler\RemoveSnippetAreaMessageHandler;
 use Sulu\Snippet\Application\MessageHandler\RemoveSnippetMessageHandler;
+use Sulu\Snippet\Application\MessageHandler\RemoveSnippetTranslationMessageHandler;
 use Sulu\Snippet\Application\MessageHandler\RestoreSnippetVersionMessageHandler;
 use Sulu\Snippet\Domain\Model\Snippet;
 use Sulu\Snippet\Domain\Model\SnippetArea;
@@ -144,6 +145,14 @@ final class SuluSnippetBundle extends AbstractBundle
                 new Reference('sulu_snippet.snippet_repository'),
                 new Reference('sulu_activity.domain_event_collector'),
                 new Reference('sulu_trash.trash_manager', ContainerInterface::NULL_ON_INVALID_REFERENCE),
+            ])
+            ->tag('messenger.message_handler');
+
+        $services->set('sulu_snippet.remove_snippet_translation_handler')
+            ->class(RemoveSnippetTranslationMessageHandler::class)
+            ->args([
+                new Reference('sulu_snippet.snippet_repository'),
+                new Reference('sulu_activity.domain_event_collector'),
             ])
             ->tag('messenger.message_handler');
 
