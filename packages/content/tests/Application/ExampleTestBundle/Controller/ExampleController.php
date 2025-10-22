@@ -192,7 +192,7 @@ class ExampleController extends AbstractRestController
         $action = $request->query->get('action');
 
         switch ($action) {
-            case 'copy-locale':
+            case 'copy_locale':
                 $dimensionContent = $this->contentManager->copy(
                     $example,
                     [

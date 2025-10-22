@@ -268,7 +268,7 @@ final class SnippetController
             return null;
         }
 
-        if ('copy-locale' === $action) {
+        if ('copy_locale' === $action) {
             $message = new CopyLocaleSnippetMessage(
                 ['uuid' => $uuid],
                 (string) $request->query->get('src'),
