@@ -219,7 +219,7 @@ class ExampleController extends AbstractRestController
                 $this->entityManager->flush();
 
                 return $this->handleView($this->view($this->normalize($example, $dimensionContent)));
-            case 'remove-draft':
+            case 'remove_draft':
                 $dimensionContent = $this->contentManager->applyTransition(
                     $example,
                     $dimensionAttributes,
