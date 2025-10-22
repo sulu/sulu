@@ -26,6 +26,7 @@ use Sulu\Snippet\Application\Message\CopyLocaleSnippetMessage;
 use Sulu\Snippet\Application\Message\CreateSnippetMessage;
 use Sulu\Snippet\Application\Message\ModifySnippetMessage;
 use Sulu\Snippet\Application\Message\RemoveSnippetMessage;
+use Sulu\Snippet\Application\Message\RemoveSnippetTranslationMessage;
 use Sulu\Snippet\Application\Message\RestoreSnippetVersionMessage;
 use Sulu\Snippet\Domain\Model\SnippetInterface;
 use Sulu\Snippet\Domain\Repository\SnippetRepositoryInterface;
@@ -223,7 +224,18 @@ final class SnippetController
 
     public function deleteAction(Request $request, string $id): Response // TODO route should be a uuid
     {
-        $message = new RemoveSnippetMessage(['uuid' => $id], $this->getLocale($request));
+        $deleteLocale = $request->query->getBoolean('deleteLocale', false);
+        $locale = $this->getLocale($request);
+
+        if ($deleteLocale) {
+            $message = new RemoveSnippetTranslationMessage(['uuid' => $id], $locale);
+            /** @see Sulu\Snippet\Application\MessageHandler\RemoveSnippetTranslationMessageHandler */
+            $this->handle(new Envelope($message, [new EnableFlushStamp()]));
+
+            return new Response('', 204);
+        }
+
+        $message = new RemoveSnippetMessage(['uuid' => $id], $locale);
         /** @see Sulu\Snippet\Application\MessageHandler\RemoveSnippetMessageHandler */
         $this->handle(new Envelope($message, [new EnableFlushStamp()]));
 

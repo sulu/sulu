@@ -27,6 +27,7 @@ use Sulu\Page\Application\MessageHandler\ModifyPageMessageHandler;
 use Sulu\Page\Application\MessageHandler\MovePageMessageHandler;
 use Sulu\Page\Application\MessageHandler\OrderPageMessageHandler;
 use Sulu\Page\Application\MessageHandler\RemovePageMessageHandler;
+use Sulu\Page\Application\MessageHandler\RemovePageTranslationMessageHandler;
 use Sulu\Page\Application\MessageHandler\RestorePageVersionMessageHandler;
 use Sulu\Page\Domain\Model\Page;
 use Sulu\Page\Domain\Model\PageDimensionContent;
@@ -156,6 +157,14 @@ final class SuluPageBundle extends AbstractBundle
                 new Reference('sulu_page.page_repository'),
                 new Reference('sulu_activity.domain_event_collector'),
                 new Reference('sulu_trash.trash_manager', ContainerInterface::NULL_ON_INVALID_REFERENCE),
+            ])
+            ->tag('messenger.message_handler');
+
+        $services->set('sulu_page.remove_page_translation_handler')
+            ->class(RemovePageTranslationMessageHandler::class)
+            ->args([
+                new Reference('sulu_page.page_repository'),
+                new Reference('sulu_activity.domain_event_collector'),
             ])
             ->tag('messenger.message_handler');
 

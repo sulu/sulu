@@ -26,6 +26,8 @@ export default class DeleteToolbarAction extends AbstractFormToolbarAction {
         return !!allowConflictDeletion;
     }
 
+    @observable deleteLocale: boolean = false;
+
     constructor(
         resourceFormStore: ResourceFormStore,
         form: Form,
@@ -35,10 +37,17 @@ export default class DeleteToolbarAction extends AbstractFormToolbarAction {
         parentResourceStore: ResourceStore
     ) {
         const {
+            delete_locale: deleteLocaleOption,
             display_condition: displayCondition,
             visible_condition: visibleCondition,
-            delete_locale: deleteLocale = false,
         } = options;
+
+        if (deleteLocaleOption !== undefined && typeof deleteLocaleOption !== 'boolean') {
+            throw new Error(
+                'The "delete_locale" option must be a boolean, but received ' +
+                typeof deleteLocaleOption + '!'
+            );
+        }
 
         if (displayCondition) {
             // @deprecated
@@ -52,11 +61,12 @@ export default class DeleteToolbarAction extends AbstractFormToolbarAction {
             }
         }
 
-        if (typeof deleteLocale !== 'boolean') {
-            throw new Error('The "delete_locale" option must be a boolean, but received ' + typeof deleteLocale + '!');
-        }
-
         super(resourceFormStore, form, router, locales, options, parentResourceStore);
+
+        // Initialize deleteLocale based on the option
+        if (deleteLocaleOption === true) {
+            this.deleteLocale = true;
+        }
     }
 
     handleDeleteReferencedResourcesDialogCancel = () => {
@@ -130,7 +140,7 @@ export default class DeleteToolbarAction extends AbstractFormToolbarAction {
         this.closeDialog();
     };
 
-    handleDialogConfirm = () => {
+    @action handleDialogConfirm = () => {
         this.delete();
     };
 
@@ -138,7 +148,9 @@ export default class DeleteToolbarAction extends AbstractFormToolbarAction {
         this.showDialog = false;
     };
 
-    renderDialog(postfix: string) {
+    renderDialog() {
+        const postfix = this.deleteLocale ? '_locale' : '';
+
         return (
             <Dialog
                 cancelText={translate('sulu_admin.cancel')}
@@ -155,12 +167,9 @@ export default class DeleteToolbarAction extends AbstractFormToolbarAction {
     }
 
     getNode() {
-        const {delete_locale: deleteLocale = false} = this.options;
-        const postfix = deleteLocale ? '_locale' : '';
-
         return (
-            <Fragment key={'sulu_admin.delete' + postfix}>
-                {this.renderDialog(postfix)}
+            <Fragment key="sulu_admin.delete">
+                {this.renderDialog()}
                 {this.renderDeleteReferencedResourceDialog()}
                 {this.renderDeleteDependantResourcesDialog()}
             </Fragment>
@@ -169,24 +178,56 @@ export default class DeleteToolbarAction extends AbstractFormToolbarAction {
 
     getToolbarItemConfig() {
         const {
+            delete_locale: deleteLocaleOption = false,
             visible_condition: visibleCondition,
-            delete_locale: deleteLocale = false,
         } = this.options;
 
         const {id} = this.resourceFormStore;
 
         const visibleConditionFulfilled = !visibleCondition || jexl.evalSync(visibleCondition, this.conditionData);
-        const isDisabled = !id || (deleteLocale && jexl.evalSync(
+
+        if (!visibleConditionFulfilled) {
+            return;
+        }
+
+        const isOnlyOneContentLocale = jexl.evalSync(
             'contentLocales && contentLocales|length == 1',
             this.conditionData
-        ));
+        );
 
-        if (visibleConditionFulfilled) {
+        if (deleteLocaleOption) {
+            // Delete locale mode
             return {
-                disabled: !!isDisabled,
+                disabled: !id || !!isOnlyOneContentLocale,
                 icon: 'su-trash-alt',
-                label: translate('sulu_admin.delete' + (deleteLocale ? '_locale' : '')),
+                label: translate('sulu_admin.delete_locale'),
                 onClick: action(() => {
+                    this.deleteLocale = true;
+                    this.showDialog = true;
+                }),
+                type: 'button',
+            };
+        } else {
+            // Regular delete mode
+            if (!id) {
+                return {
+                    disabled: true,
+                    icon: 'su-trash-alt',
+                    label: translate('sulu_admin.delete'),
+                    onClick: action(() => {
+                        this.deleteLocale = false;
+                        this.showDialog = true;
+                    }),
+                    type: 'button',
+                };
+            }
+
+            return {
+                disabled: false,
+                icon: 'su-trash-alt',
+                label: translate('sulu_admin.delete'),
+                onClick: action(() => {
+                    this.deleteLocale = false;
                     this.showDialog = true;
                 }),
                 type: 'button',
@@ -199,9 +240,7 @@ export default class DeleteToolbarAction extends AbstractFormToolbarAction {
         const {backView} = route.options;
         const {locale} = this.resourceFormStore;
 
-        const {
-            router_attributes_to_back_view: routerAttributesToBackView,
-        } = this.options;
+        const {router_attributes_to_back_view: routerAttributesToBackView} = this.options;
 
         const backViewAttributes = {locale: locale ? locale.get() : undefined};
         if (routerAttributesToBackView) {
@@ -225,15 +264,14 @@ export default class DeleteToolbarAction extends AbstractFormToolbarAction {
     };
 
     @action delete = (force: boolean = false) => {
-        const {delete_locale: deleteLocale = false} = this.options;
-
-        const options: {[string]: any} = {deleteLocale};
+        const options: { [string]: any } = {deleteLocale: this.deleteLocale};
 
         if (force) {
             options.force = true;
         }
 
-        return this.resourceFormStore.delete(options)
+        return this.resourceFormStore
+            .delete(options)
             .then(() => {
                 this.closeDialog();
                 this.closeDeleteDependantResourcesDialog();
@@ -241,39 +279,44 @@ export default class DeleteToolbarAction extends AbstractFormToolbarAction {
 
                 this.navigateBack();
             })
-            .catch(action((response) => {
-                response.json().then(action((data) => {
-                    this.closeDialog();
-                    this.closeDeleteDependantResourcesDialog();
-                    this.closeDeleteReferencedResourceDialog();
+            .catch(
+                action((response) => {
+                    response.json().then(
+                        action((data) => {
+                            this.closeDialog();
+                            this.closeDeleteDependantResourcesDialog();
+                            this.closeDeleteReferencedResourceDialog();
 
-                    if (response.status === 409 && data.code === ERROR_CODE_DEPENDANT_RESOURCES_FOUND) {
-                        this.dependantResourcesData = {
-                            dependantResourceBatches: data.dependantResourceBatches,
-                            dependantResourcesCount: data.dependantResourcesCount,
-                            detail: data.detail,
-                            title: data.title,
-                        };
+                            if (response.status === 409 && data.code === ERROR_CODE_DEPENDANT_RESOURCES_FOUND) {
+                                this.dependantResourcesData = {
+                                    dependantResourceBatches: data.dependantResourceBatches,
+                                    dependantResourcesCount: data.dependantResourcesCount,
+                                    detail: data.detail,
+                                    title: data.title,
+                                };
 
-                        return;
-                    }
+                                return;
+                            }
 
-                    if (response.status === 409 && data.code === ERROR_CODE_REFERENCING_RESOURCES_FOUND) {
-                        this.referencingResourcesData = {
-                            resource: data.resource,
-                            referencingResources: data.referencingResources,
-                            referencingResourcesCount: data.referencingResourcesCount,
-                        };
+                            if (response.status === 409 && data.code === ERROR_CODE_REFERENCING_RESOURCES_FOUND) {
+                                this.referencingResourcesData = {
+                                    resource: data.resource,
+                                    referencingResources: data.referencingResources,
+                                    referencingResourcesCount: data.referencingResourcesCount,
+                                };
 
-                        return;
-                    }
+                                return;
+                            }
 
-                    const error = data.detail || data.title || translate('sulu_admin.unexpected_delete_server_error');
+                            const error =
+                                data.detail || data.title || translate('sulu_admin.unexpected_delete_server_error');
 
-                    if (error) {
-                        this.form.errors.push(error);
-                    }
-                }));
-            }));
+                            if (error) {
+                                this.form.errors.push(error);
+                            }
+                        })
+                    );
+                })
+            );
     };
 }

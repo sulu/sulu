@@ -20,6 +20,7 @@ use Doctrine\ORM\Query\Expr\OrderBy;
 use Doctrine\ORM\QueryBuilder;
 use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
 use Gedmo\Tree\Hydrator\ORM\TreeObjectHydrator;
+use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer;
 use Sulu\Page\Domain\Exception\PageNotFoundException;
 use Sulu\Page\Domain\Model\PageDimensionContentInterface;
@@ -184,6 +185,11 @@ class PageRepository implements PageRepositoryInterface
     public function remove(PageInterface $page): void
     {
         $this->entityManager->remove($page);
+    }
+
+    public function removeDimensionContent(DimensionContentInterface $dimensionContent): void
+    {
+        $this->entityManager->remove($dimensionContent);
     }
 
     public function findByAsTree(array $filters = [], array $sortBy = [], array $selects = []): iterable

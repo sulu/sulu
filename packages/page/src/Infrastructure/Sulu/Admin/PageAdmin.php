@@ -125,25 +125,11 @@ class PageAdmin extends Admin
                     'disabled_condition' => '(_permissions && !_permissions.edit)',
                 ]
             ),
-            'delete' => new DropdownToolbarAction(
+            'delete' => new ToolbarAction(
                 'sulu_admin.delete',
-                'su-trash-alt',
                 [
-                    new ToolbarAction(
-                        'sulu_admin.delete',
-                        [
-                            'visible_condition' => '(!_permissions || _permissions.delete) && url != "/"',
-                            'router_attributes_to_back_view' => ['webspace'],
-                        ]
-                    ),
-                    new ToolbarAction(
-                        'sulu_admin.delete',
-                        [
-                            'visible_condition' => '(!_permissions || _permissions.delete) && url != "/"',
-                            'router_attributes_to_back_view' => ['webspace'],
-                            'delete_locale' => true,
-                        ]
-                    ),
+                    'visible_condition' => '(!_permissions || _permissions.delete) && url != "/"',
+                    'router_attributes_to_back_view' => ['webspace'],
                 ]
             ),
             'edit' => new DropdownToolbarAction(

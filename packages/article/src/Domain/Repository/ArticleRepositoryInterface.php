@@ -13,6 +13,7 @@ namespace Sulu\Article\Domain\Repository;
 
 use Sulu\Article\Domain\Exception\ArticleNotFoundException;
 use Sulu\Article\Domain\Model\ArticleInterface;
+use Sulu\Content\Domain\Model\DimensionContentInterface;
 
 /**
  * Implementation can be found in the following class:.
@@ -145,4 +146,7 @@ interface ArticleRepositoryInterface
     public function add(ArticleInterface $article): void;
 
     public function remove(ArticleInterface $article): void;
+
+    /** @param DimensionContentInterface<ArticleInterface> $dimensionContent */
+    public function removeDimensionContent(DimensionContentInterface $dimensionContent): void;
 }
