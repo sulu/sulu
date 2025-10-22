@@ -674,6 +674,21 @@ sulu_website:
 
 If you have nothing else configured, the whole file can be removed.
 
+### Remove `use_deprecated_object_data_format`
+
+For example in the account selection:
+```diff
+ <property name="parent" type="single_account_selection" colspan="6">
+     <meta>
+         <title>sulu_contact.parent_company</title>
+     </meta>
+
+-    <params>
+-        <param name="use_deprecated_object_data_format" value="true" />
+-    </params>
+ </property>
+```
+
 ### Removing "modules" from Permissions
 
 The unused column on the permissions table has been removed. This also requires some migration on the table, to recreate
