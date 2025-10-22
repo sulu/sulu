@@ -4157,7 +4157,7 @@ parameters:
 
 		-
 			message: "#^Cannot access property \\$_embedded on mixed\\.$#"
-			count: 28
+			count: 29
 			path: src/Sulu/Bundle/CategoryBundle/Tests/Functional/Controller/CategoryControllerTest.php
 
 		-
@@ -4212,7 +4212,7 @@ parameters:
 
 		-
 			message: "#^Cannot access property \\$total on mixed\\.$#"
-			count: 10
+			count: 11
 			path: src/Sulu/Bundle/CategoryBundle/Tests/Functional/Controller/CategoryControllerTest.php
 
 		-
@@ -4272,7 +4272,7 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$json of function json_decode expects string, string\\|false given\\.$#"
-			count: 46
+			count: 45
 			path: src/Sulu/Bundle/CategoryBundle/Tests/Functional/Controller/CategoryControllerTest.php
 
 		-
@@ -24389,6 +24389,11 @@ parameters:
 			message: "#^Property Sulu\\\\Bundle\\\\PreviewBundle\\\\Tests\\\\Functional\\\\Preview\\\\Renderer\\\\PreviewRendererTest\\:\\:\\$previewRenderer \\(Sulu\\\\Bundle\\\\PreviewBundle\\\\Preview\\\\Renderer\\\\PreviewRenderer\\) does not accept object\\|null\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PreviewBundle/Tests/Functional/Preview/Renderer/PreviewRendererTest.php
+
+		-
+			message: "#^Call to an undefined static method Gedmo\\\\Sluggable\\\\Util\\\\Urlizer\\:\\:urlize\\(\\)\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/PreviewBundle/Tests/Functional/UserInterface/Controller/PreviewLinkControllerTest.php
 
 		-
 			message: "#^Cannot access offset 'lastVisit' on mixed\\.$#"
