@@ -244,53 +244,6 @@ test('Call onChange and onFinish when item of auto_complete SingleSelectionStore
     expect(finishSpy).toBeCalledWith();
 });
 
-test('Handle object without warning when "use_deprecated_object_data_format" option of auto_complete is set', () => {
-    const formInspector = new FormInspector(
-        new ResourceFormStore(
-            new ResourceStore('test', undefined, undefined),
-            'test'
-        )
-    );
-    const changeSpy = jest.fn();
-    const finishSpy = jest.fn();
-
-    const fieldTypeOptions = {
-        default_type: 'auto_complete',
-        resource_key: 'accounts',
-        types: {
-            auto_complete: {
-                display_property: 'name',
-                search_properties: ['name', 'number'],
-            },
-        },
-    };
-
-    const schemaOptions = {
-        use_deprecated_object_data_format: {name: 'use_deprecated_object_data_format', value: true},
-    };
-
-    const singleSelection = shallow(
-        <SingleSelection
-            {...fieldTypeDefaultProps}
-            fieldTypeOptions={fieldTypeOptions}
-            formInspector={formInspector}
-            onChange={changeSpy}
-            onFinish={finishSpy}
-            schemaOptions={schemaOptions}
-            value={({id: 'old-entity-id'}: any)}
-        />
-    );
-
-    expect(singleSelection.find('SingleAutoComplete').props().selectionStore.item).toEqual({id: 'old-entity-id'});
-    expect(log.warn).toBeCalledWith(expect.stringContaining('"use_deprecated_object_data_format" param is deprecated'));
-    expect(log.warn).not.toBeCalledWith(expect.stringContaining('expects an id as value but received an object'));
-
-    singleSelection.instance().autoCompleteSelectionStore.item = {id: 'new-entity-id'};
-
-    expect(changeSpy).toBeCalledWith({id: 'new-entity-id'});
-    expect(finishSpy).toBeCalledWith();
-});
-
 test('Throw an error if the auto_complete configuration was omitted', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
     const fieldTypeOptions = {

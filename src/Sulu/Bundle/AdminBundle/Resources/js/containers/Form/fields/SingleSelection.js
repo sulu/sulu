@@ -145,11 +145,7 @@ class SingleSelection extends React.Component<Props>
         }
 
         if (this.value !== selectedItem?.id) {
-            if (this.useDeprecatedObjectDataFormat) {
-                this.handleChange((selectedItem: any));
-            } else {
-                this.handleChange(selectedItem?.id);
-            }
+            this.handleChange(selectedItem?.id);
         }
     };
 
@@ -232,26 +228,6 @@ class SingleSelection extends React.Component<Props>
         } = this.props;
 
         return resultToView;
-    }
-
-    @computed get useDeprecatedObjectDataFormat() {
-        const {
-            schemaOptions: {
-                use_deprecated_object_data_format: {
-                    value: useDeprecatedObjectDataFormat = false,
-                } = {},
-            } = {},
-        } = this.props;
-
-        if (useDeprecatedObjectDataFormat) {
-            // @deprecated
-            log.warn(
-                'The "use_deprecated_object_data_format" param is deprecated since version 2.3 and will be removed. ' +
-                'You should adjust your API to process an id instead of a serialized object.'
-            );
-        }
-
-        return useDeprecatedObjectDataFormat;
     }
 
     handleItemClick = (itemId: Value, item: ?Object) => {
