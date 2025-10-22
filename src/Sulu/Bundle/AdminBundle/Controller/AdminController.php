@@ -25,7 +25,6 @@ use Sulu\Bundle\AdminBundle\SmartContent\SmartContentProviderInterface;
 use Sulu\Bundle\ContactBundle\Contact\ContactManagerInterface;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkProviderPoolInterface;
 use Sulu\Component\Localization\Manager\LocalizationManagerInterface;
-use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -194,19 +193,8 @@ class AdminController
         $locale = $user->getLocale();
 
         $metadataOptions = $request->query->all();
-
-        try {
-            $metadata = $this->metadataProviderRegistry->getMetadataProvider($type)
-                ->getMetadata($key, $locale, $metadataOptions);
-        } catch (ServiceNotFoundException $exception) {
-            $view = View::create(
-                ['message' => \sprintf('"%s" not found', $exception->getSourceId())],
-                Response::HTTP_NOT_FOUND
-            );
-            $view->setFormat('json');
-
-            return $this->viewHandler->handle($view);
-        }
+        $metadata = $this->metadataProviderRegistry->getMetadataProvider($type)
+            ->getMetadata($key, $locale, $metadataOptions);
 
         $context = new Context();
         $context->addGroup('Default');
