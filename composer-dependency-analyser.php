@@ -31,7 +31,7 @@ return $config
             ...$optionalIgnoreShadowDependencyExtensions,
             'ext-iconv', // fallbacks to mbstring
             'ext-openssl', // fallbacks to random_bytes
-            'ext-zip',  // not required to run Sulu
+            'ext-zip', // not required to run Sulu
         ],
         [ErrorType::SHADOW_DEPENDENCY],
     )
