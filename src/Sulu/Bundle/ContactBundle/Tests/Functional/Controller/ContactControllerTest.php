@@ -176,9 +176,7 @@ class ContactControllerTest extends SuluTestCase
                 'lastName' => 'Mustermann',
                 'title' => $title->getId(),
                 'position' => $position->getId(),
-                'account' => [
-                    'id' => null,
-                ],
+                'account' => null,
                 'contactDetails' => [
                     'emails' => [
                         [
@@ -341,9 +339,7 @@ class ContactControllerTest extends SuluTestCase
                 'avatar' => [
                     'id' => $media->getId(),
                 ],
-                'account' => [
-                    'id' => $account->getId(),
-                ],
+                'account' => $account->getId(),
                 'contactDetails' => [
                     'emails' => [
                         [
@@ -482,9 +478,7 @@ class ContactControllerTest extends SuluTestCase
                 'firstName' => 'Erika',
                 'lastName' => 'Mustermann',
                 'formOfAddress' => 1,
-                'account' => [
-                    'id' => $account->getId(),
-                ],
+                'account' => $account->getId(),
             ]
         );
 
@@ -495,7 +489,7 @@ class ContactControllerTest extends SuluTestCase
         $this->assertEquals('Erika', $response->firstName);
         $this->assertEquals('Mustermann', $response->lastName);
         $this->assertEquals(1, $response->formOfAddress);
-        $this->assertEquals($account->getid(), $response->account->id);
+        $this->assertEquals($account->getid(), $response->account);
     }
 
     public function testPostEmptyAddress(): void
@@ -964,7 +958,7 @@ class ContactControllerTest extends SuluTestCase
             'note' => 'A small notice',
             'title' => $title->getId(),
             'position' => $position->getId(),
-            'account' => ['id' => $account->getId()],
+            'account' => $account->getId(),
             'avatar' => [
                 'id' => $media->getId(),
             ],
@@ -1054,9 +1048,6 @@ class ContactControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(200, $this->client->getResponse());
         unset($response['_hash']);
         unset($response['id']);
-        $accountId = $response['account']['id'] ?? null;
-        unset($response['account']);
-        $response['account']['id'] = $accountId;
         unset($response['created']);
         unset($response['changed']);
         unset($response['locales']);
@@ -1648,9 +1639,7 @@ class ContactControllerTest extends SuluTestCase
                 'lastName' => 'Doe',
                 'title' => $title->getId(),
                 'position' => $position->getId(),
-                'account' => [
-                    'id' => $account->getId(),
-                ],
+                'account' => $account->getId(),
                 'contactDetails' => [
                     'emails' => [],
                     'phones' => [
@@ -1693,7 +1682,7 @@ class ContactControllerTest extends SuluTestCase
         $this->assertEquals($title->getId(), $response->title);
         $this->assertEquals(0, \count($response->contactDetails->emails));
 
-        $this->assertEquals($account->getId(), $response->account->id);
+        $this->assertEquals($account->getId(), $response->account);
 
         $this->assertEquals('ML', $response->addresses[0]->countryCode);
 
@@ -1723,9 +1712,7 @@ class ContactControllerTest extends SuluTestCase
             [
                 'firstName' => 'Max',
                 'lastName' => 'Mustermann',
-                'account' => [
-                    'id' => $accountNew->getId(),
-                ],
+                'account' => $accountNew->getId(),
             ]
         );
 
@@ -1976,9 +1963,7 @@ class ContactControllerTest extends SuluTestCase
                 'lastName' => 'Doe',
                 'title' => $title->getId(),
                 'position' => $position->getId(),
-                'account' => [
-                    'id' => $account->getId(),
-                ],
+                'account' => $account->getId(),
                 'contactDetails' => [
                     'emails' => [
                         [
@@ -2026,7 +2011,7 @@ class ContactControllerTest extends SuluTestCase
         $this->assertEquals('John', $response->firstName);
         $this->assertEquals('Doe', $response->lastName);
         $this->assertEquals($title->getId(), $response->title);
-        $this->assertEquals($account->getId(), $response->account->id);
+        $this->assertEquals($account->getId(), $response->account);
         $this->assertEquals('john.doe@muster.at', $response->contactDetails->emails[0]->email);
         $this->assertEquals('321654987', $response->contactDetails->phones[0]->phone);
         $this->assertEquals('Street', $response->addresses[0]->street);
@@ -2049,9 +2034,7 @@ class ContactControllerTest extends SuluTestCase
                 'lastName' => 'Doe',
                 'title' => $title->getId(),
                 'position' => $position->getId(),
-                'account' => [
-                    'id' => null,
-                ],
+                'account' => null,
                 'contactDetails' => [
                     'emails' => [
                         [
@@ -2221,9 +2204,7 @@ class ContactControllerTest extends SuluTestCase
                 'lastName' => 'Mustermann',
                 'title' => 'MSc',
                 'position' => $position->getId(),
-                'account' => [
-                    'id' => $account->getId(),
-                ],
+                'account' => $account->getId(),
                 'emails' => [
                     [
                         'email' => 'erika.mustermann@muster.at',
@@ -2278,7 +2259,7 @@ class ContactControllerTest extends SuluTestCase
 
         $response = \json_decode($this->client->getResponse()->getContent(), true);
 
-        $this->assertEquals($account->getId(), $response['account']['id']);
+        $this->assertEquals($account->getId(), $response['account']);
 
         $addresses = $response['addresses'];
 

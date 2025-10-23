@@ -598,8 +598,9 @@ class AccountController extends AbstractRestController implements SecuredControl
      */
     private function setParent($parentData, AccountInterface $account): void
     {
-        if ($parentData === null) {
+        if (null === $parentData) {
             $account->setParent(null);
+
             return;
         }
 
