@@ -592,13 +592,20 @@ class AccountController extends AbstractRestController implements SecuredControl
     /**
      * Set parent to account.
      *
+     * @param mixed $parentData
+     *
      * @throws EntityNotFoundException
      */
-    private function setParent(?int $parentId, AccountInterface $account)
+    private function setParent($parentData, AccountInterface $account): void
     {
-        $parent = $this->accountRepository->findAccountById($parentId);
+        if ($parentData === null) {
+            $account->setParent(null);
+            return;
+        }
+
+        $parent = $this->accountRepository->findAccountById($parentData);
         if (!$parent) {
-            throw new EntityNotFoundException($this->getAccountEntityName(), $parentId);
+            throw new EntityNotFoundException($this->getAccountEntityName(), $parentData);
         }
         $account->setParent($parent);
     }
