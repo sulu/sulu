@@ -22,6 +22,10 @@ class CustomUrlRoute implements CustomUrlRouteInterface
 
     private string $uuid;
 
+    private bool $history = false;
+
+    private ?CustomUrlRouteInterface $targetRoute = null;
+
     public function __construct(
         private CustomUrlInterface $customUrl,
         private string $path
@@ -47,5 +51,25 @@ class CustomUrlRoute implements CustomUrlRouteInterface
     public function getCustomUrl(): CustomUrlInterface
     {
         return $this->customUrl;
+    }
+
+    public function isHistory(): bool
+    {
+        return $this->history;
+    }
+
+    public function setHistory(bool $history): void
+    {
+        $this->history = $history;
+    }
+
+    public function getTargetRoute(): ?CustomUrlRouteInterface
+    {
+        return $this->targetRoute;
+    }
+
+    public function setTargetRoute(?CustomUrlRouteInterface $targetRoute): void
+    {
+        $this->targetRoute = $targetRoute;
     }
 }

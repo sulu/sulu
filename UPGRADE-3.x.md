@@ -242,9 +242,16 @@ Custom URLs are no longer stored in PHPCR and have been migrated to Doctrine ORM
 
 ```sql
 CREATE TABLE cu_custom_url (uuid VARCHAR(36) NOT NULL, title VARCHAR(255) NOT NULL, published TINYINT(1) NOT NULL, baseDomain VARCHAR(255) NOT NULL, webspace VARCHAR(255) NOT NULL, domainParts JSON NOT NULL, targetDocument VARCHAR(255) DEFAULT NULL, targetLocale VARCHAR(255) NOT NULL, canonical TINYINT(1) NOT NULL, redirect TINYINT(1) NOT NULL, noFollow TINYINT(1) NOT NULL, noIndex TINYINT(1) NOT NULL, INDEX IDX_A06ACB06E9EDC6B8 (webspace), UNIQUE INDEX UNIQ_A06ACB062B36786B (title), PRIMARY KEY(uuid)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB;
-CREATE TABLE cu_custom_url_route (uuid VARCHAR(36) NOT NULL, customUrl VARCHAR(36) NOT NULL, path VARCHAR(255) NOT NULL, INDEX IDX_5927CCB8C085433C (customUrl), INDEX routes (path), UNIQUE INDEX cu_custom_url_route_unique (path), PRIMARY KEY(uuid)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB;
+CREATE TABLE cu_custom_url_route (uuid VARCHAR(36) NOT NULL, customUrl VARCHAR(36) NOT NULL, target_route_uuid VARCHAR(36) DEFAULT NULL, path VARCHAR(255) NOT NULL, history TINYINT(1) DEFAULT 0 NOT NULL, INDEX IDX_5927CCB8C085433C (customUrl), INDEX idx_route_path (path), INDEX idx_route_history (history), UNIQUE INDEX cu_custom_url_route_unique (path), PRIMARY KEY(uuid)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB;
 ALTER TABLE cu_custom_url_route ADD CONSTRAINT FK_5927CCB8C085433C FOREIGN KEY (customUrl) REFERENCES cu_custom_url (uuid) ON DELETE CASCADE;
+ALTER TABLE cu_custom_url_route ADD CONSTRAINT FK_5927CCB8B6A2BD70 FOREIGN KEY (target_route_uuid) REFERENCES cu_custom_url_route (uuid) ON DELETE SET NULL;
 ```
+
+**Custom URL Routing Features:**
+- **History Routes**: When a custom URL path changes (baseDomain or domainParts), the old route is automatically marked as history and redirects to the new URL with a 301 redirect
+- **Redirect Support**: Custom URLs with `redirect=true` will redirect to their target page URL
+- **SEO Properties**: `canonical`, `noFollow`, and `noIndex` properties are available and applied to route defaults
+- **Self-Referencing Routes**: The `target_route_uuid` field enables history route chains (old URL → newer URL → newest URL)
 
 ### Removed `SecurityType`
 

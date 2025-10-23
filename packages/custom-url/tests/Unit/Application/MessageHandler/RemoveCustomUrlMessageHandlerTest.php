@@ -13,77 +13,160 @@ declare(strict_types=1);
 
 namespace Sulu\CustomUrl\Tests\Unit\Application\MessageHandler;
 
-use Doctrine\ORM\EntityManagerInterface;
+use PHPUnit\Framework\TestCase;
+use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
+use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
+use Sulu\Bundle\TrashBundle\Application\TrashManager\TrashManagerInterface;
 use Sulu\CustomUrl\Application\MessageHandler\RemoveCustomUrlMessageHandler;
-use Sulu\CustomUrl\Application\Messages\CreateCustomUrlMessage;
 use Sulu\CustomUrl\Application\Messages\RemoveCustomUrlMessage;
+use Sulu\CustomUrl\Domain\Event\CustomUrlRemovedEvent;
 use Sulu\CustomUrl\Domain\Model\CustomUrlInterface;
 use Sulu\CustomUrl\Domain\Repository\CustomUrlRepositoryInterface;
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
-use Symfony\Component\Messenger\MessageBusInterface;
-use Symfony\Component\Messenger\Stamp\HandledStamp;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Uid\Uuid;
 
-class RemoveCustomUrlMessageHandlerTest extends KernelTestCase
+class RemoveCustomUrlMessageHandlerTest extends TestCase
 {
+    use ProphecyTrait;
+
+    /** @var ObjectProphecy<CustomUrlRepositoryInterface> */
+    private ObjectProphecy $customUrlRepository;
+
+    /** @var ObjectProphecy<TrashManagerInterface> */
+    private ObjectProphecy $trashManager;
+
+    /** @var ObjectProphecy<DomainEventCollectorInterface> */
+    private ObjectProphecy $domainEventCollector;
+
     private RemoveCustomUrlMessageHandler $handler;
-    private CustomUrlRepositoryInterface $customUrlRepository;
-    private EntityManagerInterface $entityManager;
 
-    private string $idOfObjectToModify;
-    private string $targetDocument;
-
-    protected function setup(): void
+    protected function setUp(): void
     {
-        self::bootKernel();
-        $container = $this->getContainer();
-        $this->entityManager = $container->get(EntityManagerInterface::class);
-        $this->handler = $container->get(RemoveCustomUrlMessageHandler::class);
+        $this->customUrlRepository = $this->prophesize(CustomUrlRepositoryInterface::class);
+        $this->trashManager = $this->prophesize(TrashManagerInterface::class);
+        $this->domainEventCollector = $this->prophesize(DomainEventCollectorInterface::class);
 
-        $this->customUrlRepository = $container->get('sulu_custom_urls.repository');
-        // Delete all custom URLs to clear the db
-        foreach ($this->customUrlRepository->findBy() as $customUrl) {
-            $this->customUrlRepository->remove($customUrl);
-        }
-        $this->entityManager->flush();
-
-        $this->targetDocument = Uuid::v4()->toRfc4122();
-
-        $createdObject = $container->get(MessageBusInterface::class)
-            ->dispatch(new CreateCustomUrlMessage(
-                'sulu_io',
-                [
-                    'title' => 'Some title',
-                    'published' => false,
-                    'baseDomain' => 'localhost/*',
-                    'domainParts' => ['test'],
-                    'targetDocument' => $this->targetDocument,
-                    'targetLocale' => 'en',
-                    'canonical' => true,
-                    'redirect' => false,
-                    'noFollow' => true,
-                    'noIndex' => true,
-                ],
-            ))->all(HandledStamp::class)[0]->getResult();
-        $this->assertInstanceOf(CustomUrlInterface::class, $createdObject, 'Could not create custom url');
-
-        $this->idOfObjectToModify = $createdObject->getUuid();
-
-        // Flushing is handled outside by a stamp
-        $this->entityManager->flush();
+        $this->handler = new RemoveCustomUrlMessageHandler(
+            $this->customUrlRepository->reveal(),
+            $this->trashManager->reveal(),
+            $this->domainEventCollector->reveal()
+        );
     }
 
-    public function testCreateCustomUrlMessageHandler(): void
+    public function testRemoveCustomUrl(): void
     {
-        $this->handler->__invoke(new RemoveCustomUrlMessage(
-            uuid: $this->idOfObjectToModify,
-            webspaceKey: 'sulu_io',
-        ));
+        $uuid = Uuid::v4()->toRfc4122();
 
-        $this->entityManager->flush();
+        $customUrl = $this->prophesize(CustomUrlInterface::class);
+        $customUrl->getWebspace()->willReturn('sulu_io');
 
-        // Checking that the custom Url was removed
-        $customUrls = $this->customUrlRepository->findBy();
-        $this->assertCount(0, $customUrls);
+        $this->customUrlRepository->getOneBy(['uuid' => $uuid])
+            ->shouldBeCalledOnce()
+            ->willReturn($customUrl->reveal());
+
+        $this->trashManager->store(CustomUrlInterface::RESOURCE_KEY, $customUrl->reveal())
+            ->shouldBeCalledOnce();
+
+        $this->domainEventCollector->collect(Argument::that(function($event) {
+            return $event instanceof CustomUrlRemovedEvent;
+        }))->shouldBeCalledOnce();
+
+        $this->customUrlRepository->remove($customUrl->reveal())
+            ->shouldBeCalledOnce();
+
+        $message = new RemoveCustomUrlMessage($uuid, 'sulu_io');
+
+        $this->handler->__invoke($message);
+    }
+
+    public function testRemoveCustomUrlWithWrongWebspace(): void
+    {
+        $uuid = Uuid::v4()->toRfc4122();
+
+        $customUrl = $this->prophesize(CustomUrlInterface::class);
+        $customUrl->getWebspace()->willReturn('sulu_io');
+
+        $this->customUrlRepository->getOneBy(['uuid' => $uuid])
+            ->shouldBeCalledOnce()
+            ->willReturn($customUrl->reveal());
+
+        // Should NOT call trash manager, event collector, or repository remove
+        $this->trashManager->store(Argument::any(), Argument::any())
+            ->shouldNotBeCalled();
+        $this->domainEventCollector->collect(Argument::any())
+            ->shouldNotBeCalled();
+        $this->customUrlRepository->remove(Argument::any())
+            ->shouldNotBeCalled();
+
+        $this->expectException(AccessDeniedException::class);
+        $this->expectExceptionMessage('Entity from webspace "sulu_io" does not belong to webspace "wrong_webspace"');
+
+        $message = new RemoveCustomUrlMessage($uuid, 'wrong_webspace');
+
+        $this->handler->__invoke($message);
+    }
+
+    public function testRemoveCustomUrlStoresInTrash(): void
+    {
+        $uuid = Uuid::v4()->toRfc4122();
+
+        $customUrl = $this->prophesize(CustomUrlInterface::class);
+        $customUrl->getWebspace()->willReturn('sulu_io');
+
+        $this->customUrlRepository->getOneBy(['uuid' => $uuid])
+            ->shouldBeCalledOnce()
+            ->willReturn($customUrl->reveal());
+
+        // Verify trash storage happens before removal
+        $this->trashManager->store(CustomUrlInterface::RESOURCE_KEY, $customUrl->reveal())
+            ->shouldBeCalledOnce();
+
+        $this->domainEventCollector->collect(Argument::type(CustomUrlRemovedEvent::class))
+            ->shouldBeCalledOnce();
+
+        $this->customUrlRepository->remove($customUrl->reveal())
+            ->shouldBeCalledOnce();
+
+        $message = new RemoveCustomUrlMessage($uuid, 'sulu_io');
+
+        $this->handler->__invoke($message);
+    }
+
+    public function testRemoveCustomUrlCollectsEvent(): void
+    {
+        $uuid = Uuid::v4()->toRfc4122();
+
+        $customUrl = $this->prophesize(CustomUrlInterface::class);
+        $customUrl->getWebspace()->willReturn('sulu_io');
+
+        $this->customUrlRepository->getOneBy(['uuid' => $uuid])
+            ->shouldBeCalledOnce()
+            ->willReturn($customUrl->reveal());
+
+        $this->trashManager->store(CustomUrlInterface::RESOURCE_KEY, $customUrl->reveal())
+            ->shouldBeCalledOnce();
+
+        // Verify event is collected
+        $eventCollected = false;
+        $this->domainEventCollector->collect(Argument::that(function($event) use (&$eventCollected) {
+            if ($event instanceof CustomUrlRemovedEvent) {
+                $eventCollected = true;
+
+                return true;
+            }
+
+            return false;
+        }))->shouldBeCalledOnce();
+
+        $this->customUrlRepository->remove($customUrl->reveal())
+            ->shouldBeCalledOnce();
+
+        $message = new RemoveCustomUrlMessage($uuid, 'sulu_io');
+
+        $this->handler->__invoke($message);
+
+        $this->assertTrue($eventCollected, 'CustomUrlRemovedEvent should have been collected');
     }
 }

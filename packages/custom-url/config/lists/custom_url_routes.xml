@@ -1,0 +1,38 @@
+<?xml version="1.0" ?>
+<list xmlns="http://schemas.sulu.io/list-builder/list">
+    <key>custom_url_routes</key>
+
+    <properties>
+        <property name="id" visibility="no" translation="sulu_admin.uuid">
+            <field-name>uuid</field-name>
+            <entity-name>Sulu\CustomUrl\Domain\Model\CustomUrlRouteInterface</entity-name>
+        </property>
+
+        <property name="slug" visibility="always" translation="sulu_admin.url" searchability="yes">
+            <field-name>path</field-name>
+            <entity-name>Sulu\CustomUrl\Domain\Model\CustomUrlRouteInterface</entity-name>
+        </property>
+
+        <property name="history" visibility="always" translation="sulu_custom_url.history" sortable="true">
+            <field-name>history</field-name>
+            <entity-name>Sulu\CustomUrl\Domain\Model\CustomUrlRouteInterface</entity-name>
+        </property>
+
+        <identity-property name="customUrl" visibility="never" sortable="false">
+            <field-name>customUrl</field-name>
+            <entity-name>Sulu\CustomUrl\Domain\Model\CustomUrlRouteInterface</entity-name>
+        </identity-property>
+
+        <property name="created" translation="sulu_admin.created" sortable="true">
+            <field-name>created</field-name>
+            <entity-name>Sulu\CustomUrl\Domain\Model\CustomUrlRouteInterface</entity-name>
+            <transformer type="datetime"/>
+        </property>
+
+        <property name="changed" translation="sulu_admin.changed" sortable="true">
+            <field-name>changed</field-name>
+            <entity-name>Sulu\CustomUrl\Domain\Model\CustomUrlRouteInterface</entity-name>
+            <transformer type="datetime"/>
+        </property>
+    </properties>
+</list>

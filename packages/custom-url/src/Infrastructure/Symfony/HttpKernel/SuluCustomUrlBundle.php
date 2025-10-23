@@ -27,15 +27,23 @@ use Sulu\CustomUrl\Application\Mapper\CustomUrlMapperInterface;
 use Sulu\CustomUrl\Application\MessageHandler\CreateCustomUrlMessageHandler;
 use Sulu\CustomUrl\Application\MessageHandler\ModifyCustomUrlMessageHandler;
 use Sulu\CustomUrl\Application\MessageHandler\RemoveCustomUrlMessageHandler;
+use Sulu\CustomUrl\Application\MessageHandler\RemoveCustomUrlRoutesMessageHandler;
+use Sulu\CustomUrl\Application\Routing\CustomUrlRouteCollectionLoader;
 use Sulu\CustomUrl\Domain\Model\CustomUrl;
 use Sulu\CustomUrl\Domain\Model\CustomUrlInterface;
 use Sulu\CustomUrl\Domain\Model\CustomUrlRoute;
 use Sulu\CustomUrl\Domain\Model\CustomUrlRouteInterface;
 use Sulu\CustomUrl\Domain\Repository\CustomUrlRepositoryInterface;
+use Sulu\CustomUrl\Domain\Repository\CustomUrlRouteRepositoryInterface;
 use Sulu\CustomUrl\Infrastructure\Doctrine\Repository\CustomUrlRepository;
+use Sulu\CustomUrl\Infrastructure\Doctrine\Repository\CustomUrlRouteRepository;
 use Sulu\CustomUrl\Infrastructure\Sulu\Admin\CustomUrlAdmin;
 use Sulu\CustomUrl\Infrastructure\Symfony\Serializer\CustomUrlNormalizer;
+use Sulu\CustomUrl\Infrastructure\Symfony\Serializer\CustomUrlRouteNormalizer;
 use Sulu\CustomUrl\UserInterface\Controller\Admin\CustomUrlController;
+use Sulu\CustomUrl\UserInterface\Controller\Admin\CustomUrlRouteController;
+use Sulu\Page\Domain\Repository\PageRepositoryInterface;
+use Sulu\Route\Domain\Repository\RouteRepositoryInterface;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Configurator\DefinitionConfigurator;
 use Symfony\Component\Config\FileLocator;
@@ -135,6 +143,14 @@ final class SuluCustomUrlBundle extends AbstractBundle
             ])
             ->tag('messenger.message_handler');
 
+        $services->set(RemoveCustomUrlRoutesMessageHandler::class)
+            ->args([
+                new Reference(CustomUrlRepositoryInterface::class),
+                new Reference(CustomUrlRouteRepositoryInterface::class),
+                new Reference(EntityManagerInterface::class),
+            ])
+            ->tag('messenger.message_handler');
+
         // Admin configuration
         $services->set('sulu_custom_urls.admin', CustomUrlAdmin::class)
             ->public()
@@ -159,6 +175,18 @@ final class SuluCustomUrlBundle extends AbstractBundle
                 new Reference('sulu_core.doctrine_rest_helper'),
             ]);
 
+        $services->set('sulu_custom_urls.custom_url_route_controller', CustomUrlRouteController::class)
+            ->public()
+            ->args([
+                new Reference(CustomUrlRepositoryInterface::class),
+                new Reference(MessageBusInterface::class),
+                new Reference(NormalizerInterface::class),
+                new Reference(FieldDescriptorFactoryInterface::class),
+                new Reference(DoctrineListBuilderFactoryInterface::class),
+                new Reference('sulu_core.doctrine_rest_helper'),
+                new Reference('request_stack'),
+            ]);
+
         // Repositories
         $services->set(CustomUrlRepositoryInterface::class, CustomUrlRepository::class)
             ->args([
@@ -167,12 +195,39 @@ final class SuluCustomUrlBundle extends AbstractBundle
 
         $services->alias('sulu_custom_urls.repository', CustomUrlRepositoryInterface::class);
 
+        $services->set(CustomUrlRouteRepositoryInterface::class, CustomUrlRouteRepository::class)
+            ->public()
+            ->args([
+                new Reference(EntityManagerInterface::class),
+            ]);
+
+        $services->alias('sulu_custom_urls.route_repository', CustomUrlRouteRepositoryInterface::class);
+
         // Extending Symfony
         $services->set(CustomUrlNormalizer::class)
             ->args([
                 new Reference('serializer.normalizer.object'),
             ])
             ->tag('serializer.normalizer');
+
+        $services->set(CustomUrlRouteNormalizer::class)
+            ->args([
+                new Reference('serializer.normalizer.object'),
+            ])
+            ->tag('serializer.normalizer');
+
+        // Routing
+        $services->set('sulu_custom_url.routing.route_collection_loader', CustomUrlRouteCollectionLoader::class)
+            ->args([
+                new Reference(CustomUrlRouteRepositoryInterface::class),
+                new Reference(PageRepositoryInterface::class),
+                new Reference(RouteRepositoryInterface::class),
+                new Reference('sulu_content.content_aggregator'),
+                new Reference('sulu_admin.metadata_provider_registry'),
+                new Reference(WebspaceManagerInterface::class),
+                '%kernel.environment%',
+            ])
+            ->tag('sulu_route.route_collection_for_request_loader', ['priority' => 35]);
 
         /** @var array<string, class-string> $bundles */
         $bundles = $builder->getParameter('kernel.bundles');
