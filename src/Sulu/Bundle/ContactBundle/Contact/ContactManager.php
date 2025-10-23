@@ -531,13 +531,8 @@ class ContactManager extends AbstractContactManager
      */
     public function setMainAccount(ContactInterface $contact, $data)
     {
-        // set account relation
-        if (isset($data['account'])
-            && isset($data['account']['id'])
-            && 'null' != $data['account']['id']
-        ) {
-            $accountId = $data['account']['id'];
-
+        $accountId = $data['account'] ?? null;
+        if (null !== $accountId) {
             $account = $this->accountRepository->findAccountById($accountId);
 
             if (!$account) {

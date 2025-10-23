@@ -157,22 +157,7 @@ class SingleSelection extends React.Component<Props>
     };
 
     @computed get value(): Value {
-        const {value, dataPath} = this.props;
-
-        if (value && typeof value === 'object') {
-            log.warn(
-                'The "SingleSelection" field with the path "' + dataPath + '" expects an id as value but '
-                + 'received an object instead. Is it possible that your API returns a serialized object?'
-                + '\n\nThe Sulu form view expects that your API returns the data in the same format as it is sent '
-                + 'to the server when submitting the form. '
-                + '\nSulu will try to extract the id from the given object heuristically. '
-                + 'This decreases performance and might lead to errors or other unexpected behaviour.'
-            );
-
-            return value.id;
-        }
-
-        return value;
+        return this.props.value;
     }
 
     @computed get type() {
