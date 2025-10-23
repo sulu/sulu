@@ -40,4 +40,26 @@ function findViewLinkItemInSelection(editor: Object, linkTag: string) {
     );
 }
 
-export {addLinkConversion, findModelItemInSelection, findViewLinkItemInSelection};
+function removePTags(htmlString: string): string {
+    const string = htmlString.replace(/<p>/g, '<!--p-->').replace(/<\/p>/g, '<!--/p--><br></br>');
+    return replaceLast(string, '<br></br>', '');
+}
+
+function addPTags(htmlString: string): string {
+    return htmlString
+        .replace(/<!--p-->/g, '<p>')
+        .replace(/<!--\/p--><br><\/br>/g, '</p>')
+        .replace(/<!--\/p-->/g, '</p>');
+}
+
+function replaceLast(str, search, replace) {
+    const lastIndex = str.lastIndexOf(search);
+
+    if (lastIndex === -1) {
+        return str;
+    }
+
+    return str.slice(0, lastIndex) + replace + str.slice(lastIndex + search.length);
+}
+
+export {addLinkConversion, findModelItemInSelection, findViewLinkItemInSelection, removePTags, addPTags};
