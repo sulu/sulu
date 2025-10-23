@@ -851,12 +851,7 @@ class Contact extends ApiWrapper
     #[Groups(['fullContact'])]
     public function getAccount()
     {
-        $mainAccount = $this->entity->getMainAccount();
-        if (!\is_null($mainAccount)) {
-            return new Account($mainAccount, $this->locale);
-        }
-
-        return;
+        return $this->entity->getMainAccount()?->getId();
     }
 
     /**

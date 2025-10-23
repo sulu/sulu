@@ -41,7 +41,7 @@ export default class SingleSelectionStore<T, U: {id: T} = Object> {
             this.item = undefined;
             return;
         }
-console.trace(JSON.stringify(itemId));
+
         this.setLoading(true);
         return ResourceRequester
             .get(this.resourceKey, {

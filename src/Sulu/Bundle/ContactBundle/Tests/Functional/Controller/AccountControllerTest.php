@@ -1851,7 +1851,7 @@ class AccountControllerTest extends SuluTestCase
             '/api/accounts',
             [
                 'name' => 'ExampleCompany',
-                'parent' => null,
+                'parent' => $account->getId(),
                 'urls' => [
                     [
                         'url' => 'http://example.company.com',
