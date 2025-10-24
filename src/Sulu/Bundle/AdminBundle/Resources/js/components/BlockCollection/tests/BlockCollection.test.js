@@ -1434,11 +1434,12 @@ test('Should not generate ID when adding block without generateBlockIds', async(
     ]);
 });
 
-test('Should preserve ID when pasting cut blocks', async() => {
+test('Should generate new ID when pasting cut blocks', async() => {
     const existingId = 'existing123';
+    const newId = 'newid789';
     clipboard.set('blocks', [{content: 'Clipboard', type: 'editor', _id: existingId}]);
 
-    const generateBlockIdsSpy = jest.fn();
+    const generateBlockIdsSpy = jest.fn().mockReturnValue(Promise.resolve([newId]));
 
     const changeSpy = jest.fn();
     const value = [{content: 'Test 1', type: 'editor'}];
@@ -1455,10 +1456,10 @@ test('Should preserve ID when pasting cut blocks', async() => {
     // Call the handler directly to properly await the async operation
     await blockCollection.instance().handlePasteBlocks(1);
 
-    expect(generateBlockIdsSpy).not.toHaveBeenCalled();
+    expect(generateBlockIdsSpy).toHaveBeenCalledWith(1);
     expect(changeSpy).toHaveBeenCalledWith([
         {content: 'Test 1', type: 'editor'},
-        {content: 'Clipboard', type: 'editor', _id: existingId},
+        {content: 'Clipboard', type: 'editor', _id: newId},
     ]);
 });
 
@@ -1517,7 +1518,7 @@ test('Should remove ID from clipboard when copying blocks', () => {
     ]);
 });
 
-test('Should preserve ID in clipboard when cutting blocks', () => {
+test('Should remove ID from clipboard when cutting blocks', () => {
     const clipboardSpy = jest.fn();
     clipboard.observe('blocks', clipboardSpy);
 
@@ -1545,6 +1546,6 @@ test('Should preserve ID in clipboard when cutting blocks', () => {
     blockCollection.find('Block').at(0).find('Icon[name="su-scissors"]').simulate('click');
 
     expect(clipboardSpy).toHaveBeenCalledWith([
-        {content: 'Test 1', type: 'editor', _id: 'testid123'}, // _id should be preserved
+        {content: 'Test 1', type: 'editor'}, // _id should be removed for cut blocks too
     ]);
 });
