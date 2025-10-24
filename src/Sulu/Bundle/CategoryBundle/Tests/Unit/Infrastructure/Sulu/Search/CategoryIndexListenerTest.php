@@ -87,7 +87,7 @@ class CategoryIndexListenerTest extends TestCase
     {
         $category = new Category();
         $category->setId(789);
-        $event = new CategoryRemovedEvent($category->getId(), 'Uncool category', 'en', ['en', 'de']);
+        $event = new CategoryRemovedEvent($category->getId(), 'Uncool category', 'en', ['locales' => ['en', 'de']]);
 
         $expectedConfig = ReindexConfig::create()
             ->withIndex('admin')

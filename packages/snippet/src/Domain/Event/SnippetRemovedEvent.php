@@ -20,14 +20,14 @@ use Sulu\Snippet\Infrastructure\Sulu\Admin\SnippetAdmin;
 class SnippetRemovedEvent extends DomainEvent
 {
     /**
-     * @param array<string, mixed> $context
-     * @param string[]|null $allLocales
+     * @param array{
+     *     locales?: string[]
+     * } $context
      */
     public function __construct(
         private string $snippetId,
         private ?string $snippetTitle,
         private array $context = [],
-        private ?array $allLocales,
     ) {
         parent::__construct();
     }
@@ -67,6 +67,6 @@ class SnippetRemovedEvent extends DomainEvent
      */
     public function getAllLocales(): ?array
     {
-        return $this->allLocales;
+        return $this->context['locales'] ?? null;
     }
 }

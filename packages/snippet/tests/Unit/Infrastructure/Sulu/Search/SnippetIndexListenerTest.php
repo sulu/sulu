@@ -84,7 +84,7 @@ class SnippetIndexListenerTest extends TestCase
     public function testOnSnippetChangedWithSnippetRemovedEvent(): void
     {
         $snippet = new Snippet('789');
-        $event = new SnippetRemovedEvent($snippet->getId(), 'Uncool snippet', [], ['en', 'de']);
+        $event = new SnippetRemovedEvent($snippet->getId(), 'Uncool snippet', ['locales' => ['en', 'de']]);
 
         $expectedConfig = ReindexConfig::create()
             ->withIndex('admin')

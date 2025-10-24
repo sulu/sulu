@@ -18,13 +18,15 @@ use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 class CategoryRemovedEvent extends DomainEvent
 {
     /**
-     * @param string[]|null $allLocales
+     * @param array{
+     *     locales?: string[]
+     * } $context
      */
     public function __construct(
         private int $categoryId,
         private ?string $categoryTitle,
         private ?string $categoryTitleLocale,
-        private ?array $allLocales,
+        private ?array $context = [],
     ) {
         parent::__construct();
     }
@@ -64,6 +66,6 @@ class CategoryRemovedEvent extends DomainEvent
      */
     public function getAllLocales(): ?array
     {
-        return $this->allLocales;
+        return $this->context['locales'] ?? null;
     }
 }
