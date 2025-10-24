@@ -845,13 +845,26 @@ class Contact extends ApiWrapper
 
     /**
      * Returns main account.
+     *
+     * @return Account|null
      */
+    public function getAccount()
+    {
+        $mainAccount = $this->entity->getMainAccount();
+        if (!\is_null($mainAccount)) {
+            return new Account($mainAccount, $this->locale);
+        }
+
+        return null;
+    }
+
+
     #[VirtualProperty]
     #[SerializedName('account')]
     #[Groups(['fullContact'])]
-    public function getAccount()
+    public function getAccountId(): ?int
     {
-        return $this->entity->getMainAccount()?->getId();
+        return $this->getAccount()?->getId();
     }
 
     /**
