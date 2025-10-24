@@ -32,7 +32,7 @@ class RouteChangedUpdaterTest extends KernelTestCase
     public static function setUpBeforeClass(): void
     {
         $entityManager = self::getContainer()->get(EntityManagerInterface::class);
-        $entityManager->getConnection()->executeStatement('DELETE FROM ro_next_routes WHERE 1 = 1');
+        $entityManager->getConnection()->executeStatement('DELETE FROM ro_routes WHERE 1 = 1');
 
         $schemaTool = new SchemaTool($entityManager);
         $classes = $entityManager->getMetadataFactory()->getAllMetadata();
@@ -44,7 +44,7 @@ class RouteChangedUpdaterTest extends KernelTestCase
     public static function tearDownAfterClass(): void
     {
         $entityManager = self::getContainer()->get(EntityManagerInterface::class);
-        $entityManager->getConnection()->executeStatement('DELETE FROM ro_next_routes WHERE 1 = 1');
+        $entityManager->getConnection()->executeStatement('DELETE FROM ro_routes WHERE 1 = 1');
 
         parent::tearDownAfterClass();
     }
@@ -52,7 +52,7 @@ class RouteChangedUpdaterTest extends KernelTestCase
     protected function setUp(): void
     {
         $entityManager = self::getContainer()->get(EntityManagerInterface::class);
-        $entityManager->getConnection()->executeStatement('DELETE FROM ro_next_routes WHERE 1 = 1');
+        $entityManager->getConnection()->executeStatement('DELETE FROM ro_routes WHERE 1 = 1');
 
         self::ensureKernelShutdown();
     }

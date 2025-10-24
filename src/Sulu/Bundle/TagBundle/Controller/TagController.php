@@ -20,6 +20,7 @@ use Sulu\Bundle\TagBundle\Tag\Exception\TagAlreadyExistsException;
 use Sulu\Bundle\TagBundle\Tag\Exception\TagNotFoundException;
 use Sulu\Bundle\TagBundle\Tag\TagInterface;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
+use Sulu\Bundle\TagBundle\Tag\TagRepositoryInterface;
 use Sulu\Component\Rest\AbstractRestController;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\MissingArgumentException;
@@ -51,6 +52,7 @@ class TagController extends AbstractRestController implements SecuredControllerI
         private FieldDescriptorFactoryInterface $fieldDescriptorFactory,
         private DoctrineListBuilderFactoryInterface $listBuilderFactory,
         private TagManagerInterface $tagManager,
+        private TagRepositoryInterface $tagRepository,
         private EntityManagerInterface $entityManager,
         private UrlGeneratorInterface $router,
         private string $tagClass
@@ -107,7 +109,7 @@ class TagController extends AbstractRestController implements SecuredControllerI
             );
             $view = $this->view($list, 200);
         } else {
-            $list = new CollectionRepresentation($this->tagManager->findAll(), TagInterface::RESOURCE_KEY);
+            $list = new CollectionRepresentation($this->tagRepository->findAll(), TagInterface::RESOURCE_KEY);
 
             $context = new Context();
             $context->setGroups(['partialTag']);

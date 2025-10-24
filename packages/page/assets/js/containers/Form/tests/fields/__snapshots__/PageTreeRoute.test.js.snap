@@ -74,6 +74,20 @@ exports[`Render a PageTreeRoute 1`] = `
           sulu_admin.refresh_url
         </span>
       </button>
+      <button
+        class="button link hasText"
+        type="button"
+      >
+        <span
+          aria-label="su-process"
+          class="su-process buttonIcon"
+        />
+        <span
+          class="buttonText"
+        >
+          sulu_admin.show_history
+        </span>
+      </button>
     </div>
   </div>
 </div>
@@ -199,6 +213,21 @@ exports[`Render a PageTreeRoute without value 1`] = `
           class="buttonText"
         >
           sulu_admin.refresh_url
+        </span>
+      </button>
+      <button
+        class="button link hasText"
+        disabled=""
+        type="button"
+      >
+        <span
+          aria-label="su-process"
+          class="su-process buttonIcon"
+        />
+        <span
+          class="buttonText"
+        >
+          sulu_admin.show_history
         </span>
       </button>
     </div>

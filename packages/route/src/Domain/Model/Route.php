@@ -19,7 +19,7 @@ use Symfony\Component\Uid\Ulid;
 class Route
 {
     /** @internal */
-    public const HISTORY_RESOURCE_KEY = 'route_history';
+    public const HISTORY_RESOURCE_KEY = 'route_histories';
 
     /** @internal */
     private const TEMPORARY_RESOURCE_IDENTIFIER = 'temp';

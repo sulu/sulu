@@ -403,7 +403,7 @@ class ExampleControllerTest extends SuluTestCase
     #[Depends('testPost')]
     public function testPostTriggerCopyLocale(int $id): void
     {
-        $this->client->request('POST', '/admin/api/examples/' . $id . '?locale=de&action=copy-locale&src=en&dest=de');
+        $this->client->request('POST', '/admin/api/examples/' . $id . '?locale=de&action=copy_locale&src=en&dest=de');
 
         $response = $this->client->getResponse();
 

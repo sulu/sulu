@@ -65,7 +65,7 @@ class CategoryControllerTest extends SuluTestCase
         );
 
         $this->assertHttpStatusCode(200, $this->client->getResponse());
-        $response = \json_decode($this->client->getResponse()->getContent());
+        $response = \json_decode($this->client->getResponse()->getContent() ?: '');
 
         $this->assertEquals('First Category', $response->name);
         $this->assertEquals('first-category-key', $response->key);
@@ -246,10 +246,15 @@ class CategoryControllerTest extends SuluTestCase
 
         $categories = $response->_embedded->categories;
 
+        $this->assertIsArray($categories);
         $this->assertCount(2, $categories);
 
-        $this->assertEquals('Third Category', $categories[0]->name);
-        $this->assertEquals('Fourth Category', $categories[1]->name);
+        $names = \array_map(function($category) {
+            return $category->name;
+        }, $categories);
+
+        $this->assertContains('Third Category', $names);
+        $this->assertContains('Fourth Category', $names);
     }
 
     public function testCGetByEmptyIds(): void
@@ -504,6 +509,35 @@ class CategoryControllerTest extends SuluTestCase
         $this->client->jsonRequest(
             'GET',
             '/api/categories?locale=en&flat=true&search=Third&searchFields=name'
+        );
+
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+
+        $response = \json_decode($this->client->getResponse()->getContent());
+        $categories = $response->_embedded->categories;
+
+        $this->assertCount(1, $categories);
+        $this->assertEquals(1, $response->total);
+
+        $this->assertEquals('Third Category', $categories[0]->name);
+        $this->assertTrue($categories[0]->hasChildren);
+    }
+
+    public function testCGetFlatWithSearchAndExpandedIds(): void
+    {
+        $category1 = $this->createCategory('first-category-key', 'en');
+        $this->createCategoryTranslation($category1, 'en', 'First Category');
+        $category3 = $this->createCategory(null, 'en', $category1);
+        $this->createCategoryTranslation($category3, 'en', 'Third Category');
+        $category4 = $this->createCategory(null, 'en', $category3);
+        $this->createCategoryTranslation($category4, 'en', 'Fourth Category');
+
+        $this->em->flush();
+        $this->em->clear();
+
+        $this->client->jsonRequest(
+            'GET',
+            '/api/categories?locale=en&flat=true&search=Third&searchFields=name&expandedIds=' . $category1->getId()
         );
 
         $this->assertHttpStatusCode(200, $this->client->getResponse());
@@ -1655,7 +1689,7 @@ class CategoryControllerTest extends SuluTestCase
         );
 
         $this->assertHttpStatusCode(200, $this->client->getResponse());
-        $response = \json_decode($this->client->getResponse()->getContent(), true);
+        $response = \json_decode($this->client->getResponse()->getContent() ?: '', true);
         $this->assertArrayNotHasKey('parent', $response);
     }
 

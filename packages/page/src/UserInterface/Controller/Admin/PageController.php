@@ -33,6 +33,7 @@ use Sulu\Page\Application\Message\ModifyPageMessage;
 use Sulu\Page\Application\Message\MovePageMessage;
 use Sulu\Page\Application\Message\OrderPageMessage;
 use Sulu\Page\Application\Message\RemovePageMessage;
+use Sulu\Page\Application\Message\RemovePageTranslationMessage;
 use Sulu\Page\Application\Message\RestorePageVersionMessage;
 use Sulu\Page\Domain\Model\PageInterface;
 use Sulu\Page\Domain\Repository\PageRepositoryInterface;
@@ -213,7 +214,18 @@ final class PageController
 
     public function deleteAction(Request $request, string $id): Response // TODO route should be a uuid
     {
-        $message = new RemovePageMessage(['uuid' => $id], $this->getLocale($request));
+        $deleteLocale = $request->query->getBoolean('deleteLocale', false);
+        $locale = $this->getLocale($request);
+
+        if ($deleteLocale) {
+            $message = new RemovePageTranslationMessage(['uuid' => $id], $locale);
+            /** @see Sulu\Page\Application\MessageHandler\RemovePageTranslationMessageHandler */
+            $this->handle(new Envelope($message, [new EnableFlushStamp()]));
+
+            return new Response('', 204);
+        }
+
+        $message = new RemovePageMessage(['uuid' => $id], $locale);
         /** @see Sulu\Page\Application\MessageHandler\RemovePageMessageHandler */
         $this->handle(new Envelope($message, [new EnableFlushStamp()]));
 
@@ -246,7 +258,7 @@ final class PageController
             return null;
         }
 
-        if ('copy-locale' === $action) {
+        if ('copy_locale' === $action) {
             $message = new CopyLocalePageMessage(
                 ['uuid' => $uuid],
                 (string) $request->query->get('src'),

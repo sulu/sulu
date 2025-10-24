@@ -25,6 +25,7 @@ use Sulu\Snippet\Application\MessageHandler\ModifySnippetAreaMessageHandler;
 use Sulu\Snippet\Application\MessageHandler\ModifySnippetMessageHandler;
 use Sulu\Snippet\Application\MessageHandler\RemoveSnippetAreaMessageHandler;
 use Sulu\Snippet\Application\MessageHandler\RemoveSnippetMessageHandler;
+use Sulu\Snippet\Application\MessageHandler\RemoveSnippetTranslationMessageHandler;
 use Sulu\Snippet\Application\MessageHandler\RestoreSnippetVersionMessageHandler;
 use Sulu\Snippet\Domain\Event\SnippetCreatedEvent;
 use Sulu\Snippet\Domain\Event\SnippetModifiedEvent;
@@ -153,6 +154,14 @@ final class SuluSnippetBundle extends AbstractBundle
             ])
             ->tag('messenger.message_handler');
 
+        $services->set('sulu_snippet.remove_snippet_translation_handler')
+            ->class(RemoveSnippetTranslationMessageHandler::class)
+            ->args([
+                new Reference('sulu_snippet.snippet_repository'),
+                new Reference('sulu_activity.domain_event_collector'),
+            ])
+            ->tag('messenger.message_handler');
+
         $services->set('sulu_snippet.apply_workflow_transition_snippet_handler')
             ->class(ApplyWorkflowTransitionSnippetMessageHandler::class)
             ->args([
@@ -186,6 +195,7 @@ final class SuluSnippetBundle extends AbstractBundle
             ->args([
                 new Reference(SnippetAreaRepositoryInterface::class),
                 new Reference(SnippetRepositoryInterface::class),
+                new Reference('sulu_activity.domain_event_collector'),
             ])
             ->tag('messenger.message_handler');
 
@@ -193,6 +203,7 @@ final class SuluSnippetBundle extends AbstractBundle
             ->class(RemoveSnippetAreaMessageHandler::class)
             ->args([
                 new Reference('sulu_snippet.snippet_area_repository'),
+                new Reference('sulu_activity.domain_event_collector'),
             ])
             ->tag('messenger.message_handler');
 
@@ -478,23 +489,6 @@ final class SuluSnippetBundle extends AbstractBundle
                                 'is_bundle' => false,
                                 'mapping' => true,
                             ],
-                        ],
-                    ],
-                ],
-            );
-        }
-
-        if ($builder->hasExtension('sulu_route')) {
-            $builder->prependExtensionConfig(
-                'sulu_route',
-                [
-                    'mappings' => [
-                        SnippetInterface::class => [
-                            'generator' => 'schema',
-                            'options' => [
-                                'route_schema' => '/{object["title"]}',
-                            ],
-                            'resource_key' => SnippetInterface::RESOURCE_KEY,
                         ],
                     ],
                 ],

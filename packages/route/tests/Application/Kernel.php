@@ -11,11 +11,9 @@
 
 namespace Sulu\Route\Tests\Application;
 
-use Sulu\Bundle\PreviewBundle\SuluPreviewBundle;
 use Sulu\Bundle\TestBundle\Kernel\SuluTestKernel;
 use Sulu\Component\HttpKernel\SuluKernel;
 use Sulu\Route\Domain\Value\RequestAttributeEnum;
-use Sulu\Route\Infrastructure\Symfony\HttpKernel\SuluRouteBundle;
 use Symfony\Cmf\Bundle\RoutingBundle\CmfRoutingBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
@@ -56,15 +54,6 @@ class Kernel extends SuluTestKernel implements CompilerPassInterface
         $hasDynamicRouting = false;
         foreach ($bundles as $key => $bundle) {
             // remove old route bundle to avoid conflicts
-            if (SuluPreviewBundle::class === $bundle::class
-                || \str_contains($bundle::class, 'Sulu')
-                || \str_contains($bundle::class, 'Massive')
-                || \str_contains($bundle::class, 'PHPCR')
-                || \str_contains($bundle::class, 'SecurityBundle')
-            ) {
-                unset($bundles[$key]);
-            }
-            // remove old route bundle to avoid conflicts
             if (CmfRoutingBundle::class === $bundle::class) {
                 $hasDynamicRouting = true;
             }
@@ -74,13 +63,13 @@ class Kernel extends SuluTestKernel implements CompilerPassInterface
             $bundles[] = new CmfRoutingBundle();
         }
 
-        $bundles[] = new SuluRouteBundle();
-
         return $bundles;
     }
 
     public function registerContainerConfiguration(LoaderInterface $loader): void
     {
+        parent::registerContainerConfiguration($loader);
+
         $loader->load(__DIR__ . '/config/config.yml');
 
         if (\file_exists(__DIR__ . '/config/config_' . $this->config . '.yml')) {

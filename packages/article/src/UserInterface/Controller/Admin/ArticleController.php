@@ -16,6 +16,7 @@ use Sulu\Article\Application\Message\CopyLocaleArticleMessage;
 use Sulu\Article\Application\Message\CreateArticleMessage;
 use Sulu\Article\Application\Message\ModifyArticleMessage;
 use Sulu\Article\Application\Message\RemoveArticleMessage;
+use Sulu\Article\Application\Message\RemoveArticleTranslationMessage;
 use Sulu\Article\Application\Message\RestoreArticleVersionMessage;
 use Sulu\Article\Domain\Model\ArticleInterface;
 use Sulu\Article\Domain\Repository\ArticleRepositoryInterface;
@@ -252,7 +253,18 @@ final class ArticleController
 
     public function deleteAction(Request $request, string $id): Response // TODO route should be a uuid
     {
-        $message = new RemoveArticleMessage(['uuid' => $id], $this->getLocale($request));
+        $deleteLocale = $request->query->getBoolean('deleteLocale', false);
+        $locale = $this->getLocale($request);
+
+        if ($deleteLocale) {
+            $message = new RemoveArticleTranslationMessage(['uuid' => $id], $locale);
+            /** @see Sulu\Article\Application\MessageHandler\RemoveArticleTranslationMessageHandler */
+            $this->handle(new Envelope($message, [new EnableFlushStamp()]));
+
+            return new Response('', 204);
+        }
+
+        $message = new RemoveArticleMessage(['uuid' => $id], $locale);
         /** @see Sulu\Article\Application\MessageHandler\RemoveArticleMessageHandler */
         $this->handle(new Envelope($message, [new EnableFlushStamp()]));
 
@@ -285,7 +297,7 @@ final class ArticleController
             return null;
         }
 
-        if ('copy-locale' === $action) {
+        if ('copy_locale' === $action) {
             $message = new CopyLocaleArticleMessage(
                 ['uuid' => $uuid],
                 (string) $request->query->get('src'),

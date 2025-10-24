@@ -20,6 +20,7 @@ use Sulu\Article\Domain\Exception\ArticleNotFoundException;
 use Sulu\Article\Domain\Model\ArticleDimensionContentInterface;
 use Sulu\Article\Domain\Model\ArticleInterface;
 use Sulu\Article\Domain\Repository\ArticleRepositoryInterface;
+use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer;
 use Webmozart\Assert\Assert;
 
@@ -178,6 +179,11 @@ class ArticleRepository implements ArticleRepositoryInterface
     public function remove(ArticleInterface $article): void
     {
         $this->entityManager->remove($article);
+    }
+
+    public function removeDimensionContent(DimensionContentInterface $dimensionContent): void
+    {
+        $this->entityManager->remove($dimensionContent);
     }
 
     /**

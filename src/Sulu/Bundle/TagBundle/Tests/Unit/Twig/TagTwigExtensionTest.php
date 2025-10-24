@@ -16,8 +16,9 @@ use JMS\Serializer\SerializationContext;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\TagBundle\Entity\Tag;
-use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
+use Sulu\Bundle\TagBundle\Tag\TagRepositoryInterface;
 use Sulu\Bundle\TagBundle\Twig\TagTwigExtension;
 use Sulu\Component\Cache\Memoize;
 use Sulu\Component\Cache\MemoizeInterface;
@@ -32,6 +33,16 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class TagTwigExtensionTest extends TestCase
 {
     use ProphecyTrait;
+
+    /**
+     * @var ObjectProphecy<TagRepositoryInterface>
+     */
+    private ObjectProphecy $tagRepository;
+
+    public function setUp(): void
+    {
+        $this->tagRepository = $this->prophesize(TagRepositoryInterface::class);
+    }
 
     /**
      * Returns memoize cache instance.
@@ -64,8 +75,7 @@ class TagTwigExtensionTest extends TestCase
             $tags[] = $tag;
         }
 
-        $tagManager = $this->prophesize(TagManagerInterface::class);
-        $tagManager->findAll()->shouldBeCalled()->willReturn($tags);
+        $this->tagRepository->findAll()->shouldBeCalled()->willReturn($tags);
 
         $serializer = $this->prophesize(ArraySerializerInterface::class);
         $serializer->serialize($tags, Argument::type(SerializationContext::class))
@@ -73,7 +83,7 @@ class TagTwigExtensionTest extends TestCase
         $tagRequestHandler = $this->prophesize(TagRequestHandlerInterface::class);
 
         $tagExtension = new TagTwigExtension(
-            $tagManager->reveal(),
+            $this->tagRepository->reveal(),
             $tagRequestHandler->reveal(),
             $serializer->reveal(),
             $this->getMemoizeCache()
@@ -104,7 +114,6 @@ class TagTwigExtensionTest extends TestCase
     {
         $tag = ['name' => 'Test'];
 
-        $tagManager = $this->prophesize(TagManagerInterface::class);
         $requestStack = $this->prophesize(RequestStack::class);
         $request = $this->prophesize(Request::class);
 
@@ -118,7 +127,7 @@ class TagTwigExtensionTest extends TestCase
         $tagRequestHandler = new TagRequestHandler($requestStack->reveal());
 
         $tagExtension = new TagTwigExtension(
-            $tagManager->reveal(),
+            $this->tagRepository->reveal(),
             $tagRequestHandler,
             $serializer->reveal(),
             $this->getMemoizeCache()
@@ -151,7 +160,6 @@ class TagTwigExtensionTest extends TestCase
     {
         $tag = ['name' => 'Test'];
 
-        $tagManager = $this->prophesize(TagManagerInterface::class);
         $requestStack = $this->prophesize(RequestStack::class);
         $request = $this->prophesize(Request::class);
 
@@ -165,7 +173,7 @@ class TagTwigExtensionTest extends TestCase
         $tagRequestHandler = new TagRequestHandler($requestStack->reveal());
 
         $tagExtension = new TagTwigExtension(
-            $tagManager->reveal(),
+            $this->tagRepository->reveal(),
             $tagRequestHandler,
             $serializer->reveal(),
             $this->getMemoizeCache()
@@ -195,7 +203,6 @@ class TagTwigExtensionTest extends TestCase
     #[\PHPUnit\Framework\Attributes\DataProvider('clearProvider')]
     public function testClearTagUrl($tagsParameter, $url, $tagsString): void
     {
-        $tagManager = $this->prophesize(TagManagerInterface::class);
         $requestStack = $this->prophesize(RequestStack::class);
         $request = $this->prophesize(Request::class);
 
@@ -209,7 +216,7 @@ class TagTwigExtensionTest extends TestCase
         $tagRequestHandler = new TagRequestHandler($requestStack->reveal());
 
         $tagExtension = new TagTwigExtension(
-            $tagManager->reveal(),
+            $this->tagRepository->reveal(),
             $tagRequestHandler,
             $serializer->reveal(),
             $this->getMemoizeCache()

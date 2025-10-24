@@ -193,12 +193,12 @@ class SuluAdminExtension extends Extension implements PrependExtensionInterface
             ->addTag('sulu_admin.typed_form_metadata_visitor');
 
         $this->loadFieldTypeOptions(
-            $config['field_type_options'],
+            $config['field_type_options'] ?? [],
             $container->getDefinition('sulu_admin.field_type_option_registry')
         );
 
         $this->registerPropertyMetadataMappers(
-            $config['field_type_options'],
+            $config['field_type_options'] ?? [],
             $container
         );
     }

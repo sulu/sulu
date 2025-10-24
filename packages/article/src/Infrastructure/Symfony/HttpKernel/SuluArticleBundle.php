@@ -23,6 +23,7 @@ use Sulu\Article\Application\MessageHandler\CopyLocaleArticleMessageHandler;
 use Sulu\Article\Application\MessageHandler\CreateArticleMessageHandler;
 use Sulu\Article\Application\MessageHandler\ModifyArticleMessageHandler;
 use Sulu\Article\Application\MessageHandler\RemoveArticleMessageHandler;
+use Sulu\Article\Application\MessageHandler\RemoveArticleTranslationMessageHandler;
 use Sulu\Article\Application\MessageHandler\RestoreArticleVersionMessageHandler;
 use Sulu\Article\Application\Webspace\WebspaceResolver;
 use Sulu\Article\Application\Webspace\WebspaceSettingsConfigurationResolver;
@@ -172,6 +173,14 @@ final class SuluArticleBundle extends AbstractBundle
                 new Reference('sulu_article.article_repository'),
                 new Reference('sulu_activity.domain_event_collector'),
                 new Reference('sulu_trash.trash_manager', ContainerInterface::NULL_ON_INVALID_REFERENCE),
+            ])
+            ->tag('messenger.message_handler');
+
+        $services->set('sulu_article.remove_article_translation_handler')
+            ->class(RemoveArticleTranslationMessageHandler::class)
+            ->args([
+                new Reference('sulu_article.article_repository'),
+                new Reference('sulu_activity.domain_event_collector'),
             ])
             ->tag('messenger.message_handler');
 
@@ -366,7 +375,7 @@ final class SuluArticleBundle extends AbstractBundle
             ->tag('sulu_reference.refresher');
 
         // Sitemap
-        $services->set('sulu_next_article.articles_sitemap_provider')
+        $services->set('sulu_article.articles_sitemap_provider')
             ->class(ArticlesSitemapProvider::class)
             ->args([
                 new Reference('doctrine.orm.entity_manager'),
@@ -501,23 +510,6 @@ final class SuluArticleBundle extends AbstractBundle
                                 'is_bundle' => false,
                                 'mapping' => true,
                             ],
-                        ],
-                    ],
-                ],
-            );
-        }
-
-        if ($builder->hasExtension('sulu_route')) {
-            $builder->prependExtensionConfig(
-                'sulu_route',
-                [
-                    'mappings' => [
-                        ArticleInterface::class => [
-                            'generator' => 'schema',
-                            'options' => [
-                                'route_schema' => '/{object["title"]}',
-                            ],
-                            'resource_key' => ArticleInterface::RESOURCE_KEY,
                         ],
                     ],
                 ],
