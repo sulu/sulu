@@ -2730,7 +2730,7 @@ class ContactControllerTest extends SuluTestCase
         return $mediaType;
     }
 
-    private function createMedia(string $name, string $mimeType, MediaType $mediaType, Collection $collection)
+    private function createMedia(string $name, string $mimeType, MediaType $mediaType, Collection $collection): Media
     {
         $file = new File();
         $file->setVersion(1);
