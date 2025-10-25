@@ -387,6 +387,7 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
             $loader->load('ffmpeg.xml');
         }
 
+        /** array<string> @mimeTypes */
         $mimeTypes = $config['format_manager']['mime_types'];
         if (0 === \count($mimeTypes)) {
             $mimeTypes = $this->getSupportedMimeTypes($ghostScriptPath, $ffmpegBinary, $ffprobeBinary);
@@ -427,7 +428,10 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
         $container->setAlias(StorageInterface::class, 'sulu_media.storage')->setPublic(true);
     }
 
-    private function getSupportedMimeTypes($ghostScriptPath, $ffmpegBinary, $ffprobeBinary)
+    /**
+     * @return array<string>
+     */
+    private function getSupportedMimeTypes($ghostScriptPath, $ffmpegBinary, $ffprobeBinary): array
     {
         $mimeTypes = ['image/*'];
 

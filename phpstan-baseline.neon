@@ -16329,7 +16329,7 @@ parameters:
 		-
 			message: '#^Cannot call method getId\(\) on mixed\.$#'
 			identifier: method.nonObject
-			count: 62
+			count: 67
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/AccountControllerTest.php
 
 		-
@@ -22605,12 +22605,6 @@ parameters:
 		-
 			message: '#^Method Sulu\\Bundle\\MediaBundle\\DependencyInjection\\SuluMediaExtension\:\:configureStorage\(\) has parameter \$config with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/DependencyInjection/SuluMediaExtension.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\DependencyInjection\\SuluMediaExtension\:\:getSupportedMimeTypes\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/DependencyInjection/SuluMediaExtension.php
 
