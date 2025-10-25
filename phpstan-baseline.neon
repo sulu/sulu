@@ -8601,13 +8601,13 @@ parameters:
 		-
 			message: '#^Cannot access offset 0 on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 74
+			count: 73
 			path: src/Sulu/Bundle/CategoryBundle/Tests/Functional/Controller/CategoryControllerTest.php
 
 		-
 			message: '#^Cannot access offset 1 on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 24
+			count: 23
 			path: src/Sulu/Bundle/CategoryBundle/Tests/Functional/Controller/CategoryControllerTest.php
 
 		-
@@ -8691,7 +8691,7 @@ parameters:
 		-
 			message: '#^Cannot access property \$name on mixed\.$#'
 			identifier: property.nonObject
-			count: 43
+			count: 42
 			path: src/Sulu/Bundle/CategoryBundle/Tests/Functional/Controller/CategoryControllerTest.php
 
 		-
@@ -8883,7 +8883,7 @@ parameters:
 		-
 			message: '#^Parameter \#2 \$haystack of method PHPUnit\\Framework\\Assert\:\:assertCount\(\) expects Countable\|iterable, mixed given\.$#'
 			identifier: argument.type
-			count: 20
+			count: 19
 			path: src/Sulu/Bundle/CategoryBundle/Tests/Functional/Controller/CategoryControllerTest.php
 
 		-
@@ -23503,12 +23503,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/DependencyInjection/SuluMediaExtension.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\DependencyInjection\\SuluMediaExtension\:\:configureFileValidator\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/DependencyInjection/SuluMediaExtension.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\MediaBundle\\DependencyInjection\\SuluMediaExtension\:\:configureFileValidator\(\) has parameter \$config with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -23518,24 +23512,6 @@ parameters:
 			message: '#^Method Sulu\\Bundle\\MediaBundle\\DependencyInjection\\SuluMediaExtension\:\:configureStorage\(\) has parameter \$config with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
-			path: src/Sulu/Bundle/MediaBundle/DependencyInjection/SuluMediaExtension.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\DependencyInjection\\SuluMediaExtension\:\:getBlockedFileTypes\(\) has parameter \$config with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/DependencyInjection/SuluMediaExtension.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\DependencyInjection\\SuluMediaExtension\:\:getBlockedFileTypes\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/DependencyInjection/SuluMediaExtension.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\DependencyInjection\\SuluMediaExtension\:\:getBlockedFileTypes\(\) should return array but returns mixed\.$#'
-			identifier: return.type
-			count: 2
 			path: src/Sulu/Bundle/MediaBundle/DependencyInjection/SuluMediaExtension.php
 
 		-
@@ -23589,13 +23565,13 @@ parameters:
 		-
 			message: '#^Parameter \#1 \$value of function count expects array\|Countable, mixed given\.$#'
 			identifier: argument.type
-			count: 2
+			count: 1
 			path: src/Sulu/Bundle/MediaBundle/DependencyInjection/SuluMediaExtension.php
 
 		-
 			message: '#^Parameter \#2 \$value of method Symfony\\Component\\DependencyInjection\\Container\:\:setParameter\(\) expects array\|bool\|float\|int\|string\|UnitEnum\|null, mixed given\.$#'
 			identifier: argument.type
-			count: 20
+			count: 21
 			path: src/Sulu/Bundle/MediaBundle/DependencyInjection/SuluMediaExtension.php
 
 		-
