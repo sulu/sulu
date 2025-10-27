@@ -12,9 +12,14 @@
 namespace Sulu\Bundle\MediaBundle\Infrastructure\Sulu\Content\Visitor;
 
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
+use Sulu\Component\Webspace\Webspace;
 use Sulu\Content\Application\Visitor\SmartContentFiltersVisitorInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
+/**
+ * @internal This class should not be instantiated by a project.
+ *           Create your own smart content filters visitor to change its behaviour.
+ */
 class MediaSmartContentFiltersVisitor implements SmartContentFiltersVisitorInterface
 {
     public function __construct(
@@ -27,23 +32,28 @@ class MediaSmartContentFiltersVisitor implements SmartContentFiltersVisitorInter
     {
         $request = $this->requestStack->getCurrentRequest();
         if (null === $request) {
-            return [];
+            return $filters;
         }
 
         if ($parameters['mimetype_parameter'] ?? null) {
             $mimetypeParameter = $parameters['mimetype_parameter'];
             if (\is_string($mimetypeParameter)) {
-                $filters['mimetype'] = $mimetypeParameter;
-            }
-        }
-        if ($parameters['type_parameter'] ?? null) {
-            $typeParameter = $parameters['type_parameter'];
-            if (\is_string($typeParameter)) {
-                $filters['type'] = $typeParameter;
+                $filters['mimetype'] = $request->query->getString($mimetypeParameter);
             }
         }
 
-        $filters['webspaceKey'] = $this->requestAnalyzer->getWebspace()->getKey();
+        if ($parameters['type_parameter'] ?? null) {
+            $typeParameter = $parameters['type_parameter'];
+            if (\is_string($typeParameter)) {
+                $filters['type'] = $request->query->getString($typeParameter);
+            }
+        }
+
+        $webspace = $this->requestAnalyzer->getWebspace();
+
+        if ($webspace instanceof Webspace) { // @phpstan-ignore-line instanceof.alwaysTrue
+            $filters['webspaceKey'] = $webspace->getKey();
+        }
 
         return $filters;
     }
