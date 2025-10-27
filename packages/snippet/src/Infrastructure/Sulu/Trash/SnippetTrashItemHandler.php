@@ -167,7 +167,7 @@ final class SnippetTrashItemHandler implements
     public function getConfiguration(): RestoreConfiguration
     {
         return new RestoreConfiguration(
-            'restore_snippet',
+            null,
             SnippetAdmin::EDIT_TABS_VIEW,
             ['id' => 'id'],
             null, // TODO serialization group?
