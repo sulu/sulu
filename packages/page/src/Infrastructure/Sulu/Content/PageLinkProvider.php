@@ -42,9 +42,9 @@ final class PageLinkProvider implements LinkProviderInterface
         return LinkConfigurationBuilder::create()
             ->setTitle($this->translator->trans('sulu_page.pages', [], 'admin'))
             ->setResourceKey(PageInterface::RESOURCE_KEY)
-            ->setListAdapter('table')
-            ->setDisplayProperties(['id'])
-            ->setOverlayTitle($this->translator->trans('sulu_page.selection_overlay_title', [], 'admin'))
+            ->setListAdapter('column_list')
+            ->setDisplayProperties(['title'])
+            ->setOverlayTitle($this->translator->trans('sulu_page.single_selection_overlay_title', [], 'admin'))
             ->setEmptyText($this->translator->trans('sulu_page.no_page_selected', [], 'admin'))
             ->setIcon('su-document');
     }
