@@ -4,8 +4,8 @@
     "availableLocales": [
         "en"
     ],
-    "behavior": "content",
-    "behaviorData": null,
+    "linkOn": false,
+    "linkData": null,
     "changed": "@datetime@",
     "changer": "@integer@",
     "contentLocales": [

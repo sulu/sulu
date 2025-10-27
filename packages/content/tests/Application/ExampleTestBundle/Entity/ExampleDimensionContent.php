@@ -17,13 +17,13 @@ use Sulu\Content\Domain\Model\AuditableInterface;
 use Sulu\Content\Domain\Model\AuditableTrait;
 use Sulu\Content\Domain\Model\AuthorInterface;
 use Sulu\Content\Domain\Model\AuthorTrait;
-use Sulu\Content\Domain\Model\ContentBehaviorInterface;
-use Sulu\Content\Domain\Model\ContentBehaviorTrait;
 use Sulu\Content\Domain\Model\ContentRichEntityInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Domain\Model\DimensionContentTrait;
 use Sulu\Content\Domain\Model\ExcerptInterface;
 use Sulu\Content\Domain\Model\ExcerptTrait;
+use Sulu\Content\Domain\Model\LinkInterface;
+use Sulu\Content\Domain\Model\LinkTrait;
 use Sulu\Content\Domain\Model\RoutableInterface;
 use Sulu\Content\Domain\Model\RoutableTrait;
 use Sulu\Content\Domain\Model\SeoInterface;
@@ -51,7 +51,7 @@ class ExampleDimensionContent implements
     WebspaceInterface,
     ShadowInterface,
     AuditableInterface,
-    ContentBehaviorInterface
+    LinkInterface
 {
     use AuthorTrait;
     use DimensionContentTrait;
@@ -65,7 +65,7 @@ class ExampleDimensionContent implements
     use WebspaceTrait;
     use WorkflowTrait;
     use AuditableTrait;
-    use ContentBehaviorTrait;
+    use LinkTrait;
 
     /**
      * @var int

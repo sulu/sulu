@@ -39,9 +39,8 @@ class PageTeaserProviderTest extends SuluTestCase
         $this->teaserProvider = self::getContainer()->get('sulu_page.page_teaser_provider');
     }
 
-    public function testFindWithContentAndExternalBehaviors(): void
+    public function testFindWithContentAndExternalLinks(): void
     {
-        // Create content behavior page (default)
         $contentPage = self::createPage([
             'en' => [
                 'live' => [
@@ -61,8 +60,8 @@ class PageTeaserProviderTest extends SuluTestCase
                     'title' => 'External Teaser Link',
                     'url' => '/external-teaser-link',
                     'template' => 'default',
-                    'behavior' => 'external',
-                    'behaviorDataExternal' => [
+                    'linkOn' => true,
+                    'linkData' => [
                         'href' => 'https://teaser-example.com',
                         'provider' => 'external',
                     ],
@@ -85,13 +84,13 @@ class PageTeaserProviderTest extends SuluTestCase
             $teasersByUuid[$teaser->getId()] = $teaser;
         }
 
-        // Test content behavior - shows own data
+        // Test internal link - shows own data
         $this->assertArrayHasKey($contentPage->getUuid(), $teasersByUuid);
         $this->assertSame('Content Excerpt Title', $teasersByUuid[$contentPage->getUuid()]->getTitle());
         $this->assertSame('Content excerpt description', $teasersByUuid[$contentPage->getUuid()]->getDescription());
         $this->assertSame('/content-teaser', $teasersByUuid[$contentPage->getUuid()]->getUrl());
 
-        // Test external behavior - shows external URL with page's own data
+        // Test external link - shows external URL with page's own data
         $this->assertArrayHasKey($externalPage->getUuid(), $teasersByUuid);
         $this->assertSame('External Excerpt Title', $teasersByUuid[$externalPage->getUuid()]->getTitle());
         $this->assertSame('External excerpt description', $teasersByUuid[$externalPage->getUuid()]->getDescription());

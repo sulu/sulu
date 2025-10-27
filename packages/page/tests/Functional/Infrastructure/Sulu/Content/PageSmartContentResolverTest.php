@@ -42,7 +42,7 @@ class PageSmartContentResolverTest extends SuluTestCase
         $this->contentAggregator = self::getContainer()->get('sulu_content.content_aggregator');
     }
 
-    public function testResolveSmartContentWithContentBehaviors(): void
+    public function testResolveSmartContentWithLinks(): void
     {
         // Create parent/homepage first
         $homepage = self::createPage([
@@ -88,7 +88,6 @@ class PageSmartContentResolverTest extends SuluTestCase
             ],
         ]);
 
-        // Create content behavior page (default)
         self::createPage([
             'en' => [
                 'live' => [
@@ -107,11 +106,10 @@ class PageSmartContentResolverTest extends SuluTestCase
                     'title' => 'Internal Link Page',
                     'url' => '/internal-link',
                     'template' => 'default',
-                    'behavior' => 'internal',
-                    'behaviorDataInternal' => [
+                    'linkOn' => true,
+                    'linkData' => [
                         'href' => $targetPage->getUuid(),
                         'provider' => 'page',
-                        'title' => 'Custom Internal Title',
                     ],
                     'parentId' => $homepage->getId(),
                 ],
@@ -125,8 +123,8 @@ class PageSmartContentResolverTest extends SuluTestCase
                     'title' => 'External Link Page',
                     'url' => '/external-link',
                     'template' => 'default',
-                    'behavior' => 'external',
-                    'behaviorDataExternal' => [
+                    'linkOn' => true,
+                    'linkData' => [
                         'href' => 'https://example.com',
                         'provider' => 'external',
                     ],
@@ -152,19 +150,19 @@ class PageSmartContentResolverTest extends SuluTestCase
             $pagesByTitle[$title] = $page;
         }
 
-        // Test content behavior - shows own title and URL
+        // Test link - shows own title and URL
         $this->assertArrayHasKey('Content Page', $pagesByTitle);
         $this->assertSame('Content Page', $pagesByTitle['Content Page']['title']);
         $this->assertSame('/content-page', $pagesByTitle['Content Page']['url']);
 
-        // Test internal behavior - resolves to target page's URL with custom title
-        $this->assertArrayHasKey('Custom Internal Title', $pagesByTitle);
-        $this->assertSame('Custom Internal Title', $pagesByTitle['Custom Internal Title']['title']);
-        $this->assertSame('/target-page', $pagesByTitle['Custom Internal Title']['url']);
-
-        // Test external behavior - shows external URL
+        // Test external link - shows external URL
         $this->assertArrayHasKey('External Link Page', $pagesByTitle);
-        $this->assertSame('External Link Page', $pagesByTitle['External Link Page']['title']);
         $this->assertSame('https://example.com', $pagesByTitle['External Link Page']['url']);
+        $this->assertSame('External Link Page', $pagesByTitle['External Link Page']['title']);
+
+        // Test internal link - resolves to target page's URL with custom title
+        $this->assertArrayHasKey('Internal Link Page', $pagesByTitle);
+        $this->assertSame('/target-page', $pagesByTitle['Internal Link Page']['url']);
+        $this->assertSame('Internal Link Page', $pagesByTitle['Internal Link Page']['title']);
     }
 }

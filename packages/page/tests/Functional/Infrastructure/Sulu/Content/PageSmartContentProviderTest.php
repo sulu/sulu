@@ -322,14 +322,13 @@ class PageSmartContentProviderTest extends SuluTestCase
             ],
         );
 
-        // ContentBehavior test pages
         // Create target page for internal link
-        self::$pages['behavior_target'] = self::createPage(
+        self::$pages['link_target'] = self::createPage(
             'sulu-io',
             self::$parentPages['sulu-io'],
             [
-                'title' => 'Behavior Target Page',
-                'url' => '/behavior-target',
+                'title' => 'Link Target Page',
+                'url' => '/link-target',
                 'template' => 'default',
                 'excerptCategories' => [self::$categories['tech']->getId()],
                 'excerptTags' => [self::$tags['web']],
@@ -338,18 +337,17 @@ class PageSmartContentProviderTest extends SuluTestCase
         );
 
         // Create internal link page
-        self::$pages['behavior_internal'] = self::createPage(
+        self::$pages['link_internal'] = self::createPage(
             'sulu-io',
             self::$parentPages['sulu-io'],
             [
                 'title' => 'Internal Link Page',
                 'url' => '/internal-link',
                 'template' => 'default',
-                'behavior' => 'internal',
-                'behaviorDataInternal' => [
-                    'href' => self::$pages['behavior_target']->getUuid(),
+                'linkOn' => true,
+                'linkData' => [
+                    'href' => self::$pages['link_target']->getUuid(),
                     'provider' => 'page',
-                    'title' => 'Custom Internal Title',
                 ],
                 'excerptCategories' => [self::$categories['tech']->getId()],
                 'excerptTags' => [self::$tags['web']],
@@ -358,15 +356,15 @@ class PageSmartContentProviderTest extends SuluTestCase
         );
 
         // Create external link page
-        self::$pages['behavior_external'] = self::createPage(
+        self::$pages['link_external'] = self::createPage(
             'sulu-io',
             self::$parentPages['sulu-io'],
             [
                 'title' => 'External Link Page',
                 'url' => '/external-link',
                 'template' => 'default',
-                'behavior' => 'external',
-                'behaviorDataExternal' => [
+                'linkOn' => true,
+                'linkData' => [
                     'href' => 'https://example.com',
                     'provider' => 'external',
                 ],
@@ -391,7 +389,7 @@ class PageSmartContentProviderTest extends SuluTestCase
         );
 
         // Verify sulu-io pages are returned
-        $expectedSuluIoPages = ['tech1', 'sports1', 'health1', 'business1', 'entertainment1', 'tech_health', 'business_tech', 'multi_category_multi_tag', 'behavior_target', 'behavior_internal', 'behavior_external'];
+        $expectedSuluIoPages = ['tech1', 'sports1', 'health1', 'business1', 'entertainment1', 'tech_health', 'business_tech', 'multi_category_multi_tag', 'link_target', 'link_internal', 'link_external'];
         foreach ($expectedSuluIoPages as $key) {
             $this->assertContains(self::$pages[$key]->getUuid(), $resultIds);
         }
@@ -763,8 +761,8 @@ class PageSmartContentProviderTest extends SuluTestCase
 
         // With sorting by title ascending, verify the results are in the correct order
         // and only include sulu-io pages
-        $this->assertSame('Behavior Target Page', $result[0]['title']);
-        $this->assertSame(self::$pages['behavior_target']->getUuid(), $result[0]['id']);
+        $this->assertSame('Link Target Page', $result[0]['title']);
+        $this->assertSame(self::$pages['link_target']->getUuid(), $result[0]['id']);
     }
 
     public function testFindFlatByMaxPerPageAndPageSecond(): void
@@ -808,13 +806,13 @@ class PageSmartContentProviderTest extends SuluTestCase
         return [
             'title_asc' => [
                 ['title' => 'asc'],
-                'Behavior Target Page',
+                'Link Target Page',
                 'Zero Tech Investments',
             ],
             'title_desc' => [
                 ['title' => 'desc'],
                 'Zero Tech Investments',
-                'Behavior Target Page',
+                'Link Target Page',
             ],
             'authored_asc' => [
                 ['authored' => 'asc'],
@@ -851,8 +849,8 @@ class PageSmartContentProviderTest extends SuluTestCase
         $this->assertCount(11, $result);
 
         // Check if first article is alphabetically first among sulu-io pages
-        $this->assertStringContainsString('Behavior Target Page', $result[0]['title']);
-        $this->assertSame(self::$pages['behavior_target']->getUuid(), $result[0]['id'], "First result should be 'Behavior Target Page'");
+        $this->assertStringContainsString('Link Target Page', $result[0]['title']);
+        $this->assertSame(self::$pages['link_target']->getUuid(), $result[0]['id'], "First result should be 'Link Target Page'");
 
         // Check if last article is alphabetically last among sulu-io pages
         $this->assertStringContainsString('Zero Tech Investments', $result[10]['title']);
@@ -885,8 +883,8 @@ class PageSmartContentProviderTest extends SuluTestCase
         $this->assertSame(self::$pages['business_tech']->getUuid(), $result[0]['id'], "First result should be 'Zero Tech Investments'");
 
         // Check if last article is alphabetically first among sulu-io pages
-        $this->assertStringContainsString('Behavior Target Page', $result[10]['title']);
-        $this->assertSame(self::$pages['behavior_target']->getUuid(), $result[10]['id'], "Last result should be 'Behavior Target Page'");
+        $this->assertStringContainsString('Link Target Page', $result[10]['title']);
+        $this->assertSame(self::$pages['link_target']->getUuid(), $result[10]['id'], "Last result should be 'Link Target Page'");
 
         // Verify the order of some key pages
         $resultIds = \array_map(fn ($page) => $page['id'], $result);
@@ -931,7 +929,7 @@ class PageSmartContentProviderTest extends SuluTestCase
         );
 
         // Last should have newest authored date among sulu-io pages
-        $this->assertSame(self::$pages['behavior_external']->getUuid(), $result[10]['id']);
+        $this->assertSame(self::$pages['link_external']->getUuid(), $result[10]['id']);
         $this->assertStringContainsString('External Link Page', $result[10]['title']);
     }
 
@@ -945,7 +943,7 @@ class PageSmartContentProviderTest extends SuluTestCase
 
         // First should have newest authored date among sulu-io pages
         $this->assertStringContainsString('External Link Page', $result[0]['title']);
-        $this->assertSame(self::$pages['behavior_external']->getUuid(), $result[0]['id'], "First result should be 'External Link Page'");
+        $this->assertSame(self::$pages['link_external']->getUuid(), $result[0]['id'], "First result should be 'External Link Page'");
 
         // Check that pages are in correct reverse chronological order
         $resultIds = \array_map(fn ($page) => $page['id'], $result);
@@ -995,7 +993,7 @@ class PageSmartContentProviderTest extends SuluTestCase
         );
 
         // Verify all default template pages from sulu-io are returned
-        $expectedKeys = ['tech1', 'sports1', 'health1', 'tech_health', 'multi_category_multi_tag', 'behavior_target', 'behavior_internal', 'behavior_external'];
+        $expectedKeys = ['tech1', 'sports1', 'health1', 'tech_health', 'multi_category_multi_tag', 'link_target', 'link_internal', 'link_external'];
         foreach ($expectedKeys as $key) {
             $this->assertContains(self::$pages[$key]->getUuid(), $resultIds, "Page '$key' should be in the default template result");
         }
@@ -1136,7 +1134,7 @@ class PageSmartContentProviderTest extends SuluTestCase
         );
 
         // Verify sulu-io pages are returned
-        $expectedSuluIoPages = ['tech1', 'sports1', 'health1', 'business1', 'entertainment1', 'tech_health', 'business_tech', 'multi_category_multi_tag', 'behavior_target', 'behavior_internal', 'behavior_external'];
+        $expectedSuluIoPages = ['tech1', 'sports1', 'health1', 'business1', 'entertainment1', 'tech_health', 'business_tech', 'multi_category_multi_tag', 'link_target', 'link_internal', 'link_external'];
         foreach ($expectedSuluIoPages as $key) {
             $this->assertContains(self::$pages[$key]->getUuid(), $resultIds, "Page '$key' should be in the sulu-io result");
         }
@@ -1217,7 +1215,7 @@ class PageSmartContentProviderTest extends SuluTestCase
         $this->assertNotContains(self::$parentPages['blog'], $resultIds, 'Parent page of blog should not be in the result');
 
         // Verify sulu-io pages are NOT returned
-        $suluIoPages = ['tech1', 'sports1', 'health1', 'business1', 'entertainment1', 'tech_health', 'business_tech', 'multi_category_multi_tag', 'behavior_target', 'behavior_internal', 'behavior_external'];
+        $suluIoPages = ['tech1', 'sports1', 'health1', 'business1', 'entertainment1', 'tech_health', 'business_tech', 'multi_category_multi_tag', 'link_target', 'link_internal', 'link_external'];
         foreach ($suluIoPages as $key) {
             $this->assertNotContains(self::$pages[$key]->getUuid(), $resultIds, "Page '$key' should not be in the blog result");
         }
@@ -1386,7 +1384,7 @@ class PageSmartContentProviderTest extends SuluTestCase
         );
 
         // Verify correct sulu-io pages are returned
-        $expectedKeys = ['tech1', 'tech_health', 'multi_category_multi_tag', 'behavior_target', 'behavior_internal', 'behavior_external'];
+        $expectedKeys = ['tech1', 'tech_health', 'multi_category_multi_tag', 'link_target', 'link_internal', 'link_external'];
         foreach ($expectedKeys as $key) {
             $this->assertContains(self::$pages[$key]->getUuid(), $resultIds, "Page '$key' should be in the combined filter result");
         }

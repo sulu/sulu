@@ -9,8 +9,8 @@
         "en",
         "de"
     ],
-    "behavior": "content",
-    "behaviorData": null,
+    "linkOn": false,
+    "linkData": null,
     "contentLocales": [
         "en",
         "de"

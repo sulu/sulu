@@ -36,7 +36,7 @@
             <tag name="sulu_content.merger" priority="4"/>
         </service>
 
-        <service id="sulu_content.content_behavior_merger" class="Sulu\Content\Application\ContentMerger\Merger\ContentBehaviorMerger">
+        <service id="sulu_content.link_merger" class="Sulu\Content\Application\ContentMerger\Merger\LinkMerger">
             <tag name="sulu_content.merger" priority="3"/>
         </service>
 

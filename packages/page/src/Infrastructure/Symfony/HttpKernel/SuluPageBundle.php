@@ -17,7 +17,6 @@ use Gedmo\Tree\Hydrator\ORM\TreeObjectHydrator;
 use Sulu\Bundle\PersistenceBundle\DependencyInjection\PersistenceExtensionTrait;
 use Sulu\Bundle\PersistenceBundle\PersistenceBundleTrait;
 use Sulu\Content\Infrastructure\Sulu\Preview\ContentObjectProvider;
-use Sulu\Page\Application\ContentAggregator\PageContentBehaviorEnhancer;
 use Sulu\Page\Application\Mapper\PageContentMapper;
 use Sulu\Page\Application\Mapper\PageMapperInterface;
 use Sulu\Page\Application\MessageHandler\ApplyWorkflowTransitionPageMessageHandler;
@@ -42,6 +41,7 @@ use Sulu\Page\Infrastructure\Sulu\Admin\MetadataVisitor\WebspaceRouteModeTypedFo
 use Sulu\Page\Infrastructure\Sulu\Admin\PageAdmin;
 use Sulu\Page\Infrastructure\Sulu\Admin\PropertyMetadataMapper\PageTreeRoutePropertyMetadataMapper;
 use Sulu\Page\Infrastructure\Sulu\Build\HomepageBuilder;
+use Sulu\Page\Infrastructure\Sulu\Content\ContentAggregator\PageLinkContentAggregationEnhancer;
 use Sulu\Page\Infrastructure\Sulu\Content\DataMapper\NavigationContextDataMapper;
 use Sulu\Page\Infrastructure\Sulu\Content\Merger\NavigationContextMerger;
 use Sulu\Page\Infrastructure\Sulu\Content\Normalizer\PageExcerptNormalizer;
@@ -250,8 +250,8 @@ final class SuluPageBundle extends AbstractBundle
             ->tag('sulu_content.normalizer');
 
         // Content Aggregation Enhancer service
-        $services->set('sulu_page.page_content_behavior_enhancer')
-            ->class(PageContentBehaviorEnhancer::class)
+        $services->set('sulu_page.page_link_content_aggregation_enhancer')
+            ->class(PageLinkContentAggregationEnhancer::class)
             ->args([
                 new Reference('sulu_page.page_repository'),
                 new Reference('sulu_content.content_aggregator'),

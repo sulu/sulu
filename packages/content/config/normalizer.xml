@@ -28,6 +28,10 @@
             <tag name="sulu_content.normalizer" priority="8"/>
         </service>
 
+        <service id="sulu_content.link_normalizer" class="Sulu\Content\Application\ContentNormalizer\Normalizer\LinkNormalizer">
+            <tag name="sulu_content.normalizer" priority="6"/>
+        </service>
+
         <service id="sulu_content.shadow_normalizer" class="Sulu\Content\Application\ContentNormalizer\Normalizer\ShadowNormalizer">
             <tag name="sulu_content.normalizer" priority="4"/>
         </service>

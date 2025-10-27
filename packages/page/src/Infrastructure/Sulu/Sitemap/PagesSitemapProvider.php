@@ -159,7 +159,7 @@ class PagesSitemapProvider extends AbstractSitemapProvider
             AND dimensionContent.stage = :stage
             AND dimensionContent.version = :version
             AND dimensionContent.seoHideInSitemap = :hide
-            AND dimensionContent.behavior = :contentBehavior
+            AND dimensionContent.linkProvider IS NULL
         ')
             ->leftJoin('page.dimensionContents', 'unLocalizedDimensionContent', 'WITH', '
             unLocalizedDimensionContent.locale IS NULL
@@ -171,8 +171,7 @@ class PagesSitemapProvider extends AbstractSitemapProvider
             ->setParameter('locale', $locale)
             ->setParameter('stage', DimensionContentInterface::STAGE_LIVE)
             ->setParameter('version', DimensionContentInterface::CURRENT_VERSION)
-            ->setParameter('hide', false)
-            ->setParameter('contentBehavior', 'content');
+            ->setParameter('hide', false);
 
         $queryBuilder->select('dimensionContent.lastModified');
         $queryBuilder->addSelect('dimensionContent.changed');
@@ -208,14 +207,13 @@ class PagesSitemapProvider extends AbstractSitemapProvider
             AND dimensionContent.stage = :stage
             AND dimensionContent.version = :version
             AND dimensionContent.seoHideInSitemap = :hide
-            AND dimensionContent.behavior = :contentBehavior
+            AND dimensionContent.linkProvider IS NULL
         ')
             ->leftJoin('dimensionContent.route', 'route')
             ->setParameter('locale', $locale)
             ->setParameter('stage', DimensionContentInterface::STAGE_LIVE)
             ->setParameter('version', DimensionContentInterface::CURRENT_VERSION)
-            ->setParameter('hide', false)
-            ->setParameter('contentBehavior', 'content');
+            ->setParameter('hide', false);
 
         $queryBuilder->select('dimensionContent.locale');
         $queryBuilder->addSelect('route.slug');

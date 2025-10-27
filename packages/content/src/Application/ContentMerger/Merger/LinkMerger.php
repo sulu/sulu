@@ -13,28 +13,26 @@ declare(strict_types=1);
 
 namespace Sulu\Content\Application\ContentMerger\Merger;
 
-use Sulu\Content\Domain\Model\ContentBehaviorInterface;
+use Sulu\Content\Domain\Model\LinkInterface;
 
 /**
  * @internal This class should not be instantiated by a project.
  *           Create your own merger instead.
  */
-final class ContentBehaviorMerger implements MergerInterface
+final class LinkMerger implements MergerInterface
 {
     public function merge(object $targetObject, object $sourceObject): void
     {
-        if (!$targetObject instanceof ContentBehaviorInterface) {
+        if (!$targetObject instanceof LinkInterface) {
             return;
         }
 
-        if (!$sourceObject instanceof ContentBehaviorInterface) {
+        if (!$sourceObject instanceof LinkInterface) {
             return;
         }
 
-        $targetObject->setBehavior($sourceObject->getBehavior());
-
-        if ($behaviorData = $sourceObject->getBehaviorData()) {
-            $targetObject->setBehaviorData($behaviorData);
+        if ($linkData = $sourceObject->getLinkData()) {
+            $targetObject->setLinkData($linkData);
         }
     }
 }

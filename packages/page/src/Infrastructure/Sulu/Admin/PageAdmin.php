@@ -217,13 +217,13 @@ class PageAdmin extends Admin
             );
 
             // Preview only available for content pages
-            $previewCondition = "behavior == 'content' && shadowOn == false";
+            $previewCondition = 'linkOn == false && shadowOn == false';
 
             // Content and SEO tabs only for content pages
-            $contentTabCondition = "behavior == 'content' && shadowOn == false";
+            $contentTabCondition = 'linkOn == false && shadowOn == false';
 
             // Excerpt tab for content AND external pages
-            $excerptTabCondition = "(behavior == 'content' || behavior == 'external') && shadowOn == false";
+            $excerptTabCondition = "(linkOn == false || (link.provider == 'page')) && shadowOn == false";
             /** @var PreviewFormViewBuilder $viewBuilder */
             foreach ($viewBuilders as $viewBuilder) {
                 if (PageAdmin::ADD_FORM_VIEW . '.content' === $viewBuilder->getName()) {

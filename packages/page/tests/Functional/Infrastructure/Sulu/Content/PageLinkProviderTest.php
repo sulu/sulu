@@ -39,7 +39,7 @@ class PageLinkProviderTest extends SuluTestCase
         $this->linkProvider = self::getContainer()->get('sulu_page.page_link_provider');
     }
 
-    public function testPreloadWithContentBehaviors(): void
+    public function testPreloadWithContentLinks(): void
     {
         // Create target page for internal link
         $targetPage = self::createPage([
@@ -52,7 +52,6 @@ class PageLinkProviderTest extends SuluTestCase
             ],
         ]);
 
-        // Create content behavior page (default)
         $contentPage = self::createPage([
             'en' => [
                 'live' => [
@@ -70,11 +69,10 @@ class PageLinkProviderTest extends SuluTestCase
                     'title' => 'Internal Link Page',
                     'url' => '/internal-link',
                     'template' => 'default',
-                    'behavior' => 'internal',
-                    'behaviorDataInternal' => [
+                    'linkOn' => true,
+                    'linkData' => [
                         'href' => $targetPage->getUuid(),
                         'provider' => 'page',
-                        'title' => 'Custom Internal Title',
                     ],
                 ],
             ],
@@ -87,8 +85,8 @@ class PageLinkProviderTest extends SuluTestCase
                     'title' => 'External Link Page',
                     'url' => '/external-link',
                     'template' => 'default',
-                    'behavior' => 'external',
-                    'behaviorDataExternal' => [
+                    'linkOn' => true,
+                    'linkData' => [
                         'href' => 'https://example.com',
                         'provider' => 'external',
                     ],
@@ -110,19 +108,19 @@ class PageLinkProviderTest extends SuluTestCase
             $linksByUuid[$link->getId()] = $link;
         }
 
-        // Test content behavior - shows own title and URL
+        // Test content link - shows own title and URL
         $this->assertArrayHasKey($contentPage->getUuid(), $linksByUuid);
         $this->assertSame('Content Page', $linksByUuid[$contentPage->getUuid()]->getTitle());
         $this->assertSame('/content-page', $linksByUuid[$contentPage->getUuid()]->getUrl());
 
-        // Test internal behavior - resolves to target page's URL with custom title
-        $this->assertArrayHasKey($internalPage->getUuid(), $linksByUuid);
-        $this->assertSame('Custom Internal Title', $linksByUuid[$internalPage->getUuid()]->getTitle());
-        $this->assertSame('/link-target', $linksByUuid[$internalPage->getUuid()]->getUrl());
-
-        // Test external behavior - shows external URL with page's own title
+        // Test external link - shows external URL with page's own title
         $this->assertArrayHasKey($externalPage->getUuid(), $linksByUuid);
         $this->assertSame('External Link Page', $linksByUuid[$externalPage->getUuid()]->getTitle());
         $this->assertSame('https://example.com', $linksByUuid[$externalPage->getUuid()]->getUrl());
+
+        // Test internal link - resolves to target page's URL with custom title
+        $this->assertArrayHasKey($internalPage->getUuid(), $linksByUuid);
+        $this->assertSame('Internal Link Page', $linksByUuid[$internalPage->getUuid()]->getTitle());
+        $this->assertSame('/link-target', $linksByUuid[$internalPage->getUuid()]->getUrl());
     }
 }

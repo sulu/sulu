@@ -34,7 +34,7 @@
                 </ul>
 
                 <ul>
-                    {% for localization in localizations %}
+                    {% for localization in localizations|default([]) %}
                         <li>
                             <a href="{{ localization.url }}">{{ localization.locale }}</a>
                         </li>
@@ -44,7 +44,7 @@
 
             <nav>
                 <ul>
-                    {% for segment in segments %}
+                    {% for segment in segments|default([]) %}
                         <li>
                             <a href="{{ segment.url }}">{{ segment.title }}</a>
                         </li>

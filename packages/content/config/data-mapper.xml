@@ -44,7 +44,7 @@
             <tag name="sulu_content.data_mapper" priority="4"/>
         </service>
 
-        <service id="sulu_content.content_behavior_data_mapper" class="Sulu\Content\Application\ContentDataMapper\DataMapper\ContentBehaviorDataMapper">
+        <service id="sulu_content.link_data_mapper" class="Sulu\Content\Application\ContentDataMapper\DataMapper\LinkDataMapper">
             <tag name="sulu_content.data_mapper" priority="2"/>
         </service>
 

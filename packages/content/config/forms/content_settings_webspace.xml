@@ -5,7 +5,7 @@
 >
     <key>content_settings_webspace</key>
 
-    <tag name="sulu_content.content_settings_form" instanceOf="Sulu\Content\Domain\Model\WebspaceInterface" priority="-30"/>
+    <tag name="sulu_content.content_settings_form" instanceOf="Sulu\Content\Domain\Model\WebspaceInterface" priority="-20"/>
 
     <properties>
         <section name="webspace">

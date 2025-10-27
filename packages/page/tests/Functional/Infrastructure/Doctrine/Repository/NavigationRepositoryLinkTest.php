@@ -49,7 +49,6 @@ class NavigationRepositoryLinkTest extends SuluTestCase
             ],
         ]);
 
-        // Create content behavior page (default)
         $contentPage = self::createPage([
             'en' => [
                 'live' => [
@@ -57,14 +56,12 @@ class NavigationRepositoryLinkTest extends SuluTestCase
                     'url' => '/content-page',
                     'template' => 'default',
                     'navigationContexts' => ['main'],
-                    'behavior' => 'content',
                     'excerptTitle' => 'Content Page Excerpt',
                     'parentId' => $homepage->getId(),
                 ],
             ],
         ]);
 
-        // Create target page for internal link
         $targetPage = self::createPage([
             'en' => [
                 'live' => [
@@ -78,7 +75,6 @@ class NavigationRepositoryLinkTest extends SuluTestCase
             ],
         ]);
 
-        // Create internal link page
         $internalLinkPage = self::createPage([
             'en' => [
                 'live' => [
@@ -86,8 +82,7 @@ class NavigationRepositoryLinkTest extends SuluTestCase
                     'url' => '/internal-link',
                     'template' => 'default',
                     'navigationContexts' => ['main'],
-                    'behavior' => 'internal',
-                    'behaviorDataInternal' => [
+                    'linkData' => [
                         'href' => $targetPage->getUuid(),
                         'provider' => 'page',
                     ],
@@ -97,7 +92,6 @@ class NavigationRepositoryLinkTest extends SuluTestCase
             ],
         ]);
 
-        // Create external link page
         $externalLinkPage = self::createPage([
             'en' => [
                 'live' => [
@@ -105,8 +99,7 @@ class NavigationRepositoryLinkTest extends SuluTestCase
                     'url' => '/external-link',
                     'template' => 'default',
                     'navigationContexts' => ['main'],
-                    'behavior' => 'external',
-                    'behaviorDataExternal' => [
+                    'linkData' => [
                         'href' => 'https://example.com',
                         'provider' => 'external',
                     ],
@@ -123,10 +116,10 @@ class NavigationRepositoryLinkTest extends SuluTestCase
             'main',
             'en',
             'sulu-io',
+            null,
             1
         );
 
-        // Test content behavior page
         /** @var array<string, mixed> $contentPageNav */
         $contentPageNav = $navigation[1];
         $this->assertSame('Content Page', $contentPageNav['title']);
@@ -139,7 +132,7 @@ class NavigationRepositoryLinkTest extends SuluTestCase
         $this->assertSame('/target-page', $internalLinkNav['url']);
         $this->assertSame('sulu-io', $internalLinkNav['webspaceKey']);
 
-        // Test external link behavior
+        // Test external link resolve url
         /** @var array<string, mixed> $externalLinkNav */
         $externalLinkNav = $navigation[3];
         $this->assertSame('External Link Page', $externalLinkNav['title']);
@@ -152,6 +145,7 @@ class NavigationRepositoryLinkTest extends SuluTestCase
             'main',
             'en',
             'sulu-io',
+            null,
             1,
             ['excerpt' => true]
         );
@@ -179,10 +173,11 @@ class NavigationRepositoryLinkTest extends SuluTestCase
             'main',
             'en',
             'sulu-io',
-            2
+            null,
+            2,
         );
 
-        // Test content behavior page
+        // Test content page
         /** @var array<string, mixed> $homepageNav */
         $homepageNav = $navigation[0];
         /** @var array<int, array<string, mixed>> $homepageChildren */
@@ -200,7 +195,7 @@ class NavigationRepositoryLinkTest extends SuluTestCase
         $this->assertSame('/target-page', $internalLinkNav['url']);
         $this->assertArrayHasKey('children', $internalLinkNav);
 
-        // Test external link behavior
+        // Test external link resolve url
         /** @var array<string, mixed> $externalLinkNav */
         $externalLinkNav = $homepageChildren[2];
         $this->assertSame('External Link Page', $externalLinkNav['title']);

@@ -15,10 +15,6 @@
         <lastmod>2023-01-14</lastmod>
     </url>
     <url>
-        <loc>http://blog.io/en/behavior-target</loc>
-        <lastmod>2023-01-14</lastmod>
-    </url>
-    <url>
         <loc>http://blog.io/en/guides</loc>
         <lastmod>2023-01-14</lastmod>
     </url>
@@ -31,6 +27,10 @@
         <lastmod>2023-01-14</lastmod>
         <xhtml:link rel="alternate" hreflang="en" href="http://blog.io/en/latest-in-tech"/>
         <xhtml:link rel="alternate" hreflang="de" href="http://blog.io/de/neueste-technologie"/>
+    </url>
+    <url>
+        <loc>http://blog.io/en/link-target</loc>
+        <lastmod>2023-01-14</lastmod>
     </url>
     <url>
         <loc>http://blog.io/en/only-en</loc>

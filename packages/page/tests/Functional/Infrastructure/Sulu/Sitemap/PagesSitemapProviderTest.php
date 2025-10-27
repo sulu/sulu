@@ -160,19 +160,18 @@ class PagesSitemapProviderTest extends WebsiteTestCase
             ],
         );
 
-        // Create behavior test pages
-        self::$pages['behavior_target'] = self::createPage(
+        self::$pages['link_target'] = self::createPage(
             'blog',
             self::$parentPages['blog'],
             [
-                'title' => 'Behavior Target Page',
+                'title' => 'Link Target Page',
                 'template' => 'default',
                 'locale' => 'en',
-                'url' => '/behavior-target',
+                'url' => '/link-target',
             ],
         );
 
-        self::$pages['behavior_internal'] = self::createPage(
+        self::$pages['link_internal'] = self::createPage(
             'blog',
             self::$parentPages['blog'],
             [
@@ -180,11 +179,10 @@ class PagesSitemapProviderTest extends WebsiteTestCase
                 'template' => 'default',
                 'locale' => 'en',
                 'url' => '/internal-link',
-                'behavior' => 'internal',
-                'behaviorDataInternal' => [
-                    'href' => self::$pages['behavior_target']->getUuid(),
+                'linkOn' => true,
+                'linkData' => [
+                    'href' => self::$pages['link_target']->getUuid(),
                     'provider' => 'page',
-                    'title' => 'Custom Internal Title',
                 ],
             ],
         );
@@ -197,8 +195,8 @@ class PagesSitemapProviderTest extends WebsiteTestCase
                 'template' => 'default',
                 'locale' => 'en',
                 'url' => '/external-link',
-                'behavior' => 'external',
-                'behaviorDataExternal' => [
+                'linkOn' => true,
+                'linkData' => [
                     'href' => 'https://example.com',
                     'provider' => 'external',
                 ],
