@@ -28,11 +28,27 @@ class PageLinkProviderTest extends TestCase
     use ProphecyTrait;
     use SetGetPrivatePropertyTrait;
 
-    private PageLinkProvider $pageLinkProvider;
+    /**
+     * @var ObjectProphecy<ContentManagerInterface>
+     */
     private ObjectProphecy $contentManager;
+
+    /**
+     * @var ObjectProphecy<PageRepositoryInterface>
+     */
     private ObjectProphecy $pageRepository;
+
+    /**
+     * @var ObjectProphecy<ReferenceStoreInterface>
+     */
     private ObjectProphecy $referenceStore;
+
+    /**
+     * @var ObjectProphecy<TranslatorInterface>
+     */
     private ObjectProphecy $translator;
+
+    private PageLinkProvider $pageLinkProvider;
 
     protected function setUp(): void
     {
