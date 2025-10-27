@@ -20,7 +20,9 @@ use Sulu\Bundle\ActivityBundle\Domain\Event\DomainEvent;
 class ArticleRemovedEvent extends DomainEvent
 {
     /**
-     * @param array<string, mixed> $context
+     * @param array{
+     *     locales?: string[]
+     * } $context
      */
     public function __construct(
         private string $articleId,
@@ -58,5 +60,13 @@ class ArticleRemovedEvent extends DomainEvent
     public function getResourceSecurityContext(): ?string
     {
         return ArticleAdmin::SECURITY_CONTEXT;
+    }
+
+    /**
+     * @return string[]|null
+     */
+    public function getAllLocales(): ?array
+    {
+        return $this->context['locales'] ?? null;
     }
 }

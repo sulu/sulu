@@ -27,6 +27,13 @@ use Sulu\Article\Application\MessageHandler\RemoveArticleTranslationMessageHandl
 use Sulu\Article\Application\MessageHandler\RestoreArticleVersionMessageHandler;
 use Sulu\Article\Application\Webspace\WebspaceResolver;
 use Sulu\Article\Application\Webspace\WebspaceSettingsConfigurationResolver;
+use Sulu\Article\Domain\Event\ArticleCreatedEvent;
+use Sulu\Article\Domain\Event\ArticleModifiedEvent;
+use Sulu\Article\Domain\Event\ArticleRemovedEvent;
+use Sulu\Article\Domain\Event\ArticleRestoredEvent;
+use Sulu\Article\Domain\Event\ArticleTranslationAddedEvent;
+use Sulu\Article\Domain\Event\ArticleTranslationCopiedEvent;
+use Sulu\Article\Domain\Event\ArticleTranslationRemovedEvent;
 use Sulu\Article\Domain\Model\Article;
 use Sulu\Article\Domain\Model\ArticleDimensionContent;
 use Sulu\Article\Domain\Model\ArticleDimensionContentInterface;
@@ -415,6 +422,26 @@ final class SuluArticleBundle extends AbstractBundle
                 '%kernel.environment%',
             ])
             ->tag('sulu_route.route_defaults_provider', ['resource_key' => 'articles']);
+
+        $services->set('sulu_article.article_index_listener')
+            ->class('Sulu\Article\Infrastructure\Sulu\Search\ArticleIndexListener')
+            ->args([
+                new Reference('sulu_message_bus'),
+            ])
+            ->tag('kernel.event_listener', ['event' => ArticleCreatedEvent::class, 'method' => 'onArticleChanged'])
+            ->tag('kernel.event_listener', ['event' => ArticleModifiedEvent::class, 'method' => 'onArticleChanged'])
+            ->tag('kernel.event_listener', ['event' => ArticleRemovedEvent::class, 'method' => 'onArticleChanged'])
+            ->tag('kernel.event_listener', ['event' => ArticleRestoredEvent::class, 'method' => 'onArticleChanged'])
+            ->tag('kernel.event_listener', ['event' => ArticleTranslationAddedEvent::class, 'method' => 'onArticleChanged'])
+            ->tag('kernel.event_listener', ['event' => ArticleTranslationRemovedEvent::class, 'method' => 'onArticleChanged'])
+            ->tag('kernel.event_listener', ['event' => ArticleTranslationCopiedEvent::class, 'method' => 'onArticleChanged']);
+
+        $services->set('sulu_article.article_reindex_provider')
+            ->class('Sulu\Article\Infrastructure\Sulu\Search\ArticleReindexProvider')
+            ->args([
+                new Reference('doctrine.orm.entity_manager'),
+            ])
+            ->tag('cmsig_seal.reindex_provider');
     }
 
     /**
@@ -533,6 +560,30 @@ final class SuluArticleBundle extends AbstractBundle
                     );
                 }
             }
+        }
+
+        if ($builder->hasExtension('sulu_search')) {
+            $builder->prependExtensionConfig(
+                'sulu_search',
+                [
+                    'admin' => [
+                        'resources' => [
+                            ArticleInterface::RESOURCE_KEY => [
+                                'name' => 'sulu_article.articles',
+                                'icon' => 'su-newspaper',
+                                'route' => [
+                                    'name' => ArticleAdmin::EDIT_TABS_VIEW,
+                                    'resultToRoute' => [
+                                        'id' => 'id',
+                                        'locale' => 'locale',
+                                    ],
+                                ],
+                                'securityContext' => ArticleAdmin::SECURITY_CONTEXT,
+                            ],
+                        ],
+                    ],
+                ],
+            );
         }
     }
 
