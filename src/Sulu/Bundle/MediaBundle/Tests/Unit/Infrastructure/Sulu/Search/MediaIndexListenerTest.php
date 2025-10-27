@@ -101,7 +101,7 @@ class MediaIndexListenerTest extends TestCase
     {
         $media = $this->createMedia('test-media');
         static::setPrivateProperty($media, 'id', 1);
-        $event = new MediaRemovedEvent($media->getId(), 1, 'test-media', 'en', ['en', 'de']);
+        $event = new MediaRemovedEvent($media->getId(), 1, 'test-media', 'en', ['locales' => ['en', 'de']]);
 
         $expectedConfig = ReindexConfig::create()
             ->withIndex('admin')

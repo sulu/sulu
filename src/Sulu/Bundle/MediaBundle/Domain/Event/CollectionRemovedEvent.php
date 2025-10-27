@@ -18,10 +18,16 @@ use Sulu\Bundle\MediaBundle\Entity\CollectionInterface;
 
 class CollectionRemovedEvent extends DomainEvent
 {
+    /**
+     * @param array{
+     *     locales?: string[]
+     * } $context
+     */
     public function __construct(
         private int $collectionId,
         private ?string $collectionTitle,
-        private ?string $collectionTitleLocale
+        private ?string $collectionTitleLocale,
+        private array $context = [],
     ) {
         parent::__construct();
     }
@@ -59,5 +65,13 @@ class CollectionRemovedEvent extends DomainEvent
     public function getResourceSecurityObjectType(): ?string
     {
         return Collection::class;
+    }
+
+    /**
+     * @return string[]|null
+     */
+    public function getAllLocales(): ?array
+    {
+        return $this->context['locales'] ?? null;
     }
 }

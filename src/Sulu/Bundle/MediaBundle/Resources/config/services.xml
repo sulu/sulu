@@ -482,8 +482,27 @@
         </service>
 
         <service
+                id="sulu_media.collection_index_listener"
+                class="Sulu\Bundle\MediaBundle\Infrastructure\Sulu\Search\CollectionIndexListener"
+        >
+            <argument type="service" id="sulu_message_bus"/>
+            <tag name="kernel.event_listener" event="Sulu\Bundle\MediaBundle\Domain\Event\CollectionCreatedEvent" method="onCollectionChanged"/>
+            <tag name="kernel.event_listener" event="Sulu\Bundle\MediaBundle\Domain\Event\CollectionModifiedEvent" method="onCollectionChanged"/>
+            <tag name="kernel.event_listener" event="Sulu\Bundle\MediaBundle\Domain\Event\CollectionRemovedEvent" method="onCollectionChanged"/>
+            <tag name="kernel.event_listener" event="Sulu\Bundle\MediaBundle\Domain\Event\CollectionRestoredEvent" method="onCollectionChanged"/>
+        </service>
+
+        <service
                 id="sulu_media.media_reindex_provider"
                 class="Sulu\Bundle\MediaBundle\Infrastructure\Sulu\Search\MediaReindexProvider"
+        >
+            <argument type="service" id="doctrine.orm.entity_manager"/>
+            <tag name="cmsig_seal.reindex_provider"/>
+        </service>
+
+        <service
+                id="sulu_media.collection_reindex_provider"
+                class="Sulu\Bundle\MediaBundle\Infrastructure\Sulu\Search\CollectionReindexProvider"
         >
             <argument type="service" id="doctrine.orm.entity_manager"/>
             <tag name="cmsig_seal.reindex_provider"/>

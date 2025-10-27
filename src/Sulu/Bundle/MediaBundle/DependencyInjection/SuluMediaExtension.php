@@ -212,6 +212,18 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
                                 ],
                                 'securityContext' => MediaAdmin::SECURITY_CONTEXT,
                             ],
+                            CollectionInterface::RESOURCE_KEY => [
+                                'name' => 'sulu_media.collection',
+                                'icon' => 'su-folder',
+                                'route' => [
+                                    'name' => MediaAdmin::MEDIA_OVERVIEW_VIEW,
+                                    'resultToRoute' => [
+                                        'id' => 'id',
+                                        'locale' => 'locale',
+                                    ],
+                                ],
+                                'securityContext' => MediaAdmin::SECURITY_CONTEXT,
+                            ],
                         ],
                     ],
                 ],
