@@ -167,7 +167,7 @@ final class ArticleTrashItemHandler implements
     public function getConfiguration(): RestoreConfiguration
     {
         return new RestoreConfiguration(
-            'restore_article',
+            null,
             ArticleAdmin::EDIT_TABS_VIEW,
             ['id' => 'id'],
             null, // TODO serialization group?
