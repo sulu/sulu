@@ -27,6 +27,12 @@ use Sulu\Snippet\Application\MessageHandler\RemoveSnippetAreaMessageHandler;
 use Sulu\Snippet\Application\MessageHandler\RemoveSnippetMessageHandler;
 use Sulu\Snippet\Application\MessageHandler\RemoveSnippetTranslationMessageHandler;
 use Sulu\Snippet\Application\MessageHandler\RestoreSnippetVersionMessageHandler;
+use Sulu\Snippet\Domain\Event\SnippetCreatedEvent;
+use Sulu\Snippet\Domain\Event\SnippetModifiedEvent;
+use Sulu\Snippet\Domain\Event\SnippetRemovedEvent;
+use Sulu\Snippet\Domain\Event\SnippetRestoredEvent;
+use Sulu\Snippet\Domain\Event\SnippetTranslationAddedEvent;
+use Sulu\Snippet\Domain\Event\SnippetTranslationRemovedEvent;
 use Sulu\Snippet\Domain\Model\Snippet;
 use Sulu\Snippet\Domain\Model\SnippetArea;
 use Sulu\Snippet\Domain\Model\SnippetAreaInterface;
@@ -69,8 +75,8 @@ use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
  */
 final class SuluSnippetBundle extends AbstractBundle
 {
-    use PersistenceExtensionTrait;
     use PersistenceBundleTrait;
+    use PersistenceExtensionTrait;
 
     /**
      * @internal this method is not part of the public API and should only be called by the Symfony framework classes
@@ -237,8 +243,7 @@ final class SuluSnippetBundle extends AbstractBundle
                 new Reference('sulu_content.content_aggregator'),
                 param(SnippetAreaCompilerPass::SNIPPET_AREA_PARAM),
             ])
-            ->tag('serializer.normalizer')
-        ;
+            ->tag('serializer.normalizer');
 
         // Twig services
         $services->set('sulu_snippet.snippet_area_twig_extension')
@@ -364,6 +369,25 @@ final class SuluSnippetBundle extends AbstractBundle
                 ->tag('sulu_trash.restore_trash_item_handler')
                 ->tag('sulu_trash.restore_configuration_provider');
         }
+
+        $services->set('sulu_snippet.snippet_index_listener')
+            ->class('Sulu\Snippet\Infrastructure\Sulu\Search\SnippetIndexListener')
+            ->args([
+                new Reference('sulu_message_bus'),
+            ])
+            ->tag('kernel.event_listener', ['event' => SnippetCreatedEvent::class, 'method' => 'onSnippetChanged'])
+            ->tag('kernel.event_listener', ['event' => SnippetModifiedEvent::class, 'method' => 'onSnippetChanged'])
+            ->tag('kernel.event_listener', ['event' => SnippetRemovedEvent::class, 'method' => 'onSnippetChanged'])
+            ->tag('kernel.event_listener', ['event' => SnippetRestoredEvent::class, 'method' => 'onSnippetChanged'])
+            ->tag('kernel.event_listener', ['event' => SnippetTranslationAddedEvent::class, 'method' => 'onSnippetChanged'])
+            ->tag('kernel.event_listener', ['event' => SnippetTranslationRemovedEvent::class, 'method' => 'onSnippetChanged']);
+
+        $services->set('sulu_snippet.snippet_reindex_provider')
+            ->class('Sulu\Snippet\Infrastructure\Sulu\Search\SnippetReindexProvider')
+            ->args([
+                new Reference('doctrine.orm.entity_manager'),
+            ])
+            ->tag('cmsig_seal.reindex_provider');
     }
 
     /**
@@ -464,6 +488,30 @@ final class SuluSnippetBundle extends AbstractBundle
                                 'alias' => 'SuluSnippet',
                                 'is_bundle' => false,
                                 'mapping' => true,
+                            ],
+                        ],
+                    ],
+                ],
+            );
+        }
+
+        if ($builder->hasExtension('sulu_search')) {
+            $builder->prependExtensionConfig(
+                'sulu_search',
+                [
+                    'admin' => [
+                        'resources' => [
+                            SnippetInterface::RESOURCE_KEY => [
+                                'name' => 'sulu_snippet.snippets',
+                                'icon' => 'su-snippet',
+                                'route' => [
+                                    'name' => 'sulu_snippet.snippet.edit_tabs',
+                                    'resultToRoute' => [
+                                        'id' => 'id',
+                                        'locale' => 'locale',
+                                    ],
+                                ],
+                                'securityContext' => SnippetAdmin::SECURITY_CONTEXT,
                             ],
                         ],
                     ],

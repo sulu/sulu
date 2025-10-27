@@ -47,7 +47,9 @@ final class RemoveSnippetMessageHandler
         $dimensionContentCollection = new DimensionContentCollection($snippet->getDimensionContents()->toArray(), [], SnippetDimensionContent::class);
         /** @var SnippetDimensionContent $localizedDimensionContent */
         $localizedDimensionContent = $dimensionContentCollection->getDimensionContent(['locale' => $message->getLocale()]);
+        $unlocalizedDimensionContent = $dimensionContentCollection->getDimensionContent(['locale' => null, 'stage' => 'draft']);
+        $context = $unlocalizedDimensionContent?->getAvailableLocales() ? ['locales' => $unlocalizedDimensionContent->getAvailableLocales()] : [];
 
-        $this->domainEventCollector->collect(new SnippetRemovedEvent($snippet->getId(), $localizedDimensionContent->getTitle(), []));
+        $this->domainEventCollector->collect(new SnippetRemovedEvent($snippet->getId(), $localizedDimensionContent->getTitle(), $context));
     }
 }

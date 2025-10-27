@@ -20,7 +20,9 @@ use Sulu\Snippet\Infrastructure\Sulu\Admin\SnippetAdmin;
 class SnippetRemovedEvent extends DomainEvent
 {
     /**
-     * @param array<string, mixed> $context
+     * @param array{
+     *     locales?: string[]
+     * } $context
      */
     public function __construct(
         private string $snippetId,
@@ -58,5 +60,13 @@ class SnippetRemovedEvent extends DomainEvent
     public function getResourceSecurityContext(): ?string
     {
         return SnippetAdmin::SECURITY_CONTEXT;
+    }
+
+    /**
+     * @return string[]|null
+     */
+    public function getAllLocales(): ?array
+    {
+        return $this->context['locales'] ?? null;
     }
 }
