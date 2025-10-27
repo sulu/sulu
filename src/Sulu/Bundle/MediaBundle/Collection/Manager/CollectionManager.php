@@ -586,6 +586,11 @@ class CollectionManager implements CollectionManagerInterface
         $collectionMeta = $collectionEntity->getDefaultMeta();
         $collectionTitle = $collectionMeta ? $collectionMeta->getTitle() : null;
         $locale = $collectionMeta ? $collectionMeta->getLocale() : null;
+        $metaLocales = [];
+
+        foreach ($collectionEntity->getMeta() as $meta) {
+            $metaLocales[] = $meta->getLocale();
+        }
 
         if (!$forceRemoveChildren) {
             $this->checkDescendantPermissionsForDelete($id);
@@ -599,7 +604,7 @@ class CollectionManager implements CollectionManagerInterface
         }
 
         $this->domainEventCollector->collect(
-            new CollectionRemovedEvent($collectionId, $collectionTitle, $locale)
+            new CollectionRemovedEvent($collectionId, $collectionTitle, $locale, ['locales' => $metaLocales])
         );
 
         $this->em->flush();

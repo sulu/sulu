@@ -674,7 +674,7 @@ class MediaManager implements MediaManagerInterface
         $this->em->remove($mediaEntity);
 
         $this->domainEventCollector->collect(
-            new MediaRemovedEvent($mediaEntity->getId(), $collectionId, $mediaTitle, $locale, $metaLocales)
+            new MediaRemovedEvent($mediaEntity->getId(), $collectionId, $mediaTitle, $locale, ['locales' => $metaLocales])
         );
 
         $this->em->flush();

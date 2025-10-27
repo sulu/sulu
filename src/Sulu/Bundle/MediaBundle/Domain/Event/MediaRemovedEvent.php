@@ -19,14 +19,16 @@ use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 class MediaRemovedEvent extends DomainEvent
 {
     /**
-     * @param string[]|null $allLocales
+     * @param array{
+     *     locales?: string[]
+     * } $context
      */
     public function __construct(
         private int $mediaId,
         private int $collectionId,
         private ?string $mediaTitle,
         private ?string $mediaTitleLocale,
-        private ?array $allLocales,
+        private array $context = [],
     ) {
         parent::__construct();
     }
@@ -76,6 +78,6 @@ class MediaRemovedEvent extends DomainEvent
      */
     public function getAllLocales(): ?array
     {
-        return $this->allLocales;
+        return $this->context['locales'] ?? null;
     }
 }
