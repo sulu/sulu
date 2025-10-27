@@ -54,7 +54,7 @@ trait AssertSnapshotTrait
     protected function assertSnapshot(
         string $snapshotPatternFilename,
         string $content,
-        string $message = ''
+        string $message = '',
     ): void {
         $snapshotFilePath = \implode(
             \DIRECTORY_SEPARATOR,
