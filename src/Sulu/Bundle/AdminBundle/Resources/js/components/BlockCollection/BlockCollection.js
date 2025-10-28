@@ -12,11 +12,12 @@ import SortableBlockList from './SortableBlockList';
 import blockCollectionStyles from './blockCollection.scss';
 import type {RenderBlockContentCallback, BlockMode, Message} from './types';
 
-type Props<T: string, U: {type: T}> = {|
+type Props<T: string, U: {_id?: string, type: T, ...}> = {|
     addButtonText?: ?string,
     collapsable: boolean,
     defaultType: T,
     disabled: boolean,
+    generateBlockIds?: (count: number) => Promise<Array<string>>,
     icons?: Array<Array<string>>,
     maxOccurs?: ?number,
     minOccurs?: ?number,
@@ -34,7 +35,7 @@ type Props<T: string, U: {type: T}> = {|
 const BLOCKS_CLIPBOARD_KEY = 'blocks';
 
 @observer
-class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, U>> {
+class BlockCollection<T: string, U: {_id?: string, type: T, ...}> extends React.Component<Props<T, U>> {
     static idCounter = 0;
 
     static defaultProps = {
@@ -52,6 +53,32 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
 
     fillArraysDisposer: ?() => *;
     setPasteableBlocksDisposer: ?() => *;
+
+    removeBlockIds = (block: any): any => {
+        if (typeof block !== 'object' || block === null) {
+            return block;
+        }
+
+        if (Array.isArray(block)) {
+            return block.map((item) => this.removeBlockIds(item));
+        }
+
+        const cleanedBlock = {...block};
+
+        // Remove _id from current level
+        if ('_id' in cleanedBlock) {
+            delete cleanedBlock._id;
+        }
+
+        // Recursively process nested objects
+        Object.keys(cleanedBlock).forEach((key) => {
+            if (typeof cleanedBlock[key] === 'object' && cleanedBlock[key] !== null) {
+                cleanedBlock[key] = this.removeBlockIds(cleanedBlock[key]);
+            }
+        });
+
+        return cleanedBlock;
+    };
 
     constructor(props: Props<T, U>) {
         super(props);
@@ -128,8 +155,8 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
         return indexes;
     }
 
-    @action handleAddBlock = (insertionIndex: number) => {
-        const {defaultType, onChange, value} = this.props;
+    @action handleAddBlock = async(insertionIndex: number) => {
+        const {defaultType, generateBlockIds, onChange, value} = this.props;
 
         if (this.hasMaximumReached) {
             throw new Error('The maximum amount of blocks has already been reached!');
@@ -142,13 +169,29 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
 
             const elementsBefore = value.slice(0, insertionIndex);
             const elementsAfter = value.slice(insertionIndex);
+
+            const newBlock: { _id?: string, type: string } = {type: defaultType};
+
+            if (generateBlockIds) {
+                const [newBlockId] = await generateBlockIds(1);
+                newBlock._id = newBlockId;
+            }
+
             // $FlowFixMe
-            onChange([...elementsBefore, {type: defaultType}, ...elementsAfter]);
+            onChange([...elementsBefore, newBlock, ...elementsAfter]);
         }
     };
 
-    @action handlePasteBlocks = (insertionIndex: number) => {
-        const {onChange, onDisplaySnackbar, value} = this.props;
+    handleAddButtonClick = (value: number) => {
+        this.handleAddBlock(value);
+    };
+
+    handlePasteButtonClick = (value: number) => {
+        this.handlePasteBlocks(value);
+    };
+
+    @action handlePasteBlocks = async(insertionIndex: number) => {
+        const {generateBlockIds, onChange, onDisplaySnackbar, value} = this.props;
 
         if (this.hasMaximumReached) {
             throw new Error('The maximum amount of blocks has already been reached!');
@@ -168,14 +211,26 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
             insertionIndex, 0, ...this.pasteableBlocks.map(() => ++BlockCollection.idCounter)
         );
 
-        const newElements = this.pasteableBlocks.map((block) => {
+        // Generate IDs for all blocks being pasted (paste always gets new IDs)
+        let generatedIds = [];
+        if (generateBlockIds) {
+            generatedIds = await generateBlockIds(this.pasteableBlocks.length);
+        }
+
+        const newElements = this.pasteableBlocks.map((block, index) => {
             // paste block with default type if type of block in clipboard is not known
-            if (!this.props.types?.[block.type]) {
-                return {...block, type: this.props.defaultType};
+            const newBlock = !this.props.types?.[block.type]
+                ? {...block, type: this.props.defaultType}
+                : {...block};
+
+            // Paste always generates new IDs (remove old _id and assign new one)
+            if (generateBlockIds) {
+                newBlock._id = generatedIds[index];
             }
 
-            return block;
+            return newBlock;
         });
+
         const elementsBefore = value.slice(0, insertionIndex);
         const elementsAfter = value.slice(insertionIndex);
 
@@ -245,16 +300,23 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
         this.duplicateBlocks([index], index);
     };
 
-    @action duplicateBlocks = (indexes: Array<number>, insertAfterIndex: number) => {
-        const {onChange, onDisplaySnackbar, value} = this.props;
+    @action duplicateBlocks = async(indexes: Array<number>, insertAfterIndex: number) => {
+        const {generateBlockIds, onChange, onDisplaySnackbar, value} = this.props;
 
         if (!value) {
             return;
         }
 
+        // Generate all IDs upfront in a single batch request
+        let generatedIds = [];
+        if (generateBlockIds) {
+            generatedIds = await generateBlockIds(indexes.length);
+        }
+
         let newValue = [...value];
 
-        indexes.forEach(( index, count) => {
+        for (let count = 0; count < indexes.length; count++) {
+            const index = indexes[count];
             if (this.hasMaximumReached) {
                 // TODO throw snackbar message or maybe its not required as fillArrays already refill the array
                 throw new Error('The maximum amount of blocks has already been reached!');
@@ -269,8 +331,18 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
             const elementsBefore = newValue.slice(0, currentInsertAfterIndex);
             const elementsAfter = newValue.slice(currentInsertAfterIndex);
 
-            newValue = [...elementsBefore, {...toJS(newValue[index])}, ...elementsAfter];
-        });
+            // Remove all _id fields (including nested ones) from the duplicated block
+            const duplicatedBlock = generateBlockIds
+                ? this.removeBlockIds(toJS(newValue[index]))
+                : {...toJS(newValue[index])};
+
+            // Assign new ID to top-level block
+            if (generateBlockIds && generatedIds.length > count) {
+                duplicatedBlock._id = generatedIds[count];
+            }
+
+            newValue = [...elementsBefore, duplicatedBlock, ...elementsAfter];
+        }
 
         onChange(newValue);
 
@@ -292,7 +364,7 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
     };
 
     copyBlocks = (indexes: Array<number>, shouldDisplaySnackbar: boolean = true) => {
-        const {onDisplaySnackbar, value} = this.props;
+        const {generateBlockIds, onDisplaySnackbar, value} = this.props;
 
         if (!value) {
             return;
@@ -301,7 +373,16 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
         const blocks = [];
 
         indexes.forEach(( index) => {
-            blocks.push({...toJS(value[index])});
+            let block = toJS(value[index]);
+
+            // Remove _id from copied blocks (including nested blocks) so new IDs are generated on paste
+            if (generateBlockIds) {
+                block = this.removeBlockIds(block);
+            } else {
+                block = {...block};
+            }
+
+            blocks.push(block);
         });
 
         clipboard.set(BLOCKS_CLIPBOARD_KEY, blocks);
@@ -324,9 +405,28 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
     };
 
     cutBlocks = (indexes: Array<number>) => {
-        const {onDisplaySnackbar} = this.props;
+        const {generateBlockIds, onDisplaySnackbar, value} = this.props;
 
-        this.copyBlocks(indexes, false);
+        if (!value) {
+            return;
+        }
+
+        const blocks = [];
+
+        indexes.forEach(( index) => {
+            let block = toJS(value[index]);
+
+            // Remove _id from cut blocks (including nested blocks) so new IDs are generated on paste
+            if (generateBlockIds) {
+                block = this.removeBlockIds(block);
+            } else {
+                block = {...block};
+            }
+
+            blocks.push(block);
+        });
+
+        clipboard.set(BLOCKS_CLIPBOARD_KEY, blocks);
         this.removeBlocks(indexes, false);
 
         if (onDisplaySnackbar) {
@@ -457,7 +557,7 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
                     className={blockCollectionStyles.addButton}
                     disabled={disabled || this.hasMaximumReached}
                     icon="su-plus"
-                    onClick={this.handleAddBlock}
+                    onClick={this.handleAddButtonClick}
                     skin="secondary"
                     value={aboveBlockIndex + 1}
                 >
@@ -468,7 +568,7 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
                         className={blockCollectionStyles.addButton}
                         disabled={disabled || this.hasMaximumReached}
                         icon="su-copy"
-                        onClick={this.handlePasteBlocks}
+                        onClick={this.handlePasteButtonClick}
                         skin="secondary"
                         value={aboveBlockIndex + 1}
                     >

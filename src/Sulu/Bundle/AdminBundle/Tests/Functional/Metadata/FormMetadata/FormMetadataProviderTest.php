@@ -126,9 +126,8 @@ class FormMetadataProviderTest extends KernelTestCase
             ['tags' => ['test' => false]]
         );
         $this->assertInstanceOf(TypedFormMetadata::class, $typedForm);
-        $forms = $typedForm->getForms();
-        \ksort($forms);
-        $this->assertSame(['grouped', 'overview'], \array_keys($forms));
+        $this->assertCount(2, $typedForm->getForms());
+        $this->assertEqualsCanonicalizing(['overview', 'grouped'], \array_keys($typedForm->getForms()));
 
         $typedForm = $this->formMetadataProvider->getMetadata(
             'page',

@@ -46,6 +46,14 @@ jest.mock('../../../utils/Translator', () => ({
     translate: (key) => key,
 }));
 
+jest.mock('fos-jsrouting/router', () => ({
+    generate: jest.fn(),
+}));
+
+jest.mock('../../../services/ResourceRequester/ResourceRequester', () => ({
+    post: jest.fn(),
+}));
+
 jest.mock('../registries/blockPreviewTransformerRegistry', () => ({
     has: jest.fn(),
     get: jest.fn(),
@@ -2011,4 +2019,87 @@ test('Throw error if passed add_button_text schema option is not a string', () =
             value={[]}
         />
     )).toThrow('The "block" field types only accepts strings as "add_button_text" schema option!');
+});
+
+test('Should pass generateBlockIds function to BlockCollection when block_id_generator is true', () => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
+    const types = {
+        default: {
+            title: 'Default',
+            form: {
+                text: {
+                    label: 'Text',
+                    type: 'text_line',
+                },
+            },
+        },
+    };
+
+    const fieldBlocks = shallow(
+        <FieldBlocks
+            {...fieldTypeDefaultProps}
+            defaultType="editor"
+            formInspector={formInspector}
+            schemaOptions={{block_id_generator: {name: 'block_id_generator', value: true}}}
+            types={types}
+            value={[]}
+        />
+    );
+
+    expect(fieldBlocks.find('BlockCollection').prop('generateBlockIds')).toBeInstanceOf(Function);
+});
+
+test('Should not pass generateBlockIds to BlockCollection when block_id_generator is false', () => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
+    const types = {
+        default: {
+            title: 'Default',
+            form: {
+                text: {
+                    label: 'Text',
+                    type: 'text_line',
+                },
+            },
+        },
+    };
+
+    const fieldBlocks = shallow(
+        <FieldBlocks
+            {...fieldTypeDefaultProps}
+            defaultType="editor"
+            formInspector={formInspector}
+            schemaOptions={{block_id_generator: {name: 'block_id_generator', value: false}}}
+            types={types}
+            value={[]}
+        />
+    );
+
+    expect(fieldBlocks.find('BlockCollection').prop('generateBlockIds')).toBeUndefined();
+});
+
+test('Throw error if passed block_id_generator schema option is not a boolean', () => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
+
+    const types = {
+        default: {
+            title: 'Default',
+            form: {
+                text: {
+                    label: 'Text',
+                    type: 'text_line',
+                },
+            },
+        },
+    };
+
+    expect(() => shallow(
+        <FieldBlocks
+            {...fieldTypeDefaultProps}
+            defaultType="editor"
+            formInspector={formInspector}
+            schemaOptions={{block_id_generator: {name: 'block_id_generator', value: 'true'}}}
+            types={types}
+            value={[]}
+        />
+    )).toThrow('The "block" field types only accepts booleans as "block_id_generator" schema option!');
 });
