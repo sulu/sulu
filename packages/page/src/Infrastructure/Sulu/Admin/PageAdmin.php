@@ -216,8 +216,14 @@ class PageAdmin extends Admin
                 toolbarActions: $formToolbarActionsWithType
             );
 
-            $previewCondition = 'shadowOn == false';
-            $tabCondition = 'shadowOn == false';
+            // Preview only available for content pages
+            $previewCondition = 'linkOn == false && shadowOn == false';
+
+            // Content and SEO tabs only for content pages
+            $contentTabCondition = 'linkOn == false && shadowOn == false';
+
+            // Excerpt tab for content AND external pages
+            $excerptTabCondition = "(linkOn == false || (link.provider == 'page')) && shadowOn == false";
             /** @var PreviewFormViewBuilder $viewBuilder */
             foreach ($viewBuilders as $viewBuilder) {
                 if (PageAdmin::ADD_FORM_VIEW . '.content' === $viewBuilder->getName()) {
@@ -232,7 +238,7 @@ class PageAdmin extends Admin
                         ->disablePreviewWebspaceChooser()
                         ->addRouterAttributesToFormRequest($routerAttributesToFormRequest)
                         ->addRouterAttributesToFormMetadata($routerAttributesToFormMetadata)
-                        ->setTabCondition($tabCondition)
+                        ->setTabCondition($contentTabCondition)
                         ->setPreviewCondition($previewCondition);
                 }
 
@@ -240,6 +246,7 @@ class PageAdmin extends Admin
                     $viewBuilder
                         ->disablePreviewWebspaceChooser()
                         ->addRouterAttributesToFormRequest($routerAttributesToFormRequest)
+                        ->setTabCondition($contentTabCondition)
                         ->setPreviewCondition($previewCondition);
                 }
 
@@ -249,7 +256,7 @@ class PageAdmin extends Admin
                         ->addRouterAttributesToFormRequest($routerAttributesToFormRequest)
                         ->addRouterAttributesToFormMetadata($routerAttributesToFormMetadata)
                         ->setPreviewCondition($previewCondition)
-                        ->setTabCondition($tabCondition);
+                        ->setTabCondition($excerptTabCondition);
                 }
 
                 if (PageAdmin::EDIT_FORM_VIEW . '.settings' === $viewBuilder->getName()) {

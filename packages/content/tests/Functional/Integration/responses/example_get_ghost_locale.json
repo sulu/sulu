@@ -6,6 +6,8 @@
     "creator" : "@integer@",
     "created": "@datetime@",
     "availableLocales": ["en"],
+    "linkOn": false,
+    "linkData": null,
     "contentLocales": ["en"],
     "excerptAudienceTargetGroups": [],
     "excerptCategories": [],

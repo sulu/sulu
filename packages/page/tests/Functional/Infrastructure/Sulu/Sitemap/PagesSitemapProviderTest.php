@@ -160,6 +160,49 @@ class PagesSitemapProviderTest extends WebsiteTestCase
             ],
         );
 
+        self::$pages['link_target'] = self::createPage(
+            'blog',
+            self::$parentPages['blog'],
+            [
+                'title' => 'Link Target Page',
+                'template' => 'default',
+                'locale' => 'en',
+                'url' => '/link-target',
+            ],
+        );
+
+        self::$pages['link_internal'] = self::createPage(
+            'blog',
+            self::$parentPages['blog'],
+            [
+                'title' => 'Internal Link Page',
+                'template' => 'default',
+                'locale' => 'en',
+                'url' => '/internal-link',
+                'linkOn' => true,
+                'linkData' => [
+                    'href' => self::$pages['link_target']->getUuid(),
+                    'provider' => 'page',
+                ],
+            ],
+        );
+
+        self::createPage(
+            'blog',
+            self::$parentPages['blog'],
+            [
+                'title' => 'External Link Page',
+                'template' => 'default',
+                'locale' => 'en',
+                'url' => '/external-link',
+                'linkOn' => true,
+                'linkData' => [
+                    'href' => 'https://example.com',
+                    'provider' => 'external',
+                ],
+            ],
+        );
+
         self::$pages['guide'] = self::createPage(
             'blog',
             self::$parentPages['blog'],

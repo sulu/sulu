@@ -8,7 +8,7 @@
     <tag name="sulu_content.content_settings_form" instanceOf="Sulu\Page\Domain\Model\PageDimensionContentInterface" priority="100"/>
 
     <properties>
-        <section name="content_settings_page_settings">
+        <section name="content_settings_page_settings" visibleCondition="shadowOn == false">
             <meta>
                 <title>sulu_content.page_settings</title>
             </meta>
@@ -17,7 +17,6 @@
                 <property
                     name="navigationContexts"
                     type="page_settings_navigation_select"
-                    visibleCondition="shadowOn == false"
                     colspan="6"
                 >
                     <meta>

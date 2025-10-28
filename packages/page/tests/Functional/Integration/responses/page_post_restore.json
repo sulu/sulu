@@ -5,8 +5,11 @@
         "en",
         "de"
     ],
+    "linkOn": false,
+    "linkData": null,
     "changed": "@datetime@",
     "changer": "@integer@",
+
     "contentLocales": [
         "en",
         "de"

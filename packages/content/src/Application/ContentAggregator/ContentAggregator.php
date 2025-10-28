@@ -31,14 +31,32 @@ class ContentAggregator implements ContentAggregatorInterface
      */
     private $contentMerger;
 
+    /**
+     * @var iterable<ContentAggregationEnhancerInterface>
+     */
+    private $contentAggregationEnhancers;
+
+    /**
+     * @param iterable<ContentAggregationEnhancerInterface> $contentAggregationEnhancers
+     */
     public function __construct(
         DimensionContentRepositoryInterface $dimensionContentRepository,
-        ContentMergerInterface $contentMerger
+        ContentMergerInterface $contentMerger,
+        iterable $contentAggregationEnhancers = []
     ) {
         $this->dimensionContentRepository = $dimensionContentRepository;
         $this->contentMerger = $contentMerger;
+        $this->contentAggregationEnhancers = $contentAggregationEnhancers;
     }
 
+    /**
+     * @template T of DimensionContentInterface
+     *
+     * @param ContentRichEntityInterface<T> $contentRichEntity
+     * @param array<string, mixed> $dimensionAttributes
+     *
+     * @return T
+     */
     public function aggregate(ContentRichEntityInterface $contentRichEntity, array $dimensionAttributes): DimensionContentInterface
     {
         $dimensionContentCollection = $this->dimensionContentRepository->load($contentRichEntity, $dimensionAttributes);
@@ -47,6 +65,12 @@ class ContentAggregator implements ContentAggregatorInterface
             throw new ContentNotFoundException($contentRichEntity, $dimensionAttributes);
         }
 
-        return $this->contentMerger->merge($dimensionContentCollection);
+        $dimensionContent = $this->contentMerger->merge($dimensionContentCollection);
+
+        foreach ($this->contentAggregationEnhancers as $enhancer) {
+            $dimensionContent = $enhancer->enhance($dimensionContent, $dimensionAttributes);
+        }
+
+        return $dimensionContent;
     }
 }

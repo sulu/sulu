@@ -1,0 +1,45 @@
+<?xml version="1.0" ?>
+<form xmlns="http://schemas.sulu.io/template/template"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/form-1.0.xsd"
+>
+    <key>content_settings_link</key>
+
+    <tag name="sulu_content.content_settings_form" instanceOf="Sulu\Content\Domain\Model\LinkInterface" priority="-30"/>
+
+    <properties>
+        <section name="link" visibleCondition="shadowOn == false">
+            <meta>
+                <title>sulu_content.link</title>
+            </meta>
+
+            <properties>
+                <property name="linkOn" type="checkbox" colspan="6">
+                    <meta>
+                        <info_text>sulu_content.enable_link_info_text</info_text>
+                    </meta>
+
+                    <params>
+                        <param name="type" value="toggler" />
+                        <param name="label">
+                            <meta>
+                                <title>sulu_content.enable_link</title>
+                            </meta>
+                        </param>
+                    </params>
+                </property>
+
+                <property name="linkData" type="link" colspan="6" visibleCondition="linkOn == true">
+                    <meta>
+                        <title>sulu_content.link</title>
+                    </meta>
+
+                    <params>
+                        <param name="enable_anchor" value="true"/>
+                        <param name="enable_attributes" value="true"/>
+                    </params>
+                </property>
+            </properties>
+        </section>
+    </properties>
+</form>

@@ -15,6 +15,7 @@ use Sulu\Content\Domain\Model\AuditableInterface;
 use Sulu\Content\Domain\Model\AuthorInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Domain\Model\ExcerptInterface;
+use Sulu\Content\Domain\Model\LinkInterface;
 use Sulu\Content\Domain\Model\RoutableInterface;
 use Sulu\Content\Domain\Model\SeoInterface;
 use Sulu\Content\Domain\Model\ShadowInterface;
@@ -26,7 +27,7 @@ use Sulu\Content\Domain\Model\WorkflowInterface;
  *
  * @extends DimensionContentInterface<PageInterface>
  */
-interface PageDimensionContentInterface extends DimensionContentInterface, ExcerptInterface, SeoInterface, TemplateInterface, RoutableInterface, WorkflowInterface, ShadowInterface, AuthorInterface, AuditableInterface
+interface PageDimensionContentInterface extends DimensionContentInterface, ExcerptInterface, SeoInterface, TemplateInterface, RoutableInterface, WorkflowInterface, ShadowInterface, AuthorInterface, AuditableInterface, LinkInterface
 {
     public function getTitle(): ?string;
 

@@ -20,6 +20,7 @@ use Sulu\Content\Domain\Model\AuthorTrait;
 use Sulu\Content\Domain\Model\ContentRichEntityInterface;
 use Sulu\Content\Domain\Model\DimensionContentTrait;
 use Sulu\Content\Domain\Model\ExcerptTrait;
+use Sulu\Content\Domain\Model\LinkTrait;
 use Sulu\Content\Domain\Model\RoutableTrait;
 use Sulu\Content\Domain\Model\SeoTrait;
 use Sulu\Content\Domain\Model\ShadowTrait;
@@ -44,6 +45,7 @@ class PageDimensionContent implements PageDimensionContentInterface
     use TemplateTrait {
         TemplateTrait::setTemplateData as parentSetTemplateData;
     }
+    use LinkTrait;
     use WorkflowTrait;
 
     protected int $id;

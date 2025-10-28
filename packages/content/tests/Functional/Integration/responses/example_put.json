@@ -10,6 +10,8 @@
         "en",
         "de"
     ],
+    "linkOn": false,
+    "linkData": null,
     "contentLocales": [
         "en",
         "de"

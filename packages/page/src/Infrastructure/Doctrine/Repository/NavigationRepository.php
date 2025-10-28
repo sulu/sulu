@@ -256,7 +256,7 @@ class NavigationRepository implements NavigationRepositoryInterface
         $query = $this->createQueryBuilder($filters)->getQuery();
 
         /** @var PageInterface $page */
-        foreach ($query->toIterable() as $page) {
+        foreach ($query->getResult() as $page) { // @phpstan-ignore-line foreach.nonIterable
             yield $page;
         }
     }
@@ -323,12 +323,12 @@ class NavigationRepository implements NavigationRepositoryInterface
      */
     private function resolvePageContent(PageInterface $page, string $locale): array
     {
-        $contentDimension = $this->contentAggregator->aggregate($page, [
+        $pageDimensionContent = $this->contentAggregator->aggregate($page, [
             'locale' => $locale,
             'stage' => DimensionContentInterface::STAGE_LIVE,
         ]);
 
-        return $this->contentResolver->resolve($contentDimension);
+        return $this->contentResolver->resolve($pageDimensionContent);
     }
 
     /**

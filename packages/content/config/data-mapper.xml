@@ -44,6 +44,10 @@
             <tag name="sulu_content.data_mapper" priority="4"/>
         </service>
 
+        <service id="sulu_content.link_data_mapper" class="Sulu\Content\Application\ContentDataMapper\DataMapper\LinkDataMapper">
+            <tag name="sulu_content.data_mapper" priority="2"/>
+        </service>
+
         <service id="sulu_content.route_data_mapper" class="Sulu\Content\Application\ContentDataMapper\DataMapper\RoutableDataMapper">
             <argument type="service" id="sulu_route.route_repository"/>
             <argument type="service" id="sulu_admin.metadata_provider_registry"/>

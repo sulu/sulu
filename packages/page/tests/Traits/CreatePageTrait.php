@@ -40,16 +40,18 @@ trait CreatePageTrait
         $firstLocale = \array_key_first($dataSet);
         $firstLocaleData = $dataSet[$firstLocale];
 
-        // Use live data for initial creation if it exists, otherwise draft
-        $initialData = $firstLocaleData['live'] ?? $firstLocaleData['draft'] ?? [];
+        $initialData = $firstLocaleData['draft'] ?? $firstLocaleData['live'] ?? [];
         $initialData['locale'] = $firstLocale;
+
+        /** @var string|null $parentId */
+        $parentId = $initialData['parentId'] ?? null;
 
         // Create page
         $envelope = $messageBus->dispatch(
             new Envelope(
                 new CreatePageMessage(
                     webspaceKey: $webspaceKey,
-                    parentId: CreatePageMessageHandler::HOMEPAGE_PARENT_ID,
+                    parentId: $parentId ?? CreatePageMessageHandler::HOMEPAGE_PARENT_ID,
                     data: $initialData
                 ),
                 [new EnableFlushStamp()]

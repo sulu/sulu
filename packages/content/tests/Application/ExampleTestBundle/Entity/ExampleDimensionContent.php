@@ -22,6 +22,8 @@ use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Domain\Model\DimensionContentTrait;
 use Sulu\Content\Domain\Model\ExcerptInterface;
 use Sulu\Content\Domain\Model\ExcerptTrait;
+use Sulu\Content\Domain\Model\LinkInterface;
+use Sulu\Content\Domain\Model\LinkTrait;
 use Sulu\Content\Domain\Model\RoutableInterface;
 use Sulu\Content\Domain\Model\RoutableTrait;
 use Sulu\Content\Domain\Model\SeoInterface;
@@ -48,7 +50,8 @@ class ExampleDimensionContent implements
     AuthorInterface,
     WebspaceInterface,
     ShadowInterface,
-    AuditableInterface
+    AuditableInterface,
+    LinkInterface
 {
     use AuthorTrait;
     use DimensionContentTrait;
@@ -62,6 +65,7 @@ class ExampleDimensionContent implements
     use WebspaceTrait;
     use WorkflowTrait;
     use AuditableTrait;
+    use LinkTrait;
 
     /**
      * @var int

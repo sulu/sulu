@@ -1,16 +1,19 @@
 {
     "author": null,
     "authored": null,
-    "changed": "@datetime@",
-    "changer": null,
-    "created": "@datetime@",
-    "creator": null,
     "availableLocales": [
         "en"
     ],
+    "linkOn": false,
+    "linkData": null,
+    "changed": "@datetime@",
+    "changer": null,
+
     "contentLocales": [
         "en"
     ],
+    "created": "@datetime@",
+    "creator": null,
     "description": null,
     "excerptCategories": [],
     "excerptDescription": null,

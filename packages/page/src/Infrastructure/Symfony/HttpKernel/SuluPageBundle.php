@@ -41,6 +41,7 @@ use Sulu\Page\Infrastructure\Sulu\Admin\MetadataVisitor\WebspaceRouteModeTypedFo
 use Sulu\Page\Infrastructure\Sulu\Admin\PageAdmin;
 use Sulu\Page\Infrastructure\Sulu\Admin\PropertyMetadataMapper\PageTreeRoutePropertyMetadataMapper;
 use Sulu\Page\Infrastructure\Sulu\Build\HomepageBuilder;
+use Sulu\Page\Infrastructure\Sulu\Content\ContentAggregator\PageLinkContentAggregationEnhancer;
 use Sulu\Page\Infrastructure\Sulu\Content\DataMapper\NavigationContextDataMapper;
 use Sulu\Page\Infrastructure\Sulu\Content\Merger\NavigationContextMerger;
 use Sulu\Page\Infrastructure\Sulu\Content\Normalizer\PageExcerptNormalizer;
@@ -247,6 +248,16 @@ final class SuluPageBundle extends AbstractBundle
         $services->set('sulu_page.page_excerpt_normalizer')
             ->class(PageExcerptNormalizer::class)
             ->tag('sulu_content.normalizer');
+
+        // Content Aggregation Enhancer service
+        $services->set('sulu_page.page_link_content_aggregation_enhancer')
+            ->class(PageLinkContentAggregationEnhancer::class)
+            ->args([
+                new Reference('sulu_page.page_repository'),
+                new Reference('sulu_content.content_aggregator'),
+                new Reference('sulu_markup.link_tag.provider_pool'),
+            ])
+            ->tag('sulu_content.content_aggregation_enhancer');
 
         // Property Metadata Mapper services
         $services->set('sulu_page.page_tree_route_property_metadata_mapper')

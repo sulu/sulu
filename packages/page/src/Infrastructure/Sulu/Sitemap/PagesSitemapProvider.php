@@ -159,6 +159,7 @@ class PagesSitemapProvider extends AbstractSitemapProvider
             AND dimensionContent.stage = :stage
             AND dimensionContent.version = :version
             AND dimensionContent.seoHideInSitemap = :hide
+            AND dimensionContent.linkProvider IS NULL
         ')
             ->leftJoin('page.dimensionContents', 'unLocalizedDimensionContent', 'WITH', '
             unLocalizedDimensionContent.locale IS NULL
@@ -206,6 +207,7 @@ class PagesSitemapProvider extends AbstractSitemapProvider
             AND dimensionContent.stage = :stage
             AND dimensionContent.version = :version
             AND dimensionContent.seoHideInSitemap = :hide
+            AND dimensionContent.linkProvider IS NULL
         ')
             ->leftJoin('dimensionContent.route', 'route')
             ->setParameter('locale', $locale)

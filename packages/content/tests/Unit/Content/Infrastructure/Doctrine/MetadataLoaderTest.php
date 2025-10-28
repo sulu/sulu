@@ -27,6 +27,7 @@ use Sulu\Bundle\TagBundle\Tag\TagInterface;
 use Sulu\Content\Domain\Model\AuthorInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Domain\Model\ExcerptInterface;
+use Sulu\Content\Domain\Model\LinkInterface;
 use Sulu\Content\Domain\Model\RoutableInterface;
 use Sulu\Content\Domain\Model\SeoInterface;
 use Sulu\Content\Domain\Model\ShadowInterface;
@@ -69,6 +70,7 @@ class MetadataLoaderTest extends TestCase
         $reflectionClass->implementsInterface(AuthorInterface::class)->willReturn(\in_array(AuthorInterface::class, $interfaces, true));
         $reflectionClass->implementsInterface(ShadowInterface::class)->willReturn(\in_array(ShadowInterface::class, $interfaces, true));
         $reflectionClass->implementsInterface(RoutableInterface::class)->willReturn(\in_array(RoutableInterface::class, $interfaces, true));
+        $reflectionClass->implementsInterface(LinkInterface::class)->willReturn(\in_array(LinkInterface::class, $interfaces, true));
 
         foreach ($interfaces as $interface) {
             $reflectionClass->implementsInterface($interface)->willReturn(true);
@@ -279,6 +281,18 @@ class MetadataLoaderTest extends TestCase
             [
                 'shadowLocale' => false,
                 'shadowLocales' => false,
+            ],
+            [],
+            [],
+        ];
+
+        yield [
+            [
+                LinkInterface::class,
+            ],
+            [
+                'linkProvider' => false,
+                'linkData' => false,
             ],
             [],
             [],

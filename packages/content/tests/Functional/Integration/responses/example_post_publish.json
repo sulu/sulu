@@ -8,6 +8,8 @@
     "availableLocales": [
         "en"
     ],
+    "linkOn": false,
+    "linkData": null,
     "contentLocales": [
         "en"
     ],

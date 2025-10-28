@@ -1,12 +1,15 @@
 {
     "author" : null,
     "authored" : "@datetime@",
+    "availableLocales" : [ "en" ],
+    "linkOn": false,
+    "linkData": null,
     "changed": "@datetime@",
     "changer": "@integer@",
+
+    "contentLocales" : [ "en" ],
     "created": "@datetime@",
     "creator": "@integer@",
-    "availableLocales" : [ "en" ],
-    "contentLocales" : [ "en" ],
     "description" : null,
     "excerptCategories" : [ ],
     "excerptDescription" : "Excerpt Description",
