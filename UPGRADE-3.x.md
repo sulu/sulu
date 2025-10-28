@@ -269,6 +269,7 @@ These unused parameters have been removed:
 - `sulu_security.entity_group.class`
 - `sulu_security.entity.group`
 - `sulu_media.adobe_creative_key`
+- `sulu_media.format_manager.blocked_file_types` -> `sulu_media.media.blocked_file_types`
 
 The resource routes has been removed:
 

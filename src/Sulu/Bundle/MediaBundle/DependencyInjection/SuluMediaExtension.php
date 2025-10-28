@@ -286,7 +286,7 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
         // storage
         $container->setParameter(
             'sulu_media.media.blocked_file_types',
-            $this->getBlockedFileTypes($config)
+            $config['upload']['blocked_file_types']
         );
         $this->configureStorage($config, $container);
 
@@ -451,20 +451,10 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
         return null !== $this->executableFinder->find($command) || @\is_executable($command);
     }
 
-    private function configureFileValidator(array $config, ContainerBuilder $container)
+    private function configureFileValidator(array $config, ContainerBuilder $container): void
     {
         $definition = $container->getDefinition('sulu_media.file_validator');
         $definition->addMethodCall('setMaxFileSize', [$config['upload']['max_filesize'] . 'MB']);
-        $definition->addMethodCall('setBlockedMimeTypes', [$this->getBlockedFileTypes($config)]);
-    }
-
-    private function getBlockedFileTypes(array $config): array
-    {
-        $blockedFileTypes = $config['upload']['blocked_file_types'];
-        if (0 === \count($blockedFileTypes)) {
-            return $config['format_manager']['blocked_file_types'];
-        }
-
-        return $blockedFileTypes;
+        $definition->addMethodCall('setBlockedMimeTypes', [$config['upload']['blocked_file_types']]);
     }
 }
