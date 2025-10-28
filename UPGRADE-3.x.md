@@ -913,6 +913,8 @@ Removed deprecated functions and properties:
 - `Sulu\Component\Rest\ListBuilder\AbstractListBuilder::whereNot` (use `where()` instead)
 - `Sulu\Bundle\Security\Entity\Role::getRole` (use `getIdentifier` instead)
 - `Sulu\Bundle\AdminBundle\Admin\AdminPool::addAdmin` (use dependency injection via tagged service instead)
+- `Sulu\Bundle\MediaBundle\Controller\MediaController::__construct` (MediaListBuilder and Representation are required
+and some parameters have been removed)
 - `Sulu\Bundle\AdminBundle\Metadata\MetadataProvierRegistry::addMetadataProiver` (use dependency injection via tagged service instead)
 - `Sulu\Bundle\TagBundle\Entity\TagRepository::findAllTags` (use `findAll` instead)
 - `Sulu\Bundle\TagBundle\Tag\TagManager::findAll` (use repository instead)
