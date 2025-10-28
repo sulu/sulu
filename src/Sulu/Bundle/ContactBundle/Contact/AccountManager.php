@@ -24,6 +24,7 @@ use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
 use Sulu\Bundle\ContactBundle\Entity\AccountRepositoryInterface;
 use Sulu\Bundle\ContactBundle\Entity\Address as AddressEntity;
 use Sulu\Bundle\ContactBundle\Entity\ContactRepository;
+use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
@@ -253,7 +254,11 @@ class AccountManager extends AbstractContactManager implements DataProviderRepos
      */
     public function setMedias(Account $account, $mediaIds)
     {
-        $foundMedias = $this->mediaRepository->findById($mediaIds);
+        /** @var MediaInterface[] $foundMedias */
+        $foundMedias = [];
+        if (\count($mediaIds) > 0) {
+            $foundMedias = $this->mediaRepository->findById($mediaIds);
+        }
         $foundMediaIds = \array_map(
             function($mediaEntity) {
                 return $mediaEntity->getId();
