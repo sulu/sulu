@@ -17,6 +17,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use Sulu\Bundle\AdminBundle\SmartContent\SmartContentProviderInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
+use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Domain\Model\WorkflowInterface;
 use Sulu\Content\Tests\Traits\CreateCategoryTrait;
 use Sulu\Content\Tests\Traits\CreateTagTrait;
@@ -742,6 +743,7 @@ class PageSmartContentProviderTest extends SuluTestCase
         ]);
 
         $this->assertCount(5, $result);
+
         $this->assertSame(
             11, // 11 sulu-io pages (parent page excluded)
             $this->smartContentProvider->countBy([
@@ -754,15 +756,21 @@ class PageSmartContentProviderTest extends SuluTestCase
             ]),
         );
 
-        $resultIds = \array_map(
+        $resultTitles = $this->resultIdsToTitles(\array_map(
             fn ($page) => $page['id'],
             $result,
-        );
+        ), 'en');
 
-        // With sorting by title ascending, verify the results are in the correct order
-        // and only include sulu-io pages
-        $this->assertSame('Link Target Page', $result[0]['title']);
-        $this->assertSame(self::$pages['link_target']->getUuid(), $result[0]['id']);
+        $this->assertSame(
+            [
+                'Digital Lifestyle',
+                'External Link Page',
+                'Fitness Tips',
+                'Football Season',
+                'Internal Link Page',
+            ],
+            $resultTitles,
+        );
     }
 
     public function testFindFlatByMaxPerPageAndPageSecond(): void
@@ -806,13 +814,13 @@ class PageSmartContentProviderTest extends SuluTestCase
         return [
             'title_asc' => [
                 ['title' => 'asc'],
-                'Link Target Page',
+                'Digital Lifestyle',
                 'Zero Tech Investments',
             ],
             'title_desc' => [
                 ['title' => 'desc'],
                 'Zero Tech Investments',
-                'Link Target Page',
+                'Digital Lifestyle',
             ],
             'authored_asc' => [
                 ['authored' => 'asc'],
@@ -849,11 +857,11 @@ class PageSmartContentProviderTest extends SuluTestCase
         $this->assertCount(11, $result);
 
         // Check if first article is alphabetically first among sulu-io pages
-        $this->assertStringContainsString('Link Target Page', $result[0]['title']);
-        $this->assertSame(self::$pages['link_target']->getUuid(), $result[0]['id'], "First result should be 'Link Target Page'");
+        $this->assertSame('Digital Lifestyle', $result[0]['title']);
+        $this->assertSame(self::$pages['multi_category_multi_tag']->getUuid(), $result[0]['id'], "First result should be 'Digital Lifestyle'");
 
         // Check if last article is alphabetically last among sulu-io pages
-        $this->assertStringContainsString('Zero Tech Investments', $result[10]['title']);
+        $this->assertSame('Zero Tech Investments', $result[10]['title']);
         $this->assertSame(self::$pages['business_tech']->getUuid(), $result[10]['id'], "Last result should be 'Zero Tech Investments'");
 
         // Verify the order of some key pages
@@ -879,12 +887,12 @@ class PageSmartContentProviderTest extends SuluTestCase
         $this->assertCount(11, $result);
 
         // Check if first article is alphabetically last among sulu-io pages
-        $this->assertStringContainsString('Zero Tech Investments', $result[0]['title']);
+        $this->assertSame('Zero Tech Investments', $result[0]['title']);
         $this->assertSame(self::$pages['business_tech']->getUuid(), $result[0]['id'], "First result should be 'Zero Tech Investments'");
 
         // Check if last article is alphabetically first among sulu-io pages
-        $this->assertStringContainsString('Link Target Page', $result[10]['title']);
-        $this->assertSame(self::$pages['link_target']->getUuid(), $result[10]['id'], "Last result should be 'Link Target Page'");
+        $this->assertSame('Digital Lifestyle', $result[10]['title']);
+        $this->assertSame(self::$pages['multi_category_multi_tag']->getUuid(), $result[10]['id'], "First result should be 'Digital Lifestyle'");
 
         // Verify the order of some key pages
         $resultIds = \array_map(fn ($page) => $page['id'], $result);
@@ -1394,5 +1402,39 @@ class PageSmartContentProviderTest extends SuluTestCase
 
         // Verify business_tech is not returned (uses landing_page template, not default)
         $this->assertNotContains(self::$pages['business_tech']->getUuid(), $resultIds, "Page 'business_tech' should not be in the combined filter result (landing_page template)");
+    }
+
+    private function getPageTitle(PageInterface $page, string $locale)
+    {
+        foreach ($page->getDimensionContents() as $pageDimension) {
+            if (0 !== $pageDimension->getVersion()
+                || $locale !== $pageDimension->getLocale()
+                || DimensionContentInterface::STAGE_LIVE !== $pageDimension->getStage()
+            ) {
+                continue;
+            }
+
+            return $pageDimension->getTitle();
+        }
+
+        throw new \RuntimeException('Title not found for page in locale ' . $locale);
+    }
+
+    /**
+     * @return array<string>
+     */
+    private function resultIdsToTitles(array $resultIds, string $string): array
+    {
+        $resultTitles = [];
+        foreach (self::$pages as $key => $page) {
+            $index = \array_search($page->getUuid(), $resultIds);
+            if (false !== $index) {
+                $resultTitles[$index] = $this->getPageTitle($page, 'en');
+            }
+        }
+
+        \ksort($resultTitles);
+
+        return $resultTitles;
     }
 }
