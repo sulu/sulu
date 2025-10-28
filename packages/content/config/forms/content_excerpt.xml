@@ -14,7 +14,7 @@
 
         <property name="excerptMore" type="text_line">
             <meta>
-                <title>sulu_page.text_for_more_link</title>
+                <title>sulu_content.text_for_more_link</title>
             </meta>
         </property>
 
@@ -50,13 +50,13 @@
 
         <property name="excerptIcon" type="single_media_selection">
             <meta>
-                <title>sulu_page.icons</title>
+                <title>sulu_content.icon</title>
             </meta>
         </property>
 
         <property name="excerptImage" type="single_media_selection">
             <meta>
-                <title>sulu_page.images</title>
+                <title>sulu_content.image</title>
             </meta>
         </property>
     </properties>
