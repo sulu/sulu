@@ -916,6 +916,8 @@ Removed deprecated functions and properties:
 - `Sulu\Bundle\AdminBundle\Metadata\MetadataProvierRegistry::addMetadataProiver` (use dependency injection via tagged service instead)
 - `Sulu\Bundle\TagBundle\Entity\TagRepository::findAllTags` (use `findAll` instead)
 - `Sulu\Bundle\TagBundle\Tag\TagManager::findAll` (use repository instead)
+- `Sulu\Bundle\TagBundle\Tag\TagManagerInterface::resolveTagIds` (use the Repository)
+- `Sulu\Bundle\TagBundle\Tag\TagManagerInterface::resolveTagNames` (use the Repository)
 
 Removed unused arguments:
 

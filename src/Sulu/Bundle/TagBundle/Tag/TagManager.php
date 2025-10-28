@@ -181,42 +181,4 @@ class TagManager implements TagManagerInterface
 
         return $destTag;
     }
-
-    /**
-     * Resolves tag ids to names.
-     *
-     * @return array
-     */
-    public function resolveTagIds($tagIds)
-    {
-        $resolvedTags = [];
-
-        foreach ($tagIds as $tagId) {
-            $tag = $this->findById($tagId);
-            if (null !== $tag) {
-                $resolvedTags[] = $tag->getName();
-            }
-        }
-
-        return $resolvedTags;
-    }
-
-    /**
-     * Resolves tag names to ids.
-     *
-     * @return array
-     */
-    public function resolveTagNames($tagNames)
-    {
-        $resolvedTags = [];
-
-        foreach ($tagNames as $tagName) {
-            $tag = $this->findByName($tagName);
-            if (null !== $tag) {
-                $resolvedTags[] = $tag->getId();
-            }
-        }
-
-        return $resolvedTags;
-    }
 }

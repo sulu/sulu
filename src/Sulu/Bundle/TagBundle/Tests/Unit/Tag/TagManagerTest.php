@@ -84,31 +84,13 @@ class TagManagerTest extends TestCase
         );
     }
 
-    public function testResolveTagNames(): void
+    public function testFindById(): void
     {
-        $tagNames = ['Tag1', 'Tag2', 'Tag3', 'InvalidTag'];
+        $tag = new Tag();
+        $this->tagRepository->findTagById(10)->shouldBeCalled()->willReturn($tag);
 
-        $this->tagRepository->findTagByName('Tag1')->shouldBeCalled()->willReturn((new Tag())->setId(1));
-        $this->tagRepository->findTagByName('Tag2')->shouldBeCalled()->willReturn((new Tag())->setId(2));
-        $this->tagRepository->findTagByName('Tag3')->shouldBeCalled()->willReturn((new Tag())->setId(3));
-        $this->tagRepository->findTagByName('InvalidTag')->shouldBeCalled()->willReturn(null);
+        $actualTag = $this->tagManager->findById(10);
 
-        $tagIds = $this->tagManager->resolveTagNames($tagNames);
-
-        $this->assertEquals([1, 2, 3], $tagIds);
-    }
-
-    public function testResolveTagIds(): void
-    {
-        $this->tagRepository->findTagById(1)->shouldBeCalled()->willReturn((new Tag())->setName('Tag1'));
-        $this->tagRepository->findTagById(2)->shouldBeCalled()->willReturn((new Tag())->setName('Tag2'));
-        $this->tagRepository->findTagById(3)->shouldBeCalled()->willReturn((new Tag())->setName('Tag3'));
-        $this->tagRepository->findTagById(99)->shouldBeCalled()->willReturn(null);
-
-        $tagIds = [1, 2, 3, 99];
-
-        $tagNames = $this->tagManager->resolveTagIds($tagIds);
-
-        $this->assertEquals(['Tag1', 'Tag2', 'Tag3'], $tagNames);
+        $this->assertEquals($tag, $actualTag);
     }
 }
