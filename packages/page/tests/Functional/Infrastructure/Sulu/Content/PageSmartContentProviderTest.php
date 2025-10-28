@@ -1404,7 +1404,7 @@ class PageSmartContentProviderTest extends SuluTestCase
         $this->assertNotContains(self::$pages['business_tech']->getUuid(), $resultIds, "Page 'business_tech' should not be in the combined filter result (landing_page template)");
     }
 
-    private function getPageTitle(PageInterface $page, string $locale)
+    private function getPageTitle(PageInterface $page, string $locale): string
     {
         foreach ($page->getDimensionContents() as $pageDimension) {
             if (0 !== $pageDimension->getVersion()
@@ -1414,22 +1414,24 @@ class PageSmartContentProviderTest extends SuluTestCase
                 continue;
             }
 
-            return $pageDimension->getTitle();
+            return $pageDimension->getTitle() ?? '';
         }
 
         throw new \RuntimeException('Title not found for page in locale ' . $locale);
     }
 
     /**
+     * @param array<string> $resultIds
+     *
      * @return array<string>
      */
-    private function resultIdsToTitles(array $resultIds, string $string): array
+    private function resultIdsToTitles(array $resultIds, string $locale): array
     {
         $resultTitles = [];
         foreach (self::$pages as $key => $page) {
             $index = \array_search($page->getUuid(), $resultIds);
             if (false !== $index) {
-                $resultTitles[$index] = $this->getPageTitle($page, 'en');
+                $resultTitles[$index] = $this->getPageTitle($page, $locale);
             }
         }
 

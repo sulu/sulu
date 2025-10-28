@@ -256,7 +256,7 @@ class NavigationRepository implements NavigationRepositoryInterface
         $query = $this->createQueryBuilder($filters)->getQuery();
 
         /** @var PageInterface $page */
-        foreach ($query->toIterable() as $page) {
+        foreach ($query->getResult() as $page) { // @phpstan-ignore-line foreach.nonIterable
             yield $page;
         }
     }

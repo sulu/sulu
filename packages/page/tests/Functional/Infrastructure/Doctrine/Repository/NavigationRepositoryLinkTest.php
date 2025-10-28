@@ -82,6 +82,7 @@ class NavigationRepositoryLinkTest extends SuluTestCase
                     'url' => '/internal-link',
                     'template' => 'default',
                     'navigationContexts' => ['main'],
+                    'linkOn' => true,
                     'linkData' => [
                         'href' => $targetPage->getUuid(),
                         'provider' => 'page',
@@ -99,6 +100,7 @@ class NavigationRepositoryLinkTest extends SuluTestCase
                     'url' => '/external-link',
                     'template' => 'default',
                     'navigationContexts' => ['main'],
+                    'linkOn' => true,
                     'linkData' => [
                         'href' => 'https://example.com',
                         'provider' => 'external',
@@ -128,7 +130,7 @@ class NavigationRepositoryLinkTest extends SuluTestCase
         // Test internal link resolves to target page
         /** @var array<string, mixed> $internalLinkNav */
         $internalLinkNav = $navigation[2];
-        $this->assertSame('Target Page', $internalLinkNav['title']);
+        $this->assertSame('Internal Link Page', $internalLinkNav['title']);
         $this->assertSame('/target-page', $internalLinkNav['url']);
         $this->assertSame('sulu-io', $internalLinkNav['webspaceKey']);
 
@@ -191,7 +193,7 @@ class NavigationRepositoryLinkTest extends SuluTestCase
         // Test internal link resolves to target page
         /** @var array<string, mixed> $internalLinkNav */
         $internalLinkNav = $homepageChildren[1];
-        $this->assertSame('Target Page', $internalLinkNav['title']);
+        $this->assertSame('Internal Link Page', $internalLinkNav['title']);
         $this->assertSame('/target-page', $internalLinkNav['url']);
         $this->assertArrayHasKey('children', $internalLinkNav);
 
