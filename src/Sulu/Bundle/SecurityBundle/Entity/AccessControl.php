@@ -52,7 +52,7 @@ class AccessControl implements AccessControlInterface
     /**
      * The class of the model this access control rule applies to.
      *
-     * @var class-string
+     * @var string
      */
     private $entityClass;
 
