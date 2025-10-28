@@ -1677,3 +1677,31 @@ test('Should pre-generate IDs only for blocks without IDs (mixed case)', async()
         },
     ]);
 });
+
+test('Should not generate IDs when generateBlockIds is not provided', async() => {
+    const changeSpy = jest.fn();
+
+    mount(
+        <BlockCollection
+            defaultType="editor"
+            onChange={changeSpy}
+            renderBlockContent={jest.fn()}
+            value={[
+                {
+                    type: 'type1',
+                    content: 'Block 1',
+                },
+                {
+                    type: 'type2',
+                    content: 'Block 2',
+                },
+            ]}
+        />
+    );
+
+    // Wait for potential async operations
+    await new Promise((resolve) => setTimeout(resolve, 0));
+
+    // Should not try to generate IDs or call onChange since generateBlockIds is not provided
+    expect(changeSpy).not.toHaveBeenCalled();
+});

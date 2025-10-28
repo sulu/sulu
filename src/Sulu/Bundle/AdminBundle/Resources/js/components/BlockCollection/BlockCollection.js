@@ -98,13 +98,13 @@ class BlockCollection<T: string, U: {_id?: string, type: T, ...}> extends React.
     }
 
     componentDidUpdate(prevProps: Props<T, U>) {
-        const {value} = this.props;
+        const {generateBlockIds, value} = this.props;
 
         // Only call ensureBlockIds if:
-        // 1. The value reference changed (not the one we just set)
-        // 2. There are actually blocks without IDs
-        // 3. We're not currently generating IDs
-        if (prevProps.value !== value && !this.isGeneratingIds) {
+        // 1. generateBlockIds function is provided
+        // 2. The value reference changed
+        // 3. There are actually blocks without IDs
+        if (generateBlockIds && prevProps.value !== value) {
             const hasBlocksWithoutIds = value && value.some((block) => !block._id);
             if (hasBlocksWithoutIds) {
                 this.ensureBlockIds();
