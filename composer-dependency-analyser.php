@@ -32,7 +32,7 @@ return $config
             'ext-iconv', // fallbacks to mbstring
             'ext-openssl', // fallbacks to random_bytes
             'ext-zip', // not required to run Sulu
-            'ext-intl' // optional fallback to strcmp
+            'ext-intl', // optional fallback to strcmp
         ],
         [ErrorType::SHADOW_DEPENDENCY],
     )
