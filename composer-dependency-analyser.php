@@ -16,35 +16,72 @@ require __DIR__ . '/vendor/symfony/dependency-injection/Loader/Configurator/Cont
 
 $config = new Configuration();
 
+$optionalIgnoreUnknownClasses = [];
+$optionalIgnoreShadowDependencyExtensions = [];
+
+// optional fallback to gd or vips
+if (\extension_loaded('imagick')) {
+    $optionalIgnoreShadowDependencyExtensions[] = 'ext-imagick';
+} else {
+    $optionalIgnoreUnknownClasses[] = 'Imagick';
+}
+
 return $config
+    // SHADOW_DEPENDENCY
+    ->ignoreErrorsOnExtensions(
+        [
+            ...$optionalIgnoreShadowDependencyExtensions,
+            'ext-openssl', // fallbacks to random_bytes
+            'ext-zip', // not required to run Sulu
+            'ext-intl', // optional fallback to strcmp
+        ],
+        [ErrorType::SHADOW_DEPENDENCY],
+    )
+    ->ignoreErrorsOnPackages(
+        [
+            'league/flysystem-local', // we support flysystem 3.0 which includes local so we can not require it directly
+            // bc layer for lowest
+        ],
+        [ErrorType::SHADOW_DEPENDENCY],
+    )
     // UnknownClasses
     ->ignoreUnknownClasses([
-        // for bc layers
+        ...$optionalIgnoreUnknownClasses,
+        // bc layer for lowest
     ])
-    // SHADOW_DEPENDENCY
-    ->ignoreErrorsOnExtension('ext-imagick', [ErrorType::SHADOW_DEPENDENCY]) // optional fallback to gd or vips
-    ->ignoreErrorsOnExtension('ext-openssl', [ErrorType::SHADOW_DEPENDENCY]) // fallbacks to random_bytes
-    ->ignoreErrorsOnExtension('ext-zip', [ErrorType::SHADOW_DEPENDENCY]) // not required to run Sulu
-    ->ignoreErrorsOnExtension('ext-intl', [ErrorType::SHADOW_DEPENDENCY]) // optional fallback to strcmp
     // DEV_DEPENDENCY_IN_PROD: optional dependency
-    ->ignoreErrorsOnPackage('php-ffmpeg/php-ffmpeg', [ErrorType::DEV_DEPENDENCY_IN_PROD])
-    ->ignoreErrorsOnPackage('rokka/imagine-vips', [ErrorType::DEV_DEPENDENCY_IN_PROD])
-    ->ignoreErrorsOnPackage('scheb/2fa-backup-code', [ErrorType::DEV_DEPENDENCY_IN_PROD])
-    ->ignoreErrorsOnPackage('scheb/2fa-bundle', [ErrorType::DEV_DEPENDENCY_IN_PROD])
-    ->ignoreErrorsOnPackage('scheb/2fa-email', [ErrorType::DEV_DEPENDENCY_IN_PROD])
-    ->ignoreErrorsOnPackage('scheb/2fa-google-authenticator', [ErrorType::DEV_DEPENDENCY_IN_PROD])
-    ->ignoreErrorsOnPackage('scheb/2fa-totp', [ErrorType::DEV_DEPENDENCY_IN_PROD])
-    ->ignoreErrorsOnPackage('scheb/2fa-trusted-device', [ErrorType::DEV_DEPENDENCY_IN_PROD])
-    ->ignoreErrorsOnPackage('symfony/emoji', [ErrorType::DEV_DEPENDENCY_IN_PROD])
-    ->ignoreErrorsOnPackage('league/flysystem-local', [ErrorType::SHADOW_DEPENDENCY]) // we support flysystem 3.0 which includes local so we can not require it directly
-    ->ignoreErrorsOnPackage('coduo/php-matcher', [ErrorType::DEV_DEPENDENCY_IN_PROD]) // false positive TestBundle requirement
-    ->ignoreErrorsOnPackage('league/flysystem-memory', [ErrorType::DEV_DEPENDENCY_IN_PROD]) // only for tests
-    ->ignoreErrorsOnPackage('symfony/monolog-bundle', [ErrorType::DEV_DEPENDENCY_IN_PROD]) // false positive only used in SuluTestKernel
+    ->ignoreErrorsOnPackages(
+        [
+            'php-ffmpeg/php-ffmpeg',
+            'rokka/imagine-vips',
+            'scheb/2fa-backup-code',
+            'scheb/2fa-bundle',
+            'scheb/2fa-email',
+            'scheb/2fa-google-authenticator',
+            'scheb/2fa-totp',
+            'scheb/2fa-trusted-device',
+            'symfony/emoji',
+            'league/flysystem-memory', // false positiv eonly used in tests
+            'symfony/monolog-bundle', // false positive only used in SuluTestKernel
+            'coduo/php-matcher', // false positive only used in tests
+        ],
+        [ErrorType::DEV_DEPENDENCY_IN_PROD],
+    )
+    // PROD_DEPENDENCY_ONLY_IN_DEV:
+    ->ignoreErrorsOnPackages(
+        [
+            'symfony/yaml', // we use yaml configurations
+            'symfony/cache', // we use cache via psr/cache interface
+        ],
+        [ErrorType::PROD_DEPENDENCY_ONLY_IN_DEV],
+    )
     // UNUSED_DEPENDENCY
-    ->ignoreErrorsOnPackage('guzzlehttp/promises', [ErrorType::UNUSED_DEPENDENCY]) // required for faster fos http cache clearing
-    ->ignoreErrorsOnPackage('nyholm/psr7', [ErrorType::UNUSED_DEPENDENCY]) // required for faster fos http cache clearing
-    ->ignoreErrorsOnPackage('symfony/css-selector', [ErrorType::UNUSED_DEPENDENCY]) // we use caches mostly via psr interfaces
-    // PROD_DEPENDENCY_ONLY_IN_DEV
-    ->ignoreErrorsOnPackage('symfony/yaml', [ErrorType::PROD_DEPENDENCY_ONLY_IN_DEV]) // we use yaml configurations
-    ->ignoreErrorsOnPackage('symfony/cache', [ErrorType::PROD_DEPENDENCY_ONLY_IN_DEV]) // we use cache via psr/cache interface
+    ->ignoreErrorsOnPackages(
+        [
+            'guzzlehttp/promises', // required for faster fos http cache clearing
+            'nyholm/psr7', // required for faster fos http cache clearing
+            'symfony/css-selector', // kept for future usage
+        ],
+        [ErrorType::UNUSED_DEPENDENCY],
+    )
 ;
