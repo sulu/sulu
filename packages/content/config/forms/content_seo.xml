@@ -8,14 +8,14 @@
     <properties>
         <property name="search_result" type="search_result" colspan="9">
             <meta>
-                <title>sulu_page.search_result</title>
+                <title>sulu_content.search_result</title>
             </meta>
         </property>
 
         <property name="seoTitle" type="text_line">
             <meta>
-                <title>sulu_page.meta_title</title>
-                <info_text>sulu_page.meta_title_info_text</info_text>
+                <title>sulu_content.meta_title</title>
+                <info_text>sulu_content.meta_title_info_text</info_text>
             </meta>
 
             <params>
@@ -25,8 +25,8 @@
 
         <property name="seoDescription" type="text_area">
             <meta>
-                <title>sulu_page.meta_description</title>
-                <info_text>sulu_page.meta_description_info_text</info_text>
+                <title>sulu_content.meta_description</title>
+                <info_text>sulu_content.meta_description_info_text</info_text>
             </meta>
 
             <params>
@@ -36,8 +36,8 @@
 
         <property name="seoKeywords" type="text_line">
             <meta>
-                <title>sulu_page.meta_keywords</title>
-                <info_text>sulu_page.meta_keywords_info_text</info_text>
+                <title>sulu_content.meta_keywords</title>
+                <info_text>sulu_content.meta_keywords_info_text</info_text>
             </meta>
 
             <params>
@@ -48,7 +48,7 @@
 
         <property name="seoCanonicalUrl" type="text_line">
             <meta>
-                <title>sulu_page.canonical_url</title>
+                <title>sulu_content.canonical_url</title>
             </meta>
         </property>
 
@@ -56,7 +56,7 @@
             <params>
                 <param name="label">
                     <meta>
-                        <title>sulu_page.no_index</title>
+                        <title>sulu_content.no_index</title>
                     </meta>
                 </param>
 
@@ -68,7 +68,7 @@
             <params>
                 <param name="label">
                     <meta>
-                        <title>sulu_page.no_follow</title>
+                        <title>sulu_content.no_follow</title>
                     </meta>
                 </param>
 
@@ -80,7 +80,7 @@
             <params>
                 <param name="label">
                     <meta>
-                        <title>sulu_page.hide_in_sitemap</title>
+                        <title>sulu_content.hide_in_sitemap</title>
                     </meta>
                 </param>
 
