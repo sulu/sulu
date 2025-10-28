@@ -632,7 +632,10 @@ class ContactManager extends AbstractContactManager implements DataProviderRepos
     private function setMedias(ContactInterface $contact, $mediaIds)
     {
         /** @var MediaInterface[] $foundMedias */
-        $foundMedias = $this->mediaRepository->findById($mediaIds);
+        $foundMedias = [];
+        if (\count($mediaIds) > 0) {
+            $foundMedias = $this->mediaRepository->findById($mediaIds);
+        }
         /** @var int[] $foundMediaIds */
         $foundMediaIds = \array_map(
             function($mediaEntity) {
