@@ -24,4 +24,12 @@ interface CustomUrlRouteInterface extends TimestampableInterface
     public function getPath(): string;
 
     public function getCustomUrl(): CustomUrlInterface;
+
+    public function isHistory(): bool;
+
+    public function setHistory(bool $history): void;
+
+    public function getTargetRoute(): ?self;
+
+    public function setTargetRoute(?self $targetRoute): void;
 }

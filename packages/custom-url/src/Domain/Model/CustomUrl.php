@@ -208,28 +208,58 @@ class CustomUrl implements AuditableInterface, CustomUrlInterface
         $this->routes->add($route);
     }
 
+    public function getCurrentRoute(): ?CustomUrlRouteInterface
+    {
+        foreach ($this->routes as $route) {
+            if (!$route->isHistory()) {
+                return $route;
+            }
+        }
+
+        return null;
+    }
+
+    public function markRouteAsHistory(CustomUrlRouteInterface $oldRoute, ?CustomUrlRouteInterface $newRoute = null): void
+    {
+        // If newRoute is not provided, use the current active route
+        if (!$newRoute) {
+            $newRoute = $this->getCurrentRoute();
+        }
+
+        // Only mark as history if routes are different
+        if ($newRoute && $oldRoute->getUuid() !== $newRoute->getUuid()) {
+            $oldRoute->setHistory(true);
+            $oldRoute->setTargetRoute($newRoute);
+        }
+    }
+
     private function updateRoutes(): void
     {
-        // Only update routes if both baseDomain and domainParts are set
         if (!isset($this->baseDomain) || empty($this->domainParts)) {
             return;
         }
 
         $path = $this->generatePath();
 
-        // Only add a new route if the path doesn't already exist
         foreach ($this->routes as $route) {
             if ($route->getPath() === $path) {
                 return;
             }
         }
 
-        $this->routes->add(new CustomUrlRoute($this, $path));
+        $oldRoute = $this->getCurrentRoute();
+
+        $newRoute = new CustomUrlRoute($this, $path);
+        $this->routes->add($newRoute);
+
+        if ($oldRoute && $oldRoute->getPath() !== $path) {
+            $oldRoute->setHistory(true);
+            $oldRoute->setTargetRoute($newRoute);
+        }
     }
 
     private function generatePath(): string
     {
-        // Count all wildcards (*) in the baseDomain
         $placeholderCount = \substr_count($this->baseDomain, '*');
 
         if ($placeholderCount !== \count($this->domainParts)) {
@@ -239,7 +269,6 @@ class CustomUrl implements AuditableInterface, CustomUrlInterface
             );
         }
 
-        // Replace placeholders with actual domain parts
         $path = $this->baseDomain;
         foreach ($this->domainParts as $domainPart) {
             $result = \preg_replace('/\*/', $domainPart, $path, 1);

@@ -13,12 +13,12 @@ declare(strict_types=1);
 
 namespace Sulu\CustomUrl\Infrastructure\Symfony\Serializer;
 
-use Sulu\CustomUrl\Domain\Model\CustomUrlInterface;
+use Sulu\CustomUrl\Domain\Model\CustomUrlRouteInterface;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 
-final class CustomUrlNormalizer implements NormalizerInterface
+final class CustomUrlRouteNormalizer implements NormalizerInterface
 {
     public function __construct(
         private ObjectNormalizer $objectNormalizer
@@ -39,12 +39,13 @@ final class CustomUrlNormalizer implements NormalizerInterface
 
         \assert(\is_array($context[AbstractNormalizer::IGNORED_ATTRIBUTES]));
 
+        // Ignore circular reference fields
+        $context[AbstractNormalizer::IGNORED_ATTRIBUTES][] = 'customUrl';
+        $context[AbstractNormalizer::IGNORED_ATTRIBUTES][] = 'targetRoute';
         $context[AbstractNormalizer::IGNORED_ATTRIBUTES][] = 'created';
         $context[AbstractNormalizer::IGNORED_ATTRIBUTES][] = 'changed';
         $context[AbstractNormalizer::IGNORED_ATTRIBUTES][] = 'creator';
         $context[AbstractNormalizer::IGNORED_ATTRIBUTES][] = 'changer';
-        $context[AbstractNormalizer::IGNORED_ATTRIBUTES][] = 'routes';
-        $context[AbstractNormalizer::IGNORED_ATTRIBUTES][] = 'currentRoute';
 
         /** @var array<mixed> $normalizedData */
         $normalizedData = $this->objectNormalizer->normalize($data, $format, $context);
@@ -54,11 +55,11 @@ final class CustomUrlNormalizer implements NormalizerInterface
 
     public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
     {
-        return $data instanceof CustomUrlInterface;
+        return $data instanceof CustomUrlRouteInterface;
     }
 
     public function getSupportedTypes(?string $format): array
     {
-        return [CustomUrlInterface::class => true];
+        return [CustomUrlRouteInterface::class => true];
     }
 }

@@ -1,0 +1,9 @@
+{
+    "_embedded": {
+        "custom_url_routes": "@array@.count(2)"
+    },
+    "limit": 2,
+    "page": 1,
+    "pages": "@integer@",
+    "total": 3
+}

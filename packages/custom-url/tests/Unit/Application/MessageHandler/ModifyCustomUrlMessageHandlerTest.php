@@ -13,176 +13,223 @@ declare(strict_types=1);
 
 namespace Sulu\CustomUrl\Tests\Unit\Application\MessageHandler;
 
-use Doctrine\ORM\EntityManagerInterface;
+use PHPUnit\Framework\TestCase;
+use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
+use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
+use Sulu\CustomUrl\Application\Mapper\CustomUrlMapperInterface;
 use Sulu\CustomUrl\Application\MessageHandler\ModifyCustomUrlMessageHandler;
-use Sulu\CustomUrl\Application\Messages\CreateCustomUrlMessage;
 use Sulu\CustomUrl\Application\Messages\ModifyCustomUrlMessage;
-use Sulu\CustomUrl\Domain\Exception\MismatchingDomainPartException;
+use Sulu\CustomUrl\Domain\Event\CustomUrlModifiedEvent;
+use Sulu\CustomUrl\Domain\Exception\CustomUrlAlreadyExistsException;
 use Sulu\CustomUrl\Domain\Model\CustomUrlInterface;
 use Sulu\CustomUrl\Domain\Repository\CustomUrlRepositoryInterface;
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
-use Symfony\Component\Messenger\MessageBusInterface;
-use Symfony\Component\Messenger\Stamp\HandledStamp;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Uid\Uuid;
 
-class ModifyCustomUrlMessageHandlerTest extends KernelTestCase
+class ModifyCustomUrlMessageHandlerTest extends TestCase
 {
+    use ProphecyTrait;
+
+    /** @var ObjectProphecy<CustomUrlRepositoryInterface> */
+    private ObjectProphecy $customUrlRepository;
+
+    /** @var ObjectProphecy<DomainEventCollectorInterface> */
+    private ObjectProphecy $domainEventCollector;
+
+    /** @var ObjectProphecy<CustomUrlMapperInterface> */
+    private ObjectProphecy $customUrlMapper;
+
     private ModifyCustomUrlMessageHandler $handler;
-    private CustomUrlRepositoryInterface $customUrlRepository;
-    private EntityManagerInterface $entityManager;
 
-    private string $idOfObjectToModify;
-    private string $targetDocument;
-
-    protected function setup(): void
+    protected function setUp(): void
     {
-        self::bootKernel();
-        $container = $this->getContainer();
-        $this->entityManager = $container->get(EntityManagerInterface::class);
-        $this->handler = $container->get(ModifyCustomUrlMessageHandler::class);
+        $this->customUrlRepository = $this->prophesize(CustomUrlRepositoryInterface::class);
+        $this->domainEventCollector = $this->prophesize(DomainEventCollectorInterface::class);
+        $this->customUrlMapper = $this->prophesize(CustomUrlMapperInterface::class);
 
-        $this->customUrlRepository = $container->get('sulu_custom_urls.repository');
-        // Delete all custom URLs to clear the db
-        foreach ($this->customUrlRepository->findBy() as $customUrl) {
-            $this->customUrlRepository->remove($customUrl);
-        }
-        $this->entityManager->flush();
-        $this->entityManager->clear();
-
-        $this->targetDocument = Uuid::v4()->toRfc4122();
-        $createdObject = $container->get(MessageBusInterface::class)
-            ->dispatch(new CreateCustomUrlMessage(
-                'sulu_io',
-                [
-                    'title' => 'Some title',
-                    'published' => false,
-                    'baseDomain' => 'localhost/*',
-                    'domainParts' => ['test'],
-                    'targetDocument' => $this->targetDocument,
-                    'targetLocale' => 'en',
-                    'canonical' => true,
-                    'redirect' => false,
-                    'noFollow' => true,
-                    'noIndex' => true,
-                ],
-            ))->all(HandledStamp::class)[0]->getResult();
-        $this->assertInstanceOf(CustomUrlInterface::class, $createdObject, 'Could not create custom url');
-
-        $this->idOfObjectToModify = $createdObject->getUuid();
-
-        // Flushing is handled outside by a stamp
-        $this->entityManager->flush();
+        $this->handler = new ModifyCustomUrlMessageHandler(
+            [$this->customUrlMapper->reveal()],
+            $this->customUrlRepository->reveal(),
+            $this->domainEventCollector->reveal()
+        );
     }
 
     public function testModifyCustomUrl(): void
     {
-        $createdObject = $this->handler->__invoke(new ModifyCustomUrlMessage(
-            uuid: $this->idOfObjectToModify,
-            webspaceKey: 'sulu_io',
-            data: [
-                'published' => true,
-                'baseDomain' => 'localhost/*/*',
-                'domainParts' => ['1', '2'],
-            ],
-        ));
+        $uuid = Uuid::v4()->toRfc4122();
+        $data = [
+            'published' => true,
+            'baseDomain' => 'localhost/*/*',
+            'domainParts' => ['1', '2'],
+        ];
 
-        $this->entityManager->flush();
+        $customUrl = $this->prophesize(CustomUrlInterface::class);
+        $customUrl->getWebspace()->willReturn('sulu_io');
+        $customUrl->getTitle()->willReturn('Some title');
+        $customUrl->getUuid()->willReturn($uuid);
 
-        // Checking that the custom Url was modified
-        $customUrl = $this->customUrlRepository->findOneBy(['uuid' => $this->idOfObjectToModify]);
-        $this->assertInstanceOf(CustomUrlInterface::class, $customUrl);
+        $this->customUrlRepository->getOneBy(['uuid' => $uuid])
+            ->shouldBeCalledOnce()
+            ->willReturn($customUrl->reveal());
 
-        $this->assertTrue($customUrl->isPublished());
-        $this->assertSame('localhost/*/*', $customUrl->getBaseDomain());
-        $this->assertSame(['1', '2'], $customUrl->getDomainParts());
+        $this->customUrlMapper->mapCustomUrlData($customUrl->reveal(), $data)
+            ->shouldBeCalledOnce();
 
-        // Checking that the history was modified
-        $routes = \iterator_to_array($customUrl->getRoutes());
-        $this->assertCount(2, $routes);
-        $this->assertSame('localhost/test', $routes[0]->getPath());
-        $this->assertSame('localhost/1/2', $routes[1]->getPath());
+        $this->customUrlRepository->findOneBy(['title' => 'Some title'])
+            ->shouldBeCalledOnce()
+            ->willReturn(null); // No other custom URL with same title
+
+        $this->customUrlRepository->add($customUrl->reveal())
+            ->shouldBeCalledOnce();
+
+        $this->domainEventCollector->collect(Argument::that(function($event) use ($customUrl, $data) {
+            return $event instanceof CustomUrlModifiedEvent
+                && $event->getCustomUrl() === $customUrl->reveal()
+                && $event->getEventPayload() === $data;
+        }))->shouldBeCalledOnce();
+
+        $message = new ModifyCustomUrlMessage($uuid, 'sulu_io', $data);
+
+        $result = $this->handler->__invoke($message);
+
+        $this->assertSame($customUrl->reveal(), $result);
     }
 
-    public function testModifyCustomUrlWithTooManyPlaceholders(): void
+    public function testModifyCustomUrlWithWrongWebspace(): void
     {
-        $this->expectException(MismatchingDomainPartException::class);
-        $this->expectExceptionMessage('Domain-part mismatch "localhost/*/*/*" with placeholders: 1, 2');
+        $uuid = Uuid::v4()->toRfc4122();
+        $data = ['published' => true];
 
-        $this->handler->__invoke(new ModifyCustomUrlMessage(
-            uuid: $this->idOfObjectToModify,
-            webspaceKey: 'sulu_io',
-            data: [
-                'published' => true,
-                'baseDomain' => 'localhost/*/*/*',
-                'domainParts' => ['1', '2'],
-            ],
-        ));
+        $customUrl = $this->prophesize(CustomUrlInterface::class);
+        $customUrl->getWebspace()->willReturn('sulu_io');
+
+        $this->customUrlRepository->getOneBy(['uuid' => $uuid])
+            ->shouldBeCalledOnce()
+            ->willReturn($customUrl->reveal());
+
+        // Should NOT call mapper, repository add, or event collector
+        $this->customUrlMapper->mapCustomUrlData(Argument::any(), Argument::any())
+            ->shouldNotBeCalled();
+        $this->customUrlRepository->add(Argument::any())
+            ->shouldNotBeCalled();
+        $this->domainEventCollector->collect(Argument::any())
+            ->shouldNotBeCalled();
+
+        $this->expectException(AccessDeniedException::class);
+        $this->expectExceptionMessage('Entity from webspace "sulu_io" does not belong to webspace "wrong_webspace"');
+
+        $message = new ModifyCustomUrlMessage($uuid, 'wrong_webspace', $data);
+
+        $this->handler->__invoke($message);
     }
 
-    public function testModifyCustomUrlWithTooManyDomainParts(): void
+    public function testModifyCustomUrlWithDuplicateTitle(): void
     {
-        $this->expectException(MismatchingDomainPartException::class);
-        $this->expectExceptionMessage('Domain-part mismatch "localhost/*/*" with placeholders: 1, 2, 3');
+        $uuid = Uuid::v4()->toRfc4122();
+        $otherUuid = Uuid::v4()->toRfc4122();
+        $data = ['title' => 'Duplicate title'];
 
-        $this->handler->__invoke(new ModifyCustomUrlMessage(
-            uuid: $this->idOfObjectToModify,
-            webspaceKey: 'sulu_io',
-            data: [
-                'published' => true,
-                'baseDomain' => 'localhost/*/*',
-                'domainParts' => ['1', '2', '3'],
-            ],
-        ));
+        $customUrl = $this->prophesize(CustomUrlInterface::class);
+        $customUrl->getWebspace()->willReturn('sulu_io');
+        $customUrl->getTitle()->willReturn('Duplicate title');
+        $customUrl->getUuid()->willReturn($uuid);
+
+        $existingCustomUrl = $this->prophesize(CustomUrlInterface::class);
+        $existingCustomUrl->getUuid()->willReturn($otherUuid);
+
+        $this->customUrlRepository->getOneBy(['uuid' => $uuid])
+            ->shouldBeCalledOnce()
+            ->willReturn($customUrl->reveal());
+
+        $this->customUrlMapper->mapCustomUrlData($customUrl->reveal(), $data)
+            ->shouldBeCalledOnce();
+
+        $this->customUrlRepository->findOneBy(['title' => 'Duplicate title'])
+            ->shouldBeCalledOnce()
+            ->willReturn($existingCustomUrl->reveal()); // Another custom URL with same title exists
+
+        // Should NOT call add or collect event
+        $this->customUrlRepository->add(Argument::any())
+            ->shouldNotBeCalled();
+        $this->domainEventCollector->collect(Argument::any())
+            ->shouldNotBeCalled();
+
+        $this->expectException(CustomUrlAlreadyExistsException::class);
+        $this->expectExceptionMessage('Duplicate title');
+
+        $message = new ModifyCustomUrlMessage($uuid, 'sulu_io', $data);
+
+        $this->handler->__invoke($message);
     }
 
-    public function testModifyCustomWithUrlGeneration(): void
+    public function testModifyCustomUrlWithSameTitleAsItself(): void
     {
-        $this->handler->__invoke(new ModifyCustomUrlMessage(
-            uuid: $this->idOfObjectToModify,
-            webspaceKey: 'sulu_io',
-            data: [
-                'published' => true,
-            ],
-        ));
-        $this->entityManager->flush();
+        $uuid = Uuid::v4()->toRfc4122();
+        $data = ['title' => 'Same title'];
 
-        // Checking that the custom Url was created
-        $customUrl = $this->customUrlRepository->findOneBy(['uuid' => $this->idOfObjectToModify]);
-        $this->assertInstanceOf(CustomUrlInterface::class, $customUrl);
+        $customUrl = $this->prophesize(CustomUrlInterface::class);
+        $customUrl->getWebspace()->willReturn('sulu_io');
+        $customUrl->getTitle()->willReturn('Same title');
+        $customUrl->getUuid()->willReturn($uuid);
 
-        $this->assertTrue($customUrl->isPublished());
-        $this->assertSame('localhost/*', $customUrl->getBaseDomain());
-        $this->assertSame(['test'], $customUrl->getDomainParts());
+        $this->customUrlRepository->getOneBy(['uuid' => $uuid])
+            ->shouldBeCalledOnce()
+            ->willReturn($customUrl->reveal());
 
-        // Checking that the history was created
-        $routes = \iterator_to_array($customUrl->getRoutes());
-        $this->assertCount(1, $routes);
-        $this->assertSame('localhost/test', $routes[0]->getPath());
+        $this->customUrlMapper->mapCustomUrlData($customUrl->reveal(), $data)
+            ->shouldBeCalledOnce();
+
+        // Same custom URL returned - should be allowed
+        $this->customUrlRepository->findOneBy(['title' => 'Same title'])
+            ->shouldBeCalledOnce()
+            ->willReturn($customUrl->reveal());
+
+        $this->customUrlRepository->add($customUrl->reveal())
+            ->shouldBeCalledOnce();
+
+        $this->domainEventCollector->collect(Argument::type(CustomUrlModifiedEvent::class))
+            ->shouldBeCalledOnce();
+
+        $message = new ModifyCustomUrlMessage($uuid, 'sulu_io', $data);
+
+        $result = $this->handler->__invoke($message);
+
+        $this->assertSame($customUrl->reveal(), $result);
     }
 
-    public function testModifyCustomWithDifferentUrl(): void
+    public function testModifyCustomUrlWithMinimalData(): void
     {
-        $this->handler->__invoke(new ModifyCustomUrlMessage(
-            uuid: $this->idOfObjectToModify,
-            webspaceKey: 'sulu_io',
-            data: [
-                'published' => true,
-                'baseDomain' => 'localhost/*',
-                'domainParts' => ['some-other'],
-            ],
-        ));
-        $this->entityManager->flush();
+        $uuid = Uuid::v4()->toRfc4122();
+        $data = ['published' => true];
 
-        $customUrl = $this->customUrlRepository->findOneBy(['uuid' => $this->idOfObjectToModify]);
-        $this->assertInstanceOf(CustomUrlInterface::class, $customUrl);
-        $this->assertTrue($customUrl->isPublished());
-        $this->assertSame('localhost/*', $customUrl->getBaseDomain());
-        $this->assertSame(['some-other'], $customUrl->getDomainParts());
+        $customUrl = $this->prophesize(CustomUrlInterface::class);
+        $customUrl->getWebspace()->willReturn('sulu_io');
+        $customUrl->getTitle()->willReturn('Original title');
+        $customUrl->getUuid()->willReturn($uuid);
 
-        // Checking that the history was created
-        $routes = \iterator_to_array($customUrl->getRoutes());
-        $this->assertCount(2, $routes);
-        $this->assertSame('localhost/test', $routes[0]->getPath());
-        $this->assertSame('localhost/some-other', $routes[1]->getPath());
+        $this->customUrlRepository->getOneBy(['uuid' => $uuid])
+            ->shouldBeCalledOnce()
+            ->willReturn($customUrl->reveal());
+
+        $this->customUrlMapper->mapCustomUrlData($customUrl->reveal(), $data)
+            ->shouldBeCalledOnce();
+
+        $this->customUrlRepository->findOneBy(['title' => 'Original title'])
+            ->shouldBeCalledOnce()
+            ->willReturn(null);
+
+        $this->customUrlRepository->add($customUrl->reveal())
+            ->shouldBeCalledOnce();
+
+        $this->domainEventCollector->collect(Argument::type(CustomUrlModifiedEvent::class))
+            ->shouldBeCalledOnce();
+
+        $message = new ModifyCustomUrlMessage($uuid, 'sulu_io', $data);
+
+        $result = $this->handler->__invoke($message);
+
+        $this->assertSame($customUrl->reveal(), $result);
     }
 }
