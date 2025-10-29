@@ -20,6 +20,7 @@ use Sulu\Snippet\Domain\Event\SnippetRemovedEvent;
 use Sulu\Snippet\Domain\Event\SnippetRestoredEvent;
 use Sulu\Snippet\Domain\Event\SnippetTranslationAddedEvent;
 use Sulu\Snippet\Domain\Event\SnippetTranslationRemovedEvent;
+use Sulu\Snippet\Domain\Event\SnippetTranslationRestoredEvent;
 use Sulu\Snippet\Domain\Model\SnippetInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
 
@@ -34,8 +35,7 @@ final class SnippetIndexListener
     ) {
     }
 
-    // Todo: Check if translation removed and translation restored event is needed.
-    public function onSnippetChanged(SnippetCreatedEvent|SnippetModifiedEvent|SnippetRemovedEvent|SnippetRestoredEvent|SnippetTranslationAddedEvent|SnippetTranslationRemovedEvent $event): void
+    public function onSnippetChanged(SnippetCreatedEvent|SnippetModifiedEvent|SnippetRemovedEvent|SnippetRestoredEvent|SnippetTranslationRestoredEvent|SnippetTranslationAddedEvent|SnippetTranslationRemovedEvent $event): void
     {
         $locale = $event->getResourceLocale();
         $identifiers = [];

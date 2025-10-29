@@ -20,7 +20,9 @@ use Sulu\Page\Infrastructure\Sulu\Admin\PageAdmin;
 class PageRemovedEvent extends DomainEvent
 {
     /**
-     * @param array<string, mixed> $context
+     * @param array{
+     *     locales?: string[]
+     * } $context
      */
     public function __construct(
         private string $pageId,
@@ -64,5 +66,13 @@ class PageRemovedEvent extends DomainEvent
     public function getResourceSecurityContext(): ?string
     {
         return PageAdmin::getPageSecurityContext(static::getResourceWebspaceKey());
+    }
+
+    /**
+     * @return string[]|null
+     */
+    public function getAllLocales(): ?array
+    {
+        return $this->context['locales'] ?? null;
     }
 }
