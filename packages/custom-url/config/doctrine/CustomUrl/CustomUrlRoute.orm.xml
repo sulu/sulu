@@ -20,12 +20,12 @@
          </many-to-one>
 
         <many-to-one field="targetRoute" target-entity="Sulu\CustomUrl\Domain\Model\CustomUrlRouteInterface">
-            <join-column name="target_route_uuid" referenced-column-name="uuid" nullable="true" on-delete="set null" />
+            <join-column name="target_route_uuid" referenced-column-name="uuid" nullable="true" on-delete="cascade" />
         </many-to-one>
 
         <indexes>
-            <index name="idx_route_path" columns="path" />
-            <index name="idx_route_history" columns="history" />
+            <index name="custom_url_route_path_idx" fields="path" />
+            <index name="custom_url_route_history_idx" fields="history" />
         </indexes>
         <unique-constraints>
             <unique-constraint name="cu_custom_url_route_unique" fields="path" />

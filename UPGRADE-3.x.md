@@ -242,9 +242,9 @@ Custom URLs are no longer stored in PHPCR and have been migrated to Doctrine ORM
 
 ```sql
 CREATE TABLE cu_custom_url (uuid VARCHAR(36) NOT NULL, title VARCHAR(255) NOT NULL, published TINYINT(1) NOT NULL, baseDomain VARCHAR(255) NOT NULL, webspace VARCHAR(255) NOT NULL, domainParts JSON NOT NULL, targetDocument VARCHAR(255) DEFAULT NULL, targetLocale VARCHAR(255) NOT NULL, canonical TINYINT(1) NOT NULL, redirect TINYINT(1) NOT NULL, noFollow TINYINT(1) NOT NULL, noIndex TINYINT(1) NOT NULL, INDEX IDX_A06ACB06E9EDC6B8 (webspace), UNIQUE INDEX UNIQ_A06ACB062B36786B (title), PRIMARY KEY(uuid)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB;
-CREATE TABLE cu_custom_url_route (uuid VARCHAR(36) NOT NULL, customUrl VARCHAR(36) NOT NULL, target_route_uuid VARCHAR(36) DEFAULT NULL, path VARCHAR(255) NOT NULL, history TINYINT(1) DEFAULT 0 NOT NULL, INDEX IDX_5927CCB8C085433C (customUrl), INDEX idx_route_path (path), INDEX idx_route_history (history), UNIQUE INDEX cu_custom_url_route_unique (path), PRIMARY KEY(uuid)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB;
+CREATE TABLE cu_custom_url_route (uuid VARCHAR(36) NOT NULL, customUrl VARCHAR(36) NOT NULL, target_route_uuid VARCHAR(36) DEFAULT NULL, path VARCHAR(255) NOT NULL, history TINYINT(1) DEFAULT 0 NOT NULL, INDEX IDX_5927CCB8C085433C (customUrl), INDEX custom_url_route_path_idx (path), INDEX custom_url_route_history_idx (history), UNIQUE INDEX cu_custom_url_route_unique (path), PRIMARY KEY(uuid)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB;
 ALTER TABLE cu_custom_url_route ADD CONSTRAINT FK_5927CCB8C085433C FOREIGN KEY (customUrl) REFERENCES cu_custom_url (uuid) ON DELETE CASCADE;
-ALTER TABLE cu_custom_url_route ADD CONSTRAINT FK_5927CCB8B6A2BD70 FOREIGN KEY (target_route_uuid) REFERENCES cu_custom_url_route (uuid) ON DELETE SET NULL;
+ALTER TABLE cu_custom_url_route ADD CONSTRAINT FK_5927CCB8B6A2BD70 FOREIGN KEY (target_route_uuid) REFERENCES cu_custom_url_route (uuid) ON DELETE CASCADE;
 ```
 
 **Custom URL Routing Features:**
