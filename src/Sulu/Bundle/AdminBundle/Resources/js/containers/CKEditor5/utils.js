@@ -41,11 +41,21 @@ function findViewLinkItemInSelection(editor: Object, linkTag: string) {
 }
 
 function removePTags(htmlString: string): string {
+    // Checks if this is a single paragraph
+    const match = htmlString.match(/^<p>([^<>]*)<\/p>$/);
+    if (match) {
+        return match[1];
+    }
+
     const string = htmlString.replace(/<p>/g, '<!--p-->').replace(/<\/p>/g, '<!--/p--><br></br>');
     return replaceLast(string, '<br></br>', '');
 }
 
 function addPTags(htmlString: string): string {
+    if (htmlString.indexOf('<!--p-->') === -1) {
+        return `<p>${htmlString}</p>`;
+    }
+
     return htmlString
         .replace(/<!--p-->/g, '<p>')
         .replace(/<!--\/p--><br><\/br>/g, '</p>')

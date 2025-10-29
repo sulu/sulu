@@ -3,7 +3,7 @@ import {removePTags, addPTags} from '../utils';
 
 test('Test remove p tags', () => {
     const html = '<p>This is a paragraph.</p>';
-    const expected = '<!--p-->This is a paragraph.<!--/p-->';
+    const expected = 'This is a paragraph.';
     expect(removePTags(html)).toBe(expected);
 });
 
@@ -40,7 +40,7 @@ test('Test remove multiple p tages', () => {
 });
 
 test('Test readd p tags', () => {
-    const string = '<!--p-->This is a paragraph.<!--/p-->';
+    const string = 'This is a paragraph.';
     const html = '<p>This is a paragraph.</p>';
     expect(addPTags(string)).toBe(html);
 });

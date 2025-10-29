@@ -71,8 +71,8 @@ export default class CKEditor5 extends React.Component<Props> {
                 value,
                 disabled,
                 options: {
-                    strip_p_tags: {
-                        value: stripPTags = false,
+                    enter_mode: {
+                        value: enterModeValue = 'p',
                     } = {},
                 } = {},
             } = this.props;
@@ -88,7 +88,7 @@ export default class CKEditor5 extends React.Component<Props> {
             const editorData = this.getEditorData();
             if (editorData !== value && !(value === '' && editorData === undefined)) {
                 let finalValue = value;
-                if (finalValue && stripPTags) {
+                if (finalValue && enterModeValue === 'br') {
                     finalValue = addPTags(finalValue);
                 }
                 this.editorInstance.setData(finalValue);
@@ -101,8 +101,8 @@ export default class CKEditor5 extends React.Component<Props> {
             formats,
             locale,
             options: {
-                strip_p_tags: {
-                    value: stripPTags = false,
+                enter_mode: {
+                    value: enterModeValue = 'p',
                 } = {},
             } = {},
         } = this.props;
@@ -218,7 +218,7 @@ export default class CKEditor5 extends React.Component<Props> {
             .then((editor) => {
                 this.editorInstance = editor;
                 let value = this.props.value;
-                if (value && stripPTags) {
+                if (value && enterModeValue === 'br') {
                     value = addPTags(value);
                 }
                 this.editorInstance.setData(value);
@@ -276,14 +276,14 @@ export default class CKEditor5 extends React.Component<Props> {
     getEditorData() {
         const {
             options: {
-                strip_p_tags: {
-                    value: stripPTags = false,
+                enter_mode: {
+                    value: enterModeValue = 'p',
                 } = {},
             } = {},
         } = this.props;
 
         const editorData = this.editorInstance.getData();
-        return editorData === '' ? undefined : (stripPTags ? removePTags(editorData) : editorData);
+        return editorData === '' ? undefined : (enterModeValue === 'br' ? removePTags(editorData) : editorData);
     }
 
     render() {
