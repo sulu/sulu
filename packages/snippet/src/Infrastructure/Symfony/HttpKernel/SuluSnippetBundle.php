@@ -33,6 +33,7 @@ use Sulu\Snippet\Domain\Event\SnippetRemovedEvent;
 use Sulu\Snippet\Domain\Event\SnippetRestoredEvent;
 use Sulu\Snippet\Domain\Event\SnippetTranslationAddedEvent;
 use Sulu\Snippet\Domain\Event\SnippetTranslationRemovedEvent;
+use Sulu\Snippet\Domain\Event\SnippetTranslationRestoredEvent;
 use Sulu\Snippet\Domain\Model\Snippet;
 use Sulu\Snippet\Domain\Model\SnippetArea;
 use Sulu\Snippet\Domain\Model\SnippetAreaInterface;
@@ -380,6 +381,7 @@ final class SuluSnippetBundle extends AbstractBundle
             ->tag('kernel.event_listener', ['event' => SnippetModifiedEvent::class, 'method' => 'onSnippetChanged'])
             ->tag('kernel.event_listener', ['event' => SnippetRemovedEvent::class, 'method' => 'onSnippetChanged'])
             ->tag('kernel.event_listener', ['event' => SnippetRestoredEvent::class, 'method' => 'onSnippetChanged'])
+            ->tag('kernel.event_listener', ['event' => SnippetTranslationRestoredEvent::class, 'method' => 'onSnippetChanged'])
             ->tag('kernel.event_listener', ['event' => SnippetTranslationAddedEvent::class, 'method' => 'onSnippetChanged'])
             ->tag('kernel.event_listener', ['event' => SnippetTranslationRemovedEvent::class, 'method' => 'onSnippetChanged']);
 

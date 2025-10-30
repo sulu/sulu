@@ -34,6 +34,7 @@ use Sulu\Article\Domain\Event\ArticleRestoredEvent;
 use Sulu\Article\Domain\Event\ArticleTranslationAddedEvent;
 use Sulu\Article\Domain\Event\ArticleTranslationCopiedEvent;
 use Sulu\Article\Domain\Event\ArticleTranslationRemovedEvent;
+use Sulu\Article\Domain\Event\ArticleTranslationRestoredEvent;
 use Sulu\Article\Domain\Model\Article;
 use Sulu\Article\Domain\Model\ArticleDimensionContent;
 use Sulu\Article\Domain\Model\ArticleDimensionContentInterface;
@@ -433,6 +434,7 @@ final class SuluArticleBundle extends AbstractBundle
             ->tag('kernel.event_listener', ['event' => ArticleModifiedEvent::class, 'method' => 'onArticleChanged'])
             ->tag('kernel.event_listener', ['event' => ArticleRemovedEvent::class, 'method' => 'onArticleChanged'])
             ->tag('kernel.event_listener', ['event' => ArticleRestoredEvent::class, 'method' => 'onArticleChanged'])
+            ->tag('kernel.event_listener', ['event' => ArticleTranslationRestoredEvent::class, 'method' => 'onArticleChanged'])
             ->tag('kernel.event_listener', ['event' => ArticleTranslationAddedEvent::class, 'method' => 'onArticleChanged'])
             ->tag('kernel.event_listener', ['event' => ArticleTranslationRemovedEvent::class, 'method' => 'onArticleChanged'])
             ->tag('kernel.event_listener', ['event' => ArticleTranslationCopiedEvent::class, 'method' => 'onArticleChanged']);

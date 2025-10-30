@@ -11,19 +11,19 @@ declare(strict_types=1);
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Article\Infrastructure\Sulu\Search;
+namespace Sulu\Page\Infrastructure\Sulu\Search;
 
 use CmsIg\Seal\Reindex\ReindexConfig;
 use CmsIg\Seal\Reindex\ReindexProviderInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
-use Sulu\Article\Domain\Model\ArticleDimensionContentInterface;
-use Sulu\Article\Domain\Model\ArticleInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
+use Sulu\Page\Domain\Model\PageDimensionContentInterface;
+use Sulu\Page\Domain\Model\PageInterface;
 
 /**
- * @phpstan-type Article array{
- *     articleId: int,
+ * @phpstan-type Page array{
+ *     pageId: int,
  *     changed: \DateTimeImmutable,
  *     created: \DateTimeImmutable,
  *     title: string,
@@ -33,25 +33,25 @@ use Sulu\Content\Domain\Model\DimensionContentInterface;
  * @internal this class is internal no backwards compatibility promise is given for this class
  *            use Symfony Dependency Injection to override or create your own ReindexProvider instead
  */
-final class ArticleReindexProvider implements ReindexProviderInterface
+final class PageReindexProvider implements ReindexProviderInterface
 {
     /**
-     * @var EntityRepository<ArticleInterface>
+     * @var EntityRepository<PageInterface>
      */
-    protected EntityRepository $articleRepository;
+    protected EntityRepository $pageRepository;
 
     /**
-     * @var EntityRepository<ArticleDimensionContentInterface>
+     * @var EntityRepository<PageDimensionContentInterface>
      */
     protected EntityRepository $dimensionContentRepository;
 
     public function __construct(
         EntityManagerInterface $entityManager,
     ) {
-        $repository = $entityManager->getRepository(ArticleInterface::class);
-        $dimensionContentRepository = $entityManager->getRepository(ArticleDimensionContentInterface::class);
+        $repository = $entityManager->getRepository(PageInterface::class);
+        $dimensionContentRepository = $entityManager->getRepository(PageDimensionContentInterface::class);
 
-        $this->articleRepository = $repository;
+        $this->pageRepository = $repository;
         $this->dimensionContentRepository = $dimensionContentRepository;
     }
 
@@ -63,18 +63,18 @@ final class ArticleReindexProvider implements ReindexProviderInterface
 
     public function provide(ReindexConfig $reindexConfig): \Generator
     {
-        $articles = $this->loadArticles($reindexConfig->getIdentifiers());
+        $pages = $this->loadPages($reindexConfig->getIdentifiers());
 
-        /** @var Article $article */
-        foreach ($articles as $article) {
+        /** @var Page $page */
+        foreach ($pages as $page) {
             yield [
-                'id' => ArticleInterface::RESOURCE_KEY . '::' . ((string) $article['articleId']) . '::' . $article['locale'],
-                'resourceKey' => ArticleInterface::RESOURCE_KEY,
-                'resourceId' => (string) $article['articleId'],
-                'changedAt' => $article['changed']->format('c'),
-                'createdAt' => $article['created']->format('c'),
-                'title' => $article['title'],
-                'locale' => $article['locale'],
+                'id' => PageInterface::RESOURCE_KEY . '::' . ((string) $page['pageId']) . '::' . $page['locale'],
+                'resourceKey' => PageInterface::RESOURCE_KEY,
+                'resourceId' => (string) $page['pageId'],
+                'changedAt' => $page['changed']->format('c'),
+                'createdAt' => $page['created']->format('c'),
+                'title' => $page['title'],
+                'locale' => $page['locale'],
             ];
         }
     }
@@ -82,12 +82,12 @@ final class ArticleReindexProvider implements ReindexProviderInterface
     /**
      * @param string[] $identifiers
      *
-     * @return iterable<Article>
+     * @return iterable<Page>
      */
-    private function loadArticles(array $identifiers = []): iterable
+    private function loadPages(array $identifiers = []): iterable
     {
         $qb = $this->dimensionContentRepository->createQueryBuilder('dimensionContent')
-            ->select('IDENTITY(dimensionContent.article) AS articleId')
+            ->select('IDENTITY(dimensionContent.page) AS pageId')
             ->addSelect('dimensionContent.created')
             ->addSelect('dimensionContent.changed')
             ->addSelect('dimensionContent.title')
@@ -107,14 +107,14 @@ final class ArticleReindexProvider implements ReindexProviderInterface
             foreach ($identifiers as $index => $identifier) {
                 $resourceKey = \explode('::', $identifier)[0];
 
-                if (ArticleInterface::RESOURCE_KEY !== $resourceKey) {
+                if (PageInterface::RESOURCE_KEY !== $resourceKey) {
                     continue;
                 }
 
                 $id = \explode('::', $identifier)[1] ?? '';
                 $locale = \explode('::', $identifier)[2] ?? '';
 
-                $conditions[] = "(dimensionContent.article = :id{$index} AND dimensionContent.locale = :locale{$index})";
+                $conditions[] = "(dimensionContent.page = :id{$index} AND dimensionContent.locale = :locale{$index})";
                 $parameters["id{$index}"] = $id;
                 $parameters["locale{$index}"] = $locale;
             }
@@ -128,7 +128,7 @@ final class ArticleReindexProvider implements ReindexProviderInterface
 
         $qb->setParameters($parameters);
 
-        /** @var iterable<Article> */
+        /** @var iterable<Page> */
         return $qb->getQuery()->toIterable();
     }
 

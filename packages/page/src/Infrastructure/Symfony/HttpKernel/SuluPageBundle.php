@@ -29,6 +29,13 @@ use Sulu\Page\Application\MessageHandler\OrderPageMessageHandler;
 use Sulu\Page\Application\MessageHandler\RemovePageMessageHandler;
 use Sulu\Page\Application\MessageHandler\RemovePageTranslationMessageHandler;
 use Sulu\Page\Application\MessageHandler\RestorePageVersionMessageHandler;
+use Sulu\Page\Domain\Event\PageCreatedEvent;
+use Sulu\Page\Domain\Event\PageModifiedEvent;
+use Sulu\Page\Domain\Event\PageRemovedEvent;
+use Sulu\Page\Domain\Event\PageRestoredEvent;
+use Sulu\Page\Domain\Event\PageTranslationAddedEvent;
+use Sulu\Page\Domain\Event\PageTranslationRemovedEvent;
+use Sulu\Page\Domain\Event\PageTranslationRestoredEvent;
 use Sulu\Page\Domain\Model\Page;
 use Sulu\Page\Domain\Model\PageDimensionContent;
 use Sulu\Page\Domain\Model\PageDimensionContentInterface;
@@ -82,8 +89,8 @@ use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
  */
 final class SuluPageBundle extends AbstractBundle
 {
-    use PersistenceExtensionTrait;
     use PersistenceBundleTrait;
+    use PersistenceExtensionTrait;
 
     public function __construct()
     {
@@ -368,7 +375,7 @@ final class SuluPageBundle extends AbstractBundle
                 new Reference('sulu_content.content_aggregator'),
                 new Reference('sulu_content.content_data_mapper'),
                 '%sulu.model.page.class%',
-                null, //TODO add security context for preview
+                null, // TODO add security context for preview
             ])
             ->tag('sulu.context', ['context' => 'admin'])
             ->tag('sulu_preview.object_provider', ['provider-key' => 'pages']);
@@ -506,6 +513,26 @@ final class SuluPageBundle extends AbstractBundle
                 ->tag('sulu_trash.restore_trash_item_handler')
                 ->tag('sulu_trash.restore_configuration_provider');
         }
+
+        $services->set('sulu_page.page_index_listener')
+            ->class('Sulu\Page\Infrastructure\Sulu\Search\PageIndexListener')
+            ->args([
+                new Reference('sulu_message_bus'),
+            ])
+            ->tag('kernel.event_listener', ['event' => PageCreatedEvent::class, 'method' => 'onPageChanged'])
+            ->tag('kernel.event_listener', ['event' => PageModifiedEvent::class, 'method' => 'onPageChanged'])
+            ->tag('kernel.event_listener', ['event' => PageRemovedEvent::class, 'method' => 'onPageChanged'])
+            ->tag('kernel.event_listener', ['event' => PageRestoredEvent::class, 'method' => 'onPageChanged'])
+            ->tag('kernel.event_listener', ['event' => PageTranslationRestoredEvent::class, 'method' => 'onPageChanged'])
+            ->tag('kernel.event_listener', ['event' => PageTranslationAddedEvent::class, 'method' => 'onPageChanged'])
+            ->tag('kernel.event_listener', ['event' => PageTranslationRemovedEvent::class, 'method' => 'onPageChanged']);
+
+        $services->set('sulu_page.page_reindex_provider')
+            ->class('Sulu\Page\Infrastructure\Sulu\Search\PageReindexProvider')
+            ->args([
+                new Reference('doctrine.orm.entity_manager'),
+            ])
+            ->tag('cmsig_seal.reindex_provider');
     }
 
     /**
@@ -623,7 +650,31 @@ final class SuluPageBundle extends AbstractBundle
                             ],
                         ],
                     ],
-                ]
+                ],
+            );
+        }
+
+        if ($builder->hasExtension('sulu_search')) {
+            $builder->prependExtensionConfig(
+                'sulu_search',
+                [
+                    'admin' => [
+                        'resources' => [
+                            PageInterface::RESOURCE_KEY => [
+                                'name' => 'sulu_page.pages',
+                                'icon' => 'su-document',
+                                'route' => [
+                                    'name' => PageAdmin::EDIT_FORM_VIEW,
+                                    'resultToRoute' => [
+                                        'id' => 'id',
+                                        'locale' => 'locale',
+                                    ],
+                                ],
+                                'securityContext' => PageAdmin::SECURITY_CONTEXT_GROUP, // Todo: Add correct permissions for webspaces.
+                            ],
+                        ],
+                    ],
+                ],
             );
         }
     }

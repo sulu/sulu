@@ -21,6 +21,7 @@ use Sulu\Article\Domain\Event\ArticleRestoredEvent;
 use Sulu\Article\Domain\Event\ArticleTranslationAddedEvent;
 use Sulu\Article\Domain\Event\ArticleTranslationCopiedEvent;
 use Sulu\Article\Domain\Event\ArticleTranslationRemovedEvent;
+use Sulu\Article\Domain\Event\ArticleTranslationRestoredEvent;
 use Sulu\Article\Domain\Model\ArticleInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
 
@@ -35,7 +36,7 @@ final class ArticleIndexListener
     ) {
     }
 
-    public function onArticleChanged(ArticleCreatedEvent|ArticleModifiedEvent|ArticleRemovedEvent|ArticleRestoredEvent|ArticleTranslationAddedEvent|ArticleTranslationRemovedEvent|ArticleTranslationCopiedEvent $event): void
+    public function onArticleChanged(ArticleCreatedEvent|ArticleModifiedEvent|ArticleRemovedEvent|ArticleRestoredEvent|ArticleTranslationRestoredEvent|ArticleTranslationAddedEvent|ArticleTranslationRemovedEvent|ArticleTranslationCopiedEvent $event): void
     {
         $locale = $event->getResourceLocale();
         $identifiers = [];

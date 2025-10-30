@@ -55,17 +55,7 @@ class ArticleReindexProviderTest extends SuluTestCase
 
     public function testTotal(): void
     {
-        $article = static::createArticle([
-            'en' => [
-                'live' => [
-                    'template' => 'article',
-                    'title' => 'Test Article',
-                    'url' => '/test-article',
-                ],
-            ],
-        ]);
-
-        $this->assertSame(1, $this->provider->total());
+        $this->assertNull($this->provider->total());
     }
 
     public function testProvideAll(): void
