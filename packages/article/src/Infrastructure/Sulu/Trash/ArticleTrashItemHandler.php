@@ -14,11 +14,14 @@ declare(strict_types=1);
 namespace Sulu\Article\Infrastructure\Sulu\Trash;
 
 use Sulu\Article\Application\Mapper\ArticleMapperInterface;
+use Sulu\Article\Domain\Event\ArticleRestoredEvent;
+use Sulu\Article\Domain\Event\ArticleTranslationRestoredEvent;
 use Sulu\Article\Domain\Model\ArticleDimensionContent;
 use Sulu\Article\Domain\Model\ArticleDimensionContentInterface;
 use Sulu\Article\Domain\Model\ArticleInterface;
 use Sulu\Article\Domain\Repository\ArticleRepositoryInterface;
 use Sulu\Article\Infrastructure\Sulu\Admin\ArticleAdmin;
+use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
 use Sulu\Bundle\TrashBundle\Application\RestoreConfigurationProvider\RestoreConfiguration;
 use Sulu\Bundle\TrashBundle\Application\RestoreConfigurationProvider\RestoreConfigurationProviderInterface;
 use Sulu\Bundle\TrashBundle\Application\TrashItemHandler\RestoreTrashItemHandlerInterface;
@@ -48,6 +51,7 @@ final class ArticleTrashItemHandler implements
         private ContentNormalizerInterface $contentNormalizer,
         private ContentMergerInterface $contentMerger,
         private iterable $articleMappers,
+        private DomainEventCollectorInterface $domainEventCollector,
     ) {
     }
 
@@ -98,7 +102,7 @@ final class ArticleTrashItemHandler implements
         /** @var array<string, ArticleDimensionContentInterface> $localizedDimensionContents */
         $localizedDimensionContents = \array_merge(
             \array_flip($availableLocales),
-            $localizedDimensionContents
+            $localizedDimensionContents,
         );
 
         foreach ($localizedDimensionContents as $locale => $localizedDimensionContent) {
@@ -113,8 +117,8 @@ final class ArticleTrashItemHandler implements
                         'stage' => DimensionContentInterface::STAGE_DRAFT,
                         'version' => DimensionContentInterface::CURRENT_VERSION,
                     ],
-                    ArticleDimensionContent::class
-                )
+                    ArticleDimensionContent::class,
+                ),
             );
 
             $normalizedContent = $this->contentNormalizer->normalize($mergedDimensionContent);
@@ -147,18 +151,58 @@ final class ArticleTrashItemHandler implements
     {
         $restoreData = $trashItem->getRestoreData();
         $articleUuid = $trashItem->getResourceId();
+        $restoreTranslation = true;
 
-        $article = $this->articleRepository->createNew($articleUuid);
+        $article = $this->articleRepository->findOneBy(['uuid' => $articleUuid]);
+
+        if (!$article) {
+            $article = $this->articleRepository->createNew($articleUuid);
+            $restoreTranslation = false;
+        }
+
         $this->articleRepository->add($article);
 
         $dimensionContents = $restoreData['dimensionContents'] ?? [];
+        $allLocales = [];
+        $articleTitle = null;
         Assert::isArray($dimensionContents, 'Expected dimensionContents to be an array');
         /** @var array<string, mixed> $dimensionContentData */
         foreach ($dimensionContents as $dimensionContentData) {
             unset($dimensionContentData['url']); // TODO old route is not removed on delete?
+
+            if (!$articleTitle && \array_key_exists('title', $dimensionContentData) && $dimensionContentData['title']) {
+                /** @var string $articleTitle */
+                $articleTitle = $dimensionContentData['title'];
+            }
+
+            if (\array_key_exists('locale', $dimensionContentData) && $dimensionContentData['locale']) {
+                $allLocales[] = $dimensionContentData['locale'];
+            }
+
             foreach ($this->articleMappers as $articleMapper) {
                 $articleMapper->mapArticleData($article, $dimensionContentData);
             }
+        }
+
+        /** @var array{locales?: string[]} $context */
+        $context = $allLocales ? ['locales' => $allLocales] : [];
+
+        if ($restoreTranslation) {
+            /** @var string $locale */
+            foreach ($allLocales as $locale) {
+                $this->domainEventCollector->collect(new ArticleTranslationRestoredEvent(
+                    $article,
+                    $locale,
+                    $restoreData,
+                ));
+            }
+        } else {
+            $this->domainEventCollector->collect(new ArticleRestoredEvent(
+                $article,
+                $articleTitle,
+                $context,
+                $restoreData,
+            ));
         }
 
         return $article;

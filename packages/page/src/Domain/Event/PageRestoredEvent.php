@@ -14,20 +14,22 @@ declare(strict_types=1);
 namespace Sulu\Page\Domain\Event;
 
 use Sulu\Bundle\ActivityBundle\Domain\Event\DomainEvent;
-use Sulu\Content\Domain\Model\DimensionContentCollection;
-use Sulu\Page\Domain\Model\PageDimensionContent;
 use Sulu\Page\Domain\Model\PageInterface;
 use Sulu\Page\Infrastructure\Sulu\Admin\PageAdmin;
 
 class PageRestoredEvent extends DomainEvent
 {
     /**
+     * @param array{
+     *     locales?: string[]
+     * } $context
      * @param mixed[] $payload
      */
     public function __construct(
         private PageInterface $page,
-        private string $locale,
-        private array $payload
+        private ?string $pageTitle,
+        private array $context,
+        private array $payload,
     ) {
         parent::__construct();
     }
@@ -64,18 +66,19 @@ class PageRestoredEvent extends DomainEvent
 
     public function getResourceTitle(): ?string
     {
-        $dimensionContentCollection = new DimensionContentCollection($this->page->getDimensionContents()->toArray(), [], PageDimensionContent::class);
-
-        return $dimensionContentCollection->getDimensionContent(['locale' => $this->locale])?->getTitle();
-    }
-
-    public function getResourceTitleLocale(): ?string
-    {
-        return $this->locale;
+        return $this->pageTitle;
     }
 
     public function getResourceSecurityContext(): ?string
     {
         return PageAdmin::getPageSecurityContext($this->getResourceWebspaceKey());
+    }
+
+    /**
+     * @return string[]|null
+     */
+    public function getAllLocales(): ?array
+    {
+        return $this->context['locales'] ?? null;
     }
 }

@@ -14,14 +14,12 @@ declare(strict_types=1);
 namespace Sulu\Snippet\Infrastructure\Sulu\Search;
 
 use CmsIg\Seal\Reindex\ReindexConfig;
-use Sulu\Content\Domain\Model\DimensionContentCollection;
 use Sulu\Snippet\Domain\Event\SnippetCreatedEvent;
 use Sulu\Snippet\Domain\Event\SnippetModifiedEvent;
 use Sulu\Snippet\Domain\Event\SnippetRemovedEvent;
 use Sulu\Snippet\Domain\Event\SnippetRestoredEvent;
 use Sulu\Snippet\Domain\Event\SnippetTranslationAddedEvent;
 use Sulu\Snippet\Domain\Event\SnippetTranslationRemovedEvent;
-use Sulu\Snippet\Domain\Model\SnippetDimensionContent;
 use Sulu\Snippet\Domain\Model\SnippetInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
 
@@ -42,7 +40,7 @@ final class SnippetIndexListener
         $locale = $event->getResourceLocale();
         $identifiers = [];
 
-        if ($event instanceof SnippetRemovedEvent) {
+        if ($event instanceof SnippetRemovedEvent || $event instanceof SnippetRestoredEvent) {
             $locales = $event->getAllLocales();
 
             if (!$locales) {
@@ -50,18 +48,6 @@ final class SnippetIndexListener
             }
 
             foreach ($locales as $locale) {
-                $identifiers[] = SnippetInterface::RESOURCE_KEY . '::' . $event->getResourceId() . '::' . $locale;
-            }
-        } elseif ($event instanceof SnippetRestoredEvent) {
-            $snippet = $event->getSnippet();
-            $dimensionContentCollection = new DimensionContentCollection($snippet->getDimensionContents()->toArray(), [], SnippetDimensionContent::class);
-            $unlocalizedDimensionContent = $dimensionContentCollection->getDimensionContent(['locale' => null, 'stage' => 'draft']);
-
-            if (!$unlocalizedDimensionContent?->getAvailableLocales()) {
-                return;
-            }
-
-            foreach ($unlocalizedDimensionContent->getAvailableLocales() as $locale) {
                 $identifiers[] = SnippetInterface::RESOURCE_KEY . '::' . $event->getResourceId() . '::' . $locale;
             }
         } elseif ($locale) {

@@ -21,9 +21,7 @@ use Sulu\Article\Domain\Event\ArticleRestoredEvent;
 use Sulu\Article\Domain\Event\ArticleTranslationAddedEvent;
 use Sulu\Article\Domain\Event\ArticleTranslationCopiedEvent;
 use Sulu\Article\Domain\Event\ArticleTranslationRemovedEvent;
-use Sulu\Article\Domain\Model\ArticleDimensionContent;
 use Sulu\Article\Domain\Model\ArticleInterface;
-use Sulu\Content\Domain\Model\DimensionContentCollection;
 use Symfony\Component\Messenger\MessageBusInterface;
 
 /**
@@ -42,7 +40,7 @@ final class ArticleIndexListener
         $locale = $event->getResourceLocale();
         $identifiers = [];
 
-        if ($event instanceof ArticleRemovedEvent) {
+        if ($event instanceof ArticleRemovedEvent || $event instanceof ArticleRestoredEvent) {
             $locales = $event->getAllLocales();
 
             if (!$locales) {
@@ -50,18 +48,6 @@ final class ArticleIndexListener
             }
 
             foreach ($locales as $locale) {
-                $identifiers[] = ArticleInterface::RESOURCE_KEY . '::' . $event->getResourceId() . '::' . $locale;
-            }
-        } elseif ($event instanceof ArticleRestoredEvent) {
-            $article = $event->getArticle();
-            $dimensionContentCollection = new DimensionContentCollection($article->getDimensionContents()->toArray(), [], ArticleDimensionContent::class);
-            $unlocalizedDimensionContent = $dimensionContentCollection->getDimensionContent(['locale' => null, 'stage' => 'draft']);
-
-            if (!$unlocalizedDimensionContent?->getAvailableLocales()) {
-                return;
-            }
-
-            foreach ($unlocalizedDimensionContent->getAvailableLocales() as $locale) {
                 $identifiers[] = ArticleInterface::RESOURCE_KEY . '::' . $event->getResourceId() . '::' . $locale;
             }
         } elseif ($locale) {

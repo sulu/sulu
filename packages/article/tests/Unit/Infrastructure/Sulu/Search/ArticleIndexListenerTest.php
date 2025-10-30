@@ -100,7 +100,7 @@ class ArticleIndexListenerTest extends TestCase
     public function testOnArticleChangedWithArticleRestored(): void
     {
         $article = new Article('222');
-        $event = new ArticleRestoredEvent($article, 'de', []);
+        $event = new ArticleRestoredEvent($article, 'test article', ['locales' => ['de']], []);
         $dimensionContent = $article->createDimensionContent();
         $dimensionContent->setLocale(null);
         $dimensionContent->addAvailableLocale('de');
