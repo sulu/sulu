@@ -368,7 +368,7 @@ class ContactManager extends AbstractContactManager
                 }
 
                 // Set position on contact
-                $position = $this->getPosition($data['position'] ?? null);
+                $position = $this->getPosition($this->getProperty($data, 'position'));
 
                 // create new account-contact relation
                 $this->createMainAccountContact(
@@ -528,7 +528,7 @@ class ContactManager extends AbstractContactManager
             }
 
             // get position
-            $position = $this->getPosition($data['position'] ?? null);
+            $position = $this->getPosition($this->getProperty($data, 'position'));
 
             // check if relation between account and contact already exists
             $mainAccountContact = $this->getMainAccountContact($contact);
@@ -710,7 +710,7 @@ class ContactManager extends AbstractContactManager
         return $this->contactRepository->getClassName();
     }
 
-    public function getPosition($id): ?Position
+    public function getPosition(?string $id): ?Position
     {
         if (null === $id) {
             return null;

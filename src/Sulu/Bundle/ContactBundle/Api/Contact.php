@@ -851,7 +851,7 @@ class Contact extends ApiWrapper
      */
     public function getAccount()
     {
-        /** @var AccountInterface $mainAccount */
+        /** @var AccountInterface|null $mainAccount */
         $mainAccount = $this->entity->getMainAccount();
         if (!\is_null($mainAccount)) {
             return new Account($mainAccount, $this->locale);
