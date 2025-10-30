@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Sulu\Snippet\Infrastructure\Sulu\Trash;
 
+use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
 use Sulu\Bundle\TrashBundle\Application\RestoreConfigurationProvider\RestoreConfiguration;
 use Sulu\Bundle\TrashBundle\Application\RestoreConfigurationProvider\RestoreConfigurationProviderInterface;
 use Sulu\Bundle\TrashBundle\Application\TrashItemHandler\RestoreTrashItemHandlerInterface;
@@ -24,6 +25,8 @@ use Sulu\Content\Application\ContentNormalizer\ContentNormalizerInterface;
 use Sulu\Content\Domain\Model\DimensionContentCollection;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Snippet\Application\Mapper\SnippetMapperInterface;
+use Sulu\Snippet\Domain\Event\SnippetRestoredEvent;
+use Sulu\Snippet\Domain\Event\SnippetTranslationRestoredEvent;
 use Sulu\Snippet\Domain\Model\SnippetDimensionContent;
 use Sulu\Snippet\Domain\Model\SnippetDimensionContentInterface;
 use Sulu\Snippet\Domain\Model\SnippetInterface;
@@ -48,6 +51,7 @@ final class SnippetTrashItemHandler implements
         private ContentNormalizerInterface $contentNormalizer,
         private ContentMergerInterface $contentMerger,
         private iterable $snippetMappers,
+        private DomainEventCollectorInterface $domainEventCollector,
     ) {
     }
 
@@ -147,18 +151,58 @@ final class SnippetTrashItemHandler implements
     {
         $restoreData = $trashItem->getRestoreData();
         $snippetUuid = $trashItem->getResourceId();
+        $restoreTranslation = true;
 
-        $snippet = $this->snippetRepository->createNew($snippetUuid);
+        $snippet = $this->snippetRepository->findOneBy(['uuid' => $snippetUuid]);
+
+        if (!$snippet) {
+            $snippet = $this->snippetRepository->createNew($snippetUuid);
+            $restoreTranslation = false;
+        }
+
         $this->snippetRepository->add($snippet);
 
         $dimensionContents = $restoreData['dimensionContents'] ?? [];
+        $allLocales = [];
+        $snippetTitle = null;
         Assert::isArray($dimensionContents, 'Expected dimensionContents to be an array');
         /** @var array<string, mixed> $dimensionContentData */
         foreach ($dimensionContents as $dimensionContentData) {
             unset($dimensionContentData['url']); // TODO old route is not removed on delete?
+
+            if (!$snippetTitle && \array_key_exists('title', $dimensionContentData) && $dimensionContentData['title']) {
+                /** @var string $snippetTitle */
+                $snippetTitle = $dimensionContentData['title'];
+            }
+
+            if (\array_key_exists('locale', $dimensionContentData) && $dimensionContentData['locale']) {
+                $allLocales[] = $dimensionContentData['locale'];
+            }
+
             foreach ($this->snippetMappers as $snippetMapper) {
                 $snippetMapper->mapSnippetData($snippet, $dimensionContentData);
             }
+        }
+
+        /** @var array{locales?: string[]} $context */
+        $context = $allLocales ? ['locales' => $allLocales] : [];
+
+        if ($restoreTranslation) {
+            /** @var string $locale */
+            foreach ($allLocales as $locale) {
+                $this->domainEventCollector->collect(new SnippetTranslationRestoredEvent(
+                    $snippet,
+                    $locale,
+                    $restoreData,
+                ));
+            }
+        } else {
+            $this->domainEventCollector->collect(new SnippetRestoredEvent(
+                $snippet,
+                $snippetTitle,
+                $context,
+                $restoreData,
+            ));
         }
 
         return $snippet;

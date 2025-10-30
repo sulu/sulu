@@ -13,21 +13,23 @@ declare(strict_types=1);
 
 namespace Sulu\Article\Domain\Event;
 
-use Sulu\Article\Domain\Model\ArticleDimensionContent;
 use Sulu\Article\Domain\Model\ArticleInterface;
 use Sulu\Article\Infrastructure\Sulu\Admin\ArticleAdmin;
 use Sulu\Bundle\ActivityBundle\Domain\Event\DomainEvent;
-use Sulu\Content\Domain\Model\DimensionContentCollection;
 
 class ArticleRestoredEvent extends DomainEvent
 {
     /**
+     * @param array{
+     *     locales?: string[]
+     * } $context
      * @param mixed[] $payload
      */
     public function __construct(
         private ArticleInterface $article,
-        private string $locale,
-        private array $payload
+        private ?string $articleTitle,
+        private array $context,
+        private array $payload,
     ) {
         parent::__construct();
     }
@@ -59,18 +61,19 @@ class ArticleRestoredEvent extends DomainEvent
 
     public function getResourceTitle(): ?string
     {
-        $dimensionContentCollection = new DimensionContentCollection($this->article->getDimensionContents()->toArray(), [], ArticleDimensionContent::class);
-
-        return $dimensionContentCollection->getDimensionContent(['locale' => $this->locale])?->getTitle();
-    }
-
-    public function getResourceTitleLocale(): ?string
-    {
-        return $this->locale;
+        return $this->articleTitle;
     }
 
     public function getResourceSecurityContext(): ?string
     {
         return ArticleAdmin::SECURITY_CONTEXT;
+    }
+
+    /**
+     * @return string[]|null
+     */
+    public function getAllLocales(): ?array
+    {
+        return $this->context['locales'] ?? null;
     }
 }

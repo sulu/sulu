@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Sulu\Page\Infrastructure\Sulu\Trash;
 
+use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
 use Sulu\Bundle\TrashBundle\Application\RestoreConfigurationProvider\RestoreConfiguration;
 use Sulu\Bundle\TrashBundle\Application\RestoreConfigurationProvider\RestoreConfigurationProviderInterface;
 use Sulu\Bundle\TrashBundle\Application\TrashItemHandler\RestoreTrashItemHandlerInterface;
@@ -24,6 +25,8 @@ use Sulu\Content\Application\ContentNormalizer\ContentNormalizerInterface;
 use Sulu\Content\Domain\Model\DimensionContentCollection;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Page\Application\Mapper\PageMapperInterface;
+use Sulu\Page\Domain\Event\PageRestoredEvent;
+use Sulu\Page\Domain\Event\PageTranslationRestoredEvent;
 use Sulu\Page\Domain\Model\PageDimensionContent;
 use Sulu\Page\Domain\Model\PageDimensionContentInterface;
 use Sulu\Page\Domain\Model\PageInterface;
@@ -48,6 +51,7 @@ final class PageTrashItemHandler implements
         private ContentNormalizerInterface $contentNormalizer,
         private ContentMergerInterface $contentMerger,
         private iterable $pageMappers,
+        private DomainEventCollectorInterface $domainEventCollector,
     ) {
     }
 
@@ -100,7 +104,7 @@ final class PageTrashItemHandler implements
         /** @var array<string, PageDimensionContentInterface> $localizedDimensionContents */
         $localizedDimensionContents = \array_merge(
             \array_flip($availableLocales),
-            $localizedDimensionContents
+            $localizedDimensionContents,
         );
 
         foreach ($localizedDimensionContents as $locale => $localizedDimensionContent) {
@@ -115,8 +119,8 @@ final class PageTrashItemHandler implements
                         'stage' => DimensionContentInterface::STAGE_DRAFT,
                         'version' => DimensionContentInterface::CURRENT_VERSION,
                     ],
-                    PageDimensionContent::class
-                )
+                    PageDimensionContent::class,
+                ),
             );
 
             $normalizedContent = $this->contentNormalizer->normalize($mergedDimensionContent);
@@ -151,33 +155,73 @@ final class PageTrashItemHandler implements
     {
         $restoreData = $trashItem->getRestoreData();
         $pageUuid = $trashItem->getResourceId();
+        $restoreTranslation = true;
 
-        // Create the page
-        $page = $this->pageRepository->createNew($pageUuid);
-        $webspaceKey = $restoreData['webspaceKey'];
-        Assert::string($webspaceKey, 'Expected webspaceKey to be a string');
-        $page->setWebspaceKey($webspaceKey);
+        $page = $this->pageRepository->findOneBy(['uuid' => $pageUuid]);
 
-        // Set parent if exists
-        $parentUuid = $restoreFormData['parentId'] ?? $restoreData['parentUuid'];
-        if ($parentUuid) {
-            Assert::string($parentUuid, 'Expected parentUuid to be a string');
-            $parent = $this->pageRepository->findOneBy(['uuid' => $parentUuid]);
-            if ($parent) {
-                $page->setParent($parent);
+        if (!$page) {
+            // Create the page
+            $page = $this->pageRepository->createNew($pageUuid);
+            $webspaceKey = $restoreData['webspaceKey'];
+            Assert::string($webspaceKey, 'Expected webspaceKey to be a string');
+            $page->setWebspaceKey($webspaceKey);
+
+            // Set parent if exists
+            $parentUuid = $restoreFormData['parentId'] ?? $restoreData['parentUuid'];
+            if ($parentUuid) {
+                Assert::string($parentUuid, 'Expected parentUuid to be a string');
+                $parent = $this->pageRepository->findOneBy(['uuid' => $parentUuid]);
+                if ($parent) {
+                    $page->setParent($parent);
+                }
             }
+
+            $restoreTranslation = false;
         }
 
         $this->pageRepository->add($page);
 
         $dimensionContents = $restoreData['dimensionContents'] ?? [];
+        $allLocales = [];
+        $pageTitle = null;
         Assert::isArray($dimensionContents, 'Expected dimensionContents to be an array');
         foreach ($dimensionContents as $dimensionContentData) {
             Assert::isArray($dimensionContentData, 'Expected dimensionContentData to be an array');
+
+            if (!$pageTitle && \array_key_exists('title', $dimensionContentData) && $dimensionContentData['title']) {
+                /** @var string $pageTitle */
+                $pageTitle = $dimensionContentData['title'];
+            }
+
+            if (\array_key_exists('locale', $dimensionContentData) && $dimensionContentData['locale']) {
+                $allLocales[] = $dimensionContentData['locale'];
+            }
+
             unset($dimensionContentData['url']); // TODO old route is not removed on delete?
             foreach ($this->pageMappers as $pageMapper) {
                 $pageMapper->mapPageData($page, $dimensionContentData);
             }
+        }
+
+        /** @var array{locales?: string[]} $context */
+        $context = $allLocales ? ['locales' => $allLocales] : [];
+
+        if ($restoreTranslation) {
+            /** @var string $locale */
+            foreach ($allLocales as $locale) {
+                $this->domainEventCollector->collect(new PageTranslationRestoredEvent(
+                    $page,
+                    $locale,
+                    $restoreData,
+                ));
+            }
+        } else {
+            $this->domainEventCollector->collect(new PageRestoredEvent(
+                $page,
+                $pageTitle,
+                $context,
+                $restoreData,
+            ));
         }
 
         return $page;

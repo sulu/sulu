@@ -14,20 +14,22 @@ declare(strict_types=1);
 namespace Sulu\Snippet\Domain\Event;
 
 use Sulu\Bundle\ActivityBundle\Domain\Event\DomainEvent;
-use Sulu\Content\Domain\Model\DimensionContentCollection;
-use Sulu\Snippet\Domain\Model\SnippetDimensionContent;
 use Sulu\Snippet\Domain\Model\SnippetInterface;
 use Sulu\Snippet\Infrastructure\Sulu\Admin\SnippetAdmin;
 
 class SnippetRestoredEvent extends DomainEvent
 {
     /**
+     * @param array{
+     *     locales?: string[]
+     * } $context
      * @param mixed[] $payload
      */
     public function __construct(
         private SnippetInterface $snippet,
-        private string $locale,
-        private array $payload
+        private ?string $snippetTitle,
+        private array $context,
+        private array $payload,
     ) {
         parent::__construct();
     }
@@ -59,18 +61,19 @@ class SnippetRestoredEvent extends DomainEvent
 
     public function getResourceTitle(): ?string
     {
-        $dimensionContentCollection = new DimensionContentCollection($this->snippet->getDimensionContents()->toArray(), [], SnippetDimensionContent::class);
-
-        return $dimensionContentCollection->getDimensionContent(['locale' => $this->locale])?->getTitle();
-    }
-
-    public function getResourceTitleLocale(): ?string
-    {
-        return $this->locale;
+        return $this->snippetTitle;
     }
 
     public function getResourceSecurityContext(): ?string
     {
         return SnippetAdmin::SECURITY_CONTEXT;
+    }
+
+    /**
+     * @return string[]|null
+     */
+    public function getAllLocales(): ?array
+    {
+        return $this->context['locales'] ?? null;
     }
 }

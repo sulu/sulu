@@ -100,7 +100,7 @@ class SnippetIndexListenerTest extends TestCase
     public function testOnSnippetChangedWithSnippetRestored(): void
     {
         $snippet = new Snippet('222');
-        $event = new SnippetRestoredEvent($snippet, 'de', []);
+        $event = new SnippetRestoredEvent($snippet, 'test Snippet', ['locales' => ['de']], []);
         $dimensionContent = $snippet->createDimensionContent();
         $dimensionContent->setLocale(null);
         $dimensionContent->addAvailableLocale('de');
