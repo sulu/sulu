@@ -43,16 +43,7 @@ class SnippetReindexProviderTest extends SuluTestCase
 
     public function testTotal(): void
     {
-        $this->createSnippet([
-            'en' => [
-                'live' => [
-                    'template' => 'snippet',
-                    'title' => 'Test Snippet',
-                ],
-            ],
-        ]);
-
-        $this->assertSame(1, $this->provider->total());
+        $this->assertNull($this->provider->total());
     }
 
     public function testProvideAll(): void

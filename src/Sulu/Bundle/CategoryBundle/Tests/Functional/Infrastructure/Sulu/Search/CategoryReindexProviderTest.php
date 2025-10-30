@@ -43,11 +43,7 @@ class CategoryReindexProviderTest extends SuluTestCase
 
     public function testTotal(): void
     {
-        $this->createCategory();
-
-        $this->entityManager->flush();
-
-        $this->assertSame(1, $this->provider->total());
+        $this->assertNull($this->provider->total());
     }
 
     public function testProvideAll(): void

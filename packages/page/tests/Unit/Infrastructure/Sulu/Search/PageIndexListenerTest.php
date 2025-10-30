@@ -100,7 +100,7 @@ class PageIndexListenerTest extends TestCase
     public function testOnPageChangedWithPageRestored(): void
     {
         $page = new Page('222');
-        $event = new PageRestoredEvent($page, 'de', []);
+        $event = new PageRestoredEvent($page, 'pageTitle', ['locales' => ['de']], []);
         $dimensionContent = $page->createDimensionContent();
         $dimensionContent->setLocale(null);
         $dimensionContent->addAvailableLocale('de');

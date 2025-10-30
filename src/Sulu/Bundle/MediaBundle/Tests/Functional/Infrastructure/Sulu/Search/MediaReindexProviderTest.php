@@ -59,11 +59,7 @@ class MediaReindexProviderTest extends SuluTestCase
 
     public function testTotal(): void
     {
-        $this->createMedia('test123');
-
-        $this->entityManager->flush();
-
-        $this->assertSame(1, $this->provider->total());
+        $this->assertNull($this->provider->total());
     }
 
     public function testProvideAll(): void

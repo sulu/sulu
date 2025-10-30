@@ -55,9 +55,10 @@ final class ArticleReindexProvider implements ReindexProviderInterface
         $this->dimensionContentRepository = $dimensionContentRepository;
     }
 
-    public function total(): int
+    public function total(): ?int
     {
-        return $this->articleRepository->count([]);
+        // Todo: Add correct count for multiple locales.
+        return null;
     }
 
     public function provide(ReindexConfig $reindexConfig): \Generator

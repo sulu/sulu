@@ -47,9 +47,10 @@ final class MediaReindexProvider implements ReindexProviderInterface
         $this->mediaRepository = $repository;
     }
 
-    public function total(): int
+    public function total(): ?int
     {
-        return $this->mediaRepository->count([]);
+        // Todo: Add correct count for multiple locales.
+        return null;
     }
 
     public function provide(ReindexConfig $reindexConfig): \Generator

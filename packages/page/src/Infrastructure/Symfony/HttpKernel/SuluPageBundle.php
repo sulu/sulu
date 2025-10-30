@@ -653,6 +653,30 @@ final class SuluPageBundle extends AbstractBundle
                 ],
             );
         }
+
+        if ($builder->hasExtension('sulu_search')) {
+            $builder->prependExtensionConfig(
+                'sulu_search',
+                [
+                    'admin' => [
+                        'resources' => [
+                            PageInterface::RESOURCE_KEY => [
+                                'name' => 'sulu_page.pages',
+                                'icon' => 'su-document',
+                                'route' => [
+                                    'name' => PageAdmin::EDIT_FORM_VIEW,
+                                    'resultToRoute' => [
+                                        'id' => 'id',
+                                        'locale' => 'locale',
+                                    ],
+                                ],
+                                'securityContext' => PageAdmin::SECURITY_CONTEXT_GROUP, // Todo: Add correct permissions for webspaces.
+                            ],
+                        ],
+                    ],
+                ],
+            );
+        }
     }
 
     /**

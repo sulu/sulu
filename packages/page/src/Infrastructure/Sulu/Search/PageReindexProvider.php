@@ -57,7 +57,7 @@ final class PageReindexProvider implements ReindexProviderInterface
 
     public function total(): ?int
     {
-        // Todo: Add correct count because of multiple locales.
+        // Todo: Add correct count for multiple locales.
         return null;
     }
 
