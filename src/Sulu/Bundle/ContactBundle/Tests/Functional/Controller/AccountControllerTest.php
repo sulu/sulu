@@ -98,7 +98,7 @@ class AccountControllerTest extends SuluTestCase
         $this->client->jsonRequest(
             'GET',
             '/api/accounts?' . \http_build_query([
-                'flat' => true,
+                'flat' => 'true',
                 'ids' => \implode(',', $ids),
             ])
         );
@@ -131,7 +131,7 @@ class AccountControllerTest extends SuluTestCase
             'GET',
             '/api/accounts?' . \http_build_query(
                 [
-                    'flat' => true,
+                    'flat' => 'true',
                     'ids' => \implode(',', $ids),
                     'page' => 2,
                     'limit' => 10,
