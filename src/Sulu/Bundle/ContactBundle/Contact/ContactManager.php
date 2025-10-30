@@ -33,6 +33,7 @@ use Sulu\Bundle\ContactBundle\Entity\Email;
 use Sulu\Bundle\ContactBundle\Entity\Fax;
 use Sulu\Bundle\ContactBundle\Entity\Note;
 use Sulu\Bundle\ContactBundle\Entity\Phone;
+use Sulu\Bundle\ContactBundle\Entity\Position;
 use Sulu\Bundle\ContactBundle\Entity\SocialMediaProfile;
 use Sulu\Bundle\ContactBundle\Entity\Url;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
@@ -232,7 +233,7 @@ class ContactManager extends AbstractContactManager
          * to better reusability.
          */
 
-        $contactDetailsData = $this->getProperty($data, 'contactDetails', []);
+        $contactDetailsData = $data['contactDetails'] ?? [];
         $isNewContact = false;
 
         $contactModified = false;
@@ -243,51 +244,51 @@ class ContactManager extends AbstractContactManager
             if (!$contact) {
                 throw new EntityNotFoundException($this->contactRepository->getClassName(), $id);
             }
-            if (!$patch || $this->getProperty($data, 'account')) {
+            if (!$patch || ($data['account'] ?? null)) {
                 $this->setMainAccount($contact, $data);
                 $contactModified = true;
             }
-            if (!$patch || $this->getProperty($contactDetailsData, 'emails')) {
-                $this->processEmails($contact, $this->getProperty($contactDetailsData, 'emails', []));
+            if (!$patch || ($contactDetailsData['emails'] ?? null)) {
+                $this->processEmails($contact, $contactDetailsData['emails'] ?? []);
                 $contactModified = true;
             }
-            if (!$patch || $this->getProperty($contactDetailsData, 'phones')) {
-                $this->processPhones($contact, $this->getProperty($contactDetailsData, 'phones', []));
+            if (!$patch || ($contactDetailsData['phones'] ?? null)) {
+                $this->processPhones($contact, $contactDetailsData['phones'] ?? []);
                 $contactModified = true;
             }
-            if (!$patch || $this->getProperty($data, 'addresses')) {
-                $this->processAddresses($contact, $this->getProperty($data, 'addresses', []));
+            if (!$patch || ($data['addresses'] ?? null)) {
+                $this->processAddresses($contact, $data['addresses'] ?? []);
                 $contactModified = true;
             }
-            if (!$patch || $this->getProperty($data, 'notes')) {
-                $this->processNotes($contact, $this->getProperty($data, 'notes', []));
+            if (!$patch || ($data['notes'] ?? null)) {
+                $this->processNotes($contact, $data['notes'] ?? []);
                 $contactModified = true;
             }
-            if (!$patch || $this->getProperty($contactDetailsData, 'faxes')) {
-                $this->processFaxes($contact, $this->getProperty($contactDetailsData, 'faxes', []));
+            if (!$patch || ($contactDetailsData['faxes'] ?? null)) {
+                $this->processFaxes($contact, $contactDetailsData['faxes'] ?? []);
                 $contactModified = true;
             }
-            if (!$patch || $this->getProperty($contactDetailsData, 'socialMedia')) {
+            if (!$patch || ($contactDetailsData['socialMedia'] ?? null)) {
                 $this->processSocialMediaProfiles(
                     $contact,
-                    $this->getProperty($contactDetailsData, 'socialMedia', [])
+                    $contactDetailsData['socialMedia'] ?? []
                 );
                 $contactModified = true;
             }
-            if (!$patch || $this->getProperty($data, 'tags')) {
-                $this->processTags($contact, $this->getProperty($data, 'tags', []));
+            if (!$patch || ($data['tags'] ?? null)) {
+                $this->processTags($contact, $data['tags'] ?? []);
                 $contactModified = true;
             }
-            if (!$patch || $this->getProperty($contactDetailsData, 'websites')) {
-                $this->processUrls($contact, $this->getProperty($contactDetailsData, 'websites', []));
+            if (!$patch || ($contactDetailsData['websites'] ?? null)) {
+                $this->processUrls($contact, $contactDetailsData['websites'] ?? []);
                 $contactModified = true;
             }
-            if (!$patch || $this->getProperty($data, 'categories')) {
-                $this->processCategories($contact, $this->getProperty($data, 'categories', []));
+            if (!$patch || ($data['categories'] ?? null)) {
+                $this->processCategories($contact, $data['categories'] ?? []);
                 $contactModified = true;
             }
-            if (!$patch || $this->getProperty($data, 'bankAccounts')) {
-                $this->processBankAccounts($contact, $this->getProperty($data, 'bankAccounts', []));
+            if (!$patch || ($data['bankAccounts'] ?? null)) {
+                $this->processBankAccounts($contact, $data['bankAccounts'] ?? []);
                 $contactModified = true;
             }
         } else {
@@ -295,35 +296,35 @@ class ContactManager extends AbstractContactManager
             $isNewContact = true;
         }
 
-        if (!$patch || null !== $this->getProperty($data, 'firstName')) {
-            $contact->setFirstName($this->getProperty($data, 'firstName'));
+        if (!$patch || null !== ($data['firstName'] ?? null)) {
+            $contact->setFirstName($data['firstName'] ?? null);
             $contactModified = true;
         }
-        if (!$patch || null !== $this->getProperty($data, 'lastName')) {
-            $contact->setLastName($this->getProperty($data, 'lastName'));
+        if (!$patch || null !== ($data['lastName'] ?? null)) {
+            $contact->setLastName($data['lastName'] ?? null);
             $contactModified = true;
         }
-        if (!$patch || null !== $this->getProperty($data, 'avatar')) {
-            $this->setAvatar($contact, $this->getProperty($data, 'avatar'));
+        if (!$patch || null !== ($data['avatar'] ?? null)) {
+            $this->setAvatar($contact, $data['avatar'] ?? null);
             $contactModified = true;
         }
-        if (!$patch || null !== $this->getProperty($data, 'note')) {
-            $contact->setNote($this->getProperty($data, 'note'));
+        if (!$patch || null !== ($data['note'] ?? null)) {
+            $contact->setNote($data['note'] ?? null);
             $contactModified = true;
         }
-        if (!$patch || null !== $this->getProperty($data, 'medias')) {
+        if (!$patch || null !== ($data['medias'] ?? null)) {
             /** @var int[] $medias */
-            $medias = $this->getProperty($data, 'medias', []);
+            $medias = $data['medias'] ?? [];
             $this->setMedias($contact, $medias);
         }
 
-        if (!$patch || $this->getProperty($data, 'title')) {
-            $this->setTitleOnContact($contact, $this->getProperty($data, 'title'));
+        if (!$patch || ($data['title'] ?? null)) {
+            $this->setTitleOnContact($contact, $data['title'] ?? null);
             $contactModified = true;
         }
 
-        if (!$patch || $this->getProperty($data, 'formOfAddress')) {
-            $formOfAddress = $this->getProperty($data, 'formOfAddress');
+        if (!$patch || ($data['formOfAddress'] ?? null)) {
+            $formOfAddress = $data['formOfAddress'] ?? null;
 
             if (\is_numeric($formOfAddress) || \is_string($formOfAddress)) {
                 $contact->setFormOfAddress($formOfAddress);
@@ -341,13 +342,13 @@ class ContactManager extends AbstractContactManager
             }
         }
 
-        if (!$patch || $this->getProperty($data, 'salutation')) {
-            $contact->setSalutation($this->getProperty($data, 'salutation'));
+        if (!$patch || ($data['salutation'] ?? null)) {
+            $contact->setSalutation($data['salutation'] ?? null);
             $contactModified = true;
         }
 
-        if (!$patch || $this->getProperty($data, 'birthday')) {
-            $birthday = $this->getProperty($data, 'birthday');
+        if (!$patch || ($data['birthday'] ?? null)) {
+            $birthday = $data['birthday'] ?? null;
             if (!empty($birthday)) {
                 $birthday = new \DateTime($birthday);
             } else {
@@ -358,7 +359,7 @@ class ContactManager extends AbstractContactManager
         }
 
         if (!$id) {
-            $parentData = $this->getProperty($data, 'account');
+            $parentData = $data['account'] ?? null;
             if (null != $parentData
                 && null != $parentData['id']
                 && 'null' != $parentData['id']
@@ -374,11 +375,7 @@ class ContactManager extends AbstractContactManager
                 }
 
                 // Set position on contact
-                $positionId = $this->getProperty($data, 'position');
-                $position = null;
-                if ($positionId) {
-                    $position = $this->getPosition($positionId);
-                }
+                $position = $this->getPosition($data['position'] ?? null);
 
                 // create new account-contact relation
                 $this->createMainAccountContact(
@@ -389,7 +386,7 @@ class ContactManager extends AbstractContactManager
             }
             // add urls, phones, emails, tags, bankAccounts, notes, addresses,..
             $this->addNewContactRelations($contact, $data);
-            $this->processCategories($contact, $this->getProperty($data, 'categories', []));
+            $this->processCategories($contact, $data['categories'] ?? []);
         }
 
         $this->em->persist($contact);
@@ -540,10 +537,7 @@ class ContactManager extends AbstractContactManager
             }
 
             // get position
-            $position = null;
-            if (isset($data['position'])) {
-                $position = $this->getPosition($data['position']);
-            }
+            $position = $this->getPosition($data['position'] ?? null);
 
             // check if relation between account and contact already exists
             $mainAccountContact = $this->getMainAccountContact($contact);
@@ -602,8 +596,8 @@ class ContactManager extends AbstractContactManager
     private function setAvatar(ContactInterface $contact, $avatar)
     {
         $mediaEntity = null;
-        if (\is_array($avatar) && $this->getProperty($avatar, 'id')) {
-            $mediaId = $this->getProperty($avatar, 'id');
+        if (\is_array($avatar) && ($avatar['id'] ?? null)) {
+            $mediaId = $avatar['id'] ?? null;
             $mediaEntity = $this->mediaRepository->findMediaById($mediaId);
 
             if (!$mediaEntity) {
@@ -682,24 +676,6 @@ class ContactManager extends AbstractContactManager
     }
 
     /**
-     * Return property for key or given default value.
-     *
-     * @param array $data
-     * @param string $key
-     * @param string $default
-     *
-     * @return string|null
-     */
-    private function getProperty($data, $key, $default = null)
-    {
-        if (\array_key_exists($key, $data)) {
-            return $data[$key];
-        }
-
-        return $default;
-    }
-
-    /**
      * @param ContactInterface $contact
      * @param int $titleId
      */
@@ -727,11 +703,13 @@ class ContactManager extends AbstractContactManager
 
     /**
      * Get a position object.
-     *
-     * @param int $id The position id
      */
-    public function getPosition($id)
+    public function getPosition(?int $id): ?Position
     {
+        if (null === $id) {
+            return null;
+        }
+
         return $this->em->getRepository(self::$positionEntityName)->find($id);
     }
 }

@@ -571,10 +571,10 @@ abstract class AbstractContactManager implements ContactManagerInterface
      */
     public function addNewContactRelations($contact, $data)
     {
-        $contactDetailsData = $this->getProperty($data, 'contactDetails') ?? [];
+        $contactDetailsData = $data['contactDetails'] ?? null ?? [];
 
         // urls
-        $urls = $this->getProperty($contactDetailsData, 'websites');
+        $urls = $contactDetailsData['websites'] ?? null;
         if (!empty($urls)) {
             foreach ($urls as $urlData) {
                 if (!empty($urlData['website'])) {
@@ -585,7 +585,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
         }
 
         //faxes
-        $faxes = $this->getProperty($contactDetailsData, 'faxes');
+        $faxes = $contactDetailsData['faxes'] ?? null;
         if (!empty($faxes)) {
             foreach ($faxes as $faxData) {
                 if (!empty($faxData['fax'])) {
@@ -596,7 +596,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
         }
 
         // Social media profiles.
-        $socialMediaProfiles = $this->getProperty($contactDetailsData, 'socialMedia');
+        $socialMediaProfiles = $contactDetailsData['socialMedia'] ?? null;
         if (!empty($socialMediaProfiles)) {
             foreach ($socialMediaProfiles as $socialMediaProfileData) {
                 $this->addSocialMediaProfile($contact, $socialMediaProfileData);
@@ -604,7 +604,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
         }
 
         // emails
-        $emails = $this->getProperty($contactDetailsData, 'emails');
+        $emails = $contactDetailsData['emails'] ?? null;
         if (!empty($emails)) {
             foreach ($emails as $emailData) {
                 if (!empty($emailData['email'])) {
@@ -615,7 +615,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
         }
 
         // phones
-        $phones = $this->getProperty($contactDetailsData, 'phones');
+        $phones = $contactDetailsData['phones'] ?? null;
         if (!empty($phones)) {
             foreach ($phones as $phoneData) {
                 if (!empty($phoneData['phone'])) {
@@ -626,7 +626,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
         }
 
         // addresses
-        $addresses = $this->getProperty($data, 'addresses');
+        $addresses = $data['addresses'] ?? null;
         if (!empty($addresses)) {
             foreach ($addresses as $addressData) {
                 $address = $this->createAddress($addressData, $isMain);
@@ -637,7 +637,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
         $this->setMainForCollection($this->getAddressRelations($contact));
 
         // notes
-        $notes = $this->getProperty($data, 'notes');
+        $notes = $data['notes'] ?? null;
         if (!empty($notes)) {
             foreach ($notes as $noteData) {
                 $this->addNote($contact, $noteData);
@@ -645,7 +645,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
         }
 
         // handle tags
-        $tags = $this->getProperty($data, 'tags');
+        $tags = $data['tags'] ?? null;
         if (!empty($tags)) {
             foreach ($tags as $tag) {
                 $this->addTag($contact, $tag);
@@ -653,8 +653,8 @@ abstract class AbstractContactManager implements ContactManagerInterface
         }
 
         // process details
-        if (null !== $this->getProperty($data, 'bankAccounts')) {
-            $this->processBankAccounts($contact, $this->getProperty($data, 'bankAccounts', []));
+        if (null !== ($data['bankAccounts'] ?? null)) {
+            $this->processBankAccounts($contact, $data['bankAccounts'] ?? []);
         }
     }
 
