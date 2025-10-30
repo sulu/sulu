@@ -682,7 +682,7 @@ class AccountController extends AbstractRestController implements SecuredControl
 
         $mainContact = null;
         if (null !== ($mainContactRequest = $request->get('mainContact'))) {
-            $mainContact = $entityManager->getRepository($this->contactClass)->find($mainContactRequest['id']);
+            $mainContact = $entityManager->getRepository($this->contactClass)->find($mainContactRequest);
             $accountModified = true;
         }
 
