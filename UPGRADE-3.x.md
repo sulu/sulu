@@ -1083,6 +1083,32 @@ As part of the update of flysystem the support for the guzzle client package `gu
 
 The `GoogleGeolocator` and the `NominatimGeolocator` no longer support the Guzzle client and require a `Symfony\HttpClient` client instead.
 
+
+### Removing custom KernelBrowser
+
+The custom browser class Sulu\Bundle\TestBundle\Kernel\SuluKernelBrowser has been removed in favour of the default Symfony one.
+This is an example on how to do that.
+
+```diff
+ $this->client->jsonRequest(
+     'GET',
+-    '/some-endpoint',
+-    [ 'some_param' => '12345' ],
++    '/some-endpoint?some_param=12345',
+ );
+```
+
+If your endpoint requires several parameters, you can compose the query string using the native function `http_build_query`:
+
+```php
+$param = [
+    'some_param' => '12345'
+];
+$this->client->jsonRequest('GET', '/some-endpoint?'. http_build_query($param));
+```
+
+Please also note that if you have a 'GET' request that has a request body that these parameters will be ignored.
+
 ### Adjusted the ReferenceContext for Reference Entities
 
 The `referenceContext` of the `Reference` entity has been adjusted to be consistent with the DimensionContentInterface::STAGE_DRAFT
