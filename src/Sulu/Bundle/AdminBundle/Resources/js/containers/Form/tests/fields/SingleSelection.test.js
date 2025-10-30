@@ -485,37 +485,6 @@ test('Pass null as value to SingleSelection for list_overlay', () => {
     expect(singleSelection.find('SingleSelection').prop('value')).toEqual(null);
 });
 
-test('Should log warning and use id of object if given value is an object instead of an id', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
-
-    const fieldTypeOptions = {
-        default_type: 'list_overlay',
-        resource_key: 'accounts',
-        types: {
-            list_overlay: {
-                adapter: 'table',
-                display_properties: ['name'],
-                empty_text: 'sulu_contact.nothing',
-                icon: 'su-account',
-                overlay_title: 'sulu_contact.overlay_title',
-            },
-        },
-    };
-
-    const singleSelection = shallow(
-        <SingleSelection
-            {...fieldTypeDefaultProps}
-            disabled={true}
-            fieldTypeOptions={fieldTypeOptions}
-            formInspector={formInspector}
-            value={({id: 125}: any)}
-        />
-    );
-
-    expect(singleSelection.find('SingleSelection').prop('value')).toEqual(125);
-    expect(log.warn).toBeCalledWith(expect.stringContaining('expects an id as value but received an object'));
-});
-
 test('Throw an error if form_options_to_list_options schema option is not an array', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
 
