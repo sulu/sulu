@@ -11469,7 +11469,7 @@ parameters:
 		-
 			message: '#^Cannot call method getId\(\) on mixed\.$#'
 			identifier: method.nonObject
-			count: 4
+			count: 5
 			path: src/Sulu/Bundle/ContactBundle/Api/Contact.php
 
 		-
@@ -11817,12 +11817,6 @@ parameters:
 		-
 			message: '#^Method Sulu\\Bundle\\ContactBundle\\Api\\Contact\:\:toArray\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Api/Contact.php
-
-		-
-			message: '#^Parameter \#1 \$account of class Sulu\\Bundle\\ContactBundle\\Api\\Account constructor expects Sulu\\Bundle\\ContactBundle\\Entity\\AccountInterface, mixed given\.$#'
-			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Api/Contact.php
 
@@ -14143,12 +14137,6 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Contact/ContactManager.php
 
 		-
-			message: '#^Cannot access offset ''id'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/ContactManager.php
-
-		-
 			message: '#^Cannot call method hasRelations\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -14851,18 +14839,6 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Controller/AccountController.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Controller\\AccountController\:\:setParent\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Controller/AccountController.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Controller\\AccountController\:\:setParent\(\) has parameter \$parentData with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Controller/AccountController.php
-
-		-
 			message: '#^Negated boolean expression is always false\.$#'
 			identifier: booleanNot.alwaysFalse
 			count: 1
@@ -15016,12 +14992,6 @@ parameters:
 			message: '#^Parameter \#1 \$number of method Sulu\\Bundle\\ContactBundle\\Entity\\AccountInterface\:\:setNumber\(\) expects string\|null, mixed given\.$#'
 			identifier: argument.type
 			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Controller/AccountController.php
-
-		-
-			message: '#^Parameter \#1 \$parentData of method Sulu\\Bundle\\ContactBundle\\Controller\\AccountController\:\:setParent\(\) expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 2
 			path: src/Sulu/Bundle/ContactBundle/Controller/AccountController.php
 
 		-

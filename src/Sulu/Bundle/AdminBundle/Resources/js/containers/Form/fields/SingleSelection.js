@@ -145,11 +145,7 @@ class SingleSelection extends React.Component<Props>
         }
 
         if (this.value !== selectedItem?.id) {
-            if (this.useDeprecatedObjectDataFormat) {
-                this.handleChange((selectedItem: any));
-            } else {
-                this.handleChange(selectedItem?.id);
-            }
+            this.handleChange(selectedItem?.id);
         }
     };
 
@@ -161,26 +157,7 @@ class SingleSelection extends React.Component<Props>
     };
 
     @computed get value(): Value {
-        const {value, dataPath} = this.props;
-
-        if (value && typeof value === 'object') {
-            if (this.type === 'auto_complete' && this.useDeprecatedObjectDataFormat) {
-                return value.id;
-            }
-
-            log.warn(
-                'The "SingleSelection" field with the path "' + dataPath + '" expects an id as value but '
-                + 'received an object instead. Is it possible that your API returns a serialized object?'
-                + '\n\nThe Sulu form view expects that your API returns the data in the same format as it is sent '
-                + 'to the server when submitting the form. '
-                + '\nSulu will try to extract the id from the given object heuristically. '
-                + 'This decreases performance and might lead to errors or other unexpected behaviour.'
-            );
-
-            return value.id;
-        }
-
-        return value;
+        return this.props.value;
     }
 
     @computed get type() {
@@ -232,26 +209,6 @@ class SingleSelection extends React.Component<Props>
         } = this.props;
 
         return resultToView;
-    }
-
-    @computed get useDeprecatedObjectDataFormat() {
-        const {
-            schemaOptions: {
-                use_deprecated_object_data_format: {
-                    value: useDeprecatedObjectDataFormat = false,
-                } = {},
-            } = {},
-        } = this.props;
-
-        if (useDeprecatedObjectDataFormat) {
-            // @deprecated
-            log.warn(
-                'The "use_deprecated_object_data_format" param is deprecated since version 2.3 and will be removed. ' +
-                'You should adjust your API to process an id instead of a serialized object.'
-            );
-        }
-
-        return useDeprecatedObjectDataFormat;
     }
 
     handleItemClick = (itemId: Value, item: ?Object) => {

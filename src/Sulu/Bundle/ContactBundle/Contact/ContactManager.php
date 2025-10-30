@@ -33,6 +33,7 @@ use Sulu\Bundle\ContactBundle\Entity\Email;
 use Sulu\Bundle\ContactBundle\Entity\Fax;
 use Sulu\Bundle\ContactBundle\Entity\Note;
 use Sulu\Bundle\ContactBundle\Entity\Phone;
+use Sulu\Bundle\ContactBundle\Entity\Position;
 use Sulu\Bundle\ContactBundle\Entity\SocialMediaProfile;
 use Sulu\Bundle\ContactBundle\Entity\Url;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
@@ -358,27 +359,16 @@ class ContactManager extends AbstractContactManager
         }
 
         if (!$id) {
-            $parentData = $this->getProperty($data, 'account');
-            if (null != $parentData
-                && null != $parentData['id']
-                && 'null' != $parentData['id']
-                && '' != $parentData['id']
-            ) {
+            $parentData = $data['account'] ?? null;
+            if (null !== $parentData) {
                 /** @var AccountInterface $parent */
-                $parent = $this->accountRepository->findAccountById($parentData['id']);
+                $parent = $this->accountRepository->findAccountById($parentData);
                 if (!$parent) {
-                    throw new EntityNotFoundException(
-                        self::$accountContactEntityName,
-                        $parentData['id']
-                    );
+                    throw new EntityNotFoundException(self::$accountContactEntityName, $parentData);
                 }
 
                 // Set position on contact
-                $positionId = $this->getProperty($data, 'position');
-                $position = null;
-                if ($positionId) {
-                    $position = $this->getPosition($positionId);
-                }
+                $position = $this->getPosition($this->getProperty($data, 'position'));
 
                 // create new account-contact relation
                 $this->createMainAccountContact(
@@ -525,19 +515,12 @@ class ContactManager extends AbstractContactManager
     }
 
     /**
-     * @param array $data
-     *
      * @throws EntityNotFoundException
      */
-    public function setMainAccount(ContactInterface $contact, $data)
+    public function setMainAccount(ContactInterface $contact, array $data)
     {
-        // set account relation
-        if (isset($data['account'])
-            && isset($data['account']['id'])
-            && 'null' != $data['account']['id']
-        ) {
-            $accountId = $data['account']['id'];
-
+        $accountId = $data['account'] ?? null;
+        if (null !== $accountId) {
             $account = $this->accountRepository->findAccountById($accountId);
 
             if (!$account) {
@@ -545,10 +528,7 @@ class ContactManager extends AbstractContactManager
             }
 
             // get position
-            $position = null;
-            if (isset($data['position'])) {
-                $position = $this->getPosition($data['position']);
-            }
+            $position = $this->getPosition($this->getProperty($data, 'position'));
 
             // check if relation between account and contact already exists
             $mainAccountContact = $this->getMainAccountContact($contact);
@@ -730,13 +710,15 @@ class ContactManager extends AbstractContactManager
         return $this->contactRepository->getClassName();
     }
 
-    /**
-     * Get a position object.
-     *
-     * @param int $id The position id
-     */
-    public function getPosition($id)
+    public function getPosition(?string $id): ?Position
     {
-        return $this->em->getRepository(self::$positionEntityName)->find($id);
+        if (null === $id) {
+            return null;
+        }
+
+        /** @var Position|null $position */
+        $position = $this->em->getRepository(self::$positionEntityName)->find($id);
+
+        return $position;
     }
 }

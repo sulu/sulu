@@ -407,7 +407,7 @@ class AccountControllerTest extends SuluTestCase
             [
                 'name' => 'ExampleCompany',
                 'note' => 'A small notice',
-                'parent' => ['id' => $account->getId()],
+                'parent' => $account->getId(),
                 'logo' => ['id' => $logo->getId()],
                 'contactDetails' => [
                     'websites' => [
@@ -1680,7 +1680,7 @@ class AccountControllerTest extends SuluTestCase
             '/api/accounts',
             [
                 'name' => 'ExampleCompany',
-                'parent' => ['id' => $account->getId()],
+                'parent' => $account->getId(),
                 'contactDetails' => [
                     'urls' => [
                         [
@@ -1760,7 +1760,7 @@ class AccountControllerTest extends SuluTestCase
             [
                 'id' => $account2Id,
                 'name' => 'ExampleCompany 222',
-                'parent' => ['id' => null],
+                'parent' => null,
                 'contactDetails' => [
                     'urls' => [
                         [
@@ -1851,7 +1851,7 @@ class AccountControllerTest extends SuluTestCase
             '/api/accounts',
             [
                 'name' => 'ExampleCompany',
-                'parent' => ['id' => $account->getId()],
+                'parent' => $account->getId(),
                 'urls' => [
                     [
                         'url' => 'http://example.company.com',

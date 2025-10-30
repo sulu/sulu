@@ -17,6 +17,7 @@ use JMS\Serializer\Annotation\SerializedName;
 use JMS\Serializer\Annotation\VirtualProperty;
 use Sulu\Bundle\CategoryBundle\Api\Category;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface as CategoryEntity;
+use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
 use Sulu\Bundle\ContactBundle\Entity\BankAccount as BankAccountEntity;
 use Sulu\Bundle\ContactBundle\Entity\ContactAddress as ContactAddressEntity;
 use Sulu\Bundle\ContactBundle\Entity\ContactInterface as ContactEntity;
@@ -845,18 +846,26 @@ class Contact extends ApiWrapper
 
     /**
      * Returns main account.
+     *
+     * @return Account|null
      */
-    #[VirtualProperty]
-    #[SerializedName('account')]
-    #[Groups(['fullContact'])]
     public function getAccount()
     {
+        /** @var AccountInterface|null $mainAccount */
         $mainAccount = $this->entity->getMainAccount();
         if (!\is_null($mainAccount)) {
             return new Account($mainAccount, $this->locale);
         }
 
-        return;
+        return null;
+    }
+
+    #[VirtualProperty]
+    #[SerializedName('account')]
+    #[Groups(['fullContact'])]
+    public function getAccountId(): ?int
+    {
+        return $this->getAccount()?->getId();
     }
 
     /**
