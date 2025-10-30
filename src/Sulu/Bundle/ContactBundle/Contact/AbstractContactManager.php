@@ -253,11 +253,9 @@ abstract class AbstractContactManager implements ContactManagerInterface
     /**
      * creates a new main Account Contacts relation.
      *
-     * @param Position $position
-     *
      * @return AccountContact
      */
-    public function createMainAccountContact(ContactInterface $contact, AccountInterface $account, $position = null)
+    public function createMainAccountContact(ContactInterface $contact, AccountInterface $account, ?Position $position = null)
     {
         $accountContact = new AccountContact();
         $accountContact->setAccount($account);
@@ -1542,7 +1540,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
     /**
      * Adds a new tag to the given contact and persist it with the given object manager.
      *
-     * @param Contact $contact
+     * @param DoctrineEntity $contact
      * @param string $data
      *
      * @return bool True if there was no error, otherwise false

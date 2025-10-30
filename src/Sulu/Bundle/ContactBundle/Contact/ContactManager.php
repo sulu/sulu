@@ -710,15 +710,15 @@ class ContactManager extends AbstractContactManager
         return $this->contactRepository->getClassName();
     }
 
-    /**
-     * Get a position object.
-     */
-    public function getPosition(?int $id): ?Position
+    public function getPosition($id): ?Position
     {
         if (null === $id) {
             return null;
         }
 
-        return $this->em->getRepository(self::$positionEntityName)->find($id);
+        /** @var Position|null $position */
+        $position = $this->em->getRepository(self::$positionEntityName)->find($id);
+
+        return $position;
     }
 }
