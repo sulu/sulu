@@ -27,12 +27,12 @@ use Sulu\Page\Domain\Event\PageTranslationAddedEvent;
 use Sulu\Page\Domain\Event\PageTranslationRemovedEvent;
 use Sulu\Page\Domain\Model\Page;
 use Sulu\Page\Domain\Model\PageInterface;
-use Sulu\Page\Infrastructure\Sulu\Search\PageIndexListener;
+use Sulu\Page\Infrastructure\Sulu\Search\AdminPageIndexListener;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\MessageBusInterface;
 
-#[CoversClass(PageIndexListener::class)]
-class PageIndexListenerTest extends TestCase
+#[CoversClass(AdminPageIndexListener::class)]
+class AdminPageIndexListenerTest extends TestCase
 {
     use ProphecyTrait;
     use SetGetPrivatePropertyTrait;
@@ -41,12 +41,12 @@ class PageIndexListenerTest extends TestCase
      * @var ObjectProphecy<MessageBusInterface>
      */
     private ObjectProphecy $messageBus;
-    private PageIndexListener $listener;
+    private AdminPageIndexListener $listener;
 
     protected function setUp(): void
     {
         $this->messageBus = $this->prophesize(MessageBusInterface::class);
-        $this->listener = new PageIndexListener($this->messageBus->reveal());
+        $this->listener = new AdminPageIndexListener($this->messageBus->reveal());
     }
 
     public function testOnPageChangedWithPageCreatedEvent(): void

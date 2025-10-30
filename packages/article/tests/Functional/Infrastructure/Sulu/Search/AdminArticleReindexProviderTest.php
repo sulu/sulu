@@ -16,7 +16,7 @@ namespace Sulu\Article\Tests\Functional\Infrastructure\Sulu\Search;
 use CmsIg\Seal\Reindex\ReindexConfig;
 use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Article\Domain\Model\ArticleInterface;
-use Sulu\Article\Infrastructure\Sulu\Search\ArticleReindexProvider;
+use Sulu\Article\Infrastructure\Sulu\Search\AdminArticleReindexProvider;
 use Sulu\Article\Tests\Traits\CreateArticleTrait;
 use Sulu\Bundle\TestBundle\Testing\SetGetPrivatePropertyTrait;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
@@ -33,24 +33,24 @@ use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
  *     authored?: string|null,
  * }
  */
-class ArticleReindexProviderTest extends SuluTestCase
+class AdminArticleReindexProviderTest extends SuluTestCase
 {
     use SetGetPrivatePropertyTrait;
     use CreateArticleTrait;
 
     private EntityManagerInterface $entityManager;
-    private ArticleReindexProvider $provider;
+    private AdminArticleReindexProvider $provider;
 
     protected function setUp(): void
     {
         $this->entityManager = $this->getEntityManager();
-        $this->provider = new ArticleReindexProvider($this->entityManager);
+        $this->provider = new AdminArticleReindexProvider($this->entityManager);
         $this->purgeDatabase();
     }
 
     public function testGetIndex(): void
     {
-        $this->assertSame('admin', ArticleReindexProvider::getIndex());
+        $this->assertSame('admin', AdminArticleReindexProvider::getIndex());
     }
 
     public function testTotal(): void

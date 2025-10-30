@@ -15,24 +15,21 @@ namespace Sulu\Bundle\ContactBundle\Tests\Functional\Infrastructure\Sulu\Search;
 
 use CmsIg\Seal\Reindex\ReindexConfig;
 use Doctrine\ORM\EntityManagerInterface;
-use Sulu\Bundle\ContactBundle\Entity\Contact;
-use Sulu\Bundle\ContactBundle\Entity\ContactInterface;
-use Sulu\Bundle\ContactBundle\Infrastructure\Sulu\Search\ContactReindexProvider;
+use Sulu\Bundle\ContactBundle\Entity\Account;
+use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
+use Sulu\Bundle\ContactBundle\Infrastructure\Sulu\Search\AdminAccountReindexProvider;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\CollectionType;
 use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Entity\MediaType;
-use Sulu\Bundle\TestBundle\Testing\SetGetPrivatePropertyTrait;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
-class ContactReindexProviderTest extends SuluTestCase
+class AdminAccountReindexProviderTest extends SuluTestCase
 {
-    use SetGetPrivatePropertyTrait;
-
     private EntityManagerInterface $entityManager;
-    private ContactReindexProvider $provider;
+    private AdminAccountReindexProvider $provider;
 
     private MediaType $imageType;
 
@@ -41,7 +38,7 @@ class ContactReindexProviderTest extends SuluTestCase
     protected function setUp(): void
     {
         $this->entityManager = $this->getEntityManager();
-        $this->provider = new ContactReindexProvider($this->entityManager);
+        $this->provider = new AdminAccountReindexProvider($this->entityManager);
         $this->purgeDatabase();
 
         $this->imageType = new MediaType();
@@ -64,13 +61,13 @@ class ContactReindexProviderTest extends SuluTestCase
 
     public function testGetIndex(): void
     {
-        $this->assertSame('admin', ContactReindexProvider::getIndex());
+        $this->assertSame('admin', AdminAccountReindexProvider::getIndex());
     }
 
     public function testTotal(): void
     {
-        $this->createContact();
-        $this->createContact();
+        $this->createAccount('Count 1');
+        $this->createAccount('Count 2');
 
         $this->entityManager->flush();
 
@@ -79,8 +76,8 @@ class ContactReindexProviderTest extends SuluTestCase
 
     public function testProvideAll(): void
     {
-        $contact1 = $this->createContact('Tom', 'Turbo', 'avatar1');
-        $contact2 = $this->createContact();
+        $account1 = $this->createAccount('Test Account 1', 'Media 1');
+        $account2 = $this->createAccount('Test Account 2');
 
         $this->entityManager->flush();
 
@@ -88,16 +85,16 @@ class ContactReindexProviderTest extends SuluTestCase
         $changedDateString2 = '2024-06-01 15:30:00';
 
         $connection = self::getEntityManager()->getConnection();
-        $sql = 'UPDATE co_contacts SET changed = :changed WHERE id = :id';
+        $sql = 'UPDATE co_accounts SET changed = :changed WHERE id = :id';
 
         $connection->executeStatement($sql, [
             'changed' => $changedDateString1,
-            'id' => $contact1->getId(),
+            'id' => $account1->getId(),
         ]);
 
         $connection->executeStatement($sql, [
             'changed' => $changedDateString2,
-            'id' => $contact2->getId(),
+            'id' => $account2->getId(),
         ]);
 
         $config = ReindexConfig::create()->withIndex('admin');
@@ -108,22 +105,22 @@ class ContactReindexProviderTest extends SuluTestCase
         $this->assertSame(
             [
                 [
-                    'id' => ContactInterface::RESOURCE_KEY . '::' . $contact1->getId(),
-                    'resourceKey' => ContactInterface::RESOURCE_KEY,
-                    'resourceId' => (string) $contact1->getId(),
-                    'mediaId' => (string) $contact1->getAvatar()?->getId(),
+                    'id' => AccountInterface::RESOURCE_KEY . '::' . $account1->getId(),
+                    'resourceKey' => AccountInterface::RESOURCE_KEY,
+                    'resourceId' => (string) $account1->getId(),
+                    'mediaId' => (string) $account1->getLogo()?->getId(),
                     'changedAt' => (new \DateTimeImmutable($changedDateString1))->format('c'),
                     'createdAt' => (new \DateTimeImmutable('2000-01-01 12:00:00'))->format('c'),
-                    'title' => $contact1->getFullName(),
+                    'title' => $account1->getName(),
                 ],
                 [
-                    'id' => ContactInterface::RESOURCE_KEY . '::' . $contact2->getId(),
-                    'resourceKey' => ContactInterface::RESOURCE_KEY,
-                    'resourceId' => (string) $contact2->getId(),
+                    'id' => AccountInterface::RESOURCE_KEY . '::' . $account2->getId(),
+                    'resourceKey' => AccountInterface::RESOURCE_KEY,
+                    'resourceId' => (string) $account2->getId(),
                     'mediaId' => '',
                     'changedAt' => (new \DateTimeImmutable($changedDateString2))->format('c'),
                     'createdAt' => (new \DateTimeImmutable('2000-01-01 12:00:00'))->format('c'),
-                    'title' => $contact2->getFullName(),
+                    'title' => $account2->getName(),
                 ],
             ],
             [...$results],
@@ -132,15 +129,15 @@ class ContactReindexProviderTest extends SuluTestCase
 
     public function testProvideWithSpecificIdentifiers(): void
     {
-        $contact1 = $this->createContact();
-        $contact2 = $this->createContact('Fritz', 'Fantom');
-        $contact3 = $this->createContact('Thomas', 'Brezina');
+        $account1 = $this->createAccount('Account One');
+        $account2 = $this->createAccount('Account Two');
+        $account3 = $this->createAccount('Account Three');
 
         $this->entityManager->flush();
 
         $identifiers = [
-            ContactInterface::RESOURCE_KEY . '::' . $contact1->getId(),
-            ContactInterface::RESOURCE_KEY . '::' . $contact3->getId(),
+            AccountInterface::RESOURCE_KEY . '::' . $account1->getId(),
+            AccountInterface::RESOURCE_KEY . '::' . $account3->getId(),
         ];
 
         $config = ReindexConfig::create()
@@ -152,26 +149,25 @@ class ContactReindexProviderTest extends SuluTestCase
         $this->assertCount(2, $results);
 
         $resultTitles = \array_column($results, 'title');
-        $this->assertContains('Tom Turbo', $resultTitles);
-        $this->assertContains('Thomas Brezina', $resultTitles);
-        $this->assertNotContains('Fritz Fantom', $resultTitles);
+        $this->assertContains('Account One', $resultTitles);
+        $this->assertContains('Account Three', $resultTitles);
+        $this->assertNotContains('Account Two', $resultTitles);
     }
 
-    private function createContact(string $firstName = 'Tom', string $lastName = 'Turbo', ?string $avatarName = null): Contact
+    private function createAccount(string $name, ?string $mediaName = null): Account
     {
-        $contact = new Contact();
-        $contact->setFirstName($firstName);
-        $contact->setLastName($lastName);
-        $contact->setCreated(new \DateTimeImmutable('2000-01-01 12:00:00'));
+        $account = new Account();
+        $account->setName($name);
+        $account->setCreated(new \DateTimeImmutable('2000-01-01 12:00:00'));
 
-        if (null !== $avatarName) {
-            $media = $this->createMedia($avatarName);
-            $contact->setAvatar($media);
+        if ($mediaName) {
+            $media = $this->createMedia($mediaName);
+            $account->setLogo($media);
         }
 
-        $this->entityManager->persist($contact);
+        $this->entityManager->persist($account);
 
-        return $contact;
+        return $account;
     }
 
     private function createMedia(string $name): Media

@@ -27,12 +27,12 @@ use Sulu\Snippet\Domain\Event\SnippetTranslationAddedEvent;
 use Sulu\Snippet\Domain\Event\SnippetTranslationRemovedEvent;
 use Sulu\Snippet\Domain\Model\Snippet;
 use Sulu\Snippet\Domain\Model\SnippetInterface;
-use Sulu\Snippet\Infrastructure\Sulu\Search\SnippetIndexListener;
+use Sulu\Snippet\Infrastructure\Sulu\Search\AdminSnippetIndexListener;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\MessageBusInterface;
 
-#[CoversClass(SnippetIndexListener::class)]
-class SnippetIndexListenerTest extends TestCase
+#[CoversClass(AdminSnippetIndexListener::class)]
+class AdminSnippetIndexListenerTest extends TestCase
 {
     use ProphecyTrait;
     use SetGetPrivatePropertyTrait;
@@ -41,12 +41,12 @@ class SnippetIndexListenerTest extends TestCase
      * @var ObjectProphecy<MessageBusInterface>
      */
     private ObjectProphecy $messageBus;
-    private SnippetIndexListener $listener;
+    private AdminSnippetIndexListener $listener;
 
     protected function setUp(): void
     {
         $this->messageBus = $this->prophesize(MessageBusInterface::class);
-        $this->listener = new SnippetIndexListener($this->messageBus->reveal());
+        $this->listener = new AdminSnippetIndexListener($this->messageBus->reveal());
     }
 
     public function testOnSnippetChangedWithSnippetCreatedEvent(): void

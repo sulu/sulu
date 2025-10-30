@@ -26,13 +26,13 @@ use Sulu\Bundle\CategoryBundle\Domain\Event\CategoryTranslationAddedEvent;
 use Sulu\Bundle\CategoryBundle\Entity\Category;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslation;
-use Sulu\Bundle\CategoryBundle\Infrastructure\Sulu\Search\CategoryIndexListener;
+use Sulu\Bundle\CategoryBundle\Infrastructure\Sulu\Search\AdminCategoryIndexListener;
 use Sulu\Bundle\TestBundle\Testing\SetGetPrivatePropertyTrait;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\MessageBusInterface;
 
-#[CoversClass(CategoryIndexListener::class)]
-class CategoryIndexListenerTest extends TestCase
+#[CoversClass(AdminCategoryIndexListener::class)]
+class AdminCategoryIndexListenerTest extends TestCase
 {
     use ProphecyTrait;
     use SetGetPrivatePropertyTrait;
@@ -41,12 +41,12 @@ class CategoryIndexListenerTest extends TestCase
      * @var ObjectProphecy<MessageBusInterface>
      */
     private ObjectProphecy $messageBus;
-    private CategoryIndexListener $listener;
+    private AdminCategoryIndexListener $listener;
 
     protected function setUp(): void
     {
         $this->messageBus = $this->prophesize(MessageBusInterface::class);
-        $this->listener = new CategoryIndexListener($this->messageBus->reveal());
+        $this->listener = new AdminCategoryIndexListener($this->messageBus->reveal());
     }
 
     public function testOnCategoryChangedWithCategoryCreatedEvent(): void

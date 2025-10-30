@@ -465,8 +465,8 @@
         </service>
 
         <service
-                id="sulu_media.media_index_listener"
-                class="Sulu\Bundle\MediaBundle\Infrastructure\Sulu\Search\MediaIndexListener"
+                id="sulu_media.admin_media_index_listener"
+                class="Sulu\Bundle\MediaBundle\Infrastructure\Sulu\Search\AdminMediaIndexListener"
         >
             <argument type="service" id="sulu_message_bus"/>
             <tag name="kernel.event_listener" event="Sulu\Bundle\MediaBundle\Domain\Event\MediaCreatedEvent" method="onMediaChanged"/>
@@ -477,8 +477,8 @@
         </service>
 
         <service
-                id="sulu_media.collection_index_listener"
-                class="Sulu\Bundle\MediaBundle\Infrastructure\Sulu\Search\CollectionIndexListener"
+                id="sulu_media.admin_collection_index_listener"
+                class="Sulu\Bundle\MediaBundle\Infrastructure\Sulu\Search\AdminCollectionIndexListener"
         >
             <argument type="service" id="sulu_message_bus"/>
             <tag name="kernel.event_listener" event="Sulu\Bundle\MediaBundle\Domain\Event\CollectionCreatedEvent" method="onCollectionChanged"/>
@@ -488,16 +488,16 @@
         </service>
 
         <service
-                id="sulu_media.media_reindex_provider"
-                class="Sulu\Bundle\MediaBundle\Infrastructure\Sulu\Search\MediaReindexProvider"
+                id="sulu_media.admin_media_reindex_provider"
+                class="Sulu\Bundle\MediaBundle\Infrastructure\Sulu\Search\AdminMediaReindexProvider"
         >
             <argument type="service" id="doctrine.orm.entity_manager"/>
             <tag name="cmsig_seal.reindex_provider"/>
         </service>
 
         <service
-                id="sulu_media.collection_reindex_provider"
-                class="Sulu\Bundle\MediaBundle\Infrastructure\Sulu\Search\CollectionReindexProvider"
+                id="sulu_media.admin_collection_reindex_provider"
+                class="Sulu\Bundle\MediaBundle\Infrastructure\Sulu\Search\AdminCollectionReindexProvider"
         >
             <argument type="service" id="doctrine.orm.entity_manager"/>
             <tag name="cmsig_seal.reindex_provider"/>

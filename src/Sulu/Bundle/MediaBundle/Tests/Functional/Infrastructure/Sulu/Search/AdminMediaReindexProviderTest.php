@@ -24,16 +24,16 @@ use Sulu\Bundle\MediaBundle\Entity\FileVersionMeta;
 use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\MediaBundle\Entity\MediaType;
-use Sulu\Bundle\MediaBundle\Infrastructure\Sulu\Search\MediaReindexProvider;
+use Sulu\Bundle\MediaBundle\Infrastructure\Sulu\Search\AdminMediaReindexProvider;
 use Sulu\Bundle\TestBundle\Testing\SetGetPrivatePropertyTrait;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
-class MediaReindexProviderTest extends SuluTestCase
+class AdminMediaReindexProviderTest extends SuluTestCase
 {
     use SetGetPrivatePropertyTrait;
 
     private EntityManagerInterface $entityManager;
-    private MediaReindexProvider $provider;
+    private AdminMediaReindexProvider $provider;
 
     private MediaType $imageType;
 
@@ -46,7 +46,7 @@ class MediaReindexProviderTest extends SuluTestCase
     protected function setUp(): void
     {
         $this->entityManager = $this->getEntityManager();
-        $this->provider = new MediaReindexProvider($this->entityManager);
+        $this->provider = new AdminMediaReindexProvider($this->entityManager);
         $this->purgeDatabase();
         $this->setUpMedia();
         $this->setUpCollection();
@@ -54,7 +54,7 @@ class MediaReindexProviderTest extends SuluTestCase
 
     public function testGetIndex(): void
     {
-        $this->assertSame('admin', MediaReindexProvider::getIndex());
+        $this->assertSame('admin', AdminMediaReindexProvider::getIndex());
     }
 
     public function testTotal(): void

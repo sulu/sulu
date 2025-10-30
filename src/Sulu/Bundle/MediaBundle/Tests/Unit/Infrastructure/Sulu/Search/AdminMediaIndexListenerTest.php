@@ -32,13 +32,13 @@ use Sulu\Bundle\MediaBundle\Entity\FileVersionMeta;
 use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\MediaBundle\Entity\MediaType;
-use Sulu\Bundle\MediaBundle\Infrastructure\Sulu\Search\MediaIndexListener;
+use Sulu\Bundle\MediaBundle\Infrastructure\Sulu\Search\AdminMediaIndexListener;
 use Sulu\Bundle\TestBundle\Testing\SetGetPrivatePropertyTrait;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\MessageBusInterface;
 
-#[CoversClass(MediaIndexListener::class)]
-class MediaIndexListenerTest extends TestCase
+#[CoversClass(AdminMediaIndexListener::class)]
+class AdminMediaIndexListenerTest extends TestCase
 {
     use ProphecyTrait;
     use SetGetPrivatePropertyTrait;
@@ -47,7 +47,7 @@ class MediaIndexListenerTest extends TestCase
      * @var ObjectProphecy<MessageBusInterface>
      */
     private ObjectProphecy $messageBus;
-    private MediaIndexListener $listener;
+    private AdminMediaIndexListener $listener;
 
     private MediaType $imageType;
 
@@ -60,7 +60,7 @@ class MediaIndexListenerTest extends TestCase
     protected function setUp(): void
     {
         $this->messageBus = $this->prophesize(MessageBusInterface::class);
-        $this->listener = new MediaIndexListener($this->messageBus->reveal());
+        $this->listener = new AdminMediaIndexListener($this->messageBus->reveal());
         $this->setUpMedia();
         $this->setUpCollection();
     }

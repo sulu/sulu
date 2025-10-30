@@ -26,13 +26,13 @@ use Sulu\Article\Domain\Event\ArticleTranslationAddedEvent;
 use Sulu\Article\Domain\Event\ArticleTranslationRemovedEvent;
 use Sulu\Article\Domain\Model\Article;
 use Sulu\Article\Domain\Model\ArticleInterface;
-use Sulu\Article\Infrastructure\Sulu\Search\ArticleIndexListener;
+use Sulu\Article\Infrastructure\Sulu\Search\AdminArticleIndexListener;
 use Sulu\Bundle\TestBundle\Testing\SetGetPrivatePropertyTrait;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\MessageBusInterface;
 
-#[CoversClass(ArticleIndexListener::class)]
-class ArticleIndexListenerTest extends TestCase
+#[CoversClass(AdminArticleIndexListener::class)]
+class AdminArticleIndexListenerTest extends TestCase
 {
     use ProphecyTrait;
     use SetGetPrivatePropertyTrait;
@@ -41,12 +41,12 @@ class ArticleIndexListenerTest extends TestCase
      * @var ObjectProphecy<MessageBusInterface>
      */
     private ObjectProphecy $messageBus;
-    private ArticleIndexListener $listener;
+    private AdminArticleIndexListener $listener;
 
     protected function setUp(): void
     {
         $this->messageBus = $this->prophesize(MessageBusInterface::class);
-        $this->listener = new ArticleIndexListener($this->messageBus->reveal());
+        $this->listener = new AdminArticleIndexListener($this->messageBus->reveal());
     }
 
     public function testOnArticleChangedWithSnippetCreatedEvent(): void

@@ -20,7 +20,7 @@ use Sulu\Bundle\MediaBundle\Domain\Event\MediaVersionAddedEvent;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
 
-final class MediaIndexListener
+final class AdminMediaIndexListener
 {
     public function __construct(
         private readonly MessageBusInterface $messageBus,

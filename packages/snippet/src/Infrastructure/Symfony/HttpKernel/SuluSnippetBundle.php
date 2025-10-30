@@ -372,8 +372,8 @@ final class SuluSnippetBundle extends AbstractBundle
                 ->tag('sulu_trash.restore_configuration_provider');
         }
 
-        $services->set('sulu_snippet.snippet_index_listener')
-            ->class('Sulu\Snippet\Infrastructure\Sulu\Search\SnippetIndexListener')
+        $services->set('sulu_snippet.admin_snippet_index_listener')
+            ->class('Sulu\Snippet\Infrastructure\Sulu\Search\AdminSnippetIndexListener')
             ->args([
                 new Reference('sulu_message_bus'),
             ])
@@ -385,8 +385,8 @@ final class SuluSnippetBundle extends AbstractBundle
             ->tag('kernel.event_listener', ['event' => SnippetTranslationAddedEvent::class, 'method' => 'onSnippetChanged'])
             ->tag('kernel.event_listener', ['event' => SnippetTranslationRemovedEvent::class, 'method' => 'onSnippetChanged']);
 
-        $services->set('sulu_snippet.snippet_reindex_provider')
-            ->class('Sulu\Snippet\Infrastructure\Sulu\Search\SnippetReindexProvider')
+        $services->set('sulu_snippet.admin_snippet_reindex_provider')
+            ->class('Sulu\Snippet\Infrastructure\Sulu\Search\AdminSnippetReindexProvider')
             ->args([
                 new Reference('doctrine.orm.entity_manager'),
             ])

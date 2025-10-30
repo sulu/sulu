@@ -26,7 +26,7 @@ use Symfony\Component\Messenger\MessageBusInterface;
  * @internal this class is internal no backwards compatibility promise is given for this class
  *           use Symfony Dependency Injection to override or create your own Listener instead
  */
-final class CategoryIndexListener
+final class AdminCategoryIndexListener
 {
     public function __construct(
         private readonly MessageBusInterface $messageBus,
@@ -35,34 +35,14 @@ final class CategoryIndexListener
 
     public function onCategoryChanged(CategoryCreatedEvent|CategoryModifiedEvent|CategoryRemovedEvent|CategoryTranslationAddedEvent|CategoryRestoredEvent $event): void
     {
-        $locale = $event->getResourceLocale();
-        $identifiers = [];
+        $resourceId = $event->getResourceId();
 
-        if ($event instanceof CategoryRemovedEvent) {
-            $locales = $event->getAllLocales();
+        $identifiers = \array_map(
+            fn (string $locale) => CategoryInterface::RESOURCE_KEY . '::' . $resourceId . '::' . $locale,
+            $this->getLocales($event),
+        );
 
-            if (!$locales) {
-                return;
-            }
-
-            foreach ($locales as $locale) {
-                $identifiers[] = CategoryInterface::RESOURCE_KEY . '::' . $event->getResourceId() . '::' . $locale;
-            }
-        } elseif ($event instanceof CategoryRestoredEvent) {
-            $category = $event->getCategory();
-
-            foreach ($category->getTranslations() as $translation) {
-                if (!$translation->getLocale()) {
-                    continue;
-                }
-
-                $identifiers[] = CategoryInterface::RESOURCE_KEY . '::' . $event->getResourceId() . '::' . $translation->getLocale();
-            }
-        } elseif ($locale) {
-            $identifiers[] = CategoryInterface::RESOURCE_KEY . '::' . $event->getResourceId() . '::' . $locale;
-        }
-
-        if (!$identifiers) {
+        if ([] === $identifiers) {
             return;
         }
 
@@ -71,5 +51,27 @@ final class CategoryIndexListener
                 ->withIndex('admin')
                 ->withIdentifiers($identifiers),
         );
+    }
+
+    /**
+     * @return string[]
+     */
+    private function getLocales(CategoryCreatedEvent|CategoryModifiedEvent|CategoryRemovedEvent|CategoryTranslationAddedEvent|CategoryRestoredEvent $event): array
+    {
+        if ($event instanceof CategoryRemovedEvent) {
+            return $event->getAllLocales() ?? [];
+        }
+
+        if ($event instanceof CategoryRestoredEvent) {
+            $locales = [];
+            $category = $event->getCategory();
+            foreach ($category->getTranslations() as $translation) {
+                $locales[] = $translation->getLocale();
+            }
+
+            return $locales;
+        }
+
+        return [$event->getResourceLocale()];
     }
 }

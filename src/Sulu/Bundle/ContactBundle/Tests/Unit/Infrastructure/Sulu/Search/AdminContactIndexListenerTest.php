@@ -30,13 +30,13 @@ use Sulu\Bundle\ContactBundle\Entity\Account;
 use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\ContactBundle\Entity\ContactInterface;
-use Sulu\Bundle\ContactBundle\Infrastructure\Sulu\Search\ContactIndexListener;
+use Sulu\Bundle\ContactBundle\Infrastructure\Sulu\Search\AdminContactIndexListener;
 use Sulu\Bundle\TestBundle\Testing\SetGetPrivatePropertyTrait;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\MessageBusInterface;
 
-#[CoversClass(ContactIndexListenerTest::class)]
-class ContactIndexListenerTest extends TestCase
+#[CoversClass(AdminContactIndexListenerTest::class)]
+class AdminContactIndexListenerTest extends TestCase
 {
     use ProphecyTrait;
     use SetGetPrivatePropertyTrait;
@@ -45,12 +45,12 @@ class ContactIndexListenerTest extends TestCase
      * @var ObjectProphecy<MessageBusInterface>
      */
     private ObjectProphecy $messageBus;
-    private ContactIndexListener $listener;
+    private AdminContactIndexListener $listener;
 
     protected function setUp(): void
     {
         $this->messageBus = $this->prophesize(MessageBusInterface::class);
-        $this->listener = new ContactIndexListener($this->messageBus->reveal());
+        $this->listener = new AdminContactIndexListener($this->messageBus->reveal());
     }
 
     public function testOnAccountChangedWithAccountCreatedEvent(): void
