@@ -1096,18 +1096,66 @@ class AccountController extends AbstractRestController implements SecuredControl
             [
                 new DoctrineConcatenationFieldDescriptor(
                     [
-                        new DoctrineFieldDescriptor( 'street', 'address', self::$addressEntityName, '', $addressJoin ),
-                        new DoctrineFieldDescriptor( 'number', 'address', self::$addressEntityName, '', $addressJoin ),
-                        new DoctrineFieldDescriptor( 'addition', 'address', self::$addressEntityName, '', $addressJoin ),
+                        new DoctrineFieldDescriptor(
+                            'street',
+                            'address',
+                            self::$addressEntityName,
+                            '',
+                            $addressJoin
+                        ),
+                        new DoctrineFieldDescriptor(
+                            'number',
+                            'address',
+                            self::$addressEntityName,
+                            '',
+                            $addressJoin
+                        ),
+                        new DoctrineFieldDescriptor(
+                            'addition',
+                            'address',
+                            self::$addressEntityName,
+                            '',
+                            $addressJoin
+                        ),
                     ],
                     'street',
                     ' '
                 ),
-                new DoctrineFieldDescriptor( 'zip', 'address', self::$addressEntityName, '', $addressJoin ),
-                new DoctrineFieldDescriptor( 'city', 'address', self::$addressEntityName, '', $addressJoin ),
-                new DoctrineFieldDescriptor( 'state', 'address', self::$addressEntityName, '', $addressJoin ),
-                new DoctrineFieldDescriptor( 'countryCode', 'address', self::$addressEntityName, '', $addressJoin ),
-                new DoctrineFieldDescriptor( 'postboxNumber', 'address', self::$addressEntityName, '', $addressJoin ),
+                new DoctrineFieldDescriptor(
+                    'zip',
+                    'address',
+                    self::$addressEntityName,
+                    '',
+                    $addressJoin
+                ),
+                new DoctrineFieldDescriptor(
+                    'city',
+                    'address',
+                    self::$addressEntityName,
+                    '',
+                    $addressJoin
+                ),
+                new DoctrineFieldDescriptor(
+                    'state',
+                    'address',
+                    self::$addressEntityName,
+                    '',
+                    $addressJoin
+                ),
+                new DoctrineFieldDescriptor(
+                    'countryCode',
+                    'address',
+                    self::$addressEntityName,
+                    '',
+                    $addressJoin
+                ),
+                new DoctrineFieldDescriptor(
+                    'postboxNumber',
+                    'address',
+                    self::$addressEntityName,
+                    '',
+                    $addressJoin
+                ),
             ],
             'address',
             'public.address',

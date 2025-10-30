@@ -571,10 +571,10 @@ abstract class AbstractContactManager implements ContactManagerInterface
      */
     public function addNewContactRelations($contact, $data)
     {
-        $contactDetailsData = $data['contactDetails'] ?? null ?? [];
+        $contactDetailsData = $this->getProperty($data, 'contactDetails') ?? [];
 
         // urls
-        $urls = $contactDetailsData['websites'] ?? null;
+        $urls = $this->getProperty($contactDetailsData, 'websites');
         if (!empty($urls)) {
             foreach ($urls as $urlData) {
                 if (!empty($urlData['website'])) {
@@ -585,7 +585,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
         }
 
         //faxes
-        $faxes = $contactDetailsData['faxes'] ?? null;
+        $faxes = $this->getProperty($contactDetailsData, 'faxes');
         if (!empty($faxes)) {
             foreach ($faxes as $faxData) {
                 if (!empty($faxData['fax'])) {
@@ -596,7 +596,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
         }
 
         // Social media profiles.
-        $socialMediaProfiles = $contactDetailsData['socialMedia'] ?? null;
+        $socialMediaProfiles = $this->getProperty($contactDetailsData, 'socialMedia');
         if (!empty($socialMediaProfiles)) {
             foreach ($socialMediaProfiles as $socialMediaProfileData) {
                 $this->addSocialMediaProfile($contact, $socialMediaProfileData);
@@ -604,7 +604,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
         }
 
         // emails
-        $emails = $contactDetailsData['emails'] ?? null;
+        $emails = $this->getProperty($contactDetailsData, 'emails');
         if (!empty($emails)) {
             foreach ($emails as $emailData) {
                 if (!empty($emailData['email'])) {
@@ -615,7 +615,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
         }
 
         // phones
-        $phones = $contactDetailsData['phones'] ?? null;
+        $phones = $this->getProperty($contactDetailsData, 'phones');
         if (!empty($phones)) {
             foreach ($phones as $phoneData) {
                 if (!empty($phoneData['phone'])) {
@@ -626,7 +626,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
         }
 
         // addresses
-        $addresses = $data['addresses'] ?? null;
+        $addresses = $this->getProperty($data, 'addresses');
         if (!empty($addresses)) {
             foreach ($addresses as $addressData) {
                 $address = $this->createAddress($addressData, $isMain);
@@ -637,7 +637,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
         $this->setMainForCollection($this->getAddressRelations($contact));
 
         // notes
-        $notes = $data['notes'] ?? null;
+        $notes = $this->getProperty($data, 'notes');
         if (!empty($notes)) {
             foreach ($notes as $noteData) {
                 $this->addNote($contact, $noteData);
@@ -645,7 +645,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
         }
 
         // handle tags
-        $tags = $data['tags'] ?? null;
+        $tags = $this->getProperty($data, 'tags');
         if (!empty($tags)) {
             foreach ($tags as $tag) {
                 $this->addTag($contact, $tag);
@@ -653,8 +653,8 @@ abstract class AbstractContactManager implements ContactManagerInterface
         }
 
         // process details
-        if (null !== ($data['bankAccounts'] ?? null)) {
-            $this->processBankAccounts($contact, $data['bankAccounts'] ?? []);
+        if (null !== $this->getProperty($data, 'bankAccounts')) {
+            $this->processBankAccounts($contact, $this->getProperty($data, 'bankAccounts', []));
         }
     }
 
@@ -1542,7 +1542,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
     /**
      * Adds a new tag to the given contact and persist it with the given object manager.
      *
-     * @param DoctrineEntity $contact
+     * @param Contact $contact
      * @param string $data
      *
      * @return bool True if there was no error, otherwise false

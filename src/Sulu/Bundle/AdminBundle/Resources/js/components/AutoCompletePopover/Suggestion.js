@@ -49,13 +49,13 @@ export default class Suggestion extends React.PureComponent<Props> {
             <span>
                 {splittedText.map((splitText, index) => {
                     return (
-                        <div key={'suggestion.'+index}>
+                        <>
                             {splitText}
                             {highlightedWords && highlightedWords[index]
                                 ? <strong>{highlightedWords[index]}</strong>
                                 : null
                             }
-                        </div>
+                        </>
                     );
                 })}
             </span>
