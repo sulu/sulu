@@ -1,5 +1,5 @@
 // @flow
-import React from 'react';
+import React, {Fragment} from 'react';
 import Icon from '../Icon';
 import suggestionStyles from './suggestion.scss';
 import type {Node} from 'react';
@@ -49,13 +49,13 @@ export default class Suggestion extends React.PureComponent<Props> {
             <span>
                 {splittedText.map((splitText, index) => {
                     return (
-                        <>
+                        <Fragment key={'suggestion.' + index}>
                             {splitText}
                             {highlightedWords && highlightedWords[index]
                                 ? <strong>{highlightedWords[index]}</strong>
                                 : null
                             }
-                        </>
+                        </Fragment>
                     );
                 })}
             </span>
