@@ -360,18 +360,11 @@ class ContactManager extends AbstractContactManager
 
         if (!$id) {
             $parentData = $data['account'] ?? null;
-            if (null != $parentData
-                && null != $parentData['id']
-                && 'null' != $parentData['id']
-                && '' != $parentData['id']
-            ) {
+            if (null !== $parentData) {
                 /** @var AccountInterface $parent */
-                $parent = $this->accountRepository->findAccountById($parentData['id']);
+                $parent = $this->accountRepository->findAccountById($parentData);
                 if (!$parent) {
-                    throw new EntityNotFoundException(
-                        self::$accountContactEntityName,
-                        $parentData['id']
-                    );
+                    throw new EntityNotFoundException(self::$accountContactEntityName, $parentData);
                 }
 
                 // Set position on contact
@@ -522,11 +515,9 @@ class ContactManager extends AbstractContactManager
     }
 
     /**
-     * @param array $data
-     *
      * @throws EntityNotFoundException
      */
-    public function setMainAccount(ContactInterface $contact, $data)
+    public function setMainAccount(ContactInterface $contact, array $data)
     {
         $accountId = $data['account'] ?? null;
         if (null !== $accountId) {
