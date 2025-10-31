@@ -17,6 +17,7 @@ use Sulu\Component\Security\Authentication\RoleInterface;
 use Sulu\Component\Security\Authentication\RoleSettingInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Security\Authorization\AccessControl\AccessControlInterface;
+use Sulu\Component\Security\Authorization\AccessControl\AccessControlProviderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
@@ -40,6 +41,9 @@ final class SuluSecurityBundle extends Bundle
         );
 
         $container->addCompilerPass(new TwoFactorCompilerPass());
+
+        $container->registerForAutoconfiguration(AccessControlProviderInterface::class)
+            ->addTag('sulu.access_control');
 
         parent::build($container);
     }
