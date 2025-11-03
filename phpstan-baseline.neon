@@ -6351,17 +6351,7 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Contact\\\\AbstractContactManager\\:\\:addFax\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Contact\\\\AbstractContactManager\\:\\:addFax\\(\\) has parameter \\$faxData with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Contact\\\\AbstractContactManager\\:\\:addNewContactRelations\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
 
@@ -6381,22 +6371,12 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Contact\\\\AbstractContactManager\\:\\:addSocialMediaProfile\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Contact\\\\AbstractContactManager\\:\\:addSocialMediaProfile\\(\\) has parameter \\$socialMediaProfileData with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Contact\\\\AbstractContactManager\\:\\:addUrl\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Contact\\\\AbstractContactManager\\:\\:checkAndSetMainAddress\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
 
@@ -6426,57 +6406,7 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Contact\\\\AbstractContactManager\\:\\:deleteAddresses\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Contact\\\\AbstractContactManager\\:\\:deleteAllEntitiesOfCollection\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Contact\\\\AbstractContactManager\\:\\:deleteAllEntitiesOfCollection\\(\\) has parameter \\$arrayCollection with generic interface Doctrine\\\\Common\\\\Collections\\\\Collection but does not specify its types\\: TKey, T$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Contact\\\\AbstractContactManager\\:\\:deleteAllRelations\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Contact\\\\AbstractContactManager\\:\\:deleteEmails\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Contact\\\\AbstractContactManager\\:\\:deleteFaxes\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Contact\\\\AbstractContactManager\\:\\:deleteNotes\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Contact\\\\AbstractContactManager\\:\\:deletePhones\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Contact\\\\AbstractContactManager\\:\\:deleteSocialMediaProfiles\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Contact\\\\AbstractContactManager\\:\\:deleteUrls\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Contact\\\\AbstractContactManager\\:\\:findMatchByCallback\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
 
@@ -6492,11 +6422,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Contact\\\\AbstractContactManager\\:\\:findMatchByCallback\\(\\) has parameter \\$requestEntities with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Contact\\\\AbstractContactManager\\:\\:getAddressByCondition\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
 
@@ -6597,31 +6522,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Contact\\\\AbstractContactManager\\:\\:resetIndexOfSubentites\\(\\) return type with generic interface Doctrine\\\\Common\\\\Collections\\\\Collection does not specify its types\\: TKey, T$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Contact\\\\AbstractContactManager\\:\\:setMainEmail\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Contact\\\\AbstractContactManager\\:\\:setMainFax\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Contact\\\\AbstractContactManager\\:\\:setMainForCollection\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Contact\\\\AbstractContactManager\\:\\:setMainPhone\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Contact\\\\AbstractContactManager\\:\\:setMainUrl\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
 
@@ -6961,16 +6861,6 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Contact/AccountManager.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Contact\\\\AccountManager\\:\\:deleteAllRelations\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AccountManager.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Contact\\\\AccountManager\\:\\:deleteBankAccounts\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AccountManager.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Contact\\\\AccountManager\\:\\:findAll\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Contact/AccountManager.php
@@ -7306,37 +7196,7 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Contact/ContactManagerInterface.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Contact\\\\ContactManagerInterface\\:\\:removeAddressRelation\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/ContactManagerInterface.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Contact\\\\ContactManagerInterface\\:\\:setMainEmail\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/ContactManagerInterface.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Contact\\\\ContactManagerInterface\\:\\:setMainFax\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/ContactManagerInterface.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Contact\\\\ContactManagerInterface\\:\\:setMainForCollection\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/ContactManagerInterface.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Contact\\\\ContactManagerInterface\\:\\:setMainForCollection\\(\\) has parameter \\$arrayCollection with generic interface Doctrine\\\\Common\\\\Collections\\\\Collection but does not specify its types\\: TKey, T$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/ContactManagerInterface.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Contact\\\\ContactManagerInterface\\:\\:setMainPhone\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/ContactManagerInterface.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Contact\\\\ContactManagerInterface\\:\\:setMainUrl\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Contact/ContactManagerInterface.php
 
@@ -27526,11 +27386,6 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/UserManager/UserManager.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\SecurityBundle\\\\UserManager\\\\UserManager\\:\\:findMatchByCallback\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/UserManager/UserManager.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\SecurityBundle\\\\UserManager\\\\UserManager\\:\\:findMatchByCallback\\(\\) has parameter \\$entity with no value type specified in iterable type Traversable\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/UserManager/UserManager.php
@@ -46132,11 +45987,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Component\\\\Rest\\\\RestHelper\\:\\:compareEntitiesWithData\\(\\) has parameter \\$requestEntities with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/RestHelper.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Rest\\\\RestHelper\\:\\:findMatchByCallback\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/Rest/RestHelper.php
 
