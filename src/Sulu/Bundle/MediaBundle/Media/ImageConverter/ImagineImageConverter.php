@@ -95,7 +95,7 @@ class ImagineImageConverter implements ImageConverterInterface
     {
         $imageResource = $this->mediaImageExtractor->extract(
             $this->storage->load($fileVersion->getStorageOptions()),
-            $fileVersion->getMimeType()
+            $fileVersion->getMimeType() ?? '-null-', // validated already in FormatManager, as mimetype can not be extract from storage as they may return none seekable resources
         );
 
         $imagine = $this->imagine;
