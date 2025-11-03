@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Sulu\Content\Infrastructure\Sulu\Traits;
 
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\SectionMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
@@ -55,7 +56,7 @@ trait ResolveContentDimensionUrlTrait
             return null; // @codeCoverageIgnore
         }
 
-        foreach ($metadata->getItems() as $property) {
+        foreach ($metadata->getFlatFieldMetadata() as $property) {
             if ('route' === $property->getType()) {
                 /** @var string|null */
                 return $dimensionContent->getTemplateData()[$property->getName()] ?? null;

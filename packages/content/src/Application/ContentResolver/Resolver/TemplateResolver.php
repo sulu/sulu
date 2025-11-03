@@ -50,7 +50,7 @@ readonly class TemplateResolver implements ResolverInterface
             );
         }
 
-        $formMetadataItems = $formMetadata->getItems();
+        $formMetadataItems = $formMetadata->getFlatFieldMetadata();
         $data = $dimensionContent->getTemplateData();
         if (null !== $properties) {
             $filteredFormMetadataItems = [];
