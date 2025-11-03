@@ -36,13 +36,13 @@ class FormatCacheRegenerateCommandTest extends TestCase
 
     public function testExecute(): void
     {
-        $this->formatManager->returnImage(1, '50x50', 'test.svg', null)
+        $this->formatManager->returnImage(1, '50x50', 'test.svg')
             ->shouldBeCalled();
 
-        $this->formatManager->returnImage(2, '200x', 'test.svg', null)
+        $this->formatManager->returnImage(2, '200x', 'test.svg')
             ->shouldBeCalled();
 
-        $this->formatManager->returnImage(3, '400x400-inset', '2020-test-test.svg', null)
+        $this->formatManager->returnImage(3, '400x400-inset', '2020-test-test.svg')
             ->shouldBeCalled();
 
         $this->executeCommand(__DIR__ . '/../../Fixtures/regenerate-formats');

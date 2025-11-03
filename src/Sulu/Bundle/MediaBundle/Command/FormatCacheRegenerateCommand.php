@@ -65,7 +65,6 @@ class FormatCacheRegenerateCommand extends Command
                 $fileInformation['id'],
                 $fileInformation['formatKey'],
                 $fileInformation['fileName'],
-                version: null
             );
 
             $progressBar->advance();

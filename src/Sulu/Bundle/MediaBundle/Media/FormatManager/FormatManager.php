@@ -87,8 +87,8 @@ class FormatManager implements FormatManagerInterface
                 throw new ImageProxyMediaNotFoundException(\sprintf('Media with id "%s" was not found.', $id));
             }
 
-            $latestFileVersion = $this->getLatestFileVersion($media);
-            $version ??= $latestFileVersion->getVersion(); // TODO remove this line in Sulu 3.0 currently bc layer when version is not given
+            $fileVersion = $this->getLatestFileVersion($media);
+            $version = null !== $version ? $version : $fileVersion->getVersion(); // TODO remove this line in Sulu 3.0 currently bc layer when version is not given
 
             /** @var File|null $file */
             $file = $media->getFiles()[0] ?? null;
@@ -104,15 +104,8 @@ class FormatManager implements FormatManagerInterface
                 throw new ImageProxyMediaNotFoundException(\sprintf('FileVersion "%s" for media with id "%s" was not found.', $requestedFileVersion->getVersion(), $id));
             }
 
-            // Generate a redirect for old versions
-            if ($latestFileVersion->getVersion() !== $requestedFileVersion->getVersion()) {
-                $formats = $this->getFormats(
-                    $id,
-                    $latestFileVersion->getName(),
-                    $latestFileVersion->getVersion(),
-                    $latestFileVersion->getSubVersion(),
-                    $latestFileVersion->getMimeType(),
-                );
+            if ($fileVersion->getVersion() !== $requestedFileVersion->getVersion()) {
+                $formats = $this->getFormats($id, $fileVersion->getName(), $fileVersion->getVersion(), $fileVersion->getSubVersion(), $fileVersion->getMimeType());
 
                 $formatUrl = $formats[$formatKey . '.' . $imageFormat] ?? null;
                 if (null === $formatUrl) {
@@ -122,10 +115,9 @@ class FormatManager implements FormatManagerInterface
                 return new RedirectResponse($formatUrl, 301);
             }
 
-            // Generate the current version
-            $supportedImageFormats = $this->converter->getSupportedOutputImageFormats($latestFileVersion->getMimeType());
+            $supportedImageFormats = $this->converter->getSupportedOutputImageFormats($fileVersion->getMimeType());
             if (empty($supportedImageFormats)) {
-                throw new InvalidMimeTypeForPreviewException($latestFileVersion->getMimeType() ?? '-null-');
+                throw new InvalidMimeTypeForPreviewException($fileVersion->getMimeType() ?? '-null-');
             }
 
             if (!\in_array($imageFormat, $supportedImageFormats)) {
@@ -138,7 +130,7 @@ class FormatManager implements FormatManagerInterface
             }
 
             // Convert Media to format.
-            $responseContent = $this->converter->convert($latestFileVersion, $formatKey, $imageFormat);
+            $responseContent = $this->converter->convert($fileVersion, $formatKey, $imageFormat);
 
             // HTTP Headers
             $status = 200;
@@ -152,7 +144,7 @@ class FormatManager implements FormatManagerInterface
                 $this->formatCache->save(
                     $responseContent,
                     $media->getId(),
-                    $this->replaceExtension($latestFileVersion->getName(), $imageFormat),
+                    $this->replaceExtension($fileVersion->getName(), $imageFormat),
                     $formatKey
                 );
             }

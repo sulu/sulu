@@ -93,12 +93,9 @@ class ImagineImageConverter implements ImageConverterInterface
 
     public function convert(FileVersion $fileVersion, $formatKey, $imageFormat)
     {
-        $rawResource = $this->storage->load($fileVersion->getStorageOptions());
-        /** @var string $mimeType */
-        $mimeType = \mime_content_type($rawResource);
         $imageResource = $this->mediaImageExtractor->extract(
-            $rawResource,
-            $fileVersion->getMimeType() ?? $mimeType,
+            $this->storage->load($fileVersion->getStorageOptions()),
+            $fileVersion->getMimeType()
         );
 
         $imagine = $this->imagine;
