@@ -43,7 +43,11 @@ class LinkPropertyResolver implements PropertyResolverInterface
             ],
             priority: -50,
             // external links are not passed as a LinkItem
-            closure: static function(LinkItem $linkItem) use ($data) {
+            closure: static function(?LinkItem $linkItem) use ($data) {
+                if (null === $linkItem) {
+                    return null;
+                }
+
                 $url = $linkItem->getUrl();
                 if (isset($data['query']) && \is_string($data['query'])) {
                     $url = \sprintf('%s?%s', $url, \ltrim($data['query'], '?'));
