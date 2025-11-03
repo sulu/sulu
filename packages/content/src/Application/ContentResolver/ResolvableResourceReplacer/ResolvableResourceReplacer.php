@@ -62,9 +62,14 @@ class ResolvableResourceReplacer implements ResolvableResourceReplacerInterface
                     $this->populateReferenceStore($value->getId(), $value->getResourceKey());
                 }
 
-                $value = $value->executeResourceCallback(
-                    $resource,
-                );
+                if ($resource === null) {
+                    $value = null;
+                } else {
+
+                    $value = $value->executeResourceCallback(
+                        $resource,
+                    );
+                }
                 $hasReplaced = true;
             }
         });
