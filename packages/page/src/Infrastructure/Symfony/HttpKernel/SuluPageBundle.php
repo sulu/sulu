@@ -48,7 +48,7 @@ use Sulu\Page\Infrastructure\Sulu\Admin\MetadataVisitor\WebspaceRouteModeTypedFo
 use Sulu\Page\Infrastructure\Sulu\Admin\PageAdmin;
 use Sulu\Page\Infrastructure\Sulu\Admin\PropertyMetadataMapper\PageTreeRoutePropertyMetadataMapper;
 use Sulu\Page\Infrastructure\Sulu\Build\HomepageBuilder;
-use Sulu\Page\Infrastructure\Sulu\Content\ContentAggregator\PageLinkContentAggregationEnhancer;
+use Sulu\Page\Infrastructure\Sulu\Content\ContentResolver\PageLinkDimensionContentEnhancer;
 use Sulu\Page\Infrastructure\Sulu\Content\DataMapper\NavigationContextDataMapper;
 use Sulu\Page\Infrastructure\Sulu\Content\Merger\NavigationContextMerger;
 use Sulu\Page\Infrastructure\Sulu\Content\Normalizer\PageExcerptNormalizer;
@@ -76,6 +76,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 
 use function Symfony\Component\DependencyInjection\Loader\Configurator\param;
+use function Symfony\Component\DependencyInjection\Loader\Configurator\service;
 use function Symfony\Component\DependencyInjection\Loader\Configurator\tagged_iterator;
 
 use Symfony\Component\DependencyInjection\Parameter;
@@ -256,15 +257,15 @@ final class SuluPageBundle extends AbstractBundle
             ->class(PageExcerptNormalizer::class)
             ->tag('sulu_content.normalizer');
 
-        // Content Aggregation Enhancer service
-        $services->set('sulu_page.page_link_content_aggregation_enhancer')
-            ->class(PageLinkContentAggregationEnhancer::class)
+        // Dimension Content Enhancer service
+        $services->set('sulu_page.page_link_dimension_content_enhancer')
+            ->class(PageLinkDimensionContentEnhancer::class)
             ->args([
                 new Reference('sulu_page.page_repository'),
                 new Reference('sulu_content.content_aggregator'),
                 new Reference('sulu_markup.link_tag.provider_pool'),
             ])
-            ->tag('sulu_content.content_aggregation_enhancer');
+            ->tag('sulu_content.dimension_content_enhancer');
 
         // Property Metadata Mapper services
         $services->set('sulu_page.page_tree_route_property_metadata_mapper')
@@ -389,13 +390,15 @@ final class SuluPageBundle extends AbstractBundle
                 new Reference('sulu_content.content_metadata_inspector'),
                 new Reference('sulu_admin.metadata_provider_registry'),
                 new Reference('translator'),
+                new Reference('sulu_content.content_enhancer'),
             ])
             ->tag('sulu.teaser.provider', ['alias' => PageInterface::RESOURCE_KEY]);
 
         $services->set('sulu_page.page_link_provider')
             ->class(PageLinkProvider::class)
             ->args([
-                new Reference('sulu_content.content_manager'),
+                new Reference('sulu_content.content_aggregator'),
+                new Reference('sulu_content.content_enhancer'),
                 new Reference('sulu_page.page_repository'),
                 new Reference('sulu_http_cache.reference_store'),
                 new Reference('translator'),

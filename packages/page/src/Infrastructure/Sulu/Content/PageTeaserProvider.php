@@ -16,8 +16,10 @@ namespace Sulu\Page\Infrastructure\Sulu\Content;
 use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
 use Sulu\Bundle\AdminBundle\Teaser\Configuration\TeaserConfiguration;
+use Sulu\Content\Application\ContentEnhancer\ContentEnhancerInterface;
 use Sulu\Content\Application\ContentManager\ContentManagerInterface;
 use Sulu\Content\Application\ContentMetadataInspector\ContentMetadataInspectorInterface;
+use Sulu\Content\Domain\Model\ContentRichEntityInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Infrastructure\Sulu\Teaser\ContentTeaserProvider;
 use Sulu\Page\Domain\Model\PageDimensionContentInterface;
@@ -26,6 +28,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @extends ContentTeaserProvider<PageDimensionContentInterface, PageInterface>
+ *
+ * TODO should not inherit from a generic TeaserProvider
  */
 class PageTeaserProvider extends ContentTeaserProvider
 {
@@ -34,16 +38,23 @@ class PageTeaserProvider extends ContentTeaserProvider
      */
     protected $translator;
 
+    /**
+     * @var ContentEnhancerInterface
+     */
+    private $contentEnhancer;
+
     public function __construct(
         ContentManagerInterface $contentManager,
         EntityManagerInterface $entityManager,
         ContentMetadataInspectorInterface $contentMetadataInspector,
         MetadataProviderRegistry $metadataProviderRegistry,
         TranslatorInterface $translator,
+        ContentEnhancerInterface $contentEnhancer,
     ) {
         parent::__construct($contentManager, $entityManager, $contentMetadataInspector, $metadataProviderRegistry, PageInterface::class);
 
         $this->translator = $translator;
+        $this->contentEnhancer = $contentEnhancer;
     }
 
     public function getConfiguration(): TeaserConfiguration
@@ -73,5 +84,27 @@ class PageTeaserProvider extends ContentTeaserProvider
     protected function getEntityIdField(): string
     {
         return 'uuid';
+    }
+
+    /**
+     * Override to add content enhancement for page links.
+     *
+     * @template E of DimensionContentInterface
+     *
+     * @param ContentRichEntityInterface<E> $contentRichEntity
+     *
+     * @return E|null
+     */
+    protected function resolveContent(ContentRichEntityInterface $contentRichEntity, string $locale, bool $showDrafts = false): ?DimensionContentInterface
+    {
+        $dimensionContent = parent::resolveContent($contentRichEntity, $locale, $showDrafts);
+
+        if (null === $dimensionContent) {
+            return null;
+        }
+
+        // Enhance the content to resolve page links and other enhancements
+        /** @var E */
+        return $this->contentEnhancer->enhance($dimensionContent);
     }
 }

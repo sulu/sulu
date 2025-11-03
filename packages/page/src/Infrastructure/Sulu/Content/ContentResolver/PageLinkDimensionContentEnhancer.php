@@ -11,20 +11,20 @@ declare(strict_types=1);
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Page\Infrastructure\Sulu\Content\ContentAggregator;
+namespace Sulu\Page\Infrastructure\Sulu\Content\ContentResolver;
 
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkProviderPoolInterface;
-use Sulu\Content\Application\ContentAggregator\ContentAggregationEnhancerInterface;
 use Sulu\Content\Application\ContentAggregator\ContentAggregatorInterface;
+use Sulu\Content\Application\ContentEnhancer\DimensionContentEnhancerInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Page\Domain\Model\PageDimensionContentInterface;
 use Sulu\Page\Domain\Repository\PageRepositoryInterface;
 
 /**
  * @internal This class should not be instantiated by a project.
- *           Create your own content aggregation enhancer instead.
+ *           Create your own dimension content enhancer instead.
  */
-class PageLinkContentAggregationEnhancer implements ContentAggregationEnhancerInterface
+class PageLinkDimensionContentEnhancer implements DimensionContentEnhancerInterface
 {
     public function __construct(
         private PageRepositoryInterface $pageRepository,
@@ -33,10 +33,8 @@ class PageLinkContentAggregationEnhancer implements ContentAggregationEnhancerIn
     ) {
     }
 
-    public function enhance(
-        DimensionContentInterface $dimensionContent,
-        array $dimensionAttributes
-    ): DimensionContentInterface {
+    public function enhance(DimensionContentInterface $dimensionContent): DimensionContentInterface
+    {
         if (!$dimensionContent instanceof PageDimensionContentInterface) {
             return $dimensionContent;
         }
@@ -45,7 +43,16 @@ class PageLinkContentAggregationEnhancer implements ContentAggregationEnhancerIn
 
         return match ($linkData['provider'] ?? null) {
             null => $dimensionContent,
-            'page' => $this->resolvePage($dimensionContent, $dimensionAttributes),
+            'page' => $this->resolvePage(
+                $dimensionContent,
+                $dimensionContent::getEffectiveDimensionAttributes(
+                    [
+                        'locale' => $dimensionContent->getLocale(),
+                        'stage' => $dimensionContent->getStage(),
+                        'version' => $dimensionContent->getVersion(),
+                    ]
+                )
+            ),
             default => $this->resolveLink($dimensionContent),
         };
     }
@@ -54,7 +61,7 @@ class PageLinkContentAggregationEnhancer implements ContentAggregationEnhancerIn
      * @template T of PageDimensionContentInterface
      *
      * @param T $pageDimensionContent
-     * @param array<string, mixed> $dimensionAttributes
+     * @param array<mixed> $dimensionAttributes
      *
      * @return T
      */
@@ -115,10 +122,18 @@ class PageLinkContentAggregationEnhancer implements ContentAggregationEnhancerIn
             return $pageDimensionContent;
         }
 
+        $url = $linkItem->getUrl();
+        if (isset($linkData['query']) && \is_string($linkData['query'])) {
+            $url = \sprintf('%s?%s', $url, \ltrim($linkData['query'], '?'));
+        }
+        if (isset($linkData['anchor']) && \is_string($linkData['anchor'])) {
+            $url = \sprintf('%s#%s', $url, \ltrim($linkData['anchor'], '#'));
+        }
+
         $pageDimensionContent->setTemplateData([
             ...$pageDimensionContent->getTemplateData(),
             ...[
-                'url' => $linkItem->getUrl(),
+                'url' => $url,
             ],
         ]);
 

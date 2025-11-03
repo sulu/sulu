@@ -14,9 +14,16 @@ declare(strict_types=1);
 namespace Sulu\Page\Tests\Functional\Infrastructure\Doctrine\Repository;
 
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
+use Sulu\Content\Domain\Model\WorkflowInterface;
+use Sulu\Messenger\Infrastructure\Symfony\Messenger\FlushMiddleware\EnableFlushStamp;
+use Sulu\Page\Application\Message\ApplyWorkflowTransitionPageMessage;
+use Sulu\Page\Application\Message\CreatePageMessage;
+use Sulu\Page\Application\MessageHandler\CreatePageMessageHandler;
 use Sulu\Page\Domain\Model\Page;
 use Sulu\Page\Domain\Repository\NavigationRepositoryInterface;
 use Sulu\Page\Tests\Traits\CreatePageTrait;
+use Symfony\Component\Messenger\Envelope;
+use Symfony\Component\Messenger\Stamp\HandledStamp;
 
 class NavigationRepositoryTest extends SuluTestCase
 {
@@ -45,10 +52,10 @@ class NavigationRepositoryTest extends SuluTestCase
 
         // Create parent page
         $envelope = $messageBus->dispatch(
-            new \Symfony\Component\Messenger\Envelope(
-                new \Sulu\Page\Application\Message\CreatePageMessage(
+            new Envelope(
+                new CreatePageMessage(
                     webspaceKey: 'sulu-io',
-                    parentId: \Sulu\Page\Application\MessageHandler\CreatePageMessageHandler::HOMEPAGE_PARENT_ID,
+                    parentId: CreatePageMessageHandler::HOMEPAGE_PARENT_ID,
                     data: [
                         'locale' => 'en',
                         'template' => 'default',
@@ -57,29 +64,29 @@ class NavigationRepositoryTest extends SuluTestCase
                         'navigationContexts' => ['main'],
                     ]
                 ),
-                [new \Sulu\Messenger\Infrastructure\Symfony\Messenger\FlushMiddleware\EnableFlushStamp()]
+                [new EnableFlushStamp()]
             )
         );
-        $result = $envelope->all(\Symfony\Component\Messenger\Stamp\HandledStamp::class)[0]->getResult();
-        \assert($result instanceof \Sulu\Page\Domain\Model\Page);
+        $result = $envelope->all(HandledStamp::class)[0]->getResult();
+        \assert($result instanceof Page);
         $this->parent = $result;
 
         // Publish parent
         $messageBus->dispatch(
-            new \Symfony\Component\Messenger\Envelope(
-                new \Sulu\Page\Application\Message\ApplyWorkflowTransitionPageMessage(
+            new Envelope(
+                new ApplyWorkflowTransitionPageMessage(
                     identifier: ['uuid' => $this->parent->getUuid()],
                     locale: 'en',
-                    transitionName: \Sulu\Content\Domain\Model\WorkflowInterface::WORKFLOW_TRANSITION_PUBLISH
+                    transitionName: WorkflowInterface::WORKFLOW_TRANSITION_PUBLISH
                 ),
-                [new \Sulu\Messenger\Infrastructure\Symfony\Messenger\FlushMiddleware\EnableFlushStamp()]
+                [new EnableFlushStamp()]
             )
         );
 
         // Create child1 under parent
         $envelope = $messageBus->dispatch(
-            new \Symfony\Component\Messenger\Envelope(
-                new \Sulu\Page\Application\Message\CreatePageMessage(
+            new Envelope(
+                new CreatePageMessage(
                     webspaceKey: 'sulu-io',
                     parentId: $this->parent->getUuid(),
                     data: [
@@ -90,29 +97,29 @@ class NavigationRepositoryTest extends SuluTestCase
                         'navigationContexts' => ['main'],
                     ]
                 ),
-                [new \Sulu\Messenger\Infrastructure\Symfony\Messenger\FlushMiddleware\EnableFlushStamp()]
+                [new EnableFlushStamp()]
             )
         );
-        $result = $envelope->all(\Symfony\Component\Messenger\Stamp\HandledStamp::class)[0]->getResult();
-        \assert($result instanceof \Sulu\Page\Domain\Model\Page);
+        $result = $envelope->all(HandledStamp::class)[0]->getResult();
+        \assert($result instanceof Page);
         $this->child1 = $result;
 
         // Publish child1
         $messageBus->dispatch(
-            new \Symfony\Component\Messenger\Envelope(
-                new \Sulu\Page\Application\Message\ApplyWorkflowTransitionPageMessage(
+            new Envelope(
+                new ApplyWorkflowTransitionPageMessage(
                     identifier: ['uuid' => $this->child1->getUuid()],
                     locale: 'en',
-                    transitionName: \Sulu\Content\Domain\Model\WorkflowInterface::WORKFLOW_TRANSITION_PUBLISH
+                    transitionName: WorkflowInterface::WORKFLOW_TRANSITION_PUBLISH
                 ),
-                [new \Sulu\Messenger\Infrastructure\Symfony\Messenger\FlushMiddleware\EnableFlushStamp()]
+                [new EnableFlushStamp()]
             )
         );
 
         // Create child2 under parent
         $envelope = $messageBus->dispatch(
-            new \Symfony\Component\Messenger\Envelope(
-                new \Sulu\Page\Application\Message\CreatePageMessage(
+            new Envelope(
+                new CreatePageMessage(
                     webspaceKey: 'sulu-io',
                     parentId: $this->parent->getUuid(),
                     data: [
@@ -123,29 +130,29 @@ class NavigationRepositoryTest extends SuluTestCase
                         'navigationContexts' => ['footer'],
                     ]
                 ),
-                [new \Sulu\Messenger\Infrastructure\Symfony\Messenger\FlushMiddleware\EnableFlushStamp()]
+                [new EnableFlushStamp()]
             )
         );
-        $result = $envelope->all(\Symfony\Component\Messenger\Stamp\HandledStamp::class)[0]->getResult();
-        \assert($result instanceof \Sulu\Page\Domain\Model\Page);
+        $result = $envelope->all(HandledStamp::class)[0]->getResult();
+        \assert($result instanceof Page);
         $this->child2 = $result;
 
         // Publish child2
         $messageBus->dispatch(
-            new \Symfony\Component\Messenger\Envelope(
-                new \Sulu\Page\Application\Message\ApplyWorkflowTransitionPageMessage(
+            new Envelope(
+                new ApplyWorkflowTransitionPageMessage(
                     identifier: ['uuid' => $this->child2->getUuid()],
                     locale: 'en',
-                    transitionName: \Sulu\Content\Domain\Model\WorkflowInterface::WORKFLOW_TRANSITION_PUBLISH
+                    transitionName: WorkflowInterface::WORKFLOW_TRANSITION_PUBLISH
                 ),
-                [new \Sulu\Messenger\Infrastructure\Symfony\Messenger\FlushMiddleware\EnableFlushStamp()]
+                [new EnableFlushStamp()]
             )
         );
 
         // Create grandchild1 under child1
         $envelope = $messageBus->dispatch(
-            new \Symfony\Component\Messenger\Envelope(
-                new \Sulu\Page\Application\Message\CreatePageMessage(
+            new Envelope(
+                new CreatePageMessage(
                     webspaceKey: 'sulu-io',
                     parentId: $this->child1->getUuid(),
                     data: [
@@ -156,22 +163,22 @@ class NavigationRepositoryTest extends SuluTestCase
                         'navigationContexts' => ['main'],
                     ]
                 ),
-                [new \Sulu\Messenger\Infrastructure\Symfony\Messenger\FlushMiddleware\EnableFlushStamp()]
+                [new EnableFlushStamp()]
             )
         );
-        $result = $envelope->all(\Symfony\Component\Messenger\Stamp\HandledStamp::class)[0]->getResult();
-        \assert($result instanceof \Sulu\Page\Domain\Model\Page);
+        $result = $envelope->all(HandledStamp::class)[0]->getResult();
+        \assert($result instanceof Page);
         $this->grandchild1 = $result;
 
         // Publish grandchild1
         $messageBus->dispatch(
-            new \Symfony\Component\Messenger\Envelope(
-                new \Sulu\Page\Application\Message\ApplyWorkflowTransitionPageMessage(
+            new Envelope(
+                new ApplyWorkflowTransitionPageMessage(
                     identifier: ['uuid' => $this->grandchild1->getUuid()],
                     locale: 'en',
-                    transitionName: \Sulu\Content\Domain\Model\WorkflowInterface::WORKFLOW_TRANSITION_PUBLISH
+                    transitionName: WorkflowInterface::WORKFLOW_TRANSITION_PUBLISH
                 ),
-                [new \Sulu\Messenger\Infrastructure\Symfony\Messenger\FlushMiddleware\EnableFlushStamp()]
+                [new EnableFlushStamp()]
             )
         );
 

@@ -43,7 +43,7 @@ final class ArticleLinkProvider implements LinkProviderInterface
             ->setTitle($this->translator->trans('sulu_article.articles', [], 'admin'))
             ->setResourceKey(ArticleInterface::RESOURCE_KEY)
             ->setListAdapter('table')
-            ->setDisplayProperties(['id'])
+            ->setDisplayProperties(['title'])
             ->setOverlayTitle($this->translator->trans('sulu_article.selection_overlay_title', [], 'admin'))
             ->setEmptyText($this->translator->trans('sulu_article.no_article_selected', [], 'admin'))
             ->setIcon('su-document');
