@@ -7741,12 +7741,6 @@ parameters:
 			path: src/Sulu/Bundle/CategoryBundle/Controller/CategoryController.php
 
 		-
-			message: '#^Call to an undefined method Sulu\\Component\\Rest\\ListBuilder\\ListBuilderInterface\:\:setParameter\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Controller/CategoryController.php
-
-		-
 			message: '#^Cannot access offset ''_embedded'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
@@ -8234,12 +8228,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#2 \$string of function explode expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Controller/KeywordController.php
-
-		-
-			message: '#^Parameter \#2 \$value of method Sulu\\Component\\Rest\\ListBuilder\\AbstractListBuilder\:\:where\(\) expects string, Sulu\\Bundle\\CategoryBundle\\Entity\\CategoryTranslationInterface given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/CategoryBundle/Controller/KeywordController.php
@@ -12943,20 +12931,8 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Contact\\AbstractContactManager\:\:addFax\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\ContactBundle\\Contact\\AbstractContactManager\:\:addFax\(\) has parameter \$faxData with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Contact\\AbstractContactManager\:\:addNewContactRelations\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
 
@@ -12979,12 +12955,6 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Contact\\AbstractContactManager\:\:addSocialMediaProfile\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\ContactBundle\\Contact\\AbstractContactManager\:\:addSocialMediaProfile\(\) has parameter \$socialMediaProfileData with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -12993,12 +12963,6 @@ parameters:
 		-
 			message: '#^Method Sulu\\Bundle\\ContactBundle\\Contact\\AbstractContactManager\:\:addUrl\(\) has parameter \$data with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Contact\\AbstractContactManager\:\:checkAndSetMainAddress\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
 
@@ -13039,68 +13003,8 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Contact\\AbstractContactManager\:\:deleteAddresses\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Contact\\AbstractContactManager\:\:deleteAllEntitiesOfCollection\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\ContactBundle\\Contact\\AbstractContactManager\:\:deleteAllEntitiesOfCollection\(\) has parameter \$arrayCollection with generic interface Doctrine\\Common\\Collections\\Collection but does not specify its types\: TKey, T$#'
 			identifier: missingType.generics
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Contact\\AbstractContactManager\:\:deleteAllRelations\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Contact\\AbstractContactManager\:\:deleteEmails\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Contact\\AbstractContactManager\:\:deleteFaxes\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Contact\\AbstractContactManager\:\:deleteNotes\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Contact\\AbstractContactManager\:\:deletePhones\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Contact\\AbstractContactManager\:\:deleteSocialMediaProfiles\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Contact\\AbstractContactManager\:\:deleteUrls\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Contact\\AbstractContactManager\:\:findMatchByCallback\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
 
@@ -13119,12 +13023,6 @@ parameters:
 		-
 			message: '#^Method Sulu\\Bundle\\ContactBundle\\Contact\\AbstractContactManager\:\:findMatchByCallback\(\) has parameter \$requestEntities with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Contact\\AbstractContactManager\:\:getAddressByCondition\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
 
@@ -13287,36 +13185,6 @@ parameters:
 		-
 			message: '#^Method Sulu\\Bundle\\ContactBundle\\Contact\\AbstractContactManager\:\:resetIndexOfSubentites\(\) return type with generic interface Doctrine\\Common\\Collections\\Collection does not specify its types\: TKey, T$#'
 			identifier: missingType.generics
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Contact\\AbstractContactManager\:\:setMainEmail\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Contact\\AbstractContactManager\:\:setMainFax\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Contact\\AbstractContactManager\:\:setMainForCollection\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Contact\\AbstractContactManager\:\:setMainPhone\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Contact\\AbstractContactManager\:\:setMainUrl\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
 
@@ -14041,18 +13909,6 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Contact/AccountManager.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Contact\\AccountManager\:\:deleteAllRelations\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AccountManager.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Contact\\AccountManager\:\:deleteBankAccounts\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AccountManager.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\ContactBundle\\Contact\\AccountManager\:\:findAll\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -14575,44 +14431,8 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Contact/ContactManagerInterface.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Contact\\ContactManagerInterface\:\:removeAddressRelation\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/ContactManagerInterface.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Contact\\ContactManagerInterface\:\:setMainEmail\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/ContactManagerInterface.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Contact\\ContactManagerInterface\:\:setMainFax\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/ContactManagerInterface.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Contact\\ContactManagerInterface\:\:setMainForCollection\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/ContactManagerInterface.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\ContactBundle\\Contact\\ContactManagerInterface\:\:setMainForCollection\(\) has parameter \$arrayCollection with generic interface Doctrine\\Common\\Collections\\Collection but does not specify its types\: TKey, T$#'
 			identifier: missingType.generics
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/ContactManagerInterface.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Contact\\ContactManagerInterface\:\:setMainPhone\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/ContactManagerInterface.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Contact\\ContactManagerInterface\:\:setMainUrl\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Contact/ContactManagerInterface.php
 
@@ -14763,12 +14583,6 @@ parameters:
 		-
 			message: '#^Binary operation "\." between non\-falsy\-string and mixed results in an error\.$#'
 			identifier: binaryOp.invalid
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Controller/AbstractMediaController.php
-
-		-
-			message: '#^Call to an undefined method Sulu\\Component\\Rest\\ListBuilder\\ListBuilderInterface\:\:setIdField\(\)\.$#'
-			identifier: method.notFound
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Controller/AbstractMediaController.php
 
@@ -14935,7 +14749,7 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Controller/AbstractMediaController.php
 
 		-
-			message: '#^Parameter \#2 \$value of method Sulu\\Component\\Rest\\ListBuilder\\AbstractListBuilder\:\:where\(\) expects string, mixed given\.$#'
+			message: '#^Parameter \#2 \$value of method Sulu\\Component\\Rest\\ListBuilder\\AbstractListBuilder\:\:where\(\) expects bool\|float\|int\|string\|null, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Controller/AbstractMediaController.php
@@ -15008,12 +14822,6 @@ parameters:
 
 		-
 			message: '#^Call to an undefined method Sulu\\Bundle\\ContactBundle\\Entity\\AccountRepositoryInterface\:\:findChildAccounts\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Controller/AccountController.php
-
-		-
-			message: '#^Call to an undefined method Sulu\\Component\\Rest\\ListBuilder\\ListBuilderInterface\:\:setIdField\(\)\.$#'
 			identifier: method.notFound
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Controller/AccountController.php
@@ -15163,12 +14971,6 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Controller/AccountController.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Controller\\AccountController\:\:generateFlatListBuilder\(\) should return Sulu\\Component\\Rest\\ListBuilder\\Doctrine\\DoctrineListBuilder but returns Sulu\\Component\\Rest\\ListBuilder\\ListBuilderInterface\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Controller/AccountController.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\ContactBundle\\Controller\\AccountController\:\:getAccountAddressesFieldDescriptors\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -15295,27 +15097,27 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Controller/AccountController.php
 
 		-
+			message: '#^Parameter \#1 \$fieldDescriptor of method Sulu\\Component\\Rest\\ListBuilder\\AbstractListBuilder\:\:sort\(\) expects Sulu\\Component\\Rest\\ListBuilder\\FieldDescriptorInterface, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Sulu/Bundle/ContactBundle/Controller/AccountController.php
+
+		-
+			message: '#^Parameter \#1 \$fieldDescriptor of method Sulu\\Component\\Rest\\ListBuilder\\AbstractListBuilder\:\:where\(\) expects Sulu\\Component\\Rest\\ListBuilder\\FieldDescriptorInterface, mixed given\.$#'
+			identifier: argument.type
+			count: 2
+			path: src/Sulu/Bundle/ContactBundle/Controller/AccountController.php
+
+		-
 			message: '#^Parameter \#1 \$fieldDescriptor of method Sulu\\Component\\Rest\\ListBuilder\\AbstractListBuilder\:\:whereNot\(\) expects Sulu\\Component\\Rest\\ListBuilder\\FieldDescriptorInterface, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Controller/AccountController.php
 
 		-
-			message: '#^Parameter \#1 \$fieldDescriptor of method Sulu\\Component\\Rest\\ListBuilder\\ListBuilderInterface\:\:addSelectField\(\) expects Sulu\\Component\\Rest\\ListBuilder\\FieldDescriptorInterface, mixed given\.$#'
+			message: '#^Parameter \#1 \$fieldDescriptor of method Sulu\\Component\\Rest\\ListBuilder\\Doctrine\\DoctrineListBuilder\:\:addSelectField\(\) expects Sulu\\Component\\Rest\\ListBuilder\\FieldDescriptorInterface, mixed given\.$#'
 			identifier: argument.type
 			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Controller/AccountController.php
-
-		-
-			message: '#^Parameter \#1 \$fieldDescriptor of method Sulu\\Component\\Rest\\ListBuilder\\ListBuilderInterface\:\:sort\(\) expects Sulu\\Component\\Rest\\ListBuilder\\FieldDescriptorInterface, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Controller/AccountController.php
-
-		-
-			message: '#^Parameter \#1 \$fieldDescriptor of method Sulu\\Component\\Rest\\ListBuilder\\ListBuilderInterface\:\:where\(\) expects Sulu\\Component\\Rest\\ListBuilder\\FieldDescriptorInterface, mixed given\.$#'
-			identifier: argument.type
-			count: 2
 			path: src/Sulu/Bundle/ContactBundle/Controller/AccountController.php
 
 		-
@@ -15344,6 +15146,12 @@ parameters:
 
 		-
 			message: '#^Parameter \#1 \$id of method Sulu\\Bundle\\ContactBundle\\Entity\\AccountRepositoryInterface\:\:findAccountByIdAndDelete\(\) expects int, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Sulu/Bundle/ContactBundle/Controller/AccountController.php
+
+		-
+			message: '#^Parameter \#1 \$idField of method Sulu\\Component\\Rest\\ListBuilder\\Doctrine\\DoctrineListBuilder\:\:setIdField\(\) expects Sulu\\Component\\Rest\\ListBuilder\\Doctrine\\FieldDescriptor\\DoctrineFieldDescriptorInterface, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Controller/AccountController.php
@@ -15529,7 +15337,7 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Controller/AccountController.php
 
 		-
-			message: '#^Parameter \#2 \$order of method Sulu\\Component\\Rest\\ListBuilder\\ListBuilderInterface\:\:sort\(\) expects string, mixed given\.$#'
+			message: '#^Parameter \#2 \$order of method Sulu\\Component\\Rest\\ListBuilder\\AbstractListBuilder\:\:sort\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Controller/AccountController.php
@@ -15562,18 +15370,6 @@ parameters:
 			message: '#^Parameter \#2 \$urls of method Sulu\\Bundle\\ContactBundle\\Contact\\AbstractContactManager\<Sulu\\Bundle\\ContactBundle\\Entity\\AccountInterface,Sulu\\Bundle\\ContactBundle\\Api\\Account,Sulu\\Bundle\\ContactBundle\\Entity\\AccountAddress\>\:\:processUrls\(\) expects array, mixed given\.$#'
 			identifier: argument.type
 			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Controller/AccountController.php
-
-		-
-			message: '#^Parameter \#2 \$value of method Sulu\\Component\\Rest\\ListBuilder\\AbstractListBuilder\:\:where\(\) expects string, null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Controller/AccountController.php
-
-		-
-			message: '#^Parameter \#2 \$value of method Sulu\\Component\\Rest\\ListBuilder\\ListBuilderInterface\:\:where\(\) expects string, int given\.$#'
-			identifier: argument.type
-			count: 2
 			path: src/Sulu/Bundle/ContactBundle/Controller/AccountController.php
 
 		-
@@ -15805,13 +15601,13 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Controller/ContactController.php
 
 		-
-			message: '#^Parameter \#1 \$fieldDescriptor of method Sulu\\Component\\Rest\\ListBuilder\\ListBuilderInterface\:\:addGroupBy\(\) expects Sulu\\Component\\Rest\\ListBuilder\\FieldDescriptorInterface, mixed given\.$#'
+			message: '#^Parameter \#1 \$fieldDescriptor of method Sulu\\Component\\Rest\\ListBuilder\\AbstractListBuilder\:\:addGroupBy\(\) expects Sulu\\Component\\Rest\\ListBuilder\\FieldDescriptorInterface, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Controller/ContactController.php
 
 		-
-			message: '#^Parameter \#1 \$fieldDescriptor of method Sulu\\Component\\Rest\\ListBuilder\\ListBuilderInterface\:\:where\(\) expects Sulu\\Component\\Rest\\ListBuilder\\FieldDescriptorInterface, mixed given\.$#'
+			message: '#^Parameter \#1 \$fieldDescriptor of method Sulu\\Component\\Rest\\ListBuilder\\AbstractListBuilder\:\:where\(\) expects Sulu\\Component\\Rest\\ListBuilder\\FieldDescriptorInterface, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Controller/ContactController.php
@@ -15836,12 +15632,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#1 \$key of function array_key_exists expects int\|string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Controller/ContactController.php
-
-		-
-			message: '#^Parameter \#1 \$listBuilder of method Sulu\\Bundle\\ContactBundle\\Controller\\ContactController\:\:prepareListResponse\(\) expects Sulu\\Component\\Rest\\ListBuilder\\Doctrine\\DoctrineListBuilder, Sulu\\Component\\Rest\\ListBuilder\\ListBuilderInterface given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Controller/ContactController.php
@@ -15872,12 +15662,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#2 \$locale of method Sulu\\Bundle\\ContactBundle\\Controller\\ContactController\:\:getList\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Controller/ContactController.php
-
-		-
-			message: '#^Parameter \#2 \$value of method Sulu\\Component\\Rest\\ListBuilder\\ListBuilderInterface\:\:where\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Controller/ContactController.php
@@ -27439,12 +27223,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Controller/MediaController.php
 
 		-
-			message: '#^Call to an undefined method Sulu\\Component\\Rest\\ListBuilder\\ListBuilderInterface\:\:addPermissionCheckField\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Controller/MediaController.php
-
-		-
 			message: '#^Cannot access offset ''adminUrl'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
@@ -27577,12 +27355,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Controller/MediaController.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\Controller\\MediaController\:\:getListBuilder\(\) should return Sulu\\Component\\Rest\\ListBuilder\\Doctrine\\DoctrineListBuilder but returns Sulu\\Component\\Rest\\ListBuilder\\ListBuilderInterface\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Controller/MediaController.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\MediaBundle\\Controller\\MediaController\:\:getRequestParameter\(\) should return string but returns mixed\.$#'
 			identifier: return.type
 			count: 1
@@ -27595,19 +27367,13 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Controller/MediaController.php
 
 		-
-			message: '#^Method Sulu\\Component\\Rest\\ListBuilder\\ListBuilderInterface\:\:setPermissionCheck\(\) invoked with 3 parameters, 2 required\.$#'
-			identifier: arguments.count
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Controller/MediaController.php
-
-		-
-			message: '#^Parameter \#1 \$fieldDescriptors of method Sulu\\Bundle\\MediaBundle\\Media\\ListBuilderFactory\\MediaListBuilderFactory\:\:getListBuilder\(\) expects array, array\<Sulu\\Component\\Rest\\ListBuilder\\FieldDescriptorInterface\>\|null given\.$#'
+			message: '#^Parameter \#1 \$fieldDescriptor of method Sulu\\Component\\Rest\\ListBuilder\\Doctrine\\DoctrineListBuilder\:\:addPermissionCheckField\(\) expects Sulu\\Component\\Rest\\ListBuilder\\Doctrine\\FieldDescriptor\\DoctrineFieldDescriptor, Sulu\\Component\\Rest\\ListBuilder\\FieldDescriptorInterface given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Controller/MediaController.php
 
 		-
-			message: '#^Parameter \#1 \$id of method Sulu\\Bundle\\MediaBundle\\Entity\\CollectionRepositoryInterface\:\:findCollectionTypeById\(\) expects int, mixed given\.$#'
+			message: '#^Parameter \#1 \$fieldDescriptors of method Sulu\\Bundle\\MediaBundle\\Media\\ListBuilderFactory\\MediaListBuilderFactory\:\:getListBuilder\(\) expects array, array\<Sulu\\Component\\Rest\\ListBuilder\\FieldDescriptorInterface\>\|null given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Controller/MediaController.php
@@ -27637,7 +27403,7 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Controller/MediaController.php
 
 		-
-			message: '#^Parameter \#1 \$user of method Sulu\\Component\\Rest\\ListBuilder\\ListBuilderInterface\:\:setPermissionCheck\(\) expects Sulu\\Component\\Security\\Authentication\\UserInterface, mixed given\.$#'
+			message: '#^Parameter \#1 \$user of method Sulu\\Component\\Rest\\ListBuilder\\Doctrine\\DoctrineListBuilder\:\:setPermissionCheck\(\) expects Sulu\\Component\\Security\\Authentication\\UserInterface, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Controller/MediaController.php
@@ -27676,12 +27442,6 @@ parameters:
 			message: '#^Parameter \#2 \$string of function explode expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 2
-			path: src/Sulu/Bundle/MediaBundle/Controller/MediaController.php
-
-		-
-			message: '#^Parameter \#2 \$value of method Sulu\\Component\\Rest\\ListBuilder\\ListBuilderInterface\:\:where\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Controller/MediaController.php
 
 		-
@@ -30314,12 +30074,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#2 \$fieldDescriptors of method Sulu\\Component\\Rest\\RestHelperInterface\:\:initializeListBuilder\(\) expects array\<Sulu\\Component\\Rest\\ListBuilder\\FieldDescriptorInterface\>, array given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Media/ListBuilderFactory/MediaListBuilderFactory.php
-
-		-
-			message: '#^Parameter \#2 \$value of method Sulu\\Component\\Rest\\ListBuilder\\AbstractListBuilder\:\:where\(\) expects string, int\<min, \-1\>\|int\<1, max\> given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Media/ListBuilderFactory/MediaListBuilderFactory.php
@@ -51445,12 +51199,6 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/Controller/GroupController.php
 
 		-
-			message: '#^Parameter \#1 \$className of method Doctrine\\ORM\\EntityManagerInterface\:\:getRepository\(\) expects class\-string\<object\>, string given\.$#'
-			identifier: argument.type
-			count: 5
-			path: src/Sulu/Bundle/SecurityBundle/Controller/GroupController.php
-
-		-
 			message: '#^Parameter \#1 \$id of method Sulu\\Component\\Rest\\AbstractRestController\:\:responseDelete\(\) expects int\|string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -51514,12 +51262,6 @@ parameters:
 			message: '#^Property Sulu\\Bundle\\SecurityBundle\\Controller\\GroupController\:\:\$fieldDescriptors type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Controller/GroupController.php
-
-		-
-			message: '#^Unable to resolve the template type T in call to method Doctrine\\ORM\\EntityManagerInterface\:\:getRepository\(\)$#'
-			identifier: argument.templateType
-			count: 5
 			path: src/Sulu/Bundle/SecurityBundle/Controller/GroupController.php
 
 		-
@@ -52033,7 +51775,7 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/Controller/RoleController.php
 
 		-
-			message: '#^Parameter \#1 \$fieldDescriptor of method Sulu\\Component\\Rest\\ListBuilder\\ListBuilderInterface\:\:where\(\) expects Sulu\\Component\\Rest\\ListBuilder\\FieldDescriptorInterface, mixed given\.$#'
+			message: '#^Parameter \#1 \$fieldDescriptor of method Sulu\\Component\\Rest\\ListBuilder\\AbstractListBuilder\:\:where\(\) expects Sulu\\Component\\Rest\\ListBuilder\\FieldDescriptorInterface, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Controller/RoleController.php
@@ -52153,12 +51895,6 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/Controller/RoleController.php
 
 		-
-			message: '#^Parameter \#2 \$value of method Sulu\\Component\\Rest\\ListBuilder\\ListBuilderInterface\:\:where\(\) expects string, false given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Controller/RoleController.php
-
-		-
 			message: '#^Property Sulu\\Bundle\\SecurityBundle\\Controller\\RoleController\:\:\$fieldDescriptors \(array\) does not accept array\<Sulu\\Component\\Rest\\ListBuilder\\FieldDescriptorInterface\>\|null\.$#'
 			identifier: assign.propertyType
 			count: 1
@@ -52243,12 +51979,6 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/Controller/UserController.php
 
 		-
-			message: '#^Parameter \#1 \$className of method Doctrine\\ORM\\EntityManagerInterface\:\:getRepository\(\) expects class\-string\<object\>, string given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Controller/UserController.php
-
-		-
 			message: '#^Parameter \#1 \$id of method Sulu\\Bundle\\SecurityBundle\\UserManager\\UserManager\:\:getUserById\(\) expects int, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -52281,12 +52011,6 @@ parameters:
 		-
 			message: '#^Strict comparison using \=\=\= between true and string will always evaluate to false\.$#'
 			identifier: identical.alwaysFalse
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Controller/UserController.php
-
-		-
-			message: '#^Unable to resolve the template type T in call to method Doctrine\\ORM\\EntityManagerInterface\:\:getRepository\(\)$#'
-			identifier: argument.templateType
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Controller/UserController.php
 
@@ -55059,12 +54783,6 @@ parameters:
 		-
 			message: '#^Method Sulu\\Bundle\\SecurityBundle\\UserManager\\UserManager\:\:findAll\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/UserManager/UserManager.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\SecurityBundle\\UserManager\\UserManager\:\:findMatchByCallback\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/UserManager/UserManager.php
 
@@ -85987,12 +85705,6 @@ parameters:
 			path: src/Sulu/Component/Rest/ListBuilder/Filter/BooleanFilterType.php
 
 		-
-			message: '#^Parameter \#2 \$value of method Sulu\\Component\\Rest\\ListBuilder\\ListBuilderInterface\:\:where\(\) expects string, bool given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/Filter/BooleanFilterType.php
-
-		-
 			message: '#^Method Sulu\\Component\\Rest\\ListBuilder\\Filter\\DateFilterType\:\:filter\(\) has parameter \$options with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -86029,12 +85741,6 @@ parameters:
 			path: src/Sulu/Component/Rest/ListBuilder/Filter/NumberFilterType.php
 
 		-
-			message: '#^Parameter \#2 \$value of method Sulu\\Component\\Rest\\ListBuilder\\ListBuilderInterface\:\:where\(\) expects string, float\|int\|string given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/Filter/NumberFilterType.php
-
-		-
 			message: '#^Method Sulu\\Component\\Rest\\ListBuilder\\Filter\\SelectFilterType\:\:filter\(\) has parameter \$options with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -86053,7 +85759,7 @@ parameters:
 			path: src/Sulu/Component/Rest/ListBuilder/Filter/TextFilterType.php
 
 		-
-			message: '#^Parameter \#2 \$value of method Sulu\\Component\\Rest\\ListBuilder\\ListBuilderInterface\:\:where\(\) expects string, mixed given\.$#'
+			message: '#^Parameter \#2 \$value of method Sulu\\Component\\Rest\\ListBuilder\\ListBuilderInterface\:\:where\(\) expects bool\|float\|int\|string\|null, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Component/Rest/ListBuilder/Filter/TextFilterType.php
@@ -87601,12 +87307,6 @@ parameters:
 			path: src/Sulu/Component/Rest/RestHelper.php
 
 		-
-			message: '#^Method Sulu\\Component\\Rest\\RestHelper\:\:findMatchByCallback\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Component/Rest/RestHelper.php
-
-		-
 			message: '#^Method Sulu\\Component\\Rest\\RestHelper\:\:findMatchByCallback\(\) has parameter \$entity with no value type specified in iterable type Traversable\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -87910,18 +87610,6 @@ parameters:
 			message: '#^Parameter \#2 \$haystack of method PHPUnit\\Framework\\Assert\:\:assertCount\(\) expects Countable\|iterable, mixed given\.$#'
 			identifier: argument.type
 			count: 4
-			path: src/Sulu/Component/Rest/Tests/Unit/ListBuilder/Doctrine/DoctrineListBuilderTest.php
-
-		-
-			message: '#^Parameter \#2 \$value of method Sulu\\Component\\Rest\\ListBuilder\\AbstractListBuilder\:\:where\(\) expects string, int given\.$#'
-			identifier: argument.type
-			count: 2
-			path: src/Sulu/Component/Rest/Tests/Unit/ListBuilder/Doctrine/DoctrineListBuilderTest.php
-
-		-
-			message: '#^Parameter \#2 \$value of method Sulu\\Component\\Rest\\ListBuilder\\AbstractListBuilder\:\:where\(\) expects string, null given\.$#'
-			identifier: argument.type
-			count: 2
 			path: src/Sulu/Component/Rest/Tests/Unit/ListBuilder/Doctrine/DoctrineListBuilderTest.php
 
 		-

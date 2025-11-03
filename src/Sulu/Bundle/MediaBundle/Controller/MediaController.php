@@ -64,6 +64,10 @@ class MediaController extends AbstractMediaController implements
      */
     protected static $entityKey = MediaInterface::RESOURCE_KEY;
 
+    /**
+     * @param class-string $mediaClass
+     * @param class-string $collectionClass
+     */
     public function __construct(
         ViewHandlerInterface $viewHandler,
         TokenStorageInterface $tokenStorage,
@@ -258,6 +262,7 @@ class MediaController extends AbstractMediaController implements
             $listBuilder->sort($fieldDescriptors['created'], 'desc');
         }
 
+        /** @var int $collectionId */
         $collectionId = $request->get('collection');
         if ($collectionId) {
             $collectionType = $this->collectionRepository->findCollectionTypeById($collectionId);

@@ -51,6 +51,9 @@ class TagController extends AbstractRestController implements ClassResourceInter
 
     protected $bundlePrefix = 'tags.';
 
+    /**
+     * @param class-string $tagClass
+     */
     public function __construct(
         ViewHandlerInterface $viewHandler,
         private RestHelperInterface $restHelper,

@@ -58,6 +58,9 @@ class RoleController extends AbstractRestController implements ClassResourceInte
      */
     protected $fieldDescriptors = [];
 
+    /**
+     * @param class-string $roleClass
+     */
     public function __construct(
         ViewHandlerInterface $viewHandler,
         private FieldDescriptorFactoryInterface $fieldDescriptorFactory,
