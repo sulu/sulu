@@ -81,8 +81,6 @@ class AudienceTargetingCacheListener implements EventSubscriberInterface
      * to it. If the cookie didn't exist yet, another request is fired in order to set the value for the cookie.
      *
      * Returns true if the cookie was already set and false otherwise.
-     *
-     * @return bool
      */
     private function setTargetGroupHeader(Request $request, CacheInvalidation $kernel): bool
     {
@@ -105,8 +103,6 @@ class AudienceTargetingCacheListener implements EventSubscriberInterface
 
     /**
      * Sends a request to the application to determine the target group of the current visitor.
-     *
-     * @return ?string
      */
     private function requestTargetGroup(Request $request, CacheInvalidation $kernel, ?int $currentTargetGroup = null): ?string
     {

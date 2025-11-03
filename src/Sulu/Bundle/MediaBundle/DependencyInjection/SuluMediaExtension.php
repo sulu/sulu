@@ -32,10 +32,10 @@ use Sulu\Bundle\PersistenceBundle\DependencyInjection\PersistenceExtensionTrait;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\DependencyInjection\Reference;
-use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\Process\ExecutableFinder;
 
 class SuluMediaExtension extends Extension implements PrependExtensionInterface

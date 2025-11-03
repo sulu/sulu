@@ -26,9 +26,6 @@ class ResolveTargetEntitiesPass implements CompilerPassInterface
     {
     }
 
-    /**
-     * @return void
-     */
     public function process(ContainerBuilder $container): void
     {
         if (!$container->hasDefinition('doctrine.orm.listeners.resolve_target_entity')) {

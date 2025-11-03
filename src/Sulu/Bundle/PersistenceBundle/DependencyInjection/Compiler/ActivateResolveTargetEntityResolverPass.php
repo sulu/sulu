@@ -20,9 +20,6 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
  */
 class ActivateResolveTargetEntityResolverPass implements CompilerPassInterface
 {
-    /**
-     * @return void
-     */
     public function process(ContainerBuilder $container): void
     {
         // TODO we should replace the SuluPersistenceBundle with configuring doctrine.orm.resolve_target_entities in the config

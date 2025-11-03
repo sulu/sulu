@@ -17,9 +17,9 @@ use Sulu\Bundle\WebsiteBundle\Sitemap\SitemapProviderInterface;
 use Sulu\Component\HttpKernel\SuluKernel;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
-use Symfony\Component\DependencyInjection\Extension\Extension;
 
 /**
  * This is the class that loads and manages your bundle configuration.

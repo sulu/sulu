@@ -29,8 +29,6 @@ class LastLoginListener implements EventSubscriberInterface
 
     /**
      * Subscribe the login events.
-     *
-     * @return array
      */
     public static function getSubscribedEvents(): array
     {

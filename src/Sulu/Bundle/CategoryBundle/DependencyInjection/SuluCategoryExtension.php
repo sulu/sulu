@@ -28,9 +28,9 @@ use Sulu\Bundle\CategoryBundle\Exception\KeywordNotUniqueException;
 use Sulu\Bundle\PersistenceBundle\DependencyInjection\PersistenceExtensionTrait;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
-use Symfony\Component\DependencyInjection\Extension\Extension;
 
 class SuluCategoryExtension extends Extension implements PrependExtensionInterface
 {

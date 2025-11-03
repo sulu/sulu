@@ -25,9 +25,9 @@ use Sulu\Component\Rest\ListBuilder\Filter\InvalidFilterTypeOptionsException;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
-use Symfony\Component\DependencyInjection\Extension\Extension;
 
 /**
  * This is the class that loads and manages your bundle configuration.
@@ -233,9 +233,6 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
         }
     }
 
-    /**
-     * @return void
-     */
     public function load(array $configs, ContainerBuilder $container): void
     {
         $configuration = new Configuration();
