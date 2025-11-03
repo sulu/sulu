@@ -220,9 +220,7 @@
         <service id="sulu_media.image.scaler" class="%sulu_media.image.scaler.class%" />
         <service id="sulu_media.image.cropper" class="%sulu_media.image.cropper.class%" />
 
-        <service id="sulu_media.image.transformation_pool" class="%sulu_media.image.transformation_pool.class%">
-            <argument type="tagged_locator" tag="sulu_media.image.transformation" index-by="alias" />
-        </service>
+        <service id="sulu_media.image.transformation_pool" class="%sulu_media.image.transformation_pool.class%" />
 
         <service id="sulu_media.image.transformation.crop" class="%sulu_media.image.transformation.crop.class%">
             <tag name="sulu_media.image.transformation" alias="crop" />
