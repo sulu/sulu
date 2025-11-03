@@ -18,29 +18,29 @@ use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\CollectionInterface;
 use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
-use Sulu\Bundle\MediaBundle\Infrastructure\Sulu\Search\CollectionReindexProvider;
+use Sulu\Bundle\MediaBundle\Infrastructure\Sulu\Search\AdminCollectionReindexProvider;
 use Sulu\Bundle\TestBundle\Testing\SetGetPrivatePropertyTrait;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Content\Tests\Functional\Traits\CreateMediaTrait;
 
-class CollectionReindexProviderTest extends SuluTestCase
+class AdminCollectionReindexProviderTest extends SuluTestCase
 {
     use SetGetPrivatePropertyTrait;
     use CreateMediaTrait;
 
     private EntityManagerInterface $entityManager;
-    private CollectionReindexProvider $provider;
+    private AdminCollectionReindexProvider $provider;
 
     protected function setUp(): void
     {
         $this->entityManager = $this->getEntityManager();
-        $this->provider = new CollectionReindexProvider($this->entityManager);
+        $this->provider = new AdminCollectionReindexProvider($this->entityManager);
         $this->purgeDatabase();
     }
 
     public function testGetIndex(): void
     {
-        $this->assertSame('admin', CollectionReindexProvider::getIndex());
+        $this->assertSame('admin', AdminCollectionReindexProvider::getIndex());
     }
 
     public function testTotal(): void

@@ -30,7 +30,7 @@ use Symfony\Component\Messenger\MessageBusInterface;
  * @internal this class is internal no backwards compatibility promise is given for this class
  *           use Symfony Dependency Injection to override or create your own Listener instead
  */
-final class ContactIndexListener
+final class AdminContactIndexListener
 {
     public function __construct(
         private readonly MessageBusInterface $messageBus,

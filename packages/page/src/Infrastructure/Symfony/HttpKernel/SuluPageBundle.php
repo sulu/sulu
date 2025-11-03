@@ -514,8 +514,8 @@ final class SuluPageBundle extends AbstractBundle
                 ->tag('sulu_trash.restore_configuration_provider');
         }
 
-        $services->set('sulu_page.page_index_listener')
-            ->class('Sulu\Page\Infrastructure\Sulu\Search\PageIndexListener')
+        $services->set('sulu_page.admin_page_index_listener')
+            ->class('Sulu\Page\Infrastructure\Sulu\Search\AdminPageIndexListener')
             ->args([
                 new Reference('sulu_message_bus'),
             ])
@@ -527,8 +527,8 @@ final class SuluPageBundle extends AbstractBundle
             ->tag('kernel.event_listener', ['event' => PageTranslationAddedEvent::class, 'method' => 'onPageChanged'])
             ->tag('kernel.event_listener', ['event' => PageTranslationRemovedEvent::class, 'method' => 'onPageChanged']);
 
-        $services->set('sulu_page.page_reindex_provider')
-            ->class('Sulu\Page\Infrastructure\Sulu\Search\PageReindexProvider')
+        $services->set('sulu_page.admin_page_reindex_provider')
+            ->class('Sulu\Page\Infrastructure\Sulu\Search\AdminPageReindexProvider')
             ->args([
                 new Reference('doctrine.orm.entity_manager'),
             ])

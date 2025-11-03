@@ -26,13 +26,13 @@ use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\CollectionInterface;
 use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
 use Sulu\Bundle\MediaBundle\Entity\CollectionType;
-use Sulu\Bundle\MediaBundle\Infrastructure\Sulu\Search\CollectionIndexListener;
+use Sulu\Bundle\MediaBundle\Infrastructure\Sulu\Search\AdminCollectionIndexListener;
 use Sulu\Bundle\TestBundle\Testing\SetGetPrivatePropertyTrait;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\MessageBusInterface;
 
-#[CoversClass(CollectionIndexListener::class)]
-class CollectionIndexListenerTest extends TestCase
+#[CoversClass(AdminCollectionIndexListener::class)]
+class AdminCollectionIndexListenerTest extends TestCase
 {
     use ProphecyTrait;
     use SetGetPrivatePropertyTrait;
@@ -41,12 +41,12 @@ class CollectionIndexListenerTest extends TestCase
      * @var ObjectProphecy<MessageBusInterface>
      */
     private ObjectProphecy $messageBus;
-    private CollectionIndexListener $listener;
+    private AdminCollectionIndexListener $listener;
 
     protected function setUp(): void
     {
         $this->messageBus = $this->prophesize(MessageBusInterface::class);
-        $this->listener = new CollectionIndexListener($this->messageBus->reveal());
+        $this->listener = new AdminCollectionIndexListener($this->messageBus->reveal());
     }
 
     public function testOnCollectionChangedWithCollectionCreatedEvent(): void
@@ -68,6 +68,7 @@ class CollectionIndexListenerTest extends TestCase
     public function testOnCollectionChangedWithCollectionModifiedEvent(): void
     {
         $collection = $this->createCollection();
+        static::setPrivateProperty($collection, 'id', 1);
         $event = new CollectionModifiedEvent($collection, 'en', []);
 
         $expectedConfig = ReindexConfig::create()

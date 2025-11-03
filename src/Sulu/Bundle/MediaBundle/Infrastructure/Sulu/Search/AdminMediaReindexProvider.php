@@ -32,7 +32,7 @@ use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
  * @internal this class is internal no backwards compatibility promise is given for this class
  *            use Symfony Dependency Injection to override or create your own ReindexProvider instead
  */
-final class MediaReindexProvider implements ReindexProviderInterface
+final class AdminMediaReindexProvider implements ReindexProviderInterface
 {
     /**
      * @var EntityRepository<MediaInterface>

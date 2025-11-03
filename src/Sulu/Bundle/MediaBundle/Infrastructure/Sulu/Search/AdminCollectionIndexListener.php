@@ -21,7 +21,7 @@ use Sulu\Bundle\MediaBundle\Domain\Event\CollectionRestoredEvent;
 use Sulu\Bundle\MediaBundle\Entity\CollectionInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
 
-final class CollectionIndexListener
+final class AdminCollectionIndexListener
 {
     public function __construct(
         private readonly MessageBusInterface $messageBus,
@@ -30,31 +30,14 @@ final class CollectionIndexListener
 
     public function onCollectionChanged(CollectionCreatedEvent|CollectionModifiedEvent|CollectionRemovedEvent|CollectionRestoredEvent $event): void
     {
-        $locale = $event->getResourceLocale();
-        $identifiers = [];
+        $resourceId = $event->getResourceId();
 
-        if ($event instanceof CollectionRemovedEvent) {
-            $locales = $event->getAllLocales();
+        $identifiers = \array_map(
+            fn (string $locale) => CollectionInterface::RESOURCE_KEY . '::' . $resourceId . '::' . $locale,
+            $this->getLocales($event),
+        );
 
-            if (!$locales) {
-                return;
-            }
-
-            foreach ($locales as $locale) {
-                $identifiers[] = CollectionInterface::RESOURCE_KEY . '::' . $event->getResourceId() . '::' . $locale;
-            }
-        } elseif ($event instanceof CollectionRestoredEvent) {
-            $collection = $event->getCollection();
-            $locales = $this->getLocales($collection);
-
-            foreach ($locales as $locale) {
-                $identifiers[] = CollectionInterface::RESOURCE_KEY . '::' . $event->getResourceId() . '::' . $locale;
-            }
-        } elseif ($locale) {
-            $identifiers[] = CollectionInterface::RESOURCE_KEY . '::' . $event->getResourceId() . '::' . $locale;
-        }
-
-        if (!$identifiers) {
+        if ([] === $identifiers) {
             return;
         }
 
@@ -68,14 +51,22 @@ final class CollectionIndexListener
     /**
      * @return string[]
      */
-    private function getLocales(CollectionInterface $collection): array
+    private function getLocales(CollectionCreatedEvent|CollectionModifiedEvent|CollectionRemovedEvent|CollectionRestoredEvent $event): array
     {
-        $locales = [];
-
-        foreach ($collection->getMeta() as $meta) {
-            $locales[] = $meta->getLocale();
+        if ($event instanceof CollectionRemovedEvent) {
+            return $event->getAllLocales() ?? [];
         }
 
-        return $locales;
+        if ($event instanceof CollectionRestoredEvent) {
+            $locales = [];
+            $collection = $event->getCollection();
+            foreach ($collection->getMeta() as $meta) {
+                $locales[] = $meta->getLocale();
+            }
+
+            return $locales;
+        }
+
+        return $event->getResourceLocale() ? [$event->getResourceLocale()] : [];
     }
 }

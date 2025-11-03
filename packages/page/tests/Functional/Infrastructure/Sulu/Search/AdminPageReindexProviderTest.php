@@ -11,34 +11,34 @@ declare(strict_types=1);
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Snippet\Tests\Functional\Infrastructure\Sulu\Search;
+namespace Sulu\Page\Tests\Functional\Infrastructure\Sulu\Search;
 
 use CmsIg\Seal\Reindex\ReindexConfig;
 use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Bundle\TestBundle\Testing\SetGetPrivatePropertyTrait;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
-use Sulu\Snippet\Domain\Model\SnippetInterface;
-use Sulu\Snippet\Infrastructure\Sulu\Search\SnippetReindexProvider;
-use Sulu\Snippet\Tests\Traits\CreateSnippetTrait;
+use Sulu\Page\Domain\Model\PageInterface;
+use Sulu\Page\Infrastructure\Sulu\Search\AdminPageReindexProvider;
+use Sulu\Page\Tests\Traits\CreatePageTrait;
 
-class SnippetReindexProviderTest extends SuluTestCase
+class AdminPageReindexProviderTest extends SuluTestCase
 {
-    use CreateSnippetTrait;
+    use CreatePageTrait;
     use SetGetPrivatePropertyTrait;
 
     private EntityManagerInterface $entityManager;
-    private SnippetReindexProvider $provider;
+    private AdminPageReindexProvider $provider;
 
     protected function setUp(): void
     {
         $this->entityManager = $this->getEntityManager();
-        $this->provider = new SnippetReindexProvider($this->entityManager);
+        $this->provider = new AdminPageReindexProvider($this->entityManager);
         $this->purgeDatabase();
     }
 
     public function testGetIndex(): void
     {
-        $this->assertSame('admin', SnippetReindexProvider::getIndex());
+        $this->assertSame('admin', AdminPageReindexProvider::getIndex());
     }
 
     public function testTotal(): void
@@ -48,25 +48,28 @@ class SnippetReindexProviderTest extends SuluTestCase
 
     public function testProvideAll(): void
     {
-        $snippet1 = $this->createSnippet([
+        $page1 = $this->createPage([
             'en' => [
                 'live' => [
-                    'template' => 'snippet',
-                    'title' => 'Test Snippet',
+                    'template' => 'default',
+                    'title' => 'Test Page',
+                    'url' => '/test-page',
                 ],
             ],
         ]);
-        $snippet2 = $this->createSnippet([
+        $page2 = $this->createPage([
             'en' => [
                 'live' => [
-                    'template' => 'snippet',
-                    'title' => 'Test Snippet 2',
+                    'template' => 'default',
+                    'title' => 'Test Page 2',
+                    'url' => '/test-page-2',
                 ],
             ],
             'de' => [
                 'draft' => [
-                    'template' => 'snippet',
+                    'template' => 'default',
                     'title' => 'Test Schnipsel 2',
+                    'url' => '/test-schnipsel-2',
                 ],
             ],
         ]);
@@ -76,18 +79,18 @@ class SnippetReindexProviderTest extends SuluTestCase
         $changedDateString2 = '2024-11-29 15:30:00';
 
         $connection = self::getEntityManager()->getConnection();
-        $sql = 'UPDATE sn_snippet_dimension_contents SET changed = :changed, created = :created WHERE snippetUuid = :uuid';
+        $sql = 'UPDATE pa_page_dimension_contents SET changed = :changed, created = :created WHERE pageUuid = :uuid';
 
         $connection->executeStatement($sql, [
             'changed' => $changedDateString1,
             'created' => $createdAt,
-            'uuid' => $snippet1->getUuid(),
+            'uuid' => $page1->getUuid(),
         ]);
 
         $connection->executeStatement($sql, [
             'changed' => $changedDateString2,
             'created' => $createdAt,
-            'uuid' => $snippet2->getUuid(),
+            'uuid' => $page2->getUuid(),
         ]);
 
         $config = ReindexConfig::create()->withIndex('admin');
@@ -98,30 +101,30 @@ class SnippetReindexProviderTest extends SuluTestCase
 
         $expectedResult = [
             [
-                'id' => SnippetInterface::RESOURCE_KEY . '::' . $snippet2->getUuid() . '::de',
-                'resourceKey' => SnippetInterface::RESOURCE_KEY,
-                'resourceId' => $snippet2->getUuid(),
+                'id' => PageInterface::RESOURCE_KEY . '::' . $page2->getUuid() . '::de',
+                'resourceKey' => PageInterface::RESOURCE_KEY,
+                'resourceId' => $page2->getUuid(),
                 'changedAt' => (new \DateTimeImmutable($changedDateString2))->format('c'),
                 'createdAt' => (new \DateTimeImmutable($createdAt))->format('c'),
                 'title' => 'Test Schnipsel 2',
                 'locale' => 'de',
             ],
             [
-                'id' => SnippetInterface::RESOURCE_KEY . '::' . $snippet1->getUuid() . '::en',
-                'resourceKey' => SnippetInterface::RESOURCE_KEY,
-                'resourceId' => $snippet1->getUuid(),
+                'id' => PageInterface::RESOURCE_KEY . '::' . $page1->getUuid() . '::en',
+                'resourceKey' => PageInterface::RESOURCE_KEY,
+                'resourceId' => $page1->getUuid(),
                 'changedAt' => (new \DateTimeImmutable($changedDateString1))->format('c'),
                 'createdAt' => (new \DateTimeImmutable($createdAt))->format('c'),
-                'title' => 'Test Snippet',
+                'title' => 'Test Page',
                 'locale' => 'en',
             ],
             [
-                'id' => SnippetInterface::RESOURCE_KEY . '::' . $snippet2->getUuid() . '::en',
-                'resourceKey' => SnippetInterface::RESOURCE_KEY,
-                'resourceId' => $snippet2->getUuid(),
+                'id' => PageInterface::RESOURCE_KEY . '::' . $page2->getUuid() . '::en',
+                'resourceKey' => PageInterface::RESOURCE_KEY,
+                'resourceId' => $page2->getUuid(),
                 'changedAt' => (new \DateTimeImmutable($changedDateString2))->format('c'),
                 'createdAt' => (new \DateTimeImmutable($createdAt))->format('c'),
-                'title' => 'Test Snippet 2',
+                'title' => 'Test Page 2',
                 'locale' => 'en',
             ],
         ];
@@ -137,31 +140,35 @@ class SnippetReindexProviderTest extends SuluTestCase
 
     public function testProvideWithSpecificIdentifiers(): void
     {
-        $snippet1 = $this->createSnippet([
+        $page1 = $this->createPage([
             'en' => [
                 'live' => [
-                    'template' => 'snippet',
-                    'title' => 'Cool Snippet 1',
+                    'template' => 'default',
+                    'title' => 'Cool Page 1',
+                    'url' => '/cool-page-1',
                 ],
             ],
             'de' => [
                 'live' => [
-                    'template' => 'snippet',
-                    'title' => 'Cool Snippet DE 1',
+                    'template' => 'default',
+                    'title' => 'Cool Page DE 1',
+                    'url' => '/cool-seite-de-1',
                 ],
             ],
         ]);
-        $snippet2 = $this->createSnippet([
+        $page2 = $this->createPage([
             'en' => [
                 'live' => [
-                    'template' => 'snippet',
-                    'title' => 'Not so cool Snippet 2',
+                    'template' => 'default',
+                    'title' => 'Not so cool Page 2',
+                    'url' => '/not-so-cool-page-2',
                 ],
             ],
             'de' => [
                 'draft' => [
-                    'template' => 'snippet',
-                    'title' => 'Not so cool Snippet DE 2',
+                    'template' => 'default',
+                    'title' => 'Not so cool Page DE 2',
+                    'url' => '/not-so-cool-seite-de-2',
                 ],
             ],
         ]);
@@ -171,23 +178,23 @@ class SnippetReindexProviderTest extends SuluTestCase
         $changedDateString2 = '2024-06-01 15:30:00';
 
         $connection = self::getEntityManager()->getConnection();
-        $sql = 'UPDATE sn_snippet_dimension_contents SET changed = :changed, created = :created WHERE snippetUuid = :uuid';
+        $sql = 'UPDATE pa_page_dimension_contents SET changed = :changed, created = :created WHERE pageUuid = :uuid';
 
         $connection->executeStatement($sql, [
             'changed' => $changedDateString1,
             'created' => $createdAt,
-            'uuid' => $snippet1->getUuid(),
+            'uuid' => $page1->getUuid(),
         ]);
 
         $connection->executeStatement($sql, [
             'changed' => $changedDateString2,
             'created' => $createdAt,
-            'uuid' => $snippet2->getUuid(),
+            'uuid' => $page2->getUuid(),
         ]);
 
         $identifiers = [
-            SnippetInterface::RESOURCE_KEY . '::' . $snippet1->getUuid() . '::de',
-            SnippetInterface::RESOURCE_KEY . '::' . $snippet2->getUuid() . '::en',
+            PageInterface::RESOURCE_KEY . '::' . $page1->getUuid() . '::de',
+            PageInterface::RESOURCE_KEY . '::' . $page2->getUuid() . '::en',
         ];
 
         $config = ReindexConfig::create()
@@ -199,9 +206,9 @@ class SnippetReindexProviderTest extends SuluTestCase
         $this->assertCount(2, $results);
 
         $resultTitles = \array_column($results, 'title');
-        $this->assertContains('Cool Snippet DE 1', $resultTitles);
-        $this->assertContains('Not so cool Snippet 2', $resultTitles);
-        $this->assertNotContains('Cool Snippet 1', $resultTitles);
-        $this->assertNotContains('Not so cool Snippet DE 2', $resultTitles);
+        $this->assertContains('Cool Page DE 1', $resultTitles);
+        $this->assertContains('Not so cool Page 2', $resultTitles);
+        $this->assertNotContains('Cool Page 1', $resultTitles);
+        $this->assertNotContains('Not so cool Page DE 2', $resultTitles);
     }
 }

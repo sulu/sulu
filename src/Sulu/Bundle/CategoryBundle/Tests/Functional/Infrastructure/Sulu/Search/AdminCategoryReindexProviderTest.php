@@ -18,27 +18,27 @@ use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Bundle\CategoryBundle\Entity\Category;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslation;
-use Sulu\Bundle\CategoryBundle\Infrastructure\Sulu\Search\CategoryReindexProvider;
+use Sulu\Bundle\CategoryBundle\Infrastructure\Sulu\Search\AdminCategoryReindexProvider;
 use Sulu\Bundle\TestBundle\Testing\SetGetPrivatePropertyTrait;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
-class CategoryReindexProviderTest extends SuluTestCase
+class AdminCategoryReindexProviderTest extends SuluTestCase
 {
     use SetGetPrivatePropertyTrait;
 
     private EntityManagerInterface $entityManager;
-    private CategoryReindexProvider $provider;
+    private AdminCategoryReindexProvider $provider;
 
     protected function setUp(): void
     {
         $this->entityManager = $this->getEntityManager();
-        $this->provider = new CategoryReindexProvider($this->entityManager);
+        $this->provider = new AdminCategoryReindexProvider($this->entityManager);
         $this->purgeDatabase();
     }
 
     public function testGetIndex(): void
     {
-        $this->assertSame('admin', CategoryReindexProvider::getIndex());
+        $this->assertSame('admin', AdminCategoryReindexProvider::getIndex());
     }
 
     public function testTotal(): void

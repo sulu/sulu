@@ -33,7 +33,7 @@ use Sulu\Page\Domain\Model\PageInterface;
  * @internal this class is internal no backwards compatibility promise is given for this class
  *            use Symfony Dependency Injection to override or create your own ReindexProvider instead
  */
-final class PageReindexProvider implements ReindexProviderInterface
+final class AdminPageReindexProvider implements ReindexProviderInterface
 {
     /**
      * @var EntityRepository<PageInterface>

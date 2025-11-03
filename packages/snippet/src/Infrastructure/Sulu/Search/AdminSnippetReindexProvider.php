@@ -11,19 +11,19 @@ declare(strict_types=1);
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Article\Infrastructure\Sulu\Search;
+namespace Sulu\Snippet\Infrastructure\Sulu\Search;
 
 use CmsIg\Seal\Reindex\ReindexConfig;
 use CmsIg\Seal\Reindex\ReindexProviderInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
-use Sulu\Article\Domain\Model\ArticleDimensionContentInterface;
-use Sulu\Article\Domain\Model\ArticleInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
+use Sulu\Snippet\Domain\Model\SnippetDimensionContentInterface;
+use Sulu\Snippet\Domain\Model\SnippetInterface;
 
 /**
- * @phpstan-type Article array{
- *     articleId: int,
+ * @phpstan-type Snippet array{
+ *     snippetId: int,
  *     changed: \DateTimeImmutable,
  *     created: \DateTimeImmutable,
  *     title: string,
@@ -33,25 +33,25 @@ use Sulu\Content\Domain\Model\DimensionContentInterface;
  * @internal this class is internal no backwards compatibility promise is given for this class
  *            use Symfony Dependency Injection to override or create your own ReindexProvider instead
  */
-final class ArticleReindexProvider implements ReindexProviderInterface
+final class AdminSnippetReindexProvider implements ReindexProviderInterface
 {
     /**
-     * @var EntityRepository<ArticleInterface>
+     * @var EntityRepository<SnippetInterface>
      */
-    protected EntityRepository $articleRepository;
+    protected EntityRepository $snippetRepository;
 
     /**
-     * @var EntityRepository<ArticleDimensionContentInterface>
+     * @var EntityRepository<SnippetDimensionContentInterface>
      */
     protected EntityRepository $dimensionContentRepository;
 
     public function __construct(
         EntityManagerInterface $entityManager,
     ) {
-        $repository = $entityManager->getRepository(ArticleInterface::class);
-        $dimensionContentRepository = $entityManager->getRepository(ArticleDimensionContentInterface::class);
+        $repository = $entityManager->getRepository(SnippetInterface::class);
+        $dimensionContentRepository = $entityManager->getRepository(SnippetDimensionContentInterface::class);
 
-        $this->articleRepository = $repository;
+        $this->snippetRepository = $repository;
         $this->dimensionContentRepository = $dimensionContentRepository;
     }
 
@@ -63,18 +63,18 @@ final class ArticleReindexProvider implements ReindexProviderInterface
 
     public function provide(ReindexConfig $reindexConfig): \Generator
     {
-        $articles = $this->loadArticles($reindexConfig->getIdentifiers());
+        $snippets = $this->loadSnippets($reindexConfig->getIdentifiers());
 
-        /** @var Article $article */
-        foreach ($articles as $article) {
+        /** @var Snippet $snippet */
+        foreach ($snippets as $snippet) {
             yield [
-                'id' => ArticleInterface::RESOURCE_KEY . '::' . ((string) $article['articleId']) . '::' . $article['locale'],
-                'resourceKey' => ArticleInterface::RESOURCE_KEY,
-                'resourceId' => (string) $article['articleId'],
-                'changedAt' => $article['changed']->format('c'),
-                'createdAt' => $article['created']->format('c'),
-                'title' => $article['title'],
-                'locale' => $article['locale'],
+                'id' => SnippetInterface::RESOURCE_KEY . '::' . ((string) $snippet['snippetId']) . '::' . $snippet['locale'],
+                'resourceKey' => SnippetInterface::RESOURCE_KEY,
+                'resourceId' => (string) $snippet['snippetId'],
+                'changedAt' => $snippet['changed']->format('c'),
+                'createdAt' => $snippet['created']->format('c'),
+                'title' => $snippet['title'],
+                'locale' => $snippet['locale'],
             ];
         }
     }
@@ -82,12 +82,12 @@ final class ArticleReindexProvider implements ReindexProviderInterface
     /**
      * @param string[] $identifiers
      *
-     * @return iterable<Article>
+     * @return iterable<Snippet>
      */
-    private function loadArticles(array $identifiers = []): iterable
+    private function loadSnippets(array $identifiers = []): iterable
     {
         $qb = $this->dimensionContentRepository->createQueryBuilder('dimensionContent')
-            ->select('IDENTITY(dimensionContent.article) AS articleId')
+            ->select('IDENTITY(dimensionContent.snippet) AS snippetId')
             ->addSelect('dimensionContent.created')
             ->addSelect('dimensionContent.changed')
             ->addSelect('dimensionContent.title')
@@ -107,14 +107,14 @@ final class ArticleReindexProvider implements ReindexProviderInterface
             foreach ($identifiers as $index => $identifier) {
                 $resourceKey = \explode('::', $identifier)[0];
 
-                if (ArticleInterface::RESOURCE_KEY !== $resourceKey) {
+                if (SnippetInterface::RESOURCE_KEY !== $resourceKey) {
                     continue;
                 }
 
                 $id = \explode('::', $identifier)[1] ?? '';
                 $locale = \explode('::', $identifier)[2] ?? '';
 
-                $conditions[] = "(dimensionContent.article = :id{$index} AND dimensionContent.locale = :locale{$index})";
+                $conditions[] = "(dimensionContent.snippet = :id{$index} AND dimensionContent.locale = :locale{$index})";
                 $parameters["id{$index}"] = $id;
                 $parameters["locale{$index}"] = $locale;
             }
@@ -128,7 +128,7 @@ final class ArticleReindexProvider implements ReindexProviderInterface
 
         $qb->setParameters($parameters);
 
-        /** @var iterable<Article> */
+        /** @var iterable<Snippet> */
         return $qb->getQuery()->toIterable();
     }
 

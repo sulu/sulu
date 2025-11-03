@@ -28,7 +28,7 @@ use Symfony\Component\Messenger\MessageBusInterface;
  * @internal this class is internal no backwards compatibility promise is given for this class
  *           use Symfony Dependency Injection to override or create your own Listener instead
  */
-final class SnippetIndexListener
+final class AdminSnippetIndexListener
 {
     public function __construct(
         private readonly MessageBusInterface $messageBus,
@@ -37,24 +37,14 @@ final class SnippetIndexListener
 
     public function onSnippetChanged(SnippetCreatedEvent|SnippetModifiedEvent|SnippetRemovedEvent|SnippetRestoredEvent|SnippetTranslationRestoredEvent|SnippetTranslationAddedEvent|SnippetTranslationRemovedEvent $event): void
     {
-        $locale = $event->getResourceLocale();
-        $identifiers = [];
+        $resourceId = $event->getResourceId();
 
-        if ($event instanceof SnippetRemovedEvent || $event instanceof SnippetRestoredEvent) {
-            $locales = $event->getAllLocales();
+        $identifiers = \array_map(
+            fn (string $locale) => SnippetInterface::RESOURCE_KEY . '::' . $resourceId . '::' . $locale,
+            $this->getLocales($event),
+        );
 
-            if (!$locales) {
-                return;
-            }
-
-            foreach ($locales as $locale) {
-                $identifiers[] = SnippetInterface::RESOURCE_KEY . '::' . $event->getResourceId() . '::' . $locale;
-            }
-        } elseif ($locale) {
-            $identifiers[] = SnippetInterface::RESOURCE_KEY . '::' . $event->getResourceId() . '::' . $locale;
-        }
-
-        if (!$identifiers) {
+        if ([] === $identifiers) {
             return;
         }
 
@@ -63,5 +53,17 @@ final class SnippetIndexListener
                 ->withIndex('admin')
                 ->withIdentifiers($identifiers),
         );
+    }
+
+    /**
+     * @return string[]
+     */
+    private function getLocales(SnippetCreatedEvent|SnippetModifiedEvent|SnippetRemovedEvent|SnippetRestoredEvent|SnippetTranslationRestoredEvent|SnippetTranslationAddedEvent|SnippetTranslationRemovedEvent $event): array
+    {
+        if ($event instanceof SnippetRemovedEvent || $event instanceof SnippetRestoredEvent) {
+            return $event->getAllLocales() ?? [];
+        }
+
+        return $event->getResourceLocale() ? [$event->getResourceLocale()] : [];
     }
 }

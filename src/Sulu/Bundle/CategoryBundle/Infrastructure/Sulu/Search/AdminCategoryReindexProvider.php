@@ -32,7 +32,7 @@ use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslationInterface;
  * @internal this class is internal no backwards compatibility promise is given for this class
  *            use Symfony Dependency Injection to override or create your own ReindexProvider instead
  */
-final class CategoryReindexProvider implements ReindexProviderInterface
+final class AdminCategoryReindexProvider implements ReindexProviderInterface
 {
     /**
      * @var EntityRepository<CategoryInterface>

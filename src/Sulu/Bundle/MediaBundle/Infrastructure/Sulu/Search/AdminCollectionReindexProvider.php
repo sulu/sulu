@@ -32,7 +32,7 @@ use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
  * @internal this class is internal no backwards compatibility promise is given for this class
  *            use Symfony Dependency Injection to override or create your own ReindexProvider instead
  */
-final class CollectionReindexProvider implements ReindexProviderInterface
+final class AdminCollectionReindexProvider implements ReindexProviderInterface
 {
     /**
      * @var EntityRepository<CollectionMeta>
