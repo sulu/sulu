@@ -47,13 +47,15 @@ class TransformationPool implements TransformationPoolInterface
      */
     public function get($name)
     {
-        try {
-            /** @var TransformationInterface $service */
-            $service = $this->container->get($name);
+        if (null !== $this->container) {
+            try {
+                /** @var TransformationInterface $service */
+                $service = $this->container->get($name);
 
-            return $service;
-        } catch (\Throwable) {
-            // do nothing and try the old logic.
+                return $service;
+            } catch (\Throwable) {
+                // do nothing and try the old logic.
+            }
         }
 
         if (\array_key_exists($name, $this->transformations)) {
