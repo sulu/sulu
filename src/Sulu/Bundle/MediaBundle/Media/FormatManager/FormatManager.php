@@ -68,7 +68,7 @@ class FormatManager implements FormatManagerInterface
         $this->logger = $logger ?: new NullLogger();
     }
 
-    public function returnImage($id, $formatKey, $fileName, ?int $version)
+    public function returnImage($id, $formatKey, $fileName, ?int $version = null)
     {
         $setExpireHeaders = false;
 
