@@ -321,14 +321,18 @@ class NavigationRepository implements NavigationRepositoryInterface
      *      extension: array<string, array<string, mixed>>,
      * }
      */
-    private function resolvePageContent(PageInterface $page, string $locale): array
+    protected function resolvePageContent(PageInterface $page, string $locale): array
     {
         $pageDimensionContent = $this->contentAggregator->aggregate($page, [
             'locale' => $locale,
             'stage' => DimensionContentInterface::STAGE_LIVE,
         ]);
 
-        return $this->contentResolver->resolve($pageDimensionContent);
+        return $this->contentResolver->resolve($pageDimensionContent, [
+            'content.title' => 'title',
+            'content.url' => 'url',
+            // FIXME add more and excerpt if requested
+        ]);
     }
 
     /**
