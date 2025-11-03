@@ -48,7 +48,10 @@ class TransformationPool implements TransformationPoolInterface
     public function get($name)
     {
         try {
-            return $this->container->get($name);
+            /** @var TransformationInterface $service */
+            $service = $this->container->get($name);
+
+            return $service;
         } catch (\Throwable) {
             // do nothing and try the old logic.
         }
