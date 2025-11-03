@@ -1,0 +1,56 @@
+{
+    "_embedded" : {
+        "pages" : [ {
+            "id" : "0199ee04-c220-784e-a6fa-ac985870f2d5",
+            "title" : null,
+            "author" : null,
+            "created" : null,
+            "changed" : null,
+            "creator" : null,
+            "changer" : null,
+            "locale" : null,
+            "publishedState": false,
+            "shadowLocale": null,
+            "ghostLocale" : null,
+            "webspaceKey" : "sulu-io",
+            "template" : null,
+            "version" : null,
+            "hasChildren" : true,
+            "_embedded" : {
+                "pages" : [ {
+                    "id" : "@string@",
+                    "title" : "Blog Page",
+                    "author" : null,
+                    "created" : "@datetime@",
+                    "changed" : "@datetime@",
+                    "creator" : "@string@",
+                    "changer" : "@string@",
+                    "locale" : "en",
+                    "publishedState": false,
+                    "shadowLocale": null,
+                    "ghostLocale" : null,
+                    "webspaceKey" : "sulu-io",
+                    "template" : "blog",
+                    "version" : 0,
+                    "hasChildren" : false
+                }, {
+                    "id" : "@string@",
+                    "title" : "Landing Page",
+                    "author" : null,
+                    "created" : "@datetime@",
+                    "changed" : "@datetime@",
+                    "creator" : "@string@",
+                    "changer" : "@string@",
+                    "locale" : "en",
+                    "publishedState": false,
+                    "shadowLocale": null,
+                    "ghostLocale" : null,
+                    "webspaceKey" : "sulu-io",
+                    "template" : "landing_page",
+                    "version" : 0,
+                    "hasChildren" : false
+                } ]
+            }
+        } ]
+    }
+}

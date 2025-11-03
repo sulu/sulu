@@ -1,0 +1,24 @@
+{
+    "_embedded" : {
+        "pages" : [ {
+            "id" : "0199ee04-c220-784e-a6fa-ac985870f2d5",
+            "title" : null,
+            "author" : null,
+            "created" : null,
+            "changed" : null,
+            "creator" : null,
+            "changer" : null,
+            "locale" : null,
+            "publishedState": false,
+            "shadowLocale": null,
+            "ghostLocale" : null,
+            "webspaceKey" : "sulu-io",
+            "template" : null,
+            "version" : null,
+            "hasChildren" : true,
+            "_embedded" : {
+                "pages" : [ ]
+            }
+        } ]
+    }
+}
