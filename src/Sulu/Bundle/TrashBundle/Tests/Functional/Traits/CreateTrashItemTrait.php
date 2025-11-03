@@ -28,7 +28,7 @@ trait CreateTrashItemTrait
     protected static function createTrashItem(
         string $resourceKey = 'test_resource',
         string $resourceId = '1',
-        $resourceTitle = '',
+        string|array $resourceTitle = '',
         array $restoreData = [],
         ?string $restoreType = null,
         array $restoreOptions = [],

@@ -11,22 +11,10 @@
 
 namespace Sulu\Bundle\TestBundle;
 
-use Sulu\Bundle\TestBundle\DependencyInjection\Compiler\ReplaceTestClientPass;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 final class SuluTestBundle extends Bundle
 {
-    /**
-     * @internal this method is not part of the public API and should only be called by the Symfony framework classes
-     */
-    public function build(ContainerBuilder $container): void
-    {
-        parent::build($container);
-
-        $container->addCompilerPass(new ReplaceTestClientPass());
-    }
-
     /**
      * @internal this method is not part of the public API and should only be called by the Symfony framework classes
      */

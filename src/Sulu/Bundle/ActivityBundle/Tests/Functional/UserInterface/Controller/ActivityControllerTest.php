@@ -18,20 +18,21 @@ use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\SecurityBundle\Entity\Permission;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Bundle\SecurityBundle\Entity\UserRole;
-use Sulu\Bundle\TestBundle\Kernel\SuluKernelBrowser;
+use Sulu\Bundle\TestBundle\Testing\AssertSnapshotTrait;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Security\Authorization\AccessControl\SecuredEntityInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
+use Symfony\Component\HttpFoundation\Response;
 
 class ActivityControllerTest extends SuluTestCase
 {
+    use AssertSnapshotTrait;
+
     public const GRANTED_CONTEXT = 'sulu.context.granted';
     public const NOT_GRANTED_CONTEXT = 'sulu.context.not_granted';
 
-    /**
-     * @var SuluKernelBrowser
-     */
-    private $client;
+    private KernelBrowser $client;
 
     public static function setUpBeforeClass(): void
     {
@@ -78,10 +79,7 @@ class ActivityControllerTest extends SuluTestCase
 
     public function setUp(): void
     {
-        /** @var SuluKernelBrowser $client */
-        $client = $this->createAuthenticatedClient();
-
-        $this->client = $client;
+        $this->client = self::createAuthenticatedClient();
     }
 
     /**
@@ -136,23 +134,18 @@ class ActivityControllerTest extends SuluTestCase
     #[\PHPUnit\Framework\Attributes\DataProvider('provideCgetAction')]
     public function testCgetAction(array $parameters, int $expectedTotal): void
     {
-        $urlParameters = \array_merge(
-            ['limit' => 0],
-            $parameters
-        );
+        $this->client->jsonRequest('GET', '/api/activities?' . \http_build_query(['limit' => 0, ...$parameters]));
 
-        $this->client->jsonRequest('GET', '/api/activities', $urlParameters);
+        $content = \json_decode((string) $this->client->getResponse()->getContent());
         $content = \json_decode((string) $this->client->getResponse()->getContent());
 
+        self::assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         self::assertSame($expectedTotal, $content->total);
     }
 
-    public function testCgetActionActivityText(): void
+    public function testCgetActionWithResourceId(): void
     {
-        $this->client->jsonRequest('GET', '/api/activities', [
-            'resourceKey' => 'examples',
-            'resourceId' => 1,
-        ]);
+        $this->client->jsonRequest('GET', '/api/activities?resourceKey=examples&resourceId=1');
 
         $content = \json_decode((string) $this->client->getResponse()->getContent());
 
@@ -160,21 +153,6 @@ class ActivityControllerTest extends SuluTestCase
             '<b>Max Mustermann</b> has created the example "Test Example 1234"',
             $content->_embedded->activities[0]->description
         );
-
-        self::assertSame(
-            'Example',
-            $content->_embedded->activities[0]->resource
-        );
-    }
-
-    public function testCgetActionActivityResource(): void
-    {
-        $this->client->jsonRequest('GET', '/api/activities', [
-            'resourceKey' => 'examples',
-            'resourceId' => 1,
-        ]);
-
-        $content = \json_decode((string) $this->client->getResponse()->getContent());
 
         self::assertSame(
             'Example',

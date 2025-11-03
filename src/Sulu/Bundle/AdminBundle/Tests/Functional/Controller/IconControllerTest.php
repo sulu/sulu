@@ -29,7 +29,7 @@ class IconControllerTest extends SuluTestCase
 
     public function testCgetActionIcomoon(): void
     {
-        $this->client->jsonRequest('GET', '/admin/api/icons', ['locale' => 'en', 'icon_set' => 'sulu']);
+        $this->client->jsonRequest('GET', '/admin/api/icons?locale=en&icon_set=sulu');
 
         $response = $this->client->getResponse();
         $this->assertHttpStatusCode(200, $response);
@@ -58,7 +58,7 @@ class IconControllerTest extends SuluTestCase
 
     public function testCgetActionSvgs(): void
     {
-        $this->client->jsonRequest('GET', '/admin/api/icons', ['locale' => 'en', 'icon_set' => 'test_svg']);
+        $this->client->jsonRequest('GET', '/admin/api/icons?locale=en&icon_set=test_svg');
 
         $response = $this->client->getResponse();
         $this->assertHttpStatusCode(200, $response);
@@ -86,7 +86,7 @@ class IconControllerTest extends SuluTestCase
 
     public function testCgetActionSvgSearch(): void
     {
-        $this->client->jsonRequest('GET', '/admin/api/icons', ['locale' => 'en', 'icon_set' => 'test_svg', 'search' => 'only']);
+        $this->client->jsonRequest('GET', '/admin/api/icons?locale=en&icon_set=test_svg&search=only');
 
         $response = $this->client->getResponse();
         $this->assertHttpStatusCode(200, $response);
