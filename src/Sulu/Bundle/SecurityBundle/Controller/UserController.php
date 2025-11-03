@@ -44,6 +44,9 @@ class UserController extends AbstractRestController implements ClassResourceInte
      */
     protected static $entityKey = 'users';
 
+    /**
+     * @param class-string $userClass
+     */
     public function __construct(
         ViewHandlerInterface $viewHandler,
         private RestHelperInterface $restHelper,

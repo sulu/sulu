@@ -24,6 +24,9 @@ use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 
 class MediaListBuilderFactory
 {
+    /**
+     * @param class-string $mediaClass
+     */
     public function __construct(
         private RestHelperInterface $restHelper,
         private DoctrineListBuilderFactoryInterface $doctrineListBuilderFactory,

@@ -40,6 +40,9 @@ class AccountMediaController extends AbstractMediaController implements ClassRes
 {
     protected static $mediaEntityKey = 'account_media';
 
+    /**
+     * @param class-string $accountClass
+     */
     public function __construct(
         ViewHandlerInterface $viewHandler,
         TokenStorageInterface $tokenStorage,

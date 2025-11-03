@@ -99,7 +99,7 @@ class KeywordController extends AbstractRestController implements ClassResourceI
         $listBuilder->where($fieldDescriptor['locale'], $locale);
         $listBuilder->where(
             $fieldDescriptor['categoryTranslationIds'],
-            $categoryTranslation
+            $categoryTranslation->getId()
         );
 
         // should eliminate duplicates
