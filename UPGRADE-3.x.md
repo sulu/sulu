@@ -873,6 +873,7 @@ Removed classes / services / interfaces / traits:
 - `Sulu\Bundle\PageBundle\Controller\WebspaceController`
 - `Sulu\Bundle\SecurityBundle\Security\LogoutSuccessHandler` (replaced by `LogoutEventSubscriber`)
 - `Sulu\Bundle\SecurityBundle\EventListener\AuhenticationFailureListener` (moved and internal)
+- `Sulu\Bundle\SecurityBundle\DependencyInjection\Compiler\AccessControlProviderPass` (use tagged_iterator)
 - `Sulu\Bundle\MediaBundle\DependencyInjection\FormatCacheClearerCompilerPass` (use tagged_iterator)
 - `Sulu\Component\Security\Authorization\AccessControl\SecuredEntityRepositoryTrait`
 - `Sulu/Bundle/AdminBundle/DependencyInjection/Compiler/AddAdminPass` (replaced by a `tagged_iterator`)

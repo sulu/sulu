@@ -102,6 +102,7 @@
             <argument type="service" id="sulu.repository.access_control"/>
             <argument type="service" id="security.helper" on-invalid="null"/>
             <argument>%sulu_security.permissions%</argument>
+            <argument type="tagged_iterator" tag="sulu.access_control" />
         </service>
 
         <service id="sulu_security.system_store" class="Sulu\Bundle\SecurityBundle\System\SystemStore">

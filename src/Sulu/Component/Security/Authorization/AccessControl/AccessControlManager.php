@@ -50,7 +50,7 @@ class AccessControlManager implements AccessControlManagerInterface
         private AccessControlRepositoryInterface $accessControlRepository,
         private ?Security $security,
         private array $permissions,
-        array $accessControlProviders = [],
+        iterable $accessControlProviders = [],
     ) {
         $this->accessControlProviders = [...$accessControlProviders];
     }
@@ -187,20 +187,6 @@ class AccessControlManager implements AccessControlManagerInterface
         }
 
         return $this->restrictPermissions($objectPermissions, $securityContextPermissions);
-    }
-
-    /**
-     * Adds a new AccessControlProvider.
-     *
-     * @deprecated Use the constructor instead
-     *
-     * @param AccessControlProviderInterface $accessControlProvider The AccessControlProvider to add
-     *
-     * @return void
-     */
-    public function addAccessControlProvider(AccessControlProviderInterface $accessControlProvider)
-    {
-        $this->accessControlProviders[] = $accessControlProvider;
     }
 
     /**

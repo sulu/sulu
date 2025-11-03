@@ -22,6 +22,7 @@ use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Bundle\TrashBundle\Domain\Repository\TrashItemRepositoryInterface;
 use Sulu\Bundle\TrashBundle\Infrastructure\Sulu\Admin\TrashAdmin;
 use Sulu\Bundle\TrashBundle\Tests\Functional\Traits\CreateTrashItemTrait;
+use Sulu\Component\Security\Authorization\AccessControl\AccessControlManagerInterface;
 use Sulu\Component\Security\Authorization\AccessControl\SecuredEntityInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
@@ -101,6 +102,7 @@ class TrashItemControllerTest extends SuluTestCase
 
     public function testCgetActionWithSecurity(): void
     {
+        /** @var AccessControlManagerInterface $accessControlManager */
         $accessControlManager = static::getContainer()->get('sulu_security.access_control_manager');
 
         $role = self::setUpUserRole();

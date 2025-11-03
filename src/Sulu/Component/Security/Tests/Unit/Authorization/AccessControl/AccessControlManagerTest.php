@@ -12,6 +12,7 @@
 namespace Sulu\Component\Security\Tests\Unit\Authorization\AccessControl;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
@@ -23,6 +24,7 @@ use Sulu\Bundle\SecurityBundle\Entity\UserRole;
 use Sulu\Bundle\SecurityBundle\Exception\AccessControlDescendantProviderNotFoundException;
 use Sulu\Bundle\SecurityBundle\System\SystemStoreInterface;
 use Sulu\Bundle\TestBundle\Testing\ReadObjectAttributeTrait;
+use Sulu\Bundle\TestBundle\Testing\SetGetPrivatePropertyTrait;
 use Sulu\Component\Rest\Exception\InsufficientDescendantPermissionsException;
 use Sulu\Component\Security\Authentication\RoleRepositoryInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
@@ -41,6 +43,7 @@ class AccessControlManagerTest extends TestCase
 {
     use ProphecyTrait;
     use ReadObjectAttributeTrait;
+    use SetGetPrivatePropertyTrait;
 
     /**
      * @var AccessControlManager
@@ -157,8 +160,8 @@ class AccessControlManagerTest extends TestCase
         $accessControlProvider2->supports(Argument::any())->willReturn(true);
         $accessControlProvider2->setPermissions(\stdClass::class, '1', [])->shouldBeCalled();
 
-        $this->accessControlManager->addAccessControlProvider($accessControlProvider1->reveal());
-        $this->accessControlManager->addAccessControlProvider($accessControlProvider2->reveal());
+        self::setPrivateProperty($this->accessControlManager, 'accessControlProviders', [
+            $accessControlProvider1->reveal(), $accessControlProvider2->reveal()]);
 
         $this->eventDispatcher->dispatch(
             new PermissionUpdateEvent(\stdClass::class, '1', []),
@@ -183,7 +186,7 @@ class AccessControlManagerTest extends TestCase
         $this->descendantProvider1->supportsDescendantType(\stdClass::class)->willReturn(true);
         $this->descendantProvider1->findDescendantIdsById('1')->willReturn(['2', '3', '5']);
 
-        $this->accessControlManager->addAccessControlProvider($accessControlProvider->reveal());
+        self::setPrivateProperty($this->accessControlManager, 'accessControlProviders', [$accessControlProvider->reveal()]);
         $this->accessControlRepository->findIdsWithGrantedPermissions(
             $this->user->reveal(),
             $this->permissions[PermissionTypes::SECURITY],
@@ -227,7 +230,7 @@ class AccessControlManagerTest extends TestCase
         $this->descendantProvider1->supportsDescendantType(\stdClass::class)->willReturn(false);
         $this->descendantProvider2->supportsDescendantType(\stdClass::class)->willReturn(false);
 
-        $this->accessControlManager->addAccessControlProvider($accessControlProvider->reveal());
+        self::setPrivateProperty($this->accessControlManager, 'accessControlProviders', [$accessControlProvider->reveal()]);
 
         $this->eventDispatcher->dispatch(Argument::any())->shouldNotBeCalled();
 
@@ -248,7 +251,7 @@ class AccessControlManagerTest extends TestCase
         $this->descendantProvider1->supportsDescendantType(\stdClass::class)->willReturn(true);
         $this->descendantProvider1->findDescendantIdsById('1')->willReturn(['2', '3', '5']);
 
-        $this->accessControlManager->addAccessControlProvider($accessControlProvider->reveal());
+        self::setPrivateProperty($this->accessControlManager, 'accessControlProviders', [$accessControlProvider->reveal()]);
         $this->accessControlRepository->findIdsWithGrantedPermissions(
             $this->user->reveal(),
             $this->permissions[PermissionTypes::SECURITY],
@@ -268,34 +271,28 @@ class AccessControlManagerTest extends TestCase
         $this->assertNull($this->accessControlManager->setPermissions(\stdClass::class, '1', []));
     }
 
-    public function testGetPermissions(): void
+    #[DataProvider('dataWithSystem')]
+    public function testGetPermissions(?string $system): void
     {
         $accessControlProvider1 = $this->prophesize(AccessControlProviderInterface::class);
         $accessControlProvider1->supports(Argument::any())->willReturn(false);
         $accessControlProvider1->getPermissions(Argument::cetera())->shouldNotBeCalled();
         $accessControlProvider2 = $this->prophesize(AccessControlProviderInterface::class);
         $accessControlProvider2->supports(Argument::any())->willReturn(true);
-        $accessControlProvider2->getPermissions(\stdClass::class, '1', null)->shouldBeCalled();
+        $accessControlProvider2->getPermissions(\stdClass::class, '1', $system)->shouldBeCalled();
 
-        $this->accessControlManager->addAccessControlProvider($accessControlProvider1->reveal());
-        $this->accessControlManager->addAccessControlProvider($accessControlProvider2->reveal());
+        self::setPrivateProperty($this->accessControlManager, 'accessControlProviders', [
+            $accessControlProvider1->reveal(),
+            $accessControlProvider2->reveal(),
+        ]);
 
-        $this->accessControlManager->getPermissions(\stdClass::class, '1');
+        $this->accessControlManager->getPermissions(\stdClass::class, '1', $system);
     }
 
-    public function testGetPermissionsWithSystem(): void
+    public static function dataWithSystem(): \Generator
     {
-        $accessControlProvider1 = $this->prophesize(AccessControlProviderInterface::class);
-        $accessControlProvider1->supports(Argument::any())->willReturn(false);
-        $accessControlProvider1->getPermissions(Argument::cetera())->shouldNotBeCalled();
-        $accessControlProvider2 = $this->prophesize(AccessControlProviderInterface::class);
-        $accessControlProvider2->supports(Argument::any())->willReturn(true);
-        $accessControlProvider2->getPermissions(\stdClass::class, '1', 'Sulu')->shouldBeCalled();
-
-        $this->accessControlManager->addAccessControlProvider($accessControlProvider1->reveal());
-        $this->accessControlManager->addAccessControlProvider($accessControlProvider2->reveal());
-
-        $this->accessControlManager->getPermissions(\stdClass::class, '1', 'Sulu');
+        yield 'without system' => [null];
+        yield 'with system' => ['Sulu'];
     }
 
     public function testGetPermissionsWithoutProvider(): void
@@ -317,7 +314,7 @@ class AccessControlManagerTest extends TestCase
         $accessControlProvider = $this->prophesize(AccessControlProviderInterface::class);
         $accessControlProvider->supports(\stdClass::class)->willReturn(true);
         $accessControlProvider->getPermissions(\stdClass::class, '1', $system)->willReturn($rolePermissions);
-        $this->accessControlManager->addAccessControlProvider($accessControlProvider->reveal());
+        self::setPrivateProperty($this->accessControlManager, 'accessControlProviders', [$accessControlProvider->reveal()]);
 
         // create role for given role permissions from data provider
         $permission1 = $this->prophesize(Permission::class);
@@ -364,7 +361,7 @@ class AccessControlManagerTest extends TestCase
         $accessControlProvider->supports(\stdClass::class)->willReturn(true);
         $accessControlProvider->getPermissions(\stdClass::class, '1', 'Sulu')
             ->willReturn([2 => ['view' => true, 'edit' => true]]);
-        $this->accessControlManager->addAccessControlProvider($accessControlProvider->reveal());
+        self::setPrivateProperty($this->accessControlManager, 'accessControlProviders', [$accessControlProvider->reveal()]);
 
         // create role for given role permissions from data provider
         $permission1 = $this->prophesize(Permission::class);
@@ -399,7 +396,7 @@ class AccessControlManagerTest extends TestCase
         $accessControlProvider->supports(\stdClass::class)->willReturn(true);
         $accessControlProvider->getPermissions(\stdClass::class, '1', 'Sulu')
             ->willReturn([2 => ['view' => true, 'edit' => true]]);
-        $this->accessControlManager->addAccessControlProvider($accessControlProvider->reveal());
+        self::setPrivateProperty($this->accessControlManager, 'accessControlProviders', [$accessControlProvider->reveal()]);
 
         $permission1 = $this->prophesize(Permission::class);
         $permission1->getPermissions()->willReturn(64);
@@ -426,7 +423,7 @@ class AccessControlManagerTest extends TestCase
         $accessControlProvider = $this->prophesize(AccessControlProviderInterface::class);
         $accessControlProvider->supports(\stdClass::class)->willReturn(true);
         $accessControlProvider->getPermissions(Argument::cetera())->shouldNotBeCalled();
-        $this->accessControlManager->addAccessControlProvider($accessControlProvider->reveal());
+        self::setPrivateProperty($this->accessControlManager, 'accessControlProviders', [$accessControlProvider->reveal()]);
 
         $permissions = $this->accessControlManager->getUserPermissions(
             new SecurityCondition('example', 'de', \stdClass::class, '1'),
@@ -451,7 +448,7 @@ class AccessControlManagerTest extends TestCase
         $accessControlProvider = $this->prophesize(AccessControlProviderInterface::class);
         $accessControlProvider->supports(\stdClass::class)->willReturn(true);
         $accessControlProvider->getPermissions(\stdClass::class, '1', 'system2')->shouldBeCalled();
-        $this->accessControlManager->addAccessControlProvider($accessControlProvider->reveal());
+        self::setPrivateProperty($this->accessControlManager, 'accessControlProviders', [$accessControlProvider->reveal()]);
 
         $permission1 = $this->prophesize(Permission::class);
         $permission1->getPermissions()->willReturn(64);
@@ -601,7 +598,7 @@ class AccessControlManagerTest extends TestCase
         $accessControlProvider->supports(\stdClass::class)->willReturn(true);
         $accessControlProvider->getPermissions(\stdClass::class, '1', 'Sulu')
             ->willReturn([2 => ['view' => true, 'edit' => true]]);
-        $this->accessControlManager->addAccessControlProvider($accessControlProvider->reveal());
+        self::setPrivateProperty($this->accessControlManager, 'accessControlProviders', [$accessControlProvider->reveal()]);
 
         $permission1 = $this->prophesize(Permission::class);
         $permission1->getPermissions()->willReturn(64);
@@ -626,8 +623,10 @@ class AccessControlManagerTest extends TestCase
         $accessControlProvider1 = $this->prophesize(AccessControlProviderInterface::class);
         $accessControlProvider2 = $this->prophesize(AccessControlProviderInterface::class);
 
-        $this->accessControlManager->addAccessControlProvider($accessControlProvider1->reveal());
-        $this->accessControlManager->addAccessControlProvider($accessControlProvider2->reveal());
+        self::setPrivateProperty($this->accessControlManager, 'accessControlProviders', [
+            $accessControlProvider1->reveal(),
+            $accessControlProvider2->reveal(),
+        ]);
 
         $this->assertCount(2, $this->readObjectAttribute($this->accessControlManager, 'accessControlProviders'));
         $this->assertContains(
