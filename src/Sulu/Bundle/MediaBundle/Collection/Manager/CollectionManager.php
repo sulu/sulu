@@ -567,10 +567,8 @@ class CollectionManager implements CollectionManagerInterface
         );
     }
 
-    public function delete($id/*, bool $forceRemoveChildren = false*/)
+    public function delete($id, bool $forceRemoveChildren = false)
     {
-        $forceRemoveChildren = \func_num_args() >= 2 ? (bool) \func_get_arg(1) : false;
-
         $collectionEntity = $this->collectionRepository->findCollectionById($id);
 
         if (!$collectionEntity) {

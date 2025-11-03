@@ -1256,3 +1256,25 @@ separate permission contexts, so you'll need to grant permissions for each group
 1. Log in to the Sulu admin interface
 2. Navigate to Settings → User Roles
 3. Edit each role and grant permissions for the new template groups under the Articles section
+
+
+### Changing deprecated signatures
+
+To maintain backward compatibility in previous versions, new arguments were previously added as doc comments only. These
+arguments are now explicitly defined in the function signatures (with default values), which may result in breaking
+changes for subclasses or overrides relying on the older method definitions.
+
+Affected classes / interfaces:
+- `Sulu\Bundle\CategoryBundle\Category\CategoryManager::delete` (added `bool $forceRemoveChildren`)
+- `Sulu\Bundle\CategoryBundle\Category\CategoryManagerInterface::delete` (added `bool $forceRemoveChildren`)
+- `Sulu\Bundle\MediaBundle\Collection\Manager\CollectionManager::delete` (added `bool $forceRemoveChildren`)
+- `Sulu\Bundle\MediaBundle\Collection\Manager\CollectionManagerInterface::delete` (added `bool $forceRemoveChildren`)
+- `Sulu\Bundle\MediaBundle\Entity\MediaRepository::findMediaByIdForRendering` (added `?int $version`)
+- `Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface::findMediaByIdForRendering` (added `?int $version`)
+- `Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManager::returnImage` (added `?int $version`)
+- `Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface::returnImage` (added `?int $version`)
+- `Sulu\Bundle\MediaBundle\Media\ImageConverter\MediaImageExtractor::extract` (added `string $resourceType`)
+- `Sulu\Bundle\MediaBundle\Media\ImageConverter\MediaImageExtractorInterface::extract` (added `string $resourceType`)
+- `Sulu\Bundle\TagBundle\Search\TagsConverter::convert` (added `?Document`)
+- `Sulu\Bundle\WebsiteBundle\Cache\CacheClearer::clear` (added `?array $tags`)
+- `Sulu\Bundle\WebsiteBundle\Cache\CacheClearerInterface::clear` (added `?array $tags`)

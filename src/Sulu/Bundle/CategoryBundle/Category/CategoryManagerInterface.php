@@ -103,7 +103,7 @@ interface CategoryManagerInterface
      *
      * @throws CategoryIdNotFoundException if the given id is not assigned to an existing category
      */
-    public function delete($id/*, bool $forceRemoveChildren = false*/);
+    public function delete($id, bool $forceRemoveChildren = false);
 
     /**
      * Returns an API-Object for a given category-entity. The API-Object wraps the entity

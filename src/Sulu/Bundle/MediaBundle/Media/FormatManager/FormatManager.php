@@ -68,15 +68,8 @@ class FormatManager implements FormatManagerInterface
         $this->logger = $logger ?: new NullLogger();
     }
 
-    public function returnImage($id, $formatKey, $fileName /*, int<1, max>|null $version = null */)
+    public function returnImage($id, $formatKey, $fileName, ?int $version = null)
     {
-        /** @var int|null $version */
-        $version = \func_num_args() > 3 ? \func_get_arg(3) : null;
-
-        if (null === $version) {
-            @trigger_deprecation('sulu/sulu', '2.5', 'The $version parameter in ' . __CLASS__ . '::' . __METHOD__ . ' is required.');
-        }
-
         $setExpireHeaders = false;
 
         try {

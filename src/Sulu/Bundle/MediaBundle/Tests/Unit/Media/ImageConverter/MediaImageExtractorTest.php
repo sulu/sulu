@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\MediaBundle\Tests\Unit\Media\ImageConverter;
 
-use Imagine\Image\ImageInterface;
 use Imagine\Image\ImagineInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
@@ -57,27 +56,6 @@ class MediaImageExtractorTest extends TestCase
         $this->assertSame(
             $resource,
             $this->mediaImageExtractor->extract($resource, 'image/jpeg')
-        );
-    }
-
-    public function testPsdConvertWithoutMimeType(): void
-    {
-        $resource = \fopen(\dirname(\dirname(\dirname(__DIR__))) . '/Fixtures/files/1x1.psd', 'r');
-
-        $image = $this->prophesize(ImageInterface::class);
-        $image->layers()->willReturn([$image->reveal()]);
-
-        $image->get('png')
-            ->shouldBeCalled()
-            ->willReturn('PNG Content');
-
-        $this->imagine->read($resource)
-            ->willReturn($image->reveal())
-            ->shouldBeCalled();
-
-        $this->assertSame(
-            'PNG Content',
-            \stream_get_contents($this->mediaImageExtractor->extract($resource))
         );
     }
 

@@ -23,5 +23,5 @@ interface MediaImageExtractorInterface
      *
      * @return resource
      */
-    public function extract($resource/*, string $resourceMimeType */);
+    public function extract($resource, string $resourceMimeType);
 }
