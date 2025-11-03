@@ -40,7 +40,7 @@ class AudienceTargetingCacheListener implements EventSubscriberInterface
 
     protected $hadValidTargetGroupCookie = false;
 
-    public function preHandle(CacheEvent $cacheEvent)
+    public function preHandle(CacheEvent $cacheEvent): void
     {
         $request = $cacheEvent->getRequest();
 
@@ -56,7 +56,7 @@ class AudienceTargetingCacheListener implements EventSubscriberInterface
         );
     }
 
-    public function postHandle(CacheEvent $cacheEvent)
+    public function postHandle(CacheEvent $cacheEvent): void
     {
         $request = $cacheEvent->getRequest();
 
@@ -81,10 +81,8 @@ class AudienceTargetingCacheListener implements EventSubscriberInterface
      * to it. If the cookie didn't exist yet, another request is fired in order to set the value for the cookie.
      *
      * Returns true if the cookie was already set and false otherwise.
-     *
-     * @return bool
      */
-    private function setTargetGroupHeader(Request $request, CacheInvalidation $kernel)
+    private function setTargetGroupHeader(Request $request, CacheInvalidation $kernel): bool
     {
         $hadValidTargetGroup = true;
         $visitorTargetGroup = $request->cookies->get(static::TARGET_GROUP_COOKIE);
@@ -105,10 +103,8 @@ class AudienceTargetingCacheListener implements EventSubscriberInterface
 
     /**
      * Sends a request to the application to determine the target group of the current visitor.
-     *
-     * @return ?string
      */
-    private function requestTargetGroup(Request $request, CacheInvalidation $kernel, ?int $currentTargetGroup = null)
+    private function requestTargetGroup(Request $request, CacheInvalidation $kernel, ?int $currentTargetGroup = null): ?string
     {
         $targetGroupRequest = Request::create(
             static::TARGET_GROUP_URL,
@@ -140,7 +136,7 @@ class AudienceTargetingCacheListener implements EventSubscriberInterface
     /**
      * Set the cookie for the target group from the request. Should only be set in case the cookie was not set before.
      */
-    private function setTargetGroupCookie(Response $response, Request $request)
+    private function setTargetGroupCookie(Response $response, Request $request): void
     {
         $response->headers->setCookie(
             Cookie::create(
@@ -158,7 +154,7 @@ class AudienceTargetingCacheListener implements EventSubscriberInterface
         );
     }
 
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
             Events::PRE_HANDLE => ['preHandle', 512],

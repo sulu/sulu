@@ -42,7 +42,7 @@ class DomainEventEventSubscriber implements EventSubscriberInterface
         $this->webspaceManager = $webspaceManager;
     }
 
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
             Events::CACHE_CLEAR => 'onCacheClear',

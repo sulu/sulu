@@ -24,7 +24,7 @@ class SuluVersionPass implements CompilerPassInterface
 {
     private const SULU_DEFAULT_VERSION = '_._._';
 
-    public function process(ContainerBuilder $container)
+    public function process(ContainerBuilder $container): void
     {
         $dir = \realpath($container->getParameter('kernel.project_dir'));
 
