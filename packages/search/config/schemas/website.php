@@ -17,7 +17,7 @@ return new Index('website', [
     'resourceKey' => new Field\TextField('resourceKey', searchable: false, filterable: true),
     'resourceId' => new Field\TextField('resourceId', searchable: false),
     'locale' => new Field\TextField('locale', searchable: false, filterable: true),
-    'webspaces' => new Field\TextField('title', multiple: true, searchable: false, filterable: true),
+    'webspaces' => new Field\TextField('webspaces', multiple: true, searchable: false, filterable: true),
     'title' => new Field\TextField('title'),
     'url' => new Field\TextField('url', searchable: false, filterable: true),
     'content' => new Field\TextField('content', multiple: true),
