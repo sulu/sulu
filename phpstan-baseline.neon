@@ -20179,12 +20179,6 @@ parameters:
 			path: src/Sulu/Bundle/CoreBundle/Build/SuluBuilder.php
 
 		-
-			message: '#^Cannot access offset ''alias'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/CoreBundle/DependencyInjection/Compiler/RegisterContentTypesCompilerPass.php
-
-		-
 			message: '#^Cannot access offset ''context'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
