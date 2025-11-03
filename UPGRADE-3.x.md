@@ -907,6 +907,8 @@ Removed deprecated functions and properties:
 - `Sulu\Bundle\WebsiteBundle\Controller\RedirectController::redirectWebspaceAction` (use Symfony RedirectController instead)
 - `Sulu\Component\Cache\Memoize::memoize()`
 - `Sulu\Component\Cache\MemoizeInterface::memoize()`
+- `Sulu\Component\Webspace\PortalInformation::getSegment()`
+- `Sulu\Component\Webspace\PortalInformation::setSegment()`
 - `Sulu\Bundle\WebsiteBundle\Twig\Core\UtilTwigExtension::extract()`
 - `Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata::setName()` (use `setKey()` instead)
 - `Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata::getName()` (use `getKey()` instead)
@@ -954,6 +956,7 @@ Removed unused arguments:
 - `Sulu\Bundle\ContactBundle\Controller\ContactController::__construct` `$contactRepository` (7rd argument) removed
 - `Sulu\Bundle\ContactBundle\Controller\ContactController::__construct` `$userRepository` (9rd argument) removed
 - `Sulu\Bundle\ContactBundle\Controller\ContactController::__construct` `$suluSecuritySystem` (12rd argument) removed
+- `Sulu\Component\Webspace\PortalInformation::__construct` `$segment` (6th argument) removed
 
 Removed kernel parameters:
 

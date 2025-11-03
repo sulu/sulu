@@ -43665,13 +43665,7 @@ parameters:
 		-
 			message: '#^If condition is always true\.$#'
 			identifier: if.alwaysTrue
-			count: 3
-			path: src/Sulu/Component/Webspace/PortalInformation.php
-
-		-
-			message: '#^Method Sulu\\Component\\Webspace\\PortalInformation\:\:__construct\(\) has parameter \$main with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
+			count: 2
 			path: src/Sulu/Component/Webspace/PortalInformation.php
 
 		-
@@ -43723,12 +43717,6 @@ parameters:
 			path: src/Sulu/Component/Webspace/PortalInformation.php
 
 		-
-			message: '#^Method Sulu\\Component\\Webspace\\PortalInformation\:\:getSegmentKey\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Component/Webspace/PortalInformation.php
-
-		-
 			message: '#^Method Sulu\\Component\\Webspace\\PortalInformation\:\:getWebspaceKey\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -43765,12 +43753,6 @@ parameters:
 			path: src/Sulu/Component/Webspace/PortalInformation.php
 
 		-
-			message: '#^Method Sulu\\Component\\Webspace\\PortalInformation\:\:setSegment\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Component/Webspace/PortalInformation.php
-
-		-
 			message: '#^Method Sulu\\Component\\Webspace\\PortalInformation\:\:setType\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -43796,12 +43778,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#1 \$localization of method Sulu\\Component\\Webspace\\PortalInformation\:\:setLocalization\(\) expects Sulu\\Component\\Localization\\Localization, Sulu\\Component\\Localization\\Localization\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Webspace/PortalInformation.php
-
-		-
-			message: '#^Parameter \#1 \$main of method Sulu\\Component\\Webspace\\PortalInformation\:\:setMain\(\) expects bool, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Component/Webspace/PortalInformation.php
@@ -43845,12 +43821,6 @@ parameters:
 		-
 			message: '#^Parameter \#1 \$webspace of method Sulu\\Component\\Webspace\\PortalInformation\:\:setWebspace\(\) expects Sulu\\Component\\Webspace\\Webspace, Sulu\\Component\\Webspace\\Webspace\|null given\.$#'
 			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Webspace/PortalInformation.php
-
-		-
-			message: '#^Ternary operator condition is always true\.$#'
-			identifier: ternary.alwaysTrue
 			count: 1
 			path: src/Sulu/Component/Webspace/PortalInformation.php
 
@@ -43911,7 +43881,7 @@ parameters:
 		-
 			message: '#^Cannot access offset ''match_type'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 3
+			count: 1
 			path: src/Sulu/Component/Webspace/Tests/Functional/Analyzer/RequestAnalyzerTest.php
 
 		-
@@ -43923,13 +43893,13 @@ parameters:
 		-
 			message: '#^Cannot access offset ''portal_url'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 6
+			count: 4
 			path: src/Sulu/Component/Webspace/Tests/Functional/Analyzer/RequestAnalyzerTest.php
 
 		-
 			message: '#^Cannot access offset ''redirect'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 6
+			count: 4
 			path: src/Sulu/Component/Webspace/Tests/Functional/Analyzer/RequestAnalyzerTest.php
 
 		-
@@ -43951,7 +43921,7 @@ parameters:
 			path: src/Sulu/Component/Webspace/Tests/Functional/Analyzer/RequestAnalyzerTest.php
 
 		-
-			message: '#^Method Sulu\\Component\\Webspace\\Tests\\Functional\\Analyzer\\RequestAnalyzerTest\:\:prepareWebspaceManager\(\) has parameter \$portalInformation with no type specified\.$#'
+			message: '#^Method Sulu\\Component\\Webspace\\Tests\\Functional\\Analyzer\\RequestAnalyzerTest\:\:prepareWebspaceManager\(\) has parameter \$config with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
 			path: src/Sulu/Component/Webspace/Tests/Functional/Analyzer/RequestAnalyzerTest.php
@@ -44661,7 +44631,7 @@ parameters:
 		-
 			message: '#^Cannot access offset ''environments'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 8
+			count: 7
 			path: src/Sulu/Component/Webspace/Tests/Unit/Manager/WebspaceCollectionTest.php
 
 		-
@@ -44743,12 +44713,6 @@ parameters:
 			path: src/Sulu/Component/Webspace/Tests/Unit/Manager/WebspaceCollectionTest.php
 
 		-
-			message: '#^Cannot access offset ''segment'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 3
-			path: src/Sulu/Component/Webspace/Tests/Unit/Manager/WebspaceCollectionTest.php
-
-		-
 			message: '#^Cannot access offset ''segments'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 8
@@ -44787,7 +44751,7 @@ parameters:
 		-
 			message: '#^Cannot access offset ''urls'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 7
+			count: 6
 			path: src/Sulu/Component/Webspace/Tests/Unit/Manager/WebspaceCollectionTest.php
 
 		-
@@ -44805,7 +44769,7 @@ parameters:
 		-
 			message: '#^Cannot access offset 0 on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 33
+			count: 31
 			path: src/Sulu/Component/Webspace/Tests/Unit/Manager/WebspaceCollectionTest.php
 
 		-
