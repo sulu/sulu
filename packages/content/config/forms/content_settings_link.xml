@@ -29,13 +29,6 @@
                     </params>
                 </property>
 
-                <property name="title" type="text_line" visibleCondition="linkOn == true and linkData.provider == 'page'">
-                    <meta>
-                        <title lang="en">Title</title>
-                        <title lang="de">Titel</title>
-                    </meta>
-                </property>
-
                 <property name="linkData" type="link" visibleCondition="linkOn == true">
                     <meta>
                         <title>sulu_content.link</title>
@@ -45,6 +38,13 @@
                         <param name="enable_anchor" value="true"/>
                         <param name="enable_query" value="true"/>
                     </params>
+                </property>
+
+                <property name="title" type="text_line" visibleCondition="linkOn == true">
+                    <meta>
+                        <title lang="en">Title</title>
+                        <title lang="de">Titel</title>
+                    </meta>
                 </property>
             </properties>
         </section>
