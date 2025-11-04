@@ -15,6 +15,7 @@ namespace Sulu\Snippet\Tests\Functional\Integration;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\SchemaTool;
+use PHPUnit\Framework\Attributes\CoversNothing;
 use PHPUnit\Framework\Attributes\Depends;
 use Sulu\Bundle\TestBundle\Testing\AssertSnapshotTrait;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
@@ -25,7 +26,7 @@ use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 /**
  * The integration test should have no impact on the coverage so we set it to coversNothing.
  */
-#[\PHPUnit\Framework\Attributes\CoversNothing]
+#[CoversNothing]
 class SnippetControllerTest extends SuluTestCase
 {
     use AssertSnapshotTrait;
@@ -237,6 +238,25 @@ class SnippetControllerTest extends SuluTestCase
         $response = $this->client->getResponse();
 
         $this->assertResponseSnapshot('snippet_cget.json', $response, 200);
+    }
+
+    #[Depends('testPost')]
+    public function testGetListWithTypesFilter(string $id): void
+    {
+        // Test filtering by existing type - should return the snippet
+        $this->client->request('GET', '/admin/api/snippets?locale=en&types=snippet');
+        $response = $this->client->getResponse();
+        $this->assertResponseSnapshot('snippet_cget_types_filter_snippet.json', $response, 200);
+
+        // Test filtering by non-existent type - should return no results
+        $this->client->request('GET', '/admin/api/snippets?locale=en&types=non-existent-type');
+        $response = $this->client->getResponse();
+        $this->assertResponseSnapshot('snippet_cget_types_filter_nonexistent.json', $response, 200);
+
+        // Test filtering by multiple types - should return snippets of the existing type
+        $this->client->request('GET', '/admin/api/snippets?locale=en&types=snippet,other-template');
+        $response = $this->client->getResponse();
+        $this->assertResponseSnapshot('snippet_cget_types_filter_multiple.json', $response, 200);
     }
 
     #[Depends('testPost')]

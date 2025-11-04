@@ -1,0 +1,20 @@
+{
+    "_embedded": {
+        "snippets": [
+            {
+                "changed": "@datetime@",
+                "changer": "@string@",
+                "created": "@datetime@",
+                "creator": "@string@",
+                "id": "@string@",
+                "publishedState": false,
+                "templateKey": "snippet",
+                "title": "Test Snippet 2"
+            }
+        ]
+    },
+    "limit": 10,
+    "total": 1,
+    "page": 1,
+    "pages": 1
+}

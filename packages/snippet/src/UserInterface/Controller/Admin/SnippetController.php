@@ -83,6 +83,26 @@ final class SnippetController
         $listBuilder->setParameter('locale', $request->query->get('locale'));
         $this->restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
 
+        $typesParam = $request->query->get('types');
+        $types = \array_filter(\explode(',', \is_string($typesParam) ? $typesParam : ''));
+
+        if (0 !== \count($types)) {
+            $dimensionContentTemplateKey = $fieldDescriptors['dimensionContentTemplateKey'];
+            $ghostDimensionContentTemplateKey = $fieldDescriptors['ghostDimensionContentTemplateKey'];
+            $expression = $listBuilder->createOrExpression([
+                $listBuilder->createAndExpression([
+                    $listBuilder->createIsNotNullExpression($dimensionContentTemplateKey),
+                    $listBuilder->createInExpression($dimensionContentTemplateKey, $types),
+                ]),
+                $listBuilder->createAndExpression([
+                    $listBuilder->createIsNullExpression($dimensionContentTemplateKey),
+                    $listBuilder->createInExpression($ghostDimensionContentTemplateKey, $types),
+                ]),
+            ]);
+
+            $listBuilder->addExpression($expression);
+        }
+
         $areasParam = $request->query->get('areas');
         if (null !== $areasParam) {
             $areas = \explode(',', (string) $areasParam);
