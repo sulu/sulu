@@ -325,6 +325,7 @@ class NavigationRepository implements NavigationRepositoryInterface
             'content.uuid' => 'object.resource.id',
             'content.title' => 'title',
             'content.url' => 'url',
+            'content.webspaceKey' => 'object.resource.webspaceKey',
             'content.template' => 'object.templateKey',
             'content.changed' => 'object.changed',
             'content.changer' => 'object.changer',

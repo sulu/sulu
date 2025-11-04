@@ -10,6 +10,7 @@
     ],
     "linkOn": false,
     "linkData": null,
+    "linkProvider": null,
     "contentLocales": [
         "en"
     ],

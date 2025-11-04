@@ -17,6 +17,7 @@
     ],
     "linkOn": false,
     "linkData": null,
+    "linkProvider": null,
     "changed": "@datetime@",
     "changer": "@integer@",
 

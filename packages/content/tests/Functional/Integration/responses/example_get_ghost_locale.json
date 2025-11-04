@@ -8,6 +8,7 @@
     "availableLocales": ["en"],
     "linkOn": false,
     "linkData": null,
+    "linkProvider": null,
     "contentLocales": ["en"],
     "excerptAudienceTargetGroups": [],
     "excerptCategories": [],

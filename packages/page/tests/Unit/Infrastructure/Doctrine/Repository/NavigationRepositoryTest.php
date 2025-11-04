@@ -19,6 +19,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
 use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
 use PHPUnit\Framework\TestCase;
+use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Content\Application\ContentAggregator\ContentAggregatorInterface;
@@ -122,11 +123,15 @@ class NavigationRepositoryTest extends TestCase
         $dimensionContent = $this->prophesize(DimensionContentInterface::class);
         $this->contentAggregator->aggregate($page->reveal(), ['locale' => 'en', 'stage' => 'live'])
             ->willReturn($dimensionContent->reveal());
-        $this->contentResolver->resolve($dimensionContent->reveal())->willReturn([
+        $this->contentResolver->resolve($dimensionContent->reveal(), Argument::type('array'))->willReturn([
             'resource' => $page->reveal(),
-            'content' => ['title' => 'Page Title'],
+            'content' => [
+                'title' => 'Page Title',
+                'webspaceKey' => 'sulu-io',
+            ],
             'view' => [],
             'extension' => ['excerpt' => ['title' => 'Excerpt Title']],
+            'excerpt' => ['title' => 'Excerpt Title'],
         ]);
 
         $result = $this->navigationRepository->getNavigationTree('main', 'en', 'sulu-io', 'segment-key', 1, ['excerpt' => true]);
@@ -187,9 +192,9 @@ class NavigationRepositoryTest extends TestCase
         $dimensionContent = $this->prophesize(DimensionContentInterface::class);
         $this->contentAggregator->aggregate($page->reveal(), ['locale' => 'de', 'stage' => 'live'])
             ->willReturn($dimensionContent->reveal());
-        $this->contentResolver->resolve($dimensionContent->reveal())->willReturn([
+        $this->contentResolver->resolve($dimensionContent->reveal(), Argument::type('array'))->willReturn([
             'resource' => $page->reveal(),
-            'content' => ['title' => 'German Page', 'description' => 'Test'],
+            'content' => ['title' => 'German Page', 'description' => 'Test', 'webspaceKey' => 'sulu-io'],
             'view' => [],
             'extension' => [],
         ]);
@@ -253,9 +258,9 @@ class NavigationRepositoryTest extends TestCase
         $dimensionContent = $this->prophesize(DimensionContentInterface::class);
         $this->contentAggregator->aggregate($page->reveal(), ['locale' => 'en', 'stage' => 'live'])
             ->willReturn($dimensionContent->reveal());
-        $this->contentResolver->resolve($dimensionContent->reveal())->willReturn([
+        $this->contentResolver->resolve($dimensionContent->reveal(), Argument::type('array'))->willReturn([
             'resource' => $page->reveal(),
-            'content' => ['title' => 'No Segment Page'],
+            'content' => ['title' => 'No Segment Page', 'webspaceKey' => 'test-webspace'],
             'view' => [],
             'extension' => [],
         ]);
@@ -320,7 +325,7 @@ class NavigationRepositoryTest extends TestCase
         $parentDimensionContent = $this->prophesize(DimensionContentInterface::class);
         $this->contentAggregator->aggregate($parentPage->reveal(), ['locale' => 'en', 'stage' => 'live'])
             ->willReturn($parentDimensionContent->reveal());
-        $this->contentResolver->resolve($parentDimensionContent->reveal())->willReturn([
+        $this->contentResolver->resolve($parentDimensionContent->reveal(), Argument::type('array'))->willReturn([
             'resource' => $parentPage->reveal(),
             'content' => ['title' => 'Parent Page'],
             'view' => [],
@@ -331,7 +336,7 @@ class NavigationRepositoryTest extends TestCase
         $childDimensionContent = $this->prophesize(DimensionContentInterface::class);
         $this->contentAggregator->aggregate($childPage->reveal(), ['locale' => 'en', 'stage' => 'live'])
             ->willReturn($childDimensionContent->reveal());
-        $this->contentResolver->resolve($childDimensionContent->reveal())->willReturn([
+        $this->contentResolver->resolve($childDimensionContent->reveal(), Argument::type('array'))->willReturn([
             'resource' => $childPage->reveal(),
             'content' => ['title' => 'Child Page'],
             'view' => [],
@@ -397,7 +402,7 @@ class NavigationRepositoryTest extends TestCase
         $dimensionContent = $this->prophesize(DimensionContentInterface::class);
         $this->contentAggregator->aggregate($page->reveal(), ['locale' => 'en', 'stage' => 'live'])
             ->willReturn($dimensionContent->reveal());
-        $this->contentResolver->resolve($dimensionContent->reveal())->willReturn([
+        $this->contentResolver->resolve($dimensionContent->reveal(), Argument::type('array'))->willReturn([
             'resource' => $page->reveal(),
             'content' => ['title' => 'Page with Excerpt'],
             'view' => [],
@@ -408,6 +413,12 @@ class NavigationRepositoryTest extends TestCase
                     'segment' => 'test-segment',
                     'audienceTargetGroups' => [1, 2],
                 ],
+            ],
+            'excerpt' => [
+                'title' => 'Excerpt Title',
+                'description' => 'Excerpt Description',
+                'segment' => 'test-segment',
+                'audienceTargetGroups' => [1, 2],
             ],
         ]);
 

@@ -58,14 +58,14 @@ class ResolvableResourceReplacer implements ResolvableResourceReplacerInterface
 
             $resource = $resolvedResources[$value->getResourceLoaderKey()][$value->getId()][$value->getMetadataIdentifier()] ?? null;
 
+            if (null !== $resource && $value instanceof ResolvableResource && $value->getResourceKey()) {
+                $this->populateReferenceStore($value->getId(), $value->getResourceKey());
+            }
+
             if (null === $resource) {
                 $value = null;
 
                 return;
-            }
-
-            if ($value instanceof ResolvableResource && $value->getResourceKey()) {
-                $this->populateReferenceStore($value->getId(), $value->getResourceKey());
             }
 
             $value = $value->executeResourceCallback($resource);
