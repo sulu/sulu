@@ -330,16 +330,6 @@ class ContactManager extends AbstractContactManager
                 $contact->setFormOfAddress($formOfAddress);
                 $contactModified = true;
             }
-
-            if (!\is_null($formOfAddress) && \is_array($formOfAddress) && \array_key_exists('id', $formOfAddress)) {
-                @trigger_deprecation(
-                    'sulu/sulu',
-                    '1.x',
-                    'Passing the "formOfAddress" as object is deprecated and will not be supported in Sulu 2.0'
-                );
-                $contact->setFormOfAddress($formOfAddress['id']);
-                $contactModified = true;
-            }
         }
 
         if (!$patch || $this->getProperty($data, 'salutation')) {
