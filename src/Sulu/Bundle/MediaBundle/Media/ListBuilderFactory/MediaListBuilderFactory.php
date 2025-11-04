@@ -44,7 +44,6 @@ class MediaListBuilderFactory
         bool $sortByDefault = true,
         ?int $collectionId = null
     ): DoctrineListBuilder {
-        /** @var DoctrineListBuilder $listBuilder */
         $listBuilder = $this->doctrineListBuilderFactory->create($this->mediaClass);
         $this->restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
 

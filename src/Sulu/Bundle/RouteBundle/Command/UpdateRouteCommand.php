@@ -54,7 +54,6 @@ EOT
 
         $batchSize = (int) $input->getOption('batch-size');
 
-        /** @var EntityRepository $repository */
         $repository = $this->entityManager->getRepository($input->getArgument('entity'));
 
         $query = $repository->createQueryBuilder('entity')->select('count(entity.id)')->getQuery();

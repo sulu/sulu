@@ -62,7 +62,6 @@ class MemoizeTwigExtensionTraitTest extends TestCase
             ->will(function(array $arguments) {return $arguments[2](); })
             ->shouldBeCalled();
 
-        /** @var TwigFunction[] $result */
         $result = $this->getFunctions();
 
         $this->assertInstanceOf(TwigFunction::class, $result[0]);

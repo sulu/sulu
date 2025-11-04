@@ -483,7 +483,6 @@ class ExcerptStructureExtension extends AbstractExtension
     private function initExcerptStructure()
     {
         $excerptStructure = $this->structureManager->getStructure(self::EXCERPT_EXTENSION_NAME);
-        /** @var PropertyInterface $property */
         foreach ($excerptStructure->getProperties() as $property) {
             $this->properties[] = $property->getName();
         }

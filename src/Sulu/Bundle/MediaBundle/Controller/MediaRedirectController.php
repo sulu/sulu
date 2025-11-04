@@ -44,7 +44,6 @@ class MediaRedirectController
         $format = $this->getRequestParameter($request, 'format');
 
         try {
-            /** @var Media $media */
             $media = $this->mediaManager->getById($id, $locale);
         } catch (MediaNotFoundException $e) {
             throw new NotFoundHttpException($e->getMessage(), $e);

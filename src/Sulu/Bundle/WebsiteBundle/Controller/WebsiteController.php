@@ -42,7 +42,6 @@ abstract class WebsiteController extends AbstractController
         $preview = false,
         $partial = false
     ) {
-        /** @var Request $request */
         $request = $this->getRequest();
 
         // extract format twig file

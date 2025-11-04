@@ -39,7 +39,6 @@ class ResourceLocatorRepository implements ResourceLocatorRepositoryInterface
 
     public function generate($parts, $parentUuid, $webspaceKey, $languageCode, $templateKey, $segmentKey = null)
     {
-        /** @var StructureInterface $structure */
         $structure = $this->structureManager->getStructure($templateKey);
         $title = $this->implodeRlpParts($structure, $parts);
 
@@ -71,7 +70,6 @@ class ResourceLocatorRepository implements ResourceLocatorRepositoryInterface
         $urls = $resourceLocatorStrategy->loadHistoryByContentUuid($uuid, $webspaceKey, $languageCode);
 
         $result = [];
-        /** @var ResourceLocatorInformation $url */
         foreach ($urls as $url) {
             $defaultParameter = '&language=' . $languageCode . '&webspace=' . $webspaceKey;
             $deleteParameter = '?path=' . $url->getResourceLocator() . $defaultParameter;

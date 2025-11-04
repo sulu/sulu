@@ -85,7 +85,6 @@ class AnalyticsManager implements AnalyticsManagerInterface
 
     public function create($webspaceKey, $data)
     {
-        /** @var AnalyticsInterface $entity */
         $entity = $this->analyticsRepository->createNew();
         $this->setData($entity, $webspaceKey, $data);
 

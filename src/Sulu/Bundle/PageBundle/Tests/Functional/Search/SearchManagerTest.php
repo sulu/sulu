@@ -47,7 +47,6 @@ class SearchManagerTest extends BaseTestCase
         /** @var QueryHit $firstHit */
         $firstHit = $result->current();
         $this->assertInstanceOf(QueryHit::class, $firstHit);
-        /** @var Document $document */
         $document = $firstHit->getDocument();
         $this->assertInstanceOf(Document::class, $document);
         $this->assertEquals('page_sulu_io', $document->getIndex());

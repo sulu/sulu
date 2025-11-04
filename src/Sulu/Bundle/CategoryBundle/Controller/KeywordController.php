@@ -84,7 +84,6 @@ class KeywordController extends AbstractRestController implements ClassResourceI
 
         $fieldDescriptor = $this->fieldDescriptorFactory->getFieldDescriptors('category_keywords');
 
-        /** @var DoctrineListBuilder $listBuilder */
         $listBuilder = $this->listBuilderFactory->create($this->keywordClass);
         $this->restHelper->initializeListBuilder($listBuilder, $fieldDescriptor);
 

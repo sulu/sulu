@@ -91,7 +91,6 @@ class ContentMapperTest extends SuluTestCase
         $this->sessionManager = $this->getContainer()->get('sulu.phpcr.session');
         $this->extensionManager = $this->getContainer()->get('sulu_page.extension.manager');
 
-        /** @var bool $hasTokenStorage */
         $hasTokenStorage = $this->getContainer()->has('security.token_storage');
         if ($hasTokenStorage) {
             $this->tokenStorage = $this->getContainer()->get('security.token_storage');

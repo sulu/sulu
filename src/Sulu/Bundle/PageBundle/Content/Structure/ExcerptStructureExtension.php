@@ -227,7 +227,6 @@ class ExcerptStructureExtension extends AbstractExtension implements ExportExten
         // Reset the properties before new initialization.
         $this->properties = [];
 
-        /** @var PropertyInterface $property */
         foreach ($this->getExcerptStructure($locale)->getProperties() as $property) {
             $this->properties[] = $property->getName();
         }
