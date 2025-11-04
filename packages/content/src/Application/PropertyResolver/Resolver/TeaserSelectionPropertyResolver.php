@@ -59,7 +59,7 @@ class TeaserSelectionPropertyResolver implements PropertyResolverInterface
                     'type' => $type,
                 ],
                 priority: -50,
-                closure: static function(?Teaser $resource) use ($item) {
+                closure: static function(Teaser $resource) use ($item) {
                     return $resource->merge($item);
                 }
             );

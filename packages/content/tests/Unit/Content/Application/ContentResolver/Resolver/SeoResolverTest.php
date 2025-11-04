@@ -54,7 +54,7 @@ class SeoResolverTest extends TestCase
         $dimensionContent->setSeoHideInSitemap(true);
 
         $formMetadata = $this->prophesize(FormMetadata::class);
-        $formMetadata->getItems()
+        $formMetadata->getFlatFieldMetadata()
             ->willReturn([]);
         $formMetadataProvider = $this->prophesize(MetadataProviderInterface::class);
         $formMetadataProvider->getMetadata('content_seo', 'en', [])

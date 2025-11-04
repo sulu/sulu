@@ -277,7 +277,7 @@ class FormMetadata extends AbstractMetadata
     /**
      * @internal no backwards compatibility promise is given for this method it could be removed or changed at any time
      *
-     * @return FieldMetadata[]
+     * @return array<string, FieldMetadata>
      */
     public function getFlatFieldMetadata(): array
     {

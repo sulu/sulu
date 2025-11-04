@@ -64,7 +64,7 @@ class ExcerptResolverTest extends TestCase
         $dimensionContent->setExcerptCategories([$category]);
 
         $formMetadata = $this->prophesize(FormMetadata::class);
-        $formMetadata->getItems()
+        $formMetadata->getFlatFieldMetadata()
             ->willReturn([]);
         $formMetadataProvider = $this->prophesize(MetadataProviderInterface::class);
         $formMetadataProvider->getMetadata('content_excerpt', 'en', [])
@@ -131,7 +131,7 @@ class ExcerptResolverTest extends TestCase
         $dimensionContent->setExcerptAudienceTargetGroups([$targetGroup1, $targetGroup2]);
 
         $formMetadata = $this->prophesize(FormMetadata::class);
-        $formMetadata->getItems()
+        $formMetadata->getFlatFieldMetadata()
             ->willReturn([]);
         $formMetadataProvider = $this->prophesize(MetadataProviderInterface::class);
         $formMetadataProvider->getMetadata('content_excerpt', 'en', [])

@@ -24,6 +24,11 @@ trait LinkTrait
      */
     private ?array $linkData = null;
 
+    public function getLinkProvider(): ?string
+    {
+        return $this->linkProvider;
+    }
+
     /**
      * @return array<string, mixed>|null
      */
