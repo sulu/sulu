@@ -223,7 +223,7 @@ class PageAdmin extends Admin
             $contentTabCondition = 'linkOn == false && shadowOn == false';
 
             // Excerpt tab for content AND external pages
-            $excerptTabCondition = "(linkOn == false || (link.provider == 'page')) && shadowOn == false";
+            $excerptTabCondition = "(linkOn == false || (linkData.provider != 'page')) && shadowOn == false";
             /** @var PreviewFormViewBuilder $viewBuilder */
             foreach ($viewBuilders as $viewBuilder) {
                 if (PageAdmin::ADD_FORM_VIEW . '.content' === $viewBuilder->getName()) {

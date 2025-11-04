@@ -29,7 +29,7 @@
                     </params>
                 </property>
 
-                <property name="title" type="text_line" visibleCondition="linkOn == true">
+                <property name="title" type="text_line" visibleCondition="linkOn == true and linkData.provider == 'page'">
                     <meta>
                         <title lang="en">Title</title>
                         <title lang="de">Titel</title>

@@ -72,7 +72,7 @@ class PageLinkDimensionContentEnhancer implements DimensionContentEnhancerInterf
         $linkData = $pageDimensionContent->getLinkData();
 
         $href = $linkData['href'] ?? null;
-        if (!\is_string($href)) {
+        if (!\is_string($href) || $pageDimensionContent->getResourceId() === $href) {
             return $pageDimensionContent;
         }
 
