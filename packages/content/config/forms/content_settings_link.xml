@@ -14,7 +14,7 @@
             </meta>
 
             <properties>
-                <property name="linkOn" type="checkbox" colspan="6">
+                <property name="linkOn" type="checkbox" colspan="12">
                     <meta>
                         <info_text>sulu_content.enable_link_info_text</info_text>
                     </meta>

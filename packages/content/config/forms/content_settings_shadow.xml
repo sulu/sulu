@@ -14,7 +14,7 @@
             </meta>
 
             <properties>
-                <property name="shadowOn" type="checkbox" colspan="6" disabledCondition="shadowLocales and __locale in shadowLocales|values">
+                <property name="shadowOn" type="checkbox" disabledCondition="shadowLocales and __locale in shadowLocales|values">
                     <meta>
                         <info_text>sulu_content.enable_shadow_page_info_text</info_text>
                     </meta>
@@ -29,7 +29,7 @@
                     </params>
                 </property>
 
-                <property name="shadowLocale" type="page_settings_shadow_locale_select" colspan="6" visibleCondition="shadowOn == true">
+                <property name="shadowLocale" type="page_settings_shadow_locale_select" visibleCondition="shadowOn == true">
                     <meta>
                         <title>sulu_content.shadow_locale</title>
                     </meta>
