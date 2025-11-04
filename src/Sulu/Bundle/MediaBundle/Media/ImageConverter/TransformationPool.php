@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\MediaBundle\Media\ImageConverter;
 
+use Psr\Container\ContainerInterface;
 use Sulu\Bundle\MediaBundle\Media\ImageConverter\Transformation\TransformationInterface;
 
 /**
@@ -23,8 +24,14 @@ class TransformationPool implements TransformationPoolInterface
      */
     private $transformations = [];
 
+    public function __construct(private ?ContainerInterface $container = null)
+    {
+    }
+
     /**
      * @param string $alias
+     *
+     * @deprecated Use the constructor instead
      */
     public function add(TransformationInterface $transformation, $alias)
     {
@@ -40,6 +47,17 @@ class TransformationPool implements TransformationPoolInterface
      */
     public function get($name)
     {
+        if (null !== $this->container) {
+            try {
+                /** @var TransformationInterface $service */
+                $service = $this->container->get($name);
+
+                return $service;
+            } catch (\Throwable) {
+                // do nothing and try the old logic.
+            }
+        }
+
         if (\array_key_exists($name, $this->transformations)) {
             return $this->transformations[$name];
         }
