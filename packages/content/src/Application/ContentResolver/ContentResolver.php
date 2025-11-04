@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Sulu\Content\Application\ContentResolver;
 
 use Sulu\Content\Application\ContentAggregator\ContentAggregatorInterface;
+use Sulu\Content\Application\ContentEnhancer\ContentEnhancerInterface;
 use Sulu\Content\Application\ContentResolver\ContentViewResolver\ContentViewResolverInterface;
 use Sulu\Content\Application\ContentResolver\DataNormalizer\ContentViewDataNormalizerInterface;
 use Sulu\Content\Application\ContentResolver\ResolvableResourceLoader\ResolvableResourceLoaderInterface;
@@ -34,7 +35,8 @@ readonly class ContentResolver implements ContentResolverInterface
         private ResolvableResourceReplacerInterface $resolvableResourceReplacer,
         private ContentViewDataNormalizerInterface $contentViewDataNormalizer,
         private ContentAggregatorInterface $contentAggregator,
-        private int $maxDepth
+        private int $maxDepth,
+        private ContentEnhancerInterface $contentEnhancer
     ) {
     }
 
@@ -179,6 +181,8 @@ readonly class ContentResolver implements ContentResolverInterface
         array &$priorityQueue,
         ?array $properties = null
     ): array {
+        $dimensionContent = $this->contentEnhancer->enhance($dimensionContent);
+
         $contentViews = $this->contentViewResolver->getContentViews($dimensionContent, $properties);
         $resolvedContent = $this->contentViewResolver->resolveContentViews($contentViews, $depth, $priorityQueue);
 

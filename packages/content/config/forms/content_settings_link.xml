@@ -14,7 +14,7 @@
             </meta>
 
             <properties>
-                <property name="linkOn" type="checkbox" colspan="6">
+                <property name="linkOn" type="checkbox" colspan="12">
                     <meta>
                         <info_text>sulu_content.enable_link_info_text</info_text>
                     </meta>
@@ -29,15 +29,22 @@
                     </params>
                 </property>
 
-                <property name="linkData" type="link" colspan="6" visibleCondition="linkOn == true">
+                <property name="linkData" type="link" visibleCondition="linkOn == true">
                     <meta>
                         <title>sulu_content.link</title>
                     </meta>
 
                     <params>
                         <param name="enable_anchor" value="true"/>
-                        <param name="enable_attributes" value="true"/>
+                        <param name="enable_query" value="true"/>
                     </params>
+                </property>
+
+                <property name="title" type="text_line" visibleCondition="linkOn == true">
+                    <meta>
+                        <title lang="en">Title</title>
+                        <title lang="de">Titel</title>
+                    </meta>
                 </property>
             </properties>
         </section>

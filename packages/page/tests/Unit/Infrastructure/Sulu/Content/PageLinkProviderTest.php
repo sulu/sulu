@@ -17,7 +17,8 @@ use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\HttpCacheBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Bundle\TestBundle\Testing\SetGetPrivatePropertyTrait;
-use Sulu\Content\Application\ContentManager\ContentManagerInterface;
+use Sulu\Content\Application\ContentAggregator\ContentAggregatorInterface;
+use Sulu\Content\Application\ContentEnhancer\ContentEnhancerInterface;
 use Sulu\Page\Domain\Model\PageInterface;
 use Sulu\Page\Domain\Repository\PageRepositoryInterface;
 use Sulu\Page\Infrastructure\Sulu\Content\PageLinkProvider;
@@ -29,9 +30,14 @@ class PageLinkProviderTest extends TestCase
     use SetGetPrivatePropertyTrait;
 
     /**
-     * @var ObjectProphecy<ContentManagerInterface>
+     * @var ObjectProphecy<ContentAggregatorInterface>
      */
-    private ObjectProphecy $contentManager;
+    private ObjectProphecy $contentAggregator;
+
+    /**
+     * @var ObjectProphecy<ContentEnhancerInterface>
+     */
+    private ObjectProphecy $contentEnhancer;
 
     /**
      * @var ObjectProphecy<PageRepositoryInterface>
@@ -52,14 +58,16 @@ class PageLinkProviderTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->contentManager = $this->prophesize(ContentManagerInterface::class);
+        $this->contentAggregator = $this->prophesize(ContentAggregatorInterface::class);
+        $this->contentEnhancer = $this->prophesize(ContentEnhancerInterface::class);
         $this->pageRepository = $this->prophesize(PageRepositoryInterface::class);
         $this->referenceStore = $this->prophesize(ReferenceStoreInterface::class);
         $this->translator = $this->prophesize(TranslatorInterface::class);
         $this->translator->trans(Argument::cetera())->willReturnArgument(0);
 
         $this->pageLinkProvider = new PageLinkProvider(
-            $this->contentManager->reveal(),
+            $this->contentAggregator->reveal(),
+            $this->contentEnhancer->reveal(),
             $this->pageRepository->reveal(),
             $this->referenceStore->reveal(),
             $this->translator->reveal()

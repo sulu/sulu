@@ -14,10 +14,12 @@ declare(strict_types=1);
 namespace Sulu\Content\Tests\Unit\Content\Application\ContentResolver;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\HttpCacheBundle\ReferenceStore\ReferenceStore;
 use Sulu\Content\Application\ContentAggregator\ContentAggregatorInterface;
+use Sulu\Content\Application\ContentEnhancer\ContentEnhancerInterface;
 use Sulu\Content\Application\ContentResolver\ContentResolver;
 use Sulu\Content\Application\ContentResolver\ContentViewResolver\ContentViewResolver;
 use Sulu\Content\Application\ContentResolver\DataNormalizer\ContentViewDataNormalizer;
@@ -54,6 +56,11 @@ class ContentResolverTest extends TestCase
      */
     private ObjectProphecy $contentAggregator;
 
+    /**
+     * @var ObjectProphecy<ContentEnhancerInterface>
+     */
+    private ObjectProphecy $contentEnhancer;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -71,6 +78,13 @@ class ContentResolverTest extends TestCase
 
         $this->resolvableResourceLoader = $this->prophesize(ResolvableResourceLoaderInterface::class);
         $this->contentAggregator = $this->prophesize(ContentAggregatorInterface::class);
+        $this->contentEnhancer = $this->prophesize(ContentEnhancerInterface::class);
+
+        // Mock ContentEnhancer to pass through dimension content unchanged
+        $this->contentEnhancer->enhance(Argument::any())->will(function(array $args) {
+            return \reset($args);
+        });
+
         $maxDepth = 5;
 
         $this->contentResolver = new ContentResolver(
@@ -80,7 +94,8 @@ class ContentResolverTest extends TestCase
             $this->resolvableResourceReplacer,
             $this->contentViewDataNormalizer,
             $this->contentAggregator->reveal(),
-            $maxDepth
+            $maxDepth,
+            $this->contentEnhancer->reveal()
         );
     }
 

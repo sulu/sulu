@@ -17,11 +17,14 @@ use Sulu\Bundle\HttpCacheBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkConfigurationBuilder;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkItem;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkProviderInterface;
-use Sulu\Content\Application\ContentManager\ContentManagerInterface;
+use Sulu\Content\Application\ContentAggregator\ContentAggregatorInterface;
+use Sulu\Content\Application\ContentEnhancer\ContentEnhancerInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
+use Sulu\Page\Domain\Model\PageDimensionContentInterface;
 use Sulu\Page\Domain\Model\PageInterface;
 use Sulu\Page\Domain\Repository\PageRepositoryInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Webmozart\Assert\Assert;
 
 /**
  * @interal This class is an integration to the SuluMarkupBundle and can be changed any time.
@@ -30,7 +33,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 final class PageLinkProvider implements LinkProviderInterface
 {
     public function __construct(
-        private readonly ContentManagerInterface $contentManager,
+        private readonly ContentAggregatorInterface $contentAggregator,
+        private readonly ContentEnhancerInterface $contentEnhancer,
         private readonly PageRepositoryInterface $pageRepository,
         private readonly ReferenceStoreInterface $referenceStore,
         private readonly TranslatorInterface $translator,
@@ -63,11 +67,16 @@ final class PageLinkProvider implements LinkProviderInterface
 
         $result = [];
         foreach ($pages as $page) {
-            $dimensionContent = $this->contentManager->resolve($page, $dimensionAttributes);
+            $dimensionContent = $this->contentAggregator->aggregate($page, $dimensionAttributes);
+            $dimensionContent = $this->contentEnhancer->enhance($dimensionContent);
+            Assert::isInstanceOf($dimensionContent, PageDimensionContentInterface::class);
+
             $this->referenceStore->add($page->getId(), PageInterface::RESOURCE_KEY);
 
+            /** @var array<string, mixed> $templateData */
+            $templateData = $dimensionContent->getTemplateData();
             /** @var string|null $url */
-            $url = $dimensionContent->getTemplateData()['url'] ?? null;
+            $url = $templateData['url'] ?? null;
             if (null === $url) {
                 // TODO what to do when there is no url?
                 continue;
