@@ -198,7 +198,9 @@
         <service id="sulu_media.image.scaler" class="Sulu\Bundle\MediaBundle\Media\ImageConverter\Scaler\Scaler" />
         <service id="sulu_media.image.cropper" class="Sulu\Bundle\MediaBundle\Media\ImageConverter\Cropper\Cropper" />
 
-        <service id="sulu_media.image.transformation_pool" class="Sulu\Bundle\MediaBundle\Media\ImageConverter\TransformationPool" />
+        <service id="sulu_media.image.transformation_pool" class="Sulu\Bundle\MediaBundle\Media\ImageConverter\TransformationPool">
+            <argument type="tagged_locator" tag="sulu_media.image.transformation" index-by="alias" />
+        </service>
 
         <service id="sulu_media.image.transformation.crop" class="Sulu\Bundle\MediaBundle\Media\ImageConverter\Transformation\CropTransformation">
             <tag name="sulu_media.image.transformation" alias="crop" />

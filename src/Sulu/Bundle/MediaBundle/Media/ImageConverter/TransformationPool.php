@@ -14,52 +14,20 @@ namespace Sulu\Bundle\MediaBundle\Media\ImageConverter;
 use Psr\Container\ContainerInterface;
 use Sulu\Bundle\MediaBundle\Media\ImageConverter\Transformation\TransformationInterface;
 
-/**
- * Default implementation of transformation pool.
- */
-class TransformationPool implements TransformationPoolInterface
+readonly class TransformationPool implements TransformationPoolInterface
 {
-    /**
-     * @var TransformationInterface[]
-     */
-    private $transformations = [];
-
-    public function __construct(private ?ContainerInterface $container = null)
-    {
+    public function __construct(
+        private ContainerInterface $container,
+    ) {
     }
 
-    /**
-     * @param string $alias
-     *
-     * @deprecated Use the constructor instead
-     */
-    public function add(TransformationInterface $transformation, $alias)
-    {
-        $this->transformations[$alias] = $transformation;
-    }
-
-    /**
-     * @param string $name A String with the name of the image transformation to load
-     *
-     * @return TransformationInterface
-     *
-     * @throws \InvalidArgumentException If the transformation doesn't exist
-     */
     public function get($name)
     {
-        if (null !== $this->container) {
-            try {
-                /** @var TransformationInterface $service */
-                $service = $this->container->get($name);
+        if ($this->container->has($name)) {
+            /** @var TransformationInterface $service */
+            $service = $this->container->get($name);
 
-                return $service;
-            } catch (\Throwable) {
-                // do nothing and try the old logic.
-            }
-        }
-
-        if (\array_key_exists($name, $this->transformations)) {
-            return $this->transformations[$name];
+            return $service;
         }
 
         throw new \InvalidArgumentException(

@@ -13,7 +13,6 @@ namespace Sulu\Bundle\MediaBundle;
 
 use Sulu\Bundle\MediaBundle\DependencyInjection\FlysystemCompilerPass;
 use Sulu\Bundle\MediaBundle\DependencyInjection\ImageFormatCompilerPass;
-use Sulu\Bundle\MediaBundle\DependencyInjection\ImageTransformationCompilerPass;
 use Sulu\Bundle\MediaBundle\Entity\CollectionInterface;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\PersistenceBundle\PersistenceBundleTrait;
@@ -38,7 +37,6 @@ final class SuluMediaBundle extends Bundle
         );
 
         $container->addCompilerPass(new ImageFormatCompilerPass());
-        $container->addCompilerPass(new ImageTransformationCompilerPass());
         $container->addCompilerPass(new FlysystemCompilerPass());
 
         parent::build($container);
