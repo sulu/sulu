@@ -24,6 +24,8 @@ interface TransformationPoolInterface
      * @param string $name
      *
      * @return TransformationInterface
+     *
+     * @throws \InvalidArgumentException thrown when the service was not found
      */
     public function get($name);
 }
