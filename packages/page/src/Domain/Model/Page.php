@@ -14,6 +14,7 @@ namespace Sulu\Page\Domain\Model;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Sulu\Component\Persistence\Model\AuditableTrait;
+use Sulu\Component\Security\Authorization\AccessControl\SecuredEntityInterface;
 use Sulu\Content\Domain\Model\ContentRichEntityTrait;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Symfony\Component\Uid\Uuid;
@@ -21,7 +22,7 @@ use Symfony\Component\Uid\Uuid;
 /**
  * @experimental
  */
-class Page implements PageInterface
+class Page implements PageInterface, SecuredEntityInterface
 {
     /**
      * @phpstan-use ContentRichEntityTrait<PageDimensionContentInterface>
@@ -149,5 +150,10 @@ class Page implements PageInterface
         $this->depth = $depth;
 
         return $this;
+    }
+
+    public function getSecurityContext(): string
+    {
+        return \sprintf('sulu.webspaces.%s', $this->webspaceKey);
     }
 }

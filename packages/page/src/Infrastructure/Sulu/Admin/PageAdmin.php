@@ -139,7 +139,7 @@ class PageAdmin extends Admin
                     new ToolbarAction(
                         'sulu_admin.copy_locale',
                         [
-                            'visible_condition' => '(!_permissions || _permissions.edit) && __webspace.localizations|length > 1',
+                            'visible_condition' => '(_permissions && _permissions.edit) && __webspace.localizations|length > 1',
                         ]
                     ),
                     new ToolbarAction(
@@ -284,7 +284,7 @@ class PageAdmin extends Admin
 
             $viewCollection->add(
                 $this->viewBuilderFactory
-                    ->createPreviewFormViewBuilder('sulu_page.page_edit_form.permissions', '/permissions')
+                    ->createPreviewFormViewBuilder(PageAdmin::EDIT_FORM_VIEW . '.permissions', '/permissions')
                     ->setResourceKey('permissions')
                     ->setPreviewResourceKey(PageInterface::RESOURCE_KEY)
                     ->setFormKey('permission_details')

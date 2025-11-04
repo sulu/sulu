@@ -364,6 +364,8 @@ final class SuluPageBundle extends AbstractBundle
                 new Reference('sulu_core.doctrine_list_builder_factory'),
                 new Reference('sulu_core.doctrine_rest_helper'),
                 new Reference('doctrine.orm.entity_manager'),
+                new Reference('sulu_security.access_control_manager'),
+                new Reference('security.token_storage'),
             ])
             ->tag('sulu.context', ['context' => 'admin']);
 
@@ -571,6 +573,8 @@ final class SuluPageBundle extends AbstractBundle
                                 'list' => 'sulu_page.get_pages',
                                 'detail' => 'sulu_page.get_page',
                             ],
+                            'security_class' => Page::class,
+                            'security_context' => 'sulu.webspaces.#webspace#',
                         ],
                         'pages_versions' => [
                             'routes' => [

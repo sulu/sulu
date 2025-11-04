@@ -259,9 +259,9 @@ class ColumnListAdapter extends AbstractAdapter {
         } = item || {};
 
         const settingOptions = [];
-        if (onRequestItemDelete) {
+        if (onRequestItemDelete && deletePermission) {
             settingOptions.push({
-                disabled: !hasActiveItem || !deletePermission,
+                disabled: !hasActiveItem,
                 label: translate('sulu_admin.delete'),
                 onClick: () => {
                     const itemId = activeItems[index + 1];
