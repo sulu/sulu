@@ -481,6 +481,58 @@ class ArticleControllerTest extends SuluTestCase
         $this->assertSame(0, $content['total']);
     }
 
+    public function testGetListWithGroupFiltering(): void
+    {
+        self::purgeDatabase();
+
+        // Create articles with different templates
+        $this->client->request('POST', '/admin/api/articles?locale=en&action=publish', [], [], [], \json_encode([
+            'template' => 'article',
+            'title' => 'Article Template Test',
+            'url' => '/article-template',
+            'mainWebspace' => 'sulu-io',
+        ]) ?: null);
+
+        $response1 = $this->client->getResponse();
+        $this->assertHttpStatusCode(201, $response1);
+        $content1 = \json_decode((string) $response1->getContent(), true);
+        $this->assertIsArray($content1);
+        $articleId = $content1['id'];
+
+        $this->client->request('POST', '/admin/api/articles?locale=en&action=publish', [], [], [], \json_encode([
+            'template' => 'blog',
+            'title' => 'Blog Template Test',
+            'url' => '/blog-template',
+            'mainWebspace' => 'sulu-io',
+        ]) ?: null);
+
+        $response2 = $this->client->getResponse();
+        $this->assertHttpStatusCode(201, $response2);
+
+        $this->client->request('POST', '/admin/api/articles?locale=en&action=publish', [], [], [], \json_encode([
+            'template' => 'news',
+            'title' => 'News Template Test',
+            'url' => '/news-template',
+            'mainWebspace' => 'sulu-io',
+        ]) ?: null);
+
+        $response3 = $this->client->getResponse();
+        $this->assertHttpStatusCode(201, $response3);
+
+        // Test type filter
+        $this->client->request('GET', '/admin/api/articles?locale=en&types=blog-group');
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(200, $response);
+        $content = \json_decode((string) $response->getContent(), true);
+        $this->assertIsArray($content);
+
+        $this->assertSame(1, $content['total']);
+        $this->assertIsArray($content['_embedded']);
+        $this->assertIsArray($content['_embedded']['articles']);
+        $this->assertIsArray($content['_embedded']['articles'][0]);
+        $this->assertSame('Blog Template Test', $content['_embedded']['articles'][0]['title']);
+    }
+
     protected function getSnapshotFolder(): string
     {
         return 'responses';

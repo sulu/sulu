@@ -20,6 +20,7 @@ use Sulu\Article\Application\Message\RemoveArticleTranslationMessage;
 use Sulu\Article\Application\Message\RestoreArticleVersionMessage;
 use Sulu\Article\Domain\Model\ArticleInterface;
 use Sulu\Article\Domain\Repository\ArticleRepositoryInterface;
+use Sulu\Bundle\AdminBundle\Metadata\GroupProviderInterface;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilder;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactoryInterface;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptorInterface;
@@ -47,60 +48,36 @@ final class ArticleController
 {
     use HandleTrait;
 
-    /**
-     * @var ArticleRepositoryInterface
-     */
-    private $articleRepository;
-
-    /**
-     * @var NormalizerInterface
-     */
-    private $normalizer;
-
-    /**
-     * @var ContentManagerInterface
-     */
-    private $contentManager;
-
-    /**
-     * @var FieldDescriptorFactoryInterface
-     */
-    private $fieldDescriptorFactory;
-
-    /**
-     * @var DoctrineListBuilderFactoryInterface
-     */
-    private $listBuilderFactory;
-
-    /**
-     * @var RestHelperInterface
-     */
-    private $restHelper;
-
     public function __construct(
-        ArticleRepositoryInterface $articleRepository,
+        private ArticleRepositoryInterface $articleRepository,
         MessageBusInterface $messageBus,
-        NormalizerInterface $normalizer,
-        ContentManagerInterface $contentManager,
-        FieldDescriptorFactoryInterface $fieldDescriptorFactory,
-        DoctrineListBuilderFactoryInterface $listBuilderFactory,
-        RestHelperInterface $restHelper,
-    ) {
-        $this->articleRepository = $articleRepository;
-        $this->messageBus = $messageBus;
-        $this->normalizer = $normalizer;
-
+        private NormalizerInterface $normalizer,
+        private GroupProviderInterface $groupProvider,
         // TODO controller should not need more then Repository, MessageBus, Serializer
-        $this->fieldDescriptorFactory = $fieldDescriptorFactory;
-        $this->listBuilderFactory = $listBuilderFactory;
-        $this->restHelper = $restHelper;
-        $this->contentManager = $contentManager;
+        private ContentManagerInterface $contentManager,
+        private FieldDescriptorFactoryInterface $fieldDescriptorFactory,
+        private DoctrineListBuilderFactoryInterface $listBuilderFactory,
+        private RestHelperInterface $restHelper,
+    ) {
+        $this->messageBus = $messageBus;
     }
 
     public function cgetAction(Request $request): Response
     {
+        $typesParam = $request->get('types', '');
+        $types = \array_filter(\explode(',', \is_string($typesParam) ? $typesParam : ''));
+
+        $groupTemplates = [];
+        $groups = $this->groupProvider->getGroups();
+        foreach ($groups as $group) {
+            if (\in_array($group->identifier, $types)) {
+                $groupTemplates = \array_merge($groupTemplates, $group->templates);
+            }
+        }
+
         $templatesParam = $request->get('templates', '');
         $templates = \array_filter(\explode(',', \is_string($templatesParam) ? $templatesParam : ''));
+        $templates = \array_unique(\array_merge($templates, $groupTemplates));
 
         // TODO this should be ArticleRepository::findFlatBy / ::countFlatBy methods
         //      but first we would need to avoid that the restHelper requires the request.

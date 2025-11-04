@@ -288,6 +288,7 @@ final class SuluArticleBundle extends AbstractBundle
                 new Reference('sulu_article.article_repository'),
                 new Reference('sulu_message_bus'),
                 new Reference('serializer'),
+                new Reference('sulu_admin.metadata_group_provider'),
                 new Reference('sulu_content.content_manager'),
                 new Reference('sulu_core.list_builder.field_descriptor_factory'),
                 new Reference('sulu_core.doctrine_list_builder_factory'),
