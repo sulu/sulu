@@ -98,7 +98,7 @@ class KeywordController extends AbstractRestController implements SecuredControl
         $listBuilder->where($fieldDescriptor['locale'], $locale);
         $listBuilder->where(
             $fieldDescriptor['categoryTranslationIds'],
-            $categoryTranslation
+            $categoryTranslation->getId()
         );
 
         // should eliminate duplicates

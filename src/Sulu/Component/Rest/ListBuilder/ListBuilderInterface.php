@@ -191,7 +191,7 @@ interface ListBuilderInterface
      * Defines a constraint for the rows to return.
      *
      * @param FieldDescriptorInterface $fieldDescriptor The FieldDescriptor which is checked
-     * @param string $value The value the FieldDescriptor should have
+     * @param int|string|float|bool|null $value The value the FieldDescriptor should have
      * @param string $comparator The comparator use to compare the values
      *
      * @return ListBuilderInterface

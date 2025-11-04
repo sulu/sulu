@@ -47,6 +47,9 @@ class MediaController extends AbstractMediaController implements
 {
     use RequestParametersTrait;
 
+    /**
+     * @param class-string $mediaClass
+     */
     public function __construct(
         ViewHandlerInterface $viewHandler,
         TokenStorageInterface $tokenStorage,

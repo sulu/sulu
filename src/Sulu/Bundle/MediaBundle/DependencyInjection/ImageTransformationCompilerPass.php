@@ -17,6 +17,8 @@ use Symfony\Component\DependencyInjection\Reference;
 
 /**
  * Compiler pass for collecting services tagged with sulu_media.image.transformation.
+ *
+ * @deprecated use the tagged_locator
  */
 class ImageTransformationCompilerPass implements CompilerPassInterface
 {

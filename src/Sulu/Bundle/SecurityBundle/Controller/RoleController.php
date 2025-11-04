@@ -52,6 +52,9 @@ class RoleController extends AbstractRestController implements SecuredController
      */
     protected $fieldDescriptors = [];
 
+    /**
+     * @param class-string $roleClass
+     */
     public function __construct(
         ViewHandlerInterface $viewHandler,
         private FieldDescriptorFactoryInterface $fieldDescriptorFactory,

@@ -53,6 +53,7 @@ class TrashItemController extends AbstractRestController
     use RequestParametersTrait;
 
     /**
+     * @param class-string $trashItemClass
      * @param array<string, int> $permissions Inject `sulu_security.permissions` parameter
      */
     public function __construct(
@@ -98,7 +99,6 @@ class TrashItemController extends AbstractRestController
             $configurationFieldDescriptors
         );
 
-        /** @var DoctrineListBuilder $listBuilder */
         $listBuilder = $this->listBuilderFactory->create($this->trashItemClass);
         $this->restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
 

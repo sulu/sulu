@@ -38,6 +38,9 @@ class UserController extends AbstractRestController implements SecuredController
 {
     use RequestParametersTrait;
 
+    /**
+     * @param class-string $userClass
+     */
     public function __construct(
         ViewHandlerInterface $viewHandler,
         private RestHelperInterface $restHelper,

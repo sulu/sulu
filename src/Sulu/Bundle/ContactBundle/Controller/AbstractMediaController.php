@@ -55,6 +55,9 @@ abstract class AbstractMediaController extends AbstractRestController
 
     protected $fieldDescriptors = null;
 
+    /**
+     * @param class-string $mediaClass
+     */
     public function __construct(
         ViewHandlerInterface $viewHandler,
         TokenStorageInterface $tokenStorage,
@@ -183,7 +186,7 @@ abstract class AbstractMediaController extends AbstractRestController
     /**
      * Returns a view containing all media of an entity.
      *
-     * @param string $entityName
+     * @param class-string $entityName
      * @param string $routeName
      * @param Request $request
      *

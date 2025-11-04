@@ -71,6 +71,9 @@ class ContactController extends AbstractRestController implements SecuredControl
 
     protected $accountContactFieldDescriptors;
 
+    /**
+     * @param class-string $contactClass
+     */
     public function __construct(
         ViewHandlerInterface $viewHandler,
         TokenStorageInterface $tokenStorage,
@@ -202,6 +205,7 @@ class ContactController extends AbstractRestController implements SecuredControl
         $listBuilder->addGroupBy($fieldDescriptors['id']);
         $this->restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
 
+        /** @var string $account */
         $accountId = $request->get('accountId');
         if ($accountId) {
             $listBuilder->where($fieldDescriptors['accountId'], $accountId);

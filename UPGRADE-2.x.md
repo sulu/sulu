@@ -13,6 +13,7 @@ Deprecated compiler passes:
 * `Sulu\Bundle\CoreBundle\DependencyInjection\Compiler\RegisterLocalizationProvidersPass` (`sulu.localization_provider`) `tagged_iterator`
 * `Sulu\Bundle\AdminBundle\DependencyInjection\Compiler\AddAdminPass` (`sulu.admin`) `tagged_iterator`
 * `Sulu\Bundle\AdminBundle\DependencyInjection\Compiler\AddMetadataProvider` (`sulu_admin.property_metadata_mapper`) `tagged_locator`
+* `Sulu\Bundle\MediaBundle\DependencyInjection\ImageTransformationCompilerPass` (`sulu_media.image.transformation`) `tagged_locator`
 
 ## 2.6.11
 

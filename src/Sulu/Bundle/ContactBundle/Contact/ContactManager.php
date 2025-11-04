@@ -437,7 +437,7 @@ class ContactManager extends AbstractContactManager
      * @param ContactInterface $contact
      * @param ContactAddress $contactAddress
      *
-     * @return mixed|void
+     * @return void
      *
      * @throws \Exception
      */

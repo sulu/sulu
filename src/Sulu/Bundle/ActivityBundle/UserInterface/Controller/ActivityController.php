@@ -40,6 +40,7 @@ class ActivityController extends AbstractRestController implements SecuredContro
     use RequestParametersTrait;
 
     /**
+     * @param class-string $activityClass
      * @param array<string, int> $permissions Inject `sulu_security.permissions` parameter
      */
     public function __construct(
