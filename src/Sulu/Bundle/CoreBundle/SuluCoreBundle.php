@@ -12,7 +12,6 @@
 namespace Sulu\Bundle\CoreBundle;
 
 use Sulu\Bundle\CoreBundle\DependencyInjection\Compiler\CsvHandlerCompilerPass;
-use Sulu\Bundle\CoreBundle\DependencyInjection\Compiler\ListBuilderMetadataProviderCompilerPass;
 use Sulu\Bundle\CoreBundle\DependencyInjection\Compiler\RemoveForeignContextServicesPass;
 use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -28,7 +27,6 @@ final class SuluCoreBundle extends Bundle
         parent::build($container);
 
         $container->addCompilerPass(new RemoveForeignContextServicesPass(), PassConfig::TYPE_BEFORE_OPTIMIZATION, 99);
-        $container->addCompilerPass(new ListBuilderMetadataProviderCompilerPass());
         $container->addCompilerPass(new CsvHandlerCompilerPass());
     }
 }
