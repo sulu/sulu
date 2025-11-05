@@ -750,6 +750,7 @@ class AccountController extends AbstractRestController implements ClassResourceI
             }
 
             $addresses = $account->getAddresses();
+            /** @var AddressEntity $address */
             foreach ($addresses as $address) {
                 if (!$address->hasRelations()) {
                     $this->entityManager->remove($address);

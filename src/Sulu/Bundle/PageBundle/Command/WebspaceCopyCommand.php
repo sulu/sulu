@@ -474,6 +474,7 @@ class WebspaceCopyCommand extends Command
         }
 
         foreach ($structureArray[$property->getName()] as &$structure) {
+            /** @var ItemMetadata $component */
             $component = $property->getComponentByName($structure['type']);
             $children = $this->getBlockConfigChildren($component);
             /** @var PropertyMetadata $child */
