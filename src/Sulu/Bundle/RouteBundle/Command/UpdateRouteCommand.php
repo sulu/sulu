@@ -12,7 +12,6 @@
 namespace Sulu\Bundle\RouteBundle\Command;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\EntityRepository;
 use Sulu\Bundle\RouteBundle\Manager\RouteManagerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;

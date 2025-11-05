@@ -14,7 +14,6 @@ namespace Sulu\Component\Rest\ListBuilder;
 use Sulu\Component\Rest\Exception\InvalidSearchException;
 use Sulu\Component\Rest\ListBuilder\Expression\ExpressionInterface;
 use Sulu\Component\Rest\ListBuilder\Filter\FilterTypeRegistry;
-use Sulu\Component\Rest\ListBuilder\Metadata\AbstractPropertyMetadata;
 use Sulu\Component\Security\Authentication\UserInterface;
 
 abstract class AbstractListBuilder implements ListBuilderInterface
