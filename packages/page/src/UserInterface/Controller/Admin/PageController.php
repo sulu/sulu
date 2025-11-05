@@ -21,6 +21,7 @@ use Sulu\Component\Rest\ListBuilder\ListBuilderInterface;
 use Sulu\Component\Rest\ListBuilder\Metadata\FieldDescriptorFactoryInterface;
 use Sulu\Component\Rest\ListBuilder\PaginatedRepresentation;
 use Sulu\Component\Rest\RestHelperInterface;
+use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Security\Authorization\AccessControl\AccessControlManagerInterface;
 use Sulu\Component\Security\Authorization\AccessControl\SecuredObjectControllerInterface;
 use Sulu\Component\Security\SecuredControllerInterface;
@@ -488,13 +489,21 @@ final class PageController implements SecuredControllerInterface, SecuredObjectC
 
             // Get user-specific permissions
             if (!empty($allPermissions)) {
-                $permissions = $this->accessControlManager->getUserPermissionByArray(
-                    null,
-                    \sprintf('sulu.webspaces.%s', $webspaceKey),
-                    $allPermissions,
-                    $this->tokenStorage->getToken()->getUser()
-                );
-                $row['_permissions'] = $permissions;
+                $token = $this->tokenStorage->getToken();
+                $user = $token?->getUser();
+
+                // Ensure user is compatible with Sulu's UserInterface
+                if ($user instanceof UserInterface) {
+                    $permissions = $this->accessControlManager->getUserPermissionByArray(
+                        null,
+                        \sprintf('sulu.webspaces.%s', $webspaceKey),
+                        $allPermissions,
+                        $user
+                    );
+                    $row['_permissions'] = $permissions;
+                } else {
+                    $row['_permissions'] = [];
+                }
             }
 
             if (\array_key_exists($rowId, $rowsByParentId)) {
@@ -514,6 +523,11 @@ final class PageController implements SecuredControllerInterface, SecuredObjectC
         return $rowsByParentId[$parentId] ?? [];
     }
 
+    /**
+     * @return string|null
+     *
+     * @phpstan-ignore return.type
+     */
     public function getSecurityContext()
     {
         // Pages have webspace-specific security contexts, but we can't determine
@@ -529,10 +543,12 @@ final class PageController implements SecuredControllerInterface, SecuredObjectC
         return Page::class;
     }
 
-    public function getSecuredObjectId(Request $request)
+    public function getSecuredObjectId(Request $request): string
     {
         // For detail actions, use id parameter
         // For list action, no specific object (will check webspace-level permissions)
-        return $request->get('id');
+        $id = $request->get('id');
+
+        return \is_string($id) ? $id : '';
     }
 }

@@ -15,6 +15,7 @@ use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Sulu\Component\Security\Authorization\SecurityCondition;
 use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
+use Sulu\Component\Webspace\Webspace;
 use Sulu\Page\Domain\Model\Page;
 use Sulu\Page\Domain\Model\PageDimensionContentInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -56,7 +57,7 @@ class PageSecurityListener implements EventSubscriberInterface
         }
 
         $webspace = $requestAttributes->getAttribute('webspace');
-        if (!$webspace->hasWebsiteSecurity()) {
+        if (!$webspace instanceof Webspace || !$webspace->hasWebsiteSecurity()) {
             return;
         }
 

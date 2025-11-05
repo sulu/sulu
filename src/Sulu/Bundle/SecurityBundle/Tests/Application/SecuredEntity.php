@@ -15,8 +15,9 @@ use Sulu\Component\Security\Authorization\AccessControl\SecuredEntityInterface;
 
 class SecuredEntity implements SecuredEntityInterface
 {
-    public function getId(): void
+    public function getId(): string
     {
+        return '';
     }
 
     public function getSecurityContext()

@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Sulu\Content\Application\ContentNormalizer\Normalizer;
 
+use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Security\Authorization\AccessControl\AccessControlManagerInterface;
 use Sulu\Component\Security\Authorization\AccessControl\SecuredEntityInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
@@ -48,14 +49,17 @@ class SecuredEntityNormalizer implements NormalizerInterface
 
         $allPermissions = $this->accessControlManager->getPermissions(
             \get_class($securedEntity),
-            $securedEntity->getId()
+            (string) $securedEntity->getId()
         );
+
+        $user = $this->tokenStorage?->getToken()?->getUser();
+        $suluUser = $user instanceof UserInterface ? $user : null;
 
         $permissions = $this->accessControlManager->getUserPermissionByArray(
             null,
             $securedEntity->getSecurityContext(),
             $allPermissions,
-            $this->tokenStorage?->getToken()?->getUser()
+            $suluUser
         );
 
         $normalizedData['_permissions'] = $permissions;

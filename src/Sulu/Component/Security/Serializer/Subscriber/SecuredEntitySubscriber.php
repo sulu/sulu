@@ -54,7 +54,7 @@ class SecuredEntitySubscriber implements EventSubscriberInterface
 
         $allPermissions = $this->accessControlManager->getPermissions(
             \get_class($object),
-            $object->getId()
+            (string) $object->getId()
         );
 
         $permissions = $this->accessControlManager->getUserPermissionByArray(
