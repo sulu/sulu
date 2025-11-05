@@ -1,4 +1,14 @@
 {
+    "_hasPermissions": false,
+    "_permissions": {
+        "add": false,
+        "archive": false,
+        "delete": false,
+        "edit": false,
+        "live": false,
+        "security": false,
+        "view": false
+    },
     "author": null,
     "authored": null,
     "availableLocales": ["en"],

@@ -60,6 +60,15 @@ class PageSecurityListenerTest extends SuluTestCase
 
     public function testSecurePageDeniedForAnonymousUser(): void
     {
+        $homepage = self::createPage([
+            'en' => [
+                'live' => [
+                    'title' => 'Homepage',
+                    'url' => '/',
+                    'template' => 'homepage',
+                ],
+            ],
+        ], 'sulu-test-secure');
         $page = self::createPage([
             'en' => [
                 'live' => [
@@ -67,6 +76,7 @@ class PageSecurityListenerTest extends SuluTestCase
                     'url' => '/secure-area',
                     'template' => 'default',
                     'article' => '<p>Super secret content</p>',
+                    'parentId' => $homepage->getId(),
                 ],
             ],
         ], 'sulu-test-secure');
@@ -92,10 +102,9 @@ class PageSecurityListenerTest extends SuluTestCase
         $permission->setContext('sulu.webspaces.sulu-test-secure');
         $role->addPermission($permission);
 
-        $entityManager = self::getEntityManager();
-        $entityManager->persist($role);
-        $entityManager->persist($permission);
-        $entityManager->flush();
+        self::getEntityManager()->persist($role);
+        self::getEntityManager()->persist($permission);
+        self::getEntityManager()->flush();
 
         return $role;
     }
@@ -108,8 +117,7 @@ class PageSecurityListenerTest extends SuluTestCase
         $accessControl->setEntityClass(Page::class);
         $accessControl->setRole($this->anonymousRole);
 
-        $entityManager = self::getEntityManager();
-        $entityManager->persist($accessControl);
-        $entityManager->flush();
+        self::getEntityManager()->persist($accessControl);
+        self::getEntityManager()->flush();
     }
 }

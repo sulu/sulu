@@ -17,6 +17,7 @@
                 "version": null,
                 "publishedState": false,
                 "hasChildren": true,
+                "_hasPermissions": false,
                 "_embedded": {
                     "pages": [
                         {
@@ -34,7 +35,8 @@
                             "template": "default",
                             "version" : 0,
                             "publishedState": false,
-                            "hasChildren": true
+                            "hasChildren": true,
+                            "_hasPermissions": false
                         },
                         {
                             "id": "@string@",
@@ -51,7 +53,8 @@
                             "template": "default",
                             "version" : 0,
                             "publishedState": true,
-                            "hasChildren": false
+                            "hasChildren": false,
+                            "_hasPermissions": false
                         },
                         {
                             "id": "@string@",
@@ -68,7 +71,8 @@
                             "template": "default",
                             "version" : 0,
                             "publishedState": false,
-                            "hasChildren": false
+                            "hasChildren": false,
+                            "_hasPermissions": false
                         }
                     ]
                 }

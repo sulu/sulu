@@ -14,7 +14,6 @@ namespace Sulu\Page\Domain\Model;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Sulu\Component\Persistence\Model\AuditableTrait;
-use Sulu\Component\Security\Authorization\AccessControl\SecuredEntityInterface;
 use Sulu\Content\Domain\Model\ContentRichEntityTrait;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Symfony\Component\Uid\Uuid;
@@ -22,7 +21,7 @@ use Symfony\Component\Uid\Uuid;
 /**
  * @experimental
  */
-class Page implements PageInterface, SecuredEntityInterface
+class Page implements PageInterface
 {
     /**
      * @phpstan-use ContentRichEntityTrait<PageDimensionContentInterface>

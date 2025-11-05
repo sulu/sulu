@@ -17,6 +17,7 @@
                 "template": null,
                 "version": null,
                 "hasChildren": true,
+                "_hasPermissions": false,
                 "_embedded": {
                     "pages": [
                         {
@@ -35,6 +36,7 @@
                             "template": "default",
                             "version" : 0,
                             "hasChildren": true,
+                            "_hasPermissions": false,
                             "_embedded": {
                                 "pages": [
                                     {
@@ -52,7 +54,8 @@
                                         "webspaceKey": "sulu-io",
                                         "template": "default",
                                         "version" : 0,
-                                        "hasChildren": false
+                                        "hasChildren": false,
+                                        "_hasPermissions": false
                                     },
                                     {
                                         "id": "@string@",
@@ -69,7 +72,8 @@
                                         "webspaceKey": "sulu-io",
                                         "template": "default",
                                         "version" : 0,
-                                        "hasChildren": false
+                                        "hasChildren": false,
+                                        "_hasPermissions": false
                                     },
                                     {
                                         "id": "@string@",
@@ -86,7 +90,8 @@
                                         "webspaceKey": "sulu-io",
                                         "template": "default",
                                         "version" : 0,
-                                        "hasChildren": false
+                                        "hasChildren": false,
+                                        "_hasPermissions": false
                                     }
                                 ]
                             }
