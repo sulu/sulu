@@ -26,7 +26,7 @@ class SecuredEntityNormalizer implements NormalizerInterface
 {
     public function __construct(
         private AccessControlManagerInterface $accessControlManager,
-        private TokenStorageInterface $tokenStorage
+        private ?TokenStorageInterface $tokenStorage = null
     ) {
     }
 
@@ -55,7 +55,7 @@ class SecuredEntityNormalizer implements NormalizerInterface
             null,
             $securedEntity->getSecurityContext(),
             $allPermissions,
-            $this->tokenStorage->getToken()?->getUser()
+            $this->tokenStorage?->getToken()?->getUser()
         );
 
         $normalizedData['_permissions'] = $permissions;
