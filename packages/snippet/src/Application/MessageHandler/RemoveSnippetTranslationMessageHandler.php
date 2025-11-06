@@ -14,6 +14,8 @@ namespace Sulu\Snippet\Application\MessageHandler;
 use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
 use Sulu\Snippet\Application\Message\RemoveSnippetTranslationMessage;
 use Sulu\Snippet\Domain\Event\SnippetTranslationRemovedEvent;
+use Sulu\Snippet\Domain\Model\SnippetDimensionContentInterface;
+use Sulu\Snippet\Domain\Model\SnippetInterface;
 use Sulu\Snippet\Domain\Repository\SnippetRepositoryInterface;
 
 /**
@@ -38,21 +40,18 @@ final class RemoveSnippetTranslationMessageHandler
         $dimensionContents = $snippet->getDimensionContents();
 
         foreach ($dimensionContents as $dimensionContent) {
-            if ($dimensionContent->getLocale() === $locale || $dimensionContent->getGhostLocale() === $locale) {
+            if ($dimensionContent->getLocale() === $locale) {
                 $snippet->removeDimensionContent($dimensionContent);
                 $this->snippetRepository->removeDimensionContent($dimensionContent);
-            } elseif ($dimensionContent->getGhostLocale() === $locale) {
-                /** @var string[] $availableLocales */
-                $availableLocales = $dimensionContent->getAvailableLocales();
-                $availableLocales = \array_values(\array_diff($availableLocales, [$locale]));
+                continue;
+            }
 
-                if ([] === $availableLocales) {
-                    $this->snippetRepository->removeDimensionContent($dimensionContent);
+            if ($dimensionContent->getGhostLocale() === $locale) {
+                $this->handleGhostLocaleRemoval($dimensionContent, $snippet, $locale);
+                continue;
+            }
 
-                    continue;
-                }
-
-                $dimensionContent->setGhostLocale($availableLocales[0]);
+            if (null === $dimensionContent->getLocale()) {
                 $dimensionContent->removeAvailableLocale($locale);
             }
         }
@@ -61,5 +60,24 @@ final class RemoveSnippetTranslationMessageHandler
             $snippet,
             $locale
         ));
+    }
+
+    private function handleGhostLocaleRemoval(
+        SnippetDimensionContentInterface $dimensionContent,
+        SnippetInterface $snippet,
+        string $locale
+    ): void {
+        $availableLocales = $dimensionContent->getAvailableLocales();
+        $availableLocales = \array_values(\array_diff($availableLocales ?? [], [$locale]));
+
+        if (empty($availableLocales)) {
+            $snippet->removeDimensionContent($dimensionContent);
+            $this->snippetRepository->removeDimensionContent($dimensionContent);
+
+            return;
+        }
+
+        $dimensionContent->setGhostLocale($availableLocales[0]);
+        $dimensionContent->removeAvailableLocale($locale);
     }
 }

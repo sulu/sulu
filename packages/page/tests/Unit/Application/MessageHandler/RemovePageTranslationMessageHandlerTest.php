@@ -13,17 +13,17 @@ declare(strict_types=1);
 
 namespace Sulu\Page\Tests\Unit\Application\MessageHandler;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
+use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Page\Application\Message\RemovePageTranslationMessage;
 use Sulu\Page\Application\MessageHandler\RemovePageTranslationMessageHandler;
 use Sulu\Page\Domain\Event\PageTranslationRemovedEvent;
+use Sulu\Page\Domain\Model\Page;
 use Sulu\Page\Domain\Model\PageDimensionContent;
-use Sulu\Page\Domain\Model\PageInterface;
 use Sulu\Page\Domain\Repository\PageRepositoryInterface;
 
 class RemovePageTranslationMessageHandlerTest extends TestCase
@@ -47,165 +47,161 @@ class RemovePageTranslationMessageHandlerTest extends TestCase
         );
     }
 
-    public function testInvokeRemovesMatchingLocale(): void
+    public function testRemoveDimensionContentWhenDirectLocaleMatches(): void
     {
         $identifier = ['uuid' => 'page-123'];
         $locale = 'en';
         $message = new RemovePageTranslationMessage($identifier, $locale);
 
-        $page = $this->prophesize(PageInterface::class);
-        $dimensionContent1 = $this->prophesize(PageDimensionContent::class);
-        $dimensionContent1->getLocale()->willReturn('en');
-        $dimensionContent1->getGhostLocale()->willReturn(null);
+        $page = new Page('page-123');
+        $dimensionContent = new PageDimensionContent($page);
+        $dimensionContent->setLocale($locale);
+        $dimensionContent->setStage(DimensionContentInterface::STAGE_DRAFT);
 
-        $dimensionContent2 = $this->prophesize(PageDimensionContent::class);
-        $dimensionContent2->getLocale()->willReturn('de');
-        $dimensionContent2->getGhostLocale()->willReturn(null);
+        $page->addDimensionContent($dimensionContent);
 
-        $dimensionContents = new ArrayCollection([
-            $dimensionContent1->reveal(),
-            $dimensionContent2->reveal(),
-        ]);
+        $this->pageRepository->getOneBy($identifier)->willReturn($page);
+        $this->pageRepository->removeDimensionContent($dimensionContent)->shouldBeCalled();
+        $this->domainEventCollector->collect(Argument::type(PageTranslationRemovedEvent::class))->shouldBeCalled();
 
-        $this->pageRepository->getOneBy($identifier)->willReturn($page->reveal());
-        $page->getDimensionContents()->willReturn($dimensionContents);
+        $this->handler->__invoke($message);
 
-        $page->removeDimensionContent($dimensionContent1->reveal())->shouldBeCalled();
-        $this->pageRepository->removeDimensionContent($dimensionContent1->reveal())->shouldBeCalled();
-
-        $page->removeDimensionContent($dimensionContent2->reveal())->shouldNotBeCalled();
-        $this->pageRepository->removeDimensionContent($dimensionContent2->reveal())->shouldNotBeCalled();
-
-        $this->domainEventCollector->collect(
-            Argument::type(PageTranslationRemovedEvent::class)
-        )->shouldBeCalled();
-
-        ($this->handler)($message);
+        $this->assertCount(0, $page->getDimensionContents());
     }
 
-    public function testInvokeRemovesMatchingGhostLocale(): void
+    public function testRemoveDimensionContentWhenGhostLocaleMatchesAndNoRemainingLocales(): void
     {
         $identifier = ['uuid' => 'page-123'];
         $locale = 'en';
         $message = new RemovePageTranslationMessage($identifier, $locale);
 
-        $page = $this->prophesize(PageInterface::class);
-        $dimensionContent1 = $this->prophesize(PageDimensionContent::class);
-        $dimensionContent1->getLocale()->willReturn('de');
-        $dimensionContent1->getGhostLocale()->willReturn('en');
+        $page = new Page('page-123');
+        $dimensionContent = new PageDimensionContent($page);
+        $dimensionContent->setLocale(null);
+        $dimensionContent->setGhostLocale($locale);
+        $dimensionContent->addAvailableLocale('en');
+        $dimensionContent->setStage(DimensionContentInterface::STAGE_DRAFT);
 
-        $dimensionContents = new ArrayCollection([$dimensionContent1->reveal()]);
+        $page->addDimensionContent($dimensionContent);
 
-        $this->pageRepository->getOneBy($identifier)->willReturn($page->reveal());
-        $page->getDimensionContents()->willReturn($dimensionContents);
+        $this->pageRepository->getOneBy($identifier)->willReturn($page);
+        $this->pageRepository->removeDimensionContent($dimensionContent)->shouldBeCalled();
+        $this->domainEventCollector->collect(Argument::type(PageTranslationRemovedEvent::class))->shouldBeCalled();
 
-        $page->removeDimensionContent($dimensionContent1->reveal())->shouldBeCalled();
-        $this->pageRepository->removeDimensionContent($dimensionContent1->reveal())->shouldBeCalled();
+        $this->handler->__invoke($message);
 
-        $this->domainEventCollector->collect(
-            Argument::type(PageTranslationRemovedEvent::class)
-        )->shouldBeCalled();
-
-        ($this->handler)($message);
+        $this->assertCount(0, $page->getDimensionContents());
     }
 
-    public function testInvokeUpdatesGhostLocaleInElseIfBranch(): void
+    public function testUpdateGhostLocaleWhenGhostLocaleMatchesWithRemainingLocales(): void
     {
         $identifier = ['uuid' => 'page-123'];
         $locale = 'en';
         $message = new RemovePageTranslationMessage($identifier, $locale);
 
-        $page = $this->prophesize(PageInterface::class);
-        $dimensionContent1 = $this->prophesize(PageDimensionContent::class);
-        $dimensionContent1->getLocale()->willReturn('de');
-        $dimensionContent1->getGhostLocale()->willReturn('en');
+        $page = new Page('page-123');
+        $dimensionContent = new PageDimensionContent($page);
+        $dimensionContent->setLocale(null);
+        $dimensionContent->setGhostLocale($locale);
+        $dimensionContent->addAvailableLocale('en');
+        $dimensionContent->addAvailableLocale('de');
+        $dimensionContent->addAvailableLocale('fr');
+        $dimensionContent->setStage(DimensionContentInterface::STAGE_DRAFT);
 
-        $dimensionContents = new ArrayCollection([$dimensionContent1->reveal()]);
+        $page->addDimensionContent($dimensionContent);
 
-        $this->pageRepository->getOneBy($identifier)->willReturn($page->reveal());
-        $page->getDimensionContents()->willReturn($dimensionContents);
+        $this->pageRepository->getOneBy($identifier)->willReturn($page);
+        $this->pageRepository->removeDimensionContent(Argument::any())->shouldNotBeCalled();
+        $this->domainEventCollector->collect(Argument::type(PageTranslationRemovedEvent::class))->shouldBeCalled();
 
-        $page->removeDimensionContent($dimensionContent1->reveal())->shouldBeCalled();
-        $this->pageRepository->removeDimensionContent($dimensionContent1->reveal())->shouldBeCalled();
+        $this->handler->__invoke($message);
 
-        $dimensionContent1->getAvailableLocales()->shouldNotBeCalled();
-        $dimensionContent1->setGhostLocale(Argument::any())->shouldNotBeCalled();
-        $dimensionContent1->removeAvailableLocale(Argument::any())->shouldNotBeCalled();
-
-        $this->domainEventCollector->collect(
-            Argument::type(PageTranslationRemovedEvent::class)
-        )->shouldBeCalled();
-
-        ($this->handler)($message);
+        $this->assertCount(1, $page->getDimensionContents());
+        $this->assertSame('de', $dimensionContent->getGhostLocale());
+        $this->assertSame(['de', 'fr'], $dimensionContent->getAvailableLocales());
     }
 
-    public function testInvokeHandlesMultipleDimensionContents(): void
+    public function testHandleNullAvailableLocales(): void
     {
         $identifier = ['uuid' => 'page-123'];
         $locale = 'en';
         $message = new RemovePageTranslationMessage($identifier, $locale);
 
-        $page = $this->prophesize(PageInterface::class);
+        $page = new Page('page-123');
+        $dimensionContent = new PageDimensionContent($page);
+        $dimensionContent->setLocale(null);
+        $dimensionContent->setGhostLocale($locale);
+        $dimensionContent->setStage(DimensionContentInterface::STAGE_DRAFT);
 
-        // Dimension content with matching locale
-        $dimensionContent1 = $this->prophesize(PageDimensionContent::class);
-        $dimensionContent1->getLocale()->willReturn('en');
-        $dimensionContent1->getGhostLocale()->willReturn(null);
+        $page->addDimensionContent($dimensionContent);
 
-        // Dimension content with matching ghost locale
-        $dimensionContent2 = $this->prophesize(PageDimensionContent::class);
-        $dimensionContent2->getLocale()->willReturn('de');
-        $dimensionContent2->getGhostLocale()->willReturn('en');
+        $this->pageRepository->getOneBy($identifier)->willReturn($page);
+        $this->pageRepository->removeDimensionContent($dimensionContent)->shouldBeCalled();
+        $this->domainEventCollector->collect(Argument::type(PageTranslationRemovedEvent::class))->shouldBeCalled();
 
-        // Dimension content that should not be affected
-        $dimensionContent3 = $this->prophesize(PageDimensionContent::class);
-        $dimensionContent3->getLocale()->willReturn('de');
-        $dimensionContent3->getGhostLocale()->willReturn(null);
+        $this->handler->__invoke($message);
 
-        $dimensionContents = new ArrayCollection([
-            $dimensionContent1->reveal(),
-            $dimensionContent2->reveal(),
-            $dimensionContent3->reveal(),
-        ]);
-
-        $this->pageRepository->getOneBy($identifier)->willReturn($page->reveal());
-        $page->getDimensionContents()->willReturn($dimensionContents);
-
-        // First dimension content should be removed
-        $page->removeDimensionContent($dimensionContent1->reveal())->shouldBeCalled();
-        $this->pageRepository->removeDimensionContent($dimensionContent1->reveal())->shouldBeCalled();
-
-        // Second dimension content should be removed
-        $page->removeDimensionContent($dimensionContent2->reveal())->shouldBeCalled();
-        $this->pageRepository->removeDimensionContent($dimensionContent2->reveal())->shouldBeCalled();
-
-        // Third dimension content should not be affected
-        $page->removeDimensionContent($dimensionContent3->reveal())->shouldNotBeCalled();
-        $this->pageRepository->removeDimensionContent($dimensionContent3->reveal())->shouldNotBeCalled();
-
-        $this->domainEventCollector->collect(
-            Argument::type(PageTranslationRemovedEvent::class)
-        )->shouldBeCalled();
-
-        ($this->handler)($message);
+        $this->assertCount(0, $page->getDimensionContents());
     }
 
-    public function testInvokeCollectsEvent(): void
+    public function testProcessMultipleDimensionContents(): void
     {
         $identifier = ['uuid' => 'page-123'];
         $locale = 'en';
         $message = new RemovePageTranslationMessage($identifier, $locale);
 
-        $page = $this->prophesize(PageInterface::class);
-        $this->pageRepository->getOneBy($identifier)->willReturn($page->reveal());
-        $page->getDimensionContents()->willReturn(new ArrayCollection([]));
+        $page = new Page('page-123');
 
-        $this->domainEventCollector->collect(Argument::that(function($event) use ($page, $locale) {
-            return $event instanceof PageTranslationRemovedEvent
-                && $event->getPage() === $page->reveal()
-                && $event->getResourceLocale() === $locale;
+        $dimensionContent1 = new PageDimensionContent($page);
+        $dimensionContent1->setLocale($locale);
+        $dimensionContent1->setStage(DimensionContentInterface::STAGE_DRAFT);
+        $page->addDimensionContent($dimensionContent1);
+
+        $dimensionContent2 = new PageDimensionContent($page);
+        $dimensionContent2->setLocale('de');
+        $dimensionContent2->setStage(DimensionContentInterface::STAGE_DRAFT);
+        $page->addDimensionContent($dimensionContent2);
+
+        $dimensionContent3 = new PageDimensionContent($page);
+        $dimensionContent3->setLocale(null);
+        $dimensionContent3->setGhostLocale($locale);
+        $dimensionContent3->addAvailableLocale('en');
+        $dimensionContent3->addAvailableLocale('de');
+        $dimensionContent3->setStage(DimensionContentInterface::STAGE_LIVE);
+        $page->addDimensionContent($dimensionContent3);
+
+        $this->pageRepository->getOneBy($identifier)->willReturn($page);
+        $this->pageRepository->removeDimensionContent($dimensionContent1)->shouldBeCalled();
+        $this->pageRepository->removeDimensionContent($dimensionContent2)->shouldNotBeCalled();
+        $this->pageRepository->removeDimensionContent($dimensionContent3)->shouldNotBeCalled();
+        $this->domainEventCollector->collect(Argument::type(PageTranslationRemovedEvent::class))->shouldBeCalled();
+
+        $this->handler->__invoke($message);
+
+        $this->assertCount(2, $page->getDimensionContents());
+        $this->assertSame('de', $dimensionContent3->getGhostLocale());
+        $this->assertSame(['de'], $dimensionContent3->getAvailableLocales());
+    }
+
+    public function testCollectsDomainEvent(): void
+    {
+        $identifier = ['uuid' => 'page-123'];
+        $locale = 'en';
+        $message = new RemovePageTranslationMessage($identifier, $locale);
+
+        $page = new Page('page-123');
+        $dimensionContent = new PageDimensionContent($page);
+        $dimensionContent->setLocale($locale);
+        $dimensionContent->setStage(DimensionContentInterface::STAGE_DRAFT);
+        $page->addDimensionContent($dimensionContent);
+
+        $this->pageRepository->getOneBy($identifier)->willReturn($page);
+        $this->pageRepository->removeDimensionContent($dimensionContent)->shouldBeCalled();
+
+        $this->domainEventCollector->collect(Argument::that(function(PageTranslationRemovedEvent $event) use ($page, $locale) {
+            return $event->getPage() === $page && $event->getResourceLocale() === $locale;
         }))->shouldBeCalled();
 
-        ($this->handler)($message);
+        $this->handler->__invoke($message);
     }
 }

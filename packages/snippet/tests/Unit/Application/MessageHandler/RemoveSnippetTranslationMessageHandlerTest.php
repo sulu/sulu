@@ -13,17 +13,17 @@ declare(strict_types=1);
 
 namespace Sulu\Snippet\Tests\Unit\Application\MessageHandler;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
+use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Snippet\Application\Message\RemoveSnippetTranslationMessage;
 use Sulu\Snippet\Application\MessageHandler\RemoveSnippetTranslationMessageHandler;
 use Sulu\Snippet\Domain\Event\SnippetTranslationRemovedEvent;
+use Sulu\Snippet\Domain\Model\Snippet;
 use Sulu\Snippet\Domain\Model\SnippetDimensionContent;
-use Sulu\Snippet\Domain\Model\SnippetInterface;
 use Sulu\Snippet\Domain\Repository\SnippetRepositoryInterface;
 
 class RemoveSnippetTranslationMessageHandlerTest extends TestCase
@@ -47,165 +47,161 @@ class RemoveSnippetTranslationMessageHandlerTest extends TestCase
         );
     }
 
-    public function testInvokeRemovesMatchingLocale(): void
+    public function testRemoveDimensionContentWhenDirectLocaleMatches(): void
     {
         $identifier = ['uuid' => 'snippet-123'];
         $locale = 'en';
         $message = new RemoveSnippetTranslationMessage($identifier, $locale);
 
-        $snippet = $this->prophesize(SnippetInterface::class);
-        $dimensionContent1 = $this->prophesize(SnippetDimensionContent::class);
-        $dimensionContent1->getLocale()->willReturn('en');
-        $dimensionContent1->getGhostLocale()->willReturn(null);
+        $snippet = new Snippet('snippet-123');
+        $dimensionContent = new SnippetDimensionContent($snippet);
+        $dimensionContent->setLocale($locale);
+        $dimensionContent->setStage(DimensionContentInterface::STAGE_DRAFT);
 
-        $dimensionContent2 = $this->prophesize(SnippetDimensionContent::class);
-        $dimensionContent2->getLocale()->willReturn('de');
-        $dimensionContent2->getGhostLocale()->willReturn(null);
+        $snippet->addDimensionContent($dimensionContent);
 
-        $dimensionContents = new ArrayCollection([
-            $dimensionContent1->reveal(),
-            $dimensionContent2->reveal(),
-        ]);
+        $this->snippetRepository->getOneBy($identifier)->willReturn($snippet);
+        $this->snippetRepository->removeDimensionContent($dimensionContent)->shouldBeCalled();
+        $this->domainEventCollector->collect(Argument::type(SnippetTranslationRemovedEvent::class))->shouldBeCalled();
 
-        $this->snippetRepository->getOneBy($identifier)->willReturn($snippet->reveal());
-        $snippet->getDimensionContents()->willReturn($dimensionContents);
+        $this->handler->__invoke($message);
 
-        $snippet->removeDimensionContent($dimensionContent1->reveal())->shouldBeCalled();
-        $this->snippetRepository->removeDimensionContent($dimensionContent1->reveal())->shouldBeCalled();
-
-        $snippet->removeDimensionContent($dimensionContent2->reveal())->shouldNotBeCalled();
-        $this->snippetRepository->removeDimensionContent($dimensionContent2->reveal())->shouldNotBeCalled();
-
-        $this->domainEventCollector->collect(
-            Argument::type(SnippetTranslationRemovedEvent::class)
-        )->shouldBeCalled();
-
-        ($this->handler)($message);
+        $this->assertCount(0, $snippet->getDimensionContents());
     }
 
-    public function testInvokeRemovesMatchingGhostLocale(): void
+    public function testRemoveDimensionContentWhenGhostLocaleMatchesAndNoRemainingLocales(): void
     {
         $identifier = ['uuid' => 'snippet-123'];
         $locale = 'en';
         $message = new RemoveSnippetTranslationMessage($identifier, $locale);
 
-        $snippet = $this->prophesize(SnippetInterface::class);
-        $dimensionContent1 = $this->prophesize(SnippetDimensionContent::class);
-        $dimensionContent1->getLocale()->willReturn('de');
-        $dimensionContent1->getGhostLocale()->willReturn('en');
+        $snippet = new Snippet('snippet-123');
+        $dimensionContent = new SnippetDimensionContent($snippet);
+        $dimensionContent->setLocale(null);
+        $dimensionContent->setGhostLocale($locale);
+        $dimensionContent->addAvailableLocale('en');
+        $dimensionContent->setStage(DimensionContentInterface::STAGE_DRAFT);
 
-        $dimensionContents = new ArrayCollection([$dimensionContent1->reveal()]);
+        $snippet->addDimensionContent($dimensionContent);
 
-        $this->snippetRepository->getOneBy($identifier)->willReturn($snippet->reveal());
-        $snippet->getDimensionContents()->willReturn($dimensionContents);
+        $this->snippetRepository->getOneBy($identifier)->willReturn($snippet);
+        $this->snippetRepository->removeDimensionContent($dimensionContent)->shouldBeCalled();
+        $this->domainEventCollector->collect(Argument::type(SnippetTranslationRemovedEvent::class))->shouldBeCalled();
 
-        $snippet->removeDimensionContent($dimensionContent1->reveal())->shouldBeCalled();
-        $this->snippetRepository->removeDimensionContent($dimensionContent1->reveal())->shouldBeCalled();
+        $this->handler->__invoke($message);
 
-        $this->domainEventCollector->collect(
-            Argument::type(SnippetTranslationRemovedEvent::class)
-        )->shouldBeCalled();
-
-        ($this->handler)($message);
+        $this->assertCount(0, $snippet->getDimensionContents());
     }
 
-    public function testInvokeUpdatesGhostLocaleInElseIfBranch(): void
+    public function testUpdateGhostLocaleWhenGhostLocaleMatchesWithRemainingLocales(): void
     {
         $identifier = ['uuid' => 'snippet-123'];
         $locale = 'en';
         $message = new RemoveSnippetTranslationMessage($identifier, $locale);
 
-        $snippet = $this->prophesize(SnippetInterface::class);
-        $dimensionContent1 = $this->prophesize(SnippetDimensionContent::class);
-        $dimensionContent1->getLocale()->willReturn('de');
-        $dimensionContent1->getGhostLocale()->willReturn('en');
+        $snippet = new Snippet('snippet-123');
+        $dimensionContent = new SnippetDimensionContent($snippet);
+        $dimensionContent->setLocale(null);
+        $dimensionContent->setGhostLocale($locale);
+        $dimensionContent->addAvailableLocale('en');
+        $dimensionContent->addAvailableLocale('de');
+        $dimensionContent->addAvailableLocale('fr');
+        $dimensionContent->setStage(DimensionContentInterface::STAGE_DRAFT);
 
-        $dimensionContents = new ArrayCollection([$dimensionContent1->reveal()]);
+        $snippet->addDimensionContent($dimensionContent);
 
-        $this->snippetRepository->getOneBy($identifier)->willReturn($snippet->reveal());
-        $snippet->getDimensionContents()->willReturn($dimensionContents);
+        $this->snippetRepository->getOneBy($identifier)->willReturn($snippet);
+        $this->snippetRepository->removeDimensionContent(Argument::any())->shouldNotBeCalled();
+        $this->domainEventCollector->collect(Argument::type(SnippetTranslationRemovedEvent::class))->shouldBeCalled();
 
-        $snippet->removeDimensionContent($dimensionContent1->reveal())->shouldBeCalled();
-        $this->snippetRepository->removeDimensionContent($dimensionContent1->reveal())->shouldBeCalled();
+        $this->handler->__invoke($message);
 
-        $dimensionContent1->getAvailableLocales()->shouldNotBeCalled();
-        $dimensionContent1->setGhostLocale(Argument::any())->shouldNotBeCalled();
-        $dimensionContent1->removeAvailableLocale(Argument::any())->shouldNotBeCalled();
-
-        $this->domainEventCollector->collect(
-            Argument::type(SnippetTranslationRemovedEvent::class)
-        )->shouldBeCalled();
-
-        ($this->handler)($message);
+        $this->assertCount(1, $snippet->getDimensionContents());
+        $this->assertSame('de', $dimensionContent->getGhostLocale());
+        $this->assertSame(['de', 'fr'], $dimensionContent->getAvailableLocales());
     }
 
-    public function testInvokeHandlesMultipleDimensionContents(): void
+    public function testHandleNullAvailableLocales(): void
     {
         $identifier = ['uuid' => 'snippet-123'];
         $locale = 'en';
         $message = new RemoveSnippetTranslationMessage($identifier, $locale);
 
-        $snippet = $this->prophesize(SnippetInterface::class);
+        $snippet = new Snippet('snippet-123');
+        $dimensionContent = new SnippetDimensionContent($snippet);
+        $dimensionContent->setLocale(null);
+        $dimensionContent->setGhostLocale($locale);
+        $dimensionContent->setStage(DimensionContentInterface::STAGE_DRAFT);
 
-        // Dimension content with matching locale
-        $dimensionContent1 = $this->prophesize(SnippetDimensionContent::class);
-        $dimensionContent1->getLocale()->willReturn('en');
-        $dimensionContent1->getGhostLocale()->willReturn(null);
+        $snippet->addDimensionContent($dimensionContent);
 
-        // Dimension content with matching ghost locale
-        $dimensionContent2 = $this->prophesize(SnippetDimensionContent::class);
-        $dimensionContent2->getLocale()->willReturn('de');
-        $dimensionContent2->getGhostLocale()->willReturn('en');
+        $this->snippetRepository->getOneBy($identifier)->willReturn($snippet);
+        $this->snippetRepository->removeDimensionContent($dimensionContent)->shouldBeCalled();
+        $this->domainEventCollector->collect(Argument::type(SnippetTranslationRemovedEvent::class))->shouldBeCalled();
 
-        // Dimension content that should not be affected
-        $dimensionContent3 = $this->prophesize(SnippetDimensionContent::class);
-        $dimensionContent3->getLocale()->willReturn('de');
-        $dimensionContent3->getGhostLocale()->willReturn(null);
+        $this->handler->__invoke($message);
 
-        $dimensionContents = new ArrayCollection([
-            $dimensionContent1->reveal(),
-            $dimensionContent2->reveal(),
-            $dimensionContent3->reveal(),
-        ]);
-
-        $this->snippetRepository->getOneBy($identifier)->willReturn($snippet->reveal());
-        $snippet->getDimensionContents()->willReturn($dimensionContents);
-
-        // First dimension content should be removed
-        $snippet->removeDimensionContent($dimensionContent1->reveal())->shouldBeCalled();
-        $this->snippetRepository->removeDimensionContent($dimensionContent1->reveal())->shouldBeCalled();
-
-        // Second dimension content should be removed
-        $snippet->removeDimensionContent($dimensionContent2->reveal())->shouldBeCalled();
-        $this->snippetRepository->removeDimensionContent($dimensionContent2->reveal())->shouldBeCalled();
-
-        // Third dimension content should not be affected
-        $snippet->removeDimensionContent($dimensionContent3->reveal())->shouldNotBeCalled();
-        $this->snippetRepository->removeDimensionContent($dimensionContent3->reveal())->shouldNotBeCalled();
-
-        $this->domainEventCollector->collect(
-            Argument::type(SnippetTranslationRemovedEvent::class)
-        )->shouldBeCalled();
-
-        ($this->handler)($message);
+        $this->assertCount(0, $snippet->getDimensionContents());
     }
 
-    public function testInvokeCollectsEvent(): void
+    public function testProcessMultipleDimensionContents(): void
     {
         $identifier = ['uuid' => 'snippet-123'];
         $locale = 'en';
         $message = new RemoveSnippetTranslationMessage($identifier, $locale);
 
-        $snippet = $this->prophesize(SnippetInterface::class);
-        $this->snippetRepository->getOneBy($identifier)->willReturn($snippet->reveal());
-        $snippet->getDimensionContents()->willReturn(new ArrayCollection([]));
+        $snippet = new Snippet('snippet-123');
 
-        $this->domainEventCollector->collect(Argument::that(function($event) use ($snippet, $locale) {
-            return $event instanceof SnippetTranslationRemovedEvent
-                && $event->getSnippet() === $snippet->reveal()
-                && $event->getResourceLocale() === $locale;
+        $dimensionContent1 = new SnippetDimensionContent($snippet);
+        $dimensionContent1->setLocale($locale);
+        $dimensionContent1->setStage(DimensionContentInterface::STAGE_DRAFT);
+        $snippet->addDimensionContent($dimensionContent1);
+
+        $dimensionContent2 = new SnippetDimensionContent($snippet);
+        $dimensionContent2->setLocale('de');
+        $dimensionContent2->setStage(DimensionContentInterface::STAGE_DRAFT);
+        $snippet->addDimensionContent($dimensionContent2);
+
+        $dimensionContent3 = new SnippetDimensionContent($snippet);
+        $dimensionContent3->setLocale(null);
+        $dimensionContent3->setGhostLocale($locale);
+        $dimensionContent3->addAvailableLocale('en');
+        $dimensionContent3->addAvailableLocale('de');
+        $dimensionContent3->setStage(DimensionContentInterface::STAGE_LIVE);
+        $snippet->addDimensionContent($dimensionContent3);
+
+        $this->snippetRepository->getOneBy($identifier)->willReturn($snippet);
+        $this->snippetRepository->removeDimensionContent($dimensionContent1)->shouldBeCalled();
+        $this->snippetRepository->removeDimensionContent($dimensionContent2)->shouldNotBeCalled();
+        $this->snippetRepository->removeDimensionContent($dimensionContent3)->shouldNotBeCalled();
+        $this->domainEventCollector->collect(Argument::type(SnippetTranslationRemovedEvent::class))->shouldBeCalled();
+
+        $this->handler->__invoke($message);
+
+        $this->assertCount(2, $snippet->getDimensionContents());
+        $this->assertSame('de', $dimensionContent3->getGhostLocale());
+        $this->assertSame(['de'], $dimensionContent3->getAvailableLocales());
+    }
+
+    public function testCollectsDomainEvent(): void
+    {
+        $identifier = ['uuid' => 'snippet-123'];
+        $locale = 'en';
+        $message = new RemoveSnippetTranslationMessage($identifier, $locale);
+
+        $snippet = new Snippet('snippet-123');
+        $dimensionContent = new SnippetDimensionContent($snippet);
+        $dimensionContent->setLocale($locale);
+        $dimensionContent->setStage(DimensionContentInterface::STAGE_DRAFT);
+        $snippet->addDimensionContent($dimensionContent);
+
+        $this->snippetRepository->getOneBy($identifier)->willReturn($snippet);
+        $this->snippetRepository->removeDimensionContent($dimensionContent)->shouldBeCalled();
+
+        $this->domainEventCollector->collect(Argument::that(function(SnippetTranslationRemovedEvent $event) use ($snippet, $locale) {
+            return $event->getSnippet() === $snippet && $event->getResourceLocale() === $locale;
         }))->shouldBeCalled();
 
-        ($this->handler)($message);
+        $this->handler->__invoke($message);
     }
 }

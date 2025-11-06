@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Sulu\Article\Tests\Unit\Application\MessageHandler;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
@@ -21,10 +20,11 @@ use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Article\Application\Message\RemoveArticleTranslationMessage;
 use Sulu\Article\Application\MessageHandler\RemoveArticleTranslationMessageHandler;
 use Sulu\Article\Domain\Event\ArticleTranslationRemovedEvent;
+use Sulu\Article\Domain\Model\Article;
 use Sulu\Article\Domain\Model\ArticleDimensionContent;
-use Sulu\Article\Domain\Model\ArticleInterface;
 use Sulu\Article\Domain\Repository\ArticleRepositoryInterface;
 use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
+use Sulu\Content\Domain\Model\DimensionContentInterface;
 
 class RemoveArticleTranslationMessageHandlerTest extends TestCase
 {
@@ -47,169 +47,161 @@ class RemoveArticleTranslationMessageHandlerTest extends TestCase
         );
     }
 
-    public function testInvokeRemovesMatchingLocale(): void
+    public function testRemoveDimensionContentWhenDirectLocaleMatches(): void
     {
         $identifier = ['uuid' => 'article-123'];
         $locale = 'en';
         $message = new RemoveArticleTranslationMessage($identifier, $locale);
 
-        $article = $this->prophesize(ArticleInterface::class);
-        $dimensionContent1 = $this->prophesize(ArticleDimensionContent::class);
-        $dimensionContent1->getLocale()->willReturn('en');
-        $dimensionContent1->getGhostLocale()->willReturn(null);
+        $article = new Article('article-123');
+        $dimensionContent = new ArticleDimensionContent($article);
+        $dimensionContent->setLocale($locale);
+        $dimensionContent->setStage(DimensionContentInterface::STAGE_DRAFT);
 
-        $dimensionContent2 = $this->prophesize(ArticleDimensionContent::class);
-        $dimensionContent2->getLocale()->willReturn('de');
-        $dimensionContent2->getGhostLocale()->willReturn(null);
+        $article->addDimensionContent($dimensionContent);
 
-        $dimensionContents = new ArrayCollection([
-            $dimensionContent1->reveal(),
-            $dimensionContent2->reveal(),
-        ]);
+        $this->articleRepository->getOneBy($identifier)->willReturn($article);
+        $this->articleRepository->removeDimensionContent($dimensionContent)->shouldBeCalled();
+        $this->domainEventCollector->collect(Argument::type(ArticleTranslationRemovedEvent::class))->shouldBeCalled();
 
-        $this->articleRepository->getOneBy($identifier)->willReturn($article->reveal());
-        $article->getDimensionContents()->willReturn($dimensionContents);
+        $this->handler->__invoke($message);
 
-        $article->removeDimensionContent($dimensionContent1->reveal())->shouldBeCalled();
-        $this->articleRepository->removeDimensionContent($dimensionContent1->reveal())->shouldBeCalled();
-
-        $article->removeDimensionContent($dimensionContent2->reveal())->shouldNotBeCalled();
-        $this->articleRepository->removeDimensionContent($dimensionContent2->reveal())->shouldNotBeCalled();
-
-        $this->domainEventCollector->collect(
-            Argument::type(ArticleTranslationRemovedEvent::class)
-        )->shouldBeCalled();
-
-        ($this->handler)($message);
+        $this->assertCount(0, $article->getDimensionContents());
     }
 
-    public function testInvokeRemovesGhostLocale(): void
+    public function testRemoveDimensionContentWhenGhostLocaleMatchesAndNoRemainingLocales(): void
     {
         $identifier = ['uuid' => 'article-123'];
         $locale = 'en';
         $message = new RemoveArticleTranslationMessage($identifier, $locale);
 
-        $article = $this->prophesize(ArticleInterface::class);
-        $dimensionContent1 = $this->prophesize(ArticleDimensionContent::class);
-        $dimensionContent1->getLocale()->willReturn(null);
-        $dimensionContent1->getGhostLocale()->willReturn('en');
+        $article = new Article('article-123');
+        $dimensionContent = new ArticleDimensionContent($article);
+        $dimensionContent->setLocale(null);
+        $dimensionContent->setGhostLocale($locale);
+        $dimensionContent->addAvailableLocale('en');
+        $dimensionContent->setStage(DimensionContentInterface::STAGE_DRAFT);
 
-        $dimensionContents = new ArrayCollection([$dimensionContent1->reveal()]);
+        $article->addDimensionContent($dimensionContent);
 
-        $this->articleRepository->getOneBy($identifier)->willReturn($article->reveal());
-        $article->getDimensionContents()->willReturn($dimensionContents);
+        $this->articleRepository->getOneBy($identifier)->willReturn($article);
+        $this->articleRepository->removeDimensionContent($dimensionContent)->shouldBeCalled();
+        $this->domainEventCollector->collect(Argument::type(ArticleTranslationRemovedEvent::class))->shouldBeCalled();
 
-        $article->removeDimensionContent($dimensionContent1->reveal())->shouldNotBeCalled();
-        $this->articleRepository->removeDimensionContent($dimensionContent1->reveal())->shouldNotBeCalled();
+        $this->handler->__invoke($message);
 
-        $dimensionContent1->getAvailableLocales()->willReturn(['en', 'de']);
-        $dimensionContent1->setGhostLocale('de')->shouldBeCalled();
-        $dimensionContent1->removeAvailableLocale('en')->shouldBeCalled();
-
-        $this->domainEventCollector->collect(
-            Argument::type(ArticleTranslationRemovedEvent::class)
-        )->shouldBeCalled();
-
-        ($this->handler)($message);
+        $this->assertCount(0, $article->getDimensionContents());
     }
 
-    public function testInvokeRemovesDimensionContentWhenNoAvailableLocalesLeft(): void
+    public function testUpdateGhostLocaleWhenGhostLocaleMatchesWithRemainingLocales(): void
     {
         $identifier = ['uuid' => 'article-123'];
         $locale = 'en';
         $message = new RemoveArticleTranslationMessage($identifier, $locale);
 
-        $article = $this->prophesize(ArticleInterface::class);
-        $dimensionContent1 = $this->prophesize(ArticleDimensionContent::class);
-        $dimensionContent1->getLocale()->willReturn(null);
-        $dimensionContent1->getGhostLocale()->willReturn('en');
-        $dimensionContent1->getAvailableLocales()->willReturn(['en']);
+        $article = new Article('article-123');
+        $dimensionContent = new ArticleDimensionContent($article);
+        $dimensionContent->setLocale(null);
+        $dimensionContent->setGhostLocale($locale);
+        $dimensionContent->addAvailableLocale('en');
+        $dimensionContent->addAvailableLocale('de');
+        $dimensionContent->addAvailableLocale('fr');
+        $dimensionContent->setStage(DimensionContentInterface::STAGE_DRAFT);
 
-        $dimensionContents = new ArrayCollection([$dimensionContent1->reveal()]);
+        $article->addDimensionContent($dimensionContent);
 
-        $this->articleRepository->getOneBy($identifier)->willReturn($article->reveal());
-        $article->getDimensionContents()->willReturn($dimensionContents);
+        $this->articleRepository->getOneBy($identifier)->willReturn($article);
+        $this->articleRepository->removeDimensionContent(Argument::any())->shouldNotBeCalled();
+        $this->domainEventCollector->collect(Argument::type(ArticleTranslationRemovedEvent::class))->shouldBeCalled();
 
-        $this->articleRepository->removeDimensionContent($dimensionContent1->reveal())->shouldBeCalled();
+        $this->handler->__invoke($message);
 
-        $dimensionContent1->setGhostLocale(Argument::any())->shouldNotBeCalled();
-        $dimensionContent1->removeAvailableLocale(Argument::any())->shouldNotBeCalled();
-
-        $this->domainEventCollector->collect(
-            Argument::type(ArticleTranslationRemovedEvent::class)
-        )->shouldBeCalled();
-
-        ($this->handler)($message);
+        $this->assertCount(1, $article->getDimensionContents());
+        $this->assertSame('de', $dimensionContent->getGhostLocale());
+        $this->assertSame(['de', 'fr'], $dimensionContent->getAvailableLocales());
     }
 
-    public function testInvokeHandlesMultipleDimensionContents(): void
+    public function testHandleNullAvailableLocales(): void
     {
         $identifier = ['uuid' => 'article-123'];
         $locale = 'en';
         $message = new RemoveArticleTranslationMessage($identifier, $locale);
 
-        $article = $this->prophesize(ArticleInterface::class);
+        $article = new Article('article-123');
+        $dimensionContent = new ArticleDimensionContent($article);
+        $dimensionContent->setLocale(null);
+        $dimensionContent->setGhostLocale($locale);
+        $dimensionContent->setStage(DimensionContentInterface::STAGE_DRAFT);
 
-        // Dimension content with matching locale
-        $dimensionContent1 = $this->prophesize(ArticleDimensionContent::class);
-        $dimensionContent1->getLocale()->willReturn('en');
-        $dimensionContent1->getGhostLocale()->willReturn(null);
+        $article->addDimensionContent($dimensionContent);
 
-        // Dimension content with ghost locale
-        $dimensionContent2 = $this->prophesize(ArticleDimensionContent::class);
-        $dimensionContent2->getLocale()->willReturn(null);
-        $dimensionContent2->getGhostLocale()->willReturn('en');
-        $dimensionContent2->getAvailableLocales()->willReturn(['en', 'de', 'fr']);
+        $this->articleRepository->getOneBy($identifier)->willReturn($article);
+        $this->articleRepository->removeDimensionContent($dimensionContent)->shouldBeCalled();
+        $this->domainEventCollector->collect(Argument::type(ArticleTranslationRemovedEvent::class))->shouldBeCalled();
 
-        // Dimension content that should not be affected
-        $dimensionContent3 = $this->prophesize(ArticleDimensionContent::class);
-        $dimensionContent3->getLocale()->willReturn('de');
-        $dimensionContent3->getGhostLocale()->willReturn(null);
+        $this->handler->__invoke($message);
 
-        $dimensionContents = new ArrayCollection([
-            $dimensionContent1->reveal(),
-            $dimensionContent2->reveal(),
-            $dimensionContent3->reveal(),
-        ]);
-
-        $this->articleRepository->getOneBy($identifier)->willReturn($article->reveal());
-        $article->getDimensionContents()->willReturn($dimensionContents);
-
-        // First dimension content should be removed
-        $article->removeDimensionContent($dimensionContent1->reveal())->shouldBeCalled();
-        $this->articleRepository->removeDimensionContent($dimensionContent1->reveal())->shouldBeCalled();
-
-        // Second dimension content should have ghost locale updated
-        $dimensionContent2->setGhostLocale('de')->shouldBeCalled();
-        $dimensionContent2->removeAvailableLocale('en')->shouldBeCalled();
-
-        // Third dimension content should not be affected
-        $article->removeDimensionContent($dimensionContent3->reveal())->shouldNotBeCalled();
-        $this->articleRepository->removeDimensionContent($dimensionContent3->reveal())->shouldNotBeCalled();
-
-        $this->domainEventCollector->collect(
-            Argument::type(ArticleTranslationRemovedEvent::class)
-        )->shouldBeCalled();
-
-        ($this->handler)($message);
+        $this->assertCount(0, $article->getDimensionContents());
     }
 
-    public function testInvokeCollectsEvent(): void
+    public function testProcessMultipleDimensionContents(): void
     {
         $identifier = ['uuid' => 'article-123'];
         $locale = 'en';
         $message = new RemoveArticleTranslationMessage($identifier, $locale);
 
-        $article = $this->prophesize(ArticleInterface::class);
-        $this->articleRepository->getOneBy($identifier)->willReturn($article->reveal());
-        $article->getDimensionContents()->willReturn(new ArrayCollection([]));
+        $article = new Article('article-123');
 
-        $this->domainEventCollector->collect(Argument::that(function($event) use ($article, $locale) {
-            return $event instanceof ArticleTranslationRemovedEvent
-                && $event->getArticle() === $article->reveal()
-                && $event->getResourceLocale() === $locale;
+        $dimensionContent1 = new ArticleDimensionContent($article);
+        $dimensionContent1->setLocale($locale);
+        $dimensionContent1->setStage(DimensionContentInterface::STAGE_DRAFT);
+        $article->addDimensionContent($dimensionContent1);
+
+        $dimensionContent2 = new ArticleDimensionContent($article);
+        $dimensionContent2->setLocale('de');
+        $dimensionContent2->setStage(DimensionContentInterface::STAGE_DRAFT);
+        $article->addDimensionContent($dimensionContent2);
+
+        $dimensionContent3 = new ArticleDimensionContent($article);
+        $dimensionContent3->setLocale(null);
+        $dimensionContent3->setGhostLocale($locale);
+        $dimensionContent3->addAvailableLocale('en');
+        $dimensionContent3->addAvailableLocale('de');
+        $dimensionContent3->setStage(DimensionContentInterface::STAGE_LIVE);
+        $article->addDimensionContent($dimensionContent3);
+
+        $this->articleRepository->getOneBy($identifier)->willReturn($article);
+        $this->articleRepository->removeDimensionContent($dimensionContent1)->shouldBeCalled();
+        $this->articleRepository->removeDimensionContent($dimensionContent2)->shouldNotBeCalled();
+        $this->articleRepository->removeDimensionContent($dimensionContent3)->shouldNotBeCalled();
+        $this->domainEventCollector->collect(Argument::type(ArticleTranslationRemovedEvent::class))->shouldBeCalled();
+
+        $this->handler->__invoke($message);
+
+        $this->assertCount(2, $article->getDimensionContents());
+        $this->assertSame('de', $dimensionContent3->getGhostLocale());
+        $this->assertSame(['de'], $dimensionContent3->getAvailableLocales());
+    }
+
+    public function testCollectsDomainEvent(): void
+    {
+        $identifier = ['uuid' => 'article-123'];
+        $locale = 'en';
+        $message = new RemoveArticleTranslationMessage($identifier, $locale);
+
+        $article = new Article('article-123');
+        $dimensionContent = new ArticleDimensionContent($article);
+        $dimensionContent->setLocale($locale);
+        $dimensionContent->setStage(DimensionContentInterface::STAGE_DRAFT);
+        $article->addDimensionContent($dimensionContent);
+
+        $this->articleRepository->getOneBy($identifier)->willReturn($article);
+        $this->articleRepository->removeDimensionContent($dimensionContent)->shouldBeCalled();
+
+        $this->domainEventCollector->collect(Argument::that(function(ArticleTranslationRemovedEvent $event) use ($article, $locale) {
+            return $event->getArticle() === $article && $event->getResourceLocale() === $locale;
         }))->shouldBeCalled();
 
-        ($this->handler)($message);
+        $this->handler->__invoke($message);
     }
 }
