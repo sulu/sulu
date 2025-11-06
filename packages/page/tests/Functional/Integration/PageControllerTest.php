@@ -688,7 +688,7 @@ class PageControllerTest extends SuluTestCase
     }
 
     #[Depends('testCopy')]
-    public function testMove(string $id): void
+    public function testMove(string $id): string
     {
         $this->client->request('POST', '/admin/api/pages/' . $id . '?locale=en&action=move&destination=0199ee04-c220-784e-a6fa-ac985870f2d5');
 
@@ -698,6 +698,69 @@ class PageControllerTest extends SuluTestCase
         $this->client->request('GET', '/admin/api/pages?locale=en&webspace=sulu-io&expandedIds=' . $id);
         $response = $this->client->getResponse();
         $this->assertResponseSnapshot('page_cget_after_move.json', $response);
+
+        return $id;
+    }
+
+    #[Depends('testMove')]
+    public function testDeleteSingleLocale(string $id): void
+    {
+        $this->client->request('GET', '/admin/api/pages/' . $id . '?locale=en');
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(200, $response);
+
+        /** @var array{template: string, title: string, url: string} $pageData */
+        $pageData = \json_decode((string) $response->getContent(), true);
+
+        $this->client->request('PUT', '/admin/api/pages/' . $id . '?locale=de', [], [], [], \json_encode([
+            'template' => $pageData['template'],
+            'title' => $pageData['title'] . ' (DE)',
+            'url' => '/de' . $pageData['url'],
+        ]) ?: null);
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(200, $response);
+
+        /** @var array<string, mixed> $content */
+        $content = \json_decode((string) $response->getContent(), true);
+        /** @var array<int, string> $availableLocales */
+        $availableLocales = $content['availableLocales'];
+        /** @var array<int, string> $contentLocales */
+        $contentLocales = $content['contentLocales'];
+        $this->assertContains('en', $availableLocales);
+        $this->assertContains('de', $availableLocales);
+        $this->assertContains('en', $contentLocales);
+        $this->assertContains('de', $contentLocales);
+
+        $this->client->request('DELETE', '/admin/api/pages/' . $id . '?locale=en&deleteLocale=true');
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(204, $response);
+
+        $this->client->request('GET', '/admin/api/pages/' . $id . '?locale=de');
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(200, $response);
+
+        /** @var array<string, mixed> $content */
+        $content = \json_decode((string) $response->getContent(), true);
+        /** @var array<int, string> $availableLocales */
+        $availableLocales = $content['availableLocales'];
+        /** @var array<int, string> $contentLocales */
+        $contentLocales = $content['contentLocales'];
+        $this->assertNotContains('en', $availableLocales);
+        $this->assertContains('de', $availableLocales);
+        $this->assertNotContains('en', $contentLocales);
+        $this->assertContains('de', $contentLocales);
+
+        $this->client->request('GET', '/admin/api/pages/' . $id . '?locale=en');
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(200, $response);
+
+        /** @var array<string, mixed> $content */
+        $content = \json_decode((string) $response->getContent(), true);
+        $this->assertEquals('de', $content['ghostLocale']);
+        /** @var array<int, string> $availableLocales */
+        $availableLocales = $content['availableLocales'];
+        $this->assertContains('de', $availableLocales);
+        $this->assertNotContains('en', $availableLocales);
     }
 
     #[Depends('testPost')]
@@ -709,7 +772,7 @@ class PageControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(204, $response);
 
         $routeRepository = $this->getContainer()->get(RouteRepositoryInterface::class);
-        $this->assertCount(10, $routeRepository->findBy([])); // TODO we need tackle this
+        $this->assertCount(11, $routeRepository->findBy([])); // TODO we need tackle this
 
         $trashRepository = self::getContainer()->get(TrashItemRepositoryInterface::class);
         $trashItem = $trashRepository->findOneBy([
@@ -724,7 +787,7 @@ class PageControllerTest extends SuluTestCase
     }
 
     #[Depends('testDelete')]
-    public function testRestore(int $trashItemId): void
+    public function testRestore(int $trashItemId): string
     {
         $trashItem = $this->getContainer()->get(TrashItemRepositoryInterface::class)->findOneBy(['id' => $trashItemId]);
         $this->assertNotNull($trashItem);
@@ -736,6 +799,8 @@ class PageControllerTest extends SuluTestCase
         $this->client->request('GET', '/admin/api/pages/' . $trashItem->getResourceId() . '?locale=en');
         $response = $this->client->getResponse();
         $this->assertResponseSnapshot('page_post_restore.json', $response, 200);
+
+        return $trashItem->getResourceId();
     }
 
     protected function getSnapshotFolder(): string

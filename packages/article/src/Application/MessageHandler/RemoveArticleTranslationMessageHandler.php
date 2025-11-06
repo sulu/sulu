@@ -13,6 +13,8 @@ namespace Sulu\Article\Application\MessageHandler;
 
 use Sulu\Article\Application\Message\RemoveArticleTranslationMessage;
 use Sulu\Article\Domain\Event\ArticleTranslationRemovedEvent;
+use Sulu\Article\Domain\Model\ArticleDimensionContentInterface;
+use Sulu\Article\Domain\Model\ArticleInterface;
 use Sulu\Article\Domain\Repository\ArticleRepositoryInterface;
 use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
 
@@ -41,18 +43,15 @@ final class RemoveArticleTranslationMessageHandler
             if ($dimensionContent->getLocale() === $locale) {
                 $article->removeDimensionContent($dimensionContent);
                 $this->articleRepository->removeDimensionContent($dimensionContent);
-            } elseif ($dimensionContent->getGhostLocale() === $locale) {
-                $availableLocales = $dimensionContent->getAvailableLocales();
-                $availableLocales = \array_values(\array_diff($availableLocales ?? [], [$locale]));
+                continue;
+            }
 
-                if ([] === $availableLocales) {
-                    $article->removeDimensionContent($dimensionContent);
-                    $this->articleRepository->removeDimensionContent($dimensionContent);
+            if ($dimensionContent->getGhostLocale() === $locale) {
+                $this->handleGhostLocaleRemoval($dimensionContent, $article, $locale);
+                continue;
+            }
 
-                    continue;
-                }
-
-                $dimensionContent->setGhostLocale($availableLocales[0]);
+            if (null === $dimensionContent->getLocale()) {
                 $dimensionContent->removeAvailableLocale($locale);
             }
         }
@@ -61,5 +60,24 @@ final class RemoveArticleTranslationMessageHandler
             $article,
             $locale
         ));
+    }
+
+    private function handleGhostLocaleRemoval(
+        ArticleDimensionContentInterface $dimensionContent,
+        ArticleInterface $article,
+        string $locale
+    ): void {
+        $availableLocales = $dimensionContent->getAvailableLocales();
+        $availableLocales = \array_values(\array_diff($availableLocales ?? [], [$locale]));
+
+        if (empty($availableLocales)) {
+            $article->removeDimensionContent($dimensionContent);
+            $this->articleRepository->removeDimensionContent($dimensionContent);
+
+            return;
+        }
+
+        $dimensionContent->setGhostLocale($availableLocales[0]);
+        $dimensionContent->removeAvailableLocale($locale);
     }
 }

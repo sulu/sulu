@@ -14,6 +14,8 @@ namespace Sulu\Page\Application\MessageHandler;
 use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
 use Sulu\Page\Application\Message\RemovePageTranslationMessage;
 use Sulu\Page\Domain\Event\PageTranslationRemovedEvent;
+use Sulu\Page\Domain\Model\PageDimensionContentInterface;
+use Sulu\Page\Domain\Model\PageInterface;
 use Sulu\Page\Domain\Repository\PageRepositoryInterface;
 
 /**
@@ -41,18 +43,15 @@ final class RemovePageTranslationMessageHandler
             if ($dimensionContent->getLocale() === $locale) {
                 $page->removeDimensionContent($dimensionContent);
                 $this->pageRepository->removeDimensionContent($dimensionContent);
-            } elseif ($dimensionContent->getGhostLocale() === $locale) {
-                $availableLocales = $dimensionContent->getAvailableLocales();
-                $availableLocales = \array_values(\array_diff($availableLocales ?? [], [$locale]));
+                continue;
+            }
 
-                if ([] === $availableLocales) {
-                    $page->removeDimensionContent($dimensionContent);
-                    $this->pageRepository->removeDimensionContent($dimensionContent);
+            if ($dimensionContent->getGhostLocale() === $locale) {
+                $this->handleGhostLocaleRemoval($dimensionContent, $page, $locale);
+                continue;
+            }
 
-                    continue;
-                }
-
-                $dimensionContent->setGhostLocale($availableLocales[0]);
+            if (null === $dimensionContent->getLocale()) {
                 $dimensionContent->removeAvailableLocale($locale);
             }
         }
@@ -61,5 +60,24 @@ final class RemovePageTranslationMessageHandler
             $page,
             $locale
         ));
+    }
+
+    private function handleGhostLocaleRemoval(
+        PageDimensionContentInterface $dimensionContent,
+        PageInterface $snippet,
+        string $locale
+    ): void {
+        $availableLocales = $dimensionContent->getAvailableLocales();
+        $availableLocales = \array_values(\array_diff($availableLocales ?? [], [$locale]));
+
+        if (empty($availableLocales)) {
+            $snippet->removeDimensionContent($dimensionContent);
+            $this->pageRepository->removeDimensionContent($dimensionContent);
+
+            return;
+        }
+
+        $dimensionContent->setGhostLocale($availableLocales[0]);
+        $dimensionContent->removeAvailableLocale($locale);
     }
 }
