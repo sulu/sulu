@@ -35,6 +35,7 @@ use Sulu\Article\Domain\Event\ArticleTranslationAddedEvent;
 use Sulu\Article\Domain\Event\ArticleTranslationCopiedEvent;
 use Sulu\Article\Domain\Event\ArticleTranslationRemovedEvent;
 use Sulu\Article\Domain\Event\ArticleTranslationRestoredEvent;
+use Sulu\Article\Domain\Event\ArticleWorkflowTransitionAppliedEvent;
 use Sulu\Article\Domain\Model\Article;
 use Sulu\Article\Domain\Model\ArticleDimensionContent;
 use Sulu\Article\Domain\Model\ArticleDimensionContentInterface;
@@ -53,6 +54,8 @@ use Sulu\Article\Infrastructure\Sulu\Reference\ArticleReferenceRefresher;
 use Sulu\Article\Infrastructure\Sulu\Route\ArticleRouteDefaultsProvider;
 use Sulu\Article\Infrastructure\Sulu\Search\AdminArticleIndexListener;
 use Sulu\Article\Infrastructure\Sulu\Search\AdminArticleReindexProvider;
+use Sulu\Article\Infrastructure\Sulu\Search\WebsiteArticleIndexListener;
+use Sulu\Article\Infrastructure\Sulu\Search\WebsiteArticleReindexProvider;
 use Sulu\Article\Infrastructure\Sulu\Sitemap\ArticlesSitemapProvider;
 use Sulu\Article\Infrastructure\Sulu\Trash\ArticleTrashItemHandler;
 use Sulu\Article\Infrastructure\Symfony\Twig\ArticleTwigExtension;
@@ -447,6 +450,22 @@ final class SuluArticleBundle extends AbstractBundle
             ->args([
                 new Reference('doctrine.orm.entity_manager'),
                 new Reference('sulu_admin.metadata_group_provider'),
+            ])
+            ->tag('cmsig_seal.reindex_provider');
+
+        $services->set('sulu_article.website_article_index_listener')
+            ->class(WebsiteArticleIndexListener::class)
+            ->args([
+                new Reference('sulu_message_bus'),
+            ])
+            ->tag('kernel.event_listener', ['event' => ArticleWorkflowTransitionAppliedEvent::class, 'method' => 'onArticleChanged'])
+            ->tag('kernel.event_listener', ['event' => ArticleRemovedEvent::class, 'method' => 'onArticleChanged'])
+            ->tag('kernel.event_listener', ['event' => ArticleTranslationRemovedEvent::class, 'method' => 'onArticleChanged']);
+
+        $services->set('sulu_article.website_article_reindex_provider')
+            ->class(WebsiteArticleReindexProvider::class)
+            ->args([
+                new Reference('doctrine.orm.entity_manager'),
             ])
             ->tag('cmsig_seal.reindex_provider');
     }

@@ -49,7 +49,7 @@ class AdminArticleIndexListenerTest extends TestCase
         $this->listener = new AdminArticleIndexListener($this->messageBus->reveal());
     }
 
-    public function testOnArticleChangedWithSnippetCreatedEvent(): void
+    public function testOnArticleChangedWithArticleCreatedEvent(): void
     {
         $article = new Article('123');
         $event = new ArticleCreatedEvent($article, 'en', []);
