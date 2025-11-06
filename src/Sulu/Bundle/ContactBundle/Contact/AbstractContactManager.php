@@ -1337,7 +1337,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
      * Updates the given address.
      *
      * @param Address $address The phone object to update
-     * @param mixed $entry The entry with the new data
+     * @param array $entry The entry with the new data
      * @param bool $isMain returns if address should be set to main
      *
      * @return bool True if successful, otherwise false
@@ -1389,11 +1389,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
         if (\array_key_exists('title', $entry)) {
             $address->setTitle($entry['title']);
         }
-        if (\array_key_exists('primaryAddress', $entry)) {
-            $isMain = $this->getBooleanValue($entry['primaryAddress']);
-        } else {
-            $isMain = false;
-        }
+        $isMain = $this->getBooleanValue($entry['primaryAddress'] ?? false);
         if (\array_key_exists('billingAddress', $entry)) {
             $address->setBillingAddress($this->getBooleanValue($entry['billingAddress']));
         }
