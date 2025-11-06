@@ -38,15 +38,15 @@ final class RemoveSnippetTranslationMessageHandler
         $dimensionContents = $snippet->getDimensionContents();
 
         foreach ($dimensionContents as $dimensionContent) {
-            if ($dimensionContent->getLocale() === $locale || $dimensionContent->getGhostLocale() === $locale) {
+            if ($dimensionContent->getLocale() === $locale) {
                 $snippet->removeDimensionContent($dimensionContent);
                 $this->snippetRepository->removeDimensionContent($dimensionContent);
             } elseif ($dimensionContent->getGhostLocale() === $locale) {
-                /** @var string[] $availableLocales */
                 $availableLocales = $dimensionContent->getAvailableLocales();
-                $availableLocales = \array_values(\array_diff($availableLocales, [$locale]));
+                $availableLocales = \array_values(\array_diff($availableLocales ?? [], [$locale]));
 
                 if ([] === $availableLocales) {
+                    $snippet->removeDimensionContent($dimensionContent);
                     $this->snippetRepository->removeDimensionContent($dimensionContent);
 
                     continue;

@@ -42,11 +42,11 @@ final class RemoveArticleTranslationMessageHandler
                 $article->removeDimensionContent($dimensionContent);
                 $this->articleRepository->removeDimensionContent($dimensionContent);
             } elseif ($dimensionContent->getGhostLocale() === $locale) {
-                /** @var string[] $availableLocales */
                 $availableLocales = $dimensionContent->getAvailableLocales();
-                $availableLocales = \array_values(\array_diff($availableLocales, [$locale]));
+                $availableLocales = \array_values(\array_diff($availableLocales ?? [], [$locale]));
 
                 if ([] === $availableLocales) {
+                    $article->removeDimensionContent($dimensionContent);
                     $this->articleRepository->removeDimensionContent($dimensionContent);
 
                     continue;

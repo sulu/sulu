@@ -15,6 +15,7 @@ use Sulu\Bundle\ActivityBundle\Infrastructure\Sulu\Admin\View\ActivityViewBuilde
 use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItem;
 use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItemCollection;
+use Sulu\Bundle\AdminBundle\Admin\View\DropdownToolbarAction;
 use Sulu\Bundle\AdminBundle\Admin\View\ToolbarAction;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewBuilderFactoryInterface;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewCollection;
@@ -111,11 +112,33 @@ class SnippetAdmin extends Admin
                     ->setTitleProperty('name')
             );
 
+            $formToolbarActions = $this->contentViewBuilderFactory->getDefaultToolbarActions(SnippetInterface::class);
+            $formToolbarActions['delete'] = new DropdownToolbarAction(
+                'sulu_admin.delete',
+                'su-trash-alt',
+                [
+                    new ToolbarAction(
+                        'sulu_admin.delete',
+                        [
+                            'visible_condition' => '(!_permissions || _permissions.delete)',
+                        ]
+                    ),
+                    new ToolbarAction(
+                        'sulu_admin.delete',
+                        [
+                            'visible_condition' => '(!_permissions || _permissions.delete)',
+                            'delete_locale' => true,
+                        ]
+                    ),
+                ]
+            );
+
             $viewBuilders = $this->contentViewBuilderFactory->createViews(
                 SnippetInterface::class,
                 static::EDIT_TABS_VIEW,
                 static::ADD_TABS_VIEW,
-                static::SECURITY_CONTEXT
+                static::SECURITY_CONTEXT,
+                toolbarActions: $formToolbarActions,
             );
 
             foreach ($viewBuilders as $viewBuilder) {

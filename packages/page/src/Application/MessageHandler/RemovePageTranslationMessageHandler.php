@@ -38,15 +38,15 @@ final class RemovePageTranslationMessageHandler
         $dimensionContents = $page->getDimensionContents();
 
         foreach ($dimensionContents as $dimensionContent) {
-            if ($dimensionContent->getLocale() === $locale || $dimensionContent->getGhostLocale() === $locale) {
+            if ($dimensionContent->getLocale() === $locale) {
                 $page->removeDimensionContent($dimensionContent);
                 $this->pageRepository->removeDimensionContent($dimensionContent);
             } elseif ($dimensionContent->getGhostLocale() === $locale) {
-                /** @var string[] $availableLocales */
                 $availableLocales = $dimensionContent->getAvailableLocales();
-                $availableLocales = \array_values(\array_diff($availableLocales, [$locale]));
+                $availableLocales = \array_values(\array_diff($availableLocales ?? [], [$locale]));
 
                 if ([] === $availableLocales) {
+                    $page->removeDimensionContent($dimensionContent);
                     $this->pageRepository->removeDimensionContent($dimensionContent);
 
                     continue;
