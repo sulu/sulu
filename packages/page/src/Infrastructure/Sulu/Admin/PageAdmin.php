@@ -284,7 +284,7 @@ class PageAdmin extends Admin
 
             $viewCollection->add(
                 $this->viewBuilderFactory
-                    ->createPreviewFormViewBuilder('sulu_page.page_edit_form.permissions', '/permissions')
+                    ->createPreviewFormViewBuilder(PageAdmin::EDIT_FORM_VIEW . '.permissions', '/permissions')
                     ->setResourceKey('permissions')
                     ->setPreviewResourceKey(PageInterface::RESOURCE_KEY)
                     ->setFormKey('permission_details')

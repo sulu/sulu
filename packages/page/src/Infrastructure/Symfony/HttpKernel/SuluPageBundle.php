@@ -63,6 +63,7 @@ use Sulu\Page\Infrastructure\Sulu\Content\ResourceLoader\PageResourceLoader;
 use Sulu\Page\Infrastructure\Sulu\Content\Visitor\SegmentSmartContentFiltersVisitor;
 use Sulu\Page\Infrastructure\Sulu\Reference\PageReferenceRefresher;
 use Sulu\Page\Infrastructure\Sulu\Route\WebspaceSiteRouteGenerator;
+use Sulu\Page\Infrastructure\Sulu\Security\PageSecurityListener;
 use Sulu\Page\Infrastructure\Sulu\Sitemap\PagesSitemapProvider;
 use Sulu\Page\Infrastructure\Sulu\Trash\PageTrashItemHandler;
 use Sulu\Page\Infrastructure\Symfony\Twig\Extension\ContentPathTwigExtension;
@@ -364,6 +365,8 @@ final class SuluPageBundle extends AbstractBundle
                 new Reference('sulu_core.doctrine_list_builder_factory'),
                 new Reference('sulu_core.doctrine_rest_helper'),
                 new Reference('doctrine.orm.entity_manager'),
+                new Reference('sulu_security.access_control_manager'),
+                new Reference('security.token_storage'),
             ])
             ->tag('sulu.context', ['context' => 'admin']);
 
@@ -536,6 +539,14 @@ final class SuluPageBundle extends AbstractBundle
                 new Reference('doctrine.orm.entity_manager'),
             ])
             ->tag('cmsig_seal.reindex_provider');
+
+        // Security
+        $services->set('sulu_page.page_security_listener')
+            ->class(PageSecurityListener::class)
+            ->args([
+                new Reference('sulu_security.security_checker', ContainerInterface::NULL_ON_INVALID_REFERENCE),
+            ])
+            ->tag('kernel.event_subscriber');
     }
 
     /**
@@ -571,6 +582,8 @@ final class SuluPageBundle extends AbstractBundle
                                 'list' => 'sulu_page.get_pages',
                                 'detail' => 'sulu_page.get_page',
                             ],
+                            'security_class' => Page::class,
+                            'security_context' => 'sulu.webspaces.#webspace#',
                         ],
                         'pages_versions' => [
                             'routes' => [

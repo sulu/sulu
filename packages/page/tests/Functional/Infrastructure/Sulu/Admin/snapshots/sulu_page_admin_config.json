@@ -165,6 +165,88 @@
                     "name": "en"
                 }
             ]
+        },
+        "sulu-test-secure": {
+            "name": "Sulu Test Secure",
+            "key": "sulu-test-secure",
+            "localizations": [
+                {
+                    "localization": "en",
+                    "locale": "en",
+                    "language": "en",
+                    "country": "",
+                    "shadow": "",
+                    "children": [],
+                    "parent": null,
+                    "default": true
+                },
+                {
+                    "localization": "de",
+                    "locale": "de",
+                    "language": "de",
+                    "country": "",
+                    "shadow": "",
+                    "children": [],
+                    "parent": null,
+                    "default": false
+                }
+            ],
+            "theme": "default",
+            "security": {
+                "system": "sulu-test-secure",
+                "permissionCheck": true
+            },
+            "defaultTemplates": {
+                "homepage": "homepage",
+                "home": "homepage",
+                "page": "default"
+            },
+            "portalInformation": [
+                [],
+                [],
+                []
+            ],
+            "urls": [
+                {
+                    "language": "",
+                    "country": "",
+                    "segment": "",
+                    "redirect": "",
+                    "main": true,
+                    "url": "sulu-secure.io\/{localization}",
+                    "environment": "test"
+                }
+            ],
+            "customUrls": [],
+            "navigations": [
+                {
+                    "key": "main",
+                    "title": "Mainnavigation"
+                }
+            ],
+            "segments": [],
+            "resourceLocatorStrategy": {
+                "inputType": "leaf"
+            },
+            "_permissions": {
+                "view": false,
+                "add": false,
+                "edit": false,
+                "delete": false,
+                "archive": false,
+                "live": false,
+                "security": false
+            },
+            "allLocalizations": [
+                {
+                    "localization": "en",
+                    "name": "en"
+                },
+                {
+                    "localization": "de",
+                    "name": "de"
+                }
+            ]
         }
     }
 }

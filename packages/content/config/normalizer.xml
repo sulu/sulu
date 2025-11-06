@@ -39,5 +39,11 @@
         <service id="sulu_content.auditable_normalizer" class="Sulu\Content\Application\ContentNormalizer\Normalizer\AuditableNormalizer">
             <tag name="sulu_content.normalizer" priority="2"/>
         </service>
+
+        <service id="sulu_content.secured_entity_normalizer" class="Sulu\Content\Application\ContentNormalizer\Normalizer\SecuredEntityNormalizer">
+            <argument type="service" id="sulu_security.access_control_manager"/>
+            <argument type="service" id="security.token_storage" on-invalid="null"/>
+            <tag name="sulu_content.normalizer" priority="1"/>
+        </service>
     </services>
 </container>
