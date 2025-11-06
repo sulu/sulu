@@ -423,7 +423,7 @@ final class SuluPageBundle extends AbstractBundle
                 param('kernel.bundles'),
                 new Reference('sulu_core.webspace.webspace_manager'),
                 new Reference('sulu_security.access_control_query_enhancer'),
-                new Reference('security.helper'),
+                new Reference('security.helper', ContainerInterface::IGNORE_ON_INVALID_REFERENCE),
                 param('sulu_security.permissions'),
             ])
             ->tag('sulu_content.smart_content_provider', ['type' => PageInterface::RESOURCE_KEY]);
@@ -513,7 +513,7 @@ final class SuluPageBundle extends AbstractBundle
                 new Reference('sulu_core.webspace.webspace_manager'),
                 '%kernel.environment%',
                 new Reference('sulu_security.access_control_query_enhancer'),
-                new Reference('security.helper'),
+                new Reference('security.helper', ContainerInterface::IGNORE_ON_INVALID_REFERENCE),
                 param('sulu_security.permissions'),
             ])
             ->tag('sulu.sitemap.provider');

@@ -112,7 +112,7 @@ readonly class PageSmartContentProvider implements SmartContentProviderInterface
         private array $bundles,
         private WebspaceManagerInterface $webspaceManager,
         private AccessControlQueryEnhancer $accessControlQueryEnhancer,
-        private Security $security,
+        private ?Security $security,
         private ?array $permissions = null,
     ) {
         $this->entityRepository = $entityManager->getRepository(PageInterface::class);
@@ -283,7 +283,7 @@ readonly class PageSmartContentProvider implements SmartContentProviderInterface
     ): void {
         $webspace = $this->webspaceManager->findWebspaceByKey($filters['webspaceKey'] ?? null);
         /** @var UserInterface|null $user */
-        $user = $webspace && $webspace->hasWebsiteSecurity() ? $this->security->getUser() : null;
+        $user = $webspace && $webspace->hasWebsiteSecurity() && $this->security ? $this->security->getUser() : null;
         /** @var int|null $permission */
         $permission = $webspace && $webspace->hasWebsiteSecurity() && $this->permissions
             ? $this->permissions[PermissionTypes::VIEW]
@@ -296,6 +296,7 @@ readonly class PageSmartContentProvider implements SmartContentProviderInterface
                 $permission,
                 PageInterface::class,
                 $alias,
+                'uuid'
             );
         }
     }
@@ -321,8 +322,8 @@ readonly class PageSmartContentProvider implements SmartContentProviderInterface
                 Join::WITH,
                 'datasourcePage.uuid = :datasource',
             )
-                ->andWhere($alias . '.lft >= datasourcePage.lft')
-                ->andWhere($alias . '.rgt <= datasourcePage.rgt')
+                ->andWhere($alias . '.lft > datasourcePage.lft')
+                ->andWhere($alias . '.rgt < datasourcePage.rgt')
                 ->setParameter('datasource', $datasource);
         } else {
             $queryBuilder->andWhere($alias . '.parent = :datasource')

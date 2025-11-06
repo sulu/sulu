@@ -34,14 +34,16 @@ class AccessControlQueryEnhancer
         ?UserInterface $user,
         int $permission,
         string $entityClass,
-        string $entityAlias
+        string $entityAlias,
+        string $entityIdField = 'id'
     ): void {
         $this->enhanceQueryWithAccessControl(
             $queryBuilder,
             $user,
             $permission,
             $entityClass,
-            $entityAlias
+            $entityAlias,
+            $entityIdField
         );
     }
 
@@ -87,9 +89,12 @@ class AccessControlQueryEnhancer
         string $entityIdField = 'id',
         ?string $entityClassField = null
     ): void {
+        // Extract just the field name from the full path (e.g., 'page.uuid' -> 'uuid')
+        $fieldName = \str_contains($entityIdField, '.') ? \substr($entityIdField, \strrpos($entityIdField, '.') + 1) : $entityIdField;
+
         $subQueryBuilder = $this->entityManager->createQueryBuilder()
             ->from($entityClass, 'entity')
-            ->select('entity.id');
+            ->select('entity.' . $fieldName);
 
         $accessClassCondition = 'accessControl.entityClass = :entityClass';
         if ($entityClassField) {
@@ -115,10 +120,10 @@ class AccessControlQueryEnhancer
         $subQueryBuilder->setParameter('permission', $permission);
 
         $result = $subQueryBuilder->getQuery()->getScalarResult();
-        $ids = \array_column($result, 'id');
+        $ids = \array_column($result, $fieldName);
 
         if (\count($ids) > 0) {
-            $queryBuilder->andWhere(\sprintf('%s.id NOT IN (:accessControlIds)', $entityAlias));
+            $queryBuilder->andWhere(\sprintf('%s.%s NOT IN (:accessControlIds)', $entityAlias, $fieldName));
             $queryBuilder->setParameter('accessControlIds', $ids);
         }
     }

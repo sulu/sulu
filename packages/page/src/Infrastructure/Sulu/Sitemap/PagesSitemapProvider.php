@@ -61,7 +61,7 @@ class PagesSitemapProvider extends AbstractSitemapProvider
         private readonly WebspaceManagerInterface $webspaceManager,
         private readonly string $environment,
         private readonly AccessControlQueryEnhancer $accessControlQueryEnhancer,
-        private readonly Security $security,
+        private readonly ?Security $security,
         private readonly ?array $permissions = null,
     ) {
         $repository = $entityManager->getRepository(PageInterface::class);
@@ -163,7 +163,7 @@ class PagesSitemapProvider extends AbstractSitemapProvider
     ): void {
         $webspace = $this->webspaceManager->findWebspaceByKey($webspaceKey);
         /** @var UserInterface|null $user */
-        $user = $webspace && $webspace->hasWebsiteSecurity() ? $this->security->getUser() : null;
+        $user = $webspace && $webspace->hasWebsiteSecurity() && $this->security ? $this->security->getUser() : null;
         /** @var int|null $permission */
         $permission = $webspace && $webspace->hasWebsiteSecurity() && $this->permissions
             ? $this->permissions[PermissionTypes::VIEW]
@@ -176,6 +176,7 @@ class PagesSitemapProvider extends AbstractSitemapProvider
                 $permission,
                 PageInterface::class,
                 $alias,
+                'uuid'
             );
         }
     }
