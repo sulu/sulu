@@ -1413,7 +1413,6 @@ abstract class AbstractContactManager implements ContactManagerInterface
             $address->setAddition($entry['addition']);
         }
 
-
         return $success;
     }
 
