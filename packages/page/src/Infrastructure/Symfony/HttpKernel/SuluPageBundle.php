@@ -60,6 +60,7 @@ use Sulu\Page\Infrastructure\Sulu\Content\PropertyResolver\BlockVisitor\SegmentB
 use Sulu\Page\Infrastructure\Sulu\Content\PropertyResolver\PageSelectionPropertyResolver;
 use Sulu\Page\Infrastructure\Sulu\Content\PropertyResolver\SinglePageSelectionPropertyResolver;
 use Sulu\Page\Infrastructure\Sulu\Content\ResourceLoader\PageResourceLoader;
+use Sulu\Page\Infrastructure\Sulu\Content\Visitor\PageSmartContentFiltersVisitor;
 use Sulu\Page\Infrastructure\Sulu\Content\Visitor\SegmentSmartContentFiltersVisitor;
 use Sulu\Page\Infrastructure\Sulu\Reference\PageReferenceRefresher;
 use Sulu\Page\Infrastructure\Sulu\Route\WebspaceSiteRouteGenerator;
@@ -420,8 +421,20 @@ final class SuluPageBundle extends AbstractBundle
                 new Reference('security.token_storage', ContainerInterface::NULL_ON_INVALID_REFERENCE),
                 new Reference('doctrine.orm.entity_manager'),
                 param('kernel.bundles'),
+                new Reference('sulu_core.webspace.webspace_manager'),
+                new Reference('sulu_security.access_control_query_enhancer'),
+                new Reference('security.helper'),
+                param('sulu_security.permissions'),
             ])
             ->tag('sulu_content.smart_content_provider', ['type' => PageInterface::RESOURCE_KEY]);
+
+        $services->set('sulu_page.page_smart_content_filters_visitor_webspace')
+            ->class(PageSmartContentFiltersVisitor::class)
+            ->args([
+                new Reference('sulu_core.webspace.request_analyzer'),
+                new Reference('request_stack'),
+            ])
+            ->tag('sulu_content.smart_content_filters_visitor');
 
         $services->set('sulu_page.page_smart_content_filters_visitor')
             ->class(SegmentSmartContentFiltersVisitor::class)
@@ -499,7 +512,9 @@ final class SuluPageBundle extends AbstractBundle
                 new Reference('doctrine.orm.entity_manager'),
                 new Reference('sulu_core.webspace.webspace_manager'),
                 '%kernel.environment%',
-                new Reference('sulu_security.access_control_manager'),
+                new Reference('sulu_security.access_control_query_enhancer'),
+                new Reference('security.helper'),
+                param('sulu_security.permissions'),
             ])
             ->tag('sulu.sitemap.provider');
 
