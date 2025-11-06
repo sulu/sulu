@@ -64,7 +64,7 @@ class RemoveArticleTranslationMessageHandlerTest extends TestCase
         $this->articleRepository->removeDimensionContent($dimensionContent)->shouldBeCalled();
         $this->domainEventCollector->collect(Argument::type(ArticleTranslationRemovedEvent::class))->shouldBeCalled();
 
-        ($this->handler)($message);
+        $this->handler->__invoke($message);
 
         $this->assertCount(0, $article->getDimensionContents());
     }
@@ -88,7 +88,7 @@ class RemoveArticleTranslationMessageHandlerTest extends TestCase
         $this->articleRepository->removeDimensionContent($dimensionContent)->shouldBeCalled();
         $this->domainEventCollector->collect(Argument::type(ArticleTranslationRemovedEvent::class))->shouldBeCalled();
 
-        ($this->handler)($message);
+        $this->handler->__invoke($message);
 
         $this->assertCount(0, $article->getDimensionContents());
     }
@@ -114,7 +114,7 @@ class RemoveArticleTranslationMessageHandlerTest extends TestCase
         $this->articleRepository->removeDimensionContent(Argument::any())->shouldNotBeCalled();
         $this->domainEventCollector->collect(Argument::type(ArticleTranslationRemovedEvent::class))->shouldBeCalled();
 
-        ($this->handler)($message);
+        $this->handler->__invoke($message);
 
         $this->assertCount(1, $article->getDimensionContents());
         $this->assertSame('de', $dimensionContent->getGhostLocale());
@@ -139,7 +139,7 @@ class RemoveArticleTranslationMessageHandlerTest extends TestCase
         $this->articleRepository->removeDimensionContent($dimensionContent)->shouldBeCalled();
         $this->domainEventCollector->collect(Argument::type(ArticleTranslationRemovedEvent::class))->shouldBeCalled();
 
-        ($this->handler)($message);
+        $this->handler->__invoke($message);
 
         $this->assertCount(0, $article->getDimensionContents());
     }
@@ -176,7 +176,7 @@ class RemoveArticleTranslationMessageHandlerTest extends TestCase
         $this->articleRepository->removeDimensionContent($dimensionContent3)->shouldNotBeCalled();
         $this->domainEventCollector->collect(Argument::type(ArticleTranslationRemovedEvent::class))->shouldBeCalled();
 
-        ($this->handler)($message);
+        $this->handler->__invoke($message);
 
         $this->assertCount(2, $article->getDimensionContents());
         $this->assertSame('de', $dimensionContent3->getGhostLocale());
@@ -202,6 +202,6 @@ class RemoveArticleTranslationMessageHandlerTest extends TestCase
             return $event->getArticle() === $article && $event->getResourceLocale() === $locale;
         }))->shouldBeCalled();
 
-        ($this->handler)($message);
+        $this->handler->__invoke($message);
     }
 }

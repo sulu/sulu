@@ -64,7 +64,7 @@ class RemovePageTranslationMessageHandlerTest extends TestCase
         $this->pageRepository->removeDimensionContent($dimensionContent)->shouldBeCalled();
         $this->domainEventCollector->collect(Argument::type(PageTranslationRemovedEvent::class))->shouldBeCalled();
 
-        ($this->handler)($message);
+        $this->handler->__invoke($message);
 
         $this->assertCount(0, $page->getDimensionContents());
     }
@@ -88,7 +88,7 @@ class RemovePageTranslationMessageHandlerTest extends TestCase
         $this->pageRepository->removeDimensionContent($dimensionContent)->shouldBeCalled();
         $this->domainEventCollector->collect(Argument::type(PageTranslationRemovedEvent::class))->shouldBeCalled();
 
-        ($this->handler)($message);
+        $this->handler->__invoke($message);
 
         $this->assertCount(0, $page->getDimensionContents());
     }
@@ -114,7 +114,7 @@ class RemovePageTranslationMessageHandlerTest extends TestCase
         $this->pageRepository->removeDimensionContent(Argument::any())->shouldNotBeCalled();
         $this->domainEventCollector->collect(Argument::type(PageTranslationRemovedEvent::class))->shouldBeCalled();
 
-        ($this->handler)($message);
+        $this->handler->__invoke($message);
 
         $this->assertCount(1, $page->getDimensionContents());
         $this->assertSame('de', $dimensionContent->getGhostLocale());
@@ -139,7 +139,7 @@ class RemovePageTranslationMessageHandlerTest extends TestCase
         $this->pageRepository->removeDimensionContent($dimensionContent)->shouldBeCalled();
         $this->domainEventCollector->collect(Argument::type(PageTranslationRemovedEvent::class))->shouldBeCalled();
 
-        ($this->handler)($message);
+        $this->handler->__invoke($message);
 
         $this->assertCount(0, $page->getDimensionContents());
     }
@@ -176,7 +176,7 @@ class RemovePageTranslationMessageHandlerTest extends TestCase
         $this->pageRepository->removeDimensionContent($dimensionContent3)->shouldNotBeCalled();
         $this->domainEventCollector->collect(Argument::type(PageTranslationRemovedEvent::class))->shouldBeCalled();
 
-        ($this->handler)($message);
+        $this->handler->__invoke($message);
 
         $this->assertCount(2, $page->getDimensionContents());
         $this->assertSame('de', $dimensionContent3->getGhostLocale());
@@ -202,6 +202,6 @@ class RemovePageTranslationMessageHandlerTest extends TestCase
             return $event->getPage() === $page && $event->getResourceLocale() === $locale;
         }))->shouldBeCalled();
 
-        ($this->handler)($message);
+        $this->handler->__invoke($message);
     }
 }

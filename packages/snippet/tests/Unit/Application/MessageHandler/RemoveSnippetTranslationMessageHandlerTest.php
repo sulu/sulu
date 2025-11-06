@@ -64,7 +64,7 @@ class RemoveSnippetTranslationMessageHandlerTest extends TestCase
         $this->snippetRepository->removeDimensionContent($dimensionContent)->shouldBeCalled();
         $this->domainEventCollector->collect(Argument::type(SnippetTranslationRemovedEvent::class))->shouldBeCalled();
 
-        ($this->handler)($message);
+        $this->handler->__invoke($message);
 
         $this->assertCount(0, $snippet->getDimensionContents());
     }
@@ -88,7 +88,7 @@ class RemoveSnippetTranslationMessageHandlerTest extends TestCase
         $this->snippetRepository->removeDimensionContent($dimensionContent)->shouldBeCalled();
         $this->domainEventCollector->collect(Argument::type(SnippetTranslationRemovedEvent::class))->shouldBeCalled();
 
-        ($this->handler)($message);
+        $this->handler->__invoke($message);
 
         $this->assertCount(0, $snippet->getDimensionContents());
     }
@@ -114,7 +114,7 @@ class RemoveSnippetTranslationMessageHandlerTest extends TestCase
         $this->snippetRepository->removeDimensionContent(Argument::any())->shouldNotBeCalled();
         $this->domainEventCollector->collect(Argument::type(SnippetTranslationRemovedEvent::class))->shouldBeCalled();
 
-        ($this->handler)($message);
+        $this->handler->__invoke($message);
 
         $this->assertCount(1, $snippet->getDimensionContents());
         $this->assertSame('de', $dimensionContent->getGhostLocale());
@@ -139,7 +139,7 @@ class RemoveSnippetTranslationMessageHandlerTest extends TestCase
         $this->snippetRepository->removeDimensionContent($dimensionContent)->shouldBeCalled();
         $this->domainEventCollector->collect(Argument::type(SnippetTranslationRemovedEvent::class))->shouldBeCalled();
 
-        ($this->handler)($message);
+        $this->handler->__invoke($message);
 
         $this->assertCount(0, $snippet->getDimensionContents());
     }
@@ -176,7 +176,7 @@ class RemoveSnippetTranslationMessageHandlerTest extends TestCase
         $this->snippetRepository->removeDimensionContent($dimensionContent3)->shouldNotBeCalled();
         $this->domainEventCollector->collect(Argument::type(SnippetTranslationRemovedEvent::class))->shouldBeCalled();
 
-        ($this->handler)($message);
+        $this->handler->__invoke($message);
 
         $this->assertCount(2, $snippet->getDimensionContents());
         $this->assertSame('de', $dimensionContent3->getGhostLocale());
@@ -202,6 +202,6 @@ class RemoveSnippetTranslationMessageHandlerTest extends TestCase
             return $event->getSnippet() === $snippet && $event->getResourceLocale() === $locale;
         }))->shouldBeCalled();
 
-        ($this->handler)($message);
+        $this->handler->__invoke($message);
     }
 }
