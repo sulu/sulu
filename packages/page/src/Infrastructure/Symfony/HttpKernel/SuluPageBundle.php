@@ -63,6 +63,8 @@ use Sulu\Page\Infrastructure\Sulu\Content\ResourceLoader\PageResourceLoader;
 use Sulu\Page\Infrastructure\Sulu\Content\Visitor\SegmentSmartContentFiltersVisitor;
 use Sulu\Page\Infrastructure\Sulu\Reference\PageReferenceRefresher;
 use Sulu\Page\Infrastructure\Sulu\Route\WebspaceSiteRouteGenerator;
+use Sulu\Page\Infrastructure\Sulu\Search\AdminPageIndexListener;
+use Sulu\Page\Infrastructure\Sulu\Search\AdminPageReindexProvider;
 use Sulu\Page\Infrastructure\Sulu\Sitemap\PagesSitemapProvider;
 use Sulu\Page\Infrastructure\Sulu\Trash\PageTrashItemHandler;
 use Sulu\Page\Infrastructure\Symfony\Twig\Extension\ContentPathTwigExtension;
@@ -518,7 +520,7 @@ final class SuluPageBundle extends AbstractBundle
         }
 
         $services->set('sulu_page.admin_page_index_listener')
-            ->class('Sulu\Page\Infrastructure\Sulu\Search\AdminPageIndexListener')
+            ->class(AdminPageIndexListener::class)
             ->args([
                 new Reference('sulu_message_bus'),
             ])
@@ -531,7 +533,7 @@ final class SuluPageBundle extends AbstractBundle
             ->tag('kernel.event_listener', ['event' => PageTranslationRemovedEvent::class, 'method' => 'onPageChanged']);
 
         $services->set('sulu_page.admin_page_reindex_provider')
-            ->class('Sulu\Page\Infrastructure\Sulu\Search\AdminPageReindexProvider')
+            ->class(AdminPageReindexProvider::class)
             ->args([
                 new Reference('doctrine.orm.entity_manager'),
             ])
