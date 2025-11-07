@@ -212,7 +212,8 @@ class NavigationRepository implements NavigationRepositoryInterface
     ): array {
         $result = [];
         foreach ($pages as $page) {
-            $result[] = $this->resolvePageContent($page, $locale, $loadExcerpt);
+            $content = $this->resolvePageContent($page, $locale);
+            $result[] = $this->normalizePageContent($content, $loadExcerpt);
         }
 
         return $result;
@@ -300,7 +301,8 @@ class NavigationRepository implements NavigationRepositoryInterface
     {
         $result = [];
         foreach ($pages as $page) {
-            $normalizedContent = $this->resolvePageContent($page, $locale, $loadExcerpt);
+            $content = $this->resolvePageContent($page, $locale);
+            $normalizedContent = $this->normalizePageContent($content, $loadExcerpt);
 
             $children = $depth < $maxDepth ? $page->getChildren() : [];
             $normalizedContent['children'] = $this->normalizePageTree($children, $loadExcerpt, $locale, $depth + 1, $maxDepth);
@@ -312,53 +314,49 @@ class NavigationRepository implements NavigationRepositoryInterface
     }
 
     /**
-     * @return array<string, mixed>
+     * @return array{
+     *      resource: object,
+     *      content: mixed,
+     *      view: mixed[],
+     *      extension: array<string, array<string, mixed>>,
+     * }
      */
-    protected function resolvePageContent(PageInterface $page, string $locale, bool $loadExcerpt): array
+    private function resolvePageContent(PageInterface $page, string $locale): array
     {
         $pageDimensionContent = $this->contentAggregator->aggregate($page, [
             'locale' => $locale,
             'stage' => DimensionContentInterface::STAGE_LIVE,
         ]);
 
-        $properties = [
-            'content.uuid' => 'object.resource.id',
-            'content.title' => 'title',
-            'content.url' => 'url',
-            'content.webspaceKey' => 'object.resource.webspaceKey',
-            'content.template' => 'object.templateKey',
-            'content.changed' => 'object.changed',
-            'content.changer' => 'object.changer',
-            'content.created' => 'object.created',
-            'content.creator' => 'object.creator',
-            'content.linkProvider' => 'object.linkData.linkProvider',
+        return $this->contentResolver->resolve($pageDimensionContent);
+    }
+
+    /**
+     * @param array{
+     *      resource: object,
+     *      content: mixed,
+     *      view: mixed[],
+     *      extension: array<string, array<string, mixed>>,
+     *  } $content
+     *
+     * @return array<string, mixed>
+     */
+    private function normalizePageContent(array $content, bool $loadExcerpt): array
+    {
+        /** @var array{
+         *      extension: array<string, array<string, mixed>>,
+         * } $contentData
+         */
+        $contentData = $content['content'];
+        /** @var PageInterface $page */
+        $page = $content['resource'];
+        $result = [
+            ...$contentData,
+            ...['webspaceKey' => $page->getWebspaceKey()],
         ];
 
         if ($loadExcerpt) {
-            $properties['excerpt.title'] = 'excerpt.title';
-            $properties['excerpt.more'] = 'excerpt.more';
-            $properties['excerpt.description'] = 'excerpt.description';
-            $properties['excerpt.segment'] = 'excerpt.segment';
-            $properties['excerpt.categories'] = 'excerpt.categories';
-            $properties['excerpt.tags'] = 'excerpt.tags';
-            $properties['excerpt.audienceTargetGroups'] = 'excerpt.audienceTargetGroups';
-            $properties['excerpt.icon'] = 'excerpt.icon';
-            $properties['excerpt.image'] = 'excerpt.image';
-        }
-
-        /** @var array{
-         *     resource: object,
-         *     content: array<string, mixed>,
-         *     view: mixed[],
-         *     extension: array<string, array<string, mixed>>,
-         *     excerpt?: mixed[]
-         * } $resolvedContent
-         */
-        $resolvedContent = $this->contentResolver->resolve($pageDimensionContent, $properties);
-
-        $result = [...$resolvedContent['content']];
-        if ($loadExcerpt) {
-            $result['excerpt'] = $resolvedContent['excerpt'] ?? [];
+            $result['excerpt'] = $content['extension']['excerpt'];
         }
 
         return $result;
