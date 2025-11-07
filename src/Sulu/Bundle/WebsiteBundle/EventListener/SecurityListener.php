@@ -13,11 +13,11 @@ namespace Sulu\Bundle\WebsiteBundle\EventListener;
 
 use Sulu\Bundle\PageBundle\Document\BasePageDocument;
 use Sulu\Component\Content\Compat\Structure\PageBridge;
-use Sulu\Component\DocumentManager\Subscriber\EventSubscriberInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Sulu\Component\Security\Authorization\SecurityCondition;
 use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 

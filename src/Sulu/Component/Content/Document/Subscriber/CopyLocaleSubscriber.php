@@ -19,7 +19,6 @@ use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
 use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\Content\Document\Behavior\WebspaceBehavior;
 use Sulu\Component\Content\Document\Behavior\WorkflowStageBehavior;
-use Sulu\Component\Content\Metadata\PropertyMetadata;
 use Sulu\Component\Content\Types\ResourceLocator\Strategy\ResourceLocatorStrategyPoolInterface;
 use Sulu\Component\DocumentManager\Behavior\Mapping\LocaleBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\ParentBehavior;
@@ -197,7 +196,6 @@ class CopyLocaleSubscriber implements EventSubscriberInterface
 
         $properties = $metadata->getProperties();
 
-        /** @var PropertyMetadata $property */
         foreach ($properties as $property) {
             if (self::PAGE_TREE_ROUTE_TYPE === $property->getName()) {
                 return $property->getName();

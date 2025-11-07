@@ -34,7 +34,9 @@ class SelectionFieldFilterType extends AbstractFieldFilterType<?Array<string | n
         this.selectionStore = new MultiSelectionStore(
             this.resourceKey,
             [],
-            observable.box(userStore.contentLocale)
+            observable.box(userStore.contentLocale),
+            'ids',
+            this.resourceParameters
         );
 
         this.selectionStoreDisposer = autorun(() => {
@@ -80,6 +82,27 @@ class SelectionFieldFilterType extends AbstractFieldFilterType<?Array<string | n
         }
 
         return resourceKey;
+    }
+
+    @computed get resourceParameters() {
+        const {parameters} = this;
+
+        if (!parameters) {
+            throw new Error('The "SelectionFieldFilterType" needs some parameters to work!');
+        }
+
+        const {requestParameters} = parameters;
+
+        if (typeof requestParameters !== 'object') {
+            return {};
+        }
+
+        const resourceParameters = {};
+        for (const parameter in requestParameters) {
+            resourceParameters[parameter] = requestParameters[parameter];
+        }
+
+        return resourceParameters;
     }
 
     @computed get displayProperty() {

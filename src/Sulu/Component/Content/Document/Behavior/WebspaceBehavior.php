@@ -18,6 +18,8 @@ interface WebspaceBehavior
 {
     /**
      * Return the webspace name.
+     *
+     * @return string
      */
     public function getWebspaceName();
 }

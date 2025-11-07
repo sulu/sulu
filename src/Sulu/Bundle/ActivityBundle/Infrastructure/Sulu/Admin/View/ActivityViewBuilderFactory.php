@@ -32,7 +32,6 @@ class ActivityViewBuilderFactory implements ActivityViewBuilderFactoryInterface
         string $resourceKey,
         string $resourceIdRouterAttribute = 'id'
     ): ListViewBuilderInterface {
-        /** @var ListViewBuilderInterface $activityListViewBuilder */
         $activityListViewBuilder = $this->viewBuilderFactory
             ->createListViewBuilder($name, $path)
             ->setResourceKey(ActivityInterface::RESOURCE_KEY)

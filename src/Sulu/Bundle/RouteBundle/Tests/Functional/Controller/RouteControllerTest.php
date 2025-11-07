@@ -349,10 +349,16 @@ class RouteControllerTest extends SuluTestCase
         $this->assertCount(3, $result['_embedded']['routes']);
 
         $items = $result['_embedded']['routes'];
+        /** @var int $itemId0 */
+        $itemId0 = $items[0]['id'];
+        /** @var int $itemId1 */
+        $itemId1 = $items[1]['id'];
+        /** @var int $itemId2 */
+        $itemId2 = $items[2]['id'];
         $items = [
-            $items[0]['id'] => $items[0],
-            $items[1]['id'] => $items[1],
-            $items[2]['id'] => $items[2],
+            $itemId0 => $items[0],
+            $itemId1 => $items[1],
+            $itemId2 => $items[2],
         ];
 
         for ($i = 0; $i < 3; ++$i) {
@@ -426,9 +432,13 @@ class RouteControllerTest extends SuluTestCase
         $this->assertCount(2, $result['_embedded']['routes']);
 
         $items = $result['_embedded']['routes'];
+        /** @var int $itemId0 */
+        $itemId0 = $items[0]['id'];
+        /** @var int $itemId1 */
+        $itemId1 = $items[1]['id'];
         $items = [
-            $items[0]['id'] => $items[0],
-            $items[1]['id'] => $items[1],
+            $itemId0 => $items[0],
+            $itemId1 => $items[1],
         ];
 
         for ($i = 0; $i < 2; ++$i) {

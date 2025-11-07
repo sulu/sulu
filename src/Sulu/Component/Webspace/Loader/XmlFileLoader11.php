@@ -44,8 +44,8 @@ class XmlFileLoader11 extends XmlFileLoader10
     {
         $expected = ['page', 'home'];
 
-        foreach ($this->xpath->query('/x:webspace/x:default-templates/x:default-template') as $node) {
-            /* @var \DOMNode $node */
+        /** @var \DOMNode $node */
+        foreach ($this->xpath->query('/x:webspace/x:default-templates/x:default-template') ?: [] as $node) {
             $template = $node->nodeValue;
             $type = $node->attributes->getNamedItem('type')->nodeValue;
 
@@ -75,8 +75,7 @@ class XmlFileLoader11 extends XmlFileLoader10
      */
     protected function generateTemplates(Webspace $webspace)
     {
-        foreach ($this->xpath->query('/x:webspace/x:templates/x:template') as $templateNode) {
-            /* @var \DOMNode $templateNode */
+        foreach ($this->xpath->query('/x:webspace/x:templates/x:template') ?: [] as $templateNode) {
             $template = $templateNode->nodeValue;
             $type = $templateNode->attributes->getNamedItem('type')->nodeValue;
             $webspace->addTemplate($type, $template);
@@ -92,8 +91,7 @@ class XmlFileLoader11 extends XmlFileLoader10
      */
     protected function generateExcludedTemplates(Webspace $webspace)
     {
-        foreach ($this->xpath->query('/x:webspace/x:excluded-templates/x:excluded-template') as $excludedTemplateNode) {
-            /* @var \DOMNode $excludedTemplateNode */
+        foreach ($this->xpath->query('/x:webspace/x:excluded-templates/x:excluded-template') ?: [] as $excludedTemplateNode) {
             $excludedTemplate = $excludedTemplateNode->nodeValue;
             $webspace->addExcludedTemplate($excludedTemplate);
         }

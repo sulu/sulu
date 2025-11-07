@@ -1,14 +1,14 @@
 sulu_media:
-    resource: "@SuluMediaBundle/Resources/config/routing_website.yml"
+    resource: "@SuluMediaBundle/Resources/config/routing_website.yaml"
 
 sulu_search:
     type: portal
-    resource: "@SuluSearchBundle/Resources/config/routing_website.yml"
+    resource: "@SuluSearchBundle/Resources/config/routing_website.yaml"
 
 sulu_website:
-    resource: "@SuluWebsiteBundle/Resources/config/routing_website.yml"
+    resource: "@SuluWebsiteBundle/Resources/config/routing_website.yaml"
 
 when@dev:
     _portal_errors:
-        resource: "@SuluWebsiteBundle/Resources/config/routing_error.yml"
+        resource: "@SuluWebsiteBundle/Resources/config/routing_error.yaml"
         type: portal

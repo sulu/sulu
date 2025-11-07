@@ -14,14 +14,12 @@ namespace Sulu\Bundle\PageBundle\Tests\Functional\Export;
 use Sulu\Bundle\PageBundle\Document\PageDocument;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Compat\Structure;
-use Sulu\Component\Content\Compat\Structure\PageBridge;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Document\Behavior\ExtensionBehavior;
 use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
 use Sulu\Component\Content\Document\Behavior\ShadowLocaleBehavior;
 use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\Content\Export\WebspaceExportInterface;
-use Sulu\Component\Content\Extension\ExtensionManagerInterface;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\Exception\DocumentManagerException;
 use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
@@ -43,11 +41,6 @@ class WebspaceExportTest extends SuluTestCase
     private $documentManager;
 
     /**
-     * @var ExtensionManagerInterface
-     */
-    private $extensionManager;
-
-    /**
      * @var int
      */
     private $creator;
@@ -56,7 +49,6 @@ class WebspaceExportTest extends SuluTestCase
     {
         parent::initPhpcr();
         $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
-        $this->extensionManager = $this->getContainer()->get('sulu_page.extension.manager');
         $this->webspaceExporter = $this->getContainer()->get('sulu_page.export.webspace');
     }
 
@@ -114,7 +106,7 @@ class WebspaceExportTest extends SuluTestCase
      */
     private function prepareData()
     {
-        /** @var PageBridge[] $data */
+        /** @var array<int, array<string, mixed>> $data */
         $data = $this->getRawData();
         $extensionDataList = $this->getExtensionDataArray();
         $data[0]['ext'] = $extensionDataList[0];
@@ -148,11 +140,13 @@ class WebspaceExportTest extends SuluTestCase
                         'type' => $data[0]['block'][0]['type']['value'],
                         'title' => $data[0]['block'][0]['title']['value'],
                         'article' => $data[0]['block'][0]['article']['value'],
+                        'settings' => $data[0]['block'][0]['settings']['value'],
                     ],
                     [
                         'type' => $data[0]['block'][1]['type']['value'],
                         'title' => $data[0]['block'][1]['title']['value'],
                         'article' => $data[0]['block'][1]['article']['value'],
+                        'settings' => $data[0]['block'][1]['settings']['value'],
                     ],
                 ],
             ],
@@ -168,6 +162,7 @@ class WebspaceExportTest extends SuluTestCase
                         'type' => $data[1]['block'][0]['type']['value'],
                         'title' => $data[1]['block'][0]['title']['value'],
                         'article' => $data[1]['block'][0]['article']['value'],
+                        'settings' => $data[1]['block'][0]['settings']['value'],
                     ],
                 ],
             ],
@@ -213,6 +208,12 @@ class WebspaceExportTest extends SuluTestCase
                             ],
                             'value' => 'Block-Article-1-1',
                         ],
+                        'settings' => [
+                            'name' => 'settings',
+                            'type' => 'block_settings',
+                            'options' => ['translate' => false],
+                            'value' => '{}',
+                        ],
                     ],
                     [
                         'type' => [
@@ -238,6 +239,12 @@ class WebspaceExportTest extends SuluTestCase
                                 'translate' => true,
                             ],
                             'value' => 'Block-Article-1-2',
+                        ],
+                        'settings' => [
+                            'name' => 'settings',
+                            'type' => 'block_settings',
+                            'options' => ['translate' => false],
+                            'value' => ['hidden' => true],
                         ],
                     ],
                 ],
@@ -274,6 +281,12 @@ class WebspaceExportTest extends SuluTestCase
                                 'translate' => true,
                             ],
                             'value' => 'Block-Article-2-1',
+                        ],
+                        'settings' => [
+                            'name' => 'settings',
+                            'type' => 'block_settings',
+                            'options' => ['translate' => false],
+                            'value' => '{}',
                         ],
                     ],
                 ],
@@ -411,6 +424,9 @@ class WebspaceExportTest extends SuluTestCase
                             $blockPropertyData = [];
                             foreach ($block as $blockName => $blockProperty) {
                                 list($type, $options) = $this->getTypeOptionsByName($blockName, $name);
+                                if ('block_settings' === $blockProperty['type'] && \is_array($blockProperty['value'])) {
+                                    $blockProperty['value'] = \json_encode($blockProperty['value']);
+                                }
                                 $blockPropertyData[$blockName] = $blockProperty;
                             }
                             $blockChildren[] = $blockPropertyData;

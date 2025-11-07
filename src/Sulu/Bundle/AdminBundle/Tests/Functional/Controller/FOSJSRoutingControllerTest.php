@@ -39,11 +39,17 @@ class FOSJSRoutingControllerTest extends SuluTestCase
         $this->assertIsArray($json);
         $this->assertArrayHasKey('routes', $json);
 
-        $routes = \array_keys($json['routes']);
-        \sort($routes);
+        $routes = [];
+        foreach (\array_keys($json['routes']) as $route) {
+            $routes[$route] = $route;
+        }
+        \ksort($routes);
 
-        $this->assertSame([
+        $expectedRoutes = [];
+
+        foreach ([
             'sulu_activity.get_activities',
+            'sulu_admin.get_icons',
             'sulu_admin.metadata',
             'sulu_admin.put_collaborations',
             'sulu_audience_targeting.get_target-group',
@@ -88,11 +94,13 @@ class FOSJSRoutingControllerTest extends SuluTestCase
             'sulu_page.get_items',
             'sulu_page.get_page',
             'sulu_page.get_page_resourcelocators',
+            'sulu_page.get_page_versions',
             'sulu_page.get_pages',
             'sulu_page.get_teasers',
             'sulu_page.get_webspace',
             'sulu_page.get_webspace_localizations',
             'sulu_page.get_webspaces',
+            'sulu_page.post_page_version_trigger',
             'sulu_preview.get_preview-link',
             'sulu_routes.get_routes',
             'sulu_search_indexes',
@@ -119,6 +127,10 @@ class FOSJSRoutingControllerTest extends SuluTestCase
             'sulu_trash.get_trash-items',
             'sulu_website.cget_webspace_analytics',
             'sulu_website.get_webspace_analytics',
-        ], $routes);
+        ] as $routeName) {
+            $expectedRoutes[$routeName] = $routeName;
+        }
+
+        $this->assertSame($expectedRoutes, $routes);
     }
 }

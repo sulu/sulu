@@ -85,6 +85,18 @@ class Configuration implements ConfigurationInterface
                         ->end()
                     ->end()
                 ->end()
+                ->arrayNode('icon_sets')
+                    ->useAttributeAsKey('name')
+                    ->normalizeKeys(false)
+                    ->prototype('scalar')
+                        ->validate()
+                            ->ifTrue(function($value) {
+                                return !\is_string($value) || !\preg_match('/^(icomoon:\/\/|svg:\/\/)/', $value);
+                            })
+                            ->thenInvalid('The icon set path must start with "icomoon://" or "svg://"')
+                        ->end()
+                    ->end()
+                ->end()
                 ->arrayNode('field_type_options')
                     ->children()
                         ->arrayNode('selection')

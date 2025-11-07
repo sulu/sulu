@@ -42,6 +42,7 @@ export default class CKEditor5 extends React.Component<TextEditorProps> {
                 onBlur={onBlur}
                 onChange={onChange}
                 onFocus={onFocus}
+                options={options || {}}
                 value={value}
             />
         );

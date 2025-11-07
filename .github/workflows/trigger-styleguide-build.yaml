@@ -5,11 +5,12 @@ on:
         branches:
             - '2.x'
             - '2.[0-9]+'
+    workflow_dispatch:
 
 jobs:
     trigger-styleguide-build:
         name: Trigger styleguide build
-        runs-on: ubuntu-latest
+        runs-on: ubuntu-22.04
         timeout-minutes: 30
 
         steps:

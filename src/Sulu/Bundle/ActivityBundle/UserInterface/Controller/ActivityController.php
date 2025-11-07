@@ -41,6 +41,7 @@ class ActivityController extends AbstractRestController implements ClassResource
     use RequestParametersTrait;
 
     /**
+     * @param class-string $activityClass
      * @param array<string, int> $permissions Inject `sulu_security.permissions` parameter
      */
     public function __construct(
@@ -74,7 +75,6 @@ class ActivityController extends AbstractRestController implements ClassResource
             $configurationFieldDescriptors
         );
 
-        /** @var DoctrineListBuilder $listBuilder */
         $listBuilder = $this->listBuilderFactory->create($this->activityClass);
         $this->restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
         $listBuilder->setSelectFields($fieldDescriptors);

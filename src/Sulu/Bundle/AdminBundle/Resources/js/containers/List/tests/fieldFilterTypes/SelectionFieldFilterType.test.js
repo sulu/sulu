@@ -32,11 +32,11 @@ test('Pass correct props to MultiAutoComplete', () => {
 
     const selectionFieldFilterType = new SelectionFieldFilterType(
         jest.fn(),
-        {displayProperty: 'name', resourceKey: 'accounts'},
+        {displayProperty: 'name', resourceKey: 'accounts', requestParameters: {rootKey: 'rootKey'}},
         undefined
     );
 
-    expect(MultiSelectionStore).toBeCalledWith('accounts', [], expect.anything());
+    expect(MultiSelectionStore).toBeCalledWith('accounts', [], expect.anything(), 'ids', {rootKey: 'rootKey'});
     // $FlowFixMe
     expect(MultiSelectionStore.mock.calls[0][2].get()).toEqual('ru');
 

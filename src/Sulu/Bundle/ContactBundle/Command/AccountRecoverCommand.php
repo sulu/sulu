@@ -167,6 +167,12 @@ class AccountRecoverCommand extends Command
                 WHERE ( c2.depth - 1 ) <> c1.depth';
 
         $statement = $this->entityManager->getConnection()->prepare($sql);
+
+        // DBAL 3 to 4 BC Layer
+        if (\method_exists($statement, 'executeStatement')) {
+            return $statement->executeStatement();
+        }
+
         $result = $statement->execute();
 
         if ($result) {

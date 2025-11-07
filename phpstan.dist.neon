@@ -7,7 +7,6 @@ includes:
     - vendor/phpstan/phpstan-phpunit/extension.neon
     - vendor/phpstan/phpstan-phpunit/rules.neon
     - vendor/phpstan/phpstan-webmozart-assert/extension.neon
-    - vendor/thecodingmachine/phpstan-strict-rules/phpstan-strict-rules.neon
 
 parameters:
     phpVersion: 80200
@@ -16,6 +15,7 @@ parameters:
     level: max
     parallel:
         processTimeout: 300.0
+    reportUnmatchedIgnoredErrors: false
     excludePaths:
         - %currentWorkingDirectory%/node_modules/*
         - %currentWorkingDirectory%/var/*
@@ -23,6 +23,8 @@ parameters:
         - %currentWorkingDirectory%/tests/Resources/cache/*
         - %currentWorkingDirectory%/*/node_modules/*
         - %currentWorkingDirectory%/*/Tests/Application/var/*
+        - %currentWorkingDirectory%/packages/*/tests/Application/var/*
+        - %currentWorkingDirectory%/packages/content/tests/Unit/Mocks/*
         - %currentWorkingDirectory%/*/Tests/app/cache/*
         - %currentWorkingDirectory%/*/Tests/app/var/*
         # RestController extends FOSRestController which was removed in friendsofsymfony/rest-bundle:3.0

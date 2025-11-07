@@ -14,7 +14,6 @@ namespace Sulu\Bundle\PageBundle\Repository;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Content\Exception\ResourceLocatorGeneratorException;
-use Sulu\Component\Content\Types\ResourceLocator\ResourceLocatorInformation;
 use Sulu\Component\Content\Types\ResourceLocator\Strategy\ResourceLocatorStrategyPoolInterface;
 
 /**
@@ -39,7 +38,6 @@ class ResourceLocatorRepository implements ResourceLocatorRepositoryInterface
 
     public function generate($parts, $parentUuid, $webspaceKey, $languageCode, $templateKey, $segmentKey = null)
     {
-        /** @var StructureInterface $structure */
         $structure = $this->structureManager->getStructure($templateKey);
         $title = $this->implodeRlpParts($structure, $parts);
 
@@ -71,7 +69,6 @@ class ResourceLocatorRepository implements ResourceLocatorRepositoryInterface
         $urls = $resourceLocatorStrategy->loadHistoryByContentUuid($uuid, $webspaceKey, $languageCode);
 
         $result = [];
-        /** @var ResourceLocatorInformation $url */
         foreach ($urls as $url) {
             $defaultParameter = '&language=' . $languageCode . '&webspace=' . $webspaceKey;
             $deleteParameter = '?path=' . $url->getResourceLocator() . $defaultParameter;

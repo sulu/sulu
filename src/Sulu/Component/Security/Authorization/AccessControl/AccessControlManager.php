@@ -40,6 +40,7 @@ class AccessControlManager implements AccessControlManagerInterface
     /**
      * @param DescendantProviderInterface[] $descendantProviders
      * @param array<string, int> $permissions
+     * @param AccessControlProviderInterface[] $accessControlProviders
      */
     public function __construct(
         private MaskConverterInterface $maskConverter,
@@ -49,8 +50,10 @@ class AccessControlManager implements AccessControlManagerInterface
         private RoleRepositoryInterface $roleRepository,
         private AccessControlRepositoryInterface $accessControlRepository,
         private Security|SymfonyCoreSecurity|null $security,
-        private array $permissions
+        private array $permissions,
+        array $accessControlProviders = [],
     ) {
+        $this->accessControlProviders = [...$accessControlProviders];
     }
 
     public function setPermissions($type, $identifier, $permissions, $inherit = false)
@@ -111,7 +114,7 @@ class AccessControlManager implements AccessControlManagerInterface
         $accessControlProvider = $this->getAccessControlProvider($type);
 
         if (!$accessControlProvider) {
-            return;
+            return null;
         }
 
         return $accessControlProvider->getPermissions($type, $identifier, $system);
@@ -189,6 +192,8 @@ class AccessControlManager implements AccessControlManagerInterface
 
     /**
      * Adds a new AccessControlProvider.
+     *
+     * @deprecated Use the constructor instead
      *
      * @param AccessControlProviderInterface $accessControlProvider The AccessControlProvider to add
      */
@@ -386,21 +391,31 @@ class AccessControlManager implements AccessControlManagerInterface
     /**
      * Returns the AccessControlProvider, which supports the given type.
      *
-     * @param string $type The type the AccessControlProvider should support
+     * @param string|null $type The type the AccessControlProvider should support
      *
-     * @return AccessControlProviderInterface
+     * @return AccessControlProviderInterface|null
      */
-    private function getAccessControlProvider($type)
+    private function getAccessControlProvider(?string $type)
     {
+        if (null === $type) {
+            return null;
+        }
+
         foreach ($this->accessControlProviders as $accessControlProvider) {
             if ($accessControlProvider->supports($type)) {
                 return $accessControlProvider;
             }
         }
+
+        return null;
     }
 
-    private function getDescendantProvider(string $type): ?DescendantProviderInterface
+    private function getDescendantProvider(?string $type): ?DescendantProviderInterface
     {
+        if (null === $type) {
+            return null;
+        }
+
         foreach ($this->descendantProviders as $descendantProvider) {
             if ($descendantProvider->supportsDescendantType($type)) {
                 return $descendantProvider;

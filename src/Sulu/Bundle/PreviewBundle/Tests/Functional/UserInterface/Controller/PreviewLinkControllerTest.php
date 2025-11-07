@@ -11,13 +11,14 @@
 
 namespace Sulu\Bundle\PreviewBundle\Tests\Functional\UserInterface\Controller;
 
-use Gedmo\Sluggable\Util\Urlizer;
 use Sulu\Bundle\PageBundle\Document\BasePageDocument;
 use Sulu\Bundle\PageBundle\Document\PageDocument;
 use Sulu\Bundle\PreviewBundle\Domain\Model\PreviewLinkInterface;
 use Sulu\Bundle\TestBundle\Kernel\SuluKernelBrowser;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
+
+use function Symfony\Component\String\u;
 
 class PreviewLinkControllerTest extends SuluTestCase
 {
@@ -183,7 +184,7 @@ class PreviewLinkControllerTest extends SuluTestCase
     {
         $page = new PageDocument();
         $page->setTitle($title);
-        $page->setResourceSegment('/' . Urlizer::urlize($title));
+        $page->setResourceSegment('/' . u($title)->ascii()->toString());
         $page->setParent($this->homePage);
         $page->setStructureType('default');
         $page->getStructure()->bind(

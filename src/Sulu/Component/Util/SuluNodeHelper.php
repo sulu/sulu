@@ -244,6 +244,8 @@ class SuluNodeHelper
      * Return the next node of the given node.
      *
      * @see getSiblingNode
+     *
+     * @return NodeInterface|null
      */
     public function getNextNode(NodeInterface $node)
     {
@@ -254,6 +256,8 @@ class SuluNodeHelper
      * Return the previous node of the given node.
      *
      * @see getSiblingNode
+     *
+     * @return NodeInterface|null
      */
     public function getPreviousNode(NodeInterface $node)
     {

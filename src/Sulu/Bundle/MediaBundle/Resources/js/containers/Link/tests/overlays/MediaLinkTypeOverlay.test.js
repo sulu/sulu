@@ -19,6 +19,12 @@ test('Render overlay with minimal config', () => {
             onConfirm={jest.fn()}
             onHrefChange={jest.fn()}
             open={true}
+            options={
+                {
+                    resourceKey: 'media',
+                    displayProperties: ['title'],
+                }
+            }
         />
     );
 
@@ -33,7 +39,12 @@ test('Render overlay with invalid href type', () => {
             onConfirm={jest.fn()}
             onHrefChange={jest.fn()}
             open={true}
-            options={undefined}
+            options={
+                {
+                    resourceKey: 'media',
+                    displayProperties: ['title'],
+                }
+            }
         />
     )).toThrow('The id of a media should always be a number!');
 });
@@ -47,6 +58,12 @@ test('Render overlay with anchor enabled', () => {
             onConfirm={jest.fn()}
             onHrefChange={jest.fn()}
             open={true}
+            options={
+                {
+                    resourceKey: 'media',
+                    displayProperties: ['title'],
+                }
+            }
         />
     );
 
@@ -62,6 +79,12 @@ test('Render overlay with target enabled', () => {
             onHrefChange={jest.fn()}
             onTargetChange={jest.fn()}
             open={true}
+            options={
+                {
+                    resourceKey: 'media',
+                    displayProperties: ['title'],
+                }
+            }
         />
     );
 
@@ -77,6 +100,12 @@ test('Render overlay with title enabled', () => {
             onHrefChange={jest.fn()}
             onTitleChange={jest.fn()}
             open={true}
+            options={
+                {
+                    resourceKey: 'media',
+                    displayProperties: ['title'],
+                }
+            }
         />
     );
 
@@ -94,6 +123,12 @@ test('Delegate only id to onHrefChange method', () => {
             onHrefChange={hrefChangeSpy}
             onTitleChange={jest.fn()}
             open={true}
+            options={
+                {
+                    resourceKey: 'media',
+                    displayProperties: ['title'],
+                }
+            }
         />
     );
 

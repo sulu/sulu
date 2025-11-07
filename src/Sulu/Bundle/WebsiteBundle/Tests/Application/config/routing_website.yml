@@ -1,16 +1,16 @@
 sulu_website:
-    resource: "@SuluWebsiteBundle/Resources/config/routing.yml"
+    resource: "@SuluWebsiteBundle/Resources/config/routing.yaml"
     prefix: /sulu_website
 
 _portal_errors:
-    resource: "@SuluWebsiteBundle/Resources/config/routing_error.yml"
+    resource: "@SuluWebsiteBundle/Resources/config/routing_error.yaml"
     type: portal
 
 sulu_website.website:
-    resource: "@SuluWebsiteBundle/Resources/config/routing_website.yml"
+    resource: "@SuluWebsiteBundle/Resources/config/routing_website.yaml"
 
 sulu_media:
-    resource: "@SuluMediaBundle/Resources/config/routing_website.yml"
+    resource: "@SuluMediaBundle/Resources/config/routing_website.yaml"
 
 _portal_loader_test:
     resource: "routing_portal_loader_test.yml"

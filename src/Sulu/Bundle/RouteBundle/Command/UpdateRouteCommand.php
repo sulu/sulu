@@ -12,7 +12,6 @@
 namespace Sulu\Bundle\RouteBundle\Command;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\EntityRepository;
 use Sulu\Bundle\RouteBundle\Manager\RouteManagerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -54,7 +53,6 @@ EOT
 
         $batchSize = (int) $input->getOption('batch-size');
 
-        /** @var EntityRepository $repository */
         $repository = $this->entityManager->getRepository($input->getArgument('entity'));
 
         $query = $repository->createQueryBuilder('entity')->select('count(entity.id)')->getQuery();

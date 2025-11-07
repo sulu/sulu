@@ -52,10 +52,13 @@ class ContactController extends AbstractRestController implements ClassResourceI
      *
      * @var string
      */
+    /** @var string */
     protected static $entityKey = ContactInterface::RESOURCE_KEY;
 
+    /** @var class-string */
     protected static $accountContactEntityName = \Sulu\Bundle\ContactBundle\Entity\AccountContact::class;
 
+    /** @var class-string */
     protected static $positionEntityName = \Sulu\Bundle\ContactBundle\Entity\Position::class;
 
     // serialization groups for contact
@@ -83,6 +86,9 @@ class ContactController extends AbstractRestController implements ClassResourceI
 
     protected $accountContactFieldDescriptors;
 
+    /**
+     * @param class-string $contactClass
+     */
     public function __construct(
         ViewHandlerInterface $viewHandler,
         TokenStorageInterface $tokenStorage,
@@ -250,6 +256,7 @@ class ContactController extends AbstractRestController implements ClassResourceI
         $listBuilder->addGroupBy($fieldDescriptors['id']);
         $this->restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
 
+        /** @var string $account */
         $account = $request->get('accountId');
         if ($account) {
             $listBuilder->where($fieldDescriptors['accountId'], $account);

@@ -1,4 +1,3 @@
 sulu_core:
-    type: rest
-    resource: "@SuluCoreBundle/Resources/config/routing_api.yml"
+    resource: "@SuluCoreBundle/Resources/config/routing_api.yaml"
     prefix: /admin/api

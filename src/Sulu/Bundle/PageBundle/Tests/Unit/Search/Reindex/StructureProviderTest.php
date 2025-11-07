@@ -71,7 +71,7 @@ class StructureProviderTest extends TestCase
     private $inspector;
 
     /**
-     * @var SecurityBehavior
+     * @var ObjectProphecy<StructureBehavior&SecurityBehavior>
      */
     private $secureStructure;
 

@@ -2,6 +2,7 @@ version: '3'
 services:
   database:
     image: mysql/mysql-server:8.0 # arm and x86/x64 compatible mysql image
+    command: [ "--max_connections=10000" ]
     ports:
       - "3306:3306"
     environment:

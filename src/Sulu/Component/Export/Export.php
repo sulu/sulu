@@ -105,6 +105,13 @@ class Export
                 $property->getType() . '_type'
             );
 
+            $block['settings'] = $this->createProperty(
+                'settings',
+                \json_encode($blockData['settings']),
+                $this->exportManager->getOptions($property->getType(), $this->format),
+                $property->getType() . '_settings',
+            );
+
             $children[] = $block;
         }
 

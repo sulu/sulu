@@ -67,7 +67,7 @@ class ResourceSegmentSubscriberTest extends TestCase
     private $resourceLocatorStrategyPool;
 
     /**
-     * @var ResourceSegmentBehavior|ObjectProphecy
+     * @var ObjectProphecy<ResourceSegmentBehavior>
      */
     private $document;
 

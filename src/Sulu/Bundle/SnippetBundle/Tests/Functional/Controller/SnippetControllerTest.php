@@ -12,7 +12,6 @@
 namespace Sulu\Bundle\SnippetBundle\Tests\Functional\Controller;
 
 use Doctrine\Persistence\ObjectRepository;
-use PHPCR\SessionInterface;
 use Sulu\Bundle\ActivityBundle\Domain\Model\ActivityInterface;
 use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
 use Sulu\Bundle\SnippetBundle\Snippet\DefaultSnippetManagerInterface;
@@ -47,11 +46,6 @@ class SnippetControllerTest extends SuluTestCase
     protected $documentManager;
 
     /**
-     * @var SessionInterface
-     */
-    private $phpcrSession;
-
-    /**
      * @var DefaultSnippetManagerInterface
      */
     private $defaultSnippetManager;
@@ -71,7 +65,6 @@ class SnippetControllerTest extends SuluTestCase
         $this->client = $this->createAuthenticatedClient();
         $this->purgeDatabase();
         $this->initPhpcr();
-        $this->phpcrSession = $this->getContainer()->get('doctrine_phpcr')->getConnection();
         $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
         $this->defaultSnippetManager = $this->getContainer()->get('sulu_snippet.default_snippet.manager');
         $this->activityRepository = $this->getEntityManager()->getRepository(ActivityInterface::class);

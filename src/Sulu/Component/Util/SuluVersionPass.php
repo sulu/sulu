@@ -39,7 +39,6 @@ class SuluVersionPass implements CompilerPassInterface
     {
         $version = '_._._';
 
-        /** @var SplFileInfo $composerFile */
         $composerFile = new SplFileInfo($dir . '/composer.lock', '', '');
         if (!$composerFile->isFile()) {
             return $version;
@@ -66,7 +65,6 @@ class SuluVersionPass implements CompilerPassInterface
     {
         $version = null;
 
-        /** @var SplFileInfo $composerFile */
         $composerFile = new SplFileInfo($dir . '/composer.json', '', '');
         if (!$composerFile->isFile()) {
             return $version;

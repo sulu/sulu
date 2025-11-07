@@ -167,10 +167,10 @@ class MediaDataProviderTest extends TestCase
 
     public function testGetTypesConfiguration(): void
     {
-        /** @var EntityManagerInterface|ObjectProphecy $entityManager */
+        /** @var ObjectProphecy<EntityManagerInterface> $entityManager */
         $entityManager = $this->prophesize(EntityManagerInterface::class);
 
-        /** @var ObjectRepository|ObjectProphecy $mediaTypeRepository */
+        /** @var ObjectProphecy<ObjectRepository> $mediaTypeRepository */
         $mediaTypeRepository = $this->prophesize(ObjectRepository::class);
 
         $serializer = $this->prophesize(ArraySerializerInterface::class);
@@ -194,7 +194,7 @@ class MediaDataProviderTest extends TestCase
             ->shouldBeCalled()
             ->willReturn([$mediaType1, $mediaType2]);
 
-        /** @var TranslatorInterface|ObjectProphecy $translator */
+        /** @var ObjectProphecy<TranslatorInterface> $translator */
         $translator = $this->prophesize(TranslatorInterface::class);
         $translator->trans('sulu_media.audio', [], 'admin')
             ->shouldBeCalled()

@@ -1,9 +1,7 @@
 sulu_page:
-    resource: "@SuluPageBundle/Resources/config/routing_api.yml"
-    type: rest		
+    resource: "@SuluPageBundle/Resources/config/routing_api.yaml"
     prefix: /api
 
 sulu_custom_urls:
-    resource: "@SuluCustomUrlBundle/Resources/config/routing_api.yml"
-    type: rest
+    resource: "@SuluCustomUrlBundle/Resources/config/routing_api.yaml"
     prefix: /api

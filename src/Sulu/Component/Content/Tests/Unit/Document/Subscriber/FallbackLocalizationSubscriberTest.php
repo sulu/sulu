@@ -48,7 +48,7 @@ class FallbackLocalizationSubscriberTest extends SubscriberTestCase
     private $registry;
 
     /**
-     * @var StructureBehavior
+     * @var ObjectProphecy<StructureBehavior&WebspaceBehavior>
      */
     private $document;
 
@@ -79,7 +79,8 @@ class FallbackLocalizationSubscriberTest extends SubscriberTestCase
         $this->inspector = $this->prophesize(DocumentInspector::class);
         $this->registry = $this->prophesize(DocumentRegistry::class);
 
-        $this->document = $this->prophesize(StructureBehavior::class)->willImplement(WebspaceBehavior::class);
+        $this->document = $this->prophesize(StructureBehavior::class)
+            ->willImplement(WebspaceBehavior::class);
         $this->webspace = $this->prophesize(Webspace::class);
         $this->localization1 = $this->prophesize(Localization::class);
         $this->localization2 = $this->prophesize(Localization::class);

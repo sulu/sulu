@@ -15,8 +15,13 @@ use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 
+/**
+ * @deprecated use tagged_locator instead:
+ * <argument type="tagged_locator" tag="sulu_admin.metadata_provider" index-by="type" />
+ */
 class AddMetadataProviderPass implements CompilerPassInterface
 {
+    /** @deprecated use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderInterface::SERVICE_TAG instead */
     public const TAG = 'sulu_admin.metadata_provider';
 
     public function process(ContainerBuilder $container)

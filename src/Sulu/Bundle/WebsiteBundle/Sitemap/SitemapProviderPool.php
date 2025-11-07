@@ -12,11 +12,12 @@
 namespace Sulu\Bundle\WebsiteBundle\Sitemap;
 
 use Sulu\Bundle\WebsiteBundle\Exception\SitemapProviderNotFoundException;
+use Symfony\Contracts\Service\ResetInterface;
 
 /**
  * Pool of all sitemap-providers.
  */
-class SitemapProviderPool implements SitemapProviderPoolInterface
+class SitemapProviderPool implements SitemapProviderPoolInterface, ResetInterface
 {
     /**
      * @var SitemapProviderInterface[]
@@ -24,9 +25,9 @@ class SitemapProviderPool implements SitemapProviderPoolInterface
     private $providers;
 
     /**
-     * @var Sitemap[]
+     * @var array<string, Sitemap[]>
      */
-    private $index;
+    private $sitemapsPerHost;
 
     /**
      * @param SitemapProviderInterface[] $providers
@@ -59,15 +60,27 @@ class SitemapProviderPool implements SitemapProviderPoolInterface
 
     public function getIndex($scheme, $host)
     {
-        if ($this->index) {
-            return $this->index;
+        $key = $scheme . $host;
+
+        if (isset($this->sitemapsPerHost[$key])) {
+            return $this->sitemapsPerHost[$key];
         }
 
-        $this->index = [];
+        $sitemapsPerHost = [];
         foreach ($this->providers as $alias => $provider) {
-            $this->index[] = $provider->createSitemap($scheme, $host);
+            $sitemapsPerHost[] = $provider->createSitemap($scheme, $host);
         }
 
-        return $this->index;
+        $this->sitemapsPerHost[$key] = $sitemapsPerHost;
+
+        return $this->sitemapsPerHost[$key];
+    }
+
+    /**
+     * @internal this method is for internal use only and should not be used by other classes
+     */
+    public function reset(): void
+    {
+        $this->sitemapsPerHost = [];
     }
 }

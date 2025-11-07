@@ -6,6 +6,10 @@ on:
         branches:
             - '[0-9]+.x'
             - '[0-9]+.[0-9]+'
+    workflow_dispatch:
+
+env:
+    CI_GROUP_OUTPUT: true
 
 # automatically cancel previously started workflows when pushing a new commit to a branch
 concurrency:
@@ -15,7 +19,7 @@ concurrency:
 jobs:
     js-css:
         name: "Node ${{ matrix.node-version }}"
-        runs-on: ubuntu-latest
+        runs-on: ubuntu-22.04
         timeout-minutes: 30
 
         strategy:
@@ -82,7 +86,7 @@ jobs:
 
     js-lint:
         name: "Node Lint"
-        runs-on: ubuntu-latest
+        runs-on: ubuntu-22.04
         timeout-minutes: 30
 
         env:
@@ -119,7 +123,7 @@ jobs:
 
     php:
         name: "PHP ${{ matrix.php-version }} (${{ matrix.database }}, ${{ matrix.phpcr-transport }}, ${{ matrix.dependency-versions }})"
-        runs-on: ubuntu-latest
+        runs-on: ubuntu-22.04
         timeout-minutes: 30
 
         env:
@@ -171,6 +175,18 @@ jobs:
                           DATABASE_COLLATE:
 
                     - php-version: '8.3'
+                      database: postgres-14
+                      phpcr-transport: jackrabbit
+                      dependency-versions: 'highest'
+                      php-extensions: 'ctype, iconv, mysql, gd'
+                      tools: 'composer:v2'
+                      env:
+                          SYMFONY_DEPRECATIONS_HELPER: weak
+                          DATABASE_URL: postgres://symfony:ChangeMe@127.0.0.1:5432/sulu_test?serverVersion=14.11
+                          DATABASE_CHARSET: UTF8
+                          DATABASE_COLLATE:
+
+                    - php-version: '8.4'
                       database: mysql-80
                       phpcr-transport: doctrinedbal
                       dependency-versions: 'highest'
@@ -229,6 +245,7 @@ jobs:
               uses: ramsey/composer-install@v1
               with:
                   dependency-versions: ${{matrix.dependency-versions}}
+                  composer-options: ${{ matrix.composer-options }}
 
             - name: Output versions and installed dependencies
               run: |
@@ -254,7 +271,7 @@ jobs:
 
     php-lint:
         name: "PHP Lint"
-        runs-on: ubuntu-latest
+        runs-on: ubuntu-22.04
         timeout-minutes: 30
 
         env:

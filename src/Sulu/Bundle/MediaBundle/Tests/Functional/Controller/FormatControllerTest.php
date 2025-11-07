@@ -12,16 +12,10 @@
 namespace Sulu\Bundle\MediaBundle\Tests\Functional\Controller;
 
 use Imagine\Image\ImageInterface;
-use Sulu\Bundle\MediaBundle\Entity\FormatOptions;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
 class FormatControllerTest extends SuluTestCase
 {
-    /**
-     * @var FormatOptions[]
-     */
-    private $formatOptions;
-
     public function testCGet(): void
     {
         $client = $this->createAuthenticatedClient();

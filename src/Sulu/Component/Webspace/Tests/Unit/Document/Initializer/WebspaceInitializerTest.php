@@ -95,13 +95,11 @@ class WebspaceInitializerTest extends TestCase
 
     public function testInitialize(): void
     {
-        /** @var Webspace $webspace1 */
         $webspace1 = new Webspace();
         $webspace1->setKey('webspace1');
         $webspace1->setTheme('theme1');
         $webspace1->setLocalizations([new Localization('de'), new Localization('en')]);
 
-        /** @var Webspace $webspace2 */
         $webspace2 = new Webspace();
         $webspace2->setKey('webspace2');
         $webspace2->setTheme('theme1');

@@ -11,22 +11,14 @@
 
 namespace Sulu\Bundle\PageBundle\Tests\Functional\ResourceLocator;
 
-use Doctrine\ORM\EntityManager;
 use PHPCR\SessionInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Compat\Property;
 use Sulu\Component\Content\Types\ResourceLocator;
-use Sulu\Component\Content\Types\ResourceLocator\Mapper\PhpcrMapper;
-use Sulu\Component\Content\Types\ResourceLocator\Mapper\ResourceLocatorMapperInterface;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 
 class ResourceLocatorTest extends SuluTestCase
 {
-    /**
-     * @var EntityManager
-     */
-    private $em;
-
     /**
      * @var SessionManagerInterface
      */
@@ -36,11 +28,6 @@ class ResourceLocatorTest extends SuluTestCase
      * @var SessionInterface
      */
     private $session;
-
-    /**
-     * @var ResourceLocatorMapperInterface
-     */
-    private $resourceLocatorMapper;
 
     /**
      * @var ResourceLocator
@@ -55,18 +42,12 @@ class ResourceLocatorTest extends SuluTestCase
 
         $this->sessionManager = $this->getContainer()->get('sulu.phpcr.session');
         $this->session = $this->sessionManager->getSession();
-        $this->resourceLocatorMapper = new PhpcrMapper(
-            $this->getContainer()->get('sulu.phpcr.session'),
-            $this->getContainer()->get('sulu_document_manager.document_manager'),
-            $this->getContainer()->get('sulu_document_manager.document_inspector')
-        );
 
         $this->resourceLocator = new ResourceLocator('not-in-use');
     }
 
     protected function initOrm()
     {
-        $this->em = $this->getContainer()->get('doctrine')->getManager();
     }
 
     public function testWrite(): void

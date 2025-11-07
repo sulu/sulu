@@ -22,6 +22,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Output\StreamOutput;
+use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\HttpKernel\DependencyInjection\ServicesResetter;
 use Symfony\Component\Process\PhpExecutableFinder;
@@ -67,18 +68,7 @@ class PHPCRCleanupCommand extends Command
         if (!$dryRun) {
             $io->warning('This command will remove properties from the PHPCR repository. Make sure to have a backup before running this command.');
             if (!$input->getOption('force')) {
-                $answer = $io->ask('Do you want to continue [y/n]', null, function(?string $value) {
-                    if (null === $value) {
-                        return false;
-                    }
-
-                    $value = \strtolower($value);
-                    if (!\in_array($value, ['y', 'n'], true)) {
-                        throw new \RuntimeException('You need to enter "y" to continue or "n" to abort.');
-                    }
-
-                    return 'y' === $value;
-                });
+                $answer = $io->askQuestion(new ConfirmationQuestion('Do you want to continue?'));
 
                 if (!$answer) {
                     $io->warning('You have aborted the command');
@@ -192,20 +182,25 @@ class PHPCRCleanupCommand extends Command
                 }
                 if (0 !== $status) {
                     ++$stats['erroredNodes'];
-                    $erroredUuids[] = $uuid;
+                    $erroredUuids[$uuid] = $process->getErrorOutput();
+                    $this->logger->writeln(\sprintf(
+                        "# Error processing node '%s'\n\n%s\n",
+                        $uuid,
+                        $process->getErrorOutput(),
+                    ));
 
                     continue;
                 }
 
-                $output = $process->getOutput();
-                \preg_match('/Documents: (\d+)/', $output, $matches);
+                $subCommandOutput = $process->getOutput();
+                \preg_match('/Documents: (\d+)/', $subCommandOutput, $matches);
                 $stats['documents'] += (int) ($matches[1] ?? 0);
-                \preg_match('/Removed properties: (\d+)/', $output, $matches);
+                \preg_match('/Removed properties: (\d+)/', $subCommandOutput, $matches);
                 $stats['removedProperties'] += (int) ($matches[1] ?? 0);
-                \preg_match('/Total properties: (\d+)/', $output, $matches);
+                \preg_match('/Total properties: (\d+)/', $subCommandOutput, $matches);
                 $stats['properties'] += (int) ($matches[1] ?? 0);
 
-                $this->logger->writeln($output);
+                $this->logger->writeln($subCommandOutput);
 
                 $progressBar->setMessage((string) $stats['nodes'], 'nodes');
                 $progressBar->setMessage((string) $stats['ignoredNodes'], 'ignoredNodes');
@@ -222,10 +217,7 @@ class PHPCRCleanupCommand extends Command
         $progressBar->finish();
         $io->success('Cleanup process finished');
 
-        if (0 < \count($erroredUuids)) {
-            $io->section('Following nodes are errored');
-            $io->listing($erroredUuids);
-        }
+        $this->printErroredNodes($erroredUuids, $io, $output->isVerbose());
 
         if (0 < \count($ignoredUuids)) {
             $io->section('Following nodes are ignored');
@@ -252,5 +244,26 @@ class PHPCRCleanupCommand extends Command
         $process->setTimeout(120);
 
         return $process;
+    }
+
+    /**
+     * @param array<string, string> $errors
+     */
+    private function printErroredNodes(array $errors, SymfonyStyle $io, bool $verbose): void
+    {
+        if ([] === $errors) {
+            return;
+        }
+
+        $io->section('Following nodes are errored');
+        if ($verbose) {
+            foreach ($errors as $uuid => $errorMessage) {
+                $io->error($uuid);
+                $io->writeln($errorMessage);
+            }
+        } else {
+            $io->listing(\array_keys($errors));
+            $io->note('To get more info about the errors rerun the command with the -v flag');
+        }
     }
 }

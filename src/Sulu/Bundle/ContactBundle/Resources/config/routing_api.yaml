@@ -1,0 +1,325 @@
+# contact routes
+sulu_contact.get_contacts:
+    path: '/contacts.{_format}'
+    methods: GET
+    controller: 'sulu_contact.contact_controller::cgetAction'
+    format: json
+    requirements:
+        _format: json|csv
+
+sulu_contact.delete_contact:
+    path: '/contacts/{id}.{_format}'
+    methods: DELETE
+    controller: 'sulu_contact.contact_controller::deleteAction'
+    format: json
+    requirements:
+        _format: json|csv
+
+sulu_contact.get_contact:
+    path: '/contacts/{id}.{_format}'
+    methods: GET
+    controller: 'sulu_contact.contact_controller::getAction'
+    format: json
+    requirements:
+        _format: json|csv
+sulu_contact.post_contact:
+    path: '/contacts.{_format}'
+    methods: POST
+    controller: 'sulu_contact.contact_controller::postAction'
+    format: json
+    requirements:
+        _format: json|csv
+
+sulu_contact.put_contact:
+    path: '/contacts/{id}.{_format}'
+    methods: PUT
+    controller: 'sulu_contact.contact_controller::putAction'
+    format: json
+    requirements:
+        _format: json|csv
+
+sulu_contact.patch_contact:
+    path: '/contacts/{id}.{_format}'
+    methods: PATCH
+    controller: 'sulu_contact.contact_controller::patchAction'
+    format: json
+    requirements:
+        _format: json|csv
+
+# account routes
+sulu_contact.get_account_contacts:
+    path: '/accounts/{id}/contacts.{_format}'
+    methods: GET
+    controller: 'sulu_contact.account_controller::getContactsAction'
+    format: json
+    requirements:
+        _format: json|csv
+
+sulu_contact.get_account_addresses:
+    path: '/accounts/{id}/addresses.{_format}'
+    methods: GET
+    controller: 'sulu_contact.account_controller::getAddressesAction'
+    format: json
+    requirements:
+        _format: json|csv
+
+sulu_contact.put_account_contacts:
+    path: '/accounts/{accountId}/contacts/{contactId}.{_format}'
+    methods: PUT
+    controller: 'sulu_contact.account_controller::putContactsAction'
+    format: json
+    requirements:
+        _format: json|csv
+
+sulu_contact.delete_account_contacts:
+    path: '/accounts/{accountId}/contacts/{id}.{_format}'
+    methods: DELETE
+    controller: 'sulu_contact.account_controller::deleteContactsAction'
+    format: json
+    requirements:
+        _format: json|csv
+
+sulu_contact.get_accounts:
+    path: '/accounts.{_format}'
+    methods: GET
+    controller: 'sulu_contact.account_controller::cgetAction'
+    format: json
+    requirements:
+        _format: json|csv
+
+sulu_contact.post_account:
+    path: '/accounts.{_format}'
+    methods: POST
+    controller: 'sulu_contact.account_controller::postAction'
+    format: json
+    requirements:
+        _format: json|csv
+
+sulu_contact.put_account:
+    path: '/accounts/{id}.{_format}'
+    methods: PUT
+    controller: 'sulu_contact.account_controller::putAction'
+    format: json
+    requirements:
+        _format: json|csv
+
+sulu_contact.patch_account:
+    path: '/accounts/{id}.{_format}'
+    methods: PATCH
+    controller: 'sulu_contact.account_controller::patchAction'
+    format: json
+    requirements:
+        _format: json|csv
+
+sulu_contact.delete_account:
+    path: '/accounts/{id}.{_format}'
+    methods: DELETE
+    controller: 'sulu_contact.account_controller::deleteAction'
+    format: json
+    requirements:
+        _format: json|csv
+
+sulu_contact.multipledeleteinfo_account:
+    path: '/accounts/multipledeleteinfo.{_format}'
+    methods: GET
+    controller: 'sulu_contact.account_controller::multipledeleteinfoAction'
+    format: json
+    requirements:
+        _format: json|csv
+
+sulu_contact.get_account_deleteinfo:
+    path: '/accounts/{id}/deleteinfo.{_format}'
+    methods: GET
+    controller: 'sulu_contact.account_controller::getDeleteinfoAction'
+    format: json
+    requirements:
+        _format: json|csv
+
+sulu_contact.get_account:
+    path: '/accounts/{id}.{_format}'
+    methods: GET
+    controller: 'sulu_contact.account_controller::getAction'
+    format: json
+    requirements:
+        _format: json|csv
+
+# contact title routes
+sulu_contact.get_contact-title:
+    path: '/contact-titles/{id}.{_format}'
+    methods: GET
+    controller: 'sulu_contact.contact_title_controller::getAction'
+    format: json
+    requirements:
+        _format: json|csv
+
+sulu_contact.get_contact-titles:
+    path: '/contact-titles.{_format}'
+    methods: GET
+    controller: 'sulu_contact.contact_title_controller::cgetAction'
+    format: json
+    requirements:
+        _format: json|csv
+
+sulu_contact.post_contact-title:
+    path: '/contact-titles.{_format}'
+    methods: POST
+    controller: 'sulu_contact.contact_title_controller::postAction'
+    format: json
+    requirements:
+        _format: json|csv
+
+sulu_contact.put_contact-title:
+    path: '/contact-titles/{id}.{_format}'
+    methods: PUT
+    controller: 'sulu_contact.contact_title_controller::putAction'
+    format: json
+    requirements:
+        _format: json|csv
+
+sulu_contact.delete_contact-titles:
+    path: '/contact-titles.{_format}'
+    methods: DELETE
+    controller: 'sulu_contact.contact_title_controller::cdeleteAction'
+    format: json
+    requirements:
+        _format: json|csv
+
+sulu_contact.delete_contact-title:
+    path: '/contact-titles/{id}.{_format}'
+    methods: DELETE
+    controller: 'sulu_contact.contact_title_controller::deleteAction'
+    format: json
+    requirements:
+        _format: json|csv
+
+sulu_contact.patch_contact-titles:
+    path: '/contact-titles.{_format}'
+    methods: PATCH
+    controller: 'sulu_contact.contact_title_controller::cpatchAction'
+    format: json
+    requirements:
+        _format: json|csv
+
+
+sulu_contact.get_contact-position:
+    path: '/contact-positions/{id}.{_format}'
+    methods: GET
+    controller: 'sulu_contact.position_controller::getAction'
+    format: json
+    requirements:
+        _format: json|csv
+
+sulu_contact.get_contact-positions:
+    path: '/contact-positions.{_format}'
+    methods: GET
+    controller: 'sulu_contact.position_controller::cgetAction'
+    format: json
+    requirements:
+        _format: json|csv
+
+sulu_contact.post_contact-position:
+    path: '/contact-positions.{_format}'
+    methods: POST
+    controller: 'sulu_contact.position_controller::postAction'
+    format: json
+    requirements:
+        _format: json|csv
+
+sulu_contact.put_contact-position:
+    path: '/contact-positions/{id}.{_format}'
+    methods: PUT
+    controller: 'sulu_contact.position_controller::putAction'
+    format: json
+    requirements:
+        _format: json|csv
+
+sulu_contact.delete_contact-positions:
+    path: '/contact-positions.{_format}'
+    methods: DELETE
+    controller: 'sulu_contact.position_controller::cdeleteAction'
+    format: json
+    requirements:
+        _format: json|csv
+
+sulu_contact.delete_contact-position:
+    path: '/contact-positions/{id}.{_format}'
+    methods: DELETE
+    controller: 'sulu_contact.position_controller::deleteAction'
+    format: json
+    requirements:
+        _format: json|csv
+
+sulu_contact.patch_contact-positions:
+    path: '/contact-positions.{_format}'
+    methods: PATCH
+    controller: 'sulu_contact.position_controller::cpatchAction'
+    format: json
+    requirements:
+        _format: json|csv
+
+# account media routes
+
+sulu_contact.delete_account_medias:
+    path: '/accounts/{contactId}/medias/{id}.{_format}'
+    methods: DELETE
+    controller: 'sulu_contact.account_media_controller::deleteAction'
+    format: json
+    requirements:
+        _format: json|csv
+
+sulu_contact.post_account_medias:
+    path: '/accounts/{contactId}/medias.{_format}'
+    methods: POST
+    controller: 'sulu_contact.account_media_controller::postAction'
+    format: json
+    requirements:
+        _format: json|csv
+
+sulu_contact.cget_account_medias:
+    path: '/accounts/{contactId}/medias.{_format}'
+    methods: GET
+    controller: 'sulu_contact.account_media_controller::cgetAction'
+    format: json
+    requirements:
+        _format: json|csv
+
+sulu_contact.get_account_medias:
+    path: '/accounts/{contactId}/medias.{_format}'
+    methods: GET
+    controller: 'sulu_contact.account_media_controller::cgetAction'
+    format: json
+    requirements:
+        _format: json|csv
+
+# contact media routes
+sulu_contact.delete_contact_medias:
+    path: '/contacts/{contactId}/medias/{id}.{_format}'
+    methods: DELETE
+    controller: 'sulu_contact.contact_media_controller::deleteAction'
+    format: json
+    requirements:
+        _format: json|csv
+
+sulu_contact.post_contact_medias:
+    path: '/contacts/{contactId}/medias.{_format}'
+    methods: POST
+    controller: 'sulu_contact.contact_media_controller::postAction'
+    format: json
+    requirements:
+        _format: json|csv
+
+sulu_contact.cget_contact_medias:
+    path: '/contacts/{contactId}/medias.{_format}'
+    methods: GET
+    controller: 'sulu_contact.contact_media_controller::cgetAction'
+    format: json
+    requirements:
+        _format: json|csv
+
+sulu_contact.get_contact_medias:
+    path: '/contacts/{contactId}/medias.{_format}'
+    methods: GET
+    controller: 'sulu_contact.contact_media_controller::cgetAction'
+    format: json
+    requirements:
+        _format: json|csv

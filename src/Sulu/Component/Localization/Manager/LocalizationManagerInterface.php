@@ -30,5 +30,8 @@ interface LocalizationManagerInterface
      */
     public function getLocales(): array;
 
+    /**
+     * @deprecated since Use the constructor instead
+     */
     public function addLocalizationProvider(LocalizationProviderInterface $localizationProvider);
 }

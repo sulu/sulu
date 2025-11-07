@@ -124,6 +124,7 @@ class ResettingControllerTest extends SuluTestCase
         $htmlBody = $message->getHtmlBody();
         $this->assertIsString($htmlBody);
         \preg_match('/forgotPasswordToken=(.*)/', $htmlBody, $regexMatches);
+        $this->assertArrayHasKey(1, $regexMatches);
         $token = $regexMatches[1];
         $expectedEmailData = $this->getExpectedEmailData($this->client, $user, $token);
 
@@ -170,6 +171,7 @@ class ResettingControllerTest extends SuluTestCase
         $htmlBody = $message->getHtmlBody();
         $this->assertIsString($htmlBody);
         \preg_match('/forgotPasswordToken=(.*)/', $htmlBody, $regexMatches);
+        $this->assertArrayHasKey(1, $regexMatches);
         $token = $regexMatches[1];
         $expectedEmailData = $this->getExpectedEmailData($this->client, $user, $token);
 
@@ -216,6 +218,7 @@ class ResettingControllerTest extends SuluTestCase
         $htmlBody = $message->getHtmlBody();
         $this->assertIsString($htmlBody);
         \preg_match('/forgotPasswordToken=(.*)/', $htmlBody, $regexMatches);
+        $this->assertArrayHasKey(1, $regexMatches);
         $token = $regexMatches[1];
         $expectedEmailData = $this->getExpectedEmailData($this->client, $user, $token);
 
@@ -395,6 +398,7 @@ class ResettingControllerTest extends SuluTestCase
         $htmlBody = $message->getHtmlBody();
         $this->assertIsString($htmlBody);
         \preg_match('/forgotPasswordToken=(.*)/', $htmlBody, $regexMatches);
+        $this->assertArrayHasKey(1, $regexMatches);
         $token = $regexMatches[1];
 
         $this->client->jsonRequest('GET', '/security/reset', [

@@ -25,12 +25,10 @@ use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
 use Sulu\Component\Content\Document\Behavior\ShadowLocaleBehavior;
 use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\Content\Extension\AbstractExtension;
-use Sulu\Component\Content\Extension\ExtensionInterface;
 use Sulu\Component\Content\Extension\ExtensionManagerInterface;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
-use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 class NodeRepositoryTest extends SuluTestCase
@@ -44,16 +42,6 @@ class NodeRepositoryTest extends SuluTestCase
      * @var ExtensionManagerInterface
      */
     private $extensionManager;
-
-    /**
-     * @var ExtensionInterface[]
-     */
-    private $extensions;
-
-    /**
-     * @var SessionManagerInterface
-     */
-    private $sessionManager;
 
     /**
      * @var ContentMapperInterface
@@ -74,12 +62,10 @@ class NodeRepositoryTest extends SuluTestCase
     {
         $this->purgeDatabase();
         $this->initPhpcr();
-        $this->extensions = [new TestExtension('test1', 'test1')];
         $this->mapper = $this->getContainer()->get('sulu.content.mapper');
         $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
         $this->nodeRepository = $this->getContainer()->get('sulu_page.node_repository');
         $this->extensionManager = $this->getContainer()->get('sulu_page.extension.manager');
-        $this->sessionManager = $this->getContainer()->get('sulu.phpcr.session');
         $this->extensionManager->addExtension(new TestExtension('test1', 'test1'));
         $this->em = $this->getEntityManager();
 

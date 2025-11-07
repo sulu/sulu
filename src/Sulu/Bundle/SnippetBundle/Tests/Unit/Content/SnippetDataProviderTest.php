@@ -131,14 +131,14 @@ class SnippetDataProviderTest extends TestCase
 
     public function testGetTypesConfiguration(): void
     {
-        /** @var TokenStorageInterface|ObjectProphecy $tokenStorage */
+        /** @var ObjectProphecy<TokenStorageInterface> $tokenStorage */
         $tokenStorage = $this->prophesize(TokenStorageInterface::class);
-        /** @var FormMetadataProvider|ObjectProphecy $formMetadataProvider */
+        /** @var ObjectProphecy<FormMetadataProvider> $formMetadataProvider */
         $formMetadataProvider = $this->prophesize(FormMetadataProvider::class);
 
-        /** @var TokenInterface|ObjectProphecy $token */
+        /** @var ObjectProphecy<TokenInterface> $token */
         $token = $this->prophesize(TokenInterface::class);
-        /** @var UserInterface|ObjectProphecy $user */
+        /** @var ObjectProphecy<UserInterface> $user */
         $user = $this->prophesize(UserInterface::class);
 
         $tokenStorage->getToken()

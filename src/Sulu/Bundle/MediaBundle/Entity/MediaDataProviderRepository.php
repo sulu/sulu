@@ -120,6 +120,15 @@ class MediaDataProviderRepository implements DataProviderRepositoryInterface
             ->setParameter('locale', $locale);
     }
 
+    /**
+     * Append additional condition to query builder for "findByFilters" function.
+     *
+     * @param string $alias
+     * @param string $locale
+     * @param mixed[] $options
+     *
+     * @return array<string, int|string|int[]|string[]> parameters for query
+     */
     protected function append(QueryBuilder $queryBuilder, $alias, $locale, $options = [])
     {
         $parameter = [];
@@ -138,9 +147,17 @@ class MediaDataProviderRepository implements DataProviderRepositoryInterface
             $parameter['type'] = $options['type'];
         }
 
+        /** @var array<string, string> */
         return $parameter;
     }
 
+    /**
+     * Extension point to append relations to tag relation if it is not direct linked.
+     *
+     * @param string $alias
+     *
+     * @return string field path to tag relation
+     */
     protected function appendTagsRelation(QueryBuilder $queryBuilder, $alias)
     {
         $queryBuilder
@@ -150,16 +167,39 @@ class MediaDataProviderRepository implements DataProviderRepositoryInterface
         return 'fileVersion.tags';
     }
 
+    /**
+     * Extension point to append relations to category relation if it is not direct linked.
+     *
+     * @param string $alias
+     *
+     * @return string field path to category relation
+     */
     protected function appendCategoriesRelation(QueryBuilder $queryBuilder, $alias)
     {
         return 'fileVersion.categories';
     }
 
+    /**
+     * Extension point to append relations to target group relation if it is not direct linked.
+     *
+     * @param string $alias
+     *
+     * @return string
+     */
     protected function appendTargetGroupRelation(QueryBuilder $queryBuilder, $alias)
     {
         return 'fileVersion.targetGroups';
     }
 
+    /**
+     * Extension point to append datasource.
+     *
+     * @param int|string $datasource
+     * @param bool $includeSubFolders
+     * @param string $alias
+     *
+     * @return array<string, int|string|int[]|string[]> parameters for query
+     */
     protected function appendDatasource($datasource, $includeSubFolders, QueryBuilder $queryBuilder, $alias)
     {
         if (!$includeSubFolders) {
@@ -178,6 +218,14 @@ class MediaDataProviderRepository implements DataProviderRepositoryInterface
         return ['collectionId' => $datasource];
     }
 
+    /**
+     * Append joins to query builder for "findByFilters" function specially for sort-by.
+     *
+     * @param string $alias
+     * @param string $locale
+     *
+     * @return void
+     */
     protected function appendSortByJoins(QueryBuilder $queryBuilder, $alias, $locale)
     {
         $queryBuilder

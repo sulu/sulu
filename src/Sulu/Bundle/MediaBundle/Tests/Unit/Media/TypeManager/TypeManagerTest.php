@@ -12,7 +12,6 @@
 namespace Sulu\Bundle\MediaBundle\Media\TypeManager;
 
 use Doctrine\Persistence\ObjectManager;
-use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\MediaBundle\Entity\MediaType;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
@@ -22,11 +21,6 @@ class TypeManagerTest extends SuluTestCase
      * @var TypeManager
      */
     private $typeManager;
-
-    /**
-     * @var ObjectProphecy
-     */
-    private $em;
 
     private $mediaTypes = [
         [

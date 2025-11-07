@@ -40,18 +40,26 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
  */
 abstract class AbstractMediaController extends AbstractRestController
 {
+    /** @var class-string */
     protected static $collectionEntityName = \Sulu\Bundle\MediaBundle\Entity\Collection::class;
 
+    /** @var class-string */
     protected static $fileVersionEntityName = \Sulu\Bundle\MediaBundle\Entity\FileVersion::class;
 
+    /** @var class-string */
     protected static $fileEntityName = \Sulu\Bundle\MediaBundle\Entity\File::class;
 
+    /** @var class-string */
     protected static $fileVersionMetaEntityName = \Sulu\Bundle\MediaBundle\Entity\FileVersionMeta::class;
 
+    /** @var string */
     protected static $mediaEntityKey = 'media';
 
     protected $fieldDescriptors = null;
 
+    /**
+     * @param class-string $mediaClass
+     */
     public function __construct(
         ViewHandlerInterface $viewHandler,
         TokenStorageInterface $tokenStorage,
@@ -188,7 +196,7 @@ abstract class AbstractMediaController extends AbstractRestController
     /**
      * Returns a view containing all media of an entity.
      *
-     * @param string $entityName
+     * @param class-string $entityName
      * @param string $routeName
      * @param Request $request
      *
@@ -274,7 +282,7 @@ abstract class AbstractMediaController extends AbstractRestController
      *
      * @deprecated
      *
-     * @param string $entityName
+     * @param class-string $entityName
      * @param string $routeName
      * @param Request $request
      * @param string $locale

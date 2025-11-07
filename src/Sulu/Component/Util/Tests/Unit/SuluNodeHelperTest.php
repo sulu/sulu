@@ -15,6 +15,7 @@ use Jackalope\Node;
 use PHPCR\NodeInterface;
 use PHPCR\PropertyInterface;
 use PHPCR\SessionInterface;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactoryInterface;
 use Sulu\Component\Util\SuluNodeHelper;
@@ -22,52 +23,52 @@ use Sulu\Component\Util\SuluNodeHelper;
 class SuluNodeHelperTest extends TestCase
 {
     /**
-     * @var SessionInterface
+     * @var MockObject&SessionInterface
      */
     private $session;
 
     /**
-     * @var StructureMetadataFactoryInterface
+     * @var MockObject&StructureMetadataFactoryInterface
      */
     private $structureMetadataFactory;
 
     /**
-     * @var NodeInterface
+     * @var MockObject&NodeInterface
      */
     private $node;
 
     /**
-     * @var PropertyInterface
+     * @var MockObject&PropertyInterface
      */
     private $property1;
 
     /**
-     * @var PropertyInterface
+     * @var MockObject&PropertyInterface
      */
     private $property2;
 
     /**
-     * @var PropertyInterface
+     * @var MockObject&PropertyInterface
      */
     private $property3;
 
     /**
-     * @var PropertyInterface
+     * @var MockObject&PropertyInterface
      */
     private $property4;
 
     /**
-     * @var PropertyInterface
+     * @var MockObject&PropertyInterface
      */
     private $property5;
 
     /**
-     * @var PropertyInterface
+     * @var MockObject&PropertyInterface
      */
     private $property6;
 
     /**
-     * @var PropertyInterface
+     * @var MockObject&PropertyInterface
      */
     private $property7;
 
@@ -90,6 +91,16 @@ class SuluNodeHelperTest extends TestCase
         $this->property6 = $this->getMockBuilder(PropertyInterface::class)->disableOriginalConstructor()->getMock();
         $this->property7 = $this->getMockBuilder(PropertyInterface::class)->disableOriginalConstructor()->getMock();
 
+        $properties = [
+            1 => $this->property1,
+            2 => $this->property2,
+            3 => $this->property3,
+            4 => $this->property4,
+            5 => $this->property5,
+            6 => $this->property6,
+            7 => $this->property7,
+        ];
+
         $propertyIndex = 1;
         foreach ([
             'i18n:fr-changer' => 'One title',
@@ -100,10 +111,10 @@ class SuluNodeHelperTest extends TestCase
             'i18n:de-seo-changer' => 'Six title',
             'i18n:de-de-changer' => 'Seven title',
         ] as $propertyName => $propertyValue) {
-            $this->{'property' . $propertyIndex}->expects($this->any())
+            $properties[$propertyIndex]->expects($this->any())
                 ->method('getName')
                 ->willReturn($propertyName);
-            $this->{'property' . $propertyIndex}->expects($this->any())
+            $properties[$propertyIndex]->expects($this->any())
                 ->method('getValue')
                 ->willReturn($propertyValue);
             ++$propertyIndex;
@@ -111,15 +122,7 @@ class SuluNodeHelperTest extends TestCase
 
         $this->node->expects($this->any())
             ->method('getProperties')
-            ->willReturn(new \ArrayIterator([
-                $this->property1,
-                $this->property2,
-                $this->property3,
-                $this->property4,
-                $this->property5,
-                $this->property6,
-                $this->property7,
-            ]));
+            ->willReturn(new \ArrayIterator($properties));
 
         $this->helper = new SuluNodeHelper(
             $this->session,
@@ -240,12 +243,19 @@ class SuluNodeHelperTest extends TestCase
 
     public function testSiblingNodes(): void
     {
+        /** @var array<MockObject&Node> $nodes */
+        $nodes = [];
         for ($i = 1; $i <= 3; ++$i) {
-            ${'node' . $i} = $this->getMockBuilder(Node::class)->disableOriginalConstructor()->getMock();
-            ${'node' . $i}->expects($this->any())
+            $nodes[$i] = $this->getMockBuilder(Node::class)->disableOriginalConstructor()->getMock();
+            $nodes[$i]->expects($this->any())
                 ->method('getPath')
                 ->willReturn('/foobar/foobar-' . $i);
         }
+
+        $node1 = $nodes[1];
+        $node2 = $nodes[2];
+        $node3 = $nodes[3];
+
         $iterator = new \ArrayIterator([
             $node1, $node2, $node3,
         ]);
@@ -257,10 +267,12 @@ class SuluNodeHelperTest extends TestCase
             ->willReturn($iterator);
 
         $res = $this->helper->getNextNode($node2);
+        $this->assertNotNull($res);
         $this->assertSame($node3->getPath(), $res->getPath());
 
         $iterator->rewind();
         $res = $this->helper->getPreviousNode($node2);
+        $this->assertNotNull($res);
         $this->assertSame($node1->getPath(), $res->getPath());
     }
 

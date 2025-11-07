@@ -72,8 +72,11 @@ class HtmlTagExtractorTest extends TestCase
         ];
     }
 
+    /**
+     * @param array<string, int> $counts
+     */
     #[\PHPUnit\Framework\Attributes\DataProvider('provideMultipleTags')]
-    public function testExtractAll($html, array $counts): void
+    public function testExtractAll(string $html, array $counts, int $count): void
     {
         $extractor = new HtmlTagExtractor('sulu');
         $result = $extractor->extract($html);
@@ -84,8 +87,11 @@ class HtmlTagExtractorTest extends TestCase
         }
     }
 
+    /**
+     * @param array<string, int> $counts
+     */
     #[\PHPUnit\Framework\Attributes\DataProvider('provideMultipleTags')]
-    public function testCount($html, array $counts, $count): void
+    public function testCount(string $html, array $counts, int $count): void
     {
         $extractor = new HtmlTagExtractor('sulu');
 

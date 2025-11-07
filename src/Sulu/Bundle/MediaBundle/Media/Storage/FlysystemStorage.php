@@ -16,7 +16,7 @@ use League\Flysystem\FileExistsException;
 use League\Flysystem\FileNotFoundException;
 use League\Flysystem\FilesystemInterface;
 use Sulu\Bundle\MediaBundle\Media\Exception\FilenameAlreadyExistsException;
-use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyMediaNotFoundException;
+use Symfony\Component\Filesystem\Exception\IOException;
 
 abstract class FlysystemStorage implements StorageInterface
 {
@@ -57,7 +57,7 @@ abstract class FlysystemStorage implements StorageInterface
         try {
             return $this->filesystem->readStream($filePath);
         } catch (FileNotFoundException $exception) {
-            throw new ImageProxyMediaNotFoundException(\sprintf('Original media at path "%s" not found', $filePath));
+            throw new IOException(\sprintf('Failed to open file with path "%s"', $filePath), path: $filePath);
         }
     }
 

@@ -23,7 +23,6 @@ use Sulu\Bundle\CategoryBundle\Entity\KeywordRepositoryInterface;
 use Sulu\Bundle\CategoryBundle\Exception\KeywordIsMultipleReferencedException;
 use Sulu\Bundle\CategoryBundle\Exception\KeywordNotUniqueException;
 use Sulu\Component\Rest\AbstractRestController;
-use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilder;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactoryInterface;
 use Sulu\Component\Rest\ListBuilder\ListRepresentation;
 use Sulu\Component\Rest\ListBuilder\Metadata\FieldDescriptorFactoryInterface;
@@ -84,7 +83,6 @@ class KeywordController extends AbstractRestController implements ClassResourceI
 
         $fieldDescriptor = $this->fieldDescriptorFactory->getFieldDescriptors('category_keywords');
 
-        /** @var DoctrineListBuilder $listBuilder */
         $listBuilder = $this->listBuilderFactory->create($this->keywordClass);
         $this->restHelper->initializeListBuilder($listBuilder, $fieldDescriptor);
 
@@ -99,7 +97,7 @@ class KeywordController extends AbstractRestController implements ClassResourceI
         $listBuilder->where($fieldDescriptor['locale'], $locale);
         $listBuilder->where(
             $fieldDescriptor['categoryTranslationIds'],
-            $categoryTranslation
+            $categoryTranslation->getId()
         );
 
         // should eliminate duplicates

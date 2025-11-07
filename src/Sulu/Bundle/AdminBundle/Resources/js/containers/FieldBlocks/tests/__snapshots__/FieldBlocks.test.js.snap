@@ -5,20 +5,34 @@ exports[`Render block with schema 1`] = `
   class="blocks"
 >
   <div
-    class="selectMultipleButtonContainer"
+    class="blockCollectionActionButtonContainer"
   >
     <button
-      class="selectMultipleButton"
+      class="blockCollectionActionButton"
       type="button"
     >
       <span
-        aria-label="su-check-circle"
-        class="su-check-circle selectMultipleButtonIcon"
+        aria-label="su-check"
+        class="su-check blockCollectionActionButtonIcon"
       />
       <span
-        class="selectMultipleButtonText"
+        class="blockCollectionActionButtonText"
       >
         sulu_admin.select_multiple_blocks
+      </span>
+    </button>
+    <button
+      class="blockCollectionActionButton"
+      type="button"
+    >
+      <span
+        aria-label="su-collapse-vertical"
+        class="su-collapse-vertical blockCollectionActionButtonIcon"
+      />
+      <span
+        class="blockCollectionActionButtonText"
+      >
+        sulu_admin.collapse_all_blocks
       </span>
     </button>
   </div>
@@ -46,9 +60,6 @@ exports[`Render block with schema 1`] = `
         <header
           class="header"
         >
-          <div
-            class="icons"
-          />
           <div
             class="iconButtons"
           >
@@ -175,9 +186,6 @@ exports[`Render block with schema 1`] = `
           class="header"
         >
           <div
-            class="icons"
-          />
-          <div
             class="iconButtons"
           >
             <button
@@ -293,20 +301,34 @@ exports[`Render block with schema and error on fields already being modified 1`]
   class="blocks"
 >
   <div
-    class="selectMultipleButtonContainer"
+    class="blockCollectionActionButtonContainer"
   >
     <button
-      class="selectMultipleButton"
+      class="blockCollectionActionButton"
       type="button"
     >
       <span
-        aria-label="su-check-circle"
-        class="su-check-circle selectMultipleButtonIcon"
+        aria-label="su-check"
+        class="su-check blockCollectionActionButtonIcon"
       />
       <span
-        class="selectMultipleButtonText"
+        class="blockCollectionActionButtonText"
       >
         sulu_admin.select_multiple_blocks
+      </span>
+    </button>
+    <button
+      class="blockCollectionActionButton"
+      type="button"
+    >
+      <span
+        aria-label="su-collapse-vertical"
+        class="su-collapse-vertical blockCollectionActionButtonIcon"
+      />
+      <span
+        class="blockCollectionActionButtonText"
+      >
+        sulu_admin.collapse_all_blocks
       </span>
     </button>
   </div>
@@ -334,9 +356,6 @@ exports[`Render block with schema and error on fields already being modified 1`]
         <header
           class="header"
         >
-          <div
-            class="icons"
-          />
           <div
             class="iconButtons"
           >
@@ -433,9 +452,6 @@ exports[`Render block with schema and error on fields already being modified 1`]
         <header
           class="header"
         >
-          <div
-            class="icons"
-          />
           <div
             class="iconButtons"
           >
@@ -536,9 +552,6 @@ exports[`Render block with schema and error on fields already being modified 1`]
           class="header"
         >
           <div
-            class="icons"
-          />
-          <div
             class="iconButtons"
           >
             <button
@@ -625,20 +638,34 @@ exports[`Render block with schema and error on fields already being modified 2`]
   class="blocks"
 >
   <div
-    class="selectMultipleButtonContainer"
+    class="blockCollectionActionButtonContainer"
   >
     <button
-      class="selectMultipleButton"
+      class="blockCollectionActionButton"
       type="button"
     >
       <span
-        aria-label="su-check-circle"
-        class="su-check-circle selectMultipleButtonIcon"
+        aria-label="su-check"
+        class="su-check blockCollectionActionButtonIcon"
       />
       <span
-        class="selectMultipleButtonText"
+        class="blockCollectionActionButtonText"
       >
         sulu_admin.select_multiple_blocks
+      </span>
+    </button>
+    <button
+      class="blockCollectionActionButton"
+      type="button"
+    >
+      <span
+        aria-label="su-collapse-vertical"
+        class="su-collapse-vertical blockCollectionActionButtonIcon"
+      />
+      <span
+        class="blockCollectionActionButtonText"
+      >
+        sulu_admin.collapse_all_blocks
       </span>
     </button>
   </div>
@@ -666,9 +693,6 @@ exports[`Render block with schema and error on fields already being modified 2`]
         <header
           class="header"
         >
-          <div
-            class="icons"
-          />
           <div
             class="iconButtons"
           >
@@ -765,9 +789,6 @@ exports[`Render block with schema and error on fields already being modified 2`]
         <header
           class="header"
         >
-          <div
-            class="icons"
-          />
           <div
             class="iconButtons"
           >
@@ -868,9 +889,6 @@ exports[`Render block with schema and error on fields already being modified 2`]
           class="header"
         >
           <div
-            class="icons"
-          />
-          <div
             class="iconButtons"
           >
             <button
@@ -960,20 +978,34 @@ exports[`Render collapsed blocks with block previews 1`] = `
   class="blocks"
 >
   <div
-    class="selectMultipleButtonContainer"
+    class="blockCollectionActionButtonContainer"
   >
     <button
-      class="selectMultipleButton"
+      class="blockCollectionActionButton"
       type="button"
     >
       <span
-        aria-label="su-check-circle"
-        class="su-check-circle selectMultipleButtonIcon"
+        aria-label="su-check"
+        class="su-check blockCollectionActionButtonIcon"
       />
       <span
-        class="selectMultipleButtonText"
+        class="blockCollectionActionButtonText"
       >
         sulu_admin.select_multiple_blocks
+      </span>
+    </button>
+    <button
+      class="blockCollectionActionButton"
+      type="button"
+    >
+      <span
+        aria-label="su-expand-vertical"
+        class="su-expand-vertical blockCollectionActionButtonIcon"
+      />
+      <span
+        class="blockCollectionActionButtonText"
+      >
+        sulu_admin.expand_all_blocks
       </span>
     </button>
   </div>
@@ -1118,20 +1150,34 @@ exports[`Render collapsed blocks with block previews 2`] = `
   class="blocks"
 >
   <div
-    class="selectMultipleButtonContainer"
+    class="blockCollectionActionButtonContainer"
   >
     <button
-      class="selectMultipleButton"
+      class="blockCollectionActionButton"
       type="button"
     >
       <span
-        aria-label="su-check-circle"
-        class="su-check-circle selectMultipleButtonIcon"
+        aria-label="su-check"
+        class="su-check blockCollectionActionButtonIcon"
       />
       <span
-        class="selectMultipleButtonText"
+        class="blockCollectionActionButtonText"
       >
         sulu_admin.select_multiple_blocks
+      </span>
+    </button>
+    <button
+      class="blockCollectionActionButton"
+      type="button"
+    >
+      <span
+        aria-label="su-expand-vertical"
+        class="su-expand-vertical blockCollectionActionButtonIcon"
+      />
+      <span
+        class="blockCollectionActionButtonText"
+      >
+        sulu_admin.expand_all_blocks
       </span>
     </button>
   </div>
@@ -1159,9 +1205,6 @@ exports[`Render collapsed blocks with block previews 2`] = `
         <header
           class="header"
         >
-          <div
-            class="icons"
-          />
           <div
             class="type"
           >
@@ -1223,9 +1266,6 @@ exports[`Render collapsed blocks with block previews 2`] = `
         <header
           class="header"
         >
-          <div
-            class="icons"
-          />
           <div
             class="type"
           >
@@ -1278,20 +1318,34 @@ exports[`Render collapsed blocks with block previews and sections 1`] = `
   class="blocks"
 >
   <div
-    class="selectMultipleButtonContainer"
+    class="blockCollectionActionButtonContainer"
   >
     <button
-      class="selectMultipleButton"
+      class="blockCollectionActionButton"
       type="button"
     >
       <span
-        aria-label="su-check-circle"
-        class="su-check-circle selectMultipleButtonIcon"
+        aria-label="su-check"
+        class="su-check blockCollectionActionButtonIcon"
       />
       <span
-        class="selectMultipleButtonText"
+        class="blockCollectionActionButtonText"
       >
         sulu_admin.select_multiple_blocks
+      </span>
+    </button>
+    <button
+      class="blockCollectionActionButton"
+      type="button"
+    >
+      <span
+        aria-label="su-expand-vertical"
+        class="su-expand-vertical blockCollectionActionButtonIcon"
+      />
+      <span
+        class="blockCollectionActionButtonText"
+      >
+        sulu_admin.expand_all_blocks
       </span>
     </button>
   </div>
@@ -1319,9 +1373,6 @@ exports[`Render collapsed blocks with block previews and sections 1`] = `
         <header
           class="header"
         >
-          <div
-            class="icons"
-          />
           <div
             class="type"
           >
@@ -1381,9 +1432,6 @@ exports[`Render collapsed blocks with block previews and sections 1`] = `
           class="header"
         >
           <div
-            class="icons"
-          />
-          <div
             class="type"
           >
             Default
@@ -1432,20 +1480,34 @@ exports[`Render collapsed blocks with block previews without tags 1`] = `
   class="blocks"
 >
   <div
-    class="selectMultipleButtonContainer"
+    class="blockCollectionActionButtonContainer"
   >
     <button
-      class="selectMultipleButton"
+      class="blockCollectionActionButton"
       type="button"
     >
       <span
-        aria-label="su-check-circle"
-        class="su-check-circle selectMultipleButtonIcon"
+        aria-label="su-check"
+        class="su-check blockCollectionActionButtonIcon"
       />
       <span
-        class="selectMultipleButtonText"
+        class="blockCollectionActionButtonText"
       >
         sulu_admin.select_multiple_blocks
+      </span>
+    </button>
+    <button
+      class="blockCollectionActionButton"
+      type="button"
+    >
+      <span
+        aria-label="su-expand-vertical"
+        class="su-expand-vertical blockCollectionActionButtonIcon"
+      />
+      <span
+        class="blockCollectionActionButtonText"
+      >
+        sulu_admin.expand_all_blocks
       </span>
     </button>
   </div>
@@ -1473,9 +1535,6 @@ exports[`Render collapsed blocks with block previews without tags 1`] = `
         <header
           class="header"
         >
-          <div
-            class="icons"
-          />
           <div
             class="type"
           >
@@ -1537,9 +1596,6 @@ exports[`Render collapsed blocks with block previews without tags 1`] = `
         <header
           class="header"
         >
-          <div
-            class="icons"
-          />
           <div
             class="type"
           >
@@ -1592,20 +1648,34 @@ exports[`Render collapsed blocks with block previews without tags and with secti
   class="blocks"
 >
   <div
-    class="selectMultipleButtonContainer"
+    class="blockCollectionActionButtonContainer"
   >
     <button
-      class="selectMultipleButton"
+      class="blockCollectionActionButton"
       type="button"
     >
       <span
-        aria-label="su-check-circle"
-        class="su-check-circle selectMultipleButtonIcon"
+        aria-label="su-check"
+        class="su-check blockCollectionActionButtonIcon"
       />
       <span
-        class="selectMultipleButtonText"
+        class="blockCollectionActionButtonText"
       >
         sulu_admin.select_multiple_blocks
+      </span>
+    </button>
+    <button
+      class="blockCollectionActionButton"
+      type="button"
+    >
+      <span
+        aria-label="su-expand-vertical"
+        class="su-expand-vertical blockCollectionActionButtonIcon"
+      />
+      <span
+        class="blockCollectionActionButtonText"
+      >
+        sulu_admin.expand_all_blocks
       </span>
     </button>
   </div>
@@ -1633,9 +1703,6 @@ exports[`Render collapsed blocks with block previews without tags and with secti
         <header
           class="header"
         >
-          <div
-            class="icons"
-          />
           <div
             class="type"
           >
@@ -1697,9 +1764,6 @@ exports[`Render collapsed blocks with block previews without tags and with secti
         <header
           class="header"
         >
-          <div
-            class="icons"
-          />
           <div
             class="type"
           >

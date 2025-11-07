@@ -107,7 +107,6 @@ class BlockProperty extends Property implements BlockPropertyInterface
                 $type->setSettings($item['settings']);
             }
 
-            /** @var PropertyInterface $subProperty */
             foreach ($type->getChildProperties() as $subProperty) {
                 if (!isset($item[$subProperty->getName()])) {
                     continue;

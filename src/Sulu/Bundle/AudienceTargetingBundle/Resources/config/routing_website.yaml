@@ -1,0 +1,7 @@
+sulu_audience_targeting.target_group:
+    path: "%sulu_audience_targeting.url%"
+    controller: sulu_audience_targeting.target_group_evaluation_controller::targetGroupAction
+
+sulu_audience_targeting.target_group_hit:
+    path: "%sulu_audience_targeting.hit.url%"
+    controller: sulu_audience_targeting.target_group_evaluation_controller::targetGroupHitAction

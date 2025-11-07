@@ -1,0 +1,48 @@
+# Analytics
+sulu_website.cget_webspace_analytics:
+    path: '/webspaces/{webspace}/analytics.{_format}'
+    methods: GET
+    controller: 'sulu_website.analytics_controller::cgetAction'
+    format: json
+    requirements:
+        _format: json|csv
+
+sulu_website.get_webspace_analytics:
+    path: '/webspaces/{webspace}/analytics/{id}.{_format}'
+    methods: GET
+    controller: 'sulu_website.analytics_controller::getAction'
+    format: json
+    requirements:
+        _format: json|csv
+
+sulu_website.post_webspace_analytics:
+    path: '/webspaces/{webspace}/analytics.{_format}'
+    methods: POST
+    controller: 'sulu_website.analytics_controller::postAction'
+    format: json
+    requirements:
+        _format: json|csv
+
+sulu_website.put_webspace_analytics:
+    path: '/webspaces/{webspace}/analytics/{id}.{_format}'
+    methods: PUT
+    controller: 'sulu_website.analytics_controller::putAction'
+    format: json
+    requirements:
+        _format: json|csv
+
+sulu_website.delete_webspace_analytics:
+    path: '/webspaces/{webspace}/analytics/{id}.{_format}'
+    methods: DELETE
+    controller: 'sulu_website.analytics_controller::deleteAction'
+    format: json
+    requirements:
+        _format: json|csv
+
+sulu_website.cdelete_webspace_analytics:
+    path: '/webspaces/{webspace}/analytics.{_format}'
+    methods: DELETE
+    controller: 'sulu_website.analytics_controller::cdeleteAction'
+    format: json
+    requirements:
+        _format: json|csv

@@ -67,7 +67,7 @@ class CopyLocaleSubscriberTest extends SubscriberTestCase
 
     public function testHandleCopyLocale(): void
     {
-        /** @var CopyLocaleEvent|ObjectProphecy $event */
+        /** @var ObjectProphecy<CopyLocaleEvent> $event */
         $event = $this->prophesize(CopyLocaleEvent::class);
         $event->getLocale()->willReturn('en');
         $event->getDestLocale()->willReturn('de');
@@ -80,11 +80,11 @@ class CopyLocaleSubscriberTest extends SubscriberTestCase
             'bar' => 'baz',
         ];
 
-        /** @var StructureInterface|ObjectProphecy $structure */
+        /** @var ObjectProphecy<StructureInterface> $structure */
         $structure = $this->prophesize(StructureInterface::class);
         $structure->toArray()->willReturn($structureData);
 
-        /** @var PageDocument|ObjectProphecy $document */
+        /** @var ObjectProphecy<PageDocument> $document */
         $document = $this->prophesize(PageDocument::class);
         $document->getUuid()->willReturn('page-uuid');
         $document->getWebspaceName()->willReturn('sulu_io');
@@ -95,20 +95,20 @@ class CopyLocaleSubscriberTest extends SubscriberTestCase
 
         $event->getDocument()->willReturn($document->reveal());
 
-        /** @var PageDocument|ObjectProphecy $parentDocument */
+        /** @var ObjectProphecy<PageDocument> $parentDocument */
         $parentDocument = $this->prophesize(PageDocument::class);
         $this->documentInspector->getParent($document->reveal())->willReturn($parentDocument->reveal());
         $this->documentInspector->getUuid($parentDocument->reveal())->willReturn('parent-page-uuid');
 
-        /** @var ResourceLocatorStrategyInterface|ObjectProphecy $resourceLocatorStrategy */
+        /** @var ObjectProphecy<ResourceLocatorStrategyInterface> $resourceLocatorStrategy */
         $resourceLocatorStrategy = $this->prophesize(ResourceLocatorStrategyInterface::class);
         $this->resourceLocatorStrategyPool->getStrategyByWebspaceKey('sulu_io')->willReturn($resourceLocatorStrategy->reveal());
 
-        /** @var PageDocument|ObjectProphecy $destDocument */
+        /** @var ObjectProphecy<PageDocument> $destDocument */
         $destDocument = $this->prophesize(PageDocument::class);
         $this->documentManager->find('page-uuid', 'de')->willReturn($destDocument->reveal());
 
-        /** @var StructureInterface|ObjectProphecy $destStructure */
+        /** @var ObjectProphecy<StructureInterface> $destStructure */
         $destStructure = $this->prophesize(StructureInterface::class);
 
         $destDocument->setLocale('de')->shouldBeCalled();
@@ -136,7 +136,7 @@ class CopyLocaleSubscriberTest extends SubscriberTestCase
 
     public function testHandleCopyLocalePageTreeRouteNonArrayRoutePath(): void
     {
-        /** @var CopyLocaleEvent|ObjectProphecy $event */
+        /** @var ObjectProphecy<CopyLocaleEvent> $event */
         $event = $this->prophesize(CopyLocaleEvent::class);
         $event->getLocale()->willReturn('en');
         $event->getDestLocale()->willReturn('de');
@@ -146,15 +146,15 @@ class CopyLocaleSubscriberTest extends SubscriberTestCase
             'routePath' => 'test',
         ];
 
-        /** @var StructureInterface|ObjectProphecy $structure */
+        /** @var ObjectProphecy<StructureInterface> $structure */
         $structure = $this->prophesize(StructureInterface::class);
         $structure->toArray()->willReturn($structureData);
 
-        /** @var PageDocument|ObjectProphecy $document */
+        /** @var ObjectProphecy<PageDocument> $document */
         $document = $this->prophesize(PageDocument::class);
         $document->getStructure()->willReturn($structure->reveal());
 
-        /** @var RoutableBehavior|ObjectProphecy $destDocument */
+        /** @var ObjectProphecy<RoutableBehavior> $destDocument */
         $destDocument = $this->prophesize(RoutableBehavior::class);
 
         $structure = $this->subscriber->checkPageTreeRoute($destDocument->reveal(), $document->reveal(), 'de');
@@ -168,7 +168,7 @@ class CopyLocaleSubscriberTest extends SubscriberTestCase
 
     public function testHandleCopyLocalePageTreeRoute(): void
     {
-        /** @var CopyLocaleEvent|ObjectProphecy $event */
+        /** @var ObjectProphecy<CopyLocaleEvent> $event */
         $event = $this->prophesize(CopyLocaleEvent::class);
         $event->getLocale()->willReturn('en');
         $event->getDestLocale()->willReturn('de');
@@ -185,15 +185,15 @@ class CopyLocaleSubscriberTest extends SubscriberTestCase
             ],
         ];
 
-        /** @var StructureInterface|ObjectProphecy $structure */
+        /** @var ObjectProphecy<StructureInterface> $structure */
         $structure = $this->prophesize(StructureInterface::class);
         $structure->toArray()->willReturn($structureData);
 
-        /** @var PageDocument|ObjectProphecy $document */
+        /** @var ObjectProphecy<PageDocument> $document */
         $document = $this->prophesize(PageDocument::class);
         $document->getStructure()->willReturn($structure->reveal());
 
-        /** @var RoutableBehavior|ObjectProphecy $destDocument */
+        /** @var ObjectProphecy<RoutableBehavior> $destDocument */
         $destDocument = $this->prophesize(RoutableBehavior::class);
         $routeInterface = $this->prophesize(RouteInterface::class);
         $destDocument->setRoutePath('/new')->shouldBeCalled();
@@ -217,7 +217,7 @@ class CopyLocaleSubscriberTest extends SubscriberTestCase
 
     public function testHandleCopyLocalePageTreeRouteParentNotPublished(): void
     {
-        /** @var CopyLocaleEvent|ObjectProphecy $event */
+        /** @var ObjectProphecy<CopyLocaleEvent> $event */
         $event = $this->prophesize(CopyLocaleEvent::class);
         $event->getLocale()->willReturn('en');
         $event->getDestLocale()->willReturn('de');
@@ -234,13 +234,13 @@ class CopyLocaleSubscriberTest extends SubscriberTestCase
             ],
         ];
 
-        /** @var StructureInterface|ObjectProphecy $structure */
+        /** @var ObjectProphecy<StructureInterface> $structure */
         $structure = $this->prophesize(StructureInterface::class);
         $structure->toArray()->willReturn($structureData);
         $propertyValue = new PropertyValue('url', '/destParentPageUrl');
         $structure->getProperty('url')->willReturn($propertyValue);
 
-        /** @var PageDocument|ObjectProphecy $document */
+        /** @var ObjectProphecy<PageDocument> $document */
         $document = $this->prophesize(PageDocument::class);
 
         $document->getStructure()->willReturn($structure->reveal());
@@ -249,7 +249,7 @@ class CopyLocaleSubscriberTest extends SubscriberTestCase
         $pageDocument->getStructure()->willReturn($structure->reveal());
         $this->documentManager->find('2ad86c23-04b7-41e0-b2bf-086b7d43d4a2', 'de')->willReturn($pageDocument->reveal());
 
-        /** @var RoutableBehavior|ObjectProphecy $destDocument */
+        /** @var ObjectProphecy<RoutableBehavior> $destDocument */
         $destDocument = $this->prophesize(RoutableBehavior::class);
         $routeInterface = $this->prophesize(RouteInterface::class);
         $destDocument->setRoutePath('/destParentPageUrl/new')->shouldBeCalled();
@@ -273,7 +273,7 @@ class CopyLocaleSubscriberTest extends SubscriberTestCase
 
     public function testHandleCopyLocalePageTreeRouteParent(): void
     {
-        /** @var CopyLocaleEvent|ObjectProphecy $event */
+        /** @var ObjectProphecy<CopyLocaleEvent> $event */
         $event = $this->prophesize(CopyLocaleEvent::class);
         $event->getLocale()->willReturn('en');
         $event->getDestLocale()->willReturn('de');
@@ -290,11 +290,11 @@ class CopyLocaleSubscriberTest extends SubscriberTestCase
             ],
         ];
 
-        /** @var StructureInterface|ObjectProphecy $structure */
+        /** @var ObjectProphecy<StructureInterface> $structure */
         $structure = $this->prophesize(StructureInterface::class);
         $structure->toArray()->willReturn($structureData);
 
-        /** @var PageDocument|ObjectProphecy $document */
+        /** @var ObjectProphecy<PageDocument> $document */
         $document = $this->prophesize(PageDocument::class);
 
         $document->getStructure()->willReturn($structure->reveal());
@@ -309,7 +309,7 @@ class CopyLocaleSubscriberTest extends SubscriberTestCase
         $pageDocument->getStructure()->willReturn($structureInterface->reveal());
         $this->documentManager->find('2ad86c23-04b7-41e0-b2bf-086b7d43d4a2', 'de')->willReturn($pageDocument->reveal());
 
-        /** @var RoutableBehavior|ObjectProphecy $destDocument */
+        /** @var ObjectProphecy<RoutableBehavior> $destDocument */
         $destDocument = $this->prophesize(RoutableBehavior::class);
         $routeInterface = $this->prophesize(RouteInterface::class);
         $destDocument->setRoutePath('/overview/new')->shouldBeCalled();
@@ -333,7 +333,7 @@ class CopyLocaleSubscriberTest extends SubscriberTestCase
 
     public function testHandleCopyLocaleOnNotExistingRoute(): void
     {
-        /** @var CopyLocaleEvent|ObjectProphecy $event */
+        /** @var ObjectProphecy<CopyLocaleEvent> $event */
         $event = $this->prophesize(CopyLocaleEvent::class);
         $event->getLocale()->willReturn('en');
         $event->getDestLocale()->willReturn('de');
@@ -350,15 +350,15 @@ class CopyLocaleSubscriberTest extends SubscriberTestCase
             ],
         ];
 
-        /** @var StructureInterface|ObjectProphecy $structure */
+        /** @var ObjectProphecy<StructureInterface> $structure */
         $structure = $this->prophesize(StructureInterface::class);
         $structure->toArray()->willReturn($structureData);
 
-        /** @var PageDocument|ObjectProphecy $document */
+        /** @var ObjectProphecy<PageDocument> $document */
         $document = $this->prophesize(PageDocument::class);
         $document->getStructure()->willReturn($structure->reveal());
 
-        /** @var RoutableBehavior|ObjectProphecy $destDocument */
+        /** @var ObjectProphecy<RoutableBehavior> $destDocument */
         $destDocument = $this->prophesize(RoutableBehavior::class);
         $destDocument->setRoutePath('/new')->shouldBeCalled();
         $destDocument->getRoute()->willReturn(null);
@@ -381,7 +381,7 @@ class CopyLocaleSubscriberTest extends SubscriberTestCase
 
     public function testHandleCopyLocaleOnExistingRoute(): void
     {
-        /** @var CopyLocaleEvent|ObjectProphecy $event */
+        /** @var ObjectProphecy<CopyLocaleEvent> $event */
         $event = $this->prophesize(CopyLocaleEvent::class);
         $event->getLocale()->willReturn('en');
         $event->getDestLocale()->willReturn('de');
@@ -398,15 +398,15 @@ class CopyLocaleSubscriberTest extends SubscriberTestCase
             ],
         ];
 
-        /** @var StructureInterface|ObjectProphecy $structure */
+        /** @var ObjectProphecy<StructureInterface> $structure */
         $structure = $this->prophesize(StructureInterface::class);
         $structure->toArray()->willReturn($structureData);
 
-        /** @var PageDocument|ObjectProphecy $document */
+        /** @var ObjectProphecy<PageDocument> $document */
         $document = $this->prophesize(PageDocument::class);
         $document->getStructure()->willReturn($structure->reveal());
 
-        /** @var RoutableBehavior|ObjectProphecy $destDocument */
+        /** @var ObjectProphecy<RoutableBehavior> $destDocument */
         $destDocument = $this->prophesize(RoutableBehavior::class);
         $destDocument->setRoutePath('/new')->shouldBeCalled();
         $route = new Route();
@@ -434,7 +434,7 @@ class CopyLocaleSubscriberTest extends SubscriberTestCase
 
     public function testHandleCopyLocaleOnExistingRouteWrongLocale(): void
     {
-        /** @var CopyLocaleEvent|ObjectProphecy $event */
+        /** @var ObjectProphecy<CopyLocaleEvent> $event */
         $event = $this->prophesize(CopyLocaleEvent::class);
         $event->getLocale()->willReturn('en');
         $event->getDestLocale()->willReturn('de');
@@ -451,15 +451,15 @@ class CopyLocaleSubscriberTest extends SubscriberTestCase
             ],
         ];
 
-        /** @var StructureInterface|ObjectProphecy $structure */
+        /** @var ObjectProphecy<StructureInterface> $structure */
         $structure = $this->prophesize(StructureInterface::class);
         $structure->toArray()->willReturn($structureData);
 
-        /** @var PageDocument|ObjectProphecy $document */
+        /** @var ObjectProphecy<PageDocument> $document */
         $document = $this->prophesize(PageDocument::class);
         $document->getStructure()->willReturn($structure->reveal());
 
-        /** @var RoutableBehavior|ObjectProphecy $destDocument */
+        /** @var ObjectProphecy<RoutableBehavior> $destDocument */
         $destDocument = $this->prophesize(RoutableBehavior::class);
         $destDocument->setRoutePath('/new')->shouldBeCalled();
         $route = new Route();

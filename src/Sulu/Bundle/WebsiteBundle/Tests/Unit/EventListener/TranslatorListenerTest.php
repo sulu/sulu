@@ -21,6 +21,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Translation\Translator;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class TranslatorListenerTest extends TestCase
 {
@@ -52,6 +53,25 @@ class TranslatorListenerTest extends TestCase
 
         $translator->setLocale('de_AT')->shouldBeCalled();
 
+        $eventListener->onKernelRequest($event);
+    }
+
+    public function testOnKernelRequestWithPseudolocalization(): void
+    {
+        // Asserting that this test should not crash (default behaviour)
+        $this->expectNotToPerformAssertions();
+
+        $translator = $this->prophesize(TranslatorInterface::class);
+        $request = new Request();
+        $localization = new Localization('de', 'at');
+        $requestAttributes = new RequestAttributes([
+            'localization' => $localization,
+        ]);
+        $request->attributes->set('_sulu', $requestAttributes);
+
+        $event = $this->createRequestEvent($request);
+
+        $eventListener = new TranslatorListener($translator->reveal());
         $eventListener->onKernelRequest($event);
     }
 

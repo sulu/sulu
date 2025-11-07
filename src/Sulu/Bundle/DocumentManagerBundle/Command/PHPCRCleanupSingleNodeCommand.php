@@ -155,6 +155,8 @@ class PHPCRCleanupSingleNodeCommand extends Command
 
                 $this->documentManager->clear();
             } catch (\Exception $e) {
+                \fwrite(\STDERR, (string) $e);
+
                 return self::INVALID;
             }
 
@@ -243,7 +245,11 @@ class PHPCRCleanupSingleNodeCommand extends Command
             yield true;
         }
 
-        $this->logger->writeln(\sprintf("Removed:\n* %s\n", \implode("\n* ", $removedProperties)));
+        if ([] !== $removedProperties) {
+            $this->logger->writeln(\sprintf("Removed properties:\n* %s\n", \implode("\n* ", $removedProperties)));
+        } else {
+            $this->logger->writeln("No properties to remove.\n");
+        }
     }
 
     private function getOptionsResolver(string $eventName): OptionsResolver

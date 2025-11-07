@@ -28,8 +28,7 @@ abstract class BaseTestCase extends KernelTestCase
 [mix:test] > mix:referenceable mix
 [mix:mapping5] > mix:referenceable mix
 [mix:mapping10] > mix:referenceable mix
-EOT
-                , true
+EOT, true
             );
         }
 

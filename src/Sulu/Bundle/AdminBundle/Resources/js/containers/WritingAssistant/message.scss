@@ -1,0 +1,69 @@
+.message {
+    box-sizing: border-box;
+    padding: 1rem;
+    background: #fff;
+    border-radius: 8px;
+    line-height: 30px;
+    text-align: left;
+    margin: 16px 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.text {
+    overflow: auto;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    padding: 5px;
+    line-height: 28px;
+    max-height: 300px;
+    resize: vertical;
+    min-height: 40px;
+}
+
+.actions {
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.command {
+    display: flex;
+    font-size: 14px;
+    font-weight: 700;
+    margin: 8px 0;
+}
+
+.expert {
+    border-left: 1px solid #ccc;
+    padding-left: 8px;
+    margin-left: 8px;
+}
+
+.insert-button {
+    min-width: 80px;
+}
+
+.text-editor {
+    :global(.ck-editor__top) {
+        display: none;
+    }
+
+    :global(.ck.ck-content) {
+        border: 0 !important;
+        padding: 5px !important;
+    }
+
+    :global(.ck.ck-content p:nth-child(1)) {
+        margin-top: 0 !important;
+    }
+
+    :global(.ck.ck-content p:last-child) {
+        margin-bottom: 0 !important;
+    }
+
+    :global(.disabled) {
+        opacity: 1 !important;
+    }
+}

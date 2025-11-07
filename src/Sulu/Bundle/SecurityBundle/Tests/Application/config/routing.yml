@@ -1,36 +1,31 @@
 sulu_security:
-    type: rest
-    resource: "@SuluSecurityBundle/Resources/config/routing.yml"
+    resource: "@SuluSecurityBundle/Resources/config/routing.yaml"
     prefix: /security
 
 sulu_security_api:
-    type: rest
-    resource: "@SuluSecurityBundle/Resources/config/routing_api.yml"
+    resource: "@SuluSecurityBundle/Resources/config/routing_api.yaml"
     prefix: /api
 
 sulu_admin:
-    resource: "@SuluAdminBundle/Resources/config/routing.yml"
+    resource: "@SuluAdminBundle/Resources/config/routing.yaml"
     prefix: /admin
 
 sulu_preview:
-    type: rest
-    resource: "@SuluPreviewBundle/Resources/config/routing.yml"
+    resource: "@SuluPreviewBundle/Resources/config/routing.yaml"
     prefix: /admin
 
 sulu_preview_api:
-    type: rest
-    resource: "@SuluPreviewBundle/Resources/config/routing_api.yml"
+    resource: "@SuluPreviewBundle/Resources/config/routing_api.yaml"
     prefix: /admin/api
 
 sulu_preview_public:
-    resource: "@SuluPreviewBundle/Resources/config/routing_public.yml"
+    resource: "@SuluPreviewBundle/Resources/config/routing_public.yaml"
     prefix: /admin/p
 
 sulu_website:
-    type: rest
-    resource: "@SuluWebsiteBundle/Resources/config/routing.yml"
+    resource: "@SuluWebsiteBundle/Resources/config/routing.yaml"
     prefix: /admin
 
 sulu_media:
-    resource: "@SuluMediaBundle/Resources/config/routing.yml"
+    resource: "@SuluMediaBundle/Resources/config/routing.yaml"
     prefix: /admin/media

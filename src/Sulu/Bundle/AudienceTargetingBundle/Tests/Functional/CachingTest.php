@@ -57,7 +57,6 @@ class CachingTest extends SuluTestCase
         $this->assertContains('X-Sulu-Target-Group', $response->getVary());
         $this->assertStringContainsString('miss', $response->headers->get('x-symfony-cache'));
         $this->assertCount(2, $response->headers->getCookies());
-        /** @var Cookie $visitorTargetGroupCookie */
         $visitorTargetGroupCookie = $response->headers->getCookies()[0];
         $this->assertEquals('_svtg', $visitorTargetGroupCookie->getName());
         $this->assertEquals($targetGroup->getId(), $visitorTargetGroupCookie->getValue());

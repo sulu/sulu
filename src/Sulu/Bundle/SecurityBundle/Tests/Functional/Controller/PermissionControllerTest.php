@@ -50,13 +50,18 @@ class PermissionControllerTest extends SuluTestCase
         $this->em->flush();
         $this->em->clear();
 
+        /** @var int $role1Id */
+        $role1Id = $role1->getId();
+        /** @var int $role2Id */
+        $role2Id = $role2->getId();
+
         $this->client->jsonRequest(
             'PUT',
             '/api/permissions?resourceKey=secured_entity&id=2',
             [
                 'permissions' => [
-                    $role1->getId() => ['view' => 'true', 'edit' => 'true'],
-                    $role2->getId() => ['view' => 'true', 'edit' => 'true'],
+                    $role1Id => ['view' => 'true', 'edit' => 'true'],
+                    $role2Id => ['view' => 'true', 'edit' => 'true'],
                 ],
             ]
         );
@@ -68,6 +73,8 @@ class PermissionControllerTest extends SuluTestCase
 
         $response = \json_decode($this->client->getResponse()->getContent(), true);
         $this->assertCount(2, $response['permissions']);
+        /** @var array<int, array<string, bool>> $permissions */
+        $permissions = $response['permissions'];
         $this->assertEquals(
             [
                 'view' => true,
@@ -79,7 +86,7 @@ class PermissionControllerTest extends SuluTestCase
                 'security' => false,
                 'live' => false,
             ],
-            $response['permissions'][$role1->getId()]
+            $permissions[$role1Id]
         );
         $this->assertEquals(
             [
@@ -92,7 +99,7 @@ class PermissionControllerTest extends SuluTestCase
                 'security' => false,
                 'live' => false,
             ],
-            $response['permissions'][$role2->getId()]
+            $permissions[$role2Id]
         );
 
         $this->client->request(
@@ -100,7 +107,7 @@ class PermissionControllerTest extends SuluTestCase
             '/api/permissions?resourceKey=secured_entity&id=2',
             [
                 'permissions' => [
-                    $role1->getId() => ['view' => 'true', 'edit' => 'false'],
+                    $role1Id => ['view' => 'true', 'edit' => 'false'],
                 ],
             ]
         );
@@ -112,6 +119,8 @@ class PermissionControllerTest extends SuluTestCase
 
         $response = \json_decode($this->client->getResponse()->getContent(), true);
         $this->assertCount(1, $response['permissions']);
+        /** @var array<int, array<string, bool>> $permissions2 */
+        $permissions2 = $response['permissions'];
         $this->assertEquals(
             [
                 'view' => true,
@@ -123,7 +132,7 @@ class PermissionControllerTest extends SuluTestCase
                 'security' => false,
                 'live' => false,
             ],
-            $response['permissions'][$role1->getId()]
+            $permissions2[$role1Id]
         );
     }
 
@@ -133,6 +142,11 @@ class PermissionControllerTest extends SuluTestCase
         $role2 = $this->createRole('Role 2');
         $this->em->flush();
         $this->em->clear();
+
+        /** @var int $role1Id */
+        $role1Id = $role1->getId();
+        /** @var int $role2Id */
+        $role2Id = $role2->getId();
 
         $document = $this->documentManager->create('secured_document');
         $document->setTitle('Test');
@@ -146,8 +160,8 @@ class PermissionControllerTest extends SuluTestCase
             '/api/permissions?resourceKey=secured_document&id=' . $document->getUuid(),
             [
                 'permissions' => [
-                    $role1->getId() => ['view' => 'true', 'edit' => 'true'],
-                    $role2->getId() => ['view' => 'true', 'edit' => 'true'],
+                    $role1Id => ['view' => 'true', 'edit' => 'true'],
+                    $role2Id => ['view' => 'true', 'edit' => 'true'],
                 ],
             ]
         );
@@ -159,6 +173,8 @@ class PermissionControllerTest extends SuluTestCase
 
         $response = \json_decode($this->client->getResponse()->getContent(), true);
         $this->assertCount(2, $response['permissions']);
+        /** @var array<int, array<string, bool>> $permissions */
+        $permissions = $response['permissions'];
         $this->assertEquals(
             [
                 'view' => true,
@@ -170,7 +186,7 @@ class PermissionControllerTest extends SuluTestCase
                 'security' => false,
                 'live' => false,
             ],
-            $response['permissions'][$role1->getId()]
+            $permissions[$role1Id]
         );
         $this->assertEquals(
             [
@@ -183,7 +199,7 @@ class PermissionControllerTest extends SuluTestCase
                 'security' => false,
                 'live' => false,
             ],
-            $response['permissions'][$role2->getId()]
+            $permissions[$role2Id]
         );
 
         $this->client->jsonRequest(
@@ -191,7 +207,7 @@ class PermissionControllerTest extends SuluTestCase
             '/api/permissions?resourceKey=secured_document&id=' . $document->getUuid(),
             [
                 'permissions' => [
-                    $role1->getId() => ['view' => 'true', 'edit' => 'false'],
+                    $role1Id => ['view' => 'true', 'edit' => 'false'],
                 ],
             ]
         );

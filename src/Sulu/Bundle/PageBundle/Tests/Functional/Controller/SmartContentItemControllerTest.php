@@ -20,7 +20,6 @@ use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Bundle\SecurityBundle\Entity\UserRole;
 use Sulu\Bundle\TagBundle\Tag\TagInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
-use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\DocumentManager\DocumentInspector;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
@@ -74,11 +73,6 @@ class SmartContentItemControllerTest extends SuluTestCase
     private $tag1;
 
     /**
-     * @var StructureManagerInterface
-     */
-    private $structureManager;
-
-    /**
      * @var DocumentInspector
      */
     private $inspector;
@@ -95,7 +89,6 @@ class SmartContentItemControllerTest extends SuluTestCase
         $this->session = $this->getContainer()->get('doctrine_phpcr')->getConnection();
         $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
         $this->formFactory = $this->getContainer()->get('form.factory');
-        $this->structureManager = $this->getContainer()->get('sulu.content.structure_manager');
         $this->inspector = $this->getContainer()->get('sulu_document_manager.document_inspector');
 
         $this->initOrm();

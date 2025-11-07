@@ -5,20 +5,34 @@ exports[`Should render a fully filled block list 1`] = `
   class="blocks"
 >
   <div
-    class="selectMultipleButtonContainer"
+    class="blockCollectionActionButtonContainer"
   >
     <button
-      class="selectMultipleButton"
+      class="blockCollectionActionButton"
       type="button"
     >
       <span
-        aria-label="su-check-circle"
-        class="su-check-circle selectMultipleButtonIcon"
+        aria-label="su-check"
+        class="su-check blockCollectionActionButtonIcon"
       />
       <span
-        class="selectMultipleButtonText"
+        class="blockCollectionActionButtonText"
       >
         sulu_admin.select_multiple_blocks
+      </span>
+    </button>
+    <button
+      class="blockCollectionActionButton"
+      type="button"
+    >
+      <span
+        aria-label="su-expand-vertical"
+        class="su-expand-vertical blockCollectionActionButtonIcon"
+      />
+      <span
+        class="blockCollectionActionButtonText"
+      >
+        sulu_admin.expand_all_blocks
       </span>
     </button>
   </div>
@@ -140,20 +154,34 @@ exports[`Should render a non-movable block list 1`] = `
   class="blocks"
 >
   <div
-    class="selectMultipleButtonContainer"
+    class="blockCollectionActionButtonContainer"
   >
     <button
-      class="selectMultipleButton"
+      class="blockCollectionActionButton"
       type="button"
     >
       <span
-        aria-label="su-check-circle"
-        class="su-check-circle selectMultipleButtonIcon"
+        aria-label="su-check"
+        class="su-check blockCollectionActionButtonIcon"
       />
       <span
-        class="selectMultipleButtonText"
+        class="blockCollectionActionButtonText"
       >
         sulu_admin.select_multiple_blocks
+      </span>
+    </button>
+    <button
+      class="blockCollectionActionButton"
+      type="button"
+    >
+      <span
+        aria-label="su-collapse-vertical"
+        class="su-collapse-vertical blockCollectionActionButtonIcon"
+      />
+      <span
+        class="blockCollectionActionButtonText"
+      >
+        sulu_admin.collapse_all_blocks
       </span>
     </button>
   </div>

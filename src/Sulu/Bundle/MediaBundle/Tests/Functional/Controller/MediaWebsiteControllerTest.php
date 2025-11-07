@@ -12,7 +12,6 @@
 namespace Sulu\Bundle\MediaBundle\Tests\Functional\Controller;
 
 use Doctrine\ORM\EntityManager;
-use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
 use Sulu\Bundle\MediaBundle\Entity\CollectionType;
@@ -50,16 +49,6 @@ class MediaWebsiteControllerTest extends WebsiteTestCase
      * @var MediaType
      */
     private $imageType;
-
-    /**
-     * @var CategoryInterface
-     */
-    private $category;
-
-    /**
-     * @var CategoryInterface
-     */
-    private $category2;
 
     /**
      * @var string

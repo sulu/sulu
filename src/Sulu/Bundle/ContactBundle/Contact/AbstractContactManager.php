@@ -346,6 +346,8 @@ abstract class AbstractContactManager implements ContactManagerInterface
      * clears all relational data from entity and deletes it.
      *
      * @param DoctrineEntity $entity
+     *
+     * @return void
      */
     public function deleteAllRelations($entity)
     {
@@ -362,6 +364,8 @@ abstract class AbstractContactManager implements ContactManagerInterface
      * deletes all notes that are assigned to entity.
      *
      * @param DoctrineEntity $entity
+     *
+     * @return void
      */
     public function deleteNotes($entity)
     {
@@ -374,6 +378,8 @@ abstract class AbstractContactManager implements ContactManagerInterface
      * deletes all phones that are assigned to entity.
      *
      * @param DoctrineEntity $entity
+     *
+     * @return void
      */
     public function deletePhones($entity)
     {
@@ -386,6 +392,8 @@ abstract class AbstractContactManager implements ContactManagerInterface
      * deletes all faxes that are assigned to entity.
      *
      * @param DoctrineEntity $entity
+     *
+     * @return void
      */
     public function deleteFaxes($entity)
     {
@@ -398,6 +406,8 @@ abstract class AbstractContactManager implements ContactManagerInterface
      * Deletes all social media profiles that are assigned to entity.
      *
      * @param DoctrineEntity $entity
+     *
+     * @return void
      */
     public function deleteSocialMediaProfiles($entity)
     {
@@ -410,6 +420,8 @@ abstract class AbstractContactManager implements ContactManagerInterface
      * deletes all urls that are assigned to entity.
      *
      * @param DoctrineEntity $entity
+     *
+     * @return void
      */
     public function deleteUrls($entity)
     {
@@ -422,6 +434,8 @@ abstract class AbstractContactManager implements ContactManagerInterface
      * deletes all addresses that are assigned to entity.
      *
      * @param DoctrineEntity $entity
+     *
+     * @return void
      */
     public function deleteAddresses($entity)
     {
@@ -438,6 +452,8 @@ abstract class AbstractContactManager implements ContactManagerInterface
      * deletes all emails that are assigned to entity.
      *
      * @param DoctrineEntity $entity
+     *
+     * @return void
      */
     public function deleteEmails($entity)
     {
@@ -448,6 +464,8 @@ abstract class AbstractContactManager implements ContactManagerInterface
 
     /**
      * @param Collection $arrayCollection
+     *
+     * @return void
      */
     protected function deleteAllEntitiesOfCollection($arrayCollection)
     {
@@ -535,6 +553,8 @@ abstract class AbstractContactManager implements ContactManagerInterface
      * @param DoctrineEntity $entity
      * @param bool $force Forces function to return an address if any address is defined
      *                    if no delivery address is defined it will first return the main address then any
+     *
+     * @return Address|null
      */
     public function getAddressByCondition($entity, callable $conditionCallback, $force = false)
     {
@@ -568,6 +588,8 @@ abstract class AbstractContactManager implements ContactManagerInterface
      *
      * @param DoctrineEntity $contact
      * @param array $data
+     *
+     * @return void
      */
     public function addNewContactRelations($contact, $data)
     {
@@ -1066,6 +1088,8 @@ abstract class AbstractContactManager implements ContactManagerInterface
      * @param DoctrineEntity $contact
      * @param array $faxData
      *
+     * @return void
+     *
      * @throws EntityIdAlreadySetException
      * @throws EntityNotFoundException
      */
@@ -1164,6 +1188,8 @@ abstract class AbstractContactManager implements ContactManagerInterface
     /**
      * @param DoctrineEntity $contact
      * @param array $socialMediaProfileData
+     *
+     * @return void
      *
      * @throws EntityIdAlreadySetException
      * @throws EntityNotFoundException
@@ -1311,7 +1337,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
      * Updates the given address.
      *
      * @param Address $address The phone object to update
-     * @param mixed $entry The entry with the new data
+     * @param array<string, mixed> $entry The entry with the new data
      * @param bool $isMain returns if address should be set to main
      *
      * @return bool True if successful, otherwise false
@@ -1330,60 +1356,56 @@ abstract class AbstractContactManager implements ContactManagerInterface
             throw new EntityNotFoundException(self::$addressTypeEntityName, $entry['addressType']);
         }
 
-        if (isset($entry['street'])) {
+        if (\array_key_exists('street', $entry)) {
             $address->setStreet($entry['street']);
         }
-        if (isset($entry['number'])) {
+        if (\array_key_exists('number', $entry)) {
             $address->setNumber($entry['number']);
         }
-        if (isset($entry['zip'])) {
+        if (\array_key_exists('zip', $entry)) {
             $address->setZip($entry['zip']);
         }
-        if (isset($entry['city'])) {
+        if (\array_key_exists('city', $entry)) {
             $address->setCity($entry['city']);
         }
-        if (isset($entry['state'])) {
+        if (\array_key_exists('state', $entry)) {
             $address->setState($entry['state']);
         }
-        if (isset($entry['countryCode'])) {
+        if (\array_key_exists('countryCode', $entry)) {
             $address->setCountryCode($entry['countryCode']);
         }
         if ($addressType) {
             $address->setAddressType($addressType);
         }
-        if (isset($entry['latitude'])) {
+        if (\array_key_exists('latitude', $entry)) {
             $address->setLatitude($entry['latitude'] ?: null);
         }
-        if (isset($entry['longitude'])) {
+        if (\array_key_exists('longitude', $entry)) {
             $address->setLongitude($entry['longitude'] ?: null);
         }
-        if (isset($entry['note'])) {
+        if (\array_key_exists('note', $entry)) {
             $address->setNote($entry['note']);
         }
-        if (isset($entry['title'])) {
+        if (\array_key_exists('title', $entry)) {
             $address->setTitle($entry['title']);
         }
-        if (isset($entry['primaryAddress'])) {
-            $isMain = $this->getBooleanValue($entry['primaryAddress']);
-        } else {
-            $isMain = false;
-        }
-        if (isset($entry['billingAddress'])) {
+        $isMain = $this->getBooleanValue($entry['primaryAddress'] ?? false);
+        if (\array_key_exists('billingAddress', $entry)) {
             $address->setBillingAddress($this->getBooleanValue($entry['billingAddress']));
         }
-        if (isset($entry['deliveryAddress'])) {
+        if (\array_key_exists('deliveryAddress', $entry)) {
             $address->setDeliveryAddress($this->getBooleanValue($entry['deliveryAddress']));
         }
-        if (isset($entry['postboxCity'])) {
+        if (\array_key_exists('postboxCity', $entry)) {
             $address->setPostboxCity($entry['postboxCity']);
         }
-        if (isset($entry['postboxNumber'])) {
+        if (\array_key_exists('postboxNumber', $entry)) {
             $address->setPostboxNumber($entry['postboxNumber']);
         }
-        if (isset($entry['postboxPostcode'])) {
+        if (\array_key_exists('postboxPostcode', $entry)) {
             $address->setPostboxPostcode($entry['postboxPostcode']);
         }
-        if (isset($entry['addition'])) {
+        if (\array_key_exists('addition', $entry)) {
             $address->setAddition($entry['addition']);
         }
 
@@ -1719,6 +1741,8 @@ abstract class AbstractContactManager implements ContactManagerInterface
      * Sets main address.
      *
      * @param Collection<int, AddressRelationEntity> $addresses
+     *
+     * @return void
      */
     protected function checkAndSetMainAddress($addresses)
     {

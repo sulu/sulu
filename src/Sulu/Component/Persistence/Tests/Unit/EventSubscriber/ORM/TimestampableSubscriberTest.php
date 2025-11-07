@@ -37,7 +37,7 @@ class TimestampableSubscriberTest extends TestCase
     private $lifecycleEvent;
 
     /**
-     * @var ObjectProphecy<\stdClass>
+     * @var ObjectProphecy<TimestampableInterface>
      */
     private $timestampableObject;
 
@@ -65,8 +65,7 @@ class TimestampableSubscriberTest extends TestCase
     {
         $this->loadClassMetadataEvent = $this->prophesize(LoadClassMetadataEventArgs::class);
         $this->lifecycleEvent = $this->prophesize(LifecycleEventArgs::class);
-        $this->timestampableObject = $this->prophesize(\stdClass::class)
-            ->willImplement(TimestampableInterface::class);
+        $this->timestampableObject = $this->prophesize(TimestampableInterface::class);
         $this->classMetadata = $this->prophesize(ClassMetadata::class);
         $this->refl = $this->prophesize(\ReflectionClass::class);
         $this->entityManager = $this->prophesize(EntityManager::class);

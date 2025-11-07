@@ -20,8 +20,8 @@ class ImageProxyException extends MediaException
      * @param string $message
      * @param int $code
      */
-    public function __construct($message, $code)
+    public function __construct($message, $code, ?\Throwable $previous = null)
     {
-        parent::__construct($message, $code);
+        parent::__construct($message, $code, $previous);
     }
 }

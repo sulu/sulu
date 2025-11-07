@@ -12,14 +12,13 @@
 namespace Sulu\Bundle\MediaBundle\Command;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Sulu\Bundle\MediaBundle\Entity\File;
-use Sulu\Bundle\MediaBundle\Entity\FileVersion;
-use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
+use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Media\TypeManager\TypeManagerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 #[AsCommand(name: 'sulu:media:type:update', description: 'Update all media type by the set configuration')]
 class MediaTypeUpdateCommand extends Command
@@ -33,43 +32,57 @@ class MediaTypeUpdateCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $em = $this->entityManager;
-        $repo = $em->getRepository(\Sulu\Bundle\MediaBundle\Entity\Media::class);
-        $medias = $repo->findAll();
-        $counter = 0;
-        /** @var MediaInterface $media */
-        foreach ($medias as $media) {
-            /** @var File $file */
-            foreach ($media->getFiles() as $file) {
-                /** @var FileVersion $fileVersion */
-                foreach ($file->getFileVersions() as $fileVersion) {
-                    $mimeType = $fileVersion->getMimeType();
-                    if (null === $mimeType) {
-                        continue;
-                    }
-
-                    if ($fileVersion->getVersion() == $file->getVersion()) {
-                        $mediaTypeId = $this->mediaTypeManager->getMediaType($mimeType);
-                        if ($media->getType()->getId() != $mediaTypeId) {
-                            $oldType = $media->getType();
-                            $newType = $this->mediaTypeManager->get($mediaTypeId);
-                            $media->setType($newType);
-                            $em->persist($media);
-                            ++$counter;
-                            $output->writeln(\sprintf('Media with id <comment>%s</comment> change from type <comment>%s</comment> to <comment>%s</comment>', $media->getId(), $oldType->getName(), $newType->getName()));
-                        }
-                    }
-                }
+        /** @var array<int, array<int>> $updates */
+        $updates = [];
+        foreach ($this->getMimeTypesForAllMedia() as $mediaInfo) {
+            $mediaTypeId = $this->mediaTypeManager->getMediaType($mediaInfo['mimeType']);
+            if ($mediaInfo['type'] != $mediaTypeId) {
+                $updates[$mediaTypeId][] = $mediaInfo['id'];
             }
         }
 
-        if ($counter) {
-            $em->flush();
-            $output->writeln(\sprintf('<info>SUCCESS FULLY UPDATED (%s)</info>', $counter));
-        } else {
-            $output->writeln('<comment>Nothing to update</comment>');
+        $io = new SymfonyStyle($input, $output);
+        if ([] === $updates) {
+            $io->comment('Nothing to update');
+
+            return 0;
         }
 
+        $counter = 0;
+        foreach ($updates as $mediaTypeId => $mediaIds) {
+            $this->entityManager->createQueryBuilder()
+                ->update(Media::class, 'media')
+                ->set('media.type', ':type')
+                ->where('media.id IN (:ids)')
+                ->setParameter('ids', $mediaIds)
+                ->setParameter('type', $mediaTypeId)
+                ->getQuery()
+                ->execute()
+            ;
+
+            $counter += \count($mediaIds);
+        }
+        $io->success(\sprintf('Updated %s media types', $counter));
+
         return 0;
+    }
+
+    /**
+     * @return array<array{id: int, type: int, mimeType: string}>
+     */
+    private function getMimeTypesForAllMedia(): array
+    {
+        /** @var array<array{id: int, type: int, mimeType: string}> $data */
+        $data = $this->entityManager->createQueryBuilder()
+            ->addSelect('media.id', 'IDENTITY(media.type) as type', 'fileVersion.mimeType')
+            ->from('SuluMediaBundle:Media', 'media')
+            ->innerJoin('media.files', 'file')
+            ->innerJoin('file.fileVersions', 'fileVersion', 'WITH', 'fileVersion.version = file.version')
+            ->groupBy('media.id', 'media.type', 'fileVersion.mimeType')
+            ->getQuery()
+            ->getArrayResult()
+        ;
+
+        return $data;
     }
 }

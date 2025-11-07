@@ -17,7 +17,6 @@ use Sulu\Bundle\PageBundle\Document\PageDocument;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Bundle\WebsiteBundle\Sitemap\SitemapContentQueryBuilder;
 use Sulu\Bundle\WebsiteBundle\Sitemap\SitemapGenerator;
-use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\Structure;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
@@ -483,7 +482,6 @@ class ExcerptStructureExtension extends AbstractExtension
     private function initExcerptStructure()
     {
         $excerptStructure = $this->structureManager->getStructure(self::EXCERPT_EXTENSION_NAME);
-        /** @var PropertyInterface $property */
         foreach ($excerptStructure->getProperties() as $property) {
             $this->properties[] = $property->getName();
         }

@@ -49,6 +49,7 @@ import {
     DateTimeFieldTransformer,
     SelectFieldFilterType,
     FolderAdapter,
+    IconAdapter,
     NumberFieldFilterType,
     NumberFieldTransformer,
     SelectionFieldFilterType,
@@ -97,6 +98,7 @@ import {
     TextEditor,
     Url,
     Link,
+    SingleIconSelection,
 } from './containers/Form';
 import {textEditorRegistry} from './containers/TextEditor';
 import Form, {
@@ -113,14 +115,17 @@ import Form, {
     SetUnpublishedToolbarAction as FormSetUnpublishedToolbarAction,
     TypeToolbarAction as FormTypeToolbarAction,
     TogglerToolbarAction as FormTogglerToolbarAction,
+    UpdateFormStoreToolbarAction as FormUpdateFormStoreToolbarAction,
+    ReloadFormStoreToolbarAction as FormReloadFormStoreToolbarAction,
 } from './views/Form';
 import {navigationRegistry} from './containers/Navigation';
 import {smartContentConfigStore} from './containers/SmartContent';
 import PreviewForm from './views/PreviewForm';
 import FormOverlayList from './views/FormOverlayList';
 import {initializeJexl} from './utils/jexl';
-import {ExternalLinkTypeOverlay, LinkTypeOverlay} from './containers/Link';
+import {ExternalLinkTypeOverlay, linkOverlayRegistry, LinkTypeOverlay} from './containers/Link';
 import linkTypeRegistry from './containers/Link/registries/linkTypeRegistry';
+import AiApplication from './containers/AiApplication';
 
 configure({enforceActions: 'observed'});
 
@@ -156,6 +161,7 @@ const FIELD_TYPE_TEXT_LINE = 'text_line';
 const FIELD_TYPE_TIME = 'time';
 const FIELD_TYPE_URL = 'url';
 const FIELD_TYPE_LINK = 'link';
+const FIELD_TYPE_SINGLE_ICON_SELECTION = 'single_icon_selection';
 
 initializer.addUpdateConfigHook('sulu_admin', (config: Object, initialized: boolean) => {
     if (!initialized) {
@@ -166,6 +172,7 @@ initializer.addUpdateConfigHook('sulu_admin', (config: Object, initialized: bool
         registerListItemActions();
         registerFieldTypes(config.fieldTypeOptions);
         registerTextEditors();
+        registerLinkOverlays();
         registerInternalLinkTypes(config.internalLinkTypes);
         registerFormToolbarActions();
         registerListToolbarActions();
@@ -196,6 +203,7 @@ function registerViews() {
 function registerListAdapters() {
     listAdapterRegistry.add('column_list', ColumnListAdapter);
     listAdapterRegistry.add('folder', FolderAdapter);
+    listAdapterRegistry.add('icon', IconAdapter);
     listAdapterRegistry.add('table', TableAdapter);
     // @deprecated use adapterOptions to set the correct skin
     listAdapterRegistry.add('table_light', TableAdapter, {skin: 'light'});
@@ -260,6 +268,7 @@ function registerFieldTypes(fieldTypeOptions) {
     fieldRegistry.add(FIELD_TYPE_TIME, DatePicker, {dateFormat: false, timeFormat: true});
     fieldRegistry.add(FIELD_TYPE_URL, Url);
     fieldRegistry.add(FIELD_TYPE_LINK, Link);
+    fieldRegistry.add(FIELD_TYPE_SINGLE_ICON_SELECTION, SingleIconSelection);
 
     registerFieldTypesWithOptions(fieldTypeOptions['selection'], Selection);
     registerFieldTypesWithOptions(fieldTypeOptions['single_selection'], SingleSelection);
@@ -294,12 +303,19 @@ function registerTextEditors() {
     textEditorRegistry.add('ckeditor5', CKEditor5);
 }
 
+function registerLinkOverlays() {
+    linkOverlayRegistry.setDefaultOverlay(LinkTypeOverlay);
+    linkOverlayRegistry.add('external', ExternalLinkTypeOverlay);
+}
+
 function registerInternalLinkTypes(internalLinkTypes) {
     for (const internalLinkTypeKey in internalLinkTypes) {
         const internalLinkType = internalLinkTypes[internalLinkTypeKey];
+        const overlay = linkOverlayRegistry.getOverlay(internalLinkTypeKey);
+
         linkTypeRegistry.add(
             internalLinkTypeKey,
-            LinkTypeOverlay,
+            overlay,
             internalLinkType.title,
             {
                 displayProperties: internalLinkType.displayProperties,
@@ -308,17 +324,10 @@ function registerInternalLinkTypes(internalLinkTypes) {
                 listAdapter: internalLinkType.listAdapter,
                 overlayTitle: internalLinkType.overlayTitle,
                 resourceKey: internalLinkType.resourceKey,
+                targets: internalLinkType.targets,
             }
         );
     }
-
-    // Add external LinkType
-    linkTypeRegistry.add(
-        'external',
-        ExternalLinkTypeOverlay,
-        'Link',
-        undefined
-    );
 }
 
 function registerFormToolbarActions() {
@@ -334,6 +343,8 @@ function registerFormToolbarActions() {
     formToolbarActionRegistry.add('sulu_admin.set_unpublished', FormSetUnpublishedToolbarAction);
     formToolbarActionRegistry.add('sulu_admin.type', FormTypeToolbarAction);
     formToolbarActionRegistry.add('sulu_admin.toggler', FormTogglerToolbarAction);
+    formToolbarActionRegistry.add('sulu_admin.update_form_store', FormUpdateFormStoreToolbarAction);
+    formToolbarActionRegistry.add('sulu_admin.reload_form_store', FormReloadFormStoreToolbarAction);
 }
 
 function registerListToolbarActions() {
@@ -434,6 +445,30 @@ function startAdmin() {
         applicationElement
     );
 }
+
+initializer.addUpdateConfigHook('sulu_ai', (config: Object, initialized: boolean) => {
+    if (initialized) {
+        return;
+    }
+
+    if (undefined === config){
+        return;
+    }
+
+    const div = document.createElement('div');
+    div.id = 'su-ai-application';
+    document.body?.appendChild(div);
+
+    if (!config['writing_assistant']?.enabled && !config['translation']?.enabled && !config['feedback']?.enabled) {
+        return;
+    }
+
+    render(<AiApplication
+        feedback={config['feedback']}
+        translation={config['translation']}
+        writingAssistant={config['writing_assistant']}
+    />, div);
+});
 
 export {
     startAdmin,

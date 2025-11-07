@@ -343,7 +343,6 @@ class NavigationItem implements \Iterator
                 return $item;
             }
             foreach ($item->getChildren() as $child) {
-                /* @var NavigationItem $child */
                 $stack[] = $child;
             }
         }
@@ -361,7 +360,6 @@ class NavigationItem implements \Iterator
     public function findChildren(self $navigationItem)
     {
         foreach ($this->getChildren() as $child) {
-            /** @var NavigationItem $child */
             if ($child->equalsChildless($navigationItem)) {
                 return $child;
             }
@@ -460,7 +458,6 @@ class NavigationItem implements \Iterator
         });
 
         foreach ($children as $key => $child) {
-            /* @var NavigationItem $child */
             $array['items'][$key] = $child->toArray();
         }
 

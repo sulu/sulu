@@ -1,0 +1,7 @@
+sulu_reference.get_references:
+    path: /references.{_format}
+    methods: GET
+    controller: sulu_reference.reference_controller::cgetAction
+    format: json
+    requirements:
+        _format: json|csv

@@ -1,5 +1,4 @@
 // @flow
-import {when} from 'mobx';
 import {initializer} from 'sulu-admin-bundle/services';
 import {
     blockPreviewTransformerRegistry,
@@ -7,9 +6,8 @@ import {
     fieldRegistry,
     viewRegistry,
 } from 'sulu-admin-bundle/containers';
-import {translate} from 'sulu-admin-bundle/utils';
 import {TeaserSelection} from 'sulu-page-bundle/containers';
-import linkTypeRegistry from 'sulu-admin-bundle/containers/Link/registries/linkTypeRegistry';
+import linkOverlayRegistry from 'sulu-admin-bundle/containers/Link/registries/linkOverlayRegistry';
 import {MediaCardOverviewAdapter, MediaCardSelectionAdapter} from './containers/List';
 import {MediaSelection, MediaVersionUpload, SingleMediaUpload, SingleMediaSelection, ImageMap} from './containers/Form';
 import {
@@ -24,6 +22,8 @@ import {MediaLinkTypeOverlay} from './containers/Link';
 
 const FIELD_TYPE_MEDIA_SELECTION = 'media_selection';
 const FIELD_TYPE_SINGLE_MEDIA_SELECTION = 'single_media_selection';
+
+linkOverlayRegistry.add('media', MediaLinkTypeOverlay);
 
 initializer.addUpdateConfigHook('sulu_media', (config: Object, initialized: boolean) => {
     const {media_permissions: mediaPermissions} = config;
@@ -63,14 +63,4 @@ initializer.addUpdateConfigHook('sulu_media', (config: Object, initialized: bool
     );
 
     TeaserSelection.Item.mediaUrl = imageFormatUrl + '?locale=en&format=sulu-25x25';
-
-    when(
-        () => !!initializer.initializedTranslationsLocale,
-        (): void => {
-            linkTypeRegistry.add('media', MediaLinkTypeOverlay, translate('sulu_media.media'), {
-                resourceKey: 'media',
-                displayProperties: ['title'],
-            });
-        }
-    );
 });

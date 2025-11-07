@@ -14,9 +14,12 @@ namespace Sulu\Bundle\MediaBundle\Tests\Unit\Markup\Link;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
+use Sulu\Bundle\MarkupBundle\Markup\Link\LinkConfiguration;
+use Sulu\Bundle\MarkupBundle\Markup\Link\LinkConfigurationBuilder;
 use Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Markup\Link\MediaLinkProvider;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class MediaLinkProviderTest extends TestCase
 {
@@ -37,20 +40,44 @@ class MediaLinkProviderTest extends TestCase
      */
     private $mediaLinkProvider;
 
+    /**
+     * @var ObjectProphecy<TranslatorInterface>
+     */
+    private $translator;
+
     public function setUp(): void
     {
         $this->mediaRepository = $this->prophesize(MediaRepositoryInterface::class);
         $this->mediaManager = $this->prophesize(MediaManagerInterface::class);
+        $this->translator = $this->prophesize(TranslatorInterface::class);
+        $this->translator->trans('sulu_media.media', [], 'admin')
+            ->willReturn('Media');
 
         $this->mediaLinkProvider = new MediaLinkProvider(
             $this->mediaRepository->reveal(),
-            $this->mediaManager->reveal()
+            $this->mediaManager->reveal(),
+            $this->translator->reveal()
         );
     }
 
     public function testGetConfiguration(): void
     {
-        $this->assertNull($this->mediaLinkProvider->getConfiguration());
+        /** @var LinkConfigurationBuilder $configurationBuilder */
+        $configurationBuilder = $this->mediaLinkProvider->getConfiguration();
+
+        $this->assertEquals(
+            new LinkConfiguration(
+                'Media',
+                'media',
+                '',
+                ['title'],
+                '',
+                '',
+                '',
+                ['_blank', '_self', '_parent', '_top'],
+            ),
+            $configurationBuilder->getLinkConfiguration()
+        );
     }
 
     public function testPreload(): void

@@ -15,7 +15,6 @@ use App\Kernel;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Events;
 use Doctrine\ORM\Tools\ResolveTargetEntityListener;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Dotenv\Dotenv;
 
 require \dirname(__DIR__, 2) . '/vendor/autoload.php';
@@ -24,7 +23,6 @@ require \dirname(__DIR__, 2) . '/vendor/autoload.php';
 $kernel = new Kernel($_SERVER['APP_ENV'], (bool) $_SERVER['APP_DEBUG'], Kernel::CONTEXT_ADMIN);
 $kernel->boot();
 
-/** @var ContainerInterface $container */
 $container = $kernel->getContainer();
 
 /** @var EntityManager $objectManager */

@@ -14,7 +14,6 @@ namespace Sulu\Bundle\PageBundle\Tests\Functional\Export;
 use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Document\WorkflowStage;
-use Sulu\Component\Content\Extension\ExtensionManagerInterface;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\Snippet\Export\SnippetExportInterface;
 
@@ -42,16 +41,6 @@ class SnippetTest extends SuluTestCase
      * @var SnippetDocument
      */
     private $snippet2;
-
-    /**
-     * @var ExtensionManagerInterface
-     */
-    private $extensionManager;
-
-    /**
-     * @var int
-     */
-    private $creator;
 
     protected function setUp(): void
     {

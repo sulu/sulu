@@ -48,6 +48,14 @@ class LinkConfigurationBuilder
      */
     private $icon;
 
+    /**
+     * @var ?array<string, string>
+     */
+    private $targets = null;
+
+    /**
+     * @return LinkConfigurationBuilder
+     */
     public static function create()
     {
         return new self();
@@ -105,6 +113,16 @@ class LinkConfigurationBuilder
         return $this;
     }
 
+    /**
+     * @param array<string, string> $targets
+     */
+    public function setTargets(array $targets): self
+    {
+        $this->targets = $targets;
+
+        return $this;
+    }
+
     public function getLinkConfiguration(): LinkConfiguration
     {
         return new LinkConfiguration(
@@ -114,7 +132,8 @@ class LinkConfigurationBuilder
             $this->displayProperties,
             $this->overlayTitle,
             $this->emptyText,
-            $this->icon
+            $this->icon,
+            $this->targets,
         );
     }
 }

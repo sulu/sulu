@@ -28,7 +28,7 @@ export default class LinkTypeOverlay extends React.Component<LinkTypeOverlayProp
             title,
         } = this.props;
 
-        if (!options) {
+        if (!options || !options.targets) {
             throw new Error('The LinkTypeOverlay needs some options in order to work!');
         }
 
@@ -39,6 +39,7 @@ export default class LinkTypeOverlay extends React.Component<LinkTypeOverlayProp
             listAdapter = '',
             overlayTitle = '',
             resourceKey,
+            targets = ['_blank', '_self', '_parent', '_top'],
         } = options;
 
         return (
@@ -81,10 +82,11 @@ export default class LinkTypeOverlay extends React.Component<LinkTypeOverlayProp
                     {onTargetChange &&
                         <Form.Field label={translate('sulu_admin.link_target')} required={true}>
                             <SingleSelect onChange={onTargetChange} value={target}>
-                                <SingleSelect.Option value="_blank">_blank</SingleSelect.Option>
-                                <SingleSelect.Option value="_self">_self</SingleSelect.Option>
-                                <SingleSelect.Option value="_parent">_parent</SingleSelect.Option>
-                                <SingleSelect.Option value="_top">_top</SingleSelect.Option>
+                                {targets.map((targetValue) => (
+                                    <SingleSelect.Option key={targetValue} value={targetValue}>
+                                        {translate(`sulu_admin.link_target${targetValue}`)}
+                                    </SingleSelect.Option>
+                                ))}
                             </SingleSelect>
                         </Form.Field>
                     }

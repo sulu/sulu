@@ -20,11 +20,18 @@ interface SitemapTwigExtensionInterface extends ExtensionInterface
 {
     /**
      * Returns prefixed resourcelocator with the url and locale.
+     *
+     * @param string $url
+     * @param string|null $locale
+     * @param string|null $webspaceKey
      */
     public function sitemapUrlFunction($url, $locale = null, $webspaceKey = null);
 
     /**
      * Returns full sitemap of webspace and language from the content.
+     *
+     * @param string|null $locale
+     * @param string|null $webspaceKey
      */
     public function sitemapFunction($locale = null, $webspaceKey = null);
 }

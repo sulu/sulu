@@ -1,0 +1,4 @@
+sulu_website.cache.remove:
+    path: /cache
+    controller: sulu_website.cache_controller::clearAction
+    methods: DELETE

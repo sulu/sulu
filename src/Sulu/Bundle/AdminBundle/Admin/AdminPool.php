@@ -24,6 +24,14 @@ class AdminPool
     private $pool = [];
 
     /**
+     * @param iterable<Admin> $admins
+     */
+    public function __construct(iterable $admins = [])
+    {
+        $this->pool = [...$admins];
+    }
+
+    /**
      * Adds a new admin.
      *
      * @param Admin $admin

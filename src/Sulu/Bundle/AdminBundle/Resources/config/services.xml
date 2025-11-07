@@ -45,7 +45,9 @@
         <service
             id="sulu_admin.metadata_provider_registry"
             class="Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry"
-        />
+        >
+            <argument type="tagged_locator" tag="sulu_admin.metadata_provider" index-by="type" />
+         </service>
 
         <service
             id="sulu_admin.form_metadata_provider"
@@ -105,6 +107,14 @@
             <argument type="service" id="sulu_core.list_builder.field_descriptor_factory" />
             <argument type="service" id="translator.default"/>
             <tag name="sulu_admin.list_metadata_loader"/>
+        </service>
+
+        <service
+            id="sulu_admin.expression_list_metadata_visitor"
+            class="Sulu\Bundle\AdminBundle\Metadata\ListMetadata\ExpressionListMetadataVisitor"
+        >
+            <argument type="service" id="sulu_core.expression_language" />
+            <tag name="sulu_admin.list_metadata_visitor" />
         </service>
 
         <service id="sulu_admin.view_builder_factory" class="Sulu\Bundle\AdminBundle\Admin\View\ViewBuilderFactory" />
@@ -264,6 +274,17 @@
         </service>
 
         <service
+            id="sulu_admin.valid_build_command"
+            class="Sulu\Bundle\AdminBundle\Command\ValidateBuildCommand"
+        >
+            <argument type="service" id="assets.packages" />
+            <argument type="string">%kernel.project_dir%</argument>
+            <argument type="string">%sulu.version%</argument>
+            <tag name="sulu.context" context="admin"/>
+            <tag name="console.command"/>
+        </service>
+
+        <service
             id="sulu_admin.debug_view_command"
             class="Sulu\Bundle\AdminBundle\Command\ViewDebugCommand"
         >
@@ -285,6 +306,30 @@
         <service id="sulu_admin.field_metadata_validator.block"
                  class="Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Validation\BlockFieldMetadataValidator">
             <tag name="sulu_admin.field_metadata_validator"/>
+        </service>
+
+        <service id="sulu_admin.form_metadata_validator.locale_options"
+                 class="Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Visitor\LocalesOptionFormMetadataVisitor">
+            <tag name="sulu_admin.form_metadata_visitor"/>
+        </service>
+
+        <service id="sulu_admin.icon_controller"
+                class="Sulu\Bundle\AdminBundle\Controller\IconController"
+                public="true">
+            <argument type="service" id="fos_rest.view_handler"/>
+            <argument>%sulu_admin.icon_sets%</argument>
+            <argument type="tagged_iterator" tag="sulu_admin.icon_provider" index-by="type"/>
+
+            <tag name="sulu.context" context="admin"/>
+        </service>
+
+        <service id="sulu_admin.icon_provider.icomoon" class="Sulu\Bundle\AdminBundle\Icon\providers\IcomoonProvider">
+            <tag name="sulu_admin.icon_provider" type="icomoon" />
+        </service>
+
+        <service id="sulu_admin.icon_provider.svg" class="Sulu\Bundle\AdminBundle\Icon\providers\SvgProvider">
+            <argument type="service" id="sulu_admin.icon_cache"/>
+            <tag name="sulu_admin.icon_provider" type="svg" />
         </service>
     </services>
 </container>

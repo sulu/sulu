@@ -21,6 +21,9 @@ use Twig\TwigFunction;
 
 class TagTwigExtension extends AbstractExtension
 {
+    /**
+     * @deprecated Requiring the TagManagerInterface instead of the TagRepository
+     */
     public function __construct(
         private TagManagerInterface $tagManager,
         private TagRequestHandlerInterface $tagRequestHandler,
@@ -29,6 +32,9 @@ class TagTwigExtension extends AbstractExtension
     ) {
     }
 
+    /**
+     * @return array<TwigFunction>
+     */
     public function getFunctions()
     {
         return [

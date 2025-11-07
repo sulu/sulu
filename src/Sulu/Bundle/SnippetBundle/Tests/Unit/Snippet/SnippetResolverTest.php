@@ -185,7 +185,7 @@ class SnippetResolverTest extends TestCase
         $structure2->setIsShadow(true)->shouldBeCalled();
         $structure2->setShadowBaseLanguage('en')->shouldBeCalled();
 
-        /** @var SnippetDocument|ObjectProphecy $snippetDocument */
+        /** @var ObjectProphecy<SnippetDocument> $snippetDocument */
         $snippetDocument = $this->prophesize(SnippetDocument::class);
         $structure2->getDocument()->willReturn($snippetDocument->reveal());
         $snippetDocument->setLocale('en')->shouldBeCalled();

@@ -11,7 +11,7 @@
 
 namespace Sulu\Bundle\MediaBundle\Media\Exception;
 
-class InvalidMimeTypeForPreviewException extends MediaException
+class InvalidMimeTypeForPreviewException extends ImageProxyException
 {
     /**
      * @param string $mimeType

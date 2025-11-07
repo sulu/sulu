@@ -17,7 +17,7 @@ namespace Sulu\Component\Content\Document\Structure;
 class Structure implements StructureInterface
 {
     /**
-     * @var array
+     * @var array<string, mixed>
      */
     protected $properties = [];
 

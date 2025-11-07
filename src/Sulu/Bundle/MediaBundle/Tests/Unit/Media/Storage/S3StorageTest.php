@@ -19,7 +19,7 @@ use League\Flysystem\Filesystem;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
-use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyMediaNotFoundException;
+use Symfony\Component\Filesystem\Exception\IOException;
 
 class S3StorageTest extends TestCase
 {
@@ -157,7 +157,7 @@ class S3StorageTest extends TestCase
 
     public function testLoadNotFound(): void
     {
-        $this->expectException(ImageProxyMediaNotFoundException::class);
+        $this->expectException(IOException::class);
 
         $adapter = $this->prophesize(AwsS3Adapter::class);
         $flysystem = $this->prophesize(Filesystem::class);

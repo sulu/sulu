@@ -20,7 +20,6 @@ use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
 use Sulu\Component\Content\Exception\ResourceLocatorAlreadyExistsException;
 use Sulu\Component\Content\Exception\ResourceLocatorMovedException;
 use Sulu\Component\Content\Exception\ResourceLocatorNotFoundException;
-use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\Types\ResourceLocator\Mapper\PhpcrMapper;
 use Sulu\Component\Content\Types\ResourceLocator\Mapper\ResourceLocatorMapperInterface;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
@@ -42,11 +41,6 @@ class PhpcrMapperTest extends SuluTestCase
      * @var ResourceLocatorMapperInterface
      */
     private $phpcrMapper;
-
-    /**
-     * @var ContentMapperInterface
-     */
-    private $mapper;
 
     /**
      * @var DocumentManagerInterface
@@ -81,7 +75,6 @@ class PhpcrMapperTest extends SuluTestCase
     public function setUp(): void
     {
         $this->initPhpcr();
-        $this->mapper = $this->getContainer()->get('sulu.content.mapper');
         $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
         $this->documentInspector = $this->getContainer()->get('sulu_document_manager.document_inspector');
         $this->defaultSession = $this->getContainer()->get('sulu_document_manager.default_session');

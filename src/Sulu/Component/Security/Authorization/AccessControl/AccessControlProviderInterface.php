@@ -13,6 +13,8 @@ namespace Sulu\Component\Security\Authorization\AccessControl;
 
 interface AccessControlProviderInterface
 {
+    public const SERVICE_TAG = 'sulu.access_control';
+
     /**
      * Sets the permissions for the object with the given class and id for the given security identity.
      *

@@ -47,15 +47,15 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
  */
 class CollectionManager implements CollectionManagerInterface
 {
-    private static $entityName = \Sulu\Bundle\MediaBundle\Entity\Collection::class;
+    private static string $entityName = \Sulu\Bundle\MediaBundle\Entity\Collection::class;
 
-    private static $entityCollectionType = \Sulu\Bundle\MediaBundle\Entity\Collection::class;
+    private static string $entityCollectionType = \Sulu\Bundle\MediaBundle\Entity\Collection::class;
 
-    private static $entityCollectionMeta = \Sulu\Bundle\MediaBundle\Entity\CollectionMeta::class;
+    private static string $entityCollectionMeta = \Sulu\Bundle\MediaBundle\Entity\CollectionMeta::class;
 
-    private static $entityUser = UserInterface::class;
+    private static string $entityUser = UserInterface::class;
 
-    private static $entityContact = ContactInterface::class;
+    private static string $entityContact = ContactInterface::class;
 
     /**
      * @var DoctrineFieldDescriptor[]
@@ -187,7 +187,6 @@ class CollectionManager implements CollectionManagerInterface
             'systemCollections' => $systemCollections,
         ];
 
-        /** @var CollectionEntity[] $entities */
         $entities = $this->collectionRepository->findCollectionSet(
             $depth,
             $filter,

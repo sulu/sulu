@@ -17,8 +17,8 @@ use League\Flysystem\Filesystem;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
-use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyMediaNotFoundException;
 use Superbalist\Flysystem\GoogleStorage\GoogleStorageAdapter;
+use Symfony\Component\Filesystem\Exception\IOException;
 
 class GoogleCloudStorageTest extends TestCase
 {
@@ -131,7 +131,7 @@ class GoogleCloudStorageTest extends TestCase
 
     public function testLoadNotFound(): void
     {
-        $this->expectException(ImageProxyMediaNotFoundException::class);
+        $this->expectException(IOException::class);
 
         $adapter = $this->prophesize(GoogleStorageAdapter::class);
         $flysystem = $this->prophesize(Filesystem::class);

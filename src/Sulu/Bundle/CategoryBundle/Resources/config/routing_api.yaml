@@ -1,0 +1,105 @@
+# Category
+sulu_category.get_category:
+    path: '/categories/{id}.{_format}'
+    methods: GET
+    controller: 'sulu_category.category_controller::getAction'
+    format: json
+    requirements:
+        _format: json|csv
+
+sulu_category.get_categories:
+    path: '/categories.{_format}'
+    methods: GET
+    controller: 'sulu_category.category_controller::cgetAction'
+    format: json
+    requirements:
+        _format: json|csv
+
+sulu_category.post_category:
+    path: '/categories.{_format}'
+    methods: POST
+    controller: 'sulu_category.category_controller::postAction'
+    format: json
+    requirements:
+        _format: json|csv
+
+sulu_category.put_category:
+    path: '/categories/{id}.{_format}'
+    methods: PUT
+    controller: 'sulu_category.category_controller::putAction'
+    format: json
+    requirements:
+        _format: json|csv
+
+sulu_category.patch_category:
+    path: '/categories/{id}.{_format}'
+    methods: PATCH
+    controller: 'sulu_category.category_controller::patchAction'
+    format: json
+    requirements:
+        _format: json|csv
+
+sulu_category.delete_category:
+    path: '/categories/{id}.{_format}'
+    methods: DELETE
+    controller: 'sulu_category.category_controller::deleteAction'
+    format: json
+    requirements:
+        _format: json|csv
+
+sulu_category.post_category_trigger:
+    path: '/categories/{id}.{_format}'
+    methods: POST
+    controller: 'sulu_category.category_controller::postTriggerAction'
+    format: json
+    requirements:
+        _format: json|csv
+
+# Keyword
+sulu_category.get_category_keywords:
+    path: '/categories/{categoryId}/keywords.{_format}'
+    methods: GET
+    controller: 'sulu_category.keyword_controller::cgetAction'
+    format: json
+    requirements:
+        _format: json|csv
+
+sulu_category.post_category_keyword:
+    path: '/categories/{categoryId}/keywords.{_format}'
+    methods: POST
+    controller: 'sulu_category.keyword_controller::postAction'
+    format: json
+    requirements:
+        _format: json|csv
+
+sulu_category.get_category_keyword:
+    path: '/categories/{categoryId}/keywords/{id}.{_format}'
+    methods: GET
+    controller: 'sulu_category.keyword_controller::getAction'
+    format: json
+    requirements:
+        _format: json|csv
+
+sulu_category.put_category_keyword:
+    path: '/categories/{categoryId}/keywords/{id}.{_format}'
+    methods: PUT
+    controller: 'sulu_category.keyword_controller::putAction'
+    format: json
+    requirements:
+        _format: json|csv
+
+sulu_category.delete_category_keyword:
+    path: '/categories/{categoryId}/keywords/{id}.{_format}'
+    methods: DELETE
+    controller: 'sulu_category.keyword_controller::deleteAction'
+    format: json
+    requirements:
+        _format: json|csv
+
+sulu_category.delete_category_keywords:
+    path: '/categories/{categoryId}/keywords.{_format}'
+    methods: DELETE
+    controller: 'sulu_category.keyword_controller::cdeleteAction'
+    format: json
+    requirements:
+        _format: json|csv

@@ -16,6 +16,7 @@ use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkConfiguration;
+use Sulu\Bundle\MarkupBundle\Markup\Link\LinkConfigurationBuilder;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkItem;
 use Sulu\Bundle\PageBundle\Markup\Link\PageLinkProvider;
 use Sulu\Bundle\SecurityBundle\Entity\User;
@@ -126,6 +127,8 @@ class PageLinkProviderTest extends TestCase
         $this->translator->trans('sulu_page.single_selection_overlay_title', [], 'admin')->willReturn('Choose page');
         $this->translator->trans('sulu_page.no_page_selected', [], 'admin')->willReturn('No page selected');
 
+        /** @var LinkConfigurationBuilder $configurationBuilder */
+        $configurationBuilder = $this->pageLinkProvider->getConfiguration();
         $this->assertEquals(
             new LinkConfiguration(
                 'Pages',
@@ -134,9 +137,10 @@ class PageLinkProviderTest extends TestCase
                 ['title'],
                 'Choose page',
                 'No page selected',
-                'su-document'
+                'su-document',
+                ['_blank', '_self', '_parent', '_top'],
             ),
-            $this->pageLinkProvider->getConfiguration()
+            $configurationBuilder->getLinkConfiguration()
         );
     }
 

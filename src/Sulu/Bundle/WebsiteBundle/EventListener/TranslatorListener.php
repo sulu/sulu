@@ -16,16 +16,19 @@ use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
-use Symfony\Component\Translation\Translator;
 use Symfony\Contracts\Translation\LocaleAwareInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class TranslatorListener implements EventSubscriberInterface
 {
     /**
-     * @var Translator|LocaleAwareInterface
+     * @var TranslatorInterface|LocaleAwareInterface
      */
     private $translator;
 
+    /**
+     * @param TranslatorInterface|LocaleAwareInterface $translator
+     */
     public function __construct($translator)
     {
         $this->translator = $translator;
@@ -42,6 +45,10 @@ class TranslatorListener implements EventSubscriberInterface
         $localization = $attributes->getAttribute('localization');
 
         if (!$localization instanceof Localization) {
+            return;
+        }
+
+        if (!\method_exists($this->translator, 'setLocale')) {
             return;
         }
 
