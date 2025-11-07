@@ -152,7 +152,8 @@
         <service
             id="sulu_admin.property_metadata_mapper.select"
             class="Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\SelectPropertyMetadataMapper">
-
+            <argument type="service" id="sulu_admin.property_metadata_min_max_value_resolver"/>
+            
             <tag name="sulu_admin.property_metadata_mapper" type="select"/>
         </service>
 
