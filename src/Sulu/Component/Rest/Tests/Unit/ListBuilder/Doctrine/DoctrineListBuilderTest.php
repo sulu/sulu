@@ -1362,7 +1362,7 @@ class DoctrineListBuilderTest extends TestCase
         $accessQueryBuilder->getQuery()->willReturn($accessQuery->reveal());
         $accessQuery->getScalarResult()->willReturn([['id' => 42]]);
 
-        $this->queryBuilder->andWhere('Sulu_Bundle_CoreBundle_Entity_Example.id NOT IN (:accessControlIds)')
+        $this->queryBuilder->andWhere('(Sulu_Bundle_CoreBundle_Entity_Example.id NOT IN (:accessControlIds) OR Sulu_Bundle_CoreBundle_Entity_Example.id IS NULL)')
             ->shouldBeCalled();
 
         $this->queryBuilder->setParameter('accessControlIds', [42])->shouldBeCalled();
@@ -1424,7 +1424,7 @@ class DoctrineListBuilderTest extends TestCase
         $accessQueryBuilder->getQuery()->willReturn($accessQuery->reveal());
         $accessQuery->getScalarResult()->willReturn([['id' => 42]]);
 
-        $this->queryBuilder->andWhere('Sulu_Bundle_CoreBundle_Entity_Example.id NOT IN (:accessControlIds)')
+        $this->queryBuilder->andWhere('(Sulu_Bundle_CoreBundle_Entity_Example.id NOT IN (:accessControlIds) OR Sulu_Bundle_CoreBundle_Entity_Example.id IS NULL)')
             ->shouldBeCalled();
 
         $this->queryBuilder->setParameter('accessControlIds', [42])->shouldBeCalled();
@@ -1482,7 +1482,7 @@ class DoctrineListBuilderTest extends TestCase
         $accessQueryBuilder->getQuery()->willReturn($accessQuery->reveal());
         $accessQuery->getScalarResult()->willReturn([['id' => 42]]);
 
-        $this->queryBuilder->andWhere(\stdClass::class . '.id NOT IN (:accessControlIds)')
+        $this->queryBuilder->andWhere('(stdClass.id NOT IN (:accessControlIds) OR stdClass.id IS NULL)')
             ->shouldBeCalled();
 
         $this->queryBuilder->setParameter('accessControlIds', [42])->shouldBeCalled();
@@ -1552,7 +1552,7 @@ class DoctrineListBuilderTest extends TestCase
         $accessQueryBuilder->getQuery()->willReturn($accessQuery->reveal());
         $accessQuery->getScalarResult()->willReturn([['id' => 42]]);
 
-        $this->queryBuilder->andWhere(\stdClass::class . '.id NOT IN (:accessControlIds)')
+        $this->queryBuilder->andWhere('(stdClass.id NOT IN (:accessControlIds) OR stdClass.id IS NULL)')
             ->shouldBeCalled();
 
         $this->queryBuilder->leftJoin(

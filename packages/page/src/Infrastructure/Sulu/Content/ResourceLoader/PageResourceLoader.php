@@ -33,7 +33,16 @@ class PageResourceLoader implements ResourceLoaderInterface
      */
     public function load(array $ids, ?string $locale, array $params = []): array
     {
-        $result = $this->pageRepository->findBy(['uuids' => $ids]);
+        /** @var array{uuids: array<string>, locale?: string, stage?: string, permissionConfig?: array{user: \Sulu\Component\Security\Authentication\UserInterface|null, permission: int}} $filters */
+        $filters = ['uuids' => $ids];
+
+        if (($params['filters'] ?? null) && \is_array($params['filters'])) {
+            /** @var array{locale?: string, stage?: string, permissionConfig?: array{user: \Sulu\Component\Security\Authentication\UserInterface|null, permission: int}} $paramsFilters */
+            $paramsFilters = $params['filters'];
+            $filters = \array_merge($filters, $paramsFilters);
+        }
+
+        $result = $this->pageRepository->findBy($filters);
 
         $mappedResult = [];
         foreach ($result as $page) {

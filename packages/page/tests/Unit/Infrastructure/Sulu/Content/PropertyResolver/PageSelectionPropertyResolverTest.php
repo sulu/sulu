@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Sulu.
  *
@@ -14,19 +16,41 @@ namespace Sulu\Bundle\Page\Tests\Unit\Infrastructure\Sulu\Content\PropertyResolv
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
+use Sulu\Component\Security\Authentication\UserInterface;
+use Sulu\Component\Security\Authorization\PermissionTypes;
+use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
+use Sulu\Component\Webspace\Security as WebspaceSecurity;
+use Sulu\Component\Webspace\Webspace;
 use Sulu\Content\Application\ContentResolver\Value\ResolvableResource;
 use Sulu\Page\Domain\Model\PageInterface;
 use Sulu\Page\Infrastructure\Sulu\Content\PropertyResolver\PageSelectionPropertyResolver;
+use Symfony\Bundle\SecurityBundle\Security;
 
 #[CoversClass(PageSelectionPropertyResolver::class)]
 class PageSelectionPropertyResolverTest extends TestCase
 {
+    use ProphecyTrait;
+
     private PageSelectionPropertyResolver $resolver;
+    /**
+     * @var ObjectProphecy<RequestAnalyzerInterface>
+     */
+    private ObjectProphecy $requestAnalyzer;
 
     public function setUp(): void
     {
-        $this->resolver = new PageSelectionPropertyResolver();
+        $this->requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
+
+        $this->requestAnalyzer->getWebspace()->willReturn(null);
+
+        $this->resolver = new PageSelectionPropertyResolver(
+            null,
+            null,
+            $this->requestAnalyzer->reveal()
+        );
     }
 
     public function testResolveEmpty(): void
@@ -145,6 +169,10 @@ class PageSelectionPropertyResolverTest extends TestCase
                 'property1' => 'value1',
                 'property2' => 'value2',
             ],
+            'filters' => [
+                'locale' => 'en',
+                'stage' => 'live',
+            ],
         ], $content[0]->getMetadata());
 
         $references = $contentView->getReferences();
@@ -163,6 +191,10 @@ class PageSelectionPropertyResolverTest extends TestCase
 
         $this->assertSame([
             'properties' => null,
+            'filters' => [
+                'locale' => 'en',
+                'stage' => 'live',
+            ],
         ], $content[0]->getMetadata());
 
         $references = $contentView->getReferences();
@@ -183,11 +215,136 @@ class PageSelectionPropertyResolverTest extends TestCase
 
         $this->assertSame([
             'properties' => null,
+            'filters' => [
+                'locale' => 'en',
+                'stage' => 'live',
+            ],
         ], $content[0]->getMetadata());
 
         $references = $contentView->getReferences();
         $this->assertCount(1, $references);
         $this->assertSame('1', $references[0]->getResourceId());
         $this->assertSame(PageInterface::RESOURCE_KEY, $references[0]->getResourceKey());
+    }
+
+    public function testResolveWithSecureWebspaceAndAuthenticatedUser(): void
+    {
+        $webspace = new Webspace();
+        $webspaceSecurity = new WebspaceSecurity();
+        $webspaceSecurity->setSystem('website');
+        $webspaceSecurity->setPermissionCheck(true);
+        $webspace->setSecurity($webspaceSecurity);
+
+        $user = $this->prophesize(UserInterface::class);
+
+        $security = $this->prophesize(Security::class);
+        $security->getUser()->willReturn($user->reveal());
+
+        $requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
+        $requestAnalyzer->getWebspace()->willReturn($webspace);
+
+        $resolver = new PageSelectionPropertyResolver(
+            $security->reveal(),
+            [PermissionTypes::VIEW => 64],
+            $requestAnalyzer->reveal()
+        );
+
+        $contentView = $resolver->resolve(['1'], 'en');
+
+        $content = $contentView->getContent();
+        $this->assertIsArray($content);
+        $this->assertInstanceOf(ResolvableResource::class, $content[0]);
+
+        $this->assertSame([
+            'properties' => null,
+            'filters' => [
+                'locale' => 'en',
+                'stage' => 'live',
+                'permissionConfig' => [
+                    'user' => $user->reveal(),
+                    'permission' => 64,
+                ],
+            ],
+        ], $content[0]->getMetadata());
+    }
+
+    public function testResolveWithNonSecureWebspace(): void
+    {
+        $webspace = new Webspace();
+
+        $user = $this->prophesize(UserInterface::class);
+
+        $security = $this->prophesize(Security::class);
+        $security->getUser()->willReturn($user->reveal());
+
+        $requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
+        $requestAnalyzer->getWebspace()->willReturn($webspace);
+
+        $resolver = new PageSelectionPropertyResolver(
+            $security->reveal(),
+            [PermissionTypes::VIEW => 64],
+            $requestAnalyzer->reveal()
+        );
+
+        $contentView = $resolver->resolve(['1'], 'en');
+
+        $content = $contentView->getContent();
+        $this->assertIsArray($content);
+        $this->assertInstanceOf(ResolvableResource::class, $content[0]);
+
+        $metadata = $content[0]->getMetadata();
+        $this->assertIsArray($metadata);
+        $this->assertArrayHasKey('filters', $metadata);
+        $filters = $metadata['filters'];
+        $this->assertIsArray($filters);
+        $this->assertArrayNotHasKey('permissionConfig', $filters);
+    }
+
+    public function testResolvePermissionConfigPreservesOtherMetadata(): void
+    {
+        $webspace = new Webspace();
+        $webspaceSecurity = new WebspaceSecurity();
+        $webspaceSecurity->setSystem('website');
+        $webspaceSecurity->setPermissionCheck(true);
+        $webspace->setSecurity($webspaceSecurity);
+
+        $user = $this->prophesize(UserInterface::class);
+
+        $security = $this->prophesize(Security::class);
+        $security->getUser()->willReturn($user->reveal());
+
+        $requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
+        $requestAnalyzer->getWebspace()->willReturn($webspace);
+
+        $resolver = new PageSelectionPropertyResolver(
+            $security->reveal(),
+            [PermissionTypes::VIEW => 64],
+            $requestAnalyzer->reveal()
+        );
+
+        $contentView = $resolver->resolve(['1'], 'en', [
+            'properties' => [
+                'property1' => 'value1',
+            ],
+        ]);
+
+        $content = $contentView->getContent();
+        $this->assertIsArray($content);
+        $this->assertInstanceOf(ResolvableResource::class, $content[0]);
+
+        $metadata = $content[0]->getMetadata();
+        $this->assertSame([
+            'properties' => [
+                'property1' => 'value1',
+            ],
+            'filters' => [
+                'locale' => 'en',
+                'stage' => 'live',
+                'permissionConfig' => [
+                    'user' => $user->reveal(),
+                    'permission' => 64,
+                ],
+            ],
+        ], $metadata);
     }
 }
