@@ -19,7 +19,7 @@ interface SecuredEntityInterface
     /**
      * Returns the unique id of the entity.
      *
-     * @return int
+     * @return int|string
      */
     public function getId();
 

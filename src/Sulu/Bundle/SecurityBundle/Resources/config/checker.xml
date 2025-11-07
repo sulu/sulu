@@ -11,6 +11,7 @@
 
         <service id="sulu_security.event_listener.security" class="Sulu\Bundle\SecurityBundle\EventListener\SuluSecurityListener">
             <argument type="service" id="sulu_security.security_checker"/>
+            <argument type="service" id="doctrine.orm.entity_manager" on-invalid="null"/>
 
             <tag name="kernel.event_subscriber"/>
         </service>

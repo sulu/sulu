@@ -241,7 +241,7 @@ class SnippetControllerTest extends SuluTestCase
     }
 
     #[Depends('testPost')]
-    public function testGetListWithTypesFilter(string $id): void
+    public function testGetListWithTypesFilter(): void
     {
         // Test filtering by existing type - should return the snippet
         $this->client->request('GET', '/admin/api/snippets?locale=en&types=snippet');
@@ -257,6 +257,58 @@ class SnippetControllerTest extends SuluTestCase
         $this->client->request('GET', '/admin/api/snippets?locale=en&types=snippet,other-template');
         $response = $this->client->getResponse();
         $this->assertResponseSnapshot('snippet_cget_types_filter_multiple.json', $response, 200);
+    }
+
+    #[Depends('testPost')]
+    public function testDeleteSingleLocale(string $id): void
+    {
+        $this->client->request('GET', '/admin/api/snippets/' . $id . '?locale=en');
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(200, $response);
+
+        /** @var array{template: string, title: string} $snippetData */
+        $snippetData = \json_decode((string) $response->getContent(), true);
+
+        $this->client->request('PUT', '/admin/api/snippets/' . $id . '?locale=de', [], [], [], \json_encode([
+            'template' => $snippetData['template'],
+            'title' => $snippetData['title'] . ' (DE)',
+        ]) ?: null);
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(200, $response);
+
+        /** @var array<string, mixed> $content */
+        $content = \json_decode((string) $response->getContent(), true);
+        /** @var array<int, string> $availableLocales */
+        $availableLocales = $content['availableLocales'];
+        $this->assertContains('en', $availableLocales);
+        $this->assertContains('de', $availableLocales);
+
+        $this->client->request('DELETE', '/admin/api/snippets/' . $id . '?locale=de&deleteLocale=true');
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(204, $response);
+
+        $this->client->request('GET', '/admin/api/snippets/' . $id . '?locale=en');
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(200, $response);
+
+        /** @var array<string, mixed> $content */
+        $content = \json_decode((string) $response->getContent(), true);
+        /** @var array<int, string> $availableLocales */
+        $availableLocales = $content['availableLocales'];
+        $this->assertNotContains('de', $availableLocales);
+        $this->assertContains('en', $availableLocales);
+
+        $this->client->request('GET', '/admin/api/snippets/' . $id . '?locale=de');
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(200, $response);
+
+        /** @var array<string, mixed> $content */
+        $content = \json_decode((string) $response->getContent(), true);
+        $this->assertEquals('en', $content['ghostLocale']);
+        /** @var array<int, string> $availableLocales */
+        $availableLocales = $content['availableLocales'];
+        $this->assertContains('en', $availableLocales);
+        $this->assertNotContains('de', $availableLocales);
     }
 
     #[Depends('testPost')]

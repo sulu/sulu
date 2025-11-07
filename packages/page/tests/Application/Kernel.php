@@ -14,6 +14,7 @@ namespace Sulu\Page\Tests\Application;
 use Sulu\Bundle\TestBundle\Kernel\SuluTestKernel;
 use Sulu\Component\HttpKernel\SuluKernel;
 use Sulu\Content\Tests\Application\ExampleTestBundle\ExampleTestBundle;
+use Symfony\Bundle\SecurityBundle\SecurityBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
 
 /**
@@ -21,6 +22,11 @@ use Symfony\Component\Config\Loader\LoaderInterface;
  */
 class Kernel extends SuluTestKernel
 {
+    /**
+     * @var string
+     */
+    private $appContext;
+
     /**
      * @var string|null
      */
@@ -31,6 +37,7 @@ class Kernel extends SuluTestKernel
         $environmentParts = \explode('_', $environment, 2);
         $environment = $environmentParts[0];
         $this->config = $environmentParts[1] ?? $this->config;
+        $this->appContext = $environmentParts[1] ?? '';
 
         parent::__construct($environment, $debug, $suluContext);
     }
@@ -40,6 +47,10 @@ class Kernel extends SuluTestKernel
         $bundles = [...parent::registerBundles()];
 
         $bundles[] = new ExampleTestBundle(); // TODO currently required for test content bundle, everybody should setup database by its own
+
+        if ('with_security' === $this->appContext) {
+            $bundles[] = new SecurityBundle();
+        }
 
         return $bundles;
     }

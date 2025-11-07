@@ -33,3 +33,9 @@ sulu_website_frontend:
 sulu_trash_api:
     resource: "@SuluTrashBundle/Resources/config/routing_api.yaml"
     prefix: /admin/api
+
+login:
+    path: /login
+    controller: Symfony\Bundle\FrameworkBundle\Controller\TemplateController
+    defaults:
+        template: login.html.twig

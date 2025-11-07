@@ -150,4 +150,9 @@ class Page implements PageInterface
 
         return $this;
     }
+
+    public function getSecurityContext(): string
+    {
+        return \sprintf('sulu.webspaces.%s', $this->webspaceKey);
+    }
 }

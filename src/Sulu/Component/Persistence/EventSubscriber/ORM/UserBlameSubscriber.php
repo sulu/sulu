@@ -43,6 +43,7 @@ class UserBlameSubscriber
         $metadata = $event->getClassMetadata();
         $reflection = $metadata->getReflectionClass();
 
+        // @phpstan-ignore notIdentical.alwaysTrue
         if (null !== $reflection && $reflection->implementsInterface(UserBlameInterface::class)) {
             if (!$metadata->hasAssociation(self::CREATOR_FIELD)) {
                 $metadata->mapManyToOne([

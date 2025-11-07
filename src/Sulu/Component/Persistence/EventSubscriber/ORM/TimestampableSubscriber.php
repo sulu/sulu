@@ -34,6 +34,7 @@ class TimestampableSubscriber
         $metadata = $event->getClassMetadata();
         $reflection = $metadata->getReflectionClass();
 
+        // @phpstan-ignore notIdentical.alwaysTrue
         if (null !== $reflection && $reflection->implementsInterface(TimestampableInterface::class)) {
             if (!$metadata->hasField(self::CREATED_FIELD)) {
                 $metadata->mapField([

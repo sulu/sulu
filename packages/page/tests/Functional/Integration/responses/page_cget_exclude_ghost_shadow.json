@@ -2,6 +2,7 @@
     "_embedded": {
         "pages": [
             {
+                "_hasPermissions": false,
                 "id": "0199ee04-c220-784e-a6fa-ac985870f2d5",
                 "version" : null,
                 "title": null,
@@ -20,6 +21,7 @@
                 "_embedded": {
                     "pages": [
                         {
+                            "_hasPermissions": false,
                             "author": null,
                             "changed": "@datetime@",
                             "changer": "Max Mustermann",

@@ -125,11 +125,25 @@ class PageAdmin extends Admin
                     'disabled_condition' => '(_permissions && !_permissions.edit)',
                 ]
             ),
-            'delete' => new ToolbarAction(
+            'delete' => new DropdownToolbarAction(
                 'sulu_admin.delete',
+                'su-trash-alt',
                 [
-                    'visible_condition' => '(!_permissions || _permissions.delete) && url != "/"',
-                    'router_attributes_to_back_view' => ['webspace'],
+                    new ToolbarAction(
+                        'sulu_admin.delete',
+                        [
+                            'visible_condition' => '(!_permissions || _permissions.delete) && url != "/"',
+                            'router_attributes_to_back_view' => ['webspace'],
+                        ]
+                    ),
+                    new ToolbarAction(
+                        'sulu_admin.delete',
+                        [
+                            'visible_condition' => '(!_permissions || _permissions.delete) && url != "/"',
+                            'router_attributes_to_back_view' => ['webspace'],
+                            'delete_locale' => true,
+                        ]
+                    ),
                 ]
             ),
             'edit' => new DropdownToolbarAction(
@@ -284,7 +298,7 @@ class PageAdmin extends Admin
 
             $viewCollection->add(
                 $this->viewBuilderFactory
-                    ->createPreviewFormViewBuilder('sulu_page.page_edit_form.permissions', '/permissions')
+                    ->createPreviewFormViewBuilder(PageAdmin::EDIT_FORM_VIEW . '.permissions', '/permissions')
                     ->setResourceKey('permissions')
                     ->setPreviewResourceKey(PageInterface::RESOURCE_KEY)
                     ->setFormKey('permission_details')

@@ -46,7 +46,7 @@
             <entity-name>ghostDimensionContent</entity-name>
             <field-name>Sulu\Article\Domain\Model\ArticleInterface.dimensionContents</field-name>
             <method>LEFT</method>
-            <condition>ghostDimensionContent.locale = unlocalizedDimensionContent.ghostLocale AND ghostDimensionContent.stage = 'draft' AND dimensionContent IS NULL</condition>
+            <condition>ghostDimensionContent.locale = unlocalizedDimensionContent.ghostLocale AND ghostDimensionContent.stage = 'draft' AND dimensionContent IS NULL AND ghostDimensionContent.version = 0</condition>
         </join>
     </joins>
 

@@ -17,6 +17,7 @@
                 "template": null,
                 "publishedState": false,
                 "hasChildren": true,
+                "_hasPermissions": false,
                 "_embedded": {
                     "pages": [
                         {
@@ -34,7 +35,8 @@
                             "webspaceKey": "sulu-io",
                             "template": "default",
                             "publishedState": false,
-                            "hasChildren": true
+                            "hasChildren": true,
+                            "_hasPermissions": false
                         },
                         {
                             "id": "@string@",
@@ -52,6 +54,7 @@
                             "template": "default",
                             "publishedState": true,
                             "hasChildren": true,
+                            "_hasPermissions": false,
                             "_embedded": {
                                 "pages": [
                                     {
@@ -69,7 +72,8 @@
                                         "webspaceKey": "sulu-io",
                                         "template": "default",
                                         "publishedState": false,
-                                        "hasChildren": false
+                                        "hasChildren": false,
+                                        "_hasPermissions": false
                                     }
                                 ]
                             }

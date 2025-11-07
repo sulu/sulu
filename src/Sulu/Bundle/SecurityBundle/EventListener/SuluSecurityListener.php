@@ -11,6 +11,8 @@
 
 namespace Sulu\Bundle\SecurityBundle\EventListener;
 
+use Doctrine\ORM\EntityManagerInterface;
+use Sulu\Component\Security\Authorization\AccessControl\SecuredEntityInterface;
 use Sulu\Component\Security\Authorization\AccessControl\SecuredObjectControllerInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
@@ -26,8 +28,10 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
  */
 class SuluSecurityListener implements EventSubscriberInterface
 {
-    public function __construct(private SecurityCheckerInterface $securityChecker)
-    {
+    public function __construct(
+        private SecurityCheckerInterface $securityChecker,
+        private ?EntityManagerInterface $entityManager = null
+    ) {
     }
 
     public static function getSubscribedEvents(): array
@@ -100,6 +104,22 @@ class SuluSecurityListener implements EventSubscriberInterface
         // check permission
         if ($controller instanceof SecuredControllerInterface) {
             $securityContext = $controller->getSecurityContext();
+        }
+
+        // For object-level security, we need to load the entity to get its security context
+        // if no static context was provided
+        // @phpstan-ignore notIdentical.alwaysTrue (getSecurityContext can return null)
+        if (null === $securityContext && null !== $objectType && null !== $objectId && null !== $this->entityManager) {
+            // Load the entity to get its security context
+            /** @var class-string<object> $objectType */
+            $repository = $this->entityManager->getRepository($objectType);
+            // @phpstan-ignore if.alwaysTrue (repository can be null in some edge cases)
+            if ($repository) {
+                $entity = $repository->find($objectId);
+                if ($entity instanceof SecuredEntityInterface) {
+                    $securityContext = $entity->getSecurityContext();
+                }
+            }
         }
 
         if (null !== $securityContext) {

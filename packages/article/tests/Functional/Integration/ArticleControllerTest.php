@@ -337,6 +337,67 @@ class ArticleControllerTest extends SuluTestCase
     }
 
     #[Depends('testPost')]
+    public function testDeleteSingleLocale(string $id): void
+    {
+        $this->client->request('GET', '/admin/api/articles/' . $id . '?locale=en');
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(200, $response);
+
+        /** @var array{template: string, title: string, url: string} $articleData */
+        $articleData = \json_decode((string) $response->getContent(), true);
+
+        $this->client->request('PUT', '/admin/api/articles/' . $id . '?locale=de', [], [], [], \json_encode([
+            'template' => $articleData['template'],
+            'title' => $articleData['title'] . ' (DE)',
+            'url' => '/de' . $articleData['url'],
+        ]) ?: null);
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(200, $response);
+
+        /** @var array<string, mixed> $content */
+        $content = \json_decode((string) $response->getContent(), true);
+        /** @var array<int, string> $availableLocales */
+        $availableLocales = $content['availableLocales'];
+        /** @var array<int, string> $contentLocales */
+        $contentLocales = $content['contentLocales'];
+        $this->assertContains('en', $availableLocales);
+        $this->assertContains('de', $availableLocales);
+        $this->assertContains('en', $contentLocales);
+        $this->assertContains('de', $contentLocales);
+
+        $this->client->request('DELETE', '/admin/api/articles/' . $id . '?locale=de&deleteLocale=true');
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(204, $response);
+
+        $this->client->request('GET', '/admin/api/articles/' . $id . '?locale=en');
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(200, $response);
+
+        /** @var array<string, mixed> $content */
+        $content = \json_decode((string) $response->getContent(), true);
+        /** @var array<int, string> $availableLocales */
+        $availableLocales = $content['availableLocales'];
+        /** @var array<int, string> $contentLocales */
+        $contentLocales = $content['contentLocales'];
+        $this->assertNotContains('de', $availableLocales);
+        $this->assertContains('en', $availableLocales);
+        $this->assertNotContains('de', $contentLocales);
+        $this->assertContains('en', $contentLocales);
+
+        $this->client->request('GET', '/admin/api/articles/' . $id . '?locale=de');
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(200, $response);
+
+        /** @var array<string, mixed> $content */
+        $content = \json_decode((string) $response->getContent(), true);
+        $this->assertEquals('en', $content['ghostLocale']);
+        /** @var array<int, string> $availableLocales */
+        $availableLocales = $content['availableLocales'];
+        $this->assertContains('en', $availableLocales);
+        $this->assertNotContains('de', $availableLocales);
+    }
+
+    #[Depends('testPost')]
     #[Depends('testGetList')]
     public function testDelete(string $id): int
     {
@@ -345,7 +406,7 @@ class ArticleControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(204, $response);
 
         $routeRepository = $this->getContainer()->get(RouteRepositoryInterface::class);
-        $this->assertCount(3, $routeRepository->findBy([])); // TODO we need tackle this
+        $this->assertCount(4, $routeRepository->findBy([])); // TODO we need tackle this
 
         $trashRepository = self::getContainer()->get(TrashItemRepositoryInterface::class);
         $trashItem = $trashRepository->findOneBy([

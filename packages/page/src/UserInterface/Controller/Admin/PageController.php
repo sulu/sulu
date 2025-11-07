@@ -21,6 +21,10 @@ use Sulu\Component\Rest\ListBuilder\ListBuilderInterface;
 use Sulu\Component\Rest\ListBuilder\Metadata\FieldDescriptorFactoryInterface;
 use Sulu\Component\Rest\ListBuilder\PaginatedRepresentation;
 use Sulu\Component\Rest\RestHelperInterface;
+use Sulu\Component\Security\Authentication\UserInterface;
+use Sulu\Component\Security\Authorization\AccessControl\AccessControlManagerInterface;
+use Sulu\Component\Security\Authorization\AccessControl\SecuredObjectControllerInterface;
+use Sulu\Component\Security\SecuredControllerInterface;
 use Sulu\Content\Application\ContentManager\ContentManagerInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Domain\Model\WorkflowInterface;
@@ -35,6 +39,7 @@ use Sulu\Page\Application\Message\OrderPageMessage;
 use Sulu\Page\Application\Message\RemovePageMessage;
 use Sulu\Page\Application\Message\RemovePageTranslationMessage;
 use Sulu\Page\Application\Message\RestorePageVersionMessage;
+use Sulu\Page\Domain\Model\Page;
 use Sulu\Page\Domain\Model\PageInterface;
 use Sulu\Page\Domain\Repository\PageRepositoryInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -43,6 +48,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\HandleTrait;
 use Symfony\Component\Messenger\MessageBusInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 /**
@@ -50,7 +56,7 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
  *           Use instead a request or response listener to
  *           extend the endpoints behaviours
  */
-final class PageController
+final class PageController implements SecuredControllerInterface, SecuredObjectControllerInterface
 {
     use HandleTrait;
 
@@ -63,6 +69,8 @@ final class PageController
         private DoctrineListBuilderFactoryInterface $listBuilderFactory,
         private RestHelperInterface $restHelper,
         private EntityManagerInterface $entityManager,
+        private AccessControlManagerInterface $accessControlManager,
+        private TokenStorageInterface $tokenStorage,
     ) {
         // TODO controller should not need more then Repository, MessageBus, Serializer
     }
@@ -245,7 +253,7 @@ final class PageController
         );
     }
 
-    private function getLocale(Request $request): string
+    public function getLocale(Request $request): string
     {
         return $request->query->getString('locale', $request->getLocale());
     }
@@ -466,8 +474,38 @@ final class PageController
             // TODO this should be handled by the listbuilder
             $row['publishedState'] = WorkflowInterface::WORKFLOW_PLACE_PUBLISHED === $row['publishedState'];
 
+            // Add permissions data for each row
             /** @var string $rowId */
             $rowId = $row['id'];
+            /** @var string $webspaceKey */
+            $webspaceKey = $row['webspaceKey'];
+
+            // Get all permissions for the page
+            $allPermissions = $this->accessControlManager->getPermissions(
+                Page::class,
+                $rowId
+            );
+            $row['_hasPermissions'] = !empty($allPermissions);
+
+            // Get user-specific permissions
+            if (!empty($allPermissions)) {
+                $token = $this->tokenStorage->getToken();
+                $user = $token?->getUser();
+
+                // Ensure user is compatible with Sulu's UserInterface
+                if ($user instanceof UserInterface) {
+                    $permissions = $this->accessControlManager->getUserPermissionByArray(
+                        null,
+                        \sprintf('sulu.webspaces.%s', $webspaceKey),
+                        $allPermissions,
+                        $user
+                    );
+                    $row['_permissions'] = $permissions;
+                } else {
+                    $row['_permissions'] = [];
+                }
+            }
+
             if (\array_key_exists($rowId, $rowsByParentId)) {
                 $row['_embedded'] = [
                     $resourceKey => $rowsByParentId[$rowId],
@@ -483,5 +521,34 @@ final class PageController
         }
 
         return $rowsByParentId[$parentId] ?? [];
+    }
+
+    /**
+     * @return string|null
+     *
+     * @phpstan-ignore return.type
+     */
+    public function getSecurityContext()
+    {
+        // Pages have webspace-specific security contexts, but we can't determine
+        // the webspace here without the Request. We return null and rely on
+        // object-level permissions via SecuredObjectControllerInterface.
+        // The SuluSecurityListener will load the Page entity and get its
+        // security context dynamically.
+        return null;
+    }
+
+    public function getSecuredClass()
+    {
+        return Page::class;
+    }
+
+    public function getSecuredObjectId(Request $request): string
+    {
+        // For detail actions, use id parameter
+        // For list action, no specific object (will check webspace-level permissions)
+        $id = $request->get('id');
+
+        return \is_string($id) ? $id : '';
     }
 }
