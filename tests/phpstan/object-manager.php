@@ -12,7 +12,7 @@ declare(strict_types=1);
  */
 
 use App\Kernel;
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Events;
 use Doctrine\ORM\Tools\ResolveTargetEntityListener;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -27,7 +27,7 @@ $kernel->boot();
 /** @var ContainerInterface $container */
 $container = $kernel->getContainer();
 
-/** @var EntityManager $objectManager */
+/** @var EntityManagerInterface $objectManager */
 $objectManager = $container->get('doctrine')->getManager();
 
 // remove ResolveTargetEntityListener from returned EntityManager to not resolve SuluPersistenceBundle classes

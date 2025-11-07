@@ -11,7 +11,7 @@
 
 namespace Sulu\Bundle\PageBundle\Search\EventSubscriber;
 
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Massive\Bundle\SearchBundle\Search\Event\HitEvent;
 use Massive\Bundle\SearchBundle\Search\Event\PreIndexEvent;
 use Massive\Bundle\SearchBundle\Search\Factory;
@@ -31,7 +31,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class BlameTimestampSubscriber implements EventSubscriberInterface
 {
-    public function __construct(private Factory $factory, private EntityManager $entityManager)
+    public function __construct(private Factory $factory, private EntityManagerInterface $entityManager)
     {
     }
 

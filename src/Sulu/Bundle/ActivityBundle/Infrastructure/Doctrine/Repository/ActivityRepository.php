@@ -12,7 +12,7 @@
 namespace Sulu\Bundle\ActivityBundle\Infrastructure\Doctrine\Repository;
 
 use Doctrine\DBAL\Query\QueryBuilder;
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Sulu\Bundle\ActivityBundle\Domain\Event\DomainEvent;
 use Sulu\Bundle\ActivityBundle\Domain\Model\ActivityInterface;
@@ -21,7 +21,7 @@ use Sulu\Bundle\ActivityBundle\Domain\Repository\ActivityRepositoryInterface;
 class ActivityRepository implements ActivityRepositoryInterface
 {
     /**
-     * @var EntityManager
+     * @var EntityManagerInterface
      */
     protected $entityManager;
 
@@ -35,7 +35,7 @@ class ActivityRepository implements ActivityRepositoryInterface
      */
     protected $shouldPersistPayload;
 
-    public function __construct(EntityManager $entityManager, bool $shouldPersistPayload)
+    public function __construct(EntityManagerInterface $entityManager, bool $shouldPersistPayload)
     {
         $this->entityManager = $entityManager;
         $this->entityRepository = $entityManager->getRepository(ActivityInterface::class);
