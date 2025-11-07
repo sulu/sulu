@@ -1335,7 +1335,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
      * Updates the given address.
      *
      * @param Address $address The phone object to update
-     * @param mixed $entry The entry with the new data
+     * @param array<string, mixed> $entry The entry with the new data
      * @param bool $isMain returns if address should be set to main
      *
      * @return bool True if successful, otherwise false
@@ -1354,60 +1354,56 @@ abstract class AbstractContactManager implements ContactManagerInterface
             throw new EntityNotFoundException(self::$addressTypeEntityName, $entry['addressType']);
         }
 
-        if (isset($entry['street'])) {
+        if (\array_key_exists('street', $entry)) {
             $address->setStreet($entry['street']);
         }
-        if (isset($entry['number'])) {
+        if (\array_key_exists('number', $entry)) {
             $address->setNumber($entry['number']);
         }
-        if (isset($entry['zip'])) {
+        if (\array_key_exists('zip', $entry)) {
             $address->setZip($entry['zip']);
         }
-        if (isset($entry['city'])) {
+        if (\array_key_exists('city', $entry)) {
             $address->setCity($entry['city']);
         }
-        if (isset($entry['state'])) {
+        if (\array_key_exists('state', $entry)) {
             $address->setState($entry['state']);
         }
-        if (isset($entry['countryCode'])) {
+        if (\array_key_exists('countryCode', $entry)) {
             $address->setCountryCode($entry['countryCode']);
         }
         if ($addressType) {
             $address->setAddressType($addressType);
         }
-        if (isset($entry['latitude'])) {
+        if (\array_key_exists('latitude', $entry)) {
             $address->setLatitude($entry['latitude'] ?: null);
         }
-        if (isset($entry['longitude'])) {
+        if (\array_key_exists('longitude', $entry)) {
             $address->setLongitude($entry['longitude'] ?: null);
         }
-        if (isset($entry['note'])) {
+        if (\array_key_exists('note', $entry)) {
             $address->setNote($entry['note']);
         }
-        if (isset($entry['title'])) {
+        if (\array_key_exists('title', $entry)) {
             $address->setTitle($entry['title']);
         }
-        if (isset($entry['primaryAddress'])) {
-            $isMain = $this->getBooleanValue($entry['primaryAddress']);
-        } else {
-            $isMain = false;
-        }
-        if (isset($entry['billingAddress'])) {
+        $isMain = $this->getBooleanValue($entry['primaryAddress'] ?? false);
+        if (\array_key_exists('billingAddress', $entry)) {
             $address->setBillingAddress($this->getBooleanValue($entry['billingAddress']));
         }
-        if (isset($entry['deliveryAddress'])) {
+        if (\array_key_exists('deliveryAddress', $entry)) {
             $address->setDeliveryAddress($this->getBooleanValue($entry['deliveryAddress']));
         }
-        if (isset($entry['postboxCity'])) {
+        if (\array_key_exists('postboxCity', $entry)) {
             $address->setPostboxCity($entry['postboxCity']);
         }
-        if (isset($entry['postboxNumber'])) {
+        if (\array_key_exists('postboxNumber', $entry)) {
             $address->setPostboxNumber($entry['postboxNumber']);
         }
-        if (isset($entry['postboxPostcode'])) {
+        if (\array_key_exists('postboxPostcode', $entry)) {
             $address->setPostboxPostcode($entry['postboxPostcode']);
         }
-        if (isset($entry['addition'])) {
+        if (\array_key_exists('addition', $entry)) {
             $address->setAddition($entry['addition']);
         }
 

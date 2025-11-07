@@ -2032,6 +2032,83 @@ class AccountControllerTest extends SuluTestCase
         $this->assertEquals(true, $response->addresses[2]->primaryAddress);
     }
 
+    public function testEmptyValueAddressHandlingPut(): void
+    {
+        $emailType = $this->createEmailType('Private');
+        $addressType = $this->createAddressType('Private');
+        $address = $this->createAddress($addressType);
+        $account = $this->createAccount('Company', null, null, $address);
+        $this->em->flush();
+        $this->em->clear();
+
+        $this->client->jsonRequest(
+            'PUT',
+            '/api/accounts/' . $account->getId(),
+            [
+                'name' => 'ExampleCompany',
+                'urls' => [],
+                'emails' => [
+                    [
+                        'email' => 'office@company.com',
+                        'emailType' => [
+                            'id' => $emailType->getId(),
+                            'name' => 'Private',
+                        ],
+                    ],
+                ],
+                'addresses' => [
+                    [
+                        'id' => $address->getId(),
+                        'street' => '',
+                        'number' => '',
+                        'zip' => null,
+                        'city' => null,
+                        'addressType' => $addressType->getId(),
+                        'billingAddress' => true,
+                        'primaryAddress' => true,
+                        'deliveryAddress' => null,
+                        'postboxNumber' => '',
+                    ],
+                ],
+            ]
+        );
+
+        $expectedAddress = [
+            'id' => $address->getId(),
+            'street' => '',
+            'number' => '',
+            'addition' => '',
+            'zip' => null,
+            'city' => null,
+            'state' => null,
+            'countryCode' => null,
+            'addressType' => $addressType->getId(),
+            'billingAddress' => true,
+            'primaryAddress' => true,
+            'deliveryAddress' => false,
+            'postboxCity' => null,
+            'postboxPostcode' => null,
+            'postboxNumber' => '',
+            'note' => null,
+            'title' => null,
+            'latitude' => null,
+            'longitude' => null,
+        ];
+
+        $response = \json_decode((string) $this->client->getResponse()->getContent(), true);
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+        $this->assertEquals($expectedAddress, $response['addresses'][0]);
+
+        $this->client->jsonRequest(
+            'GET',
+            '/api/accounts/' . $account->getId()
+        );
+
+        $response = \json_decode((string) $this->client->getResponse()->getContent(), true);
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+        $this->assertEquals($expectedAddress, $response['addresses'][0]);
+    }
+
     public function sortAddressesPrimaryLast()
     {
         return function($a, $b) {

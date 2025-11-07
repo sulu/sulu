@@ -12379,42 +12379,6 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
 
 		-
-			message: '#^Cannot access offset ''addition'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
-
-		-
-			message: '#^Cannot access offset ''addressType'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
-
-		-
-			message: '#^Cannot access offset ''billingAddress'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
-
-		-
-			message: '#^Cannot access offset ''city'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
-
-		-
-			message: '#^Cannot access offset ''countryCode'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
-
-		-
-			message: '#^Cannot access offset ''deliveryAddress'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
-
-		-
 			message: '#^Cannot access offset ''email'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 2
@@ -12433,75 +12397,9 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
 
 		-
-			message: '#^Cannot access offset ''latitude'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
-
-		-
-			message: '#^Cannot access offset ''longitude'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
-
-		-
-			message: '#^Cannot access offset ''note'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
-
-		-
-			message: '#^Cannot access offset ''number'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
-
-		-
 			message: '#^Cannot access offset ''phone'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 2
-			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
-
-		-
-			message: '#^Cannot access offset ''postboxCity'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
-
-		-
-			message: '#^Cannot access offset ''postboxNumber'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
-
-		-
-			message: '#^Cannot access offset ''postboxPostcode'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
-
-		-
-			message: '#^Cannot access offset ''primaryAddress'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
-
-		-
-			message: '#^Cannot access offset ''state'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
-
-		-
-			message: '#^Cannot access offset ''street'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
-
-		-
-			message: '#^Cannot access offset ''title'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
 
 		-
@@ -12514,12 +12412,6 @@ parameters:
 			message: '#^Cannot access offset ''website'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 2
-			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
-
-		-
-			message: '#^Cannot access offset ''zip'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
 
 		-
@@ -13531,6 +13423,12 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
 
 		-
+			message: '#^Parameter \#2 \$entry of method Sulu\\Bundle\\ContactBundle\\Contact\\AbstractContactManager\<DoctrineEntity,ApiEntity,AddressRelationEntity\>\:\:updateAddress\(\) expects array\<string, mixed\>, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
+
+		-
 			message: '#^Parameter \#2 \$entry of method Sulu\\Bundle\\ContactBundle\\Contact\\AbstractContactManager\<DoctrineEntity,ApiEntity,AddressRelationEntity\>\:\:updateEmail\(\) expects array, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -13939,21 +13837,9 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Contact/ContactManager.php
 
 		-
-			message: '#^Call to function array_key_exists\(\) with ''id'' and \*NEVER\* will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/ContactManager.php
-
-		-
 			message: '#^Call to function is_array\(\) with array will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 2
-			path: src/Sulu/Bundle/ContactBundle/Contact/ContactManager.php
-
-		-
-			message: '#^Call to function is_array\(\) with string will always evaluate to false\.$#'
-			identifier: function.impossibleType
-			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Contact/ContactManager.php
 
 		-
@@ -14072,12 +13958,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#1 \$firstName of method Sulu\\Bundle\\ContactBundle\\Entity\\ContactInterface\:\:setFirstName\(\) expects string, string\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/ContactManager.php
-
-		-
-			message: '#^Parameter \#1 \$formOfAddress of method Sulu\\Bundle\\ContactBundle\\Entity\\ContactInterface\:\:setFormOfAddress\(\) expects int, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Contact/ContactManager.php
@@ -14206,12 +14086,6 @@ parameters:
 			message: '#^Parameter \#3 \$default of method Sulu\\Bundle\\ContactBundle\\Contact\\ContactManager\:\:getProperty\(\) expects string\|null, array given\.$#'
 			identifier: argument.type
 			count: 13
-			path: src/Sulu/Bundle/ContactBundle/Contact/ContactManager.php
-
-		-
-			message: '#^Result of && is always false\.$#'
-			identifier: booleanAnd.alwaysFalse
-			count: 2
 			path: src/Sulu/Bundle/ContactBundle/Contact/ContactManager.php
 
 		-
@@ -16111,6 +15985,12 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/AccountControllerTest.php
 
 		-
+			message: '#^Cannot access offset ''addresses'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 2
+			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/AccountControllerTest.php
+
+		-
 			message: '#^Cannot access offset ''firstName'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 2
@@ -16131,7 +16011,7 @@ parameters:
 		-
 			message: '#^Cannot access offset 0 on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 130
+			count: 132
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/AccountControllerTest.php
 
 		-
@@ -16503,7 +16383,7 @@ parameters:
 		-
 			message: '#^Cannot call method getId\(\) on mixed\.$#'
 			identifier: method.nonObject
-			count: 81
+			count: 86
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/AccountControllerTest.php
 
 		-
@@ -16659,7 +16539,7 @@ parameters:
 		-
 			message: '#^Parameter \#1 \$addressType of method Sulu\\Bundle\\ContactBundle\\Tests\\Functional\\Controller\\AccountControllerTest\:\:createAddress\(\) expects Sulu\\Bundle\\ContactBundle\\Entity\\AddressType\|null, mixed given\.$#'
 			identifier: argument.type
-			count: 5
+			count: 6
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/AccountControllerTest.php
 
 		-
@@ -16815,7 +16695,7 @@ parameters:
 		-
 			message: '#^Parameter \#4 \$address of method Sulu\\Bundle\\ContactBundle\\Tests\\Functional\\Controller\\AccountControllerTest\:\:createAccount\(\) expects Sulu\\Bundle\\ContactBundle\\Entity\\Address\|null, mixed given\.$#'
 			identifier: argument.type
-			count: 5
+			count: 6
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/AccountControllerTest.php
 
 		-
@@ -20101,30 +19981,6 @@ parameters:
 			path: src/Sulu/Bundle/CoreBundle/Entity/ApiEntityWrapper.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\CoreBundle\\Tests\\Unit\\DependencyInjection\\Compiler\\ListBuilderMetadataProviderCompilerPassTest\:\:dataProcessProvider\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/CoreBundle/Tests/Unit/DependencyInjection/Compiler/ListBuilderMetadataProviderCompilerPassTest.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\CoreBundle\\Tests\\Unit\\DependencyInjection\\Compiler\\ListBuilderMetadataProviderCompilerPassTest\:\:testProcess\(\) has parameter \$hasDefinition with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/CoreBundle/Tests/Unit/DependencyInjection/Compiler/ListBuilderMetadataProviderCompilerPassTest.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\CoreBundle\\Tests\\Unit\\DependencyInjection\\Compiler\\ListBuilderMetadataProviderCompilerPassTest\:\:testProcess\(\) has parameter \$taggedServices with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/CoreBundle/Tests/Unit/DependencyInjection/Compiler/ListBuilderMetadataProviderCompilerPassTest.php
-
-		-
-			message: '#^Parameter \#1 \$array of function array_keys expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/CoreBundle/Tests/Unit/DependencyInjection/Compiler/ListBuilderMetadataProviderCompilerPassTest.php
-
-		-
 			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
 			identifier: foreach.nonIterable
 			count: 2
@@ -22801,12 +22657,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/DependencyInjection/Configuration.php
 
 		-
-			message: '#^Cannot access offset ''alias'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/DependencyInjection/ImageTransformationCompilerPass.php
-
-		-
 			message: '#^Binary operation "\." between ''flysystem\.adapter\.'' and mixed results in an error\.$#'
 			identifier: binaryOp.invalid
 			count: 1
@@ -24785,12 +24635,6 @@ parameters:
 			identifier: missingType.iterableValue
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Media/ImageConverter/Transformation/TransformationInterface.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\Media\\ImageConverter\\TransformationPool\:\:add\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Media/ImageConverter/TransformationPool.php
 
 		-
 			message: '#^Method Sulu\\Bundle\\MediaBundle\\Media\\ListBuilderFactory\\MediaListBuilderFactory\:\:getListBuilder\(\) has parameter \$fieldDescriptors with no value type specified in iterable type array\.$#'
@@ -31219,12 +31063,6 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/SingleSignOn/SingleSignOnAdapterFactory.php
 
 		-
-			message: '#^Return type \(void\) of method Sulu\\Bundle\\SecurityBundle\\Tests\\Application\\SecuredEntity\:\:getId\(\) should be compatible with return type \(int\) of method Sulu\\Component\\Security\\Authorization\\AccessControl\\SecuredEntityInterface\:\:getId\(\)$#'
-			identifier: method.childReturnType
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Tests/Application/SecuredEntity.php
-
-		-
 			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
 			identifier: foreach.nonIterable
 			count: 1
@@ -37129,12 +36967,6 @@ parameters:
 			path: src/Sulu/Component/Persistence/EventSubscriber/ORM/TimestampableSubscriber.php
 
 		-
-			message: '#^Strict comparison using \!\=\= between null and ReflectionClass\<object\> will always evaluate to true\.$#'
-			identifier: notIdentical.alwaysTrue
-			count: 1
-			path: src/Sulu/Component/Persistence/EventSubscriber/ORM/TimestampableSubscriber.php
-
-		-
 			message: '#^Call to an undefined method Doctrine\\Persistence\\Mapping\\ClassMetadata\<object\>\:\:mapManyToOne\(\)\.$#'
 			identifier: method.notFound
 			count: 2
@@ -37179,12 +37011,6 @@ parameters:
 		-
 			message: '#^Method Sulu\\Component\\Persistence\\EventSubscriber\\ORM\\UserBlameSubscriber\:\:onFlush\(\) has no return type specified\.$#'
 			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Component/Persistence/EventSubscriber/ORM/UserBlameSubscriber.php
-
-		-
-			message: '#^Strict comparison using \!\=\= between null and ReflectionClass\<object\> will always evaluate to true\.$#'
-			identifier: notIdentical.alwaysTrue
 			count: 1
 			path: src/Sulu/Component/Persistence/EventSubscriber/ORM/UserBlameSubscriber.php
 
@@ -41031,12 +40857,6 @@ parameters:
 		-
 			message: '#^Method Sulu\\Component\\Security\\Serializer\\Subscriber\\SecuredEntitySubscriber\:\:onPostSerialize\(\) has no return type specified\.$#'
 			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Component/Security/Serializer/Subscriber/SecuredEntitySubscriber.php
-
-		-
-			message: '#^Parameter \#2 \$identifier of method Sulu\\Component\\Security\\Authorization\\AccessControl\\AccessControlManagerInterface\:\:getPermissions\(\) expects string\|null, int given\.$#'
-			identifier: argument.type
 			count: 1
 			path: src/Sulu/Component/Security/Serializer/Subscriber/SecuredEntitySubscriber.php
 

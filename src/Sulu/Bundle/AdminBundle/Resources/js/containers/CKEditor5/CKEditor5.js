@@ -17,6 +17,7 @@ import CodePlugin from '@ckeditor/ckeditor5-basic-styles/src/code';
 import TablePlugin from '@ckeditor/ckeditor5-table/src/table';
 import TableToolbarPlugin from '@ckeditor/ckeditor5-table/src/tabletoolbar';
 import {translate} from '../../utils/Translator';
+import {addPTags, removePTags} from './utils';
 import ExternalLinkPlugin from './plugins/ExternalLinkPlugin';
 import InternalLinkPlugin from './plugins/InternalLinkPlugin';
 import configRegistry from './registries/configRegistry';
@@ -24,6 +25,7 @@ import pluginRegistry from './registries/pluginRegistry';
 import type {IObservableValue} from 'mobx/lib/mobx';
 import type {ElementRef} from 'react';
 import './ckeditor5.scss';
+import type {SchemaOptions} from '../Form/types';
 
 type Props = {|
     disabled: boolean,
@@ -32,6 +34,7 @@ type Props = {|
     onBlur?: () => void,
     onChange: (value: ?string) => void,
     onFocus?: (event: { target: EventTarget }) => void,
+    options?: SchemaOptions,
     value: ?string,
 |};
 
@@ -48,6 +51,7 @@ export default class CKEditor5 extends React.Component<Props> {
     static defaultProps = {
         disabled: false,
         formats: ['h2', 'h3', 'h4', 'h5', 'h6'],
+        options: {},
         value: '',
     };
 
@@ -63,7 +67,15 @@ export default class CKEditor5 extends React.Component<Props> {
 
     componentDidUpdate() {
         if (this.editorInstance) {
-            const {value, disabled} = this.props;
+            const {
+                value,
+                disabled,
+                options: {
+                    enter_mode: {
+                        value: enterModeValue = 'p',
+                    } = {},
+                } = {},
+            } = this.props;
 
             if (disabled) {
                 this.editorInstance.ui.element.classList.add('disabled');
@@ -75,13 +87,25 @@ export default class CKEditor5 extends React.Component<Props> {
 
             const editorData = this.getEditorData();
             if (editorData !== value && !(value === '' && editorData === undefined)) {
-                this.editorInstance.setData(value);
+                let finalValue = value;
+                if (finalValue && enterModeValue === 'br') {
+                    finalValue = addPTags(finalValue);
+                }
+                this.editorInstance.setData(finalValue);
             }
         }
     }
 
     componentDidMount() {
-        const {formats, locale} = this.props;
+        const {
+            formats,
+            locale,
+            options: {
+                enter_mode: {
+                    value: enterModeValue = 'p',
+                } = {},
+            } = {},
+        } = this.props;
 
         const defaultConfig = {
             toolbar: [
@@ -193,8 +217,11 @@ export default class CKEditor5 extends React.Component<Props> {
             })
             .then((editor) => {
                 this.editorInstance = editor;
-
-                this.editorInstance.setData(this.props.value);
+                let value = this.props.value;
+                if (value && enterModeValue === 'br') {
+                    value = addPTags(value);
+                }
+                this.editorInstance.setData(value);
 
                 const {disabled, onBlur, onChange, onFocus} = this.props;
                 const {
@@ -247,8 +274,16 @@ export default class CKEditor5 extends React.Component<Props> {
     }
 
     getEditorData() {
+        const {
+            options: {
+                enter_mode: {
+                    value: enterModeValue = 'p',
+                } = {},
+            } = {},
+        } = this.props;
+
         const editorData = this.editorInstance.getData();
-        return editorData === '' ? undefined : editorData;
+        return editorData === '' ? undefined : (enterModeValue === 'br' ? removePTags(editorData) : editorData);
     }
 
     render() {
