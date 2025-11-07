@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\MarkupBundle;
 
-use Sulu\Bundle\MarkupBundle\DependencyInjection\CompilerPass\ParserCompilerPass;
 use Sulu\Bundle\MarkupBundle\DependencyInjection\CompilerPass\TagCompilerPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
@@ -30,7 +29,6 @@ class SuluMarkupBundle extends Bundle
     {
         parent::build($container);
 
-        $container->addCompilerPass(new ParserCompilerPass());
         $container->addCompilerPass(new TagCompilerPass());
     }
 }
