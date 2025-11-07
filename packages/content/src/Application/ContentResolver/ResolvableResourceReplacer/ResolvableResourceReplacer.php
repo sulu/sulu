@@ -52,21 +52,24 @@ class ResolvableResourceReplacer implements ResolvableResourceReplacerInterface
 
         $hasReplaced = false;
         \array_walk_recursive($content, function(&$value) use ($resolvedResources, &$hasReplaced) {
-            if (
-                $value instanceof ResolvableInterface
-            ) {
-                $resource = $resolvedResources[$value->getResourceLoaderKey()][$value->getId()][$value->getMetadataIdentifier()] ?? null;
-
-                // Populate ReferenceStore if resource was successfully loaded and has resourceKey
-                if (null !== $resource && $value instanceof ResolvableResource && $value->getResourceKey()) {
-                    $this->populateReferenceStore($value->getId(), $value->getResourceKey());
-                }
-
-                $value = $value->executeResourceCallback(
-                    $resource,
-                );
-                $hasReplaced = true;
+            if (!$value instanceof ResolvableInterface) {
+                return;
             }
+
+            $resource = $resolvedResources[$value->getResourceLoaderKey()][$value->getId()][$value->getMetadataIdentifier()] ?? null;
+
+            if (null !== $resource && $value instanceof ResolvableResource && $value->getResourceKey()) {
+                $this->populateReferenceStore($value->getId(), $value->getResourceKey());
+            }
+
+            if (null === $resource) {
+                $value = null;
+
+                return;
+            }
+
+            $value = $value->executeResourceCallback($resource);
+            $hasReplaced = true;
         });
 
         // Recursively replace ResolvableResource instances in nested arrays

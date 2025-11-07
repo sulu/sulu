@@ -43,7 +43,7 @@ readonly class ExcerptResolver implements ResolverInterface
         /** @var FormMetadata $formMetadata */
         $formMetadata = $this->formMetadataProvider->getMetadata($this->getFormKey(), $locale, []);
 
-        $formMetadataItems = $formMetadata->getItems();
+        $formMetadataItems = $formMetadata->getFlatFieldMetadata();
         $data = $this->getExcerptData($dimensionContent);
         if (null !== $properties) {
             $filteredFormMetadataItems = [];

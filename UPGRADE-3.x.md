@@ -54,6 +54,16 @@ don’t lose these files by checking them out again from version control:
 git checkout config/templates/articles/
 ```
 
+### Pre Update step to 3.0 Cleanup phpcr-repository
+
+Before you can upgrade to Sulu 3.0 you need to cleanup the phpcr-repository.
+
+Run the following command to remove all the unused properties from the phpcr-repository:
+
+```bash
+php bin/adminconsole sulu:document:phpcr-cleanup
+```
+
 ### Upgrade to Sulu 3.0 and register new bundles
 
 Now upgrade the dependencies to Sulu 3.0:
@@ -163,6 +173,14 @@ to update your database schema.
 The following SQL statements are examples based on MySQL. You might generate them via doctrine for your preferred database.
 
 #### RouteBundle
+
+To be able to use the old routes in the migration we have to rename the `ro_routes` table to `ro_routes_old`.
+
+```sql
+ALTER TABLE ro_routes RENAME TO ro_routes_old;
+```
+
+And create a new `ro_routes` table with the following structure:
 
 ```sql
 CREATE TABLE ro_routes (id INT AUTO_INCREMENT NOT NULL, parent_id INT DEFAULT NULL, site VARCHAR(31) DEFAULT NULL, locale VARCHAR(15) NOT NULL, slug VARCHAR(144) NOT NULL, resource_key VARCHAR(32) NOT NULL, resource_id VARCHAR(70) NOT NULL, INDEX IDX_BD51B2DA727ACA70 (parent_id), INDEX ro_routes_resource_idx (locale, resource_key, resource_id), UNIQUE INDEX ro_routes_unique (site, locale, slug), PRIMARY KEY(id));

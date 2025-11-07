@@ -40,7 +40,7 @@ readonly class SeoResolver implements ResolverInterface
         /** @var FormMetadata $formMetadata */
         $formMetadata = $this->formMetadataProvider->getMetadata($this->getFormKey(), $locale, []);
 
-        $formMetadataItems = \array_filter($formMetadata->getItems(), function($item) {
+        $formMetadataItems = \array_filter($formMetadata->getFlatFieldMetadata(), function($item) {
             return !\in_array($item->getType(), $this->excludedPropertyTypes(), true);
         });
         $data = $this->getSeoData($dimensionContent);

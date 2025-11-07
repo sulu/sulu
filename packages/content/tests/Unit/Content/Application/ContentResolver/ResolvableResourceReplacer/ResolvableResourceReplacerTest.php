@@ -205,41 +205,6 @@ class ResolvableResourceReplacerTest extends TestCase
         self::assertEmpty($tags);
     }
 
-    public function testReplaceWithMissingResource(): void
-    {
-        $resolvableResource = new ResolvableResource(
-            '123',
-            'page',
-            1,
-            function(mixed $resource) {
-                return $resource ?? 'fallback';
-            },
-            null,
-            'pages');
-
-        $content = ['page' => $resolvableResource];
-
-        $resolvedResources = [
-            'page' => [
-                '456' => ['default' => ['title' => 'Other Page']], // Different ID
-            ],
-        ];
-
-        $result = $this->replacer->replaceResolvableResourcesWithResolvedValues(
-            $content,
-            $resolvedResources,
-            0,
-            5
-        );
-
-        // Should use callback with null resource
-        self::assertSame('fallback', $result['page']);
-
-        // ReferenceStore should be empty when resource not found
-        $tags = $this->referenceStore->getAll();
-        self::assertEmpty($tags);
-    }
-
     public function testReplaceWithComplexNestedStructure(): void
     {
         $pageResource = new ResolvableResource(

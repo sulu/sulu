@@ -277,7 +277,7 @@ class FormMetadata extends AbstractMetadata
     /**
      * @internal no backwards compatibility promise is given for this method it could be removed or changed at any time
      *
-     * @return FieldMetadata[]
+     * @return array<string, FieldMetadata>
      */
     public function getFlatFieldMetadata(): array
     {
@@ -285,10 +285,10 @@ class FormMetadata extends AbstractMetadata
         foreach ($this->getItems() as $item) {
             if ($item instanceof SectionMetadata) {
                 foreach ($item->getFlatFieldMetadata() as $subItem) {
-                    $items[] = $subItem;
+                    $items[$subItem->getName()] = $subItem;
                 }
             } elseif ($item instanceof FieldMetadata) {
-                $items[] = $item;
+                $items[$item->getName()] = $item;
             }
         }
 

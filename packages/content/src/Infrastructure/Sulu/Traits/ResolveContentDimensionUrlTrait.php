@@ -55,7 +55,7 @@ trait ResolveContentDimensionUrlTrait
             return null; // @codeCoverageIgnore
         }
 
-        foreach ($metadata->getItems() as $property) {
+        foreach ($metadata->getFlatFieldMetadata() as $property) {
             if ('route' === $property->getType()) {
                 /** @var string|null */
                 return $dimensionContent->getTemplateData()[$property->getName()] ?? null;
