@@ -35,11 +35,17 @@ class ToolbarAction
         $this->options = $options;
     }
 
+    /**
+     * @return string
+     */
     public function getType()
     {
         return $this->type;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function getOptions()
     {
         return $this->options;
