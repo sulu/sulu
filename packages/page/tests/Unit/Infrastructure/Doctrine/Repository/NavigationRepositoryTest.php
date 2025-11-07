@@ -47,6 +47,39 @@ class NavigationRepositoryTest extends TestCase
     /** @var ObjectProphecy<ContentResolverInterface> */
     private ObjectProphecy $contentResolver;
 
+    /**
+     * @return array<string, string>
+     */
+    private function getDefaultProperties(bool $loadExcerpt): array
+    {
+        $properties = [
+            'content.uuid' => 'object.resource.id',
+            'content.title' => 'title',
+            'content.url' => 'url',
+            'content.webspaceKey' => 'object.resource.webspaceKey',
+            'content.template' => 'object.templateKey',
+            'content.changed' => 'object.changed',
+            'content.changer' => 'object.changer',
+            'content.created' => 'object.created',
+            'content.creator' => 'object.creator',
+            'content.linkProvider' => 'object.linkData.linkProvider',
+        ];
+
+        if ($loadExcerpt) {
+            $properties['excerpt.title'] = 'excerpt.title';
+            $properties['excerpt.more'] = 'excerpt.more';
+            $properties['excerpt.description'] = 'excerpt.description';
+            $properties['excerpt.segment'] = 'excerpt.segment';
+            $properties['excerpt.categories'] = 'excerpt.categories';
+            $properties['excerpt.tags'] = 'excerpt.tags';
+            $properties['excerpt.audienceTargetGroups'] = 'excerpt.audienceTargetGroups';
+            $properties['excerpt.icon'] = 'excerpt.icon';
+            $properties['excerpt.image'] = 'excerpt.image';
+        }
+
+        return $properties;
+    }
+
     protected function setUp(): void
     {
         $this->entityManager = $this->prophesize(EntityManagerInterface::class);
@@ -129,7 +162,7 @@ class NavigationRepositoryTest extends TestCase
             'extension' => ['excerpt' => ['title' => 'Excerpt Title']],
         ]);
 
-        $result = $this->navigationRepository->getNavigationTree('main', 'en', 'sulu-io', 'segment-key', 1, ['excerpt' => true]);
+        $result = $this->navigationRepository->getNavigationTree('main', 'en', 'sulu-io', 'segment-key', 1, $this->getDefaultProperties(true));
 
         $this->assertNotEmpty($result);
         $this->assertCount(1, $result);
@@ -412,7 +445,7 @@ class NavigationRepositoryTest extends TestCase
         ]);
 
         /** @var array<int, array{excerpt?: array{title: string, segment: string}}> $result */
-        $result = $this->navigationRepository->getNavigationFlat('main', 'en', 'sulu-io', 'test-segment', 1, ['excerpt' => true]);
+        $result = $this->navigationRepository->getNavigationFlat('main', 'en', 'sulu-io', 'test-segment', 1, $this->getDefaultProperties(true));
 
         $this->assertNotEmpty($result);
         $this->assertCount(1, $result);

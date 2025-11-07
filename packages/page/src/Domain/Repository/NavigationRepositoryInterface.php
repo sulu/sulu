@@ -14,7 +14,7 @@ namespace Sulu\Page\Domain\Repository;
 interface NavigationRepositoryInterface
 {
     /**
-     * @param array<string, mixed> $properties
+     * @param array<string, string> $properties
      *
      * @return array<string, mixed>[]
      */
@@ -28,7 +28,7 @@ interface NavigationRepositoryInterface
     ): array;
 
     /**
-     * @param array<string, mixed> $properties
+     * @param array<string, string> $properties
      *
      * @return array<string, mixed>[]
      */
@@ -42,7 +42,7 @@ interface NavigationRepositoryInterface
     ): array;
 
     /**
-     * @param array<string, mixed> $properties
+     * @param array<string, string> $properties
      *
      * @return array<string, mixed>[]
      */
@@ -56,7 +56,7 @@ interface NavigationRepositoryInterface
     ): array;
 
     /**
-     * @param array<string, mixed> $properties
+     * @param array<string, string> $properties
      *
      * @return array<string, mixed>[]
      */
@@ -70,7 +70,7 @@ interface NavigationRepositoryInterface
     ): array;
 
     /**
-     * @param array<string, mixed> $properties
+     * @param array<string, string> $properties
      *
      * @return array<string, mixed>[]
      */
