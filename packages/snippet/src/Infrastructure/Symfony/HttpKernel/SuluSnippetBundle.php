@@ -51,6 +51,8 @@ use Sulu\Snippet\Infrastructure\Sulu\Content\PropertyResolver\SnippetSelectionPr
 use Sulu\Snippet\Infrastructure\Sulu\Content\ResourceLoader\SnippetResourceLoader;
 use Sulu\Snippet\Infrastructure\Sulu\Content\SnippetSmartContentProvider;
 use Sulu\Snippet\Infrastructure\Sulu\Reference\SnippetReferenceRefresher;
+use Sulu\Snippet\Infrastructure\Sulu\Search\AdminSnippetIndexListener;
+use Sulu\Snippet\Infrastructure\Sulu\Search\AdminSnippetReindexProvider;
 use Sulu\Snippet\Infrastructure\Sulu\Trash\SnippetTrashItemHandler;
 use Sulu\Snippet\Infrastructure\Symfony\CompilerPass\SnippetAreaCompilerPass;
 use Sulu\Snippet\Infrastructure\Symfony\Normalizer\SnippetAreaNormalizer;
@@ -373,7 +375,7 @@ final class SuluSnippetBundle extends AbstractBundle
         }
 
         $services->set('sulu_snippet.admin_snippet_index_listener')
-            ->class('Sulu\Snippet\Infrastructure\Sulu\Search\AdminSnippetIndexListener')
+            ->class(AdminSnippetIndexListener::class)
             ->args([
                 new Reference('sulu_message_bus'),
             ])
@@ -386,7 +388,7 @@ final class SuluSnippetBundle extends AbstractBundle
             ->tag('kernel.event_listener', ['event' => SnippetTranslationRemovedEvent::class, 'method' => 'onSnippetChanged']);
 
         $services->set('sulu_snippet.admin_snippet_reindex_provider')
-            ->class('Sulu\Snippet\Infrastructure\Sulu\Search\AdminSnippetReindexProvider')
+            ->class(AdminSnippetReindexProvider::class)
             ->args([
                 new Reference('doctrine.orm.entity_manager'),
             ])

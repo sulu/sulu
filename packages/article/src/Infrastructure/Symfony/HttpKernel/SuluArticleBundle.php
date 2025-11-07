@@ -51,6 +51,8 @@ use Sulu\Article\Infrastructure\Sulu\Content\PropertyResolver\SingleArticleSelec
 use Sulu\Article\Infrastructure\Sulu\Content\ResourceLoader\ArticleResourceLoader;
 use Sulu\Article\Infrastructure\Sulu\Reference\ArticleReferenceRefresher;
 use Sulu\Article\Infrastructure\Sulu\Route\ArticleRouteDefaultsProvider;
+use Sulu\Article\Infrastructure\Sulu\Search\AdminArticleIndexListener;
+use Sulu\Article\Infrastructure\Sulu\Search\AdminArticleReindexProvider;
 use Sulu\Article\Infrastructure\Sulu\Sitemap\ArticlesSitemapProvider;
 use Sulu\Article\Infrastructure\Sulu\Trash\ArticleTrashItemHandler;
 use Sulu\Article\Infrastructure\Symfony\Twig\ArticleTwigExtension;
@@ -427,7 +429,7 @@ final class SuluArticleBundle extends AbstractBundle
             ->tag('sulu_route.route_defaults_provider', ['resource_key' => 'articles']);
 
         $services->set('sulu_article.admin_article_index_listener')
-            ->class('Sulu\Article\Infrastructure\Sulu\Search\AdminArticleIndexListener')
+            ->class(AdminArticleIndexListener::class)
             ->args([
                 new Reference('sulu_message_bus'),
             ])
@@ -441,7 +443,7 @@ final class SuluArticleBundle extends AbstractBundle
             ->tag('kernel.event_listener', ['event' => ArticleTranslationCopiedEvent::class, 'method' => 'onArticleChanged']);
 
         $services->set('sulu_article.admin_article_reindex_provider')
-            ->class('Sulu\Article\Infrastructure\Sulu\Search\AdminArticleReindexProvider')
+            ->class(AdminArticleReindexProvider::class)
             ->args([
                 new Reference('doctrine.orm.entity_manager'),
             ])
