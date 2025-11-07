@@ -331,7 +331,7 @@ class NavigationRepository implements NavigationRepositoryInterface
             'content.changer' => 'object.changer',
             'content.created' => 'object.created',
             'content.creator' => 'object.creator',
-            'content.nodeType' => 'object.linkProvider',
+            'content.linkProvider' => 'object.linkData.linkProvider',
         ];
 
         if ($loadExcerpt) {
@@ -360,13 +360,6 @@ class NavigationRepository implements NavigationRepositoryInterface
         if ($loadExcerpt) {
             $result['excerpt'] = $resolvedContent['excerpt'] ?? [];
         }
-
-        $nodeType = $result['nodeType'] ?? null;
-        $result['nodeType'] = match ($nodeType) {
-            PageInterface::RESOURCE_KEY => 2,
-            null => 1,
-            default => 4,
-        };
 
         return $result;
     }

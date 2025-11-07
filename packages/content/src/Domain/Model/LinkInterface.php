@@ -15,8 +15,6 @@ namespace Sulu\Content\Domain\Model;
 
 interface LinkInterface
 {
-    public function getLinkProvider(): ?string;
-
     /**
      * @return array<string, mixed>|null
      */
