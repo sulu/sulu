@@ -603,7 +603,6 @@ class FileVersion implements AuditableInterface
 
             $this->formatOptions->clear();
             foreach ($newFormatOptionsArray as $newFormatOptions) {
-                /* @var FormatOptions $newFormatOptions */
                 $newFormatOptions->setFileVersion($this);
                 $this->addFormatOptions($newFormatOptions);
             }

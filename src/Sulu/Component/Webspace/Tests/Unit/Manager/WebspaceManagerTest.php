@@ -351,7 +351,6 @@ class WebspaceManagerTest extends WebspaceTestCase
         $this->assertInstanceOf(PortalInformation::class, $portalInformation);
         $this->assertEquals('de_at', $portalInformation->getLocalization()->getLocale());
 
-        /** @var Webspace $webspace */
         $webspace = $portalInformation->getWebspace();
 
         $this->assertEquals('Sulu CMF', $webspace->getName());
@@ -645,7 +644,6 @@ class WebspaceManagerTest extends WebspaceTestCase
         $this->assertEquals('sulu.at', $portalInformation->getRedirect());
         $this->assertEquals('www.sulu.at', $portalInformation->getUrl());
 
-        /** @var Webspace $webspace */
         $webspace = $portalInformation->getWebspace();
 
         $this->assertEquals('Sulu CMF', $webspace->getName());

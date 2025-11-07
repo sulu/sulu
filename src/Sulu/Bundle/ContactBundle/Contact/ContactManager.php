@@ -438,7 +438,6 @@ class ContactManager extends AbstractContactManager
         }
 
         // reload address to get all data (including relational data)
-        /** @var Address $address */
         $address = $contactAddress->getAddress();
         $address = $this->em->getRepository(Address::class)->findById($address->getId());
 

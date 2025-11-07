@@ -112,7 +112,6 @@ class ResettingController
     public function sendEmailAction(Request $request)
     {
         try {
-            /** @var UserInterface $user */
             $user = $this->findUser($request->get('user'));
             $maxNumberEmails = $this->tokenSendLimit;
 

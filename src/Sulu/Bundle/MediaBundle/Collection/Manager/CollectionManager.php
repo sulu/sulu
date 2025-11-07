@@ -187,7 +187,6 @@ class CollectionManager implements CollectionManagerInterface
             'systemCollections' => $systemCollections,
         ];
 
-        /** @var CollectionEntity[] $entities */
         $entities = $this->collectionRepository->findCollectionSet(
             $depth,
             $filter,

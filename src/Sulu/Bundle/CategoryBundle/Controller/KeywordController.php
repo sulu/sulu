@@ -22,7 +22,6 @@ use Sulu\Bundle\CategoryBundle\Entity\KeywordRepositoryInterface;
 use Sulu\Bundle\CategoryBundle\Exception\KeywordIsMultipleReferencedException;
 use Sulu\Bundle\CategoryBundle\Exception\KeywordNotUniqueException;
 use Sulu\Component\Rest\AbstractRestController;
-use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilder;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactoryInterface;
 use Sulu\Component\Rest\ListBuilder\Metadata\FieldDescriptorFactoryInterface;
 use Sulu\Component\Rest\ListBuilder\PaginatedRepresentation;
@@ -83,7 +82,6 @@ class KeywordController extends AbstractRestController implements SecuredControl
 
         $fieldDescriptor = $this->fieldDescriptorFactory->getFieldDescriptors('category_keywords');
 
-        /** @var DoctrineListBuilder $listBuilder */
         $listBuilder = $this->listBuilderFactory->create($this->keywordClass);
         $this->restHelper->initializeListBuilder($listBuilder, $fieldDescriptor);
 
