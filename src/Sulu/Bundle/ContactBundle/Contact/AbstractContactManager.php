@@ -1337,7 +1337,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
      * Updates the given address.
      *
      * @param Address $address The phone object to update
-     * @param array $entry The entry with the new data
+     * @param array<string, mixed> $entry The entry with the new data
      * @param bool $isMain returns if address should be set to main
      *
      * @return bool True if successful, otherwise false

@@ -6241,96 +6241,6 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
 
 		-
-			message: "#^Cannot access offset 'addition' on mixed\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
-
-		-
-			message: "#^Cannot access offset 'addressType' on mixed\\.$#"
-			count: 2
-			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
-
-		-
-			message: "#^Cannot access offset 'billingAddress' on mixed\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
-
-		-
-			message: "#^Cannot access offset 'city' on mixed\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
-
-		-
-			message: "#^Cannot access offset 'countryCode' on mixed\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
-
-		-
-			message: "#^Cannot access offset 'deliveryAddress' on mixed\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
-
-		-
-			message: "#^Cannot access offset 'latitude' on mixed\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
-
-		-
-			message: "#^Cannot access offset 'longitude' on mixed\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
-
-		-
-			message: "#^Cannot access offset 'note' on mixed\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
-
-		-
-			message: "#^Cannot access offset 'number' on mixed\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
-
-		-
-			message: "#^Cannot access offset 'postboxCity' on mixed\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
-
-		-
-			message: "#^Cannot access offset 'postboxNumber' on mixed\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
-
-		-
-			message: "#^Cannot access offset 'postboxPostcode' on mixed\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
-
-		-
-			message: "#^Cannot access offset 'primaryAddress' on mixed\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
-
-		-
-			message: "#^Cannot access offset 'state' on mixed\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
-
-		-
-			message: "#^Cannot access offset 'street' on mixed\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
-
-		-
-			message: "#^Cannot access offset 'title' on mixed\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
-
-		-
-			message: "#^Cannot access offset 'zip' on mixed\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
-
-		-
 			message: "#^If condition is always true\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
@@ -8611,6 +8521,11 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/AccountControllerTest.php
 
 		-
+			message: "#^Cannot access offset 'addresses' on mixed\\.$#"
+			count: 2
+			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/AccountControllerTest.php
+
+		-
 			message: "#^Cannot access offset 'contact' on mixed\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/AccountControllerTest.php
@@ -8637,7 +8552,7 @@ parameters:
 
 		-
 			message: "#^Cannot access offset 0 on mixed\\.$#"
-			count: 6
+			count: 8
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/AccountControllerTest.php
 
 		-
@@ -13222,11 +13137,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$fieldDescriptors of method Sulu\\\\Bundle\\\\MediaBundle\\\\Media\\\\ListBuilderFactory\\\\MediaListBuilderFactory\\:\\:getListBuilder\\(\\) expects array, array\\<Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\FieldDescriptorInterface\\>\\|null given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Controller/MediaController.php
-
-		-
-			message: "#^Parameter \\#1 \\$id of method Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\CollectionRepositoryInterface\\:\\:findCollectionTypeById\\(\\) expects int, mixed given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Controller/MediaController.php
 
