@@ -892,6 +892,7 @@ Removed classes / services / interfaces / traits:
 - `Sulu\Bundle\SecurityBundle\Security\LogoutSuccessHandler` (replaced by `LogoutEventSubscriber`)
 - `Sulu\Bundle\SecurityBundle\EventListener\AuhenticationFailureListener` (moved and internal)
 - `Sulu\Bundle\SecurityBundle\DependencyInjection\Compiler\AccessControlProviderPass` (use tagged_iterator)
+- `Sulu\Bundle\MarkupBundle\DependencyInjection\Compiler\ParserCompilerPass` (use tagged_iterator)
 - `Sulu\Bundle\MediaBundle\DependencyInjection\FormatCacheClearerCompilerPass` (use tagged_iterator)
 - `Sulu\Component\Security\Authorization\AccessControl\SecuredEntityRepositoryTrait`
 - `Sulu/Bundle/AdminBundle/DependencyInjection/Compiler/AddAdminPass` (replaced by a `tagged_iterator`)
@@ -1062,7 +1063,6 @@ The following methods have been updated with a return type hint:
 - `SuluHttpCacheExtension::prepend()`: returns `void`
 - `SuluLocationExtension::load()`: returns `void`
 - `SuluLocationExtension::prepend()`: returns `void`
-- `ParserCompilerpass::process()`: returns `void`
 - `SuluMarkupExtension::load()`: returns `void`
 - `SuluMarkupExtension::prepend()`: returns `void`
 - `MailerListener::getSubscribedEvents()`: returns `array`
