@@ -515,7 +515,7 @@ class CollectionManager implements CollectionManagerInterface
     protected function getTypeById($typeId)
     {
         /** @var CollectionType $type */
-        $type = $this->em->getRepository('SuluMediaBundle:CollectionType')->find($typeId);
+        $type = $this->em->getRepository(CollectionType::class)->find($typeId);
         if (!$type) {
             throw new CollectionTypeNotFoundException('Collection Type with the ID ' . $typeId . ' not found');
         }
