@@ -255,7 +255,6 @@ class ImageMapContentType extends ComplexContentType implements ContentTypeExpor
                 $isImport
             );
 
-            /** @var PropertyInterface $subProperty */
             foreach ($propertyType->getChildProperties() as $subProperty) {
                 if (!isset($hotspot[$subProperty->getName()])) {
                     continue;

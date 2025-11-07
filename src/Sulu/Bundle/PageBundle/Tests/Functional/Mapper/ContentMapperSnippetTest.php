@@ -101,7 +101,6 @@ class ContentMapperSnippetTest extends SuluTestCase
         $this->documentManager->persist($document, 'de');
         $this->documentManager->flush();
 
-        /** @var SnippetDocument $document */
         $document = $this->createSnippetDocument();
         $document->setStructureType('animal');
         $document->setTitle('Some other animal');

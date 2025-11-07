@@ -15,7 +15,6 @@ use PHPCR\NodeInterface;
 use Sulu\Bundle\ReferenceBundle\Application\Collector\ReferenceCollectorInterface;
 use Sulu\Bundle\ReferenceBundle\Infrastructure\Sulu\ContentType\ReferenceContentTypeInterface;
 use Sulu\Bundle\SearchBundle\Search\Factory;
-use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Content\ContentTypeExportInterface;
@@ -227,7 +226,6 @@ class ExcerptStructureExtension extends AbstractExtension implements ExportExten
         // Reset the properties before new initialization.
         $this->properties = [];
 
-        /** @var PropertyInterface $property */
         foreach ($this->getExcerptStructure($locale)->getProperties() as $property) {
             $this->properties[] = $property->getName();
         }

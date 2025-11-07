@@ -32,6 +32,7 @@ class TimestampableSubscriber
     public function loadClassMetadata(LoadClassMetadataEventArgs $event)
     {
         $metadata = $event->getClassMetadata();
+        /** @var \ReflectionClass<object>|null $reflection */
         $reflection = $metadata->getReflectionClass();
 
         if (null !== $reflection && $reflection->implementsInterface(TimestampableInterface::class)) {

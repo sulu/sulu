@@ -56,7 +56,6 @@ final class SnippetTrashItemHandler implements
             'locales' => [],
         ];
 
-        /** @var string $locale */
         foreach ($this->documentInspector->getLocales($snippet) as $locale) {
             /** @var SnippetDocument $localizedSnippet */
             $localizedSnippet = $this->documentManager->find($snippet->getUuid(), $locale);

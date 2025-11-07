@@ -123,7 +123,6 @@ class ShadowCopyPropertiesSubscriber implements EventSubscriberInterface
     {
         /** @var string $shadowLocale */
         $shadowLocale = $document->getShadowLocale();
-        /** @var string $locale */
         $locale = $document->getLocale();
 
         $tags = $this->getTags($node, $shadowLocale);

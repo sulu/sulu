@@ -15,7 +15,6 @@ use Sulu\Bundle\PageBundle\Document\PageDocument;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Document\WorkflowStage;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
-use Symfony\Component\DomCrawler\Crawler;
 
 class WebsiteSearchControllerTest extends SuluTestCase
 {
@@ -81,7 +80,6 @@ class WebsiteSearchControllerTest extends SuluTestCase
 
     public function testSearchExactTerm(): void
     {
-        /** @var Crawler $crawler */
         $crawler = $this->websiteClient->request('GET', 'http://de.sulu.lo/search?q=Product');
         $response = $this->websiteClient->getResponse();
 
@@ -91,7 +89,6 @@ class WebsiteSearchControllerTest extends SuluTestCase
 
     public function testSearchExactTermEndingWithSpace(): void
     {
-        /** @var Crawler $crawler */
         $crawler = $this->websiteClient->request('GET', 'http://de.sulu.lo/search?q=Product%20');
         $response = $this->websiteClient->getResponse();
 
@@ -101,7 +98,6 @@ class WebsiteSearchControllerTest extends SuluTestCase
 
     public function testSearchIncompleteTerm(): void
     {
-        /** @var Crawler $crawler */
         $crawler = $this->websiteClient->request('GET', 'http://de.sulu.lo/search?q=Prod');
         $response = $this->websiteClient->getResponse();
 
@@ -111,7 +107,6 @@ class WebsiteSearchControllerTest extends SuluTestCase
 
     public function testSearchTermFuzzy(): void
     {
-        /** @var Crawler $crawler */
         $crawler = $this->websiteClient->request('GET', 'http://de.sulu.lo/search?q=Prodoct');
         $response = $this->websiteClient->getResponse();
 
@@ -121,7 +116,6 @@ class WebsiteSearchControllerTest extends SuluTestCase
 
     public function testSearchTermWithSpecialChar(): void
     {
-        /** @var Crawler $crawler */
         $crawler = $this->websiteClient->request('GET', 'http://de.sulu.lo/search?q=Prod*?t');
         $response = $this->websiteClient->getResponse();
 

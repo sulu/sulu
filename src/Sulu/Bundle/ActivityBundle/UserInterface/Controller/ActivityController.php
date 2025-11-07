@@ -75,7 +75,6 @@ class ActivityController extends AbstractRestController implements ClassResource
             $configurationFieldDescriptors
         );
 
-        /** @var DoctrineListBuilder $listBuilder */
         $listBuilder = $this->listBuilderFactory->create($this->activityClass);
         $this->restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
         $listBuilder->setSelectFields($fieldDescriptors);

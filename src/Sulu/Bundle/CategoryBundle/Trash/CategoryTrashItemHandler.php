@@ -150,7 +150,6 @@ final class CategoryTrashItemHandler implements
                 'keywords' => [],
             ];
 
-            /** @var MediaInterface $media */
             foreach ($translation->getMedias() as $media) {
                 $translationData['mediaIds'][] = $media->getId();
             }

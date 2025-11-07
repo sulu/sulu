@@ -101,7 +101,6 @@ class AccountManager extends AbstractContactManager implements DataProviderRepos
         }
 
         // Reload address to get all data (including relational data).
-        /** @var AddressEntity $address */
         $address = $accountAddress->getAddress();
         $address = $this->em->getRepository(AddressEntity::class)
             ->findById($address->getId());
