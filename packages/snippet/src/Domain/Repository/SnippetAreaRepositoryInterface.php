@@ -53,6 +53,16 @@ interface SnippetAreaRepositoryInterface
      *     uuids?: string[],
      *     webspaceKey?: string,
      *     areaKey?: string,
+     * } $filters
+     */
+    public function findSnippetUuidBy(array $filters): ?string;
+
+    /**
+     * @param array{
+     *     uuid?: string,
+     *     uuids?: string[],
+     *     webspaceKey?: string,
+     *     areaKey?: string,
      *     page?: int,
      *     limit?: int,
      * } $filters

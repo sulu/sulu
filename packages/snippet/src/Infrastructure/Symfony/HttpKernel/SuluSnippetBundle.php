@@ -49,6 +49,7 @@ use Sulu\Snippet\Infrastructure\Sulu\Admin\SnippetAreaAdmin;
 use Sulu\Snippet\Infrastructure\Sulu\Content\PropertyResolver\SingleSnippetSelectionPropertyResolver;
 use Sulu\Snippet\Infrastructure\Sulu\Content\PropertyResolver\SnippetSelectionPropertyResolver;
 use Sulu\Snippet\Infrastructure\Sulu\Content\ResourceLoader\SnippetResourceLoader;
+use Sulu\Snippet\Infrastructure\Sulu\Content\SmartResolver\SnippetAreaSmartResolver;
 use Sulu\Snippet\Infrastructure\Sulu\Content\SnippetSmartContentProvider;
 use Sulu\Snippet\Infrastructure\Sulu\Reference\SnippetReferenceRefresher;
 use Sulu\Snippet\Infrastructure\Sulu\Search\AdminSnippetIndexListener;
@@ -320,6 +321,15 @@ final class SuluSnippetBundle extends AbstractBundle
         $services->set('sulu_snippet.snippet_selection_property_resolver')
             ->class(SnippetSelectionPropertyResolver::class)
             ->tag('sulu_content.property_resolver');
+
+        // SmartResolver services
+        $services->set('sulu_snippet.snippet_area_smart_resolver')
+            ->class(SnippetAreaSmartResolver::class)
+            ->args([
+                new Reference('sulu_snippet.snippet_area_repository'),
+                new Reference('sulu_core.webspace.request_analyzer'),
+            ])
+            ->tag('sulu_content.smart_resolver', ['type' => 'snippet_area_default']);
 
         // ResourceLoader services
         $services->set('sulu_snippet.snippet_resource_loader')

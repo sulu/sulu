@@ -76,6 +76,20 @@ class SnippetAreaRepository implements SnippetAreaRepositoryInterface
         return $snippetArea;
     }
 
+    public function findSnippetUuidBy(array $filters): ?string
+    {
+        $queryBuilder = $this->createQueryBuilder($filters);
+        $queryBuilder->select('IDENTITY(area.snippet)');
+
+        try {
+            $result = $queryBuilder->getQuery()->getSingleScalarResult();
+
+            return \is_string($result) ? $result : null;
+        } catch (NoResultException $e) {
+            return null;
+        }
+    }
+
     public function countBy(array $filters = []): int
     {
         // The countBy method will ignore any page and limit parameters
