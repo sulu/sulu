@@ -242,5 +242,4 @@ class NavigationTwigExtension extends AbstractExtension
 
         return $properties;
     }
-
 }
