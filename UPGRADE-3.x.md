@@ -165,6 +165,36 @@ and update your templates definition to use the new controller:
 +<controller>Sulu\Content\UserInterface\Controller\Website\ContentController::indexAction</controller>
 ```
 
+### Navigation Twig Extension property filtering
+
+The navigation Twig functions and repository methods now support custom property filtering, allowing you to specify
+which fields should be resolved from the content.
+
+**What Changed:**
+
+All navigation-related Twig extension methods now accept an optional `$properties` parameter that allows you to customize
+which content fields are resolved. When not provided, the extension uses the defaults from Sulu 2.x that include commonly
+needed fields like `uuid`, `title`, `url`, `webspaceKey`, `template`, etc.
+
+**Using custom properties in Twig:**
+
+You can now customize which fields are resolved by passing a properties array to the navigation functions:
+
+```twig
+{# Load only specific fields #}
+{% set navigation = sulu_navigation_root_flat('main', 2, false, {
+    'content.uuid': 'object.resource.id',
+    'content.title': 'title',
+    'content.url': 'url'
+}) %}
+
+{# Load excerpt fields along with default content fields #}
+{% set navigationWithExcerpt = sulu_navigation_root_flat('main', 2, true) %}
+```
+
+The property mapping uses the format `'output_key': 'content_resolver_path'`, where the content resolver path can 
+access nested object properties using dot notation (e.g., `'object.resource.webspaceKey'`).
+
 ### Add new Content storage tables
 
 The new content storage architecture requires a new database schema. You can execute the following sql statements
@@ -1196,6 +1226,16 @@ and directly modifying the new `Route` entity is sufficient.
 ### Changed methods for 3.0
 
 - `Sulu\Bundle\ContactBundle\Controller\AbstractMediaController::__construct`
+- `Sulu\Page\Infrastructure\Symfony\Twig\Extension\NavigationTwigExtension::flatRootNavigationFunction` (added `?array $properties = null`)
+- `Sulu\Page\Infrastructure\Symfony\Twig\Extension\NavigationTwigExtension::treeRootNavigationFunction` (added `?array $properties = null`)
+- `Sulu\Page\Infrastructure\Symfony\Twig\Extension\NavigationTwigExtension::flatNavigationFunction` (added `?array $properties = null`)
+- `Sulu\Page\Infrastructure\Symfony\Twig\Extension\NavigationTwigExtension::treeNavigationFunction` (added `?array $properties = null`)
+- `Sulu\Page\Infrastructure\Symfony\Twig\Extension\NavigationTwigExtension::breadcrumbFunction` (added `?array $properties = null`)
+- `Sulu\Page\Domain\Repository\NavigationRepositoryInterface::getNavigationFlat` (added `array $properties = []`)
+- `Sulu\Page\Domain\Repository\NavigationRepositoryInterface::getNavigationTree` (added `array $properties = []`)
+- `Sulu\Page\Domain\Repository\NavigationRepositoryInterface::getNavigationFlatByUuid` (added `array $properties = []`)
+- `Sulu\Page\Domain\Repository\NavigationRepositoryInterface::getNavigationTreeByUuid` (added `array $properties = []`)
+- `Sulu\Page\Domain\Repository\NavigationRepositoryInterface::getBreadcrumb` (added `array $properties = []`)
 
 ### Piwik replaced with Matomo script
 
