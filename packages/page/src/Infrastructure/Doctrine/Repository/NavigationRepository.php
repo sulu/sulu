@@ -315,32 +315,19 @@ class NavigationRepository implements NavigationRepositoryInterface
             'stage' => DimensionContentInterface::STAGE_LIVE,
         ]);
 
+        // prefix all properties with "nav." to only resolve navigation related content
+        foreach ($properties as $key => $value) {
+            unset($properties[$key]);
+            $properties['nav.' . $key] = $value;
+        }
+
         /** @var array{
-         *     resource: object,
-         *     content: array<string, mixed>,
-         *     view: mixed[],
-         *     extension: array<string, array<string, mixed>>,
-         *     excerpt?: mixed[]
+         *     nav: array<string, mixed>,
          * } $resolvedContent
          */
         $resolvedContent = $this->contentResolver->resolve($pageDimensionContent, $properties);
 
-        $result = [...$resolvedContent['content']];
-
-        // Include excerpt data if any excerpt properties were requested
-        $hasExcerptProperties = false;
-        foreach ($properties as $key => $value) {
-            if (\str_starts_with($key, 'excerpt.')) {
-                $hasExcerptProperties = true;
-                break;
-            }
-        }
-
-        if ($hasExcerptProperties) {
-            $result['excerpt'] = $resolvedContent['excerpt'] ?? [];
-        }
-
-        return $result;
+        return $resolvedContent['nav'];
     }
 
     /**

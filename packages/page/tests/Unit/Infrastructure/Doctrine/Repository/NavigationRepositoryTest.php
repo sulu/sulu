@@ -54,16 +54,16 @@ class NavigationRepositoryTest extends TestCase
     private function getDefaultProperties(bool $loadExcerpt): array
     {
         $properties = [
-            'content.uuid' => 'object.resource.id',
-            'content.title' => 'title',
-            'content.url' => 'url',
-            'content.webspaceKey' => 'object.resource.webspaceKey',
-            'content.template' => 'object.templateKey',
-            'content.changed' => 'object.changed',
-            'content.changer' => 'object.changer',
-            'content.created' => 'object.created',
-            'content.creator' => 'object.creator',
-            'content.linkProvider' => 'object.linkData.linkProvider',
+            'uuid' => 'object.resource.id',
+            'title' => 'title',
+            'url' => 'url',
+            'webspaceKey' => 'object.resource.webspaceKey',
+            'template' => 'object.templateKey',
+            'changed' => 'object.changed',
+            'changer' => 'object.changer',
+            'created' => 'object.created',
+            'creator' => 'object.creator',
+            'linkProvider' => 'object.linkData.linkProvider',
         ];
 
         if ($loadExcerpt) {
@@ -158,13 +158,12 @@ class NavigationRepositoryTest extends TestCase
             ->willReturn($dimensionContent->reveal());
         $this->contentResolver->resolve($dimensionContent->reveal(), Argument::type('array'))->willReturn([
             'resource' => $page->reveal(),
-            'content' => [
+            'nav' => [
                 'title' => 'Page Title',
                 'webspaceKey' => 'sulu-io',
+                'excerpt' => ['title' => 'Excerpt Title'],
             ],
             'view' => [],
-            'extension' => ['excerpt' => ['title' => 'Excerpt Title']],
-            'excerpt' => ['title' => 'Excerpt Title'],
         ]);
 
         $result = $this->navigationRepository->getNavigationTree('main', 'en', 'sulu-io', 'segment-key', 1, $this->getDefaultProperties(true));
@@ -227,13 +226,12 @@ class NavigationRepositoryTest extends TestCase
             ->willReturn($dimensionContent->reveal());
         $this->contentResolver->resolve($dimensionContent->reveal(), Argument::type('array'))->willReturn([
             'resource' => $page->reveal(),
-            'content' => [
+            'nav' => [
                 'title' => 'German Page',
                 'description' => 'Test',
                 'webspaceKey' => 'sulu-io',
             ],
             'view' => [],
-            'extension' => [],
         ]);
 
         $result = $this->navigationRepository->getNavigationFlat('footer', 'de', 'sulu-io', null, 2, $this->getDefaultProperties(false));
@@ -297,12 +295,11 @@ class NavigationRepositoryTest extends TestCase
             ->willReturn($dimensionContent->reveal());
         $this->contentResolver->resolve($dimensionContent->reveal(), Argument::type('array'))->willReturn([
             'resource' => $page->reveal(),
-            'content' => [
+            'nav' => [
                 'title' => 'No Segment Page',
                 'webspaceKey' => 'test-webspace',
             ],
             'view' => [],
-            'extension' => [],
         ]);
 
         $result = $this->navigationRepository->getNavigationTree('sidebar', 'en', 'test-webspace', null, 3, $this->getDefaultProperties(false));
@@ -367,9 +364,8 @@ class NavigationRepositoryTest extends TestCase
             ->willReturn($parentDimensionContent->reveal());
         $this->contentResolver->resolve($parentDimensionContent->reveal(), Argument::type('array'))->willReturn([
             'resource' => $parentPage->reveal(),
-            'content' => ['title' => 'Parent Page'],
+            'nav' => ['title' => 'Parent Page'],
             'view' => [],
-            'extension' => [],
         ]);
 
         // Setup content resolution for child
@@ -378,9 +374,8 @@ class NavigationRepositoryTest extends TestCase
             ->willReturn($childDimensionContent->reveal());
         $this->contentResolver->resolve($childDimensionContent->reveal(), Argument::type('array'))->willReturn([
             'resource' => $childPage->reveal(),
-            'content' => ['title' => 'Child Page'],
+            'nav' => ['title' => 'Child Page'],
             'view' => [],
-            'extension' => [],
         ]);
 
         /** @var array<int, array{title: string, children: array<int, array{title: string, children: array<string, mixed>}>}> $result */
@@ -444,9 +439,8 @@ class NavigationRepositoryTest extends TestCase
             ->willReturn($dimensionContent->reveal());
         $this->contentResolver->resolve($dimensionContent->reveal(), Argument::type('array'))->willReturn([
             'resource' => $page->reveal(),
-            'content' => ['title' => 'Page with Excerpt'],
-            'view' => [],
-            'extension' => [
+            'nav' => [
+                'title' => 'Page with Excerpt',
                 'excerpt' => [
                     'title' => 'Excerpt Title',
                     'description' => 'Excerpt Description',
@@ -454,12 +448,7 @@ class NavigationRepositoryTest extends TestCase
                     'audienceTargetGroups' => [1, 2],
                 ],
             ],
-            'excerpt' => [
-                'title' => 'Excerpt Title',
-                'description' => 'Excerpt Description',
-                'segment' => 'test-segment',
-                'audienceTargetGroups' => [1, 2],
-            ],
+            'view' => [],
         ]);
 
         /** @var array<int, array{excerpt?: array{title: string, segment: string}}> $result */

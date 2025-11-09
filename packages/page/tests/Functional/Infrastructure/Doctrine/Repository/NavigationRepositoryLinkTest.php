@@ -31,16 +31,16 @@ class NavigationRepositoryLinkTest extends SuluTestCase
     private function getDefaultProperties(bool $withExcerpt = false): array
     {
         $properties = [
-            'content.uuid' => 'object.resource.id',
-            'content.title' => 'title',
-            'content.url' => 'url',
-            'content.webspaceKey' => 'object.resource.webspaceKey',
-            'content.template' => 'object.templateKey',
-            'content.changed' => 'object.changed',
-            'content.changer' => 'object.changer',
-            'content.created' => 'object.created',
-            'content.creator' => 'object.creator',
-            'content.linkProvider' => 'object.linkData.linkProvider',
+            'uuid' => 'object.resource.id',
+            'title' => 'title',
+            'url' => 'url',
+            'webspaceKey' => 'object.resource.webspaceKey',
+            'template' => 'object.templateKey',
+            'changed' => 'object.changed',
+            'changer' => 'object.changer',
+            'created' => 'object.created',
+            'creator' => 'object.creator',
+            'linkProvider' => 'object.linkData.linkProvider',
         ];
 
         if ($withExcerpt) {
