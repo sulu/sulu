@@ -2,6 +2,29 @@
 
 For every update follow the [Upgrade Documentation](https://docs.sulu.io/2.x/upgrades/upgrade-2.x.html) steps.
 
+## 2.6.25
+
+### Deprecated `RequestParametersTrait`
+
+The `RequestParametersTrait` has been deprecated. Specifically, the `getRequestParameter` method should be replaced
+with direct access to the request object, such as:
+
+```php
+$request->query->get('param');
+$request->headers->get('param');
+$request->request->get('param');
+```
+
+For type-safe alternatives, use the appropriate methods on the `ParameterBag`:
+
+```php
+$request->query->getBoolean('param');
+$request->query->getString('param');
+$request->query->getInt('param');
+```
+
+This deprecation also includes the `Sulu\Component\Rest\Exception\MissingParameterException`.
+
 ## 2.6.23
 
 ### CKEditor upgrade to 47
@@ -52,7 +75,51 @@ CREATE INDEX IDX_C526DC5238C751C4 ON se_access_controls (idRoles);
 
 ## 2.6.16
 
+<<<<<<< HEAD
 * Deprecated \Sulu\Bundle\MediaBundle\Controller\AbstractMediaController::getTitleFromUpload -> MediaManager::getTitleFromUpload
+||||||| parent of 052f9af8c7 (Fix typo in deprecated trait name)
+### Deprecated `RequestParameters` trait
+
+The `RequestParameters` trait has been deprecated. Specifically, the `getRequestParameter` method should be replaced
+with direct access to the request object, such as:
+
+```php
+$request->query->get('param');
+$request->headers->get('param');
+$request->request->get('param');
+```
+
+For type-safe alternatives, use the appropriate methods on the `ParameterBag`:
+
+```php
+$request->query->getBoolean('param');
+$request->query->getString('param');
+$request->query->getInt('param');
+```
+
+This deprecation also includes the `Sulu\Component\Rest\Exception\MissingParameterException`.
+=======
+### Deprecated `RequestParametersTrait`
+
+The `RequestParametersTrait` has been deprecated. Specifically, the `getRequestParameter` method should be replaced
+with direct access to the request object, such as:
+
+```php
+$request->query->get('param');
+$request->headers->get('param');
+$request->request->get('param');
+```
+
+For type-safe alternatives, use the appropriate methods on the `ParameterBag`:
+
+```php
+$request->query->getBoolean('param');
+$request->query->getString('param');
+$request->query->getInt('param');
+```
+
+This deprecation also includes the `Sulu\Component\Rest\Exception\MissingParameterException`.
+>>>>>>> 052f9af8c7 (Fix typo in deprecated trait name)
 
 ## 2.6.13
 
