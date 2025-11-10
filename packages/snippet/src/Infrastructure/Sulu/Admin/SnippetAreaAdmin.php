@@ -29,15 +29,23 @@ class SnippetAreaAdmin extends Admin
 
     public const LIST_VIEW = 'sulu_snippet.snippet_areas.list';
 
+    /**
+     * @param array<string, mixed> $snippetAreas
+     */
     public function __construct(
         private ViewBuilderFactoryInterface $viewBuilderFactory,
         private SecurityCheckerInterface $securityChecker,
+        private array $snippetAreas,
     ) {
     }
 
     public function configureViews(ViewCollection $viewCollection): void
     {
         if (!$this->securityChecker->hasPermission(static::SECURITY_CONTEXT, PermissionTypes::EDIT)) {
+            return;
+        }
+
+        if (empty($this->snippetAreas)) {
             return;
         }
 

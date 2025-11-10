@@ -236,6 +236,7 @@ final class SuluSnippetBundle extends AbstractBundle
             ->args([
                 new Reference('sulu_admin.view_builder_factory'),
                 new Reference('sulu_security.security_checker'),
+                param(SnippetAreaCompilerPass::SNIPPET_AREA_PARAM),
             ])
             ->tag('sulu.context', ['context' => 'admin'])
             ->tag('sulu.admin');
