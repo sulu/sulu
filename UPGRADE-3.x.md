@@ -664,6 +664,34 @@ kept here for completeness:
 +        "sulu-snippet-bundle": "file:../../vendor/sulu/sulu/packages/snippet/assets/js",
 ```
 
+### SnippetArea Admin requires defined areas
+
+The `SnippetAreaAdmin` service is now automatically unregistered when no snippet areas are defined in your
+snippet templates. If you want the snippet areas tab to appear in the admin interface, you need to define
+at least one area in your snippet template XML files.
+
+Snippet template example with area definition:
+
+```xml
+<template xmlns="http://schemas.sulu.io/template/template"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/template-1.0.xsd">
+    <key>default</key>
+
+    <areas>
+        <area key="footer">
+            <title lang="en">Footer</title>
+            <title lang="de">Fußzeile</title>
+        </area>
+    </areas>
+
+    <!-- ... rest of your template ... -->
+</template>
+```
+
+If you previously relied on the snippet areas functionality without defining areas, you must now explicitly
+define them in your snippet templates located in `config/templates/snippets/`.
+
 ### Removing deprecated twig functions
 
 - `sulu_meta_alternate` (use the SEO template instead `@SuluWebsite/Extension/seo.html.twig`)

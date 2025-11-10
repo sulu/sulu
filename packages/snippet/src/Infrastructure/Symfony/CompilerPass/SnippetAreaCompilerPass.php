@@ -45,6 +45,10 @@ class SnippetAreaCompilerPass implements CompilerPassInterface
 
         \ksort($areas);
         $container->setParameter(self::SNIPPET_AREA_PARAM, $areas);
+
+        if (empty($areas)) {
+            $container->removeDefinition('sulu_snippet.snippet_area_admin');
+        }
     }
 
     /**
