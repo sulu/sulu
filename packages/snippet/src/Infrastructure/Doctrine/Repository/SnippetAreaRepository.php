@@ -76,7 +76,7 @@ class SnippetAreaRepository implements SnippetAreaRepositoryInterface
         return $snippetArea;
     }
 
-    public function findSnippetUuidBy(array $filters): ?string
+    public function findOneUuidBy(array $filters): ?string
     {
         $queryBuilder = $this->createQueryBuilder($filters);
         $queryBuilder->select('IDENTITY(area.snippet)');

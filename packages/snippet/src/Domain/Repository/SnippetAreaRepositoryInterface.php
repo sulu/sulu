@@ -55,7 +55,7 @@ interface SnippetAreaRepositoryInterface
      *     areaKey?: string,
      * } $filters
      */
-    public function findSnippetUuidBy(array $filters): ?string;
+    public function findOneUuidBy(array $filters): ?string;
 
     /**
      * @param array{

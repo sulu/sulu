@@ -73,7 +73,7 @@ class SnippetAreaSmartResolverTest extends TestCase
 
         $this->requestAnalyzer->getWebspace()->willReturn($webspace);
 
-        $this->snippetAreaRepository->findSnippetUuidBy([
+        $this->snippetAreaRepository->findOneUuidBy([
             'webspaceKey' => 'sulu_io',
             'areaKey' => 'header',
         ])->willReturn('snippet-uuid-123');
@@ -100,7 +100,7 @@ class SnippetAreaSmartResolverTest extends TestCase
 
         $this->requestAnalyzer->getWebspace()->willReturn($webspace);
 
-        $this->snippetAreaRepository->findSnippetUuidBy([
+        $this->snippetAreaRepository->findOneUuidBy([
             'webspaceKey' => 'sulu_io',
             'areaKey' => 'footer',
         ])->willReturn(null);
@@ -126,6 +126,6 @@ class SnippetAreaSmartResolverTest extends TestCase
         $this->assertNull($result->getContent());
         $this->assertSame([], $result->getView());
 
-        $this->snippetAreaRepository->findSnippetUuidBy()->shouldNotHaveBeenCalled();
+        $this->snippetAreaRepository->findOneUuidBy()->shouldNotHaveBeenCalled();
     }
 }

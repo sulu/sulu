@@ -53,7 +53,7 @@ class SnippetAreaSmartResolver implements SmartResolverInterface
         }
         $webspaceKey = $webspace->getKey();
 
-        $snippetId = $this->snippetAreaRepository->findSnippetUuidBy([
+        $snippetId = $this->snippetAreaRepository->findOneUuidBy([
             'webspaceKey' => $webspaceKey,
             'areaKey' => $areaKey,
         ]);
