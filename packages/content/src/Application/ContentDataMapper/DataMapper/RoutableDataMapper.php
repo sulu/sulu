@@ -96,11 +96,8 @@ class RoutableDataMapper implements DataMapperInterface
             return;
         }
 
-        $routeSlug = $data[$name];
-        \assert(
-            \is_string($routeSlug),
-            \sprintf('Expected property "%s" be string but "%s" given.', $name, \get_debug_type($routeSlug))
-        );
+        $parentRoute = $this->findParentRoute($property, $data[$name], $locale);
+        $routeSlug = $this->extractRouteSlug($property, $data[$name]);
 
         $route = $localizedDimensionContent->getRoute();
         if (!$route instanceof Route
@@ -128,7 +125,7 @@ class RoutableDataMapper implements DataMapperInterface
 
         if ($route instanceof Route) {
             $route->setSlug($routeSlug);
-            // TODO support for parent and tree change update
+            $route->setParentRoute($parentRoute);
 
             return;
         }
@@ -138,8 +135,8 @@ class RoutableDataMapper implements DataMapperInterface
             fn (): string => (string) $localizedDimensionContent->getResourceId(),
             $locale,
             $routeSlug,
-            null, // TODO support for site / webspaces maybe set it in the `setRoute` of PageDimensionContent
-            null, // TODO support for parent and tree route
+            null,
+            $parentRoute,
         );
 
         $localizedDimensionContent->setRoute($route);
@@ -150,10 +147,78 @@ class RoutableDataMapper implements DataMapperInterface
     private function getRouteProperty(FormMetadata $metadata): ?FieldMetadata
     {
         foreach ($metadata->getFlatFieldMetadata() as $property) {
-            // TODO add support for page_tree_route field type: https://github.com/sulu/SuluContentBundle/issues/242
-            if ('route' === $property->getType()) {
+            if ('route' === $property->getType()
+                || 'page_tree_route' === $property->getType()
+            ) {
                 return $property;
             }
+        }
+
+        return null;
+    }
+
+    private function extractRouteSlug(FieldMetadata $property, mixed $routeData): string
+    {
+        if ('page_tree_route' === $property->getType()) {
+            \assert(
+                \is_array($routeData),
+                \sprintf('Expected property "%s" be array object but "%s" given.', $property->getName(), \get_debug_type($routeData))
+            );
+
+            $pageData = $routeData['page'] ?? null;
+            \assert(
+                \is_array($pageData),
+                \sprintf('Expected property "%s/page" be an array but "%s" given.', $property->getName(), \get_debug_type($pageData))
+            );
+
+            $pagePath = $pageData['path'] ?? null;
+            \assert(
+                \is_string($pagePath),
+                \sprintf('Expected property "%s/page/path" be string but "%s" given.', $property->getName(), \get_debug_type($pagePath))
+            );
+
+            $suffix = $routeData['suffix'] ?? null;
+            \assert(
+                \is_string($suffix),
+                \sprintf('Expected property "%s/suffix" be string but "%s" given.', $property->getName(), \get_debug_type($suffix))
+            );
+
+            return \rtrim($pagePath, '/') . '/' . \ltrim($suffix, '/');
+        }
+
+        \assert(
+            \is_string($routeData),
+            \sprintf('Expected property "%s" be string but "%s" given.', $property->getName(), \get_debug_type($routeData))
+        );
+
+        return $routeData;
+    }
+
+    private function findParentRoute(FieldMetadata $property, mixed $routeData, string $locale): ?Route
+    {
+        if ('page_tree_route' === $property->getType()) {
+            \assert(
+                \is_array($routeData),
+                \sprintf('Expected property "%s" be array object but "%s" given.', $property->getName(), \get_debug_type($routeData))
+            );
+
+            $pageData = $routeData['page'] ?? null;
+            \assert(
+                \is_array($pageData),
+                \sprintf('Expected property "%s/page" be an array but "%s" given.', $property->getName(), \get_debug_type($pageData))
+            );
+
+            $pageUuid = $pageData['uuid'] ?? null;
+            \assert(
+                \is_string($pageUuid),
+                \sprintf('Expected property "%s/page/path" be string but "%s" given.', $property->getName(), \get_debug_type($pageUuid))
+            );
+
+            return $this->routeRepository->findOneBy([
+                'locale' => $locale,
+                'resourceKey' => 'pages', // not using constant to avoid dependency to page bundle
+                'resourceId' => $pageUuid,
+            ]);
         }
 
         return null;

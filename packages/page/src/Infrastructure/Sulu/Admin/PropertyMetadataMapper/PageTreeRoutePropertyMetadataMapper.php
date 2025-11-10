@@ -43,7 +43,7 @@ final readonly class PageTreeRoutePropertyMetadataMapper implements PropertyMeta
         $pageTreeRouteMetadata = new ObjectMetadata([
             new PropertyMetadata('page', $mandatory, $pageMetadata),
             new PropertyMetadata('path', false, new StringMetadata()),
-            new PropertyMetadata('suffix', false, new StringMetadata()),
+            new PropertyMetadata('suffix', $mandatory, new StringMetadata()),
         ]);
 
         if (!$mandatory) {
