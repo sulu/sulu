@@ -466,6 +466,8 @@ final class SuluArticleBundle extends AbstractBundle
             ->class(WebsiteArticleReindexProvider::class)
             ->args([
                 new Reference('doctrine.orm.entity_manager'),
+                '%sulu_article.default_main_webspace%',
+                '%sulu_article.default_additional_webspaces%',
             ])
             ->tag('cmsig_seal.reindex_provider');
     }

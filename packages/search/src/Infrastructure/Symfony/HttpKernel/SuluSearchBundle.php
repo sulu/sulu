@@ -129,7 +129,6 @@ final class SuluSearchBundle extends AbstractBundle
                 new Reference('cmsig_seal.engine.default'),
                 new Reference('sulu_core.webspace.request_analyzer'),
                 new Reference('twig'),
-                param('sulu_search.admin_resources'),
                 new Reference('sulu_website.resolver.template_attribute'),
             ])
             ->tag('sulu.context', ['context' => 'website']);

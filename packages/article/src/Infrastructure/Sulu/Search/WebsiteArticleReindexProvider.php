@@ -48,14 +48,32 @@ final class WebsiteArticleReindexProvider implements ReindexProviderInterface
      */
     protected EntityRepository $dimensionContentRepository;
 
+    /**
+     * @var array<string, string>|null
+     */
+    private ?array $defaultMainWebspace;
+
+    /**
+     * @var array<string, string>|null
+     */
+    private ?array $defaultAdditionalWebspaces;
+
+    /**
+     * @param array<string, string>|null $defaultMainWebspace
+     * @param array<string, string>|null $defaultAdditionalWebspaces
+     */
     public function __construct(
         EntityManagerInterface $entityManager,
+        ?array $defaultMainWebspace,
+        ?array $defaultAdditionalWebspaces,
     ) {
         $repository = $entityManager->getRepository(ArticleInterface::class);
         $dimensionContentRepository = $entityManager->getRepository(ArticleDimensionContentInterface::class);
 
         $this->articleRepository = $repository;
         $this->dimensionContentRepository = $dimensionContentRepository;
+        $this->defaultMainWebspace = $defaultMainWebspace;
+        $this->defaultAdditionalWebspaces = $defaultAdditionalWebspaces;
     }
 
     public function total(): ?int
@@ -76,6 +94,17 @@ final class WebsiteArticleReindexProvider implements ReindexProviderInterface
                 $article['additionalWebspaces'] ?? [],
             );
             $webspaces = \array_values(\array_unique($webspaces));
+
+            if (0 === \count($webspaces)) {
+                $defaultMainWebspace = $this->defaultMainWebspace ? ($this->defaultMainWebspace['default'] ? [$this->defaultMainWebspace['default']] : []) : [];
+                /** @var string[] $defaultAdditionalWebspaces */
+                $defaultAdditionalWebspaces = $this->defaultAdditionalWebspaces ? ($this->defaultAdditionalWebspaces['default'] ?? []) : [];
+
+                $webspaces = \array_merge(
+                    $defaultMainWebspace,
+                    $defaultAdditionalWebspaces,
+                );
+            }
 
             yield [
                 'id' => ArticleInterface::RESOURCE_KEY . '::' . ((string) $article['articleId']) . '::' . $article['locale'],
