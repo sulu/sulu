@@ -16,6 +16,7 @@
                 "webspaceKey": "sulu-io",
                 "template": null,
                 "version": null,
+                "linkProvider": null,
                 "hasChildren": true,
                 "_hasPermissions": false,
                 "_embedded": {
@@ -35,6 +36,7 @@
                             "webspaceKey": "sulu-io",
                             "template": "default",
                             "version" : 0,
+                            "linkProvider": null,
                             "hasChildren": true,
                             "_hasPermissions": false,
                             "_embedded": {
@@ -54,6 +56,7 @@
                                         "webspaceKey": "sulu-io",
                                         "template": "default",
                                         "version" : 0,
+                                        "linkProvider": null,
                                         "hasChildren": false,
                                         "_hasPermissions": false
                                     },
@@ -72,6 +75,7 @@
                                         "webspaceKey": "sulu-io",
                                         "template": "default",
                                         "version" : 0,
+                                        "linkProvider": null,
                                         "hasChildren": false,
                                         "_hasPermissions": false
                                     },
@@ -90,6 +94,7 @@
                                         "webspaceKey": "sulu-io",
                                         "template": "default",
                                         "version" : 0,
+                                        "linkProvider": null,
                                         "hasChildren": false,
                                         "_hasPermissions": false
                                     }

@@ -17,6 +17,7 @@
                 "webspaceKey": "sulu-io",
                 "template": null,
                 "publishedState": false,
+                "linkProvider": null,
                 "hasChildren": true,
                 "_embedded": {
                     "pages": [
@@ -30,6 +31,7 @@
                             "ghostLocale": null,
                             "hasChildren": true,
                             "id": "@string@",
+                            "linkProvider": null,
                             "version" : 0,
                             "locale": "de",
                             "publishedState": false,
