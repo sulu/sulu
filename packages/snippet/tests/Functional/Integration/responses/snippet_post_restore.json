@@ -1,6 +1,7 @@
 {
     "availableLocales": [
-        "en"
+        "en",
+        "de"
     ],
     "changed": "@datetime@",
     "changer" : "@integer@",
@@ -16,7 +17,7 @@
     "excerptSegment": null,
     "excerptTags": [],
     "excerptTitle": "Excerpt Title 2",
-    "ghostLocale": "en",
+    "ghostLocale": "de",
     "id": "@string@",
     "image": null,
     "locale": "en",

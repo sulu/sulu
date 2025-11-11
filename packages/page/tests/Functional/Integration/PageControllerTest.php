@@ -703,7 +703,7 @@ class PageControllerTest extends SuluTestCase
     }
 
     #[Depends('testMove')]
-    public function testDeleteSingleLocale(string $id): void
+    public function testDeleteSingleLocale(string $id): string
     {
         $this->client->request('GET', '/admin/api/pages/' . $id . '?locale=en');
         $response = $this->client->getResponse();
@@ -761,6 +761,33 @@ class PageControllerTest extends SuluTestCase
         $availableLocales = $content['availableLocales'];
         $this->assertContains('de', $availableLocales);
         $this->assertNotContains('en', $availableLocales);
+
+        return $id;
+    }
+
+    #[Depends('testDeleteSingleLocale')]
+    public function testRecreateDeletedLocale(string $id): string
+    {
+        $this->client->request('PUT', '/admin/api/pages/' . $id . '?locale=en', [], [], [], \json_encode([
+            'template' => 'default',
+            'title' => 'Recreated Test Page (EN)',
+            'url' => '/recreated-my-page',
+        ]) ?: null);
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(200, $response);
+
+        /** @var array<string, mixed> $content */
+        $content = \json_decode((string) $response->getContent(), true);
+        /** @var array<int, string> $availableLocales */
+        $availableLocales = $content['availableLocales'];
+        /** @var array<int, string> $contentLocales */
+        $contentLocales = $content['contentLocales'];
+        $this->assertContains('en', $availableLocales);
+        $this->assertContains('de', $availableLocales);
+        $this->assertContains('en', $contentLocales);
+        $this->assertContains('de', $contentLocales);
+
+        return $id;
     }
 
     #[Depends('testPost')]
@@ -772,7 +799,7 @@ class PageControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(204, $response);
 
         $routeRepository = $this->getContainer()->get(RouteRepositoryInterface::class);
-        $this->assertCount(11, $routeRepository->findBy([])); // TODO we need tackle this
+        $this->assertCount(12, $routeRepository->findBy([])); // TODO we need tackle this
 
         $trashRepository = self::getContainer()->get(TrashItemRepositoryInterface::class);
         $trashItem = $trashRepository->findOneBy([
