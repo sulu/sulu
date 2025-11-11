@@ -165,6 +165,68 @@ and update your templates definition to use the new controller:
 +<controller>Sulu\Content\UserInterface\Controller\Website\ContentController::indexAction</controller>
 ```
 
+### Content load Twig functions split and properties now required
+
+The Sulu 2.6 `sulu_content_load` function has been split into separate `sulu_page_load` and `sulu_article_load` functions.
+Additionally, the `properties` parameter is now mandatory, and a new optional `locale` parameter has been added.
+
+**What Changed:**
+
+**For Pages and Articles (Sulu 2.6 → Sulu 3.0):**
+- `sulu_content_load(uuid, ?properties)` → `sulu_page_load(uuid, properties, ?locale)`
+- `sulu_content_load(uuid, ?properties)` → `sulu_article_load(uuid, properties, ?locale)`
+
+**For Snippets (Sulu 2.6 → Sulu 3.0):**
+- `sulu_snippet_load_by_area(area, ?webspaceKey, ?locale)` → `sulu_snippet_load_by_area(areaKey, properties, ?webspaceKey, ?locale)`
+
+**Key Changes:**
+1. **Function split**: The single `sulu_content_load` function has been replaced with `sulu_page_load` and `sulu_article_load`
+2. **Properties mandatory**: The `properties` parameter was optional in Sulu 2.6 but is now required in Sulu 3.0
+3. **Locale parameter added**: A new optional `locale` parameter allows you to load content in a specific locale (previously always used the current request's locale)
+4. **Snippet properties**: The `properties` parameter is completely new for snippets in Sulu 3.0
+
+**Migration:**
+
+Update all Twig templates to use the new function names and pass the properties array explicitly:
+
+```twig
+{# Old Sulu 2.6 #}
+{% set page = sulu_content_load(page_uuid) %}
+{% set page = sulu_content_load(page_uuid, ['title', 'description']) %}
+{% set article = sulu_content_load(article_uuid) %}
+{% set snippet = sulu_snippet_load_by_area('footer', 'sulu-io', 'en') %}
+
+{# New Sulu 3.0 - use separate functions, properties mandatory #}
+{% set page = sulu_page_load(page_uuid, {
+    'title': 'title',
+    'description': 'description',
+}) %}
+
+{# Optionally specify locale (new in 3.0) #}
+{% set page = sulu_page_load(page_uuid, {
+    'title': 'title',
+    'url': 'url'
+}, 'en') %}
+
+{# Use sulu_article_load for articles #}
+{% set article = sulu_article_load(article_uuid, {
+    'title': 'title',
+    'description': 'description'
+}) %}
+
+{# Snippets now require properties parameter #}
+{% set snippet = sulu_snippet_load_by_area('footer', {
+    'title': 'title',
+    'image': 'image'
+}, 'sulu-io', 'en') %}
+```
+
+**Note:** The property mapping uses the format `'output_key': 'content_resolver_path'`. For example:
+- `'title': 'title'` - Maps the content's title field to the `title` key in the output
+- `'url': 'url'` - Maps the content's URL to the `url` key
+- `'content': 'content'` - Maps all template data fields to the `content` key
+- `'excerpt.description': 'excerpt.description'` - Maps excerpt extension fields
+
 ### Navigation Twig functions renamed to `sulu_page_` prefix
 
 All navigation-related Twig functions have been renamed to include the `sulu_page_` prefix instead of just `sulu_`

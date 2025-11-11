@@ -84,9 +84,7 @@ class SnippetAreaTwigExtensionTest extends TestCase
         $webspaceKey = 'example';
         $locale = 'en';
 
-        // Create real objects
         $snippet = new Snippet('test-snippet-uuid');
-
         $snippetDimensionContent = new SnippetDimensionContent($snippet);
         $snippetDimensionContent->setTemplateData(['title' => 'Test Snippet']);
 
@@ -114,9 +112,9 @@ class SnippetAreaTwigExtensionTest extends TestCase
             ]
         )->willReturn($snippetDimensionContent);
 
-        $this->contentResolver->resolve($snippetDimensionContent, null)->willReturn($resolvedContent);
+        $this->contentResolver->resolve($snippetDimensionContent, [])->willReturn($resolvedContent);
 
-        $result = $this->extension->loadSnippetByArea($areaKey, $webspaceKey, $locale);
+        $result = $this->extension->loadSnippetByArea($areaKey, [], $webspaceKey, $locale);
 
         $this->assertSame($resolvedContent, $result);
 
@@ -168,9 +166,9 @@ class SnippetAreaTwigExtensionTest extends TestCase
             ]
         )->willReturn($snippetDimensionContent);
 
-        $this->contentResolver->resolve($snippetDimensionContent, null)->willReturn($resolvedContent);
+        $this->contentResolver->resolve($snippetDimensionContent, [])->willReturn($resolvedContent);
 
-        $result = $this->extension->loadSnippetByArea($areaKey);
+        $result = $this->extension->loadSnippetByArea($areaKey, []);
 
         $this->assertSame($resolvedContent, $result);
 
@@ -186,7 +184,7 @@ class SnippetAreaTwigExtensionTest extends TestCase
 
         $this->requestAnalyzer->getWebspace()->willReturn(null);
 
-        $result = $this->extension->loadSnippetByArea($areaKey);
+        $result = $this->extension->loadSnippetByArea($areaKey, []);
 
         $this->assertNull($result);
     }
@@ -202,7 +200,7 @@ class SnippetAreaTwigExtensionTest extends TestCase
         $this->requestAnalyzer->getWebspace()->willReturn($webspace);
         $this->requestAnalyzer->getCurrentLocalization()->willReturn(null);
 
-        $result = $this->extension->loadSnippetByArea($areaKey);
+        $result = $this->extension->loadSnippetByArea($areaKey, []);
 
         $this->assertNull($result);
     }
@@ -218,7 +216,7 @@ class SnippetAreaTwigExtensionTest extends TestCase
             'areaKey' => $areaKey,
         ])->willReturn(null);
 
-        $result = $this->extension->loadSnippetByArea($areaKey, $webspaceKey, $locale);
+        $result = $this->extension->loadSnippetByArea($areaKey, [], $webspaceKey, $locale);
 
         $this->assertNull($result);
     }
@@ -236,7 +234,7 @@ class SnippetAreaTwigExtensionTest extends TestCase
             'areaKey' => $areaKey,
         ])->willReturn($snippetArea);
 
-        $result = $this->extension->loadSnippetByArea($areaKey, $webspaceKey, $locale);
+        $result = $this->extension->loadSnippetByArea($areaKey, [], $webspaceKey, $locale);
 
         $this->assertNull($result);
     }
@@ -251,7 +249,7 @@ class SnippetAreaTwigExtensionTest extends TestCase
             ->willThrow(new SnippetAreaNotFoundException(['areaKey' => $areaKey]));
 
         $this->expectException(SnippetAreaNotFoundException::class);
-        $this->extension->loadSnippetByArea($areaKey, $webspaceKey, $locale);
+        $this->extension->loadSnippetByArea($areaKey, [], $webspaceKey, $locale);
     }
 
     public function testLoadSnippetByAreaWithProperties(): void
@@ -292,7 +290,7 @@ class SnippetAreaTwigExtensionTest extends TestCase
 
         $this->contentResolver->resolve($snippetDimensionContent, $properties)->willReturn($resolvedContent);
 
-        $result = $this->extension->loadSnippetByArea($areaKey, $webspaceKey, $locale, $properties);
+        $result = $this->extension->loadSnippetByArea($areaKey, $properties, $webspaceKey, $locale);
 
         $this->assertSame($resolvedContent, $result);
     }
