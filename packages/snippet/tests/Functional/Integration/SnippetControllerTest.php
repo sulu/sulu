@@ -260,7 +260,7 @@ class SnippetControllerTest extends SuluTestCase
     }
 
     #[Depends('testPost')]
-    public function testDeleteSingleLocale(string $id): void
+    public function testDeleteSingleLocale(string $id): string
     {
         $this->client->request('GET', '/admin/api/snippets/' . $id . '?locale=en');
         $response = $this->client->getResponse();
@@ -309,6 +309,35 @@ class SnippetControllerTest extends SuluTestCase
         $availableLocales = $content['availableLocales'];
         $this->assertContains('en', $availableLocales);
         $this->assertNotContains('de', $availableLocales);
+
+        return $id;
+    }
+
+    #[Depends('testDeleteSingleLocale')]
+    public function testRecreateDeletedLocale(string $id): string
+    {
+        $this->client->request('GET', '/admin/api/snippets/' . $id . '?locale=en');
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(200, $response);
+
+        /** @var array{template: string, title: string} $snippetData */
+        $snippetData = \json_decode((string) $response->getContent(), true);
+
+        $this->client->request('PUT', '/admin/api/snippets/' . $id . '?locale=de', [], [], [], \json_encode([
+            'template' => $snippetData['template'],
+            'title' => 'Recreated Test Snippet (DE)',
+        ]) ?: null);
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(200, $response);
+
+        /** @var array<string, mixed> $content */
+        $content = \json_decode((string) $response->getContent(), true);
+        /** @var array<int, string> $availableLocales */
+        $availableLocales = $content['availableLocales'];
+        $this->assertContains('en', $availableLocales);
+        $this->assertContains('de', $availableLocales);
+
+        return $id;
     }
 
     #[Depends('testPost')]

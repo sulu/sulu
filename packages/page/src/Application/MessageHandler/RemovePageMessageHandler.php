@@ -17,6 +17,7 @@ use Sulu\Content\Domain\Model\DimensionContentCollection;
 use Sulu\Page\Application\Message\RemovePageMessage;
 use Sulu\Page\Domain\Event\PageRemovedEvent;
 use Sulu\Page\Domain\Model\PageDimensionContent;
+use Sulu\Page\Domain\Model\PageDimensionContentInterface;
 use Sulu\Page\Domain\Repository\PageRepositoryInterface;
 
 /**
@@ -45,14 +46,29 @@ final class RemovePageMessageHandler
         $this->trashManager?->store($resourceKey, $page);
 
         $dimensionContentCollection = new DimensionContentCollection($page->getDimensionContents()->toArray(), [], PageDimensionContent::class);
-        /** @var PageDimensionContent $localizedDimensionContent */
+        /** @var PageDimensionContentInterface|null $localizedDimensionContent */
         $localizedDimensionContent = $dimensionContentCollection->getDimensionContent(['locale' => $message->getLocale()]);
+        $unlocalizedDimensionContent = $dimensionContentCollection->getDimensionContent(['locale' => null, 'stage' => 'draft']);
+        $context = $unlocalizedDimensionContent?->getAvailableLocales() ? ['locales' => $unlocalizedDimensionContent->getAvailableLocales()] : [];
+
+        // Try to get title from the removed locale first, fallback to any available locale if null
+        $title = $localizedDimensionContent?->getTitle();
+        if (null === $title && $unlocalizedDimensionContent) {
+            $availableLocales = $unlocalizedDimensionContent->getAvailableLocales();
+            foreach ($availableLocales as $availableLocale) {
+                $fallbackDimensionContent = $dimensionContentCollection->getDimensionContent(['locale' => $availableLocale]);
+                if ($fallbackDimensionContent instanceof PageDimensionContentInterface && null !== $fallbackDimensionContent->getTitle()) {
+                    $title = $fallbackDimensionContent->getTitle();
+                    break;
+                }
+            }
+        }
 
         $this->domainEventCollector->collect(new PageRemovedEvent(
             $page->getUuid(),
             $page->getWebspaceKey(),
-            $localizedDimensionContent->getTitle(),
-            []
+            $title,
+            $context
         ));
     }
 }

@@ -14,6 +14,7 @@ namespace Sulu\Article\Application\MessageHandler;
 use Sulu\Article\Application\Message\RemoveArticleMessage;
 use Sulu\Article\Domain\Event\ArticleRemovedEvent;
 use Sulu\Article\Domain\Model\ArticleDimensionContent;
+use Sulu\Article\Domain\Model\ArticleDimensionContentInterface;
 use Sulu\Article\Domain\Repository\ArticleRepositoryInterface;
 use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
 use Sulu\Bundle\TrashBundle\Application\TrashManager\TrashManagerInterface;
@@ -45,10 +46,24 @@ final class RemoveArticleMessageHandler
         $this->trashManager?->store($resourceKey, $article);
 
         $dimensionContentCollection = new DimensionContentCollection($article->getDimensionContents()->toArray(), [], ArticleDimensionContent::class);
+        /** @var ArticleDimensionContentInterface|null $localizedDimensionContent */
         $localizedDimensionContent = $dimensionContentCollection->getDimensionContent(['locale' => $message->getLocale()]);
         $unlocalizedDimensionContent = $dimensionContentCollection->getDimensionContent(['locale' => null, 'stage' => 'draft']);
         $context = $unlocalizedDimensionContent?->getAvailableLocales() ? ['locales' => $unlocalizedDimensionContent->getAvailableLocales()] : [];
 
-        $this->domainEventCollector->collect(new ArticleRemovedEvent($article->getId(), $localizedDimensionContent?->getTitle(), $context));
+        // Try to get title from the removed locale first, fallback to any available locale if null
+        $title = $localizedDimensionContent?->getTitle();
+        if (null === $title && $unlocalizedDimensionContent) {
+            $availableLocales = $unlocalizedDimensionContent->getAvailableLocales();
+            foreach ($availableLocales as $availableLocale) {
+                $fallbackDimensionContent = $dimensionContentCollection->getDimensionContent(['locale' => $availableLocale]);
+                if ($fallbackDimensionContent instanceof ArticleDimensionContentInterface && null !== $fallbackDimensionContent->getTitle()) {
+                    $title = $fallbackDimensionContent->getTitle();
+                    break;
+                }
+            }
+        }
+
+        $this->domainEventCollector->collect(new ArticleRemovedEvent($article->getId(), $title, $context));
     }
 }
