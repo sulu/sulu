@@ -30,6 +30,7 @@ use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer;
+use Sulu\Page\Domain\Model\Page;
 use Sulu\Page\Domain\Model\PageDimensionContentInterface;
 use Sulu\Page\Domain\Model\PageInterface;
 use Sulu\Page\Infrastructure\Sulu\Admin\PageAdmin;
@@ -294,7 +295,7 @@ readonly class PageSmartContentProvider implements SmartContentProviderInterface
                 $queryBuilder,
                 $user,
                 $permission,
-                PageInterface::class,
+                Page::class,
                 $alias,
                 'uuid'
             );

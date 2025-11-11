@@ -17,6 +17,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Bundle\SecurityBundle\Entity\AccessControl;
 use Sulu\Bundle\SecurityBundle\Entity\Permission;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
+use Sulu\Page\Domain\Model\Page;
 use Sulu\Page\Domain\Model\PageInterface;
 
 trait CreatePageWithPermissionsTrait
@@ -48,7 +49,7 @@ trait CreatePageWithPermissionsTrait
         $accessControl = new AccessControl();
         $accessControl->setPermissions($permissions);
         $accessControl->setEntityId($page->getUuid());
-        $accessControl->setEntityClass(PageInterface::class);
+        $accessControl->setEntityClass(Page::class);
         $accessControl->setRole($role);
 
         self::getEntityManager()->persist($accessControl);

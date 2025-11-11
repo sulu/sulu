@@ -35,12 +35,6 @@ class SinglePageSelectionPropertyResolver implements PropertyResolverInterface
             return ContentView::create(null, ['id' => null, ...$params]);
         }
 
-        /** @var array{locale: string, stage: string} $filters */
-        $filters = [
-            'locale' => $locale,
-            'stage' => 'live',
-        ];
-
         /** @var string $resourceLoaderKey */
         $resourceLoaderKey = $params['resourceLoader'] ?? PageResourceLoader::getKey();
 
@@ -55,7 +49,6 @@ class SinglePageSelectionPropertyResolver implements PropertyResolverInterface
             priority: 150,
             metadata: [
                 'properties' => $params['properties'] ?? null,
-                'filters' => $filters,
             ]
         );
     }

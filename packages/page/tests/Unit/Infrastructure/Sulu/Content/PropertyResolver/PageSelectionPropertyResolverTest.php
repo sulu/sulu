@@ -150,10 +150,6 @@ class PageSelectionPropertyResolverTest extends TestCase
                 'property1' => 'value1',
                 'property2' => 'value2',
             ],
-            'filters' => [
-                'locale' => 'en',
-                'stage' => 'live',
-            ],
         ], $content[0]->getMetadata());
 
         $references = $contentView->getReferences();
@@ -172,10 +168,6 @@ class PageSelectionPropertyResolverTest extends TestCase
 
         $this->assertSame([
             'properties' => null,
-            'filters' => [
-                'locale' => 'en',
-                'stage' => 'live',
-            ],
         ], $content[0]->getMetadata());
 
         $references = $contentView->getReferences();
@@ -196,10 +188,6 @@ class PageSelectionPropertyResolverTest extends TestCase
 
         $this->assertSame([
             'properties' => null,
-            'filters' => [
-                'locale' => 'en',
-                'stage' => 'live',
-            ],
         ], $content[0]->getMetadata());
 
         $references = $contentView->getReferences();

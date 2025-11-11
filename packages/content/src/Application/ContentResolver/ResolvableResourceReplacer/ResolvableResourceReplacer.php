@@ -28,6 +28,12 @@ class ResolvableResourceReplacer implements ResolvableResourceReplacerInterface
     ) {
     }
 
+    /**
+     * @param array<int|string, mixed> $content
+     * @param array<string, array<string|int, array<string, mixed>>> $resolvedResources
+     *
+     * @return array<int|string, mixed>
+     */
     public function replaceResolvableResourcesWithResolvedValues(
         array $content,
         array $resolvedResources,
@@ -35,55 +41,91 @@ class ResolvableResourceReplacer implements ResolvableResourceReplacerInterface
         int $maxDepth
     ): array {
         if ($depth > $maxDepth) {
-            // replace non resolved resources with null
-            \array_walk_recursive($content, function(&$value) {
-                if ($value instanceof ResolvableResource) {
-                    // TODO add callback with exception in dev mode
-                    $value = null;
-                }
-            });
-
-            return $content;
+            return $this->replaceUnresolvedWithNull($content);
         }
 
         if (0 === \count($resolvedResources)) {
             return $content;
         }
 
-        $hasReplaced = false;
-        \array_walk_recursive($content, function(&$value) use ($resolvedResources, &$hasReplaced) {
-            if (!$value instanceof ResolvableInterface) {
-                return;
+        $onlyResolvableResources = true;
+        foreach ($content as $key => $value) {
+            if ($value instanceof ResolvableInterface) {
+                $content[$key] = $this->resolveValue(
+                    $value,
+                    $resolvedResources
+                );
+
+                // If resolved to array, recurse into it
+                if (\is_array($content[$key])) {
+                    $content[$key] = $this->replaceResolvableResourcesWithResolvedValues(
+                        $content[$key],
+                        $resolvedResources,
+                        $depth + 1,
+                        $maxDepth
+                    );
+                }
+                continue;
             }
+            $onlyResolvableResources = false;
 
-            $resource = $resolvedResources[$value->getResourceLoaderKey()][$value->getId()][$value->getMetadataIdentifier()] ?? null;
-
-            if (null !== $resource && $value instanceof ResolvableResource && $value->getResourceKey()) {
-                $this->populateReferenceStore($value->getId(), $value->getResourceKey());
+            if (\is_array($value)) {
+                $content[$key] = $this->replaceResolvableResourcesWithResolvedValues(
+                    $value,
+                    $resolvedResources,
+                    $depth + 1,
+                    $maxDepth
+                );
             }
+        }
 
-            if (null === $resource) {
-                $value = null;
-
-                return;
+        // this is required for e.g. selections where some entities are not resolved
+        // due to insufficient permissions
+        if ($onlyResolvableResources) {
+            // remove non-resolved resources if all values were resolvable resources
+            $isList = \array_is_list($content);
+            $content = \array_filter($content, static fn ($value) => null !== $value);
+            if ($isList) {
+                $content = \array_values($content);
             }
+        }
 
-            $value = $value->executeResourceCallback($resource);
-            $hasReplaced = true;
-        });
+        return $content;
+    }
 
-        // Recursively replace ResolvableResource instances in nested arrays
-        // if a replacement was made in the previous step.
-        // This is necessary to resolve nested ResolvableResource instances
-        // which might have been added during the first replacement,
-        // e.g., when a ResolvableResource is replaced with an array containing another ResolvableResource.
-        if ($hasReplaced) {
-            $content = $this->replaceResolvableResourcesWithResolvedValues(
-                $content,
-                $resolvedResources,
-                $depth + 1,
-                $maxDepth
-            );
+    /**
+     * @param array<string, array<string|int, array<string, mixed>>> $resolvedResources
+     */
+    private function resolveValue(
+        ResolvableInterface $value,
+        array $resolvedResources
+    ): mixed {
+        $loaderKey = $value->getResourceLoaderKey();
+        $id = $value->getId();
+        $metadataIdentifier = $value->getMetadataIdentifier();
+
+        $resource = $resolvedResources[$loaderKey][$id][$metadataIdentifier] ?? null;
+
+        if (null !== $resource && $value instanceof ResolvableResource && $value->getResourceKey()) {
+            $this->populateReferenceStore($value->getId(), $value->getResourceKey());
+        }
+
+        return null === $resource ? null : $value->executeResourceCallback($resource);
+    }
+
+    /**
+     * @param array<int|string, mixed> $content
+     *
+     * @return array<int|string, mixed>
+     */
+    private function replaceUnresolvedWithNull(array $content): array
+    {
+        foreach ($content as $key => $value) {
+            if ($value instanceof ResolvableResource) {
+                $content[$key] = null;
+            } elseif (\is_array($value)) {
+                $content[$key] = $this->replaceUnresolvedWithNull($value);
+            }
         }
 
         return $content;

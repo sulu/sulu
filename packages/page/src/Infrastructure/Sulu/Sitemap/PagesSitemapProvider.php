@@ -24,6 +24,7 @@ use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\PortalInformation;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
+use Sulu\Page\Domain\Model\Page;
 use Sulu\Page\Domain\Model\PageInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 
@@ -32,7 +33,7 @@ use Symfony\Bundle\SecurityBundle\Security;
  *           projects can create there own sitemap providers or use symfony
  *           dependency injection container to override this sitemap provider service
  *
- * @phpstan-type Page array{
+ * @phpstan-type PageData array{
  *     lastModified: \DateTimeImmutable|null,
  *     changed: \DateTimeImmutable,
  *     locale: string,
@@ -115,7 +116,7 @@ class PagesSitemapProvider extends AbstractSitemapProvider
                 $alternateRoutes[$pageUuid][$alternateLocale][] = $alternateSlug;
             }
 
-            /** @var Page $page */
+            /** @var PageData $page */
             foreach ($pagesIterator as $page) {
                 $pages[] = $page;
 
@@ -174,7 +175,7 @@ class PagesSitemapProvider extends AbstractSitemapProvider
                 $queryBuilder,
                 $user,
                 $permission,
-                PageInterface::class,
+                Page::class,
                 $alias,
                 'uuid'
             );
@@ -182,7 +183,7 @@ class PagesSitemapProvider extends AbstractSitemapProvider
     }
 
     /**
-     * @return iterable<Page>
+     * @return iterable<PageData>
      */
     private function getPages(string $webspaceKey, string $locale): iterable
     {
@@ -225,7 +226,7 @@ class PagesSitemapProvider extends AbstractSitemapProvider
         $queryBuilder->orderBy('route.slug', 'ASC');
 
         /**
-         * @var iterable<Page>
+         * @var iterable<PageData>
          */
         return $queryBuilder->getQuery()->toIterable();
     }
@@ -269,7 +270,7 @@ class PagesSitemapProvider extends AbstractSitemapProvider
     }
 
     /**
-     * @param Page $page
+     * @param PageData $page
      * @param array<string, array<string, string[]>> $alternatePages
      */
     private function generateSitemapUrl(

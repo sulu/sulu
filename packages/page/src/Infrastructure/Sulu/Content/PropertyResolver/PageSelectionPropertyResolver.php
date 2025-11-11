@@ -38,17 +38,11 @@ class PageSelectionPropertyResolver implements PropertyResolverInterface
             return ContentView::create([], ['ids' => [], ...$params]);
         }
 
-        /** @var string[] $ids */
-        $ids = $data;
-
-        /** @var array{locale: string, stage: string} $filters */
-        $filters = [
-            'locale' => $locale,
-            'stage' => 'live',
-        ];
-
         /** @var string $resourceLoaderKey */
         $resourceLoaderKey = $params['resourceLoader'] ?? PageResourceLoader::getKey();
+
+        /** @var string[] $ids */
+        $ids = $data;
 
         return ContentView::createResolvablesWithReferences(
             ids: $ids,
@@ -61,7 +55,6 @@ class PageSelectionPropertyResolver implements PropertyResolverInterface
             priority: 150,
             metadata: [
                 'properties' => $params['properties'] ?? null,
-                'filters' => $filters,
             ]
         );
     }

@@ -25,6 +25,7 @@ use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer;
 use Sulu\Page\Domain\Exception\PageNotFoundException;
+use Sulu\Page\Domain\Model\Page;
 use Sulu\Page\Domain\Model\PageDimensionContentInterface;
 use Sulu\Page\Domain\Model\PageInterface;
 use Sulu\Page\Domain\Repository\PageRepositoryInterface;
@@ -407,7 +408,7 @@ class PageRepository implements PageRepositoryInterface
                 $queryBuilder,
                 $accessControl['user'] ?? null,
                 $accessControl['permission'],
-                PageInterface::class,
+                Page::class,
                 'page',
                 'uuid'
             );
