@@ -158,6 +158,7 @@ final class SuluCustomUrlBundle extends AbstractBundle
                 service(WebspaceManagerInterface::class),
                 service(ViewBuilderFactoryInterface::class),
                 service(SecurityCheckerInterface::class),
+                '%kernel.environment%',
             ])
             ->tag('sulu.admin')
             ->tag('sulu.context', ['context' => 'admin']);
