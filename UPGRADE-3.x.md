@@ -167,33 +167,50 @@ and update your templates definition to use the new controller:
 
 ### Navigation Twig Extension property filtering
 
-The navigation Twig functions and repository methods now support custom property filtering, allowing you to specify
-which fields should be resolved from the content.
+The navigation Twig functions and repository methods now support custom property filtering, and the default properties
+have been simplified to improve performance.
 
 **What Changed:**
 
-All navigation-related Twig extension methods now accept an optional `$properties` parameter that allows you to customize
-which content fields are resolved. When not provided, the extension uses the defaults from Sulu 2.x that include commonly
-needed fields like `uuid`, `title`, `url`, `webspaceKey`, `template`, etc.
+1. The `$loadExcerpt` parameter has been removed from all navigation functions
+2. The default properties have been reduced to only `title` and `url`
+3. All navigation-related Twig extension methods accept an optional `$properties` parameter for custom fields
 
-**Using custom properties in Twig:**
+**Migration:**
 
-You can now customize which fields are resolved by passing a properties array to the navigation functions:
+If you need the old default properties, explicitly pass them to the navigation functions:
 
 ```twig
-{# Load only specific fields #}
-{% set navigation = sulu_navigation_root_flat('main', 2, false, {
-    'content.uuid': 'object.resource.id',
-    'content.title': 'title',
-    'content.url': 'url'
+{# Old behavior (Sulu 2.6) #}
+{% set navigation = sulu_navigation_root_flat('main', 2, false) %}
+
+{# New behavior - explicitly specify needed properties #}
+{% set navigation = sulu_navigation_root_flat('main', 2, {
+    'uuid': 'object.resource.id',
+    'title': 'title',
+    'url': 'url',
+    'webspaceKey': 'object.resource.webspaceKey',
+    'template': 'object.templateKey',
+    'changed': 'object.changed',
+    'changer': 'object.changer',
+    'created': 'object.created',
+    'creator': 'object.creator',
+    'linkProvider': 'object.linkData.linkProvider'
 }) %}
 
-{# Load excerpt fields along with default content fields #}
-{% set navigationWithExcerpt = sulu_navigation_root_flat('main', 2, true) %}
+{# For excerpt fields, include them explicitly #}
+{% set navigationWithExcerpt = sulu_navigation_root_flat('main', 2, {
+    'title': 'title',
+    'url': 'url',
+    'excerpt.title': 'excerpt.title',
+    'excerpt.description': 'excerpt.description',
+    'excerpt.image': 'excerpt.image'
+}) %}
 ```
 
-The property mapping uses the format `'output_key': 'content_resolver_path'`, where the content resolver path can 
-access nested object properties using dot notation (e.g., `'object.resource.webspaceKey'`).
+Be aware, that the "nodeType" was replaced by "linkProvider", this field must be adjusted accordingly.  The property mapping
+uses the format `'output_key': 'content_resolver_path'`, where the content resolver path can access nested object
+properties using dot notation (e.g., `'object.resource.webspaceKey'`).
 
 ### Add new Content storage tables
 

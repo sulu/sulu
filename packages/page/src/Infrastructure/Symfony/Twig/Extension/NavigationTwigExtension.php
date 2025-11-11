@@ -50,7 +50,7 @@ class NavigationTwigExtension extends AbstractExtension
      *
      * @return array<string, mixed>[]
      */
-    public function flatRootNavigationFunction(string $navigationContext, int $depth = 1, bool $loadExcerpt = false, ?array $properties = null): array
+    public function flatRootNavigationFunction(string $navigationContext, int $depth = 1, ?array $properties = null): array
     {
         $webspaceKey = $this->requestAnalyzer->getWebspace()->getKey();
         $locale = $this->requestAnalyzer->getCurrentLocalization()->getLocale();
@@ -63,7 +63,7 @@ class NavigationTwigExtension extends AbstractExtension
             $webspaceKey,
             $segment?->getKey(),
             $depth,
-            $properties ?? $this->getDefaultProperties($loadExcerpt),
+            $properties ?? $this->getDefaultProperties(),
         );
     }
 
@@ -72,7 +72,7 @@ class NavigationTwigExtension extends AbstractExtension
      *
      * @return array<string, mixed>[]
      */
-    public function treeRootNavigationFunction(string $navigationContext, int $depth = 1, bool $loadExcerpt = false, ?array $properties = null): array
+    public function treeRootNavigationFunction(string $navigationContext, int $depth = 1, ?array $properties = null): array
     {
         $webspaceKey = $this->requestAnalyzer->getWebspace()->getKey();
         $locale = $this->requestAnalyzer->getCurrentLocalization()->getLocale();
@@ -85,7 +85,7 @@ class NavigationTwigExtension extends AbstractExtension
             $webspaceKey,
             $segment?->getKey(),
             $depth,
-            $properties ?? $this->getDefaultProperties($loadExcerpt)
+            $properties ?? $this->getDefaultProperties()
         );
     }
 
@@ -98,7 +98,6 @@ class NavigationTwigExtension extends AbstractExtension
         string $uuid,
         ?string $context = null,
         int $depth = 1,
-        bool $loadExcerpt = false,
         ?int $level = null,
         ?array $properties = null
     ): array {
@@ -111,7 +110,7 @@ class NavigationTwigExtension extends AbstractExtension
                 $uuid,
                 $locale,
                 $webspaceKey,
-                $properties ?? $this->getDefaultProperties(false)
+                $properties ?? $this->getDefaultProperties()
             );
 
             if (!isset($breadcrumb[$level])) {
@@ -132,7 +131,7 @@ class NavigationTwigExtension extends AbstractExtension
             $webspaceKey,
             $depth,
             $context,
-            $properties ?? $this->getDefaultProperties($loadExcerpt)
+            $properties ?? $this->getDefaultProperties()
         );
     }
 
@@ -145,7 +144,6 @@ class NavigationTwigExtension extends AbstractExtension
         string $uuid,
         ?string $context = null,
         int $depth = 1,
-        bool $loadExcerpt = false,
         ?int $level = null,
         ?array $properties = null
     ): array {
@@ -158,7 +156,7 @@ class NavigationTwigExtension extends AbstractExtension
                 $uuid,
                 $locale,
                 $webspaceKey,
-                $properties ?? $this->getDefaultProperties(false)
+                $properties ?? $this->getDefaultProperties()
             );
 
             if (!isset($breadcrumb[$level])) {
@@ -179,7 +177,7 @@ class NavigationTwigExtension extends AbstractExtension
             $webspaceKey,
             $depth,
             $context,
-            $properties ?? $this->getDefaultProperties($loadExcerpt)
+            $properties ?? $this->getDefaultProperties()
         );
     }
 
@@ -197,7 +195,7 @@ class NavigationTwigExtension extends AbstractExtension
             $uuid,
             $locale,
             $webspaceKey,
-            $properties ?? $this->getDefaultProperties(false)
+            $properties ?? $this->getDefaultProperties()
         );
     }
 
@@ -213,33 +211,11 @@ class NavigationTwigExtension extends AbstractExtension
     /**
      * @return array<string, string>
      */
-    private function getDefaultProperties(bool $loadExcerpt): array
+    private function getDefaultProperties(): array
     {
-        $properties = [
-            'uuid' => 'object.resource.id',
+        return [
             'title' => 'title',
             'url' => 'url',
-            'webspaceKey' => 'object.resource.webspaceKey',
-            'template' => 'object.templateKey',
-            'changed' => 'object.changed',
-            'changer' => 'object.changer',
-            'created' => 'object.created',
-            'creator' => 'object.creator',
-            'linkProvider' => 'object.linkData.linkProvider',
         ];
-
-        if ($loadExcerpt) {
-            $properties['excerpt.title'] = 'excerpt.title';
-            $properties['excerpt.more'] = 'excerpt.more';
-            $properties['excerpt.description'] = 'excerpt.description';
-            $properties['excerpt.segment'] = 'excerpt.segment';
-            $properties['excerpt.categories'] = 'excerpt.categories';
-            $properties['excerpt.tags'] = 'excerpt.tags';
-            $properties['excerpt.audienceTargetGroups'] = 'excerpt.audienceTargetGroups';
-            $properties['excerpt.icon'] = 'excerpt.icon';
-            $properties['excerpt.image'] = 'excerpt.image';
-        }
-
-        return $properties;
     }
 }

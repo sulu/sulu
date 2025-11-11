@@ -28,34 +28,12 @@ class NavigationTwigExtensionTest extends TestCase
     /**
      * @return array<string, string>
      */
-    private function getDefaultProperties(bool $loadExcerpt): array
+    private function getDefaultProperties(): array
     {
-        $properties = [
-            'uuid' => 'object.resource.id',
+        return [
             'title' => 'title',
             'url' => 'url',
-            'webspaceKey' => 'object.resource.webspaceKey',
-            'template' => 'object.templateKey',
-            'changed' => 'object.changed',
-            'changer' => 'object.changer',
-            'created' => 'object.created',
-            'creator' => 'object.creator',
-            'linkProvider' => 'object.linkData.linkProvider',
         ];
-
-        if ($loadExcerpt) {
-            $properties['excerpt.title'] = 'excerpt.title';
-            $properties['excerpt.more'] = 'excerpt.more';
-            $properties['excerpt.description'] = 'excerpt.description';
-            $properties['excerpt.segment'] = 'excerpt.segment';
-            $properties['excerpt.categories'] = 'excerpt.categories';
-            $properties['excerpt.tags'] = 'excerpt.tags';
-            $properties['excerpt.audienceTargetGroups'] = 'excerpt.audienceTargetGroups';
-            $properties['excerpt.icon'] = 'excerpt.icon';
-            $properties['excerpt.image'] = 'excerpt.image';
-        }
-
-        return $properties;
     }
 
     /**
@@ -106,11 +84,11 @@ class NavigationTwigExtensionTest extends TestCase
         $requestAnalyzer->getCurrentLocalization()->willReturn($localization);
         $requestAnalyzer->getSegment()->willReturn(null);
 
-        $navigationRepository->getNavigationFlat('main', 'en', 'sulu-io', null, 1, $this->getDefaultProperties(false))
+        $navigationRepository->getNavigationFlat('main', 'en', 'sulu-io', null, 1, $this->getDefaultProperties())
             ->willReturn([['title' => 'Page 1']])
             ->shouldBeCalled();
 
-        $result = $extension->flatRootNavigationFunction('main', 1, false);
+        $result = $extension->flatRootNavigationFunction('main', 1);
 
         $this->assertEquals([['title' => 'Page 1']], $result);
     }
@@ -133,11 +111,11 @@ class NavigationTwigExtensionTest extends TestCase
         $requestAnalyzer->getCurrentLocalization()->willReturn($localization);
         $requestAnalyzer->getSegment()->willReturn(null);
 
-        $navigationRepository->getNavigationTree('main', 'en', 'sulu-io', null, 2, $this->getDefaultProperties(true))
+        $navigationRepository->getNavigationTree('main', 'en', 'sulu-io', null, 2, $this->getDefaultProperties())
             ->willReturn([['title' => 'Page 1', 'children' => []]])
             ->shouldBeCalled();
 
-        $result = $extension->treeRootNavigationFunction('main', 2, true);
+        $result = $extension->treeRootNavigationFunction('main', 2);
 
         $this->assertEquals([['title' => 'Page 1', 'children' => []]], $result);
     }
@@ -159,11 +137,11 @@ class NavigationTwigExtensionTest extends TestCase
         $localization = new Localization('en');
         $requestAnalyzer->getCurrentLocalization()->willReturn($localization);
 
-        $navigationRepository->getNavigationFlatByUuid('parent-uuid', 'en', 'sulu-io', 2, 'main', $this->getDefaultProperties(true))
+        $navigationRepository->getNavigationFlatByUuid('parent-uuid', 'en', 'sulu-io', 2, 'main', $this->getDefaultProperties())
             ->willReturn([['title' => 'Child 1'], ['title' => 'Child 2']])
             ->shouldBeCalled();
 
-        $result = $extension->flatNavigationFunction('parent-uuid', 'main', 2, true);
+        $result = $extension->flatNavigationFunction('parent-uuid', 'main', 2);
 
         $this->assertEquals([['title' => 'Child 1'], ['title' => 'Child 2']], $result);
     }
@@ -185,11 +163,11 @@ class NavigationTwigExtensionTest extends TestCase
         $localization = new Localization('en');
         $requestAnalyzer->getCurrentLocalization()->willReturn($localization);
 
-        $navigationRepository->getNavigationTreeByUuid('parent-uuid', 'en', 'sulu-io', 2, null, $this->getDefaultProperties(false))
+        $navigationRepository->getNavigationTreeByUuid('parent-uuid', 'en', 'sulu-io', 2, null, $this->getDefaultProperties())
             ->willReturn([['title' => 'Child 1', 'children' => [['title' => 'Grandchild 1']]]])
             ->shouldBeCalled();
 
-        $result = $extension->treeNavigationFunction('parent-uuid', null, 2, false);
+        $result = $extension->treeNavigationFunction('parent-uuid', null, 2);
 
         $this->assertEquals([['title' => 'Child 1', 'children' => [['title' => 'Grandchild 1']]]], $result);
     }
@@ -211,7 +189,7 @@ class NavigationTwigExtensionTest extends TestCase
         $localization = new Localization('en');
         $requestAnalyzer->getCurrentLocalization()->willReturn($localization);
 
-        $navigationRepository->getBreadcrumb('child-uuid', 'en', 'sulu-io', $this->getDefaultProperties(false))
+        $navigationRepository->getBreadcrumb('child-uuid', 'en', 'sulu-io', $this->getDefaultProperties())
             ->willReturn([['uuid' => 'parent-uuid', 'title' => 'Parent'], ['uuid' => 'child-uuid', 'title' => 'Child']])
             ->shouldBeCalled();
 
@@ -243,15 +221,15 @@ class NavigationTwigExtensionTest extends TestCase
             ['uuid' => 'child-uuid', 'title' => 'Child'],
         ];
 
-        $navigationRepository->getBreadcrumb('child-uuid', 'en', 'sulu-io', $this->getDefaultProperties(false))
+        $navigationRepository->getBreadcrumb('child-uuid', 'en', 'sulu-io', $this->getDefaultProperties())
             ->willReturn($breadcrumb)
             ->shouldBeCalled();
 
-        $navigationRepository->getNavigationFlatByUuid('grandparent-uuid', 'en', 'sulu-io', 1, null, $this->getDefaultProperties(false))
+        $navigationRepository->getNavigationFlatByUuid('grandparent-uuid', 'en', 'sulu-io', 1, null, $this->getDefaultProperties())
             ->willReturn([['uuid' => 'parent-uuid', 'title' => 'Parent'], ['uuid' => 'uncle-uuid', 'title' => 'Uncle']])
             ->shouldBeCalled();
 
-        $result = $extension->flatNavigationFunction('child-uuid', null, 1, false, 0);
+        $result = $extension->flatNavigationFunction('child-uuid', null, 1, 0);
 
         $this->assertEquals([['uuid' => 'parent-uuid', 'title' => 'Parent'], ['uuid' => 'uncle-uuid', 'title' => 'Uncle']], $result);
     }
@@ -277,11 +255,11 @@ class NavigationTwigExtensionTest extends TestCase
             ['uuid' => 'parent-uuid', 'title' => 'Parent'],
         ];
 
-        $navigationRepository->getBreadcrumb('child-uuid', 'en', 'sulu-io', $this->getDefaultProperties(false))
+        $navigationRepository->getBreadcrumb('child-uuid', 'en', 'sulu-io', $this->getDefaultProperties())
             ->willReturn($breadcrumb)
             ->shouldBeCalled();
 
-        $result = $extension->flatNavigationFunction('child-uuid', null, 1, false, 5);
+        $result = $extension->flatNavigationFunction('child-uuid', null, 1, 5);
 
         $this->assertEquals([], $result);
     }
