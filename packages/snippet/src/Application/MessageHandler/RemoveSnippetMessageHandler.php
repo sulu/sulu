@@ -54,7 +54,7 @@ final class RemoveSnippetMessageHandler
         // Try to get title from the removed locale first, fallback to any available locale if null
         $title = $localizedDimensionContent?->getTitle();
         if (null === $title && $unlocalizedDimensionContent) {
-            $availableLocales = $unlocalizedDimensionContent->getAvailableLocales();
+            $availableLocales = $unlocalizedDimensionContent->getAvailableLocales() ?? [];
             foreach ($availableLocales as $availableLocale) {
                 $fallbackDimensionContent = $dimensionContentCollection->getDimensionContent(['locale' => $availableLocale]);
                 if ($fallbackDimensionContent instanceof SnippetDimensionContentInterface && null !== $fallbackDimensionContent->getTitle()) {
