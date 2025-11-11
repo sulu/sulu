@@ -25,9 +25,9 @@
                         <a href="{{ sulu_content_root_path() }}">Homepage</a>
                     </li>
 
-                    {% for item in sulu_navigation_root_tree('main') %}
+                    {% for item in sulu_page_navigation_root_tree('main') %}
                         <li>
-                            <a href="{{ sulu_content_path(item.url, item.webspaceKey) }}"
+                            <a href="{{ sulu_content_path(item.url) }}"
                                title="{{ item.title }}">{{ item.title }}</a>
                         </li>
                     {% endfor %}

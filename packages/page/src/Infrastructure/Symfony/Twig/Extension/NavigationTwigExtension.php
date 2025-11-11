@@ -36,12 +36,12 @@ class NavigationTwigExtension extends AbstractExtension
     public function getFunctions(): array
     {
         return [
-            new TwigFunction('sulu_navigation_root_flat', [$this, 'flatRootNavigationFunction']),
-            new TwigFunction('sulu_navigation_root_tree', [$this, 'treeRootNavigationFunction']),
-            new TwigFunction('sulu_navigation_flat', [$this, 'flatNavigationFunction']),
-            new TwigFunction('sulu_navigation_tree', [$this, 'treeNavigationFunction']),
-            new TwigFunction('sulu_breadcrumb', [$this, 'breadcrumbFunction']),
-            new TwigFunction('sulu_navigation_is_active', [$this, 'navigationIsActiveFunction']),
+            new TwigFunction('sulu_page_navigation_root_flat', [$this, 'flatRootNavigationFunction']),
+            new TwigFunction('sulu_page_navigation_root_tree', [$this, 'treeRootNavigationFunction']),
+            new TwigFunction('sulu_page_navigation_flat', [$this, 'flatNavigationFunction']),
+            new TwigFunction('sulu_page_navigation_tree', [$this, 'treeNavigationFunction']),
+            new TwigFunction('sulu_page_breadcrumb', [$this, 'breadcrumbFunction']),
+            new TwigFunction('sulu_page_navigation_is_active', [$this, 'navigationIsActiveFunction']),
         ];
     }
 

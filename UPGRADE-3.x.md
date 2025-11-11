@@ -165,6 +165,19 @@ and update your templates definition to use the new controller:
 +<controller>Sulu\Content\UserInterface\Controller\Website\ContentController::indexAction</controller>
 ```
 
+### Navigation Twig functions renamed to `sulu_page_` prefix
+
+All navigation-related Twig functions have been renamed to include the `sulu_page_` prefix instead of just `sulu_`
+to better reflect that they come from the page package.
+
+**Old function names:**
+- `sulu_navigation_root_flat` → `sulu_page_navigation_root_flat`
+- `sulu_navigation_root_tree` → `sulu_page_navigation_root_tree`
+- `sulu_navigation_flat` → `sulu_page_navigation_flat`
+- `sulu_navigation_tree` → `sulu_page_navigation_tree`
+- `sulu_breadcrumb` → `sulu_page_breadcrumb`
+- `sulu_navigation_is_active` → `sulu_page_navigation_is_active`
+
 ### Navigation Twig Extension property filtering
 
 The navigation Twig functions and repository methods now support custom property filtering, and the default properties
@@ -184,8 +197,8 @@ If you need the old default properties, explicitly pass them to the navigation f
 {# Old behavior (Sulu 2.6) #}
 {% set navigation = sulu_navigation_root_flat('main', 2, false) %}
 
-{# New behavior - explicitly specify needed properties #}
-{% set navigation = sulu_navigation_root_flat('main', 2, {
+{# New behavior - use new function names and explicitly specify needed properties #}
+{% set navigation = sulu_page_navigation_root_flat('main', 2, {
     'uuid': 'object.resource.id',
     'title': 'title',
     'url': 'url',
@@ -199,7 +212,7 @@ If you need the old default properties, explicitly pass them to the navigation f
 }) %}
 
 {# For excerpt fields, include them explicitly #}
-{% set navigationWithExcerpt = sulu_navigation_root_flat('main', 2, {
+{% set navigationWithExcerpt = sulu_page_navigation_root_flat('main', 2, {
     'title': 'title',
     'url': 'url',
     'excerpt.title': 'excerpt.title',
