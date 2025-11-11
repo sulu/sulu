@@ -279,20 +279,10 @@ final class SuluPageBundle extends AbstractBundle
         // Property Resolver services
         $services->set('sulu_page.page_selection_property_resolver')
             ->class(PageSelectionPropertyResolver::class)
-            ->args([
-                new Reference('security.helper', ContainerInterface::IGNORE_ON_INVALID_REFERENCE),
-                param('sulu_security.permissions'),
-                new Reference('sulu_core.webspace.request_analyzer'),
-            ])
             ->tag('sulu_content.property_resolver');
 
         $services->set('sulu_page.single_page_selection_property_resolver')
             ->class(SinglePageSelectionPropertyResolver::class)
-            ->args([
-                new Reference('security.helper', ContainerInterface::IGNORE_ON_INVALID_REFERENCE),
-                param('sulu_security.permissions'),
-                new Reference('sulu_core.webspace.request_analyzer'),
-            ])
             ->tag('sulu_content.property_resolver');
 
         $services->set('sulu_page.segment_block_visitor')
@@ -307,6 +297,9 @@ final class SuluPageBundle extends AbstractBundle
             ->class(PageResourceLoader::class)
             ->args([
                 new Reference('sulu_page.page_repository'),
+                new Reference('security.helper', ContainerInterface::IGNORE_ON_INVALID_REFERENCE),
+                param('sulu_security.permissions'),
+                new Reference('sulu_core.webspace.request_analyzer'),
             ])
             ->tag('sulu_content.resource_loader', ['type' => PageResourceLoader::RESOURCE_LOADER_KEY]);
 

@@ -60,7 +60,7 @@ class SinglePageSelectionPropertyResolverPermissionTest extends SuluTestCase
         ], 'sulu-test-secure');
     }
 
-    public function testPageRepositoryWithoutPermissionConfigReturnsPage(): void
+    public function testPageRepositoryWithoutaccessControlReturnsPage(): void
     {
         $page = $this->createSimplePage('sulu-io', 'en', 'Page 1');
 
@@ -75,7 +75,7 @@ class SinglePageSelectionPropertyResolverPermissionTest extends SuluTestCase
         $this->assertSame($page->getUuid(), $result[0]->getUuid());
     }
 
-    public function testPageRepositoryWithPermissionConfigFiltersPageWithoutPermission(): void
+    public function testPageRepositoryWithaccessControlFiltersPageWithoutPermission(): void
     {
         $deniedPage = $this->createSimplePage('sulu-test-secure', 'en', 'Denied Page');
 
@@ -89,7 +89,7 @@ class SinglePageSelectionPropertyResolverPermissionTest extends SuluTestCase
         $this->assertCount(0, $result);
     }
 
-    public function testPageRepositoryWithPermissionConfigReturnsAllowedPage(): void
+    public function testPageRepositoryWithaccessControlReturnsAllowedPage(): void
     {
         $allowedPage = $this->createSimplePage('sulu-test-secure', 'en', 'Allowed Page');
 
@@ -174,7 +174,7 @@ class SinglePageSelectionPropertyResolverPermissionTest extends SuluTestCase
      *     uuids: string[],
      *     locale: string,
      *     stage: string,
-     *     permissionConfig: array{user: null, permission: int},
+     *     accessControl: array{user: null, permission: int},
      * }
      */
     private function createFiltersWithPermissions(array $uuids, int $permission = 64, string $locale = 'en', string $stage = 'live'): array
@@ -183,7 +183,7 @@ class SinglePageSelectionPropertyResolverPermissionTest extends SuluTestCase
             'uuids' => $uuids,
             'locale' => $locale,
             'stage' => $stage,
-            'permissionConfig' => [
+            'accessControl' => [
                 'user' => null,
                 'permission' => $permission,
             ],

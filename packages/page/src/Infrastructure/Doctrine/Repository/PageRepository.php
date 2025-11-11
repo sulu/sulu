@@ -270,7 +270,7 @@ class PageRepository implements PageRepositoryInterface
      *     limit?: int,
      *     navigationContexts?: string[],
      *     depth?: int,
-     *     permissionConfig?: array{user?: UserInterface|null, permission?: int|null},
+     *     accessControl?: array{user?: UserInterface|null, permission?: int|null},
      * } $filters
      * @param array{
      *     uuid?: 'asc'|'desc',
@@ -285,8 +285,8 @@ class PageRepository implements PageRepositoryInterface
      */
     private function createQueryBuilder(array $filters, array $sortBy = [], array $selects = []): QueryBuilder
     {
-        $permissionConfig = $filters['permissionConfig'] ?? null;
-        unset($filters['permissionConfig']);
+        $accessControl = $filters['accessControl'] ?? null;
+        unset($filters['accessControl']);
 
         foreach ($selects as $selectGroup => $value) {
             if (!$value) {
@@ -402,11 +402,11 @@ class PageRepository implements PageRepositoryInterface
             }
         }
 
-        if (null !== $permissionConfig && isset($permissionConfig['permission'])) {
+        if (null !== $accessControl && isset($accessControl['permission'])) {
             $this->accessControlQueryEnhancer->enhance(
                 $queryBuilder,
-                $permissionConfig['user'] ?? null,
-                $permissionConfig['permission'],
+                $accessControl['user'] ?? null,
+                $accessControl['permission'],
                 PageInterface::class,
                 'page',
                 'uuid'

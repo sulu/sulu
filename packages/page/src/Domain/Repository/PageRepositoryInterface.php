@@ -46,7 +46,7 @@ interface PageRepositoryInterface
      *     locale?: string,
      *     stage?: string,
      *     load_ghost_content?: bool,
-     *     permissionConfig?: array{user?: UserInterface|null, permission?: int|null},
+     *     accessControl?: array{user?: UserInterface|null, permission?: int|null},
      * } $filters
      * @param array{
      *     page_admin?: bool,
@@ -64,7 +64,7 @@ interface PageRepositoryInterface
      *     uuids?: string[],
      *     locale?: string,
      *     stage?: string,
-     *     permissionConfig?: array{user?: UserInterface|null, permission?: int|null},
+     *     accessControl?: array{user?: UserInterface|null, permission?: int|null},
      * } $filters
      * @param array{
      *     page_admin?: bool,
@@ -91,7 +91,7 @@ interface PageRepositoryInterface
      *     limit?: int,
      *     navigationContexts?: string[],
      *     depth?: int,
-     *     permissionConfig?: array{user?: UserInterface|null, permission?: int|null},
+     *     accessControl?: array{user?: UserInterface|null, permission?: int|null},
      * } $filters
      * @param array{
      *     id?: 'asc'|'desc',
@@ -124,7 +124,7 @@ interface PageRepositoryInterface
      *     limit?: int,
      *     navigationContexts?: string[],
      *     depth?: int,
-     *     permissionConfig?: array{user?: UserInterface|null, permission?: int|null},
+     *     accessControl?: array{user?: UserInterface|null, permission?: int|null},
      * } $filters
      * @param array{
      *     id?: 'asc'|'desc',
@@ -155,7 +155,7 @@ interface PageRepositoryInterface
      *     templateKeys?: string[],
      *     page?: int,
      *     limit?: int,
-     *     permissionConfig?: array{user?: UserInterface|null, permission?: int|null},
+     *     accessControl?: array{user?: UserInterface|null, permission?: int|null},
      * } $filters
      * @param array{
      *     id?: 'asc'|'desc',
@@ -179,7 +179,7 @@ interface PageRepositoryInterface
      *     tagNames?: string[],
      *     tagOperator?: 'AND'|'OR',
      *     templateKeys?: string[],
-     *     permissionConfig?: array{user?: UserInterface|null, permission?: int|null},
+     *     accessControl?: array{user?: UserInterface|null, permission?: int|null},
      * } $filters
      */
     public function countBy(array $filters = []): int;

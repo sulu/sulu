@@ -115,7 +115,7 @@ class PageRepositoryPermissionTest extends SuluTestCase
                 'uuids' => $uuids,
                 'locale' => 'en',
                 'stage' => 'live',
-                'permissionConfig' => [
+                'accessControl' => [
                     'user' => null,
                     'permission' => $this->viewPermission,
                 ],
@@ -153,7 +153,7 @@ class PageRepositoryPermissionTest extends SuluTestCase
                 'uuids' => $uuids,
                 'locale' => 'en',
                 'stage' => 'live',
-                'permissionConfig' => [
+                'accessControl' => [
                     'user' => null,
                     'permission' => $this->viewPermission,
                 ],
@@ -191,7 +191,7 @@ class PageRepositoryPermissionTest extends SuluTestCase
                 'uuids' => $uuids,
                 'locale' => 'en',
                 'stage' => 'live',
-                'permissionConfig' => [
+                'accessControl' => [
                     'user' => null,
                     'permission' => $this->viewPermission,
                 ],
@@ -217,7 +217,7 @@ class PageRepositoryPermissionTest extends SuluTestCase
                 'uuids' => $uuids,
                 'locale' => 'en',
                 'stage' => 'live',
-                'permissionConfig' => [
+                'accessControl' => [
                     'user' => null,
                     'permission' => $this->viewPermission,
                 ],

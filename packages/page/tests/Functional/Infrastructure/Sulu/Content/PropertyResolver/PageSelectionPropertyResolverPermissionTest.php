@@ -60,7 +60,7 @@ class PageSelectionPropertyResolverPermissionTest extends SuluTestCase
         ], 'sulu-test-secure');
     }
 
-    public function testPageRepositoryWithoutPermissionConfigReturnsAllPages(): void
+    public function testPageRepositoryWithoutaccessControlReturnsAllPages(): void
     {
         $page1 = $this->createSimplePage('sulu-io', 'en', 'Page 1');
         $page2 = $this->createSimplePage('sulu-io', 'en', 'Page 2');
@@ -76,7 +76,7 @@ class PageSelectionPropertyResolverPermissionTest extends SuluTestCase
         $this->assertCount(3, $result);
     }
 
-    public function testPageRepositoryWithPermissionConfigFiltersPagesWithoutPermissions(): void
+    public function testPageRepositoryWithaccessControlFiltersPagesWithoutPermissions(): void
     {
         $allowedPage = $this->createSimplePage('sulu-test-secure', 'en', 'Allowed Page');
         $deniedPage1 = $this->createSimplePage('sulu-test-secure', 'en', 'Denied Page 1');
@@ -191,7 +191,7 @@ class PageSelectionPropertyResolverPermissionTest extends SuluTestCase
      *     uuids: string[],
      *     locale: string,
      *     stage: string,
-     *     permissionConfig: array{user: null, permission: int},
+     *     accessControl: array{user: null, permission: int},
      * }
      */
     private function createFiltersWithPermissions(array $uuids, int $permission = 64, string $locale = 'en', string $stage = 'live'): array
@@ -200,7 +200,7 @@ class PageSelectionPropertyResolverPermissionTest extends SuluTestCase
             'uuids' => $uuids,
             'locale' => $locale,
             'stage' => $stage,
-            'permissionConfig' => [
+            'accessControl' => [
                 'user' => null,
                 'permission' => $permission,
             ],
