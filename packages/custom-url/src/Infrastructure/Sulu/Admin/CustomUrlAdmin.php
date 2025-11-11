@@ -138,7 +138,7 @@ class CustomUrlAdmin extends Admin
         foreach ($this->webspaceManager->getWebspaceCollection()->getWebspaces() as $webspace) {
             foreach ($webspace->getPortals() as $portal) {
                 $environment = $portal->getEnvironment($this->environment);
-                if ($environment && \count($environment->getCustomUrls()) > 0) {
+                if (\count($environment->getCustomUrls()) > 0) {
                     return true;
                 }
             }
