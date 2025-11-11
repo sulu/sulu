@@ -990,6 +990,7 @@ Removed JavaScript files and methods:
  - `sulu-admin-bundle/stores/localizationStore/localizationStore.js` `loadLocalizations`
  - `sulu-page-bundle/stores/webspaceStore/webspaceStore.js` `loadWebspaces`
  - `sulu-page-bundle/stores/webspaceStore/webspaceStore.js` `loadWebspace`
+ - `sulu-admin-bundle/Resources/js/components/PermissionHint/PermissionHint.js` -> `Hint`
 
 Removed container parameters:
 
