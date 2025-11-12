@@ -33,22 +33,24 @@ class NavigationTwigExtension extends AbstractExtension
     ) {
     }
 
-    public function getFunctions()
+    public function getFunctions(): array
     {
         return [
-            new TwigFunction('sulu_navigation_root_flat', [$this, 'flatRootNavigationFunction']),
-            new TwigFunction('sulu_navigation_root_tree', [$this, 'treeRootNavigationFunction']),
-            new TwigFunction('sulu_navigation_flat', [$this, 'flatNavigationFunction']),
-            new TwigFunction('sulu_navigation_tree', [$this, 'treeNavigationFunction']),
-            new TwigFunction('sulu_breadcrumb', [$this, 'breadcrumbFunction']),
-            new TwigFunction('sulu_navigation_is_active', [$this, 'navigationIsActiveFunction']),
+            new TwigFunction('sulu_page_navigation_root_flat', [$this, 'flatRootNavigationFunction']),
+            new TwigFunction('sulu_page_navigation_root_tree', [$this, 'treeRootNavigationFunction']),
+            new TwigFunction('sulu_page_navigation_flat', [$this, 'flatNavigationFunction']),
+            new TwigFunction('sulu_page_navigation_tree', [$this, 'treeNavigationFunction']),
+            new TwigFunction('sulu_page_breadcrumb', [$this, 'breadcrumbFunction']),
+            new TwigFunction('sulu_page_navigation_is_active', [$this, 'navigationIsActiveFunction']),
         ];
     }
 
     /**
+     * @param array<string, string>|null $properties
+     *
      * @return array<string, mixed>[]
      */
-    public function flatRootNavigationFunction(string $navigationContext, int $depth = 1, bool $loadExcerpt = false): array
+    public function flatRootNavigationFunction(string $navigationContext, int $depth = 1, ?array $properties = null): array
     {
         $webspaceKey = $this->requestAnalyzer->getWebspace()->getKey();
         $locale = $this->requestAnalyzer->getCurrentLocalization()->getLocale();
@@ -61,14 +63,16 @@ class NavigationTwigExtension extends AbstractExtension
             $webspaceKey,
             $segment?->getKey(),
             $depth,
-            ['loadExcerpt' => $loadExcerpt],
+            $properties ?? $this->getDefaultProperties(),
         );
     }
 
     /**
+     * @param array<string, string>|null $properties
+     *
      * @return array<string, mixed>[]
      */
-    public function treeRootNavigationFunction(string $navigationContext, int $depth = 1, bool $loadExcerpt = false): array
+    public function treeRootNavigationFunction(string $navigationContext, int $depth = 1, ?array $properties = null): array
     {
         $webspaceKey = $this->requestAnalyzer->getWebspace()->getKey();
         $locale = $this->requestAnalyzer->getCurrentLocalization()->getLocale();
@@ -81,19 +85,21 @@ class NavigationTwigExtension extends AbstractExtension
             $webspaceKey,
             $segment?->getKey(),
             $depth,
-            ['excerpt' => $loadExcerpt],
+            $properties ?? $this->getDefaultProperties()
         );
     }
 
     /**
+     * @param array<string, string>|null $properties
+     *
      * @return array<string, mixed>[]
      */
     public function flatNavigationFunction(
         string $uuid,
         ?string $context = null,
         int $depth = 1,
-        bool $loadExcerpt = false,
-        ?int $level = null
+        ?int $level = null,
+        ?array $properties = null
     ): array {
         $webspaceKey = $this->requestAnalyzer->getWebspace()->getKey();
         $locale = $this->requestAnalyzer->getCurrentLocalization()->getLocale();
@@ -104,7 +110,7 @@ class NavigationTwigExtension extends AbstractExtension
                 $uuid,
                 $locale,
                 $webspaceKey,
-                []
+                $properties ?? $this->getDefaultProperties()
             );
 
             if (!isset($breadcrumb[$level])) {
@@ -125,19 +131,21 @@ class NavigationTwigExtension extends AbstractExtension
             $webspaceKey,
             $depth,
             $context,
-            ['excerpt' => $loadExcerpt]
+            $properties ?? $this->getDefaultProperties()
         );
     }
 
     /**
+     * @param array<string, string>|null $properties
+     *
      * @return array<string, mixed>[]
      */
     public function treeNavigationFunction(
         string $uuid,
         ?string $context = null,
         int $depth = 1,
-        bool $loadExcerpt = false,
-        ?int $level = null
+        ?int $level = null,
+        ?array $properties = null
     ): array {
         $webspaceKey = $this->requestAnalyzer->getWebspace()->getKey();
         $locale = $this->requestAnalyzer->getCurrentLocalization()->getLocale();
@@ -148,7 +156,7 @@ class NavigationTwigExtension extends AbstractExtension
                 $uuid,
                 $locale,
                 $webspaceKey,
-                []
+                $properties ?? $this->getDefaultProperties()
             );
 
             if (!isset($breadcrumb[$level])) {
@@ -169,14 +177,16 @@ class NavigationTwigExtension extends AbstractExtension
             $webspaceKey,
             $depth,
             $context,
-            ['excerpt' => $loadExcerpt]
+            $properties ?? $this->getDefaultProperties()
         );
     }
 
     /**
+     * @param array<string, string>|null $properties
+     *
      * @return array<string, mixed>[]
      */
-    public function breadcrumbFunction(string $uuid): array
+    public function breadcrumbFunction(string $uuid, ?array $properties = null): array
     {
         $webspaceKey = $this->requestAnalyzer->getWebspace()->getKey();
         $locale = $this->requestAnalyzer->getCurrentLocalization()->getLocale();
@@ -185,7 +195,7 @@ class NavigationTwigExtension extends AbstractExtension
             $uuid,
             $locale,
             $webspaceKey,
-            []
+            $properties ?? $this->getDefaultProperties()
         );
     }
 
@@ -196,5 +206,16 @@ class NavigationTwigExtension extends AbstractExtension
         }
 
         return (bool) \preg_match(\sprintf('/%s([\/]|$)/', \preg_quote($itemPath, '/')), $requestPath);
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    private function getDefaultProperties(): array
+    {
+        return [
+            'title' => 'title',
+            'url' => 'url',
+        ];
     }
 }

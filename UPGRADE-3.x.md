@@ -165,6 +165,128 @@ and update your templates definition to use the new controller:
 +<controller>Sulu\Content\UserInterface\Controller\Website\ContentController::indexAction</controller>
 ```
 
+### Content load Twig functions split and properties now required
+
+The Sulu 2.6 `sulu_content_load` function has been split into separate `sulu_page_load` and `sulu_article_load` functions.
+Additionally, the `properties` parameter is now mandatory, and a new optional `locale` parameter has been added.
+
+**What Changed:**
+
+**For Pages and Articles (Sulu 2.6 → Sulu 3.0):**
+- `sulu_content_load(uuid, ?properties)` → `sulu_page_load(uuid, properties, ?locale)`
+- `sulu_content_load(uuid, ?properties)` → `sulu_article_load(uuid, properties, ?locale)`
+
+**For Snippets (Sulu 2.6 → Sulu 3.0):**
+- `sulu_snippet_load_by_area(area, ?webspaceKey, ?locale)` → `sulu_snippet_load_by_area(areaKey, properties, ?webspaceKey, ?locale)`
+
+**Key Changes:**
+1. **Function split**: The single `sulu_content_load` function has been replaced with `sulu_page_load` and `sulu_article_load`
+2. **Properties mandatory**: The `properties` parameter was optional in Sulu 2.6 but is now required in Sulu 3.0
+3. **Locale parameter added**: A new optional `locale` parameter allows you to load content in a specific locale (previously always used the current request's locale)
+4. **Snippet properties**: The `properties` parameter is completely new for snippets in Sulu 3.0
+
+**Migration:**
+
+Update all Twig templates to use the new function names and pass the properties array explicitly:
+
+```twig
+{# Old Sulu 2.6 #}
+{% set page = sulu_content_load(page_uuid) %}
+{% set page = sulu_content_load(page_uuid, ['title', 'description']) %}
+{% set article = sulu_content_load(article_uuid) %}
+{% set snippet = sulu_snippet_load_by_area('footer', 'sulu-io', 'en') %}
+
+{# New Sulu 3.0 - use separate functions, properties mandatory #}
+{% set page = sulu_page_load(page_uuid, {
+    'title': 'title',
+    'description': 'description',
+}) %}
+
+{# Optionally specify locale (new in 3.0) #}
+{% set page = sulu_page_load(page_uuid, {
+    'title': 'title',
+    'url': 'url'
+}, 'en') %}
+
+{# Use sulu_article_load for articles #}
+{% set article = sulu_article_load(article_uuid, {
+    'title': 'title',
+    'description': 'description'
+}) %}
+
+{# Snippets now require properties parameter #}
+{% set snippet = sulu_snippet_load_by_area('footer', {
+    'title': 'title',
+    'image': 'image'
+}, 'sulu-io', 'en') %}
+```
+
+**Note:** The property mapping uses the format `'output_key': 'content_resolver_path'`. For example:
+- `'title': 'title'` - Maps the content's title field to the `title` key in the output
+- `'url': 'url'` - Maps the content's URL to the `url` key
+- `'content': 'content'` - Maps all template data fields to the `content` key
+- `'excerpt.description': 'excerpt.description'` - Maps excerpt extension fields
+
+### Navigation Twig functions renamed to `sulu_page_` prefix
+
+All navigation-related Twig functions have been renamed to include the `sulu_page_` prefix instead of just `sulu_`
+to better reflect that they come from the page package.
+
+**Old function names:**
+- `sulu_navigation_root_flat` → `sulu_page_navigation_root_flat`
+- `sulu_navigation_root_tree` → `sulu_page_navigation_root_tree`
+- `sulu_navigation_flat` → `sulu_page_navigation_flat`
+- `sulu_navigation_tree` → `sulu_page_navigation_tree`
+- `sulu_breadcrumb` → `sulu_page_breadcrumb`
+- `sulu_navigation_is_active` → `sulu_page_navigation_is_active`
+
+### Navigation Twig Extension property filtering
+
+The navigation Twig functions and repository methods now support custom property filtering, and the default properties
+have been simplified to improve performance.
+
+**What Changed:**
+
+1. The `$loadExcerpt` parameter has been removed from all navigation functions
+2. The default properties have been reduced to only `title` and `url`
+3. All navigation-related Twig extension methods accept an optional `$properties` parameter for custom fields
+
+**Migration:**
+
+If you need the old default properties, explicitly pass them to the navigation functions:
+
+```twig
+{# Old behavior (Sulu 2.6) #}
+{% set navigation = sulu_navigation_root_flat('main', 2, false) %}
+
+{# New behavior - use new function names and explicitly specify needed properties #}
+{% set navigation = sulu_page_navigation_root_flat('main', 2, {
+    'uuid': 'object.resource.id',
+    'title': 'title',
+    'url': 'url',
+    'webspaceKey': 'object.resource.webspaceKey',
+    'template': 'object.templateKey',
+    'changed': 'object.changed',
+    'changer': 'object.changer',
+    'created': 'object.created',
+    'creator': 'object.creator',
+    'linkProvider': 'object.linkData.linkProvider'
+}) %}
+
+{# For excerpt fields, include them explicitly #}
+{% set navigationWithExcerpt = sulu_page_navigation_root_flat('main', 2, {
+    'title': 'title',
+    'url': 'url',
+    'excerpt.title': 'excerpt.title',
+    'excerpt.description': 'excerpt.description',
+    'excerpt.image': 'excerpt.image'
+}) %}
+```
+
+Be aware, that the "nodeType" was replaced by "linkProvider", this field must be adjusted accordingly.  The property mapping
+uses the format `'output_key': 'content_resolver_path'`, where the content resolver path can access nested object
+properties using dot notation (e.g., `'object.resource.webspaceKey'`).
+
 ### Add new Content storage tables
 
 The new content storage architecture requires a new database schema. You can execute the following sql statements
@@ -1196,6 +1318,16 @@ and directly modifying the new `Route` entity is sufficient.
 ### Changed methods for 3.0
 
 - `Sulu\Bundle\ContactBundle\Controller\AbstractMediaController::__construct`
+- `Sulu\Page\Infrastructure\Symfony\Twig\Extension\NavigationTwigExtension::flatRootNavigationFunction` (added `?array $properties = null`)
+- `Sulu\Page\Infrastructure\Symfony\Twig\Extension\NavigationTwigExtension::treeRootNavigationFunction` (added `?array $properties = null`)
+- `Sulu\Page\Infrastructure\Symfony\Twig\Extension\NavigationTwigExtension::flatNavigationFunction` (added `?array $properties = null`)
+- `Sulu\Page\Infrastructure\Symfony\Twig\Extension\NavigationTwigExtension::treeNavigationFunction` (added `?array $properties = null`)
+- `Sulu\Page\Infrastructure\Symfony\Twig\Extension\NavigationTwigExtension::breadcrumbFunction` (added `?array $properties = null`)
+- `Sulu\Page\Domain\Repository\NavigationRepositoryInterface::getNavigationFlat` (added `array $properties = []`)
+- `Sulu\Page\Domain\Repository\NavigationRepositoryInterface::getNavigationTree` (added `array $properties = []`)
+- `Sulu\Page\Domain\Repository\NavigationRepositoryInterface::getNavigationFlatByUuid` (added `array $properties = []`)
+- `Sulu\Page\Domain\Repository\NavigationRepositoryInterface::getNavigationTreeByUuid` (added `array $properties = []`)
+- `Sulu\Page\Domain\Repository\NavigationRepositoryInterface::getBreadcrumb` (added `array $properties = []`)
 
 ### Piwik replaced with Matomo script
 

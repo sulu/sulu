@@ -79,9 +79,7 @@ class NavigationRepository implements NavigationRepositoryInterface
             'stage' => DimensionContentInterface::STAGE_LIVE,
         ]);
 
-        $loadExcerpt = (bool) ($properties['excerpt'] ?? false);
-
-        return $this->normalizePageTree($pages, $loadExcerpt, $locale, 1, $depth);
+        return $this->normalizePageTree($pages, $properties, $locale, 1, $depth);
     }
 
     public function getNavigationFlat(
@@ -101,7 +99,7 @@ class NavigationRepository implements NavigationRepositoryInterface
             'stage' => DimensionContentInterface::STAGE_LIVE,
         ]);
 
-        return $this->resolveAndNormalizePages($pages, $locale, $this->shouldLoadExcerpt($properties));
+        return $this->resolveAndNormalizePages($pages, $locale, $properties);
     }
 
     public function getNavigationFlatByUuid(
@@ -117,7 +115,7 @@ class NavigationRepository implements NavigationRepositoryInterface
         /** @var iterable<PageInterface> $pages */
         $pages = $this->createQueryBuilder($filters)->getQuery()->getResult();
 
-        return $this->resolveAndNormalizePages($pages, $locale, $this->shouldLoadExcerpt($properties));
+        return $this->resolveAndNormalizePages($pages, $locale, $properties);
     }
 
     public function getNavigationTreeByUuid(
@@ -131,7 +129,7 @@ class NavigationRepository implements NavigationRepositoryInterface
         $filters = $this->buildChildrenFilters($uuid, $locale, $webspaceKey, $depth, $navigationContext);
         $pages = $this->findByAsTree($filters);
 
-        return $this->normalizePageTree($pages, $this->shouldLoadExcerpt($properties), $locale, 1, $depth);
+        return $this->normalizePageTree($pages, $properties, $locale, 1, $depth);
     }
 
     public function getBreadcrumb(
@@ -157,15 +155,7 @@ class NavigationRepository implements NavigationRepositoryInterface
         /** @var PageInterface[] $pages */
         $pages = [...$ancestors, $page];
 
-        return $this->resolveAndNormalizePages($pages, $locale, $this->shouldLoadExcerpt($properties));
-    }
-
-    /**
-     * @param array<string, mixed> $properties
-     */
-    private function shouldLoadExcerpt(array $properties): bool
-    {
-        return (bool) ($properties['excerpt'] ?? false);
+        return $this->resolveAndNormalizePages($pages, $locale, $properties);
     }
 
     /**
@@ -202,18 +192,18 @@ class NavigationRepository implements NavigationRepositoryInterface
 
     /**
      * @param iterable<PageInterface> $pages
+     * @param array<string, string> $properties
      *
      * @return array<string, mixed>[]
      */
     private function resolveAndNormalizePages(
         iterable $pages,
         string $locale,
-        bool $loadExcerpt
+        array $properties
     ): array {
         $result = [];
         foreach ($pages as $page) {
-            $content = $this->resolvePageContent($page, $locale);
-            $result[] = $this->normalizePageContent($content, $loadExcerpt);
+            $result[] = $this->resolvePageContent($page, $locale, $properties);
         }
 
         return $result;
@@ -294,18 +284,18 @@ class NavigationRepository implements NavigationRepositoryInterface
 
     /**
      * @param iterable<PageInterface> $pages
+     * @param array<string, string> $properties
      *
      * @return array<string, mixed>[]
      */
-    private function normalizePageTree(iterable $pages, bool $loadExcerpt, string $locale, int $depth, int $maxDepth): array
+    private function normalizePageTree(iterable $pages, array $properties, string $locale, int $depth, int $maxDepth): array
     {
         $result = [];
         foreach ($pages as $page) {
-            $content = $this->resolvePageContent($page, $locale);
-            $normalizedContent = $this->normalizePageContent($content, $loadExcerpt);
+            $normalizedContent = $this->resolvePageContent($page, $locale, $properties);
 
             $children = $depth < $maxDepth ? $page->getChildren() : [];
-            $normalizedContent['children'] = $this->normalizePageTree($children, $loadExcerpt, $locale, $depth + 1, $maxDepth);
+            $normalizedContent['children'] = $this->normalizePageTree($children, $properties, $locale, $depth + 1, $maxDepth);
 
             $result[] = $normalizedContent;
         }
@@ -314,52 +304,30 @@ class NavigationRepository implements NavigationRepositoryInterface
     }
 
     /**
-     * @return array{
-     *      resource: object,
-     *      content: mixed,
-     *      view: mixed[],
-     *      extension: array<string, array<string, mixed>>,
-     * }
+     * @param array<string, string> $properties
+     *
+     * @return array<string, mixed>
      */
-    private function resolvePageContent(PageInterface $page, string $locale): array
+    protected function resolvePageContent(PageInterface $page, string $locale, array $properties): array
     {
         $pageDimensionContent = $this->contentAggregator->aggregate($page, [
             'locale' => $locale,
             'stage' => DimensionContentInterface::STAGE_LIVE,
         ]);
 
-        return $this->contentResolver->resolve($pageDimensionContent);
-    }
-
-    /**
-     * @param array{
-     *      resource: object,
-     *      content: mixed,
-     *      view: mixed[],
-     *      extension: array<string, array<string, mixed>>,
-     *  } $content
-     *
-     * @return array<string, mixed>
-     */
-    private function normalizePageContent(array $content, bool $loadExcerpt): array
-    {
-        /** @var array{
-         *      extension: array<string, array<string, mixed>>,
-         * } $contentData
-         */
-        $contentData = $content['content'];
-        /** @var PageInterface $page */
-        $page = $content['resource'];
-        $result = [
-            ...$contentData,
-            ...['webspaceKey' => $page->getWebspaceKey()],
-        ];
-
-        if ($loadExcerpt) {
-            $result['excerpt'] = $content['extension']['excerpt'];
+        // prefix all properties with "nav." to only resolve navigation related content
+        foreach ($properties as $key => $value) {
+            unset($properties[$key]);
+            $properties['nav.' . $key] = $value;
         }
 
-        return $result;
+        /** @var array{
+         *     nav: array<string, mixed>,
+         * } $resolvedContent
+         */
+        $resolvedContent = $this->contentResolver->resolve($pageDimensionContent, $properties);
+
+        return $resolvedContent['nav'];
     }
 
     /**
