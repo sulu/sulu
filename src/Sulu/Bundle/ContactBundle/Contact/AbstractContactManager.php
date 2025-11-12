@@ -1660,7 +1660,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
      * Updates the given note.
      *
      * @param BankAccount $entity The phone object to update
-     * @param string $data The entry with the new data
+     * @param array<string, mixed> $data The entry with the new data
      *
      * @return bool True if successful, otherwise false
      */
