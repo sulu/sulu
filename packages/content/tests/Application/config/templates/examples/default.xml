@@ -108,7 +108,30 @@
                         </property>
                     </properties>
                 </type>
+
+                <type name="media">
+                    <meta>
+                        <title lang="en">Media</title>
+                        <title lang="de">Medien</title>
+                    </meta>
+
+                    <properties>
+                        <property name="media" type="media_selection">
+                            <meta>
+                                <title lang="en">Media</title>
+                                <title lang="de">Medien</title>
+                            </meta>
+                        </property>
+                    </properties>
+                </type>
             </types>
         </block>
+
+        <property name="examples" type="example_selection">
+            <meta>
+                <title lang="en">Examples</title>
+                <title lang="de">Beispiele</title>
+            </meta>
+        </property>
     </properties>
 </template>
