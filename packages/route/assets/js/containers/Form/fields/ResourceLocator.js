@@ -108,7 +108,7 @@ class ResourceLocator extends React.Component<FieldTypeProps<?string>> {
             })
         );
 
-        if (this.enableAutoGeneration) {
+        if (this.enableAutoGeneration && this.props.formInspector.formStore?.dirty) {
             this.refreshResourceLocator();
         }
     }
