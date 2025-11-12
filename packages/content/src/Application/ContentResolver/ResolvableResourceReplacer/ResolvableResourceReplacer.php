@@ -56,7 +56,6 @@ class ResolvableResourceReplacer implements ResolvableResourceReplacerInterface
                     $resolvedResources
                 );
 
-                // If resolved to array, recurse into it
                 if (\is_array($content[$key])) {
                     $content[$key] = $this->replaceResolvableResourcesWithResolvedValues(
                         $content[$key],
@@ -73,7 +72,7 @@ class ResolvableResourceReplacer implements ResolvableResourceReplacerInterface
                 $content[$key] = $this->replaceResolvableResourcesWithResolvedValues(
                     $value,
                     $resolvedResources,
-                    $depth + 1,
+                    $depth, // only increase depth for ResolvableInterface
                     $maxDepth
                 );
             }
