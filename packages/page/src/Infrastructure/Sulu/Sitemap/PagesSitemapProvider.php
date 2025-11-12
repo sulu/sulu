@@ -13,21 +13,27 @@ namespace Sulu\Page\Infrastructure\Sulu\Sitemap;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\QueryBuilder;
+use Sulu\Bundle\SecurityBundle\AccessControl\AccessControlQueryEnhancer;
 use Sulu\Bundle\WebsiteBundle\Sitemap\AbstractSitemapProvider;
 use Sulu\Bundle\WebsiteBundle\Sitemap\SitemapAlternateLink;
 use Sulu\Bundle\WebsiteBundle\Sitemap\SitemapUrl;
 use Sulu\Component\Localization\Localization;
+use Sulu\Component\Security\Authentication\UserInterface;
+use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\PortalInformation;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
+use Sulu\Page\Domain\Model\Page;
 use Sulu\Page\Domain\Model\PageInterface;
+use Symfony\Bundle\SecurityBundle\Security;
 
 /**
  * @internal your code should not create direct dependencies on this implementation
  *           projects can create there own sitemap providers or use symfony
  *           dependency injection container to override this sitemap provider service
  *
- * @phpstan-type Page array{
+ * @phpstan-type PageData array{
  *     lastModified: \DateTimeImmutable|null,
  *     changed: \DateTimeImmutable,
  *     locale: string,
@@ -48,10 +54,16 @@ class PagesSitemapProvider extends AbstractSitemapProvider
      */
     protected EntityRepository $entityRepository;
 
+    /**
+     * @param mixed[]|null $permissions
+     */
     public function __construct(
         EntityManagerInterface $entityManager,
         private readonly WebspaceManagerInterface $webspaceManager,
         private readonly string $environment,
+        private readonly AccessControlQueryEnhancer $accessControlQueryEnhancer,
+        private readonly ?Security $security,
+        private readonly ?array $permissions = null,
     ) {
         $repository = $entityManager->getRepository(PageInterface::class);
 
@@ -104,7 +116,7 @@ class PagesSitemapProvider extends AbstractSitemapProvider
                 $alternateRoutes[$pageUuid][$alternateLocale][] = $alternateSlug;
             }
 
-            /** @var Page $page */
+            /** @var PageData $page */
             foreach ($pagesIterator as $page) {
                 $pages[] = $page;
 
@@ -129,8 +141,6 @@ class PagesSitemapProvider extends AbstractSitemapProvider
             }
 
             foreach ($pages as $page) {
-                // Todo: Add access control check.
-
                 $sitemapUrl = $this->generateSitemapUrl($page, $alternatePages, $portalInformation, $host, $scheme);
 
                 if (!$sitemapUrl) {
@@ -145,7 +155,35 @@ class PagesSitemapProvider extends AbstractSitemapProvider
     }
 
     /**
-     * @return iterable<Page>
+     * Enhances the query builder with access control filtering if webspace has security enabled.
+     */
+    private function enhanceQueryBuilderWithAccessControl(
+        QueryBuilder $queryBuilder,
+        string $webspaceKey,
+        string $alias
+    ): void {
+        $webspace = $this->webspaceManager->findWebspaceByKey($webspaceKey);
+        /** @var UserInterface|null $user */
+        $user = $webspace && $webspace->hasWebsiteSecurity() && $this->security ? $this->security->getUser() : null;
+        /** @var int|null $permission */
+        $permission = $webspace && $webspace->hasWebsiteSecurity() && $this->permissions
+            ? $this->permissions[PermissionTypes::VIEW]
+            : null;
+
+        if ($permission) {
+            $this->accessControlQueryEnhancer->enhance(
+                $queryBuilder,
+                $user,
+                $permission,
+                Page::class,
+                $alias,
+                'uuid'
+            );
+        }
+    }
+
+    /**
+     * @return iterable<PageData>
      */
     private function getPages(string $webspaceKey, string $locale): iterable
     {
@@ -173,6 +211,8 @@ class PagesSitemapProvider extends AbstractSitemapProvider
             ->setParameter('version', DimensionContentInterface::CURRENT_VERSION)
             ->setParameter('hide', false);
 
+        $this->enhanceQueryBuilderWithAccessControl($queryBuilder, $webspaceKey, 'page');
+
         $queryBuilder->select('dimensionContent.lastModified');
         $queryBuilder->addSelect('dimensionContent.changed');
         $queryBuilder->addSelect('dimensionContent.locale');
@@ -186,7 +226,7 @@ class PagesSitemapProvider extends AbstractSitemapProvider
         $queryBuilder->orderBy('route.slug', 'ASC');
 
         /**
-         * @var iterable<Page>
+         * @var iterable<PageData>
          */
         return $queryBuilder->getQuery()->toIterable();
     }
@@ -215,6 +255,8 @@ class PagesSitemapProvider extends AbstractSitemapProvider
             ->setParameter('version', DimensionContentInterface::CURRENT_VERSION)
             ->setParameter('hide', false);
 
+        $this->enhanceQueryBuilderWithAccessControl($queryBuilder, $webspaceKey, 'page');
+
         $queryBuilder->select('dimensionContent.locale');
         $queryBuilder->addSelect('route.slug');
         $queryBuilder->addSelect('page.uuid');
@@ -228,7 +270,7 @@ class PagesSitemapProvider extends AbstractSitemapProvider
     }
 
     /**
-     * @param Page $page
+     * @param PageData $page
      * @param array<string, array<string, string[]>> $alternatePages
      */
     private function generateSitemapUrl(

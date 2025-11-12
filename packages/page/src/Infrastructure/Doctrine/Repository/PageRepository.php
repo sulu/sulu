@@ -20,9 +20,12 @@ use Doctrine\ORM\Query\Expr\OrderBy;
 use Doctrine\ORM\QueryBuilder;
 use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
 use Gedmo\Tree\Hydrator\ORM\TreeObjectHydrator;
+use Sulu\Bundle\SecurityBundle\AccessControl\AccessControlQueryEnhancer;
+use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer;
 use Sulu\Page\Domain\Exception\PageNotFoundException;
+use Sulu\Page\Domain\Model\Page;
 use Sulu\Page\Domain\Model\PageDimensionContentInterface;
 use Sulu\Page\Domain\Model\PageInterface;
 use Sulu\Page\Domain\Repository\PageRepositoryInterface;
@@ -68,6 +71,11 @@ class PageRepository implements PageRepositoryInterface
     protected $dimensionContentQueryEnhancer;
 
     /**
+     * @var AccessControlQueryEnhancer
+     */
+    private $accessControlQueryEnhancer;
+
+    /**
      * @var class-string<PageInterface>
      */
     protected $pageClassName;
@@ -79,7 +87,8 @@ class PageRepository implements PageRepositoryInterface
 
     public function __construct(
         EntityManagerInterface $entityManager,
-        DimensionContentQueryEnhancer $dimensionContentQueryEnhancer
+        DimensionContentQueryEnhancer $dimensionContentQueryEnhancer,
+        AccessControlQueryEnhancer $accessControlQueryEnhancer
     ) {
         $repository = $entityManager->getRepository(PageInterface::class);
         Assert::isInstanceOf($repository, NestedTreeRepository::class);
@@ -88,6 +97,7 @@ class PageRepository implements PageRepositoryInterface
         $this->entityDimensionContentRepository = $entityManager->getRepository(PageDimensionContentInterface::class);
         $this->entityManager = $entityManager;
         $this->dimensionContentQueryEnhancer = $dimensionContentQueryEnhancer;
+        $this->accessControlQueryEnhancer = $accessControlQueryEnhancer;
         $this->pageClassName = $this->entityRepository->getClassName();
         $this->pageDimensionContentClassName = $this->entityDimensionContentRepository->getClassName();
     }
@@ -261,6 +271,7 @@ class PageRepository implements PageRepositoryInterface
      *     limit?: int,
      *     navigationContexts?: string[],
      *     depth?: int,
+     *     accessControl?: array{user?: UserInterface|null, permission?: int|null},
      * } $filters
      * @param array{
      *     uuid?: 'asc'|'desc',
@@ -275,6 +286,9 @@ class PageRepository implements PageRepositoryInterface
      */
     private function createQueryBuilder(array $filters, array $sortBy = [], array $selects = []): QueryBuilder
     {
+        $accessControl = $filters['accessControl'] ?? null;
+        unset($filters['accessControl']);
+
         foreach ($selects as $selectGroup => $value) {
             if (!$value) {
                 continue;
@@ -387,6 +401,17 @@ class PageRepository implements PageRepositoryInterface
                     ->andWhere('navigationContext.navigationContext IN (:navigationContexts)')
                     ->setParameter('navigationContexts', $navigationContexts);
             }
+        }
+
+        if (null !== $accessControl && isset($accessControl['permission'])) {
+            $this->accessControlQueryEnhancer->enhance(
+                $queryBuilder,
+                $accessControl['user'] ?? null,
+                $accessControl['permission'],
+                Page::class,
+                'page',
+                'uuid'
+            );
         }
 
         return $queryBuilder;

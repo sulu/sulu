@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Sulu.
  *
@@ -14,6 +16,7 @@ namespace Sulu\Bundle\Page\Tests\Unit\Infrastructure\Sulu\Content\PropertyResolv
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
 use Sulu\Content\Application\ContentResolver\Value\ResolvableResource;
 use Sulu\Page\Domain\Model\PageInterface;
@@ -22,6 +25,8 @@ use Sulu\Page\Infrastructure\Sulu\Content\PropertyResolver\SinglePageSelectionPr
 #[CoversClass(SinglePageSelectionPropertyResolver::class)]
 class SinglePageSelectionPropertyResolverTest extends TestCase
 {
+    use ProphecyTrait;
+
     private SinglePageSelectionPropertyResolver $resolver;
 
     public function setUp(): void
