@@ -18,6 +18,7 @@ use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\AudienceTargetingBundle\EventListener\AudienceTargetingCacheListener;
 use Sulu\Bundle\HttpCacheBundle\Cache\SuluHttpCache;
 use Sulu\Bundle\TestBundle\Testing\ReadObjectAttributeTrait;
+use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
@@ -48,29 +49,30 @@ class AudienceTargetingCacheListenerTest extends TestCase
         // check if both cookies are set
         $this->assertCount(2, $response->headers->getCookies());
 
-        // check for target group cookie
-        $this->assertEquals(
-            AudienceTargetingCacheListener::TARGET_GROUP_COOKIE,
-            $response->headers->getCookies()[0]->getName()
-        );
-        $this->assertEquals(
-            'TARGET_GROUP_1',
-            $response->headers->getCookies()[0]->getValue()
-        );
-        $this->assertEquals(
-            AudienceTargetingCacheListener::TARGET_GROUP_COOKIE_LIFETIME,
-            $response->headers->getCookies()[0]->getExpiresTime()
-        );
+        $this->assertSame([
+            [
+                'name' => AudienceTargetingCacheListener::TARGET_GROUP_COOKIE,
+                'value' => 'TARGET_GROUP_1',
+                'expiresTime' => AudienceTargetingCacheListener::TARGET_GROUP_COOKIE_LIFETIME,
+            ],
+            [
+                'name' => AudienceTargetingCacheListener::VISITOR_SESSION_COOKIE,
+                'value' => 'is_valid',
+                'expiresTime' => 0,
+            ],
+        ], \array_map(function(Cookie $cookie) {
+            $value = $cookie->getValue();
 
-        // check for session cookie
-        $this->assertEquals(
-            AudienceTargetingCacheListener::VISITOR_SESSION_COOKIE,
-            $response->headers->getCookies()[1]->getName()
-        );
-        $this->assertGreaterThan(
-            1,
-            $response->headers->getCookies()[1]->getValue()
-        );
+            if (AudienceTargetingCacheListener::VISITOR_SESSION_COOKIE === $cookie->getName()) {
+                $value = $cookie->getValue() > 0 ? 'is_valid' : 'is_not_valid';
+            }
+
+            return [
+                'name' => $cookie->getName(),
+                'value' => $value,
+                'expiresTime' => $cookie->getExpiresTime(),
+            ];
+        }, $response->headers->getCookies()));
     }
 
     public function testHandleInternalRequest(): void

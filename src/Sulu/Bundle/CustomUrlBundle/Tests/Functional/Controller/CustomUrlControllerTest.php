@@ -124,8 +124,11 @@ class CustomUrlControllerTest extends SuluTestCase
         ];
     }
 
+    /**
+     * @param array<string, mixed> $data
+     */
     #[\PHPUnit\Framework\Attributes\DataProvider('postProvider')]
-    public function testPost($data, $url, $statusCode = 200, $restErrorCode = null)
+    public function testPost(array $data, string $url, int $statusCode = 200, ?int $restErrorCode = null)
     {
         // content document is not there in provider
         if (\array_key_exists('targetDocument', $data)) {
@@ -136,6 +139,7 @@ class CustomUrlControllerTest extends SuluTestCase
 
         $response = $this->client->getResponse();
         $responseData = \json_decode($response->getContent(), true);
+        $this->assertIsArray($responseData);
 
         $this->assertHttpStatusCode($statusCode, $response);
 
@@ -260,8 +264,12 @@ class CustomUrlControllerTest extends SuluTestCase
         ];
     }
 
+    /**
+     * @param array<string, mixed> $before
+     * @param array<string, mixed> $data
+     */
     #[\PHPUnit\Framework\Attributes\DataProvider('postMultipleProvider')]
-    public function testPostMultiple($before, $data, $beforeUrl, $url, $statusCode = 200, $restErrorCode = null): void
+    public function testPostMultiple(array $before, array $data, string $beforeUrl, string $url, int $statusCode = 200, ?int $restErrorCode = null): void
     {
         $this->testPost($before, $beforeUrl);
         $this->testPost($data, $url, $statusCode, $restErrorCode);
@@ -506,8 +514,12 @@ class CustomUrlControllerTest extends SuluTestCase
         ];
     }
 
+    /**
+     * @param array<string, mixed> $before
+     * @param array<string, mixed> $data
+     */
     #[\PHPUnit\Framework\Attributes\DataProvider('putProvider')]
-    public function testPut(array $before, $data, $url, $statusCode = 200, $restErrorCode = null)
+    public function testPut(array $before, array $data, string $url, int $statusCode = 200, ?int $restErrorCode = null)
     {
         foreach ($before as $beforeUrl => $beforeData) {
             $uuid = $this->testPost($beforeData, $beforeUrl);
@@ -573,8 +585,11 @@ class CustomUrlControllerTest extends SuluTestCase
         ];
     }
 
+    /**
+     * @param array<string, mixed> $data
+     */
     #[\PHPUnit\Framework\Attributes\DataProvider('getProvider')]
-    public function testGet($data, $url): void
+    public function testGet(array $data, string $url): void
     {
         // content document is not there in provider
         if (\array_key_exists('targetDocument', $data)) {
@@ -646,6 +661,9 @@ class CustomUrlControllerTest extends SuluTestCase
         ];
     }
 
+    /**
+     * @param array<string, array<string, mixed> $items
+     */
     #[\PHPUnit\Framework\Attributes\DataProvider('cgetProvider')]
     public function testCGet($items): void
     {
@@ -683,8 +701,11 @@ class CustomUrlControllerTest extends SuluTestCase
         }
     }
 
+    /**
+     * @param array<string, mixed> $data
+     */
     #[\PHPUnit\Framework\Attributes\DataProvider('getProvider')]
-    public function testDelete($data, $url): void
+    public function testDelete(array $data, string $url): void
     {
         $uuid = $this->testPost($data, $url);
 
@@ -703,8 +724,11 @@ class CustomUrlControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(404, $response);
     }
 
+    /**
+     * @param array<string, array<string, mixed>> $items
+     */
     #[\PHPUnit\Framework\Attributes\DataProvider('cgetProvider')]
-    public function testCDelete($items): void
+    public function testCDelete(array $items): void
     {
         $uuid = $this->testPost(
             [
