@@ -650,6 +650,7 @@ class MediaRepositoryTest extends SuluTestCase
         $this->em->flush();
 
         $file = $media1->getFiles()[0];
+        /** @var FileVersion $fileVersion */
         $fileVersion = $file->getFileVersions()[0];
         $fileVersion2 = clone $fileVersion;
         $fileVersion2->setVersion(2);
