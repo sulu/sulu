@@ -191,7 +191,7 @@ jobs:
                       phpcr-transport: doctrinedbal
                       dependency-versions: 'highest'
                       php-extensions: 'ctype, iconv, mysql, imagick'
-                      tools: 'composer:v2'
+                      tools: 'composer:snapshot'
                       composer-stability: 'dev'
                       env:
                           SYMFONY_DEPRECATIONS_HELPER: weak
@@ -242,7 +242,7 @@ jobs:
               run: composer config minimum-stability ${{ matrix.composer-stability }}
 
             - name: Install composer dependencies
-              uses: ramsey/composer-install@v1
+              uses: ramsey/composer-install@v3
               with:
                   dependency-versions: ${{matrix.dependency-versions}}
                   composer-options: ${{ matrix.composer-options }}
@@ -295,7 +295,7 @@ jobs:
                   coverage: none
 
             - name: Install composer dependencies
-              uses: ramsey/composer-install@v1
+              uses: ramsey/composer-install@v3
               with:
                   dependency-versions: highest
 
