@@ -19,7 +19,8 @@ class RemovePageMessage
     public function __construct(
         /** @var array{ uuid?: string } $identifier */
         private array $identifier,
-        private string $locale
+        private string $locale,
+        private bool $forceRemoveChildren = false
     ) {
     }
 
@@ -36,5 +37,10 @@ class RemovePageMessage
     public function getLocale(): string
     {
         return $this->locale;
+    }
+
+    public function getForceRemoveChildren(): bool
+    {
+        return $this->forceRemoveChildren;
     }
 }

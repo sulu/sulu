@@ -172,6 +172,10 @@ final class SuluPageBundle extends AbstractBundle
             ->args([
                 new Reference('sulu_page.page_repository'),
                 new Reference('sulu_activity.domain_event_collector'),
+                new Reference('sulu.repository.access_control'),
+                new Reference('sulu_security.system_store'),
+                new Reference('security.helper', ContainerInterface::NULL_ON_INVALID_REFERENCE),
+                param('sulu_security.permissions'),
                 new Reference('sulu_trash.trash_manager', ContainerInterface::NULL_ON_INVALID_REFERENCE),
             ])
             ->tag('messenger.message_handler');
@@ -347,7 +351,8 @@ final class SuluPageBundle extends AbstractBundle
                 new Reference('doctrine.orm.entity_manager'),
                 new Reference('sulu_content.dimension_content_query_enhancer'),
                 new Reference('sulu_security.access_control_query_enhancer'),
-            ]);
+            ])
+            ->tag('sulu.descendant_provider');
 
         $services->alias(PageRepositoryInterface::class, 'sulu_page.page_repository');
 

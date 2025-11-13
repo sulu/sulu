@@ -31,6 +31,8 @@
     "sulu_page.delete_draft": "Entwurf löschen",
     "sulu_page.delete_draft_warning_title": "Entwurf löschen?",
     "sulu_page.delete_draft_warning_text": "Soll der Entwurf wirklich gelöscht werden? Alle Daten gehen dadurch verloren. Die veröffentlichte Seite bleibt unverändert bestehen.",
+    "sulu_page.delete_page_dependant_warning_title": "{1}Eine Unterseite löschen?|]1,Inf[%count% Unterseiten löschen?",
+    "sulu_page.delete_page_dependant_warning_detail": "{1}Sind Sie sich sicher, dass Sie zusätzlich eine Unterseiten löschen möchten?|]1,Inf[Sind Sie sich sicher, dass Sie zusätzlich %count% Unterseiten löschen möchten?",
     "sulu_page.unpublish_warning_title": "Nicht mehr veröffentlichen?",
     "sulu_page.unpublish_warning_text": "Soll die Seite wirklich nicht mehr veröffentlicht werden? Dadurch gehen sämtliche Verknüpfungen auf der Website verloren. Dieser Status kann jederzeit ohne Datenverlust geändert werden.",
     "sulu_page.unpublish": "Nicht mehr veröffentlichen",

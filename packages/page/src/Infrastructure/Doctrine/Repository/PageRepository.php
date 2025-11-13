@@ -181,10 +181,10 @@ class PageRepository implements PageRepositoryInterface
             $queryBuilder->addSelect(\explode(' ', $orderBy->getParts()[0])[0]);
         }
 
-        /** @var iterable<string> $identifiers */
-        $identifiers = $queryBuilder->getQuery()->getResult();
+        /** @var array<array{uuid: string}> $result */
+        $result = $queryBuilder->getQuery()->getResult();
 
-        return $identifiers;
+        return \array_column($result, 'uuid');
     }
 
     public function add(PageInterface $page): void
@@ -266,6 +266,7 @@ class PageRepository implements PageRepositoryInterface
      *     templateKeys?: string[],
      *     loadGhost?: bool,
      *     parentId?: string|null,
+     *     descendantOfId?: string,
      *     webspaceKey?: string,
      *     page?: int,
      *     limit?: int,
@@ -330,6 +331,20 @@ class PageRepository implements PageRepositoryInterface
                 default => $queryBuilder->andWhere('page.parent = :parentId')
                     ->setParameter('parentId', $parentId),
             };
+        }
+
+        $descendantOfId = $filters['descendantOfId'] ?? null;
+        if (null !== $descendantOfId) {
+            Assert::string($descendantOfId); // @phpstan-ignore staticMethod.alreadyNarrowedType
+            $queryBuilder
+                ->innerJoin(
+                    PageInterface::class,
+                    'ancestorPage',
+                    Join::WITH,
+                    'page.lft > ancestorPage.lft AND page.rgt < ancestorPage.rgt'
+                )
+                ->andWhere('ancestorPage.uuid = :descendantOfId')
+                ->setParameter('descendantOfId', $descendantOfId);
         }
 
         $depth = $filters['depth'] ?? null;
@@ -436,5 +451,25 @@ class PageRepository implements PageRepositoryInterface
         if (!$hasJoin) {
             $queryBuilder->leftJoin('page.dimensionContents', 'dimensionContent');
         }
+    }
+
+    public function findDescendantIdsById($id): array
+    {
+        /** @var string $id */
+        $descendants = $this->findIdentifiersBy(['descendantOfId' => $id]);
+
+        /** @var array<string> $result */
+        $result = [...$descendants];
+
+        return $result;
+    }
+
+    public function supportsDescendantType(string $type): bool
+    {
+        if (!\class_exists($type) && !\interface_exists($type)) {
+            return false;
+        }
+
+        return \is_a($type, PageInterface::class, true);
     }
 }

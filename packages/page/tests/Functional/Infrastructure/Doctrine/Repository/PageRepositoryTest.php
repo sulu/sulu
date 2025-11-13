@@ -18,11 +18,12 @@ use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Page\Domain\Model\Page;
+use Sulu\Page\Domain\Model\PageInterface;
 use Sulu\Page\Domain\Repository\PageRepositoryInterface;
 use Sulu\Page\Tests\Traits\CreatePageTrait;
 use Sulu\Page\Tests\Traits\CreatePageWithPermissionsTrait;
 
-class PageRepositoryPermissionTest extends SuluTestCase
+class PageRepositoryTest extends SuluTestCase
 {
     use CreatePageTrait;
     use CreatePageWithPermissionsTrait;
@@ -83,9 +84,7 @@ class PageRepositoryPermissionTest extends SuluTestCase
             'stage' => 'live',
         ]);
 
-        /** @var array<array{uuid: string}> $resultArray */
-        $resultArray = \iterator_to_array($result);
-        $resultUuids = \array_column($resultArray, 'uuid');
+        $resultUuids = [...$result];
 
         $this->assertCount(3, $resultUuids);
         $this->assertContains($page1->getUuid(), $resultUuids);
@@ -122,7 +121,7 @@ class PageRepositoryPermissionTest extends SuluTestCase
             ]
         );
 
-        $resultUuids = \array_column(\iterator_to_array($result), 'uuid');
+        $resultUuids = [...$result];
 
         $this->assertContains($allowedPage->getUuid(), $resultUuids);
         $this->assertNotContains($deniedPage1->getUuid(), $resultUuids);
@@ -160,9 +159,7 @@ class PageRepositoryPermissionTest extends SuluTestCase
             ]
         );
 
-        /** @var array<array{uuid: string}> $resultArray */
-        $resultArray = \iterator_to_array($result);
-        $resultUuids = \array_column($resultArray, 'uuid');
+        $resultUuids = [...$result];
 
         $this->assertCount(2, $resultUuids);
         $this->assertContains($allowed1->getUuid(), $resultUuids);
@@ -224,9 +221,204 @@ class PageRepositoryPermissionTest extends SuluTestCase
             ]
         );
 
-        $resultUuids = \array_column(\iterator_to_array($result), 'uuid');
+        $resultUuids = [...$result];
 
         $this->assertContains($pageWithoutAcl->getUuid(), $resultUuids);
+    }
+
+    public function testFindDescendantIdsById(): void
+    {
+        $parent = self::createPage([
+            'en' => [
+                'draft' => [
+                    'title' => 'Parent',
+                    'url' => '/parent',
+                    'template' => 'default',
+                ],
+            ],
+        ]);
+
+        $child1 = self::createPage([
+            'en' => [
+                'draft' => [
+                    'title' => 'Child 1',
+                    'url' => '/parent/child1',
+                    'template' => 'default',
+                    'parentId' => $parent->getUuid(),
+                ],
+            ],
+        ]);
+
+        $child2 = self::createPage([
+            'en' => [
+                'draft' => [
+                    'title' => 'Child 2',
+                    'url' => '/parent/child2',
+                    'template' => 'default',
+                    'parentId' => $parent->getUuid(),
+                ],
+            ],
+        ]);
+
+        $grandchild = self::createPage([
+            'en' => [
+                'draft' => [
+                    'title' => 'Grandchild',
+                    'url' => '/parent/child1/grandchild',
+                    'template' => 'default',
+                    'parentId' => $child1->getUuid(),
+                ],
+            ],
+        ]);
+
+        $this->entityManager->flush();
+        $this->entityManager->clear();
+
+        $descendantIds = $this->pageRepository->findDescendantIdsById($parent->getUuid());
+
+        $this->assertCount(3, $descendantIds);
+        $this->assertContains($child1->getUuid(), $descendantIds);
+        $this->assertContains($child2->getUuid(), $descendantIds);
+        $this->assertContains($grandchild->getUuid(), $descendantIds);
+    }
+
+    public function testFindDescendantIdsByIdWithNoChildren(): void
+    {
+        $page = self::createPage([
+            'en' => [
+                'draft' => [
+                    'title' => 'Single Page',
+                    'url' => '/single',
+                    'template' => 'default',
+                ],
+            ],
+        ]);
+
+        $this->entityManager->flush();
+        $this->entityManager->clear();
+
+        $descendantIds = $this->pageRepository->findDescendantIdsById($page->getUuid());
+
+        $this->assertEmpty($descendantIds);
+    }
+
+    public function testSupportsDescendantType(): void
+    {
+        $this->assertTrue($this->pageRepository->supportsDescendantType(PageInterface::class));
+        $this->assertTrue($this->pageRepository->supportsDescendantType(Page::class));
+        $this->assertFalse($this->pageRepository->supportsDescendantType('SomeOtherClass'));
+    }
+
+    public function testFindDescendantIdsByIdWithDeepNesting(): void
+    {
+        $parent = self::createPage([
+            'en' => [
+                'draft' => [
+                    'title' => 'Parent',
+                    'url' => '/parent',
+                    'template' => 'default',
+                ],
+            ],
+        ]);
+
+        $child = self::createPage([
+            'en' => [
+                'draft' => [
+                    'title' => 'Child',
+                    'url' => '/parent/child',
+                    'template' => 'default',
+                    'parentId' => $parent->getUuid(),
+                ],
+            ],
+        ]);
+
+        $grandchild = self::createPage([
+            'en' => [
+                'draft' => [
+                    'title' => 'Grandchild',
+                    'url' => '/parent/child/grandchild',
+                    'template' => 'default',
+                    'parentId' => $child->getUuid(),
+                ],
+            ],
+        ]);
+
+        $greatGrandchild = self::createPage([
+            'en' => [
+                'draft' => [
+                    'title' => 'Great Grandchild',
+                    'url' => '/parent/child/grandchild/great',
+                    'template' => 'default',
+                    'parentId' => $grandchild->getUuid(),
+                ],
+            ],
+        ]);
+
+        $this->entityManager->flush();
+        $this->entityManager->clear();
+
+        $descendantIds = $this->pageRepository->findDescendantIdsById($parent->getUuid());
+
+        $this->assertCount(3, $descendantIds);
+        $this->assertContains($child->getUuid(), $descendantIds);
+        $this->assertContains($grandchild->getUuid(), $descendantIds);
+        $this->assertContains($greatGrandchild->getUuid(), $descendantIds);
+    }
+
+    public function testFindDescendantIdsByIdWithMultipleSiblings(): void
+    {
+        $parent = self::createPage([
+            'en' => [
+                'draft' => [
+                    'title' => 'Parent',
+                    'url' => '/parent',
+                    'template' => 'default',
+                ],
+            ],
+        ]);
+
+        $child1 = self::createPage([
+            'en' => [
+                'draft' => [
+                    'title' => 'Child 1',
+                    'url' => '/parent/child1',
+                    'template' => 'default',
+                    'parentId' => $parent->getUuid(),
+                ],
+            ],
+        ]);
+
+        $child2 = self::createPage([
+            'en' => [
+                'draft' => [
+                    'title' => 'Child 2',
+                    'url' => '/parent/child2',
+                    'template' => 'default',
+                    'parentId' => $parent->getUuid(),
+                ],
+            ],
+        ]);
+
+        $child3 = self::createPage([
+            'en' => [
+                'draft' => [
+                    'title' => 'Child 3',
+                    'url' => '/parent/child3',
+                    'template' => 'default',
+                    'parentId' => $parent->getUuid(),
+                ],
+            ],
+        ]);
+
+        $this->entityManager->flush();
+        $this->entityManager->clear();
+
+        $descendantIds = $this->pageRepository->findDescendantIdsById($parent->getUuid());
+
+        $this->assertCount(3, $descendantIds);
+        $this->assertContains($child1->getUuid(), $descendantIds);
+        $this->assertContains($child2->getUuid(), $descendantIds);
+        $this->assertContains($child3->getUuid(), $descendantIds);
     }
 
     /**
