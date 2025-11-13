@@ -91,7 +91,7 @@ class Configuration implements ConfigurationInterface
                     ->prototype('scalar')
                         ->validate()
                             ->ifTrue(function($value) {
-                                return !\is_string($value) || !\preg_match('/^([a-z0-9-_]+:\/\//', $value);
+                                return !\is_string($value) || !\preg_match('/^[a-z0-9-_]+:\/\//', $value);
                             })
                             ->thenInvalid('The icon set path must start with "<provider-name>://"')
                         ->end()
