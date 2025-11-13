@@ -21,4 +21,5 @@ return new Index('admin', [
     'mediaId' => new Field\IntegerField('mediaId'),
     'changedAt' => new Field\DateTimeField('changedAt'),
     'createdAt' => new Field\DateTimeField('createdAt'),
+    'metadata' => new Field\JsonObjectField('metadata'),
 ]);

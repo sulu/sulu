@@ -11,6 +11,7 @@ import searchResourceStore from './stores/searchResourceStore';
 import SearchField from './SearchField';
 import SearchResult from './SearchResult';
 import searchStyles from './search.scss';
+import jexl from 'jexl';
 import searchResultStyles from './searchResult.scss';
 import type {SearchResource} from './types';
 
@@ -65,20 +66,20 @@ class Search extends React.Component<Props> {
             route: {
                 name: routeName,
                 resultToRoute,
+                resultToRouteName,
             },
         } = this.searchResources[result.resourceKey];
-        const resultId = result.resourceId || null;
-        const resultLocale = result.locale || null;
-        const resultParams = {
-            id: resultId,
-            locale: resultLocale,
-        };
+
+        let route = routeName;
+        Object.keys(resultToRouteName).forEach((resultPath) => {
+            route = route.replace(`{${resultToRouteName[resultPath]}}`, `${jexl.evalSync(resultPath, result)}`);
+        });
 
         const {router} = this.props;
         router.navigate(
-            routeName,
+            route,
             Object.keys(resultToRoute).reduce((parameters, resultPath) => {
-                parameters[resultPath] = resultParams[resultPath];
+                parameters[resultToRoute[resultPath]] = jexl.evalSync(resultPath, result);
                 return parameters;
             }, {})
         );

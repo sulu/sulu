@@ -703,8 +703,9 @@ final class SuluPageBundle extends AbstractBundle
                                 'route' => [
                                     'name' => PageAdmin::EDIT_FORM_VIEW,
                                     'resultToRoute' => [
-                                        'id' => 'id',
+                                        'resourceId' => 'id',
                                         'locale' => 'locale',
+                                        'metadata.webspaceKey' => 'webspace',
                                     ],
                                 ],
                                 'securityContext' => PageAdmin::SECURITY_CONTEXT_GROUP, // Todo: Add correct permissions for webspaces.

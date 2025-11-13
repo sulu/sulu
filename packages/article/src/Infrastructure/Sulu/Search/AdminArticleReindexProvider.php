@@ -19,6 +19,8 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Sulu\Article\Domain\Model\ArticleDimensionContentInterface;
 use Sulu\Article\Domain\Model\ArticleInterface;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormGroup;
+use Sulu\Bundle\AdminBundle\Metadata\GroupProviderInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 
 /**
@@ -28,6 +30,7 @@ use Sulu\Content\Domain\Model\DimensionContentInterface;
  *     created: \DateTimeImmutable,
  *     title: string,
  *     locale: string,
+ *     templateKey: string,
  * }
  *
  * @internal this class is internal no backwards compatibility promise is given for this class
@@ -45,14 +48,18 @@ final class AdminArticleReindexProvider implements ReindexProviderInterface
      */
     protected EntityRepository $dimensionContentRepository;
 
+    protected GroupProviderInterface $groupProvider;
+
     public function __construct(
         EntityManagerInterface $entityManager,
+        GroupProviderInterface $groupProvider,
     ) {
         $repository = $entityManager->getRepository(ArticleInterface::class);
         $dimensionContentRepository = $entityManager->getRepository(ArticleDimensionContentInterface::class);
 
         $this->articleRepository = $repository;
         $this->dimensionContentRepository = $dimensionContentRepository;
+        $this->groupProvider = $groupProvider;
     }
 
     public function total(): ?int
@@ -64,9 +71,20 @@ final class AdminArticleReindexProvider implements ReindexProviderInterface
     public function provide(ReindexConfig $reindexConfig): \Generator
     {
         $articles = $this->loadArticles($reindexConfig->getIdentifiers());
+        /** @var FormGroup[] $groups */
+        $groups = $this->groupProvider->getGroups();
 
         /** @var Article $article */
         foreach ($articles as $article) {
+            $groupIdentifier = null;
+
+            foreach ($groups as $group) {
+                if (\in_array($article['templateKey'], $group->templates)) {
+                    $groupIdentifier = $group->identifier;
+                    break;
+                }
+            }
+
             yield [
                 'id' => ArticleInterface::RESOURCE_KEY . '::' . ((string) $article['articleId']) . '::' . $article['locale'],
                 'resourceKey' => ArticleInterface::RESOURCE_KEY,
@@ -75,6 +93,9 @@ final class AdminArticleReindexProvider implements ReindexProviderInterface
                 'createdAt' => $article['created']->format('c'),
                 'title' => $article['title'],
                 'locale' => $article['locale'],
+                'metadata' => [
+                    'group' => $groupIdentifier,
+                ],
             ];
         }
     }
@@ -92,6 +113,7 @@ final class AdminArticleReindexProvider implements ReindexProviderInterface
             ->addSelect('dimensionContent.changed')
             ->addSelect('dimensionContent.title')
             ->addSelect('dimensionContent.locale')
+            ->addSelect('dimensionContent.templateKey')
             ->where('dimensionContent.stage = :stage')
             ->andWhere('dimensionContent.locale IS NOT NULL')
             ->andWhere('dimensionContent.version = :version');

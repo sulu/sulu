@@ -153,6 +153,9 @@ test('Render search results', () => {
             locale: 'de',
             resourceKey: 'page',
             title: 'Test1',
+            metadata: {
+                webspace_key: 'example',
+            },
         },
         {
             description: 'something 2',
@@ -161,6 +164,9 @@ test('Render search results', () => {
             locale: undefined,
             resourceKey: 'contact',
             title: 'Max Mustermann',
+            metadata: {
+                webspace_key: 'example',
+            },
         },
     ];
     searchStore.query = 'something';
@@ -282,6 +288,9 @@ test('Navigate to route for search result item', () => {
             resourceKey: 'page',
             resourceId: 'f0a1f99e-3c28-4db9-bc5d-94ed43d8a50f',
             title: 'Test1',
+            metadata: {
+                webspace_key: 'example',
+            },
         },
         {
             description: 'something 2',
@@ -291,6 +300,9 @@ test('Navigate to route for search result item', () => {
             resourceKey: 'contact',
             resourceId: '5',
             title: 'Max Mustermann',
+            metadata: {
+                webspace_key: 'example',
+            },
         },
     ];
     searchStore.query = 'something';
