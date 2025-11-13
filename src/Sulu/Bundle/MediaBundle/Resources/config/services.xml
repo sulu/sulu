@@ -332,7 +332,7 @@
             <argument type="service" id="translator"/>
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>
             <argument type="service" id="sulu_security.access_control_query_enhancer"/>
-            <argument type="service" id="security.helper" on-invalid="ignore"/>
+            <argument type="service" id="security.helper" on-invalid="null"/>
             <argument type="expression">container.hasParameter('sulu_audience_targeting.enabled')</argument>
             <argument>%sulu_security.permissions%</argument>
 

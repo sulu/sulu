@@ -91,7 +91,7 @@ readonly class MediaSmartContentProvider implements SmartContentProviderInterfac
         private TranslatorInterface $translator,
         private WebspaceManagerInterface $webspaceManager,
         private AccessControlQueryEnhancer $accessControlQueryEnhancer,
-        private Security $security,
+        private ?Security $security,
         private bool $hasAudienceTargeting = false,
         private ?array $permissions = null,
     ) {
@@ -222,7 +222,7 @@ readonly class MediaSmartContentProvider implements SmartContentProviderInterfac
     ): void {
         $webspace = $this->webspaceManager->findWebspaceByKey($filters['webspaceKey'] ?? null);
         /** @var UserInterface|null $user */
-        $user = $webspace && $webspace->hasWebsiteSecurity() ? $this->security->getUser() : null;
+        $user = $webspace && $webspace->hasWebsiteSecurity() ? $this->security?->getUser() : null;
         /** @var int|null $permission */
         $permission = $webspace && $webspace->hasWebsiteSecurity() && $this->permissions
             ? $this->permissions[PermissionTypes::VIEW]
