@@ -141,6 +141,16 @@ jobs:
                     - php-version: '8.2'
                       database: mysql-57
                       dependency-versions: 'lowest'
+                      composer-block-insecure: 'false'
+                      php-extensions: 'ctype, iconv, mysql, gd'
+                      tools: 'composer:v2'
+                      env:
+                          SYMFONY_DEPRECATIONS_HELPER: disabled
+                          DATABASE_URL: mysql://root@127.0.0.1:3306/sulu_test?serverVersion=5.7&charset=utf8mb4
+
+                    - php-version: '8.2'
+                      database: mysql-57
+                      dependency-versions: 'lowest'
                       php-extensions: 'ctype, iconv, mysql, gd'
                       tools: 'composer:v2'
                       env:
@@ -196,6 +206,10 @@ jobs:
               # These tools are not required to run tests, so we are removing them to improve dependency resolving and
               # testing lowest versions.
               run: composer remove "*php-cs-fixer*" "*phpstan*" "*rector*" --dev --no-update
+
+            - name: Set composer block-insecure
+              if: ${{ composer-block-insecure }}
+              run: composer config "audit.block-insecure" ${{ matrix.composer-block-insecure }}
 
             - name: Set composer stability
               if: ${{ matrix.composer-stability }}
