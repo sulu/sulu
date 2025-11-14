@@ -36,6 +36,7 @@ use Sulu\Page\Domain\Event\PageRestoredEvent;
 use Sulu\Page\Domain\Event\PageTranslationAddedEvent;
 use Sulu\Page\Domain\Event\PageTranslationRemovedEvent;
 use Sulu\Page\Domain\Event\PageTranslationRestoredEvent;
+use Sulu\Page\Domain\Event\PageWorkflowTransitionAppliedEvent;
 use Sulu\Page\Domain\Model\Page;
 use Sulu\Page\Domain\Model\PageDimensionContent;
 use Sulu\Page\Domain\Model\PageDimensionContentInterface;
@@ -66,6 +67,8 @@ use Sulu\Page\Infrastructure\Sulu\Reference\PageReferenceRefresher;
 use Sulu\Page\Infrastructure\Sulu\Route\WebspaceSiteRouteGenerator;
 use Sulu\Page\Infrastructure\Sulu\Search\AdminPageIndexListener;
 use Sulu\Page\Infrastructure\Sulu\Search\AdminPageReindexProvider;
+use Sulu\Page\Infrastructure\Sulu\Search\WebsitePageIndexListener;
+use Sulu\Page\Infrastructure\Sulu\Search\WebsitePageReindexProvider;
 use Sulu\Page\Infrastructure\Sulu\Security\PageSecurityListener;
 use Sulu\Page\Infrastructure\Sulu\Sitemap\PagesSitemapProvider;
 use Sulu\Page\Infrastructure\Sulu\Trash\PageTrashItemHandler;
@@ -556,6 +559,22 @@ final class SuluPageBundle extends AbstractBundle
 
         $services->set('sulu_page.admin_page_reindex_provider')
             ->class(AdminPageReindexProvider::class)
+            ->args([
+                new Reference('doctrine.orm.entity_manager'),
+            ])
+            ->tag('cmsig_seal.reindex_provider');
+
+        $services->set('sulu_page.website_page_index_listener')
+            ->class(WebsitePageIndexListener::class)
+            ->args([
+                new Reference('sulu_message_bus'),
+            ])
+            ->tag('kernel.event_listener', ['event' => PageWorkflowTransitionAppliedEvent::class, 'method' => 'onPageChanged'])
+            ->tag('kernel.event_listener', ['event' => PageRemovedEvent::class, 'method' => 'onPageChanged'])
+            ->tag('kernel.event_listener', ['event' => PageTranslationRemovedEvent::class, 'method' => 'onPageChanged']);
+
+        $services->set('sulu_page.website_page_reindex_provider')
+            ->class(WebsitePageReindexProvider::class)
             ->args([
                 new Reference('doctrine.orm.entity_manager'),
             ])
