@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\WebsiteBundle\Routing;
 
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
+use Sulu\Route\Domain\Value\RequestAttributeEnum;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
@@ -64,6 +65,9 @@ class RequestListener implements EventSubscriberInterface
             }
             if (!$context->hasParameter('host')) {
                 $context->setParameter('host', $portalInformation->getHost());
+            }
+            if (!$context->hasParameter(RequestAttributeEnum::SITE->value)) {
+                $context->setParameter(RequestAttributeEnum::SITE->value, $portalInformation->getWebspace()->getKey());
             }
         }
     }
