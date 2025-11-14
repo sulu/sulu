@@ -433,7 +433,7 @@ class ArticleControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(204, $response);
 
         $routeRepository = $this->getContainer()->get(RouteRepositoryInterface::class);
-        $this->assertCount(5, $routeRepository->findBy([])); // TODO we need tackle this
+        $this->assertCount(0, $routeRepository->findBy([]));
 
         $trashRepository = self::getContainer()->get(TrashItemRepositoryInterface::class);
         $trashItem = $trashRepository->findOneBy([
