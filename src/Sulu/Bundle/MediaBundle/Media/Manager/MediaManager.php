@@ -12,7 +12,6 @@
 namespace Sulu\Bundle\MediaBundle\Media\Manager;
 
 use Doctrine\ORM\EntityManagerInterface;
-use FFMpeg\FFProbe;
 use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRepositoryInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryRepositoryInterface;
@@ -42,7 +41,6 @@ use Sulu\Bundle\MediaBundle\Media\Exception\MediaNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\FileValidator\FileValidatorInterface;
 use Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface;
 use Sulu\Bundle\MediaBundle\Media\PropertiesProvider\MediaPropertiesProviderInterface;
-use Sulu\Bundle\MediaBundle\Media\PropertiesProvider\VideoPropertiesProvider;
 use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
 use Sulu\Bundle\MediaBundle\Media\TypeManager\TypeManagerInterface;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
@@ -65,20 +63,14 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 class MediaManager implements MediaManagerInterface
 {
     /**
-     * @deprecated This const is deprecated and will be removed in Sulu 3.0 use the CollectionInterface::class instead.
-     */
-    public const ENTITY_NAME_COLLECTION = \Sulu\Bundle\MediaBundle\Entity\Collection::class;
-
-    /**
      * @var int
      */
     public $count;
 
     /**
      * @param CollectionRepository $collectionRepository
-     * @param null|FFprobe|MediaPropertiesProviderInterface[] $mediaPropertiesProviders
+     * @param MediaPropertiesProviderInterface[] $mediaPropertiesProviders
      * @param string $downloadPath
-     * @param string $adminDownloadPath
      */
     public function __construct(
         protected MediaRepositoryInterface $mediaRepository,
@@ -95,45 +87,12 @@ class MediaManager implements MediaManagerInterface
         private DomainEventCollectorInterface $domainEventCollector,
         private ?TokenStorageInterface $tokenStorage,
         private ?SecurityCheckerInterface $securityChecker,
-        protected $mediaPropertiesProviders,
+        protected iterable $mediaPropertiesProviders,
         private $downloadPath,
         protected ?TargetGroupRepositoryInterface $targetGroupRepository,
-        private $adminDownloadPath = null,
+        private string $adminDownloadPath,
         private ?TrashManagerInterface $trashManager = null
     ) {
-        if (!$adminDownloadPath) {
-            @trigger_deprecation(
-                'sulu/sulu',
-                '2.2',
-                \sprintf(
-                    'The usage of the "%s" without setting the "$adminDownloadPath" is deprecated and will not longer work in Sulu 3.0.',
-                    MediaManager::class
-                )
-            );
-        }
-
-        $this->adminDownloadPath = $adminDownloadPath ?: '/admin' . $this->downloadPath;
-
-        if (!\is_iterable($mediaPropertiesProviders)) {
-            @trigger_deprecation(
-                'sulu/sulu',
-                '2.3',
-                \sprintf(
-                    'The usage of the "%s" without setting "$mediaPropertiesProviders" is deprecated and will not longer work in Sulu 3.0.',
-                    MediaManager::class
-                )
-            );
-
-            if ($mediaPropertiesProviders instanceof FFProbe) {
-                $mediaPropertiesProviders = [
-                    new VideoPropertiesProvider($mediaPropertiesProviders),
-                ];
-            } else {
-                $mediaPropertiesProviders = [];
-            }
-        }
-
-        $this->mediaPropertiesProviders = $mediaPropertiesProviders;
     }
 
     public function getById($id, $locale)
@@ -213,7 +172,7 @@ class MediaManager implements MediaManagerInterface
     /**
      * @return array<string, mixed>
      */
-    private function getProperties(UploadedFile $uploadedFile)
+    private function getProperties(UploadedFile $uploadedFile): array
     {
         $properties = [];
         foreach ($this->mediaPropertiesProviders as $mediaPropertiesProvider) {
