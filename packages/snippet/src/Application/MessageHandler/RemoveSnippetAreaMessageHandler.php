@@ -42,7 +42,7 @@ readonly class RemoveSnippetAreaMessageHandler
 
         $snippetArea->setSnippet(null);
 
-        $this->domainEventCollector->collect(new SnippetAreaRemovedEvent($snippetArea->getAreaKey(), $snippetArea->getAreaKey(), $message->getData()));
+        $this->domainEventCollector->collect(new SnippetAreaRemovedEvent($snippetArea->getUuid(), $snippetArea->getAreaKey(), $message->getData()));
 
         return $snippetArea;
     }

@@ -50,6 +50,7 @@ use Sulu\Article\Infrastructure\Sulu\Content\ArticleTeaserProvider;
 use Sulu\Article\Infrastructure\Sulu\Content\PropertyResolver\ArticleSelectionPropertyResolver;
 use Sulu\Article\Infrastructure\Sulu\Content\PropertyResolver\SingleArticleSelectionPropertyResolver;
 use Sulu\Article\Infrastructure\Sulu\Content\ResourceLoader\ArticleResourceLoader;
+use Sulu\Article\Infrastructure\Sulu\HttpCache\EventSubscriber\ArticleCacheInvalidationSubscriber;
 use Sulu\Article\Infrastructure\Sulu\Reference\ArticleReferenceRefresher;
 use Sulu\Article\Infrastructure\Sulu\Route\ArticleRouteDefaultsProvider;
 use Sulu\Article\Infrastructure\Sulu\Search\AdminArticleIndexListener;
@@ -387,6 +388,16 @@ final class SuluArticleBundle extends AbstractBundle
                 new Reference('sulu_content.content_merger'),
             ])
             ->tag('sulu_reference.refresher');
+
+        // Cache Invalidation
+        $services->set('sulu_article.article_cache_invalidation_subscriber')
+            ->class(ArticleCacheInvalidationSubscriber::class)
+            ->args([
+                new Reference('sulu_http_cache.cache_manager', ContainerInterface::NULL_ON_INVALID_REFERENCE),
+                new Reference('sulu_route.route_repository'),
+                new Reference('sulu_content.content_aggregator'),
+            ])
+            ->tag('kernel.event_subscriber');
 
         // Sitemap
         $services->set('sulu_article.articles_sitemap_provider')

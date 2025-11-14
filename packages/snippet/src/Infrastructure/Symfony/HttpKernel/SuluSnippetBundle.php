@@ -51,6 +51,8 @@ use Sulu\Snippet\Infrastructure\Sulu\Content\PropertyResolver\SnippetSelectionPr
 use Sulu\Snippet\Infrastructure\Sulu\Content\ResourceLoader\SnippetResourceLoader;
 use Sulu\Snippet\Infrastructure\Sulu\Content\SmartResolver\SnippetAreaSmartResolver;
 use Sulu\Snippet\Infrastructure\Sulu\Content\SnippetSmartContentProvider;
+use Sulu\Snippet\Infrastructure\Sulu\HttpCache\EventSubscriber\SnippetAreaCacheInvalidationSubscriber;
+use Sulu\Snippet\Infrastructure\Sulu\HttpCache\EventSubscriber\SnippetCacheInvalidationSubscriber;
 use Sulu\Snippet\Infrastructure\Sulu\Reference\SnippetReferenceRefresher;
 use Sulu\Snippet\Infrastructure\Sulu\Search\AdminSnippetIndexListener;
 use Sulu\Snippet\Infrastructure\Sulu\Search\AdminSnippetReindexProvider;
@@ -364,6 +366,24 @@ final class SuluSnippetBundle extends AbstractBundle
                 new Reference('sulu_content.content_merger'),
             ])
             ->tag('sulu_reference.refresher');
+
+        // Cache Invalidation
+        $services->set('sulu_snippet.snippet_cache_invalidation_subscriber')
+            ->class(SnippetCacheInvalidationSubscriber::class)
+            ->args([
+                new Reference('sulu_http_cache.cache_manager', ContainerInterface::NULL_ON_INVALID_REFERENCE),
+                new Reference('sulu_content.content_aggregator'),
+                param(SnippetAreaCompilerPass::SNIPPET_AREA_PARAM),
+            ])
+            ->tag('kernel.event_subscriber');
+
+        $services->set('sulu_snippet.snippet_area_cache_invalidation_subscriber')
+            ->class(SnippetAreaCacheInvalidationSubscriber::class)
+            ->args([
+                new Reference('sulu_http_cache.cache_manager', ContainerInterface::NULL_ON_INVALID_REFERENCE),
+                param(SnippetAreaCompilerPass::SNIPPET_AREA_PARAM),
+            ])
+            ->tag('kernel.event_subscriber');
 
         // Trash services
         /** @var array<string, class-string> $bundles */

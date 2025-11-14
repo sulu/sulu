@@ -64,6 +64,7 @@ use Sulu\Page\Infrastructure\Sulu\Content\PropertyResolver\SinglePageSelectionPr
 use Sulu\Page\Infrastructure\Sulu\Content\ResourceLoader\PageResourceLoader;
 use Sulu\Page\Infrastructure\Sulu\Content\Visitor\PageSmartContentFiltersVisitor;
 use Sulu\Page\Infrastructure\Sulu\Content\Visitor\SegmentSmartContentFiltersVisitor;
+use Sulu\Page\Infrastructure\Sulu\HttpCache\EventSubscriber\PageCacheInvalidationSubscriber;
 use Sulu\Page\Infrastructure\Sulu\Reference\PageReferenceRefresher;
 use Sulu\Page\Infrastructure\Sulu\Route\WebspaceSiteRouteGenerator;
 use Sulu\Page\Infrastructure\Sulu\Search\AdminPageIndexListener;
@@ -603,6 +604,16 @@ final class SuluPageBundle extends AbstractBundle
                 new Reference('sulu_security.system_store'),
                 new Reference('security.helper', ContainerInterface::NULL_ON_INVALID_REFERENCE),
                 param('sulu_security.permissions'),
+            ])
+            ->tag('kernel.event_subscriber');
+
+        // Cache Invalidation
+        $services->set('sulu_page.page_cache_invalidation_subscriber')
+            ->class(PageCacheInvalidationSubscriber::class)
+            ->args([
+                new Reference('sulu_http_cache.cache_manager', ContainerInterface::NULL_ON_INVALID_REFERENCE),
+                new Reference('sulu_route.route_repository'),
+                new Reference('sulu_content.content_aggregator'),
             ])
             ->tag('kernel.event_subscriber');
     }
