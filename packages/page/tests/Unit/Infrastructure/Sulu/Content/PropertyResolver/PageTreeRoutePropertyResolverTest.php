@@ -88,7 +88,7 @@ class PageTreeRoutePropertyResolverTest extends TestCase
     /**
      * @param array{
      *      page: array{
-     *          uuid: string,
+     *          uuid?: string,
      *          path: string,
      *      },
      *      suffix: string,
