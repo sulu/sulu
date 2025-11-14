@@ -799,7 +799,7 @@ class PageControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(204, $response);
 
         $routeRepository = $this->getContainer()->get(RouteRepositoryInterface::class);
-        $this->assertCount(12, $routeRepository->findBy([])); // TODO we need tackle this
+        $this->assertCount(9, $routeRepository->findBy([]));
 
         $trashRepository = self::getContainer()->get(TrashItemRepositoryInterface::class);
         $trashItem = $trashRepository->findOneBy([

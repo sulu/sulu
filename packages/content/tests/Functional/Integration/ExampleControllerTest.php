@@ -462,7 +462,7 @@ class ExampleControllerTest extends SuluTestCase
     public function testDelete(int $id): void
     {
         $routeRepository = $this->getContainer()->get(RouteRepositoryInterface::class);
-        $this->assertCount(3, $routeRepository->findBy([])); // TODO we need tackle this
+        $this->assertCount(3, $routeRepository->findBy([]));
     }
 
     public function testReferencesCreatedWithMediaReferences(): int

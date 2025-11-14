@@ -16,6 +16,7 @@ namespace Sulu\Content\Infrastructure\Symfony\HttpKernel;
 use Sulu\Content\Application\PropertyResolver\Resolver\PropertyResolverInterface;
 use Sulu\Content\Application\PropertyResolver\Resolver\PropertyResolverMetadataAwareInterface;
 use Sulu\Content\Application\ResourceLoader\Loader\ResourceLoaderInterface;
+use Sulu\Content\Infrastructure\Doctrine\EventListener\RouteCleanupListener;
 use Sulu\Content\Infrastructure\Symfony\HttpKernel\Compiler\ResourceLoaderCacheCompilerPass;
 use Sulu\Content\Infrastructure\Symfony\HttpKernel\Compiler\SettingsFormPass;
 use Symfony\Component\Config\Definition\Configurator\DefinitionConfigurator;
@@ -58,6 +59,15 @@ final class SuluContentBundle extends AbstractBundle
         $loader->load('resolvers.xml');
         $loader->load('resource-loader.xml');
         $loader->load('reference.xml');
+
+        $services = $container->services();
+
+        $services->set('sulu_content.doctrine_route_cleanup_listener')
+            ->class(RouteCleanupListener::class)
+            ->tag('doctrine.event_listener', ['event' => 'preRemove', 'method' => 'preRemove'])
+            ->tag('doctrine.event_listener', ['event' => 'postFlush', 'method' => 'postFlush'])
+            ->tag('doctrine.event_listener', ['event' => 'onClear', 'method' => 'onClear'])
+            ->tag('kernel.reset', ['method' => 'reset']);
     }
 
     /**
