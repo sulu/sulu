@@ -19,24 +19,24 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Sulu\Article\Domain\Model\ArticleDimensionContentInterface;
 use Sulu\Article\Domain\Model\ArticleInterface;
-use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormGroup;
-use Sulu\Bundle\AdminBundle\Metadata\GroupProviderInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 
 /**
  * @phpstan-type Article array{
  *     articleId: int,
  *     changed: \DateTimeImmutable,
- *     created: \DateTimeImmutable,
  *     title: string,
  *     locale: string,
- *     templateKey: string,
+ *     mainWebspace: string|null,
+ *     additionalWebspaces: string[]|null,
+ *     slug: string,
+ *     authored: \DateTimeImmutable|null,
  * }
  *
  * @internal this class is internal no backwards compatibility promise is given for this class
  *            use Symfony Dependency Injection to override or create your own ReindexProvider instead
  */
-final class AdminArticleReindexProvider implements ReindexProviderInterface
+final class WebsiteArticleReindexProvider implements ReindexProviderInterface
 {
     /**
      * @var EntityRepository<ArticleInterface>
@@ -48,18 +48,32 @@ final class AdminArticleReindexProvider implements ReindexProviderInterface
      */
     protected EntityRepository $dimensionContentRepository;
 
-    protected GroupProviderInterface $groupProvider;
+    /**
+     * @var array<string, string>|null
+     */
+    private ?array $defaultMainWebspace;
 
+    /**
+     * @var array<string, string>|null
+     */
+    private ?array $defaultAdditionalWebspaces;
+
+    /**
+     * @param array<string, string>|null $defaultMainWebspace
+     * @param array<string, string>|null $defaultAdditionalWebspaces
+     */
     public function __construct(
         EntityManagerInterface $entityManager,
-        GroupProviderInterface $groupProvider,
+        ?array $defaultMainWebspace,
+        ?array $defaultAdditionalWebspaces,
     ) {
         $repository = $entityManager->getRepository(ArticleInterface::class);
         $dimensionContentRepository = $entityManager->getRepository(ArticleDimensionContentInterface::class);
 
         $this->articleRepository = $repository;
         $this->dimensionContentRepository = $dimensionContentRepository;
-        $this->groupProvider = $groupProvider;
+        $this->defaultMainWebspace = $defaultMainWebspace;
+        $this->defaultAdditionalWebspaces = $defaultAdditionalWebspaces;
     }
 
     public function total(): ?int
@@ -71,31 +85,38 @@ final class AdminArticleReindexProvider implements ReindexProviderInterface
     public function provide(ReindexConfig $reindexConfig): \Generator
     {
         $articles = $this->loadArticles($reindexConfig->getIdentifiers());
-        /** @var FormGroup[] $groups */
-        $groups = $this->groupProvider->getGroups();
 
         /** @var Article $article */
         foreach ($articles as $article) {
-            $groupIdentifier = null;
+            $authoredAt = $article['authored'] ?? $article['changed'];
+            $webspaces = \array_merge(
+                $article['mainWebspace'] ? [$article['mainWebspace']] : [],
+                $article['additionalWebspaces'] ?? [],
+            );
+            $webspaces = \array_values(\array_unique($webspaces));
 
-            foreach ($groups as $group) {
-                if (\in_array($article['templateKey'], $group->templates)) {
-                    $groupIdentifier = $group->identifier;
-                    break;
-                }
+            if (0 === \count($webspaces)) {
+                $defaultMainWebspace = $this->defaultMainWebspace ? ($this->defaultMainWebspace['default'] ? [$this->defaultMainWebspace['default']] : []) : [];
+                /** @var string[] $defaultAdditionalWebspaces */
+                $defaultAdditionalWebspaces = $this->defaultAdditionalWebspaces ? ($this->defaultAdditionalWebspaces['default'] ?? []) : [];
+
+                $webspaces = \array_merge(
+                    $defaultMainWebspace,
+                    $defaultAdditionalWebspaces,
+                );
             }
 
             yield [
                 'id' => ArticleInterface::RESOURCE_KEY . '::' . ((string) $article['articleId']) . '::' . $article['locale'],
                 'resourceKey' => ArticleInterface::RESOURCE_KEY,
                 'resourceId' => (string) $article['articleId'],
-                'changedAt' => $article['changed']->format('c'),
-                'createdAt' => $article['created']->format('c'),
-                'title' => $article['title'],
                 'locale' => $article['locale'],
-                'metadata' => [
-                    'group' => $groupIdentifier,
-                ],
+                'webspaces' => $webspaces,
+                'title' => $article['title'],
+                'url' => $article['slug'],
+                'content' => [], // Todo: Add content.
+                'mediaId' => '',
+                'authoredAt' => $authoredAt->format('c'),
             ];
         }
     }
@@ -108,18 +129,22 @@ final class AdminArticleReindexProvider implements ReindexProviderInterface
     private function loadArticles(array $identifiers = []): iterable
     {
         $qb = $this->dimensionContentRepository->createQueryBuilder('dimensionContent')
+            ->leftJoin('dimensionContent.route', 'route')
             ->select('IDENTITY(dimensionContent.article) AS articleId')
-            ->addSelect('dimensionContent.created')
+            ->addSelect('dimensionContent.authored')
             ->addSelect('dimensionContent.changed')
             ->addSelect('dimensionContent.title')
             ->addSelect('dimensionContent.locale')
-            ->addSelect('dimensionContent.templateKey')
+            ->addSelect('dimensionContent.mainWebspace')
+            ->addSelect('dimensionContent.additionalWebspaces')
+            ->addSelect('route.slug')
+
             ->where('dimensionContent.stage = :stage')
             ->andWhere('dimensionContent.locale IS NOT NULL')
             ->andWhere('dimensionContent.version = :version');
 
         $parameters = [
-            'stage' => DimensionContentInterface::STAGE_DRAFT,
+            'stage' => DimensionContentInterface::STAGE_LIVE,
             'version' => DimensionContentInterface::CURRENT_VERSION,
         ];
 
@@ -156,6 +181,6 @@ final class AdminArticleReindexProvider implements ReindexProviderInterface
 
     public static function getIndex(): string
     {
-        return 'admin';
+        return 'website';
     }
 }

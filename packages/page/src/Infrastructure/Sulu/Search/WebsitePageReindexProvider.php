@@ -28,13 +28,15 @@ use Sulu\Page\Domain\Model\PageInterface;
  *     created: \DateTimeImmutable,
  *     title: string,
  *     locale: string,
+ *     slug: string,
+ *     authored: \DateTimeImmutable|null,
  *     webspaceKey: string,
  * }
  *
  * @internal this class is internal no backwards compatibility promise is given for this class
  *            use Symfony Dependency Injection to override or create your own ReindexProvider instead
  */
-final class AdminPageReindexProvider implements ReindexProviderInterface
+final class WebsitePageReindexProvider implements ReindexProviderInterface
 {
     /**
      * @var EntityRepository<PageInterface>
@@ -68,17 +70,19 @@ final class AdminPageReindexProvider implements ReindexProviderInterface
 
         /** @var Page $page */
         foreach ($pages as $page) {
+            $authoredAt = $page['authored'] ?? $page['changed'];
+
             yield [
                 'id' => PageInterface::RESOURCE_KEY . '::' . ((string) $page['pageId']) . '::' . $page['locale'],
                 'resourceKey' => PageInterface::RESOURCE_KEY,
                 'resourceId' => (string) $page['pageId'],
-                'changedAt' => $page['changed']->format('c'),
-                'createdAt' => $page['created']->format('c'),
-                'title' => $page['title'],
                 'locale' => $page['locale'],
-                'metadata' => [
-                    'webspaceKey' => $page['webspaceKey'],
-                ],
+                'webspaces' => [$page['webspaceKey']],
+                'title' => $page['title'],
+                'url' => $page['slug'],
+                'content' => [], // Todo: Add content.
+                'mediaId' => '',
+                'authoredAt' => $authoredAt->format('c'),
             ];
         }
     }
@@ -91,19 +95,21 @@ final class AdminPageReindexProvider implements ReindexProviderInterface
     private function loadPages(array $identifiers = []): iterable
     {
         $qb = $this->dimensionContentRepository->createQueryBuilder('dimensionContent')
+            ->leftJoin('dimensionContent.route', 'route')
             ->leftJoin('dimensionContent.page', 'page')
             ->select('IDENTITY(dimensionContent.page) AS pageId')
-            ->addSelect('dimensionContent.created')
+            ->addSelect('dimensionContent.authored')
             ->addSelect('dimensionContent.changed')
             ->addSelect('dimensionContent.title')
             ->addSelect('dimensionContent.locale')
+            ->addSelect('route.slug')
             ->addSelect('page.webspaceKey')
             ->where('dimensionContent.stage = :stage')
             ->andWhere('dimensionContent.locale IS NOT NULL')
             ->andWhere('dimensionContent.version = :version');
 
         $parameters = [
-            'stage' => DimensionContentInterface::STAGE_DRAFT,
+            'stage' => DimensionContentInterface::STAGE_LIVE,
             'version' => DimensionContentInterface::CURRENT_VERSION,
         ];
 
@@ -140,6 +146,6 @@ final class AdminPageReindexProvider implements ReindexProviderInterface
 
     public static function getIndex(): string
     {
-        return 'admin';
+        return 'website';
     }
 }

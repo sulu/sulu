@@ -522,7 +522,7 @@ final class SuluSnippetBundle extends AbstractBundle
                                 'route' => [
                                     'name' => 'sulu_snippet.snippet.edit_tabs',
                                     'resultToRoute' => [
-                                        'id' => 'id',
+                                        'resourceId' => 'id',
                                         'locale' => 'locale',
                                     ],
                                 ],
