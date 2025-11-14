@@ -35,7 +35,7 @@ class PageTreeRoutePropertyResolverTest extends TestCase
     {
         $contentView = $this->resolver->resolve([], 'en');
 
-        $this->assertSame(null, $contentView->getContent());
+        $this->assertNull($contentView->getContent());
         $this->assertSame([], $contentView->getView());
     }
 
@@ -43,7 +43,7 @@ class PageTreeRoutePropertyResolverTest extends TestCase
     {
         $contentView = $this->resolver->resolve([], 'en');
 
-        $this->assertSame(null, $contentView->getContent());
+        $this->assertNull($contentView->getContent());
         $this->assertSame([], $contentView->getView());
     }
 
@@ -51,7 +51,7 @@ class PageTreeRoutePropertyResolverTest extends TestCase
     {
         $contentView = $this->resolver->resolve([], 'en', ['custom' => 'params']);
 
-        $this->assertSame(null, $contentView->getContent());
+        $this->assertNull($contentView->getContent());
         $this->assertSame([
             'custom' => 'params',
         ], $contentView->getView());
@@ -62,7 +62,7 @@ class PageTreeRoutePropertyResolverTest extends TestCase
     {
         $contentView = $this->resolver->resolve($data, 'en');
 
-        $this->assertSame(null, $contentView->getContent());
+        $this->assertNull($contentView->getContent());
         $this->assertSame([], $contentView->getView());
     }
 
@@ -87,11 +87,11 @@ class PageTreeRoutePropertyResolverTest extends TestCase
 
     /**
      * @param array{
-     *     page: array{
-     *         uuid: string,
-     *         path: string,
-     *     },
-     *     suffix: string,
+     *      page: array{
+     *          uuid: string,
+     *          path: string,
+     *      },
+     *      suffix: string,
      * } $data
      */
     #[DataProvider('provideResolvableData')]
@@ -107,11 +107,12 @@ class PageTreeRoutePropertyResolverTest extends TestCase
      * @return iterable<array{
      *     0: array{
      *         page: array{
-     *             uuid: string,
+     *             uuid?: string,
      *             path: string,
      *         },
      *         suffix: string,
      *     },
+     *     1: ?string,
      * }>
      */
     public static function provideResolvableData(): iterable
