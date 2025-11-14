@@ -69,6 +69,7 @@ use Sulu\Page\Infrastructure\Sulu\Search\AdminPageIndexListener;
 use Sulu\Page\Infrastructure\Sulu\Search\AdminPageReindexProvider;
 use Sulu\Page\Infrastructure\Sulu\Search\WebsitePageIndexListener;
 use Sulu\Page\Infrastructure\Sulu\Search\WebsitePageReindexProvider;
+use Sulu\Page\Infrastructure\Sulu\Security\PageDescendantSecurityListener;
 use Sulu\Page\Infrastructure\Sulu\Security\PageSecurityListener;
 use Sulu\Page\Infrastructure\Sulu\Sitemap\PagesSitemapProvider;
 use Sulu\Page\Infrastructure\Sulu\Trash\PageTrashItemHandler;
@@ -172,10 +173,6 @@ final class SuluPageBundle extends AbstractBundle
             ->args([
                 new Reference('sulu_page.page_repository'),
                 new Reference('sulu_activity.domain_event_collector'),
-                new Reference('sulu.repository.access_control'),
-                new Reference('sulu_security.system_store'),
-                new Reference('security.helper', ContainerInterface::NULL_ON_INVALID_REFERENCE),
-                param('sulu_security.permissions'),
                 new Reference('sulu_trash.trash_manager', ContainerInterface::NULL_ON_INVALID_REFERENCE),
             ])
             ->tag('messenger.message_handler');
@@ -590,6 +587,17 @@ final class SuluPageBundle extends AbstractBundle
             ->class(PageSecurityListener::class)
             ->args([
                 new Reference('sulu_security.security_checker', ContainerInterface::NULL_ON_INVALID_REFERENCE),
+            ])
+            ->tag('kernel.event_subscriber');
+
+        $services->set('sulu_page.page_descendant_security_listener')
+            ->class(PageDescendantSecurityListener::class)
+            ->args([
+                new Reference('sulu_page.page_repository'),
+                new Reference('sulu.repository.access_control'),
+                new Reference('sulu_security.system_store'),
+                new Reference('security.helper', ContainerInterface::NULL_ON_INVALID_REFERENCE),
+                param('sulu_security.permissions'),
             ])
             ->tag('kernel.event_subscriber');
     }
