@@ -23,6 +23,7 @@ use Sulu\Page\Application\Message\CreatePageMessage;
 use Sulu\Page\Application\Message\ModifyPageMessage;
 use Sulu\Page\Application\MessageHandler\CreatePageMessageHandler;
 use Sulu\Page\Application\MessageHandler\ModifyPageMessageHandler;
+use Sulu\Page\Domain\Exception\RemovePageDependantResourcesFoundException;
 use Sulu\Page\Domain\Model\Page;
 use Sulu\Page\Domain\Model\PageInterface;
 use Sulu\Route\Domain\Repository\RouteRepositoryInterface;
@@ -794,7 +795,7 @@ class PageControllerTest extends SuluTestCase
     #[Depends('testOrderPages')]
     public function testDelete(string $id): int
     {
-        $this->client->request('DELETE', '/admin/api/pages/' . $id . '?locale=en');
+        $this->client->request('DELETE', '/admin/api/pages/' . $id . '?locale=en&force=true');
         $response = $this->client->getResponse();
         $this->assertHttpStatusCode(204, $response);
 
@@ -833,5 +834,80 @@ class PageControllerTest extends SuluTestCase
     protected function getSnapshotFolder(): string
     {
         return 'responses';
+    }
+
+    /* --- The following tests are independent tests and purge the database on their own --- */
+    public function testDeletePageWithDescendantsWithoutForceReturnsConflict(): void
+    {
+        $this->purgeDatabase();
+        $homepage = $this->createHomepage('homepage-uuid', 'sulu_io');
+
+        $parentPage = $this->createPage('homepage-uuid', [
+            'title' => 'Parent Page',
+            'template' => 'default',
+            'url' => '/parent',
+        ]);
+
+        $childPage = $this->createPage($parentPage->getUuid(), [
+            'title' => 'Child Page',
+            'template' => 'default',
+            'url' => '/parent/child',
+        ]);
+
+        $parentUuid = $parentPage->getUuid();
+        self::getEntityManager()->clear();
+
+        $this->client->request('DELETE', '/admin/api/pages/' . $parentUuid . '?locale=en');
+        $response = $this->client->getResponse();
+
+        $this->assertHttpStatusCode(409, $response);
+
+        /** @var array{code: int, message: string} $responseData */
+        $responseData = \json_decode((string) $response->getContent(), true);
+
+        $this->assertEquals(RemovePageDependantResourcesFoundException::EXCEPTION_CODE_DEPENDANT_RESOURCES_FOUND, $responseData['code']);
+
+        $this->client->request('DELETE', '/admin/api/pages/' . $parentUuid . '?locale=en&force=true');
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(204, $response);
+    }
+
+    public function testDeletePageWithDescendantsWithForceSucceeds(): void
+    {
+        $this->purgeDatabase();
+        $homepage = $this->createHomepage('homepage-uuid-2', 'sulu_io');
+
+        $parentPage = $this->createPage('homepage-uuid-2', [
+            'title' => 'Parent Page',
+            'template' => 'default',
+            'url' => '/parent',
+        ]);
+
+        $child = $this->createPage($parentPage->getUuid(), [
+            'title' => 'Child Page',
+            'template' => 'default',
+            'url' => '/parent/child',
+        ]);
+
+        $grandchild = $this->createPage($child->getUuid(), [
+            'title' => 'Grandchild Page',
+            'template' => 'default',
+            'url' => '/parent/child/grandchild',
+        ]);
+
+        $parentUuid = $parentPage->getUuid();
+        $childUuid = $child->getUuid();
+        $grandchildUuid = $grandchild->getUuid();
+
+        self::getEntityManager()->clear();
+
+        $this->client->request('DELETE', '/admin/api/pages/' . $parentUuid . '?locale=en&force=true');
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(204, $response);
+
+        $pageRepository = $this->getContainer()->get('sulu_page.page_repository');
+        $this->assertNull($pageRepository->findOneBy(['uuid' => $parentUuid]));
+        $this->assertNull($pageRepository->findOneBy(['uuid' => $childUuid]));
+        $this->assertNull($pageRepository->findOneBy(['uuid' => $grandchildUuid]));
     }
 }

@@ -16,8 +16,10 @@ use Sulu\Bundle\TrashBundle\Application\TrashManager\TrashManagerInterface;
 use Sulu\Content\Domain\Model\DimensionContentCollection;
 use Sulu\Page\Application\Message\RemovePageMessage;
 use Sulu\Page\Domain\Event\PageRemovedEvent;
+use Sulu\Page\Domain\Exception\RemovePageDependantResourcesFoundException;
 use Sulu\Page\Domain\Model\PageDimensionContent;
 use Sulu\Page\Domain\Model\PageDimensionContentInterface;
+use Sulu\Page\Domain\Model\PageInterface;
 use Sulu\Page\Domain\Repository\PageRepositoryInterface;
 
 /**
@@ -38,6 +40,10 @@ final class RemovePageMessageHandler
     public function __invoke(RemovePageMessage $message): void
     {
         $page = $this->pageRepository->getOneBy($message->getIdentifier());
+
+        if (!$message->getForceRemoveChildren()) {
+            $this->checkDescendantsForDependencyWarning($page);
+        }
 
         $this->pageRepository->remove($page);
 
@@ -70,5 +76,61 @@ final class RemovePageMessageHandler
             $title,
             $context
         ));
+    }
+
+    private function checkDescendantsForDependencyWarning(PageInterface $page): void
+    {
+        $descendantIds = $this->pageRepository->findDescendantIdsById($page->getUuid());
+
+        if (empty($descendantIds)) {
+            return;
+        }
+
+        /** @var array<string> $descendantIds */
+        $descendants = $this->pageRepository->findBy(['uuids' => $descendantIds]);
+        $descendantResources = [];
+        foreach ($descendants as $descendant) {
+            $descendantResources[] = [
+                'uuid' => $descendant->getUuid(),
+                'resourceKey' => PageInterface::RESOURCE_KEY,
+                'depth' => $descendant->getDepth(),
+            ];
+        }
+
+        throw new RemovePageDependantResourcesFoundException(
+            [
+                'id' => $page->getUuid(),
+                'resourceKey' => PageInterface::RESOURCE_KEY,
+            ],
+            $this->groupResourcesByDepth($descendantResources),
+            \count($descendantResources)
+        );
+    }
+
+    /**
+     * @param array<array{uuid: string, resourceKey: string, depth: int}> $resources
+     *
+     * @return array<int, array<array{id: string, resourceKey: string}>>
+     */
+    private function groupResourcesByDepth(array $resources): array
+    {
+        $grouped = [];
+
+        foreach ($resources as $resource) {
+            $depth = $resource['depth'];
+
+            if (!isset($grouped[$depth])) {
+                $grouped[$depth] = [];
+            }
+
+            $grouped[$depth][] = [
+                'id' => $resource['uuid'],
+                'resourceKey' => $resource['resourceKey'],
+            ];
+        }
+
+        \krsort($grouped);
+
+        return \array_values($grouped);
     }
 }

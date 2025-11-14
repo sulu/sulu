@@ -31,6 +31,8 @@
     "sulu_page.delete_draft": "Delete draft",
     "sulu_page.delete_draft_warning_title": "Delete Draft?",
     "sulu_page.delete_draft_warning_text": "Do you really want to delete the draft? All data will be lost. The published page will not be changed.",
+    "sulu_page.delete_page_dependant_warning_title": "{1}Delete one subpage?|]1,Inf[Delete %count% subpages?",
+    "sulu_page.delete_page_dependant_warning_detail": "{1}Are you sure that you also want to delete one subpage?|]1,Inf[Are you sure that you also want to delete %count% subpages?",
     "sulu_page.unpublish_warning_title": "Set to unpublished?",
     "sulu_page.unpublish_warning_text": "Do you really want to unpublish the page? All website links will be lost. This setting can be changed at any time without data loss.",
     "sulu_page.unpublish": "Set to unpublished",

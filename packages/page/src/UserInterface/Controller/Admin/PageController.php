@@ -223,6 +223,7 @@ final class PageController implements SecuredControllerInterface, SecuredObjectC
     public function deleteAction(Request $request, string $id): Response // TODO route should be a uuid
     {
         $deleteLocale = $request->query->getBoolean('deleteLocale', false);
+        $forceRemoveChildren = $request->query->getBoolean('force', false);
         $locale = $this->getLocale($request);
 
         if ($deleteLocale) {
@@ -233,7 +234,7 @@ final class PageController implements SecuredControllerInterface, SecuredObjectC
             return new Response('', 204);
         }
 
-        $message = new RemovePageMessage(['uuid' => $id], $locale);
+        $message = new RemovePageMessage(['uuid' => $id], $locale, $forceRemoveChildren);
         /** @see Sulu\Page\Application\MessageHandler\RemovePageMessageHandler */
         $this->handle(new Envelope($message, [new EnableFlushStamp()]));
 

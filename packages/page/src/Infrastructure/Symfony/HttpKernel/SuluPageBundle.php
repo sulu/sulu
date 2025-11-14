@@ -69,6 +69,7 @@ use Sulu\Page\Infrastructure\Sulu\Search\AdminPageIndexListener;
 use Sulu\Page\Infrastructure\Sulu\Search\AdminPageReindexProvider;
 use Sulu\Page\Infrastructure\Sulu\Search\WebsitePageIndexListener;
 use Sulu\Page\Infrastructure\Sulu\Search\WebsitePageReindexProvider;
+use Sulu\Page\Infrastructure\Sulu\Security\PageDescendantSecurityListener;
 use Sulu\Page\Infrastructure\Sulu\Security\PageSecurityListener;
 use Sulu\Page\Infrastructure\Sulu\Sitemap\PagesSitemapProvider;
 use Sulu\Page\Infrastructure\Sulu\Trash\PageTrashItemHandler;
@@ -347,7 +348,8 @@ final class SuluPageBundle extends AbstractBundle
                 new Reference('doctrine.orm.entity_manager'),
                 new Reference('sulu_content.dimension_content_query_enhancer'),
                 new Reference('sulu_security.access_control_query_enhancer'),
-            ]);
+            ])
+            ->tag('sulu.descendant_provider');
 
         $services->alias(PageRepositoryInterface::class, 'sulu_page.page_repository');
 
@@ -585,6 +587,17 @@ final class SuluPageBundle extends AbstractBundle
             ->class(PageSecurityListener::class)
             ->args([
                 new Reference('sulu_security.security_checker', ContainerInterface::NULL_ON_INVALID_REFERENCE),
+            ])
+            ->tag('kernel.event_subscriber');
+
+        $services->set('sulu_page.page_descendant_security_listener')
+            ->class(PageDescendantSecurityListener::class)
+            ->args([
+                new Reference('sulu_page.page_repository'),
+                new Reference('sulu.repository.access_control'),
+                new Reference('sulu_security.system_store'),
+                new Reference('security.helper', ContainerInterface::NULL_ON_INVALID_REFERENCE),
+                param('sulu_security.permissions'),
             ])
             ->tag('kernel.event_subscriber');
     }

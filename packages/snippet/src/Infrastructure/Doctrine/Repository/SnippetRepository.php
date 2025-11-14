@@ -165,10 +165,10 @@ class SnippetRepository implements SnippetRepositoryInterface
             $queryBuilder->addSelect(\explode(' ', $orderBy->getParts()[0])[0]);
         }
 
-        /** @var iterable<string> $identifiers */
-        $identifiers = $queryBuilder->getQuery()->getResult();
+        /** @var array<array{uuid: string}> $result */
+        $result = $queryBuilder->getQuery()->getResult();
 
-        return $identifiers;
+        return \array_column($result, 'uuid');
     }
 
     public function add(SnippetInterface $snippet): void
