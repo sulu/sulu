@@ -22,6 +22,7 @@ class ResourceLocator extends React.Component<FieldTypeProps<?string>> {
     @observable partsChangedSinceRefresh: boolean = false;
 
     partsChangeDisposer: ?() => mixed;
+    finishHandlerDisposer: ?() => mixed;
 
     @computed get parts(): {[string]: mixed} {
         const {
@@ -45,12 +46,13 @@ class ResourceLocator extends React.Component<FieldTypeProps<?string>> {
 
     @computed get enableAutoGeneration(): boolean {
         const {
+            disabled,
             formInspector: {
                 id,
             },
         } = this.props;
 
-        return !id && !this.inputChanged && Object.keys(this.parts).length > 0;
+        return !id && !disabled && !this.inputChanged && Object.keys(this.parts).length > 0;
     }
 
     @computed get enableRefreshButton(): boolean {
@@ -92,21 +94,31 @@ class ResourceLocator extends React.Component<FieldTypeProps<?string>> {
             {equals: comparer.structural}
         );
 
-        formInspector.addFinishFieldHandler(action((finishedFieldDataPath, finishedFieldSchemaPath) => {
-            const {tags: finishedFieldTags} = formInspector.getSchemaEntryByPath(finishedFieldSchemaPath) || {};
-            if (!finishedFieldTags || !finishedFieldTags.some((tag) => tag.name === PART_TAG)) {
-                return;
-            }
+        this.finishHandlerDisposer = formInspector.addFinishFieldHandler(
+            action((finishedFieldDataPath, finishedFieldSchemaPath) => {
+                const {tags: finishedFieldTags} = formInspector.getSchemaEntryByPath(finishedFieldSchemaPath) || {};
 
-            if (this.enableAutoGeneration) {
-                this.refreshResourceLocator();
-            }
-        }));
+                if (!finishedFieldTags || !finishedFieldTags.some((tag) => tag.name === PART_TAG)) {
+                    return;
+                }
+
+                if (this.enableAutoGeneration) {
+                    this.refreshResourceLocator();
+                }
+            })
+        );
+
+        if (this.enableAutoGeneration && this.props.formInspector.formStore?.dirty) {
+            this.refreshResourceLocator();
+        }
     }
 
     componentWillUnmount() {
         if (this.partsChangeDisposer) {
             this.partsChangeDisposer();
+        }
+        if (this.finishHandlerDisposer) {
+            this.finishHandlerDisposer();
         }
     }
 
@@ -115,6 +127,7 @@ class ResourceLocator extends React.Component<FieldTypeProps<?string>> {
             fieldTypeOptions: {
                 generationUrl,
                 resourceStorePropertiesToRequest = {},
+                requestParameters = {},
             },
             formInspector,
             onChange,
@@ -126,6 +139,10 @@ class ResourceLocator extends React.Component<FieldTypeProps<?string>> {
         } = this.props;
 
         const requestOptions = {...formInspector.options};
+
+        Object.entries(requestParameters).forEach(([parameterName, parameterValue]) => {
+            requestOptions[parameterName] = parameterValue;
+        });
 
         Object.entries(resourceStorePropertiesToRequest).forEach(([propertyName, parameterName]) => {
             const propertyValue = toJS(formInspector.getValueByPath('/' + propertyName));

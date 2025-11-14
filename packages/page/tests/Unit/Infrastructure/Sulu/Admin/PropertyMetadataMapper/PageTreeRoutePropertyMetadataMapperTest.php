@@ -79,7 +79,7 @@ class PageTreeRoutePropertyMetadataMapperTest extends TestCase
                 'path' => ['type' => 'string'],
                 'suffix' => ['type' => 'string'],
             ],
-            'required' => ['page'],
+            'required' => ['page', 'suffix'],
         ], $jsonSchema);
     }
 }

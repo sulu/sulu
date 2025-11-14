@@ -51,6 +51,7 @@ final readonly class ResourceLocatorGenerateController
         $parentResourceId = $payload->getString('parentId') ?: null;
         $parentResourceKey = $payload->getString('parentKey') ?: $resourceKey;
         $routeSchema = $payload->getString('routeSchema') ?: null;
+        $relative = $payload->getBoolean('relative');
 
         return new ResourceLocatorRequest(
             $parts,
@@ -61,6 +62,7 @@ final readonly class ResourceLocatorGenerateController
             $parentResourceId,
             $parentResourceKey,
             $routeSchema,
+            $relative,
         );
     }
 }

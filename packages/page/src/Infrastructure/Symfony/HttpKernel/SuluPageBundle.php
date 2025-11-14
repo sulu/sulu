@@ -59,6 +59,7 @@ use Sulu\Page\Infrastructure\Sulu\Content\PageSmartContentProvider;
 use Sulu\Page\Infrastructure\Sulu\Content\PageTeaserProvider;
 use Sulu\Page\Infrastructure\Sulu\Content\PropertyResolver\BlockVisitor\SegmentBlockVisitor;
 use Sulu\Page\Infrastructure\Sulu\Content\PropertyResolver\PageSelectionPropertyResolver;
+use Sulu\Page\Infrastructure\Sulu\Content\PropertyResolver\PageTreeRoutePropertyResolver;
 use Sulu\Page\Infrastructure\Sulu\Content\PropertyResolver\SinglePageSelectionPropertyResolver;
 use Sulu\Page\Infrastructure\Sulu\Content\ResourceLoader\PageResourceLoader;
 use Sulu\Page\Infrastructure\Sulu\Content\Visitor\PageSmartContentFiltersVisitor;
@@ -287,6 +288,10 @@ final class SuluPageBundle extends AbstractBundle
 
         $services->set('sulu_page.single_page_selection_property_resolver')
             ->class(SinglePageSelectionPropertyResolver::class)
+            ->tag('sulu_content.property_resolver');
+
+        $services->set('sulu_page.page_tree_route_property_resolver')
+            ->class(PageTreeRoutePropertyResolver::class)
             ->tag('sulu_content.property_resolver');
 
         $services->set('sulu_page.segment_block_visitor')
