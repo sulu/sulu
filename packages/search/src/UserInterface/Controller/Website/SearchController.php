@@ -39,21 +39,24 @@ class SearchController
         $locale = $this->requestAnalyzer->getCurrentLocalization()->getLocale();
         $webspace = $this->requestAnalyzer->getWebspace();
 
-        $search = $this->engine->createSearchBuilder('website')
-            ->addFilter(Condition::search($query));
-
-        if ($locale) {
-            $search->addFilter(Condition::equal('locale', $locale));
-        }
-
-        $search->addFilter(Condition::equal('webspaces', $webspace->getKey()));
-
-        $search->highlight(['title', 'content'], '<mark>', '</mark>');
-        $result = $search->getResult();
         $hits = [];
 
-        foreach ($result as $document) {
-            $hits[] = $document;
+        if ($query) {
+            $search = $this->engine->createSearchBuilder('website')
+                ->addFilter(Condition::search($query));
+
+            if ($locale) {
+                $search->addFilter(Condition::equal('locale', $locale));
+            }
+
+            $search->addFilter(Condition::equal('webspaces', $webspace->getKey()));
+
+            $search->highlight(['title', 'content'], '<mark>', '</mark>');
+            $result = $search->getResult();
+
+            foreach ($result as $document) {
+                $hits[] = $document;
+            }
         }
 
         $template = $webspace->getTemplate('search', (string) $request->getRequestFormat());
@@ -67,14 +70,6 @@ class SearchController
         $parameters = $this->templateAttributeResolver->resolve($parameters);
 
         $response = new Response($this->twig->render($template, $parameters));
-
-        // we need to set the content type ourselves here
-        // else symfony will use the accept header of the client and the page could be cached with false content-type
-        // see following symfony issue: https://github.com/symfony/symfony/issues/35694
-        $mimeType = $request->getMimeType((string) $request->getRequestFormat());
-        if ($mimeType) {
-            $response->headers->set('Content-Type', $mimeType);
-        }
 
         return $response;
     }
