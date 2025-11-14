@@ -254,9 +254,9 @@ test('Navigate to route for search result item', () => {
             route: {
                 name: 'sulu_page.edit_form',
                 resultToRoute: {
-                    id: 'id',
+                    resourceId: 'id',
                     locale: 'locale',
-                    'properties/webspace_key': 'webspace',
+                    'metadata.webspaceKey': 'webspace',
                 },
             },
         },
@@ -270,6 +270,21 @@ test('Navigate to route for search result item', () => {
                 },
             },
         },
+        article: {
+            resourceKey: 'article',
+            name: 'Article',
+            route: {
+                name: 'sulu_article.article.edit_tabs_{group}',
+                resultToRouteName: {
+                    'metadata.group': 'group',
+                },
+                resultToRoute: {
+                    resourceId: 'id',
+                    locale: 'locale',
+                    'metadata.webspaceKey': 'webspace',
+                },
+            },
+        },
     };
 
     const searchResourcesPromise = Promise.resolve(searchResources);
@@ -279,29 +294,37 @@ test('Navigate to route for search result item', () => {
     searchStore.result = [
         {
             description: 'something',
-            id: 'page::f0a1f99e-3c28-4db9-bc5d-94ed43d8a50f::de',
+            id: 'pages::f0a1f99e-3c28-4db9-bc5d-94ed43d8a50f::de',
             imageUrl: '/image.jgp',
             locale: 'de',
-            properties: {
-                webspace_key: 'example',
-            },
             resourceKey: 'page',
             resourceId: 'f0a1f99e-3c28-4db9-bc5d-94ed43d8a50f',
             title: 'Test1',
             metadata: {
-                webspace_key: 'example',
+                webspaceKey: 'example',
             },
         },
         {
             description: 'something 2',
-            id: 'contact::5',
+            id: '5',
             imageUrl: '/image2.jgp',
             locale: undefined,
             resourceKey: 'contact',
             resourceId: '5',
             title: 'Max Mustermann',
             metadata: {
-                webspace_key: 'example',
+                webspaceKey: 'example',
+            },
+        },
+        {
+            description: 'something article',
+            id: 'articles::019a5d6f-191e-766b-834b-6d1bc4fe4765::en',
+            locale: 'en',
+            resourceKey: 'article',
+            resourceId: '019a5d6f-191e-766b-834b-6d1bc4fe4765',
+            title: 'Test Article',
+            metadata: {
+                group: 'blog',
             },
         },
     ];
@@ -311,13 +334,17 @@ test('Navigate to route for search result item', () => {
 
     return searchResourcesPromise.then(() => {
         search.update();
+        search.find('SearchResult').at(2).find('div').at(0).simulate('click');
+        expect(router.navigate).toHaveBeenLastCalledWith(
+            'sulu_article.article.edit_tabs_blog',
+            {id: '019a5d6f-191e-766b-834b-6d1bc4fe4765', locale: 'en'}
+        );
         search.find('SearchResult').at(1).find('div').at(0).simulate('click');
         expect(router.navigate).toHaveBeenLastCalledWith('sulu_contact.edit_form', {id: '5'});
         search.find('SearchResult').at(0).find('div').at(0).simulate('click');
         expect(router.navigate).toHaveBeenLastCalledWith(
             'sulu_page.edit_form',
-            // Todo: Add webspace key when pages are added to search.
-            {id: 'f0a1f99e-3c28-4db9-bc5d-94ed43d8a50f', locale: 'de', webspace: undefined}
+            {id: 'f0a1f99e-3c28-4db9-bc5d-94ed43d8a50f', locale: 'de', webspace: 'example'}
         );
     });
 });

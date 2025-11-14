@@ -6,12 +6,12 @@ import {Icon, Loader} from 'sulu-admin-bundle/components';
 import Pagination from 'sulu-admin-bundle/components/Pagination';
 import {Router} from 'sulu-admin-bundle/services';
 import {translate} from 'sulu-admin-bundle/utils';
+import jexl from 'jexl';
 import searchStore from './stores/searchStore';
 import searchResourceStore from './stores/searchResourceStore';
 import SearchField from './SearchField';
 import SearchResult from './SearchResult';
 import searchStyles from './search.scss';
-import jexl from 'jexl';
 import searchResultStyles from './searchResult.scss';
 import type {SearchResource} from './types';
 
@@ -71,9 +71,12 @@ class Search extends React.Component<Props> {
         } = this.searchResources[result.resourceKey];
 
         let route = routeName;
-        Object.keys(resultToRouteName).forEach((resultPath) => {
-            route = route.replace(`{${resultToRouteName[resultPath]}}`, `${jexl.evalSync(resultPath, result)}`);
-        });
+
+        if (resultToRouteName) {
+            Object.keys(resultToRouteName).forEach((resultPath) => {
+                route = route.replace(`{${resultToRouteName[resultPath]}}`, `${jexl.evalSync(resultPath, result)}`);
+            });
+        }
 
         const {router} = this.props;
         router.navigate(
