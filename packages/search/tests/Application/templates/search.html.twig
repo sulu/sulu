@@ -1,0 +1,11 @@
+<h2>Showing {{ hits|length }} results for "{{ query }}"</h2>
+
+<ul>
+    {% for i, hit in hits %}
+        <li>
+            <a href="{{ hit.url }}" class="search-result">
+                {{- hit._formatted.title|default(hit.title)|raw -}}
+            </a>
+        </li>
+    {% endfor %}
+</ul>

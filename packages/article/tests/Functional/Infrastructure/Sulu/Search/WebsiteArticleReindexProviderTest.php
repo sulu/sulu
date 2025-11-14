@@ -45,7 +45,7 @@ class WebsiteArticleReindexProviderTest extends SuluTestCase
     protected function setUp(): void
     {
         $this->entityManager = $this->getEntityManager();
-        $this->provider = new WebsiteArticleReindexProvider($this->entityManager);
+        $this->provider = new WebsiteArticleReindexProvider($this->entityManager, ['default' => 'sulu-io'], null);
         $this->purgeDatabase();
     }
 
@@ -163,7 +163,115 @@ class WebsiteArticleReindexProviderTest extends SuluTestCase
                 'resourceKey' => ArticleInterface::RESOURCE_KEY,
                 'resourceId' => $article2->getUuid(),
                 'locale' => 'en',
-                'webspaces' => [],
+                'webspaces' => ['sulu-io'],
+                'title' => 'Article TWO EN',
+                'url' => '/test-article-two-en',
+                'content' => [],
+                'mediaId' => '',
+                'authoredAt' => (new \DateTimeImmutable($changedDateString2))->format('c'),
+            ],
+        ];
+
+        \usort($expectedResult, fn ($a, $b) => \strcmp($a['id'], $b['id']));
+        \usort($results, fn ($a, $b) => \strcmp($a['id'], $b['id']));
+
+        $this->assertSame(
+            $expectedResult,
+            $results,
+        );
+    }
+
+    public function testProvideAllNoWebspaces(): void
+    {
+        $article1 = static::createArticle([
+            'en' => [
+                'live' => [
+                    'template' => 'article',
+                    'title' => 'Article One EN',
+                    'url' => '/test-article',
+                    'authored' => '1995-11-29T12:00:00+00:00',
+                    'customizeWebspaceSettings' => false,
+                ],
+            ],
+        ]);
+
+        $article2 = static::createArticle([
+            'de' => [
+                'live' => [
+                    'template' => 'article',
+                    'title' => 'Article TWO DE',
+                    'url' => '/test-article-two',
+                    'customizeWebspaceSettings' => false,
+                ],
+            ],
+            'en' => [
+                'live' => [
+                    'template' => 'article',
+                    'title' => 'Article TWO EN',
+                    'url' => '/test-article-two-en',
+                    'customizeWebspaceSettings' => false,
+                ],
+            ],
+        ]);
+
+        $createdAt = '2020-06-01 15:30:00';
+        $changedDateString1 = '2023-06-01 15:30:00';
+        $changedDateString2 = '2024-11-29 15:30:00';
+
+        $connection = self::getEntityManager()->getConnection();
+        $sql = 'UPDATE ar_article_dimension_contents SET changed = :changed, created = :created WHERE articleUuid = :uuid';
+
+        $connection->executeStatement($sql, [
+            'changed' => $changedDateString1,
+            'created' => $createdAt,
+            'uuid' => $article1->getUuid(),
+            'stage' => DimensionContentInterface::STAGE_LIVE,
+        ]);
+
+        $connection->executeStatement($sql, [
+            'changed' => $changedDateString2,
+            'created' => $createdAt,
+            'uuid' => $article2->getUuid(),
+            'stage' => DimensionContentInterface::STAGE_LIVE,
+        ]);
+
+        $config = ReindexConfig::create()->withIndex('website');
+        /** @var array<array{id: string}> $results */
+        $results = \iterator_to_array($this->provider->provide($config));
+
+        $this->assertCount(3, $results);
+
+        $expectedResult = [
+            [
+                'id' => ArticleInterface::RESOURCE_KEY . '::' . $article1->getUuid() . '::en',
+                'resourceKey' => ArticleInterface::RESOURCE_KEY,
+                'resourceId' => $article1->getUuid(),
+                'locale' => 'en',
+                'webspaces' => ['sulu-io'],
+                'title' => 'Article One EN',
+                'url' => '/test-article',
+                'content' => [],
+                'mediaId' => '',
+                'authoredAt' => (new \DateTimeImmutable('1995-11-29 12:00:00'))->format('c'),
+            ],
+            [
+                'id' => ArticleInterface::RESOURCE_KEY . '::' . $article2->getUuid() . '::de',
+                'resourceKey' => ArticleInterface::RESOURCE_KEY,
+                'resourceId' => $article2->getUuid(),
+                'locale' => 'de',
+                'webspaces' => ['sulu-io'],
+                'title' => 'Article TWO DE',
+                'url' => '/test-article-two',
+                'content' => [],
+                'mediaId' => '',
+                'authoredAt' => (new \DateTimeImmutable($changedDateString2))->format('c'),
+            ],
+            [
+                'id' => ArticleInterface::RESOURCE_KEY . '::' . $article2->getUuid() . '::en',
+                'resourceKey' => ArticleInterface::RESOURCE_KEY,
+                'resourceId' => $article2->getUuid(),
+                'locale' => 'en',
+                'webspaces' => ['sulu-io'],
                 'title' => 'Article TWO EN',
                 'url' => '/test-article-two-en',
                 'content' => [],

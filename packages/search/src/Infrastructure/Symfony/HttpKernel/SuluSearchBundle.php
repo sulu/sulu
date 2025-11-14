@@ -16,6 +16,7 @@ namespace Sulu\Search\Infrastructure\Symfony\HttpKernel;
 use Sulu\Search\Application\MessageHandler\ReindexMessageHandler;
 use Sulu\Search\Infrastructure\Sulu\Admin\SearchAdmin;
 use Sulu\Search\UserInterface\Controller\Admin\SearchController;
+use Sulu\Search\UserInterface\Controller\Website\SearchController as WebsiteSearchController;
 use Symfony\Component\Config\Definition\Configurator\DefinitionConfigurator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
@@ -120,6 +121,17 @@ final class SuluSearchBundle extends AbstractBundle
                 new Reference('security.token_storage'),
             ])
             ->tag('sulu.context', ['context' => 'admin']);
+
+        $services->set('sulu_search.controller.website_search')
+            ->class(WebsiteSearchController::class)
+            ->public()
+            ->args([
+                new Reference('cmsig_seal.engine.default'),
+                new Reference('sulu_core.webspace.request_analyzer'),
+                new Reference('twig'),
+                new Reference('sulu_website.resolver.template_attribute'),
+            ])
+            ->tag('sulu.context', ['context' => 'website']);
     }
 
     /**
