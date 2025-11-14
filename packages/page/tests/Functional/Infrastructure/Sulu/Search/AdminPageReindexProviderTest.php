@@ -108,6 +108,9 @@ class AdminPageReindexProviderTest extends SuluTestCase
                 'createdAt' => (new \DateTimeImmutable($createdAt))->format('c'),
                 'title' => 'Test Schnipsel 2',
                 'locale' => 'de',
+                'metadata' => [
+                    'webspaceKey' => 'sulu-io',
+                ],
             ],
             [
                 'id' => PageInterface::RESOURCE_KEY . '::' . $page1->getUuid() . '::en',
@@ -117,6 +120,9 @@ class AdminPageReindexProviderTest extends SuluTestCase
                 'createdAt' => (new \DateTimeImmutable($createdAt))->format('c'),
                 'title' => 'Test Page',
                 'locale' => 'en',
+                'metadata' => [
+                    'webspaceKey' => 'sulu-io',
+                ],
             ],
             [
                 'id' => PageInterface::RESOURCE_KEY . '::' . $page2->getUuid() . '::en',
@@ -126,6 +132,9 @@ class AdminPageReindexProviderTest extends SuluTestCase
                 'createdAt' => (new \DateTimeImmutable($createdAt))->format('c'),
                 'title' => 'Test Page 2',
                 'locale' => 'en',
+                'metadata' => [
+                    'webspaceKey' => 'sulu-io',
+                ],
             ],
         ];
 

@@ -230,7 +230,7 @@ class SuluContactExtension extends Extension implements PrependExtensionInterfac
                                 'route' => [
                                     'name' => ContactAdmin::ACCOUNT_EDIT_FORM_VIEW,
                                     'resultToRoute' => [
-                                        'id' => 'id',
+                                        'resourceId' => 'id',
                                     ],
                                 ],
                                 'securityContext' => ContactAdmin::ACCOUNT_SECURITY_CONTEXT,
@@ -241,7 +241,7 @@ class SuluContactExtension extends Extension implements PrependExtensionInterfac
                                 'route' => [
                                     'name' => ContactAdmin::CONTACT_EDIT_FORM_VIEW,
                                     'resultToRoute' => [
-                                        'id' => 'id',
+                                        'resourceId' => 'id',
                                     ],
                                 ],
                                 'securityContext' => ContactAdmin::CONTACT_SECURITY_CONTEXT,

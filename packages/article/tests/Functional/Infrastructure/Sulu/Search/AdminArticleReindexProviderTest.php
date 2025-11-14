@@ -18,6 +18,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Article\Domain\Model\ArticleInterface;
 use Sulu\Article\Infrastructure\Sulu\Search\AdminArticleReindexProvider;
 use Sulu\Article\Tests\Traits\CreateArticleTrait;
+use Sulu\Bundle\AdminBundle\Metadata\GroupProviderInterface;
 use Sulu\Bundle\TestBundle\Testing\SetGetPrivatePropertyTrait;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
@@ -44,7 +45,9 @@ class AdminArticleReindexProviderTest extends SuluTestCase
     protected function setUp(): void
     {
         $this->entityManager = $this->getEntityManager();
-        $this->provider = new AdminArticleReindexProvider($this->entityManager);
+        /** @var GroupProviderInterface $groupProvider */
+        $groupProvider = $this->getContainer()->get('sulu_admin.metadata_group_provider');
+        $this->provider = new AdminArticleReindexProvider($this->entityManager, $groupProvider);
         $this->purgeDatabase();
     }
 
@@ -121,6 +124,9 @@ class AdminArticleReindexProviderTest extends SuluTestCase
                 'createdAt' => (new \DateTimeImmutable($createdAt))->format('c'),
                 'title' => 'Article One EN',
                 'locale' => 'en',
+                'metadata' => [
+                    'group' => 'default',
+                ],
             ],
             [
                 'id' => ArticleInterface::RESOURCE_KEY . '::' . $article2->getUuid() . '::en',
@@ -130,6 +136,9 @@ class AdminArticleReindexProviderTest extends SuluTestCase
                 'createdAt' => (new \DateTimeImmutable($createdAt))->format('c'),
                 'title' => 'Article TWO EN',
                 'locale' => 'en',
+                'metadata' => [
+                    'group' => 'default',
+                ],
             ],
             [
                 'id' => ArticleInterface::RESOURCE_KEY . '::' . $article2->getUuid() . '::de',
@@ -139,6 +148,9 @@ class AdminArticleReindexProviderTest extends SuluTestCase
                 'createdAt' => (new \DateTimeImmutable($createdAt))->format('c'),
                 'title' => 'Article TWO DE',
                 'locale' => 'de',
+                'metadata' => [
+                    'group' => 'default',
+                ],
             ],
         ];
 

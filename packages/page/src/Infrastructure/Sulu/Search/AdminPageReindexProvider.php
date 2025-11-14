@@ -28,6 +28,7 @@ use Sulu\Page\Domain\Model\PageInterface;
  *     created: \DateTimeImmutable,
  *     title: string,
  *     locale: string,
+ *     webspaceKey: string,
  * }
  *
  * @internal this class is internal no backwards compatibility promise is given for this class
@@ -75,6 +76,9 @@ final class AdminPageReindexProvider implements ReindexProviderInterface
                 'createdAt' => $page['created']->format('c'),
                 'title' => $page['title'],
                 'locale' => $page['locale'],
+                'metadata' => [
+                    'webspaceKey' => $page['webspaceKey'],
+                ],
             ];
         }
     }
@@ -87,11 +91,13 @@ final class AdminPageReindexProvider implements ReindexProviderInterface
     private function loadPages(array $identifiers = []): iterable
     {
         $qb = $this->dimensionContentRepository->createQueryBuilder('dimensionContent')
+            ->leftJoin('dimensionContent.page', 'page')
             ->select('IDENTITY(dimensionContent.page) AS pageId')
             ->addSelect('dimensionContent.created')
             ->addSelect('dimensionContent.changed')
             ->addSelect('dimensionContent.title')
             ->addSelect('dimensionContent.locale')
+            ->addSelect('page.webspaceKey')
             ->where('dimensionContent.stage = :stage')
             ->andWhere('dimensionContent.locale IS NOT NULL')
             ->andWhere('dimensionContent.version = :version');

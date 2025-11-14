@@ -446,6 +446,7 @@ final class SuluArticleBundle extends AbstractBundle
             ->class(AdminArticleReindexProvider::class)
             ->args([
                 new Reference('doctrine.orm.entity_manager'),
+                new Reference('sulu_admin.metadata_group_provider'),
             ])
             ->tag('cmsig_seal.reindex_provider');
     }
@@ -578,9 +579,12 @@ final class SuluArticleBundle extends AbstractBundle
                                 'name' => 'sulu_article.articles',
                                 'icon' => 'su-newspaper',
                                 'route' => [
-                                    'name' => ArticleAdmin::EDIT_TABS_VIEW,
+                                    'name' => ArticleAdmin::EDIT_TABS_VIEW . '_{group}',
+                                    'resultToRouteName' => [
+                                        'metadata.group' => 'group',
+                                    ],
                                     'resultToRoute' => [
-                                        'id' => 'id',
+                                        'resourceId' => 'id',
                                         'locale' => 'locale',
                                     ],
                                 ],

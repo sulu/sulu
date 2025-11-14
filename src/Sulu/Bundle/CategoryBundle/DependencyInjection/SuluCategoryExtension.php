@@ -182,7 +182,7 @@ class SuluCategoryExtension extends Extension implements PrependExtensionInterfa
                                 'route' => [
                                     'name' => 'sulu_category.edit_form',
                                     'resultToRoute' => [
-                                        'id' => 'id',
+                                        'resourceId' => 'id',
                                         'locale' => 'locale',
                                     ],
                                 ],
