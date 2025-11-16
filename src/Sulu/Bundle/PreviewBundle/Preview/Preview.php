@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\PreviewBundle\Preview;
 
-use Doctrine\Common\Cache\Cache;
 use Psr\Cache\CacheItemPoolInterface;
 use Sulu\Bundle\PreviewBundle\Preview\Exception\ProviderNotFoundException;
 use Sulu\Bundle\PreviewBundle\Preview\Exception\TokenNotFoundException;
@@ -26,21 +25,12 @@ class Preview
 {
     public const CONTENT_REPLACER = '<!-- CONTENT-REPLACER -->';
 
-    /**
-     * @var PreviewCache
-     */
-    private $cache;
-
-    /**
-     * @param CacheItemPoolInterface|Cache $cache
-     */
     public function __construct(
         private PreviewObjectProviderRegistryInterface $previewObjectProviderRegistry,
-        $cache,
+        private CacheItemPoolInterface $cache,
         private PreviewRendererInterface $renderer,
         private int $cacheLifeTime = 3600
     ) {
-        $this->cache = new PreviewCache($cache);
     }
 
     /**
@@ -83,7 +73,7 @@ class Preview
             return;
         }
 
-        $this->cache->delete($token);
+        $this->cache->deleteItem($token);
     }
 
     /**
@@ -91,7 +81,7 @@ class Preview
      */
     public function exists(string $token): bool
     {
-        return $this->cache->contains($token);
+        return $this->cache->hasItem($token);
     }
 
     /**
@@ -254,7 +244,15 @@ class Preview
             'objectClass' => $objectType,
         ];
 
-        $this->cache->save($item->getToken(), \json_encode($data), $this->cacheLifeTime);
+        $id = $item->getToken();
+        $cacheItem = $this->cache->getItem($id);
+        $cacheItem->set(\json_encode($data));
+
+        if (0 !== $this->cacheLifeTime) {
+            $cacheItem->expiresAfter($this->cacheLifeTime);
+        }
+
+        $this->cache->save($cacheItem);
     }
 
     protected function fetch(string $token): PreviewCacheItem
@@ -262,6 +260,9 @@ class Preview
         if (!$this->exists($token)) {
             throw new TokenNotFoundException($token);
         }
+
+        /** @var string $cachedContent */
+        $cachedContent = $this->cache->getItem($token)->get();
 
         /**
          * @var array{
@@ -274,7 +275,7 @@ class Preview
          *     objectClass: string,
          * } $data
          */
-        $data = \json_decode($this->cache->fetch($token), true);
+        $data = \json_decode($cachedContent, true);
         $provider = $this->getProvider($data['providerKey']);
 
         $object = $provider->getDefaults(new PreviewContext($data['id'], $data['locale']));

@@ -1055,6 +1055,7 @@ Removed classes / services / interfaces / traits:
 - `Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStorePoolInterface`
 - `Sulu\Bundle\WebsiteBundle\ReferenceStore\WebspaceReferenceStore`
 - `Sulu\Bundle\MediaBundle\DependencyInjection\ImageTransformationCompilerPass` (replaced by `tagged_locator`)
+- `Sulu\Bundle\PreviewBundle\Preview\PreviewCache` -> (using Symfony cache now)
 
 Removed deprecated functions and properties:
 
