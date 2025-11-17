@@ -11,7 +11,7 @@
 
 namespace Sulu\Bundle\PreviewBundle\Infrastructure\Doctrine\Repository;
 
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Sulu\Bundle\PreviewBundle\Domain\Model\PreviewLinkInterface;
 use Sulu\Bundle\PreviewBundle\Domain\Repository\PreviewLinkRepositoryInterface;
@@ -25,7 +25,7 @@ class PreviewLinkRepository implements PreviewLinkRepositoryInterface
     protected $entityRepository;
 
     public function __construct(
-        protected EntityManager $entityManager,
+        protected EntityManagerInterface $entityManager,
     ) {
         $this->entityRepository = $entityManager->getRepository(PreviewLinkInterface::class);
     }

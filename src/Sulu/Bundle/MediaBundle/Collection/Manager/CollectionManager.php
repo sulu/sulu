@@ -11,7 +11,7 @@
 
 namespace Sulu\Bundle\MediaBundle\Collection\Manager;
 
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
 use Sulu\Bundle\ContactBundle\Entity\ContactInterface;
@@ -76,7 +76,7 @@ class CollectionManager implements CollectionManagerInterface
         private MediaRepositoryInterface $mediaRepository,
         private FormatManagerInterface $formatManager,
         private UserRepositoryInterface $userRepository,
-        private EntityManager $em,
+        private EntityManagerInterface $em,
         private DomainEventCollectorInterface $domainEventCollector,
         private ?TokenStorageInterface $tokenStorage,
         private ?TrashManagerInterface $trashManager,

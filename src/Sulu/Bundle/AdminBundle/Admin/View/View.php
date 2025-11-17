@@ -104,6 +104,9 @@ class View
         return $this;
     }
 
+    /**
+     * @param mixed $value
+     */
     public function setOption(string $key, $value): self
     {
         $this->options[$key] = $value;

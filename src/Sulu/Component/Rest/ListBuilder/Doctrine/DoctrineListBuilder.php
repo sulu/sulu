@@ -11,7 +11,7 @@
 
 namespace Sulu\Component\Rest\ListBuilder\Doctrine;
 
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
 use Sulu\Bundle\SecurityBundle\AccessControl\AccessControlQueryEnhancer;
 use Sulu\Component\Rest\ListBuilder\AbstractListBuilder;
@@ -115,7 +115,7 @@ class DoctrineListBuilder extends AbstractListBuilder
      * @param class-string $entityName
      */
     public function __construct(
-        private EntityManager $em,
+        private EntityManagerInterface $em,
         private $entityName,
         FilterTypeRegistry $filterTypeRegistry,
         private EventDispatcherInterface $eventDispatcher,
