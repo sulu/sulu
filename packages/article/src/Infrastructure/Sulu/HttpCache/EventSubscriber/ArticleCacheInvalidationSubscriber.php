@@ -18,11 +18,15 @@ use Sulu\Article\Domain\Event\ArticleWorkflowTransitionAppliedEvent;
 use Sulu\Article\Domain\Model\ArticleDimensionContentInterface;
 use Sulu\Article\Domain\Model\ArticleInterface;
 use Sulu\Bundle\HttpCacheBundle\Cache\CacheManagerInterface;
+use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
+use Sulu\Component\Webspace\Webspace;
 use Sulu\Content\Application\ContentAggregator\ContentAggregatorInterface;
 use Sulu\Content\Domain\Exception\ContentNotFoundException;
 use Sulu\Content\Domain\Model\WorkflowInterface;
+use Sulu\Route\Application\Routing\Generator\RouteGeneratorInterface;
 use Sulu\Route\Domain\Repository\RouteRepositoryInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * @internal No BC promise is given for this class. Create your own event subscriber or use the
@@ -33,7 +37,9 @@ class ArticleCacheInvalidationSubscriber implements EventSubscriberInterface
     public function __construct(
         private ?CacheManagerInterface $cacheManager,
         private RouteRepositoryInterface $routeRepository,
-        private ContentAggregatorInterface $contentAggregator
+        private ContentAggregatorInterface $contentAggregator,
+        private RouteGeneratorInterface $routeGenerator,
+        private WebspaceManagerInterface $webspaceManager
     ) {
     }
 
@@ -59,10 +65,13 @@ class ArticleCacheInvalidationSubscriber implements EventSubscriberInterface
         }
 
         $article = $event->getArticle();
-        $uuid = $article->getUuid();
 
-        $this->cacheManager->invalidateTag($uuid);
-        $this->invalidateArticlePaths($uuid, $event->getResourceLocale());
+        $this->cacheManager->invalidateTag($article->getUuid());
+
+        if (!$this->cacheManager->supportsTags()) {
+            $this->invalidateArticlePaths($article, $event->getResourceLocale());
+        }
+
         $this->invalidateArticleExcerpt($article, $event->getResourceLocale());
     }
 
@@ -75,7 +84,7 @@ class ArticleCacheInvalidationSubscriber implements EventSubscriberInterface
         $this->cacheManager->invalidateTag($event->getResourceId());
     }
 
-    private function invalidateArticlePaths(string $uuid, ?string $locale): void
+    private function invalidateArticlePaths(ArticleInterface $article, ?string $locale): void
     {
         if (!$locale || !$this->cacheManager) {
             return;
@@ -83,12 +92,28 @@ class ArticleCacheInvalidationSubscriber implements EventSubscriberInterface
 
         $routes = $this->routeRepository->findBy([
             'resourceKey' => ArticleInterface::RESOURCE_KEY,
-            'resourceId' => $uuid,
+            'resourceId' => $article->getUuid(),
             'locale' => $locale,
         ]);
 
-        foreach ($routes as $route) {
-            $this->cacheManager->invalidatePath($route->getSlug());
+        /** @var Webspace $webspace */
+        foreach ($this->webspaceManager->getWebspaceCollection() as $webspace) {
+            if (null === $webspace->getLocalization($locale)) {
+                continue;
+            }
+
+            $webspaceKey = $webspace->getKey();
+
+            foreach ($routes as $route) {
+                $url = $this->routeGenerator->generate(
+                    $route->getSlug(),
+                    $route->getLocale(),
+                    $webspaceKey,
+                    UrlGeneratorInterface::ABSOLUTE_URL
+                );
+
+                $this->cacheManager->invalidatePath($url);
+            }
         }
     }
 

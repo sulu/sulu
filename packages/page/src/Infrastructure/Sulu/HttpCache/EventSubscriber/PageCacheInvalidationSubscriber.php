@@ -21,8 +21,10 @@ use Sulu\Page\Domain\Event\PageRemovedEvent;
 use Sulu\Page\Domain\Event\PageWorkflowTransitionAppliedEvent;
 use Sulu\Page\Domain\Model\PageDimensionContentInterface;
 use Sulu\Page\Domain\Model\PageInterface;
+use Sulu\Route\Application\Routing\Generator\RouteGeneratorInterface;
 use Sulu\Route\Domain\Repository\RouteRepositoryInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * @internal No BC promise is given for this class. Create your own event subscriber or use the
@@ -33,7 +35,8 @@ class PageCacheInvalidationSubscriber implements EventSubscriberInterface
     public function __construct(
         private ?CacheManagerInterface $cacheManager,
         private RouteRepositoryInterface $routeRepository,
-        private ContentAggregatorInterface $contentAggregator
+        private ContentAggregatorInterface $contentAggregator,
+        private RouteGeneratorInterface $routeGenerator
     ) {
     }
 
@@ -62,7 +65,11 @@ class PageCacheInvalidationSubscriber implements EventSubscriberInterface
         $uuid = $page->getUuid();
 
         $this->cacheManager->invalidateTag($uuid);
-        $this->invalidatePagePaths($uuid, $event->getResourceLocale());
+
+        if (!$this->cacheManager->supportsTags()) {
+            $this->invalidatePagePaths($uuid, $event->getResourceLocale());
+        }
+
         $this->invalidatePageExcerpt($page, $event->getResourceLocale());
     }
 
@@ -88,7 +95,14 @@ class PageCacheInvalidationSubscriber implements EventSubscriberInterface
         ]);
 
         foreach ($routes as $route) {
-            $this->cacheManager->invalidatePath($route->getSlug());
+            $url = $this->routeGenerator->generate(
+                $route->getSlug(),
+                $route->getLocale(),
+                $route->getSite(),
+                UrlGeneratorInterface::ABSOLUTE_URL
+            );
+
+            $this->cacheManager->invalidatePath($url);
         }
     }
 

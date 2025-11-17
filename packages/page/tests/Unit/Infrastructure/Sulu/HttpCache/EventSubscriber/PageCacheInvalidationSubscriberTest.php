@@ -28,8 +28,10 @@ use Sulu\Page\Domain\Model\Page;
 use Sulu\Page\Domain\Model\PageDimensionContent;
 use Sulu\Page\Domain\Model\PageInterface;
 use Sulu\Page\Infrastructure\Sulu\HttpCache\EventSubscriber\PageCacheInvalidationSubscriber;
+use Sulu\Route\Application\Routing\Generator\RouteGeneratorInterface;
 use Sulu\Route\Domain\Model\Route;
 use Sulu\Route\Domain\Repository\RouteRepositoryInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class PageCacheInvalidationSubscriberTest extends TestCase
 {
@@ -50,18 +52,26 @@ class PageCacheInvalidationSubscriberTest extends TestCase
      */
     private ObjectProphecy $contentAggregator;
 
+    /**
+     * @var ObjectProphecy<RouteGeneratorInterface>
+     */
+    private ObjectProphecy $routeGenerator;
+
     private PageCacheInvalidationSubscriber $subscriber;
 
     protected function setUp(): void
     {
         $this->cacheManager = $this->prophesize(CacheManagerInterface::class);
+        $this->cacheManager->supportsTags()->willReturn(true);
         $this->routeRepository = $this->prophesize(RouteRepositoryInterface::class);
         $this->contentAggregator = $this->prophesize(ContentAggregatorInterface::class);
+        $this->routeGenerator = $this->prophesize(RouteGeneratorInterface::class);
 
         $this->subscriber = new PageCacheInvalidationSubscriber(
             $this->cacheManager->reveal(),
             $this->routeRepository->reveal(),
-            $this->contentAggregator->reveal()
+            $this->contentAggregator->reveal(),
+            $this->routeGenerator->reveal()
         );
     }
 
@@ -113,16 +123,24 @@ class PageCacheInvalidationSubscriberTest extends TestCase
             'locale' => 'en',
         ])->willReturn([$route1, $route2]);
 
+        $this->cacheManager->supportsTags()->willReturn(false);
+
         $this->contentAggregator->aggregate($page, [
             'locale' => 'en',
             'stage' => 'live',
         ])->willThrow(ContentNotFoundException::class);
 
+        $this->routeGenerator->generate('/en/test-page', 'en', null, UrlGeneratorInterface::ABSOLUTE_URL)
+            ->willReturn('https://example.com/en/test-page');
+
+        $this->routeGenerator->generate('/en/old-url', 'en', null, UrlGeneratorInterface::ABSOLUTE_URL)
+            ->willReturn('https://example.com/en/old-url');
+
         $this->cacheManager->invalidateTag('page-uuid-123')
             ->shouldBeCalled();
-        $this->cacheManager->invalidatePath('/en/test-page')
+        $this->cacheManager->invalidatePath('https://example.com/en/test-page')
             ->shouldBeCalled();
-        $this->cacheManager->invalidatePath('/en/old-url')
+        $this->cacheManager->invalidatePath('https://example.com/en/old-url')
             ->shouldBeCalled();
 
         $this->subscriber->onWorkflowTransition($event);
