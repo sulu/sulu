@@ -23,32 +23,23 @@ class FormMetadata extends AbstractMetadata
      * @var array<string, string>
      */
     #[Exclude]
-    private $titles = [];
+    private array $titles = [];
 
     /**
      * @var ItemMetadata[]
      */
     #[SerializedName('form')]
     #[Exclude(if: "'admin_form_metadata_keys_only' in context.getAttribute('groups')")]
-    private $items = [];
+    private array $items = [];
 
-    /**
-     * @var SchemaMetadata
-     */
     #[Exclude(if: "'admin_form_metadata_keys_only' in context.getAttribute('groups')")]
-    private $schema;
+    private SchemaMetadata $schema;
 
-    /**
-     * @var TemplateMetadata|null
-     */
     #[Exclude()]
-    private $template;
+    private ?TemplateMetadata $template;
 
-    /**
-     * @var string
-     */
     #[Exclude(if: "'admin_form_metadata_keys_only' in context.getAttribute('groups')")]
-    private $key;
+    private string $key;
 
     /**
      * @var string|null
@@ -86,10 +77,7 @@ class FormMetadata extends AbstractMetadata
         return $this->key;
     }
 
-    /**
-     * @return void
-     */
-    public function setKey(string $key)
+    public function setKey(string $key): void
     {
         $this->key = $key;
     }
