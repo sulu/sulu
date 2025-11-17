@@ -65,7 +65,11 @@ class PageCacheInvalidationSubscriber implements EventSubscriberInterface
         $uuid = $page->getUuid();
 
         $this->cacheManager->invalidateTag($uuid);
-        $this->invalidatePagePaths($uuid, $event->getResourceLocale());
+
+        if (!$this->cacheManager->supportsTags()) {
+            $this->invalidatePagePaths($uuid, $event->getResourceLocale());
+        }
+
         $this->invalidatePageExcerpt($page, $event->getResourceLocale());
     }
 

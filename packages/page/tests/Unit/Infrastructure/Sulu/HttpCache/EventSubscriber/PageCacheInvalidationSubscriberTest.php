@@ -62,6 +62,7 @@ class PageCacheInvalidationSubscriberTest extends TestCase
     protected function setUp(): void
     {
         $this->cacheManager = $this->prophesize(CacheManagerInterface::class);
+        $this->cacheManager->supportsTags()->willReturn(true);
         $this->routeRepository = $this->prophesize(RouteRepositoryInterface::class);
         $this->contentAggregator = $this->prophesize(ContentAggregatorInterface::class);
         $this->routeGenerator = $this->prophesize(RouteGeneratorInterface::class);
@@ -121,6 +122,8 @@ class PageCacheInvalidationSubscriberTest extends TestCase
             'resourceId' => 'page-uuid-123',
             'locale' => 'en',
         ])->willReturn([$route1, $route2]);
+
+        $this->cacheManager->supportsTags()->willReturn(false);
 
         $this->contentAggregator->aggregate($page, [
             'locale' => 'en',

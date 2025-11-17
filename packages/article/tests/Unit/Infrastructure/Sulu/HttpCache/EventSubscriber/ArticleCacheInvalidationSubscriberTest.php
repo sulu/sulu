@@ -25,6 +25,10 @@ use Sulu\Article\Infrastructure\Sulu\HttpCache\EventSubscriber\ArticleCacheInval
 use Sulu\Bundle\CategoryBundle\Entity\Category;
 use Sulu\Bundle\HttpCacheBundle\Cache\CacheManagerInterface;
 use Sulu\Bundle\TagBundle\Entity\Tag;
+use Sulu\Component\Localization\Localization;
+use Sulu\Component\Webspace\Manager\WebspaceCollection;
+use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
+use Sulu\Component\Webspace\Webspace;
 use Sulu\Content\Application\ContentAggregator\ContentAggregatorInterface;
 use Sulu\Content\Domain\Exception\ContentNotFoundException;
 use Sulu\Content\Domain\Model\WorkflowInterface;
@@ -57,20 +61,28 @@ class ArticleCacheInvalidationSubscriberTest extends TestCase
      */
     private ObjectProphecy $routeGenerator;
 
+    /**
+     * @var ObjectProphecy<WebspaceManagerInterface>
+     */
+    private ObjectProphecy $webspaceManager;
+
     private ArticleCacheInvalidationSubscriber $subscriber;
 
     protected function setUp(): void
     {
         $this->cacheManager = $this->prophesize(CacheManagerInterface::class);
+        $this->cacheManager->supportsTags()->willReturn(true); // Default: tags supported, no path invalidation
         $this->routeRepository = $this->prophesize(RouteRepositoryInterface::class);
         $this->contentAggregator = $this->prophesize(ContentAggregatorInterface::class);
         $this->routeGenerator = $this->prophesize(RouteGeneratorInterface::class);
+        $this->webspaceManager = $this->prophesize(WebspaceManagerInterface::class);
 
         $this->subscriber = new ArticleCacheInvalidationSubscriber(
             $this->cacheManager->reveal(),
             $this->routeRepository->reveal(),
             $this->contentAggregator->reveal(),
-            $this->routeGenerator->reveal()
+            $this->routeGenerator->reveal(),
+            $this->webspaceManager->reveal()
         );
     }
 
@@ -120,22 +132,53 @@ class ArticleCacheInvalidationSubscriberTest extends TestCase
             'locale' => 'en',
         ])->willReturn([$route1, $route2]);
 
+        $this->cacheManager->supportsTags()->willReturn(false);
+        $localization = $this->prophesize(Localization::class);
+
+        $webspace1 = $this->prophesize(Webspace::class);
+        $webspace1->getLocalization('en')->willReturn($localization->reveal());
+        $webspace1->getKey()->willReturn('sulu_io');
+
+        $webspace2 = $this->prophesize(Webspace::class);
+        $webspace2->getLocalization('en')->willReturn($localization->reveal());
+        $webspace2->getKey()->willReturn('blog');
+
+        $webspace3 = $this->prophesize(Webspace::class);
+        $webspace3->getLocalization('en')->willReturn(null); // Does not support 'en'
+
+        $webspaceCollection = new WebspaceCollection([
+            'sulu_io' => $webspace1->reveal(),
+            'blog' => $webspace2->reveal(),
+            'other' => $webspace3->reveal(),
+        ]);
+
+        $this->webspaceManager->getWebspaceCollection()->willReturn($webspaceCollection);
+
         $this->contentAggregator->aggregate($article, [
             'locale' => 'en',
             'stage' => 'live',
         ])->willThrow(ContentNotFoundException::class);
 
-        $this->routeGenerator->generate('/en/blog/test-article', 'en', null, UrlGeneratorInterface::ABSOLUTE_URL)
-            ->willReturn('https://example.com/en/blog/test-article');
+        $this->routeGenerator->generate('/en/blog/test-article', 'en', 'sulu_io', UrlGeneratorInterface::ABSOLUTE_URL)
+            ->willReturn('https://sulu.io/en/blog/test-article');
+        $this->routeGenerator->generate('/en/blog/test-article', 'en', 'blog', UrlGeneratorInterface::ABSOLUTE_URL)
+            ->willReturn('https://blog.example.com/en/blog/test-article');
 
-        $this->routeGenerator->generate('/en/news/old-slug', 'en', null, UrlGeneratorInterface::ABSOLUTE_URL)
-            ->willReturn('https://example.com/en/news/old-slug');
+        $this->routeGenerator->generate('/en/news/old-slug', 'en', 'sulu_io', UrlGeneratorInterface::ABSOLUTE_URL)
+            ->willReturn('https://sulu.io/en/news/old-slug');
+        $this->routeGenerator->generate('/en/news/old-slug', 'en', 'blog', UrlGeneratorInterface::ABSOLUTE_URL)
+            ->willReturn('https://blog.example.com/en/news/old-slug');
 
         $this->cacheManager->invalidateTag('article-uuid-123')
             ->shouldBeCalled();
-        $this->cacheManager->invalidatePath('https://example.com/en/blog/test-article')
+
+        $this->cacheManager->invalidatePath('https://sulu.io/en/blog/test-article')
             ->shouldBeCalled();
-        $this->cacheManager->invalidatePath('https://example.com/en/news/old-slug')
+        $this->cacheManager->invalidatePath('https://blog.example.com/en/blog/test-article')
+            ->shouldBeCalled();
+        $this->cacheManager->invalidatePath('https://sulu.io/en/news/old-slug')
+            ->shouldBeCalled();
+        $this->cacheManager->invalidatePath('https://blog.example.com/en/news/old-slug')
             ->shouldBeCalled();
 
         $this->subscriber->onWorkflowTransition($event);
