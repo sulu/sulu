@@ -76,7 +76,7 @@ class FormMetadata extends AbstractMetadata
     }
 
     /**
-     * @deprecated since 3.0, use setName() instead
+     * @deprecated since 3.0, use getKey() instead
      */
     #[VirtualProperty]
     #[SerializedName('name')]
@@ -109,20 +109,15 @@ class FormMetadata extends AbstractMetadata
         return $this->group;
     }
 
-    /**
-     * @return void
-     */
-    public function setTitle(string $title, string $locale)
+    public function setTitle(string $title, string $locale): void
     {
         $this->titles[$locale] = $title;
     }
 
     /**
      * @param array<string, string> $titles
-     *
-     * @return void
      */
-    public function setTitles(array $titles)
+    public function setTitles(array $titles): void
     {
         $this->titles = $titles;
     }
@@ -156,10 +151,8 @@ class FormMetadata extends AbstractMetadata
 
     /**
      * @param ItemMetadata[] $items
-     *
-     * @return void
      */
-    public function setItems(array $items)
+    public function setItems(array $items): void
     {
         $this->items = $items;
     }
@@ -169,10 +162,7 @@ class FormMetadata extends AbstractMetadata
         $this->items[$item->getName()] = $item;
     }
 
-    /**
-     * @return void
-     */
-    public function setSchema(SchemaMetadata $schema)
+    public function setSchema(SchemaMetadata $schema): void
     {
         $this->schema = $schema;
     }
@@ -182,10 +172,7 @@ class FormMetadata extends AbstractMetadata
         return $this->schema;
     }
 
-    /**
-     * @return void
-     */
-    public function setTemplate(?TemplateMetadata $template)
+    public function setTemplate(?TemplateMetadata $template): void
     {
         $this->template = $template;
     }
@@ -247,7 +234,6 @@ class FormMetadata extends AbstractMetadata
 
     /**
      * @param TagMetadata[] $tags
-     * @return void
      */
     public function setTags(array $tags): void
     {
@@ -261,8 +247,6 @@ class FormMetadata extends AbstractMetadata
 
     /**
      * @param array<string> $resources
-     *
-     * @return void
      */
     public function setResources(array $resources): void
     {
