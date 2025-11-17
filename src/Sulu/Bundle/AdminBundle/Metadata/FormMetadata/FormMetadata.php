@@ -23,32 +23,23 @@ class FormMetadata extends AbstractMetadata
      * @var array<string, string>
      */
     #[Exclude]
-    private $titles = [];
+    private array $titles = [];
 
     /**
      * @var ItemMetadata[]
      */
     #[SerializedName('form')]
     #[Exclude(if: "'admin_form_metadata_keys_only' in context.getAttribute('groups')")]
-    private $items = [];
+    private array $items = [];
 
-    /**
-     * @var SchemaMetadata
-     */
     #[Exclude(if: "'admin_form_metadata_keys_only' in context.getAttribute('groups')")]
-    private $schema;
+    private SchemaMetadata $schema;
 
-    /**
-     * @var TemplateMetadata|null
-     */
     #[Exclude()]
-    private $template;
+    private ?TemplateMetadata $template;
 
-    /**
-     * @var string
-     */
     #[Exclude(if: "'admin_form_metadata_keys_only' in context.getAttribute('groups')")]
-    private $key;
+    private string $key;
 
     /**
      * @var string|null
@@ -76,7 +67,7 @@ class FormMetadata extends AbstractMetadata
     }
 
     /**
-     * @deprecated since 3.0, use setName() instead
+     * @deprecated since 3.0, use getKey() instead
      */
     #[VirtualProperty]
     #[SerializedName('name')]
@@ -86,7 +77,7 @@ class FormMetadata extends AbstractMetadata
         return $this->key;
     }
 
-    public function setKey(string $key)
+    public function setKey(string $key): void
     {
         $this->key = $key;
     }
@@ -106,7 +97,7 @@ class FormMetadata extends AbstractMetadata
         return $this->group;
     }
 
-    public function setTitle(string $title, string $locale)
+    public function setTitle(string $title, string $locale): void
     {
         $this->titles[$locale] = $title;
     }
@@ -114,7 +105,7 @@ class FormMetadata extends AbstractMetadata
     /**
      * @param array<string, string> $titles
      */
-    public function setTitles(array $titles)
+    public function setTitles(array $titles): void
     {
         $this->titles = $titles;
     }
@@ -149,7 +140,7 @@ class FormMetadata extends AbstractMetadata
     /**
      * @param ItemMetadata[] $items
      */
-    public function setItems(array $items)
+    public function setItems(array $items): void
     {
         $this->items = $items;
     }
@@ -159,7 +150,7 @@ class FormMetadata extends AbstractMetadata
         $this->items[$item->getName()] = $item;
     }
 
-    public function setSchema(SchemaMetadata $schema)
+    public function setSchema(SchemaMetadata $schema): void
     {
         $this->schema = $schema;
     }
@@ -169,7 +160,7 @@ class FormMetadata extends AbstractMetadata
         return $this->schema;
     }
 
-    public function setTemplate(?TemplateMetadata $template)
+    public function setTemplate(?TemplateMetadata $template): void
     {
         $this->template = $template;
     }
