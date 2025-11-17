@@ -8,7 +8,7 @@
     <tag name="sulu_content.content_settings_form" instanceOf="Sulu\Page\Domain\Model\PageDimensionContentInterface" priority="100"/>
 
     <properties>
-        <section name="content_settings_page_settings" visibleCondition="shadowOn == false">
+        <section name="content_settings_page_settings" visibleCondition="shadowOn == false AND url != '/'">
             <meta>
                 <title>sulu_content.page_settings</title>
             </meta>
