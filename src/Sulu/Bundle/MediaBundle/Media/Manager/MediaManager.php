@@ -405,11 +405,25 @@ class MediaManager implements MediaManagerInterface
         $data['size'] = $uploadedFile->getSize();
         $data['mimeType'] = $uploadedFile->getMimeType();
         $data['properties'] = $this->getProperties($uploadedFile);
+        $data['title'] ??= $this->getTitleFromUpload($uploadedFile);
         $data['type'] = [
             'id' => $this->typeManager->getMediaType($uploadedFile->getMimeType()),
         ];
 
         return $this->createMedia($data, $user);
+    }
+
+    /**
+     * Gets the default media title based on the uploaded file.
+     * This implementation just removes the extension.
+     */
+    protected function getTitleFromUpload(UploadedFile $file): string
+    {
+        if (!\str_contains($file->getClientOriginalName(), '.')) {
+            return $file->getClientOriginalName();
+        }
+
+        return \implode('.', \explode('.', $file->getClientOriginalName(), -1));
     }
 
     /**
