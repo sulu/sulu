@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Sulu\Page\Infrastructure\Sulu\HttpCache\EventSubscriber;
 
 use Sulu\Bundle\HttpCacheBundle\Cache\CacheManagerInterface;
-use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Content\Application\ContentAggregator\ContentAggregatorInterface;
 use Sulu\Content\Domain\Exception\ContentNotFoundException;
 use Sulu\Content\Domain\Model\WorkflowInterface;
@@ -22,8 +21,10 @@ use Sulu\Page\Domain\Event\PageRemovedEvent;
 use Sulu\Page\Domain\Event\PageWorkflowTransitionAppliedEvent;
 use Sulu\Page\Domain\Model\PageDimensionContentInterface;
 use Sulu\Page\Domain\Model\PageInterface;
+use Sulu\Route\Application\Routing\Generator\RouteGeneratorInterface;
 use Sulu\Route\Domain\Repository\RouteRepositoryInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * @internal No BC promise is given for this class. Create your own event subscriber or use the
@@ -35,7 +36,7 @@ class PageCacheInvalidationSubscriber implements EventSubscriberInterface
         private ?CacheManagerInterface $cacheManager,
         private RouteRepositoryInterface $routeRepository,
         private ContentAggregatorInterface $contentAggregator,
-        private WebspaceManagerInterface $webspaceManager
+        private RouteGeneratorInterface $routeGenerator
     ) {
     }
 
@@ -90,16 +91,14 @@ class PageCacheInvalidationSubscriber implements EventSubscriberInterface
         ]);
 
         foreach ($routes as $route) {
-            $urls = $this->webspaceManager->findUrlsByResourceLocator(
+            $url = $this->routeGenerator->generate(
                 $route->getSlug(),
-                null,
                 $route->getLocale(),
                 $route->getSite(),
+                UrlGeneratorInterface::ABSOLUTE_URL
             );
 
-            foreach ($urls as $url) {
-                $this->cacheManager->invalidatePath($url);
-            }
+            $this->cacheManager->invalidatePath($url);
         }
     }
 

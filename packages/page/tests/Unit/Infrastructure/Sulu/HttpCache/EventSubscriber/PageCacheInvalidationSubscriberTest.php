@@ -19,7 +19,6 @@ use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\CategoryBundle\Entity\Category;
 use Sulu\Bundle\HttpCacheBundle\Cache\CacheManagerInterface;
 use Sulu\Bundle\TagBundle\Entity\Tag;
-use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Content\Application\ContentAggregator\ContentAggregatorInterface;
 use Sulu\Content\Domain\Exception\ContentNotFoundException;
 use Sulu\Content\Domain\Model\WorkflowInterface;
@@ -29,8 +28,10 @@ use Sulu\Page\Domain\Model\Page;
 use Sulu\Page\Domain\Model\PageDimensionContent;
 use Sulu\Page\Domain\Model\PageInterface;
 use Sulu\Page\Infrastructure\Sulu\HttpCache\EventSubscriber\PageCacheInvalidationSubscriber;
+use Sulu\Route\Application\Routing\Generator\RouteGeneratorInterface;
 use Sulu\Route\Domain\Model\Route;
 use Sulu\Route\Domain\Repository\RouteRepositoryInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class PageCacheInvalidationSubscriberTest extends TestCase
 {
@@ -52,9 +53,9 @@ class PageCacheInvalidationSubscriberTest extends TestCase
     private ObjectProphecy $contentAggregator;
 
     /**
-     * @var ObjectProphecy<WebspaceManagerInterface>
+     * @var ObjectProphecy<RouteGeneratorInterface>
      */
-    private ObjectProphecy $webspaceManager;
+    private ObjectProphecy $routeGenerator;
 
     private PageCacheInvalidationSubscriber $subscriber;
 
@@ -63,13 +64,13 @@ class PageCacheInvalidationSubscriberTest extends TestCase
         $this->cacheManager = $this->prophesize(CacheManagerInterface::class);
         $this->routeRepository = $this->prophesize(RouteRepositoryInterface::class);
         $this->contentAggregator = $this->prophesize(ContentAggregatorInterface::class);
-        $this->webspaceManager = $this->prophesize(WebspaceManagerInterface::class);
+        $this->routeGenerator = $this->prophesize(RouteGeneratorInterface::class);
 
         $this->subscriber = new PageCacheInvalidationSubscriber(
             $this->cacheManager->reveal(),
             $this->routeRepository->reveal(),
             $this->contentAggregator->reveal(),
-            $this->webspaceManager->reveal()
+            $this->routeGenerator->reveal()
         );
     }
 
@@ -126,19 +127,11 @@ class PageCacheInvalidationSubscriberTest extends TestCase
             'stage' => 'live',
         ])->willThrow(ContentNotFoundException::class);
 
-        $this->webspaceManager->findUrlsByResourceLocator(
-            '/en/test-page',
-            null,
-            'en',
-            null
-        )->willReturn(['https://example.com/en/test-page']);
+        $this->routeGenerator->generate('/en/test-page', 'en', null, UrlGeneratorInterface::ABSOLUTE_URL)
+            ->willReturn('https://example.com/en/test-page');
 
-        $this->webspaceManager->findUrlsByResourceLocator(
-            '/en/old-url',
-            null,
-            'en',
-            null
-        )->willReturn(['https://example.com/en/old-url']);
+        $this->routeGenerator->generate('/en/old-url', 'en', null, UrlGeneratorInterface::ABSOLUTE_URL)
+            ->willReturn('https://example.com/en/old-url');
 
         $this->cacheManager->invalidateTag('page-uuid-123')
             ->shouldBeCalled();

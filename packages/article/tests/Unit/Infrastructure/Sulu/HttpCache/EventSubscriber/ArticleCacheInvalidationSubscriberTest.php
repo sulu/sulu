@@ -25,12 +25,13 @@ use Sulu\Article\Infrastructure\Sulu\HttpCache\EventSubscriber\ArticleCacheInval
 use Sulu\Bundle\CategoryBundle\Entity\Category;
 use Sulu\Bundle\HttpCacheBundle\Cache\CacheManagerInterface;
 use Sulu\Bundle\TagBundle\Entity\Tag;
-use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Content\Application\ContentAggregator\ContentAggregatorInterface;
 use Sulu\Content\Domain\Exception\ContentNotFoundException;
 use Sulu\Content\Domain\Model\WorkflowInterface;
+use Sulu\Route\Application\Routing\Generator\RouteGeneratorInterface;
 use Sulu\Route\Domain\Model\Route;
 use Sulu\Route\Domain\Repository\RouteRepositoryInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class ArticleCacheInvalidationSubscriberTest extends TestCase
 {
@@ -52,9 +53,9 @@ class ArticleCacheInvalidationSubscriberTest extends TestCase
     private ObjectProphecy $contentAggregator;
 
     /**
-     * @var ObjectProphecy<WebspaceManagerInterface>
+     * @var ObjectProphecy<RouteGeneratorInterface>
      */
-    private ObjectProphecy $webspaceManager;
+    private ObjectProphecy $routeGenerator;
 
     private ArticleCacheInvalidationSubscriber $subscriber;
 
@@ -63,13 +64,13 @@ class ArticleCacheInvalidationSubscriberTest extends TestCase
         $this->cacheManager = $this->prophesize(CacheManagerInterface::class);
         $this->routeRepository = $this->prophesize(RouteRepositoryInterface::class);
         $this->contentAggregator = $this->prophesize(ContentAggregatorInterface::class);
-        $this->webspaceManager = $this->prophesize(WebspaceManagerInterface::class);
+        $this->routeGenerator = $this->prophesize(RouteGeneratorInterface::class);
 
         $this->subscriber = new ArticleCacheInvalidationSubscriber(
             $this->cacheManager->reveal(),
             $this->routeRepository->reveal(),
             $this->contentAggregator->reveal(),
-            $this->webspaceManager->reveal()
+            $this->routeGenerator->reveal()
         );
     }
 
@@ -124,19 +125,11 @@ class ArticleCacheInvalidationSubscriberTest extends TestCase
             'stage' => 'live',
         ])->willThrow(ContentNotFoundException::class);
 
-        $this->webspaceManager->findUrlsByResourceLocator(
-            '/en/blog/test-article',
-            null,
-            'en',
-            null
-        )->willReturn(['https://example.com/en/blog/test-article']);
+        $this->routeGenerator->generate('/en/blog/test-article', 'en', null, UrlGeneratorInterface::ABSOLUTE_URL)
+            ->willReturn('https://example.com/en/blog/test-article');
 
-        $this->webspaceManager->findUrlsByResourceLocator(
-            '/en/news/old-slug',
-            null,
-            'en',
-            null
-        )->willReturn(['https://example.com/en/news/old-slug']);
+        $this->routeGenerator->generate('/en/news/old-slug', 'en', null, UrlGeneratorInterface::ABSOLUTE_URL)
+            ->willReturn('https://example.com/en/news/old-slug');
 
         $this->cacheManager->invalidateTag('article-uuid-123')
             ->shouldBeCalled();
