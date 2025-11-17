@@ -87,10 +87,10 @@ class RouteGeneratorTest extends TestCase
 
     public function testGenerateRelativePath(): void
     {
-        $this->requestContext->setPathInfo('/en');
+        $this->requestContext->setPathInfo('/en/world/test');
 
         $result = $this->routeGenerator->generate('/test', 'en', 'the_site', UrlGeneratorInterface::RELATIVE_PATH);
-        $this->assertSame('/en/test', $result); // currently we handle RELATIVE_PATH like ABSOLUTE_PATH
+        $this->assertSame('../test', $result);
     }
 
     public function testGenerateAbsolutePath(): void
@@ -98,7 +98,7 @@ class RouteGeneratorTest extends TestCase
         $this->requestContext->setPathInfo('/en');
 
         $result = $this->routeGenerator->generate('/test', 'en', 'the_site', UrlGeneratorInterface::ABSOLUTE_PATH);
-        $this->assertSame('/en/test', $result); // currently we handle RELATIVE_PATH like ABSOLUTE_PATH
+        $this->assertSame('/en/test', $result);
     }
 
     public function testGenerateOther(): void
