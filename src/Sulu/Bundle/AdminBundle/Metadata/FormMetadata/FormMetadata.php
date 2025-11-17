@@ -86,6 +86,9 @@ class FormMetadata extends AbstractMetadata
         return $this->key;
     }
 
+    /**
+     * @return void
+     */
     public function setKey(string $key)
     {
         $this->key = $key;
@@ -106,6 +109,9 @@ class FormMetadata extends AbstractMetadata
         return $this->group;
     }
 
+    /**
+     * @return void
+     */
     public function setTitle(string $title, string $locale)
     {
         $this->titles[$locale] = $title;
@@ -113,6 +119,8 @@ class FormMetadata extends AbstractMetadata
 
     /**
      * @param array<string, string> $titles
+     *
+     * @return void
      */
     public function setTitles(array $titles)
     {
@@ -148,6 +156,8 @@ class FormMetadata extends AbstractMetadata
 
     /**
      * @param ItemMetadata[] $items
+     *
+     * @return void
      */
     public function setItems(array $items)
     {
@@ -159,6 +169,9 @@ class FormMetadata extends AbstractMetadata
         $this->items[$item->getName()] = $item;
     }
 
+    /**
+     * @return void
+     */
     public function setSchema(SchemaMetadata $schema)
     {
         $this->schema = $schema;
@@ -169,6 +182,9 @@ class FormMetadata extends AbstractMetadata
         return $this->schema;
     }
 
+    /**
+     * @return void
+     */
     public function setTemplate(?TemplateMetadata $template)
     {
         $this->template = $template;
@@ -231,6 +247,7 @@ class FormMetadata extends AbstractMetadata
 
     /**
      * @param TagMetadata[] $tags
+     * @return void
      */
     public function setTags(array $tags): void
     {
@@ -244,6 +261,8 @@ class FormMetadata extends AbstractMetadata
 
     /**
      * @param array<string> $resources
+     *
+     * @return void
      */
     public function setResources(array $resources): void
     {

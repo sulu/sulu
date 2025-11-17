@@ -34,12 +34,12 @@ abstract class ItemMetadata
     protected $descriptions = [];
 
     /**
-     * @var string
+     * @var string|null
      */
     protected $disabledCondition;
 
     /**
-     * @var string
+     * @var string|null
      */
     protected $visibleCondition;
 
