@@ -19,6 +19,7 @@ use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\CategoryBundle\Entity\Category;
 use Sulu\Bundle\HttpCacheBundle\Cache\CacheManagerInterface;
 use Sulu\Bundle\TagBundle\Entity\Tag;
+use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Content\Application\ContentAggregator\ContentAggregatorInterface;
 use Sulu\Content\Domain\Exception\ContentNotFoundException;
 use Sulu\Content\Domain\Model\WorkflowInterface;
@@ -50,6 +51,11 @@ class PageCacheInvalidationSubscriberTest extends TestCase
      */
     private ObjectProphecy $contentAggregator;
 
+    /**
+     * @var ObjectProphecy<WebspaceManagerInterface>
+     */
+    private ObjectProphecy $webspaceManager;
+
     private PageCacheInvalidationSubscriber $subscriber;
 
     protected function setUp(): void
@@ -57,11 +63,13 @@ class PageCacheInvalidationSubscriberTest extends TestCase
         $this->cacheManager = $this->prophesize(CacheManagerInterface::class);
         $this->routeRepository = $this->prophesize(RouteRepositoryInterface::class);
         $this->contentAggregator = $this->prophesize(ContentAggregatorInterface::class);
+        $this->webspaceManager = $this->prophesize(WebspaceManagerInterface::class);
 
         $this->subscriber = new PageCacheInvalidationSubscriber(
             $this->cacheManager->reveal(),
             $this->routeRepository->reveal(),
-            $this->contentAggregator->reveal()
+            $this->contentAggregator->reveal(),
+            $this->webspaceManager->reveal()
         );
     }
 
@@ -118,11 +126,25 @@ class PageCacheInvalidationSubscriberTest extends TestCase
             'stage' => 'live',
         ])->willThrow(ContentNotFoundException::class);
 
+        $this->webspaceManager->findUrlsByResourceLocator(
+            '/en/test-page',
+            null,
+            'en',
+            null
+        )->willReturn(['https://example.com/en/test-page']);
+
+        $this->webspaceManager->findUrlsByResourceLocator(
+            '/en/old-url',
+            null,
+            'en',
+            null
+        )->willReturn(['https://example.com/en/old-url']);
+
         $this->cacheManager->invalidateTag('page-uuid-123')
             ->shouldBeCalled();
-        $this->cacheManager->invalidatePath('/en/test-page')
+        $this->cacheManager->invalidatePath('https://example.com/en/test-page')
             ->shouldBeCalled();
-        $this->cacheManager->invalidatePath('/en/old-url')
+        $this->cacheManager->invalidatePath('https://example.com/en/old-url')
             ->shouldBeCalled();
 
         $this->subscriber->onWorkflowTransition($event);

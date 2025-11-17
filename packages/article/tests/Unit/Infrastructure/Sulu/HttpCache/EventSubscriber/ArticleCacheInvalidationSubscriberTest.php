@@ -25,6 +25,7 @@ use Sulu\Article\Infrastructure\Sulu\HttpCache\EventSubscriber\ArticleCacheInval
 use Sulu\Bundle\CategoryBundle\Entity\Category;
 use Sulu\Bundle\HttpCacheBundle\Cache\CacheManagerInterface;
 use Sulu\Bundle\TagBundle\Entity\Tag;
+use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Content\Application\ContentAggregator\ContentAggregatorInterface;
 use Sulu\Content\Domain\Exception\ContentNotFoundException;
 use Sulu\Content\Domain\Model\WorkflowInterface;
@@ -50,6 +51,11 @@ class ArticleCacheInvalidationSubscriberTest extends TestCase
      */
     private ObjectProphecy $contentAggregator;
 
+    /**
+     * @var ObjectProphecy<WebspaceManagerInterface>
+     */
+    private ObjectProphecy $webspaceManager;
+
     private ArticleCacheInvalidationSubscriber $subscriber;
 
     protected function setUp(): void
@@ -57,11 +63,13 @@ class ArticleCacheInvalidationSubscriberTest extends TestCase
         $this->cacheManager = $this->prophesize(CacheManagerInterface::class);
         $this->routeRepository = $this->prophesize(RouteRepositoryInterface::class);
         $this->contentAggregator = $this->prophesize(ContentAggregatorInterface::class);
+        $this->webspaceManager = $this->prophesize(WebspaceManagerInterface::class);
 
         $this->subscriber = new ArticleCacheInvalidationSubscriber(
             $this->cacheManager->reveal(),
             $this->routeRepository->reveal(),
-            $this->contentAggregator->reveal()
+            $this->contentAggregator->reveal(),
+            $this->webspaceManager->reveal()
         );
     }
 
@@ -116,11 +124,25 @@ class ArticleCacheInvalidationSubscriberTest extends TestCase
             'stage' => 'live',
         ])->willThrow(ContentNotFoundException::class);
 
+        $this->webspaceManager->findUrlsByResourceLocator(
+            '/en/blog/test-article',
+            null,
+            'en',
+            null
+        )->willReturn(['https://example.com/en/blog/test-article']);
+
+        $this->webspaceManager->findUrlsByResourceLocator(
+            '/en/news/old-slug',
+            null,
+            'en',
+            null
+        )->willReturn(['https://example.com/en/news/old-slug']);
+
         $this->cacheManager->invalidateTag('article-uuid-123')
             ->shouldBeCalled();
-        $this->cacheManager->invalidatePath('/en/blog/test-article')
+        $this->cacheManager->invalidatePath('https://example.com/en/blog/test-article')
             ->shouldBeCalled();
-        $this->cacheManager->invalidatePath('/en/news/old-slug')
+        $this->cacheManager->invalidatePath('https://example.com/en/news/old-slug')
             ->shouldBeCalled();
 
         $this->subscriber->onWorkflowTransition($event);

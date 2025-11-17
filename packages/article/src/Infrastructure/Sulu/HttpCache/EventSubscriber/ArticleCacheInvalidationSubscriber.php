@@ -18,6 +18,7 @@ use Sulu\Article\Domain\Event\ArticleWorkflowTransitionAppliedEvent;
 use Sulu\Article\Domain\Model\ArticleDimensionContentInterface;
 use Sulu\Article\Domain\Model\ArticleInterface;
 use Sulu\Bundle\HttpCacheBundle\Cache\CacheManagerInterface;
+use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Content\Application\ContentAggregator\ContentAggregatorInterface;
 use Sulu\Content\Domain\Exception\ContentNotFoundException;
 use Sulu\Content\Domain\Model\WorkflowInterface;
@@ -33,7 +34,8 @@ class ArticleCacheInvalidationSubscriber implements EventSubscriberInterface
     public function __construct(
         private ?CacheManagerInterface $cacheManager,
         private RouteRepositoryInterface $routeRepository,
-        private ContentAggregatorInterface $contentAggregator
+        private ContentAggregatorInterface $contentAggregator,
+        private WebspaceManagerInterface $webspaceManager
     ) {
     }
 
@@ -88,7 +90,16 @@ class ArticleCacheInvalidationSubscriber implements EventSubscriberInterface
         ]);
 
         foreach ($routes as $route) {
-            $this->cacheManager->invalidatePath($route->getSlug());
+            $urls = $this->webspaceManager->findUrlsByResourceLocator(
+                $route->getSlug(),
+                null,
+                $route->getLocale(),
+                $route->getSite(),
+            );
+
+            foreach ($urls as $url) {
+                $this->cacheManager->invalidatePath($url);
+            }
         }
     }
 

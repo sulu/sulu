@@ -614,6 +614,7 @@ final class SuluPageBundle extends AbstractBundle
                 new Reference('sulu_http_cache.cache_manager', ContainerInterface::NULL_ON_INVALID_REFERENCE),
                 new Reference('sulu_route.route_repository'),
                 new Reference('sulu_content.content_aggregator'),
+                new Reference('sulu_core.webspace.webspace_manager'),
             ])
             ->tag('kernel.event_subscriber');
     }
