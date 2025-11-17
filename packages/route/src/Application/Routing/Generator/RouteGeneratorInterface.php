@@ -12,11 +12,12 @@
 namespace Sulu\Route\Application\Routing\Generator;
 
 use Sulu\Route\Domain\Exception\MissingRequestContextParameterException;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 interface RouteGeneratorInterface
 {
     /**
      * @throws MissingRequestContextParameterException
      */
-    public function generate(string $slug, ?string $locale = null, ?string $site = null): string;
+    public function generate(string $slug, ?string $locale = null, ?string $site = null, int $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH): string;
 }

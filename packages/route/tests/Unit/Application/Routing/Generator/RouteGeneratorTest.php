@@ -18,6 +18,7 @@ use Sulu\Route\Application\Routing\Generator\SiteRouteGeneratorInterface;
 use Sulu\Route\Domain\Exception\MissingRequestContextParameterException;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Translation\LocaleSwitcher;
 
@@ -72,9 +73,43 @@ class RouteGeneratorTest extends TestCase
         $this->assertSame('/en/test', $result);
     }
 
+    public function testGenerateAbsoluteUrl(): void
+    {
+        $result = $this->routeGenerator->generate('/test', 'en', 'the_site', UrlGeneratorInterface::ABSOLUTE_URL);
+        $this->assertSame('http://localhost/en/test', $result);
+    }
+
+    public function testGenerateNetworkPath(): void
+    {
+        $result = $this->routeGenerator->generate('/test', 'en', 'the_site', UrlGeneratorInterface::NETWORK_PATH);
+        $this->assertSame('//localhost/en/test', $result);
+    }
+
+    public function testGenerateRelativePath(): void
+    {
+        $this->requestContext->setPathInfo('/en');
+
+        $result = $this->routeGenerator->generate('/test', 'en', 'the_site', UrlGeneratorInterface::RELATIVE_PATH);
+        $this->assertSame('/en/test', $result); // currently we handle RELATIVE_PATH like ABSOLUTE_PATH
+    }
+
+    public function testGenerateAbsolutePath(): void
+    {
+        $this->requestContext->setPathInfo('/en');
+
+        $result = $this->routeGenerator->generate('/test', 'en', 'the_site', UrlGeneratorInterface::ABSOLUTE_PATH);
+        $this->assertSame('/en/test', $result); // currently we handle RELATIVE_PATH like ABSOLUTE_PATH
+    }
+
     public function testGenerateOther(): void
     {
         $result = $this->routeGenerator->generate('/test', 'en', 'the_other_side');
+        $this->assertSame('https://example.org/en/test', $result);
+    }
+
+    public function testGenerateOtherAbsolutePath(): void
+    {
+        $result = $this->routeGenerator->generate('/test', 'en', 'the_other_side', UrlGeneratorInterface::ABSOLUTE_PATH);
         $this->assertSame('https://example.org/en/test', $result);
     }
 

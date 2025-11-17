@@ -15,6 +15,7 @@ use Psr\Container\ContainerInterface;
 use Sulu\Route\Domain\Exception\MissingRequestContextParameterException;
 use Sulu\Route\Domain\Value\RequestAttributeEnum;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Translation\LocaleSwitcher;
 
@@ -28,7 +29,7 @@ final class RouteGenerator implements RouteGeneratorInterface
     ) {
     }
 
-    public function generate(string $slug, ?string $locale = null, ?string $site = null): string
+    public function generate(string $slug, ?string $locale = null, ?string $site = null, int $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH): string
     {
         if (null === $site) {
             $requestSite = $this->requestContext->getParameter(RequestAttributeEnum::SITE->value);
@@ -75,10 +76,13 @@ final class RouteGenerator implements RouteGeneratorInterface
             },
         );
 
-        if (\str_starts_with($generatedUrl, $schemeAndHttpHost)) {
-            return \substr($generatedUrl, \strlen($schemeAndHttpHost) - 1);
-        }
-
-        return $generatedUrl;
+        return match (true) {
+            UrlGeneratorInterface::NETWORK_PATH === $referenceType && \str_starts_with($generatedUrl, $this->requestContext->getScheme()) => \substr($generatedUrl, \strlen($this->requestContext->getScheme()) + 1),
+            (
+                UrlGeneratorInterface::ABSOLUTE_PATH === $referenceType
+                || UrlGeneratorInterface::RELATIVE_PATH === $referenceType // currently relative path behaves like absolute path
+            ) && \str_starts_with($generatedUrl, $schemeAndHttpHost) => \substr($generatedUrl, \strlen($schemeAndHttpHost) - 1),
+            default => $generatedUrl,
+        };
     }
 }
