@@ -18,7 +18,7 @@ namespace Sulu\Content\Domain\Model;
  *
  * @extends \Traversable<T>
  */
-interface DimensionContentCollectionInterface extends \Traversable, \Countable
+interface DimensionContentCollectionInterface extends \Traversable, \Countable, \IteratorAggregate
 {
     /**
      * @param mixed[] $dimensionAttributes

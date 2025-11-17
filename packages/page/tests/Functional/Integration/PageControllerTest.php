@@ -25,6 +25,7 @@ use Sulu\Page\Application\MessageHandler\CreatePageMessageHandler;
 use Sulu\Page\Application\MessageHandler\ModifyPageMessageHandler;
 use Sulu\Page\Domain\Exception\RemovePageDependantResourcesFoundException;
 use Sulu\Page\Domain\Model\Page;
+use Sulu\Page\Domain\Model\PageDimensionContent;
 use Sulu\Page\Domain\Model\PageInterface;
 use Sulu\Route\Domain\Repository\RouteRepositoryInterface;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
@@ -803,6 +804,30 @@ class PageControllerTest extends SuluTestCase
     #[Depends('testOrderPages')]
     public function testDelete(string $id): int
     {
+        // Add German translation before deleting to test multi-locale restore
+        $this->client->request('GET', '/admin/api/pages/' . $id . '?locale=en');
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(200, $response);
+
+        /** @var array{template: string, title: string, url: string} $pageData */
+        $pageData = \json_decode((string) $response->getContent(), true);
+
+        $this->client->request('PUT', '/admin/api/pages/' . $id . '?locale=de', [], [], [], \json_encode([
+            'template' => $pageData['template'],
+            'title' => $pageData['title'] . ' (DE)',
+            'url' => '/de' . $pageData['url'],
+        ]) ?: null);
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(200, $response);
+
+        /** @var array<string, mixed> $content */
+        $content = \json_decode((string) $response->getContent(), true);
+        /** @var array<int, string> $availableLocales */
+        $availableLocales = $content['availableLocales'];
+        $this->assertContains('en', $availableLocales);
+        $this->assertContains('de', $availableLocales);
+
+        // Now delete the page with both locales
         $this->client->request('DELETE', '/admin/api/pages/' . $id . '?locale=en&force=true');
         $response = $this->client->getResponse();
         $this->assertHttpStatusCode(204, $response);
@@ -832,7 +857,44 @@ class PageControllerTest extends SuluTestCase
         $response = $this->client->getResponse();
         $this->assertHttpStatusCode(200, $response);
 
-        $this->client->request('GET', '/admin/api/pages/' . $trashItem->getResourceId() . '?locale=en');
+        // Verify dimension content counts: should have exactly 1 unlocalized dimension content
+        // This is the critical test for the multi-locale restore bug fix
+        $pageId = $trashItem->getResourceId();
+        $pageRepository = $this->getContainer()->get('sulu_page.page_repository');
+        $restoredPage = $pageRepository->findOneBy(['uuid' => $pageId]);
+        $this->assertNotNull($restoredPage);
+
+        $dimensionContents = self::getEntityManager()
+            ->getRepository(PageDimensionContent::class)
+            ->findBy(['page' => $restoredPage]);
+
+        // Count unlocalized dimension contents (locale = null, stage = draft)
+        $unlocalizedDraftCount = 0;
+        $localizedDraftCount = 0;
+        foreach ($dimensionContents as $dc) {
+            if ('draft' === $dc->getStage()) {
+                if (null === $dc->getLocale()) {
+                    ++$unlocalizedDraftCount;
+                } else {
+                    ++$localizedDraftCount;
+                }
+            }
+        }
+
+        $this->assertSame(
+            1,
+            $unlocalizedDraftCount,
+            'Should have exactly 1 unlocalized dimension content after restoring multi-locale page, but found: ' . $unlocalizedDraftCount
+        );
+
+        $this->assertSame(
+            2,
+            $localizedDraftCount,
+            'Should have exactly 2 localized dimension contents (en, de) after restore, but found: ' . $localizedDraftCount
+        );
+
+        // Verify the API response
+        $this->client->request('GET', '/admin/api/pages/' . $pageId . '?locale=en');
         $response = $this->client->getResponse();
         $this->assertResponseSnapshot('page_post_restore.json', $response, 200);
 

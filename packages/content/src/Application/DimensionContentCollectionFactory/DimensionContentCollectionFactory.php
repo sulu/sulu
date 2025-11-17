@@ -14,44 +14,49 @@ declare(strict_types=1);
 namespace Sulu\Content\Application\DimensionContentCollectionFactory;
 
 use Sulu\Content\Application\ContentDataMapper\ContentDataMapperInterface;
+use Sulu\Content\Application\ContentMetadataInspector\ContentMetadataInspectorInterface;
 use Sulu\Content\Domain\Factory\DimensionContentCollectionFactoryInterface;
 use Sulu\Content\Domain\Model\ContentRichEntityInterface;
 use Sulu\Content\Domain\Model\DimensionContentCollection;
 use Sulu\Content\Domain\Model\DimensionContentCollectionInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
-use Sulu\Content\Domain\Repository\DimensionContentRepositoryInterface;
 use Symfony\Component\PropertyAccess\PropertyAccessor;
 
 class DimensionContentCollectionFactory implements DimensionContentCollectionFactoryInterface
 {
     public function __construct(
-        private DimensionContentRepositoryInterface $dimensionContentRepository,
+        private ContentMetadataInspectorInterface $contentMetadataInspector,
         private ContentDataMapperInterface $contentDataMapper,
         private PropertyAccessor $propertyAccessor,
     ) {
     }
 
+    /**
+     * @template T of DimensionContentInterface
+     *
+     * @param ContentRichEntityInterface<T> $contentRichEntity
+     *
+     * @return DimensionContentCollectionInterface<T>
+     */
     public function create(
         ContentRichEntityInterface $contentRichEntity,
         array $dimensionAttributes,
         array $data
     ): DimensionContentCollectionInterface {
-        $dimensionContentCollection = $this->dimensionContentRepository->load($contentRichEntity, $dimensionAttributes);
-        $dimensionAttributes = $dimensionContentCollection->getDimensionAttributes();
+        /** @var class-string<T> $dimensionContentClass */
+        $dimensionContentClass = $this->contentMetadataInspector->getDimensionContentClass($contentRichEntity::class);
+        $dimensionAttributes = $dimensionContentClass::getEffectiveDimensionAttributes($dimensionAttributes);
+
+        $dimensionContentCollection = new DimensionContentCollection(
+            $contentRichEntity->getDimensionContents(),
+            $dimensionAttributes,
+            $dimensionContentClass
+        );
 
         $unlocalizedAttributes = $dimensionAttributes;
         $unlocalizedAttributes['locale'] = null;
 
-        $entityDimensionContentCollection = new DimensionContentCollection(
-            $contentRichEntity->getDimensionContents()->toArray(),
-            $dimensionAttributes,
-            $dimensionContentCollection->getDimensionContentClass()
-        );
-
-        $unlocalizedDimensionContent =
-            $entityDimensionContentCollection->getDimensionContent($unlocalizedAttributes) ??
-            $dimensionContentCollection->getDimensionContent($unlocalizedAttributes);
-
+        $unlocalizedDimensionContent = $dimensionContentCollection->getDimensionContent($unlocalizedAttributes);
         if (!$unlocalizedDimensionContent) {
             $unlocalizedDimensionContent = $this->createContentDimension(
                 $contentRichEntity,
@@ -63,8 +68,7 @@ class DimensionContentCollectionFactory implements DimensionContentCollectionFac
         /** @var string|null $locale */
         $locale = $dimensionAttributes['locale'] ?? null;
         if ($locale) {
-            $localizedDimensionContent = $entityDimensionContentCollection->getDimensionContent($dimensionAttributes) ??
-                $dimensionContentCollection->getDimensionContent($dimensionAttributes);
+            $localizedDimensionContent = $dimensionContentCollection->getDimensionContent($dimensionAttributes);
 
             if (!$localizedDimensionContent) {
                 $localizedDimensionContent = $this->createContentDimension(

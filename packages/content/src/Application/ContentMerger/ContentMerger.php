@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace Sulu\Content\Application\ContentMerger;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Sulu\Component\Util\SortUtils;
 use Sulu\Content\Application\ContentMerger\Merger\MergerInterface;
 use Sulu\Content\Domain\Model\DimensionContentCollectionInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
@@ -57,7 +59,12 @@ class ContentMerger implements ContentMergerInterface
 
         $mergedDimensionContent = null;
 
-        foreach ($dimensionContentCollection as $dimensionContent) {
+        $dimensionContents = new ArrayCollection(
+            // dimension contents need to be sorted from most specific to least specific when they are merged
+            SortUtils::multisort($dimensionContentCollection->getIterator(), \array_keys($dimensionContentCollection->getDimensionAttributes()), 'asc')
+        );
+
+        foreach ($dimensionContents as $dimensionContent) {
             if (!$mergedDimensionContent) {
                 $contentRichEntity = $dimensionContent->getResource();
                 /** @var T $mergedDimensionContent */

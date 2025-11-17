@@ -14,8 +14,8 @@ declare(strict_types=1);
 namespace Sulu\Content\Domain\Model;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
-use Sulu\Component\Util\SortUtils;
 
 /**
  * @template-covariant T of DimensionContentInterface
@@ -23,10 +23,10 @@ use Sulu\Component\Util\SortUtils;
  * @implements \IteratorAggregate<T>
  * @implements DimensionContentCollectionInterface<T>
  */
-class DimensionContentCollection implements \IteratorAggregate, DimensionContentCollectionInterface
+class DimensionContentCollection implements DimensionContentCollectionInterface
 {
     /**
-     * @var ArrayCollection<int, T>
+     * @var Collection<int, T>
      */
     private $dimensionContents;
 
@@ -48,12 +48,12 @@ class DimensionContentCollection implements \IteratorAggregate, DimensionContent
     /**
      * DimensionContentCollection constructor.
      *
-     * @param array<int, T> $dimensionContents
+     * @param array<int, T>|Collection<int, T> $dimensionContents
      * @param mixed[] $dimensionAttributes
      * @param class-string<T> $dimensionContentClass
      */
     public function __construct(
-        array $dimensionContents,
+        array|Collection $dimensionContents,
         array $dimensionAttributes,
         string $dimensionContentClass
     ) {
@@ -61,10 +61,8 @@ class DimensionContentCollection implements \IteratorAggregate, DimensionContent
         $this->defaultDimensionAttributes = $dimensionContentClass::getDefaultDimensionAttributes();
         $this->dimensionAttributes = $dimensionContentClass::getEffectiveDimensionAttributes($dimensionAttributes);
 
-        $this->dimensionContents = new ArrayCollection(
-            // dimension contents need to be sorted from most specific to least specific when they are merged
-            SortUtils::multisort($dimensionContents, \array_keys($this->dimensionAttributes), 'asc')
-        );
+        // TODO remove the array conversion
+        $this->dimensionContents = $dimensionContents instanceof Collection ? $dimensionContents : new ArrayCollection($dimensionContents);
     }
 
     public function getDimensionContentClass(): string
@@ -75,17 +73,7 @@ class DimensionContentCollection implements \IteratorAggregate, DimensionContent
     public function getDimensionContent(array $dimensionAttributes): ?DimensionContentInterface
     {
         $dimensionAttributes = \array_merge($this->defaultDimensionAttributes, $dimensionAttributes);
-
-        $criteria = Criteria::create();
-        foreach ($dimensionAttributes as $key => $value) {
-            if (null === $value) {
-                $expr = $criteria->expr()->isNull($key);
-            } else {
-                $expr = $criteria->expr()->eq($key, $value);
-            }
-
-            $criteria->andWhere($expr);
-        }
+        $criteria = $this->buildCriteriaFromAttributes($dimensionAttributes);
 
         return $this->dimensionContents->matching($criteria)->first() ?: null;
     }
@@ -100,11 +88,48 @@ class DimensionContentCollection implements \IteratorAggregate, DimensionContent
      */
     public function getIterator(): \Traversable
     {
-        return $this->dimensionContents;
+        $attributesWithoutLocale = $this->dimensionAttributes;
+        $locale = $attributesWithoutLocale['locale'] ?? null;
+        unset($attributesWithoutLocale['locale']);
+
+        $criteria = $this->buildCriteriaFromAttributes($attributesWithoutLocale);
+
+        if ($locale) {
+            $criteria->andWhere(
+                Criteria::expr()->orX(
+                    Criteria::expr()->isNull('locale'),
+                    Criteria::expr()->eq('locale', $locale)
+                )
+            );
+        } else {
+            $criteria->andWhere(Criteria::expr()->isNull('locale'));
+        }
+
+        return $this->dimensionContents->matching($criteria)->getIterator();
     }
 
     public function count(): int
     {
         return \count($this->dimensionContents);
+    }
+
+    /**
+     * @param mixed[] $dimensionAttributes
+     */
+    private function buildCriteriaFromAttributes(array $dimensionAttributes): Criteria
+    {
+        $criteria = Criteria::create();
+
+        foreach ($dimensionAttributes as $key => $value) {
+            if (null === $value) {
+                $expr = $criteria->expr()->isNull($key);
+            } else {
+                $expr = $criteria->expr()->eq($key, $value);
+            }
+
+            $criteria->andWhere($expr);
+        }
+
+        return $criteria;
     }
 }
