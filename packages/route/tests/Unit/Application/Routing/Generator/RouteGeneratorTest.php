@@ -113,6 +113,18 @@ class RouteGeneratorTest extends TestCase
         $this->assertSame('https://example.org/en/test', $result);
     }
 
+    public function testGenerateOtherRelativePath(): void
+    {
+        $result = $this->routeGenerator->generate('/test', 'en', 'the_other_side', UrlGeneratorInterface::RELATIVE_PATH);
+        $this->assertSame('https://example.org/en/test', $result);
+    }
+
+    public function testGenerateOtherNetworkPath(): void
+    {
+        $result = $this->routeGenerator->generate('/test', 'en', 'the_other_side', UrlGeneratorInterface::NETWORK_PATH);
+        $this->assertSame('https://example.org/en/test', $result);
+    }
+
     public function testGenerateRequestContextLocale(): void
     {
         $this->requestContext->setParameter('_locale', 'de');

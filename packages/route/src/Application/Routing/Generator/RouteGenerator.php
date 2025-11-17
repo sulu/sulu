@@ -78,7 +78,7 @@ final class RouteGenerator implements RouteGeneratorInterface
         );
 
         return match (true) {
-            UrlGeneratorInterface::NETWORK_PATH === $referenceType && \str_starts_with($generatedUrl, $this->requestContext->getScheme()) => \substr($generatedUrl, \strlen($this->requestContext->getScheme()) + 1),
+            UrlGeneratorInterface::NETWORK_PATH === $referenceType && \str_starts_with($generatedUrl, $this->requestContext->getScheme() . '://') => \substr($generatedUrl, \strlen($this->requestContext->getScheme()) + 1),
             UrlGeneratorInterface::ABSOLUTE_PATH === $referenceType && \str_starts_with($generatedUrl, $schemeAndHttpHost) => \substr($generatedUrl, \strlen($schemeAndHttpHost) - 1),
             UrlGeneratorInterface::RELATIVE_PATH === $referenceType && \str_starts_with($generatedUrl, $schemeAndHttpHost) => UrlGenerator::getRelativePath($this->requestContext->getPathInfo(), \substr($generatedUrl, \strlen($schemeAndHttpHost) - 1)),
             default => $generatedUrl,
