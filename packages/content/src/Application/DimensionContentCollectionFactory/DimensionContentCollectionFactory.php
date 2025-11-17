@@ -21,33 +21,14 @@ use Sulu\Content\Domain\Model\DimensionContentCollectionInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Domain\Repository\DimensionContentRepositoryInterface;
 use Symfony\Component\PropertyAccess\PropertyAccessor;
-use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 
 class DimensionContentCollectionFactory implements DimensionContentCollectionFactoryInterface
 {
-    /**
-     * @var DimensionContentRepositoryInterface
-     */
-    private $dimensionContentRepository;
-
-    /**
-     * @var ContentDataMapperInterface
-     */
-    private $contentDataMapper;
-
-    /**
-     * @var PropertyAccessorInterface
-     */
-    private $propertyAccessor;
-
     public function __construct(
-        DimensionContentRepositoryInterface $dimensionContentRepository,
-        ContentDataMapperInterface $contentDataMapper,
-        PropertyAccessor $propertyAccessor
+        private DimensionContentRepositoryInterface $dimensionContentRepository,
+        private ContentDataMapperInterface $contentDataMapper,
+        private PropertyAccessor $propertyAccessor,
     ) {
-        $this->dimensionContentRepository = $dimensionContentRepository;
-        $this->contentDataMapper = $contentDataMapper;
-        $this->propertyAccessor = $propertyAccessor;
     }
 
     public function create(
@@ -61,7 +42,15 @@ class DimensionContentCollectionFactory implements DimensionContentCollectionFac
         $unlocalizedAttributes = $dimensionAttributes;
         $unlocalizedAttributes['locale'] = null;
 
-        $unlocalizedDimensionContent = $dimensionContentCollection->getDimensionContent($unlocalizedAttributes);
+        $entityDimensionContentCollection = new DimensionContentCollection(
+            $contentRichEntity->getDimensionContents()->toArray(),
+            $dimensionAttributes,
+            $dimensionContentCollection->getDimensionContentClass()
+        );
+
+        $unlocalizedDimensionContent =
+            $entityDimensionContentCollection->getDimensionContent($unlocalizedAttributes) ??
+            $dimensionContentCollection->getDimensionContent($unlocalizedAttributes);
 
         if (!$unlocalizedDimensionContent) {
             $unlocalizedDimensionContent = $this->createContentDimension(
@@ -74,7 +63,8 @@ class DimensionContentCollectionFactory implements DimensionContentCollectionFac
         /** @var string|null $locale */
         $locale = $dimensionAttributes['locale'] ?? null;
         if ($locale) {
-            $localizedDimensionContent = $dimensionContentCollection->getDimensionContent($dimensionAttributes);
+            $localizedDimensionContent = $entityDimensionContentCollection->getDimensionContent($dimensionAttributes) ??
+                $dimensionContentCollection->getDimensionContent($dimensionAttributes);
 
             if (!$localizedDimensionContent) {
                 $localizedDimensionContent = $this->createContentDimension(
