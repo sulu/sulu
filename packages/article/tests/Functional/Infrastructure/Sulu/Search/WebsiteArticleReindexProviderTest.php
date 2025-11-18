@@ -120,9 +120,11 @@ class WebsiteArticleReindexProviderTest extends SuluTestCase
             'stage' => DimensionContentInterface::STAGE_LIVE,
         ]);
 
+        $sql = 'UPDATE ar_article_dimension_contents SET changed = :changed, authored = :authored WHERE articleUuid = :uuid';
         $connection->executeStatement($sql, [
             'changed' => $changedDateString2,
             'created' => $createdAt,
+            'authored' => null,
             'uuid' => $article2->getUuid(),
             'stage' => DimensionContentInterface::STAGE_LIVE,
         ]);
@@ -228,9 +230,11 @@ class WebsiteArticleReindexProviderTest extends SuluTestCase
             'stage' => DimensionContentInterface::STAGE_LIVE,
         ]);
 
+        $sql = 'UPDATE ar_article_dimension_contents SET changed = :changed, created = :created, authored = :authored WHERE articleUuid = :uuid';
         $connection->executeStatement($sql, [
             'changed' => $changedDateString2,
             'created' => $createdAt,
+            'authored' => null,
             'uuid' => $article2->getUuid(),
             'stage' => DimensionContentInterface::STAGE_LIVE,
         ]);

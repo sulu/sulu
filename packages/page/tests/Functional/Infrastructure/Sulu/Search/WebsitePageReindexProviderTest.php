@@ -86,8 +86,10 @@ class WebsitePageReindexProviderTest extends SuluTestCase
             'uuid' => $page1->getUuid(),
         ]);
 
+        $sql = 'UPDATE pa_page_dimension_contents SET changed = :changed, authored = :authored WHERE pageUuid = :uuid';
         $connection->executeStatement($sql, [
             'changed' => $changedDateString2,
+            'authored' => null,
             'uuid' => $page2->getUuid(),
         ]);
 

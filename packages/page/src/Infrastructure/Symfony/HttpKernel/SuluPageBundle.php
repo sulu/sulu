@@ -158,6 +158,7 @@ final class SuluPageBundle extends AbstractBundle
                 new Reference('sulu_page.page_repository'),
                 tagged_iterator('sulu_page.page_mapper'),
                 new Reference('sulu_activity.domain_event_collector'),
+                new Reference('security.token_storage', ContainerInterface::NULL_ON_INVALID_REFERENCE),
             ])
             ->tag('messenger.message_handler');
 
