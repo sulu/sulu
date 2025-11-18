@@ -37,5 +37,6 @@
     "sulu_content.hide_block_description": "This block will not be published, but remains editable in the admin.",
     "sulu_content.schedules_label": "Assign time schedule",
     "sulu_content.schedules_description": "The block will only be visible if at least one condition is valid.",
-    "sulu_content.add_schedule": "Add schedule"
+    "sulu_content.add_schedule": "Add schedule",
+    "sulu_content.changelog": "Changelog"
 }
