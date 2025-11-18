@@ -47,6 +47,14 @@ class ArticleControllerTest extends SuluTestCase
         // TODO this should not be necessary
     }
 
+    public function testInvalidIdGet(): void
+    {
+        $this->client->request('GET', '/admin/api/articles/invalid-id?locale=en');
+        $response = $this->client->getResponse();
+
+        $this->assertHttpStatusCode(404, $response);
+    }
+
     public function testPostPublish(): string
     {
         self::purgeDatabase();
