@@ -72,7 +72,7 @@ final class PageTrashItemHandler implements
             'dimensionContents' => [],
         ];
 
-        $restoreType = $options['locales'] ?? null ? 'translation' : null;
+        $restoreType = $options['locale'] ?? null ? 'translation' : null;
 
         $titles = [];
         /** @var array<string, PageDimensionContentInterface> $localizedDimensionContents */
@@ -82,13 +82,17 @@ final class PageTrashItemHandler implements
         foreach ($page->getDimensionContents() as $dimensionContent) {
             if (
                 DimensionContentInterface::CURRENT_VERSION !== $dimensionContent->getVersion()
-                && DimensionContentInterface::STAGE_LIVE !== $dimensionContent->getStage()
+                || DimensionContentInterface::STAGE_DRAFT !== $dimensionContent->getStage()
             ) {
                 continue;
             }
 
             if (null === $dimensionContent->getLocale()) {
                 $unlocalizedDimensionContent = $dimensionContent;
+                continue;
+            }
+
+            if ('translation' === $restoreType && $dimensionContent->getLocale() !== $options['locale']) {
                 continue;
             }
 
@@ -103,7 +107,7 @@ final class PageTrashItemHandler implements
         Assert::isArray($availableLocales, 'Expected availableLocales to be an array');
         /** @var array<string, PageDimensionContentInterface> $localizedDimensionContents */
         $localizedDimensionContents = \array_merge(
-            \array_flip($availableLocales),
+            \array_flip(\array_filter($availableLocales, static fn ($locale) => \array_key_exists($locale, $localizedDimensionContents))),
             $localizedDimensionContents,
         );
 
@@ -197,7 +201,6 @@ final class PageTrashItemHandler implements
                 $allLocales[] = $dimensionContentData['locale'];
             }
 
-            unset($dimensionContentData['url']); // TODO old route is not removed on delete?
             foreach ($this->pageMappers as $pageMapper) {
                 $pageMapper->mapPageData($page, $dimensionContentData);
             }
