@@ -50,6 +50,14 @@ class SnippetControllerTest extends SuluTestCase
         $schemaTool->updateSchema($classes, false);
     }
 
+    public function testInvalidIdGet(): void
+    {
+        $this->client->request('GET', '/admin/api/snippets/invalid-id?locale=en');
+        $response = $this->client->getResponse();
+
+        $this->assertHttpStatusCode(404, $response);
+    }
+
     public function testPostPublish(): string
     {
         self::purgeDatabase();

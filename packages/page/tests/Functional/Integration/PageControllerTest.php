@@ -143,6 +143,14 @@ class PageControllerTest extends SuluTestCase
         return $page;
     }
 
+    public function testInvalidIdGet(): void
+    {
+        $this->client->request('GET', '/admin/api/pages/invalid-id?locale=en');
+        $response = $this->client->getResponse();
+
+        $this->assertHttpStatusCode(404, $response);
+    }
+
     public function testPostPublish(): string
     {
         self::purgeDatabase();

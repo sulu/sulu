@@ -12,6 +12,7 @@
 namespace Sulu\Page\UserInterface\Controller\Admin;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\ListBuilder\CollectionRepresentation;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilder;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactoryInterface;
@@ -39,6 +40,7 @@ use Sulu\Page\Application\Message\OrderPageMessage;
 use Sulu\Page\Application\Message\RemovePageMessage;
 use Sulu\Page\Application\Message\RemovePageTranslationMessage;
 use Sulu\Page\Application\Message\RestorePageVersionMessage;
+use Sulu\Page\Domain\Exception\PageNotFoundException;
 use Sulu\Page\Domain\Model\Page;
 use Sulu\Page\Domain\Model\PageInterface;
 use Sulu\Page\Domain\Repository\PageRepositoryInterface;
@@ -159,18 +161,27 @@ final class PageController implements SecuredControllerInterface, SecuredObjectC
             'stage' => DimensionContentInterface::STAGE_DRAFT,
         ];
 
-        $page = $this->pageRepository->getOneBy(
-            \array_merge(
+        try {
+            $page = $this->pageRepository->getOneBy(
+                \array_merge(
+                    [
+                        'uuid' => $id,
+                        'loadGhost' => true,
+                    ],
+                    $dimensionAttributes,
+                ),
                 [
-                    'uuid' => $id,
-                    'loadGhost' => true,
+                    PageRepositoryInterface::GROUP_SELECT_PAGE_ADMIN => true,
                 ],
-                $dimensionAttributes,
-            ),
-            [
-                PageRepositoryInterface::GROUP_SELECT_PAGE_ADMIN => true,
-            ],
-        );
+            );
+        } catch (PageNotFoundException $e) {
+            $exception = new EntityNotFoundException($e->getModel(), $id, $e);
+
+            return new JsonResponse(
+                $exception->toArray(),
+                404
+            );
+        }
 
         // TODO the `$page` should just be serialized
         //      Instead of calling the content resolver service which triggers an additional query.

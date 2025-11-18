@@ -18,9 +18,11 @@ use Sulu\Article\Application\Message\ModifyArticleMessage;
 use Sulu\Article\Application\Message\RemoveArticleMessage;
 use Sulu\Article\Application\Message\RemoveArticleTranslationMessage;
 use Sulu\Article\Application\Message\RestoreArticleVersionMessage;
+use Sulu\Article\Domain\Exception\ArticleNotFoundException;
 use Sulu\Article\Domain\Model\ArticleInterface;
 use Sulu\Article\Domain\Repository\ArticleRepositoryInterface;
 use Sulu\Bundle\AdminBundle\Metadata\GroupProviderInterface;
+use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilder;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactoryInterface;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptorInterface;
@@ -169,18 +171,27 @@ final class ArticleController
             'stage' => DimensionContentInterface::STAGE_DRAFT,
         ];
 
-        $article = $this->articleRepository->getOneBy(
-            \array_merge(
+        try {
+            $article = $this->articleRepository->getOneBy(
+                \array_merge(
+                    [
+                        'uuid' => $id,
+                        'loadGhost' => true,
+                    ],
+                    $dimensionAttributes,
+                ),
                 [
-                    'uuid' => $id,
-                    'loadGhost' => true,
+                    ArticleRepositoryInterface::GROUP_SELECT_ARTICLE_ADMIN => true,
                 ],
-                $dimensionAttributes,
-            ),
-            [
-                ArticleRepositoryInterface::GROUP_SELECT_ARTICLE_ADMIN => true,
-            ],
-        );
+            );
+        } catch (ArticleNotFoundException $e) {
+            $exception = new EntityNotFoundException($e->getModel(), $id, $e);
+
+            return new JsonResponse(
+                $exception->toArray(),
+                404
+            );
+        }
 
         // TODO the `$article` should just be serialized
         //      Instead of calling the content resolver service which triggers an additional query.
