@@ -17,6 +17,7 @@ use Sulu\Article\Domain\Model\ArticleDimensionContentInterface;
 use Sulu\Article\Domain\Model\ArticleInterface;
 use Sulu\Article\Domain\Repository\ArticleRepositoryInterface;
 use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
+use Sulu\Bundle\TrashBundle\Application\TrashManager\TrashManagerInterface;
 
 /**
  * @experimental
@@ -29,6 +30,7 @@ final class RemoveArticleTranslationMessageHandler
     public function __construct(
         private ArticleRepositoryInterface $articleRepository,
         private DomainEventCollectorInterface $domainEventCollector,
+        private ?TrashManagerInterface $trashManager = null,
     ) {
     }
 
@@ -36,6 +38,8 @@ final class RemoveArticleTranslationMessageHandler
     {
         $article = $this->articleRepository->getOneBy($message->getIdentifier());
         $locale = $message->getLocale();
+
+        $this->trashManager?->store($article::RESOURCE_KEY, $article, ['locale' => $locale]);
 
         $dimensionContents = $article->getDimensionContents();
 
