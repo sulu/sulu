@@ -23,7 +23,7 @@
                     "_hasPermissions": false,
                     "id" : "@string@",
                     "title" : "Test Page 2",
-                    "author" : null,
+                    "author" : "@string@",
                     "created" : "@datetime@",
                     "changed" : "@datetime@",
                     "creator" : "@string@",

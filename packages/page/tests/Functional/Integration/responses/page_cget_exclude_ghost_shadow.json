@@ -23,7 +23,7 @@
                     "pages": [
                         {
                             "_hasPermissions": false,
-                            "author": null,
+                            "author": "@string@",
                             "changed": "@datetime@",
                             "changer": "Max Mustermann",
                             "created": "@datetime@",

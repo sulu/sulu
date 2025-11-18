@@ -17,6 +17,8 @@ use Sulu\Article\Domain\Event\ArticleCreatedEvent;
 use Sulu\Article\Domain\Model\ArticleInterface;
 use Sulu\Article\Domain\Repository\ArticleRepositoryInterface;
 use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
+use Sulu\Bundle\SecurityBundle\Entity\User;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  * @experimental
@@ -30,13 +32,28 @@ final class CreateArticleMessageHandler
         private ArticleRepositoryInterface $articleRepository,
         /** @var iterable<ArticleMapperInterface> */
         private iterable $articleMappers,
-        private DomainEventCollectorInterface $domainEventCollector
+        private DomainEventCollectorInterface $domainEventCollector,
+        private ?TokenStorageInterface $tokenStorage = null,
     ) {
     }
 
     public function __invoke(CreateArticleMessage $message): ArticleInterface
     {
         $data = $message->getData();
+
+        if (!\array_key_exists('author', $data)) {
+            $token = $this->tokenStorage?->getToken();
+            $user = $token?->getUser();
+            if (null !== $token && $user instanceof User) {
+                $contact = $user->getContact();
+                $data['author'] = $contact->getId();
+            }
+        }
+
+        if (!\array_key_exists('authored', $data)) {
+            $data['authored'] = (new \DateTimeImmutable())->format('c');
+        }
+
         $article = $this->articleRepository->createNew($message->getUuid());
 
         foreach ($this->articleMappers as $articleMapper) {

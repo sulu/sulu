@@ -12,11 +12,13 @@
 namespace Sulu\Page\Application\MessageHandler;
 
 use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
+use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Page\Application\Mapper\PageMapperInterface;
 use Sulu\Page\Application\Message\CreatePageMessage;
 use Sulu\Page\Domain\Event\PageCreatedEvent;
 use Sulu\Page\Domain\Model\PageInterface;
 use Sulu\Page\Domain\Repository\PageRepositoryInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  * @experimental
@@ -35,12 +37,27 @@ final class CreatePageMessageHandler
         private PageRepositoryInterface $pageRepository,
         private iterable $pageMappers,
         private DomainEventCollectorInterface $domainEventCollector,
+        private ?TokenStorageInterface $tokenStorage = null,
     ) {
     }
 
     public function __invoke(CreatePageMessage $message): PageInterface
     {
         $data = $message->getData();
+
+        if (!\array_key_exists('author', $data)) {
+            $token = $this->tokenStorage?->getToken();
+            $user = $token?->getUser();
+            if (null !== $token && $user instanceof User) {
+                $contact = $user->getContact();
+                $data['author'] = $contact->getId();
+            }
+        }
+
+        if (!\array_key_exists('authored', $data)) {
+            $data['authored'] = (new \DateTimeImmutable())->format('c');
+        }
+
         /** @var string $locale */
         $locale = $data['locale'];
         $page = $this->pageRepository->createNew($message->getUuid());

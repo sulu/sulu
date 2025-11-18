@@ -10,7 +10,7 @@
         "view": false
     },
     "author": null,
-    "authored": null,
+    "authored": "@datetime@",
     "availableLocales": [
         "en"
     ],
