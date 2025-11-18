@@ -19,6 +19,7 @@ use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItem;
 use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItemCollection;
 use Sulu\Bundle\AdminBundle\Admin\View\DropdownToolbarAction;
+use Sulu\Bundle\AdminBundle\Admin\View\PreviewFormViewBuilder;
 use Sulu\Bundle\AdminBundle\Admin\View\ToolbarAction;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewBuilderFactoryInterface;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewCollection;
@@ -210,7 +211,11 @@ class ArticleAdmin extends Admin
             return;
         }
 
+        $previewCondition = 'availableLocales && locale in availableLocales';
         foreach ($viewBuilders as $viewBuilder) {
+            if ($viewBuilder instanceof PreviewFormViewBuilder) {
+                $viewBuilder->setPreviewCondition($previewCondition);
+            }
             $viewCollection->add($viewBuilder);
         }
 
