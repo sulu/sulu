@@ -39,7 +39,9 @@ final class RemoveSnippetTranslationMessageHandler
         $snippet = $this->snippetRepository->getOneBy($message->getIdentifier());
         $locale = $message->getLocale();
 
-        $this->trashManager?->store($snippet::RESOURCE_KEY, $snippet, ['locale' => $locale]);
+        /** @var string $resourceKey */
+        $resourceKey = $snippet::RESOURCE_KEY;
+        $this->trashManager?->store($resourceKey, $snippet, ['locale' => $locale]);
 
         $dimensionContents = $snippet->getDimensionContents();
 

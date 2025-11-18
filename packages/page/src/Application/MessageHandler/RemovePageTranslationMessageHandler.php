@@ -39,7 +39,9 @@ final class RemovePageTranslationMessageHandler
         $page = $this->pageRepository->getOneBy($message->getIdentifier());
         $locale = $message->getLocale();
 
-        $this->trashManager?->store($page::RESOURCE_KEY, $page, ['locale' => $locale]);
+        /** @var string $resourceKey */
+        $resourceKey = $page::RESOURCE_KEY;
+        $this->trashManager?->store($resourceKey, $page, ['locale' => $locale]);
 
         $dimensionContents = $page->getDimensionContents();
 

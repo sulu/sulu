@@ -100,17 +100,20 @@ final class SnippetTrashItemHandler implements
         Assert::notNull($unlocalizedDimensionContent, 'Expected to find an unlocalized dimension content for the snippet.');
         Assert::notEmpty($localizedDimensionContents, 'Expected to find at least one localized dimension content for the snippet.');
 
-        // sort dimensionContents after the availableLocales from the unlocalizedDimension
+        // Reorder localized dimension contents to match the order defined in availableLocales.
         $availableLocales = $unlocalizedDimensionContent->getAvailableLocales();
         Assert::isArray($availableLocales, 'Expected availableLocales to be an array');
         /** @var array<string, SnippetDimensionContentInterface> $localizedDimensionContents */
         $localizedDimensionContents = \array_merge(
-            \array_flip(\array_filter($availableLocales, static fn ($locale) => \array_key_exists($locale, $localizedDimensionContents))),
+            \array_flip(
+                \array_filter(
+                    $availableLocales, static fn ($locale) => \array_key_exists($locale, $localizedDimensionContents)
+                )
+            ),
             $localizedDimensionContents
         );
 
         foreach ($localizedDimensionContents as $locale => $localizedDimensionContent) {
-            /** @var array<int, SnippetDimensionContent> $dimensionContents */
             $dimensionContents = [$unlocalizedDimensionContent, $localizedDimensionContent];
 
             $mergedDimensionContent = $this->contentMerger->merge(
@@ -155,29 +158,29 @@ final class SnippetTrashItemHandler implements
     {
         $restoreData = $trashItem->getRestoreData();
         $snippetUuid = $trashItem->getResourceId();
-        $restoreTranslation = true;
 
         $snippet = $this->snippetRepository->findOneBy(['uuid' => $snippetUuid]);
-
         if (!$snippet) {
             $snippet = $this->snippetRepository->createNew($snippetUuid);
-            $restoreTranslation = false;
+            $this->snippetRepository->add($snippet);
         }
 
-        $this->snippetRepository->add($snippet);
-
         $dimensionContents = $restoreData['dimensionContents'] ?? [];
+        /** @var list<string> $allLocales */
         $allLocales = [];
+        /** @var string|null $snippetTitle */
         $snippetTitle = null;
         Assert::isArray($dimensionContents, 'Expected dimensionContents to be an array');
-        /** @var array<string, mixed> $dimensionContentData */
         foreach ($dimensionContents as $dimensionContentData) {
-            if (!$snippetTitle && \array_key_exists('title', $dimensionContentData) && $dimensionContentData['title']) {
-                /** @var string $snippetTitle */
+            Assert::isArray($dimensionContentData, 'Expected dimensionContentData to be an array');
+            /** @var array<string, mixed> $dimensionContentData */
+            if (null === $snippetTitle && \array_key_exists('title', $dimensionContentData) && $dimensionContentData['title']) {
+                Assert::string($dimensionContentData['title']);
                 $snippetTitle = $dimensionContentData['title'];
             }
 
             if (\array_key_exists('locale', $dimensionContentData) && $dimensionContentData['locale']) {
+                Assert::string($dimensionContentData['locale']);
                 $allLocales[] = $dimensionContentData['locale'];
             }
 
@@ -186,11 +189,9 @@ final class SnippetTrashItemHandler implements
             }
         }
 
-        /** @var array{locales?: string[]} $context */
         $context = $allLocales ? ['locales' => $allLocales] : [];
 
-        if ($restoreTranslation) {
-            /** @var string $locale */
+        if ('translation' === $trashItem->getRestoreType()) {
             foreach ($allLocales as $locale) {
                 $this->domainEventCollector->collect(new SnippetTranslationRestoredEvent(
                     $snippet,
@@ -198,14 +199,16 @@ final class SnippetTrashItemHandler implements
                     $restoreData,
                 ));
             }
-        } else {
-            $this->domainEventCollector->collect(new SnippetRestoredEvent(
-                $snippet,
-                $snippetTitle,
-                $context,
-                $restoreData,
-            ));
+
+            return $snippet;
         }
+
+        $this->domainEventCollector->collect(new SnippetRestoredEvent(
+            $snippet,
+            $snippetTitle,
+            $context,
+            $restoreData,
+        ));
 
         return $snippet;
     }

@@ -39,7 +39,9 @@ final class RemoveArticleTranslationMessageHandler
         $article = $this->articleRepository->getOneBy($message->getIdentifier());
         $locale = $message->getLocale();
 
-        $this->trashManager?->store($article::RESOURCE_KEY, $article, ['locale' => $locale]);
+        /** @var string $resourceKey */
+        $resourceKey = $article::RESOURCE_KEY;
+        $this->trashManager?->store($resourceKey, $article, ['locale' => $locale]);
 
         $dimensionContents = $article->getDimensionContents();
 
