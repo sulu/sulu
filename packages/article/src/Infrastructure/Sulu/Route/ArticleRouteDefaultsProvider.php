@@ -14,13 +14,11 @@ declare(strict_types=1);
 namespace Sulu\Article\Infrastructure\Sulu\Route;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Sulu\Article\Application\Webspace\WebspaceResolver;
-use Sulu\Article\Domain\Model\AdditionalWebspacesInterface;
+use Sulu\Article\Domain\Model\ArticleDimensionContentInterface;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
 use Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeResolverInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Content\Application\ContentAggregator\ContentAggregatorInterface;
-use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Infrastructure\Sulu\Route\ContentRouteDefaultsProvider;
 use Sulu\Route\Application\Routing\Matcher\RouteDefaultsProviderInterface;
 use Sulu\Route\Domain\Model\Route;
@@ -36,7 +34,6 @@ class ArticleRouteDefaultsProvider extends ContentRouteDefaultsProvider implemen
         MetadataProviderRegistry $metadataProviderRegistry,
         CacheLifetimeResolverInterface $cacheLifetimeResolver,
         private WebspaceManagerInterface $webspaceManager,
-        private WebspaceResolver $webspaceResolver,
         private string $environment = 'prod',
     ) {
         parent::__construct($entityManager, $contentAggregator, $metadataProviderRegistry, $cacheLifetimeResolver);
@@ -48,7 +45,7 @@ class ArticleRouteDefaultsProvider extends ContentRouteDefaultsProvider implemen
 
         // Add SEO data if object supports additional webspaces
         if (isset($defaults['object'])
-            && $defaults['object'] instanceof AdditionalWebspacesInterface
+            && $defaults['object'] instanceof ArticleDimensionContentInterface
         ) {
             $seoData = $this->getSeoData($defaults['object'], $route);
             if ($seoData) {
@@ -64,18 +61,14 @@ class ArticleRouteDefaultsProvider extends ContentRouteDefaultsProvider implemen
      *
      * @return array<string, mixed>|null
      */
-    private function getSeoData(AdditionalWebspacesInterface $dimensionContent, Route $route): ?array
+    private function getSeoData(ArticleDimensionContentInterface $dimensionContent, Route $route): ?array
     {
-        if (!$dimensionContent instanceof DimensionContentInterface) {
-            return null;
-        }
-
         $locale = $dimensionContent->getLocale();
         if (!$locale) {
             return null;
         }
 
-        $mainWebspace = $this->webspaceResolver->resolveMainWebspace($dimensionContent, $locale);
+        $mainWebspace = $dimensionContent->getMainWebspace();
         if (!$mainWebspace) {
             return null;
         }

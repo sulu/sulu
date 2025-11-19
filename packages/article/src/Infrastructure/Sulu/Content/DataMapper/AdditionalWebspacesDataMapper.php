@@ -11,21 +11,31 @@ declare(strict_types=1);
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Article\Application\Content\DataMapper;
+namespace Sulu\Article\Infrastructure\Sulu\Content\DataMapper;
 
-use Sulu\Article\Domain\Model\AdditionalWebspacesInterface;
+use Sulu\Article\Domain\Model\ArticleDimensionContentInterface;
 use Sulu\Content\Application\ContentDataMapper\DataMapper\DataMapperInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Webmozart\Assert\Assert;
 
 class AdditionalWebspacesDataMapper implements DataMapperInterface
 {
+    /**
+     * @param array<string, string>|null $defaultMainWebspace
+     * @param array<string, string[]>|null $defaultAdditionalWebspaces
+     */
+    public function __construct(
+        private readonly ?array $defaultMainWebspace,
+        private readonly ?array $defaultAdditionalWebspaces,
+    ) {
+    }
+
     public function map(
         DimensionContentInterface $unlocalizedDimensionContent,
         DimensionContentInterface $localizedDimensionContent,
         array $data,
     ): void {
-        if (!$localizedDimensionContent instanceof AdditionalWebspacesInterface) {
+        if (!$localizedDimensionContent instanceof ArticleDimensionContentInterface) {
             return;
         }
 
@@ -35,7 +45,7 @@ class AdditionalWebspacesDataMapper implements DataMapperInterface
     /**
      * @param mixed[] $data
      */
-    private function setAdditionalWebspacesData(AdditionalWebspacesInterface $dimensionContent, array $data): void
+    private function setAdditionalWebspacesData(ArticleDimensionContentInterface $dimensionContent, array $data): void
     {
         $customizeWebspaceSettings = false;
 
@@ -45,10 +55,13 @@ class AdditionalWebspacesDataMapper implements DataMapperInterface
             $dimensionContent->setCustomizeWebspaceSettings($customizeWebspaceSettings);
         }
 
-        // If customize is not activated, set both mainWebspace and additionalWebspaces to null
+        // If customize is not activated, set main and additional webspaces to default values from the configuration.
         if (!$customizeWebspaceSettings) {
-            $dimensionContent->setMainWebspace(null);
-            $dimensionContent->setAdditionalWebspaces(null);
+            $mainWebspace = $this->defaultMainWebspace['default'] ?? null;
+            $additionalWebspaces = $this->defaultAdditionalWebspaces['default'] ?? [];
+            $dimensionContent->setMainWebspace($mainWebspace);
+            $dimensionContent->setAdditionalWebspaces(\array_values($additionalWebspaces));
+            $dimensionContent->setCustomizeWebspaceSettings($customizeWebspaceSettings);
 
             return;
         }

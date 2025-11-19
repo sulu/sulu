@@ -30,4 +30,24 @@ use Sulu\Content\Domain\Model\WorkflowInterface;
 interface ArticleDimensionContentInterface extends DimensionContentInterface, ExcerptInterface, SeoInterface, TemplateInterface, RoutableInterface, WorkflowInterface, ShadowInterface, WebspaceInterface, AuthorInterface, AuditableInterface
 {
     public function getTitle(): ?string;
+
+    public function getCustomizeWebspaceSettings(): bool;
+
+    public function setCustomizeWebspaceSettings(bool $customizeWebspaceSettings): void;
+
+    /**
+     * @return string[]
+     */
+    public function getAdditionalWebspaces(): array;
+
+    /**
+     * @param string[] $additionalWebspaces
+     */
+    public function setAdditionalWebspaces(array $additionalWebspaces): self;
+
+    public function addAdditionalWebspace(string $additionalWebspace): self;
+
+    public function hasAdditionalWebspace(string $additionalWebspace): bool;
+
+    public function getTargetWebspace(string $currentWebspaceKey): string;
 }
