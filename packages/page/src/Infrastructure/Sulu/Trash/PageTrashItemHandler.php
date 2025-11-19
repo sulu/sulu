@@ -214,14 +214,14 @@ final class PageTrashItemHandler implements
             }
 
             return $page;
-        } else {
-            $this->domainEventCollector->collect(new PageRestoredEvent(
-                $page,
-                $pageTitle,
-                $context,
-                $restoreData,
-            ));
         }
+
+        $this->domainEventCollector->collect(new PageRestoredEvent(
+            $page,
+            $pageTitle,
+            $context,
+            $restoreData,
+        ));
 
         return $page;
     }
