@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Sulu\Content\Tests\Application\ExampleTestBundle\Reference;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query\Expr\Join;
@@ -184,7 +185,7 @@ class ExampleReferenceRefresher implements ReferenceRefresherInterface
                     }
                     yield $this->contentMerger->merge(
                         new DimensionContentCollection(
-                            $unlocalizedDimensionContent ? [$exampleDimensionContent, $unlocalizedDimensionContent] : [$exampleDimensionContent],
+                            new ArrayCollection($unlocalizedDimensionContent ? [$exampleDimensionContent, $unlocalizedDimensionContent] : [$exampleDimensionContent]),
                             $exampleDimensionContent::getEffectiveDimensionAttributes(['locale' => $locale, 'stage' => $stage]),
                             ExampleDimensionContent::class
                         )

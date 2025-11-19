@@ -75,7 +75,7 @@ final class CopyPageMessageHandler
             );
         }
 
-        $dimensionContentCollection = new DimensionContentCollection($sourcePage->getDimensionContents()->toArray(), [], PageDimensionContent::class);
+        $dimensionContentCollection = new DimensionContentCollection($sourcePage->getDimensionContents(), [], PageDimensionContent::class);
         /** @var PageDimensionContent $localizedDimensionContent */
         $localizedDimensionContent = $dimensionContentCollection->getDimensionContent(['locale' => $message->getLocale()]);
 

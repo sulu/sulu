@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Sulu\Content\Tests\Unit\Content\Domain\Model;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use PHPUnit\Framework\TestCase;
 use Sulu\Content\Domain\Model\DimensionContentCollection;
 use Sulu\Content\Domain\Model\DimensionContentCollectionInterface;
@@ -32,7 +33,7 @@ class DimensionContentCollectionTest extends TestCase
         array $dimensionContents,
         array $dimensionAttributes
     ): DimensionContentCollectionInterface {
-        return new DimensionContentCollection($dimensionContents, $dimensionAttributes, ExampleDimensionContent::class);
+        return new DimensionContentCollection(new ArrayCollection($dimensionContents), $dimensionAttributes, ExampleDimensionContent::class);
     }
 
     public function testCount(): void

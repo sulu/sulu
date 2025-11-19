@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Sulu\Content\Tests\Traits;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Content\Application\ContentDataMapper\ContentDataMapper;
@@ -91,7 +92,7 @@ trait CreateExampleTrait
 
             // Map Draft Data
             $draftDimensionContentCollection = new DimensionContentCollection(
-                [$draftUnlocalizedDimension, $draftLocalizedDimension],
+                new ArrayCollection([$draftUnlocalizedDimension, $draftLocalizedDimension]),
                 ['stage' => DimensionContentInterface::STAGE_DRAFT, 'locale' => $locale],
                 ExampleDimensionContent::class
             );
@@ -131,7 +132,7 @@ trait CreateExampleTrait
 
                 // map data
                 $liveDimensionContentCollection = new DimensionContentCollection(
-                    \array_filter([$liveUnlocalizedDimension, $liveLocalizedDimension]),
+                    new ArrayCollection(\array_filter([$liveUnlocalizedDimension, $liveLocalizedDimension])),
                     ['stage' => DimensionContentInterface::STAGE_LIVE, 'locale' => $locale],
                     ExampleDimensionContent::class
                 );

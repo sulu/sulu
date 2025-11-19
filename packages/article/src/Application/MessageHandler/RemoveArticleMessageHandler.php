@@ -45,7 +45,7 @@ final class RemoveArticleMessageHandler
         $resourceKey = $article::RESOURCE_KEY;
         $this->trashManager?->store($resourceKey, $article);
 
-        $dimensionContentCollection = new DimensionContentCollection($article->getDimensionContents()->toArray(), [], ArticleDimensionContent::class);
+        $dimensionContentCollection = new DimensionContentCollection($article->getDimensionContents(), [], ArticleDimensionContent::class);
         /** @var ArticleDimensionContentInterface|null $localizedDimensionContent */
         $localizedDimensionContent = $dimensionContentCollection->getDimensionContent(['locale' => $message->getLocale()]);
         $unlocalizedDimensionContent = $dimensionContentCollection->getDimensionContent(['locale' => null, 'stage' => 'draft']);

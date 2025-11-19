@@ -63,7 +63,7 @@ class ArticleVersionRestoredEvent extends DomainEvent
 
     public function getResourceTitle(): ?string
     {
-        $dimensionContentCollection = new DimensionContentCollection($this->article->getDimensionContents()->toArray(), [], ArticleDimensionContent::class);
+        $dimensionContentCollection = new DimensionContentCollection($this->article->getDimensionContents(), [], ArticleDimensionContent::class);
 
         return $dimensionContentCollection->getDimensionContent(['locale' => $this->locale])?->getTitle();
     }

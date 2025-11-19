@@ -45,7 +45,7 @@ final class RemoveSnippetMessageHandler
         $resourceKey = $snippet::RESOURCE_KEY;
         $this->trashManager?->store($resourceKey, $snippet);
 
-        $dimensionContentCollection = new DimensionContentCollection($snippet->getDimensionContents()->toArray(), [], SnippetDimensionContent::class);
+        $dimensionContentCollection = new DimensionContentCollection($snippet->getDimensionContents(), [], SnippetDimensionContent::class);
         /** @var SnippetDimensionContentInterface|null $localizedDimensionContent */
         $localizedDimensionContent = $dimensionContentCollection->getDimensionContent(['locale' => $message->getLocale()]);
         $unlocalizedDimensionContent = $dimensionContentCollection->getDimensionContent(['locale' => null, 'stage' => 'draft']);

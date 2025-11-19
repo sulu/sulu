@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Sulu\Content\Application\DimensionContentCollectionFactory;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Sulu\Content\Application\ContentDataMapper\ContentDataMapperInterface;
 use Sulu\Content\Application\ContentMetadataInspector\ContentMetadataInspectorInterface;
 use Sulu\Content\Domain\Factory\DimensionContentCollectionFactoryInterface;
@@ -85,10 +86,10 @@ class DimensionContentCollectionFactory implements DimensionContentCollectionFac
         }
 
         $dimensionContentCollection = new DimensionContentCollection(
-            \array_filter([
+            new ArrayCollection(\array_filter([
                 $unlocalizedDimensionContent,
                 $localizedDimensionContent,
-            ]),
+            ])),
             $dimensionAttributes,
             $dimensionContentCollection->getDimensionContentClass()
         );

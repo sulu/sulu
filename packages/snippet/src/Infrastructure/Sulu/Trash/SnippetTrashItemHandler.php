@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Sulu\Snippet\Infrastructure\Sulu\Trash;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
 use Sulu\Bundle\TrashBundle\Application\RestoreConfigurationProvider\RestoreConfiguration;
 use Sulu\Bundle\TrashBundle\Application\RestoreConfigurationProvider\RestoreConfigurationProviderInterface;
@@ -114,11 +115,9 @@ final class SnippetTrashItemHandler implements
         );
 
         foreach ($localizedDimensionContents as $locale => $localizedDimensionContent) {
-            $dimensionContents = [$unlocalizedDimensionContent, $localizedDimensionContent];
-
             $mergedDimensionContent = $this->contentMerger->merge(
                 new DimensionContentCollection(
-                    $dimensionContents,
+                    new ArrayCollection([$unlocalizedDimensionContent, $localizedDimensionContent]),
                     [
                         'locale' => $locale,
                         'stage' => DimensionContentInterface::STAGE_DRAFT,
