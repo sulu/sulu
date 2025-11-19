@@ -36,7 +36,7 @@ final class WebsiteArticleIndexListener
         $resourceId = $event->getResourceId();
 
         $identifiers = \array_map(
-            fn (string $locale) => ArticleInterface::RESOURCE_KEY . '::' . $resourceId . '::' . $locale,
+            fn (string $locale) => ArticleInterface::RESOURCE_KEY . '__' . $resourceId . '__' . $locale,
             $this->getLocales($event),
         );
 

@@ -108,7 +108,7 @@ class AdminContactReindexProviderTest extends SuluTestCase
         $this->assertSame(
             [
                 [
-                    'id' => ContactInterface::RESOURCE_KEY . '::' . $contact1->getId(),
+                    'id' => ContactInterface::RESOURCE_KEY . '__' . $contact1->getId(),
                     'resourceKey' => ContactInterface::RESOURCE_KEY,
                     'resourceId' => (string) $contact1->getId(),
                     'mediaId' => (string) $contact1->getAvatar()?->getId(),
@@ -117,7 +117,7 @@ class AdminContactReindexProviderTest extends SuluTestCase
                     'title' => $contact1->getFullName(),
                 ],
                 [
-                    'id' => ContactInterface::RESOURCE_KEY . '::' . $contact2->getId(),
+                    'id' => ContactInterface::RESOURCE_KEY . '__' . $contact2->getId(),
                     'resourceKey' => ContactInterface::RESOURCE_KEY,
                     'resourceId' => (string) $contact2->getId(),
                     'mediaId' => '',
@@ -139,8 +139,8 @@ class AdminContactReindexProviderTest extends SuluTestCase
         $this->entityManager->flush();
 
         $identifiers = [
-            ContactInterface::RESOURCE_KEY . '::' . $contact1->getId(),
-            ContactInterface::RESOURCE_KEY . '::' . $contact3->getId(),
+            ContactInterface::RESOURCE_KEY . '__' . $contact1->getId(),
+            ContactInterface::RESOURCE_KEY . '__' . $contact3->getId(),
         ];
 
         $config = ReindexConfig::create()

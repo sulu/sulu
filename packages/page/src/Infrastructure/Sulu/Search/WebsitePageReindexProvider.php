@@ -73,7 +73,7 @@ final class WebsitePageReindexProvider implements ReindexProviderInterface
             $authoredAt = $page['authored'] ?? $page['changed'];
 
             yield [
-                'id' => PageInterface::RESOURCE_KEY . '::' . ((string) $page['pageId']) . '::' . $page['locale'],
+                'id' => PageInterface::RESOURCE_KEY . '__' . ((string) $page['pageId']) . '__' . $page['locale'],
                 'resourceKey' => PageInterface::RESOURCE_KEY,
                 'resourceId' => (string) $page['pageId'],
                 'locale' => $page['locale'],
@@ -117,14 +117,14 @@ final class WebsitePageReindexProvider implements ReindexProviderInterface
             $conditions = [];
 
             foreach ($identifiers as $index => $identifier) {
-                $resourceKey = \explode('::', $identifier)[0];
+                $resourceKey = \explode('__', $identifier)[0];
 
                 if (PageInterface::RESOURCE_KEY !== $resourceKey) {
                     continue;
                 }
 
-                $id = \explode('::', $identifier)[1] ?? '';
-                $locale = \explode('::', $identifier)[2] ?? '';
+                $id = \explode('__', $identifier)[1] ?? '';
+                $locale = \explode('__', $identifier)[2] ?? '';
 
                 $conditions[] = "(dimensionContent.page = :id{$index} AND dimensionContent.locale = :locale{$index})";
                 $parameters["id{$index}"] = $id;

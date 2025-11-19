@@ -42,7 +42,7 @@ final class AdminPageIndexListener
         $resourceId = $event->getResourceId();
 
         $identifiers = \array_map(
-            fn (string $locale) => PageInterface::RESOURCE_KEY . '::' . $resourceId . '::' . $locale,
+            fn (string $locale) => PageInterface::RESOURCE_KEY . '__' . $resourceId . '__' . $locale,
             $this->getLocales($event),
         );
 

@@ -95,7 +95,7 @@ class AdminMediaReindexProviderTest extends SuluTestCase
 
         $expectedResult = [
             [
-                'id' => MediaInterface::RESOURCE_KEY . '::' . $media1->getId() . '::en',
+                'id' => MediaInterface::RESOURCE_KEY . '__' . $media1->getId() . '__en',
                 'resourceKey' => MediaInterface::RESOURCE_KEY,
                 'resourceId' => (string) $media1->getId(),
                 'mediaId' => (string) $media1->getId(),
@@ -105,7 +105,7 @@ class AdminMediaReindexProviderTest extends SuluTestCase
                 'locale' => 'en',
             ],
             [
-                'id' => MediaInterface::RESOURCE_KEY . '::' . $media2->getId() . '::de',
+                'id' => MediaInterface::RESOURCE_KEY . '__' . $media2->getId() . '__de',
                 'resourceKey' => MediaInterface::RESOURCE_KEY,
                 'resourceId' => (string) $media2->getId(),
                 'mediaId' => (string) $media2->getId(),
@@ -132,8 +132,8 @@ class AdminMediaReindexProviderTest extends SuluTestCase
         $media3 = $this->createMedia('Cool Media EN 2');
 
         $identifiers = [
-            MediaInterface::RESOURCE_KEY . '::' . $media1->getId() . '::en',
-            MediaInterface::RESOURCE_KEY . '::' . $media2->getId() . '::de',
+            MediaInterface::RESOURCE_KEY . '__' . $media1->getId() . '__en',
+            MediaInterface::RESOURCE_KEY . '__' . $media2->getId() . '__de',
         ];
 
         $config = ReindexConfig::create()

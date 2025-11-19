@@ -40,7 +40,7 @@ final class AdminSnippetIndexListener
         $resourceId = $event->getResourceId();
 
         $identifiers = \array_map(
-            fn (string $locale) => SnippetInterface::RESOURCE_KEY . '::' . $resourceId . '::' . $locale,
+            fn (string $locale) => SnippetInterface::RESOURCE_KEY . '__' . $resourceId . '__' . $locale,
             $this->getLocales($event),
         );
 

@@ -56,7 +56,7 @@ class AdminSnippetIndexListenerTest extends TestCase
 
         $expectedConfig = ReindexConfig::create()
             ->withIndex('admin')
-            ->withIdentifiers([SnippetInterface::RESOURCE_KEY . '::123::en']);
+            ->withIdentifiers([SnippetInterface::RESOURCE_KEY . '__123__en']);
 
         $this->messageBus->dispatch($expectedConfig)
             ->willReturn(new Envelope($expectedConfig))
@@ -72,7 +72,7 @@ class AdminSnippetIndexListenerTest extends TestCase
 
         $expectedConfig = ReindexConfig::create()
             ->withIndex('admin')
-            ->withIdentifiers([SnippetInterface::RESOURCE_KEY . '::456::en']);
+            ->withIdentifiers([SnippetInterface::RESOURCE_KEY . '__456__en']);
 
         $this->messageBus->dispatch($expectedConfig)
             ->willReturn(new Envelope($expectedConfig))
@@ -88,7 +88,7 @@ class AdminSnippetIndexListenerTest extends TestCase
 
         $expectedConfig = ReindexConfig::create()
             ->withIndex('admin')
-            ->withIdentifiers([SnippetInterface::RESOURCE_KEY . '::789::en', SnippetInterface::RESOURCE_KEY . '::789::de']);
+            ->withIdentifiers([SnippetInterface::RESOURCE_KEY . '__789__en', SnippetInterface::RESOURCE_KEY . '__789__de']);
 
         $this->messageBus->dispatch($expectedConfig)
             ->willReturn(new Envelope($expectedConfig))
@@ -108,7 +108,7 @@ class AdminSnippetIndexListenerTest extends TestCase
 
         $expectedConfig = ReindexConfig::create()
             ->withIndex('admin')
-            ->withIdentifiers([SnippetInterface::RESOURCE_KEY . '::222::de']);
+            ->withIdentifiers([SnippetInterface::RESOURCE_KEY . '__222__de']);
 
         $this->messageBus->dispatch($expectedConfig)
             ->willReturn(new Envelope($expectedConfig))
@@ -124,7 +124,7 @@ class AdminSnippetIndexListenerTest extends TestCase
 
         $expectedConfig = ReindexConfig::create()
             ->withIndex('admin')
-            ->withIdentifiers([SnippetInterface::RESOURCE_KEY . '::333::de']);
+            ->withIdentifiers([SnippetInterface::RESOURCE_KEY . '__333__de']);
 
         $this->messageBus->dispatch($expectedConfig)
             ->willReturn(new Envelope($expectedConfig))
@@ -140,7 +140,7 @@ class AdminSnippetIndexListenerTest extends TestCase
 
         $expectedConfig = ReindexConfig::create()
             ->withIndex('admin')
-            ->withIdentifiers([SnippetInterface::RESOURCE_KEY . '::444::de']);
+            ->withIdentifiers([SnippetInterface::RESOURCE_KEY . '__444__de']);
 
         $this->messageBus->dispatch($expectedConfig)
             ->willReturn(new Envelope($expectedConfig))

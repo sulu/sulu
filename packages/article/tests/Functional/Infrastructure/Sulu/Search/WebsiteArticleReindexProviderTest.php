@@ -137,7 +137,7 @@ class WebsiteArticleReindexProviderTest extends SuluTestCase
 
         $expectedResult = [
             [
-                'id' => ArticleInterface::RESOURCE_KEY . '::' . $article1->getUuid() . '::en',
+                'id' => ArticleInterface::RESOURCE_KEY . '__' . $article1->getUuid() . '__en',
                 'resourceKey' => ArticleInterface::RESOURCE_KEY,
                 'resourceId' => $article1->getUuid(),
                 'locale' => 'en',
@@ -149,7 +149,7 @@ class WebsiteArticleReindexProviderTest extends SuluTestCase
                 'authoredAt' => (new \DateTimeImmutable('1995-11-29 12:00:00'))->format('c'),
             ],
             [
-                'id' => ArticleInterface::RESOURCE_KEY . '::' . $article2->getUuid() . '::de',
+                'id' => ArticleInterface::RESOURCE_KEY . '__' . $article2->getUuid() . '__de',
                 'resourceKey' => ArticleInterface::RESOURCE_KEY,
                 'resourceId' => $article2->getUuid(),
                 'locale' => 'de',
@@ -161,7 +161,7 @@ class WebsiteArticleReindexProviderTest extends SuluTestCase
                 'authoredAt' => (new \DateTimeImmutable($changedDateString2))->format('c'),
             ],
             [
-                'id' => ArticleInterface::RESOURCE_KEY . '::' . $article2->getUuid() . '::en',
+                'id' => ArticleInterface::RESOURCE_KEY . '__' . $article2->getUuid() . '__en',
                 'resourceKey' => ArticleInterface::RESOURCE_KEY,
                 'resourceId' => $article2->getUuid(),
                 'locale' => 'en',
@@ -247,7 +247,7 @@ class WebsiteArticleReindexProviderTest extends SuluTestCase
 
         $expectedResult = [
             [
-                'id' => ArticleInterface::RESOURCE_KEY . '::' . $article1->getUuid() . '::en',
+                'id' => ArticleInterface::RESOURCE_KEY . '__' . $article1->getUuid() . '__en',
                 'resourceKey' => ArticleInterface::RESOURCE_KEY,
                 'resourceId' => $article1->getUuid(),
                 'locale' => 'en',
@@ -259,7 +259,7 @@ class WebsiteArticleReindexProviderTest extends SuluTestCase
                 'authoredAt' => (new \DateTimeImmutable('1995-11-29 12:00:00'))->format('c'),
             ],
             [
-                'id' => ArticleInterface::RESOURCE_KEY . '::' . $article2->getUuid() . '::de',
+                'id' => ArticleInterface::RESOURCE_KEY . '__' . $article2->getUuid() . '__de',
                 'resourceKey' => ArticleInterface::RESOURCE_KEY,
                 'resourceId' => $article2->getUuid(),
                 'locale' => 'de',
@@ -271,7 +271,7 @@ class WebsiteArticleReindexProviderTest extends SuluTestCase
                 'authoredAt' => (new \DateTimeImmutable($changedDateString2))->format('c'),
             ],
             [
-                'id' => ArticleInterface::RESOURCE_KEY . '::' . $article2->getUuid() . '::en',
+                'id' => ArticleInterface::RESOURCE_KEY . '__' . $article2->getUuid() . '__en',
                 'resourceKey' => ArticleInterface::RESOURCE_KEY,
                 'resourceId' => $article2->getUuid(),
                 'locale' => 'en',
@@ -340,8 +340,8 @@ class WebsiteArticleReindexProviderTest extends SuluTestCase
         ]);
 
         $identifiers = [
-            ArticleInterface::RESOURCE_KEY . '::' . $article1->getUuid() . '::en',
-            ArticleInterface::RESOURCE_KEY . '::' . $article2->getUuid() . '::de',
+            ArticleInterface::RESOURCE_KEY . '__' . $article1->getUuid() . '__en',
+            ArticleInterface::RESOURCE_KEY . '__' . $article2->getUuid() . '__de',
         ];
 
         $config = ReindexConfig::create()

@@ -105,7 +105,7 @@ class AdminCollectionReindexProviderTest extends SuluTestCase
 
         $expectedResult = [
             [
-                'id' => CollectionInterface::RESOURCE_KEY . '::' . $collection1->getId() . '::en',
+                'id' => CollectionInterface::RESOURCE_KEY . '__' . $collection1->getId() . '__en',
                 'resourceKey' => CollectionInterface::RESOURCE_KEY,
                 'resourceId' => (string) $collection1->getId(),
                 'changedAt' => (new \DateTimeImmutable($changedDateString1))->format('c'),
@@ -114,7 +114,7 @@ class AdminCollectionReindexProviderTest extends SuluTestCase
                 'locale' => 'en',
             ],
             [
-                'id' => CollectionInterface::RESOURCE_KEY . '::' . $collection2->getId() . '::de',
+                'id' => CollectionInterface::RESOURCE_KEY . '__' . $collection2->getId() . '__de',
                 'resourceKey' => CollectionInterface::RESOURCE_KEY,
                 'resourceId' => (string) $collection2->getId(),
                 'changedAt' => (new \DateTimeImmutable($changedDateString2))->format('c'),
@@ -124,7 +124,7 @@ class AdminCollectionReindexProviderTest extends SuluTestCase
             ],
 
             [
-                'id' => CollectionInterface::RESOURCE_KEY . '::' . $collection2->getId() . '::en',
+                'id' => CollectionInterface::RESOURCE_KEY . '__' . $collection2->getId() . '__en',
                 'resourceKey' => CollectionInterface::RESOURCE_KEY,
                 'resourceId' => (string) $collection2->getId(),
                 'changedAt' => (new \DateTimeImmutable($changedDateString2))->format('c'),
@@ -172,8 +172,8 @@ class AdminCollectionReindexProviderTest extends SuluTestCase
         $this->entityManager->flush();
 
         $identifiers = [
-            CollectionInterface::RESOURCE_KEY . '::' . $collection1->getId() . '::en',
-            CollectionInterface::RESOURCE_KEY . '::' . $collection2->getId() . '::de',
+            CollectionInterface::RESOURCE_KEY . '__' . $collection1->getId() . '__en',
+            CollectionInterface::RESOURCE_KEY . '__' . $collection2->getId() . '__de',
         ];
 
         $config = ReindexConfig::create()

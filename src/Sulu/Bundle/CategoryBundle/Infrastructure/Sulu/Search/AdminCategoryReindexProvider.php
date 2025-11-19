@@ -67,7 +67,7 @@ final class AdminCategoryReindexProvider implements ReindexProviderInterface
         /** @var Category $category */
         foreach ($categories as $category) {
             yield [
-                'id' => CategoryInterface::RESOURCE_KEY . '::' . ((string) $category['id']) . '::' . $category['locale'],
+                'id' => CategoryInterface::RESOURCE_KEY . '__' . ((string) $category['id']) . '__' . $category['locale'],
                 'resourceKey' => CategoryInterface::RESOURCE_KEY,
                 'resourceId' => (string) $category['id'],
                 'changedAt' => $category['changed']->format('c'),
@@ -98,14 +98,14 @@ final class AdminCategoryReindexProvider implements ReindexProviderInterface
             $parameters = [];
 
             foreach ($identifiers as $index => $identifier) {
-                $resourceKey = \explode('::', $identifier)[0];
+                $resourceKey = \explode('__', $identifier)[0];
 
                 if (CategoryInterface::RESOURCE_KEY !== $resourceKey) {
                     continue;
                 }
 
-                $id = \explode('::', $identifier)[1] ?? '';
-                $locale = \explode('::', $identifier)[2] ?? '';
+                $id = \explode('__', $identifier)[1] ?? '';
+                $locale = \explode('__', $identifier)[2] ?? '';
 
                 $conditions[] = "(category.id = :id{$index} AND translation.locale = :locale{$index})";
                 $parameters["id{$index}"] = $id;

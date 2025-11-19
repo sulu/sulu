@@ -98,7 +98,7 @@ class AdminSnippetReindexProviderTest extends SuluTestCase
 
         $expectedResult = [
             [
-                'id' => SnippetInterface::RESOURCE_KEY . '::' . $snippet2->getUuid() . '::de',
+                'id' => SnippetInterface::RESOURCE_KEY . '__' . $snippet2->getUuid() . '__de',
                 'resourceKey' => SnippetInterface::RESOURCE_KEY,
                 'resourceId' => $snippet2->getUuid(),
                 'changedAt' => (new \DateTimeImmutable($changedDateString2))->format('c'),
@@ -107,7 +107,7 @@ class AdminSnippetReindexProviderTest extends SuluTestCase
                 'locale' => 'de',
             ],
             [
-                'id' => SnippetInterface::RESOURCE_KEY . '::' . $snippet1->getUuid() . '::en',
+                'id' => SnippetInterface::RESOURCE_KEY . '__' . $snippet1->getUuid() . '__en',
                 'resourceKey' => SnippetInterface::RESOURCE_KEY,
                 'resourceId' => $snippet1->getUuid(),
                 'changedAt' => (new \DateTimeImmutable($changedDateString1))->format('c'),
@@ -116,7 +116,7 @@ class AdminSnippetReindexProviderTest extends SuluTestCase
                 'locale' => 'en',
             ],
             [
-                'id' => SnippetInterface::RESOURCE_KEY . '::' . $snippet2->getUuid() . '::en',
+                'id' => SnippetInterface::RESOURCE_KEY . '__' . $snippet2->getUuid() . '__en',
                 'resourceKey' => SnippetInterface::RESOURCE_KEY,
                 'resourceId' => $snippet2->getUuid(),
                 'changedAt' => (new \DateTimeImmutable($changedDateString2))->format('c'),
@@ -186,8 +186,8 @@ class AdminSnippetReindexProviderTest extends SuluTestCase
         ]);
 
         $identifiers = [
-            SnippetInterface::RESOURCE_KEY . '::' . $snippet1->getUuid() . '::de',
-            SnippetInterface::RESOURCE_KEY . '::' . $snippet2->getUuid() . '::en',
+            SnippetInterface::RESOURCE_KEY . '__' . $snippet1->getUuid() . '__de',
+            SnippetInterface::RESOURCE_KEY . '__' . $snippet2->getUuid() . '__en',
         ];
 
         $config = ReindexConfig::create()

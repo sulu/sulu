@@ -105,7 +105,7 @@ class AdminAccountReindexProviderTest extends SuluTestCase
         $this->assertSame(
             [
                 [
-                    'id' => AccountInterface::RESOURCE_KEY . '::' . $account1->getId(),
+                    'id' => AccountInterface::RESOURCE_KEY . '__' . $account1->getId(),
                     'resourceKey' => AccountInterface::RESOURCE_KEY,
                     'resourceId' => (string) $account1->getId(),
                     'mediaId' => (string) $account1->getLogo()?->getId(),
@@ -114,7 +114,7 @@ class AdminAccountReindexProviderTest extends SuluTestCase
                     'title' => $account1->getName(),
                 ],
                 [
-                    'id' => AccountInterface::RESOURCE_KEY . '::' . $account2->getId(),
+                    'id' => AccountInterface::RESOURCE_KEY . '__' . $account2->getId(),
                     'resourceKey' => AccountInterface::RESOURCE_KEY,
                     'resourceId' => (string) $account2->getId(),
                     'mediaId' => '',
@@ -136,8 +136,8 @@ class AdminAccountReindexProviderTest extends SuluTestCase
         $this->entityManager->flush();
 
         $identifiers = [
-            AccountInterface::RESOURCE_KEY . '::' . $account1->getId(),
-            AccountInterface::RESOURCE_KEY . '::' . $account3->getId(),
+            AccountInterface::RESOURCE_KEY . '__' . $account1->getId(),
+            AccountInterface::RESOURCE_KEY . '__' . $account3->getId(),
         ];
 
         $config = ReindexConfig::create()

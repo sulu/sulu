@@ -61,7 +61,7 @@ class AdminContactIndexListenerTest extends TestCase
 
         $expectedConfig = ReindexConfig::create()
             ->withIndex('admin')
-            ->withIdentifiers([AccountInterface::RESOURCE_KEY . '::123']);
+            ->withIdentifiers([AccountInterface::RESOURCE_KEY . '__123']);
 
         $this->messageBus->dispatch($expectedConfig)
             ->willReturn(new Envelope($expectedConfig))
@@ -78,7 +78,7 @@ class AdminContactIndexListenerTest extends TestCase
 
         $expectedConfig = ReindexConfig::create()
             ->withIndex('admin')
-            ->withIdentifiers([AccountInterface::RESOURCE_KEY . '::456']);
+            ->withIdentifiers([AccountInterface::RESOURCE_KEY . '__456']);
 
         $this->messageBus->dispatch($expectedConfig)
             ->willReturn(new Envelope($expectedConfig))
@@ -96,7 +96,7 @@ class AdminContactIndexListenerTest extends TestCase
 
         $expectedConfig = ReindexConfig::create()
             ->withIndex('admin')
-            ->withIdentifiers([AccountInterface::RESOURCE_KEY . '::789']);
+            ->withIdentifiers([AccountInterface::RESOURCE_KEY . '__789']);
 
         $this->messageBus->dispatch($expectedConfig)
             ->willReturn(new Envelope($expectedConfig))
@@ -114,7 +114,7 @@ class AdminContactIndexListenerTest extends TestCase
 
         $expectedConfig = ReindexConfig::create()
             ->withIndex('admin')
-            ->withIdentifiers([AccountInterface::RESOURCE_KEY . '::789']);
+            ->withIdentifiers([AccountInterface::RESOURCE_KEY . '__789']);
 
         $this->messageBus->dispatch($expectedConfig)
             ->willReturn(new Envelope($expectedConfig))
@@ -130,7 +130,7 @@ class AdminContactIndexListenerTest extends TestCase
 
         $expectedConfig = ReindexConfig::create()
             ->withIndex('admin')
-            ->withIdentifiers([ContactInterface::RESOURCE_KEY . '::123']);
+            ->withIdentifiers([ContactInterface::RESOURCE_KEY . '__123']);
 
         $this->messageBus->dispatch($expectedConfig)
             ->willReturn(new Envelope($expectedConfig))
@@ -146,7 +146,7 @@ class AdminContactIndexListenerTest extends TestCase
 
         $expectedConfig = ReindexConfig::create()
             ->withIndex('admin')
-            ->withIdentifiers([ContactInterface::RESOURCE_KEY . '::456']);
+            ->withIdentifiers([ContactInterface::RESOURCE_KEY . '__456']);
 
         $this->messageBus->dispatch($expectedConfig)
             ->willReturn(new Envelope($expectedConfig))
@@ -164,7 +164,7 @@ class AdminContactIndexListenerTest extends TestCase
 
         $expectedConfig = ReindexConfig::create()
             ->withIndex('admin')
-            ->withIdentifiers([ContactInterface::RESOURCE_KEY . '::789']);
+            ->withIdentifiers([ContactInterface::RESOURCE_KEY . '__789']);
 
         $this->messageBus->dispatch($expectedConfig)
             ->willReturn(new Envelope($expectedConfig))
@@ -182,7 +182,7 @@ class AdminContactIndexListenerTest extends TestCase
 
         $expectedConfig = ReindexConfig::create()
             ->withIndex('admin')
-            ->withIdentifiers([ContactInterface::RESOURCE_KEY . '::789']);
+            ->withIdentifiers([ContactInterface::RESOURCE_KEY . '__789']);
 
         $this->messageBus->dispatch($expectedConfig)
             ->willReturn(new Envelope($expectedConfig))

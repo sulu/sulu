@@ -56,7 +56,7 @@ class AdminCollectionIndexListenerTest extends TestCase
 
         $expectedConfig = ReindexConfig::create()
             ->withIndex('admin')
-            ->withIdentifiers([CollectionInterface::RESOURCE_KEY . '::' . $collection->getId() . '::en']);
+            ->withIdentifiers([CollectionInterface::RESOURCE_KEY . '__' . $collection->getId() . '__en']);
 
         $this->messageBus->dispatch($expectedConfig)
             ->willReturn(new Envelope($expectedConfig))
@@ -73,7 +73,7 @@ class AdminCollectionIndexListenerTest extends TestCase
 
         $expectedConfig = ReindexConfig::create()
             ->withIndex('admin')
-            ->withIdentifiers([CollectionInterface::RESOURCE_KEY . '::' . $collection->getId() . '::en']);
+            ->withIdentifiers([CollectionInterface::RESOURCE_KEY . '__' . $collection->getId() . '__en']);
 
         $this->messageBus->dispatch($expectedConfig)
             ->willReturn(new Envelope($expectedConfig))
@@ -90,7 +90,7 @@ class AdminCollectionIndexListenerTest extends TestCase
 
         $expectedConfig = ReindexConfig::create()
             ->withIndex('admin')
-            ->withIdentifiers([CollectionInterface::RESOURCE_KEY . '::' . $collection->getId() . '::en', CollectionInterface::RESOURCE_KEY . '::' . $collection->getId() . '::de']);
+            ->withIdentifiers([CollectionInterface::RESOURCE_KEY . '__' . $collection->getId() . '__en', CollectionInterface::RESOURCE_KEY . '__' . $collection->getId() . '__de']);
 
         $this->messageBus->dispatch($expectedConfig)
             ->willReturn(new Envelope($expectedConfig))
@@ -106,7 +106,7 @@ class AdminCollectionIndexListenerTest extends TestCase
 
         $expectedConfig = ReindexConfig::create()
             ->withIndex('admin')
-            ->withIdentifiers([CollectionInterface::RESOURCE_KEY . '::' . $collection->getId() . '::en']);
+            ->withIdentifiers([CollectionInterface::RESOURCE_KEY . '__' . $collection->getId() . '__en']);
 
         $this->messageBus->dispatch($expectedConfig)
             ->willReturn(new Envelope($expectedConfig))
