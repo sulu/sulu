@@ -20,7 +20,6 @@ use PHPUnit\Framework\Attributes\Depends;
 use Sulu\Bundle\TestBundle\Testing\AssertSnapshotTrait;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Bundle\TrashBundle\Domain\Repository\TrashItemRepositoryInterface;
-use Sulu\Content\Tests\Functional\Traits\CreateCategoryTrait;
 use Sulu\Snippet\Domain\Model\SnippetInterface;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
@@ -31,7 +30,6 @@ use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 class SnippetControllerTest extends SuluTestCase
 {
     use AssertSnapshotTrait;
-    use CreateCategoryTrait;
 
     /**
      * @var KernelBrowser
