@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace Sulu\Article\Application\Webspace;
 
+use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
+
 class WebspaceSettingsConfigurationResolver
 {
     /**
@@ -22,6 +24,7 @@ class WebspaceSettingsConfigurationResolver
     public function __construct(
         private array $defaultMainWebspace,
         private array $defaultAdditionalWebspaces,
+        private readonly WebspaceManagerInterface $webspaceManager,
     ) {
     }
 
@@ -33,6 +36,11 @@ class WebspaceSettingsConfigurationResolver
 
         if (\array_key_exists('default', $this->defaultMainWebspace)) {
             return $this->defaultMainWebspace['default'];
+        }
+
+        $webspaces = $this->webspaceManager->getWebspaceCollection()->getWebspaces();
+        if (1 === \count($webspaces)) {
+            return \reset($webspaces)->getKey();
         }
 
         throw new \Exception('No configured default main webspace for locale "' . $searchedLocale . '" not found.');

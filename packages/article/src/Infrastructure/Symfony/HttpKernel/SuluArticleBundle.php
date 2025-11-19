@@ -232,8 +232,7 @@ final class SuluArticleBundle extends AbstractBundle
         $services->set('sulu_article.additional_webspaces_data_mapper')
             ->class(AdditionalWebspacesDataMapper::class)
             ->args([
-                '%sulu_article.default_main_webspace%',
-                '%sulu_article.default_additional_webspaces%',
+                new Reference('sulu_article.webspace_settings_configuration_resolver'),
             ])
             ->tag('sulu_content.data_mapper');
 
@@ -246,6 +245,7 @@ final class SuluArticleBundle extends AbstractBundle
             ->args([
                 '%sulu_article.default_main_webspace%',
                 '%sulu_article.default_additional_webspaces%',
+                new Reference('sulu_core.webspace.webspace_manager'),
             ]);
 
         $services->set('sulu_article.article_admin')

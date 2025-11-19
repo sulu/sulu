@@ -184,20 +184,4 @@ class ArticleDimensionContent implements ArticleDimensionContentInterface
             $this,
         );
     }
-
-    public function getTargetWebspace(string $currentWebspaceKey): string
-    {
-        $additionalWebspaces = $this->getAdditionalWebspaces();
-
-        if ($this->getMainWebspace() === $currentWebspaceKey
-            || (
-                $additionalWebspaces
-                && \in_array($currentWebspaceKey, $additionalWebspaces, true)
-            )
-        ) {
-            return $currentWebspaceKey;
-        }
-
-        return $this->getMainWebspace() ?? '';
-    }
 }

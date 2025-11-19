@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Sulu\Article\Infrastructure\Sulu\Content\DataMapper;
 
+use Sulu\Article\Application\Webspace\WebspaceSettingsConfigurationResolver;
 use Sulu\Article\Domain\Model\ArticleDimensionContentInterface;
 use Sulu\Content\Application\ContentDataMapper\DataMapper\DataMapperInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
@@ -20,13 +21,8 @@ use Webmozart\Assert\Assert;
 
 class AdditionalWebspacesDataMapper implements DataMapperInterface
 {
-    /**
-     * @param array<string, string>|null $defaultMainWebspace
-     * @param array<string, string[]>|null $defaultAdditionalWebspaces
-     */
     public function __construct(
-        private readonly ?array $defaultMainWebspace,
-        private readonly ?array $defaultAdditionalWebspaces,
+        private readonly WebspaceSettingsConfigurationResolver $webspaceSettingsConfigurationResolver,
     ) {
     }
 
@@ -57,9 +53,10 @@ class AdditionalWebspacesDataMapper implements DataMapperInterface
 
         // If customize is not activated, set main and additional webspaces to default values from the configuration.
         if (!$customizeWebspaceSettings) {
-            $mainWebspace = $this->defaultMainWebspace['default'] ?? null;
-            $additionalWebspaces = $this->defaultAdditionalWebspaces['default'] ?? [];
-            $dimensionContent->setMainWebspace($mainWebspace);
+            $locale = (string) $dimensionContent->getLocale();
+            $defaultMainWebspace = $this->webspaceSettingsConfigurationResolver->getDefaultMainWebspaceForLocale($locale);
+            $additionalWebspaces = $this->webspaceSettingsConfigurationResolver->getDefaultAdditionalWebspacesForLocale($locale);
+            $dimensionContent->setMainWebspace($defaultMainWebspace);
             $dimensionContent->setAdditionalWebspaces(\array_values($additionalWebspaces));
             $dimensionContent->setCustomizeWebspaceSettings($customizeWebspaceSettings);
 

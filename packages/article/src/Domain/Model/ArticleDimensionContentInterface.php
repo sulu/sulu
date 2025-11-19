@@ -48,6 +48,4 @@ interface ArticleDimensionContentInterface extends DimensionContentInterface, Ex
     public function addAdditionalWebspace(string $additionalWebspace): self;
 
     public function hasAdditionalWebspace(string $additionalWebspace): bool;
-
-    public function getTargetWebspace(string $currentWebspaceKey): string;
 }

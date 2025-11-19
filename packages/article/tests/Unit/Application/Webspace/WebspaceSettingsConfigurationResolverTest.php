@@ -14,10 +14,25 @@ declare(strict_types=1);
 namespace Sulu\Article\Tests\Unit\Application\Webspace;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Article\Application\Webspace\WebspaceSettingsConfigurationResolver;
+use Sulu\Component\Webspace\Manager\WebspaceCollection;
+use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
+use Sulu\Component\Webspace\Webspace;
 
 class WebspaceSettingsConfigurationResolverTest extends TestCase
 {
+    use ProphecyTrait;
+
+    /** @var ObjectProphecy<WebspaceManagerInterface> */
+    private ObjectProphecy $webspaceManager;
+
+    protected function setUp(): void
+    {
+        $this->webspaceManager = $this->prophesize(WebspaceManagerInterface::class);
+    }
+
     public function testResolveMainWebspaceWithLocaleSpecificConfig(): void
     {
         $defaultMainWebspace = [
@@ -27,7 +42,7 @@ class WebspaceSettingsConfigurationResolverTest extends TestCase
         ];
         $defaultAdditionalWebspaces = [];
 
-        $resolver = new WebspaceSettingsConfigurationResolver($defaultMainWebspace, $defaultAdditionalWebspaces);
+        $resolver = new WebspaceSettingsConfigurationResolver($defaultMainWebspace, $defaultAdditionalWebspaces, $this->webspaceManager->reveal());
 
         $result = $resolver->getDefaultMainWebspaceForLocale('en');
         $this->assertSame('sulu-io-en', $result);
@@ -44,7 +59,7 @@ class WebspaceSettingsConfigurationResolverTest extends TestCase
         ];
         $defaultAdditionalWebspaces = [];
 
-        $resolver = new WebspaceSettingsConfigurationResolver($defaultMainWebspace, $defaultAdditionalWebspaces);
+        $resolver = new WebspaceSettingsConfigurationResolver($defaultMainWebspace, $defaultAdditionalWebspaces, $this->webspaceManager->reveal());
 
         $result = $resolver->getDefaultMainWebspaceForLocale('fr');
         $this->assertSame('sulu-io-default', $result);
@@ -55,10 +70,34 @@ class WebspaceSettingsConfigurationResolverTest extends TestCase
         $defaultMainWebspace = [];
         $defaultAdditionalWebspaces = [];
 
-        $resolver = new WebspaceSettingsConfigurationResolver($defaultMainWebspace, $defaultAdditionalWebspaces);
+        $resolver = new WebspaceSettingsConfigurationResolver($defaultMainWebspace, $defaultAdditionalWebspaces, $this->webspaceManager->reveal());
 
+        $webspace = new Webspace();
+        $webspace->setName('sulu-io');
+        $webspace->setKey('sulu-io');
+        $webspaceCollection = new WebspaceCollection(['default' => $webspace]);
+        $this->webspaceManager->getWebspaceCollection()->willReturn($webspaceCollection);
+        $result = $resolver->getDefaultMainWebspaceForLocale('en');
+        $this->assertSame('sulu-io', $result);
+    }
+
+    public function testResolveMainWebspaceWithNoConfigMultipleWebspaces(): void
+    {
+        $defaultMainWebspace = [];
+        $defaultAdditionalWebspaces = [];
+
+        $resolver = new WebspaceSettingsConfigurationResolver($defaultMainWebspace, $defaultAdditionalWebspaces, $this->webspaceManager->reveal());
+
+        $webspace = new Webspace();
+        $webspace->setName('sulu-io');
+        $webspace->setKey('sulu-io');
+        $webspace2 = new Webspace();
+        $webspace2->setName('blog');
+        $webspace2->setKey('blog');
+        $webspaceCollection = new WebspaceCollection(['default' => $webspace, 'additional' => $webspace2]);
+        $this->webspaceManager->getWebspaceCollection()->willReturn($webspaceCollection);
         $this->expectException(\Exception::class);
-        $resolver->getDefaultMainWebspaceForLocale('en');
+        $result = $resolver->getDefaultMainWebspaceForLocale('en');
     }
 
     public function testResolveMainWebspaceWithNullLocale(): void
@@ -68,7 +107,7 @@ class WebspaceSettingsConfigurationResolverTest extends TestCase
         ];
         $defaultAdditionalWebspaces = [];
 
-        $resolver = new WebspaceSettingsConfigurationResolver($defaultMainWebspace, $defaultAdditionalWebspaces);
+        $resolver = new WebspaceSettingsConfigurationResolver($defaultMainWebspace, $defaultAdditionalWebspaces, $this->webspaceManager->reveal());
 
         $result = $resolver->getDefaultMainWebspaceForLocale('default');
         $this->assertSame('sulu-io-default', $result);
@@ -83,7 +122,7 @@ class WebspaceSettingsConfigurationResolverTest extends TestCase
             'default' => ['sulu-io'],
         ];
 
-        $resolver = new WebspaceSettingsConfigurationResolver($defaultMainWebspace, $defaultAdditionalWebspaces);
+        $resolver = new WebspaceSettingsConfigurationResolver($defaultMainWebspace, $defaultAdditionalWebspaces, $this->webspaceManager->reveal());
 
         $result = $resolver->getDefaultAdditionalWebspacesForLocale('en');
         $this->assertSame(['sulu-io', 'example-com'], $result);
@@ -100,7 +139,7 @@ class WebspaceSettingsConfigurationResolverTest extends TestCase
             'default' => ['sulu-io'],
         ];
 
-        $resolver = new WebspaceSettingsConfigurationResolver($defaultMainWebspace, $defaultAdditionalWebspaces);
+        $resolver = new WebspaceSettingsConfigurationResolver($defaultMainWebspace, $defaultAdditionalWebspaces, $this->webspaceManager->reveal());
 
         $result = $resolver->getDefaultAdditionalWebspacesForLocale('fr');
         $this->assertSame(['sulu-io'], $result);
@@ -111,7 +150,7 @@ class WebspaceSettingsConfigurationResolverTest extends TestCase
         $defaultMainWebspace = [];
         $defaultAdditionalWebspaces = [];
 
-        $resolver = new WebspaceSettingsConfigurationResolver($defaultMainWebspace, $defaultAdditionalWebspaces);
+        $resolver = new WebspaceSettingsConfigurationResolver($defaultMainWebspace, $defaultAdditionalWebspaces, $this->webspaceManager->reveal());
 
         $result = $resolver->getDefaultAdditionalWebspacesForLocale('en');
         $this->assertSame([], $result);
@@ -124,7 +163,7 @@ class WebspaceSettingsConfigurationResolverTest extends TestCase
             'default' => ['sulu-io', 'example-com'],
         ];
 
-        $resolver = new WebspaceSettingsConfigurationResolver($defaultMainWebspace, $defaultAdditionalWebspaces);
+        $resolver = new WebspaceSettingsConfigurationResolver($defaultMainWebspace, $defaultAdditionalWebspaces, $this->webspaceManager->reveal());
 
         $result = $resolver->getDefaultAdditionalWebspacesForLocale('default');
         $this->assertSame(['sulu-io', 'example-com'], $result);
@@ -136,7 +175,7 @@ class WebspaceSettingsConfigurationResolverTest extends TestCase
         $defaultMainWebspace = ['default' => 'sulu-io'];
         $defaultAdditionalWebspaces = [];
 
-        $resolver = new WebspaceSettingsConfigurationResolver($defaultMainWebspace, $defaultAdditionalWebspaces);
+        $resolver = new WebspaceSettingsConfigurationResolver($defaultMainWebspace, $defaultAdditionalWebspaces, $this->webspaceManager->reveal());
 
         $result = $resolver->getDefaultMainWebspaceForLocale('en');
         $this->assertSame('sulu-io', $result);
@@ -151,7 +190,7 @@ class WebspaceSettingsConfigurationResolverTest extends TestCase
         $defaultMainWebspace = [];
         $defaultAdditionalWebspaces = ['default' => ['sulu-io', 'example-com']];
 
-        $resolver = new WebspaceSettingsConfigurationResolver($defaultMainWebspace, $defaultAdditionalWebspaces);
+        $resolver = new WebspaceSettingsConfigurationResolver($defaultMainWebspace, $defaultAdditionalWebspaces, $this->webspaceManager->reveal());
 
         $result = $resolver->getDefaultAdditionalWebspacesForLocale('en');
         $this->assertSame(['sulu-io', 'example-com'], $result);
