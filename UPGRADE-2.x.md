@@ -1,5 +1,9 @@
 # Upgrade
 
+## 2.5.32
+
+* Deprecated \Sulu\Bundle\MediaBundle\Controller\AbstractMediaController::getTitleFromUpload -> MediaManager::getTitleFromUpload
+
 ## 2.5.23
 
 ### Doctrine incompatibility with Symfony 6.3
