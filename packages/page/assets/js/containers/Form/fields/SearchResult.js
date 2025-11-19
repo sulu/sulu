@@ -6,13 +6,29 @@ import type {FieldTypeProps} from 'sulu-admin-bundle/types';
 
 @observer
 class SearchResult extends React.Component<FieldTypeProps<typeof undefined>> {
+    extractUrlFromPageTreeRoute(url: string): string {
+        let urlPath = '';
+
+        if (typeof url.page === 'object'
+            && url.page.path === 'string'
+        ) {
+            urlPath += url.page.path;
+        }
+
+        if (typeof url.suffix === 'object') {
+            urlPath += url.suffix;
+        }
+
+        return urlPath;
+    }
+
     render() {
         const {formInspector} = this.props;
         const locale = formInspector.locale ? formInspector.locale.get() : undefined;
 
         const description = formInspector.getValueByPath('/ext/seo/description');
         const title = formInspector.getValueByPath('/ext/seo/title');
-        const url = formInspector.getValueByPath('/url');
+        let url = formInspector.getValueByPath('/url');
 
         if (title !== undefined && typeof title !== 'string') {
             throw new Error('If "title" is defined it must be a string!');
@@ -22,7 +38,15 @@ class SearchResult extends React.Component<FieldTypeProps<typeof undefined>> {
             throw new Error('If description is defined it must be a string!');
         }
 
-        if (url !== undefined && typeof url !== 'string') {
+        if (url === undefined) {
+            url = '';
+        }
+
+        if (typeof url === 'object') {
+            url = this.extractUrlFromPageTreeRoute(url);
+        }
+
+        if (typeof url !== 'string') {
             throw new Error('If "url" is defined it must be a string!');
         }
 
