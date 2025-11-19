@@ -35,7 +35,10 @@
         "Tag 2"
     ],
     "excerptTitle": "Excerpt Title",
-    "excerptAudienceTargetGroups": [],
+    "excerptAudienceTargetGroups": [
+        "@integer@",
+        "@integer@"
+    ],
     "excerptSegment": {
         "sulu-io": "@string@"
     },

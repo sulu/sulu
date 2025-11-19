@@ -21,7 +21,10 @@
     "excerptImage": null,
     "excerptMore": "Excerpt More 2",
     "excerptSegment": "updated-segment",
-    "excerptTags": [],
+    "excerptTags": [
+        "Tag 3",
+        "Tag 4"
+    ],
     "excerptTitle": "Excerpt Title 2",
     "ghostLocale": "de",
     "id": "@string@",
