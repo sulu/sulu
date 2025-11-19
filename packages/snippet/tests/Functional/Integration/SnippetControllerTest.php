@@ -360,6 +360,7 @@ class SnippetControllerTest extends SuluTestCase
         $trashItem = $trashRepository->findOneBy([
             'resourceKey' => SnippetInterface::RESOURCE_KEY,
             'resourceId' => $id,
+            'restoreType' => null,
         ]);
         $this->assertNotNull($trashItem);
         $id = $trashItem->getId();

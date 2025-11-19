@@ -70,7 +70,7 @@ final class ArticleTrashItemHandler implements
             'dimensionContents' => [],
         ];
 
-        $restoreType = $options['locales'] ?? null ? 'translation' : null;
+        $restoreType = $options['locale'] ?? null ? 'translation' : null;
 
         $titles = [];
         /** @var array<string, ArticleDimensionContentInterface> $localizedDimensionContents */
@@ -80,7 +80,7 @@ final class ArticleTrashItemHandler implements
         foreach ($article->getDimensionContents() as $dimensionContent) {
             if (
                 DimensionContentInterface::CURRENT_VERSION !== $dimensionContent->getVersion()
-                && DimensionContentInterface::STAGE_LIVE !== $dimensionContent->getStage()
+                || DimensionContentInterface::STAGE_DRAFT !== $dimensionContent->getStage()
             ) {
                 continue;
             }
@@ -90,23 +90,30 @@ final class ArticleTrashItemHandler implements
                 continue;
             }
 
+            if ('translation' === $restoreType && $dimensionContent->getLocale() !== $options['locale']) {
+                continue;
+            }
+
             $localizedDimensionContents[$dimensionContent->getLocale()] = $dimensionContent;
         }
 
         Assert::notNull($unlocalizedDimensionContent, 'Expected to find an unlocalized dimension content for the article.');
         Assert::notEmpty($localizedDimensionContents, 'Expected to find at least one localized dimension content for the article.');
 
-        // sort dimensionContents after the availableLocales from the unlocalizedDimension
+        // Reorder localized dimension contents to match the order defined in availableLocales.
         $availableLocales = $unlocalizedDimensionContent->getAvailableLocales();
         Assert::isArray($availableLocales, 'Expected availableLocales to be an array');
         /** @var array<string, ArticleDimensionContentInterface> $localizedDimensionContents */
         $localizedDimensionContents = \array_merge(
-            \array_flip($availableLocales),
+            \array_flip(
+                \array_filter(
+                    $availableLocales, static fn ($locale) => \array_key_exists($locale, $localizedDimensionContents)
+                )
+            ),
             $localizedDimensionContents,
         );
 
         foreach ($localizedDimensionContents as $locale => $localizedDimensionContent) {
-            /** @var array<int, ArticleDimensionContent> $dimensionContents */
             $dimensionContents = [$unlocalizedDimensionContent, $localizedDimensionContent];
 
             $mergedDimensionContent = $this->contentMerger->merge(
@@ -151,31 +158,29 @@ final class ArticleTrashItemHandler implements
     {
         $restoreData = $trashItem->getRestoreData();
         $articleUuid = $trashItem->getResourceId();
-        $restoreTranslation = true;
 
         $article = $this->articleRepository->findOneBy(['uuid' => $articleUuid]);
-
         if (!$article) {
             $article = $this->articleRepository->createNew($articleUuid);
-            $restoreTranslation = false;
+            $this->articleRepository->add($article);
         }
 
-        $this->articleRepository->add($article);
-
         $dimensionContents = $restoreData['dimensionContents'] ?? [];
+        /** @var list<string> $allLocales */
         $allLocales = [];
+        /** @var string|null $articleTitle */
         $articleTitle = null;
         Assert::isArray($dimensionContents, 'Expected dimensionContents to be an array');
-        /** @var array<string, mixed> $dimensionContentData */
         foreach ($dimensionContents as $dimensionContentData) {
-            unset($dimensionContentData['url']); // TODO old route is not removed on delete?
-
-            if (!$articleTitle && \array_key_exists('title', $dimensionContentData) && $dimensionContentData['title']) {
-                /** @var string $articleTitle */
+            Assert::isArray($dimensionContentData, 'Expected dimensionContentData to be an array');
+            /** @var array<string, mixed> $dimensionContentData */
+            if (null === $articleTitle && \array_key_exists('title', $dimensionContentData) && $dimensionContentData['title']) {
+                Assert::string($dimensionContentData['title']);
                 $articleTitle = $dimensionContentData['title'];
             }
 
             if (\array_key_exists('locale', $dimensionContentData) && $dimensionContentData['locale']) {
+                Assert::string($dimensionContentData['locale']);
                 $allLocales[] = $dimensionContentData['locale'];
             }
 
@@ -184,11 +189,9 @@ final class ArticleTrashItemHandler implements
             }
         }
 
-        /** @var array{locales?: string[]} $context */
         $context = $allLocales ? ['locales' => $allLocales] : [];
 
-        if ($restoreTranslation) {
-            /** @var string $locale */
+        if ('translation' === $trashItem->getRestoreType()) {
             foreach ($allLocales as $locale) {
                 $this->domainEventCollector->collect(new ArticleTranslationRestoredEvent(
                     $article,
@@ -196,14 +199,16 @@ final class ArticleTrashItemHandler implements
                     $restoreData,
                 ));
             }
-        } else {
-            $this->domainEventCollector->collect(new ArticleRestoredEvent(
-                $article,
-                $articleTitle,
-                $context,
-                $restoreData,
-            ));
+
+            return $article;
         }
+
+        $this->domainEventCollector->collect(new ArticleRestoredEvent(
+            $article,
+            $articleTitle,
+            $context,
+            $restoreData,
+        ));
 
         return $article;
     }
