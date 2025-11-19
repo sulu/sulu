@@ -19,7 +19,7 @@ use Sulu\Snippet\Domain\Model\SnippetAreaInterface;
 /**
  * Implementation can be found in the following class.
  *
- * @see Sulu\Snippet\Infrastructure\Doctrine\Repository\SnippetAreaRepository
+ * @see \Sulu\Snippet\Infrastructure\Doctrine\Repository\SnippetAreaRepository
  */
 interface SnippetAreaRepositoryInterface
 {
