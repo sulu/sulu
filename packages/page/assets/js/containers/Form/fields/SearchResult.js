@@ -22,7 +22,7 @@ class SearchResult extends React.Component<FieldTypeProps<typeof undefined>> {
         throw new Error('If "url" is defined it must be a string or a object following page tree structure!');
     }
 
-    extractUrlFromPageTreeRoute(url: {}): string {
+    extractUrlFromPageTreeRoute(url: Object): string {
         let urlPath = '';
 
         if (typeof url.page === 'object'
