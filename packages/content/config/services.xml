@@ -55,7 +55,7 @@
 
         <!-- Content Dimension Factory -->
         <service id="sulu_content.dimension_content_collection_factory" class="Sulu\Content\Application\DimensionContentCollectionFactory\DimensionContentCollectionFactory">
-            <argument type="service" id="sulu_content.dimension_content_repository"/>
+            <argument type="service" id="sulu_content.content_metadata_inspector"/>
             <argument type="service" id="sulu_content.content_data_mapper"/>
             <argument type="service" id="property_accessor"/>
         </service>

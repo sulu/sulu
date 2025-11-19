@@ -77,13 +77,13 @@ final class SnippetController
         $fieldDescriptors = $this->fieldDescriptorFactory->getFieldDescriptors(SnippetInterface::RESOURCE_KEY);
         /** @var DoctrineListBuilder $listBuilder */
         $listBuilder = $this->listBuilderFactory->create(SnippetInterface::class);
+        $this->restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
         $listBuilder->setIdField($fieldDescriptors['id']); // TODO should be uuid field descriptor
         $listBuilder->addSelectField($fieldDescriptors['locale']);
         $listBuilder->addSelectField($fieldDescriptors['ghostLocale']);
         $listBuilder->addSelectField($fieldDescriptors['published']);
         $listBuilder->addSelectField($fieldDescriptors['publishedState']);
         $listBuilder->setParameter('locale', $request->query->get('locale'));
-        $this->restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
 
         $typesParam = $request->query->get('types');
         $types = \array_filter(\explode(',', \is_string($typesParam) ? $typesParam : ''));
