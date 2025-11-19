@@ -142,6 +142,7 @@
         "scheb/2fa-totp": "^6.10 || ^7.0",
         "scheb/2fa-trusted-device": "^6.0 || ^7.0",
         "shipmonk/composer-dependency-analyser": "^1.8",
+        "spaze/phpstan-disallowed-calls": "^4.7",
         "symfony/browser-kit": "^6.4 || ^7.1",
         "symfony/debug-bundle": "^6.4 || ^7.1",
         "symfony/dom-crawler": "^6.4 || ^7.1",

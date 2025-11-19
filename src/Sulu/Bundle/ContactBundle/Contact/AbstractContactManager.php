@@ -1778,7 +1778,9 @@ abstract class AbstractContactManager implements ContactManagerInterface
     {
         if ($entities && \count($entities) > 0 && \method_exists($entities, 'getValues')) {
             $newEntities = $entities->getValues();
-            $entities->clear();
+            foreach ($entities as $entity) {
+                $entities->removeElement($entity);
+            }
             foreach ($newEntities as $value) {
                 $entities->add($value);
             }

@@ -145,7 +145,9 @@ class Analytics implements AnalyticsInterface
 
     public function clearDomains(): AnalyticsInterface
     {
-        $this->domains->clear();
+        foreach ($this->domains as $domain) {
+            $this->domains->removeElement($domain);
+        }
 
         return $this;
     }
