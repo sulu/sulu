@@ -201,7 +201,7 @@ final class PageController implements SecuredControllerInterface, SecuredObjectC
         $parentId = $request->query->getString('parentId');
         $message = new CreatePageMessage($webspaceKey, $parentId, $this->getData($request));
 
-        /** @see Sulu\Page\Application\MessageHandler\CreatePageMessageHandler */
+        /** @see \Sulu\Page\Application\MessageHandler\CreatePageMessageHandler */
         /** @var PageInterface $page */
         $page = $this->handle(new Envelope($message, [new EnableFlushStamp()]));
         $uuid = $page->getUuid();
@@ -216,7 +216,7 @@ final class PageController implements SecuredControllerInterface, SecuredObjectC
     public function putAction(Request $request, string $id): Response // TODO route should be a uuid?
     {
         $message = new ModifyPageMessage(['uuid' => $id], $this->getData($request));
-        /** @see Sulu\Page\Application\MessageHandler\ModifyPageMessageHandler */
+        /** @see \Sulu\Page\Application\MessageHandler\ModifyPageMessageHandler */
         $this->handle(new Envelope($message, [new EnableFlushStamp()]));
 
         $this->handleAction($request, $id);
@@ -239,14 +239,14 @@ final class PageController implements SecuredControllerInterface, SecuredObjectC
 
         if ($deleteLocale) {
             $message = new RemovePageTranslationMessage(['uuid' => $id], $locale);
-            /** @see Sulu\Page\Application\MessageHandler\RemovePageTranslationMessageHandler */
+            /** @see \Sulu\Page\Application\MessageHandler\RemovePageTranslationMessageHandler */
             $this->handle(new Envelope($message, [new EnableFlushStamp()]));
 
             return new Response('', 204);
         }
 
         $message = new RemovePageMessage(['uuid' => $id], $locale, $forceRemoveChildren);
-        /** @see Sulu\Page\Application\MessageHandler\RemovePageMessageHandler */
+        /** @see \Sulu\Page\Application\MessageHandler\RemovePageMessageHandler */
         $this->handle(new Envelope($message, [new EnableFlushStamp()]));
 
         return new Response('', 204);
@@ -285,21 +285,21 @@ final class PageController implements SecuredControllerInterface, SecuredObjectC
                 (string) $request->query->get('dest'),
             );
 
-            /** @see Sulu\Page\Application\MessageHandler\CopyLocalePageMessageHandler */
+            /** @see \Sulu\Page\Application\MessageHandler\CopyLocalePageMessageHandler */
             /** @var PageInterface|null */
             return $this->handle(new Envelope($message, [new EnableFlushStamp()]));
         } elseif ('move' === $action) {
             $destinationUuid = $request->query->getString('destination');
             $message = new MovePageMessage(['uuid' => $uuid], ['uuid' => $destinationUuid], $this->getLocale($request));
 
-            /** @see Sulu\Page\Application\MessageHandler\MovePageMessageHandler */
+            /** @see \Sulu\Page\Application\MessageHandler\MovePageMessageHandler */
             /** @var PageInterface|null */
             return $this->handle(new Envelope($message, [new EnableFlushStamp()]));
         } elseif ('copy' == $action) {
             $destinationUuid = $request->query->getString('destination');
             $message = new CopyPageMessage(['uuid' => $uuid], ['uuid' => $destinationUuid], $this->getLocale($request));
 
-            /** @see Sulu\Page\Application\MessageHandler\CopyPageMessageHandler */
+            /** @see \Sulu\Page\Application\MessageHandler\CopyPageMessageHandler */
             /** @var PageInterface|null */
             return $this->handle(new Envelope($message, [new EnableFlushStamp()]));
         } elseif ('order' === $action) {
@@ -310,7 +310,7 @@ final class PageController implements SecuredControllerInterface, SecuredObjectC
                 $this->getLocale($request),
             );
 
-            /** @see Sulu\Page\Application\MessageHandler\OrderPageMessageHandler */
+            /** @see \Sulu\Page\Application\MessageHandler\OrderPageMessageHandler */
             /** @var PageInterface|null */
             return $this->handle(new Envelope($message, [new EnableFlushStamp()]));
         } elseif ('restore' === $action) {
@@ -326,14 +326,14 @@ final class PageController implements SecuredControllerInterface, SecuredObjectC
                 $request->query->all(),
             );
 
-            /** @see Sulu\Page\Application\MessageHandler\RestorePageVersionMessageHandler */
+            /** @see \Sulu\Page\Application\MessageHandler\RestorePageVersionMessageHandler */
             /** @var PageInterface|null */
             return $this->handle(new Envelope($message, [new EnableFlushStamp()]));
         }
 
         $message = new ApplyWorkflowTransitionPageMessage(['uuid' => $uuid], $this->getLocale($request), $action);
 
-        /** @see Sulu\Page\Application\MessageHandler\ApplyWorkflowTransitionPageMessageHandler */
+        /** @see \Sulu\Page\Application\MessageHandler\ApplyWorkflowTransitionPageMessageHandler */
         /** @var PageInterface|null */
         return $this->handle(new Envelope($message, [new EnableFlushStamp()]));
     }

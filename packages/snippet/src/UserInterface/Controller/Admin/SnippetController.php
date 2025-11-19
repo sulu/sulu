@@ -223,7 +223,7 @@ final class SnippetController
     {
         $message = new CreateSnippetMessage($this->getData($request));
 
-        /** @see Sulu\Snippet\Application\MessageHandler\CreateSnippetMessageHandler */
+        /** @see \Sulu\Snippet\Application\MessageHandler\CreateSnippetMessageHandler */
         /** @var SnippetInterface $snippet */
         $snippet = $this->handle(new Envelope($message, [new EnableFlushStamp()]));
         $uuid = $snippet->getUuid();
@@ -238,7 +238,7 @@ final class SnippetController
     public function putAction(Request $request, string $id): Response // TODO route should be a uuid?
     {
         $message = new ModifySnippetMessage(['uuid' => $id], $this->getData($request));
-        /** @see Sulu\Snippet\Application\MessageHandler\ModifySnippetMessageHandler */
+        /** @see \Sulu\Snippet\Application\MessageHandler\ModifySnippetMessageHandler */
         $this->handle(new Envelope($message, [new EnableFlushStamp()]));
 
         $this->handleAction($request, $id);
@@ -260,14 +260,14 @@ final class SnippetController
 
         if ($deleteLocale) {
             $message = new RemoveSnippetTranslationMessage(['uuid' => $id], $locale);
-            /** @see Sulu\Snippet\Application\MessageHandler\RemoveSnippetTranslationMessageHandler */
+            /** @see \Sulu\Snippet\Application\MessageHandler\RemoveSnippetTranslationMessageHandler */
             $this->handle(new Envelope($message, [new EnableFlushStamp()]));
 
             return new Response('', 204);
         }
 
         $message = new RemoveSnippetMessage(['uuid' => $id], $locale);
-        /** @see Sulu\Snippet\Application\MessageHandler\RemoveSnippetMessageHandler */
+        /** @see \Sulu\Snippet\Application\MessageHandler\RemoveSnippetMessageHandler */
         $this->handle(new Envelope($message, [new EnableFlushStamp()]));
 
         return new Response('', 204);
@@ -306,7 +306,7 @@ final class SnippetController
                 (string) $request->query->get('dest')
             );
 
-            /** @see Sulu\Snippet\Application\MessageHandler\CopyLocaleSnippetMessageHandler */
+            /** @see \Sulu\Snippet\Application\MessageHandler\CopyLocaleSnippetMessageHandler */
             /** @var null */
             return $this->handle(new Envelope($message, [new EnableFlushStamp()]));
         } elseif ('restore' === $action) {
@@ -322,13 +322,13 @@ final class SnippetController
                 $request->query->all(),
             );
 
-            /** @see Sulu\Snippet\Application\MessageHandler\RestoreSnippetVersionMessageHandler */
+            /** @see \Sulu\Snippet\Application\MessageHandler\RestoreSnippetVersionMessageHandler */
             /** @var SnippetInterface|null */
             return $this->handle(new Envelope($message, [new EnableFlushStamp()]));
         } else {
             $message = new ApplyWorkflowTransitionSnippetMessage(['uuid' => $uuid], $this->getLocale($request), $action);
 
-            /** @see Sulu\Snippet\Application\MessageHandler\ApplyWorkflowTransitionSnippetMessageHandler */
+            /** @see \Sulu\Snippet\Application\MessageHandler\ApplyWorkflowTransitionSnippetMessageHandler */
             /** @var null */
             return $this->handle(new Envelope($message, [new EnableFlushStamp()]));
         }

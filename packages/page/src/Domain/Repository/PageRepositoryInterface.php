@@ -20,7 +20,7 @@ use Sulu\Page\Domain\Model\PageInterface;
 /**
  * Implementation can be found in the following class:.
  *
- * @see Sulu\Page\Infrastructure\Doctrine\Repository\PageRepository
+ * @see \Sulu\Page\Infrastructure\Doctrine\Repository\PageRepository
  */
 interface PageRepositoryInterface extends DescendantProviderInterface
 {

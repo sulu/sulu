@@ -209,7 +209,7 @@ final class ArticleController
     {
         $message = new CreateArticleMessage($this->getData($request));
 
-        /** @see Sulu\Article\Application\MessageHandler\CreateArticleMessageHandler */
+        /** @see \Sulu\Article\Application\MessageHandler\CreateArticleMessageHandler */
         /** @var ArticleInterface $article */
         $article = $this->handle(new Envelope($message, [new EnableFlushStamp()]));
         $uuid = $article->getUuid();
@@ -224,7 +224,7 @@ final class ArticleController
     public function putAction(Request $request, string $id): Response // TODO route should be a uuid?
     {
         $message = new ModifyArticleMessage(['uuid' => $id], $this->getData($request));
-        /** @see Sulu\Article\Application\MessageHandler\ModifyArticleMessageHandler */
+        /** @see \Sulu\Article\Application\MessageHandler\ModifyArticleMessageHandler */
         $this->handle(new Envelope($message, [new EnableFlushStamp()]));
 
         $this->handleAction($request, $id);
@@ -246,14 +246,14 @@ final class ArticleController
 
         if ($deleteLocale) {
             $message = new RemoveArticleTranslationMessage(['uuid' => $id], $locale);
-            /** @see Sulu\Article\Application\MessageHandler\RemoveArticleTranslationMessageHandler */
+            /** @see \Sulu\Article\Application\MessageHandler\RemoveArticleTranslationMessageHandler */
             $this->handle(new Envelope($message, [new EnableFlushStamp()]));
 
             return new Response('', 204);
         }
 
         $message = new RemoveArticleMessage(['uuid' => $id], $locale);
-        /** @see Sulu\Article\Application\MessageHandler\RemoveArticleMessageHandler */
+        /** @see \Sulu\Article\Application\MessageHandler\RemoveArticleMessageHandler */
         $this->handle(new Envelope($message, [new EnableFlushStamp()]));
 
         return new Response('', 204);
@@ -292,7 +292,7 @@ final class ArticleController
                 (string) $request->query->get('dest'),
             );
 
-            /** @see Sulu\Article\Application\MessageHandler\CopyLocaleArticleMessageHandler */
+            /** @see \Sulu\Article\Application\MessageHandler\CopyLocaleArticleMessageHandler */
             /** @var ArticleInterface|null */
             return $this->handle(new Envelope($message, [new EnableFlushStamp()]));
         } elseif ('restore' === $action) {
@@ -308,13 +308,13 @@ final class ArticleController
                 $request->query->all(),
             );
 
-            /** @see Sulu\Article\Application\MessageHandler\RestoreArticleVersionMessageHandler */
+            /** @see \Sulu\Article\Application\MessageHandler\RestoreArticleVersionMessageHandler */
             /** @var ArticleInterface|null */
             return $this->handle(new Envelope($message, [new EnableFlushStamp()]));
         }
         $message = new ApplyWorkflowTransitionArticleMessage(['uuid' => $uuid], $this->getLocale($request), $action);
 
-        /** @see Sulu\Article\Application\MessageHandler\ApplyWorkflowTransitionArticleMessageHandler */
+        /** @see \Sulu\Article\Application\MessageHandler\ApplyWorkflowTransitionArticleMessageHandler */
         /** @var null */
         return $this->handle(new Envelope($message, [new EnableFlushStamp()]));
     }

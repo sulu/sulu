@@ -18,7 +18,7 @@ use Sulu\Content\Domain\Model\DimensionContentInterface;
 /**
  * Implementation can be found in the following class:.
  *
- * @see Sulu\Article\Infrastructure\Doctrine\Repository\ArticleRepository
+ * @see \Sulu\Article\Infrastructure\Doctrine\Repository\ArticleRepository
  */
 interface ArticleRepositoryInterface
 {
