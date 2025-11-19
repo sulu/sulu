@@ -68,7 +68,7 @@ final class AdminSnippetReindexProvider implements ReindexProviderInterface
         /** @var Snippet $snippet */
         foreach ($snippets as $snippet) {
             yield [
-                'id' => SnippetInterface::RESOURCE_KEY . '::' . ((string) $snippet['snippetId']) . '::' . $snippet['locale'],
+                'id' => SnippetInterface::RESOURCE_KEY . '__' . ((string) $snippet['snippetId']) . '__' . $snippet['locale'],
                 'resourceKey' => SnippetInterface::RESOURCE_KEY,
                 'resourceId' => (string) $snippet['snippetId'],
                 'changedAt' => $snippet['changed']->format('c'),
@@ -105,14 +105,14 @@ final class AdminSnippetReindexProvider implements ReindexProviderInterface
             $conditions = [];
 
             foreach ($identifiers as $index => $identifier) {
-                $resourceKey = \explode('::', $identifier)[0];
+                $resourceKey = \explode('__', $identifier)[0];
 
                 if (SnippetInterface::RESOURCE_KEY !== $resourceKey) {
                     continue;
                 }
 
-                $id = \explode('::', $identifier)[1] ?? '';
-                $locale = \explode('::', $identifier)[2] ?? '';
+                $id = \explode('__', $identifier)[1] ?? '';
+                $locale = \explode('__', $identifier)[2] ?? '';
 
                 $conditions[] = "(dimensionContent.snippet = :id{$index} AND dimensionContent.locale = :locale{$index})";
                 $parameters["id{$index}"] = $id;

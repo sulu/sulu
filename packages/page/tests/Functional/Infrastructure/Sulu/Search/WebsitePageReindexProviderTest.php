@@ -101,7 +101,7 @@ class WebsitePageReindexProviderTest extends SuluTestCase
 
         $expectedResult = [
             [
-                'id' => PageInterface::RESOURCE_KEY . '::' . $page1->getUuid() . '::en',
+                'id' => PageInterface::RESOURCE_KEY . '__' . $page1->getUuid() . '__en',
                 'resourceKey' => PageInterface::RESOURCE_KEY,
                 'resourceId' => $page1->getUuid(),
                 'locale' => 'en',
@@ -113,7 +113,7 @@ class WebsitePageReindexProviderTest extends SuluTestCase
                 'authoredAt' => (new \DateTimeImmutable('1995-11-29 12:00:00'))->format('c'),
             ],
             [
-                'id' => PageInterface::RESOURCE_KEY . '::' . $page2->getUuid() . '::en',
+                'id' => PageInterface::RESOURCE_KEY . '__' . $page2->getUuid() . '__en',
                 'resourceKey' => PageInterface::RESOURCE_KEY,
                 'resourceId' => $page2->getUuid(),
                 'locale' => 'en',

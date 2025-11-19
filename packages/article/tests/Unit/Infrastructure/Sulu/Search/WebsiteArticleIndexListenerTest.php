@@ -54,7 +54,7 @@ class WebsiteArticleIndexListenerTest extends TestCase
 
         $expectedConfig = ReindexConfig::create()
             ->withIndex('website')
-            ->withIdentifiers([ArticleInterface::RESOURCE_KEY . '::123::en']);
+            ->withIdentifiers([ArticleInterface::RESOURCE_KEY . '__123__en']);
 
         $this->messageBus->dispatch($expectedConfig)
             ->willReturn(new Envelope($expectedConfig))
@@ -70,7 +70,7 @@ class WebsiteArticleIndexListenerTest extends TestCase
 
         $expectedConfig = ReindexConfig::create()
             ->withIndex('website')
-            ->withIdentifiers([ArticleInterface::RESOURCE_KEY . '::789::en', ArticleInterface::RESOURCE_KEY . '::789::de']);
+            ->withIdentifiers([ArticleInterface::RESOURCE_KEY . '__789__en', ArticleInterface::RESOURCE_KEY . '__789__de']);
 
         $this->messageBus->dispatch($expectedConfig)
             ->willReturn(new Envelope($expectedConfig))
@@ -86,7 +86,7 @@ class WebsiteArticleIndexListenerTest extends TestCase
 
         $expectedConfig = ReindexConfig::create()
             ->withIndex('website')
-            ->withIdentifiers([ArticleInterface::RESOURCE_KEY . '::444::de']);
+            ->withIdentifiers([ArticleInterface::RESOURCE_KEY . '__444__de']);
 
         $this->messageBus->dispatch($expectedConfig)
             ->willReturn(new Envelope($expectedConfig))

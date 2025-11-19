@@ -58,7 +58,7 @@ final class AdminAccountReindexProvider implements ReindexProviderInterface
         /** @var Account $account */
         foreach ($accounts as $account) {
             yield [
-                'id' => AccountInterface::RESOURCE_KEY . '::' . ((string) $account['id']),
+                'id' => AccountInterface::RESOURCE_KEY . '__' . ((string) $account['id']),
                 'resourceKey' => AccountInterface::RESOURCE_KEY,
                 'resourceId' => (string) $account['id'],
                 'mediaId' => (string) $account['mediaId'],
@@ -85,7 +85,7 @@ final class AdminAccountReindexProvider implements ReindexProviderInterface
 
         if (0 < \count($identifiers)) {
             $qb->where('account.id IN (:ids)')
-                ->setParameter('ids', \array_map(fn ($identifier) => (int) \str_replace(AccountInterface::RESOURCE_KEY . '::', '', $identifier), $identifiers));
+                ->setParameter('ids', \array_map(fn ($identifier) => (int) \str_replace(AccountInterface::RESOURCE_KEY . '__', '', $identifier), $identifiers));
         }
 
         /** @var iterable<Account> */

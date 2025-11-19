@@ -101,7 +101,7 @@ class AdminPageReindexProviderTest extends SuluTestCase
 
         $expectedResult = [
             [
-                'id' => PageInterface::RESOURCE_KEY . '::' . $page2->getUuid() . '::de',
+                'id' => PageInterface::RESOURCE_KEY . '__' . $page2->getUuid() . '__de',
                 'resourceKey' => PageInterface::RESOURCE_KEY,
                 'resourceId' => $page2->getUuid(),
                 'changedAt' => (new \DateTimeImmutable($changedDateString2))->format('c'),
@@ -113,7 +113,7 @@ class AdminPageReindexProviderTest extends SuluTestCase
                 ],
             ],
             [
-                'id' => PageInterface::RESOURCE_KEY . '::' . $page1->getUuid() . '::en',
+                'id' => PageInterface::RESOURCE_KEY . '__' . $page1->getUuid() . '__en',
                 'resourceKey' => PageInterface::RESOURCE_KEY,
                 'resourceId' => $page1->getUuid(),
                 'changedAt' => (new \DateTimeImmutable($changedDateString1))->format('c'),
@@ -125,7 +125,7 @@ class AdminPageReindexProviderTest extends SuluTestCase
                 ],
             ],
             [
-                'id' => PageInterface::RESOURCE_KEY . '::' . $page2->getUuid() . '::en',
+                'id' => PageInterface::RESOURCE_KEY . '__' . $page2->getUuid() . '__en',
                 'resourceKey' => PageInterface::RESOURCE_KEY,
                 'resourceId' => $page2->getUuid(),
                 'changedAt' => (new \DateTimeImmutable($changedDateString2))->format('c'),
@@ -202,8 +202,8 @@ class AdminPageReindexProviderTest extends SuluTestCase
         ]);
 
         $identifiers = [
-            PageInterface::RESOURCE_KEY . '::' . $page1->getUuid() . '::de',
-            PageInterface::RESOURCE_KEY . '::' . $page2->getUuid() . '::en',
+            PageInterface::RESOURCE_KEY . '__' . $page1->getUuid() . '__de',
+            PageInterface::RESOURCE_KEY . '__' . $page2->getUuid() . '__en',
         ];
 
         $config = ReindexConfig::create()

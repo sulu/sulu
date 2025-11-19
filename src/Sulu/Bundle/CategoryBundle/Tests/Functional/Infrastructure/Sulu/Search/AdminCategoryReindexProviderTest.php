@@ -80,7 +80,7 @@ class AdminCategoryReindexProviderTest extends SuluTestCase
 
         $expectedResult = [
             [
-                'id' => CategoryInterface::RESOURCE_KEY . '::' . $category1->getId() . '::' . $category1Translation->getLocale(),
+                'id' => CategoryInterface::RESOURCE_KEY . '__' . $category1->getId() . '__' . $category1Translation->getLocale(),
                 'resourceKey' => CategoryInterface::RESOURCE_KEY,
                 'resourceId' => (string) $category1->getId(),
                 'changedAt' => (new \DateTimeImmutable($changedDateString1))->format('c'),
@@ -89,7 +89,7 @@ class AdminCategoryReindexProviderTest extends SuluTestCase
                 'locale' => $category1Translation->getLocale(),
             ],
             [
-                'id' => CategoryInterface::RESOURCE_KEY . '::' . $category2->getId() . '::' . $category2Translation1->getLocale(),
+                'id' => CategoryInterface::RESOURCE_KEY . '__' . $category2->getId() . '__' . $category2Translation1->getLocale(),
                 'resourceKey' => CategoryInterface::RESOURCE_KEY,
                 'resourceId' => (string) $category2->getId(),
                 'changedAt' => (new \DateTimeImmutable($changedDateString2))->format('c'),
@@ -98,7 +98,7 @@ class AdminCategoryReindexProviderTest extends SuluTestCase
                 'locale' => $category2Translation1->getLocale(),
             ],
             [
-                'id' => CategoryInterface::RESOURCE_KEY . '::' . $category2->getId() . '::' . $category2Translation2->getLocale(),
+                'id' => CategoryInterface::RESOURCE_KEY . '__' . $category2->getId() . '__' . $category2Translation2->getLocale(),
                 'resourceKey' => CategoryInterface::RESOURCE_KEY,
                 'resourceId' => (string) $category2->getId(),
                 'changedAt' => (new \DateTimeImmutable($changedDateString2))->format('c'),
@@ -146,8 +146,8 @@ class AdminCategoryReindexProviderTest extends SuluTestCase
         ]);
 
         $identifiers = [
-            CategoryInterface::RESOURCE_KEY . '::' . $category1->getId() . '::' . $category1Translation->getLocale(),
-            CategoryInterface::RESOURCE_KEY . '::' . $category2->getId() . '::' . $category2Translation2->getLocale(),
+            CategoryInterface::RESOURCE_KEY . '__' . $category1->getId() . '__' . $category1Translation->getLocale(),
+            CategoryInterface::RESOURCE_KEY . '__' . $category2->getId() . '__' . $category2Translation2->getLocale(),
         ];
 
         $config = ReindexConfig::create()

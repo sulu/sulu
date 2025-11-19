@@ -43,7 +43,7 @@ final class AdminContactIndexListener
             ReindexConfig::create()
                 ->withIndex('admin')
                 ->withIdentifiers([
-                    AccountInterface::RESOURCE_KEY . '::' . $event->getResourceId(),
+                    AccountInterface::RESOURCE_KEY . '__' . $event->getResourceId(),
                 ]),
         );
     }
@@ -54,7 +54,7 @@ final class AdminContactIndexListener
             ReindexConfig::create()
                 ->withIndex('admin')
                 ->withIdentifiers([
-                    ContactInterface::RESOURCE_KEY . '::' . $event->getResourceId(),
+                    ContactInterface::RESOURCE_KEY . '__' . $event->getResourceId(),
                 ]),
         );
     }

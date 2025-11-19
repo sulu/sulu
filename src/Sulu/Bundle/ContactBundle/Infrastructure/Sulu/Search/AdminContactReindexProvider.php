@@ -59,7 +59,7 @@ final class AdminContactReindexProvider implements ReindexProviderInterface
         /** @var Contact $contact */
         foreach ($contacts as $contact) {
             yield [
-                'id' => ContactInterface::RESOURCE_KEY . '::' . ((string) $contact['id']),
+                'id' => ContactInterface::RESOURCE_KEY . '__' . ((string) $contact['id']),
                 'resourceKey' => ContactInterface::RESOURCE_KEY,
                 'resourceId' => (string) $contact['id'],
                 'mediaId' => (string) $contact['mediaId'],
@@ -87,7 +87,7 @@ final class AdminContactReindexProvider implements ReindexProviderInterface
 
         if (0 < \count($identifiers)) {
             $qb->where('contact.id IN (:ids)')
-                ->setParameter('ids', \array_map(fn ($identifier) => (int) \str_replace(ContactInterface::RESOURCE_KEY . '::', '', $identifier), $identifiers));
+                ->setParameter('ids', \array_map(fn ($identifier) => (int) \str_replace(ContactInterface::RESOURCE_KEY . '__', '', $identifier), $identifiers));
         }
 
         /** @var iterable<Contact> */

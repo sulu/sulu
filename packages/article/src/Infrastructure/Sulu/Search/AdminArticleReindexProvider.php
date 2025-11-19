@@ -86,7 +86,7 @@ final class AdminArticleReindexProvider implements ReindexProviderInterface
             }
 
             yield [
-                'id' => ArticleInterface::RESOURCE_KEY . '::' . ((string) $article['articleId']) . '::' . $article['locale'],
+                'id' => ArticleInterface::RESOURCE_KEY . '__' . ((string) $article['articleId']) . '__' . $article['locale'],
                 'resourceKey' => ArticleInterface::RESOURCE_KEY,
                 'resourceId' => (string) $article['articleId'],
                 'changedAt' => $article['changed']->format('c'),
@@ -127,14 +127,14 @@ final class AdminArticleReindexProvider implements ReindexProviderInterface
             $conditions = [];
 
             foreach ($identifiers as $index => $identifier) {
-                $resourceKey = \explode('::', $identifier)[0];
+                $resourceKey = \explode('__', $identifier)[0];
 
                 if (ArticleInterface::RESOURCE_KEY !== $resourceKey) {
                     continue;
                 }
 
-                $id = \explode('::', $identifier)[1] ?? '';
-                $locale = \explode('::', $identifier)[2] ?? '';
+                $id = \explode('__', $identifier)[1] ?? '';
+                $locale = \explode('__', $identifier)[2] ?? '';
 
                 $conditions[] = "(dimensionContent.article = :id{$index} AND dimensionContent.locale = :locale{$index})";
                 $parameters["id{$index}"] = $id;

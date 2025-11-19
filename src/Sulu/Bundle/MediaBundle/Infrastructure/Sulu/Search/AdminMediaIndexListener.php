@@ -40,17 +40,17 @@ final class AdminMediaIndexListener
             }
 
             foreach ($locales as $locale) {
-                $identifiers[] = MediaInterface::RESOURCE_KEY . '::' . $event->getResourceId() . '::' . $locale;
+                $identifiers[] = MediaInterface::RESOURCE_KEY . '__' . $event->getResourceId() . '__' . $locale;
             }
         } elseif ($event instanceof MediaRestoredEvent || $event instanceof MediaVersionAddedEvent) {
             $media = $event->getMedia();
             $locales = $this->getLocales($media);
 
             foreach ($locales as $locale) {
-                $identifiers[] = MediaInterface::RESOURCE_KEY . '::' . $event->getResourceId() . '::' . $locale;
+                $identifiers[] = MediaInterface::RESOURCE_KEY . '__' . $event->getResourceId() . '__' . $locale;
             }
         } elseif ($locale) {
-            $identifiers[] = MediaInterface::RESOURCE_KEY . '::' . $event->getResourceId() . '::' . $locale;
+            $identifiers[] = MediaInterface::RESOURCE_KEY . '__' . $event->getResourceId() . '__' . $locale;
         }
 
         if (!$identifiers) {
