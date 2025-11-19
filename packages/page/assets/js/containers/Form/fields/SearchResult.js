@@ -6,7 +6,7 @@ import type {FieldTypeProps} from 'sulu-admin-bundle/types';
 
 @observer
 class SearchResult extends React.Component<FieldTypeProps<typeof undefined>> {
-    extractUrlFromPageTreeRoute(url: string): string {
+    extractUrlFromPageTreeRoute(url: object): string {
         let urlPath = '';
 
         if (typeof url.page === 'object'
@@ -15,7 +15,7 @@ class SearchResult extends React.Component<FieldTypeProps<typeof undefined>> {
             urlPath += url.page.path;
         }
 
-        if (typeof url.suffix === 'object') {
+        if (typeof url.suffix === 'string') {
             urlPath += url.suffix;
         }
 
