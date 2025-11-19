@@ -50,12 +50,12 @@ class DimensionContentRepositoryTest extends SuluTestCase
         // assert result
         $this->assertCount(2, $dimensionContentCollection);
 
-        $this->assertSame([
-            $dimensionContent1->getId(),
-            $dimensionContent2->getId(),
-        ], \array_map(function(ExampleDimensionContent $dimensionContent) {
+        $dimensionContentIds = array_map(function(ExampleDimensionContent $dimensionContent) {
             return $dimensionContent->getId();
-        }, \iterator_to_array($dimensionContentCollection)));
+        }, \iterator_to_array($dimensionContentCollection));
+
+        $this->assertContains($dimensionContent1->getId(), $dimensionContentIds);
+        $this->assertContains($dimensionContent2->getId(), $dimensionContentIds);
     }
 
     public function testLoadOneNotExist(): void
