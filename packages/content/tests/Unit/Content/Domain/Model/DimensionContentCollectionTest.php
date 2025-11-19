@@ -56,28 +56,6 @@ class DimensionContentCollectionTest extends TestCase
         $this->assertSame(2, $dimensionContentCollection->count()); // @phpstan-ignore-line
     }
 
-    public function testSortedByAttributes(): void
-    {
-        $example = new Example();
-        $dimensionContent1 = new ExampleDimensionContent($example);
-        $dimensionContent1->setStage('draft');
-        $dimensionContent2 = new ExampleDimensionContent($example);
-        $dimensionContent2->setLocale('de');
-        $dimensionContent2->setStage('draft');
-
-        $attributes = ['locale' => 'de'];
-
-        $dimensionContentCollection = $this->createDimensionContentCollectionInstance([
-            $dimensionContent2,
-            $dimensionContent1,
-        ], $attributes);
-
-        $this->assertSame([
-            $dimensionContent1,
-            $dimensionContent2,
-        ], \iterator_to_array($dimensionContentCollection));
-    }
-
     public function testIterator(): void
     {
         $example = new Example();

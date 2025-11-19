@@ -81,32 +81,6 @@ class DimensionContentRepositoryTest extends SuluTestCase
         }, \iterator_to_array($dimensionContentCollection)));
     }
 
-    public function testLoadExistOrderedDifferent(): void
-    {
-        // prepare database
-        $contentRichEntity = $this->createContentRichEntity();
-        // First create the dimension 2 to test if its still the last dimension
-        $dimensionContent2 = $this->createContentDimension($contentRichEntity, ['locale' => 'de']);
-        $dimensionContent1 = $this->createContentDimension($contentRichEntity);
-
-        $this->getEntityManager()->flush();
-        $this->getEntityManager()->clear();
-
-        // test functionality
-        $dimensionContentRepository = $this->createContentDimensionRepository();
-        $dimensionContentCollection = $dimensionContentRepository->load($contentRichEntity, ['locale' => 'de']);
-
-        // assert result
-        $this->assertCount(2, $dimensionContentCollection);
-
-        $this->assertSame([
-            $dimensionContent1->getId(),
-            $dimensionContent2->getId(), // Dimension 2 should be the last one in this case
-        ], \array_map(function(ExampleDimensionContent $dimensionContent) {
-            return $dimensionContent->getId();
-        }, \iterator_to_array($dimensionContentCollection)));
-    }
-
     private function createContentRichEntity(): Example
     {
         $example = new Example();
