@@ -120,6 +120,8 @@ class TargetGroupRule implements TargetGroupRuleInterface
 
     public function clearConditions()
     {
-        $this->conditions->clear();
+        foreach ($this->conditions as $condition) {
+            $this->removeCondition($condition);
+        }
     }
 }
