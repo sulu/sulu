@@ -22,6 +22,7 @@ use Sulu\Content\Application\ContentResolver\Value\ContentView;
 use Sulu\Content\Application\MetadataResolver\MetadataResolver;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Domain\Model\ExcerptInterface;
+use Sulu\Content\Domain\Model\TaxonomyInterface;
 
 readonly class ExcerptResolver implements ResolverInterface
 {
@@ -129,26 +130,36 @@ readonly class ExcerptResolver implements ResolverInterface
      */
     protected function getExcerptData(ExcerptInterface $dimensionContent): array
     {
-        return [
+        $data = [
             'excerptTitle' => $dimensionContent->getExcerptTitle(),
             'excerptMore' => $dimensionContent->getExcerptMore(),
             'excerptDescription' => $dimensionContent->getExcerptDescription(),
-            'excerptSegment' => $dimensionContent->getExcerptSegment(),
-            'excerptCategories' => \array_map(
-                fn (CategoryInterface $category) => $category->getId(),
-                $dimensionContent->getExcerptCategories(),
-            ),
-            'excerptTags' => \array_map(
-                fn (TagInterface $tag) => $tag->getName(),
-                $dimensionContent->getExcerptTags(),
-            ),
-            'excerptAudienceTargetGroups' => \array_map(
-                fn (TargetGroupInterface $audienceTargetGroup) => $audienceTargetGroup->getId(),
-                $dimensionContent->getExcerptAudienceTargetGroups(),
-            ),
             'excerptIcon' => $dimensionContent->getExcerptIcon(),
             'excerptImage' => $dimensionContent->getExcerptImage(),
         ];
+
+        if ($dimensionContent instanceof TaxonomyInterface) {
+            $data['excerptSegment'] = $dimensionContent->getExcerptSegment();
+            $data['excerptCategories'] = \array_map(
+                fn (CategoryInterface $category) => $category->getId(),
+                $dimensionContent->getExcerptCategories(),
+            );
+            $data['excerptTags'] = \array_map(
+                fn (TagInterface $tag) => $tag->getName(),
+                $dimensionContent->getExcerptTags(),
+            );
+            $data['excerptAudienceTargetGroups'] = \array_map(
+                fn (TargetGroupInterface $audienceTargetGroup) => $audienceTargetGroup->getId(),
+                $dimensionContent->getExcerptAudienceTargetGroups(),
+            );
+        } else {
+            $data['excerptSegment'] = null;
+            $data['excerptCategories'] = [];
+            $data['excerptTags'] = [];
+            $data['excerptAudienceTargetGroups'] = [];
+        }
+
+        return $data;
     }
 
     public static function getPrefix(): string

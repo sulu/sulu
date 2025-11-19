@@ -18,6 +18,7 @@ use Sulu\Content\Domain\Factory\TagFactoryInterface;
 use Sulu\Content\Domain\Factory\TargetGroupFactoryInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Domain\Model\ExcerptInterface;
+use Sulu\Content\Domain\Model\TaxonomyInterface;
 use Webmozart\Assert\Assert;
 
 class ExcerptDataMapper implements DataMapperInterface
@@ -58,14 +59,6 @@ class ExcerptDataMapper implements DataMapperInterface
             Assert::nullOrString($data['excerptMore']);
             $dimensionContent->setExcerptMore($data['excerptMore']);
         }
-        if (\array_key_exists('excerptSegment', $data)) {
-            $segment = $data['excerptSegment'];
-            if (\is_array($data['excerptSegment'])) {
-                $segment = \array_values($data['excerptSegment'])[0] ?? null;
-            }
-            Assert::nullOrString($segment);
-            $dimensionContent->setExcerptSegment($segment);
-        }
         if (\array_key_exists('excerptImage', $data)) {
             Assert::nullOrIsArray($data['excerptImage']);
             Assert::nullOrInteger($data['excerptImage']['id'] ?? null);
@@ -75,6 +68,19 @@ class ExcerptDataMapper implements DataMapperInterface
             Assert::nullOrIsArray($data['excerptIcon']);
             Assert::nullOrInteger($data['excerptIcon']['id'] ?? null);
             $dimensionContent->setExcerptIcon($data['excerptIcon']); // @phpstan-ignore argument.type
+        }
+
+        if (!$dimensionContent instanceof TaxonomyInterface) {
+            return;
+        }
+
+        if (\array_key_exists('excerptSegment', $data)) {
+            $segment = $data['excerptSegment'];
+            if (\is_array($data['excerptSegment'])) {
+                $segment = \array_values($data['excerptSegment'])[0] ?? null;
+            }
+            Assert::nullOrString($segment);
+            $dimensionContent->setExcerptSegment($segment);
         }
         if (\array_key_exists('excerptTags', $data)) {
             Assert::isArray($data['excerptTags']);

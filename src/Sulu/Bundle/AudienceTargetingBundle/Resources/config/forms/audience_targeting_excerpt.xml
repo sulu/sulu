@@ -5,7 +5,7 @@
 >
     <key>audience_targeting_excerpt</key>
 
-    <tag name="sulu_content.content_excerpt_form" instanceOf="Sulu\Content\Domain\Model\ExcerptInterface" priority="10"/>
+    <tag name="sulu_content.content_excerpt_form" instanceOf="Sulu\Content\Domain\Model\TaxonomyInterface" priority="10"/>
 
     <properties>
         <property name="excerptAudienceTargetGroups" type="target_group_selection" onInvalid="ignore">

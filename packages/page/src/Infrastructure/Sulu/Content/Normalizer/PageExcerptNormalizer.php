@@ -15,14 +15,14 @@ namespace Sulu\Page\Infrastructure\Sulu\Content\Normalizer;
 
 use Sulu\Content\Application\ContentNormalizer\Normalizer\NormalizerInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
-use Sulu\Content\Domain\Model\ExcerptInterface;
+use Sulu\Content\Domain\Model\TaxonomyInterface;
 use Sulu\Page\Domain\Model\PageInterface;
 
 class PageExcerptNormalizer implements NormalizerInterface
 {
     public function enhance(object $object, array $normalizedData): array
     {
-        if (!$object instanceof ExcerptInterface || !$object instanceof DimensionContentInterface) {
+        if (!$object instanceof TaxonomyInterface || !$object instanceof DimensionContentInterface) {
             return $normalizedData;
         }
 

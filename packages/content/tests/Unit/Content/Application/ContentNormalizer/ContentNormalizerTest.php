@@ -32,6 +32,8 @@ use Sulu\Content\Domain\Model\RoutableInterface;
 use Sulu\Content\Domain\Model\RoutableTrait;
 use Sulu\Content\Domain\Model\SeoInterface;
 use Sulu\Content\Domain\Model\SeoTrait;
+use Sulu\Content\Domain\Model\TaxonomyInterface;
+use Sulu\Content\Domain\Model\TaxonomyTrait;
 use Sulu\Content\Domain\Model\TemplateInterface;
 use Sulu\Content\Domain\Model\TemplateTrait;
 use Sulu\Content\Domain\Model\WorkflowInterface;
@@ -107,9 +109,10 @@ class ContentNormalizerTest extends TestCase
         $contentRichEntityMock = $this->prophesize(ContentRichEntityInterface::class);
         $contentRichEntityMock->getId()->willReturn(5);
 
-        $object = new class($contentRichEntityMock->reveal()) implements DimensionContentInterface, ExcerptInterface, SeoInterface, TemplateInterface, WorkflowInterface, RoutableInterface {
+        $object = new class($contentRichEntityMock->reveal()) implements DimensionContentInterface, ExcerptInterface, TaxonomyInterface, SeoInterface, TemplateInterface, WorkflowInterface, RoutableInterface {
             use DimensionContentTrait;
             use ExcerptTrait;
+            use TaxonomyTrait;
             use RoutableTrait;
             use SeoTrait;
             use TemplateTrait;

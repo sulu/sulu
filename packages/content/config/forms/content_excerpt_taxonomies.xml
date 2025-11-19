@@ -5,7 +5,7 @@
 >
     <key>content_excerpt_taxonomies</key>
 
-    <tag name="sulu_content.content_excerpt_form" instanceOf="Sulu\Content\Domain\Model\ExcerptInterface" priority="50"/>
+    <tag name="sulu_content.content_excerpt_form" instanceOf="Sulu\Content\Domain\Model\TaxonomyInterface" priority="50"/>
 
     <properties>
         <property name="excerptCategories" type="category_selection">

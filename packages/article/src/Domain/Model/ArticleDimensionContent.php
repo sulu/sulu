@@ -21,6 +21,7 @@ use Sulu\Content\Domain\Model\ExcerptTrait;
 use Sulu\Content\Domain\Model\RoutableTrait;
 use Sulu\Content\Domain\Model\SeoTrait;
 use Sulu\Content\Domain\Model\ShadowTrait;
+use Sulu\Content\Domain\Model\TaxonomyTrait;
 use Sulu\Content\Domain\Model\TemplateTrait;
 //use Sulu\Content\Domain\Model\WebspaceTrait;
 use Sulu\Content\Domain\Model\WebspaceTrait;
@@ -36,6 +37,7 @@ class ArticleDimensionContent implements ArticleDimensionContentInterface, Addit
     use AuthorTrait;
     use DimensionContentTrait;
     use ExcerptTrait;
+    use TaxonomyTrait;
     use RoutableTrait;
     use SeoTrait;
     use ShadowTrait;

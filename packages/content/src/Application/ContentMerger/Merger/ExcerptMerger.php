@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Sulu\Content\Application\ContentMerger\Merger;
 
 use Sulu\Content\Domain\Model\ExcerptInterface;
+use Sulu\Content\Domain\Model\TaxonomyInterface;
 
 /**
  * @internal This class should not be instantiated by a project.
@@ -43,16 +44,20 @@ final class ExcerptMerger implements MergerInterface
             $targetObject->setExcerptMore($excerptMore);
         }
 
-        if ($excerptSegment = $sourceObject->getExcerptSegment()) {
-            $targetObject->setExcerptSegment($excerptSegment);
-        }
-
         if ($excerptIcon = $sourceObject->getExcerptIcon()) {
             $targetObject->setExcerptIcon($excerptIcon);
         }
 
         if ($excerptImage = $sourceObject->getExcerptImage()) {
             $targetObject->setExcerptImage($excerptImage);
+        }
+
+        if (!$targetObject instanceof TaxonomyInterface || !$sourceObject instanceof TaxonomyInterface) {
+            return;
+        }
+
+        if ($excerptSegment = $sourceObject->getExcerptSegment()) {
+            $targetObject->setExcerptSegment($excerptSegment);
         }
 
         if ($excerptTags = $sourceObject->getExcerptTags()) {

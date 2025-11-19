@@ -5,7 +5,7 @@
 >
     <key>page_excerpt_segments</key>
 
-    <tag name="sulu_content.content_excerpt_form" instanceOf="Sulu\Content\Domain\Model\ExcerptInterface" priority="25"/>
+    <tag name="sulu_content.content_excerpt_form" instanceOf="Sulu\Content\Domain\Model\TaxonomyInterface" priority="25"/>
 
     <properties>
         <property
