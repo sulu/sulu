@@ -11,6 +11,7 @@
 
 namespace Sulu\Snippet\Infrastructure\Sulu\Reference;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query\Expr\Join;
@@ -190,7 +191,7 @@ class SnippetReferenceRefresher implements ReferenceRefresherInterface
                     }
                     yield $this->contentMerger->merge(
                         new DimensionContentCollection(
-                            $unlocalizedDimensionContent ? [$snippetDimensionContent, $unlocalizedDimensionContent] : [$snippetDimensionContent],
+                            new ArrayCollection($unlocalizedDimensionContent ? [$snippetDimensionContent, $unlocalizedDimensionContent] : [$snippetDimensionContent]),
                             $snippetDimensionContent::getEffectiveDimensionAttributes(['locale' => $locale, 'stage' => $stage]),
                             SnippetDimensionContent::class
                         )

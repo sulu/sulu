@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Sulu\Content\Infrastructure\Doctrine;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Content\Application\ContentMetadataInspector\ContentMetadataInspectorInterface;
 use Sulu\Content\Domain\Model\ContentRichEntityInterface;
@@ -81,7 +82,7 @@ class DimensionContentRepository implements DimensionContentRepositoryInterface
         $dimensionContents = $queryBuilder->getQuery()->getResult();
 
         return new DimensionContentCollection(
-            $dimensionContents,
+            new ArrayCollection($dimensionContents),
             $dimensionAttributes,
             $dimensionContentClass
         );

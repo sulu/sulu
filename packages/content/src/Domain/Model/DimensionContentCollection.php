@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Sulu\Content\Domain\Model;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 
@@ -47,12 +46,12 @@ class DimensionContentCollection implements DimensionContentCollectionInterface
     /**
      * DimensionContentCollection constructor.
      *
-     * @param array<int, T>|Collection<int, T> $dimensionContents
+     * @param Collection<int, T> $dimensionContents
      * @param mixed[] $dimensionAttributes
      * @param class-string<T> $dimensionContentClass
      */
     public function __construct(
-        array|Collection $dimensionContents,
+        Collection $dimensionContents,
         array $dimensionAttributes,
         string $dimensionContentClass
     ) {
@@ -60,8 +59,7 @@ class DimensionContentCollection implements DimensionContentCollectionInterface
         $this->defaultDimensionAttributes = $dimensionContentClass::getDefaultDimensionAttributes();
         $this->dimensionAttributes = $dimensionContentClass::getEffectiveDimensionAttributes($dimensionAttributes);
 
-        // TODO remove the array conversion
-        $this->dimensionContents = $dimensionContents instanceof Collection ? $dimensionContents : new ArrayCollection($dimensionContents);
+        $this->dimensionContents = $dimensionContents;
     }
 
     public function getDimensionContentClass(): string

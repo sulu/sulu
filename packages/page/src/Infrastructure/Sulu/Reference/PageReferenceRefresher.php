@@ -11,6 +11,7 @@
 
 namespace Sulu\Page\Infrastructure\Sulu\Reference;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query\Expr\Join;
@@ -191,7 +192,7 @@ class PageReferenceRefresher implements ReferenceRefresherInterface
                     }
                     yield $this->contentMerger->merge(
                         new DimensionContentCollection(
-                            $unlocalizedDimensionContent ? [$pageDimensionContent, $unlocalizedDimensionContent] : [$pageDimensionContent],
+                            new ArrayCollection($unlocalizedDimensionContent ? [$pageDimensionContent, $unlocalizedDimensionContent] : [$pageDimensionContent]),
                             $pageDimensionContent::getEffectiveDimensionAttributes(['locale' => $locale, 'stage' => $stage]),
                             PageDimensionContent::class
                         )

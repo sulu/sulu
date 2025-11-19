@@ -61,7 +61,7 @@ class PageMovedEvent extends DomainEvent
             return $eventContext;
         }
 
-        $newParentDimensionContentCollection = new DimensionContentCollection($newParent->getDimensionContents()->toArray(), [], PageDimensionContent::class);
+        $newParentDimensionContentCollection = new DimensionContentCollection($newParent->getDimensionContents(), [], PageDimensionContent::class);
         $newParentLocalizedDimensionContent = $newParentDimensionContentCollection->getDimensionContent(['locale' => $this->locale]);
 
         return \array_merge($eventContext, [
@@ -89,7 +89,7 @@ class PageMovedEvent extends DomainEvent
 
     public function getResourceTitle(): ?string
     {
-        $dimensionContentCollection = new DimensionContentCollection($this->page->getDimensionContents()->toArray(), [], PageDimensionContent::class);
+        $dimensionContentCollection = new DimensionContentCollection($this->page->getDimensionContents(), [], PageDimensionContent::class);
 
         return $dimensionContentCollection->getDimensionContent(['locale' => $this->locale])?->getTitle();
     }

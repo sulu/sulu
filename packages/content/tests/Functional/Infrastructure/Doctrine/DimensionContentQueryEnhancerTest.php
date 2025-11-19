@@ -140,7 +140,7 @@ class DimensionContentQueryEnhancerTest extends SuluTestCase
             [ExampleRepository::GROUP_SELECT_EXAMPLE_ADMIN => true]
         );
         $dimensionContentCollection = new DimensionContentCollection(
-            \iterator_to_array($example->getDimensionContents()),
+            $example->getDimensionContents(),
             $dimensionAttributes,
             ExampleDimensionContent::class
         );
@@ -180,7 +180,7 @@ class DimensionContentQueryEnhancerTest extends SuluTestCase
             [ExampleRepository::GROUP_SELECT_EXAMPLE_WEBSITE => true]
         );
         $dimensionContentCollection = new DimensionContentCollection(
-            \iterator_to_array($example->getDimensionContents()),
+            $example->getDimensionContents(),
             $dimensionAttributes,
             ExampleDimensionContent::class
         );
@@ -220,7 +220,7 @@ class DimensionContentQueryEnhancerTest extends SuluTestCase
             ]
         );
         $dimensionContentCollection = new DimensionContentCollection(
-            \iterator_to_array($example->getDimensionContents()),
+            $example->getDimensionContents(),
             $dimensionAttributes,
             ExampleDimensionContent::class
         );

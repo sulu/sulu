@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Sulu\Article\Infrastructure\Sulu\Trash;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Sulu\Article\Application\Mapper\ArticleMapperInterface;
 use Sulu\Article\Domain\Event\ArticleRestoredEvent;
 use Sulu\Article\Domain\Event\ArticleTranslationRestoredEvent;
@@ -114,11 +115,9 @@ final class ArticleTrashItemHandler implements
         );
 
         foreach ($localizedDimensionContents as $locale => $localizedDimensionContent) {
-            $dimensionContents = [$unlocalizedDimensionContent, $localizedDimensionContent];
-
             $mergedDimensionContent = $this->contentMerger->merge(
                 new DimensionContentCollection(
-                    $dimensionContents,
+                    new ArrayCollection([$unlocalizedDimensionContent, $localizedDimensionContent]),
                     [
                         'locale' => $locale,
                         'stage' => DimensionContentInterface::STAGE_DRAFT,

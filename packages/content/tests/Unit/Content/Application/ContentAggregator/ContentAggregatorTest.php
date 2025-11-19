@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Sulu\Content\Tests\Unit\Content\Application\ContentAggregator;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
@@ -62,10 +63,10 @@ class ContentAggregatorTest extends TestCase
         ];
 
         $dimensionContentCollection = new DimensionContentCollection(
-            [
+            new ArrayCollection([
                 $dimensionContent1,
                 $dimensionContent2,
-            ],
+            ]),
             $expectedAttributes,
             ExampleDimensionContent::class
         );
@@ -107,7 +108,7 @@ class ContentAggregatorTest extends TestCase
         ];
 
         $dimensionContentCollection = new DimensionContentCollection(
-            [],
+            new ArrayCollection([]),
             $expectedAttributes,
             ExampleDimensionContent::class
         );

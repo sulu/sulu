@@ -51,7 +51,7 @@ class MovePageMessageHandler
             return;
         }
 
-        $previousParentDimensionContentCollection = new DimensionContentCollection($previousParent->getDimensionContents()->toArray(), [], PageDimensionContent::class);
+        $previousParentDimensionContentCollection = new DimensionContentCollection($previousParent->getDimensionContents(), [], PageDimensionContent::class);
         /** @var PageDimensionContent $previousParentLocalizedDimensionContent */
         $previousParentLocalizedDimensionContent = $previousParentDimensionContentCollection->getDimensionContent(['locale' => $message->getLocale()]);
 

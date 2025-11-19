@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Sulu\Content\Tests\Unit\Content\Application\ContentMerger;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use PHPUnit\Framework\TestCase;
 use Sulu\Content\Application\ContentMerger\ContentMerger;
 use Sulu\Content\Application\ContentMerger\ContentMergerInterface;
@@ -77,10 +78,10 @@ class ContentMergerTest extends TestCase
         $mergedDimensionContent->setVersion(ExampleDimensionContent::CURRENT_VERSION)
             ->shouldBeCalled();
 
-        $dimensionContentCollection = new DimensionContentCollection([
+        $dimensionContentCollection = new DimensionContentCollection(new ArrayCollection([
             $dimensionContent1,
             $dimensionContent2,
-        ], [
+        ]), [
             'locale' => 'en',
             'stage' => 'draft',
         ], $dimensionContent1::class);
@@ -104,7 +105,7 @@ class ContentMergerTest extends TestCase
             $merger2->reveal(),
         ]);
 
-        $dimensionContentCollection = new DimensionContentCollection([], [], ExampleDimensionContent::class);
+        $dimensionContentCollection = new DimensionContentCollection(new ArrayCollection([]), [], ExampleDimensionContent::class);
 
         $contentMerger->merge($dimensionContentCollection);
     }
@@ -150,10 +151,10 @@ class ContentMergerTest extends TestCase
         $unlocalizedDimension->setLocale(null);
         $unlocalizedDimension->setStage('draft');
 
-        $dimensionContentCollection = new DimensionContentCollection([
+        $dimensionContentCollection = new DimensionContentCollection(new ArrayCollection([
             $localizedDimension,
             $unlocalizedDimension,
-        ], [
+        ]), [
             'locale' => 'de',
             'stage' => 'draft',
         ], ExampleDimensionContent::class);
@@ -210,11 +211,11 @@ class ContentMergerTest extends TestCase
         $deDimension->setLocale('de');
         $deDimension->setStage('draft');
 
-        $dimensionContentCollection = new DimensionContentCollection([
+        $dimensionContentCollection = new DimensionContentCollection(new ArrayCollection([
             $enDimension,
             $unlocalizedDimension,
             $deDimension,
-        ], [
+        ]), [
             'locale' => 'de',
             'stage' => 'draft',
         ], ExampleDimensionContent::class);
@@ -254,10 +255,10 @@ class ContentMergerTest extends TestCase
         $unlocalizedDimension->setStage('draft');
         $unlocalizedDimension->setTemplateData(['title' => 'Unlocalized Title']);
 
-        $dimensionContentCollection = new DimensionContentCollection([
+        $dimensionContentCollection = new DimensionContentCollection(new ArrayCollection([
             $localizedDimension,
             $unlocalizedDimension,
-        ], [
+        ]), [
             'locale' => 'de',
             'stage' => 'draft',
         ], ExampleDimensionContent::class);

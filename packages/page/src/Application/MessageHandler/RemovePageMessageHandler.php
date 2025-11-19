@@ -51,7 +51,7 @@ final class RemovePageMessageHandler
         $resourceKey = $page::RESOURCE_KEY;
         $this->trashManager?->store($resourceKey, $page);
 
-        $dimensionContentCollection = new DimensionContentCollection($page->getDimensionContents()->toArray(), [], PageDimensionContent::class);
+        $dimensionContentCollection = new DimensionContentCollection($page->getDimensionContents(), [], PageDimensionContent::class);
         /** @var PageDimensionContentInterface|null $localizedDimensionContent */
         $localizedDimensionContent = $dimensionContentCollection->getDimensionContent(['locale' => $message->getLocale()]);
         $unlocalizedDimensionContent = $dimensionContentCollection->getDimensionContent(['locale' => null, 'stage' => 'draft']);

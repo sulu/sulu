@@ -72,7 +72,7 @@ class SnippetTranslationCopiedEvent extends DomainEvent
 
     public function getResourceTitle(): ?string
     {
-        $dimensionContentCollection = new DimensionContentCollection($this->snippet->getDimensionContents()->toArray(), [], SnippetDimensionContent::class);
+        $dimensionContentCollection = new DimensionContentCollection($this->snippet->getDimensionContents(), [], SnippetDimensionContent::class);
 
         return $dimensionContentCollection->getDimensionContent(['locale' => $this->locale])?->getTitle();
     }

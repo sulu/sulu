@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Sulu\Content\Tests\Unit\Content\Application\ContentWorkflow;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
@@ -105,10 +106,10 @@ class ContentWorkflowTest extends TestCase
             \get_class($dimensionContent2->reveal()))
         );
 
-        $dimensionContentCollection = new DimensionContentCollection([
+        $dimensionContentCollection = new DimensionContentCollection(new ArrayCollection([
             $dimensionContent1->reveal(),
             $dimensionContent2->reveal(),
-        ], $dimensionAttributes, ExampleDimensionContent::class);
+        ]), $dimensionAttributes, ExampleDimensionContent::class);
 
         $dimensionContentRepository->load($contentRichEntity->reveal(), $dimensionAttributes)
             ->willReturn($dimensionContentCollection)
@@ -141,9 +142,9 @@ class ContentWorkflowTest extends TestCase
         $dimensionContent1->getLocale()->willReturn(null);
         $dimensionContent1->getStage()->willReturn('draft');
 
-        $dimensionContentCollection = new DimensionContentCollection([
+        $dimensionContentCollection = new DimensionContentCollection(new ArrayCollection([
             $dimensionContent1->reveal(),
-        ], $dimensionAttributes, ExampleDimensionContent::class);
+        ]), $dimensionAttributes, ExampleDimensionContent::class);
 
         $dimensionContentRepository->load($contentRichEntity->reveal(), $dimensionAttributes)
             ->willReturn($dimensionContentCollection)
@@ -190,10 +191,10 @@ class ContentWorkflowTest extends TestCase
             ->willReturn('unpublished')
             ->shouldBeCalled();
 
-        $dimensionContentCollection = new DimensionContentCollection([
+        $dimensionContentCollection = new DimensionContentCollection(new ArrayCollection([
             $this->wrapWorkflowMock($dimensionContent1),
             $this->wrapWorkflowMock($dimensionContent2),
-        ], $dimensionAttributes, ExampleDimensionContent::class);
+        ]), $dimensionAttributes, ExampleDimensionContent::class);
 
         $dimensionContentRepository->load($contentRichEntity->reveal(), $dimensionAttributes)
             ->willReturn($dimensionContentCollection)
@@ -248,10 +249,10 @@ class ContentWorkflowTest extends TestCase
                 ->shouldBeCalled();
         }
 
-        $dimensionContentCollection = new DimensionContentCollection([
+        $dimensionContentCollection = new DimensionContentCollection(new ArrayCollection([
             $this->wrapWorkflowMock($dimensionContent1),
             $this->wrapWorkflowMock($dimensionContent2),
-        ], $dimensionAttributes, ExampleDimensionContent::class);
+        ]), $dimensionAttributes, ExampleDimensionContent::class);
 
         $dimensionContentRepository->load($contentRichEntity->reveal(), $dimensionAttributes)
             ->willReturn($dimensionContentCollection)

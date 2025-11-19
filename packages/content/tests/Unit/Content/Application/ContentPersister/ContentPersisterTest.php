@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Sulu\Content\Tests\Unit\Content\Application\ContentPersister;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use PHPUnit\Framework\TestCase;
 use Sulu\Content\Application\ContentMerger\ContentMergerInterface;
 use Sulu\Content\Application\ContentPersister\ContentPersister;
@@ -58,10 +59,10 @@ class ContentPersisterTest extends TestCase
         $dimensionContent2->setLocale('de');
         $dimensionContent2->setStage(DimensionContentInterface::STAGE_DRAFT);
 
-        $dimensionContentCollection = new DimensionContentCollection([
+        $dimensionContentCollection = new DimensionContentCollection(new ArrayCollection([
             $dimensionContent1,
             $dimensionContent2,
-        ], $expectedAttributes, ExampleDimensionContent::class);
+        ]), $expectedAttributes, ExampleDimensionContent::class);
 
         $dimensionContentCollectionFactory = $this->prophesize(DimensionContentCollectionFactoryInterface::class);
         $dimensionContentCollectionFactory->create($example, $attributes, $data)
