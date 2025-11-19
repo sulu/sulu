@@ -160,6 +160,96 @@ class ExcerptTraitTest extends TestCase
         $this->assertSame([3, 4], $model->getExcerptCategoryIds());
     }
 
+    public function testSetExcerptTagsSynchronizesCollection(): void
+    {
+        $tag1 = $this->createTag(1);
+        $tag2 = $this->createTag(2);
+        $tag3 = $this->createTag(3);
+
+        $model = $this->getExcerptInstance();
+
+        $model->setExcerptTags([$tag1, $tag2]);
+        $this->assertSame([1, 2], \array_values(\array_map(function(TagInterface $tag) {
+            return $tag->getId();
+        }, $model->getExcerptTags())));
+
+        $model->setExcerptTags([$tag1, $tag3]);
+        $this->assertSame([1, 3], \array_values(\array_map(function(TagInterface $tag) {
+            return $tag->getId();
+        }, $model->getExcerptTags())));
+
+        $this->assertCount(2, $model->getExcerptTags());
+    }
+
+    public function testSetExcerptCategoriesSynchronizesCollection(): void
+    {
+        $category1 = $this->createCategory(1);
+        $category2 = $this->createCategory(2);
+        $category3 = $this->createCategory(3);
+
+        $model = $this->getExcerptInstance();
+
+        $model->setExcerptCategories([$category1, $category2]);
+        $this->assertSame([1, 2], \array_values(\array_map(function(CategoryInterface $category) {
+            return $category->getId();
+        }, $model->getExcerptCategories())));
+
+        $model->setExcerptCategories([$category1, $category3]);
+        $this->assertSame([1, 3], \array_values(\array_map(function(CategoryInterface $category) {
+            return $category->getId();
+        }, $model->getExcerptCategories())));
+
+        $this->assertCount(2, $model->getExcerptCategories());
+    }
+
+    public function testSetExcerptAudienceTargetGroupsSynchronizesCollection(): void
+    {
+        $targetGroup1 = $this->createTargetGroup(1);
+        $targetGroup2 = $this->createTargetGroup(2);
+        $targetGroup3 = $this->createTargetGroup(3);
+
+        $model = $this->getExcerptInstance();
+
+        $model->setExcerptAudienceTargetGroups([$targetGroup1, $targetGroup2]);
+        $this->assertSame([1, 2], \array_values(\array_map(function(TargetGroupInterface $targetGroup) {
+            return $targetGroup->getId();
+        }, $model->getExcerptAudienceTargetGroups())));
+
+        $model->setExcerptAudienceTargetGroups([$targetGroup1, $targetGroup3]);
+        $this->assertSame([1, 3], \array_values(\array_map(function(TargetGroupInterface $targetGroup) {
+            return $targetGroup->getId();
+        }, $model->getExcerptAudienceTargetGroups())));
+
+        $this->assertCount(2, $model->getExcerptAudienceTargetGroups());
+    }
+
+    public function testSharedTagInstancesAcrossMultipleModels(): void
+    {
+        $tag1 = $this->createTag(1);
+        $tag2 = $this->createTag(2);
+
+        $model1 = $this->getExcerptInstance();
+        $model2 = $this->getExcerptInstance();
+
+        $model1->setExcerptTags([$tag1, $tag2]);
+        $model2->setExcerptTags([$tag1, $tag2]);
+
+        $this->assertCount(2, $model1->getExcerptTags());
+        $this->assertCount(2, $model2->getExcerptTags());
+
+        $model2->setExcerptTags([$tag1]);
+
+        $this->assertCount(2, $model1->getExcerptTags());
+        $this->assertSame([1, 2], \array_values(\array_map(function(TagInterface $tag) {
+            return $tag->getId();
+        }, $model1->getExcerptTags())));
+
+        $this->assertCount(1, $model2->getExcerptTags());
+        $this->assertSame([1], \array_values(\array_map(function(TagInterface $tag) {
+            return $tag->getId();
+        }, $model2->getExcerptTags())));
+    }
+
     private function createTag(int $id): TagInterface
     {
         $tag = new Tag();
