@@ -68,13 +68,8 @@ class SnippetControllerTest extends SuluTestCase
             'published' => '2020-05-08T00:00:00+00:00', // Should be ignored
             'description' => null,
             'image' => null,
-            'excerptTitle' => 'Excerpt Title',
-            'excerptDescription' => 'Excerpt Description',
-            'excerptMore' => 'Excerpt More',
             'excerptTags' => ['Tag 1', 'Tag 2'],
             'excerptCategories' => [],
-            'excerptIcon' => null,
-            'excerptMedia' => null,
         ]) ?: null);
 
         $response = $this->client->getResponse();
@@ -112,13 +107,8 @@ class SnippetControllerTest extends SuluTestCase
                     'template' => 'snippet',
                     'title' => 'Test modified version snippet',
                     'description' => 'modified version',
-                    'excerptTitle' => 'Modified Excerpt Title',
-                    'excerptDescription' => 'Modified Excerpt Description',
-                    'excerptMore' => 'Modified Excerpt More',
                     'excerptTags' => ['Modified Tag 1', 'Modified Tag 2'],
                     'excerptCategories' => [],
-                    'excerptIcon' => null,
-                    'excerptMedia' => null,
                 ],
             ) ?: null,
         );
@@ -171,13 +161,8 @@ class SnippetControllerTest extends SuluTestCase
             'template' => 'snippet',
             'title' => 'Test Snippet',
             'images' => null,
-            'excerptTitle' => 'Excerpt Title',
-            'excerptDescription' => 'Excerpt Description',
-            'excerptMore' => 'Excerpt More',
             'excerptTags' => ['Tag 1', 'Tag 2'],
             'excerptCategories' => [],
-            'excerptIcon' => null,
-            'excerptMedia' => null,
         ]) ?: null);
 
         $response = $this->client->getResponse();
@@ -224,13 +209,8 @@ class SnippetControllerTest extends SuluTestCase
             'template' => 'snippet',
             'title' => 'Test Snippet 2',
             'description' => '<p>Test Snippet 2</p>',
-            'excerptTitle' => 'Excerpt Title 2',
-            'excerptDescription' => 'Excerpt Description 2',
-            'excerptMore' => 'Excerpt More 2',
             'excerptTags' => ['Tag 3', 'Tag 4'],
             'excerptCategories' => [],
-            'excerptIcon' => null,
-            'excerptMedia' => null,
         ]) ?: null);
 
         $response = $this->client->getResponse();

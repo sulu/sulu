@@ -38,6 +38,7 @@ trait CreateExampleTrait
         $contentDataMapper = new ContentDataMapper([
             static::getContainer()->get('sulu_content.template_data_mapper'),
             static::getContainer()->get('sulu_content.excerpt_data_mapper'),
+            static::getContainer()->get('sulu_content.taxonomy_data_mapper'),
             static::getContainer()->get('sulu_content.seo_data_mapper'),
             static::getContainer()->get('sulu_content.workflow_data_mapper'),
             // for performance reasons we avoid here route mapper and create the route manually when needed

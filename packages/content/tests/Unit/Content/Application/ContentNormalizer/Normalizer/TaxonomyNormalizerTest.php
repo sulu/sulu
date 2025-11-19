@@ -14,23 +14,24 @@ declare(strict_types=1);
 namespace Sulu\Content\Tests\Unit\Content\Application\ContentNormalizer\Normalizer;
 
 use PHPUnit\Framework\TestCase;
-use Sulu\Content\Application\ContentNormalizer\Normalizer\ExcerptNormalizer;
+use Prophecy\PhpUnit\ProphecyTrait;
+use Sulu\Content\Application\ContentNormalizer\Normalizer\TaxonomyNormalizer;
 use Sulu\Content\Domain\Model\ContentRichEntityInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
-use Sulu\Content\Domain\Model\ExcerptInterface;
+use Sulu\Content\Domain\Model\TaxonomyInterface;
 
-class ExcerptNormalizerTest extends TestCase
+class TaxonomyNormalizerTest extends TestCase
 {
-    use \Prophecy\PhpUnit\ProphecyTrait;
+    use ProphecyTrait;
 
-    protected function createExcerptNormalizerInstance(): ExcerptNormalizer
+    protected function createTaxonomyNormalizerInstance(): TaxonomyNormalizer
     {
-        return new ExcerptNormalizer();
+        return new TaxonomyNormalizer();
     }
 
-    public function testIgnoredAttributesNotImplementExcerptInterface(): void
+    public function testIgnoredAttributesNotImplementTaxonomyInterface(): void
     {
-        $normalizer = $this->createExcerptNormalizerInstance();
+        $normalizer = $this->createTaxonomyNormalizerInstance();
         $object = $this->prophesize(\stdClass::class);
 
         $this->assertSame(
@@ -41,8 +42,8 @@ class ExcerptNormalizerTest extends TestCase
 
     public function testIgnoredAttributes(): void
     {
-        $normalizer = $this->createExcerptNormalizerInstance();
-        $object = $this->prophesize(ExcerptInterface::class);
+        $normalizer = $this->createTaxonomyNormalizerInstance();
+        $object = $this->prophesize(TaxonomyInterface::class);
 
         $this->assertSame(
             [
@@ -54,9 +55,9 @@ class ExcerptNormalizerTest extends TestCase
         );
     }
 
-    public function testEnhanceNotImplementExcerptInterface(): void
+    public function testEnhanceNotImplementTaxonomyInterface(): void
     {
-        $normalizer = $this->createExcerptNormalizerInstance();
+        $normalizer = $this->createTaxonomyNormalizerInstance();
         $object = $this->prophesize(\stdClass::class);
 
         $data = [
@@ -72,11 +73,11 @@ class ExcerptNormalizerTest extends TestCase
 
     public function testEnhance(): void
     {
-        $normalizer = $this->createExcerptNormalizerInstance();
+        $normalizer = $this->createTaxonomyNormalizerInstance();
 
         $resource = $this->prophesize(ContentRichEntityInterface::class);
 
-        $object = $this->prophesize(ExcerptInterface::class);
+        $object = $this->prophesize(TaxonomyInterface::class);
         $object->willImplement(DimensionContentInterface::class);
         $object->getResource()->willReturn($resource->reveal());
 
@@ -99,11 +100,11 @@ class ExcerptNormalizerTest extends TestCase
 
     public function testEnhanceWithAudienceTargetGroups(): void
     {
-        $normalizer = $this->createExcerptNormalizerInstance();
+        $normalizer = $this->createTaxonomyNormalizerInstance();
 
         $resource = $this->prophesize(ContentRichEntityInterface::class);
 
-        $object = $this->prophesize(ExcerptInterface::class);
+        $object = $this->prophesize(TaxonomyInterface::class);
         $object->willImplement(DimensionContentInterface::class);
         $object->getResource()->willReturn($resource->reveal());
 
