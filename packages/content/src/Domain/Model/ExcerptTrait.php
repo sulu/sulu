@@ -125,10 +125,17 @@ trait ExcerptTrait
     public function setExcerptCategories(array $excerptCategories): void
     {
         $this->initializeCategories();
-        $this->excerptCategories->clear();
 
-        foreach ($excerptCategories as $excerptCategory) {
-            $this->excerptCategories->add($excerptCategory);
+        foreach ($this->excerptCategories as $existingCategory) {
+            if (!\in_array($existingCategory, $excerptCategories, true)) {
+                $this->excerptCategories->removeElement($existingCategory);
+            }
+        }
+
+        foreach ($excerptCategories as $newCategory) {
+            if (!$this->excerptCategories->contains($newCategory)) {
+                $this->excerptCategories->add($newCategory);
+            }
         }
     }
 
@@ -162,10 +169,17 @@ trait ExcerptTrait
     public function setExcerptTags(array $excerptTags): void
     {
         $this->initializeTags();
-        $this->excerptTags->clear();
 
-        foreach ($excerptTags as $excerptTag) {
-            $this->excerptTags->add($excerptTag);
+        foreach ($this->excerptTags as $existingTag) {
+            if (!\in_array($existingTag, $excerptTags, true)) {
+                $this->excerptTags->removeElement($existingTag);
+            }
+        }
+
+        foreach ($excerptTags as $newTag) {
+            if (!$this->excerptTags->contains($newTag)) {
+                $this->excerptTags->add($newTag);
+            }
         }
     }
 
@@ -190,10 +204,19 @@ trait ExcerptTrait
     public function setExcerptAudienceTargetGroups(array $excerptAudienceTargetGroups): void
     {
         $this->initializeAudienceTargetGroups();
-        $this->excerptAudienceTargetGroups->clear();
 
-        foreach ($excerptAudienceTargetGroups as $excerptAudienceTargetGroup) {
-            $this->excerptAudienceTargetGroups->add($excerptAudienceTargetGroup);
+        // Remove target groups no longer in the new list
+        foreach ($this->excerptAudienceTargetGroups as $existingTargetGroup) {
+            if (!\in_array($existingTargetGroup, $excerptAudienceTargetGroups, true)) {
+                $this->excerptAudienceTargetGroups->removeElement($existingTargetGroup);
+            }
+        }
+
+        // Add new target groups
+        foreach ($excerptAudienceTargetGroups as $newTargetGroup) {
+            if (!$this->excerptAudienceTargetGroups->contains($newTargetGroup)) {
+                $this->excerptAudienceTargetGroups->add($newTargetGroup);
+            }
         }
     }
 

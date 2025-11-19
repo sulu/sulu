@@ -20,7 +20,9 @@ use PHPUnit\Framework\Attributes\Depends;
 use Sulu\Bundle\TestBundle\Testing\AssertSnapshotTrait;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Bundle\TrashBundle\Domain\Repository\TrashItemRepositoryInterface;
+use Sulu\Content\Tests\Functional\Traits\CreateCategoryTrait;
 use Sulu\Snippet\Domain\Model\SnippetInterface;
+use Sulu\Snippet\Domain\Repository\SnippetRepositoryInterface;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 /**
@@ -30,6 +32,7 @@ use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 class SnippetControllerTest extends SuluTestCase
 {
     use AssertSnapshotTrait;
+    use CreateCategoryTrait;
 
     /**
      * @var KernelBrowser
@@ -382,6 +385,84 @@ class SnippetControllerTest extends SuluTestCase
         $this->client->request('GET', '/admin/api/snippets/' . $trashItem->getResourceId() . '?locale=en');
         $response = $this->client->getResponse();
         $this->assertResponseSnapshot('snippet_post_restore.json', $response, 200);
+    }
+
+    public function testPublishPreservesDimensionContentTagRelations(): void
+    {
+        self::purgeDatabase();
+
+        $category = $this->createCategory(['key' => 'test-category']);
+        $this->createCategoryTranslation($category, ['title' => 'Test Category', 'locale' => 'en']);
+        self::getEntityManager()->flush();
+
+        $snippetRepository = self::getContainer()->get(SnippetRepositoryInterface::class);
+        $this->client->request('POST', '/admin/api/snippets?locale=en', [], [], [], \json_encode([
+            'template' => 'snippet',
+            'title' => 'Tag Test Snippet',
+            'excerptTags' => ['Test Tag 1', 'Test Tag 2'],
+            'excerptCategories' => [$category->getId()],
+        ]) ?: null);
+
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(201, $response);
+        $content = \json_decode((string) $response->getContent(), true);
+        $this->assertIsArray($content);
+        $this->assertArrayHasKey('id', $content);
+        $id = $content['id'];
+        $this->assertIsString($id);
+
+        $snippet = $snippetRepository->findOneBy(['uuid' => $id]);
+        $this->assertNotNull($snippet);
+
+        $localizedDraft = null;
+        foreach ($snippet->getDimensionContents() as $dimensionContent) {
+            if ('draft' === $dimensionContent->getStage() && 'en' === $dimensionContent->getLocale() && 0 === $dimensionContent->getVersion()) {
+                $localizedDraft = $dimensionContent;
+                break;
+            }
+        }
+
+        $this->assertNotNull($localizedDraft, 'Localized draft should exist before publish');
+        $this->assertCount(2, $localizedDraft->getExcerptTags(), 'Localized draft should have 2 tags before publish');
+        $this->assertCount(1, $localizedDraft->getExcerptCategories(), 'Localized draft should have 1 category before publish');
+
+        self::getEntityManager()->clear();
+        $this->client->request('PUT', '/admin/api/snippets/' . $id . '?locale=en&action=publish', [], [], [], \json_encode($content) ?: null);
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(200, $response);
+
+        $snippet = $snippetRepository->findOneBy(['uuid' => $id]);
+        $this->assertNotNull($snippet);
+
+        $draftVersion0 = null;
+        $draftVersioned = null;
+        $liveVersion0 = null;
+
+        foreach ($snippet->getDimensionContents() as $dimensionContent) {
+            if ('en' !== $dimensionContent->getLocale()) {
+                continue;
+            }
+
+            if ('draft' === $dimensionContent->getStage() && 0 === $dimensionContent->getVersion()) {
+                $draftVersion0 = $dimensionContent;
+            } elseif ('draft' === $dimensionContent->getStage() && $dimensionContent->getVersion() > 0) {
+                $draftVersioned = $dimensionContent;
+            } elseif ('live' === $dimensionContent->getStage() && 0 === $dimensionContent->getVersion()) {
+                $liveVersion0 = $dimensionContent;
+            }
+        }
+
+        $this->assertNotNull($draftVersion0, 'Draft version=0 dimension content should exist');
+        $this->assertNotNull($draftVersioned, 'Draft versioned dimension content should exist');
+        $this->assertNotNull($liveVersion0, 'Live version=0 dimension content should exist');
+
+        $this->assertCount(2, $draftVersion0->getExcerptTags(), 'Draft version=0 should have 2 tags');
+        $this->assertCount(2, $draftVersioned->getExcerptTags(), 'Draft versioned should have 2 tags');
+        $this->assertCount(2, $liveVersion0->getExcerptTags(), 'Live version=0 should have 2 tags');
+
+        $this->assertCount(1, $draftVersion0->getExcerptCategories(), 'Draft version=0 should have 1 category');
+        $this->assertCount(1, $draftVersioned->getExcerptCategories(), 'Draft versioned should have 1 category');
+        $this->assertCount(1, $liveVersion0->getExcerptCategories(), 'Live version=0 should have 1 category');
     }
 
     protected function getSnapshotFolder(): string
