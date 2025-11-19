@@ -1,0 +1,23 @@
+<?xml version="1.0" ?>
+<form xmlns="http://schemas.sulu.io/template/template"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/form-1.0.xsd"
+>
+    <key>content_excerpt_taxonomies</key>
+
+    <tag name="sulu_content.content_excerpt_form" instanceOf="Sulu\Content\Domain\Model\ExcerptInterface" priority="50"/>
+
+    <properties>
+        <property name="excerptCategories" type="category_selection">
+            <meta>
+                <title>sulu_category.categories</title>
+            </meta>
+        </property>
+
+        <property name="excerptTags" type="tag_selection">
+            <meta>
+                <title>sulu_tag.tags</title>
+            </meta>
+        </property>
+    </properties>
+</form>

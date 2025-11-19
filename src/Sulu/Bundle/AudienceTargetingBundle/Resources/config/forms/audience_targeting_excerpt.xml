@@ -1,0 +1,17 @@
+<?xml version="1.0" ?>
+<form xmlns="http://schemas.sulu.io/template/template"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/form-1.0.xsd"
+>
+    <key>audience_targeting_excerpt</key>
+
+    <tag name="sulu_content.content_excerpt_form" instanceOf="Sulu\Content\Domain\Model\ExcerptInterface" priority="10"/>
+
+    <properties>
+        <property name="excerptAudienceTargetGroups" type="target_group_selection" onInvalid="ignore">
+            <meta>
+                <title>sulu_audience_targeting.target_groups</title>
+            </meta>
+        </property>
+    </properties>
+</form>

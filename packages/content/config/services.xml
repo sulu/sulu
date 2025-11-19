@@ -16,6 +16,7 @@
             <argument type="service" id="sulu_content.content_metadata_inspector"/>
             <argument type="service" id="sulu_security.security_checker"/>
             <argument>%sulu_content.content_settings_forms%</argument>
+            <argument>%sulu_content.content_excerpt_forms%</argument>
 
             <tag name="sulu.context" context="admin"/>
         </service>

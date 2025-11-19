@@ -37,13 +37,15 @@ class ContentViewBuilderFactory implements ContentViewBuilderFactoryInterface
 {
     /**
      * @param array<string, array{instanceOf: class-string}> $settingsForms
+     * @param array<string, array{instanceOf: class-string}> $excerptForms
      */
     public function __construct(
         private ViewBuilderFactoryInterface $viewBuilderFactory,
         private PreviewObjectProviderRegistryInterface $objectProviderRegistry,
         private ContentMetadataInspectorInterface $contentMetadataInspector,
         private SecurityCheckerInterface $securityChecker,
-        private array $settingsForms
+        private array $settingsForms,
+        private array $excerptForms = []
     ) {
     }
 
@@ -192,7 +194,8 @@ class ContentViewBuilderFactory implements ContentViewBuilderFactoryInterface
                     $editParentView,
                     $previewEnabled,
                     $resourceKey,
-                    $seoAndExcerptToolbarActions
+                    $seoAndExcerptToolbarActions,
+                    $dimensionContentClass
                 );
             }
 
@@ -269,9 +272,18 @@ class ContentViewBuilderFactory implements ContentViewBuilderFactoryInterface
         string $parentView,
         bool $previewEnabled,
         string $resourceKey,
-        array $toolbarActions
+        array $toolbarActions,
+        string $dimensionContentClass
     ): ViewBuilderInterface {
+        $forms = [];
+        foreach ($this->excerptForms as $key => $tag) {
+            if (\is_subclass_of($dimensionContentClass, $tag['instanceOf']) || $dimensionContentClass === $tag['instanceOf']) {
+                $forms[] = $key;
+            }
+        }
+
         return $this->createFormViewBuilder($parentView . '.excerpt', '/excerpt', $previewEnabled)
+            ->addMetadataRequestParameters(['forms' => $forms])
             ->setResourceKey($resourceKey)
             ->setFormKey('content_excerpt')
             ->setTabTitle('sulu_content.excerpt')
