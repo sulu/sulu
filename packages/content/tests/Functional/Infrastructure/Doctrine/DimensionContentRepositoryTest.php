@@ -50,7 +50,7 @@ class DimensionContentRepositoryTest extends SuluTestCase
         // assert result
         $this->assertCount(2, $dimensionContentCollection);
 
-        $dimensionContentIds = array_map(function(ExampleDimensionContent $dimensionContent) {
+        $dimensionContentIds = \array_map(function(ExampleDimensionContent $dimensionContent) {
             return $dimensionContent->getId();
         }, \iterator_to_array($dimensionContentCollection));
 

@@ -6,7 +6,10 @@
                 "changer": "@string@",
                 "created": "@datetime@",
                 "creator": "@string@",
+                "ghostLocale": null,
                 "id": "@string@",
+                "locale": "en",
+                "published": null,
                 "publishedState": false,
                 "templateKey": "snippet",
                 "title": "Test Snippet 2"
