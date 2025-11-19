@@ -120,21 +120,19 @@ class DimensionContentCollectionFactoryTest extends TestCase
 
         /** @var ExampleDimensionContent[] $dimensionContents */
         $dimensionContents = \iterator_to_array($dimensionContentCollection);
-        $dimensionContent1 = $dimensionContents[0]; // unlocalized
-        $dimensionContent2 = $dimensionContents[1]; // localized (de)
+        $dimensionContent1 = $dimensionContents[0];
+        $dimensionContent2 = $dimensionContents[1];
 
         $this->assertNull($dimensionContent1->getLocale());
         $this->assertSame('de', $dimensionContent2->getLocale());
         $this->assertSame('de', $dimensionContent1->getGhostLocale());
         $this->assertSame(['de'], $dimensionContent1->getAvailableLocales());
 
-        // Verify they were added to the entity
         $this->assertCount(2, $example->getDimensionContents());
     }
 
     public function testCreateWithoutExistingLocalizedDimensionContent(): void
     {
-        // Create real Example entity with existing unlocalized dimension content
         $example = new Example();
         $example->id = 1;
 

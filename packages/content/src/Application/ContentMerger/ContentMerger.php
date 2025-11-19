@@ -61,6 +61,7 @@ class ContentMerger implements ContentMergerInterface
 
         $dimensionContents = new ArrayCollection(
             // dimension contents need to be sorted from most specific to least specific when they are merged
+            // @phpstan-ignore argument.templateType
             SortUtils::multisort($dimensionContentCollection->getIterator(), \array_keys($dimensionContentCollection->getDimensionAttributes()), 'asc')
         );
 

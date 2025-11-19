@@ -827,7 +827,6 @@ class PageControllerTest extends SuluTestCase
         $this->assertContains('en', $availableLocales);
         $this->assertContains('de', $availableLocales);
 
-        // Now delete the page with both locales
         $this->client->request('DELETE', '/admin/api/pages/' . $id . '?locale=en&force=true');
         $response = $this->client->getResponse();
         $this->assertHttpStatusCode(204, $response);
@@ -857,8 +856,6 @@ class PageControllerTest extends SuluTestCase
         $response = $this->client->getResponse();
         $this->assertHttpStatusCode(200, $response);
 
-        // Verify dimension content counts: should have exactly 1 unlocalized dimension content
-        // This is the critical test for the multi-locale restore bug fix
         $pageId = $trashItem->getResourceId();
         $pageRepository = $this->getContainer()->get('sulu_page.page_repository');
         $restoredPage = $pageRepository->findOneBy(['uuid' => $pageId]);
@@ -868,12 +865,11 @@ class PageControllerTest extends SuluTestCase
             ->getRepository(PageDimensionContent::class)
             ->findBy(['page' => $restoredPage]);
 
-        // Count unlocalized dimension contents (locale = null, stage = draft)
         $unlocalizedDraftCount = 0;
         $localizedDraftCount = 0;
-        foreach ($dimensionContents as $dc) {
-            if ('draft' === $dc->getStage()) {
-                if (null === $dc->getLocale()) {
+        foreach ($dimensionContents as $dimensionContent) {
+            if ('draft' === $dimensionContent->getStage()) {
+                if (null === $dimensionContent->getLocale()) {
                     ++$unlocalizedDraftCount;
                 } else {
                     ++$localizedDraftCount;
@@ -893,7 +889,6 @@ class PageControllerTest extends SuluTestCase
             'Should have exactly 2 localized dimension contents (en, de) after restore, but found: ' . $localizedDraftCount
         );
 
-        // Verify the API response
         $this->client->request('GET', '/admin/api/pages/' . $pageId . '?locale=en');
         $response = $this->client->getResponse();
         $this->assertResponseSnapshot('page_post_restore.json', $response, 200);

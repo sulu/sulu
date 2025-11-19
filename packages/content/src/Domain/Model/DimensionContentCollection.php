@@ -20,7 +20,6 @@ use Doctrine\Common\Collections\Criteria;
 /**
  * @template-covariant T of DimensionContentInterface
  *
- * @implements \IteratorAggregate<T>
  * @implements DimensionContentCollectionInterface<T>
  */
 class DimensionContentCollection implements DimensionContentCollectionInterface
