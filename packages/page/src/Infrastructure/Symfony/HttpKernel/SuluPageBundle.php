@@ -70,6 +70,8 @@ use Sulu\Page\Infrastructure\Sulu\Reference\PageReferenceRefresher;
 use Sulu\Page\Infrastructure\Sulu\Route\WebspaceSiteRouteGenerator;
 use Sulu\Page\Infrastructure\Sulu\Search\AdminPageIndexListener;
 use Sulu\Page\Infrastructure\Sulu\Search\AdminPageReindexProvider;
+use Sulu\Page\Infrastructure\Sulu\Search\Visitor\WebsitePageReindexContentVisitor;
+use Sulu\Page\Infrastructure\Sulu\Search\Visitor\WebsitePageReindexProviderVisitorInterface;
 use Sulu\Page\Infrastructure\Sulu\Search\WebsitePageIndexListener;
 use Sulu\Page\Infrastructure\Sulu\Search\WebsitePageReindexProvider;
 use Sulu\Page\Infrastructure\Sulu\Security\PageDescendantSecurityListener;
@@ -591,10 +593,21 @@ final class SuluPageBundle extends AbstractBundle
             ->tag('kernel.event_listener', ['event' => PageRemovedEvent::class, 'method' => 'onPageChanged'])
             ->tag('kernel.event_listener', ['event' => PageTranslationRemovedEvent::class, 'method' => 'onPageChanged']);
 
+        $builder->registerForAutoconfiguration(WebsitePageReindexProviderVisitorInterface::class)
+            ->addTag('sulu_page.website_page_reindex_provider_visitor');
+
+        $services->set('sulu_page.website_page_reindex_content_visitor')
+            ->class(WebsitePageReindexContentVisitor::class)
+            ->args([
+                new Reference('sulu_admin.form_metadata_provider'),
+            ])
+            ->tag('sulu_page.website_page_reindex_provider_visitor');
+
         $services->set('sulu_page.website_page_reindex_provider')
             ->class(WebsitePageReindexProvider::class)
             ->args([
                 new Reference('doctrine.orm.entity_manager'),
+                tagged_iterator('sulu_page.website_page_reindex_provider_visitor'),
             ])
             ->tag('cmsig_seal.reindex_provider');
 

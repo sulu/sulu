@@ -22,6 +22,7 @@ use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Page\Domain\Model\Page;
 use Sulu\Page\Domain\Model\PageDimensionContentInterface;
 use Sulu\Page\Domain\Model\PageInterface;
+use Sulu\Page\Infrastructure\Sulu\Search\Visitor\WebsitePageReindexProviderVisitorInterface;
 
 /**
  * @phpstan-type PageData array{
@@ -33,6 +34,8 @@ use Sulu\Page\Domain\Model\PageInterface;
  *     slug: string,
  *     authored: \DateTimeImmutable|null,
  *     webspaceKey: string,
+ *     templateKey: string|null,
+ *     templateData: array<string, mixed>,
  * }
  *
  * @internal this class is internal no backwards compatibility promise is given for this class
@@ -50,8 +53,12 @@ final class WebsitePageReindexProvider implements ReindexProviderInterface
      */
     protected EntityRepository $dimensionContentRepository;
 
+    /**
+     * @param iterable<WebsitePageReindexProviderVisitorInterface> $visitors
+     */
     public function __construct(
         EntityManagerInterface $entityManager,
+        private iterable $visitors = [],
     ) {
         $repository = $entityManager->getRepository(PageInterface::class);
         $dimensionContentRepository = $entityManager->getRepository(PageDimensionContentInterface::class);
@@ -74,7 +81,7 @@ final class WebsitePageReindexProvider implements ReindexProviderInterface
         foreach ($pages as $page) {
             $authoredAt = $page['authored'] ?? $page['changed'];
 
-            yield [
+            $data = [
                 'id' => PageInterface::RESOURCE_KEY . '__' . ((string) $page['pageId']) . '__' . $page['locale'],
                 'resourceKey' => PageInterface::RESOURCE_KEY,
                 'resourceId' => (string) $page['pageId'],
@@ -82,10 +89,16 @@ final class WebsitePageReindexProvider implements ReindexProviderInterface
                 'webspaces' => [$page['webspaceKey']],
                 'title' => $page['title'],
                 'url' => $page['slug'],
-                'content' => [], // Todo: Add content.
+                'content' => [],
                 'mediaId' => '',
                 'authoredAt' => $authoredAt->format('c'),
             ];
+
+            foreach ($this->visitors as $visitor) {
+                $data = $visitor->visit($page, $data);
+            }
+
+            yield $data;
         }
     }
 
@@ -110,6 +123,8 @@ final class WebsitePageReindexProvider implements ReindexProviderInterface
             ->addSelect('dimensionContent.changed')
             ->addSelect('dimensionContent.title')
             ->addSelect('dimensionContent.locale')
+            ->addSelect('dimensionContent.templateKey')
+            ->addSelect('dimensionContent.templateData')
             ->addSelect('route.slug')
             ->addSelect('page.webspaceKey')
             ->where('dimensionContent.stage = :stage')

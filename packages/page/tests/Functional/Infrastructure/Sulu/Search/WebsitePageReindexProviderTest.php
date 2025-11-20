@@ -36,7 +36,7 @@ class WebsitePageReindexProviderTest extends SuluTestCase
     protected function setUp(): void
     {
         $this->entityManager = $this->getEntityManager();
-        $this->provider = new WebsitePageReindexProvider($this->entityManager);
+        $this->provider = new WebsitePageReindexProvider($this->entityManager, []);
         $this->purgeDatabase();
         $this->anonymousRole = $this->createAnonymousRoleWithWebspacePermissions('sulu-test-secure');
     }
