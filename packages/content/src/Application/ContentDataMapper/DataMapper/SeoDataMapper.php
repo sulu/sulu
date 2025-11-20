@@ -13,12 +13,23 @@ declare(strict_types=1);
 
 namespace Sulu\Content\Application\ContentDataMapper\DataMapper;
 
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Domain\Model\SeoInterface;
 use Webmozart\Assert\Assert;
 
-class SeoDataMapper implements DataMapperInterface
+readonly class SeoDataMapper implements DataMapperInterface
 {
+    /**
+     * @param array<string, array{instanceOf: class-string}> $seoForms
+     */
+    public function __construct(
+        private MetadataProviderInterface $formMetadataProvider,
+        private array $seoForms,
+    ) {
+    }
+
     public function map(
         DimensionContentInterface $unlocalizedDimensionContent,
         DimensionContentInterface $localizedDimensionContent,
@@ -36,16 +47,24 @@ class SeoDataMapper implements DataMapperInterface
      */
     private function setSeoData(SeoInterface $dimensionContent, array $data): void
     {
+        if (!$dimensionContent instanceof DimensionContentInterface) {
+            return;
+        }
+
         $seoData = $dimensionContent->getSeoData();
+        $validSeoProperties = $this->getSeoProperties($dimensionContent);
 
         foreach ($data as $key => $value) {
             if (\str_starts_with($key, 'seo')) {
+                // Skip boolean properties - they have dedicated columns
                 if (\in_array($key, ['seoNoIndex', 'seoNoFollow', 'seoHideInSitemap'], true)) {
                     continue;
                 }
 
-                $internalKey = \lcfirst(\substr($key, 3));
-                $seoData[$internalKey] = $value;
+                if (($validSeoProperties[$key] ?? null) !== null) {
+                    $internalKey = \lcfirst(\substr($key, 3));
+                    $seoData[$internalKey] = $value;
+                }
             }
         }
 
@@ -65,5 +84,45 @@ class SeoDataMapper implements DataMapperInterface
             Assert::boolean($data['seoNoIndex']);
             $dimensionContent->setSeoNoIndex($data['seoNoIndex']);
         }
+    }
+
+    /**
+     * @template T of DimensionContentInterface
+     *
+     * @param T $dimensionContent
+     *
+     * @return array<string, mixed>
+     */
+    private function getSeoProperties(DimensionContentInterface $dimensionContent): array
+    {
+        $locale = $dimensionContent->getLocale();
+        if (!$locale) {
+            return [];
+        }
+
+        $forms = $this->getSeoForms();
+        if (0 === \count($forms)) {
+            return [];
+        }
+
+        /** @var FormMetadata $formMetadata */
+        $formMetadata = $this->formMetadataProvider->getMetadata('content_seo', $locale, ['forms' => $forms]);
+
+        return $formMetadata->getFlatFieldMetadata();
+    }
+
+    /**
+     * @return string[]
+     */
+    private function getSeoForms(): array
+    {
+        $forms = [];
+        foreach ($this->seoForms as $key => $tag) {
+            if (SeoInterface::class === $tag['instanceOf']) {
+                $forms[] = $key;
+            }
+        }
+
+        return $forms;
     }
 }

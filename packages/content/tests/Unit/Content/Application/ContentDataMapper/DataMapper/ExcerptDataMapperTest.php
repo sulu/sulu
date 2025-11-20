@@ -64,7 +64,7 @@ class ExcerptDataMapperTest extends TestCase
         $excerptMapper = $this->createExcerptDataMapperInstance();
         $excerptMapper->map($unlocalizedDimensionContent->reveal(), $localizedDimensionContent->reveal(), $data);
 
-        $this->assertTrue(true); // Avoid risky test as this is an early return test // @phpstan-ignore method.alreadyNarrowedType
+        $this->expectNotToPerformAssertions();
     }
 
     public function testMapNoData(): void
