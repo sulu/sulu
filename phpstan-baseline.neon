@@ -286,11 +286,6 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Admin/View/ToolbarAction.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\View\\\\ToolbarAction\\:\\:getOptions\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/View/ToolbarAction.php
-
-		-
 			message: "#^Property Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\View\\\\ToolbarAction\\:\\:\\$options type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AdminBundle/Admin/View/ToolbarAction.php
@@ -12452,11 +12447,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$entity of method Sulu\\\\Bundle\\\\MediaBundle\\\\Collection\\\\Manager\\\\CollectionManager\\:\\:getApiEntity\\(\\) expects Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\CollectionInterface, Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\Collection\\|null given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Collection/Manager/CollectionManager.php
-
-		-
-			message: "#^Parameter \\#1 \\$entityName of method Doctrine\\\\ORM\\\\EntityManager\\:\\:getRepository\\(\\) expects class\\-string\\<SuluMediaBundle\\:CollectionType\\>, string given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Collection/Manager/CollectionManager.php
 
@@ -30863,11 +30853,6 @@ parameters:
 		-
 			message: "#^Cannot access offset 'prefix' on mixed\\.$#"
 			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Resolver/TemplateAttributeResolver.php
-
-		-
-			message: "#^Cannot call method get\\(\\) on Symfony\\\\Component\\\\HttpFoundation\\\\Request\\|null\\.$#"
-			count: 3
 			path: src/Sulu/Bundle/WebsiteBundle/Resolver/TemplateAttributeResolver.php
 
 		-
