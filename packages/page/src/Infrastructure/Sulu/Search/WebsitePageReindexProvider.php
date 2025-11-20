@@ -17,12 +17,14 @@ use CmsIg\Seal\Reindex\ReindexConfig;
 use CmsIg\Seal\Reindex\ReindexProviderInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
+use Sulu\Bundle\SecurityBundle\Entity\AccessControl;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
+use Sulu\Page\Domain\Model\Page;
 use Sulu\Page\Domain\Model\PageDimensionContentInterface;
 use Sulu\Page\Domain\Model\PageInterface;
 
 /**
- * @phpstan-type Page array{
+ * @phpstan-type PageData array{
  *     pageId: int,
  *     changed: \DateTimeImmutable,
  *     created: \DateTimeImmutable,
@@ -68,7 +70,7 @@ final class WebsitePageReindexProvider implements ReindexProviderInterface
     {
         $pages = $this->loadPages($reindexConfig->getIdentifiers());
 
-        /** @var Page $page */
+        /** @var PageData $page */
         foreach ($pages as $page) {
             $authoredAt = $page['authored'] ?? $page['changed'];
 
@@ -90,13 +92,19 @@ final class WebsitePageReindexProvider implements ReindexProviderInterface
     /**
      * @param string[] $identifiers
      *
-     * @return iterable<Page>
+     * @return iterable<PageData>
      */
     private function loadPages(array $identifiers = []): iterable
     {
         $qb = $this->dimensionContentRepository->createQueryBuilder('dimensionContent')
             ->leftJoin('dimensionContent.route', 'route')
             ->leftJoin('dimensionContent.page', 'page')
+            ->leftJoin(
+                AccessControl::class,
+                'accessControl',
+                'WITH',
+                'accessControl.entityId = page.uuid AND accessControl.entityClass = :pageClass'
+            )
             ->select('IDENTITY(dimensionContent.page) AS pageId')
             ->addSelect('dimensionContent.authored')
             ->addSelect('dimensionContent.changed')
@@ -106,11 +114,13 @@ final class WebsitePageReindexProvider implements ReindexProviderInterface
             ->addSelect('page.webspaceKey')
             ->where('dimensionContent.stage = :stage')
             ->andWhere('dimensionContent.locale IS NOT NULL')
-            ->andWhere('dimensionContent.version = :version');
+            ->andWhere('dimensionContent.version = :version')
+            ->andWhere('accessControl.id IS NULL');
 
         $parameters = [
             'stage' => DimensionContentInterface::STAGE_LIVE,
             'version' => DimensionContentInterface::CURRENT_VERSION,
+            'pageClass' => Page::class,
         ];
 
         if (0 < \count($identifiers)) {
@@ -140,7 +150,7 @@ final class WebsitePageReindexProvider implements ReindexProviderInterface
 
         $qb->setParameters($parameters);
 
-        /** @var iterable<Page> */
+        /** @var iterable<PageData> */
         return $qb->getQuery()->toIterable();
     }
 

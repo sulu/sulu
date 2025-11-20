@@ -15,25 +15,30 @@ namespace Sulu\Page\Tests\Functional\Infrastructure\Sulu\Search;
 
 use CmsIg\Seal\Reindex\ReindexConfig;
 use Doctrine\ORM\EntityManagerInterface;
+use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Bundle\TestBundle\Testing\SetGetPrivatePropertyTrait;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Page\Domain\Model\PageInterface;
 use Sulu\Page\Infrastructure\Sulu\Search\WebsitePageReindexProvider;
 use Sulu\Page\Tests\Traits\CreatePageTrait;
+use Sulu\Page\Tests\Traits\CreatePageWithPermissionsTrait;
 
 class WebsitePageReindexProviderTest extends SuluTestCase
 {
     use CreatePageTrait;
+    use CreatePageWithPermissionsTrait;
     use SetGetPrivatePropertyTrait;
 
     private EntityManagerInterface $entityManager;
     private WebsitePageReindexProvider $provider;
+    private Role $anonymousRole;
 
     protected function setUp(): void
     {
         $this->entityManager = $this->getEntityManager();
         $this->provider = new WebsitePageReindexProvider($this->entityManager);
         $this->purgeDatabase();
+        $this->anonymousRole = $this->createAnonymousRoleWithWebspacePermissions('sulu-test-secure');
     }
 
     public function testGetIndex(): void
@@ -74,6 +79,18 @@ class WebsitePageReindexProviderTest extends SuluTestCase
                 ],
             ],
         ], 'blog');
+        $page3 = $this->createPage([
+            'en' => [
+                'live' => [
+                    'template' => 'default',
+                    'title' => 'No Access',
+                    'url' => '/no-access',
+                    'authored' => '1995-11-29T12:00:00+00:00',
+                ],
+            ],
+        ], 'sulu-io');
+        $this->denyAccessToPage($page3, $this->anonymousRole);
+        $this->entityManager->clear();
 
         $changedDateString1 = '2023-06-01 15:30:00';
         $changedDateString2 = '2024-11-29 15:30:00';
