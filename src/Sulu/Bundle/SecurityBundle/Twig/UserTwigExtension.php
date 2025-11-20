@@ -44,9 +44,9 @@ class UserTwigExtension extends AbstractExtension
      *
      * @return User
      */
-    public function resolveUserFunction(string $id)
+    public function resolveUserFunction($id)
     {
-        return $this->cache->get($id, function() use ($id) {
+        return $this->cache->get((string) $id, function() use ($id) {
             return $this->userRepository->findUserById($id);
         });
     }
