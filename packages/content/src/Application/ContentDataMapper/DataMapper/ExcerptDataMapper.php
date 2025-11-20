@@ -13,11 +13,22 @@ declare(strict_types=1);
 
 namespace Sulu\Content\Application\ContentDataMapper\DataMapper;
 
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Domain\Model\ExcerptInterface;
 
-class ExcerptDataMapper implements DataMapperInterface
+readonly class ExcerptDataMapper implements DataMapperInterface
 {
+    /**
+     * @param array<string, array{instanceOf: class-string}> $excerptForms
+     */
+    public function __construct(
+        private MetadataProviderInterface $formMetadataProvider,
+        private array $excerptForms,
+    ) {
+    }
+
     public function map(
         DimensionContentInterface $unlocalizedDimensionContent,
         DimensionContentInterface $localizedDimensionContent,
@@ -27,23 +38,55 @@ class ExcerptDataMapper implements DataMapperInterface
             return;
         }
 
-        $this->setExcerptData($localizedDimensionContent, $data);
-    }
-
-    /**
-     * @param array<string, mixed> $data
-     */
-    private function setExcerptData(ExcerptInterface $dimensionContent, array $data): void
-    {
-        $excerptData = $dimensionContent->getExcerptData();
-
+        $excerptData = $localizedDimensionContent->getExcerptData();
+        $validExcerptProperties = $this->getExcerptProperties($localizedDimensionContent);
         foreach ($data as $key => $value) {
-            if (\str_starts_with($key, 'excerpt')) {
+            if (($validExcerptProperties[$key] ?? null) !== null && \str_starts_with($key, 'excerpt')) {
                 $internalKey = \lcfirst(\substr($key, 7));
                 $excerptData[$internalKey] = $value;
             }
         }
 
-        $dimensionContent->setExcerptData($excerptData);
+        $localizedDimensionContent->setExcerptData($excerptData);
+    }
+
+    /**
+     * @template T of DimensionContentInterface
+     *
+     * @param T $dimensionContent
+     *
+     * @return array<string, mixed>
+     */
+    private function getExcerptProperties(DimensionContentInterface $dimensionContent): array
+    {
+        $locale = $dimensionContent->getLocale();
+        if (!$locale) {
+            return [];
+        }
+
+        $forms = $this->getExcerptForms();
+        if (0 === \count($forms)) {
+            return [];
+        }
+
+        /** @var FormMetadata $formMetadata */
+        $formMetadata = $this->formMetadataProvider->getMetadata('content_excerpt', $locale, ['forms' => $forms]);
+
+        return $formMetadata->getFlatFieldMetadata();
+    }
+
+    /**
+     * @return string[]
+     */
+    private function getExcerptForms(): array
+    {
+        $forms = [];
+        foreach ($this->excerptForms as $key => $tag) {
+            if (ExcerptInterface::class === $tag['instanceOf']) {
+                $forms[] = $key;
+            }
+        }
+
+        return $forms;
     }
 }
