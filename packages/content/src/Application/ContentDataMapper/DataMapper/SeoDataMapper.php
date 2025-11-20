@@ -36,25 +36,20 @@ class SeoDataMapper implements DataMapperInterface
      */
     private function setSeoData(SeoInterface $dimensionContent, array $data): void
     {
-        if (\array_key_exists('seoTitle', $data)) {
-            Assert::nullOrString($data['seoTitle']);
-            $dimensionContent->setSeoTitle($data['seoTitle']);
+        $seoData = $dimensionContent->getSeoData();
+
+        foreach ($data as $key => $value) {
+            if (\str_starts_with($key, 'seo')) {
+                if (\in_array($key, ['seoNoIndex', 'seoNoFollow', 'seoHideInSitemap'], true)) {
+                    continue;
+                }
+
+                $internalKey = \lcfirst(\substr($key, 3));
+                $seoData[$internalKey] = $value;
+            }
         }
 
-        if (\array_key_exists('seoDescription', $data)) {
-            Assert::nullOrString($data['seoDescription']);
-            $dimensionContent->setSeoDescription($data['seoDescription']);
-        }
-
-        if (\array_key_exists('seoKeywords', $data)) {
-            Assert::nullOrString($data['seoKeywords']);
-            $dimensionContent->setSeoKeywords($data['seoKeywords']);
-        }
-
-        if (\array_key_exists('seoCanonicalUrl', $data)) {
-            Assert::nullOrString($data['seoCanonicalUrl']);
-            $dimensionContent->setSeoCanonicalUrl($data['seoCanonicalUrl']);
-        }
+        $dimensionContent->setSeoData($seoData);
 
         if (\array_key_exists('seoHideInSitemap', $data)) {
             Assert::boolean($data['seoHideInSitemap']);

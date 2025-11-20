@@ -42,4 +42,14 @@ interface SeoInterface
     public function getSeoHideInSitemap(): bool;
 
     public function setSeoHideInSitemap(bool $seoHideInSitemap): void;
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function getSeoData(): array;
+
+    /**
+     * @param array<string, mixed> $seoData
+     */
+    public function setSeoData(array $seoData): void;
 }

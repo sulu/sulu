@@ -15,13 +15,10 @@ namespace Sulu\Content\Domain\Model;
 
 trait SeoTrait
 {
-    private ?string $seoTitle = null;
-
-    private ?string $seoDescription = null;
-
-    private ?string $seoKeywords = null;
-
-    private ?string $seoCanonicalUrl = null;
+    /**
+     * @var array<string, mixed>
+     */
+    private array $seoData = [];
 
     private bool $seoNoIndex = false;
 
@@ -31,42 +28,50 @@ trait SeoTrait
 
     public function getSeoTitle(): ?string
     {
-        return $this->seoTitle;
+        $value = $this->seoData['title'] ?? null;
+
+        return \is_string($value) ? $value : null;
     }
 
     public function setSeoTitle(?string $seoTitle): void
     {
-        $this->seoTitle = $seoTitle;
+        $this->seoData['title'] = $seoTitle;
     }
 
     public function getSeoDescription(): ?string
     {
-        return $this->seoDescription;
+        $value = $this->seoData['description'] ?? null;
+
+        return \is_string($value) ? $value : null;
     }
 
     public function setSeoDescription(?string $seoDescription): void
     {
-        $this->seoDescription = $seoDescription;
+        $this->seoData['description'] = $seoDescription;
     }
 
     public function getSeoKeywords(): ?string
     {
-        return $this->seoKeywords;
+        $value = $this->seoData['keywords'] ?? null;
+
+        return \is_string($value) ? $value : null;
     }
 
     public function setSeoKeywords(?string $seoKeywords): void
     {
-        $this->seoKeywords = $seoKeywords;
+        $this->seoData['keywords'] = $seoKeywords;
     }
 
     public function getSeoCanonicalUrl(): ?string
     {
-        return $this->seoCanonicalUrl;
+        $value = $this->seoData['canonicalUrl'] ?? null;
+
+        return \is_string($value) ? $value : null;
     }
 
     public function setSeoCanonicalUrl(?string $seoCanonicalUrl): void
     {
-        $this->seoCanonicalUrl = $seoCanonicalUrl;
+        $this->seoData['canonicalUrl'] = $seoCanonicalUrl;
     }
 
     public function getSeoNoIndex(): bool
@@ -97,5 +102,21 @@ trait SeoTrait
     public function setSeoHideInSitemap(bool $seoHideInSitemap): void
     {
         $this->seoHideInSitemap = $seoHideInSitemap;
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function getSeoData(): array
+    {
+        return $this->seoData;
+    }
+
+    /**
+     * @param array<string, mixed> $seoData
+     */
+    public function setSeoData(array $seoData): void
+    {
+        $this->seoData = $seoData;
     }
 }

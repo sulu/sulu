@@ -80,10 +80,7 @@ final class MetadataLoader
         }
 
         if ($reflection->implementsInterface(SeoInterface::class)) {
-            $this->addField($metadata, 'seoTitle');
-            $this->addField($metadata, 'seoDescription', 'text');
-            $this->addField($metadata, 'seoKeywords', 'text');
-            $this->addField($metadata, 'seoCanonicalUrl', 'text');
+            $this->addField($metadata, 'seoData', 'json', ['nullable' => false, 'options' => ['jsonb' => true]]);
             $this->addField($metadata, 'seoNoIndex', 'boolean');
             $this->addField($metadata, 'seoNoFollow', 'boolean');
             $this->addField($metadata, 'seoHideInSitemap', 'boolean');

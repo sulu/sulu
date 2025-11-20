@@ -200,10 +200,7 @@ class MetadataLoaderTest extends TestCase
                 SeoInterface::class,
             ],
             [
-                'seoTitle' => false,
-                'seoDescription' => false,
-                'seoKeywords' => false,
-                'seoCanonicalUrl' => false,
+                'seoData' => false,
                 'seoNoIndex' => false,
                 'seoNoFollow' => false,
                 'seoHideInSitemap' => false,

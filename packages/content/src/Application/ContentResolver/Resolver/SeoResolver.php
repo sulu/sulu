@@ -123,10 +123,6 @@ readonly class SeoResolver implements ResolverInterface
 
     /**
      * @return array{
-     *     seoTitle: string|null,
-     *     seoDescription: string|null,
-     *     seoKeywords: string|null,
-     *     seoCanonicalUrl: string|null,
      *     seoNoIndex: bool,
      *     seoNoFollow: bool,
      *     seoHideInSitemap: bool
@@ -134,15 +130,17 @@ readonly class SeoResolver implements ResolverInterface
      */
     protected function getSeoData(SeoInterface $dimensionContent): array
     {
-        return [
-            'seoTitle' => $dimensionContent->getSeoTitle(),
-            'seoDescription' => $dimensionContent->getSeoDescription(),
-            'seoKeywords' => $dimensionContent->getSeoKeywords(),
-            'seoCanonicalUrl' => $dimensionContent->getSeoCanonicalUrl(),
-            'seoNoIndex' => $dimensionContent->getSeoNoIndex(),
-            'seoNoFollow' => $dimensionContent->getSeoNoFollow(),
-            'seoHideInSitemap' => $dimensionContent->getSeoHideInSitemap(),
-        ];
+        $data = [];
+
+        foreach ($dimensionContent->getSeoData() as $key => $value) {
+            $data['seo' . \ucfirst($key)] = $value;
+        }
+
+        $data['seoNoIndex'] = $dimensionContent->getSeoNoIndex();
+        $data['seoNoFollow'] = $dimensionContent->getSeoNoFollow();
+        $data['seoHideInSitemap'] = $dimensionContent->getSeoHideInSitemap();
+
+        return $data;
     }
 
     public static function getPrefix(): string

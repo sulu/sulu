@@ -37,7 +37,7 @@ class SeoMergerTest extends TestCase
 
         $target = $this->prophesize(DimensionContentInterface::class);
         $target->willImplement(SeoInterface::class);
-        $target->setSeoTitle(Argument::any())->shouldNotBeCalled();
+        $target->setSeoData(Argument::any())->shouldNotBeCalled();
 
         $merger->merge($target->reveal(), $source->reveal());
     }
@@ -48,7 +48,7 @@ class SeoMergerTest extends TestCase
 
         $source = $this->prophesize(DimensionContentInterface::class);
         $source->willImplement(SeoInterface::class);
-        $source->getSeoTitle(Argument::any())->shouldNotBeCalled();
+        $source->getSeoData()->shouldNotBeCalled();
 
         $target = $this->prophesize(DimensionContentInterface::class);
 
@@ -61,20 +61,25 @@ class SeoMergerTest extends TestCase
 
         $source = $this->prophesize(DimensionContentInterface::class);
         $source->willImplement(SeoInterface::class);
-        $source->getSeoTitle()->willReturn('Seo Title')->shouldBeCalled();
-        $source->getSeoDescription()->willReturn('Seo Description')->shouldBeCalled();
-        $source->getSeoKeywords()->willReturn('Seo Keyword 1, Seo Keyword 2')->shouldBeCalled();
-        $source->getSeoCanonicalUrl()->willReturn('https://canonical.localhost/')->shouldBeCalled();
+        $source->getSeoData()->willReturn([
+            'title' => 'Seo Title',
+            'description' => 'Seo Description',
+            'keywords' => 'Seo Keyword 1, Seo Keyword 2',
+            'canonicalUrl' => 'https://canonical.localhost/',
+        ])->shouldBeCalled();
         $source->getSeoNoFollow()->willReturn(true)->shouldBeCalled();
         $source->getSeoNoIndex()->willReturn(true)->shouldBeCalled();
         $source->getSeoHideInSitemap()->willReturn(true)->shouldBeCalled();
 
         $target = $this->prophesize(DimensionContentInterface::class);
         $target->willImplement(SeoInterface::class);
-        $target->setSeoTitle('Seo Title')->shouldBeCalled();
-        $target->setSeoDescription('Seo Description')->shouldBeCalled();
-        $target->setSeoKeywords('Seo Keyword 1, Seo Keyword 2')->shouldBeCalled();
-        $target->setSeoCanonicalUrl('https://canonical.localhost/')->shouldBeCalled();
+        $target->getSeoData()->willReturn([])->shouldBeCalled();
+        $target->setSeoData([
+            'title' => 'Seo Title',
+            'description' => 'Seo Description',
+            'keywords' => 'Seo Keyword 1, Seo Keyword 2',
+            'canonicalUrl' => 'https://canonical.localhost/',
+        ])->shouldBeCalled();
         $target->setSeoNoFollow(true)->shouldBeCalled();
         $target->setSeoNoIndex(true)->shouldBeCalled();
         $target->setSeoHideInSitemap(true)->shouldBeCalled();
@@ -88,20 +93,15 @@ class SeoMergerTest extends TestCase
 
         $source = $this->prophesize(DimensionContentInterface::class);
         $source->willImplement(SeoInterface::class);
-        $source->getSeoTitle()->willReturn(null)->shouldBeCalled();
-        $source->getSeoDescription()->willReturn(null)->shouldBeCalled();
-        $source->getSeoKeywords()->willReturn(null)->shouldBeCalled();
-        $source->getSeoCanonicalUrl()->willReturn(null)->shouldBeCalled();
+        $source->getSeoData()->willReturn([])->shouldBeCalled();
         $source->getSeoNoFollow()->willReturn(false)->shouldBeCalled();
         $source->getSeoNoIndex()->willReturn(false)->shouldBeCalled();
         $source->getSeoHideInSitemap()->willReturn(false)->shouldBeCalled();
 
         $target = $this->prophesize(DimensionContentInterface::class);
         $target->willImplement(SeoInterface::class);
-        $target->setSeoTitle('Seo Title')->shouldNotBeCalled();
-        $target->setSeoDescription('Seo Description')->shouldNotBeCalled();
-        $target->setSeoKeywords('Seo Keyword 1, Seo Keyword 2')->shouldNotBeCalled();
-        $target->setSeoCanonicalUrl('https://canonical.localhost/')->shouldNotBeCalled();
+        $target->getSeoData()->willReturn([])->shouldBeCalled();
+        $target->setSeoData([])->shouldBeCalled();
         $target->setSeoNoFollow(false)->shouldNotBeCalled();
         $target->setSeoNoIndex(false)->shouldNotBeCalled();
         $target->setSeoHideInSitemap(false)->shouldNotBeCalled();

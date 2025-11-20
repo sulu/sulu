@@ -21,6 +21,7 @@ use Sulu\Content\Application\ContentNormalizer\ContentNormalizerInterface;
 use Sulu\Content\Application\ContentNormalizer\Normalizer\DimensionContentNormalizer;
 use Sulu\Content\Application\ContentNormalizer\Normalizer\ExcerptNormalizer;
 use Sulu\Content\Application\ContentNormalizer\Normalizer\RoutableNormalizer;
+use Sulu\Content\Application\ContentNormalizer\Normalizer\SeoNormalizer;
 use Sulu\Content\Application\ContentNormalizer\Normalizer\TaxonomyNormalizer;
 use Sulu\Content\Application\ContentNormalizer\Normalizer\TemplateNormalizer;
 use Sulu\Content\Application\ContentNormalizer\Normalizer\WorkflowNormalizer;
@@ -50,6 +51,7 @@ class ContentNormalizerTest extends TestCase
             new DimensionContentNormalizer(),
             new TaxonomyNormalizer(),
             new ExcerptNormalizer(),
+            new SeoNormalizer(),
             new TemplateNormalizer(),
             new WorkflowNormalizer(),
             new RoutableNormalizer(),
