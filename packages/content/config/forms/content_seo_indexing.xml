@@ -1,0 +1,47 @@
+<?xml version="1.0" ?>
+<form xmlns="http://schemas.sulu.io/template/template"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/form-1.0.xsd"
+>
+    <key>content_seo_indexing</key>
+
+    <tag name="sulu_content.content_seo_form" instanceOf="Sulu\Content\Domain\Model\SeoInterface" priority="50"/>
+
+    <properties>
+        <property name="seoNoIndex" type="checkbox">
+            <params>
+                <param name="label">
+                    <meta>
+                        <title>sulu_content.no_index</title>
+                    </meta>
+                </param>
+
+                <param name="type" value="toggler" />
+            </params>
+        </property>
+
+        <property name="seoNoFollow" type="checkbox">
+            <params>
+                <param name="label">
+                    <meta>
+                        <title>sulu_content.no_follow</title>
+                    </meta>
+                </param>
+
+                <param name="type" value="toggler" />
+            </params>
+        </property>
+
+        <property name="seoHideInSitemap" type="checkbox">
+            <params>
+                <param name="label">
+                    <meta>
+                        <title>sulu_content.hide_in_sitemap</title>
+                    </meta>
+                </param>
+
+                <param name="type" value="toggler" />
+            </params>
+        </property>
+    </properties>
+</form>

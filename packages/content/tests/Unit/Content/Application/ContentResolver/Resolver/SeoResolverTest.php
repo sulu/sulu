@@ -21,6 +21,7 @@ use Sulu\Content\Application\ContentResolver\Resolver\SeoResolver;
 use Sulu\Content\Application\ContentResolver\Value\ContentView;
 use Sulu\Content\Application\MetadataResolver\MetadataResolver;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
+use Sulu\Content\Domain\Model\SeoInterface;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\Example;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\ExampleDimensionContent;
 
@@ -32,7 +33,8 @@ class SeoResolverTest extends TestCase
     {
         $templateResolver = new SeoResolver(
             $this->prophesize(MetadataProviderInterface::class)->reveal(),
-            $this->prophesize(MetadataResolver::class)->reveal()
+            $this->prophesize(MetadataResolver::class)->reveal(),
+            []
         );
 
         self::assertNull($templateResolver->resolve($this->prophesize(DimensionContentInterface::class)->reveal()));
@@ -53,11 +55,22 @@ class SeoResolverTest extends TestCase
         $dimensionContent->setSeoNoFollow(true);
         $dimensionContent->setSeoHideInSitemap(true);
 
+        $seoForms = [
+            'content_seo_metadata' => [
+                'instanceOf' => SeoInterface::class,
+                'priority' => 100,
+            ],
+            'content_seo_indexing' => [
+                'instanceOf' => SeoInterface::class,
+                'priority' => 50,
+            ],
+        ];
+
         $formMetadata = $this->prophesize(FormMetadata::class);
         $formMetadata->getFlatFieldMetadata()
             ->willReturn([]);
         $formMetadataProvider = $this->prophesize(MetadataProviderInterface::class);
-        $formMetadataProvider->getMetadata('content_seo', 'en', [])
+        $formMetadataProvider->getMetadata('content_seo', 'en', ['forms' => ['content_seo_metadata', 'content_seo_indexing']])
             ->willReturn($formMetadata->reveal());
 
         $metadataResolver = $this->prophesize(MetadataResolver::class);
@@ -78,7 +91,8 @@ class SeoResolverTest extends TestCase
 
         $templateResolver = new SeoResolver(
             $formMetadataProvider->reveal(),
-            $metadataResolver->reveal()
+            $metadataResolver->reveal(),
+            $seoForms
         );
 
         $contentView = $templateResolver->resolve($dimensionContent);

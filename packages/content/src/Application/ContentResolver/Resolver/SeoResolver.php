@@ -22,9 +22,13 @@ use Sulu\Content\Domain\Model\SeoInterface;
 
 readonly class SeoResolver implements ResolverInterface
 {
+    /**
+     * @param array<string, array{instanceOf: class-string}> $seoForms
+     */
     public function __construct(
         private MetadataProviderInterface $formMetadataProvider,
-        private MetadataResolver $metadataResolver
+        private MetadataResolver $metadataResolver,
+        private array $seoForms
     ) {
     }
 
@@ -37,8 +41,15 @@ readonly class SeoResolver implements ResolverInterface
         /** @var string $locale */
         $locale = $dimensionContent->getLocale();
 
+        $forms = [];
+        foreach ($this->seoForms as $key => $tag) {
+            if (SeoInterface::class === $tag['instanceOf']) {
+                $forms[] = $key;
+            }
+        }
+
         /** @var FormMetadata $formMetadata */
-        $formMetadata = $this->formMetadataProvider->getMetadata($this->getFormKey(), $locale, []);
+        $formMetadata = $this->formMetadataProvider->getMetadata($this->getFormKey(), $locale, ['forms' => $forms]);
 
         $formMetadataItems = \array_filter($formMetadata->getFlatFieldMetadata(), function($item) {
             return !\in_array($item->getType(), $this->excludedPropertyTypes(), true);
