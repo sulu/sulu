@@ -50,14 +50,8 @@
         </service>
 
         <service id="sulu_contact.twig.cache_adapter" class="Symfony\Component\Cache\Adapter\ArrayAdapter" />
-
-        <service id="sulu_contact.twig.cache" class="Doctrine\Common\Cache\Cache">
-            <factory class="Doctrine\Common\Cache\Psr6\DoctrineProvider" method="wrap"/>
-            <argument type="service" id="sulu_contact.twig.cache_adapter" />
-        </service>
-
         <service id="sulu_contact.twig" class="Sulu\Bundle\ContactBundle\Twig\ContactTwigExtension">
-            <argument type="service" id="sulu_contact.twig.cache"/>
+            <argument type="service" id="sulu_contact.twig.cache_adapter"/>
             <argument type="service" id="sulu.repository.contact"/>
 
             <tag name="twig.extension"/>

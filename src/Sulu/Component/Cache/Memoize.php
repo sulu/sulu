@@ -13,6 +13,7 @@ namespace Sulu\Component\Cache;
 
 use Doctrine\Common\Cache\Cache;
 use Doctrine\Common\Cache\FlushableCache;
+use Symfony\Component\Cache\Adapter\ArrayAdapter;
 use Symfony\Contracts\Service\ResetInterface;
 
 /**
@@ -21,10 +22,10 @@ use Symfony\Contracts\Service\ResetInterface;
 class Memoize implements MemoizeInterface, ResetInterface
 {
     /**
-     * @param Cache $cache should also include FlushableCache to reset in other runtimes like FrankenPHP correctly
+     * @param ArrayAdapter $cache should also include FlushableCache to reset in other runtimes like FrankenPHP correctly
      * @param int $defaultLifeTime
      */
-    public function __construct(protected Cache $cache, protected $defaultLifeTime)
+    public function __construct(protected ArrayAdapter $cache, protected $defaultLifeTime)
     {
     }
 
@@ -40,14 +41,17 @@ class Memoize implements MemoizeInterface, ResetInterface
 
         // memoize pattern: save result for arguments once and
         // return the value from cache if it is called more than once
-        if ($this->cache->contains($id)) {
-            return $this->cache->fetch($id);
-        } else {
-            $value = \call_user_func_array($compute, $arguments);
-            $this->cache->save($id, $value, $lifeTime);
-
-            return $value;
+        $item = $this->cache->getItem($id);
+        if ($item->isHit()) {
+            return $item->get();
         }
+
+        $value = \call_user_func_array($compute, $arguments);
+        $item->set($value);
+        $item->expiresAfter($lifeTime);
+        $this->cache->save($item);
+
+        return $value;
     }
 
     /**
@@ -55,8 +59,7 @@ class Memoize implements MemoizeInterface, ResetInterface
      */
     public function reset()
     {
-        if ($this->cache instanceof FlushableCache) {
-            $this->cache->flushAll();
-        }
+        // This is not necessary as the cache flushes itself on reset.
+        $this->cache->clear();
     }
 }
