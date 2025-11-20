@@ -17,6 +17,7 @@ use CmsIg\Seal\Reindex\ReindexConfig;
 use CmsIg\Seal\Reindex\ReindexProviderInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
+use Sulu\Article\Domain\Model\ArticleDimensionContentAdditionalWebspace;
 use Sulu\Article\Domain\Model\ArticleDimensionContentInterface;
 use Sulu\Article\Domain\Model\ArticleInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
@@ -30,6 +31,7 @@ use Sulu\Content\Domain\Model\DimensionContentInterface;
  *     mainWebspace: string|null,
  *     additionalWebspaces: string[]|null,
  *     slug: string,
+ *     dimensionContentId: int,
  *     authored: \DateTimeImmutable|null,
  * }
  *
@@ -39,41 +41,23 @@ use Sulu\Content\Domain\Model\DimensionContentInterface;
 final class WebsiteArticleReindexProvider implements ReindexProviderInterface
 {
     /**
-     * @var EntityRepository<ArticleInterface>
-     */
-    protected EntityRepository $articleRepository;
-
-    /**
      * @var EntityRepository<ArticleDimensionContentInterface>
      */
     protected EntityRepository $dimensionContentRepository;
 
     /**
-     * @var array<string, string>|null
+     * @var EntityRepository<ArticleDimensionContentAdditionalWebspace>
      */
-    private ?array $defaultMainWebspace;
+    protected EntityRepository $additionalWebspacesRepository;
 
-    /**
-     * @var array<string, string>|null
-     */
-    private ?array $defaultAdditionalWebspaces;
-
-    /**
-     * @param array<string, string>|null $defaultMainWebspace
-     * @param array<string, string>|null $defaultAdditionalWebspaces
-     */
     public function __construct(
         EntityManagerInterface $entityManager,
-        ?array $defaultMainWebspace,
-        ?array $defaultAdditionalWebspaces,
     ) {
-        $repository = $entityManager->getRepository(ArticleInterface::class);
         $dimensionContentRepository = $entityManager->getRepository(ArticleDimensionContentInterface::class);
+        $additionalWebspacesRepository = $entityManager->getRepository(ArticleDimensionContentAdditionalWebspace::class);
 
-        $this->articleRepository = $repository;
         $this->dimensionContentRepository = $dimensionContentRepository;
-        $this->defaultMainWebspace = $defaultMainWebspace;
-        $this->defaultAdditionalWebspaces = $defaultAdditionalWebspaces;
+        $this->additionalWebspacesRepository = $additionalWebspacesRepository;
     }
 
     public function total(): ?int
@@ -85,25 +69,25 @@ final class WebsiteArticleReindexProvider implements ReindexProviderInterface
     public function provide(ReindexConfig $reindexConfig): \Generator
     {
         $articles = $this->loadArticles($reindexConfig->getIdentifiers());
+        $dimesionContentIds = [];
+        $resolvedArticles = [];
+
+        foreach ($articles as $article) {
+            $dimesionContentIds[] = $article['dimensionContentId'];
+            $resolvedArticles[$article['dimensionContentId']] = $article;
+        }
+
+        $additionalWebspacesResult = $this->loadAdditionalWebspaces($dimesionContentIds);
 
         /** @var Article $article */
-        foreach ($articles as $article) {
+        foreach ($resolvedArticles as $article) {
             $authoredAt = $article['authored'] ?? $article['changed'];
-            $webspaces = \array_merge(
-                $article['mainWebspace'] ? [$article['mainWebspace']] : [],
-                $article['additionalWebspaces'] ?? [],
-            );
-            $webspaces = \array_values(\array_unique($webspaces));
+            $webspaces = $article['mainWebspace'] ? [$article['mainWebspace']] : [];
 
-            if (0 === \count($webspaces)) {
-                $defaultMainWebspace = $this->defaultMainWebspace ? ($this->defaultMainWebspace['default'] ? [$this->defaultMainWebspace['default']] : []) : [];
-                /** @var string[] $defaultAdditionalWebspaces */
-                $defaultAdditionalWebspaces = $this->defaultAdditionalWebspaces ? ($this->defaultAdditionalWebspaces['default'] ?? []) : [];
-
-                $webspaces = \array_merge(
-                    $defaultMainWebspace,
-                    $defaultAdditionalWebspaces,
-                );
+            foreach ($additionalWebspacesResult as $additionalWebspaceRow) {
+                if ($additionalWebspaceRow['articleDimensionContentId'] === $article['dimensionContentId'] && !\in_array($additionalWebspaceRow['webspace'], $webspaces, true)) {
+                    $webspaces[] = $additionalWebspaceRow['webspace'];
+                }
             }
 
             yield [
@@ -136,9 +120,8 @@ final class WebsiteArticleReindexProvider implements ReindexProviderInterface
             ->addSelect('dimensionContent.title')
             ->addSelect('dimensionContent.locale')
             ->addSelect('dimensionContent.mainWebspace')
-            ->addSelect('dimensionContent.additionalWebspaces')
+            ->addSelect('dimensionContent.id AS dimensionContentId')
             ->addSelect('route.slug')
-
             ->where('dimensionContent.stage = :stage')
             ->andWhere('dimensionContent.locale IS NOT NULL')
             ->andWhere('dimensionContent.version = :version');
@@ -177,6 +160,26 @@ final class WebsiteArticleReindexProvider implements ReindexProviderInterface
 
         /** @var iterable<Article> */
         return $qb->getQuery()->toIterable();
+    }
+
+    /**
+     * @param int[] $dimesionContentIds
+     *
+     * @return array<int, array{articleDimensionContentId: int, webspace: string}>
+     */
+    private function loadAdditionalWebspaces(array $dimesionContentIds = []): array
+    {
+        if (0 === \count($dimesionContentIds)) {
+            return [];
+        }
+
+        $qb = $this->additionalWebspacesRepository->createQueryBuilder('additionalWebspace')
+            ->select('IDENTITY(additionalWebspace.articleDimensionContent) AS articleDimensionContentId')
+            ->addSelect('additionalWebspace.additionalWebspace AS webspace')
+            ->where('additionalWebspace.articleDimensionContent IN (:dimesionContentIds)')
+            ->setParameter('dimesionContentIds', $dimesionContentIds);
+
+        return $qb->getQuery()->getResult();
     }
 
     public static function getIndex(): string

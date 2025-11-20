@@ -11,20 +11,20 @@ declare(strict_types=1);
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Article\Application\Content\Merger;
+namespace Sulu\Article\Infrastructure\Sulu\Content\Merger;
 
-use Sulu\Article\Domain\Model\AdditionalWebspacesInterface;
+use Sulu\Article\Domain\Model\ArticleDimensionContentInterface;
 use Sulu\Content\Application\ContentMerger\Merger\MergerInterface;
 
 class AdditionalWebspacesMerger implements MergerInterface
 {
     public function merge(object $targetObject, object $sourceObject): void
     {
-        if (!$targetObject instanceof AdditionalWebspacesInterface) {
+        if (!$targetObject instanceof ArticleDimensionContentInterface) {
             return;
         }
 
-        if (!$sourceObject instanceof AdditionalWebspacesInterface) {
+        if (!$sourceObject instanceof ArticleDimensionContentInterface) {
             return;
         }
 
@@ -35,8 +35,6 @@ class AdditionalWebspacesMerger implements MergerInterface
 
         // Merge additionalWebspaces array
         $additionalWebspaces = $sourceObject->getAdditionalWebspaces();
-        if (null !== $additionalWebspaces) {
-            $targetObject->setAdditionalWebspaces($additionalWebspaces);
-        }
+        $targetObject->setAdditionalWebspaces($additionalWebspaces);
     }
 }

@@ -11,11 +11,23 @@
         </id>
 
         <field name="title" type="string" column="title" length="191" nullable="true"/>
+        <field name="customizeWebspaceSettings" type="boolean" column="customizeWebspaceSettings" nullable="false"/>
 
         <many-to-one field="article" target-entity="Sulu\Article\Domain\Model\ArticleInterface" inversed-by="dimensionContents">
             <join-columns>
                 <join-column name="articleUuid" referenced-column-name="uuid" on-delete="CASCADE" nullable="false"/>
             </join-columns>
         </many-to-one>
+
+        <one-to-many
+                field="additionalWebspaces"
+                target-entity="Sulu\Article\Domain\Model\ArticleDimensionContentAdditionalWebspace"
+                mapped-by="articleDimensionContent"
+                orphan-removal="true"
+        >
+            <cascade>
+                <cascade-persist/>
+            </cascade>
+        </one-to-many>
     </mapped-superclass>
 </doctrine-mapping>

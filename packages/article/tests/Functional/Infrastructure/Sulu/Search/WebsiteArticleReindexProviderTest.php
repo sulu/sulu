@@ -45,7 +45,7 @@ class WebsiteArticleReindexProviderTest extends SuluTestCase
     protected function setUp(): void
     {
         $this->entityManager = $this->getEntityManager();
-        $this->provider = new WebsiteArticleReindexProvider($this->entityManager, ['default' => 'sulu-io'], null);
+        $this->provider = new WebsiteArticleReindexProvider($this->entityManager);
         $this->purgeDatabase();
     }
 

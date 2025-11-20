@@ -323,6 +323,7 @@ class ArticlesSitemapProviderTest extends WebsiteTestCase
             'template' => 'article',
             'locale' => 'en',
             'mainWebspace' => 'blog',
+            'customizeWebspaceSettings' => true,
         ], $data);
 
         $messageBus = self::getContainer()->get('sulu_message_bus');

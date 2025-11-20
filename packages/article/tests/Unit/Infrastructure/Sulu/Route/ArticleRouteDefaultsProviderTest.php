@@ -20,8 +20,6 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
-use Sulu\Article\Application\Webspace\WebspaceResolver;
-use Sulu\Article\Domain\Model\AdditionalWebspacesInterface;
 use Sulu\Article\Domain\Model\Article;
 use Sulu\Article\Domain\Model\ArticleDimensionContent;
 use Sulu\Article\Infrastructure\Sulu\Route\ArticleRouteDefaultsProvider;
@@ -49,8 +47,6 @@ class ArticleRouteDefaultsProviderTest extends TestCase
     private CacheLifetimeResolver $cacheLifetimeResolver;
     /** @var ObjectProphecy<WebspaceManagerInterface> */
     private ObjectProphecy $webspaceManager;
-    /** @var ObjectProphecy<WebspaceResolver> */
-    private ObjectProphecy $webspaceResolver;
     /** @var ObjectProphecy<FormMetadataProvider> */
     private ObjectProphecy $formMetadataProvider;
 
@@ -64,7 +60,6 @@ class ArticleRouteDefaultsProviderTest extends TestCase
         $container->set('form', $this->formMetadataProvider->reveal());
         $this->metadataProviderRegistry = new MetadataProviderRegistry($container);
         $this->webspaceManager = $this->prophesize(WebspaceManagerInterface::class);
-        $this->webspaceResolver = $this->prophesize(WebspaceResolver::class);
     }
 
     protected function getArticleRouteDefaultsProviderInstance(): RouteDefaultsProviderInterface
@@ -75,7 +70,6 @@ class ArticleRouteDefaultsProviderTest extends TestCase
             $this->metadataProviderRegistry,
             $this->cacheLifetimeResolver,
             $this->webspaceManager->reveal(),
-            $this->webspaceResolver->reveal(),
             'test'
         );
     }
@@ -89,11 +83,11 @@ class ArticleRouteDefaultsProviderTest extends TestCase
         $mainWebspace = 'sulu-io';
         $canonicalUrl = 'https://sulu.io/test-article';
 
-        // Create article dimension content that implements AdditionalWebspacesInterface
         $contentRichEntity = new Article();
         $resolvedDimensionContent = new ArticleDimensionContent($contentRichEntity);
         $resolvedDimensionContent->setLocale($locale);
         $resolvedDimensionContent->setTemplateKey('default');
+        $resolvedDimensionContent->setMainWebspace($mainWebspace);
 
         $queryBuilder = $this->prophesize(QueryBuilder::class);
         $query = $this->prophesize(AbstractQuery::class);
@@ -110,9 +104,6 @@ class ArticleRouteDefaultsProviderTest extends TestCase
             ->willReturn($resolvedDimensionContent);
 
         $this->prepareTemplateMetadata('ArticleController::indexAction', 'article.html.twig', 'seconds', '3600');
-
-        $this->webspaceResolver->resolveMainWebspace($resolvedDimensionContent, $locale)
-            ->willReturn($mainWebspace);
 
         $this->webspaceManager->findUrlByResourceLocator($slug, 'test', $locale, $mainWebspace)
             ->willReturn($canonicalUrl);
@@ -141,7 +132,6 @@ class ArticleRouteDefaultsProviderTest extends TestCase
         $locale = 'en';
         $slug = '/test-article';
 
-        // Create article dimension content that doesn't implement AdditionalWebspacesInterface
         $contentRichEntity = new Article();
         $resolvedDimensionContent = new ArticleDimensionContent($contentRichEntity);
         $resolvedDimensionContent->setLocale($locale);
