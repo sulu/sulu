@@ -15,44 +15,45 @@ namespace Sulu\Content\Domain\Model;
 
 trait ExcerptTrait
 {
-    private ?string $excerptTitle = null;
-
-    private ?string $excerptDescription = null;
-
-    private ?string $excerptMore = null;
-
-    private ?int $excerptImageId = null;
-
-    private ?int $excerptIconId = null;
+    /**
+     * @var array<string, mixed>
+     */
+    private array $excerptData = [];
 
     public function getExcerptTitle(): ?string
     {
-        return $this->excerptTitle;
+        $value = $this->excerptData['title'] ?? null;
+
+        return \is_string($value) ? $value : null;
     }
 
     public function setExcerptTitle(?string $excerptTitle): void
     {
-        $this->excerptTitle = $excerptTitle;
+        $this->excerptData['title'] = $excerptTitle;
     }
 
     public function getExcerptDescription(): ?string
     {
-        return $this->excerptDescription;
+        $value = $this->excerptData['description'] ?? null;
+
+        return \is_string($value) ? $value : null;
     }
 
     public function setExcerptDescription(?string $excerptDescription): void
     {
-        $this->excerptDescription = $excerptDescription;
+        $this->excerptData['description'] = $excerptDescription;
     }
 
     public function getExcerptMore(): ?string
     {
-        return $this->excerptMore;
+        $value = $this->excerptData['more'] ?? null;
+
+        return \is_string($value) ? $value : null;
     }
 
     public function setExcerptMore(?string $excerptMore): void
     {
-        $this->excerptMore = $excerptMore;
+        $this->excerptData['more'] = $excerptMore;
     }
 
     /**
@@ -60,13 +61,10 @@ trait ExcerptTrait
      */
     public function getExcerptImage(): ?array
     {
-        if (!$this->excerptImageId) {
-            return null;
-        }
+        $value = $this->excerptData['image'] ?? null;
 
-        return [
-            'id' => $this->excerptImageId,
-        ];
+        /** @var array{id: int}|null */
+        return \is_array($value) ? $value : null;
     }
 
     /**
@@ -74,7 +72,7 @@ trait ExcerptTrait
      */
     public function setExcerptImage(?array $excerptImage): void
     {
-        $this->excerptImageId = $excerptImage['id'] ?? null;
+        $this->excerptData['image'] = $excerptImage;
     }
 
     /**
@@ -82,13 +80,10 @@ trait ExcerptTrait
      */
     public function getExcerptIcon(): ?array
     {
-        if (!$this->excerptIconId) {
-            return null;
-        }
+        $value = $this->excerptData['icon'] ?? null;
 
-        return [
-            'id' => $this->excerptIconId,
-        ];
+        /** @var array{id: int}|null */
+        return \is_array($value) ? $value : null;
     }
 
     /**
@@ -96,6 +91,22 @@ trait ExcerptTrait
      */
     public function setExcerptIcon(?array $excerptIcon): void
     {
-        $this->excerptIconId = $excerptIcon['id'] ?? null;
+        $this->excerptData['icon'] = $excerptIcon;
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function getExcerptData(): array
+    {
+        return $this->excerptData;
+    }
+
+    /**
+     * @param array<string, mixed> $excerptData
+     */
+    public function setExcerptData(array $excerptData): void
+    {
+        $this->excerptData = $excerptData;
     }
 }

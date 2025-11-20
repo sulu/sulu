@@ -46,4 +46,14 @@ interface ExcerptInterface
      * @param array{id?: int}|null $excerptIcon
      */
     public function setExcerptIcon(?array $excerptIcon): void;
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function getExcerptData(): array;
+
+    /**
+     * @param array<string, mixed> $excerptData
+     */
+    public function setExcerptData(array $excerptData): void;
 }

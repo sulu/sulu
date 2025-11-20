@@ -37,7 +37,7 @@ class ExcerptMergerTest extends TestCase
 
         $target = $this->prophesize(DimensionContentInterface::class);
         $target->willImplement(ExcerptInterface::class);
-        $target->setExcerptTitle(Argument::any())->shouldNotBeCalled();
+        $target->setExcerptData(Argument::any())->shouldNotBeCalled();
 
         $merger->merge($target->reveal(), $source->reveal());
     }
@@ -48,7 +48,7 @@ class ExcerptMergerTest extends TestCase
 
         $source = $this->prophesize(DimensionContentInterface::class);
         $source->willImplement(ExcerptInterface::class);
-        $source->getExcerptTitle(Argument::any())->shouldNotBeCalled();
+        $source->getExcerptData()->shouldNotBeCalled();
 
         $target = $this->prophesize(DimensionContentInterface::class);
 
@@ -61,19 +61,24 @@ class ExcerptMergerTest extends TestCase
 
         $source = $this->prophesize(DimensionContentInterface::class);
         $source->willImplement(ExcerptInterface::class);
-        $source->getExcerptTitle()->willReturn('Excerpt Title')->shouldBeCalled();
-        $source->getExcerptDescription()->willReturn('Excerpt Description')->shouldBeCalled();
-        $source->getExcerptMore()->willReturn('Excerpt More')->shouldBeCalled();
-        $source->getExcerptImage()->willReturn(['id' => 8])->shouldBeCalled();
-        $source->getExcerptIcon()->willReturn(['id' => 9])->shouldBeCalled();
+        $source->getExcerptData()->willReturn([
+            'title' => 'Excerpt Title',
+            'description' => 'Excerpt Description',
+            'more' => 'Excerpt More',
+            'image' => ['id' => 8],
+            'icon' => ['id' => 9],
+        ])->shouldBeCalled();
 
         $target = $this->prophesize(DimensionContentInterface::class);
         $target->willImplement(ExcerptInterface::class);
-        $target->setExcerptTitle('Excerpt Title')->shouldBeCalled();
-        $target->setExcerptDescription('Excerpt Description')->shouldBeCalled();
-        $target->setExcerptMore('Excerpt More')->shouldBeCalled();
-        $target->setExcerptImage(['id' => 8])->shouldBeCalled();
-        $target->setExcerptIcon(['id' => 9])->shouldBeCalled();
+        $target->getExcerptData()->willReturn([])->shouldBeCalled();
+        $target->setExcerptData([
+            'title' => 'Excerpt Title',
+            'description' => 'Excerpt Description',
+            'more' => 'Excerpt More',
+            'image' => ['id' => 8],
+            'icon' => ['id' => 9],
+        ])->shouldBeCalled();
 
         $merger->merge($target->reveal(), $source->reveal());
     }
@@ -84,19 +89,12 @@ class ExcerptMergerTest extends TestCase
 
         $source = $this->prophesize(DimensionContentInterface::class);
         $source->willImplement(ExcerptInterface::class);
-        $source->getExcerptTitle()->willReturn(null)->shouldBeCalled();
-        $source->getExcerptDescription()->willReturn(null)->shouldBeCalled();
-        $source->getExcerptMore()->willReturn(null)->shouldBeCalled();
-        $source->getExcerptImage()->willReturn(null)->shouldBeCalled();
-        $source->getExcerptIcon()->willReturn(null)->shouldBeCalled();
+        $source->getExcerptData()->willReturn([])->shouldBeCalled();
 
         $target = $this->prophesize(DimensionContentInterface::class);
         $target->willImplement(ExcerptInterface::class);
-        $target->setExcerptTitle(Argument::any())->shouldNotBeCalled();
-        $target->setExcerptDescription(Argument::any())->shouldNotBeCalled();
-        $target->setExcerptMore(Argument::any())->shouldNotBeCalled();
-        $target->setExcerptImage(Argument::any())->shouldNotBeCalled();
-        $target->setExcerptIcon(Argument::any())->shouldNotBeCalled();
+        $target->getExcerptData()->willReturn([])->shouldBeCalled();
+        $target->setExcerptData([])->shouldBeCalled();
 
         $merger->merge($target->reveal(), $source->reveal());
     }

@@ -139,13 +139,9 @@ readonly class ExcerptTaxonomyResolver implements ResolverInterface
         $data = [];
 
         if ($dimensionContent instanceof ExcerptInterface) {
-            $data = \array_merge($data, [
-                'excerptTitle' => $dimensionContent->getExcerptTitle(),
-                'excerptMore' => $dimensionContent->getExcerptMore(),
-                'excerptDescription' => $dimensionContent->getExcerptDescription(),
-                'excerptIcon' => $dimensionContent->getExcerptIcon(),
-                'excerptImage' => $dimensionContent->getExcerptImage(),
-            ]);
+            foreach ($dimensionContent->getExcerptData() as $key => $value) {
+                $data['excerpt' . \ucfirst($key)] = $value;
+            }
         }
 
         if ($dimensionContent instanceof TaxonomyInterface) {

@@ -20,7 +20,6 @@ use Doctrine\ORM\Mapping\ClassMetadata;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\ContactBundle\Entity\ContactInterface;
-use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\TagBundle\Tag\TagInterface;
 use Sulu\Content\Domain\Model\AuthorInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
@@ -91,30 +90,7 @@ final class MetadataLoader
         }
 
         if ($reflection->implementsInterface(ExcerptInterface::class)) {
-            $this->addField($metadata, 'excerptTitle');
-            $this->addField($metadata, 'excerptMore', 'string', ['length' => 63]);
-            $this->addField($metadata, 'excerptDescription', 'text');
-            $this->addField($metadata, 'excerptImageId', 'integer', [
-                'columnName' => 'excerptImageId',
-                '_custom' => [
-                    'references' => [
-                        'entity' => MediaInterface::class,
-                        'field' => 'id',
-                        'onDelete' => 'SET NULL',
-                    ],
-                ],
-            ]);
-
-            $this->addField($metadata, 'excerptIconId', 'integer', [
-                'columnName' => 'excerptIconId',
-                '_custom' => [
-                    'references' => [
-                        'entity' => MediaInterface::class,
-                        'field' => 'id',
-                        'onDelete' => 'SET NULL',
-                    ],
-                ],
-            ]);
+            $this->addField($metadata, 'excerptData', 'json', ['nullable' => false, 'options' => ['jsonb' => true]]);
         }
 
         if ($reflection->implementsInterface(TaxonomyInterface::class)) {

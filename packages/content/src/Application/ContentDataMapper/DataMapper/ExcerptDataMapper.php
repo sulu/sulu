@@ -15,7 +15,6 @@ namespace Sulu\Content\Application\ContentDataMapper\DataMapper;
 
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Domain\Model\ExcerptInterface;
-use Webmozart\Assert\Assert;
 
 class ExcerptDataMapper implements DataMapperInterface
 {
@@ -36,27 +35,15 @@ class ExcerptDataMapper implements DataMapperInterface
      */
     private function setExcerptData(ExcerptInterface $dimensionContent, array $data): void
     {
-        if (\array_key_exists('excerptTitle', $data)) {
-            Assert::nullOrString($data['excerptTitle']);
-            $dimensionContent->setExcerptTitle($data['excerptTitle']);
+        $excerptData = $dimensionContent->getExcerptData();
+
+        foreach ($data as $key => $value) {
+            if (\str_starts_with($key, 'excerpt')) {
+                $internalKey = \lcfirst(\substr($key, 7));
+                $excerptData[$internalKey] = $value;
+            }
         }
-        if (\array_key_exists('excerptDescription', $data)) {
-            Assert::nullOrString($data['excerptDescription']);
-            $dimensionContent->setExcerptDescription($data['excerptDescription']);
-        }
-        if (\array_key_exists('excerptMore', $data)) {
-            Assert::nullOrString($data['excerptMore']);
-            $dimensionContent->setExcerptMore($data['excerptMore']);
-        }
-        if (\array_key_exists('excerptImage', $data)) {
-            Assert::nullOrIsArray($data['excerptImage']);
-            Assert::nullOrInteger($data['excerptImage']['id'] ?? null);
-            $dimensionContent->setExcerptImage($data['excerptImage']); // @phpstan-ignore argument.type
-        }
-        if (\array_key_exists('excerptIcon', $data)) {
-            Assert::nullOrIsArray($data['excerptIcon']);
-            Assert::nullOrInteger($data['excerptIcon']['id'] ?? null);
-            $dimensionContent->setExcerptIcon($data['excerptIcon']); // @phpstan-ignore argument.type
-        }
+
+        $dimensionContent->setExcerptData($excerptData);
     }
 }
