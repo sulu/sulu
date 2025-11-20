@@ -89,40 +89,27 @@ final class SnippetController
         $types = \array_filter(\explode(',', \is_string($typesParam) ? $typesParam : ''));
 
         if (0 !== \count($types)) {
-            $dimensionContentTemplateKey = $fieldDescriptors['dimensionContentTemplateKey'];
-            $ghostDimensionContentTemplateKey = $fieldDescriptors['ghostDimensionContentTemplateKey'];
-            $expression = $listBuilder->createOrExpression([
-                $listBuilder->createAndExpression([
-                    $listBuilder->createIsNotNullExpression($dimensionContentTemplateKey),
-                    $listBuilder->createInExpression($dimensionContentTemplateKey, $types),
-                ]),
-                $listBuilder->createAndExpression([
-                    $listBuilder->createIsNullExpression($dimensionContentTemplateKey),
-                    $listBuilder->createInExpression($ghostDimensionContentTemplateKey, $types),
-                ]),
-            ]);
-
-            $listBuilder->addExpression($expression);
+            $this->addTemplateKeyFilter($listBuilder, $fieldDescriptors, $types);
         }
 
         $areasParam = $request->query->get('areas');
         if (null !== $areasParam) {
             $areas = \explode(',', (string) $areasParam);
-            $types = [];
+            $templateKeys = [];
             foreach ($areas as $area) {
                 if (!\array_key_exists($area, $this->snippetAreas)) {
                     continue;
                 }
 
-                $type = $this->snippetAreas[$area]['template'];
-                if (empty($type)) {
+                $templateKey = $this->snippetAreas[$area]['template'];
+                if (empty($templateKey)) {
                     continue;
                 }
-                $types[] = $type;
+                $templateKeys[] = $templateKey;
             }
 
-            if (!empty($types)) {
-                $listBuilder->in($fieldDescriptors['templateKey'], $types);
+            if (!empty($templateKeys)) {
+                $this->addTemplateKeyFilter($listBuilder, $fieldDescriptors, $templateKeys);
             }
         }
 
@@ -332,5 +319,31 @@ final class SnippetController
             /** @var null */
             return $this->handle(new Envelope($message, [new EnableFlushStamp()]));
         }
+    }
+
+    /**
+     * @param DoctrineFieldDescriptorInterface[] $fieldDescriptors
+     * @param string[] $templateKeys
+     */
+    private function addTemplateKeyFilter(
+        DoctrineListBuilder $listBuilder,
+        array $fieldDescriptors,
+        array $templateKeys
+    ): void {
+        $dimensionContentTemplateKey = $fieldDescriptors['dimensionContentTemplateKey'];
+        $ghostDimensionContentTemplateKey = $fieldDescriptors['ghostDimensionContentTemplateKey'];
+
+        $expression = $listBuilder->createOrExpression([
+            $listBuilder->createAndExpression([
+                $listBuilder->createIsNotNullExpression($dimensionContentTemplateKey),
+                $listBuilder->createInExpression($dimensionContentTemplateKey, $templateKeys),
+            ]),
+            $listBuilder->createAndExpression([
+                $listBuilder->createIsNullExpression($dimensionContentTemplateKey),
+                $listBuilder->createInExpression($ghostDimensionContentTemplateKey, $templateKeys),
+            ]),
+        ]);
+
+        $listBuilder->addExpression($expression);
     }
 }
