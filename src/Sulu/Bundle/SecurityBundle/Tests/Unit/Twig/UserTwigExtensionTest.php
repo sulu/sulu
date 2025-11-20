@@ -25,24 +25,18 @@ class UserTwigExtensionTest extends TestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @var UserTwigExtension
-     */
-    private $extension;
+    private UserTwigExtension $extension;
 
-    /**
-     * @var Cache
-     */
-    private $cache;
+    private ArrayAdapter $cache;
 
     /**
      * @var ObjectProphecy<UserRepository>
      */
-    private $userRepository;
+    private ObjectProphecy $userRepository;
 
     protected function setUp(): void
     {
-        $this->cache = DoctrineProvider::wrap(new ArrayAdapter());
+        $this->cache = new ArrayAdapter();
         $this->userRepository = $this->prophesize(UserRepository::class);
 
         $this->extension = new UserTwigExtension($this->cache, $this->userRepository->reveal());

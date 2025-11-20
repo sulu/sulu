@@ -51,7 +51,7 @@ class TagTwigExtensionTest extends TestCase
      */
     private function getMemoizeCache()
     {
-        return new Memoize(DoctrineProvider::wrap(new ArrayAdapter()), 0);
+        return new Memoize(new ArrayAdapter(), 0);
     }
 
     public static function getProvider()

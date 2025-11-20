@@ -71,7 +71,6 @@ return $config
     ->ignoreErrorsOnPackages(
         [
             'symfony/yaml', // we use yaml configurations
-            'symfony/cache', // we use cache via psr/cache interface
         ],
         [ErrorType::PROD_DEPENDENCY_ONLY_IN_DEV],
     )
