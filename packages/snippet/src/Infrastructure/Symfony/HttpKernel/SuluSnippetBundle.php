@@ -247,7 +247,6 @@ final class SuluSnippetBundle extends AbstractBundle
         $services->set('sulu_snippet.snippet_area_normalizer', SnippetAreaNormalizer::class)
             ->args([
                 new Reference('serializer.normalizer.object'),
-                new Reference('sulu_content.content_aggregator'),
                 param(SnippetAreaCompilerPass::SNIPPET_AREA_PARAM),
             ])
             ->tag('serializer.normalizer');

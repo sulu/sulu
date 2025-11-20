@@ -13,10 +13,11 @@ declare(strict_types=1);
 
 namespace Sulu\Snippet\Infrastructure\Symfony\Normalizer;
 
-use Sulu\Content\Application\ContentAggregator\ContentAggregatorInterface;
+use Sulu\Content\Domain\Model\DimensionContentCollection;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Snippet\Domain\Model\SnippetArea;
 use Sulu\Snippet\Domain\Model\SnippetAreaInterface;
+use Sulu\Snippet\Domain\Model\SnippetDimensionContentInterface;
 use Sulu\Snippet\Domain\Model\SnippetInterface;
 use Sulu\Snippet\Infrastructure\Symfony\CompilerPass\SnippetAreaCompilerPass;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
@@ -32,7 +33,6 @@ final class SnippetAreaNormalizer implements NormalizerInterface
      */
     public function __construct(
         private ObjectNormalizer $objectNormalizer,
-        private ContentAggregatorInterface $contentAggregator,
         private array $snippetAreas,
     ) {
     }
@@ -97,16 +97,30 @@ final class SnippetAreaNormalizer implements NormalizerInterface
             return null;
         }
 
-        $dimensionContent = $this->contentAggregator->aggregate(
-            $snippet,
+        /** @var DimensionContentCollection<SnippetDimensionContentInterface> $dimensionContentCollection */
+        $dimensionContentCollection = new DimensionContentCollection(
+            $snippet->getDimensionContents(),
             [
-                'locale' => $locale,
-                'stage' => DimensionContentInterface::STAGE_LIVE,
+                'stage' => DimensionContentInterface::STAGE_DRAFT,
                 'version' => DimensionContentInterface::CURRENT_VERSION,
-            ]
+            ],
+            $snippet->createDimensionContent()::class
         );
 
-        return $dimensionContent->getTitle();
+        $localizedDimensionContent = $dimensionContentCollection->getDimensionContent(['locale' => $locale]);
+        if (null !== $localizedDimensionContent) {
+            return $localizedDimensionContent->getTitle();
+        }
+
+        $unlocalizedDimensionContent = $dimensionContentCollection->getDimensionContent(['locale' => null]);
+        if (null === $unlocalizedDimensionContent) {
+            return null;
+        }
+
+        $locale = $unlocalizedDimensionContent->getGhostLocale() ?? $unlocalizedDimensionContent->getAvailableLocales()[0] ?? null;
+        $ghostLocaleDimensionContent = $dimensionContentCollection->getDimensionContent(['locale' => $locale]);
+
+        return $ghostLocaleDimensionContent?->getTitle();
     }
 
     public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
