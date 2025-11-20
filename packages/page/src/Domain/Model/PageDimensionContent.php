@@ -24,6 +24,7 @@ use Sulu\Content\Domain\Model\LinkTrait;
 use Sulu\Content\Domain\Model\RoutableTrait;
 use Sulu\Content\Domain\Model\SeoTrait;
 use Sulu\Content\Domain\Model\ShadowTrait;
+use Sulu\Content\Domain\Model\TaxonomyTrait;
 use Sulu\Content\Domain\Model\TemplateTrait;
 use Sulu\Content\Domain\Model\WorkflowTrait;
 use Sulu\Route\Domain\Model\Route;
@@ -37,6 +38,7 @@ class PageDimensionContent implements PageDimensionContentInterface
     use AuthorTrait;
     use DimensionContentTrait;
     use ExcerptTrait;
+    use TaxonomyTrait;
     use RoutableTrait {
         setRoute as parentSetRoute;
     }

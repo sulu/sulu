@@ -9,5 +9,11 @@
 
             <tag name="sulu_admin.form_metadata_visitor" />
         </service>
+
+        <service id="sulu_content.excerpt_form_metadata_visitor" class="Sulu\Content\Infrastructure\Sulu\Form\ExcerptFormMetadataVisitor">
+            <argument type="service" id="sulu_admin.xml_form_metadata_loader"/>
+
+            <tag name="sulu_admin.form_metadata_visitor" />
+        </service>
     </services>
 </container>

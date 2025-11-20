@@ -14,13 +14,13 @@ declare(strict_types=1);
 namespace Sulu\Content\Application\ContentNormalizer\Normalizer;
 
 use Sulu\Content\Domain\Model\DimensionContentInterface;
-use Sulu\Content\Domain\Model\ExcerptInterface;
+use Sulu\Content\Domain\Model\TaxonomyInterface;
 
-class ExcerptNormalizer implements NormalizerInterface
+class TaxonomyNormalizer implements NormalizerInterface
 {
     public function enhance(object $object, array $normalizedData): array
     {
-        if (!$object instanceof ExcerptInterface || !$object instanceof DimensionContentInterface) {
+        if (!$object instanceof TaxonomyInterface || !$object instanceof DimensionContentInterface) {
             return $normalizedData;
         }
 
@@ -36,7 +36,7 @@ class ExcerptNormalizer implements NormalizerInterface
 
     public function getIgnoredAttributes(object $object): array
     {
-        if (!$object instanceof ExcerptInterface) {
+        if (!$object instanceof TaxonomyInterface) {
             return [];
         }
 

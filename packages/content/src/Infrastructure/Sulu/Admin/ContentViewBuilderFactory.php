@@ -27,6 +27,7 @@ use Sulu\Content\Application\ContentMetadataInspector\ContentMetadataInspectorIn
 use Sulu\Content\Domain\Model\ExcerptInterface;
 use Sulu\Content\Domain\Model\SeoInterface;
 use Sulu\Content\Domain\Model\ShadowInterface;
+use Sulu\Content\Domain\Model\TaxonomyInterface;
 use Sulu\Content\Domain\Model\TemplateInterface;
 use Sulu\Content\Domain\Model\WorkflowInterface;
 
@@ -37,13 +38,15 @@ class ContentViewBuilderFactory implements ContentViewBuilderFactoryInterface
 {
     /**
      * @param array<string, array{instanceOf: class-string}> $settingsForms
+     * @param array<string, array{instanceOf: class-string}> $excerptForms
      */
     public function __construct(
         private ViewBuilderFactoryInterface $viewBuilderFactory,
         private PreviewObjectProviderRegistryInterface $objectProviderRegistry,
         private ContentMetadataInspectorInterface $contentMetadataInspector,
         private SecurityCheckerInterface $securityChecker,
-        private array $settingsForms
+        private array $settingsForms,
+        private array $excerptForms = []
     ) {
     }
 
@@ -187,12 +190,15 @@ class ContentViewBuilderFactory implements ContentViewBuilderFactoryInterface
                 );
             }
 
-            if (\is_subclass_of($dimensionContentClass, ExcerptInterface::class)) {
+            if (\is_subclass_of($dimensionContentClass, ExcerptInterface::class)
+                || \is_subclass_of($dimensionContentClass, TaxonomyInterface::class)
+            ) {
                 $views[] = $this->createExcerptFormView(
                     $editParentView,
                     $previewEnabled,
                     $resourceKey,
-                    $seoAndExcerptToolbarActions
+                    $seoAndExcerptToolbarActions,
+                    $dimensionContentClass
                 );
             }
 
@@ -269,12 +275,24 @@ class ContentViewBuilderFactory implements ContentViewBuilderFactoryInterface
         string $parentView,
         bool $previewEnabled,
         string $resourceKey,
-        array $toolbarActions
+        array $toolbarActions,
+        string $dimensionContentClass
     ): ViewBuilderInterface {
+        $forms = [];
+        foreach ($this->excerptForms as $key => $tag) {
+            if (\is_subclass_of($dimensionContentClass, $tag['instanceOf']) || $dimensionContentClass === $tag['instanceOf']) {
+                $forms[] = $key;
+            }
+        }
+
+        $hasExcerpt = \is_subclass_of($dimensionContentClass, ExcerptInterface::class);
+        $tabTitle = $hasExcerpt ? 'sulu_content.excerpt' : 'sulu_content.taxonomies';
+
         return $this->createFormViewBuilder($parentView . '.excerpt', '/excerpt', $previewEnabled)
+            ->addMetadataRequestParameters(['forms' => $forms])
             ->setResourceKey($resourceKey)
             ->setFormKey('content_excerpt')
-            ->setTabTitle('sulu_content.excerpt')
+            ->setTabTitle($tabTitle)
             ->setTitleVisible(true)
             ->addToolbarActions(\array_values($toolbarActions))
             ->setTabOrder(40)

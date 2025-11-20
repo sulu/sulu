@@ -16,7 +16,7 @@
             <tag name="sulu_content.normalizer" priority="64"/>
         </service>
 
-        <service id="sulu_content.excerpt_normalizer" class="Sulu\Content\Application\ContentNormalizer\Normalizer\ExcerptNormalizer">
+        <service id="sulu_content.taxonomy_normalizer" class="Sulu\Content\Application\ContentNormalizer\Normalizer\TaxonomyNormalizer">
             <tag name="sulu_content.normalizer" priority="32"/>
         </service>
 

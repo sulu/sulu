@@ -17,30 +17,30 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderInterface;
-use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroup;
-use Sulu\Bundle\CategoryBundle\Entity\Category;
-use Sulu\Bundle\TagBundle\Entity\Tag;
-use Sulu\Bundle\TestBundle\Testing\SetGetPrivatePropertyTrait;
-use Sulu\Content\Application\ContentResolver\Resolver\ExcerptResolver;
+use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
+use Sulu\Bundle\TagBundle\Tag\TagInterface;
+use Sulu\Content\Application\ContentResolver\Resolver\ExcerptTaxonomyResolver;
 use Sulu\Content\Application\ContentResolver\Value\ContentView;
 use Sulu\Content\Application\MetadataResolver\MetadataResolver;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
+use Sulu\Content\Domain\Model\ExcerptInterface;
+use Sulu\Content\Domain\Model\TaxonomyInterface;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\Example;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\ExampleDimensionContent;
 
-class ExcerptResolverTest extends TestCase
+class ExcerptTaxonomyResolverTest extends TestCase
 {
     use ProphecyTrait;
-    use SetGetPrivatePropertyTrait;
 
-    public function testResolveWithNonTemplateInterface(): void
+    public function testResolveWithNonExcerptInterface(): void
     {
-        $templateResolver = new ExcerptResolver(
+        $resolver = new ExcerptTaxonomyResolver(
             $this->prophesize(MetadataProviderInterface::class)->reveal(),
-            $this->prophesize(MetadataResolver::class)->reveal()
+            $this->prophesize(MetadataResolver::class)->reveal(),
+            []
         );
 
-        self::assertNull($templateResolver->resolve($this->prophesize(DimensionContentInterface::class)->reveal()));
+        self::assertNull($resolver->resolve($this->prophesize(DimensionContentInterface::class)->reveal()));
     }
 
     public function testResolve(): void
@@ -55,19 +55,12 @@ class ExcerptResolverTest extends TestCase
         $dimensionContent->setExcerptMore('Sulu is more awesome');
         $dimensionContent->setExcerptIcon(['id' => 1]);
         $dimensionContent->setExcerptImage(['id' => 2]);
-        $tag = new Tag();
-        $tag->setName('Tag 1');
-        $this->setPrivateProperty($tag, 'id', 1);
-        $dimensionContent->setExcerptTags([$tag]);
-        $category = new Category();
-        $this->setPrivateProperty($category, 'id', 1);
-        $dimensionContent->setExcerptCategories([$category]);
 
         $formMetadata = $this->prophesize(FormMetadata::class);
         $formMetadata->getFlatFieldMetadata()
             ->willReturn([]);
         $formMetadataProvider = $this->prophesize(MetadataProviderInterface::class);
-        $formMetadataProvider->getMetadata('content_excerpt', 'en', [])
+        $formMetadataProvider->getMetadata('content_excerpt', 'en', ['forms' => ['content_excerpt_metadata', 'content_excerpt_taxonomies']])
             ->willReturn($formMetadata->reveal());
 
         $metadataResolver = $this->prophesize(MetadataResolver::class);
@@ -75,11 +68,11 @@ class ExcerptResolverTest extends TestCase
             'excerptTitle' => 'Sulu',
             'excerptDescription' => 'Sulu is awesome',
             'excerptMore' => 'Sulu is more awesome',
-            'excerptSegment' => null,
             'excerptIcon' => ['id' => 1],
             'excerptImage' => ['id' => 2],
-            'excerptTags' => ['Tag 1'],
-            'excerptCategories' => [1],
+            'excerptSegment' => null,
+            'excerptCategories' => [],
+            'excerptTags' => [],
             'excerptAudienceTargetGroups' => [],
         ], 'en')
             ->willReturn(
@@ -88,12 +81,16 @@ class ExcerptResolverTest extends TestCase
                 ]
             );
 
-        $excerptResolver = new ExcerptResolver(
+        $resolver = new ExcerptTaxonomyResolver(
             $formMetadataProvider->reveal(),
-            $metadataResolver->reveal()
+            $metadataResolver->reveal(),
+            [
+                'content_excerpt_metadata' => ['instanceOf' => ExcerptInterface::class],
+                'content_excerpt_taxonomies' => ['instanceOf' => TaxonomyInterface::class],
+            ]
         );
 
-        $contentView = $excerptResolver->resolve($dimensionContent);
+        $contentView = $resolver->resolve($dimensionContent);
 
         self::assertInstanceOf(ContentView::class, $contentView);
         $content = $contentView->getContent();
@@ -101,40 +98,36 @@ class ExcerptResolverTest extends TestCase
         self::assertCount(1, $content);
     }
 
-    public function testResolveWithSegmentAndAudienceTargetGroups(): void
+    public function testResolveWithTaxonomy(): void
     {
         $example = new Example();
         $dimensionContent = new ExampleDimensionContent($example);
         $example->addDimensionContent($dimensionContent);
         $dimensionContent->setLocale('en');
 
+        $tag1 = $this->prophesize(TagInterface::class);
+        $tag1->getName()->willReturn('tag1');
+        $tag2 = $this->prophesize(TagInterface::class);
+        $tag2->getName()->willReturn('tag2');
+
+        $category1 = $this->prophesize(CategoryInterface::class);
+        $category1->getId()->willReturn(1);
+        $category2 = $this->prophesize(CategoryInterface::class);
+        $category2->getId()->willReturn(2);
+
         $dimensionContent->setExcerptTitle('Sulu');
         $dimensionContent->setExcerptDescription('Sulu is awesome');
         $dimensionContent->setExcerptMore('Sulu is more awesome');
-        $dimensionContent->setExcerptSegment('test-segment');
-        $dimensionContent->setExcerptIcon(['id' => 1]);
-        $dimensionContent->setExcerptImage(['id' => 2]);
-
-        $tag = new Tag();
-        $tag->setName('Tag 1');
-        $this->setPrivateProperty($tag, 'id', 1);
-        $dimensionContent->setExcerptTags([$tag]);
-
-        $category = new Category();
-        $this->setPrivateProperty($category, 'id', 1);
-        $dimensionContent->setExcerptCategories([$category]);
-
-        $targetGroup1 = new TargetGroup();
-        $this->setPrivateProperty($targetGroup1, 'id', 5);
-        $targetGroup2 = new TargetGroup();
-        $this->setPrivateProperty($targetGroup2, 'id', 6);
-        $dimensionContent->setExcerptAudienceTargetGroups([$targetGroup1, $targetGroup2]);
+        $dimensionContent->setExcerptIcon(['id' => 3]);
+        $dimensionContent->setExcerptImage(['id' => 4]);
+        $dimensionContent->setExcerptTags([$tag1->reveal(), $tag2->reveal()]);
+        $dimensionContent->setExcerptCategories([$category1->reveal(), $category2->reveal()]);
 
         $formMetadata = $this->prophesize(FormMetadata::class);
         $formMetadata->getFlatFieldMetadata()
             ->willReturn([]);
         $formMetadataProvider = $this->prophesize(MetadataProviderInterface::class);
-        $formMetadataProvider->getMetadata('content_excerpt', 'en', [])
+        $formMetadataProvider->getMetadata('content_excerpt', 'en', ['forms' => ['content_excerpt_metadata', 'content_excerpt_taxonomies']])
             ->willReturn($formMetadata->reveal());
 
         $metadataResolver = $this->prophesize(MetadataResolver::class);
@@ -142,12 +135,12 @@ class ExcerptResolverTest extends TestCase
             'excerptTitle' => 'Sulu',
             'excerptDescription' => 'Sulu is awesome',
             'excerptMore' => 'Sulu is more awesome',
-            'excerptSegment' => 'test-segment',
-            'excerptIcon' => ['id' => 1],
-            'excerptImage' => ['id' => 2],
-            'excerptTags' => ['Tag 1'],
-            'excerptCategories' => [1],
-            'excerptAudienceTargetGroups' => [5, 6],
+            'excerptIcon' => ['id' => 3],
+            'excerptImage' => ['id' => 4],
+            'excerptSegment' => null,
+            'excerptCategories' => [1, 2],
+            'excerptTags' => ['tag1', 'tag2'],
+            'excerptAudienceTargetGroups' => [],
         ], 'en')
             ->willReturn(
                 [
@@ -155,12 +148,16 @@ class ExcerptResolverTest extends TestCase
                 ]
             );
 
-        $excerptResolver = new ExcerptResolver(
+        $resolver = new ExcerptTaxonomyResolver(
             $formMetadataProvider->reveal(),
-            $metadataResolver->reveal()
+            $metadataResolver->reveal(),
+            [
+                'content_excerpt_metadata' => ['instanceOf' => ExcerptInterface::class],
+                'content_excerpt_taxonomies' => ['instanceOf' => TaxonomyInterface::class],
+            ]
         );
 
-        $contentView = $excerptResolver->resolve($dimensionContent);
+        $contentView = $resolver->resolve($dimensionContent);
 
         self::assertInstanceOf(ContentView::class, $contentView);
         $content = $contentView->getContent();

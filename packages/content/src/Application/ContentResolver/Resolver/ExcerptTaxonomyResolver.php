@@ -20,31 +20,44 @@ use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\TagBundle\Tag\TagInterface;
 use Sulu\Content\Application\ContentResolver\Value\ContentView;
 use Sulu\Content\Application\MetadataResolver\MetadataResolver;
+use Sulu\Content\Domain\Model\ContentRichEntityInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Domain\Model\ExcerptInterface;
+use Sulu\Content\Domain\Model\TaxonomyInterface;
 
-readonly class ExcerptResolver implements ResolverInterface
+readonly class ExcerptTaxonomyResolver implements ResolverInterface
 {
+    /**
+     * @param array<string, array{instanceOf: class-string}> $excerptForms
+     */
     public function __construct(
         private MetadataProviderInterface $formMetadataProvider,
         private MetadataResolver $metadataResolver,
+        private array $excerptForms,
     ) {
     }
 
     public function resolve(DimensionContentInterface $dimensionContent, ?array $properties = null): ?ContentView
     {
-        if (!$dimensionContent instanceof ExcerptInterface) {
+        if (!$dimensionContent instanceof ExcerptInterface && !$dimensionContent instanceof TaxonomyInterface) {
             return null;
         }
 
         /** @var string $locale */
         $locale = $dimensionContent->getLocale();
 
+        $forms = [];
+        foreach ($this->excerptForms as $key => $tag) {
+            if (\in_array($tag['instanceOf'], [ExcerptInterface::class, TaxonomyInterface::class], true)) {
+                $forms[] = $key;
+            }
+        }
+
         /** @var FormMetadata $formMetadata */
-        $formMetadata = $this->formMetadataProvider->getMetadata($this->getFormKey(), $locale, []);
+        $formMetadata = $this->formMetadataProvider->getMetadata($this->getFormKey(), $locale, ['forms' => $forms]);
 
         $formMetadataItems = $formMetadata->getFlatFieldMetadata();
-        $data = $this->getExcerptData($dimensionContent);
+        $data = $this->getExcerptTaxonomyData($dimensionContent);
         if (null !== $properties) {
             $filteredFormMetadataItems = [];
             $filteredTemplateData = [];
@@ -115,40 +128,45 @@ readonly class ExcerptResolver implements ResolverInterface
     }
 
     /**
-     * @return array{
-     *     excerptTitle: string|null,
-     *     excerptMore: string|null,
-     *     excerptDescription: string|null,
-     *     excerptSegment: string|null,
-     *     excerptCategories: int[],
-     *     excerptTags: string[],
-     *     excerptAudienceTargetGroups: int[],
-     *     excerptIcon: array{id: int}|null,
-     *     excerptImage: array{id: int}|null
-     * }
+     * @template T of ContentRichEntityInterface
+     *
+     * @param DimensionContentInterface<T> $dimensionContent
+     *
+     * @return array<string, mixed>
      */
-    protected function getExcerptData(ExcerptInterface $dimensionContent): array
+    protected function getExcerptTaxonomyData(DimensionContentInterface $dimensionContent): array
     {
-        return [
-            'excerptTitle' => $dimensionContent->getExcerptTitle(),
-            'excerptMore' => $dimensionContent->getExcerptMore(),
-            'excerptDescription' => $dimensionContent->getExcerptDescription(),
-            'excerptSegment' => $dimensionContent->getExcerptSegment(),
-            'excerptCategories' => \array_map(
-                fn (CategoryInterface $category) => $category->getId(),
-                $dimensionContent->getExcerptCategories(),
-            ),
-            'excerptTags' => \array_map(
-                fn (TagInterface $tag) => $tag->getName(),
-                $dimensionContent->getExcerptTags(),
-            ),
-            'excerptAudienceTargetGroups' => \array_map(
-                fn (TargetGroupInterface $audienceTargetGroup) => $audienceTargetGroup->getId(),
-                $dimensionContent->getExcerptAudienceTargetGroups(),
-            ),
-            'excerptIcon' => $dimensionContent->getExcerptIcon(),
-            'excerptImage' => $dimensionContent->getExcerptImage(),
-        ];
+        $data = [];
+
+        if ($dimensionContent instanceof ExcerptInterface) {
+            $data = \array_merge($data, [
+                'excerptTitle' => $dimensionContent->getExcerptTitle(),
+                'excerptMore' => $dimensionContent->getExcerptMore(),
+                'excerptDescription' => $dimensionContent->getExcerptDescription(),
+                'excerptIcon' => $dimensionContent->getExcerptIcon(),
+                'excerptImage' => $dimensionContent->getExcerptImage(),
+            ]);
+        }
+
+        if ($dimensionContent instanceof TaxonomyInterface) {
+            $data = \array_merge($data, [
+                'excerptSegment' => $dimensionContent->getExcerptSegment(),
+                'excerptCategories' => \array_map(
+                    fn (CategoryInterface $category) => $category->getId(),
+                    $dimensionContent->getExcerptCategories(),
+                ),
+                'excerptTags' => \array_map(
+                    fn (TagInterface $tag) => $tag->getName(),
+                    $dimensionContent->getExcerptTags(),
+                ),
+                'excerptAudienceTargetGroups' => \array_map(
+                    fn (TargetGroupInterface $audienceTargetGroup) => $audienceTargetGroup->getId(),
+                    $dimensionContent->getExcerptAudienceTargetGroups(),
+                ),
+            ]);
+        }
+
+        return $data;
     }
 
     public static function getPrefix(): string
