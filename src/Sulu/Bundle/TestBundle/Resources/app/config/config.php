@@ -17,11 +17,6 @@ return static function(PhpFileLoader $loader, ContainerBuilder $container) {
     $filesystem = new Filesystem();
 
     $context = $container->getParameter('sulu.context');
-    $path = __DIR__ . \DIRECTORY_SEPARATOR;
-    if (!$filesystem->exists($path . 'parameters.yml')) {
-        $filesystem->copy($path . 'parameters.yml.dist', $path . 'parameters.yml');
-    }
-    $loader->import('parameters.yml');
     $loader->import('context_' . $context . '.yml');
 
     if ('admin' === $context) {
