@@ -144,10 +144,10 @@ readonly class SeoResolver implements ResolverInterface
         $data = [];
 
         // Flatten nested structure for metadata resolver
-        if (isset($seoData['seo']) && \is_array($seoData['seo'])) {
-            foreach ($seoData['seo'] as $fieldName => $value) {
-                $data['seo/' . $fieldName] = $value;
-            }
+        $seoFields = $seoData['seo'] ?? [];
+        \assert(\is_array($seoFields));
+        foreach ($seoFields as $fieldName => $value) {
+            $data['seo/' . $fieldName] = $value;
         }
 
         // Add boolean fields (these have dedicated columns)

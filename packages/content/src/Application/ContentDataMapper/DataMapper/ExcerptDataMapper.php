@@ -38,9 +38,7 @@ readonly class ExcerptDataMapper implements DataMapperInterface
         $validExcerptProperties = $this->getExcerptProperties($localizedDimensionContent);
 
         if (isset($data['excerpt']) && \is_array($data['excerpt'])) {
-            if (!isset($excerptData['excerpt'])) {
-                $excerptData['excerpt'] = [];
-            }
+            $excerptData['excerpt'] ??= [];
             \assert(\is_array($excerptData['excerpt']));
 
             foreach ($data['excerpt'] as $fieldName => $value) {

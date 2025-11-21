@@ -51,9 +51,7 @@ readonly class SeoDataMapper implements DataMapperInterface
         $validSeoProperties = $this->getSeoProperties($dimensionContent);
 
         if (isset($data['seo']) && \is_array($data['seo'])) {
-            if (!isset($seoData['seo'])) {
-                $seoData['seo'] = [];
-            }
+            $seoData['seo'] ??= [];
             \assert(\is_array($seoData['seo']));
 
             foreach ($data['seo'] as $fieldName => $value) {

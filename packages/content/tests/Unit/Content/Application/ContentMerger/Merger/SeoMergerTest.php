@@ -102,9 +102,9 @@ class SeoMergerTest extends TestCase
         $target->willImplement(SeoInterface::class);
         $target->getSeoData()->willReturn([])->shouldBeCalled();
         $target->setSeoData([])->shouldBeCalled();
-        $target->setSeoNoFollow(false)->shouldNotBeCalled();
-        $target->setSeoNoIndex(false)->shouldNotBeCalled();
-        $target->setSeoHideInSitemap(false)->shouldNotBeCalled();
+        $target->setSeoNoFollow(false)->shouldBeCalled();
+        $target->setSeoNoIndex(false)->shouldBeCalled();
+        $target->setSeoHideInSitemap(false)->shouldBeCalled();
 
         $seoMerger->merge($target->reveal(), $source->reveal());
     }

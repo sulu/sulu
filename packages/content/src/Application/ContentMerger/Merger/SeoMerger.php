@@ -36,16 +36,8 @@ final class SeoMerger implements MergerInterface
             $sourceObject->getSeoData()
         ));
 
-        if ($seoNoIndex = $sourceObject->getSeoNoIndex()) {
-            $targetObject->setSeoNoIndex($seoNoIndex);
-        }
-
-        if ($seoNoFollow = $sourceObject->getSeoNoFollow()) {
-            $targetObject->setSeoNoFollow($seoNoFollow);
-        }
-
-        if ($seoHideInSitemap = $sourceObject->getSeoHideInSitemap()) {
-            $targetObject->setSeoHideInSitemap($seoHideInSitemap);
-        }
+        $targetObject->setSeoNoIndex($sourceObject->getSeoNoIndex());
+        $targetObject->setSeoNoFollow($sourceObject->getSeoNoFollow());
+        $targetObject->setSeoHideInSitemap($sourceObject->getSeoHideInSitemap());
     }
 }
