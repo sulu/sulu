@@ -17,6 +17,7 @@ use CmsIg\Seal\Reindex\ReindexConfig;
 use CmsIg\Seal\Reindex\ReindexProviderInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
+use Sulu\Bundle\CategoryBundle\Admin\CategoryAdmin;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslationInterface;
 
@@ -74,6 +75,7 @@ final class AdminCategoryReindexProvider implements ReindexProviderInterface
                 'createdAt' => $category['created']->format('c'),
                 'title' => $category['translation'],
                 'locale' => $category['locale'],
+                'securityContext' => CategoryAdmin::SECURITY_CONTEXT,
             ];
         }
     }

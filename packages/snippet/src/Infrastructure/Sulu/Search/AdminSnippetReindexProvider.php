@@ -20,6 +20,7 @@ use Doctrine\ORM\EntityRepository;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Snippet\Domain\Model\SnippetDimensionContentInterface;
 use Sulu\Snippet\Domain\Model\SnippetInterface;
+use Sulu\Snippet\Infrastructure\Sulu\Admin\SnippetAdmin;
 
 /**
  * @phpstan-type Snippet array{
@@ -75,6 +76,7 @@ final class AdminSnippetReindexProvider implements ReindexProviderInterface
                 'createdAt' => $snippet['created']->format('c'),
                 'title' => $snippet['title'],
                 'locale' => $snippet['locale'],
+                'securityContext' => SnippetAdmin::SECURITY_CONTEXT,
             ];
         }
     }

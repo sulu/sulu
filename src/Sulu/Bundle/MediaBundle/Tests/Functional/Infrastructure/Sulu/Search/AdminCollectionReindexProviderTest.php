@@ -15,6 +15,7 @@ namespace Sulu\Bundle\MediaBundle\Tests\Functional\Infrastructure\Sulu\Search;
 
 use CmsIg\Seal\Reindex\ReindexConfig;
 use Doctrine\ORM\EntityManagerInterface;
+use Sulu\Bundle\MediaBundle\Admin\MediaAdmin;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\CollectionInterface;
 use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
@@ -112,6 +113,7 @@ class AdminCollectionReindexProviderTest extends SuluTestCase
                 'createdAt' => (new \DateTimeImmutable($createdDateString1))->format('c'),
                 'title' => 'Test Collection 1',
                 'locale' => 'en',
+                'securityContext' => MediaAdmin::SECURITY_CONTEXT,
             ],
             [
                 'id' => CollectionInterface::RESOURCE_KEY . '__' . $collection2->getId() . '__de',
@@ -121,6 +123,7 @@ class AdminCollectionReindexProviderTest extends SuluTestCase
                 'createdAt' => (new \DateTimeImmutable($createdDateString2))->format('c'),
                 'title' => 'Test Collection 2',
                 'locale' => 'de',
+                'securityContext' => MediaAdmin::SECURITY_CONTEXT,
             ],
 
             [
@@ -131,6 +134,7 @@ class AdminCollectionReindexProviderTest extends SuluTestCase
                 'createdAt' => (new \DateTimeImmutable($createdDateString2))->format('c'),
                 'title' => 'Test Collection 2 EN',
                 'locale' => 'en',
+                'securityContext' => MediaAdmin::SECURITY_CONTEXT,
             ],
         ];
 

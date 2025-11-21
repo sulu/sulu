@@ -119,6 +119,7 @@ final class SuluSearchBundle extends AbstractBundle
                 param('sulu_search.admin_resources'),
                 new Reference('sulu_media.media_manager'),
                 new Reference('security.token_storage'),
+                new Reference('sulu_security.mask_converter'),
             ])
             ->tag('sulu.context', ['context' => 'admin']);
 

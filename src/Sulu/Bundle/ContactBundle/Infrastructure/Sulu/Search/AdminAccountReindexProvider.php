@@ -17,6 +17,7 @@ use CmsIg\Seal\Reindex\ReindexConfig;
 use CmsIg\Seal\Reindex\ReindexProviderInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
+use Sulu\Bundle\ContactBundle\Admin\ContactAdmin;
 use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
 
 /**
@@ -65,6 +66,7 @@ final class AdminAccountReindexProvider implements ReindexProviderInterface
                 'changedAt' => $account['changed']->format('c'),
                 'createdAt' => $account['created']->format('c'),
                 'title' => $account['name'],
+                'securityContext' => ContactAdmin::ACCOUNT_SECURITY_CONTEXT,
             ];
         }
     }

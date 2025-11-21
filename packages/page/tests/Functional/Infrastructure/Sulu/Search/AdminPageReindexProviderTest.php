@@ -18,6 +18,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Bundle\TestBundle\Testing\SetGetPrivatePropertyTrait;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Page\Domain\Model\PageInterface;
+use Sulu\Page\Infrastructure\Sulu\Admin\PageAdmin;
 use Sulu\Page\Infrastructure\Sulu\Search\AdminPageReindexProvider;
 use Sulu\Page\Tests\Traits\CreatePageTrait;
 
@@ -111,6 +112,7 @@ class AdminPageReindexProviderTest extends SuluTestCase
                 'metadata' => [
                     'webspaceKey' => 'sulu-io',
                 ],
+                'securityContext' => PageAdmin::SECURITY_CONTEXT_PREFIX . 'sulu-io',
             ],
             [
                 'id' => PageInterface::RESOURCE_KEY . '__' . $page1->getUuid() . '__en',
@@ -123,6 +125,7 @@ class AdminPageReindexProviderTest extends SuluTestCase
                 'metadata' => [
                     'webspaceKey' => 'sulu-io',
                 ],
+                'securityContext' => PageAdmin::SECURITY_CONTEXT_PREFIX . 'sulu-io',
             ],
             [
                 'id' => PageInterface::RESOURCE_KEY . '__' . $page2->getUuid() . '__en',
@@ -135,6 +138,7 @@ class AdminPageReindexProviderTest extends SuluTestCase
                 'metadata' => [
                     'webspaceKey' => 'sulu-io',
                 ],
+                'securityContext' => PageAdmin::SECURITY_CONTEXT_PREFIX . 'sulu-io',
             ],
         ];
 

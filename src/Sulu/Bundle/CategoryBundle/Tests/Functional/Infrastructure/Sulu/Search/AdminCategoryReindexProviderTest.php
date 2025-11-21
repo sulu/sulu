@@ -15,6 +15,7 @@ namespace Sulu\Bundle\CategoryBundle\Tests\Functional\Infrastructure\Sulu\Search
 
 use CmsIg\Seal\Reindex\ReindexConfig;
 use Doctrine\ORM\EntityManagerInterface;
+use Sulu\Bundle\CategoryBundle\Admin\CategoryAdmin;
 use Sulu\Bundle\CategoryBundle\Entity\Category;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslation;
@@ -87,6 +88,7 @@ class AdminCategoryReindexProviderTest extends SuluTestCase
                 'createdAt' => (new \DateTimeImmutable('2000-01-01 12:00:00'))->format('c'),
                 'title' => $category1Translation->getTranslation(),
                 'locale' => $category1Translation->getLocale(),
+                'securityContext' => CategoryAdmin::SECURITY_CONTEXT,
             ],
             [
                 'id' => CategoryInterface::RESOURCE_KEY . '__' . $category2->getId() . '__' . $category2Translation1->getLocale(),
@@ -96,6 +98,7 @@ class AdminCategoryReindexProviderTest extends SuluTestCase
                 'createdAt' => (new \DateTimeImmutable('2000-01-01 12:00:00'))->format('c'),
                 'title' => $category2Translation1->getTranslation(),
                 'locale' => $category2Translation1->getLocale(),
+                'securityContext' => CategoryAdmin::SECURITY_CONTEXT,
             ],
             [
                 'id' => CategoryInterface::RESOURCE_KEY . '__' . $category2->getId() . '__' . $category2Translation2->getLocale(),
@@ -105,6 +108,7 @@ class AdminCategoryReindexProviderTest extends SuluTestCase
                 'createdAt' => (new \DateTimeImmutable('2000-01-01 12:00:00'))->format('c'),
                 'title' => $category2Translation2->getTranslation(),
                 'locale' => $category2Translation2->getLocale(),
+                'securityContext' => CategoryAdmin::SECURITY_CONTEXT,
             ],
         ];
 

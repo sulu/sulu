@@ -15,6 +15,7 @@ namespace Sulu\Bundle\ContactBundle\Tests\Functional\Infrastructure\Sulu\Search;
 
 use CmsIg\Seal\Reindex\ReindexConfig;
 use Doctrine\ORM\EntityManagerInterface;
+use Sulu\Bundle\ContactBundle\Admin\ContactAdmin;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\ContactBundle\Entity\ContactInterface;
 use Sulu\Bundle\ContactBundle\Infrastructure\Sulu\Search\AdminContactReindexProvider;
@@ -115,6 +116,7 @@ class AdminContactReindexProviderTest extends SuluTestCase
                     'changedAt' => (new \DateTimeImmutable($changedDateString1))->format('c'),
                     'createdAt' => (new \DateTimeImmutable('2000-01-01 12:00:00'))->format('c'),
                     'title' => $contact1->getFullName(),
+                    'securityContext' => ContactAdmin::CONTACT_SECURITY_CONTEXT,
                 ],
                 [
                     'id' => ContactInterface::RESOURCE_KEY . '__' . $contact2->getId(),
@@ -124,6 +126,7 @@ class AdminContactReindexProviderTest extends SuluTestCase
                     'changedAt' => (new \DateTimeImmutable($changedDateString2))->format('c'),
                     'createdAt' => (new \DateTimeImmutable('2000-01-01 12:00:00'))->format('c'),
                     'title' => $contact2->getFullName(),
+                    'securityContext' => ContactAdmin::CONTACT_SECURITY_CONTEXT,
                 ],
             ],
             [...$results],

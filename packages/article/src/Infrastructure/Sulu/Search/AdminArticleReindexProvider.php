@@ -19,6 +19,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Sulu\Article\Domain\Model\ArticleDimensionContentInterface;
 use Sulu\Article\Domain\Model\ArticleInterface;
+use Sulu\Article\Infrastructure\Sulu\Admin\ArticleAdmin;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormGroup;
 use Sulu\Bundle\AdminBundle\Metadata\GroupProviderInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
@@ -96,6 +97,7 @@ final class AdminArticleReindexProvider implements ReindexProviderInterface
                 'metadata' => [
                     'group' => $groupIdentifier,
                 ],
+                'securityContext' => ArticleAdmin::getArticleSecurityContext($groupIdentifier ?? 'default'),
             ];
         }
     }
