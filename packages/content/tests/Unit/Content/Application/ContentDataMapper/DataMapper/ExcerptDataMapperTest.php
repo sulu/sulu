@@ -20,7 +20,6 @@ use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderInterface;
 use Sulu\Content\Application\ContentDataMapper\DataMapper\ExcerptDataMapper;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
-use Sulu\Content\Domain\Model\ExcerptInterface;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\Example;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\ExampleDimensionContent;
 
@@ -46,13 +45,7 @@ class ExcerptDataMapperTest extends TestCase
             Argument::any()
         )->willReturn($formMetadata->reveal());
 
-        $excerptForms = [
-            'content_excerpt_metadata' => [
-                'instanceOf' => ExcerptInterface::class,
-            ],
-        ];
-
-        return new ExcerptDataMapper($formMetadataProvider->reveal(), $excerptForms);
+        return new ExcerptDataMapper($formMetadataProvider->reveal());
     }
 
     public function testMapNoExcerptInterface(): void

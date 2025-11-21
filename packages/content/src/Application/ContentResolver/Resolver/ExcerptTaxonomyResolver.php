@@ -27,13 +27,9 @@ use Sulu\Content\Domain\Model\TaxonomyInterface;
 
 readonly class ExcerptTaxonomyResolver implements ResolverInterface
 {
-    /**
-     * @param array<string, array{instanceOf: class-string}> $excerptForms
-     */
     public function __construct(
         private MetadataProviderInterface $formMetadataProvider,
         private MetadataResolver $metadataResolver,
-        private array $excerptForms,
     ) {
     }
 
@@ -46,15 +42,12 @@ readonly class ExcerptTaxonomyResolver implements ResolverInterface
         /** @var string $locale */
         $locale = $dimensionContent->getLocale();
 
-        $forms = [];
-        foreach ($this->excerptForms as $key => $tag) {
-            if (\in_array($tag['instanceOf'], [ExcerptInterface::class, TaxonomyInterface::class], true)) {
-                $forms[] = $key;
-            }
-        }
-
         /** @var FormMetadata $formMetadata */
-        $formMetadata = $this->formMetadataProvider->getMetadata($this->getFormKey(), $locale, ['forms' => $forms]);
+        $formMetadata = $this->formMetadataProvider->getMetadata(
+            $this->getFormKey(),
+            $locale,
+            ['instanceOf' => $dimensionContent::class],
+        );
 
         $formMetadataItems = $formMetadata->getFlatFieldMetadata();
         $data = $this->getExcerptTaxonomyData($dimensionContent);

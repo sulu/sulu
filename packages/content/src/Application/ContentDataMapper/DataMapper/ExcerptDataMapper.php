@@ -20,12 +20,8 @@ use Sulu\Content\Domain\Model\ExcerptInterface;
 
 readonly class ExcerptDataMapper implements DataMapperInterface
 {
-    /**
-     * @param array<string, array{instanceOf: class-string}> $excerptForms
-     */
     public function __construct(
         private MetadataProviderInterface $formMetadataProvider,
-        private array $excerptForms,
     ) {
     }
 
@@ -64,29 +60,13 @@ readonly class ExcerptDataMapper implements DataMapperInterface
             return [];
         }
 
-        $forms = $this->getExcerptForms();
-        if (0 === \count($forms)) {
-            return [];
-        }
-
         /** @var FormMetadata $formMetadata */
-        $formMetadata = $this->formMetadataProvider->getMetadata('content_excerpt', $locale, ['forms' => $forms]);
+        $formMetadata = $this->formMetadataProvider->getMetadata(
+            'content_excerpt',
+            $locale,
+            ['instanceOf' => $dimensionContent::class],
+        );
 
         return $formMetadata->getFlatFieldMetadata();
-    }
-
-    /**
-     * @return string[]
-     */
-    private function getExcerptForms(): array
-    {
-        $forms = [];
-        foreach ($this->excerptForms as $key => $tag) {
-            if (ExcerptInterface::class === $tag['instanceOf']) {
-                $forms[] = $key;
-            }
-        }
-
-        return $forms;
     }
 }
