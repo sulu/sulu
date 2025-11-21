@@ -27,15 +27,13 @@ class Snippet implements SnippetInterface
     use ContentRichEntityTrait;
     use AuditableTrait;
 
-    /**
-     * @var string
-     */
-    protected $uuid;
+    protected string $uuid;
 
     public function __construct(
         ?string $uuid = null
     ) {
         $this->uuid = $uuid ?: Uuid::v7()->__toString();
+        $this->initializeDimensionContents();
     }
 
     public function getId(): string // TODO should be replaced by uuid

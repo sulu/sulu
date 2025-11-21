@@ -26,22 +26,22 @@ class DimensionContentCollection implements DimensionContentCollectionInterface
     /**
      * @var Collection<int, T>
      */
-    private $dimensionContents;
+    private Collection $dimensionContents;
 
     /**
      * @var mixed[]
      */
-    private $dimensionAttributes;
+    private array $dimensionAttributes;
 
     /**
      * @var class-string<T>
      */
-    private $dimensionContentClass;
+    private string $dimensionContentClass;
 
     /**
      * @var mixed[]
      */
-    private $defaultDimensionAttributes;
+    private array $defaultDimensionAttributes;
 
     /**
      * DimensionContentCollection constructor.

@@ -35,10 +35,7 @@ trait TaxonomyTrait
      */
     private $excerptAudienceTargetGroups;
 
-    /**
-     * @var string|null
-     */
-    private $excerptSegment;
+    private ?string $excerptSegment = null;
 
     /**
      * @return int[]
@@ -167,7 +164,7 @@ trait TaxonomyTrait
 
     public function getExcerptSegment(): ?string
     {
-        return $this->excerptSegment ?? null;
+        return $this->excerptSegment;
     }
 
     public function setExcerptSegment(?string $excerptSegment): void

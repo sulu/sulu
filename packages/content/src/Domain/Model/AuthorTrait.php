@@ -20,20 +20,11 @@ use Sulu\Bundle\ContactBundle\Entity\ContactInterface;
  */
 trait AuthorTrait
 {
-    /**
-     * @var ContactInterface|null
-     */
-    private $author;
+    private ?ContactInterface $author = null;
 
-    /**
-     * @var \DateTimeImmutable|null
-     */
-    private $authored;
+    private ?\DateTimeImmutable $authored = null;
 
-    /**
-     * @var \DateTimeImmutable|null
-     */
-    private $lastModified;
+    private ?\DateTimeImmutable $lastModified = null;
 
     public function getAuthor(): ?ContactInterface
     {

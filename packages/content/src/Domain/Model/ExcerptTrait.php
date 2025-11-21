@@ -15,30 +15,15 @@ namespace Sulu\Content\Domain\Model;
 
 trait ExcerptTrait
 {
-    /**
-     * @var string|null
-     */
-    private $excerptTitle;
+    private ?string $excerptTitle = null;
 
-    /**
-     * @var string|null
-     */
-    private $excerptDescription;
+    private ?string $excerptDescription = null;
 
-    /**
-     * @var string|null
-     */
-    private $excerptMore;
+    private ?string $excerptMore = null;
 
-    /**
-     * @var int|null
-     */
-    private $excerptImageId;
+    private ?int $excerptImageId = null;
 
-    /**
-     * @var int|null
-     */
-    private $excerptIconId;
+    private ?int $excerptIconId = null;
 
     public function getExcerptTitle(): ?string
     {

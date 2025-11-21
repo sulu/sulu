@@ -15,10 +15,7 @@ namespace Sulu\Content\Domain\Model;
 
 trait WebspaceTrait
 {
-    /**
-     * @var string|null
-     */
-    protected $mainWebspace;
+    protected ?string $mainWebspace = null;
 
     public function getMainWebspace(): ?string
     {

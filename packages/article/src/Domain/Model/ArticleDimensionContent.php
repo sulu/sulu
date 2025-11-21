@@ -47,25 +47,13 @@ class ArticleDimensionContent implements ArticleDimensionContentInterface
     use WebspaceTrait;
     use WorkflowTrait;
 
-    /**
-     * @var int
-     */
-    protected $id;
+    protected int $id;
 
-    /**
-     * @var ArticleInterface
-     */
-    protected $article;
+    protected ArticleInterface $article;
 
-    /**
-     * @var string|null
-     */
-    protected $title;
+    protected ?string $title = null;
 
-    /**
-     * @var bool
-     */
-    private $customizeWebspaceSettings = false;
+    private bool $customizeWebspaceSettings = false;
 
     /**
      * @var Collection<int, ArticleDimensionContentAdditionalWebspace>
