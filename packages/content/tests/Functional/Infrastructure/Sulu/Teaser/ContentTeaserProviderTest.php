@@ -45,16 +45,20 @@ class ContentTeaserProviderTest extends WebsiteTestCase
                 'live' => [
                     'title' => 'example-1',
                     'article' => 'example-1-article',
-                    'excerptTitle' => 'example-1-excerpt-title',
-                    'excerptDescription' => 'example-1-excerpt-description',
-                    'excerptMore' => 'example-1-more',
+                    'excerpt' => [
+                        'title' => 'example-1-excerpt-title',
+                        'description' => 'example-1-excerpt-description',
+                        'more' => 'example-1-more',
+                    ],
                 ],
             ],
             'de' => [
                 'live' => [
                     'title' => 'beispiel-1',
                     'article' => null,
-                    'excerptDescription' => 'example-1-excerpt-auszug',
+                    'excerpt' => [
+                        'description' => 'example-1-excerpt-auszug',
+                    ],
                 ],
             ],
         ]);

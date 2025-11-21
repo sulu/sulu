@@ -14,7 +14,7 @@
             </meta>
         </property>
 
-        <property name="seoTitle" type="text_line">
+        <property name="seo/title" type="text_line">
             <meta>
                 <title>sulu_content.meta_title</title>
                 <info_text>sulu_content.meta_title_info_text</info_text>
@@ -25,7 +25,7 @@
             </params>
         </property>
 
-        <property name="seoDescription" type="text_area">
+        <property name="seo/description" type="text_area">
             <meta>
                 <title>sulu_content.meta_description</title>
                 <info_text>sulu_content.meta_description_info_text</info_text>
@@ -36,7 +36,7 @@
             </params>
         </property>
 
-        <property name="seoKeywords" type="text_line">
+        <property name="seo/keywords" type="text_line">
             <meta>
                 <title>sulu_content.meta_keywords</title>
                 <info_text>sulu_content.meta_keywords_info_text</info_text>
@@ -48,7 +48,7 @@
             </params>
         </property>
 
-        <property name="seoCanonicalUrl" type="text_line">
+        <property name="seo/canonicalUrl" type="text_line">
             <meta>
                 <title>sulu_content.canonical_url</title>
             </meta>

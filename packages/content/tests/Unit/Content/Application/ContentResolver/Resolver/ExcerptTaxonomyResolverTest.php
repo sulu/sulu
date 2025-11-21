@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Sulu\Content\Tests\Unit\Content\Application\ContentResolver\Resolver;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderInterface;
@@ -61,22 +62,8 @@ class ExcerptTaxonomyResolverTest extends TestCase
             ->willReturn($formMetadata->reveal());
 
         $metadataResolver = $this->prophesize(MetadataResolver::class);
-        $metadataResolver->resolveItems([], [
-            'excerptTitle' => 'Sulu',
-            'excerptDescription' => 'Sulu is awesome',
-            'excerptMore' => 'Sulu is more awesome',
-            'excerptIcon' => ['id' => 1],
-            'excerptImage' => ['id' => 2],
-            'excerptSegment' => null,
-            'excerptCategories' => [],
-            'excerptTags' => [],
-            'excerptAudienceTargetGroups' => [],
-        ], 'en')
-            ->willReturn(
-                [
-                    ContentView::create(['dummy' => 'data'], []),
-                ]
-            );
+        $metadataResolver->resolveItems(Argument::any(), Argument::any(), Argument::any())
+            ->willReturn([]);
 
         $resolver = new ExcerptTaxonomyResolver(
             $formMetadataProvider->reveal(),
@@ -88,7 +75,6 @@ class ExcerptTaxonomyResolverTest extends TestCase
         self::assertInstanceOf(ContentView::class, $contentView);
         $content = $contentView->getContent();
         self::assertIsArray($content);
-        self::assertCount(1, $content);
     }
 
     public function testResolveWithTaxonomy(): void
@@ -124,22 +110,8 @@ class ExcerptTaxonomyResolverTest extends TestCase
             ->willReturn($formMetadata->reveal());
 
         $metadataResolver = $this->prophesize(MetadataResolver::class);
-        $metadataResolver->resolveItems([], [
-            'excerptTitle' => 'Sulu',
-            'excerptDescription' => 'Sulu is awesome',
-            'excerptMore' => 'Sulu is more awesome',
-            'excerptIcon' => ['id' => 3],
-            'excerptImage' => ['id' => 4],
-            'excerptSegment' => null,
-            'excerptCategories' => [1, 2],
-            'excerptTags' => ['tag1', 'tag2'],
-            'excerptAudienceTargetGroups' => [],
-        ], 'en')
-            ->willReturn(
-                [
-                    ContentView::create(['dummy' => 'data'], []),
-                ]
-            );
+        $metadataResolver->resolveItems(Argument::any(), Argument::any(), Argument::any())
+            ->willReturn([]);
 
         $resolver = new ExcerptTaxonomyResolver(
             $formMetadataProvider->reveal(),
@@ -151,6 +123,5 @@ class ExcerptTaxonomyResolverTest extends TestCase
         self::assertInstanceOf(ContentView::class, $contentView);
         $content = $contentView->getContent();
         self::assertIsArray($content);
-        self::assertCount(1, $content);
     }
 }

@@ -27,16 +27,16 @@
     "created": "@datetime@",
     "creator": "@integer@",
     "description": null,
+    "excerpt": {
+        "title": "Excerpt Title",
+        "description": "Excerpt Description",
+        "more": "Excerpt More"
+    },
     "excerptCategories": [],
-    "excerptDescription": "Excerpt Description",
-    "excerptIcon": null,
-    "excerptImage": null,
-    "excerptMore": "Excerpt More",
     "excerptTags": [
         "Tag 1",
         "Tag 2"
     ],
-    "excerptTitle": "Excerpt Title",
     "excerptAudienceTargetGroups": [
         "@integer@",
         "@integer@"
@@ -54,13 +54,15 @@
     "parentUuid" : "@uuid@",
     "published": null,
     "publishedState": false,
-    "seoCanonicalUrl": "https://sulu.io/",
-    "seoDescription": "Seo Description",
+    "seo": {
+        "title": "Seo Title",
+        "description": "Seo Description",
+        "keywords": "Seo Keyword 1, Seo Keyword 2",
+        "canonicalUrl": "https://sulu.io/"
+    },
     "seoHideInSitemap": true,
-    "seoKeywords": "Seo Keyword 1, Seo Keyword 2",
     "seoNoFollow": true,
     "seoNoIndex": true,
-    "seoTitle": "Seo Title",
     "shadowLocale": null,
     "shadowLocales": [],
     "shadowOn": false,

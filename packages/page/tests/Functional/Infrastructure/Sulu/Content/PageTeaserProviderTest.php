@@ -47,8 +47,10 @@ class PageTeaserProviderTest extends SuluTestCase
                     'title' => 'Content Teaser Page',
                     'url' => '/content-teaser',
                     'template' => 'default',
-                    'excerptTitle' => 'Content Excerpt Title',
-                    'excerptDescription' => 'Content excerpt description',
+                    'excerpt' => [
+                        'title' => 'Content Excerpt Title',
+                        'description' => 'Content excerpt description',
+                    ],
                 ],
             ],
         ]);
@@ -65,8 +67,10 @@ class PageTeaserProviderTest extends SuluTestCase
                         'href' => 'https://teaser-example.com',
                         'provider' => 'external',
                     ],
-                    'excerptTitle' => 'External Excerpt Title',
-                    'excerptDescription' => 'External excerpt description',
+                    'excerpt' => [
+                        'title' => 'External Excerpt Title',
+                        'description' => 'External excerpt description',
+                    ],
                 ],
             ],
         ]);

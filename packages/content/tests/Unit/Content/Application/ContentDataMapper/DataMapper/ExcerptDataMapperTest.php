@@ -32,11 +32,11 @@ class ExcerptDataMapperTest extends TestCase
         $formMetadataProvider = $this->prophesize(MetadataProviderInterface::class);
         $formMetadata = $this->prophesize(FormMetadata::class);
         $formMetadata->getFlatFieldMetadata()->willReturn([
-            'excerptTitle' => [],
-            'excerptDescription' => [],
-            'excerptMore' => [],
-            'excerptImage' => [],
-            'excerptIcon' => [],
+            'excerpt/title' => [],
+            'excerpt/description' => [],
+            'excerpt/more' => [],
+            'excerpt/image' => [],
+            'excerpt/icon' => [],
         ]);
 
         $formMetadataProvider->getMetadata(
@@ -51,11 +51,13 @@ class ExcerptDataMapperTest extends TestCase
     public function testMapNoExcerptInterface(): void
     {
         $data = [
-            'excerptTitle' => 'Excerpt Title',
-            'excerptDescription' => 'Excerpt Description',
-            'excerptMore' => 'Excerpt More',
-            'excerptImage' => ['id' => 1],
-            'excerptIcon' => ['id' => 2],
+            'excerpt' => [
+                'title' => 'Excerpt Title',
+                'description' => 'Excerpt Description',
+                'more' => 'Excerpt More',
+                'image' => ['id' => 1],
+                'icon' => ['id' => 2],
+            ],
         ];
 
         $unlocalizedDimensionContent = $this->prophesize(DimensionContentInterface::class);
@@ -88,11 +90,11 @@ class ExcerptDataMapperTest extends TestCase
     public function testMapUnlocalizedExcerpt(): void
     {
         $data = [
-            'excerptTitle' => 'Excerpt Title',
-            'excerptDescription' => 'Excerpt Description',
-            'excerptMore' => 'Excerpt More',
-            'excerptImage' => ['id' => 1],
-            'excerptIcon' => ['id' => 2],
+            'excerpt/title' => 'Excerpt Title',
+            'excerpt/description' => 'Excerpt Description',
+            'excerpt/more' => 'Excerpt More',
+            'excerpt/image' => ['id' => 1],
+            'excerpt/icon' => ['id' => 2],
         ];
 
         $example = new Example();
@@ -113,11 +115,13 @@ class ExcerptDataMapperTest extends TestCase
     public function testMapWithAllExcerptData(): void
     {
         $data = [
-            'excerptTitle' => 'Excerpt Title',
-            'excerptDescription' => 'Excerpt Description',
-            'excerptMore' => 'Excerpt More',
-            'excerptImage' => ['id' => 1],
-            'excerptIcon' => ['id' => 2],
+            'excerpt' => [
+                'title' => 'Excerpt Title',
+                'description' => 'Excerpt Description',
+                'more' => 'Excerpt More',
+                'image' => ['id' => 1],
+                'icon' => ['id' => 2],
+            ],
         ];
 
         $example = new Example();
@@ -138,9 +142,11 @@ class ExcerptDataMapperTest extends TestCase
     public function testMapWithInvalidExcerptProperty(): void
     {
         $data = [
-            'excerptTitle' => 'Excerpt Title',
-            'excerptDescription' => 'Excerpt Description',
-            'excerptCustomField' => 'Should be filtered out',
+            'excerpt' => [
+                'title' => 'Excerpt Title',
+                'description' => 'Excerpt Description',
+                'customField' => 'Should be filtered out',
+            ],
         ];
 
         $example = new Example();
@@ -159,12 +165,14 @@ class ExcerptDataMapperTest extends TestCase
     public function testMapWithMixedValidAndInvalidProperties(): void
     {
         $data = [
-            'excerptTitle' => 'Valid Title',
-            'excerptCustomField' => 'Invalid - not in form',
-            'excerptDescription' => 'Valid Description',
-            'excerptFoo' => 'Invalid - not in form',
-            'excerptImage' => ['id' => 5],
-            'excerptBar' => 'Invalid - not in form',
+            'excerpt' => [
+                'title' => 'Valid Title',
+                'customField' => 'Invalid - not in form',
+                'description' => 'Valid Description',
+                'foo' => 'Invalid - not in form',
+                'image' => ['id' => 5],
+                'bar' => 'Invalid - not in form',
+            ],
         ];
 
         $example = new Example();

@@ -134,10 +134,14 @@ class SmartContentContentResolverTest extends SuluTestCase
                         'title' => 'Example 0',
                         'url' => '/example-0',
                         'description' => 'Example 0 description',
-                        'excerptTitle' => 'excerpt-example-title-0',
-                        'excerptDescription' => 'excerpt-example-description-0',
-                        'seoTitle' => 'seo-example-title-0',
-                        'seoDescription' => 'seo-example-description-0',
+                        'excerpt' => [
+                            'title' => 'excerpt-example-title-0',
+                            'description' => 'excerpt-example-description-0',
+                        ],
+                        'seo' => [
+                            'title' => 'seo-example-title-0',
+                            'description' => 'seo-example-description-0',
+                        ],
                     ],
                 ],
             ]

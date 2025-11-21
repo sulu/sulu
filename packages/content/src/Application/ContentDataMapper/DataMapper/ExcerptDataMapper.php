@@ -36,10 +36,20 @@ readonly class ExcerptDataMapper implements DataMapperInterface
 
         $excerptData = $localizedDimensionContent->getExcerptData();
         $validExcerptProperties = $this->getExcerptProperties($localizedDimensionContent);
-        foreach ($data as $key => $value) {
-            if (($validExcerptProperties[$key] ?? null) !== null && \str_starts_with($key, 'excerpt')) {
-                $internalKey = \lcfirst(\substr($key, 7));
-                $excerptData[$internalKey] = $value;
+
+        if (isset($data['excerpt']) && \is_array($data['excerpt'])) {
+            if (!isset($excerptData['excerpt'])) {
+                $excerptData['excerpt'] = [];
+            }
+            \assert(\is_array($excerptData['excerpt']));
+
+            foreach ($data['excerpt'] as $fieldName => $value) {
+                $propertyKey = 'excerpt/' . $fieldName;
+
+                // Only store if the property is defined in the form metadata
+                if (\array_key_exists($propertyKey, $validExcerptProperties)) {
+                    $excerptData['excerpt'][$fieldName] = $value;
+                }
             }
         }
 

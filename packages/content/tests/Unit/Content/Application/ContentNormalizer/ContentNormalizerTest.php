@@ -197,40 +197,46 @@ class ContentNormalizerTest extends TestCase
 
         $contentNormalizer = $this->createContentNormalizerInstance();
 
+        $normalizedData = $contentNormalizer->normalize($object);
+
         $this->assertSame([
             'availableLocales' => ['en', 'de'],
+            'excerpt' => [
+                'title' => 'Excerpt Title',
+                'description' => 'Excerpt Description',
+                'more' => 'Excerpt More',
+                'image' => ['id' => 8],
+                'icon' => ['id' => 9],
+            ],
             'excerptAudienceTargetGroups' => [],
             'excerptCategories' => [
                 3,
                 4,
             ],
-            'excerptDescription' => 'Excerpt Description',
-            'excerptIcon' => ['id' => 9],
-            'excerptImage' => ['id' => 8],
-            'excerptMore' => 'Excerpt More',
             'excerptSegment' => null,
             'excerptTags' => [
                 'Tag 1',
                 'Tag 2',
             ],
-            'excerptTitle' => 'Excerpt Title',
             'ghostLocale' => 'en',
             'id' => 5,
             'locale' => 'de',
             'published' => '2020-02-02T12:30:00+00:00',
             'publishedState' => false,
-            'seoCanonicalUrl' => 'https://caninical.localhost/',
-            'seoDescription' => 'Seo Description',
+            'seo' => [
+                'title' => 'Seo Title',
+                'description' => 'Seo Description',
+                'keywords' => 'Seo Keyword 1, Seo Keyword 2',
+                'canonicalUrl' => 'https://caninical.localhost/',
+            ],
             'seoHideInSitemap' => true,
-            'seoKeywords' => 'Seo Keyword 1, Seo Keyword 2',
             'seoNoFollow' => true,
             'seoNoIndex' => true,
-            'seoTitle' => 'Seo Title',
             'someTemplate' => 'data',
             'stage' => 'live',
             'template' => 'template-key',
             'version' => DimensionContentInterface::CURRENT_VERSION,
             'workflowPlace' => 'draft',
-        ], $contentNormalizer->normalize($object));
+        ], $normalizedData);
     }
 }

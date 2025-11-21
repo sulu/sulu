@@ -50,16 +50,18 @@ readonly class SeoDataMapper implements DataMapperInterface
         $seoData = $dimensionContent->getSeoData();
         $validSeoProperties = $this->getSeoProperties($dimensionContent);
 
-        foreach ($data as $key => $value) {
-            if (\str_starts_with($key, 'seo')) {
-                // Skip boolean properties - they have dedicated columns
-                if (\in_array($key, ['seoNoIndex', 'seoNoFollow', 'seoHideInSitemap'], true)) {
-                    continue;
-                }
+        if (isset($data['seo']) && \is_array($data['seo'])) {
+            if (!isset($seoData['seo'])) {
+                $seoData['seo'] = [];
+            }
+            \assert(\is_array($seoData['seo']));
 
-                if (($validSeoProperties[$key] ?? null) !== null) {
-                    $internalKey = \lcfirst(\substr($key, 3));
-                    $seoData[$internalKey] = $value;
+            foreach ($data['seo'] as $fieldName => $value) {
+                $propertyKey = 'seo/' . $fieldName;
+
+                // Only store if the property is defined in the form metadata
+                if (\array_key_exists($propertyKey, $validSeoProperties)) {
+                    $seoData['seo'][$fieldName] = $value;
                 }
             }
         }

@@ -22,38 +22,62 @@ trait ExcerptTrait
 
     public function getExcerptTitle(): ?string
     {
-        $value = $this->excerptData['title'] ?? null;
+        $excerpt = $this->excerptData['excerpt'] ?? null;
+        if (!\is_array($excerpt)) {
+            return null;
+        }
+
+        $value = $excerpt['title'] ?? null;
 
         return \is_string($value) ? $value : null;
     }
 
     public function setExcerptTitle(?string $excerptTitle): void
     {
-        $this->excerptData['title'] = $excerptTitle;
+        if (!isset($this->excerptData['excerpt']) || !\is_array($this->excerptData['excerpt'])) {
+            $this->excerptData['excerpt'] = [];
+        }
+        $this->excerptData['excerpt']['title'] = $excerptTitle;
     }
 
     public function getExcerptDescription(): ?string
     {
-        $value = $this->excerptData['description'] ?? null;
+        $excerpt = $this->excerptData['excerpt'] ?? null;
+        if (!\is_array($excerpt)) {
+            return null;
+        }
+
+        $value = $excerpt['description'] ?? null;
 
         return \is_string($value) ? $value : null;
     }
 
     public function setExcerptDescription(?string $excerptDescription): void
     {
-        $this->excerptData['description'] = $excerptDescription;
+        if (!isset($this->excerptData['excerpt']) || !\is_array($this->excerptData['excerpt'])) {
+            $this->excerptData['excerpt'] = [];
+        }
+        $this->excerptData['excerpt']['description'] = $excerptDescription;
     }
 
     public function getExcerptMore(): ?string
     {
-        $value = $this->excerptData['more'] ?? null;
+        $excerpt = $this->excerptData['excerpt'] ?? null;
+        if (!\is_array($excerpt)) {
+            return null;
+        }
+
+        $value = $excerpt['more'] ?? null;
 
         return \is_string($value) ? $value : null;
     }
 
     public function setExcerptMore(?string $excerptMore): void
     {
-        $this->excerptData['more'] = $excerptMore;
+        if (!isset($this->excerptData['excerpt']) || !\is_array($this->excerptData['excerpt'])) {
+            $this->excerptData['excerpt'] = [];
+        }
+        $this->excerptData['excerpt']['more'] = $excerptMore;
     }
 
     /**
@@ -61,7 +85,12 @@ trait ExcerptTrait
      */
     public function getExcerptImage(): ?array
     {
-        $value = $this->excerptData['image'] ?? null;
+        $excerpt = $this->excerptData['excerpt'] ?? null;
+        if (!\is_array($excerpt)) {
+            return null;
+        }
+
+        $value = $excerpt['image'] ?? null;
 
         /** @var array{id: int}|null */
         return \is_array($value) ? $value : null;
@@ -72,7 +101,10 @@ trait ExcerptTrait
      */
     public function setExcerptImage(?array $excerptImage): void
     {
-        $this->excerptData['image'] = $excerptImage;
+        if (!isset($this->excerptData['excerpt']) || !\is_array($this->excerptData['excerpt'])) {
+            $this->excerptData['excerpt'] = [];
+        }
+        $this->excerptData['excerpt']['image'] = $excerptImage;
     }
 
     /**
@@ -80,7 +112,12 @@ trait ExcerptTrait
      */
     public function getExcerptIcon(): ?array
     {
-        $value = $this->excerptData['icon'] ?? null;
+        $excerpt = $this->excerptData['excerpt'] ?? null;
+        if (!\is_array($excerpt)) {
+            return null;
+        }
+
+        $value = $excerpt['icon'] ?? null;
 
         /** @var array{id: int}|null */
         return \is_array($value) ? $value : null;
@@ -91,7 +128,10 @@ trait ExcerptTrait
      */
     public function setExcerptIcon(?array $excerptIcon): void
     {
-        $this->excerptData['icon'] = $excerptIcon;
+        if (!isset($this->excerptData['excerpt']) || !\is_array($this->excerptData['excerpt'])) {
+            $this->excerptData['excerpt'] = [];
+        }
+        $this->excerptData['excerpt']['icon'] = $excerptIcon;
     }
 
     /**

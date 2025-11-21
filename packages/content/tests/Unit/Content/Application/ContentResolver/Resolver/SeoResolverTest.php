@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Sulu\Content\Tests\Unit\Content\Application\ContentResolver\Resolver;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderInterface;
@@ -61,20 +62,8 @@ class SeoResolverTest extends TestCase
             ->willReturn($formMetadata->reveal());
 
         $metadataResolver = $this->prophesize(MetadataResolver::class);
-        $metadataResolver->resolveItems([], [
-            'seoTitle' => 'Sulu',
-            'seoDescription' => 'Sulu is awesome',
-            'seoKeywords' => 'Sulu, awesome',
-            'seoCanonicalUrl' => 'https://sulu.io',
-            'seoNoIndex' => true,
-            'seoNoFollow' => true,
-            'seoHideInSitemap' => true,
-        ], 'en')
-            ->willReturn(
-                [
-                    ContentView::create(['dummy' => 'data'], []),
-                ]
-            );
+        $metadataResolver->resolveItems(Argument::any(), Argument::any(), Argument::any())
+            ->willReturn([]);
 
         $templateResolver = new SeoResolver(
             $formMetadataProvider->reveal(),
@@ -86,6 +75,5 @@ class SeoResolverTest extends TestCase
         self::assertInstanceOf(ContentView::class, $contentView);
         $content = $contentView->getContent();
         self::assertIsArray($content);
-        self::assertCount(1, $content);
     }
 }

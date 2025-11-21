@@ -82,7 +82,7 @@ readonly class SeoResolver implements ResolverInterface
         $filteredProperties = [];
         foreach ($properties as $key => $value) {
             if (\str_starts_with((string) $value, self::getPrefix())) {
-                $normalizedValue = 'seo' . \ucfirst(\substr((string) $value, \strlen(self::getPrefix())));
+                $normalizedValue = 'seo/' . \substr((string) $value, \strlen(self::getPrefix()));
                 $filteredProperties[$key] = $normalizedValue;
             }
         }
@@ -103,7 +103,13 @@ readonly class SeoResolver implements ResolverInterface
             if (null !== $properties && \array_key_exists($key, $properties)) {
                 $normalizedKey = $key;
             } else {
-                $normalizedKey = \str_starts_with((string) $key, 'seo') ? \lcfirst(\substr((string) $key, \strlen('seo'))) : $key;
+                if (\str_starts_with((string) $key, 'seo/')) {
+                    $normalizedKey = \substr((string) $key, \strlen('seo/'));
+                } elseif (\str_starts_with((string) $key, 'seo')) {
+                    $normalizedKey = \lcfirst(\substr((string) $key, \strlen('seo')));
+                } else {
+                    $normalizedKey = $key;
+                }
             }
 
             $result[$normalizedKey] = $item;
@@ -134,12 +140,17 @@ readonly class SeoResolver implements ResolverInterface
      */
     protected function getSeoData(SeoInterface $dimensionContent): array
     {
+        $seoData = $dimensionContent->getSeoData();
         $data = [];
 
-        foreach ($dimensionContent->getSeoData() as $key => $value) {
-            $data['seo' . \ucfirst($key)] = $value;
+        // Flatten nested structure for metadata resolver
+        if (isset($seoData['seo']) && \is_array($seoData['seo'])) {
+            foreach ($seoData['seo'] as $fieldName => $value) {
+                $data['seo/' . $fieldName] = $value;
+            }
         }
 
+        // Add boolean fields (these have dedicated columns)
         $data['seoNoIndex'] = $dimensionContent->getSeoNoIndex();
         $data['seoNoFollow'] = $dimensionContent->getSeoNoFollow();
         $data['seoHideInSitemap'] = $dimensionContent->getSeoHideInSitemap();

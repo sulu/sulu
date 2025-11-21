@@ -19,6 +19,20 @@ class SeoNormalizer implements NormalizerInterface
 {
     public function enhance(object $object, array $normalizedData): array
     {
+        if (!$object instanceof SeoInterface) {
+            return $normalizedData;
+        }
+
+        $seoData = $object->getSeoData();
+        if (isset($seoData['seo'])) {
+            $normalizedData['seo'] = $seoData['seo'];
+        }
+
+        // Add boolean fields (they have dedicated columns, not in nested structure)
+        $normalizedData['seoHideInSitemap'] = $object->getSeoHideInSitemap();
+        $normalizedData['seoNoFollow'] = $object->getSeoNoFollow();
+        $normalizedData['seoNoIndex'] = $object->getSeoNoIndex();
+
         return $normalizedData;
     }
 
@@ -28,8 +42,13 @@ class SeoNormalizer implements NormalizerInterface
             return [];
         }
 
+        // Ignore raw seoData and individual getter fields (stored in nested structure)
         return [
             'seoData',
+            'seoTitle',
+            'seoDescription',
+            'seoKeywords',
+            'seoCanonicalUrl',
         ];
     }
 }

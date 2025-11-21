@@ -32,10 +32,10 @@ class SeoDataMapperTest extends TestCase
         $formMetadataProvider = $this->prophesize(MetadataProviderInterface::class);
         $formMetadata = $this->prophesize(FormMetadata::class);
         $formMetadata->getFlatFieldMetadata()->willReturn([
-            'seoTitle' => [],
-            'seoDescription' => [],
-            'seoKeywords' => [],
-            'seoCanonicalUrl' => [],
+            'seo/title' => [],
+            'seo/description' => [],
+            'seo/keywords' => [],
+            'seo/canonicalUrl' => [],
         ]);
 
         $formMetadataProvider->getMetadata(
@@ -50,10 +50,12 @@ class SeoDataMapperTest extends TestCase
     public function testMapNoSeoInterface(): void
     {
         $data = [
-            'seoTitle' => 'Seo Title',
-            'seoDescription' => 'Seo Description',
-            'seoKeywords' => 'Seo Keyword 1, Seo Keyword 2',
-            'seoCanonicalUrl' => 'http://example.localhost',
+            'seo' => [
+                'title' => 'Seo Title',
+                'description' => 'Seo Description',
+                'keywords' => 'Seo Keyword 1, Seo Keyword 2',
+                'canonicalUrl' => 'http://example.localhost',
+            ],
             'seoHideInSitemap' => true,
             'seoNoIndex' => true,
             'seoNoFollow' => true,
@@ -92,10 +94,12 @@ class SeoDataMapperTest extends TestCase
     public function testMapData(): void
     {
         $data = [
-            'seoTitle' => 'Seo Title',
-            'seoDescription' => 'Seo Description',
-            'seoKeywords' => 'Seo Keyword 1, Seo Keyword 2',
-            'seoCanonicalUrl' => 'http://example.localhost',
+            'seo' => [
+                'title' => 'Seo Title',
+                'description' => 'Seo Description',
+                'keywords' => 'Seo Keyword 1, Seo Keyword 2',
+                'canonicalUrl' => 'http://example.localhost',
+            ],
             'seoHideInSitemap' => true,
             'seoNoIndex' => true,
             'seoNoFollow' => true,
@@ -122,9 +126,11 @@ class SeoDataMapperTest extends TestCase
     public function testMapWithInvalidSeoProperty(): void
     {
         $data = [
-            'seoTitle' => 'Seo Title',
-            'seoDescription' => 'Seo Description',
-            'seoCustomField' => 'Should be filtered out',
+            'seo' => [
+                'title' => 'Seo Title',
+                'description' => 'Seo Description',
+                'customField' => 'Should be filtered out',
+            ],
             'seoHideInSitemap' => true,
         ];
 
@@ -145,12 +151,14 @@ class SeoDataMapperTest extends TestCase
     public function testMapWithMixedValidAndInvalidProperties(): void
     {
         $data = [
-            'seoTitle' => 'Valid Title',
-            'seoCustomField' => 'Invalid - not in form',
-            'seoDescription' => 'Valid Description',
-            'seoFoo' => 'Invalid - not in form',
-            'seoKeywords' => 'Valid Keywords',
-            'seoBar' => 'Invalid - not in form',
+            'seo' => [
+                'title' => 'Valid Title',
+                'customField' => 'Invalid - not in form',
+                'description' => 'Valid Description',
+                'foo' => 'Invalid - not in form',
+                'keywords' => 'Valid Keywords',
+                'bar' => 'Invalid - not in form',
+            ],
             'seoNoIndex' => true,
             'seoNoFollow' => false,
         ];

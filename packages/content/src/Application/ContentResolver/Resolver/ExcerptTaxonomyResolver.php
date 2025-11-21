@@ -85,7 +85,7 @@ readonly class ExcerptTaxonomyResolver implements ResolverInterface
         $filteredProperties = [];
         foreach ($properties as $key => $value) {
             if (\str_starts_with((string) $value, self::getPrefix())) {
-                $normalizedValue = 'excerpt' . \ucfirst(\substr((string) $value, \strlen(self::getPrefix())));
+                $normalizedValue = 'excerpt/' . \substr((string) $value, \strlen(self::getPrefix()));
                 $filteredProperties[$key] = $normalizedValue;
             }
         }
@@ -106,7 +106,13 @@ readonly class ExcerptTaxonomyResolver implements ResolverInterface
             if (null !== $properties && \array_key_exists($key, $properties)) {
                 $normalizedKey = $key;
             } else {
-                $normalizedKey = \str_starts_with((string) $key, 'excerpt') ? \lcfirst(\substr((string) $key, \strlen('excerpt'))) : $key;
+                if (\str_starts_with((string) $key, 'excerpt/')) {
+                    $normalizedKey = \substr((string) $key, \strlen('excerpt/'));
+                } elseif (\str_starts_with((string) $key, 'excerpt')) {
+                    $normalizedKey = \lcfirst(\substr((string) $key, \strlen('excerpt')));
+                } else {
+                    $normalizedKey = $key;
+                }
             }
 
             $result[$normalizedKey] = $item;
@@ -132,8 +138,13 @@ readonly class ExcerptTaxonomyResolver implements ResolverInterface
         $data = [];
 
         if ($dimensionContent instanceof ExcerptInterface) {
-            foreach ($dimensionContent->getExcerptData() as $key => $value) {
-                $data['excerpt' . \ucfirst($key)] = $value;
+            $excerptData = $dimensionContent->getExcerptData();
+
+            // Flatten nested structure for metadata resolver
+            if (isset($excerptData['excerpt']) && \is_array($excerptData['excerpt'])) {
+                foreach ($excerptData['excerpt'] as $fieldName => $value) {
+                    $data['excerpt/' . $fieldName] = $value;
+                }
             }
         }
 
