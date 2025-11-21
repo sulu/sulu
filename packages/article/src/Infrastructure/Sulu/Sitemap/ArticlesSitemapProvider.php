@@ -153,14 +153,13 @@ class ArticlesSitemapProvider extends AbstractSitemapProvider
     {
         $queryBuilder = $this->entityRepository->createQueryBuilder('article');
 
-        // Todo: Add additional webspaces.
         $queryBuilder->distinct()->join('article.dimensionContents', 'dimensionContent', 'WITH', '
             dimensionContent.locale = :locale
             AND dimensionContent.stage = :stage
-            AND dimensionContent.mainWebspace = :webspaceKey
             AND dimensionContent.version = :version
             AND dimensionContent.seoHideInSitemap = :hide
         ')
+            ->leftJoin('dimensionContent.additionalWebspaces', 'additionalWebspace')
             ->leftJoin('article.dimensionContents', 'unLocalizedDimensionContent', 'WITH', '
             unLocalizedDimensionContent.locale IS NULL
             AND unLocalizedDimensionContent.stage = :stage
@@ -168,6 +167,7 @@ class ArticlesSitemapProvider extends AbstractSitemapProvider
             AND unLocalizedDimensionContent.seoHideInSitemap = :hide
         ')
             ->leftJoin('dimensionContent.route', 'route')
+            ->andWhere('dimensionContent.mainWebspace = :webspaceKey OR additionalWebspace.additionalWebspace = :webspaceKey')
             ->setParameter('locale', $locale)
             ->setParameter('stage', DimensionContentInterface::STAGE_LIVE)
             ->setParameter('webspaceKey', $webspaceKey)
@@ -189,8 +189,7 @@ class ArticlesSitemapProvider extends AbstractSitemapProvider
         /**
          * @var iterable<Article>
          */
-        // return $queryBuilder->getQuery()->toIterable();
-        return $queryBuilder->getQuery()->getResult();
+        return $queryBuilder->getQuery()->toIterable();
     }
 
     /**
@@ -200,16 +199,16 @@ class ArticlesSitemapProvider extends AbstractSitemapProvider
     {
         $queryBuilder = $this->entityRepository->createQueryBuilder('article');
 
-        // Todo: Add additional webspaces.
         $queryBuilder->distinct()->leftJoin('article.dimensionContents', 'dimensionContent', 'WITH', '
             dimensionContent.locale != :locale
             AND dimensionContent.locale IS NOT NULL
             AND dimensionContent.stage = :stage
-            AND dimensionContent.mainWebspace = :webspaceKey
             AND dimensionContent.version = :version
             AND dimensionContent.seoHideInSitemap = :hide
         ')
+            ->leftJoin('dimensionContent.additionalWebspaces', 'additionalWebspace')
             ->leftJoin('dimensionContent.route', 'route')
+            ->andWhere('dimensionContent.mainWebspace = :webspaceKey OR additionalWebspace.additionalWebspace = :webspaceKey')
             ->setParameter('locale', $locale)
             ->setParameter('stage', DimensionContentInterface::STAGE_LIVE)
             ->setParameter('webspaceKey', $webspaceKey)
