@@ -17,6 +17,7 @@ use CmsIg\Seal\Reindex\ReindexConfig;
 use CmsIg\Seal\Reindex\ReindexProviderInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
+use Sulu\Bundle\MediaBundle\Admin\MediaAdmin;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 
 /**
@@ -68,6 +69,7 @@ final class AdminMediaReindexProvider implements ReindexProviderInterface
                 'createdAt' => $media['created']->format('c'),
                 'title' => $media['title'],
                 'locale' => $media['locale'],
+                'securityContext' => MediaAdmin::SECURITY_CONTEXT,
             ];
         }
     }

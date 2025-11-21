@@ -16,6 +16,7 @@ namespace Sulu\Article\Tests\Functional\Infrastructure\Sulu\Search;
 use CmsIg\Seal\Reindex\ReindexConfig;
 use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Article\Domain\Model\ArticleInterface;
+use Sulu\Article\Infrastructure\Sulu\Admin\ArticleAdmin;
 use Sulu\Article\Infrastructure\Sulu\Search\AdminArticleReindexProvider;
 use Sulu\Article\Tests\Traits\CreateArticleTrait;
 use Sulu\Bundle\AdminBundle\Metadata\GroupProviderInterface;
@@ -127,6 +128,7 @@ class AdminArticleReindexProviderTest extends SuluTestCase
                 'metadata' => [
                     'group' => 'default',
                 ],
+                'securityContext' => ArticleAdmin::getArticleSecurityContext('default'),
             ],
             [
                 'id' => ArticleInterface::RESOURCE_KEY . '__' . $article2->getUuid() . '__en',
@@ -139,6 +141,7 @@ class AdminArticleReindexProviderTest extends SuluTestCase
                 'metadata' => [
                     'group' => 'default',
                 ],
+                'securityContext' => ArticleAdmin::getArticleSecurityContext('default'),
             ],
             [
                 'id' => ArticleInterface::RESOURCE_KEY . '__' . $article2->getUuid() . '__de',
@@ -151,6 +154,7 @@ class AdminArticleReindexProviderTest extends SuluTestCase
                 'metadata' => [
                     'group' => 'default',
                 ],
+                'securityContext' => ArticleAdmin::getArticleSecurityContext('default'),
             ],
         ];
 

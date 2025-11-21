@@ -17,6 +17,7 @@ use CmsIg\Seal\Reindex\ReindexConfig;
 use CmsIg\Seal\Reindex\ReindexProviderInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
+use Sulu\Bundle\MediaBundle\Admin\MediaAdmin;
 use Sulu\Bundle\MediaBundle\Entity\CollectionInterface;
 use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
 
@@ -66,6 +67,7 @@ final class AdminCollectionReindexProvider implements ReindexProviderInterface
                 'createdAt' => $collection['created']->format('c'),
                 'title' => $collection['title'],
                 'locale' => $collection['locale'],
+                'securityContext' => MediaAdmin::SECURITY_CONTEXT,
             ];
         }
     }

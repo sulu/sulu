@@ -20,6 +20,7 @@ use Doctrine\ORM\EntityRepository;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Page\Domain\Model\PageDimensionContentInterface;
 use Sulu\Page\Domain\Model\PageInterface;
+use Sulu\Page\Infrastructure\Sulu\Admin\PageAdmin;
 
 /**
  * @phpstan-type Page array{
@@ -79,6 +80,7 @@ final class AdminPageReindexProvider implements ReindexProviderInterface
                 'metadata' => [
                     'webspaceKey' => $page['webspaceKey'],
                 ],
+                'securityContext' => PageAdmin::SECURITY_CONTEXT_PREFIX . $page['webspaceKey'],
             ];
         }
     }
