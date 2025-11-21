@@ -326,14 +326,20 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
             return 1;
         }
 
-        $page = (int) $this->requestStack->getCurrentRequest()->get($pageParameter, 1);
+        $page = $this->requestStack->getCurrentRequest()->get($pageParameter, 1);
+
+        if (!\is_numeric($page)) {
+            return 1;
+        }
+
+        if ($page > \PHP_INT_MAX) { // needs to be done before cast e.g.: ?page=99999999999999999999
+            return \PHP_INT_MAX;
+        }
+
+        $page = (int) $page;
 
         if ($page <= 1) {
             $page = 1;
-        }
-
-        if ($page > \PHP_INT_MAX) {
-            return \PHP_INT_MAX;
         }
 
         return $page;
