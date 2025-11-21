@@ -39,9 +39,9 @@ class Memoize implements MemoizeInterface, ResetInterface
 
         return $this->cache->get($id, function($item) use ($compute, $arguments, $lifeTime) {
             $value = \call_user_func_array($compute, $arguments);
-        
+
             $item->expiresAfter($lifeTime);
-            
+
             return $value;
         });
     }

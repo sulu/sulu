@@ -12,9 +12,9 @@
 namespace Sulu\Component\Cache\Tests\Unit\Cache;
 
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\Cache\Adapter\ArrayAdapter;
 use Sulu\Component\Cache\Memoize;
 use Sulu\Component\Cache\MemoizeInterface;
+use Symfony\Component\Cache\Adapter\ArrayAdapter;
 
 class MemoizeTest extends TestCase
 {

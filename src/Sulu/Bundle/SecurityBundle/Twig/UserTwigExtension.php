@@ -11,9 +11,9 @@
 
 namespace Sulu\Bundle\SecurityBundle\Twig;
 
-use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\SecurityBundle\Entity\UserRepository;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
@@ -41,7 +41,7 @@ class UserTwigExtension extends AbstractExtension
      *
      * @param int $id id to resolve
      *
-     * @return User
+     * @return UserInterface|null
      */
     public function resolveUserFunction($id)
     {

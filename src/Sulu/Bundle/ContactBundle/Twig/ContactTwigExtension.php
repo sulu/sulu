@@ -40,15 +40,15 @@ class ContactTwigExtension extends AbstractExtension
     }
 
     /**
-     * @param string $id id to resolve
+     * @param string|int $id id to resolve
      *
      * @return ContactInterface|null
      *
      * @throws InvalidArgumentException
      */
-    public function resolveContactFunction(string $id)
+    public function resolveContactFunction($id)
     {
-        return $this->cache->get($id, function() use ($id) {
+        return $this->cache->get((string) $id, function() use ($id) {
             return $this->contactRepository->find($id);
         });
     }
