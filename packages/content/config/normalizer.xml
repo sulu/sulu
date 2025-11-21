@@ -24,6 +24,10 @@
             <tag name="sulu_content.normalizer" priority="31"/>
         </service>
 
+        <service id="sulu_content.seo_normalizer" class="Sulu\Content\Application\ContentNormalizer\Normalizer\SeoNormalizer">
+            <tag name="sulu_content.normalizer" priority="30"/>
+        </service>
+
         <service id="sulu_content.routable_normalizer" class="Sulu\Content\Application\ContentNormalizer\Normalizer\RoutableNormalizer">
             <tag name="sulu_content.normalizer" priority="16"/>
         </service>

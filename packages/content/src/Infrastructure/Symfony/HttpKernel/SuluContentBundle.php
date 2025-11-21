@@ -19,6 +19,7 @@ use Sulu\Content\Application\ResourceLoader\Loader\ResourceLoaderInterface;
 use Sulu\Content\Infrastructure\Doctrine\EventListener\RouteCleanupListener;
 use Sulu\Content\Infrastructure\Symfony\HttpKernel\Compiler\ExcerptFormPass;
 use Sulu\Content\Infrastructure\Symfony\HttpKernel\Compiler\ResourceLoaderCacheCompilerPass;
+use Sulu\Content\Infrastructure\Symfony\HttpKernel\Compiler\SeoFormPass;
 use Sulu\Content\Infrastructure\Symfony\HttpKernel\Compiler\SettingsFormPass;
 use Symfony\Component\Config\Definition\Configurator\DefinitionConfigurator;
 use Symfony\Component\Config\FileLocator;
@@ -105,6 +106,7 @@ final class SuluContentBundle extends AbstractBundle
     {
         $container->addCompilerPass(new SettingsFormPass());
         $container->addCompilerPass(new ExcerptFormPass());
+        $container->addCompilerPass(new SeoFormPass());
         $container->addCompilerPass(new ResourceLoaderCacheCompilerPass());
 
         $container->registerForAutoconfiguration(ResourceLoaderInterface::class)

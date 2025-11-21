@@ -17,6 +17,7 @@ use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Domain\Model\ExcerptInterface;
+use Webmozart\Assert\Assert;
 
 readonly class ExcerptDataMapper implements DataMapperInterface
 {
@@ -34,16 +35,14 @@ readonly class ExcerptDataMapper implements DataMapperInterface
             return;
         }
 
-        $excerptData = $localizedDimensionContent->getExcerptData();
-        $validExcerptProperties = $this->getExcerptProperties($localizedDimensionContent);
-        foreach ($data as $key => $value) {
-            if (($validExcerptProperties[$key] ?? null) !== null && \str_starts_with($key, 'excerpt')) {
-                $internalKey = \lcfirst(\substr($key, 7));
-                $excerptData[$internalKey] = $value;
-            }
-        }
+        if (\array_key_exists('excerpt', $data)) {
+            $excerptData = $data['excerpt'];
+            Assert::isArray($excerptData);
 
-        $localizedDimensionContent->setExcerptData($excerptData);
+            $validExcerptProperties = $this->getExcerptProperties($localizedDimensionContent); // add support of unlocalized excerpt data in future
+
+            $localizedDimensionContent->setExcerptData($excerptData);  // @phpstan-ignore-line argument.type
+        }
     }
 
     /**

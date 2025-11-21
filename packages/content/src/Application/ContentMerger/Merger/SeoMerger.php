@@ -31,32 +31,13 @@ final class SeoMerger implements MergerInterface
             return;
         }
 
-        if ($seoTitle = $sourceObject->getSeoTitle()) {
-            $targetObject->setSeoTitle($seoTitle);
-        }
+        $targetObject->setSeoData(\array_merge(
+            $targetObject->getSeoData(),
+            $sourceObject->getSeoData()
+        ));
 
-        if ($seoDescription = $sourceObject->getSeoDescription()) {
-            $targetObject->setSeoDescription($seoDescription);
-        }
-
-        if ($seoKeywords = $sourceObject->getSeoKeywords()) {
-            $targetObject->setSeoKeywords($seoKeywords);
-        }
-
-        if ($seoCanonicalUrl = $sourceObject->getSeoCanonicalUrl()) {
-            $targetObject->setSeoCanonicalUrl($seoCanonicalUrl);
-        }
-
-        if ($seoNoIndex = $sourceObject->getSeoNoIndex()) {
-            $targetObject->setSeoNoIndex($seoNoIndex);
-        }
-
-        if ($seoNoFollow = $sourceObject->getSeoNoFollow()) {
-            $targetObject->setSeoNoFollow($seoNoFollow);
-        }
-
-        if ($seoHideInSitemap = $sourceObject->getSeoHideInSitemap()) {
-            $targetObject->setSeoHideInSitemap($seoHideInSitemap);
-        }
+        $targetObject->setSeoNoIndex($sourceObject->getSeoNoIndex());
+        $targetObject->setSeoNoFollow($sourceObject->getSeoNoFollow());
+        $targetObject->setSeoHideInSitemap($sourceObject->getSeoHideInSitemap());
     }
 }

@@ -8,31 +8,31 @@
     <tag name="sulu_content.content_excerpt_form" instanceOf="Sulu\Content\Domain\Model\ExcerptInterface" priority="100"/>
 
     <properties>
-        <property name="excerptTitle" type="text_line">
+        <property name="excerpt/title" type="text_line">
             <meta>
                 <title>sulu_admin.title</title>
             </meta>
         </property>
 
-        <property name="excerptMore" type="text_line">
+        <property name="excerpt/more" type="text_line">
             <meta>
                 <title>sulu_content.text_for_more_link</title>
             </meta>
         </property>
 
-        <property name="excerptDescription" type="text_editor">
+        <property name="excerpt/description" type="text_editor">
             <meta>
                 <title>sulu_admin.description</title>
             </meta>
         </property>
 
-        <property name="excerptIcon" type="single_media_selection">
+        <property name="excerpt/icon" type="single_media_selection">
             <meta>
                 <title>sulu_content.icon</title>
             </meta>
         </property>
 
-        <property name="excerptImage" type="single_media_selection">
+        <property name="excerpt/image" type="single_media_selection">
             <meta>
                 <title>sulu_content.image</title>
             </meta>

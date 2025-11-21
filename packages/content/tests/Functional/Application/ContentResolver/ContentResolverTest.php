@@ -71,13 +71,17 @@ class ContentResolverTest extends SuluTestCase
                         'email' => 'example@sulu.io',
                         'external_url' => 'https://sulu.io',
                         'text_area' => 'Lorem Ipsum dolor sit amet',
-                        'excerptTitle' => 'excerpt-title-1',
-                        'excerptMore' => 'excerpt-more-1',
-                        'excerptDescription' => 'excerpt-description-1',
-                        'seoTitle' => 'seo-title-1',
-                        'seoDescription' => 'seo-description-1',
-                        'seoKeywords' => 'seo-keywords-1',
-                        'seoCanonicalUrl' => 'https://sulu.io',
+                        'excerpt' => [
+                            'title' => 'excerpt-title-1',
+                            'more' => 'excerpt-more-1',
+                            'description' => 'excerpt-description-1',
+                        ],
+                        'seo' => [
+                            'title' => 'seo-title-1',
+                            'description' => 'seo-description-1',
+                            'keywords' => 'seo-keywords-1',
+                            'canonicalUrl' => 'https://sulu.io',
+                        ],
                         'seoNoIndex' => true,
                         'seoNoFollow' => true,
                         'seoHideInSitemap' => true,
@@ -148,14 +152,17 @@ class ContentResolverTest extends SuluTestCase
                         'url' => '/nested-example',
                         'description' => 'Nested example description',
 
-                        'excerptTitle' => 'excerpt-example-title-0',
-                        'excerptDescription' => 'excerpt-example-description-0',
-
-                        'seoTitle' => 'seo-example-title-0',
-                        'seoDescription' => 'seo-example-description-0',
+                        'excerpt' => [
+                            'title' => 'excerpt-example-title-0',
+                            'description' => 'excerpt-example-description-0',
+                        ],
+                        'seo' => [
+                            'title' => 'seo-example-title-0',
+                            'description' => 'seo-example-description-0',
+                        ],
                     ],
                 ],
-            ]
+            ],
         );
         static::getEntityManager()->flush();
 
@@ -168,20 +175,23 @@ class ContentResolverTest extends SuluTestCase
                         'url' => '/lorem-ipsum',
                         'examples' => [$example0->getId()],
                         'examples_with_properties' => [$example0->getId()],
-                        'excerptTitle' => 'excerpt-title-1',
-                        'excerptMore' => 'excerpt-more-1',
-                        'excerptDescription' => 'excerpt-description-1',
-
-                        'seoTitle' => 'seo-title-1',
-                        'seoDescription' => 'seo-description-1',
-                        'seoKeywords' => 'seo-keywords-1',
-                        'seoCanonicalUrl' => 'https://sulu.io',
-                        'seoNoIndex' => true,
-                        'seoNoFollow' => true,
-                        'seoHideInSitemap' => true,
+                        'excerpt' => [
+                            'title' => 'excerpt-title-1',
+                            'more' => 'excerpt-more-1',
+                            'description' => 'excerpt-description-1',
+                        ],
+                        'seo' => [
+                            'title' => 'seo-title-1',
+                            'description' => 'seo-description-1',
+                            'keywords' => 'seo-keywords-1',
+                            'canonicalUrl' => 'https://sulu.io',
+                        ],
                     ],
+                    'seoNoIndex' => true,
+                    'seoNoFollow' => true,
+                    'seoHideInSitemap' => true,
                 ],
-            ]
+            ],
         );
 
         static::getEntityManager()->flush();
@@ -261,11 +271,13 @@ class ContentResolverTest extends SuluTestCase
                             'id' => $media1->getId(),
                             'displayOption' => 'left',
                         ],
-                        'excerptIcon' => [
-                            'id' => $media1->getId(),
-                        ],
-                        'excerptImage' => [
-                            'id' => $media2->getId(),
+                        'excerpt' => [
+                            'icon' => [
+                                'id' => $media1->getId(),
+                            ],
+                            'image' => [
+                                'id' => $media2->getId(),
+                            ],
                         ],
                     ],
                 ],

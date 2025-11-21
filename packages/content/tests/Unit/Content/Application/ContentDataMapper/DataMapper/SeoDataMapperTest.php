@@ -14,6 +14,10 @@ declare(strict_types=1);
 namespace Sulu\Content\Tests\Unit\Content\Application\ContentDataMapper\DataMapper;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderInterface;
 use Sulu\Content\Application\ContentDataMapper\DataMapper\SeoDataMapper;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\Example;
@@ -21,20 +25,37 @@ use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\ExampleDimensionCont
 
 class SeoDataMapperTest extends TestCase
 {
-    use \Prophecy\PhpUnit\ProphecyTrait;
+    use ProphecyTrait;
 
     protected function createSeoDataMapperInstance(): SeoDataMapper
     {
-        return new SeoDataMapper();
+        $formMetadataProvider = $this->prophesize(MetadataProviderInterface::class);
+        $formMetadata = $this->prophesize(FormMetadata::class);
+        $formMetadata->getFlatFieldMetadata()->willReturn([
+            'seo/title' => [],
+            'seo/description' => [],
+            'seo/keywords' => [],
+            'seo/canonicalUrl' => [],
+        ]);
+
+        $formMetadataProvider->getMetadata(
+            'content_seo',
+            Argument::any(),
+            Argument::any()
+        )->willReturn($formMetadata->reveal());
+
+        return new SeoDataMapper($formMetadataProvider->reveal());
     }
 
     public function testMapNoSeoInterface(): void
     {
         $data = [
-            'seoTitle' => 'Seo Title',
-            'seoDescription' => 'Seo Description',
-            'seoKeywords' => 'Seo Keyword 1, Seo Keyword 2',
-            'seoCanonicalUrl' => 'http://example.localhost',
+            'seo' => [
+                'title' => 'Seo Title',
+                'description' => 'Seo Description',
+                'keywords' => 'Seo Keyword 1, Seo Keyword 2',
+                'canonicalUrl' => 'http://example.localhost',
+            ],
             'seoHideInSitemap' => true,
             'seoNoIndex' => true,
             'seoNoFollow' => true,
@@ -45,7 +66,7 @@ class SeoDataMapperTest extends TestCase
 
         $seoMapper = $this->createSeoDataMapperInstance();
         $seoMapper->map($unlocalizedDimensionContent->reveal(), $localizedDimensionContent->reveal(), $data);
-        $this->assertTrue(true); // Avoid risky test as this is an early return test // @phpstan-ignore method.alreadyNarrowedType
+        $this->expectNotToPerformAssertions();
     }
 
     public function testMapNoData(): void
@@ -55,6 +76,7 @@ class SeoDataMapperTest extends TestCase
         $example = new Example();
         $unlocalizedDimensionContent = new ExampleDimensionContent($example);
         $localizedDimensionContent = new ExampleDimensionContent($example);
+        $localizedDimensionContent->setLocale('en');
 
         $seoMapper = $this->createSeoDataMapperInstance();
 
@@ -72,10 +94,12 @@ class SeoDataMapperTest extends TestCase
     public function testMapData(): void
     {
         $data = [
-            'seoTitle' => 'Seo Title',
-            'seoDescription' => 'Seo Description',
-            'seoKeywords' => 'Seo Keyword 1, Seo Keyword 2',
-            'seoCanonicalUrl' => 'http://example.localhost',
+            'seo' => [
+                'title' => 'Seo Title',
+                'description' => 'Seo Description',
+                'keywords' => 'Seo Keyword 1, Seo Keyword 2',
+                'canonicalUrl' => 'http://example.localhost',
+            ],
             'seoHideInSitemap' => true,
             'seoNoIndex' => true,
             'seoNoFollow' => true,
@@ -84,6 +108,7 @@ class SeoDataMapperTest extends TestCase
         $example = new Example();
         $unlocalizedDimensionContent = new ExampleDimensionContent($example);
         $localizedDimensionContent = new ExampleDimensionContent($example);
+        $localizedDimensionContent->setLocale('en');
 
         $seoMapper = $this->createSeoDataMapperInstance();
 
@@ -96,5 +121,71 @@ class SeoDataMapperTest extends TestCase
         $this->assertTrue($localizedDimensionContent->getSeoHideInSitemap());
         $this->assertTrue($localizedDimensionContent->getSeoNoFollow());
         $this->assertTrue($localizedDimensionContent->getSeoNoIndex());
+    }
+
+    public function testMapWithInvalidSeoProperty(): void
+    {
+        $this->markTestSkipped('TODO: we should implement this as soon as we implemented also unlocalized properties.');
+
+        // @phpstan-ignore-next-line deadCode.unreachable
+        $data = [
+            'seo' => [
+                'title' => 'Seo Title',
+                'description' => 'Seo Description',
+                'customField' => 'Should be filtered out',
+            ],
+            'seoHideInSitemap' => true,
+        ];
+
+        $example = new Example();
+        $unlocalizedDimensionContent = new ExampleDimensionContent($example);
+        $localizedDimensionContent = new ExampleDimensionContent($example);
+        $localizedDimensionContent->setLocale('en');
+
+        $seoMapper = $this->createSeoDataMapperInstance();
+        $seoMapper->map($unlocalizedDimensionContent, $localizedDimensionContent, $data);
+
+        $this->assertSame('Seo Title', $localizedDimensionContent->getSeoTitle());
+        $this->assertSame('Seo Description', $localizedDimensionContent->getSeoDescription());
+        $this->assertTrue($localizedDimensionContent->getSeoHideInSitemap());
+        $this->assertArrayNotHasKey('customField', $localizedDimensionContent->getSeoData());
+    }
+
+    public function testMapWithMixedValidAndInvalidProperties(): void
+    {
+        $this->markTestSkipped('TODO: we should implement this as soon as we implemented also unlocalized properties.');
+
+        // @phpstan-ignore-next-line deadCode.unreachable
+        $data = [
+            'seo' => [
+                'title' => 'Valid Title',
+                'customField' => 'Invalid - not in form',
+                'description' => 'Valid Description',
+                'foo' => 'Invalid - not in form',
+                'keywords' => 'Valid Keywords',
+                'bar' => 'Invalid - not in form',
+            ],
+            'seoNoIndex' => true,
+            'seoNoFollow' => false,
+        ];
+
+        $example = new Example();
+        $unlocalizedDimensionContent = new ExampleDimensionContent($example);
+        $localizedDimensionContent = new ExampleDimensionContent($example);
+        $localizedDimensionContent->setLocale('en');
+
+        $seoMapper = $this->createSeoDataMapperInstance();
+        $seoMapper->map($unlocalizedDimensionContent, $localizedDimensionContent, $data);
+
+        $this->assertSame('Valid Title', $localizedDimensionContent->getSeoTitle());
+        $this->assertSame('Valid Description', $localizedDimensionContent->getSeoDescription());
+        $this->assertSame('Valid Keywords', $localizedDimensionContent->getSeoKeywords());
+        $this->assertTrue($localizedDimensionContent->getSeoNoIndex());
+        $this->assertFalse($localizedDimensionContent->getSeoNoFollow());
+
+        $seoData = $localizedDimensionContent->getSeoData();
+        $this->assertArrayNotHasKey('customField', $seoData);
+        $this->assertArrayNotHasKey('foo', $seoData);
+        $this->assertArrayNotHasKey('bar', $seoData);
     }
 }

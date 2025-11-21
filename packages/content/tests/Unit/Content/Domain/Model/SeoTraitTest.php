@@ -30,7 +30,7 @@ class SeoTraitTest extends TestCase
     {
         $model = $this->getSeoInstance();
         $this->assertNull($model->getSeoTitle());
-        $model->setSeoTitle('Seo Title');
+        $model->setSeoData(['title' => 'Seo Title']);
         $this->assertSame('Seo Title', $model->getSeoTitle());
     }
 
@@ -38,7 +38,7 @@ class SeoTraitTest extends TestCase
     {
         $model = $this->getSeoInstance();
         $this->assertNull($model->getSeoDescription());
-        $model->setSeoDescription('Seo Description');
+        $model->setSeoData(['description' => 'Seo Description']);
         $this->assertSame('Seo Description', $model->getSeoDescription());
     }
 
@@ -46,7 +46,7 @@ class SeoTraitTest extends TestCase
     {
         $model = $this->getSeoInstance();
         $this->assertNull($model->getSeoKeywords());
-        $model->setSeoKeywords('Keyword 1, Keyword 2');
+        $model->setSeoData(['keywords' => 'Keyword 1, Keyword 2']);
         $this->assertSame('Keyword 1, Keyword 2', $model->getSeoKeywords());
     }
 
@@ -54,7 +54,7 @@ class SeoTraitTest extends TestCase
     {
         $model = $this->getSeoInstance();
         $this->assertNull($model->getSeoCanonicalUrl());
-        $model->setSeoCanonicalUrl('/test-page');
+        $model->setSeoData(['canonicalUrl' => '/test-page']);
         $this->assertSame('/test-page', $model->getSeoCanonicalUrl());
     }
 

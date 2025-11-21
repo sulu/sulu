@@ -77,7 +77,9 @@ class NavigationRepositoryLinkTest extends SuluTestCase
                     'url' => '/',
                     'template' => 'default',
                     'navigationContexts' => ['main'],
-                    'excerptTitle' => 'Homepage Excerpt',
+                    'excerpt' => [
+                        'title' => 'Homepage Excerpt',
+                    ],
                 ],
             ],
         ]);
@@ -89,7 +91,9 @@ class NavigationRepositoryLinkTest extends SuluTestCase
                     'url' => '/content-page',
                     'template' => 'default',
                     'navigationContexts' => ['main'],
-                    'excerptTitle' => 'Content Page Excerpt',
+                    'excerpt' => [
+                        'title' => 'Content Page Excerpt',
+                    ],
                     'parentId' => $homepage->getId(),
                 ],
             ],
@@ -102,7 +106,9 @@ class NavigationRepositoryLinkTest extends SuluTestCase
                     'url' => '/target-page',
                     'template' => 'default',
                     'navigationContexts' => [],
-                    'excerptTitle' => 'Target Page Excerpt',
+                    'excerpt' => [
+                        'title' => 'Target Page Excerpt',
+                    ],
                     'parentId' => $homepage->getId(),
                 ],
             ],
@@ -120,7 +126,9 @@ class NavigationRepositoryLinkTest extends SuluTestCase
                         'href' => $targetPage->getUuid(),
                         'provider' => 'page',
                     ],
-                    'excerptTitle' => 'Internal Link Excerpt',
+                    'excerpt' => [
+                        'title' => 'Internal Link Excerpt',
+                    ],
                     'parentId' => $homepage->getId(),
                 ],
             ],
@@ -138,7 +146,9 @@ class NavigationRepositoryLinkTest extends SuluTestCase
                         'href' => 'https://example.com',
                         'provider' => 'external',
                     ],
-                    'excerptTitle' => 'External Link Excerpt',
+                    'excerpt' => [
+                        'title' => 'External Link Excerpt',
+                    ],
                     'parentId' => $homepage->getId(),
                 ],
             ],

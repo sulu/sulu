@@ -15,13 +15,10 @@ namespace Sulu\Content\Domain\Model;
 
 trait SeoTrait
 {
-    private ?string $seoTitle = null;
-
-    private ?string $seoDescription = null;
-
-    private ?string $seoKeywords = null;
-
-    private ?string $seoCanonicalUrl = null;
+    /**
+     * @var array<string, mixed>
+     */
+    private array $seoData = [];
 
     private bool $seoNoIndex = false;
 
@@ -31,42 +28,30 @@ trait SeoTrait
 
     public function getSeoTitle(): ?string
     {
-        return $this->seoTitle;
-    }
+        $value = $this->seoData['title'] ?? null;
 
-    public function setSeoTitle(?string $seoTitle): void
-    {
-        $this->seoTitle = $seoTitle;
+        return \is_string($value) ? $value : null;
     }
 
     public function getSeoDescription(): ?string
     {
-        return $this->seoDescription;
-    }
+        $value = $this->seoData['description'] ?? null;
 
-    public function setSeoDescription(?string $seoDescription): void
-    {
-        $this->seoDescription = $seoDescription;
+        return \is_string($value) ? $value : null;
     }
 
     public function getSeoKeywords(): ?string
     {
-        return $this->seoKeywords;
-    }
+        $value = $this->seoData['keywords'] ?? null;
 
-    public function setSeoKeywords(?string $seoKeywords): void
-    {
-        $this->seoKeywords = $seoKeywords;
+        return \is_string($value) ? $value : null;
     }
 
     public function getSeoCanonicalUrl(): ?string
     {
-        return $this->seoCanonicalUrl;
-    }
+        $value = $this->seoData['canonicalUrl'] ?? null;
 
-    public function setSeoCanonicalUrl(?string $seoCanonicalUrl): void
-    {
-        $this->seoCanonicalUrl = $seoCanonicalUrl;
+        return \is_string($value) ? $value : null;
     }
 
     public function getSeoNoIndex(): bool
@@ -97,5 +82,21 @@ trait SeoTrait
     public function setSeoHideInSitemap(bool $seoHideInSitemap): void
     {
         $this->seoHideInSitemap = $seoHideInSitemap;
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function getSeoData(): array
+    {
+        return $this->seoData;
+    }
+
+    /**
+     * @param array<string, mixed> $seoData
+     */
+    public function setSeoData(array $seoData): void
+    {
+        $this->seoData = $seoData;
     }
 }

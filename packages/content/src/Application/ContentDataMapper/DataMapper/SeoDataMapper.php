@@ -13,12 +13,19 @@ declare(strict_types=1);
 
 namespace Sulu\Content\Application\ContentDataMapper\DataMapper;
 
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Domain\Model\SeoInterface;
 use Webmozart\Assert\Assert;
 
-class SeoDataMapper implements DataMapperInterface
+readonly class SeoDataMapper implements DataMapperInterface
 {
+    public function __construct(
+        private MetadataProviderInterface $formMetadataProvider,
+    ) {
+    }
+
     public function map(
         DimensionContentInterface $unlocalizedDimensionContent,
         DimensionContentInterface $localizedDimensionContent,
@@ -36,24 +43,17 @@ class SeoDataMapper implements DataMapperInterface
      */
     private function setSeoData(SeoInterface $dimensionContent, array $data): void
     {
-        if (\array_key_exists('seoTitle', $data)) {
-            Assert::nullOrString($data['seoTitle']);
-            $dimensionContent->setSeoTitle($data['seoTitle']);
+        if (!$dimensionContent instanceof DimensionContentInterface) {
+            return;
         }
 
-        if (\array_key_exists('seoDescription', $data)) {
-            Assert::nullOrString($data['seoDescription']);
-            $dimensionContent->setSeoDescription($data['seoDescription']);
-        }
+        if (\array_key_exists('seo', $data)) {
+            $seoData = $data['seo'];
+            Assert::isArray($seoData);
 
-        if (\array_key_exists('seoKeywords', $data)) {
-            Assert::nullOrString($data['seoKeywords']);
-            $dimensionContent->setSeoKeywords($data['seoKeywords']);
-        }
+            $validSeoProperties = $this->getSeoProperties($dimensionContent); // add support of unlocalized seo data in future
 
-        if (\array_key_exists('seoCanonicalUrl', $data)) {
-            Assert::nullOrString($data['seoCanonicalUrl']);
-            $dimensionContent->setSeoCanonicalUrl($data['seoCanonicalUrl']);
+            $dimensionContent->setSeoData($seoData); // @phpstan-ignore-line argument.type
         }
 
         if (\array_key_exists('seoHideInSitemap', $data)) {
@@ -70,5 +70,29 @@ class SeoDataMapper implements DataMapperInterface
             Assert::boolean($data['seoNoIndex']);
             $dimensionContent->setSeoNoIndex($data['seoNoIndex']);
         }
+    }
+
+    /**
+     * @template T of DimensionContentInterface
+     *
+     * @param T $dimensionContent
+     *
+     * @return array<string, mixed>
+     */
+    private function getSeoProperties(DimensionContentInterface $dimensionContent): array
+    {
+        $locale = $dimensionContent->getLocale();
+        if (!$locale) {
+            return [];
+        }
+
+        /** @var FormMetadata $formMetadata */
+        $formMetadata = $this->formMetadataProvider->getMetadata(
+            'content_seo',
+            $locale,
+            ['instanceOf' => $dimensionContent::class],
+        );
+
+        return $formMetadata->getFlatFieldMetadata();
     }
 }

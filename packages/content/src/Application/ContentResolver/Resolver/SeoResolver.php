@@ -24,7 +24,7 @@ readonly class SeoResolver implements ResolverInterface
 {
     public function __construct(
         private MetadataProviderInterface $formMetadataProvider,
-        private MetadataResolver $metadataResolver
+        private MetadataResolver $metadataResolver,
     ) {
     }
 
@@ -38,7 +38,11 @@ readonly class SeoResolver implements ResolverInterface
         $locale = $dimensionContent->getLocale();
 
         /** @var FormMetadata $formMetadata */
-        $formMetadata = $this->formMetadataProvider->getMetadata($this->getFormKey(), $locale, []);
+        $formMetadata = $this->formMetadataProvider->getMetadata(
+            $this->getFormKey(),
+            $locale,
+            ['instanceOf' => $dimensionContent::class],
+        );
 
         $formMetadataItems = \array_filter($formMetadata->getFlatFieldMetadata(), function($item) {
             return !\in_array($item->getType(), $this->excludedPropertyTypes(), true);
@@ -78,7 +82,7 @@ readonly class SeoResolver implements ResolverInterface
         $filteredProperties = [];
         foreach ($properties as $key => $value) {
             if (\str_starts_with((string) $value, self::getPrefix())) {
-                $normalizedValue = 'seo' . \ucfirst(\substr((string) $value, \strlen(self::getPrefix())));
+                $normalizedValue = 'seo/' . \substr((string) $value, \strlen(self::getPrefix()));
                 $filteredProperties[$key] = $normalizedValue;
             }
         }
@@ -99,7 +103,13 @@ readonly class SeoResolver implements ResolverInterface
             if (null !== $properties && \array_key_exists($key, $properties)) {
                 $normalizedKey = $key;
             } else {
-                $normalizedKey = \str_starts_with((string) $key, 'seo') ? \lcfirst(\substr((string) $key, \strlen('seo'))) : $key;
+                if (\str_starts_with((string) $key, 'seo/')) {
+                    $normalizedKey = \substr((string) $key, \strlen('seo/'));
+                } elseif (\str_starts_with((string) $key, 'seo')) {
+                    $normalizedKey = \lcfirst(\substr((string) $key, \strlen('seo')));
+                } else {
+                    $normalizedKey = $key;
+                }
             }
 
             $result[$normalizedKey] = $item;
@@ -123,10 +133,6 @@ readonly class SeoResolver implements ResolverInterface
 
     /**
      * @return array{
-     *     seoTitle: string|null,
-     *     seoDescription: string|null,
-     *     seoKeywords: string|null,
-     *     seoCanonicalUrl: string|null,
      *     seoNoIndex: bool,
      *     seoNoFollow: bool,
      *     seoHideInSitemap: bool
@@ -134,15 +140,18 @@ readonly class SeoResolver implements ResolverInterface
      */
     protected function getSeoData(SeoInterface $dimensionContent): array
     {
-        return [
-            'seoTitle' => $dimensionContent->getSeoTitle(),
-            'seoDescription' => $dimensionContent->getSeoDescription(),
-            'seoKeywords' => $dimensionContent->getSeoKeywords(),
-            'seoCanonicalUrl' => $dimensionContent->getSeoCanonicalUrl(),
-            'seoNoIndex' => $dimensionContent->getSeoNoIndex(),
-            'seoNoFollow' => $dimensionContent->getSeoNoFollow(),
-            'seoHideInSitemap' => $dimensionContent->getSeoHideInSitemap(),
-        ];
+        $data = [];
+
+        foreach ($dimensionContent->getSeoData() as $fieldName => $value) {
+            $data['seo/' . $fieldName] = $value;
+        }
+
+        // Add boolean fields (these have dedicated columns)
+        $data['seoNoIndex'] = $dimensionContent->getSeoNoIndex();
+        $data['seoNoFollow'] = $dimensionContent->getSeoNoFollow();
+        $data['seoHideInSitemap'] = $dimensionContent->getSeoHideInSitemap();
+
+        return $data;
     }
 
     public static function getPrefix(): string

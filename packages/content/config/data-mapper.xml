@@ -25,6 +25,8 @@
         </service>
 
         <service id="sulu_content.seo_data_mapper" class="Sulu\Content\Application\ContentDataMapper\DataMapper\SeoDataMapper">
+            <argument type="service" id="sulu_admin.form_metadata_provider"/>
+
             <tag name="sulu_content.data_mapper" priority="32"/>
         </service>
 

@@ -30,7 +30,7 @@ class ExcerptTraitTest extends TestCase
     {
         $model = $this->getExcerptInstance();
         $this->assertNull($model->getExcerptTitle());
-        $model->setExcerptTitle('Excerpt Title');
+        $model->setExcerptData(['title' => 'Excerpt Title']);
         $this->assertSame('Excerpt Title', $model->getExcerptTitle());
     }
 
@@ -38,7 +38,7 @@ class ExcerptTraitTest extends TestCase
     {
         $model = $this->getExcerptInstance();
         $this->assertNull($model->getExcerptDescription());
-        $model->setExcerptDescription('Excerpt Description');
+        $model->setExcerptData(['description' => 'Excerpt Description']);
         $this->assertSame('Excerpt Description', $model->getExcerptDescription());
     }
 
@@ -46,7 +46,7 @@ class ExcerptTraitTest extends TestCase
     {
         $model = $this->getExcerptInstance();
         $this->assertNull($model->getExcerptMore());
-        $model->setExcerptMore('Excerpt More');
+        $model->setExcerptData(['more' => 'Excerpt More']);
         $this->assertSame('Excerpt More', $model->getExcerptMore());
     }
 
@@ -54,7 +54,7 @@ class ExcerptTraitTest extends TestCase
     {
         $model = $this->getExcerptInstance();
         $this->assertNull($model->getExcerptImage());
-        $model->setExcerptImage(['id' => 1]);
+        $model->setExcerptData(['image' => ['id' => 1]]);
         $this->assertNotNull($model->getExcerptImage());
         $this->assertSame(['id' => 1], $model->getExcerptImage());
     }
@@ -63,7 +63,7 @@ class ExcerptTraitTest extends TestCase
     {
         $model = $this->getExcerptInstance();
         $this->assertNull($model->getExcerptIcon());
-        $model->setExcerptIcon(['id' => 2]);
+        $model->setExcerptData(['icon' => ['id' => 2]]);
         $this->assertNotNull($model->getExcerptIcon());
         $this->assertSame(['id' => 2], $model->getExcerptIcon());
     }

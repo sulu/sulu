@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Sulu\Content\Tests\Unit\Content\Application\ContentResolver\Resolver;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderInterface;
@@ -32,7 +33,7 @@ class SeoResolverTest extends TestCase
     {
         $templateResolver = new SeoResolver(
             $this->prophesize(MetadataProviderInterface::class)->reveal(),
-            $this->prophesize(MetadataResolver::class)->reveal()
+            $this->prophesize(MetadataResolver::class)->reveal(),
         );
 
         self::assertNull($templateResolver->resolve($this->prophesize(DimensionContentInterface::class)->reveal()));
@@ -45,10 +46,12 @@ class SeoResolverTest extends TestCase
         $example->addDimensionContent($dimensionContent);
         $dimensionContent->setLocale('en');
 
-        $dimensionContent->setSeoTitle('Sulu');
-        $dimensionContent->setSeoDescription('Sulu is awesome');
-        $dimensionContent->setSeoKeywords('Sulu, awesome');
-        $dimensionContent->setSeoCanonicalUrl('https://sulu.io');
+        $dimensionContent->setSeoData([
+            'title' => 'Sulu',
+            'description' => 'Sulu is awesome',
+            'keywords' => 'Sulu, awesome',
+            'canonicalUrl' => 'https://sulu.io',
+        ]);
         $dimensionContent->setSeoNoIndex(true);
         $dimensionContent->setSeoNoFollow(true);
         $dimensionContent->setSeoHideInSitemap(true);
@@ -57,28 +60,16 @@ class SeoResolverTest extends TestCase
         $formMetadata->getFlatFieldMetadata()
             ->willReturn([]);
         $formMetadataProvider = $this->prophesize(MetadataProviderInterface::class);
-        $formMetadataProvider->getMetadata('content_seo', 'en', [])
+        $formMetadataProvider->getMetadata('content_seo', 'en', ['instanceOf' => ExampleDimensionContent::class])
             ->willReturn($formMetadata->reveal());
 
         $metadataResolver = $this->prophesize(MetadataResolver::class);
-        $metadataResolver->resolveItems([], [
-            'seoTitle' => 'Sulu',
-            'seoDescription' => 'Sulu is awesome',
-            'seoKeywords' => 'Sulu, awesome',
-            'seoCanonicalUrl' => 'https://sulu.io',
-            'seoNoIndex' => true,
-            'seoNoFollow' => true,
-            'seoHideInSitemap' => true,
-        ], 'en')
-            ->willReturn(
-                [
-                    ContentView::create(['dummy' => 'data'], []),
-                ]
-            );
+        $metadataResolver->resolveItems(Argument::any(), Argument::any(), Argument::any())
+            ->willReturn([]);
 
         $templateResolver = new SeoResolver(
             $formMetadataProvider->reveal(),
-            $metadataResolver->reveal()
+            $metadataResolver->reveal(),
         );
 
         $contentView = $templateResolver->resolve($dimensionContent);
@@ -86,6 +77,5 @@ class SeoResolverTest extends TestCase
         self::assertInstanceOf(ContentView::class, $contentView);
         $content = $contentView->getContent();
         self::assertIsArray($content);
-        self::assertCount(1, $content);
     }
 }

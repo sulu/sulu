@@ -21,6 +21,7 @@ use Sulu\Content\Application\ContentNormalizer\ContentNormalizerInterface;
 use Sulu\Content\Application\ContentNormalizer\Normalizer\DimensionContentNormalizer;
 use Sulu\Content\Application\ContentNormalizer\Normalizer\ExcerptNormalizer;
 use Sulu\Content\Application\ContentNormalizer\Normalizer\RoutableNormalizer;
+use Sulu\Content\Application\ContentNormalizer\Normalizer\SeoNormalizer;
 use Sulu\Content\Application\ContentNormalizer\Normalizer\TaxonomyNormalizer;
 use Sulu\Content\Application\ContentNormalizer\Normalizer\TemplateNormalizer;
 use Sulu\Content\Application\ContentNormalizer\Normalizer\WorkflowNormalizer;
@@ -50,6 +51,7 @@ class ContentNormalizerTest extends TestCase
             new DimensionContentNormalizer(),
             new TaxonomyNormalizer(),
             new ExcerptNormalizer(),
+            new SeoNormalizer(),
             new TemplateNormalizer(),
             new WorkflowNormalizer(),
             new RoutableNormalizer(),
@@ -170,19 +172,24 @@ class ContentNormalizerTest extends TestCase
         $category2 = $this->prophesize(CategoryInterface::class);
         $category2->getId()->willReturn(4);
 
-        $object->setSeoTitle('Seo Title');
-        $object->setSeoDescription('Seo Description');
-        $object->setSeoKeywords('Seo Keyword 1, Seo Keyword 2');
-        $object->setSeoCanonicalUrl('https://caninical.localhost/');
+        $object->setSeoData([
+            'title' => 'Seo Title',
+            'description' => 'Seo Description',
+            'keywords' => 'Seo Keyword 1, Seo Keyword 2',
+            'canonicalUrl' => 'https://caninical.localhost/',
+        ]);
+
         $object->setSeoNoIndex(true);
         $object->setSeoNoFollow(true);
         $object->setSeoHideInSitemap(true);
 
-        $object->setExcerptTitle('Excerpt Title');
-        $object->setExcerptDescription('Excerpt Description');
-        $object->setExcerptMore('Excerpt More');
-        $object->setExcerptImage(['id' => 8]);
-        $object->setExcerptIcon(['id' => 9]);
+        $object->setExcerptData([
+            'title' => 'Excerpt Title',
+            'description' => 'Excerpt Description',
+            'more' => 'Excerpt More',
+            'image' => ['id' => 8],
+            'icon' => ['id' => 9],
+        ]);
         $object->setExcerptTags([$tag1->reveal(), $tag2->reveal()]);
         $object->setExcerptCategories([$category1->reveal(), $category2->reveal()]);
 
@@ -195,40 +202,46 @@ class ContentNormalizerTest extends TestCase
 
         $contentNormalizer = $this->createContentNormalizerInstance();
 
+        $normalizedData = $contentNormalizer->normalize($object);
+
         $this->assertSame([
             'availableLocales' => ['en', 'de'],
+            'excerpt' => [
+                'title' => 'Excerpt Title',
+                'description' => 'Excerpt Description',
+                'more' => 'Excerpt More',
+                'image' => ['id' => 8],
+                'icon' => ['id' => 9],
+            ],
             'excerptAudienceTargetGroups' => [],
             'excerptCategories' => [
                 3,
                 4,
             ],
-            'excerptDescription' => 'Excerpt Description',
-            'excerptIcon' => ['id' => 9],
-            'excerptImage' => ['id' => 8],
-            'excerptMore' => 'Excerpt More',
             'excerptSegment' => null,
             'excerptTags' => [
                 'Tag 1',
                 'Tag 2',
             ],
-            'excerptTitle' => 'Excerpt Title',
             'ghostLocale' => 'en',
             'id' => 5,
             'locale' => 'de',
             'published' => '2020-02-02T12:30:00+00:00',
             'publishedState' => false,
-            'seoCanonicalUrl' => 'https://caninical.localhost/',
-            'seoDescription' => 'Seo Description',
+            'seo' => [
+                'title' => 'Seo Title',
+                'description' => 'Seo Description',
+                'keywords' => 'Seo Keyword 1, Seo Keyword 2',
+                'canonicalUrl' => 'https://caninical.localhost/',
+            ],
             'seoHideInSitemap' => true,
-            'seoKeywords' => 'Seo Keyword 1, Seo Keyword 2',
             'seoNoFollow' => true,
             'seoNoIndex' => true,
-            'seoTitle' => 'Seo Title',
             'someTemplate' => 'data',
             'stage' => 'live',
             'template' => 'template-key',
             'version' => DimensionContentInterface::CURRENT_VERSION,
             'workflowPlace' => 'draft',
-        ], $contentNormalizer->normalize($object));
+        ], $normalizedData);
     }
 }
