@@ -75,7 +75,6 @@
                  class="Sulu\Content\Application\ContentResolver\Resolver\SeoResolver">
             <argument type="service" id="sulu_admin.form_metadata_provider"/>
             <argument type="service" id="sulu_content.metadata_resolver"/>
-            <argument>%sulu_content.content_seo_forms%</argument>
 
             <tag name="sulu_content.content_resolver" type="seo"/>
         </service>

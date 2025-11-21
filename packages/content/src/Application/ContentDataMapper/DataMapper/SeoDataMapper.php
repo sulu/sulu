@@ -21,12 +21,8 @@ use Webmozart\Assert\Assert;
 
 readonly class SeoDataMapper implements DataMapperInterface
 {
-    /**
-     * @param array<string, array{instanceOf: class-string}> $seoForms
-     */
     public function __construct(
         private MetadataProviderInterface $formMetadataProvider,
-        private array $seoForms,
     ) {
     }
 
@@ -100,29 +96,13 @@ readonly class SeoDataMapper implements DataMapperInterface
             return [];
         }
 
-        $forms = $this->getSeoForms();
-        if (0 === \count($forms)) {
-            return [];
-        }
-
         /** @var FormMetadata $formMetadata */
-        $formMetadata = $this->formMetadataProvider->getMetadata('content_seo', $locale, ['forms' => $forms]);
+        $formMetadata = $this->formMetadataProvider->getMetadata(
+            'content_seo',
+            $locale,
+            ['instanceOf' => $dimensionContent::class],
+        );
 
         return $formMetadata->getFlatFieldMetadata();
-    }
-
-    /**
-     * @return string[]
-     */
-    private function getSeoForms(): array
-    {
-        $forms = [];
-        foreach ($this->seoForms as $key => $tag) {
-            if (SeoInterface::class === $tag['instanceOf']) {
-                $forms[] = $key;
-            }
-        }
-
-        return $forms;
     }
 }

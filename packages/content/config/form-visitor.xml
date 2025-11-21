@@ -29,5 +29,13 @@
 
             <tag name="sulu_admin.form_metadata_visitor" priority="-10" />
         </service>
+
+        <service id="sulu_content.seo_instanceof_form_metadata_visitor" class="Sulu\Content\Infrastructure\Sulu\Form\InstanceOfFormMetadataVisitor">
+            <argument type="service" id="sulu_admin.xml_form_metadata_loader"/>
+            <argument>content_seo</argument>
+            <argument>%sulu_content.content_seo_forms%</argument>
+
+            <tag name="sulu_admin.form_metadata_visitor" priority="-10" />
+        </service>
     </services>
 </container>

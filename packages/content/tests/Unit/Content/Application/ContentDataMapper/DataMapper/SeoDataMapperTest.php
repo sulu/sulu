@@ -20,7 +20,6 @@ use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderInterface;
 use Sulu\Content\Application\ContentDataMapper\DataMapper\SeoDataMapper;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
-use Sulu\Content\Domain\Model\SeoInterface;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\Example;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\ExampleDimensionContent;
 
@@ -45,13 +44,7 @@ class SeoDataMapperTest extends TestCase
             Argument::any()
         )->willReturn($formMetadata->reveal());
 
-        $seoForms = [
-            'content_seo' => [
-                'instanceOf' => SeoInterface::class,
-            ],
-        ];
-
-        return new SeoDataMapper($formMetadataProvider->reveal(), $seoForms);
+        return new SeoDataMapper($formMetadataProvider->reveal());
     }
 
     public function testMapNoSeoInterface(): void
