@@ -15,7 +15,6 @@ use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\MediaBundle\Api\Media;
 use Sulu\Bundle\MediaBundle\Collection\Manager\CollectionManager;
 use Sulu\Bundle\MediaBundle\DataFixtures\ORM\LoadCollectionTypes;
-use Sulu\Bundle\MediaBundle\DataFixtures\ORM\LoadMediaTypes;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManager;
 use Sulu\Bundle\MediaBundle\Tests\Application\SecuredKernel;
@@ -49,8 +48,6 @@ class MediaStreamControllerWebsiteSecuredTest extends WebsiteTestCase
 
         $collectionTypes = new LoadCollectionTypes();
         $collectionTypes->load($this->getEntityManager());
-        $mediaTypes = new LoadMediaTypes();
-        $mediaTypes->load($this->getEntityManager());
     }
 
     #[\PHPUnit\Framework\Attributes\RunInSeparateProcess]

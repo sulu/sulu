@@ -240,10 +240,9 @@ class ContentResolverTest extends SuluTestCase
     {
         // @phpstan-ignore-next-line
         $collection1 = self::createCollection(['title' => 'collection-1', 'locale' => 'en']);
-        $mediaType = self::createMediaType(['name' => 'Image', 'description' => 'This is an image']);
-        $media1 = self::createMedia($collection1, $mediaType, ['title' => 'media-1', 'locale' => 'en']);
-        $media2 = self::createMedia($collection1, $mediaType, ['title' => 'media-2', 'locale' => 'en']);
-        $media3 = self::createMedia($collection1, $mediaType, ['title' => 'media-3', 'locale' => 'en']);
+        $media1 = self::createMedia($collection1, ['title' => 'media-1', 'locale' => 'en']);
+        $media2 = self::createMedia($collection1, ['title' => 'media-2', 'locale' => 'en']);
+        $media3 = self::createMedia($collection1, ['title' => 'media-3', 'locale' => 'en']);
 
         self::getEntityManager()->flush();
 
@@ -469,9 +468,8 @@ class ContentResolverTest extends SuluTestCase
     {
         // @phpstan-ignore-next-line
         $collection1 = self::createCollection(['title' => 'collection-1', 'locale' => 'en']);
-        $mediaType = self::createMediaType(['name' => 'Image', 'description' => 'This is an image']);
-        $media1 = self::createMedia($collection1, $mediaType, ['title' => 'media-1', 'locale' => 'en']);
-        $media2 = self::createMedia($collection1, $mediaType, ['title' => 'media-2', 'locale' => 'en']);
+        $media1 = self::createMedia($collection1, ['title' => 'media-1', 'locale' => 'en']);
+        $media2 = self::createMedia($collection1, ['title' => 'media-2', 'locale' => 'en']);
 
         self::getEntityManager()->flush();
 
@@ -599,9 +597,8 @@ class ContentResolverTest extends SuluTestCase
     public function testResolvePropertyNamedContentView(): void
     {
         $collection1 = self::createCollection(['title' => 'collection-1', 'locale' => 'en']);
-        $mediaType = self::createMediaType(['name' => 'Image', 'description' => 'This is an image']);
-        $media1 = self::createMedia($collection1, $mediaType, ['title' => 'media-1', 'locale' => 'en']);
-        $media2 = self::createMedia($collection1, $mediaType, ['title' => 'media-2', 'locale' => 'en']);
+        $media1 = self::createMedia($collection1, ['title' => 'media-1', 'locale' => 'en']);
+        $media2 = self::createMedia($collection1, ['title' => 'media-2', 'locale' => 'en']);
         self::getEntityManager()->flush();
 
         $example1 = static::createExample(
@@ -936,9 +933,8 @@ class ContentResolverTest extends SuluTestCase
     public function testResolveImageMap(): void
     {
         $collection1 = self::createCollection(['title' => 'collection-1', 'locale' => 'en']);
-        $mediaType = self::createMediaType(['name' => 'Image', 'description' => 'This is an image']);
-        $mainMedia = self::createMedia($collection1, $mediaType, ['title' => 'media-main', 'locale' => 'en']);
-        $media1 = self::createMedia($collection1, $mediaType, ['title' => 'media-1', 'locale' => 'en']);
+        $mainMedia = self::createMedia($collection1, ['title' => 'media-main', 'locale' => 'en']);
+        $media1 = self::createMedia($collection1, ['title' => 'media-1', 'locale' => 'en']);
 
         self::getEntityManager()->flush();
 

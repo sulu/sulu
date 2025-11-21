@@ -14,7 +14,6 @@ namespace Sulu\Bundle\MediaBundle\Tests\Functional\Controller;
 use Sulu\Bundle\MediaBundle\Api\Media;
 use Sulu\Bundle\MediaBundle\Collection\Manager\CollectionManager;
 use Sulu\Bundle\MediaBundle\DataFixtures\ORM\LoadCollectionTypes;
-use Sulu\Bundle\MediaBundle\DataFixtures\ORM\LoadMediaTypes;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManager;
 use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
 use Sulu\Bundle\TestBundle\Testing\WebsiteTestCase;
@@ -35,8 +34,6 @@ class MediaStreamControllerTest extends WebsiteTestCase
 
         $collectionTypes = new LoadCollectionTypes();
         $collectionTypes->load($this->getEntityManager());
-        $mediaTypes = new LoadMediaTypes();
-        $mediaTypes->load($this->getEntityManager());
     }
 
     public function testDownloadAction(): void

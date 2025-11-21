@@ -2,12 +2,6 @@
 <list xmlns="http://schemas.sulu.io/list-builder/list">
     <key>media</key>
 
-    <joins name="type">
-        <join>
-            <entity-name>Sulu\Bundle\MediaBundle\Entity\MediaType</entity-name>
-            <field-name>%sulu.model.media.class%.type</field-name>
-        </join>
-    </joins>
     <joins name="previewImageFileVersion">
         <join>
             <entity-name>%sulu.model.media.class%PreviewImage</entity-name>
@@ -132,10 +126,8 @@
         <property name="adminUrl" visibility="never"/>
 
         <property name="type" translation="sulu_media.type" visibility="always">
-            <field-name>name</field-name>
-            <entity-name>Sulu\Bundle\MediaBundle\Entity\MediaType</entity-name>
-
-            <joins ref="type"/>
+            <field-name>type</field-name>
+            <entity-name>%sulu.model.media.class%</entity-name>
 
             <transformer type="icon">
                 <params>

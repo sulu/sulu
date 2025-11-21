@@ -31,7 +31,6 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
     {
         try {
             $queryBuilder = $this->createQueryBuilder('media')
-                ->leftJoin('media.type', 'type')
                 ->leftJoin('media.collection', 'collection')
                 ->leftJoin('media.files', 'file')
                 ->leftJoin('file.fileVersions', 'fileVersion')
@@ -45,7 +44,6 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
                 ->leftJoin('media.changer', 'changer')
                 ->leftJoin('changer.contact', 'changerContact')
                 ->leftJoin('media.previewImage', 'previewImage')
-                ->addSelect('type')
                 ->addSelect('collection')
                 ->addSelect('file')
                 ->addSelect('fileVersion')
@@ -68,11 +66,7 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
                 /** @var MediaInterface[] $result */
                 $result = $query->getArrayResult();
 
-                if (isset($result[0])) {
-                    return $result[0];
-                } else {
-                    return null;
-                }
+                return $result[0] ?? null;
             } else {
                 /** @var MediaInterface */
                 return $query->getSingleResult();
@@ -161,7 +155,6 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
         }
 
         $queryBuilder = $this->createQueryBuilder('media')
-            ->leftJoin('media.type', 'type')
             ->leftJoin('media.collection', 'collection')
             ->innerJoin('media.files', 'file')
             ->innerJoin('file.fileVersions', 'fileVersion', 'WITH', 'fileVersion.version = file.version')
@@ -174,7 +167,6 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
             ->leftJoin('creator.contact', 'creatorContact')
             ->leftJoin('media.changer', 'changer')
             ->leftJoin('changer.contact', 'changerContact')
-            ->addSelect('type')
             ->addSelect('collection')
             ->addSelect('file')
             ->addSelect('tag')
@@ -361,8 +353,7 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
         }
 
         if (!empty($types)) {
-            $queryBuilder->innerJoin('media.type', 'type');
-            $queryBuilder->andWhere('type.name IN (:types)');
+            $queryBuilder->andWhere('media.type IN (:types)');
             $queryBuilder->setParameter('types', $types);
         }
 

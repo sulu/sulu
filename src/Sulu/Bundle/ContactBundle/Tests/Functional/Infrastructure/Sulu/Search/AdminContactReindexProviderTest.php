@@ -24,7 +24,7 @@ use Sulu\Bundle\MediaBundle\Entity\CollectionType;
 use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\Media;
-use Sulu\Bundle\MediaBundle\Entity\MediaType;
+use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\TestBundle\Testing\SetGetPrivatePropertyTrait;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
@@ -35,8 +35,6 @@ class AdminContactReindexProviderTest extends SuluTestCase
     private EntityManagerInterface $entityManager;
     private AdminContactReindexProvider $provider;
 
-    private MediaType $imageType;
-
     protected Collection $collection;
 
     protected function setUp(): void
@@ -45,10 +43,6 @@ class AdminContactReindexProviderTest extends SuluTestCase
         $this->provider = new AdminContactReindexProvider($this->entityManager);
         $this->purgeDatabase();
 
-        $this->imageType = new MediaType();
-        $this->imageType->setName('image');
-        $this->imageType->setDescription('This is an image');
-
         $this->collection = new Collection();
         $collectionType = new CollectionType();
         $collectionType->setName('Default Collection Type');
@@ -56,7 +50,6 @@ class AdminContactReindexProviderTest extends SuluTestCase
 
         $this->collection->setType($collectionType);
 
-        $this->entityManager->persist($this->imageType);
         $this->entityManager->persist($collectionType);
         $this->entityManager->persist($this->collection);
 
@@ -195,7 +188,7 @@ class AdminContactReindexProviderTest extends SuluTestCase
         $this->entityManager->persist($fileVersion);
 
         $media = new Media();
-        $media->setType($this->imageType);
+        $media->setType(MediaInterface::TYPE_IMAGE);
         $media->setCollection($this->collection);
         $media->addFile($file);
         $file->setMedia($media);

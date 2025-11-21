@@ -17,7 +17,7 @@ use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
 use Sulu\Bundle\MediaBundle\Entity\CollectionRepository;
 use Sulu\Bundle\MediaBundle\Entity\CollectionType;
 use Sulu\Bundle\MediaBundle\Entity\Media;
-use Sulu\Bundle\MediaBundle\Entity\MediaType;
+use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Media\SystemCollections\SystemCollectionManagerInterface;
 
@@ -29,12 +29,7 @@ class CollectionRepositoryTest extends SuluTestCase
     private $em;
 
     /**
-     * @var MediaType
-     */
-    private $mediaType;
-
-    /**
-     * @var array
+     * @var array<array{string, ?int, bool, int}>
      */
     private $collectionData = [
         ['1', null, false, 0],
@@ -89,11 +84,6 @@ class CollectionRepositoryTest extends SuluTestCase
         $systemCollectionType->setKey(SystemCollectionManagerInterface::COLLECTION_TYPE);
         $this->em->persist($systemCollectionType);
 
-        $this->mediaType = new MediaType();
-        $this->mediaType->setName('image');
-        $this->mediaType->setDescription('This is an image');
-        $this->em->persist($this->mediaType);
-
         foreach ($this->collectionData as $collection) {
             $this->collections[] = $this->createCollection(
                 $collection[0],
@@ -110,7 +100,7 @@ class CollectionRepositoryTest extends SuluTestCase
         $this->em->flush();
     }
 
-    private function createCollection($name, $parent, $collectionType, $numberMedia)
+    private function createCollection($name, $parent, $collectionType, int $numberMedia)
     {
         $collection = new Collection();
         $collectionMeta = new CollectionMeta();
@@ -134,12 +124,12 @@ class CollectionRepositoryTest extends SuluTestCase
         return $collection;
     }
 
-    private function addMedia(Collection $collection, $numberMedia): void
+    private function addMedia(Collection $collection, int $numberMedia): void
     {
         for ($i = 0; $i < $numberMedia; ++$i) {
             $media = new Media();
+            $media->setType(MediaInterface::TYPE_IMAGE);
             $media->setCollection($collection);
-            $media->setType($this->mediaType);
             $collection->addMedia($media);
 
             $this->em->persist($media);

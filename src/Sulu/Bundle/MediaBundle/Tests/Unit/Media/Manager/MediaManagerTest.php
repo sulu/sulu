@@ -31,8 +31,8 @@ use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\FileVersionMeta;
 use Sulu\Bundle\MediaBundle\Entity\FormatOptions;
 use Sulu\Bundle\MediaBundle\Entity\Media;
+use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface;
-use Sulu\Bundle\MediaBundle\Entity\MediaType;
 use Sulu\Bundle\MediaBundle\Media\Exception\InvalidMediaTypeException;
 use Sulu\Bundle\MediaBundle\Media\FileValidator\FileValidatorInterface;
 use Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface;
@@ -368,6 +368,8 @@ class MediaManagerTest extends TestCase
             ->willReturn([])
             ->shouldBeCalled();
 
+        $this->typeManager->getMediaType('img')->shouldBeCalled()->willReturn(MediaInterface::TYPE_IMAGE);
+
         $this->domainEventCollector->collect(Argument::type(MediaCreatedEvent::class))->shouldBeCalled();
 
         $media = $this->mediaManager->save($uploadedFile->reveal(), ['locale' => 'en', 'title' => 'my title'], 1);
@@ -389,15 +391,11 @@ class MediaManagerTest extends TestCase
         $uploadedFile->getClientOriginalName()->willReturn('test.pdf');
         $uploadedFile->getPathname()->willReturn('');
         $uploadedFile->getSize()->willReturn('123');
-        $uploadedFile->getMimeType()->willReturn('img');
+        $uploadedFile->getMimeType()->willReturn('image/jpeg');
 
         $media = $this->prophesize(Media::class);
         $media->setChanger(Argument::any())->willReturn($media->reveal());
         $media->setChanged(Argument::any())->willReturn($media->reveal());
-
-        $mediaType = $this->prophesize(MediaType::class);
-        $mediaType->getId()->willReturn(1);
-        $media->getType()->willReturn($mediaType->reveal());
 
         $file = $this->prophesize(File::class);
         $file->getVersion()->willReturn(1);
@@ -407,9 +405,11 @@ class MediaManagerTest extends TestCase
 
         $fileVersion = $this->prophesize(FileVersion::class);
         $fileVersion->getVersion()->willReturn(1);
+        $fileVersion->getMimeType()->willReturn('application/text');
         $file->getFileVersion(1)->willReturn($fileVersion->reveal());
 
-        $this->typeManager->getMediaType('img')->willReturn(2);
+        $this->typeManager->getMediaType('application/text')->shouldBeCalled()->willReturn(MediaInterface::TYPE_DOCUMENT);
+        $this->typeManager->getMediaType('image/jpeg')->shouldBeCalled()->willReturn(MediaInterface::TYPE_IMAGE);
 
         $this->mediaRepository->findMediaById(1)->willReturn($media);
 
@@ -509,13 +509,19 @@ class MediaManagerTest extends TestCase
         $uploadedFile->getMimeType()->willReturn('video/ogg');
         $this->mediaRepository->createNew()->willReturn(new Media());
 
+        $this->typeManager->getMediaType('video/ogg')->shouldBeCalled()->willReturn(MediaInterface::TYPE_VIDEO);
+
         $this->storage->save(Argument::cetera())->willReturn([]);
         $this->mediaPropertiesProvider
             ->provide($uploadedFile->reveal())
             ->willReturn(['key' => 'value'])
             ->shouldBeCalled();
 
-        $media = $this->mediaManager->save($uploadedFile->reveal(), ['locale' => 'en', 'title' => 'test'], null);
+        $media = $this->mediaManager->save(
+            $uploadedFile->reveal(),
+            ['locale' => 'en', 'title' => 'test'],
+            null,
+        );
         $this->assertNotNull($media);
         $this->assertSame(['key' => 'value'], $media->getProperties());
     }

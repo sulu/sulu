@@ -20,7 +20,7 @@ use Sulu\Bundle\MediaBundle\Entity\CollectionType;
 use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\Media;
-use Sulu\Bundle\MediaBundle\Entity\MediaType;
+use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
@@ -47,11 +47,6 @@ class AccountMediaControllerTest extends SuluTestCase
     protected $media2;
 
     /**
-     * @var MediaType
-     */
-    protected $imageType;
-
-    /**
      * @var Collection
      */
     protected $collection;
@@ -76,9 +71,6 @@ class AccountMediaControllerTest extends SuluTestCase
         $this->account = new Account();
         $this->account->setName('Company');
 
-        $this->imageType = new MediaType();
-        $this->imageType->setName('image');
-
         $this->collection = new Collection();
         $collectionType = new CollectionType();
         $collectionType->setName('Default Collection Type');
@@ -89,7 +81,6 @@ class AccountMediaControllerTest extends SuluTestCase
         $this->em->persist($this->account);
         $this->em->persist($this->collection);
         $this->em->persist($collectionType);
-        $this->em->persist($this->imageType);
         $this->em->flush();
     }
 
@@ -255,7 +246,7 @@ class AccountMediaControllerTest extends SuluTestCase
         $this->em->persist($fileVersion);
 
         $media = new Media();
-        $media->setType($this->imageType);
+        $media->setType(MediaInterface::TYPE_IMAGE);
         $media->setCollection($this->collection);
         $media->addFile($file);
         $file->setMedia($media);

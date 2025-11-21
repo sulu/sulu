@@ -9,20 +9,20 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\MediaBundle\Media\TypeManager;
+namespace Sulu\Bundle\MediaBundle\Tests\Unit\Media\TypeManager;
 
-use Doctrine\Persistence\ObjectManager;
-use Sulu\Bundle\MediaBundle\Entity\MediaType;
+use PHPUnit\Framework\Attributes\DataProvider;
+use Sulu\Bundle\MediaBundle\Media\TypeManager\TypeManager;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
 class TypeManagerTest extends SuluTestCase
 {
-    /**
-     * @var TypeManager
-     */
-    private $typeManager;
+    private TypeManager $typeManager;
 
-    private $mediaTypes = [
+    /**
+     * @var array<array{type: string, mimeTypes: array<string>}>
+     */
+    private array $mediaTypes = [
         [
             'type' => 'document',
             'mimeTypes' => ['*'],
@@ -45,55 +45,40 @@ class TypeManagerTest extends SuluTestCase
     {
         parent::setUp();
 
-        /** @var ObjectManager $em */
-        $em = $this->getContainer()->get('doctrine.orm.entity_manager');
-
-        foreach ($this->mediaTypes as $mediaTypeData) {
-            $mediaType = new MediaType();
-            $mediaType->setName($mediaTypeData['type']);
-            $em->persist($mediaType);
-        }
-
-        $em->flush();
-
-        $this->typeManager = new TypeManager(
-            $em,
-            $this->mediaTypes,
-            ['file/exe']
-        );
+        $this->typeManager = new TypeManager($this->mediaTypes);
     }
 
-    public function testMediaTypes(): void
+    #[DataProvider('mediaTypesProvider')]
+    public function testMediaTypes(string $mimeType, string $expectedMediaType): void
     {
-        $data = [
-            // documents
-            'application/pdf' => 'document',
-            'application/msword' => 'document',
-            'application/vnd.ms-excel' => 'document',
-            'application/zip' => 'document',
-            'text/html' => 'document',
-            // images
-            'image/jpg' => 'image',
-            'image/jepg' => 'image',
-            'image/gif' => 'image',
-            'image/png' => 'image',
-            'image/vnd.adobe.photoshop' => 'image',
-            // videos
-            'video/mp4' => 'video',
-            'video/mov' => 'video',
-            // audios
-            'audio/mpeg' => 'audio',
-            'audio/mp3' => 'audio',
-        ];
+        $computedType = $this->typeManager->getMediaType($mimeType);
+        $this->assertEquals($expectedMediaType, $computedType);
+    }
 
-        foreach ($data as $mimeType => $mediaType) {
-            $mediaTypeName = null;
-            $id = $this->typeManager->getMediaType($mimeType);
-            $setMediaType = $this->typeManager->get($id);
-            if ($setMediaType) {
-                $mediaTypeName = $setMediaType->getName();
-            }
-            $this->assertEquals($mediaTypeName, $mediaType);
-        }
+    /**
+     * @return array<array{string, string}>
+     */
+    public static function mediaTypesProvider(): array
+    {
+        return [
+            // documents
+            ['application/pdf', 'document'],
+            ['application/msword', 'document'],
+            ['application/vnd.ms-excel', 'document'],
+            ['application/zip', 'document'],
+            ['text/html', 'document'],
+            // images
+            ['image/jpg', 'image'],
+            ['image/jepg', 'image'],
+            ['image/gif', 'image'],
+            ['image/png', 'image'],
+            ['image/vnd.adobe.photoshop', 'image'],
+            // videos
+            ['video/mp4', 'video'],
+            ['video/mov', 'video'],
+            // audios
+            ['audio/mpeg', 'audio'],
+            ['audio/mp3', 'audio'],
+        ];
     }
 }

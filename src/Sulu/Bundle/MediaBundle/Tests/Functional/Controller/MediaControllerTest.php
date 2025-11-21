@@ -24,7 +24,7 @@ use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\FileVersionMeta;
 use Sulu\Bundle\MediaBundle\Entity\FormatOptions;
 use Sulu\Bundle\MediaBundle\Entity\Media;
-use Sulu\Bundle\MediaBundle\Entity\MediaType;
+use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\TagBundle\Tag\TagInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
@@ -51,26 +51,6 @@ class MediaControllerTest extends SuluTestCase
      * @var CollectionMeta
      */
     private $collectionMeta;
-
-    /**
-     * @var MediaType
-     */
-    private $documentType;
-
-    /**
-     * @var MediaType
-     */
-    private $imageType;
-
-    /**
-     * @var MediaType
-     */
-    private $videoType;
-
-    /**
-     * @var MediaType
-     */
-    private $audioType;
 
     /**
      * @var CategoryInterface
@@ -213,23 +193,6 @@ class MediaControllerTest extends SuluTestCase
 
     protected function setUpMedia(): void
     {
-        // Create Media Type
-        $this->documentType = new MediaType();
-        $this->documentType->setName('document');
-        $this->documentType->setDescription('This is a document');
-
-        $this->imageType = new MediaType();
-        $this->imageType->setName('image');
-        $this->imageType->setDescription('This is an image');
-
-        $this->videoType = new MediaType();
-        $this->videoType->setName('video');
-        $this->videoType->setDescription('This is a video');
-
-        $this->audioType = new MediaType();
-        $this->audioType->setName('audio');
-        $this->audioType->setDescription('This is a video');
-
         $tagRepository = $this->getContainer()->get('sulu.repository.tag');
 
         // create some tags
@@ -241,10 +204,6 @@ class MediaControllerTest extends SuluTestCase
 
         $this->em->persist($this->tag1);
         $this->em->persist($this->tag2);
-        $this->em->persist($this->documentType);
-        $this->em->persist($this->audioType);
-        $this->em->persist($this->imageType);
-        $this->em->persist($this->videoType);
 
         $this->em->flush();
     }
@@ -254,20 +213,20 @@ class MediaControllerTest extends SuluTestCase
         $media = new Media();
         $media->setPreviewImage($previewMedia);
 
-        if ('image' === $type) {
-            $media->setType($this->imageType);
+        if (MediaInterface::TYPE_IMAGE === $type) {
+            $media->setType($type);
             $extension = 'jpeg';
             $mimeType = 'image/jpg';
-        } elseif ('audio' === $type) {
-            $media->setType($this->audioType);
+        } elseif (MediaInterface::TYPE_AUDIO === $type) {
+            $media->setType($type);
             $extension = 'mp3';
             $mimeType = 'audio/mp3';
-        } elseif ('video' === $type) {
-            $media->setType($this->videoType);
+        } elseif (MediaInterface::TYPE_VIDEO === $type) {
+            $media->setType($type);
             $extension = 'mp4';
             $mimeType = 'video/mp4';
         } else {
-            $media->setType($this->documentType);
+            $media->setType(MediaInterface::TYPE_DOCUMENT);
             $extension = 'txt';
             $mimeType = 'text/plain';
         }
@@ -473,8 +432,7 @@ class MediaControllerTest extends SuluTestCase
         $response = \json_decode($this->client->getResponse()->getContent(), true);
 
         $this->assertEquals($media->getId(), $response['id']);
-        $this->assertNotNull($response['type']['id']);
-        $this->assertEquals('image', $response['type']['name']);
+        $this->assertEquals('image', $response['type']);
         $this->assertEquals('en-gb', $response['locale']);
         $this->assertNull($response['fallbackLocale']);
         $this->assertEquals('photo.jpeg', $response['name']);
@@ -1487,8 +1445,7 @@ class MediaControllerTest extends SuluTestCase
         $response = \json_decode($this->client->getResponse()->getContent());
 
         $this->assertEquals($media->getId(), $response->id);
-        $this->assertNotNull($response->type->id);
-        $this->assertEquals('image', $response->type->name);
+        $this->assertEquals('image', $response->type);
         $this->assertEquals('photo.jpeg', $response->name);
         $this->assertEquals($this->mediaDefaultTitle, $response->title);
         $this->assertEquals('3', $response->downloadCounter);

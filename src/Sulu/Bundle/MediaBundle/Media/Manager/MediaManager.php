@@ -195,7 +195,6 @@ class MediaManager implements MediaManagerInterface
      * @return Media
      *
      * @throws FileVersionNotFoundException
-     * @throws InvalidMediaTypeException
      */
     private function modifyMedia($uploadedFile, $data, $user)
     {
@@ -230,8 +229,9 @@ class MediaManager implements MediaManagerInterface
             // new uploaded file
             ++$version;
             $this->validator->validate($uploadedFile);
-            $type = $this->typeManager->getMediaType($uploadedFile->getMimeType());
-            if ($type !== $mediaEntity->getType()->getId()) {
+            $oldType = $this->typeManager->getMediaType($uploadedFile->getMimeType());
+            $newType = $this->typeManager->getMediaType($currentFileVersion->getMimeType());
+            if ($oldType !== $newType) {
                 throw new InvalidMediaTypeException('New media version must have the same media type.');
             }
 
@@ -244,9 +244,7 @@ class MediaManager implements MediaManagerInterface
             $data['size'] = \intval($uploadedFile->getSize());
             $data['mimeType'] = $uploadedFile->getMimeType();
             $data['properties'] = $this->getProperties($uploadedFile);
-            $data['type'] = [
-                'id' => $type,
-            ];
+            $data['type'] = $mediaEntity->getType();
             $data['version'] = $version;
 
             $fileVersion = clone $currentFileVersion;
@@ -367,10 +365,8 @@ class MediaManager implements MediaManagerInterface
         $data['size'] = $uploadedFile->getSize();
         $data['mimeType'] = $uploadedFile->getMimeType();
         $data['properties'] = $this->getProperties($uploadedFile);
+        $data['type'] = $this->typeManager->getMediaType($uploadedFile->getMimeType());
         $data['title'] ??= $this->getTitleFromUpload($uploadedFile);
-        $data['type'] = [
-            'id' => $this->typeManager->getMediaType($uploadedFile->getMimeType()),
-        ];
 
         return $this->createMedia($data, $user);
     }
@@ -460,6 +456,7 @@ class MediaManager implements MediaManagerInterface
                 || 'targetGroups' === $attribute
                 || 'focusPointX' === $attribute
                 || 'focusPointY' === $attribute
+                || 'type' === $attribute
             ) {
                 switch ($attribute) {
                     case 'size':
@@ -533,9 +530,8 @@ class MediaManager implements MediaManagerInterface
                         $media->setCollection($collectionEntity); // set parent
                         break;
                     case 'type':
-                        if (isset($value['id'])) {
-                            $type = $this->typeManager->get($value['id']);
-                            $media->setType($type);
+                        if (\is_string($value)) {
+                            $media->setType($value);
                         }
                         break;
                     case 'categories':

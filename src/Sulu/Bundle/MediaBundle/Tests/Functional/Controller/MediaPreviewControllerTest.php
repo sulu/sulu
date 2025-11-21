@@ -21,7 +21,6 @@ use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\FileVersionMeta;
 use Sulu\Bundle\MediaBundle\Entity\Media;
-use Sulu\Bundle\MediaBundle\Entity\MediaType;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -32,16 +31,6 @@ class MediaPreviewControllerTest extends SuluTestCase
      * @var EntityManagerInterface
      */
     private $em;
-
-    /**
-     * @var MediaType
-     */
-    private $imageType;
-
-    /**
-     * @var MediaType
-     */
-    private $videoType;
 
     /**
      * @var Collection
@@ -91,17 +80,7 @@ class MediaPreviewControllerTest extends SuluTestCase
 
         $this->collection->addMeta($collectionMeta);
 
-        $this->imageType = new MediaType();
-        $this->imageType->setName('image');
-        $this->imageType->setDescription('This is an image');
-
-        $this->videoType = new MediaType();
-        $this->videoType->setName('video');
-        $this->videoType->setDescription('This is a video');
-
         $this->em->persist($this->collection);
-        $this->em->persist($this->imageType);
-        $this->em->persist($this->videoType);
         $this->em->persist($collectionType1);
         $this->em->persist($collectionType2);
         $this->em->persist($collectionMeta);
@@ -146,7 +125,7 @@ class MediaPreviewControllerTest extends SuluTestCase
     public function testDelete(): void
     {
         $preview = $this->createMedia('preview');
-        $media = $this->createMedia('photo', 'en-gb', 'image', $preview);
+        $media = $this->createMedia('photo', $preview);
         $mediaId = $media->getId();
 
         $this->assertEquals($preview, $media->getPreviewImage());
@@ -161,20 +140,14 @@ class MediaPreviewControllerTest extends SuluTestCase
         $this->assertStringContainsString('photo.jpg?v=1-0', $response->thumbnails->{'sulu-400x400'});
     }
 
-    private function createMedia($name, $locale = 'en-gb', $type = 'image', ?Media $previewMedia = null)
+    private function createMedia(string $name, ?Media $previewMedia = null): Media
     {
         $media = new Media();
+        $media->setType('image');
         $media->setPreviewImage($previewMedia);
 
-        if ('image' === $type) {
-            $media->setType($this->imageType);
-            $extension = 'jpeg';
-            $mimeType = 'image/jpg';
-        } elseif ('video' === $type) {
-            $media->setType($this->videoType);
-            $extension = 'mp4';
-            $mimeType = 'video/mp4';
-        }
+        $extension = 'jpeg';
+        $mimeType = 'image/jpg';
 
         // create file
         $file = new File();
@@ -201,7 +174,7 @@ class MediaPreviewControllerTest extends SuluTestCase
 
         // create meta
         $fileVersionMeta = new FileVersionMeta();
-        $fileVersionMeta->setLocale($locale);
+        $fileVersionMeta->setLocale('en-gb');
         $fileVersionMeta->setTitle($name);
         $fileVersionMeta->setFileVersion($fileVersion);
 

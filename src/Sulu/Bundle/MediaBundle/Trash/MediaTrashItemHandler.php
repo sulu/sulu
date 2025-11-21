@@ -29,7 +29,6 @@ use Sulu\Bundle\MediaBundle\Entity\FileVersionPublishLanguage;
 use Sulu\Bundle\MediaBundle\Entity\FormatOptions;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface;
-use Sulu\Bundle\MediaBundle\Entity\MediaType;
 use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
 use Sulu\Bundle\TagBundle\Tag\TagInterface;
 use Sulu\Bundle\TrashBundle\Application\DoctrineRestoreHelper\DoctrineRestoreHelperInterface;
@@ -71,7 +70,7 @@ final class MediaTrashItemHandler implements
 
         $data = [
             'collectionId' => $media->getCollection()->getId(),
-            'typeId' => $media->getType()->getId(),
+            'type' => $media->getType(),
             'previewImageId' => $previewImage ? $previewImage->getId() : null,
             'created' => $media->getCreated()->format('c'),
             'creatorId' => $creator ? $creator->getId() : null,
@@ -199,12 +198,13 @@ final class MediaTrashItemHandler implements
         $collection = $this->findEntity(CollectionInterface::class, $restoreFormData['collectionId']);
         Assert::isInstanceOf($collection, CollectionInterface::class);
 
-        $type = $this->findEntity(MediaType::class, $data['typeId']);
-        Assert::isInstanceOf($type, MediaType::class);
-
         $media = $this->mediaRepository->createNew();
         $media->setCollection($collection);
-        $media->setType($type);
+
+        if (\is_string($data['type'])) {
+            $media->setType($data['type']);
+        }
+
         $media->setPreviewImage($this->findEntity(MediaInterface::class, $data['previewImageId']));
         $media->setCreated(new \DateTimeImmutable($data['created']));
         $media->setCreator($this->findEntity(UserInterface::class, $data['creatorId']));

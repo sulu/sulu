@@ -74,7 +74,7 @@ class MediaTypeUpdateCommand extends Command
     {
         /** @var array<array{id: int, type: int, mimeType: string}> $data */
         $data = $this->entityManager->createQueryBuilder()
-            ->addSelect('media.id', 'IDENTITY(media.type) as type', 'fileVersion.mimeType')
+            ->addSelect('media.id', 'media.type', 'fileVersion.mimeType')
             ->from('SuluMediaBundle:Media', 'media')
             ->innerJoin('media.files', 'file')
             ->innerJoin('file.fileVersions', 'fileVersion', 'WITH', 'fileVersion.version = file.version')

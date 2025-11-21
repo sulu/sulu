@@ -19,8 +19,8 @@ use Sulu\Bundle\MediaBundle\Admin\MediaAdmin;
 use Sulu\Bundle\MediaBundle\Api\Media;
 use Sulu\Bundle\MediaBundle\Collection\Manager\CollectionManager;
 use Sulu\Bundle\MediaBundle\DataFixtures\ORM\LoadCollectionTypes;
-use Sulu\Bundle\MediaBundle\DataFixtures\ORM\LoadMediaTypes;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
+use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManager;
 use Sulu\Bundle\SecurityBundle\Entity\Permission;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
@@ -158,8 +158,6 @@ class MediaStreamControllerAdminTest extends SuluTestCase
 
         $collectionTypes = new LoadCollectionTypes();
         $collectionTypes->load($this->getEntityManager());
-        $mediaTypes = new LoadMediaTypes();
-        $mediaTypes->load($this->getEntityManager());
     }
 
     private function createUploadedFile(string $path): UploadedFile
@@ -192,6 +190,7 @@ class MediaStreamControllerAdminTest extends SuluTestCase
                 'title' => $title,
                 'collection' => $this->createCollection(),
                 'locale' => 'en',
+                'type' => MediaInterface::TYPE_IMAGE,
             ],
             null
         );

@@ -38,7 +38,7 @@ use Sulu\Bundle\MediaBundle\Entity\CollectionType;
 use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\Media;
-use Sulu\Bundle\MediaBundle\Entity\MediaType;
+use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Bundle\TrashBundle\Domain\Model\TrashItemInterface;
@@ -94,8 +94,7 @@ class ContactControllerTest extends SuluTestCase
         $account = $this->createAccount('Musterfirma');
         $collectionType = $this->createCollectionType('My collection type');
         $collection = $this->createCollection($collectionType);
-        $mediaType = $this->createMediaType('image', 'This is an image');
-        $media = $this->createMedia('media1.jpeg', 'image/jpeg', $mediaType, $collection);
+        $media = $this->createMedia('media1.jpeg', $collection);
         $contact = $this->createContact(
             'Max',
             'Mustermann',
@@ -320,8 +319,7 @@ class ContactControllerTest extends SuluTestCase
         $faxType = $this->createFaxType('Private');
         $collectionType = $this->createCollectionType('My collection type');
         $collection = $this->createCollection($collectionType);
-        $mediaType = $this->createMediaType('image', 'This is an image');
-        $media = $this->createMedia('media1.jpeg', 'image/jpeg', $mediaType, $collection);
+        $media = $this->createMedia('media1.jpeg', $collection);
         $addressType = $this->createAddressType('Private');
         $account = $this->createAccount('Musterfirma');
         $category1 = $this->createCategory('first-category-key', 'en', 'First Category', 'Description of Category');
@@ -924,8 +922,7 @@ class ContactControllerTest extends SuluTestCase
         $account = $this->createAccount('Musterfirma');
         $collectionType = $this->createCollectionType('My collection type');
         $collection = $this->createCollection($collectionType);
-        $mediaType = $this->createMediaType('image', 'This is an image');
-        $media = $this->createMedia('media1.jpeg', 'image/jpeg', $mediaType, $collection);
+        $media = $this->createMedia('media1.jpeg', $collection);
         $category1 = $this->createCategory('first-category-key', 'en', 'First Category', 'Description of Category');
         $category2 = $this->createCategory('second-category-key', 'en', 'Second Category', 'Description of second Category');
         $category3 = $this->createCategory('third-category-key', 'en', 'Third Category', 'Description of third Category');
@@ -2131,9 +2128,8 @@ class ContactControllerTest extends SuluTestCase
     {
         $collectionType = $this->createCollectionType('My collection type');
         $collection = $this->createCollection($collectionType);
-        $mediaType = $this->createMediaType('image', 'This is an image');
-        $media1 = $this->createMedia('media1.jpeg', 'image/jpeg', $mediaType, $collection);
-        $media2 = $this->createMedia('media2.jpeg', 'image/jpeg', $mediaType, $collection);
+        $media1 = $this->createMedia('media1.jpeg', $collection);
+        $media2 = $this->createMedia('media2.jpeg', $collection);
         $contact = $this->createContact('Max', 'Mustermann');
         $this->em->flush();
 
@@ -2702,7 +2698,7 @@ class ContactControllerTest extends SuluTestCase
         return $address;
     }
 
-    private function createCollection(CollectionType $collectionType)
+    private function createCollection(CollectionType $collectionType): Collection
     {
         $collection = new Collection();
         $collection->setType($collectionType);
@@ -2711,7 +2707,7 @@ class ContactControllerTest extends SuluTestCase
         return $collection;
     }
 
-    private function createCollectionType(string $name)
+    private function createCollectionType(string $name): CollectionType
     {
         $collectionType = new CollectionType();
         $collectionType->setName($name);
@@ -2720,24 +2716,14 @@ class ContactControllerTest extends SuluTestCase
         return $collectionType;
     }
 
-    private function createMediaType(string $name, ?string $description = null)
-    {
-        $mediaType = new MediaType();
-        $mediaType->setName($name);
-        $mediaType->setDescription($description);
-        $this->em->persist($mediaType);
-
-        return $mediaType;
-    }
-
-    private function createMedia(string $name, string $mimeType, MediaType $mediaType, Collection $collection): Media
+    private function createMedia(string $name, Collection $collection): Media
     {
         $file = new File();
         $file->setVersion(1);
 
         $fileVersion = new FileVersion();
         $fileVersion->setVersion(1);
-        $fileVersion->setName('media1.jpeg');
+        $fileVersion->setName($name);
         $fileVersion->setMimeType('image/jpg');
         $fileVersion->setFile($file);
         $fileVersion->setSize(111111);
@@ -2748,7 +2734,7 @@ class ContactControllerTest extends SuluTestCase
         $this->em->persist($fileVersion);
 
         $media = new Media();
-        $media->setType($mediaType);
+        $media->setType(MediaInterface::TYPE_IMAGE);
         $media->setCollection($collection);
         $media->addFile($file);
         $file->setMedia($media);

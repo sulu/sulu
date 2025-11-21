@@ -28,7 +28,6 @@ use Sulu\Bundle\MediaBundle\Entity\FileVersionPublishLanguage;
 use Sulu\Bundle\MediaBundle\Entity\FormatOptions;
 use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
-use Sulu\Bundle\MediaBundle\Entity\MediaType;
 use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
 use Sulu\Bundle\MediaBundle\Tests\Functional\Traits\CreateUploadedFileTrait;
 use Sulu\Bundle\MediaBundle\Trash\MediaTrashItemHandler;
@@ -91,10 +90,6 @@ class MediaTrashItemHandlerTest extends SuluTestCase
         $collection1 = $this->createCollection();
         $collection2 = $this->createCollection();
 
-        $mediaType = new MediaType();
-        $mediaType->setId(2);
-        $mediaType->setName('image');
-
         $uploadedFile1 = $this->createUploadedFileImage();
         $file1StorageOptions = $this->storage->save($uploadedFile1->getPathname(), 'testStoreAndRestore-1');
 
@@ -103,11 +98,11 @@ class MediaTrashItemHandlerTest extends SuluTestCase
 
         $previewImageMedia = new Media();
         $previewImageMedia->setCollection($collection1);
-        $previewImageMedia->setType($mediaType);
+        $previewImageMedia->setType(MediaInterface::TYPE_IMAGE);
 
         $media1 = new Media();
+        $media1->setType(MediaInterface::TYPE_IMAGE);
         $media1->setCollection($collection1);
-        $media1->setType($mediaType);
         $media1->setPreviewImage($previewImageMedia);
 
         $media1File1 = new File();
@@ -206,7 +201,6 @@ class MediaTrashItemHandlerTest extends SuluTestCase
         $media1File1Version2FormatOptions2->setCropX(500);
         $media1File1Version2FormatOptions2->setCropY(750);
 
-        $this->entityManager->persist($mediaType);
         $this->entityManager->persist($previewImageMedia);
         $this->entityManager->persist($media1);
         $this->entityManager->flush();
@@ -240,7 +234,6 @@ class MediaTrashItemHandlerTest extends SuluTestCase
         static::assertCount(2, $this->entityManager->getRepository(MediaInterface::class)->findAll());
         static::assertSame($originalMediaId, $restoredMedia->getId());
         static::assertSame($collection2->getId(), $restoredMedia->getCollection()->getId());
-        static::assertSame($mediaType->getId(), $restoredMedia->getType()->getId());
         static::assertTrue($this->filesystem->exists($this->storage->getPath($file1StorageOptions)));
         static::assertTrue($this->filesystem->exists($this->storage->getPath($file2StorageOptions)));
 
@@ -354,10 +347,6 @@ class MediaTrashItemHandlerTest extends SuluTestCase
     {
         $collection1 = $this->createCollection();
 
-        $mediaType = new MediaType();
-        $mediaType->setId(2);
-        $mediaType->setName('image');
-
         $uploadedFile1 = $this->createUploadedFileImage();
         $file1StorageOptions = $this->storage->save($uploadedFile1->getPathname(), 'testStoreAndRemove-1');
         $file1TrashStorageOptions = \array_merge($file1StorageOptions, ['directory' => 'trash']);
@@ -368,7 +357,7 @@ class MediaTrashItemHandlerTest extends SuluTestCase
 
         $media1 = new Media();
         $media1->setCollection($collection1);
-        $media1->setType($mediaType);
+        $media1->setType(MediaInterface::TYPE_DOCUMENT);
 
         $media1File1 = new File();
         $media1->addFile($media1File1);
@@ -405,7 +394,6 @@ class MediaTrashItemHandlerTest extends SuluTestCase
         $media1File1Version2Meta1->setTitle('file-version-2-title-de');
         $media1File1Version2Meta1->setLocale('de');
 
-        $this->entityManager->persist($mediaType);
         $this->entityManager->persist($media1);
         $this->entityManager->flush();
 

@@ -472,12 +472,11 @@ class ExampleControllerTest extends SuluTestCase
 
         // Create media entities
         $collection = $this->createCollection(['title' => 'Test Collection', 'locale' => 'en']);
-        $mediaType = $this->createMediaType(['name' => 'Image', 'description' => 'Test Image Type']);
 
-        $media1 = $this->createMedia($collection, $mediaType, ['title' => 'Media 1', 'locale' => 'en']);
-        $media2 = $this->createMedia($collection, $mediaType, ['title' => 'Media 2', 'locale' => 'en']);
-        $media3 = $this->createMedia($collection, $mediaType, ['title' => 'Media 3', 'locale' => 'en']);
-        $media4 = $this->createMedia($collection, $mediaType, ['title' => 'Media 4', 'locale' => 'en']);
+        $media1 = $this->createMedia($collection, ['title' => 'Media 1', 'locale' => 'en']);
+        $media2 = $this->createMedia($collection, ['title' => 'Media 2', 'locale' => 'en']);
+        $media3 = $this->createMedia($collection, ['title' => 'Media 3', 'locale' => 'en']);
+        $media4 = $this->createMedia($collection, ['title' => 'Media 4', 'locale' => 'en']);
 
         self::getEntityManager()->flush();
 
@@ -602,11 +601,10 @@ class ExampleControllerTest extends SuluTestCase
         self::purgeDatabase();
 
         $collection = $this->createCollection(['title' => 'Test Collection', 'locale' => 'en']);
-        $mediaType = $this->createMediaType(['name' => 'Image', 'description' => 'Test Image Type']);
 
-        $media1 = $this->createMedia($collection, $mediaType, ['title' => 'Media 1', 'locale' => 'en']);
-        $media2 = $this->createMedia($collection, $mediaType, ['title' => 'Media 2', 'locale' => 'en']);
-        $media3 = $this->createMedia($collection, $mediaType, ['title' => 'Media 3', 'locale' => 'en']);
+        $media1 = $this->createMedia($collection, ['title' => 'Media 1', 'locale' => 'en']);
+        $media2 = $this->createMedia($collection, ['title' => 'Media 2', 'locale' => 'en']);
+        $media3 = $this->createMedia($collection, ['title' => 'Media 3', 'locale' => 'en']);
 
         self::getEntityManager()->flush();
 
@@ -779,9 +777,8 @@ class ExampleControllerTest extends SuluTestCase
         self::purgeDatabase();
 
         $collection = $this->createCollection(['title' => 'Test Collection', 'locale' => 'en']);
-        $mediaType = $this->createMediaType(['name' => 'Image', 'description' => 'Test Image Type']);
-        $media1 = $this->createMedia($collection, $mediaType, ['title' => 'Media 1', 'locale' => 'en']);
-        $media2 = $this->createMedia($collection, $mediaType, ['title' => 'Media 2', 'locale' => 'en']);
+        $media1 = $this->createMedia($collection, ['title' => 'Media 1', 'locale' => 'en']);
+        $media2 = $this->createMedia($collection, ['title' => 'Media 2', 'locale' => 'en']);
 
         self::getEntityManager()->flush();
 
@@ -892,9 +889,8 @@ class ExampleControllerTest extends SuluTestCase
         self::purgeDatabase();
 
         $collection = $this->createCollection(['title' => 'Test Collection', 'locale' => 'en']);
-        $mediaType = $this->createMediaType(['name' => 'Image', 'description' => 'Test Image Type']);
-        $media1 = $this->createMedia($collection, $mediaType, ['title' => 'Media 1', 'locale' => 'en']);
-        $media2 = $this->createMedia($collection, $mediaType, ['title' => 'Media 2', 'locale' => 'en']);
+        $media1 = $this->createMedia($collection, ['title' => 'Media 1', 'locale' => 'en']);
+        $media2 = $this->createMedia($collection, ['title' => 'Media 2', 'locale' => 'en']);
 
         self::getEntityManager()->flush();
 
@@ -962,8 +958,7 @@ class ExampleControllerTest extends SuluTestCase
         self::purgeDatabase();
 
         $collection = $this->createCollection(['title' => 'Test Collection', 'locale' => 'en']);
-        $mediaType = $this->createMediaType(['name' => 'Image', 'description' => 'Test Image Type']);
-        $media1 = $this->createMedia($collection, $mediaType, ['title' => 'Test Media', 'locale' => 'en']);
+        $media1 = $this->createMedia($collection, ['title' => 'Test Media', 'locale' => 'en']);
 
         $referencedExample1 = static::createExample([
             'en' => [

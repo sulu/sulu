@@ -20,7 +20,7 @@ use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\FileVersionMeta;
 use Sulu\Bundle\MediaBundle\Entity\Media;
-use Sulu\Bundle\MediaBundle\Entity\MediaType;
+use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Component\HttpFoundation\Response;
@@ -46,21 +46,6 @@ class MediaRedirectControllerTest extends SuluTestCase
      * @var CollectionMeta
      */
     private $collectionMeta;
-
-    /**
-     * @var MediaType
-     */
-    private $documentType;
-
-    /**
-     * @var MediaType
-     */
-    private $imageType;
-
-    /**
-     * @var MediaType
-     */
-    private $videoType;
 
     /**
      * @var CategoryInterface
@@ -183,19 +168,6 @@ class MediaRedirectControllerTest extends SuluTestCase
 
     protected function setUpMedia()
     {
-        // Create Media Type
-        $this->documentType = new MediaType();
-        $this->documentType->setName('document');
-        $this->documentType->setDescription('This is a document');
-
-        $this->imageType = new MediaType();
-        $this->imageType->setName('image');
-        $this->imageType->setDescription('This is an image');
-
-        $this->videoType = new MediaType();
-        $this->videoType->setName('video');
-        $this->videoType->setDescription('This is a video');
-
         $tagRepository = $this->getContainer()->get('sulu.repository.tag');
 
         // create some tags
@@ -207,9 +179,6 @@ class MediaRedirectControllerTest extends SuluTestCase
 
         $this->em->persist($tag1);
         $this->em->persist($tag2);
-        $this->em->persist($this->documentType);
-        $this->em->persist($this->imageType);
-        $this->em->persist($this->videoType);
 
         $this->em->flush();
     }
@@ -217,7 +186,7 @@ class MediaRedirectControllerTest extends SuluTestCase
     protected function createMedia($name, $locale = 'en-gb')
     {
         $media = new Media();
-        $media->setType($this->imageType);
+        $media->setType(MediaInterface::TYPE_IMAGE);
 
         // create file
         $file = new File();

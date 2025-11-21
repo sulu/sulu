@@ -23,7 +23,6 @@ use Sulu\Bundle\MediaBundle\Entity\FileVersionContentLanguage;
 use Sulu\Bundle\MediaBundle\Entity\FileVersionMeta;
 use Sulu\Bundle\MediaBundle\Entity\FileVersionPublishLanguage;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
-use Sulu\Bundle\MediaBundle\Entity\MediaType;
 use Sulu\Bundle\MediaBundle\Media\Exception\FileNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\FileVersionNotFoundException;
 use Sulu\Bundle\TagBundle\Tag\TagInterface;
@@ -39,24 +38,32 @@ use Webmozart\Assert\Assert;
 class Media extends ApiWrapper
 {
     /**
+     * @deprecated Use the constant on the MediaInterface
+     *
      * @var string
      */
-    public const MEDIA_TYPE_IMAGE = 'image';
+    public const MEDIA_TYPE_IMAGE = MediaInterface::TYPE_IMAGE;
 
     /**
+     * @deprecated Use the constant on the MediaInterface
+     *
      * @var string
      */
-    public const MEDIA_TYPE_VIDEO = 'video';
+    public const MEDIA_TYPE_VIDEO = MediaInterface::TYPE_VIDEO;
 
     /**
+     * @deprecated Use the constant on the MediaInterface
+     *
      * @var string
      */
-    public const MEDIA_TYPE_AUDIO = 'audio';
+    public const MEDIA_TYPE_AUDIO = MediaInterface::TYPE_AUDIO;
 
     /**
+     * @deprecated Use the constant on the MediaInterface
+     *
      * @var string
      */
-    public const MEDIA_TYPE_DOCUMENT = 'document';
+    public const MEDIA_TYPE_DOCUMENT = MediaInterface::TYPE_DOCUMENT;
 
     /**
      * @var string
@@ -441,17 +448,20 @@ class Media extends ApiWrapper
     }
 
     /**
-     * @return MediaType
+     * @return string
      */
     #[VirtualProperty]
     #[SerializedName('type')]
     public function getType()
     {
-        return $this->entity->getType();
+        /** @var MediaInterface $entity */
+        $entity = $this->entity;
+
+        return $entity->getType();
     }
 
     /**
-     * @param MediaType $type
+     * @param string $type
      *
      * @return $this
      */
@@ -469,7 +479,7 @@ class Media extends ApiWrapper
      */
     public function isTypeOf($type)
     {
-        return $this->getType()->getName() == $type;
+        return $this->getType() == $type;
     }
 
     /**
@@ -479,7 +489,7 @@ class Media extends ApiWrapper
     #[SerializedName('isImage')]
     public function isImage()
     {
-        return $this->isTypeOf(self::MEDIA_TYPE_IMAGE);
+        return $this->isTypeOf(MediaInterface::TYPE_IMAGE);
     }
 
     /**
@@ -489,7 +499,7 @@ class Media extends ApiWrapper
     #[SerializedName('isVideo')]
     public function isVideo()
     {
-        return $this->isTypeOf(self::MEDIA_TYPE_VIDEO);
+        return $this->isTypeOf(MediaInterface::TYPE_VIDEO);
     }
 
     /**
@@ -499,7 +509,7 @@ class Media extends ApiWrapper
     #[SerializedName('isAudio')]
     public function isAudio()
     {
-        return $this->isTypeOf(self::MEDIA_TYPE_AUDIO);
+        return $this->isTypeOf(MediaInterface::TYPE_AUDIO);
     }
 
     /**
@@ -509,7 +519,7 @@ class Media extends ApiWrapper
     #[SerializedName('isDocument')]
     public function isDocument()
     {
-        return $this->isTypeOf(self::MEDIA_TYPE_DOCUMENT);
+        return $this->isTypeOf(MediaInterface::TYPE_DOCUMENT);
     }
 
     /**

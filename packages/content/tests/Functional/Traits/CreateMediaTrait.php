@@ -22,7 +22,6 @@ use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\FileVersionMeta;
 use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
-use Sulu\Bundle\MediaBundle\Entity\MediaType;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
@@ -75,33 +74,14 @@ trait CreateMediaTrait
 
     /**
      * @param array{
-     *     name?: string,
-     *     description?: string,
-     * } $data
-     */
-    protected static function createMediaType(array $data): MediaType
-    {
-        $manager = self::getContainer()->get('doctrine.orm.entity_manager');
-
-        $mediaType = new MediaType();
-        $mediaType->setName($data['name'] ?? 'example');
-        $mediaType->setDescription($data['description'] ?? 'Example Media Type');
-
-        $manager->persist($mediaType);
-
-        return $mediaType;
-    }
-
-    /**
-     * @param array{
      *     title?: string,
      *     description?: string,
+     *     type ?: string,
      *     locale?: string,
      * } $data
      */
     protected static function createMedia(
         CollectionInterface $collection,
-        MediaType $mediaType,
         array $data = [],
     ): MediaInterface {
         $manager = self::getContainer()->get('doctrine.orm.entity_manager');
@@ -123,7 +103,7 @@ trait CreateMediaTrait
             ->setMedia($media);
 
         $media->addFile($file)
-            ->setType($mediaType)
+            ->setType($data['type'] ?? MediaInterface::TYPE_IMAGE)
             ->setCollection($collection);
 
         $fileVersion = new FileVersion();
