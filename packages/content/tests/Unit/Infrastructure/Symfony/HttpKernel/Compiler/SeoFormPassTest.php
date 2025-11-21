@@ -39,10 +39,6 @@ class SeoFormPassTest extends TestCase
                 'instanceOf' => SeoInterface::class,
                 'priority' => 100,
             ],
-            'content_seo_indexing' => [
-                'instanceOf' => SeoInterface::class,
-                'priority' => 50,
-            ],
         ])->shouldBeCalled();
 
         $seoFormPass = new SeoFormPass();
