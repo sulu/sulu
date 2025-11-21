@@ -36,10 +36,9 @@ class ExampleProfilerWebsiteTest extends SuluTestCase
     public function testResolveNestedResolvableResources(): void
     {
         $collection1 = self::createCollection(['title' => 'collection-1', 'locale' => 'en']);
-        $mediaType = self::createMediaType(['name' => 'Image', 'description' => 'This is an image']);
-        $media1 = self::createMedia($collection1, $mediaType, ['title' => 'media-1', 'locale' => 'en']);
-        $media2 = self::createMedia($collection1, $mediaType, ['title' => 'media-2', 'locale' => 'en']);
-        $media3 = self::createMedia($collection1, $mediaType, ['title' => 'media-3', 'locale' => 'en']);
+        $media1 = self::createMedia($collection1, ['title' => 'media-1', 'locale' => 'en']);
+        $media2 = self::createMedia($collection1, ['title' => 'media-2', 'locale' => 'en']);
+        $media3 = self::createMedia($collection1, ['title' => 'media-3', 'locale' => 'en']);
         self::getEntityManager()->flush();
 
         $innerInnerExample = static::createExample(
