@@ -20,6 +20,7 @@ use Doctrine\ORM\EntityRepository;
 use Sulu\Article\Domain\Model\ArticleDimensionContentAdditionalWebspace;
 use Sulu\Article\Domain\Model\ArticleDimensionContentInterface;
 use Sulu\Article\Domain\Model\ArticleInterface;
+use Sulu\Article\Infrastructure\Sulu\Search\Visitor\WebsiteArticleReindexProviderVisitorInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 
 /**
@@ -33,6 +34,8 @@ use Sulu\Content\Domain\Model\DimensionContentInterface;
  *     slug: string,
  *     dimensionContentId: int,
  *     authored: \DateTimeImmutable|null,
+ *     templateKey: string|null,
+ *     templateData: array<string, mixed>,
  * }
  *
  * @internal this class is internal no backwards compatibility promise is given for this class
@@ -50,8 +53,12 @@ final class WebsiteArticleReindexProvider implements ReindexProviderInterface
      */
     protected EntityRepository $additionalWebspacesRepository;
 
+    /**
+     * @param iterable<WebsiteArticleReindexProviderVisitorInterface> $visitors
+     */
     public function __construct(
         EntityManagerInterface $entityManager,
+        private iterable $visitors = [],
     ) {
         $dimensionContentRepository = $entityManager->getRepository(ArticleDimensionContentInterface::class);
         $additionalWebspacesRepository = $entityManager->getRepository(ArticleDimensionContentAdditionalWebspace::class);
@@ -90,7 +97,7 @@ final class WebsiteArticleReindexProvider implements ReindexProviderInterface
                 }
             }
 
-            yield [
+            $data = [
                 'id' => ArticleInterface::RESOURCE_KEY . '__' . ((string) $article['articleId']) . '__' . $article['locale'],
                 'resourceKey' => ArticleInterface::RESOURCE_KEY,
                 'resourceId' => (string) $article['articleId'],
@@ -98,10 +105,16 @@ final class WebsiteArticleReindexProvider implements ReindexProviderInterface
                 'webspaces' => $webspaces,
                 'title' => $article['title'],
                 'url' => $article['slug'],
-                'content' => [], // Todo: Add content.
+                'content' => [],
                 'mediaId' => '',
                 'authoredAt' => $authoredAt->format('c'),
             ];
+
+            foreach ($this->visitors as $visitor) {
+                $data = $visitor->visit($article, $data);
+            }
+
+            yield $data;
         }
     }
 
@@ -120,6 +133,8 @@ final class WebsiteArticleReindexProvider implements ReindexProviderInterface
             ->addSelect('dimensionContent.title')
             ->addSelect('dimensionContent.locale')
             ->addSelect('dimensionContent.mainWebspace')
+            ->addSelect('dimensionContent.templateKey')
+            ->addSelect('dimensionContent.templateData')
             ->addSelect('dimensionContent.id AS dimensionContentId')
             ->addSelect('route.slug')
             ->where('dimensionContent.stage = :stage')

@@ -52,6 +52,8 @@ use Sulu\Article\Infrastructure\Sulu\Reference\ArticleReferenceRefresher;
 use Sulu\Article\Infrastructure\Sulu\Route\ArticleRouteDefaultsProvider;
 use Sulu\Article\Infrastructure\Sulu\Search\AdminArticleIndexListener;
 use Sulu\Article\Infrastructure\Sulu\Search\AdminArticleReindexProvider;
+use Sulu\Article\Infrastructure\Sulu\Search\Visitor\WebsiteArticleReindexContentVisitor;
+use Sulu\Article\Infrastructure\Sulu\Search\Visitor\WebsiteArticleReindexProviderVisitorInterface;
 use Sulu\Article\Infrastructure\Sulu\Search\WebsiteArticleIndexListener;
 use Sulu\Article\Infrastructure\Sulu\Search\WebsiteArticleReindexProvider;
 use Sulu\Article\Infrastructure\Sulu\Sitemap\ArticlesSitemapProvider;
@@ -460,10 +462,21 @@ final class SuluArticleBundle extends AbstractBundle
             ->tag('kernel.event_listener', ['event' => ArticleRemovedEvent::class, 'method' => 'onArticleChanged'])
             ->tag('kernel.event_listener', ['event' => ArticleTranslationRemovedEvent::class, 'method' => 'onArticleChanged']);
 
+        $builder->registerForAutoconfiguration(WebsiteArticleReindexProviderVisitorInterface::class)
+            ->addTag('sulu_article.website_article_reindex_provider_visitor');
+
+        $services->set('sulu_article.website_article_reindex_content_visitor')
+            ->class(WebsiteArticleReindexContentVisitor::class)
+            ->args([
+                new Reference('sulu_admin.form_metadata_provider'),
+            ])
+            ->tag('sulu_article.website_article_reindex_provider_visitor');
+
         $services->set('sulu_article.website_article_reindex_provider')
             ->class(WebsiteArticleReindexProvider::class)
             ->args([
                 new Reference('doctrine.orm.entity_manager'),
+                tagged_iterator('sulu_article.website_article_reindex_provider_visitor'),
             ])
             ->tag('cmsig_seal.reindex_provider');
     }
