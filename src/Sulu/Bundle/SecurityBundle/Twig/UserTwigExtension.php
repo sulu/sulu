@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\SecurityBundle\Twig;
 
-use Doctrine\Common\Cache\Cache;
 use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\SecurityBundle\Entity\UserRepository;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;

@@ -11,8 +11,6 @@
 
 namespace Sulu\Bundle\SecurityBundle\Tests\Unit\Twig;
 
-use Doctrine\Common\Cache\Cache;
-use Doctrine\Common\Cache\Psr6\DoctrineProvider;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;

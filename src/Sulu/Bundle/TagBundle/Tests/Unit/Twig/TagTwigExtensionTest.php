@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\TagBundle\Tests\Unit\Twig;
 
-use Doctrine\Common\Cache\Psr6\DoctrineProvider;
 use JMS\Serializer\SerializationContext;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
