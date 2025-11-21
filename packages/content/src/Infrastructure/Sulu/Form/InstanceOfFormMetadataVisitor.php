@@ -35,13 +35,14 @@ class InstanceOfFormMetadataVisitor implements FormMetadataVisitorInterface
      */
     public function __construct(
         private XmlFormMetadataLoader $xmlFormMetadataLoader,
+        private string $formKey,
         private array $forms
     ) {
     }
 
     public function visitFormMetadata(FormMetadata $formMetadata, string $locale, array $metadataOptions = []): void
     {
-        if (!\array_key_exists('instanceOf', $metadataOptions)) {
+        if (!\array_key_exists('instanceOf', $metadataOptions) || $formMetadata->getKey() !== $this->formKey) {
             return;
         }
 

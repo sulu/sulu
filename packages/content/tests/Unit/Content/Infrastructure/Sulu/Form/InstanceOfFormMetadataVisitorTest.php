@@ -59,6 +59,7 @@ class InstanceOfFormMetadataVisitorTest extends TestCase
 
         $this->instanceOfFormMetadataVisitor = new InstanceOfFormMetadataVisitor(
             $this->xmlFormMetadataLoader->reveal(),
+            'content_excerpt',
             $excerptForms
         );
     }
@@ -75,7 +76,6 @@ class InstanceOfFormMetadataVisitorTest extends TestCase
 
         $this->instanceOfFormMetadataVisitor->visitFormMetadata($formMetadata, 'de', []);
 
-        // Verify nothing was added (no instanceOf in options)
         $this->assertCount(0, $formMetadata->getItems());
     }
 
@@ -91,7 +91,25 @@ class InstanceOfFormMetadataVisitorTest extends TestCase
 
         $this->instanceOfFormMetadataVisitor->visitFormMetadata($formMetadata, 'de', ['some' => 'option']);
 
-        // Verify nothing was added
+        $this->assertCount(0, $formMetadata->getItems());
+    }
+
+    public function testVisitFormMetadataWithDifferentFormKey(): void
+    {
+        $formMetadata = new FormMetadata();
+        $formMetadata->setKey('content_seo'); // Different form key
+        $formMetadata->setItems([]);
+        $formMetadata->setSchema(new SchemaMetadata());
+
+        $metadataOptions = [
+            'instanceOf' => ExcerptInterface::class,
+        ];
+
+        $this->xmlFormMetadataLoader->getMetadata(Argument::any(), Argument::any(), Argument::any())
+            ->shouldNotBeCalled();
+
+        $this->instanceOfFormMetadataVisitor->visitFormMetadata($formMetadata, 'de', $metadataOptions);
+
         $this->assertCount(0, $formMetadata->getItems());
     }
 
@@ -116,7 +134,6 @@ class InstanceOfFormMetadataVisitorTest extends TestCase
 
         $this->instanceOfFormMetadataVisitor->visitFormMetadata($formMetadata, 'de', $metadataOptions);
 
-        // Verify nothing was added (sub-forms returned null)
         $this->assertCount(0, $formMetadata->getItems());
     }
 

@@ -18,6 +18,7 @@
 
         <service id="sulu_content.excerpt_instanceof_form_metadata_visitor" class="Sulu\Content\Infrastructure\Sulu\Form\InstanceOfFormMetadataVisitor">
             <argument type="service" id="sulu_admin.xml_form_metadata_loader"/>
+            <argument>content_excerpt</argument>
             <argument>%sulu_content.content_excerpt_forms%</argument>
 
             <tag name="sulu_admin.form_metadata_visitor" priority="-10" />
