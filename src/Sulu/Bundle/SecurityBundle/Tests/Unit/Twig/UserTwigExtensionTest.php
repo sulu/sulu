@@ -52,10 +52,10 @@ class UserTwigExtensionTest extends TestCase
         $this->userRepository->findUserById(2)->willReturn($user2);
 
         $user = $this->extension->resolveUserFunction(1);
-        $this->assertEquals('hikaru', $user->getUserIdentifier());
+        $this->assertEquals('hikaru', $user?->getUserIdentifier());
 
         $user = $this->extension->resolveUserFunction(2);
-        $this->assertEquals('sulu', $user->getUserIdentifier());
+        $this->assertEquals('sulu', $user?->getUserIdentifier());
     }
 
     public function testResolveUserFunctionNonExisting(): void

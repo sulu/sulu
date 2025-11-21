@@ -51,10 +51,12 @@ class ContactTwigExtensionTest extends TestCase
         $this->contactRepository->find(2)->willReturn($contact2);
 
         $contact = $this->extension->resolveContactFunction(1);
-        $this->assertEquals('Hikaru Sulu', $contact?->getFullName());
+        $this->assertEquals('Hikaru', $contact?->getFirstName());
+        $this->assertEquals('Sulu', $contact?->getLastName());
 
         $contact = $this->extension->resolveContactFunction(2);
-        $this->assertEquals('John Cho', $contact?->getFullName());
+        $this->assertEquals('John', $contact?->getFirstName());
+        $this->assertEquals('Cho', $contact?->getLastName());
     }
 
     public function testResolveContactFunctionNonExisting(): void
