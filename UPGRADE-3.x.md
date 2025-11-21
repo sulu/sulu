@@ -393,6 +393,35 @@ ALTER TABLE cu_custom_url_route ADD CONSTRAINT FK_5927CCB8B6A2BD70 FOREIGN KEY (
 - **SEO Properties**: `canonical`, `noFollow`, and `noIndex` properties are available and applied to route defaults
 - **Self-Referencing Routes**: The `target_route_uuid` field enables history route chains (old URL → newer URL → newest URL)
 
+#### MediaBundle
+
+The media bundle removed some unused tables:
+
+```sql
+ALTER TABLE me_file_version_content_languages DROP FOREIGN KEY FK_F3FD652C911ADE33;
+ALTER TABLE me_file_version_publish_languages DROP FOREIGN KEY FK_195DAB3C911ADE33;
+DROP TABLE me_file_version_content_languages;
+DROP TABLE me_file_version_publish_languages;
+```
+
+Also the media types have been moved to the `me_media` table itself:
+
+```sql
+ALTER TABLE me_media ADD COLUMN type VARCHAR(10) DEFAULT NULL;
+UPDATE me_media m
+    JOIN me_media_types mt ON mt.id = m.idMediaTypes
+    SET m.type = mt.name;
+
+ALTER TABLE me_media DROP FOREIGN KEY FK_A694E57284671716;
+DROP TABLE me_media_types;
+DROP INDEX IDX_A694E57284671716 ON me_media;
+
+ALTER TABLE me_media MODIFY type VARCHAR(10) NOT NULL;
+ALTER TABLE me_media DROP idMediaTypes;
+
+CREATE INDEX IDX_A694E5728CDE5729 ON me_media (type);
+```
+
 ### Removed `SecurityType`
 
 Removed the `Sulu\Bundle\SecurityBundle\Entity\SecurityType` class and its fixtures. This also includes database migrations:
