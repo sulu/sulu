@@ -18,6 +18,7 @@ use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescri
 use Sulu\Component\Rest\ListBuilder\Metadata\FieldDescriptorFactoryInterface;
 use Sulu\Component\Rest\ListBuilder\PaginatedRepresentation;
 use Sulu\Component\Rest\RestHelperInterface;
+use Sulu\Component\Security\SecuredControllerInterface;
 use Sulu\Content\Application\ContentManager\ContentManagerInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Domain\Model\WorkflowInterface;
@@ -32,6 +33,7 @@ use Sulu\Snippet\Application\Message\RestoreSnippetVersionMessage;
 use Sulu\Snippet\Domain\Exception\SnippetNotFoundException;
 use Sulu\Snippet\Domain\Model\SnippetInterface;
 use Sulu\Snippet\Domain\Repository\SnippetRepositoryInterface;
+use Sulu\Snippet\Infrastructure\Sulu\Admin\SnippetAdmin;
 use Sulu\Snippet\Infrastructure\Symfony\CompilerPass\SnippetAreaCompilerPass;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -48,7 +50,7 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
  *
  * @phpstan-import-type SnippetAreaConfig from SnippetAreaCompilerPass
  */
-final class SnippetController
+final class SnippetController implements SecuredControllerInterface
 {
     use HandleTrait;
 
@@ -273,7 +275,7 @@ final class SnippetController
         );
     }
 
-    private function getLocale(Request $request): string
+    public function getLocale(Request $request): string
     {
         return $request->query->getAlnum('locale', $request->getLocale());
     }
@@ -345,5 +347,10 @@ final class SnippetController
         ]);
 
         $listBuilder->addExpression($expression);
+    }
+
+    public function getSecurityContext()
+    {
+        return SnippetAdmin::SECURITY_CONTEXT;
     }
 }

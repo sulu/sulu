@@ -21,6 +21,7 @@ use Sulu\Article\Application\Message\RestoreArticleVersionMessage;
 use Sulu\Article\Domain\Exception\ArticleNotFoundException;
 use Sulu\Article\Domain\Model\ArticleInterface;
 use Sulu\Article\Domain\Repository\ArticleRepositoryInterface;
+use Sulu\Article\Infrastructure\Sulu\Admin\ArticleAdmin;
 use Sulu\Bundle\AdminBundle\Metadata\GroupProviderInterface;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilder;
@@ -29,6 +30,7 @@ use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescri
 use Sulu\Component\Rest\ListBuilder\Metadata\FieldDescriptorFactoryInterface;
 use Sulu\Component\Rest\ListBuilder\PaginatedRepresentation;
 use Sulu\Component\Rest\RestHelperInterface;
+use Sulu\Component\Security\SecuredControllerInterface;
 use Sulu\Content\Application\ContentManager\ContentManagerInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Domain\Model\WorkflowInterface;
@@ -46,7 +48,7 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
  *           Use instead a request or response listener to
  *           extend the endpoints behaviours
  */
-final class ArticleController
+final class ArticleController implements SecuredControllerInterface
 {
     use HandleTrait;
 
@@ -272,7 +274,7 @@ final class ArticleController
         );
     }
 
-    private function getLocale(Request $request): string
+    public function getLocale(Request $request): string
     {
         return $request->query->getString('locale', $request->getLocale());
     }
@@ -317,5 +319,10 @@ final class ArticleController
         /** @see \Sulu\Article\Application\MessageHandler\ApplyWorkflowTransitionArticleMessageHandler */
         /** @var null */
         return $this->handle(new Envelope($message, [new EnableFlushStamp()]));
+    }
+
+    public function getSecurityContext()
+    {
+        return ArticleAdmin::SECURITY_CONTEXT;
     }
 }
