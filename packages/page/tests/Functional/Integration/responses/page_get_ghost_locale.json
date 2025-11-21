@@ -41,6 +41,7 @@
     "shadowOn": false,
     "stage": "draft",
     "template": null,
+    "title": null,
     "version" : 0,
     "webspace": "sulu-io",
     "workflowPlace": null

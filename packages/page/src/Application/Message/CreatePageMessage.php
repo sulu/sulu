@@ -18,10 +18,7 @@ use Webmozart\Assert\Assert;
  */
 class CreatePageMessage
 {
-    /**
-     * @var string|null
-     */
-    private $uuid;
+    private ?string $uuid = null;
 
     /**
      * @param mixed[] $data

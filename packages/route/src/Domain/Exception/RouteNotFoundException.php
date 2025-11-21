@@ -15,15 +15,12 @@ use Sulu\Route\Domain\Model\Route;
 
 class RouteNotFoundException extends \Exception
 {
-    /**
-     * @var string
-     */
-    private $model;
+    private string $model;
 
     /**
      * @var array<string, mixed>
      */
-    private $filters;
+    private array $filters;
 
     /**
      * @param array<string, mixed> $filters

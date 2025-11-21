@@ -54,7 +54,7 @@ class PageDimensionContent implements PageDimensionContentInterface
 
     protected PageInterface $page;
 
-    protected ?string $title;
+    protected ?string $title = null;
 
     /**
      * @var Collection<int, PageDimensionContentNavigationContext>

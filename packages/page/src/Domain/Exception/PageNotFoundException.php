@@ -15,15 +15,12 @@ use Sulu\Page\Domain\Model\PageInterface;
 
 class PageNotFoundException extends \Exception
 {
-    /**
-     * @var string
-     */
-    private $model;
+    private string $model;
 
     /**
      * @var array<string, mixed>
      */
-    private $filters;
+    private array $filters;
 
     /**
      * @param array<string, mixed> $filters

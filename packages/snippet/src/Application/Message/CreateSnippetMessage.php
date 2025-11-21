@@ -21,12 +21,9 @@ class CreateSnippetMessage
     /**
      * @var array<string, mixed>
      */
-    private $data;
+    private array $data;
 
-    /**
-     * @var string|null
-     */
-    private $uuid;
+    private ?string $uuid = null;
 
     /**
      * @param array<string, mixed> $data

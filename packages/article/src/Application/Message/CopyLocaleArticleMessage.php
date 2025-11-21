@@ -18,24 +18,18 @@ class CopyLocaleArticleMessage
      *     uuid?: string
      * }
      */
-    private $identifier;
+    private array $identifier;
 
-    /**
-     * @var string
-     */
-    private $sourceLocale;
+    private string $sourceLocale;
 
-    /**
-     * @var string
-     */
-    private $targetLocale;
+    private string $targetLocale;
 
     /**
      * @param array{
      *     uuid?: string
      * } $identifier
      */
-    public function __construct($identifier, string $sourceLocale, string $targetLocale)
+    public function __construct(array $identifier, string $sourceLocale, string $targetLocale)
     {
         $this->identifier = $identifier;
         $this->sourceLocale = $sourceLocale;
@@ -47,7 +41,7 @@ class CopyLocaleArticleMessage
      *     uuid?: string
      * }
      */
-    public function getIdentifier()
+    public function getIdentifier(): array
     {
         return $this->identifier;
     }

@@ -18,17 +18,11 @@ class ApplyWorkflowTransitionPageMessage
      *     uuid?: string,
      * }
      */
-    private $identifier;
+    private array $identifier;
 
-    /**
-     * @var string
-     */
-    private $locale;
+    private string $locale;
 
-    /**
-     * @var string
-     */
-    private $transitionName;
+    private string $transitionName;
 
     /**
      * @param array{

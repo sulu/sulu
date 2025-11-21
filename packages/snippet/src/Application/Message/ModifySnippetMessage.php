@@ -23,12 +23,12 @@ class ModifySnippetMessage
      *     uuid?: string
      * }
      */
-    private $identifier;
+    private array $identifier;
 
     /**
      * @var array<string, mixed>
      */
-    private $data;
+    private array $data;
 
     /**
      * @param array{
