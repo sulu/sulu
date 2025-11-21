@@ -14,6 +14,13 @@
     "created": "@datetime@",
     "creator": "@integer@",
     "description": "<p>Test Article 2</p>",
+    "excerpt": {
+        "title": "Excerpt Title 2",
+        "description": "Excerpt Description 2",
+        "more": "Excerpt More 2",
+        "icon": null,
+        "image": null
+    },
     "excerptAudienceTargetGroups": [],
     "excerptCategories": [],
     "excerptSegment": "updated-segment",
@@ -29,6 +36,12 @@
     "locale": "en",
     "published": null,
     "publishedState": false,
+    "seo": {
+        "canonicalUrl": "https://sulu.io/2",
+        "description": "Seo Description 2",
+        "keywords": "Seo Keyword 3, Seo Keyword 4",
+        "title": "Seo Title 2"
+    },
     "seoHideInSitemap": false,
     "seoNoFollow": false,
     "seoNoIndex": false,

@@ -17,19 +17,11 @@ interface SeoInterface
 {
     public function getSeoTitle(): ?string;
 
-    public function setSeoTitle(?string $seoTitle): void;
-
     public function getSeoDescription(): ?string;
-
-    public function setSeoDescription(?string $seoDescription): void;
 
     public function getSeoKeywords(): ?string;
 
-    public function setSeoKeywords(?string $seoKeywords): void;
-
     public function getSeoCanonicalUrl(): ?string;
-
-    public function setSeoCanonicalUrl(?string $seoCanonicalUrl): void;
 
     public function getSeoNoIndex(): bool;
 

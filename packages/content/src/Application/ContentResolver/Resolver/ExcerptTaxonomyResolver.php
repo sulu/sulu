@@ -138,12 +138,8 @@ readonly class ExcerptTaxonomyResolver implements ResolverInterface
         $data = [];
 
         if ($dimensionContent instanceof ExcerptInterface) {
-            $excerptData = $dimensionContent->getExcerptData();
-
             // Flatten nested structure for metadata resolver
-            $excerptFields = $excerptData['excerpt'] ?? [];
-            \assert(\is_array($excerptFields));
-            foreach ($excerptFields as $fieldName => $value) {
+            foreach ($dimensionContent->getExcerptData() as $fieldName => $value) {
                 $data['excerpt/' . $fieldName] = $value;
             }
         }

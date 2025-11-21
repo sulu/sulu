@@ -48,11 +48,13 @@ class ExcerptTaxonomyResolverTest extends TestCase
         $example->addDimensionContent($dimensionContent);
         $dimensionContent->setLocale('en');
 
-        $dimensionContent->setExcerptTitle('Sulu');
-        $dimensionContent->setExcerptDescription('Sulu is awesome');
-        $dimensionContent->setExcerptMore('Sulu is more awesome');
-        $dimensionContent->setExcerptIcon(['id' => 1]);
-        $dimensionContent->setExcerptImage(['id' => 2]);
+        $dimensionContent->setExcerptData([
+            'title' => 'Sulu',
+            'description' => 'Sulu is awesome',
+            'more' => 'Sulu is more awesome',
+            'icon' => ['id' => 1],
+            'image' => ['id' => 2],
+        ]);
 
         $formMetadata = $this->prophesize(FormMetadata::class);
         $formMetadata->getFlatFieldMetadata()
@@ -94,11 +96,13 @@ class ExcerptTaxonomyResolverTest extends TestCase
         $category2 = $this->prophesize(CategoryInterface::class);
         $category2->getId()->willReturn(2);
 
-        $dimensionContent->setExcerptTitle('Sulu');
-        $dimensionContent->setExcerptDescription('Sulu is awesome');
-        $dimensionContent->setExcerptMore('Sulu is more awesome');
-        $dimensionContent->setExcerptIcon(['id' => 3]);
-        $dimensionContent->setExcerptImage(['id' => 4]);
+        $dimensionContent->setExcerptData([
+            'title' => 'Sulu',
+            'description' => 'Sulu is awesome',
+            'more' => 'Sulu is more awesome',
+            'icon' => ['id' => 1],
+            'image' => ['id' => 2],
+        ]);
         $dimensionContent->setExcerptTags([$tag1->reveal(), $tag2->reveal()]);
         $dimensionContent->setExcerptCategories([$category1->reveal(), $category2->reveal()]);
 

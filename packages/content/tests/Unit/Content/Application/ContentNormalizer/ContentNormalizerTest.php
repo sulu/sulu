@@ -172,19 +172,24 @@ class ContentNormalizerTest extends TestCase
         $category2 = $this->prophesize(CategoryInterface::class);
         $category2->getId()->willReturn(4);
 
-        $object->setSeoTitle('Seo Title');
-        $object->setSeoDescription('Seo Description');
-        $object->setSeoKeywords('Seo Keyword 1, Seo Keyword 2');
-        $object->setSeoCanonicalUrl('https://caninical.localhost/');
+        $object->setSeoData([
+            'title' => 'Seo Title',
+            'description' => 'Seo Description',
+            'keywords' => 'Seo Keyword 1, Seo Keyword 2',
+            'canonicalUrl' => 'https://caninical.localhost/',
+        ]);
+
         $object->setSeoNoIndex(true);
         $object->setSeoNoFollow(true);
         $object->setSeoHideInSitemap(true);
 
-        $object->setExcerptTitle('Excerpt Title');
-        $object->setExcerptDescription('Excerpt Description');
-        $object->setExcerptMore('Excerpt More');
-        $object->setExcerptImage(['id' => 8]);
-        $object->setExcerptIcon(['id' => 9]);
+        $object->setExcerptData([
+            'title' => 'Excerpt Title',
+            'description' => 'Excerpt Description',
+            'more' => 'Excerpt More',
+            'image' => ['id' => 8],
+            'icon' => ['id' => 9],
+        ]);
         $object->setExcerptTags([$tag1->reveal(), $tag2->reveal()]);
         $object->setExcerptCategories([$category1->reveal(), $category2->reveal()]);
 

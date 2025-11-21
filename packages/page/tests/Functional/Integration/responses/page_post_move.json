@@ -21,6 +21,13 @@
     "created": "@datetime@",
     "creator": "@integer@",
     "description" : null,
+    "excerpt": {
+        "title": "Excerpt Title",
+        "description": "Excerpt Description",
+        "more": "Excerpt More",
+        "icon": null,
+        "media": null
+    },
     "excerptCategories" : [ ],
     "excerptTags" : [ "Tag 1", "Tag 2" ],
     "excerptAudienceTargetGroups" : [ "@integer@", "@integer@" ],
@@ -35,6 +42,12 @@
     "parentUuid" : "@uuid@",
     "published" : null,
     "publishedState" : false,
+    "seo": {
+        "title": "Seo Title",
+        "description": "Seo Description",
+        "keywords": "Seo Keyword 1, Seo Keyword 2",
+        "canonicalUrl": "https://sulu.io/"
+    },
     "seoHideInSitemap" : true,
     "seoNoFollow" : true,
     "seoNoIndex" : true,

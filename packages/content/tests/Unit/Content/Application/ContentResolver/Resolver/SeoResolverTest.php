@@ -46,10 +46,12 @@ class SeoResolverTest extends TestCase
         $example->addDimensionContent($dimensionContent);
         $dimensionContent->setLocale('en');
 
-        $dimensionContent->setSeoTitle('Sulu');
-        $dimensionContent->setSeoDescription('Sulu is awesome');
-        $dimensionContent->setSeoKeywords('Sulu, awesome');
-        $dimensionContent->setSeoCanonicalUrl('https://sulu.io');
+        $dimensionContent->setSeoData([
+            'title' => 'Sulu',
+            'description' => 'Sulu is awesome',
+            'keywords' => 'Sulu, awesome',
+            'canonicalUrl' => 'https://sulu.io',
+        ]);
         $dimensionContent->setSeoNoIndex(true);
         $dimensionContent->setSeoNoFollow(true);
         $dimensionContent->setSeoHideInSitemap(true);

@@ -24,8 +24,8 @@ class ExcerptNormalizer implements NormalizerInterface
         }
 
         $excerptData = $object->getExcerptData();
-        if (isset($excerptData['excerpt'])) {
-            $normalizedData['excerpt'] = $excerptData['excerpt'];
+        if ([] !== $excerptData) {
+            $normalizedData['excerpt'] = $excerptData;
         }
 
         return $normalizedData;

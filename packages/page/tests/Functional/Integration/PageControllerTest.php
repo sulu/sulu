@@ -249,13 +249,15 @@ class PageControllerTest extends SuluTestCase
         $targetGroupIds = $this->createTargetGroups();
 
         $excerptData = [
-            'excerptTitle' => 'Modified Excerpt Title',
-            'excerptDescription' => 'Modified Excerpt Description',
-            'excerptMore' => 'Modified Excerpt More',
+            'excerpt' => [
+                'title' => 'Modified Excerpt Title',
+                'description' => 'Modified Excerpt Description',
+                'more' => 'Modified Excerpt More',
+                'icon' => null,
+                'media' => null,
+            ],
             'excerptTags' => ['Modified Tag 1', 'Modified Tag 2'],
             'excerptCategories' => [],
-            'excerptIcon' => null,
-            'excerptMedia' => null,
             'excerptSegment' => 'enterprise-segment',
         ];
 
@@ -277,10 +279,12 @@ class PageControllerTest extends SuluTestCase
                     'url' => '/my-page',
                     'description' => 'modified version',
                     'image' => null,
-                    'seoTitle' => 'Modified Seo Title',
-                    'seoDescription' => 'Modified Seo Description',
-                    'seoCanonicalUrl' => 'https://modified-sulu.io/',
-                    'seoKeywords' => 'Modified Seo Keyword 1, Modified Seo Keyword 2',
+                    'seo' => [
+                        'title' => 'Modified Seo Title',
+                        'description' => 'Modified Seo Description',
+                        'canonicalUrl' => 'https://modified-sulu.io/',
+                        'keywords' => 'Modified Seo Keyword 1, Modified Seo Keyword 2',
+                    ],
                     'seoNoIndex' => true,
                     'seoNoFollow' => true,
                     'seoHideInSitemap' => true,
@@ -646,13 +650,15 @@ class PageControllerTest extends SuluTestCase
         $targetGroupIds = $this->createTargetGroups();
 
         $excerptData = [
-            'excerptTitle' => 'Excerpt Title',
-            'excerptDescription' => 'Excerpt Description',
-            'excerptMore' => 'Excerpt More',
+            'excerpt' => [
+                'title' => 'Excerpt Title',
+                'description' => 'Excerpt Description',
+                'more' => 'Excerpt More',
+                'icon' => null,
+                'media' => null,
+            ],
             'excerptTags' => ['Tag 1', 'Tag 2'],
             'excerptCategories' => [],
-            'excerptIcon' => null,
-            'excerptMedia' => null,
             'excerptSegment' => 'copy-segment',
         ];
 
@@ -676,10 +682,12 @@ class PageControllerTest extends SuluTestCase
                     'images' => null,
                     'lastModified' => '2022-05-08T00:00:00+00:00',
                     'lastModifiedEnabled' => true,
-                    'seoTitle' => 'Seo Title',
-                    'seoDescription' => 'Seo Description',
-                    'seoCanonicalUrl' => 'https://sulu.io/',
-                    'seoKeywords' => 'Seo Keyword 1, Seo Keyword 2',
+                    'seo' => [
+                        'title' => 'Seo Title',
+                        'description' => 'Seo Description',
+                        'canonicalUrl' => 'https://sulu.io/',
+                        'keywords' => 'Seo Keyword 1, Seo Keyword 2',
+                    ],
                     'seoNoIndex' => true,
                     'seoNoFollow' => true,
                     'seoHideInSitemap' => true,

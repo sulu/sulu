@@ -28,82 +28,30 @@ trait SeoTrait
 
     public function getSeoTitle(): ?string
     {
-        $seo = $this->seoData['seo'] ?? null;
-        if (!\is_array($seo)) {
-            return null;
-        }
-
-        $value = $seo['title'] ?? null;
+        $value = $this->seoData['title'] ?? null;
 
         return \is_string($value) ? $value : null;
-    }
-
-    public function setSeoTitle(?string $seoTitle): void
-    {
-        if (!isset($this->seoData['seo']) || !\is_array($this->seoData['seo'])) {
-            $this->seoData['seo'] = [];
-        }
-        $this->seoData['seo']['title'] = $seoTitle;
     }
 
     public function getSeoDescription(): ?string
     {
-        $seo = $this->seoData['seo'] ?? null;
-        if (!\is_array($seo)) {
-            return null;
-        }
-
-        $value = $seo['description'] ?? null;
+        $value = $this->seoData['description'] ?? null;
 
         return \is_string($value) ? $value : null;
-    }
-
-    public function setSeoDescription(?string $seoDescription): void
-    {
-        if (!isset($this->seoData['seo']) || !\is_array($this->seoData['seo'])) {
-            $this->seoData['seo'] = [];
-        }
-        $this->seoData['seo']['description'] = $seoDescription;
     }
 
     public function getSeoKeywords(): ?string
     {
-        $seo = $this->seoData['seo'] ?? null;
-        if (!\is_array($seo)) {
-            return null;
-        }
-
-        $value = $seo['keywords'] ?? null;
+        $value = $this->seoData['keywords'] ?? null;
 
         return \is_string($value) ? $value : null;
-    }
-
-    public function setSeoKeywords(?string $seoKeywords): void
-    {
-        if (!isset($this->seoData['seo']) || !\is_array($this->seoData['seo'])) {
-            $this->seoData['seo'] = [];
-        }
-        $this->seoData['seo']['keywords'] = $seoKeywords;
     }
 
     public function getSeoCanonicalUrl(): ?string
     {
-        $seo = $this->seoData['seo'] ?? null;
-        if (!\is_array($seo)) {
-            return null;
-        }
-
-        $value = $seo['canonicalUrl'] ?? null;
+        $value = $this->seoData['canonicalUrl'] ?? null;
 
         return \is_string($value) ? $value : null;
-    }
-
-    public function setSeoCanonicalUrl(?string $seoCanonicalUrl): void
-    {
-        if (!isset($this->seoData['seo']) || !\is_array($this->seoData['seo'])) {
-            $this->seoData['seo'] = [];
-        }
-        $this->seoData['seo']['canonicalUrl'] = $seoCanonicalUrl;
     }
 
     public function getSeoNoIndex(): bool

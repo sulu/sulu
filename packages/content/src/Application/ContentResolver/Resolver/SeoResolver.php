@@ -140,13 +140,9 @@ readonly class SeoResolver implements ResolverInterface
      */
     protected function getSeoData(SeoInterface $dimensionContent): array
     {
-        $seoData = $dimensionContent->getSeoData();
         $data = [];
 
-        // Flatten nested structure for metadata resolver
-        $seoFields = $seoData['seo'] ?? [];
-        \assert(\is_array($seoFields));
-        foreach ($seoFields as $fieldName => $value) {
+        foreach ($dimensionContent->getSeoData() as $fieldName => $value) {
             $data['seo/' . $fieldName] = $value;
         }
 

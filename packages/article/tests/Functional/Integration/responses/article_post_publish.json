@@ -14,6 +14,13 @@
     "creator": "@integer@",
     "customizeWebspaceSettings": false,
     "description": null,
+    "excerpt": {
+        "title": "Excerpt Title",
+        "description": "Excerpt Description",
+        "more": "Excerpt More",
+        "icon": null,
+        "image": null
+    },
     "excerptAudienceTargetGroups": [],
     "excerptCategories": [],
     "excerptSegment": "test-segment",
@@ -29,6 +36,12 @@
     "locale": "en",
     "published": "@string@.isDateTime()",
     "publishedState": true,
+    "seo": {
+        "canonicalUrl": "https://sulu.io/",
+        "description": "Seo Description",
+        "keywords": "Seo Keyword 1, Seo Keyword 2",
+        "title": "Seo Title"
+    },
     "seoHideInSitemap": true,
     "seoNoFollow": true,
     "seoNoIndex": true,

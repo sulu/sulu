@@ -17,6 +17,7 @@ use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Domain\Model\ExcerptInterface;
+use Webmozart\Assert\Assert;
 
 readonly class ExcerptDataMapper implements DataMapperInterface
 {
@@ -34,24 +35,12 @@ readonly class ExcerptDataMapper implements DataMapperInterface
             return;
         }
 
-        $excerptData = $localizedDimensionContent->getExcerptData();
-        $validExcerptProperties = $this->getExcerptProperties($localizedDimensionContent);
+        if (\array_key_exists('excerpt', $data)) {
+            $validExcerptProperties = $this->getExcerptProperties($localizedDimensionContent); // add support of unlocalized excerpt data in future
 
-        if (isset($data['excerpt']) && \is_array($data['excerpt'])) {
-            $excerptData['excerpt'] ??= [];
-            \assert(\is_array($excerptData['excerpt']));
-
-            foreach ($data['excerpt'] as $fieldName => $value) {
-                $propertyKey = 'excerpt/' . $fieldName;
-
-                // Only store if the property is defined in the form metadata
-                if (\array_key_exists($propertyKey, $validExcerptProperties)) {
-                    $excerptData['excerpt'][$fieldName] = $value;
-                }
-            }
+            Assert::isArray($data['excerpt']);
+            $localizedDimensionContent->setExcerptData($data['excerpt']);
         }
-
-        $localizedDimensionContent->setExcerptData($excerptData);
     }
 
     /**

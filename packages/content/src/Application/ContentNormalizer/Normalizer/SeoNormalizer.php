@@ -24,8 +24,8 @@ class SeoNormalizer implements NormalizerInterface
         }
 
         $seoData = $object->getSeoData();
-        if (isset($seoData['seo'])) {
-            $normalizedData['seo'] = $seoData['seo'];
+        if ([] !== $seoData) {
+            $normalizedData['seo'] = $seoData;
         }
 
         // Add boolean fields (they have dedicated columns, not in nested structure)

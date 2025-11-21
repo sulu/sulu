@@ -17,15 +17,9 @@ interface ExcerptInterface
 {
     public function getExcerptTitle(): ?string;
 
-    public function setExcerptTitle(?string $excerptTitle): void;
-
     public function getExcerptMore(): ?string;
 
-    public function setExcerptMore(?string $excerptMore): void;
-
     public function getExcerptDescription(): ?string;
-
-    public function setExcerptDescription(?string $excerptDescription): void;
 
     /**
      * @return array{id: int}|null
@@ -33,19 +27,9 @@ interface ExcerptInterface
     public function getExcerptImage(): ?array;
 
     /**
-     * @param array{id?: int}|null $excerptImage
-     */
-    public function setExcerptImage(?array $excerptImage): void;
-
-    /**
      * @return array{id: int}|null
      */
     public function getExcerptIcon(): ?array;
-
-    /**
-     * @param array{id?: int}|null $excerptIcon
-     */
-    public function setExcerptIcon(?array $excerptIcon): void;
 
     /**
      * @return array<string, mixed>
