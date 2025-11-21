@@ -13,6 +13,8 @@ namespace Sulu\Bundle\AdminBundle\Metadata\FormMetadata;
 
 class TagMetadata
 {
+    public const SEARCH_FIELD_TAG = 'sulu.search.field';
+
     /**
      * @var string
      */

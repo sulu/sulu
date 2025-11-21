@@ -20,7 +20,7 @@ use Doctrine\ORM\EntityRepository;
 use Sulu\Article\Domain\Model\ArticleDimensionContentAdditionalWebspace;
 use Sulu\Article\Domain\Model\ArticleDimensionContentInterface;
 use Sulu\Article\Domain\Model\ArticleInterface;
-use Sulu\Article\Infrastructure\Sulu\Search\Visitor\WebsiteArticleReindexProviderVisitorInterface;
+use Sulu\Article\Infrastructure\Sulu\Search\Visitor\WebsiteArticleReindexProviderEnhancerInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 
 /**
@@ -34,8 +34,6 @@ use Sulu\Content\Domain\Model\DimensionContentInterface;
  *     slug: string,
  *     dimensionContentId: int,
  *     authored: \DateTimeImmutable|null,
- *     templateKey: string|null,
- *     templateData: array<string, mixed>,
  * }
  *
  * @internal this class is internal no backwards compatibility promise is given for this class
@@ -54,11 +52,11 @@ final class WebsiteArticleReindexProvider implements ReindexProviderInterface
     protected EntityRepository $additionalWebspacesRepository;
 
     /**
-     * @param iterable<WebsiteArticleReindexProviderVisitorInterface> $visitors
+     * @param iterable<WebsiteArticleReindexProviderEnhancerInterface> $enhancers
      */
     public function __construct(
         EntityManagerInterface $entityManager,
-        private iterable $visitors = [],
+        private iterable $enhancers = [],
     ) {
         $dimensionContentRepository = $entityManager->getRepository(ArticleDimensionContentInterface::class);
         $additionalWebspacesRepository = $entityManager->getRepository(ArticleDimensionContentAdditionalWebspace::class);
@@ -110,8 +108,8 @@ final class WebsiteArticleReindexProvider implements ReindexProviderInterface
                 'authoredAt' => $authoredAt->format('c'),
             ];
 
-            foreach ($this->visitors as $visitor) {
-                $data = $visitor->visit($article, $data);
+            foreach ($this->enhancers as $enhancer) {
+                $data = $enhancer->enhanceDocument($article, $data);
             }
 
             yield $data;
@@ -133,8 +131,6 @@ final class WebsiteArticleReindexProvider implements ReindexProviderInterface
             ->addSelect('dimensionContent.title')
             ->addSelect('dimensionContent.locale')
             ->addSelect('dimensionContent.mainWebspace')
-            ->addSelect('dimensionContent.templateKey')
-            ->addSelect('dimensionContent.templateData')
             ->addSelect('dimensionContent.id AS dimensionContentId')
             ->addSelect('route.slug')
             ->where('dimensionContent.stage = :stage')
@@ -172,6 +168,10 @@ final class WebsiteArticleReindexProvider implements ReindexProviderInterface
         }
 
         $qb->setParameters($parameters);
+
+        foreach ($this->enhancers as $enhancer) {
+            $enhancer->enhanceQuery($qb);
+        }
 
         /** @var iterable<Article> */
         return $qb->getQuery()->toIterable();

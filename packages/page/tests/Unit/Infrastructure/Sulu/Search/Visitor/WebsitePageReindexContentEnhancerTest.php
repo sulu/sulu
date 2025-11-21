@@ -11,21 +11,22 @@ declare(strict_types=1);
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Article\Tests\Unit\Infrastructure\Sulu\Search\Visitor;
+namespace Sulu\Page\Tests\Unit\Infrastructure\Sulu\Search\Visitor;
 
+use Doctrine\ORM\QueryBuilder;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
-use Sulu\Article\Infrastructure\Sulu\Search\Visitor\WebsiteArticleReindexContentVisitor;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadataProvider;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TagMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
+use Sulu\Page\Infrastructure\Sulu\Search\Visitor\WebsitePageReindexContentEnhancer;
 
-class WebsiteArticleReindexContentVisitorTest extends TestCase
+class WebsitePageReindexContentEnhancerTest extends TestCase
 {
     use ProphecyTrait;
 
@@ -34,12 +35,21 @@ class WebsiteArticleReindexContentVisitorTest extends TestCase
      */
     private ObjectProphecy $formMetadataProvider;
 
-    private WebsiteArticleReindexContentVisitor $visitor;
+    private WebsitePageReindexContentEnhancer $enhancer;
 
     protected function setUp(): void
     {
         $this->formMetadataProvider = $this->prophesize(FormMetadataProvider::class);
-        $this->visitor = new WebsiteArticleReindexContentVisitor($this->formMetadataProvider->reveal());
+        $this->enhancer = new WebsitePageReindexContentEnhancer($this->formMetadataProvider->reveal());
+    }
+
+    public function testEnhanceQueryAddsTemplateFields(): void
+    {
+        $queryBuilder = $this->prophesize(QueryBuilder::class);
+        $queryBuilder->addSelect('dimensionContent.templateKey')->willReturn($queryBuilder)->shouldBeCalled();
+        $queryBuilder->addSelect('dimensionContent.templateData')->willReturn($queryBuilder)->shouldBeCalled();
+
+        $this->enhancer->enhanceQuery($queryBuilder->reveal());
     }
 
     public function testVisitWithoutTemplateKey(): void
@@ -51,7 +61,7 @@ class WebsiteArticleReindexContentVisitorTest extends TestCase
 
         $data = ['content' => []];
 
-        $returnedData = $this->visitor->visit($result, $data);
+        $returnedData = $this->enhancer->enhanceDocument($result, $data);
 
         $this->assertSame($data, $returnedData);
         $this->formMetadataProvider->getMetadata(Argument::cetera())->shouldNotHaveBeenCalled();
@@ -66,7 +76,7 @@ class WebsiteArticleReindexContentVisitorTest extends TestCase
 
         $data = ['content' => []];
 
-        $returnedData = $this->visitor->visit($result, $data);
+        $returnedData = $this->enhancer->enhanceDocument($result, $data);
 
         $this->assertSame($data, $returnedData);
         $this->formMetadataProvider->getMetadata(Argument::cetera())->shouldNotHaveBeenCalled();
@@ -82,7 +92,7 @@ class WebsiteArticleReindexContentVisitorTest extends TestCase
 
         $data = ['content' => []];
 
-        $returnedData = $this->visitor->visit($result, $data);
+        $returnedData = $this->enhancer->enhanceDocument($result, $data);
 
         $this->assertSame($data, $returnedData);
         $this->formMetadataProvider->getMetadata(Argument::cetera())->shouldNotHaveBeenCalled();
@@ -92,11 +102,11 @@ class WebsiteArticleReindexContentVisitorTest extends TestCase
     {
         $titleField = new FieldMetadata('title');
         $titleField->setType('text_line');
-        $titleField->addTag($this->createTag('sulu.search.field'));
+        $titleField->addTag($this->createTag(TagMetadata::SEARCH_FIELD_TAG));
 
         $descriptionField = new FieldMetadata('description');
         $descriptionField->setType('text_area');
-        $descriptionField->addTag($this->createTag('sulu.search.field'));
+        $descriptionField->addTag($this->createTag(TagMetadata::SEARCH_FIELD_TAG));
 
         $urlField = new FieldMetadata('url');
         $urlField->setType('text_line');
@@ -110,7 +120,7 @@ class WebsiteArticleReindexContentVisitorTest extends TestCase
         $typedFormMetadata = new TypedFormMetadata();
         $typedFormMetadata->addForm('default', $formMetadata);
 
-        $this->formMetadataProvider->getMetadata('article', 'en')
+        $this->formMetadataProvider->getMetadata('page', 'en')
             ->willReturn($typedFormMetadata)
             ->shouldBeCalledOnce();
 
@@ -126,7 +136,7 @@ class WebsiteArticleReindexContentVisitorTest extends TestCase
 
         $data = ['content' => []];
 
-        $returnedData = $this->visitor->visit($result, $data);
+        $returnedData = $this->enhancer->enhanceDocument($result, $data);
 
         $this->assertSame(['Test Title', 'Test Description'], $returnedData['content']);
     }
@@ -135,7 +145,7 @@ class WebsiteArticleReindexContentVisitorTest extends TestCase
     {
         $textField = new FieldMetadata('text');
         $textField->setType('text_editor');
-        $textField->addTag($this->createTag('sulu.search.field'));
+        $textField->addTag($this->createTag(TagMetadata::SEARCH_FIELD_TAG));
 
         $formMetadata = new FormMetadata();
         $formMetadata->setKey('default');
@@ -144,7 +154,7 @@ class WebsiteArticleReindexContentVisitorTest extends TestCase
         $typedFormMetadata = new TypedFormMetadata();
         $typedFormMetadata->addForm('default', $formMetadata);
 
-        $this->formMetadataProvider->getMetadata('article', 'en')
+        $this->formMetadataProvider->getMetadata('page', 'en')
             ->willReturn($typedFormMetadata)
             ->shouldBeCalledOnce();
 
@@ -158,7 +168,7 @@ class WebsiteArticleReindexContentVisitorTest extends TestCase
 
         $data = ['content' => []];
 
-        $returnedData = $this->visitor->visit($result, $data);
+        $returnedData = $this->enhancer->enhanceDocument($result, $data);
 
         $this->assertSame(['Hello world'], $returnedData['content']);
     }
@@ -167,23 +177,23 @@ class WebsiteArticleReindexContentVisitorTest extends TestCase
     {
         $titleField = new FieldMetadata('title');
         $titleField->setType('text_line');
-        $titleField->addTag($this->createTag('sulu.search.field'));
+        $titleField->addTag($this->createTag(TagMetadata::SEARCH_FIELD_TAG));
 
         $mediaField = new FieldMetadata('media');
         $mediaField->setType('media_selection');
-        $mediaField->addTag($this->createTag('sulu.search.field'));
+        $mediaField->addTag($this->createTag(TagMetadata::SEARCH_FIELD_TAG));
 
         $selectField = new FieldMetadata('category');
         $selectField->setType('single_select');
-        $selectField->addTag($this->createTag('sulu.search.field'));
+        $selectField->addTag($this->createTag(TagMetadata::SEARCH_FIELD_TAG));
 
         $checkboxField = new FieldMetadata('featured');
         $checkboxField->setType('checkbox');
-        $checkboxField->addTag($this->createTag('sulu.search.field'));
+        $checkboxField->addTag($this->createTag(TagMetadata::SEARCH_FIELD_TAG));
 
         $dateField = new FieldMetadata('published');
         $dateField->setType('date');
-        $dateField->addTag($this->createTag('sulu.search.field'));
+        $dateField->addTag($this->createTag(TagMetadata::SEARCH_FIELD_TAG));
 
         $formMetadata = new FormMetadata();
         $formMetadata->setKey('default');
@@ -196,7 +206,7 @@ class WebsiteArticleReindexContentVisitorTest extends TestCase
         $typedFormMetadata = new TypedFormMetadata();
         $typedFormMetadata->addForm('default', $formMetadata);
 
-        $this->formMetadataProvider->getMetadata('article', 'en')
+        $this->formMetadataProvider->getMetadata('page', 'en')
             ->willReturn($typedFormMetadata)
             ->shouldBeCalledOnce();
 
@@ -214,7 +224,7 @@ class WebsiteArticleReindexContentVisitorTest extends TestCase
 
         $data = ['content' => []];
 
-        $returnedData = $this->visitor->visit($result, $data);
+        $returnedData = $this->enhancer->enhanceDocument($result, $data);
 
         $this->assertSame(['Test Title'], $returnedData['content']);
     }
@@ -231,7 +241,7 @@ class WebsiteArticleReindexContentVisitorTest extends TestCase
         $typedFormMetadata = new TypedFormMetadata();
         $typedFormMetadata->addForm('default', $formMetadata);
 
-        $this->formMetadataProvider->getMetadata('article', 'en')
+        $this->formMetadataProvider->getMetadata('page', 'en')
             ->willReturn($typedFormMetadata)
             ->shouldBeCalledOnce();
 
@@ -243,7 +253,7 @@ class WebsiteArticleReindexContentVisitorTest extends TestCase
 
         $data = ['content' => []];
 
-        $returnedData = $this->visitor->visit($result, $data);
+        $returnedData = $this->enhancer->enhanceDocument($result, $data);
 
         $this->assertSame($expectedContent, $returnedData['content'], 'Failed for scenario: ' . $scenario);
     }
@@ -256,7 +266,7 @@ class WebsiteArticleReindexContentVisitorTest extends TestCase
         return [
             'single block with one item' => [
                 [
-                    'title' => 'Article Title',
+                    'title' => 'Page Title',
                     'blocks' => [
                         [
                             'type' => 'text',
@@ -264,12 +274,12 @@ class WebsiteArticleReindexContentVisitorTest extends TestCase
                         ],
                     ],
                 ],
-                ['Article Title', 'First block text'],
+                ['Page Title', 'First block text'],
                 'single block with one item',
             ],
             'single block with multiple items' => [
                 [
-                    'title' => 'Article Title',
+                    'title' => 'Page Title',
                     'blocks' => [
                         [
                             'type' => 'text',
@@ -285,12 +295,12 @@ class WebsiteArticleReindexContentVisitorTest extends TestCase
                         ],
                     ],
                 ],
-                ['Article Title', 'First block', 'Second block', 'Third block'],
+                ['Page Title', 'First block', 'Second block', 'Third block'],
                 'single block with multiple items',
             ],
             'blocks with HTML content' => [
                 [
-                    'title' => 'Article Title',
+                    'title' => 'Page Title',
                     'blocks' => [
                         [
                             'type' => 'text',
@@ -302,20 +312,20 @@ class WebsiteArticleReindexContentVisitorTest extends TestCase
                         ],
                     ],
                 ],
-                ['Article Title', 'Block with HTML', 'Another formatted text'],
+                ['Page Title', 'Block with HTML', 'Another formatted text'],
                 'blocks with HTML content',
             ],
             'empty block array' => [
                 [
-                    'title' => 'Article Title',
+                    'title' => 'Page Title',
                     'blocks' => [],
                 ],
-                ['Article Title'],
+                ['Page Title'],
                 'empty block array',
             ],
             'block with non-searchable fields' => [
                 [
-                    'title' => 'Article Title',
+                    'title' => 'Page Title',
                     'blocks' => [
                         [
                             'type' => 'text',
@@ -324,12 +334,12 @@ class WebsiteArticleReindexContentVisitorTest extends TestCase
                         ],
                     ],
                 ],
-                ['Article Title', 'Searchable text'],
+                ['Page Title', 'Searchable text'],
                 'block with non-searchable fields',
             ],
             'nested blocks (2 levels)' => [
                 [
-                    'title' => 'Article Title',
+                    'title' => 'Page Title',
                     'blocks' => [
                         [
                             'type' => 'wrapper',
@@ -342,12 +352,12 @@ class WebsiteArticleReindexContentVisitorTest extends TestCase
                         ],
                     ],
                 ],
-                ['Article Title', 'Nested text content'],
+                ['Page Title', 'Nested text content'],
                 'nested blocks (2 levels)',
             ],
             'deeply nested blocks (3 levels)' => [
                 [
-                    'title' => 'Article Title',
+                    'title' => 'Page Title',
                     'blocks' => [
                         [
                             'type' => 'wrapper',
@@ -365,12 +375,12 @@ class WebsiteArticleReindexContentVisitorTest extends TestCase
                         ],
                     ],
                 ],
-                ['Article Title', 'Deeply nested text'],
+                ['Page Title', 'Deeply nested text'],
                 'deeply nested blocks (3 levels)',
             ],
             'multiple nested blocks in list' => [
                 [
-                    'title' => 'Article Title',
+                    'title' => 'Page Title',
                     'blocks' => [
                         [
                             'type' => 'wrapper',
@@ -396,7 +406,7 @@ class WebsiteArticleReindexContentVisitorTest extends TestCase
                         ],
                     ],
                 ],
-                ['Article Title', 'First nested', 'Second nested', 'Third nested'],
+                ['Page Title', 'First nested', 'Second nested', 'Third nested'],
                 'multiple nested blocks in list',
             ],
         ];
@@ -406,11 +416,11 @@ class WebsiteArticleReindexContentVisitorTest extends TestCase
     {
         $titleField = new FieldMetadata('title');
         $titleField->setType('text_line');
-        $titleField->addTag($this->createTag('sulu.search.field'));
+        $titleField->addTag($this->createTag(TagMetadata::SEARCH_FIELD_TAG));
 
         $textField = new FieldMetadata('text');
         $textField->setType('text_editor');
-        $textField->addTag($this->createTag('sulu.search.field'));
+        $textField->addTag($this->createTag(TagMetadata::SEARCH_FIELD_TAG));
 
         $settingsField = new FieldMetadata('settings');
         $settingsField->setType('text_line');

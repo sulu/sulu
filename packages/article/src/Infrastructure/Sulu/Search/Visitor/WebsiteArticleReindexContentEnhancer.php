@@ -11,21 +11,23 @@ declare(strict_types=1);
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Page\Infrastructure\Sulu\Search\Visitor;
+namespace Sulu\Article\Infrastructure\Sulu\Search\Visitor;
 
+use Doctrine\ORM\QueryBuilder;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadataProvider;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\ItemMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TagMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
 
 /**
- * @internal if you need to override this service, create a new service based on the WebsitePageReindexProviderVisitorInterface
+ * @internal if you need to override this service, create a new service based on the WebsiteArticleReindexProviderEnhancerInterface
  * instead of extending this class
  *
  * @final
  */
-class WebsitePageReindexContentVisitor implements WebsitePageReindexProviderVisitorInterface
+class WebsiteArticleReindexContentEnhancer implements WebsiteArticleReindexProviderEnhancerInterface
 {
     private const SUPPORTED_FIELD_TYPES = [
         'text_line',
@@ -38,36 +40,43 @@ class WebsitePageReindexContentVisitor implements WebsitePageReindexProviderVisi
     ) {
     }
 
-    public function visit(array $result, array $data): array
+    public function enhanceQuery(QueryBuilder $queryBuilder): void
     {
-        $templateKey = $result['templateKey'] ?? null;
-        $locale = $result['locale'] ?? null;
-        $templateData = $result['templateData'] ?? [];
-        $data['content'] = [];
+        $queryBuilder
+            ->addSelect('dimensionContent.templateKey')
+            ->addSelect('dimensionContent.templateData');
+    }
+
+    public function enhanceDocument(array $queryResult, array $document): array
+    {
+        $templateKey = $queryResult['templateKey'] ?? null;
+        $locale = $queryResult['locale'] ?? null;
+        $templateData = $queryResult['templateData'] ?? [];
+        $document['content'] = [];
 
         if (!\is_string($templateKey) || !\is_string($locale) || !\is_array($templateData) || 0 === \count($templateData)) {
-            return $data;
+            return $document;
         }
 
         /** @var array<string, mixed> $templateData */
         $metadata = $this->getTemplateFormMetadata($templateKey, $locale);
         if (!$metadata) {
-            return $data;
+            return $document;
         }
 
         $searchableFields = [];
         $this->collectSearchableFields($metadata->getFlatFieldMetadata(), $searchableFields);
         $content = $this->extractContent($templateData, $searchableFields);
 
-        $data['content'] = $content;
+        $document['content'] = $content;
 
-        return $data;
+        return $document;
     }
 
     private function getTemplateFormMetadata(string $templateKey, string $locale): ?FormMetadata
     {
         /** @var TypedFormMetadata $formMetadata */
-        $formMetadata = $this->formMetadataProvider->getMetadata('page', $locale);
+        $formMetadata = $this->formMetadataProvider->getMetadata('article', $locale);
         /** @var array<string, FormMetadata> $forms */
         $forms = $formMetadata->getForms();
 
@@ -87,7 +96,7 @@ class WebsitePageReindexContentVisitor implements WebsitePageReindexProviderVisi
 
             $hasSearchTag = false;
             foreach ($item->getTags() as $tag) {
-                if ('sulu.search.field' === $tag->getName()) {
+                if (TagMetadata::SEARCH_FIELD_TAG === $tag->getName()) {
                     $hasSearchTag = true;
                     break;
                 }
