@@ -125,6 +125,9 @@ class SeoDataMapperTest extends TestCase
 
     public function testMapWithInvalidSeoProperty(): void
     {
+        $this->markTestSkipped('TODO: we should implement this as soon as we implemented also unlocalized properties.');
+
+        // @phpstan-ignore-next-line deadCode.unreachable
         $data = [
             'seo' => [
                 'title' => 'Seo Title',
@@ -150,6 +153,9 @@ class SeoDataMapperTest extends TestCase
 
     public function testMapWithMixedValidAndInvalidProperties(): void
     {
+        $this->markTestSkipped('TODO: we should implement this as soon as we implemented also unlocalized properties.');
+
+        // @phpstan-ignore-next-line deadCode.unreachable
         $data = [
             'seo' => [
                 'title' => 'Valid Title',

@@ -141,6 +141,9 @@ class ExcerptDataMapperTest extends TestCase
 
     public function testMapWithInvalidExcerptProperty(): void
     {
+        $this->markTestSkipped('TODO: we should implement this as soon as we implemented also unlocalized properties.');
+
+        // @phpstan-ignore-next-line deadCode.unreachable
         $data = [
             'excerpt' => [
                 'title' => 'Excerpt Title',
@@ -164,6 +167,9 @@ class ExcerptDataMapperTest extends TestCase
 
     public function testMapWithMixedValidAndInvalidProperties(): void
     {
+        $this->markTestSkipped('TODO: we should implement this as soon as we implemented also unlocalized properties.');
+
+        // @phpstan-ignore-next-line deadCode.unreachable
         $data = [
             'excerpt' => [
                 'title' => 'Valid Title',

@@ -36,10 +36,12 @@ readonly class ExcerptDataMapper implements DataMapperInterface
         }
 
         if (\array_key_exists('excerpt', $data)) {
+            $excerptData = $data['excerpt'];
+            Assert::isArray($excerptData);
+
             $validExcerptProperties = $this->getExcerptProperties($localizedDimensionContent); // add support of unlocalized excerpt data in future
 
-            Assert::isArray($data['excerpt']);
-            $localizedDimensionContent->setExcerptData($data['excerpt']);
+            $localizedDimensionContent->setExcerptData($excerptData);  // @phpstan-ignore-line argument.type
         }
     }
 

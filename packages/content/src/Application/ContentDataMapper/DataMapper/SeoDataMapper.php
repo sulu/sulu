@@ -48,10 +48,12 @@ readonly class SeoDataMapper implements DataMapperInterface
         }
 
         if (\array_key_exists('seo', $data)) {
+            $seoData = $data['seo'];
+            Assert::isArray($seoData);
+
             $validSeoProperties = $this->getSeoProperties($dimensionContent); // add support of unlocalized seo data in future
 
-            Assert::isArray($data['seo']);
-            $dimensionContent->setSeoData($data['seo']);
+            $dimensionContent->setSeoData($seoData); // @phpstan-ignore-line argument.type
         }
 
         if (\array_key_exists('seoHideInSitemap', $data)) {
