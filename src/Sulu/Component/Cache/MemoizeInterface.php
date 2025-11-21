@@ -20,9 +20,10 @@ interface MemoizeInterface
      * Returns the value stored in the cache or uses the passed function to compute the value and save to cache
      * This function uses the given key for the caching mechanism.
      *
+     * @param string|int $id cache key
      * @param array $arguments array of parameter to call compute function
      * @param callable $compute
-     * @param int $lifeTime cache lifetime
+     * @param int|null $lifeTime cache lifetime
      */
     public function memoizeById($id, $arguments, $compute, $lifeTime = null);
 }

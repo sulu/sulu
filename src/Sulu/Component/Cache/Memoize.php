@@ -11,8 +11,6 @@
 
 namespace Sulu\Component\Cache;
 
-use Doctrine\Common\Cache\Cache;
-use Doctrine\Common\Cache\FlushableCache;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
 use Symfony\Contracts\Service\ResetInterface;
 
@@ -39,19 +37,13 @@ class Memoize implements MemoizeInterface, ResetInterface
         // determine cache key
         $id = \md5(\sprintf('%s(%s)', $id, \serialize($arguments)));
 
-        // memoize pattern: save result for arguments once and
-        // return the value from cache if it is called more than once
-        $item = $this->cache->getItem($id);
-        if ($item->isHit()) {
-            return $item->get();
-        }
-
-        $value = \call_user_func_array($compute, $arguments);
-        $item->set($value);
-        $item->expiresAfter($lifeTime);
-        $this->cache->save($item);
-
-        return $value;
+        return $this->cache->get($id, function($item) use ($compute, $arguments, $lifeTime) {
+            $value = \call_user_func_array($compute, $arguments);
+        
+            $item->expiresAfter($lifeTime);
+            
+            return $value;
+        });
     }
 
     /**
