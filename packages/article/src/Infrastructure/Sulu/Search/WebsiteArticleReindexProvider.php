@@ -20,6 +20,7 @@ use Doctrine\ORM\EntityRepository;
 use Sulu\Article\Domain\Model\ArticleDimensionContentAdditionalWebspace;
 use Sulu\Article\Domain\Model\ArticleDimensionContentInterface;
 use Sulu\Article\Domain\Model\ArticleInterface;
+use Sulu\Article\Infrastructure\Sulu\Search\Visitor\WebsiteArticleReindexProviderEnhancerInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 
 /**
@@ -50,8 +51,12 @@ final class WebsiteArticleReindexProvider implements ReindexProviderInterface
      */
     protected EntityRepository $additionalWebspacesRepository;
 
+    /**
+     * @param iterable<WebsiteArticleReindexProviderEnhancerInterface> $enhancers
+     */
     public function __construct(
         EntityManagerInterface $entityManager,
+        private iterable $enhancers = [],
     ) {
         $dimensionContentRepository = $entityManager->getRepository(ArticleDimensionContentInterface::class);
         $additionalWebspacesRepository = $entityManager->getRepository(ArticleDimensionContentAdditionalWebspace::class);
@@ -90,7 +95,7 @@ final class WebsiteArticleReindexProvider implements ReindexProviderInterface
                 }
             }
 
-            yield [
+            $data = [
                 'id' => ArticleInterface::RESOURCE_KEY . '__' . ((string) $article['articleId']) . '__' . $article['locale'],
                 'resourceKey' => ArticleInterface::RESOURCE_KEY,
                 'resourceId' => (string) $article['articleId'],
@@ -98,10 +103,16 @@ final class WebsiteArticleReindexProvider implements ReindexProviderInterface
                 'webspaces' => $webspaces,
                 'title' => $article['title'],
                 'url' => $article['slug'],
-                'content' => [], // Todo: Add content.
+                'content' => [],
                 'mediaId' => '',
                 'authoredAt' => $authoredAt->format('c'),
             ];
+
+            foreach ($this->enhancers as $enhancer) {
+                $data = $enhancer->enhanceDocument($article, $data);
+            }
+
+            yield $data;
         }
     }
 
@@ -157,6 +168,10 @@ final class WebsiteArticleReindexProvider implements ReindexProviderInterface
         }
 
         $qb->setParameters($parameters);
+
+        foreach ($this->enhancers as $enhancer) {
+            $enhancer->enhanceQuery($qb);
+        }
 
         /** @var iterable<Article> */
         return $qb->getQuery()->toIterable();

@@ -22,6 +22,7 @@ use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Page\Domain\Model\Page;
 use Sulu\Page\Domain\Model\PageDimensionContentInterface;
 use Sulu\Page\Domain\Model\PageInterface;
+use Sulu\Page\Infrastructure\Sulu\Search\Visitor\WebsitePageReindexProviderEnhancerInterface;
 
 /**
  * @phpstan-type PageData array{
@@ -50,8 +51,12 @@ final class WebsitePageReindexProvider implements ReindexProviderInterface
      */
     protected EntityRepository $dimensionContentRepository;
 
+    /**
+     * @param iterable<WebsitePageReindexProviderEnhancerInterface> $enhancers
+     */
     public function __construct(
         EntityManagerInterface $entityManager,
+        private iterable $enhancers = [],
     ) {
         $repository = $entityManager->getRepository(PageInterface::class);
         $dimensionContentRepository = $entityManager->getRepository(PageDimensionContentInterface::class);
@@ -74,7 +79,7 @@ final class WebsitePageReindexProvider implements ReindexProviderInterface
         foreach ($pages as $page) {
             $authoredAt = $page['authored'] ?? $page['changed'];
 
-            yield [
+            $data = [
                 'id' => PageInterface::RESOURCE_KEY . '__' . ((string) $page['pageId']) . '__' . $page['locale'],
                 'resourceKey' => PageInterface::RESOURCE_KEY,
                 'resourceId' => (string) $page['pageId'],
@@ -82,10 +87,16 @@ final class WebsitePageReindexProvider implements ReindexProviderInterface
                 'webspaces' => [$page['webspaceKey']],
                 'title' => $page['title'],
                 'url' => $page['slug'],
-                'content' => [], // Todo: Add content.
+                'content' => [],
                 'mediaId' => '',
                 'authoredAt' => $authoredAt->format('c'),
             ];
+
+            foreach ($this->enhancers as $enhancer) {
+                $data = $enhancer->enhanceDocument($page, $data);
+            }
+
+            yield $data;
         }
     }
 
@@ -149,6 +160,10 @@ final class WebsitePageReindexProvider implements ReindexProviderInterface
         }
 
         $qb->setParameters($parameters);
+
+        foreach ($this->enhancers as $enhancer) {
+            $enhancer->enhanceQuery($qb);
+        }
 
         /** @var iterable<PageData> */
         return $qb->getQuery()->toIterable();
