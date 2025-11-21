@@ -15,15 +15,12 @@ namespace Sulu\Content\Domain\Model;
 
 trait ShadowTrait
 {
-    /**
-     * @var string|null
-     */
-    protected $shadowLocale;
+    protected ?string $shadowLocale = null;
 
     /**
      * @var array<string, string>|null
      */
-    protected $shadowLocales;
+    protected ?array $shadowLocales = null;
 
     /**
      * @internal should only be set by content bundle services not from outside

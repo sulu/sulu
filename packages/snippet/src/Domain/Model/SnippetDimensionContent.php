@@ -33,20 +33,11 @@ class SnippetDimensionContent implements SnippetDimensionContentInterface
     use TaxonomyTrait;
     use AuditableTrait;
 
-    /**
-     * @var int
-     */
-    protected $id;
+    protected int $id;
 
-    /**
-     * @var SnippetInterface
-     */
-    protected $snippet;
+    protected SnippetInterface $snippet;
 
-    /**
-     * @var string|null
-     */
-    protected $title;
+    protected ?string $title = null;
 
     public function __construct(SnippetInterface $snippet)
     {
