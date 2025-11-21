@@ -13,10 +13,6 @@ declare(strict_types=1);
 
 namespace Sulu\Content\Domain\Model;
 
-use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupInterface;
-use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
-use Sulu\Bundle\TagBundle\Tag\TagInterface;
-
 interface ExcerptInterface
 {
     public function getExcerptTitle(): ?string;
@@ -30,55 +26,6 @@ interface ExcerptInterface
     public function getExcerptDescription(): ?string;
 
     public function setExcerptDescription(?string $excerptDescription): void;
-
-    /**
-     * @return CategoryInterface[]
-     */
-    public function getExcerptCategories(): array;
-
-    /**
-     * @return int[]
-     */
-    public function getExcerptCategoryIds(): array;
-
-    /**
-     * @param CategoryInterface[] $excerptCategories
-     */
-    public function setExcerptCategories(array $excerptCategories): void;
-
-    /**
-     * @return TagInterface[]
-     */
-    public function getExcerptTags(): array;
-
-    /**
-     * @return string[]
-     */
-    public function getExcerptTagNames(): array;
-
-    /**
-     * @param TagInterface[] $excerptTags
-     */
-    public function setExcerptTags(array $excerptTags): void;
-
-    /**
-     * @return TargetGroupInterface[]
-     */
-    public function getExcerptAudienceTargetGroups(): array;
-
-    /**
-     * @return int[]
-     */
-    public function getExcerptAudienceTargetGroupIds(): array;
-
-    /**
-     * @param TargetGroupInterface[] $excerptAudienceTargetGroups
-     */
-    public function setExcerptAudienceTargetGroups(array $excerptAudienceTargetGroups): void;
-
-    public function getExcerptSegment(): ?string;
-
-    public function setExcerptSegment(?string $excerptSegment): void;
 
     /**
      * @return array{id: int}|null
@@ -99,4 +46,14 @@ interface ExcerptInterface
      * @param array{id?: int}|null $excerptIcon
      */
     public function setExcerptIcon(?array $excerptIcon): void;
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function getExcerptData(): array;
+
+    /**
+     * @param array<string, mixed> $excerptData
+     */
+    public function setExcerptData(array $excerptData): void;
 }

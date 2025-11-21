@@ -507,7 +507,9 @@ class FileVersion implements AuditableInterface
      */
     public function removeTags()
     {
-        $this->tags->clear();
+        foreach ($this->tags as $tag) {
+            $this->tags->removeElement($tag);
+        }
     }
 
     /**
@@ -564,7 +566,7 @@ class FileVersion implements AuditableInterface
                 $newMetaList[] = clone $meta;
             }
 
-            $this->meta->clear();
+            $this->meta->clear(); // @phpstan-ignore-line disallowed.method it saved to call here as it a none persisted entity
             foreach ($newMetaList as $newMeta) {
                 $newMeta->setFileVersion($this);
                 $this->addMeta($newMeta);
@@ -579,7 +581,7 @@ class FileVersion implements AuditableInterface
                 $newContentLanguageList[] = clone $contentLanguage;
             }
 
-            $this->contentLanguages->clear();
+            $this->contentLanguages->clear(); // @phpstan-ignore-line disallowed.method it saved to call here as it a none persisted entity
             foreach ($newContentLanguageList as $newContentLanguage) {
                 $newContentLanguage->setFileVersion($this);
                 $this->addContentLanguage($newContentLanguage);
@@ -590,7 +592,7 @@ class FileVersion implements AuditableInterface
                 $newPublishLanguageList[] = clone $publishLanguage;
             }
 
-            $this->publishLanguages->clear();
+            $this->publishLanguages->clear(); // @phpstan-ignore-line disallowed.method it saved to call here as it a none persisted entity
             foreach ($newPublishLanguageList as $newPublishLanguage) {
                 $newPublishLanguage->setFileVersion($this);
                 $this->addPublishLanguage($newPublishLanguage);
@@ -601,7 +603,7 @@ class FileVersion implements AuditableInterface
                 $newFormatOptionsArray[] = clone $formatOptions;
             }
 
-            $this->formatOptions->clear();
+            $this->formatOptions->clear(); // @phpstan-ignore-line disallowed.method it saved to call here as it a none persisted entity
             foreach ($newFormatOptionsArray as $newFormatOptions) {
                 $newFormatOptions->setFileVersion($this);
                 $this->addFormatOptions($newFormatOptions);
@@ -658,7 +660,9 @@ class FileVersion implements AuditableInterface
      */
     public function removeCategories()
     {
-        $this->categories->clear();
+        foreach ($this->categories as $category) {
+            $this->categories->removeElement($category);
+        }
     }
 
     /**
@@ -684,8 +688,8 @@ class FileVersion implements AuditableInterface
      */
     public function removeTargetGroups()
     {
-        if ($this->targetGroups) {
-            $this->targetGroups->clear();
+        foreach ($this->targetGroups as $targetGroup) {
+            $this->targetGroups->removeElement($targetGroup);
         }
     }
 

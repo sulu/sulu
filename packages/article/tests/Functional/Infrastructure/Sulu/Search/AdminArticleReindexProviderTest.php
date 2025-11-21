@@ -16,8 +16,10 @@ namespace Sulu\Article\Tests\Functional\Infrastructure\Sulu\Search;
 use CmsIg\Seal\Reindex\ReindexConfig;
 use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Article\Domain\Model\ArticleInterface;
+use Sulu\Article\Infrastructure\Sulu\Admin\ArticleAdmin;
 use Sulu\Article\Infrastructure\Sulu\Search\AdminArticleReindexProvider;
 use Sulu\Article\Tests\Traits\CreateArticleTrait;
+use Sulu\Bundle\AdminBundle\Metadata\GroupProviderInterface;
 use Sulu\Bundle\TestBundle\Testing\SetGetPrivatePropertyTrait;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
@@ -44,7 +46,9 @@ class AdminArticleReindexProviderTest extends SuluTestCase
     protected function setUp(): void
     {
         $this->entityManager = $this->getEntityManager();
-        $this->provider = new AdminArticleReindexProvider($this->entityManager);
+        /** @var GroupProviderInterface $groupProvider */
+        $groupProvider = $this->getContainer()->get('sulu_admin.metadata_group_provider');
+        $this->provider = new AdminArticleReindexProvider($this->entityManager, $groupProvider);
         $this->purgeDatabase();
     }
 
@@ -114,31 +118,43 @@ class AdminArticleReindexProviderTest extends SuluTestCase
 
         $expectedResult = [
             [
-                'id' => ArticleInterface::RESOURCE_KEY . '::' . $article1->getUuid() . '::en',
+                'id' => ArticleInterface::RESOURCE_KEY . '__' . $article1->getUuid() . '__en',
                 'resourceKey' => ArticleInterface::RESOURCE_KEY,
                 'resourceId' => $article1->getUuid(),
                 'changedAt' => (new \DateTimeImmutable($changedDateString1))->format('c'),
                 'createdAt' => (new \DateTimeImmutable($createdAt))->format('c'),
                 'title' => 'Article One EN',
                 'locale' => 'en',
+                'metadata' => [
+                    'group' => 'default',
+                ],
+                'securityContext' => ArticleAdmin::getArticleSecurityContext('default'),
             ],
             [
-                'id' => ArticleInterface::RESOURCE_KEY . '::' . $article2->getUuid() . '::en',
+                'id' => ArticleInterface::RESOURCE_KEY . '__' . $article2->getUuid() . '__en',
                 'resourceKey' => ArticleInterface::RESOURCE_KEY,
                 'resourceId' => $article2->getUuid(),
                 'changedAt' => (new \DateTimeImmutable($changedDateString2))->format('c'),
                 'createdAt' => (new \DateTimeImmutable($createdAt))->format('c'),
                 'title' => 'Article TWO EN',
                 'locale' => 'en',
+                'metadata' => [
+                    'group' => 'default',
+                ],
+                'securityContext' => ArticleAdmin::getArticleSecurityContext('default'),
             ],
             [
-                'id' => ArticleInterface::RESOURCE_KEY . '::' . $article2->getUuid() . '::de',
+                'id' => ArticleInterface::RESOURCE_KEY . '__' . $article2->getUuid() . '__de',
                 'resourceKey' => ArticleInterface::RESOURCE_KEY,
                 'resourceId' => $article2->getUuid(),
                 'changedAt' => (new \DateTimeImmutable($changedDateString2))->format('c'),
                 'createdAt' => (new \DateTimeImmutable($createdAt))->format('c'),
                 'title' => 'Article TWO DE',
                 'locale' => 'de',
+                'metadata' => [
+                    'group' => 'default',
+                ],
+                'securityContext' => ArticleAdmin::getArticleSecurityContext('default'),
             ],
         ];
 
@@ -217,8 +233,8 @@ class AdminArticleReindexProviderTest extends SuluTestCase
         ]);
 
         $identifiers = [
-            ArticleInterface::RESOURCE_KEY . '::' . $article1->getUuid() . '::en',
-            ArticleInterface::RESOURCE_KEY . '::' . $article2->getUuid() . '::de',
+            ArticleInterface::RESOURCE_KEY . '__' . $article1->getUuid() . '__en',
+            ArticleInterface::RESOURCE_KEY . '__' . $article2->getUuid() . '__de',
         ];
 
         $config = ReindexConfig::create()

@@ -13,8 +13,10 @@ namespace Sulu\Snippet\Tests\Functional\Infrastructure\Symfony\CompilerPass;
 
 use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\TestBundle\Testing\KernelTestCase;
+use Sulu\Snippet\Infrastructure\Sulu\Admin\SnippetAreaAdmin;
 use Sulu\Snippet\Infrastructure\Symfony\CompilerPass\SnippetAreaCompilerPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class SnippetAreaCompilerPassTest extends KernelTestCase
@@ -116,5 +118,31 @@ class SnippetAreaCompilerPassTest extends KernelTestCase
             $this->assertStringContainsString('snippet.xml', $e->getMessage());
             $this->assertStringContainsString('duplicate-hotel.xml', $e->getMessage());
         }
+    }
+
+    public function testUnregistersSnippetAreaAdminWhenNoAreasAreDefined(): void
+    {
+        $translator = $this->prophesize(TranslatorInterface::class);
+
+        $container = new ContainerBuilder();
+        $container->set('translator', $translator->reveal());
+        $container->setParameter('sulu_core.locales', ['en', 'de']);
+        $container->setParameter('sulu_admin.templates.configuration', [
+            'snippet' => [
+                'directories' => [
+                    __DIR__ . '/../../../../Application/config/templates/snippets-empty',
+                ],
+            ],
+        ]);
+
+        $container->setDefinition('sulu_snippet.snippet_area_admin', new Definition(SnippetAreaAdmin::class));
+
+        $this->assertTrue($container->hasDefinition('sulu_snippet.snippet_area_admin'));
+
+        $compilerPass = new SnippetAreaCompilerPass();
+        $compilerPass->process($container);
+
+        $this->assertFalse($container->hasDefinition('sulu_snippet.snippet_area_admin'));
+        $this->assertEquals([], $container->getParameter(SnippetAreaCompilerPass::SNIPPET_AREA_PARAM));
     }
 }

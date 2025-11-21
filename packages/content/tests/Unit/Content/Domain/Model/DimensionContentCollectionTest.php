@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Sulu\Content\Tests\Unit\Content\Domain\Model;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use PHPUnit\Framework\TestCase;
 use Sulu\Content\Domain\Model\DimensionContentCollection;
 use Sulu\Content\Domain\Model\DimensionContentCollectionInterface;
@@ -32,7 +33,7 @@ class DimensionContentCollectionTest extends TestCase
         array $dimensionContents,
         array $dimensionAttributes
     ): DimensionContentCollectionInterface {
-        return new DimensionContentCollection($dimensionContents, $dimensionAttributes, ExampleDimensionContent::class);
+        return new DimensionContentCollection(new ArrayCollection($dimensionContents), $dimensionAttributes, ExampleDimensionContent::class);
     }
 
     public function testCount(): void
@@ -54,28 +55,6 @@ class DimensionContentCollectionTest extends TestCase
         $this->assertCount(2, $dimensionContentCollection);
         $this->assertSame(2, \count($dimensionContentCollection)); // @phpstan-ignore-line
         $this->assertSame(2, $dimensionContentCollection->count()); // @phpstan-ignore-line
-    }
-
-    public function testSortedByAttributes(): void
-    {
-        $example = new Example();
-        $dimensionContent1 = new ExampleDimensionContent($example);
-        $dimensionContent1->setStage('draft');
-        $dimensionContent2 = new ExampleDimensionContent($example);
-        $dimensionContent2->setLocale('de');
-        $dimensionContent2->setStage('draft');
-
-        $attributes = ['locale' => 'de'];
-
-        $dimensionContentCollection = $this->createDimensionContentCollectionInstance([
-            $dimensionContent2,
-            $dimensionContent1,
-        ], $attributes);
-
-        $this->assertSame([
-            $dimensionContent1,
-            $dimensionContent2,
-        ], \iterator_to_array($dimensionContentCollection));
     }
 
     public function testIterator(): void

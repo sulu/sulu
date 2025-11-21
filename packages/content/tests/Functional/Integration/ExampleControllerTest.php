@@ -23,6 +23,7 @@ use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Tests\Application\AppCache;
 use Sulu\Content\Tests\Application\CacheTagsKernel;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\Example;
+use Sulu\Content\Tests\Application\ExampleTestBundle\Repository\ExampleRepository;
 use Sulu\Content\Tests\Functional\Traits\CreateCategoryTrait;
 use Sulu\Content\Tests\Functional\Traits\CreateMediaTrait;
 use Sulu\Content\Tests\Functional\Traits\CreateTagTrait;
@@ -462,7 +463,7 @@ class ExampleControllerTest extends SuluTestCase
     public function testDelete(int $id): void
     {
         $routeRepository = $this->getContainer()->get(RouteRepositoryInterface::class);
-        $this->assertCount(3, $routeRepository->findBy([])); // TODO we need tackle this
+        $this->assertCount(3, $routeRepository->findBy([]));
     }
 
     public function testReferencesCreatedWithMediaReferences(): int
@@ -1025,6 +1026,86 @@ class ExampleControllerTest extends SuluTestCase
         $this->assertSame(3, $totalReferenceCount);
 
         return $id;
+    }
+
+    public function testPublishPreservesDimensionContentTagRelations(): void
+    {
+        self::purgeDatabase();
+
+        $category = $this->createCategory(['key' => 'test-category']);
+        $this->createCategoryTranslation($category, ['title' => 'Test Category', 'locale' => 'en']);
+        self::getEntityManager()->flush();
+
+        /** @var ExampleRepository $exampleRepository */
+        $exampleRepository = self::getContainer()->get('example_test.example_repository');
+        $this->client->request('POST', '/admin/api/examples?locale=en', [], [], [], \json_encode([
+            'template' => 'default',
+            'title' => 'Tag Test Example',
+            'excerptTags' => ['Test Tag 1', 'Test Tag 2'],
+            'excerptCategories' => [$category->getId()],
+            'url' => '/test-example',
+        ]) ?: null);
+
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(201, $response);
+        $content = \json_decode((string) $response->getContent(), true);
+        $this->assertIsArray($content);
+        $this->assertArrayHasKey('id', $content);
+        $id = $content['id'];
+        $this->assertIsInt($id);
+
+        $example = $exampleRepository->findOneBy(['uuid' => $id]);
+        $this->assertNotNull($example);
+
+        $localizedDraft = null;
+        foreach ($example->getDimensionContents() as $dimensionContent) {
+            if ('draft' === $dimensionContent->getStage() && 'en' === $dimensionContent->getLocale() && 0 === $dimensionContent->getVersion()) {
+                $localizedDraft = $dimensionContent;
+                break;
+            }
+        }
+
+        $this->assertNotNull($localizedDraft, 'Localized draft should exist before publish');
+        $this->assertCount(2, $localizedDraft->getExcerptTags(), 'Localized draft should have 2 tags before publish');
+        $this->assertCount(1, $localizedDraft->getExcerptCategories(), 'Localized draft should have 1 category before publish');
+
+        self::getEntityManager()->clear();
+        $this->client->request('PUT', '/admin/api/examples/' . $id . '?locale=en&action=publish', [], [], [], \json_encode($content) ?: null);
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(200, $response);
+
+        $example = $exampleRepository->findOneBy(['uuid' => $id]);
+        $this->assertNotNull($example);
+
+        $draftVersion0 = null;
+        $draftVersioned = null;
+        $liveVersion0 = null;
+
+        foreach ($example->getDimensionContents() as $dimensionContent) {
+            if ('en' !== $dimensionContent->getLocale()) {
+                continue;
+            }
+
+            if ('draft' === $dimensionContent->getStage() && 0 === $dimensionContent->getVersion()) {
+                $draftVersion0 = $dimensionContent;
+            } elseif ('draft' === $dimensionContent->getStage() && $dimensionContent->getVersion() > 0) {
+                $draftVersioned = $dimensionContent;
+            } elseif ('live' === $dimensionContent->getStage() && 0 === $dimensionContent->getVersion()) {
+                $liveVersion0 = $dimensionContent;
+            }
+        }
+
+        $this->assertNotNull($draftVersion0, 'Draft version=0 dimension content should exist');
+        $this->assertNotNull($draftVersioned, 'Draft versioned dimension content should exist');
+        $this->assertNotNull($liveVersion0, 'Live version=0 dimension content should exist');
+
+        $this->assertCount(2, $draftVersion0->getExcerptTags(), 'Draft version=0 should have 2 tags');
+        $this->assertCount(2, $draftVersioned->getExcerptTags(), 'Draft versioned should have 2 tags');
+        $this->assertCount(2, $liveVersion0->getExcerptTags(), 'Live version=0 should have 2 tags');
+
+        $this->assertCount(1, $draftVersion0->getExcerptCategories(), 'Draft version=0 should have 1 category');
+        $this->assertCount(1, $draftVersioned->getExcerptCategories(), 'Draft versioned should have 1 category');
+        $this->assertCount(1, $liveVersion0->getExcerptCategories(), 'Live version=0 should have 1 category');
     }
 
     protected function getSnapshotFolder(): string

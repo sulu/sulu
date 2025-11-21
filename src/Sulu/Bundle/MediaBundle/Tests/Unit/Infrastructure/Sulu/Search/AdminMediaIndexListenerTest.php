@@ -68,7 +68,7 @@ class AdminMediaIndexListenerTest extends TestCase
 
         $expectedConfig = ReindexConfig::create()
             ->withIndex('admin')
-            ->withIdentifiers([MediaInterface::RESOURCE_KEY . '::' . $media->getId() . '::en']);
+            ->withIdentifiers([MediaInterface::RESOURCE_KEY . '__' . $media->getId() . '__en']);
 
         $this->messageBus->dispatch($expectedConfig)
             ->willReturn(new Envelope($expectedConfig))
@@ -84,7 +84,7 @@ class AdminMediaIndexListenerTest extends TestCase
 
         $expectedConfig = ReindexConfig::create()
             ->withIndex('admin')
-            ->withIdentifiers([MediaInterface::RESOURCE_KEY . '::' . $media->getId() . '::en']);
+            ->withIdentifiers([MediaInterface::RESOURCE_KEY . '__' . $media->getId() . '__en']);
 
         $this->messageBus->dispatch($expectedConfig)
             ->willReturn(new Envelope($expectedConfig))
@@ -101,7 +101,7 @@ class AdminMediaIndexListenerTest extends TestCase
 
         $expectedConfig = ReindexConfig::create()
             ->withIndex('admin')
-            ->withIdentifiers([MediaInterface::RESOURCE_KEY . '::' . $media->getId() . '::en', MediaInterface::RESOURCE_KEY . '::' . $media->getId() . '::de']);
+            ->withIdentifiers([MediaInterface::RESOURCE_KEY . '__' . $media->getId() . '__en', MediaInterface::RESOURCE_KEY . '__' . $media->getId() . '__de']);
 
         $this->messageBus->dispatch($expectedConfig)
             ->willReturn(new Envelope($expectedConfig))
@@ -117,7 +117,7 @@ class AdminMediaIndexListenerTest extends TestCase
 
         $expectedConfig = ReindexConfig::create()
             ->withIndex('admin')
-            ->withIdentifiers([MediaInterface::RESOURCE_KEY . '::' . $media->getId() . '::en']);
+            ->withIdentifiers([MediaInterface::RESOURCE_KEY . '__' . $media->getId() . '__en']);
 
         $this->messageBus->dispatch($expectedConfig)
             ->willReturn(new Envelope($expectedConfig))
@@ -134,7 +134,7 @@ class AdminMediaIndexListenerTest extends TestCase
 
         $expectedConfig = ReindexConfig::create()
             ->withIndex('admin')
-            ->withIdentifiers([MediaInterface::RESOURCE_KEY . '::' . $media->getId() . '::en']);
+            ->withIdentifiers([MediaInterface::RESOURCE_KEY . '__' . $media->getId() . '__en']);
 
         $this->messageBus->dispatch($expectedConfig)
             ->willReturn(new Envelope($expectedConfig))

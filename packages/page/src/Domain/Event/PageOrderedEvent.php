@@ -63,7 +63,7 @@ class PageOrderedEvent extends DomainEvent
 
     public function getResourceTitle(): ?string
     {
-        $dimensionContentCollection = new DimensionContentCollection($this->page->getDimensionContents()->toArray(), [], PageDimensionContent::class);
+        $dimensionContentCollection = new DimensionContentCollection($this->page->getDimensionContents(), [], PageDimensionContent::class);
 
         return $dimensionContentCollection->getDimensionContent(['locale' => $this->locale])?->getTitle();
     }

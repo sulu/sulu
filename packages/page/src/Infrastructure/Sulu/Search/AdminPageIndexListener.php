@@ -42,7 +42,7 @@ final class AdminPageIndexListener
         $resourceId = $event->getResourceId();
 
         $identifiers = \array_map(
-            fn (string $locale) => PageInterface::RESOURCE_KEY . '::' . $resourceId . '::' . $locale,
+            fn (string $locale) => PageInterface::RESOURCE_KEY . '__' . $resourceId . '__' . $locale,
             $this->getLocales($event),
         );
 
@@ -68,7 +68,7 @@ final class AdminPageIndexListener
 
         if ($event instanceof PageRestoredEvent) {
             $page = $event->getPage();
-            $dimensionContentCollection = new DimensionContentCollection($page->getDimensionContents()->toArray(), [], PageDimensionContent::class);
+            $dimensionContentCollection = new DimensionContentCollection($page->getDimensionContents(), [], PageDimensionContent::class);
             $unlocalizedDimensionContent = $dimensionContentCollection->getDimensionContent(['locale' => null, 'stage' => 'draft']);
 
             return $unlocalizedDimensionContent ? ($unlocalizedDimensionContent->getAvailableLocales() ?? []) : [];

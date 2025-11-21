@@ -31,6 +31,7 @@ use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\ExampleDimensionCont
 use Sulu\Route\Domain\Model\Route;
 use Sulu\Route\Domain\Repository\RouteRepositoryInterface;
 use Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\Uid\Uuid;
 
 class RoutableDataMapperTest extends TestCase
 {
@@ -226,6 +227,46 @@ class RoutableDataMapperTest extends TestCase
         $this->assertSame([], $localizedDimensionContent->getTemplateData());
     }
 
+    public function testMapPageTreeRouteProperty(): void
+    {
+        $uuid = Uuid::v4()->toRfc4122();
+
+        $data = [
+            'url' => [
+                'page' => [
+                    'uuid' => $uuid,
+                    'path' => '/parent',
+                ],
+                'suffix' => '/test',
+            ],
+        ];
+
+        $example = new Example();
+        static::setPrivateProperty($example, 'id', 1);
+        $unlocalizedDimensionContent = new ExampleDimensionContent($example);
+        $unlocalizedDimensionContent->setStage('draft');
+        $localizedDimensionContent = new ExampleDimensionContent($example);
+        $localizedDimensionContent->setTemplateKey('default');
+        $localizedDimensionContent->setStage('draft');
+        $localizedDimensionContent->setLocale('en');
+
+        $this->routeRepository->add(Argument::any())->shouldBeCalled();
+        $parentRoute = new Route('pages', $uuid, 'en', '/parent', 'sulu-io', null);
+        $this->routeRepository->findOneBy([
+            'resourceKey' => 'pages',
+            'resourceId' => $uuid,
+            'locale' => 'en',
+        ])
+            ->willReturn($parentRoute)
+            ->shouldBeCalled();
+
+        $mapper = $this->createRouteDataMapperInstance($this->createTypedFormMetadataWithPageTreeRoute());
+        $mapper->map($unlocalizedDimensionContent, $localizedDimensionContent, $data);
+
+        $this->assertSame('/parent/test', $localizedDimensionContent->getRoute()?->getSlug());
+        $this->assertSame([], $localizedDimensionContent->getTemplateData());
+    }
+
     public function testMapRoutePropertyLive(): void
     {
         $data = [
@@ -348,6 +389,25 @@ class RoutableDataMapperTest extends TestCase
         $routeProperty = new FieldMetadata($propertyName);
         $routeProperty->setMultilingual(true);
         $routeProperty->setType('route');
+
+        $formMetadata->addItem($routeProperty);
+
+        $typedFormMetadata = new TypedFormMetadata();
+        $typedFormMetadata->addForm($formMetadata->getKey(), $formMetadata);
+        $typedFormMetadata->setDefaultType('default');
+
+        return $typedFormMetadata;
+    }
+
+    private function createTypedFormMetadataWithPageTreeRoute(string $propertyName = 'url'): TypedFormMetadata
+    {
+        $formMetadata = new FormMetadata();
+        $formMetadata->setTitle('Default', 'en');
+        $formMetadata->setKey('default');
+
+        $routeProperty = new FieldMetadata($propertyName);
+        $routeProperty->setMultilingual(true);
+        $routeProperty->setType('page_tree_route');
 
         $formMetadata->addItem($routeProperty);
 

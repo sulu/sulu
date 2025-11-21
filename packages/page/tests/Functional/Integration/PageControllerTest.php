@@ -23,7 +23,9 @@ use Sulu\Page\Application\Message\CreatePageMessage;
 use Sulu\Page\Application\Message\ModifyPageMessage;
 use Sulu\Page\Application\MessageHandler\CreatePageMessageHandler;
 use Sulu\Page\Application\MessageHandler\ModifyPageMessageHandler;
+use Sulu\Page\Domain\Exception\RemovePageDependantResourcesFoundException;
 use Sulu\Page\Domain\Model\Page;
+use Sulu\Page\Domain\Model\PageDimensionContent;
 use Sulu\Page\Domain\Model\PageInterface;
 use Sulu\Route\Domain\Repository\RouteRepositoryInterface;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
@@ -140,6 +142,14 @@ class PageControllerTest extends SuluTestCase
         self::getEntityManager()->flush();
 
         return $page;
+    }
+
+    public function testInvalidIdGet(): void
+    {
+        $this->client->request('GET', '/admin/api/pages/invalid-id?locale=en');
+        $response = $this->client->getResponse();
+
+        $this->assertHttpStatusCode(404, $response);
     }
 
     public function testPostPublish(): string
@@ -703,7 +713,7 @@ class PageControllerTest extends SuluTestCase
     }
 
     #[Depends('testMove')]
-    public function testDeleteSingleLocale(string $id): void
+    public function testDeleteSingleLocale(string $id): string
     {
         $this->client->request('GET', '/admin/api/pages/' . $id . '?locale=en');
         $response = $this->client->getResponse();
@@ -761,18 +771,68 @@ class PageControllerTest extends SuluTestCase
         $availableLocales = $content['availableLocales'];
         $this->assertContains('de', $availableLocales);
         $this->assertNotContains('en', $availableLocales);
+
+        return $id;
+    }
+
+    #[Depends('testDeleteSingleLocale')]
+    public function testRecreateDeletedLocale(string $id): string
+    {
+        $this->client->request('PUT', '/admin/api/pages/' . $id . '?locale=en', [], [], [], \json_encode([
+            'template' => 'default',
+            'title' => 'Recreated Test Page (EN)',
+            'url' => '/recreated-my-page',
+        ]) ?: null);
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(200, $response);
+
+        /** @var array<string, mixed> $content */
+        $content = \json_decode((string) $response->getContent(), true);
+        /** @var array<int, string> $availableLocales */
+        $availableLocales = $content['availableLocales'];
+        /** @var array<int, string> $contentLocales */
+        $contentLocales = $content['contentLocales'];
+        $this->assertContains('en', $availableLocales);
+        $this->assertContains('de', $availableLocales);
+        $this->assertContains('en', $contentLocales);
+        $this->assertContains('de', $contentLocales);
+
+        return $id;
     }
 
     #[Depends('testPost')]
     #[Depends('testOrderPages')]
     public function testDelete(string $id): int
     {
-        $this->client->request('DELETE', '/admin/api/pages/' . $id . '?locale=en');
+        // Add German translation before deleting to test multi-locale restore
+        $this->client->request('GET', '/admin/api/pages/' . $id . '?locale=en');
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(200, $response);
+
+        /** @var array{template: string, title: string, url: string} $pageData */
+        $pageData = \json_decode((string) $response->getContent(), true);
+
+        $this->client->request('PUT', '/admin/api/pages/' . $id . '?locale=de', [], [], [], \json_encode([
+            'template' => $pageData['template'],
+            'title' => $pageData['title'] . ' (DE)',
+            'url' => '/de' . $pageData['url'],
+        ]) ?: null);
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(200, $response);
+
+        /** @var array<string, mixed> $content */
+        $content = \json_decode((string) $response->getContent(), true);
+        /** @var array<int, string> $availableLocales */
+        $availableLocales = $content['availableLocales'];
+        $this->assertContains('en', $availableLocales);
+        $this->assertContains('de', $availableLocales);
+
+        $this->client->request('DELETE', '/admin/api/pages/' . $id . '?locale=en&force=true');
         $response = $this->client->getResponse();
         $this->assertHttpStatusCode(204, $response);
 
         $routeRepository = $this->getContainer()->get(RouteRepositoryInterface::class);
-        $this->assertCount(11, $routeRepository->findBy([])); // TODO we need tackle this
+        $this->assertCount(9, $routeRepository->findBy([]));
 
         $trashRepository = self::getContainer()->get(TrashItemRepositoryInterface::class);
         $trashItem = $trashRepository->findOneBy([
@@ -796,7 +856,40 @@ class PageControllerTest extends SuluTestCase
         $response = $this->client->getResponse();
         $this->assertHttpStatusCode(200, $response);
 
-        $this->client->request('GET', '/admin/api/pages/' . $trashItem->getResourceId() . '?locale=en');
+        $pageId = $trashItem->getResourceId();
+        $pageRepository = $this->getContainer()->get('sulu_page.page_repository');
+        $restoredPage = $pageRepository->findOneBy(['uuid' => $pageId]);
+        $this->assertNotNull($restoredPage);
+
+        $dimensionContents = self::getEntityManager()
+            ->getRepository(PageDimensionContent::class)
+            ->findBy(['page' => $restoredPage]);
+
+        $unlocalizedDraftCount = 0;
+        $localizedDraftCount = 0;
+        foreach ($dimensionContents as $dimensionContent) {
+            if ('draft' === $dimensionContent->getStage()) {
+                if (null === $dimensionContent->getLocale()) {
+                    ++$unlocalizedDraftCount;
+                } else {
+                    ++$localizedDraftCount;
+                }
+            }
+        }
+
+        $this->assertSame(
+            1,
+            $unlocalizedDraftCount,
+            'Should have exactly 1 unlocalized dimension content after restoring multi-locale page, but found: ' . $unlocalizedDraftCount
+        );
+
+        $this->assertSame(
+            2,
+            $localizedDraftCount,
+            'Should have exactly 2 localized dimension contents (en, de) after restore, but found: ' . $localizedDraftCount
+        );
+
+        $this->client->request('GET', '/admin/api/pages/' . $pageId . '?locale=en');
         $response = $this->client->getResponse();
         $this->assertResponseSnapshot('page_post_restore.json', $response, 200);
 
@@ -806,5 +899,80 @@ class PageControllerTest extends SuluTestCase
     protected function getSnapshotFolder(): string
     {
         return 'responses';
+    }
+
+    /* --- The following tests are independent tests and purge the database on their own --- */
+    public function testDeletePageWithDescendantsWithoutForceReturnsConflict(): void
+    {
+        $this->purgeDatabase();
+        $homepage = $this->createHomepage('homepage-uuid', 'sulu_io');
+
+        $parentPage = $this->createPage('homepage-uuid', [
+            'title' => 'Parent Page',
+            'template' => 'default',
+            'url' => '/parent',
+        ]);
+
+        $childPage = $this->createPage($parentPage->getUuid(), [
+            'title' => 'Child Page',
+            'template' => 'default',
+            'url' => '/parent/child',
+        ]);
+
+        $parentUuid = $parentPage->getUuid();
+        self::getEntityManager()->clear();
+
+        $this->client->request('DELETE', '/admin/api/pages/' . $parentUuid . '?locale=en');
+        $response = $this->client->getResponse();
+
+        $this->assertHttpStatusCode(409, $response);
+
+        /** @var array{code: int, message: string} $responseData */
+        $responseData = \json_decode((string) $response->getContent(), true);
+
+        $this->assertEquals(RemovePageDependantResourcesFoundException::EXCEPTION_CODE_DEPENDANT_RESOURCES_FOUND, $responseData['code']);
+
+        $this->client->request('DELETE', '/admin/api/pages/' . $parentUuid . '?locale=en&force=true');
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(204, $response);
+    }
+
+    public function testDeletePageWithDescendantsWithForceSucceeds(): void
+    {
+        $this->purgeDatabase();
+        $homepage = $this->createHomepage('homepage-uuid-2', 'sulu_io');
+
+        $parentPage = $this->createPage('homepage-uuid-2', [
+            'title' => 'Parent Page',
+            'template' => 'default',
+            'url' => '/parent',
+        ]);
+
+        $child = $this->createPage($parentPage->getUuid(), [
+            'title' => 'Child Page',
+            'template' => 'default',
+            'url' => '/parent/child',
+        ]);
+
+        $grandchild = $this->createPage($child->getUuid(), [
+            'title' => 'Grandchild Page',
+            'template' => 'default',
+            'url' => '/parent/child/grandchild',
+        ]);
+
+        $parentUuid = $parentPage->getUuid();
+        $childUuid = $child->getUuid();
+        $grandchildUuid = $grandchild->getUuid();
+
+        self::getEntityManager()->clear();
+
+        $this->client->request('DELETE', '/admin/api/pages/' . $parentUuid . '?locale=en&force=true');
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(204, $response);
+
+        $pageRepository = $this->getContainer()->get('sulu_page.page_repository');
+        $this->assertNull($pageRepository->findOneBy(['uuid' => $parentUuid]));
+        $this->assertNull($pageRepository->findOneBy(['uuid' => $childUuid]));
+        $this->assertNull($pageRepository->findOneBy(['uuid' => $grandchildUuid]));
     }
 }

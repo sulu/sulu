@@ -191,7 +191,8 @@ class MediaManagerTest extends TestCase
                 $this->mediaPropertiesProvider->reveal(),
             ],
             '/download/{id}/media/{slug}',
-            $this->targetGroupRepository->reveal()
+            $this->targetGroupRepository->reveal(),
+            '/admin/download/{id}/media/{slug}',
         );
     }
 

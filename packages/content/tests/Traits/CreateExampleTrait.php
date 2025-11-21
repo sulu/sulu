@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Sulu\Content\Tests\Traits;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Content\Application\ContentDataMapper\ContentDataMapper;
@@ -37,6 +38,7 @@ trait CreateExampleTrait
         $contentDataMapper = new ContentDataMapper([
             static::getContainer()->get('sulu_content.template_data_mapper'),
             static::getContainer()->get('sulu_content.excerpt_data_mapper'),
+            static::getContainer()->get('sulu_content.taxonomy_data_mapper'),
             static::getContainer()->get('sulu_content.seo_data_mapper'),
             static::getContainer()->get('sulu_content.workflow_data_mapper'),
             // for performance reasons we avoid here route mapper and create the route manually when needed
@@ -91,7 +93,7 @@ trait CreateExampleTrait
 
             // Map Draft Data
             $draftDimensionContentCollection = new DimensionContentCollection(
-                [$draftUnlocalizedDimension, $draftLocalizedDimension],
+                new ArrayCollection([$draftUnlocalizedDimension, $draftLocalizedDimension]),
                 ['stage' => DimensionContentInterface::STAGE_DRAFT, 'locale' => $locale],
                 ExampleDimensionContent::class
             );
@@ -131,7 +133,7 @@ trait CreateExampleTrait
 
                 // map data
                 $liveDimensionContentCollection = new DimensionContentCollection(
-                    \array_filter([$liveUnlocalizedDimension, $liveLocalizedDimension]),
+                    new ArrayCollection(\array_filter([$liveUnlocalizedDimension, $liveLocalizedDimension])),
                     ['stage' => DimensionContentInterface::STAGE_LIVE, 'locale' => $locale],
                     ExampleDimensionContent::class
                 );

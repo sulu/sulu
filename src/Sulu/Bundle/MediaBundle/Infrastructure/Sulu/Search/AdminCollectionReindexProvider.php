@@ -17,6 +17,7 @@ use CmsIg\Seal\Reindex\ReindexConfig;
 use CmsIg\Seal\Reindex\ReindexProviderInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
+use Sulu\Bundle\MediaBundle\Admin\MediaAdmin;
 use Sulu\Bundle\MediaBundle\Entity\CollectionInterface;
 use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
 
@@ -59,13 +60,14 @@ final class AdminCollectionReindexProvider implements ReindexProviderInterface
         /** @var Collection $collection */
         foreach ($collections as $collection) {
             yield [
-                'id' => CollectionInterface::RESOURCE_KEY . '::' . ((string) $collection['collectionId']) . '::' . $collection['locale'],
+                'id' => CollectionInterface::RESOURCE_KEY . '__' . ((string) $collection['collectionId']) . '__' . $collection['locale'],
                 'resourceKey' => CollectionInterface::RESOURCE_KEY,
                 'resourceId' => (string) $collection['collectionId'],
                 'changedAt' => $collection['changed']->format('c'),
                 'createdAt' => $collection['created']->format('c'),
                 'title' => $collection['title'],
                 'locale' => $collection['locale'],
+                'securityContext' => MediaAdmin::SECURITY_CONTEXT,
             ];
         }
     }
@@ -90,14 +92,14 @@ final class AdminCollectionReindexProvider implements ReindexProviderInterface
             $parameters = [];
 
             foreach ($identifiers as $index => $identifier) {
-                $resourceKey = \explode('::', $identifier)[0];
+                $resourceKey = \explode('__', $identifier)[0];
 
                 if (CollectionInterface::RESOURCE_KEY !== $resourceKey) {
                     continue;
                 }
 
-                $id = \explode('::', $identifier)[1] ?? '';
-                $locale = \explode('::', $identifier)[2] ?? '';
+                $id = \explode('__', $identifier)[1] ?? '';
+                $locale = \explode('__', $identifier)[2] ?? '';
 
                 $conditions[] = "(collection.id = :id{$index} AND collectionMeta.locale = :locale{$index})";
                 $parameters["id{$index}"] = $id;

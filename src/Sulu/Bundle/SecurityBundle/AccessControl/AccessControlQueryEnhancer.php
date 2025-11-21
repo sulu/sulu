@@ -34,14 +34,16 @@ class AccessControlQueryEnhancer
         ?UserInterface $user,
         int $permission,
         string $entityClass,
-        string $entityAlias
+        string $entityAlias,
+        string $entityIdField = 'id'
     ): void {
         $this->enhanceQueryWithAccessControl(
             $queryBuilder,
             $user,
             $permission,
             $entityClass,
-            $entityAlias
+            $entityAlias,
+            $entityIdField
         );
     }
 
@@ -89,7 +91,7 @@ class AccessControlQueryEnhancer
     ): void {
         $subQueryBuilder = $this->entityManager->createQueryBuilder()
             ->from($entityClass, 'entity')
-            ->select('entity.id');
+            ->select('entity.' . $entityIdField);
 
         $accessClassCondition = 'accessControl.entityClass = :entityClass';
         if ($entityClassField) {
@@ -115,10 +117,10 @@ class AccessControlQueryEnhancer
         $subQueryBuilder->setParameter('permission', $permission);
 
         $result = $subQueryBuilder->getQuery()->getScalarResult();
-        $ids = \array_column($result, 'id');
+        $ids = \array_column($result, $entityIdField);
 
         if (\count($ids) > 0) {
-            $queryBuilder->andWhere(\sprintf('%s.id NOT IN (:accessControlIds)', $entityAlias));
+            $queryBuilder->andWhere(\sprintf('(%s.%s NOT IN (:accessControlIds) OR %s.%s IS NULL)', $entityAlias, $entityIdField, $entityAlias, $entityIdField));
             $queryBuilder->setParameter('accessControlIds', $ids);
         }
     }

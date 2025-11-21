@@ -36,6 +36,7 @@ use Sulu\Page\Domain\Event\PageRestoredEvent;
 use Sulu\Page\Domain\Event\PageTranslationAddedEvent;
 use Sulu\Page\Domain\Event\PageTranslationRemovedEvent;
 use Sulu\Page\Domain\Event\PageTranslationRestoredEvent;
+use Sulu\Page\Domain\Event\PageWorkflowTransitionAppliedEvent;
 use Sulu\Page\Domain\Model\Page;
 use Sulu\Page\Domain\Model\PageDimensionContent;
 use Sulu\Page\Domain\Model\PageDimensionContentInterface;
@@ -44,6 +45,7 @@ use Sulu\Page\Domain\Repository\PageRepositoryInterface;
 use Sulu\Page\Infrastructure\Doctrine\Repository\NavigationRepository;
 use Sulu\Page\Infrastructure\Doctrine\Repository\PageRepository;
 use Sulu\Page\Infrastructure\JMS\Serializer\WebspaceSerializeEventSubscriber;
+use Sulu\Page\Infrastructure\Sulu\Admin\MetadataVisitor\DefaultTemplateTypedFormMetadataVisitor;
 use Sulu\Page\Infrastructure\Sulu\Admin\MetadataVisitor\WebspaceRouteModeTypedFormMetadataVisitor;
 use Sulu\Page\Infrastructure\Sulu\Admin\PageAdmin;
 use Sulu\Page\Infrastructure\Sulu\Admin\PropertyMetadataMapper\PageTreeRoutePropertyMetadataMapper;
@@ -58,13 +60,19 @@ use Sulu\Page\Infrastructure\Sulu\Content\PageSmartContentProvider;
 use Sulu\Page\Infrastructure\Sulu\Content\PageTeaserProvider;
 use Sulu\Page\Infrastructure\Sulu\Content\PropertyResolver\BlockVisitor\SegmentBlockVisitor;
 use Sulu\Page\Infrastructure\Sulu\Content\PropertyResolver\PageSelectionPropertyResolver;
+use Sulu\Page\Infrastructure\Sulu\Content\PropertyResolver\PageTreeRoutePropertyResolver;
 use Sulu\Page\Infrastructure\Sulu\Content\PropertyResolver\SinglePageSelectionPropertyResolver;
 use Sulu\Page\Infrastructure\Sulu\Content\ResourceLoader\PageResourceLoader;
+use Sulu\Page\Infrastructure\Sulu\Content\Visitor\PageSmartContentFiltersVisitor;
 use Sulu\Page\Infrastructure\Sulu\Content\Visitor\SegmentSmartContentFiltersVisitor;
+use Sulu\Page\Infrastructure\Sulu\HttpCache\EventSubscriber\PageCacheInvalidationSubscriber;
 use Sulu\Page\Infrastructure\Sulu\Reference\PageReferenceRefresher;
 use Sulu\Page\Infrastructure\Sulu\Route\WebspaceSiteRouteGenerator;
 use Sulu\Page\Infrastructure\Sulu\Search\AdminPageIndexListener;
 use Sulu\Page\Infrastructure\Sulu\Search\AdminPageReindexProvider;
+use Sulu\Page\Infrastructure\Sulu\Search\WebsitePageIndexListener;
+use Sulu\Page\Infrastructure\Sulu\Search\WebsitePageReindexProvider;
+use Sulu\Page\Infrastructure\Sulu\Security\PageDescendantSecurityListener;
 use Sulu\Page\Infrastructure\Sulu\Security\PageSecurityListener;
 use Sulu\Page\Infrastructure\Sulu\Sitemap\PagesSitemapProvider;
 use Sulu\Page\Infrastructure\Sulu\Trash\PageTrashItemHandler;
@@ -151,6 +159,7 @@ final class SuluPageBundle extends AbstractBundle
                 new Reference('sulu_page.page_repository'),
                 tagged_iterator('sulu_page.page_mapper'),
                 new Reference('sulu_activity.domain_event_collector'),
+                new Reference('security.token_storage', ContainerInterface::NULL_ON_INVALID_REFERENCE),
             ])
             ->tag('messenger.message_handler');
 
@@ -177,6 +186,7 @@ final class SuluPageBundle extends AbstractBundle
             ->args([
                 new Reference('sulu_page.page_repository'),
                 new Reference('sulu_activity.domain_event_collector'),
+                new Reference('sulu_trash.trash_manager', ContainerInterface::NULL_ON_INVALID_REFERENCE),
             ])
             ->tag('messenger.message_handler');
 
@@ -284,6 +294,10 @@ final class SuluPageBundle extends AbstractBundle
             ->class(SinglePageSelectionPropertyResolver::class)
             ->tag('sulu_content.property_resolver');
 
+        $services->set('sulu_page.page_tree_route_property_resolver')
+            ->class(PageTreeRoutePropertyResolver::class)
+            ->tag('sulu_content.property_resolver');
+
         $services->set('sulu_page.segment_block_visitor')
             ->class(SegmentBlockVisitor::class)
             ->args([
@@ -296,6 +310,9 @@ final class SuluPageBundle extends AbstractBundle
             ->class(PageResourceLoader::class)
             ->args([
                 new Reference('sulu_page.page_repository'),
+                new Reference('security.helper', ContainerInterface::IGNORE_ON_INVALID_REFERENCE),
+                param('sulu_security.permissions'),
+                new Reference('sulu_core.webspace.request_analyzer'),
             ])
             ->tag('sulu_content.resource_loader', ['type' => PageResourceLoader::RESOURCE_LOADER_KEY]);
 
@@ -333,13 +350,22 @@ final class SuluPageBundle extends AbstractBundle
             ])
             ->tag('sulu_admin.typed_form_metadata_visitor');
 
+        $services->set('sulu_page.default_template_typed_form_metadata_visitor')
+            ->class(DefaultTemplateTypedFormMetadataVisitor::class)
+            ->args([
+                new Reference('sulu_core.webspace.webspace_manager'),
+            ])
+            ->tag('sulu_admin.typed_form_metadata_visitor');
+
         // Repositories services
         $services->set('sulu_page.page_repository')
             ->class(PageRepository::class)
             ->args([
                 new Reference('doctrine.orm.entity_manager'),
                 new Reference('sulu_content.dimension_content_query_enhancer'),
-            ]);
+                new Reference('sulu_security.access_control_query_enhancer'),
+            ])
+            ->tag('sulu.descendant_provider');
 
         $services->alias(PageRepositoryInterface::class, 'sulu_page.page_repository');
 
@@ -420,8 +446,20 @@ final class SuluPageBundle extends AbstractBundle
                 new Reference('security.token_storage', ContainerInterface::NULL_ON_INVALID_REFERENCE),
                 new Reference('doctrine.orm.entity_manager'),
                 param('kernel.bundles'),
+                new Reference('sulu_core.webspace.webspace_manager'),
+                new Reference('sulu_security.access_control_query_enhancer'),
+                new Reference('security.helper', ContainerInterface::IGNORE_ON_INVALID_REFERENCE),
+                param('sulu_security.permissions'),
             ])
             ->tag('sulu_content.smart_content_provider', ['type' => PageInterface::RESOURCE_KEY]);
+
+        $services->set('sulu_page.page_smart_content_filters_visitor_webspace')
+            ->class(PageSmartContentFiltersVisitor::class)
+            ->args([
+                new Reference('sulu_core.webspace.request_analyzer'),
+                new Reference('request_stack'),
+            ])
+            ->tag('sulu_content.smart_content_filters_visitor');
 
         $services->set('sulu_page.page_smart_content_filters_visitor')
             ->class(SegmentSmartContentFiltersVisitor::class)
@@ -499,7 +537,9 @@ final class SuluPageBundle extends AbstractBundle
                 new Reference('doctrine.orm.entity_manager'),
                 new Reference('sulu_core.webspace.webspace_manager'),
                 '%kernel.environment%',
-                new Reference('sulu_security.access_control_manager'),
+                new Reference('sulu_security.access_control_query_enhancer'),
+                new Reference('security.helper', ContainerInterface::IGNORE_ON_INVALID_REFERENCE),
+                param('sulu_security.permissions'),
             ])
             ->tag('sulu.sitemap.provider');
 
@@ -542,11 +582,49 @@ final class SuluPageBundle extends AbstractBundle
             ])
             ->tag('cmsig_seal.reindex_provider');
 
+        $services->set('sulu_page.website_page_index_listener')
+            ->class(WebsitePageIndexListener::class)
+            ->args([
+                new Reference('sulu_message_bus'),
+            ])
+            ->tag('kernel.event_listener', ['event' => PageWorkflowTransitionAppliedEvent::class, 'method' => 'onPageChanged'])
+            ->tag('kernel.event_listener', ['event' => PageRemovedEvent::class, 'method' => 'onPageChanged'])
+            ->tag('kernel.event_listener', ['event' => PageTranslationRemovedEvent::class, 'method' => 'onPageChanged']);
+
+        $services->set('sulu_page.website_page_reindex_provider')
+            ->class(WebsitePageReindexProvider::class)
+            ->args([
+                new Reference('doctrine.orm.entity_manager'),
+            ])
+            ->tag('cmsig_seal.reindex_provider');
+
         // Security
         $services->set('sulu_page.page_security_listener')
             ->class(PageSecurityListener::class)
             ->args([
                 new Reference('sulu_security.security_checker', ContainerInterface::NULL_ON_INVALID_REFERENCE),
+            ])
+            ->tag('kernel.event_subscriber');
+
+        $services->set('sulu_page.page_descendant_security_listener')
+            ->class(PageDescendantSecurityListener::class)
+            ->args([
+                new Reference('sulu_page.page_repository'),
+                new Reference('sulu.repository.access_control'),
+                new Reference('sulu_security.system_store'),
+                new Reference('security.helper', ContainerInterface::NULL_ON_INVALID_REFERENCE),
+                param('sulu_security.permissions'),
+            ])
+            ->tag('kernel.event_subscriber');
+
+        // Cache Invalidation
+        $services->set('sulu_page.page_cache_invalidation_subscriber')
+            ->class(PageCacheInvalidationSubscriber::class)
+            ->args([
+                new Reference('sulu_http_cache.cache_manager', ContainerInterface::NULL_ON_INVALID_REFERENCE),
+                new Reference('sulu_route.route_repository'),
+                new Reference('sulu_content.content_aggregator'),
+                new Reference('sulu_route.route_generator'),
             ])
             ->tag('kernel.event_subscriber');
     }
@@ -684,8 +762,9 @@ final class SuluPageBundle extends AbstractBundle
                                 'route' => [
                                     'name' => PageAdmin::EDIT_FORM_VIEW,
                                     'resultToRoute' => [
-                                        'id' => 'id',
+                                        'resourceId' => 'id',
                                         'locale' => 'locale',
+                                        'metadata.webspaceKey' => 'webspace',
                                     ],
                                 ],
                                 'securityContext' => PageAdmin::SECURITY_CONTEXT_GROUP, // Todo: Add correct permissions for webspaces.

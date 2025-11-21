@@ -112,9 +112,14 @@ class ResolvableResourceLoader implements ResolvableResourceLoaderInterface
 
         $resourceIds = \array_map(fn (ResolvableResource $resource) => $resource->getId(), $resolvableResources);
 
+        // We can use the metadata of the first resource, as all resources share the same metadata structure
+        // different metadata structures will lead to different metadataIdentifiers and thus different resource loading calls
+        $params = \count($resolvableResources) > 0 ? \reset($resolvableResources)->getMetadata() ?? [] : [];
+
         return $resourceLoader->load(
             $resourceIds,
             $locale,
+            $params
         );
     }
 }

@@ -15,6 +15,7 @@ namespace Sulu\Bundle\ContactBundle\Tests\Functional\Infrastructure\Sulu\Search;
 
 use CmsIg\Seal\Reindex\ReindexConfig;
 use Doctrine\ORM\EntityManagerInterface;
+use Sulu\Bundle\ContactBundle\Admin\ContactAdmin;
 use Sulu\Bundle\ContactBundle\Entity\Account;
 use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
 use Sulu\Bundle\ContactBundle\Infrastructure\Sulu\Search\AdminAccountReindexProvider;
@@ -98,22 +99,24 @@ class AdminAccountReindexProviderTest extends SuluTestCase
         $this->assertSame(
             [
                 [
-                    'id' => AccountInterface::RESOURCE_KEY . '::' . $account1->getId(),
+                    'id' => AccountInterface::RESOURCE_KEY . '__' . $account1->getId(),
                     'resourceKey' => AccountInterface::RESOURCE_KEY,
                     'resourceId' => (string) $account1->getId(),
                     'mediaId' => (string) $account1->getLogo()?->getId(),
                     'changedAt' => (new \DateTimeImmutable($changedDateString1))->format('c'),
                     'createdAt' => (new \DateTimeImmutable('2000-01-01 12:00:00'))->format('c'),
                     'title' => $account1->getName(),
+                    'securityContext' => ContactAdmin::ACCOUNT_SECURITY_CONTEXT,
                 ],
                 [
-                    'id' => AccountInterface::RESOURCE_KEY . '::' . $account2->getId(),
+                    'id' => AccountInterface::RESOURCE_KEY . '__' . $account2->getId(),
                     'resourceKey' => AccountInterface::RESOURCE_KEY,
                     'resourceId' => (string) $account2->getId(),
                     'mediaId' => '',
                     'changedAt' => (new \DateTimeImmutable($changedDateString2))->format('c'),
                     'createdAt' => (new \DateTimeImmutable('2000-01-01 12:00:00'))->format('c'),
                     'title' => $account2->getName(),
+                    'securityContext' => ContactAdmin::ACCOUNT_SECURITY_CONTEXT,
                 ],
             ],
             [...$results],
@@ -129,8 +132,8 @@ class AdminAccountReindexProviderTest extends SuluTestCase
         $this->entityManager->flush();
 
         $identifiers = [
-            AccountInterface::RESOURCE_KEY . '::' . $account1->getId(),
-            AccountInterface::RESOURCE_KEY . '::' . $account3->getId(),
+            AccountInterface::RESOURCE_KEY . '__' . $account1->getId(),
+            AccountInterface::RESOURCE_KEY . '__' . $account3->getId(),
         ];
 
         $config = ReindexConfig::create()

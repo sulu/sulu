@@ -1,5 +1,6 @@
 // @flow
 import {mount, render} from 'enzyme';
+import {observable} from 'mobx';
 import SelectFieldFilterType from '../../fieldFilterTypes/SelectFieldFilterType';
 
 jest.mock('../../../../utils/Translator', () => ({
@@ -93,5 +94,43 @@ test.each([
 
     return valueNodePromise.then((valueNode) => {
         expect(valueNode).toEqual(expectedValueNode);
+    });
+});
+
+test('Handle observable array options with numeric keys', () => {
+    const observableOptions = observable(['app.job.jobSource.0', 'app.job.jobSource.1', 'app.job.jobSource.2']);
+    const selectFieldFilterType = new SelectFieldFilterType(
+        jest.fn(),
+        {options: observableOptions},
+        undefined
+    );
+
+    const selectFieldFilterTypeForm = mount(selectFieldFilterType.getFormNode());
+
+    expect(selectFieldFilterTypeForm.find('Checkbox')).toHaveLength(3);
+    expect(selectFieldFilterTypeForm.find('Checkbox').at(0).prop('value')).toEqual('0');
+    expect(selectFieldFilterTypeForm.find('Checkbox').at(0).text()).toEqual('app.job.jobSource.0');
+    expect(selectFieldFilterTypeForm.find('Checkbox').at(1).prop('value')).toEqual('1');
+    expect(selectFieldFilterTypeForm.find('Checkbox').at(1).text()).toEqual('app.job.jobSource.1');
+    expect(selectFieldFilterTypeForm.find('Checkbox').at(2).prop('value')).toEqual('2');
+    expect(selectFieldFilterTypeForm.find('Checkbox').at(2).text()).toEqual('app.job.jobSource.2');
+});
+
+test('Return value node observable array options', () => {
+    const observableOptions = observable(['Option Zero', 'Option One', 'Option Two']);
+    const selectFieldFilterType = new SelectFieldFilterType(
+        jest.fn(),
+        {options: observableOptions},
+        undefined
+    );
+
+    const valueNodePromise = selectFieldFilterType.getValueNode(['0', '2']);
+
+    if (!valueNodePromise) {
+        throw new Error('The getValueNode function must return a promise!');
+    }
+
+    return valueNodePromise.then((valueNode) => {
+        expect(valueNode).toEqual('Option Zero, Option Two');
     });
 });

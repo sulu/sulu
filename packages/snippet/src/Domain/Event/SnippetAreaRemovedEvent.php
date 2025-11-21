@@ -55,6 +55,12 @@ class SnippetAreaRemovedEvent extends DomainEvent
         return $this->snippetAreaTitle;
     }
 
+    public function getAreaKey(): ?string
+    {
+        // SnippetArea has no translatable title, so area key serves as the resource title
+        return $this->snippetAreaTitle;
+    }
+
     public function getResourceSecurityContext(): ?string
     {
         return SnippetAreaAdmin::SECURITY_CONTEXT;

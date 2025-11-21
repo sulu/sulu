@@ -19,6 +19,9 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Sulu\Article\Domain\Model\ArticleDimensionContentInterface;
 use Sulu\Article\Domain\Model\ArticleInterface;
+use Sulu\Article\Infrastructure\Sulu\Admin\ArticleAdmin;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormGroup;
+use Sulu\Bundle\AdminBundle\Metadata\GroupProviderInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 
 /**
@@ -28,6 +31,7 @@ use Sulu\Content\Domain\Model\DimensionContentInterface;
  *     created: \DateTimeImmutable,
  *     title: string,
  *     locale: string,
+ *     templateKey: string,
  * }
  *
  * @internal this class is internal no backwards compatibility promise is given for this class
@@ -45,14 +49,18 @@ final class AdminArticleReindexProvider implements ReindexProviderInterface
      */
     protected EntityRepository $dimensionContentRepository;
 
+    protected GroupProviderInterface $groupProvider;
+
     public function __construct(
         EntityManagerInterface $entityManager,
+        GroupProviderInterface $groupProvider,
     ) {
         $repository = $entityManager->getRepository(ArticleInterface::class);
         $dimensionContentRepository = $entityManager->getRepository(ArticleDimensionContentInterface::class);
 
         $this->articleRepository = $repository;
         $this->dimensionContentRepository = $dimensionContentRepository;
+        $this->groupProvider = $groupProvider;
     }
 
     public function total(): ?int
@@ -64,17 +72,32 @@ final class AdminArticleReindexProvider implements ReindexProviderInterface
     public function provide(ReindexConfig $reindexConfig): \Generator
     {
         $articles = $this->loadArticles($reindexConfig->getIdentifiers());
+        /** @var FormGroup[] $groups */
+        $groups = $this->groupProvider->getGroups();
 
         /** @var Article $article */
         foreach ($articles as $article) {
+            $groupIdentifier = null;
+
+            foreach ($groups as $group) {
+                if (\in_array($article['templateKey'], $group->templates)) {
+                    $groupIdentifier = $group->identifier;
+                    break;
+                }
+            }
+
             yield [
-                'id' => ArticleInterface::RESOURCE_KEY . '::' . ((string) $article['articleId']) . '::' . $article['locale'],
+                'id' => ArticleInterface::RESOURCE_KEY . '__' . ((string) $article['articleId']) . '__' . $article['locale'],
                 'resourceKey' => ArticleInterface::RESOURCE_KEY,
                 'resourceId' => (string) $article['articleId'],
                 'changedAt' => $article['changed']->format('c'),
                 'createdAt' => $article['created']->format('c'),
                 'title' => $article['title'],
                 'locale' => $article['locale'],
+                'metadata' => [
+                    'group' => $groupIdentifier,
+                ],
+                'securityContext' => ArticleAdmin::getArticleSecurityContext($groupIdentifier ?? 'default'),
             ];
         }
     }
@@ -92,6 +115,7 @@ final class AdminArticleReindexProvider implements ReindexProviderInterface
             ->addSelect('dimensionContent.changed')
             ->addSelect('dimensionContent.title')
             ->addSelect('dimensionContent.locale')
+            ->addSelect('dimensionContent.templateKey')
             ->where('dimensionContent.stage = :stage')
             ->andWhere('dimensionContent.locale IS NOT NULL')
             ->andWhere('dimensionContent.version = :version');
@@ -105,14 +129,14 @@ final class AdminArticleReindexProvider implements ReindexProviderInterface
             $conditions = [];
 
             foreach ($identifiers as $index => $identifier) {
-                $resourceKey = \explode('::', $identifier)[0];
+                $resourceKey = \explode('__', $identifier)[0];
 
                 if (ArticleInterface::RESOURCE_KEY !== $resourceKey) {
                     continue;
                 }
 
-                $id = \explode('::', $identifier)[1] ?? '';
-                $locale = \explode('::', $identifier)[2] ?? '';
+                $id = \explode('__', $identifier)[1] ?? '';
+                $locale = \explode('__', $identifier)[2] ?? '';
 
                 $conditions[] = "(dimensionContent.article = :id{$index} AND dimensionContent.locale = :locale{$index})";
                 $parameters["id{$index}"] = $id;

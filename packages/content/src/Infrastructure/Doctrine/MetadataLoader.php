@@ -20,7 +20,6 @@ use Doctrine\ORM\Mapping\ClassMetadata;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\ContactBundle\Entity\ContactInterface;
-use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\TagBundle\Tag\TagInterface;
 use Sulu\Content\Domain\Model\AuthorInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
@@ -29,6 +28,7 @@ use Sulu\Content\Domain\Model\LinkInterface;
 use Sulu\Content\Domain\Model\RoutableInterface;
 use Sulu\Content\Domain\Model\SeoInterface;
 use Sulu\Content\Domain\Model\ShadowInterface;
+use Sulu\Content\Domain\Model\TaxonomyInterface;
 use Sulu\Content\Domain\Model\TemplateInterface;
 use Sulu\Content\Domain\Model\WebspaceInterface;
 use Sulu\Content\Domain\Model\WorkflowInterface;
@@ -90,32 +90,11 @@ final class MetadataLoader
         }
 
         if ($reflection->implementsInterface(ExcerptInterface::class)) {
-            $this->addField($metadata, 'excerptTitle');
-            $this->addField($metadata, 'excerptMore', 'string', ['length' => 63]);
-            $this->addField($metadata, 'excerptDescription', 'text');
+            $this->addField($metadata, 'excerptData', 'json', ['nullable' => false, 'options' => ['jsonb' => true]]);
+        }
+
+        if ($reflection->implementsInterface(TaxonomyInterface::class)) {
             $this->addField($metadata, 'excerptSegment');
-            $this->addField($metadata, 'excerptImageId', 'integer', [
-                'columnName' => 'excerptImageId',
-                '_custom' => [
-                    'references' => [
-                        'entity' => MediaInterface::class,
-                        'field' => 'id',
-                        'onDelete' => 'SET NULL',
-                    ],
-                ],
-            ]);
-
-            $this->addField($metadata, 'excerptIconId', 'integer', [
-                'columnName' => 'excerptIconId',
-                '_custom' => [
-                    'references' => [
-                        'entity' => MediaInterface::class,
-                        'field' => 'id',
-                        'onDelete' => 'SET NULL',
-                    ],
-                ],
-            ]);
-
             $this->addManyToMany($event, $metadata, 'excerptTags', TagInterface::class, 'tag_id');
             $this->addManyToMany($event, $metadata, 'excerptCategories', CategoryInterface::class, 'category_id');
             if ($this->bundles['SuluAudienceTargetingBundle'] ?? false) {

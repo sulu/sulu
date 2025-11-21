@@ -105,11 +105,11 @@ class CollaborationRepositoryTest extends TestCase
             [
                 5,
                 'collaboration1',
-                '1',
+                1,
                 'max',
                 'Max Mustermann',
                 'collaboration2',
-                '2',
+                2,
                 'erika',
                 'Erika Mustermann',
                 'page',
@@ -118,11 +118,11 @@ class CollaborationRepositoryTest extends TestCase
             [
                 10,
                 'collaboration1',
-                '2',
+                2,
                 'erika',
                 'Erika Mustermann',
                 'collaboration2',
-                '1',
+                1,
                 'max',
                 'Max Mustermann',
                 'snippet',
@@ -133,17 +133,17 @@ class CollaborationRepositoryTest extends TestCase
 
     #[\PHPUnit\Framework\Attributes\DataProvider('provideUpdate')]
     public function testUpdate(
-        $threshold,
-        $collaborationId1,
-        $userId1,
-        $userName1,
-        $fullName1,
-        $collaborationId2,
-        $userId2,
-        $userName2,
-        $fullName2,
-        $resourceKey,
-        $id
+        int $threshold,
+        string $collaborationId1,
+        int $userId1,
+        string $userName1,
+        string $fullName1,
+        string $collaborationId2,
+        int $userId2,
+        string $userName2,
+        string $fullName2,
+        string $resourceKey,
+        int $id
     ): void {
         $cacheItem = new CacheItem();
         $this->cache->getItem($resourceKey . '_' . $id)->willReturn($cacheItem);

@@ -15,6 +15,7 @@ namespace Sulu\Bundle\MediaBundle\Tests\Functional\Infrastructure\Sulu\Search;
 
 use CmsIg\Seal\Reindex\ReindexConfig;
 use Doctrine\ORM\EntityManagerInterface;
+use Sulu\Bundle\MediaBundle\Admin\MediaAdmin;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
 use Sulu\Bundle\MediaBundle\Entity\CollectionType;
@@ -91,7 +92,7 @@ class AdminMediaReindexProviderTest extends SuluTestCase
 
         $expectedResult = [
             [
-                'id' => MediaInterface::RESOURCE_KEY . '::' . $media1->getId() . '::en',
+                'id' => MediaInterface::RESOURCE_KEY . '__' . $media1->getId() . '__en',
                 'resourceKey' => MediaInterface::RESOURCE_KEY,
                 'resourceId' => (string) $media1->getId(),
                 'mediaId' => (string) $media1->getId(),
@@ -99,9 +100,10 @@ class AdminMediaReindexProviderTest extends SuluTestCase
                 'createdAt' => (new \DateTimeImmutable($createdDateString1))->format('c'),
                 'title' => 'media EN',
                 'locale' => 'en',
+                'securityContext' => MediaAdmin::SECURITY_CONTEXT,
             ],
             [
-                'id' => MediaInterface::RESOURCE_KEY . '::' . $media2->getId() . '::de',
+                'id' => MediaInterface::RESOURCE_KEY . '__' . $media2->getId() . '__de',
                 'resourceKey' => MediaInterface::RESOURCE_KEY,
                 'resourceId' => (string) $media2->getId(),
                 'mediaId' => (string) $media2->getId(),
@@ -109,6 +111,7 @@ class AdminMediaReindexProviderTest extends SuluTestCase
                 'createdAt' => (new \DateTimeImmutable($createdDateString2))->format('c'),
                 'title' => 'media DE',
                 'locale' => 'de',
+                'securityContext' => MediaAdmin::SECURITY_CONTEXT,
             ],
         ];
 
@@ -128,8 +131,8 @@ class AdminMediaReindexProviderTest extends SuluTestCase
         $media3 = $this->createMedia('Cool Media EN 2');
 
         $identifiers = [
-            MediaInterface::RESOURCE_KEY . '::' . $media1->getId() . '::en',
-            MediaInterface::RESOURCE_KEY . '::' . $media2->getId() . '::de',
+            MediaInterface::RESOURCE_KEY . '__' . $media1->getId() . '__en',
+            MediaInterface::RESOURCE_KEY . '__' . $media2->getId() . '__de',
         ];
 
         $config = ReindexConfig::create()

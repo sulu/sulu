@@ -17,12 +17,13 @@
                 "webspaceKey": "sulu-io",
                 "template": null,
                 "publishedState": false,
+                "linkProvider": null,
                 "hasChildren": true,
                 "_embedded": {
                     "pages": [
                         {
                             "_hasPermissions": false,
-                            "author": null,
+                            "author": "@string@",
                             "changed": "@datetime@",
                             "changer": "Max Mustermann",
                             "created": "@datetime@",
@@ -30,6 +31,7 @@
                             "ghostLocale": null,
                             "hasChildren": true,
                             "id": "@string@",
+                            "linkProvider": null,
                             "version" : 0,
                             "locale": "de",
                             "publishedState": false,

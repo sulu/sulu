@@ -9,13 +9,13 @@ import ArrowMenu from '../../components/ArrowMenu';
 import Button from '../../components/Button';
 import Dialog from '../../components/Dialog';
 import Loader from '../../components/Loader';
-import PermissionHint from '../../components/PermissionHint';
 import userStore from '../../stores/userStore';
 import SingleListOverlay from '../SingleListOverlay';
 import {translate} from '../../utils';
 import DeleteReferencedResourceDialog from '../DeleteReferencedResourceDialog';
 import DeleteDependantResourcesDialog from '../DeleteDependantResourcesDialog';
 import {ERROR_CODE_DEPENDANT_RESOURCES_FOUND, ERROR_CODE_REFERENCING_RESOURCES_FOUND} from '../../constants';
+import Hint from '../../components/Hint';
 import ListStore from './stores/ListStore';
 import listAdapterRegistry from './registries/listAdapterRegistry';
 import AbstractAdapter from './adapters/AbstractAdapter';
@@ -645,7 +645,7 @@ class List extends React.Component<Props> {
         const hasToolbar = searchable || filterable || actions.length || this.showColumnOptions || adapters.length > 1;
 
         if (store.forbidden) {
-            return <PermissionHint />;
+            return <Hint icon="su-lock" title={translate('sulu_admin.no_permissions')} />;
         }
 
         return (

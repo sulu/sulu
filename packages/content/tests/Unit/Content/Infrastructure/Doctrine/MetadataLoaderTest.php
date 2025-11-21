@@ -31,6 +31,7 @@ use Sulu\Content\Domain\Model\LinkInterface;
 use Sulu\Content\Domain\Model\RoutableInterface;
 use Sulu\Content\Domain\Model\SeoInterface;
 use Sulu\Content\Domain\Model\ShadowInterface;
+use Sulu\Content\Domain\Model\TaxonomyInterface;
 use Sulu\Content\Domain\Model\TemplateInterface;
 use Sulu\Content\Domain\Model\WebspaceInterface;
 use Sulu\Content\Domain\Model\WorkflowInterface;
@@ -64,6 +65,7 @@ class MetadataLoaderTest extends TestCase
         $reflectionClass->implementsInterface(DimensionContentInterface::class)->willReturn(\in_array(DimensionContentInterface::class, $interfaces, true));
         $reflectionClass->implementsInterface(SeoInterface::class)->willReturn(\in_array(SeoInterface::class, $interfaces, true));
         $reflectionClass->implementsInterface(ExcerptInterface::class)->willReturn(\in_array(ExcerptInterface::class, $interfaces, true));
+        $reflectionClass->implementsInterface(TaxonomyInterface::class)->willReturn(\in_array(TaxonomyInterface::class, $interfaces, true));
         $reflectionClass->implementsInterface(TemplateInterface::class)->willReturn(\in_array(TemplateInterface::class, $interfaces, true));
         $reflectionClass->implementsInterface(WorkflowInterface::class)->willReturn(\in_array(WorkflowInterface::class, $interfaces, true));
         $reflectionClass->implementsInterface(WebspaceInterface::class)->willReturn(\in_array(WebspaceInterface::class, $interfaces, true));
@@ -173,12 +175,18 @@ class MetadataLoaderTest extends TestCase
                 ExcerptInterface::class,
             ],
             [
-                'excerptTitle' => false,
-                'excerptDescription' => false,
-                'excerptMore' => false,
+                'excerptData' => false,
+            ],
+            [],
+            [],
+        ];
+
+        yield [
+            [
+                TaxonomyInterface::class,
+            ],
+            [
                 'excerptSegment' => false,
-                'excerptImageId' => false,
-                'excerptIconId' => false,
             ],
             [
                 'excerptTags' => false,
@@ -221,12 +229,18 @@ class MetadataLoaderTest extends TestCase
                 ExcerptInterface::class,
             ],
             [
-                'excerptTitle' => true,
-                'excerptDescription' => false,
-                'excerptMore' => false,
+                'excerptData' => true,
+            ],
+            [],
+            [],
+        ];
+
+        yield [
+            [
+                TaxonomyInterface::class,
+            ],
+            [
                 'excerptSegment' => false,
-                'excerptImageId' => false,
-                'excerptIconId' => false,
             ],
             [
                 'excerptTags' => true,
@@ -305,6 +319,7 @@ class MetadataLoaderTest extends TestCase
         $reflectionClass = $this->prophesize(\ReflectionClass::class);
 
         $reflectionClass->implementsInterface(ExcerptInterface::class)->willReturn(true);
+        $reflectionClass->implementsInterface(TaxonomyInterface::class)->willReturn(true);
         $reflectionClass->implementsInterface(Argument::any())->willReturn(false);
 
         $classMetadata = $this->prophesize(ClassMetadata::class);
@@ -313,15 +328,13 @@ class MetadataLoaderTest extends TestCase
         $classMetadata->getIdentifierColumnNames()->willReturn(['id']);
         $classMetadata->getName()->willReturn(ExampleDimensionContent::class);
 
-        // All excerpt fields should be added
-        $classMetadata->hasField('excerptTitle')->willReturn(false);
-        $classMetadata->hasField('excerptDescription')->willReturn(false);
-        $classMetadata->hasField('excerptMore')->willReturn(false);
-        $classMetadata->hasField('excerptSegment')->willReturn(false);
-        $classMetadata->hasField('excerptImageId')->willReturn(false);
-        $classMetadata->hasField('excerptIconId')->willReturn(false);
+        // Excerpt field should be added (1 JSON field from ExcerptInterface)
+        $classMetadata->hasField('excerptData')->willReturn(false);
 
-        $classMetadata->mapField(Argument::any())->shouldBeCalledTimes(6);
+        // Taxonomy field should be added (1 field from TaxonomyInterface)
+        $classMetadata->hasField('excerptSegment')->willReturn(false);
+
+        $classMetadata->mapField(Argument::any())->shouldBeCalledTimes(2);
 
         // Tags and categories should be added
         $classMetadata->hasAssociation('excerptTags')->willReturn(false);
@@ -357,6 +370,7 @@ class MetadataLoaderTest extends TestCase
         $reflectionClass = $this->prophesize(\ReflectionClass::class);
 
         $reflectionClass->implementsInterface(ExcerptInterface::class)->willReturn(true);
+        $reflectionClass->implementsInterface(TaxonomyInterface::class)->willReturn(true);
         $reflectionClass->implementsInterface(Argument::any())->willReturn(false);
 
         $classMetadata = $this->prophesize(ClassMetadata::class);
@@ -365,15 +379,13 @@ class MetadataLoaderTest extends TestCase
         $classMetadata->getIdentifierColumnNames()->willReturn(['id']);
         $classMetadata->getName()->willReturn(ExampleDimensionContent::class);
 
-        // All excerpt fields should be added
-        $classMetadata->hasField('excerptTitle')->willReturn(false);
-        $classMetadata->hasField('excerptDescription')->willReturn(false);
-        $classMetadata->hasField('excerptMore')->willReturn(false);
-        $classMetadata->hasField('excerptSegment')->willReturn(false);
-        $classMetadata->hasField('excerptImageId')->willReturn(false);
-        $classMetadata->hasField('excerptIconId')->willReturn(false);
+        // Excerpt field should be added (1 JSON field from ExcerptInterface)
+        $classMetadata->hasField('excerptData')->willReturn(false);
 
-        $classMetadata->mapField(Argument::any())->shouldBeCalledTimes(6);
+        // Taxonomy field should be added (1 field from TaxonomyInterface)
+        $classMetadata->hasField('excerptSegment')->willReturn(false);
+
+        $classMetadata->mapField(Argument::any())->shouldBeCalledTimes(2);
 
         // Tags, categories, and target groups should be added
         $classMetadata->hasAssociation('excerptTags')->willReturn(false);

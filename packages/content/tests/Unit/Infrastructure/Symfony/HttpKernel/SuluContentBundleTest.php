@@ -64,7 +64,7 @@ class SuluContentBundleTest extends AbstractExtensionTestCase
         $passConfig = $containerBuilder->getCompiler()->getPassConfig();
 
         $this->assertSame(
-            2,
+            3,
             \count($passConfig->getPasses()) - $beforeCount
         );
     }

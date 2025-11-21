@@ -228,5 +228,10 @@
             <field-name>workflowPlace</field-name>
             <entity-name>dimensionContent</entity-name>
         </property>
+
+        <property name="linkProvider" visibility="never">
+            <field-name>linkProvider</field-name>
+            <entity-name>dimensionContent</entity-name>
+        </property>
     </properties>
 </list>

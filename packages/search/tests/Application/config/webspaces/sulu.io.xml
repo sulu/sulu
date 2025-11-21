@@ -23,7 +23,7 @@
     </default-templates>
 
     <templates>
-        <template type="search">search/search</template>
+        <template type="search">search</template>
     </templates>
 
     <navigation>

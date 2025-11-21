@@ -206,7 +206,7 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
                                 'route' => [
                                     'name' => MediaAdmin::EDIT_FORM_VIEW,
                                     'resultToRoute' => [
-                                        'id' => 'id',
+                                        'resourceId' => 'id',
                                         'locale' => 'locale',
                                     ],
                                 ],
@@ -218,7 +218,7 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
                                 'route' => [
                                     'name' => MediaAdmin::MEDIA_OVERVIEW_VIEW,
                                     'resultToRoute' => [
-                                        'id' => 'id',
+                                        'resourceId' => 'id',
                                         'locale' => 'locale',
                                     ],
                                 ],

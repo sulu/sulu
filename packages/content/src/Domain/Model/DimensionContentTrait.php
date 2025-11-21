@@ -15,30 +15,18 @@ namespace Sulu\Content\Domain\Model;
 
 trait DimensionContentTrait
 {
-    /**
-     * @var string|null
-     */
-    protected $locale;
+    protected ?string $locale = null;
 
-    /**
-     * @var string|null
-     */
-    protected $ghostLocale;
+    protected ?string $ghostLocale = null;
 
     /**
      * @var string[]|null
      */
-    protected $availableLocales;
+    protected ?array $availableLocales = null;
 
-    /**
-     * @var string
-     */
-    protected $stage = DimensionContentInterface::STAGE_DRAFT;
+    protected string $stage = DimensionContentInterface::STAGE_DRAFT;
 
-    /**
-     * @var bool
-     */
-    private $isMerged = false;
+    private bool $isMerged = false;
 
     private int $version = DimensionContentInterface::CURRENT_VERSION;
 

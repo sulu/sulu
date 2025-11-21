@@ -20,6 +20,10 @@
             <tag name="sulu_content.merger" priority="32"/>
         </service>
 
+        <service id="sulu_content.taxonomy_merger" class="Sulu\Content\Application\ContentMerger\Merger\TaxonomyMerger">
+            <tag name="sulu_content.merger" priority="31"/>
+        </service>
+
         <service id="sulu_content.seo_merger" class="Sulu\Content\Application\ContentMerger\Merger\SeoMerger">
             <tag name="sulu_content.merger" priority="24"/>
         </service>

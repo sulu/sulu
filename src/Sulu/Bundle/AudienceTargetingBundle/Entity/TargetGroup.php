@@ -177,7 +177,9 @@ class TargetGroup implements TargetGroupInterface
 
     public function clearWebspaces()
     {
-        $this->webspaces->clear();
+        foreach ($this->webspaces as $webspace) {
+            $this->removeWebspace($webspace);
+        }
     }
 
     public function getRules()
@@ -201,6 +203,8 @@ class TargetGroup implements TargetGroupInterface
 
     public function clearRules()
     {
-        $this->rules->clear();
+        foreach ($this->rules as $rule) {
+            $this->removeRule($rule);
+        }
     }
 }

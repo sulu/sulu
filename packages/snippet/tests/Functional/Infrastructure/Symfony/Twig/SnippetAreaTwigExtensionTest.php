@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Sulu\Snippet\Tests\Functional\Infrastructure\Symfony\Twig;
 
-use Sulu\Bundle\MediaBundle\Api\Media;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Content\Tests\Functional\Traits\CreateMediaTrait;
 use Sulu\Snippet\Infrastructure\Symfony\Twig\SnippetAreaTwigExtension;
@@ -56,20 +55,14 @@ class SnippetAreaTwigExtensionTest extends SuluTestCase
 
         self::getEntityManager()->flush();
 
-        $result = $this->snippetAreaTwigExtension->loadSnippetByArea('hotel', 'sulu-io', 'en');
+        $result = $this->snippetAreaTwigExtension->loadSnippetByArea('hotel', [], 'sulu-io', 'en');
 
         $this->assertIsArray($result);
         $this->assertArrayHasKey('content', $result);
 
         /** @var array<string, mixed> $content */
         $content = $result['content'];
-        $this->assertArrayHasKey('title', $content);
-        $this->assertSame('Test Snippet', $content['title']);
-        $this->assertArrayHasKey('description', $content);
-        $this->assertSame('This is a test snippet description', $content['description']);
-        $this->assertArrayHasKey('image', $content);
-        $this->assertInstanceOf(Media::class, $content['image']);
-        $this->assertSame($media->getId(), $content['image']->getId());
+        $this->assertEmpty($content);
     }
 
     public function testLoadSnippetByAreaWithProperties(): void
@@ -100,7 +93,7 @@ class SnippetAreaTwigExtensionTest extends SuluTestCase
             'description' => 'description',
         ];
 
-        $result = $this->snippetAreaTwigExtension->loadSnippetByArea('hotel', 'sulu-io', 'en', $properties);
+        $result = $this->snippetAreaTwigExtension->loadSnippetByArea('hotel', $properties, 'sulu-io', 'en');
 
         $this->assertIsArray($result);
         $this->assertArrayHasKey('title', $result);
@@ -116,7 +109,7 @@ class SnippetAreaTwigExtensionTest extends SuluTestCase
 
     public function testLoadSnippetByAreaReturnsNullWhenAreaNotFound(): void
     {
-        $result = $this->snippetAreaTwigExtension->loadSnippetByArea('nonexistent', 'sulu-io', 'en');
+        $result = $this->snippetAreaTwigExtension->loadSnippetByArea('nonexistent', [], 'sulu-io', 'en');
 
         $this->assertNull($result);
     }
@@ -134,7 +127,7 @@ class SnippetAreaTwigExtensionTest extends SuluTestCase
 
         self::getEntityManager()->flush();
 
-        $result = $this->snippetAreaTwigExtension->loadSnippetByArea('hotel', 'sulu-io', 'en');
+        $result = $this->snippetAreaTwigExtension->loadSnippetByArea('hotel', [], 'sulu-io', 'en');
 
         $this->assertNull($result);
     }

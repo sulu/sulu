@@ -25,6 +25,39 @@ class NavigationRepositoryLinkTest extends SuluTestCase
 
     private NavigationRepositoryInterface $navigationRepository;
 
+    /**
+     * @return array<string, string>
+     */
+    private function getDefaultProperties(bool $withExcerpt = false): array
+    {
+        $properties = [
+            'uuid' => 'object.resource.id',
+            'title' => 'title',
+            'url' => 'url',
+            'webspaceKey' => 'object.resource.webspaceKey',
+            'template' => 'object.templateKey',
+            'changed' => 'object.changed',
+            'changer' => 'object.changer',
+            'created' => 'object.created',
+            'creator' => 'object.creator',
+            'linkProvider' => 'object.linkData.linkProvider',
+        ];
+
+        if ($withExcerpt) {
+            $properties['excerpt.title'] = 'excerpt.title';
+            $properties['excerpt.more'] = 'excerpt.more';
+            $properties['excerpt.description'] = 'excerpt.description';
+            $properties['excerpt.segment'] = 'excerpt.segment';
+            $properties['excerpt.categories'] = 'excerpt.categories';
+            $properties['excerpt.tags'] = 'excerpt.tags';
+            $properties['excerpt.audienceTargetGroups'] = 'excerpt.audienceTargetGroups';
+            $properties['excerpt.icon'] = 'excerpt.icon';
+            $properties['excerpt.image'] = 'excerpt.image';
+        }
+
+        return $properties;
+    }
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -119,7 +152,8 @@ class NavigationRepositoryLinkTest extends SuluTestCase
             'en',
             'sulu-io',
             null,
-            1
+            1,
+            $this->getDefaultProperties()
         );
 
         /** @var array<string, mixed> $contentPageNav */
@@ -149,7 +183,7 @@ class NavigationRepositoryLinkTest extends SuluTestCase
             'sulu-io',
             null,
             1,
-            ['excerpt' => true]
+            $this->getDefaultProperties(true)
         );
 
         // Test internal link with excerpt
@@ -177,6 +211,7 @@ class NavigationRepositoryLinkTest extends SuluTestCase
             'sulu-io',
             null,
             2,
+            $this->getDefaultProperties()
         );
 
         // Test content page

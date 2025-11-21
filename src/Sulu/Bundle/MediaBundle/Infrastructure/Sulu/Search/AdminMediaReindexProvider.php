@@ -17,6 +17,7 @@ use CmsIg\Seal\Reindex\ReindexConfig;
 use CmsIg\Seal\Reindex\ReindexProviderInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
+use Sulu\Bundle\MediaBundle\Admin\MediaAdmin;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 
 /**
@@ -60,7 +61,7 @@ final class AdminMediaReindexProvider implements ReindexProviderInterface
         /** @var Media $media */
         foreach ($medias as $media) {
             yield [
-                'id' => MediaInterface::RESOURCE_KEY . '::' . ((string) $media['id']) . '::' . $media['locale'],
+                'id' => MediaInterface::RESOURCE_KEY . '__' . ((string) $media['id']) . '__' . $media['locale'],
                 'resourceKey' => MediaInterface::RESOURCE_KEY,
                 'resourceId' => (string) $media['id'],
                 'mediaId' => (string) $media['id'],
@@ -68,6 +69,7 @@ final class AdminMediaReindexProvider implements ReindexProviderInterface
                 'createdAt' => $media['created']->format('c'),
                 'title' => $media['title'],
                 'locale' => $media['locale'],
+                'securityContext' => MediaAdmin::SECURITY_CONTEXT,
             ];
         }
     }
@@ -96,14 +98,14 @@ final class AdminMediaReindexProvider implements ReindexProviderInterface
             $parameters = [];
 
             foreach ($identifiers as $index => $identifier) {
-                $resourceKey = \explode('::', $identifier)[0];
+                $resourceKey = \explode('__', $identifier)[0];
 
                 if (MediaInterface::RESOURCE_KEY !== $resourceKey) {
                     continue;
                 }
 
-                $id = \explode('::', $identifier)[1] ?? '';
-                $locale = \explode('::', $identifier)[2] ?? '';
+                $id = \explode('__', $identifier)[1] ?? '';
+                $locale = \explode('__', $identifier)[2] ?? '';
 
                 $conditions[] = "(media.id = :id{$index} AND meta.locale = :locale{$index})";
                 $parameters["id{$index}"] = $id;

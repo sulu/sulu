@@ -49,14 +49,14 @@ class AdminArticleIndexListenerTest extends TestCase
         $this->listener = new AdminArticleIndexListener($this->messageBus->reveal());
     }
 
-    public function testOnArticleChangedWithSnippetCreatedEvent(): void
+    public function testOnArticleChangedWithArticleCreatedEvent(): void
     {
         $article = new Article('123');
         $event = new ArticleCreatedEvent($article, 'en', []);
 
         $expectedConfig = ReindexConfig::create()
             ->withIndex('admin')
-            ->withIdentifiers([ArticleInterface::RESOURCE_KEY . '::123::en']);
+            ->withIdentifiers([ArticleInterface::RESOURCE_KEY . '__123__en']);
 
         $this->messageBus->dispatch($expectedConfig)
             ->willReturn(new Envelope($expectedConfig))
@@ -72,7 +72,7 @@ class AdminArticleIndexListenerTest extends TestCase
 
         $expectedConfig = ReindexConfig::create()
             ->withIndex('admin')
-            ->withIdentifiers([ArticleInterface::RESOURCE_KEY . '::456::en']);
+            ->withIdentifiers([ArticleInterface::RESOURCE_KEY . '__456__en']);
 
         $this->messageBus->dispatch($expectedConfig)
             ->willReturn(new Envelope($expectedConfig))
@@ -88,7 +88,7 @@ class AdminArticleIndexListenerTest extends TestCase
 
         $expectedConfig = ReindexConfig::create()
             ->withIndex('admin')
-            ->withIdentifiers([ArticleInterface::RESOURCE_KEY . '::789::en', ArticleInterface::RESOURCE_KEY . '::789::de']);
+            ->withIdentifiers([ArticleInterface::RESOURCE_KEY . '__789__en', ArticleInterface::RESOURCE_KEY . '__789__de']);
 
         $this->messageBus->dispatch($expectedConfig)
             ->willReturn(new Envelope($expectedConfig))
@@ -108,7 +108,7 @@ class AdminArticleIndexListenerTest extends TestCase
 
         $expectedConfig = ReindexConfig::create()
             ->withIndex('admin')
-            ->withIdentifiers([ArticleInterface::RESOURCE_KEY . '::222::de']);
+            ->withIdentifiers([ArticleInterface::RESOURCE_KEY . '__222__de']);
 
         $this->messageBus->dispatch($expectedConfig)
             ->willReturn(new Envelope($expectedConfig))
@@ -124,7 +124,7 @@ class AdminArticleIndexListenerTest extends TestCase
 
         $expectedConfig = ReindexConfig::create()
             ->withIndex('admin')
-            ->withIdentifiers([ArticleInterface::RESOURCE_KEY . '::333::de']);
+            ->withIdentifiers([ArticleInterface::RESOURCE_KEY . '__333__de']);
 
         $this->messageBus->dispatch($expectedConfig)
             ->willReturn(new Envelope($expectedConfig))
@@ -140,7 +140,7 @@ class AdminArticleIndexListenerTest extends TestCase
 
         $expectedConfig = ReindexConfig::create()
             ->withIndex('admin')
-            ->withIdentifiers([ArticleInterface::RESOURCE_KEY . '::444::de']);
+            ->withIdentifiers([ArticleInterface::RESOURCE_KEY . '__444__de']);
 
         $this->messageBus->dispatch($expectedConfig)
             ->willReturn(new Envelope($expectedConfig))

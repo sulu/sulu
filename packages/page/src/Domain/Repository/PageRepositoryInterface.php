@@ -11,6 +11,8 @@
 
 namespace Sulu\Page\Domain\Repository;
 
+use Sulu\Component\Security\Authentication\UserInterface;
+use Sulu\Component\Security\Authorization\AccessControl\DescendantProviderInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Page\Domain\Exception\PageNotFoundException;
 use Sulu\Page\Domain\Model\PageInterface;
@@ -18,9 +20,9 @@ use Sulu\Page\Domain\Model\PageInterface;
 /**
  * Implementation can be found in the following class:.
  *
- * @see Sulu\Page\Infrastructure\Doctrine\Repository\PageRepository
+ * @see \Sulu\Page\Infrastructure\Doctrine\Repository\PageRepository
  */
-interface PageRepositoryInterface
+interface PageRepositoryInterface extends DescendantProviderInterface
 {
     /**
      * Groups are used in controllers and represents serialization / resolver group,
@@ -44,7 +46,10 @@ interface PageRepositoryInterface
      *     uuids?: string[],
      *     locale?: string,
      *     stage?: string,
+     *     parentId?: string|null,
+     *     descendantOfId?: string,
      *     load_ghost_content?: bool,
+     *     accessControl?: array{user?: UserInterface|null, permission?: int|null},
      * } $filters
      * @param array{
      *     page_admin?: bool,
@@ -62,6 +67,9 @@ interface PageRepositoryInterface
      *     uuids?: string[],
      *     locale?: string,
      *     stage?: string,
+     *     parentId?: string|null,
+     *     descendantOfId?: string,
+     *     accessControl?: array{user?: UserInterface|null, permission?: int|null},
      * } $filters
      * @param array{
      *     page_admin?: bool,
@@ -84,10 +92,13 @@ interface PageRepositoryInterface
      *     tagNames?: string[],
      *     tagOperator?: 'AND'|'OR',
      *     templateKeys?: string[],
+     *     parentId?: string|null,
+     *     descendantOfId?: string,
      *     page?: int,
      *     limit?: int,
      *     navigationContexts?: string[],
      *     depth?: int,
+     *     accessControl?: array{user?: UserInterface|null, permission?: int|null},
      * } $filters
      * @param array{
      *     id?: 'asc'|'desc',
@@ -116,10 +127,13 @@ interface PageRepositoryInterface
      *     tagNames?: string[],
      *     tagOperator?: 'AND'|'OR',
      *     templateKeys?: string[],
+     *     parentId?: string|null,
+     *     descendantOfId?: string,
      *     page?: int,
      *     limit?: int,
      *     navigationContexts?: string[],
      *     depth?: int,
+     *     accessControl?: array{user?: UserInterface|null, permission?: int|null},
      * } $filters
      * @param array{
      *     id?: 'asc'|'desc',
@@ -148,8 +162,11 @@ interface PageRepositoryInterface
      *     tagNames?: string[],
      *     tagOperator?: 'AND'|'OR',
      *     templateKeys?: string[],
+     *     parentId?: string|null,
+     *     descendantOfId?: string,
      *     page?: int,
      *     limit?: int,
+     *     accessControl?: array{user?: UserInterface|null, permission?: int|null},
      * } $filters
      * @param array{
      *     id?: 'asc'|'desc',
@@ -173,6 +190,9 @@ interface PageRepositoryInterface
      *     tagNames?: string[],
      *     tagOperator?: 'AND'|'OR',
      *     templateKeys?: string[],
+     *     parentId?: string|null,
+     *     descendantOfId?: string,
+     *     accessControl?: array{user?: UserInterface|null, permission?: int|null},
      * } $filters
      */
     public function countBy(array $filters = []): int;

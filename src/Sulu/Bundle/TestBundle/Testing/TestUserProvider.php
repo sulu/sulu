@@ -11,7 +11,7 @@
 
 namespace Sulu\Bundle\TestBundle\Testing;
 
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Bundle\ContactBundle\Entity\ContactRepositoryInterface;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
@@ -34,7 +34,7 @@ class TestUserProvider implements UserProviderInterface, ResetInterface
     private $user = null;
 
     /**
-     * @var EntityManager
+     * @var EntityManagerInterface
      */
     private $entityManager;
 
@@ -59,7 +59,7 @@ class TestUserProvider implements UserProviderInterface, ResetInterface
     private $userProvider;
 
     public function __construct(
-        EntityManager $entityManager,
+        EntityManagerInterface $entityManager,
         ContactRepositoryInterface $contactRepository,
         UserRepositoryInterface $userRepository,
         PasswordHasherFactoryInterface $passwordHasherFactory,

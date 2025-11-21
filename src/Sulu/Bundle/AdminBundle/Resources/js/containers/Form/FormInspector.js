@@ -68,8 +68,12 @@ export default class FormInspector {
         this.saveHandlers.forEach((saveHandler) => saveHandler(options));
     }
 
-    addFinishFieldHandler(finishFieldHandler: FinishFieldHandler) {
+    addFinishFieldHandler(finishFieldHandler: FinishFieldHandler): () => void {
         this.finishFieldHandlers.push(finishFieldHandler);
+
+        return (): void => {
+            this.finishFieldHandlers = this.finishFieldHandlers.filter((handler) => handler !== finishFieldHandler);
+        };
     }
 
     finishField(dataPath: string, schemaPath: string) {

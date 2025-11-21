@@ -50,6 +50,14 @@ class SnippetControllerTest extends SuluTestCase
         $schemaTool->updateSchema($classes, false);
     }
 
+    public function testInvalidIdGet(): void
+    {
+        $this->client->request('GET', '/admin/api/snippets/invalid-id?locale=en');
+        $response = $this->client->getResponse();
+
+        $this->assertHttpStatusCode(404, $response);
+    }
+
     public function testPostPublish(): string
     {
         self::purgeDatabase();
@@ -60,13 +68,8 @@ class SnippetControllerTest extends SuluTestCase
             'published' => '2020-05-08T00:00:00+00:00', // Should be ignored
             'description' => null,
             'image' => null,
-            'excerptTitle' => 'Excerpt Title',
-            'excerptDescription' => 'Excerpt Description',
-            'excerptMore' => 'Excerpt More',
             'excerptTags' => ['Tag 1', 'Tag 2'],
             'excerptCategories' => [],
-            'excerptIcon' => null,
-            'excerptMedia' => null,
         ]) ?: null);
 
         $response = $this->client->getResponse();
@@ -104,13 +107,8 @@ class SnippetControllerTest extends SuluTestCase
                     'template' => 'snippet',
                     'title' => 'Test modified version snippet',
                     'description' => 'modified version',
-                    'excerptTitle' => 'Modified Excerpt Title',
-                    'excerptDescription' => 'Modified Excerpt Description',
-                    'excerptMore' => 'Modified Excerpt More',
                     'excerptTags' => ['Modified Tag 1', 'Modified Tag 2'],
                     'excerptCategories' => [],
-                    'excerptIcon' => null,
-                    'excerptMedia' => null,
                 ],
             ) ?: null,
         );
@@ -163,13 +161,8 @@ class SnippetControllerTest extends SuluTestCase
             'template' => 'snippet',
             'title' => 'Test Snippet',
             'images' => null,
-            'excerptTitle' => 'Excerpt Title',
-            'excerptDescription' => 'Excerpt Description',
-            'excerptMore' => 'Excerpt More',
             'excerptTags' => ['Tag 1', 'Tag 2'],
             'excerptCategories' => [],
-            'excerptIcon' => null,
-            'excerptMedia' => null,
         ]) ?: null);
 
         $response = $this->client->getResponse();
@@ -216,13 +209,8 @@ class SnippetControllerTest extends SuluTestCase
             'template' => 'snippet',
             'title' => 'Test Snippet 2',
             'description' => '<p>Test Snippet 2</p>',
-            'excerptTitle' => 'Excerpt Title 2',
-            'excerptDescription' => 'Excerpt Description 2',
-            'excerptMore' => 'Excerpt More 2',
             'excerptTags' => ['Tag 3', 'Tag 4'],
             'excerptCategories' => [],
-            'excerptIcon' => null,
-            'excerptMedia' => null,
         ]) ?: null);
 
         $response = $this->client->getResponse();
@@ -260,7 +248,7 @@ class SnippetControllerTest extends SuluTestCase
     }
 
     #[Depends('testPost')]
-    public function testDeleteSingleLocale(string $id): void
+    public function testDeleteSingleLocale(string $id): string
     {
         $this->client->request('GET', '/admin/api/snippets/' . $id . '?locale=en');
         $response = $this->client->getResponse();
@@ -309,6 +297,35 @@ class SnippetControllerTest extends SuluTestCase
         $availableLocales = $content['availableLocales'];
         $this->assertContains('en', $availableLocales);
         $this->assertNotContains('de', $availableLocales);
+
+        return $id;
+    }
+
+    #[Depends('testDeleteSingleLocale')]
+    public function testRecreateDeletedLocale(string $id): string
+    {
+        $this->client->request('GET', '/admin/api/snippets/' . $id . '?locale=en');
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(200, $response);
+
+        /** @var array{template: string, title: string} $snippetData */
+        $snippetData = \json_decode((string) $response->getContent(), true);
+
+        $this->client->request('PUT', '/admin/api/snippets/' . $id . '?locale=de', [], [], [], \json_encode([
+            'template' => $snippetData['template'],
+            'title' => 'Recreated Test Snippet (DE)',
+        ]) ?: null);
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(200, $response);
+
+        /** @var array<string, mixed> $content */
+        $content = \json_decode((string) $response->getContent(), true);
+        /** @var array<int, string> $availableLocales */
+        $availableLocales = $content['availableLocales'];
+        $this->assertContains('en', $availableLocales);
+        $this->assertContains('de', $availableLocales);
+
+        return $id;
     }
 
     #[Depends('testPost')]
@@ -323,6 +340,7 @@ class SnippetControllerTest extends SuluTestCase
         $trashItem = $trashRepository->findOneBy([
             'resourceKey' => SnippetInterface::RESOURCE_KEY,
             'resourceId' => $id,
+            'restoreType' => null,
         ]);
         $this->assertNotNull($trashItem);
         $id = $trashItem->getId();

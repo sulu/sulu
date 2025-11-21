@@ -18,15 +18,12 @@ namespace Sulu\Content\Domain\Model;
  */
 trait TemplateTrait
 {
-    /**
-     * @var string|null
-     */
-    private $templateKey;
+    private ?string $templateKey = null;
 
     /**
      * @var array<string, mixed>
      */
-    private $templateData = [];
+    private array $templateData = [];
 
     public function getTemplateKey(): ?string
     {

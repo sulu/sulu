@@ -48,6 +48,37 @@ test('Pass correct fields to SearchResult component', () => {
     expect(searchResult.prop('url')).toEqual('www.example.org/url');
 });
 
+test('Pass correct fields to SearchResult component with PageTreeRoute', () => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
+    formInspector.getValueByPath.mockImplementation((path) => {
+        switch (path) {
+            case '/ext/seo/description':
+                return 'SEO description';
+            case '/ext/seo/title':
+                return 'SEO title';
+            case '/url':
+                return {
+                    page: {
+                        uuid: '019a9d17-6a7d-7d56-acc0-0068d1cd4040',
+                        path: '/page',
+                    },
+                    suffix: '/article',
+                };
+        }
+    });
+
+    const searchResult = shallow(
+        <SearchResult
+            {...fieldTypeDefaultProps}
+            formInspector={formInspector}
+        />
+    );
+
+    expect(searchResult.prop('description')).toEqual('SEO description');
+    expect(searchResult.prop('title')).toEqual('SEO title');
+    expect(searchResult.prop('url')).toEqual('www.example.org/page/article');
+});
+
 test('Pass correct fields to SearchResult component', () => {
     const formInspector = new FormInspector(
         new ResourceFormStore(

@@ -15,15 +15,9 @@ namespace Sulu\Content\Domain\Model;
 
 trait WorkflowTrait
 {
-    /**
-     * @var string|null
-     */
-    protected $workflowPlace;
+    protected ?string $workflowPlace = null;
 
-    /**
-     * @var \DateTimeImmutable|null
-     */
-    protected $workflowPublished;
+    protected ?\DateTimeImmutable $workflowPublished = null;
 
     public static function getWorkflowName(): string
     {

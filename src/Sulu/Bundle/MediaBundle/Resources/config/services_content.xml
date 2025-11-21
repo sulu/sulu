@@ -41,6 +41,9 @@
         <service id="sulu_media.media_resource_loader"
                  class="Sulu\Bundle\MediaBundle\Infrastructure\Sulu\Content\ResourceLoader\MediaResourceLoader">
             <argument type="service" id="sulu_media.media_manager"/>
+            <argument type="service" id="security.helper" on-invalid="ignore"/>
+            <argument>%sulu_security.permissions%</argument>
+            <argument type="service" id="sulu_core.webspace.request_analyzer"/>
 
             <tag name="sulu_content.resource_loader" key="media"/>
         </service>

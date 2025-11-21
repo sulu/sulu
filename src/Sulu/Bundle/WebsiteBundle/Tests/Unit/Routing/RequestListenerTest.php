@@ -17,6 +17,7 @@ use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\WebsiteBundle\Routing\RequestListener;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\PortalInformation;
+use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -66,6 +67,9 @@ class RequestListenerTest extends TestCase
     {
         $this->portalInformation->getPrefix()->willReturn('test/');
         $this->portalInformation->getHost()->willReturn('sulu.io');
+        $webspace = new Webspace();
+        $webspace->setKey('sulu_io');
+        $this->portalInformation->getWebspace()->willReturn($webspace);
         $this->requestAnalyzer->getPortalInformation()->willReturn($this->portalInformation);
 
         $event = $this->createRequestEvent(new Request());
@@ -75,12 +79,16 @@ class RequestListenerTest extends TestCase
 
         $this->assertSame('test/', $this->requestContext->getParameter('prefix'));
         $this->assertSame('sulu.io', $this->requestContext->getParameter('host'));
+        $this->assertSame('sulu_io', $this->requestContext->getParameter('site'));
     }
 
     public function testRequestAnalyzerSubRequest(): void
     {
         $this->portalInformation->getPrefix()->willReturn('test/');
         $this->portalInformation->getHost()->willReturn('sulu.io');
+        $webspace = new Webspace();
+        $webspace->setKey('sulu_io');
+        $this->portalInformation->getWebspace()->willReturn($webspace);
         $this->requestAnalyzer->getPortalInformation()->willReturn($this->portalInformation);
 
         // if a route was not found the request listener is called as sub request
@@ -98,6 +106,9 @@ class RequestListenerTest extends TestCase
     {
         $this->portalInformation->getPrefix()->willReturn('test/');
         $this->portalInformation->getHost()->willReturn('sulu.io');
+        $webspace = new Webspace();
+        $webspace->setKey('sulu_io');
+        $this->portalInformation->getWebspace()->willReturn($webspace);
         $this->requestAnalyzer->getPortalInformation()->willReturn($this->portalInformation);
 
         // Context Hash is a Main Request https://github.com/FriendsOfSymfony/FOSHttpCache/blob/a582deb3f55f8a7efdae8ac916ef4adc285543a0/src/SymfonyCache/UserContextListener.php#L170
@@ -112,6 +123,7 @@ class RequestListenerTest extends TestCase
 
         $this->assertFalse($this->requestContext->hasParameter('prefix'));
         $this->assertFalse($this->requestContext->hasParameter('host'));
+        $this->assertFalse($this->requestContext->hasParameter('site'));
     }
 
     private function createRequestEvent(Request $request, int $requestType = HttpKernelInterface::MAIN_REQUEST): RequestEvent

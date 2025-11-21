@@ -20,6 +20,7 @@ use Doctrine\ORM\EntityRepository;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Page\Domain\Model\PageDimensionContentInterface;
 use Sulu\Page\Domain\Model\PageInterface;
+use Sulu\Page\Infrastructure\Sulu\Admin\PageAdmin;
 
 /**
  * @phpstan-type Page array{
@@ -28,6 +29,7 @@ use Sulu\Page\Domain\Model\PageInterface;
  *     created: \DateTimeImmutable,
  *     title: string,
  *     locale: string,
+ *     webspaceKey: string,
  * }
  *
  * @internal this class is internal no backwards compatibility promise is given for this class
@@ -68,13 +70,17 @@ final class AdminPageReindexProvider implements ReindexProviderInterface
         /** @var Page $page */
         foreach ($pages as $page) {
             yield [
-                'id' => PageInterface::RESOURCE_KEY . '::' . ((string) $page['pageId']) . '::' . $page['locale'],
+                'id' => PageInterface::RESOURCE_KEY . '__' . ((string) $page['pageId']) . '__' . $page['locale'],
                 'resourceKey' => PageInterface::RESOURCE_KEY,
                 'resourceId' => (string) $page['pageId'],
                 'changedAt' => $page['changed']->format('c'),
                 'createdAt' => $page['created']->format('c'),
                 'title' => $page['title'],
                 'locale' => $page['locale'],
+                'metadata' => [
+                    'webspaceKey' => $page['webspaceKey'],
+                ],
+                'securityContext' => PageAdmin::SECURITY_CONTEXT_PREFIX . $page['webspaceKey'],
             ];
         }
     }
@@ -87,11 +93,13 @@ final class AdminPageReindexProvider implements ReindexProviderInterface
     private function loadPages(array $identifiers = []): iterable
     {
         $qb = $this->dimensionContentRepository->createQueryBuilder('dimensionContent')
+            ->leftJoin('dimensionContent.page', 'page')
             ->select('IDENTITY(dimensionContent.page) AS pageId')
             ->addSelect('dimensionContent.created')
             ->addSelect('dimensionContent.changed')
             ->addSelect('dimensionContent.title')
             ->addSelect('dimensionContent.locale')
+            ->addSelect('page.webspaceKey')
             ->where('dimensionContent.stage = :stage')
             ->andWhere('dimensionContent.locale IS NOT NULL')
             ->andWhere('dimensionContent.version = :version');
@@ -105,14 +113,14 @@ final class AdminPageReindexProvider implements ReindexProviderInterface
             $conditions = [];
 
             foreach ($identifiers as $index => $identifier) {
-                $resourceKey = \explode('::', $identifier)[0];
+                $resourceKey = \explode('__', $identifier)[0];
 
                 if (PageInterface::RESOURCE_KEY !== $resourceKey) {
                     continue;
                 }
 
-                $id = \explode('::', $identifier)[1] ?? '';
-                $locale = \explode('::', $identifier)[2] ?? '';
+                $id = \explode('__', $identifier)[1] ?? '';
+                $locale = \explode('__', $identifier)[2] ?? '';
 
                 $conditions[] = "(dimensionContent.page = :id{$index} AND dimensionContent.locale = :locale{$index})";
                 $parameters["id{$index}"] = $id;

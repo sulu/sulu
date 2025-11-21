@@ -49,10 +49,10 @@ final class AdminArticleIndexListener
             }
 
             foreach ($locales as $locale) {
-                $identifiers[] = ArticleInterface::RESOURCE_KEY . '::' . $event->getResourceId() . '::' . $locale;
+                $identifiers[] = ArticleInterface::RESOURCE_KEY . '__' . $event->getResourceId() . '__' . $locale;
             }
         } elseif ($locale) {
-            $identifiers[] = ArticleInterface::RESOURCE_KEY . '::' . $event->getResourceId() . '::' . $locale;
+            $identifiers[] = ArticleInterface::RESOURCE_KEY . '__' . $event->getResourceId() . '__' . $locale;
         }
 
         if (!$identifiers) {

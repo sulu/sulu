@@ -16,7 +16,7 @@ namespace Sulu\Page\Tests\Unit\Infrastructure\Sulu\Content\Normalizer;
 use PHPUnit\Framework\TestCase;
 use Sulu\Content\Domain\Model\ContentRichEntityInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
-use Sulu\Content\Domain\Model\ExcerptInterface;
+use Sulu\Content\Domain\Model\TaxonomyInterface;
 use Sulu\Page\Domain\Model\PageInterface;
 use Sulu\Page\Infrastructure\Sulu\Content\Normalizer\PageExcerptNormalizer;
 
@@ -32,7 +32,7 @@ class PageExcerptNormalizerTest extends TestCase
     public function testIgnoredAttributes(): void
     {
         $normalizer = $this->createPageExcerptNormalizerInstance();
-        $object = $this->prophesize(ExcerptInterface::class);
+        $object = $this->prophesize(TaxonomyInterface::class);
 
         $this->assertSame(
             [],
@@ -59,7 +59,7 @@ class PageExcerptNormalizerTest extends TestCase
     public function testEnhanceNotImplementDimensionContentInterface(): void
     {
         $normalizer = $this->createPageExcerptNormalizerInstance();
-        $object = $this->prophesize(ExcerptInterface::class);
+        $object = $this->prophesize(TaxonomyInterface::class);
 
         $data = [
             'excerptTagNames' => '12345',
@@ -78,7 +78,7 @@ class PageExcerptNormalizerTest extends TestCase
 
         $resource = $this->prophesize(ContentRichEntityInterface::class);
 
-        $object = $this->prophesize(ExcerptInterface::class);
+        $object = $this->prophesize(TaxonomyInterface::class);
         $object->willImplement(DimensionContentInterface::class);
         $object->getResource()->willReturn($resource->reveal());
 
@@ -105,7 +105,7 @@ class PageExcerptNormalizerTest extends TestCase
         $page = $this->prophesize(PageInterface::class);
         $page->getWebspaceKey()->willReturn('example-webspace');
 
-        $object = $this->prophesize(ExcerptInterface::class);
+        $object = $this->prophesize(TaxonomyInterface::class);
         $object->willImplement(DimensionContentInterface::class);
         $object->getResource()->willReturn($page->reveal());
         $object->getExcerptSegment()->willReturn('test-segment');
@@ -135,7 +135,7 @@ class PageExcerptNormalizerTest extends TestCase
 
         $page = $this->prophesize(PageInterface::class);
 
-        $object = $this->prophesize(ExcerptInterface::class);
+        $object = $this->prophesize(TaxonomyInterface::class);
         $object->willImplement(DimensionContentInterface::class);
         $object->getResource()->willReturn($page->reveal());
         $object->getExcerptSegment()->willReturn(null);

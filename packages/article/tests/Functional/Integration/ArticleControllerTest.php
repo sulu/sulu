@@ -47,6 +47,14 @@ class ArticleControllerTest extends SuluTestCase
         // TODO this should not be necessary
     }
 
+    public function testInvalidIdGet(): void
+    {
+        $this->client->request('GET', '/admin/api/articles/invalid-id?locale=en');
+        $response = $this->client->getResponse();
+
+        $this->assertHttpStatusCode(404, $response);
+    }
+
     public function testPostPublish(): string
     {
         self::purgeDatabase();
@@ -337,7 +345,7 @@ class ArticleControllerTest extends SuluTestCase
     }
 
     #[Depends('testPost')]
-    public function testDeleteSingleLocale(string $id): void
+    public function testDeleteSingleLocale(string $id): string
     {
         $this->client->request('GET', '/admin/api/articles/' . $id . '?locale=en');
         $response = $this->client->getResponse();
@@ -395,6 +403,33 @@ class ArticleControllerTest extends SuluTestCase
         $availableLocales = $content['availableLocales'];
         $this->assertContains('en', $availableLocales);
         $this->assertNotContains('de', $availableLocales);
+
+        return $id;
+    }
+
+    #[Depends('testDeleteSingleLocale')]
+    public function testRecreateDeletedLocale(string $id): string
+    {
+        $this->client->request('PUT', '/admin/api/articles/' . $id . '?locale=de', [], [], [], \json_encode([
+            'template' => 'article',
+            'title' => 'Recreated Test Article (DE)',
+            'url' => '/de/recreated-my-article',
+        ]) ?: null);
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(200, $response);
+
+        /** @var array<string, mixed> $content */
+        $content = \json_decode((string) $response->getContent(), true);
+        /** @var array<int, string> $availableLocales */
+        $availableLocales = $content['availableLocales'];
+        /** @var array<int, string> $contentLocales */
+        $contentLocales = $content['contentLocales'];
+        $this->assertContains('en', $availableLocales);
+        $this->assertContains('de', $availableLocales);
+        $this->assertContains('en', $contentLocales);
+        $this->assertContains('de', $contentLocales);
+
+        return $id;
     }
 
     #[Depends('testPost')]
@@ -406,12 +441,13 @@ class ArticleControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(204, $response);
 
         $routeRepository = $this->getContainer()->get(RouteRepositoryInterface::class);
-        $this->assertCount(4, $routeRepository->findBy([])); // TODO we need tackle this
+        $this->assertCount(0, $routeRepository->findBy([]));
 
         $trashRepository = self::getContainer()->get(TrashItemRepositoryInterface::class);
         $trashItem = $trashRepository->findOneBy([
             'resourceKey' => ArticleInterface::RESOURCE_KEY,
             'resourceId' => $id,
+            'restoreType' => null,
         ]);
         $this->assertNotNull($trashItem);
         $id = $trashItem->getId();

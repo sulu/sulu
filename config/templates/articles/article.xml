@@ -27,13 +27,11 @@
             <tag name="sulu.rlp.part"/>
         </property>
 
-        <property name="url" type="route">
+        <property name="url" type="page_tree_route">
             <meta>
                 <title lang="en">Resourcelocator</title>
                 <title lang="de">Adresse</title>
             </meta>
-
-            <tag name="sulu.rlp"/>
         </property>
 
         <property name="article" type="text_editor">

@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Sulu\Page\Infrastructure\Sulu\Trash;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
 use Sulu\Bundle\TrashBundle\Application\RestoreConfigurationProvider\RestoreConfiguration;
 use Sulu\Bundle\TrashBundle\Application\RestoreConfigurationProvider\RestoreConfigurationProviderInterface;
@@ -63,7 +64,6 @@ final class PageTrashItemHandler implements
     public function store(object $resource, array $options = []): TrashItemInterface
     {
         Assert::isInstanceOf($resource, PageInterface::class);
-
         $page = $resource;
 
         $data = [
@@ -72,17 +72,15 @@ final class PageTrashItemHandler implements
             'dimensionContents' => [],
         ];
 
-        $restoreType = $options['locales'] ?? null ? 'translation' : null;
+        $restoreType = $options['locale'] ?? null ? 'translation' : null;
 
         $titles = [];
-        /** @var array<string, PageDimensionContentInterface> $localizedDimensionContents */
         $localizedDimensionContents = [];
-        /** @var PageDimensionContentInterface|null $unlocalizedDimensionContent */
         $unlocalizedDimensionContent = null;
         foreach ($page->getDimensionContents() as $dimensionContent) {
             if (
                 DimensionContentInterface::CURRENT_VERSION !== $dimensionContent->getVersion()
-                && DimensionContentInterface::STAGE_LIVE !== $dimensionContent->getStage()
+                || DimensionContentInterface::STAGE_DRAFT !== $dimensionContent->getStage()
             ) {
                 continue;
             }
@@ -92,28 +90,33 @@ final class PageTrashItemHandler implements
                 continue;
             }
 
+            if ('translation' === $restoreType && $dimensionContent->getLocale() !== $options['locale']) {
+                continue;
+            }
+
             $localizedDimensionContents[$dimensionContent->getLocale()] = $dimensionContent;
         }
 
         Assert::notNull($unlocalizedDimensionContent, 'Expected to find an unlocalized dimension content for the page.');
         Assert::notEmpty($localizedDimensionContents, 'Expected to find at least one localized dimension content for the page.');
 
-        // sort dimensionContents after the availableLocales from the unlocalizedDimension
+        // Reorder localized dimension contents to match the order defined in availableLocales.
         $availableLocales = $unlocalizedDimensionContent->getAvailableLocales();
         Assert::isArray($availableLocales, 'Expected availableLocales to be an array');
         /** @var array<string, PageDimensionContentInterface> $localizedDimensionContents */
         $localizedDimensionContents = \array_merge(
-            \array_flip($availableLocales),
+            \array_flip(
+                \array_filter(
+                    $availableLocales, static fn ($locale) => \array_key_exists($locale, $localizedDimensionContents)
+                )
+            ),
             $localizedDimensionContents,
         );
 
         foreach ($localizedDimensionContents as $locale => $localizedDimensionContent) {
-            /** @var array<int, PageDimensionContent> $dimensionContents */
-            $dimensionContents = [$unlocalizedDimensionContent, $localizedDimensionContent];
-
             $mergedDimensionContent = $this->contentMerger->merge(
                 new DimensionContentCollection(
-                    $dimensionContents,
+                    new ArrayCollection([$unlocalizedDimensionContent, $localizedDimensionContent]),
                     [
                         'locale' => $locale,
                         'stage' => DimensionContentInterface::STAGE_DRAFT,
@@ -155,18 +158,16 @@ final class PageTrashItemHandler implements
     {
         $restoreData = $trashItem->getRestoreData();
         $pageUuid = $trashItem->getResourceId();
-        $restoreTranslation = true;
 
         $page = $this->pageRepository->findOneBy(['uuid' => $pageUuid]);
-
         if (!$page) {
-            // Create the page
             $page = $this->pageRepository->createNew($pageUuid);
+            $this->pageRepository->add($page);
+
             $webspaceKey = $restoreData['webspaceKey'];
             Assert::string($webspaceKey, 'Expected webspaceKey to be a string');
             $page->setWebspaceKey($webspaceKey);
 
-            // Set parent if exists
             $parentUuid = $restoreFormData['parentId'] ?? $restoreData['parentUuid'];
             if ($parentUuid) {
                 Assert::string($parentUuid, 'Expected parentUuid to be a string');
@@ -175,11 +176,7 @@ final class PageTrashItemHandler implements
                     $page->setParent($parent);
                 }
             }
-
-            $restoreTranslation = false;
         }
-
-        $this->pageRepository->add($page);
 
         $dimensionContents = $restoreData['dimensionContents'] ?? [];
         $allLocales = [];
@@ -197,7 +194,6 @@ final class PageTrashItemHandler implements
                 $allLocales[] = $dimensionContentData['locale'];
             }
 
-            unset($dimensionContentData['url']); // TODO old route is not removed on delete?
             foreach ($this->pageMappers as $pageMapper) {
                 $pageMapper->mapPageData($page, $dimensionContentData);
             }
@@ -206,7 +202,7 @@ final class PageTrashItemHandler implements
         /** @var array{locales?: string[]} $context */
         $context = $allLocales ? ['locales' => $allLocales] : [];
 
-        if ($restoreTranslation) {
+        if ('translation' === $trashItem->getRestoreType()) {
             /** @var string $locale */
             foreach ($allLocales as $locale) {
                 $this->domainEventCollector->collect(new PageTranslationRestoredEvent(
@@ -215,14 +211,16 @@ final class PageTrashItemHandler implements
                     $restoreData,
                 ));
             }
-        } else {
-            $this->domainEventCollector->collect(new PageRestoredEvent(
-                $page,
-                $pageTitle,
-                $context,
-                $restoreData,
-            ));
+
+            return $page;
         }
+
+        $this->domainEventCollector->collect(new PageRestoredEvent(
+            $page,
+            $pageTitle,
+            $context,
+            $restoreData,
+        ));
 
         return $page;
     }
@@ -233,7 +231,7 @@ final class PageTrashItemHandler implements
             'restore_page',
             PageAdmin::EDIT_FORM_VIEW,
             ['id' => 'id', 'webspace' => 'webspace'],
-            null, // TODO serialization group?
+            null,
         );
     }
 }

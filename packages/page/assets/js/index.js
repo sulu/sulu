@@ -39,14 +39,6 @@ initializer.addUpdateConfigHook('sulu_page', (config: Object, initialized: boole
 
     conditionDataProviderRegistry.add(webspaceConditionDataProvider);
 
-    fieldRegistry.add(
-        'page_tree_route',
-        PageTreeRoute,
-        {
-            defaultMode: 'tree_leaf_edit',
-        }
-    );
-
     if (config.versioning) {
         fieldRegistry.add('settings_versions', SettingsVersions);
     }
@@ -54,4 +46,18 @@ initializer.addUpdateConfigHook('sulu_page', (config: Object, initialized: boole
     for (const teaserProviderKey in config.teaser) {
         teaserProviderRegistry.add(teaserProviderKey, config.teaser[teaserProviderKey]);
     }
+});
+
+initializer.addUpdateConfigHook('sulu_route', (config: Object, initialized: boolean) => {
+    if (initialized) {
+        return;
+    }
+
+    fieldRegistry.add(
+        'page_tree_route',
+        PageTreeRoute,
+        {
+            generationUrl: config.generateUrl,
+        }
+    );
 });

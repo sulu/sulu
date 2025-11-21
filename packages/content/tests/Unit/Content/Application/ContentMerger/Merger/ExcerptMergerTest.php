@@ -15,9 +15,6 @@ namespace Sulu\Content\Tests\Unit\Content\Application\ContentMerger\Merger;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
-use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupInterface;
-use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
-use Sulu\Bundle\TagBundle\Tag\TagInterface;
 use Sulu\Content\Application\ContentMerger\Merger\ExcerptMerger;
 use Sulu\Content\Application\ContentMerger\Merger\MergerInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
@@ -40,7 +37,7 @@ class ExcerptMergerTest extends TestCase
 
         $target = $this->prophesize(DimensionContentInterface::class);
         $target->willImplement(ExcerptInterface::class);
-        $target->setExcerptTitle(Argument::any())->shouldNotBeCalled();
+        $target->setExcerptData(Argument::any())->shouldNotBeCalled();
 
         $merger->merge($target->reveal(), $source->reveal());
     }
@@ -51,7 +48,7 @@ class ExcerptMergerTest extends TestCase
 
         $source = $this->prophesize(DimensionContentInterface::class);
         $source->willImplement(ExcerptInterface::class);
-        $source->getExcerptTitle(Argument::any())->shouldNotBeCalled();
+        $source->getExcerptData()->shouldNotBeCalled();
 
         $target = $this->prophesize(DimensionContentInterface::class);
 
@@ -62,59 +59,26 @@ class ExcerptMergerTest extends TestCase
     {
         $merger = $this->getExcerptMergerInstance();
 
-        $tag1 = $this->prophesize(TagInterface::class);
-        $tag1->getId()->willReturn(1);
-        $tag2 = $this->prophesize(TagInterface::class);
-        $tag2->getId()->willReturn(2);
-
-        $category1 = $this->prophesize(CategoryInterface::class);
-        $category1->getId()->willReturn(3);
-        $category2 = $this->prophesize(CategoryInterface::class);
-        $category2->getId()->willReturn(4);
-
-        $targetGroup1 = $this->prophesize(TargetGroupInterface::class);
-        $targetGroup1->getId()->willReturn(5);
-        $targetGroup2 = $this->prophesize(TargetGroupInterface::class);
-        $targetGroup2->getId()->willReturn(6);
-
         $source = $this->prophesize(DimensionContentInterface::class);
         $source->willImplement(ExcerptInterface::class);
-        $source->getExcerptTitle()->willReturn('Excerpt Title')->shouldBeCalled();
-        $source->getExcerptDescription()->willReturn('Excerpt Description')->shouldBeCalled();
-        $source->getExcerptMore()->willReturn('Excerpt More')->shouldBeCalled();
-        $source->getExcerptSegment()->willReturn('test-segment')->shouldBeCalled();
-        $source->getExcerptTags()->willReturn([$tag1->reveal(), $tag2->reveal()])->shouldBeCalled();
-        $source->getExcerptCategories()->willReturn([$category1->reveal(), $category2->reveal()])->shouldBeCalled();
-        $source->getExcerptAudienceTargetGroups()->willReturn([$targetGroup1->reveal(), $targetGroup2->reveal()])->shouldBeCalled();
-        $source->getExcerptImage()->willReturn(['id' => 8])->shouldBeCalled();
-        $source->getExcerptIcon()->willReturn(['id' => 9])->shouldBeCalled();
+        $source->getExcerptData()->willReturn([
+            'title' => 'Excerpt Title',
+            'description' => 'Excerpt Description',
+            'more' => 'Excerpt More',
+            'image' => ['id' => 8],
+            'icon' => ['id' => 9],
+        ])->shouldBeCalled();
 
         $target = $this->prophesize(DimensionContentInterface::class);
         $target->willImplement(ExcerptInterface::class);
-        $target->setExcerptTitle('Excerpt Title')->shouldBeCalled();
-        $target->setExcerptDescription('Excerpt Description')->shouldBeCalled();
-        $target->setExcerptMore('Excerpt More')->shouldBeCalled();
-        $target->setExcerptSegment('test-segment')->shouldBeCalled();
-        $target->setExcerptTags(Argument::that(function(array $tags) {
-            /** @var TagInterface[] $tags */
-            return \array_map(function(TagInterface $tag) {
-                return $tag->getId();
-            }, $tags) === [1, 2];
-        }))->shouldBeCalled();
-        $target->setExcerptCategories(Argument::that(function(array $categories) {
-            /** @var CategoryInterface[] $categories */
-            return \array_map(function(CategoryInterface $category) {
-                return $category->getId();
-            }, $categories) === [3, 4];
-        }))->shouldBeCalled();
-        $target->setExcerptAudienceTargetGroups(Argument::that(function(array $targetGroups) {
-            /** @var TargetGroupInterface[] $targetGroups */
-            return \array_map(function(TargetGroupInterface $targetGroup) {
-                return $targetGroup->getId();
-            }, $targetGroups) === [5, 6];
-        }))->shouldBeCalled();
-        $target->setExcerptImage(['id' => 8])->shouldBeCalled();
-        $target->setExcerptIcon(['id' => 9])->shouldBeCalled();
+        $target->getExcerptData()->willReturn([])->shouldBeCalled();
+        $target->setExcerptData([
+            'title' => 'Excerpt Title',
+            'description' => 'Excerpt Description',
+            'more' => 'Excerpt More',
+            'image' => ['id' => 8],
+            'icon' => ['id' => 9],
+        ])->shouldBeCalled();
 
         $merger->merge($target->reveal(), $source->reveal());
     }
@@ -125,27 +89,12 @@ class ExcerptMergerTest extends TestCase
 
         $source = $this->prophesize(DimensionContentInterface::class);
         $source->willImplement(ExcerptInterface::class);
-        $source->getExcerptTitle()->willReturn(null)->shouldBeCalled();
-        $source->getExcerptDescription()->willReturn(null)->shouldBeCalled();
-        $source->getExcerptMore()->willReturn(null)->shouldBeCalled();
-        $source->getExcerptSegment()->willReturn(null)->shouldBeCalled();
-        $source->getExcerptTags()->willReturn([])->shouldBeCalled();
-        $source->getExcerptCategories()->willReturn([])->shouldBeCalled();
-        $source->getExcerptAudienceTargetGroups()->willReturn([])->shouldBeCalled();
-        $source->getExcerptImage()->willReturn(null)->shouldBeCalled();
-        $source->getExcerptIcon()->willReturn(null)->shouldBeCalled();
+        $source->getExcerptData()->willReturn([])->shouldBeCalled();
 
         $target = $this->prophesize(DimensionContentInterface::class);
         $target->willImplement(ExcerptInterface::class);
-        $target->setExcerptTitle(Argument::any())->shouldNotBeCalled();
-        $target->setExcerptDescription(Argument::any())->shouldNotBeCalled();
-        $target->setExcerptMore(Argument::any())->shouldNotBeCalled();
-        $target->setExcerptSegment(Argument::any())->shouldNotBeCalled();
-        $target->setExcerptTags(Argument::any())->shouldNotBeCalled();
-        $target->setExcerptCategories(Argument::any())->shouldNotBeCalled();
-        $target->setExcerptAudienceTargetGroups(Argument::any())->shouldNotBeCalled();
-        $target->setExcerptImage(Argument::any())->shouldNotBeCalled();
-        $target->setExcerptIcon(Argument::any())->shouldNotBeCalled();
+        $target->getExcerptData()->willReturn([])->shouldBeCalled();
+        $target->setExcerptData([])->shouldBeCalled();
 
         $merger->merge($target->reveal(), $source->reveal());
     }

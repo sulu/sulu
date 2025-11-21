@@ -61,9 +61,9 @@
             <tag name="sulu_content.content_resolver" type="settings"/>
         </service>
 
-        <!-- Excerpt Resolver -->
-        <service id="sulu_content.excerpt_resolver"
-                 class="Sulu\Content\Application\ContentResolver\Resolver\ExcerptResolver">
+        <!-- Excerpt and Taxonomy Resolver -->
+        <service id="sulu_content.excerpt_taxonomy_resolver"
+                 class="Sulu\Content\Application\ContentResolver\Resolver\ExcerptTaxonomyResolver">
             <argument type="service" id="sulu_admin.form_metadata_provider"/>
             <argument type="service" id="sulu_content.metadata_resolver"/>
 

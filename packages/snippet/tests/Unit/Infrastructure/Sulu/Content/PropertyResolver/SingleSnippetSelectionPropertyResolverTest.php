@@ -18,6 +18,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
 use Sulu\Content\Application\ContentResolver\Value\ResolvableResource;
+use Sulu\Content\Application\ContentResolver\Value\SmartResolvable;
 use Sulu\Snippet\Infrastructure\Sulu\Content\PropertyResolver\SingleSnippetSelectionPropertyResolver;
 
 #[CoversClass(SingleSnippetSelectionPropertyResolver::class)]
@@ -148,5 +149,50 @@ class SingleSnippetSelectionPropertyResolverTest extends TestCase
         $this->assertSame([
             'properties' => null,
         ], $content->getMetadata());
+    }
+
+    public function testResolveWithDefaultParameterWhenDataIsNull(): void
+    {
+        $contentView = $this->resolver->resolve(null, 'en', ['default' => 'header']);
+
+        $content = $contentView->getContent();
+        $this->assertInstanceOf(SmartResolvable::class, $content);
+        $this->assertSame('snippet_area_default', $content->getResourceLoaderKey());
+        $this->assertSame(['areaKey' => 'header'], $content->getData());
+        $this->assertSame(['default' => 'header'], $contentView->getView());
+    }
+
+    public function testResolveWithDefaultParameterWhenDataIsEmptyString(): void
+    {
+        $contentView = $this->resolver->resolve('', 'en', ['default' => 'footer']);
+
+        $content = $contentView->getContent();
+        $this->assertInstanceOf(SmartResolvable::class, $content);
+        $this->assertSame('snippet_area_default', $content->getResourceLoaderKey());
+        $this->assertSame(['areaKey' => 'footer'], $content->getData());
+        $this->assertSame(['default' => 'footer'], $contentView->getView());
+    }
+
+    public function testResolveWithDefaultParameterButDataIsSet(): void
+    {
+        $contentView = $this->resolver->resolve('snippet-123', 'en', ['default' => 'header']);
+
+        $content = $contentView->getContent();
+        $this->assertInstanceOf(ResolvableResource::class, $content);
+        $this->assertSame('snippet-123', $content->getId());
+        $this->assertSame('snippet', $content->getResourceLoaderKey());
+
+        $this->assertSame([
+            'id' => 'snippet-123',
+            'default' => 'header',
+        ], $contentView->getView());
+    }
+
+    public function testResolveWithoutDefaultParameterWhenDataIsNull(): void
+    {
+        $contentView = $this->resolver->resolve(null, 'en');
+
+        $this->assertNull($contentView->getContent());
+        $this->assertSame(['id' => null], $contentView->getView());
     }
 }

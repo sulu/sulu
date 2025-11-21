@@ -1658,7 +1658,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
      * Updates the given note.
      *
      * @param BankAccount $entity The phone object to update
-     * @param string $data The entry with the new data
+     * @param array<string, mixed> $data The entry with the new data
      *
      * @return bool True if successful, otherwise false
      */
@@ -1778,7 +1778,9 @@ abstract class AbstractContactManager implements ContactManagerInterface
     {
         if ($entities && \count($entities) > 0 && \method_exists($entities, 'getValues')) {
             $newEntities = $entities->getValues();
-            $entities->clear();
+            foreach ($entities as $entity) {
+                $entities->removeElement($entity);
+            }
             foreach ($newEntities as $value) {
                 $entities->add($value);
             }

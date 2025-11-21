@@ -16,6 +16,7 @@
                 "template": null,
                 "version": null,
                 "publishedState": false,
+                "linkProvider": null,
                 "hasChildren": true,
                 "_hasPermissions": false,
                 "_embedded": {
@@ -23,7 +24,7 @@
                         {
                             "id": "@string@",
                             "title": "Test Page 2",
-                            "author": null,
+                            "author": "@string@",
                             "created": "@datetime@",
                             "changed": "@datetime@",
                             "creator": "@string@",
@@ -35,13 +36,14 @@
                             "template": "default",
                             "version" : 0,
                             "publishedState": false,
+                            "linkProvider": null,
                             "hasChildren": true,
                             "_hasPermissions": false
                         },
                         {
                             "id": "@string@",
                             "title": "Test page for copy",
-                            "author": null,
+                            "author": "@string@",
                             "created": "@datetime@",
                             "changed": "@datetime@",
                             "creator": "@string@",
@@ -53,13 +55,14 @@
                             "template": "default",
                             "version" : 0,
                             "publishedState": true,
+                            "linkProvider": null,
                             "hasChildren": false,
                             "_hasPermissions": false
                         },
                         {
                             "id": "@string@",
                             "title": "Test page for copy",
-                            "author": null,
+                            "author": "@string@",
                             "created": "@datetime@",
                             "changed": "@datetime@",
                             "creator": "@string@",
@@ -71,6 +74,7 @@
                             "template": "default",
                             "version" : 0,
                             "publishedState": false,
+                            "linkProvider": null,
                             "hasChildren": false,
                             "_hasPermissions": false
                         }

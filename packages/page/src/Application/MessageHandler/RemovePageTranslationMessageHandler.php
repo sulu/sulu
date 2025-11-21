@@ -12,6 +12,7 @@
 namespace Sulu\Page\Application\MessageHandler;
 
 use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
+use Sulu\Bundle\TrashBundle\Application\TrashManager\TrashManagerInterface;
 use Sulu\Page\Application\Message\RemovePageTranslationMessage;
 use Sulu\Page\Domain\Event\PageTranslationRemovedEvent;
 use Sulu\Page\Domain\Model\PageDimensionContentInterface;
@@ -29,6 +30,7 @@ final class RemovePageTranslationMessageHandler
     public function __construct(
         private PageRepositoryInterface $pageRepository,
         private DomainEventCollectorInterface $domainEventCollector,
+        private ?TrashManagerInterface $trashManager = null,
     ) {
     }
 
@@ -36,6 +38,10 @@ final class RemovePageTranslationMessageHandler
     {
         $page = $this->pageRepository->getOneBy($message->getIdentifier());
         $locale = $message->getLocale();
+
+        /** @var string $resourceKey */
+        $resourceKey = $page::RESOURCE_KEY;
+        $this->trashManager?->store($resourceKey, $page, ['locale' => $locale]);
 
         $dimensionContents = $page->getDimensionContents();
 

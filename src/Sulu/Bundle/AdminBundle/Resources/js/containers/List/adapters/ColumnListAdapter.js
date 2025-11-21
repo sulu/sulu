@@ -112,10 +112,11 @@ class ColumnListAdapter extends AbstractAdapter {
             indicators.push(<Icon key="permissions" name="su-permissions" />);
         }
 
-        if (item.linked === 'internal') {
-            indicators.push(<Icon key="internal" name="su-link2" />);
-        } else if (item.linked === 'external') {
+        if (item.linkProvider === 'external') {
             indicators.push(<Icon key="external" name="su-link" />);
+        }
+        else if (item.linkProvider !== undefined) {
+            indicators.push(<Icon key="internal" name="su-link2" />);
         } else if (item.shadowLocale) {
             indicators.push(<Icon key="shadow" name="su-shadow-page" />);
         }

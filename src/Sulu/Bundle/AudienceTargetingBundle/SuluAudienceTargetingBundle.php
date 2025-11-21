@@ -31,6 +31,25 @@ final class SuluAudienceTargetingBundle extends Bundle
     /**
      * @internal this method is not part of the public API and should only be called by the Symfony framework classes
      */
+    public function prepend(ContainerBuilder $container): void
+    {
+        if ($container->hasExtension('sulu_admin')) {
+            $container->prependExtensionConfig(
+                'sulu_admin',
+                [
+                    'forms' => [
+                        'directories' => [
+                            __DIR__ . '/Resources/config/forms',
+                        ],
+                    ],
+                ]
+            );
+        }
+    }
+
+    /**
+     * @internal this method is not part of the public API and should only be called by the Symfony framework classes
+     */
     public function build(ContainerBuilder $container): void
     {
         $this->buildPersistence(

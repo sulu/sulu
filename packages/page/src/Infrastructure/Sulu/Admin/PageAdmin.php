@@ -230,8 +230,8 @@ class PageAdmin extends Admin
                 toolbarActions: $formToolbarActionsWithType
             );
 
-            // Preview only available for content pages
-            $previewCondition = 'linkOn == false && shadowOn == false';
+            // Preview only available for content pages and existing locales
+            $previewCondition = 'linkOn == false && shadowOn == false && availableLocales && locale in availableLocales';
 
             // Content and SEO tabs only for content pages
             $contentTabCondition = 'linkOn == false && shadowOn == false';

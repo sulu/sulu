@@ -15,7 +15,6 @@ namespace Sulu\Article\Tests\Functional\Infrastructure\Symfony\Twig;
 
 use Sulu\Article\Infrastructure\Symfony\Twig\ArticleTwigExtension;
 use Sulu\Article\Tests\Traits\CreateArticleTrait;
-use Sulu\Bundle\MediaBundle\Api\Media;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Content\Tests\Functional\Traits\CreateMediaTrait;
 
@@ -54,20 +53,14 @@ class ArticleTwigExtensionTest extends SuluTestCase
             ],
         ]);
 
-        $result = $this->articleTwigExtension->loadArticle($article->getUuid(), 'en');
+        $result = $this->articleTwigExtension->loadArticle($article->getUuid(), [], 'en');
 
         $this->assertIsArray($result);
         $this->assertArrayHasKey('content', $result);
 
         /** @var array<string, mixed> $content */
         $content = $result['content'];
-        $this->assertArrayHasKey('title', $content);
-        $this->assertSame('Test Article', $content['title']);
-        $this->assertArrayHasKey('description', $content);
-        $this->assertSame('This is a test article description', $content['description']);
-        $this->assertArrayHasKey('image', $content);
-        $this->assertInstanceOf(Media::class, $content['image']);
-        $this->assertSame($media->getId(), $content['image']->getId());
+        $this->assertEmpty($content);
     }
 
     public function testLoadArticleWithProperties(): void
@@ -96,7 +89,7 @@ class ArticleTwigExtensionTest extends SuluTestCase
             'description' => 'description',
         ];
 
-        $result = $this->articleTwigExtension->loadArticle($article->getUuid(), 'en', $properties);
+        $result = $this->articleTwigExtension->loadArticle($article->getUuid(), $properties, 'en');
 
         $this->assertIsArray($result);
         $this->assertArrayHasKey('title', $result);
@@ -112,7 +105,7 @@ class ArticleTwigExtensionTest extends SuluTestCase
 
     public function testLoadArticleReturnsNullWhenArticleNotFound(): void
     {
-        $result = $this->articleTwigExtension->loadArticle('nonexistent-uuid', 'en');
+        $result = $this->articleTwigExtension->loadArticle('nonexistent-uuid', [], 'en');
 
         $this->assertNull($result);
     }

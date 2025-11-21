@@ -30,6 +30,8 @@ use Sulu\Content\Domain\Model\SeoInterface;
 use Sulu\Content\Domain\Model\SeoTrait;
 use Sulu\Content\Domain\Model\ShadowInterface;
 use Sulu\Content\Domain\Model\ShadowTrait;
+use Sulu\Content\Domain\Model\TaxonomyInterface;
+use Sulu\Content\Domain\Model\TaxonomyTrait;
 use Sulu\Content\Domain\Model\TemplateInterface;
 use Sulu\Content\Domain\Model\TemplateTrait;
 use Sulu\Content\Domain\Model\WebspaceInterface;
@@ -43,6 +45,7 @@ use Sulu\Content\Domain\Model\WorkflowTrait;
 class ExampleDimensionContent implements
     DimensionContentInterface,
     ExcerptInterface,
+    TaxonomyInterface,
     SeoInterface,
     TemplateInterface,
     RoutableInterface,
@@ -56,6 +59,7 @@ class ExampleDimensionContent implements
     use AuthorTrait;
     use DimensionContentTrait;
     use ExcerptTrait;
+    use TaxonomyTrait;
     use RoutableTrait;
     use SeoTrait;
     use ShadowTrait;

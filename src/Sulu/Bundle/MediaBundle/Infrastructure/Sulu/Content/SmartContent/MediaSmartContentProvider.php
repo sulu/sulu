@@ -19,6 +19,7 @@ use Sulu\Bundle\AdminBundle\SmartContent\Configuration\ProviderConfigurationInte
 use Sulu\Bundle\AdminBundle\SmartContent\SmartContentProviderInterface;
 use Sulu\Bundle\AdminBundle\SmartContent\SmartContentQueryEnhancer;
 use Sulu\Bundle\MediaBundle\Admin\MediaAdmin;
+use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\CollectionInterface;
 use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
@@ -91,7 +92,7 @@ readonly class MediaSmartContentProvider implements SmartContentProviderInterfac
         private TranslatorInterface $translator,
         private WebspaceManagerInterface $webspaceManager,
         private AccessControlQueryEnhancer $accessControlQueryEnhancer,
-        private Security $security,
+        private ?Security $security,
         private bool $hasAudienceTargeting = false,
         private ?array $permissions = null,
     ) {
@@ -222,7 +223,7 @@ readonly class MediaSmartContentProvider implements SmartContentProviderInterfac
     ): void {
         $webspace = $this->webspaceManager->findWebspaceByKey($filters['webspaceKey'] ?? null);
         /** @var UserInterface|null $user */
-        $user = $webspace && $webspace->hasWebsiteSecurity() ? $this->security->getUser() : null;
+        $user = $webspace && $webspace->hasWebsiteSecurity() ? $this->security?->getUser() : null;
         /** @var int|null $permission */
         $permission = $webspace && $webspace->hasWebsiteSecurity() && $this->permissions
             ? $this->permissions[PermissionTypes::VIEW]
@@ -324,8 +325,8 @@ readonly class MediaSmartContentProvider implements SmartContentProviderInterfac
                 $queryBuilder,
                 $user,
                 $permission,
-                $entityClass,
-                $alias,
+                Collection::class,
+                'collection',
             );
         }
     }

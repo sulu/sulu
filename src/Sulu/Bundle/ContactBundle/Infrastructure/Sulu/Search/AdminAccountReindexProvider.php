@@ -17,6 +17,7 @@ use CmsIg\Seal\Reindex\ReindexConfig;
 use CmsIg\Seal\Reindex\ReindexProviderInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
+use Sulu\Bundle\ContactBundle\Admin\ContactAdmin;
 use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
 
 /**
@@ -58,13 +59,14 @@ final class AdminAccountReindexProvider implements ReindexProviderInterface
         /** @var Account $account */
         foreach ($accounts as $account) {
             yield [
-                'id' => AccountInterface::RESOURCE_KEY . '::' . ((string) $account['id']),
+                'id' => AccountInterface::RESOURCE_KEY . '__' . ((string) $account['id']),
                 'resourceKey' => AccountInterface::RESOURCE_KEY,
                 'resourceId' => (string) $account['id'],
                 'mediaId' => (string) $account['mediaId'],
                 'changedAt' => $account['changed']->format('c'),
                 'createdAt' => $account['created']->format('c'),
                 'title' => $account['name'],
+                'securityContext' => ContactAdmin::ACCOUNT_SECURITY_CONTEXT,
             ];
         }
     }
@@ -85,7 +87,7 @@ final class AdminAccountReindexProvider implements ReindexProviderInterface
 
         if (0 < \count($identifiers)) {
             $qb->where('account.id IN (:ids)')
-                ->setParameter('ids', \array_map(fn ($identifier) => (int) \str_replace(AccountInterface::RESOURCE_KEY . '::', '', $identifier), $identifiers));
+                ->setParameter('ids', \array_map(fn ($identifier) => (int) \str_replace(AccountInterface::RESOURCE_KEY . '__', '', $identifier), $identifiers));
         }
 
         /** @var iterable<Account> */

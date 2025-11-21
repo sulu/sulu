@@ -13,9 +13,6 @@ declare(strict_types=1);
 
 namespace Sulu\Article\Infrastructure\Symfony\HttpKernel;
 
-use Sulu\Article\Application\Content\DataMapper\AdditionalWebspacesDataMapper;
-use Sulu\Article\Application\Content\Merger\AdditionalWebspacesMerger;
-use Sulu\Article\Application\Content\Normalizer\AdditionalWebspacesNormalizer;
 use Sulu\Article\Application\Mapper\ArticleContentMapper;
 use Sulu\Article\Application\Mapper\ArticleMapperInterface;
 use Sulu\Article\Application\MessageHandler\ApplyWorkflowTransitionArticleMessageHandler;
@@ -25,7 +22,6 @@ use Sulu\Article\Application\MessageHandler\ModifyArticleMessageHandler;
 use Sulu\Article\Application\MessageHandler\RemoveArticleMessageHandler;
 use Sulu\Article\Application\MessageHandler\RemoveArticleTranslationMessageHandler;
 use Sulu\Article\Application\MessageHandler\RestoreArticleVersionMessageHandler;
-use Sulu\Article\Application\Webspace\WebspaceResolver;
 use Sulu\Article\Application\Webspace\WebspaceSettingsConfigurationResolver;
 use Sulu\Article\Domain\Event\ArticleCreatedEvent;
 use Sulu\Article\Domain\Event\ArticleModifiedEvent;
@@ -35,24 +31,29 @@ use Sulu\Article\Domain\Event\ArticleTranslationAddedEvent;
 use Sulu\Article\Domain\Event\ArticleTranslationCopiedEvent;
 use Sulu\Article\Domain\Event\ArticleTranslationRemovedEvent;
 use Sulu\Article\Domain\Event\ArticleTranslationRestoredEvent;
+use Sulu\Article\Domain\Event\ArticleWorkflowTransitionAppliedEvent;
 use Sulu\Article\Domain\Model\Article;
 use Sulu\Article\Domain\Model\ArticleDimensionContent;
 use Sulu\Article\Domain\Model\ArticleDimensionContentInterface;
 use Sulu\Article\Domain\Model\ArticleInterface;
 use Sulu\Article\Domain\Repository\ArticleRepositoryInterface;
-use Sulu\Article\Infrastructure\Doctrine\MetadataLoader;
 use Sulu\Article\Infrastructure\Doctrine\Repository\ArticleRepository;
 use Sulu\Article\Infrastructure\Sulu\Admin\ArticleAdmin;
 use Sulu\Article\Infrastructure\Sulu\Content\ArticleLinkProvider;
 use Sulu\Article\Infrastructure\Sulu\Content\ArticleSmartContentProvider;
 use Sulu\Article\Infrastructure\Sulu\Content\ArticleTeaserProvider;
+use Sulu\Article\Infrastructure\Sulu\Content\DataMapper\AdditionalWebspacesDataMapper;
+use Sulu\Article\Infrastructure\Sulu\Content\Merger\AdditionalWebspacesMerger;
 use Sulu\Article\Infrastructure\Sulu\Content\PropertyResolver\ArticleSelectionPropertyResolver;
 use Sulu\Article\Infrastructure\Sulu\Content\PropertyResolver\SingleArticleSelectionPropertyResolver;
 use Sulu\Article\Infrastructure\Sulu\Content\ResourceLoader\ArticleResourceLoader;
+use Sulu\Article\Infrastructure\Sulu\HttpCache\EventSubscriber\ArticleCacheInvalidationSubscriber;
 use Sulu\Article\Infrastructure\Sulu\Reference\ArticleReferenceRefresher;
 use Sulu\Article\Infrastructure\Sulu\Route\ArticleRouteDefaultsProvider;
 use Sulu\Article\Infrastructure\Sulu\Search\AdminArticleIndexListener;
 use Sulu\Article\Infrastructure\Sulu\Search\AdminArticleReindexProvider;
+use Sulu\Article\Infrastructure\Sulu\Search\WebsiteArticleIndexListener;
+use Sulu\Article\Infrastructure\Sulu\Search\WebsiteArticleReindexProvider;
 use Sulu\Article\Infrastructure\Sulu\Sitemap\ArticlesSitemapProvider;
 use Sulu\Article\Infrastructure\Sulu\Trash\ArticleTrashItemHandler;
 use Sulu\Article\Infrastructure\Symfony\Twig\ArticleTwigExtension;
@@ -165,6 +166,7 @@ final class SuluArticleBundle extends AbstractBundle
                 new Reference('sulu_article.article_repository'),
                 tagged_iterator('sulu_article.article_mapper'),
                 new Reference('sulu_activity.domain_event_collector'),
+                new Reference('security.token_storage', ContainerInterface::NULL_ON_INVALID_REFERENCE),
             ])
             ->tag('messenger.message_handler');
 
@@ -191,6 +193,7 @@ final class SuluArticleBundle extends AbstractBundle
             ->args([
                 new Reference('sulu_article.article_repository'),
                 new Reference('sulu_activity.domain_event_collector'),
+                new Reference('sulu_trash.trash_manager', ContainerInterface::NULL_ON_INVALID_REFERENCE),
             ])
             ->tag('messenger.message_handler');
 
@@ -230,11 +233,10 @@ final class SuluArticleBundle extends AbstractBundle
 
         $services->set('sulu_article.additional_webspaces_data_mapper')
             ->class(AdditionalWebspacesDataMapper::class)
+            ->args([
+                new Reference('sulu_article.webspace_settings_configuration_resolver'),
+            ])
             ->tag('sulu_content.data_mapper');
-
-        $services->set('sulu_article.additional_webspaces_metadata_loader')
-            ->class(MetadataLoader::class)
-            ->tag('doctrine.event_listener', ['event' => 'loadClassMetadata']);
 
         $services->set('sulu_article.additional_webspaces_merger')
             ->class(AdditionalWebspacesMerger::class)
@@ -245,21 +247,8 @@ final class SuluArticleBundle extends AbstractBundle
             ->args([
                 '%sulu_article.default_main_webspace%',
                 '%sulu_article.default_additional_webspaces%',
-            ]);
-
-        $services->set('sulu_article.webspace_resolver')
-            ->class(WebspaceResolver::class)
-            ->args([
                 new Reference('sulu_core.webspace.webspace_manager'),
-                new Reference('sulu_article.webspace_settings_configuration_resolver'),
             ]);
-
-        $services->set('sulu_article.additional_webspaces_normalizer')
-            ->class(AdditionalWebspacesNormalizer::class)
-            ->args([
-                new Reference('sulu_article.webspace_resolver'),
-            ])
-            ->tag('sulu_content.normalizer');
 
         $services->set('sulu_article.article_admin')
             ->class(ArticleAdmin::class)
@@ -385,6 +374,18 @@ final class SuluArticleBundle extends AbstractBundle
             ])
             ->tag('sulu_reference.refresher');
 
+        // Cache Invalidation
+        $services->set('sulu_article.article_cache_invalidation_subscriber')
+            ->class(ArticleCacheInvalidationSubscriber::class)
+            ->args([
+                new Reference('sulu_http_cache.cache_manager', ContainerInterface::NULL_ON_INVALID_REFERENCE),
+                new Reference('sulu_route.route_repository'),
+                new Reference('sulu_content.content_aggregator'),
+                new Reference('sulu_route.route_generator'),
+                new Reference('sulu_core.webspace.webspace_manager'),
+            ])
+            ->tag('kernel.event_subscriber');
+
         // Sitemap
         $services->set('sulu_article.articles_sitemap_provider')
             ->class(ArticlesSitemapProvider::class)
@@ -392,7 +393,8 @@ final class SuluArticleBundle extends AbstractBundle
                 new Reference('doctrine.orm.entity_manager'),
                 new Reference('sulu_core.webspace.webspace_manager'),
                 '%kernel.environment%',
-                new Reference('sulu_security.access_control_manager'),
+                '%sulu_article.default_main_webspace%',
+                '%sulu_article.default_additional_webspaces%',
             ])
             ->tag('sulu.sitemap.provider');
 
@@ -423,7 +425,6 @@ final class SuluArticleBundle extends AbstractBundle
                 new Reference('sulu_admin.metadata_provider_registry'),
                 new Reference('sulu_http_cache.cache_lifetime.resolver'),
                 new Reference('sulu_core.webspace.webspace_manager'),
-                new Reference('sulu_article.webspace_resolver'),
                 '%kernel.environment%',
             ])
             ->tag('sulu_route.route_defaults_provider', ['resource_key' => 'articles']);
@@ -444,6 +445,23 @@ final class SuluArticleBundle extends AbstractBundle
 
         $services->set('sulu_article.admin_article_reindex_provider')
             ->class(AdminArticleReindexProvider::class)
+            ->args([
+                new Reference('doctrine.orm.entity_manager'),
+                new Reference('sulu_admin.metadata_group_provider'),
+            ])
+            ->tag('cmsig_seal.reindex_provider');
+
+        $services->set('sulu_article.website_article_index_listener')
+            ->class(WebsiteArticleIndexListener::class)
+            ->args([
+                new Reference('sulu_message_bus'),
+            ])
+            ->tag('kernel.event_listener', ['event' => ArticleWorkflowTransitionAppliedEvent::class, 'method' => 'onArticleChanged'])
+            ->tag('kernel.event_listener', ['event' => ArticleRemovedEvent::class, 'method' => 'onArticleChanged'])
+            ->tag('kernel.event_listener', ['event' => ArticleTranslationRemovedEvent::class, 'method' => 'onArticleChanged']);
+
+        $services->set('sulu_article.website_article_reindex_provider')
+            ->class(WebsiteArticleReindexProvider::class)
             ->args([
                 new Reference('doctrine.orm.entity_manager'),
             ])
@@ -578,9 +596,12 @@ final class SuluArticleBundle extends AbstractBundle
                                 'name' => 'sulu_article.articles',
                                 'icon' => 'su-newspaper',
                                 'route' => [
-                                    'name' => ArticleAdmin::EDIT_TABS_VIEW,
+                                    'name' => ArticleAdmin::EDIT_TABS_VIEW . '_{group}',
+                                    'resultToRouteName' => [
+                                        'metadata.group' => 'group',
+                                    ],
                                     'resultToRoute' => [
-                                        'id' => 'id',
+                                        'resourceId' => 'id',
                                         'locale' => 'locale',
                                     ],
                                 ],

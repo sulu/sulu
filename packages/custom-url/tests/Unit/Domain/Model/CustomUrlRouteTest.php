@@ -38,7 +38,6 @@ class CustomUrlRouteTest extends TestCase
 
         $uuid = $route->getUuid();
 
-        $this->assertNotNull($uuid);
         // UUID v7 format: xxxxxxxx-xxxx-7xxx-xxxx-xxxxxxxxxxxx
         $this->assertMatchesRegularExpression(
             '/^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i',

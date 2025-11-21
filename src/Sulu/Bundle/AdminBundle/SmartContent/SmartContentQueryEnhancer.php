@@ -14,7 +14,7 @@ namespace Sulu\Bundle\AdminBundle\SmartContent;
 use Doctrine\ORM\Query\Expr\OrderBy;
 use Doctrine\ORM\QueryBuilder;
 
-class SmartContentQueryEnhancer
+final class SmartContentQueryEnhancer
 {
     public function addPagination(QueryBuilder $queryBuilder, int $offset, ?int $limit = null): void
     {

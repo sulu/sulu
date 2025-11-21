@@ -42,15 +42,23 @@ final readonly class ResourceLocatorGenerator implements ResourceLocatorGenerato
 
         $path = '/' . \implode('-', $parts);
 
+        $parentPath = \rtrim($parentPath, '/');
+
         // TODO routeSchema
 
-        return $this->createUnique( // TODO own service called during doctrine listener also?
-            \rtrim($parentPath, '/') . $path,
+        $uniquePath = $this->createUnique( // TODO own service called during doctrine listener also?
+            $parentPath . $path,
             $request->locale,
             $request->site,
             $request->resourceKey,
             $request->resourceId,
         );
+
+        if ($request->relative) {
+            return \substr($uniquePath, \strlen($parentPath));
+        }
+
+        return $uniquePath;
     }
 
     private function createUnique(

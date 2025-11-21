@@ -24,13 +24,18 @@ use Sulu\Bundle\AdminBundle\SmartContent\Configuration\BuilderInterface;
 use Sulu\Bundle\AdminBundle\SmartContent\Configuration\ProviderConfigurationInterface;
 use Sulu\Bundle\AdminBundle\SmartContent\SmartContentProviderInterface;
 use Sulu\Bundle\AdminBundle\SmartContent\SmartContentQueryEnhancer;
+use Sulu\Bundle\SecurityBundle\AccessControl\AccessControlQueryEnhancer;
 use Sulu\Component\Security\Authentication\UserInterface;
+use Sulu\Component\Security\Authorization\PermissionTypes;
+use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer;
+use Sulu\Page\Domain\Model\Page;
 use Sulu\Page\Domain\Model\PageDimensionContentInterface;
 use Sulu\Page\Domain\Model\PageInterface;
 use Sulu\Page\Infrastructure\Sulu\Admin\PageAdmin;
 use Sulu\Page\Infrastructure\Sulu\Content\ResourceLoader\PageResourceLoader;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
@@ -54,6 +59,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
  *       audienceTargeting?: bool,
  *       targetGroupId?: int,
  *       segmentKey?: string,
+ *       webspaceKey?: string,
  *   }
  * @phpstan-type PageSmartContentCountFilters array{
  *       categories: int[],
@@ -74,6 +80,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
  *       audienceTargeting?: bool,
  *       targetGroupId?: int,
  *       segmentKey?: string,
+ *       webspaceKey?: string,
  *   }
  */
 readonly class PageSmartContentProvider implements SmartContentProviderInterface
@@ -95,6 +102,7 @@ readonly class PageSmartContentProvider implements SmartContentProviderInterface
 
     /**
      * @param array<string, mixed> $bundles
+     * @param mixed[]|null $permissions
      */
     public function __construct(
         private DimensionContentQueryEnhancer $dimensionContentQueryEnhancer,
@@ -103,6 +111,10 @@ readonly class PageSmartContentProvider implements SmartContentProviderInterface
         private ?TokenStorageInterface $tokenStorage,
         EntityManagerInterface $entityManager,
         private array $bundles,
+        private WebspaceManagerInterface $webspaceManager,
+        private AccessControlQueryEnhancer $accessControlQueryEnhancer,
+        private ?Security $security,
+        private ?array $permissions = null,
     ) {
         $this->entityRepository = $entityManager->getRepository(PageInterface::class);
         $this->entityDimensionContentRepository = $entityManager->getRepository(PageDimensionContentInterface::class);
@@ -162,6 +174,7 @@ readonly class PageSmartContentProvider implements SmartContentProviderInterface
             [],
         );
         $this->addInternalFilters($queryBuilder, $filters, $alias);
+        $this->enhanceQueryBuilderWithAccessControl($queryBuilder, $filters, $alias);
 
         $queryBuilder->select('COUNT(DISTINCT page.uuid)');
 
@@ -197,6 +210,7 @@ readonly class PageSmartContentProvider implements SmartContentProviderInterface
             $sortBys,
         );
         $this->addInternalFilters($queryBuilder, $filters, $alias);
+        $this->enhanceQueryBuilderWithAccessControl($queryBuilder, $filters, $alias);
 
         // TODO refactor this part to not use distinct
         // we need the distinct here, because joins due to tags/categories can lead to duplicate results
@@ -259,6 +273,36 @@ readonly class PageSmartContentProvider implements SmartContentProviderInterface
     }
 
     /**
+     * Enhances the query builder with access control filtering if webspace has security enabled.
+     *
+     * @param array{webspaceKey?: string} $filters
+     */
+    private function enhanceQueryBuilderWithAccessControl(
+        QueryBuilder $queryBuilder,
+        array $filters,
+        string $alias
+    ): void {
+        $webspace = $this->webspaceManager->findWebspaceByKey($filters['webspaceKey'] ?? null);
+        /** @var UserInterface|null $user */
+        $user = $webspace && $webspace->hasWebsiteSecurity() && $this->security ? $this->security->getUser() : null;
+        /** @var int|null $permission */
+        $permission = $webspace && $webspace->hasWebsiteSecurity() && $this->permissions
+            ? $this->permissions[PermissionTypes::VIEW]
+            : null;
+
+        if ($permission) {
+            $this->accessControlQueryEnhancer->enhance(
+                $queryBuilder,
+                $user,
+                $permission,
+                Page::class,
+                $alias,
+                'uuid'
+            );
+        }
+    }
+
+    /**
      * @param array{
      *     dataSource: string|null,
      *     includeSubFolders: bool,
@@ -279,8 +323,8 @@ readonly class PageSmartContentProvider implements SmartContentProviderInterface
                 Join::WITH,
                 'datasourcePage.uuid = :datasource',
             )
-                ->andWhere($alias . '.lft >= datasourcePage.lft')
-                ->andWhere($alias . '.rgt <= datasourcePage.rgt')
+                ->andWhere($alias . '.lft > datasourcePage.lft')
+                ->andWhere($alias . '.rgt < datasourcePage.rgt')
                 ->setParameter('datasource', $datasource);
         } else {
             $queryBuilder->andWhere($alias . '.parent = :datasource')

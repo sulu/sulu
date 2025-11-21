@@ -102,7 +102,7 @@ class CustomUrlController implements SecuredControllerInterface
     {
         $requestData = $request->request->all();
         try {
-            /** @see Sulu\CustomUrl\Application\MessageHandler\CreateCustomUrlMessageHandler */
+            /** @see \Sulu\CustomUrl\Application\MessageHandler\CreateCustomUrlMessageHandler */
             /** @var CustomUrlInterface $customUrl */
             $customUrl = $this->handle(new Envelope(
                 new CreateCustomUrlMessage(
@@ -133,7 +133,7 @@ class CustomUrlController implements SecuredControllerInterface
         unset($requestData['creator'], $requestData['changer'], $requestData['created'], $requestData['updated']);
 
         try {
-            /** @see Sulu\CustomUrl\Application\MessageHandler\ModifyCustomUrlMessageHandler */
+            /** @see \Sulu\CustomUrl\Application\MessageHandler\ModifyCustomUrlMessageHandler */
             /** @var CustomUrlInterface $customUrl */
             $customUrl = $this->handle(new Envelope(
                 new ModifyCustomUrlMessage(
@@ -161,7 +161,7 @@ class CustomUrlController implements SecuredControllerInterface
 
     public function deleteAction(string $webspace, string $id): Response
     {
-        /** @see Sulu\CustomUrl\Application\MessageHandler\RemoveCustomUrlMessageHandler */
+        /** @see \Sulu\CustomUrl\Application\MessageHandler\RemoveCustomUrlMessageHandler */
         /** @var CustomUrlInterface $customUrl */
         $customUrl = $this->handle(new Envelope(
             new RemoveCustomUrlMessage(uuid: $id, webspaceKey: $webspace),
@@ -177,7 +177,7 @@ class CustomUrlController implements SecuredControllerInterface
 
         // TODO: bulk delete should either be more efficient or just fall back to calling the delete endpoint in code
         foreach ($ids as $id) {
-            /** @see Sulu\CustomUrl\Application\MessageHandler\RemoveCustomUrlMessageHandler */
+            /** @see \Sulu\CustomUrl\Application\MessageHandler\RemoveCustomUrlMessageHandler */
             $this->handle(new Envelope(
                 new RemoveCustomUrlMessage(uuid: $id, webspaceKey: $webspace),
                 [new EnableFlushStamp()],

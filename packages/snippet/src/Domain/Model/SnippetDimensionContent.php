@@ -16,7 +16,7 @@ namespace Sulu\Snippet\Domain\Model;
 use Sulu\Component\Persistence\Model\AuditableTrait;
 use Sulu\Content\Domain\Model\ContentRichEntityInterface;
 use Sulu\Content\Domain\Model\DimensionContentTrait;
-use Sulu\Content\Domain\Model\ExcerptTrait;
+use Sulu\Content\Domain\Model\TaxonomyTrait;
 use Sulu\Content\Domain\Model\TemplateTrait;
 use Sulu\Content\Domain\Model\WorkflowTrait;
 
@@ -30,23 +30,14 @@ class SnippetDimensionContent implements SnippetDimensionContentInterface
         TemplateTrait::setTemplateData as parentSetTemplateData;
     }
     use WorkflowTrait;
-    use ExcerptTrait;
+    use TaxonomyTrait;
     use AuditableTrait;
 
-    /**
-     * @var int
-     */
-    protected $id;
+    protected int $id;
 
-    /**
-     * @var SnippetInterface
-     */
-    protected $snippet;
+    protected SnippetInterface $snippet;
 
-    /**
-     * @var string|null
-     */
-    protected $title;
+    protected ?string $title = null;
 
     public function __construct(SnippetInterface $snippet)
     {

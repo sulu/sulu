@@ -1,13 +1,15 @@
 {
-    "author": null,
+    "author": "@integer@",
     "authored": "2020-06-09T00:00:00+00:00",
     "availableLocales": [
-        "en"
+        "en",
+        "de"
     ],
     "changed": "@datetime@",
     "changer": "@integer@",
     "contentLocales": [
-        "en"
+        "en",
+        "de"
     ],
     "created": "@datetime@",
     "creator": "@integer@",
@@ -19,7 +21,10 @@
     "excerptImage": null,
     "excerptMore": "Excerpt More 2",
     "excerptSegment": "updated-segment",
-    "excerptTags": [],
+    "excerptTags": [
+        "Tag 3",
+        "Tag 4"
+    ],
     "excerptTitle": "Excerpt Title 2",
     "ghostLocale": "en",
     "id": "@string@",
@@ -46,6 +51,6 @@
     "template": "article",
     "title": "Test Article 2",
     "version": 0,
-    "url": null,
+    "url": "/my-article-2",
     "workflowPlace": "unpublished"
 }

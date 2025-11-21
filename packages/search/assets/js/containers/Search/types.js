@@ -7,5 +7,6 @@ export type SearchResource = {|
     route: {|
         name: string,
         resultToRoute: {[key: string]: string},
+        resultToRouteName?: {[key: string]: string},
     |},
 |};

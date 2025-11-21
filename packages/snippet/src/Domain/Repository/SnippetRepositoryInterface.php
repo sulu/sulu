@@ -18,7 +18,7 @@ use Sulu\Snippet\Domain\Model\SnippetInterface;
 /**
  * Implementation can be found in the following class:.
  *
- * @see Sulu\Snippet\Infrastructure\Doctrine\Repository\SnippetRepository
+ * @see \Sulu\Snippet\Infrastructure\Doctrine\Repository\SnippetRepository
  */
 interface SnippetRepositoryInterface
 {

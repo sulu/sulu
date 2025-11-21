@@ -1,6 +1,7 @@
 {
     "sulu_content.seo": "SEO",
     "sulu_content.excerpt": "Auszug & Taxonomien",
+    "sulu_content.taxonomies": "Taxonomien",
     "sulu_content.content": "Inhalt",
     "sulu_content.text_for_more_link": "Text für weiterführenden Link",
     "sulu_content.icon": "Icon",
@@ -37,5 +38,6 @@
     "sulu_content.hide_block_description": "Dieser Block wird nicht veröffentlicht, kann aber weiterhin im Admin bearbeitet werden.",
     "sulu_content.schedules_label": "Zeitfenster zuweisen",
     "sulu_content.schedules_description": "Der Block wird nur angezeigt, wenn mindestens einer der Bedingungen erfüllt wird.",
-    "sulu_content.add_schedule": "Zeitfenster hinzufügen"
+    "sulu_content.add_schedule": "Zeitfenster hinzufügen",
+    "sulu_content.changelog": "Änderungshistorie"
 }

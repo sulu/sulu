@@ -18,6 +18,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Bundle\TestBundle\Testing\SetGetPrivatePropertyTrait;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Page\Domain\Model\PageInterface;
+use Sulu\Page\Infrastructure\Sulu\Admin\PageAdmin;
 use Sulu\Page\Infrastructure\Sulu\Search\AdminPageReindexProvider;
 use Sulu\Page\Tests\Traits\CreatePageTrait;
 
@@ -101,31 +102,43 @@ class AdminPageReindexProviderTest extends SuluTestCase
 
         $expectedResult = [
             [
-                'id' => PageInterface::RESOURCE_KEY . '::' . $page2->getUuid() . '::de',
+                'id' => PageInterface::RESOURCE_KEY . '__' . $page2->getUuid() . '__de',
                 'resourceKey' => PageInterface::RESOURCE_KEY,
                 'resourceId' => $page2->getUuid(),
                 'changedAt' => (new \DateTimeImmutable($changedDateString2))->format('c'),
                 'createdAt' => (new \DateTimeImmutable($createdAt))->format('c'),
                 'title' => 'Test Schnipsel 2',
                 'locale' => 'de',
+                'metadata' => [
+                    'webspaceKey' => 'sulu-io',
+                ],
+                'securityContext' => PageAdmin::SECURITY_CONTEXT_PREFIX . 'sulu-io',
             ],
             [
-                'id' => PageInterface::RESOURCE_KEY . '::' . $page1->getUuid() . '::en',
+                'id' => PageInterface::RESOURCE_KEY . '__' . $page1->getUuid() . '__en',
                 'resourceKey' => PageInterface::RESOURCE_KEY,
                 'resourceId' => $page1->getUuid(),
                 'changedAt' => (new \DateTimeImmutable($changedDateString1))->format('c'),
                 'createdAt' => (new \DateTimeImmutable($createdAt))->format('c'),
                 'title' => 'Test Page',
                 'locale' => 'en',
+                'metadata' => [
+                    'webspaceKey' => 'sulu-io',
+                ],
+                'securityContext' => PageAdmin::SECURITY_CONTEXT_PREFIX . 'sulu-io',
             ],
             [
-                'id' => PageInterface::RESOURCE_KEY . '::' . $page2->getUuid() . '::en',
+                'id' => PageInterface::RESOURCE_KEY . '__' . $page2->getUuid() . '__en',
                 'resourceKey' => PageInterface::RESOURCE_KEY,
                 'resourceId' => $page2->getUuid(),
                 'changedAt' => (new \DateTimeImmutable($changedDateString2))->format('c'),
                 'createdAt' => (new \DateTimeImmutable($createdAt))->format('c'),
                 'title' => 'Test Page 2',
                 'locale' => 'en',
+                'metadata' => [
+                    'webspaceKey' => 'sulu-io',
+                ],
+                'securityContext' => PageAdmin::SECURITY_CONTEXT_PREFIX . 'sulu-io',
             ],
         ];
 
@@ -193,8 +206,8 @@ class AdminPageReindexProviderTest extends SuluTestCase
         ]);
 
         $identifiers = [
-            PageInterface::RESOURCE_KEY . '::' . $page1->getUuid() . '::de',
-            PageInterface::RESOURCE_KEY . '::' . $page2->getUuid() . '::en',
+            PageInterface::RESOURCE_KEY . '__' . $page1->getUuid() . '__de',
+            PageInterface::RESOURCE_KEY . '__' . $page2->getUuid() . '__en',
         ];
 
         $config = ReindexConfig::create()

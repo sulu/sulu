@@ -44,7 +44,8 @@ class CustomUrlAdmin extends Admin
     public function __construct(
         private WebspaceManagerInterface $webspaceManager,
         private ViewBuilderFactoryInterface $viewBuilderFactory,
-        private SecurityCheckerInterface $securityChecker
+        private SecurityCheckerInterface $securityChecker,
+        private string $environment
     ) {
     }
 
@@ -55,7 +56,7 @@ class CustomUrlAdmin extends Admin
             new ToolbarAction('sulu_admin.delete'),
         ];
 
-        if ($this->hasSomeWebspaceCustomUrlPermission()) {
+        if ($this->hasSomeWebspaceCustomUrlPermission() && $this->hasAnyWebspaceWithCustomUrls()) {
             $viewCollection->add(
                 $this->viewBuilderFactory
                     ->createFormOverlayListViewBuilder(self::LIST_VIEW, '/custom-urls')
@@ -126,6 +127,20 @@ class CustomUrlAdmin extends Admin
 
             if ($hasWebspacePermission) {
                 return true;
+            }
+        }
+
+        return false;
+    }
+
+    private function hasAnyWebspaceWithCustomUrls(): bool
+    {
+        foreach ($this->webspaceManager->getWebspaceCollection()->getWebspaces() as $webspace) {
+            foreach ($webspace->getPortals() as $portal) {
+                $environment = $portal->getEnvironment($this->environment);
+                if (\count($environment->getCustomUrls()) > 0) {
+                    return true;
+                }
             }
         }
 

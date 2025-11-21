@@ -67,12 +67,6 @@ parameters:
 			path: packages/content/src/Infrastructure/Sulu/Teaser/ContentTeaserProvider.php
 
 		-
-			message: '#^Possibly invalid array key type mixed\.$#'
-			identifier: offsetAccess.invalidOffset
-			count: 2
-			path: packages/content/tests/Functional/Infrastructure/Doctrine/DimensionContentQueryEnhancerTest.php
-
-		-
 			message: '#^Method Sulu\\Content\\Tests\\Unit\\Content\\Application\\PropertyResolver\\BlockVisitor\\ScheduleBlockVisitorTest\:\:provideVisit\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -245,6 +239,12 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: packages/page/src/UserInterface/Controller/Admin/PageController.php
+
+		-
+			message: '#^Call to method PHPUnit\\Framework\\Assert\:\:assertEmpty\(\) with array\{\} will always evaluate to true\.$#'
+			identifier: method.alreadyNarrowedType
+			count: 1
+			path: packages/page/tests/Unit/Infrastructure/Sulu/Content/DataMapper/NavigationContextDataMapperTest.php
 
 		-
 			message: '#^Parameter \#1 \$entityName of method Sulu\\Component\\Rest\\ListBuilder\\Doctrine\\DoctrineListBuilderFactoryInterface\:\:create\(\) expects class\-string, string given\.$#'
@@ -6511,6 +6511,18 @@ parameters:
 			path: src/Sulu/Bundle/AudienceTargetingBundle/Tests/Unit/EventListener/AudienceTargetingCacheListenerTest.php
 
 		-
+			message: '#^Call to method PHPUnit\\Framework\\Assert\:\:assertCount\(\) with 2 and array\{\} will always evaluate to false\.$#'
+			identifier: method.impossibleType
+			count: 1
+			path: src/Sulu/Bundle/AudienceTargetingBundle/Tests/Unit/EventListener/AudienceTargetingCacheListenerTest.php
+
+		-
+			message: '#^Call to method PHPUnit\\Framework\\Assert\:\:assertEmpty\(\) with array\{\} will always evaluate to true\.$#'
+			identifier: method.alreadyNarrowedType
+			count: 1
+			path: src/Sulu/Bundle/AudienceTargetingBundle/Tests/Unit/EventListener/AudienceTargetingCacheListenerTest.php
+
+		-
 			message: '#^Method Sulu\\Bundle\\AudienceTargetingBundle\\Tests\\Unit\\EventListener\\AudienceTargetingCacheListenerTest\:\:readObjectAttribute\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -12319,12 +12331,6 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
 
 		-
-			message: '#^Call to function array_key_exists\(\) with ''public'' and string will always evaluate to false\.$#'
-			identifier: function.impossibleType
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
-
-		-
 			message: '#^Call to function method_exists\(\) with Doctrine\\Common\\Collections\\Collection and ''getValues'' will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 1
@@ -12979,24 +12985,6 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
 
 		-
-			message: '#^Offset ''bankName'' on string in isset\(\) does not exist\.$#'
-			identifier: isset.offset
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
-
-		-
-			message: '#^Offset ''bic'' on string in isset\(\) does not exist\.$#'
-			identifier: isset.offset
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
-
-		-
-			message: '#^Offset ''iban'' does not exist on string\.$#'
-			identifier: offsetAccess.notFound
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
-
-		-
 			message: '#^Offset ''iban'' might not exist on array\|null\.$#'
 			identifier: offsetAccess.notFound
 			count: 1
@@ -13327,12 +13315,6 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
 
 		-
-			message: '#^Parameter \#2 \$array of function array_key_exists expects array, string given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
-
-		-
 			message: '#^Parameter \#2 \$bankAccounts of method Sulu\\Bundle\\ContactBundle\\Contact\\AbstractContactManager\<DoctrineEntity,ApiEntity,AddressRelationEntity\>\:\:processBankAccounts\(\) expects array, string\|null given\.$#'
 			identifier: argument.type
 			count: 1
@@ -13363,7 +13345,7 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
 
 		-
-			message: '#^Parameter \#2 \$data of method Sulu\\Bundle\\ContactBundle\\Contact\\AbstractContactManager\<DoctrineEntity,ApiEntity,AddressRelationEntity\>\:\:updateBankAccount\(\) expects string, mixed given\.$#'
+			message: '#^Parameter \#2 \$data of method Sulu\\Bundle\\ContactBundle\\Contact\\AbstractContactManager\<DoctrineEntity,ApiEntity,AddressRelationEntity\>\:\:updateBankAccount\(\) expects array\<string, mixed\>, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
@@ -20035,21 +20017,9 @@ parameters:
 			path: src/Sulu/Bundle/HttpCacheBundle/DependencyInjection/SuluHttpCacheExtension.php
 
 		-
-			message: '#^Cannot access offset ''symfony'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: src/Sulu/Bundle/HttpCacheBundle/DependencyInjection/SuluHttpCacheExtension.php
-
-		-
 			message: '#^Cannot access offset ''tag_mode'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
-			path: src/Sulu/Bundle/HttpCacheBundle/DependencyInjection/SuluHttpCacheExtension.php
-
-		-
-			message: '#^Cannot access offset ''varnish'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
 			path: src/Sulu/Bundle/HttpCacheBundle/DependencyInjection/SuluHttpCacheExtension.php
 
 		-
@@ -20464,24 +20434,6 @@ parameters:
 			message: '#^Cannot access offset ''type'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
-			path: src/Sulu/Bundle/MarkupBundle/DependencyInjection/CompilerPass/ParserCompilerPass.php
-
-		-
-			message: '#^Possibly invalid array key type mixed\.$#'
-			identifier: offsetAccess.invalidOffset
-			count: 1
-			path: src/Sulu/Bundle/MarkupBundle/DependencyInjection/CompilerPass/ParserCompilerPass.php
-
-		-
-			message: '#^Cannot access offset ''tag'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/MarkupBundle/DependencyInjection/CompilerPass/TagCompilerPass.php
-
-		-
-			message: '#^Cannot access offset ''type'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
 			path: src/Sulu/Bundle/MarkupBundle/DependencyInjection/CompilerPass/TagCompilerPass.php
 
 		-
@@ -20517,12 +20469,6 @@ parameters:
 		-
 			message: '#^Method Sulu\\Bundle\\MarkupBundle\\Listener\\MarkupListener\:\:replaceMarkup\(\) has no return type specified\.$#'
 			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/MarkupBundle/Listener/MarkupListener.php
-
-		-
-			message: '#^Parameter \#1 \$key of function array_key_exists expects int\|string, string\|null given\.$#'
-			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/MarkupBundle/Listener/MarkupListener.php
 
@@ -20785,12 +20731,6 @@ parameters:
 			path: src/Sulu/Bundle/MarkupBundle/Tag/TagInterface.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\MarkupBundle\\Tag\\TagRegistry\:\:getTag\(\) should return Sulu\\Bundle\\MarkupBundle\\Tag\\TagInterface but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Sulu/Bundle/MarkupBundle/Tag/TagRegistry.php
-
-		-
 			message: '#^Parameter \#2 \$array of function array_key_exists expects array, Sulu\\Bundle\\MarkupBundle\\Tag\\TagInterface given\.$#'
 			identifier: argument.type
 			count: 1
@@ -20801,12 +20741,6 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/MarkupBundle/Tag/TagRegistry.php
-
-		-
-			message: '#^Class Sulu\\Bundle\\MarkupBundle\\Listener\\MarkupListener constructor invoked with 2 parameters, 1 required\.$#'
-			identifier: arguments.count
-			count: 1
-			path: src/Sulu/Bundle/MarkupBundle/Tests/Unit/Listener/MarkupListenerTest.php
 
 		-
 			message: '#^Binary operation "\." between ''\<html\>\<body\>'' and mixed results in an error\.$#'
@@ -23835,7 +23769,7 @@ parameters:
 		-
 			message: '#^Cannot access offset ''title'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 4
+			count: 3
 			path: src/Sulu/Bundle/MediaBundle/Media/FormatManager/FormatManager.php
 
 		-
@@ -24061,6 +23995,12 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Media/ImageConverter/Focus/Focus.php
 
 		-
+			message: '#^Call to an undefined method object\:\:layers\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Sulu/Bundle/MediaBundle/Media/ImageConverter/ImagineImageConverter.php
+
+		-
 			message: '#^Cannot access offset ''effect'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
@@ -24080,12 +24020,6 @@ parameters:
 
 		-
 			message: '#^Cannot call method add\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Media/ImageConverter/ImagineImageConverter.php
-
-		-
-			message: '#^Cannot call method layers\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Media/ImageConverter/ImagineImageConverter.php
@@ -24623,12 +24557,6 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Media/ListRepresentationFactory/MediaListRepresentationFactory.php
-
-		-
-			message: '#^Argument of an invalid type array\<Sulu\\Bundle\\MediaBundle\\Media\\PropertiesProvider\\MediaPropertiesProviderInterface\>\|FFMpeg\\FFProbe\|null supplied for foreach, only iterables are supported\.$#'
-			identifier: foreach.nonIterable
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Media/Manager/MediaManager.php
 
 		-
 			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
@@ -27045,12 +26973,6 @@ parameters:
 		-
 			message: '#^Cannot call method setVersion\(\) on mixed\.$#'
 			identifier: method.nonObject
-			count: 2
-			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Entity/MediaRepositoryTest.php
-
-		-
-			message: '#^Cannot clone non\-object variable \$fileVersion of type mixed\.$#'
-			identifier: clone.nonObject
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Entity/MediaRepositoryTest.php
 
@@ -27122,12 +27044,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#1 \$object of function get_class expects object, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Entity/MediaRepositoryTest.php
-
-		-
-			message: '#^Parameter \#1 \$object of method Doctrine\\Persistence\\ObjectManager\:\:persist\(\) expects object, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Entity/MediaRepositoryTest.php
@@ -28399,28 +28315,10 @@ parameters:
 			path: src/Sulu/Bundle/PreviewBundle/Preview/Exception/PreviewRendererException.php
 
 		-
-			message: '#^Parameter \#2 \$value of method Sulu\\Bundle\\PreviewBundle\\Preview\\PreviewCache\:\:save\(\) expects string, string\|false given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/PreviewBundle/Preview/Preview.php
-
-		-
 			message: '#^Parameter \#3 \$subject of function str_replace expects array\<string\>\|string, string\|null given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/PreviewBundle/Preview/Preview.php
-
-		-
-			message: '#^Call to an undefined method Doctrine\\Common\\Cache\\Cache\|Psr\\Cache\\CacheItemPoolInterface\:\:delete\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/Sulu/Bundle/PreviewBundle/Preview/PreviewCache.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PreviewBundle\\Preview\\PreviewCache\:\:fetch\(\) should return string but returns mixed\.$#'
-			identifier: return.type
-			count: 2
-			path: src/Sulu/Bundle/PreviewBundle/Preview/PreviewCache.php
 
 		-
 			message: '#^Method Sulu\\Bundle\\PreviewBundle\\Preview\\Renderer\\PreviewKernel\:\:getKernelParameters\(\) return type has no value type specified in iterable type array\.$#'
@@ -31792,12 +31690,6 @@ parameters:
 			message: '#^Cannot access offset ''id'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 5
-			path: src/Sulu/Bundle/SecurityBundle/UserManager/UserManager.php
-
-		-
-			message: '#^Cannot access offset ''locale'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/UserManager/UserManager.php
 
 		-

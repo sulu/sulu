@@ -33,7 +33,7 @@ final class AdminCollectionIndexListener
         $resourceId = $event->getResourceId();
 
         $identifiers = \array_map(
-            fn (string $locale) => CollectionInterface::RESOURCE_KEY . '::' . $resourceId . '::' . $locale,
+            fn (string $locale) => CollectionInterface::RESOURCE_KEY . '__' . $resourceId . '__' . $locale,
             $this->getLocales($event),
         );
 

@@ -15,6 +15,7 @@ namespace Sulu\Bundle\CategoryBundle\Tests\Functional\Infrastructure\Sulu\Search
 
 use CmsIg\Seal\Reindex\ReindexConfig;
 use Doctrine\ORM\EntityManagerInterface;
+use Sulu\Bundle\CategoryBundle\Admin\CategoryAdmin;
 use Sulu\Bundle\CategoryBundle\Entity\Category;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslation;
@@ -80,31 +81,34 @@ class AdminCategoryReindexProviderTest extends SuluTestCase
 
         $expectedResult = [
             [
-                'id' => CategoryInterface::RESOURCE_KEY . '::' . $category1->getId() . '::' . $category1Translation->getLocale(),
+                'id' => CategoryInterface::RESOURCE_KEY . '__' . $category1->getId() . '__' . $category1Translation->getLocale(),
                 'resourceKey' => CategoryInterface::RESOURCE_KEY,
                 'resourceId' => (string) $category1->getId(),
                 'changedAt' => (new \DateTimeImmutable($changedDateString1))->format('c'),
                 'createdAt' => (new \DateTimeImmutable('2000-01-01 12:00:00'))->format('c'),
                 'title' => $category1Translation->getTranslation(),
                 'locale' => $category1Translation->getLocale(),
+                'securityContext' => CategoryAdmin::SECURITY_CONTEXT,
             ],
             [
-                'id' => CategoryInterface::RESOURCE_KEY . '::' . $category2->getId() . '::' . $category2Translation1->getLocale(),
+                'id' => CategoryInterface::RESOURCE_KEY . '__' . $category2->getId() . '__' . $category2Translation1->getLocale(),
                 'resourceKey' => CategoryInterface::RESOURCE_KEY,
                 'resourceId' => (string) $category2->getId(),
                 'changedAt' => (new \DateTimeImmutable($changedDateString2))->format('c'),
                 'createdAt' => (new \DateTimeImmutable('2000-01-01 12:00:00'))->format('c'),
                 'title' => $category2Translation1->getTranslation(),
                 'locale' => $category2Translation1->getLocale(),
+                'securityContext' => CategoryAdmin::SECURITY_CONTEXT,
             ],
             [
-                'id' => CategoryInterface::RESOURCE_KEY . '::' . $category2->getId() . '::' . $category2Translation2->getLocale(),
+                'id' => CategoryInterface::RESOURCE_KEY . '__' . $category2->getId() . '__' . $category2Translation2->getLocale(),
                 'resourceKey' => CategoryInterface::RESOURCE_KEY,
                 'resourceId' => (string) $category2->getId(),
                 'changedAt' => (new \DateTimeImmutable($changedDateString2))->format('c'),
                 'createdAt' => (new \DateTimeImmutable('2000-01-01 12:00:00'))->format('c'),
                 'title' => $category2Translation2->getTranslation(),
                 'locale' => $category2Translation2->getLocale(),
+                'securityContext' => CategoryAdmin::SECURITY_CONTEXT,
             ],
         ];
 
@@ -146,8 +150,8 @@ class AdminCategoryReindexProviderTest extends SuluTestCase
         ]);
 
         $identifiers = [
-            CategoryInterface::RESOURCE_KEY . '::' . $category1->getId() . '::' . $category1Translation->getLocale(),
-            CategoryInterface::RESOURCE_KEY . '::' . $category2->getId() . '::' . $category2Translation2->getLocale(),
+            CategoryInterface::RESOURCE_KEY . '__' . $category1->getId() . '__' . $category1Translation->getLocale(),
+            CategoryInterface::RESOURCE_KEY . '__' . $category2->getId() . '__' . $category2Translation2->getLocale(),
         ];
 
         $config = ReindexConfig::create()

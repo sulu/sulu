@@ -1,5 +1,9 @@
 # Upgrade
 
+## 2.6.16
+
+* Deprecated \Sulu\Bundle\MediaBundle\Controller\AbstractMediaController::getTitleFromUpload -> MediaManager::getTitleFromUpload
+
 ## 2.6.13
 
 ### Using `tagged_locator` and `tagged_iterator` over custom compiler passes
@@ -13,6 +17,7 @@ Deprecated compiler passes:
 * `Sulu\Bundle\CoreBundle\DependencyInjection\Compiler\RegisterLocalizationProvidersPass` (`sulu.localization_provider`) `tagged_iterator`
 * `Sulu\Bundle\AdminBundle\DependencyInjection\Compiler\AddAdminPass` (`sulu.admin`) `tagged_iterator`
 * `Sulu\Bundle\AdminBundle\DependencyInjection\Compiler\AddMetadataProvider` (`sulu_admin.property_metadata_mapper`) `tagged_locator`
+* `Sulu\Bundle\MarkupBundle\DependencyInjection\CompilerPass\ParserCompilerPass` -> `tagged_locator`
 * `Sulu\Bundle\MediaBundle\DependencyInjection\ImageTransformationCompilerPass` (`sulu_media.image.transformation`) `tagged_locator`
 
 ## 2.6.11
@@ -529,6 +534,10 @@ sulu_website:
 
 In the previous version the `SnippetController` would return the entire content of the snippet in the `cgetAction`. Now
 it respects the list of fields provided in the query parameter and only returns those.
+
+## 2.5.33
+
+* Deprecated \Sulu\Bundle\MediaBundle\Controller\AbstractMediaController::getTitleFromUpload -> MediaManager::getTitleFromUpload
 
 ## 2.5.23
 

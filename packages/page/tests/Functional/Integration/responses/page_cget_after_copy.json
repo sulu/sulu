@@ -16,6 +16,7 @@
                 "webspaceKey": "sulu-io",
                 "template": null,
                 "publishedState": false,
+                "linkProvider": null,
                 "hasChildren": true,
                 "_hasPermissions": false,
                 "_embedded": {
@@ -24,7 +25,7 @@
                             "id": "@string@",
                             "version" : 0,
                             "title": "Test Page 2",
-                            "author": null,
+                            "author": "@string@",
                             "created": "@datetime@",
                             "changed": "@datetime@",
                             "creator": "@string@",
@@ -35,6 +36,7 @@
                             "webspaceKey": "sulu-io",
                             "template": "default",
                             "publishedState": false,
+                            "linkProvider": null,
                             "hasChildren": true,
                             "_hasPermissions": false
                         },
@@ -42,7 +44,7 @@
                             "id": "@string@",
                             "version" : 0,
                             "title": "Test page for copy",
-                            "author": null,
+                            "author": "@string@",
                             "created": "@datetime@",
                             "changed": "@datetime@",
                             "creator": "@string@",
@@ -53,6 +55,7 @@
                             "webspaceKey": "sulu-io",
                             "template": "default",
                             "publishedState": true,
+                            "linkProvider": null,
                             "hasChildren": true,
                             "_hasPermissions": false,
                             "_embedded": {
@@ -61,7 +64,7 @@
                                         "id": "@string@",
                                         "version" : 0,
                                         "title": "Test page for copy",
-                                        "author": null,
+                                        "author": "@string@",
                                         "created": "@datetime@",
                                         "changed": "@datetime@",
                                         "creator": "@string@",
@@ -72,6 +75,7 @@
                                         "webspaceKey": "sulu-io",
                                         "template": "default",
                                         "publishedState": false,
+                                        "linkProvider": null,
                                         "hasChildren": false,
                                         "_hasPermissions": false
                                     }

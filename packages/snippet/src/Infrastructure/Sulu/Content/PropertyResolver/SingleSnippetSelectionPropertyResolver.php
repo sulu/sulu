@@ -27,10 +27,21 @@ class SingleSnippetSelectionPropertyResolver implements PropertyResolverInterfac
      * @param array{
      *     resourceLoader?: string,
      *     properties?: array<string, mixed>|null,
+     *     default?: string,
      * } $params
      */
     public function resolve(mixed $data, string $locale, array $params = []): ContentView
     {
+        if ((null === $data || '' === $data) && isset($params['default'])) {
+            return ContentView::createSmartResolvable(
+                data: [
+                    'areaKey' => $params['default'],
+                ],
+                resourceLoaderKey: 'snippet_area_default',
+                view: $params,
+            );
+        }
+
         if (!\is_string($data)) {
             return ContentView::create(null, \array_merge(['id' => null], $params));
         }

@@ -13,198 +13,47 @@ declare(strict_types=1);
 
 namespace Sulu\Content\Domain\Model;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupInterface;
-use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
-use Sulu\Bundle\TagBundle\Tag\TagInterface;
-
 trait ExcerptTrait
 {
     /**
-     * @var string|null
+     * @var array<string, mixed>
      */
-    private $excerptTitle;
-
-    /**
-     * @var string|null
-     */
-    private $excerptDescription;
-
-    /**
-     * @var string|null
-     */
-    private $excerptMore;
-
-    /**
-     * @var ArrayCollection<int, CategoryInterface>
-     */
-    private $excerptCategories;
-
-    /**
-     * @var ArrayCollection<int, TagInterface>
-     */
-    private $excerptTags;
-
-    /**
-     * @var ArrayCollection<int, TargetGroupInterface>
-     */
-    private $excerptAudienceTargetGroups;
-
-    /**
-     * @var string|null
-     */
-    private $excerptSegment;
-
-    /**
-     * @var int|null
-     */
-    private $excerptImageId;
-
-    /**
-     * @var int|null
-     */
-    private $excerptIconId;
+    private array $excerptData = [];
 
     public function getExcerptTitle(): ?string
     {
-        return $this->excerptTitle;
+        $value = $this->excerptData['title'] ?? null;
+
+        return \is_string($value) ? $value : null;
     }
 
     public function setExcerptTitle(?string $excerptTitle): void
     {
-        $this->excerptTitle = $excerptTitle;
+        $this->excerptData['title'] = $excerptTitle;
     }
 
     public function getExcerptDescription(): ?string
     {
-        return $this->excerptDescription;
+        $value = $this->excerptData['description'] ?? null;
+
+        return \is_string($value) ? $value : null;
     }
 
     public function setExcerptDescription(?string $excerptDescription): void
     {
-        $this->excerptDescription = $excerptDescription;
+        $this->excerptData['description'] = $excerptDescription;
     }
 
     public function getExcerptMore(): ?string
     {
-        return $this->excerptMore;
+        $value = $this->excerptData['more'] ?? null;
+
+        return \is_string($value) ? $value : null;
     }
 
     public function setExcerptMore(?string $excerptMore): void
     {
-        $this->excerptMore = $excerptMore;
-    }
-
-    /**
-     * @return int[]
-     */
-    public function getExcerptCategoryIds(): array
-    {
-        $this->initializeCategories();
-        $categoryIds = [];
-        foreach ($this->excerptCategories as $excerptCategory) {
-            $categoryIds[] = $excerptCategory->getId();
-        }
-
-        return $categoryIds;
-    }
-
-    /**
-     * @return CategoryInterface[]
-     */
-    public function getExcerptCategories(): array
-    {
-        $this->initializeCategories();
-
-        return $this->excerptCategories->toArray();
-    }
-
-    /**
-     * @param CategoryInterface[] $excerptCategories
-     */
-    public function setExcerptCategories(array $excerptCategories): void
-    {
-        $this->initializeCategories();
-        $this->excerptCategories->clear();
-
-        foreach ($excerptCategories as $excerptCategory) {
-            $this->excerptCategories->add($excerptCategory);
-        }
-    }
-
-    /**
-     * @return TagInterface[]
-     */
-    public function getExcerptTags(): array
-    {
-        $this->initializeTags();
-
-        return $this->excerptTags->toArray();
-    }
-
-    /**
-     * @return string[]
-     */
-    public function getExcerptTagNames(): array
-    {
-        $this->initializeTags();
-        $tagNames = [];
-        foreach ($this->excerptTags as $excerptTag) {
-            $tagNames[] = $excerptTag->getName();
-        }
-
-        return $tagNames;
-    }
-
-    /**
-     * @param TagInterface[] $excerptTags
-     */
-    public function setExcerptTags(array $excerptTags): void
-    {
-        $this->initializeTags();
-        $this->excerptTags->clear();
-
-        foreach ($excerptTags as $excerptTag) {
-            $this->excerptTags->add($excerptTag);
-        }
-    }
-
-    public function getExcerptAudienceTargetGroups(): array
-    {
-        $this->initializeAudienceTargetGroups();
-
-        return $this->excerptAudienceTargetGroups->toArray();
-    }
-
-    public function getExcerptAudienceTargetGroupIds(): array
-    {
-        $this->initializeAudienceTargetGroups();
-        $targetGroupIds = [];
-        foreach ($this->excerptAudienceTargetGroups as $excerptAudienceTargetGroup) {
-            $targetGroupIds[] = $excerptAudienceTargetGroup->getId();
-        }
-
-        return $targetGroupIds;
-    }
-
-    public function setExcerptAudienceTargetGroups(array $excerptAudienceTargetGroups): void
-    {
-        $this->initializeAudienceTargetGroups();
-        $this->excerptAudienceTargetGroups->clear();
-
-        foreach ($excerptAudienceTargetGroups as $excerptAudienceTargetGroup) {
-            $this->excerptAudienceTargetGroups->add($excerptAudienceTargetGroup);
-        }
-    }
-
-    public function getExcerptSegment(): ?string
-    {
-        return $this->excerptSegment ?? null;
-    }
-
-    public function setExcerptSegment(?string $excerptSegment): void
-    {
-        $this->excerptSegment = $excerptSegment;
+        $this->excerptData['more'] = $excerptMore;
     }
 
     /**
@@ -212,13 +61,10 @@ trait ExcerptTrait
      */
     public function getExcerptImage(): ?array
     {
-        if (!$this->excerptImageId) {
-            return null;
-        }
+        $value = $this->excerptData['image'] ?? null;
 
-        return [
-            'id' => $this->excerptImageId,
-        ];
+        /** @var array{id: int}|null */
+        return \is_array($value) ? $value : null;
     }
 
     /**
@@ -226,7 +72,7 @@ trait ExcerptTrait
      */
     public function setExcerptImage(?array $excerptImage): void
     {
-        $this->excerptImageId = $excerptImage['id'] ?? null;
+        $this->excerptData['image'] = $excerptImage;
     }
 
     /**
@@ -234,13 +80,10 @@ trait ExcerptTrait
      */
     public function getExcerptIcon(): ?array
     {
-        if (!$this->excerptIconId) {
-            return null;
-        }
+        $value = $this->excerptData['icon'] ?? null;
 
-        return [
-            'id' => $this->excerptIconId,
-        ];
+        /** @var array{id: int}|null */
+        return \is_array($value) ? $value : null;
     }
 
     /**
@@ -248,27 +91,22 @@ trait ExcerptTrait
      */
     public function setExcerptIcon(?array $excerptIcon): void
     {
-        $this->excerptIconId = $excerptIcon['id'] ?? null;
+        $this->excerptData['icon'] = $excerptIcon;
     }
 
-    private function initializeTags(): void
+    /**
+     * @return array<string, mixed>
+     */
+    public function getExcerptData(): array
     {
-        if (null === $this->excerptTags) {
-            $this->excerptTags = new ArrayCollection();
-        }
+        return $this->excerptData;
     }
 
-    private function initializeCategories(): void
+    /**
+     * @param array<string, mixed> $excerptData
+     */
+    public function setExcerptData(array $excerptData): void
     {
-        if (null === $this->excerptCategories) {
-            $this->excerptCategories = new ArrayCollection();
-        }
-    }
-
-    private function initializeAudienceTargetGroups(): void
-    {
-        if (null === $this->excerptAudienceTargetGroups) {
-            $this->excerptAudienceTargetGroups = new ArrayCollection();
-        }
+        $this->excerptData = $excerptData;
     }
 }

@@ -31,7 +31,7 @@ test('Render different kind of data with edit button', () => {
                 hasChildren: false,
                 publishedState: false,
                 published: '2017-08-23',
-                linked: 'internal',
+                linkProvider: 'page',
             },
             {
                 id: 7,
@@ -39,7 +39,7 @@ test('Render different kind of data with edit button', () => {
                 hasChildren: false,
                 publishedState: true,
                 published: '2017-08-23',
-                linked: 'internal',
+                linkProvider: 'page',
             },
         ],
         [
@@ -63,7 +63,7 @@ test('Render different kind of data with edit button', () => {
                 hasChildren: false,
                 publishedState: false,
                 published: '2017-08-23',
-                linked: 'external',
+                linkProvider: 'external',
             },
             {
                 id: 9,
@@ -71,7 +71,7 @@ test('Render different kind of data with edit button', () => {
                 hasChildren: false,
                 publishedState: true,
                 published: '2017-08-23',
-                linked: 'external',
+                linkProvider: 'external',
             },
         ],
         [

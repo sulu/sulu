@@ -18,15 +18,19 @@ use Sulu\Article\Application\Message\ModifyArticleMessage;
 use Sulu\Article\Application\Message\RemoveArticleMessage;
 use Sulu\Article\Application\Message\RemoveArticleTranslationMessage;
 use Sulu\Article\Application\Message\RestoreArticleVersionMessage;
+use Sulu\Article\Domain\Exception\ArticleNotFoundException;
 use Sulu\Article\Domain\Model\ArticleInterface;
 use Sulu\Article\Domain\Repository\ArticleRepositoryInterface;
+use Sulu\Article\Infrastructure\Sulu\Admin\ArticleAdmin;
 use Sulu\Bundle\AdminBundle\Metadata\GroupProviderInterface;
+use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilder;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactoryInterface;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptorInterface;
 use Sulu\Component\Rest\ListBuilder\Metadata\FieldDescriptorFactoryInterface;
 use Sulu\Component\Rest\ListBuilder\PaginatedRepresentation;
 use Sulu\Component\Rest\RestHelperInterface;
+use Sulu\Component\Security\SecuredControllerInterface;
 use Sulu\Content\Application\ContentManager\ContentManagerInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Domain\Model\WorkflowInterface;
@@ -44,7 +48,7 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
  *           Use instead a request or response listener to
  *           extend the endpoints behaviours
  */
-final class ArticleController
+final class ArticleController implements SecuredControllerInterface
 {
     use HandleTrait;
 
@@ -169,18 +173,27 @@ final class ArticleController
             'stage' => DimensionContentInterface::STAGE_DRAFT,
         ];
 
-        $article = $this->articleRepository->getOneBy(
-            \array_merge(
+        try {
+            $article = $this->articleRepository->getOneBy(
+                \array_merge(
+                    [
+                        'uuid' => $id,
+                        'loadGhost' => true,
+                    ],
+                    $dimensionAttributes,
+                ),
                 [
-                    'uuid' => $id,
-                    'loadGhost' => true,
+                    ArticleRepositoryInterface::GROUP_SELECT_ARTICLE_ADMIN => true,
                 ],
-                $dimensionAttributes,
-            ),
-            [
-                ArticleRepositoryInterface::GROUP_SELECT_ARTICLE_ADMIN => true,
-            ],
-        );
+            );
+        } catch (ArticleNotFoundException $e) {
+            $exception = new EntityNotFoundException($e->getModel(), $id, $e);
+
+            return new JsonResponse(
+                $exception->toArray(),
+                404
+            );
+        }
 
         // TODO the `$article` should just be serialized
         //      Instead of calling the content resolver service which triggers an additional query.
@@ -198,7 +211,7 @@ final class ArticleController
     {
         $message = new CreateArticleMessage($this->getData($request));
 
-        /** @see Sulu\Article\Application\MessageHandler\CreateArticleMessageHandler */
+        /** @see \Sulu\Article\Application\MessageHandler\CreateArticleMessageHandler */
         /** @var ArticleInterface $article */
         $article = $this->handle(new Envelope($message, [new EnableFlushStamp()]));
         $uuid = $article->getUuid();
@@ -213,7 +226,7 @@ final class ArticleController
     public function putAction(Request $request, string $id): Response // TODO route should be a uuid?
     {
         $message = new ModifyArticleMessage(['uuid' => $id], $this->getData($request));
-        /** @see Sulu\Article\Application\MessageHandler\ModifyArticleMessageHandler */
+        /** @see \Sulu\Article\Application\MessageHandler\ModifyArticleMessageHandler */
         $this->handle(new Envelope($message, [new EnableFlushStamp()]));
 
         $this->handleAction($request, $id);
@@ -235,14 +248,14 @@ final class ArticleController
 
         if ($deleteLocale) {
             $message = new RemoveArticleTranslationMessage(['uuid' => $id], $locale);
-            /** @see Sulu\Article\Application\MessageHandler\RemoveArticleTranslationMessageHandler */
+            /** @see \Sulu\Article\Application\MessageHandler\RemoveArticleTranslationMessageHandler */
             $this->handle(new Envelope($message, [new EnableFlushStamp()]));
 
             return new Response('', 204);
         }
 
         $message = new RemoveArticleMessage(['uuid' => $id], $locale);
-        /** @see Sulu\Article\Application\MessageHandler\RemoveArticleMessageHandler */
+        /** @see \Sulu\Article\Application\MessageHandler\RemoveArticleMessageHandler */
         $this->handle(new Envelope($message, [new EnableFlushStamp()]));
 
         return new Response('', 204);
@@ -261,7 +274,7 @@ final class ArticleController
         );
     }
 
-    private function getLocale(Request $request): string
+    public function getLocale(Request $request): string
     {
         return $request->query->getString('locale', $request->getLocale());
     }
@@ -281,7 +294,7 @@ final class ArticleController
                 (string) $request->query->get('dest'),
             );
 
-            /** @see Sulu\Article\Application\MessageHandler\CopyLocaleArticleMessageHandler */
+            /** @see \Sulu\Article\Application\MessageHandler\CopyLocaleArticleMessageHandler */
             /** @var ArticleInterface|null */
             return $this->handle(new Envelope($message, [new EnableFlushStamp()]));
         } elseif ('restore' === $action) {
@@ -297,14 +310,19 @@ final class ArticleController
                 $request->query->all(),
             );
 
-            /** @see Sulu\Article\Application\MessageHandler\RestoreArticleVersionMessageHandler */
+            /** @see \Sulu\Article\Application\MessageHandler\RestoreArticleVersionMessageHandler */
             /** @var ArticleInterface|null */
             return $this->handle(new Envelope($message, [new EnableFlushStamp()]));
         }
         $message = new ApplyWorkflowTransitionArticleMessage(['uuid' => $uuid], $this->getLocale($request), $action);
 
-        /** @see Sulu\Article\Application\MessageHandler\ApplyWorkflowTransitionArticleMessageHandler */
+        /** @see \Sulu\Article\Application\MessageHandler\ApplyWorkflowTransitionArticleMessageHandler */
         /** @var null */
         return $this->handle(new Envelope($message, [new EnableFlushStamp()]));
+    }
+
+    public function getSecurityContext()
+    {
+        return ArticleAdmin::SECURITY_CONTEXT;
     }
 }

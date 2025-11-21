@@ -18,6 +18,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
 use Sulu\Content\Application\ContentResolver\Value\ResolvableResource;
+use Sulu\Content\Application\ContentResolver\Value\SmartResolvable;
 use Sulu\Snippet\Infrastructure\Sulu\Content\PropertyResolver\SnippetSelectionPropertyResolver;
 
 #[CoversClass(SnippetSelectionPropertyResolver::class)]
@@ -169,5 +170,48 @@ class SnippetSelectionPropertyResolverTest extends TestCase
         $this->assertSame([
             'properties' => null,
         ], $content[0]->getMetadata());
+    }
+
+    public function testResolveDefaultWithEmptyArray(): void
+    {
+        $contentView = $this->resolver->resolve([], 'en', ['default' => 'footer']);
+
+        $content = $contentView->getContent();
+        $this->assertInstanceOf(SmartResolvable::class, $content);
+        $this->assertSame('snippet_area_default', $content->getResourceLoaderKey());
+        $this->assertSame(['areaKey' => ['footer']], $content->getData());
+        $this->assertSame(['default' => 'footer'], $contentView->getView());
+    }
+
+    public function testResolveDefaultWithNull(): void
+    {
+        $contentView = $this->resolver->resolve(null, 'en', ['default' => 'header']);
+
+        $content = $contentView->getContent();
+        $this->assertInstanceOf(SmartResolvable::class, $content);
+        $this->assertSame('snippet_area_default', $content->getResourceLoaderKey());
+        $this->assertSame(['areaKey' => ['header']], $content->getData());
+        $this->assertSame(['default' => 'header'], $contentView->getView());
+    }
+
+    public function testResolveDefaultWithData(): void
+    {
+        $contentView = $this->resolver->resolve(['1', '2'], 'en', ['default' => 'footer']);
+
+        $content = $contentView->getContent();
+        $this->assertIsArray($content);
+        $this->assertCount(2, $content);
+        $this->assertInstanceOf(ResolvableResource::class, $content[0]);
+        $this->assertSame('1', $content[0]->getId());
+        $this->assertInstanceOf(ResolvableResource::class, $content[1]);
+        $this->assertSame('2', $content[1]->getId());
+    }
+
+    public function testResolveWithoutDefault(): void
+    {
+        $contentView = $this->resolver->resolve(null, 'en');
+
+        $this->assertEmpty($contentView->getContent());
+        $this->assertSame(['ids' => []], $contentView->getView());
     }
 }

@@ -6,8 +6,8 @@
     <ul>
         {% for i, hit in hits %}
             <li>
-                <a href="{{ hit.document.url }}">
-                    {{- hit.document.title -}}
+                <a href="{{ sulu_content_path(hit.url) }}">
+                    {{- hit.title -}}
                 </a>
             </li>
         {% endfor %}

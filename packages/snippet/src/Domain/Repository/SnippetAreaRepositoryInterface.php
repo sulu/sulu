@@ -19,7 +19,7 @@ use Sulu\Snippet\Domain\Model\SnippetAreaInterface;
 /**
  * Implementation can be found in the following class.
  *
- * @see Sulu\Snippet\Infrastructure\Doctrine\Repository\SnippetAreaRepository
+ * @see \Sulu\Snippet\Infrastructure\Doctrine\Repository\SnippetAreaRepository
  */
 interface SnippetAreaRepositoryInterface
 {
@@ -46,6 +46,16 @@ interface SnippetAreaRepositoryInterface
      * } $filters
      */
     public function findOneBy(array $filters): ?SnippetAreaInterface;
+
+    /**
+     * @param array{
+     *     uuid?: string,
+     *     uuids?: string[],
+     *     webspaceKey?: string,
+     *     areaKey?: string,
+     * } $filters
+     */
+    public function findOneUuidBy(array $filters): ?string;
 
     /**
      * @param array{

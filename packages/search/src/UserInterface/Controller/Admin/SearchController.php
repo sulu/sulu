@@ -17,8 +17,11 @@ use CmsIg\Seal\EngineInterface;
 use CmsIg\Seal\Search\Condition\Condition;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Sulu\Bundle\SecurityBundle\Entity\User;
+use Sulu\Bundle\SecurityBundle\Entity\UserRole;
 use Sulu\Component\Rest\ListBuilder\ListRestHelperInterface;
 use Sulu\Component\Rest\ListBuilder\PaginatedRepresentation;
+use Sulu\Component\Security\Authorization\MaskConverterInterface;
+use Sulu\Component\Security\Authorization\PermissionTypes;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -34,6 +37,7 @@ class SearchController
         private readonly array $resources,
         private readonly MediaManagerInterface $mediaManager,
         private TokenStorageInterface $tokenStorage,
+        private readonly MaskConverterInterface $maskConverter,
     ) {
     }
 
@@ -50,6 +54,34 @@ class SearchController
 
         /** @var User $user */
         $user = $this->tokenStorage->getToken()?->getUser();
+        $userSecurityContexts = [];
+
+        /** @var UserRole $userRole */
+        foreach ($user->getUserRoles() as $userRole) {
+            $permissions = $userRole->getRole()->getPermissions();
+
+            foreach ($permissions as $permission) {
+                $context = $permission->getContext();
+                $permissionsArray = $this->maskConverter->convertPermissionsToArray($permission->getPermissions());
+                if ($permissionsArray[PermissionTypes::EDIT] ?? false) {
+                    $userSecurityContexts[] = $context;
+                }
+            }
+        }
+        $userSecurityContexts = \array_unique($userSecurityContexts);
+
+        if (!$userSecurityContexts) {
+            $representation = new PaginatedRepresentation(
+                [],
+                'result',
+                (int) $page,
+                (int) $limit,
+                0,
+            );
+
+            return new JsonResponse($representation->toArray());
+        }
+
         $userLocale = $user->getLocale();
 
         $search = $this->engine->createSearchBuilder('admin')
@@ -64,6 +96,8 @@ class SearchController
         if ($locale) {
             $search->addFilter(Condition::equal('locale', $locale));
         }
+
+        $search->addFilter(Condition::in('securityContext', \array_values($userSecurityContexts)));
 
         $result = $search->getResult();
         $documents = [];

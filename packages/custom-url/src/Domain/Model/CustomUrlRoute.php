@@ -33,7 +33,7 @@ class CustomUrlRoute implements CustomUrlRouteInterface
         $this->uuid = Uuid::v7()->__toString();
     }
 
-    public function getUuid(): ?string
+    public function getUuid(): string
     {
         return $this->uuid;
     }

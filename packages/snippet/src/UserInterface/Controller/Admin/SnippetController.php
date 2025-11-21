@@ -11,12 +11,14 @@
 
 namespace Sulu\Snippet\UserInterface\Controller\Admin;
 
+use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilder;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactoryInterface;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptorInterface;
 use Sulu\Component\Rest\ListBuilder\Metadata\FieldDescriptorFactoryInterface;
 use Sulu\Component\Rest\ListBuilder\PaginatedRepresentation;
 use Sulu\Component\Rest\RestHelperInterface;
+use Sulu\Component\Security\SecuredControllerInterface;
 use Sulu\Content\Application\ContentManager\ContentManagerInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Domain\Model\WorkflowInterface;
@@ -28,8 +30,10 @@ use Sulu\Snippet\Application\Message\ModifySnippetMessage;
 use Sulu\Snippet\Application\Message\RemoveSnippetMessage;
 use Sulu\Snippet\Application\Message\RemoveSnippetTranslationMessage;
 use Sulu\Snippet\Application\Message\RestoreSnippetVersionMessage;
+use Sulu\Snippet\Domain\Exception\SnippetNotFoundException;
 use Sulu\Snippet\Domain\Model\SnippetInterface;
 use Sulu\Snippet\Domain\Repository\SnippetRepositoryInterface;
+use Sulu\Snippet\Infrastructure\Sulu\Admin\SnippetAdmin;
 use Sulu\Snippet\Infrastructure\Symfony\CompilerPass\SnippetAreaCompilerPass;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -46,7 +50,7 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
  *
  * @phpstan-import-type SnippetAreaConfig from SnippetAreaCompilerPass
  */
-final class SnippetController
+final class SnippetController implements SecuredControllerInterface
 {
     use HandleTrait;
 
@@ -75,52 +79,39 @@ final class SnippetController
         $fieldDescriptors = $this->fieldDescriptorFactory->getFieldDescriptors(SnippetInterface::RESOURCE_KEY);
         /** @var DoctrineListBuilder $listBuilder */
         $listBuilder = $this->listBuilderFactory->create(SnippetInterface::class);
+        $this->restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
         $listBuilder->setIdField($fieldDescriptors['id']); // TODO should be uuid field descriptor
         $listBuilder->addSelectField($fieldDescriptors['locale']);
         $listBuilder->addSelectField($fieldDescriptors['ghostLocale']);
         $listBuilder->addSelectField($fieldDescriptors['published']);
         $listBuilder->addSelectField($fieldDescriptors['publishedState']);
         $listBuilder->setParameter('locale', $request->query->get('locale'));
-        $this->restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
 
         $typesParam = $request->query->get('types');
         $types = \array_filter(\explode(',', \is_string($typesParam) ? $typesParam : ''));
 
         if (0 !== \count($types)) {
-            $dimensionContentTemplateKey = $fieldDescriptors['dimensionContentTemplateKey'];
-            $ghostDimensionContentTemplateKey = $fieldDescriptors['ghostDimensionContentTemplateKey'];
-            $expression = $listBuilder->createOrExpression([
-                $listBuilder->createAndExpression([
-                    $listBuilder->createIsNotNullExpression($dimensionContentTemplateKey),
-                    $listBuilder->createInExpression($dimensionContentTemplateKey, $types),
-                ]),
-                $listBuilder->createAndExpression([
-                    $listBuilder->createIsNullExpression($dimensionContentTemplateKey),
-                    $listBuilder->createInExpression($ghostDimensionContentTemplateKey, $types),
-                ]),
-            ]);
-
-            $listBuilder->addExpression($expression);
+            $this->addTemplateKeyFilter($listBuilder, $fieldDescriptors, $types);
         }
 
         $areasParam = $request->query->get('areas');
         if (null !== $areasParam) {
             $areas = \explode(',', (string) $areasParam);
-            $types = [];
+            $templateKeys = [];
             foreach ($areas as $area) {
                 if (!\array_key_exists($area, $this->snippetAreas)) {
                     continue;
                 }
 
-                $type = $this->snippetAreas[$area]['template'];
-                if (empty($type)) {
+                $templateKey = $this->snippetAreas[$area]['template'];
+                if (empty($templateKey)) {
                     continue;
                 }
-                $types[] = $type;
+                $templateKeys[] = $templateKey;
             }
 
-            if (!empty($types)) {
-                $listBuilder->in($fieldDescriptors['templateKey'], $types);
+            if (!empty($templateKeys)) {
+                $this->addTemplateKeyFilter($listBuilder, $fieldDescriptors, $templateKeys);
             }
         }
 
@@ -183,18 +174,27 @@ final class SnippetController
             'stage' => DimensionContentInterface::STAGE_DRAFT,
         ];
 
-        $snippet = $this->snippetRepository->getOneBy(
-            \array_merge(
+        try {
+            $snippet = $this->snippetRepository->getOneBy(
+                \array_merge(
+                    [
+                        'uuid' => $id,
+                        'loadGhost' => true,
+                    ],
+                    $dimensionAttributes,
+                ),
                 [
-                    'uuid' => $id,
-                    'loadGhost' => true,
-                ],
-                $dimensionAttributes,
-            ),
-            [
-                SnippetRepositoryInterface::GROUP_SELECT_SNIPPET_ADMIN => true,
-            ]
-        );
+                    SnippetRepositoryInterface::GROUP_SELECT_SNIPPET_ADMIN => true,
+                ]
+            );
+        } catch (SnippetNotFoundException $e) {
+            $exception = new EntityNotFoundException($e->getModel(), $id, $e);
+
+            return new JsonResponse(
+                $exception->toArray(),
+                404
+            );
+        }
 
         // TODO the `$snippet` should just be serialized
         //      Instead of calling the content resolver service which triggers an additional query.
@@ -212,7 +212,7 @@ final class SnippetController
     {
         $message = new CreateSnippetMessage($this->getData($request));
 
-        /** @see Sulu\Snippet\Application\MessageHandler\CreateSnippetMessageHandler */
+        /** @see \Sulu\Snippet\Application\MessageHandler\CreateSnippetMessageHandler */
         /** @var SnippetInterface $snippet */
         $snippet = $this->handle(new Envelope($message, [new EnableFlushStamp()]));
         $uuid = $snippet->getUuid();
@@ -227,7 +227,7 @@ final class SnippetController
     public function putAction(Request $request, string $id): Response // TODO route should be a uuid?
     {
         $message = new ModifySnippetMessage(['uuid' => $id], $this->getData($request));
-        /** @see Sulu\Snippet\Application\MessageHandler\ModifySnippetMessageHandler */
+        /** @see \Sulu\Snippet\Application\MessageHandler\ModifySnippetMessageHandler */
         $this->handle(new Envelope($message, [new EnableFlushStamp()]));
 
         $this->handleAction($request, $id);
@@ -249,14 +249,14 @@ final class SnippetController
 
         if ($deleteLocale) {
             $message = new RemoveSnippetTranslationMessage(['uuid' => $id], $locale);
-            /** @see Sulu\Snippet\Application\MessageHandler\RemoveSnippetTranslationMessageHandler */
+            /** @see \Sulu\Snippet\Application\MessageHandler\RemoveSnippetTranslationMessageHandler */
             $this->handle(new Envelope($message, [new EnableFlushStamp()]));
 
             return new Response('', 204);
         }
 
         $message = new RemoveSnippetMessage(['uuid' => $id], $locale);
-        /** @see Sulu\Snippet\Application\MessageHandler\RemoveSnippetMessageHandler */
+        /** @see \Sulu\Snippet\Application\MessageHandler\RemoveSnippetMessageHandler */
         $this->handle(new Envelope($message, [new EnableFlushStamp()]));
 
         return new Response('', 204);
@@ -275,7 +275,7 @@ final class SnippetController
         );
     }
 
-    private function getLocale(Request $request): string
+    public function getLocale(Request $request): string
     {
         return $request->query->getAlnum('locale', $request->getLocale());
     }
@@ -295,7 +295,7 @@ final class SnippetController
                 (string) $request->query->get('dest')
             );
 
-            /** @see Sulu\Snippet\Application\MessageHandler\CopyLocaleSnippetMessageHandler */
+            /** @see \Sulu\Snippet\Application\MessageHandler\CopyLocaleSnippetMessageHandler */
             /** @var null */
             return $this->handle(new Envelope($message, [new EnableFlushStamp()]));
         } elseif ('restore' === $action) {
@@ -311,15 +311,46 @@ final class SnippetController
                 $request->query->all(),
             );
 
-            /** @see Sulu\Snippet\Application\MessageHandler\RestoreSnippetVersionMessageHandler */
+            /** @see \Sulu\Snippet\Application\MessageHandler\RestoreSnippetVersionMessageHandler */
             /** @var SnippetInterface|null */
             return $this->handle(new Envelope($message, [new EnableFlushStamp()]));
         } else {
             $message = new ApplyWorkflowTransitionSnippetMessage(['uuid' => $uuid], $this->getLocale($request), $action);
 
-            /** @see Sulu\Snippet\Application\MessageHandler\ApplyWorkflowTransitionSnippetMessageHandler */
+            /** @see \Sulu\Snippet\Application\MessageHandler\ApplyWorkflowTransitionSnippetMessageHandler */
             /** @var null */
             return $this->handle(new Envelope($message, [new EnableFlushStamp()]));
         }
+    }
+
+    /**
+     * @param DoctrineFieldDescriptorInterface[] $fieldDescriptors
+     * @param string[] $templateKeys
+     */
+    private function addTemplateKeyFilter(
+        DoctrineListBuilder $listBuilder,
+        array $fieldDescriptors,
+        array $templateKeys
+    ): void {
+        $dimensionContentTemplateKey = $fieldDescriptors['dimensionContentTemplateKey'];
+        $ghostDimensionContentTemplateKey = $fieldDescriptors['ghostDimensionContentTemplateKey'];
+
+        $expression = $listBuilder->createOrExpression([
+            $listBuilder->createAndExpression([
+                $listBuilder->createIsNotNullExpression($dimensionContentTemplateKey),
+                $listBuilder->createInExpression($dimensionContentTemplateKey, $templateKeys),
+            ]),
+            $listBuilder->createAndExpression([
+                $listBuilder->createIsNullExpression($dimensionContentTemplateKey),
+                $listBuilder->createInExpression($ghostDimensionContentTemplateKey, $templateKeys),
+            ]),
+        ]);
+
+        $listBuilder->addExpression($expression);
+    }
+
+    public function getSecurityContext()
+    {
+        return SnippetAdmin::SECURITY_CONTEXT;
     }
 }

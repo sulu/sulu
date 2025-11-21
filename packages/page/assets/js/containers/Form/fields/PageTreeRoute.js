@@ -48,8 +48,6 @@ class PageTreeRoute extends Component<Props> {
     handlePageChange = (value: ?string | number, page: ?Object = {
         path: null,
     }): void => {
-        const {onFinish} = this.props;
-
         const uuid = (value && value.toString()) || undefined;
         const path = (page && page.url) || undefined;
 
@@ -60,8 +58,6 @@ class PageTreeRoute extends Component<Props> {
                 path,
             },
         });
-
-        onFinish();
     };
 
     handleSuffixChange = (value: ?string): void => {
@@ -72,9 +68,10 @@ class PageTreeRoute extends Component<Props> {
     };
 
     handleChange = (value: ?PageTreeRouteValue) => {
-        const {onChange} = this.props;
+        const {onChange, onFinish} = this.props;
 
         onChange(value);
+        onFinish();
     };
 
     render() {
@@ -117,16 +114,23 @@ class PageTreeRoute extends Component<Props> {
                             data={data}
                             dataPath={dataPath}
                             defaultType={defaultType}
-                            disabled={disabled}
+                            disabled={disabled || !this.pageValue}
                             error={undefined}
                             fieldTypeOptions={{
-                                historyResourceKey: 'routes',
+                                historyResourceKey: 'route_histories',
+                                defaultMode: 'tree_leaf_edit',
                                 options: {
                                     history: true,
+                                },
+                                requestParameters: {
+                                    parentId: this.pageValue,
+                                    parentKey: 'pages',
+                                    relative: true,
                                 },
                                 ...fieldTypeOptions,
                             }}
                             formInspector={formInspector}
+                            key={this.pageValue ? this.pageValue : 'empty'}
                             label={undefined}
                             maxOccurs={1}
                             minOccurs={1}

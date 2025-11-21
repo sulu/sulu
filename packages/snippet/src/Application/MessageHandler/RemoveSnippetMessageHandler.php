@@ -17,6 +17,7 @@ use Sulu\Content\Domain\Model\DimensionContentCollection;
 use Sulu\Snippet\Application\Message\RemoveSnippetMessage;
 use Sulu\Snippet\Domain\Event\SnippetRemovedEvent;
 use Sulu\Snippet\Domain\Model\SnippetDimensionContent;
+use Sulu\Snippet\Domain\Model\SnippetDimensionContentInterface;
 use Sulu\Snippet\Domain\Repository\SnippetRepositoryInterface;
 
 /**
@@ -44,12 +45,25 @@ final class RemoveSnippetMessageHandler
         $resourceKey = $snippet::RESOURCE_KEY;
         $this->trashManager?->store($resourceKey, $snippet);
 
-        $dimensionContentCollection = new DimensionContentCollection($snippet->getDimensionContents()->toArray(), [], SnippetDimensionContent::class);
-        /** @var SnippetDimensionContent $localizedDimensionContent */
+        $dimensionContentCollection = new DimensionContentCollection($snippet->getDimensionContents(), [], SnippetDimensionContent::class);
+        /** @var SnippetDimensionContentInterface|null $localizedDimensionContent */
         $localizedDimensionContent = $dimensionContentCollection->getDimensionContent(['locale' => $message->getLocale()]);
         $unlocalizedDimensionContent = $dimensionContentCollection->getDimensionContent(['locale' => null, 'stage' => 'draft']);
         $context = $unlocalizedDimensionContent?->getAvailableLocales() ? ['locales' => $unlocalizedDimensionContent->getAvailableLocales()] : [];
 
-        $this->domainEventCollector->collect(new SnippetRemovedEvent($snippet->getId(), $localizedDimensionContent->getTitle(), $context));
+        // Try to get title from the removed locale first, fallback to any available locale if null
+        $title = $localizedDimensionContent?->getTitle();
+        if (null === $title && $unlocalizedDimensionContent) {
+            $availableLocales = $unlocalizedDimensionContent->getAvailableLocales() ?? [];
+            foreach ($availableLocales as $availableLocale) {
+                $fallbackDimensionContent = $dimensionContentCollection->getDimensionContent(['locale' => $availableLocale]);
+                if ($fallbackDimensionContent instanceof SnippetDimensionContentInterface && null !== $fallbackDimensionContent->getTitle()) {
+                    $title = $fallbackDimensionContent->getTitle();
+                    break;
+                }
+            }
+        }
+
+        $this->domainEventCollector->collect(new SnippetRemovedEvent($snippet->getId(), $title, $context));
     }
 }

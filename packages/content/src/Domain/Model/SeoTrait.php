@@ -15,40 +15,19 @@ namespace Sulu\Content\Domain\Model;
 
 trait SeoTrait
 {
-    /**
-     * @var string|null
-     */
-    private $seoTitle;
+    private ?string $seoTitle = null;
 
-    /**
-     * @var string|null
-     */
-    private $seoDescription;
+    private ?string $seoDescription = null;
 
-    /**
-     * @var string|null
-     */
-    private $seoKeywords;
+    private ?string $seoKeywords = null;
 
-    /**
-     * @var string|null
-     */
-    private $seoCanonicalUrl;
+    private ?string $seoCanonicalUrl = null;
 
-    /**
-     * @var bool
-     */
-    private $seoNoIndex = false;
+    private bool $seoNoIndex = false;
 
-    /**
-     * @var bool
-     */
-    private $seoNoFollow = false;
+    private bool $seoNoFollow = false;
 
-    /**
-     * @var bool
-     */
-    private $seoHideInSitemap = false;
+    private bool $seoHideInSitemap = false;
 
     public function getSeoTitle(): ?string
     {

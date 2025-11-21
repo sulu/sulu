@@ -11,11 +11,17 @@
         </service>
 
         <service id="sulu_content.excerpt_data_mapper" class="Sulu\Content\Application\ContentDataMapper\DataMapper\ExcerptDataMapper">
+            <argument type="service" id="sulu_admin.form_metadata_provider"/>
+
+            <tag name="sulu_content.data_mapper" priority="64"/>
+        </service>
+
+        <service id="sulu_content.taxonomy_data_mapper" class="Sulu\Content\Application\ContentDataMapper\DataMapper\TaxonomyDataMapper">
             <argument type="service" id="sulu_content.tag_factory"/>
             <argument type="service" id="sulu_content.category_factory"/>
             <argument type="service" id="sulu_audience_targeting.target_group_factory" on-invalid="null"/>
 
-            <tag name="sulu_content.data_mapper" priority="64"/>
+            <tag name="sulu_content.data_mapper" priority="63"/>
         </service>
 
         <service id="sulu_content.seo_data_mapper" class="Sulu\Content\Application\ContentDataMapper\DataMapper\SeoDataMapper">

@@ -57,7 +57,7 @@ class AdminCategoryIndexListenerTest extends TestCase
 
         $expectedConfig = ReindexConfig::create()
             ->withIndex('admin')
-            ->withIdentifiers([CategoryInterface::RESOURCE_KEY . '::123::en']);
+            ->withIdentifiers([CategoryInterface::RESOURCE_KEY . '__123__en']);
 
         $this->messageBus->dispatch($expectedConfig)
             ->willReturn(new Envelope($expectedConfig))
@@ -74,7 +74,7 @@ class AdminCategoryIndexListenerTest extends TestCase
 
         $expectedConfig = ReindexConfig::create()
             ->withIndex('admin')
-            ->withIdentifiers([CategoryInterface::RESOURCE_KEY . '::456::en']);
+            ->withIdentifiers([CategoryInterface::RESOURCE_KEY . '__456__en']);
 
         $this->messageBus->dispatch($expectedConfig)
             ->willReturn(new Envelope($expectedConfig))
@@ -91,7 +91,7 @@ class AdminCategoryIndexListenerTest extends TestCase
 
         $expectedConfig = ReindexConfig::create()
             ->withIndex('admin')
-            ->withIdentifiers([CategoryInterface::RESOURCE_KEY . '::789::en', CategoryInterface::RESOURCE_KEY . '::789::de']);
+            ->withIdentifiers([CategoryInterface::RESOURCE_KEY . '__789__en', CategoryInterface::RESOURCE_KEY . '__789__de']);
 
         $this->messageBus->dispatch($expectedConfig)
             ->willReturn(new Envelope($expectedConfig))
@@ -109,7 +109,7 @@ class AdminCategoryIndexListenerTest extends TestCase
 
         $expectedConfig = ReindexConfig::create()
             ->withIndex('admin')
-            ->withIdentifiers([CategoryInterface::RESOURCE_KEY . '::111::de']);
+            ->withIdentifiers([CategoryInterface::RESOURCE_KEY . '__111__de']);
 
         $this->messageBus->dispatch($expectedConfig)
             ->willReturn(new Envelope($expectedConfig))
@@ -130,7 +130,7 @@ class AdminCategoryIndexListenerTest extends TestCase
 
         $expectedConfig = ReindexConfig::create()
             ->withIndex('admin')
-            ->withIdentifiers([CategoryInterface::RESOURCE_KEY . '::111::en']);
+            ->withIdentifiers([CategoryInterface::RESOURCE_KEY . '__111__en']);
 
         $this->messageBus->dispatch($expectedConfig)
             ->willReturn(new Envelope($expectedConfig))

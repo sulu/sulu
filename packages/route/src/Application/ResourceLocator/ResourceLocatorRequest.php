@@ -27,6 +27,7 @@ final readonly class ResourceLocatorRequest
         public ?string $parentResourceId,
         ?string $parentResourceKey,
         public ?string $routeSchema,
+        public bool $relative = false,
     ) {
         $this->parentResourceKey = $parentResourceKey ?? $this->resourceKey;
     }

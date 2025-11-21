@@ -2,7 +2,7 @@
     "_embedded": {
         "articles": [
             {
-                "author": null,
+                "author": "@string@",
                 "changed": "@datetime@",
                 "changer": "@string@",
                 "created": "@datetime@",

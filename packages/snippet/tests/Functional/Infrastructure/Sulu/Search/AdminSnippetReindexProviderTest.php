@@ -18,6 +18,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Bundle\TestBundle\Testing\SetGetPrivatePropertyTrait;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Snippet\Domain\Model\SnippetInterface;
+use Sulu\Snippet\Infrastructure\Sulu\Admin\SnippetAdmin;
 use Sulu\Snippet\Infrastructure\Sulu\Search\AdminSnippetReindexProvider;
 use Sulu\Snippet\Tests\Traits\CreateSnippetTrait;
 
@@ -98,31 +99,34 @@ class AdminSnippetReindexProviderTest extends SuluTestCase
 
         $expectedResult = [
             [
-                'id' => SnippetInterface::RESOURCE_KEY . '::' . $snippet2->getUuid() . '::de',
+                'id' => SnippetInterface::RESOURCE_KEY . '__' . $snippet2->getUuid() . '__de',
                 'resourceKey' => SnippetInterface::RESOURCE_KEY,
                 'resourceId' => $snippet2->getUuid(),
                 'changedAt' => (new \DateTimeImmutable($changedDateString2))->format('c'),
                 'createdAt' => (new \DateTimeImmutable($createdAt))->format('c'),
                 'title' => 'Test Schnipsel 2',
                 'locale' => 'de',
+                'securityContext' => SnippetAdmin::SECURITY_CONTEXT,
             ],
             [
-                'id' => SnippetInterface::RESOURCE_KEY . '::' . $snippet1->getUuid() . '::en',
+                'id' => SnippetInterface::RESOURCE_KEY . '__' . $snippet1->getUuid() . '__en',
                 'resourceKey' => SnippetInterface::RESOURCE_KEY,
                 'resourceId' => $snippet1->getUuid(),
                 'changedAt' => (new \DateTimeImmutable($changedDateString1))->format('c'),
                 'createdAt' => (new \DateTimeImmutable($createdAt))->format('c'),
                 'title' => 'Test Snippet',
                 'locale' => 'en',
+                'securityContext' => SnippetAdmin::SECURITY_CONTEXT,
             ],
             [
-                'id' => SnippetInterface::RESOURCE_KEY . '::' . $snippet2->getUuid() . '::en',
+                'id' => SnippetInterface::RESOURCE_KEY . '__' . $snippet2->getUuid() . '__en',
                 'resourceKey' => SnippetInterface::RESOURCE_KEY,
                 'resourceId' => $snippet2->getUuid(),
                 'changedAt' => (new \DateTimeImmutable($changedDateString2))->format('c'),
                 'createdAt' => (new \DateTimeImmutable($createdAt))->format('c'),
                 'title' => 'Test Snippet 2',
                 'locale' => 'en',
+                'securityContext' => SnippetAdmin::SECURITY_CONTEXT,
             ],
         ];
 
@@ -186,8 +190,8 @@ class AdminSnippetReindexProviderTest extends SuluTestCase
         ]);
 
         $identifiers = [
-            SnippetInterface::RESOURCE_KEY . '::' . $snippet1->getUuid() . '::de',
-            SnippetInterface::RESOURCE_KEY . '::' . $snippet2->getUuid() . '::en',
+            SnippetInterface::RESOURCE_KEY . '__' . $snippet1->getUuid() . '__de',
+            SnippetInterface::RESOURCE_KEY . '__' . $snippet2->getUuid() . '__en',
         ];
 
         $config = ReindexConfig::create()

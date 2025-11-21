@@ -194,6 +194,17 @@ class ArticlesSitemapProviderTest extends WebsiteTestCase
             ],
         );
 
+        self::$articles['addition_webspace_blog'] = self::createArticle(
+            [
+                'title' => 'Additional Webspace Blog',
+                'template' => 'article',
+                'locale' => 'en',
+                'url' => '/additional-webspace-blog',
+                'mainWebspace' => 'sulu-io',
+                'additionalWebspaces' => ['blog'],
+            ],
+        );
+
         self::$articles['only_de'] = self::createArticle(
             [
                 'title' => 'Only de',
@@ -323,6 +334,7 @@ class ArticlesSitemapProviderTest extends WebsiteTestCase
             'template' => 'article',
             'locale' => 'en',
             'mainWebspace' => 'blog',
+            'customizeWebspaceSettings' => true,
         ], $data);
 
         $messageBus = self::getContainer()->get('sulu_message_bus');

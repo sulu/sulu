@@ -15,6 +15,7 @@ namespace Sulu\Bundle\ContactBundle\Tests\Functional\Infrastructure\Sulu\Search;
 
 use CmsIg\Seal\Reindex\ReindexConfig;
 use Doctrine\ORM\EntityManagerInterface;
+use Sulu\Bundle\ContactBundle\Admin\ContactAdmin;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\ContactBundle\Entity\ContactInterface;
 use Sulu\Bundle\ContactBundle\Infrastructure\Sulu\Search\AdminContactReindexProvider;
@@ -101,22 +102,24 @@ class AdminContactReindexProviderTest extends SuluTestCase
         $this->assertSame(
             [
                 [
-                    'id' => ContactInterface::RESOURCE_KEY . '::' . $contact1->getId(),
+                    'id' => ContactInterface::RESOURCE_KEY . '__' . $contact1->getId(),
                     'resourceKey' => ContactInterface::RESOURCE_KEY,
                     'resourceId' => (string) $contact1->getId(),
                     'mediaId' => (string) $contact1->getAvatar()?->getId(),
                     'changedAt' => (new \DateTimeImmutable($changedDateString1))->format('c'),
                     'createdAt' => (new \DateTimeImmutable('2000-01-01 12:00:00'))->format('c'),
                     'title' => $contact1->getFullName(),
+                    'securityContext' => ContactAdmin::CONTACT_SECURITY_CONTEXT,
                 ],
                 [
-                    'id' => ContactInterface::RESOURCE_KEY . '::' . $contact2->getId(),
+                    'id' => ContactInterface::RESOURCE_KEY . '__' . $contact2->getId(),
                     'resourceKey' => ContactInterface::RESOURCE_KEY,
                     'resourceId' => (string) $contact2->getId(),
                     'mediaId' => '',
                     'changedAt' => (new \DateTimeImmutable($changedDateString2))->format('c'),
                     'createdAt' => (new \DateTimeImmutable('2000-01-01 12:00:00'))->format('c'),
                     'title' => $contact2->getFullName(),
+                    'securityContext' => ContactAdmin::CONTACT_SECURITY_CONTEXT,
                 ],
             ],
             [...$results],
@@ -132,8 +135,8 @@ class AdminContactReindexProviderTest extends SuluTestCase
         $this->entityManager->flush();
 
         $identifiers = [
-            ContactInterface::RESOURCE_KEY . '::' . $contact1->getId(),
-            ContactInterface::RESOURCE_KEY . '::' . $contact3->getId(),
+            ContactInterface::RESOURCE_KEY . '__' . $contact1->getId(),
+            ContactInterface::RESOURCE_KEY . '__' . $contact3->getId(),
         ];
 
         $config = ReindexConfig::create()

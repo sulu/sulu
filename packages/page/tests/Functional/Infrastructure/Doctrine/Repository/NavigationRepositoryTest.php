@@ -36,6 +36,25 @@ class NavigationRepositoryTest extends SuluTestCase
     private Page $child2;
     private Page $grandchild1;
 
+    /**
+     * @return array<string, string>
+     */
+    private function getDefaultProperties(): array
+    {
+        return [
+            'uuid' => 'object.resource.id',
+            'title' => 'title',
+            'url' => 'url',
+            'webspaceKey' => 'object.resource.webspaceKey',
+            'template' => 'object.templateKey',
+            'changed' => 'object.changed',
+            'changer' => 'object.changer',
+            'created' => 'object.created',
+            'creator' => 'object.creator',
+            'linkProvider' => 'object.linkData.linkProvider',
+        ];
+    }
+
     protected function setUp(): void
     {
         self::purgeDatabase();
@@ -191,7 +210,9 @@ class NavigationRepositoryTest extends SuluTestCase
             $this->parent->getUuid(),
             'en',
             'sulu-io',
-            1
+            1,
+            null,
+            $this->getDefaultProperties()
         );
 
         $this->assertCount(2, $result);
@@ -206,7 +227,9 @@ class NavigationRepositoryTest extends SuluTestCase
             $this->parent->getUuid(),
             'en',
             'sulu-io',
-            1
+            1,
+            null,
+            $this->getDefaultProperties()
         );
 
         $this->assertCount(2, $result1);
@@ -216,7 +239,9 @@ class NavigationRepositoryTest extends SuluTestCase
             $this->parent->getUuid(),
             'en',
             'sulu-io',
-            2
+            2,
+            null,
+            $this->getDefaultProperties()
         );
 
         $this->assertCount(3, $result2);
@@ -234,7 +259,8 @@ class NavigationRepositoryTest extends SuluTestCase
             'en',
             'sulu-io',
             1,
-            'main'
+            'main',
+            $this->getDefaultProperties()
         );
 
         $this->assertCount(1, $result);
@@ -246,7 +272,8 @@ class NavigationRepositoryTest extends SuluTestCase
             'en',
             'sulu-io',
             1,
-            'footer'
+            'footer',
+            $this->getDefaultProperties()
         );
 
         $this->assertCount(1, $resultFooter);
@@ -259,7 +286,9 @@ class NavigationRepositoryTest extends SuluTestCase
             'non-existent-uuid',
             'en',
             'sulu-io',
-            1
+            1,
+            null,
+            $this->getDefaultProperties()
         );
 
         $this->assertSame([], $result);
@@ -271,7 +300,9 @@ class NavigationRepositoryTest extends SuluTestCase
             $this->parent->getUuid(),
             'en',
             'sulu-io',
-            1
+            1,
+            null,
+            $this->getDefaultProperties()
         );
 
         $this->assertCount(2, $result);
@@ -288,7 +319,9 @@ class NavigationRepositoryTest extends SuluTestCase
             $this->parent->getUuid(),
             'en',
             'sulu-io',
-            1
+            1,
+            null,
+            $this->getDefaultProperties()
         );
 
         $this->assertCount(2, $result1);
@@ -300,7 +333,9 @@ class NavigationRepositoryTest extends SuluTestCase
             $this->parent->getUuid(),
             'en',
             'sulu-io',
-            2
+            2,
+            null,
+            $this->getDefaultProperties()
         );
 
         $this->assertCount(2, $result2);
@@ -318,7 +353,8 @@ class NavigationRepositoryTest extends SuluTestCase
             'en',
             'sulu-io',
             2,
-            'main'
+            'main',
+            $this->getDefaultProperties()
         );
 
         $this->assertCount(1, $result);
@@ -335,7 +371,9 @@ class NavigationRepositoryTest extends SuluTestCase
             'non-existent-uuid',
             'en',
             'sulu-io',
-            1
+            1,
+            null,
+            $this->getDefaultProperties()
         );
 
         $this->assertSame([], $result);
@@ -346,7 +384,8 @@ class NavigationRepositoryTest extends SuluTestCase
         $result = $this->navigationRepository->getBreadcrumb(
             $this->grandchild1->getUuid(),
             'en',
-            'sulu-io'
+            'sulu-io',
+            $this->getDefaultProperties()
         );
 
         $this->assertCount(3, $result);
@@ -363,7 +402,8 @@ class NavigationRepositoryTest extends SuluTestCase
         $result = $this->navigationRepository->getBreadcrumb(
             $this->child1->getUuid(),
             'en',
-            'sulu-io'
+            'sulu-io',
+            $this->getDefaultProperties()
         );
 
         $this->assertCount(2, $result);
@@ -374,7 +414,8 @@ class NavigationRepositoryTest extends SuluTestCase
         $resultParent = $this->navigationRepository->getBreadcrumb(
             $this->parent->getUuid(),
             'en',
-            'sulu-io'
+            'sulu-io',
+            $this->getDefaultProperties()
         );
 
         $this->assertCount(1, $resultParent);
@@ -386,7 +427,8 @@ class NavigationRepositoryTest extends SuluTestCase
         $result = $this->navigationRepository->getBreadcrumb(
             'non-existent-uuid',
             'en',
-            'sulu-io'
+            'sulu-io',
+            $this->getDefaultProperties()
         );
 
         $this->assertSame([], $result);

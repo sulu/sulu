@@ -134,7 +134,7 @@ final class SnippetAreaController
         ];
         $message = new ModifySnippetAreaMessage($data);
 
-        /** @see \Sulu\Snippet\Application\MessageHandler\ModifySnippetMessageHandler */
+        /** @see \Sulu\Snippet\Application\MessageHandler\ModifySnippetAreaMessageHandler */
         $updatedSnippetArea = $this->handle(new Envelope($message, [new EnableFlushStamp()]));
 
         return new JsonResponse($this->normalizer->normalize(
