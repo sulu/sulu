@@ -30,8 +30,6 @@ abstract class AbstractMediaController extends AbstractRestController
         $data = $request->request->all();
         $data['locale'] = $request->get('locale', $fallback ? $this->getLocale($request) : null);
         $data['collection'] = $request->get('collection');
-        $data['contentLanguages'] = $request->get('contentLanguages', []);
-        $data['publishLanguages'] = $request->get('publishLanguages', []);
 
         // @deprecated Just prefill from request here and let the MediaManager set the default title
         $data['title'] = $request->get('title', $fallback ? $this->getTitleFromUpload($request) : null);

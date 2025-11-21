@@ -489,12 +489,6 @@ class MediaManager implements MediaManagerInterface
                     case 'storageOptions':
                         $media->setStorageOptions($value);
                         break;
-                    case 'publishLanguages':
-                        $media->setPublishLanguages($value);
-                        break;
-                    case 'contentLanguages':
-                        $media->setContentLanguages($value);
-                        break;
                     case 'tags':
                         $media->removeTags();
                         if (\count($value)) {
