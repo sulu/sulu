@@ -11,6 +11,8 @@
         </service>
 
         <service id="sulu_content.excerpt_data_mapper" class="Sulu\Content\Application\ContentDataMapper\DataMapper\ExcerptDataMapper">
+            <argument type="service" id="sulu_admin.form_metadata_provider"/>
+
             <tag name="sulu_content.data_mapper" priority="64"/>
         </service>
 

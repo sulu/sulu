@@ -31,24 +31,9 @@ final class ExcerptMerger implements MergerInterface
             return;
         }
 
-        if ($excerptTitle = $sourceObject->getExcerptTitle()) {
-            $targetObject->setExcerptTitle($excerptTitle);
-        }
-
-        if ($excerptDescription = $sourceObject->getExcerptDescription()) {
-            $targetObject->setExcerptDescription($excerptDescription);
-        }
-
-        if ($excerptMore = $sourceObject->getExcerptMore()) {
-            $targetObject->setExcerptMore($excerptMore);
-        }
-
-        if ($excerptIcon = $sourceObject->getExcerptIcon()) {
-            $targetObject->setExcerptIcon($excerptIcon);
-        }
-
-        if ($excerptImage = $sourceObject->getExcerptImage()) {
-            $targetObject->setExcerptImage($excerptImage);
-        }
+        $targetObject->setExcerptData(\array_merge(
+            $targetObject->getExcerptData(),
+            $sourceObject->getExcerptData()
+        ));
     }
 }

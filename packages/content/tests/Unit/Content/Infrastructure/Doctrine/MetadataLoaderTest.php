@@ -175,11 +175,7 @@ class MetadataLoaderTest extends TestCase
                 ExcerptInterface::class,
             ],
             [
-                'excerptTitle' => false,
-                'excerptDescription' => false,
-                'excerptMore' => false,
-                'excerptImageId' => false,
-                'excerptIconId' => false,
+                'excerptData' => false,
             ],
             [],
             [],
@@ -233,11 +229,7 @@ class MetadataLoaderTest extends TestCase
                 ExcerptInterface::class,
             ],
             [
-                'excerptTitle' => true,
-                'excerptDescription' => false,
-                'excerptMore' => false,
-                'excerptImageId' => false,
-                'excerptIconId' => false,
+                'excerptData' => true,
             ],
             [],
             [],
@@ -336,17 +328,13 @@ class MetadataLoaderTest extends TestCase
         $classMetadata->getIdentifierColumnNames()->willReturn(['id']);
         $classMetadata->getName()->willReturn(ExampleDimensionContent::class);
 
-        // Excerpt fields should be added (5 fields from ExcerptInterface)
-        $classMetadata->hasField('excerptTitle')->willReturn(false);
-        $classMetadata->hasField('excerptDescription')->willReturn(false);
-        $classMetadata->hasField('excerptMore')->willReturn(false);
-        $classMetadata->hasField('excerptImageId')->willReturn(false);
-        $classMetadata->hasField('excerptIconId')->willReturn(false);
+        // Excerpt field should be added (1 JSON field from ExcerptInterface)
+        $classMetadata->hasField('excerptData')->willReturn(false);
 
         // Taxonomy field should be added (1 field from TaxonomyInterface)
         $classMetadata->hasField('excerptSegment')->willReturn(false);
 
-        $classMetadata->mapField(Argument::any())->shouldBeCalledTimes(6);
+        $classMetadata->mapField(Argument::any())->shouldBeCalledTimes(2);
 
         // Tags and categories should be added
         $classMetadata->hasAssociation('excerptTags')->willReturn(false);
@@ -391,17 +379,13 @@ class MetadataLoaderTest extends TestCase
         $classMetadata->getIdentifierColumnNames()->willReturn(['id']);
         $classMetadata->getName()->willReturn(ExampleDimensionContent::class);
 
-        // Excerpt fields should be added (5 fields from ExcerptInterface)
-        $classMetadata->hasField('excerptTitle')->willReturn(false);
-        $classMetadata->hasField('excerptDescription')->willReturn(false);
-        $classMetadata->hasField('excerptMore')->willReturn(false);
-        $classMetadata->hasField('excerptImageId')->willReturn(false);
-        $classMetadata->hasField('excerptIconId')->willReturn(false);
+        // Excerpt field should be added (1 JSON field from ExcerptInterface)
+        $classMetadata->hasField('excerptData')->willReturn(false);
 
         // Taxonomy field should be added (1 field from TaxonomyInterface)
         $classMetadata->hasField('excerptSegment')->willReturn(false);
 
-        $classMetadata->mapField(Argument::any())->shouldBeCalledTimes(6);
+        $classMetadata->mapField(Argument::any())->shouldBeCalledTimes(2);
 
         // Tags, categories, and target groups should be added
         $classMetadata->hasAssociation('excerptTags')->willReturn(false);

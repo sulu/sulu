@@ -19,6 +19,7 @@ use Sulu\Bundle\TagBundle\Tag\TagInterface;
 use Sulu\Content\Application\ContentNormalizer\ContentNormalizer;
 use Sulu\Content\Application\ContentNormalizer\ContentNormalizerInterface;
 use Sulu\Content\Application\ContentNormalizer\Normalizer\DimensionContentNormalizer;
+use Sulu\Content\Application\ContentNormalizer\Normalizer\ExcerptNormalizer;
 use Sulu\Content\Application\ContentNormalizer\Normalizer\RoutableNormalizer;
 use Sulu\Content\Application\ContentNormalizer\Normalizer\TaxonomyNormalizer;
 use Sulu\Content\Application\ContentNormalizer\Normalizer\TemplateNormalizer;
@@ -48,6 +49,7 @@ class ContentNormalizerTest extends TestCase
         return new ContentNormalizer([
             new DimensionContentNormalizer(),
             new TaxonomyNormalizer(),
+            new ExcerptNormalizer(),
             new TemplateNormalizer(),
             new WorkflowNormalizer(),
             new RoutableNormalizer(),

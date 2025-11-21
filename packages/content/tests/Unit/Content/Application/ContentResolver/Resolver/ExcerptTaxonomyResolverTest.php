@@ -23,8 +23,6 @@ use Sulu\Content\Application\ContentResolver\Resolver\ExcerptTaxonomyResolver;
 use Sulu\Content\Application\ContentResolver\Value\ContentView;
 use Sulu\Content\Application\MetadataResolver\MetadataResolver;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
-use Sulu\Content\Domain\Model\ExcerptInterface;
-use Sulu\Content\Domain\Model\TaxonomyInterface;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\Example;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\ExampleDimensionContent;
 
@@ -37,7 +35,6 @@ class ExcerptTaxonomyResolverTest extends TestCase
         $resolver = new ExcerptTaxonomyResolver(
             $this->prophesize(MetadataProviderInterface::class)->reveal(),
             $this->prophesize(MetadataResolver::class)->reveal(),
-            []
         );
 
         self::assertNull($resolver->resolve($this->prophesize(DimensionContentInterface::class)->reveal()));
@@ -60,7 +57,7 @@ class ExcerptTaxonomyResolverTest extends TestCase
         $formMetadata->getFlatFieldMetadata()
             ->willReturn([]);
         $formMetadataProvider = $this->prophesize(MetadataProviderInterface::class);
-        $formMetadataProvider->getMetadata('content_excerpt', 'en', ['forms' => ['content_excerpt_metadata', 'content_excerpt_taxonomies']])
+        $formMetadataProvider->getMetadata('content_excerpt', 'en', ['instanceOf' => ExampleDimensionContent::class])
             ->willReturn($formMetadata->reveal());
 
         $metadataResolver = $this->prophesize(MetadataResolver::class);
@@ -84,10 +81,6 @@ class ExcerptTaxonomyResolverTest extends TestCase
         $resolver = new ExcerptTaxonomyResolver(
             $formMetadataProvider->reveal(),
             $metadataResolver->reveal(),
-            [
-                'content_excerpt_metadata' => ['instanceOf' => ExcerptInterface::class],
-                'content_excerpt_taxonomies' => ['instanceOf' => TaxonomyInterface::class],
-            ]
         );
 
         $contentView = $resolver->resolve($dimensionContent);
@@ -127,7 +120,7 @@ class ExcerptTaxonomyResolverTest extends TestCase
         $formMetadata->getFlatFieldMetadata()
             ->willReturn([]);
         $formMetadataProvider = $this->prophesize(MetadataProviderInterface::class);
-        $formMetadataProvider->getMetadata('content_excerpt', 'en', ['forms' => ['content_excerpt_metadata', 'content_excerpt_taxonomies']])
+        $formMetadataProvider->getMetadata('content_excerpt', 'en', ['instanceOf' => ExampleDimensionContent::class])
             ->willReturn($formMetadata->reveal());
 
         $metadataResolver = $this->prophesize(MetadataResolver::class);
@@ -151,10 +144,6 @@ class ExcerptTaxonomyResolverTest extends TestCase
         $resolver = new ExcerptTaxonomyResolver(
             $formMetadataProvider->reveal(),
             $metadataResolver->reveal(),
-            [
-                'content_excerpt_metadata' => ['instanceOf' => ExcerptInterface::class],
-                'content_excerpt_taxonomies' => ['instanceOf' => TaxonomyInterface::class],
-            ]
         );
 
         $contentView = $resolver->resolve($dimensionContent);
