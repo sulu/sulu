@@ -48,7 +48,7 @@ class TemplateAttributeResolverTest extends TestCase
     protected $router;
 
     /**
-     * @var ObjectProphecy<RequestStack>
+     * @var RequestStack
      */
     protected $requestStack;
 
@@ -73,11 +73,6 @@ class TemplateAttributeResolverTest extends TestCase
     protected $portal;
 
     /**
-     * @var ObjectProphecy<Request>
-     */
-    protected $request;
-
-    /**
      * @var TemplateAttributeResolver
      */
     protected $templateAttributeResolver;
@@ -94,8 +89,7 @@ class TemplateAttributeResolverTest extends TestCase
 
         $this->requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
         $this->router = $this->prophesize(RouterInterface::class);
-        $this->requestStack = $this->prophesize(RequestStack::class);
-        $this->request = $this->prophesize(Request::class);
+        $this->requestStack = new RequestStack();
         $this->webspaceManager = $this->prophesize(WebspaceManagerInterface::class);
         $this->webspace = $this->prophesize(Webspace::class);
         $this->portal = $this->prophesize(Portal::class);
@@ -119,8 +113,6 @@ class TemplateAttributeResolverTest extends TestCase
 
         $this->webspaceManager->getPortalInformations($this->environment)->willReturn($this->portalInformations);
 
-        $this->requestStack->getCurrentRequest()->willReturn($this->request);
-
         $this->portal->getKey()->willReturn($webspacePortalKey);
         $this->portal->getName()->willReturn($webspacePortalName);
         $this->portal->getDefaultLocalization()->willReturn(Localization::createFromString('en'));
@@ -134,8 +126,10 @@ class TemplateAttributeResolverTest extends TestCase
         $this->requestAnalyzer->getWebspace()->willReturn($this->webspace->reveal());
         $this->requestAnalyzer->getSegment()->willReturn();
 
-        $this->request->get('_route')->willReturn('test');
-        $this->request->get('_route_params')->willReturn(['host' => 'sulu.io', 'prefix' => '/de']);
+        $request = new Request();
+        $request->attributes->set('_route', 'test');
+        $request->attributes->set('_route_params', ['host' => 'sulu.io', 'prefix' => '/de']);
+        $this->requestStack->push($request);
 
         $this->router->generate('test', ['host' => 'sulu.io', 'prefix' => '/de'], UrlGeneratorInterface::ABSOLUTE_URL)->willReturn('http://sulu.io/de/test');
         $this->router->generate('test', ['host' => 'sulu.io', 'prefix' => '/en'], UrlGeneratorInterface::ABSOLUTE_URL)->willReturn('http://sulu.io/en/test');
@@ -191,8 +185,10 @@ class TemplateAttributeResolverTest extends TestCase
     {
         $templateAttributeResolver = $this->createTemplateAttributeResolver();
 
-        $this->request->get('_route')->willReturn('test_static')->shouldBeCalled();
-        $this->request->get('_route_params')->willReturn(['host' => 'sulu.io', '_locale' => 'de']);
+        $request = new Request();
+        $request->attributes->set('_route', 'test_static');
+        $request->attributes->set('_route_params', ['host' => 'sulu.io', '_locale' => 'de']);
+        $this->requestStack->push($request);
 
         $this->router->generate('test_static', ['host' => 'sulu.io', '_locale' => 'de'], UrlGeneratorInterface::ABSOLUTE_URL)
             ->willReturn('http://sulu.io/de/test')->shouldBeCalledTimes(1);
@@ -236,14 +232,14 @@ class TemplateAttributeResolverTest extends TestCase
         ], $resolved);
     }
 
-    private function createTemplateAttributeResolver()
+    private function createTemplateAttributeResolver(array $enabledTwigAttributes = ['urls' => true])
     {
         return new TemplateAttributeResolver(
             $this->requestAnalyzer->reveal(),
             $this->requestAnalyzerResolver,
             $this->webspaceManager->reveal(),
             $this->router->reveal(),
-            $this->requestStack->reveal(),
+            $this->requestStack,
             $this->environment,
         );
     }
