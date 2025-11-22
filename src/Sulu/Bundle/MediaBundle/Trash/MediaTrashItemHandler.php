@@ -109,7 +109,7 @@ final class MediaTrashItemHandler implements
                     'created' => $file->getCreated()->format('c'),
                     'creatorId' => $creator ? $creator->getId() : null,
                     'meta' => [],
-                    'defaultMetaLocale' => $fileVersion->getDefaultMeta()->getLocale(),
+                    'defaultMetaLocale' => $fileVersion->getDefaultMeta()?->getLocale(),
                     'formatOptions' => [],
                     'tagIds' => [],
                     'categoryIds' => [],
@@ -232,7 +232,9 @@ final class MediaTrashItemHandler implements
                     $meta->setFileVersion($fileVersion);
                     $fileVersion->addMeta($meta);
 
-                    if ($metaData['locale'] === $fileVersionData['defaultMetaLocale']) {
+                    if ($metaData['locale'] === $fileVersionData['defaultMetaLocale']
+                        || !$fileVersion->getDefaultMeta()
+                    ) {
                         $fileVersion->setDefaultMeta($meta);
                     }
 

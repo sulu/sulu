@@ -840,7 +840,7 @@ class Media extends ApiWrapper
     /**
      * @param bool $create
      *
-     * @return FileVersionMeta
+     * @return ($create is true ? FileVersionMeta : FileVersionMeta|null)
      */
     private function getMeta($create = false)
     {

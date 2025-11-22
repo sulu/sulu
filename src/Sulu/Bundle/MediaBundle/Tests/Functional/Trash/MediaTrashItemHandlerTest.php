@@ -236,7 +236,7 @@ class MediaTrashItemHandlerTest extends SuluTestCase
         static::assertSame([], $restoredFile1Version1->getProperties());
         static::assertSame(101, $restoredFile1Version1->getFocusPointX());
         static::assertSame(202, $restoredFile1Version1->getFocusPointY());
-        static::assertSame('de', $restoredFile1Version1->getDefaultMeta()->getLocale());
+        static::assertSame('de', $restoredFile1Version1->getDefaultMeta()?->getLocale());
         static::assertCount(0, $restoredFile1Version1->getTags());
         static::assertCount(0, $restoredFile1Version1->getCategories());
         static::assertCount(0, $restoredFile1Version1->getTargetGroups());
@@ -260,7 +260,7 @@ class MediaTrashItemHandlerTest extends SuluTestCase
         static::assertSame(35, $restoredFile1Version2->getFocusPointX());
         static::assertSame(45, $restoredFile1Version2->getFocusPointY());
         static::assertCount(2, $restoredFile1Version2->getMeta());
-        static::assertSame('de', $restoredFile1Version2->getDefaultMeta()->getLocale());
+        static::assertSame('de', $restoredFile1Version2->getDefaultMeta()?->getLocale());
         static::assertCount(2, $restoredFile1Version2->getFormatOptions());
 
         static::assertCount(2, $restoredFile1Version2->getTags());
