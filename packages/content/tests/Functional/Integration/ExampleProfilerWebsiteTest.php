@@ -136,7 +136,7 @@ class ExampleProfilerWebsiteTest extends SuluTestCase
                 // Load inner-inner example dimension content with tags and categories
                 'test_example_dimension_contents.test_example_dimension_content_excerpt_tags.ta_tags.test_example_dimension_content_excerpt_categories.ca_categories',
                 // Batch load all media references (once for all 3 examples)
-                'me_media.me_collections.me_files.me_file_versions.me_file_version_tags.ta_tags.me_file_version_meta.me_file_version_meta.me_file_version_content_languages.me_file_version_publish_languages.se_users.co_contacts.se_users.co_contacts',
+                'me_media.me_collections.me_files.me_file_versions.me_file_version_tags.ta_tags.me_file_version_meta.me_file_version_meta.se_users.co_contacts.se_users.co_contacts',
                 // Route resolution for locale switcher
                 'ro_routes',
                 // Analytics for the webspace

@@ -19,9 +19,7 @@ use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface as CategoryEntity;
 use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
-use Sulu\Bundle\MediaBundle\Entity\FileVersionContentLanguage;
 use Sulu\Bundle\MediaBundle\Entity\FileVersionMeta;
-use Sulu\Bundle\MediaBundle\Entity\FileVersionPublishLanguage;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\MediaBundle\Media\Exception\FileNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\FileVersionNotFoundException;
@@ -542,80 +540,6 @@ class Media extends ApiWrapper
         $this->getFileVersion()->setStorageOptions($storageOptions);
 
         return $this;
-    }
-
-    /**
-     * @param array $publishLanguages
-     *
-     * @return $this
-     */
-    public function setPublishLanguages($publishLanguages)
-    {
-        $fileVersion = $this->getFileVersion();
-
-        foreach ($publishLanguages as $locale) {
-            $publishLanguage = new FileVersionPublishLanguage();
-            $publishLanguage->setFileVersion($fileVersion);
-            $publishLanguage->setLocale($locale);
-            if (!$fileVersion->getPublishLanguages()->contains($publishLanguage)) {
-                $fileVersion->addPublishLanguage($publishLanguage);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return array
-     */
-    #[VirtualProperty]
-    #[SerializedName('publishLanguages')]
-    public function getPublishLanguages()
-    {
-        $publishLanguages = [];
-        /** @var FileVersionPublishLanguage $publishLanguage */
-        foreach ($this->getFileVersion()->getPublishLanguages() as $publishLanguage) {
-            $publishLanguages[] = $publishLanguage->getLocale();
-        }
-
-        return $publishLanguages;
-    }
-
-    /**
-     * @param array $contentLanguages
-     *
-     * @return $this
-     */
-    public function setContentLanguages($contentLanguages)
-    {
-        $fileVersion = $this->getFileVersion();
-
-        foreach ($contentLanguages as $locale) {
-            $contentLanguage = new FileVersionContentLanguage();
-            $contentLanguage->setFileVersion($fileVersion);
-            $contentLanguage->setLocale($locale);
-            if (!$fileVersion->getContentLanguages()->contains($contentLanguage)) {
-                $fileVersion->addContentLanguage($contentLanguage);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return array
-     */
-    #[VirtualProperty]
-    #[SerializedName('contentLanguages')]
-    public function getContentLanguages()
-    {
-        $contentLanguages = [];
-        /** @var FileVersionContentLanguage $contentLanguage */
-        foreach ($this->getFileVersion()->getContentLanguages() as $contentLanguage) {
-            $contentLanguages[] = $contentLanguage->getLocale();
-        }
-
-        return $contentLanguages;
     }
 
     /**

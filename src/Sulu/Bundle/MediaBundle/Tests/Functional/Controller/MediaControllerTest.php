@@ -902,17 +902,8 @@ class MediaControllerTest extends SuluTestCase
                 'description' => 'New Image Description',
                 'copyright' => 'My copyright',
                 'credits' => 'My credits',
-                'contentLanguages' => [
-                    'en-gb',
-                ],
                 'focusPointX' => 0,
                 'focusPointY' => 0,
-                'publishLanguages' => [
-                    'en-gb',
-                    'en-au',
-                    'en',
-                    'de',
-                ],
                 'targetGroups' => [
                     $targetGroup1->getId(),
                     $targetGroup2->getId(),
@@ -944,21 +935,6 @@ class MediaControllerTest extends SuluTestCase
         $this->assertEquals(0, $response->focusPointY);
         $this->assertNotEmpty($response->url);
         $this->assertNotEmpty($response->thumbnails);
-        $this->assertEquals(
-            [
-                'en-gb',
-            ],
-            $response->contentLanguages
-        );
-        $this->assertEquals(
-            [
-                'en-gb',
-                'en-au',
-                'en',
-                'de',
-            ],
-            $response->publishLanguages
-        );
 
         $this->assertContains($this->category->getId(), $response->categories);
         $this->assertContains($this->category2->getId(), $response->categories);
@@ -1078,15 +1054,6 @@ class MediaControllerTest extends SuluTestCase
                 'description' => 'New Image Description',
                 'copyright' => 'My copyright',
                 'credits' => 'My credits',
-                'contentLanguages' => [
-                    'en-gb',
-                ],
-                'publishLanguages' => [
-                    'en-gb',
-                    'en-au',
-                    'en',
-                    'de',
-                ],
             ],
             [
                 'fileVersion' => $photo,
@@ -1108,21 +1075,6 @@ class MediaControllerTest extends SuluTestCase
         $this->assertEquals('New Image Description', $response->description);
         $this->assertEquals('My copyright', $response->copyright);
         $this->assertEquals('My credits', $response->credits);
-        $this->assertEquals(
-            [
-                'en-gb',
-            ],
-            $response->contentLanguages
-        );
-        $this->assertEquals(
-            [
-                'en-gb',
-                'en-au',
-                'en',
-                'de',
-            ],
-            $response->publishLanguages
-        );
     }
 
     public function testFileVersionDelete(): void
@@ -1284,16 +1236,7 @@ class MediaControllerTest extends SuluTestCase
                 'credits' => 'My credits',
                 'focusPointX' => 1,
                 'focusPointY' => 2,
-                'contentLanguages' => [
-                    'en-gb',
-                ],
                 'tags' => ['Tag 1', 'Tag 2'],
-                'publishLanguages' => [
-                    'en-gb',
-                    'en-au',
-                    'en',
-                    'de',
-                ],
             ]
         );
 
@@ -1315,21 +1258,6 @@ class MediaControllerTest extends SuluTestCase
         $this->assertEquals(['Tag 1', 'Tag 2'], $response->tags);
 
         $this->assertNotEmpty($response->thumbnails);
-        $this->assertEquals(
-            [
-                'en-gb',
-            ],
-            $response->contentLanguages
-        );
-        $this->assertEquals(
-            [
-                'en-gb',
-                'en-au',
-                'en',
-                'de',
-            ],
-            $response->publishLanguages
-        );
     }
 
     public function testTagRemove(): void

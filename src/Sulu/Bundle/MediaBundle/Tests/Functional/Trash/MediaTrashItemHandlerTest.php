@@ -22,9 +22,7 @@ use Sulu\Bundle\MediaBundle\Entity\CollectionInterface;
 use Sulu\Bundle\MediaBundle\Entity\CollectionType;
 use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
-use Sulu\Bundle\MediaBundle\Entity\FileVersionContentLanguage;
 use Sulu\Bundle\MediaBundle\Entity\FileVersionMeta;
-use Sulu\Bundle\MediaBundle\Entity\FileVersionPublishLanguage;
 use Sulu\Bundle\MediaBundle\Entity\FormatOptions;
 use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
@@ -149,21 +147,6 @@ class MediaTrashItemHandlerTest extends SuluTestCase
         $media1File1Version2->addTargetGroup($targetGroup1);
         $media1File1Version2->addTargetGroup($targetGroup2);
 
-        $media1File1Version2ContentLanguage1 = new FileVersionContentLanguage();
-        $media1File1Version2->addContentLanguage($media1File1Version2ContentLanguage1);
-        $media1File1Version2ContentLanguage1->setFileVersion($media1File1Version2);
-        $media1File1Version2ContentLanguage1->setLocale('de');
-
-        $media1File1Version2ContentLanguage2 = new FileVersionContentLanguage();
-        $media1File1Version2->addContentLanguage($media1File1Version2ContentLanguage2);
-        $media1File1Version2ContentLanguage2->setFileVersion($media1File1Version2);
-        $media1File1Version2ContentLanguage2->setLocale('ru');
-
-        $media1File1Version2PublishLanguage1 = new FileVersionPublishLanguage();
-        $media1File1Version2->addPublishLanguage($media1File1Version2PublishLanguage1);
-        $media1File1Version2PublishLanguage1->setFileVersion($media1File1Version2);
-        $media1File1Version2PublishLanguage1->setLocale('de');
-
         $media1File1Version2Meta1 = new FileVersionMeta();
         $media1File1Version2->addMeta($media1File1Version2Meta1);
         $media1File1Version2->setDefaultMeta($media1File1Version2Meta1);
@@ -257,8 +240,6 @@ class MediaTrashItemHandlerTest extends SuluTestCase
         static::assertCount(0, $restoredFile1Version1->getTags());
         static::assertCount(0, $restoredFile1Version1->getCategories());
         static::assertCount(0, $restoredFile1Version1->getTargetGroups());
-        static::assertCount(0, $restoredFile1Version1->getContentLanguages());
-        static::assertCount(0, $restoredFile1Version1->getPublishLanguages());
         static::assertCount(1, $restoredFile1Version1->getMeta());
         static::assertCount(0, $restoredFile1Version1->getFormatOptions());
 
@@ -299,16 +280,6 @@ class MediaTrashItemHandlerTest extends SuluTestCase
         static::assertNotNull($restoredFile1Version2->getTargetGroups()[1]);
         static::assertSame($targetGroup1->getId(), $restoredFile1Version2->getTargetGroups()[0]->getId());
         static::assertSame($targetGroup2->getId(), $restoredFile1Version2->getTargetGroups()[1]->getId());
-
-        static::assertCount(2, $restoredFile1Version2->getContentLanguages());
-        static::assertNotNull($restoredFile1Version2->getContentLanguages()[0]);
-        static::assertNotNull($restoredFile1Version2->getContentLanguages()[1]);
-        static::assertSame('de', $restoredFile1Version2->getContentLanguages()[0]->getLocale());
-        static::assertSame('ru', $restoredFile1Version2->getContentLanguages()[1]->getLocale());
-
-        static::assertCount(1, $restoredFile1Version2->getPublishLanguages());
-        static::assertNotNull($restoredFile1Version2->getContentLanguages()[0]);
-        static::assertSame('de', $restoredFile1Version2->getContentLanguages()[0]->getLocale());
 
         /** @var FileVersionMeta $restoredFile1Version2Meta1 */
         $restoredFile1Version2Meta1 = $restoredFile1Version2->getMeta()[0];

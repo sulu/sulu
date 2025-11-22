@@ -23,9 +23,7 @@ use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\CollectionInterface;
 use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
-use Sulu\Bundle\MediaBundle\Entity\FileVersionContentLanguage;
 use Sulu\Bundle\MediaBundle\Entity\FileVersionMeta;
-use Sulu\Bundle\MediaBundle\Entity\FileVersionPublishLanguage;
 use Sulu\Bundle\MediaBundle\Entity\FormatOptions;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface;
@@ -110,8 +108,6 @@ final class MediaTrashItemHandler implements
                     'focusPointY' => $fileVersion->getFocusPointY(),
                     'created' => $file->getCreated()->format('c'),
                     'creatorId' => $creator ? $creator->getId() : null,
-                    'contentLanguageLocales' => [],
-                    'publishLanguageLocales' => [],
                     'meta' => [],
                     'defaultMetaLocale' => $fileVersion->getDefaultMeta()->getLocale(),
                     'formatOptions' => [],
@@ -119,16 +115,6 @@ final class MediaTrashItemHandler implements
                     'categoryIds' => [],
                     'targetGroupIds' => [],
                 ];
-
-                /** @var FileVersionContentLanguage $contentLanguage */
-                foreach ($fileVersion->getContentLanguages() as $contentLanguage) {
-                    $fileVersionData['contentLanguageLocales'][] = $contentLanguage->getLocale();
-                }
-
-                /** @var FileVersionPublishLanguage $publishLanguage */
-                foreach ($fileVersion->getPublishLanguages() as $publishLanguage) {
-                    $fileVersionData['publishLanguageLocales'][] = $publishLanguage->getLocale();
-                }
 
                 /** @var FileVersionMeta $meta */
                 foreach ($fileVersion->getMeta() as $meta) {
@@ -240,22 +226,6 @@ final class MediaTrashItemHandler implements
                 $fileVersion->setFocusPointY($fileVersionData['focusPointY']);
                 $fileVersion->setCreated(new \DateTimeImmutable($fileVersionData['created']));
                 $fileVersion->setCreator($this->findEntity(UserInterface::class, $fileVersionData['creatorId']));
-
-                foreach ($fileVersionData['contentLanguageLocales'] as $contentLanguageLocale) {
-                    $contentLanguage = new FileVersionContentLanguage();
-                    $contentLanguage->setFileVersion($fileVersion);
-                    $fileVersion->addContentLanguage($contentLanguage);
-
-                    $contentLanguage->setLocale($contentLanguageLocale);
-                }
-
-                foreach ($fileVersionData['publishLanguageLocales'] as $publishLanguageLocale) {
-                    $publishLanguage = new FileVersionPublishLanguage();
-                    $publishLanguage->setFileVersion($fileVersion);
-                    $fileVersion->addPublishLanguage($publishLanguage);
-
-                    $publishLanguage->setLocale($publishLanguageLocale);
-                }
 
                 foreach ($fileVersionData['meta'] as $metaData) {
                     $meta = new FileVersionMeta();

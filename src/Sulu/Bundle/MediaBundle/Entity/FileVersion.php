@@ -72,16 +72,6 @@ class FileVersion implements AuditableInterface
     private $id;
 
     /**
-     * @var DoctrineCollection<int, FileVersionContentLanguage>
-     */
-    private $contentLanguages;
-
-    /**
-     * @var DoctrineCollection<int, FileVersionPublishLanguage>
-     */
-    private $publishLanguages;
-
-    /**
      * @var DoctrineCollection<int, FileVersionMeta>
      */
     private $meta;
@@ -137,8 +127,6 @@ class FileVersion implements AuditableInterface
      */
     public function __construct()
     {
-        $this->contentLanguages = new ArrayCollection();
-        $this->publishLanguages = new ArrayCollection();
         $this->meta = new ArrayCollection();
         $this->formatOptions = new ArrayCollection();
         $this->tags = new ArrayCollection();
@@ -349,66 +337,6 @@ class FileVersion implements AuditableInterface
     }
 
     /**
-     * Add contentLanguages.
-     *
-     * @return FileVersion
-     */
-    public function addContentLanguage(FileVersionContentLanguage $contentLanguages)
-    {
-        $this->contentLanguages[] = $contentLanguages;
-
-        return $this;
-    }
-
-    /**
-     * Remove contentLanguages.
-     */
-    public function removeContentLanguage(FileVersionContentLanguage $contentLanguages)
-    {
-        $this->contentLanguages->removeElement($contentLanguages);
-    }
-
-    /**
-     * Get contentLanguages.
-     *
-     * @return DoctrineCollection<int, FileVersionContentLanguage>
-     */
-    public function getContentLanguages()
-    {
-        return $this->contentLanguages;
-    }
-
-    /**
-     * Add publishLanguages.
-     *
-     * @return FileVersion
-     */
-    public function addPublishLanguage(FileVersionPublishLanguage $publishLanguages)
-    {
-        $this->publishLanguages[] = $publishLanguages;
-
-        return $this;
-    }
-
-    /**
-     * Remove publishLanguages.
-     */
-    public function removePublishLanguage(FileVersionPublishLanguage $publishLanguages)
-    {
-        $this->publishLanguages->removeElement($publishLanguages);
-    }
-
-    /**
-     * Get publishLanguages.
-     *
-     * @return DoctrineCollection<int, FileVersionPublishLanguage>
-     */
-    public function getPublishLanguages()
-    {
-        return $this->publishLanguages;
-    }
-
-    /**
      * Add meta.
      *
      * @return FileVersion
@@ -554,10 +482,6 @@ class FileVersion implements AuditableInterface
             /** @var FileVersionMeta[] $newMetaList */
             $newMetaList = [];
             $defaultMetaLocale = $this->getDefaultMeta()->getLocale();
-            /** @var FileVersionContentLanguage[] $newContentLanguageList */
-            $newContentLanguageList = [];
-            /** @var FileVersionPublishLanguage[] $newPublishLanguageList */
-            $newPublishLanguageList = [];
             /** @var FormatOptions[] $newFormatOptionsArray */
             $newFormatOptionsArray = [];
 
@@ -574,28 +498,6 @@ class FileVersion implements AuditableInterface
                 if ($newMeta->getLocale() === $defaultMetaLocale) {
                     $this->setDefaultMeta($newMeta);
                 }
-            }
-
-            foreach ($this->contentLanguages as $contentLanguage) {
-                /* @var FileVersionContentLanguage $contentLanguage */
-                $newContentLanguageList[] = clone $contentLanguage;
-            }
-
-            $this->contentLanguages->clear(); // @phpstan-ignore-line disallowed.method it saved to call here as it a none persisted entity
-            foreach ($newContentLanguageList as $newContentLanguage) {
-                $newContentLanguage->setFileVersion($this);
-                $this->addContentLanguage($newContentLanguage);
-            }
-
-            foreach ($this->publishLanguages as $publishLanguage) {
-                /* @var FileVersionPublishLanguage $publishLanguage */
-                $newPublishLanguageList[] = clone $publishLanguage;
-            }
-
-            $this->publishLanguages->clear(); // @phpstan-ignore-line disallowed.method it saved to call here as it a none persisted entity
-            foreach ($newPublishLanguageList as $newPublishLanguage) {
-                $newPublishLanguage->setFileVersion($this);
-                $this->addPublishLanguage($newPublishLanguage);
             }
 
             foreach ($this->formatOptions as $formatOptions) {
