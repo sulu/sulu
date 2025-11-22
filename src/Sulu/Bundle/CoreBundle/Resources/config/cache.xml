@@ -6,13 +6,8 @@
     <services>
         <service id="sulu_core.cache.memoize.cache_adapter" class="Symfony\Component\Cache\Adapter\ArrayAdapter" />
 
-        <service id="sulu_core.cache.memoize.cache" class="Doctrine\Common\Cache\CacheProvider">
-            <factory class="Doctrine\Common\Cache\Psr6\DoctrineProvider" method="wrap"/>
-            <argument type="service" id="sulu_core.cache.memoize.cache_adapter" />
-        </service>
-
         <service id="sulu_core.cache.memoize" class="Sulu\Component\Cache\Memoize">
-            <argument type="service" id="sulu_core.cache.memoize.cache"/>
+            <argument type="service" id="sulu_core.cache.memoize.cache_adapter"/>
             <argument type="string">%sulu_core.cache.memoize.default_lifetime%</argument>
             <tag name="kernel.reset" method="reset" />
         </service>

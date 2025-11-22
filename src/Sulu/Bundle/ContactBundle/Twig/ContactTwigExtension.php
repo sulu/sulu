@@ -11,9 +11,10 @@
 
 namespace Sulu\Bundle\ContactBundle\Twig;
 
-use Doctrine\Common\Cache\Cache;
+use Psr\Cache\InvalidArgumentException;
 use Sulu\Bundle\ContactBundle\Entity\ContactInterface;
 use Sulu\Bundle\ContactBundle\Entity\ContactRepository;
+use Symfony\Component\Cache\Adapter\ArrayAdapter;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
@@ -23,7 +24,7 @@ use Twig\TwigFunction;
 class ContactTwigExtension extends AbstractExtension
 {
     public function __construct(
-        private Cache $cache,
+        private ArrayAdapter $cache,
         private ContactRepository $contactRepository,
     ) {
     }
@@ -34,28 +35,21 @@ class ContactTwigExtension extends AbstractExtension
     public function getFunctions()
     {
         return [
-            new TwigFunction('sulu_resolve_contact', [$this, 'resolveContactFunction']),
+            new TwigFunction('sulu_resolve_contact', $this->resolveContactFunction(...)),
         ];
     }
 
     /**
-     * @param int $id id to resolve
+     * @param string|int $id id to resolve
      *
      * @return ContactInterface|null
+     *
+     * @throws InvalidArgumentException
      */
     public function resolveContactFunction($id)
     {
-        if ($this->cache->contains($id)) {
-            return $this->cache->fetch($id);
-        }
-
-        $contact = $this->contactRepository->find($id);
-        if (null === $contact) {
-            return null;
-        }
-
-        $this->cache->save($id, $contact);
-
-        return $contact;
+        return $this->cache->get((string) $id, function() use ($id) {
+            return $this->contactRepository->find($id);
+        });
     }
 }

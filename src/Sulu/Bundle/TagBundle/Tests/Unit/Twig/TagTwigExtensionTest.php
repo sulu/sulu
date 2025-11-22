@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\TagBundle\Tests\Unit\Twig;
 
-use Doctrine\Common\Cache\Psr6\DoctrineProvider;
 use JMS\Serializer\SerializationContext;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
@@ -51,7 +50,7 @@ class TagTwigExtensionTest extends TestCase
      */
     private function getMemoizeCache()
     {
-        return new Memoize(DoctrineProvider::wrap(new ArrayAdapter()), 0);
+        return new Memoize(new ArrayAdapter(), 0);
     }
 
     public static function getProvider()

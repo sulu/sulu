@@ -11,8 +11,6 @@
 
 namespace Sulu\Bundle\ContactBundle\Tests\Unit;
 
-use Doctrine\Common\Cache\Cache;
-use Doctrine\Common\Cache\Psr6\DoctrineProvider;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
@@ -25,15 +23,7 @@ class ContactTwigExtensionTest extends TestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @var ContactTwigExtension
-     */
-    private $extension;
-
-    /**
-     * @var Cache
-     */
-    private $cache;
+    private ContactTwigExtension $extension;
 
     /**
      * @var ObjectProphecy<ContactRepository>
@@ -42,10 +32,9 @@ class ContactTwigExtensionTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->cache = DoctrineProvider::wrap(new ArrayAdapter());
         $this->contactRepository = $this->prophesize(ContactRepository::class);
 
-        $this->extension = new ContactTwigExtension($this->cache, $this->contactRepository->reveal());
+        $this->extension = new ContactTwigExtension(new ArrayAdapter(), $this->contactRepository->reveal());
     }
 
     public function testResolveContactFunction(): void
@@ -62,10 +51,12 @@ class ContactTwigExtensionTest extends TestCase
         $this->contactRepository->find(2)->willReturn($contact2);
 
         $contact = $this->extension->resolveContactFunction(1);
-        $this->assertEquals('Hikaru Sulu', $contact->getFullName());
+        $this->assertEquals('Hikaru', $contact?->getFirstName());
+        $this->assertEquals('Sulu', $contact?->getLastName());
 
         $contact = $this->extension->resolveContactFunction(2);
-        $this->assertEquals('John Cho', $contact->getFullName());
+        $this->assertEquals('John', $contact?->getFirstName());
+        $this->assertEquals('Cho', $contact?->getLastName());
     }
 
     public function testResolveContactFunctionNonExisting(): void

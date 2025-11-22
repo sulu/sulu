@@ -11,8 +11,6 @@
 
 namespace Sulu\Bundle\SecurityBundle\Tests\Unit\Twig;
 
-use Doctrine\Common\Cache\Cache;
-use Doctrine\Common\Cache\Psr6\DoctrineProvider;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
@@ -25,24 +23,18 @@ class UserTwigExtensionTest extends TestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @var UserTwigExtension
-     */
-    private $extension;
+    private UserTwigExtension $extension;
 
-    /**
-     * @var Cache
-     */
-    private $cache;
+    private ArrayAdapter $cache;
 
     /**
      * @var ObjectProphecy<UserRepository>
      */
-    private $userRepository;
+    private ObjectProphecy $userRepository;
 
     protected function setUp(): void
     {
-        $this->cache = DoctrineProvider::wrap(new ArrayAdapter());
+        $this->cache = new ArrayAdapter();
         $this->userRepository = $this->prophesize(UserRepository::class);
 
         $this->extension = new UserTwigExtension($this->cache, $this->userRepository->reveal());
@@ -60,10 +52,10 @@ class UserTwigExtensionTest extends TestCase
         $this->userRepository->findUserById(2)->willReturn($user2);
 
         $user = $this->extension->resolveUserFunction(1);
-        $this->assertEquals('hikaru', $user->getUsername());
+        $this->assertEquals('hikaru', $user?->getUserIdentifier());
 
         $user = $this->extension->resolveUserFunction(2);
-        $this->assertEquals('sulu', $user->getUsername());
+        $this->assertEquals('sulu', $user?->getUserIdentifier());
     }
 
     public function testResolveUserFunctionNonExisting(): void
