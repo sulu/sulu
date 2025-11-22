@@ -157,6 +157,7 @@
         "scheb/2fa-totp": "^6.0 || ^7.0",
         "scheb/2fa-trusted-device": "^6.0 || ^7.0",
         "shipmonk/composer-dependency-analyser": "^1.8",
+        "spaze/phpstan-disallowed-calls": "^4.7",
         "superbalist/flysystem-google-storage": "^7.1",
         "symfony/browser-kit": "^5.4 || ^6.0 || ^7.0",
         "symfony/debug-bundle": "^5.4 || ^6.0 || ^7.0",

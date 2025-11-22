@@ -7,6 +7,7 @@ includes:
     - vendor/phpstan/phpstan-phpunit/extension.neon
     - vendor/phpstan/phpstan-phpunit/rules.neon
     - vendor/phpstan/phpstan-webmozart-assert/extension.neon
+    - vendor/spaze/phpstan-disallowed-calls/extension.neon
 
 parameters:
     phpVersion: 80200
@@ -33,6 +34,10 @@ parameters:
         - %currentWorkingDirectory%/src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/LegacyResettingControllerTest.php
         - %currentWorkingDirectory%/src/Sulu/Bundle/MarkupBundle/Listener/SwiftMailerListener.php
         - %currentWorkingDirectory%/src/Sulu/Bundle/MarkupBundle/Tests/Unit/Listener/SwiftMailerListenerTest.php
+    disallowedMethodCalls:
+        -
+            method: 'Doctrine\Common\Collections\Collection::clear()'
+            message: 'use add and removeElement methods instead of clear to avoid unintended data loss if domain event listeners reflush during postFlush event'
     symfony:
         containerXmlPath: %currentWorkingDirectory%/var/cache/admin/dev/App_KernelDevDebugContainer.xml
         consoleApplicationLoader: tests/phpstan/console-application.php

@@ -117,7 +117,7 @@ class ReferenceCollector implements ReferenceCollectorInterface
             $this->referenceRepository->add($reference);
         }
 
-        $this->referenceCollection->clear();
+        $this->referenceCollection->clear(); // @phpstan-ignore-line disallowed.method the `referenceCollection` is no entity so we save to use clear here
     }
 
     private function getReference(ReferenceInterface $reference): ?ReferenceInterface

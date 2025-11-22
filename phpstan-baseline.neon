@@ -415,12 +415,6 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Admin/View/FormOverlayListViewBuilder.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\AdminBundle\\Admin\\View\\FormOverlayListViewBuilder\:\:setOption\(\) has parameter \$value with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/View/FormOverlayListViewBuilder.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\AdminBundle\\Admin\\View\\FormOverlayListViewBuilder\:\:setRequestParameters\(\) has parameter \$requestParameters with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -495,12 +489,6 @@ parameters:
 		-
 			message: '#^Method Sulu\\Bundle\\AdminBundle\\Admin\\View\\FormViewBuilder\:\:addRouterAttributesToFormMetadata\(\) has parameter \$routerAttributesToFormMetadata with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/View/FormViewBuilder.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\AdminBundle\\Admin\\View\\FormViewBuilder\:\:setOption\(\) has parameter \$value with no type specified\.$#'
-			identifier: missingType.parameter
 			count: 1
 			path: src/Sulu/Bundle/AdminBundle/Admin/View/FormViewBuilder.php
 
@@ -619,12 +607,6 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Admin/View/ListViewBuilder.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\AdminBundle\\Admin\\View\\ListViewBuilder\:\:setOption\(\) has parameter \$value with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/View/ListViewBuilder.php
-
-		-
 			message: '#^Parameter \#1 \.\.\.\$arrays of function array_merge expects array, mixed given\.$#'
 			identifier: argument.type
 			count: 11
@@ -669,12 +651,6 @@ parameters:
 		-
 			message: '#^Method Sulu\\Bundle\\AdminBundle\\Admin\\View\\PreviewFormViewBuilder\:\:addRouterAttributesToFormMetadata\(\) has parameter \$routerAttributesToFormMetadata with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/View/PreviewFormViewBuilder.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\AdminBundle\\Admin\\View\\PreviewFormViewBuilder\:\:setOption\(\) has parameter \$value with no type specified\.$#'
-			identifier: missingType.parameter
 			count: 1
 			path: src/Sulu/Bundle/AdminBundle/Admin/View/PreviewFormViewBuilder.php
 
@@ -757,12 +733,6 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Admin/View/ResourceTabViewBuilder.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\AdminBundle\\Admin\\View\\ResourceTabViewBuilder\:\:setOption\(\) has parameter \$value with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/View/ResourceTabViewBuilder.php
-
-		-
 			message: '#^Parameter \#1 \.\.\.\$arrays of function array_merge expects array, mixed given\.$#'
 			identifier: argument.type
 			count: 12
@@ -793,12 +763,6 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Admin/View/TabViewBuilder.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\AdminBundle\\Admin\\View\\TabViewBuilder\:\:setOption\(\) has parameter \$value with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/View/TabViewBuilder.php
-
-		-
 			message: '#^Parameter \#1 \.\.\.\$arrays of function array_merge expects array, mixed given\.$#'
 			identifier: argument.type
 			count: 3
@@ -811,30 +775,6 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Admin/View/TabViewBuilder.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\AdminBundle\\Admin\\View\\ToolbarAction\:\:__construct\(\) has parameter \$options with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/View/ToolbarAction.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\AdminBundle\\Admin\\View\\ToolbarAction\:\:getOptions\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/View/ToolbarAction.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\AdminBundle\\Admin\\View\\ToolbarAction\:\:getType\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/View/ToolbarAction.php
-
-		-
-			message: '#^Property Sulu\\Bundle\\AdminBundle\\Admin\\View\\ToolbarAction\:\:\$options type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/View/ToolbarAction.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\AdminBundle\\Admin\\View\\View\:\:getAttributeDefault\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -843,12 +783,6 @@ parameters:
 		-
 			message: '#^Method Sulu\\Bundle\\AdminBundle\\Admin\\View\\View\:\:getOption\(\) has no return type specified\.$#'
 			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/View/View.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\AdminBundle\\Admin\\View\\View\:\:setOption\(\) has parameter \$value with no type specified\.$#'
-			identifier: missingType.parameter
 			count: 1
 			path: src/Sulu/Bundle/AdminBundle/Admin/View/View.php
 
@@ -875,18 +809,6 @@ parameters:
 			identifier: missingType.iterableValue
 			count: 1
 			path: src/Sulu/Bundle/AdminBundle/Admin/View/View.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\AdminBundle\\Admin\\View\\ViewBuilder\:\:setOption\(\) has parameter \$value with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/View/ViewBuilder.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\AdminBundle\\Admin\\View\\ViewBuilderInterface\:\:setOption\(\) has parameter \$value with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/View/ViewBuilderInterface.php
 
 		-
 			message: '#^Cannot call method getParent\(\) on mixed\.$#'
@@ -937,66 +859,6 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Admin/View/ViewRegistry.php
 
 		-
-			message: '#^Binary operation "\." between ''\<info\>Starting…'' and mixed results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Command/DownloadLanguageCommand.php
-
-		-
-			message: '#^Binary operation "\." between ''admin\.'' and mixed results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Command/DownloadLanguageCommand.php
-
-		-
-			message: '#^Binary operation "\." between mixed and mixed results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Command/DownloadLanguageCommand.php
-
-		-
-			message: '#^Binary operation "\." between non\-falsy\-string and mixed results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 3
-			path: src/Sulu/Bundle/AdminBundle/Command/DownloadLanguageCommand.php
-
-		-
-			message: '#^Cannot access offset ''require'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Command/DownloadLanguageCommand.php
-
-		-
-			message: '#^Cannot call method writeln\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 3
-			path: src/Sulu/Bundle/AdminBundle/Command/DownloadLanguageCommand.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\AdminBundle\\Command\\DownloadLanguageCommand\:\:downloadLanguage\(\) has parameter \$language with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Command/DownloadLanguageCommand.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\AdminBundle\\Command\\DownloadLanguageCommand\:\:downloadLanguage\(\) has parameter \$output with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Command/DownloadLanguageCommand.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\AdminBundle\\Command\\DownloadLanguageCommand\:\:downloadLanguage\(\) has parameter \$project with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Command/DownloadLanguageCommand.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\AdminBundle\\Command\\DownloadLanguageCommand\:\:downloadLanguage\(\) has parameter \$translationBaseUrl with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Command/DownloadLanguageCommand.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\AdminBundle\\Command\\DownloadLanguageCommand\:\:downloadLanguage\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -1009,40 +871,10 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Command/DownloadLanguageCommand.php
 
 		-
-			message: '#^Parameter \#1 \$array of function array_keys expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Command/DownloadLanguageCommand.php
-
-		-
-			message: '#^Parameter \#1 \$haystack of function strpos expects string, int\|string given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Command/DownloadLanguageCommand.php
-
-		-
 			message: '#^Parameter \#1 \$json of function json_decode expects string, string\|false given\.$#'
 			identifier: argument.type
 			count: 3
 			path: src/Sulu/Bundle/AdminBundle/Command/DownloadLanguageCommand.php
-
-		-
-			message: '#^Parameter \#1 \.\.\.\$arrays of function array_merge expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Command/DownloadLanguageCommand.php
-
-		-
-			message: '#^Parameter \#2 \$content of method Symfony\\Component\\Filesystem\\Filesystem\:\:dumpFile\(\) expects resource\|string, string\|false given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Command/DownloadLanguageCommand.php
-
-		-
-			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
-			identifier: foreach.nonIterable
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Command/UpdateBuildCommand.php
 
 		-
 			message: '#^Binary operation "\." between ''https\://codeload…'' and mixed results in an error\.$#'
@@ -1087,57 +919,9 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Command/UpdateBuildCommand.php
 
 		-
-			message: '#^Cannot access offset ''dependencies'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Command/UpdateBuildCommand.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\AdminBundle\\Command\\UpdateBuildCommand\:\:doManualBuild\(\) should return int but returns mixed\.$#'
 			identifier: return.type
 			count: 3
-			path: src/Sulu/Bundle/AdminBundle/Command/UpdateBuildCommand.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\AdminBundle\\Command\\UpdateBuildCommand\:\:getLocalFile\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Command/UpdateBuildCommand.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\AdminBundle\\Command\\UpdateBuildCommand\:\:getRemoteFile\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Command/UpdateBuildCommand.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\AdminBundle\\Command\\UpdateBuildCommand\:\:hash\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Command/UpdateBuildCommand.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\AdminBundle\\Command\\UpdateBuildCommand\:\:hash\(\) has parameter \$content with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Command/UpdateBuildCommand.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\AdminBundle\\Command\\UpdateBuildCommand\:\:mergeJsonStrings\(\) should return string but returns string\|false\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Command/UpdateBuildCommand.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\AdminBundle\\Command\\UpdateBuildCommand\:\:runProcess\(\) has parameter \$command with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Command/UpdateBuildCommand.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\AdminBundle\\Command\\UpdateBuildCommand\:\:runProcess\(\) should return int but returns int\|null\.$#'
-			identifier: return.type
-			count: 1
 			path: src/Sulu/Bundle/AdminBundle/Command/UpdateBuildCommand.php
 
 		-
@@ -1147,31 +931,7 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Command/UpdateBuildCommand.php
 
 		-
-			message: '#^Parameter \#1 \$command of static method Symfony\\Component\\Process\\Process\:\:fromShellCommandline\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Command/UpdateBuildCommand.php
-
-		-
 			message: '#^Parameter \#1 \$files of method Symfony\\Component\\Filesystem\\Filesystem\:\:remove\(\) expects iterable\|string, list\<string\>\|false given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Command/UpdateBuildCommand.php
-
-		-
-			message: '#^Parameter \#1 \$haystack of function strpos expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Command/UpdateBuildCommand.php
-
-		-
-			message: '#^Parameter \#1 \$json of function json_decode expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Command/UpdateBuildCommand.php
-
-		-
-			message: '#^Parameter \#1 \$mainJson of method Sulu\\Bundle\\AdminBundle\\Command\\UpdateBuildCommand\:\:mergeJsonStrings\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/AdminBundle/Command/UpdateBuildCommand.php
@@ -1195,24 +955,6 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Command/UpdateBuildCommand.php
 
 		-
-			message: '#^Parameter \#1 \$string of function substr expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Command/UpdateBuildCommand.php
-
-		-
-			message: '#^Parameter \#2 \$additionalJson of method Sulu\\Bundle\\AdminBundle\\Command\\UpdateBuildCommand\:\:mergeJsonStrings\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Command/UpdateBuildCommand.php
-
-		-
-			message: '#^Parameter \#2 \$content of method Sulu\\Bundle\\AdminBundle\\Command\\UpdateBuildCommand\:\:writeFile\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Command/UpdateBuildCommand.php
-
-		-
 			message: '#^Parameter \#2 \.\.\.\$replacements of function array_replace_recursive expects array, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -1220,12 +962,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#2 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Command/UpdateBuildCommand.php
-
-		-
-			message: '#^Parameter \#3 \$subject of function preg_replace expects array\<float\|int\|string\>\|string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/AdminBundle/Command/UpdateBuildCommand.php
@@ -1339,12 +1075,6 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Command/ViewDebugCommand.php
 
 		-
-			message: '#^Binary operation "\*" between string and 1000 results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Controller/AdminController.php
-
-		-
 			message: '#^Cannot call method getContact\(\) on Symfony\\Component\\Security\\Core\\User\\UserInterface\|null\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -1371,12 +1101,6 @@ parameters:
 		-
 			message: '#^Method Sulu\\Bundle\\AdminBundle\\Controller\\AdminController\:\:__construct\(\) has parameter \$contactManager with generic interface Sulu\\Bundle\\ContactBundle\\Contact\\ContactManagerInterface but does not specify its types\: DoctrineEntity, ApiEntity, AddressRelationEntity$#'
 			identifier: missingType.generics
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Controller/AdminController.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\AdminBundle\\Controller\\AdminController\:\:indexAction\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: src/Sulu/Bundle/AdminBundle/Controller/AdminController.php
 
@@ -1657,42 +1381,6 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/DependencyInjection/SuluAdminExtension.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\AdminBundle\\Entity\\Collaboration\:\:getChanged\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Entity/Collaboration.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\AdminBundle\\Entity\\Collaboration\:\:getConnectionId\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Entity/Collaboration.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\AdminBundle\\Entity\\Collaboration\:\:getId\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Entity/Collaboration.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\AdminBundle\\Entity\\Collaboration\:\:getResourceKey\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Entity/Collaboration.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\AdminBundle\\Entity\\Collaboration\:\:getStarted\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Entity/Collaboration.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\AdminBundle\\Entity\\Collaboration\:\:updateTime\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Entity/Collaboration.php
-
-		-
 			message: '#^Property Sulu\\Bundle\\AdminBundle\\Entity\\Collaboration\:\:\$fullName is never read, only written\.$#'
 			identifier: property.onlyWritten
 			count: 1
@@ -1747,21 +1435,9 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Entity/CollaborationRepository.php
 
 		-
-			message: '#^Parameter \#1 \$resourceKey of method Sulu\\Bundle\\AdminBundle\\Entity\\CollaborationRepository\:\:getCacheId\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Entity/CollaborationRepository.php
-
-		-
 			message: '#^Parameter \#2 \$callback of function array_filter expects \(callable\(mixed\)\: bool\)\|null, Closure\(Sulu\\Bundle\\AdminBundle\\Entity\\Collaboration\)\: bool given\.$#'
 			identifier: argument.type
 			count: 2
-			path: src/Sulu/Bundle/AdminBundle/Entity/CollaborationRepository.php
-
-		-
-			message: '#^Possibly invalid array key type mixed\.$#'
-			identifier: offsetAccess.invalidOffset
-			count: 1
 			path: src/Sulu/Bundle/AdminBundle/Entity/CollaborationRepository.php
 
 		-
@@ -1793,18 +1469,6 @@ parameters:
 			identifier: missingType.iterableValue
 			count: 1
 			path: src/Sulu/Bundle/AdminBundle/FieldType/FieldTypeOptionRegistryInterface.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\AdminBundle\\FormMetadata\\FormMetadata\:\:setKey\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/FormMetadata/FormMetadata.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\AdminBundle\\FormMetadata\\FormMetadata\:\:setSchema\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/FormMetadata/FormMetadata.php
 
 		-
 			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
@@ -3727,12 +3391,6 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/Controller/AdminControllerTest.php
 
 		-
-			message: '#^Parameter \#23 \$collaborationInterval of class Sulu\\Bundle\\AdminBundle\\Controller\\AdminController constructor expects string, int given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/Controller/AdminControllerTest.php
-
-		-
 			message: '#^Property Sulu\\Bundle\\AdminBundle\\Tests\\Unit\\Controller\\AdminControllerTest\:\:\$contactManager with generic interface Sulu\\Bundle\\ContactBundle\\Contact\\ContactManagerInterface does not specify its types\: DoctrineEntity, ApiEntity, AddressRelationEntity$#'
 			identifier: missingType.generics
 			count: 1
@@ -3757,139 +3415,13 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/Controller/AdminControllerTest.php
 
 		-
-			message: '#^Binary operation "\+" between mixed and 1 results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/Entity/CollaborationRepositoryTest.php
-
-		-
-			message: '#^Binary operation "\+" between mixed and 10 results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/Entity/CollaborationRepositoryTest.php
-
-		-
-			message: '#^Binary operation "\." between mixed and ''_'' results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/Entity/CollaborationRepositoryTest.php
-
-		-
-			message: '#^Binary operation "\." between non\-falsy\-string and mixed results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/Entity/CollaborationRepositoryTest.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\AdminBundle\\Tests\\Unit\\Entity\\CollaborationRepositoryTest\:\:provideUpdate\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
 			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/Entity/CollaborationRepositoryTest.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\AdminBundle\\Tests\\Unit\\Entity\\CollaborationRepositoryTest\:\:testUpdate\(\) has parameter \$collaborationId1 with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/Entity/CollaborationRepositoryTest.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\AdminBundle\\Tests\\Unit\\Entity\\CollaborationRepositoryTest\:\:testUpdate\(\) has parameter \$collaborationId2 with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/Entity/CollaborationRepositoryTest.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\AdminBundle\\Tests\\Unit\\Entity\\CollaborationRepositoryTest\:\:testUpdate\(\) has parameter \$fullName1 with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/Entity/CollaborationRepositoryTest.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\AdminBundle\\Tests\\Unit\\Entity\\CollaborationRepositoryTest\:\:testUpdate\(\) has parameter \$fullName2 with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/Entity/CollaborationRepositoryTest.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\AdminBundle\\Tests\\Unit\\Entity\\CollaborationRepositoryTest\:\:testUpdate\(\) has parameter \$id with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/Entity/CollaborationRepositoryTest.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\AdminBundle\\Tests\\Unit\\Entity\\CollaborationRepositoryTest\:\:testUpdate\(\) has parameter \$resourceKey with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/Entity/CollaborationRepositoryTest.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\AdminBundle\\Tests\\Unit\\Entity\\CollaborationRepositoryTest\:\:testUpdate\(\) has parameter \$threshold with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/Entity/CollaborationRepositoryTest.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\AdminBundle\\Tests\\Unit\\Entity\\CollaborationRepositoryTest\:\:testUpdate\(\) has parameter \$userId1 with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/Entity/CollaborationRepositoryTest.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\AdminBundle\\Tests\\Unit\\Entity\\CollaborationRepositoryTest\:\:testUpdate\(\) has parameter \$userId2 with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/Entity/CollaborationRepositoryTest.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\AdminBundle\\Tests\\Unit\\Entity\\CollaborationRepositoryTest\:\:testUpdate\(\) has parameter \$userName1 with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/Entity/CollaborationRepositoryTest.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\AdminBundle\\Tests\\Unit\\Entity\\CollaborationRepositoryTest\:\:testUpdate\(\) has parameter \$userName2 with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/Entity/CollaborationRepositoryTest.php
-
-		-
-			message: '#^Parameter \#1 \$connectionId of class Sulu\\Bundle\\AdminBundle\\Entity\\Collaboration constructor expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 3
-			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/Entity/CollaborationRepositoryTest.php
-
-		-
 			message: '#^Parameter \#2 \$id of method Sulu\\Bundle\\AdminBundle\\Entity\\CollaborationRepository\:\:find\(\) expects string, int given\.$#'
-			identifier: argument.type
-			count: 3
-			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/Entity/CollaborationRepositoryTest.php
-
-		-
-			message: '#^Parameter \#2 \$threshold of class Sulu\\Bundle\\AdminBundle\\Entity\\CollaborationRepository constructor expects int, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/Entity/CollaborationRepositoryTest.php
-
-		-
-			message: '#^Parameter \#2 \$userId of class Sulu\\Bundle\\AdminBundle\\Entity\\Collaboration constructor expects int, mixed given\.$#'
-			identifier: argument.type
-			count: 3
-			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/Entity/CollaborationRepositoryTest.php
-
-		-
-			message: '#^Parameter \#3 \$username of class Sulu\\Bundle\\AdminBundle\\Entity\\Collaboration constructor expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 3
-			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/Entity/CollaborationRepositoryTest.php
-
-		-
-			message: '#^Parameter \#4 \$fullName of class Sulu\\Bundle\\AdminBundle\\Entity\\Collaboration constructor expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 3
-			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/Entity/CollaborationRepositoryTest.php
-
-		-
-			message: '#^Parameter \#5 \$resourceKey of class Sulu\\Bundle\\AdminBundle\\Entity\\Collaboration constructor expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 3
 			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/Entity/CollaborationRepositoryTest.php
@@ -6405,6 +5937,18 @@ parameters:
 		-
 			message: '#^Access to an undefined property Prophecy\\Prophecy\\ObjectProphecy\<Symfony\\Component\\HttpFoundation\\Response\>\:\:\$headers\.$#'
 			identifier: property.notFound
+			count: 1
+			path: src/Sulu/Bundle/AudienceTargetingBundle/Tests/Unit/EventListener/AudienceTargetingCacheListenerTest.php
+
+		-
+			message: '#^Call to method PHPUnit\\Framework\\Assert\:\:assertCount\(\) with 2 and array\{\} will always evaluate to false\.$#'
+			identifier: method.impossibleType
+			count: 1
+			path: src/Sulu/Bundle/AudienceTargetingBundle/Tests/Unit/EventListener/AudienceTargetingCacheListenerTest.php
+
+		-
+			message: '#^Call to method PHPUnit\\Framework\\Assert\:\:assertEmpty\(\) with array\{\} will always evaluate to true\.$#'
+			identifier: method.alreadyNarrowedType
 			count: 1
 			path: src/Sulu/Bundle/AudienceTargetingBundle/Tests/Unit/EventListener/AudienceTargetingCacheListenerTest.php
 
@@ -12457,12 +12001,6 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
 
 		-
-			message: '#^Call to function array_key_exists\(\) with ''public'' and string will always evaluate to false\.$#'
-			identifier: function.impossibleType
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
-
-		-
 			message: '#^Call to function method_exists\(\) with Doctrine\\Common\\Collections\\Collection and ''getValues'' will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 1
@@ -13117,24 +12655,6 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
 
 		-
-			message: '#^Offset ''bankName'' on string in isset\(\) does not exist\.$#'
-			identifier: isset.offset
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
-
-		-
-			message: '#^Offset ''bic'' on string in isset\(\) does not exist\.$#'
-			identifier: isset.offset
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
-
-		-
-			message: '#^Offset ''iban'' does not exist on string\.$#'
-			identifier: offsetAccess.notFound
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
-
-		-
 			message: '#^Offset ''iban'' might not exist on array\|null\.$#'
 			identifier: offsetAccess.notFound
 			count: 1
@@ -13465,12 +12985,6 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
 
 		-
-			message: '#^Parameter \#2 \$array of function array_key_exists expects array, string given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
-
-		-
 			message: '#^Parameter \#2 \$bankAccounts of method Sulu\\Bundle\\ContactBundle\\Contact\\AbstractContactManager\<DoctrineEntity,ApiEntity,AddressRelationEntity\>\:\:processBankAccounts\(\) expects array, string\|null given\.$#'
 			identifier: argument.type
 			count: 1
@@ -13501,7 +13015,7 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
 
 		-
-			message: '#^Parameter \#2 \$data of method Sulu\\Bundle\\ContactBundle\\Contact\\AbstractContactManager\<DoctrineEntity,ApiEntity,AddressRelationEntity\>\:\:updateBankAccount\(\) expects string, mixed given\.$#'
+			message: '#^Parameter \#2 \$data of method Sulu\\Bundle\\ContactBundle\\Contact\\AbstractContactManager\<DoctrineEntity,ApiEntity,AddressRelationEntity\>\:\:updateBankAccount\(\) expects array\<string, mixed\>, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
@@ -21465,7 +20979,7 @@ parameters:
 		-
 			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
 			identifier: foreach.nonIterable
-			count: 6
+			count: 2
 			path: src/Sulu/Bundle/CustomUrlBundle/Tests/Functional/Controller/CustomUrlControllerTest.php
 
 		-
@@ -21489,7 +21003,7 @@ parameters:
 		-
 			message: '#^Cannot access offset ''code'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
+			count: 1
 			path: src/Sulu/Bundle/CustomUrlBundle/Tests/Functional/Controller/CustomUrlControllerTest.php
 
 		-
@@ -21517,12 +21031,6 @@ parameters:
 			path: src/Sulu/Bundle/CustomUrlBundle/Tests/Functional/Controller/CustomUrlControllerTest.php
 
 		-
-			message: '#^Cannot access offset ''title'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 3
-			path: src/Sulu/Bundle/CustomUrlBundle/Tests/Functional/Controller/CustomUrlControllerTest.php
-
-		-
 			message: '#^Cannot access offset 0 on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
@@ -21531,7 +21039,13 @@ parameters:
 		-
 			message: '#^Cannot access offset mixed on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 5
+			count: 2
+			path: src/Sulu/Bundle/CustomUrlBundle/Tests/Functional/Controller/CustomUrlControllerTest.php
+
+		-
+			message: '#^Cannot access offset string on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 2
 			path: src/Sulu/Bundle/CustomUrlBundle/Tests/Functional/Controller/CustomUrlControllerTest.php
 
 		-
@@ -21565,37 +21079,7 @@ parameters:
 			path: src/Sulu/Bundle/CustomUrlBundle/Tests/Functional/Controller/CustomUrlControllerTest.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\CustomUrlBundle\\Tests\\Functional\\Controller\\CustomUrlControllerTest\:\:testCDelete\(\) has parameter \$items with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/CustomUrlBundle/Tests/Functional/Controller/CustomUrlControllerTest.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\CustomUrlBundle\\Tests\\Functional\\Controller\\CustomUrlControllerTest\:\:testCGet\(\) has parameter \$items with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/CustomUrlBundle/Tests/Functional/Controller/CustomUrlControllerTest.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\CustomUrlBundle\\Tests\\Functional\\Controller\\CustomUrlControllerTest\:\:testDelete\(\) has parameter \$data with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/CustomUrlBundle/Tests/Functional/Controller/CustomUrlControllerTest.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\CustomUrlBundle\\Tests\\Functional\\Controller\\CustomUrlControllerTest\:\:testDelete\(\) has parameter \$url with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/CustomUrlBundle/Tests/Functional/Controller/CustomUrlControllerTest.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\CustomUrlBundle\\Tests\\Functional\\Controller\\CustomUrlControllerTest\:\:testGet\(\) has parameter \$data with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/CustomUrlBundle/Tests/Functional/Controller/CustomUrlControllerTest.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\CustomUrlBundle\\Tests\\Functional\\Controller\\CustomUrlControllerTest\:\:testGet\(\) has parameter \$url with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
 			path: src/Sulu/Bundle/CustomUrlBundle/Tests/Functional/Controller/CustomUrlControllerTest.php
@@ -21607,103 +21091,19 @@ parameters:
 			path: src/Sulu/Bundle/CustomUrlBundle/Tests/Functional/Controller/CustomUrlControllerTest.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\CustomUrlBundle\\Tests\\Functional\\Controller\\CustomUrlControllerTest\:\:testPost\(\) has parameter \$data with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/CustomUrlBundle/Tests/Functional/Controller/CustomUrlControllerTest.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\CustomUrlBundle\\Tests\\Functional\\Controller\\CustomUrlControllerTest\:\:testPost\(\) has parameter \$restErrorCode with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/CustomUrlBundle/Tests/Functional/Controller/CustomUrlControllerTest.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\CustomUrlBundle\\Tests\\Functional\\Controller\\CustomUrlControllerTest\:\:testPost\(\) has parameter \$statusCode with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/CustomUrlBundle/Tests/Functional/Controller/CustomUrlControllerTest.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\CustomUrlBundle\\Tests\\Functional\\Controller\\CustomUrlControllerTest\:\:testPost\(\) has parameter \$url with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/CustomUrlBundle/Tests/Functional/Controller/CustomUrlControllerTest.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\CustomUrlBundle\\Tests\\Functional\\Controller\\CustomUrlControllerTest\:\:testPostMultiple\(\) has parameter \$before with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/CustomUrlBundle/Tests/Functional/Controller/CustomUrlControllerTest.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\CustomUrlBundle\\Tests\\Functional\\Controller\\CustomUrlControllerTest\:\:testPostMultiple\(\) has parameter \$beforeUrl with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/CustomUrlBundle/Tests/Functional/Controller/CustomUrlControllerTest.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\CustomUrlBundle\\Tests\\Functional\\Controller\\CustomUrlControllerTest\:\:testPostMultiple\(\) has parameter \$data with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/CustomUrlBundle/Tests/Functional/Controller/CustomUrlControllerTest.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\CustomUrlBundle\\Tests\\Functional\\Controller\\CustomUrlControllerTest\:\:testPostMultiple\(\) has parameter \$restErrorCode with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/CustomUrlBundle/Tests/Functional/Controller/CustomUrlControllerTest.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\CustomUrlBundle\\Tests\\Functional\\Controller\\CustomUrlControllerTest\:\:testPostMultiple\(\) has parameter \$statusCode with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/CustomUrlBundle/Tests/Functional/Controller/CustomUrlControllerTest.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\CustomUrlBundle\\Tests\\Functional\\Controller\\CustomUrlControllerTest\:\:testPostMultiple\(\) has parameter \$url with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/CustomUrlBundle/Tests/Functional/Controller/CustomUrlControllerTest.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\CustomUrlBundle\\Tests\\Functional\\Controller\\CustomUrlControllerTest\:\:testPut\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
 			path: src/Sulu/Bundle/CustomUrlBundle/Tests/Functional/Controller/CustomUrlControllerTest.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\CustomUrlBundle\\Tests\\Functional\\Controller\\CustomUrlControllerTest\:\:testPut\(\) has parameter \$before with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
+			message: '#^PHPDoc tag @param has invalid value \(array\<string, array\<string, mixed\> \$items\)\: Unexpected token "\$items", expected ''\>'' at offset 53 on line 2$#'
+			identifier: phpDoc.parseError
 			count: 1
 			path: src/Sulu/Bundle/CustomUrlBundle/Tests/Functional/Controller/CustomUrlControllerTest.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\CustomUrlBundle\\Tests\\Functional\\Controller\\CustomUrlControllerTest\:\:testPut\(\) has parameter \$data with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/CustomUrlBundle/Tests/Functional/Controller/CustomUrlControllerTest.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\CustomUrlBundle\\Tests\\Functional\\Controller\\CustomUrlControllerTest\:\:testPut\(\) has parameter \$restErrorCode with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/CustomUrlBundle/Tests/Functional/Controller/CustomUrlControllerTest.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\CustomUrlBundle\\Tests\\Functional\\Controller\\CustomUrlControllerTest\:\:testPut\(\) has parameter \$statusCode with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/CustomUrlBundle/Tests/Functional/Controller/CustomUrlControllerTest.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\CustomUrlBundle\\Tests\\Functional\\Controller\\CustomUrlControllerTest\:\:testPut\(\) has parameter \$url with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/CustomUrlBundle/Tests/Functional/Controller/CustomUrlControllerTest.php
-
-		-
-			message: '#^Parameter \#1 \$code of method Sulu\\Bundle\\TestBundle\\Testing\\SuluTestCase\:\:assertHttpStatusCode\(\) expects int, mixed given\.$#'
+			message: '#^Parameter \#1 \$data of method Sulu\\Bundle\\CustomUrlBundle\\Tests\\Functional\\Controller\\CustomUrlControllerTest\:\:testPost\(\) expects array\<string, mixed\>, mixed given\.$#'
 			identifier: argument.type
 			count: 2
 			path: src/Sulu/Bundle/CustomUrlBundle/Tests/Functional/Controller/CustomUrlControllerTest.php
@@ -21729,13 +21129,13 @@ parameters:
 		-
 			message: '#^Parameter \#2 \$array of function array_key_exists expects array, mixed given\.$#'
 			identifier: argument.type
-			count: 7
+			count: 1
 			path: src/Sulu/Bundle/CustomUrlBundle/Tests/Functional/Controller/CustomUrlControllerTest.php
 
 		-
 			message: '#^Parameter \#2 \$array of method PHPUnit\\Framework\\Assert\:\:assertArrayHasKey\(\) expects array\<mixed\>\|ArrayAccess\<\(int\|string\), mixed\>, mixed given\.$#'
 			identifier: argument.type
-			count: 4
+			count: 3
 			path: src/Sulu/Bundle/CustomUrlBundle/Tests/Functional/Controller/CustomUrlControllerTest.php
 
 		-
@@ -21745,15 +21145,9 @@ parameters:
 			path: src/Sulu/Bundle/CustomUrlBundle/Tests/Functional/Controller/CustomUrlControllerTest.php
 
 		-
-			message: '#^Parameter \#3 \$message of method PHPUnit\\Framework\\Assert\:\:assertEquals\(\) expects string, mixed given\.$#'
+			message: '#^Parameter \#2 \$url of method Sulu\\Bundle\\CustomUrlBundle\\Tests\\Functional\\Controller\\CustomUrlControllerTest\:\:testPost\(\) expects string, mixed given\.$#'
 			identifier: argument.type
-			count: 3
-			path: src/Sulu/Bundle/CustomUrlBundle/Tests/Functional/Controller/CustomUrlControllerTest.php
-
-		-
-			message: '#^Parameter \#3 \$parameters of method Symfony\\Component\\BrowserKit\\AbstractBrowser\<Symfony\\Component\\HttpFoundation\\Request,Symfony\\Component\\HttpFoundation\\Response\>\:\:jsonRequest\(\) expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 2
+			count: 1
 			path: src/Sulu/Bundle/CustomUrlBundle/Tests/Functional/Controller/CustomUrlControllerTest.php
 
 		-
@@ -23019,7 +22413,7 @@ parameters:
 		-
 			message: '#^Cannot access offset int\<\-8521761, 12649488\> on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 3
+			count: 2
 			path: src/Sulu/Bundle/DocumentManagerBundle/Slugifier/Urlizer.php
 
 		-
@@ -23929,21 +23323,9 @@ parameters:
 			path: src/Sulu/Bundle/HttpCacheBundle/DependencyInjection/SuluHttpCacheExtension.php
 
 		-
-			message: '#^Cannot access offset ''symfony'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: src/Sulu/Bundle/HttpCacheBundle/DependencyInjection/SuluHttpCacheExtension.php
-
-		-
 			message: '#^Cannot access offset ''tag_mode'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
-			path: src/Sulu/Bundle/HttpCacheBundle/DependencyInjection/SuluHttpCacheExtension.php
-
-		-
-			message: '#^Cannot access offset ''varnish'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
 			path: src/Sulu/Bundle/HttpCacheBundle/DependencyInjection/SuluHttpCacheExtension.php
 
 		-
@@ -24823,12 +24205,6 @@ parameters:
 			path: src/Sulu/Bundle/MarkupBundle/DependencyInjection/CompilerPass/ParserCompilerPass.php
 
 		-
-			message: '#^Cannot access offset ''tag'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/MarkupBundle/DependencyInjection/CompilerPass/TagCompilerPass.php
-
-		-
 			message: '#^Cannot access offset ''type'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
@@ -25133,12 +24509,6 @@ parameters:
 			identifier: missingType.iterableValue
 			count: 1
 			path: src/Sulu/Bundle/MarkupBundle/Tag/TagInterface.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\MarkupBundle\\Tag\\TagRegistry\:\:getTag\(\) should return Sulu\\Bundle\\MarkupBundle\\Tag\\TagInterface but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Sulu/Bundle/MarkupBundle/Tag/TagRegistry.php
 
 		-
 			message: '#^Parameter \#2 \$array of function array_key_exists expects array, Sulu\\Bundle\\MarkupBundle\\Tag\\TagInterface given\.$#'
@@ -29307,7 +28677,7 @@ parameters:
 		-
 			message: '#^Cannot access offset ''title'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 4
+			count: 3
 			path: src/Sulu/Bundle/MediaBundle/Media/FormatManager/FormatManager.php
 
 		-
@@ -29539,6 +28909,12 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Media/ImageConverter/Focus/Focus.php
 
 		-
+			message: '#^Call to an undefined method object\:\:layers\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Sulu/Bundle/MediaBundle/Media/ImageConverter/ImagineImageConverter.php
+
+		-
 			message: '#^Cannot access offset ''effect'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
@@ -29558,12 +28934,6 @@ parameters:
 
 		-
 			message: '#^Cannot call method add\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Media/ImageConverter/ImagineImageConverter.php
-
-		-
-			message: '#^Cannot call method layers\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Media/ImageConverter/ImagineImageConverter.php
@@ -33507,12 +32877,6 @@ parameters:
 		-
 			message: '#^Cannot call method setVersion\(\) on mixed\.$#'
 			identifier: method.nonObject
-			count: 2
-			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Entity/MediaRepositoryTest.php
-
-		-
-			message: '#^Cannot clone non\-object variable \$fileVersion of type mixed\.$#'
-			identifier: clone.nonObject
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Entity/MediaRepositoryTest.php
 
@@ -33590,12 +32954,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#1 \$object of function get_class expects object, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Entity/MediaRepositoryTest.php
-
-		-
-			message: '#^Parameter \#1 \$object of method Doctrine\\Persistence\\ObjectManager\:\:persist\(\) expects object, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Entity/MediaRepositoryTest.php
@@ -46939,12 +46297,6 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/SmartContent/QueryBuilderTest.php
 
 		-
-			message: '#^Cannot access offset mixed on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 5
-			path: src/Sulu/Bundle/PageBundle/Tests/Functional/SmartContent/QueryBuilderTest.php
-
-		-
 			message: '#^Cannot call method bind\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -46953,13 +46305,13 @@ parameters:
 		-
 			message: '#^Cannot call method getUuid\(\) on mixed\.$#'
 			identifier: method.nonObject
-			count: 21
+			count: 17
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/SmartContent/QueryBuilderTest.php
 
 		-
 			message: '#^Cannot use array destructuring on mixed\.$#'
 			identifier: offsetAccess.nonArray
-			count: 8
+			count: 5
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/SmartContent/QueryBuilderTest.php
 
 		-
@@ -46969,19 +46321,7 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/SmartContent/QueryBuilderTest.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Tests\\Functional\\SmartContent\\QueryBuilderTest\:\:datasourceProvider\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Tests/Functional/SmartContent/QueryBuilderTest.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\PageBundle\\Tests\\Functional\\SmartContent\\QueryBuilderTest\:\:orderByProvider\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Tests/Functional/SmartContent/QueryBuilderTest.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Tests\\Functional\\SmartContent\\QueryBuilderTest\:\:propertiesProvider\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/SmartContent/QueryBuilderTest.php
@@ -47047,12 +46387,6 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/SmartContent/QueryBuilderTest.php
 
 		-
-			message: '#^Parameter \#1 \$array of function array_keys expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 3
-			path: src/Sulu/Bundle/PageBundle/Tests/Functional/SmartContent/QueryBuilderTest.php
-
-		-
 			message: '#^Parameter \#1 \$id of method PHPCR\\SessionInterface\:\:getNodeByIdentifier\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 4
@@ -47062,18 +46396,6 @@ parameters:
 			message: '#^Parameter \#1 \$identifier of method Sulu\\Component\\DocumentManager\\DocumentManagerInterface\:\:find\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 3
-			path: src/Sulu/Bundle/PageBundle/Tests/Functional/SmartContent/QueryBuilderTest.php
-
-		-
-			message: '#^Parameter \#1 \$value of function count expects array\|Countable, mixed given\.$#'
-			identifier: argument.type
-			count: 3
-			path: src/Sulu/Bundle/PageBundle/Tests/Functional/SmartContent/QueryBuilderTest.php
-
-		-
-			message: '#^Parameter \#2 \$array of method PHPUnit\\Framework\\Assert\:\:assertArrayHasKey\(\) expects array\<mixed\>\|ArrayAccess\<\(int\|string\), mixed\>, mixed given\.$#'
-			identifier: argument.type
-			count: 2
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/SmartContent/QueryBuilderTest.php
 
 		-
@@ -47103,7 +46425,7 @@ parameters:
 		-
 			message: '#^Possibly invalid array key type mixed\.$#'
 			identifier: offsetAccess.invalidOffset
-			count: 4
+			count: 7
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/SmartContent/QueryBuilderTest.php
 
 		-
@@ -48873,12 +48195,6 @@ parameters:
 		-
 			message: '#^Cannot cast mixed to int\.$#'
 			identifier: cast.int
-			count: 1
-			path: src/Sulu/Bundle/RouteBundle/Command/UpdateRouteCommand.php
-
-		-
-			message: '#^PHPDoc tag @var for variable \$repository contains generic class Doctrine\\ORM\\EntityRepository but does not specify its types\: TEntityClass$#'
-			identifier: missingType.generics
 			count: 1
 			path: src/Sulu/Bundle/RouteBundle/Command/UpdateRouteCommand.php
 
@@ -54541,12 +53857,6 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/UserManager/UserManager.php
 
 		-
-			message: '#^Cannot access offset ''locale'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: src/Sulu/Bundle/SecurityBundle/UserManager/UserManager.php
-
-		-
 			message: '#^Cannot access offset ''locales'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 2
@@ -57885,7 +57195,7 @@ parameters:
 		-
 			message: '#^Parameter \#2 \$array of function array_key_exists expects array, mixed given\.$#'
 			identifier: argument.type
-			count: 2
+			count: 1
 			path: src/Sulu/Bundle/SnippetBundle/Tests/Unit/Content/SnippetDataProviderTest.php
 
 		-
@@ -57895,7 +57205,7 @@ parameters:
 			path: src/Sulu/Bundle/SnippetBundle/Tests/Unit/Content/SnippetDataProviderTest.php
 
 		-
-			message: '#^Parameter \#2 \$propertyParameter of method Sulu\\Bundle\\SnippetBundle\\Content\\SnippetDataProvider\:\:resolveDataItems\(\) expects array\<Sulu\\Component\\Content\\Compat\\PropertyParameter\>, mixed given\.$#'
+			message: '#^Parameter \#2 \$propertyParameter of method Sulu\\Bundle\\SnippetBundle\\Content\\SnippetDataProvider\:\:resolveDataItems\(\) expects array\<Sulu\\Component\\Content\\Compat\\PropertyParameter\>, array given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/SnippetBundle/Tests/Unit/Content/SnippetDataProviderTest.php
@@ -71359,12 +70669,6 @@ parameters:
 			path: src/Sulu/Component/Content/Metadata/ItemMetadata.php
 
 		-
-			message: '#^Property Sulu\\Component\\Content\\Metadata\\ItemMetadata\:\:\$disabledCondition \(string\) does not accept string\|null\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/ItemMetadata.php
-
-		-
 			message: '#^Property Sulu\\Component\\Content\\Metadata\\ItemMetadata\:\:\$parameters type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -71379,12 +70683,6 @@ parameters:
 		-
 			message: '#^Property Sulu\\Component\\Content\\Metadata\\ItemMetadata\:\:\$titles type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/ItemMetadata.php
-
-		-
-			message: '#^Property Sulu\\Component\\Content\\Metadata\\ItemMetadata\:\:\$visibleCondition \(string\) does not accept string\|null\.$#'
-			identifier: assign.propertyType
 			count: 1
 			path: src/Sulu/Component/Content/Metadata/ItemMetadata.php
 
@@ -84325,12 +83623,6 @@ parameters:
 			path: src/Sulu/Component/Persistence/EventSubscriber/ORM/TimestampableSubscriber.php
 
 		-
-			message: '#^Strict comparison using \!\=\= between null and ReflectionClass\<covariant object\> will always evaluate to true\.$#'
-			identifier: notIdentical.alwaysTrue
-			count: 1
-			path: src/Sulu/Component/Persistence/EventSubscriber/ORM/TimestampableSubscriber.php
-
-		-
 			message: '#^Call to an undefined method Doctrine\\Persistence\\Mapping\\ClassMetadata\<object\>\:\:mapManyToOne\(\)\.$#'
 			identifier: method.notFound
 			count: 2
@@ -84381,12 +83673,6 @@ parameters:
 		-
 			message: '#^Method Sulu\\Component\\Persistence\\EventSubscriber\\ORM\\UserBlameSubscriber\:\:onFlush\(\) has no return type specified\.$#'
 			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Component/Persistence/EventSubscriber/ORM/UserBlameSubscriber.php
-
-		-
-			message: '#^Strict comparison using \!\=\= between null and ReflectionClass\<covariant object\> will always evaluate to true\.$#'
-			identifier: notIdentical.alwaysTrue
 			count: 1
 			path: src/Sulu/Component/Persistence/EventSubscriber/ORM/UserBlameSubscriber.php
 
@@ -89887,12 +89173,6 @@ parameters:
 			path: src/Sulu/Component/SmartContent/Tests/Unit/ContentTypeTest.php
 
 		-
-			message: '#^Cannot access offset ''dataSource'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: src/Sulu/Component/SmartContent/Tests/Unit/ContentTypeTest.php
-
-		-
 			message: '#^Cannot access offset ''segmentKey'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 2
@@ -90057,7 +89337,7 @@ parameters:
 		-
 			message: '#^Parameter \#2 \$array of function array_key_exists expects array, mixed given\.$#'
 			identifier: argument.type
-			count: 6
+			count: 3
 			path: src/Sulu/Component/SmartContent/Tests/Unit/ContentTypeTest.php
 
 		-
@@ -90339,7 +89619,7 @@ parameters:
 		-
 			message: '#^Parameter \#2 \$array of function array_key_exists expects array, mixed given\.$#'
 			identifier: argument.type
-			count: 2
+			count: 1
 			path: src/Sulu/Component/Symfony/CompilerPass/TaggedServiceCollectorCompilerPass.php
 
 		-

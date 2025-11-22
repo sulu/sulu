@@ -188,6 +188,9 @@ class QueryBuilderTest extends SuluTestCase
         $this->getContainer()->get('sulu_security.system_store')->setSystem('sulu_io');
     }
 
+    /**
+     * @return array<string, PageDocument>
+     */
     public function propertiesProvider()
     {
         $documents = [];
@@ -298,6 +301,13 @@ class QueryBuilderTest extends SuluTestCase
         }
     }
 
+    /**
+     * @return array{
+     *     0: PageDocument,
+     *     1: PageDocument,
+     *     2: array<string, PageDocument>,
+     * }
+     */
     public function datasourceProvider()
     {
         /** @var PageDocument $news */
@@ -1205,6 +1215,8 @@ class QueryBuilderTest extends SuluTestCase
 
     public function orderByProvider()
     {
+        $documents = [];
+
         /** @var PageDocument $document */
         $document = $this->documentManager->create('page');
         $document->setTitle('A');

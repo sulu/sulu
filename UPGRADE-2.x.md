@@ -1,5 +1,9 @@
 # Upgrade
 
+## 2.6.16
+
+* Deprecated \Sulu\Bundle\MediaBundle\Controller\AbstractMediaController::getTitleFromUpload -> MediaManager::getTitleFromUpload
+
 ## 2.6.13
 
 ### Using `tagged_locator` and `tagged_iterator` over custom compiler passes
@@ -530,6 +534,10 @@ sulu_website:
 
 In the previous version the `SnippetController` would return the entire content of the snippet in the `cgetAction`. Now
 it respects the list of fields provided in the query parameter and only returns those.
+
+## 2.5.33
+
+* Deprecated \Sulu\Bundle\MediaBundle\Controller\AbstractMediaController::getTitleFromUpload -> MediaManager::getTitleFromUpload
 
 ## 2.5.23
 

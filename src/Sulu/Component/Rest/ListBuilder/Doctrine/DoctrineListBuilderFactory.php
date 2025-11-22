@@ -11,7 +11,7 @@
 
 namespace Sulu\Component\Rest\ListBuilder\Doctrine;
 
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Bundle\SecurityBundle\AccessControl\AccessControlQueryEnhancer;
 use Sulu\Component\Rest\ListBuilder\Filter\FilterTypeRegistry;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -22,7 +22,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 class DoctrineListBuilderFactory implements DoctrineListBuilderFactoryInterface
 {
     public function __construct(
-        private EntityManager $em,
+        private EntityManagerInterface $em,
         private FilterTypeRegistry $filterTypeRegistry,
         private EventDispatcherInterface $eventDispatcher,
         private array $permissions,
