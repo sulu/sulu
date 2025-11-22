@@ -232,7 +232,7 @@ class TemplateAttributeResolverTest extends TestCase
         ], $resolved);
     }
 
-    private function createTemplateAttributeResolver(array $enabledTwigAttributes = ['urls' => true])
+    private function createTemplateAttributeResolver(): TemplateAttributeResolver
     {
         return new TemplateAttributeResolver(
             $this->requestAnalyzer->reveal(),
