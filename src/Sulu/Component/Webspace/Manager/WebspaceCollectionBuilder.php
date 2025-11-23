@@ -191,7 +191,7 @@ class WebspaceCollectionBuilder
     }
 
     /**
-     * @param string[] $replacers
+     * @param array<string, string> $replacers
      * @param string $urlAddress
      */
     private function buildUrlFullMatch(
@@ -326,7 +326,7 @@ class WebspaceCollectionBuilder
     /**
      * Replaces the given values in the pattern.
      *
-     * @param array<string> $replacers
+     * @param array<string, string> $replacers
      */
     private function generateUrlAddress(string $pattern, array $replacers): string
     {
