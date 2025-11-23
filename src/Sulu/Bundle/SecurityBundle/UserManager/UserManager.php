@@ -175,6 +175,10 @@ class UserManager implements UserManagerInterface
                 }
             }
 
+            if (!$patch || null !== $contactId) {
+                $user->setContact($this->getContact($contactId));
+            }
+
             if (!$patch || null !== $locale) {
                 $user->setLocale($locale);
             }
@@ -459,6 +463,26 @@ class UserManager implements UserManagerInterface
         }
 
         return true;
+    }
+
+    /**
+     * Returns the contact with the given id.
+     *
+     * @param int|string|null $id
+     *
+     * @return Contact
+     *
+     * @throws EntityNotFoundException
+     */
+    private function getContact($id)
+    {
+        $contact = $this->contactManager->findById($id);
+
+        if (!$contact) {
+            throw new EntityNotFoundException($this->contactManager->getContactEntityName(), $id);
+        }
+
+        return $contact;
     }
 
     /**

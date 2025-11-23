@@ -167,7 +167,6 @@
             "key": "sulu-test-secure",
             "localizations": [
                 {
-                    "localization": "en",
                     "locale": "en",
                     "language": "en",
                     "country": "",
@@ -177,7 +176,6 @@
                     "default": true
                 },
                 {
-                    "localization": "de",
                     "locale": "de",
                     "language": "de",
                     "country": "",
