@@ -31,7 +31,8 @@ class FormMetadataProvider implements MetadataProviderInterface
         private iterable $formMetadataVisitors,
         private iterable $typedFormMetadataVisitors,
         private string $fallbackLocale,
-    ) {}
+    ) {
+    }
 
     public function getMetadata(string $key, string $locale, array $metadataOptions = []): MetadataInterface
     {

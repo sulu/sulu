@@ -38,18 +38,6 @@ class FormViewBuilder implements FormViewBuilderInterface
         return $this;
     }
 
-    /**
-     * @deprecated The usage of the "setRequestParameters" method in the FormViewBuilder is deprecated. Please use "addRequestParameters" instead.
-     */
-    public function setRequestParameters(array $requestParameters): FormViewBuilderInterface
-    {
-        @trigger_deprecation('sulu/sulu', '2.1', 'The usage of the "setRequestParameters" method in the FormViewBuilder is deprecated. Please use "addRequestParameters" instead.');
-
-        $this->setRequestParametersToView($this->view, $requestParameters);
-
-        return $this;
-    }
-
     public function addLocales(array $locales): FormViewBuilderInterface
     {
         $this->addLocalesToView($this->view, $locales);

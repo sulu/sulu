@@ -175,18 +175,6 @@ class UserManager implements UserManagerInterface
                 }
             }
 
-            if (!$patch || (null !== $contact || null !== $contactId)) {
-                if ($contact && !$contactId) {
-                    @trigger_deprecation(
-                        'sulu/sulu',
-                        '1.4',
-                        'Usage of the contact object to define the contact corresponding to the user is deprecated'
-                        . ' since version 1.4 and will be removed in 2.0. Use the contactId query parameter instead.'
-                    );
-                }
-                $user->setContact($this->getContact($contactId ?: $contact['id']));
-            }
-
             if (!$patch || null !== $locale) {
                 $user->setLocale($locale);
             }
@@ -471,26 +459,6 @@ class UserManager implements UserManagerInterface
         }
 
         return true;
-    }
-
-    /**
-     * Returns the contact with the given id.
-     *
-     * @param int $id
-     *
-     * @return Contact
-     *
-     * @throws EntityNotFoundException
-     */
-    private function getContact($id)
-    {
-        $contact = $this->contactManager->findById($id);
-
-        if (!$contact) {
-            throw new EntityNotFoundException($this->contactManager->getContactEntityName(), $id);
-        }
-
-        return $contact;
     }
 
     /**

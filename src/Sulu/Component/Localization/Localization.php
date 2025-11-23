@@ -205,29 +205,6 @@ class Localization implements \JsonSerializable, ArrayableInterface
     }
 
     /**
-     * Returns the localization code, which is a combination of the language and the country.
-     *
-     * @param string $delimiter between language and country
-     *
-     * @return string
-     *
-     * @deprecated use getLocale instead
-     */
-    #[VirtualProperty]
-    #[Groups(['frontend', 'Default'])]
-    public function getLocalization($delimiter = '_')
-    {
-        @trigger_deprecation('sulu/sulu', '1.2', __METHOD__ . '() is deprecated and will be removed in 2.0. Use getLocale() instead.');
-
-        $localization = $this->getLanguage();
-        if (null != $this->getCountry()) {
-            $localization .= $delimiter . $this->getCountry();
-        }
-
-        return $localization;
-    }
-
-    /**
      * Returns the localization code, which is a combination of the language and the country in a specific format.
      *
      * @param string $format requested localization format

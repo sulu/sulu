@@ -14,7 +14,6 @@ namespace Sulu\Bundle\SecurityBundle\EventListener;
 use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\SecurityBundle\System\SystemStoreInterface;
 use Sulu\Component\HttpKernel\SuluKernel;
-use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
@@ -23,12 +22,8 @@ class SystemListener implements EventSubscriberInterface
 {
     public function __construct(
         private SystemStoreInterface $systemStore,
-        private ?RequestAnalyzerInterface $requestAnalyzer,
         private string $context
     ) {
-        if (null !== $requestAnalyzer) {
-            @trigger_deprecation('sulu/sulu', '2.4', 'The argument "%s" in class "%s" is deprecated and not longer required set `null` instead.', RequestAnalyzerInterface::class, __CLASS__);
-        }
     }
 
     public static function getSubscribedEvents(): array
