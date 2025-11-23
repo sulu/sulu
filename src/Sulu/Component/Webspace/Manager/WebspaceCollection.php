@@ -26,7 +26,7 @@ class WebspaceCollection implements \IteratorAggregate
     /**
      * All the portals in a specific sulu installation.
      *
-     * @var array<string, Portal>
+     * @var array<Portal>
      */
     private $portals;
 
@@ -185,7 +185,7 @@ class WebspaceCollection implements \IteratorAggregate
     /**
      * Returns all the portals of this collection.
      *
-     * @return array<string, Portal>
+     * @return array<Portal>
      */
     public function getPortals()
     {
@@ -195,7 +195,7 @@ class WebspaceCollection implements \IteratorAggregate
     /**
      * Sets the portals for this collection.
      *
-     * @param array<string, Portal> $portals
+     * @param array<Portal> $portals
      */
     public function setPortals($portals)
     {

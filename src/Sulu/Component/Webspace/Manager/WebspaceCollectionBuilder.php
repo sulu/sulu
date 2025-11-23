@@ -11,7 +11,6 @@
 
 namespace Sulu\Component\Webspace\Manager;
 
-use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Environment;
@@ -30,14 +29,14 @@ class WebspaceCollectionBuilder
     /**
      * The webspaces for the configured path.
      *
-     * @var Webspace[]
+     * @var array<string, Webspace>
      */
     private $webspaces;
 
     /**
      * The portals for the configured path.
      *
-     * @var Portal[]
+     * @var array<Portal>
      */
     private $portals;
 
@@ -49,12 +48,8 @@ class WebspaceCollectionBuilder
     private $portalInformations;
 
     /**
-     * @var TypedFormMetadata
-     */
-    private $typedFormMetadata;
-
-    /**
      * @param string $path
+     * @param array<string> $availableTemplates
      */
     public function __construct(
         private LoaderInterface $loader,
@@ -118,7 +113,7 @@ class WebspaceCollectionBuilder
         return $collection;
     }
 
-    private function buildPortals(Webspace $webspace)
+    private function buildPortals(Webspace $webspace): void
     {
         foreach ($webspace->getPortals() as $portal) {
             $this->portals[] = $portal;
@@ -127,14 +122,14 @@ class WebspaceCollectionBuilder
         }
     }
 
-    private function buildEnvironments(Portal $portal)
+    private function buildEnvironments(Portal $portal): void
     {
         foreach ($portal->getEnvironments() as $environment) {
             $this->buildEnvironment($portal, $environment);
         }
     }
 
-    private function buildEnvironment(Portal $portal, Environment $environment)
+    private function buildEnvironment(Portal $portal, Environment $environment): void
     {
         foreach ($environment->getUrls() as $url) {
             $urlAddress = $url->getUrl();
@@ -181,7 +176,7 @@ class WebspaceCollectionBuilder
         $urlAddress,
         $urlRedirect,
         Url $url
-    ) {
+    ): void {
         $this->portalInformations[$environment->getType()][$urlAddress] = new PortalInformation(
             RequestAnalyzerInterface::MATCH_TYPE_REDIRECT,
             $webspace,
@@ -202,11 +197,11 @@ class WebspaceCollectionBuilder
     private function buildUrlFullMatch(
         Portal $portal,
         Environment $environment,
-        $replacers,
+        array $replacers,
         $urlAddress,
         Localization $localization,
         Url $url
-    ) {
+    ): void {
         $urlResult = $this->generateUrlAddress($urlAddress, $replacers);
         $this->portalInformations[$environment->getType()][$urlResult] = new PortalInformation(
             RequestAnalyzerInterface::MATCH_TYPE_FULL,
@@ -229,7 +224,7 @@ class WebspaceCollectionBuilder
         Environment $environment,
         $urlAddress,
         Url $url
-    ) {
+    ): void {
         $replacers = [];
 
         $urlResult = $this->urlReplacer->cleanup(
@@ -268,7 +263,7 @@ class WebspaceCollectionBuilder
         Environment $environment,
         Url $url,
         $urlAddress
-    ) {
+    ): void {
         if ($url->getLanguage()) {
             $language = $url->getLanguage();
             $country = $url->getCountry();
@@ -319,12 +314,7 @@ class WebspaceCollectionBuilder
         );
     }
 
-    /**
-     * @param string $urlResult
-     *
-     * @return bool
-     */
-    private function validateUrlPartialMatch($urlResult, Environment $environment)
+    private function validateUrlPartialMatch(string $urlResult, Environment $environment): bool
     {
         return
             // only valid if there is no full match already
@@ -336,12 +326,9 @@ class WebspaceCollectionBuilder
     /**
      * Replaces the given values in the pattern.
      *
-     * @param string $pattern
-     * @param array $replacers
-     *
-     * @return string
+     * @param array<string> $replacers
      */
-    private function generateUrlAddress($pattern, $replacers)
+    private function generateUrlAddress(string $pattern, array $replacers): string
     {
         foreach ($replacers as $replacer => $value) {
             $pattern = $this->urlReplacer->replace($pattern, $replacer, $value);
