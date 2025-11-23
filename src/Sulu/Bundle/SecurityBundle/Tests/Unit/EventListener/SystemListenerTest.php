@@ -15,7 +15,6 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\SecurityBundle\System\SystemStoreInterface;
-use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 
 class SystemListenerTest extends TestCase
@@ -27,15 +26,9 @@ class SystemListenerTest extends TestCase
      */
     private $systemStore;
 
-    /**
-     * @var ObjectProphecy<RequestAnalyzerInterface>
-     */
-    private $requestAnalyzer;
-
     public function setUp(): void
     {
         $this->systemStore = $this->prophesize(SystemStoreInterface::class);
-        $this->requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
     }
 
     public function testSetAdminSystem(): void
@@ -49,6 +42,6 @@ class SystemListenerTest extends TestCase
 
     private function createSystemListener(string $context): SystemListener
     {
-        return new SystemListener($this->systemStore->reveal(), $this->requestAnalyzer->reveal(), $context);
+        return new SystemListener($this->systemStore->reveal(), $context);
     }
 }
