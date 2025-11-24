@@ -1170,6 +1170,7 @@ and some parameters have been removed)
 - `Sulu\Bundle\TagBundle\Tag\TagManager::findAll` (use repository instead)
 - `Sulu\Bundle\TagBundle\Tag\TagManagerInterface::resolveTagIds` (use the Repository)
 - `Sulu\Bundle\TagBundle\Tag\TagManagerInterface::resolveTagNames` (use the Repository)
+- `Sulu\Bundle\MediaBundle\Controller\AbstractMediaController::getTitleFromUpload` (use MediaManager function)
 
 Removed unused arguments:
 

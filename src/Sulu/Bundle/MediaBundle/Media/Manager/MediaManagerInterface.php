@@ -49,6 +49,8 @@ interface MediaManagerInterface
      * @param string $locale the locale which the object will be returned
      *
      * @return Media
+     *
+     * @throws MediaNotFoundException
      */
     public function getById($id, $locale);
 
@@ -58,6 +60,8 @@ interface MediaManagerInterface
      * @param int $id
      *
      * @return MediaInterface
+     *
+     * @throws MediaNotFoundException
      */
     public function getEntityById($id);
 
