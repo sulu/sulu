@@ -1186,6 +1186,7 @@ Removed kernel parameters:
 
 - All `sulu_*.class` parameters for services where removed (use compilerpasses to replace class of a service definition)
 - Parameter `%permissions%` was replaced in favor of `%sulu_security.permissions%`
+- The `%sulu.common_cache_dir%` dir was replace by `%kernel.share_dir%`
 
 Removed JavaScript files and methods:
 

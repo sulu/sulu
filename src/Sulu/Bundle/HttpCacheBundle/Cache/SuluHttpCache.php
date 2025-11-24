@@ -48,7 +48,7 @@ class SuluHttpCache extends HttpCache implements CacheInvalidation
     public function __construct(HttpKernelInterface $kernel, $cacheDir = null, ?bool $debug = null)
     {
         if (!$cacheDir && $kernel instanceof SuluKernel) {
-            $cacheDir = $kernel->getCommonCacheDir() . \DIRECTORY_SEPARATOR . 'http_cache';
+            $cacheDir = $kernel->getShareDir() . \DIRECTORY_SEPARATOR . 'http_cache';
         }
 
         parent::__construct($kernel, $cacheDir);

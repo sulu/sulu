@@ -216,12 +216,27 @@ abstract class SuluKernel extends Kernel
             . $this->environment;
     }
 
-    public function getCommonCacheDir(): string
+    public function getShareDir(): ?string
     {
+        // Remove this method in favor of Symfony own one when:
+        //  - minimum Symfony version is 7.4.
+        //  - cache dir is no longer context specific
+
+        if (null !== $dir = $_SERVER['APP_SHARE_DIR'] ?? null) {
+            if (false === $dir = \filter_var($dir, \FILTER_VALIDATE_BOOL, \FILTER_NULL_ON_FAILURE) ?? $dir) {
+                return null;
+            }
+
+            if (\is_string($dir)) {
+                return $this->getProjectDir() . \DIRECTORY_SEPARATOR
+                    . $dir . \DIRECTORY_SEPARATOR
+                    . $this->environment;
+            }
+        }
+
         return $this->getProjectDir() . \DIRECTORY_SEPARATOR
             . 'var' . \DIRECTORY_SEPARATOR
-            . 'cache' . \DIRECTORY_SEPARATOR
-            . 'common' . \DIRECTORY_SEPARATOR
+            . 'share' . \DIRECTORY_SEPARATOR
             . $this->environment;
     }
 
@@ -272,8 +287,9 @@ abstract class SuluKernel extends Kernel
             parent::getKernelParameters(),
             [
                 'sulu.context' => $this->context,
-                'sulu.common_cache_dir' => $this->getCommonCacheDir(),
-            ]
+                // remove when minimum Symfony Version is 7.4:
+                ...(($dir = $this->getShareDir()) ? ['kernel.share_dir' => \realpath($dir) ?: $dir] : []),
+            ],
         );
     }
 
