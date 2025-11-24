@@ -468,7 +468,7 @@ class UserManager implements UserManagerInterface
     /**
      * Returns the contact with the given id.
      *
-     * @param int|string|null $id
+     * @param int $id
      *
      * @return Contact
      *
