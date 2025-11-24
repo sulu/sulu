@@ -318,9 +318,7 @@ class UserControllerTest extends SuluTestCase
                 'email' => 'manager@test.com',
                 'password' => 'verysecurepassword',
                 'locale' => 'en',
-                'contact' => [
-                    'id' => $this->contact1->getId(),
-                ],
+                'contact' => $this->contact1->getId(),
             ]
         );
 
@@ -414,9 +412,7 @@ class UserControllerTest extends SuluTestCase
                 'email' => 'admin@test.com', //already used by admin
                 'password' => 'verysecurepassword',
                 'locale' => 'en',
-                'contact' => [
-                    'id' => $this->contact1->getId(),
-                ],
+                'contact' => $this->contact1->getId(),
                 'userRoles' => [
                     [
                         'role' => [
@@ -432,40 +428,6 @@ class UserControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(409, $this->client->getResponse());
         $this->assertStringContainsString('email', \strtolower($response->message));
         $this->assertEquals(1004, $response->code);
-    }
-
-    public function testPostWithContactEmail(): void
-    {
-        // no user-email passed, but a unique contact-email
-        // so the controller should use the contact-email as the user-email as well
-        $this->client->jsonRequest(
-            'POST',
-            '/api/users',
-            [
-                'username' => 'hikari',
-                'password' => 'verysecurepassword',
-                'locale' => 'en',
-                'contact' => [
-                    'id' => $this->contact1->getId(),
-                    'emails' => [['email' => 'contact.unique@test.com']],
-                ],
-                'userRoles' => [
-                    [
-                        'role' => [
-                            'id' => $this->role1->getId(),
-                        ],
-                        'locales' => '["de"]',
-                    ],
-                ],
-            ]
-        );
-        $response = \json_decode($this->client->getResponse()->getContent());
-
-        $this->assertHttpStatusCode(200, $this->client->getResponse());
-        $this->assertEquals('hikari', $response->username);
-        $this->assertEquals('contact.unique@test.com', $response->email);
-        $this->assertEquals($this->contact1->getId(), $response->contact->id);
-        $this->assertEquals('contact.unique@test.com', $response->contact->emails[0]->email);
     }
 
     public function testDelete(): void
@@ -498,9 +460,7 @@ class UserControllerTest extends SuluTestCase
                 'username' => 'manager',
                 'password' => 'verysecurepassword',
                 'locale' => 'en',
-                'contact' => [
-                    'id' => $this->contact1->getId(),
-                ],
+                'contact' => $this->contact1->getId(),
                 'userRoles' => [
                     [
                         'id' => $this->user1->getId(),
@@ -562,9 +522,7 @@ class UserControllerTest extends SuluTestCase
                 'username' => 'admin',
                 'password' => 'verysecurepassword',
                 'locale' => 'en',
-                'contact' => [
-                    'id' => $this->contact1->getId(),
-                ],
+                'contact' => $this->contact1->getId(),
             ]
         );
 
@@ -584,9 +542,7 @@ class UserControllerTest extends SuluTestCase
                 'username' => 'manager',
                 'password' => 'verysecurepassword',
                 'locale' => 'en',
-                'contact' => [
-                    'id' => $this->contact1->getId(),
-                ],
+                'contact' => $this->contact1->getId(),
             ]
         );
 
@@ -597,9 +553,7 @@ class UserControllerTest extends SuluTestCase
                 'username' => 'admin',
                 'password' => 'verysecurepassword',
                 'locale' => 'en',
-                'contact' => [
-                    'id' => $this->contact1->getId(),
-                ],
+                'contact' => $this->contact1->getId(),
             ]
         );
 
@@ -640,9 +594,7 @@ class UserControllerTest extends SuluTestCase
             'PATCH',
             '/api/users/' . $this->user1->getId(),
             [
-                'contact' => [
-                    'id' => $this->contact1->getId(),
-                ],
+                'contact' => $this->contact1->getId(),
             ]
         );
         $response = \json_decode($this->client->getResponse()->getContent());
@@ -668,9 +620,7 @@ class UserControllerTest extends SuluTestCase
                 'username' => 'manager',
                 'password' => 'verysecurepassword',
                 'locale' => 'en',
-                'contact' => [
-                    'id' => $this->contact1->getId(),
-                ],
+                'contact' => $this->contact1->getId(),
             ]
         );
 
@@ -697,9 +647,7 @@ class UserControllerTest extends SuluTestCase
             [
                 'password' => 'verysecurepassword',
                 'locale' => 'en',
-                'contact' => [
-                    'id' => $this->contact1->getId(),
-                ],
+                'contact' => $this->contact1->getId(),
                 'userRoles' => [
                     [
                         'role' => [
@@ -730,9 +678,7 @@ class UserControllerTest extends SuluTestCase
             [
                 'username' => 'manager',
                 'locale' => 'en',
-                'contact' => [
-                    'id' => $this->contact1->getId(),
-                ],
+                'contact' => $this->contact1->getId(),
                 'userRoles' => [
                     [
                         'role' => [
@@ -855,9 +801,7 @@ class UserControllerTest extends SuluTestCase
                 'username' => 'manager',
                 'password' => 'verysecurepassword',
                 'locale' => 'en',
-                'contact' => [
-                    'id' => $this->contact1->getId(),
-                ],
+                'contact' => $this->contact1->getId(),
                 'userRoles' => [
                     [
                         'id' => $this->user1->getId(),
@@ -895,9 +839,7 @@ class UserControllerTest extends SuluTestCase
                 'username' => 'manager',
                 'password' => 'verysecurepassword',
                 'locale' => 'en',
-                'contact' => [
-                    'id' => $this->contact1->getId(),
-                ],
+                'contact' => $this->contact1->getId(),
                 'userRoles' => [
                     [
                         'id' => $this->user1->getId(),
@@ -931,9 +873,7 @@ class UserControllerTest extends SuluTestCase
                 'username' => 'manager',
                 'password' => '',
                 'locale' => 'en',
-                'contact' => [
-                    'id' => $this->contact1->getId(),
-                ],
+                'contact' => $this->contact1->getId(),
                 'userRoles' => [
                     [
                         'role' => [
@@ -965,9 +905,7 @@ class UserControllerTest extends SuluTestCase
             [
                 'username' => 'manager',
                 'locale' => 'en',
-                'contact' => [
-                    'id' => $this->contact1->getId(),
-                ],
+                'contact' => $this->contact1->getId(),
             ]
         );
 
@@ -988,9 +926,7 @@ class UserControllerTest extends SuluTestCase
                 'username' => 'manager',
                 'password' => '',
                 'locale' => 'en',
-                'contact' => [
-                    'id' => $this->contact1->getId(),
-                ],
+                'contact' => $this->contact1->getId(),
                 'userRoles' => [
                     [
                         'id' => $this->user1->getId(),
