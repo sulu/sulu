@@ -62,8 +62,8 @@ class Kernel extends SuluTestKernel
         return parent::getCacheDir() . \ltrim('/' . $this->appContext);
     }
 
-    public function getCommonCacheDir(): string
+    public function getShareDir(): string
     {
-        return parent::getCommonCacheDir() . \ltrim('/' . $this->appContext);
+        return parent::getShareDir() . \ltrim('/' . $this->appContext);
     }
 }

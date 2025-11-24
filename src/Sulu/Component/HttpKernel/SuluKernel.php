@@ -216,16 +216,12 @@ abstract class SuluKernel extends Kernel
             . $this->environment;
     }
 
-    /**
-     * Remove this method when minimum Symfony version is 7.4.
-     */
     public function getShareDir(): ?string
     {
-        if (\method_exists(parent::class, 'getShareDir')) {
-            return parent::getShareDir();
-        }
+        // Remove this method in favor of Symfony own one when:
+        //  - minimum Symfony version is 7.4.
+        //  - cache dir is no longer context specific
 
-        // Remove this method when minimum Symfony version is 7.4.
         if (null !== $dir = $_SERVER['APP_SHARE_DIR'] ?? null) {
             if (false === $dir = \filter_var($dir, \FILTER_VALIDATE_BOOL, \FILTER_NULL_ON_FAILURE) ?? $dir) {
                 return null;
