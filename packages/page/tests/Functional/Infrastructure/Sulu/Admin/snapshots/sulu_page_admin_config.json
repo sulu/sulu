@@ -7,7 +7,6 @@
             "key": "blog",
             "localizations": [
                 {
-                    "localization": "de",
                     "locale": "de",
                     "language": "de",
                     "country": "",
@@ -17,7 +16,6 @@
                     "default": true
                 },
                 {
-                    "localization": "en",
                     "locale": "en",
                     "language": "en",
                     "country": "",
@@ -89,7 +87,6 @@
             "key": "sulu-io",
             "localizations": [
                 {
-                    "localization": "de",
                     "locale": "de",
                     "language": "de",
                     "country": "",
@@ -99,7 +96,6 @@
                     "default": true
                 },
                 {
-                    "localization": "en",
                     "locale": "en",
                     "language": "en",
                     "country": "",
@@ -171,7 +167,6 @@
             "key": "sulu-test-secure",
             "localizations": [
                 {
-                    "localization": "en",
                     "locale": "en",
                     "language": "en",
                     "country": "",
@@ -181,7 +176,6 @@
                     "default": true
                 },
                 {
-                    "localization": "de",
                     "locale": "de",
                     "language": "de",
                     "country": "",

@@ -56,10 +56,12 @@ class AdminControllerTest extends SuluTestCase
         $this->assertIsObject($response->sulu_admin->resources);
         $this->assertTrue(\property_exists($response, 'sulu_preview'));
 
-        $this->assertSame('en', $response->sulu_admin->localizations[0]->localization);
-        $this->assertSame('en_us', $response->sulu_admin->localizations[1]->localization);
-        $this->assertSame('de', $response->sulu_admin->localizations[2]->localization);
-        $this->assertSame('de_at', $response->sulu_admin->localizations[3]->localization);
+        /** @var array<object{locale: string}> $localizations */
+        $localizations = $response->sulu_admin->localizations;
+        $this->assertSame('en', $localizations[0]->locale);
+        $this->assertSame('en_us', $localizations[1]->locale);
+        $this->assertSame('de', $localizations[2]->locale);
+        $this->assertSame('de_at', $localizations[3]->locale);
     }
 
     public function testGetConfigWithFallbackNonExistUserLocale(): void
@@ -85,10 +87,12 @@ class AdminControllerTest extends SuluTestCase
         $this->assertIsObject($response->sulu_admin->resources);
         $this->assertTrue(\property_exists($response, 'sulu_preview'));
 
-        $this->assertSame('en', $response->sulu_admin->localizations[0]->localization);
-        $this->assertSame('en_us', $response->sulu_admin->localizations[1]->localization);
-        $this->assertSame('de', $response->sulu_admin->localizations[2]->localization);
-        $this->assertSame('de_at', $response->sulu_admin->localizations[3]->localization);
+        /** @var array<object{locale: string}> $localizations */
+        $localizations = $response->sulu_admin->localizations;
+        $this->assertSame('en', $localizations[0]->locale);
+        $this->assertSame('en_us', $localizations[1]->locale);
+        $this->assertSame('de', $localizations[2]->locale);
+        $this->assertSame('de_at', $localizations[3]->locale);
     }
 
     public function testTemplateConfig(): void

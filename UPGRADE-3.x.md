@@ -1595,3 +1595,4 @@ Affected classes / interfaces:
 - `Sulu\Bundle\TagBundle\Search\TagsConverter::convert` (added `?Document`)
 - `Sulu\Bundle\WebsiteBundle\Cache\CacheClearer::clear` (added `?array $tags`)
 - `Sulu\Bundle\WebsiteBundle\Cache\CacheClearerInterface::clear` (added `?array $tags`)
+- `Sulu\Bundle\SecurityBundle\EventListener\SystemListener::__construct` (removed `RequestAnalyserInterface $requestAnalyser`)
