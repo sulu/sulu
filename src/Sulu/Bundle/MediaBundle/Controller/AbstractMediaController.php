@@ -30,34 +30,10 @@ abstract class AbstractMediaController extends AbstractRestController
         $data = $request->request->all();
         $data['locale'] = $request->get('locale', $fallback ? $this->getLocale($request) : null);
         $data['collection'] = $request->get('collection');
-
-        // @deprecated Just prefill from request here and let the MediaManager set the default title
-        $data['title'] = $request->get('title', $fallback ? $this->getTitleFromUpload($request) : null);
+        $data['title'] = $request->get('title');
         $data['formats'] = $request->get('formats', []);
 
         return $data;
-    }
-
-    /**
-     * @deprecated If you want to customize this please change the MediaManager::getTitleFromUpload
-     *
-     * @param Request $request
-     *
-     * @return string|null
-     */
-    protected function getTitleFromUpload($request)
-    {
-        $uploadedFile = $this->getUploadedFile($request, 'fileVersion');
-
-        if ($uploadedFile) {
-            if (false === \strpos($uploadedFile->getClientOriginalName(), '.')) {
-                return $uploadedFile->getClientOriginalName();
-            }
-
-            return \implode('.', \explode('.', $uploadedFile->getClientOriginalName(), -1));
-        }
-
-        return null;
     }
 
     /**
