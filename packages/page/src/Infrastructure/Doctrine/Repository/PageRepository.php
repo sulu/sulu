@@ -222,7 +222,7 @@ class PageRepository implements PageRepositoryInterface
         $page = $this->getOneBy($filters);
 
         $parent = $page->getParent();
-        $siblings = $this->entityRepository->getChildren($parent);
+        $siblings = $this->entityRepository->getChildren($parent, true);
         $currentPosition = \array_search($page, $siblings);
 
         if (false === $currentPosition) {
