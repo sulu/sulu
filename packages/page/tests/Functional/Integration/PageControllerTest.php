@@ -999,4 +999,104 @@ class PageControllerTest extends SuluTestCase
         $this->assertNull($pageRepository->findOneBy(['uuid' => $childUuid]));
         $this->assertNull($pageRepository->findOneBy(['uuid' => $grandchildUuid]));
     }
+
+    public function testOrderingPagesWhenSiblingHasChildren(): void
+    {
+        self::purgeDatabase();
+
+        $homepage = $this->createHomepage('homepage-order-with-children-uuid', 'sulu-io');
+
+        $pageWithChildren = $this->createPage($homepage->getId(), [
+            'title' => 'Page with Children',
+            'template' => 'default',
+            'url' => '/page-with-children',
+        ]);
+
+        $this->createPage($pageWithChildren->getId(), [
+            'title' => 'Child 1',
+            'template' => 'default',
+            'url' => '/page-with-children/child-1',
+        ]);
+
+        $this->createPage($pageWithChildren->getId(), [
+            'title' => 'Child 2',
+            'template' => 'default',
+            'url' => '/page-with-children/child-2',
+        ]);
+
+        $this->createPage($pageWithChildren->getId(), [
+            'title' => 'Child 3',
+            'template' => 'default',
+            'url' => '/page-with-children/child-3',
+        ]);
+
+        $this->createPage($homepage->getId(), [
+            'title' => 'Page 2',
+            'template' => 'default',
+            'url' => '/page-2',
+        ]);
+
+        $this->createPage($homepage->getId(), [
+            'title' => 'Page 3',
+            'template' => 'default',
+            'url' => '/page-3',
+        ]);
+
+        $this->createPage($homepage->getId(), [
+            'title' => 'Page 4',
+            'template' => 'default',
+            'url' => '/page-4',
+        ]);
+
+        self::ensureKernelShutdown();
+
+        $this->client->request(
+            'GET',
+            \sprintf('/admin/api/pages?exclude-ghosts=false&exclude-shadows=false&locale=en&webspace=sulu-io&parentId=%s&fields=title,id&flat=true', $homepage->getId())
+        );
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(200, $response);
+        /** @var array{_embedded: array{pages: array<int, array{title: string, id: string}>}} $content */
+        $content = \json_decode((string) $response->getContent(), true);
+        $pages = $content['_embedded']['pages'];
+
+        $this->assertCount(4, $pages, 'Should have 4 top-level pages');
+        $this->assertEquals('Page with Children', $pages[0]['title'], 'Page with children should be at index 0');
+        $this->assertEquals('Page 2', $pages[1]['title'], 'Page 2 should be at index 1');
+        $this->assertEquals('Page 3', $pages[2]['title'], 'Page 3 should be at index 2');
+        $this->assertEquals('Page 4', $pages[3]['title'], 'Page 4 should be at index 3');
+
+        $page2Id = $pages[1]['id'];
+
+        self::ensureKernelShutdown();
+
+        $this->client->request(
+            'POST',
+            \sprintf('/admin/api/pages/%s?webspace=sulu-io&locale=en&action=order', $page2Id),
+            [],
+            [],
+            [],
+            \json_encode(['position' => 4]) ?: null
+        );
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(200, $response);
+
+        self::ensureKernelShutdown();
+
+        $this->client->request(
+            'GET',
+            \sprintf('/admin/api/pages?exclude-ghosts=false&exclude-shadows=false&locale=en&webspace=sulu-io&parentId=%s&fields=title,id&flat=true', $homepage->getId())
+        );
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(200, $response);
+        /** @var array{_embedded: array{pages: array<int, array{title: string, id: string}>}} $content */
+        $content = \json_decode((string) $response->getContent(), true);
+        $pagesAfter = $content['_embedded']['pages'];
+
+        $this->assertCount(4, $pagesAfter, 'Should still have 4 top-level pages');
+        $this->assertEquals('Page with Children', $pagesAfter[0]['title'], 'After moving Page 2 past page with children: Page with Children should remain at index 0');
+        $this->assertEquals('Page 3', $pagesAfter[1]['title'], 'After moving Page 2 to position 4: Page 3 should be at index 1');
+        $this->assertEquals('Page 4', $pagesAfter[2]['title'], 'After moving Page 2 to position 4: Page 4 should be at index 2');
+        $this->assertEquals('Page 2', $pagesAfter[3]['title'], 'After moving Page 2 to position 4: Page 2 should be at index 3 (position 4)');
+    }
 }
