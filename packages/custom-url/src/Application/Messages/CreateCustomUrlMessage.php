@@ -15,10 +15,7 @@ use Webmozart\Assert\Assert;
 
 class CreateCustomUrlMessage
 {
-    /**
-     * @var string|null
-     */
-    private $uuid;
+    private ?string $uuid = null;
 
     /**
      * @param array<string, mixed> $data

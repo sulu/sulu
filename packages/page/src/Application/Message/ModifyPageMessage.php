@@ -23,12 +23,12 @@ class ModifyPageMessage
      *     uuid?: string
      * }
      */
-    private $identifier;
+    private array $identifier;
 
     /**
      * @var mixed[]
      */
-    private $data;
+    private array $data;
 
     /**
      * @param array{

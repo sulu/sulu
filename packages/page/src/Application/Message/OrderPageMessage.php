@@ -30,7 +30,7 @@ class OrderPageMessage
      *     uuid?: string
      * }
      */
-    public function getIdentifier()
+    public function getIdentifier(): array
     {
         return $this->identifier;
     }
