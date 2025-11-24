@@ -149,7 +149,6 @@ class UserManager implements UserManagerInterface
                 }
                 /** @var UserInterface $user */
                 $user = $this->userRepository->createNew();
-                $this->processEmail($user, $email, $contact);
             }
 
             // check if username is already in database and the current user is not the user with this username
@@ -530,36 +529,17 @@ class UserManager implements UserManagerInterface
     /**
      * Processes the email and adds it to the user.
      *
-     * @param string $email
-     * @param null|array $contact
-     *
      * @throws EmailNotUniqueException
      */
-    private function processEmail(UserInterface $user, $email, $contact = null)
+    private function processEmail(UserInterface $user, string $email): void
     {
-        if ($contact) {
-            // if no email passed try to use the contact's first email
-            if (null === $email
-                && \array_key_exists('emails', $contact) && \count($contact['emails']) > 0
-                && $this->isEmailUnique($contact['emails'][0]['email'])
-            ) {
-                $email = $contact['emails'][0]['email'];
-            }
-            if (null !== $email) {
-                if (!$this->isEmailUnique($email)) {
-                    throw new EmailNotUniqueException($email);
-                }
-                $user->setEmail($email);
-            }
-        } else {
-            $currentEmail = $user->getEmail() ?? '';
-            $hasEmailChanged = $email && 0 !== \strcasecmp($email, $currentEmail);
+        $currentEmail = $user->getEmail() ?? '';
+        $hasEmailChanged = $email && 0 !== \strcasecmp($email, $currentEmail);
 
-            if ($hasEmailChanged && !$this->isEmailUnique($email)) {
-                throw new EmailNotUniqueException($email);
-            }
-            $user->setEmail($email);
+        if ($hasEmailChanged && !$this->isEmailUnique($email)) {
+            throw new EmailNotUniqueException($email);
         }
+        $user->setEmail($email);
     }
 
     /**
