@@ -104,9 +104,11 @@ class ArticleDimensionContent implements ArticleDimensionContentInterface
         return $this->customizeWebspaceSettings;
     }
 
-    public function setCustomizeWebspaceSettings(bool $customizeWebspaceSettings): void
+    public function setCustomizeWebspaceSettings(bool $customizeWebspaceSettings): static
     {
         $this->customizeWebspaceSettings = $customizeWebspaceSettings;
+
+        return $this;
     }
 
     /**
@@ -123,7 +125,7 @@ class ArticleDimensionContent implements ArticleDimensionContentInterface
     /**
      * @param string[] $additionalWebspaces
      */
-    public function setAdditionalWebspaces(array $additionalWebspaces): self
+    public function setAdditionalWebspaces(array $additionalWebspaces): static
     {
         $existingAdditionalWebspaces = [];
         foreach ($this->additionalWebspaces as $existingAdditionalWebspace) {
@@ -144,7 +146,7 @@ class ArticleDimensionContent implements ArticleDimensionContentInterface
         return $this;
     }
 
-    public function addAdditionalWebspace(string $additionalWebspace): self
+    public function addAdditionalWebspace(string $additionalWebspace): static
     {
         if (!$this->hasAdditionalWebspace($additionalWebspace)) {
             $this->additionalWebspaces->add($this->createAdditionalWebspace($additionalWebspace));

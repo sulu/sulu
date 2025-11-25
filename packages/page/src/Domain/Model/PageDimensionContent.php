@@ -115,7 +115,7 @@ class PageDimensionContent implements PageDimensionContentInterface
         ));
     }
 
-    public function setNavigationContexts(array $navigationContexts): self
+    public function setNavigationContexts(array $navigationContexts): static
     {
         $existingContexts = [];
         foreach ($this->navigationContexts as $existingPageNavigationContext) {
@@ -136,7 +136,7 @@ class PageDimensionContent implements PageDimensionContentInterface
         return $this;
     }
 
-    public function addNavigationContext(string $navigationContext): self
+    public function addNavigationContext(string $navigationContext): static
     {
         if (!$this->hasNavigationContext($navigationContext)) {
             $this->navigationContexts->add($this->createNavigationContext($navigationContext));
@@ -153,7 +153,7 @@ class PageDimensionContent implements PageDimensionContentInterface
         );
     }
 
-    public function removeNavigationContext(string $navigationContext): self
+    public function removeNavigationContext(string $navigationContext): static
     {
         foreach ($this->navigationContexts as $pageDimensionNavigationContext) {
             if ($pageDimensionNavigationContext->getNavigationContext() === $navigationContext) {

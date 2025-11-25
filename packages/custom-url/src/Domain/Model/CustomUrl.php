@@ -68,9 +68,11 @@ class CustomUrl implements AuditableInterface, CustomUrlInterface
         return $this->uuid;
     }
 
-    public function setId(string $uuid): void
+    public function setId(string $uuid): static
     {
         $this->uuid = $uuid;
+
+        return $this;
     }
 
     public function getUuid(): string
@@ -78,9 +80,11 @@ class CustomUrl implements AuditableInterface, CustomUrlInterface
         return $this->uuid;
     }
 
-    public function setUuid(string $uuid): void
+    public function setUuid(string $uuid): static
     {
         $this->uuid = $uuid;
+
+        return $this;
     }
 
     public function getTitle(): string
@@ -88,14 +92,18 @@ class CustomUrl implements AuditableInterface, CustomUrlInterface
         return $this->title;
     }
 
-    public function setTitle(string $title): void
+    public function setTitle(string $title): static
     {
         $this->title = $title;
+
+        return $this;
     }
 
-    public function setPublished(bool $published): void
+    public function setPublished(bool $published): static
     {
         $this->published = $published;
+
+        return $this;
     }
 
     public function isPublished(): bool
@@ -103,9 +111,11 @@ class CustomUrl implements AuditableInterface, CustomUrlInterface
         return $this->published;
     }
 
-    public function setWebspace(string $webspace): void
+    public function setWebspace(string $webspace): static
     {
         $this->webspace = $webspace;
+
+        return $this;
     }
 
     public function getWebspace(): string
@@ -113,9 +123,11 @@ class CustomUrl implements AuditableInterface, CustomUrlInterface
         return $this->webspace;
     }
 
-    public function setBaseDomain(string $baseDomain): void
+    public function setBaseDomain(string $baseDomain): static
     {
         $this->baseDomain = $baseDomain;
+
+        return $this;
     }
 
     public function getBaseDomain(): string
@@ -123,9 +135,11 @@ class CustomUrl implements AuditableInterface, CustomUrlInterface
         return $this->baseDomain;
     }
 
-    public function setDomainParts(array $domainParts): void
+    public function setDomainParts(array $domainParts): static
     {
         $this->domainParts = $domainParts;
+
+        return $this;
     }
 
     public function generateRoutes(): void
@@ -138,9 +152,11 @@ class CustomUrl implements AuditableInterface, CustomUrlInterface
         return $this->domainParts;
     }
 
-    public function setTargetDocument(?string $targetDocument): void
+    public function setTargetDocument(?string $targetDocument): static
     {
         $this->targetDocument = $targetDocument;
+
+        return $this;
     }
 
     public function getTargetDocument(): ?string
@@ -153,9 +169,11 @@ class CustomUrl implements AuditableInterface, CustomUrlInterface
         return $this->targetLocale;
     }
 
-    public function setTargetLocale(string $targetLocale): void
+    public function setTargetLocale(string $targetLocale): static
     {
         $this->targetLocale = $targetLocale;
+
+        return $this;
     }
 
     public function isCanonical(): bool
@@ -163,9 +181,11 @@ class CustomUrl implements AuditableInterface, CustomUrlInterface
         return $this->canonical;
     }
 
-    public function setCanonical(bool $canonical): void
+    public function setCanonical(bool $canonical): static
     {
         $this->canonical = $canonical;
+
+        return $this;
     }
 
     public function isRedirect(): bool
@@ -173,9 +193,11 @@ class CustomUrl implements AuditableInterface, CustomUrlInterface
         return $this->redirect;
     }
 
-    public function setRedirect(bool $redirect): void
+    public function setRedirect(bool $redirect): static
     {
         $this->redirect = $redirect;
+
+        return $this;
     }
 
     public function isNoFollow(): bool
@@ -183,9 +205,11 @@ class CustomUrl implements AuditableInterface, CustomUrlInterface
         return $this->noFollow;
     }
 
-    public function setNoFollow(bool $noFollow): void
+    public function setNoFollow(bool $noFollow): static
     {
         $this->noFollow = $noFollow;
+
+        return $this;
     }
 
     public function isNoIndex(): bool
@@ -193,9 +217,11 @@ class CustomUrl implements AuditableInterface, CustomUrlInterface
         return $this->noIndex;
     }
 
-    public function setNoIndex(bool $noIndex): void
+    public function setNoIndex(bool $noIndex): static
     {
         $this->noIndex = $noIndex;
+
+        return $this;
     }
 
     public function getRoutes(): iterable
@@ -203,9 +229,11 @@ class CustomUrl implements AuditableInterface, CustomUrlInterface
         return $this->routes;
     }
 
-    public function addRoute(CustomUrlRouteInterface $route): void
+    public function addRoute(CustomUrlRouteInterface $route): static
     {
         $this->routes->add($route);
+
+        return $this;
     }
 
     public function getCurrentRoute(): ?CustomUrlRouteInterface

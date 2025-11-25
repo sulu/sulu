@@ -33,30 +33,30 @@ interface PageInterface extends AuditableInterface, ContentRichEntityInterface, 
 
     public function getWebspaceKey(): string;
 
-    public function setWebspaceKey(string $webspaceKey): self;
+    public function setWebspaceKey(string $webspaceKey): static;
 
     public function getLft(): int;
 
-    public function setLft(int $lft): self;
+    public function setLft(int $lft): static;
 
     public function getRgt(): int;
 
-    public function setRgt(int $rgt): self;
+    public function setRgt(int $rgt): static;
 
     public function getDepth(): int;
 
-    public function setDepth(int $depth): self;
+    public function setDepth(int $depth): static;
 
     public function getParent(): ?self;
 
-    public function setParent(self $parent): self;
+    public function setParent(self $parent): static;
 
     /**
      * @return Collection<int, PageInterface>
      */
     public function getChildren(): Collection;
 
-    public function addChild(self $child): self;
+    public function addChild(self $child): static;
 
-    public function removeChild(self $child): self;
+    public function removeChild(self $child): static;
 }

@@ -92,7 +92,8 @@ class CreateCustomUrlMessageHandlerTest extends TestCase
 
         // Setup entity expectations
         $customUrl->setWebspace('sulu_io')
-            ->shouldBeCalledOnce();
+            ->shouldBeCalledOnce()
+            ->willReturn($customUrl->reveal());
 
         // Setup event collector expectations
         $this->domainEventCollector->collect(Argument::that(function($event) use ($customUrl, $data) {
@@ -141,7 +142,8 @@ class CreateCustomUrlMessageHandlerTest extends TestCase
             ->shouldBeCalledOnce();
 
         $customUrl->setWebspace('sulu_io')
-            ->shouldBeCalledOnce();
+            ->shouldBeCalledOnce()
+            ->willReturn($customUrl->reveal());
 
         // Should NOT call add or collect event
         $this->customUrlRepository->add(Argument::any())
@@ -193,7 +195,8 @@ class CreateCustomUrlMessageHandlerTest extends TestCase
             ->shouldBeCalledOnce();
 
         $customUrl->setWebspace('sulu_io')
-            ->shouldBeCalledOnce();
+            ->shouldBeCalledOnce()
+            ->willReturn($customUrl->reveal());
 
         $this->domainEventCollector->collect(Argument::type(CustomUrlCreatedEvent::class))
             ->shouldBeCalledOnce();

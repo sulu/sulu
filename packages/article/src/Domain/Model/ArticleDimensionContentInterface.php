@@ -32,7 +32,7 @@ interface ArticleDimensionContentInterface extends DimensionContentInterface, Ex
 
     public function getCustomizeWebspaceSettings(): bool;
 
-    public function setCustomizeWebspaceSettings(bool $customizeWebspaceSettings): void;
+    public function setCustomizeWebspaceSettings(bool $customizeWebspaceSettings): static;
 
     /**
      * @return string[]
@@ -42,9 +42,9 @@ interface ArticleDimensionContentInterface extends DimensionContentInterface, Ex
     /**
      * @param string[] $additionalWebspaces
      */
-    public function setAdditionalWebspaces(array $additionalWebspaces): self;
+    public function setAdditionalWebspaces(array $additionalWebspaces): static;
 
-    public function addAdditionalWebspace(string $additionalWebspace): self;
+    public function addAdditionalWebspace(string $additionalWebspace): static;
 
     public function hasAdditionalWebspace(string $additionalWebspace): bool;
 }
