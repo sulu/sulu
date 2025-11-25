@@ -15,8 +15,6 @@ use Sulu\Component\Persistence\Model\AuditableInterface;
 use Sulu\Content\Domain\Model\ContentRichEntityInterface;
 
 /**
- * @experimental
- *
  * @extends ContentRichEntityInterface<ArticleDimensionContentInterface>
  */
 interface ArticleInterface extends AuditableInterface, ContentRichEntityInterface

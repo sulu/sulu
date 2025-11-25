@@ -28,8 +28,6 @@ use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
 
 /**
- * @experimental
- *
  * @codeCoverageIgnore
  */
 final class SuluSearchBundle extends AbstractBundle

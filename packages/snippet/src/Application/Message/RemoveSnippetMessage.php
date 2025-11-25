@@ -11,9 +11,6 @@
 
 namespace Sulu\Snippet\Application\Message;
 
-/**
- * @experimental
- */
 class RemoveSnippetMessage
 {
     public function __construct(

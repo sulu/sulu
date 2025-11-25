@@ -13,9 +13,6 @@ namespace Sulu\Snippet\Application\Mapper;
 
 use Sulu\Snippet\Domain\Model\SnippetInterface;
 
-/**
- * @experimental
- */
 interface SnippetMapperInterface
 {
     /**

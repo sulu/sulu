@@ -17,8 +17,6 @@ use Sulu\Component\Security\Authorization\AccessControl\SecuredEntityInterface;
 use Sulu\Content\Domain\Model\ContentRichEntityInterface;
 
 /**
- * @experimental
- *
  * @extends ContentRichEntityInterface<PageDimensionContentInterface>
  */
 interface PageInterface extends AuditableInterface, ContentRichEntityInterface, SecuredEntityInterface

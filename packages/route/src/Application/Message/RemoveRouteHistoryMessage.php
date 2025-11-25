@@ -12,8 +12,6 @@
 namespace Sulu\Route\Application\Message;
 
 /**
- * @experimental
- *
  * @internal This class should not be instantiated by a project.
  *            Create your own Message and Handler instead.
  */

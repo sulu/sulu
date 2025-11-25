@@ -20,9 +20,6 @@ use Sulu\Content\Domain\Model\TaxonomyTrait;
 use Sulu\Content\Domain\Model\TemplateTrait;
 use Sulu\Content\Domain\Model\WorkflowTrait;
 
-/**
- * @experimental
- */
 class SnippetDimensionContent implements SnippetDimensionContentInterface
 {
     use DimensionContentTrait;

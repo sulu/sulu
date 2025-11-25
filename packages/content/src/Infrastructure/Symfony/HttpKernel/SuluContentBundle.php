@@ -29,8 +29,6 @@ use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
 
 /**
- * @experimental
- *
  * @codeCoverageIgnore
  */
 final class SuluContentBundle extends AbstractBundle

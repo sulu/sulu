@@ -21,8 +21,6 @@ use Sulu\Bundle\TrashBundle\Application\TrashManager\TrashManagerInterface;
 use Sulu\Content\Domain\Model\DimensionContentCollection;
 
 /**
- * @experimental
- *
  * @internal This class should not be instantiated by a project.
  *           Create your own Message and Handler instead.
  */

@@ -34,8 +34,6 @@ use Sulu\Page\Domain\Model\PageInterface;
  * @internal This class is internal and should not be extended or overwritten.
  *           You can create a separate admin class in your project and get the
  *           respective object from the collection to extend a navigation item or a view
- *
- * @experimental
  */
 class PageAdmin extends Admin
 {

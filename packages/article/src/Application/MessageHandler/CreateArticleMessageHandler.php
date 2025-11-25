@@ -21,8 +21,6 @@ use Sulu\Bundle\SecurityBundle\Entity\User;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
- * @experimental
- *
  * @internal This class should not be instantiated by a project.
  *           Create a ArticleMapper to extend this Handler.
  */

@@ -13,9 +13,6 @@ namespace Sulu\Article\Application\Mapper;
 
 use Sulu\Article\Domain\Model\ArticleInterface;
 
-/**
- * @experimental
- */
 interface ArticleMapperInterface
 {
     /**

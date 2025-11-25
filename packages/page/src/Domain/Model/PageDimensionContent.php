@@ -29,9 +29,6 @@ use Sulu\Content\Domain\Model\TemplateTrait;
 use Sulu\Content\Domain\Model\WorkflowTrait;
 use Sulu\Route\Domain\Model\Route;
 
-/**
- * @experimental
- */
 class PageDimensionContent implements PageDimensionContentInterface
 {
     use AuditableTrait;

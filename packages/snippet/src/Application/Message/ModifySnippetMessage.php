@@ -13,9 +13,6 @@ namespace Sulu\Snippet\Application\Message;
 
 use Webmozart\Assert\Assert;
 
-/**
- * @experimental
- */
 class ModifySnippetMessage
 {
     /**

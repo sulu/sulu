@@ -45,8 +45,6 @@ use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
 use Symfony\Component\String\Slugger\AsciiSlugger;
 
 /**
- * @experimental
- *
  * @codeCoverageIgnore
  */
 final class SuluRouteBundle extends AbstractBundle
