@@ -131,7 +131,7 @@ class TargetGroup implements TargetGroupInterface
     #[SerializedName('webspaceKeys')]
     public function getWebspaceKeys(): array
     {
-        // @phpstan-ignore isset.initializedProperty (property may be uninitialized when loaded from trash)
+        // @phpstan-ignore-next-line
         if (!isset($this->webspaces)) {
             return [];
         }
