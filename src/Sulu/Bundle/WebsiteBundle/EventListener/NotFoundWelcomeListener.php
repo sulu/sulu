@@ -40,8 +40,6 @@ final readonly class NotFoundWelcomeListener
 
     /**
      * Check if the fixtures are loaded by checking if there are collection types in the database.
-     *
-     * @return bool
      */
     public function isFixturesLoaded(): bool
     {

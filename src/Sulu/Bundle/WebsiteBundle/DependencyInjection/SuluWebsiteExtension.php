@@ -128,10 +128,6 @@ class SuluWebsiteExtension extends Extension implements PrependExtensionInterfac
         $loader->load('sitemap.php');
         $loader->load('command.php');
 
-        if ('dev' === $container->getParameter('kernel.environment')) {
-            $loader->load('services_dev.xml');
-        }
-
         $bundles = $container->getParameter('kernel.bundles');
         $analyticsEnabled = $config['analytics']['enabled'];
 
