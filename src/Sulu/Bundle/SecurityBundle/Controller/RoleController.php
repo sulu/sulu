@@ -156,9 +156,9 @@ class RoleController extends AbstractRestController implements SecuredController
      */
     public function postAction(Request $request)
     {
-        $name = $request->request->get('name');
-        $key = $request->request->get('key');
-        $system = $request->request->get('system');
+        $name = $request->request->getString('name');
+        $key = $request->request->getString('key') ?: null;
+        $system = $request->request->getString('system');
 
         try {
             if (null === $name) {
@@ -171,7 +171,7 @@ class RoleController extends AbstractRestController implements SecuredController
             /** @var RoleInterface $role */
             $role = $this->roleRepository->createNew();
             $role->setName($name);
-            $role->setKey(\is_string($key) ? $key : null);
+            $role->setKey($key);
             $role->setSystem($system);
 
             $permissions = $request->request->all('permissions');
@@ -212,9 +212,9 @@ class RoleController extends AbstractRestController implements SecuredController
         /** @var RoleInterface $role */
         $role = $this->roleRepository->findRoleById($id);
 
-        $name = $request->request->get('name');
-        $key = $request->request->get('key');
-        $system = $request->request->get('system');
+        $name = $request->request->getString('name');
+        $key = $request->request->getString('key') ?: null;
+        $system = $request->request->getString('system');
 
         try {
             if (!$role) {
