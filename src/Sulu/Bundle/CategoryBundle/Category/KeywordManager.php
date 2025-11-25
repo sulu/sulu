@@ -153,6 +153,7 @@ class KeywordManager implements KeywordManagerInterface
             // dispatch event only if keyword was flushed and therefore has an id
             if (!$keyword->isNew()) {
                 $this->domainEventCollector->collect(new CategoryKeywordRemovedEvent(
+                    $category->getId(),
                     $category,
                     $keyword->getLocale(),
                     $keyword->getId(),

@@ -187,6 +187,7 @@ class KeywordManagerTest extends TestCase
         $categoryTranslation->setChanged(Argument::any())->shouldBeCalled();
 
         $category = $this->prophesize(CategoryInterface::class);
+        $category->getId()->willReturn(5678);
         $category->findTranslationByLocale($locale)->willReturn($categoryTranslation->reveal());
         $category->setChanged(Argument::any())->shouldBeCalled();
 

@@ -19,6 +19,7 @@ use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslationInterface;
 class CategoryKeywordRemovedEvent extends DomainEvent
 {
     public function __construct(
+        private int $categoryId,
         private CategoryInterface $category,
         private string $locale,
         private int $keywordId,
@@ -52,7 +53,7 @@ class CategoryKeywordRemovedEvent extends DomainEvent
 
     public function getResourceId(): string
     {
-        return (string) $this->category->getId();
+        return (string) $this->categoryId;
     }
 
     public function getResourceLocale(): string
