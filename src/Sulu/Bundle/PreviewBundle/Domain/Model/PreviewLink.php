@@ -13,20 +13,11 @@ namespace Sulu\Bundle\PreviewBundle\Domain\Model;
 
 class PreviewLink implements PreviewLinkInterface
 {
-    /**
-     * @var int
-     */
-    private $id;
+    private int $id;
 
-    /**
-     * @var int
-     */
-    private $visitCount = 0;
+    private int $visitCount = 0;
 
-    /**
-     * @var \DateTimeImmutable|null
-     */
-    private $lastVisit;
+    private ?\DateTimeImmutable $lastVisit = null;
 
     /**
      * @param array<string, mixed> $options
@@ -75,7 +66,7 @@ class PreviewLink implements PreviewLinkInterface
         return $this->visitCount;
     }
 
-    public function increaseVisitCount(): PreviewLinkInterface
+    public function increaseVisitCount(): static
     {
         ++$this->visitCount;
         $this->lastVisit = new \DateTimeImmutable();
