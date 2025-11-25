@@ -16,42 +16,23 @@ namespace Sulu\Bundle\AudienceTargetingBundle\Entity;
  */
 interface TargetGroupConditionInterface
 {
-    /**
-     * @return int
-     */
-    public function getId();
+    public function getId(): int;
 
-    /**
-     * @return string
-     */
-    public function getType();
+    public function getType(): string;
 
-    /**
-     * @param string $type
-     *
-     * @return $this
-     */
-    public function setType($type);
+    public function setType(string $type): static;
 
     /**
      * @return mixed[]
      */
-    public function getCondition();
+    public function getCondition(): array;
 
     /**
      * @param mixed[] $condition
-     *
-     * @return $this
      */
-    public function setCondition($condition);
+    public function setCondition(array $condition): static;
 
-    /**
-     * @return TargetGroupRuleInterface
-     */
-    public function getRule();
+    public function getRule(): TargetGroupRuleInterface;
 
-    /**
-     * @return $this
-     */
-    public function setRule(TargetGroupRuleInterface $rule);
+    public function setRule(TargetGroupRuleInterface $rule): static;
 }

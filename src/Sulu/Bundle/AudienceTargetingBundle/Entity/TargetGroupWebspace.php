@@ -16,44 +16,35 @@ namespace Sulu\Bundle\AudienceTargetingBundle\Entity;
  */
 class TargetGroupWebspace implements TargetGroupWebspaceInterface
 {
-    /**
-     * @var int
-     */
-    private $id;
+    private int $id;
 
-    /**
-     * @var string
-     */
-    private $webspaceKey;
+    private string $webspaceKey;
 
-    /**
-     * @var TargetGroupInterface
-     */
-    private $targetGroup;
+    private TargetGroupInterface $targetGroup;
 
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function getWebspaceKey()
+    public function getWebspaceKey(): string
     {
         return $this->webspaceKey;
     }
 
-    public function setWebspaceKey($webspaceKey)
+    public function setWebspaceKey(string $webspaceKey): static
     {
         $this->webspaceKey = $webspaceKey;
 
         return $this;
     }
 
-    public function getTargetGroup()
+    public function getTargetGroup(): TargetGroupInterface
     {
         return $this->targetGroup;
     }
 
-    public function setTargetGroup(TargetGroupInterface $targetGroup)
+    public function setTargetGroup(TargetGroupInterface $targetGroup): static
     {
         $this->targetGroup = $targetGroup;
 

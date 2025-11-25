@@ -427,7 +427,9 @@ class TargetGroupControllerTest extends SuluTestCase
         $targetGroup = $this->getTargetGroupRepository()->createNew();
         $this->getEntityManager()->persist($targetGroup);
         $targetGroup->setTitle($this->getProperty($data, 'title', 'Target Group'));
-        $targetGroup->setDescription($this->getProperty($data, 'description', 'Target Group Description'));
+        /** @var string|null $description */
+        $description = $this->getProperty($data, 'description', 'Target Group Description');
+        $targetGroup->setDescription($description);
         $targetGroup->setPriority($this->getProperty($data, 'priority', 1));
         $targetGroup->setAllWebspaces($this->getProperty($data, 'allWebspaces', false));
         $targetGroup->setActive($this->getProperty($data, 'active', true));

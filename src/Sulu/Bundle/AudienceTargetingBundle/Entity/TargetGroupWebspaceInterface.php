@@ -16,30 +16,13 @@ namespace Sulu\Bundle\AudienceTargetingBundle\Entity;
  */
 interface TargetGroupWebspaceInterface
 {
-    /**
-     * @return int
-     */
-    public function getId();
+    public function getId(): int;
 
-    /**
-     * @return string
-     */
-    public function getWebspaceKey();
+    public function getWebspaceKey(): string;
 
-    /**
-     * @param string $webspaceKey
-     *
-     * @return $this
-     */
-    public function setWebspaceKey($webspaceKey);
+    public function setWebspaceKey(string $webspaceKey): static;
 
-    /**
-     * @return TargetGroupInterface
-     */
-    public function getTargetGroup();
+    public function getTargetGroup(): TargetGroupInterface;
 
-    /**
-     * @return $this
-     */
-    public function setTargetGroup(TargetGroupInterface $targetGroup);
+    public function setTargetGroup(TargetGroupInterface $targetGroup): static;
 }
