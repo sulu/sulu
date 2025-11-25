@@ -11,80 +11,39 @@
 
 namespace Sulu\Bundle\WebsiteBundle\Entity;
 
-/**
- * Domain.
- */
 class Domain
 {
-    /**
-     * @var int
-     */
-    private $id;
+    private int $id;
 
-    /**
-     * @var string
-     */
-    private $url;
+    private string $url;
 
-    /**
-     * @var string
-     */
-    private $environment;
+    private string $environment;
 
-    /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * Set url.
-     *
-     * @param string $url
-     *
-     * @return Domain
-     */
-    public function setUrl($url)
+    public function setUrl(string $url): static
     {
         $this->url = $url;
 
         return $this;
     }
 
-    /**
-     * Get url.
-     *
-     * @return string
-     */
-    public function getUrl()
+    public function getUrl(): string
     {
         return $this->url;
     }
 
-    /**
-     * Set environment.
-     *
-     * @param string $environment
-     *
-     * @return Domain
-     */
-    public function setEnvironment($environment)
+    public function setEnvironment(string $environment): static
     {
         $this->environment = $environment;
 
         return $this;
     }
 
-    /**
-     * Get environment.
-     *
-     * @return string
-     */
-    public function getEnvironment()
+    public function getEnvironment(): string
     {
         return $this->environment;
     }

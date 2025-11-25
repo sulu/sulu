@@ -112,7 +112,6 @@ class AnalyticsManagerTest extends BaseFunctional
     public function testFind(): void
     {
         $id = $this->entities[0]->getId();
-        $this->assertNotNull($id);
         $result = $this->analyticsManager->find($id);
 
         $this->assertEquals('test-1', $result->getTitle());
@@ -213,8 +212,6 @@ class AnalyticsManagerTest extends BaseFunctional
     public function testUpdate($webspaceKey, array $data): void
     {
         $id = $this->entities[0]->getId();
-        $this->assertNotNull($id);
-
         $result = $this->analyticsManager->update($id, $data);
         $this->getEntityManager()->flush();
 
@@ -280,8 +277,6 @@ class AnalyticsManagerTest extends BaseFunctional
     public function testUpdateWithExistingUrl(): void
     {
         $id = $this->entities[0]->getId();
-        $this->assertNotNull($id);
-
         $this->analyticsManager->update(
             $id,
             [
@@ -303,8 +298,6 @@ class AnalyticsManagerTest extends BaseFunctional
     public function testRemove(): void
     {
         $id = $this->entities[0]->getId();
-        $this->assertNotNull($id);
-
         $this->analyticsManager->remove($id);
         $this->getEntityManager()->flush();
 
@@ -328,8 +321,8 @@ class AnalyticsManagerTest extends BaseFunctional
         $this->assertEmpty(
             \array_filter(
                 $this->analyticsManager->findAll('sulu_io'),
-                function(AnalyticsInterface $analytics) {
-                    return $analytics->getId() === $this->entities[0]->getId();
+                function(AnalyticsInterface $analytics) use ($id) {
+                    return $analytics->getId() === $id;
                 }
             )
         );
@@ -338,11 +331,7 @@ class AnalyticsManagerTest extends BaseFunctional
     public function testRemoveMultiple(): void
     {
         $id1 = $this->entities[0]->getId();
-        $this->assertNotNull($id1);
-
         $id2 = $this->entities[1]->getId();
-        $this->assertNotNull($id2);
-
         $ids = [$id1, $id2];
         $this->analyticsManager->removeMultiple($ids);
         $this->getEntityManager()->flush();
