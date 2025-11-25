@@ -157,13 +157,13 @@ class Reference implements ReferenceInterface, TimestampableInterface
     public function equals(ReferenceInterface $reference): bool
     {
         return
-            $this->getResourceKey() === $reference->getResourceKey()
-            && $this->getResourceId() === $reference->getResourceId()
-            && $this->getReferenceLocale() === $reference->getReferenceLocale()
-            && $this->getReferenceResourceKey() === $reference->getReferenceResourceKey()
-            && $this->getReferenceResourceId() === $reference->getReferenceResourceId()
-            && $this->getReferenceProperty() === $reference->getReferenceProperty()
-            && $this->getReferenceContext() === $reference->getReferenceContext()
-            && $this->getReferenceRouterAttributes() === $reference->getReferenceRouterAttributes();
+            $this->resourceKey === $reference->resourceKey
+            && $this->resourceId === $reference->resourceId
+            && $this->referenceLocale === $reference->referenceLocale
+            && $this->referenceResourceKey === $reference->referenceResourceKey
+            && $this->referenceResourceId === $reference->referenceResourceId
+            && $this->referenceProperty === $reference->referenceProperty
+            && $this->referenceContext === $reference->referenceContext
+            && $this->referenceRouterAttributes === $reference->referenceRouterAttributes;
     }
 }
