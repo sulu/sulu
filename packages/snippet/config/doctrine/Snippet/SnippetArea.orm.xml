@@ -13,8 +13,8 @@
         <field name="webspaceKey" type="string" />
         <field name="areaKey" type="string" />
 
-        <one-to-one field="snippet" target-entity="Sulu\Snippet\Domain\Model\SnippetInterface">
+        <many-to-one field="snippet" target-entity="Sulu\Snippet\Domain\Model\SnippetInterface">
             <join-column name="idSnippet" referenced-column-name="uuid" on-delete="CASCADE" nullable="true"/>
-        </one-to-one>
+        </many-to-one>
     </mapped-superclass>
 </doctrine-mapping>
