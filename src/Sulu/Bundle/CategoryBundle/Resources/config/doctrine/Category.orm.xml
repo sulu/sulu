@@ -27,11 +27,6 @@
             </join-columns>
             <gedmo:tree-parent/>
         </many-to-one>
-        <one-to-many field="meta" target-entity="Sulu\Bundle\CategoryBundle\Entity\CategoryMetaInterface" mapped-by="category">
-            <cascade>
-                <cascade-persist/>
-            </cascade>
-        </one-to-many>
         <one-to-many field="translations" target-entity="Sulu\Bundle\CategoryBundle\Entity\CategoryTranslationInterface"
                      mapped-by="category">
             <cascade>

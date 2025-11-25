@@ -1000,6 +1000,13 @@ Removed classes / services / interfaces / traits:
 - `Sulu\Bundle\MarkupBundle\Listener\SwiftMailerListener`
 - `Sulu\Bundle\DocumentManagerBundle\Slugifier\Urlizer`
 - `Sulu\Bundle\CategoryBundle\DependencyInjection\DeprecationCompilerPass`
+- `Sulu\Bundle\CategoryBundle\Entity\CategoryMeta` (unused in admin UI)
+- `Sulu\Bundle\CategoryBundle\Entity\CategoryMetaInterface` (unused in admin UI)
+- `Sulu\Bundle\CategoryBundle\Entity\CategoryMetaRepository` (unused in admin UI)
+- `Sulu\Bundle\CategoryBundle\Entity\CategoryMetaRepositoryInterface` (unused in admin UI)
+- `Sulu\Bundle\CategoryBundle\Entity\CategoryInterface::getMeta()` (unused in admin UI)
+- `Sulu\Bundle\CategoryBundle\Entity\CategoryInterface::addMeta()` (unused in admin UI)
+- `Sulu\Bundle\CategoryBundle\Entity\CategoryInterface::removeMeta()` (unused in admin UI)
 - `Sulu\Bundle\SecurityBundle\DataFixtures\ORM\LoadSecurityTypes`
 - `Sulu\Bundle\SecurityBundle\Controller\ContextsController`
 - `Sulu\Bundle\SecurityBundle\Security\Exception\TokenAlreadyRequestedException`

@@ -22,206 +22,171 @@ class Category implements CategoryInterface
 {
     use AuditableTrait;
 
-    /**
-     * @var int
-     */
-    protected $lft;
+    protected int $lft = 0;
 
-    /**
-     * @var int
-     */
-    protected $rgt;
+    protected int $rgt = 0;
 
-    /**
-     * @var int
-     */
-    protected $depth;
+    protected int $depth = 0;
 
-    /**
-     * @var int
-     */
-    protected $id;
+    protected int $id;
 
-    /**
-     * @var string|null
-     */
-    protected $key;
+    protected ?string $key = null;
 
-    /**
-     * @var string
-     */
-    protected $defaultLocale;
+    protected string $defaultLocale = '';
 
-    /**
-     * @var CategoryInterface|null
-     */
-    protected $parent;
-
-    /**
-     * @var Collection<int, CategoryMetaInterface>
-     */
-    protected $meta;
+    protected ?CategoryInterface $parent = null;
 
     /**
      * @var Collection<int, CategoryTranslationInterface>
      */
-    protected $translations;
+    protected Collection $translations;
 
     /**
      * @var Collection<int, CategoryInterface>
      */
-    protected $children;
+    protected Collection $children;
 
     /**
      * Constructor.
      */
     public function __construct()
     {
-        $this->meta = new ArrayCollection();
         $this->translations = new ArrayCollection();
         $this->children = new ArrayCollection();
     }
 
-    public function setId($id)
+    public function setId(int $id): static
     {
         $this->id = $id;
 
         return $this;
     }
 
-    public function setLft($lft)
+    public function setLft(int $lft): static
     {
         $this->lft = $lft;
 
         return $this;
     }
 
-    public function getLft()
+    public function getLft(): int
     {
         return $this->lft;
     }
 
-    public function setRgt($rgt)
+    public function setRgt(int $rgt): static
     {
         $this->rgt = $rgt;
 
         return $this;
     }
 
-    public function getRgt()
+    public function getRgt(): int
     {
         return $this->rgt;
     }
 
-    public function setDepth($depth)
+    public function setDepth(int $depth): static
     {
         $this->depth = $depth;
 
         return $this;
     }
 
-    public function getDepth()
+    public function getDepth(): int
     {
         return $this->depth;
     }
 
-    public function getKey()
+    public function getKey(): ?string
     {
         return $this->key;
     }
 
-    public function setKey($key)
+    public function setKey(?string $key): static
     {
         $this->key = $key;
 
         return $this;
     }
 
-    public function setDefaultLocale($defaultLocale)
+    public function setDefaultLocale(string $defaultLocale): static
     {
         $this->defaultLocale = $defaultLocale;
 
         return $this;
     }
 
-    public function getDefaultLocale()
+    public function getDefaultLocale(): string
     {
         return $this->defaultLocale;
     }
 
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function setParent(?CategoryInterface $parent = null)
+    public function isNew(): bool
+    {
+        return !isset($this->id);
+    }
+
+    public function setParent(?CategoryInterface $parent = null): static
     {
         $this->parent = $parent;
 
         return $this;
     }
 
-    public function getParent()
+    public function getParent(): ?CategoryInterface
     {
         return $this->parent;
     }
 
-    public function addMeta(CategoryMetaInterface $meta)
-    {
-        $this->meta[] = $meta;
-
-        return $this;
-    }
-
-    public function removeMeta(CategoryMetaInterface $meta)
-    {
-        $this->meta->removeElement($meta);
-    }
-
-    public function getMeta()
-    {
-        return $this->meta;
-    }
-
-    public function addTranslation(CategoryTranslationInterface $translations)
+    public function addTranslation(CategoryTranslationInterface $translations): static
     {
         $this->translations[] = $translations;
 
         return $this;
     }
 
-    public function removeTranslation(CategoryTranslationInterface $translations)
+    public function removeTranslation(CategoryTranslationInterface $translations): static
     {
         $this->translations->removeElement($translations);
+
+        return $this;
     }
 
-    public function getTranslations()
+    public function getTranslations(): Collection
     {
         return $this->translations;
     }
 
-    public function findTranslationByLocale($locale)
+    public function findTranslationByLocale(?string $locale): ?CategoryTranslationInterface
     {
         return $this->translations->filter(
             function(CategoryTranslationInterface $translation) use ($locale) {
                 return $translation->getLocale() === $locale;
             }
-        )->first();
+        )->first() ?: null;
     }
 
-    public function addChild(CategoryInterface $child)
+    public function addChild(CategoryInterface $child): static
     {
         $this->children[] = $child;
 
         return $this;
     }
 
-    public function removeChild(CategoryInterface $child)
+    public function removeChild(CategoryInterface $child): static
     {
         $this->children->removeElement($child);
+
+        return $this;
     }
 
-    public function getChildren()
+    public function getChildren(): Collection
     {
         return $this->children;
     }

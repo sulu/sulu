@@ -22,7 +22,6 @@ use Sulu\Bundle\CategoryBundle\Domain\Event\CategoryRemovedEvent;
 use Sulu\Bundle\CategoryBundle\Domain\Event\CategoryTranslationAddedEvent;
 use Sulu\Bundle\CategoryBundle\Domain\Exception\RemoveCategoryDependantResourcesFoundException;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
-use Sulu\Bundle\CategoryBundle\Entity\CategoryMetaRepositoryInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryRepositoryInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslationInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslationRepositoryInterface;
@@ -45,7 +44,6 @@ class CategoryManager implements CategoryManagerInterface
 
     public function __construct(
         private CategoryRepositoryInterface $categoryRepository,
-        private CategoryMetaRepositoryInterface $categoryMetaRepository,
         private CategoryTranslationRepositoryInterface $categoryTranslationRepository,
         private UserRepositoryInterface $userRepository,
         private KeywordManagerInterface $keywordManager,
@@ -127,7 +125,7 @@ class CategoryManager implements CategoryManagerInterface
         if (!$isNewCategory) {
             $categoryEntity = $this->findById($this->getProperty($data, 'id'));
 
-            if (false !== $categoryEntity->findTranslationByLocale($locale)) {
+            if (null !== $categoryEntity->findTranslationByLocale($locale)) {
                 $isNewTranslation = false;
             }
         } else {
@@ -146,7 +144,7 @@ class CategoryManager implements CategoryManagerInterface
 
         if (!$patch || $this->getProperty($data, 'name')) {
             $translationEntity = $this->findOrCreateCategoryTranslation($categoryEntity, $categoryWrapper, $locale);
-            $translationEntity->setTranslation($this->getProperty($data, 'name', null));
+            $translationEntity->setTranslation($this->getProperty($data, 'name', ''));
         }
 
         if (!$patch || $this->getProperty($data, 'description')) {
@@ -157,32 +155,18 @@ class CategoryManager implements CategoryManagerInterface
         if (!$patch || $this->getProperty($data, 'medias')) {
             $translationEntity = $this->findOrCreateCategoryTranslation($categoryEntity, $categoryWrapper, $locale);
             $translationEntity->setMedias(
-                \array_map(
+                \array_filter(\array_map(
                     function($item) {
                         return $this->em->getReference(MediaInterface::class, $item);
                     },
                     $this->getProperty($data, 'medias', [])
-                )
+                ))
             );
         }
 
         $key = $this->getProperty($data, 'key');
         if (!$patch || $key) {
             $categoryWrapper->setKey($key);
-        }
-        if (!$patch || $this->getProperty($data, 'meta')) {
-            $metaData = (\is_array($this->getProperty($data, 'meta'))) ? $this->getProperty($data, 'meta') : [];
-
-            $metaEntities = [];
-            foreach ($metaData as $meta) {
-                $metaEntity = $this->categoryMetaRepository->createNew();
-                $metaEntity->setId($this->getProperty($meta, 'id'));
-                $metaEntity->setKey($this->getProperty($meta, 'key'));
-                $metaEntity->setValue($this->getProperty($meta, 'value'));
-                $metaEntity->setLocale($this->getProperty($meta, 'locale'));
-                $metaEntities[] = $metaEntity;
-            }
-            $categoryWrapper->setMeta($metaEntities);
         }
         if (!$patch || $this->getProperty($data, 'parent')) {
             $parentCategory = null;

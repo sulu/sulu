@@ -22,110 +22,82 @@ interface CategoryTranslationInterface extends AuditableInterface
 {
     /**
      * Set translation.
-     *
-     * @param string $translation
-     *
-     * @return CategoryTranslationInterface
      */
-    public function setTranslation($translation);
+    public function setTranslation(string $translation): static;
 
     /**
      * Get translation.
-     *
-     * @return string
      */
-    public function getTranslation();
+    public function getTranslation(): string;
 
     /**
      * Get description.
-     *
-     * @return string
      */
-    public function getDescription();
+    public function getDescription(): ?string;
 
     /**
      * Set description.
-     *
-     * @return CategoryTranslationInterface
      */
-    public function setDescription($description);
+    public function setDescription(?string $description): static;
 
     /**
-     * Get description.
+     * Get medias.
      *
      * @return MediaInterface[]
      */
-    public function getMedias();
+    public function getMedias(): array;
 
     /**
-     * Set images.
+     * Set medias.
      *
-     * @param MediaInterface[] $images
-     *
-     * @return CategoryTranslationInterface
+     * @param MediaInterface[] $medias
      */
-    public function setMedias($images);
+    public function setMedias(array $medias): static;
 
     /**
      * Set locale.
-     *
-     * @param string $locale
-     *
-     * @return CategoryTranslationInterface
      */
-    public function setLocale($locale);
+    public function setLocale(string $locale): static;
 
     /**
      * Get locale.
-     *
-     * @return string
      */
-    public function getLocale();
+    public function getLocale(): string;
 
     /**
      * Get id.
-     *
-     * @return int
      */
-    public function getId();
+    public function getId(): int;
 
     /**
      * Set category.
-     *
-     * @return CategoryTranslationInterface
      */
-    public function setCategory(CategoryInterface $category);
+    public function setCategory(CategoryInterface $category): static;
 
     /**
      * Get category.
-     *
-     * @return CategoryInterface
      */
-    public function getCategory();
+    public function getCategory(): CategoryInterface;
 
     /**
      * Add keyword.
-     *
-     * @return CategoryInterface
      */
-    public function addKeyword(KeywordInterface $keyword);
+    public function addKeyword(KeywordInterface $keyword): static;
 
     /**
      * Remove keyword.
      */
-    public function removeKeyword(KeywordInterface $keyword);
+    public function removeKeyword(KeywordInterface $keyword): static;
 
     /**
      * Get keywords.
      *
-     * @return Collection|KeywordInterface[]
+     * @return Collection<int, KeywordInterface>
      */
-    public function getKeywords();
+    public function getKeywords(): Collection;
 
     /**
      * Returns true if given keyword already linked with the category.
-     *
-     * @return bool
      */
-    public function hasKeyword(KeywordInterface $keyword);
+    public function hasKeyword(KeywordInterface $keyword): bool;
 }

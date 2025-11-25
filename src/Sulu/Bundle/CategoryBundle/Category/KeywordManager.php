@@ -48,7 +48,7 @@ class KeywordManager implements KeywordManagerInterface
             throw new KeywordIsMultipleReferencedException($keyword);
         }
 
-        if (null !== $keyword->getId()
+        if (!$keyword->isNew()
             && self::FORCE_MERGE !== $force
             && null !== $this->keywordRepository->findByKeyword($keyword->getKeyword(), $keyword->getLocale())
         ) {
@@ -63,7 +63,7 @@ class KeywordManager implements KeywordManagerInterface
 
         /** @var CategoryTranslationInterface $categoryTranslation */
         foreach ($keyword->getCategoryTranslations() as $categoryTranslation) {
-            $event = $keyword->getId()
+            $event = !$keyword->isNew()
                 ? new CategoryKeywordModifiedEvent($categoryTranslation->getCategory(), $keyword)
                 : new CategoryKeywordAddedEvent($categoryTranslation->getCategory(), $keyword);
 
@@ -151,8 +151,9 @@ class KeywordManager implements KeywordManagerInterface
             $categoryTranslation->setChanged(new \DateTimeImmutable());
 
             // dispatch event only if keyword was flushed and therefore has an id
-            if ($keyword->getId()) {
+            if (!$keyword->isNew()) {
                 $this->domainEventCollector->collect(new CategoryKeywordRemovedEvent(
+                    $category->getId(),
                     $category,
                     $keyword->getLocale(),
                     $keyword->getId(),

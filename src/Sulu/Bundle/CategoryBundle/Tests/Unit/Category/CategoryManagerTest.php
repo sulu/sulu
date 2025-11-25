@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\CategoryBundle\Tests\Unit\Category;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
@@ -25,7 +26,6 @@ use Sulu\Bundle\CategoryBundle\Domain\Event\CategoryMovedEvent;
 use Sulu\Bundle\CategoryBundle\Domain\Event\CategoryRemovedEvent;
 use Sulu\Bundle\CategoryBundle\Domain\Exception\RemoveCategoryDependantResourcesFoundException;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
-use Sulu\Bundle\CategoryBundle\Entity\CategoryMetaRepositoryInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryRepositoryInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslationInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslationRepositoryInterface;
@@ -41,11 +41,6 @@ class CategoryManagerTest extends TestCase
      * @var ObjectProphecy<CategoryRepositoryInterface>
      */
     protected $categoryRepository;
-
-    /**
-     * @var ObjectProphecy<CategoryMetaRepositoryInterface>
-     */
-    protected $categoryMetaRepository;
 
     /**
      * @var ObjectProphecy<CategoryTranslationRepositoryInterface>
@@ -85,7 +80,6 @@ class CategoryManagerTest extends TestCase
     public function setUp(): void
     {
         $this->categoryRepository = $this->prophesize(CategoryRepositoryInterface::class);
-        $this->categoryMetaRepository = $this->prophesize(CategoryMetaRepositoryInterface::class);
         $this->categoryTranslateRepository = $this->prophesize(CategoryTranslationRepositoryInterface::class);
         $this->userRepository = $this->prophesize(UserRepositoryInterface::class);
         $this->entityManager = $this->prophesize(EntityManagerInterface::class);
@@ -97,7 +91,6 @@ class CategoryManagerTest extends TestCase
 
         $this->categoryManager = new CategoryManager(
             $this->categoryRepository->reveal(),
-            $this->categoryMetaRepository->reveal(),
             $this->categoryTranslateRepository->reveal(),
             $this->userRepository->reveal(),
             $this->keywordManager->reveal(),
@@ -152,11 +145,11 @@ class CategoryManagerTest extends TestCase
         $translation = $this->prophesize(CategoryTranslationInterface::class);
         $translation->getTranslation()->willReturn('category-translation');
         $translation->getLocale()->willReturn('de');
-        $translation->getKeywords()->willReturn([$keyword1->reveal(), $keyword2->reveal()]);
+        $translation->getKeywords()->willReturn(new ArrayCollection([$keyword1->reveal(), $keyword2->reveal()]));
 
         $category = $this->prophesize(CategoryInterface::class);
         $category->getDefaultLocale()->willReturn('de');
-        $category->getTranslations()->willReturn([$translation->reveal()]);
+        $category->getTranslations()->willReturn(new ArrayCollection([$translation->reveal()]));
         $category->findTranslationByLocale('de')->willReturn($translation->reveal());
 
         $this->categoryRepository->findCategoryById($id)->willReturn($category->reveal());
@@ -178,11 +171,11 @@ class CategoryManagerTest extends TestCase
 
         $translation = $this->prophesize(CategoryTranslationInterface::class);
         $translation->getTranslation()->willReturn('category-translation');
-        $translation->getKeywords()->willReturn([$keyword1->reveal(), $keyword2->reveal()]);
+        $translation->getKeywords()->willReturn(new ArrayCollection([$keyword1->reveal(), $keyword2->reveal()]));
 
         $category = $this->prophesize(CategoryInterface::class);
         $category->getDefaultLocale()->willReturn('de');
-        $category->getTranslations()->willReturn([$translation->reveal()]);
+        $category->getTranslations()->willReturn(new ArrayCollection([$translation->reveal()]));
         $category->findTranslationByLocale('de')->willReturn($translation->reveal());
 
         $this->categoryRepository->findCategoryById($id)->willReturn($category->reveal());
@@ -210,11 +203,11 @@ class CategoryManagerTest extends TestCase
         $translation = $this->prophesize(CategoryTranslationInterface::class);
         $translation->getTranslation()->willReturn('category-translation');
         $translation->getLocale()->willReturn('de');
-        $translation->getKeywords()->willReturn([$keyword1->reveal(), $keyword2->reveal()]);
+        $translation->getKeywords()->willReturn(new ArrayCollection([$keyword1->reveal(), $keyword2->reveal()]));
 
         $category = $this->prophesize(CategoryInterface::class);
         $category->getDefaultLocale()->willReturn('de');
-        $category->getTranslations()->willReturn([$translation->reveal()]);
+        $category->getTranslations()->willReturn(new ArrayCollection([$translation->reveal()]));
         $category->findTranslationByLocale('de')->willReturn($translation->reveal());
 
         $this->categoryRepository->findCategoryById($id)->willReturn($category->reveal());
@@ -235,8 +228,9 @@ class CategoryManagerTest extends TestCase
         $this->categoryRepository->findCategoryById($id)->willReturn($category->reveal());
         $this->categoryRepository->findCategoryById($parentId)->willReturn($newParentCategory->reveal());
 
+        $category->getId()->willReturn($id);
         $category->getParent()->willReturn(null)->shouldBeCalled();
-        $category->setParent($newParentCategory->reveal())->shouldBeCalled();
+        $category->setParent($newParentCategory->reveal())->willReturn($category->reveal())->shouldBeCalled();
 
         $this->domainEventCollector->collect(Argument::type(CategoryMovedEvent::class))->shouldBeCalled();
 
@@ -252,8 +246,13 @@ class CategoryManagerTest extends TestCase
         $this->categoryRepository->findCategoryById($id)->willReturn($category->reveal());
         $this->categoryRepository->findCategoryById($parentId)->shouldNotBeCalled();
 
+        $category->getId()->willReturn($id);
         $category->getParent()->willReturn($previousParentCategory->reveal())->shouldBeCalled();
-        $category->setParent(null)->shouldBeCalled();
+        $category->setParent(null)->willReturn($category->reveal())->shouldBeCalled();
+
+        $previousParentCategory->getId()->willReturn(99);
+        $previousParentCategory->getDefaultLocale()->willReturn('en');
+        $previousParentCategory->findTranslationByLocale('en')->willReturn(null);
 
         $this->domainEventCollector->collect(Argument::type(CategoryMovedEvent::class))->shouldBeCalled();
 

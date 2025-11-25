@@ -12,8 +12,6 @@
 namespace Sulu\Bundle\CategoryBundle\DependencyInjection;
 
 use Sulu\Bundle\CategoryBundle\Entity\Category;
-use Sulu\Bundle\CategoryBundle\Entity\CategoryMeta;
-use Sulu\Bundle\CategoryBundle\Entity\CategoryMetaRepository;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryRepository;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslation;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslationRepository;
@@ -50,13 +48,6 @@ final class Configuration implements ConfigurationInterface
                             ->children()
                                 ->scalarNode('model')->defaultValue(Category::class)->end()
                                 ->scalarNode('repository')->defaultValue(CategoryRepository::class)->end()
-                            ->end()
-                        ->end()
-                        ->arrayNode('category_meta')
-                            ->addDefaultsIfNotSet()
-                            ->children()
-                                ->scalarNode('model')->defaultValue(CategoryMeta::class)->end()
-                                ->scalarNode('repository')->defaultValue(CategoryMetaRepository::class)->end()
                             ->end()
                         ->end()
                         ->arrayNode('category_translation')

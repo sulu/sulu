@@ -15,7 +15,6 @@ namespace Sulu\Bundle\CategoryBundle\DependencyInjection;
 
 use Sulu\Bundle\CategoryBundle\Admin\CategoryAdmin;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
-use Sulu\Bundle\CategoryBundle\Entity\CategoryMetaRepositoryInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryRepositoryInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslationRepositoryInterface;
 use Sulu\Bundle\CategoryBundle\Entity\KeywordRepositoryInterface;
@@ -58,7 +57,6 @@ class SuluCategoryExtension extends Extension implements PrependExtensionInterfa
         $container->addAliases(
             [
                 CategoryRepositoryInterface::class => 'sulu.repository.category',
-                CategoryMetaRepositoryInterface::class => 'sulu.repository.category_meta',
                 CategoryTranslationRepositoryInterface::class => 'sulu.repository.category_translation',
                 KeywordRepositoryInterface::class => 'sulu.repository.keyword',
             ],

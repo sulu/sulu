@@ -22,25 +22,16 @@ class Keyword implements KeywordInterface
 {
     use AuditableTrait;
 
-    /**
-     * @var int
-     */
-    protected $id;
+    protected int $id;
 
-    /**
-     * @var string
-     */
-    protected $keyword;
+    protected string $keyword = '';
 
-    /**
-     * @var string
-     */
-    protected $locale;
+    protected string $locale = '';
 
     /**
      * @var Collection<int, CategoryTranslationInterface>
      */
-    protected $categoryTranslations;
+    protected Collection $categoryTranslations;
 
     /**
      * Constructor.
@@ -50,69 +41,76 @@ class Keyword implements KeywordInterface
         $this->categoryTranslations = new ArrayCollection();
     }
 
-    public function setLocale($locale)
+    public function setLocale(string $locale): static
     {
         $this->locale = $locale;
 
         return $this;
     }
 
-    public function getLocale()
+    public function getLocale(): string
     {
         return $this->locale;
     }
 
-    public function setKeyword($keyword)
+    public function setKeyword(string $keyword): static
     {
         $this->keyword = $keyword;
 
         return $this;
     }
 
-    public function getKeyword()
+    public function getKeyword(): string
     {
         return $this->keyword;
     }
 
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function equals(KeywordInterface $keyword)
+    public function isNew(): bool
+    {
+        return !isset($this->id);
+    }
+
+    public function equals(KeywordInterface $keyword): bool
     {
         return $keyword->getKeyword() === $this->getKeyword()
         && $keyword->getLocale() === $this->getLocale();
     }
 
-    public function addCategoryTranslation(CategoryTranslationInterface $categoryTranslation)
+    public function addCategoryTranslation(CategoryTranslationInterface $categoryTranslation): static
     {
         $this->categoryTranslations[] = $categoryTranslation;
 
         return $this;
     }
 
-    public function removeCategoryTranslation(CategoryTranslationInterface $categoryTranslation)
+    public function removeCategoryTranslation(CategoryTranslationInterface $categoryTranslation): static
     {
         $this->categoryTranslations->removeElement($categoryTranslation);
+
+        return $this;
     }
 
-    public function getCategoryTranslations()
+    public function getCategoryTranslations(): Collection
     {
         return $this->categoryTranslations;
     }
 
-    public function isReferencedMultiple()
+    public function isReferencedMultiple(): bool
     {
         return $this->getCategoryTranslations()->count() > 1;
     }
 
-    public function isReferenced()
+    public function isReferenced(): bool
     {
         return $this->getCategoryTranslations()->count() > 0;
     }
 
-    public function getCategoryTranslationCount()
+    public function getCategoryTranslationCount(): int
     {
         return $this->getCategoryTranslations()->count();
     }

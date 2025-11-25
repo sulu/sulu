@@ -165,12 +165,10 @@ class CategoryRepository extends NestedTreeRepository implements CategoryReposit
     private function getCategoryQuery()
     {
         return $this->createQueryBuilder('category')
-            ->leftJoin('category.meta', 'categoryMeta')
             ->leftJoin('category.translations', 'categoryTranslations')
             ->leftJoin('categoryTranslations.keywords', 'categoryKeywords')
             ->leftJoin('category.parent', 'categoryParent')
             ->leftJoin('category.children', 'categoryChildren')
-            ->addSelect('categoryMeta')
             ->addSelect('categoryTranslations')
             ->addSelect('categoryKeywords')
             ->addSelect('categoryParent')

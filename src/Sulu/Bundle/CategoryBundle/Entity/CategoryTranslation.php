@@ -22,40 +22,25 @@ class CategoryTranslation implements CategoryTranslationInterface
 {
     use AuditableTrait;
 
-    /**
-     * @var string
-     */
-    protected $translation;
+    protected string $translation = '';
 
-    /**
-     * @var string|null
-     */
-    protected $description;
+    protected ?string $description = null;
 
     /**
      * @var Collection<int, CategoryTranslationMedia>
      */
-    protected $medias;
+    protected Collection $medias;
 
-    /**
-     * @var string
-     */
-    protected $locale;
+    protected string $locale = '';
 
-    /**
-     * @var int
-     */
-    protected $id;
+    protected int $id;
 
-    /**
-     * @var CategoryInterface
-     */
-    protected $category;
+    protected CategoryInterface $category;
 
     /**
      * @var Collection<int, KeywordInterface>
      */
-    protected $keywords;
+    protected Collection $keywords;
 
     public function __construct()
     {
@@ -63,34 +48,31 @@ class CategoryTranslation implements CategoryTranslationInterface
         $this->medias = new ArrayCollection();
     }
 
-    public function setTranslation($translation)
+    public function setTranslation(string $translation): static
     {
         $this->translation = $translation;
 
         return $this;
     }
 
-    public function getTranslation()
+    public function getTranslation(): string
     {
         return $this->translation;
     }
 
-    /**
-     * @return string|null
-     */
-    public function getDescription()
+    public function getDescription(): ?string
     {
         return $this->description;
     }
 
-    public function setDescription($description)
+    public function setDescription(?string $description): static
     {
         $this->description = $description;
 
         return $this;
     }
 
-    public function getMedias()
+    public function getMedias(): array
     {
         $medias = [];
 
@@ -103,7 +85,7 @@ class CategoryTranslation implements CategoryTranslationInterface
         return \array_values($medias);
     }
 
-    public function setMedias($medias)
+    public function setMedias(array $medias): static
     {
         $position = 0;
         foreach ($this->medias as $media) {
@@ -124,55 +106,59 @@ class CategoryTranslation implements CategoryTranslationInterface
             $media = new CategoryTranslationMedia($this, $medias[$position], $position + 1);
             $this->medias->add($media);
         }
+
+        return $this;
     }
 
-    public function setLocale($locale)
+    public function setLocale(string $locale): static
     {
         $this->locale = $locale;
 
         return $this;
     }
 
-    public function getLocale()
+    public function getLocale(): string
     {
         return $this->locale;
     }
 
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function setCategory(CategoryInterface $category)
+    public function setCategory(CategoryInterface $category): static
     {
         $this->category = $category;
 
         return $this;
     }
 
-    public function getCategory()
+    public function getCategory(): CategoryInterface
     {
         return $this->category;
     }
 
-    public function addKeyword(KeywordInterface $keyword)
+    public function addKeyword(KeywordInterface $keyword): static
     {
         $this->keywords[] = $keyword;
 
         return $this;
     }
 
-    public function removeKeyword(KeywordInterface $keyword)
+    public function removeKeyword(KeywordInterface $keyword): static
     {
         $this->keywords->removeElement($keyword);
+
+        return $this;
     }
 
-    public function getKeywords()
+    public function getKeywords(): Collection
     {
         return $this->keywords;
     }
 
-    public function hasKeyword(KeywordInterface $keyword)
+    public function hasKeyword(KeywordInterface $keyword): bool
     {
         return $this->keywords->exists(
             function($key, KeywordInterface $element) use ($keyword) {

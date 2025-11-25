@@ -7,7 +7,6 @@
                  class="Sulu\Bundle\CategoryBundle\Trash\CategoryTrashItemHandler">
             <argument type="service" id="sulu_trash.trash_item_repository"/>
             <argument type="service" id="sulu.repository.category"/>
-            <argument type="service" id="sulu.repository.category_meta"/>
             <argument type="service" id="sulu.repository.category_translation"/>
             <argument type="service" id="sulu.repository.keyword"/>
             <argument type="service" id="doctrine.orm.entity_manager"/>

@@ -15,11 +15,9 @@ use JMS\Serializer\Annotation\Groups;
 use JMS\Serializer\Annotation\SerializedName;
 use JMS\Serializer\Annotation\VirtualProperty;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface as Entity;
-use Sulu\Bundle\CategoryBundle\Entity\CategoryMetaInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslationInterface;
 use Sulu\Bundle\CoreBundle\Entity\ApiEntityWrapper;
 use Sulu\Bundle\MediaBundle\Api\Media;
-use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
 use Sulu\Component\Security\Authentication\UserInterface;
 
 class Category extends ApiEntityWrapper
@@ -32,14 +30,13 @@ class Category extends ApiEntityWrapper
 
     /**
      * Returns the id of the category.
-     *
-     * @return array
      */
     #[VirtualProperty]
     #[SerializedName('id')]
     #[Groups(['fullCategory', 'partialCategory'])]
-    public function getId()
+    public function getId(): int
     {
+        /** @var int */
         return $this->entity->getId();
     }
 
@@ -88,16 +85,14 @@ class Category extends ApiEntityWrapper
 
     /**
      * Returns the description of the Category dependent on the locale.
-     *
-     * @return string
      */
     #[VirtualProperty]
     #[SerializedName('description')]
     #[Groups(['fullCategory', 'partialCategory'])]
-    public function getDescription()
+    public function getDescription(): ?string
     {
         if (null === ($translation = $this->getTranslation(true))) {
-            return;
+            return null;
         }
 
         return $translation->getDescription();
@@ -176,37 +171,6 @@ class Category extends ApiEntityWrapper
         }
 
         return $translation->getLocale();
-    }
-
-    /**
-     * Returns the name of the Category dependent on the locale.
-     *
-     * @return array
-     */
-    #[VirtualProperty]
-    #[SerializedName('meta')]
-    #[Groups(['fullCategory', 'partialCategory'])]
-    public function getMeta()
-    {
-        $arrReturn = [];
-        if (null !== $this->entity->getMeta()) {
-            foreach ($this->entity->getMeta() as $meta) {
-                if (!$meta->getLocale() || $meta->getLocale() === $this->locale) {
-                    \array_push(
-                        $arrReturn,
-                        [
-                            'id' => $meta->getId(),
-                            'key' => $meta->getKey(),
-                            'value' => $meta->getValue(),
-                        ]
-                    );
-                }
-            }
-
-            return $arrReturn;
-        }
-
-        return;
     }
 
     /**
@@ -310,37 +274,13 @@ class Category extends ApiEntityWrapper
         $translationEntity->setTranslation($translation->getTranslation());
         $translationEntity->setLocale($translation->getLocale());
 
-        if (null === $this->getId() && null === $this->getDefaultLocale()) {
+        /** @var \Sulu\Bundle\CategoryBundle\Entity\CategoryInterface $entity */
+        $entity = $this->entity;
+        if ($entity->isNew() && '' === $this->getDefaultLocale()) {
             // new entity and new translation
             // save first locale as default
             $this->entity->setDefaultLocale($translationEntity->getLocale());
         }
-    }
-
-    /**
-     * Takes meta as array and sets it to the entity.
-     *
-     * @param CategoryMetaInterface[] $metaEntities
-     *
-     * @return Category
-     */
-    public function setMeta($metaEntities)
-    {
-        $currentMeta = $this->entity->getMeta();
-        foreach ($metaEntities as $singleMeta) {
-            $metaEntity = $this->getSingleMetaById($currentMeta, $singleMeta->getId());
-            if (!$metaEntity) {
-                $metaEntity = $singleMeta;
-                $this->entity->addMeta($metaEntity);
-            }
-
-            $metaEntity->setCategory($this->entity);
-            $metaEntity->setKey($singleMeta->getKey());
-            $metaEntity->setValue($singleMeta->getValue());
-            $metaEntity->setLocale($singleMeta->getLocale());
-        }
-
-        return $this;
     }
 
     /**
@@ -444,28 +384,6 @@ class Category extends ApiEntityWrapper
     }
 
     /**
-     * Takes an array of CollectionMeta and returns a single meta for a given id.
-     *
-     * @param CategoryMetaInterface[] $meta
-     * @param int $id
-     *
-     * @return null|CategoryMetaInterface
-     */
-    private function getSingleMetaById($meta, $id)
-    {
-        if (null !== $id) {
-            /** @var CategoryMetaInterface[] $singleMeta */
-            foreach ($meta as $singleMeta) {
-                if ($singleMeta->getId() === $id) {
-                    return $singleMeta;
-                }
-            }
-        }
-
-        return null;
-    }
-
-    /**
      * Returns an array representation of the object.
      *
      * @return array
@@ -477,7 +395,6 @@ class Category extends ApiEntityWrapper
             'key' => $this->getKey(),
             'name' => $this->getName(),
             'description' => $this->getDescription(),
-            'meta' => $this->getMeta(),
             'keywords' => $this->getKeywords(),
             'defaultLocale' => $this->getDefaultLocale(),
             'creator' => $this->getCreator(),

@@ -43,6 +43,8 @@ use Symfony\Component\Messenger\Stamp\HandledStamp;
  *     parent?: string|null,
  *     author?: int|null,
  *     authored?: string|null,
+ *     linkOn?: bool,
+ *     linkData?: array{href: string, provider: string},
  * }
  *
  * @phpstan-import-type SmartContentBaseFilters from SmartContentProviderInterface
