@@ -25,7 +25,7 @@ class Tag implements TagInterface
 
     #[Expose]
     #[Groups(['partialTag'])]
-    private string $name;
+    private string $name = '';
 
     #[Groups(['partialTag'])]
     private int $id;
@@ -35,6 +35,12 @@ class Tag implements TagInterface
 
     #[Groups(['partialTag'])]
     private \DateTimeImmutable $changed;
+
+    public function __construct()
+    {
+        $this->created = new \DateTimeImmutable();
+        $this->changed = new \DateTimeImmutable();
+    }
 
     public function setName(string $name): static
     {
@@ -65,7 +71,7 @@ class Tag implements TagInterface
         return $this->created;
     }
 
-    public function setCreated(\DateTimeImmutable $created): self
+    public function setCreated(\DateTimeImmutable $created): static
     {
         $this->created = $created;
 
@@ -77,7 +83,7 @@ class Tag implements TagInterface
         return $this->changed;
     }
 
-    public function setChanged(\DateTimeImmutable $changed): self
+    public function setChanged(\DateTimeImmutable $changed): static
     {
         $this->changed = $changed;
 
@@ -86,6 +92,6 @@ class Tag implements TagInterface
 
     public function __toString(): string
     {
-        return (string) $this->getName();
+        return $this->getName();
     }
 }
