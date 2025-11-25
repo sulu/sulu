@@ -65,9 +65,14 @@ class Keyword implements KeywordInterface
         return $this->keyword;
     }
 
-    public function getId(): ?int
+    public function getId(): int
     {
-        return $this->id ?? null;
+        return $this->id;
+    }
+
+    public function isNew(): bool
+    {
+        return !isset($this->id);
     }
 
     public function equals(KeywordInterface $keyword): bool

@@ -28,7 +28,7 @@ class Category implements CategoryInterface
 
     protected int $depth = 0;
 
-    protected ?int $id = null;
+    protected int $id;
 
     protected ?string $key = null;
 
@@ -122,9 +122,14 @@ class Category implements CategoryInterface
         return $this->defaultLocale;
     }
 
-    public function getId(): ?int
+    public function getId(): int
     {
         return $this->id;
+    }
+
+    public function isNew(): bool
+    {
+        return !isset($this->id);
     }
 
     public function setParent(?CategoryInterface $parent = null): static

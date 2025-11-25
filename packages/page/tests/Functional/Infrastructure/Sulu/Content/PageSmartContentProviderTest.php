@@ -38,7 +38,7 @@ use Symfony\Component\Messenger\Stamp\HandledStamp;
  *     url?: string,
  *     template?: string,
  *     locale?: string,
- *     excerptCategories?: array<int|null>,
+ *     excerptCategories?: int[],
  *     excerptTags?: string[],
  *     parent?: string|null,
  *     author?: int|null,

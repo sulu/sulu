@@ -166,7 +166,7 @@ class KeywordController extends AbstractRestController implements SecuredControl
         $category = $this->categoryRepository->findCategoryById($categoryId);
         $keyword->setKeyword($request->get('keyword'));
 
-        $keyword = $this->keywordManager->save($keyword, $category, $force);
+        $keyword = $this->keywordManager->save($keyword, $category, $force, true);
 
         $this->entityManager->persist($keyword);
         $this->entityManager->flush();

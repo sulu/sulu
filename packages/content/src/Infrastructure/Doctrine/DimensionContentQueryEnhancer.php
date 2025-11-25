@@ -70,7 +70,7 @@ class DimensionContentQueryEnhancer
      * @param array{
      *     locale?: string|null,
      *     stage?: string|null,
-     *     categoryIds?: array<int|null>,
+     *     categoryIds?: int[],
      *     categoryKeys?: string[],
      *     categoryOperator?: 'AND'|'OR',
      *     tagIds?: int[],
@@ -134,8 +134,6 @@ class DimensionContentQueryEnhancer
             $categoryIds = $filters['categoryIds'] ?? null;
             if ($categoryIds) {
                 Assert::isArray($categoryIds); // @phpstan-ignore staticMethod.alreadyNarrowedType
-                /** @var int[] $filteredCategoryIds */
-                $filteredCategoryIds = \array_values(\array_filter($categoryIds, fn ($id) => null !== $id));
 
                 $this->addJoinFilter(
                     $queryBuilder,
@@ -143,7 +141,7 @@ class DimensionContentQueryEnhancer
                     'filterCategoryId',
                     'id',
                     'categoryIds',
-                    $filteredCategoryIds,
+                    $categoryIds,
                     $filters['categoryOperator'] ?? 'OR',
                 );
             }

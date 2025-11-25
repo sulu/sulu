@@ -32,7 +32,7 @@ interface KeywordManagerInterface
      *
      * @return KeywordInterface
      */
-    public function save(KeywordInterface $keyword, CategoryInterface $category, $force = null);
+    public function save(KeywordInterface $keyword, CategoryInterface $category, $force = null, bool $isPersisted = false);
 
     /**
      * Removes keyword from given category.

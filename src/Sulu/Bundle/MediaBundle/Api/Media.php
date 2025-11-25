@@ -938,9 +938,7 @@ class Media extends ApiWrapper
         $fileVersion = $this->getFileVersion();
         $categories = $fileVersion->getCategories();
 
-        return \array_values(\array_filter(\array_map(function(CategoryEntity $category) {
-            return $category->getId();
-        }, $categories->toArray()), fn ($id) => null !== $id));
+        return \array_map(fn (CategoryEntity $category) => $category->getId(), $categories->toArray());
     }
 
     /**

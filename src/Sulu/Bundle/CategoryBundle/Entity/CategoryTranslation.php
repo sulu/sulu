@@ -33,7 +33,7 @@ class CategoryTranslation implements CategoryTranslationInterface
 
     protected string $locale = '';
 
-    protected ?int $id = null;
+    protected int $id;
 
     protected CategoryInterface $category;
 
@@ -122,7 +122,7 @@ class CategoryTranslation implements CategoryTranslationInterface
         return $this->locale;
     }
 
-    public function getId(): ?int
+    public function getId(): int
     {
         return $this->id;
     }

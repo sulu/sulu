@@ -30,14 +30,13 @@ class Category extends ApiEntityWrapper
 
     /**
      * Returns the id of the category.
-     *
-     * @return array
      */
     #[VirtualProperty]
     #[SerializedName('id')]
     #[Groups(['fullCategory', 'partialCategory'])]
-    public function getId()
+    public function getId(): int
     {
+        /** @var int */
         return $this->entity->getId();
     }
 
@@ -275,7 +274,9 @@ class Category extends ApiEntityWrapper
         $translationEntity->setTranslation($translation->getTranslation());
         $translationEntity->setLocale($translation->getLocale());
 
-        if (null === $this->getId() && '' === $this->getDefaultLocale()) {
+        /** @var \Sulu\Bundle\CategoryBundle\Entity\CategoryInterface $entity */
+        $entity = $this->entity;
+        if ($entity->isNew() && '' === $this->getDefaultLocale()) {
             // new entity and new translation
             // save first locale as default
             $this->entity->setDefaultLocale($translationEntity->getLocale());

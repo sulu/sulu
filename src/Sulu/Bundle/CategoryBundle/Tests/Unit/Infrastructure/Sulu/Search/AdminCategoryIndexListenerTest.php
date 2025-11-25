@@ -87,9 +87,7 @@ class AdminCategoryIndexListenerTest extends TestCase
     {
         $category = new Category();
         $category->setId(789);
-        $categoryId = $category->getId();
-        \assert(null !== $categoryId);
-        $event = new CategoryRemovedEvent($categoryId, 'Uncool category', 'en', ['locales' => ['en', 'de']]);
+        $event = new CategoryRemovedEvent($category->getId(), 'Uncool category', 'en', ['locales' => ['en', 'de']]);
 
         $expectedConfig = ReindexConfig::create()
             ->withIndex('admin')

@@ -79,7 +79,12 @@ interface CategoryInterface extends AuditableInterface
     /**
      * Get id.
      */
-    public function getId(): ?int;
+    public function getId(): int;
+
+    /**
+     * Check if entity is new (has not been persisted yet).
+     */
+    public function isNew(): bool;
 
     /**
      * Add translations.

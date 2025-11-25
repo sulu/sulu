@@ -45,10 +45,7 @@ trait TaxonomyTrait
         $this->initializeCategories();
         $categoryIds = [];
         foreach ($this->excerptCategories as $excerptCategory) {
-            $id = $excerptCategory->getId();
-            if (null !== $id) {
-                $categoryIds[] = $id;
-            }
+            $categoryIds[] = $excerptCategory->getId();
         }
 
         return $categoryIds;

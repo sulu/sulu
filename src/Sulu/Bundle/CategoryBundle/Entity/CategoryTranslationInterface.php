@@ -67,7 +67,7 @@ interface CategoryTranslationInterface extends AuditableInterface
     /**
      * Get id.
      */
-    public function getId(): ?int;
+    public function getId(): int;
 
     /**
      * Set category.
