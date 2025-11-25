@@ -23,18 +23,12 @@ class Tag implements TagInterface
 {
     use UserBlameTrait;
 
-    /**
-     * @var string
-     */
     #[Expose]
     #[Groups(['partialTag'])]
-    private $name;
+    private string $name;
 
-    /**
-     * @var int
-     */
     #[Groups(['partialTag'])]
-    private $id;
+    private int $id;
 
     #[Groups(['partialTag'])]
     private \DateTimeImmutable $created;
@@ -42,24 +36,24 @@ class Tag implements TagInterface
     #[Groups(['partialTag'])]
     private \DateTimeImmutable $changed;
 
-    public function setName($name)
+    public function setName(string $name): static
     {
         $this->name = $name;
 
         return $this;
     }
 
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
 
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function setId($id)
+    public function setId(int $id): static
     {
         $this->id = $id;
 
@@ -90,7 +84,7 @@ class Tag implements TagInterface
         return $this;
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return (string) $this->getName();
     }
