@@ -20,10 +20,10 @@ use Sulu\Bundle\TrashBundle\Domain\Model\TrashItem;
 
 class TrashItemTest extends TestCase
 {
-    public function testGetId(): void
+    public function testIsNew(): void
     {
         $trashItem = new TrashItem();
-        static::assertNull($trashItem->getId());
+        static::assertTrue($trashItem->isNew());
     }
 
     public function testGetSetResourceKey(): void
