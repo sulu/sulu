@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Sulu.
  *
@@ -24,62 +26,28 @@ interface TargetGroupRuleInterface
 
     public const FREQUENCY_VISITOR = 3;
 
-    /**
-     * @return int
-     */
-    public function getId();
+    public function getId(): ?int;
 
-    /**
-     * @return string
-     */
-    public function getTitle();
+    public function getTitle(): string;
 
-    /**
-     * @param string $title
-     *
-     * @return $this
-     */
-    public function setTitle($title);
+    public function setTitle(string $title): static;
 
-    /**
-     * @return int
-     */
-    public function getFrequency();
+    public function getFrequency(): int;
 
-    /**
-     * @param int $frequency
-     *
-     * @return $this
-     */
-    public function setFrequency($frequency);
+    public function setFrequency(int $frequency): static;
 
-    /**
-     * @return TargetGroupInterface
-     */
-    public function getTargetGroup();
+    public function getTargetGroup(): TargetGroupInterface;
 
-    /**
-     * @return $this
-     */
-    public function setTargetGroup(TargetGroupInterface $targetGroup);
+    public function setTargetGroup(TargetGroupInterface $targetGroup): static;
 
     /**
      * @return Collection<int, TargetGroupConditionInterface>
      */
-    public function getConditions();
+    public function getConditions(): Collection;
 
-    /**
-     * @return $this
-     */
-    public function addCondition(TargetGroupConditionInterface $condition);
+    public function addCondition(TargetGroupConditionInterface $condition): static;
 
-    /**
-     * @return $this
-     */
-    public function removeCondition(TargetGroupConditionInterface $condition);
+    public function removeCondition(TargetGroupConditionInterface $condition): static;
 
-    /**
-     * Clears the rule from its conditions.
-     */
-    public function clearConditions();
+    public function clearConditions(): static;
 }

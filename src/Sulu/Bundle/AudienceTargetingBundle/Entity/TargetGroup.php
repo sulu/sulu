@@ -23,45 +23,27 @@ use JMS\Serializer\Annotation\VirtualProperty;
  */
 class TargetGroup implements TargetGroupInterface
 {
-    /**
-     * @var int
-     */
-    private $id;
+    private ?int $id = null;
 
-    /**
-     * @var string
-     */
-    private $title;
+    private string $title;
 
-    /**
-     * @var string|null
-     */
-    private $description;
+    private ?string $description = null;
 
-    /**
-     * @var int
-     */
-    private $priority;
+    private int $priority;
 
-    /**
-     * @var bool
-     */
-    private $allWebspaces = false;
+    private bool $allWebspaces = false;
 
-    /**
-     * @var bool
-     */
-    private $active = false;
+    private bool $active = false;
 
     /**
      * @var Collection<int, TargetGroupWebspaceInterface>
      */
-    private $webspaces;
+    private Collection $webspaces;
 
     /**
      * @var Collection<int, TargetGroupRuleInterface>
      */
-    private $rules;
+    private Collection $rules;
 
     /**
      * Initialization of collections.
@@ -72,82 +54,82 @@ class TargetGroup implements TargetGroupInterface
         $this->rules = new ArrayCollection();
     }
 
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getTitle()
+    public function getTitle(): string
     {
         return $this->title;
     }
 
-    public function setTitle($title)
+    public function setTitle(string $title): static
     {
         $this->title = $title;
 
         return $this;
     }
 
-    /**
-     * @return string|null
-     */
-    public function getDescription()
+    public function getDescription(): ?string
     {
         return $this->description;
     }
 
-    public function setDescription($description)
+    public function setDescription(?string $description): static
     {
         $this->description = $description;
 
         return $this;
     }
 
-    public function getPriority()
+    public function getPriority(): int
     {
         return $this->priority;
     }
 
-    public function setPriority($priority)
+    public function setPriority(int $priority): static
     {
         $this->priority = $priority;
 
         return $this;
     }
 
-    public function isAllWebspaces()
+    public function isAllWebspaces(): bool
     {
         return $this->allWebspaces;
     }
 
-    public function setAllWebspaces($allWebspaces)
+    public function setAllWebspaces(bool $allWebspaces): static
     {
         $this->allWebspaces = $allWebspaces;
 
         return $this;
     }
 
-    public function isActive()
+    public function isActive(): bool
     {
         return $this->active;
     }
 
-    public function setActive($active)
+    public function setActive(bool $active): static
     {
         $this->active = $active;
 
         return $this;
     }
 
-    public function getWebspaces()
+    public function getWebspaces(): Collection
     {
         return $this->webspaces;
     }
 
+    /**
+     * @return string[]
+     */
     #[VirtualProperty]
     #[SerializedName('webspaceKeys')]
-    public function getWebspaceKeys()
+    public function getWebspaceKeys(): array
     {
         // @phpstan-ignore-next-line
         if (null === $this->webspaces) {
@@ -161,50 +143,54 @@ class TargetGroup implements TargetGroupInterface
         );
     }
 
-    public function addWebspace(TargetGroupWebspaceInterface $webspace)
+    public function addWebspace(TargetGroupWebspaceInterface $webspace): static
     {
         $this->webspaces[] = $webspace;
 
         return $this;
     }
 
-    public function removeWebspace(TargetGroupWebspaceInterface $webspace)
+    public function removeWebspace(TargetGroupWebspaceInterface $webspace): static
     {
         $this->webspaces->removeElement($webspace);
 
         return $this;
     }
 
-    public function clearWebspaces()
+    public function clearWebspaces(): static
     {
         foreach ($this->webspaces as $webspace) {
             $this->removeWebspace($webspace);
         }
+
+        return $this;
     }
 
-    public function getRules()
+    public function getRules(): Collection
     {
         return $this->rules;
     }
 
-    public function addRule(TargetGroupRuleInterface $rule)
+    public function addRule(TargetGroupRuleInterface $rule): static
     {
         $this->rules[] = $rule;
 
         return $this;
     }
 
-    public function removeRule(TargetGroupRuleInterface $rule)
+    public function removeRule(TargetGroupRuleInterface $rule): static
     {
         $this->rules->removeElement($rule);
 
         return $this;
     }
 
-    public function clearRules()
+    public function clearRules(): static
     {
         foreach ($this->rules as $rule) {
             $this->removeRule($rule);
         }
+
+        return $this;
     }
 }

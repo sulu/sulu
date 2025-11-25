@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Sulu.
  *
@@ -19,30 +21,18 @@ use Doctrine\Common\Collections\Collection;
  */
 class TargetGroupRule implements TargetGroupRuleInterface
 {
-    /**
-     * @var int
-     */
-    private $id;
+    private ?int $id = null;
 
-    /**
-     * @var string
-     */
-    private $title;
+    private string $title;
 
-    /**
-     * @var int
-     */
-    private $frequency;
+    private int $frequency;
 
-    /**
-     * @var TargetGroupInterface
-     */
-    private $targetGroup;
+    private TargetGroupInterface $targetGroup;
 
     /**
      * @var Collection<int, TargetGroupConditionInterface>
      */
-    private $conditions;
+    private Collection $conditions;
 
     /**
      * Initialize collections.
@@ -52,76 +42,72 @@ class TargetGroupRule implements TargetGroupRuleInterface
         $this->conditions = new ArrayCollection();
     }
 
-    /**
-     * @return int
-     */
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    /**
-     * @return string
-     */
-    public function getTitle()
+    public function getTitle(): string
     {
         return $this->title;
     }
 
-    public function setTitle($title)
+    public function setTitle(string $title): static
     {
         $this->title = $title;
 
         return $this;
     }
 
-    public function getFrequency()
+    public function getFrequency(): int
     {
         return $this->frequency;
     }
 
-    public function setFrequency($frequency)
+    public function setFrequency(int $frequency): static
     {
         $this->frequency = $frequency;
 
         return $this;
     }
 
-    public function getTargetGroup()
+    public function getTargetGroup(): TargetGroupInterface
     {
         return $this->targetGroup;
     }
 
-    public function setTargetGroup(TargetGroupInterface $targetGroup)
+    public function setTargetGroup(TargetGroupInterface $targetGroup): static
     {
         $this->targetGroup = $targetGroup;
 
         return $this;
     }
 
-    public function getConditions()
+    public function getConditions(): Collection
     {
         return $this->conditions;
     }
 
-    public function addCondition(TargetGroupConditionInterface $condition)
+    public function addCondition(TargetGroupConditionInterface $condition): static
     {
         $this->conditions[] = $condition;
 
         return $this;
     }
 
-    public function removeCondition(TargetGroupConditionInterface $condition)
+    public function removeCondition(TargetGroupConditionInterface $condition): static
     {
         $this->conditions->removeElement($condition);
 
         return $this;
     }
 
-    public function clearConditions()
+    public function clearConditions(): static
     {
         foreach ($this->conditions as $condition) {
             $this->removeCondition($condition);
         }
+
+        return $this;
     }
 }

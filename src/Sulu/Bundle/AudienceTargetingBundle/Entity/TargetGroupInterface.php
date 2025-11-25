@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Sulu.
  *
@@ -18,142 +20,47 @@ use Doctrine\Common\Collections\Collection;
  */
 interface TargetGroupInterface
 {
-    /**
-     * Returns the ID of the TargetGroup.
-     *
-     * @return int
-     */
-    public function getId();
+    public function getId(): ?int;
+
+    public function getTitle(): string;
+
+    public function setTitle(string $title): static;
+
+    public function getDescription(): ?string;
+
+    public function setDescription(?string $description): static;
+
+    public function getPriority(): int;
+
+    public function setPriority(int $priority): static;
+
+    public function isAllWebspaces(): bool;
+
+    public function setAllWebspaces(bool $allWebspaces): static;
+
+    public function isActive(): bool;
+
+    public function setActive(bool $active): static;
 
     /**
-     * Returns the title of the TargetGroup.
-     *
-     * @return string
-     */
-    public function getTitle();
-
-    /**
-     * Sets the title of the TargetGroup.
-     *
-     * @param string $title
-     *
-     * @return $this
-     */
-    public function setTitle($title);
-
-    /**
-     * Returns the description of the TargetGroup.
-     *
-     * @return string
-     */
-    public function getDescription();
-
-    /**
-     * Sets the description of the TargetGroup.
-     *
-     * @param string $description
-     *
-     * @return $this
-     */
-    public function setDescription($description);
-
-    /**
-     * Returns the priority of the TargetGroup.
-     *
-     * @return int
-     */
-    public function getPriority();
-
-    /**
-     * Sets the priority of the TargetGroup.
-     *
-     * @param int $priority
-     *
-     * @return $this
-     */
-    public function setPriority($priority);
-
-    /**
-     * Returns if the TargetGroup is valid for all webspaces.
-     *
-     * @return bool
-     */
-    public function isAllWebspaces();
-
-    /**
-     * Sets if the TargetGroup is valid for all webspaces.
-     *
-     * @param bool $allWebspaces
-     *
-     * @return $this
-     */
-    public function setAllWebspaces($allWebspaces);
-
-    /**
-     * Returns whether the TargetGroup is active or not.
-     *
-     * @return bool
-     */
-    public function isActive();
-
-    /**
-     * Decides if the TargetGroup is active or not.
-     *
-     * @param bool $active
-     *
-     * @return $this
-     */
-    public function setActive($active);
-
-    /**
-     * Returns all Webspaces the TargetGroup is valid for.
-     *
      * @return Collection<int, TargetGroupWebspaceInterface>
      */
-    public function getWebspaces();
+    public function getWebspaces(): Collection;
+
+    public function addWebspace(TargetGroupWebspaceInterface $webspace): static;
+
+    public function removeWebspace(TargetGroupWebspaceInterface $webspace): static;
+
+    public function clearWebspaces(): static;
 
     /**
-     * Adds a Webspaces to the TargetGroup.
-     *
-     * @return $this
-     */
-    public function addWebspace(TargetGroupWebspaceInterface $webspace);
-
-    /**
-     * Removes a webspace from the TargetGroup.
-     *
-     * @return $this
-     */
-    public function removeWebspace(TargetGroupWebspaceInterface $webspace);
-
-    /**
-     * Clears all webspaces from this TargetGroup.
-     */
-    public function clearWebspaces();
-
-    /**
-     * Returns the rules, which have to match in order to be assigned to this TargetGroup.
-     *
      * @return Collection<int, TargetGroupRuleInterface>
      */
-    public function getRules();
+    public function getRules(): Collection;
 
-    /**
-     * Adds a new rule for this TargetGroup.
-     *
-     * @return $this
-     */
-    public function addRule(TargetGroupRuleInterface $rule);
+    public function addRule(TargetGroupRuleInterface $rule): static;
 
-    /**
-     * Removes a rule from this TargetGroup.
-     *
-     * @return $this
-     */
-    public function removeRule(TargetGroupRuleInterface $rule);
+    public function removeRule(TargetGroupRuleInterface $rule): static;
 
-    /**
-     * Clears all rules from this TargetGroup.
-     */
-    public function clearRules();
+    public function clearRules(): static;
 }

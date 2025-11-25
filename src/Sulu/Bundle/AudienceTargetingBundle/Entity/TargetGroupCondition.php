@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Sulu.
  *
@@ -18,62 +20,53 @@ use JMS\Serializer\Annotation\Type;
  */
 class TargetGroupCondition implements TargetGroupConditionInterface
 {
-    /**
-     * @var int
-     */
-    private $id;
+    private ?int $id = null;
 
-    /**
-     * @var string
-     */
-    private $type;
+    private string $type;
 
     /**
      * @var mixed[]
      */
     #[Type('array')]
-    private $condition;
+    private array $condition;
 
-    /**
-     * @var TargetGroupRuleInterface
-     */
-    private $rule;
+    private TargetGroupRuleInterface $rule;
 
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getType()
+    public function getType(): string
     {
         return $this->type;
     }
 
-    public function setType($type)
+    public function setType(string $type): static
     {
         $this->type = $type;
 
         return $this;
     }
 
-    public function getCondition()
+    public function getCondition(): array
     {
         return $this->condition;
     }
 
-    public function setCondition($condition)
+    public function setCondition(array $condition): static
     {
         $this->condition = $condition;
 
         return $this;
     }
 
-    public function getRule()
+    public function getRule(): TargetGroupRuleInterface
     {
         return $this->rule;
     }
 
-    public function setRule(TargetGroupRuleInterface $rule)
+    public function setRule(TargetGroupRuleInterface $rule): static
     {
         $this->rule = $rule;
 
