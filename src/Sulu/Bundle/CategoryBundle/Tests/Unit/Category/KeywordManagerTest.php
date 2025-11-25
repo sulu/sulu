@@ -55,6 +55,7 @@ class KeywordManagerTest extends TestCase
             $otherKeyword->getKeyword()->willReturn($keywordString);
             $otherKeyword->getLocale()->willReturn($locale);
             $otherKeyword->getId()->willReturn(15);
+            $otherKeyword->isNew()->willReturn(false); // Existing keyword from database
         }
         $repository->findByKeyword($keywordString, $locale)->willReturn($otherKeyword ? $otherKeyword->reveal() : null);
 
@@ -86,13 +87,14 @@ class KeywordManagerTest extends TestCase
             $otherKeyword->addCategoryTranslation($categoryTranslation->reveal())->willReturn($otherKeyword->reveal())->shouldBeCalledTimes($has ? 0 : 1);
             $otherKeyword->getCategoryTranslations()->willReturn(new ArrayCollection([$categoryTranslation->reveal()]));
             // No CategoryKeywordRemovedEvent since the original keyword wasn't persisted
+            // Since otherKeyword is from database (not new), dispatches CategoryKeywordModifiedEvent
+            $domainEventCollector->collect(Argument::type(CategoryKeywordModifiedEvent::class))->shouldBeCalled();
         } else {
             $keyword->addCategoryTranslation($categoryTranslation->reveal())->willReturn($keyword->reveal())->shouldBeCalledTimes($has ? 0 : 1);
             $keyword->getCategoryTranslations()->willReturn(new ArrayCollection([$categoryTranslation->reveal()]));
+            // Since keyword is new, dispatches CategoryKeywordAddedEvent
+            $domainEventCollector->collect(Argument::type(CategoryKeywordAddedEvent::class))->shouldBeCalled();
         }
-
-        // With isPersisted=false (default), always dispatches CategoryKeywordAddedEvent
-        $domainEventCollector->collect(Argument::type(CategoryKeywordAddedEvent::class))->shouldBeCalled();
 
         $manager = new KeywordManager(
             $repository->reveal(),

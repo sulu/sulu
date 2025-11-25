@@ -37,7 +37,7 @@ class KeywordManager implements KeywordManagerInterface
     ) {
     }
 
-    public function save(KeywordInterface $keyword, CategoryInterface $category, $force = null, bool $isPersisted = false)
+    public function save(KeywordInterface $keyword, CategoryInterface $category, $force = null)
     {
         // overwrite existing keyword if force is present
         if (null === $force
@@ -48,7 +48,7 @@ class KeywordManager implements KeywordManagerInterface
             throw new KeywordIsMultipleReferencedException($keyword);
         }
 
-        if ($isPersisted
+        if (!$keyword->isNew()
             && self::FORCE_MERGE !== $force
             && null !== $this->keywordRepository->findByKeyword($keyword->getKeyword(), $keyword->getLocale())
         ) {
@@ -63,7 +63,7 @@ class KeywordManager implements KeywordManagerInterface
 
         /** @var CategoryTranslationInterface $categoryTranslation */
         foreach ($keyword->getCategoryTranslations() as $categoryTranslation) {
-            $event = $isPersisted
+            $event = !$keyword->isNew()
                 ? new CategoryKeywordModifiedEvent($categoryTranslation->getCategory(), $keyword)
                 : new CategoryKeywordAddedEvent($categoryTranslation->getCategory(), $keyword);
 
