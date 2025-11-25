@@ -23,6 +23,7 @@ use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
 use Sulu\Bundle\SecurityBundle\Entity\TwoFactor\TwoFactorTrait;
 use Sulu\Component\Persistence\Model\AuditableInterface;
 use Sulu\Component\Persistence\Model\AuditableTrait;
+use Sulu\Component\Security\Authentication\RoleInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Symfony\Component\Security\Core\User\EquatableInterface;
 use Symfony\Component\Security\Core\User\LegacyPasswordAuthenticatedUserInterface;
@@ -34,113 +35,58 @@ class User extends ApiEntity implements UserInterface, EquatableInterface, Audit
     use AuditableTrait;
     use TwoFactorTrait;
 
-    /**
-     * @var int
-     */
     #[Expose]
     #[Groups(['frontend', 'fullUser'])]
-    protected $id;
+    protected int $id;
 
-    /**
-     * @var string
-     */
     #[Expose]
     #[Groups(['frontend', 'fullUser', 'profile'])]
-    protected $username;
+    protected string $username = '';
 
-    /**
-     * @var string|null
-     */
     #[Expose]
     #[Groups(['fullUser', 'profile'])]
-    protected $email;
+    protected ?string $email = null;
 
-    /**
-     * @var string
-     */
-    protected $password;
+    protected string $password = '';
 
-    /**
-     * @var string
-     */
     #[Expose]
     #[Groups(['frontend', 'fullUser', 'profile'])]
-    protected $locale;
+    protected string $locale = '';
 
-    /**
-     * @var string
-     */
-    protected $salt;
+    protected string $salt = '';
 
-    /**
-     * @var string|null
-     */
     #[Expose]
-    protected $privateKey;
+    protected ?string $privateKey = null;
 
-    /**
-     * @var string|null
-     */
-    protected $apiKey;
+    protected ?string $apiKey = null;
 
-    /**
-     * @var bool
-     */
     #[Expose]
-    protected $locked = false;
+    protected bool $locked = false;
 
-    /**
-     * @var bool
-     */
     #[Expose]
-    protected $enabled = true;
+    protected bool $enabled = true;
 
-    /**
-     * @var \DateTime|null
-     */
-    protected $lastLogin;
+    protected ?\DateTime $lastLogin = null;
 
-    /**
-     * @var string|null
-     */
-    protected $confirmationKey;
+    protected ?string $confirmationKey = null;
 
-    /**
-     * @var string|null
-     */
-    protected $passwordResetToken;
+    protected ?string $passwordResetToken = null;
 
-    /**
-     * @var \DateTime|null
-     */
-    private $passwordResetTokenExpiresAt;
+    private ?\DateTime $passwordResetTokenExpiresAt = null;
 
-    /**
-     * @var int|null
-     */
-    private $passwordResetTokenEmailsSent;
+    private ?int $passwordResetTokenEmailsSent = null;
 
-    /**
-     * @var ContactInterface
-     */
     #[Expose]
     #[Groups(['frontend', 'fullUser'])]
-    protected $contact;
+    protected ?ContactInterface $contact = null;
 
-    /**
-     * @var Collection|UserRole[]
-     */
+    /** @var Collection<int, UserRole> */
     #[Expose]
-    protected $userRoles;
+    protected Collection $userRoles;
 
-    /**
-     * @var Collection|UserSetting[]
-     */
-    protected $userSettings;
+    /** @var Collection<string, UserSetting> */
+    protected Collection $userSettings;
 
-    /**
-     * Constructor.
-     */
     public function __construct()
     {
         $this->apiKey = \md5(\uniqid());
@@ -149,38 +95,26 @@ class User extends ApiEntity implements UserInterface, EquatableInterface, Audit
         $this->userSettings = new ArrayCollection();
     }
 
-    /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * Set username.
-     *
-     * @param string $username
-     *
-     * @return self
-     */
-    public function setUsername($username)
+    public function isNew(): bool
+    {
+        return !isset($this->id);
+    }
+
+    public function setUsername(string $username): static
     {
         $this->username = $username;
 
         return $this;
     }
 
-    /**
-     * Get username.
-     *
-     * @return string
-     */
     #[SerializedName('username')]
     #[Groups(['frontend', 'fullUser'])]
-    public function getUsername()
+    public function getUsername(): string
     {
         return $this->username;
     }
@@ -190,69 +124,38 @@ class User extends ApiEntity implements UserInterface, EquatableInterface, Audit
         return $this->username;
     }
 
-    /**
-     * Set password.
-     *
-     * @param string $password
-     *
-     * @return self
-     */
-    public function setPassword($password)
+    public function setPassword(string $password): static
     {
         $this->password = $password;
 
         return $this;
     }
 
-    /**
-     * Get password.
-     */
     public function getPassword(): ?string
     {
         return $this->password;
     }
 
-    /**
-     * Set locale.
-     *
-     * @param string $locale
-     *
-     * @return self
-     */
-    public function setLocale($locale)
+    public function setLocale(string $locale): static
     {
         $this->locale = $locale;
 
         return $this;
     }
 
-    /**
-     * Get locale.
-     *
-     * @return string
-     */
-    public function getLocale()
+    public function getLocale(): string
     {
         return $this->locale;
     }
 
-    /**
-     * Set salt.
-     *
-     * @param string $salt
-     *
-     * @return self
-     */
-    public function setSalt($salt)
+    public function setSalt(?string $salt): static
     {
-        $this->salt = $salt;
+        $this->salt = $salt ?? '';
 
         return $this;
     }
 
     /**
-     * Get salt.
-     *
      * @deprecated The salt functionality was deprecated in Sulu 2.5 and will be removed in Sulu 3.0
      *             Modern password algorithm do not longer require a salt.
      */
@@ -261,239 +164,126 @@ class User extends ApiEntity implements UserInterface, EquatableInterface, Audit
         return $this->salt;
     }
 
-    /**
-     * Set privateKey.
-     *
-     * @param string|null $privateKey
-     *
-     * @return self
-     */
-    public function setPrivateKey($privateKey)
+    public function setPrivateKey(?string $privateKey): static
     {
         $this->privateKey = $privateKey;
 
         return $this;
     }
 
-    /**
-     * Get privateKey.
-     *
-     * @return string|null
-     */
-    public function getPrivateKey()
+    public function getPrivateKey(): ?string
     {
         return $this->privateKey;
     }
 
-    /**
-     * Removes the password of the user.
-     */
     public function eraseCredentials(): void
     {
     }
 
-    /**
-     * Set apiKey.
-     *
-     * @param string|null $apiKey
-     *
-     * @return self
-     */
-    public function setApiKey($apiKey)
+    public function setApiKey(?string $apiKey): static
     {
         $this->apiKey = $apiKey;
 
         return $this;
     }
 
-    /**
-     * Get apiKey.
-     *
-     * @return string|null
-     */
-    public function getApiKey()
+    public function getApiKey(): ?string
     {
         return $this->apiKey;
     }
 
-    /**
-     * Set locked.
-     *
-     * @param bool $locked
-     *
-     * @return self
-     */
-    public function setLocked($locked)
+    public function setLocked(bool $locked): static
     {
         $this->locked = $locked;
 
         return $this;
     }
 
-    public function getLocked()
+    public function getLocked(): bool
     {
         return $this->locked;
     }
 
-    /**
-     * Set enabled.
-     *
-     * @param bool $enabled
-     *
-     * @return self
-     */
-    public function setEnabled($enabled)
+    public function setEnabled(bool $enabled): static
     {
         $this->enabled = $enabled;
 
         return $this;
     }
 
-    public function getEnabled()
+    public function getEnabled(): bool
     {
         return $this->enabled;
     }
 
-    /**
-     * Set lastLogin.
-     *
-     * @param \DateTime|null $lastLogin
-     *
-     * @return self
-     */
-    public function setLastLogin($lastLogin)
+    public function setLastLogin(?\DateTime $lastLogin): static
     {
         $this->lastLogin = $lastLogin;
 
         return $this;
     }
 
-    /**
-     * Get lastLogin.
-     *
-     * @return \DateTime|null
-     */
-    public function getLastLogin()
+    public function getLastLogin(): ?\DateTime
     {
         return $this->lastLogin;
     }
 
-    /**
-     * Set confirmationKey.
-     *
-     * @param string|null $confirmationKey
-     *
-     * @return self
-     */
-    public function setConfirmationKey($confirmationKey)
+    public function setConfirmationKey(?string $confirmationKey): static
     {
         $this->confirmationKey = $confirmationKey;
 
         return $this;
     }
 
-    /**
-     * Get confirmationKey.
-     *
-     * @return string|null
-     */
-    public function getConfirmationKey()
+    public function getConfirmationKey(): ?string
     {
         return $this->confirmationKey;
     }
 
-    /**
-     * Set passwordResetToken.
-     *
-     * @param string|null $passwordResetToken
-     *
-     * @return self
-     */
-    public function setPasswordResetToken($passwordResetToken)
+    public function setPasswordResetToken(?string $passwordResetToken): static
     {
         $this->passwordResetToken = $passwordResetToken;
 
         return $this;
     }
 
-    /**
-     * Get passwordResetToken.
-     *
-     * @return string|null
-     */
-    public function getPasswordResetToken()
+    public function getPasswordResetToken(): ?string
     {
         return $this->passwordResetToken;
     }
 
-    /**
-     * Set email.
-     *
-     * @param string|null $email
-     *
-     * @return self
-     */
-    public function setEmail($email)
+    public function setEmail(?string $email): static
     {
         $this->email = $email;
 
         return $this;
     }
 
-    /**
-     * Get email.
-     *
-     * @return string|null
-     */
-    public function getEmail()
+    public function getEmail(): ?string
     {
         return $this->email;
     }
 
-    /**
-     * Set tokenExpiresAt.
-     *
-     * @param \DateTime|null $passwordResetTokenExpiresAt
-     *
-     * @return self
-     */
-    public function setPasswordResetTokenExpiresAt($passwordResetTokenExpiresAt)
+    public function setPasswordResetTokenExpiresAt(?\DateTime $passwordResetTokenExpiresAt): static
     {
         $this->passwordResetTokenExpiresAt = $passwordResetTokenExpiresAt;
 
         return $this;
     }
 
-    /**
-     * Get passwordResetTokenExpiresAt.
-     *
-     * @return \DateTime|null
-     */
-    public function getPasswordResetTokenExpiresAt()
+    public function getPasswordResetTokenExpiresAt(): ?\DateTime
     {
         return $this->passwordResetTokenExpiresAt;
     }
 
-    /**
-     * Set passwordResetTokenEmailsSent.
-     *
-     * @param int|null $passwordResetTokenEmailsSent
-     *
-     * @return self
-     */
-    public function setPasswordResetTokenEmailsSent($passwordResetTokenEmailsSent)
+    public function setPasswordResetTokenEmailsSent(?int $passwordResetTokenEmailsSent): static
     {
         $this->passwordResetTokenEmailsSent = $passwordResetTokenEmailsSent;
 
         return $this;
     }
 
-    /**
-     * Get passwordResetTokenEmailsSent.
-     *
-     * @return int|null
-     */
-    public function getPasswordResetTokenEmailsSent()
+    public function getPasswordResetTokenEmailsSent(): ?int
     {
         return $this->passwordResetTokenEmailsSent;
     }
@@ -512,32 +302,24 @@ class User extends ApiEntity implements UserInterface, EquatableInterface, Audit
             && $this->enabled === $user->getEnabled();
     }
 
-    /**
-     * Add userRoles.
-     *
-     * @return self
-     */
-    public function addUserRole(UserRole $userRoles)
+    public function addUserRole(UserRole $userRoles): static
     {
         $this->userRoles[] = $userRoles;
 
         return $this;
     }
 
-    /**
-     * Remove userRoles.
-     */
-    public function removeUserRole(UserRole $userRoles)
+    public function removeUserRole(UserRole $userRoles): static
     {
         $this->userRoles->removeElement($userRoles);
+
+        return $this;
     }
 
     /**
-     * Get userRoles.
-     *
-     * @return ArrayCollection
+     * @return Collection<int, UserRole>
      */
-    public function getUserRoles()
+    public function getUserRoles(): Collection
     {
         return $this->userRoles;
     }
@@ -556,7 +338,10 @@ class User extends ApiEntity implements UserInterface, EquatableInterface, Audit
         return $roles;
     }
 
-    public function getRoleObjects()
+    /**
+     * @return array<int, RoleInterface>
+     */
+    public function getRoleObjects(): array
     {
         $roles = [];
         foreach ($this->getUserRoles() as $userRole) {
@@ -566,39 +351,34 @@ class User extends ApiEntity implements UserInterface, EquatableInterface, Audit
         return $roles;
     }
 
-    /**
-     * Add userSettings.
-     *
-     * @return self
-     */
-    public function addUserSetting(UserSetting $userSettings)
+    public function addUserSetting(UserSetting $userSettings): static
     {
         $this->userSettings[] = $userSettings;
 
         return $this;
     }
 
-    /**
-     * Remove userSettings.
-     */
-    public function removeUserSetting(UserSetting $userSettings)
+    public function removeUserSetting(UserSetting $userSettings): static
     {
         $this->userSettings->removeElement($userSettings);
+
+        return $this;
     }
 
     /**
-     * Get userSettings.
-     *
-     * @return Collection|UserSetting[]
+     * @return Collection<string, UserSetting>
      */
-    public function getUserSettings()
+    public function getUserSettings(): Collection
     {
         return $this->userSettings;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     #[VirtualProperty]
     #[Groups(['frontend'])]
-    public function getSettings()
+    public function getSettings(): array
     {
         $userSettingValues = [];
         foreach ($this->userSettings as $userSetting) {
@@ -608,80 +388,59 @@ class User extends ApiEntity implements UserInterface, EquatableInterface, Audit
         return $userSettingValues;
     }
 
-    /**
-     * Set contact.
-     *
-     * @return self
-     */
-    public function setContact(?ContactInterface $contact = null)
+    public function setContact(?ContactInterface $contact = null): static
     {
         $this->contact = $contact;
 
         return $this;
     }
 
-    /**
-     * Get contact.
-     *
-     * @return ContactInterface
-     */
-    public function getContact()
+    public function getContact(): ?ContactInterface
     {
         return $this->contact;
     }
 
-    /**
-     * @return string
-     */
     #[VirtualProperty]
     #[SerializedName('fullName')]
     #[Groups(['frontend', 'fullUser'])]
-    public function getFullName()
+    public function getFullName(): string
     {
         return null !== $this->getContact() ?
             $this->getContact()->getFullName() : $this->getUsername();
     }
 
-    /**
-     * @return string
-     */
     #[VirtualProperty]
     #[Groups(['profile'])]
-    public function getFirstName()
+    public function getFirstName(): string
     {
+        if (null === $this->contact) {
+            return '';
+        }
+
         return $this->contact->getFirstName();
     }
 
-    /**
-     * Set firstName.
-     *
-     * @return $this
-     */
-    public function setFirstName($firstName)
+    public function setFirstName(string $firstName): static
     {
-        $this->contact->setFirstName($firstName);
+        $this->contact?->setFirstName($firstName);
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
     #[VirtualProperty]
     #[Groups(['profile'])]
-    public function getLastName()
+    public function getLastName(): string
     {
+        if (null === $this->contact) {
+            return '';
+        }
+
         return $this->contact->getLastName();
     }
 
-    /**
-     * Set lastName.
-     *
-     * @return $this
-     */
-    public function setLastName($lastName)
+    public function setLastName(string $lastName): static
     {
-        $this->contact->setLastName($lastName);
+        $this->contact?->setLastName($lastName);
 
         return $this;
     }

@@ -16,130 +16,48 @@ use Sulu\Bundle\SecurityBundle\Entity\Permission;
 use Sulu\Bundle\SecurityBundle\Entity\UserRole;
 use Sulu\Component\Persistence\Model\AuditableInterface;
 
-/**
- * Defines the interface for a role.
- */
 interface RoleInterface extends AuditableInterface, SecurityIdentityInterface
 {
     public const RESOURCE_KEY = 'roles';
     public const IS_SULU_ANONYMOUS = 'IS_SULU_ANONYMOUS';
 
-    /**
-     * Set name.
-     *
-     * @param string $name
-     *
-     * @return RoleInterface
-     */
-    public function setName($name);
+    public function setName(string $name): static;
+
+    public function getName(): string;
+
+    public function setKey(?string $key): static;
+
+    public function getKey(): ?string;
+
+    public function setSystem(string $system): static;
+
+    public function getSystem(): string;
+
+    public function getId(): int;
+
+    public function isNew(): bool;
+
+    public function addPermission(Permission $permissions): static;
+
+    public function removePermission(Permission $permissions): static;
 
     /**
-     * Get name.
-     *
-     * @return string
-     */
-    public function getName();
-
-    /**
-     * Set key.
-     *
-     * @param string $key
-     *
-     * @return RoleInterface
-     */
-    public function setKey($key);
-
-    /**
-     * Get key.
-     *
-     * @return string|null
-     */
-    public function getKey();
-
-    /**
-     * Set system.
-     *
-     * @param string $system
-     *
-     * @return RoleInterface
-     */
-    public function setSystem($system);
-
-    /**
-     * Get system.
-     *
-     * @return string
-     */
-    public function getSystem();
-
-    /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId();
-
-    /**
-     * Add permissions.
-     *
-     * @return RoleInterface
-     */
-    public function addPermission(Permission $permissions);
-
-    /**
-     * Remove permissions.
-     *
-     * @return void
-     */
-    public function removePermission(Permission $permissions);
-
-    /**
-     * Get permissions.
-     *
      * @return Collection<int, Permission>
      */
-    public function getPermissions();
+    public function getPermissions(): Collection;
+
+    public function addUserRole(UserRole $userRoles): static;
+
+    public function removeUserRole(UserRole $userRoles): static;
 
     /**
-     * Add userRoles.
-     *
-     * @return $this
-     */
-    public function addUserRole(UserRole $userRoles);
-
-    /**
-     * Remove userRoles.
-     *
-     * @return void
-     */
-    public function removeUserRole(UserRole $userRoles);
-
-    /**
-     * Get userRoles.
-     *
      * @return Collection<int, UserRole>
      */
-    public function getUserRoles();
+    public function getUserRoles(): Collection;
 
-    /**
-     * Returns setting by name.
-     *
-     * @param string $key
-     *
-     * @return RoleSettingInterface|null
-     */
-    public function getSetting($key);
+    public function getSetting(string $key): ?RoleSettingInterface;
 
-    /**
-     * Returns if the role is of type anonymous and is handled like IS_ANONYMOUS in Symfony.
-     * See https://symfony.com/doc/5.1/security.html#checking-to-see-if-a-user-is-logged-in-is-authenticated-fully documentation.
-     */
     public function getAnonymous(): bool;
 
-    /**
-     * Set if the role is IS_ANONYMOUS.
-     *
-     * @return void
-     */
-    public function setAnonymous(bool $anonymous);
+    public function setAnonymous(bool $anonymous): static;
 }

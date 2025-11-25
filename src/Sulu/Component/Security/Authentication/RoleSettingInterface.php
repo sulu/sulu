@@ -11,61 +11,19 @@
 
 namespace Sulu\Component\Security\Authentication;
 
-/**
- * Defines the interface for a role setting.
- */
 interface RoleSettingInterface
 {
-    /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId();
+    public function getId(): int;
 
-    /**
-     * Set key.
-     *
-     * @param string $key
-     *
-     * @return RoleSettingInterface
-     */
-    public function setKey($key);
+    public function setKey(string $key): static;
 
-    /**
-     * Get key.
-     *
-     * @return string
-     */
-    public function getKey();
+    public function getKey(): string;
 
-    /**
-     * Set value.
-     *
-     * @param array $value
-     *
-     * @return RoleSettingInterface
-     */
-    public function setValue($value);
+    public function setValue(mixed $value): static;
 
-    /**
-     * Get value.
-     *
-     * @return array
-     */
-    public function getValue();
+    public function getValue(): mixed;
 
-    /**
-     * Set role.
-     *
-     * @return RoleSettingInterface
-     */
-    public function setRole(?RoleInterface $role = null);
+    public function setRole(?RoleInterface $role = null): static;
 
-    /**
-     * Get role.
-     *
-     * @return RoleSettingInterface
-     */
-    public function getRole();
+    public function getRole(): ?RoleInterface;
 }

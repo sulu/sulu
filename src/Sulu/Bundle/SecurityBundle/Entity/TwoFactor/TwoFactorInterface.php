@@ -17,8 +17,5 @@ interface TwoFactorInterface extends PreferredProviderInterface, EmailInterface,
 {
     public function getTwoFactor(): ?UserTwoFactor;
 
-    /**
-     * @return static
-     */
-    public function setTwoFactor(?UserTwoFactor $twoFactor);
+    public function setTwoFactor(?UserTwoFactor $twoFactor): static;
 }

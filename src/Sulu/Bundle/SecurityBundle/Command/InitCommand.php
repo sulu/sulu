@@ -96,7 +96,7 @@ final class InitCommand extends Command
                 $permissionAdded = true;
             }
 
-            if ($role->getId()) {
+            if (!$role->isNew()) {
                 if (!$permissionAdded) {
                     $ui->text(\sprintf(
                         '[ ] Anonymous role named "%s" exists in system "%s" already.',

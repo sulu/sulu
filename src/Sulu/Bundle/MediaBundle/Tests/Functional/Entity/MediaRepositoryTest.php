@@ -97,7 +97,7 @@ class MediaRepositoryTest extends SuluTestCase
         $this->em->persist($tag2);
     }
 
-    private function createCollection(string $collectionType)
+    private function createCollection(string $collectionType): Collection
     {
         $collection = new Collection();
         $collection->setType($this->collectionTypes[$collectionType]);
@@ -116,12 +116,13 @@ class MediaRepositoryTest extends SuluTestCase
         return $collection;
     }
 
-    private function createAccessControl($entity, Role $role, int $permissions): void
+    private function createAccessControl(object $entity, Role $role, int $permissions): void
     {
+        \assert(\method_exists($entity, 'getId'));
         $accessControl = new AccessControl();
         $accessControl->setPermissions($permissions);
         $accessControl->setEntityId($entity->getId());
-        $accessControl->setEntityClass(\get_class($entity));
+        $accessControl->setEntityClass($entity::class);
         $accessControl->setRole($role);
         $this->em->persist($accessControl);
     }

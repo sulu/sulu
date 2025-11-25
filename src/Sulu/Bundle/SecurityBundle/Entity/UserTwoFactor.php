@@ -36,15 +36,22 @@ class UserTwoFactor
         $this->user = $user;
     }
 
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    public function isNew(): bool
+    {
+        return !isset($this->id);
+    }
+
     public function getMethod(): ?string
     {
         return $this->method;
     }
 
-    /**
-     * @return static
-     */
-    public function setMethod(?string $twoFactorType)
+    public function setMethod(?string $twoFactorType): static
     {
         $this->method = $twoFactorType;
 
@@ -83,11 +90,9 @@ class UserTwoFactor
     }
 
     /**
-     * @param mixed[] $options
-     *
-     * @return static
+     * @param array<string, mixed>|null $options
      */
-    public function setOptions(?array $options)
+    public function setOptions(?array $options): static
     {
         $this->options = $options ? \json_encode($options, \JSON_THROW_ON_ERROR) : null;
 

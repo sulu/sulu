@@ -14,52 +14,22 @@ namespace Sulu\Component\Security\Authentication;
 use Sulu\Bundle\SecurityBundle\Entity\TwoFactor\TwoFactorInterface;
 use Symfony\Component\Security\Core\User\UserInterface as BaseUserInterface;
 
-/**
- * The UserInterface for Sulu, extends the Symfony UserInterface with an ID.
- */
 interface UserInterface extends BaseUserInterface, TwoFactorInterface
 {
     public const RESOURCE_KEY = 'users';
 
-    /**
-     * Returns the ID of the User.
-     *
-     * @return int
-     */
-    public function getId();
+    public function getId(): int;
+
+    public function getLocale(): string;
 
     /**
-     * Returns the locale of the user.
-     *
-     * @return string Users locale
+     * @return array<int, RoleInterface>
      */
-    public function getLocale();
+    public function getRoleObjects(): array;
 
-    /**
-     * Returns all the roles the user has assigned.
-     *
-     * @return RoleInterface[]
-     */
-    public function getRoleObjects();
+    public function getFullName(): string;
 
-    /**
-     * Returns the full name of the user.
-     *
-     * @return string
-     */
-    public function getFullName();
+    public function getLocked(): bool;
 
-    /**
-     * Get locked.
-     *
-     * @return bool
-     */
-    public function getLocked();
-
-    /**
-     * Get enabled.
-     *
-     * @return bool
-     */
-    public function getEnabled();
+    public function getEnabled(): bool;
 }

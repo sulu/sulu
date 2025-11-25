@@ -26,51 +26,27 @@ class Role implements RoleInterface
 {
     use AuditableTrait;
 
-    /**
-     * @var int
-     */
-    private $id;
+    private int $id;
 
-    /**
-     * @var string
-     */
-    private $name;
+    private string $name = '';
 
-    /**
-     * @var string|null
-     */
-    private $key;
+    private ?string $key = null;
 
-    /**
-     * @var string
-     */
-    private $system;
+    private string $system = '';
 
-    /**
-     * @var Collection<int, Permission>
-     */
+    /** @var Collection<int, Permission> */
     #[Groups(['fullRole'])]
-    private $permissions;
+    private Collection $permissions;
 
-    /**
-     * @var Collection<int, UserRole>
-     */
+    /** @var Collection<int, UserRole> */
     #[Exclude]
-    private $userRoles;
+    private Collection $userRoles;
 
-    /**
-     * @var Collection<string, RoleSettingInterface>
-     */
-    private $settings;
+    /** @var Collection<string, RoleSettingInterface> */
+    private Collection $settings;
 
-    /**
-     * @var bool
-     */
-    private $anonymous = false;
+    private bool $anonymous = false;
 
-    /**
-     * Constructor.
-     */
     public function __construct()
     {
         $this->permissions = new ArrayCollection();
@@ -78,17 +54,17 @@ class Role implements RoleInterface
         $this->settings = new ArrayCollection();
     }
 
-    /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function getIdentifier()
+    public function isNew(): bool
+    {
+        return !isset($this->id);
+    }
+
+    public function getIdentifier(): string
     {
         if ($this->anonymous) {
             return RoleInterface::IS_SULU_ANONYMOUS;
@@ -104,105 +80,109 @@ class Role implements RoleInterface
         return 'ROLE_SULU_' . \strtoupper($key);
     }
 
-    public function setName($name)
+    public function setName(string $name): static
     {
         $this->name = $name;
 
         return $this;
     }
 
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
 
-    public function getKey()
+    public function getKey(): ?string
     {
         return $this->key;
     }
 
-    public function setKey($key)
+    public function setKey(?string $key): static
     {
         $this->key = $key;
 
         return $this;
     }
 
-    public function setSystem($system)
+    public function setSystem(string $system): static
     {
         $this->system = $system;
 
         return $this;
     }
 
-    public function getSystem()
+    public function getSystem(): string
     {
         return $this->system;
     }
 
-    public function addPermission(Permission $permissions)
+    public function addPermission(Permission $permissions): static
     {
         $this->permissions[] = $permissions;
 
         return $this;
     }
 
-    public function removePermission(Permission $permissions)
+    public function removePermission(Permission $permissions): static
     {
         $this->permissions->removeElement($permissions);
+
+        return $this;
     }
 
-    public function getPermissions()
+    /**
+     * @return Collection<int, Permission>
+     */
+    public function getPermissions(): Collection
     {
         return $this->permissions;
     }
 
-    public function addUserRole(UserRole $userRoles)
+    public function addUserRole(UserRole $userRoles): static
     {
         $this->userRoles[] = $userRoles;
 
         return $this;
     }
 
-    public function removeUserRole(UserRole $userRoles)
+    public function removeUserRole(UserRole $userRoles): static
     {
         $this->userRoles->removeElement($userRoles);
+
+        return $this;
     }
 
-    public function getUserRoles()
+    /**
+     * @return Collection<int, UserRole>
+     */
+    public function getUserRoles(): Collection
     {
         return $this->userRoles;
     }
 
-    /**
-     * @return $this
-     */
-    public function addSetting(RoleSettingInterface $setting)
+    public function addSetting(RoleSettingInterface $setting): static
     {
         $this->settings->set($setting->getKey(), $setting);
 
         return $this;
     }
 
-    /**
-     * @return void
-     */
-    public function removeSetting(RoleSettingInterface $setting)
+    public function removeSetting(RoleSettingInterface $setting): static
     {
         $this->settings->remove($setting->getKey());
+
+        return $this;
     }
 
     /**
-     * Get settings.
-     *
      * @return Collection<string, RoleSettingInterface>
      */
-    public function getSettings()
+    public function getSettings(): Collection
     {
         return $this->settings;
     }
 
-    public function getSetting($key)
+    public function getSetting(string $key): ?RoleSettingInterface
     {
         return $this->settings->get($key);
     }
@@ -212,8 +192,10 @@ class Role implements RoleInterface
         return $this->anonymous;
     }
 
-    public function setAnonymous(bool $anonymous)
+    public function setAnonymous(bool $anonymous): static
     {
         $this->anonymous = $anonymous;
+
+        return $this;
     }
 }

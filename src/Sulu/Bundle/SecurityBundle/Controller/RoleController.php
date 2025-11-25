@@ -171,7 +171,7 @@ class RoleController extends AbstractRestController implements SecuredController
             /** @var RoleInterface $role */
             $role = $this->roleRepository->createNew();
             $role->setName($name);
-            $role->setKey($key);
+            $role->setKey(\is_string($key) ? $key : null);
             $role->setSystem($system);
 
             $permissions = $request->request->all('permissions');
@@ -221,7 +221,7 @@ class RoleController extends AbstractRestController implements SecuredController
                 throw new EntityNotFoundException($this->roleRepository->getClassName(), $id);
             } else {
                 $role->setName($name);
-                $role->setKey($key);
+                $role->setKey(\is_string($key) ? $key : null);
                 $role->setSystem($system);
 
                 if (!$this->processPermissions($role, $request->request->all('permissions'))) {

@@ -44,7 +44,7 @@ final class CreateArticleMessageHandler
             $user = $token?->getUser();
             if (null !== $token && $user instanceof User) {
                 $contact = $user->getContact();
-                $data['author'] = $contact->getId();
+                $data['author'] = $contact?->getId();
             }
         }
 
