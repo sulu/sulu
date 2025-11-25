@@ -9,8 +9,6 @@
             <argument type="service" id="filesystem"/>
             <argument>%sulu_website.sitemap.dump_dir%</argument>
             <argument>%kernel.environment%</argument>
-            <argument>%router.request_context.scheme%</argument>
-            <argument>%router.request_context.host%</argument>
             <argument type="service" id="router.request_context" />
 
             <tag name="console.command" />

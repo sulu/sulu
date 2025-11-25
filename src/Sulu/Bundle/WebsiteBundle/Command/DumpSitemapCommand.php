@@ -24,11 +24,6 @@ use Symfony\Component\Routing\RequestContext;
 #[AsCommand(name: 'sulu:website:dump-sitemap')]
 class DumpSitemapCommand extends Command
 {
-    /**
-     * @var OutputInterface
-     */
-    private $output;
-
     public function __construct(
         private WebspaceManagerInterface $webspaceManager,
         private XmlSitemapDumperInterface $sitemapDumper,
@@ -47,8 +42,6 @@ class DumpSitemapCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $this->output = $output;
-
         if ($input->getOption('clear')) {
             $this->clear();
         }
