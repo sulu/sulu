@@ -51,7 +51,7 @@ class User extends ApiEntity implements UserInterface, EquatableInterface, Audit
 
     #[Expose]
     #[Groups(['frontend', 'fullUser', 'profile'])]
-    protected string $locale = '';
+    protected string $locale = 'en';
 
     protected string $salt = '';
 
