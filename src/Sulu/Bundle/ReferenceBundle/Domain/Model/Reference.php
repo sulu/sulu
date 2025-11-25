@@ -18,55 +18,28 @@ class Reference implements ReferenceInterface, TimestampableInterface
 {
     use TimestampableTrait;
 
-    /**
-     * @var int
-     */
-    private $id;
+    private int $id;
 
-    /**
-     * @var string
-     */
-    private $resourceKey;
+    private string $resourceKey = '';
 
-    /**
-     * @var string
-     */
-    private $resourceId;
+    private string $resourceId = '';
 
-    /**
-     * @var string
-     */
-    private $referenceResourceKey;
+    private string $referenceResourceKey = '';
 
-    /**
-     * @var string
-     */
-    private $referenceResourceId;
+    private string $referenceResourceId = '';
 
-    /**
-     * @var string|null
-     */
-    private $referenceLocale;
+    private ?string $referenceLocale = null;
 
     /**
      * @var array<string, string>
      */
-    private $referenceRouterAttributes = [];
+    private array $referenceRouterAttributes = [];
 
-    /**
-     * @var string
-     */
-    private $referenceTitle;
+    private string $referenceTitle = '';
 
-    /**
-     * @var string
-     */
-    private $referenceContext;
+    private string $referenceContext = '';
 
-    /**
-     * @var string
-     */
-    private $referenceProperty;
+    private string $referenceProperty = '';
 
     public function getId(): int
     {
@@ -184,13 +157,13 @@ class Reference implements ReferenceInterface, TimestampableInterface
     public function equals(ReferenceInterface $reference): bool
     {
         return
-            $this->resourceKey === $reference->resourceKey
-            && $this->resourceId === $reference->resourceId
-            && $this->referenceLocale === $reference->referenceLocale
-            && $this->referenceResourceKey === $reference->referenceResourceKey
-            && $this->referenceResourceId === $reference->referenceResourceId
-            && $this->referenceProperty === $reference->referenceProperty
-            && $this->referenceContext === $reference->referenceContext
-            && $this->referenceRouterAttributes === $reference->referenceRouterAttributes;
+            $this->getResourceKey() === $reference->getResourceKey()
+            && $this->getResourceId() === $reference->getResourceId()
+            && $this->getReferenceLocale() === $reference->getReferenceLocale()
+            && $this->getReferenceResourceKey() === $reference->getReferenceResourceKey()
+            && $this->getReferenceResourceId() === $reference->getReferenceResourceId()
+            && $this->getReferenceProperty() === $reference->getReferenceProperty()
+            && $this->getReferenceContext() === $reference->getReferenceContext()
+            && $this->getReferenceRouterAttributes() === $reference->getReferenceRouterAttributes();
     }
 }
