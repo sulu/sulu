@@ -49,9 +49,11 @@ class SnippetArea implements SnippetAreaInterface
         return $this->uuid;
     }
 
-    public function setWebspaceKey(string $webspaceKey): void
+    public function setWebspaceKey(string $webspaceKey): static
     {
         $this->webspaceKey = $webspaceKey;
+
+        return $this;
     }
 
     public function getWebspaceKey(): string
@@ -59,9 +61,11 @@ class SnippetArea implements SnippetAreaInterface
         return $this->webspaceKey;
     }
 
-    public function setAreaKey(string $areaKey): void
+    public function setAreaKey(string $areaKey): static
     {
         $this->areaKey = $areaKey;
+
+        return $this;
     }
 
     public function getAreaKey(): string
@@ -69,9 +73,11 @@ class SnippetArea implements SnippetAreaInterface
         return $this->areaKey;
     }
 
-    public function setSnippet(?SnippetInterface $snippet): void
+    public function setSnippet(?SnippetInterface $snippet): static
     {
         $this->snippet = $snippet;
+
+        return $this;
     }
 
     public function getSnippet(): ?SnippetInterface

@@ -17,15 +17,15 @@ interface SnippetAreaInterface
 {
     public const RESOURCE_KEY = 'snippet_areas';
 
-    public function setWebspaceKey(string $webspaceKey): void;
+    public function setWebspaceKey(string $webspaceKey): static;
 
     public function getWebspaceKey(): string;
 
-    public function setAreaKey(string $areaKey): void;
+    public function setAreaKey(string $areaKey): static;
 
     public function getAreaKey(): string;
 
-    public function setSnippet(?SnippetInterface $snippet): void;
+    public function setSnippet(?SnippetInterface $snippet): static;
 
     public function getSnippet(): ?SnippetInterface;
 
