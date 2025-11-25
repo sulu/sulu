@@ -24,7 +24,7 @@ class Route
     /** @internal */
     private const TEMPORARY_RESOURCE_IDENTIFIER = 'temp';
 
-    private ?int $id = null;
+    private int $id;
 
     private ?string $site;
 
@@ -107,7 +107,7 @@ class Route
 
     public function getId(): int
     {
-        \assert(null !== $this->id, 'Do not access before persist and flush the entity to doctrine.');
+        \assert(isset($this->id), 'Do not access before persist and flush the entity to doctrine.');
 
         return $this->id;
     }
