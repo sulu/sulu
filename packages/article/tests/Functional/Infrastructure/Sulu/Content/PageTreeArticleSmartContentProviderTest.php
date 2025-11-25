@@ -62,7 +62,7 @@ class PageTreeArticleSmartContentProviderTest extends SuluTestCase
         $routeRepository = $container->get('sulu_route.route_repository');
 
         $requestContext = $container->get('router.request_context');
-        $requestContext->setParameter(RequestAttributeEnum::SITE->value, 'sulu-io');
+        $requestContext->setParameter(RequestAttributeEnum::WEBSPACE->value, 'sulu-io');
 
         // Create parent pages
         self::$pages['blog'] = self::createPage([

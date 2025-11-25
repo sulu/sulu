@@ -12,7 +12,7 @@
 namespace Sulu\Page\Infrastructure\Sulu\Route;
 
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
-use Sulu\Route\Application\Routing\Generator\SiteRouteGeneratorInterface;
+use Sulu\Route\Application\Routing\Generator\WebspaceRouteGeneratorInterface;
 use Sulu\Route\Domain\Exception\MissingRequestContextParameterException;
 use Sulu\Route\Domain\Value\RequestAttributeEnum;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,7 +24,7 @@ use Symfony\Component\Routing\RequestContext;
  *
  * @internal this class is internal and should not be extended or overwritten
  */
-class WebspaceSiteRouteGenerator implements SiteRouteGeneratorInterface
+class PageWebspaceRouteGenerator implements WebspaceRouteGeneratorInterface
 {
     public function __construct(
         private readonly WebspaceManagerInterface $webspaceManager,
@@ -34,18 +34,18 @@ class WebspaceSiteRouteGenerator implements SiteRouteGeneratorInterface
 
     public function generate(RequestContext $requestContext, string $slug, string $locale): string
     {
-        $site = $requestContext->getParameter(RequestAttributeEnum::SITE->value);
+        $site = $requestContext->getParameter(RequestAttributeEnum::WEBSPACE->value);
         if (!\is_string($site)) {
             $currentRequest = $this->requestStack->getCurrentRequest();
 
             if (!$currentRequest instanceof Request) {
-                throw new MissingRequestContextParameterException(RequestAttributeEnum::SITE->value);
+                throw new MissingRequestContextParameterException(RequestAttributeEnum::WEBSPACE->value);
             }
 
-            $site = $currentRequest->attributes->get(RequestAttributeEnum::SITE->value); // TODO the requestContext should be kept in sync via listener with request attributes
+            $site = $currentRequest->attributes->get(RequestAttributeEnum::WEBSPACE->value); // TODO the requestContext should be kept in sync via listener with request attributes
 
             if (!\is_string($site)) {
-                throw new MissingRequestContextParameterException(RequestAttributeEnum::SITE->value);
+                throw new MissingRequestContextParameterException(RequestAttributeEnum::WEBSPACE->value);
             }
         }
 

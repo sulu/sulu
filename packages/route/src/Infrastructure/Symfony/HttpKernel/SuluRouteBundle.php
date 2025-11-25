@@ -19,7 +19,7 @@ use Sulu\Route\Application\ResourceLocator\PathCleanup\PathCleanupInterface;
 use Sulu\Route\Application\ResourceLocator\ResourceLocatorGenerator;
 use Sulu\Route\Application\Routing\Generator\RouteGenerator;
 use Sulu\Route\Application\Routing\Generator\RouteGeneratorInterface;
-use Sulu\Route\Application\Routing\Generator\SiteRouteGeneratorInterface;
+use Sulu\Route\Application\Routing\Generator\WebspaceRouteGeneratorInterface;
 use Sulu\Route\Application\Routing\Matcher\RouteCollectionForRequestLoaderInterface;
 use Sulu\Route\Application\Routing\Matcher\RouteCollectionForRequestRouteLoader;
 use Sulu\Route\Application\Routing\Matcher\RouteDefaultsProviderInterface;
@@ -97,7 +97,7 @@ final class SuluRouteBundle extends AbstractBundle
         $services->set('sulu_route.route_generator')
             ->class(RouteGenerator::class)
             ->args([
-                tagged_locator('sulu_route.site_route_generator', 'site', 'getSite'),
+                tagged_locator('sulu_route.webspace_route_generator', 'webspace', 'getWebspace'),
                 new Reference('router.request_context'),
                 new Reference('request_stack'),
                 new Reference('translation.locale_switcher'),
@@ -184,8 +184,8 @@ final class SuluRouteBundle extends AbstractBundle
             ->tag('sulu.admin');
 
         // Extension Points
-        $builder->registerForAutoconfiguration(SiteRouteGeneratorInterface::class)
-            ->addTag('sulu_route.site_route_generator');
+        $builder->registerForAutoconfiguration(WebspaceRouteGeneratorInterface::class)
+            ->addTag('sulu_route.webspace_route_generator');
 
         $builder->registerForAutoconfiguration(RouteCollectionForRequestLoaderInterface::class)
             ->addTag('sulu_route.route_collection_for_request_loader');

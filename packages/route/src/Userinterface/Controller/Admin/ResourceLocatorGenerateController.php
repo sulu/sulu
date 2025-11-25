@@ -45,7 +45,7 @@ final readonly class ResourceLocatorGenerateController
 
         /** @var array<string, string>  $parts */
         $locale = $payload->getString('locale');
-        $site = $payload->getString('webspace') ?: null;
+        $webspace = $payload->getString('webspace') ?: null;
         $resourceKey = $payload->getString('resourceKey');
         $resourceId = $payload->getString('resourceId') ?: null;
         $parentResourceId = $payload->getString('parentId') ?: null;
@@ -56,7 +56,7 @@ final readonly class ResourceLocatorGenerateController
         return new ResourceLocatorRequest(
             $parts,
             $locale,
-            $site,
+            $webspace,
             $resourceKey,
             $resourceId,
             $parentResourceId,

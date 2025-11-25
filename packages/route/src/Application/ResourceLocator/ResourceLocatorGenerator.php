@@ -49,7 +49,7 @@ final readonly class ResourceLocatorGenerator implements ResourceLocatorGenerato
         $uniquePath = $this->createUnique( // TODO own service called during doctrine listener also?
             $parentPath . $path,
             $request->locale,
-            $request->site,
+            $request->webspace,
             $request->resourceKey,
             $request->resourceId,
         );
@@ -64,7 +64,7 @@ final readonly class ResourceLocatorGenerator implements ResourceLocatorGenerato
     private function createUnique(
         string $path,
         string $locale,
-        ?string $site,
+        ?string $webspace,
         string $resourceKey,
         ?string $resourceId,
     ): string {
@@ -74,7 +74,7 @@ final readonly class ResourceLocatorGenerator implements ResourceLocatorGenerato
         while ($this->routeRepository->existBy(
             $resourceId ? [
                 'locale' => $locale,
-                'site' => $site,
+                'webspace' => $webspace,
                 'slug' => $path,
                 'excludeResource' => [
                     'resourceKey' => $resourceKey,
@@ -82,7 +82,7 @@ final readonly class ResourceLocatorGenerator implements ResourceLocatorGenerato
                 ],
             ] : [
                 'locale' => $locale,
-                'site' => $site,
+                'webspace' => $webspace,
                 'slug' => $path,
             ],
         )) {

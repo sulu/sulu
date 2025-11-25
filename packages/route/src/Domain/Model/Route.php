@@ -26,7 +26,7 @@ class Route
 
     private int $id;
 
-    private ?string $site;
+    private ?string $webspace;
 
     private string $locale;
 
@@ -45,13 +45,13 @@ class Route
      */
     private mixed $resourceIdCallable = null;
 
-    public function __construct(string $resourceKey, string $resourceId, string $locale, string $slug, ?string $site = null, ?Route $parentRoute = null)
+    public function __construct(string $resourceKey, string $resourceId, string $locale, string $slug, ?string $webspace = null, ?Route $parentRoute = null)
     {
         $this->resourceKey = $resourceKey;
         $this->resourceId = $resourceId;
         $this->locale = $locale;
         $this->slug = $slug;
-        $this->site = $site;
+        $this->webspace = $webspace;
         $this->parentRoute = $parentRoute;
     }
 
@@ -67,7 +67,7 @@ class Route
      *
      * @param (callable(): string) $resourceIdCallable Example of a callable: fn(): string => (string) $entity->getId()
      */
-    public static function createRouteWithTempId(string $resourceKey, callable $resourceIdCallable, string $locale, string $slug, ?string $site = null, ?Route $parentRoute = null): Route
+    public static function createRouteWithTempId(string $resourceKey, callable $resourceIdCallable, string $locale, string $slug, ?string $webspace = null, ?Route $parentRoute = null): Route
     {
         // to avoid confuses with widely used uuids in our own code we use a not so widely used ULID in base58 format
         $tempId = self::TEMPORARY_RESOURCE_IDENTIFIER . '::' . (new Ulid())->toBase58();
@@ -77,7 +77,7 @@ class Route
             $tempId,
             $locale,
             $slug,
-            $site,
+            $webspace,
             $parentRoute
         );
 
@@ -112,14 +112,14 @@ class Route
         return $this->id;
     }
 
-    public function getSite(): ?string
+    public function getWebspace(): ?string
     {
-        return $this->site;
+        return $this->webspace;
     }
 
-    public function setSite(?string $site): static
+    public function setWebspace(?string $webspace): static
     {
-        $this->site = $site;
+        $this->webspace = $webspace;
 
         return $this;
     }

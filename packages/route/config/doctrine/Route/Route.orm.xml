@@ -7,7 +7,7 @@
         table="ro_routes"
     ><!-- FIXME change route to `ro_routes` -->
         <unique-constraints>
-            <unique-constraint name="ro_routes_unique" fields="site,locale,slug" />
+            <unique-constraint name="ro_routes_unique" fields="webspace,locale,slug" />
         </unique-constraints>
 
         <indexes>
@@ -18,7 +18,7 @@
             <generator strategy="AUTO"/>
         </id>
 
-        <field name="site" type="string" length="31" nullable="true"/>
+        <field name="webspace" type="string" length="31" nullable="true"/>
         <field name="locale" type="string" length="15"/>
         <field name="slug" type="string" length="144"/>
 

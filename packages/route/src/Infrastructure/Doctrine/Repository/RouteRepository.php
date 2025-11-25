@@ -109,25 +109,25 @@ class RouteRepository implements RouteRepositoryInterface
     {
         $queryBuilder = $this->repository->createQueryBuilder('route');
 
-        if (\array_key_exists('site', $filters)) {
-            $site = $filters['site'] ?? null;
+        if (\array_key_exists('webspace', $filters)) {
+            $webspace = $filters['webspace'] ?? null;
             $queryBuilder->andWhere(
-                null === $site ? 'route.site IS NULL' : 'route.site = :site'
+                null === $webspace ? 'route.webspace IS NULL' : 'route.webspace = :webspace'
             );
 
-            if (null !== $site) {
-                $queryBuilder->setParameter('site', $site);
+            if (null !== $webspace) {
+                $queryBuilder->setParameter('webspace', $webspace);
             }
         }
 
-        if (\array_key_exists('siteOrNull', $filters)) {
-            $site = $filters['siteOrNull'] ?? null;
+        if (\array_key_exists('webspaceOrNull', $filters)) {
+            $webspace = $filters['webspaceOrNull'] ?? null;
             $queryBuilder->andWhere(
-                null === $site ? 'route.site IS NULL' : '(route.site = :site OR route.site IS NULL)'
+                null === $webspace ? 'route.webspace IS NULL' : '(route.webspace = :webspace OR route.webspace IS NULL)'
             );
 
-            if (null !== $site) {
-                $queryBuilder->setParameter('site', $site);
+            if (null !== $webspace) {
+                $queryBuilder->setParameter('webspace', $webspace);
             }
         }
 
@@ -183,14 +183,14 @@ class RouteRepository implements RouteRepositoryInterface
         if ([] !== $sortBys) {
             foreach ($sortBys as $field => $order) {
                 $order = match (true) {
-                    // if we filter by siteOrNull and order by site we need invert the order for specific platforms
+                    // if we filter by webspaceOrNull and order by webspace we need invert the order for specific platforms
                     // TODO if possible in future use something like ASC NULLS FIRST / DESC NULLS LAST directly
-                    ('site' === $field // @phpstan-ignore-line identical.alwaysTrue
+                    ('webspace' === $field // @phpstan-ignore-line identical.alwaysTrue
                         && (
                             $this->entityManager->getConnection()->getDatabasePlatform() instanceof PostgreSQLPlatform
                             || $this->entityManager->getConnection()->getDatabasePlatform() instanceof OraclePlatform
                         )
-                        && \array_key_exists('siteOrNull', $filters)
+                        && \array_key_exists('webspaceOrNull', $filters)
                     ) => match ($order) {
                         'asc' => 'desc',
                         'desc' => 'asc',

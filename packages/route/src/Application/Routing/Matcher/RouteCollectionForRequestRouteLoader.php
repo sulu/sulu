@@ -25,7 +25,7 @@ use Symfony\Component\Routing\RouteCollection;
 /**
  * @internal This is an internal class overwrite by decorate the service and use the `RouteCollectionForRequestLoaderInterface` not this class.
  *
- * The RouteLoader requires that a previous request listener has set the site and slug attributes. In case of Sulu
+ * The RouteLoader requires that a previous request listener has set the webspace and slug attributes. In case of Sulu
  * this is done inside the PageBundle via a WebspaceRequestListener.
  */
 final readonly class RouteCollectionForRequestRouteLoader implements RouteCollectionForRequestLoaderInterface
@@ -40,21 +40,21 @@ final readonly class RouteCollectionForRequestRouteLoader implements RouteCollec
     public function getRouteCollectionForRequest(Request $request): RouteCollection
     {
         $locale = $request->getLocale();
-        $site = $request->attributes->get(RequestAttributeEnum::SITE->value);
+        $webspace = $request->attributes->get(RequestAttributeEnum::WEBSPACE->value);
         $slug = $request->attributes->get(RequestAttributeEnum::SLUG->value);
 
-        if (null === $site) {
+        if (null === $webspace) {
             // TODO remove this bridge the routing should not know about webspaces and the sulu routes attributes
             $suluAttribute = $request->attributes->get('_sulu');
             if ($suluAttribute instanceof RequestAttributes) {
                 $portalInformation = $suluAttribute->getAttribute('portalInformation');
 
                 if ($portalInformation instanceof PortalInformation) {
-                    $site = $portalInformation->getWebspaceKey();
+                    $webspace = $portalInformation->getWebspaceKey();
 
-                    if ($site) {
-                        $request->attributes->set(RequestAttributeEnum::SITE->value, $site);
-                        $this->requestContext->setParameter(RequestAttributeEnum::SITE->value, $site);
+                    if ($webspace) {
+                        $request->attributes->set(RequestAttributeEnum::WEBSPACE->value, $webspace);
+                        $this->requestContext->setParameter(RequestAttributeEnum::WEBSPACE->value, $webspace);
                     }
                 }
 
@@ -76,17 +76,17 @@ final readonly class RouteCollectionForRequestRouteLoader implements RouteCollec
             }
         }
 
-        if ((null !== $site && !\is_string($site))
+        if ((null !== $webspace && !\is_string($webspace))
             || !\is_string($slug)
         ) {
             return new RouteCollection();
         }
 
         $route = $this->routeRepository->findFirstBy([
-            'siteOrNull' => $site,
+            'webspaceOrNull' => $webspace,
             'locale' => $locale,
             'slug' => $slug,
-        ], ['site' => 'desc']);
+        ], ['webspace' => 'desc']);
 
         if (null === $route) {
             return new RouteCollection();

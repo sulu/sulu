@@ -63,7 +63,7 @@ class ResourceLocatorGeneratorTest extends TestCase
                 'title' => 'Hello World',
             ],
             locale: 'de',
-            site: 'website',
+            webspace: 'website',
             resourceKey: 'articles',
             parentResourceId: 'cff165a7-ae8e-46b4-8f32-f0a339173207',
             parentResourceKey: 'pages',
@@ -74,7 +74,7 @@ class ResourceLocatorGeneratorTest extends TestCase
             resourceId: 'cff165a7-ae8e-46b4-8f32-f0a339173207',
             locale: 'de',
             slug: '/news',
-            site: 'website',
+            webspace: 'website',
         );
         $this->routeRepository->findOneBy([
             'resourceId' => 'cff165a7-ae8e-46b4-8f32-f0a339173207',
@@ -98,19 +98,19 @@ class ResourceLocatorGeneratorTest extends TestCase
         $this->routeRepository->existBy([
             'slug' => '/hello-world',
             'locale' => 'en',
-            'site' => null,
+            'webspace' => null,
         ])->willReturn(true);
 
         $this->routeRepository->existBy([
             'slug' => '/hello-world-1',
             'locale' => 'en',
-            'site' => null,
+            'webspace' => null,
         ])->willReturn(true);
 
         $this->routeRepository->existBy([
             'slug' => '/hello-world-2',
             'locale' => 'en',
-            'site' => null,
+            'webspace' => null,
         ])->willReturn(false);
 
         $this->assertSame('/hello-world-2', $this->resourceLocatorGenerator->generate($request));
@@ -122,7 +122,7 @@ class ResourceLocatorGeneratorTest extends TestCase
     private function createResourceLocatorRequest(
         array $parts = [],
         string $locale = 'en',
-        ?string $site = null,
+        ?string $webspace = null,
         string $resourceKey = 'pages',
         ?string $resourceId = null,
         ?string $parentResourceId = null,
@@ -132,7 +132,7 @@ class ResourceLocatorGeneratorTest extends TestCase
         return new ResourceLocatorRequest(
             parts: $parts,
             locale: $locale,
-            site: $site,
+            webspace: $webspace,
             resourceKey: $resourceKey,
             resourceId: $resourceId,
             parentResourceId: $parentResourceId,
@@ -146,7 +146,7 @@ class ResourceLocatorGeneratorTest extends TestCase
         string $resourceId = '12345',
         string $locale = 'en',
         string $slug = '/',
-        ?string $site = null,
+        ?string $webspace = null,
         ?Route $parentRoute = null,
     ): Route {
         return new Route(
@@ -154,7 +154,7 @@ class ResourceLocatorGeneratorTest extends TestCase
             $resourceId,
             $locale,
             $slug,
-            $site,
+            $webspace,
             $parentRoute,
         );
     }

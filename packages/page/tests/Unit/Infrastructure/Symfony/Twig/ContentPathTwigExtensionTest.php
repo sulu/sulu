@@ -16,7 +16,7 @@ use PHPUnit\Framework\Attributes\TestWith;
 use PHPUnit\Framework\TestCase;
 use Sulu\Page\Infrastructure\Symfony\Twig\Extension\ContentPathTwigExtension;
 use Sulu\Route\Application\Routing\Generator\RouteGenerator;
-use Sulu\Route\Application\Routing\Generator\SiteRouteGeneratorInterface;
+use Sulu\Route\Application\Routing\Generator\WebspaceRouteGeneratorInterface;
 use Sulu\Route\Domain\Value\RequestAttributeEnum;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -47,7 +47,7 @@ class ContentPathTwigExtensionTest extends TestCase
             $this->requestContext,
         );
 
-        $websiteRouteGenerator = new class() implements SiteRouteGeneratorInterface {
+        $websiteRouteGenerator = new class() implements WebspaceRouteGeneratorInterface {
             public function generate(RequestContext $requestContext, string $slug, string $locale): string
             {
                 $port = match ($requestContext->getScheme()) {
@@ -67,7 +67,7 @@ class ContentPathTwigExtensionTest extends TestCase
             }
         };
 
-        $intranetRouteGenerator = new class() implements SiteRouteGeneratorInterface {
+        $intranetRouteGenerator = new class() implements WebspaceRouteGeneratorInterface {
             public function generate(RequestContext $requestContext, string $slug, string $locale): string
             {
                 $port = match ($requestContext->getScheme()) {
@@ -117,7 +117,7 @@ class ContentPathTwigExtensionTest extends TestCase
     #[TestWith(['http://intranet.localhost/de/test', '/test', 'intranet', 'de'])]
     public function testSuluContentPath(string $expectedUrl, string $slug, ?string $webspaceKey = null, ?string $locale = null): void
     {
-        $this->requestContext->setParameter(RequestAttributeEnum::SITE->value, 'website');
+        $this->requestContext->setParameter(RequestAttributeEnum::WEBSPACE->value, 'website');
 
         $this->assertSame(
             $expectedUrl,
@@ -127,7 +127,7 @@ class ContentPathTwigExtensionTest extends TestCase
 
     public function testSuluContentRootPath(): void
     {
-        $this->requestContext->setParameter(RequestAttributeEnum::SITE->value, 'website');
+        $this->requestContext->setParameter(RequestAttributeEnum::WEBSPACE->value, 'website');
 
         $this->assertSame(
             '/en',

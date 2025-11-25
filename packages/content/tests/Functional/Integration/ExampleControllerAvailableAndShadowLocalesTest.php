@@ -43,7 +43,7 @@ class ExampleControllerAvailableAndShadowLocalesTest extends SuluTestCase
         // TODO this should not be necessary
         $this->client->disableReboot();
         $requestContext = self::getContainer()->get('router.request_context');
-        $requestContext->setParameter(RequestAttributeEnum::SITE->value, 'sulu-io');
+        $requestContext->setParameter(RequestAttributeEnum::WEBSPACE->value, 'sulu-io');
         // TODO this should not be necessary
     }
 

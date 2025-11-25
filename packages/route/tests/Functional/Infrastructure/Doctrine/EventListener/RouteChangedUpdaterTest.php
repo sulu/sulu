@@ -22,7 +22,7 @@ use Sulu\Route\Infrastructure\Doctrine\EventListener\RouteChangedUpdater;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 /**
- * @phpstan-type RouteData array{resourceId: string, locale?: string, slug: string, site?: string|null, parentSlug?: string|null, parentSite?: string|null}
+ * @phpstan-type RouteData array{resourceId: string, locale?: string, slug: string, webspace?: string|null, parentSlug?: string|null, parentWebspace?: string|null}
  */
 #[CoversClass(RouteChangedUpdater::class)]
 class RouteChangedUpdaterTest extends KernelTestCase
@@ -116,10 +116,10 @@ class RouteChangedUpdaterTest extends KernelTestCase
         $postParentRouteSetter = [];
         foreach ($routes as $routeData) {
             $route = $this->createRoute($routeData);
-            $uniqueKey = ($route->getSite() ?? '') . $route->getLocale() . $route->getSlug();
+            $uniqueKey = ($route->getWebspace() ?? '') . $route->getLocale() . $route->getSlug();
             $parentRoute = null;
             if (isset($routeData['parentSlug'])) {
-                $parentUniqueKey = ($routeData['parentSite'] ?? $route->getSite() ?? '') . $route->getLocale() . $routeData['parentSlug'];
+                $parentUniqueKey = ($routeData['parentWebspace'] ?? $route->getWebspace() ?? '') . $route->getLocale() . $routeData['parentSlug'];
                 $parentRoute = $createdRoutes[$parentUniqueKey] ?? null;
                 if (null === $parentRoute) { // if parent route was not yet created we set it later see $postParentRouteSetter foreach below
                     $postParentRouteSetter[$parentUniqueKey][] = $route;
@@ -162,14 +162,14 @@ class RouteChangedUpdaterTest extends KernelTestCase
                 'resourceKey' => 'page',
                 'resourceId' => $expectedRoute['resourceId'],
                 'locale' => $expectedRoute['locale'] ?? 'en',
-                'site' => $expectedRoute['site'] ?? null,
+                'webspace' => $expectedRoute['webspace'] ?? null,
             ]);
 
             $this->assertNotNull($route, \sprintf(
-                'Expected route with resourceId "%s", locale "%s" and site "%s" not found.',
+                'Expected route with resourceId "%s", locale "%s" and webspace "%s" not found.',
                 $expectedRoute['resourceId'],
                 $expectedRoute['locale'] ?? 'en',
-                $expectedRoute['site'] ?? 'NULL',
+                $expectedRoute['webspace'] ?? 'NULL',
             ));
 
             $this->assertSame($expectedRoute['slug'], $route->getSlug());
@@ -190,7 +190,7 @@ class RouteChangedUpdaterTest extends KernelTestCase
                 if ($expectedRoute['resourceId'] === $route['resourceId']
                     && $expectedRoute['slug'] !== $route['slug']
                     && ($expectedRoute['locale'] ?? 'en') === ($route['locale'] ?? 'en')
-                    && ($expectedRoute['site'] ?? null) === ($route['site'] ?? null)
+                    && ($expectedRoute['webspace'] ?? null) === ($route['webspace'] ?? null)
                 ) {
                     $expectedHistoryRoutes[] = $route;
                 }
@@ -203,7 +203,7 @@ class RouteChangedUpdaterTest extends KernelTestCase
         foreach ($expectedHistoryRoutes as $expectedHistoryRoute) {
             $route = $repository->findOneBy([
                 'locale' => $expectedHistoryRoute['locale'] ?? 'en',
-                'site' => $expectedHistoryRoute['site'] ?? null,
+                'webspace' => $expectedHistoryRoute['webspace'] ?? null,
                 'slug' => $expectedHistoryRoute['slug'],
             ]);
 
@@ -260,19 +260,19 @@ class RouteChangedUpdaterTest extends KernelTestCase
                     'resourceId' => '1',
                     'slug' => '/test',
                     'locale' => 'en',
-                    'site' => 'website',
+                    'webspace' => 'website',
                 ],
                 [
                     'resourceId' => '2',
                     'slug' => '/test-2',
                     'locale' => 'en',
-                    'site' => 'website',
+                    'webspace' => 'website',
                 ],
                 [
                     'resourceId' => '3',
                     'slug' => '/test-2/child-a',
                     'locale' => 'en',
-                    'site' => 'website',
+                    'webspace' => 'website',
                 ],
             ],
             'changeRoute' => '/test-article',
@@ -281,19 +281,19 @@ class RouteChangedUpdaterTest extends KernelTestCase
                     'resourceId' => '1',
                     'slug' => '/test-article',
                     'locale' => 'en',
-                    'site' => 'website',
+                    'webspace' => 'website',
                 ],
                 [
                     'resourceId' => '2',
                     'slug' => '/test-2',
                     'locale' => 'en',
-                    'site' => 'website',
+                    'webspace' => 'website',
                 ],
                 [
                     'resourceId' => '3',
                     'slug' => '/test-2/child-a',
                     'locale' => 'en',
-                    'site' => 'website',
+                    'webspace' => 'website',
                 ],
             ],
             'expectedChangedRoutes' => 1,
@@ -513,59 +513,59 @@ class RouteChangedUpdaterTest extends KernelTestCase
                 [
                     'resourceId' => '1',
                     'slug' => '/test',
-                    'site' => 'website',
+                    'webspace' => 'website',
                 ],
                 [
                     'resourceId' => '2',
                     'slug' => '/test/child-a',
-                    'site' => 'website',
+                    'webspace' => 'website',
                     'parentSlug' => '/test',
                 ],
                 [
                     'resourceId' => '3',
                     'slug' => '/test/child-b',
-                    'site' => 'website',
+                    'webspace' => 'website',
                     'parentSlug' => '/test',
                 ],
                 [
                     'resourceId' => '4',
                     'slug' => '/test/child-b/grand-child-a',
-                    'site' => 'website',
+                    'webspace' => 'website',
                     'parentSlug' => '/test/child-b',
                 ],
                 [
                     'resourceId' => '5',
                     'slug' => '/test/child-b/grand-child-b',
-                    'site' => 'website',
+                    'webspace' => 'website',
                     'parentSlug' => '/test/child-b',
                 ],
                 [
                     'resourceId' => '1',
                     'slug' => '/test',
-                    'site' => 'intranet',
+                    'webspace' => 'intranet',
                 ],
                 [
                     'resourceId' => '2',
                     'slug' => '/test/child-a',
-                    'site' => 'intranet',
+                    'webspace' => 'intranet',
                     'parentSlug' => '/test',
                 ],
                 [
                     'resourceId' => '3',
                     'slug' => '/test/child-b',
-                    'site' => 'intranet',
+                    'webspace' => 'intranet',
                     'parentSlug' => '/test',
                 ],
                 [
                     'resourceId' => '4',
                     'slug' => '/test/child-b/grand-child-a',
-                    'site' => 'intranet',
+                    'webspace' => 'intranet',
                     'parentSlug' => '/test/child-b',
                 ],
                 [
                     'resourceId' => '5',
                     'slug' => '/test/child-b/grand-child-b',
-                    'site' => 'intranet',
+                    'webspace' => 'intranet',
                     'parentSlug' => '/test/child-b',
                 ],
             ],
@@ -574,59 +574,59 @@ class RouteChangedUpdaterTest extends KernelTestCase
                 [
                     'resourceId' => '1',
                     'slug' => '/test-article',
-                    'site' => 'website',
+                    'webspace' => 'website',
                 ],
                 [
                     'resourceId' => '2',
                     'slug' => '/test-article/child-a',
-                    'site' => 'website',
+                    'webspace' => 'website',
                     'parentSlug' => '/test-article',
                 ],
                 [
                     'resourceId' => '3',
                     'slug' => '/test-article/child-b',
-                    'site' => 'website',
+                    'webspace' => 'website',
                     'parentSlug' => '/test-article',
                 ],
                 [
                     'resourceId' => '4',
                     'slug' => '/test-article/child-b/grand-child-a',
-                    'site' => 'website',
+                    'webspace' => 'website',
                     'parentSlug' => '/test-article/child-b',
                 ],
                 [
                     'resourceId' => '5',
                     'slug' => '/test-article/child-b/grand-child-b',
-                    'site' => 'website',
+                    'webspace' => 'website',
                     'parentSlug' => '/test-article/child-b',
                 ],
                 [
                     'resourceId' => '1',
                     'slug' => '/test',
-                    'site' => 'intranet',
+                    'webspace' => 'intranet',
                 ],
                 [
                     'resourceId' => '2',
                     'slug' => '/test/child-a',
-                    'site' => 'intranet',
+                    'webspace' => 'intranet',
                     'parentSlug' => '/test',
                 ],
                 [
                     'resourceId' => '3',
                     'slug' => '/test/child-b',
-                    'site' => 'intranet',
+                    'webspace' => 'intranet',
                     'parentSlug' => '/test',
                 ],
                 [
                     'resourceId' => '4',
                     'slug' => '/test/child-b/grand-child-a',
-                    'site' => 'intranet',
+                    'webspace' => 'intranet',
                     'parentSlug' => '/test/child-b',
                 ],
                 [
                     'resourceId' => '5',
                     'slug' => '/test/child-b/grand-child-b',
-                    'site' => 'intranet',
+                    'webspace' => 'intranet',
                     'parentSlug' => '/test/child-b',
                 ],
             ],
@@ -638,40 +638,40 @@ class RouteChangedUpdaterTest extends KernelTestCase
                 [
                     'resourceId' => '1',
                     'slug' => '/test',
-                    'site' => 'website',
+                    'webspace' => 'website',
                 ],
                 [
                     'resourceId' => '2',
                     'slug' => '/test/child-a',
-                    'site' => 'website',
+                    'webspace' => 'website',
                     'parentSlug' => '/test',
-                    'parentSite' => 'website',
+                    'parentWebspace' => 'website',
                 ],
                 [
                     'resourceId' => '3',
                     'slug' => '/test/something-else/child-a',
-                    'site' => null,
+                    'webspace' => null,
                     'parentSlug' => '/test',
-                    'parentSite' => 'website',
+                    'parentWebspace' => 'website',
                 ],
                 [
                     'resourceId' => '4',
                     'slug' => '/test/something-else/child-b',
-                    'site' => null,
+                    'webspace' => null,
                     'parentSlug' => '/test',
-                    'parentSite' => 'website',
+                    'parentWebspace' => 'website',
                 ],
                 [
                     'resourceId' => '10',
                     'slug' => '/test-2',
-                    'site' => 'website',
+                    'webspace' => 'website',
                 ],
                 [
                     'resourceId' => '11',
                     'slug' => '/test-2/something-else/child-a',
-                    'site' => null,
+                    'webspace' => null,
                     'parentSlug' => '/test-2',
-                    'parentSite' => 'website',
+                    'parentWebspace' => 'website',
                 ],
             ],
             'changeRoute' => '/test-article',
@@ -679,39 +679,39 @@ class RouteChangedUpdaterTest extends KernelTestCase
                 [
                     'resourceId' => '1',
                     'slug' => '/test-article',
-                    'site' => 'website',
+                    'webspace' => 'website',
                 ],
                 [
                     'resourceId' => '2',
                     'slug' => '/test-article/child-a',
-                    'site' => 'website',
+                    'webspace' => 'website',
                     'parentSlug' => '/test-article',
                 ],
                 [
                     'resourceId' => '3',
                     'slug' => '/test-article/something-else/child-a',
-                    'site' => null,
+                    'webspace' => null,
                     'parentSlug' => '/test-article',
-                    'parentSite' => 'website',
+                    'parentWebspace' => 'website',
                 ],
                 [
                     'resourceId' => '4',
                     'slug' => '/test-article/something-else/child-b',
-                    'site' => null,
+                    'webspace' => null,
                     'parentSlug' => '/test-article',
-                    'parentSite' => 'website',
+                    'parentWebspace' => 'website',
                 ],
                 [
                     'resourceId' => '10',
                     'slug' => '/test-2',
-                    'site' => 'website',
+                    'webspace' => 'website',
                 ],
                 [
                     'resourceId' => '11',
                     'slug' => '/test-2/something-else/child-a',
-                    'site' => null,
+                    'webspace' => null,
                     'parentSlug' => '/test-2',
-                    'parentSite' => 'website',
+                    'parentWebspace' => 'website',
                 ],
             ],
             'expectedChangedRoutes' => 4,
@@ -722,14 +722,14 @@ class RouteChangedUpdaterTest extends KernelTestCase
                 [
                     'resourceId' => '2',
                     'slug' => '/test/child-a',
-                    'site' => 'website',
+                    'webspace' => 'website',
                     'parentSlug' => '/test',
-                    'parentSite' => 'website',
+                    'parentWebspace' => 'website',
                 ],
                 [
                     'resourceId' => '1',
                     'slug' => '/test',
-                    'site' => 'website',
+                    'webspace' => 'website',
                 ],
             ],
             'changeRoute' => '/test/child-a-edit',
@@ -737,14 +737,14 @@ class RouteChangedUpdaterTest extends KernelTestCase
                 [
                     'resourceId' => '2',
                     'slug' => '/test/child-a-edit',
-                    'site' => 'website',
+                    'webspace' => 'website',
                     'parentSlug' => '/test',
-                    'parentSite' => 'website',
+                    'parentWebspace' => 'website',
                 ],
                 [
                     'resourceId' => '1',
                     'slug' => '/test',
-                    'site' => 'website',
+                    'webspace' => 'website',
                 ],
             ],
             'expectedChangedRoutes' => 1,
@@ -755,14 +755,14 @@ class RouteChangedUpdaterTest extends KernelTestCase
                 [
                     'resourceId' => '2',
                     'slug' => '/test/child-a',
-                    'site' => 'website',
+                    'webspace' => 'website',
                     'parentSlug' => '/test',
-                    'parentSite' => 'website',
+                    'parentWebspace' => 'website',
                 ],
                 [
                     'resourceId' => '1',
                     'slug' => '/test',
-                    'site' => 'website',
+                    'webspace' => 'website',
                 ],
             ],
             'changeRoute' => '/test-child-a',
@@ -770,14 +770,14 @@ class RouteChangedUpdaterTest extends KernelTestCase
                 [
                     'resourceId' => '2',
                     'slug' => '/test-child-a',
-                    'site' => 'website',
+                    'webspace' => 'website',
                     'parentSlug' => '/test',
-                    'parentSite' => 'website',
+                    'parentWebspace' => 'website',
                 ],
                 [
                     'resourceId' => '1',
                     'slug' => '/test',
-                    'site' => 'website',
+                    'webspace' => 'website',
                 ],
             ],
             'expectedChangedRoutes' => 1,
@@ -788,21 +788,21 @@ class RouteChangedUpdaterTest extends KernelTestCase
                 [
                     'resourceId' => '1',
                     'slug' => '/test',
-                    'site' => 'website',
+                    'webspace' => 'website',
                 ],
                 [
                     'resourceId' => '2',
                     'slug' => '/test-child-a',
-                    'site' => 'website',
+                    'webspace' => 'website',
                     'parentSlug' => '/test',
-                    'parentSite' => 'website',
+                    'parentWebspace' => 'website',
                 ],
                 [
                     'resourceId' => '3',
                     'slug' => '/test/child-b',
-                    'site' => 'website',
+                    'webspace' => 'website',
                     'parentSlug' => '/test',
-                    'parentSite' => 'website',
+                    'parentWebspace' => 'website',
                 ],
             ],
             'changeRoute' => '/test-article',
@@ -810,21 +810,21 @@ class RouteChangedUpdaterTest extends KernelTestCase
                 [
                     'resourceId' => '1',
                     'slug' => '/test-article',
-                    'site' => 'website',
+                    'webspace' => 'website',
                 ],
                 [
                     'resourceId' => '2',
                     'slug' => '/test-child-a',
-                    'site' => 'website',
+                    'webspace' => 'website',
                     'parentSlug' => '/test-article',
-                    'parentSite' => 'website',
+                    'parentWebspace' => 'website',
                 ],
                 [
                     'resourceId' => '3',
                     'slug' => '/test-article/child-b',
-                    'site' => 'website',
+                    'webspace' => 'website',
                     'parentSlug' => '/test-article',
-                    'parentSite' => 'website',
+                    'parentWebspace' => 'website',
                 ],
             ],
             'expectedChangedRoutes' => 2,
@@ -835,14 +835,14 @@ class RouteChangedUpdaterTest extends KernelTestCase
                 [
                     'resourceId' => '1',
                     'slug' => '/test',
-                    'site' => 'website',
+                    'webspace' => 'website',
                 ],
                 [
                     'resourceId' => '2',
                     'slug' => '/test/child-a',
-                    'site' => 'website',
+                    'webspace' => 'website',
                     'parentSlug' => null,
-                    'parentSite' => null,
+                    'parentWebspace' => null,
                 ],
             ],
             'changeRoute' => '/test-article',
@@ -850,14 +850,14 @@ class RouteChangedUpdaterTest extends KernelTestCase
                 [
                     'resourceId' => '1',
                     'slug' => '/test-article',
-                    'site' => 'website',
+                    'webspace' => 'website',
                 ],
                 [
                     'resourceId' => '2',
                     'slug' => '/test/child-a',
-                    'site' => 'website',
+                    'webspace' => 'website',
                     'parentSlug' => null,
-                    'parentSite' => null,
+                    'parentWebspace' => null,
                 ],
             ],
             'expectedChangedRoutes' => 1,
@@ -868,21 +868,21 @@ class RouteChangedUpdaterTest extends KernelTestCase
                 [
                     'resourceId' => '1',
                     'slug' => '/test',
-                    'site' => 'website',
+                    'webspace' => 'website',
                 ],
                 [
                     'resourceId' => '2',
                     'slug' => '/test/child-a',
-                    'site' => 'website',
+                    'webspace' => 'website',
                     'parentSlug' => '/test',
-                    'parentSite' => 'website',
+                    'parentWebspace' => 'website',
                 ],
                 [
                     'resourceId' => '3',
                     'slug' => '/test/grand-child-1', // this was before "/test/child-a/grand-child-1"
-                    'site' => 'website',
+                    'webspace' => 'website',
                     'parentSlug' => '/test/child-a', // and so still child of "/test-child-a"
-                    'parentSite' => 'website',
+                    'parentWebspace' => 'website',
                 ],
             ],
             'changeRoute' => '/test-article',
@@ -890,21 +890,21 @@ class RouteChangedUpdaterTest extends KernelTestCase
                 [
                     'resourceId' => '1',
                     'slug' => '/test-article',
-                    'site' => 'website',
+                    'webspace' => 'website',
                 ],
                 [
                     'resourceId' => '2',
                     'slug' => '/test-article/child-a',
-                    'site' => 'website',
+                    'webspace' => 'website',
                     'parentSlug' => '/test-article',
-                    'parentSite' => 'website',
+                    'parentWebspace' => 'website',
                 ],
                 [
                     'resourceId' => '3',
                     'slug' => '/test-article/grand-child-1',
-                    'site' => 'website',
+                    'webspace' => 'website',
                     'parentSlug' => '/test-article/child-a',
-                    'parentSite' => 'website',
+                    'parentWebspace' => 'website',
                 ],
             ],
             'expectedChangedRoutes' => 3,
@@ -1000,7 +1000,7 @@ class RouteChangedUpdaterTest extends KernelTestCase
             $route['resourceId'],
             $route['locale'] ?? 'en',
             $route['slug'],
-            $route['site'] ?? null,
+            $route['webspace'] ?? null,
         );
     }
 }

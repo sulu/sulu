@@ -23,5 +23,5 @@ doctrine:
         url: '%env(DATABASE_URL)%'
 
 services:
-    Sulu\Route\Tests\Application\ExampleSiteRouteGenerator:
+    Sulu\Route\Tests\Application\ExampleWebspaceRouteGenerator:
         autoconfigure: true

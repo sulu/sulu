@@ -52,7 +52,7 @@ final readonly class RouteHistoryDefaultsProvider implements RouteDefaultsProvid
             throw new GoneHttpException(\sprintf('The target route with resourceKey "%s" and resourceId "%s" no longer exists.', $resourceKey, $resourceId));
         }
 
-        $url = $this->routeGenerator->generate($targetRoute->getSlug(), $targetRoute->getLocale(), $targetRoute->getSite());
+        $url = $this->routeGenerator->generate($targetRoute->getSlug(), $targetRoute->getLocale(), $targetRoute->getWebspace());
 
         return [
             '_controller' => RedirectController::class,

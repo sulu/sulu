@@ -14,7 +14,7 @@ namespace Sulu\Route\Tests\Unit\Application\Routing\Generator;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Sulu\Route\Application\Routing\Generator\RouteGenerator;
-use Sulu\Route\Application\Routing\Generator\SiteRouteGeneratorInterface;
+use Sulu\Route\Application\Routing\Generator\WebspaceRouteGeneratorInterface;
 use Sulu\Route\Domain\Exception\MissingRequestContextParameterException;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -32,7 +32,7 @@ class RouteGeneratorTest extends TestCase
     public function setUp(): void
     {
         $container = new Container();
-        $container->set('the_site', new class() implements SiteRouteGeneratorInterface {
+        $container->set('the_site', new class() implements WebspaceRouteGeneratorInterface {
             public function generate(RequestContext $requestContext, string $slug, string $locale): string
             {
                 $port = match ($requestContext->getScheme()) {
@@ -52,7 +52,7 @@ class RouteGeneratorTest extends TestCase
             }
         });
 
-        $container->set('the_other_side', new class() implements SiteRouteGeneratorInterface {
+        $container->set('the_other_side', new class() implements WebspaceRouteGeneratorInterface {
             public function generate(RequestContext $requestContext, string $slug, string $locale): string
             {
                 return \sprintf(
@@ -133,9 +133,9 @@ class RouteGeneratorTest extends TestCase
         $this->assertSame('/de/test', $result);
     }
 
-    public function testGenerateRequestContextSite(): void
+    public function testGenerateRequestContextWebspace(): void
     {
-        $this->requestContext->setParameter('site', 'the_site');
+        $this->requestContext->setParameter('webspace', 'the_site');
 
         $result = $this->routeGenerator->generate('/test', 'en', null);
         $this->assertSame('/en/test', $result);
@@ -147,10 +147,10 @@ class RouteGeneratorTest extends TestCase
         $this->assertSame('/en/test', $result);
     }
 
-    public function testGenerateRequestContextSiteMissing(): void
+    public function testGenerateRequestContextWebspaceMissing(): void
     {
         $this->expectException(MissingRequestContextParameterException::class);
-        $this->expectExceptionMessage('Missing request context parameter "site".');
+        $this->expectExceptionMessage('Missing request context parameter "webspace".');
 
         $this->routeGenerator->generate('/test', 'en', null);
     }

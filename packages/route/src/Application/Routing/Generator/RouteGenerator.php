@@ -23,27 +23,27 @@ use Symfony\Component\Translation\LocaleSwitcher;
 final class RouteGenerator implements RouteGeneratorInterface
 {
     public function __construct(
-        private ContainerInterface $siteRouteGeneratorLocator,
+        private ContainerInterface $webspaceRouteGeneratorLocator,
         private RequestContext $requestContext,
         private RequestStack $requestStack,
         private LocaleSwitcher $localeSwitcher,
     ) {
     }
 
-    public function generate(string $slug, ?string $locale = null, ?string $site = null, int $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH): string
+    public function generate(string $slug, ?string $locale = null, ?string $webspace = null, int $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH): string
     {
-        if (null === $site) {
-            $requestSite = $this->requestContext->getParameter(RequestAttributeEnum::SITE->value);
+        if (null === $webspace) {
+            $requestWebspace = $this->requestContext->getParameter(RequestAttributeEnum::WEBSPACE->value);
 
-            if (!\is_string($requestSite)) {
-                $requestSite = $this->requestStack->getCurrentRequest()?->attributes->get(RequestAttributeEnum::SITE->value);
+            if (!\is_string($requestWebspace)) {
+                $requestWebspace = $this->requestStack->getCurrentRequest()?->attributes->get(RequestAttributeEnum::WEBSPACE->value);
             }
 
-            if (!\is_string($requestSite)) {
-                throw new MissingRequestContextParameterException(RequestAttributeEnum::SITE->value);
+            if (!\is_string($requestWebspace)) {
+                throw new MissingRequestContextParameterException(RequestAttributeEnum::WEBSPACE->value);
             }
 
-            $site = $requestSite;
+            $webspace = $requestWebspace;
         }
 
         if (null === $locale) {
@@ -55,16 +55,16 @@ final class RouteGenerator implements RouteGeneratorInterface
             }
         }
 
-        $siteRouteGenerator = null;
-        if ($this->siteRouteGeneratorLocator->has($site)) {
-            $siteRouteGenerator = $this->siteRouteGeneratorLocator->get($site);
-        } elseif ($this->siteRouteGeneratorLocator->has('.default')) { // TODO discuss how we should handle this, currently a workaround to avoid register one per webspace
-            $siteRouteGenerator = $this->siteRouteGeneratorLocator->get('.default');
+        $webspaceRouteGenerator = null;
+        if ($this->webspaceRouteGeneratorLocator->has($webspace)) {
+            $webspaceRouteGenerator = $this->webspaceRouteGeneratorLocator->get($webspace);
+        } elseif ($this->webspaceRouteGeneratorLocator->has('.default')) { // TODO discuss how we should handle this, currently a workaround to avoid register one per webspace
+            $webspaceRouteGenerator = $this->webspaceRouteGeneratorLocator->get('.default');
         }
 
-        \assert($siteRouteGenerator instanceof SiteRouteGeneratorInterface, 'The SiteRouteGenerator for "' . $site . '" must implement SiteRouteGeneratorInterface but got: ' . \get_debug_type($siteRouteGenerator));
+        \assert($webspaceRouteGenerator instanceof WebspaceRouteGeneratorInterface, 'The WebspaceRouteGenerator for "' . $webspace . '" must implement WebspaceRouteGeneratorInterface but got: ' . \get_debug_type($webspaceRouteGenerator));
 
-        $generatedUrl = $siteRouteGenerator->generate($this->requestContext, $slug, $locale);
+        $generatedUrl = $webspaceRouteGenerator->generate($this->requestContext, $slug, $locale);
 
         $schemeAndHttpHost = \sprintf(
             '%s://%s%s/',

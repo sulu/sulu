@@ -79,7 +79,7 @@ class RequestListenerTest extends TestCase
 
         $this->assertSame('test/', $this->requestContext->getParameter('prefix'));
         $this->assertSame('sulu.io', $this->requestContext->getParameter('host'));
-        $this->assertSame('sulu_io', $this->requestContext->getParameter('site'));
+        $this->assertSame('sulu_io', $this->requestContext->getParameter('webspace'));
     }
 
     public function testRequestAnalyzerSubRequest(): void
@@ -123,7 +123,7 @@ class RequestListenerTest extends TestCase
 
         $this->assertFalse($this->requestContext->hasParameter('prefix'));
         $this->assertFalse($this->requestContext->hasParameter('host'));
-        $this->assertFalse($this->requestContext->hasParameter('site'));
+        $this->assertFalse($this->requestContext->hasParameter('webspace'));
     }
 
     private function createRequestEvent(Request $request, int $requestType = HttpKernelInterface::MAIN_REQUEST): RequestEvent

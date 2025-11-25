@@ -18,7 +18,7 @@ use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\TestBundle\Testing\SetGetPrivatePropertyTrait;
 use Sulu\Route\Application\Routing\Generator\RouteGenerator;
-use Sulu\Route\Application\Routing\Generator\SiteRouteGeneratorInterface;
+use Sulu\Route\Application\Routing\Generator\WebspaceRouteGeneratorInterface;
 use Sulu\Route\Application\Routing\Matcher\RouteHistoryDefaultsProvider;
 use Sulu\Route\Domain\Model\Route;
 use Sulu\Route\Domain\Repository\RouteRepositoryInterface;
@@ -52,7 +52,7 @@ class RouteHistoryDefaultsProviderTest extends TestCase
 
         // Use the same setup as in RouteGeneratorTest
         $container = new Container();
-        $container->set('the_site', new class() implements SiteRouteGeneratorInterface {
+        $container->set('the_site', new class() implements WebspaceRouteGeneratorInterface {
             public function generate(RequestContext $requestContext, string $slug, string $locale): string
             {
                 $port = match ($requestContext->getScheme()) {

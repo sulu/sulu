@@ -11,13 +11,13 @@
 
 namespace Sulu\Route\Tests\Application;
 
-use Sulu\Route\Application\Routing\Generator\SiteRouteGeneratorInterface;
+use Sulu\Route\Application\Routing\Generator\WebspaceRouteGeneratorInterface;
 use Symfony\Component\Routing\RequestContext;
 
 /**
  * @internal
  */
-final class ExampleSiteRouteGenerator implements SiteRouteGeneratorInterface
+final class ExampleWebspaceRouteGenerator implements WebspaceRouteGeneratorInterface
 {
     public function generate(RequestContext $requestContext, string $slug, string $locale): string
     {
@@ -37,7 +37,7 @@ final class ExampleSiteRouteGenerator implements SiteRouteGeneratorInterface
         );
     }
 
-    public static function getSite(): string
+    public static function getWebspace(): string
     {
         return 'sulu-io';
     }
