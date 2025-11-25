@@ -192,6 +192,7 @@ class RoleController extends AbstractRestController implements SecuredController
                 if (\strpos($e->getMessage(), 'Duplicate entry \'' . $role->getName())) {
                     throw new RoleNameAlreadyExistsException($name, $e);
                 } else {
+                    // @phpstan-ignore-next-line argument.type
                     throw new RoleKeyAlreadyExistsException($key, $e);
                 }
             }
@@ -245,6 +246,7 @@ class RoleController extends AbstractRestController implements SecuredController
             if (\strpos($e->getMessage(), 'Duplicate entry \'' . $role->getName())) {
                 throw new RoleNameAlreadyExistsException($name, $e);
             } else {
+                // @phpstan-ignore-next-line argument.type
                 throw new RoleKeyAlreadyExistsException($key, $e);
             }
         } catch (RestException $re) {
