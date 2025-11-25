@@ -379,15 +379,15 @@ class FileVersion implements AuditableInterface
 
     public function addTargetGroup(TargetGroupInterface $targetGroup): static
     {
-        $this->targetGroups[] = $targetGroup;
+        $this->getTargetGroups()[] = $targetGroup;
 
         return $this;
     }
 
     public function removeTargetGroups(): static
     {
-        foreach ($this->targetGroups as $targetGroup) {
-            $this->targetGroups->removeElement($targetGroup);
+        foreach ($this->getTargetGroups() as $targetGroup) {
+            $this->getTargetGroups()->removeElement($targetGroup);
         }
 
         return $this;
@@ -398,6 +398,13 @@ class FileVersion implements AuditableInterface
      */
     public function getTargetGroups(): DoctrineCollection
     {
+        // Lazy initialization needed because targetGroups is not mapped in Doctrine
+        // (AudienceTargetingBundle is optional). Doctrine won't initialize this
+        // collection when loading entities from the database.
+        if (!isset($this->targetGroups)) { // @phpstan-ignore-line isset.initializedProperty
+            $this->targetGroups = new ArrayCollection();
+        }
+
         return $this->targetGroups;
     }
 
