@@ -156,9 +156,9 @@ class RoleController extends AbstractRestController implements SecuredController
      */
     public function postAction(Request $request)
     {
-        $name = $request->request->get('name');
-        $key = $request->request->get('key');
-        $system = $request->request->get('system');
+        $name = $request->request->getString('name') ?: null;
+        $key = $request->request->getString('key') ?: null;
+        $system = $request->request->getString('system') ?: null;
 
         try {
             if (null === $name) {
@@ -192,6 +192,7 @@ class RoleController extends AbstractRestController implements SecuredController
                 if (\strpos($e->getMessage(), 'Duplicate entry \'' . $role->getName())) {
                     throw new RoleNameAlreadyExistsException($name, $e);
                 } else {
+                    // @phpstan-ignore-next-line argument.type
                     throw new RoleKeyAlreadyExistsException($key, $e);
                 }
             }
@@ -212,14 +213,21 @@ class RoleController extends AbstractRestController implements SecuredController
         /** @var RoleInterface $role */
         $role = $this->roleRepository->findRoleById($id);
 
-        $name = $request->request->get('name');
-        $key = $request->request->get('key');
-        $system = $request->request->get('system');
+        $name = $request->request->getString('name') ?: null;
+        $key = $request->request->getString('key') ?: null;
+        $system = $request->request->getString('system') ?: null;
 
         try {
             if (!$role) {
                 throw new EntityNotFoundException($this->roleRepository->getClassName(), $id);
             } else {
+                if (null === $name) {
+                    throw new InvalidArgumentException('Role', 'name');
+                }
+                if (null === $system) {
+                    throw new InvalidArgumentException('Role', 'system');
+                }
+
                 $role->setName($name);
                 $role->setKey($key);
                 $role->setSystem($system);
@@ -238,6 +246,7 @@ class RoleController extends AbstractRestController implements SecuredController
             if (\strpos($e->getMessage(), 'Duplicate entry \'' . $role->getName())) {
                 throw new RoleNameAlreadyExistsException($name, $e);
             } else {
+                // @phpstan-ignore-next-line argument.type
                 throw new RoleKeyAlreadyExistsException($key, $e);
             }
         } catch (RestException $re) {

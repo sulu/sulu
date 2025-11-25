@@ -13,47 +13,23 @@ namespace Sulu\Component\Security\Authorization\AccessControl;
 
 use Sulu\Component\Security\Authentication\RoleInterface;
 
-/**
- * Interface for the model responsible for storing access control information of objects.
- */
 interface AccessControlInterface
 {
-    /**
-     * @return int
-     */
-    public function getId();
+    public function getId(): int;
 
-    /**
-     * @return RoleInterface
-     */
-    public function getRole();
+    public function getRole(): RoleInterface;
 
-    /**
-     * @param RoleInterface $role
-     */
-    public function setRole($role);
+    public function setRole(RoleInterface $role): static;
 
-    /**
-     * @return int
-     */
-    public function getPermissions();
+    public function getPermissions(): int;
 
-    /**
-     * @param int $permissions
-     */
-    public function setPermissions($permissions);
+    public function setPermissions(int $permissions): static;
 
-    /**
-     * @return string|int
-     */
-    public function getEntityId();
+    public function getEntityId(): string|int;
 
-    /**
-     * @param string|int $entityId
-     */
-    public function setEntityId($entityId);
+    public function setEntityId(string|int $entityId): static;
 
-    public function getEntityClass();
+    public function getEntityClass(): string;
 
-    public function setEntityClass($entityClass);
+    public function setEntityClass(string $entityClass): static;
 }

@@ -14,68 +14,58 @@ namespace Sulu\Bundle\SecurityBundle\Entity;
 use Sulu\Component\Security\Authentication\RoleInterface;
 use Sulu\Component\Security\Authentication\RoleSettingInterface;
 
-/**
- * RoleSetting.
- */
 class RoleSetting implements RoleSettingInterface
 {
-    /**
-     * @var int
-     */
-    private $id;
+    private int $id;
 
-    /**
-     * @var string
-     */
-    private $key;
+    private string $key;
 
-    /**
-     * @var array
-     */
-    private $value;
+    private mixed $value;
 
-    /**
-     * @var RoleInterface
-     */
-    private $role;
+    private ?RoleInterface $role = null;
 
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function setKey($key)
+    public function isNew(): bool
+    {
+        return !isset($this->id);
+    }
+
+    public function setKey(string $key): static
     {
         $this->key = $key;
 
         return $this;
     }
 
-    public function getKey()
+    public function getKey(): string
     {
         return $this->key;
     }
 
-    public function setValue($value)
+    public function setValue(mixed $value): static
     {
         $this->value = $value;
 
         return $this;
     }
 
-    public function getValue()
+    public function getValue(): mixed
     {
         return $this->value;
     }
 
-    public function setRole(?RoleInterface $role = null)
+    public function setRole(?RoleInterface $role = null): static
     {
         $this->role = $role;
 
         return $this;
     }
 
-    public function getRole()
+    public function getRole(): ?RoleInterface
     {
         return $this->role;
     }

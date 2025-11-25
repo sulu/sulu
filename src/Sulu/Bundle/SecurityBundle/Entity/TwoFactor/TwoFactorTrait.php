@@ -27,19 +27,16 @@ trait TwoFactorTrait
     use TotpTrait;
     use TrustedDeviceTrait;
 
-    /**
-     * @var UserTwoFactor|null
-     */
     #[Expose]
     #[Groups(['profile'])]
-    protected $twoFactor = null;
+    protected ?UserTwoFactor $twoFactor = null;
 
     public function getTwoFactor(): ?UserTwoFactor
     {
         return $this->twoFactor;
     }
 
-    public function setTwoFactor(?UserTwoFactor $twoFactor)
+    public function setTwoFactor(?UserTwoFactor $twoFactor): static
     {
         $this->twoFactor = $twoFactor;
 

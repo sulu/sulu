@@ -15,116 +15,67 @@ use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Expose;
 use Sulu\Component\Security\Authentication\RoleInterface;
 
-/**
- * Permission.
- */
-#[ExclusionPolicy('all')] // ;
+#[ExclusionPolicy('all')]
 class Permission
 {
-    /**
-     * @var string
-     */
     #[Expose]
-    private $context;
+    private string $context;
 
-    /**
-     * @var int
-     */
     #[Expose]
-    private $permissions;
+    private int $permissions;
 
-    /**
-     * @var int
-     */
     #[Expose]
-    private $id;
+    private int $id;
 
-    /**
-     * @var RoleInterface
-     */
-    private $role;
+    private ?RoleInterface $role = null;
 
-    /**
-     * Set context.
-     *
-     * @param string $context
-     *
-     * @return Permission
-     */
-    public function setContext($context)
+    public function setContext(string $context): static
     {
         $this->context = $context;
 
         return $this;
     }
 
-    /**
-     * Get context.
-     *
-     * @return string
-     */
-    public function getContext()
+    public function getContext(): string
     {
         return $this->context;
     }
 
-    /**
-     * Set permissions.
-     *
-     * @param int $permissions
-     *
-     * @return Permission
-     */
-    public function setPermissions($permissions)
+    public function setPermissions(int $permissions): static
     {
         $this->permissions = $permissions;
 
         return $this;
     }
 
-    /**
-     * Get permissions.
-     *
-     * @return int
-     */
-    public function getPermissions()
+    public function getPermissions(): int
     {
         return $this->permissions;
     }
 
-    /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * Set role.
-     *
-     * @return Permission
-     */
-    public function setRole(?RoleInterface $role = null)
+    public function isNew(): bool
+    {
+        return !isset($this->id);
+    }
+
+    public function setRole(?RoleInterface $role = null): static
     {
         $this->role = $role;
 
         return $this;
     }
 
-    /**
-     * Get role.
-     *
-     * @return RoleInterface
-     */
-    public function getRole()
+    public function getRole(): ?RoleInterface
     {
         return $this->role;
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return (string) $this->context;
     }

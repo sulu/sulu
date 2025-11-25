@@ -79,8 +79,8 @@ class ProfileController
         $user = $this->tokenStorage->getToken()->getUser();
         $this->userManager->save($this->getData($request), $request->get('locale'), $user->getId(), true);
 
-        $user->setFirstName($request->request->get('firstName'));
-        $user->setLastName($request->request->get('lastName'));
+        $user->setFirstName((string) $request->request->get('firstName'));
+        $user->setLastName((string) $request->request->get('lastName'));
 
         if ($user instanceof TwoFactorInterface) {
             /** @var array{method?: string|null} $twoFactorData */

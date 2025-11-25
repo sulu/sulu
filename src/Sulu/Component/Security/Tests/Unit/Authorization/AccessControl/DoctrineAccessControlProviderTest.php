@@ -197,11 +197,15 @@ class DoctrineAccessControlProviderTest extends TestCase
 
         $accessControl1 = $this->prophesize(AccessControl::class);
         $accessControl1->getRole()->willReturn($role1);
-        $accessControl1->setPermissions(64)->shouldBeCalled();
+        $accessControl1->setPermissions(64)->will(function($args) use ($accessControl1) {
+            return $accessControl1->reveal();
+        })->shouldBeCalled();
 
         $accessControl2 = $this->prophesize(AccessControl::class);
         $accessControl2->getRole()->willReturn($role2);
-        $accessControl2->setPermissions(64)->shouldBeCalled();
+        $accessControl2->setPermissions(64)->will(function($args) use ($accessControl2) {
+            return $accessControl2->reveal();
+        })->shouldBeCalled();
 
         $this->accessControlRepository->findByTypeAndId('AcmeBundle\Example', 1)
             ->willReturn([$accessControl1, $accessControl2]);

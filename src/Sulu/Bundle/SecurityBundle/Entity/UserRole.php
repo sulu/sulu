@@ -20,109 +20,72 @@ use Sulu\Bundle\SecurityBundle\Exception\AssignAnonymousRoleException;
 use Sulu\Component\Security\Authentication\RoleInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
 
-/**
- * UserRole.
- */
-#[ExclusionPolicy('all')] // ;
+#[ExclusionPolicy('all')]
 class UserRole extends ApiEntity
 {
-    /**
-     * @var int
-     */
     #[Expose]
-    protected $id;
+    protected int $id;
 
-    /**
-     * @var string
-     */
     #[Expose]
-    protected $locale;
+    protected string $locale;
 
-    /**
-     * @var UserInterface
-     */
-    protected $user;
+    protected UserInterface $user;
 
-    /**
-     * @var RoleInterface
-     */
     #[Expose]
-    protected $role;
+    protected RoleInterface $role;
 
-    /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * Set locale.
-     *
-     * @param string $locale
-     *
-     * @return UserRole
-     */
-    public function setLocale($locale)
+    public function isNew(): bool
+    {
+        return !isset($this->id);
+    }
+
+    public function setLocale(string $locale): static
     {
         $this->locale = $locale;
 
         return $this;
     }
 
-    /**
-     * Get locale.
-     *
-     * @return string
-     */
-    public function getLocale()
+    public function getLocale(): string
     {
         return $this->locale;
     }
 
     /**
-     * Get Locales as array.
-     *
-     * @return array
+     * @return list<string>|null
      */
     #[VirtualProperty]
     #[SerializedName('locales')]
-    public function getLocales()
+    public function getLocales(): ?array
     {
-        return \json_decode($this->locale);
+        $decoded = \json_decode($this->locale, true);
+
+        if (!\is_array($decoded)) {
+            return null;
+        }
+
+        /** @var list<string> */
+        return \array_values($decoded);
     }
 
-    /**
-     * Set user.
-     *
-     * @return UserRole
-     */
-    public function setUser(UserInterface $user)
+    public function setUser(UserInterface $user): static
     {
         $this->user = $user;
 
         return $this;
     }
 
-    /**
-     * Get user.
-     *
-     * @return UserInterface
-     */
-    public function getUser()
+    public function getUser(): UserInterface
     {
         return $this->user;
     }
 
-    /**
-     * Set role.
-     *
-     * @return UserRole
-     */
-    public function setRole(RoleInterface $role)
+    public function setRole(RoleInterface $role): static
     {
         if ($role->getAnonymous()) {
             throw new AssignAnonymousRoleException($role);
@@ -133,12 +96,7 @@ class UserRole extends ApiEntity
         return $this;
     }
 
-    /**
-     * Get role.
-     *
-     * @return RoleInterface
-     */
-    public function getRole()
+    public function getRole(): RoleInterface
     {
         return $this->role;
     }

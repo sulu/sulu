@@ -63,9 +63,19 @@ class UserProviderTest extends TestCase
         $this->user = new User();
         $this->user->setUsername('sulu');
         $this->user->setEmail('test@sulu.io');
+        $this->user->setPassword('password');
+        $this->user->setLocale('en');
+        $this->setEntityId($this->user, 1);
 
-        $this->userRepository->findUserWithSecurityById($this->user->getId())->willReturn($this->user);
+        $this->userRepository->findUserWithSecurityById(1)->willReturn($this->user);
         $this->userRepository->findUserByIdentifier('sulu')->willReturn($this->user);
+    }
+
+    private function setEntityId(object $entity, int $id): void
+    {
+        $reflection = new \ReflectionClass($entity);
+        $property = $reflection->getProperty('id');
+        $property->setValue($entity, $id);
     }
 
     public function testLoginFailDisabledUser(): void
@@ -86,8 +96,13 @@ class UserProviderTest extends TestCase
     {
         $role = new Role();
         $role->setSystem('Sulu');
+        $role->setName('Test Role');
+        $this->setEntityId($role, 1);
         $userRole = new UserRole();
         $userRole->setRole($role);
+        $userRole->setLocale('["en"]');
+        $userRole->setUser($this->user);
+        $this->setEntityId($userRole, 1);
         $this->user->addUserRole($userRole);
         $this->systemStore->getSystem()
             ->willReturn('Sulu')

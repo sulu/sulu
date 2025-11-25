@@ -35,7 +35,7 @@
         <field name="email" column="email" type="string" length="191" unique="true" nullable="true"/>
 
         <one-to-one field="contact" target-entity="Sulu\Bundle\ContactBundle\Entity\ContactInterface">
-            <join-column name="idContacts" referenced-column-name="id" on-delete="CASCADE" nullable="false"/>
+            <join-column name="idContacts" referenced-column-name="id" on-delete="CASCADE" nullable="true"/>
         </one-to-one>
 
         <one-to-one field="twoFactor" target-entity="Sulu\Bundle\SecurityBundle\Entity\UserTwoFactor" mapped-by="user">

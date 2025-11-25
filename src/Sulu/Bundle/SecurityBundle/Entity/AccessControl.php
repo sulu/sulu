@@ -16,72 +16,53 @@ use Sulu\Component\Security\Authorization\AccessControl\AccessControlInterface;
 
 class AccessControl implements AccessControlInterface
 {
-    /**
-     * @var int
-     */
-    private $id;
+    private int $id;
 
-    /**
-     * The role this access control rule is valid for.
-     *
-     * @var RoleInterface
-     */
-    private $role;
+    private RoleInterface $role;
 
-    /**
-     * Holds the permissions as a bitmask.
-     *
-     * @var int
-     */
-    private $permissions;
+    private int $permissions;
 
-    /**
-     * The id of the model this access control rule applies to.
-     *
-     * @var string
-     */
-    private $entityId;
+    private string $entityId;
 
-    /**
-     * The id as integer representation of the model this access control rule applies to.
-     *
-     * @var int|null
-     */
-    private $entityIdInteger;
+    private ?int $entityIdInteger = null;
 
-    /**
-     * The class of the model this access control rule applies to.
-     *
-     * @var string
-     */
-    private $entityClass;
+    private string $entityClass;
 
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function getRole()
+    public function isNew(): bool
+    {
+        return !isset($this->id);
+    }
+
+    public function getRole(): RoleInterface
     {
         return $this->role;
     }
 
-    public function setRole($role)
+    public function setRole(RoleInterface $role): static
     {
         $this->role = $role;
+
+        return $this;
     }
 
-    public function getPermissions()
+    public function getPermissions(): int
     {
         return $this->permissions;
     }
 
-    public function setPermissions($permissions)
+    public function setPermissions(int $permissions): static
     {
         $this->permissions = $permissions;
+
+        return $this;
     }
 
-    public function getEntityId()
+    public function getEntityId(): string|int
     {
         if ($this->entityIdInteger) {
             return $this->entityIdInteger;
@@ -90,22 +71,26 @@ class AccessControl implements AccessControlInterface
         return $this->entityId;
     }
 
-    public function setEntityId($entityId)
+    public function setEntityId(string|int $entityId): static
     {
         $this->entityId = (string) $entityId;
 
         if (\is_numeric($entityId)) {
             $this->entityIdInteger = (int) $entityId;
         }
+
+        return $this;
     }
 
-    public function getEntityClass()
+    public function getEntityClass(): string
     {
         return $this->entityClass;
     }
 
-    public function setEntityClass($entityClass)
+    public function setEntityClass(string $entityClass): static
     {
         $this->entityClass = $entityClass;
+
+        return $this;
     }
 }

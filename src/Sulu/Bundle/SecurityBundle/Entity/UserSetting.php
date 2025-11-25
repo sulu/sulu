@@ -14,99 +14,47 @@ namespace Sulu\Bundle\SecurityBundle\Entity;
 use JMS\Serializer\Annotation\Exclude;
 use Sulu\Component\Security\Authentication\UserInterface;
 
-/**
- * Entry for a key-value-store like user setting.
- */
 class UserSetting
 {
-    /**
-     * The value of the setting.
-     *
-     * @var string
-     */
-    private $value;
+    private string $value;
 
-    /**
-     * The key under which this setting is available.
-     *
-     * @var string
-     */
-    private $key;
+    private string $key;
 
-    /**
-     * The user for which this setting is applying.
-     *
-     * @var UserInterface
-     */
     #[Exclude]
-    private $user;
+    private UserInterface $user;
 
-    /**
-     * Sets the value for this user setting.
-     *
-     * @param string $value
-     *
-     * @return UserSetting
-     */
-    public function setValue($value)
+    public function setValue(string $value): static
     {
         $this->value = $value;
 
         return $this;
     }
 
-    /**
-     * Returns the value for this user setting.
-     *
-     * @return string
-     */
-    public function getValue()
+    public function getValue(): string
     {
         return $this->value;
     }
 
-    /**
-     * Sets the key for this user setting.
-     *
-     * @param string $key
-     *
-     * @return UserSetting
-     */
-    public function setKey($key)
+    public function setKey(string $key): static
     {
         $this->key = $key;
 
         return $this;
     }
 
-    /**
-     * Returns the key for this user setting.
-     *
-     * @return string
-     */
-    public function getKey()
+    public function getKey(): string
     {
         return $this->key;
     }
 
-    /**
-     * Sets the user for this user setting.
-     *
-     * @return UserSetting
-     */
-    public function setUser(UserInterface $user)
+    public function setUser(UserInterface $user): static
     {
         $this->user = $user;
 
         return $this;
     }
 
-    /**
-     * Returns the user for this user setting.
-     *
-     * @return UserInterface
-     */
-    public function getUser()
+    public function getUser(): UserInterface
     {
         return $this->user;
     }
