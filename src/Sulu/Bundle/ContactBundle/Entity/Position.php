@@ -13,66 +13,35 @@ namespace Sulu\Bundle\ContactBundle\Entity;
 
 use JMS\Serializer\Annotation\Groups;
 
-/**
- * Position.
- */
 class Position implements \JsonSerializable
 {
     public const RESOURCE_KEY = 'contact_positions';
 
-    /**
-     * @var string
-     */
     #[Groups(['fullContact', 'partialContact'])]
-    private $position;
+    private string $position;
 
-    /**
-     * @var int
-     */
     #[Groups(['fullContact', 'partialContact'])]
-    private $id;
+    private ?int $id = null;
 
-    /**
-     * Set position.
-     *
-     * @param string $position
-     *
-     * @return Position
-     */
-    public function setPosition($position)
+    public function setPosition(string $position): static
     {
         $this->position = $position;
 
         return $this;
     }
 
-    /**
-     * Get position.
-     *
-     * @return string
-     */
-    public function getPosition()
+    public function getPosition(): string
     {
         return $this->position;
     }
 
-    /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }
 
     /**
-     * (PHP 5 &gt;= 5.4.0)<br/>
-     * Specify data which should be serialized to JSON.
-     *
-     * @see http://php.net/manual/en/jsonserializable.jsonserialize.php
-     *
-     * @return array{id: int, position: string}
+     * @return array{id: int|null, position: string}
      */
     public function jsonSerialize(): array
     {

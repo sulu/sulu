@@ -13,65 +13,34 @@ namespace Sulu\Bundle\ContactBundle\Entity;
 
 use JMS\Serializer\Annotation\Groups;
 
-/**
- * ContactTitle.
- */
 class ContactTitle implements \JsonSerializable
 {
     public const RESOURCE_KEY = 'contact_titles';
 
-    /**
-     * @var string
-     */
     #[Groups(['fullContact', 'partialContact'])]
-    private $title;
+    private string $title;
 
-    /**
-     * @var int
-     */
     #[Groups(['fullContact', 'partialContact'])]
-    private $id;
+    private int $id;
 
-    /**
-     * Set title.
-     *
-     * @param string $title
-     *
-     * @return ContactTitle
-     */
-    public function setTitle($title)
+    public function setTitle(string $title): static
     {
         $this->title = $title;
 
         return $this;
     }
 
-    /**
-     * Get title.
-     *
-     * @return string
-     */
-    public function getTitle()
+    public function getTitle(): string
     {
         return $this->title;
     }
 
-    /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
     /**
-     * (PHP 5 &gt;= 5.4.0)<br/>
-     * Specify data which should be serialized to JSON.
-     *
-     * @see http://php.net/manual/en/jsonserializable.jsonserialize.php
-     *
      * @return array{id: int, title: string}
      */
     public function jsonSerialize(): array
@@ -82,12 +51,7 @@ class ContactTitle implements \JsonSerializable
         ];
     }
 
-    /**
-     * Return the string representation of this title.
-     *
-     * @return string
-     */
-    public function __toString()
+    public function __toString(): string
     {
         return (string) $this->getTitle();
     }

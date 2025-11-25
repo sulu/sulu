@@ -16,40 +16,28 @@ use Doctrine\Common\Collections\Collection;
 use JMS\Serializer\Annotation\Exclude;
 use JMS\Serializer\Annotation\Groups;
 
-/**
- * Fax.
- */
 class Fax
 {
-    /**
-     * @var string
-     */
     #[Groups(['fullAccount', 'partialAccount', 'fullContact', 'partialContact'])]
-    private $fax;
+    private string $fax;
 
-    /**
-     * @var int
-     */
     #[Groups(['fullAccount', 'partialAccount', 'fullContact', 'partialContact'])]
-    private $id;
+    private int $id;
 
-    /**
-     * @var FaxType
-     */
     #[Groups(['fullAccount', 'fullContact'])]
-    private $faxType;
+    private FaxType $faxType;
 
     /**
      * @var Collection<int, ContactInterface>
      */
     #[Exclude]
-    private $contacts;
+    private Collection $contacts;
 
     /**
      * @var Collection<int, AccountInterface>
      */
     #[Exclude]
-    private $accounts;
+    private Collection $accounts;
 
     /**
      * Constructor.
@@ -60,118 +48,75 @@ class Fax
         $this->accounts = new ArrayCollection();
     }
 
-    /**
-     * Set fax.
-     *
-     * @param string $fax
-     *
-     * @return Fax
-     */
-    public function setFax($fax)
+    public function setFax(string $fax): static
     {
         $this->fax = $fax;
 
         return $this;
     }
 
-    /**
-     * Get fax.
-     *
-     * @return string
-     */
-    public function getFax()
+    public function getFax(): string
     {
         return $this->fax;
     }
 
-    /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * Set faxType.
-     *
-     * @return Fax
-     */
-    public function setFaxType(FaxType $faxType)
+    public function setFaxType(FaxType $faxType): static
     {
         $this->faxType = $faxType;
 
         return $this;
     }
 
-    /**
-     * Get faxType.
-     *
-     * @return FaxType
-     */
-    public function getFaxType()
+    public function getFaxType(): FaxType
     {
         return $this->faxType;
     }
 
-    /**
-     * Add contacts.
-     *
-     * @return Fax
-     */
-    public function addContact(ContactInterface $contacts)
+    public function addContact(ContactInterface $contacts): static
     {
         $this->contacts[] = $contacts;
 
         return $this;
     }
 
-    /**
-     * Remove contacts.
-     */
-    public function removeContact(ContactInterface $contacts)
+    public function removeContact(ContactInterface $contacts): static
     {
         $this->contacts->removeElement($contacts);
+
+        return $this;
     }
 
     /**
-     * Get contacts.
-     *
      * @return Collection<int, ContactInterface>
      */
-    public function getContacts()
+    public function getContacts(): Collection
     {
         return $this->contacts;
     }
 
-    /**
-     * Add accounts.
-     *
-     * @return Fax
-     */
-    public function addAccount(AccountInterface $account)
+    public function addAccount(AccountInterface $account): static
     {
         $this->accounts[] = $account;
 
         return $this;
     }
 
-    /**
-     * Remove accounts.
-     */
-    public function removeAccount(AccountInterface $account)
+    public function removeAccount(AccountInterface $account): static
     {
         $this->accounts->removeElement($account);
+
+        return $this;
     }
 
     /**
-     * Get accounts.
-     *
      * @return Collection<int, AccountInterface>
      */
-    public function getAccounts()
+    public function getAccounts(): Collection
     {
         return $this->accounts;
     }

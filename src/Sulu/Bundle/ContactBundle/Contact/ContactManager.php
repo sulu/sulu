@@ -327,7 +327,7 @@ class ContactManager extends AbstractContactManager
             $formOfAddress = $this->getProperty($data, 'formOfAddress');
 
             if (\is_numeric($formOfAddress) || \is_string($formOfAddress)) {
-                $contact->setFormOfAddress($formOfAddress);
+                $contact->setFormOfAddress((int) $formOfAddress);
                 $contactModified = true;
             }
         }

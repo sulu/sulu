@@ -177,6 +177,7 @@ class PositionController extends AbstractRestController
                 }
 
                 $positionId = $position->getId();
+                \assert(null !== $positionId);
                 $positionName = $position->getPosition();
 
                 $this->entityManager->remove($position);
@@ -215,6 +216,7 @@ class PositionController extends AbstractRestController
                 }
 
                 $positionId = $position->getId();
+                \assert(null !== $positionId);
                 $positionName = $position->getPosition();
 
                 $this->entityManager->remove($position);

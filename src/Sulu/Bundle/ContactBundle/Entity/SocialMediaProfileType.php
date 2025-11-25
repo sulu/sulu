@@ -18,26 +18,17 @@ use JMS\Serializer\Annotation\Groups;
 use JMS\Serializer\Annotation\SerializedName;
 use JMS\Serializer\Annotation\VirtualProperty;
 
-/**
- * Type of social media profile (i.e. Facebook,...).
- */
 #[ExclusionPolicy('All')]
 class SocialMediaProfileType implements \JsonSerializable
 {
-    /**
-     * @var int
-     */
-    private $id;
+    private int $id;
+
+    private string $name;
 
     /**
-     * @var string
+     * @var Collection<int, SocialMediaProfile>
      */
-    private $name;
-
-    /**
-     * @var Collection|SocialMediaProfile[]
-     */
-    private $socialMediaProfiles;
+    private Collection $socialMediaProfiles;
 
     /**
      * Constructor.
@@ -47,33 +38,22 @@ class SocialMediaProfileType implements \JsonSerializable
         $this->socialMediaProfiles = new ArrayCollection();
     }
 
-    /**
-     * To force id = 1 in load fixtures.
-     *
-     * @param int $id
-     */
-    public function setId($id)
+    public function setId(int $id): static
     {
         $this->id = $id;
+
+        return $this;
     }
 
-    /**
-     * @return int
-     */
     #[VirtualProperty]
     #[SerializedName('id')]
     #[Groups(['fullAccount', 'fullContact', 'frontend'])]
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * @param string $name
-     *
-     * @return SocialMediaProfileType
-     */
-    public function setName($name)
+    public function setName(string $name): static
     {
         // Limit to maximal sql column length.
         $this->name = \substr($name, 0, 100);
@@ -81,45 +61,37 @@ class SocialMediaProfileType implements \JsonSerializable
         return $this;
     }
 
-    /**
-     * @return string
-     */
     #[VirtualProperty]
     #[SerializedName('name')]
     #[Groups(['fullAccount', 'fullContact', 'frontend'])]
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * @return SocialMediaProfileType
-     */
-    public function addSocialMediaProfile(SocialMediaProfile $socialMediaProfile)
+    public function addSocialMediaProfile(SocialMediaProfile $socialMediaProfile): static
     {
         $this->socialMediaProfiles[] = $socialMediaProfile;
 
         return $this;
     }
 
-    public function removeSocialMediaProfile(SocialMediaProfile $socialMediaProfile)
+    public function removeSocialMediaProfile(SocialMediaProfile $socialMediaProfile): static
     {
         $this->socialMediaProfiles->removeElement($socialMediaProfile);
+
+        return $this;
     }
 
     /**
-     * @return Collection|SocialMediaProfile[]
+     * @return Collection<int, SocialMediaProfile>
      */
-    public function getSocialMediaProfiles()
+    public function getSocialMediaProfiles(): Collection
     {
         return $this->socialMediaProfiles;
     }
 
     /**
-     * Specify data which should be serialized to JSON.
-     *
-     * @see http://php.net/manual/en/jsonserializable.jsonserialize.php
-     *
      * @return array{id: int, name: string}
      */
     public function jsonSerialize(): array

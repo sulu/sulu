@@ -16,28 +16,19 @@ use Doctrine\Common\Collections\Collection;
 use JMS\Serializer\Annotation\Exclude;
 use JMS\Serializer\Annotation\Groups;
 
-/**
- * PhoneType.
- */
 class PhoneType implements \JsonSerializable
 {
-    /**
-     * @var string
-     */
     #[Groups(['fullAccount', 'fullContact', 'frontend'])]
-    private $name;
+    private string $name;
+
+    #[Groups(['fullAccount', 'fullContact', 'frontend'])]
+    private int $id;
 
     /**
-     * @var int
-     */
-    #[Groups(['fullAccount', 'fullContact', 'frontend'])]
-    private $id;
-
-    /**
-     * @var Collection
+     * @var Collection<int, Phone>
      */
     #[Exclude]
-    private $phones;
+    private Collection $phones;
 
     /**
      * Constructor.
@@ -47,86 +38,53 @@ class PhoneType implements \JsonSerializable
         $this->phones = new ArrayCollection();
     }
 
-    /**
-     * To force id = 1 in load fixtures.
-     *
-     * @param int $id
-     */
-    public function setId($id)
+    public function setId(int $id): static
     {
         $this->id = $id;
+
+        return $this;
     }
 
-    /**
-     * Set name.
-     *
-     * @param string $name
-     *
-     * @return PhoneType
-     */
-    public function setName($name)
+    public function setName(string $name): static
     {
         $this->name = $name;
 
         return $this;
     }
 
-    /**
-     * Get name.
-     *
-     * @return string
-     */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * Add phones.
-     *
-     * @return PhoneType
-     */
-    public function addPhone(Phone $phones)
+    public function addPhone(Phone $phones): static
     {
         $this->phones[] = $phones;
 
         return $this;
     }
 
-    /**
-     * Remove phones.
-     */
-    public function removePhone(Phone $phones)
+    public function removePhone(Phone $phones): static
     {
         $this->phones->removeElement($phones);
+
+        return $this;
     }
 
     /**
-     * Get phones.
-     *
-     * @return Collection
+     * @return Collection<int, Phone>
      */
-    public function getPhones()
+    public function getPhones(): Collection
     {
         return $this->phones;
     }
 
     /**
-     * (PHP 5 &gt;= 5.4.0)<br/>
-     * Specify data which should be serialized to JSON.
-     *
-     * @see http://php.net/manual/en/jsonserializable.jsonserialize.php
-     *
      * @return array{id: int, name: string}
      */
     public function jsonSerialize(): array

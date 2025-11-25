@@ -17,154 +17,94 @@ use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Expose;
 use JMS\Serializer\Annotation\Groups;
 
-/**
- * Address.
- */
-#[ExclusionPolicy('all')] // ;
+#[ExclusionPolicy('all')]
 class Address
 {
-    /**
-     * @var string|null
-     */
     #[Groups(['fullAccount', 'partialAccount', 'fullContact', 'partialContact'])]
     #[Expose]
-    private $street;
+    private ?string $street = null;
 
-    /**
-     * @var string|null
-     */
     #[Groups(['fullAccount', 'partialAccount', 'fullContact', 'partialContact'])]
     #[Expose]
-    private $number;
+    private ?string $number = null;
 
-    /**
-     * @var string|null
-     */
     #[Groups(['fullAccount', 'partialAccount', 'fullContact', 'partialContact'])]
     #[Expose]
-    private $addition;
+    private ?string $addition = null;
 
-    /**
-     * @var string|null
-     */
     #[Groups(['fullAccount', 'partialAccount', 'fullContact', 'partialContact'])]
     #[Expose]
-    private $zip;
+    private ?string $zip = null;
 
-    /**
-     * @var string|null
-     */
     #[Groups(['fullAccount', 'partialAccount', 'fullContact', 'partialContact'])]
     #[Expose]
-    private $city;
+    private ?string $city = null;
 
-    /**
-     * @var string|null
-     */
     #[Groups(['fullAccount', 'partialAccount', 'fullContact', 'partialContact'])]
     #[Expose]
-    private $state;
+    private ?string $state = null;
 
-    /**
-     * @var int
-     */
     #[Groups(['fullAccount', 'partialAccount', 'fullContact', 'partialContact'])]
     #[Expose]
-    private $id;
+    private int $id;
 
-    /**
-     * @var AddressType
-     */
     #[Groups(['fullAccount', 'fullContact'])]
     #[Expose]
-    private $addressType;
+    private AddressType $addressType;
 
-    /**
-     * @var string|null
-     */
     #[Groups(['fullAccount', 'partialAccount', 'fullContact', 'partialContact'])]
     #[Expose]
-    private $countryCode;
+    private ?string $countryCode = null;
 
-    /**
-     * @var bool|null
-     */
     #[Groups(['fullAccount', 'partialAccount', 'fullContact', 'partialContact'])]
     #[Expose]
-    private $primaryAddress;
+    private ?bool $primaryAddress = null;
 
-    /**
-     * @var bool|null
-     */
     #[Groups(['fullAccount', 'partialAccount', 'fullContact', 'partialContact'])]
     #[Expose]
-    private $deliveryAddress;
+    private ?bool $deliveryAddress = null;
 
-    /**
-     * @var bool|null
-     */
     #[Groups(['fullAccount', 'partialAccount', 'fullContact', 'partialContact'])]
     #[Expose]
-    private $billingAddress;
+    private ?bool $billingAddress = null;
 
-    /**
-     * @var string|null
-     */
     #[Groups(['fullAccount', 'partialAccount', 'fullContact', 'partialContact'])]
     #[Expose]
-    private $postboxNumber;
+    private ?string $postboxNumber = null;
 
-    /**
-     * @var string|null
-     */
     #[Groups(['fullAccount', 'partialAccount', 'fullContact', 'partialContact'])]
     #[Expose]
-    private $postboxPostcode;
+    private ?string $postboxPostcode = null;
 
-    /**
-     * @var string|null
-     */
     #[Groups(['fullAccount', 'partialAccount', 'fullContact', 'partialContact'])]
     #[Expose]
-    private $postboxCity;
+    private ?string $postboxCity = null;
 
     /**
      * @var Collection<int, ContactAddress>
      */
-    private $contactAddresses;
+    private Collection $contactAddresses;
 
     /**
      * @var Collection<int, AccountAddress>
      */
-    private $accountAddresses;
+    private Collection $accountAddresses;
 
-    /**
-     * @var string|null
-     */
     #[Groups(['fullAccount', 'partialAccount', 'fullContact', 'partialContact'])]
     #[Expose]
-    private $note;
+    private ?string $note = null;
 
-    /**
-     * @var string|null
-     */
     #[Groups(['fullAccount', 'partialAccount', 'fullContact', 'partialContact'])]
     #[Expose]
-    private $title;
+    private ?string $title = null;
 
-    /**
-     * @var float|null
-     */
     #[Groups(['fullAccount', 'partialAccount', 'fullContact', 'partialContact'])]
     #[Expose]
-    private $latitude;
+    private ?float $latitude = null;
 
-    /**
-     * @var float|null
-     */
     #[Groups(['fullAccount', 'partialAccount', 'fullContact', 'partialContact'])]
     #[Expose]
-    private $longitude;
+    private ?float $longitude = null;
 
     /**
      * Constructor.
@@ -175,197 +115,102 @@ class Address
         $this->contactAddresses = new ArrayCollection();
     }
 
-    /**
-     * Set street.
-     *
-     * @param string|null $street
-     *
-     * @return Address
-     */
-    public function setStreet($street)
+    public function setStreet(?string $street): static
     {
         $this->street = $street;
 
         return $this;
     }
 
-    /**
-     * Get street.
-     *
-     * @return string|null
-     */
-    public function getStreet()
+    public function getStreet(): ?string
     {
         return $this->street;
     }
 
-    /**
-     * Set number.
-     *
-     * @param string|null $number
-     *
-     * @return Address
-     */
-    public function setNumber($number)
+    public function setNumber(?string $number): static
     {
         $this->number = $number;
 
         return $this;
     }
 
-    /**
-     * Get number.
-     *
-     * @return string|null
-     */
-    public function getNumber()
+    public function getNumber(): ?string
     {
         return $this->number;
     }
 
-    /**
-     * Set addition.
-     *
-     * @param string|null $addition
-     *
-     * @return Address
-     */
-    public function setAddition($addition)
+    public function setAddition(?string $addition): static
     {
         $this->addition = $addition;
 
         return $this;
     }
 
-    /**
-     * Get addition.
-     *
-     * @return string|null
-     */
-    public function getAddition()
+    public function getAddition(): ?string
     {
         return $this->addition;
     }
 
-    /**
-     * Set zip.
-     *
-     * @param string|null $zip
-     *
-     * @return Address
-     */
-    public function setZip($zip)
+    public function setZip(?string $zip): static
     {
         $this->zip = $zip;
 
         return $this;
     }
 
-    /**
-     * Get zip.
-     *
-     * @return string|null
-     */
-    public function getZip()
+    public function getZip(): ?string
     {
         return $this->zip;
     }
 
-    /**
-     * Set city.
-     *
-     * @param string|null $city
-     *
-     * @return Address
-     */
-    public function setCity($city)
+    public function setCity(?string $city): static
     {
         $this->city = $city;
 
         return $this;
     }
 
-    /**
-     * Get city.
-     *
-     * @return string|null
-     */
-    public function getCity()
+    public function getCity(): ?string
     {
         return $this->city;
     }
 
-    /**
-     * Set state.
-     *
-     * @param string|null $state
-     *
-     * @return Address
-     */
-    public function setState($state)
+    public function setState(?string $state): static
     {
         $this->state = $state;
 
         return $this;
     }
 
-    /**
-     * Get state.
-     *
-     * @return string|null
-     */
-    public function getState()
+    public function getState(): ?string
     {
         return $this->state;
     }
 
-    /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * Set addressType.
-     *
-     * @return Address
-     */
-    public function setAddressType(AddressType $addressType)
+    public function setAddressType(AddressType $addressType): static
     {
         $this->addressType = $addressType;
 
         return $this;
     }
 
-    /**
-     * Get addressType.
-     *
-     * @return AddressType
-     */
-    public function getAddressType()
+    public function getAddressType(): AddressType
     {
         return $this->addressType;
     }
 
-    /**
-     * Set countryCode.
-     *
-     * @return Address
-     */
-    public function setCountryCode(?string $countryCode)
+    public function setCountryCode(?string $countryCode): static
     {
         $this->countryCode = $countryCode;
 
         return $this;
     }
 
-    /**
-     * Get countryCode.
-     */
     public function getCountryCode(): ?string
     {
         return $this->countryCode;
@@ -380,216 +225,123 @@ class Address
         return new Country($this->countryCode);
     }
 
-    /**
-     * Set primaryAddress.
-     *
-     * @param bool $primaryAddress
-     *
-     * @return Address
-     */
-    public function setPrimaryAddress($primaryAddress)
+    public function setPrimaryAddress(?bool $primaryAddress): static
     {
         $this->primaryAddress = $primaryAddress;
 
         return $this;
     }
 
-    /**
-     * Get primaryAddress.
-     *
-     * @return bool|null
-     */
-    public function getPrimaryAddress()
+    public function getPrimaryAddress(): ?bool
     {
         return $this->primaryAddress;
     }
 
-    /**
-     * Set deliveryAddress.
-     *
-     * @param bool $deliveryAddress
-     *
-     * @return Address
-     */
-    public function setDeliveryAddress($deliveryAddress)
+    public function setDeliveryAddress(?bool $deliveryAddress): static
     {
         $this->deliveryAddress = $deliveryAddress;
 
         return $this;
     }
 
-    /**
-     * Get deliveryAddress.
-     *
-     * @return bool|null
-     */
-    public function getDeliveryAddress()
+    public function getDeliveryAddress(): ?bool
     {
         return $this->deliveryAddress;
     }
 
-    /**
-     * Set billingAddress.
-     *
-     * @param bool $billingAddress
-     *
-     * @return Address
-     */
-    public function setBillingAddress($billingAddress)
+    public function setBillingAddress(?bool $billingAddress): static
     {
         $this->billingAddress = $billingAddress;
 
         return $this;
     }
 
-    /**
-     * Get billingAddress.
-     *
-     * @return bool|null
-     */
-    public function getBillingAddress()
+    public function getBillingAddress(): ?bool
     {
         return $this->billingAddress;
     }
 
-    /**
-     * Set postboxNumber.
-     *
-     * @param string|null $postboxNumber
-     *
-     * @return Address
-     */
-    public function setPostboxNumber($postboxNumber)
+    public function setPostboxNumber(?string $postboxNumber): static
     {
         $this->postboxNumber = $postboxNumber;
 
         return $this;
     }
 
-    /**
-     * Get postboxNumber.
-     *
-     * @return string|null
-     */
-    public function getPostboxNumber()
+    public function getPostboxNumber(): ?string
     {
         return $this->postboxNumber;
     }
 
-    /**
-     * Set postboxPostcode.
-     *
-     * @param string|null $postboxPostcode
-     *
-     * @return Address
-     */
-    public function setPostboxPostcode($postboxPostcode)
+    public function setPostboxPostcode(?string $postboxPostcode): static
     {
         $this->postboxPostcode = $postboxPostcode;
 
         return $this;
     }
 
-    /**
-     * Get postboxPostcode.
-     *
-     * @return string|null
-     */
-    public function getPostboxPostcode()
+    public function getPostboxPostcode(): ?string
     {
         return $this->postboxPostcode;
     }
 
-    /**
-     * Set postboxCity.
-     *
-     * @param string|null $postboxCity
-     *
-     * @return Address
-     */
-    public function setPostboxCity($postboxCity)
+    public function setPostboxCity(?string $postboxCity): static
     {
         $this->postboxCity = $postboxCity;
 
         return $this;
     }
 
-    /**
-     * Get postboxCity.
-     *
-     * @return string|null
-     */
-    public function getPostboxCity()
+    public function getPostboxCity(): ?string
     {
         return $this->postboxCity;
     }
 
-    /**
-     * Add contactAddresses.
-     *
-     * @return Address
-     */
-    public function addContactAddress(ContactAddress $contactAddresses)
+    public function addContactAddress(ContactAddress $contactAddresses): static
     {
         $this->contactAddresses[] = $contactAddresses;
 
         return $this;
     }
 
-    /**
-     * Remove contactAddresses.
-     */
-    public function removeContactAddress(ContactAddress $contactAddresses)
+    public function removeContactAddress(ContactAddress $contactAddresses): static
     {
         $this->contactAddresses->removeElement($contactAddresses);
+
+        return $this;
     }
 
     /**
-     * Get contactAddresses.
-     *
      * @return Collection<int, ContactAddress>
      */
-    public function getContactAddresses()
+    public function getContactAddresses(): Collection
     {
         return $this->contactAddresses;
     }
 
-    /**
-     * Add accountAddresses.
-     *
-     * @return Address
-     */
-    public function addAccountAddress(AccountAddress $accountAddresses)
+    public function addAccountAddress(AccountAddress $accountAddresses): static
     {
         $this->accountAddresses[] = $accountAddresses;
 
         return $this;
     }
 
-    /**
-     * Remove accountAddresses.
-     */
-    public function removeAccountAddress(AccountAddress $accountAddresses)
+    public function removeAccountAddress(AccountAddress $accountAddresses): static
     {
         $this->accountAddresses->removeElement($accountAddresses);
+
+        return $this;
     }
 
     /**
-     * Get accountAddresses.
-     *
      * @return Collection<int, AccountAddress>
      */
-    public function getAccountAddresses()
+    public function getAccountAddresses(): Collection
     {
         return $this->accountAddresses;
     }
 
-    /**
-     * returns if address has at least one relation to another entity.
-     *
-     * @return bool
-     */
-    public function hasRelations()
+    public function hasRelations(): bool
     {
         if (!$this->getContactAddresses()->isEmpty()
             || !$this->getAccountAddresses()->isEmpty()
@@ -600,96 +352,48 @@ class Address
         return false;
     }
 
-    /**
-     * Set note.
-     *
-     * @param string|null $note
-     *
-     * @return Address
-     */
-    public function setNote($note)
+    public function setNote(?string $note): static
     {
         $this->note = $note;
 
         return $this;
     }
 
-    /**
-     * Get note.
-     *
-     * @return string|null
-     */
-    public function getNote()
+    public function getNote(): ?string
     {
         return $this->note;
     }
 
-    /**
-     * Set title.
-     *
-     * @param string|null $title
-     *
-     * @return Address
-     */
-    public function setTitle($title)
+    public function setTitle(?string $title): static
     {
         $this->title = $title;
 
         return $this;
     }
 
-    /**
-     * Get title.
-     *
-     * @return string|null
-     */
-    public function getTitle()
+    public function getTitle(): ?string
     {
         return $this->title;
     }
 
-    /**
-     * Returns latitude.
-     *
-     * @return float|null
-     */
-    public function getLatitude()
+    public function getLatitude(): ?float
     {
         return $this->latitude;
     }
 
-    /**
-     * Set latitude.
-     *
-     * @param float|null $latitude
-     *
-     * @return Address
-     */
-    public function setLatitude($latitude)
+    public function setLatitude(?float $latitude): static
     {
         $this->latitude = $latitude;
 
         return $this;
     }
 
-    /**
-     * Returns longitude.
-     *
-     * @return float|null
-     */
-    public function getLongitude()
+    public function getLongitude(): ?float
     {
         return $this->longitude;
     }
 
-    /**
-     * Set longitude.
-     *
-     * @param float|null $longitude
-     *
-     * @return Address
-     */
-    public function setLongitude($longitude)
+    public function setLongitude(?float $longitude): static
     {
         $this->longitude = $longitude;
 

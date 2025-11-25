@@ -13,106 +13,54 @@ namespace Sulu\Bundle\ContactBundle\Entity;
 
 use JMS\Serializer\Annotation\Exclude;
 
-/**
- * ContactAddress.
- */
 class ContactAddress
 {
-    /**
-     * @var bool
-     */
-    private $main;
+    private bool $main = false;
 
-    /**
-     * @var int
-     */
-    private $id;
+    private ?int $id = null;
 
-    /**
-     * @var Address
-     */
-    private $address;
+    private Address $address;
 
-    /**
-     * @var ContactInterface
-     */
     #[Exclude]
-    private $contact;
+    private ContactInterface $contact;
 
-    /**
-     * Set main.
-     *
-     * @param bool $main
-     *
-     * @return ContactAddress
-     */
-    public function setMain($main)
+    public function setMain(bool $main): static
     {
         $this->main = $main;
 
         return $this;
     }
 
-    /**
-     * Get main.
-     *
-     * @return bool
-     */
-    public function getMain()
+    public function getMain(): bool
     {
         return $this->main;
     }
 
-    /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    /**
-     * Set address.
-     *
-     * @return ContactAddress
-     */
-    public function setAddress(Address $address)
+    public function setAddress(Address $address): static
     {
         $this->address = $address;
 
         return $this;
     }
 
-    /**
-     * Get address.
-     *
-     * @return Address
-     */
-    public function getAddress()
+    public function getAddress(): Address
     {
         return $this->address;
     }
 
-    /**
-     * Set contact.
-     *
-     * @return ContactAddress
-     */
-    public function setContact(ContactInterface $contact)
+    public function setContact(ContactInterface $contact): static
     {
         $this->contact = $contact;
 
         return $this;
     }
 
-    /**
-     * Get contact.
-     *
-     * @return ContactInterface
-     */
-    public function getContact()
+    public function getContact(): ContactInterface
     {
         return $this->contact;
     }

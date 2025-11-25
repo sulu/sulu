@@ -278,9 +278,9 @@ final class AccountTrashItemHandler implements
         foreach (($data['addresses'] ?? []) as $addressData) {
             $address = new Address();
             $address->setAddressType($this->getReference(AddressType::class, $addressData['typeId']));
-            $address->setBillingAddress($addressData['billingAddress'] ?? false);
-            $address->setDeliveryAddress($addressData['deliveryAddress'] ?? false);
-            $address->setPrimaryAddress($addressData['primaryAddress'] ?? false);
+            $address->setBillingAddress((bool) ($addressData['billingAddress'] ?? false));
+            $address->setDeliveryAddress((bool) ($addressData['deliveryAddress'] ?? false));
+            $address->setPrimaryAddress((bool) ($addressData['primaryAddress'] ?? false));
             $address->setTitle($addressData['title'] ?? null);
             $address->setStreet($addressData['street'] ?? null);
             $address->setNumber($addressData['number'] ?? null);

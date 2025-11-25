@@ -16,28 +16,19 @@ use Doctrine\Common\Collections\Collection;
 use JMS\Serializer\Annotation\Exclude;
 use JMS\Serializer\Annotation\Groups;
 
-/**
- * UrlType.
- */
 class UrlType implements \JsonSerializable
 {
-    /**
-     * @var string
-     */
     #[Groups(['fullAccount', 'fullContact', 'frontend'])]
-    private $name;
+    private string $name;
+
+    #[Groups(['fullAccount', 'fullContact', 'frontend'])]
+    private int $id;
 
     /**
-     * @var int
-     */
-    #[Groups(['fullAccount', 'fullContact', 'frontend'])]
-    private $id;
-
-    /**
-     * @var Collection
+     * @var Collection<int, Url>
      */
     #[Exclude]
-    private $urls;
+    private Collection $urls;
 
     /**
      * Constructor.
@@ -47,86 +38,53 @@ class UrlType implements \JsonSerializable
         $this->urls = new ArrayCollection();
     }
 
-    /**
-     * To force id = 1 in load fixtures.
-     *
-     * @param int $id
-     */
-    public function setId($id)
+    public function setId(int $id): static
     {
         $this->id = $id;
+
+        return $this;
     }
 
-    /**
-     * Set name.
-     *
-     * @param string $name
-     *
-     * @return UrlType
-     */
-    public function setName($name)
+    public function setName(string $name): static
     {
         $this->name = $name;
 
         return $this;
     }
 
-    /**
-     * Get name.
-     *
-     * @return string
-     */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * Add urls.
-     *
-     * @return UrlType
-     */
-    public function addUrl(Url $urls)
+    public function addUrl(Url $urls): static
     {
         $this->urls[] = $urls;
 
         return $this;
     }
 
-    /**
-     * Remove urls.
-     */
-    public function removeUrl(Url $urls)
+    public function removeUrl(Url $urls): static
     {
         $this->urls->removeElement($urls);
+
+        return $this;
     }
 
     /**
-     * Get urls.
-     *
-     * @return Collection
+     * @return Collection<int, Url>
      */
-    public function getUrls()
+    public function getUrls(): Collection
     {
         return $this->urls;
     }
 
     /**
-     * (PHP 5 &gt;= 5.4.0)<br/>
-     * Specify data which should be serialized to JSON.
-     *
-     * @see http://php.net/manual/en/jsonserializable.jsonserialize.php
-     *
      * @return array{id: int, name: string}
      */
     public function jsonSerialize(): array

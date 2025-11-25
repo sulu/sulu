@@ -17,58 +17,55 @@ use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\TagBundle\Tag\TagInterface;
 use Sulu\Component\Persistence\Model\AuditableInterface;
 
-/**
- * interface for accounts.
- */
 interface AccountInterface extends AuditableInterface
 {
     public const RESOURCE_KEY = 'accounts';
 
-    public function setName(string $name): self;
+    public function setName(string $name): static;
 
     public function getName(): string;
 
-    public function setExternalId(?string $externalId): self;
+    public function setExternalId(?string $externalId): static;
 
     public function getExternalId(): ?string;
 
-    public function setNumber(?string $number): self;
+    public function setNumber(?string $number): static;
 
     public function getNumber(): ?string;
 
-    public function setCorporation(?string $corporation): self;
+    public function setCorporation(?string $corporation): static;
 
     public function getCorporation(): ?string;
 
-    public function setUid(?string $uid): self;
+    public function setUid(?string $uid): static;
 
     public function getUid(): ?string;
 
-    public function setRegisterNumber(?string $registerNumber): self;
+    public function setRegisterNumber(?string $registerNumber): static;
 
     public function getRegisterNumber(): ?string;
 
-    public function setPlaceOfJurisdiction(?string $placeOfJurisdiction): self;
+    public function setPlaceOfJurisdiction(?string $placeOfJurisdiction): static;
 
     public function getPlaceOfJurisdiction(): ?string;
 
-    public function setMainEmail(?string $mainEmail = null): self;
+    public function setMainEmail(?string $mainEmail = null): static;
 
     public function getMainEmail(): ?string;
 
-    public function setMainPhone(?string $mainPhone = null): self;
+    public function setMainPhone(?string $mainPhone = null): static;
 
     public function getMainPhone(): ?string;
 
-    public function setMainFax(?string $mainFax = null): self;
+    public function setMainFax(?string $mainFax = null): static;
 
-    public function setLogo(MediaInterface $logo): self;
+    public function setLogo(MediaInterface $logo): static;
 
     public function getLogo(): ?MediaInterface;
 
     public function getMainFax(): ?string;
 
-    public function setMainUrl(?string $mainUrl = null): self;
+    public function setMainUrl(?string $mainUrl = null): static;
 
     public function getMainUrl(): ?string;
 
@@ -76,49 +73,49 @@ interface AccountInterface extends AuditableInterface
 
     public function getMainContact(): ?ContactInterface;
 
-    public function setMainContact(?ContactInterface $mainContact = null): self;
+    public function setMainContact(?ContactInterface $mainContact = null): static;
 
-    public function setLft(int $lft): self;
+    public function setLft(int $lft): static;
 
     public function getLft(): int;
 
-    public function setRgt(int $rgt): self;
+    public function setRgt(int $rgt): static;
 
     public function getRgt(): int;
 
-    public function setDepth(int $depth): self;
+    public function setDepth(int $depth): static;
 
     public function getDepth(): int;
 
-    public function setParent(?self $parent = null): self;
+    public function setParent(?self $parent = null): static;
 
     public function getParent(): ?self;
 
-    public function addUrl(Url $url): self;
+    public function addUrl(Url $url): static;
 
-    public function removeUrl(Url $url): self;
+    public function removeUrl(Url $url): static;
 
     public function getNote(): ?string;
 
-    public function setNote(?string $note): self;
+    public function setNote(?string $note): static;
 
     /**
      * @return Collection<int, Url>
      */
     public function getUrls(): Collection;
 
-    public function addPhone(Phone $phone): self;
+    public function addPhone(Phone $phone): static;
 
-    public function removePhone(Phone $phone): self;
+    public function removePhone(Phone $phone): static;
 
     /**
      * @return Collection<int, Phone>
      */
     public function getPhones(): Collection;
 
-    public function addEmail(Email $email): self;
+    public function addEmail(Email $email): static;
 
-    public function removeEmail(Email $emails): self;
+    public function removeEmail(Email $emails): static;
 
     /**
      * @return Collection<int, Email>
@@ -130,45 +127,45 @@ interface AccountInterface extends AuditableInterface
      */
     public function getChildren(): Collection;
 
-    public function addFax(Fax $fax): self;
+    public function addFax(Fax $fax): static;
 
-    public function removeFax(Fax $fax): self;
+    public function removeFax(Fax $fax): static;
 
     /**
      * @return Collection<int, Fax>
      */
     public function getFaxes(): Collection;
 
-    public function addSocialMediaProfile(SocialMediaProfile $socialMediaProfile): self;
+    public function addSocialMediaProfile(SocialMediaProfile $socialMediaProfile): static;
 
-    public function removeSocialMediaProfile(SocialMediaProfile $socialMediaProfile): self;
+    public function removeSocialMediaProfile(SocialMediaProfile $socialMediaProfile): static;
 
     /**
      * @return Collection<int, SocialMediaProfile>
      */
     public function getSocialMediaProfiles(): Collection;
 
-    public function addBankAccount(BankAccount $bankAccount): self;
+    public function addBankAccount(BankAccount $bankAccount): static;
 
-    public function removeBankAccount(BankAccount $bankAccount): self;
+    public function removeBankAccount(BankAccount $bankAccount): static;
 
     /**
      * @return Collection<int, BankAccount>
      */
     public function getBankAccounts(): Collection;
 
-    public function addTag(TagInterface $tag): self;
+    public function addTag(TagInterface $tag): static;
 
-    public function removeTag(TagInterface $tag): self;
+    public function removeTag(TagInterface $tag): static;
 
     /**
      * @return Collection<int, TagInterface>
      */
     public function getTags(): Collection;
 
-    public function addAccountContact(AccountContact $accountContact): self;
+    public function addAccountContact(AccountContact $accountContact): static;
 
-    public function removeAccountContact(AccountContact $accountContact): self;
+    public function removeAccountContact(AccountContact $accountContact): static;
 
     /**
      * @return Collection<int, AccountContact>
@@ -187,26 +184,26 @@ interface AccountInterface extends AuditableInterface
      */
     public function getContacts(): array;
 
-    public function addMedia(MediaInterface $media): self;
+    public function addMedia(MediaInterface $media): static;
 
-    public function removeMedia(MediaInterface $media): self;
+    public function removeMedia(MediaInterface $media): static;
 
     /**
      * @return Collection<int, MediaInterface>
      */
     public function getMedias(): Collection;
 
-    public function addAccountAddress(AccountAddress $accountAddress): self;
+    public function addAccountAddress(AccountAddress $accountAddress): static;
 
-    public function removeAccountAddress(AccountAddress $accountAddress): self;
+    public function removeAccountAddress(AccountAddress $accountAddress): static;
 
-    public function addChild(self $child): self;
+    public function addChild(self $child): static;
 
-    public function removeChild(self $child): self;
+    public function removeChild(self $child): static;
 
-    public function addCategory(CategoryInterface $category): self;
+    public function addCategory(CategoryInterface $category): static;
 
-    public function removeCategory(CategoryInterface $category): self;
+    public function removeCategory(CategoryInterface $category): static;
 
     /**
      * @return Collection<int, CategoryInterface>

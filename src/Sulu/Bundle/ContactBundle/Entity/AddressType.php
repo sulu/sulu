@@ -16,28 +16,19 @@ use Doctrine\Common\Collections\Collection;
 use JMS\Serializer\Annotation\Exclude;
 use JMS\Serializer\Annotation\Groups;
 
-/**
- * AddressType.
- */
 class AddressType implements \JsonSerializable
 {
-    /**
-     * @var string
-     */
     #[Groups(['frontend', 'fullAccount', 'fullContact'])]
-    private $name;
+    private string $name;
 
-    /**
-     * @var int
-     */
     #[Groups(['frontend', 'fullAccount', 'fullContact'])]
-    private $id;
+    private int $id;
 
     /**
      * @var Collection<int, Address>
      */
     #[Exclude]
-    private $addresses;
+    private Collection $addresses;
 
     /**
      * Constructor.
@@ -47,86 +38,53 @@ class AddressType implements \JsonSerializable
         $this->addresses = new ArrayCollection();
     }
 
-    /**
-     * To force id = 1 in load fixtures.
-     *
-     * @param int $id
-     */
-    public function setId($id)
+    public function setId(int $id): static
     {
         $this->id = $id;
+
+        return $this;
     }
 
-    /**
-     * Set name.
-     *
-     * @param string $name
-     *
-     * @return AddressType
-     */
-    public function setName($name)
+    public function setName(string $name): static
     {
         $this->name = $name;
 
         return $this;
     }
 
-    /**
-     * Get name.
-     *
-     * @return string
-     */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * Add addresses.
-     *
-     * @return AddressType
-     */
-    public function addAddresse(Address $addresses)
+    public function addAddresse(Address $addresses): static
     {
         $this->addresses[] = $addresses;
 
         return $this;
     }
 
-    /**
-     * Remove addresses.
-     */
-    public function removeAddresse(Address $addresses)
+    public function removeAddresse(Address $addresses): static
     {
         $this->addresses->removeElement($addresses);
+
+        return $this;
     }
 
     /**
-     * Get addresses.
-     *
      * @return Collection<int, Address>
      */
-    public function getAddresses()
+    public function getAddresses(): Collection
     {
         return $this->addresses;
     }
 
     /**
-     * (PHP 5 &gt;= 5.4.0)<br/>
-     * Specify data which should be serialized to JSON.
-     *
-     * @see http://php.net/manual/en/jsonserializable.jsonserialize.php
-     *
      * @return array{id: int, name: string}
      */
     public function jsonSerialize(): array
@@ -137,23 +95,17 @@ class AddressType implements \JsonSerializable
         ];
     }
 
-    /**
-     * Add addresses.
-     *
-     * @return AddressType
-     */
-    public function addAddress(Address $addresses)
+    public function addAddress(Address $addresses): static
     {
         $this->addresses[] = $addresses;
 
         return $this;
     }
 
-    /**
-     * Remove addresses.
-     */
-    public function removeAddress(Address $addresses)
+    public function removeAddress(Address $addresses): static
     {
         $this->addresses->removeElement($addresses);
+
+        return $this;
     }
 }

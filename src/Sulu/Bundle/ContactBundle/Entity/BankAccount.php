@@ -15,46 +15,28 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use JMS\Serializer\Annotation\Exclude;
 
-/**
- * BankAccount.
- */
 class BankAccount
 {
-    /**
-     * @var string|null
-     */
-    private $bankName;
+    private ?string $bankName = null;
 
-    /**
-     * @var string|null
-     */
-    private $bic;
+    private ?string $bic = null;
 
-    /**
-     * @var string
-     */
-    private $iban;
+    private string $iban;
 
-    /**
-     * @var bool
-     */
-    private $public = false;
+    private bool $public = false;
 
-    /**
-     * @var int
-     */
-    private $id;
+    private ?int $id = null;
 
     /**
      * @var Collection<int, AccountInterface>
      */
     #[Exclude]
-    private $accounts;
+    private Collection $accounts;
 
     /**
      * @var Collection<int, ContactInterface>
      */
-    private $contacts;
+    private Collection $contacts;
 
     /**
      * Constructor.
@@ -65,168 +47,99 @@ class BankAccount
         $this->contacts = new ArrayCollection();
     }
 
-    /**
-     * Set bic.
-     *
-     * @param string|null $bic
-     *
-     * @return BankAccount
-     */
-    public function setBic($bic)
+    public function setBic(?string $bic): static
     {
         $this->bic = $bic;
 
         return $this;
     }
 
-    /**
-     * Get bic.
-     *
-     * @return string|null
-     */
-    public function getBic()
+    public function getBic(): ?string
     {
         return $this->bic;
     }
 
-    /**
-     * Set iban.
-     *
-     * @param string $iban
-     *
-     * @return BankAccount
-     */
-    public function setIban($iban)
+    public function setIban(string $iban): static
     {
         $this->iban = $iban;
 
         return $this;
     }
 
-    /**
-     * Get iban.
-     *
-     * @return string
-     */
-    public function getIban()
+    public function getIban(): string
     {
         return $this->iban;
     }
 
-    /**
-     * Set public.
-     *
-     * @param bool $public
-     *
-     * @return BankAccount
-     */
-    public function setPublic($public)
+    public function setPublic(bool $public): static
     {
         $this->public = $public;
 
         return $this;
     }
 
-    /**
-     * Get public.
-     *
-     * @return bool
-     */
-    public function getPublic()
+    public function getPublic(): bool
     {
         return $this->public;
     }
 
-    /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    /**
-     * Add accounts.
-     *
-     * @return BankAccount
-     */
-    public function addAccount(AccountInterface $accounts)
+    public function addAccount(AccountInterface $accounts): static
     {
         $this->accounts[] = $accounts;
 
         return $this;
     }
 
-    /**
-     * Remove accounts.
-     */
-    public function removeAccount(AccountInterface $accounts)
+    public function removeAccount(AccountInterface $accounts): static
     {
         $this->accounts->removeElement($accounts);
+
+        return $this;
     }
 
     /**
-     * Get accounts.
-     *
      * @return Collection<int, AccountInterface>
      */
-    public function getAccounts()
+    public function getAccounts(): Collection
     {
         return $this->accounts;
     }
 
-    /**
-     * Set bankName.
-     *
-     * @param string|null $bankName
-     *
-     * @return BankAccount
-     */
-    public function setBankName($bankName)
+    public function setBankName(?string $bankName): static
     {
         $this->bankName = $bankName;
 
         return $this;
     }
 
-    /**
-     * Get bankName.
-     *
-     * @return string|null
-     */
-    public function getBankName()
+    public function getBankName(): ?string
     {
         return $this->bankName;
     }
 
-    /**
-     * Add contacts.
-     *
-     * @return BankAccount
-     */
-    public function addContact(ContactInterface $contacts)
+    public function addContact(ContactInterface $contacts): static
     {
         $this->contacts[] = $contacts;
 
         return $this;
     }
 
-    /**
-     * Remove contacts.
-     */
-    public function removeContact(ContactInterface $contacts)
+    public function removeContact(ContactInterface $contacts): static
     {
         $this->contacts->removeElement($contacts);
+
+        return $this;
     }
 
     /**
-     * Get contacts.
-     *
      * @return Collection<int, ContactInterface>
      */
-    public function getContacts()
+    public function getContacts(): Collection
     {
         return $this->contacts;
     }
