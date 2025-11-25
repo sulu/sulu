@@ -749,15 +749,19 @@ class Account extends ApiWrapper
     /**
      * Get mainContact.
      *
-     * @return Account
+     * @return int|null
      */
     #[VirtualProperty]
     #[SerializedName('mainContact')]
     #[Groups(['fullAccount'])]
-    public function getMainContact()
+    public function getMainContact(): ?int
     {
-        if ($this->entity->getMainContact()) {
-            return new Contact($this->entity->getMainContact(), $this->locale);
+        $mainContact = $this->entity->getMainContact();
+        if ($mainContact) {
+            /** @var int $id */
+            $id = $mainContact->getId();
+
+            return $id;
         }
 
         return null;

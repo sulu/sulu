@@ -241,10 +241,10 @@ final class ContactTrashItemHandler implements
 
         /** @var ContactInterface $contact */
         $contact = $this->contactRepository->createNew();
-        $contact->setFirstName($data['firstName']);
+        $contact->setFirstName($data['firstName'] ?? '');
         $middleName = $data['middleName'] ?? null;
         $contact->setMiddleName(\is_string($middleName) ? $middleName : null);
-        $contact->setLastName($data['lastName']);
+        $contact->setLastName($data['lastName'] ?? '');
         $contact->setBirthday(isset($data['birthday']) ? new \DateTime($data['birthday']) : null);
         $salutation = $data['salutation'] ?? null;
         $contact->setSalutation(\is_string($salutation) ? $salutation : null);

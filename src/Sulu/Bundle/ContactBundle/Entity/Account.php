@@ -28,13 +28,13 @@ class Account implements AccountInterface
 
     private int $id;
 
-    private string $name;
+    private string $name = '';
 
-    protected int $lft;
+    protected int $lft = 0;
 
-    protected int $rgt;
+    protected int $rgt = 0;
 
-    protected int $depth;
+    protected int $depth = 0;
 
     #[Exclude]
     private ?UserInterface $changer = null;
@@ -70,7 +70,7 @@ class Account implements AccountInterface
      * @var Collection<int, AccountInterface>
      */
     #[Exclude]
-    protected Collection $children;
+    protected $children;
 
     protected ?AccountInterface $parent = null;
 
@@ -78,74 +78,74 @@ class Account implements AccountInterface
      * @var Collection<int, Address>
      */
     #[Accessor(getter: 'getAddresses')]
-    protected Collection $addresses;
+    protected $addresses;
 
     /**
      * @var Collection<int, Url>
      */
-    protected Collection $urls;
+    protected $urls;
 
     /**
      * @var Collection<int, Phone>
      */
-    protected Collection $phones;
+    protected $phones;
 
     /**
      * @var Collection<int, SocialMediaProfile>
      */
-    protected Collection $socialMediaProfiles;
+    protected $socialMediaProfiles;
 
     /**
      * @var Collection<int, Email>
      */
-    protected Collection $emails;
+    protected $emails;
 
     /**
      * @var Collection<int, Note>
      *
      * @deprecated
      */
-    protected Collection $notes;
+    protected $notes;
 
     protected ?string $note = null;
 
     /**
      * @var Collection<int, Fax>
      */
-    protected Collection $faxes;
+    protected $faxes;
 
     /**
      * @var Collection<int, BankAccount>
      */
-    protected Collection $bankAccounts;
+    protected $bankAccounts;
 
     /**
      * @var Collection<int, TagInterface>
      */
     #[Accessor(getter: 'getTagNameArray')]
     #[Type('array')]
-    protected Collection $tags;
+    protected $tags;
 
     /**
      * @var Collection<int, AccountContact>
      */
-    protected Collection $accountContacts;
+    protected $accountContacts;
 
     /**
      * @var Collection<int, AccountAddress>
      */
     #[Exclude]
-    protected Collection $accountAddresses;
+    protected $accountAddresses;
 
     /**
      * @var Collection<int, MediaInterface>
      */
-    protected Collection $medias;
+    protected $medias;
 
     /**
      * @var Collection<int, CategoryInterface>
      */
-    protected Collection $categories;
+    protected $categories;
 
     /**
      * Constructor.
@@ -166,7 +166,6 @@ class Account implements AccountInterface
         $this->accountAddresses = new ArrayCollection();
         $this->bankAccounts = new ArrayCollection();
         $this->medias = new ArrayCollection();
-        $this->tags = new ArrayCollection();
     }
 
     public function setLft(int $lft): static

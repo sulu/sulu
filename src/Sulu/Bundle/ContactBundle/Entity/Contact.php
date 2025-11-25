@@ -35,11 +35,11 @@ class Contact extends ApiEntity implements ContactInterface
     #[Groups(['frontend', 'partialContact', 'fullContact'])]
     protected int $id;
 
-    protected string $firstName;
+    protected string $firstName = '';
 
     protected ?string $middleName = null;
 
-    protected string $lastName;
+    protected string $lastName = '';
 
     protected ?ContactTitle $title = null;
 
@@ -48,7 +48,7 @@ class Contact extends ApiEntity implements ContactInterface
     /**
      * @var Collection<int, ContactLocale>
      */
-    protected Collection $locales;
+    protected $locales;
 
     #[Groups(['fullContact'])]
     protected ?UserInterface $changer = null;
@@ -64,31 +64,31 @@ class Contact extends ApiEntity implements ContactInterface
      * @deprecated
      */
     #[Groups(['fullContact'])]
-    protected Collection $notes;
+    protected $notes;
 
     /**
      * @var Collection<int, Email>
      */
     #[Groups(['fullContact', 'partialContact'])]
-    protected Collection $emails;
+    protected $emails;
 
     /**
      * @var Collection<int, Phone>
      */
     #[Groups(['fullContact'])]
-    protected Collection $phones;
+    protected $phones;
 
     /**
      * @var Collection<int, Fax>
      */
     #[Groups(['fullContact'])]
-    protected Collection $faxes;
+    protected $faxes;
 
     /**
      * @var Collection<int, SocialMediaProfile>
      */
     #[Groups(['fullContact'])]
-    protected Collection $socialMediaProfiles;
+    protected $socialMediaProfiles;
 
     protected ?int $formOfAddress = null;
 
@@ -100,7 +100,7 @@ class Contact extends ApiEntity implements ContactInterface
     #[Accessor(getter: 'getTagNameArray')]
     #[Groups(['fullContact'])]
     #[Type('array')]
-    protected Collection $tags;
+    protected $tags;
 
     /**
      * main account.
@@ -116,13 +116,13 @@ class Contact extends ApiEntity implements ContactInterface
      */
     #[Accessor(getter: 'getAddresses')]
     #[Groups(['fullContact'])]
-    protected Collection $addresses;
+    protected $addresses;
 
     /**
      * @var Collection<int, AccountContact>
      */
     #[Exclude]
-    protected Collection $accountContacts;
+    protected $accountContacts;
 
     protected ?bool $newsletter = null;
 
@@ -140,31 +140,31 @@ class Contact extends ApiEntity implements ContactInterface
      * @var Collection<int, ContactAddress>
      */
     #[Exclude]
-    protected Collection $contactAddresses;
+    protected $contactAddresses;
 
     /**
      * @var Collection<int, MediaInterface>
      */
     #[Groups(['fullContact'])]
-    protected Collection $medias;
+    protected $medias;
 
     /**
      * @var Collection<int, CategoryInterface>
      */
     #[Groups(['fullContact'])]
-    protected Collection $categories;
+    protected $categories;
 
     /**
      * @var Collection<int, Url>
      */
     #[Groups(['fullContact'])]
-    protected Collection $urls;
+    protected $urls;
 
     /**
      * @var Collection<int, BankAccount>
      */
     #[Groups(['fullContact'])]
-    protected Collection $bankAccounts;
+    protected $bankAccounts;
 
     protected ?MediaInterface $avatar = null;
 

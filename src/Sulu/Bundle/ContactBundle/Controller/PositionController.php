@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Sulu.
  *
@@ -37,7 +39,7 @@ class PositionController extends AbstractRestController
         ViewHandlerInterface $viewHandler,
         private PositionRepository $positionRepository,
         private EntityManagerInterface $entityManager,
-        private DomainEventCollectorInterface $domainEventCollector
+        private DomainEventCollectorInterface $domainEventCollector,
     ) {
         parent::__construct($viewHandler);
     }
@@ -53,9 +55,9 @@ class PositionController extends AbstractRestController
     {
         $view = $this->responseGetById(
             $id,
-            function($id) {
+            function ($id) {
                 return $this->positionRepository->find($id);
-            }
+            },
         );
 
         return $this->handleView($view);
@@ -78,7 +80,7 @@ class PositionController extends AbstractRestController
 
         $list = new CollectionRepresentation(
             $this->positionRepository->findBy($filter, ['position' => 'ASC']),
-            Position::RESOURCE_KEY
+            Position::RESOURCE_KEY,
         );
 
         $view = $this->view($list, 200);
@@ -96,9 +98,9 @@ class PositionController extends AbstractRestController
         $name = $request->get('position');
 
         try {
-            if (null == $name) {
+            if (null === $name) {
                 throw new RestException(
-                    'There is no position-name for the given name'
+                    'There is no position-name for the given name',
                 );
             }
 
@@ -108,7 +110,7 @@ class PositionController extends AbstractRestController
             $this->entityManager->persist($position);
 
             $this->domainEventCollector->collect(
-                new ContactPositionCreatedEvent($position, $request->request->all())
+                new ContactPositionCreatedEvent($position, $request->request->all()),
             );
 
             $this->entityManager->flush();
@@ -138,22 +140,20 @@ class PositionController extends AbstractRestController
 
             if (!$position) {
                 throw new EntityNotFoundException(self::$entityName, $id);
-            } else {
-                $name = $request->get('position');
-
-                if (empty($name)) {
-                    throw new RestException('There is no position-name for the given name');
-                } else {
-                    $position->setPosition($name);
-
-                    $this->domainEventCollector->collect(
-                        new ContactPositionModifiedEvent($position, $request->request->all())
-                    );
-
-                    $this->entityManager->flush();
-                    $view = $this->view($position, 200);
-                }
             }
+            $name = $request->get('position');
+
+            if (empty($name)) {
+                throw new RestException('There is no position-name for the given name');
+            }
+            $position->setPosition($name);
+
+            $this->domainEventCollector->collect(
+                new ContactPositionModifiedEvent($position, $request->request->all()),
+            );
+
+            $this->entityManager->flush();
+            $view = $this->view($position, 200);
         } catch (EntityNotFoundException $enfe) {
             $view = $this->view($enfe->toArray(), 404);
         } catch (RestException $exc) {
@@ -177,13 +177,15 @@ class PositionController extends AbstractRestController
                 }
 
                 $positionId = $position->getId();
-                \assert(null !== $positionId);
+                if (null === $positionId) {
+                    throw new \RuntimeException('Position ID cannot be null');
+                }
                 $positionName = $position->getPosition();
 
                 $this->entityManager->remove($position);
 
                 $this->domainEventCollector->collect(
-                    new ContactPositionRemovedEvent($positionId, $positionName)
+                    new ContactPositionRemovedEvent($positionId, $positionName),
                 );
             }
 
@@ -207,22 +209,23 @@ class PositionController extends AbstractRestController
     public function deleteAction($id)
     {
         try {
-            $delete = function($id) {
-                /* @var Position $position */
+            $delete = function ($id) {
+                /** @var Position|null $position */
                 $position = $this->positionRepository->find($id);
-
-                if (!$position) {
-                    throw new EntityNotFoundException(self::$entityName, $id);
+                if (null === $position) {
+                    return;
                 }
 
                 $positionId = $position->getId();
-                \assert(null !== $positionId);
+                if (null === $positionId) {
+                    return;
+                }
                 $positionName = $position->getPosition();
 
                 $this->entityManager->remove($position);
 
                 $this->domainEventCollector->collect(
-                    new ContactPositionRemovedEvent($positionId, $positionName)
+                    new ContactPositionRemovedEvent($positionId, $positionName),
                 );
 
                 $this->entityManager->flush();
@@ -250,7 +253,7 @@ class PositionController extends AbstractRestController
             while ($item = $request->get($i)) {
                 if (!isset($item['position'])) {
                     throw new RestException(
-                        'There is no position-name for the given name'
+                        'There is no position-name for the given name',
                     );
                 }
 
@@ -274,9 +277,9 @@ class PositionController extends AbstractRestController
      *
      * @param mixed[] $item
      *
-     * @return Position added or updated entity
-     *
      * @throws EntityNotFoundException
+     *
+     * @return Position added or updated entity
      */
     private function addAndUpdatePositions($item)
     {
@@ -284,22 +287,21 @@ class PositionController extends AbstractRestController
             /* @var Position $position */
             $position = $this->positionRepository->find($item['id']);
 
-            if (null == $position) {
+            if (null === $position) {
                 throw new EntityNotFoundException(self::$entityName, $item['id']);
-            } else {
-                $position->setPosition($item['position']);
-
-                $this->domainEventCollector->collect(
-                    new ContactPositionModifiedEvent($position, $item)
-                );
             }
+            $position->setPosition($item['position']);
+
+            $this->domainEventCollector->collect(
+                new ContactPositionModifiedEvent($position, $item),
+            );
         } else {
             $position = new Position();
             $position->setPosition($item['position']);
             $this->entityManager->persist($position);
 
             $this->domainEventCollector->collect(
-                new ContactPositionCreatedEvent($position, $item)
+                new ContactPositionCreatedEvent($position, $item),
             );
         }
 
