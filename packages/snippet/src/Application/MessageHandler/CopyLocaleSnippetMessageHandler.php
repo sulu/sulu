@@ -19,8 +19,6 @@ use Sulu\Snippet\Domain\Event\SnippetTranslationCopiedEvent;
 use Sulu\Snippet\Domain\Repository\SnippetRepositoryInterface;
 
 /**
- * @experimental
- *
  * @internal This class should not be instantiated by a project.
  *           Create your own Message and Handler instead.
  */

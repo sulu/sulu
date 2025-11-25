@@ -24,8 +24,6 @@ use Sulu\Content\Domain\Model\TemplateInterface;
 use Sulu\Content\Domain\Model\WorkflowInterface;
 
 /**
- * @experimental
- *
  * @extends DimensionContentInterface<PageInterface>
  */
 interface PageDimensionContentInterface extends DimensionContentInterface, ExcerptInterface, TaxonomyInterface, SeoInterface, TemplateInterface, RoutableInterface, WorkflowInterface, ShadowInterface, AuthorInterface, AuditableInterface, LinkInterface

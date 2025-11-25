@@ -15,8 +15,6 @@ use Sulu\Component\Persistence\Model\AuditableInterface;
 use Sulu\Content\Domain\Model\ContentRichEntityInterface;
 
 /**
- * @experimental
- *
  * @extends ContentRichEntityInterface<SnippetDimensionContentInterface>
  */
 interface SnippetInterface extends AuditableInterface, ContentRichEntityInterface

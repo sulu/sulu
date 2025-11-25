@@ -20,8 +20,6 @@ use Sulu\Content\Application\ContentCopier\ContentCopierInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 
 /**
- * @experimental
- *
  * @internal This class should not be instantiated by a project.
  *           Create your own Message and Handler instead.
  */

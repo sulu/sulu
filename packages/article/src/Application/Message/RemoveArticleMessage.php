@@ -11,9 +11,6 @@
 
 namespace Sulu\Article\Application\Message;
 
-/**
- * @experimental
- */
 class RemoveArticleMessage
 {
     public function __construct(

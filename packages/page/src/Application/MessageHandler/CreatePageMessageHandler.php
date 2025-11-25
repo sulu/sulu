@@ -21,8 +21,6 @@ use Sulu\Page\Domain\Repository\PageRepositoryInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
- * @experimental
- *
  * @internal This class should not be instantiated by a project.
  *           Create a PageMapper to extend this Handler.
  */

@@ -11,9 +11,6 @@
 
 namespace Sulu\Page\Application\Message;
 
-/**
- * @experimental
- */
 class RemovePageTranslationMessage
 {
     public function __construct(

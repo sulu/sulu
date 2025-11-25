@@ -23,8 +23,6 @@ use Symfony\Component\Routing\RequestContext;
  * @final
  *
  * @internal this class is internal and should not be extended or overwritten
- *
- * @experimental
  */
 class WebspaceSiteRouteGenerator implements SiteRouteGeneratorInterface
 {

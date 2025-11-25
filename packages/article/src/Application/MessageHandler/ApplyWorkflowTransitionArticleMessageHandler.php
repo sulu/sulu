@@ -18,8 +18,6 @@ use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterfa
 use Sulu\Content\Application\ContentWorkflow\ContentWorkflowInterface;
 
 /**
- * @experimental
- *
  * @internal This class should not be instantiated by a project.
  *           Create your own Message and Handler instead.
  */

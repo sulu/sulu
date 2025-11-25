@@ -20,8 +20,6 @@ use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterfa
 use Sulu\Bundle\TrashBundle\Application\TrashManager\TrashManagerInterface;
 
 /**
- * @experimental
- *
  * @internal This class should not be instantiated by a project.
  *           Create your own Message and Handler instead.
  */

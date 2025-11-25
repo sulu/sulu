@@ -11,9 +11,6 @@
 
 namespace Sulu\Snippet\Application\Message;
 
-/**
- * @experimental
- */
 class RemoveSnippetTranslationMessage
 {
     public function __construct(

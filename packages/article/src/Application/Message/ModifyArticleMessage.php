@@ -13,9 +13,6 @@ namespace Sulu\Article\Application\Message;
 
 use Webmozart\Assert\Assert;
 
-/**
- * @experimental
- */
 class ModifyArticleMessage
 {
     /**

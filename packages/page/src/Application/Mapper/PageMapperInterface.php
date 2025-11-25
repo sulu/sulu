@@ -13,9 +13,6 @@ namespace Sulu\Page\Application\Mapper;
 
 use Sulu\Page\Domain\Model\PageInterface;
 
-/**
- * @experimental
- */
 interface PageMapperInterface
 {
     /**

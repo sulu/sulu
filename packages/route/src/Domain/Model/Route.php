@@ -56,12 +56,10 @@ class Route
     }
 
     /**
-     * @experimental This method is experimental and may be removed or changed in the future.
-     *
      *    MM
      *   <' \___/|          _
      *     \_  _/    or    / \
-     *       ][            \_/
+     *       ][            \_/.
      *
      * There might be a chicken egg problem when try to create a route for an entity which is not flushed yet. This
      * can happen if the id of the entity is auto increment. So we need generate a temporary resourceId. Which we

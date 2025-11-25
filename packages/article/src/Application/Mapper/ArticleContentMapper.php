@@ -16,8 +16,6 @@ use Sulu\Content\Application\ContentPersister\ContentPersisterInterface;
 use Webmozart\Assert\Assert;
 
 /**
- * @experimental
- *
  * @internal This class should be instantiated inside a project.
  *           Use the message to create or modify an article.
  *           Or inject all the mappers into a custom service.

@@ -18,8 +18,6 @@ use Sulu\Content\Domain\Model\TemplateInterface;
 use Sulu\Content\Domain\Model\WorkflowInterface;
 
 /**
- * @experimental
- *
  * @extends DimensionContentInterface<SnippetInterface>
  */
 interface SnippetDimensionContentInterface extends DimensionContentInterface, TemplateInterface, WorkflowInterface, TaxonomyInterface, AuditableInterface

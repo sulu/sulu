@@ -16,8 +16,6 @@ use Sulu\Snippet\Domain\Model\SnippetInterface;
 use Webmozart\Assert\Assert;
 
 /**
- * @experimental
- *
  * @internal This class should be instantiated inside a project.
  *           Use the message to create or modify an snippet.
  *           Or inject all the mappers into a custom service.

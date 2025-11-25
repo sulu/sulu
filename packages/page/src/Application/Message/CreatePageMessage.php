@@ -13,9 +13,6 @@ namespace Sulu\Page\Application\Message;
 
 use Webmozart\Assert\Assert;
 
-/**
- * @experimental
- */
 class CreatePageMessage
 {
     private ?string $uuid = null;

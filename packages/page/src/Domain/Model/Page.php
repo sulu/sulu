@@ -18,9 +18,6 @@ use Sulu\Content\Domain\Model\ContentRichEntityTrait;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Symfony\Component\Uid\Uuid;
 
-/**
- * @experimental
- */
 class Page implements PageInterface
 {
     /**
