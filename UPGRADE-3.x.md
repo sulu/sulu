@@ -1210,6 +1210,12 @@ Removed container parameters:
 - `sulu_security.security_types.fixture`
 - `sulu_media.media.max_file_size` (replaced by `sulu_media.media.max_filesize`)
 
+### Native PHP types for entities and interfaces
+
+All entity classes and their corresponding interfaces have been updated to use native PHP type declarations instead of PHPDoc annotations. This includes parameter types, return types, and property types across all bundles.
+
+**Impact:** If you extend any Sulu entity or implement any Sulu interface, you must update your code to include the same native type declarations. PHP will throw fatal errors if child classes or interface implementations have incompatible type signatures.
+
 ### Added return type hints
 
 The following methods have been updated with a return type hint:
