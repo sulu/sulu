@@ -25,73 +25,29 @@ use Symfony\Component\Routing\RequestContext;
 class DumpSitemapCommand extends Command
 {
     /**
-     * @var WebspaceManagerInterface
-     */
-    private $webspaceManager;
-
-    /**
-     * @var XmlSitemapDumperInterface
-     */
-    private $sitemapDumper;
-
-    /**
-     * @var Filesystem
-     */
-    private $filesystem;
-
-    /**
      * @var OutputInterface
      */
     private $output;
 
-    /**
-     * @var string
-     */
-    private $environment;
-
-    /**
-     * @var string
-     */
-    private $baseDirectory;
-
     public function __construct(
-        WebspaceManagerInterface $webspaceManager,
-        XmlSitemapDumperInterface $sitemapDumper,
-        Filesystem $filesystem,
-        string $baseDirectory,
-        string $environment,
-        private string $scheme,
-        string $defaultHost,
-        ?RequestContext $requestContext = null
+        private WebspaceManagerInterface $webspaceManager,
+        private XmlSitemapDumperInterface $sitemapDumper,
+        private Filesystem $filesystem,
+        private string $baseDirectory,
+        private string $environment,
+        private RequestContext $requestContext,
     ) {
         parent::__construct();
-
-        $this->webspaceManager = $webspaceManager;
-        $this->sitemapDumper = $sitemapDumper;
-        $this->filesystem = $filesystem;
-        $this->environment = $environment;
-        $this->baseDirectory = $baseDirectory;
-
-        if (null === $requestContext) {
-            @trigger_deprecation('sulu/sulu', '2.6', 'It is deprecated to not pass the request context to "%s".', self::class);
-        } elseif ($requestContext->getScheme() !== $scheme) {
-            @trigger_deprecation('sulu/sulu', '2.6', 'It is deprecated to define a different scheme in kernel parameter "router.request_context.scheme" and "framework.router.default_uri" config. Starting with Sulu 3.0 only "framework.router.default_uri" will be respected in "%s".', self::class);
-        }
     }
 
     protected function configure(): void
     {
-        $this->addOption('https', null, InputOption::VALUE_NONE, 'Use https scheme for url generation.')
-            ->addOption('clear', null, InputOption::VALUE_NONE, 'Delete all file before start.');
+        $this->addOption('clear', null, InputOption::VALUE_NONE, 'Delete all file before start.');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->output = $output;
-
-        if ($input->getOption('https')) {
-            $this->scheme = 'https';
-        }
 
         if ($input->getOption('clear')) {
             $this->clear();
@@ -104,14 +60,14 @@ class DumpSitemapCommand extends Command
         $hosts = [];
         foreach ($portalInformations as $portalInformation) {
             $portalUrl = $portalInformation->getUrl();
-            $urlParts = \parse_url($this->scheme . '://' . $portalUrl);
+            $urlParts = \parse_url($this->requestContext->getScheme() . '://' . $portalUrl);
             $hosts[] = $urlParts['host'];
         }
 
         $hosts = \array_unique(\array_filter($hosts));
 
         foreach ($hosts as $host) {
-            $this->sitemapDumper->dumpHost($this->scheme, $host);
+            $this->sitemapDumper->dumpHost($this->requestContext->getScheme(), $host);
         }
 
         return 0;
@@ -122,6 +78,6 @@ class DumpSitemapCommand extends Command
      */
     private function clear(): void
     {
-        $this->filesystem->remove(\rtrim($this->baseDirectory, '/') . '/' . $this->scheme);
+        $this->filesystem->remove(\rtrim($this->baseDirectory, '/') . '/' . $this->requestContext->getScheme());
     }
 }
