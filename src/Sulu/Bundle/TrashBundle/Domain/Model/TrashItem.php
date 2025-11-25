@@ -26,44 +26,33 @@ use Sulu\Component\Security\Authentication\UserInterface;
 #[ExclusionPolicy('all')]
 class TrashItem implements TrashItemInterface
 {
-    /**
-     * @var int
-     */
     #[Expose]
     #[Groups(['trash_item_admin_api'])]
-    private $id;
+    private int $id;
 
-    /**
-     * @var string
-     */
     #[Expose]
     #[Groups(['trash_item_admin_api'])]
-    private $resourceKey;
+    private string $resourceKey;
 
-    /**
-     * @var string
-     */
     #[Expose]
     #[Groups(['trash_item_admin_api'])]
-    private $resourceId;
+    private string $resourceId;
 
     /**
      * @var mixed[]
      */
     #[Expose]
     #[Groups(['trash_item_admin_api'])]
-    private $restoreData = [];
+    private array $restoreData = [];
 
     /**
      * The restoreType can be used to indicate a sub entity.
      *     e.g.: Store and Restore a single translation of a page.
      *          -> "translation".
-     *
-     * @var string|null
      */
     #[Expose]
     #[Groups(['trash_item_admin_api'])]
-    private $restoreType;
+    private ?string $restoreType = null;
 
     /**
      * The restoreOptions are used to change behaviour of store and restore handler.
@@ -74,49 +63,31 @@ class TrashItem implements TrashItemInterface
      */
     #[Expose]
     #[Groups(['trash_item_admin_api'])]
-    private $restoreOptions = [];
+    private array $restoreOptions = [];
 
-    /**
-     * @var string|null
-     */
     #[Expose]
     #[Groups(['trash_item_admin_api'])]
-    private $resourceSecurityContext;
+    private ?string $resourceSecurityContext = null;
 
-    /**
-     * @var string|null
-     */
     #[Expose]
-    private $resourceSecurityObjectType;
+    private ?string $resourceSecurityObjectType = null;
 
-    /**
-     * @var string|null
-     */
     #[Expose]
     #[Groups(['trash_item_admin_api'])]
-    private $resourceSecurityObjectId;
+    private ?string $resourceSecurityObjectId = null;
 
-    /**
-     * @var \DateTimeImmutable
-     */
     #[Expose]
     #[Groups(['trash_item_admin_api'])]
-    private $storeTimestamp;
+    private \DateTimeImmutable $storeTimestamp;
 
-    /**
-     * @var UserInterface|null
-     */
-    private $user;
+    private ?UserInterface $user = null;
 
     /**
      * @var Collection<int, TrashItemTranslation>
      */
-    private $translations;
+    private Collection $translations;
 
-    /**
-     * @var string|null
-     */
-    private $defaultLocale;
+    private ?string $defaultLocale = null;
 
     public function __construct()
     {
@@ -124,9 +95,14 @@ class TrashItem implements TrashItemInterface
         $this->storeTimestamp = new \DateTimeImmutable();
     }
 
-    public function getId(): ?int
+    public function getId(): int
     {
         return $this->id;
+    }
+
+    public function isNew(): bool
+    {
+        return !isset($this->id);
     }
 
     public function getResourceKey(): string
@@ -134,7 +110,7 @@ class TrashItem implements TrashItemInterface
         return $this->resourceKey;
     }
 
-    public function setResourceKey(string $resourceKey): TrashItemInterface
+    public function setResourceKey(string $resourceKey): static
     {
         $this->resourceKey = $resourceKey;
 
@@ -146,7 +122,7 @@ class TrashItem implements TrashItemInterface
         return $this->resourceId;
     }
 
-    public function setResourceId(string $resourceId): TrashItemInterface
+    public function setResourceId(string $resourceId): static
     {
         $this->resourceId = $resourceId;
 
@@ -158,7 +134,7 @@ class TrashItem implements TrashItemInterface
         return $this->restoreData;
     }
 
-    public function setRestoreData(array $restoreData): TrashItemInterface
+    public function setRestoreData(array $restoreData): static
     {
         $this->restoreData = $restoreData;
 
@@ -170,7 +146,7 @@ class TrashItem implements TrashItemInterface
         return $this->restoreType;
     }
 
-    public function setRestoreType(?string $restoreType): TrashItemInterface
+    public function setRestoreType(?string $restoreType): static
     {
         $this->restoreType = $restoreType;
 
@@ -182,7 +158,7 @@ class TrashItem implements TrashItemInterface
         return $this->restoreOptions;
     }
 
-    public function setRestoreOptions(array $restoreOptions): TrashItemInterface
+    public function setRestoreOptions(array $restoreOptions): static
     {
         $this->restoreOptions = $restoreOptions;
 
@@ -194,7 +170,7 @@ class TrashItem implements TrashItemInterface
         return $this->getTranslation($locale, true)->getTitle();
     }
 
-    public function setResourceTitle(string $resourceTitle, ?string $locale = null): TrashItemInterface
+    public function setResourceTitle(string $resourceTitle, ?string $locale = null): static
     {
         if (!$this->hasTranslation($locale)) {
             $translation = new TrashItemTranslation($this, $locale, $resourceTitle);
@@ -214,7 +190,7 @@ class TrashItem implements TrashItemInterface
         return $this->resourceSecurityContext;
     }
 
-    public function setResourceSecurityContext(?string $resourceSecurityContext): TrashItemInterface
+    public function setResourceSecurityContext(?string $resourceSecurityContext): static
     {
         $this->resourceSecurityContext = $resourceSecurityContext;
 
@@ -226,7 +202,7 @@ class TrashItem implements TrashItemInterface
         return $this->resourceSecurityObjectType;
     }
 
-    public function setResourceSecurityObjectType(?string $resourceSecurityObjectType): TrashItemInterface
+    public function setResourceSecurityObjectType(?string $resourceSecurityObjectType): static
     {
         $this->resourceSecurityObjectType = $resourceSecurityObjectType;
 
@@ -238,7 +214,7 @@ class TrashItem implements TrashItemInterface
         return $this->resourceSecurityObjectId;
     }
 
-    public function setResourceSecurityObjectId(?string $resourceSecurityObjectId): TrashItemInterface
+    public function setResourceSecurityObjectId(?string $resourceSecurityObjectId): static
     {
         $this->resourceSecurityObjectId = $resourceSecurityObjectId;
 
@@ -250,7 +226,7 @@ class TrashItem implements TrashItemInterface
         return $this->storeTimestamp;
     }
 
-    public function setStoreTimestamp(\DateTimeImmutable $storeTimestamp): TrashItemInterface
+    public function setStoreTimestamp(\DateTimeImmutable $storeTimestamp): static
     {
         $this->storeTimestamp = $storeTimestamp;
 
@@ -270,7 +246,7 @@ class TrashItem implements TrashItemInterface
         return $this->user ? $this->user->getId() : null;
     }
 
-    public function setUser(?UserInterface $user): TrashItemInterface
+    public function setUser(?UserInterface $user): static
     {
         $this->user = $user;
 

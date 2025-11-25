@@ -122,10 +122,11 @@ class TrashItemRepositoryTest extends SuluTestCase
             'Resource title'
         );
 
+        $trashItemId = $trashItem->getId();
         $this->repository->remove($trashItem);
         $this->entityManager->flush();
 
-        $result = $this->repository->findOneBy(['id' => $trashItem->getId()]);
+        $result = $this->repository->findOneBy(['id' => $trashItemId]);
 
         static::assertNull($result);
     }

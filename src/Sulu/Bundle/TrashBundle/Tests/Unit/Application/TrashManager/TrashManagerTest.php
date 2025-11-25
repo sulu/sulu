@@ -18,6 +18,7 @@ use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
+use Sulu\Bundle\TestBundle\Testing\SetGetPrivatePropertyTrait;
 use Sulu\Bundle\TrashBundle\Application\TrashItemHandler\RemoveTrashItemHandlerInterface;
 use Sulu\Bundle\TrashBundle\Application\TrashItemHandler\RestoreTrashItemHandlerInterface;
 use Sulu\Bundle\TrashBundle\Application\TrashItemHandler\StoreTrashItemHandlerInterface;
@@ -33,6 +34,7 @@ use Symfony\Component\DependencyInjection\ServiceLocator;
 class TrashManagerTest extends TestCase
 {
     use ProphecyTrait;
+    use SetGetPrivatePropertyTrait;
 
     /**
      * @var ObjectProphecy<TrashItemRepositoryInterface>
@@ -149,6 +151,7 @@ class TrashManagerTest extends TestCase
         $trashItem->setResourceKey('tags');
         $trashItem->setResourceId('1');
         $trashItem->setResourceTitle('Tag Title');
+        $this->setPrivateProperty($trashItem, 'id', 1);
 
         $this->removeTrashItemHandlerLocator->has('tags')->willReturn(false);
 
@@ -166,6 +169,7 @@ class TrashManagerTest extends TestCase
         $trashItem->setResourceKey('tags');
         $trashItem->setResourceId('1');
         $trashItem->setResourceTitle('Tag Title');
+        $this->setPrivateProperty($trashItem, 'id', 1);
 
         $this->removeTrashItemHandlerLocator->has('tags')->willReturn(true);
         $this->removeTrashItemHandlerLocator->get('tags')->willReturn($removeTrashItemHandler->reveal());

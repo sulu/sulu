@@ -20,29 +20,17 @@ use JMS\Serializer\Annotation\Groups;
 #[ExclusionPolicy('all')]
 class TrashItemTranslation
 {
-    /**
-     * @var int
-     */
-    private $id;
+    private int $id;
 
-    /**
-     * @var TrashItemInterface
-     */
-    private $trashItem;
+    private TrashItemInterface $trashItem;
 
-    /**
-     * @var string|null
-     */
     #[Expose]
     #[Groups(['trash_item_admin_api'])]
-    private $locale;
+    private ?string $locale;
 
-    /**
-     * @var string
-     */
     #[Expose]
     #[Groups(['trash_item_admin_api'])]
-    private $title;
+    private string $title;
 
     public function __construct(TrashItemInterface $trashItem, ?string $locale, string $title)
     {
@@ -56,7 +44,7 @@ class TrashItemTranslation
         return $this->trashItem;
     }
 
-    public function setTrashItem(TrashItemInterface $trashItem): self
+    public function setTrashItem(TrashItemInterface $trashItem): static
     {
         $this->trashItem = $trashItem;
 
@@ -68,7 +56,7 @@ class TrashItemTranslation
         return $this->locale;
     }
 
-    public function setLocale(?string $locale): self
+    public function setLocale(?string $locale): static
     {
         $this->locale = $locale;
 
@@ -80,7 +68,7 @@ class TrashItemTranslation
         return $this->title;
     }
 
-    public function setTitle(string $title): self
+    public function setTitle(string $title): static
     {
         $this->title = $title;
 
