@@ -43,7 +43,7 @@ class AdditionalWebspacesMergerTest extends TestCase
 
         $target = $this->prophesize(DimensionContentInterface::class);
         $target->willImplement(ArticleDimensionContentInterface::class);
-        $target->setCustomizeWebspaceSettings($customizeWebspaceSettings)->shouldBeCalled();
+        $target->setCustomizeWebspaceSettings($customizeWebspaceSettings)->shouldBeCalled()->willReturn($target->reveal());
         $target->setAdditionalWebspaces(['test-webspace'])->shouldBeCalled()->willReturn($target->reveal());
 
         $merger->merge($target->reveal(), $source->reveal());
@@ -79,7 +79,7 @@ class AdditionalWebspacesMergerTest extends TestCase
 
         $target = $this->prophesize(DimensionContentInterface::class);
         $target->willImplement(ArticleDimensionContentInterface::class);
-        $target->setCustomizeWebspaceSettings(true)->shouldBeCalled();
+        $target->setCustomizeWebspaceSettings(true)->shouldBeCalled()->willReturn($target->reveal());
         $target->setAdditionalWebspaces($additionalWebspaces)->shouldBeCalled()->willReturn($target->reveal());
 
         $merger->merge($target->reveal(), $source->reveal());
@@ -96,7 +96,7 @@ class AdditionalWebspacesMergerTest extends TestCase
 
         $target = $this->prophesize(DimensionContentInterface::class);
         $target->willImplement(ArticleDimensionContentInterface::class);
-        $target->setCustomizeWebspaceSettings(true)->shouldBeCalled();
+        $target->setCustomizeWebspaceSettings(true)->shouldBeCalled()->willReturn($target->reveal());
         $target->setAdditionalWebspaces([])->shouldBeCalled()->willReturn($target->reveal());
 
         $merger->merge($target->reveal(), $source->reveal());
@@ -115,7 +115,7 @@ class AdditionalWebspacesMergerTest extends TestCase
 
         $target = $this->prophesize(DimensionContentInterface::class);
         $target->willImplement(ArticleDimensionContentInterface::class);
-        $target->setCustomizeWebspaceSettings(true)->shouldBeCalled();
+        $target->setCustomizeWebspaceSettings(true)->shouldBeCalled()->willReturn($target->reveal());
         $target->setAdditionalWebspaces($additionalWebspaces)->shouldBeCalled()->willReturn($target->reveal());
 
         $merger->merge($target->reveal(), $source->reveal());

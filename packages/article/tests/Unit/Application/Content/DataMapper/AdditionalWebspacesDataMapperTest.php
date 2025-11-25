@@ -64,7 +64,7 @@ class AdditionalWebspacesDataMapperTest extends TestCase
         $unlocalizedDimensionContent = $this->prophesize(DimensionContentInterface::class);
         $dimensionContent = $this->prophesize(DimensionContentInterface::class);
         $dimensionContent->willImplement(ArticleDimensionContentInterface::class);
-        $dimensionContent->setCustomizeWebspaceSettings(true)->shouldBeCalled();
+        $dimensionContent->setCustomizeWebspaceSettings(true)->shouldBeCalled()->willReturn($dimensionContent->reveal());
         $dimensionContent->setAdditionalWebspaces(['example-com'])->shouldBeCalled()->willReturn($dimensionContent->reveal());
 
         $data = [
@@ -89,7 +89,7 @@ class AdditionalWebspacesDataMapperTest extends TestCase
         $this->configurationResolver->getDefaultAdditionalWebspacesForLocale($locale)->willReturn(['blog'])->shouldBeCalled();
         $dimensionContent->setMainWebspace('sulu-io')->shouldBeCalled();
         $dimensionContent->setAdditionalWebspaces(['blog'])->shouldBeCalled()->willReturn($dimensionContent->reveal());
-        $dimensionContent->setCustomizeWebspaceSettings(false)->shouldBeCalled();
+        $dimensionContent->setCustomizeWebspaceSettings(false)->shouldBeCalled()->willReturn($dimensionContent->reveal());
 
         $data = [
             'customizeWebspaceSettings' => false,
@@ -113,7 +113,7 @@ class AdditionalWebspacesDataMapperTest extends TestCase
         $this->configurationResolver->getDefaultAdditionalWebspacesForLocale($locale)->willReturn(['blog'])->shouldBeCalled();
         $dimensionContent->setMainWebspace('sulu-io')->shouldBeCalled();
         $dimensionContent->setAdditionalWebspaces(['blog'])->shouldBeCalled()->willReturn($dimensionContent->reveal());
-        $dimensionContent->setCustomizeWebspaceSettings(false)->shouldBeCalled();
+        $dimensionContent->setCustomizeWebspaceSettings(false)->shouldBeCalled()->willReturn($dimensionContent->reveal());
         $data = [
             'mainWebspace' => 'sulu-io',
             'additionalWebspaces' => ['example-com'],
@@ -129,7 +129,7 @@ class AdditionalWebspacesDataMapperTest extends TestCase
         $unlocalizedDimensionContent = $this->prophesize(DimensionContentInterface::class);
         $dimensionContent = $this->prophesize(DimensionContentInterface::class);
         $dimensionContent->willImplement(ArticleDimensionContentInterface::class);
-        $dimensionContent->setCustomizeWebspaceSettings(true)->shouldBeCalled();
+        $dimensionContent->setCustomizeWebspaceSettings(true)->shouldBeCalled()->willReturn($dimensionContent->reveal());
         $dimensionContent->setAdditionalWebspaces([])->shouldBeCalled()->willReturn($dimensionContent->reveal());
 
         $data = [
@@ -148,7 +148,7 @@ class AdditionalWebspacesDataMapperTest extends TestCase
         $unlocalizedDimensionContent = $this->prophesize(DimensionContentInterface::class);
         $dimensionContent = $this->prophesize(DimensionContentInterface::class);
         $dimensionContent->willImplement(ArticleDimensionContentInterface::class);
-        $dimensionContent->setCustomizeWebspaceSettings(true)->shouldBeCalled();
+        $dimensionContent->setCustomizeWebspaceSettings(true)->shouldBeCalled()->willReturn($dimensionContent->reveal());
         $dimensionContent->setAdditionalWebspaces([])->shouldBeCalled()->willReturn($dimensionContent->reveal());
 
         $data = [
