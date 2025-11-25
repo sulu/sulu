@@ -156,9 +156,9 @@ class RoleController extends AbstractRestController implements SecuredController
      */
     public function postAction(Request $request)
     {
-        $name = $request->request->getString('name');
+        $name = $request->request->getString('name') ?: null;
         $key = $request->request->getString('key') ?: null;
-        $system = $request->request->getString('system');
+        $system = $request->request->getString('system') ?: null;
 
         try {
             if (null === $name) {
@@ -212,16 +212,23 @@ class RoleController extends AbstractRestController implements SecuredController
         /** @var RoleInterface $role */
         $role = $this->roleRepository->findRoleById($id);
 
-        $name = $request->request->getString('name');
+        $name = $request->request->getString('name') ?: null;
         $key = $request->request->getString('key') ?: null;
-        $system = $request->request->getString('system');
+        $system = $request->request->getString('system') ?: null;
 
         try {
             if (!$role) {
                 throw new EntityNotFoundException($this->roleRepository->getClassName(), $id);
             } else {
+                if (null === $name) {
+                    throw new InvalidArgumentException('Role', 'name');
+                }
+                if (null === $system) {
+                    throw new InvalidArgumentException('Role', 'system');
+                }
+
                 $role->setName($name);
-                $role->setKey(\is_string($key) ? $key : null);
+                $role->setKey($key);
                 $role->setSystem($system);
 
                 if (!$this->processPermissions($role, $request->request->all('permissions'))) {
