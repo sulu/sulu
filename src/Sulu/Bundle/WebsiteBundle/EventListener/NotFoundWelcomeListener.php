@@ -19,6 +19,9 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Twig\Environment;
 
+ /**
+  * @internal this is an internal class which should not be used by a project
+  */
 final readonly class NotFoundWelcomeListener
 {
     public function __construct(
