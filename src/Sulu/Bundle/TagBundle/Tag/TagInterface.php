@@ -22,33 +22,26 @@ interface TagInterface extends AuditableInterface
 
     /**
      * Set name.
-     *
-     * @param string $name
-     *
-     * @return TagInterface
      */
-    public function setName($name);
+    public function setName(string $name): static;
 
     /**
      * Get name.
-     *
-     * @return string
      */
-    public function getName();
+    public function getName(): string;
 
     /**
      * Get id.
-     *
-     * @return int
      */
-    public function getId();
+    public function getId(): int;
 
     /**
      * Set id.
-     *
-     * @param int $id
-     *
-     * @return TagInterface
      */
-    public function setId($id);
+    public function setId(int $id): static;
+
+    /**
+     * Get string representation.
+     */
+    public function __toString(): string;
 }
