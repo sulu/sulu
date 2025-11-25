@@ -144,8 +144,7 @@
             </field>
         </concatenation-property>
 
-        <property name="authored" type="date" visibility="no" translation="sulu_admin.authored"
-        >
+        <property name="authored" type="date" visibility="no" translation="sulu_admin.authored" sortable="false">
             <transformer type="datetime"/>
         </property>
 
