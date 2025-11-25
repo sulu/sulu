@@ -748,8 +748,6 @@ class Account extends ApiWrapper
 
     /**
      * Get mainContact.
-     *
-     * @return int|null
      */
     #[VirtualProperty]
     #[SerializedName('mainContact')]

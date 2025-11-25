@@ -55,7 +55,7 @@ class PositionController extends AbstractRestController
     {
         $view = $this->responseGetById(
             $id,
-            function ($id) {
+            function($id) {
                 return $this->positionRepository->find($id);
             },
         );
@@ -209,7 +209,7 @@ class PositionController extends AbstractRestController
     public function deleteAction($id)
     {
         try {
-            $delete = function ($id) {
+            $delete = function($id) {
                 /** @var Position|null $position */
                 $position = $this->positionRepository->find($id);
                 if (null === $position) {
@@ -248,9 +248,9 @@ class PositionController extends AbstractRestController
     {
         try {
             $data = [];
+            $items = $request->toArray();
 
-            $i = 0;
-            while ($item = $request->get($i)) {
+            foreach ($items as $item) {
                 if (!isset($item['position'])) {
                     throw new RestException(
                         'There is no position-name for the given name',
@@ -258,7 +258,6 @@ class PositionController extends AbstractRestController
                 }
 
                 $data[] = $this->addAndUpdatePositions($item);
-                ++$i;
             }
 
             $this->entityManager->flush();
@@ -277,9 +276,9 @@ class PositionController extends AbstractRestController
      *
      * @param mixed[] $item
      *
-     * @throws EntityNotFoundException
-     *
      * @return Position added or updated entity
+     *
+     * @throws EntityNotFoundException
      */
     private function addAndUpdatePositions($item)
     {
