@@ -44,6 +44,7 @@ use Sulu\Article\Infrastructure\Sulu\Content\ArticleSmartContentProvider;
 use Sulu\Article\Infrastructure\Sulu\Content\ArticleTeaserProvider;
 use Sulu\Article\Infrastructure\Sulu\Content\DataMapper\AdditionalWebspacesDataMapper;
 use Sulu\Article\Infrastructure\Sulu\Content\Merger\AdditionalWebspacesMerger;
+use Sulu\Article\Infrastructure\Sulu\Content\PageTreeArticleSmartContentProvider;
 use Sulu\Article\Infrastructure\Sulu\Content\PropertyResolver\ArticleSelectionPropertyResolver;
 use Sulu\Article\Infrastructure\Sulu\Content\PropertyResolver\SingleArticleSelectionPropertyResolver;
 use Sulu\Article\Infrastructure\Sulu\Content\ResourceLoader\ArticleResourceLoader;
@@ -348,6 +349,16 @@ final class SuluArticleBundle extends AbstractBundle
                 new Reference('sulu_admin.metadata_group_provider'),
             ])
         ->tag('sulu_content.smart_content_provider', ['type' => ArticleInterface::RESOURCE_KEY]);
+
+        $services->set('sulu_article.page_tree_article_smart_content_provider')
+            ->class(PageTreeArticleSmartContentProvider::class)
+            ->args([
+                new Reference('sulu_content.dimension_content_query_enhancer'),
+                new Reference('sulu_admin.smart_content_query_enhancer'),
+                new Reference('doctrine.orm.entity_manager'),
+                new Reference('sulu_admin.metadata_group_provider'),
+            ])
+            ->tag('sulu_content.smart_content_provider', ['type' => PageTreeArticleSmartContentProvider::PROVIDER_TYPE]);
 
         $services->set('sulu_article.article_reference_store')
             ->class(ReferenceStore::class)
