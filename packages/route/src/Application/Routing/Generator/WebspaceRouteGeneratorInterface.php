@@ -13,7 +13,7 @@ namespace Sulu\Route\Application\Routing\Generator;
 
 use Symfony\Component\Routing\RequestContext;
 
-interface SiteRouteGeneratorInterface
+interface WebspaceRouteGeneratorInterface
 {
     public function generate(RequestContext $requestContext, string $slug, string $locale): string;
 }

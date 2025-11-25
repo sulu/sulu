@@ -40,11 +40,11 @@ class RouteRepositoryTest extends KernelTestCase
         $unexpectedLocalesRouteEs = new Route('example', '1', 'es', '/ejemplo', 'the_site');
         $entityManager->persist($unexpectedLocalesRouteEs);
 
-        $multiSiteRouteEn = new Route('multisite', '1', 'en', '/example', null);
-        $entityManager->persist($multiSiteRouteEn);
+        $multiWebspaceRouteEn = new Route('multisite', '1', 'en', '/example', null);
+        $entityManager->persist($multiWebspaceRouteEn);
 
-        $multiSiteRouteDe = new Route('multisite', '1', 'de', '/beispiel', null);
-        $entityManager->persist($multiSiteRouteDe);
+        $multiWebspaceRouteDe = new Route('multisite', '1', 'de', '/beispiel', null);
+        $entityManager->persist($multiWebspaceRouteDe);
 
         $entityManager->flush();
         $entityManager->clear();
@@ -86,10 +86,10 @@ class RouteRepositoryTest extends KernelTestCase
         $this->assertNull($route);
     }
 
-    public function testFindOneBySiteSlugLocale(): void
+    public function testFindOneByWebspaceSlugLocale(): void
     {
         $route = $this->routeRepository->findOneBy([
-            'site' => 'the_site',
+            'webspace' => 'the_site',
             'slug' => '/test',
             'locale' => 'en',
         ]);
@@ -97,13 +97,13 @@ class RouteRepositoryTest extends KernelTestCase
         $this->assertNotNull($route);
         $this->assertSame('/test', $route->getSlug());
         $this->assertSame('en', $route->getLocale());
-        $this->assertSame('the_site', $route->getSite());
+        $this->assertSame('the_site', $route->getWebspace());
     }
 
-    public function testGetOneBySiteSlugLocale(): void
+    public function testGetOneByWebspaceSlugLocale(): void
     {
         $route = $this->routeRepository->findOneBy([
-            'site' => 'the_site',
+            'webspace' => 'the_site',
             'slug' => '/test',
             'locale' => 'en',
         ]);
@@ -111,7 +111,7 @@ class RouteRepositoryTest extends KernelTestCase
         $this->assertNotNull($route);
         $this->assertSame('/test', $route->getSlug());
         $this->assertSame('en', $route->getLocale());
-        $this->assertSame('the_site', $route->getSite());
+        $this->assertSame('the_site', $route->getWebspace());
     }
 
     public function testFindOneByResourceAndLocale(): void
@@ -128,49 +128,49 @@ class RouteRepositoryTest extends KernelTestCase
         $this->assertSame('example::1', $route->getResourceId());
     }
 
-    public function testFindFirstBySiteOrNullSlugLocale(): void
+    public function testFindFirstByWebspaceOrNullSlugLocale(): void
     {
         $routes = $this->routeRepository->findBy([
-            'siteOrNull' => 'the_site',
+            'webspaceOrNull' => 'the_site',
             'slug' => '/example',
             'locale' => 'en',
-        ], ['site' => 'desc']);
+        ], ['webspace' => 'desc']);
 
         $this->assertGreaterThanOrEqual(2, \count([...$routes]), 'This test requires at least two routes on the same slug and locale.');
 
         $route = $this->routeRepository->findFirstBy([
-            'siteOrNull' => 'the_site',
+            'webspaceOrNull' => 'the_site',
             'slug' => '/example',
             'locale' => 'en',
-        ], ['site' => 'desc']);
+        ], ['webspace' => 'desc']);
 
         $this->assertNotNull($route);
         $this->assertSame('/example', $route->getSlug());
         $this->assertSame('en', $route->getLocale());
-        $this->assertSame('the_site', $route->getSite());
+        $this->assertSame('the_site', $route->getWebspace());
     }
 
-    public function testFindFirstBySiteSlugLocale(): void
+    public function testFindFirstByWebspaceSlugLocale(): void
     {
         $route = $this->routeRepository->findFirstBy([
-            'siteOrNull' => null,
+            'webspaceOrNull' => null,
             'slug' => '/example',
             'locale' => 'en',
-        ], ['site' => 'desc']);
+        ], ['webspace' => 'desc']);
 
         $this->assertNotNull($route);
         $this->assertSame('/example', $route->getSlug());
         $this->assertSame('en', $route->getLocale());
-        $this->assertNull($route->getSite());
+        $this->assertNull($route->getWebspace());
     }
 
     public function testFindFirstByNotExist(): void
     {
         $route = $this->routeRepository->findFirstBy([
-            'siteOrNull' => 'the_site',
+            'webspaceOrNull' => 'the_site',
             'slug' => '/not-exist',
             'locale' => 'en',
-        ], ['site' => 'desc']);
+        ], ['webspace' => 'desc']);
 
         $this->assertNull($route);
     }
@@ -194,21 +194,21 @@ class RouteRepositoryTest extends KernelTestCase
                     'resourceId' => '1',
                     'locale' => 'de',
                     'slug' => '/beispiel',
-                    'site' => 'the_site',
+                    'webspace' => 'the_site',
                 ],
                 [
                     'resourceKey' => 'example',
                     'resourceId' => '1',
                     'locale' => 'en',
                     'slug' => '/example',
-                    'site' => 'the_site',
+                    'webspace' => 'the_site',
                 ],
                 [
                     'resourceKey' => 'example',
                     'resourceId' => '1',
                     'locale' => 'fr',
                     'slug' => '/exemple',
-                    'site' => 'the_site',
+                    'webspace' => 'the_site',
                 ],
             ],
             \array_map(function(Route $route): array {
@@ -217,7 +217,7 @@ class RouteRepositoryTest extends KernelTestCase
                     'resourceId' => $route->getResourceId(),
                     'locale' => $route->getLocale(),
                     'slug' => $route->getSlug(),
-                    'site' => $route->getSite(),
+                    'webspace' => $route->getWebspace(),
                 ];
             }, $routes),
         );
@@ -234,19 +234,19 @@ class RouteRepositoryTest extends KernelTestCase
         $this->assertNull($route);
     }
 
-    public function testExistBySiteSlugLocale(): void
+    public function testExistByWebspaceSlugLocale(): void
     {
         $this->assertTrue($this->routeRepository->existBy([
-            'site' => 'the_site',
+            'webspace' => 'the_site',
             'slug' => '/example',
             'locale' => 'en',
         ]));
     }
 
-    public function testExistBySiteWithExclude(): void
+    public function testExistByWebspaceWithExclude(): void
     {
         $this->assertFalse($this->routeRepository->existBy([
-            'site' => 'the_site',
+            'webspace' => 'the_site',
             'slug' => '/example',
             'locale' => 'en',
             'excludeResource' => [
@@ -256,10 +256,10 @@ class RouteRepositoryTest extends KernelTestCase
         ]));
     }
 
-    public function testExistBySiteSlugLocaleNotFound(): void
+    public function testExistByWebspaceSlugLocaleNotFound(): void
     {
         $this->assertFalse($this->routeRepository->existBy([
-            'site' => 'the_site',
+            'webspace' => 'the_site',
             'slug' => '/example-1',
             'locale' => 'en',
         ]));

@@ -86,7 +86,7 @@ class ArticleSmartContentProviderTest extends SuluTestCase
 
         // TODO this should not be necessary
         $requestContext = $container->get('router.request_context');
-        $requestContext->setParameter(RequestAttributeEnum::SITE->value, 'sulu-io');
+        $requestContext->setParameter(RequestAttributeEnum::WEBSPACE->value, 'sulu-io');
         // TODO this should not be necessary
 
         // Create categories

@@ -19,5 +19,5 @@ interface RouteGeneratorInterface
     /**
      * @throws MissingRequestContextParameterException
      */
-    public function generate(string $slug, ?string $locale = null, ?string $site = null, int $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH): string;
+    public function generate(string $slug, ?string $locale = null, ?string $webspace = null, int $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH): string;
 }

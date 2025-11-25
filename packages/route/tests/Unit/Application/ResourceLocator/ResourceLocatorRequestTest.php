@@ -33,11 +33,11 @@ class ResourceLocatorRequestTest extends TestCase
         $this->assertSame('de', $instance->locale);
     }
 
-    public function testSite(): void
+    public function testWebspace(): void
     {
-        $instance = $this->createInstance(site: 'sulu');
+        $instance = $this->createInstance(webspace: 'sulu');
 
-        $this->assertSame('sulu', $instance->site);
+        $this->assertSame('sulu', $instance->webspace);
     }
 
     public function testResourceKey(): void
@@ -90,7 +90,7 @@ class ResourceLocatorRequestTest extends TestCase
     private function createInstance(
         array $parts = [],
         string $locale = 'en',
-        ?string $site = null,
+        ?string $webspace = null,
         string $resourceKey = 'pages',
         ?string $resourceId = null,
         ?string $parentResourceId = null,
@@ -100,7 +100,7 @@ class ResourceLocatorRequestTest extends TestCase
         return new ResourceLocatorRequest(
             parts: $parts,
             locale: $locale,
-            site: $site,
+            webspace: $webspace,
             resourceKey: $resourceKey,
             resourceId: $resourceId,
             parentResourceId: $parentResourceId,

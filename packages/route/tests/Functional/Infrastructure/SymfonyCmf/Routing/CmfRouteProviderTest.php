@@ -74,7 +74,7 @@ class CmfRouteProviderTest extends WebsiteTestCase
         $cmfRouteProvider = self::getContainer()->get('sulu_route.symfony_cmf_route_provider');
 
         $request = Request::create('/en/test-redirect');
-        $request->attributes->set(RequestAttributeEnum::SITE->value, 'sulu-io');
+        $request->attributes->set(RequestAttributeEnum::WEBSPACE->value, 'sulu-io');
         $request->attributes->set(RequestAttributeEnum::SLUG->value, '/test-redirect');
         $request->setLocale('en');
 

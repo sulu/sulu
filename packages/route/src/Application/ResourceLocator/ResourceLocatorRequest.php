@@ -21,7 +21,7 @@ final readonly class ResourceLocatorRequest
     public function __construct(
         public array $parts,
         public string $locale,
-        public ?string $site,
+        public ?string $webspace,
         public string $resourceKey,
         public ?string $resourceId,
         public ?string $parentResourceId,

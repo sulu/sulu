@@ -66,8 +66,8 @@ class RequestListener implements EventSubscriberInterface
             if (!$context->hasParameter('host')) {
                 $context->setParameter('host', $portalInformation->getHost());
             }
-            if (!$context->hasParameter(RequestAttributeEnum::SITE->value)) {
-                $context->setParameter(RequestAttributeEnum::SITE->value, $portalInformation->getWebspace()->getKey());
+            if (!$context->hasParameter(RequestAttributeEnum::WEBSPACE->value)) {
+                $context->setParameter(RequestAttributeEnum::WEBSPACE->value, $portalInformation->getWebspace()->getKey());
             }
         }
     }

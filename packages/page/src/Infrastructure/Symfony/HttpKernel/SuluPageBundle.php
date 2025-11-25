@@ -67,7 +67,7 @@ use Sulu\Page\Infrastructure\Sulu\Content\Visitor\PageSmartContentFiltersVisitor
 use Sulu\Page\Infrastructure\Sulu\Content\Visitor\SegmentSmartContentFiltersVisitor;
 use Sulu\Page\Infrastructure\Sulu\HttpCache\EventSubscriber\PageCacheInvalidationSubscriber;
 use Sulu\Page\Infrastructure\Sulu\Reference\PageReferenceRefresher;
-use Sulu\Page\Infrastructure\Sulu\Route\WebspaceSiteRouteGenerator;
+use Sulu\Page\Infrastructure\Sulu\Route\PageWebspaceRouteGenerator;
 use Sulu\Page\Infrastructure\Sulu\Search\AdminPageIndexListener;
 use Sulu\Page\Infrastructure\Sulu\Search\AdminPageReindexProvider;
 use Sulu\Page\Infrastructure\Sulu\Search\Visitor\WebsitePageReindexContentEnhancer;
@@ -335,13 +335,13 @@ final class SuluPageBundle extends AbstractBundle
             ->tag('sulu.admin');
 
         // Route Integration
-        $services->set('sulu_page.webspace_site_route_generator')
-            ->class(WebspaceSiteRouteGenerator::class)
+        $services->set('sulu_page.page_webspace_route_generator')
+            ->class(PageWebspaceRouteGenerator::class)
             ->args([
                 new Reference('sulu_core.webspace.webspace_manager'),
                 new Reference('request_stack'),
             ])
-            ->tag('sulu_route.site_route_generator', ['site' => '.default']);
+            ->tag('sulu_route.webspace_route_generator', ['webspace' => '.default']);
 
         $services->set('sulu_page.webspace_route_mode_typed_form_metadata_visitor')
             ->class(WebspaceRouteModeTypedFormMetadataVisitor::class)

@@ -13,7 +13,7 @@ namespace Sulu\Route\Domain\Value;
 
 enum RequestAttributeEnum: string
 {
-    case SITE = 'site';
+    case WEBSPACE = 'webspace';
 
     case SLUG = 'slug';
 }

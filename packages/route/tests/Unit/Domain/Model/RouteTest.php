@@ -100,7 +100,7 @@ class RouteTest extends TestCase
         string $resourceId = '1',
         string $locale = 'en',
         string $slug = '/',
-        ?string $site = null,
+        ?string $webspace = null,
         ?Route $parentRoute = null,
     ): Route {
         return new Route(
@@ -108,7 +108,7 @@ class RouteTest extends TestCase
             $resourceId,
             $locale,
             $slug,
-            $site,
+            $webspace,
             $parentRoute,
         );
     }
@@ -118,7 +118,7 @@ class RouteTest extends TestCase
         ?callable $resourceIdCallable = null,
         string $locale = 'en',
         string $slug = '/',
-        ?string $site = null,
+        ?string $webspace = null,
         ?Route $parentRoute = null,
     ): Route {
         return Route::createRouteWithTempId(
@@ -126,7 +126,7 @@ class RouteTest extends TestCase
             null === $resourceIdCallable ? fn () => '1' : $resourceIdCallable,
             $locale,
             $slug,
-            $site,
+            $webspace,
             $parentRoute,
         );
     }

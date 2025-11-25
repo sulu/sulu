@@ -90,7 +90,7 @@ class Kernel extends SuluTestKernel implements CompilerPassInterface
     public function handle(Request $request, int $type = HttpKernelInterface::MAIN_REQUEST, bool $catch = true): Response
     {
         if (\str_starts_with($request->getPathInfo(), '/en/')) { // use for the CmfRouteProviderTest
-            $request->attributes->set(RequestAttributeEnum::SITE->value, 'sulu-io');
+            $request->attributes->set(RequestAttributeEnum::WEBSPACE->value, 'sulu-io');
             $request->attributes->set(RequestAttributeEnum::SLUG->value, \substr($request->getPathInfo(), 3));
         }
 

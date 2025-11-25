@@ -63,7 +63,7 @@ class RouteCollectionForRequestRouteLoaderTest extends TestCase
         );
     }
 
-    public function testGetRouteCollectionForRequestIncorrectSite(): void
+    public function testGetRouteCollectionForRequestIncorrectWebspace(): void
     {
         $request = Request::create('/en/test');
         $request->attributes->set(RequestAttributeEnum::SLUG->value, new \stdClass());
@@ -77,7 +77,7 @@ class RouteCollectionForRequestRouteLoaderTest extends TestCase
     public function testGetRouteCollectionForRequestNoSlug(): void
     {
         $request = Request::create('/en/test');
-        $request->attributes->set(RequestAttributeEnum::SITE->value, 'the_site');
+        $request->attributes->set(RequestAttributeEnum::WEBSPACE->value, 'the_site');
 
         $this->routeRepository->findFirstBy(Argument::cetera())->shouldNotBeCalled();
         $routeCollection = $this->routeCollectionForRequestRouteLoader->getRouteCollectionForRequest($request);
@@ -88,7 +88,7 @@ class RouteCollectionForRequestRouteLoaderTest extends TestCase
     public function testGetRouteCollectionForRequestNoRoute(): void
     {
         $request = Request::create('/test');
-        $request->attributes->set(RequestAttributeEnum::SITE->value, 'the_site');
+        $request->attributes->set(RequestAttributeEnum::WEBSPACE->value, 'the_site');
         $request->attributes->set(RequestAttributeEnum::SLUG->value, '/test');
 
         $this->routeRepository->findFirstBy(Argument::cetera())->willReturn(null);
@@ -100,7 +100,7 @@ class RouteCollectionForRequestRouteLoaderTest extends TestCase
     public function testGetRouteCollectionForRequestMatch(): void
     {
         $request = Request::create('/test');
-        $request->attributes->set(RequestAttributeEnum::SITE->value, 'the_site');
+        $request->attributes->set(RequestAttributeEnum::WEBSPACE->value, 'the_site');
         $request->attributes->set(RequestAttributeEnum::SLUG->value, '/test');
 
         $routeModel = new Route('resource_key_example', '1', 'en', '/test', 'the_site');

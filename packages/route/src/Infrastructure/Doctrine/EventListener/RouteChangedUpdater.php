@@ -33,7 +33,7 @@ use Symfony\Contracts\Service\ResetInterface;
 class RouteChangedUpdater implements ResetInterface
 {
     /**
-     * @var array<int, array{oldSlug: string, oldSite: string|null, route: Route}>
+     * @var array<int, array{oldSlug: string, oldWebspace: string|null, route: Route}>
      */
     private array $routeChanges = [];
 
@@ -55,10 +55,10 @@ class RouteChangedUpdater implements ResetInterface
             \assert(\is_string($oldSlug), 'Slug is expected to be always a string.');
         }
 
-        $oldSite = $route->getSite();
-        if ($args->hasChangedField('site')) {
-            $oldSite = $args->getOldValue('site');
-            \assert(\is_string($oldSite) || \is_null($oldSite), 'Site is expected to be always a string or null.');
+        $oldWebspace = $route->getWebspace();
+        if ($args->hasChangedField('webspace')) {
+            $oldWebspace = $args->getOldValue('webspace');
+            \assert(\is_string($oldWebspace) || \is_null($oldWebspace), 'Webspace is expected to be always a string or null.');
         }
 
         if ($oldSlug === $route->getSlug()) {
@@ -67,7 +67,7 @@ class RouteChangedUpdater implements ResetInterface
 
         $this->routeChanges[$route->getId()] = [
             'oldSlug' => $oldSlug,
-            'oldSite' => $oldSite,
+            'oldWebspace' => $oldWebspace,
             'route' => $route,
         ];
     }
@@ -123,21 +123,21 @@ class RouteChangedUpdater implements ResetInterface
         foreach ($this->routeChanges as $routeChange) {
             $route = $routeChange['route'];
             $oldSlug = $routeChange['oldSlug'];
-            $oldSite = $routeChange['oldSite'];
+            $oldWebspace = $routeChange['oldWebspace'];
             $newSlug = $route->getSlug();
             $locale = $route->getLocale();
-            $site = $route->getSite();
+            $webspace = $route->getWebspace();
 
             // select all child and grand routes of oldSlug
             $selectQueryBuilder = $connection->createQueryBuilder()
                 ->from($routesTableName, 'parent')
                 ->select('parent.id AS parent_id')
-                ->addSelect('child.site')
+                ->addSelect('child.webspace')
                 ->addSelect('child.slug')
                 ->addSelect('child.resource_key')
                 ->addSelect('child.resource_id')
                 ->innerJoin('parent', $routesTableName, 'child', 'child.parent_id = parent.id')
-                ->andWhere(\is_string($site) ? 'parent.site = :site' : 'parent.site IS NULL')
+                ->andWhere(\is_string($webspace) ? 'parent.webspace = :webspace' : 'parent.webspace IS NULL')
                 ->andWhere('parent.locale = :locale')
                 ->andWhere('(parent.slug = :newSlug OR parent.slug LIKE :oldSlugSlash)') // direct child is using newSlug already updated as we are in PostFlush, grand child use oldSlugWithSlash as not yet updated
                 ->andWhere('(child.slug LIKE :oldSlugSlash)') // ignore disconnected child routes in case of full tree edit
@@ -145,14 +145,14 @@ class RouteChangedUpdater implements ResetInterface
                 ->setParameter('oldSlugSlash', $oldSlug . '/%', ParameterType::STRING)
                 ->setParameter('locale', $locale, ParameterType::STRING);
 
-            if (\is_string($site)) {
-                $selectQueryBuilder->setParameter('site', $site, ParameterType::STRING);
+            if (\is_string($webspace)) {
+                $selectQueryBuilder->setParameter('webspace', $webspace, ParameterType::STRING);
             }
 
             /**
              * @var array<int, array{
              *     parent_id: int,
-             *     site: string|null,
+             *     webspace: string|null,
              *     slug: string,
              *     resource_key: string,
              *     resource_id: string,
@@ -168,7 +168,7 @@ class RouteChangedUpdater implements ResetInterface
                     $childAndGrandChildRow['resource_key'] . '::' . $childAndGrandChildRow['resource_id'],
                     $locale,
                     $childAndGrandChildRow['slug'],
-                    $childAndGrandChildRow['site'],
+                    $childAndGrandChildRow['webspace'],
                     null, // history never has parents as they never will be updated
                 );
             }
@@ -181,7 +181,7 @@ class RouteChangedUpdater implements ResetInterface
                 $route->getResourceKey() . '::' . $route->getResourceId(),
                 $locale,
                 $oldSlug,
-                $oldSite,
+                $oldWebspace,
                 null, // history never has parents ad they never will be updated
             );
 
@@ -229,14 +229,14 @@ class RouteChangedUpdater implements ResetInterface
                 $classMetadata->getColumnName('resourceId') => ':resourceId',
                 $classMetadata->getColumnName('locale') => ':locale',
                 $classMetadata->getColumnName('slug') => ':slug',
-                $classMetadata->getColumnName('site') => ':site',
+                $classMetadata->getColumnName('webspace') => ':webspace',
             ])
             ->setParameters([
                 'resourceKey' => $historyRoute->getResourceKey(),
                 'resourceId' => $historyRoute->getResourceId(),
                 'locale' => $historyRoute->getLocale(),
                 'slug' => $historyRoute->getSlug(),
-                'site' => $historyRoute->getSite(),
+                'webspace' => $historyRoute->getWebspace(),
             ]);
 
         if (

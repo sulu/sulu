@@ -34,7 +34,7 @@ class AdminRequestProcessor implements RequestProcessorInterface
         $attributes['webspaceKey'] = $request->get('webspace') ?: $request->get('webspaceKey');
         $attributes['locale'] = $request->get('locale', $request->get('language'));
 
-        $request->attributes->set(RequestAttributeEnum::SITE->value, $attributes['webspaceKey']); // TODO move in own request listener
+        $request->attributes->set(RequestAttributeEnum::WEBSPACE->value, $attributes['webspaceKey']); // TODO move in own request listener
 
         if ($attributes['locale']) {
             $attributes['localization'] = Localization::createFromString($attributes['locale']);

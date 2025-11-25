@@ -92,7 +92,7 @@ class PageDimensionContent implements PageDimensionContentInterface
 
     public function setRoute(Route $route): void
     {
-        $route->setSite($this->getResource()->getWebspaceKey());
+        $route->setWebspace($this->getResource()->getWebspaceKey());
 
         $this->parentSetRoute($route);
     }

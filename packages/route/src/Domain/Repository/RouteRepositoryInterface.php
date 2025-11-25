@@ -17,8 +17,8 @@ use Sulu\Route\Domain\Model\Route;
 /**
  * @phpstan-type RouteFilter array{
  *     id?: int|null,
- *     site?: string|null,
- *     siteOrNull?: string|null,
+ *     webspace?: string|null,
+ *     webspaceOrNull?: string|null,
  *     locale?: string,
  *     locales?: string[],
  *     slug?: string,
@@ -30,7 +30,7 @@ use Sulu\Route\Domain\Model\Route;
  *     },
  * }
  * @phpstan-type RouteSortBy array{
- *     site?: 'asc'|'desc',
+ *     webspace?: 'asc'|'desc',
  * }
  */
 interface RouteRepositoryInterface

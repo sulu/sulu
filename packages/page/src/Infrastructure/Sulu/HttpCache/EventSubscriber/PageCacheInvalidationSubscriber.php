@@ -98,7 +98,7 @@ class PageCacheInvalidationSubscriber implements EventSubscriberInterface
             $url = $this->routeGenerator->generate(
                 $route->getSlug(),
                 $route->getLocale(),
-                $route->getSite(),
+                $route->getWebspace(),
                 UrlGeneratorInterface::ABSOLUTE_URL
             );
 

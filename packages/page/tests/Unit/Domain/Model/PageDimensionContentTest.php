@@ -131,7 +131,7 @@ class PageDimensionContentTest extends TestCase
     public function testSetRoute(): void
     {
         $route = $this->prophesize(Route::class);
-        $route->setSite('sulu-io')->shouldBeCalled()->willReturn($route->reveal());
+        $route->setWebspace('sulu-io')->shouldBeCalled()->willReturn($route->reveal());
 
         $this->pageDimensionContent->setRoute($route->reveal());
 

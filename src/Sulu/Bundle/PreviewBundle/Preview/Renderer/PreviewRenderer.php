@@ -90,7 +90,7 @@ class PreviewRenderer implements PreviewRendererInterface
 
         $attributes['preview'] = true;
         $attributes['partial'] = $partial;
-        $attributes[RequestAttributeEnum::SITE->value] = $webspaceKey;
+        $attributes[RequestAttributeEnum::WEBSPACE->value] = $webspaceKey;
         $attributes['_sulu'] = new RequestAttributes(
             [
                 'webspace' => $webspace,
