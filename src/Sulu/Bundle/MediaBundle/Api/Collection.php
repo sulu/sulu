@@ -143,7 +143,7 @@ class Collection extends ApiWrapper
      */
     public function setDescription($description)
     {
-        $this->getMeta(true)->setDescription($description);
+        $this->getMeta(true)?->setDescription($description);
 
         return $this;
     }
@@ -308,7 +308,7 @@ class Collection extends ApiWrapper
      */
     public function setTitle($title)
     {
-        $this->getMeta(true)->setTitle($title);
+        $this->getMeta(true)?->setTitle($title);
 
         return $this;
     }
@@ -496,12 +496,7 @@ class Collection extends ApiWrapper
             || SystemCollectionManagerInterface::COLLECTION_TYPE === $this->entity->getType()->getKey();
     }
 
-    /**
-     * @param bool $create
-     *
-     * @return CollectionMeta
-     */
-    private function getMeta($create = false)
+    private function getMeta(bool $create = false): ?CollectionMeta
     {
         $locale = $this->locale;
         $metaCollection = $this->entity->getMeta();
@@ -534,7 +529,8 @@ class Collection extends ApiWrapper
             return $this->entity->getDefaultMeta();
         }
 
-        // return exists
+        // return exists - collection is not empty so first() is guaranteed to return CollectionMeta
+        /** @var CollectionMeta */
         return $metaCollectionFiltered->first();
     }
 }

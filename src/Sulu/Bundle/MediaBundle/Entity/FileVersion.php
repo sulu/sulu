@@ -23,108 +23,54 @@ use Sulu\Component\Persistence\Model\AuditableTrait;
 use Symfony\Component\Mime\MimeTypes;
 
 /**
- * FileVersion.
- *
  * @phpstan-import-type StorageOptions from StorageInterface
  */
 class FileVersion implements AuditableInterface
 {
     use AuditableTrait;
 
-    /**
-     * @var string
-     */
-    private $name;
+    private int $id;
 
-    /**
-     * @var int
-     */
-    private $version;
+    private string $name;
 
-    /**
-     * @var int
-     */
-    private $subVersion = 0;
+    private int $version;
 
-    /**
-     * @var int
-     */
-    private $size;
+    private int $subVersion = 0;
 
-    /**
-     * @var string|null
-     */
-    private $mimeType;
+    private int $size;
 
-    /**
-     * @var string|null
-     */
-    private $storageOptions;
+    private ?string $mimeType = null;
 
-    /**
-     * @var int
-     */
-    private $downloadCounter = 0;
+    private ?string $storageOptions = null;
 
-    /**
-     * @var int
-     */
-    private $id;
+    private int $downloadCounter = 0;
 
-    /**
-     * @var DoctrineCollection<int, FileVersionMeta>
-     */
-    private $meta;
+    /** @var DoctrineCollection<int, FileVersionMeta> */
+    private DoctrineCollection $meta;
 
-    /**
-     * @var DoctrineCollection<string, FormatOptions>
-     */
-    private $formatOptions;
+    /** @var DoctrineCollection<string, FormatOptions> */
+    private DoctrineCollection $formatOptions;
 
-    /**
-     * @var File
-     */
     #[Exclude]
-    private $file;
+    private ?File $file = null;
 
-    /**
-     * @var DoctrineCollection<int, TagInterface>
-     */
-    private $tags;
+    /** @var DoctrineCollection<int, TagInterface> */
+    private DoctrineCollection $tags;
 
-    /**
-     * @var FileVersionMeta
-     */
-    private $defaultMeta;
+    private ?FileVersionMeta $defaultMeta = null;
 
-    /**
-     * @var string|null
-     */
-    private $properties = '{}';
+    private ?string $properties = '{}';
 
-    /**
-     * @var DoctrineCollection<int, CategoryInterface>
-     */
-    private $categories;
+    /** @var DoctrineCollection<int, CategoryInterface> */
+    private DoctrineCollection $categories;
 
-    /**
-     * @var DoctrineCollection<int, TargetGroupInterface>
-     */
-    private $targetGroups;
+    /** @var DoctrineCollection<int, TargetGroupInterface> */
+    private DoctrineCollection $targetGroups;
 
-    /**
-     * @var int|null
-     */
-    private $focusPointX;
+    private ?int $focusPointX = null;
 
-    /**
-     * @var int|null
-     */
-    private $focusPointY;
+    private ?int $focusPointY = null;
 
-    /**
-     * Constructor.
-     */
     public function __construct()
     {
         $this->meta = new ArrayCollection();
@@ -134,131 +80,67 @@ class FileVersion implements AuditableInterface
         $this->targetGroups = new ArrayCollection();
     }
 
-    /**
-     * Set name.
-     *
-     * @param string $name
-     *
-     * @return FileVersion
-     */
-    public function setName($name)
+    public function setName(string $name): static
     {
         $this->name = $name;
 
         return $this;
     }
 
-    /**
-     * Get name.
-     *
-     * @return string
-     */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * Set version.
-     *
-     * @param int $version
-     *
-     * @return FileVersion
-     */
-    public function setVersion($version)
+    public function setVersion(int $version): static
     {
         $this->version = $version;
 
         return $this;
     }
 
-    /**
-     * Get version.
-     *
-     * @return int
-     */
-    public function getVersion()
+    public function getVersion(): int
     {
         return $this->version;
     }
 
-    /**
-     * Increases the subversion. Required for cache busting on certain operations which change the image without
-     * creating a new file version.
-     *
-     * @return FileVersion
-     */
-    public function increaseSubVersion()
+    public function increaseSubVersion(): static
     {
         ++$this->subVersion;
 
         return $this;
     }
 
-    /**
-     * Get subVersion.
-     *
-     * @return int
-     */
-    public function getSubVersion()
+    public function getSubVersion(): int
     {
         return $this->subVersion;
     }
 
-    /**
-     * Set size.
-     *
-     * @param int $size
-     *
-     * @return FileVersion
-     */
-    public function setSize($size)
+    public function setSize(int $size): static
     {
         $this->size = $size;
 
         return $this;
     }
 
-    /**
-     * Get size.
-     *
-     * @return int
-     */
-    public function getSize()
+    public function getSize(): int
     {
         return $this->size;
     }
 
-    /**
-     * Set mimeType.
-     *
-     * @param string $mimeType
-     *
-     * @return FileVersion
-     */
-    public function setMimeType($mimeType)
+    public function setMimeType(?string $mimeType): static
     {
         $this->mimeType = $mimeType;
 
         return $this;
     }
 
-    /**
-     * Get mimeType.
-     *
-     * @return string|null
-     */
-    public function getMimeType()
+    public function getMimeType(): ?string
     {
         return $this->mimeType;
     }
 
-    /**
-     * Get extension.
-     *
-     * @return null|string
-     */
-    public function getExtension()
+    public function getExtension(): ?string
     {
         $pathInfo = \pathinfo($this->getName());
         $extension = MimeTypes::getDefault()->getExtensions($this->getMimeType() ?? '')[0] ?? null;
@@ -273,10 +155,8 @@ class FileVersion implements AuditableInterface
 
     /**
      * @param StorageOptions $storageOptions
-     *
-     * @return FileVersion
      */
-    public function setStorageOptions(array $storageOptions)
+    public function setStorageOptions(array $storageOptions): static
     {
         $serializedText = \json_encode($storageOptions);
         if (false === $serializedText) {
@@ -302,76 +182,46 @@ class FileVersion implements AuditableInterface
         return $storageOptions;
     }
 
-    /**
-     * Set downloadCounter.
-     *
-     * @param int $downloadCounter
-     *
-     * @return FileVersion
-     */
-    public function setDownloadCounter($downloadCounter)
+    public function setDownloadCounter(int $downloadCounter): static
     {
         $this->downloadCounter = $downloadCounter;
 
         return $this;
     }
 
-    /**
-     * Get downloadCounter.
-     *
-     * @return int
-     */
-    public function getDownloadCounter()
+    public function getDownloadCounter(): int
     {
         return $this->downloadCounter;
     }
 
-    /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * Add meta.
-     *
-     * @return FileVersion
-     */
-    public function addMeta(FileVersionMeta $meta)
+    public function addMeta(FileVersionMeta $meta): static
     {
         $this->meta[] = $meta;
 
         return $this;
     }
 
-    /**
-     * Remove meta.
-     */
-    public function removeMeta(FileVersionMeta $meta)
+    public function removeMeta(FileVersionMeta $meta): static
     {
         $this->meta->removeElement($meta);
+
+        return $this;
     }
 
     /**
-     * Get meta.
-     *
      * @return DoctrineCollection<int, FileVersionMeta>
      */
-    public function getMeta()
+    public function getMeta(): DoctrineCollection
     {
         return $this->meta;
     }
 
-    /**
-     * Adds a format-options entity to the file-version.
-     *
-     * @return FileVersion
-     */
-    public function addFormatOptions(FormatOptions $formatOptions)
+    public function addFormatOptions(FormatOptions $formatOptions): static
     {
         $this->formatOptions[$formatOptions->getFormatKey()] = $formatOptions;
 
@@ -379,95 +229,64 @@ class FileVersion implements AuditableInterface
     }
 
     /**
-     * Get formatOptions.
-     *
      * @return DoctrineCollection<string, FormatOptions>
      */
-    public function getFormatOptions()
+    public function getFormatOptions(): DoctrineCollection
     {
         return $this->formatOptions;
     }
 
-    /**
-     * Set file.
-     *
-     * @return FileVersion
-     */
-    public function setFile(?File $file = null)
+    public function setFile(?File $file = null): static
     {
         $this->file = $file;
 
         return $this;
     }
 
-    /**
-     * Get file.
-     *
-     * @return File
-     */
-    public function getFile()
+    public function getFile(): ?File
     {
         return $this->file;
     }
 
-    /**
-     * Add tags.
-     *
-     * @return FileVersion
-     */
-    public function addTag(TagInterface $tags)
+    public function addTag(TagInterface $tags): static
     {
         $this->tags[] = $tags;
 
         return $this;
     }
 
-    /**
-     * Remove tags.
-     */
-    public function removeTag(TagInterface $tags)
+    public function removeTag(TagInterface $tags): static
     {
         $this->tags->removeElement($tags);
+
+        return $this;
     }
 
-    /**
-     * Remove all tags.
-     */
-    public function removeTags()
+    public function removeTags(): static
     {
         foreach ($this->tags as $tag) {
             $this->tags->removeElement($tag);
         }
+
+        return $this;
     }
 
     /**
-     * Get tags.
-     *
      * @return DoctrineCollection<int, TagInterface>
      */
-    public function getTags()
+    public function getTags(): DoctrineCollection
     {
         return $this->tags;
     }
 
-    /**
-     * Set defaultMeta.
-     *
-     * @return FileVersion
-     */
-    public function setDefaultMeta(?FileVersionMeta $defaultMeta = null)
+    public function setDefaultMeta(?FileVersionMeta $defaultMeta = null): static
     {
         $this->defaultMeta = $defaultMeta;
 
         return $this;
     }
 
-    /**
-     * Get defaultMeta.
-     *
-     * @return FileVersionMeta|null
-     */
-    public function getDefaultMeta()
+    public function getDefaultMeta(): ?FileVersionMeta
     {
         return $this->defaultMeta;
     }
@@ -477,8 +296,8 @@ class FileVersion implements AuditableInterface
      */
     public function __clone()
     {
-        if ($this->id) {
-            $this->id = null;
+        if (isset($this->id)) {
+            unset($this->id);
             /** @var FileVersionMeta[] $newMetaList */
             $newMetaList = [];
             $defaultMetaLocale = $this->getDefaultMeta()?->getLocale();
@@ -513,28 +332,17 @@ class FileVersion implements AuditableInterface
         }
     }
 
-    /**
-     * Is active.
-     *
-     * @return bool
-     */
-    public function isActive()
+    public function isActive(): bool
     {
-        return $this->version === $this->file->getVersion();
+        return $this->file && $this->version === $this->file->getVersion();
     }
 
-    /**
-     * @return mixed
-     */
-    public function getProperties()
+    public function getProperties(): mixed
     {
         return \json_decode($this->properties ?? '', true);
     }
 
-    /**
-     * @return self
-     */
-    public function setProperties(array $properties)
+    public function setProperties(array $properties): static
     {
         $serializedText = \json_encode($properties);
         if (false === $serializedText) {
@@ -545,101 +353,82 @@ class FileVersion implements AuditableInterface
         return $this;
     }
 
-    /**
-     * Add categories.
-     *
-     * @return self
-     */
-    public function addCategory(CategoryInterface $categories)
+    public function addCategory(CategoryInterface $categories): static
     {
         $this->categories[] = $categories;
 
         return $this;
     }
 
-    /**
-     * Remove categories.
-     */
-    public function removeCategories()
+    public function removeCategories(): static
     {
         foreach ($this->categories as $category) {
             $this->categories->removeElement($category);
         }
+
+        return $this;
     }
 
     /**
-     * Get categories.
-     *
      * @return DoctrineCollection<int, CategoryInterface>
      */
-    public function getCategories()
+    public function getCategories(): DoctrineCollection
     {
         return $this->categories;
     }
 
-    /**
-     * Add a target group.
-     */
-    public function addTargetGroup(TargetGroupInterface $targetGroup)
+    public function addTargetGroup(TargetGroupInterface $targetGroup): static
     {
-        $this->targetGroups[] = $targetGroup;
+        $this->getTargetGroups()[] = $targetGroup;
+
+        return $this;
     }
 
-    /**
-     * Remove all target groups.
-     */
-    public function removeTargetGroups()
+    public function removeTargetGroups(): static
     {
-        foreach ($this->targetGroups as $targetGroup) {
-            $this->targetGroups->removeElement($targetGroup);
+        foreach ($this->getTargetGroups() as $targetGroup) {
+            $this->getTargetGroups()->removeElement($targetGroup);
         }
+
+        return $this;
     }
 
     /**
      * @return DoctrineCollection<int, TargetGroupInterface>
      */
-    public function getTargetGroups()
+    public function getTargetGroups(): DoctrineCollection
     {
+        // Lazy initialization needed because targetGroups is not mapped in Doctrine
+        // (AudienceTargetingBundle is optional). Doctrine won't initialize this
+        // collection when loading entities from the database.
+        if (!isset($this->targetGroups)) { // @phpstan-ignore-line isset.initializedProperty
+            $this->targetGroups = new ArrayCollection();
+        }
+
         return $this->targetGroups;
     }
 
-    /**
-     * Returns the x coordinate of the focus point.
-     *
-     * @return int|null
-     */
-    public function getFocusPointX()
+    public function getFocusPointX(): ?int
     {
         return $this->focusPointX;
     }
 
-    /**
-     * Sets the x coordinate of the focus point.
-     *
-     * @param int $focusPointX
-     */
-    public function setFocusPointX($focusPointX)
+    public function setFocusPointX(?int $focusPointX): static
     {
         $this->focusPointX = $focusPointX;
+
+        return $this;
     }
 
-    /**
-     * Returns the y coordinate of the focus point.
-     *
-     * @return int|null
-     */
-    public function getFocusPointY()
+    public function getFocusPointY(): ?int
     {
         return $this->focusPointY;
     }
 
-    /**
-     * Sets the y coordinate of the focus point.
-     *
-     * @param int $focusPointY
-     */
-    public function setFocusPointY($focusPointY)
+    public function setFocusPointY(?int $focusPointY): static
     {
         $this->focusPointY = $focusPointY;
+
+        return $this;
     }
 }

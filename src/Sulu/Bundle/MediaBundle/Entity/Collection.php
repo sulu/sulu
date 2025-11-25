@@ -25,38 +25,20 @@ class Collection implements CollectionInterface, PermissionInheritanceInterface
 {
     use AuditableTrait;
 
-    /**
-     * @var int
-     */
-    protected $id;
+    protected int $id;
 
-    /**
-     * @var string|null
-     */
-    protected $style;
+    protected ?string $style = null;
 
-    /**
-     * @var int
-     */
     #[Exclude]
-    protected $lft;
+    protected int $lft;
 
-    /**
-     * @var int
-     */
     #[Exclude]
-    protected $rgt;
+    protected int $rgt;
 
-    /**
-     * @var int
-     */
     #[Exclude]
-    protected $depth;
+    protected int $depth;
 
-    /**
-     * @var CollectionType
-     */
-    protected $type;
+    protected CollectionType $type;
 
     #[Exclude]
     protected ?UserInterface $changer = null;
@@ -64,36 +46,21 @@ class Collection implements CollectionInterface, PermissionInheritanceInterface
     #[Exclude]
     protected ?UserInterface $creator = null;
 
-    /**
-     * @var string|null
-     */
-    private $key;
+    private ?string $key = null;
 
-    /**
-     * @var DoctrineCollection<int, CollectionMeta>
-     */
-    private $meta;
+    /** @var DoctrineCollection<int, CollectionMeta> */
+    private DoctrineCollection $meta;
 
-    /**
-     * @var DoctrineCollection<int, MediaInterface>
-     */
+    /** @var DoctrineCollection<int, MediaInterface> */
     #[Exclude]
-    private $media;
+    private DoctrineCollection $media;
 
-    /**
-     * @var DoctrineCollection<int, CollectionInterface>
-     */
-    private $children;
+    /** @var DoctrineCollection<int, CollectionInterface> */
+    private DoctrineCollection $children;
 
-    /**
-     * @var CollectionInterface|null
-     */
-    private $parent;
+    private ?CollectionInterface $parent = null;
 
-    /**
-     * @var CollectionMeta
-     */
-    private $defaultMeta;
+    private ?CollectionMeta $defaultMeta = null;
 
     public function __construct()
     {
@@ -102,152 +69,82 @@ class Collection implements CollectionInterface, PermissionInheritanceInterface
         $this->children = new ArrayCollection();
     }
 
-    /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * Set style.
-     *
-     * @param string|null $style
-     *
-     * @return CollectionInterface
-     */
-    public function setStyle($style)
+    public function isNew(): bool
+    {
+        return !isset($this->id);
+    }
+
+    public function setStyle(?string $style): static
     {
         $this->style = $style;
 
         return $this;
     }
 
-    /**
-     * Get style.
-     *
-     * @return string|null
-     */
-    public function getStyle()
+    public function getStyle(): ?string
     {
         return $this->style;
     }
 
-    /**
-     * Set lft.
-     *
-     * @param int $lft
-     *
-     * @return CollectionInterface
-     */
-    public function setLft($lft)
+    public function setLft(int $lft): static
     {
         $this->lft = $lft;
 
         return $this;
     }
 
-    /**
-     * Get lft.
-     *
-     * @return int
-     */
-    public function getLft()
+    public function getLft(): int
     {
         return $this->lft;
     }
 
-    /**
-     * Set rgt.
-     *
-     * @param int $rgt
-     *
-     * @return CollectionInterface
-     */
-    public function setRgt($rgt)
+    public function setRgt(int $rgt): static
     {
         $this->rgt = $rgt;
 
         return $this;
     }
 
-    /**
-     * Get rgt.
-     *
-     * @return int
-     */
-    public function getRgt()
+    public function getRgt(): int
     {
         return $this->rgt;
     }
 
-    /**
-     * Set depth.
-     *
-     * @param int $depth
-     *
-     * @return CollectionInterface
-     */
-    public function setDepth($depth)
+    public function setDepth(int $depth): static
     {
         $this->depth = $depth;
 
         return $this;
     }
 
-    /**
-     * Get depth.
-     *
-     * @return int
-     */
-    public function getDepth()
+    public function getDepth(): int
     {
         return $this->depth;
     }
 
-    /**
-     * Set type.
-     *
-     * @return CollectionInterface
-     */
-    public function setType(CollectionType $type)
+    public function setType(CollectionType $type): static
     {
         $this->type = $type;
 
         return $this;
     }
 
-    /**
-     * Get type.
-     *
-     * @return CollectionType
-     */
-    public function getType()
+    public function getType(): CollectionType
     {
         return $this->type;
     }
 
-    /**
-     * Set key.
-     *
-     * @return string|null
-     */
-    public function getKey()
+    public function getKey(): ?string
     {
         return $this->key;
     }
 
-    /**
-     * Get key.
-     *
-     * @param string|null $key
-     *
-     * @return CollectionInterface
-     */
-    public function setKey($key)
+    public function setKey(?string $key): static
     {
         $this->key = $key;
 
@@ -255,44 +152,33 @@ class Collection implements CollectionInterface, PermissionInheritanceInterface
     }
 
     /**
-     * @return DoctrineCollection<int, self>
+     * @return DoctrineCollection<int, CollectionInterface>
      */
-    public function getChildren()
+    public function getChildren(): DoctrineCollection
     {
         return $this->children;
     }
 
-    public function setChildren(DoctrineCollection $children)
+    public function setChildren(DoctrineCollection $children): static
     {
         $this->children = $children;
+
+        return $this;
     }
 
-    /**
-     * Set parent.
-     *
-     * @return CollectionInterface
-     */
-    public function setParent(?CollectionInterface $parent = null)
+    public function setParent(?CollectionInterface $parent = null): static
     {
         $this->parent = $parent;
 
         return $this;
     }
 
-    /**
-     * Get parent.
-     *
-     * @return CollectionInterface|null
-     */
-    public function getParent()
+    public function getParent(): ?CollectionInterface
     {
         return $this->parent;
     }
 
-    /**
-     * @return int|null
-     */
-    public function getParentId()
+    public function getParentId(): ?int
     {
         if ($this->parent) {
             return $this->parent->getId();
@@ -301,115 +187,77 @@ class Collection implements CollectionInterface, PermissionInheritanceInterface
         return null;
     }
 
-    /**
-     * Add meta.
-     *
-     * @return Collection
-     */
-    public function addMeta(CollectionMeta $meta)
+    public function addMeta(CollectionMeta $meta): static
     {
         $this->meta[] = $meta;
 
         return $this;
     }
 
-    /**
-     * Remove meta.
-     *
-     * @return void
-     */
-    public function removeMeta(CollectionMeta $meta)
+    public function removeMeta(CollectionMeta $meta): static
     {
         $this->meta->removeElement($meta);
+
+        return $this;
     }
 
     /**
-     * Get meta.
-     *
      * @return DoctrineCollection<int, CollectionMeta>
      */
-    public function getMeta()
+    public function getMeta(): DoctrineCollection
     {
         return $this->meta;
     }
 
-    /**
-     * Add media.
-     *
-     * @return Collection
-     */
-    public function addMedia(MediaInterface $media)
+    public function addMedia(MediaInterface $media): static
     {
         $this->media[] = $media;
 
         return $this;
     }
 
-    /**
-     * Remove media.
-     *
-     * @return void
-     */
-    public function removeMedia(MediaInterface $media)
+    public function removeMedia(MediaInterface $media): static
     {
         $this->media->removeElement($media);
+
+        return $this;
     }
 
     /**
-     * Get media.
-     *
      * @return DoctrineCollection<int, MediaInterface>
      */
-    public function getMedia()
+    public function getMedia(): DoctrineCollection
     {
         return $this->media;
     }
 
-    /**
-     * Add children.
-     *
-     * @return Collection
-     */
-    public function addChildren(CollectionInterface $children)
+    public function addChildren(CollectionInterface $children): static
     {
         $this->children[] = $children;
 
         return $this;
     }
 
-    /**
-     * Remove children.
-     *
-     * @return void
-     */
-    public function removeChildren(CollectionInterface $children)
+    public function removeChildren(CollectionInterface $children): static
     {
         $this->children->removeElement($children);
+
+        return $this;
     }
 
-    /**
-     * Set defaultMeta.
-     *
-     * @return Collection
-     */
-    public function setDefaultMeta(?CollectionMeta $defaultMeta = null)
+    public function setDefaultMeta(?CollectionMeta $defaultMeta = null): static
     {
         $this->defaultMeta = $defaultMeta;
 
         return $this;
     }
 
-    /**
-     * Get defaultMeta.
-     *
-     * @return CollectionMeta
-     */
-    public function getDefaultMeta()
+    public function getDefaultMeta(): ?CollectionMeta
     {
         return $this->defaultMeta;
     }
 
-    public function getSecurityContext()
+    public function getSecurityContext(): string
     {
         return 'sulu.media.collections';
     }

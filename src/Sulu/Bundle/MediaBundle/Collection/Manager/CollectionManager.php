@@ -768,12 +768,14 @@ class CollectionManager implements CollectionManagerInterface
             $this->setBreadcrumbToCollection($apiEntity, $locale, $breadcrumbEntities);
         }
 
-        if ($entity && $entity->getId()) {
+        if ($entity && !$entity->isNew()) {
             $apiEntity->setMediaCount($this->collectionRepository->countMedia($entity));
             $apiEntity->setSubCollectionCount($this->collectionRepository->countSubCollections($entity));
+
+            return $this->addPreview($apiEntity);
         }
 
-        return $this->addPreview($apiEntity);
+        return $apiEntity;
     }
 
     /**

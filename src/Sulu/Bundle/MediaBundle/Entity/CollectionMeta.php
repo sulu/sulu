@@ -11,136 +11,67 @@
 
 namespace Sulu\Bundle\MediaBundle\Entity;
 
-/**
- * CollectionMeta.
- */
 class CollectionMeta
 {
-    /**
-     * @var string
-     */
-    private $title;
+    private int $id;
 
-    /**
-     * @var string|null
-     */
-    private $description;
+    private string $title;
 
-    /**
-     * @var string
-     */
-    private $locale;
+    private ?string $description = null;
 
-    /**
-     * @var int
-     */
-    private $id;
+    private string $locale;
 
-    /**
-     * @var CollectionInterface
-     */
-    private $collection;
+    private CollectionInterface $collection;
 
-    /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * Set title.
-     *
-     * @param string $title
-     *
-     * @return CollectionMeta
-     */
-    public function setTitle($title)
+    public function setTitle(string $title): static
     {
         $this->title = $title;
 
         return $this;
     }
 
-    /**
-     * Get title.
-     *
-     * @return string
-     */
-    public function getTitle()
+    public function getTitle(): string
     {
         return $this->title;
     }
 
-    /**
-     * Set description.
-     *
-     * @param string|null $description
-     *
-     * @return CollectionMeta
-     */
-    public function setDescription($description)
+    public function setDescription(?string $description): static
     {
         $this->description = $description;
 
         return $this;
     }
 
-    /**
-     * Get description.
-     *
-     * @return string|null
-     */
-    public function getDescription()
+    public function getDescription(): ?string
     {
         return $this->description;
     }
 
-    /**
-     * Set locale.
-     *
-     * @param string $locale
-     *
-     * @return CollectionMeta
-     */
-    public function setLocale($locale)
+    public function setLocale(string $locale): static
     {
         $this->locale = $locale;
 
         return $this;
     }
 
-    /**
-     * Get locale.
-     *
-     * @return string
-     */
-    public function getLocale()
+    public function getLocale(): string
     {
         return $this->locale;
     }
 
-    /**
-     * Set collection.
-     *
-     * @return CollectionMeta
-     */
-    public function setCollection(CollectionInterface $collection)
+    public function setCollection(CollectionInterface $collection): static
     {
         $this->collection = $collection;
 
         return $this;
     }
 
-    /**
-     * Get collection.
-     *
-     * @return CollectionInterface
-     */
-    public function getCollection()
+    public function getCollection(): CollectionInterface
     {
         return $this->collection;
     }

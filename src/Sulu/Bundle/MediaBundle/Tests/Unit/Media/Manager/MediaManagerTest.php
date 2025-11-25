@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\MediaBundle\Tests\Unit\Media\Manager;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
@@ -282,7 +283,7 @@ class MediaManagerTest extends TestCase
         $media = $this->prophesize(Media::class);
         $media->getId()->willReturn(1);
         $media->getCollection()->willReturn($collection);
-        $media->getFiles()->willReturn([]);
+        $media->getFiles()->willReturn(new ArrayCollection([]));
 
         $this->mediaRepository->findMediaById(1)->willReturn($media);
         $this->securityChecker->checkPermission(
@@ -300,7 +301,7 @@ class MediaManagerTest extends TestCase
 
         $file = $this->prophesize(File::class);
         $fileVersion = $this->prophesize(FileVersion::class);
-        $file->getFileVersions()->willReturn([$fileVersion->reveal()]);
+        $file->getFileVersions()->willReturn(new ArrayCollection([$fileVersion->reveal()]));
         $file->getLatestFileVersion()->willReturn($fileVersion->reveal());
         $fileVersion->getId()->willReturn(1);
         $fileVersion->getName()->willReturn('test');
@@ -310,15 +311,15 @@ class MediaManagerTest extends TestCase
         $fileVersionMeta = $this->prophesize(FileVersionMeta::class);
         $fileVersionMeta->getTitle()->willReturn('Test image');
         $fileVersionMeta->getLocale()->willReturn('en');
-        $fileVersion->getMeta()->willReturn([$fileVersionMeta->reveal()]);
+        $fileVersion->getMeta()->willReturn(new ArrayCollection([$fileVersionMeta->reveal()]));
         $fileVersion->getDefaultMeta()->willReturn($fileVersionMeta->reveal());
 
         $formatOptions = $this->prophesize(FormatOptions::class);
-        $fileVersion->getFormatOptions()->willReturn([$formatOptions->reveal()]);
+        $fileVersion->getFormatOptions()->willReturn(new ArrayCollection([$formatOptions->reveal()]));
 
         $media = $this->prophesize(Media::class);
         $media->getCollection()->willReturn($collection);
-        $media->getFiles()->willReturn([$file->reveal()]);
+        $media->getFiles()->willReturn(new ArrayCollection([$file->reveal()]));
         $media->getId()->willReturn(1);
 
         $this->formatManager->purge(
@@ -360,7 +361,9 @@ class MediaManagerTest extends TestCase
         $user = $this->prophesize(User::class)->willImplement(UserInterface::class);
         $this->userRepository->findUserById(1)->willReturn($user);
 
-        $this->mediaRepository->createNew()->willReturn(new Media());
+        $newMedia = new Media();
+        static::setPrivateProperty($newMedia, 'id', 1);
+        $this->mediaRepository->createNew()->willReturn($newMedia);
 
         $this->storage->save('', $cleanUpResult . $extension)->shouldBeCalled();
         $this->mediaPropertiesProvider
@@ -401,7 +404,7 @@ class MediaManagerTest extends TestCase
         $file->getVersion()->willReturn(1);
         $file->setChanger(Argument::any())->willReturn($file->reveal());
         $file->setChanged(Argument::any())->willReturn($file->reveal());
-        $media->getFiles()->willReturn([$file->reveal()]);
+        $media->getFiles()->willReturn(new ArrayCollection([$file->reveal()]));
 
         $fileVersion = $this->prophesize(FileVersion::class);
         $fileVersion->getVersion()->willReturn(1);
@@ -433,24 +436,24 @@ class MediaManagerTest extends TestCase
         $fileVersion->getFocusPointY()->willReturn(null);
         $fileVersionMeta = $this->prophesize(FileVersionMeta::class);
         $fileVersionMeta->getLocale()->willReturn('en');
-        $fileVersion->getMeta()->willReturn([$fileVersionMeta]);
+        $fileVersion->getMeta()->willReturn(new ArrayCollection([$fileVersionMeta->reveal()]));
         $file->getFileVersion(1)->willReturn($fileVersion->reveal());
-        $file->getFileVersions()->willReturn([$fileVersion->reveal()]);
+        $file->getFileVersions()->willReturn(new ArrayCollection([$fileVersion->reveal()]));
         $file->getLatestFileVersion()->willReturn($fileVersion->reveal());
         $file->getVersion()->willReturn(1);
-        $media->getFiles()->willReturn([$file->reveal()]);
+        $media->getFiles()->willReturn(new ArrayCollection([$file->reveal()]));
         $this->mediaRepository->findMediaById(1)->willReturn($media);
         $this->formatManager->getFormats(Argument::cetera())->willReturn([]);
 
-        $media->setChanger(Argument::any())->shouldBeCalled();
-        $media->setChanged(Argument::any())->shouldBeCalled();
-        $file->setChanger(Argument::any())->shouldBeCalled();
-        $file->setChanged(Argument::any())->shouldBeCalled();
-        $fileVersion->setProperties([])->shouldBeCalled();
-        $fileVersion->setChanged(Argument::any())->shouldBeCalled();
-        $fileVersion->setFocusPointX(1)->shouldBeCalled();
-        $fileVersion->setFocusPointY(2)->shouldBeCalled();
-        $fileVersion->increaseSubVersion()->shouldBeCalled();
+        $media->setChanger(Argument::any())->willReturn($media->reveal())->shouldBeCalled();
+        $media->setChanged(Argument::any())->willReturn($media->reveal())->shouldBeCalled();
+        $file->setChanger(Argument::any())->willReturn($file->reveal())->shouldBeCalled();
+        $file->setChanged(Argument::any())->willReturn($file->reveal())->shouldBeCalled();
+        $fileVersion->setProperties([])->willReturn($fileVersion->reveal())->shouldBeCalled();
+        $fileVersion->setChanged(Argument::any())->willReturn($fileVersion->reveal())->shouldBeCalled();
+        $fileVersion->setFocusPointX(1)->willReturn($fileVersion->reveal())->shouldBeCalled();
+        $fileVersion->setFocusPointY(2)->willReturn($fileVersion->reveal())->shouldBeCalled();
+        $fileVersion->increaseSubVersion()->willReturn($fileVersion->reveal())->shouldBeCalled();
         $this->formatManager->purge(1, 'test', 'image/jpeg')->shouldBeCalled();
 
         $this->domainEventCollector->collect(Argument::type(MediaModifiedEvent::class))->shouldBeCalled();
@@ -476,22 +479,22 @@ class MediaManagerTest extends TestCase
         $fileVersion->getFocusPointY()->willReturn(2);
         $fileVersionMeta = $this->prophesize(FileVersionMeta::class);
         $fileVersionMeta->getLocale()->willReturn('en');
-        $fileVersion->getMeta()->willReturn([$fileVersionMeta]);
+        $fileVersion->getMeta()->willReturn(new ArrayCollection([$fileVersionMeta->reveal()]));
         $file->getFileVersion(1)->willReturn($fileVersion->reveal());
-        $file->getFileVersions()->willReturn([$fileVersion->reveal()]);
+        $file->getFileVersions()->willReturn(new ArrayCollection([$fileVersion->reveal()]));
         $file->getLatestFileVersion()->willReturn($fileVersion->reveal());
         $file->getVersion()->willReturn(1);
-        $media->getFiles()->willReturn([$file->reveal()]);
+        $media->getFiles()->willReturn(new ArrayCollection([$file->reveal()]));
         $this->mediaRepository->findMediaById(1)->willReturn($media);
 
-        $media->setChanger(Argument::any())->shouldBeCalled();
-        $media->setChanged(Argument::any())->shouldBeCalled();
-        $file->setChanger(Argument::any())->shouldBeCalled();
-        $file->setChanged(Argument::any())->shouldBeCalled();
-        $fileVersion->setFocusPointX(1)->shouldBeCalled();
-        $fileVersion->setFocusPointY(2)->shouldBeCalled();
-        $fileVersion->setProperties([])->shouldBeCalled();
-        $fileVersion->setChanged(Argument::any())->shouldBeCalled();
+        $media->setChanger(Argument::any())->willReturn($media->reveal())->shouldBeCalled();
+        $media->setChanged(Argument::any())->willReturn($media->reveal())->shouldBeCalled();
+        $file->setChanger(Argument::any())->willReturn($file->reveal())->shouldBeCalled();
+        $file->setChanged(Argument::any())->willReturn($file->reveal())->shouldBeCalled();
+        $fileVersion->setFocusPointX(1)->willReturn($fileVersion->reveal())->shouldBeCalled();
+        $fileVersion->setFocusPointY(2)->willReturn($fileVersion->reveal())->shouldBeCalled();
+        $fileVersion->setProperties([])->willReturn($fileVersion->reveal())->shouldBeCalled();
+        $fileVersion->setChanged(Argument::any())->willReturn($fileVersion->reveal())->shouldBeCalled();
         $fileVersion->increaseSubVersion()->shouldNotBeCalled();
 
         $this->domainEventCollector->collect(Argument::type(MediaModifiedEvent::class))->shouldBeCalled();
@@ -507,7 +510,9 @@ class MediaManagerTest extends TestCase
         $uploadedFile->getPathname()->willReturn('');
         $uploadedFile->getSize()->willReturn('123');
         $uploadedFile->getMimeType()->willReturn('video/ogg');
-        $this->mediaRepository->createNew()->willReturn(new Media());
+        $newMedia = new Media();
+        static::setPrivateProperty($newMedia, 'id', 1);
+        $this->mediaRepository->createNew()->willReturn($newMedia);
 
         $this->typeManager->getMediaType('video/ogg')->shouldBeCalled()->willReturn(MediaInterface::TYPE_VIDEO);
 
@@ -588,8 +593,10 @@ class MediaManagerTest extends TestCase
         self::setPrivateProperty($media, 'id', $id);
 
         $file = new File();
+        $file->setVersion(1);
         $fileVersion = new FileVersion();
         $fileVersion->setName('Media' . $id);
+        $fileVersion->setVersion(1);
         $file->addFileVersion($fileVersion);
         $media->addFile($file);
 

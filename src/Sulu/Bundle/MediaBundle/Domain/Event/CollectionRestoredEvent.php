@@ -55,12 +55,12 @@ class CollectionRestoredEvent extends DomainEvent
 
     public function getResourceTitle(): ?string
     {
-        return $this->collection->getDefaultMeta()->getTitle();
+        return $this->collection->getDefaultMeta()?->getTitle();
     }
 
     public function getResourceTitleLocale(): ?string
     {
-        return $this->collection->getDefaultMeta()->getLocale();
+        return $this->collection->getDefaultMeta()?->getLocale();
     }
 
     public function getResourceSecurityContext(): ?string

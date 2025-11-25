@@ -16,115 +16,65 @@ use Doctrine\Common\Collections\Collection as DoctrineCollection;
 use Sulu\Component\Persistence\Model\AuditableInterface;
 use Sulu\Component\Persistence\Model\AuditableTrait;
 
-/**
- * File.
- */
 class File implements AuditableInterface
 {
     use AuditableTrait;
 
-    /**
-     * @var int
-     */
-    private $version;
+    private int $id;
 
-    /**
-     * @var int
-     */
-    private $id;
+    private int $version;
 
-    /**
-     * @var DoctrineCollection<int, FileVersion>
-     */
-    private $fileVersions;
+    /** @var DoctrineCollection<int, FileVersion> */
+    private DoctrineCollection $fileVersions;
 
-    /**
-     * @var MediaInterface
-     */
-    private $media;
+    private MediaInterface $media;
 
-    /**
-     * Constructor.
-     */
     public function __construct()
     {
         $this->fileVersions = new ArrayCollection();
     }
 
-    /**
-     * Set version.
-     *
-     * @param int $version
-     *
-     * @return File
-     */
-    public function setVersion($version)
+    public function setVersion(int $version): static
     {
         $this->version = $version;
 
         return $this;
     }
 
-    /**
-     * Get version.
-     *
-     * @return int
-     */
-    public function getVersion()
+    public function getVersion(): int
     {
         return $this->version;
     }
 
-    /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * Add fileVersions.
-     *
-     * @return File
-     */
-    public function addFileVersion(FileVersion $fileVersions)
+    public function addFileVersion(FileVersion $fileVersions): static
     {
         $this->fileVersions[] = $fileVersions;
 
         return $this;
     }
 
-    /**
-     * Remove fileVersions.
-     */
-    public function removeFileVersion(FileVersion $fileVersions)
+    public function removeFileVersion(FileVersion $fileVersions): static
     {
         $this->fileVersions->removeElement($fileVersions);
+
+        return $this;
     }
 
     /**
-     * Get fileVersions.
-     *
      * @return DoctrineCollection<int, FileVersion>
      */
-    public function getFileVersions()
+    public function getFileVersions(): DoctrineCollection
     {
         return $this->fileVersions;
     }
 
-    /**
-     * Get file version.
-     *
-     * @param int $version
-     *
-     * @return FileVersion|null
-     */
-    public function getFileVersion($version)
+    public function getFileVersion(int $version): ?FileVersion
     {
-        /** @var FileVersion $fileVersion */
         foreach ($this->fileVersions as $fileVersion) {
             if ($fileVersion->getVersion() === $version) {
                 return $fileVersion;
@@ -134,34 +84,19 @@ class File implements AuditableInterface
         return null;
     }
 
-    /**
-     * Get latest file version.
-     *
-     * @return FileVersion|null
-     */
-    public function getLatestFileVersion()
+    public function getLatestFileVersion(): ?FileVersion
     {
         return $this->getFileVersion($this->version);
     }
 
-    /**
-     * Set media.
-     *
-     * @return File
-     */
-    public function setMedia(MediaInterface $media)
+    public function setMedia(MediaInterface $media): static
     {
         $this->media = $media;
 
         return $this;
     }
 
-    /**
-     * Get media.
-     *
-     * @return MediaInterface
-     */
-    public function getMedia()
+    public function getMedia(): MediaInterface
     {
         return $this->media;
     }

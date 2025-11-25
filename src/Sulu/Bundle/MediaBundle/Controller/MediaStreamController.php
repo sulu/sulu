@@ -106,7 +106,7 @@ class MediaStreamController
                 return new Response('Invalid file name for media with ID "' . $id . '".', 404);
             }
 
-            if ($this->securityChecker) {
+            if ($this->securityChecker && $fileVersion->getFile()) {
                 $this->securityChecker->checkPermission(
                     new SecurityCondition(
                         MediaAdmin::SECURITY_CONTEXT,
@@ -181,7 +181,7 @@ class MediaStreamController
 
         // Set headers for
         $file = $fileVersion->getFile();
-        if ($fileVersion->getVersion() !== $file->getVersion()) {
+        if ($file && $fileVersion->getVersion() !== $file->getVersion()) {
             $latestFileVersion = $file->getLatestFileVersion();
 
             $response->headers->set(

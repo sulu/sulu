@@ -109,6 +109,8 @@ class FormatOptionsManagerTest extends TestCase
         $file->setVersion(1);
         $fileVersion = new FileVersion();
         $fileVersion->setVersion(1);
+        $fileVersion->setName('test.jpg');
+        $fileVersion->setMimeType('image/jpeg');
         $file->addFileVersion($fileVersion);
 
         $this->media[0]->addFile($file);

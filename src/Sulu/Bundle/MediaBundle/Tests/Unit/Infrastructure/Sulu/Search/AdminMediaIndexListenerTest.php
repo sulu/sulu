@@ -64,6 +64,7 @@ class AdminMediaIndexListenerTest extends TestCase
     public function testOnMediaChangedWithMediaCreatedEvent(): void
     {
         $media = $this->createMedia('test-media');
+        static::setPrivateProperty($media, 'id', 1);
         $event = new MediaCreatedEvent($media, 'en', []);
 
         $expectedConfig = ReindexConfig::create()
@@ -80,6 +81,7 @@ class AdminMediaIndexListenerTest extends TestCase
     public function testOnMediaChangedWithMediaModifiedEvent(): void
     {
         $media = $this->createMedia('test-media');
+        static::setPrivateProperty($media, 'id', 1);
         $event = new MediaModifiedEvent($media, 'en', []);
 
         $expectedConfig = ReindexConfig::create()
@@ -113,6 +115,7 @@ class AdminMediaIndexListenerTest extends TestCase
     public function testOnMediaChangedWithMediaRestoredEvent(): void
     {
         $media = $this->createMedia('test-media');
+        static::setPrivateProperty($media, 'id', 1);
         $event = new MediaRestoredEvent($media, []);
 
         $expectedConfig = ReindexConfig::create()
@@ -129,6 +132,7 @@ class AdminMediaIndexListenerTest extends TestCase
     public function testOnMediaChangedWithMediaVersionAddedEvent(): void
     {
         $media = $this->createMedia('test-media');
+        static::setPrivateProperty($media, 'id', 1);
 
         $event = new MediaVersionAddedEvent($media, 1);
 

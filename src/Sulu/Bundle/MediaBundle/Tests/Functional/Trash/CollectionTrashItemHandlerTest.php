@@ -174,7 +174,7 @@ class CollectionTrashItemHandlerTest extends TestCase
 
         $this->assertInstanceOf(Collection::class, $collection);
         $this->assertSame(1, $collection->getId());
-        $this->assertSame('Minimal Collection', $collection->getDefaultMeta()->getTitle());
+        $this->assertSame('Minimal Collection', $collection->getDefaultMeta()?->getTitle());
         $this->assertSame('2020-11-05T12:15:00+01:00', $collection->getCreated()->format('c'));
         $this->assertSame('2020-12-10T14:15:00+01:00', $collection->getChanged()->format('c'));
     }
@@ -213,7 +213,7 @@ class CollectionTrashItemHandlerTest extends TestCase
 
         $this->assertInstanceOf(Collection::class, $collection);
         $this->assertSame(2, $collection->getId());
-        $this->assertSame('Minimal Collection', $collection->getDefaultMeta()->getTitle());
+        $this->assertSame('Minimal Collection', $collection->getDefaultMeta()?->getTitle());
         $this->assertSame('2020-11-05T12:15:00+01:00', $collection->getCreated()->format('c'));
         $this->assertSame('2020-12-10T14:15:00+01:00', $collection->getChanged()->format('c'));
     }

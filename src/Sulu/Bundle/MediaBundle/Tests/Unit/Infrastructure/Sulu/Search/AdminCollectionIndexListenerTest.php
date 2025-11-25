@@ -52,6 +52,7 @@ class AdminCollectionIndexListenerTest extends TestCase
     public function testOnCollectionChangedWithCollectionCreatedEvent(): void
     {
         $collection = $this->createCollection();
+        static::setPrivateProperty($collection, 'id', 1);
         $event = new CollectionCreatedEvent($collection, 'en', []);
 
         $expectedConfig = ReindexConfig::create()
@@ -102,6 +103,7 @@ class AdminCollectionIndexListenerTest extends TestCase
     public function testOnCollectionChangedWithCollectionRestoredEvent(): void
     {
         $collection = $this->createCollection();
+        static::setPrivateProperty($collection, 'id', 1);
         $event = new CollectionRestoredEvent($collection, []);
 
         $expectedConfig = ReindexConfig::create()
