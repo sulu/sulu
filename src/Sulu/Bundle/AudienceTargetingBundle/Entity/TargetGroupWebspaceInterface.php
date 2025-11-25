@@ -18,7 +18,7 @@ namespace Sulu\Bundle\AudienceTargetingBundle\Entity;
  */
 interface TargetGroupWebspaceInterface
 {
-    public function getId(): ?int;
+    public function getId(): int;
 
     public function getWebspaceKey(): string;
 

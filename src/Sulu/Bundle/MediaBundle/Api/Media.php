@@ -984,9 +984,9 @@ class Media extends ApiWrapper
             return [];
         }
 
-        return \array_values(\array_filter(\array_map(function(TargetGroupInterface $targetGroup) {
+        return \array_map(function(TargetGroupInterface $targetGroup) {
             return $targetGroup->getId();
-        }, $this->getFileVersion()->getTargetGroups()->toArray()), fn ($id) => null !== $id));
+        }, $this->getFileVersion()->getTargetGroups()->toArray());
     }
 
     /**

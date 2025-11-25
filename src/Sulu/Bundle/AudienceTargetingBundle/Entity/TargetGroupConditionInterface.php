@@ -18,7 +18,7 @@ namespace Sulu\Bundle\AudienceTargetingBundle\Entity;
  */
 interface TargetGroupConditionInterface
 {
-    public function getId(): ?int;
+    public function getId(): int;
 
     public function getType(): string;
 

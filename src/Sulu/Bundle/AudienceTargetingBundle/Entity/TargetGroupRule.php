@@ -21,7 +21,7 @@ use Doctrine\Common\Collections\Collection;
  */
 class TargetGroupRule implements TargetGroupRuleInterface
 {
-    private ?int $id = null;
+    private int $id;
 
     private string $title;
 
@@ -42,7 +42,7 @@ class TargetGroupRule implements TargetGroupRuleInterface
         $this->conditions = new ArrayCollection();
     }
 
-    public function getId(): ?int
+    public function getId(): int
     {
         return $this->id;
     }

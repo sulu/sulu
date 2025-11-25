@@ -26,7 +26,7 @@ interface TargetGroupRuleInterface
 
     public const FREQUENCY_VISITOR = 3;
 
-    public function getId(): ?int;
+    public function getId(): int;
 
     public function getTitle(): string;
 

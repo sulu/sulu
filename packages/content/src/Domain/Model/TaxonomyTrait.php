@@ -137,10 +137,7 @@ trait TaxonomyTrait
         $this->initializeAudienceTargetGroups();
         $targetGroupIds = [];
         foreach ($this->excerptAudienceTargetGroups as $excerptAudienceTargetGroup) {
-            $id = $excerptAudienceTargetGroup->getId();
-            if (null !== $id) {
-                $targetGroupIds[] = $id;
-            }
+            $targetGroupIds[] = $excerptAudienceTargetGroup->getId();
         }
 
         return $targetGroupIds;

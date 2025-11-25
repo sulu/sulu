@@ -115,7 +115,7 @@ class TargetGroupRepositoryTest extends SuluTestCase
 
         $this->getEntityManager()->flush();
 
-        $targetGroups = $this->targetGroupRepository->findByIds(\array_values(\array_filter([$targetGroup2->getId(), $targetGroup3->getId()], fn ($id) => null !== $id)));
+        $targetGroups = $this->targetGroupRepository->findByIds([$targetGroup2->getId(), $targetGroup3->getId()]);
 
         $this->assertCount(2, $targetGroups);
         $this->assertEquals('Target Group 2', $targetGroups[0]->getTitle());

@@ -20,7 +20,7 @@ use JMS\Serializer\Annotation\Type;
  */
 class TargetGroupCondition implements TargetGroupConditionInterface
 {
-    private ?int $id = null;
+    private int $id;
 
     private string $type;
 
@@ -32,7 +32,7 @@ class TargetGroupCondition implements TargetGroupConditionInterface
 
     private TargetGroupRuleInterface $rule;
 
-    public function getId(): ?int
+    public function getId(): int
     {
         return $this->id;
     }

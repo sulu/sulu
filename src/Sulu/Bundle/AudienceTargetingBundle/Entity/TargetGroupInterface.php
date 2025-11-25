@@ -20,7 +20,7 @@ use Doctrine\Common\Collections\Collection;
  */
 interface TargetGroupInterface
 {
-    public function getId(): ?int;
+    public function getId(): int;
 
     public function getTitle(): string;
 

@@ -308,7 +308,7 @@ class TargetGroupController extends AbstractRestController implements SecuredCon
         $targetGroup->clearRules();
 
         foreach ($data['rules'] as $ruleData) {
-            $rule = $this->getOrCreateTargetGroupRuleById($targetGroup->getId(), $ruleData['id'] ?? null);
+            $rule = $this->getOrCreateTargetGroupRuleById($data['id'] ?? null, $ruleData['id'] ?? null);
             $oldRules->removeElement($rule);
 
             $rule->setTargetGroup($targetGroup);
@@ -323,7 +323,7 @@ class TargetGroupController extends AbstractRestController implements SecuredCon
             $rule->clearConditions();
 
             foreach ($ruleData['conditions'] as $conditionData) {
-                $condition = $this->getOrCreateTargetGroupConditionById($rule->getId(), $conditionData['id'] ?? null);
+                $condition = $this->getOrCreateTargetGroupConditionById($ruleData['id'] ?? null, $conditionData['id'] ?? null);
                 $oldConditions->removeElement($condition);
 
                 $condition->setRule($rule);

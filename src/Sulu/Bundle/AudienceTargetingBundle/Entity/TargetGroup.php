@@ -23,7 +23,7 @@ use JMS\Serializer\Annotation\VirtualProperty;
  */
 class TargetGroup implements TargetGroupInterface
 {
-    private ?int $id = null;
+    private int $id;
 
     private string $title;
 
@@ -54,7 +54,7 @@ class TargetGroup implements TargetGroupInterface
         $this->rules = new ArrayCollection();
     }
 
-    public function getId(): ?int
+    public function getId(): int
     {
         return $this->id;
     }
@@ -131,8 +131,8 @@ class TargetGroup implements TargetGroupInterface
     #[SerializedName('webspaceKeys')]
     public function getWebspaceKeys(): array
     {
-        // @phpstan-ignore-next-line
-        if (null === $this->webspaces) {
+        // @phpstan-ignore isset.initializedProperty (property may be uninitialized when loaded from trash)
+        if (!isset($this->webspaces)) {
             return [];
         }
 

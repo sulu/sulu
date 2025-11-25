@@ -83,6 +83,7 @@ class TargetGroupEvaluationControllerTest extends TestCase
     public static function provideTargetGroup()
     {
         $targetGroup1 = new TargetGroup();
+        self::setPrivateProperty($targetGroup1, 'id', 1);
 
         $targetGroup2 = new TargetGroup();
         self::setPrivateProperty($targetGroup2, 'id', 2);
@@ -92,7 +93,7 @@ class TargetGroupEvaluationControllerTest extends TestCase
         self::setPrivateProperty($targetGroup4, 'id', 4);
 
         return [
-            ['X-Sulu-Target-Group-Hash', null, $targetGroup1, null],
+            ['X-Sulu-Target-Group-Hash', null, $targetGroup1, 1],
             ['X-Sulu-Target-Group-Hash', null, $targetGroup2, 2],
             ['X-Sulu-Target-Group', null, null, 0],
             ['X-Sulu-Target-Group', $targetGroup3, $targetGroup4, 4],

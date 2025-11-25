@@ -18,13 +18,13 @@ namespace Sulu\Bundle\AudienceTargetingBundle\Entity;
  */
 class TargetGroupWebspace implements TargetGroupWebspaceInterface
 {
-    private ?int $id = null;
+    private int $id;
 
     private string $webspaceKey;
 
     private TargetGroupInterface $targetGroup;
 
-    public function getId(): ?int
+    public function getId(): int
     {
         return $this->id;
     }

@@ -88,7 +88,7 @@ class PageControllerTest extends SuluTestCase
 
         self::getEntityManager()->flush();
 
-        return \array_values(\array_filter([$targetGroup1->getId(), $targetGroup2->getId()], fn ($id) => null !== $id));
+        return [$targetGroup1->getId(), $targetGroup2->getId()];
     }
 
     /**
