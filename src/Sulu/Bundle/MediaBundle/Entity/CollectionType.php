@@ -15,135 +15,72 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection as DoctrineCollection;
 use JMS\Serializer\Annotation\Exclude;
 
-/**
- * CollectionType.
- */
 class CollectionType
 {
-    /**
-     * @var int
-     */
-    private $id;
+    private int $id;
 
-    /**
-     * @var string
-     */
-    private $name;
+    private string $name;
 
-    /**
-     * @var string|null
-     */
-    private $key;
+    private ?string $key = null;
 
-    /**
-     * @var string|null
-     */
-    private $description;
+    private ?string $description = null;
 
-    /**
-     * @var DoctrineCollection<int, CollectionInterface>
-     */
+    /** @var DoctrineCollection<int, CollectionInterface> */
     #[Exclude]
-    private $collections;
+    private DoctrineCollection $collections;
 
-    /**
-     * Constructor.
-     */
     public function __construct()
     {
         $this->collections = new ArrayCollection();
     }
 
-    /**
-     * Set name.
-     *
-     * @param string $name
-     *
-     * @return $this
-     */
-    public function setName($name)
+    public function setName(string $name): static
     {
         $this->name = $name;
 
         return $this;
     }
 
-    /**
-     * Get name.
-     *
-     * @return string
-     */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * Set description.
-     *
-     * @param string|null $description
-     *
-     * @return $this
-     */
-    public function setDescription($description)
+    public function setDescription(?string $description): static
     {
         $this->description = $description;
 
         return $this;
     }
 
-    /**
-     * Get description.
-     *
-     * @return string|null
-     */
-    public function getDescription()
+    public function getDescription(): ?string
     {
         return $this->description;
     }
 
     /**
      * To force id = 1 in load fixtures.
-     *
-     * @param int $id
-     *
-     * @return $this
      */
-    public function setId($id)
+    public function setId(int $id): static
     {
         $this->id = $id;
 
         return $this;
     }
 
-    /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * Add collections.
-     *
-     * @return $this
-     */
-    public function addCollection(CollectionInterface $collections)
+    public function addCollection(CollectionInterface $collections): static
     {
         $this->collections->add($collections);
 
         return $this;
     }
 
-    /**
-     * Remove collections.
-     *
-     * @return $this
-     */
-    public function removeCollection(CollectionInterface $collections)
+    public function removeCollection(CollectionInterface $collections): static
     {
         $this->collections->removeElement($collections);
 
@@ -151,35 +88,21 @@ class CollectionType
     }
 
     /**
-     * Get collections.
-     *
      * @return DoctrineCollection<int, CollectionInterface>
      */
-    public function getCollections()
+    public function getCollections(): DoctrineCollection
     {
         return $this->collections;
     }
 
-    /**
-     * Set key.
-     *
-     * @param string $key
-     *
-     * @return $this
-     */
-    public function setKey($key)
+    public function setKey(?string $key): static
     {
         $this->key = $key;
 
         return $this;
     }
 
-    /**
-     * Get key.
-     *
-     * @return string|null
-     */
-    public function getKey()
+    public function getKey(): ?string
     {
         return $this->key;
     }

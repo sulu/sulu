@@ -11,194 +11,95 @@
 
 namespace Sulu\Bundle\MediaBundle\Entity;
 
-/**
- * FileVersionMeta.
- */
 class FileVersionMeta
 {
-    /**
-     * @var int
-     */
-    private $id;
+    private int $id;
 
-    /**
-     * @var string
-     */
-    private $title;
+    private string $title;
 
-    /**
-     * @var string|null
-     */
-    private $description;
+    private ?string $description = null;
 
-    /**
-     * @var string|null
-     */
-    private $copyright;
+    private ?string $copyright = null;
 
-    /**
-     * @var string|null
-     */
-    private $credits;
+    private ?string $credits = null;
 
-    /**
-     * @var string
-     */
-    private $locale;
+    private string $locale;
 
-    /**
-     * @var FileVersion
-     */
-    private $fileVersion;
+    private FileVersion $fileVersion;
 
-    /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * Set title.
-     *
-     * @param string $title
-     *
-     * @return FileVersionMeta
-     */
-    public function setTitle($title)
+    public function setTitle(string $title): static
     {
         $this->title = $title;
 
         return $this;
     }
 
-    /**
-     * Get title.
-     *
-     * @return string
-     */
-    public function getTitle()
+    public function getTitle(): string
     {
         return $this->title;
     }
 
-    /**
-     * Set description.
-     *
-     * @param string|null $description
-     *
-     * @return FileVersionMeta
-     */
-    public function setDescription($description)
+    public function setDescription(?string $description): static
     {
         $this->description = $description;
 
         return $this;
     }
 
-    /**
-     * Get description.
-     *
-     * @return string|null
-     */
-    public function getDescription()
+    public function getDescription(): ?string
     {
         return $this->description;
     }
 
-    /**
-     * Set copyright.
-     *
-     * @param string|null $copyright
-     *
-     * @return FileVersionMeta
-     */
-    public function setCopyright($copyright)
+    public function setCopyright(?string $copyright): static
     {
         $this->copyright = $copyright;
 
         return $this;
     }
 
-    /**
-     * Get copyright.
-     *
-     * @return string|null
-     */
-    public function getCopyright()
+    public function getCopyright(): ?string
     {
         return $this->copyright;
     }
 
-    /**
-     * Set credits.
-     *
-     * @param string|null $credits
-     *
-     * @return FileVersionMeta
-     */
-    public function setCredits($credits)
+    public function setCredits(?string $credits): static
     {
         $this->credits = $credits;
 
         return $this;
     }
 
-    /**
-     * Get credits.
-     *
-     * @return string|null
-     */
-    public function getCredits()
+    public function getCredits(): ?string
     {
         return $this->credits;
     }
 
-    /**
-     * Set locale.
-     *
-     * @param string $locale
-     *
-     * @return FileVersionMeta
-     */
-    public function setLocale($locale)
+    public function setLocale(string $locale): static
     {
         $this->locale = $locale;
 
         return $this;
     }
 
-    /**
-     * Get locale.
-     *
-     * @return string
-     */
-    public function getLocale()
+    public function getLocale(): string
     {
         return $this->locale;
     }
 
-    /**
-     * Set fileVersion.
-     *
-     * @return FileVersionMeta
-     */
-    public function setFileVersion(FileVersion $fileVersion)
+    public function setFileVersion(FileVersion $fileVersion): static
     {
         $this->fileVersion = $fileVersion;
 
         return $this;
     }
 
-    /**
-     * Get fileVersion.
-     *
-     * @return FileVersion
-     */
-    public function getFileVersion()
+    public function getFileVersion(): FileVersion
     {
         return $this->fileVersion;
     }
@@ -208,8 +109,8 @@ class FileVersionMeta
      */
     public function __clone()
     {
-        if ($this->id) {
-            $this->id = null;
+        if (isset($this->id)) {
+            unset($this->id);
         }
     }
 }

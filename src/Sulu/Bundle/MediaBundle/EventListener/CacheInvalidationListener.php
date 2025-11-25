@@ -78,7 +78,10 @@ class CacheInvalidationListener
         } elseif ($object instanceof File) {
             $this->invalidateEntity($object->getMedia());
         } elseif ($object instanceof FileVersion) {
-            $this->invalidateEntity($object->getFile());
+            $file = $object->getFile();
+            if ($file) {
+                $this->invalidateEntity($file);
+            }
             $this->invalidateTags($cacheManager, $object->getTags());
             $this->invalidateCategories($cacheManager, $object->getCategories());
         } elseif ($object instanceof FileVersionMeta) {

@@ -57,7 +57,7 @@ final class CollectionTrashItemHandler implements
             'id' => $resource->getId(),
             'key' => $resource->getKey(),
             'typeId' => $resource->getType()->getId(),
-            'defaultMetaLocale' => $resource->getDefaultMeta()->getLocale(),
+            'defaultMetaLocale' => $resource->getDefaultMeta()?->getLocale(),
             'parentId' => null,
             'meta' => [],
             'created' => $resource->getCreated()->format('c'),

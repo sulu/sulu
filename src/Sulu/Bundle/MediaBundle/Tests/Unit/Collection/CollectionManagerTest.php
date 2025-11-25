@@ -109,6 +109,7 @@ class CollectionManagerTest extends TestCase
         $collectionType->getId()->willReturn(1);
         $entity->getType()->willReturn($collectionType->reveal());
         $entity->getId()->willReturn($id);
+        $entity->isNew()->willReturn(false);
 
         if (null !== $parent) {
             $parentEntity = $this->prophesize(Collection::class);

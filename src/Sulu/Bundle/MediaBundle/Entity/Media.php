@@ -23,31 +23,17 @@ class Media implements MediaInterface
 {
     use AuditableTrait;
 
-    /**
-     * @var int
-     */
-    protected $id;
+    protected int $id;
 
-    /**
-     * @var DoctrineCollection<int, File>
-     */
-    protected $files;
+    /** @var DoctrineCollection<int, File> */
+    protected DoctrineCollection $files;
 
-    /**
-     * @var CollectionInterface
-     */
     #[Exclude]
-    protected $collection;
+    protected CollectionInterface $collection;
 
-    /**
-     * @var string
-     */
-    protected $type;
+    protected string $type;
 
-    /**
-     * @var MediaInterface|null
-     */
-    protected $previewImage;
+    protected ?MediaInterface $previewImage = null;
 
     /**
      * Constructor.
@@ -57,36 +43,43 @@ class Media implements MediaInterface
         $this->files = new ArrayCollection();
     }
 
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function addFile(File $files)
+    public function isNew(): bool
+    {
+        return !isset($this->id);
+    }
+
+    public function addFile(File $files): static
     {
         $this->files[] = $files;
 
         return $this;
     }
 
-    public function removeFile(File $files)
+    public function removeFile(File $files): static
     {
         $this->files->removeElement($files);
+
+        return $this;
     }
 
-    public function getFiles()
+    public function getFiles(): DoctrineCollection
     {
         return $this->files;
     }
 
-    public function setCollection(CollectionInterface $collection)
+    public function setCollection(CollectionInterface $collection): static
     {
         $this->collection = $collection;
 
         return $this;
     }
 
-    public function getCollection()
+    public function getCollection(): CollectionInterface
     {
         return $this->collection;
     }
@@ -103,14 +96,14 @@ class Media implements MediaInterface
         return $this->type;
     }
 
-    public function setPreviewImage(?MediaInterface $previewImage = null)
+    public function setPreviewImage(?MediaInterface $previewImage = null): static
     {
         $this->previewImage = $previewImage;
 
         return $this;
     }
 
-    public function getPreviewImage()
+    public function getPreviewImage(): ?MediaInterface
     {
         return $this->previewImage;
     }

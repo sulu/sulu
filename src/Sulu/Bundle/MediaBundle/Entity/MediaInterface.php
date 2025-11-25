@@ -26,63 +26,28 @@ interface MediaInterface extends AuditableInterface
     public const TYPE_AUDIO = 'audio';
     public const TYPE_DOCUMENT = 'document';
 
-    /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId();
+    public function getId(): int;
+
+    public function isNew(): bool;
+
+    public function addFile(File $files): static;
+
+    public function removeFile(File $files): static;
 
     /**
-     * Add files.
-     *
-     * @return MediaInterface
-     */
-    public function addFile(File $files);
-
-    /**
-     * Remove files.
-     *
-     * @return void
-     */
-    public function removeFile(File $files);
-
-    /**
-     * Get files.
-     *
      * @return DoctrineCollection<int, File>
      */
-    public function getFiles();
+    public function getFiles(): DoctrineCollection;
 
-    /**
-     * Set collection.
-     *
-     * @return MediaInterface
-     */
-    public function setCollection(CollectionInterface $collection);
+    public function setCollection(CollectionInterface $collection): static;
 
-    /**
-     * Get collectionInterface.
-     *
-     * @return CollectionInterface
-     */
-    public function getCollection();
+    public function getCollection(): CollectionInterface;
 
     public function setType(string $type): self;
 
     public function getType(): string;
 
-    /**
-     * Set preview image.
-     *
-     * @return MediaInterface|null
-     */
-    public function setPreviewImage(?self $previewImage = null);
+    public function setPreviewImage(?self $previewImage = null): static;
 
-    /**
-     * Get preview image.
-     *
-     * @return MediaInterface|null
-     */
-    public function getPreviewImage();
+    public function getPreviewImage(): ?self;
 }

@@ -167,22 +167,22 @@ class MediaTrashItemHandlerTest extends SuluTestCase
         $media1File1Version2Meta2->setLocale('en');
 
         $media1File1Version2FormatOptions1 = new FormatOptions();
-        $media1File1Version2->addFormatOptions($media1File1Version2FormatOptions1);
-        $media1File1Version2FormatOptions1->setFileVersion($media1File1Version2);
         $media1File1Version2FormatOptions1->setFormatKey('format-key-1');
+        $media1File1Version2FormatOptions1->setFileVersion($media1File1Version2);
         $media1File1Version2FormatOptions1->setCropHeight(200);
         $media1File1Version2FormatOptions1->setCropWidth(100);
         $media1File1Version2FormatOptions1->setCropX(50);
         $media1File1Version2FormatOptions1->setCropY(75);
+        $media1File1Version2->addFormatOptions($media1File1Version2FormatOptions1);
 
         $media1File1Version2FormatOptions2 = new FormatOptions();
-        $media1File1Version2->addFormatOptions($media1File1Version2FormatOptions2);
-        $media1File1Version2FormatOptions2->setFileVersion($media1File1Version2);
         $media1File1Version2FormatOptions2->setFormatKey('format-key-2');
+        $media1File1Version2FormatOptions2->setFileVersion($media1File1Version2);
         $media1File1Version2FormatOptions2->setCropHeight(2000);
         $media1File1Version2FormatOptions2->setCropWidth(1000);
         $media1File1Version2FormatOptions2->setCropX(500);
         $media1File1Version2FormatOptions2->setCropY(750);
+        $media1File1Version2->addFormatOptions($media1File1Version2FormatOptions2);
 
         $this->entityManager->persist($previewImageMedia);
         $this->entityManager->persist($media1);

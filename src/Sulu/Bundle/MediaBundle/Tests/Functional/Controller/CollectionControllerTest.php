@@ -222,7 +222,7 @@ class CollectionControllerTest extends SuluTestCase
         $this->em->flush();
     }
 
-    private function createCollectionType($id, $key, $name, $description = '')
+    private function createCollectionType(int $id, ?string $key, string $name, string $description = ''): CollectionType
     {
         $collectionType = new CollectionType();
         $collectionType->setId($id);

@@ -220,10 +220,16 @@ final class MediaTrashItemHandler implements
                 $fileVersion->setSize($fileVersionData['size']);
                 $fileVersion->setDownloadCounter($fileVersionData['downloadCounter']);
                 $fileVersion->setStorageOptions($restoredStorageOptions);
-                $fileVersion->setMimeType($fileVersionData['mimeType']);
+                /** @var string|null $mimeType */
+                $mimeType = $fileVersionData['mimeType'] ?? null;
+                $fileVersion->setMimeType($mimeType);
                 $fileVersion->setProperties($fileVersionData['properties']);
-                $fileVersion->setFocusPointX($fileVersionData['focusPointX']);
-                $fileVersion->setFocusPointY($fileVersionData['focusPointY']);
+                /** @var int|null $focusPointX */
+                $focusPointX = $fileVersionData['focusPointX'] ?? null;
+                $fileVersion->setFocusPointX($focusPointX);
+                /** @var int|null $focusPointY */
+                $focusPointY = $fileVersionData['focusPointY'] ?? null;
+                $fileVersion->setFocusPointY($focusPointY);
                 $fileVersion->setCreated(new \DateTimeImmutable($fileVersionData['created']));
                 $fileVersion->setCreator($this->findEntity(UserInterface::class, $fileVersionData['creatorId']));
 
@@ -251,10 +257,18 @@ final class MediaTrashItemHandler implements
                     $formatOption->setFormatKey($formatOptionData['formatKey']);
                     $fileVersion->addFormatOptions($formatOption);
 
-                    $formatOption->setCropHeight($formatOptionData['cropHeight']);
-                    $formatOption->setCropWidth($formatOptionData['cropWidth']);
-                    $formatOption->setCropX($formatOptionData['cropX']);
-                    $formatOption->setCropY($formatOptionData['cropY']);
+                    /** @var int $cropHeight */
+                    $cropHeight = $formatOptionData['cropHeight'];
+                    $formatOption->setCropHeight($cropHeight);
+                    /** @var int $cropWidth */
+                    $cropWidth = $formatOptionData['cropWidth'];
+                    $formatOption->setCropWidth($cropWidth);
+                    /** @var int $cropX */
+                    $cropX = $formatOptionData['cropX'];
+                    $formatOption->setCropX($cropX);
+                    /** @var int $cropY */
+                    $cropY = $formatOptionData['cropY'];
+                    $formatOption->setCropY($cropY);
                 }
 
                 foreach ($fileVersionData['tagIds'] as $tagId) {

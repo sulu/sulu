@@ -15,133 +15,75 @@ use Doctrine\Common\Collections\Collection as DoctrineCollection;
 use Sulu\Component\Persistence\Model\AuditableInterface;
 use Sulu\Component\Security\Authorization\AccessControl\SecuredEntityInterface;
 
-/**
- * @method CollectionMeta getDefaultMeta();
- * @method DoctrineCollection|CollectionMeta[] getMeta();
- */
 interface CollectionInterface extends AuditableInterface, SecuredEntityInterface
 {
     public const RESOURCE_KEY = 'collections';
 
-    /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId();
+    public function getId(): int;
 
-    /**
-     * Get key.
-     *
-     * @return string|null
-     */
-    public function getKey();
+    public function isNew(): bool;
 
-    /**
-     * Set key.
-     *
-     * @param string|null $key
-     *
-     * @return CollectionInterface
-     */
-    public function setKey($key);
+    public function getKey(): ?string;
 
-    /**
-     * Set style.
-     *
-     * @param string|null $style
-     *
-     * @return CollectionInterface
-     */
-    public function setStyle($style);
+    public function setKey(?string $key): static;
 
-    /**
-     * Get style.
-     *
-     * @return string|null
-     */
-    public function getStyle();
+    public function setStyle(?string $style): static;
 
-    /**
-     * Set lft.
-     *
-     * @param int $lft
-     *
-     * @return CollectionInterface
-     */
-    public function setLft($lft);
+    public function getStyle(): ?string;
 
-    /**
-     * Get lft.
-     *
-     * @return int
-     */
-    public function getLft();
+    public function setLft(int $lft): static;
 
-    /**
-     * Set rgt.
-     *
-     * @param int $rgt
-     *
-     * @return CollectionInterface
-     */
-    public function setRgt($rgt);
+    public function getLft(): int;
 
-    /**
-     * Get rgt.
-     *
-     * @return int
-     */
-    public function getRgt();
+    public function setRgt(int $rgt): static;
 
-    /**
-     * Set depth.
-     *
-     * @param int $depth
-     *
-     * @return CollectionInterface
-     */
-    public function setDepth($depth);
+    public function getRgt(): int;
 
-    /**
-     * Get depth.
-     *
-     * @return int
-     */
-    public function getDepth();
+    public function setDepth(int $depth): static;
 
-    /**
-     * Set parent.
-     *
-     * @return CollectionInterface
-     */
-    public function setParent(?self $parent = null);
+    public function getDepth(): int;
 
-    /**
-     * Get parent.
-     *
-     * @return CollectionInterface|null
-     */
-    public function getParent();
+    public function setParent(?self $parent = null): static;
 
-    /**
-     * Set type.
-     *
-     * @return CollectionInterface
-     */
-    public function setType(CollectionType $type);
+    public function getParent(): ?self;
 
-    /**
-     * Get type.
-     *
-     * @return CollectionType
-     */
-    public function getType();
+    public function setType(CollectionType $type): static;
+
+    public function getType(): CollectionType;
 
     /**
      * @param DoctrineCollection<int, CollectionInterface> $children
-     *
-     * @return void
      */
-    public function setChildren(DoctrineCollection $children);
+    public function setChildren(DoctrineCollection $children): static;
+
+    /**
+     * @return DoctrineCollection<int, self>
+     */
+    public function getChildren(): DoctrineCollection;
+
+    public function addMeta(CollectionMeta $meta): static;
+
+    public function removeMeta(CollectionMeta $meta): static;
+
+    /**
+     * @return DoctrineCollection<int, CollectionMeta>
+     */
+    public function getMeta(): DoctrineCollection;
+
+    public function addMedia(MediaInterface $media): static;
+
+    public function removeMedia(MediaInterface $media): static;
+
+    /**
+     * @return DoctrineCollection<int, MediaInterface>
+     */
+    public function getMedia(): DoctrineCollection;
+
+    public function addChildren(self $children): static;
+
+    public function removeChildren(self $children): static;
+
+    public function setDefaultMeta(?CollectionMeta $defaultMeta = null): static;
+
+    public function getDefaultMeta(): ?CollectionMeta;
 }
