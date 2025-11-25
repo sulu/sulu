@@ -18,55 +18,28 @@ class Reference implements ReferenceInterface, TimestampableInterface
 {
     use TimestampableTrait;
 
-    /**
-     * @var int
-     */
-    private $id;
+    private int $id;
 
-    /**
-     * @var string
-     */
-    private $resourceKey;
+    private string $resourceKey = '';
 
-    /**
-     * @var string
-     */
-    private $resourceId;
+    private string $resourceId = '';
 
-    /**
-     * @var string
-     */
-    private $referenceResourceKey;
+    private string $referenceResourceKey = '';
 
-    /**
-     * @var string
-     */
-    private $referenceResourceId;
+    private string $referenceResourceId = '';
 
-    /**
-     * @var string|null
-     */
-    private $referenceLocale;
+    private ?string $referenceLocale = null;
 
     /**
      * @var array<string, string>
      */
-    private $referenceRouterAttributes = [];
+    private array $referenceRouterAttributes = [];
 
-    /**
-     * @var string
-     */
-    private $referenceTitle;
+    private string $referenceTitle = '';
 
-    /**
-     * @var string
-     */
-    private $referenceContext;
+    private string $referenceContext = '';
 
-    /**
-     * @var string
-     */
-    private $referenceProperty;
+    private string $referenceProperty = '';
 
     public function getId(): int
     {
