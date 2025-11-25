@@ -20,6 +20,9 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
 
+/**
+ * @internal this is an internal class which should not be used by a project
+ */
 class LoadDevelopmentOnlyServicesCompilerPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container): void
