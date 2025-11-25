@@ -18,54 +18,34 @@ use JMS\Serializer\Annotation\VirtualProperty;
 
 class Analytics implements AnalyticsInterface
 {
-    /**
-     * @var int
-     */
-    private $id;
+    private int $id;
 
-    /**
-     * @var string
-     */
-    private $title;
+    private string $title;
 
-    /**
-     * @var bool
-     */
-    private $allDomains;
+    private bool $allDomains;
 
-    /**
-     * @var mixed
-     */
     #[Exclude]
-    private $content;
+    private mixed $content;
 
-    /**
-     * @var string
-     */
-    private $type;
+    private string $type;
 
-    /**
-     * @var string
-     */
-    private $webspaceKey;
+    private string $webspaceKey;
 
-    /**
-     * @var Collection<int, Domain>
-     */
+    /** @var Collection<int, Domain> */
     #[Exclude]
-    private $domains;
+    private Collection $domains;
 
     public function __construct()
     {
         $this->domains = new ArrayCollection();
     }
 
-    public function getId(): ?int
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function setTitle(string $title): AnalyticsInterface
+    public function setTitle(string $title): static
     {
         $this->title = $title;
 
@@ -77,7 +57,7 @@ class Analytics implements AnalyticsInterface
         return $this->title;
     }
 
-    public function setAllDomains(bool $allDomains): AnalyticsInterface
+    public function setAllDomains(bool $allDomains): static
     {
         $this->allDomains = $allDomains;
 
@@ -89,19 +69,19 @@ class Analytics implements AnalyticsInterface
         return $this->allDomains;
     }
 
-    public function setContent($content): AnalyticsInterface
+    public function setContent(mixed $content): static
     {
         $this->content = $content;
 
         return $this;
     }
 
-    public function getContent()
+    public function getContent(): mixed
     {
         return $this->content;
     }
 
-    public function setType(string $type): AnalyticsInterface
+    public function setType(string $type): static
     {
         $this->type = $type;
 
@@ -113,7 +93,7 @@ class Analytics implements AnalyticsInterface
         return $this->type;
     }
 
-    public function setWebspaceKey(string $webspaceKey): AnalyticsInterface
+    public function setWebspaceKey(string $webspaceKey): static
     {
         $this->webspaceKey = $webspaceKey;
 
@@ -125,7 +105,7 @@ class Analytics implements AnalyticsInterface
         return $this->webspaceKey;
     }
 
-    public function addDomain(Domain $domain): AnalyticsInterface
+    public function addDomain(Domain $domain): static
     {
         if ($this->domains->contains($domain)) {
             return $this;
@@ -136,14 +116,14 @@ class Analytics implements AnalyticsInterface
         return $this;
     }
 
-    public function removeDomain(Domain $domain): AnalyticsInterface
+    public function removeDomain(Domain $domain): static
     {
         $this->domains->removeElement($domain);
 
         return $this;
     }
 
-    public function clearDomains(): AnalyticsInterface
+    public function clearDomains(): static
     {
         foreach ($this->domains as $domain) {
             $this->domains->removeElement($domain);

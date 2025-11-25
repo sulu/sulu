@@ -19,39 +19,33 @@ interface AnalyticsInterface
 
     public const LIST_KEY = 'analytics';
 
-    public function getId(): ?int;
+    public function getId(): int;
 
-    public function setTitle(string $title): self;
+    public function setTitle(string $title): static;
 
     public function getTitle(): string;
 
-    public function setAllDomains(bool $allDomains): self;
+    public function setAllDomains(bool $allDomains): static;
 
     public function isAllDomains(): bool;
 
-    /**
-     * @param mixed $content
-     */
-    public function setContent($content): self;
+    public function setContent(mixed $content): static;
 
-    /**
-     * @return mixed
-     */
-    public function getContent();
+    public function getContent(): mixed;
 
-    public function setType(string $type): self;
+    public function setType(string $type): static;
 
     public function getType(): string;
 
-    public function setWebspaceKey(string $webspaceKey): self;
+    public function setWebspaceKey(string $webspaceKey): static;
 
     public function getWebspaceKey(): string;
 
-    public function addDomain(Domain $domain): self;
+    public function addDomain(Domain $domain): static;
 
-    public function removeDomain(Domain $domain): self;
+    public function removeDomain(Domain $domain): static;
 
-    public function clearDomains(): self;
+    public function clearDomains(): static;
 
     /**
      * @return Collection<int, string>|null

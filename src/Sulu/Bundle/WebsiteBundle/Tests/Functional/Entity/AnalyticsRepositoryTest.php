@@ -60,7 +60,6 @@ class AnalyticsRepositoryTest extends BaseFunctional
         );
 
         $id = $entity->getId();
-        $this->assertNotNull($id);
         $result = $this->analyticsRepository->findById($id);
         $this->assertEquals('test-1', $result->getTitle());
     }
