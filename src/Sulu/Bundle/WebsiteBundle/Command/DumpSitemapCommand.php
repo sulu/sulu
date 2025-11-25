@@ -19,84 +19,29 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Routing\RequestContext;
 
 #[AsCommand(name: 'sulu:website:dump-sitemap')]
 class DumpSitemapCommand extends Command
 {
-    /**
-     * @var WebspaceManagerInterface
-     */
-    private $webspaceManager;
-
-    /**
-     * @var XmlSitemapDumperInterface
-     */
-    private $sitemapDumper;
-
-    /**
-     * @var Filesystem
-     */
-    private $filesystem;
-
-    /**
-     * @var OutputInterface
-     */
-    private $output;
-
-    /**
-     * @var string
-     */
-    private $environment;
-
-    /**
-     * @var string
-     */
-    private $baseDirectory;
-
-    /**
-     * @var string
-     */
-    private $defaultHost;
-
-    /**
-     * @var string
-     */
-    private $scheme;
-
     public function __construct(
-        WebspaceManagerInterface $webspaceManager,
-        XmlSitemapDumperInterface $sitemapDumper,
-        Filesystem $filesystem,
-        string $baseDirectory,
-        string $environment,
-        string $scheme,
-        string $defaultHost
+        private WebspaceManagerInterface $webspaceManager,
+        private XmlSitemapDumperInterface $sitemapDumper,
+        private Filesystem $filesystem,
+        private string $baseDirectory,
+        private string $environment,
+        private RequestContext $requestContext,
     ) {
         parent::__construct();
-
-        $this->webspaceManager = $webspaceManager;
-        $this->sitemapDumper = $sitemapDumper;
-        $this->filesystem = $filesystem;
-        $this->environment = $environment;
-        $this->baseDirectory = $baseDirectory;
-        $this->scheme = $scheme;
-        $this->defaultHost = $defaultHost;
     }
 
     protected function configure(): void
     {
-        $this->addOption('https', null, InputOption::VALUE_NONE, 'Use https scheme for url generation.')
-            ->addOption('clear', null, InputOption::VALUE_NONE, 'Delete all file before start.');
+        $this->addOption('clear', null, InputOption::VALUE_NONE, 'Delete all file before start.');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $this->output = $output;
-
-        if ($input->getOption('https')) {
-            $this->scheme = 'https';
-        }
-
         if ($input->getOption('clear')) {
             $this->clear();
         }
@@ -108,14 +53,14 @@ class DumpSitemapCommand extends Command
         $hosts = [];
         foreach ($portalInformations as $portalInformation) {
             $portalUrl = $portalInformation->getUrl();
-            $urlParts = \parse_url($this->scheme . '://' . $portalUrl);
+            $urlParts = \parse_url($this->requestContext->getScheme() . '://' . $portalUrl);
             $hosts[] = $urlParts['host'];
         }
 
         $hosts = \array_unique(\array_filter($hosts));
 
         foreach ($hosts as $host) {
-            $this->sitemapDumper->dumpHost($this->scheme, $host);
+            $this->sitemapDumper->dumpHost($this->requestContext->getScheme(), $host);
         }
 
         return 0;
@@ -124,8 +69,8 @@ class DumpSitemapCommand extends Command
     /**
      * Clear the sitemap-cache.
      */
-    private function clear()
+    private function clear(): void
     {
-        $this->filesystem->remove(\rtrim($this->baseDirectory, '/') . '/' . $this->scheme);
+        $this->filesystem->remove(\rtrim($this->baseDirectory, '/') . '/' . $this->requestContext->getScheme());
     }
 }

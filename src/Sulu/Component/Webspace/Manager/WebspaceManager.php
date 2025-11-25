@@ -27,6 +27,7 @@ use Sulu\Page\Domain\Model\PageInterface;
 use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Routing\RequestContext;
 
 /**
  * This class is responsible for loading, reading and caching the portal configuration files.
@@ -54,8 +55,7 @@ class WebspaceManager implements WebspaceManagerInterface
         private RequestStack $requestStack,
         array $options,
         private string $environment,
-        private string $defaultHost,
-        private string $defaultScheme,
+        private RequestContext $requestContext,
         private MetadataProviderRegistry $metadataProviderRegistry,
     ) {
         $this->setOptions($options);
@@ -437,7 +437,7 @@ class WebspaceManager implements WebspaceManagerInterface
 
             $currentRequest = $this->requestStack->getCurrentRequest();
 
-            $host = $currentRequest ? $currentRequest->getHost() : $this->defaultHost;
+            $host = $currentRequest ? $currentRequest->getHost() : $this->requestContext->getHost();
             foreach ($this->getPortalInformations() as $portalInformation) {
                 $portalInformation->setUrl($this->urlReplacer->replaceHost($portalInformation->getUrl(), $host));
                 $portalInformation->setUrlExpression(
@@ -542,7 +542,7 @@ class WebspaceManager implements WebspaceManagerInterface
         $currentRequest = $this->requestStack->getCurrentRequest();
 
         if (!$scheme) {
-            $scheme = $currentRequest ? $currentRequest->getScheme() : $this->defaultScheme;
+            $scheme = $currentRequest ? $currentRequest->getScheme() : $this->requestContext->getScheme();
         }
 
         if (false !== \strpos($portalUrl, '/')) {
