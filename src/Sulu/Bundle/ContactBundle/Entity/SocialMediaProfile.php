@@ -19,36 +19,24 @@ use JMS\Serializer\Annotation\Groups;
 use JMS\Serializer\Annotation\SerializedName;
 use JMS\Serializer\Annotation\VirtualProperty;
 
-/**
- * Social media profile belonging to account or contact.
- */
 #[ExclusionPolicy('All')]
 class SocialMediaProfile
 {
-    /**
-     * @var int
-     */
-    private $id;
+    private int $id;
 
-    /**
-     * @var string
-     */
-    private $username;
+    private string $username;
 
-    /**
-     * @var SocialMediaProfileType
-     */
-    private $socialMediaProfileType;
+    private SocialMediaProfileType $socialMediaProfileType;
 
     /**
      * @var Collection<int, ContactInterface>
      */
-    private $contacts;
+    private Collection $contacts;
 
     /**
      * @var Collection<int, AccountInterface>
      */
-    private $accounts;
+    private Collection $accounts;
 
     /**
      * Constructor.
@@ -59,23 +47,15 @@ class SocialMediaProfile
         $this->accounts = new ArrayCollection();
     }
 
-    /**
-     * @return int
-     */
     #[VirtualProperty]
     #[SerializedName('id')]
     #[Groups(['fullAccount', 'partialAccount', 'fullContact', 'partialContact'])]
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * @param string $username
-     *
-     * @return SocialMediaProfile
-     */
-    public function setUsername($username)
+    public function setUsername(string $username): static
     {
         // Limit to maximal sql column length.
         $this->username = \substr($username, 0, 255);
@@ -83,80 +63,69 @@ class SocialMediaProfile
         return $this;
     }
 
-    /**
-     * @return string
-     */
     #[VirtualProperty]
     #[SerializedName('username')]
     #[Groups(['fullAccount', 'partialAccount', 'fullContact', 'partialContact'])]
-    public function getUsername()
+    public function getUsername(): string
     {
         return $this->username;
     }
 
-    /**
-     * @return SocialMediaProfile
-     */
-    public function setSocialMediaProfileType(SocialMediaProfileType $socialMediaProfileType)
+    public function setSocialMediaProfileType(SocialMediaProfileType $socialMediaProfileType): static
     {
         $this->socialMediaProfileType = $socialMediaProfileType;
 
         return $this;
     }
 
-    /**
-     * @return SocialMediaProfileType
-     */
     #[Serializer\VirtualProperty]
     #[Serializer\SerializedName('socialMediaProfileType')]
     #[Groups(['fullAccount', 'fullContact'])]
-    public function getSocialMediaProfileType()
+    public function getSocialMediaProfileType(): SocialMediaProfileType
     {
         return $this->socialMediaProfileType;
     }
 
-    /**
-     * @return SocialMediaProfile
-     */
-    public function addContact(ContactInterface $contacts)
+    public function addContact(ContactInterface $contacts): static
     {
         $this->contacts[] = $contacts;
 
         return $this;
     }
 
-    public function removeContact(ContactInterface $contacts)
+    public function removeContact(ContactInterface $contacts): static
     {
         $this->contacts->removeElement($contacts);
+
+        return $this;
     }
 
     /**
      * @return Collection<int, ContactInterface>
      */
-    public function getContacts()
+    public function getContacts(): Collection
     {
         return $this->contacts;
     }
 
-    /**
-     * @return SocialMediaProfile
-     */
-    public function addAccount(AccountInterface $account)
+    public function addAccount(AccountInterface $account): static
     {
         $this->accounts[] = $account;
 
         return $this;
     }
 
-    public function removeAccount(AccountInterface $account)
+    public function removeAccount(AccountInterface $account): static
     {
         $this->accounts->removeElement($account);
+
+        return $this;
     }
 
     /**
      * @return Collection<int, AccountInterface>
      */
-    public function getAccounts()
+    public function getAccounts(): Collection
     {
         return $this->accounts;
     }

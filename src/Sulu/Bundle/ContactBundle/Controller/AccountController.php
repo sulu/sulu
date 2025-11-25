@@ -560,10 +560,14 @@ class AccountController extends AbstractRestController implements SecuredControl
         $this->setParent($request->get('parent'), $account);
 
         $mainContact = null;
-        if (null !== ($mainContactRequest = $request->get('mainContact'))) {
-            $mainContact = $entityManager->getRepository(
-                $this->contactClass
-            )->find($mainContactRequest['id']);
+        $mainContactRequest = $request->get('mainContact');
+        if (null !== $mainContactRequest && '' !== $mainContactRequest && 0 !== $mainContactRequest) {
+            $mainContactId = \is_array($mainContactRequest) ? ($mainContactRequest['id'] ?? null) : $mainContactRequest;
+            if (null !== $mainContactId) {
+                $mainContact = $entityManager->getRepository(
+                    $this->contactClass
+                )->find($mainContactId);
+            }
         }
 
         $account->setMainContact($mainContact);
@@ -681,9 +685,13 @@ class AccountController extends AbstractRestController implements SecuredControl
         }
 
         $mainContact = null;
-        if (null !== ($mainContactRequest = $request->get('mainContact'))) {
-            $mainContact = $entityManager->getRepository($this->contactClass)->find($mainContactRequest);
-            $accountModified = true;
+        $mainContactRequest = $request->get('mainContact');
+        if (null !== $mainContactRequest && '' !== $mainContactRequest && 0 !== $mainContactRequest) {
+            $mainContactId = \is_array($mainContactRequest) ? ($mainContactRequest['id'] ?? null) : $mainContactRequest;
+            if (null !== $mainContactId) {
+                $mainContact = $entityManager->getRepository($this->contactClass)->find($mainContactId);
+                $accountModified = true;
+            }
         }
 
         if (null !== $request->get('bankAccounts')) {

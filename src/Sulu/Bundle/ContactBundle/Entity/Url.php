@@ -16,40 +16,28 @@ use Doctrine\Common\Collections\Collection;
 use JMS\Serializer\Annotation\Exclude;
 use JMS\Serializer\Annotation\Groups;
 
-/**
- * Url.
- */
 class Url
 {
-    /**
-     * @var string
-     */
     #[Groups(['fullAccount', 'partialAccount', 'fullContact', 'partialContact'])]
-    private $url;
+    private string $url;
 
-    /**
-     * @var int
-     */
     #[Groups(['fullAccount', 'partialAccount', 'fullContact', 'partialContact'])]
-    private $id;
+    private int $id;
 
-    /**
-     * @var UrlType
-     */
     #[Groups(['fullAccount', 'fullContact'])]
-    private $urlType;
+    private UrlType $urlType;
 
     /**
      * @var Collection<int, AccountInterface>
      */
     #[Exclude]
-    private $accounts;
+    private Collection $accounts;
 
     /**
      * @var Collection<int, ContactInterface>
      */
     #[Exclude]
-    private $contacts;
+    private Collection $contacts;
 
     /**
      * Constructor.
@@ -60,118 +48,75 @@ class Url
         $this->contacts = new ArrayCollection();
     }
 
-    /**
-     * Set url.
-     *
-     * @param string $url
-     *
-     * @return Url
-     */
-    public function setUrl($url)
+    public function setUrl(string $url): static
     {
         $this->url = $url;
 
         return $this;
     }
 
-    /**
-     * Get url.
-     *
-     * @return string
-     */
-    public function getUrl()
+    public function getUrl(): string
     {
         return $this->url;
     }
 
-    /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * Set urlType.
-     *
-     * @return Url
-     */
-    public function setUrlType(UrlType $urlType)
+    public function setUrlType(UrlType $urlType): static
     {
         $this->urlType = $urlType;
 
         return $this;
     }
 
-    /**
-     * Get urlType.
-     *
-     * @return UrlType
-     */
-    public function getUrlType()
+    public function getUrlType(): UrlType
     {
         return $this->urlType;
     }
 
-    /**
-     * Add accounts.
-     *
-     * @return Url
-     */
-    public function addAccount(AccountInterface $account)
+    public function addAccount(AccountInterface $account): static
     {
         $this->accounts[] = $account;
 
         return $this;
     }
 
-    /**
-     * Remove accounts.
-     */
-    public function removeAccount(AccountInterface $account)
+    public function removeAccount(AccountInterface $account): static
     {
         $this->accounts->removeElement($account);
+
+        return $this;
     }
 
     /**
-     * Get accounts.
-     *
      * @return Collection<int, AccountInterface>
      */
-    public function getAccounts()
+    public function getAccounts(): Collection
     {
         return $this->accounts;
     }
 
-    /**
-     * Add contacts.
-     *
-     * @return Url
-     */
-    public function addContact(ContactInterface $contacts)
+    public function addContact(ContactInterface $contacts): static
     {
         $this->contacts[] = $contacts;
 
         return $this;
     }
 
-    /**
-     * Remove contacts.
-     */
-    public function removeContact(ContactInterface $contacts)
+    public function removeContact(ContactInterface $contacts): static
     {
         $this->contacts->removeElement($contacts);
+
+        return $this;
     }
 
     /**
-     * Get contacts.
-     *
      * @return Collection<int, ContactInterface>
      */
-    public function getContacts()
+    public function getContacts(): Collection
     {
         return $this->contacts;
     }

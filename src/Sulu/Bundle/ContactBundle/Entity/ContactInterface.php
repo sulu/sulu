@@ -17,562 +17,204 @@ use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\TagBundle\Tag\TagInterface;
 use Sulu\Component\Persistence\Model\AuditableInterface;
 
-/**
- * Contact interface.
- */
 interface ContactInterface extends AuditableInterface
 {
     public const RESOURCE_KEY = 'contacts';
 
-    /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId();
+    public function getId(): int;
+
+    public function setFirstName(string $firstName): static;
+
+    public function getFirstName(): string;
+
+    public function setMiddleName(?string $middleName): static;
+
+    public function getMiddleName(): ?string;
+
+    public function setLastName(string $lastName): static;
+
+    public function getLastName(): string;
+
+    public function setTitle(?ContactTitle $title): static;
+
+    public function getTitle(): ?ContactTitle;
+
+    public function setPosition(?Position $position): static;
+
+    public function getPosition(): ?Position;
+
+    public function setBirthday(?\DateTime $birthday): static;
+
+    public function getBirthday(): ?\DateTime;
+
+    public function addLocale(ContactLocale $locale): static;
+
+    public function removeLocale(ContactLocale $locale): static;
 
     /**
-     * Set first name.
-     *
-     * @param string $firstName
-     *
-     * @return ContactInterface
-     */
-    public function setFirstName($firstName);
-
-    /**
-     * Get first name.
-     *
-     * @return string
-     */
-    public function getFirstName();
-
-    /**
-     * Set middle name.
-     *
-     * @param string $middleName
-     *
-     * @return ContactInterface
-     */
-    public function setMiddleName($middleName);
-
-    /**
-     * Get middle name.
-     *
-     * @return string
-     */
-    public function getMiddleName();
-
-    /**
-     * Set last name.
-     *
-     * @param string $lastName
-     *
-     * @return ContactInterface
-     */
-    public function setLastName($lastName);
-
-    /**
-     * Get last name.
-     *
-     * @return string
-     */
-    public function getLastName();
-
-    /**
-     * Set title.
-     *
-     * @param ContactTitle|null $title
-     *
-     * @return ContactInterface
-     */
-    public function setTitle($title);
-
-    /**
-     * Get title.
-     *
-     * @return ContactTitle|null
-     */
-    public function getTitle();
-
-    /**
-     * Set position.
-     *
-     * @param Position|null $position
-     *
-     * @return ContactInterface
-     */
-    public function setPosition($position);
-
-    /**
-     * Get position.
-     *
-     * @return string|null
-     */
-    public function getPosition();
-
-    /**
-     * Set birthday.
-     *
-     * @param \DateTime|null $birthday
-     *
-     * @return ContactInterface
-     */
-    public function setBirthday($birthday);
-
-    /**
-     * Get birthday.
-     *
-     * @return \DateTime|null
-     */
-    public function getBirthday();
-
-    /**
-     * Add locale.
-     *
-     * @return ContactInterface
-     */
-    public function addLocale(ContactLocale $locale);
-
-    /**
-     * Remove locale.
-     *
-     * @return void
-     */
-    public function removeLocale(ContactLocale $locale);
-
-    /**
-     * Get locales.
-     *
      * @return Collection<int, ContactLocale>
      */
-    public function getLocales();
+    public function getLocales(): Collection;
+
+    public function addNote(Note $note): static;
+
+    public function removeNote(Note $note): static;
 
     /**
-     * Add note.
-     *
-     * @return ContactInterface
-     */
-    public function addNote(Note $note);
-
-    /**
-     * Remove note.
-     *
-     * @return void
-     */
-    public function removeNote(Note $note);
-
-    /**
-     * Get notes.
-     *
      * @return Collection<int, Note>
      */
-    public function getNotes();
+    public function getNotes(): Collection;
+
+    public function addEmail(Email $email): static;
+
+    public function removeEmail(Email $email): static;
 
     /**
-     * Add email.
-     *
-     * @return ContactInterface
-     */
-    public function addEmail(Email $email);
-
-    /**
-     * Remove email.
-     *
-     * @return void
-     */
-    public function removeEmail(Email $email);
-
-    /**
-     * Get emails.
-     *
      * @return Collection<int, Email>
      */
-    public function getEmails();
+    public function getEmails(): Collection;
+
+    public function addPhone(Phone $phone): static;
+
+    public function removePhone(Phone $phone): static;
 
     /**
-     * Add phone.
-     *
-     * @return ContactInterface
-     */
-    public function addPhone(Phone $phone);
-
-    /**
-     * Remove phone.
-     *
-     * @return void
-     */
-    public function removePhone(Phone $phone);
-
-    /**
-     * Get phones.
-     *
      * @return Collection<int, Phone>
      */
-    public function getPhones();
+    public function getPhones(): Collection;
+
+    public function addFax(Fax $fax): static;
+
+    public function removeFax(Fax $fax): static;
 
     /**
-     * Add fax.
-     *
-     * @return ContactInterface
-     */
-    public function addFax(Fax $fax);
-
-    /**
-     * Remove fax.
-     *
-     * @return void
-     */
-    public function removeFax(Fax $fax);
-
-    /**
-     * Get faxes.
-     *
      * @return Collection<int, Fax>
      */
-    public function getFaxes();
+    public function getFaxes(): Collection;
+
+    public function addSocialMediaProfile(SocialMediaProfile $socialMediaProfile): static;
+
+    public function removeSocialMediaProfile(SocialMediaProfile $socialMediaProfile): static;
 
     /**
-     * Add social media profile.
-     *
-     * @return ContactInterface
-     */
-    public function addSocialMediaProfile(SocialMediaProfile $socialMediaProfile);
-
-    /**
-     * Remove social media profile.
-     *
-     * @return void
-     */
-    public function removeSocialMediaProfile(SocialMediaProfile $socialMediaProfile);
-
-    /**
-     * Get social media profiles.
-     *
      * @return Collection<int, SocialMediaProfile>
      */
-    public function getSocialMediaProfiles();
+    public function getSocialMediaProfiles(): Collection;
+
+    public function addUrl(Url $url): static;
+
+    public function removeUrl(Url $url): static;
 
     /**
-     * Add url.
-     *
-     * @return ContactInterface
-     */
-    public function addUrl(Url $url);
-
-    /**
-     * Remove url.
-     *
-     * @return void
-     */
-    public function removeUrl(Url $url);
-
-    /**
-     * Get urls.
-     *
      * @return Collection<int, Url>
      */
-    public function getUrls();
+    public function getUrls(): Collection;
+
+    public function setFormOfAddress(?int $formOfAddress): static;
+
+    public function getFormOfAddress(): ?int;
+
+    public function addTag(TagInterface $tag): static;
+
+    public function removeTag(TagInterface $tag): static;
 
     /**
-     * Set form of address.
-     *
-     * @param int $formOfAddress
-     *
-     * @return ContactInterface
-     */
-    public function setFormOfAddress($formOfAddress);
-
-    /**
-     * Get form of address.
-     *
-     * @return int
-     */
-    public function getFormOfAddress();
-
-    /**
-     * Add tag.
-     *
-     * @return ContactInterface
-     */
-    public function addTag(TagInterface $tag);
-
-    /**
-     * Remove tag.
-     *
-     * @return void
-     */
-    public function removeTag(TagInterface $tag);
-
-    /**
-     * Get tags.
-     *
      * @return Collection<int, TagInterface>
      */
-    public function getTags();
+    public function getTags(): Collection;
 
     /**
-     * Parse tags to array containing tag names.
-     *
      * @return string[]
      */
-    public function getTagNameArray();
+    public function getTagNameArray(): array;
+
+    public function setSalutation(?string $salutation): static;
+
+    public function getSalutation(): ?string;
+
+    public function addAccountContact(AccountContact $accountContact): static;
+
+    public function removeAccountContact(AccountContact $accountContact): static;
 
     /**
-     * Set salutation.
-     *
-     * @param string $salutation
-     *
-     * @return ContactInterface
-     */
-    public function setSalutation($salutation);
-
-    /**
-     * Get salutation.
-     *
-     * @return string|null
-     */
-    public function getSalutation();
-
-    /**
-     * Add account contact.
-     *
-     * @return ContactInterface
-     */
-    public function addAccountContact(AccountContact $accountContact);
-
-    /**
-     * Remove account contact.
-     *
-     * @return void
-     */
-    public function removeAccountContact(AccountContact $accountContact);
-
-    /**
-     * Get account contacts.
-     *
      * @return Collection<int, AccountContact>
      */
-    public function getAccountContacts();
+    public function getAccountContacts(): Collection;
+
+    public function setNewsletter(?bool $newsletter): static;
+
+    public function getNewsletter(): ?bool;
+
+    public function setGender(?string $gender): static;
+
+    public function getGender(): ?string;
+
+    public function getMainAccount(): ?AccountInterface;
+
+    public function setMainEmail(?string $mainEmail): static;
+
+    public function getMainEmail(): ?string;
+
+    public function setMainPhone(?string $mainPhone): static;
+
+    public function getMainPhone(): ?string;
+
+    public function setMainFax(?string $mainFax): static;
+
+    public function getMainFax(): ?string;
+
+    public function setMainUrl(?string $mainUrl): static;
+
+    public function getMainUrl(): ?string;
+
+    public function addContactAddress(ContactAddress $contactAddress): static;
+
+    public function removeContactAddress(ContactAddress $contactAddress): static;
 
     /**
-     * Set newsletter.
-     *
-     * @param bool $newsletter
-     *
-     * @return ContactInterface
-     */
-    public function setNewsletter($newsletter);
-
-    /**
-     * Get newsletter.
-     *
-     * @return bool
-     */
-    public function getNewsletter();
-
-    /**
-     * Set gender.
-     *
-     * @param string $gender
-     *
-     * @return ContactInterface
-     */
-    public function setGender($gender);
-
-    /**
-     * Get gender.
-     *
-     * @return string|null
-     */
-    public function getGender();
-
-    /**
-     * Returns main account.
-     *
-     * @return AccountInterface|null
-     */
-    public function getMainAccount();
-
-    /**
-     * Set main email.
-     *
-     * @param string|null $mainEmail
-     *
-     * @return ContactInterface
-     */
-    public function setMainEmail($mainEmail);
-
-    /**
-     * Get main email.
-     *
-     * @return string|null
-     */
-    public function getMainEmail();
-
-    /**
-     * Set main phone.
-     *
-     * @param string|null $mainPhone
-     *
-     * @return ContactInterface
-     */
-    public function setMainPhone($mainPhone);
-
-    /**
-     * Get main phone.
-     *
-     * @return string|null
-     */
-    public function getMainPhone();
-
-    /**
-     * Set main fax.
-     *
-     * @param string|null $mainFax
-     *
-     * @return ContactInterface
-     */
-    public function setMainFax($mainFax);
-
-    /**
-     * Get main fax.
-     *
-     * @return string|null
-     */
-    public function getMainFax();
-
-    /**
-     * Set main url.
-     *
-     * @param string|null $mainUrl
-     *
-     * @return ContactInterface
-     */
-    public function setMainUrl($mainUrl);
-
-    /**
-     * Get main url.
-     *
-     * @return string|null
-     */
-    public function getMainUrl();
-
-    /**
-     * Add contact address.
-     *
-     * @return ContactInterface
-     */
-    public function addContactAddress(ContactAddress $contactAddress);
-
-    /**
-     * Remove contact address.
-     *
-     * @return void
-     */
-    public function removeContactAddress(ContactAddress $contactAddress);
-
-    /**
-     * Get contact addresses.
-     *
      * @return Collection<int, ContactAddress>
      */
-    public function getContactAddresses();
+    public function getContactAddresses(): Collection;
 
     /**
-     * Returns addresses.
-     *
      * @return Address[]
      */
-    public function getAddresses();
+    public function getAddresses(): array;
+
+    public function getMainAddress(): ?Address;
+
+    public function addMedia(MediaInterface $media): static;
+
+    public function removeMedia(MediaInterface $media): static;
 
     /**
-     * Returns the main address.
-     *
-     * @return Address|null
-     */
-    public function getMainAddress();
-
-    /**
-     * Add medias.
-     *
-     * @return ContactInterface
-     */
-    public function addMedia(MediaInterface $media);
-
-    /**
-     * Remove media.
-     *
-     * @return void
-     */
-    public function removeMedia(MediaInterface $media);
-
-    /**
-     * Get medias.
-     *
      * @return Collection<int, MediaInterface>
      */
-    public function getMedias();
+    public function getMedias(): Collection;
+
+    public function getAvatar(): ?MediaInterface;
+
+    public function setAvatar(?MediaInterface $avatar): static;
+
+    public function addCategory(CategoryInterface $category): static;
+
+    public function removeCategory(CategoryInterface $category): static;
 
     /**
-     * Get the contacts avatar.
-     *
-     * @return MediaInterface|null
-     */
-    public function getAvatar();
-
-    /**
-     * Sets the avatar for the contact.
-     *
-     * @param MediaInterface|null $avatar
-     *
-     * @return void
-     */
-    public function setAvatar($avatar);
-
-    /**
-     * Add category.
-     *
-     * @return ContactInterface
-     */
-    public function addCategory(CategoryInterface $category);
-
-    /**
-     * Remove category.
-     *
-     * @return void
-     */
-    public function removeCategory(CategoryInterface $category);
-
-    /**
-     * Get categories.
-     *
      * @return Collection<int, CategoryInterface>
      */
-    public function getCategories();
+    public function getCategories(): Collection;
+
+    public function addBankAccount(BankAccount $bankAccount): static;
+
+    public function removeBankAccount(BankAccount $bankAccount): static;
 
     /**
-     * Add bank account.
-     *
-     * @return ContactInterface
-     */
-    public function addBankAccount(BankAccount $bankAccount);
-
-    /**
-     * Remove bank account.
-     *
-     * @return void
-     */
-    public function removeBankAccount(BankAccount $bankAccount);
-
-    /**
-     * Get bankAccounts.
-     *
      * @return Collection<int, BankAccount>
      */
-    public function getBankAccounts();
+    public function getBankAccounts(): Collection;
 
-    public function setNote(?string $note): self;
+    public function setNote(?string $note): static;
 
     public function getNote(): ?string;
 }

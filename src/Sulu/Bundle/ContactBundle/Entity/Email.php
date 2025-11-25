@@ -16,40 +16,28 @@ use Doctrine\Common\Collections\Collection;
 use JMS\Serializer\Annotation\Exclude;
 use JMS\Serializer\Annotation\Groups;
 
-/**
- * Email.
- */
 class Email
 {
-    /**
-     * @var string
-     */
     #[Groups(['fullAccount', 'partialAccount', 'fullContact', 'partialContact'])]
-    private $email;
+    private string $email;
 
-    /**
-     * @var int
-     */
     #[Groups(['fullAccount', 'partialAccount', 'fullContact', 'partialContact'])]
-    private $id;
+    private int $id;
 
-    /**
-     * @var EmailType
-     */
     #[Groups(['fullAccount', 'fullContact'])]
-    private $emailType;
+    private EmailType $emailType;
 
     /**
      * @var Collection<int, ContactInterface>
      */
     #[Exclude]
-    private $contacts;
+    private Collection $contacts;
 
     /**
      * @var Collection<int, AccountInterface>
      */
     #[Exclude]
-    private $accounts;
+    private Collection $accounts;
 
     /**
      * Constructor.
@@ -60,118 +48,75 @@ class Email
         $this->accounts = new ArrayCollection();
     }
 
-    /**
-     * Set email.
-     *
-     * @param string $email
-     *
-     * @return Email
-     */
-    public function setEmail($email)
+    public function setEmail(string $email): static
     {
         $this->email = $email;
 
         return $this;
     }
 
-    /**
-     * Get email.
-     *
-     * @return string
-     */
-    public function getEmail()
+    public function getEmail(): string
     {
         return $this->email;
     }
 
-    /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * Set emailType.
-     *
-     * @return Email
-     */
-    public function setEmailType(EmailType $emailType)
+    public function setEmailType(EmailType $emailType): static
     {
         $this->emailType = $emailType;
 
         return $this;
     }
 
-    /**
-     * Get emailType.
-     *
-     * @return EmailType
-     */
-    public function getEmailType()
+    public function getEmailType(): EmailType
     {
         return $this->emailType;
     }
 
-    /**
-     * Add contacts.
-     *
-     * @return Email
-     */
-    public function addContact(ContactInterface $contacts)
+    public function addContact(ContactInterface $contacts): static
     {
         $this->contacts[] = $contacts;
 
         return $this;
     }
 
-    /**
-     * Remove contacts.
-     */
-    public function removeContact(ContactInterface $contacts)
+    public function removeContact(ContactInterface $contacts): static
     {
         $this->contacts->removeElement($contacts);
+
+        return $this;
     }
 
     /**
-     * Get contacts.
-     *
      * @return Collection<int, ContactInterface>
      */
-    public function getContacts()
+    public function getContacts(): Collection
     {
         return $this->contacts;
     }
 
-    /**
-     * Add accounts.
-     *
-     * @return Email
-     */
-    public function addAccount(AccountInterface $account)
+    public function addAccount(AccountInterface $account): static
     {
         $this->accounts[] = $account;
 
         return $this;
     }
 
-    /**
-     * Remove accounts.
-     */
-    public function removeAccount(AccountInterface $account)
+    public function removeAccount(AccountInterface $account): static
     {
         $this->accounts->removeElement($account);
+
+        return $this;
     }
 
     /**
-     * Get accounts.
-     *
      * @return Collection<int, AccountInterface>
      */
-    public function getAccounts()
+    public function getAccounts(): Collection
     {
         return $this->accounts;
     }

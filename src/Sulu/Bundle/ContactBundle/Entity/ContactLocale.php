@@ -11,78 +11,39 @@
 
 namespace Sulu\Bundle\ContactBundle\Entity;
 
-/**
- * ContactLocale.
- */
 class ContactLocale
 {
-    /**
-     * @var string
-     */
-    private $locale;
+    private string $locale;
 
-    /**
-     * @var int
-     */
-    private $id;
+    private int $id;
 
-    /**
-     * @var ContactInterface
-     */
-    private $contact;
+    private ContactInterface $contact;
 
-    /**
-     * Set locale.
-     *
-     * @param string $locale
-     *
-     * @return ContactLocale
-     */
-    public function setLocale($locale)
+    public function setLocale(string $locale): static
     {
         $this->locale = $locale;
 
         return $this;
     }
 
-    /**
-     * Get locale.
-     *
-     * @return string
-     */
-    public function getLocale()
+    public function getLocale(): string
     {
         return $this->locale;
     }
 
-    /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * Set contact.
-     *
-     * @return ContactLocale
-     */
-    public function setContact(ContactInterface $contact)
+    public function setContact(ContactInterface $contact): static
     {
         $this->contact = $contact;
 
         return $this;
     }
 
-    /**
-     * Get contact.
-     *
-     * @return ContactInterface
-     */
-    public function getContact()
+    public function getContact(): ContactInterface
     {
         return $this->contact;
     }

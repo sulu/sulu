@@ -123,7 +123,7 @@ class ContactManagerTest extends TestCase
         $contact->getContactAddresses()->willReturn(new ArrayCollection());
         $contact->getTags()->willReturn(new ArrayCollection());
         $this->tagManager->findOrCreateByName('testtag')->willReturn($tag->reveal());
-        $contact->addTag($tag->reveal())->shouldBeCalled();
+        $contact->addTag($tag->reveal())->willReturn($contact->reveal())->shouldBeCalled();
 
         $this->contactManager->addNewContactRelations($contact->reveal(), ['tags' => ['testtag']]);
     }

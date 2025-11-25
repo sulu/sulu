@@ -241,14 +241,19 @@ final class ContactTrashItemHandler implements
 
         /** @var ContactInterface $contact */
         $contact = $this->contactRepository->createNew();
-        $contact->setFirstName($data['firstName'] ?? null);
-        $contact->setMiddleName($data['middleName'] ?? null);
-        $contact->setLastName($data['lastName'] ?? null);
+        $contact->setFirstName($data['firstName'] ?? '');
+        $middleName = $data['middleName'] ?? null;
+        $contact->setMiddleName(\is_string($middleName) ? $middleName : null);
+        $contact->setLastName($data['lastName'] ?? '');
         $contact->setBirthday(isset($data['birthday']) ? new \DateTime($data['birthday']) : null);
-        $contact->setSalutation($data['salutation'] ?? null);
-        $contact->setFormOfAddress($data['formOfAddress'] ?? null);
-        $contact->setNewsletter($data['newsletter'] ?? null);
-        $contact->setGender($data['gender'] ?? null);
+        $salutation = $data['salutation'] ?? null;
+        $contact->setSalutation(\is_string($salutation) ? $salutation : null);
+        $formOfAddress = $data['formOfAddress'] ?? null;
+        $contact->setFormOfAddress(\is_int($formOfAddress) ? $formOfAddress : null);
+        $newsletter = $data['newsletter'] ?? null;
+        $contact->setNewsletter(\is_bool($newsletter) ? $newsletter : null);
+        $gender = $data['gender'] ?? null;
+        $contact->setGender(\is_string($gender) ? $gender : null);
         $contact->setNote($data['note'] ?? null);
         $contact->setMainEmail($data['mainEmail'] ?? null);
         $contact->setMainFax($data['mainFax'] ?? null);
@@ -277,9 +282,9 @@ final class ContactTrashItemHandler implements
         foreach (($data['addresses'] ?? []) as $addressData) {
             $address = new Address();
             $address->setAddressType($this->getReference(AddressType::class, $addressData['typeId']));
-            $address->setBillingAddress($addressData['billingAddress'] ?? false);
-            $address->setDeliveryAddress($addressData['deliveryAddress'] ?? false);
-            $address->setPrimaryAddress($addressData['primaryAddress'] ?? false);
+            $address->setBillingAddress((bool) ($addressData['billingAddress'] ?? false));
+            $address->setDeliveryAddress((bool) ($addressData['deliveryAddress'] ?? false));
+            $address->setPrimaryAddress((bool) ($addressData['primaryAddress'] ?? false));
             $address->setTitle($addressData['title'] ?? null);
             $address->setStreet($addressData['street'] ?? null);
             $address->setNumber($addressData['number'] ?? null);

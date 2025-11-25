@@ -16,28 +16,19 @@ use Doctrine\Common\Collections\Collection;
 use JMS\Serializer\Annotation\Exclude;
 use JMS\Serializer\Annotation\Groups;
 
-/**
- * FaxType.
- */
 class FaxType implements \JsonSerializable
 {
-    /**
-     * @var string
-     */
     #[Groups(['fullAccount', 'fullContact', 'frontend'])]
-    private $name;
+    private string $name;
+
+    #[Groups(['fullAccount', 'fullContact', 'frontend'])]
+    private int $id;
 
     /**
-     * @var int
-     */
-    #[Groups(['fullAccount', 'fullContact', 'frontend'])]
-    private $id;
-
-    /**
-     * @var Collection
+     * @var Collection<int, Fax>
      */
     #[Exclude]
-    private $faxes;
+    private Collection $faxes;
 
     /**
      * Constructor.
@@ -47,86 +38,53 @@ class FaxType implements \JsonSerializable
         $this->faxes = new ArrayCollection();
     }
 
-    /**
-     * To force id = 1 in load fixtures.
-     *
-     * @param int $id
-     */
-    public function setId($id)
+    public function setId(int $id): static
     {
         $this->id = $id;
+
+        return $this;
     }
 
-    /**
-     * Set name.
-     *
-     * @param string $name
-     *
-     * @return FaxType
-     */
-    public function setName($name)
+    public function setName(string $name): static
     {
         $this->name = $name;
 
         return $this;
     }
 
-    /**
-     * Get name.
-     *
-     * @return string
-     */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * Add faxes.
-     *
-     * @return FaxType
-     */
-    public function addFaxe(Fax $faxes)
+    public function addFaxe(Fax $faxes): static
     {
         $this->faxes[] = $faxes;
 
         return $this;
     }
 
-    /**
-     * Remove faxes.
-     */
-    public function removeFaxe(Fax $faxes)
+    public function removeFaxe(Fax $faxes): static
     {
         $this->faxes->removeElement($faxes);
+
+        return $this;
     }
 
     /**
-     * Get faxes.
-     *
-     * @return Collection
+     * @return Collection<int, Fax>
      */
-    public function getFaxes()
+    public function getFaxes(): Collection
     {
         return $this->faxes;
     }
 
     /**
-     * (PHP 5 &gt;= 5.4.0)<br/>
-     * Specify data which should be serialized to JSON.
-     *
-     * @see http://php.net/manual/en/jsonserializable.jsonserialize.php
-     *
      * @return array{id: int, name: string}
      */
     public function jsonSerialize(): array
@@ -137,23 +95,17 @@ class FaxType implements \JsonSerializable
         ];
     }
 
-    /**
-     * Add faxes.
-     *
-     * @return FaxType
-     */
-    public function addFax(Fax $faxes)
+    public function addFax(Fax $faxes): static
     {
         $this->faxes[] = $faxes;
 
         return $this;
     }
 
-    /**
-     * Remove faxes.
-     */
-    public function removeFax(Fax $faxes)
+    public function removeFax(Fax $faxes): static
     {
         $this->faxes->removeElement($faxes);
+
+        return $this;
     }
 }

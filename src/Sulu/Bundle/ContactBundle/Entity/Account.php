@@ -26,102 +26,45 @@ class Account implements AccountInterface
 {
     use TimestampableTrait;
 
-    /**
-     * @var int
-     */
-    private $id;
+    private int $id;
 
-    /**
-     * @var string
-     */
-    private $name;
+    private string $name = '';
 
-    /**
-     * @var int
-     */
-    protected $lft;
+    protected int $lft = 0;
 
-    /**
-     * @var int
-     */
-    protected $rgt;
+    protected int $rgt = 0;
 
-    /**
-     * @var int
-     */
-    protected $depth;
+    protected int $depth = 0;
 
-    /**
-     * @var UserInterface|null
-     */
     #[Exclude]
-    private $changer;
+    private ?UserInterface $changer = null;
 
-    /**
-     * @var UserInterface|null
-     */
     #[Exclude]
-    private $creator;
+    private ?UserInterface $creator = null;
 
-    /**
-     * @var string|null
-     */
-    private $externalId;
+    private ?string $externalId = null;
 
-    /**
-     * @var string|null
-     */
-    private $number;
+    private ?string $number = null;
 
-    /**
-     * @var string|null
-     */
-    private $corporation;
+    private ?string $corporation = null;
 
-    /**
-     * @var string|null
-     */
-    private $uid;
+    private ?string $uid = null;
 
-    /**
-     * @var string|null
-     */
-    private $registerNumber;
+    private ?string $registerNumber = null;
 
-    /**
-     * @var string|null
-     */
-    private $placeOfJurisdiction;
+    private ?string $placeOfJurisdiction = null;
 
-    /**
-     * @var string|null
-     */
-    private $mainEmail;
+    private ?string $mainEmail = null;
 
-    /**
-     * @var string|null
-     */
-    private $mainPhone;
+    private ?string $mainPhone = null;
 
-    /**
-     * @var string|null
-     */
-    private $mainFax;
+    private ?string $mainFax = null;
 
-    /**
-     * @var string|null
-     */
-    private $mainUrl;
+    private ?string $mainUrl = null;
 
-    /**
-     * @var ContactInterface|null
-     */
-    private $mainContact;
+    private ?ContactInterface $mainContact = null;
 
-    /**
-     * @var MediaInterface|null
-     */
-    protected $logo;
+    protected ?MediaInterface $logo = null;
 
     /**
      * @var Collection<int, AccountInterface>
@@ -129,10 +72,7 @@ class Account implements AccountInterface
     #[Exclude]
     protected $children;
 
-    /**
-     * @var AccountInterface|null
-     */
-    protected $parent;
+    protected ?AccountInterface $parent = null;
 
     /**
      * @var Collection<int, Address>
@@ -167,10 +107,7 @@ class Account implements AccountInterface
      */
     protected $notes;
 
-    /**
-     * @var string|null
-     */
-    protected $note;
+    protected ?string $note = null;
 
     /**
      * @var Collection<int, Fax>
@@ -229,10 +166,9 @@ class Account implements AccountInterface
         $this->accountAddresses = new ArrayCollection();
         $this->bankAccounts = new ArrayCollection();
         $this->medias = new ArrayCollection();
-        $this->tags = new ArrayCollection();
     }
 
-    public function setLft(int $lft): AccountInterface
+    public function setLft(int $lft): static
     {
         $this->lft = $lft;
 
@@ -244,7 +180,7 @@ class Account implements AccountInterface
         return $this->lft;
     }
 
-    public function setRgt(int $rgt): AccountInterface
+    public function setRgt(int $rgt): static
     {
         $this->rgt = $rgt;
 
@@ -256,7 +192,7 @@ class Account implements AccountInterface
         return $this->rgt;
     }
 
-    public function setDepth(int $depth): AccountInterface
+    public function setDepth(int $depth): static
     {
         $this->depth = $depth;
 
@@ -268,7 +204,7 @@ class Account implements AccountInterface
         return $this->depth;
     }
 
-    public function setParent(?AccountInterface $parent = null): AccountInterface
+    public function setParent(?AccountInterface $parent = null): static
     {
         $this->parent = $parent;
 
@@ -280,64 +216,73 @@ class Account implements AccountInterface
         return $this->parent;
     }
 
-    public function addUrl(Url $url): AccountInterface
+    public function addUrl(Url $url): static
     {
         $this->urls[] = $url;
 
         return $this;
     }
 
-    public function removeUrl(Url $url): AccountInterface
+    public function removeUrl(Url $url): static
     {
         $this->urls->removeElement($url);
 
         return $this;
     }
 
+    /**
+     * @return Collection<int, Url>
+     */
     public function getUrls(): Collection
     {
         return $this->urls;
     }
 
-    public function addPhone(Phone $phone): AccountInterface
+    public function addPhone(Phone $phone): static
     {
         $this->phones[] = $phone;
 
         return $this;
     }
 
-    public function removePhone(Phone $phone): AccountInterface
+    public function removePhone(Phone $phone): static
     {
         $this->phones->removeElement($phone);
 
         return $this;
     }
 
+    /**
+     * @return Collection<int, Phone>
+     */
     public function getPhones(): Collection
     {
         return $this->phones;
     }
 
-    public function addEmail(Email $email): AccountInterface
+    public function addEmail(Email $email): static
     {
         $this->emails[] = $email;
 
         return $this;
     }
 
-    public function removeEmail(Email $email): AccountInterface
+    public function removeEmail(Email $email): static
     {
         $this->emails->removeElement($email);
 
         return $this;
     }
 
+    /**
+     * @return Collection<int, Email>
+     */
     public function getEmails(): Collection
     {
         return $this->emails;
     }
 
-    public function setNote(?string $note): AccountInterface
+    public function setNote(?string $note): static
     {
         $this->note = $note;
 
@@ -349,14 +294,14 @@ class Account implements AccountInterface
         return $this->note;
     }
 
-    public function addNote(Note $note): AccountInterface
+    public function addNote(Note $note): static
     {
         $this->notes[] = $note;
 
         return $this;
     }
 
-    public function removeNote(Note $note): AccountInterface
+    public function removeNote(Note $note): static
     {
         $this->notes->removeElement($note);
 
@@ -371,96 +316,111 @@ class Account implements AccountInterface
         return $this->notes;
     }
 
-    public function addChildren(AccountInterface $children): AccountInterface
+    public function addChildren(AccountInterface $children): static
     {
         $this->children[] = $children;
 
         return $this;
     }
 
-    public function removeChildren(AccountInterface $children): AccountInterface
+    public function removeChildren(AccountInterface $children): static
     {
         $this->children->removeElement($children);
 
         return $this;
     }
 
+    /**
+     * @return Collection<int, AccountInterface>
+     */
     public function getChildren(): Collection
     {
         return $this->children;
     }
 
-    public function addFax(Fax $fax): AccountInterface
+    public function addFax(Fax $fax): static
     {
         $this->faxes[] = $fax;
 
         return $this;
     }
 
-    public function removeFax(Fax $fax): AccountInterface
+    public function removeFax(Fax $fax): static
     {
         $this->faxes->removeElement($fax);
 
         return $this;
     }
 
+    /**
+     * @return Collection<int, Fax>
+     */
     public function getFaxes(): Collection
     {
         return $this->faxes;
     }
 
-    public function addSocialMediaProfile(SocialMediaProfile $socialMediaProfile): AccountInterface
+    public function addSocialMediaProfile(SocialMediaProfile $socialMediaProfile): static
     {
         $this->socialMediaProfiles[] = $socialMediaProfile;
 
         return $this;
     }
 
-    public function removeSocialMediaProfile(SocialMediaProfile $socialMediaProfile): AccountInterface
+    public function removeSocialMediaProfile(SocialMediaProfile $socialMediaProfile): static
     {
         $this->socialMediaProfiles->removeElement($socialMediaProfile);
 
         return $this;
     }
 
+    /**
+     * @return Collection<int, SocialMediaProfile>
+     */
     public function getSocialMediaProfiles(): Collection
     {
         return $this->socialMediaProfiles;
     }
 
-    public function addBankAccount(BankAccount $bankAccount): AccountInterface
+    public function addBankAccount(BankAccount $bankAccount): static
     {
         $this->bankAccounts[] = $bankAccount;
 
         return $this;
     }
 
-    public function removeBankAccount(BankAccount $bankAccount): AccountInterface
+    public function removeBankAccount(BankAccount $bankAccount): static
     {
         $this->bankAccounts->removeElement($bankAccount);
 
         return $this;
     }
 
+    /**
+     * @return Collection<int, BankAccount>
+     */
     public function getBankAccounts(): Collection
     {
         return $this->bankAccounts;
     }
 
-    public function addTag(TagInterface $tag): AccountInterface
+    public function addTag(TagInterface $tag): static
     {
         $this->tags[] = $tag;
 
         return $this;
     }
 
-    public function removeTag(TagInterface $tag): AccountInterface
+    public function removeTag(TagInterface $tag): static
     {
         $this->tags->removeElement($tag);
 
         return $this;
     }
 
+    /**
+     * @return Collection<int, TagInterface>
+     */
     public function getTags(): Collection
     {
         return $this->tags;
@@ -479,39 +439,45 @@ class Account implements AccountInterface
         return $tags;
     }
 
-    public function addAccountContact(AccountContact $accountContact): AccountInterface
+    public function addAccountContact(AccountContact $accountContact): static
     {
         $this->accountContacts[] = $accountContact;
 
         return $this;
     }
 
-    public function removeAccountContact(AccountContact $accountContact): AccountInterface
+    public function removeAccountContact(AccountContact $accountContact): static
     {
         $this->accountContacts->removeElement($accountContact);
 
         return $this;
     }
 
+    /**
+     * @return Collection<int, AccountContact>
+     */
     public function getAccountContacts(): Collection
     {
         return $this->accountContacts;
     }
 
-    public function addAccountAddress(AccountAddress $accountAddress): AccountInterface
+    public function addAccountAddress(AccountAddress $accountAddress): static
     {
         $this->accountAddresses[] = $accountAddress;
 
         return $this;
     }
 
-    public function removeAccountAddress(AccountAddress $accountAddress): AccountInterface
+    public function removeAccountAddress(AccountAddress $accountAddress): static
     {
         $this->accountAddresses->removeElement($accountAddress);
 
         return $this;
     }
 
+    /**
+     * @return Collection<int, AccountAddress>
+     */
     public function getAccountAddresses(): Collection
     {
         return $this->accountAddresses;
@@ -565,62 +531,65 @@ class Account implements AccountInterface
         return $contacts;
     }
 
-    public function addMedia(MediaInterface $media): AccountInterface
+    public function addMedia(MediaInterface $media): static
     {
         $this->medias[] = $media;
 
         return $this;
     }
 
-    public function removeMedia(MediaInterface $media): AccountInterface
+    public function removeMedia(MediaInterface $media): static
     {
         $this->medias->removeElement($media);
 
         return $this;
     }
 
+    /**
+     * @return Collection<int, MediaInterface>
+     */
     public function getMedias(): Collection
     {
         return $this->medias;
     }
 
-    public function addChild(AccountInterface $children): AccountInterface
+    public function addChild(AccountInterface $children): static
     {
         $this->children[] = $children;
 
         return $this;
     }
 
-    public function removeChild(AccountInterface $children): AccountInterface
+    public function removeChild(AccountInterface $children): static
     {
         $this->children->removeElement($children);
 
         return $this;
     }
 
-    public function addCategory(CategoryInterface $category): AccountInterface
+    public function addCategory(CategoryInterface $category): static
     {
         $this->categories[] = $category;
 
         return $this;
     }
 
-    public function removeCategory(CategoryInterface $category): AccountInterface
+    public function removeCategory(CategoryInterface $category): static
     {
         $this->categories->removeElement($category);
 
         return $this;
     }
 
+    /**
+     * @return Collection<int, CategoryInterface>
+     */
     public function getCategories(): Collection
     {
         return $this->categories;
     }
 
-    /**
-     * @param int $id
-     */
-    public function setId($id): AccountInterface
+    public function setId(int $id): static
     {
         $this->id = $id;
 
@@ -632,7 +601,7 @@ class Account implements AccountInterface
         return $this->id;
     }
 
-    public function setName(string $name): AccountInterface
+    public function setName(string $name): static
     {
         $this->name = $name;
 
@@ -644,7 +613,7 @@ class Account implements AccountInterface
         return $this->name;
     }
 
-    public function setExternalId(?string $externalId): AccountInterface
+    public function setExternalId(?string $externalId): static
     {
         $this->externalId = $externalId;
 
@@ -656,7 +625,7 @@ class Account implements AccountInterface
         return $this->externalId;
     }
 
-    public function setNumber(?string $number): AccountInterface
+    public function setNumber(?string $number): static
     {
         $this->number = $number;
 
@@ -668,7 +637,7 @@ class Account implements AccountInterface
         return $this->number;
     }
 
-    public function setCorporation(?string $corporation): AccountInterface
+    public function setCorporation(?string $corporation): static
     {
         $this->corporation = $corporation;
 
@@ -680,7 +649,7 @@ class Account implements AccountInterface
         return $this->corporation;
     }
 
-    public function setUid(?string $uid): AccountInterface
+    public function setUid(?string $uid): static
     {
         $this->uid = $uid;
 
@@ -692,7 +661,7 @@ class Account implements AccountInterface
         return $this->uid;
     }
 
-    public function setRegisterNumber(?string $registerNumber): AccountInterface
+    public function setRegisterNumber(?string $registerNumber): static
     {
         $this->registerNumber = $registerNumber;
 
@@ -704,7 +673,7 @@ class Account implements AccountInterface
         return $this->registerNumber;
     }
 
-    public function setPlaceOfJurisdiction(?string $placeOfJurisdiction): AccountInterface
+    public function setPlaceOfJurisdiction(?string $placeOfJurisdiction): static
     {
         $this->placeOfJurisdiction = $placeOfJurisdiction;
 
@@ -716,7 +685,7 @@ class Account implements AccountInterface
         return $this->placeOfJurisdiction;
     }
 
-    public function setMainEmail(?string $mainEmail = null): AccountInterface
+    public function setMainEmail(?string $mainEmail = null): static
     {
         $this->mainEmail = $mainEmail;
 
@@ -728,7 +697,7 @@ class Account implements AccountInterface
         return $this->mainEmail;
     }
 
-    public function setMainPhone(?string $mainPhone = null): AccountInterface
+    public function setMainPhone(?string $mainPhone = null): static
     {
         $this->mainPhone = $mainPhone;
 
@@ -740,14 +709,14 @@ class Account implements AccountInterface
         return $this->mainPhone;
     }
 
-    public function setMainFax(?string $mainFax = null): AccountInterface
+    public function setMainFax(?string $mainFax = null): static
     {
         $this->mainFax = $mainFax;
 
         return $this;
     }
 
-    public function setLogo(MediaInterface $logo): AccountInterface
+    public function setLogo(MediaInterface $logo): static
     {
         $this->logo = $logo;
 
@@ -764,7 +733,7 @@ class Account implements AccountInterface
         return $this->mainFax;
     }
 
-    public function setMainUrl(?string $mainUrl = null): AccountInterface
+    public function setMainUrl(?string $mainUrl = null): static
     {
         $this->mainUrl = $mainUrl;
 
@@ -781,7 +750,7 @@ class Account implements AccountInterface
         return $this->changer;
     }
 
-    public function setChanger(?UserInterface $changer): AccountInterface
+    public function setChanger(?UserInterface $changer): static
     {
         $this->changer = $changer;
 
@@ -793,10 +762,7 @@ class Account implements AccountInterface
         return $this->creator;
     }
 
-    /**
-     * @param UserInterface|null $creator
-     */
-    public function setCreator($creator): AccountInterface
+    public function setCreator(?UserInterface $creator): static
     {
         $this->creator = $creator;
 
@@ -808,7 +774,7 @@ class Account implements AccountInterface
         return $this->mainContact;
     }
 
-    public function setMainContact(?ContactInterface $mainContact = null): AccountInterface
+    public function setMainContact(?ContactInterface $mainContact = null): static
     {
         $this->mainContact = $mainContact;
 

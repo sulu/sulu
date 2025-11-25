@@ -11,105 +11,53 @@
 
 namespace Sulu\Bundle\ContactBundle\Entity;
 
-/**
- * AccountAddress.
- */
 class AccountAddress
 {
-    /**
-     * @var bool
-     */
-    private $main;
+    private bool $main = false;
 
-    /**
-     * @var int
-     */
-    private $id;
+    private ?int $id = null;
 
-    /**
-     * @var Address
-     */
-    private $address;
+    private Address $address;
 
-    /**
-     * @var AccountInterface
-     */
-    private $account;
+    private AccountInterface $account;
 
-    /**
-     * Set main.
-     *
-     * @param bool $main
-     *
-     * @return AccountAddress
-     */
-    public function setMain($main)
+    public function setMain(bool $main): static
     {
         $this->main = $main;
 
         return $this;
     }
 
-    /**
-     * Get main.
-     *
-     * @return bool
-     */
-    public function getMain()
+    public function getMain(): bool
     {
         return $this->main;
     }
 
-    /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    /**
-     * Set address.
-     *
-     * @return AccountAddress
-     */
-    public function setAddress(Address $address)
+    public function setAddress(Address $address): static
     {
         $this->address = $address;
 
         return $this;
     }
 
-    /**
-     * Get address.
-     *
-     * @return Address
-     */
-    public function getAddress()
+    public function getAddress(): Address
     {
         return $this->address;
     }
 
-    /**
-     * Set account.
-     *
-     * @return AccountAddress
-     */
-    public function setAccount(AccountInterface $account)
+    public function setAccount(AccountInterface $account): static
     {
         $this->account = $account;
 
         return $this;
     }
 
-    /**
-     * Get account.
-     *
-     * @return AccountInterface
-     */
-    public function getAccount()
+    public function getAccount(): AccountInterface
     {
         return $this->account;
     }

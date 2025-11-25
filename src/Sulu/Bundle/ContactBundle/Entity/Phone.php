@@ -16,40 +16,28 @@ use Doctrine\Common\Collections\Collection;
 use JMS\Serializer\Annotation\Exclude;
 use JMS\Serializer\Annotation\Groups;
 
-/**
- * Phone.
- */
 class Phone
 {
-    /**
-     * @var string
-     */
     #[Groups(['fullAccount', 'partialAccount', 'fullContact', 'partialContact'])]
-    private $phone;
+    private string $phone;
 
-    /**
-     * @var int
-     */
     #[Groups(['fullAccount', 'partialAccount', 'fullContact', 'partialContact'])]
-    private $id;
+    private int $id;
 
-    /**
-     * @var PhoneType
-     */
     #[Groups(['fullAccount', 'fullContact'])]
-    private $phoneType;
+    private PhoneType $phoneType;
 
     /**
      * @var Collection<int, ContactInterface>
      */
     #[Exclude]
-    private $contacts;
+    private Collection $contacts;
 
     /**
      * @var Collection<int, AccountInterface>
      */
     #[Exclude]
-    private $accounts;
+    private Collection $accounts;
 
     /**
      * Constructor.
@@ -60,118 +48,75 @@ class Phone
         $this->accounts = new ArrayCollection();
     }
 
-    /**
-     * Set phone.
-     *
-     * @param string $phone
-     *
-     * @return Phone
-     */
-    public function setPhone($phone)
+    public function setPhone(string $phone): static
     {
         $this->phone = $phone;
 
         return $this;
     }
 
-    /**
-     * Get phone.
-     *
-     * @return string
-     */
-    public function getPhone()
+    public function getPhone(): string
     {
         return $this->phone;
     }
 
-    /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * Set phoneType.
-     *
-     * @return Phone
-     */
-    public function setPhoneType(PhoneType $phoneType)
+    public function setPhoneType(PhoneType $phoneType): static
     {
         $this->phoneType = $phoneType;
 
         return $this;
     }
 
-    /**
-     * Get phoneType.
-     *
-     * @return PhoneType
-     */
-    public function getPhoneType()
+    public function getPhoneType(): PhoneType
     {
         return $this->phoneType;
     }
 
-    /**
-     * Add contacts.
-     *
-     * @return Phone
-     */
-    public function addContact(ContactInterface $contacts)
+    public function addContact(ContactInterface $contacts): static
     {
         $this->contacts[] = $contacts;
 
         return $this;
     }
 
-    /**
-     * Remove contacts.
-     */
-    public function removeContact(ContactInterface $contacts)
+    public function removeContact(ContactInterface $contacts): static
     {
         $this->contacts->removeElement($contacts);
+
+        return $this;
     }
 
     /**
-     * Get contacts.
-     *
      * @return Collection<int, ContactInterface>
      */
-    public function getContacts()
+    public function getContacts(): Collection
     {
         return $this->contacts;
     }
 
-    /**
-     * Add accounts.
-     *
-     * @return Phone
-     */
-    public function addAccount(AccountInterface $account)
+    public function addAccount(AccountInterface $account): static
     {
         $this->accounts[] = $account;
 
         return $this;
     }
 
-    /**
-     * Remove accounts.
-     */
-    public function removeAccount(AccountInterface $account)
+    public function removeAccount(AccountInterface $account): static
     {
         $this->accounts->removeElement($account);
+
+        return $this;
     }
 
     /**
-     * Get accounts.
-     *
      * @return Collection<int, AccountInterface>
      */
-    public function getAccounts()
+    public function getAccounts(): Collection
     {
         return $this->accounts;
     }

@@ -16,28 +16,19 @@ use Doctrine\Common\Collections\Collection;
 use JMS\Serializer\Annotation\Exclude;
 use JMS\Serializer\Annotation\Groups;
 
-/**
- * EmailType.
- */
 class EmailType implements \JsonSerializable
 {
-    /**
-     * @var string
-     */
     #[Groups(['fullAccount', 'fullContact', 'frontend'])]
-    private $name;
+    private string $name;
+
+    #[Groups(['fullAccount', 'fullContact', 'frontend'])]
+    private int $id;
 
     /**
-     * @var int
-     */
-    #[Groups(['fullAccount', 'fullContact', 'frontend'])]
-    private $id;
-
-    /**
-     * @var Collection
+     * @var Collection<int, Email>
      */
     #[Exclude]
-    private $emails;
+    private Collection $emails;
 
     /**
      * Constructor.
@@ -47,89 +38,56 @@ class EmailType implements \JsonSerializable
         $this->emails = new ArrayCollection();
     }
 
-    /**
-     * To force id = 1 in load fixtures.
-     *
-     * @param int $id
-     */
-    public function setId($id)
+    public function setId(int $id): static
     {
         $this->id = $id;
+
+        return $this;
     }
 
-    /**
-     * Set name.
-     *
-     * @param string $name
-     *
-     * @return EmailType
-     */
-    public function setName($name)
+    public function setName(string $name): static
     {
         $this->name = $name;
 
         return $this;
     }
 
-    /**
-     * Get name.
-     *
-     * @return string
-     */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * Add emails.
-     *
-     * @return EmailType
-     */
-    public function addEmail(Email $emails)
+    public function addEmail(Email $emails): static
     {
         $this->emails[] = $emails;
 
         return $this;
     }
 
-    /**
-     * Remove emails.
-     */
-    public function removeEmail(Email $emails)
+    public function removeEmail(Email $emails): static
     {
         $this->emails->removeElement($emails);
+
+        return $this;
     }
 
     /**
-     * Get emails.
-     *
-     * @return Collection
+     * @return Collection<int, Email>
      */
-    public function getEmails()
+    public function getEmails(): Collection
     {
         return $this->emails;
     }
 
     /**
-     * (PHP 5 &gt;= 5.4.0)<br/>
-     * Specify data which should be serialized to JSON.
-     *
-     * @see http://php.net/manual/en/jsonserializable.jsonserialize.php
-     *
      * @return array{id: int, name: string}
      */
-    public function jsonSerialize(): mixed
+    public function jsonSerialize(): array
     {
         return [
             'id' => $this->getId(),

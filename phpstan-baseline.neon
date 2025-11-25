@@ -9447,7 +9447,7 @@ parameters:
 		-
 			message: '#^Cannot call method getId\(\) on mixed\.$#'
 			identifier: method.nonObject
-			count: 2
+			count: 3
 			path: src/Sulu/Bundle/ContactBundle/Api/Account.php
 
 		-

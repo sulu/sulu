@@ -11,134 +11,69 @@
 
 namespace Sulu\Bundle\ContactBundle\Entity;
 
-/**
- * AccountContact.
- */
 class AccountContact
 {
     public const RESOURCE_KEY = 'account_contacts';
 
-    /**
-     * @var bool
-     */
-    private $main;
+    private bool $main = false;
 
-    /**
-     * @var int
-     */
-    private $id;
+    private int $id;
 
-    /**
-     * @var ContactInterface
-     */
-    private $contact;
+    private ContactInterface $contact;
 
-    /**
-     * @var AccountInterface
-     */
-    private $account;
+    private AccountInterface $account;
 
-    /**
-     * @var Position|null
-     */
-    private $position;
+    private ?Position $position = null;
 
-    /**
-     * Set main.
-     *
-     * @param bool $main
-     *
-     * @return AccountContact
-     */
-    public function setMain($main)
+    public function setMain(bool $main): static
     {
         $this->main = $main;
 
         return $this;
     }
 
-    /**
-     * Get main.
-     *
-     * @return bool
-     */
-    public function getMain()
+    public function getMain(): bool
     {
         return $this->main;
     }
 
-    /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * Set contact.
-     *
-     * @return AccountContact
-     */
-    public function setContact(ContactInterface $contact)
+    public function setContact(ContactInterface $contact): static
     {
         $this->contact = $contact;
 
         return $this;
     }
 
-    /**
-     * Get contact.
-     *
-     * @return ContactInterface
-     */
-    public function getContact()
+    public function getContact(): ContactInterface
     {
         return $this->contact;
     }
 
-    /**
-     * Set account.
-     *
-     * @return AccountContact
-     */
-    public function setAccount(AccountInterface $account)
+    public function setAccount(AccountInterface $account): static
     {
         $this->account = $account;
 
         return $this;
     }
 
-    /**
-     * Get account.
-     *
-     * @return AccountInterface
-     */
-    public function getAccount()
+    public function getAccount(): AccountInterface
     {
         return $this->account;
     }
 
-    /**
-     * Set position.
-     *
-     * @return AccountContact
-     */
-    public function setPosition(?Position $position = null)
+    public function setPosition(?Position $position = null): static
     {
         $this->position = $position;
 
         return $this;
     }
 
-    /**
-     * Get position.
-     *
-     * @return Position|null
-     */
-    public function getPosition()
+    public function getPosition(): ?Position
     {
         return $this->position;
     }

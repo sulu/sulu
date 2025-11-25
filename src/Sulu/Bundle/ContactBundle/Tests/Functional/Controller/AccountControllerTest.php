@@ -1014,7 +1014,7 @@ class AccountControllerTest extends SuluTestCase
 
         $this->assertEquals('ExampleCompany', $response->name);
         $this->assertEquals('A small notice', $response->note);
-        $this->assertEquals($contact->getId(), $response->mainContact->id);
+        $this->assertEquals($contact->getId(), $response->mainContact);
 
         $this->assertEquals(2, \count($response->contactDetails->websites));
         $this->assertEquals('http://example.company.com', $response->contactDetails->websites[0]->website);
