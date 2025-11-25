@@ -12,7 +12,6 @@
 namespace Sulu\Bundle\CategoryBundle;
 
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
-use Sulu\Bundle\CategoryBundle\Entity\CategoryMetaInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslationInterface;
 use Sulu\Bundle\CategoryBundle\Entity\KeywordInterface;
 use Sulu\Bundle\PersistenceBundle\PersistenceBundleTrait;
@@ -31,7 +30,6 @@ final class SuluCategoryBundle extends Bundle
         $this->buildPersistence(
             [
                 CategoryInterface::class => 'sulu.model.category.class',
-                CategoryMetaInterface::class => 'sulu.model.category_meta.class',
                 CategoryTranslationInterface::class => 'sulu.model.category_translation.class',
                 KeywordInterface::class => 'sulu.model.keyword.class',
             ],

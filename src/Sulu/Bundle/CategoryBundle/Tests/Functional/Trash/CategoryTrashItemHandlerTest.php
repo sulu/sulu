@@ -14,7 +14,6 @@ namespace Sulu\Bundle\CategoryBundle\Tests\Functional\Trash;
 use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Bundle\CategoryBundle\Entity\Category;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
-use Sulu\Bundle\CategoryBundle\Entity\CategoryMeta;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslation;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslationInterface;
 use Sulu\Bundle\CategoryBundle\Entity\Keyword;
@@ -64,12 +63,6 @@ class CategoryTrashItemHandlerTest extends SuluTestCase
         $category1 = new Category();
         $category1->setKey('test-key');
         $category1->setDefaultLocale('en');
-
-        $category1Meta1 = new CategoryMeta();
-        $category1Meta1->setLocale('en');
-        $category1Meta1->setKey('meta-key');
-        $category1Meta1->setValue('meta-value');
-        $category1Meta1->setCategory($category1);
 
         $category1TranslationEn = new CategoryTranslation();
         $category1TranslationEn->setTranslation('first category');

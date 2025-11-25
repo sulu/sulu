@@ -82,23 +82,6 @@ interface CategoryInterface extends AuditableInterface
     public function getId(): ?int;
 
     /**
-     * Add meta.
-     */
-    public function addMeta(CategoryMetaInterface $meta): static;
-
-    /**
-     * Remove meta.
-     */
-    public function removeMeta(CategoryMetaInterface $meta): static;
-
-    /**
-     * Get meta.
-     *
-     * @return Collection<int, CategoryMetaInterface>
-     */
-    public function getMeta(): Collection;
-
-    /**
      * Add translations.
      */
     public function addTranslation(CategoryTranslationInterface $translations): static;

@@ -18,8 +18,6 @@ use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterfa
 use Sulu\Bundle\CategoryBundle\Admin\CategoryAdmin;
 use Sulu\Bundle\CategoryBundle\Domain\Event\CategoryRestoredEvent;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
-use Sulu\Bundle\CategoryBundle\Entity\CategoryMetaInterface;
-use Sulu\Bundle\CategoryBundle\Entity\CategoryMetaRepositoryInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryRepositoryInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslationInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslationRepositoryInterface;
@@ -53,11 +51,6 @@ final class CategoryTrashItemHandler implements
     private $categoryRepository;
 
     /**
-     * @var CategoryMetaRepositoryInterface
-     */
-    private $categoryMetaRepository;
-
-    /**
      * @var CategoryTranslationRepositoryInterface
      */
     private $categoryTranslationRepository;
@@ -85,7 +78,6 @@ final class CategoryTrashItemHandler implements
     public function __construct(
         TrashItemRepositoryInterface $trashItemRepository,
         CategoryRepositoryInterface $categoryRepository,
-        CategoryMetaRepositoryInterface $categoryMetaRepository,
         CategoryTranslationRepositoryInterface $categoryTranslationRepository,
         KeywordRepositoryInterface $keywordRepository,
         EntityManagerInterface $entityManager,
@@ -94,7 +86,6 @@ final class CategoryTrashItemHandler implements
     ) {
         $this->trashItemRepository = $trashItemRepository;
         $this->categoryRepository = $categoryRepository;
-        $this->categoryMetaRepository = $categoryMetaRepository;
         $this->categoryTranslationRepository = $categoryTranslationRepository;
         $this->keywordRepository = $keywordRepository;
         $this->entityManager = $entityManager;
@@ -119,20 +110,8 @@ final class CategoryTrashItemHandler implements
             'parentId' => $parent ? $parent->getId() : null,
             'created' => $category->getCreated()->format('c'),
             'creatorId' => $creator ? $creator->getId() : null,
-            'metas' => [],
             'translations' => [],
         ];
-
-        /** @var CategoryMetaInterface $meta */
-        foreach ($category->getMeta() as $meta) {
-            $metaData = [
-                'key' => $meta->getKey(),
-                'value' => $meta->getValue(),
-                'locale' => $meta->getLocale(),
-            ];
-
-            $data['metas'][] = $metaData;
-        }
 
         /** @var CategoryTranslationInterface $translation */
         foreach ($category->getTranslations() as $translation) {
@@ -199,18 +178,6 @@ final class CategoryTrashItemHandler implements
 
         if ($parentId) {
             $category->setParent($this->categoryRepository->findCategoryById($parentId));
-        }
-
-        foreach ($data['metas'] as $metaData) {
-            $meta = $this->categoryMetaRepository->createNew();
-            $meta->setCategory($category);
-            $category->addMeta($meta);
-
-            $meta->setKey($metaData['key']);
-            $meta->setValue($metaData['value']);
-            /** @var string|null $metaLocale */
-            $metaLocale = $metaData['locale'] ?? null;
-            $meta->setLocale($metaLocale);
         }
 
         foreach ($data['translations'] as $translationData) {

@@ -26,7 +26,6 @@ use Sulu\Bundle\CategoryBundle\Domain\Event\CategoryMovedEvent;
 use Sulu\Bundle\CategoryBundle\Domain\Event\CategoryRemovedEvent;
 use Sulu\Bundle\CategoryBundle\Domain\Exception\RemoveCategoryDependantResourcesFoundException;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
-use Sulu\Bundle\CategoryBundle\Entity\CategoryMetaRepositoryInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryRepositoryInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslationInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslationRepositoryInterface;
@@ -42,11 +41,6 @@ class CategoryManagerTest extends TestCase
      * @var ObjectProphecy<CategoryRepositoryInterface>
      */
     protected $categoryRepository;
-
-    /**
-     * @var ObjectProphecy<CategoryMetaRepositoryInterface>
-     */
-    protected $categoryMetaRepository;
 
     /**
      * @var ObjectProphecy<CategoryTranslationRepositoryInterface>
@@ -86,7 +80,6 @@ class CategoryManagerTest extends TestCase
     public function setUp(): void
     {
         $this->categoryRepository = $this->prophesize(CategoryRepositoryInterface::class);
-        $this->categoryMetaRepository = $this->prophesize(CategoryMetaRepositoryInterface::class);
         $this->categoryTranslateRepository = $this->prophesize(CategoryTranslationRepositoryInterface::class);
         $this->userRepository = $this->prophesize(UserRepositoryInterface::class);
         $this->entityManager = $this->prophesize(EntityManagerInterface::class);
@@ -98,7 +91,6 @@ class CategoryManagerTest extends TestCase
 
         $this->categoryManager = new CategoryManager(
             $this->categoryRepository->reveal(),
-            $this->categoryMetaRepository->reveal(),
             $this->categoryTranslateRepository->reveal(),
             $this->userRepository->reveal(),
             $this->keywordManager->reveal(),

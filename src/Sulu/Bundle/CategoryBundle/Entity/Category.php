@@ -37,11 +37,6 @@ class Category implements CategoryInterface
     protected ?CategoryInterface $parent = null;
 
     /**
-     * @var Collection<int, CategoryMetaInterface>
-     */
-    protected Collection $meta;
-
-    /**
      * @var Collection<int, CategoryTranslationInterface>
      */
     protected Collection $translations;
@@ -56,7 +51,6 @@ class Category implements CategoryInterface
      */
     public function __construct()
     {
-        $this->meta = new ArrayCollection();
         $this->translations = new ArrayCollection();
         $this->children = new ArrayCollection();
     }
@@ -143,25 +137,6 @@ class Category implements CategoryInterface
     public function getParent(): ?CategoryInterface
     {
         return $this->parent;
-    }
-
-    public function addMeta(CategoryMetaInterface $meta): static
-    {
-        $this->meta[] = $meta;
-
-        return $this;
-    }
-
-    public function removeMeta(CategoryMetaInterface $meta): static
-    {
-        $this->meta->removeElement($meta);
-
-        return $this;
-    }
-
-    public function getMeta(): Collection
-    {
-        return $this->meta;
     }
 
     public function addTranslation(CategoryTranslationInterface $translations): static

@@ -54,7 +54,6 @@ class CategoryControllerTest extends SuluTestCase
     {
         $category1 = $this->createCategory('first-category-key', 'en');
         $this->createCategoryTranslation($category1, 'en', 'First Category');
-        $categoryMeta1 = $this->createCategoryMeta($category1, 'en', 'description', 'Description of Category');
 
         $this->em->flush();
         $this->em->clear();
@@ -71,9 +70,6 @@ class CategoryControllerTest extends SuluTestCase
         $this->assertEquals('first-category-key', $response->key);
         $this->assertEquals('en', $response->locale);
         $this->assertEquals($category1->getId(), $response->id);
-        $this->assertEquals(1, \count($response->meta));
-        $this->assertEquals('description', $response->meta[0]->key);
-        $this->assertEquals('Description of Category', $response->meta[0]->value);
     }
 
     public function testGetByIdChild(): void
@@ -1029,17 +1025,6 @@ class CategoryControllerTest extends SuluTestCase
                 'description' => 'Sulu is awesome',
                 'medias' => ['ids' => $ids],
                 'key' => 'new-category-key',
-                'meta' => [
-                    [
-                        'key' => 'myKey',
-                        'value' => 'myValue',
-                    ],
-                    [
-                        'key' => 'anotherKey',
-                        'value' => 'should not be visible due to locale',
-                        'locale' => 'de-ch',
-                    ],
-                ],
             ]
         );
 
@@ -1052,9 +1037,6 @@ class CategoryControllerTest extends SuluTestCase
         $this->assertEquals('new-category-key', $response->key);
         $this->assertEquals('en', $response->defaultLocale);
         $this->assertEquals('en', $response->locale);
-        $this->assertEquals(1, \count($response->meta));
-        $this->assertEquals('myKey', $response->meta[0]->key);
-        $this->assertEquals('myValue', $response->meta[0]->value);
 
         /** @var ActivityInterface $activity */
         $activity = $this->activityRepository->findOneBy(['type' => 'created']);
@@ -1070,9 +1052,6 @@ class CategoryControllerTest extends SuluTestCase
         $response = \json_decode($this->client->getResponse()->getContent());
         $this->assertEquals('New Category', $response->name);
         $this->assertEquals('new-category-key', $response->key);
-        $this->assertEquals(1, \count($response->meta));
-        $this->assertEquals('myKey', $response->meta[0]->key);
-        $this->assertEquals('myValue', $response->meta[0]->value);
     }
 
     public function testPostWithoutMedia(): void
@@ -1188,7 +1167,6 @@ class CategoryControllerTest extends SuluTestCase
     {
         $category1 = $this->createCategory('first-category-key', 'en');
         $this->createCategoryTranslation($category1, 'en', 'First Category');
-        $categoryMeta1 = $this->createCategoryMeta($category1, 'en', 'description', 'Description of Category');
 
         $this->em->flush();
         $this->em->clear();
@@ -1198,18 +1176,6 @@ class CategoryControllerTest extends SuluTestCase
             '/api/categories/' . $category1->getId() . '?locale=en',
             [
                 'name' => 'Modified Category',
-                'meta' => [
-                    [
-                        'id' => $categoryMeta1->getId(),
-                        'key' => 'modifiedKey',
-                        'value' => 'This meta got overriden',
-                        'locale' => null,
-                    ],
-                    [
-                        'key' => 'newMeta',
-                        'value' => 'This meta got added',
-                    ],
-                ],
             ]
         );
 
@@ -1219,18 +1185,6 @@ class CategoryControllerTest extends SuluTestCase
         $this->assertEquals('Modified Category', $response->name);
         $this->assertNull($response->key);
         $this->assertEquals('en', $response->defaultLocale);
-        $this->assertEquals(2, \count($response->meta));
-
-        \usort(
-            $response->meta,
-            function($m1, $m2) {
-                return \strcmp($m1->key, $m2->key);
-            }
-        );
-        $this->assertTrue('modifiedKey' === $response->meta[0]->key);
-        $this->assertTrue('This meta got overriden' === $response->meta[0]->value);
-        $this->assertTrue('newMeta' === $response->meta[1]->key);
-        $this->assertTrue('This meta got added' === $response->meta[1]->value);
 
         /** @var ActivityInterface $activity */
         $activity = $this->activityRepository->findOneBy(['type' => 'modified']);
@@ -1245,18 +1199,6 @@ class CategoryControllerTest extends SuluTestCase
         $response = \json_decode($this->client->getResponse()->getContent());
         $this->assertEquals('Modified Category', $response->name);
         $this->assertNull($response->key);
-        $this->assertEquals(2, \count($response->meta));
-
-        \usort(
-            $response->meta,
-            function($m1, $m2) {
-                return \strcmp($m1->key, $m2->key);
-            }
-        );
-        $this->assertTrue('modifiedKey' === $response->meta[0]->key);
-        $this->assertTrue('This meta got overriden' === $response->meta[0]->value);
-        $this->assertTrue('newMeta' === $response->meta[1]->key);
-        $this->assertTrue('This meta got added' === $response->meta[1]->value);
     }
 
     public function testSortingOfMedia(): void
@@ -1716,20 +1658,6 @@ class CategoryControllerTest extends SuluTestCase
         $this->em->persist($categoryTrans);
 
         return $categoryTrans;
-    }
-
-    private function createCategoryMeta(CategoryInterface $category, string $locale, string $key, string $value)
-    {
-        $categoryMeta = $this->getContainer()->get('sulu.repository.category_meta')->createNew();
-        $categoryMeta->setLocale($locale);
-        $categoryMeta->setKey($key);
-        $categoryMeta->setValue($value);
-        $categoryMeta->setCategory($category);
-        $category->addMeta($categoryMeta);
-
-        $this->em->persist($categoryMeta);
-
-        return $categoryMeta;
     }
 
     protected function createCollection()

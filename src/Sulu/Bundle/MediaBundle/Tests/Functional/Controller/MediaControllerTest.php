@@ -154,14 +154,6 @@ class MediaControllerTest extends SuluTestCase
         $categoryTrans->setCategory($category);
         $category->addTranslation($categoryTrans);
 
-        // meta for first category
-        $categoryMeta = $this->getContainer()->get('sulu.repository.category_meta')->createNew();
-        $categoryMeta->setLocale('en');
-        $categoryMeta->setKey('description');
-        $categoryMeta->setValue('Description of Category');
-        $categoryMeta->setCategory($category);
-        $category->addMeta($categoryMeta);
-
         /* Second Category
         -------------------------------------*/
         $category2 = $this->getContainer()->get('sulu.repository.category')->createNew();
@@ -176,14 +168,6 @@ class MediaControllerTest extends SuluTestCase
         $categoryTrans2->setTranslation('Second Category');
         $categoryTrans2->setCategory($category2);
         $category2->addTranslation($categoryTrans2);
-
-        // meta for second category
-        $categoryMeta2 = $this->getContainer()->get('sulu.repository.category_meta')->createNew();
-        $categoryMeta2->setLocale('de');
-        $categoryMeta2->setKey('description');
-        $categoryMeta2->setValue('Description of second Category');
-        $categoryMeta2->setCategory($category2);
-        $category2->addMeta($categoryMeta2);
 
         $this->em->persist($category2);
         $this->em->persist($category);

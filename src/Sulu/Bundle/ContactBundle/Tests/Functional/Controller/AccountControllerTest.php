@@ -2468,14 +2468,6 @@ class AccountControllerTest extends SuluTestCase
         $categoryTrans->setCategory($category);
         $category->addTranslation($categoryTrans);
 
-        // meta for first category
-        $categoryMeta = $this->getContainer()->get('sulu.repository.category_meta')->createNew();
-        $categoryMeta->setLocale($locale);
-        $categoryMeta->setKey('description');
-        $categoryMeta->setValue($description);
-        $categoryMeta->setCategory($category);
-        $category->addMeta($categoryMeta);
-
         $this->em->persist($category);
 
         return $category;
