@@ -15,92 +15,50 @@ use Sulu\Component\Security\Authentication\UserInterface;
 
 class Activity implements ActivityInterface
 {
-    /**
-     * @var int
-     */
-    private $id;
+    private int $id;
 
-    /**
-     * @var string
-     */
-    private $type;
+    private string $type;
 
     /**
      * @var mixed[]
      */
-    private $context = [];
+    private array $context = [];
 
     /**
      * @var mixed[]|null
      */
-    private $payload;
+    private ?array $payload = null;
 
-    /**
-     * @var \DateTimeImmutable
-     */
-    private $timestamp;
+    private \DateTimeImmutable $timestamp;
 
-    /**
-     * @var string|null
-     */
-    private $batch;
+    private ?string $batch = null;
 
-    /**
-     * @var UserInterface|null
-     */
-    private $user;
+    private ?UserInterface $user = null;
 
-    /**
-     * @var string
-     */
-    private $resourceKey;
+    private string $resourceKey;
 
-    /**
-     * @var string
-     */
-    private $resourceId;
+    private string $resourceId;
 
-    /**
-     * @var string|null
-     */
-    private $resourceLocale;
+    private ?string $resourceLocale = null;
 
-    /**
-     * @var string|null
-     */
-    private $resourceWebspaceKey;
+    private ?string $resourceWebspaceKey = null;
 
-    /**
-     * @var string|null
-     */
-    private $resourceTitle;
+    private ?string $resourceTitle = null;
 
-    /**
-     * @var string|null
-     */
-    private $resourceTitleLocale;
+    private ?string $resourceTitleLocale = null;
 
-    /**
-     * @var string|null
-     */
-    private $resourceSecurityContext;
+    private ?string $resourceSecurityContext = null;
 
-    /**
-     * @var string|null
-     */
-    private $resourceSecurityObjectType;
+    private ?string $resourceSecurityObjectType = null;
 
-    /**
-     * @var string|null
-     */
-    private $resourceSecurityObjectId;
+    private ?string $resourceSecurityObjectId = null;
 
     public function getType(): string
     {
         return $this->type;
     }
 
-    public function setType(string $type): ActivityInterface
+    public function setType(string $type): static
     {
         $this->type = $type;
 
@@ -112,7 +70,7 @@ class Activity implements ActivityInterface
         return $this->context;
     }
 
-    public function setContext(array $context): ActivityInterface
+    public function setContext(array $context): static
     {
         $this->context = $context;
 
@@ -124,7 +82,7 @@ class Activity implements ActivityInterface
         return $this->payload;
     }
 
-    public function setPayload(?array $payload): ActivityInterface
+    public function setPayload(?array $payload): static
     {
         $this->payload = $payload;
 
@@ -136,7 +94,7 @@ class Activity implements ActivityInterface
         return $this->timestamp;
     }
 
-    public function setTimestamp(\DateTimeImmutable $timestamp): ActivityInterface
+    public function setTimestamp(\DateTimeImmutable $timestamp): static
     {
         $this->timestamp = $timestamp;
 
@@ -148,7 +106,7 @@ class Activity implements ActivityInterface
         return $this->batch;
     }
 
-    public function setBatch(?string $batch): ActivityInterface
+    public function setBatch(?string $batch): static
     {
         $this->batch = $batch;
 
@@ -160,7 +118,7 @@ class Activity implements ActivityInterface
         return $this->user;
     }
 
-    public function setUser(?UserInterface $user): ActivityInterface
+    public function setUser(?UserInterface $user): static
     {
         $this->user = $user;
 
@@ -172,7 +130,7 @@ class Activity implements ActivityInterface
         return $this->resourceKey;
     }
 
-    public function setResourceKey(string $resourceKey): ActivityInterface
+    public function setResourceKey(string $resourceKey): static
     {
         $this->resourceKey = $resourceKey;
 
@@ -184,7 +142,7 @@ class Activity implements ActivityInterface
         return $this->resourceId;
     }
 
-    public function setResourceId(string $resourceId): ActivityInterface
+    public function setResourceId(string $resourceId): static
     {
         $this->resourceId = $resourceId;
 
@@ -196,7 +154,7 @@ class Activity implements ActivityInterface
         return $this->resourceLocale;
     }
 
-    public function setResourceLocale(?string $resourceLocale): ActivityInterface
+    public function setResourceLocale(?string $resourceLocale): static
     {
         $this->resourceLocale = $resourceLocale;
 
@@ -208,7 +166,7 @@ class Activity implements ActivityInterface
         return $this->resourceWebspaceKey;
     }
 
-    public function setResourceWebspaceKey(?string $resourceWebspaceKey): ActivityInterface
+    public function setResourceWebspaceKey(?string $resourceWebspaceKey): static
     {
         $this->resourceWebspaceKey = $resourceWebspaceKey;
 
@@ -220,7 +178,7 @@ class Activity implements ActivityInterface
         return $this->resourceTitle;
     }
 
-    public function setResourceTitle(?string $resourceTitle): ActivityInterface
+    public function setResourceTitle(?string $resourceTitle): static
     {
         $this->resourceTitle = $resourceTitle;
 
@@ -232,7 +190,7 @@ class Activity implements ActivityInterface
         return $this->resourceTitleLocale;
     }
 
-    public function setResourceTitleLocale(?string $resourceTitleLocale): ActivityInterface
+    public function setResourceTitleLocale(?string $resourceTitleLocale): static
     {
         $this->resourceTitleLocale = $resourceTitleLocale;
 
@@ -244,7 +202,7 @@ class Activity implements ActivityInterface
         return $this->resourceSecurityContext;
     }
 
-    public function setResourceSecurityContext(?string $resourceSecurityContext): ActivityInterface
+    public function setResourceSecurityContext(?string $resourceSecurityContext): static
     {
         $this->resourceSecurityContext = $resourceSecurityContext;
 
@@ -256,7 +214,7 @@ class Activity implements ActivityInterface
         return $this->resourceSecurityObjectType;
     }
 
-    public function setResourceSecurityObjectType(?string $resourceSecurityObjectType): ActivityInterface
+    public function setResourceSecurityObjectType(?string $resourceSecurityObjectType): static
     {
         $this->resourceSecurityObjectType = $resourceSecurityObjectType;
 
@@ -268,7 +226,7 @@ class Activity implements ActivityInterface
         return $this->resourceSecurityObjectId;
     }
 
-    public function setResourceSecurityObjectId(?string $resourceSecurityObjectId): ActivityInterface
+    public function setResourceSecurityObjectId(?string $resourceSecurityObjectId): static
     {
         $this->resourceSecurityObjectId = $resourceSecurityObjectId;
 
