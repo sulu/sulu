@@ -38,11 +38,11 @@ interface PageDimensionContentInterface extends DimensionContentInterface, Excer
     /**
      * @param string[] $navigationContexts
      */
-    public function setNavigationContexts(array $navigationContexts): self;
+    public function setNavigationContexts(array $navigationContexts): static;
 
-    public function addNavigationContext(string $navigationContext): self;
+    public function addNavigationContext(string $navigationContext): static;
 
-    public function removeNavigationContext(string $navigationContext): self;
+    public function removeNavigationContext(string $navigationContext): static;
 
     public function hasNavigationContext(string $navigationContext): bool;
 }
