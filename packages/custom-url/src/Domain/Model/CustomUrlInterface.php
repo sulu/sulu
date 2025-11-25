@@ -21,68 +21,68 @@ interface CustomUrlInterface extends AuditableInterface
 
     public function getId(): string;
 
-    public function setId(string $id): void;
+    public function setId(string $id): static;
 
     public function getUuid(): string;
 
-    public function setUuid(string $uuid): void;
+    public function setUuid(string $uuid): static;
 
     public function getTitle(): string;
 
-    public function setTitle(string $title): void;
+    public function setTitle(string $title): static;
 
-    public function setPublished(bool $published): void;
+    public function setPublished(bool $published): static;
 
     public function isPublished(): bool;
 
-    public function setWebspace(string $webspace): void;
+    public function setWebspace(string $webspace): static;
 
     public function getWebspace(): string;
 
-    public function setBaseDomain(string $baseDomain): void;
+    public function setBaseDomain(string $baseDomain): static;
 
     public function getBaseDomain(): string;
 
     /**
      * @param array<string> $domainParts
      */
-    public function setDomainParts(array $domainParts): void;
+    public function setDomainParts(array $domainParts): static;
 
     /**
      * @return array<string>
      */
     public function getDomainParts(): array;
 
-    public function setTargetDocument(string $targetDocument): void;
+    public function setTargetDocument(?string $targetDocument): static;
 
     public function getTargetDocument(): ?string;
 
     public function getTargetLocale(): string;
 
-    public function setTargetLocale(string $targetLocale): void;
+    public function setTargetLocale(string $targetLocale): static;
 
     public function isCanonical(): bool;
 
-    public function setCanonical(bool $canonical): void;
+    public function setCanonical(bool $canonical): static;
 
     public function isRedirect(): bool;
 
-    public function setRedirect(bool $redirect): void;
+    public function setRedirect(bool $redirect): static;
 
     public function isNoFollow(): bool;
 
-    public function setNoFollow(bool $noFollow): void;
+    public function setNoFollow(bool $noFollow): static;
 
     public function isNoIndex(): bool;
 
-    public function setNoIndex(bool $noIndex): void;
+    public function setNoIndex(bool $noIndex): static;
 
     /**
      * @return iterable<CustomUrlRouteInterface>
      */
     public function getRoutes(): iterable;
 
-    public function addRoute(CustomUrlRouteInterface $route): void;
+    public function addRoute(CustomUrlRouteInterface $route): static;
 
     public function generateRoutes(): void;
 

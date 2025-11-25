@@ -38,9 +38,11 @@ class CustomUrlRoute implements CustomUrlRouteInterface
         return $this->uuid;
     }
 
-    public function setUuid(string $uuid): void
+    public function setUuid(string $uuid): static
     {
         $this->uuid = $uuid;
+
+        return $this;
     }
 
     public function getPath(): string
@@ -58,9 +60,11 @@ class CustomUrlRoute implements CustomUrlRouteInterface
         return $this->history;
     }
 
-    public function setHistory(bool $history): void
+    public function setHistory(bool $history): static
     {
         $this->history = $history;
+
+        return $this;
     }
 
     public function getTargetRoute(): ?CustomUrlRouteInterface
@@ -68,8 +72,10 @@ class CustomUrlRoute implements CustomUrlRouteInterface
         return $this->targetRoute;
     }
 
-    public function setTargetRoute(?CustomUrlRouteInterface $targetRoute): void
+    public function setTargetRoute(?CustomUrlRouteInterface $targetRoute): static
     {
         $this->targetRoute = $targetRoute;
+
+        return $this;
     }
 }

@@ -17,9 +17,9 @@ use Sulu\Component\Persistence\Model\TimestampableInterface;
 
 interface CustomUrlRouteInterface extends TimestampableInterface
 {
-    public function getUuid(): ?string;
+    public function getUuid(): string;
 
-    public function setUuid(string $uuid): void;
+    public function setUuid(string $uuid): static;
 
     public function getPath(): string;
 
@@ -27,9 +27,9 @@ interface CustomUrlRouteInterface extends TimestampableInterface
 
     public function isHistory(): bool;
 
-    public function setHistory(bool $history): void;
+    public function setHistory(bool $history): static;
 
     public function getTargetRoute(): ?self;
 
-    public function setTargetRoute(?self $targetRoute): void;
+    public function setTargetRoute(?self $targetRoute): static;
 }
