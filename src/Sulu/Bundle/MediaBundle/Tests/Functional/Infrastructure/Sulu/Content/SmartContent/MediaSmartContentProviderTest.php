@@ -780,7 +780,7 @@ class MediaSmartContentProviderTest extends SuluTestCase
 
     /**
      * @param MediaData $data
-     * @param int[] $categoryIds
+     * @param array<int|null> $categoryIds
      * @param string[] $tagNames
      */
     private static function createAndEnhanceMedia(

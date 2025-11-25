@@ -88,16 +88,14 @@ class Category extends ApiEntityWrapper
 
     /**
      * Returns the description of the Category dependent on the locale.
-     *
-     * @return string
      */
     #[VirtualProperty]
     #[SerializedName('description')]
     #[Groups(['fullCategory', 'partialCategory'])]
-    public function getDescription()
+    public function getDescription(): ?string
     {
         if (null === ($translation = $this->getTranslation(true))) {
-            return;
+            return null;
         }
 
         return $translation->getDescription();
@@ -310,7 +308,7 @@ class Category extends ApiEntityWrapper
         $translationEntity->setTranslation($translation->getTranslation());
         $translationEntity->setLocale($translation->getLocale());
 
-        if (null === $this->getId() && null === $this->getDefaultLocale()) {
+        if (null === $this->getId() && '' === $this->getDefaultLocale()) {
             // new entity and new translation
             // save first locale as default
             $this->entity->setDefaultLocale($translationEntity->getLocale());
@@ -447,11 +445,10 @@ class Category extends ApiEntityWrapper
      * Takes an array of CollectionMeta and returns a single meta for a given id.
      *
      * @param CategoryMetaInterface[] $meta
-     * @param int $id
      *
      * @return null|CategoryMetaInterface
      */
-    private function getSingleMetaById($meta, $id)
+    private function getSingleMetaById($meta, ?int $id)
     {
         if (null !== $id) {
             /** @var CategoryMetaInterface[] $singleMeta */

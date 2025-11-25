@@ -17,7 +17,7 @@ use Sulu\Bundle\AdminBundle\SmartContent\Configuration\ProviderConfigurationInte
 
 /**
  * @phpstan-type SmartContentBaseFilters array{
- *      categories: int[],
+ *      categories: array<int|null>,
  *      categoryOperator: 'AND'|'OR',
  *      websiteCategories: string[],
  *      websiteCategoryOperator: 'AND'|'OR',
@@ -35,7 +35,7 @@ use Sulu\Bundle\AdminBundle\SmartContent\Configuration\ProviderConfigurationInte
  *      excludeDuplicates: bool,
  *  }
  * @phpstan-type SmartContentCountBaseFilters array{
- *       categories: int[],
+ *       categories: array<int|null>,
  *       categoryOperator: 'AND'|'OR',
  *       websiteCategories: string[],
  *       websiteCategoryOperator: 'AND'|'OR',

@@ -21,81 +21,51 @@ interface KeywordInterface extends AuditableInterface
 {
     /**
      * Set locale.
-     *
-     * @param string $locale
-     *
-     * @return KeywordInterface
      */
-    public function setLocale($locale);
+    public function setLocale(string $locale): static;
 
     /**
      * Get locale.
-     *
-     * @return string
      */
-    public function getLocale();
+    public function getLocale(): string;
 
     /**
      * Set keyword.
-     *
-     * @param string $keyword
-     *
-     * @return KeywordInterface
      */
-    public function setKeyword($keyword);
+    public function setKeyword(string $keyword): static;
 
     /**
      * Get keyword.
-     *
-     * @return string
      */
-    public function getKeyword();
+    public function getKeyword(): string;
 
     /**
      * Get id.
-     *
-     * @return int
      */
-    public function getId();
+    public function getId(): ?int;
 
     /**
      * Add category-translation.
-     *
-     * @return KeywordInterface
      */
-    public function addCategoryTranslation(CategoryTranslationInterface $categoryTranslation);
+    public function addCategoryTranslation(CategoryTranslationInterface $categoryTranslation): static;
 
     /**
      * Remove category-translation.
-     *
-     * @return void
      */
-    public function removeCategoryTranslation(CategoryTranslationInterface $categoryTranslation);
+    public function removeCategoryTranslation(CategoryTranslationInterface $categoryTranslation): static;
 
     /**
      * Get categories.
      *
      * @return Collection<int, CategoryTranslationInterface>
      */
-    public function getCategoryTranslations();
+    public function getCategoryTranslations(): Collection;
 
-    /**
-     * @return bool
-     */
-    public function isReferencedMultiple();
+    public function isReferencedMultiple(): bool;
 
-    /**
-     * @return bool
-     */
-    public function isReferenced();
+    public function isReferenced(): bool;
 
-    /**
-     * @return int
-     */
-    public function getCategoryTranslationCount();
+    public function getCategoryTranslationCount(): int;
 
-    /**
-     * @return bool
-     */
-    public function equals(self $keyword);
+    public function equals(self $keyword): bool;
 }

@@ -18,79 +18,51 @@ interface CategoryMetaInterface
 {
     /**
      * Set key.
-     *
-     * @param string $key
-     *
-     * @return CategoryMetaInterface
      */
-    public function setKey($key);
+    public function setKey(string $key): static;
 
     /**
      * Get key.
-     *
-     * @return string
      */
-    public function getKey();
+    public function getKey(): string;
 
     /**
      * Set value.
-     *
-     * @param string $value
-     *
-     * @return CategoryMetaInterface
      */
-    public function setValue($value);
+    public function setValue(string $value): static;
 
     /**
      * Get value.
-     *
-     * @return string
      */
-    public function getValue();
+    public function getValue(): string;
 
     /**
      * Set locale.
-     *
-     * @param string $locale
-     *
-     * @return CategoryMetaInterface
      */
-    public function setLocale($locale);
+    public function setLocale(?string $locale): static;
 
     /**
      * Get locale.
-     *
-     * @return string
      */
-    public function getLocale();
+    public function getLocale(): ?string;
 
     /**
      * Get id.
-     *
-     * @return int
      */
-    public function getId();
+    public function getId(): ?int;
 
     /**
      * Set id.
-     *
-     * @param int $id
-     *
-     * @return CategoryMetaInterface
      */
-    public function setId($id);
+    public function setId(?int $id): static;
 
     /**
      * Set category.
-     *
-     * @return CategoryMetaInterface
      */
-    public function setCategory(CategoryInterface $category);
+    public function setCategory(CategoryInterface $category): static;
 
     /**
      * Get category.
-     *
-     * @return CategoryInterface
      */
-    public function getCategory();
+    public function getCategory(): CategoryInterface;
 }

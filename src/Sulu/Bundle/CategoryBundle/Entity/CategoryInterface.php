@@ -23,183 +23,127 @@ interface CategoryInterface extends AuditableInterface
 
     /**
      * Set id.
-     *
-     * @param int $id
-     *
-     * @return CategoryInterface
      */
-    public function setId($id);
+    public function setId(int $id): static;
 
     /**
      * Set lft.
-     *
-     * @param int $lft
-     *
-     * @return CategoryInterface
      */
-    public function setLft($lft);
+    public function setLft(int $lft): static;
 
     /**
      * Get lft.
-     *
-     * @return int
      */
-    public function getLft();
+    public function getLft(): int;
 
     /**
      * Set rgt.
-     *
-     * @param int $rgt
-     *
-     * @return CategoryInterface
      */
-    public function setRgt($rgt);
+    public function setRgt(int $rgt): static;
 
     /**
      * Get rgt.
-     *
-     * @return int
      */
-    public function getRgt();
+    public function getRgt(): int;
 
     /**
      * Set depth.
-     *
-     * @param int $depth
-     *
-     * @return CategoryInterface
      */
-    public function setDepth($depth);
+    public function setDepth(int $depth): static;
 
     /**
      * Get depth.
-     *
-     * @return int
      */
-    public function getDepth();
+    public function getDepth(): int;
 
     /**
      * Get key.
-     *
-     * @return string|null
      */
-    public function getKey();
+    public function getKey(): ?string;
 
     /**
      * Set key.
-     *
-     * @param string|null $key
-     *
-     * @return CategoryInterface
      */
-    public function setKey($key);
+    public function setKey(?string $key): static;
 
     /**
      * Set defaultLocale.
-     *
-     * @param string $defaultLocale
-     *
-     * @return CategoryInterface
      */
-    public function setDefaultLocale($defaultLocale);
+    public function setDefaultLocale(string $defaultLocale): static;
 
     /**
      * Get defaultLocale.
-     *
-     * @return string
      */
-    public function getDefaultLocale();
+    public function getDefaultLocale(): string;
 
     /**
      * Get id.
-     *
-     * @return int
      */
-    public function getId();
+    public function getId(): ?int;
 
     /**
      * Add meta.
-     *
-     * @return CategoryInterface
      */
-    public function addMeta(CategoryMetaInterface $meta);
+    public function addMeta(CategoryMetaInterface $meta): static;
 
     /**
      * Remove meta.
-     *
-     * @return void
      */
-    public function removeMeta(CategoryMetaInterface $meta);
+    public function removeMeta(CategoryMetaInterface $meta): static;
 
     /**
      * Get meta.
      *
      * @return Collection<int, CategoryMetaInterface>
      */
-    public function getMeta();
+    public function getMeta(): Collection;
 
     /**
      * Add translations.
-     *
-     * @return CategoryInterface
      */
-    public function addTranslation(CategoryTranslationInterface $translations);
+    public function addTranslation(CategoryTranslationInterface $translations): static;
 
     /**
      * Remove translations.
-     *
-     * @return void
      */
-    public function removeTranslation(CategoryTranslationInterface $translations);
+    public function removeTranslation(CategoryTranslationInterface $translations): static;
 
     /**
      * Get translations.
      *
      * @return Collection<int, CategoryTranslationInterface>
      */
-    public function getTranslations();
+    public function getTranslations(): Collection;
 
     /**
-     * Get single meta by locale or false if does not exists.
-     *
-     * @param ?string $locale
-     *
-     * @return CategoryTranslationInterface|false
+     * Get single translation by locale or null if does not exist.
      */
-    public function findTranslationByLocale($locale);
+    public function findTranslationByLocale(?string $locale): ?CategoryTranslationInterface;
 
     /**
      * Add children.
-     *
-     * @return CategoryInterface
      */
-    public function addChild(self $child);
+    public function addChild(self $child): static;
 
     /**
      * Remove children.
-     *
-     * @return void
      */
-    public function removeChild(self $child);
+    public function removeChild(self $child): static;
 
     /**
      * Get children.
      *
      * @return Collection<int, CategoryInterface>
      */
-    public function getChildren();
+    public function getChildren(): Collection;
 
     /**
      * Set parent.
-     *
-     * @return CategoryInterface
      */
-    public function setParent(?self $parent = null);
+    public function setParent(?self $parent = null): static;
 
     /**
      * Get parent.
-     *
-     * @return CategoryInterface|null
      */
-    public function getParent();
+    public function getParent(): ?CategoryInterface;
 }

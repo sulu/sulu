@@ -38,11 +38,13 @@ use Symfony\Component\Messenger\Stamp\HandledStamp;
  *     url?: string,
  *     template?: string,
  *     locale?: string,
- *     excerptCategories?: int[],
+ *     excerptCategories?: array<int|null>,
  *     excerptTags?: string[],
  *     parent?: string|null,
  *     author?: int|null,
  *     authored?: string|null,
+ *     linkOn?: bool,
+ *     linkData?: array{href: string, provider: string},
  * }
  *
  * @phpstan-import-type SmartContentBaseFilters from SmartContentProviderInterface

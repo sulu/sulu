@@ -935,13 +935,12 @@ class Media extends ApiWrapper
     #[SerializedName('categories')]
     public function getCategories()
     {
-        $apiCategories = [];
         $fileVersion = $this->getFileVersion();
         $categories = $fileVersion->getCategories();
 
-        return \array_map(function(CategoryEntity $category) {
+        return \array_values(\array_filter(\array_map(function(CategoryEntity $category) {
             return $category->getId();
-        }, $categories->toArray());
+        }, $categories->toArray()), fn ($id) => null !== $id));
     }
 
     /**

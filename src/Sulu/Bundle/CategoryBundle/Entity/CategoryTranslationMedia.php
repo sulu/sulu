@@ -15,25 +15,13 @@ use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 
 class CategoryTranslationMedia
 {
-    /**
-     * @var int
-     */
-    protected $id;
+    protected int $id;
 
-    /**
-     * @var CategoryTranslationInterface
-     */
-    protected $categoryTranslation;
+    protected CategoryTranslationInterface $categoryTranslation;
 
-    /**
-     * @var MediaInterface
-     */
-    protected $media;
+    protected MediaInterface $media;
 
-    /**
-     * @var int
-     */
-    protected $position = 0;
+    protected int $position = 0;
 
     public function __construct(CategoryTranslationInterface $categoryTranslation, MediaInterface $media, int $position)
     {
@@ -54,7 +42,7 @@ class CategoryTranslationMedia
         return $this->categoryTranslation;
     }
 
-    public function getMedia()
+    public function getMedia(): MediaInterface
     {
         return $this->media;
     }

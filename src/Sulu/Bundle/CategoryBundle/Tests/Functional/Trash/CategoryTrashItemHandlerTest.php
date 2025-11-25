@@ -146,7 +146,9 @@ class CategoryTrashItemHandlerTest extends SuluTestCase
         static::assertSame('deutsche beschreibung', $restoredTranslationDe->getDescription());
         static::assertCount(0, $restoredTranslationDe->getMedias());
         static::assertCount(1, $restoredTranslationDe->getKeywords());
-        static::assertSame('test keyword', $restoredTranslationDe->getKeywords()[0]->getKeyword());
+        $firstKeyword = $restoredTranslationDe->getKeywords()->first();
+        static::assertNotFalse($firstKeyword);
+        static::assertSame('test keyword', $firstKeyword->getKeyword());
     }
 
     protected function createCollection(): CollectionInterface

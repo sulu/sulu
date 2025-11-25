@@ -208,7 +208,9 @@ final class CategoryTrashItemHandler implements
 
             $meta->setKey($metaData['key']);
             $meta->setValue($metaData['value']);
-            $meta->setLocale($metaData['locale']);
+            /** @var string|null $metaLocale */
+            $metaLocale = $metaData['locale'] ?? null;
+            $meta->setLocale($metaLocale);
         }
 
         foreach ($data['translations'] as $translationData) {
@@ -216,8 +218,12 @@ final class CategoryTrashItemHandler implements
             $translation->setCategory($category);
             $category->addTranslation($translation);
 
-            $translation->setTranslation($translationData['translation']);
-            $translation->setDescription($translationData['description']);
+            /** @var string $translationName */
+            $translationName = $translationData['translation'];
+            $translation->setTranslation($translationName);
+            /** @var string|null $translationDescription */
+            $translationDescription = $translationData['description'] ?? null;
+            $translation->setDescription($translationDescription);
             $translation->setLocale($translationData['locale']);
             $translation->setCreated(new \DateTimeImmutable($translationData['created']));
             $translation->setCreator($this->findEntity(UserInterface::class, $translationData['creatorId']));
