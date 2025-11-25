@@ -74,7 +74,14 @@ class PublicPreviewControllerTest extends TestCase
         ];
 
         $previewLink = $this->prophesize(PreviewLinkInterface::class);
-        $previewLink->increaseVisitCount()->shouldBeCalled();
+        $previewLink->increaseVisitCount()->will(
+            /** @phpstan-ignore argument.type */
+            function($args, $prophecy) {
+                \assert($prophecy instanceof ObjectProphecy);
+
+                return $prophecy->reveal();
+            }
+        )->shouldBeCalled();
 
         $this->previewLinkRepository->findByToken('1234567890123')->willReturn($previewLink->reveal());
         $this->previewLinkRepository->commit()->shouldBeCalled();

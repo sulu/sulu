@@ -37,7 +37,7 @@ interface PreviewLinkInterface
 
     public function getVisitCount(): int;
 
-    public function increaseVisitCount(): self;
+    public function increaseVisitCount(): static;
 
     public function getLastVisit(): ?\DateTimeImmutable;
 }
