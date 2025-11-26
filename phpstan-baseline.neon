@@ -27601,12 +27601,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Entity/File.php
 
 		-
-			message: '#^If condition is always true\.$#'
-			identifier: if.alwaysTrue
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/FileVersion.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\MediaBundle\\Entity\\FileVersion\:\:addTargetGroup\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -61123,12 +61117,6 @@ parameters:
 			path: src/Sulu/Bundle/WebsiteBundle/Resolver/TemplateAttributeResolver.php
 
 		-
-			message: '#^Cannot call method get\(\) on Symfony\\Component\\HttpFoundation\\Request\|null\.$#'
-			identifier: method.nonObject
-			count: 3
-			path: src/Sulu/Bundle/WebsiteBundle/Resolver/TemplateAttributeResolver.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\WebsiteBundle\\Resolver\\TemplateAttributeResolver\:\:__construct\(\) has parameter \$enabledTwigAttributes with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -88731,12 +88719,6 @@ parameters:
 		-
 			message: '#^Cannot access offset ''websiteTagsOperator'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Component/SmartContent/ContentType.php
-
-		-
-			message: '#^Cannot cast mixed to int\.$#'
-			identifier: cast.int
 			count: 1
 			path: src/Sulu/Component/SmartContent/ContentType.php
 

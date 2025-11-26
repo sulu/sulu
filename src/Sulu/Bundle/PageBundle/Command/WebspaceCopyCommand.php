@@ -509,7 +509,7 @@ class WebspaceCopyCommand extends Command
                 continue;
             }
 
-            if ('provider' !== $parameter['name'] || 'content' !== $parameter['value']) {
+            if ('provider' !== $parameter['name'] || 'pages' !== $parameter['value']) {
                 continue;
             }
 

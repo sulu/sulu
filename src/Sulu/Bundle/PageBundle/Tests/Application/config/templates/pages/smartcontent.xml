@@ -22,7 +22,7 @@
             </meta>
 
             <params>
-                <param name="provider" value="content"/>
+                <param name="provider" value="pages"/>
                 <param name="max_per_page" value="5"/>
                 <param name="page_parameter" value="p"/>
                 <param name="properties" type="collection">
