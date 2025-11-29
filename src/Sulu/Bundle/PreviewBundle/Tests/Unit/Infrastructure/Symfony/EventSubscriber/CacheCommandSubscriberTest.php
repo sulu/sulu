@@ -11,10 +11,12 @@
 
 namespace Sulu\Bundle\PreviewBundle\Tests\Unit\Infrastructure\Symfony\EventSubscriber;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
+use Sulu\Bundle\MediaBundle\Command\InitCommand;
 use Sulu\Bundle\PreviewBundle\Infrastructure\Symfony\EventSubscriber\CacheCommandSubscriber;
 use Sulu\Bundle\PreviewBundle\Preview\Renderer\KernelFactoryInterface;
 use Symfony\Bundle\FrameworkBundle\Command\CacheClearCommand;
@@ -22,7 +24,9 @@ use Symfony\Bundle\FrameworkBundle\Command\CacheWarmupCommand;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Event\ConsoleCommandEvent;
+use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 
@@ -30,25 +34,19 @@ class CacheCommandSubscriberTest extends TestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @var ObjectProphecy<KernelFactoryInterface>
-     */
-    private $kernelFactory;
+    /** @var ObjectProphecy<KernelFactoryInterface> */
+    private ObjectProphecy $kernelFactory;
 
-    /**
-     * @var CacheCommandSubscriber
-     */
-    private $cacheCommandSubscriber;
+    /** @var ObjectProphecy<KernelInterface> */
+    private ObjectProphecy $previewKernel;
 
-    /**
-     * @var ObjectProphecy<KernelInterface>
-     */
-    private $previewKernel;
+    /** @var ObjectProphecy<Application> */
+    private ObjectProphecy $application;
 
-    /**
-     * @var ObjectProphecy<Application>
-     */
-    private $application;
+    private CacheCommandSubscriber $cacheCommandSubscriber;
+
+    private InputInterface $input;
+    private OutputInterface $output;
 
     public function setUp(): void
     {
@@ -56,59 +54,43 @@ class CacheCommandSubscriberTest extends TestCase
         $this->previewKernel = $this->prophesize(KernelInterface::class);
         $this->kernelFactory = $this->prophesize(KernelFactoryInterface::class);
         $this->cacheCommandSubscriber = new CacheCommandSubscriber($this->kernelFactory->reveal());
+        $this->input = new ArrayInput([]);
+        $this->output = new NullOutput();
 
         $this->cacheCommandSubscriber->setApplication($this->application->reveal());
     }
 
-    public function testEventCacheClear(): void
+    #[DataProvider('dataCommandIsRunProvider')]
+    public function testCommandIsRun(string $commandClass): void
     {
-        $command = $this->prophesize(CacheClearCommand::class);
+        $command = $this->prophesize($commandClass);
 
         $this->kernelFactory->create()
             ->shouldBeCalled()
             ->willReturn($this->previewKernel->reveal());
-
         $this->application->setAutoExit(false)->shouldBeCalled();
-        $this->application->run(Argument::any(), Argument::any())
-            ->shouldBeCalled();
+        $this->application->run($this->input, $this->output)->shouldBeCalled();
 
-        $this->runCommand($command->reveal());
+        $event = new ConsoleCommandEvent($command->reveal(), $this->input, $this->output);
+
+        $this->cacheCommandSubscriber->onCommand($event);
     }
 
-    public function testEventCacheWarmup(): void
+    public static function dataCommandIsRunProvider(): array
     {
-        $command = $this->prophesize(CacheWarmupCommand::class);
-
-        $this->kernelFactory->create()
-            ->shouldBeCalled()
-            ->willReturn($this->previewKernel->reveal());
-
-        $this->application->setAutoExit(false)->shouldBeCalled();
-        $this->application->run(Argument::any(), Argument::any())
-            ->shouldBeCalled();
-
-        $this->runCommand($command->reveal());
+        return [
+            [CacheClearCommand::class],
+            [CacheWarmupCommand::class],
+        ];
     }
 
-    public function testEventOtherCommand(): void
+    public function testOtherCommandsAreNotForwarded(): void
     {
-        $command = $this->prophesize(Command::class);
+        $command = $this->prophesize(InitCommand::class);
 
-        $this->kernelFactory->create()
-            ->shouldNotBeCalled();
+        $this->application->run($this->input, $this->output)->shouldNotBeCalled();
 
-        $this->application->run(Argument::any(), Argument::any())
-            ->shouldNotBeCalled();
-
-        $this->runCommand($command->reveal());
-    }
-
-    private function runCommand(Command $command): void
-    {
-        $input = $this->prophesize(InputInterface::class);
-        $output = $this->prophesize(OutputInterface::class);
-
-        $event = new ConsoleCommandEvent($command, $input->reveal(), $output->reveal());
+        $event = new ConsoleCommandEvent($command->reveal(), $this->input, $this->output);
 
         $this->cacheCommandSubscriber->onCommand($event);
     }
