@@ -17,6 +17,8 @@ use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\PreviewBundle\Infrastructure\Symfony\EventSubscriber\CacheCommandSubscriber;
 use Sulu\Bundle\PreviewBundle\Preview\Renderer\KernelFactoryInterface;
+use Symfony\Bundle\FrameworkBundle\Command\CacheClearCommand;
+use Symfony\Bundle\FrameworkBundle\Command\CacheWarmupCommand;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Event\ConsoleCommandEvent;
@@ -60,8 +62,7 @@ class CacheCommandSubscriberTest extends TestCase
 
     public function testEventCacheClear(): void
     {
-        $command = $this->prophesize(Command::class);
-        $command->getName()->willReturn('cache:clear');
+        $command = $this->prophesize(CacheClearCommand::class);
 
         $this->kernelFactory->create()
             ->shouldBeCalled()
@@ -76,8 +77,7 @@ class CacheCommandSubscriberTest extends TestCase
 
     public function testEventCacheWarmup(): void
     {
-        $command = $this->prophesize(Command::class);
-        $command->getName()->willReturn('cache:warmup');
+        $command = $this->prophesize(CacheWarmupCommand::class);
 
         $this->kernelFactory->create()
             ->shouldBeCalled()
@@ -93,7 +93,6 @@ class CacheCommandSubscriberTest extends TestCase
     public function testEventOtherCommand(): void
     {
         $command = $this->prophesize(Command::class);
-        $command->getName()->willReturn('other:command');
 
         $this->kernelFactory->create()
             ->shouldNotBeCalled();
