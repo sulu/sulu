@@ -17,7 +17,7 @@ use JMS\Serializer\Annotation\Type;
 /**
  * Represents a parameter of a property.
  */
-class PropertyParameter implements \JsonSerializable
+class PropertyParameter implements \Stringable, \JsonSerializable
 {
     /**
      * @var string

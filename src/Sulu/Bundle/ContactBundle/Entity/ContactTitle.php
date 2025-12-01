@@ -16,7 +16,7 @@ use JMS\Serializer\Annotation\Groups;
 /**
  * ContactTitle.
  */
-class ContactTitle implements \JsonSerializable
+class ContactTitle implements \Stringable, \JsonSerializable
 {
     public const RESOURCE_KEY = 'contact_titles';
 

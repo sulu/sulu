@@ -19,7 +19,7 @@ use Sulu\Component\Security\Authentication\RoleInterface;
  * Permission.
  */
 #[ExclusionPolicy('all')] // ;
-class Permission
+class Permission implements \Stringable
 {
     /**
      * @var string

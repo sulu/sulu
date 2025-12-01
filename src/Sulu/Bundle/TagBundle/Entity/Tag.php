@@ -19,7 +19,7 @@ use Sulu\Component\Security\Authentication\UserInterface;
 /**
  * Represents single tag in the system.
  */
-class Tag implements TagInterface
+class Tag implements \Stringable, TagInterface
 {
     /**
      * @var string
