@@ -18,7 +18,7 @@ use Sulu\Component\Util\ArrayableInterface;
 /**
  * Represents a localization of a webspace definition.
  */
-class Localization implements \JsonSerializable, ArrayableInterface
+class Localization implements \Stringable, \JsonSerializable, ArrayableInterface
 {
     public const UNDERSCORE = 'de_at';
 
