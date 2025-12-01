@@ -24,6 +24,8 @@ use Sulu\Bundle\ContactBundle\Domain\Event\AccountContactRemovedEvent;
 use Sulu\Bundle\ContactBundle\Domain\Event\AccountCreatedEvent;
 use Sulu\Bundle\ContactBundle\Domain\Event\AccountModifiedEvent;
 use Sulu\Bundle\ContactBundle\Domain\Event\AccountRemovedEvent;
+use Sulu\Bundle\ContactBundle\Entity\Account;
+use Sulu\Bundle\ContactBundle\Entity\AccountAddress;
 use Sulu\Bundle\ContactBundle\Entity\AccountContact as AccountContactEntity;
 use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
 use Sulu\Bundle\ContactBundle\Entity\AccountRepositoryInterface;
@@ -739,6 +741,7 @@ class AccountController extends AbstractRestController implements ClassResourceI
         }
 
         $delete = function($id) use ($request) {
+            /** @var ?Account $account */
             $account = $this->accountRepository->findAccountByIdAndDelete($id);
 
             if (!$account) {
@@ -752,9 +755,48 @@ class AccountController extends AbstractRestController implements ClassResourceI
             $addresses = $account->getAddresses();
             /** @var AddressEntity $address */
             foreach ($addresses as $address) {
-                if (!$address->hasRelations()) {
-                    $this->entityManager->remove($address);
+                if (\count($address->getContactAddresses()) > 0) {
+                    continue;
                 }
+                if (\count($address->getAccountAddresses()) > 1) {
+                    continue;
+                }
+                $accountAddresses = $address->getAccountAddresses()->toArray();
+                /** @var AccountAddress $firstAccountAddress */
+                $firstAccountAddress = \array_pop($accountAddresses);
+                if ($firstAccountAddress->getAccount() !== $account) {
+                    continue;
+                }
+                $this->entityManager->remove($address);
+            }
+
+            $bankAccounts = $account->getBankAccounts();
+            foreach ($bankAccounts as $bankAccount) {
+                if (\count($bankAccount->getContacts()) > 0) {
+                    continue;
+                }
+                if ($bankAccount->getAccounts()->toArray() !== [$account]) {
+                    continue;
+                }
+                $this->entityManager->remove($bankAccount);
+            }
+
+            $flatRelations = \array_merge(
+                $account->getUrls()->toArray(),
+                $account->getEmails()->toArray(),
+                $account->getPhones()->toArray(),
+                $account->getFaxes()->toArray(),
+                $account->getNotes()->toArray(),
+                $account->getSocialMediaProfiles()->toArray(),
+            );
+
+            foreach ($flatRelations as $relation) {
+                $this->entityManager->remove($relation);
+            }
+
+            $phones = $account->getPhones();
+            foreach ($phones as $phone) {
+                $this->entityManager->remove($phone);
             }
 
             // Remove related contacts if removeContacts is true.

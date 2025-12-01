@@ -20,6 +20,7 @@ use Sulu\Bundle\ContactBundle\Entity\AccountContact;
 use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
 use Sulu\Bundle\ContactBundle\Entity\Address;
 use Sulu\Bundle\ContactBundle\Entity\AddressType;
+use Sulu\Bundle\ContactBundle\Entity\BankAccount;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\ContactBundle\Entity\Email;
 use Sulu\Bundle\ContactBundle\Entity\EmailType;
@@ -29,6 +30,8 @@ use Sulu\Bundle\ContactBundle\Entity\Note;
 use Sulu\Bundle\ContactBundle\Entity\Phone;
 use Sulu\Bundle\ContactBundle\Entity\PhoneType;
 use Sulu\Bundle\ContactBundle\Entity\Position;
+use Sulu\Bundle\ContactBundle\Entity\SocialMediaProfile;
+use Sulu\Bundle\ContactBundle\Entity\SocialMediaProfileType;
 use Sulu\Bundle\ContactBundle\Entity\Url;
 use Sulu\Bundle\ContactBundle\Entity\UrlType;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
@@ -1411,7 +1414,55 @@ class AccountControllerTest extends SuluTestCase
 
     public function testDeleteById(): void
     {
-        $account = $this->createAccount('Company');
+        $urlType = $this->createUrlType('Private');
+        $url = $this->createUrl('http://www.company.example', $urlType);
+        $emailType = $this->createEmailType('Private');
+        $email = $this->createEmail('info@muster.at', $emailType);
+        $phoneType = $this->createPhoneType('Private');
+        $phone = $this->createPhone('123456789', $phoneType);
+        $faxType = $this->createFaxType('Private');
+        $fax = $this->createFax('123456789', $faxType);
+        $socialMediaProfileType = $this->createSocialMediaProfileType('Linkedin');
+        $socialMediaProfile = $this->createSocialMediaProfile('https://www.linkedin.com/company/sulu-cms', $socialMediaProfileType);
+        $bankAccount = $this->createBankAccount('123456789', 'DE89370400440532013000', 'SULU');
+        $addressType = $this->createAddressType('Private');
+        $address = $this->createAddress(
+            $addressType,
+            'Musterstraße',
+            '1',
+            '0000',
+            'Musterstadt',
+            'Musterland',
+            'ML',
+            true,
+            true,
+            false,
+            'Dornbirn',
+            '6850',
+            '4711',
+            'note',
+            47.4048346,
+            9.7602198
+        );
+        $note = $this->createNote('Note');
+
+        $account = $this->createAccount(
+            'Company',
+            null,
+            $url,
+            $address,
+            $email,
+            $phone,
+            $fax,
+            $note,
+            'somewhere',
+            null,
+            null,
+            null,
+            $socialMediaProfile,
+            $bankAccount
+        );
+
         $this->em->flush();
         $this->em->clear();
 
@@ -1425,6 +1476,15 @@ class AccountControllerTest extends SuluTestCase
 
         $trashItem = $this->trashItemRepository->findOneBy(['resourceKey' => 'accounts', 'resourceId' => $accountId]);
         $this->assertNotNull($trashItem);
+
+        self::assertNull($this->em->find(Url::class, $url->getId()));
+        self::assertNull($this->em->find(Email::class, $email->getId()));
+        self::assertNull($this->em->find(Phone::class, $phone->getId()));
+        self::assertNull($this->em->find(Fax::class, $fax->getId()));
+        self::assertNull($this->em->find(Address::class, $address->getId()));
+        self::assertNull($this->em->find(Note::class, $note->getId()));
+        self::assertNull($this->em->find(SocialMediaProfile::class, $socialMediaProfile->getId()));
+        self::assertNull($this->em->find(BankAccount::class, $bankAccount->getId()));
     }
 
     public function testDeleteParentById(): void
@@ -2173,8 +2233,10 @@ class AccountControllerTest extends SuluTestCase
         ?string $placeOfJurisdiction = null,
         ?Media $logo = null,
         ?array $categories = null,
-        ?Contact $mainContact = null
-    ) {
+        ?Contact $mainContact = null,
+        ?SocialMediaProfile $socialMediaProfile = null,
+        ?BankAccount $bankAccount = null,
+    ): AccountInterface|Account {
         $account = new Account();
         $account->setName($name);
         $account->setParent($parent);
@@ -2226,12 +2288,22 @@ class AccountControllerTest extends SuluTestCase
             $account->setMainContact($mainContact);
         }
 
+        if ($socialMediaProfile) {
+            $account->addSocialMediaProfile($socialMediaProfile);
+        }
+
+        if ($bankAccount) {
+            $bankAccount->addAccount($account);
+            $account->addBankAccount($bankAccount);
+            $this->em->persist($bankAccount);
+        }
+
         $this->em->persist($account);
 
         return $account;
     }
 
-    private function createUrlType(string $name)
+    private function createUrlType(string $name): UrlType
     {
         $urlType = new UrlType();
         $urlType->setName($name);
@@ -2241,7 +2313,7 @@ class AccountControllerTest extends SuluTestCase
         return $urlType;
     }
 
-    private function createUrl(string $urlValue, UrlType $urlType)
+    private function createUrl(string $urlValue, UrlType $urlType): Url
     {
         $url = new Url();
         $url->setUrl($urlValue);
@@ -2252,7 +2324,7 @@ class AccountControllerTest extends SuluTestCase
         return $url;
     }
 
-    private function createEmail(string $emailAddress, EmailType $emailType)
+    private function createEmail(string $emailAddress, EmailType $emailType): Email
     {
         $email = new Email();
         $email->setEmail($emailAddress);
@@ -2263,7 +2335,7 @@ class AccountControllerTest extends SuluTestCase
         return $email;
     }
 
-    private function createEmailType(string $type)
+    private function createEmailType(string $type): EmailType
     {
         $emailType = new EmailType();
         $emailType->setName($type);
@@ -2273,7 +2345,7 @@ class AccountControllerTest extends SuluTestCase
         return $emailType;
     }
 
-    private function createAddressType(string $type)
+    private function createAddressType(string $type): AddressType
     {
         $addressType = new AddressType();
         $addressType->setName($type);
@@ -2283,7 +2355,7 @@ class AccountControllerTest extends SuluTestCase
         return $addressType;
     }
 
-    private function createFaxType(string $type)
+    private function createFaxType(string $type): FaxType
     {
         $faxType = new FaxType();
         $faxType->setName('Private');
@@ -2293,7 +2365,7 @@ class AccountControllerTest extends SuluTestCase
         return $faxType;
     }
 
-    private function createFax(string $number, FaxType $faxType)
+    private function createFax(string $number, FaxType $faxType): Fax
     {
         $fax = new Fax();
         $fax->setFax('123654789');
@@ -2304,7 +2376,7 @@ class AccountControllerTest extends SuluTestCase
         return $fax;
     }
 
-    private function createPhoneType(string $type)
+    private function createPhoneType(string $type): PhoneType
     {
         $phoneType = new PhoneType();
         $phoneType->setName($type);
@@ -2314,7 +2386,7 @@ class AccountControllerTest extends SuluTestCase
         return $phoneType;
     }
 
-    private function createPhone(string $phoneNumber, PhoneType $phoneType)
+    private function createPhone(string $phoneNumber, PhoneType $phoneType): Phone
     {
         $phone = new Phone();
         $phone->setPhone($phoneNumber);
@@ -2325,7 +2397,7 @@ class AccountControllerTest extends SuluTestCase
         return $phone;
     }
 
-    private function createPosition(string $positionName)
+    private function createPosition(string $positionName): Position
     {
         $position = new Position();
         $position->setPosition($positionName);
@@ -2352,7 +2424,7 @@ class AccountControllerTest extends SuluTestCase
         ?string $note = null,
         ?float $latitude = null,
         ?float $longitude = null
-    ) {
+    ): Address {
         $address = new Address();
         $address->setStreet($street);
         $address->setNumber($number);
@@ -2383,7 +2455,7 @@ class AccountControllerTest extends SuluTestCase
         string $lastName,
         ?string $middleName = null,
         ?int $formOfAddress = null
-    ) {
+    ): Contact {
         $contact = new Contact();
         $contact->setFirstName($firstName);
         $contact->setLastName($lastName);
@@ -2404,7 +2476,7 @@ class AccountControllerTest extends SuluTestCase
         return $contact;
     }
 
-    private function createCollection(CollectionType $collectionType)
+    private function createCollection(CollectionType $collectionType): Collection
     {
         $collection = new Collection();
         $collection->setType($collectionType);
@@ -2413,7 +2485,7 @@ class AccountControllerTest extends SuluTestCase
         return $collection;
     }
 
-    private function createCollectionType(string $name)
+    private function createCollectionType(string $name): CollectionType
     {
         $collectionType = new CollectionType();
         $collectionType->setName($name);
@@ -2422,7 +2494,7 @@ class AccountControllerTest extends SuluTestCase
         return $collectionType;
     }
 
-    private function createMediaType(string $name, ?string $description = null)
+    private function createMediaType(string $name, ?string $description = null): MediaType
     {
         $mediaType = new MediaType();
         $mediaType->setName($name);
@@ -2432,7 +2504,7 @@ class AccountControllerTest extends SuluTestCase
         return $mediaType;
     }
 
-    private function createMedia(string $name, string $mimeType, MediaType $mediaType, Collection $collection)
+    private function createMedia(string $name, string $mimeType, MediaType $mediaType, Collection $collection): Media
     {
         $file = new File();
         $file->setVersion(1);
@@ -2460,7 +2532,7 @@ class AccountControllerTest extends SuluTestCase
         return $media;
     }
 
-    private function createNote(string $value)
+    private function createNote(string $value): Note
     {
         $note = new Note();
         $note->setValue($value);
@@ -2474,10 +2546,8 @@ class AccountControllerTest extends SuluTestCase
      * Creates a certain amount of accounts.
      *
      * @param int $number
-     *
-     * @return array
      */
-    private function createMultipleMinimalAccounts($number)
+    private function createMultipleMinimalAccounts($number): array
     {
         $accounts = [];
 
@@ -2512,5 +2582,38 @@ class AccountControllerTest extends SuluTestCase
         $this->em->persist($category);
 
         return $category;
+    }
+
+    private function createSocialMediaProfileType(string $type): SocialMediaProfileType
+    {
+        $socialMediaProfileType = new SocialMediaProfileType();
+        $socialMediaProfileType->setName($type);
+
+        $this->em->persist($socialMediaProfileType);
+
+        return $socialMediaProfileType;
+    }
+
+    private function createSocialMediaProfile(string $username, SocialMediaProfileType $socialMedaProfileType): SocialMediaProfile
+    {
+        $socialMediaProfile = new SocialMediaProfile();
+        $socialMediaProfile->setUsername($username);
+        $socialMediaProfile->setSocialMediaProfileType($socialMedaProfileType);
+
+        $this->em->persist($socialMediaProfile);
+
+        return $socialMediaProfile;
+    }
+
+    private function createBankAccount(string $bankName, string $iban, string $bic): BankAccount
+    {
+        $bankAccount = new BankAccount();
+        $bankAccount->setBankName($bankName);
+        $bankAccount->setIban($iban);
+        $bankAccount->setBic($bic);
+
+        $this->em->persist($bankAccount);
+
+        return $bankAccount;
     }
 }
