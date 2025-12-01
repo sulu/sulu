@@ -20,6 +20,7 @@ final readonly class FormGroup
         public string $identifier,
         public string $title,
         public array $templates = [],
+        public int $order = 9999,
     ) {
     }
 
@@ -29,6 +30,17 @@ final readonly class FormGroup
             $this->identifier,
             $this->title,
             [...$this->templates, $template],
+            $this->order,
+        );
+    }
+
+    public function withOrder(int $order): self
+    {
+        return new self(
+            $this->identifier,
+            $this->title,
+            $this->templates,
+            $order,
         );
     }
 }

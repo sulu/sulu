@@ -54,7 +54,7 @@ class GroupProviderTest extends TestCase
         $this->translator = $this->prophesize(TranslatorInterface::class);
 
         $this->metadataProviderRegistry = new MetadataProviderRegistry($this->container->reveal());
-        $this->groupProvider = new GroupProvider($this->metadataProviderRegistry, $this->translator->reveal());
+        $this->groupProvider = new GroupProvider($this->metadataProviderRegistry, $this->translator->reveal(), []);
     }
 
     public function testGetGroupsWithSingleGroup(): void
@@ -81,7 +81,7 @@ class GroupProviderTest extends TestCase
         $this->translator->trans(\Prophecy\Argument::any(), [], 'admin')
             ->willReturnArgument(0);
 
-        $groups = $this->groupProvider->getGroups();
+        $groups = $this->groupProvider->getGroups(ArticleInterface::TEMPLATE_TYPE, ArticleInterface::TEMPLATE_TYPE);
 
         $this->assertCount(1, $groups);
         $this->assertArrayHasKey('content', $groups);
@@ -120,7 +120,7 @@ class GroupProviderTest extends TestCase
         $this->translator->trans(\Prophecy\Argument::any(), [], 'admin')
             ->willReturnArgument(0);
 
-        $groups = $this->groupProvider->getGroups();
+        $groups = $this->groupProvider->getGroups(ArticleInterface::TEMPLATE_TYPE, ArticleInterface::TEMPLATE_TYPE);
 
         $this->assertCount(3, $groups);
         $this->assertArrayHasKey('content', $groups);
@@ -159,7 +159,7 @@ class GroupProviderTest extends TestCase
         $this->translator->trans(\Prophecy\Argument::any(), [], 'admin')
             ->willReturnArgument(0);
 
-        $groups = $this->groupProvider->getGroups();
+        $groups = $this->groupProvider->getGroups(ArticleInterface::TEMPLATE_TYPE, ArticleInterface::TEMPLATE_TYPE);
 
         $this->assertCount(1, $groups);
         $this->assertArrayHasKey('default', $groups);
@@ -179,7 +179,7 @@ class GroupProviderTest extends TestCase
             ->getMetadata(ArticleInterface::TEMPLATE_TYPE, '', [])
             ->willReturn($typedFormMetadata);
 
-        $groups = $this->groupProvider->getGroups();
+        $groups = $this->groupProvider->getGroups(ArticleInterface::TEMPLATE_TYPE, ArticleInterface::TEMPLATE_TYPE);
 
         $this->assertCount(0, $groups);
         $this->assertEmpty($groups);
@@ -214,7 +214,7 @@ class GroupProviderTest extends TestCase
         $this->translator->trans(\Prophecy\Argument::any(), [], 'admin')
             ->willReturnArgument(0);
 
-        $groups = $this->groupProvider->getGroups();
+        $groups = $this->groupProvider->getGroups(ArticleInterface::TEMPLATE_TYPE, ArticleInterface::TEMPLATE_TYPE);
 
         $this->assertCount(2, $groups);
         $this->assertArrayHasKey('content', $groups);
@@ -271,5 +271,428 @@ class GroupProviderTest extends TestCase
             'single_char' => ['a', 'A'],
             'empty_string' => ['', ''],
         ];
+    }
+
+    public function testGetGroupsWithOrdering(): void
+    {
+        $formMetadata1 = new FormMetadata();
+        $formMetadata1->setKey('article');
+        $formMetadata1->setGroup('content');
+
+        $formMetadata2 = new FormMetadata();
+        $formMetadata2->setKey('blog');
+        $formMetadata2->setGroup('blog');
+
+        $formMetadata3 = new FormMetadata();
+        $formMetadata3->setKey('news');
+        $formMetadata3->setGroup('news');
+
+        $typedFormMetadata = new TypedFormMetadata();
+        $typedFormMetadata->addForm('article', $formMetadata1);
+        $typedFormMetadata->addForm('blog', $formMetadata2);
+        $typedFormMetadata->addForm('news', $formMetadata3);
+
+        $this->container->has('form')->willReturn(true);
+        $this->container->get('form')->willReturn($this->metadataProvider->reveal());
+
+        $this->metadataProvider
+            ->getMetadata(ArticleInterface::TEMPLATE_TYPE, '', [])
+            ->willReturn($typedFormMetadata);
+
+        $this->translator->trans(\Prophecy\Argument::any(), [], 'admin')
+            ->willReturnArgument(0);
+
+        // Create a GroupProvider with ordering configuration
+        $groupProvider = new GroupProvider(
+            $this->metadataProviderRegistry,
+            $this->translator->reveal(),
+            [
+                ArticleInterface::TEMPLATE_TYPE => [
+                    'news' => ['order' => 10],
+                    'blog' => ['order' => 20],
+                    'content' => ['order' => 30],
+                ],
+            ]
+        );
+
+        $groups = $groupProvider->getGroups(ArticleInterface::TEMPLATE_TYPE, ArticleInterface::TEMPLATE_TYPE);
+
+        $this->assertCount(3, $groups);
+
+        // Verify groups are returned in the configured order
+        $groupKeys = \array_keys($groups);
+        $this->assertSame('news', $groupKeys[0]);
+        $this->assertSame('blog', $groupKeys[1]);
+        $this->assertSame('content', $groupKeys[2]);
+
+        // Verify order property
+        $this->assertSame(10, $groups['news']->order);
+        $this->assertSame(20, $groups['blog']->order);
+        $this->assertSame(30, $groups['content']->order);
+    }
+
+    public function testGetGroupsWithPartialOrdering(): void
+    {
+        $formMetadata1 = new FormMetadata();
+        $formMetadata1->setKey('article');
+        $formMetadata1->setGroup('content');
+
+        $formMetadata2 = new FormMetadata();
+        $formMetadata2->setKey('blog');
+        $formMetadata2->setGroup('blog');
+
+        $formMetadata3 = new FormMetadata();
+        $formMetadata3->setKey('news');
+        $formMetadata3->setGroup('news');
+
+        $formMetadata4 = new FormMetadata();
+        $formMetadata4->setKey('archive');
+        $formMetadata4->setGroup('archive');
+
+        $typedFormMetadata = new TypedFormMetadata();
+        $typedFormMetadata->addForm('article', $formMetadata1);
+        $typedFormMetadata->addForm('blog', $formMetadata2);
+        $typedFormMetadata->addForm('news', $formMetadata3);
+        $typedFormMetadata->addForm('archive', $formMetadata4);
+
+        $this->container->has('form')->willReturn(true);
+        $this->container->get('form')->willReturn($this->metadataProvider->reveal());
+
+        $this->metadataProvider
+            ->getMetadata(ArticleInterface::TEMPLATE_TYPE, '', [])
+            ->willReturn($typedFormMetadata);
+
+        $this->translator->trans(\Prophecy\Argument::any(), [], 'admin')
+            ->willReturnArgument(0);
+
+        // Create a GroupProvider with partial ordering configuration (only news and blog)
+        $groupProvider = new GroupProvider(
+            $this->metadataProviderRegistry,
+            $this->translator->reveal(),
+            [
+                ArticleInterface::TEMPLATE_TYPE => [
+                    'news' => ['order' => 10],
+                    'blog' => ['order' => 20],
+                ],
+            ]
+        );
+
+        $groups = $groupProvider->getGroups(ArticleInterface::TEMPLATE_TYPE, ArticleInterface::TEMPLATE_TYPE);
+
+        $this->assertCount(4, $groups);
+
+        // Verify groups are returned in correct order:
+        // - configured groups first (news, blog)
+        // - unconfigured groups last, alphabetically (archive, content)
+        $groupKeys = \array_keys($groups);
+        $this->assertSame('news', $groupKeys[0]);
+        $this->assertSame('blog', $groupKeys[1]);
+        $this->assertSame('archive', $groupKeys[2]);
+        $this->assertSame('content', $groupKeys[3]);
+
+        // Verify order property
+        $this->assertSame(10, $groups['news']->order);
+        $this->assertSame(20, $groups['blog']->order);
+        $this->assertSame(9999, $groups['archive']->order);
+        $this->assertSame(9999, $groups['content']->order);
+    }
+
+    public function testGetGroupsWithoutOrdering(): void
+    {
+        $formMetadata1 = new FormMetadata();
+        $formMetadata1->setKey('article');
+        $formMetadata1->setGroup('content');
+
+        $formMetadata2 = new FormMetadata();
+        $formMetadata2->setKey('blog');
+        $formMetadata2->setGroup('blog');
+
+        $formMetadata3 = new FormMetadata();
+        $formMetadata3->setKey('news');
+        $formMetadata3->setGroup('news');
+
+        $typedFormMetadata = new TypedFormMetadata();
+        $typedFormMetadata->addForm('article', $formMetadata1);
+        $typedFormMetadata->addForm('blog', $formMetadata2);
+        $typedFormMetadata->addForm('news', $formMetadata3);
+
+        $this->container->has('form')->willReturn(true);
+        $this->container->get('form')->willReturn($this->metadataProvider->reveal());
+
+        $this->metadataProvider
+            ->getMetadata(ArticleInterface::TEMPLATE_TYPE, '', [])
+            ->willReturn($typedFormMetadata);
+
+        $this->translator->trans(\Prophecy\Argument::any(), [], 'admin')
+            ->willReturnArgument(0);
+
+        // Create a GroupProvider without ordering configuration
+        $groupProvider = new GroupProvider(
+            $this->metadataProviderRegistry,
+            $this->translator->reveal(),
+            []
+        );
+
+        $groups = $groupProvider->getGroups();
+
+        $this->assertCount(3, $groups);
+
+        // Verify groups are returned in alphabetical order
+        $groupKeys = \array_keys($groups);
+        $this->assertSame('blog', $groupKeys[0]);
+        $this->assertSame('content', $groupKeys[1]);
+        $this->assertSame('news', $groupKeys[2]);
+
+        // Verify all have default order
+        $this->assertSame(9999, $groups['blog']->order);
+        $this->assertSame(9999, $groups['content']->order);
+        $this->assertSame(9999, $groups['news']->order);
+    }
+
+    public function testGetGroupsWithCustomTranslationKey(): void
+    {
+        $formMetadata1 = new FormMetadata();
+        $formMetadata1->setKey('article');
+        $formMetadata1->setGroup('blog');
+
+        $typedFormMetadata = new TypedFormMetadata();
+        $typedFormMetadata->addForm('article', $formMetadata1);
+
+        $this->container->has('form')->willReturn(true);
+        $this->container->get('form')->willReturn($this->metadataProvider->reveal());
+
+        $this->metadataProvider
+            ->getMetadata(ArticleInterface::TEMPLATE_TYPE, '', [])
+            ->willReturn($typedFormMetadata);
+
+        $this->translator->trans('app.custom_blog_title', [], 'admin')
+            ->willReturn('Custom Blog Title');
+
+        // Create a GroupProvider with custom translation key
+        $groupProvider = new GroupProvider(
+            $this->metadataProviderRegistry,
+            $this->translator->reveal(),
+            [
+                ArticleInterface::TEMPLATE_TYPE => [
+                    'blog' => ['translation_key' => 'app.custom_blog_title'],
+                ],
+            ]
+        );
+
+        $groups = $groupProvider->getGroups(ArticleInterface::TEMPLATE_TYPE, ArticleInterface::TEMPLATE_TYPE);
+
+        $this->assertCount(1, $groups);
+        $this->assertSame('Custom Blog Title', $groups['blog']->title);
+    }
+
+    public function testGetGroupsWithCustomResourceKey(): void
+    {
+        $formMetadata1 = new FormMetadata();
+        $formMetadata1->setKey('page');
+        $formMetadata1->setGroup('homepage');
+
+        $formMetadata2 = new FormMetadata();
+        $formMetadata2->setKey('default');
+        $formMetadata2->setGroup('standard');
+
+        $typedFormMetadata = new TypedFormMetadata();
+        $typedFormMetadata->addForm('page', $formMetadata1);
+        $typedFormMetadata->addForm('default', $formMetadata2);
+
+        $this->container->has('form')->willReturn(true);
+        $this->container->get('form')->willReturn($this->metadataProvider->reveal());
+
+        $this->metadataProvider
+            ->getMetadata('pages', '', [])
+            ->willReturn($typedFormMetadata);
+
+        $this->translator->trans(\Prophecy\Argument::any(), [], 'admin')
+            ->willReturnArgument(0);
+
+        // Create a GroupProvider with configuration for custom resource key
+        $groupProvider = new GroupProvider(
+            $this->metadataProviderRegistry,
+            $this->translator->reveal(),
+            [
+                'pages' => [
+                    'homepage' => ['order' => 1],
+                    'standard' => ['order' => 2],
+                ],
+            ]
+        );
+
+        $groups = $groupProvider->getGroups('pages', 'pages');
+
+        $this->assertCount(2, $groups);
+
+        // Verify groups are returned in the configured order
+        $groupKeys = \array_keys($groups);
+        $this->assertSame('homepage', $groupKeys[0]);
+        $this->assertSame('standard', $groupKeys[1]);
+
+        // Verify order property
+        $this->assertSame(1, $groups['homepage']->order);
+        $this->assertSame(2, $groups['standard']->order);
+    }
+
+    public function testGetGroupsBackwardCompatibility(): void
+    {
+        $formMetadata1 = new FormMetadata();
+        $formMetadata1->setKey('article');
+        $formMetadata1->setGroup('blog');
+
+        $typedFormMetadata = new TypedFormMetadata();
+        $typedFormMetadata->addForm('article', $formMetadata1);
+
+        $this->container->has('form')->willReturn(true);
+        $this->container->get('form')->willReturn($this->metadataProvider->reveal());
+
+        $this->metadataProvider
+            ->getMetadata(ArticleInterface::TEMPLATE_TYPE, '', [])
+            ->willReturn($typedFormMetadata);
+
+        $this->translator->trans(\Prophecy\Argument::any(), [], 'admin')
+            ->willReturnArgument(0);
+
+        $groupProvider = new GroupProvider(
+            $this->metadataProviderRegistry,
+            $this->translator->reveal(),
+            []
+        );
+
+        // Capture deprecation warning
+        $deprecationTriggered = false;
+        set_error_handler(function ($errno, $errstr) use (&$deprecationTriggered) {
+            if (\E_USER_DEPRECATED === $errno && false !== \strpos($errstr, 'Calling "GroupProvider::getGroups()" without arguments is deprecated')) {
+                $deprecationTriggered = true;
+
+                return true;
+            }
+
+            return false;
+        }, \E_USER_DEPRECATED);
+
+        // Call without parameters - should use ArticleInterface::TEMPLATE_TYPE as default and trigger deprecation
+        $groups = $groupProvider->getGroups();
+
+        restore_error_handler();
+
+        $this->assertTrue($deprecationTriggered, 'Deprecation warning should have been triggered');
+        $this->assertCount(1, $groups);
+        $this->assertArrayHasKey('blog', $groups);
+    }
+
+    public function testGetGroupsWithTemplateTypeOnly(): void
+    {
+        $formMetadata1 = new FormMetadata();
+        $formMetadata1->setKey('page');
+        $formMetadata1->setGroup('homepage');
+
+        $typedFormMetadata = new TypedFormMetadata();
+        $typedFormMetadata->addForm('page', $formMetadata1);
+
+        $this->container->has('form')->willReturn(true);
+        $this->container->get('form')->willReturn($this->metadataProvider->reveal());
+
+        $this->metadataProvider
+            ->getMetadata('pages', '', [])
+            ->willReturn($typedFormMetadata);
+
+        $this->translator->trans(\Prophecy\Argument::any(), [], 'admin')
+            ->willReturnArgument(0);
+
+        $groupProvider = new GroupProvider(
+            $this->metadataProviderRegistry,
+            $this->translator->reveal(),
+            [
+                'pages' => [
+                    'homepage' => ['order' => 10],
+                ],
+            ]
+        );
+
+        // Call with only templateType - resourceKey should default to templateType
+        $groups = $groupProvider->getGroups(null, 'pages');
+
+        $this->assertCount(1, $groups);
+        $this->assertArrayHasKey('homepage', $groups);
+        $this->assertSame(10, $groups['homepage']->order);
+    }
+
+    public function testGetGroupsWithShorthandConfigurationUsesArrayIndex(): void
+    {
+        $formMetadata1 = new FormMetadata();
+        $formMetadata1->setKey('article');
+        $formMetadata1->setGroup('blog');
+
+        $formMetadata2 = new FormMetadata();
+        $formMetadata2->setKey('news');
+        $formMetadata2->setGroup('news');
+
+        $formMetadata3 = new FormMetadata();
+        $formMetadata3->setKey('archive');
+        $formMetadata3->setGroup('archive');
+
+        $typedFormMetadata = new TypedFormMetadata();
+        $typedFormMetadata->addForm('article', $formMetadata1);
+        $typedFormMetadata->addForm('news', $formMetadata2);
+        $typedFormMetadata->addForm('archive', $formMetadata3);
+
+        $this->container->has('form')->willReturn(true);
+        $this->container->get('form')->willReturn($this->metadataProvider->reveal());
+
+        $this->metadataProvider
+            ->getMetadata(ArticleInterface::TEMPLATE_TYPE, '', [])
+            ->willReturn($typedFormMetadata);
+
+        $this->translator->trans('app.blog_articles', [], 'admin')
+            ->willReturn('Blog Articles');
+        $this->translator->trans('app.news_articles', [], 'admin')
+            ->willReturn('News Articles');
+        $this->translator->trans('app.archive_articles', [], 'admin')
+            ->willReturn('Archive Articles');
+
+        // Config processed by Symfony would have array indices as order
+        // This simulates what the configuration normalization does
+        $groupProvider = new GroupProvider(
+            $this->metadataProviderRegistry,
+            $this->translator->reveal(),
+            [
+                ArticleInterface::TEMPLATE_TYPE => [
+                    'blog' => [
+                        'translation_key' => 'app.blog_articles',
+                        'order' => 0, // array index
+                    ],
+                    'news' => [
+                        'translation_key' => 'app.news_articles',
+                        'order' => 1, // array index
+                    ],
+                    'archive' => [
+                        'translation_key' => 'app.archive_articles',
+                        'order' => 2, // array index
+                    ],
+                ],
+            ]
+        );
+
+        $groups = $groupProvider->getGroups(ArticleInterface::TEMPLATE_TYPE, ArticleInterface::TEMPLATE_TYPE);
+
+        $this->assertCount(3, $groups);
+
+        // Verify groups are returned in array index order
+        $groupKeys = \array_keys($groups);
+        $this->assertSame('blog', $groupKeys[0]);
+        $this->assertSame('news', $groupKeys[1]);
+        $this->assertSame('archive', $groupKeys[2]);
+
+        // Verify order property matches array indices
+        $this->assertSame(0, $groups['blog']->order);
+        $this->assertSame(1, $groups['news']->order);
+        $this->assertSame(2, $groups['archive']->order);
+
+        // Verify custom translation keys were used
+        $this->assertSame('Blog Articles', $groups['blog']->title);
+        $this->assertSame('News Articles', $groups['news']->title);
+        $this->assertSame('Archive Articles', $groups['archive']->title);
     }
 }

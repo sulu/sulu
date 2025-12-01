@@ -16,7 +16,10 @@ use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormGroup;
 interface GroupProviderInterface
 {
     /**
+     * @param string|null $resourceKey (optional) The resource key to get groups for
+     * @param string|null $templateType (optional) The template type to get groups for
+     *
      * @return array<string, FormGroup>
      */
-    public function getGroups(): array;
+    public function getGroups(/* ?string $resourceKey = null, ?string $templateType = null */): array;
 }
