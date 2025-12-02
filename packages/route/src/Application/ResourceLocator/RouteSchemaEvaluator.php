@@ -77,7 +77,6 @@ final class RouteSchemaEvaluator implements RouteSchemaEvaluatorInterface
 
     private function registerFunctions(): void
     {
-        // implode function with ArrayObject support
         $this->expressionLanguage->register(
             'implode',
             fn (string $glue, string $pieces): string => \sprintf('implode(%s, %s)', $glue, $pieces),
@@ -95,7 +94,6 @@ final class RouteSchemaEvaluator implements RouteSchemaEvaluatorInterface
             }
         );
 
-        // is_array function
         $this->expressionLanguage->addFunction(
             ExpressionFunction::fromPhp('is_array')
         );
