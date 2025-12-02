@@ -22,6 +22,7 @@ final readonly class ResourceLocatorGenerator implements ResourceLocatorGenerato
     public function __construct(
         private RouteRepositoryInterface $routeRepository,
         private PathCleanupInterface $pathCleanup,
+        private ?RouteSchemaProcessor $routeSchemaProcessor = null,
     ) {
     }
 
@@ -38,13 +39,29 @@ final readonly class ResourceLocatorGenerator implements ResourceLocatorGenerato
             $parentPath = $parentRoute?->getSlug() ?: '/';
         }
 
+        $parentPath = \rtrim($parentPath, '/');
+
+        if (null !== $request->routeSchema && null !== $this->routeSchemaProcessor) {
+            $path = $this->routeSchemaProcessor->process($request);
+
+            $uniquePath = $this->createUnique(
+                $parentPath . $path,
+                $request->locale,
+                $request->webspace,
+                $request->resourceKey,
+                $request->resourceId,
+            );
+
+            if ($request->relative) {
+                return \substr($uniquePath, \strlen($parentPath));
+            }
+
+            return $uniquePath;
+        }
+
         $parts = \array_map(fn ($part) => $this->pathCleanup->cleanup($part, $request->locale), $request->parts);
 
         $path = '/' . \implode('-', $parts);
-
-        $parentPath = \rtrim($parentPath, '/');
-
-        // TODO routeSchema
 
         $uniquePath = $this->createUnique( // TODO own service called during doctrine listener also?
             $parentPath . $path,

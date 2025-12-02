@@ -17,6 +17,7 @@ use Sulu\Route\Application\MessageHandler\RemoveRouteHistoryMessageHandler;
 use Sulu\Route\Application\ResourceLocator\PathCleanup\PathCleanup;
 use Sulu\Route\Application\ResourceLocator\PathCleanup\PathCleanupInterface;
 use Sulu\Route\Application\ResourceLocator\ResourceLocatorGenerator;
+use Sulu\Route\Application\ResourceLocator\RouteSchemaProcessor;
 use Sulu\Route\Application\Routing\Generator\RouteGenerator;
 use Sulu\Route\Application\Routing\Generator\RouteGeneratorInterface;
 use Sulu\Route\Application\Routing\Generator\WebspaceRouteGeneratorInterface;
@@ -122,6 +123,13 @@ final class SuluRouteBundle extends AbstractBundle
         $services->alias(PathCleanupInterface::class, 'sulu_route.path_cleanup')
             ->public();
 
+        $services->set('sulu_route.route_schema_processor')
+            ->class(RouteSchemaProcessor::class)
+            ->args([
+                new Reference('translator'),
+                new Reference('sulu_route.path_cleanup'),
+            ]);
+
         $services->alias(RouteGeneratorInterface::class, 'sulu_route.route_generator')
             ->public();
 
@@ -147,6 +155,7 @@ final class SuluRouteBundle extends AbstractBundle
             ->args([
                 new Reference('sulu_route.route_repository'),
                 new Reference('sulu_route.path_cleanup'),
+                new Reference('sulu_route.route_schema_processor'),
             ]);
 
         // Message Handler services
