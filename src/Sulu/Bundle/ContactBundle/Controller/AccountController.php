@@ -770,17 +770,6 @@ class AccountController extends AbstractRestController implements ClassResourceI
                 $this->entityManager->remove($address);
             }
 
-            $bankAccounts = $account->getBankAccounts();
-            foreach ($bankAccounts as $bankAccount) {
-                if (\count($bankAccount->getContacts()) > 0) {
-                    continue;
-                }
-                if ($bankAccount->getAccounts()->toArray() !== [$account]) {
-                    continue;
-                }
-                $this->entityManager->remove($bankAccount);
-            }
-
             $flatRelations = \array_merge(
                 $account->getUrls()->toArray(),
                 $account->getEmails()->toArray(),
@@ -788,15 +777,17 @@ class AccountController extends AbstractRestController implements ClassResourceI
                 $account->getFaxes()->toArray(),
                 $account->getNotes()->toArray(),
                 $account->getSocialMediaProfiles()->toArray(),
+                $account->getBankAccounts()->toArray()
             );
 
-            foreach ($flatRelations as $relation) {
-                $this->entityManager->remove($relation);
-            }
-
-            $phones = $account->getPhones();
-            foreach ($phones as $phone) {
-                $this->entityManager->remove($phone);
+            foreach ($flatRelations as $relationEntity) {
+                if (\count($relationEntity->getContacts()) > 0) {
+                    continue;
+                }
+                if ($relationEntity->getAccounts()->toArray() !== [$account]) {
+                    continue;
+                }
+                $this->entityManager->remove($relationEntity);
             }
 
             // Remove related contacts if removeContacts is true.
