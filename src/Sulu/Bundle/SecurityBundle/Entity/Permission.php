@@ -16,7 +16,7 @@ use JMS\Serializer\Annotation\Expose;
 use Sulu\Component\Security\Authentication\RoleInterface;
 
 #[ExclusionPolicy('all')]
-class Permission
+class Permission implements \Stringable
 {
     #[Expose]
     private string $context;

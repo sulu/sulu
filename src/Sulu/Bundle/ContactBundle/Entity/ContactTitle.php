@@ -13,7 +13,7 @@ namespace Sulu\Bundle\ContactBundle\Entity;
 
 use JMS\Serializer\Annotation\Groups;
 
-class ContactTitle implements \JsonSerializable
+class ContactTitle implements \Stringable, \JsonSerializable
 {
     public const RESOURCE_KEY = 'contact_titles';
 

@@ -19,7 +19,7 @@ use Sulu\Component\Persistence\Model\UserBlameTrait;
 /**
  * Represents single tag in the system.
  */
-class Tag implements TagInterface
+class Tag implements \Stringable, TagInterface
 {
     use UserBlameTrait;
 
