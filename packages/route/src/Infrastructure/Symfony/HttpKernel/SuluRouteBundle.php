@@ -18,6 +18,7 @@ use Sulu\Route\Application\ResourceLocator\PathCleanup\PathCleanup;
 use Sulu\Route\Application\ResourceLocator\PathCleanup\PathCleanupInterface;
 use Sulu\Route\Application\ResourceLocator\ResourceLocatorGenerator;
 use Sulu\Route\Application\ResourceLocator\RouteSchemaEvaluator;
+use Sulu\Route\Application\ResourceLocator\RouteSchemaEvaluatorInterface;
 use Sulu\Route\Application\Routing\Generator\RouteGenerator;
 use Sulu\Route\Application\Routing\Generator\RouteGeneratorInterface;
 use Sulu\Route\Application\Routing\Generator\WebspaceRouteGeneratorInterface;
@@ -130,6 +131,9 @@ final class SuluRouteBundle extends AbstractBundle
                 new Reference('sulu_route.path_cleanup'),
             ]);
 
+        $services->alias(RouteSchemaEvaluatorInterface::class, 'sulu_route.route_schema_evaluator')
+            ->public();
+
         $services->alias(RouteGeneratorInterface::class, 'sulu_route.route_generator')
             ->public();
 
@@ -154,7 +158,6 @@ final class SuluRouteBundle extends AbstractBundle
             ->class(ResourceLocatorGenerator::class)
             ->args([
                 new Reference('sulu_route.route_repository'),
-                new Reference('sulu_route.path_cleanup'),
                 new Reference('sulu_route.route_schema_evaluator'),
             ]);
 

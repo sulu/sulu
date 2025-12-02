@@ -20,6 +20,7 @@ use Sulu\Route\Application\ResourceLocator\PathCleanup\PathCleanup;
 use Sulu\Route\Application\ResourceLocator\ResourceLocatorGenerator;
 use Sulu\Route\Application\ResourceLocator\ResourceLocatorRequest;
 use Sulu\Route\Application\ResourceLocator\RouteSchemaEvaluator;
+use Sulu\Route\Application\ResourceLocator\RouteSchemaEvaluatorInterface;
 use Sulu\Route\Domain\Model\Route;
 use Sulu\Route\Domain\Repository\RouteRepositoryInterface;
 use Symfony\Component\String\Slugger\AsciiSlugger;
@@ -37,14 +38,21 @@ class ResourceLocatorGeneratorTest extends TestCase
 
     private ResourceLocatorGenerator $resourceLocatorGenerator;
 
+    private RouteSchemaEvaluatorInterface $routeSchemaEvaluator;
+
     public function setUp(): void
     {
         $this->routeRepository = $this->prophesize(RouteRepositoryInterface::class);
 
+        $translator = $this->prophesize(TranslatorInterface::class);
+        $this->routeSchemaEvaluator = new RouteSchemaEvaluator(
+            $translator->reveal(),
+            new PathCleanup(new AsciiSlugger(), []),
+        );
+
         $this->resourceLocatorGenerator = new ResourceLocatorGenerator(
             $this->routeRepository->reveal(),
-            new PathCleanup(new AsciiSlugger(), []),
-            null, // RouteSchemaEvaluator - not used in basic tests
+            $this->routeSchemaEvaluator,
         );
     }
 
@@ -121,19 +129,6 @@ class ResourceLocatorGeneratorTest extends TestCase
 
     public function testGenerateWithRouteSchema(): void
     {
-        $translator = $this->prophesize(TranslatorInterface::class);
-
-        $routeSchemaProcessor = new RouteSchemaEvaluator(
-            $translator->reveal(),
-            new PathCleanup(new AsciiSlugger(), []),
-        );
-
-        $generator = new ResourceLocatorGenerator(
-            $this->routeRepository->reveal(),
-            new PathCleanup(new AsciiSlugger(), []),
-            $routeSchemaProcessor,
-        );
-
         $request = $this->createResourceLocatorRequest(
             parts: ['title' => 'Hello World'],
             routeSchema: '/{object[\'title\']}',
@@ -141,24 +136,11 @@ class ResourceLocatorGeneratorTest extends TestCase
 
         $this->routeRepository->existBy(Argument::any())->willReturn(false);
 
-        $this->assertSame('/hello-world', $generator->generate($request));
+        $this->assertSame('/hello-world', $this->resourceLocatorGenerator->generate($request));
     }
 
     public function testGenerateWithParentAndRouteSchema(): void
     {
-        $translator = $this->prophesize(TranslatorInterface::class);
-
-        $routeSchemaProcessor = new RouteSchemaEvaluator(
-            $translator->reveal(),
-            new PathCleanup(new AsciiSlugger(), []),
-        );
-
-        $generator = new ResourceLocatorGenerator(
-            $this->routeRepository->reveal(),
-            new PathCleanup(new AsciiSlugger(), []),
-            $routeSchemaProcessor,
-        );
-
         $request = $this->createResourceLocatorRequest(
             parts: ['title' => 'Hello World'],
             locale: 'de',
@@ -186,7 +168,7 @@ class ResourceLocatorGeneratorTest extends TestCase
 
         $this->routeRepository->existBy(Argument::any())->willReturn(false);
 
-        $this->assertSame('/news/hello-world', $generator->generate($request));
+        $this->assertSame('/news/hello-world', $this->resourceLocatorGenerator->generate($request));
     }
 
     /**

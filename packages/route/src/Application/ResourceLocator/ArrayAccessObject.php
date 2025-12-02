@@ -17,6 +17,8 @@ namespace Sulu\Route\Application\ResourceLocator;
  * A wrapper class that allows both property access (object.title) and
  * array access (object['title']) syntax in ExpressionLanguage expressions.
  *
+ * @internal no backwards compatibility promises are given for this class it can be removed at any time
+ *
  * @implements \ArrayAccess<string, mixed>
  */
 final class ArrayAccessObject implements \ArrayAccess

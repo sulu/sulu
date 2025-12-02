@@ -20,7 +20,10 @@ use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 use Symfony\Component\ExpressionLanguage\SyntaxError;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-final class RouteSchemaEvaluator
+/**
+ * @internal no backwards compatibility promises are given for this class it can be removed at any time
+ */
+final class RouteSchemaEvaluator implements RouteSchemaEvaluatorInterface
 {
     private ExpressionLanguage $expressionLanguage;
 
@@ -32,7 +35,10 @@ final class RouteSchemaEvaluator
         $this->registerFunctions();
     }
 
-    public function process(ResourceLocatorRequest $request): string
+    /**
+     * @throws InvalidRouteSchemaException
+     */
+    public function evaluate(ResourceLocatorRequest $request): string
     {
         $schema = $request->routeSchema;
         if (null === $schema) {

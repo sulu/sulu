@@ -11,18 +11,18 @@
 
 namespace Sulu\Route\Application\ResourceLocator;
 
-use Sulu\Route\Application\ResourceLocator\PathCleanup\PathCleanupInterface;
 use Sulu\Route\Domain\Repository\RouteRepositoryInterface;
 
 final readonly class ResourceLocatorGenerator implements ResourceLocatorGeneratorInterface
 {
+    private const DEFAULT_ROUTE_SCHEMA = '/{implode("-", object)}';
+
     /**
      * @internal get the service always from the Service Container and never instantiate it directly
      */
     public function __construct(
         private RouteRepositoryInterface $routeRepository,
-        private PathCleanupInterface $pathCleanup,
-        private ?RouteSchemaEvaluator $routeSchemaProcessor = null,
+        private RouteSchemaEvaluatorInterface $routeSchemaEvaluator,
     ) {
     }
 
@@ -30,12 +30,11 @@ final readonly class ResourceLocatorGenerator implements ResourceLocatorGenerato
     {
         $parentPath = $this->resolveParentPath($request);
 
-        if (null !== $request->routeSchema && null !== $this->routeSchemaProcessor) {
-            $path = $this->routeSchemaProcessor->process($request);
-        } else {
-            $parts = \array_map(fn ($part) => $this->pathCleanup->cleanup($part, $request->locale), $request->parts);
-            $path = '/' . \implode('-', $parts);
+        if (null === $request->routeSchema) {
+            $request = $request->withRouteSchema(self::DEFAULT_ROUTE_SCHEMA);
         }
+
+        $path = $this->routeSchemaEvaluator->evaluate($request);
 
         $uniquePath = $this->createUnique(
             $parentPath . $path,

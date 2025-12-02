@@ -60,7 +60,7 @@ class RouteSchemaEvaluatorTest extends TestCase
 
         $this->pathCleanup->cleanup('Hello World', 'en')->willReturn('hello-world');
 
-        $result = $this->processor->process($request);
+        $result = $this->processor->evaluate($request);
 
         $this->assertSame('/hello-world', $result);
     }
@@ -82,7 +82,7 @@ class RouteSchemaEvaluatorTest extends TestCase
         $this->pathCleanup->cleanup('Artikel', 'de')->willReturn('artikel');
         $this->pathCleanup->cleanup('My Article', 'de')->willReturn('my-article');
 
-        $result = $this->processor->process($request);
+        $result = $this->processor->evaluate($request);
 
         $this->assertSame('/artikel/my-article', $result);
     }
@@ -102,7 +102,7 @@ class RouteSchemaEvaluatorTest extends TestCase
 
         $this->pathCleanup->cleanup('Hello-World', 'en')->willReturn('hello-world');
 
-        $result = $this->processor->process($request);
+        $result = $this->processor->evaluate($request);
 
         $this->assertSame('/hello-world', $result);
     }
@@ -123,7 +123,7 @@ class RouteSchemaEvaluatorTest extends TestCase
         $this->pathCleanup->cleanup('2024', 'en')->willReturn('2024');
         $this->pathCleanup->cleanup('My Great Article', 'en')->willReturn('my-great-article');
 
-        $result = $this->processor->process($request);
+        $result = $this->processor->evaluate($request);
 
         $this->assertSame('/blog/2024/my-great-article', $result);
     }
@@ -144,7 +144,7 @@ class RouteSchemaEvaluatorTest extends TestCase
         $this->expectException(InvalidRouteSchemaException::class);
         $this->expectExceptionMessageMatches('/Invalid expression/');
 
-        $this->processor->process($request);
+        $this->processor->evaluate($request);
     }
 
     public function testProcessMissingLeadingSlashThrowsException(): void
@@ -165,7 +165,7 @@ class RouteSchemaEvaluatorTest extends TestCase
         $this->expectException(InvalidRouteSchemaException::class);
         $this->expectExceptionMessage('must produce a path starting with /');
 
-        $this->processor->process($request);
+        $this->processor->evaluate($request);
     }
 
     public function testProcessDotNotation(): void
@@ -183,7 +183,7 @@ class RouteSchemaEvaluatorTest extends TestCase
 
         $this->pathCleanup->cleanup('Hello', 'en')->willReturn('hello');
 
-        $result = $this->processor->process($request);
+        $result = $this->processor->evaluate($request);
 
         $this->assertSame('/hello', $result);
     }
