@@ -20,7 +20,7 @@ use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 use Symfony\Component\ExpressionLanguage\SyntaxError;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-final class RouteSchemaProcessor
+final class RouteSchemaEvaluator
 {
     private ExpressionLanguage $expressionLanguage;
 

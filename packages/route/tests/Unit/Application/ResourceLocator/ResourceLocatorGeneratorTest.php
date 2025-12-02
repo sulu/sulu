@@ -19,7 +19,7 @@ use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Route\Application\ResourceLocator\PathCleanup\PathCleanup;
 use Sulu\Route\Application\ResourceLocator\ResourceLocatorGenerator;
 use Sulu\Route\Application\ResourceLocator\ResourceLocatorRequest;
-use Sulu\Route\Application\ResourceLocator\RouteSchemaProcessor;
+use Sulu\Route\Application\ResourceLocator\RouteSchemaEvaluator;
 use Sulu\Route\Domain\Model\Route;
 use Sulu\Route\Domain\Repository\RouteRepositoryInterface;
 use Symfony\Component\String\Slugger\AsciiSlugger;
@@ -44,7 +44,7 @@ class ResourceLocatorGeneratorTest extends TestCase
         $this->resourceLocatorGenerator = new ResourceLocatorGenerator(
             $this->routeRepository->reveal(),
             new PathCleanup(new AsciiSlugger(), []),
-            null, // RouteSchemaProcessor - not used in basic tests
+            null, // RouteSchemaEvaluator - not used in basic tests
         );
     }
 
@@ -123,7 +123,7 @@ class ResourceLocatorGeneratorTest extends TestCase
     {
         $translator = $this->prophesize(TranslatorInterface::class);
 
-        $routeSchemaProcessor = new RouteSchemaProcessor(
+        $routeSchemaProcessor = new RouteSchemaEvaluator(
             $translator->reveal(),
             new PathCleanup(new AsciiSlugger(), []),
         );
@@ -148,7 +148,7 @@ class ResourceLocatorGeneratorTest extends TestCase
     {
         $translator = $this->prophesize(TranslatorInterface::class);
 
-        $routeSchemaProcessor = new RouteSchemaProcessor(
+        $routeSchemaProcessor = new RouteSchemaEvaluator(
             $translator->reveal(),
             new PathCleanup(new AsciiSlugger(), []),
         );

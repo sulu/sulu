@@ -20,11 +20,11 @@ use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Route\Application\ResourceLocator\Exception\InvalidRouteSchemaException;
 use Sulu\Route\Application\ResourceLocator\PathCleanup\PathCleanupInterface;
 use Sulu\Route\Application\ResourceLocator\ResourceLocatorRequest;
-use Sulu\Route\Application\ResourceLocator\RouteSchemaProcessor;
+use Sulu\Route\Application\ResourceLocator\RouteSchemaEvaluator;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-#[CoversClass(RouteSchemaProcessor::class)]
-class RouteSchemaProcessorTest extends TestCase
+#[CoversClass(RouteSchemaEvaluator::class)]
+class RouteSchemaEvaluatorTest extends TestCase
 {
     use ProphecyTrait;
 
@@ -32,14 +32,14 @@ class RouteSchemaProcessorTest extends TestCase
     private ObjectProphecy $translator;
     /** @var ObjectProphecy<PathCleanupInterface> */
     private ObjectProphecy $pathCleanup;
-    private RouteSchemaProcessor $processor;
+    private RouteSchemaEvaluator $processor;
 
     protected function setUp(): void
     {
         $this->translator = $this->prophesize(TranslatorInterface::class);
         $this->pathCleanup = $this->prophesize(PathCleanupInterface::class);
 
-        $this->processor = new RouteSchemaProcessor(
+        $this->processor = new RouteSchemaEvaluator(
             $this->translator->reveal(),
             $this->pathCleanup->reveal(),
         );

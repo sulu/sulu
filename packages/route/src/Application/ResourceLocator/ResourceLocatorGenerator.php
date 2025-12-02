@@ -22,48 +22,22 @@ final readonly class ResourceLocatorGenerator implements ResourceLocatorGenerato
     public function __construct(
         private RouteRepositoryInterface $routeRepository,
         private PathCleanupInterface $pathCleanup,
-        private ?RouteSchemaProcessor $routeSchemaProcessor = null,
+        private ?RouteSchemaEvaluator $routeSchemaProcessor = null,
     ) {
     }
 
     public function generate(ResourceLocatorRequest $request): string
     {
-        $parentPath = '/';
-        if ($request->parentResourceId) {
-            $parentRoute = $this->routeRepository->findOneBy([
-                'resourceKey' => $request->parentResourceKey,
-                'resourceId' => $request->parentResourceId,
-                'locale' => $request->locale,
-            ]);
-
-            $parentPath = $parentRoute?->getSlug() ?: '/';
-        }
-
-        $parentPath = \rtrim($parentPath, '/');
+        $parentPath = $this->resolveParentPath($request);
 
         if (null !== $request->routeSchema && null !== $this->routeSchemaProcessor) {
             $path = $this->routeSchemaProcessor->process($request);
-
-            $uniquePath = $this->createUnique(
-                $parentPath . $path,
-                $request->locale,
-                $request->webspace,
-                $request->resourceKey,
-                $request->resourceId,
-            );
-
-            if ($request->relative) {
-                return \substr($uniquePath, \strlen($parentPath));
-            }
-
-            return $uniquePath;
+        } else {
+            $parts = \array_map(fn ($part) => $this->pathCleanup->cleanup($part, $request->locale), $request->parts);
+            $path = '/' . \implode('-', $parts);
         }
 
-        $parts = \array_map(fn ($part) => $this->pathCleanup->cleanup($part, $request->locale), $request->parts);
-
-        $path = '/' . \implode('-', $parts);
-
-        $uniquePath = $this->createUnique( // TODO own service called during doctrine listener also?
+        $uniquePath = $this->createUnique(
             $parentPath . $path,
             $request->locale,
             $request->webspace,
@@ -76,6 +50,21 @@ final readonly class ResourceLocatorGenerator implements ResourceLocatorGenerato
         }
 
         return $uniquePath;
+    }
+
+    private function resolveParentPath(ResourceLocatorRequest $request): string
+    {
+        if (!$request->parentResourceId) {
+            return '';
+        }
+
+        $parentRoute = $this->routeRepository->findOneBy([
+            'resourceKey' => $request->parentResourceKey,
+            'resourceId' => $request->parentResourceId,
+            'locale' => $request->locale,
+        ]);
+
+        return \rtrim($parentRoute?->getSlug() ?? '', '/');
     }
 
     private function createUnique(
