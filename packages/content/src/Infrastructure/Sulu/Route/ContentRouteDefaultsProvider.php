@@ -39,36 +39,12 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 class ContentRouteDefaultsProvider implements RouteDefaultsProviderInterface
 {
-    /**
-     * @var EntityManagerInterface
-     */
-    protected $entityManager;
-
-    /**
-     * @var ContentAggregatorInterface
-     */
-    protected $contentAggregator;
-
-    /**
-     * @var MetadataProviderRegistry
-     */
-    private $metadataProviderRegistry;
-
-    /**
-     * @var CacheLifetimeResolverInterface
-     */
-    private $cacheLifetimeResolver;
-
     public function __construct(
-        EntityManagerInterface $entityManager,
-        ContentAggregatorInterface $contentAggregator,
-        MetadataProviderRegistry $metadataProviderRegistry,
-        CacheLifetimeResolverInterface $cacheLifetimeResolver,
+        protected EntityManagerInterface $entityManager,
+        protected ContentAggregatorInterface $contentAggregator,
+        private MetadataProviderRegistry $metadataProviderRegistry,
+        private CacheLifetimeResolverInterface $cacheLifetimeResolver,
     ) {
-        $this->entityManager = $entityManager;
-        $this->contentAggregator = $contentAggregator;
-        $this->metadataProviderRegistry = $metadataProviderRegistry;
-        $this->cacheLifetimeResolver = $cacheLifetimeResolver;
     }
 
     public function getDefaults(Route $route): array

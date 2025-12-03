@@ -11,42 +11,32 @@
 
 namespace Sulu\Route\Application\ResourceLocator;
 
-use Sulu\Route\Application\ResourceLocator\PathCleanup\PathCleanupInterface;
 use Sulu\Route\Domain\Repository\RouteRepositoryInterface;
 
 final readonly class ResourceLocatorGenerator implements ResourceLocatorGeneratorInterface
 {
+    private const DEFAULT_ROUTE_SCHEMA = '/{implode("-", object)}';
+
     /**
      * @internal get the service always from the Service Container and never instantiate it directly
      */
     public function __construct(
         private RouteRepositoryInterface $routeRepository,
-        private PathCleanupInterface $pathCleanup,
+        private RouteSchemaEvaluatorInterface $routeSchemaEvaluator,
     ) {
     }
 
     public function generate(ResourceLocatorRequest $request): string
     {
-        $parentPath = '/';
-        if ($request->parentResourceId) {
-            $parentRoute = $this->routeRepository->findOneBy([
-                'resourceKey' => $request->parentResourceKey,
-                'resourceId' => $request->parentResourceId,
-                'locale' => $request->locale,
-            ]);
+        $parentPath = $this->resolveParentPath($request);
 
-            $parentPath = $parentRoute?->getSlug() ?: '/';
+        if (null === $request->routeSchema) {
+            $request = $request->withRouteSchema(self::DEFAULT_ROUTE_SCHEMA);
         }
 
-        $parts = \array_map(fn ($part) => $this->pathCleanup->cleanup($part, $request->locale), $request->parts);
+        $path = $this->routeSchemaEvaluator->evaluate($request);
 
-        $path = '/' . \implode('-', $parts);
-
-        $parentPath = \rtrim($parentPath, '/');
-
-        // TODO routeSchema
-
-        $uniquePath = $this->createUnique( // TODO own service called during doctrine listener also?
+        $uniquePath = $this->createUnique(
             $parentPath . $path,
             $request->locale,
             $request->webspace,
@@ -59,6 +49,21 @@ final readonly class ResourceLocatorGenerator implements ResourceLocatorGenerato
         }
 
         return $uniquePath;
+    }
+
+    private function resolveParentPath(ResourceLocatorRequest $request): string
+    {
+        if (!$request->parentResourceId) {
+            return '';
+        }
+
+        $parentRoute = $this->routeRepository->findOneBy([
+            'resourceKey' => $request->parentResourceKey,
+            'resourceId' => $request->parentResourceId,
+            'locale' => $request->locale,
+        ]);
+
+        return \rtrim($parentRoute?->getSlug() ?? '', '/');
     }
 
     private function createUnique(

@@ -31,4 +31,19 @@ final readonly class ResourceLocatorRequest
     ) {
         $this->parentResourceKey = $parentResourceKey ?? $this->resourceKey;
     }
+
+    public function withRouteSchema(string $routeSchema): self
+    {
+        return new self(
+            $this->parts,
+            $this->locale,
+            $this->webspace,
+            $this->resourceKey,
+            $this->resourceId,
+            $this->parentResourceId,
+            $this->parentResourceKey,
+            $routeSchema,
+            $this->relative,
+        );
+    }
 }

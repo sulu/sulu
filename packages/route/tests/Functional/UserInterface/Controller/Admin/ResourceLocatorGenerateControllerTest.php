@@ -229,4 +229,44 @@ class ResourceLocatorGenerateControllerTest extends SuluTestCase
             }
         JSON, $response->getContent() ?: '');
     }
+
+    public function testGenerateWithRouteSchema(): void
+    {
+        $this->client->request('POST', '/admin/api/resource-locators', content: \json_encode([
+            'parts' => ['year' => '2024', 'title' => 'Hello World'],
+            'locale' => 'en',
+            'webspace' => 'website',
+            'resourceKey' => 'articles',
+            'resourceId' => null,
+            'routeSchema' => '/blog/{object[\'year\']}/{object[\'title\']}',
+        ], \JSON_THROW_ON_ERROR));
+
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(200, $response);
+        $this->assertMatchesPattern(<<<'JSON'
+            {
+                "resourceLocator": "/blog/2024/hello-world"
+            }
+        JSON, $response->getContent() ?: '');
+    }
+
+    public function testGenerateWithRouteSchemaImplode(): void
+    {
+        $this->client->request('POST', '/admin/api/resource-locators', content: \json_encode([
+            'parts' => ['part1' => 'Hello', 'part2' => 'World'],
+            'locale' => 'en',
+            'webspace' => 'website',
+            'resourceKey' => 'articles',
+            'resourceId' => null,
+            'routeSchema' => '/{implode(\'-\', object)}',
+        ], \JSON_THROW_ON_ERROR));
+
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(200, $response);
+        $this->assertMatchesPattern(<<<'JSON'
+            {
+                "resourceLocator": "/hello-world"
+            }
+        JSON, $response->getContent() ?: '');
+    }
 }

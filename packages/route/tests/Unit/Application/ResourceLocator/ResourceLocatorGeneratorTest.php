@@ -19,9 +19,12 @@ use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Route\Application\ResourceLocator\PathCleanup\PathCleanup;
 use Sulu\Route\Application\ResourceLocator\ResourceLocatorGenerator;
 use Sulu\Route\Application\ResourceLocator\ResourceLocatorRequest;
+use Sulu\Route\Application\ResourceLocator\RouteSchemaEvaluator;
+use Sulu\Route\Application\ResourceLocator\RouteSchemaEvaluatorInterface;
 use Sulu\Route\Domain\Model\Route;
 use Sulu\Route\Domain\Repository\RouteRepositoryInterface;
 use Symfony\Component\String\Slugger\AsciiSlugger;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[CoversClass(ResourceLocatorGenerator::class)]
 class ResourceLocatorGeneratorTest extends TestCase
@@ -35,13 +38,21 @@ class ResourceLocatorGeneratorTest extends TestCase
 
     private ResourceLocatorGenerator $resourceLocatorGenerator;
 
+    private RouteSchemaEvaluatorInterface $routeSchemaEvaluator;
+
     public function setUp(): void
     {
         $this->routeRepository = $this->prophesize(RouteRepositoryInterface::class);
 
+        $translator = $this->prophesize(TranslatorInterface::class);
+        $this->routeSchemaEvaluator = new RouteSchemaEvaluator(
+            $translator->reveal(),
+            new PathCleanup(new AsciiSlugger(), []),
+        );
+
         $this->resourceLocatorGenerator = new ResourceLocatorGenerator(
             $this->routeRepository->reveal(),
-            new PathCleanup(new AsciiSlugger(), []),
+            $this->routeSchemaEvaluator,
         );
     }
 
@@ -114,6 +125,50 @@ class ResourceLocatorGeneratorTest extends TestCase
         ])->willReturn(false);
 
         $this->assertSame('/hello-world-2', $this->resourceLocatorGenerator->generate($request));
+    }
+
+    public function testGenerateWithRouteSchema(): void
+    {
+        $request = $this->createResourceLocatorRequest(
+            parts: ['title' => 'Hello World'],
+            routeSchema: '/{object[\'title\']}',
+        );
+
+        $this->routeRepository->existBy(Argument::any())->willReturn(false);
+
+        $this->assertSame('/hello-world', $this->resourceLocatorGenerator->generate($request));
+    }
+
+    public function testGenerateWithParentAndRouteSchema(): void
+    {
+        $request = $this->createResourceLocatorRequest(
+            parts: ['title' => 'Hello World'],
+            locale: 'de',
+            webspace: 'website',
+            resourceKey: 'articles',
+            parentResourceId: 'cff165a7-ae8e-46b4-8f32-f0a339173207',
+            parentResourceKey: 'pages',
+            routeSchema: '/{object.title}',
+        );
+
+        $parentRoute = $this->createRoute(
+            resourceKey: 'pages',
+            resourceId: 'cff165a7-ae8e-46b4-8f32-f0a339173207',
+            locale: 'de',
+            slug: '/news',
+            webspace: 'website',
+        );
+        $this->routeRepository->findOneBy([
+            'resourceId' => 'cff165a7-ae8e-46b4-8f32-f0a339173207',
+            'resourceKey' => 'pages',
+            'locale' => 'de',
+        ])
+            ->willReturn($parentRoute)
+            ->shouldBeCalled();
+
+        $this->routeRepository->existBy(Argument::any())->willReturn(false);
+
+        $this->assertSame('/news/hello-world', $this->resourceLocatorGenerator->generate($request));
     }
 
     /**
