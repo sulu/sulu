@@ -21,14 +21,8 @@ use Sulu\Content\Domain\Model\TemplateInterface;
 
 class TemplateDataMapper implements DataMapperInterface
 {
-    /**
-     * @var MetadataProviderRegistry
-     */
-    private $metadataProviderRegistry;
-
-    public function __construct(MetadataProviderRegistry $metadataProviderRegistry)
+    public function __construct(private MetadataProviderRegistry $metadataProviderRegistry)
     {
-        $this->metadataProviderRegistry = $metadataProviderRegistry;
     }
 
     public function map(

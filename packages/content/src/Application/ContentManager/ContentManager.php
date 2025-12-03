@@ -23,43 +23,13 @@ use Sulu\Content\Domain\Model\DimensionContentInterface;
 
 class ContentManager implements ContentManagerInterface
 {
-    /**
-     * @var ContentAggregatorInterface
-     */
-    private $contentAggregator;
-
-    /**
-     * @var ContentPersisterInterface
-     */
-    private $contentPersister;
-
-    /**
-     * @var ContentNormalizerInterface
-     */
-    private $contentNormalizer;
-
-    /**
-     * @var ContentCopierInterface
-     */
-    private $contentCopier;
-
-    /**
-     * @var ContentWorkflowInterface
-     */
-    private $contentWorkflow;
-
     public function __construct(
-        ContentAggregatorInterface $contentAggregator,
-        ContentPersisterInterface $contentPersister,
-        ContentNormalizerInterface $contentNormalizer,
-        ContentCopierInterface $contentCopier,
-        ContentWorkflowInterface $contentWorkflow,
+        private ContentAggregatorInterface $contentAggregator,
+        private ContentPersisterInterface $contentPersister,
+        private ContentNormalizerInterface $contentNormalizer,
+        private ContentCopierInterface $contentCopier,
+        private ContentWorkflowInterface $contentWorkflow
     ) {
-        $this->contentAggregator = $contentAggregator;
-        $this->contentPersister = $contentPersister;
-        $this->contentNormalizer = $contentNormalizer;
-        $this->contentCopier = $contentCopier;
-        $this->contentWorkflow = $contentWorkflow;
     }
 
     public function resolve(ContentRichEntityInterface $contentRichEntity, array $dimensionAttributes): DimensionContentInterface

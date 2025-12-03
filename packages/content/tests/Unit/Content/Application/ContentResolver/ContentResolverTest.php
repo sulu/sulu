@@ -268,12 +268,10 @@ class TestExampleDimensionContent implements DimensionContentInterface
     use DimensionContentTrait;
 
     protected int $id;
-    protected TestExample $example;
     protected ?string $title = null;
 
-    public function __construct(TestExample $example)
+    public function __construct(protected TestExample $example)
     {
-        $this->example = $example;
     }
 
     public function getId(): int

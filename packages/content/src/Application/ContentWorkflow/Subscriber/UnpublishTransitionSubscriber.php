@@ -32,16 +32,10 @@ use Symfony\Component\Workflow\Event\TransitionEvent;
  */
 class UnpublishTransitionSubscriber implements EventSubscriberInterface
 {
-    private ContentMetadataInspectorInterface $contentMetadataInspector;
-
-    protected EntityManagerInterface $entityManager;
-
     public function __construct(
-        ContentMetadataInspectorInterface $contentMetadataInspector,
-        EntityManagerInterface $entityManager
+        private ContentMetadataInspectorInterface $contentMetadataInspector,
+        protected EntityManagerInterface $entityManager
     ) {
-        $this->contentMetadataInspector = $contentMetadataInspector;
-        $this->entityManager = $entityManager;
     }
 
     public function onUnpublish(TransitionEvent $transitionEvent): void

@@ -28,24 +28,12 @@ use Sulu\Content\Domain\Model\DimensionContentInterface;
 class PreviewDimensionContentCollection implements \IteratorAggregate, DimensionContentCollectionInterface
 {
     /**
-     * @var T
-     */
-    private $previewDimensionContent;
-
-    /**
-     * @var string
-     */
-    private $previewLocale;
-
-    /**
      * @param T $previewDimensionContent
      */
     public function __construct(
-        DimensionContentInterface $previewDimensionContent,
-        string $previewLocale
+        private DimensionContentInterface $previewDimensionContent,
+        private string $previewLocale
     ) {
-        $this->previewDimensionContent = $previewDimensionContent;
-        $this->previewLocale = $previewLocale;
     }
 
     public function getDimensionContentClass(): string
