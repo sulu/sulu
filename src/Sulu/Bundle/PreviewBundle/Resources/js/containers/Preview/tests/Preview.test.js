@@ -58,6 +58,7 @@ jest.mock('sulu-admin-bundle/containers/Form/stores/ResourceFormStore', () => je
         return {
             resourceKey: resourceStore.resourceKey,
             locale: resourceStore.observableOptions?.locale,
+            data: {},
         };
     }
 ));
@@ -583,7 +584,7 @@ test('Change target group in PreviewStore when selection of target group has cha
 
         preview.find('Select').at(2).prop('onChange')(4);
         expect(previewStore.setTargetGroup).toBeCalledWith(4);
-        expect(previewStore.update).toBeCalledWith(undefined);
+        expect(previewStore.update).toBeCalledWith({});
     });
 });
 
@@ -610,4 +611,34 @@ test('Change dateTime in PreviewStore when DatePicker changed', () => {
         preview.find('DatePicker').prop('onChange')(date);
         expect(previewStore.setDateTime).toBeCalledWith(date);
     });
+});
+
+test('Use mainWebspace from formStore data as default webspace', () => {
+    const resourceStore = new ResourceStore('articles', 1);
+    const formStore = new ResourceFormStore(resourceStore, 'articles');
+
+    // $FlowFixMe
+    formStore.data = {mainWebspace: 'example'};
+
+    const router = new Router({});
+
+    mount(<Preview formStore={formStore} router={router} />);
+
+    // Should use mainWebspace from formStore.data instead of first webspace
+    expect(PreviewStore).toBeCalledWith('articles', undefined, undefined, 'example', undefined);
+});
+
+test('Fall back to first webspace when mainWebspace is not in webspace options', () => {
+    const resourceStore = new ResourceStore('articles', 1);
+    const formStore = new ResourceFormStore(resourceStore, 'articles');
+
+    // $FlowFixMe
+    formStore.data = {mainWebspace: 'non_existent_webspace'};
+
+    const router = new Router({});
+
+    mount(<Preview formStore={formStore} router={router} />);
+
+    // Should fall back to first webspace when mainWebspace is not available
+    expect(PreviewStore).toBeCalledWith('articles', undefined, undefined, 'sulu_io', undefined);
 });
