@@ -146,7 +146,6 @@ class WebspaceDataMapperTest extends TestCase
         $localizedDimensionContent = new ExampleDimensionContent($example);
         $localizedDimensionContent->setLocale('de');
 
-        // Mock webspace that only supports 'en'
         $localizationEn = new Localization('en');
         $webspace = new Webspace();
         $webspace->setKey('example');
@@ -169,7 +168,6 @@ class WebspaceDataMapperTest extends TestCase
         $localizedDimensionContent = new ExampleDimensionContent($example);
         $localizedDimensionContent->setLocale('en');
 
-        // Mock webspace that supports 'en'
         $localizationEn = new Localization('en');
         $webspace = new Webspace();
         $webspace->setKey('example');

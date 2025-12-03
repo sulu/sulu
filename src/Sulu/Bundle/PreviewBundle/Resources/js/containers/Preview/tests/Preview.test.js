@@ -624,7 +624,6 @@ test('Use mainWebspace from formStore data as default webspace', () => {
 
     mount(<Preview formStore={formStore} router={router} />);
 
-    // Should use mainWebspace from formStore.data instead of first webspace
     expect(PreviewStore).toBeCalledWith('articles', undefined, undefined, 'example', undefined);
 });
 
@@ -639,6 +638,5 @@ test('Fall back to first webspace when mainWebspace is not in webspace options',
 
     mount(<Preview formStore={formStore} router={router} />);
 
-    // Should fall back to first webspace when mainWebspace is not available
     expect(PreviewStore).toBeCalledWith('articles', undefined, undefined, 'sulu_io', undefined);
 });

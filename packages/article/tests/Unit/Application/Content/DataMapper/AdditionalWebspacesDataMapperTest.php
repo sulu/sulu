@@ -78,7 +78,6 @@ class AdditionalWebspacesDataMapperTest extends TestCase
         $dimensionContent->getLocale()->willReturn('en');
         $dimensionContent->setAdditionalWebspaces(['example-com'])->shouldBeCalled()->willReturn($dimensionContent->reveal());
 
-        // Mock webspace with locale support
         $localization = new Localization('en');
         $webspace = new Webspace();
         $webspace->setKey('example-com');
@@ -192,7 +191,6 @@ class AdditionalWebspacesDataMapperTest extends TestCase
         $dimensionContent->setCustomizeWebspaceSettings(true)->shouldBeCalled()->willReturn($dimensionContent->reveal());
         $dimensionContent->getLocale()->willReturn('de');
 
-        // Mock webspace that only supports 'en'
         $localizationEn = new Localization('en');
         $webspace = new Webspace();
         $webspace->setKey('example-com');
@@ -220,7 +218,6 @@ class AdditionalWebspacesDataMapperTest extends TestCase
         $dimensionContent->getLocale()->willReturn('en');
         $dimensionContent->setAdditionalWebspaces(['example-com'])->shouldBeCalled()->willReturn($dimensionContent->reveal());
 
-        // Mock webspace that supports 'en'
         $localizationEn = new Localization('en');
         $webspace = new Webspace();
         $webspace->setKey('example-com');
