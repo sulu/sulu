@@ -57,7 +57,6 @@ class WebspaceDataMapper implements DataMapperInterface
         if (\array_key_exists('mainWebspace', $data)) {
             Assert::nullOrString($data['mainWebspace']);
 
-            // Validate that the webspace supports the current locale
             if ($data['mainWebspace']) {
                 $this->validateWebspaceSupportsLocale($data['mainWebspace'], $dimensionContent->getLocale());
             }

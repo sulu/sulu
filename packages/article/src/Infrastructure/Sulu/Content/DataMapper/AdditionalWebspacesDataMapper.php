@@ -70,12 +70,10 @@ class AdditionalWebspacesDataMapper implements DataMapperInterface
             Assert::nullOrIsArray($data['additionalWebspaces']);
             $additionalWebspaces = $data['additionalWebspaces'] ?? [];
 
-            // Ensure all values are strings
             $additionalWebspaces = \array_filter($additionalWebspaces, static function($webspace): bool {
                 return \is_string($webspace) && '' !== $webspace;
             });
 
-            // Validate all webspaces support the current locale
             if (\count($additionalWebspaces) > 0) {
                 $locale = (string) $dimensionContent->getLocale();
                 foreach ($additionalWebspaces as $webspaceKey) {

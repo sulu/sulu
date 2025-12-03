@@ -178,4 +178,62 @@ class AdditionalWebspacesDataMapperTest extends TestCase
 
         $dataMapper->map($unlocalizedDimensionContent->reveal(), $dimensionContent->reveal(), $data);
     }
+
+    public function testMapWithUnsupportedLocaleThrowsException(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Webspace "example-com" does not support locale "de"');
+
+        $dataMapper = $this->getAdditionalWebspacesDataMapperInstance();
+
+        $unlocalizedDimensionContent = $this->prophesize(DimensionContentInterface::class);
+        $dimensionContent = $this->prophesize(DimensionContentInterface::class);
+        $dimensionContent->willImplement(ArticleDimensionContentInterface::class);
+        $dimensionContent->setCustomizeWebspaceSettings(true)->shouldBeCalled()->willReturn($dimensionContent->reveal());
+        $dimensionContent->getLocale()->willReturn('de');
+
+        // Mock webspace that only supports 'en'
+        $localizationEn = new Localization('en');
+        $webspace = new Webspace();
+        $webspace->setKey('example-com');
+        $webspace->setName('Example');
+        $webspace->addLocalization($localizationEn);
+        $this->webspaceManager->findWebspaceByKey('example-com')->willReturn($webspace);
+
+        $data = [
+            'customizeWebspaceSettings' => true,
+            'mainWebspace' => 'sulu-io',
+            'additionalWebspaces' => ['example-com'],
+        ];
+
+        $dataMapper->map($unlocalizedDimensionContent->reveal(), $dimensionContent->reveal(), $data);
+    }
+
+    public function testMapWithSupportedLocale(): void
+    {
+        $dataMapper = $this->getAdditionalWebspacesDataMapperInstance();
+
+        $unlocalizedDimensionContent = $this->prophesize(DimensionContentInterface::class);
+        $dimensionContent = $this->prophesize(DimensionContentInterface::class);
+        $dimensionContent->willImplement(ArticleDimensionContentInterface::class);
+        $dimensionContent->setCustomizeWebspaceSettings(true)->shouldBeCalled()->willReturn($dimensionContent->reveal());
+        $dimensionContent->getLocale()->willReturn('en');
+        $dimensionContent->setAdditionalWebspaces(['example-com'])->shouldBeCalled()->willReturn($dimensionContent->reveal());
+
+        // Mock webspace that supports 'en'
+        $localizationEn = new Localization('en');
+        $webspace = new Webspace();
+        $webspace->setKey('example-com');
+        $webspace->setName('Example');
+        $webspace->addLocalization($localizationEn);
+        $this->webspaceManager->findWebspaceByKey('example-com')->willReturn($webspace);
+
+        $data = [
+            'customizeWebspaceSettings' => true,
+            'mainWebspace' => 'sulu-io',
+            'additionalWebspaces' => ['example-com'],
+        ];
+
+        $dataMapper->map($unlocalizedDimensionContent->reveal(), $dimensionContent->reveal(), $data);
+    }
 }

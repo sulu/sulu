@@ -16,6 +16,7 @@ namespace Sulu\Content\Tests\Unit\Content\Application\ContentDataMapper\DataMapp
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
+use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Manager\WebspaceCollection;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Webspace;
@@ -129,5 +130,56 @@ class WebspaceDataMapperTest extends TestCase
         $authorMapper->map($unlocalizedDimensionContent, $localizedDimensionContent, $data);
 
         $this->assertNull($localizedDimensionContent->getMainWebspace());
+    }
+
+    public function testMapDataWithUnsupportedLocaleThrowsException(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Webspace "example" does not support locale "de"');
+
+        $data = [
+            'mainWebspace' => 'example',
+        ];
+
+        $example = new Example();
+        $unlocalizedDimensionContent = new ExampleDimensionContent($example);
+        $localizedDimensionContent = new ExampleDimensionContent($example);
+        $localizedDimensionContent->setLocale('de');
+
+        // Mock webspace that only supports 'en'
+        $localizationEn = new Localization('en');
+        $webspace = new Webspace();
+        $webspace->setKey('example');
+        $webspace->addLocalization($localizationEn);
+
+        $this->webspaceManager->findWebspaceByKey('example')->willReturn($webspace);
+
+        $authorMapper = $this->createWebspaceDataMapperInstance();
+        $authorMapper->map($unlocalizedDimensionContent, $localizedDimensionContent, $data);
+    }
+
+    public function testMapDataWithSupportedLocale(): void
+    {
+        $data = [
+            'mainWebspace' => 'example',
+        ];
+
+        $example = new Example();
+        $unlocalizedDimensionContent = new ExampleDimensionContent($example);
+        $localizedDimensionContent = new ExampleDimensionContent($example);
+        $localizedDimensionContent->setLocale('en');
+
+        // Mock webspace that supports 'en'
+        $localizationEn = new Localization('en');
+        $webspace = new Webspace();
+        $webspace->setKey('example');
+        $webspace->addLocalization($localizationEn);
+
+        $this->webspaceManager->findWebspaceByKey('example')->willReturn($webspace);
+
+        $authorMapper = $this->createWebspaceDataMapperInstance();
+        $authorMapper->map($unlocalizedDimensionContent, $localizedDimensionContent, $data);
+
+        $this->assertSame('example', $localizedDimensionContent->getMainWebspace());
     }
 }
