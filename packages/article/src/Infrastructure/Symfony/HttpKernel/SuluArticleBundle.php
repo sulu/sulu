@@ -236,6 +236,7 @@ final class SuluArticleBundle extends AbstractBundle
             ->class(AdditionalWebspacesDataMapper::class)
             ->args([
                 new Reference('sulu_article.webspace_settings_configuration_resolver'),
+                new Reference('sulu_core.webspace.webspace_manager'),
             ])
             ->tag('sulu_content.data_mapper');
 

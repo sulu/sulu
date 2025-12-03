@@ -45,6 +45,9 @@ final class CopyLocaleArticleMessageHandler
             [
                 'stage' => DimensionContentInterface::STAGE_DRAFT,
                 'locale' => $message->getTargetLocale(),
+            ],
+            [
+                'ignoredAttributes' => ['mainWebspace', 'additionalWebspaces'],
             ]
         );
 
