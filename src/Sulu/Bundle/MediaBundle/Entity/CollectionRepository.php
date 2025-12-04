@@ -195,6 +195,10 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
                 ->addSelect('parent')
                 ->addSelect('children');
 
+            $qb->addSelect('(CASE WHEN type.key = :systemType THEN 1 ELSE 0 END) AS HIDDEN systemSort');
+            $qb->addOrderBy('systemSort', 'ASC');
+            $qb->setParameter('systemType', SystemCollectionManagerInterface::COLLECTION_TYPE);
+
             if (null !== $sortBy && \is_array($sortBy) && \count($sortBy) > 0) {
                 foreach ($sortBy as $column => $order) {
                     $qb->addOrderBy('collectionMeta.' . $column, 'asc' === \strtolower($order) ? 'ASC' : 'DESC');

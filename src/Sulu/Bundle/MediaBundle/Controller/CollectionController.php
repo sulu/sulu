@@ -126,7 +126,7 @@ class CollectionController extends AbstractRestController implements ClassResour
             $offset = $this->getOffset($request, $limit);
             $search = $this->listRestHelper->getSearchPattern();
             /** @var string|null $sortBy */
-            $sortBy = $request->get('sortBy');
+            $sortBy = $request->get('sortBy', 'title');
             /** @var string $sortOrder */
             $sortOrder = $request->get('sortOrder', 'ASC');
 
