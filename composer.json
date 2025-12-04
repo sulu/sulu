@@ -25,7 +25,7 @@
         "docs": "https://docs.sulu.io/"
     },
     "require": {
-        "php": "^8.2 || ^8.3 || ^8.4",
+        "php": "^8.2 || ^8.3 || ^8.4 || ^8.5",
         "ext-dom": "*",
         "ext-fileinfo": "*",
         "ext-filter": "*",
