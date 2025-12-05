@@ -6,7 +6,7 @@ when@prod: &prod
 
     # Varnish Configuration:
     #
-    # See: https://docs.sulu.io/en/2.0/cookbook/caching-with-varnish.html
+    # See: https://docs.sulu.io/en/2.6/cookbook/caching-with-varnish.html
     # Changes in the public/index.php is needed to disable the symfony http cache and use varnish instead
     #
     #        varnish:

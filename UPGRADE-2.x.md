@@ -256,7 +256,7 @@ Sulu now uses Webpack 5 to build the administration interface application. To en
 If you have integrated custom JavaScript components into the administration interface,
 you might need to adjust your components to be compatible with the updated dependencies.
 If you have not integrated custom JavaScript code, you project is adjusted automatically by the
-[update build](https://docs.sulu.io/en/latest/upgrades/upgrade-2.x.html) command.
+[update build](https://docs.sulu.io/en/2.6/upgrades/upgrade-2.x.html) command.
 
 Additionally, the following packages where upgraded:
 
@@ -703,7 +703,7 @@ The JavaScript dependencies of the Sulu administration interface were updated to
 If you have integrated custom JavaScript components into the administration interface,
 you might need to adjust your components to be compatible with the updated dependencies.
 If you have not integrated custom JavaScript code, you project is adjusted automatically by the
-[update build](https://docs.sulu.io/en/latest/upgrades/upgrade-2.x.html) command.
+[update build](https://docs.sulu.io/en/2.6/upgrades/upgrade-2.x.html) command.
 
 ### Rename labelRef to inputContainerRef
 
