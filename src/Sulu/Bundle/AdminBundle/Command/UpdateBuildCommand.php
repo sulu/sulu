@@ -310,7 +310,7 @@ class UpdateBuildCommand extends Command
         $this->cleanupPreviouslyInstalledDependencies();
 
         $errorHelpMessage =
-            'Visit https://docs.sulu.io/en/latest/cookbook/build-admin-frontend.html#common-errors' . \PHP_EOL
+            'Visit https://docs.sulu.io/en/2.6/cookbook/build-admin-frontend.html#common-errors' . \PHP_EOL
             . 'to get some tips on how to fix this error.';
 
         $ui->section('Install npm dependencies');
