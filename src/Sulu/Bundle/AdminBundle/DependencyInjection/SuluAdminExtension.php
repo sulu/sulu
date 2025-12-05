@@ -170,6 +170,7 @@ class SuluAdminExtension extends Extension implements PrependExtensionInterface
         $container->setParameter('sulu_admin.forms.directories', $config['forms']['directories'] ?? []);
         $container->setParameter('sulu_admin.lists.directories', $config['lists']['directories'] ?? []);
         $container->setParameter('sulu_admin.templates.configuration', $config['templates']);
+        $container->setParameter('sulu_admin.template_groups', $config['template_groups'] ?? []);
 
         $container->setParameter('sulu_admin.icon_sets', $config['icon_sets'] ?? []);
 
