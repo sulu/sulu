@@ -19,6 +19,9 @@ use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Article\Application\Webspace\WebspaceSettingsConfigurationResolver;
 use Sulu\Article\Domain\Model\ArticleDimensionContentInterface;
 use Sulu\Article\Infrastructure\Sulu\Content\DataMapper\AdditionalWebspacesDataMapper;
+use Sulu\Component\Localization\Localization;
+use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
+use Sulu\Component\Webspace\Webspace;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 
 class AdditionalWebspacesDataMapperTest extends TestCase
@@ -28,14 +31,21 @@ class AdditionalWebspacesDataMapperTest extends TestCase
     /** @var ObjectProphecy<WebspaceSettingsConfigurationResolver> */
     private ObjectProphecy $configurationResolver;
 
+    /** @var ObjectProphecy<WebspaceManagerInterface> */
+    private ObjectProphecy $webspaceManager;
+
     protected function setUp(): void
     {
         $this->configurationResolver = $this->prophesize(WebspaceSettingsConfigurationResolver::class);
+        $this->webspaceManager = $this->prophesize(WebspaceManagerInterface::class);
     }
 
     protected function getAdditionalWebspacesDataMapperInstance(): AdditionalWebspacesDataMapper
     {
-        return new AdditionalWebspacesDataMapper($this->configurationResolver->reveal());
+        return new AdditionalWebspacesDataMapper(
+            $this->configurationResolver->reveal(),
+            $this->webspaceManager->reveal()
+        );
     }
 
     public function testMapNotImplementingInterface(): void
@@ -65,7 +75,15 @@ class AdditionalWebspacesDataMapperTest extends TestCase
         $dimensionContent = $this->prophesize(DimensionContentInterface::class);
         $dimensionContent->willImplement(ArticleDimensionContentInterface::class);
         $dimensionContent->setCustomizeWebspaceSettings(true)->shouldBeCalled()->willReturn($dimensionContent->reveal());
+        $dimensionContent->getLocale()->willReturn('en');
         $dimensionContent->setAdditionalWebspaces(['example-com'])->shouldBeCalled()->willReturn($dimensionContent->reveal());
+
+        $localization = new Localization('en');
+        $webspace = new Webspace();
+        $webspace->setKey('example-com');
+        $webspace->setName('Example');
+        $webspace->addLocalization($localization);
+        $this->webspaceManager->findWebspaceByKey('example-com')->willReturn($webspace);
 
         $data = [
             'customizeWebspaceSettings' => true,
@@ -155,6 +173,62 @@ class AdditionalWebspacesDataMapperTest extends TestCase
             'customizeWebspaceSettings' => true,
             'mainWebspace' => 'sulu-io',
             'additionalWebspaces' => [],
+        ];
+
+        $dataMapper->map($unlocalizedDimensionContent->reveal(), $dimensionContent->reveal(), $data);
+    }
+
+    public function testMapWithUnsupportedLocaleThrowsException(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Webspace "example-com" does not support locale "de"');
+
+        $dataMapper = $this->getAdditionalWebspacesDataMapperInstance();
+
+        $unlocalizedDimensionContent = $this->prophesize(DimensionContentInterface::class);
+        $dimensionContent = $this->prophesize(DimensionContentInterface::class);
+        $dimensionContent->willImplement(ArticleDimensionContentInterface::class);
+        $dimensionContent->setCustomizeWebspaceSettings(true)->shouldBeCalled()->willReturn($dimensionContent->reveal());
+        $dimensionContent->getLocale()->willReturn('de');
+
+        $localizationEn = new Localization('en');
+        $webspace = new Webspace();
+        $webspace->setKey('example-com');
+        $webspace->setName('Example');
+        $webspace->addLocalization($localizationEn);
+        $this->webspaceManager->findWebspaceByKey('example-com')->willReturn($webspace);
+
+        $data = [
+            'customizeWebspaceSettings' => true,
+            'mainWebspace' => 'sulu-io',
+            'additionalWebspaces' => ['example-com'],
+        ];
+
+        $dataMapper->map($unlocalizedDimensionContent->reveal(), $dimensionContent->reveal(), $data);
+    }
+
+    public function testMapWithSupportedLocale(): void
+    {
+        $dataMapper = $this->getAdditionalWebspacesDataMapperInstance();
+
+        $unlocalizedDimensionContent = $this->prophesize(DimensionContentInterface::class);
+        $dimensionContent = $this->prophesize(DimensionContentInterface::class);
+        $dimensionContent->willImplement(ArticleDimensionContentInterface::class);
+        $dimensionContent->setCustomizeWebspaceSettings(true)->shouldBeCalled()->willReturn($dimensionContent->reveal());
+        $dimensionContent->getLocale()->willReturn('en');
+        $dimensionContent->setAdditionalWebspaces(['example-com'])->shouldBeCalled()->willReturn($dimensionContent->reveal());
+
+        $localizationEn = new Localization('en');
+        $webspace = new Webspace();
+        $webspace->setKey('example-com');
+        $webspace->setName('Example');
+        $webspace->addLocalization($localizationEn);
+        $this->webspaceManager->findWebspaceByKey('example-com')->willReturn($webspace);
+
+        $data = [
+            'customizeWebspaceSettings' => true,
+            'mainWebspace' => 'sulu-io',
+            'additionalWebspaces' => ['example-com'],
         ];
 
         $dataMapper->map($unlocalizedDimensionContent->reveal(), $dimensionContent->reveal(), $data);

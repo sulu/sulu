@@ -41,7 +41,6 @@ class Preview extends React.Component<Props> {
 
     @observable previewStore: PreviewStore;
     @observable previewWindow: any;
-    @observable webspaceOptions: Array<Object> = [];
     @observable reloadCounter: number = 0;
 
     schemaDisposer: () => mixed;
@@ -50,6 +49,9 @@ class Preview extends React.Component<Props> {
 
     @computed get webspaceKey() {
         const {
+            formStore: {
+                data,
+            },
             router: {
                 attributes: {
                     webspace,
@@ -61,7 +63,38 @@ class Preview extends React.Component<Props> {
             throw new Error('The "webspace" router attribute must be a string if set!');
         }
 
-        return webspace || this.webspaceOptions[0].value;
+        // Priority: router attribute > article mainWebspace > first available webspace
+        const mainWebspace = data?.mainWebspace;
+        if (webspace) {
+            return webspace;
+        }
+
+        // Use mainWebspace if it's valid and supports the current locale
+        if (mainWebspace && this.webspaceOptions.some((option) => option.value === mainWebspace)) {
+            return mainWebspace;
+        }
+
+        return this.webspaceOptions[0]?.value;
+    }
+
+    @computed get webspaceOptions(): Array<Object> {
+        const {formStore: {locale}} = this.props;
+        const currentLocale = locale?.get();
+
+        return webspaceStore.grantedWebspaces
+            .filter((webspace) => {
+                // Filter webspaces that support the current locale
+                if (!currentLocale || !webspace.localizations) {
+                    return true;
+                }
+                return webspace.localizations.some(
+                    (localization) => localization.locale === currentLocale
+                );
+            })
+            .map((webspace): Object => ({
+                label: webspace.name,
+                value: webspace.key,
+            }));
     }
 
     @computed get segments() {
@@ -82,11 +115,6 @@ class Preview extends React.Component<Props> {
         if (Preview.audienceTargeting) {
             this.targetGroupsStore = new ResourceListStore('target_groups');
         }
-
-        this.webspaceOptions = webspaceStore.grantedWebspaces.map((webspace): Object => ({
-            label: webspace.name,
-            value: webspace.key,
-        }));
 
         this.createPreviewStore();
         if (Preview.mode === 'auto') {
@@ -166,6 +194,8 @@ class Preview extends React.Component<Props> {
         this.localeDisposer = reaction(
             () => toJS(formStore.locale),
             (locale) => {
+                // Update webspace to one that supports the new locale
+                this.previewStore.setWebspace(this.webspaceKey);
                 this.previewStore.restart(locale);
             }
         );

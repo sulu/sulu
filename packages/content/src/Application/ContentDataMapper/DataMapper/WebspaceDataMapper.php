@@ -56,12 +56,36 @@ class WebspaceDataMapper implements DataMapperInterface
         //      on the template itself which will be injected with ["type" => ["template-key" => "webspace-key"]] into this service.
         if (\array_key_exists('mainWebspace', $data)) {
             Assert::nullOrString($data['mainWebspace']);
+
+            if ($data['mainWebspace']) {
+                $this->validateWebspaceSupportsLocale($data['mainWebspace'], $dimensionContent->getLocale());
+            }
+
             $dimensionContent->setMainWebspace($data['mainWebspace']);
         }
 
         if (!$dimensionContent->getMainWebspace()) {
             // if no main webspace is yet set a default webspace will be set
             $dimensionContent->setMainWebspace($this->getDefaultWebspaceKey());
+        }
+    }
+
+    private function validateWebspaceSupportsLocale(string $webspaceKey, ?string $locale): void
+    {
+        if (!$locale) {
+            return;
+        }
+
+        $webspace = $this->webspaceManager->findWebspaceByKey($webspaceKey);
+
+        if (!$webspace) {
+            throw new \InvalidArgumentException(\sprintf('Webspace "%s" not found', $webspaceKey));
+        }
+
+        if (!$webspace->getLocalization($locale)) {
+            throw new \InvalidArgumentException(
+                \sprintf('Webspace "%s" does not support locale "%s"', $webspaceKey, $locale)
+            );
         }
     }
 
