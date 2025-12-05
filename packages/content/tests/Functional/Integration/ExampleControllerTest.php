@@ -451,7 +451,7 @@ class ExampleControllerTest extends SuluTestCase
             'excerptIcon' => null,
             'excerptMedia' => null,
             'authored' => '2020-06-09T00:00:00+00:00',
-            'mainWebspace' => 'sulu-io2',
+            'mainWebspace' => 'sulu-io',
             'lastModifiedEnabled' => true,
             'lastModified' => '2022-05-08T00:00:00+00:00',
         ]) ?: null);
