@@ -199,9 +199,6 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
                         ],
                     ],
                     'maintain' => [
-                        'dependencies' => [
-                            'node_order' => [],
-                        ],
                     ],
                 ],
             ];
