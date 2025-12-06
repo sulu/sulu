@@ -11,7 +11,7 @@ declare(strict_types=1);
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\SnippetBundle\Tests\Unit\Infrastructure\Sulu\Content\SmartResolver;
+namespace Sulu\Snippet\Tests\Unit\Infrastructure\Sulu\Content\SmartResolver;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;

@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\Page\Tests\Unit\Infrastructure\Sulu\Content\Merger;
+namespace Sulu\Page\Tests\Unit\Infrastructure\Sulu\Content\Merger;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;

@@ -11,7 +11,7 @@ declare(strict_types=1);
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Content\Tests\Unit\Content\Infrastructure\Symfony\HttpKernel;
+namespace Sulu\Content\Tests\Unit\Infrastructure\Symfony\HttpKernel;
 
 use Doctrine\Bundle\DoctrineBundle\DependencyInjection\DoctrineExtension;
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractExtensionTestCase;

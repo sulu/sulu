@@ -11,7 +11,7 @@ declare(strict_types=1);
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Content\Tests\Functional\Infrastructure\Doctrine;
+namespace Sulu\Content\Tests\Functional\Integration;
 
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\Example;
