@@ -11,8 +11,8 @@
 
 namespace Sulu\Bundle\MediaBundle\EventListener;
 
-use Doctrine\ORM\Mapping\ClassMetadataInfo;
 use Doctrine\Persistence\Event\LoadClassMetadataEventArgs;
+use Doctrine\Persistence\Mapping\ClassMetadata;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupInterface;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 
@@ -23,7 +23,7 @@ class MediaAudienceTargetingSubscriber
 {
     public function loadClassMetadata(LoadClassMetadataEventArgs $event)
     {
-        /** @var ClassMetadataInfo<object> $metadata */
+        /** @var ClassMetadata<object> $metadata */
         $metadata = $event->getClassMetadata();
         $reflection = $metadata->getReflectionClass();
 

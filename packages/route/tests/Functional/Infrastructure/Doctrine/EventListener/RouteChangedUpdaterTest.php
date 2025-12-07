@@ -34,10 +34,6 @@ class RouteChangedUpdaterTest extends KernelTestCase
         $entityManager = self::getContainer()->get(EntityManagerInterface::class);
         $entityManager->getConnection()->executeStatement('DELETE FROM ro_routes WHERE 1 = 1');
 
-        $schemaTool = new SchemaTool($entityManager);
-        $classes = $entityManager->getMetadataFactory()->getAllMetadata();
-        $schemaTool->updateSchema($classes, false);
-
         self::ensureKernelShutdown();
     }
 

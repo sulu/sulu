@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Sulu\Content\Application\ContentMetadataInspector;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Mapping\OneToManyAssociationMapping;
 use Sulu\Content\Domain\Model\ContentRichEntityInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 
@@ -39,18 +40,20 @@ class ContentMetadataInspector implements ContentMetadataInspectorInterface
     public function getDimensionContentClass(string $contentRichEntityClass): string
     {
         $classMetadata = $this->entityManager->getClassMetadata($contentRichEntityClass);
-        /** @var array{targetEntity: class-string<T>} $associationMapping */
         $associationMapping = $classMetadata->getAssociationMapping('dimensionContents');
 
-        return $associationMapping['targetEntity'];
+        \assert($associationMapping instanceof OneToManyAssociationMapping, 'Expected dimensionContents to be a OneToMany association.');
+
+        return $associationMapping->targetEntity;
     }
 
     public function getDimensionContentPropertyName(string $contentRichEntityClass): string
     {
         $classMetadata = $this->entityManager->getClassMetadata($contentRichEntityClass);
-        /** @var array{mappedBy: string} $associationMapping */
         $associationMapping = $classMetadata->getAssociationMapping('dimensionContents');
 
-        return $associationMapping['mappedBy'];
+        \assert($associationMapping instanceof OneToManyAssociationMapping, 'Expected dimensionContents to be a OneToMany association.');
+
+        return $associationMapping->mappedBy;
     }
 }
