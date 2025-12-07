@@ -43,6 +43,7 @@ class ContentMetadataInspectorTest extends TestCase
                 'fieldName' => 'dimensionContents',
                 'sourceEntity' => Example::class,
                 'targetEntity' => ExampleDimensionContent::class,
+                'isOwningSide' => true,
             ]));
 
         $entityManager->getClassMetadata(Example::class)->willReturn($classMetadata->reveal());
@@ -66,6 +67,7 @@ class ContentMetadataInspectorTest extends TestCase
                 'sourceEntity' => Example::class,
                 'targetEntity' => ExampleDimensionContent::class,
                 'mappedBy' => 'example',
+                'isOwningSide' => true,
             ]));
 
         $entityManager->getClassMetadata(Example::class)->willReturn($classMetadata->reveal());

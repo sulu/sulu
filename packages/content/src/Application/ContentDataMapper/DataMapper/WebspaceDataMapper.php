@@ -50,7 +50,7 @@ class WebspaceDataMapper implements DataMapperInterface
     /**
      * @param mixed[] $data
      */
-    private function setWebspaceData(WebspaceInterface $dimensionContent, array $data): void
+    private function setWebspaceData(WebspaceInterface|DimensionContentInterface $dimensionContent, array $data): void
     {
         // TODO allow to configure another webspace with `<tag name="sulu_content.default_main_webspace" value="example" />`
         //      on the template itself which will be injected with ["type" => ["template-key" => "webspace-key"]] into this service.
