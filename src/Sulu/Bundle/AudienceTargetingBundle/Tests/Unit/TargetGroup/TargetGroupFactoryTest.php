@@ -40,7 +40,7 @@ class TargetGroupFactoryTest extends TestCase
     {
         $result = $this->targetGroupFactory->create([]);
         $this->assertSame([], $result);
-        $this->entityManager->getPartialReference()->shouldNotHaveBeenCalled();
+        $this->entityManager->getReference()->shouldNotHaveBeenCalled();
     }
 
     public function testCreateWithSingleTargetGroupId(): void
@@ -48,7 +48,7 @@ class TargetGroupFactoryTest extends TestCase
         $targetGroupId = 1;
         $targetGroup = $this->prophesize(TargetGroupInterface::class);
 
-        $this->entityManager->getPartialReference(
+        $this->entityManager->getReference(
             TargetGroupInterface::class,
             $targetGroupId,
         )->willReturn($targetGroup->reveal())->shouldBeCalled();
@@ -66,17 +66,17 @@ class TargetGroupFactoryTest extends TestCase
         $targetGroup2 = $this->prophesize(TargetGroupInterface::class);
         $targetGroup3 = $this->prophesize(TargetGroupInterface::class);
 
-        $this->entityManager->getPartialReference(
+        $this->entityManager->getReference(
             TargetGroupInterface::class,
             1,
         )->willReturn($targetGroup1->reveal())->shouldBeCalled();
 
-        $this->entityManager->getPartialReference(
+        $this->entityManager->getReference(
             TargetGroupInterface::class,
             2,
         )->willReturn($targetGroup2->reveal())->shouldBeCalled();
 
-        $this->entityManager->getPartialReference(
+        $this->entityManager->getReference(
             TargetGroupInterface::class,
             3,
         )->willReturn($targetGroup3->reveal())->shouldBeCalled();
@@ -96,17 +96,17 @@ class TargetGroupFactoryTest extends TestCase
         $targetGroup1 = $this->prophesize(TargetGroupInterface::class);
         $targetGroup3 = $this->prophesize(TargetGroupInterface::class);
 
-        $this->entityManager->getPartialReference(
+        $this->entityManager->getReference(
             TargetGroupInterface::class,
             5,
         )->willReturn($targetGroup5->reveal())->shouldBeCalled();
 
-        $this->entityManager->getPartialReference(
+        $this->entityManager->getReference(
             TargetGroupInterface::class,
             1,
         )->willReturn($targetGroup1->reveal())->shouldBeCalled();
 
-        $this->entityManager->getPartialReference(
+        $this->entityManager->getReference(
             TargetGroupInterface::class,
             3,
         )->willReturn($targetGroup3->reveal())->shouldBeCalled();

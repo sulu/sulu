@@ -477,8 +477,8 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
         $qb
             ->andWhere($alias . '.id NOT IN (' . $authorizedDescendantCollectionsQb->getDQL() . ')');
 
-        foreach ($authorizedDescendantCollectionsQb->getParameters() as $parameterKey => $parameterValue) {
-            $qb->setParameter($parameterKey, $parameterValue);
+        foreach ($authorizedDescendantCollectionsQb->getParameters() as $parameter) {
+            $qb->setParameter($parameter->getName(), $parameter->getValue(), $parameter->getType());
         }
 
         return $qb;

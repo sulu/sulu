@@ -38,7 +38,7 @@ class CategoryFactory implements CategoryFactoryInterface
         $categories = [];
         foreach ($categoryIds as $categoryId) {
             /** @var CategoryInterface $category */
-            $category = $this->entityManager->getPartialReference(
+            $category = $this->entityManager->getReference(
                 CategoryInterface::class,
                 $categoryId
             );
