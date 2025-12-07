@@ -15,6 +15,7 @@ namespace Sulu\Content\Tests\Unit\Content\Application\ContentMetadataInspector;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\ClassMetadata;
+use Doctrine\ORM\Mapping\OneToManyAssociationMapping;
 use PHPUnit\Framework\TestCase;
 use Sulu\Content\Application\ContentMetadataInspector\ContentMetadataInspector;
 use Sulu\Content\Application\ContentMetadataInspector\ContentMetadataInspectorInterface;
@@ -38,7 +39,7 @@ class ContentMetadataInspectorTest extends TestCase
         $entityManager = $this->prophesize(EntityManagerInterface::class);
         $classMetadata = $this->prophesize(ClassMetadata::class);
         $classMetadata->getAssociationMapping('dimensionContents')
-            ->willReturn(['targetEntity' => ExampleDimensionContent::class]);
+            ->willReturn(OneToManyAssociationMapping::fromMappingArray(['targetEntity' => ExampleDimensionContent::class]));
 
         $entityManager->getClassMetadata(Example::class)->willReturn($classMetadata->reveal());
 
@@ -56,7 +57,7 @@ class ContentMetadataInspectorTest extends TestCase
         $entityManager = $this->prophesize(EntityManagerInterface::class);
         $classMetadata = $this->prophesize(ClassMetadata::class);
         $classMetadata->getAssociationMapping('dimensionContents')
-            ->willReturn(['mappedBy' => 'example']);
+            ->willReturn(OneToManyAssociationMapping::fromMappingArray(['mappedBy' => 'example']));
 
         $entityManager->getClassMetadata(Example::class)->willReturn($classMetadata->reveal());
 
