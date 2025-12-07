@@ -28,7 +28,7 @@ class ContentRichEntityTraitTest extends TestCase
                 throw new \RuntimeException('Should not be called while executing tests.');
             }
 
-            public function getId()
+            public function getId(): int
             {
                 throw new \RuntimeException('Should not be called while executing tests.');
             }

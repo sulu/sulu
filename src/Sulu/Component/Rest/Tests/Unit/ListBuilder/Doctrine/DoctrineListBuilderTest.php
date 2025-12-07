@@ -71,7 +71,7 @@ class DoctrineListBuilderTest extends TestCase
     private $entityManager;
 
     /**
-     * @var ObjectProphecy<ClassMetadata>
+     * @var ObjectProphecy<ClassMetadata<object>>
      */
     private $classMetadata;
 
@@ -81,7 +81,7 @@ class DoctrineListBuilderTest extends TestCase
     private $queryBuilder;
 
     /**
-     * @var ObjectProphecy<Query>
+     * @var ObjectProphecy<Query<int, object>>
      */
     private $query;
 
@@ -128,7 +128,7 @@ class DoctrineListBuilderTest extends TestCase
         $this->filterTypeRegistry = $this->prophesize(FilterTypeRegistry::class);
         $this->queryBuilder = $this->prophesize(QueryBuilder::class);
         $this->query = $this->prophesize(Query::class);
-        $this->classMetadata = $this->prophesize(ClassMetadata::class);
+        $this->classMetadata = $this->prophesize(ClassMetadata::class); // @phpstan-ignore-line assign.propertyType
 
         $this->entityManager->createQueryBuilder()->willReturn($this->queryBuilder->reveal());
         $this->entityManager->getClassMetadata(Argument::any())

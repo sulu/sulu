@@ -32,7 +32,6 @@ final class DoctrineRestoreHelper implements DoctrineRestoreHelperInterface
         $metadata = $this->entityManager->getClassMetaData($entityClass);
 
         $idReflectionProperty = $metadata->getSingleIdReflectionProperty();
-        $idReflectionProperty->setAccessible(true);
         $idReflectionProperty->setValue($entity, $id);
 
         $previousIdGeneratorType = $metadata->generatorType;
