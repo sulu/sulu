@@ -49,7 +49,6 @@ trait CreateExampleTrait
         if ($options['create_route'] ?? false) {
             Assert::isInstanceOf($entityManager, EntityManager::class);
             $entityManager->persist($example);
-            $entityManager->flush($example); // we need an id for creating the route
         }
 
         $slugger = new AsciiSlugger();

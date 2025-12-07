@@ -815,9 +815,6 @@ class ContactControllerTest extends SuluTestCase
         $accountContact2->setAccount($account2);
         $contact1->addAccountContact($accountContact2);
 
-        $this->em->persist($account1);
-        $this->em->persist($account2);
-        $this->em->persist($account3);
         $this->em->persist($contact1);
         $this->em->persist($accountContact1);
         $this->em->persist($accountContact2);
@@ -846,10 +843,7 @@ class ContactControllerTest extends SuluTestCase
     public function testGetListByAccountId(): void
     {
         $account1 = $this->createAccount('Musterfirma 1');
-        $this->em->persist($account1);
-
         $account2 = $this->createAccount('Musterfirma 2');
-        $this->em->persist($account2);
 
         $contact1 = new Contact();
         $contact1->setFirstName('Erika');
@@ -2441,7 +2435,7 @@ class ContactControllerTest extends SuluTestCase
         };
     }
 
-    private function createAccount(string $name)
+    private function createAccount(string $name): Account
     {
         $account = new Account();
         $account->setName($name);
