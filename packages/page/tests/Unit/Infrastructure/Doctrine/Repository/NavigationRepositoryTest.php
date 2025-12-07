@@ -149,7 +149,7 @@ class NavigationRepositoryTest extends TestCase
         $queryBuilder->andWhere('navigationContext.navigationContext IN (:navigationContexts)')->willReturn($queryBuilder->reveal());
         $queryBuilder->setParameter('navigationContexts', ['main'])->willReturn($queryBuilder->reveal());
 
-        $query->setHint('doctrine.includeMetaColumns', true)->shouldBeCalled();
+        $query->setHint('doctrine.includeMetaColumns', true)->willReturn($query->reveal())->shouldBeCalled();
         $query->getResult('sulu_page_tree')->willReturn([$page->reveal()]);
 
         // Setup content resolution
@@ -286,7 +286,7 @@ class NavigationRepositoryTest extends TestCase
         $queryBuilder->andWhere('navigationContext.navigationContext IN (:navigationContexts)')->willReturn($queryBuilder->reveal());
         $queryBuilder->setParameter('navigationContexts', ['sidebar'])->willReturn($queryBuilder->reveal());
 
-        $query->setHint('doctrine.includeMetaColumns', true)->shouldBeCalled();
+        $query->setHint('doctrine.includeMetaColumns', true)->willReturn($query->reveal())->shouldBeCalled();
         $query->getResult('sulu_page_tree')->willReturn([$page->reveal()]);
 
         // Setup content resolution
@@ -355,7 +355,7 @@ class NavigationRepositoryTest extends TestCase
         $queryBuilder->andWhere('navigationContext.navigationContext IN (:navigationContexts)')->willReturn($queryBuilder->reveal());
         $queryBuilder->setParameter('navigationContexts', ['main'])->willReturn($queryBuilder->reveal());
 
-        $query->setHint('doctrine.includeMetaColumns', true)->shouldBeCalled();
+        $query->setHint('doctrine.includeMetaColumns', true)->willReturn($query->reveal())->shouldBeCalled();
         $query->getResult('sulu_page_tree')->willReturn([$parentPage->reveal()]);
 
         // Setup content resolution for parent
