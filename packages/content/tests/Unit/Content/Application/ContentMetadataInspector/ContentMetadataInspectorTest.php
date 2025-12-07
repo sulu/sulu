@@ -39,7 +39,11 @@ class ContentMetadataInspectorTest extends TestCase
         $entityManager = $this->prophesize(EntityManagerInterface::class);
         $classMetadata = $this->prophesize(ClassMetadata::class);
         $classMetadata->getAssociationMapping('dimensionContents')
-            ->willReturn(OneToManyAssociationMapping::fromMappingArray(['targetEntity' => ExampleDimensionContent::class]));
+            ->willReturn(OneToManyAssociationMapping::fromMappingArray([
+                'fieldName' => 'dimensionContents',
+                'sourceEntity' => Example::class,
+                'targetEntity' => ExampleDimensionContent::class,
+            ]));
 
         $entityManager->getClassMetadata(Example::class)->willReturn($classMetadata->reveal());
 
@@ -57,7 +61,12 @@ class ContentMetadataInspectorTest extends TestCase
         $entityManager = $this->prophesize(EntityManagerInterface::class);
         $classMetadata = $this->prophesize(ClassMetadata::class);
         $classMetadata->getAssociationMapping('dimensionContents')
-            ->willReturn(OneToManyAssociationMapping::fromMappingArray(['mappedBy' => 'example']));
+            ->willReturn(OneToManyAssociationMapping::fromMappingArray([
+                'fieldName' => 'dimensionContents',
+                'sourceEntity' => Example::class,
+                'targetEntity' => ExampleDimensionContent::class,
+                'mappedBy' => 'example',
+            ]));
 
         $entityManager->getClassMetadata(Example::class)->willReturn($classMetadata->reveal());
 
