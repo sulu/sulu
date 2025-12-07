@@ -107,7 +107,6 @@
         "symfony/twig-bundle": "^6.4 || ^7.1",
         "symfony/uid": "^6.4 || ^7.1",
         "symfony/validator": "^6.4 || ^7.1",
-        "symfony/var-exporter": "^6.4 || ^7.1",
         "symfony/workflow": "^6.4 || ^7.1",
         "symfony/yaml": "^6.4 || ^7.1",
         "toflar/psr6-symfony-http-cache-store": "^4.0",
