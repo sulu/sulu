@@ -14,8 +14,8 @@ declare(strict_types=1);
 namespace Sulu\Page\Tests\Unit\Infrastructure\Doctrine\Repository;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
 use PHPUnit\Framework\TestCase;
@@ -115,7 +115,7 @@ class NavigationRepositoryTest extends TestCase
         $page->getWebspaceKey()->willReturn('sulu-io');
 
         $queryBuilder = $this->prophesize(QueryBuilder::class);
-        $query = $this->prophesize(AbstractQuery::class);
+        $query = $this->prophesize(Query::class);
 
         $this->nestedTreeRepository->createQueryBuilder('page')->willReturn($queryBuilder->reveal());
 
@@ -183,7 +183,7 @@ class NavigationRepositoryTest extends TestCase
         $page->getWebspaceKey()->willReturn('sulu-io');
 
         $queryBuilder = $this->prophesize(QueryBuilder::class);
-        $query = $this->prophesize(AbstractQuery::class);
+        $query = $this->prophesize(Query::class);
 
         $this->nestedTreeRepository->createQueryBuilder('page')->willReturn($queryBuilder->reveal());
 
@@ -252,7 +252,7 @@ class NavigationRepositoryTest extends TestCase
         $page->getWebspaceKey()->willReturn('test-webspace');
 
         $queryBuilder = $this->prophesize(QueryBuilder::class);
-        $query = $this->prophesize(AbstractQuery::class);
+        $query = $this->prophesize(Query::class);
 
         $this->nestedTreeRepository->createQueryBuilder('page')->willReturn($queryBuilder->reveal());
 
@@ -321,7 +321,7 @@ class NavigationRepositoryTest extends TestCase
         $childPage->getWebspaceKey()->willReturn('sulu-io');
 
         $queryBuilder = $this->prophesize(QueryBuilder::class);
-        $query = $this->prophesize(AbstractQuery::class);
+        $query = $this->prophesize(Query::class);
 
         $this->nestedTreeRepository->createQueryBuilder('page')->willReturn($queryBuilder->reveal());
 
@@ -396,7 +396,7 @@ class NavigationRepositoryTest extends TestCase
         $page->getWebspaceKey()->willReturn('sulu-io');
 
         $queryBuilder = $this->prophesize(QueryBuilder::class);
-        $query = $this->prophesize(AbstractQuery::class);
+        $query = $this->prophesize(Query::class);
 
         $this->nestedTreeRepository->createQueryBuilder('page')->willReturn($queryBuilder->reveal());
 

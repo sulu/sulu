@@ -13,8 +13,8 @@ declare(strict_types=1);
 
 namespace Sulu\Article\Tests\Unit\Infrastructure\Sulu\Route;
 
-use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
@@ -90,7 +90,7 @@ class ArticleRouteDefaultsProviderTest extends TestCase
         $resolvedDimensionContent->setMainWebspace($mainWebspace);
 
         $queryBuilder = $this->prophesize(QueryBuilder::class);
-        $query = $this->prophesize(AbstractQuery::class);
+        $query = $this->prophesize(Query::class);
 
         $this->entityManager->createQueryBuilder()->willReturn($queryBuilder->reveal());
         $queryBuilder->select('entity')->willReturn($queryBuilder->reveal());
@@ -138,7 +138,7 @@ class ArticleRouteDefaultsProviderTest extends TestCase
         $resolvedDimensionContent->setTemplateKey('default');
 
         $queryBuilder = $this->prophesize(QueryBuilder::class);
-        $query = $this->prophesize(AbstractQuery::class);
+        $query = $this->prophesize(Query::class);
 
         $this->entityManager->createQueryBuilder()->willReturn($queryBuilder->reveal());
         $queryBuilder->select('entity')->willReturn($queryBuilder->reveal());
