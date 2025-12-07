@@ -13,8 +13,8 @@ declare(strict_types=1);
 
 namespace Sulu\Content\Tests\Unit\Content\Infrastructure\Sulu\Route;
 
-use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
@@ -97,7 +97,7 @@ class ContentRouteDefaultsProviderTest extends TestCase
         $contentRichEntity = $this->prophesize(ContentRichEntityInterface::class);
 
         $queryBuilder = $this->prophesize(QueryBuilder::class);
-        $query = $this->prophesize(AbstractQuery::class);
+        $query = $this->prophesize(Query::class);
 
         $this->entityManager->createQueryBuilder()->willReturn($queryBuilder->reveal());
         $queryBuilder->select('entity')->willReturn($queryBuilder->reveal());
@@ -137,7 +137,7 @@ class ContentRouteDefaultsProviderTest extends TestCase
         $contentRichEntity = $this->prophesize(ContentRichEntityInterface::class);
 
         $queryBuilder = $this->prophesize(QueryBuilder::class);
-        $query = $this->prophesize(AbstractQuery::class);
+        $query = $this->prophesize(Query::class);
 
         $this->entityManager->createQueryBuilder()->willReturn($queryBuilder->reveal());
         $queryBuilder->select('entity')->willReturn($queryBuilder->reveal());
@@ -170,7 +170,7 @@ class ContentRouteDefaultsProviderTest extends TestCase
         $resolvedDimensionContent->setTemplateKey('default');
 
         $queryBuilder = $this->prophesize(QueryBuilder::class);
-        $query = $this->prophesize(AbstractQuery::class);
+        $query = $this->prophesize(Query::class);
 
         $this->entityManager->createQueryBuilder()->willReturn($queryBuilder->reveal());
         $queryBuilder->select('entity')->willReturn($queryBuilder->reveal());
@@ -216,7 +216,7 @@ class ContentRouteDefaultsProviderTest extends TestCase
         $resolvedDimensionContent->setLocale(null);
 
         $queryBuilder = $this->prophesize(QueryBuilder::class);
-        $query = $this->prophesize(AbstractQuery::class);
+        $query = $this->prophesize(Query::class);
 
         $this->entityManager->createQueryBuilder()->willReturn($queryBuilder->reveal());
         $queryBuilder->select('entity')->willReturn($queryBuilder->reveal());
@@ -246,7 +246,7 @@ class ContentRouteDefaultsProviderTest extends TestCase
         $contentRichEntity = new Example();
 
         $queryBuilder = $this->prophesize(QueryBuilder::class);
-        $query = $this->prophesize(AbstractQuery::class);
+        $query = $this->prophesize(Query::class);
 
         $this->entityManager->createQueryBuilder()->willReturn($queryBuilder->reveal());
         $queryBuilder->select('entity')->willReturn($queryBuilder->reveal());
@@ -286,7 +286,7 @@ class ContentRouteDefaultsProviderTest extends TestCase
         $resolvedDimensionContent->setTemplateKey('default');
 
         $queryBuilder = $this->prophesize(QueryBuilder::class);
-        $query = $this->prophesize(AbstractQuery::class);
+        $query = $this->prophesize(Query::class);
 
         $this->entityManager->createQueryBuilder()->willReturn($queryBuilder->reveal());
         $queryBuilder->select('entity')->willReturn($queryBuilder->reveal());
@@ -323,7 +323,7 @@ class ContentRouteDefaultsProviderTest extends TestCase
         $resolvedDimensionContent->setTemplateKey(null);
 
         $queryBuilder = $this->prophesize(QueryBuilder::class);
-        $query = $this->prophesize(AbstractQuery::class);
+        $query = $this->prophesize(Query::class);
 
         $this->entityManager->createQueryBuilder()->willReturn($queryBuilder->reveal());
         $queryBuilder->select('entity')->willReturn($queryBuilder->reveal());
