@@ -41,7 +41,7 @@ class OrderByTraitTest extends TestCase
         }
 
         foreach ($expectedOrderBy as $field => $order) {
-            $queryBuilder->addOrderBy($field, $order)->shouldBeCalledTimes(1);
+            $queryBuilder->addOrderBy($field, $order)->willReturn($queryBuilder->reveal())->shouldBeCalledTimes(1);
         }
 
         $this->addOrderBy($queryBuilder->reveal(), $alias, $orderBy);
