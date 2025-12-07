@@ -28,6 +28,7 @@ use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
 use Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeResolver;
 use Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeResolverInterface;
+use Sulu\Bundle\TestBundle\Testing\SetGetPrivatePropertyTrait;
 use Sulu\Content\Application\ContentAggregator\ContentAggregatorInterface;
 use Sulu\Content\Domain\Exception\ContentNotFoundException;
 use Sulu\Content\Domain\Model\ContentRichEntityInterface;
@@ -44,6 +45,7 @@ use Webmozart\Assert\Assert;
 class ContentRouteDefaultsProviderTest extends TestCase
 {
     use ProphecyTrait;
+    use SetGetPrivatePropertyTrait;
 
     /**
      * @var ObjectProphecy<EntityManagerInterface>
@@ -165,6 +167,7 @@ class ContentRouteDefaultsProviderTest extends TestCase
     public function testGetDefaults(): void
     {
         $contentRichEntity = new Example();
+        self::setPrivateProperty($contentRichEntity, 'id', '123-123-123');
         $resolvedDimensionContent = new ExampleDimensionContent($contentRichEntity);
         $resolvedDimensionContent->setLocale('en');
         $resolvedDimensionContent->setTemplateKey('default');
@@ -212,6 +215,7 @@ class ContentRouteDefaultsProviderTest extends TestCase
         $this->expectException(NotFoundHttpException::class);
 
         $contentRichEntity = new Example();
+        self::setPrivateProperty($contentRichEntity, 'id', '123-123-123');
         $resolvedDimensionContent = new ExampleDimensionContent($contentRichEntity);
         $resolvedDimensionContent->setLocale(null);
 
@@ -244,6 +248,7 @@ class ContentRouteDefaultsProviderTest extends TestCase
         $this->expectException(NotFoundHttpException::class);
 
         $contentRichEntity = new Example();
+        self::setPrivateProperty($contentRichEntity, 'id', '123-123-123');
 
         $queryBuilder = $this->prophesize(QueryBuilder::class);
         $query = $this->prophesize(Query::class);
@@ -281,6 +286,7 @@ class ContentRouteDefaultsProviderTest extends TestCase
         $this->expectException(\RuntimeException::class);
 
         $contentRichEntity = new Example();
+        self::setPrivateProperty($contentRichEntity, 'id', '123-123-123');
         $resolvedDimensionContent = new ExampleDimensionContent($contentRichEntity);
         $resolvedDimensionContent->setLocale('en');
         $resolvedDimensionContent->setTemplateKey('default');
@@ -318,6 +324,7 @@ class ContentRouteDefaultsProviderTest extends TestCase
         $this->expectException(NotFoundHttpException::class);
 
         $contentRichEntity = new Example();
+        self::setPrivateProperty($contentRichEntity, 'id', '123-123-123');
         $resolvedDimensionContent = new ExampleDimensionContent($contentRichEntity);
         $resolvedDimensionContent->setLocale('en');
         $resolvedDimensionContent->setTemplateKey(null);
