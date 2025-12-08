@@ -57,6 +57,11 @@ class CachedResourceLoader implements ResourceLoaderContentViewEnhancementInterf
         return $result;
     }
 
+    public function getInnerClass(): string
+    {
+        return $this->decoratedResourceLoader::class;
+    }
+
     public static function getKey(): string
     {
         throw new \LogicException('Should not be called statically on CachedResourceLoader');
