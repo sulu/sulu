@@ -67,10 +67,6 @@ class ReferencesOption
         foreach ($classMetadata->getFieldNames() as $fieldName) {
             $mapping = $classMetadata->getFieldMapping($fieldName);
 
-            if (!$mapping['options']) {
-                continue;
-            }
-
             $references = $mapping['options']['references'] ?? null;
 
             if (null === $references) {
