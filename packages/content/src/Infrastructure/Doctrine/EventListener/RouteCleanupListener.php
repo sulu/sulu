@@ -240,7 +240,7 @@ class RouteCleanupListener implements ResetInterface
         $resourceFieldName = null;
 
         foreach ($metadata->getAssociationMappings() as $fieldName => $mapping) {
-            if (\is_a($mapping->targetEntity, ContentRichEntityInterface::class, true)) {
+            if (\is_a($mapping['targetEntity'], ContentRichEntityInterface::class, true)) {
                 $resourceFieldName = $fieldName;
                 break;
             }

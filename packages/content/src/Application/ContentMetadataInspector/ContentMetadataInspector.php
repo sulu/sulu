@@ -42,9 +42,7 @@ class ContentMetadataInspector implements ContentMetadataInspectorInterface
         $classMetadata = $this->entityManager->getClassMetadata($contentRichEntityClass);
         $associationMapping = $classMetadata->getAssociationMapping('dimensionContents');
 
-        \assert($associationMapping instanceof OneToManyAssociationMapping, 'Expected dimensionContents to be a OneToMany association.');
-
-        return $associationMapping->targetEntity;
+        return $associationMapping['targetEntity'];
     }
 
     public function getDimensionContentPropertyName(string $contentRichEntityClass): string
@@ -52,8 +50,6 @@ class ContentMetadataInspector implements ContentMetadataInspectorInterface
         $classMetadata = $this->entityManager->getClassMetadata($contentRichEntityClass);
         $associationMapping = $classMetadata->getAssociationMapping('dimensionContents');
 
-        \assert($associationMapping instanceof OneToManyAssociationMapping, 'Expected dimensionContents to be a OneToMany association.');
-
-        return $associationMapping->mappedBy;
+        return $associationMapping['mappedBy'];
     }
 }

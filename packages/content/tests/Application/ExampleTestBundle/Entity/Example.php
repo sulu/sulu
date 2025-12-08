@@ -31,6 +31,8 @@ class Example implements ContentRichEntityInterface
     public const TEMPLATE_TYPE = 'example';
 
     /**
+     * We keep here int|string as Example is used in tests a lot and both should be supported.
+     *
      * @var int|string
      */
     public $id;
