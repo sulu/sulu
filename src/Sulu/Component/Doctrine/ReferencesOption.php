@@ -67,13 +67,11 @@ class ReferencesOption
         foreach ($classMetadata->getFieldNames() as $fieldName) {
             $mapping = $classMetadata->getFieldMapping($fieldName);
 
-            $references = $mapping['options']['references'] ?? null;
-
-            if (null === $references) {
+            if (!isset($mapping['options']['references'])) {
                 continue;
             }
 
-            $mapping['_custom']['references'] = $references;
+            $mapping['_custom']['references'] = $mapping['options']['references'];
             unset($mapping['options']['references']);
             $classMetadata->setAttributeOverride($mapping['fieldName'], $mapping);
         }

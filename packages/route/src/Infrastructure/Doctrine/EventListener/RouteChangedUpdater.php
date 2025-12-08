@@ -239,10 +239,7 @@ class RouteChangedUpdater implements ResetInterface
                 'webspace' => $historyRoute->getWebspace(),
             ]);
 
-        if (
-            null !== $classMetadata->idGenerator
-            && !$classMetadata->idGenerator->isPostInsertGenerator()
-        ) {
+        if (!$classMetadata->idGenerator->isPostInsertGenerator()) {
             $historyInsertQueryBuilder->setValue(
                 $classMetadata->getColumnName('id'),
                 $classMetadata->idGenerator->generateId($objectManager, $historyRoute), // @phpstan-ignore-line argument.type // not really sure to return a integer id as a string so currently keep the id as int
