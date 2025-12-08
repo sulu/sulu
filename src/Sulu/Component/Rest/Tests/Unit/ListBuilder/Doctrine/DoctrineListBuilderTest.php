@@ -127,7 +127,7 @@ class DoctrineListBuilderTest extends TestCase
         $this->entityManager = $this->prophesize(EntityManager::class);
         $this->filterTypeRegistry = $this->prophesize(FilterTypeRegistry::class);
         $this->queryBuilder = $this->prophesize(QueryBuilder::class);
-        $this->query = $this->prophesize(Query::class);
+        $this->query = $this->prophesize(Query::class); // @phpstan-ignore-line assign.propertyType
         $this->classMetadata = $this->prophesize(ClassMetadata::class); // @phpstan-ignore-line assign.propertyType
 
         $this->entityManager->createQueryBuilder()->willReturn($this->queryBuilder->reveal());

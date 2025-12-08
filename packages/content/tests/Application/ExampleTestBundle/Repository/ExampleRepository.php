@@ -92,8 +92,8 @@ class ExampleRepository
 
     /**
      * @param array{
-     *     id?: int,
-     *     ids?: int[],
+     *     id?: int|string,
+     *     ids?: array<int|string>,
      *     locale?: string|null,
      *     stage?: string|null,
      * } $filters
@@ -121,8 +121,8 @@ class ExampleRepository
 
     /**
      * @param array{
-     *     id?: int,
-     *     ids?: int[],
+     *     id?: int|string,
+     *     ids?: array<int|string>,
      *     locale?: string|null,
      *     stage?: string|null,
      * } $filters
@@ -148,8 +148,8 @@ class ExampleRepository
 
     /**
      * @param array{
-     *     id?: int,
-     *     ids?: int[],
+     *     id?: int|string,
+     *     ids?: array<int|string>,
      *     locale?: string|null,
      *     stage?: string|null,
      *     categoryIds?: int[],
@@ -174,8 +174,8 @@ class ExampleRepository
          * @see https://github.com/phpstan/phpstan/issues/5223https://github.com/phpstan/phpstan/issues/5223
          *
          * @var array{
-         *     id?: int,
-         *     ids?: int[],
+         *     id?: int|string,
+         *     ids?: array<int|string>,
          *     locale?: string|null,
          *     stage?: string|null,
          *     categoryIds?: int[],
@@ -195,8 +195,8 @@ class ExampleRepository
 
     /**
      * @param array{
-     *     id?: int,
-     *     ids?: int[],
+     *     id?: int|string,
+     *     ids?: array<int|string>,
      *     locale?: string|null,
      *     stage?: string|null,
      *     categoryIds?: int[],
@@ -246,8 +246,8 @@ class ExampleRepository
 
     /**
      * @param array{
-     *     id?: int,
-     *     ids?: int[],
+     *     id?: int|string,
+     *     ids?: array<int|string>,
      *     locale?: string|null,
      *     stage?: string|null,
      *     categoryIds?: int[],

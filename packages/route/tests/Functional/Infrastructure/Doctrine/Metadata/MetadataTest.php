@@ -44,6 +44,7 @@ class MetadataTest extends KernelTestCase
                 $fieldDefinition = $classMetadata->getFieldMapping($field);
 
                 Assert::true(isset($fieldDefinition['length']), 'We expect the length to be returned.');
+                Assert::integer($fieldDefinition['length'], 'We expect the length to be a integer.');
 
                 $countLimit += $fieldDefinition['length'];
             }
@@ -77,6 +78,7 @@ class MetadataTest extends KernelTestCase
 
                 Assert::true('string' === $fieldDefinition['type'], 'Currently this tests handles only strings.');
                 Assert::true(isset($fieldDefinition['length']), 'We expect the length to be returned.');
+                Assert::integer($fieldDefinition['length'], 'We expect the length to be a integer.');
 
                 $countLimit += $fieldDefinition['length'];
             }

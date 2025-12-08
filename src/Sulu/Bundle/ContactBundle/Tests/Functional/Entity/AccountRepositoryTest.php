@@ -79,7 +79,7 @@ class AccountRepositoryTest extends SuluTestCase
         $this->assertNull($this->em->find(AccountInterface::class, $account1Id));
     }
 
-    private function createAccount($name, $tags = [], $categories = [])
+    private function createAccount($name, $tags = [], $categories = []): Account
     {
         $account = new Account();
         $account->setName($name);

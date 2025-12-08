@@ -15,6 +15,7 @@ use Doctrine\ORM\Configuration;
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\Persistence\Mapping\ReflectionService;
+use Webmozart\Assert\Assert;
 
 /**
  * @internal
@@ -22,16 +23,17 @@ use Doctrine\Persistence\Mapping\ReflectionService;
 class MetadataSubscriber
 {
     /**
-     * @var array
+     * @var list<class-string>
      */
     private $classNames;
 
     /**
-     * Constructor.
-     *
-     * @param array $objects
+     * @param array<string, array<string, array{
+     *     model?: class-string<object>,
+     *     repository?: class-string<\Doctrine\ORM\EntityRepository<object>>
+     * }>> $objects
      */
-    public function __construct(protected $objects)
+    public function __construct(protected array $objects)
     {
     }
 
@@ -135,14 +137,16 @@ class MetadataSubscriber
     }
 
     /**
-     * @return array
+     * @return list<class-string>
      */
     private function getAllClassNames(Configuration $configuration)
     {
         if (!$this->classNames) {
-            $this->classNames = $configuration->getMetadataDriverImpl()->getAllClassNames();
+            $classNames = $configuration->getMetadataDriverImpl()?->getAllClassNames();
+            Assert::isList($classNames, 'Expected getAllClassNames to return a list of class names.');
+            $this->classNames = $classNames;
         }
 
-        return $this->classNames;
+        return $this->classNames ?? [];
     }
 }

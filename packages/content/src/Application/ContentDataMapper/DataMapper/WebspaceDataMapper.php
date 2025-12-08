@@ -48,7 +48,11 @@ class WebspaceDataMapper implements DataMapperInterface
     }
 
     /**
-     * @param mixed[] $data
+     * @template T of \Sulu\Content\Domain\Model\ContentRichEntityInterface
+     *
+     * @param WebspaceInterface&DimensionContentInterface<T> $dimensionContent
+     *
+     * @param array<string, mixed> $data
      */
     private function setWebspaceData(WebspaceInterface|DimensionContentInterface $dimensionContent, array $data): void
     {
