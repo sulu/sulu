@@ -120,7 +120,7 @@ class MetadataSubscriber
     private function unsetAssociationMappings(ClassMetadata $metadata): void
     {
         foreach ($metadata->getAssociationMappings() as $key => $value) {
-            // can be changed to $value->type aif min version is doctrine/orm 3+
+            // can be changed to $value->type if min version is doctrine/orm 3+
             // @phpstan-ignore-next-line argument.type
             if ($this->hasRelation($value['type'])) {
                 unset($metadata->associationMappings[$key]);
