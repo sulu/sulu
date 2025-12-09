@@ -65,7 +65,7 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
 
         let newValue = toJS(value);
 
-        if (newValue && types !== oldTypes) {
+        if (newValue) {
             if (!defaultType) {
                 throw new Error(
                     'It is impossible that a block has no defaultType. This should not happen and is likely a bug.'
