@@ -100,9 +100,15 @@ class MetadataSubscriber
 
             // map relations
             foreach ($parentMetadata->getAssociationMappings() as $key => $value) {
+                // can be changed to $value->type and $value->sourceEntity if min version is doctrine/orm 3+
+                // @phpstan-ignore-next-line argument.type
                 if ($this->hasRelation($value['type'])) {
                     $value['sourceEntity'] = $metadata->getName();
-                    $metadata->associationMappings[$key] = $value;
+                    // can be removed if min version is doctrine/orm 3+
+                    // @phpstan-ignore-next-line function.impossibleType
+                    if (\is_array($value)) {
+                        $metadata->associationMappings[$key] = $value;
+                    }
                 }
             }
         }
@@ -114,6 +120,8 @@ class MetadataSubscriber
     private function unsetAssociationMappings(ClassMetadata $metadata): void
     {
         foreach ($metadata->getAssociationMappings() as $key => $value) {
+            // can be changed to $value->type aif min version is doctrine/orm 3+
+            // @phpstan-ignore-next-line argument.type
             if ($this->hasRelation($value['type'])) {
                 unset($metadata->associationMappings[$key]);
             }
@@ -147,6 +155,6 @@ class MetadataSubscriber
             $this->classNames = $classNames;
         }
 
-        return $this->classNames ?? [];
+        return $this->classNames;
     }
 }
