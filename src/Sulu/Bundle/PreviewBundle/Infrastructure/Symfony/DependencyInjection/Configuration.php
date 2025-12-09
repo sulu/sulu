@@ -78,7 +78,7 @@ final class Configuration implements ConfigurationInterface
     /**
      * @param string $name
      *
-     * @return NodeDefinition
+     * @return NodeDefinition<null>
      */
     private function addBasicProviderNode($name)
     {
@@ -91,7 +91,7 @@ final class Configuration implements ConfigurationInterface
     /**
      * Build file_system node configuration definition.
      *
-     * @return NodeDefinition
+     * @return NodeDefinition<null>
      */
     private function addFileSystemNode()
     {
@@ -112,7 +112,7 @@ final class Configuration implements ConfigurationInterface
     /**
      * Build redis node configuration definition.
      *
-     * @return NodeDefinition
+     * @return NodeDefinition<null>
      */
     private function addRedisNode()
     {
