@@ -21,17 +21,19 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Sulu\Content\Application\PropertyResolver\Resolver\PropertyResolverInterface;
 
 #[AsCommand('sulu:debug:content', description: 'Debugging the content services to see if they are correctly registered')]
 final class DebugContentCommand extends Command
 {
     /**
-     * @param iterable<string, ResourceLoaderInterface> $loaders
-     * @param iterable<string, ResolverInterface> $resolvers
+     * @param iterable<string, ResourceLoaderInterface> $loader
+     * @param iterable<string, ResolverInterface> $resolver
+     * @param iterable<string, PropertyResolverInterface> $propertyResolver
      */
     public function __construct(
-        private readonly iterable $loaders,
-        private readonly iterable $resolvers,
+        private readonly iterable $loader,
+        private readonly iterable $resolver,
         private readonly iterable $propertyResolver,
     ) {
         parent::__construct();
@@ -42,13 +44,13 @@ final class DebugContentCommand extends Command
         $io = new SymfonyStyle($input, $output);
 
         $io->title('Loaders');
-        $this->printLoaders($io, $this->loaders);
+        $this->printLoaders($io, $this->loader);
 
         $io->title('Content resolvers');
-        $this->printContentResolvers($io, $this->resolvers);
+        $this->printContentResolvers($io, $this->resolver);
 
         $io->title('Property resolvers');
-        $this->printContentResolvers($io, $this->propertyResolver);
+        $this->printPropertyResolver($io, $this->propertyResolver);
 
         return Command::SUCCESS;
     }
@@ -59,7 +61,7 @@ final class DebugContentCommand extends Command
     private function printLoaders(SymfonyStyle $io, iterable $loaders): void
     {
         $tableData = [];
-        foreach ($this->loaders as $key => $loader) {
+        foreach ($loaders as $key => $loader) {
             $cached = false;
             if ($loader instanceof CachedResourceLoader) {
                 $loader = $loader->getInnerClass();
@@ -88,6 +90,9 @@ final class DebugContentCommand extends Command
         $io->table(['Type', 'Resolver Class'], $tableData);
     }
 
+    /**
+     * @param iterable<string, PropertyResolverInterface> $resolvers
+     */
     private function printPropertyResolver(SymfonyStyle $io, iterable $resolvers): void
     {
         $tableData = [];

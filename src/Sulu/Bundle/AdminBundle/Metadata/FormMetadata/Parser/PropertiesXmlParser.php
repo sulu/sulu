@@ -532,7 +532,7 @@ class PropertiesXmlParser
         }
     }
 
-    private function normalizePropertyData($data): array
+    private function normalizePropertyData(array $data): array
     {
         $data = \array_replace_recursive(
             [
