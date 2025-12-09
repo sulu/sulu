@@ -149,7 +149,7 @@
         "symfony/dotenv": "^6.4 || ^7.1",
         "symfony/emoji": "^7.1",
         "symfony/lock": "^6.4 || ^7.1",
-        "symfony/monolog-bundle": "^3.7",
+        "symfony/monolog-bundle": "^3.7 || ^4.0",
         "symfony/phpunit-bridge": "^6.4 || ^7.1",
         "symfony/runtime": "^6.4 || ^7.1",
         "symfony/stopwatch": "^6.4 || ^7.1",
