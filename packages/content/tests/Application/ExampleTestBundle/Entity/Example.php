@@ -37,9 +37,6 @@ class Example implements ContentRichEntityInterface
      */
     public $id; // @phpstan-ignore-line doctrine.columnType
 
-    /**
-     * @return int|string
-     */
     public function getId(): int|string
     {
         return $this->id;

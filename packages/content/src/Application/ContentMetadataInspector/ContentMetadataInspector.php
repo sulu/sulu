@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Sulu\Content\Application\ContentMetadataInspector;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Mapping\OneToManyAssociationMapping;
 use Sulu\Content\Domain\Model\ContentRichEntityInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 

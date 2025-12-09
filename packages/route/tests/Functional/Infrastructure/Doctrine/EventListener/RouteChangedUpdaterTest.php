@@ -12,7 +12,6 @@
 namespace Sulu\Route\Tests\Functional\Infrastructure\Doctrine\EventListener;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Tools\SchemaTool;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Sulu\Bundle\TestBundle\Testing\SetGetPrivatePropertyTrait;
