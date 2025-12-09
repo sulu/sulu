@@ -17,6 +17,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Sulu\Bundle\TestBundle\Testing\SetGetPrivatePropertyTrait;
 use Sulu\Content\Application\ContentAggregator\ContentAggregator;
 use Sulu\Content\Application\ContentAggregator\ContentAggregatorInterface;
 use Sulu\Content\Application\ContentMerger\ContentMergerInterface;
@@ -30,6 +31,7 @@ use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\ExampleDimensionCont
 class ContentAggregatorTest extends TestCase
 {
     use ProphecyTrait;
+    use SetGetPrivatePropertyTrait;
 
     protected function createContentAggregatorInstance(
         DimensionContentRepositoryInterface $dimensionContentRepository,
@@ -44,6 +46,7 @@ class ContentAggregatorTest extends TestCase
     public function testAggregate(): void
     {
         $example = new Example();
+        self::setPrivateProperty($example, 'id', 1);
 
         $dimensionContent1 = new ExampleDimensionContent($example);
         $dimensionContent1->setStage(DimensionContentInterface::STAGE_DRAFT);
@@ -96,6 +99,7 @@ class ContentAggregatorTest extends TestCase
         $this->expectException(ContentNotFoundException::class);
 
         $example = new Example();
+        self::setPrivateProperty($example, 'id', 1);
 
         $attributes = [
             'locale' => 'de',

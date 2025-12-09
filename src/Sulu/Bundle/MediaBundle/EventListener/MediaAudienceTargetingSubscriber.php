@@ -11,10 +11,10 @@
 
 namespace Sulu\Bundle\MediaBundle\EventListener;
 
-use Doctrine\ORM\Mapping\ClassMetadataInfo;
 use Doctrine\Persistence\Event\LoadClassMetadataEventArgs;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupInterface;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
+use Webmozart\Assert\Assert;
 
 /**
  * This subscriber adds the relationship between media and audience target groups if both bundles are registered.
@@ -23,8 +23,8 @@ class MediaAudienceTargetingSubscriber
 {
     public function loadClassMetadata(LoadClassMetadataEventArgs $event)
     {
-        /** @var ClassMetadataInfo<object> $metadata */
         $metadata = $event->getClassMetadata();
+        Assert::isInstanceOf($metadata, \Doctrine\ORM\Mapping\ClassMetadata::class);
         $reflection = $metadata->getReflectionClass();
 
         if ($reflection && FileVersion::class === $reflection->getName()) {

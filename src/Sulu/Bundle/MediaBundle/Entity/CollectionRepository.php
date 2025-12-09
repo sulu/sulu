@@ -475,8 +475,11 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
             ->orderBy('authorizedCollection.id', 'ASC');
 
         $qb
-            ->andWhere($alias . '.id NOT IN (' . $authorizedDescendantCollectionsQb->getDQL() . ')')
-            ->setParameters($authorizedDescendantCollectionsQb->getParameters());
+            ->andWhere($alias . '.id NOT IN (' . $authorizedDescendantCollectionsQb->getDQL() . ')');
+
+        foreach ($authorizedDescendantCollectionsQb->getParameters() as $parameter) {
+            $qb->setParameter($parameter->getName(), $parameter->getValue(), $parameter->getType()); // @phpstan-ignore-line argument.type
+        }
 
         return $qb;
     }

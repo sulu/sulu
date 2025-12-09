@@ -46,6 +46,8 @@ class ReferencesOption
 {
     /**
      * The supported options.
+     *
+     * @var array<string>
      */
     private static $knownOptions = [
         'entity',
@@ -97,6 +99,7 @@ class ReferencesOption
                 continue;
             }
 
+            /** @var array<string, mixed> $referencesOptions */
             $referencesOptions = $mapping['_custom']['references'];
 
             $unknownOptions = \array_diff_key($referencesOptions, \array_flip(self::$knownOptions));
@@ -135,18 +138,22 @@ class ReferencesOption
             $localColumnName = $classMetadata->getColumnName($fieldName);
 
             // we need to use the actual class if the entity is an interface that is mapped by the SuluPersistenceBundle
+            /** @var class-string $targetEntity */
             $targetEntity = $referencesOptions['entity'];
             if (\array_key_exists($targetEntity, $this->targetEntityMapping)) {
+                /** @var class-string $targetEntity */
                 $targetEntity = $this->targetEntityMapping[$targetEntity];
             }
 
             /** @var ObjectManager $manager */
             $manager = $this->managerRegistry->getManagerForClass($targetEntity);
-            /** @var ClassMetadata $foreignClassMetadata */
+            /** @var ClassMetadata<object> $foreignClassMetadata */
             $foreignClassMetadata = $manager->getClassMetadata($targetEntity);
 
             $foreignTable = $foreignClassMetadata->getTableName();
-            $foreignColumnName = $foreignClassMetadata->getColumnName($referencesOptions['field']);
+            /** @var string $field */
+            $field = $referencesOptions['field'];
+            $foreignColumnName = $foreignClassMetadata->getColumnName($field);
             $options = [];
 
             if (isset($referencesOptions['onDelete'])) {

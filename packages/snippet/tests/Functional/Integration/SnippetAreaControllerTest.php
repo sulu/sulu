@@ -13,8 +13,6 @@ declare(strict_types=1);
 
 namespace Sulu\Snippet\Tests\Functional\Integration;
 
-use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Tools\SchemaTool;
 use Sulu\Bundle\TestBundle\Testing\AssertSnapshotTrait;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
@@ -35,12 +33,6 @@ class SnippetAreaControllerTest extends SuluTestCase
             [],
             ['CONTENT_TYPE' => 'application/json', 'HTTP_ACCEPT' => 'application/json']
         );
-
-        /** @var EntityManagerInterface $entityManager */
-        $entityManager = self::getContainer()->get(EntityManagerInterface::class);
-        $schemaTool = new SchemaTool($entityManager);
-        $classes = $entityManager->getMetadataFactory()->getAllMetadata();
-        $schemaTool->updateSchema($classes, false);
     }
 
     public function testGetList(): void

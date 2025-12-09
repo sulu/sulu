@@ -79,7 +79,7 @@ class PageReferenceRefresherTest extends TestCase
     {
         // Create a simple mock that returns empty results
         $queryBuilder = $this->prophesize(\Doctrine\ORM\QueryBuilder::class);
-        $query = $this->prophesize(\Doctrine\ORM\AbstractQuery::class);
+        $query = $this->prophesize(\Doctrine\ORM\Query::class);
 
         // Mock the query builder chain
         $queryBuilder->where('dimensionContent.version = :version')->willReturn($queryBuilder);
@@ -104,7 +104,7 @@ class PageReferenceRefresherTest extends TestCase
         $filter = ['resourceId' => '123', 'resourceKey' => 'pages', 'locale' => 'en', 'stage' => 'live'];
 
         $queryBuilder = $this->prophesize(\Doctrine\ORM\QueryBuilder::class);
-        $query = $this->prophesize(\Doctrine\ORM\AbstractQuery::class);
+        $query = $this->prophesize(\Doctrine\ORM\Query::class);
 
         $queryBuilder->where('dimensionContent.version = :version')->willReturn($queryBuilder);
         $queryBuilder->setParameter('version', DimensionContentInterface::CURRENT_VERSION)->willReturn($queryBuilder);

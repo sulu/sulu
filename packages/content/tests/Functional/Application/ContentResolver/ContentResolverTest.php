@@ -1109,6 +1109,8 @@ class ContentResolverTest extends SuluTestCase
             ]
         );
 
+        static::getEntityManager()->flush();
+
         $example1 = static::createExample(
             [
                 'en' => [

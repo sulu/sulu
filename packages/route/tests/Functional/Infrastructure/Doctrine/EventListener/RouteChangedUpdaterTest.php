@@ -12,7 +12,6 @@
 namespace Sulu\Route\Tests\Functional\Infrastructure\Doctrine\EventListener;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Tools\SchemaTool;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Sulu\Bundle\TestBundle\Testing\SetGetPrivatePropertyTrait;
@@ -33,10 +32,6 @@ class RouteChangedUpdaterTest extends KernelTestCase
     {
         $entityManager = self::getContainer()->get(EntityManagerInterface::class);
         $entityManager->getConnection()->executeStatement('DELETE FROM ro_routes WHERE 1 = 1');
-
-        $schemaTool = new SchemaTool($entityManager);
-        $classes = $entityManager->getMetadataFactory()->getAllMetadata();
-        $schemaTool->updateSchema($classes, false);
 
         self::ensureKernelShutdown();
     }

@@ -79,6 +79,7 @@ return $config
         [
             'guzzlehttp/promises', // required for faster fos http cache clearing
             'nyholm/psr7', // required for faster fos http cache clearing
+            'symfony/var-exporter', // required for doctrine lazy objects
             'symfony/css-selector', // kept for future usage
         ],
         [ErrorType::UNUSED_DEPENDENCY],

@@ -36,7 +36,7 @@ class ContactFactory implements ContactFactoryInterface
         }
 
         /** @var ContactInterface|null $contact */
-        $contact = $this->entityManager->getPartialReference(
+        $contact = $this->entityManager->getReference(
             ContactInterface::class,
             $contactId
         );

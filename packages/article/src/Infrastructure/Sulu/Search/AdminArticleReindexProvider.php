@@ -150,7 +150,9 @@ final class AdminArticleReindexProvider implements ReindexProviderInterface
             $qb->andWhere(\implode(' OR ', $conditions));
         }
 
-        $qb->setParameters($parameters);
+        foreach ($parameters as $parameterKey => $parameterValue) {
+            $qb->setParameter($parameterKey, $parameterValue);
+        }
 
         /** @var iterable<Article> */
         return $qb->getQuery()->toIterable();

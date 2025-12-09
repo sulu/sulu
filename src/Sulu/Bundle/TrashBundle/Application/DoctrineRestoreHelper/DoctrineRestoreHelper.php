@@ -16,6 +16,7 @@ namespace Sulu\Bundle\TrashBundle\Application\DoctrineRestoreHelper;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Id\AssignedGenerator;
 use Doctrine\ORM\Mapping\ClassMetadata;
+use Doctrine\ORM\Mapping\PropertyAccessors\PropertyAccessor;
 
 /**
  * @internal
@@ -31,9 +32,16 @@ final class DoctrineRestoreHelper implements DoctrineRestoreHelperInterface
         $entityClass = \get_class($entity);
         $metadata = $this->entityManager->getClassMetaData($entityClass);
 
-        $idReflectionProperty = $metadata->getSingleIdReflectionProperty();
-        $idReflectionProperty->setAccessible(true);
-        $idReflectionProperty->setValue($entity, $id);
+        if (\method_exists($metadata, 'getSingleIdPropertyAccessor')) { // @phpstan-ignore-line function.alreadyNarrowedType
+            /** @var PropertyAccessor $idPropertyAccessor */
+            $idPropertyAccessor = $metadata->getSingleIdPropertyAccessor();
+            $idPropertyAccessor->setValue($entity, $id);
+        } else {
+            // can be removed when doctrine/orm min version is 3+
+            /** @var \ReflectionProperty $idReflectionProperty */
+            $idReflectionProperty = $metadata->getSingleIdReflectionProperty();
+            $idReflectionProperty->setValue($entity, $id);
+        }
 
         $previousIdGeneratorType = $metadata->generatorType;
         $previousIdGenerator = $metadata->idGenerator;

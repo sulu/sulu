@@ -33,7 +33,7 @@ class TargetGroupFactory implements TargetGroupFactoryInterface
         $targetGroups = [];
         foreach ($targetGroupIds as $targetGroupId) {
             /** @var TargetGroupInterface $targetGroup */
-            $targetGroup = $this->entityManager->getPartialReference(
+            $targetGroup = $this->entityManager->getReference(
                 TargetGroupInterface::class,
                 $targetGroupId,
             );

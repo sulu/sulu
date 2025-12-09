@@ -90,7 +90,8 @@ class DoctrineWhereExpressionTest extends TestCase
         $fieldDescriptor = new DoctrineFieldDescriptor('name', 'name', self::$entityName);
         $whereExpression = new DoctrineWhereExpression($fieldDescriptor, $value, 'LIKE');
 
-        $this->queryBuilder->setParameter(Argument::containingString('name'), '%' . $value . '%');
+        $this->queryBuilder->setParameter(Argument::containingString('name'), '%' . $value . '%')
+            ->willReturn($this->queryBuilder->reveal());
 
         // parameter names will be generated (combined with unique ids with length of 23 characters)
         $statement = $whereExpression->getStatement($this->queryBuilder->reveal());

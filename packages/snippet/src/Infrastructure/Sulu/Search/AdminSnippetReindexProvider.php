@@ -128,7 +128,9 @@ final class AdminSnippetReindexProvider implements ReindexProviderInterface
             $qb->andWhere(\implode(' OR ', $conditions));
         }
 
-        $qb->setParameters($parameters);
+        foreach ($parameters as $parameterKey => $parameterValue) {
+            $qb->setParameter($parameterKey, $parameterValue);
+        }
 
         /** @var iterable<Snippet> */
         return $qb->getQuery()->toIterable();

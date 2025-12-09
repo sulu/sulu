@@ -159,7 +159,9 @@ final class WebsitePageReindexProvider implements ReindexProviderInterface
             $qb->andWhere(\implode(' OR ', $conditions));
         }
 
-        $qb->setParameters($parameters);
+        foreach ($parameters as $parameterKey => $parameterValue) {
+            $qb->setParameter($parameterKey, $parameterValue);
+        }
 
         foreach ($this->enhancers as $enhancer) {
             $enhancer->enhanceQuery($qb);

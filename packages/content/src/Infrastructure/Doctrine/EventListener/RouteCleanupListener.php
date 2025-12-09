@@ -240,6 +240,8 @@ class RouteCleanupListener implements ResetInterface
         $resourceFieldName = null;
 
         foreach ($metadata->getAssociationMappings() as $fieldName => $mapping) {
+            // can be changed to $mapping->targetEntity if min version is doctrine/orm 3+
+            // @phpstan-ignore-next-line argument.type
             if (\is_a($mapping['targetEntity'], ContentRichEntityInterface::class, true)) {
                 $resourceFieldName = $fieldName;
                 break;

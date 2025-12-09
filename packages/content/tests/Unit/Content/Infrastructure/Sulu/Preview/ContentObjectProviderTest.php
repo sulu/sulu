@@ -13,9 +13,9 @@ declare(strict_types=1);
 
 namespace Sulu\Content\Tests\Unit\Content\Infrastructure\Sulu\Preview;
 
-use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NoResultException;
+use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
@@ -115,7 +115,7 @@ class ContentObjectProviderTest extends TestCase
             ->willReturn($queryBuilder->reveal())
             ->shouldBeCalledTimes(1);
 
-        $query = $this->prophesize(AbstractQuery::class);
+        $query = $this->prophesize(Query::class);
 
         $queryBuilder->getQuery()->willReturn($query->reveal())->shouldBeCalledTimes(1);
 
@@ -171,7 +171,7 @@ class ContentObjectProviderTest extends TestCase
             ->willReturn($queryBuilder->reveal())
             ->shouldBeCalledTimes(1);
 
-        $query = $this->prophesize(AbstractQuery::class);
+        $query = $this->prophesize(Query::class);
 
         $queryBuilder->getQuery()->willReturn($query->reveal())->shouldBeCalledTimes(1);
 
@@ -255,7 +255,7 @@ class ContentObjectProviderTest extends TestCase
             ->willReturn($queryBuilder->reveal())
             ->shouldBeCalledTimes(1);
 
-        $query = $this->prophesize(AbstractQuery::class);
+        $query = $this->prophesize(Query::class);
 
         $queryBuilder->getQuery()->willReturn($query->reveal())->shouldBeCalledTimes(1);
 

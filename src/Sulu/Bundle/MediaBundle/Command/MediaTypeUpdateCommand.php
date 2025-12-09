@@ -13,6 +13,7 @@ namespace Sulu\Bundle\MediaBundle\Command;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Bundle\MediaBundle\Entity\Media;
+use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\MediaBundle\Media\TypeManager\TypeManagerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -75,7 +76,7 @@ class MediaTypeUpdateCommand extends Command
         /** @var array<array{id: int, type: int, mimeType: string}> $data */
         $data = $this->entityManager->createQueryBuilder()
             ->addSelect('media.id', 'media.type', 'fileVersion.mimeType')
-            ->from('SuluMediaBundle:Media', 'media')
+            ->from(MediaInterface::class, 'media')
             ->innerJoin('media.files', 'file')
             ->innerJoin('file.fileVersions', 'fileVersion', 'WITH', 'fileVersion.version = file.version')
             ->groupBy('media.id', 'media.type', 'fileVersion.mimeType')

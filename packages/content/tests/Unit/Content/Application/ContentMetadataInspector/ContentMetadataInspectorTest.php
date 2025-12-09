@@ -15,6 +15,7 @@ namespace Sulu\Content\Tests\Unit\Content\Application\ContentMetadataInspector;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\ClassMetadata;
+use Doctrine\ORM\Mapping\OneToManyAssociationMapping;
 use PHPUnit\Framework\TestCase;
 use Sulu\Content\Application\ContentMetadataInspector\ContentMetadataInspector;
 use Sulu\Content\Application\ContentMetadataInspector\ContentMetadataInspectorInterface;
@@ -37,8 +38,16 @@ class ContentMetadataInspectorTest extends TestCase
     {
         $entityManager = $this->prophesize(EntityManagerInterface::class);
         $classMetadata = $this->prophesize(ClassMetadata::class);
+        $mapping = [
+            'fieldName' => 'dimensionContents',
+            'sourceEntity' => Example::class,
+            'targetEntity' => ExampleDimensionContent::class,
+            'isOwningSide' => true,
+        ];
         $classMetadata->getAssociationMapping('dimensionContents')
-            ->willReturn(['targetEntity' => ExampleDimensionContent::class]);
+            ->willReturn(\class_exists(OneToManyAssociationMapping::class) // check can be removed when min version of doctrine/orm is 3.0
+                ? OneToManyAssociationMapping::fromMappingArray($mapping)
+                : $mapping);
 
         $entityManager->getClassMetadata(Example::class)->willReturn($classMetadata->reveal());
 
@@ -55,8 +64,17 @@ class ContentMetadataInspectorTest extends TestCase
     {
         $entityManager = $this->prophesize(EntityManagerInterface::class);
         $classMetadata = $this->prophesize(ClassMetadata::class);
+        $mapping = [
+            'fieldName' => 'dimensionContents',
+            'sourceEntity' => Example::class,
+            'targetEntity' => ExampleDimensionContent::class,
+            'mappedBy' => 'example',
+            'isOwningSide' => true,
+        ];
         $classMetadata->getAssociationMapping('dimensionContents')
-            ->willReturn(['mappedBy' => 'example']);
+            ->willReturn(\class_exists(OneToManyAssociationMapping::class) // check can be removed when min version of doctrine/orm is 3.0
+                ? OneToManyAssociationMapping::fromMappingArray($mapping)
+                : $mapping);
 
         $entityManager->getClassMetadata(Example::class)->willReturn($classMetadata->reveal());
 

@@ -31,14 +31,13 @@ class Example implements ContentRichEntityInterface
     public const TEMPLATE_TYPE = 'example';
 
     /**
-     * @var int
+     * We keep here int|string as Example is used in tests a lot and both should be supported.
+     *
+     * @var int|string
      */
-    public $id;
+    public $id; // @phpstan-ignore-line doctrine.columnType
 
-    /**
-     * @return int
-     */
-    public function getId()
+    public function getId(): int|string
     {
         return $this->id;
     }

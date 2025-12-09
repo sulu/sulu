@@ -15,6 +15,7 @@ use Doctrine\ORM\Configuration;
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\Persistence\Mapping\ReflectionService;
+use Webmozart\Assert\Assert;
 
 /**
  * @internal
@@ -22,16 +23,17 @@ use Doctrine\Persistence\Mapping\ReflectionService;
 class MetadataSubscriber
 {
     /**
-     * @var array
+     * @var list<class-string>
      */
     private $classNames;
 
     /**
-     * Constructor.
-     *
-     * @param array $objects
+     * @param array<string, array<string, array{
+     *     model?: class-string<object>,
+     *     repository?: class-string<\Doctrine\ORM\EntityRepository<object>>
+     * }>> $objects
      */
-    public function __construct(protected $objects)
+    public function __construct(protected array $objects)
     {
     }
 
@@ -98,9 +100,15 @@ class MetadataSubscriber
 
             // map relations
             foreach ($parentMetadata->getAssociationMappings() as $key => $value) {
+                // can be changed to $value->type and $value->sourceEntity if min version is doctrine/orm 3+
+                // @phpstan-ignore-next-line argument.type
                 if ($this->hasRelation($value['type'])) {
                     $value['sourceEntity'] = $metadata->getName();
-                    $metadata->associationMappings[$key] = $value;
+                    // can be removed if min version is doctrine/orm 3+
+                    // @phpstan-ignore-next-line function.impossibleType
+                    if (\is_array($value)) {
+                        $metadata->associationMappings[$key] = $value;
+                    }
                 }
             }
         }
@@ -112,6 +120,8 @@ class MetadataSubscriber
     private function unsetAssociationMappings(ClassMetadata $metadata): void
     {
         foreach ($metadata->getAssociationMappings() as $key => $value) {
+            // can be changed to $value->type if min version is doctrine/orm 3+
+            // @phpstan-ignore-next-line argument.type
             if ($this->hasRelation($value['type'])) {
                 unset($metadata->associationMappings[$key]);
             }
@@ -135,12 +145,14 @@ class MetadataSubscriber
     }
 
     /**
-     * @return array
+     * @return list<class-string>
      */
     private function getAllClassNames(Configuration $configuration)
     {
         if (!$this->classNames) {
-            $this->classNames = $configuration->getMetadataDriverImpl()->getAllClassNames();
+            $classNames = $configuration->getMetadataDriverImpl()?->getAllClassNames();
+            Assert::isList($classNames, 'Expected getAllClassNames to return a list of class names.');
+            $this->classNames = $classNames;
         }
 
         return $this->classNames;

@@ -13,8 +13,6 @@ declare(strict_types=1);
 
 namespace Sulu\Snippet\Tests\Functional\Integration;
 
-use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Tools\SchemaTool;
 use PHPUnit\Framework\Attributes\CoversNothing;
 use PHPUnit\Framework\Attributes\Depends;
 use Sulu\Bundle\TestBundle\Testing\AssertSnapshotTrait;
@@ -42,12 +40,6 @@ class SnippetControllerTest extends SuluTestCase
             [],
             ['CONTENT_TYPE' => 'application/json', 'HTTP_ACCEPT' => 'application/json']
         );
-
-        /** @var EntityManagerInterface $entityManager */
-        $entityManager = self::getContainer()->get(EntityManagerInterface::class);
-        $schemaTool = new SchemaTool($entityManager);
-        $classes = $entityManager->getMetadataFactory()->getAllMetadata();
-        $schemaTool->updateSchema($classes, false);
     }
 
     public function testInvalidIdGet(): void
