@@ -34,7 +34,7 @@ class PropertiesXmlParser
     }
 
     /**
-     * @return array<string, FieldMetadata|SectionMetadata>
+     * @return array<FieldMetadata|SectionMetadata>
      */
     public function load(
         \DOMXPath $xpath,
@@ -398,7 +398,7 @@ class PropertiesXmlParser
     /**
      * @param array<string, array<string, mixed>> $data
      *
-     * @return array<string, FieldMetadata|SectionMetadata>
+     * @return array<FieldMetadata|SectionMetadata>
      */
     private function mapProperties(array $data): array
     {
@@ -407,7 +407,7 @@ class PropertiesXmlParser
             $property = $this->createProperty($propertyName, $dataProperty);
 
             if ($property) {
-                $properties[$propertyName] = $property;
+                $properties[] = $property;
             }
         }
 
@@ -426,7 +426,7 @@ class PropertiesXmlParser
         return $property;
     }
 
-    private function createSection(string $propertyName, $data): SectionMetadata
+    private function createSection($propertyName, $data): SectionMetadata
     {
         $section = new SectionMetadata($propertyName);
         if (isset($data['colspan'])) {
@@ -532,7 +532,7 @@ class PropertiesXmlParser
         }
     }
 
-    private function normalizePropertyData(array $data): array
+    private function normalizePropertyData($data): array
     {
         $data = \array_replace_recursive(
             [
@@ -560,7 +560,7 @@ class PropertiesXmlParser
         return $data;
     }
 
-    private function normalizeItem(array $data): array
+    private function normalizeItem($data): array
     {
         $data = \array_merge_recursive(
             [
