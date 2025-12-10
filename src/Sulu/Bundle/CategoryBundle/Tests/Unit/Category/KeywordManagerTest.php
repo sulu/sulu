@@ -47,6 +47,8 @@ class KeywordManagerTest extends TestCase
         $repository = $this->prophesize(KeywordRepositoryInterface::class);
         $categoryTranslationRepository = $this->prophesize(CategoryTranslationRepositoryInterface::class);
         $entityManager = $this->prophesize(EntityManagerInterface::class);
+        $entityManager->contains(Argument::any())->willReturn(false);
+        $entityManager->refresh(Argument::any())->shouldNotBeCalled();
         $domainEventCollector = $this->prophesize(DomainEventCollectorInterface::class);
 
         $otherKeyword = null;

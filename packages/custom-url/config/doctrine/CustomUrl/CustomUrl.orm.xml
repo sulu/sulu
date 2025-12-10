@@ -8,7 +8,7 @@
             <index columns="webspace" />
         </indexes>
 
-        <id name="uuid" type="string" column="uuid">
+        <id name="uuid" type="string" column="uuid" length="36">
             <generator strategy="NONE"/>
         </id>
 
@@ -26,7 +26,7 @@
 
         <one-to-many field="routes" target-entity="Sulu\CustomUrl\Domain\Model\CustomUrlRouteInterface" mapped-by="customUrl" fetch="EXTRA_LAZY" orphan-removal="true">
             <cascade>
-                <cascade-all/>
+                <cascade-persist/>
             </cascade>
         </one-to-many>
     </mapped-superclass>

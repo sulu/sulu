@@ -155,9 +155,9 @@ class AccountRecoverCommand extends Command
     /**
      * Fix nodes where difference to parents depth.
      *
-     * @return int|bool Number of affected rows
+     * @return int Number of affected rows
      */
-    private function fixWrongDepthGap()
+    private function fixWrongDepthGap(): int
     {
         // FIXME: convert this native query to DQL (once its possible to join within UPDATE statement)
         // fix nodes where difference to parents depth > 1
@@ -168,19 +168,7 @@ class AccountRecoverCommand extends Command
 
         $statement = $this->entityManager->getConnection()->prepare($sql);
 
-        // DBAL 3 to 4 BC Layer
-        if (\method_exists($statement, 'executeStatement')) {
-            return $statement->executeStatement();
-        }
-
-        $result = $statement->execute();
-
-        if ($result) {
-            // DBAL 2 to 3 BC Layer
-            return \method_exists($statement, 'rowCount') ? $statement->rowCount() : $result->rowCount();
-        }
-
-        return false;
+        return (int) $statement->executeStatement();
     }
 
     /**

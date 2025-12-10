@@ -14,6 +14,9 @@ namespace Sulu\Bundle\TestBundle\Testing;
 use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
 use Doctrine\Common\DataFixtures\ProxyReferenceRepository;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
+use Doctrine\DBAL\Platforms\AbstractMySQLPlatform;
+use Doctrine\DBAL\Platforms\MySQLPlatform;
+use Doctrine\DBAL\Platforms\PostgreSQLPlatform;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -30,24 +33,15 @@ trait PurgeDatabaseTrait
         $entityManager = static::getEntityManager();
         $connection = $entityManager->getConnection();
 
-        $isMysql = 'mysql' === $connection->getDriver()->getDatabasePlatform()->getName();
-        $isPostgreSQL = 'postgresql' === $connection->getDriver()->getDatabasePlatform()->getName();
-
-        $executeDoctrineStatement = function(string $sql) use ($connection) {
-            if (\method_exists($connection, 'executeStatement')) {
-                $connection->executeStatement($sql);
-            } else {
-                // executeUpdate can be removed when upgrade to a doctrine/dbal 3
-                $connection->executeUpdate($sql);
-            }
-        };
+        $isMysql = $connection->getDatabasePlatform() instanceof AbstractMySQLPlatform;
+        $isPostgreSQL = $connection->getDatabasePlatform() instanceof PostgreSQLPlatform;
 
         if ($isMysql) {
-            $executeDoctrineStatement('SET foreign_key_checks = 0;');
+            $connection->executeStatement('SET foreign_key_checks = 0;');
         }
 
         if ($isPostgreSQL) {
-            $executeDoctrineStatement('SET session_replication_role = "replica";');
+            $connection->executeStatement('SET session_replication_role = "replica";');
         }
 
         $purger = new ORMPurger();
@@ -57,11 +51,11 @@ trait PurgeDatabaseTrait
         $executor->purge();
 
         if ($isMysql) {
-            $executeDoctrineStatement('SET foreign_key_checks = 1;');
+            $connection->executeStatement('SET foreign_key_checks = 1;');
         }
 
         if ($isPostgreSQL) {
-            $executeDoctrineStatement('SET session_replication_role = "origin";');
+            $connection->executeStatement('SET session_replication_role = "origin";');
         }
     }
 

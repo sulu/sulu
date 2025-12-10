@@ -32,7 +32,6 @@ class TimestampableSubscriber
     public function loadClassMetadata(LoadClassMetadataEventArgs $event)
     {
         $metadata = $event->getClassMetadata();
-        /** @var \ReflectionClass<object>|null $reflection */
         $reflection = $metadata->getReflectionClass();
 
         // @phpstan-ignore notIdentical.alwaysTrue
