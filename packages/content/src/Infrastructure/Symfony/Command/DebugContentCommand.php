@@ -47,13 +47,10 @@ final class DebugContentCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
-        $io->title('Loaders');
         $this->printLoaders($io, $this->loader);
 
-        $io->title('Content resolvers');
         $this->printContentResolvers($io, $this->resolver);
 
-        $io->title('Property resolvers');
         $this->printPropertyResolver($io, $this->propertyResolver);
 
         return Command::SUCCESS;
@@ -64,22 +61,21 @@ final class DebugContentCommand extends Command
      */
     private function printLoaders(SymfonyStyle $io, iterable $loaders): void
     {
+        $io->title('Resource loaders');
+
         $tableData = [];
         foreach ($loaders as $key => $loader) {
-            $cached = false;
             if ($loader instanceof CachedResourceLoader) {
                 $loader = $loader->getInnerClass();
-                $cached = true;
             }
 
             $tableData[] = [
                 $key,
                 $loader,
-                $cached ? 'x' : '',
             ];
         }
 
-        $io->table(['Content Type', 'Loader Class', 'Cached'], $tableData);
+        $io->table(['Type', 'Loader Class'], $tableData);
     }
 
     /**
@@ -87,6 +83,8 @@ final class DebugContentCommand extends Command
      */
     private function printContentResolvers(SymfonyStyle $io, iterable $resolvers): void
     {
+        $io->title('Dimension Content resolvers');
+
         $tableData = [];
         foreach ($resolvers as $type => $resolver) {
             $tableData[] = [$type, $resolver::class];
@@ -99,10 +97,14 @@ final class DebugContentCommand extends Command
      */
     private function printPropertyResolver(SymfonyStyle $io, iterable $resolvers): void
     {
+        $io->title('Property resolvers');
+
+        $io->info('If a type does not have an explicit property resolver (eg. "text" or "text_area") the "default" property resolver is used.');
+
         $tableData = [];
         foreach ($resolvers as $type => $resolver) {
-            $tableData[] = [$type, $resolver::class];
+            $tableData[] = ['default' === $type ? '->' : '', $type, $resolver::class];
         }
-        $io->table(['Type', 'Property resolver class'], $tableData);
+        $io->table(['#', 'Type', 'Property resolver class'], $tableData);
     }
 }
