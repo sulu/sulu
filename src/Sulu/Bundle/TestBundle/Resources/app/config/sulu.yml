@@ -16,9 +16,8 @@ framework:
 
 doctrine:
     orm:
-        auto_generate_proxy_classes: "%kernel.debug%"
         naming_strategy: doctrine.orm.naming_strategy.underscore
-        auto_mapping: true
+        auto_mapping: false
     dbal:
         url: '%env(resolve:DATABASE_URL)%'
         dbname_suffix: '_test%env(default::TEST_TOKEN)%'
