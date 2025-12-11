@@ -23,7 +23,11 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-#[AsCommand('sulu:debug:content', description: 'Debugging the content services to see if they are correctly registered')]
+/**
+ * @internal the command can be used and console command call is under bc promise but no bc promise is given for this PHP class itself
+ * as it may will have additional dependencies in future
+ */
+#[AsCommand('sulu:content:debug', description: 'Debugging the content services to see if they are correctly registered')]
 final class DebugContentCommand extends Command
 {
     /**
