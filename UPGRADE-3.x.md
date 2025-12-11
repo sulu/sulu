@@ -1609,3 +1609,20 @@ Affected classes / interfaces:
 - `Sulu\Bundle\WebsiteBundle\Cache\CacheClearer::clear` (added `?array $tags`)
 - `Sulu\Bundle\WebsiteBundle\Cache\CacheClearerInterface::clear` (added `?array $tags`)
 - `Sulu\Bundle\SecurityBundle\EventListener\SystemListener::__construct` (removed `RequestAnalyserInterface $requestAnalyser`)
+
+### Extending Block Settings
+
+The `config/forms/page_block_settings.xml` file should be renamed to `config/forms/content_block_settings.xml`.
+Additionally, ensure that the `<key>` value is changed as well:
+
+```diff
+<?xml version="1.0" ?>
+<form xmlns="http://schemas.sulu.io/template/template"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/form-1.0.xsd">
+-   <key>page_block_settings</key>
++   <key>content_block_settings</key>
+    <properties>
+       <!-- ... -->
+    </properties>
+</form>
