@@ -1611,6 +1611,7 @@ Affected classes / interfaces:
 - `Sulu\Bundle\SecurityBundle\EventListener\SystemListener::__construct` (removed `RequestAnalyserInterface $requestAnalyser`)
 
 ### Extending Block Settings
+
 The `config/forms/page_block_settings.xml` file should be renamed to `config/forms/content_block_settings.xml`.
 Additionally, ensure that the `<key>` value is changed as well:
 
@@ -1621,6 +1622,7 @@ Additionally, ensure that the `<key>` value is changed as well:
       xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/form-1.0.xsd">
 -   <key>page_block_settings</key>
 +   <key>content_block_settings</key>
-    <properties></properties>
+    <properties>
+       <!-- ... -->
+    </properties>
 </form>
-```
