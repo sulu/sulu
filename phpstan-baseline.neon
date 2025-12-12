@@ -937,12 +937,6 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Command/UpdateBuildCommand.php
 
 		-
-			message: '#^Parameter \#1 \$messages of method Symfony\\Component\\Console\\Style\\SymfonyStyle\:\:write\(\) expects iterable\<string\>\|string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Command/UpdateBuildCommand.php
-
-		-
 			message: '#^Parameter \#1 \$pattern of function preg_match expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1

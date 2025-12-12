@@ -40,11 +40,17 @@ class Configuration implements ConfigurationInterface
         return $treeBuilder;
     }
 
+    /**
+     * @param NodeBuilder<null> $rootNode
+     */
     private function getCoreConfiguration(NodeBuilder $rootNode)
     {
         $rootNode->scalarNode('cache_dir')->defaultValue('%kernel.cache_dir%/sulu')->end();
     }
 
+    /**
+     * @param NodeBuilder<null> $rootNode
+     */
     private function getLocaleConfiguration(NodeBuilder $rootNode)
     {
         $rootNode
@@ -60,6 +66,9 @@ class Configuration implements ConfigurationInterface
             ->scalarNode('fallback_locale')->defaultValue('en')->end();
     }
 
+    /**
+     * @param NodeBuilder<null> $rootNode
+     */
     private function getWebspaceConfiguration(NodeBuilder $rootNode)
     {
         $rootNode->arrayNode('webspace')
@@ -72,6 +81,9 @@ class Configuration implements ConfigurationInterface
         ->end();
     }
 
+    /**
+     * @param NodeBuilder<null> $rootNode
+     */
     private function getFieldsConfiguration(NodeBuilder $rootNode)
     {
         $rootNode->arrayNode('fields_defaults')
@@ -97,6 +109,9 @@ class Configuration implements ConfigurationInterface
         ->end();
     }
 
+    /**
+     * @param NodeBuilder<null> $rootNode
+     */
     private function getContentConfiguration(NodeBuilder $rootNode)
     {
         $rootNode->arrayNode('content')
@@ -175,6 +190,9 @@ class Configuration implements ConfigurationInterface
         ->end();
     }
 
+    /**
+     * @param NodeBuilder<null> $rootNode
+     */
     private function getCacheConfiguration(NodeBuilder $rootNode)
     {
         $rootNode->arrayNode('cache')
