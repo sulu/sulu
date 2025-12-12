@@ -120,13 +120,6 @@ class ActivityRepository implements ActivityRepositoryInterface
         // this prevents flushing unrelated changes and allows to call this method in a postFlush event-listener
         $queryBuilder = $this->getInsertQueryBuilder($activity);
 
-        // DBAL 3 to 4 BC Layer
-        if (\method_exists($queryBuilder, 'executeStatement')) {
-            $queryBuilder->executeStatement();
-
-            return;
-        }
-
-        $queryBuilder->execute();
+        $queryBuilder->executeStatement();
     }
 }

@@ -4,7 +4,7 @@
       xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
                           https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
     <mapped-superclass name="Sulu\CustomUrl\Domain\Model\CustomUrlRoute" table="cu_custom_url_route">
-        <id name="uuid" type="string" column="uuid">
+        <id name="uuid" type="string" column="uuid" length="36">
             <generator strategy="NONE"/>
         </id>
 
@@ -16,17 +16,18 @@
         </field>
 
         <many-to-one field="customUrl" target-entity="Sulu\CustomUrl\Domain\Model\CustomUrlInterface" inversed-by="routes">
-            <join-column name="customUrl" referenced-column-name="uuid" nullable="false" on-delete="cascade" />
+            <join-column name="customUrl" referenced-column-name="uuid" nullable="false" on-delete="CASCADE" />
          </many-to-one>
 
         <many-to-one field="targetRoute" target-entity="Sulu\CustomUrl\Domain\Model\CustomUrlRouteInterface">
-            <join-column name="target_route_uuid" referenced-column-name="uuid" nullable="true" on-delete="cascade" />
+            <join-column name="target_route_uuid" referenced-column-name="uuid" nullable="true" on-delete="CASCADE" />
         </many-to-one>
 
         <indexes>
             <index name="custom_url_route_path_idx" fields="path" />
             <index name="custom_url_route_history_idx" fields="history" />
         </indexes>
+
         <unique-constraints>
             <unique-constraint name="cu_custom_url_route_unique" fields="path" />
         </unique-constraints>

@@ -105,7 +105,7 @@ class RouteChangedUpdater implements ResetInterface
             $newResourceId = $route->generateRealResourceId();
 
             $updateTempResourceIdQueryBuilder = $connection->createQueryBuilder()
-                ->update($routesTableName, 'r')
+                ->update($routesTableName)
                 ->set('resource_id', ':newResourceId')
                 ->setParameter('newResourceId', $newResourceId, ParameterType::STRING)
                 ->where('resource_id = :tempResourceId')
@@ -195,7 +195,7 @@ class RouteChangedUpdater implements ResetInterface
 
                 // update child and grand routes
                 $updateQueryBuilder = $connection->createQueryBuilder()
-                    ->update($routesTableName, 'r')
+                    ->update($routesTableName)
                     ->set('slug', 'CONCAT(:newSlug' . $newSlugCast . ', SUBSTRING(slug, ' . (\strlen($oldSlug) + 1) . '))')
                     ->setParameter('newSlug', $newSlug, ParameterType::STRING)
                     ->where('parent_id IN (:parentIds)')
