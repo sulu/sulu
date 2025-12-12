@@ -427,7 +427,7 @@ function startAdmin() {
             '\nJavaScript build of the Sulu administration interface does not match the version of the Sulu backend.' +
             '\nBackend version: ' + Config.suluVersion + ', JavaScript build version: ' + SULU_ADMIN_BUILD_VERSION +
             '\n\nHave you forgotten to update the build while upgrading your application?' + '' +
-            '\nhttps://docs.sulu.io/en/latest/upgrades/upgrade-2.x.html'
+            '\nhttps://docs.sulu.io/en/2.6/upgrades/upgrade-2.x.html'
         );
     }
 

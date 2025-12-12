@@ -25,7 +25,7 @@
         "docs": "https://docs.sulu.io/"
     },
     "require": {
-        "php": "^8.2 || ^8.3 || ^8.4",
+        "php": "^8.2 || ^8.3 || ^8.4 || ^8.5",
         "ext-dom": "*",
         "ext-fileinfo": "*",
         "ext-filter": "*",
@@ -162,7 +162,7 @@
         "symfony/browser-kit": "^5.4 || ^6.0 || ^7.0",
         "symfony/debug-bundle": "^5.4 || ^6.0 || ^7.0",
         "symfony/dotenv": "^5.4 || ^6.0 || ^7.0",
-        "symfony/monolog-bundle": "^3.5",
+        "symfony/monolog-bundle": "^3.5 || ^4.0",
         "symfony/phpunit-bridge": "^5.4 || ^6.0 || ^7.0",
         "symfony/runtime": "^5.4 || ^6.0 || ^7.0",
         "symfony/stopwatch": "^5.4 || ^6.0 || ^7.0",
