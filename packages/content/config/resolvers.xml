@@ -40,8 +40,7 @@
             <argument type="service" id="sulu_content.resolvable_resource_replacer" />
             <argument type="service" id="sulu_content.content_view_data_normalizer" />
             <argument type="service" id="sulu_content.content_aggregator" />
-            <!--  TODO          <argument>%sulu_content.resource_resolver.max_depth%</argument>-->
-            <argument>5</argument>
+            <argument>%sulu_content.resource_resolver.max_depth%</argument>
             <argument type="service" id="sulu_content.content_enhancer"/>
         </service>
         <service id="Sulu\Content\Application\ContentResolver\ContentResolverInterface" alias="sulu_content.content_resolver"/>

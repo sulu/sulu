@@ -38,7 +38,16 @@ final class SuluContentBundle extends AbstractBundle
      */
     public function configure(DefinitionConfigurator $definition): void
     {
-        $definition->rootNode();
+        $definition->rootNode() // @phpstan-ignore-line
+            ->children()
+                ->arrayNode('resource_resolver')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->scalarNode('max_depth')->defaultValue(5)->end()
+                    ->end()
+                ->end()
+            ->end()
+        ;
     }
 
     /**
@@ -48,6 +57,10 @@ final class SuluContentBundle extends AbstractBundle
      */
     public function loadExtension(array $config, ContainerConfigurator $container, ContainerBuilder $builder): void
     {
+        $container->parameters()
+            ->set('sulu_content.resource_resolver.max_depth', $config['resource_resolver']['max_depth'] ?? 5)
+        ;
+
         // TODO refactor to PHP based service definitions
         $loader = new XmlFileLoader($builder, new FileLocator(\dirname(__DIR__, 4) . '/config'));
         $loader->load('data-mapper.xml');
