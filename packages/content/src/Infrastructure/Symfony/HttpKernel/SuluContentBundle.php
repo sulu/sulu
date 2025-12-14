@@ -57,9 +57,9 @@ final class SuluContentBundle extends AbstractBundle
      */
     public function loadExtension(array $config, ContainerConfigurator $container, ContainerBuilder $builder): void
     {
-        $container->parameters()
-            ->set('sulu_content.resource_resolver.max_depth', $config['resource_resolver']['max_depth'] ?? 5)
-        ;
+        /** @var array{max_depth: int} $resourceResolverConfig */
+        $resourceResolverConfig = $config['resource_resolver'];
+        $builder->setParameter('sulu_content.resource_resolver.max_depth', $resourceResolverConfig['max_depth']);
 
         // TODO refactor to PHP based service definitions
         $loader = new XmlFileLoader($builder, new FileLocator(\dirname(__DIR__, 4) . '/config'));

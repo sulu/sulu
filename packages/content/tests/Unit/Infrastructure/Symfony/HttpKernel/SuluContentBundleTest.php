@@ -68,7 +68,7 @@ class SuluContentBundleTest extends AbstractExtensionTestCase
         );
     }
 
-    public function testIsConfigurationEmpty(): void
+    public function testEmptyConfiguration(): void
     {
         $contentBundle = $this->getContentBundle();
         $treeBuilder = new TreeBuilder('sulu_content');
@@ -90,7 +90,11 @@ class SuluContentBundleTest extends AbstractExtensionTestCase
         $tree = $treeBuilder->buildTree();
 
         $this->assertSame([
-            'sulu_content' => [],
+            'sulu_content' => [
+                'resource_resolver' => [
+                    'max_depth' => 5,
+                ],
+            ],
         ], [
             $tree->getName() => $tree->finalize([]),
         ]);
