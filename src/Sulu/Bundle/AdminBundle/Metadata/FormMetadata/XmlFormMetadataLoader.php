@@ -17,6 +17,7 @@ use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface;
+use Symfony\Component\VarExporter\VarExporter;
 
 class XmlFormMetadataLoader implements FormMetadataLoaderInterface, CacheWarmerInterface
 {
@@ -63,19 +64,21 @@ class XmlFormMetadataLoader implements FormMetadataLoaderInterface, CacheWarmerI
     {
         $configCache = $this->getConfigCache($key);
 
-        if (!\file_exists($configCache->getPath())) {
+        if ($configCache->isFresh()) {
+            $formMetadata = @include $configCache->getPath();
+            if ($formMetadata instanceof FormMetadata) {
+                return $formMetadata;
+            }
+        }
+
+        if (!$this->debug) {
             return null;
         }
 
-        if (!$configCache->isFresh()) {
-            $this->warmUp($this->cacheDir);
-        }
+        $this->warmUp($this->cacheDir);
+        $formMetadata = @include $configCache->getPath();
 
-        $form = \unserialize(\file_get_contents($configCache->getPath()) ?: '');
-
-        \assert($form instanceof FormMetadata, 'Expected FormMetadata instance for key: "' . $key . '".');
-
-        return $form;
+        return $formMetadata instanceof FormMetadata ? $formMetadata : null;
     }
 
     public function warmUp($cacheDir, ?string $buildDir = null): array
@@ -100,11 +103,15 @@ class XmlFormMetadataLoader implements FormMetadataLoaderInterface, CacheWarmerI
 
             $configCache = $this->getConfigCache($key);
             $configCache->write(
-                \serialize($formMetadata),
+                '<?php return ' . VarExporter::export($formMetadata) . ';',
                 \array_map(function(string $resource) {
                     return new FileResource($resource);
                 }, $formsMetadataResources[$key])
             );
+
+            if (\function_exists('opcache_invalidate')) {
+                \opcache_invalidate($configCache->getPath(), true);
+            }
         }
 
         return [];
@@ -137,6 +144,6 @@ class XmlFormMetadataLoader implements FormMetadataLoaderInterface, CacheWarmerI
 
     private function getConfigCache(string $key): ConfigCache
     {
-        return new ConfigCache(\sprintf('%s%s%s', $this->cacheDir, \DIRECTORY_SEPARATOR, $key), $this->debug);
+        return new ConfigCache(\sprintf('%s%s%s.php', $this->cacheDir, \DIRECTORY_SEPARATOR, $key), $this->debug);
     }
 }

@@ -27,7 +27,12 @@ class XmlFormMetadataLoaderTest extends TestCase
 {
     use ProphecyTrait;
 
-    public const CACHE_DIR = __DIR__ . '/../../../../../../../../tests/Resources/cache';
+    private const CACHE_DIR = __DIR__ . '/../../../../../../../../tests/Resources/cache';
+
+    private static function getCacheDir(): string
+    {
+        return self::CACHE_DIR;
+    }
 
     /**
      * @var ObjectProphecy<FormXmlLoader>
@@ -55,7 +60,7 @@ class XmlFormMetadataLoaderTest extends TestCase
             [
                 __DIR__ . '/dummy-forms',
             ],
-            static::CACHE_DIR,
+            self::getCacheDir(),
             false
         );
     }
@@ -108,6 +113,18 @@ class XmlFormMetadataLoaderTest extends TestCase
         return $sectionMetadata;
     }
 
+    protected function tearDown(): void
+    {
+        $cacheFile = self::getCacheDir() . '/some_form_key.php';
+        if (\file_exists($cacheFile)) {
+            \unlink($cacheFile);
+        }
+        $metaFile = $cacheFile . '.meta';
+        if (\file_exists($metaFile)) {
+            \unlink($metaFile);
+        }
+    }
+
     public function testWarmUp(): void
     {
         $propertyMetadata = $this->createFieldMetadata('some_property', 'text_line');
@@ -126,6 +143,74 @@ class XmlFormMetadataLoaderTest extends TestCase
         $this->fieldMetadataValidator->validate($blockPropertyMetadata, 'some_form_key')->shouldBeCalled();
         $this->fieldMetadataValidator->validate($blockMetadata, 'some_form_key')->shouldBeCalled();
 
-        $this->xmlFormMetadataLoader->warmUp(static::CACHE_DIR);
+        $this->xmlFormMetadataLoader->warmUp(self::getCacheDir());
+    }
+
+    public function testWarmUpGeneratesPhpFile(): void
+    {
+        $formMetadata = $this->createFormMetadata('some_form_key', [
+            $this->createFieldMetadata('test_field', 'text_line'),
+        ]);
+
+        $this->formXmlLoader->load(Argument::cetera())->willReturn($formMetadata);
+        $this->fieldMetadataValidator->validate(Argument::cetera(), Argument::cetera())->shouldBeCalled();
+
+        $this->xmlFormMetadataLoader->warmUp(self::getCacheDir());
+
+        $cacheFile = self::getCacheDir() . '/some_form_key.php';
+        $this->assertFileExists($cacheFile);
+
+        $content = \file_get_contents($cacheFile);
+        $this->assertIsString($content);
+        $this->assertStringStartsWith('<?php return ', $content);
+        $this->assertStringNotContainsString('unserialize', $content);
+    }
+
+    public function testGetMetadataFromCache(): void
+    {
+        $formMetadata = $this->createFormMetadata('some_form_key', [
+            $this->createFieldMetadata('test_field', 'text_line'),
+        ]);
+
+        $this->formXmlLoader->load(Argument::cetera())->willReturn($formMetadata);
+        $this->fieldMetadataValidator->validate(Argument::cetera(), Argument::cetera())->shouldBeCalled();
+
+        $this->xmlFormMetadataLoader->warmUp(self::getCacheDir());
+
+        $loadedMetadata = $this->xmlFormMetadataLoader->getMetadata('some_form_key', 'en');
+
+        $this->assertInstanceOf(FormMetadata::class, $loadedMetadata);
+        $this->assertSame('some_form_key', $loadedMetadata->getKey());
+        $this->assertCount(1, $loadedMetadata->getItems());
+    }
+
+    public function testGetMetadataReturnsNullWhenCacheMissingInProdMode(): void
+    {
+        $result = $this->xmlFormMetadataLoader->getMetadata('nonexistent_form', 'en');
+
+        $this->assertNull($result);
+    }
+
+    public function testGetMetadataAutoRebuildsInDebugMode(): void
+    {
+        $formMetadata = $this->createFormMetadata('some_form_key', [
+            $this->createFieldMetadata('test_field', 'text_line'),
+        ]);
+
+        $this->formXmlLoader->load(Argument::cetera())->willReturn($formMetadata);
+        $this->fieldMetadataValidator->validate(Argument::cetera(), Argument::cetera())->shouldBeCalled();
+
+        $debugLoader = new XmlFormMetadataLoader(
+            $this->formXmlLoader->reveal(),
+            $this->fieldMetadataValidator->reveal(),
+            [__DIR__ . '/dummy-forms'],
+            self::getCacheDir(),
+            true
+        );
+
+        $loadedMetadata = $debugLoader->getMetadata('some_form_key', 'en');
+
+        $this->assertInstanceOf(FormMetadata::class, $loadedMetadata);
+        $this->assertSame('some_form_key', $loadedMetadata->getKey());
     }
 }
