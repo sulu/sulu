@@ -75,7 +75,7 @@ class ContentAggregatorTest extends TestCase
         );
 
         $dimensionContentRepository = $this->prophesize(DimensionContentRepositoryInterface::class);
-        $dimensionContentRepository->load($example, $attributes)
+        $dimensionContentRepository->loadOrUseExisting($example, $attributes)
             ->willReturn($dimensionContentCollection)
             ->shouldBeCalled();
 
@@ -118,7 +118,7 @@ class ContentAggregatorTest extends TestCase
         );
 
         $dimensionContentRepository = $this->prophesize(DimensionContentRepositoryInterface::class);
-        $dimensionContentRepository->load($example, $attributes)->willReturn($dimensionContentCollection);
+        $dimensionContentRepository->loadOrUseExisting($example, $attributes)->willReturn($dimensionContentCollection);
 
         $contentMerger = $this->prophesize(ContentMergerInterface::class);
         $contentMerger->merge($dimensionContentCollection)->willReturn(Argument::cetera())->shouldNotBeCalled();

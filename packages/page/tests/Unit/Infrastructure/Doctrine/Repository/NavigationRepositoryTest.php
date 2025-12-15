@@ -92,11 +92,9 @@ class NavigationRepositoryTest extends TestCase
         $this->contentAggregator = $this->prophesize(ContentAggregatorInterface::class);
         $this->contentResolver = $this->prophesize(ContentResolverInterface::class);
 
-        // Setup entity manager to return our mocked repositories
         $this->entityManager->getRepository(PageInterface::class)->willReturn($this->nestedTreeRepository->reveal());
         $this->entityManager->getRepository(PageDimensionContentInterface::class)->willReturn($this->dimensionContentRepository->reveal());
 
-        // Setup repository class names
         $this->nestedTreeRepository->getClassName()->willReturn('Sulu\Page\Domain\Model\Page');
         $this->dimensionContentRepository->getClassName()->willReturn('Sulu\Page\Domain\Model\PageDimensionContent');
 
@@ -104,7 +102,8 @@ class NavigationRepositoryTest extends TestCase
             $this->entityManager->reveal(),
             $this->dimensionContentQueryEnhancer->reveal(),
             $this->contentAggregator->reveal(),
-            $this->contentResolver->reveal()
+            $this->contentResolver->reveal(),
+            false
         );
     }
 
@@ -119,7 +118,6 @@ class NavigationRepositoryTest extends TestCase
 
         $this->nestedTreeRepository->createQueryBuilder('page')->willReturn($queryBuilder->reveal());
 
-        // Setup query builder chain
         $queryBuilder->andWhere('page.webspaceKey = :webspaceKey')->willReturn($queryBuilder->reveal());
         $queryBuilder->setParameter('webspaceKey', 'sulu-io')->willReturn($queryBuilder->reveal());
         $queryBuilder->andWhere('page.depth <= :depth')->willReturn($queryBuilder->reveal());
@@ -127,7 +125,6 @@ class NavigationRepositoryTest extends TestCase
         $queryBuilder->addOrderBy('page.lft', 'asc')->willReturn($queryBuilder->reveal());
         $queryBuilder->getQuery()->willReturn($query->reveal());
 
-        // Setup query enhancer
         $expectedFilters = [
             'locale' => 'en',
             'navigationContexts' => ['main'],
@@ -144,15 +141,25 @@ class NavigationRepositoryTest extends TestCase
             []
         )->shouldBeCalled();
 
-        // Setup navigation context join
-        $queryBuilder->leftJoin('filterDimensionContent.navigationContexts', 'navigationContext')->willReturn($queryBuilder->reveal());
-        $queryBuilder->andWhere('navigationContext.navigationContext IN (:navigationContexts)')->willReturn($queryBuilder->reveal());
+        $queryBuilder->getDQLPart('join')->willReturn([]);
+        $queryBuilder->leftJoin('page.dimensionContents', 'dimensionContent')->willReturn($queryBuilder->reveal());
+        $this->dimensionContentQueryEnhancer->addSelects(
+            $queryBuilder->reveal(),
+            'Sulu\Page\Domain\Model\PageDimensionContent',
+            $expectedFilters,
+            [DimensionContentQueryEnhancer::GROUP_SELECT_CONTENT_WEBSITE => true]
+        )->shouldBeCalled();
+
+        $queryBuilder->leftJoin('dimensionContent.navigationContexts', 'navigationContext')->willReturn($queryBuilder->reveal());
+        $queryBuilder->addSelect('navigationContext')->willReturn($queryBuilder->reveal());
+
+        $queryBuilder->leftJoin('filterDimensionContent.navigationContexts', 'filterNavigationContext')->willReturn($queryBuilder->reveal());
+        $queryBuilder->andWhere('filterNavigationContext.navigationContext IN (:navigationContexts)')->willReturn($queryBuilder->reveal());
         $queryBuilder->setParameter('navigationContexts', ['main'])->willReturn($queryBuilder->reveal());
 
         $query->setHint('doctrine.includeMetaColumns', true)->willReturn($query->reveal())->shouldBeCalled();
         $query->getResult('sulu_page_tree')->willReturn([$page->reveal()]);
 
-        // Setup content resolution
         $dimensionContent = $this->prophesize(DimensionContentInterface::class);
         $this->contentAggregator->aggregate($page->reveal(), ['locale' => 'en', 'stage' => 'live'])
             ->willReturn($dimensionContent->reveal());
@@ -187,7 +194,6 @@ class NavigationRepositoryTest extends TestCase
 
         $this->nestedTreeRepository->createQueryBuilder('page')->willReturn($queryBuilder->reveal());
 
-        // Setup query builder chain
         $queryBuilder->andWhere('page.webspaceKey = :webspaceKey')->willReturn($queryBuilder->reveal());
         $queryBuilder->setParameter('webspaceKey', 'sulu-io')->willReturn($queryBuilder->reveal());
         $queryBuilder->andWhere('page.depth <= :depth')->willReturn($queryBuilder->reveal());
@@ -195,7 +201,6 @@ class NavigationRepositoryTest extends TestCase
         $queryBuilder->addOrderBy('page.lft', 'asc')->willReturn($queryBuilder->reveal());
         $queryBuilder->getQuery()->willReturn($query->reveal());
 
-        // Setup query enhancer
         $expectedFilters = [
             'locale' => 'de',
             'navigationContexts' => ['footer'],
@@ -212,15 +217,25 @@ class NavigationRepositoryTest extends TestCase
             []
         )->shouldBeCalled();
 
-        // Setup navigation context join
-        $queryBuilder->leftJoin('filterDimensionContent.navigationContexts', 'navigationContext')->willReturn($queryBuilder->reveal());
-        $queryBuilder->andWhere('navigationContext.navigationContext IN (:navigationContexts)')->willReturn($queryBuilder->reveal());
+        $queryBuilder->getDQLPart('join')->willReturn([]);
+        $queryBuilder->leftJoin('page.dimensionContents', 'dimensionContent')->willReturn($queryBuilder->reveal());
+        $this->dimensionContentQueryEnhancer->addSelects(
+            $queryBuilder->reveal(),
+            'Sulu\Page\Domain\Model\PageDimensionContent',
+            $expectedFilters,
+            [DimensionContentQueryEnhancer::GROUP_SELECT_CONTENT_WEBSITE => true]
+        )->shouldBeCalled();
+
+        $queryBuilder->leftJoin('dimensionContent.navigationContexts', 'navigationContext')->willReturn($queryBuilder->reveal());
+        $queryBuilder->addSelect('navigationContext')->willReturn($queryBuilder->reveal());
+
+        $queryBuilder->leftJoin('filterDimensionContent.navigationContexts', 'filterNavigationContext')->willReturn($queryBuilder->reveal());
+        $queryBuilder->andWhere('filterNavigationContext.navigationContext IN (:navigationContexts)')->willReturn($queryBuilder->reveal());
         $queryBuilder->setParameter('navigationContexts', ['footer'])->willReturn($queryBuilder->reveal());
 
         $query->toIterable()->willReturn([$page->reveal()]);
         $query->getResult()->willReturn([$page->reveal()]);
 
-        // Setup content resolution
         $dimensionContent = $this->prophesize(DimensionContentInterface::class);
         $this->contentAggregator->aggregate($page->reveal(), ['locale' => 'de', 'stage' => 'live'])
             ->willReturn($dimensionContent->reveal());
@@ -256,7 +271,6 @@ class NavigationRepositoryTest extends TestCase
 
         $this->nestedTreeRepository->createQueryBuilder('page')->willReturn($queryBuilder->reveal());
 
-        // Setup query builder chain
         $queryBuilder->andWhere('page.webspaceKey = :webspaceKey')->willReturn($queryBuilder->reveal());
         $queryBuilder->setParameter('webspaceKey', 'test-webspace')->willReturn($queryBuilder->reveal());
         $queryBuilder->andWhere('page.depth <= :depth')->willReturn($queryBuilder->reveal());
@@ -264,7 +278,6 @@ class NavigationRepositoryTest extends TestCase
         $queryBuilder->addOrderBy('page.lft', 'asc')->willReturn($queryBuilder->reveal());
         $queryBuilder->getQuery()->willReturn($query->reveal());
 
-        // Setup query enhancer with null segmentKey
         $expectedFilters = [
             'locale' => 'en',
             'navigationContexts' => ['sidebar'],
@@ -281,15 +294,25 @@ class NavigationRepositoryTest extends TestCase
             []
         )->shouldBeCalled();
 
-        // Setup navigation context join
-        $queryBuilder->leftJoin('filterDimensionContent.navigationContexts', 'navigationContext')->willReturn($queryBuilder->reveal());
-        $queryBuilder->andWhere('navigationContext.navigationContext IN (:navigationContexts)')->willReturn($queryBuilder->reveal());
+        $queryBuilder->getDQLPart('join')->willReturn([]);
+        $queryBuilder->leftJoin('page.dimensionContents', 'dimensionContent')->willReturn($queryBuilder->reveal());
+        $this->dimensionContentQueryEnhancer->addSelects(
+            $queryBuilder->reveal(),
+            'Sulu\Page\Domain\Model\PageDimensionContent',
+            $expectedFilters,
+            [DimensionContentQueryEnhancer::GROUP_SELECT_CONTENT_WEBSITE => true]
+        )->shouldBeCalled();
+
+        $queryBuilder->leftJoin('dimensionContent.navigationContexts', 'navigationContext')->willReturn($queryBuilder->reveal());
+        $queryBuilder->addSelect('navigationContext')->willReturn($queryBuilder->reveal());
+
+        $queryBuilder->leftJoin('filterDimensionContent.navigationContexts', 'filterNavigationContext')->willReturn($queryBuilder->reveal());
+        $queryBuilder->andWhere('filterNavigationContext.navigationContext IN (:navigationContexts)')->willReturn($queryBuilder->reveal());
         $queryBuilder->setParameter('navigationContexts', ['sidebar'])->willReturn($queryBuilder->reveal());
 
         $query->setHint('doctrine.includeMetaColumns', true)->willReturn($query->reveal())->shouldBeCalled();
         $query->getResult('sulu_page_tree')->willReturn([$page->reveal()]);
 
-        // Setup content resolution
         $dimensionContent = $this->prophesize(DimensionContentInterface::class);
         $this->contentAggregator->aggregate($page->reveal(), ['locale' => 'en', 'stage' => 'live'])
             ->willReturn($dimensionContent->reveal());
@@ -325,7 +348,6 @@ class NavigationRepositoryTest extends TestCase
 
         $this->nestedTreeRepository->createQueryBuilder('page')->willReturn($queryBuilder->reveal());
 
-        // Setup query builder chain for depth 2
         $queryBuilder->andWhere('page.webspaceKey = :webspaceKey')->willReturn($queryBuilder->reveal());
         $queryBuilder->setParameter('webspaceKey', 'sulu-io')->willReturn($queryBuilder->reveal());
         $queryBuilder->andWhere('page.depth <= :depth')->willReturn($queryBuilder->reveal());
@@ -333,7 +355,6 @@ class NavigationRepositoryTest extends TestCase
         $queryBuilder->addOrderBy('page.lft', 'asc')->willReturn($queryBuilder->reveal());
         $queryBuilder->getQuery()->willReturn($query->reveal());
 
-        // Setup query enhancer
         $expectedFilters = [
             'locale' => 'en',
             'navigationContexts' => ['main'],
@@ -350,15 +371,25 @@ class NavigationRepositoryTest extends TestCase
             []
         )->shouldBeCalled();
 
-        // Setup navigation context join
-        $queryBuilder->leftJoin('filterDimensionContent.navigationContexts', 'navigationContext')->willReturn($queryBuilder->reveal());
-        $queryBuilder->andWhere('navigationContext.navigationContext IN (:navigationContexts)')->willReturn($queryBuilder->reveal());
+        $queryBuilder->getDQLPart('join')->willReturn([]);
+        $queryBuilder->leftJoin('page.dimensionContents', 'dimensionContent')->willReturn($queryBuilder->reveal());
+        $this->dimensionContentQueryEnhancer->addSelects(
+            $queryBuilder->reveal(),
+            'Sulu\Page\Domain\Model\PageDimensionContent',
+            $expectedFilters,
+            [DimensionContentQueryEnhancer::GROUP_SELECT_CONTENT_WEBSITE => true]
+        )->shouldBeCalled();
+
+        $queryBuilder->leftJoin('dimensionContent.navigationContexts', 'navigationContext')->willReturn($queryBuilder->reveal());
+        $queryBuilder->addSelect('navigationContext')->willReturn($queryBuilder->reveal());
+
+        $queryBuilder->leftJoin('filterDimensionContent.navigationContexts', 'filterNavigationContext')->willReturn($queryBuilder->reveal());
+        $queryBuilder->andWhere('filterNavigationContext.navigationContext IN (:navigationContexts)')->willReturn($queryBuilder->reveal());
         $queryBuilder->setParameter('navigationContexts', ['main'])->willReturn($queryBuilder->reveal());
 
         $query->setHint('doctrine.includeMetaColumns', true)->willReturn($query->reveal())->shouldBeCalled();
         $query->getResult('sulu_page_tree')->willReturn([$parentPage->reveal()]);
 
-        // Setup content resolution for parent
         $parentDimensionContent = $this->prophesize(DimensionContentInterface::class);
         $this->contentAggregator->aggregate($parentPage->reveal(), ['locale' => 'en', 'stage' => 'live'])
             ->willReturn($parentDimensionContent->reveal());
@@ -368,7 +399,6 @@ class NavigationRepositoryTest extends TestCase
             'view' => [],
         ]);
 
-        // Setup content resolution for child
         $childDimensionContent = $this->prophesize(DimensionContentInterface::class);
         $this->contentAggregator->aggregate($childPage->reveal(), ['locale' => 'en', 'stage' => 'live'])
             ->willReturn($childDimensionContent->reveal());
@@ -400,7 +430,6 @@ class NavigationRepositoryTest extends TestCase
 
         $this->nestedTreeRepository->createQueryBuilder('page')->willReturn($queryBuilder->reveal());
 
-        // Setup basic query builder chain
         $queryBuilder->andWhere('page.webspaceKey = :webspaceKey')->willReturn($queryBuilder->reveal());
         $queryBuilder->setParameter('webspaceKey', 'sulu-io')->willReturn($queryBuilder->reveal());
         $queryBuilder->andWhere('page.depth <= :depth')->willReturn($queryBuilder->reveal());
@@ -408,7 +437,6 @@ class NavigationRepositoryTest extends TestCase
         $queryBuilder->addOrderBy('page.lft', 'asc')->willReturn($queryBuilder->reveal());
         $queryBuilder->getQuery()->willReturn($query->reveal());
 
-        // Setup query enhancer
         $expectedFilters = [
             'locale' => 'en',
             'navigationContexts' => ['main'],
@@ -425,15 +453,25 @@ class NavigationRepositoryTest extends TestCase
             []
         )->shouldBeCalled();
 
-        // Setup navigation context join
-        $queryBuilder->leftJoin('filterDimensionContent.navigationContexts', 'navigationContext')->willReturn($queryBuilder->reveal());
-        $queryBuilder->andWhere('navigationContext.navigationContext IN (:navigationContexts)')->willReturn($queryBuilder->reveal());
+        $queryBuilder->getDQLPart('join')->willReturn([]);
+        $queryBuilder->leftJoin('page.dimensionContents', 'dimensionContent')->willReturn($queryBuilder->reveal());
+        $this->dimensionContentQueryEnhancer->addSelects(
+            $queryBuilder->reveal(),
+            'Sulu\Page\Domain\Model\PageDimensionContent',
+            $expectedFilters,
+            [DimensionContentQueryEnhancer::GROUP_SELECT_CONTENT_WEBSITE => true]
+        )->shouldBeCalled();
+
+        $queryBuilder->leftJoin('dimensionContent.navigationContexts', 'navigationContext')->willReturn($queryBuilder->reveal());
+        $queryBuilder->addSelect('navigationContext')->willReturn($queryBuilder->reveal());
+
+        $queryBuilder->leftJoin('filterDimensionContent.navigationContexts', 'filterNavigationContext')->willReturn($queryBuilder->reveal());
+        $queryBuilder->andWhere('filterNavigationContext.navigationContext IN (:navigationContexts)')->willReturn($queryBuilder->reveal());
         $queryBuilder->setParameter('navigationContexts', ['main'])->willReturn($queryBuilder->reveal());
 
         $query->toIterable()->willReturn([$page->reveal()]);
         $query->getResult()->willReturn([$page->reveal()]);
 
-        // Setup content resolution with excerpt
         $dimensionContent = $this->prophesize(DimensionContentInterface::class);
         $this->contentAggregator->aggregate($page->reveal(), ['locale' => 'en', 'stage' => 'live'])
             ->willReturn($dimensionContent->reveal());

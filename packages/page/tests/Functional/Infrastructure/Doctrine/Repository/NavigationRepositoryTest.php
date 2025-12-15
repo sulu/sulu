@@ -14,16 +14,9 @@ declare(strict_types=1);
 namespace Sulu\Page\Tests\Functional\Infrastructure\Doctrine\Repository;
 
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
-use Sulu\Content\Domain\Model\WorkflowInterface;
-use Sulu\Messenger\Infrastructure\Symfony\Messenger\FlushMiddleware\EnableFlushStamp;
-use Sulu\Page\Application\Message\ApplyWorkflowTransitionPageMessage;
-use Sulu\Page\Application\Message\CreatePageMessage;
-use Sulu\Page\Application\MessageHandler\CreatePageMessageHandler;
 use Sulu\Page\Domain\Model\Page;
 use Sulu\Page\Domain\Repository\NavigationRepositoryInterface;
 use Sulu\Page\Tests\Traits\CreatePageTrait;
-use Symfony\Component\Messenger\Envelope;
-use Symfony\Component\Messenger\Stamp\HandledStamp;
 
 class NavigationRepositoryTest extends SuluTestCase
 {
@@ -33,7 +26,6 @@ class NavigationRepositoryTest extends SuluTestCase
 
     private Page $parent;
     private Page $child1;
-    private Page $child2;
     private Page $grandchild1;
 
     /**
@@ -61,145 +53,58 @@ class NavigationRepositoryTest extends SuluTestCase
 
         $this->navigationRepository = self::getContainer()->get('sulu_page.navigation_repository');
 
-        $messageBus = self::getContainer()->get('sulu_message_bus');
-
         // Create hierarchical page structure:
         // parent (main)
         //   ├── child1 (main)
         //   │   └── grandchild1 (main)
         //   └── child2 (footer)
 
-        // Create parent page
-        $envelope = $messageBus->dispatch(
-            new Envelope(
-                new CreatePageMessage(
-                    webspaceKey: 'sulu-io',
-                    parentId: CreatePageMessageHandler::HOMEPAGE_PARENT_ID,
-                    data: [
-                        'locale' => 'en',
-                        'template' => 'default',
-                        'title' => 'Parent Page',
-                        'url' => '/parent',
-                        'navigationContexts' => ['main'],
-                    ]
-                ),
-                [new EnableFlushStamp()]
-            )
-        );
-        $result = $envelope->all(HandledStamp::class)[0]->getResult();
-        \assert($result instanceof Page);
-        $this->parent = $result;
+        $this->parent = self::createPage([
+            'en' => [
+                'live' => [
+                    'template' => 'default',
+                    'title' => 'Parent Page',
+                    'url' => '/parent',
+                    'navigationContexts' => ['main'],
+                ],
+            ],
+        ]);
 
-        // Publish parent
-        $messageBus->dispatch(
-            new Envelope(
-                new ApplyWorkflowTransitionPageMessage(
-                    identifier: ['uuid' => $this->parent->getUuid()],
-                    locale: 'en',
-                    transitionName: WorkflowInterface::WORKFLOW_TRANSITION_PUBLISH
-                ),
-                [new EnableFlushStamp()]
-            )
-        );
+        $this->child1 = self::createPage([
+            'en' => [
+                'live' => [
+                    'parentId' => $this->parent->getUuid(),
+                    'template' => 'default',
+                    'title' => 'Child 1',
+                    'url' => '/child1',
+                    'navigationContexts' => ['main'],
+                ],
+            ],
+        ]);
 
-        // Create child1 under parent
-        $envelope = $messageBus->dispatch(
-            new Envelope(
-                new CreatePageMessage(
-                    webspaceKey: 'sulu-io',
-                    parentId: $this->parent->getUuid(),
-                    data: [
-                        'locale' => 'en',
-                        'template' => 'default',
-                        'title' => 'Child 1',
-                        'url' => '/child1',
-                        'navigationContexts' => ['main'],
-                    ]
-                ),
-                [new EnableFlushStamp()]
-            )
-        );
-        $result = $envelope->all(HandledStamp::class)[0]->getResult();
-        \assert($result instanceof Page);
-        $this->child1 = $result;
+        self::createPage([
+            'en' => [
+                'live' => [
+                    'parentId' => $this->parent->getUuid(),
+                    'template' => 'default',
+                    'title' => 'Child 2',
+                    'url' => '/child2',
+                    'navigationContexts' => ['footer'],
+                ],
+            ],
+        ]);
 
-        // Publish child1
-        $messageBus->dispatch(
-            new Envelope(
-                new ApplyWorkflowTransitionPageMessage(
-                    identifier: ['uuid' => $this->child1->getUuid()],
-                    locale: 'en',
-                    transitionName: WorkflowInterface::WORKFLOW_TRANSITION_PUBLISH
-                ),
-                [new EnableFlushStamp()]
-            )
-        );
-
-        // Create child2 under parent
-        $envelope = $messageBus->dispatch(
-            new Envelope(
-                new CreatePageMessage(
-                    webspaceKey: 'sulu-io',
-                    parentId: $this->parent->getUuid(),
-                    data: [
-                        'locale' => 'en',
-                        'template' => 'default',
-                        'title' => 'Child 2',
-                        'url' => '/child2',
-                        'navigationContexts' => ['footer'],
-                    ]
-                ),
-                [new EnableFlushStamp()]
-            )
-        );
-        $result = $envelope->all(HandledStamp::class)[0]->getResult();
-        \assert($result instanceof Page);
-        $this->child2 = $result;
-
-        // Publish child2
-        $messageBus->dispatch(
-            new Envelope(
-                new ApplyWorkflowTransitionPageMessage(
-                    identifier: ['uuid' => $this->child2->getUuid()],
-                    locale: 'en',
-                    transitionName: WorkflowInterface::WORKFLOW_TRANSITION_PUBLISH
-                ),
-                [new EnableFlushStamp()]
-            )
-        );
-
-        // Create grandchild1 under child1
-        $envelope = $messageBus->dispatch(
-            new Envelope(
-                new CreatePageMessage(
-                    webspaceKey: 'sulu-io',
-                    parentId: $this->child1->getUuid(),
-                    data: [
-                        'locale' => 'en',
-                        'template' => 'default',
-                        'title' => 'Grandchild 1',
-                        'url' => '/grandchild1',
-                        'navigationContexts' => ['main'],
-                    ]
-                ),
-                [new EnableFlushStamp()]
-            )
-        );
-        $result = $envelope->all(HandledStamp::class)[0]->getResult();
-        \assert($result instanceof Page);
-        $this->grandchild1 = $result;
-
-        // Publish grandchild1
-        $messageBus->dispatch(
-            new Envelope(
-                new ApplyWorkflowTransitionPageMessage(
-                    identifier: ['uuid' => $this->grandchild1->getUuid()],
-                    locale: 'en',
-                    transitionName: WorkflowInterface::WORKFLOW_TRANSITION_PUBLISH
-                ),
-                [new EnableFlushStamp()]
-            )
-        );
+        $this->grandchild1 = self::createPage([
+            'en' => [
+                'live' => [
+                    'parentId' => $this->child1->getUuid(),
+                    'template' => 'default',
+                    'title' => 'Grandchild 1',
+                    'url' => '/grandchild1',
+                    'navigationContexts' => ['main'],
+                ],
+            ],
+        ]);
 
         self::getEntityManager()->flush();
     }
@@ -253,7 +158,6 @@ class NavigationRepositoryTest extends SuluTestCase
 
     public function testGetNavigationFlatByUuidWithNavigationContext(): void
     {
-        // Filter by 'main' context
         $result = $this->navigationRepository->getNavigationFlatByUuid(
             $this->parent->getUuid(),
             'en',
@@ -266,7 +170,6 @@ class NavigationRepositoryTest extends SuluTestCase
         $this->assertCount(1, $result);
         $this->assertSame('Child 1', $result[0]['title']);
 
-        // Filter by 'footer' context
         $resultFooter = $this->navigationRepository->getNavigationFlatByUuid(
             $this->parent->getUuid(),
             'en',
@@ -347,7 +250,6 @@ class NavigationRepositoryTest extends SuluTestCase
 
     public function testGetNavigationTreeByUuidWithNavigationContext(): void
     {
-        // Filter by 'main' context
         $result = $this->navigationRepository->getNavigationTreeByUuid(
             $this->parent->getUuid(),
             'en',
@@ -390,7 +292,6 @@ class NavigationRepositoryTest extends SuluTestCase
 
         $this->assertCount(3, $result);
 
-        // Verify root -> current order
         $this->assertSame('Parent Page', $result[0]['title']);
         $this->assertSame('Child 1', $result[1]['title']);
         $this->assertSame('Grandchild 1', $result[2]['title']);
@@ -398,7 +299,6 @@ class NavigationRepositoryTest extends SuluTestCase
 
     public function testGetBreadcrumbOrder(): void
     {
-        // Test with child1 - should have 2 items
         $result = $this->navigationRepository->getBreadcrumb(
             $this->child1->getUuid(),
             'en',
@@ -410,7 +310,6 @@ class NavigationRepositoryTest extends SuluTestCase
         $this->assertSame('Parent Page', $result[0]['title']);
         $this->assertSame('Child 1', $result[1]['title']);
 
-        // Test with parent - should have 1 item
         $resultParent = $this->navigationRepository->getBreadcrumb(
             $this->parent->getUuid(),
             'en',

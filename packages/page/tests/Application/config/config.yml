@@ -4,6 +4,7 @@ framework:
     messenger:
         transports:
         routing:
+    profiler: { enabled: true, collect: false }
 
 twig:
     paths:
