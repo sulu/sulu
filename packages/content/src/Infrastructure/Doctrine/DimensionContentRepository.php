@@ -15,6 +15,7 @@ namespace Sulu\Content\Infrastructure\Doctrine;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\PersistentCollection;
 use Sulu\Content\Application\ContentMetadataInspector\ContentMetadataInspectorInterface;
 use Sulu\Content\Domain\Model\ContentRichEntityInterface;
 use Sulu\Content\Domain\Model\DimensionContentCollection;
@@ -86,5 +87,35 @@ class DimensionContentRepository implements DimensionContentRepositoryInterface
             $dimensionAttributes,
             $dimensionContentClass
         );
+    }
+
+    /**
+     * @template T of DimensionContentInterface
+     *
+     * @param ContentRichEntityInterface<T> $contentRichEntity
+     * @param mixed[] $dimensionAttributes
+     *
+     * @return DimensionContentCollectionInterface<T>
+     */
+    public function loadOrUseExisting(
+        ContentRichEntityInterface $contentRichEntity,
+        array $dimensionAttributes
+    ): DimensionContentCollectionInterface {
+        $dimensionContents = $contentRichEntity->getDimensionContents();
+
+        if ($dimensionContents instanceof PersistentCollection
+            && $dimensionContents->isInitialized()
+            && $dimensionContents->count() > 0
+        ) {
+            $dimensionContentClass = $this->contentMetadataInspector->getDimensionContentClass($contentRichEntity::class);
+
+            return new DimensionContentCollection(
+                $dimensionContents,
+                $dimensionAttributes,
+                $dimensionContentClass
+            );
+        }
+
+        return $this->load($contentRichEntity, $dimensionAttributes);
     }
 }

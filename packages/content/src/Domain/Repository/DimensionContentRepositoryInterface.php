@@ -31,4 +31,17 @@ interface DimensionContentRepositoryInterface
         ContentRichEntityInterface $contentRichEntity,
         array $dimensionAttributes
     ): DimensionContentCollectionInterface;
+
+    /**
+     * @template T of DimensionContentInterface
+     *
+     * @param ContentRichEntityInterface<T> $contentRichEntity
+     * @param mixed[] $dimensionAttributes
+     *
+     * @return DimensionContentCollectionInterface<T>
+     */
+    public function loadOrUseExisting(
+        ContentRichEntityInterface $contentRichEntity,
+        array $dimensionAttributes
+    ): DimensionContentCollectionInterface;
 }

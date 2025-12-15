@@ -88,6 +88,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 
+use function Symfony\Component\DependencyInjection\Loader\Configurator\expr;
 use function Symfony\Component\DependencyInjection\Loader\Configurator\param;
 use function Symfony\Component\DependencyInjection\Loader\Configurator\service;
 use function Symfony\Component\DependencyInjection\Loader\Configurator\tagged_iterator;
@@ -476,6 +477,7 @@ final class SuluPageBundle extends AbstractBundle
                 new Reference('sulu_content.dimension_content_query_enhancer'),
                 new Reference('sulu_content.content_aggregator'),
                 new Reference('sulu_content.content_resolver'),
+                expr("container.hasParameter('sulu_audience_targeting.enabled')"),
             ]);
 
         $services->alias(NavigationRepository::class, 'sulu_page.navigation_repository');

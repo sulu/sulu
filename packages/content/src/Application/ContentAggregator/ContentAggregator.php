@@ -21,22 +21,10 @@ use Sulu\Content\Domain\Repository\DimensionContentRepositoryInterface;
 
 class ContentAggregator implements ContentAggregatorInterface
 {
-    /**
-     * @var DimensionContentRepositoryInterface
-     */
-    private $dimensionContentRepository;
-
-    /**
-     * @var ContentMergerInterface
-     */
-    private $contentMerger;
-
     public function __construct(
-        DimensionContentRepositoryInterface $dimensionContentRepository,
-        ContentMergerInterface $contentMerger,
+        private DimensionContentRepositoryInterface $dimensionContentRepository,
+        private ContentMergerInterface $contentMerger,
     ) {
-        $this->dimensionContentRepository = $dimensionContentRepository;
-        $this->contentMerger = $contentMerger;
     }
 
     /**
@@ -49,7 +37,10 @@ class ContentAggregator implements ContentAggregatorInterface
      */
     public function aggregate(ContentRichEntityInterface $contentRichEntity, array $dimensionAttributes): DimensionContentInterface
     {
-        $dimensionContentCollection = $this->dimensionContentRepository->load($contentRichEntity, $dimensionAttributes);
+        $dimensionContentCollection = $this->dimensionContentRepository->loadOrUseExisting(
+            $contentRichEntity,
+            $dimensionAttributes
+        );
 
         if (0 === \count($dimensionContentCollection)) {
             throw new ContentNotFoundException($contentRichEntity, $dimensionAttributes);

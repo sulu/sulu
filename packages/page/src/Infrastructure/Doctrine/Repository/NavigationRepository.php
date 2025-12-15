@@ -14,6 +14,7 @@ namespace Sulu\Page\Infrastructure\Doctrine\Repository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
+use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
 use Sulu\Content\Application\ContentAggregator\ContentAggregatorInterface;
@@ -52,6 +53,7 @@ class NavigationRepository implements NavigationRepositoryInterface
         private DimensionContentQueryEnhancer $dimensionContentQueryEnhancer,
         private ContentAggregatorInterface $contentAggregator,
         private ContentResolverInterface $contentResolver,
+        private bool $audienceTargetingEnabled = false,
     ) {
         $repository = $entityManager->getRepository(PageInterface::class);
         Assert::isInstanceOf($repository, NestedTreeRepository::class);
@@ -138,20 +140,26 @@ class NavigationRepository implements NavigationRepositoryInterface
         string $webspaceKey,
         array $properties = []
     ): array {
-        $page = $this->createQueryBuilder(['uuid' => $uuid])->getQuery()->getOneOrNullResult();
+        /** @var PageInterface|null $page */
+        $page = $this->createQueryBuilder([
+            'uuid' => $uuid,
+            'locale' => $locale,
+            'stage' => DimensionContentInterface::STAGE_LIVE,
+        ])->getQuery()->getOneOrNullResult();
 
         if (null === $page) {
             return [];
         }
 
-        // Query all ancestors in a single query using nested set values
         /** @var PageInterface[] $ancestors */
         $ancestors = $this->createQueryBuilder([
-            'ancestorsOf' => $uuid,
+            'ancestorLft' => $page->getLft(),
+            'ancestorRgt' => $page->getRgt(),
             'webspaceKey' => $webspaceKey,
+            'locale' => $locale,
+            'stage' => DimensionContentInterface::STAGE_LIVE,
         ])->getQuery()->getResult();
 
-        // Combine ancestors with current page (ancestors are already ordered by lft ASC)
         /** @var PageInterface[] $pages */
         $pages = [...$ancestors, $page];
 
@@ -341,6 +349,8 @@ class NavigationRepository implements NavigationRepositoryInterface
      *     depth?: int,
      *     uuid?: string,
      *     ancestorsOf?: string,
+     *     ancestorLft?: int,
+     *     ancestorRgt?: int,
      *     childrenOf?: string,
      *     childrenDepth?: int,
      * } $filters
@@ -356,8 +366,17 @@ class NavigationRepository implements NavigationRepositoryInterface
                 ->setParameter('uuid', $uuid);
         }
 
+        $ancestorLft = $filters['ancestorLft'] ?? null;
+        $ancestorRgt = $filters['ancestorRgt'] ?? null;
         $ancestorsOf = $filters['ancestorsOf'] ?? null;
-        if (null !== $ancestorsOf) {
+
+        if (null !== $ancestorLft && null !== $ancestorRgt) {
+            $queryBuilder
+                ->andWhere('page.lft < :ancestorLft')
+                ->andWhere('page.rgt > :ancestorRgt')
+                ->setParameter('ancestorLft', $ancestorLft)
+                ->setParameter('ancestorRgt', $ancestorRgt);
+        } elseif (null !== $ancestorsOf) {
             Assert::string($ancestorsOf); // @phpstan-ignore staticMethod.alreadyNarrowedType
 
             $result = $this->fetchNestedSetValues($ancestorsOf, ['lft', 'rgt']);
@@ -437,14 +456,29 @@ class NavigationRepository implements NavigationRepositoryInterface
                 $filters,
                 []
             );
+
+            $this->leftJoinDimensionContent($queryBuilder);
+            $selects = [DimensionContentQueryEnhancer::GROUP_SELECT_CONTENT_WEBSITE => true];
+            if ($this->audienceTargetingEnabled) {
+                $selects[DimensionContentQueryEnhancer::SELECT_EXCERPT_AUDIENCE_TARGET_GROUPS] = true;
+            }
+            $this->dimensionContentQueryEnhancer->addSelects(
+                $queryBuilder,
+                $this->pageDimensionContentClassName,
+                $filters,
+                $selects
+            );
+
+            $queryBuilder->leftJoin('dimensionContent.navigationContexts', 'navigationContext')
+                ->addSelect('navigationContext');
         }
 
         $navigationContexts = $filters['navigationContexts'] ?? null;
         if (null !== $navigationContexts) {
             Assert::isArray($navigationContexts); // @phpstan-ignore staticMethod.alreadyNarrowedType
             if ([] !== $navigationContexts) {
-                $queryBuilder->leftJoin('filterDimensionContent.navigationContexts', 'navigationContext')
-                    ->andWhere('navigationContext.navigationContext IN (:navigationContexts)')
+                $queryBuilder->leftJoin('filterDimensionContent.navigationContexts', 'filterNavigationContext')
+                    ->andWhere('filterNavigationContext.navigationContext IN (:navigationContexts)')
                     ->setParameter('navigationContexts', $navigationContexts);
             }
         }
@@ -452,5 +486,25 @@ class NavigationRepository implements NavigationRepositoryInterface
         $queryBuilder->addOrderBy('page.lft', 'asc');
 
         return $queryBuilder;
+    }
+
+    private function leftJoinDimensionContent(QueryBuilder $queryBuilder): void
+    {
+        $hasJoin = false;
+        /** @var array<string, Join[]> $joinParts */
+        $joinParts = $queryBuilder->getDQLPart('join');
+
+        foreach ($joinParts as $joins) {
+            foreach ($joins as $join) {
+                if ('page.dimensionContents' === $join->getJoin()) {
+                    $hasJoin = true;
+                    break 2;
+                }
+            }
+        }
+
+        if (!$hasJoin) {
+            $queryBuilder->leftJoin('page.dimensionContents', 'dimensionContent');
+        }
     }
 }
