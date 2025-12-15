@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Content\Tests\Unit\Content\Infrastructure\Symfony\HttpKernel\Compiler;
+namespace Sulu\Content\Tests\Unit\Infrastructure\Symfony\HttpKernel\Compiler;
 
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractCompilerPassTestCase;
 use Sulu\Content\Application\ResourceLoader\Loader\CachedResourceLoader;

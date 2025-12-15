@@ -11,7 +11,7 @@ declare(strict_types=1);
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\ArticleBundle\Tests\Unit\Infrastructure\Sulu\Content\PropertyResolver;
+namespace Sulu\Article\Tests\Unit\Infrastructure\Sulu\Content\PropertyResolver;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;

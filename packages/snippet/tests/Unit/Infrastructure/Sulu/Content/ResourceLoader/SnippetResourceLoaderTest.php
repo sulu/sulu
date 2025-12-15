@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\SnippetBundle\Tests\Unit\Infrastructure\Sulu\Content\ResourceLoader;
+namespace Sulu\Snippet\Tests\Unit\Infrastructure\Sulu\Content\ResourceLoader;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
