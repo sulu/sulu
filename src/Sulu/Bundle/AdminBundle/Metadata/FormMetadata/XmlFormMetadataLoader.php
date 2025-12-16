@@ -62,11 +62,9 @@ class XmlFormMetadataLoader implements FormMetadataLoaderInterface, CacheWarmerI
     {
         $path = $this->getCachePath($key);
 
-        if (\file_exists($path)) {
-            $formMetadata = include $path;
-            if ($formMetadata instanceof FormMetadata) {
-                return $formMetadata;
-            }
+        $formMetadata = @include $path;
+        if ($formMetadata instanceof FormMetadata) {
+            return $formMetadata;
         }
 
         if (!$this->debug) {
@@ -75,14 +73,9 @@ class XmlFormMetadataLoader implements FormMetadataLoaderInterface, CacheWarmerI
 
         $this->warmUp($this->cacheDir);
 
-        if (\file_exists($path)) {
-            $formMetadata = include $path;
-            if ($formMetadata instanceof FormMetadata) {
-                return $formMetadata;
-            }
-        }
+        $formMetadata = @include $path;
 
-        return null;
+        return $formMetadata instanceof FormMetadata ? $formMetadata : null;
     }
 
     public function warmUp($cacheDir, ?string $buildDir = null): array

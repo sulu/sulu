@@ -38,11 +38,9 @@ class XmlTemplateFormMetadataLoader implements FormMetadataLoaderInterface, Cach
     {
         $path = $this->getCachePath($key);
 
-        if (\file_exists($path)) {
-            $typedFormMetadata = include $path;
-            if ($typedFormMetadata instanceof TypedFormMetadata) {
-                return $typedFormMetadata;
-            }
+        $typedFormMetadata = @include $path;
+        if ($typedFormMetadata instanceof TypedFormMetadata) {
+            return $typedFormMetadata;
         }
 
         if (!$this->debug) {
@@ -51,14 +49,9 @@ class XmlTemplateFormMetadataLoader implements FormMetadataLoaderInterface, Cach
 
         $this->warmUp($this->cacheDir);
 
-        if (\file_exists($path)) {
-            $typedFormMetadata = include $path;
-            if ($typedFormMetadata instanceof TypedFormMetadata) {
-                return $typedFormMetadata;
-            }
-        }
+        $typedFormMetadata = @include $path;
 
-        return null;
+        return $typedFormMetadata instanceof TypedFormMetadata ? $typedFormMetadata : null;
     }
 
     public function warmUp(string $cacheDir, ?string $buildDir = null): array
