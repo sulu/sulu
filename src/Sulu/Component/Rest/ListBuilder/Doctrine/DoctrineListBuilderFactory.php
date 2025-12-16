@@ -22,10 +22,10 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 class DoctrineListBuilderFactory implements DoctrineListBuilderFactoryInterface
 {
     public function __construct(
-        private EntityManagerInterface              $em,
-        private FilterTypeRegistry                  $filterTypeRegistry,
-        private EventDispatcherInterface            $eventDispatcher,
-        private array                               $permissions,
+        private EntityManagerInterface $em,
+        private FilterTypeRegistry $filterTypeRegistry,
+        private EventDispatcherInterface $eventDispatcher,
+        private array $permissions,
         private AccessControlQueryEnhancerInterface $accessControlQueryEnhancer,
     ) {
     }

@@ -122,7 +122,7 @@ class DataProviderRepositoryTraitTest extends TestCase
 
             public function __construct(
                 AccessControlQueryEnhancerInterface $accessControlQueryEnhancer,
-                private QueryBuilder                $queryBuilder,
+                private QueryBuilder $queryBuilder,
             ) {
                 $this->accessControlQueryEnhancer = $accessControlQueryEnhancer;
             }
