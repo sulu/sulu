@@ -195,6 +195,7 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
                             'fixtures' => [],
                             'user' => [],
                             'system_collections' => [],
+                            'default_collection' => [],
                             'security' => [],
                         ],
                     ],

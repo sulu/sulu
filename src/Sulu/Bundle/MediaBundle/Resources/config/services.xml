@@ -364,6 +364,13 @@
             <tag name="massive_build.builder" />
         </service>
 
+        <service id="sulu_media.default_collection.builder" class="Sulu\Component\Media\SystemCollections\DefaultCollectionBuilder">
+            <argument type="service" id="sulu_media.collection_manager"/>
+            <argument type="service" id="sulu_core.webspace.webspace_manager" />
+
+            <tag name="massive_build.builder" />
+        </service>
+
         <service id="sulu_media.disposition_type.resolver" class="Sulu\Bundle\MediaBundle\Media\DispositionType\DispositionTypeResolver" public="true">
             <argument>%sulu_media.disposition_type.default%</argument>
             <argument>%sulu_media.disposition_type.mime_types_inline%</argument>
