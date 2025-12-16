@@ -15,16 +15,15 @@ namespace Sulu\Component\Media\SystemCollections;
 
 use Massive\Bundle\BuildBundle\Build\BuilderContext;
 use Massive\Bundle\BuildBundle\Build\BuilderInterface;
-use Sulu\Bundle\MediaBundle\Api\Collection;
 use Sulu\Bundle\MediaBundle\Collection\Manager\CollectionManagerInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-readonly class DefaultCollectionBuilder implements BuilderInterface
+class DefaultCollectionBuilder implements BuilderInterface
 {
-    private ?InputInterface $input;
-    private ?OutputInterface $output;
+    private ?InputInterface $input = null;
+    private ?OutputInterface $output = null;
 
     public function __construct(
         private CollectionManagerInterface $collectionManager,
@@ -47,10 +46,10 @@ readonly class DefaultCollectionBuilder implements BuilderInterface
         foreach ($this->webspaceManager->getAllLocalizations() as $localization) {
             $locale = $localization->getLocale();
 
-            $this->output->writeln('Updating test collection for ' . $localization);
+            $this->output?->writeln('Updating test collection for ' . $localization);
 
             $existingId = $this->collectionManager->getByKey('test_collection', $locale)?->getId();
-            if (null !== $existingId && $this->input->getOption('destroy')) {
+            if (null !== $existingId && $this->input?->getOption('destroy')) {
                 $this->collectionManager->delete($existingId);
                 $existingId = null;
             }
@@ -68,7 +67,12 @@ readonly class DefaultCollectionBuilder implements BuilderInterface
 
     public function setContext(BuilderContext $context): void
     {
-        $this->input = $context->getInput();
-        $this->output = $context->getOutput();
+        /** @var InputInterface $input */
+        $input = $context->getInput();
+        $this->input = $input;
+
+        /** @var OutputInterface $output */
+        $output = $context->getOutput();
+        $this->output = $output;
     }
 }

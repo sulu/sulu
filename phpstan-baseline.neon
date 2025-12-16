@@ -19747,12 +19747,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Collection/Manager/CollectionManager.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\MediaBundle\\Collection\\Manager\\CollectionManager\:\:getByKey\(\) should return Sulu\\Bundle\\MediaBundle\\Api\\Collection but empty return statement found\.$#'
-			identifier: return.empty
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Collection/Manager/CollectionManager.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\MediaBundle\\Collection\\Manager\\CollectionManager\:\:getPreview\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -33171,24 +33165,6 @@ parameters:
 		-
 			message: '#^Property Sulu\\Component\\Media\\SystemCollections\\SystemCollectionManager\:\:\$systemCollections type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Component/Media/SystemCollections/SystemCollectionManager.php
-
-		-
-			message: '#^Strict comparison using \!\=\= between null and Sulu\\Bundle\\MediaBundle\\Api\\Collection will always evaluate to true\.$#'
-			identifier: notIdentical.alwaysTrue
-			count: 1
-			path: src/Sulu/Component/Media/SystemCollections/SystemCollectionManager.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between null and Sulu\\Bundle\\MediaBundle\\Api\\Collection will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 1
-			path: src/Sulu/Component/Media/SystemCollections/SystemCollectionManager.php
-
-		-
-			message: '#^Unreachable statement \- code above always terminates\.$#'
-			identifier: deadCode.unreachable
 			count: 1
 			path: src/Sulu/Component/Media/SystemCollections/SystemCollectionManager.php
 

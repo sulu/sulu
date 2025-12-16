@@ -139,7 +139,7 @@ class CollectionManager implements CollectionManagerInterface
         $collection = $this->collectionRepository->findCollectionByKey($key);
 
         if (!$collection) {
-            return;
+            return null;
         }
 
         return $this->getApiEntity($collection, $locale);

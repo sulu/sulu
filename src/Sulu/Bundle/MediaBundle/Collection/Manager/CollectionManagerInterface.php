@@ -64,7 +64,7 @@ interface CollectionManagerInterface
      * @param string $key
      * @param string $locale
      *
-     * @return Collection
+     * @return Collection|null
      */
     public function getByKey($key, $locale);
 
