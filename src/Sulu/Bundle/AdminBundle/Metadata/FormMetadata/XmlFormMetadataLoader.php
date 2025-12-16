@@ -13,8 +13,6 @@ namespace Sulu\Bundle\AdminBundle\Metadata\FormMetadata;
 
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Loader\FormXmlLoader;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Validation\FieldMetadataValidatorInterface;
-use Symfony\Component\Config\ConfigCache;
-use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface;
 use Symfony\Component\VarExporter\VarExporter;
@@ -62,10 +60,10 @@ class XmlFormMetadataLoader implements FormMetadataLoaderInterface, CacheWarmerI
 
     public function getMetadata(string $key, string $locale, array $metadataOptions = []): ?FormMetadata
     {
-        $configCache = $this->getConfigCache($key);
+        $path = $this->getCachePath($key);
 
-        if ($configCache->isFresh()) {
-            $formMetadata = @include $configCache->getPath();
+        if (\file_exists($path)) {
+            $formMetadata = include $path;
             if ($formMetadata instanceof FormMetadata) {
                 return $formMetadata;
             }
@@ -76,21 +74,25 @@ class XmlFormMetadataLoader implements FormMetadataLoaderInterface, CacheWarmerI
         }
 
         $this->warmUp($this->cacheDir);
-        $formMetadata = @include $configCache->getPath();
 
-        return $formMetadata instanceof FormMetadata ? $formMetadata : null;
+        if (\file_exists($path)) {
+            $formMetadata = include $path;
+            if ($formMetadata instanceof FormMetadata) {
+                return $formMetadata;
+            }
+        }
+
+        return null;
     }
 
     public function warmUp($cacheDir, ?string $buildDir = null): array
     {
         $formFinder = (new Finder())->in($this->formDirectories)->name('*.xml');
         $formsMetadataCollection = [];
-        $formsMetadataResources = [];
 
         foreach ($formFinder as $formFile) {
             $formMetadata = $this->formXmlLoader->load($formFile->getPathName());
             $formKey = $formMetadata->getKey();
-            $formsMetadataResources[$formKey][] = $formFile->getPathName();
             if (!\array_key_exists($formKey, $formsMetadataCollection)) {
                 $formsMetadataCollection[$formKey] = $formMetadata;
             } else {
@@ -101,17 +103,8 @@ class XmlFormMetadataLoader implements FormMetadataLoaderInterface, CacheWarmerI
         foreach ($formsMetadataCollection as $key => $formMetadata) {
             $this->validateItems($formMetadata->getItems(), $key);
 
-            $configCache = $this->getConfigCache($key);
-            $configCache->write(
-                '<?php return ' . VarExporter::export($formMetadata) . ';',
-                \array_map(function(string $resource) {
-                    return new FileResource($resource);
-                }, $formsMetadataResources[$key])
-            );
-
-            if (\function_exists('opcache_invalidate')) {
-                \opcache_invalidate($configCache->getPath(), true);
-            }
+            $path = $this->getCachePath($key);
+            $this->writeCache($path, '<?php return ' . VarExporter::export($formMetadata) . ';');
         }
 
         return [];
@@ -142,8 +135,24 @@ class XmlFormMetadataLoader implements FormMetadataLoaderInterface, CacheWarmerI
         return false;
     }
 
-    private function getConfigCache(string $key): ConfigCache
+    private function getCachePath(string $key): string
     {
-        return new ConfigCache(\sprintf('%s%s%s.php', $this->cacheDir, \DIRECTORY_SEPARATOR, $key), $this->debug);
+        return \sprintf('%s%s%s.php', $this->cacheDir, \DIRECTORY_SEPARATOR, $key);
+    }
+
+    private function writeCache(string $path, string $content): void
+    {
+        $dir = \dirname($path);
+        if (!\is_dir($dir)) {
+            \mkdir($dir, 0777, true);
+        }
+
+        $tmpFile = $path . '.' . \uniqid('', true);
+        \file_put_contents($tmpFile, $content);
+        \rename($tmpFile, $path);
+
+        if (\function_exists('opcache_invalidate')) {
+            \opcache_invalidate($path, true);
+        }
     }
 }
