@@ -91,7 +91,7 @@ class SuluContentBundleTest extends AbstractExtensionTestCase
 
         $this->assertSame([
             'sulu_content' => [
-                'resource_resolver' => [
+                'content_resolver' => [
                     'max_depth' => 5,
                 ],
             ],

@@ -40,7 +40,7 @@ final class SuluContentBundle extends AbstractBundle
     {
         $definition->rootNode() // @phpstan-ignore-line
             ->children()
-                ->arrayNode('resource_resolver')
+                ->arrayNode('content_resolver')
                     ->addDefaultsIfNotSet()
                     ->children()
                         ->scalarNode('max_depth')->defaultValue(5)->end()
@@ -57,10 +57,6 @@ final class SuluContentBundle extends AbstractBundle
      */
     public function loadExtension(array $config, ContainerConfigurator $container, ContainerBuilder $builder): void
     {
-        /** @var array{max_depth: int} $resourceResolverConfig */
-        $resourceResolverConfig = $config['resource_resolver'];
-        $builder->setParameter('sulu_content.resource_resolver.max_depth', $resourceResolverConfig['max_depth']);
-
         // TODO refactor to PHP based service definitions
         $loader = new XmlFileLoader($builder, new FileLocator(\dirname(__DIR__, 4) . '/config'));
         $loader->load('data-mapper.xml');
@@ -74,6 +70,12 @@ final class SuluContentBundle extends AbstractBundle
         $loader->load('reference.xml');
 
         $services = $container->services();
+
+        /** @var array{max_depth: int} $contentResolverConfig */
+        $contentResolverConfig = $config['content_resolver'];
+
+        $builder->getDefinition('sulu_content.content_resolver')
+            ->setArgument('$maxDepth', $contentResolverConfig['max_depth']);
 
         $services->set('sulu_content.doctrine_route_cleanup_listener')
             ->class(RouteCleanupListener::class)
