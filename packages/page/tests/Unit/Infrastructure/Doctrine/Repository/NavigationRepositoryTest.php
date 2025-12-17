@@ -146,7 +146,11 @@ class NavigationRepositoryTest extends TestCase
         $this->dimensionContentQueryEnhancer->addSelects(
             $queryBuilder->reveal(),
             'Sulu\Page\Domain\Model\PageDimensionContent',
-            $expectedFilters,
+            [
+                'locale' => $expectedFilters['locale'],
+                'stage' => $expectedFilters['stage'],
+                'version' => DimensionContentInterface::CURRENT_VERSION,
+            ],
             [DimensionContentQueryEnhancer::GROUP_SELECT_CONTENT_WEBSITE => true]
         )->shouldBeCalled();
 
@@ -222,7 +226,11 @@ class NavigationRepositoryTest extends TestCase
         $this->dimensionContentQueryEnhancer->addSelects(
             $queryBuilder->reveal(),
             'Sulu\Page\Domain\Model\PageDimensionContent',
-            $expectedFilters,
+            [
+                'locale' => $expectedFilters['locale'],
+                'stage' => $expectedFilters['stage'],
+                'version' => DimensionContentInterface::CURRENT_VERSION,
+            ],
             [DimensionContentQueryEnhancer::GROUP_SELECT_CONTENT_WEBSITE => true]
         )->shouldBeCalled();
 
@@ -299,7 +307,11 @@ class NavigationRepositoryTest extends TestCase
         $this->dimensionContentQueryEnhancer->addSelects(
             $queryBuilder->reveal(),
             'Sulu\Page\Domain\Model\PageDimensionContent',
-            $expectedFilters,
+            [
+                'locale' => $expectedFilters['locale'],
+                'stage' => $expectedFilters['stage'],
+                'version' => DimensionContentInterface::CURRENT_VERSION,
+            ],
             [DimensionContentQueryEnhancer::GROUP_SELECT_CONTENT_WEBSITE => true]
         )->shouldBeCalled();
 
@@ -376,7 +388,11 @@ class NavigationRepositoryTest extends TestCase
         $this->dimensionContentQueryEnhancer->addSelects(
             $queryBuilder->reveal(),
             'Sulu\Page\Domain\Model\PageDimensionContent',
-            $expectedFilters,
+            [
+                'locale' => $expectedFilters['locale'],
+                'stage' => $expectedFilters['stage'],
+                'version' => DimensionContentInterface::CURRENT_VERSION,
+            ],
             [DimensionContentQueryEnhancer::GROUP_SELECT_CONTENT_WEBSITE => true]
         )->shouldBeCalled();
 
@@ -458,7 +474,11 @@ class NavigationRepositoryTest extends TestCase
         $this->dimensionContentQueryEnhancer->addSelects(
             $queryBuilder->reveal(),
             'Sulu\Page\Domain\Model\PageDimensionContent',
-            $expectedFilters,
+            [
+                'locale' => $expectedFilters['locale'],
+                'stage' => $expectedFilters['stage'],
+                'version' => DimensionContentInterface::CURRENT_VERSION,
+            ],
             [DimensionContentQueryEnhancer::GROUP_SELECT_CONTENT_WEBSITE => true]
         )->shouldBeCalled();
 

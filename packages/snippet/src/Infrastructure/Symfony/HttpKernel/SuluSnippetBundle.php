@@ -254,6 +254,7 @@ final class SuluSnippetBundle extends AbstractBundle
             ->class(SnippetAreaTwigExtension::class)
             ->args([
                 new Reference('sulu_snippet.snippet_area_repository'),
+                new Reference('sulu_snippet.snippet_repository'),
                 new Reference('sulu_content.content_aggregator'),
                 new Reference('sulu_core.webspace.request_analyzer'),
                 new Reference('sulu_snippet.snippet_reference_store'),

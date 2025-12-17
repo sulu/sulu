@@ -124,11 +124,12 @@ class NavigationPerformanceTest extends SuluTestCase
             \sprintf('Expected 5 navigation items from sulu_page_navigation_root_flat, got %d', $navigationCount)
         );
 
+        // 8 queries: Optimized eager-loading with all excerpt relations in single query
         $this->assertCount(
-            11,
+            8,
             $result['queries'],
             \sprintf(
-                'Query count regression for sulu_page_navigation_root_flat: Expected exactly 11 queries, but got %d. Query patterns: %s',
+                'Query count regression for sulu_page_navigation_root_flat: Expected exactly 8 queries, but got %d. Query patterns: %s',
                 \count($result['queries']),
                 \implode(' | ', $this->extractQueryPatterns($result['queries']))
             )
@@ -150,11 +151,12 @@ class NavigationPerformanceTest extends SuluTestCase
             \sprintf('Expected 3 root navigation items from sulu_page_navigation_root_tree, got %d', $navigationCount)
         );
 
+        // 8 queries: Optimized eager-loading with all excerpt relations in single query
         $this->assertCount(
-            11,
+            8,
             $result['queries'],
             \sprintf(
-                'Query count regression for sulu_page_navigation_root_tree: Expected exactly 11 queries, but got %d. Query patterns: %s',
+                'Query count regression for sulu_page_navigation_root_tree: Expected exactly 8 queries, but got %d. Query patterns: %s',
                 \count($result['queries']),
                 \implode(' | ', $this->extractQueryPatterns($result['queries']))
             )
@@ -176,11 +178,12 @@ class NavigationPerformanceTest extends SuluTestCase
             \sprintf('Expected 2 navigation items from sulu_page_navigation_flat (child1 + grandchild1 with depth 2), got %d', $navigationCount)
         );
 
+        // 9 queries: Optimized eager-loading with all excerpt relations in single query
         $this->assertCount(
-            12,
+            9,
             $result['queries'],
             \sprintf(
-                'Query count regression for sulu_page_navigation_flat: Expected exactly 12 queries, but got %d. Query patterns: %s',
+                'Query count regression for sulu_page_navigation_flat: Expected exactly 9 queries, but got %d. Query patterns: %s',
                 \count($result['queries']),
                 \implode(' | ', $this->extractQueryPatterns($result['queries']))
             )
@@ -202,11 +205,12 @@ class NavigationPerformanceTest extends SuluTestCase
             \sprintf('Expected 1 navigation item from sulu_page_navigation_tree (grandchild1), got %d', $navigationCount)
         );
 
+        // 9 queries: Optimized eager-loading with all excerpt relations in single query
         $this->assertCount(
-            12,
+            9,
             $result['queries'],
             \sprintf(
-                'Query count regression for sulu_page_navigation_tree: Expected exactly 12 queries, but got %d. Query patterns: %s',
+                'Query count regression for sulu_page_navigation_tree: Expected exactly 9 queries, but got %d. Query patterns: %s',
                 \count($result['queries']),
                 \implode(' | ', $this->extractQueryPatterns($result['queries']))
             )
@@ -228,11 +232,12 @@ class NavigationPerformanceTest extends SuluTestCase
             \sprintf('Expected 3 breadcrumb items (parent -> child1 -> grandchild1), got %d', $navigationCount)
         );
 
+        // 9 queries: Optimized eager-loading with all excerpt relations in single query
         $this->assertCount(
-            12,
+            9,
             $result['queries'],
             \sprintf(
-                'Query count regression for sulu_page_breadcrumb: Expected exactly 12 queries, but got %d. Query patterns: %s',
+                'Query count regression for sulu_page_breadcrumb: Expected exactly 9 queries, but got %d. Query patterns: %s',
                 \count($result['queries']),
                 \implode(' | ', $this->extractQueryPatterns($result['queries']))
             )

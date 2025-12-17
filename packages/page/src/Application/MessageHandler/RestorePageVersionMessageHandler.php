@@ -14,6 +14,7 @@ namespace Sulu\Page\Application\MessageHandler;
 use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
 use Sulu\Content\Application\ContentCopier\ContentCopierInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
+use Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer;
 use Sulu\Page\Application\Message\RestorePageVersionMessage;
 use Sulu\Page\Domain\Event\PageVersionRestoredEvent;
 use Sulu\Page\Domain\Model\PageInterface;
@@ -34,19 +35,33 @@ class RestorePageVersionMessageHandler
 
     public function __invoke(RestorePageVersionMessage $message): PageInterface
     {
-        $page = $this->pageRepository->getOneBy($message->getPageIdentifier());
         $options = $message->getOptions();
+        $stage = $options['stage'] ?? DimensionContentInterface::STAGE_DRAFT;
+
+        $page = $this->pageRepository->getOneBy(
+            $message->getPageIdentifier(),
+            [
+                PageRepositoryInterface::SELECT_PAGE_CONTENT => [
+                    'selects' => [DimensionContentQueryEnhancer::GROUP_SELECT_CONTENT_WEBSITE => true],
+                    'dimensionAttributes' => [
+                        'locale' => $message->getLocale(),
+                        'stage' => $stage,
+                        'versions' => [$message->getVersion(), DimensionContentInterface::CURRENT_VERSION],
+                    ],
+                ],
+            ]
+        );
 
         $dimensionContent = $this->contentCopier->copy(
             $page,
             [
-                'stage' => $options['stage'] ?? DimensionContentInterface::STAGE_DRAFT,
+                'stage' => $stage,
                 'locale' => $message->getLocale(),
                 'version' => $message->getVersion(),
             ],
             $page,
             [
-                'stage' => $options['stage'] ?? DimensionContentInterface::STAGE_DRAFT,
+                'stage' => $stage,
                 'locale' => $message->getLocale(),
                 'version' => DimensionContentInterface::CURRENT_VERSION,
             ],

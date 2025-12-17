@@ -81,9 +81,8 @@ class PublishTransitionSubscriber implements EventSubscriberInterface
         }
 
         // Create a new version of the content before it is published
-        $this->contentCopier->copy(
-            $contentRichEntity,
-            \array_merge($dimensionAttributes, ['locale' => $locale, 'version' => DimensionContentInterface::CURRENT_VERSION]),
+        $this->contentCopier->copyFromDimensionContentCollection(
+            $dimensionContentCollection,
             $contentRichEntity,
             \array_merge($dimensionAttributes, ['locale' => $locale, 'version' => \time()]),
             ['ignoredAttributes' => ['url']] // ignore url, because we cannot restore it from a version

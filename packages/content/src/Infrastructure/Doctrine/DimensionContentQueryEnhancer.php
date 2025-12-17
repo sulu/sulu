@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Sulu\Content\Infrastructure\Doctrine;
 
 use Doctrine\Common\Collections\Criteria;
+use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
@@ -285,17 +286,17 @@ class DimensionContentQueryEnhancer
             if ($selects[self::SELECT_EXCERPT_CATEGORIES_TRANSLATION] ?? false) {
                 Assert::notFalse($selects[self::SELECT_EXCERPT_CATEGORIES] ?? false);
                 Assert::notNull($locale);
-                $queryBuilder->leftJoin(
-                    'contentExcerptCategory.translations',
-                    'contentExcerptCategoryTranslation',
-                    Join::WITH,
-                    '(
-                        contentExcerptCategoryTranslation.locale = contentExcerptCategory.defaultLocale
-                        OR contentExcerptCategoryTranslation.locale = :locale
-                    )',
-                )
+
+                $locales = (array) $locale;
+                $queryBuilder
+                    ->leftJoin(
+                        'contentExcerptCategory.translations',
+                        'contentExcerptCategoryTranslation',
+                        Join::WITH,
+                        'contentExcerptCategoryTranslation.locale = contentExcerptCategory.defaultLocale OR contentExcerptCategoryTranslation.locale IN (:locales)'
+                    )
                     ->addSelect('contentExcerptCategoryTranslation')
-                    ->setParameter('locale', $locale);
+                    ->setParameter('locales', $locales, ArrayParameterType::STRING);
             }
 
             if ($selects[self::SELECT_EXCERPT_AUDIENCE_TARGET_GROUPS] ?? false) {
@@ -314,13 +315,12 @@ class DimensionContentQueryEnhancer
 
         foreach ($attributes as $key => $value) {
             $fieldName = $alias . '.' . $key;
+
             $expr = $criteria->expr()->isNull($fieldName);
-
             if (null !== $value) {
-                $eqExpr = $criteria->expr()->eq($fieldName, $value);
-                $expr = $criteria->expr()->orX($expr, $eqExpr);
+                $valueExpr = $criteria->expr()->in($fieldName, (array) $value);
+                $expr = $criteria->expr()->orX($expr, $valueExpr);
             }
-
             $criteria->andWhere($expr);
         }
 

@@ -16,6 +16,7 @@ use Sulu\Component\Localization\Manager\LocalizationManagerInterface;
 use Sulu\Content\Application\ContentCopier\ContentCopierInterface;
 use Sulu\Content\Domain\Model\DimensionContentCollection;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
+use Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer;
 use Sulu\Page\Application\Message\CopyPageMessage;
 use Sulu\Page\Domain\Event\PageCopiedEvent;
 use Sulu\Page\Domain\Model\PageDimensionContent;
@@ -38,18 +39,54 @@ final class CopyPageMessageHandler
 
     public function __invoke(CopyPageMessage $message): PageInterface
     {
-        $sourcePage = $this->pageRepository->getOneBy($message->getSourceIdentifier());
-        $targetParentPage = $this->pageRepository->getOneBy($message->getTargetParentIdentifier());
+        $allLocales = [];
+        foreach ($this->localizationManager->getLocalizations() as $localization) {
+            $allLocales[] = $localization->getLocale();
+        }
+
+        $sourcePage = $this->pageRepository->getOneBy(
+            $message->getSourceIdentifier(),
+            [
+                PageRepositoryInterface::SELECT_PAGE_CONTENT => [
+                    'selects' => [DimensionContentQueryEnhancer::GROUP_SELECT_CONTENT_WEBSITE => true],
+                    'dimensionAttributes' => [
+                        'locales' => $allLocales,
+                        'stage' => DimensionContentInterface::STAGE_DRAFT,
+                    ],
+                ],
+            ]
+        );
+        $targetParentPage = $this->pageRepository->getOneBy(
+            $message->getTargetParentIdentifier(),
+            [
+                PageRepositoryInterface::SELECT_PAGE_CONTENT => [
+                    'selects' => [], // No excerpt/tags needed - only used for webspace/parent info
+                    'dimensionAttributes' => [
+                        'locale' => $message->getLocale(),
+                        'stage' => DimensionContentInterface::STAGE_DRAFT,
+                    ],
+                ],
+            ]
+        );
 
         $targetPage = $this->pageRepository->createNew($message->getTargetUuid());
         $targetPage->setWebspaceKey($targetParentPage->getWebspaceKey());
         $targetPage->setParent($targetParentPage);
         $this->pageRepository->add($targetPage);
 
-        // TODO we should not depend on the LocalizationManager here, but rather use the `availableLocales` from the sourceDimensionContent itself.
-        foreach ($this->localizationManager->getLocalizations() as $localization) {
-            $exists = $this->pageRepository->countBy([...$message->getSourceIdentifier(), 'locale' => $localization->getLocale(), 'stage' => DimensionContentInterface::STAGE_DRAFT]);
-            if (!$exists) {
+        $dimensionContentCollection = new DimensionContentCollection(
+            $sourcePage->getDimensionContents(),
+            [],
+            PageDimensionContent::class
+        );
+
+        foreach ($allLocales as $locale) {
+            $sourceDimensionContent = $dimensionContentCollection->getDimensionContent([
+                'locale' => $locale,
+                'stage' => DimensionContentInterface::STAGE_DRAFT,
+            ]);
+
+            if ($sourceDimensionContent?->getLocale() !== $locale) {
                 // If the page does not exist in the target locale, we cannot copy content for that locale.
                 continue;
             }
@@ -58,12 +95,12 @@ final class CopyPageMessageHandler
                 $sourcePage,
                 [
                     'stage' => DimensionContentInterface::STAGE_DRAFT,
-                    'locale' => $localization->getLocale(),
+                    'locale' => $locale,
                 ],
                 $targetPage,
                 [
                     'stage' => DimensionContentInterface::STAGE_DRAFT,
-                    'locale' => $localization->getLocale(),
+                    'locale' => $locale,
                 ],
                 [
                     'ignoredAttributes' => [
@@ -73,9 +110,11 @@ final class CopyPageMessageHandler
             );
         }
 
-        $dimensionContentCollection = new DimensionContentCollection($sourcePage->getDimensionContents(), [], PageDimensionContent::class);
         /** @var PageDimensionContent $localizedDimensionContent */
-        $localizedDimensionContent = $dimensionContentCollection->getDimensionContent(['locale' => $message->getLocale()]);
+        $localizedDimensionContent = $dimensionContentCollection->getDimensionContent([
+            'locale' => $message->getLocale(),
+            'stage' => DimensionContentInterface::STAGE_DRAFT,
+        ]);
 
         $this->domainEventCollector->collect(new PageCopiedEvent($sourcePage, $sourcePage->getId(), $sourcePage->getWebspaceKey(), $localizedDimensionContent->getTitle(), $message->getLocale()));
 

@@ -458,14 +458,22 @@ class NavigationRepository implements NavigationRepositoryInterface
             );
 
             $this->leftJoinDimensionContent($queryBuilder);
+
+            $dimensionAttributes = [
+                'locale' => $filters['locale'] ?? null,
+                'stage' => $filters['stage'] ?? null,
+                'version' => DimensionContentInterface::CURRENT_VERSION,
+            ];
+
             $selects = [DimensionContentQueryEnhancer::GROUP_SELECT_CONTENT_WEBSITE => true];
             if ($this->audienceTargetingEnabled) {
                 $selects[DimensionContentQueryEnhancer::SELECT_EXCERPT_AUDIENCE_TARGET_GROUPS] = true;
             }
+
             $this->dimensionContentQueryEnhancer->addSelects(
                 $queryBuilder,
                 $this->pageDimensionContentClassName,
-                $filters,
+                $dimensionAttributes,
                 $selects
             );
 

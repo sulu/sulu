@@ -21,6 +21,7 @@ use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Content\Application\ContentAggregator\ContentAggregatorInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Domain\Model\TemplateInterface;
+use Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer;
 use Sulu\CustomUrl\Domain\Model\CustomUrlInterface;
 use Sulu\CustomUrl\Domain\Model\CustomUrlRouteInterface;
 use Sulu\CustomUrl\Domain\Repository\CustomUrlRouteRepositoryInterface;
@@ -249,12 +250,13 @@ final readonly class CustomUrlRouteCollectionLoader implements RouteCollectionFo
             return $collection;
         }
 
-        $page = $this->loadPageEntity($targetDocument);
+        $targetLocale = $customUrl->getTargetLocale();
+        $page = $this->loadPageEntity($targetDocument, $targetLocale);
         if (!$page) {
             return $collection;
         }
 
-        $dimensionContent = $this->loadDimensionContent($page, $customUrl->getTargetLocale());
+        $dimensionContent = $this->loadDimensionContent($page, $targetLocale);
         if (!$dimensionContent instanceof TemplateInterface) {
             return $collection;
         }
@@ -346,11 +348,23 @@ final readonly class CustomUrlRouteCollectionLoader implements RouteCollectionFo
         }
     }
 
-    private function loadPageEntity(string $uuid): ?PageInterface
+    private function loadPageEntity(string $uuid, string $locale): ?PageInterface
     {
         try {
             /** @var PageInterface|null $page */
-            $page = $this->pageRepository->findOneBy(['uuid' => $uuid]);
+            $page = $this->pageRepository->findOneBy(
+                [
+                    'uuid' => $uuid,
+                    'locale' => $locale,
+                    'stage' => DimensionContentInterface::STAGE_LIVE,
+                    'version' => DimensionContentInterface::CURRENT_VERSION,
+                ],
+                [
+                    PageRepositoryInterface::SELECT_PAGE_CONTENT => [
+                        DimensionContentQueryEnhancer::GROUP_SELECT_CONTENT_WEBSITE => true,
+                    ],
+                ]
+            );
 
             return $page;
         } catch (\Exception $e) {
@@ -369,6 +383,7 @@ final readonly class CustomUrlRouteCollectionLoader implements RouteCollectionFo
                 [
                     'locale' => $locale,
                     'stage' => DimensionContentInterface::STAGE_LIVE,
+                    'version' => DimensionContentInterface::CURRENT_VERSION,
                 ],
             );
         } catch (\Exception) {

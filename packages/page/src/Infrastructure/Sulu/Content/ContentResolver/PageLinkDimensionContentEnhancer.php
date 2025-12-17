@@ -76,9 +76,24 @@ class PageLinkDimensionContentEnhancer implements DimensionContentEnhancerInterf
             return $pageDimensionContent;
         }
 
-        $page = $this->pageRepository->findOneBy([
-            'uuid' => $href,
-        ]);
+        /** @var string|null $locale */
+        $locale = $dimensionAttributes['locale'] ?? null;
+        /** @var string|null $stage */
+        $stage = $dimensionAttributes['stage'] ?? null;
+
+        $page = $this->pageRepository->findOneBy(
+            ['uuid' => $href],
+            [
+                PageRepositoryInterface::SELECT_PAGE_CONTENT => [
+                    'selects' => [], // No excerpt/tags needed for link resolution
+                    'dimensionAttributes' => [
+                        'locale' => $locale,
+                        'stage' => $stage ?? DimensionContentInterface::STAGE_DRAFT,
+                        'version' => DimensionContentInterface::CURRENT_VERSION,
+                    ],
+                ],
+            ]
+        );
 
         if (null === $page) {
             return $pageDimensionContent;

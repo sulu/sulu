@@ -13,17 +13,18 @@ declare(strict_types=1);
 
 namespace Sulu\Content\Application\ContentAggregator;
 
+use Doctrine\ORM\PersistentCollection;
 use Sulu\Content\Application\ContentMerger\ContentMergerInterface;
 use Sulu\Content\Domain\Exception\ContentNotFoundException;
 use Sulu\Content\Domain\Model\ContentRichEntityInterface;
+use Sulu\Content\Domain\Model\DimensionContentCollection;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
-use Sulu\Content\Domain\Repository\DimensionContentRepositoryInterface;
 
 class ContentAggregator implements ContentAggregatorInterface
 {
     public function __construct(
-        private DimensionContentRepositoryInterface $dimensionContentRepository,
         private ContentMergerInterface $contentMerger,
+        private bool $debug = false,
     ) {
     }
 
@@ -37,9 +38,25 @@ class ContentAggregator implements ContentAggregatorInterface
      */
     public function aggregate(ContentRichEntityInterface $contentRichEntity, array $dimensionAttributes): DimensionContentInterface
     {
-        $dimensionContentCollection = $this->dimensionContentRepository->loadOrUseExisting(
-            $contentRichEntity,
-            $dimensionAttributes
+        $dimensionContents = $contentRichEntity->getDimensionContents();
+
+        if ($this->debug && $dimensionContents instanceof PersistentCollection && !$dimensionContents->isInitialized()) {
+            throw new \RuntimeException(\sprintf(
+                'Dimension contents must be eager-loaded before calling aggregate(). '
+                . 'Entity "%s" has uninitialized dimension contents. '
+                . 'Fix: Add ->leftJoin(\'entity.dimensionContents\', \'dimensionContent\') to your query. '
+                . 'This error only appears in debug mode - production will fall back to lazy loading '
+                . 'but with worse performance.',
+                $contentRichEntity::class
+            ));
+        }
+
+        $dimensionContentClass = $contentRichEntity->createDimensionContent()::class;
+
+        $dimensionContentCollection = new DimensionContentCollection(
+            $dimensionContents,
+            $dimensionAttributes,
+            $dimensionContentClass
         );
 
         if (0 === \count($dimensionContentCollection)) {

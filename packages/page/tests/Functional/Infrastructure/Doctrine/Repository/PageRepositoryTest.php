@@ -17,7 +17,10 @@ use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Security\Authorization\PermissionTypes;
+use Sulu\Content\Domain\Model\DimensionContentInterface;
+use Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer;
 use Sulu\Page\Domain\Model\Page;
+use Sulu\Page\Domain\Model\PageDimensionContent;
 use Sulu\Page\Domain\Model\PageInterface;
 use Sulu\Page\Domain\Repository\PageRepositoryInterface;
 use Sulu\Page\Tests\Traits\CreatePageTrait;
@@ -442,5 +445,209 @@ class PageRepositoryTest extends SuluTestCase
                 ],
             ],
         ], $webspaceKey);
+    }
+
+    public function testGetOneByWithDimensionAttributesLoadsMultipleVersions(): void
+    {
+        // Create page with draft content
+        $page = self::createPage([
+            'en' => [
+                'draft' => [
+                    'title' => 'Version Test Page',
+                    'url' => '/version-test',
+                    'template' => 'default',
+                ],
+            ],
+        ]);
+
+        $this->entityManager->flush();
+        $this->entityManager->clear();
+
+        // Load page with multiple versions using new API format
+        $loadedPage = $this->pageRepository->getOneBy(
+            ['uuid' => $page->getUuid()],
+            [
+                PageRepositoryInterface::SELECT_PAGE_CONTENT => [
+                    'selects' => [DimensionContentQueryEnhancer::GROUP_SELECT_CONTENT_WEBSITE => true],
+                    'dimensionAttributes' => [
+                        'locale' => 'en',
+                        'stage' => DimensionContentInterface::STAGE_DRAFT,
+                        'version' => DimensionContentInterface::CURRENT_VERSION,
+                    ],
+                ],
+            ]
+        );
+
+        // Verify dimension contents are loaded
+        $dimensionContents = $loadedPage->getDimensionContents();
+        $this->assertGreaterThan(0, $dimensionContents->count());
+
+        // Find the draft dimension content
+        $draftContent = null;
+        foreach ($dimensionContents as $dc) {
+            if ('en' === $dc->getLocale() && DimensionContentInterface::STAGE_DRAFT === $dc->getStage()) {
+                $draftContent = $dc;
+                break;
+            }
+        }
+
+        $this->assertNotNull($draftContent);
+        $this->assertInstanceOf(PageDimensionContent::class, $draftContent);
+        $this->assertSame('Version Test Page', $draftContent->getTitle());
+    }
+
+    public function testGetOneByWithBackwardCompatibleSelectFormat(): void
+    {
+        // Create page with draft content
+        $page = self::createPage([
+            'en' => [
+                'draft' => [
+                    'title' => 'Backward Compat Test',
+                    'url' => '/backward-compat',
+                    'template' => 'default',
+                ],
+            ],
+        ]);
+
+        $this->entityManager->flush();
+        $this->entityManager->clear();
+
+        // Load page using old API format (should still work)
+        $loadedPage = $this->pageRepository->getOneBy(
+            [
+                'uuid' => $page->getUuid(),
+                'locale' => 'en',
+                'stage' => DimensionContentInterface::STAGE_DRAFT,
+            ],
+            [
+                PageRepositoryInterface::SELECT_PAGE_CONTENT => [
+                    DimensionContentQueryEnhancer::GROUP_SELECT_CONTENT_WEBSITE => true,
+                ],
+            ]
+        );
+
+        // Verify dimension contents are loaded
+        $dimensionContents = $loadedPage->getDimensionContents();
+        $this->assertGreaterThan(0, $dimensionContents->count());
+
+        // Find the draft dimension content
+        $draftContent = null;
+        foreach ($dimensionContents as $dc) {
+            if ('en' === $dc->getLocale() && DimensionContentInterface::STAGE_DRAFT === $dc->getStage()) {
+                $draftContent = $dc;
+                break;
+            }
+        }
+
+        $this->assertNotNull($draftContent);
+        $this->assertSame('Backward Compat Test', $draftContent->getTitle());
+    }
+
+    public function testGetOneByWithMultipleLocalesInDimensionAttributes(): void
+    {
+        // Create page with multiple locales
+        $page = self::createPage([
+            'en' => [
+                'draft' => [
+                    'title' => 'English Title',
+                    'url' => '/multi-locale',
+                    'template' => 'default',
+                ],
+            ],
+            'de' => [
+                'draft' => [
+                    'title' => 'German Title',
+                    'url' => '/multi-locale-de',
+                    'template' => 'default',
+                ],
+            ],
+        ]);
+
+        $this->entityManager->flush();
+        $this->entityManager->clear();
+
+        // Load page with multiple locales using new API format
+        $loadedPage = $this->pageRepository->getOneBy(
+            ['uuid' => $page->getUuid()],
+            [
+                PageRepositoryInterface::SELECT_PAGE_CONTENT => [
+                    'selects' => [DimensionContentQueryEnhancer::GROUP_SELECT_CONTENT_WEBSITE => true],
+                    'dimensionAttributes' => [
+                        'locales' => ['en', 'de'],
+                        'stage' => DimensionContentInterface::STAGE_DRAFT,
+                    ],
+                ],
+            ]
+        );
+
+        // Verify both locale dimension contents are loaded
+        $dimensionContents = $loadedPage->getDimensionContents();
+
+        $enContent = null;
+        $deContent = null;
+        foreach ($dimensionContents as $dc) {
+            if (DimensionContentInterface::STAGE_DRAFT === $dc->getStage()) {
+                if ('en' === $dc->getLocale()) {
+                    $enContent = $dc;
+                } elseif ('de' === $dc->getLocale()) {
+                    $deContent = $dc;
+                }
+            }
+        }
+
+        $this->assertNotNull($enContent, 'English dimension content should be loaded');
+        $this->assertNotNull($deContent, 'German dimension content should be loaded');
+        $this->assertSame('English Title', $enContent->getTitle());
+        $this->assertSame('German Title', $deContent->getTitle());
+    }
+
+    public function testGetOneByWithVersionsArrayInDimensionAttributes(): void
+    {
+        // Create page with draft content
+        $page = self::createPage([
+            'en' => [
+                'draft' => [
+                    'title' => 'Versions Array Test',
+                    'url' => '/versions-array',
+                    'template' => 'default',
+                ],
+            ],
+        ]);
+
+        $this->entityManager->flush();
+        $this->entityManager->clear();
+
+        // Load page with versions array (used by RestorePageVersionMessageHandler)
+        $loadedPage = $this->pageRepository->getOneBy(
+            ['uuid' => $page->getUuid()],
+            [
+                PageRepositoryInterface::SELECT_PAGE_CONTENT => [
+                    'selects' => [DimensionContentQueryEnhancer::GROUP_SELECT_CONTENT_WEBSITE => true],
+                    'dimensionAttributes' => [
+                        'locale' => 'en',
+                        'stage' => DimensionContentInterface::STAGE_DRAFT,
+                        'versions' => [DimensionContentInterface::CURRENT_VERSION, 12345],
+                    ],
+                ],
+            ]
+        );
+
+        // Verify dimension contents are loaded (only current version exists)
+        $dimensionContents = $loadedPage->getDimensionContents();
+        $this->assertGreaterThan(0, $dimensionContents->count());
+
+        // Find the current draft dimension content
+        $draftContent = null;
+        foreach ($dimensionContents as $dc) {
+            if ('en' === $dc->getLocale()
+                && DimensionContentInterface::STAGE_DRAFT === $dc->getStage()
+                && DimensionContentInterface::CURRENT_VERSION === $dc->getVersion()) {
+                $draftContent = $dc;
+                break;
+            }
+        }
+
+        $this->assertNotNull($draftContent);
+        $this->assertSame('Versions Array Test', $draftContent->getTitle());
     }
 }

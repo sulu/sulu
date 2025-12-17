@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Sulu\Content\Tests\Unit\Content\Application\ContentAggregator;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
@@ -22,9 +21,8 @@ use Sulu\Content\Application\ContentAggregator\ContentAggregator;
 use Sulu\Content\Application\ContentAggregator\ContentAggregatorInterface;
 use Sulu\Content\Application\ContentMerger\ContentMergerInterface;
 use Sulu\Content\Domain\Exception\ContentNotFoundException;
-use Sulu\Content\Domain\Model\DimensionContentCollection;
+use Sulu\Content\Domain\Model\DimensionContentCollectionInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
-use Sulu\Content\Domain\Repository\DimensionContentRepositoryInterface;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\Example;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\ExampleDimensionContent;
 
@@ -34,12 +32,12 @@ class ContentAggregatorTest extends TestCase
     use SetGetPrivatePropertyTrait;
 
     protected function createContentAggregatorInstance(
-        DimensionContentRepositoryInterface $dimensionContentRepository,
-        ContentMergerInterface $contentMerger
+        ContentMergerInterface $contentMerger,
+        bool $debug = false
     ): ContentAggregatorInterface {
         return new ContentAggregator(
-            $dimensionContentRepository,
-            $contentMerger
+            $contentMerger,
+            $debug
         );
     }
 
@@ -53,45 +51,31 @@ class ContentAggregatorTest extends TestCase
         $dimensionContent1->setLocale(null);
         $dimensionContent2 = new ExampleDimensionContent($example);
         $dimensionContent2->setStage(DimensionContentInterface::STAGE_DRAFT);
-        $dimensionContent2->setLocale(null);
+        $dimensionContent2->setLocale('de');
+
+        $example->addDimensionContent($dimensionContent1);
+        $example->addDimensionContent($dimensionContent2);
 
         $attributes = [
             'locale' => 'de',
         ];
 
-        $expectedAttributes = [
-            'locale' => 'de',
-            'stage' => DimensionContentInterface::STAGE_DRAFT,
-            'version' => DimensionContentInterface::CURRENT_VERSION,
-        ];
-
-        $dimensionContentCollection = new DimensionContentCollection(
-            new ArrayCollection([
-                $dimensionContent1,
-                $dimensionContent2,
-            ]),
-            $expectedAttributes,
-            ExampleDimensionContent::class
-        );
-
-        $dimensionContentRepository = $this->prophesize(DimensionContentRepositoryInterface::class);
-        $dimensionContentRepository->loadOrUseExisting($example, $attributes)
-            ->willReturn($dimensionContentCollection)
-            ->shouldBeCalled();
-
-        $mergedDimensionContent = $this->prophesize(DimensionContentInterface::class);
+        $mergedDimensionContent = new ExampleDimensionContent($example);
+        $mergedDimensionContent->setStage(DimensionContentInterface::STAGE_DRAFT);
+        $mergedDimensionContent->setLocale('de');
 
         $contentMerger = $this->prophesize(ContentMergerInterface::class);
-        $contentMerger->merge($dimensionContentCollection)
-            ->willReturn($mergedDimensionContent->reveal())
+        $contentMerger->merge(Argument::that(function($arg) {
+            return $arg instanceof DimensionContentCollectionInterface;
+        }))
+            ->willReturn($mergedDimensionContent)
             ->shouldBeCalled();
 
         $contentAggregator = $this->createContentAggregatorInstance(
-            $dimensionContentRepository->reveal(),
-            $contentMerger->reveal()
+            $contentMerger->reveal(),
         );
 
-        $this->assertSame($mergedDimensionContent->reveal(), $contentAggregator->aggregate($example, $attributes));
+        $this->assertSame($mergedDimensionContent, $contentAggregator->aggregate($example, $attributes));
     }
 
     public function testAggregateNotFound(): void
@@ -105,26 +89,10 @@ class ContentAggregatorTest extends TestCase
             'locale' => 'de',
         ];
 
-        $expectedAttributes = [
-            'locale' => 'de',
-            'stage' => DimensionContentInterface::STAGE_DRAFT,
-            'version' => DimensionContentInterface::CURRENT_VERSION,
-        ];
-
-        $dimensionContentCollection = new DimensionContentCollection(
-            new ArrayCollection([]),
-            $expectedAttributes,
-            ExampleDimensionContent::class
-        );
-
-        $dimensionContentRepository = $this->prophesize(DimensionContentRepositoryInterface::class);
-        $dimensionContentRepository->loadOrUseExisting($example, $attributes)->willReturn($dimensionContentCollection);
-
         $contentMerger = $this->prophesize(ContentMergerInterface::class);
-        $contentMerger->merge($dimensionContentCollection)->willReturn(Argument::cetera())->shouldNotBeCalled();
+        $contentMerger->merge(Argument::cetera())->shouldNotBeCalled();
 
         $contentAggregator = $this->createContentAggregatorInstance(
-            $dimensionContentRepository->reveal(),
             $contentMerger->reveal()
         );
 

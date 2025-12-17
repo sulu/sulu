@@ -20,6 +20,7 @@ use Sulu\Bundle\MarkupBundle\Markup\Link\LinkProviderInterface;
 use Sulu\Content\Application\ContentAggregator\ContentAggregatorInterface;
 use Sulu\Content\Application\ContentEnhancer\ContentEnhancerInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
+use Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer;
 use Sulu\Page\Domain\Model\PageDimensionContentInterface;
 use Sulu\Page\Domain\Model\PageInterface;
 use Sulu\Page\Domain\Repository\PageRepositoryInterface;
@@ -58,11 +59,21 @@ final class PageLinkProvider implements LinkProviderInterface
         $dimensionAttributes = [
             'locale' => $locale,
             'stage' => $published ? DimensionContentInterface::STAGE_LIVE : DimensionContentInterface::STAGE_DRAFT,
+            'version' => DimensionContentInterface::CURRENT_VERSION,
         ];
 
         $pages = $this->pageRepository->findBy(
-            filters: [...$dimensionAttributes, 'uuids' => $hrefs],
-            selects: [PageRepositoryInterface::GROUP_SELECT_PAGE_WEBSITE => true]
+            filters: [
+                'uuids' => $hrefs,
+                'locale' => $locale,
+                'stage' => $dimensionAttributes['stage'],
+                'version' => DimensionContentInterface::CURRENT_VERSION,
+            ],
+            selects: [
+                PageRepositoryInterface::SELECT_PAGE_CONTENT => [
+                    DimensionContentQueryEnhancer::GROUP_SELECT_CONTENT_WEBSITE => true,
+                ],
+            ]
         );
 
         $result = [];

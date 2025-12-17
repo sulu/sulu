@@ -62,6 +62,9 @@ class ArticleTwigExtension extends AbstractExtension
 
         $article = $this->articleRepository->findOneBy([
             'uuid' => $uuid,
+            'locale' => $locale,
+            'stage' => DimensionContentInterface::STAGE_LIVE,
+            'version' => DimensionContentInterface::CURRENT_VERSION,
         ]);
 
         if (null === $article) {

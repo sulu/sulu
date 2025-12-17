@@ -394,14 +394,27 @@ class PageRepository implements PageRepositoryInterface
 
         // selects
         if ($selects[self::SELECT_PAGE_CONTENT] ?? null) {
-            /** @var array<string, bool> $contentSelects */
-            $contentSelects = $selects[self::SELECT_PAGE_CONTENT];
+            $contentConfig = $selects[self::SELECT_PAGE_CONTENT];
             $this->leftJoinDimensionContent($queryBuilder);
+
+            if (\is_array($contentConfig) && isset($contentConfig['dimensionAttributes'])) {
+                /** @var array<string, bool> $contentSelects */
+                $contentSelects = $contentConfig['selects'] ?? [];
+                /** @var array<string, mixed> $dimensionAttributesConfig */
+                $dimensionAttributesConfig = $contentConfig['dimensionAttributes'];
+                $dimensionAttributes = $this->normalizeDimensionAttributes(
+                    $dimensionAttributesConfig
+                );
+            } else {
+                /** @var array<string, bool> $contentSelects */
+                $contentSelects = $contentConfig;
+                $dimensionAttributes = $filters;
+            }
 
             $this->dimensionContentQueryEnhancer->addSelects(
                 $queryBuilder,
                 $this->pageDimensionContentClassName,
-                $filters,
+                $dimensionAttributes,
                 $contentSelects
             );
         }
@@ -451,6 +464,34 @@ class PageRepository implements PageRepositoryInterface
         if (!$hasJoin) {
             $queryBuilder->leftJoin('page.dimensionContents', 'dimensionContent');
         }
+    }
+
+    /**
+     * Normalize dimension attributes for loading multiple values.
+     *
+     * Converts plural keys to arrays:
+     * - 'locales' => ['en', 'de'] becomes 'locale' => ['en', 'de']
+     * - 'versions' => [null, 123] becomes 'version' => [null, 123]
+     * - 'stages' => ['draft', 'live'] becomes 'stage' => ['draft', 'live']
+     *
+     * @param array<string, mixed> $attributes
+     *
+     * @return array<string, mixed>
+     */
+    private function normalizeDimensionAttributes(array $attributes): array
+    {
+        $pluralMap = ['locales' => 'locale', 'versions' => 'version', 'stages' => 'stage'];
+
+        $normalized = [];
+        foreach ($attributes as $key => $value) {
+            if (isset($pluralMap[$key])) {
+                $normalized[$pluralMap[$key]] = (array) $value;
+            } else {
+                $normalized[$key] = $value;
+            }
+        }
+
+        return $normalized;
     }
 
     public function findDescendantIdsById($id): array

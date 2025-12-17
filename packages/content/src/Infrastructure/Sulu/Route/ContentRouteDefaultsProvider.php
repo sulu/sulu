@@ -15,6 +15,7 @@ namespace Sulu\Content\Infrastructure\Sulu\Route;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NoResultException;
+use Doctrine\ORM\Query\Expr\Join;
 use Sulu\Article\Domain\Model\Article;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\CacheLifetimeMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
@@ -107,14 +108,36 @@ class ContentRouteDefaultsProvider implements RouteDefaultsProviderInterface
     private function loadEntity(string $entityClass, string $id, string $locale): ?DimensionContentInterface
     {
         try {
-            /** @var ContentRichEntityInterface<T> $contentRichEntity */
-            $contentRichEntity = $this->entityManager->createQueryBuilder()
+            $queryBuilder = $this->entityManager->createQueryBuilder()
                 ->select('entity')
                 ->from($entityClass, 'entity')
+                ->leftJoin(
+                    'entity.dimensionContents',
+                    'dimensionContent',
+                    Join::WITH,
+                    'dimensionContent.stage = :stage AND dimensionContent.version = :version AND (dimensionContent.locale IS NULL OR dimensionContent.locale = :locale)'
+                )
+                ->addSelect('dimensionContent')
                 ->where('entity = :id')
                 ->setParameter('id', $id)
-                ->getQuery()
-                ->getSingleResult();
+                ->setParameter('locale', $locale)
+                ->setParameter('stage', DimensionContentInterface::STAGE_LIVE)
+                ->setParameter('version', DimensionContentInterface::CURRENT_VERSION);
+
+            // ContentMerger (TaxonomyMerger) accesses excerpt data during aggregation,
+            // so we must eager-load to avoid lazy-loading queries
+            $queryBuilder
+                ->leftJoin('dimensionContent.excerptTags', 'excerptTag')
+                ->addSelect('excerptTag')
+                ->leftJoin('dimensionContent.excerptCategories', 'excerptCategory')
+                ->addSelect('excerptCategory')
+                ->leftJoin('excerptCategory.translations', 'excerptCategoryTranslation')
+                ->addSelect('excerptCategoryTranslation')
+                ->leftJoin('dimensionContent.excerptAudienceTargetGroups', 'excerptAudienceTargetGroup')
+                ->addSelect('excerptAudienceTargetGroup');
+
+            /** @var ContentRichEntityInterface<T> $contentRichEntity */
+            $contentRichEntity = $queryBuilder->getQuery()->getSingleResult();
         } catch (NoResultException $exception) {
             return null;
         }
@@ -129,6 +152,7 @@ class ContentRouteDefaultsProvider implements RouteDefaultsProviderInterface
                 [
                     'locale' => $locale,
                     'stage' => DimensionContentInterface::STAGE_LIVE,
+                    'version' => DimensionContentInterface::CURRENT_VERSION,
                 ]
             );
 
