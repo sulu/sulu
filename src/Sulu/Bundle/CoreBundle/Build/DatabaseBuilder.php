@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\CoreBundle\Build;
 
 use Doctrine\DBAL\Exception\ConnectionException;
+use Webmozart\Assert\Assert;
 
 /**
  * Builder for initializing the (relational) database.
@@ -31,10 +32,12 @@ class DatabaseBuilder extends SuluBuilder
     public function build()
     {
         $doctrine = $this->container->get('doctrine');
-        $connection = $databaseExists = $doctrine->getConnection();
+        Assert::isInstanceOf($doctrine, \Doctrine\Bundle\DoctrineBundle\Registry::class);
+        $connection = $doctrine->getConnection();
+        Assert::isInstanceOf($connection, \Doctrine\DBAL\Connection::class);
 
         try {
-            $schemaManager = $connection->getSchemaManager();
+            $schemaManager = $connection->createSchemaManager();
             $databaseExists = true;
             $schemaManager->listDatabases();
         } catch (ConnectionException $e) {
@@ -48,10 +51,6 @@ class DatabaseBuilder extends SuluBuilder
                 ]);
             }
             $this->execCommand('Creating the database', 'doctrine:database:create');
-
-            // avoid "Invalid catalog name: 1046 No database selected" by reconnecting
-            $doctrine->getConnection()->close();
-            $doctrine->getConnection()->connect();
 
             $this->execCommand('Creating the schema', 'doctrine:schema:create');
 
