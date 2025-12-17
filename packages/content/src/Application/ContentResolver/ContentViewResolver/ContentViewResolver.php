@@ -117,7 +117,7 @@ class ContentViewResolver implements ContentViewResolverInterface
             if (\count(\array_filter($content, fn ($entry) => $entry instanceof ContentView)) === \count($content)) {
                 /** @var ContentView[] $content */
                 // resolve array of content views
-                $resolvedContentViews = $this->resolveContentViews($content, $depth + 1, $priorityQueue);
+                $resolvedContentViews = $this->resolveContentViews($content, $depth, $priorityQueue);
                 $result['content'][$name] = $resolvedContentViews['content'];
                 $result['view'][$name] = $resolvedContentViews['view'];
                 $result['resolvableResources'] = $this->resolvableResourceQueueProcessor->mergeResolvableResources(
@@ -132,7 +132,7 @@ class ContentViewResolver implements ContentViewResolverInterface
             foreach ($content as $key => $entry) {
                 // resolve array of mixed content
                 if ($entry instanceof ContentView) {
-                    $resolvedContentView = $this->resolveContentView($entry, $key, $depth + 1, $priorityQueue);
+                    $resolvedContentView = $this->resolveContentView($entry, $key, $depth, $priorityQueue);
                     $result['content'][$name] = \array_merge($result['content'][$name] ?? [], $resolvedContentView['content']);
                     $result['view'][$name] = \array_merge($result['view'][$name] ?? [], $resolvedContentView['view']);
                     $resolvableResources = $this->resolvableResourceQueueProcessor->mergeResolvableResources(

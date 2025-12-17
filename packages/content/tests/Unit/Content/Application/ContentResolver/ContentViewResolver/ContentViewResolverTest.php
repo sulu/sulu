@@ -215,4 +215,66 @@ class ContentViewResolverTest extends TestCase
         self::assertArrayHasKey('page', $result['resolvableResources'][1]);
         self::assertSame($resolvableResource1, $result['resolvableResources'][1]['page'][0]['123'][$resolvableResource1->getMetadataIdentifier()]);
     }
+
+    public function testDeeplyNestedContentViewsPreserveDepth(): void
+    {
+        $resolvableResource = new ResolvableResource('snippet-123', 'snippet', 1);
+
+        $level3ContentView = ContentView::create(
+            ['snippet' => $resolvableResource],
+            ['snippet' => 'Snippet Field']
+        );
+        $level2ContentView = ContentView::create([$level3ContentView], []);
+        $level1ContentView = ContentView::create([$level2ContentView], []);
+        $rootContentView = ContentView::create([$level1ContentView], []);
+
+        $priorityQueue = [];
+        $initialDepth = 0;
+        $result = $this->contentViewResolver->resolveContentView($rootContentView, 'blocks', $initialDepth, $priorityQueue);
+
+        $expectedPriority = $resolvableResource->getPriority();
+        $expectedLoaderKey = $resolvableResource->getResourceLoaderKey();
+        $expectedId = $resolvableResource->getId();
+        $expectedMetadataId = $resolvableResource->getMetadataIdentifier();
+
+        self::assertArrayHasKey($expectedPriority, $result['resolvableResources']);
+        self::assertArrayHasKey($expectedLoaderKey, $result['resolvableResources'][$expectedPriority]);
+        self::assertArrayHasKey($initialDepth, $result['resolvableResources'][$expectedPriority][$expectedLoaderKey]);
+        self::assertArrayHasKey($expectedId, $result['resolvableResources'][$expectedPriority][$expectedLoaderKey][$initialDepth]);
+        self::assertSame(
+            $resolvableResource,
+            $result['resolvableResources'][$expectedPriority][$expectedLoaderKey][$initialDepth][$expectedId][$expectedMetadataId]
+        );
+    }
+
+    public function testMixedNestedContentViewsPreserveDepth(): void
+    {
+        $resolvableResource1 = new ResolvableResource('snippet-1', 'snippet', 1);
+        $resolvableResource2 = new ResolvableResource('snippet-2', 'snippet', 1);
+
+        $level2ContentView = ContentView::create(
+            ['snippet' => $resolvableResource2],
+            ['snippet' => 'Snippet Field 2']
+        );
+        $level1ContentView = ContentView::create(
+            [
+                'snippet' => $resolvableResource1,
+                'nested' => $level2ContentView,
+            ],
+            []
+        );
+
+        $priorityQueue = [];
+        $initialDepth = 1;
+        $result = $this->contentViewResolver->resolveContentView($level1ContentView, 'blocks', $initialDepth, $priorityQueue);
+
+        $expectedPriority = $resolvableResource1->getPriority();
+        $expectedLoaderKey = $resolvableResource1->getResourceLoaderKey();
+
+        self::assertArrayHasKey($expectedPriority, $result['resolvableResources']);
+        self::assertArrayHasKey($expectedLoaderKey, $result['resolvableResources'][$expectedPriority]);
+        self::assertArrayHasKey($initialDepth, $result['resolvableResources'][$expectedPriority][$expectedLoaderKey]);
+        self::assertArrayHasKey('snippet-1', $result['resolvableResources'][$expectedPriority][$expectedLoaderKey][$initialDepth]);
+        self::assertArrayHasKey('snippet-2', $result['resolvableResources'][$expectedPriority][$expectedLoaderKey][$initialDepth]);
+    }
 }
