@@ -17887,43 +17887,13 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Util/IndexComparatorInterface.php
 
 		-
-			message: '#^Cannot call method close\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Bundle/CoreBundle/Build/DatabaseBuilder.php
-
-		-
-			message: '#^Cannot call method connect\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Bundle/CoreBundle/Build/DatabaseBuilder.php
-
-		-
 			message: '#^Cannot call method get\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 1
 			path: src/Sulu/Bundle/CoreBundle/Build/DatabaseBuilder.php
 
 		-
-			message: '#^Cannot call method getConnection\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 3
-			path: src/Sulu/Bundle/CoreBundle/Build/DatabaseBuilder.php
-
-		-
 			message: '#^Cannot call method getOption\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Bundle/CoreBundle/Build/DatabaseBuilder.php
-
-		-
-			message: '#^Cannot call method getSchemaManager\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Sulu/Bundle/CoreBundle/Build/DatabaseBuilder.php
-
-		-
-			message: '#^Cannot call method listDatabases\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 1
 			path: src/Sulu/Bundle/CoreBundle/Build/DatabaseBuilder.php
