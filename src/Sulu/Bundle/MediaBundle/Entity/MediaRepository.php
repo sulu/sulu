@@ -15,7 +15,7 @@ use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\Tools\Pagination\Paginator;
-use Sulu\Bundle\SecurityBundle\AccessControl\AccessControlQueryEnhancer;
+use Sulu\Bundle\SecurityBundle\AccessControl\AccessControlQueryEnhancerInterface;
 use Sulu\Component\Media\SystemCollections\SystemCollectionManagerInterface;
 use Sulu\Component\Persistence\Repository\ORM\EntityRepository;
 use Sulu\Component\Security\Authentication\UserInterface;
@@ -25,7 +25,7 @@ use Sulu\Component\Security\Authentication\UserInterface;
  */
 class MediaRepository extends EntityRepository implements MediaRepositoryInterface
 {
-    private AccessControlQueryEnhancer $accessControlQueryEnhancer;
+    private AccessControlQueryEnhancerInterface $accessControlQueryEnhancer;
 
     public function findMediaById($id, $asArray = false)
     {
@@ -444,7 +444,7 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
             ->getArrayResult();
     }
 
-    public function setAccessControlQueryEnhancer(AccessControlQueryEnhancer $accessControlQueryEnhancer)
+    public function setAccessControlQueryEnhancer(AccessControlQueryEnhancerInterface $accessControlQueryEnhancer)
     {
         $this->accessControlQueryEnhancer = $accessControlQueryEnhancer;
     }

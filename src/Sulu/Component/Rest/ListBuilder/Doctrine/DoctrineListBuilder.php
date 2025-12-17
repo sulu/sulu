@@ -13,7 +13,7 @@ namespace Sulu\Component\Rest\ListBuilder\Doctrine;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
-use Sulu\Bundle\SecurityBundle\AccessControl\AccessControlQueryEnhancer;
+use Sulu\Bundle\SecurityBundle\AccessControl\AccessControlQueryEnhancerInterface;
 use Sulu\Component\Rest\ListBuilder\AbstractListBuilder;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineCountFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
@@ -120,7 +120,7 @@ class DoctrineListBuilder extends AbstractListBuilder
         FilterTypeRegistry $filterTypeRegistry,
         private EventDispatcherInterface $eventDispatcher,
         private array $permissions,
-        private AccessControlQueryEnhancer $accessControlQueryEnhancer
+        private AccessControlQueryEnhancerInterface $accessControlQueryEnhancer,
     ) {
         parent::__construct($filterTypeRegistry);
         $this->idField = new DoctrineFieldDescriptor(

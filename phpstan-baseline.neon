@@ -283,12 +283,6 @@ parameters:
 			path: src/Sulu/Bundle/ActivityBundle/Domain/Repository/NullActivityRepository.php
 
 		-
-			message: '#^Call to function method_exists\(\) with Doctrine\\DBAL\\Query\\QueryBuilder and ''executeStatement'' will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: src/Sulu/Bundle/ActivityBundle/Infrastructure/Doctrine/Repository/ActivityRepository.php
-
-		-
 			message: '#^Call to function method_exists\(\) with Doctrine\\ORM\\Id\\AbstractIdGenerator and ''generateId'' will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 1
@@ -6919,12 +6913,6 @@ parameters:
 			path: src/Sulu/Bundle/CategoryBundle/Command/RecoverCommand.php
 
 		-
-			message: '#^Call to function method_exists\(\) with Doctrine\\DBAL\\Statement and ''executeStatement'' will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Command/RecoverCommand.php
-
-		-
 			message: '#^Cannot call method execute\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -6979,12 +6967,6 @@ parameters:
 			path: src/Sulu/Bundle/CategoryBundle/Command/RecoverCommand.php
 
 		-
-			message: '#^If condition is always true\.$#'
-			identifier: if.alwaysTrue
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Command/RecoverCommand.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\CategoryBundle\\Command\\RecoverCommand\:\:findCategoriesWithoutParents\(\) should return int but returns mixed\.$#'
 			identifier: return.type
 			count: 1
@@ -7003,20 +6985,8 @@ parameters:
 			path: src/Sulu/Bundle/CategoryBundle/Command/RecoverCommand.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\CategoryBundle\\Command\\RecoverCommand\:\:fixWrongDepthGap\(\) should return bool\|int but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Command/RecoverCommand.php
-
-		-
 			message: '#^Parameter \#1 \$value of function count expects array\|Countable, mixed given\.$#'
 			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Command/RecoverCommand.php
-
-		-
-			message: '#^Unreachable statement \- code above always terminates\.$#'
-			identifier: deadCode.unreachable
 			count: 1
 			path: src/Sulu/Bundle/CategoryBundle/Command/RecoverCommand.php
 
@@ -11275,12 +11245,6 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Command/AccountRecoverCommand.php
 
 		-
-			message: '#^Call to function method_exists\(\) with Doctrine\\DBAL\\Statement and ''executeStatement'' will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Command/AccountRecoverCommand.php
-
-		-
 			message: '#^Cannot call method execute\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -11335,12 +11299,6 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Command/AccountRecoverCommand.php
 
 		-
-			message: '#^If condition is always true\.$#'
-			identifier: if.alwaysTrue
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Command/AccountRecoverCommand.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\ContactBundle\\Command\\AccountRecoverCommand\:\:findInitialWrongDepthGap\(\) should return int but returns mixed\.$#'
 			identifier: return.type
 			count: 1
@@ -11359,20 +11317,8 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Command/AccountRecoverCommand.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\ContactBundle\\Command\\AccountRecoverCommand\:\:fixWrongDepthGap\(\) should return bool\|int but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Command/AccountRecoverCommand.php
-
-		-
 			message: '#^Parameter \#1 \$value of function count expects array\|Countable, mixed given\.$#'
 			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Command/AccountRecoverCommand.php
-
-		-
-			message: '#^Unreachable statement \- code above always terminates\.$#'
-			identifier: deadCode.unreachable
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Command/AccountRecoverCommand.php
 
@@ -30589,12 +30535,6 @@ parameters:
 			path: src/Sulu/Bundle/TestBundle/Testing/SuluTestCase.php
 
 		-
-			message: '#^Call to function method_exists\(\) with Doctrine\\DBAL\\Connection and ''executeStatement'' will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: src/Sulu/Bundle/TestBundle/Testing/SuluTestCase.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\TestBundle\\Testing\\SuluTestCase\:\:assertHttpStatusCode\(\) has parameter \$response with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -34909,13 +34849,13 @@ parameters:
 			path: src/Sulu/Component/Rest/ListBuilder/Doctrine/DoctrineListBuilder.php
 
 		-
-			message: '#^Parameter \#3 \$permission of method Sulu\\Bundle\\SecurityBundle\\AccessControl\\AccessControlQueryEnhancer\:\:enhance\(\) expects int, mixed given\.$#'
+			message: '#^Parameter \#3 \$permission of method Sulu\\Bundle\\SecurityBundle\\AccessControl\\AccessControlQueryEnhancerInterface\:\:enhance\(\) expects int, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Component/Rest/ListBuilder/Doctrine/DoctrineListBuilder.php
 
 		-
-			message: '#^Parameter \#3 \$permission of method Sulu\\Bundle\\SecurityBundle\\AccessControl\\AccessControlQueryEnhancer\:\:enhanceWithDynamicEntityClass\(\) expects int, mixed given\.$#'
+			message: '#^Parameter \#3 \$permission of method Sulu\\Bundle\\SecurityBundle\\AccessControl\\AccessControlQueryEnhancerInterface\:\:enhanceWithDynamicEntityClass\(\) expects int, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Component/Rest/ListBuilder/Doctrine/DoctrineListBuilder.php

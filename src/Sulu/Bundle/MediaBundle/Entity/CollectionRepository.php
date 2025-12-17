@@ -18,7 +18,7 @@ use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
 use Sulu\Bundle\MediaBundle\Entity\Collection as CollectionEntity;
-use Sulu\Bundle\SecurityBundle\AccessControl\AccessControlQueryEnhancer;
+use Sulu\Bundle\SecurityBundle\AccessControl\AccessControlQueryEnhancerInterface;
 use Sulu\Component\Media\SystemCollections\SystemCollectionManagerInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Security\Authorization\AccessControl\DescendantProviderInterface;
@@ -33,7 +33,7 @@ use Sulu\Component\Security\Authorization\AccessControl\DescendantProviderInterf
  */
 class CollectionRepository extends NestedTreeRepository implements CollectionRepositoryInterface, DescendantProviderInterface
 {
-    private AccessControlQueryEnhancer $accessControlQueryEnhancer;
+    private AccessControlQueryEnhancerInterface $accessControlQueryEnhancer;
 
     public function findCollectionById($id)
     {
@@ -384,7 +384,7 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
         }
     }
 
-    public function setAccessControlQueryEnhancer(AccessControlQueryEnhancer $accessControlQueryEnhancer)
+    public function setAccessControlQueryEnhancer(AccessControlQueryEnhancerInterface $accessControlQueryEnhancer)
     {
         $this->accessControlQueryEnhancer = $accessControlQueryEnhancer;
     }
