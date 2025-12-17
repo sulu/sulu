@@ -21,6 +21,7 @@ use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Content\Application\ContentAggregator\ContentAggregatorInterface;
 use Sulu\Content\Application\ContentResolver\ContentResolverInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
+use Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
@@ -60,12 +61,19 @@ class ArticleTwigExtension extends AbstractExtension
             $locale = $localization->getLocale();
         }
 
-        $article = $this->articleRepository->findOneBy([
-            'uuid' => $uuid,
-            'locale' => $locale,
-            'stage' => DimensionContentInterface::STAGE_LIVE,
-            'version' => DimensionContentInterface::CURRENT_VERSION,
-        ]);
+        $article = $this->articleRepository->findOneBy(
+            [
+                'uuid' => $uuid,
+                'locale' => $locale,
+                'stage' => DimensionContentInterface::STAGE_LIVE,
+                'version' => DimensionContentInterface::CURRENT_VERSION,
+            ],
+            [
+                ArticleRepositoryInterface::SELECT_ARTICLE_CONTENT => [
+                    DimensionContentQueryEnhancer::GROUP_SELECT_CONTENT_WEBSITE => true,
+                ],
+            ]
+        );
 
         if (null === $article) {
             return null;

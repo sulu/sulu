@@ -39,7 +39,7 @@ final class CopyLocalePageMessageHandler
                 PageRepositoryInterface::SELECT_PAGE_CONTENT => [
                     'selects' => [],
                     'dimensionAttributes' => [
-                        'locales' => [$message->getSourceLocale(), $message->getTargetLocale()],
+                        'locale' => [$message->getSourceLocale(), $message->getTargetLocale()],
                         'stage' => DimensionContentInterface::STAGE_DRAFT,
                     ],
                 ],

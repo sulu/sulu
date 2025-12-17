@@ -573,7 +573,7 @@ class PageRepositoryTest extends SuluTestCase
                 PageRepositoryInterface::SELECT_PAGE_CONTENT => [
                     'selects' => [DimensionContentQueryEnhancer::GROUP_SELECT_CONTENT_WEBSITE => true],
                     'dimensionAttributes' => [
-                        'locales' => ['en', 'de'],
+                        'locale' => ['en', 'de'],
                         'stage' => DimensionContentInterface::STAGE_DRAFT,
                     ],
                 ],

@@ -132,9 +132,7 @@ class ContentRouteDefaultsProvider implements RouteDefaultsProviderInterface
                 ->leftJoin('dimensionContent.excerptCategories', 'excerptCategory')
                 ->addSelect('excerptCategory')
                 ->leftJoin('excerptCategory.translations', 'excerptCategoryTranslation')
-                ->addSelect('excerptCategoryTranslation')
-                ->leftJoin('dimensionContent.excerptAudienceTargetGroups', 'excerptAudienceTargetGroup')
-                ->addSelect('excerptAudienceTargetGroup');
+                ->addSelect('excerptCategoryTranslation');
 
             /** @var ContentRichEntityInterface<T> $contentRichEntity */
             $contentRichEntity = $queryBuilder->getQuery()->getSingleResult();

@@ -46,7 +46,7 @@ class RestorePageVersionMessageHandler
                     'dimensionAttributes' => [
                         'locale' => $message->getLocale(),
                         'stage' => $stage,
-                        'versions' => [$message->getVersion(), DimensionContentInterface::CURRENT_VERSION],
+                        'version' => [$message->getVersion(), DimensionContentInterface::CURRENT_VERSION],
                     ],
                 ],
             ]

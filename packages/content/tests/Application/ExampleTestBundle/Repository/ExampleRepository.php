@@ -328,18 +328,27 @@ class ExampleRepository
         }
 
         if ($selects['with-example-content'] ?? null) {
-            /** @var array<string, bool> $contentSelects */
-            $contentSelects = $selects['with-example-content'];
-
+            $contentConfig = $selects['with-example-content'];
             $queryBuilder->leftJoin(
                 'example.dimensionContents',
                 'dimensionContent'
             );
 
+            if (\is_array($contentConfig) && isset($contentConfig['dimensionAttributes'])) {
+                /** @var array<string, bool> $contentSelects */
+                $contentSelects = $contentConfig['selects'] ?? [];
+                /** @var array<string, mixed> $dimensionAttributes */
+                $dimensionAttributes = $contentConfig['dimensionAttributes'];
+            } else {
+                /** @var array<string, bool> $contentSelects */
+                $contentSelects = $contentConfig;
+                $dimensionAttributes = $filters;
+            }
+
             $this->dimensionContentQueryEnhancer->addSelects(
                 $queryBuilder,
                 ExampleDimensionContent::class,
-                $filters,
+                $dimensionAttributes,
                 $contentSelects
             );
         }

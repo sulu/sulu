@@ -400,11 +400,8 @@ class PageRepository implements PageRepositoryInterface
             if (\is_array($contentConfig) && isset($contentConfig['dimensionAttributes'])) {
                 /** @var array<string, bool> $contentSelects */
                 $contentSelects = $contentConfig['selects'] ?? [];
-                /** @var array<string, mixed> $dimensionAttributesConfig */
-                $dimensionAttributesConfig = $contentConfig['dimensionAttributes'];
-                $dimensionAttributes = $this->normalizeDimensionAttributes(
-                    $dimensionAttributesConfig
-                );
+                /** @var array<string, mixed> $dimensionAttributes */
+                $dimensionAttributes = $contentConfig['dimensionAttributes'];
             } else {
                 /** @var array<string, bool> $contentSelects */
                 $contentSelects = $contentConfig;
@@ -464,34 +461,6 @@ class PageRepository implements PageRepositoryInterface
         if (!$hasJoin) {
             $queryBuilder->leftJoin('page.dimensionContents', 'dimensionContent');
         }
-    }
-
-    /**
-     * Normalize dimension attributes for loading multiple values.
-     *
-     * Converts plural keys to arrays:
-     * - 'locales' => ['en', 'de'] becomes 'locale' => ['en', 'de']
-     * - 'versions' => [null, 123] becomes 'version' => [null, 123]
-     * - 'stages' => ['draft', 'live'] becomes 'stage' => ['draft', 'live']
-     *
-     * @param array<string, mixed> $attributes
-     *
-     * @return array<string, mixed>
-     */
-    private function normalizeDimensionAttributes(array $attributes): array
-    {
-        $pluralMap = ['locales' => 'locale', 'versions' => 'version', 'stages' => 'stage'];
-
-        $normalized = [];
-        foreach ($attributes as $key => $value) {
-            if (isset($pluralMap[$key])) {
-                $normalized[$pluralMap[$key]] = (array) $value;
-            } else {
-                $normalized[$key] = $value;
-            }
-        }
-
-        return $normalized;
     }
 
     public function findDescendantIdsById($id): array

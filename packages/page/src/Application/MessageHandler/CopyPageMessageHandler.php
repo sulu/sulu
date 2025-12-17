@@ -50,7 +50,7 @@ final class CopyPageMessageHandler
                 PageRepositoryInterface::SELECT_PAGE_CONTENT => [
                     'selects' => [DimensionContentQueryEnhancer::GROUP_SELECT_CONTENT_WEBSITE => true],
                     'dimensionAttributes' => [
-                        'locales' => $allLocales,
+                        'locale' => $allLocales,
                         'stage' => DimensionContentInterface::STAGE_DRAFT,
                     ],
                 ],
