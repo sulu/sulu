@@ -1,0 +1,89 @@
+{% extends 'views/base.html.twig' %}
+
+{% block content %}
+    <h1>{{ content.title }}</h1>
+
+    {# Root Flat Navigation #}
+    {% if content.showNavigationRootFlat %}
+        {% set navigationRootFlat = sulu_page_navigation_root_flat('main', 2) %}
+        <nav class="navigation-root-flat" data-count="{{ navigationRootFlat|length }}">
+            <ul>
+                {% for item in navigationRootFlat %}
+                    <li><a href="{{ item.url }}">{{ item.title }}</a></li>
+                {% endfor %}
+            </ul>
+        </nav>
+    {% endif %}
+
+    {# Root Tree Navigation #}
+    {% if content.showNavigationRootTree %}
+        {% set navigationRootTree = sulu_page_navigation_root_tree('main', 2) %}
+        <nav class="navigation-root-tree" data-count="{{ navigationRootTree|length }}">
+            <ul>
+                {% for item in navigationRootTree %}
+                    <li>
+                        <a href="{{ item.url }}">{{ item.title }}</a>
+                        {% if item.children is defined and item.children|length > 0 %}
+                            <ul>
+                                {% for child in item.children %}
+                                    <li><a href="{{ child.url }}">{{ child.title }}</a></li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+        </nav>
+    {% endif %}
+
+    {# Flat Navigation by UUID #}
+    {% if content.showNavigationFlat %}
+        {% set navigationFlat = sulu_page_navigation_flat(resource.id, 'main', 2) %}
+        <nav class="navigation-flat" data-count="{{ navigationFlat|length }}">
+            <ul>
+                {% for item in navigationFlat %}
+                    <li><a href="{{ item.url }}">{{ item.title }}</a></li>
+                {% endfor %}
+            </ul>
+        </nav>
+    {% endif %}
+
+    {# Tree Navigation by UUID #}
+    {% if content.showNavigationTree %}
+        {% set navigationTree = sulu_page_navigation_tree(resource.id, 'main', 2) %}
+        <nav class="navigation-tree" data-count="{{ navigationTree|length }}">
+            <ul>
+                {% for item in navigationTree %}
+                    <li>
+                        <a href="{{ item.url }}">{{ item.title }}</a>
+                        {% if item.children is defined and item.children|length > 0 %}
+                            <ul>
+                                {% for child in item.children %}
+                                    <li><a href="{{ child.url }}">{{ child.title }}</a></li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+        </nav>
+    {% endif %}
+
+    {# Breadcrumb #}
+    {% if content.showBreadcrumb %}
+        {% set breadcrumb = sulu_page_breadcrumb(resource.id) %}
+        <nav class="breadcrumb" data-count="{{ breadcrumb|length }}" aria-label="Breadcrumb">
+            <ol>
+                {% for item in breadcrumb %}
+                    <li>
+                        {% if not loop.last %}
+                            <a href="{{ item.url }}">{{ item.title }}</a>
+                        {% else %}
+                            {{ item.title }}
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ol>
+        </nav>
+    {% endif %}
+{% endblock %}

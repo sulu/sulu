@@ -282,18 +282,26 @@ class SnippetRepository implements SnippetRepositoryInterface
 
         // selects
         if ($selects[self::SELECT_SNIPPET_CONTENT] ?? null) {
-            /** @var array<string, bool> $contentSelects */
-            $contentSelects = $selects[self::SELECT_SNIPPET_CONTENT];
-
+            /** @var array{dimensionAttributes?: array<string, mixed>, selects?: array<string, bool>} $contentConfig */
+            $contentConfig = $selects[self::SELECT_SNIPPET_CONTENT];
             $queryBuilder->leftJoin(
                 'snippet.dimensionContents',
                 'dimensionContent'
             );
 
+            if (isset($contentConfig['dimensionAttributes'])) {
+                $contentSelects = $contentConfig['selects'] ?? [];
+                $dimensionAttributes = $contentConfig['dimensionAttributes'];
+            } else {
+                /** @var array<string, bool> $contentSelects */
+                $contentSelects = $contentConfig;
+                $dimensionAttributes = $filters;
+            }
+
             $this->dimensionContentQueryEnhancer->addSelects(
                 $queryBuilder,
                 $this->snippetDimensionContentClassName,
-                $filters,
+                $dimensionAttributes,
                 $contentSelects
             );
         }

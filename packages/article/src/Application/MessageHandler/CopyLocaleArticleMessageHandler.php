@@ -33,7 +33,18 @@ final class CopyLocaleArticleMessageHandler
 
     public function __invoke(CopyLocaleArticleMessage $message): void
     {
-        $article = $this->articleRepository->getOneBy($message->getIdentifier());
+        $article = $this->articleRepository->getOneBy(
+            $message->getIdentifier(),
+            [
+                ArticleRepositoryInterface::SELECT_ARTICLE_CONTENT => [
+                    'selects' => [],
+                    'dimensionAttributes' => [
+                        'locale' => [$message->getSourceLocale(), $message->getTargetLocale()],
+                        'stage' => DimensionContentInterface::STAGE_DRAFT,
+                    ],
+                ],
+            ]
+        );
 
         $this->contentCopier->copy(
             $article,

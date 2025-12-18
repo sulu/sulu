@@ -12,6 +12,8 @@
 namespace Sulu\Page\Application\MessageHandler;
 
 use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
+use Sulu\Content\Domain\Model\DimensionContentInterface;
+use Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer;
 use Sulu\Page\Application\Mapper\PageMapperInterface;
 use Sulu\Page\Application\Message\ModifyPageMessage;
 use Sulu\Page\Domain\Event\PageModifiedEvent;
@@ -41,7 +43,22 @@ final class ModifyPageMessageHandler
         $data = $message->getData();
         /** @var string $locale */
         $locale = $data['locale'];
-        $page = $this->pageRepository->getOneBy($identifier);
+
+        $page = $this->pageRepository->getOneBy(
+            [
+                ...$identifier,
+                'locale' => $locale,
+            ],
+            [
+                PageRepositoryInterface::SELECT_PAGE_CONTENT => [
+                    'selects' => [DimensionContentQueryEnhancer::GROUP_SELECT_CONTENT_ADMIN => true],
+                    'dimensionAttributes' => [
+                        'locale' => $locale,
+                        'stage' => [DimensionContentInterface::STAGE_DRAFT, DimensionContentInterface::STAGE_LIVE],
+                    ],
+                ],
+            ]
+        );
 
         foreach ($this->pageMappers as $pageMapper) {
             $pageMapper->mapPageData($page, $data);

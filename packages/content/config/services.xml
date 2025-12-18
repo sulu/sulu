@@ -78,15 +78,6 @@
 
         <service id="Sulu\Content\Application\ContentMetadataInspector\ContentMetadataInspectorInterface" alias="sulu_content.content_metadata_inspector"/>
 
-        <!-- Content Dimension Loader -->
-        <service id="sulu_content.dimension_content_repository" class="Sulu\Content\Infrastructure\Doctrine\DimensionContentRepository">
-            <argument type="service" id="doctrine.orm.entity_manager"/>
-            <argument type="service" id="sulu_content.content_metadata_inspector"/>
-            <argument type="service" id="sulu_content.dimension_content_query_enhancer"/>
-        </service>
-
-        <service id="Sulu\Content\Domain\Repository\DimensionContentRepositoryInterface" alias="sulu_content.dimension_content_repository"/>
-
         <service id="sulu_content.dimension_content_query_enhancer" class="Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer"/>
 
         <service id="Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer" alias="sulu_content.dimension_content_query_enhancer"/>
@@ -97,6 +88,7 @@
             <argument type="service" id="sulu_content.content_aggregator"/>
             <argument type="service" id="sulu_admin.metadata_provider_registry"/>
             <argument type="service" id="sulu_http_cache.cache_lifetime.resolver"/>
+            <argument type="expression">container.hasParameter('sulu_audience_targeting.enabled')</argument>
 
             <tag name="sulu_route.route_defaults_provider" resource-key="examples"/>
             <tag name="sulu_route.route_defaults_provider" resource-key="pages"/>
@@ -112,8 +104,8 @@
 
         <!-- Content Aggregator -->
         <service id="sulu_content.content_aggregator" class="Sulu\Content\Application\ContentAggregator\ContentAggregator">
-            <argument type="service" id="sulu_content.dimension_content_repository"/>
             <argument type="service" id="sulu_content.content_merger"/>
+            <argument>%kernel.debug%</argument>
         </service>
         <service id="Sulu\Content\Application\ContentAggregator\ContentAggregatorInterface" alias="sulu_content.content_aggregator"/>
 
@@ -136,10 +128,11 @@
 
         <!-- Content Workflow -->
         <service id="sulu_content.content_workflow" class="Sulu\Content\Application\ContentWorkflow\ContentWorkflow">
-            <argument type="service" id="sulu_content.dimension_content_repository"/>
+            <argument type="service" id="sulu_content.content_metadata_inspector"/>
             <argument type="service" id="sulu_content.content_merger"/>
             <argument type="service" id="workflow.registry" on-invalid="null"/>
             <argument type="service" id="event_dispatcher"/>
+            <argument>%kernel.debug%</argument>
         </service>
 
         <service id="Sulu\Content\Application\ContentWorkflow\ContentWorkflowInterface" alias="sulu_content.content_workflow" />
@@ -157,7 +150,7 @@
         </service>
 
         <service id="sulu_content.unpublish_transition_subscriber" class="Sulu\Content\Application\ContentWorkflow\Subscriber\UnpublishTransitionSubscriber">
-            <argument type="service" id="sulu_content.dimension_content_repository"/>
+            <argument type="service" id="sulu_content.content_metadata_inspector"/>
             <argument type="service" id="doctrine.orm.entity_manager"/>
 
             <tag name="kernel.event_subscriber"/>

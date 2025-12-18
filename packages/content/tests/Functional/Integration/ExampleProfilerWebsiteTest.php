@@ -123,18 +123,12 @@ class ExampleProfilerWebsiteTest extends SuluTestCase
             [
                 // Route lookup for the requested page
                 'ro_routes',
-                // Load start example entity
-                'test_examples',
-                // Load start example dimension content with tags and categories
-                'test_example_dimension_contents.test_example_dimension_content_excerpt_tags.ta_tags.test_example_dimension_content_excerpt_categories.ca_categories',
-                // Load inner example entity
-                'test_examples',
-                // Load inner example dimension content with tags and categories
-                'test_example_dimension_contents.test_example_dimension_content_excerpt_tags.ta_tags.test_example_dimension_content_excerpt_categories.ca_categories',
-                // Load inner-inner example entity
-                'test_examples',
-                // Load inner-inner example dimension content with tags and categories
-                'test_example_dimension_contents.test_example_dimension_content_excerpt_tags.ta_tags.test_example_dimension_content_excerpt_categories.ca_categories',
+                // Load start example entity with dimension content, tags, and categories (eager loaded)
+                'test_examples.test_example_dimension_contents.test_example_dimension_content_excerpt_tags.ta_tags.test_example_dimension_content_excerpt_categories.ca_categories.ca_category_translations',
+                // Load inner example entity with dimension content, tags, and categories (eager loaded)
+                'test_examples.test_example_dimension_contents.test_example_dimension_contents.test_example_dimension_content_excerpt_tags.ta_tags.test_example_dimension_content_excerpt_categories.ca_categories.ca_category_translations',
+                // Load inner-inner example entity with dimension content, tags, and categories (eager loaded)
+                'test_examples.test_example_dimension_contents.test_example_dimension_contents.test_example_dimension_content_excerpt_tags.ta_tags.test_example_dimension_content_excerpt_categories.ca_categories.ca_category_translations',
                 // Batch load all media references (once for all 3 examples)
                 'me_media.me_collections.me_files.me_file_versions.me_file_version_tags.ta_tags.me_file_version_meta.me_file_version_meta.se_users.co_contacts.se_users.co_contacts',
                 // Route resolution for locale switcher

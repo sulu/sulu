@@ -21,6 +21,7 @@ services:
             - '@sulu_core.doctrine_rest_helper'
             - '@sulu_content.content_manager'
             - '@doctrine.orm.entity_manager'
+            - '@example_test.example_repository'
         tags:
             - { name: sulu.context, context: admin }
 

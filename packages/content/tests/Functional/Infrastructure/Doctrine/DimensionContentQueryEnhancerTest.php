@@ -453,6 +453,9 @@ class DimensionContentQueryEnhancerTest extends SuluTestCase
                 ],
                 [
                     'title' => 'asc',
+                ],
+                [
+                    ExampleRepository::SELECT_EXAMPLE_CONTENT => true,
                 ]
             )
         );
@@ -469,6 +472,9 @@ class DimensionContentQueryEnhancerTest extends SuluTestCase
                 ],
                 [
                     'title' => 'desc',
+                ],
+                [
+                    ExampleRepository::SELECT_EXAMPLE_CONTENT => true,
                 ]
             )
         );
@@ -499,6 +505,9 @@ class DimensionContentQueryEnhancerTest extends SuluTestCase
                 ],
                 [
                     'authored' => 'desc',
+                ],
+                [
+                    ExampleRepository::SELECT_EXAMPLE_CONTENT => true,
                 ]
             )
         );
@@ -521,6 +530,9 @@ class DimensionContentQueryEnhancerTest extends SuluTestCase
                 ],
                 [
                     'authored' => 'asc',
+                ],
+                [
+                    ExampleRepository::SELECT_EXAMPLE_CONTENT => true,
                 ]
             )
         );
@@ -557,6 +569,9 @@ class DimensionContentQueryEnhancerTest extends SuluTestCase
                 ],
                 [
                     'workflowPublished' => 'desc',
+                ],
+                [
+                    ExampleRepository::SELECT_EXAMPLE_CONTENT => true,
                 ]
             )
         );
@@ -579,6 +594,9 @@ class DimensionContentQueryEnhancerTest extends SuluTestCase
                 ],
                 [
                     'workflowPublished' => 'asc',
+                ],
+                [
+                    ExampleRepository::SELECT_EXAMPLE_CONTENT => true,
                 ]
             )
         );

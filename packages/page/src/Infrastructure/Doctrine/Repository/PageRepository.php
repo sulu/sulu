@@ -394,14 +394,23 @@ class PageRepository implements PageRepositoryInterface
 
         // selects
         if ($selects[self::SELECT_PAGE_CONTENT] ?? null) {
-            /** @var array<string, bool> $contentSelects */
-            $contentSelects = $selects[self::SELECT_PAGE_CONTENT];
+            /** @var array{dimensionAttributes?: array<string, mixed>, selects?: array<string, bool>} $contentConfig */
+            $contentConfig = $selects[self::SELECT_PAGE_CONTENT];
             $this->leftJoinDimensionContent($queryBuilder);
+
+            if (isset($contentConfig['dimensionAttributes'])) {
+                $contentSelects = $contentConfig['selects'] ?? [];
+                $dimensionAttributes = $contentConfig['dimensionAttributes'];
+            } else {
+                /** @var array<string, bool> $contentSelects */
+                $contentSelects = $contentConfig;
+                $dimensionAttributes = $filters;
+            }
 
             $this->dimensionContentQueryEnhancer->addSelects(
                 $queryBuilder,
                 $this->pageDimensionContentClassName,
-                $filters,
+                $dimensionAttributes,
                 $contentSelects
             );
         }

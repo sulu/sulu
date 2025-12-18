@@ -18,6 +18,7 @@ use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Content\Application\ContentAggregator\ContentAggregatorInterface;
 use Sulu\Content\Application\ContentResolver\ContentResolverInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
+use Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer;
 use Sulu\Page\Domain\Model\PageDimensionContentInterface;
 use Sulu\Page\Domain\Model\PageInterface;
 use Sulu\Page\Domain\Repository\PageRepositoryInterface;
@@ -60,9 +61,19 @@ class PageTwigExtension extends AbstractExtension
             $locale = $localization->getLocale();
         }
 
-        $page = $this->pageRepository->findOneBy([
-            'uuid' => $uuid,
-        ]);
+        $page = $this->pageRepository->findOneBy(
+            [
+                'uuid' => $uuid,
+                'locale' => $locale,
+                'stage' => DimensionContentInterface::STAGE_LIVE,
+                'version' => DimensionContentInterface::CURRENT_VERSION,
+            ],
+            [
+                PageRepositoryInterface::SELECT_PAGE_CONTENT => [
+                    DimensionContentQueryEnhancer::GROUP_SELECT_CONTENT_WEBSITE => true,
+                ],
+            ]
+        );
 
         if (null === $page) {
             return null;

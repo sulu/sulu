@@ -21,6 +21,7 @@ use Sulu\Bundle\MarkupBundle\Markup\Link\LinkItem;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkProviderInterface;
 use Sulu\Content\Application\ContentManager\ContentManagerInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
+use Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -54,11 +55,21 @@ final class ArticleLinkProvider implements LinkProviderInterface
         $dimensionAttributes = [
             'locale' => $locale,
             'stage' => $published ? DimensionContentInterface::STAGE_LIVE : DimensionContentInterface::STAGE_DRAFT,
+            'version' => DimensionContentInterface::CURRENT_VERSION,
         ];
 
         $articles = $this->articleRepository->findBy(
-            filters: [...$dimensionAttributes, 'uuids' => $hrefs],
-            selects: [ArticleRepositoryInterface::GROUP_SELECT_ARTICLE_WEBSITE => true]
+            filters: [
+                'uuids' => $hrefs,
+                'locale' => $locale,
+                'stage' => $dimensionAttributes['stage'],
+                'version' => DimensionContentInterface::CURRENT_VERSION,
+            ],
+            selects: [
+                ArticleRepositoryInterface::SELECT_ARTICLE_CONTENT => [
+                    DimensionContentQueryEnhancer::GROUP_SELECT_CONTENT_WEBSITE => true,
+                ],
+            ]
         );
 
         $result = [];

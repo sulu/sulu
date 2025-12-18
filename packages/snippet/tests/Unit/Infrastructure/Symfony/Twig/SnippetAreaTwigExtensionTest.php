@@ -31,6 +31,7 @@ use Sulu\Snippet\Domain\Model\SnippetArea;
 use Sulu\Snippet\Domain\Model\SnippetDimensionContent;
 use Sulu\Snippet\Domain\Model\SnippetInterface;
 use Sulu\Snippet\Domain\Repository\SnippetAreaRepositoryInterface;
+use Sulu\Snippet\Domain\Repository\SnippetRepositoryInterface;
 use Sulu\Snippet\Infrastructure\Symfony\Twig\SnippetAreaTwigExtension;
 
 class SnippetAreaTwigExtensionTest extends TestCase
@@ -41,6 +42,9 @@ class SnippetAreaTwigExtensionTest extends TestCase
 
     /** @var ObjectProphecy<SnippetAreaRepositoryInterface> */
     private ObjectProphecy $snippetAreaRepository;
+
+    /** @var ObjectProphecy<SnippetRepositoryInterface> */
+    private ObjectProphecy $snippetRepository;
 
     /** @var ObjectProphecy<ContentAggregatorInterface> */
     private ObjectProphecy $contentAggregator;
@@ -56,6 +60,7 @@ class SnippetAreaTwigExtensionTest extends TestCase
     protected function setUp(): void
     {
         $this->snippetAreaRepository = $this->prophesize(SnippetAreaRepositoryInterface::class);
+        $this->snippetRepository = $this->prophesize(SnippetRepositoryInterface::class);
         $this->contentAggregator = $this->prophesize(ContentAggregatorInterface::class);
         $this->requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
         $this->contentResolver = $this->prophesize(ContentResolverInterface::class);
@@ -63,6 +68,7 @@ class SnippetAreaTwigExtensionTest extends TestCase
 
         $this->extension = new SnippetAreaTwigExtension(
             $this->snippetAreaRepository->reveal(),
+            $this->snippetRepository->reveal(),
             $this->contentAggregator->reveal(),
             $this->requestAnalyzer->reveal(),
             $this->referenceStore,
@@ -102,6 +108,16 @@ class SnippetAreaTwigExtensionTest extends TestCase
             'webspaceKey' => $webspaceKey,
             'areaKey' => $areaKey,
         ])->willReturn($snippetArea);
+
+        $this->snippetRepository->findOneBy(
+            [
+                'uuid' => 'test-snippet-uuid',
+                'locale' => $locale,
+                'stage' => DimensionContentInterface::STAGE_LIVE,
+                'version' => DimensionContentInterface::CURRENT_VERSION,
+            ],
+            Argument::any()
+        )->willReturn($snippet);
 
         $this->contentAggregator->aggregate(
             $snippet,
@@ -156,6 +172,16 @@ class SnippetAreaTwigExtensionTest extends TestCase
             'webspaceKey' => $webspaceKey,
             'areaKey' => $areaKey,
         ])->willReturn($snippetArea);
+
+        $this->snippetRepository->findOneBy(
+            [
+                'uuid' => 'footer-snippet-uuid',
+                'locale' => $locale,
+                'stage' => DimensionContentInterface::STAGE_LIVE,
+                'version' => DimensionContentInterface::CURRENT_VERSION,
+            ],
+            Argument::any()
+        )->willReturn($snippet);
 
         $this->contentAggregator->aggregate(
             $snippet,
@@ -278,6 +304,16 @@ class SnippetAreaTwigExtensionTest extends TestCase
             'webspaceKey' => $webspaceKey,
             'areaKey' => $areaKey,
         ])->willReturn($snippetArea);
+
+        $this->snippetRepository->findOneBy(
+            [
+                'uuid' => 'test-snippet-uuid',
+                'locale' => $locale,
+                'stage' => DimensionContentInterface::STAGE_LIVE,
+                'version' => DimensionContentInterface::CURRENT_VERSION,
+            ],
+            Argument::any()
+        )->willReturn($snippet);
 
         $this->contentAggregator->aggregate(
             $snippet,

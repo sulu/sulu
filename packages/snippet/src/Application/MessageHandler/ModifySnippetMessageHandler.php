@@ -12,6 +12,8 @@
 namespace Sulu\Snippet\Application\MessageHandler;
 
 use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
+use Sulu\Content\Domain\Model\DimensionContentInterface;
+use Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer;
 use Sulu\Snippet\Application\Mapper\SnippetMapperInterface;
 use Sulu\Snippet\Application\Message\ModifySnippetMessage;
 use Sulu\Snippet\Domain\Event\SnippetModifiedEvent;
@@ -36,14 +38,28 @@ final class ModifySnippetMessageHandler
     {
         $identifier = $message->getIdentifier();
         $data = $message->getData();
-        $snippet = $this->snippetRepository->getOneBy($identifier);
+        /** @var string $locale */
+        $locale = $data['locale'];
+
+        $snippet = $this->snippetRepository->getOneBy(
+            [
+                ...$identifier,
+                'locale' => $locale,
+            ],
+            [
+                SnippetRepositoryInterface::SELECT_SNIPPET_CONTENT => [
+                    'selects' => [DimensionContentQueryEnhancer::GROUP_SELECT_CONTENT_ADMIN => true],
+                    'dimensionAttributes' => [
+                        'locale' => $locale,
+                        'stage' => [DimensionContentInterface::STAGE_DRAFT, DimensionContentInterface::STAGE_LIVE],
+                    ],
+                ],
+            ]
+        );
 
         foreach ($this->snippetMappers as $snippetMapper) {
             $snippetMapper->mapSnippetData($snippet, $data);
         }
-
-        /** @var string $locale */
-        $locale = $data['locale'];
 
         $this->domainEventCollector->collect(new SnippetModifiedEvent($snippet, $locale, $data));
 

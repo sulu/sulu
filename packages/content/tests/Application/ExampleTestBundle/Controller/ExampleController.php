@@ -29,6 +29,7 @@ use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Domain\Model\WorkflowInterface;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\Example;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\ExampleDimensionContent;
+use Sulu\Content\Tests\Application\ExampleTestBundle\Repository\ExampleRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -61,6 +62,11 @@ class ExampleController extends AbstractRestController
      */
     private $entityManager;
 
+    /**
+     * @var ExampleRepository
+     */
+    private $exampleRepository;
+
     public function __construct(
         ViewHandlerInterface $viewHandler,
         TokenStorageInterface $tokenStorage,
@@ -68,13 +74,15 @@ class ExampleController extends AbstractRestController
         DoctrineListBuilderFactoryInterface $listBuilderFactory,
         RestHelperInterface $restHelper,
         ContentManagerInterface $contentManager,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
+        ExampleRepository $exampleRepository
     ) {
         $this->fieldDescriptorFactory = $fieldDescriptorFactory;
         $this->listBuilderFactory = $listBuilderFactory;
         $this->restHelper = $restHelper;
         $this->contentManager = $contentManager;
         $this->entityManager = $entityManager;
+        $this->exampleRepository = $exampleRepository;
 
         parent::__construct($viewHandler, $tokenStorage);
     }
@@ -135,14 +143,17 @@ class ExampleController extends AbstractRestController
      */
     public function getAction(Request $request, int $id): Response
     {
-        /** @var Example|null $example */
-        $example = $this->entityManager->getRepository(Example::class)->findOneBy(['id' => $id]);
+        $dimensionAttributes = $this->getDimensionAttributes($request);
+
+        $example = $this->exampleRepository->findOneBy(
+            ['id' => $id],
+            [ExampleRepository::SELECT_EXAMPLE_CONTENT => ['dimensionAttributes' => $dimensionAttributes]]
+        );
 
         if (!$example) {
             throw new NotFoundHttpException();
         }
 
-        $dimensionAttributes = $this->getDimensionAttributes($request);
         $dimensionContent = $this->contentManager->resolve($example, $dimensionAttributes);
 
         return $this->handleView($this->view($this->normalize($example, $dimensionContent)));
@@ -156,7 +167,7 @@ class ExampleController extends AbstractRestController
         $example = new Example();
 
         $data = $this->getData($request);
-        $dimensionAttributes = $this->getDimensionAttributes($request); // ["locale" => "en", "stage" => "draft"]
+        $dimensionAttributes = $this->getDimensionAttributes($request);
 
         $dimensionContent = $this->contentManager->persist($example, $data, $dimensionAttributes);
 
@@ -181,15 +192,25 @@ class ExampleController extends AbstractRestController
      */
     public function postTriggerAction(string $id, Request $request): Response
     {
-        /** @var Example|null $example */
-        $example = $this->entityManager->getRepository(Example::class)->findOneBy(['id' => $id]);
+        $dimensionAttributes = $this->getDimensionAttributes($request);
+        $action = $request->query->get('action');
+
+        // For workflow operations that copy/modify across locales or versions, load ALL dimension contents
+        if (\in_array($action, ['copy_locale', 'restore', 'unpublish', 'remove_draft'], true)) {
+            $example = $this->exampleRepository->findOneBy(
+                ['id' => (int) $id],
+                [ExampleRepository::SELECT_EXAMPLE_CONTENT => true]
+            );
+        } else {
+            $example = $this->exampleRepository->findOneBy(
+                ['id' => (int) $id],
+                [ExampleRepository::SELECT_EXAMPLE_CONTENT => ['dimensionAttributes' => $dimensionAttributes]]
+            );
+        }
 
         if (!$example) {
             throw new NotFoundHttpException();
         }
-
-        $dimensionAttributes = $this->getDimensionAttributes($request); // ["locale" => "en", "stage" => "draft"]
-        $action = $request->query->get('action');
 
         switch ($action) {
             case 'copy_locale':
@@ -262,15 +283,25 @@ class ExampleController extends AbstractRestController
      */
     public function putAction(Request $request, int $id): Response
     {
-        /** @var Example|null $example */
-        $example = $this->entityManager->getRepository(Example::class)->findOneBy(['id' => $id]);
+        $data = $this->getData($request);
+        $dimensionAttributes = $this->getDimensionAttributes($request);
+
+        // Load all dimension contents when publishing (workflow needs access to all locales/stages)
+        if ('publish' === $request->query->get('action')) {
+            $example = $this->exampleRepository->findOneBy(
+                ['id' => $id],
+                [ExampleRepository::SELECT_EXAMPLE_CONTENT => true]
+            );
+        } else {
+            $example = $this->exampleRepository->findOneBy(
+                ['id' => $id],
+                [ExampleRepository::SELECT_EXAMPLE_CONTENT => ['dimensionAttributes' => $dimensionAttributes]]
+            );
+        }
 
         if (!$example) {
             throw new NotFoundHttpException();
         }
-
-        $data = $this->getData($request);
-        $dimensionAttributes = $this->getDimensionAttributes($request); // ["locale" => "en", "stage" => "draft"]
 
         /** @var ExampleDimensionContent $dimensionContent */
         $dimensionContent = $this->contentManager->persist($example, $data, $dimensionAttributes);

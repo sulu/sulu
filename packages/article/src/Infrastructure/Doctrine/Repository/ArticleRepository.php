@@ -282,18 +282,26 @@ class ArticleRepository implements ArticleRepositoryInterface
 
         // selects
         if ($selects[self::SELECT_ARTICLE_CONTENT] ?? null) {
-            /** @var array<string, bool> $contentSelects */
-            $contentSelects = $selects[self::SELECT_ARTICLE_CONTENT];
-
+            /** @var array{dimensionAttributes?: array<string, mixed>, selects?: array<string, bool>} $contentConfig */
+            $contentConfig = $selects[self::SELECT_ARTICLE_CONTENT];
             $queryBuilder->leftJoin(
                 'article.dimensionContents',
                 'dimensionContent',
             );
 
+            if (isset($contentConfig['dimensionAttributes'])) {
+                $contentSelects = $contentConfig['selects'] ?? [];
+                $dimensionAttributes = $contentConfig['dimensionAttributes'];
+            } else {
+                /** @var array<string, bool> $contentSelects */
+                $contentSelects = $contentConfig;
+                $dimensionAttributes = $filters;
+            }
+
             $this->dimensionContentQueryEnhancer->addSelects(
                 $queryBuilder,
                 $this->articleDimensionContentClassName,
-                $filters,
+                $dimensionAttributes,
                 $contentSelects,
             );
         }

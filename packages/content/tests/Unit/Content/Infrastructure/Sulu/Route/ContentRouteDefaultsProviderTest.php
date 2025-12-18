@@ -104,14 +104,16 @@ class ContentRouteDefaultsProviderTest extends TestCase
         $this->entityManager->createQueryBuilder()->willReturn($queryBuilder->reveal());
         $queryBuilder->select('entity')->willReturn($queryBuilder->reveal());
         $queryBuilder->from(Example::class, 'entity')->willReturn($queryBuilder->reveal());
+        $queryBuilder->leftJoin(Argument::cetera())->willReturn($queryBuilder->reveal());
+        $queryBuilder->addSelect(Argument::cetera())->willReturn($queryBuilder->reveal());
         $queryBuilder->where('entity = :id')->willReturn($queryBuilder->reveal());
-        $queryBuilder->setParameter('id', '123-123-123')->willReturn($queryBuilder->reveal());
+        $queryBuilder->setParameter(Argument::cetera())->willReturn($queryBuilder->reveal());
         $queryBuilder->getQuery()->willReturn($query);
         $query->getSingleResult()->willReturn($contentRichEntity->reveal());
 
         $this->contentAggregator->aggregate(
             $contentRichEntity->reveal(),
-            ['locale' => 'en', 'stage' => 'live']
+            ['locale' => 'en', 'stage' => 'live', 'version' => 0]
         )->willReturn($resolvedDimensionContent->reveal());
 
         $route = new Route(
@@ -144,14 +146,16 @@ class ContentRouteDefaultsProviderTest extends TestCase
         $this->entityManager->createQueryBuilder()->willReturn($queryBuilder->reveal());
         $queryBuilder->select('entity')->willReturn($queryBuilder->reveal());
         $queryBuilder->from(Example::class, 'entity')->willReturn($queryBuilder->reveal());
+        $queryBuilder->leftJoin(Argument::cetera())->willReturn($queryBuilder->reveal());
+        $queryBuilder->addSelect(Argument::cetera())->willReturn($queryBuilder->reveal());
         $queryBuilder->where('entity = :id')->willReturn($queryBuilder->reveal());
-        $queryBuilder->setParameter('id', '123-123-123')->willReturn($queryBuilder->reveal());
+        $queryBuilder->setParameter(Argument::cetera())->willReturn($queryBuilder->reveal());
         $queryBuilder->getQuery()->willReturn($query);
         $query->getSingleResult()->willReturn($contentRichEntity->reveal());
 
         $this->contentAggregator->aggregate(
             $contentRichEntity->reveal(),
-            ['locale' => 'en', 'stage' => 'live']
+            ['locale' => 'en', 'stage' => 'live', 'version' => 0]
         )->willReturn($dimensionContent->reveal());
 
         $route = new Route(
@@ -178,12 +182,14 @@ class ContentRouteDefaultsProviderTest extends TestCase
         $this->entityManager->createQueryBuilder()->willReturn($queryBuilder->reveal());
         $queryBuilder->select('entity')->willReturn($queryBuilder->reveal());
         $queryBuilder->from(Example::class, 'entity')->willReturn($queryBuilder->reveal());
+        $queryBuilder->leftJoin(Argument::cetera())->willReturn($queryBuilder->reveal());
+        $queryBuilder->addSelect(Argument::cetera())->willReturn($queryBuilder->reveal());
         $queryBuilder->where('entity = :id')->willReturn($queryBuilder->reveal());
-        $queryBuilder->setParameter('id', '123-123-123')->willReturn($queryBuilder->reveal());
+        $queryBuilder->setParameter(Argument::cetera())->willReturn($queryBuilder->reveal());
         $queryBuilder->getQuery()->willReturn($query);
         $query->getSingleResult()->willReturn($contentRichEntity);
 
-        $this->contentAggregator->aggregate($contentRichEntity, ['locale' => 'en', 'stage' => 'live'])
+        $this->contentAggregator->aggregate($contentRichEntity, ['locale' => 'en', 'stage' => 'live', 'version' => 0])
             ->willReturn($resolvedDimensionContent);
 
         $this->prepareTemplateMetadata(
@@ -225,12 +231,14 @@ class ContentRouteDefaultsProviderTest extends TestCase
         $this->entityManager->createQueryBuilder()->willReturn($queryBuilder->reveal());
         $queryBuilder->select('entity')->willReturn($queryBuilder->reveal());
         $queryBuilder->from(Example::class, 'entity')->willReturn($queryBuilder->reveal());
+        $queryBuilder->leftJoin(Argument::cetera())->willReturn($queryBuilder->reveal());
+        $queryBuilder->addSelect(Argument::cetera())->willReturn($queryBuilder->reveal());
         $queryBuilder->where('entity = :id')->willReturn($queryBuilder->reveal());
-        $queryBuilder->setParameter('id', '123-123-123')->willReturn($queryBuilder->reveal());
+        $queryBuilder->setParameter(Argument::cetera())->willReturn($queryBuilder->reveal());
         $queryBuilder->getQuery()->willReturn($query);
         $query->getSingleResult()->willReturn($contentRichEntity);
 
-        $this->contentAggregator->aggregate($contentRichEntity, ['locale' => 'en', 'stage' => 'live'])
+        $this->contentAggregator->aggregate($contentRichEntity, ['locale' => 'en', 'stage' => 'live', 'version' => 0])
             ->willReturn($resolvedDimensionContent);
 
         $route = new Route(
@@ -256,12 +264,14 @@ class ContentRouteDefaultsProviderTest extends TestCase
         $this->entityManager->createQueryBuilder()->willReturn($queryBuilder->reveal());
         $queryBuilder->select('entity')->willReturn($queryBuilder->reveal());
         $queryBuilder->from(Example::class, 'entity')->willReturn($queryBuilder->reveal());
+        $queryBuilder->leftJoin(Argument::cetera())->willReturn($queryBuilder->reveal());
+        $queryBuilder->addSelect(Argument::cetera())->willReturn($queryBuilder->reveal());
         $queryBuilder->where('entity = :id')->willReturn($queryBuilder->reveal());
-        $queryBuilder->setParameter('id', '123-123-123')->willReturn($queryBuilder->reveal());
+        $queryBuilder->setParameter(Argument::cetera())->willReturn($queryBuilder->reveal());
         $queryBuilder->getQuery()->willReturn($query);
         $query->getSingleResult()->willReturn($contentRichEntity);
 
-        $this->contentAggregator->aggregate($contentRichEntity, ['locale' => 'en', 'stage' => 'live'])
+        $this->contentAggregator->aggregate($contentRichEntity, ['locale' => 'en', 'stage' => 'live', 'version' => 0])
             ->will(function(array $arguments) {
                 $entity = $arguments[0] ?? null;
                 $attributes = $arguments[1] ?? null;
@@ -297,12 +307,14 @@ class ContentRouteDefaultsProviderTest extends TestCase
         $this->entityManager->createQueryBuilder()->willReturn($queryBuilder->reveal());
         $queryBuilder->select('entity')->willReturn($queryBuilder->reveal());
         $queryBuilder->from(Example::class, 'entity')->willReturn($queryBuilder->reveal());
+        $queryBuilder->leftJoin(Argument::cetera())->willReturn($queryBuilder->reveal());
+        $queryBuilder->addSelect(Argument::cetera())->willReturn($queryBuilder->reveal());
         $queryBuilder->where('entity = :id')->willReturn($queryBuilder->reveal());
-        $queryBuilder->setParameter('id', '123-123-123')->willReturn($queryBuilder->reveal());
+        $queryBuilder->setParameter(Argument::cetera())->willReturn($queryBuilder->reveal());
         $queryBuilder->getQuery()->willReturn($query);
         $query->getSingleResult()->willReturn($contentRichEntity);
 
-        $this->contentAggregator->aggregate($contentRichEntity, ['locale' => 'en', 'stage' => 'live'])
+        $this->contentAggregator->aggregate($contentRichEntity, ['locale' => 'en', 'stage' => 'live', 'version' => 0])
             ->willReturn($resolvedDimensionContent);
 
         $this->formMetadataProvider->getMetadata(Argument::cetera())
@@ -335,12 +347,14 @@ class ContentRouteDefaultsProviderTest extends TestCase
         $this->entityManager->createQueryBuilder()->willReturn($queryBuilder->reveal());
         $queryBuilder->select('entity')->willReturn($queryBuilder->reveal());
         $queryBuilder->from(Example::class, 'entity')->willReturn($queryBuilder->reveal());
+        $queryBuilder->leftJoin(Argument::cetera())->willReturn($queryBuilder->reveal());
+        $queryBuilder->addSelect(Argument::cetera())->willReturn($queryBuilder->reveal());
         $queryBuilder->where('entity = :id')->willReturn($queryBuilder->reveal());
-        $queryBuilder->setParameter('id', '123-123-123')->willReturn($queryBuilder->reveal());
+        $queryBuilder->setParameter(Argument::cetera())->willReturn($queryBuilder->reveal());
         $queryBuilder->getQuery()->willReturn($query);
         $query->getSingleResult()->willReturn($contentRichEntity);
 
-        $this->contentAggregator->aggregate($contentRichEntity, ['locale' => 'en', 'stage' => 'live'])
+        $this->contentAggregator->aggregate($contentRichEntity, ['locale' => 'en', 'stage' => 'live', 'version' => 0])
             ->willReturn($resolvedDimensionContent);
 
         $route = new Route(

@@ -1,0 +1,60 @@
+<?xml version="1.0" ?>
+<template xmlns="http://schemas.sulu.io/template/template"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/template-1.0.xsd">
+
+    <key>navigation-test</key>
+
+    <view>views/pages/navigation-test</view>
+    <controller>Sulu\Content\UserInterface\Controller\Website\ContentController::indexAction</controller>
+    <cacheLifetime>2400</cacheLifetime>
+
+    <properties>
+        <property name="title" type="text_line" mandatory="true">
+            <meta>
+                <title lang="en">Title</title>
+            </meta>
+            <params>
+                <param name="headline" value="true"/>
+            </params>
+            <tag name="sulu.rlp.part"/>
+        </property>
+
+        <property name="url" type="route">
+            <meta>
+                <title lang="en">URL</title>
+            </meta>
+            <tag name="sulu.rlp"/>
+        </property>
+
+        <property name="showNavigationRootFlat" type="checkbox">
+            <meta>
+                <title lang="en">Show Root Flat Navigation</title>
+            </meta>
+        </property>
+
+        <property name="showNavigationRootTree" type="checkbox">
+            <meta>
+                <title lang="en">Show Root Tree Navigation</title>
+            </meta>
+        </property>
+
+        <property name="showNavigationFlat" type="checkbox">
+            <meta>
+                <title lang="en">Show Flat Navigation</title>
+            </meta>
+        </property>
+
+        <property name="showNavigationTree" type="checkbox">
+            <meta>
+                <title lang="en">Show Tree Navigation</title>
+            </meta>
+        </property>
+
+        <property name="showBreadcrumb" type="checkbox">
+            <meta>
+                <title lang="en">Show Breadcrumb</title>
+            </meta>
+        </property>
+    </properties>
+</template>

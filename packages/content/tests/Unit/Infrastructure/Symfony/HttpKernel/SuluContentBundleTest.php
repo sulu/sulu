@@ -23,7 +23,6 @@ use Sulu\Content\Application\ContentNormalizer\ContentNormalizerInterface;
 use Sulu\Content\Application\ContentPersister\ContentPersisterInterface;
 use Sulu\Content\Application\ContentWorkflow\ContentWorkflowInterface;
 use Sulu\Content\Domain\Factory\DimensionContentCollectionFactoryInterface;
-use Sulu\Content\Domain\Repository\DimensionContentRepositoryInterface;
 use Sulu\Content\Infrastructure\Doctrine\MetadataLoader;
 use Sulu\Content\Infrastructure\Sulu\Admin\ContentViewBuilderFactoryInterface;
 use Sulu\Content\Infrastructure\Symfony\HttpKernel\SuluContentBundle;
@@ -117,7 +116,6 @@ class SuluContentBundleTest extends AbstractExtensionTestCase
         // Additional services aliases
         $this->assertContainerBuilderHasAlias(ContentViewBuilderFactoryInterface::class, 'sulu_content.content_view_builder_factory');
         $this->assertContainerBuilderHasAlias(DimensionContentCollectionFactoryInterface::class, 'sulu_content.dimension_content_collection_factory');
-        $this->assertContainerBuilderHasAlias(DimensionContentRepositoryInterface::class, 'sulu_content.dimension_content_repository');
     }
 
     public function testPrepend(): void

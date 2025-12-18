@@ -21,6 +21,7 @@ use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Security as WebspaceSecurity;
 use Sulu\Component\Webspace\Webspace;
+use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Page\Domain\Model\Page;
 use Sulu\Page\Domain\Repository\PageRepositoryInterface;
 use Sulu\Page\Infrastructure\Sulu\Content\ResourceLoader\PageResourceLoader;
@@ -68,7 +69,15 @@ class PageResourceLoaderTest extends TestCase
         $page1 = $this->createPage('123-123-123');
         $page2 = $this->createPage('321-321-321');
 
-        $this->pageRepository->findBy(['uuids' => ['123-123-123', '321-321-321']])->willReturn([
+        $this->pageRepository->findBy(
+            [
+                'uuids' => ['123-123-123', '321-321-321'],
+                'locale' => 'en',
+                'stage' => DimensionContentInterface::STAGE_LIVE,
+            ],
+            [],
+            [PageRepositoryInterface::GROUP_SELECT_PAGE_WEBSITE => true]
+        )->willReturn([
             $page1,
             $page2,
         ])
@@ -86,11 +95,15 @@ class PageResourceLoaderTest extends TestCase
     {
         $page = $this->createPage('123-123-123');
 
-        $this->pageRepository->findBy([
-            'uuids' => ['123-123-123'],
-            'locale' => 'en',
-            'stage' => 'live',
-        ])->willReturn([$page])
+        $this->pageRepository->findBy(
+            [
+                'uuids' => ['123-123-123'],
+                'locale' => 'en',
+                'stage' => 'live',
+            ],
+            [],
+            [PageRepositoryInterface::GROUP_SELECT_PAGE_WEBSITE => true]
+        )->willReturn([$page])
             ->shouldBeCalled();
 
         $result = $this->loader->load(['123-123-123'], 'en', [
@@ -108,15 +121,19 @@ class PageResourceLoaderTest extends TestCase
         $page = $this->createPage('123-123-123');
         $user = $this->prophesize(UserInterface::class);
 
-        $this->pageRepository->findBy([
-            'uuids' => ['123-123-123'],
-            'locale' => 'en',
-            'stage' => 'live',
-            'accessControl' => [
-                'user' => $user->reveal(),
-                'permission' => 64,
+        $this->pageRepository->findBy(
+            [
+                'uuids' => ['123-123-123'],
+                'locale' => 'en',
+                'stage' => 'live',
+                'accessControl' => [
+                    'user' => $user->reveal(),
+                    'permission' => 64,
+                ],
             ],
-        ])->willReturn([$page])
+            [],
+            [PageRepositoryInterface::GROUP_SELECT_PAGE_WEBSITE => true]
+        )->willReturn([$page])
             ->shouldBeCalled();
 
         $result = $this->loader->load(['123-123-123'], 'en', [
@@ -137,9 +154,15 @@ class PageResourceLoaderTest extends TestCase
     {
         $page = $this->createPage('123-123-123');
 
-        $this->pageRepository->findBy([
-            'uuids' => ['123-123-123'],
-        ])->willReturn([$page])
+        $this->pageRepository->findBy(
+            [
+                'uuids' => ['123-123-123'],
+                'locale' => 'en',
+                'stage' => DimensionContentInterface::STAGE_LIVE,
+            ],
+            [],
+            [PageRepositoryInterface::GROUP_SELECT_PAGE_WEBSITE => true]
+        )->willReturn([$page])
             ->shouldBeCalled();
 
         $result = $this->loader->load(['123-123-123'], 'en', []);
@@ -151,12 +174,16 @@ class PageResourceLoaderTest extends TestCase
     {
         $page = $this->createPage('123-123-123');
 
-        $this->pageRepository->findBy(Argument::that(function(array $filters) {
-            return isset($filters['uuids'])
-                && $filters['uuids'] === ['123-123-123']
-                && isset($filters['locale'])
-                && 'de' === $filters['locale'];
-        }))->willReturn([$page])
+        $this->pageRepository->findBy(
+            Argument::that(function(array $filters) {
+                return isset($filters['uuids'])
+                    && $filters['uuids'] === ['123-123-123']
+                    && isset($filters['locale'])
+                    && 'de' === $filters['locale'];
+            }),
+            [],
+            [PageRepositoryInterface::GROUP_SELECT_PAGE_WEBSITE => true]
+        )->willReturn([$page])
             ->shouldBeCalled();
 
         $result = $this->loader->load(['123-123-123'], 'en', [
@@ -172,9 +199,15 @@ class PageResourceLoaderTest extends TestCase
     {
         $page = $this->createPage('123-123-123');
 
-        $this->pageRepository->findBy([
-            'uuids' => ['123-123-123'],
-        ])->willReturn([$page])
+        $this->pageRepository->findBy(
+            [
+                'uuids' => ['123-123-123'],
+                'locale' => 'en',
+                'stage' => DimensionContentInterface::STAGE_LIVE,
+            ],
+            [],
+            [PageRepositoryInterface::GROUP_SELECT_PAGE_WEBSITE => true]
+        )->willReturn([$page])
             ->shouldBeCalled();
 
         $result = $this->loader->load(['123-123-123'], 'en', [
@@ -209,15 +242,19 @@ class PageResourceLoaderTest extends TestCase
 
         $page = $this->createPage('123-123-123');
 
-        $this->pageRepository->findBy([
-            'uuids' => ['123-123-123'],
-            'locale' => 'en',
-            'stage' => 'live',
-            'accessControl' => [
-                'user' => $user->reveal(),
-                'permission' => 64,
+        $this->pageRepository->findBy(
+            [
+                'uuids' => ['123-123-123'],
+                'locale' => 'en',
+                'stage' => 'live',
+                'accessControl' => [
+                    'user' => $user->reveal(),
+                    'permission' => 64,
+                ],
             ],
-        ])->willReturn([$page])
+            [],
+            [PageRepositoryInterface::GROUP_SELECT_PAGE_WEBSITE => true]
+        )->willReturn([$page])
             ->shouldBeCalled();
 
         $result = $loader->load(['123-123-123'], 'en', [
@@ -251,10 +288,14 @@ class PageResourceLoaderTest extends TestCase
 
         $page = $this->createPage('123-123-123');
 
-        $this->pageRepository->findBy(Argument::that(function(array $filters) {
-            return isset($filters['uuids'])
-                && !isset($filters['accessControl']);
-        }))->willReturn([$page])
+        $this->pageRepository->findBy(
+            Argument::that(function(array $filters) {
+                return isset($filters['uuids'])
+                    && !isset($filters['accessControl']);
+            }),
+            [],
+            [PageRepositoryInterface::GROUP_SELECT_PAGE_WEBSITE => true]
+        )->willReturn([$page])
             ->shouldBeCalled();
 
         $result = $loader->load(['123-123-123'], 'en', [
@@ -293,15 +334,19 @@ class PageResourceLoaderTest extends TestCase
         $page = $this->createPage('123-123-123');
 
         // Should use the existing accessControl from filters, not add a new one
-        $this->pageRepository->findBy([
-            'uuids' => ['123-123-123'],
-            'locale' => 'en',
-            'stage' => 'live',
-            'accessControl' => [
-                'user' => null,
-                'permission' => 32,
+        $this->pageRepository->findBy(
+            [
+                'uuids' => ['123-123-123'],
+                'locale' => 'en',
+                'stage' => 'live',
+                'accessControl' => [
+                    'user' => null,
+                    'permission' => 32,
+                ],
             ],
-        ])->willReturn([$page])
+            [],
+            [PageRepositoryInterface::GROUP_SELECT_PAGE_WEBSITE => true]
+        )->willReturn([$page])
             ->shouldBeCalled();
 
         $result = $loader->load(['123-123-123'], 'en', [

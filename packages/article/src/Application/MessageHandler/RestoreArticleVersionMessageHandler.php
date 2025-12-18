@@ -18,6 +18,7 @@ use Sulu\Article\Domain\Repository\ArticleRepositoryInterface;
 use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
 use Sulu\Content\Application\ContentCopier\ContentCopierInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
+use Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer;
 
 /**
  * @internal This class should not be instantiated by a project.
@@ -34,21 +35,34 @@ class RestoreArticleVersionMessageHandler
 
     public function __invoke(RestoreArticleVersionMessage $message): ArticleInterface
     {
-        $article = $this->articleRepository->getOneBy($message->getArticleIdentifier());
         $options = $message->getOptions();
-        $locale = $message->getLocale();
+        $stage = $options['stage'] ?? DimensionContentInterface::STAGE_DRAFT;
+
+        $article = $this->articleRepository->getOneBy(
+            $message->getArticleIdentifier(),
+            [
+                ArticleRepositoryInterface::SELECT_ARTICLE_CONTENT => [
+                    'selects' => [DimensionContentQueryEnhancer::GROUP_SELECT_CONTENT_WEBSITE => true],
+                    'dimensionAttributes' => [
+                        'locale' => $message->getLocale(),
+                        'stage' => $stage,
+                        'version' => [$message->getVersion(), DimensionContentInterface::CURRENT_VERSION],
+                    ],
+                ],
+            ]
+        );
 
         $dimensionContent = $this->contentCopier->copy(
             $article,
             [
-                'stage' => $options['stage'] ?? DimensionContentInterface::STAGE_DRAFT,
-                'locale' => $locale,
+                'stage' => $stage,
+                'locale' => $message->getLocale(),
                 'version' => $message->getVersion(),
             ],
             $article,
             [
-                'stage' => $options['stage'] ?? DimensionContentInterface::STAGE_DRAFT,
-                'locale' => $locale,
+                'stage' => $stage,
+                'locale' => $message->getLocale(),
                 'version' => DimensionContentInterface::CURRENT_VERSION,
             ],
             [
@@ -56,7 +70,7 @@ class RestoreArticleVersionMessageHandler
             ]
         );
 
-        $this->domainEventCollector->collect(new ArticleVersionRestoredEvent($article, $locale, $message->getVersion()));
+        $this->domainEventCollector->collect(new ArticleVersionRestoredEvent($article, $message->getLocale(), $message->getVersion()));
 
         return $dimensionContent->getResource();
     }

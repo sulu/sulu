@@ -33,7 +33,18 @@ final class CopyLocaleSnippetMessageHandler
 
     public function __invoke(CopyLocaleSnippetMessage $message): void
     {
-        $snippet = $this->snippetRepository->getOneBy($message->getIdentifier());
+        $snippet = $this->snippetRepository->getOneBy(
+            $message->getIdentifier(),
+            [
+                SnippetRepositoryInterface::SELECT_SNIPPET_CONTENT => [
+                    'selects' => [],
+                    'dimensionAttributes' => [
+                        'locale' => [$message->getSourceLocale(), $message->getTargetLocale()],
+                        'stage' => DimensionContentInterface::STAGE_DRAFT,
+                    ],
+                ],
+            ]
+        );
 
         $this->contentCopier->copy(
             $snippet,

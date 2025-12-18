@@ -33,7 +33,18 @@ final class CopyLocalePageMessageHandler
 
     public function __invoke(CopyLocalePageMessage $message): void
     {
-        $page = $this->pageRepository->getOneBy($message->getIdentifier());
+        $page = $this->pageRepository->getOneBy(
+            $message->getIdentifier(),
+            [
+                PageRepositoryInterface::SELECT_PAGE_CONTENT => [
+                    'selects' => [],
+                    'dimensionAttributes' => [
+                        'locale' => [$message->getSourceLocale(), $message->getTargetLocale()],
+                        'stage' => DimensionContentInterface::STAGE_DRAFT,
+                    ],
+                ],
+            ]
+        );
 
         $this->contentCopier->copy(
             $page,

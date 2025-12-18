@@ -14,6 +14,7 @@ namespace Sulu\Snippet\Application\MessageHandler;
 use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
 use Sulu\Content\Application\ContentCopier\ContentCopierInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
+use Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer;
 use Sulu\Snippet\Application\Message\RestoreSnippetVersionMessage;
 use Sulu\Snippet\Domain\Event\SnippetVersionRestoredEvent;
 use Sulu\Snippet\Domain\Model\SnippetInterface;
@@ -34,21 +35,34 @@ class RestoreSnippetVersionMessageHandler
 
     public function __invoke(RestoreSnippetVersionMessage $message): SnippetInterface
     {
-        $snippet = $this->snippetRepository->getOneBy($message->getSnippetIdentifier());
         $options = $message->getOptions();
-        $locale = $message->getLocale();
+        $stage = $options['stage'] ?? DimensionContentInterface::STAGE_DRAFT;
+
+        $snippet = $this->snippetRepository->getOneBy(
+            $message->getSnippetIdentifier(),
+            [
+                SnippetRepositoryInterface::SELECT_SNIPPET_CONTENT => [
+                    'selects' => [DimensionContentQueryEnhancer::GROUP_SELECT_CONTENT_WEBSITE => true],
+                    'dimensionAttributes' => [
+                        'locale' => $message->getLocale(),
+                        'stage' => $stage,
+                        'version' => [$message->getVersion(), DimensionContentInterface::CURRENT_VERSION],
+                    ],
+                ],
+            ]
+        );
 
         $dimensionContent = $this->contentCopier->copy(
             $snippet,
             [
-                'stage' => $options['stage'] ?? DimensionContentInterface::STAGE_DRAFT,
-                'locale' => $locale,
+                'stage' => $stage,
+                'locale' => $message->getLocale(),
                 'version' => $message->getVersion(),
             ],
             $snippet,
             [
-                'stage' => $options['stage'] ?? DimensionContentInterface::STAGE_DRAFT,
-                'locale' => $locale,
+                'stage' => $stage,
+                'locale' => $message->getLocale(),
                 'version' => DimensionContentInterface::CURRENT_VERSION,
             ],
             [
@@ -56,7 +70,7 @@ class RestoreSnippetVersionMessageHandler
             ]
         );
 
-        $this->domainEventCollector->collect(new SnippetVersionRestoredEvent($snippet, $locale, $message->getVersion()));
+        $this->domainEventCollector->collect(new SnippetVersionRestoredEvent($snippet, $message->getLocale(), $message->getVersion()));
 
         return $dimensionContent->getResource();
     }

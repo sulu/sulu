@@ -18,6 +18,7 @@ use Sulu\Article\Domain\Model\Article;
 use Sulu\Article\Domain\Repository\ArticleRepositoryInterface;
 use Sulu\Article\Infrastructure\Sulu\Content\ResourceLoader\ArticleResourceLoader;
 use Sulu\Bundle\TestBundle\Testing\SetGetPrivatePropertyTrait;
+use Sulu\Content\Domain\Model\DimensionContentInterface;
 
 class ArticleResourceLoaderTest extends TestCase
 {
@@ -47,7 +48,15 @@ class ArticleResourceLoaderTest extends TestCase
         $article1 = $this->createArticle('1');
         $article2 = $this->createArticle('3');
 
-        $this->articleRepository->findBy(['uuids' => ['1', '3']])->willReturn([
+        $this->articleRepository->findBy(
+            [
+                'uuids' => ['1', '3'],
+                'locale' => 'en',
+                'stage' => DimensionContentInterface::STAGE_LIVE,
+            ],
+            [],
+            [ArticleRepositoryInterface::GROUP_SELECT_ARTICLE_WEBSITE => true]
+        )->willReturn([
             $article1,
             $article2,
         ])

@@ -16,14 +16,13 @@ namespace Sulu\Content\Tests\Unit\Content\Application\ContentWorkflow\Subscriber
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Sulu\Content\Application\ContentMetadataInspector\ContentMetadataInspectorInterface;
 use Sulu\Content\Application\ContentWorkflow\ContentWorkflowInterface;
 use Sulu\Content\Application\ContentWorkflow\Subscriber\UnpublishTransitionSubscriber;
 use Sulu\Content\Domain\Exception\ContentNotFoundException;
 use Sulu\Content\Domain\Model\ContentRichEntityInterface;
-use Sulu\Content\Domain\Model\DimensionContentCollectionInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Domain\Model\WorkflowInterface;
-use Sulu\Content\Domain\Repository\DimensionContentRepositoryInterface;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\Example;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\ExampleDimensionContent;
 use Symfony\Component\Workflow\Event\TransitionEvent;
@@ -34,19 +33,19 @@ class UnpublishTransitionSubscriberTest extends TestCase
     use \Prophecy\PhpUnit\ProphecyTrait;
 
     public function createContentUnpublishSubscriberInstance(
-        DimensionContentRepositoryInterface $dimensionContentRepository,
+        ContentMetadataInspectorInterface $contentMetadataInspector,
         EntityManagerInterface $entityManager
     ): UnpublishTransitionSubscriber {
-        return new UnpublishTransitionSubscriber($dimensionContentRepository, $entityManager);
+        return new UnpublishTransitionSubscriber($contentMetadataInspector, $entityManager);
     }
 
     public function testGetSubscribedEvents(): void
     {
-        $dimensionContentRepository = $this->prophesize(DimensionContentRepositoryInterface::class);
+        $contentMetadataInspector = $this->prophesize(ContentMetadataInspectorInterface::class);
         $entityManager = $this->prophesize(EntityManagerInterface::class);
 
         $contentUnpublishSubscriber = $this->createContentUnpublishSubscriberInstance(
-            $dimensionContentRepository->reveal(),
+            $contentMetadataInspector->reveal(),
             $entityManager->reveal()
         );
 
@@ -63,11 +62,11 @@ class UnpublishTransitionSubscriberTest extends TestCase
             new Marking()
         );
 
-        $dimensionContentRepository = $this->prophesize(DimensionContentRepositoryInterface::class);
+        $contentMetadataInspector = $this->prophesize(ContentMetadataInspectorInterface::class);
         $entityManager = $this->prophesize(EntityManagerInterface::class);
 
         $contentUnpublishSubscriber = $this->createContentUnpublishSubscriberInstance(
-            $dimensionContentRepository->reveal(),
+            $contentMetadataInspector->reveal(),
             $entityManager->reveal()
         );
 
@@ -92,11 +91,11 @@ class UnpublishTransitionSubscriberTest extends TestCase
             ContentWorkflowInterface::CONTENT_RICH_ENTITY_CONTEXT_KEY => $contentRichEntity->reveal(),
         ]);
 
-        $dimensionContentRepository = $this->prophesize(DimensionContentRepositoryInterface::class);
+        $contentMetadataInspector = $this->prophesize(ContentMetadataInspectorInterface::class);
         $entityManager = $this->prophesize(EntityManagerInterface::class);
 
         $contentUnpublishSubscriber = $this->createContentUnpublishSubscriberInstance(
-            $dimensionContentRepository->reveal(),
+            $contentMetadataInspector->reveal(),
             $entityManager->reveal()
         );
 
@@ -121,11 +120,11 @@ class UnpublishTransitionSubscriberTest extends TestCase
             ContentWorkflowInterface::DIMENSION_ATTRIBUTES_CONTEXT_KEY => $dimensionAttributes,
         ]);
 
-        $dimensionContentRepository = $this->prophesize(DimensionContentRepositoryInterface::class);
+        $contentMetadataInspector = $this->prophesize(ContentMetadataInspectorInterface::class);
         $entityManager = $this->prophesize(EntityManagerInterface::class);
 
         $contentUnpublishSubscriber = $this->createContentUnpublishSubscriberInstance(
-            $dimensionContentRepository->reveal(),
+            $contentMetadataInspector->reveal(),
             $entityManager->reveal()
         );
 
@@ -138,51 +137,11 @@ class UnpublishTransitionSubscriberTest extends TestCase
     {
         $this->expectException(ContentNotFoundException::class);
 
-        $dimensionContent = $this->prophesize(DimensionContentInterface::class);
-        $contentRichEntity = $this->prophesize(ContentRichEntityInterface::class);
-        $dimensionAttributes = ['locale' => 'en', 'stage' => 'draft'];
-
-        $event = new TransitionEvent(
-            $dimensionContent->reveal(),
-            new Marking()
-        );
-        $event->setContext([
-            ContentWorkflowInterface::DIMENSION_ATTRIBUTES_CONTEXT_KEY => $dimensionAttributes,
-            ContentWorkflowInterface::CONTENT_RICH_ENTITY_CONTEXT_KEY => $contentRichEntity->reveal(),
-        ]);
-
-        $dimensionContentRepository = $this->prophesize(DimensionContentRepositoryInterface::class);
-        $entityManager = $this->prophesize(EntityManagerInterface::class);
-
-        $contentUnpublishSubscriber = $this->createContentUnpublishSubscriberInstance(
-            $dimensionContentRepository->reveal(),
-            $entityManager->reveal()
-        );
-
-        $dimensionContentCollection = $this->prophesize(DimensionContentCollectionInterface::class);
-        $dimensionContentCollection->getDimensionContent(['locale' => 'en', 'stage' => 'live'])
-            ->willReturn(null)
-            ->shouldBeCalled();
-
-        $liveDimensionAttributes = \array_merge($dimensionAttributes, ['stage' => DimensionContentInterface::STAGE_LIVE]);
-
-        $dimensionContentRepository->load($contentRichEntity->reveal(), $liveDimensionAttributes)
-            ->willReturn($dimensionContentCollection)
-            ->shouldBeCalled();
-
-        $entityManager->remove(Argument::cetera())->shouldNotBeCalled();
-
-        $contentUnpublishSubscriber->onUnpublish($event);
-    }
-
-    public function testOnUnpublish(): void
-    {
         $example = new Example();
+        $example->id = 'test-id';
         $dimensionContent = new ExampleDimensionContent($example);
-        $dimensionContent->setStage('stage');
+        $dimensionContent->setStage('draft');
         $dimensionContent->setLocale('en');
-        $dimensionContent->setWorkflowPublished(new \DateTimeImmutable());
-        $dimensionContent->setShadowLocale('de');
 
         $dimensionAttributes = ['locale' => 'en', 'stage' => 'draft'];
 
@@ -195,35 +154,69 @@ class UnpublishTransitionSubscriberTest extends TestCase
             ContentWorkflowInterface::CONTENT_RICH_ENTITY_CONTEXT_KEY => $example,
         ]);
 
-        $dimensionContentRepository = $this->prophesize(DimensionContentRepositoryInterface::class);
+        $contentMetadataInspector = $this->prophesize(ContentMetadataInspectorInterface::class);
         $entityManager = $this->prophesize(EntityManagerInterface::class);
 
         $contentUnpublishSubscriber = $this->createContentUnpublishSubscriberInstance(
-            $dimensionContentRepository->reveal(),
+            $contentMetadataInspector->reveal(),
             $entityManager->reveal()
         );
+
+        $contentMetadataInspector->getDimensionContentClass(Example::class)
+            ->willReturn(ExampleDimensionContent::class)
+            ->shouldBeCalled();
+
+        $entityManager->remove(Argument::cetera())->shouldNotBeCalled();
+
+        $contentUnpublishSubscriber->onUnpublish($event);
+    }
+
+    public function testOnUnpublish(): void
+    {
+        $example = new Example();
+        $example->id = 'test-id';
 
         $localizedLiveDimensionContent = new ExampleDimensionContent($example);
         $localizedLiveDimensionContent->setStage('live');
         $localizedLiveDimensionContent->setLocale('en');
-        $dimensionContentCollection = $this->prophesize(DimensionContentCollectionInterface::class);
-        $dimensionContentCollection->getDimensionContent(['locale' => 'en', 'stage' => 'live'])
-            ->willReturn($localizedLiveDimensionContent)
-            ->shouldBeCalled();
 
         $unlocalizedLiveDimensionContent = new ExampleDimensionContent($example);
         $unlocalizedLiveDimensionContent->setStage('live');
         $unlocalizedLiveDimensionContent->addAvailableLocale('en');
         $unlocalizedLiveDimensionContent->addAvailableLocale('de');
         $unlocalizedLiveDimensionContent->addShadowLocale('en', 'de');
-        $dimensionContentCollection->getDimensionContent(['locale' => null, 'stage' => 'live'])
-            ->willReturn($unlocalizedLiveDimensionContent)
-            ->shouldBeCalled();
 
-        $liveDimensionAttributes = \array_merge($dimensionAttributes, ['stage' => DimensionContentInterface::STAGE_LIVE]);
+        $dimensionContent = new ExampleDimensionContent($example);
+        $dimensionContent->setStage('draft');
+        $dimensionContent->setLocale('en');
+        $dimensionContent->setWorkflowPublished(new \DateTimeImmutable());
+        $dimensionContent->setShadowLocale('de');
 
-        $dimensionContentRepository->load($example, $liveDimensionAttributes)
-            ->willReturn($dimensionContentCollection)
+        $example->addDimensionContent($dimensionContent);
+        $example->addDimensionContent($localizedLiveDimensionContent);
+        $example->addDimensionContent($unlocalizedLiveDimensionContent);
+
+        $dimensionAttributes = ['locale' => 'en', 'stage' => 'draft'];
+
+        $event = new TransitionEvent(
+            $dimensionContent,
+            new Marking()
+        );
+        $event->setContext([
+            ContentWorkflowInterface::DIMENSION_ATTRIBUTES_CONTEXT_KEY => $dimensionAttributes,
+            ContentWorkflowInterface::CONTENT_RICH_ENTITY_CONTEXT_KEY => $example,
+        ]);
+
+        $contentMetadataInspector = $this->prophesize(ContentMetadataInspectorInterface::class);
+        $entityManager = $this->prophesize(EntityManagerInterface::class);
+
+        $contentUnpublishSubscriber = $this->createContentUnpublishSubscriberInstance(
+            $contentMetadataInspector->reveal(),
+            $entityManager->reveal()
+        );
+
+        $contentMetadataInspector->getDimensionContentClass(Example::class)
+            ->willReturn(ExampleDimensionContent::class)
             ->shouldBeCalled();
 
         $entityManager->remove($localizedLiveDimensionContent)->shouldBeCalled();

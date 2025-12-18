@@ -18,9 +18,11 @@ use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Content\Application\ContentAggregator\ContentAggregatorInterface;
 use Sulu\Content\Application\ContentResolver\ContentResolverInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
+use Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer;
 use Sulu\Snippet\Domain\Model\SnippetDimensionContentInterface;
 use Sulu\Snippet\Domain\Model\SnippetInterface;
 use Sulu\Snippet\Domain\Repository\SnippetAreaRepositoryInterface;
+use Sulu\Snippet\Domain\Repository\SnippetRepositoryInterface;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
@@ -28,6 +30,7 @@ class SnippetAreaTwigExtension extends AbstractExtension
 {
     public function __construct(
         private SnippetAreaRepositoryInterface $snippetAreaRepository,
+        private SnippetRepositoryInterface $snippetRepository,
         private ContentAggregatorInterface $contentAggregator,
         private RequestAnalyzerInterface $requestAnalyzer,
         private ReferenceStoreInterface $referenceStore,
@@ -78,7 +81,23 @@ class SnippetAreaTwigExtension extends AbstractExtension
             return null;
         }
 
-        $snippet = $snippetArea->getSnippet();
+        $snippet = $this->snippetRepository->findOneBy(
+            [
+                'uuid' => $snippetArea->getSnippet()->getUuid(),
+                'locale' => $locale,
+                'stage' => DimensionContentInterface::STAGE_LIVE,
+                'version' => DimensionContentInterface::CURRENT_VERSION,
+            ],
+            [
+                SnippetRepositoryInterface::SELECT_SNIPPET_CONTENT => [
+                    DimensionContentQueryEnhancer::GROUP_SELECT_CONTENT_WEBSITE => true,
+                ],
+            ]
+        );
+
+        if (null === $snippet) {
+            return null;
+        }
 
         /** @var SnippetDimensionContentInterface $dimensionContent */
         $dimensionContent = $this->contentAggregator->aggregate(

@@ -40,6 +40,8 @@ trait FindContentRichEntitiesTrait
         $entities = $entityManager->createQueryBuilder()
             ->select(ContentWorkflowInterface::CONTENT_RICH_ENTITY_CONTEXT_KEY)
             ->from($contentRichEntityClass, ContentWorkflowInterface::CONTENT_RICH_ENTITY_CONTEXT_KEY)
+            ->leftJoin(ContentWorkflowInterface::CONTENT_RICH_ENTITY_CONTEXT_KEY . '.dimensionContents', 'dimensionContent')
+            ->addSelect('dimensionContent')
             ->where(ContentWorkflowInterface::CONTENT_RICH_ENTITY_CONTEXT_KEY . '.' . $entityIdField . ' IN (:ids)')
             ->getQuery()
             ->setParameter('ids', $ids)
