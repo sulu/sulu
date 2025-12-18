@@ -15,6 +15,7 @@ namespace Sulu\Article\Infrastructure\Sulu\Content\ResourceLoader;
 
 use Sulu\Article\Domain\Repository\ArticleRepositoryInterface;
 use Sulu\Content\Application\ResourceLoader\Loader\ResourceLoaderInterface;
+use Sulu\Content\Domain\Model\DimensionContentInterface;
 
 /**
  * @internal if you need to override this service, create a new service with based on ResourceLoaderInterface instead of extending this class
@@ -35,7 +36,19 @@ class ArticleResourceLoader implements ResourceLoaderInterface
      */
     public function load(array $ids, ?string $locale, array $params = []): array
     {
-        $result = $this->articleRepository->findBy(['uuids' => $ids]);
+        if (null === $locale) {
+            return [];
+        }
+
+        $result = $this->articleRepository->findBy(
+            [
+                'uuids' => $ids,
+                'locale' => $locale,
+                'stage' => DimensionContentInterface::STAGE_LIVE,
+            ],
+            [],
+            [ArticleRepositoryInterface::GROUP_SELECT_ARTICLE_WEBSITE => true]
+        );
 
         $mappedResult = [];
         foreach ($result as $article) {

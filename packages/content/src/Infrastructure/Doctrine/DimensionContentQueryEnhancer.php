@@ -283,9 +283,8 @@ class DimensionContentQueryEnhancer
                     ->addSelect('contentExcerptCategory');
             }
 
-            if ($selects[self::SELECT_EXCERPT_CATEGORIES_TRANSLATION] ?? false) {
+            if (($selects[self::SELECT_EXCERPT_CATEGORIES_TRANSLATION] ?? false) && (null !== $locale)) {
                 Assert::notFalse($selects[self::SELECT_EXCERPT_CATEGORIES] ?? false);
-                Assert::notNull($locale);
 
                 $locales = (array) $locale;
                 $queryBuilder

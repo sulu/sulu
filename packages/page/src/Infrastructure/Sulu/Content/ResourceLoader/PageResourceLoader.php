@@ -15,6 +15,7 @@ use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Content\Application\ResourceLoader\Loader\ResourceLoaderInterface;
+use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Page\Domain\Repository\PageRepositoryInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 
@@ -44,7 +45,11 @@ class PageResourceLoader implements ResourceLoaderInterface
     public function load(array $ids, ?string $locale, array $params = []): array
     {
         /** @var array{uuids: array<string>, locale?: string, stage?: string, accessControl?: array{user: UserInterface|null, permission: int}} $filters */
-        $filters = ['uuids' => $ids];
+        $filters = [
+            'uuids' => $ids,
+            'locale' => $locale,
+            'stage' => DimensionContentInterface::STAGE_LIVE,
+        ];
 
         if (($params['filters'] ?? null) && \is_array($params['filters'])) {
             /** @var array{locale?: string, stage?: string, accessControl?: array{user: UserInterface|null, permission: int}} $paramsFilters */
@@ -66,7 +71,11 @@ class PageResourceLoader implements ResourceLoaderInterface
             }
         }
 
-        $result = $this->pageRepository->findBy($filters);
+        $result = $this->pageRepository->findBy(
+            $filters,
+            [],
+            [PageRepositoryInterface::GROUP_SELECT_PAGE_WEBSITE => true]
+        );
 
         $mappedResult = [];
         foreach ($result as $page) {

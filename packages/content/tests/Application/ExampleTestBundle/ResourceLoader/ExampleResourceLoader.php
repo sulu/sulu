@@ -12,6 +12,7 @@
 namespace Sulu\Content\Tests\Application\ExampleTestBundle\ResourceLoader;
 
 use Sulu\Content\Application\ResourceLoader\Loader\ResourceLoaderInterface;
+use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Repository\ExampleRepository;
 
 class ExampleResourceLoader implements ResourceLoaderInterface
@@ -28,7 +29,11 @@ class ExampleResourceLoader implements ResourceLoaderInterface
      */
     public function load(array $ids, ?string $locale, array $params = []): array
     {
-        $result = $this->exampleRepository->findBy(['ids' => $ids]);
+        $result = $this->exampleRepository->findBy(
+            ['ids' => $ids, 'locale' => $locale, 'stage' => DimensionContentInterface::STAGE_LIVE],
+            [],
+            [ExampleRepository::GROUP_SELECT_EXAMPLE_WEBSITE => true]
+        );
 
         $mappedResult = [];
         foreach ($result as $example) {

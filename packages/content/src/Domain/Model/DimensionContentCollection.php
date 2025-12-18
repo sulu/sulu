@@ -107,7 +107,7 @@ class DimensionContentCollection implements DimensionContentCollectionInterface
 
     public function count(): int
     {
-        return \count($this->dimensionContents);
+        return \iterator_count($this->getIterator());
     }
 
     /**

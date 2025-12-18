@@ -15,6 +15,7 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\TestBundle\Testing\SetGetPrivatePropertyTrait;
+use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Snippet\Domain\Model\Snippet;
 use Sulu\Snippet\Domain\Repository\SnippetRepositoryInterface;
 use Sulu\Snippet\Infrastructure\Sulu\Content\ResourceLoader\SnippetResourceLoader;
@@ -47,7 +48,15 @@ class SnippetResourceLoaderTest extends TestCase
         $snippet1 = $this->createSnippet('1');
         $snippet2 = $this->createSnippet('3');
 
-        $this->snippetRepository->findBy(['uuids' => ['1', '3']])->willReturn([
+        $this->snippetRepository->findBy(
+            [
+                'uuids' => ['1', '3'],
+                'locale' => 'en',
+                'stage' => DimensionContentInterface::STAGE_LIVE,
+            ],
+            [],
+            [SnippetRepositoryInterface::GROUP_SELECT_SNIPPET_WEBSITE => true]
+        )->willReturn([
             $snippet1,
             $snippet2,
         ])

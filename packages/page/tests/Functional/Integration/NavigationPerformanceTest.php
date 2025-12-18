@@ -26,9 +26,12 @@ class NavigationPerformanceTest extends SuluTestCase
 
     private KernelBrowser $client;
 
-    public static function setUpBeforeClass(): void
+    private string $parentUuid;
+    private string $child1Uuid;
+
+    public function setUp(): void
     {
-        parent::setUpBeforeClass();
+        parent::setUp();
         self::purgeDatabase();
 
         self::createPage([
@@ -66,6 +69,7 @@ class NavigationPerformanceTest extends SuluTestCase
                 ],
             ],
         ]);
+        $this->parentUuid = $parent->getUuid();
 
         $child1 = self::createPage([
             'en' => [
@@ -79,6 +83,7 @@ class NavigationPerformanceTest extends SuluTestCase
                 ],
             ],
         ]);
+        $this->child1Uuid = $child1->getUuid();
 
         self::createPage([
             'en' => [
@@ -118,22 +123,32 @@ class NavigationPerformanceTest extends SuluTestCase
         $this->assertStringContainsString('navigation-root-flat', $content);
 
         $navigationCount = $this->extractNavigationCount($content, 'navigation-root-flat');
-        $this->assertSame(
-            5,
-            $navigationCount,
-            \sprintf('Expected 5 navigation items from sulu_page_navigation_root_flat, got %d', $navigationCount)
-        );
+        $this->assertSame(5, $navigationCount);
 
-        // 8 queries: Optimized eager-loading with all excerpt relations in single query
-        $this->assertCount(
-            8,
-            $result['queries'],
-            \sprintf(
-                'Query count regression for sulu_page_navigation_root_flat: Expected exactly 8 queries, but got %d. Query patterns: %s',
-                \count($result['queries']),
-                \implode(' | ', $this->extractQueryPatterns($result['queries']))
-            )
-        );
+        $initialQueryCount = \count($result['queries']);
+        $this->assertCount(8, $result['queries']);
+
+        self::createPage([
+            'en' => [
+                'live' => [
+                    'template' => 'default',
+                    'title' => 'Additional Root Page Flat Test',
+                    'url' => '/additional-root-flat-test',
+                    'navigationContexts' => ['main'],
+                ],
+            ],
+        ]);
+        self::getEntityManager()->flush();
+        self::getEntityManager()->clear();
+
+        $resultAfter = $this->requestPageAndGetQueries('http://sulu.io/en/test-root-flat');
+        $contentAfter = (string) $resultAfter['response']->getContent();
+
+        $navigationCountAfter = $this->extractNavigationCount($contentAfter, 'navigation-root-flat');
+        $this->assertSame($navigationCount + 1, $navigationCountAfter);
+
+        // Query count should stay the same despite more pages
+        $this->assertCount($initialQueryCount, $resultAfter['queries']);
     }
 
     public function testNavigationRootTreeQueryCount(): void
@@ -145,22 +160,31 @@ class NavigationPerformanceTest extends SuluTestCase
         $this->assertStringContainsString('navigation-root-tree', $content);
 
         $navigationCount = $this->extractNavigationCount($content, 'navigation-root-tree');
-        $this->assertSame(
-            3,
-            $navigationCount,
-            \sprintf('Expected 3 root navigation items from sulu_page_navigation_root_tree, got %d', $navigationCount)
-        );
+        $this->assertSame(3, $navigationCount);
 
-        // 8 queries: Optimized eager-loading with all excerpt relations in single query
-        $this->assertCount(
-            8,
-            $result['queries'],
-            \sprintf(
-                'Query count regression for sulu_page_navigation_root_tree: Expected exactly 8 queries, but got %d. Query patterns: %s',
-                \count($result['queries']),
-                \implode(' | ', $this->extractQueryPatterns($result['queries']))
-            )
-        );
+        $initialQueryCount = \count($result['queries']);
+        $this->assertCount(8, $result['queries']);
+
+        self::createPage([
+            'en' => [
+                'live' => [
+                    'template' => 'default',
+                    'title' => 'Additional Root Page Tree Test',
+                    'url' => '/additional-root-tree-test',
+                    'navigationContexts' => ['main'],
+                ],
+            ],
+        ]);
+        self::getEntityManager()->flush();
+        self::getEntityManager()->clear();
+
+        $resultAfter = $this->requestPageAndGetQueries('http://sulu.io/en/test-root-tree');
+        $contentAfter = (string) $resultAfter['response']->getContent();
+
+        $navigationCountAfter = $this->extractNavigationCount($contentAfter, 'navigation-root-tree');
+        $this->assertSame($navigationCount + 1, $navigationCountAfter);
+
+        $this->assertCount($initialQueryCount, $resultAfter['queries']);
     }
 
     public function testNavigationFlatByUuidQueryCount(): void
@@ -172,22 +196,32 @@ class NavigationPerformanceTest extends SuluTestCase
         $this->assertStringContainsString('navigation-flat', $content);
 
         $navigationCount = $this->extractNavigationCount($content, 'navigation-flat');
-        $this->assertSame(
-            2,
-            $navigationCount,
-            \sprintf('Expected 2 navigation items from sulu_page_navigation_flat (child1 + grandchild1 with depth 2), got %d', $navigationCount)
-        );
+        $this->assertSame(2, $navigationCount);
 
-        // 9 queries: Optimized eager-loading with all excerpt relations in single query
-        $this->assertCount(
-            9,
-            $result['queries'],
-            \sprintf(
-                'Query count regression for sulu_page_navigation_flat: Expected exactly 9 queries, but got %d. Query patterns: %s',
-                \count($result['queries']),
-                \implode(' | ', $this->extractQueryPatterns($result['queries']))
-            )
-        );
+        $initialQueryCount = \count($result['queries']);
+        $this->assertCount(9, $result['queries']);
+
+        self::createPage([
+            'en' => [
+                'live' => [
+                    'parentId' => $this->parentUuid,
+                    'template' => 'default',
+                    'title' => 'Child Flat Test',
+                    'url' => '/parent/child-flat-test',
+                    'navigationContexts' => ['main'],
+                ],
+            ],
+        ]);
+        self::getEntityManager()->flush();
+        self::getEntityManager()->clear();
+
+        $resultAfter = $this->requestPageAndGetQueries('http://sulu.io/en/parent');
+        $contentAfter = (string) $resultAfter['response']->getContent();
+
+        $navigationCountAfter = $this->extractNavigationCount($contentAfter, 'navigation-flat');
+        $this->assertSame($navigationCount + 1, $navigationCountAfter);
+
+        $this->assertCount($initialQueryCount, $resultAfter['queries']);
     }
 
     public function testNavigationTreeByUuidQueryCount(): void
@@ -199,22 +233,32 @@ class NavigationPerformanceTest extends SuluTestCase
         $this->assertStringContainsString('navigation-tree', $content);
 
         $navigationCount = $this->extractNavigationCount($content, 'navigation-tree');
-        $this->assertSame(
-            1,
-            $navigationCount,
-            \sprintf('Expected 1 navigation item from sulu_page_navigation_tree (grandchild1), got %d', $navigationCount)
-        );
+        $this->assertSame(1, $navigationCount);
 
-        // 9 queries: Optimized eager-loading with all excerpt relations in single query
-        $this->assertCount(
-            9,
-            $result['queries'],
-            \sprintf(
-                'Query count regression for sulu_page_navigation_tree: Expected exactly 9 queries, but got %d. Query patterns: %s',
-                \count($result['queries']),
-                \implode(' | ', $this->extractQueryPatterns($result['queries']))
-            )
-        );
+        $initialQueryCount = \count($result['queries']);
+        $this->assertCount(9, $result['queries']);
+
+        self::createPage([
+            'en' => [
+                'live' => [
+                    'parentId' => $this->child1Uuid,
+                    'template' => 'default',
+                    'title' => 'Grandchild Tree Test',
+                    'url' => '/parent/child1/grandchild-tree-test',
+                    'navigationContexts' => ['main'],
+                ],
+            ],
+        ]);
+        self::getEntityManager()->flush();
+        self::getEntityManager()->clear();
+
+        $resultAfter = $this->requestPageAndGetQueries('http://sulu.io/en/parent/child1');
+        $contentAfter = (string) $resultAfter['response']->getContent();
+
+        $navigationCountAfter = $this->extractNavigationCount($contentAfter, 'navigation-tree');
+        $this->assertSame($navigationCount + 1, $navigationCountAfter);
+
+        $this->assertCount($initialQueryCount, $resultAfter['queries']);
     }
 
     public function testBreadcrumbQueryCount(): void
@@ -226,22 +270,32 @@ class NavigationPerformanceTest extends SuluTestCase
         $this->assertStringContainsString('breadcrumb', $content);
 
         $navigationCount = $this->extractNavigationCount($content, 'breadcrumb');
-        $this->assertSame(
-            3,
-            $navigationCount,
-            \sprintf('Expected 3 breadcrumb items (parent -> child1 -> grandchild1), got %d', $navigationCount)
-        );
+        $this->assertSame(3, $navigationCount);
 
-        // 9 queries: Optimized eager-loading with all excerpt relations in single query
-        $this->assertCount(
-            9,
-            $result['queries'],
-            \sprintf(
-                'Query count regression for sulu_page_breadcrumb: Expected exactly 9 queries, but got %d. Query patterns: %s',
-                \count($result['queries']),
-                \implode(' | ', $this->extractQueryPatterns($result['queries']))
-            )
-        );
+        $initialQueryCount = \count($result['queries']);
+        $this->assertCount(9, $result['queries']);
+
+        self::createPage([
+            'en' => [
+                'live' => [
+                    'parentId' => $this->child1Uuid,
+                    'template' => 'default',
+                    'title' => 'Grandchild Breadcrumb Test',
+                    'url' => '/parent/child1/grandchild-breadcrumb-test',
+                    'navigationContexts' => ['main'],
+                ],
+            ],
+        ]);
+        self::getEntityManager()->flush();
+        self::getEntityManager()->clear();
+
+        $resultAfter = $this->requestPageAndGetQueries('http://sulu.io/en/parent/child1/grandchild1');
+        $contentAfter = (string) $resultAfter['response']->getContent();
+
+        $navigationCountAfter = $this->extractNavigationCount($contentAfter, 'breadcrumb');
+        $this->assertSame($navigationCount, $navigationCountAfter);
+
+        $this->assertCount($initialQueryCount, $resultAfter['queries']);
     }
 
     /**
@@ -272,22 +326,6 @@ class NavigationPerformanceTest extends SuluTestCase
             'queries' => $queries,
             'response' => $response,
         ];
-    }
-
-    /**
-     * @param list<array{sql: string}> $queries
-     *
-     * @return list<string>
-     */
-    private function extractQueryPatterns(array $queries): array
-    {
-        $patterns = [];
-        foreach ($queries as $query) {
-            \preg_match_all('/(?:FROM|JOIN)\s+([a-z_]+)\s+[a-z0-9_]/i', $query['sql'], $matches);
-            $patterns[] = \implode('.', $matches[1]);
-        }
-
-        return $patterns;
     }
 
     private function extractNavigationCount(string $content, string $navClass): int

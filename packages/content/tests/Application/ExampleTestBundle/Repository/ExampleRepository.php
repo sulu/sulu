@@ -129,7 +129,7 @@ class ExampleRepository
      * @param array{
      *     example_admin?: bool,
      *     example_website?: bool,
-     *     with-example-content?: array<string, mixed>,
+     *     with-example-content?: bool|array<string, mixed>,
      * } $selects
      */
     public function findOneBy(array $filters, array $selects = []): ?Example
@@ -328,29 +328,38 @@ class ExampleRepository
         }
 
         if ($selects['with-example-content'] ?? null) {
+            /** @var true|array{dimensionAttributes?: array<string, mixed>, selects?: array<string, bool>} $contentConfig */
             $contentConfig = $selects['with-example-content'];
             $queryBuilder->leftJoin(
                 'example.dimensionContents',
                 'dimensionContent'
             );
 
-            if (\is_array($contentConfig) && isset($contentConfig['dimensionAttributes'])) {
-                /** @var array<string, bool> $contentSelects */
+            // If contentConfig is just 'true', load all dimension contents without filtering
+            if (true === $contentConfig) {
+                $queryBuilder->addSelect('dimensionContent');
+            } elseif (isset($contentConfig['dimensionAttributes'])) {
                 $contentSelects = $contentConfig['selects'] ?? [];
-                /** @var array<string, mixed> $dimensionAttributes */
                 $dimensionAttributes = $contentConfig['dimensionAttributes'];
+
+                $this->dimensionContentQueryEnhancer->addSelects(
+                    $queryBuilder,
+                    ExampleDimensionContent::class,
+                    $dimensionAttributes,
+                    $contentSelects
+                );
             } else {
                 /** @var array<string, bool> $contentSelects */
                 $contentSelects = $contentConfig;
                 $dimensionAttributes = $filters;
-            }
 
-            $this->dimensionContentQueryEnhancer->addSelects(
-                $queryBuilder,
-                ExampleDimensionContent::class,
-                $dimensionAttributes,
-                $contentSelects
-            );
+                $this->dimensionContentQueryEnhancer->addSelects(
+                    $queryBuilder,
+                    ExampleDimensionContent::class,
+                    $dimensionAttributes,
+                    $contentSelects
+                );
+            }
         }
 
         return $queryBuilder;

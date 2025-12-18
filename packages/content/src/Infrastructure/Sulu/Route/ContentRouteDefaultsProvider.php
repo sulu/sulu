@@ -45,6 +45,7 @@ class ContentRouteDefaultsProvider implements RouteDefaultsProviderInterface
         protected ContentAggregatorInterface $contentAggregator,
         private MetadataProviderRegistry $metadataProviderRegistry,
         private CacheLifetimeResolverInterface $cacheLifetimeResolver,
+        private bool $audienceTargetingEnabled = false,
     ) {
     }
 
@@ -133,6 +134,12 @@ class ContentRouteDefaultsProvider implements RouteDefaultsProviderInterface
                 ->addSelect('excerptCategory')
                 ->leftJoin('excerptCategory.translations', 'excerptCategoryTranslation')
                 ->addSelect('excerptCategoryTranslation');
+
+            if ($this->audienceTargetingEnabled) {
+                $queryBuilder
+                    ->leftJoin('dimensionContent.excerptAudienceTargetGroups', 'excerptAudienceTargetGroup')
+                    ->addSelect('excerptAudienceTargetGroup');
+            }
 
             /** @var ContentRichEntityInterface<T> $contentRichEntity */
             $contentRichEntity = $queryBuilder->getQuery()->getSingleResult();

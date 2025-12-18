@@ -95,12 +95,14 @@ class ArticleRouteDefaultsProviderTest extends TestCase
         $this->entityManager->createQueryBuilder()->willReturn($queryBuilder->reveal());
         $queryBuilder->select('entity')->willReturn($queryBuilder->reveal());
         $queryBuilder->from(Article::class, 'entity')->willReturn($queryBuilder->reveal());
+        $queryBuilder->leftJoin(Argument::cetera())->willReturn($queryBuilder->reveal());
+        $queryBuilder->addSelect(Argument::cetera())->willReturn($queryBuilder->reveal());
         $queryBuilder->where('entity = :id')->willReturn($queryBuilder->reveal());
-        $queryBuilder->setParameter('id', '123-123-123')->willReturn($queryBuilder->reveal());
+        $queryBuilder->setParameter(Argument::cetera())->willReturn($queryBuilder->reveal());
         $queryBuilder->getQuery()->willReturn($query->reveal());
         $query->getSingleResult()->willReturn($contentRichEntity);
 
-        $this->contentAggregator->aggregate($contentRichEntity, ['locale' => $locale, 'stage' => 'live'])
+        $this->contentAggregator->aggregate($contentRichEntity, ['locale' => $locale, 'stage' => 'live', 'version' => 0])
             ->willReturn($resolvedDimensionContent);
 
         $this->prepareTemplateMetadata('ArticleController::indexAction', 'article.html.twig', 'seconds', '3600');
@@ -143,12 +145,14 @@ class ArticleRouteDefaultsProviderTest extends TestCase
         $this->entityManager->createQueryBuilder()->willReturn($queryBuilder->reveal());
         $queryBuilder->select('entity')->willReturn($queryBuilder->reveal());
         $queryBuilder->from(Article::class, 'entity')->willReturn($queryBuilder->reveal());
+        $queryBuilder->leftJoin(Argument::cetera())->willReturn($queryBuilder->reveal());
+        $queryBuilder->addSelect(Argument::cetera())->willReturn($queryBuilder->reveal());
         $queryBuilder->where('entity = :id')->willReturn($queryBuilder->reveal());
-        $queryBuilder->setParameter('id', '123-123-123')->willReturn($queryBuilder->reveal());
+        $queryBuilder->setParameter(Argument::cetera())->willReturn($queryBuilder->reveal());
         $queryBuilder->getQuery()->willReturn($query->reveal());
         $query->getSingleResult()->willReturn($contentRichEntity);
 
-        $this->contentAggregator->aggregate($contentRichEntity, ['locale' => $locale, 'stage' => 'live'])
+        $this->contentAggregator->aggregate($contentRichEntity, ['locale' => $locale, 'stage' => 'live', 'version' => 0])
             ->willReturn($resolvedDimensionContent);
 
         $this->prepareTemplateMetadata('ArticleController::indexAction', 'article.html.twig', 'seconds', '3600');

@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Sulu\Snippet\Infrastructure\Sulu\Content\ResourceLoader;
 
 use Sulu\Content\Application\ResourceLoader\Loader\ResourceLoaderInterface;
+use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Snippet\Domain\Repository\SnippetRepositoryInterface;
 
 /**
@@ -35,7 +36,19 @@ class SnippetResourceLoader implements ResourceLoaderInterface
      */
     public function load(array $ids, ?string $locale, array $params = []): array
     {
-        $result = $this->snippetRepository->findBy(['uuids' => $ids]);
+        if (null === $locale) {
+            return [];
+        }
+
+        $result = $this->snippetRepository->findBy(
+            [
+                'uuids' => $ids,
+                'locale' => $locale,
+                'stage' => DimensionContentInterface::STAGE_LIVE,
+            ],
+            [],
+            [SnippetRepositoryInterface::GROUP_SELECT_SNIPPET_WEBSITE => true]
+        );
 
         $mappedResult = [];
         foreach ($result as $snippet) {
