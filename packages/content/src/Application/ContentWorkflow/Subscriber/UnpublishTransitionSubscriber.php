@@ -14,13 +14,14 @@ declare(strict_types=1);
 namespace Sulu\Content\Application\ContentWorkflow\Subscriber;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Sulu\Content\Application\ContentMetadataInspector\ContentMetadataInspectorInterface;
 use Sulu\Content\Application\ContentWorkflow\ContentWorkflowInterface;
 use Sulu\Content\Domain\Exception\ContentNotFoundException;
 use Sulu\Content\Domain\Model\ContentRichEntityInterface;
+use Sulu\Content\Domain\Model\DimensionContentCollection;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Domain\Model\ShadowInterface;
 use Sulu\Content\Domain\Model\WorkflowInterface;
-use Sulu\Content\Domain\Repository\DimensionContentRepositoryInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Workflow\Event\TransitionEvent;
 
@@ -31,21 +32,15 @@ use Symfony\Component\Workflow\Event\TransitionEvent;
  */
 class UnpublishTransitionSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var DimensionContentRepositoryInterface
-     */
-    private $dimensionContentRepository;
+    private ContentMetadataInspectorInterface $contentMetadataInspector;
 
-    /**
-     * @var EntityManagerInterface
-     */
-    protected $entityManager;
+    protected EntityManagerInterface $entityManager;
 
     public function __construct(
-        DimensionContentRepositoryInterface $dimensionContentRepository,
+        ContentMetadataInspectorInterface $contentMetadataInspector,
         EntityManagerInterface $entityManager
     ) {
-        $this->dimensionContentRepository = $dimensionContentRepository;
+        $this->contentMetadataInspector = $contentMetadataInspector;
         $this->entityManager = $entityManager;
     }
 
@@ -74,7 +69,9 @@ class UnpublishTransitionSubscriber implements EventSubscriberInterface
         }
 
         $liveDimensionAttributes = \array_merge($dimensionAttributes, ['stage' => DimensionContentInterface::STAGE_LIVE]);
-        $dimensionContentCollection = $this->dimensionContentRepository->load($contentRichEntity, $liveDimensionAttributes);
+        $dimensionContents = $contentRichEntity->getDimensionContents();
+        $dimensionContentClass = $this->contentMetadataInspector->getDimensionContentClass($contentRichEntity::class);
+        $dimensionContentCollection = new DimensionContentCollection($dimensionContents, $liveDimensionAttributes, $dimensionContentClass);
         $localizedLiveDimensionContent = $dimensionContentCollection->getDimensionContent($liveDimensionAttributes);
 
         if (!$localizedLiveDimensionContent) {

@@ -13,14 +13,16 @@ declare(strict_types=1);
 
 namespace Sulu\Content\Application\ContentWorkflow;
 
+use Doctrine\ORM\PersistentCollection;
 use Sulu\Content\Application\ContentMerger\ContentMergerInterface;
+use Sulu\Content\Application\ContentMetadataInspector\ContentMetadataInspectorInterface;
 use Sulu\Content\Domain\Exception\ContentNotFoundException;
 use Sulu\Content\Domain\Exception\UnavailableContentTransitionException;
 use Sulu\Content\Domain\Exception\UnknownContentTransitionException;
 use Sulu\Content\Domain\Model\ContentRichEntityInterface;
+use Sulu\Content\Domain\Model\DimensionContentCollection;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Domain\Model\WorkflowInterface;
-use Sulu\Content\Domain\Repository\DimensionContentRepositoryInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Workflow\DefinitionBuilder;
@@ -35,36 +37,17 @@ use Symfony\Component\Workflow\WorkflowInterface as SymfonyWorkflowInterface;
 
 class ContentWorkflow implements ContentWorkflowInterface
 {
-    /**
-     * @var DimensionContentRepositoryInterface
-     */
-    private $dimensionContentRepository;
-
-    /**
-     * @var ContentMergerInterface
-     */
-    private $contentMerger;
-
-    /**
-     * @var EventDispatcherInterface
-     */
-    private $eventDispatcher;
-
-    /**
-     * @var Registry
-     */
-    private $workflowRegistry;
+    private Registry $workflowRegistry;
+    private EventDispatcherInterface $eventDispatcher;
 
     public function __construct(
-        DimensionContentRepositoryInterface $dimensionContentRepository,
-        ContentMergerInterface $contentMerger,
+        private ContentMetadataInspectorInterface $contentMetadataInspector,
+        private ContentMergerInterface $contentMerger,
         ?Registry $workflowRegistry = null,
-        ?EventDispatcherInterface $eventDispatcher = null
+        ?EventDispatcherInterface $eventDispatcher = null,
+        private bool $debug = false
     ) {
-        $this->dimensionContentRepository = $dimensionContentRepository;
-        $this->contentMerger = $contentMerger;
         $this->eventDispatcher = $eventDispatcher ?: new EventDispatcher();
-        // TODO: get public workflow registry from outside
         $this->workflowRegistry = $workflowRegistry ?: new Registry();
         $this->workflowRegistry->addWorkflow(
             $this->getWorkflow(),
@@ -81,11 +64,20 @@ class ContentWorkflow implements ContentWorkflowInterface
          * Transition should always be applied to the STAGE_DRAFT content-dimension of the given $dimensionAttributes.
          * This ensures that the STAGE_DRAFT content-dimension is the single source of truth for the current
          * 'workflowPlace'. The registered WorkflowSubscribers are free to load and modify other content-dimensions.
-         *
-         * TODO: maybe throw an exception here if the $dimensionAttributes contain another stage than 'STAGE_DRAFT'
          */
+        $dimensionContents = $contentRichEntity->getDimensionContents();
 
-        $dimensionContentCollection = $this->dimensionContentRepository->load($contentRichEntity, $dimensionAttributes);
+        if ($this->debug && $dimensionContents instanceof PersistentCollection && !$dimensionContents->isInitialized()) {
+            throw new \RuntimeException(\sprintf(
+                'Dimension contents must be eager-loaded before calling apply(). '
+                . 'Entity "%s" has uninitialized dimension contents. '
+                . 'Fix: Add ->leftJoin(\'entity.dimensionContents\', \'dimensionContent\') to your query.',
+                $contentRichEntity::class
+            ));
+        }
+
+        $dimensionContentClass = $this->contentMetadataInspector->getDimensionContentClass($contentRichEntity::class);
+        $dimensionContentCollection = new DimensionContentCollection($dimensionContents, $dimensionAttributes, $dimensionContentClass);
         $dimensionAttributes = $dimensionContentCollection->getDimensionAttributes();
         $localizedDimensionContent = $dimensionContentCollection->getDimensionContent($dimensionAttributes);
 

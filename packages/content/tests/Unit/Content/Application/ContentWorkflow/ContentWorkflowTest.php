@@ -20,6 +20,7 @@ use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Content\Application\ContentMerger\ContentMergerInterface;
+use Sulu\Content\Application\ContentMetadataInspector\ContentMetadataInspectorInterface;
 use Sulu\Content\Application\ContentWorkflow\ContentWorkflow;
 use Sulu\Content\Application\ContentWorkflow\ContentWorkflowInterface;
 use Sulu\Content\Domain\Exception\ContentNotFoundException;
@@ -29,7 +30,6 @@ use Sulu\Content\Domain\Model\ContentRichEntityInterface;
 use Sulu\Content\Domain\Model\DimensionContentCollection;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Domain\Model\WorkflowInterface;
-use Sulu\Content\Domain\Repository\DimensionContentRepositoryInterface;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\ExampleDimensionContent;
 use Sulu\Content\Tests\Unit\Mocks\DimensionContentMockWrapperTrait;
 use Sulu\Content\Tests\Unit\Mocks\MockWrapper;
@@ -40,11 +40,11 @@ class ContentWorkflowTest extends TestCase
     use ProphecyTrait;
 
     protected function createContentWorkflowInstance(
-        DimensionContentRepositoryInterface $dimensionContentRepository,
+        ContentMetadataInspectorInterface $contentMetadataInspector,
         ContentMergerInterface $contentMerger
     ): ContentWorkflowInterface {
         return new ContentWorkflow(
-            $dimensionContentRepository,
+            $contentMetadataInspector,
             $contentMerger
         );
     }
@@ -80,17 +80,15 @@ class ContentWorkflowTest extends TestCase
     {
         $this->expectException(\RuntimeException::class);
 
-        $dimensionContentRepository = $this->prophesize(DimensionContentRepositoryInterface::class);
+        $contentMetadataInspector = $this->prophesize(ContentMetadataInspectorInterface::class);
         $contentMerger = $this->prophesize(ContentMergerInterface::class);
 
         $contentWorkflow = $this->createContentWorkflowInstance(
-            $dimensionContentRepository->reveal(),
+            $contentMetadataInspector->reveal(),
             $contentMerger->reveal()
         );
 
-        $contentRichEntity = $this->prophesize(ContentRichEntityInterface::class);
         $dimensionAttributes = ['locale' => 'de', 'stage' => 'draft'];
-        $transitionName = 'request_for_review';
 
         $dimensionContent1 = $this->prophesize(DimensionContentInterface::class);
         $dimensionContent1->getStage()->willReturn('draft');
@@ -106,19 +104,21 @@ class ContentWorkflowTest extends TestCase
             \get_class($dimensionContent2->reveal()))
         );
 
-        $dimensionContentCollection = new DimensionContentCollection(new ArrayCollection([
+        $dimensionContents = new ArrayCollection([
             $dimensionContent1->reveal(),
             $dimensionContent2->reveal(),
-        ]), $dimensionAttributes, ExampleDimensionContent::class);
+        ]);
 
-        $dimensionContentRepository->load($contentRichEntity->reveal(), $dimensionAttributes)
-            ->willReturn($dimensionContentCollection)
-            ->shouldBeCalled();
+        $contentRichEntity = $this->prophesize(ContentRichEntityInterface::class);
+        $contentRichEntity->getDimensionContents()->willReturn($dimensionContents);
+
+        $contentMetadataInspector->getDimensionContentClass($contentRichEntity->reveal()::class)
+            ->willReturn(ExampleDimensionContent::class);
 
         $contentWorkflow->apply(
             $contentRichEntity->reveal(),
             $dimensionAttributes,
-            $transitionName
+            'request_for_review'
         );
     }
 
@@ -126,34 +126,35 @@ class ContentWorkflowTest extends TestCase
     {
         $this->expectException(ContentNotFoundException::class);
 
-        $dimensionContentRepository = $this->prophesize(DimensionContentRepositoryInterface::class);
+        $contentMetadataInspector = $this->prophesize(ContentMetadataInspectorInterface::class);
         $contentMerger = $this->prophesize(ContentMergerInterface::class);
 
         $contentWorkflow = $this->createContentWorkflowInstance(
-            $dimensionContentRepository->reveal(),
+            $contentMetadataInspector->reveal(),
             $contentMerger->reveal()
         );
 
-        $contentRichEntity = $this->prophesize(ContentRichEntityInterface::class);
         $dimensionAttributes = ['locale' => 'de', 'stage' => 'draft'];
-        $transitionName = 'request_for_review';
 
         $dimensionContent1 = $this->prophesize(DimensionContentInterface::class);
         $dimensionContent1->getLocale()->willReturn(null);
         $dimensionContent1->getStage()->willReturn('draft');
 
-        $dimensionContentCollection = new DimensionContentCollection(new ArrayCollection([
+        $dimensionContents = new ArrayCollection([
             $dimensionContent1->reveal(),
-        ]), $dimensionAttributes, ExampleDimensionContent::class);
+        ]);
 
-        $dimensionContentRepository->load($contentRichEntity->reveal(), $dimensionAttributes)
-            ->willReturn($dimensionContentCollection)
-            ->shouldBeCalled();
+        $contentRichEntity = $this->prophesize(ContentRichEntityInterface::class);
+        $contentRichEntity->getDimensionContents()->willReturn($dimensionContents);
+        $contentRichEntity->getId()->willReturn('test-id');
+
+        $contentMetadataInspector->getDimensionContentClass($contentRichEntity->reveal()::class)
+            ->willReturn(ExampleDimensionContent::class);
 
         $contentWorkflow->apply(
             $contentRichEntity->reveal(),
             $dimensionAttributes,
-            $transitionName
+            'request_for_review'
         );
     }
 
@@ -164,15 +165,14 @@ class ContentWorkflowTest extends TestCase
             'Transition "not-exist-transition" is not defined for workflow "content_workflow".'
         );
 
-        $dimensionContentRepository = $this->prophesize(DimensionContentRepositoryInterface::class);
+        $contentMetadataInspector = $this->prophesize(ContentMetadataInspectorInterface::class);
         $contentMerger = $this->prophesize(ContentMergerInterface::class);
 
         $contentWorkflow = $this->createContentWorkflowInstance(
-            $dimensionContentRepository->reveal(),
+            $contentMetadataInspector->reveal(),
             $contentMerger->reveal()
         );
 
-        $contentRichEntity = $this->prophesize(ContentRichEntityInterface::class);
         $dimensionAttributes = ['locale' => 'de', 'stage' => 'draft'];
 
         $dimensionContent1 = $this->prophesize(DimensionContentInterface::class);
@@ -191,14 +191,16 @@ class ContentWorkflowTest extends TestCase
             ->willReturn('unpublished')
             ->shouldBeCalled();
 
-        $dimensionContentCollection = new DimensionContentCollection(new ArrayCollection([
+        $dimensionContents = new ArrayCollection([
             $this->wrapWorkflowMock($dimensionContent1),
             $this->wrapWorkflowMock($dimensionContent2),
-        ]), $dimensionAttributes, ExampleDimensionContent::class);
+        ]);
 
-        $dimensionContentRepository->load($contentRichEntity->reveal(), $dimensionAttributes)
-            ->willReturn($dimensionContentCollection)
-            ->shouldBeCalled();
+        $contentRichEntity = $this->prophesize(ContentRichEntityInterface::class);
+        $contentRichEntity->getDimensionContents()->willReturn($dimensionContents);
+
+        $contentMetadataInspector->getDimensionContentClass($contentRichEntity->reveal()::class)
+            ->willReturn(ExampleDimensionContent::class);
 
         $contentWorkflow->apply(
             $contentRichEntity->reveal(),
@@ -217,15 +219,14 @@ class ContentWorkflowTest extends TestCase
             $this->expectException(UnavailableContentTransitionException::class);
         }
 
-        $dimensionContentRepository = $this->prophesize(DimensionContentRepositoryInterface::class);
+        $contentMetadataInspector = $this->prophesize(ContentMetadataInspectorInterface::class);
         $contentMerger = $this->prophesize(ContentMergerInterface::class);
 
         $contentWorkflow = $this->createContentWorkflowInstance(
-            $dimensionContentRepository->reveal(),
+            $contentMetadataInspector->reveal(),
             $contentMerger->reveal()
         );
 
-        $contentRichEntity = $this->prophesize(ContentRichEntityInterface::class);
         $dimensionAttributes = ['locale' => 'de', 'stage' => 'draft'];
 
         $dimensionContent1 = $this->prophesize(DimensionContentInterface::class);
@@ -249,18 +250,22 @@ class ContentWorkflowTest extends TestCase
                 ->shouldBeCalled();
         }
 
-        $dimensionContentCollection = new DimensionContentCollection(new ArrayCollection([
+        $dimensionContents = new ArrayCollection([
             $this->wrapWorkflowMock($dimensionContent1),
             $this->wrapWorkflowMock($dimensionContent2),
-        ]), $dimensionAttributes, ExampleDimensionContent::class);
+        ]);
 
-        $dimensionContentRepository->load($contentRichEntity->reveal(), $dimensionAttributes)
-            ->willReturn($dimensionContentCollection)
-            ->shouldBeCalled();
+        $contentRichEntity = $this->prophesize(ContentRichEntityInterface::class);
+        $contentRichEntity->getDimensionContents()->willReturn($dimensionContents);
+
+        $contentMetadataInspector->getDimensionContentClass($contentRichEntity->reveal()::class)
+            ->willReturn(ExampleDimensionContent::class);
+
+        $dimensionContentCollection = new DimensionContentCollection($dimensionContents, $dimensionAttributes, ExampleDimensionContent::class);
 
         $mergedDimensionContent = $this->prophesize(DimensionContentInterface::class);
 
-        $contentMerger->merge($dimensionContentCollection)
+        $contentMerger->merge(Argument::type(DimensionContentCollection::class))
             ->willReturn($mergedDimensionContent)
             ->shouldBeCalledTimes($isTransitionAllowed ? 1 : 0);
 

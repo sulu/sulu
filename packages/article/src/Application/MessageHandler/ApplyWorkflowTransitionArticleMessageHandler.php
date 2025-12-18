@@ -16,6 +16,8 @@ use Sulu\Article\Domain\Event\ArticleWorkflowTransitionAppliedEvent;
 use Sulu\Article\Domain\Repository\ArticleRepositoryInterface;
 use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
 use Sulu\Content\Application\ContentWorkflow\ContentWorkflowInterface;
+use Sulu\Content\Domain\Model\DimensionContentInterface;
+use Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer;
 
 /**
  * @internal This class should not be instantiated by a project.
@@ -32,7 +34,18 @@ final class ApplyWorkflowTransitionArticleMessageHandler
 
     public function __invoke(ApplyWorkflowTransitionArticleMessage $message): void
     {
-        $article = $this->articleRepository->getOneBy($message->getIdentifier());
+        $article = $this->articleRepository->getOneBy(
+            $message->getIdentifier(),
+            [
+                ArticleRepositoryInterface::SELECT_ARTICLE_CONTENT => [
+                    'selects' => [DimensionContentQueryEnhancer::GROUP_SELECT_CONTENT_ADMIN => true],
+                    'dimensionAttributes' => [
+                        'locale' => $message->getLocale(),
+                        'stage' => [DimensionContentInterface::STAGE_DRAFT, DimensionContentInterface::STAGE_LIVE],
+                    ],
+                ],
+            ]
+        );
 
         $this->contentWorkflow->apply(
             $article,

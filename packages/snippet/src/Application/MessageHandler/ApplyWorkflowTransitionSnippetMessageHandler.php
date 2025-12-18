@@ -13,6 +13,8 @@ namespace Sulu\Snippet\Application\MessageHandler;
 
 use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
 use Sulu\Content\Application\ContentWorkflow\ContentWorkflowInterface;
+use Sulu\Content\Domain\Model\DimensionContentInterface;
+use Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer;
 use Sulu\Snippet\Application\Message\ApplyWorkflowTransitionSnippetMessage;
 use Sulu\Snippet\Domain\Event\SnippetWorkflowTransitionAppliedEvent;
 use Sulu\Snippet\Domain\Repository\SnippetRepositoryInterface;
@@ -32,7 +34,18 @@ final class ApplyWorkflowTransitionSnippetMessageHandler
 
     public function __invoke(ApplyWorkflowTransitionSnippetMessage $message): void
     {
-        $snippet = $this->snippetRepository->getOneBy($message->getIdentifier());
+        $snippet = $this->snippetRepository->getOneBy(
+            $message->getIdentifier(),
+            [
+                SnippetRepositoryInterface::SELECT_SNIPPET_CONTENT => [
+                    'selects' => [DimensionContentQueryEnhancer::GROUP_SELECT_CONTENT_ADMIN => true],
+                    'dimensionAttributes' => [
+                        'locale' => $message->getLocale(),
+                        'stage' => [DimensionContentInterface::STAGE_DRAFT, DimensionContentInterface::STAGE_LIVE],
+                    ],
+                ],
+            ]
+        );
 
         $this->contentWorkflow->apply(
             $snippet,

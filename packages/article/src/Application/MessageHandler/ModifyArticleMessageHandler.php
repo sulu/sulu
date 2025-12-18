@@ -17,6 +17,8 @@ use Sulu\Article\Domain\Event\ArticleModifiedEvent;
 use Sulu\Article\Domain\Model\ArticleInterface;
 use Sulu\Article\Domain\Repository\ArticleRepositoryInterface;
 use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
+use Sulu\Content\Domain\Model\DimensionContentInterface;
+use Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer;
 
 /**
  * @internal This class should not be instantiated by a project.
@@ -36,14 +38,28 @@ final class ModifyArticleMessageHandler
     {
         $identifier = $message->getIdentifier();
         $data = $message->getData();
-        $article = $this->articleRepository->getOneBy($identifier);
+        /** @var string $locale */
+        $locale = $data['locale'];
+
+        $article = $this->articleRepository->getOneBy(
+            [
+                ...$identifier,
+                'locale' => $locale,
+            ],
+            [
+                ArticleRepositoryInterface::SELECT_ARTICLE_CONTENT => [
+                    'selects' => [DimensionContentQueryEnhancer::GROUP_SELECT_CONTENT_ADMIN => true],
+                    'dimensionAttributes' => [
+                        'locale' => $locale,
+                        'stage' => [DimensionContentInterface::STAGE_DRAFT, DimensionContentInterface::STAGE_LIVE],
+                    ],
+                ],
+            ]
+        );
 
         foreach ($this->articleMappers as $articleMapper) {
             $articleMapper->mapArticleData($article, $data);
         }
-
-        /** @var string $locale */
-        $locale = $data['locale'];
 
         $this->domainEventCollector->collect(new ArticleModifiedEvent($article, $locale, $data));
 

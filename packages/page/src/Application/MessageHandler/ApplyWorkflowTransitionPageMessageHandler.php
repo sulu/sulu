@@ -13,6 +13,8 @@ namespace Sulu\Page\Application\MessageHandler;
 
 use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
 use Sulu\Content\Application\ContentWorkflow\ContentWorkflowInterface;
+use Sulu\Content\Domain\Model\DimensionContentInterface;
+use Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer;
 use Sulu\Page\Application\Message\ApplyWorkflowTransitionPageMessage;
 use Sulu\Page\Domain\Event\PageWorkflowTransitionAppliedEvent;
 use Sulu\Page\Domain\Repository\PageRepositoryInterface;
@@ -32,7 +34,18 @@ final class ApplyWorkflowTransitionPageMessageHandler
 
     public function __invoke(ApplyWorkflowTransitionPageMessage $message): void
     {
-        $page = $this->pageRepository->getOneBy($message->getIdentifier());
+        $page = $this->pageRepository->getOneBy(
+            $message->getIdentifier(),
+            [
+                PageRepositoryInterface::SELECT_PAGE_CONTENT => [
+                    'selects' => [DimensionContentQueryEnhancer::GROUP_SELECT_CONTENT_ADMIN => true],
+                    'dimensionAttributes' => [
+                        'locale' => $message->getLocale(),
+                        'stage' => [DimensionContentInterface::STAGE_DRAFT, DimensionContentInterface::STAGE_LIVE],
+                    ],
+                ],
+            ]
+        );
 
         $this->contentWorkflow->apply(
             $page,
