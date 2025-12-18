@@ -113,7 +113,7 @@ class TimestampableSubscriberTest extends TestCase
         $this->classMetadata->getFieldValue($entity, 'created')->willReturn($created);
 
         if (null === $created) {
-            $this->classMetadata->setFieldValue( $entity, 'created', $timestamp)->shouldBeCalled();
+            $this->classMetadata->setFieldValue($entity, 'created', $timestamp)->shouldBeCalled();
         } else {
             $this->classMetadata->setFieldValue(Argument::any())->shouldNotBeCalled();
         }
