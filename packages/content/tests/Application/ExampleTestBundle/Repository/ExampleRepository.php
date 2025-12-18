@@ -335,7 +335,6 @@ class ExampleRepository
                 'dimensionContent'
             );
 
-            // If contentConfig is just 'true', load all dimension contents without filtering
             if (true === $contentConfig) {
                 $queryBuilder->addSelect('dimensionContent');
             } elseif (isset($contentConfig['dimensionAttributes'])) {

@@ -171,7 +171,6 @@ class PublishTransitionSubscriberTest extends TestCase
         $targetDimensionAttributes = $dimensionAttributes;
         $targetDimensionAttributes['stage'] = 'live';
 
-        // Generic stub for version creation call (must be defined before specific stubs)
         $versionDimensionContent = $this->prophesize(DimensionContentInterface::class);
         $contentCopier->copyFromDimensionContentCollection(
             $dimensionContentCollection->reveal(),
@@ -221,7 +220,6 @@ class PublishTransitionSubscriberTest extends TestCase
         $targetDimensionAttributes = $dimensionAttributes;
         $targetDimensionAttributes['stage'] = 'live';
 
-        // Generic stub for version creation call
         $versionDimensionContent = $this->prophesize(DimensionContentInterface::class);
         $contentCopier->copyFromDimensionContentCollection(
             $dimensionContentCollection->reveal(),
@@ -278,7 +276,6 @@ class PublishTransitionSubscriberTest extends TestCase
         $targetDimensionAttributes = $dimensionAttributes;
         $targetDimensionAttributes['stage'] = 'live';
 
-        // Generic stub for version creation call
         $versionDimensionContent = $this->prophesize(DimensionContentInterface::class);
         $contentCopier->copyFromDimensionContentCollection(
             $dimensionContentCollection->reveal(),
@@ -339,7 +336,6 @@ class PublishTransitionSubscriberTest extends TestCase
         $targetDimensionAttributes = $dimensionAttributes;
         $targetDimensionAttributes['stage'] = 'live';
 
-        // Generic stub for version creation call
         $versionDimensionContent = $this->prophesize(DimensionContentInterface::class);
         $contentCopier->copyFromDimensionContentCollection(
             $dimensionContentCollection->reveal(),
