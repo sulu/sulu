@@ -14,6 +14,7 @@ namespace Sulu\Component\Persistence\EventSubscriber\ORM;
 use Doctrine\Persistence\Event\LifecycleEventArgs;
 use Doctrine\Persistence\Event\LoadClassMetadataEventArgs;
 use Sulu\Component\Persistence\Model\TimestampableInterface;
+use Symfony\Component\Clock\ClockInterface;
 
 /**
  * Manage the timestamp fields on models implementing the
@@ -24,6 +25,8 @@ class TimestampableSubscriber
     public const CREATED_FIELD = 'created';
 
     public const CHANGED_FIELD = 'changed';
+
+    public function __construct(private ClockInterface $clock) {}
 
     /**
      * Load the class data, mapping the created and changed fields
@@ -86,9 +89,9 @@ class TimestampableSubscriber
 
         $created = $meta->getFieldValue($entity, self::CREATED_FIELD);
         if (null === $created) {
-            $meta->setFieldValue($entity, self::CREATED_FIELD, new \DateTimeImmutable());
+            $meta->setFieldValue($entity, self::CREATED_FIELD, $this->clock->now());
         }
 
-        $meta->setFieldValue($entity, self::CHANGED_FIELD, new \DateTimeImmutable());
+        $meta->setFieldValue($entity, self::CHANGED_FIELD, $this->clock->now());
     }
 }
