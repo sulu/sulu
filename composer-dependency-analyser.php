@@ -34,6 +34,7 @@ return $config
             'ext-openssl', // fallbacks to random_bytes
             'ext-zip', // not required to run Sulu
             'ext-intl', // optional fallback to strcmp
+            'ext-zend-opcache', // optional for cache invalidation
         ],
         [ErrorType::SHADOW_DEPENDENCY],
     )
@@ -79,7 +80,6 @@ return $config
         [
             'guzzlehttp/promises', // required for faster fos http cache clearing
             'nyholm/psr7', // required for faster fos http cache clearing
-            'symfony/var-exporter', // required for doctrine lazy objects
             'symfony/css-selector', // kept for future usage
         ],
         [ErrorType::UNUSED_DEPENDENCY],

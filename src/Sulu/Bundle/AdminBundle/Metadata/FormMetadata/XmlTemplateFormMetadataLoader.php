@@ -13,10 +13,9 @@ namespace Sulu\Bundle\AdminBundle\Metadata\FormMetadata;
 
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Loader\TemplateXmlLoader;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Validation\FieldMetadataValidatorInterface;
-use Symfony\Component\Config\ConfigCache;
-use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface;
+use Symfony\Component\VarExporter\VarExporter;
 
 class XmlTemplateFormMetadataLoader implements FormMetadataLoaderInterface, CacheWarmerInterface
 {
@@ -37,21 +36,22 @@ class XmlTemplateFormMetadataLoader implements FormMetadataLoaderInterface, Cach
 
     public function getMetadata(string $key, ?string $locale = null, array $metadataOptions = []): ?TypedFormMetadata
     {
-        $configCache = $this->getConfigCache($key);
+        $path = $this->getCachePath($key);
 
-        if (!\file_exists($configCache->getPath())) {
+        $typedFormMetadata = @include $path;
+        if ($typedFormMetadata instanceof TypedFormMetadata) {
+            return $typedFormMetadata;
+        }
+
+        if (!$this->debug) {
             return null;
         }
 
-        if (!$configCache->isFresh()) {
-            $this->warmUp($this->cacheDir);
-        }
+        $this->warmUp($this->cacheDir);
 
-        $typedForm = \unserialize(\file_get_contents($configCache->getPath()) ?: '');
+        $typedFormMetadata = @include $path;
 
-        \assert($typedForm instanceof TypedFormMetadata, 'Expected TypedFormMetadata instance for key: "' . $key . '".');
-
-        return $typedForm;
+        return $typedFormMetadata instanceof TypedFormMetadata ? $typedFormMetadata : null;
     }
 
     public function warmUp(string $cacheDir, ?string $buildDir = null): array
@@ -64,7 +64,6 @@ class XmlTemplateFormMetadataLoader implements FormMetadataLoaderInterface, Cach
             );
 
             $formsMetadataCollection = [];
-            $formsMetadataResources = [];
 
             $typedFormMetadata = new TypedFormMetadata();
             if (null !== $defaultType) {
@@ -77,7 +76,6 @@ class XmlTemplateFormMetadataLoader implements FormMetadataLoaderInterface, Cach
                 foreach ($formFinder as $formFile) {
                     $formMetadata = $this->templateXmlLoader->load($formFile->getPathName());
                     $formKey = $formMetadata->getKey();
-                    $formsMetadataResources[] = $formFile->getPathName();
                     if (!\array_key_exists($formKey, $formsMetadataCollection)) {
                         $formsMetadataCollection[$formKey] = $formMetadata;
                     } else {
@@ -91,13 +89,8 @@ class XmlTemplateFormMetadataLoader implements FormMetadataLoaderInterface, Cach
                 $typedFormMetadata->addForm($formMetadata->getKey(), $formMetadata);
             }
 
-            $configCache = $this->getConfigCache($type);
-            $configCache->write(
-                \serialize($typedFormMetadata),
-                \array_map(function(string $resource) {
-                    return new FileResource($resource);
-                }, $formsMetadataResources)
-            );
+            $path = $this->getCachePath($type);
+            $this->writeCache($path, '<?php return ' . VarExporter::export($typedFormMetadata) . ';');
         }
 
         return [];
@@ -128,8 +121,24 @@ class XmlTemplateFormMetadataLoader implements FormMetadataLoaderInterface, Cach
         return false;
     }
 
-    private function getConfigCache(string $key): ConfigCache
+    private function getCachePath(string $key): string
     {
-        return new ConfigCache(\sprintf('%s%s%s', $this->cacheDir, \DIRECTORY_SEPARATOR, $key), $this->debug);
+        return \sprintf('%s%s%s.php', $this->cacheDir, \DIRECTORY_SEPARATOR, $key);
+    }
+
+    private function writeCache(string $path, string $content): void
+    {
+        $dir = \dirname($path);
+        if (!\is_dir($dir)) {
+            \mkdir($dir, 0777, true);
+        }
+
+        $tmpFile = $path . '.' . \uniqid('', true);
+        \file_put_contents($tmpFile, $content);
+        \rename($tmpFile, $path);
+
+        if (\function_exists('opcache_invalidate')) {
+            \opcache_invalidate($path, true);
+        }
     }
 }
