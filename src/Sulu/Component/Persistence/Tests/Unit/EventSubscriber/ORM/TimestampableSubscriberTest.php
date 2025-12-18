@@ -21,6 +21,7 @@ use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Component\Persistence\EventSubscriber\ORM\TimestampableSubscriber;
 use Sulu\Component\Persistence\Model\TimestampableInterface;
+use Symfony\Component\Clock\ClockInterface;
 
 class TimestampableSubscriberTest extends TestCase
 {
@@ -61,6 +62,9 @@ class TimestampableSubscriberTest extends TestCase
      */
     private $subscriber;
 
+    /** @var ObjectProphecy<ClockInterface> */
+    private ObjectProphecy $clock;
+
     public function setUp(): void
     {
         $this->loadClassMetadataEvent = $this->prophesize(LoadClassMetadataEventArgs::class);
@@ -69,8 +73,9 @@ class TimestampableSubscriberTest extends TestCase
         $this->classMetadata = $this->prophesize(ClassMetadata::class);
         $this->refl = $this->prophesize(\ReflectionClass::class);
         $this->entityManager = $this->prophesize(EntityManager::class);
+        $this->clock = $this->prophesize(ClockInterface::class);
 
-        $this->subscriber = new TimestampableSubscriber();
+        $this->subscriber = new TimestampableSubscriber($this->clock->reveal());
     }
 
     public function testLoadClassMetadata(): void
@@ -78,6 +83,7 @@ class TimestampableSubscriberTest extends TestCase
         $this->loadClassMetadataEvent->getClassMetadata()->willReturn($this->classMetadata->reveal());
         $this->classMetadata->getReflectionClass()->willReturn($this->refl->reveal());
         $this->refl->implementsInterface(TimestampableInterface::class)->willReturn(true);
+        $this->clock->now()->shouldNotBeCalled();
 
         $this->classMetadata->mapField(Argument::any())->shouldBeCalled();
         $this->classMetadata->hasField('created')->willReturn(false);
@@ -98,27 +104,21 @@ class TimestampableSubscriberTest extends TestCase
     public function testOnPreUpdate($created): void
     {
         $entity = $this->timestampableObject->reveal();
+        $timestamp = new \DateTimeImmutable();
         $this->lifecycleEvent->getObject()->willReturn($this->timestampableObject->reveal());
         $this->lifecycleEvent->getObjectManager()->willReturn($this->entityManager->reveal());
         $this->entityManager->getClassMetadata(\get_class($entity))->willReturn($this->classMetadata);
+        $this->clock->now()->shouldBeCalled()->willReturn($timestamp);
 
         $this->classMetadata->getFieldValue($entity, 'created')->willReturn($created);
 
         if (null === $created) {
-            $this->classMetadata->setFieldValue(
-                $entity,
-                'created',
-                Argument::type('\DateTimeImmutable')
-            )->shouldBeCalled();
+            $this->classMetadata->setFieldValue( $entity, 'created', $timestamp)->shouldBeCalled();
         } else {
             $this->classMetadata->setFieldValue(Argument::any())->shouldNotBeCalled();
         }
 
-        $this->classMetadata->setFieldValue(
-            $entity,
-            'changed',
-            Argument::type('\DateTimeImmutable')
-        )->shouldBeCalled();
+        $this->classMetadata->setFieldValue($entity, 'changed', $timestamp)->shouldBeCalled();
 
         $this->subscriber->preUpdate($this->lifecycleEvent->reveal());
     }
