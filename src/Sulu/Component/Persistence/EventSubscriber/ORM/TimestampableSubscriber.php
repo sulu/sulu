@@ -26,7 +26,9 @@ class TimestampableSubscriber
 
     public const CHANGED_FIELD = 'changed';
 
-    public function __construct(private ClockInterface $clock) {}
+    public function __construct(private ClockInterface $clock)
+    {
+    }
 
     /**
      * Load the class data, mapping the created and changed fields
@@ -76,6 +78,8 @@ class TimestampableSubscriber
     /**
      * Set the timestamps. If created is NULL then set it. Always
      * set the changed field.
+     *
+     * @return void
      */
     private function handleTimestamp(LifecycleEventArgs $event)
     {
@@ -88,10 +92,12 @@ class TimestampableSubscriber
         $meta = $event->getObjectManager()->getClassMetadata(\get_class($entity));
 
         $created = $meta->getFieldValue($entity, self::CREATED_FIELD);
+
+        $now = new \DateTimeImmutable($this->clock->now()->format('Y-m-d H:i:s'), $this->clock->now()->getTimezone());
         if (null === $created) {
-            $meta->setFieldValue($entity, self::CREATED_FIELD, $this->clock->now());
+            $meta->setFieldValue($entity, self::CREATED_FIELD, $now);
         }
 
-        $meta->setFieldValue($entity, self::CHANGED_FIELD, $this->clock->now());
+        $meta->setFieldValue($entity, self::CHANGED_FIELD, $now);
     }
 }
