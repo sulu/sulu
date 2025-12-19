@@ -107,13 +107,21 @@ class ContentObjectProviderTest extends TestCase
             ->willReturn($queryBuilder->reveal())
             ->shouldBeCalledTimes(1);
 
+        $queryBuilder->leftJoin(Argument::cetera())
+            ->willReturn($queryBuilder->reveal())
+            ->shouldBeCalledTimes(1);
+
+        $queryBuilder->addSelect(Argument::type('string'))
+            ->willReturn($queryBuilder->reveal())
+            ->shouldBeCalledTimes(1);
+
         $queryBuilder->where(Argument::type('string'))
             ->willReturn($queryBuilder->reveal())
             ->shouldBeCalledTimes(1);
 
         $queryBuilder->setParameter(Argument::type('string'), Argument::any())
             ->willReturn($queryBuilder->reveal())
-            ->shouldBeCalledTimes(1);
+            ->shouldBeCalledTimes(3);
 
         $query = $this->prophesize(Query::class);
 
@@ -163,13 +171,21 @@ class ContentObjectProviderTest extends TestCase
             ->willReturn($queryBuilder->reveal())
             ->shouldBeCalledTimes(1);
 
+        $queryBuilder->leftJoin(Argument::cetera())
+            ->willReturn($queryBuilder->reveal())
+            ->shouldBeCalledTimes(1);
+
+        $queryBuilder->addSelect(Argument::type('string'))
+            ->willReturn($queryBuilder->reveal())
+            ->shouldBeCalledTimes(1);
+
         $queryBuilder->where(Argument::type('string'))
             ->willReturn($queryBuilder->reveal())
             ->shouldBeCalledTimes(1);
 
         $queryBuilder->setParameter(Argument::type('string'), Argument::any())
             ->willReturn($queryBuilder->reveal())
-            ->shouldBeCalledTimes(1);
+            ->shouldBeCalledTimes(3);
 
         $query = $this->prophesize(Query::class);
 
@@ -247,13 +263,21 @@ class ContentObjectProviderTest extends TestCase
             ->willReturn($queryBuilder->reveal())
             ->shouldBeCalledTimes(1);
 
+        $queryBuilder->leftJoin(Argument::cetera())
+            ->willReturn($queryBuilder->reveal())
+            ->shouldBeCalledTimes(1);
+
+        $queryBuilder->addSelect(Argument::type('string'))
+            ->willReturn($queryBuilder->reveal())
+            ->shouldBeCalledTimes(1);
+
         $queryBuilder->where(Argument::type('string'))
             ->willReturn($queryBuilder->reveal())
             ->shouldBeCalledTimes(1);
 
         $queryBuilder->setParameter(Argument::type('string'), Argument::any())
             ->willReturn($queryBuilder->reveal())
-            ->shouldBeCalledTimes(1);
+            ->shouldBeCalledTimes(3);
 
         $query = $this->prophesize(Query::class);
 
