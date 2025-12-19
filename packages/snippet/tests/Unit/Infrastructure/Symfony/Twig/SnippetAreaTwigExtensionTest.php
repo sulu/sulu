@@ -330,4 +330,53 @@ class SnippetAreaTwigExtensionTest extends TestCase
 
         $this->assertSame($resolvedContent, $result);
     }
+
+    public function testLoadSnippetByAreaWithoutProperties(): void
+    {
+        $areaKey = 'header';
+        $webspaceKey = 'example';
+        $locale = 'en';
+
+        $snippet = new Snippet('test-snippet-uuid');
+        $snippetDimensionContent = new SnippetDimensionContent($snippet);
+        $snippetDimensionContent->setTemplateData(['title' => 'Test Snippet', 'description' => 'Test Description']);
+
+        $snippetArea = new SnippetArea($areaKey, $webspaceKey);
+        $snippetArea->setSnippet($snippet);
+
+        $resolvedContent = [
+            'title' => 'Test Snippet',
+            'description' => 'Test Description',
+        ];
+
+        $this->snippetAreaRepository->findOneBy([
+            'webspaceKey' => $webspaceKey,
+            'areaKey' => $areaKey,
+        ])->willReturn($snippetArea);
+
+        $this->snippetRepository->findOneBy(
+            [
+                'uuid' => 'test-snippet-uuid',
+                'locale' => $locale,
+                'stage' => DimensionContentInterface::STAGE_LIVE,
+                'version' => DimensionContentInterface::CURRENT_VERSION,
+            ],
+            Argument::any()
+        )->willReturn($snippet);
+
+        $this->contentAggregator->aggregate(
+            $snippet,
+            [
+                'locale' => $locale,
+                'stage' => DimensionContentInterface::STAGE_LIVE,
+                'version' => DimensionContentInterface::CURRENT_VERSION,
+            ]
+        )->willReturn($snippetDimensionContent);
+
+        $this->contentResolver->resolve($snippetDimensionContent, null)->willReturn($resolvedContent);
+
+        $result = $this->extension->loadSnippetByArea($areaKey, webspaceKey: $webspaceKey, locale: $locale);
+
+        $this->assertSame($resolvedContent, $result);
+    }
 }
