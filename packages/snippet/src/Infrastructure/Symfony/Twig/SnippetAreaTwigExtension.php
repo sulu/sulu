@@ -46,13 +46,13 @@ class SnippetAreaTwigExtension extends AbstractExtension
     }
 
     /**
-     * @param array<string, string> $properties
+     * @param array<string, string>|null $properties
      *
      * @return array<string, mixed>|null
      */
     public function loadSnippetByArea(
         string $areaKey,
-        array $properties,
+        ?array $properties = null,
         ?string $webspaceKey = null,
         ?string $locale = null,
     ): ?array {
