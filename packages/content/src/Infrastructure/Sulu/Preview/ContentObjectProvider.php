@@ -107,13 +107,14 @@ class ContentObjectProvider implements PreviewDefaultsProviderInterface
                     'entity.dimensionContents',
                     'dimensionContent',
                     Join::WITH,
-                    'dimensionContent.stage = :stage AND (dimensionContent.locale IS NULL OR dimensionContent.locale = :locale)'
+                    'dimensionContent.stage = :stage AND dimensionContent.version = :version AND (dimensionContent.locale IS NULL OR dimensionContent.locale = :locale)'
                 )
                 ->addSelect('dimensionContent')
                 ->where('entity = :id')
                 ->setParameter('id', $id)
                 ->setParameter('locale', $locale)
                 ->setParameter('stage', DimensionContentInterface::STAGE_DRAFT)
+                ->setParameter('version', DimensionContentInterface::CURRENT_VERSION)
                 ->getQuery()
                 ->getSingleResult();
         } catch (NoResultException $exception) {

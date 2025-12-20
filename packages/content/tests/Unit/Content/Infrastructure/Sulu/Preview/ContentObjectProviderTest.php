@@ -121,7 +121,7 @@ class ContentObjectProviderTest extends TestCase
 
         $queryBuilder->setParameter(Argument::type('string'), Argument::any())
             ->willReturn($queryBuilder->reveal())
-            ->shouldBeCalledTimes(3);
+            ->shouldBeCalledTimes(4);
 
         $query = $this->prophesize(Query::class);
 
@@ -185,7 +185,7 @@ class ContentObjectProviderTest extends TestCase
 
         $queryBuilder->setParameter(Argument::type('string'), Argument::any())
             ->willReturn($queryBuilder->reveal())
-            ->shouldBeCalledTimes(3);
+            ->shouldBeCalledTimes(4);
 
         $query = $this->prophesize(Query::class);
 
@@ -277,7 +277,7 @@ class ContentObjectProviderTest extends TestCase
 
         $queryBuilder->setParameter(Argument::type('string'), Argument::any())
             ->willReturn($queryBuilder->reveal())
-            ->shouldBeCalledTimes(3);
+            ->shouldBeCalledTimes(4);
 
         $query = $this->prophesize(Query::class);
 
