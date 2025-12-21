@@ -79,7 +79,7 @@ class AdminControllerTest extends SuluTestCase
 
         $pageConfig = $response->sulu_page;
 
-        $this->assertCount(3, (array) $pageConfig->webspaces);
+        $this->assertCount(4, (array) $pageConfig->webspaces);
         $this->assertEquals('destination_io', $pageConfig->webspaces->destination_io->key);
         $this->assertEquals('sulu_io', $pageConfig->webspaces->sulu_io->key);
         $this->assertEquals('test_io', $pageConfig->webspaces->test_io->key);

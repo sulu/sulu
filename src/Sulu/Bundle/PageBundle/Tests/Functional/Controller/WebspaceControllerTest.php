@@ -25,11 +25,12 @@ class WebspaceControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(200, $client->getResponse());
 
         $data = $response['_embedded']['webspaces'];
-        $this->assertCount(3, $data);
+        $this->assertCount(4, $data);
 
         $destinationWebspace = $data[0];
-        $suluWebspace = $data[1];
-        $testWebspace = $data[2];
+        $sortIndicatorWebspace = $data[1];
+        $suluWebspace = $data[2];
+        $testWebspace = $data[3];
 
         $this->assertEquals('Destination CMF', $destinationWebspace['name']);
         $this->assertCount(2, $destinationWebspace['navigations']);
@@ -40,6 +41,7 @@ class WebspaceControllerTest extends SuluTestCase
         $this->assertSame('de', $destinationWebspace['allLocalizations'][0]['localization']);
         $this->assertSame('es', $destinationWebspace['allLocalizations'][1]['name']);
         $this->assertSame('es', $destinationWebspace['allLocalizations'][1]['localization']);
+        $this->assertEquals('Another Random CMF', $sortIndicatorWebspace['name']);
         $this->assertEquals('Sulu CMF', $suluWebspace['name']);
         $this->assertCount(2, $suluWebspace['navigations']);
         $this->assertEquals('main', $suluWebspace['navigations'][0]['key']);
