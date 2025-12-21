@@ -668,7 +668,7 @@ class PageController extends AbstractRestController implements ClassResourceInte
             }
         }
 
-        return $webspaceContents;
+        return $this->sortWebspaceContent($webspaceContents);
     }
 
     private function getWebspace(Request $request, bool $force = true): ?string
@@ -684,5 +684,24 @@ class PageController extends AbstractRestController implements ClassResourceInte
             SecurityBehavior::class,
             $request->get('id')
         );
+    }
+
+    /**
+     * @param Content[] $webspaceContents
+     *
+     * @return Content[]
+     */
+    private function sortWebspaceContent(array $webspaceContents): array
+    {
+        \usort($webspaceContents, function(Content $a, Content $b): int {
+            /** @var string $titleA */
+            $titleA = $a->getPropertyWithDefault('title');
+            /** @var string $titleB */
+            $titleB = $b->getPropertyWithDefault('title');
+
+            return \strnatcasecmp($titleA, $titleB);
+        });
+
+        return $webspaceContents;
     }
 }

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<webspace xmlns="http://schemas.sulu.io/webspace/webspace"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://schemas.sulu.io/webspace/webspace http://schemas.sulu.io/webspace/webspace-1.1.xsd">
+
+    <name>Another Random CMF</name>
+    <key>some_random_io</key>
+
+    <security permission-check="false">
+        <system>sulu</system>
+    </security>
+
+    <localizations>
+        <localization language="de"/>
+    </localizations>
+
+    <theme>default</theme>
+
+    <default-templates>
+        <default-template type="page">default</default-template>
+        <default-template type="homepage">overview</default-template>
+    </default-templates>
+
+    <navigation>
+        <contexts>
+            <context key="main">
+                <meta>
+                    <title lang="de">Mainnavigation</title>
+                </meta>
+            </context>
+            <context key="footer">
+                <meta>
+                    <title lang="de">Footernavigation</title>
+                </meta>
+            </context>
+        </contexts>
+    </navigation>
+
+    <resource-locator>
+        <strategy>tree_leaf_edit</strategy>
+    </resource-locator>
+
+    <portals>
+        <portal>
+            <name>Another Random CMF DE</name>
+            <key>some_random_io</key>
+
+            <localizations>
+                <localization language="de"/>
+            </localizations>
+
+            <environments>
+                <environment type="prod">
+                    <urls>
+                        <url language="de">some-random-cmf.de</url>
+                    </urls>
+                </environment>
+                <environment type="dev">
+                    <urls>
+                        <url language="de">some-random-cmf-dev.de</url>
+                    </urls>
+                </environment>
+                <environment type="phpcr">
+                    <urls>
+                        <url language="de">some-random-cmf-phpcr.de</url>
+                    </urls>
+                </environment>
+                <environment type="test">
+                    <urls>
+                        <url language="de">some-random-cmf-test.de</url>
+                    </urls>
+                </environment>
+            </environments>
+        </portal>
+    </portals>
+</webspace>

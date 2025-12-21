@@ -96,6 +96,21 @@ class PageControllerTest extends SuluTestCase
         $this->assertContains('Test CMF', $titles);
     }
 
+    public function testGetFlatResponseAlphabeticallyOrderedWithGermanLocale(): void
+    {
+        $this->client->jsonRequest('GET', '/api/pages?locale=de&flat=true');
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+
+        $response = \json_decode($this->client->getResponse()->getContent());
+        $this->assertCount(4, $response->_embedded->pages);
+
+        $titles = \array_map(function(\stdClass $page) {
+            return $page->title;
+        }, $response->_embedded->pages);
+
+        $this->assertSame(['Another Random CMF', 'Destination CMF', 'Sulu CMF', 'Test CMF'], $titles);
+    }
+
     public function testGetFlatResponseForWebspace(): void
     {
         $this->client->jsonRequest('GET', '/api/pages?locale=en&flat=true&webspace=sulu_io');
