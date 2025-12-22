@@ -43,6 +43,11 @@ class DefaultCollectionBuilder implements BuilderInterface
 
     public function build(): void
     {
+        $title = [
+            'default' => 'Images',
+            'en_US' => 'Images',
+            'de_DE' => 'Bilder',
+        ];
         foreach ($this->webspaceManager->getAllLocalizations() as $localization) {
             $locale = $localization->getLocale();
 
@@ -55,7 +60,7 @@ class DefaultCollectionBuilder implements BuilderInterface
             }
 
             $this->collectionManager->save([
-                'title' => 'Test Collection',
+                'title' => $title[$locale] ?? $title['en_US'],
                 'key' => 'test_collection',
                 'type' => ['id' => 1], // Non System collection
                 'locale' => $locale,
