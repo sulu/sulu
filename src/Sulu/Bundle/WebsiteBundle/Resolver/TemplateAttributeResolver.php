@@ -127,14 +127,16 @@ class TemplateAttributeResolver implements TemplateAttributeResolverInterface
         $request = $this->requestStack->getCurrentRequest();
         $urls = [];
 
-        if ($request && $request->attributes->get('_route')) {
+        $portal = $this->requestAnalyzer->getPortal();
+
+        if ($request && $request->attributes->get('_route') && null !== $portal) {
             $portalInformations = $this->webspaceManager->getPortalInformations($this->environment);
             $routeParams = $request->attributes->get('_route_params');
             $routeName = $request->attributes->get('_route');
 
             foreach ($portalInformations as $portalInformation) {
                 if (
-                    $portalInformation->getPortalKey() === $this->requestAnalyzer->getPortal()->getKey()
+                    $portalInformation->getPortalKey() === $portal->getKey()
                     && RequestAnalyzerInterface::MATCH_TYPE_FULL === $portalInformation->getType()
                 ) {
                     if (isset($routeParams['prefix'])) {

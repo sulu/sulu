@@ -201,9 +201,9 @@ class RequestAnalyzerTest extends TestCase
         $this->requestAnalyzer->analyze($request);
 
         $this->assertEquals('de_at', $request->getLocale());
-        $this->assertEquals('de_at', $this->requestAnalyzer->getCurrentLocalization()->getLocale());
-        $this->assertEquals('sulu', $this->requestAnalyzer->getWebspace()->getKey());
-        $this->assertEquals('sulu', $this->requestAnalyzer->getPortal()->getKey());
+        $this->assertEquals('de_at', $this->requestAnalyzer->getCurrentLocalization()?->getLocale());
+        $this->assertEquals('sulu', $this->requestAnalyzer->getWebspace()?->getKey());
+        $this->assertEquals('sulu', $this->requestAnalyzer->getPortal()?->getKey());
         $this->assertEquals(null, $this->requestAnalyzer->getSegment());
         $this->assertEquals($expected['portal_url'], $this->requestAnalyzer->getPortalUrl());
         $this->assertEquals($expected['redirect'], $this->requestAnalyzer->getRedirect());
@@ -224,9 +224,9 @@ class RequestAnalyzerTest extends TestCase
 
         $this->assertEquals($expected['format'], $request->getRequestFormat());
         $this->assertEquals('de_at', $request->getLocale());
-        $this->assertEquals('de_at', $this->requestAnalyzer->getCurrentLocalization()->getLocale());
-        $this->assertEquals('sulu', $this->requestAnalyzer->getWebspace()->getKey());
-        $this->assertEquals('sulu', $this->requestAnalyzer->getPortal()->getKey());
+        $this->assertEquals('de_at', $this->requestAnalyzer->getCurrentLocalization()?->getLocale());
+        $this->assertEquals('sulu', $this->requestAnalyzer->getWebspace()?->getKey());
+        $this->assertEquals('sulu', $this->requestAnalyzer->getPortal()?->getKey());
         $this->assertEquals(null, $this->requestAnalyzer->getSegment());
         $this->assertEquals($expected['portal_url'], $this->requestAnalyzer->getPortalUrl());
         $this->assertEquals($expected['redirect'], $this->requestAnalyzer->getRedirect());
@@ -268,9 +268,9 @@ class RequestAnalyzerTest extends TestCase
         $this->requestAnalyzer->validate($request);
 
         $this->assertEquals('de_at', $request->getLocale());
-        $this->assertEquals('de_at', $this->requestAnalyzer->getCurrentLocalization()->getLocale());
-        $this->assertEquals('sulu', $this->requestAnalyzer->getWebspace()->getKey());
-        $this->assertEquals('sulu', $this->requestAnalyzer->getPortal()->getKey());
+        $this->assertEquals('de_at', $this->requestAnalyzer->getCurrentLocalization()?->getLocale());
+        $this->assertEquals('sulu', $this->requestAnalyzer->getWebspace()?->getKey());
+        $this->assertEquals('sulu', $this->requestAnalyzer->getPortal()?->getKey());
         $this->assertEquals(null, $this->requestAnalyzer->getSegment());
         $this->assertEquals($expected['portal_url'], $this->requestAnalyzer->getPortalUrl());
         $this->assertEquals($expected['redirect'], $this->requestAnalyzer->getRedirect());

@@ -52,8 +52,15 @@ class NavigationTwigExtension extends AbstractExtension
      */
     public function flatRootNavigationFunction(string $navigationContext, int $depth = 1, ?array $properties = null): array
     {
-        $webspaceKey = $this->requestAnalyzer->getWebspace()->getKey();
-        $locale = $this->requestAnalyzer->getCurrentLocalization()->getLocale();
+        $webspace = $this->requestAnalyzer->getWebspace();
+        $localization = $this->requestAnalyzer->getCurrentLocalization();
+
+        if (null === $webspace || null === $localization) {
+            return [];
+        }
+
+        $webspaceKey = $webspace->getKey();
+        $locale = $localization->getLocale();
         /** @var Segment|null $segment */
         $segment = $this->requestAnalyzer->getSegment();
 
@@ -74,8 +81,15 @@ class NavigationTwigExtension extends AbstractExtension
      */
     public function treeRootNavigationFunction(string $navigationContext, int $depth = 1, ?array $properties = null): array
     {
-        $webspaceKey = $this->requestAnalyzer->getWebspace()->getKey();
-        $locale = $this->requestAnalyzer->getCurrentLocalization()->getLocale();
+        $webspace = $this->requestAnalyzer->getWebspace();
+        $localization = $this->requestAnalyzer->getCurrentLocalization();
+
+        if (null === $webspace || null === $localization) {
+            return [];
+        }
+
+        $webspaceKey = $webspace->getKey();
+        $locale = $localization->getLocale();
         /** @var Segment|null $segment */
         $segment = $this->requestAnalyzer->getSegment();
 
@@ -101,8 +115,15 @@ class NavigationTwigExtension extends AbstractExtension
         ?int $level = null,
         ?array $properties = null
     ): array {
-        $webspaceKey = $this->requestAnalyzer->getWebspace()->getKey();
-        $locale = $this->requestAnalyzer->getCurrentLocalization()->getLocale();
+        $webspace = $this->requestAnalyzer->getWebspace();
+        $localization = $this->requestAnalyzer->getCurrentLocalization();
+
+        if (null === $webspace || null === $localization) {
+            return [];
+        }
+
+        $webspaceKey = $webspace->getKey();
+        $locale = $localization->getLocale();
 
         // Handle level parameter: get breadcrumb and use UUID at specified level
         if (null !== $level) {
@@ -147,8 +168,15 @@ class NavigationTwigExtension extends AbstractExtension
         ?int $level = null,
         ?array $properties = null
     ): array {
-        $webspaceKey = $this->requestAnalyzer->getWebspace()->getKey();
-        $locale = $this->requestAnalyzer->getCurrentLocalization()->getLocale();
+        $webspace = $this->requestAnalyzer->getWebspace();
+        $localization = $this->requestAnalyzer->getCurrentLocalization();
+
+        if (null === $webspace || null === $localization) {
+            return [];
+        }
+
+        $webspaceKey = $webspace->getKey();
+        $locale = $localization->getLocale();
 
         // Handle level parameter: get breadcrumb and use UUID at specified level
         if (null !== $level) {
@@ -188,8 +216,15 @@ class NavigationTwigExtension extends AbstractExtension
      */
     public function breadcrumbFunction(string $uuid, ?array $properties = null): array
     {
-        $webspaceKey = $this->requestAnalyzer->getWebspace()->getKey();
-        $locale = $this->requestAnalyzer->getCurrentLocalization()->getLocale();
+        $webspace = $this->requestAnalyzer->getWebspace();
+        $localization = $this->requestAnalyzer->getCurrentLocalization();
+
+        if (null === $webspace || null === $localization) {
+            return [];
+        }
+
+        $webspaceKey = $webspace->getKey();
+        $locale = $localization->getLocale();
 
         return $this->navigationRepository->getBreadcrumb(
             $uuid,

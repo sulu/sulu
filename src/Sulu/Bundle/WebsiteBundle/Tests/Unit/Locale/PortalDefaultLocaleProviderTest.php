@@ -32,6 +32,7 @@ class PortalDefaultLocaleProviderTest extends TestCase
 
         $portalDefaultLocaleProvider = new PortalDefaultLocaleProvider($requestAnalyzer->reveal());
 
+        /** @var Localization $defaultLocale */
         $defaultLocale = $portalDefaultLocaleProvider->getDefaultLocale();
 
         $this->assertEquals('de-AT', $defaultLocale->getLocale(Localization::ISO6391));

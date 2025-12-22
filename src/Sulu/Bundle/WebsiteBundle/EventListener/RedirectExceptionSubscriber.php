@@ -128,6 +128,10 @@ class RedirectExceptionSubscriber implements EventSubscriberInterface
 
         $localization = $this->defaultLocaleProvider->getDefaultLocale();
 
+        if (null === $localization) {
+            return;
+        }
+
         $redirect = $attributes->getAttribute('redirect');
         $redirect = $this->urlReplacer->replaceCountry($redirect, $localization->getCountry());
         $redirect = $this->urlReplacer->replaceLanguage($redirect, $localization->getLanguage());

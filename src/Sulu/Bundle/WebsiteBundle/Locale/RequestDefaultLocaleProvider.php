@@ -38,29 +38,35 @@ class RequestDefaultLocaleProvider implements DefaultLocaleProviderInterface
 
     public function getDefaultLocale()
     {
+        $portal = $this->requestAnalyzer->getPortal();
+
+        if (null === $portal) {
+            return null;
+        }
+
         $request = $this->requestStack->getCurrentRequest();
 
         if (null === $request) {
-            return $this->requestAnalyzer->getPortal()->getDefaultLocalization();
+            return $portal->getDefaultLocalization();
         }
 
-        $defaultLocalization = $this->requestAnalyzer->getPortal()->getDefaultLocalization()->getLocale(Localization::LCID);
+        $defaultLocalization = $portal->getDefaultLocalization()->getLocale(Localization::LCID);
         $localizations = [$defaultLocalization];
 
-        foreach ($this->requestAnalyzer->getPortal()->getLocalizations() as $localization) {
+        foreach ($portal->getLocalizations() as $localization) {
             if ($localization->getLocale(Localization::LCID) !== $defaultLocalization) {
                 $localizations[] = $localization->getLocale(Localization::LCID);
             }
         }
 
-        $preferredLocale = $this->requestStack->getCurrentRequest()->getPreferredLanguage($localizations);
+        $preferredLocale = $request->getPreferredLanguage($localizations);
 
-        foreach ($this->requestAnalyzer->getPortal()->getLocalizations() as $localization) {
+        foreach ($portal->getLocalizations() as $localization) {
             if ($localization->getLocale(Localization::LCID) === $preferredLocale) {
                 return $localization;
             }
         }
 
-        return $this->requestAnalyzer->getPortal()->getDefaultLocalization();
+        return $portal->getDefaultLocalization();
     }
 }
