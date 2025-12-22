@@ -24,6 +24,7 @@ class WebspaceControllerTest extends SuluTestCase
 
         $this->assertHttpStatusCode(200, $client->getResponse());
 
+        /** @var array<array-key,array<array-key,array<array-key,array<array-key,string>>>> $data */
         $data = $response['_embedded']['webspaces'];
         $this->assertCount(4, $data);
 

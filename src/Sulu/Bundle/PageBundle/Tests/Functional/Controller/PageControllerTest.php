@@ -101,12 +101,15 @@ class PageControllerTest extends SuluTestCase
         $this->client->jsonRequest('GET', '/api/pages?locale=de&flat=true');
         $this->assertHttpStatusCode(200, $this->client->getResponse());
 
-        $response = \json_decode($this->client->getResponse()->getContent());
-        $this->assertCount(4, $response->_embedded->pages);
+        /** @var string $content */
+        $content = $this->client->getResponse()->getContent();
+        /** @var array<array-key,array<array-key,array<array-key,array<array-key,string>>>> $response */
+        $response = \json_decode($content, true);
+        $this->assertCount(4, $response['_embedded']['pages']);
 
-        $titles = \array_map(function(\stdClass $page) {
-            return $page->title;
-        }, $response->_embedded->pages);
+        $titles = \array_map(function(array $page): string {
+            return $page['title'];
+        }, $response['_embedded']['pages']);
 
         $this->assertSame(['Another Random CMF', 'Destination CMF', 'Sulu CMF', 'Test CMF'], $titles);
     }
